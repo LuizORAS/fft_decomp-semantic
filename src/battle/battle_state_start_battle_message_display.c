@@ -16,9 +16,9 @@ void battle_state_start_battle_message_display(void) {
 
     g_battle_game_state = BATTLE_GAME_STATE_BATTLE_MESSAGE_DISPLAY;
     g_main_system_animation_speed = 1;
-    g_battle_action_post_action = 0;
+    g_action_post_action = 0;
     unit = battle_unit_get_casting_misc_data();
-    battle_action_build_targets_post_action_message();
+    action_build_targets_post_action_message();
     battle_unit_update_attack_result_animation(unit);
     unit->item_display_active = 0;
     battle_text_set_message_duration_frames(0x3c);

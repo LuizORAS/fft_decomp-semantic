@@ -3,7 +3,7 @@
 
 /* Queues the failure message for a charged action that cannot start: mode 1 no
  * target, 2 silenced, 3 not enough MP (the result of
- * battle_action_init_current_data); any other mode queues none.
+ * action_init_current_data); any other mode queues none.
  *
  * The three numeric displays are pointed at the FRAME.BIN page, and the first
  * display is built at once unless one is already running. */
@@ -17,13 +17,13 @@ void battle_gfx_activate_numerical_sprite_data(battle_unit_misc_data_t* unit, s3
     display_0->tpage = BATTLE_GFX_TPAGE_FRAME;
     switch (mode) {
     case 1:
-        unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_NO_TARGET;
+        unit->action_display_flags |= ACTION_DISPLAY_FLAG_NO_TARGET;
         break;
     case 2:
-        unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_SILENCED;
+        unit->action_display_flags |= ACTION_DISPLAY_FLAG_SILENCED;
         break;
     case 3:
-        unit->action_display_flags |= BATTLE_ACTION_DISPLAY_FLAG_NO_MP;
+        unit->action_display_flags |= ACTION_DISPLAY_FLAG_NO_MP;
         break;
     }
     if (unit->numeric_display.active == 0) {

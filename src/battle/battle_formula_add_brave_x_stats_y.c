@@ -5,11 +5,10 @@
 void battle_formula_add_brave_x_stats_y(void) {
     s32 y;
 
-    g_battle_action_target_data->brave_change
-        = g_battle_action_current_ability.range_data.x | BATTLE_ACTION_STAT_CHANGE_INCREASE;
-    y = g_battle_action_current_ability.range_data.y | BATTLE_ACTION_STAT_CHANGE_INCREASE;
-    g_battle_action_target_data->pa_change = y;
-    g_battle_action_target_data->ma_change = y;
-    g_battle_action_target_data->sp_change = y;
-    g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
+    g_action_target_data->brave_change = g_action_current_ability.range_data.x | ACTION_STAT_CHANGE_INCREASE;
+    y = g_action_current_ability.range_data.y | ACTION_STAT_CHANGE_INCREASE;
+    g_action_target_data->pa_change = y;
+    g_action_target_data->ma_change = y;
+    g_action_target_data->sp_change = y;
+    g_action_target_data->attack_type = ACTION_TYPE_PSEUDO_STATUS;
 }

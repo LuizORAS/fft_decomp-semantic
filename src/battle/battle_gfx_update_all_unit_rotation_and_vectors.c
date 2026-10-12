@@ -16,7 +16,7 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
     long gte_flag;
     battle_unit_misc_data_t* unit;
     map_tile_t* tile;
-    battle_move_effective_flags_e movement_flags;
+    move_effective_flags_e movement_flags;
 
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);
@@ -39,7 +39,7 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
 
         tile = battle_map_get_tile_data_pointer(
             unit->screen.vx / MAP_TILE_SIZE, unit->screen.vz / MAP_TILE_SIZE, unit->map_z);
-        if (unit->step_phase != BATTLE_MOVE_STEP_PHASE_NONE) {
+        if (unit->step_phase != MOVE_STEP_PHASE_NONE) {
             if ((tile->surface.depth_bias) != 0) {
                 battle_camera_calculate_relative_offset_by_5(&screen, &adjusted);
             } else {
@@ -52,7 +52,7 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
         }
 
         if (unit->battle_data != 0) {
-            movement_flags = battle_move_get_effective_flags(unit->battle_data);
+            movement_flags = move_get_effective_flags(unit->battle_data);
             if ((movement_flags & BATTLE_EFFECTIVE_MOVEMENT_IN_WATER) != 0) {
                 if (tile->depth_half_height.depth != 0) {
                     adjusted.vy -= 12;

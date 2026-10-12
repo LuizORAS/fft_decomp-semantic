@@ -13,7 +13,7 @@ void battle_unit_set_animation_based_on_mounted_state(battle_unit_misc_data_t* u
 
     anim = BATTLE_UNIT_ANIMATION_RIDING;
     if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_RIDER) {
-        water_depth = battle_move_get_water_depth(unit) & 0xFF;
+        water_depth = move_get_water_depth(unit) & 0xFF;
         if (water_depth < 0) {
             selected = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
         } else if (water_depth < 2) {

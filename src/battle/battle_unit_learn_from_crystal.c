@@ -19,16 +19,16 @@ s32 battle_unit_learn_from_crystal(battle_stats_t* unit, s32 flags) {
     u8* crystal_bits;
     u8* end;
 
-    battle_action_clear_current_data(&unit->action);
-    unit->action.miss_type = BATTLE_ACTION_MISS_TYPE_CANCELLED;
+    action_clear_current_data(&unit->action);
+    unit->action.miss_type = ACTION_MISS_TYPE_CANCELLED;
     unit->action.hit = 0;
     if (flags & BATTLE_CRYSTAL_TAKE_TREASURE) {
-        return battle_action_increment_item_quantity_for_steal_break(unit, g_main_crystal_treasure_item_id);
+        return action_increment_item_quantity_for_steal_break(unit, g_main_crystal_treasure_item_id);
     }
     if (flags & BATTLE_CRYSTAL_RESTORE_HP_MP) {
         unit->action.hit = 1;
-        unit->action.attack_type = BATTLE_ACTION_TYPE_HP_HEALING | BATTLE_ACTION_TYPE_MP_HEALING;
-        unit->action.miss_type = BATTLE_ACTION_MISS_TYPE_HIT;
+        unit->action.attack_type = ACTION_TYPE_HP_HEALING | ACTION_TYPE_MP_HEALING;
+        unit->action.miss_type = ACTION_MISS_TYPE_HIT;
         unit->action.hp_healing = unit->max_hp - unit->hp;
         unit->action.mp_healing = unit->max_mp - unit->mp;
     }

@@ -9,6 +9,6 @@ void battle_script_waitwalk_event_instruction(s32 unit_id) {
     if (misc_id != EVENT_MISC_ID_NONE) {
         do {
             battle_thread_yield();
-        } while (battle_move_is_unit_moving_by_misc_id(misc_id) != 0);
+        } while (move_is_unit_moving_by_misc_id(misc_id) != 0);
     }
 }

@@ -32,7 +32,7 @@ void battle_state_update_action_execute_mode(void) {
     }
     battle_gfx_update_status_bubbles_and_graphics();
     battle_gfx_draw_screen_color_modulation_overlay();
-    battle_target_calculate_tile_coords_and_glow_from_at_list();
+    target_calculate_tile_coords_and_glow_from_at_list();
 
     unit = battle_unit_get_casting_misc_data();
     /* The target reads the 16-bit value of g_main_system_animation_speed. */
@@ -41,7 +41,7 @@ void battle_state_update_action_execute_mode(void) {
         for (i = 0; i < unit->strike.target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
             if (target != 0) {
-                battle_move_update_knockback_step(target);
+                move_update_knockback_step(target);
                 g_battle_state_animation_continue_check |= target->step_phase;
             }
         }

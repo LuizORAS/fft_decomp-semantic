@@ -23,7 +23,7 @@ enum {
  */
 s32 battle_reaction_prepare_next(s16* out_ability) {
     battle_stats_t* unit;
-    battle_action_command_t* action;
+    action_command_t* action;
     s32 i;
     s32 outcome;
     s32 result;
@@ -37,19 +37,19 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
     }
     i = 0;
     do {
-        g_battle_action_context = BATTLE_ACTION_CONTEXT_PRIMARY;
+        g_action_context = ACTION_CONTEXT_PRIMARY;
         if (i != g_battle_acting_unit_id) {
             unit = &g_battle_unit_stats[i];
             action = &unit->action_command;
             if (battle_unit_get_action_restriction(unit) == BATTLE_UNIT_ACTION_RESTRICTION_NONE
                 && unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
-                can_react = battle_action_can_unit_react(unit);
+                can_react = action_can_unit_react(unit);
                 ability = unit->action.reaction_id;
-                if (((can_react == 0 && g_battle_action_state != BATTLE_ACTION_STATE_AI_SIMULATION)
+                if (((can_react == 0 && g_action_state != ACTION_STATE_AI_SIMULATION)
                         || ability == ABILITY_ID_REACTION_REFLECT)
                     && ability != 0) {
-                    g_battle_action_context = BATTLE_ACTION_CONTEXT_REACTION_OR_SIMULATION;
-                    main_util_copy_action_data(action, &g_battle_action_saved_command);
+                    g_action_context = ACTION_CONTEXT_REACTION_OR_SIMULATION;
+                    main_util_copy_action_data(action, &g_action_saved_command);
                     g_battle_current_reaction_ability_id = ability;
                     action->actor_id = i;
                     action->skillset_id = 0;
@@ -60,10 +60,10 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                     unit->action.reaction_id = 0;
                     switch (reaction_id) {
                     case ABILITY_ID_REACTION_REFLECT:
-                        outcome = -(battle_target_apply_reflect(unit) == 0) & 3;
+                        outcome = -(target_apply_reflect(unit) == 0) & 3;
                         break;
                     case ABILITY_ID_REACTION_MEATBONE_SLASH:
-                        if (battle_action_store_counter_ability(unit, SKILLSET_ID_ATTACK, 0, 1) != 0) {
+                        if (action_store_counter_ability(unit, SKILLSET_ID_ATTACK, 0, 1) != 0) {
                             outcome = BATTLE_REACTION_OUTCOME_NONE;
                         } else {
                             action->skillset_id = 1;
@@ -72,18 +72,16 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                         break;
                     case ABILITY_ID_REACTION_COUNTER_MAGIC:
                         outcome
-                            = (battle_action_store_counter_ability(unit, SKILLSET_ID_BLACK_MAGIC, last_attack, 0) == 0)
-                            * 2;
+                            = (action_store_counter_ability(unit, SKILLSET_ID_BLACK_MAGIC, last_attack, 0) == 0) * 2;
                         break;
                     case ABILITY_ID_REACTION_COUNTER_TACKLE:
-                        if (battle_action_store_counter_ability(
-                                unit, SKILLSET_ID_BLACK_MAGIC, ABILITY_ID_BASIC_SKILL_DASH, 1)
+                        if (action_store_counter_ability(unit, SKILLSET_ID_BLACK_MAGIC, ABILITY_ID_BASIC_SKILL_DASH, 1)
                             != 0) {
                             outcome = BATTLE_REACTION_OUTCOME_NONE;
                         }
                         break;
                     case ABILITY_ID_REACTION_COUNTER_FLOOD:
-                        outcome = (battle_action_store_counter_ability(unit, SKILLSET_ID_ELEMENTAL,
+                        outcome = (action_store_counter_ability(unit, SKILLSET_ID_ELEMENTAL,
                                        g_main_terrain_geomancy_abilities
                                            [g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.type],
                                        0)
@@ -91,7 +89,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                             * 2;
                         break;
                     case ABILITY_ID_REACTION_AUTO_POTION:
-                        result = battle_action_select_auto_potion_item(unit);
+                        result = action_select_auto_potion_item(unit);
                         if (result == -1) {
                             outcome = BATTLE_REACTION_OUTCOME_NONE;
                             break;
@@ -104,7 +102,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                         action->target_position.vx = unit->x;
                         action->target_position.vz = unit->position.y;
                         action->target_position.vy = unit->position.higher_elevation;
-                        result = battle_action_call_attack_preparation_at_preview(action);
+                        result = action_call_attack_preparation_at_preview(action);
                         outcome = BATTLE_REACTION_OUTCOME_COUNTER;
                         unit->action_command.ability_id = ABILITY_ID_REACTION_AUTO_POTION;
                         if (result == -1 || result == 2 || result == 3) {
@@ -112,7 +110,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                         }
                         break;
                     case ABILITY_ID_REACTION_COUNTER:
-                        if (battle_action_store_counter_ability(unit, SKILLSET_ID_ATTACK, 0, 1) != 0) {
+                        if (action_store_counter_ability(unit, SKILLSET_ID_ATTACK, 0, 1) != 0) {
                             outcome = BATTLE_REACTION_OUTCOME_NONE;
                         }
                         break;
@@ -124,24 +122,24 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                                 == 0);
                         break;
                     }
-                    if ((outcome == 1 || outcome == 2) && battle_action_check_and_consume_mp(unit) != 0) {
+                    if ((outcome == 1 || outcome == 2) && action_check_and_consume_mp(unit) != 0) {
                         outcome = BATTLE_REACTION_OUTCOME_NONE;
                     }
                     if (outcome == BATTLE_REACTION_OUTCOME_NONE) {
-                        main_util_copy_action_data(&g_battle_action_saved_command, action);
+                        main_util_copy_action_data(&g_action_saved_command, action);
                         i++;
                         continue;
                     }
                     if (outcome >= 1 && outcome <= 3) {
-                        battle_action_init_current_ability_strike_data(unit);
+                        action_init_current_ability_strike_data(unit);
                     } else {
-                        g_battle_action_current_ability.strike_count = 1;
-                        g_battle_action_current_ability.strike_counter = 0;
-                        g_battle_action_current_ability.weapon_proc_pending = 0;
-                        g_battle_action_current_ability.knockback_flags = 0;
-                        g_battle_action_current_ability.primary_weapon_id
+                        g_action_current_ability.strike_count = 1;
+                        g_action_current_ability.strike_counter = 0;
+                        g_action_current_ability.weapon_proc_pending = 0;
+                        g_action_current_ability.knockback_flags = 0;
+                        g_action_current_ability.primary_weapon_id
                             = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
-                        g_battle_action_current_ability.secondary_weapon_id
+                        g_action_current_ability.secondary_weapon_id
                             = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
                         action->skillset_id = 0;
                         action->targeting_type = 5;
@@ -162,7 +160,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
         }
         i++;
     } while (i < 21);
-    g_battle_action_context = BATTLE_ACTION_CONTEXT_PRIMARY;
+    g_action_context = ACTION_CONTEXT_PRIMARY;
     *out_ability = 0;
     return -1;
 }

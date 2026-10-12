@@ -25,7 +25,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     u32* ordering_table;
     s32 polarity;
 
-    g_battle_ai_workspace_ptr = (event_work_t*)g_battle_ai_workspace;
+    g_ai_workspace_ptr = (event_work_t*)g_ai_workspace;
     if (g_world_gfx_draw_primitives_immediately != 0) {
         DrawSync(0);
         rect.w = 0x100;
@@ -165,7 +165,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     } else if (g_world_companion_overlay_state == COMPANION_OVERLAY_STATE_BUNIT) {
         world_script_set_event_speed(1);
         i = bunit_entrypoint(0, 0);
-        battle_target_move_cursor_to_battle_id(i);
+        target_move_cursor_to_battle_id(i);
         g_world_active_unit_data.battle_id = i;
         g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_IDLE;
     } else if (g_world_companion_overlay_state == COMPANION_OVERLAY_STATE_CARD_SAVE) {

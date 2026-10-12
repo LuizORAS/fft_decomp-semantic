@@ -4,18 +4,18 @@
 /* Formula 0x42: damage (PA * Y); the caster takes (PA * Y / X). No evade. */
 void battle_formula_damage_pa_times_y_damage_caster_pa_times_y_over_x(void) {
     s16 damage;
-    battle_action_data_t* action;
+    action_data_t* action;
 
     battle_formula_store_pa_and_y();
     battle_formula_apply_zodiac_compatibility();
-    damage = g_battle_action_current_ability.xa * g_battle_action_current_ability.ya;
+    damage = g_action_current_ability.xa * g_action_current_ability.ya;
     /* Cast-pointer stores: as struct members GCC sinks them past the
      * following scalar global loads; the target keeps source order. */
-    g_battle_action_target_data->hp_damage = damage;
-    damage = damage / g_battle_action_current_ability.range_data.x;
-    action = g_battle_action_attacker_data;
+    g_action_target_data->hp_damage = damage;
+    damage = damage / g_action_current_ability.range_data.x;
+    action = g_action_attacker_data;
     action->hit = 1;
     action->hp_damage = damage;
-    g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_HP_DAMAGE;
-    g_battle_action_attacker_data->attack_type = BATTLE_ACTION_TYPE_HP_DAMAGE;
+    g_action_target_data->attack_type = ACTION_TYPE_HP_DAMAGE;
+    g_action_attacker_data->attack_type = ACTION_TYPE_HP_DAMAGE;
 }

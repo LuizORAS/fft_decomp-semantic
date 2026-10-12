@@ -5,9 +5,9 @@
  * marked and the unit confirms or backs out.
  *
  * For a player-controlled unit circle restores the cursor input mode and opens
- * the confirmation prompt (battle_action_confirm). Cross clears the target marks
+ * the confirmation prompt (action_confirm). Cross clears the target marks
  * and returns to the idle action menu when the ability has no target choice,
- * otherwise to the range display (battle_target_set_boxes_red). An AI-controlled
+ * otherwise to the range display (target_set_boxes_red). An AI-controlled
  * unit confirms by itself once its state frame counter reaches 0x1f. */
 void battle_state_handle_ability_preview_state(void) {
     u16 frame_data;
@@ -21,18 +21,18 @@ void battle_state_handle_ability_preview_state(void) {
         if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
             g_battle_cursor_input_mode = g_battle_cursor_input_mode_saved;
             battle_gfx_update_unit_palettes();
-            battle_action_confirm();
+            action_confirm();
         } else if ((g_main_input_pressed_buttons & PSX_PAD_CROSS) != 0) {
             g_battle_cursor_input_mode = g_battle_cursor_input_mode_saved;
-            battle_target_set_tile_background_color(BATTLE_TILE_MARK_HIDE_TARGETS, 3);
-            if (unit->ability_preview_phase == BATTLE_TARGET_PANELS_NO_TARGETING) {
-                battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 3);
+            target_set_tile_background_color(BATTLE_TILE_MARK_HIDE_TARGETS, 3);
+            if (unit->ability_preview_phase == TARGET_PANELS_NO_TARGETING) {
+                target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 3);
                 battle_gfx_update_unit_palettes();
                 battle_menu_open_active_unit_idle_action_menu();
             } else {
-                battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 3);
+                target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 3);
                 battle_gfx_update_unit_palettes();
-                battle_target_set_boxes_red();
+                target_set_boxes_red();
             }
         }
     } else {
@@ -41,7 +41,7 @@ void battle_state_handle_ability_preview_state(void) {
         if (frame_data >= 0x1f) {
             g_battle_cursor_input_mode = g_battle_cursor_input_mode_saved;
             battle_gfx_update_unit_palettes();
-            battle_action_confirm();
+            action_confirm();
         }
     }
     battle_state_handle_free_cursor_input();

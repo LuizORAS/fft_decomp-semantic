@@ -1335,8 +1335,8 @@ data:
   - {addr: 0x8016ee68, name: g_open_text_section_offsets}
   - {addr: 0x80173cbc, name: g_world_menu_selected_tile_info_pages}
   - {addr: 0x8017403c, name: g_battle_menu_skillset_disabled_flags}
-  - {addr: 0x80174048, name: g_battle_ai_workspace_ptr}
-  - {addr: 0x8017404c, name: g_battle_action_menu_row_types}
+  - {addr: 0x80174048, name: g_ai_workspace_ptr}
+  - {addr: 0x8017404c, name: g_action_menu_row_types}
   - {addr: 0x8017fd80, name: set_unit_cannot_exist}
   - {addr: 0x80182430, name: unit_has_adjacent_monster_skill_support}
   - {addr: 0x80189c4c, name: g_world_wldface_vram_rects}
@@ -1896,7 +1896,7 @@ data:
   - {addr: 0x8019b358, name: g_world_gfx_free_rect_grid_cells}
   - {addr: 0x8019b368, name: g_world_menu_buffer_allocations}
   - {addr: 0x8019b3e8, name: g_world_menu_buffer_arena}
-  - {addr: 0x8019f3ac, name: g_battle_ai_workspace}
+  - {addr: 0x8019f3ac, name: g_ai_workspace}
   - {addr: 0x801a23e8, name: g_world_menu_buffer_allocation_map}
   - {addr: 0x801a2458, name: g_world_text_player_name_buffer}
   - {addr: 0x801a246c, name: g_world_text_line_widths}

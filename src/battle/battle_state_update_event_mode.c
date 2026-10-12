@@ -20,7 +20,7 @@ void battle_state_update_event_mode(void) {
         battle_camera_update_offset_screen_coord_animation();
         battle_camera_update_zoom_animation();
         battle_camera_update_rotation_animation();
-        battle_move_update_unit_by_misc_id();
+        move_update_unit_by_misc_id();
     }
     battle_gfx_update_status_bubbles_and_graphics();
     battle_gfx_draw_screen_color_modulation_overlay();
@@ -28,8 +28,8 @@ void battle_state_update_event_mode(void) {
     case 0:
         battle_gfx_init_evtchr_vram_slots();
         g_battle_menu_status_enabled = 1;
-        battle_ai_init_workspace();
-        battle_action_check_between_turn_events();
+        ai_init_workspace();
+        action_check_between_turn_events();
         break;
     case 9:
         battle_gfx_init_evtchr_vram_slots();

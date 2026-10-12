@@ -17,7 +17,7 @@ void battle_unit_update_facing_and_pending_animations(void) {
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++, state++) {
         if (battle_unit_has_misc_id(i) != 0) {
             if (g_battle_unit_pending_animation_ids[i] != 0) {
-                moving = battle_move_is_unit_moving_by_misc_id(i);
+                moving = move_is_unit_moving_by_misc_id(i);
                 if (moving == 0 && g_battle_unit_was_moving_latch[i] != 0) {
                     battle_unit_set_animation(i, g_battle_unit_pending_animation_ids[i]);
                     g_battle_unit_pending_animation_ids[i] = 0;

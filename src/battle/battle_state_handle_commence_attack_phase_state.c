@@ -12,11 +12,11 @@ void battle_state_handle_commence_attack_phase_state(void) {
     unit = battle_unit_get_source_misc_data();
     if (unit->attack_phase_state == BATTLE_ATTACK_PREPARATION_JUMP) {
         if (unit->animation.wait == 0) {
-            battle_action_set_only_action_taken(unit->battle_data->misc_unit_id);
+            action_set_only_action_taken(unit->battle_data->misc_unit_id);
             battle_unit_update_post_command_animation_display(unit);
         }
     } else {
-        g_battle_action_phase = BATTLE_ACTION_PHASE_PRE_ACTION;
+        g_action_phase = ACTION_PHASE_PRE_ACTION;
         battle_state_announce_next_charged_action();
     }
 }

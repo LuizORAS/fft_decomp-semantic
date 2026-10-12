@@ -13,7 +13,7 @@ void battle_unit_start_ability_charge_hold_animation(battle_unit_misc_data_t* un
     animation = g_battle_ability_charge_animation_sets[g_battle_ability_animation_data[unit->used_ability_id]
             .charge_animation_set_id][1];
     if (animation != 0) {
-        water_depth = battle_move_get_water_depth(unit);
+        water_depth = move_get_water_depth(unit);
         selected_animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
         if (water_depth < 2) {
             selected_animation = animation;

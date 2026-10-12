@@ -5,7 +5,7 @@
  * Return the highest-order status changed by an action. Bits 0-6 encode the
  * one-based status index, 0x80 marks removal, and 0x100 reflects flags_2 bit 3.
  */
-s32 main_status_find_action_highest_order_effect(const battle_action_data_t* action) {
+s32 main_status_find_action_highest_order_effect(const action_data_t* action) {
     s32 highest_order;
     s32 result;
     s32 status_index;

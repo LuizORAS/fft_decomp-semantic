@@ -10,7 +10,7 @@ void battle_formula_select_magic_gun_ability(void) {
     u16 id;
     s32 roll;
 
-    element = g_battle_action_current_ability.weapon_data.element;
+    element = g_action_current_ability.weapon_data.element;
     roll = battle_formula_get_random_0_7fff();
     pct = (roll * 100) / 0x8000;
     if (element & BATTLE_ELEMENT_FIRE) {
@@ -41,8 +41,8 @@ void battle_formula_select_magic_gun_ability(void) {
             }
         }
     }
-    g_battle_action_current_ability.ability_id = id;
-    g_battle_action_attacker->action_command.ability_id = id;
-    main_util_copy_byte_data(&g_main_ability_range_data[id], &g_battle_action_current_ability.range_data,
-        sizeof(g_battle_action_current_ability.range_data));
+    g_action_current_ability.ability_id = id;
+    g_action_attacker->action_command.ability_id = id;
+    main_util_copy_byte_data(&g_main_ability_range_data[id], &g_action_current_ability.range_data,
+        sizeof(g_action_current_ability.range_data));
 }

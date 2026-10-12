@@ -4,7 +4,7 @@
 
 /* Resolve a unit's status changes with the action state set to preview (2). */
 void battle_status_resolve_unit_changes_in_preview(s32 unit_id, s32 removal_only) {
-    g_battle_action_state = BATTLE_ACTION_STATE_PREVIEW;
+    g_action_state = ACTION_STATE_PREVIEW;
     battle_status_resolve_unit_changes(unit_id, removal_only);
-    g_battle_action_state = BATTLE_ACTION_STATE_EXECUTE;
+    g_action_state = ACTION_STATE_EXECUTE;
 }

@@ -18,14 +18,14 @@ void battle_formula_calculate_facing_evade(void) {
     s32 facing;
     u8* result;
 
-    dx = g_battle_action_target->x - g_battle_action_attacker->x;
+    dx = g_action_target->x - g_action_attacker->x;
     distance_x = dx < 0 ? -dx : dx;
-    dy = g_battle_action_target->position.y - g_battle_action_attacker->position.y;
+    dy = g_action_target->position.y - g_action_attacker->position.y;
     distance_y = dy < 0 ? -dy : dy;
     direction = BATTLE_ABILITY_FACING_SIDE;
     if (distance_y < distance_x) {
         if (dx > 0) {
-            facing = g_battle_action_target->position.facing << 8;
+            facing = g_action_target->position.facing << 8;
             if (facing == BATTLE_UNIT_POSITION_FACING_WEST) {
                 direction = BATTLE_ABILITY_FACING_FRONT;
             } else if (facing == BATTLE_UNIT_POSITION_FACING_EAST) {
@@ -33,7 +33,7 @@ void battle_formula_calculate_facing_evade(void) {
             }
         }
         if (dx < 0) {
-            facing = g_battle_action_target->position.facing << 8;
+            facing = g_action_target->position.facing << 8;
             if (facing == BATTLE_UNIT_POSITION_FACING_EAST) {
                 direction = BATTLE_ABILITY_FACING_FRONT;
             } else if (facing == BATTLE_UNIT_POSITION_FACING_WEST) {
@@ -42,7 +42,7 @@ void battle_formula_calculate_facing_evade(void) {
         }
     } else if (distance_x < distance_y) {
         if (dy > 0) {
-            facing = g_battle_action_target->position.facing << 8;
+            facing = g_action_target->position.facing << 8;
             if (facing == BATTLE_UNIT_POSITION_FACING_SOUTH) {
                 direction = BATTLE_ABILITY_FACING_FRONT;
             } else if (facing == BATTLE_UNIT_POSITION_FACING_NORTH) {
@@ -50,31 +50,31 @@ void battle_formula_calculate_facing_evade(void) {
             }
         }
         if (dy < 0) {
-            facing = g_battle_action_target->position.facing << 8;
+            facing = g_action_target->position.facing << 8;
             if (facing == BATTLE_UNIT_POSITION_FACING_NORTH) {
                 direction = BATTLE_ABILITY_FACING_FRONT;
             } else if (facing == BATTLE_UNIT_POSITION_FACING_SOUTH) {
                 direction = BATTLE_ABILITY_FACING_BACK;
             }
         }
-    } else if (dx > 0 && (g_battle_action_target->position.facing << 8) == BATTLE_UNIT_POSITION_FACING_WEST) {
+    } else if (dx > 0 && (g_action_target->position.facing << 8) == BATTLE_UNIT_POSITION_FACING_WEST) {
         direction = BATTLE_ABILITY_FACING_FRONT;
-    } else if (dx < 0 && (g_battle_action_target->position.facing << 8) == BATTLE_UNIT_POSITION_FACING_EAST) {
+    } else if (dx < 0 && (g_action_target->position.facing << 8) == BATTLE_UNIT_POSITION_FACING_EAST) {
         direction = BATTLE_ABILITY_FACING_FRONT;
-    } else if (dy > 0 && (g_battle_action_target->position.facing << 8) == BATTLE_UNIT_POSITION_FACING_SOUTH) {
+    } else if (dy > 0 && (g_action_target->position.facing << 8) == BATTLE_UNIT_POSITION_FACING_SOUTH) {
         direction = BATTLE_ABILITY_FACING_FRONT;
-    } else if (dy < 0 && (g_battle_action_target->position.facing << 8) == BATTLE_UNIT_POSITION_FACING_NORTH) {
+    } else if (dy < 0 && (g_action_target->position.facing << 8) == BATTLE_UNIT_POSITION_FACING_NORTH) {
         direction = BATTLE_ABILITY_FACING_FRONT;
     } else if (dx == 0 && dy == 0) {
         direction = BATTLE_ABILITY_FACING_BACK;
     }
-    result = &g_battle_action_current_ability.facing_modifier;
+    result = &g_action_current_ability.facing_modifier;
     *result = direction;
     if (*result != BATTLE_ABILITY_FACING_FRONT) {
-        g_battle_action_current_ability.class_evade = 0;
+        g_action_current_ability.class_evade = 0;
     }
     if (*result == BATTLE_ABILITY_FACING_BACK) {
-        g_battle_action_current_ability.right_hand_evade = 0;
-        g_battle_action_current_ability.left_hand_evade = 0;
+        g_action_current_ability.right_hand_evade = 0;
+        g_action_current_ability.left_hand_evade = 0;
     }
 }

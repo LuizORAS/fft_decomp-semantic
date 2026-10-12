@@ -190,7 +190,10 @@ none), and prefer the profile of its neighbours.
   only when the clean spelling provably changes the bytes, with a one-line
   comment saying so.
 - Names carry the module prefix (`battle_`, `world_`, `wldcore_`, `open_`,
-  `main_`, `<overlay>_`; globals `g_battle_`, …). Unknowns stay
+  `main_`, `<overlay>_`; globals `g_battle_`, …). BATTLE's AI, movement,
+  targeting and action subsystems use `ai_`, `move_`, `target_` and `action_`
+  (globals `g_ai_`, …), while retaining their BATTLE source and header ownership.
+  Unknowns stay
   `func_ADDRESS` or `D_ADDRESS` until the code supports a name. Unnamed
   struct members are `_unknown_XX` (code accesses it, meaning unknown),
   `_unused_XX` (no source accesses it by name) or `_padding_XX` (alignment

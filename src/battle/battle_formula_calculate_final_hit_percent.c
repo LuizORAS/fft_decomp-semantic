@@ -16,46 +16,46 @@ void battle_formula_calculate_final_hit_percent(void) {
     u8 evade;
     u8 item;
 
-    if ((g_battle_action_current_ability.ability_id != 0)
-        && !(g_battle_action_current_ability.range_data.flags_4 & ABILITY_SECONDARY_FLAG_4_EVADEABLE)) {
+    if ((g_action_current_ability.ability_id != 0)
+        && !(g_action_current_ability.range_data.flags_4 & ABILITY_SECONDARY_FLAG_4_EVADEABLE)) {
         return;
     }
-    hit = g_battle_action_current_ability.base_hit;
-    accessory = g_battle_action_current_ability.accessory_evade;
-    if ((accessory >= hit) || ((right = g_battle_action_current_ability.right_hand_evade) >= hit)
-        || ((left = g_battle_action_current_ability.left_hand_evade) >= hit)
-        || ((evade = g_battle_action_current_ability.class_evade) >= hit)) {
-        g_battle_action_target_data->hit = 0;
-        g_battle_action_target_data->attack_accuracy = 0;
+    hit = g_action_current_ability.base_hit;
+    accessory = g_action_current_ability.accessory_evade;
+    if ((accessory >= hit) || ((right = g_action_current_ability.right_hand_evade) >= hit)
+        || ((left = g_action_current_ability.left_hand_evade) >= hit)
+        || ((evade = g_action_current_ability.class_evade) >= hit)) {
+        g_action_target_data->hit = 0;
+        g_action_target_data->attack_accuracy = 0;
     } else {
-        g_battle_action_target_data->attack_accuracy
+        g_action_target_data->attack_accuracy
             = ((hit - accessory) * 100 / hit * ((hit - right) * 100 / hit) * ((hit - left) * 100 / hit)
                   * ((hit - evade) * 100 / hit) / 1000000)
-            * g_battle_action_target_data->attack_accuracy / 100;
+            * g_action_target_data->attack_accuracy / 100;
     }
-    if (battle_formula_calculate_attack_evaded(g_battle_action_current_ability.accessory_evade, hit,
-            BATTLE_ACTION_MISS_TYPE_ACCESSORY_EVADE, g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY])
+    if (battle_formula_calculate_attack_evaded(g_action_current_ability.accessory_evade, hit,
+            ACTION_MISS_TYPE_ACCESSORY_EVADE, g_action_target->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY])
         != 0) {
         return;
     }
-    item = g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
+    item = g_action_target->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
     if (item == ITEM_ID_NONE) {
-        item = g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD];
+        item = g_action_target->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD];
     }
     if (battle_formula_calculate_attack_evaded(
-            g_battle_action_current_ability.right_hand_evade, hit, BATTLE_ACTION_MISS_TYPE_RIGHT_HAND_EVADE, item)
+            g_action_current_ability.right_hand_evade, hit, ACTION_MISS_TYPE_RIGHT_HAND_EVADE, item)
         != 0) {
         return;
     }
-    item = g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
+    item = g_action_target->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
     if (item == ITEM_ID_NONE) {
-        item = g_battle_action_target->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD];
+        item = g_action_target->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD];
     }
     if (battle_formula_calculate_attack_evaded(
-            g_battle_action_current_ability.left_hand_evade, hit, BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE, item)
+            g_action_current_ability.left_hand_evade, hit, ACTION_MISS_TYPE_LEFT_HAND_EVADE, item)
         != 0) {
         return;
     }
-    battle_formula_calculate_attack_evaded(g_battle_action_current_ability.class_evade, hit,
-        BATTLE_ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD, ITEM_ID_NONE);
+    battle_formula_calculate_attack_evaded(
+        g_action_current_ability.class_evade, hit, ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD, ITEM_ID_NONE);
 }

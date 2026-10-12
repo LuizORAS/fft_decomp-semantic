@@ -16,7 +16,7 @@ void battle_state_handle_target_select_state(void) {
     battle_camera_handle_rotation_input();
     battle_camera_call_zoom_map();
     battle_camera_call_toggle_tilt();
-    battle_target_move_cursor_by_input();
+    target_move_cursor_by_input();
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if (g_main_input_pressed_buttons & PSX_PAD_CIRCLE) {
@@ -26,14 +26,14 @@ void battle_state_handle_target_select_state(void) {
         /* The targeted choice requires an enemy, the recovery choice an ally. */
         if (target == 0) {
             battle_state_enter_target_select_denied();
-        } else if (caster->target_select_command == BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_SELECT) {
+        } else if (caster->target_select_command == AI_COMMAND_AUTOBATTLE_TARGETED_SELECT) {
             if ((caster->battle_data->team_flags & BATTLE_TEAM_MASK)
                 == (target->battle_data->team_flags & BATTLE_TEAM_MASK)) {
                 battle_state_enter_target_select_denied();
             } else {
                 battle_state_enter_target_select_confirm();
             }
-        } else if (caster->target_select_command == BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT) {
+        } else if (caster->target_select_command == AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT) {
             if ((caster->battle_data->team_flags & BATTLE_TEAM_MASK)
                 == (target->battle_data->team_flags & BATTLE_TEAM_MASK)) {
                 battle_state_enter_target_select_confirm();
@@ -43,10 +43,10 @@ void battle_state_handle_target_select_state(void) {
         }
         battle_gfx_update_unit_palettes();
     } else if (g_main_input_pressed_buttons & PSX_PAD_CROSS) {
-        battle_target_move_cursor_to_unit(battle_unit_get_casting_misc_data());
+        target_move_cursor_to_unit(battle_unit_get_casting_misc_data());
         battle_gfx_update_unit_palettes();
         battle_menu_set_next_script_action_menus();
     } else if (g_main_input_pressed_buttons & PSX_PAD_TRIANGLE) {
-        battle_target_move_cursor_to_unit(battle_unit_get_casting_misc_data());
+        target_move_cursor_to_unit(battle_unit_get_casting_misc_data());
     }
 }

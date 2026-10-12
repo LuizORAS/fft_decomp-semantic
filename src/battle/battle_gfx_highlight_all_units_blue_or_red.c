@@ -3,8 +3,8 @@
 
 /* Starts the repeating tint that marks the candidates of an auto-battle target
  * choice: red on every unit of another team than the casting unit's for
- * BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_SELECT, blue on every unit of its own
- * team for BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT. Other modes tint
+ * AI_COMMAND_AUTOBATTLE_TARGETED_SELECT, blue on every unit of its own
+ * team for AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT. Other modes tint
  * nothing. */
 void battle_gfx_highlight_all_units_blue_or_red(s32 mode) {
     battle_unit_misc_data_t* caster;
@@ -21,13 +21,13 @@ void battle_gfx_highlight_all_units_blue_or_red(s32 mode) {
             continue;
         }
         switch (mode) {
-        case BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_SELECT:
+        case AI_COMMAND_AUTOBATTLE_TARGETED_SELECT:
             if ((unit->battle_data->team_flags & BATTLE_TEAM_MASK)
                 != (caster->battle_data->team_flags & BATTLE_TEAM_MASK)) {
                 battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT, 4, MAP_CLUT_ROW_UNITS, i, 0, 0x10, 0, 0);
             }
             continue;
-        case BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT:
+        case AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT:
             if ((unit->battle_data->team_flags & BATTLE_TEAM_MASK)
                 == (caster->battle_data->team_flags & BATTLE_TEAM_MASK)) {
                 battle_map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT, 4, MAP_CLUT_ROW_UNITS, i, 0, 0, 0, 0x18);

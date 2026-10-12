@@ -20,8 +20,8 @@ void battle_unit_set_attacker_animation_for_shield_block(
     }
     kind = stats->action.miss_type;
     anim = 0;
-    if (kind >= BATTLE_ACTION_MISS_TYPE_RIGHT_HAND_EVADE
-        && (kind < BATTLE_ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD || kind == BATTLE_ACTION_MISS_TYPE_GOLEM_GUARD)) {
+    if (kind >= ACTION_MISS_TYPE_RIGHT_HAND_EVADE
+        && (kind < ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD || kind == ACTION_MISS_TYPE_GOLEM_GUARD)) {
         switch (attacker->animation.sequence_id >> 1) {
         case BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_HIGH:
             anim = BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_BLOCKED_HIGH;

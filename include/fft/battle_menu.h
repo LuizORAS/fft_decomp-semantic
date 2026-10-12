@@ -132,7 +132,7 @@ extern s16 g_battle_menu_status_left_text_ids[20];
 extern s16 g_battle_menu_status_right_text_ids[20];
 extern s32 g_battle_menu_action_menu_build_result;
 extern s16 g_battle_menu_selected_option;
-extern battle_action_data_t* g_battle_menu_preview_target_action;
+extern action_data_t* g_battle_menu_preview_target_action;
 extern menu_gradient_panel_prims_t g_battle_menu_panel_fade_frames[];
 extern battle_menu_scratch_buffer_t g_battle_menu_scratch_buffer;
 extern u16* const* g_battle_help_active_text_id_tables;
@@ -165,10 +165,10 @@ extern u8 g_battle_menu_restriction_message_ids[];
 extern s16 g_battle_menu_result;            /* menu result: -4 pending, -1 cancelled */
 extern s16 g_battle_menu_row_message_ids[]; /* per-row message id */
 
-extern battle_ai_command_t g_battle_menu_selected_command;
+extern ai_command_t g_battle_menu_selected_command;
 /* Action command staged by the battle menu and passed whole to
- * battle_action_preview_at_list; the WORLD twin is g_world_menu_preview_action. */
-extern battle_action_command_t g_battle_menu_selected_action;
+ * action_preview_at_list; the WORLD twin is g_world_menu_preview_action. */
+extern action_command_t g_battle_menu_selected_action;
 extern image_load_parameters_t g_battle_menu_single_icon_image_params[5];
 extern u8 g_battle_menu_skillset_disabled_flags[]; /* per-row greyed flag */
 extern menu_unit_status_record_t g_battle_menu_status_billboard;
@@ -232,7 +232,7 @@ void battle_menu_free_high_overlay(void);
 extern menu_cursor_bob_entry_t g_battle_cursor_bob_thresholds[];
 extern menu_cursor_bob_entry_t g_battle_cursor_bob_active_thresholds[];
 s32 battle_menu_get_cursor_bob_offset(s32 mode);
-battle_ai_command_t* battle_menu_get_selected_command_address(void);
+ai_command_t* battle_menu_get_selected_command_address(void);
 void battle_menu_icon_linked_entry_thread(void);
 void battle_menu_size_entry_to_text(menu_entry_t* entry, s16* width, s16* height, s32* out_pad, s32 pad_short);
 void battle_menu_init_buffer_allocator(void);
@@ -312,7 +312,7 @@ void battle_menu_copy_palette_colors(const menu_palette_pair_t* source);
 void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu_unit_status_record_t* output);
 
 s32 battle_menu_dispatch_system_function(
-    s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, battle_action_command_t* action);
+    s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, action_command_t* action);
 
 s32 battle_menu_display_item_inventory_ability(s32 unit_id, s32 skillset, u8* out_item_ids);
 s32 battle_menu_load_math_skill_attributes(s32 unit_id, s32 skillset, s16* out_ability_ids);

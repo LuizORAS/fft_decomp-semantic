@@ -21,7 +21,7 @@ void debugchr_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu
         output->team_kind = 1;
     if (!(unit->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK))
         output->team_kind = 2;
-    if (unit->auto_battle_setting != BATTLE_AI_AUTOBATTLE_MANUAL)
+    if (unit->auto_battle_setting != AI_AUTOBATTLE_MANUAL)
         output->team_kind = 3;
     output->experience = unit->experience;
     value = unit->max_hp;
@@ -40,7 +40,7 @@ void debugchr_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu
     output->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = unit->ct;
     output->list_index = 0;
     output->unit_count = 0;
-    g_battle_thread_call_target = (void (*)(void))battle_action_check_at_list_for_unit_battle_id;
+    g_battle_thread_call_target = (void (*)(void))action_check_at_list_for_unit_battle_id;
     output->list_index = battle_thread_call_on_main_stack(unit);
     if (unit->has_turn != 0)
         output->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = UNIT_TURN_CT_THRESHOLD;

@@ -16,12 +16,12 @@ s32 battle_unit_apply_stat_increment_decrement(s32 mod, u8* stat, u8 max, u8 min
     s32 value;
 
     value = stat[0];
-    amount = mod & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
+    amount = mod & ACTION_STAT_CHANGE_VALUE_MASK;
     if (max == 0xFF && amount == 0x7F) {
         amount = 0xFF;
     }
 
-    if ((mod & BATTLE_ACTION_STAT_CHANGE_INCREASE) != 0) {
+    if ((mod & ACTION_STAT_CHANGE_INCREASE) != 0) {
         value = value + amount;
     } else {
         value = value - amount;

@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 /* ConfirmAction game-state handler: act on the answer to the prompt
- * battle_action_confirm opened.
+ * action_confirm opened.
  *
  * For a player-controlled unit command 5 targets the cursor tile; 6 and 7 target
  * the unit on it, storing the command as the targeting type and the unit's battle
@@ -12,7 +12,7 @@
  * pre-attack animation. */
 void battle_state_handle_confirm_action_state(void) {
     battle_unit_misc_data_t* unit;
-    battle_ai_command_t* selected_command_address;
+    ai_command_t* selected_command_address;
     battle_unit_misc_data_t* target;
     s32 selected_command;
 
@@ -45,8 +45,8 @@ void battle_state_handle_confirm_action_state(void) {
             return;
         case 8:
         case 0xff:
-            battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 3);
-            battle_target_set_boxes_red();
+            target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 3);
+            target_set_boxes_red();
             return;
         default:
             break;
@@ -61,8 +61,8 @@ void battle_state_handle_confirm_action_state(void) {
             return;
         case 8:
         case 0xff:
-            battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 3);
-            battle_target_set_boxes_red();
+            target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 3);
+            target_set_boxes_red();
             return;
         default:
             break;

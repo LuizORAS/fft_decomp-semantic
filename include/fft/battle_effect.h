@@ -154,7 +154,7 @@ typedef struct battle_effect_secondary_animation {
 } battle_effect_secondary_animation_t;
 
 /* Queue of post-action "effect message" popups, drained newest-first by
- * battle_action_resume_attack_phase_control. The stride is 8: the producer at
+ * action_resume_attack_phase_control. The stride is 8: the producer at
  * 0x80072d8c indexes the array directly and the consumer walks it by
  * `idx * 8`, and only these three fields are ever read or written. */
 typedef struct battle_post_effect_msg {
@@ -2138,7 +2138,7 @@ s32 battle_effect_spawn_emitter_particles(s16 record_index, s32 frame, s32 emitt
 void battle_effect_build_secondary_init_from_action(
     battle_unit_misc_data_t* unit, battle_effect_secondary_init_t* init);
 
-void battle_move_start_teleport_step(battle_unit_misc_data_t* unit);
+void move_start_teleport_step(battle_unit_misc_data_t* unit);
 
 void battle_effect_init_altima_teleport_data(
     battle_unit_misc_data_t* unit, battle_effect_secondary_init_t* teleport_data);

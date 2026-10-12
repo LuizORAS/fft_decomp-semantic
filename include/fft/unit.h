@@ -147,7 +147,7 @@ typedef enum battle_unit_movement_set_3 {
 /* The 20-byte action command shared by unit stats, AI candidates and menus.
  * Targeting reads coordinates as signed or unsigned 16-bit values. Item selection
  * reads and updates only the low byte of the 16-bit item/equipment field. */
-typedef struct battle_action_command {
+typedef struct action_command {
     u8 actor_id;               /* 0x00 */
     u8 skillset_id;            /* 0x01 */
     s16 ability_id;            /* 0x02 */
@@ -157,14 +157,14 @@ typedef struct battle_action_command {
     u8 targeting_type;         /* 0x0a; battle_targeting_type_e */
     u8 target_id;              /* 0x0b */
     SVECTOR target_position;   /* 0x0c; tile x, elevation, y; padding is unread */
-} battle_action_command_t;
-typedef char battle_action_command_size_must_be_20[(sizeof(battle_action_command_t) == 20) ? 1 : -1];
+} action_command_t;
+typedef char action_command_size_must_be_20[(sizeof(action_command_t) == 20) ? 1 : -1];
 
-/* battle_action_data_t.ct_change values that are not an amount. Any other value is a gain when
+/* action_data_t.ct_change values that are not an amount. Any other value is a gain when
  * bit 7 is set and a loss otherwise. */
 enum {
-    BATTLE_ACTION_CT_CHANGE_ZERO = 0x7f,  /* CT set to 0 */
-    BATTLE_ACTION_CT_CHANGE_QUICK = 0xff, /* CT filled */
+    ACTION_CT_CHANGE_ZERO = 0x7f,  /* CT set to 0 */
+    ACTION_CT_CHANGE_QUICK = 0xff, /* CT filled */
 };
 
 /* The pending infliction/removal masks are copied and cleared together. */
@@ -179,10 +179,10 @@ typedef char unit_action_status_changes_size_must_be_10[(sizeof(unit_action_stat
  * The action target/attacker pointers address this block directly.
  * status_changes.infliction/removal mirror the five status_sets.current bytes.
  */
-typedef struct battle_action_data {
+typedef struct action_data {
     u8 hit;          /* 0x00; 1 hit, 0 miss */
     u8 critical;     /* 0x01 */
-    u8 miss_type;    /* 0x02; battle_action_miss_type_e */
+    u8 miss_type;    /* 0x02; action_miss_type_e */
     u8 item_lost;    /* 0x03; potion / break / steal / draw out */
     s16 hp_damage;   /* 0x04 */
     s16 hp_healing;  /* 0x06 */
@@ -191,32 +191,32 @@ typedef struct battle_action_data {
     s16 gil_change;  /* 0x0c; stolen / lost */
     s16 reaction_id; /* 0x0e */
     /* Target readers and writers consistently access 0x10-0x11 as one 16-bit value. */
-    u16 special_effect;                          /* 0x10; battle_action_special_effect_e */
+    u16 special_effect;                          /* 0x10; action_special_effect_e */
     u8 sp_change;                                /* 0x12 */
-    u8 ct_change;                                /* 0x13; BATTLE_ACTION_CT_CHANGE_* or an amount */
+    u8 ct_change;                                /* 0x13; ACTION_CT_CHANGE_* or an amount */
     u8 pa_change;                                /* 0x14 */
     u8 ma_change;                                /* 0x15 */
     u8 brave_change;                             /* 0x16 */
     u8 faith_change;                             /* 0x17 */
     u8 miss_display_flags;                       /* 0x18 */
-    u8 equipment_destroyed;                      /* 0x19; battle_action_equipment_slot_mask_e */
+    u8 equipment_destroyed;                      /* 0x19; action_equipment_slot_mask_e */
     u8 stolen_item_id;                           /* 0x1a */
     unit_action_status_changes_t status_changes; /* 0x1b; removal at 0x20 */
-    u8 attack_type;                              /* 0x25; battle_action_type_flags_e */
+    u8 attack_type;                              /* 0x25; action_type_flags_e */
     u16 last_received_attack;                    /* 0x26; reaction data, varies by ability */
     u8 exp_change;                               /* 0x28; Steal EXP */
     u8 jp_change;                                /* 0x29; Move-JP Up / JP stolen */
     /* Written as a 16-bit value everywhere (battle_formula_apply_status lhu/sh,
      * arrow_guard_usability, battle_formula_apply_catch, force_attack_miss). */
     s16 attack_accuracy; /* 0x2a */
-} battle_action_data_t;
-typedef char battle_action_data_size_must_be_44[(sizeof(battle_action_data_t) == 44) ? 1 : -1];
+} action_data_t;
+typedef char action_data_size_must_be_44[(sizeof(action_data_t) == 44) ? 1 : -1];
 
-/* battle_action_data_t.miss_display_flags, loaded from the ability's AI flags. */
-typedef enum battle_action_miss_display_flags {
-    BATTLE_ACTION_MISS_DISPLAY_TEAM_MASK = 0x03,       /* the AI target-allies / target-enemies pair */
-    BATTLE_ACTION_MISS_DISPLAY_DODGE_ANIMATION = 0x80, /* the ability's evade-with-motion bit */
-} battle_action_miss_display_flags_e;
+/* action_data_t.miss_display_flags, loaded from the ability's AI flags. */
+typedef enum action_miss_display_flags {
+    ACTION_MISS_DISPLAY_TEAM_MASK = 0x03,       /* the AI target-allies / target-enemies pair */
+    ACTION_MISS_DISPLAY_DODGE_ANIMATION = 0x80, /* the ability's evade-with-motion bit */
+} action_miss_display_flags_e;
 
 /* character identity */
 /*
@@ -874,43 +874,43 @@ typedef struct battle_stats {
     unit_career_data_t career;                           /* 0x096; unlocked jobs, learned abilities, levels and JP */
     /* main_unit_store_character_names (0x8005c984) copies 16/16/8/8
      * bytes to these four destinations. All names use the game's encoding. */
-    u8 name[16];                            /* 0x12c */
-    u8 job_name[16];                        /* 0x13c */
-    u8 primary_skillset_name[8];            /* 0x14c */
-    u8 secondary_skillset_name[8];          /* 0x154 */
-    u8 ko_count;                            /* 0x15c */
-    u8 charged_ability_ct;                  /* 0x15d */
-    u8 monster_graphic;                     /* 0x15e; copied from job data and consumed by WORLD formation graphics */
-    u8 spritesheet_id;                      /* 0x15f */
-    u8 job_portrait_palette;                /* 0x160 */
-    u8 unit_id;                             /* 0x161 */
-    u8 base_job_skillset;                   /* 0x162 */
-    u8 war_trophy;                          /* 0x163 */
-    u8 bonus_money_modifier;                /* 0x164 */
-    u8 ai_target_x;                         /* 0x165 */
-    u8 ai_target_y;                         /* 0x166 */
-    u8 ai_flags;                            /* 0x167; battle_ai_decision_flags_e */
-    u8 prioritized_target;                  /* 0x168 */
-    u8 ai_targeting_flags_1;                /* 0x169; copied to battle_ai_unit_decision_t +0x06 */
-    u8 ai_targeting_flags_2;                /* 0x16a; battle_ai_targeting_flags_2_e */
-    u8 ai_initial_enemy_flag;               /* 0x16b; ENTD 0x27 */
-    unit_name_id_t quote_name_id;           /* 0x16c */
-    battle_action_command_t action_command; /* 0x16e..0x181 */
-    u8 mount_info;                          /* 0x182 */
-    u8 existence;                           /* 0x183; battle_unit_existence_state_e */
-    u8 equipped_flags;                      /* 0x184; battle_unit_equipped_flags_e */
+    u8 name[16];                     /* 0x12c */
+    u8 job_name[16];                 /* 0x13c */
+    u8 primary_skillset_name[8];     /* 0x14c */
+    u8 secondary_skillset_name[8];   /* 0x154 */
+    u8 ko_count;                     /* 0x15c */
+    u8 charged_ability_ct;           /* 0x15d */
+    u8 monster_graphic;              /* 0x15e; copied from job data and consumed by WORLD formation graphics */
+    u8 spritesheet_id;               /* 0x15f */
+    u8 job_portrait_palette;         /* 0x160 */
+    u8 unit_id;                      /* 0x161 */
+    u8 base_job_skillset;            /* 0x162 */
+    u8 war_trophy;                   /* 0x163 */
+    u8 bonus_money_modifier;         /* 0x164 */
+    u8 ai_target_x;                  /* 0x165 */
+    u8 ai_target_y;                  /* 0x166 */
+    u8 ai_flags;                     /* 0x167; ai_decision_flags_e */
+    u8 prioritized_target;           /* 0x168 */
+    u8 ai_targeting_flags_1;         /* 0x169; copied to ai_unit_decision_t +0x06 */
+    u8 ai_targeting_flags_2;         /* 0x16a; ai_targeting_flags_2_e */
+    u8 ai_initial_enemy_flag;        /* 0x16b; ENTD 0x27 */
+    unit_name_id_t quote_name_id;    /* 0x16c */
+    action_command_t action_command; /* 0x16e..0x181 */
+    u8 mount_info;                   /* 0x182 */
+    u8 existence;                    /* 0x183; battle_unit_existence_state_e */
+    u8 equipped_flags;               /* 0x184; battle_unit_equipped_flags_e */
     u8 _unused_185;
-    u8 has_turn;                 /* 0x186 */
-    u8 movement_taken;           /* 0x187 */
-    u8 action_taken;             /* 0x188 */
-    u8 ability_outcome;          /* 0x189 */
-    u8 misc_unit_id;             /* 0x18a */
-    u8 ability_ct;               /* 0x18b */
-    battle_action_data_t action; /* 0x18c through 0x1b7 */
-    u8 auto_battle_setting;      /* 0x1b8; battle_ai_autobattle_mode_e */
-    u8 auto_battle_target;       /* 0x1b9 */
-    u8 initial_team_flags;       /* 0x1ba */
-    u8 inflicted_status[5];      /* 0x1bb */
+    u8 has_turn;            /* 0x186 */
+    u8 movement_taken;      /* 0x187 */
+    u8 action_taken;        /* 0x188 */
+    u8 ability_outcome;     /* 0x189 */
+    u8 misc_unit_id;        /* 0x18a */
+    u8 ability_ct;          /* 0x18b */
+    action_data_t action;   /* 0x18c through 0x1b7 */
+    u8 auto_battle_setting; /* 0x1b8; ai_autobattle_mode_e */
+    u8 auto_battle_target;  /* 0x1b9 */
+    u8 initial_team_flags;  /* 0x1ba */
+    u8 inflicted_status[5]; /* 0x1bb */
 } battle_stats_t;
 typedef char battle_stats_size_must_be_448[(sizeof(battle_stats_t) == 448) ? 1 : -1];
 typedef char battle_stats_innate_status_must_be_0x4e[((unsigned long)&((battle_stats_t*)0)->status_sets.innate == 0x4e)
@@ -1011,10 +1011,10 @@ typedef struct entd_unit {
     /* 0x21-0x27 are copied as seven bytes to battle_stats_t ai_target_x onward
      * by a loop that indexes ai_target_xy, so nothing names the members after it. */
     u8 ai_target_xy[2];       /* 0x21; AI "stay near" X, Y */
-    u8 ai_flags;              /* 0x23; battle_ai_decision_flags_e; 0x80 = upper level of the stay-near tile */
+    u8 ai_flags;              /* 0x23; ai_decision_flags_e; 0x80 = upper level of the stay-near tile */
     u8 ai_target_unit_id;     /* 0x24; battle_stats_t prioritized_target */
-    u8 ai_targeting_flags_1;  /* 0x25; copied to battle_ai_unit_decision_t +0x06 */
-    u8 ai_targeting_flags_2;  /* 0x26; battle_ai_targeting_flags_2_e */
+    u8 ai_targeting_flags_1;  /* 0x25; copied to ai_unit_decision_t +0x06 */
+    u8 ai_targeting_flags_2;  /* 0x26; ai_targeting_flags_2_e */
     u8 ai_initial_enemy_flag; /* 0x27 */
 } entd_unit_t;
 typedef char entd_unit_size_must_be_40[(sizeof(entd_unit_t) == 40) ? 1 : -1];
@@ -1147,13 +1147,13 @@ typedef enum battle_formation_index {
 
 /* battle_stats_t.auto_battle_setting and the AI copies of it. The BATTLE and
  * WORLD auto-battle menus store it and the AI reads it. */
-typedef enum battle_ai_autobattle_mode {
-    BATTLE_AI_AUTOBATTLE_MANUAL = 0, /* the player gives the orders */
-    BATTLE_AI_AUTOBATTLE_TARGETED = 12,
-    BATTLE_AI_AUTOBATTLE_RECOVERY = 14,
-    BATTLE_AI_AUTOBATTLE_FADING_LIFE = 16,
-    BATTLE_AI_AUTOBATTLE_RETREAT = 17,
-} battle_ai_autobattle_mode_e;
+typedef enum ai_autobattle_mode {
+    AI_AUTOBATTLE_MANUAL = 0, /* the player gives the orders */
+    AI_AUTOBATTLE_TARGETED = 12,
+    AI_AUTOBATTLE_RECOVERY = 14,
+    AI_AUTOBATTLE_FADING_LIFE = 16,
+    AI_AUTOBATTLE_RETREAT = 17,
+} ai_autobattle_mode_e;
 
 enum {
     ITEM_ID_MASK = 0xff,

@@ -8,9 +8,9 @@ void world_menu_confirm_auto_battle_selection_thread(void) {
     menu_entry_t* menu = g_world_menu_thread_menu_data;
 
     if (menu[1].selected_index == 3) {
-        unit->auto_battle_setting = BATTLE_AI_AUTOBATTLE_FADING_LIFE;
+        unit->auto_battle_setting = AI_AUTOBATTLE_FADING_LIFE;
     } else if (menu[1].selected_index == 4) {
-        unit->auto_battle_setting = BATTLE_AI_AUTOBATTLE_RETREAT;
+        unit->auto_battle_setting = AI_AUTOBATTLE_RETREAT;
     }
     g_world_menu_set_auto_battle_row_actions = -3;
     world_menu_confirm_action_silently(entry);

@@ -30,21 +30,21 @@ void battle_sound_select_weapon_hit(battle_unit_misc_data_t* unit, s32 hit) {
                 continue;
             }
             switch (target->battle_data->action.miss_type) {
-            case BATTLE_ACTION_MISS_TYPE_RIGHT_HAND_EVADE:
-            case BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE:
-            case BATTLE_ACTION_MISS_TYPE_GOLEM_GUARD:
+            case ACTION_MISS_TYPE_RIGHT_HAND_EVADE:
+            case ACTION_MISS_TYPE_LEFT_HAND_EVADE:
+            case ACTION_MISS_TYPE_GOLEM_GUARD:
                 battle_sound_play_movement_sfx(unit, g_battle_sound_shield_deflect_sfx_ids[weapon_type]);
                 break;
-            case BATTLE_ACTION_MISS_TYPE_ACCESSORY_EVADE:
-            case BATTLE_ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD:
-            case BATTLE_ACTION_MISS_TYPE_FORCED_FAILURE:
-            case BATTLE_ACTION_MISS_TYPE_BLADE_GRASP_OR_FINGER_GUARD:
-            case BATTLE_ACTION_MISS_TYPE_CATCH:
+            case ACTION_MISS_TYPE_ACCESSORY_EVADE:
+            case ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD:
+            case ACTION_MISS_TYPE_FORCED_FAILURE:
+            case ACTION_MISS_TYPE_BLADE_GRASP_OR_FINGER_GUARD:
+            case ACTION_MISS_TYPE_CATCH:
                 battle_sound_play_movement_sfx(unit, MAIN_SFX_ERROR_MESSAGE);
                 break;
-            case BATTLE_ACTION_MISS_TYPE_NULLIFIED:
-            case BATTLE_ACTION_MISS_TYPE_ACCURACY_MISS:
-            case BATTLE_ACTION_MISS_TYPE_CANCELLED:
+            case ACTION_MISS_TYPE_NULLIFIED:
+            case ACTION_MISS_TYPE_ACCURACY_MISS:
+            case ACTION_MISS_TYPE_CANCELLED:
                 break;
             default:
                 if (target->battle_data->action.critical != 0) {

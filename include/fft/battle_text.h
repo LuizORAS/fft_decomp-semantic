@@ -108,7 +108,7 @@ void battle_text_configure_sprite_vram(
     RECT* rect, s16 width, s16 height, texture_primitive_t* primitive, s32 clut_offset);
 u8* battle_text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor);
 s32 battle_text_count_decimal_digits(s32 value);
-void battle_text_determine_spell_quote(battle_action_command_t* action, s32 unit_id, s32 enabled);
+void battle_text_determine_spell_quote(action_command_t* action, s32 unit_id, s32 enabled);
 void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
 void battle_text_print_fnt_value_and_next(s32 value);
 s32 battle_text_read_packed_nibble(u8* data, s32 index, s32 row, s32 stride);

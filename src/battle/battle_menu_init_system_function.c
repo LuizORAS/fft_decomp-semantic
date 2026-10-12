@@ -10,14 +10,13 @@
  * enabled. Everything else returns battle_menu_dispatch_system_function's result;
  * for SCENARIO_CHECK and CLOSE the action pointer passed on is unset. */
 s32 battle_menu_init_system_function(s32 type, s32 option, s32 unit_id, s32 parameter, s32 enabled) {
-    battle_action_command_t* action;
+    action_command_t* action;
 
     if (type != BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK && type != BATTLE_MENU_SYSTEM_COMMAND_CLOSE) {
         action = battle_unit_get_misc_action_command_by_battle_id(unit_id);
         if (type == BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE) {
             /* The target returns the void callee's leftover $v0. */
-            return ((s32 (*)(battle_action_command_t*, s32, s32))battle_text_determine_spell_quote)(
-                action, unit_id, enabled);
+            return ((s32 (*)(action_command_t*, s32, s32))battle_text_determine_spell_quote)(action, unit_id, enabled);
         }
         if (type == BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT) {
             return battle_menu_dispatch_system_function(

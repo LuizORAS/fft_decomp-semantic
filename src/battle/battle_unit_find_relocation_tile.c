@@ -41,19 +41,19 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* des
     s32 found_x;
     s32 found_y;
     s32 total;
-    battle_target_panel_t* panel;
+    target_panel_t* panel;
 
     unit = &g_battle_unit_stats[unit_index];
     origin_x = unit->x;
     origin_y = unit->position.y;
-    for (n = 0x1ff * sizeof(battle_target_panel_t); n >= 0; n -= sizeof(battle_target_panel_t)) {
-        ((battle_target_panel_t*)((u8*)g_battle_target_panels + n))->unit_record_index = 0;
+    for (n = 0x1ff * sizeof(target_panel_t); n >= 0; n -= sizeof(target_panel_t)) {
+        ((target_panel_t*)((u8*)g_target_panels + n))->unit_record_index = 0;
     }
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
             index = battle_map_calculate_location(unit);
-            panel = &g_battle_target_panels[index];
+            panel = &g_target_panels[index];
             tile = &g_battle_map_tile_data[index];
             if (i == unit_index) {
                 height = tile->height * 2 + tile->depth_half_height.half_height;
@@ -70,7 +70,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* des
     for (i = 0; i < g_battle_relocated_unit_count; i++) {
         index = g_battle_relocated_unit_coords[i].elevation * 256
             + g_battle_relocated_unit_coords[i].y * g_battle_map_max_x + g_battle_relocated_unit_coords[i].x;
-        panel = &g_battle_target_panels[index];
+        panel = &g_target_panels[index];
         panel->unit_record_index = 1;
     }
     for (pass = 0; pass < 2; pass++) {
@@ -112,7 +112,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* des
                             if (flags.untargetable) {
                                 continue;
                             }
-                            if (g_battle_target_panels[index].unit_record_index != 0) {
+                            if (g_target_panels[index].unit_record_index != 0) {
                                 continue;
                             }
                             surface = tile->surface.type;

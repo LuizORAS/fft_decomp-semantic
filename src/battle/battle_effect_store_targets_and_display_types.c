@@ -52,9 +52,9 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
                     init.targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_NORMAL;
                 } else if (target_stats->action.critical != 0) {
                     init.targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_CRITICAL;
-                } else if (target_stats->action.miss_type == BATTLE_ACTION_MISS_TYPE_REFLECTED) {
+                } else if (target_stats->action.miss_type == ACTION_MISS_TYPE_REFLECTED) {
                     init.targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_REFLECTED;
-                } else if (target_stats->action.miss_type != BATTLE_ACTION_MISS_TYPE_HIT) {
+                } else if (target_stats->action.miss_type != ACTION_MISS_TYPE_HIT) {
                     init.targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_MISSED;
                 } else {
                     init.targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_NORMAL;
@@ -91,8 +91,7 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
     init.spectator_count = spectators;
     init.math_skill_flag = block->math_skill_flag;
     init.used_weapon_id = block->used_weapon_id;
-    if (block->last_attack_id == 0 || block->reaction_occurred != 0
-        || g_battle_action_phase != BATTLE_ACTION_PHASE_ACTING_UNIT
+    if (block->last_attack_id == 0 || block->reaction_occurred != 0 || g_action_phase != ACTION_PHASE_ACTING_UNIT
         || (unit->used_item_or_weapon_id - ITEM_ID_BLAZE_GUN) < 2U
         || (item = unit->used_item_or_weapon_id) == ITEM_ID_BLAST_GUN) {
         packed = 0;

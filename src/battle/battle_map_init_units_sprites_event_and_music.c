@@ -111,8 +111,8 @@ s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 depl
         battle_map_init_ambient_light();
         battle_map_init_darkness();
         battle_map_upload_clut_rows();
-        battle_action_run_between_turn_control(BATTLE_BETWEEN_TURN_MODE_RESET);
-        battle_ai_init_workspace();
+        action_run_between_turn_control(BATTLE_BETWEEN_TURN_MODE_RESET);
+        ai_init_workspace();
         step++;
         break;
     }

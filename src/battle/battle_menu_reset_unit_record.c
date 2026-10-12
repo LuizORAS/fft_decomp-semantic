@@ -10,7 +10,7 @@ void battle_menu_reset_unit_record(s32 battle_id) {
     stats = battle_unit_get_stats_from_battle_id(battle_id);
     records = g_battle_menu_unit_selection_records;
     for (i = 0; i < 17; i++) {
-        if (stats->auto_battle_setting == BATTLE_AI_AUTOBATTLE_MANUAL) {
+        if (stats->auto_battle_setting == AI_AUTOBATTLE_MANUAL) {
             ((u8*)&records[battle_id])[i] = 0;
             g_battle_menu_unit_selection_records[battle_id]._unknown_01 = 0xFF;
         }

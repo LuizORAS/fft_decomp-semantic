@@ -21,7 +21,7 @@ void require_panel_copy_battle_stats_to_gauges(battle_stats_t* unit, menu_unit_s
     if (!(unit->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)) {
         output->team_kind = 2;
     }
-    if (unit->auto_battle_setting != BATTLE_AI_AUTOBATTLE_MANUAL) {
+    if (unit->auto_battle_setting != AI_AUTOBATTLE_MANUAL) {
         output->team_kind = 3;
     }
     output->experience = unit->experience;

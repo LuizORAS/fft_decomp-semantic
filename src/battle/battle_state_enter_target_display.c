@@ -12,7 +12,7 @@ void battle_state_enter_target_display(void) {
     g_battle_game_state = BATTLE_GAME_STATE_TARGET_DISPLAY;
     cast = battle_unit_get_casting_misc_data()->battle_data;
     unit = battle_unit_get_misc_data_by_battle_id(cast->auto_battle_target);
-    battle_target_move_cursor_to_unit(unit);
+    target_move_cursor_to_unit(unit);
     battle_camera_rotate_when_unit_tile_not_visible(unit);
     if (unit != 0) {
         target = unit->battle_data;

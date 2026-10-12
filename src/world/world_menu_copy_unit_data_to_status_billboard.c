@@ -26,7 +26,7 @@ void world_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu_un
         output->team_kind = 1;
     if (!(unit->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK))
         output->team_kind = 2;
-    if (unit->auto_battle_setting != BATTLE_AI_AUTOBATTLE_MANUAL)
+    if (unit->auto_battle_setting != AI_AUTOBATTLE_MANUAL)
         output->team_kind = 3;
     output->experience = unit->experience;
     value = unit->max_hp;

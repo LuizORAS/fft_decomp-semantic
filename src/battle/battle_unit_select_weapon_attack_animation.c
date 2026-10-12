@@ -36,10 +36,10 @@ void battle_unit_select_weapon_attack_animation(battle_unit_misc_data_t* attacke
             return;
         }
         miss_type = target->battle_data->action.miss_type;
-        if (miss_type != BATTLE_ACTION_MISS_TYPE_HIT) {
-            if (miss_type >= BATTLE_ACTION_MISS_TYPE_REFLECTED) {
-                if (miss_type < BATTLE_ACTION_MISS_TYPE_BUGGED_REFLECTION) {
-                    if (miss_type >= BATTLE_ACTION_MISS_TYPE_GOLEM_GUARD) {
+        if (miss_type != ACTION_MISS_TYPE_HIT) {
+            if (miss_type >= ACTION_MISS_TYPE_REFLECTED) {
+                if (miss_type < ACTION_MISS_TYPE_BUGGED_REFLECTION) {
+                    if (miss_type >= ACTION_MISS_TYPE_GOLEM_GUARD) {
                         battle_unit_store_animation_facing_movement_data(
                             g_battle_weapon_attack_animations[attacker->equipped_weapon_type][0], attacker->facing,
                             attacker);

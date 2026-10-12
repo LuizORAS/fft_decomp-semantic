@@ -11,5 +11,5 @@ void battle_state_enter_target_select_start(void) {
     unit = battle_unit_get_casting_misc_data();
     stats = unit->battle_data;
     battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_TARGETING_PROMPT, 0, stats->misc_unit_id, 0, 1);
-    battle_action_set_at_list_active();
+    action_set_at_list_active();
 }

@@ -198,7 +198,7 @@ void battle_state_reset_frame_pacing_timer(void);
 s32 battle_state_try_enter_scenario_event(battle_unit_misc_data_t* unit);
 void battle_state_enter_action_cast(void);
 void battle_state_enter_commence_attack_phase(void);
-void battle_action_post_action_facing_stub(battle_stats_t* unused_unit, s32 unused_facing);
+void action_post_action_facing_stub(battle_stats_t* unused_unit, s32 unused_facing);
 void battle_state_enter_open_sp2_files(void);
 void battle_bin_entrypoint(void);
 s32 battle_mul_div_s64(s32 a, s32 b, s32 c);
@@ -367,7 +367,7 @@ s32 battle_unit_find_slot_by_character_identity(u32 character_identity);
 s32 battle_map_tile_data_15_stub(void);
 s32 battle_fixed_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 s32 battle_return_one(s32 unused_misc_id);
-s32 battle_target_spread_panel_to_neighbors(s32 y, s32 x);
+s32 target_spread_panel_to_neighbors(s32 y, s32 x);
 s32 battle_return_zero(void);
 
 /* unnamed */

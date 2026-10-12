@@ -13,7 +13,7 @@
 void battle_effect_build_secondary_init_from_action(
     battle_unit_misc_data_t* unit, battle_effect_secondary_init_t* init) {
     battle_unit_misc_data_t* target;
-    battle_action_data_t* action;
+    action_data_t* action;
     s32 i;
 
     init->target_count = unit->strike.target_count;
@@ -27,25 +27,25 @@ void battle_effect_build_secondary_init_from_action(
             init->targets[i].data.unit.misc_id = target->unit_id;
             action = &target->battle_data->action;
             switch (action->miss_type) {
-            case BATTLE_ACTION_MISS_TYPE_ACCESSORY_EVADE:
-            case BATTLE_ACTION_MISS_TYPE_RIGHT_HAND_EVADE:
-            case BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE:
-            case BATTLE_ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD:
+            case ACTION_MISS_TYPE_ACCESSORY_EVADE:
+            case ACTION_MISS_TYPE_RIGHT_HAND_EVADE:
+            case ACTION_MISS_TYPE_LEFT_HAND_EVADE:
+            case ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD:
                 init->targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_MISSED;
                 break;
-            case BATTLE_ACTION_MISS_TYPE_NULLIFIED:
-            case BATTLE_ACTION_MISS_TYPE_ACCURACY_MISS:
-            case BATTLE_ACTION_MISS_TYPE_FORCED_FAILURE:
-            case BATTLE_ACTION_MISS_TYPE_CANCELLED:
-            case BATTLE_ACTION_MISS_TYPE_BLADE_GRASP_OR_FINGER_GUARD:
-            case BATTLE_ACTION_MISS_TYPE_CATCH:
+            case ACTION_MISS_TYPE_NULLIFIED:
+            case ACTION_MISS_TYPE_ACCURACY_MISS:
+            case ACTION_MISS_TYPE_FORCED_FAILURE:
+            case ACTION_MISS_TYPE_CANCELLED:
+            case ACTION_MISS_TYPE_BLADE_GRASP_OR_FINGER_GUARD:
+            case ACTION_MISS_TYPE_CATCH:
                 init->targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_NO_EFFECT;
                 break;
-            case BATTLE_ACTION_MISS_TYPE_GOLEM_GUARD:
+            case ACTION_MISS_TYPE_GOLEM_GUARD:
                 init->targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_GOLEM;
                 break;
             default:
-                if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT) {
+                if (action->special_effect & ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT) {
                     init->targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_BREAK;
                 } else if (action->critical != 0) {
                     init->targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_CRITICAL;

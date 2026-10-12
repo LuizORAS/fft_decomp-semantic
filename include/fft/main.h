@@ -793,7 +793,7 @@ void main_status_set_action_state(battle_stats_t* unit, u8 action_state);
 s32 main_status_set_ct(battle_stats_t* unit, s32 status_id, s32 removing);
 void main_status_store_current(battle_stats_t* unit);
 void main_status_update_unit_flags_and_ct(battle_stats_t* unit);
-s32 main_status_find_action_highest_order_effect(const battle_action_data_t* action);
+s32 main_status_find_action_highest_order_effect(const action_data_t* action);
 
 /* system */
 /* Bits of g_main_system_flags, the 32-bit control flags of the WLDCORE world-map
@@ -971,7 +971,7 @@ void main_util_clear_byte_data(void* destination, s32 count);
 /* SCUS byte loops at 0x8005e254 (copy) and 0x8005e644 (clear).
  * Copy takes source first; both routines do nothing for a nonpositive count. */
 void main_util_copy_byte_data(const void* source, void* destination, s32 count);
-void main_util_copy_action_data(const battle_action_command_t* source, battle_action_command_t* destination);
+void main_util_copy_action_data(const action_command_t* source, action_command_t* destination);
 void main_heap_clear_smd_allocator_table(void);
 void main_util_copy_bytes(const void* source, void* destination, int count);
 
@@ -1190,7 +1190,7 @@ enum {
 };
 
 /* Rows of g_main_terrain_movement_cost_tables, chosen from the unit's movement
- * abilities by battle_move_store_unit_movement_to_scratchpad; each has one
+ * abilities by move_store_unit_movement_to_scratchpad; each has one
  * cost per map_surface_type_e. */
 typedef enum main_terrain_cost_table {
     MAIN_TERRAIN_COST_TABLE_DEFAULT = 0,
@@ -1203,7 +1203,7 @@ typedef enum main_terrain_cost_table {
 
 /* Costs in those rows that are not a number of Move points. */
 enum {
-    MAIN_TERRAIN_COST_WEATHER = 0,    /* replaced by battle_move_get_weather_terrain_cost */
+    MAIN_TERRAIN_COST_WEATHER = 0,    /* replaced by move_get_weather_terrain_cost */
     MAIN_TERRAIN_COST_BLOCKED = 0xff, /* stays so under Any Ground */
 };
 

@@ -5,7 +5,7 @@
  *
  * After a charged ability (turn event ABILITY_READY) a queued scenario event with
  * a nonzero finish operation starts; otherwise the between-turn events run. On a
- * unit's own turn, a unit whose turn is over (battle_action_check_change_of_turn
+ * unit's own turn, a unit whose turn is over (action_check_change_of_turn
  * returns 1) gets its last command and ability copied back into its misc record;
  * a Jump then resets its preparation and goes to the between-turn events, and
  * anything else opens the Wait menu. A unit whose turn goes on gets its action
@@ -22,7 +22,7 @@ void battle_state_handle_jp_exp_gain_state(void) {
     if (g_battle_camera_rotation_action != BATTLE_CAMERA_ROTATION_NONE) {
         return;
     }
-    if (g_battle_action_turn_event_type == BATTLE_TURN_EVENT_ABILITY_READY) {
+    if (g_action_turn_event_type == BATTLE_TURN_EVENT_ABILITY_READY) {
         if (battle_menu_init_system_function(
                 BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 2, unit->battle_data->misc_unit_id, 0, 1)
                 == 2
@@ -30,23 +30,23 @@ void battle_state_handle_jp_exp_gain_state(void) {
             g_battle_previous_game_state = g_battle_game_state;
             battle_menu_init_system_function(
                 BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 0, unit->battle_data->misc_unit_id, 0, 1);
-            battle_action_set_casting_unit_id_ff();
+            action_set_casting_unit_id_ff();
             return;
         }
-        battle_action_check_between_turn_events();
+        action_check_between_turn_events();
         return;
     }
-    if (battle_action_check_change_of_turn(unit->battle_data->misc_unit_id) == 1) {
+    if (action_check_change_of_turn(unit->battle_data->misc_unit_id) == 1) {
         /* battle_stats_t +0x16e holds the same 20-byte command payload. */
         unit->command_state.ai.data.action = unit->battle_data->action_command;
         unit->used_ability_id = unit->battle_data->action_command.ability_id;
         if (unit->attack_phase_state == BATTLE_ATTACK_PREPARATION_JUMP) {
             unit->attack_phase_state = BATTLE_ATTACK_PREPARATION_CHARGE;
             battle_gfx_reset_unit_graphic_trigger(unit->unit_id);
-            battle_action_check_between_turn_events();
+            action_check_between_turn_events();
             return;
         }
-        battle_action_choose_wait();
+        action_choose_wait();
         return;
     }
     battle_menu_set_next_script_action_menus();

@@ -27,7 +27,7 @@ s32 battle_status_queue_misc_graphics_flag_change(s32 status, s32 enabled, s32 b
         case BATTLE_STATUS_HANDLER_INDEX(BATTLE_STATUS_ID_FROG):
             unit->statuses_to_remove_5_6 |= BATTLE_MISC_STATUS_FROG;
             unit->statuses_to_add_5_6 &= ~BATTLE_MISC_STATUS_FROG;
-            battle_ai_init_unit_abilities(battle_id);
+            ai_init_unit_abilities(battle_id);
             return 1;
         case BATTLE_STATUS_HANDLER_INDEX(BATTLE_STATUS_ID_JUMP):
         case BATTLE_STATUS_HANDLER_INDEX(BATTLE_STATUS_ID_FLOAT):
@@ -59,7 +59,7 @@ s32 battle_status_queue_misc_graphics_flag_change(s32 status, s32 enabled, s32 b
         case BATTLE_STATUS_HANDLER_INDEX(BATTLE_STATUS_ID_FROG):
             unit->statuses_to_add_5_6 |= BATTLE_MISC_STATUS_FROG;
             unit->statuses_to_remove_5_6 &= ~BATTLE_MISC_STATUS_FROG;
-            battle_ai_init_unit_abilities(battle_id);
+            ai_init_unit_abilities(battle_id);
             return 1;
         case BATTLE_STATUS_HANDLER_INDEX(BATTLE_STATUS_ID_TREASURE):
             unit->statuses_to_add_5_6 |= BATTLE_MISC_STATUS_TREASURE;

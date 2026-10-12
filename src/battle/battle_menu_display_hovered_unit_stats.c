@@ -179,7 +179,7 @@ void battle_menu_display_hovered_unit_stats(
         if (!(unit->initial_team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)) {
             status->team_kind = 2;
         }
-        if (unit->auto_battle_setting != BATTLE_AI_AUTOBATTLE_MANUAL) {
+        if (unit->auto_battle_setting != AI_AUTOBATTLE_MANUAL) {
             status->team_kind = 3;
         }
         params = g_battle_unit_status_sprite_image_params_by_mode[mode];

@@ -12,7 +12,7 @@ u8 battle_unit_generate_treasure(battle_stats_t* unit) {
     s32 i;
     u32 item_id;
 
-    if (g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE) {
+    if (g_action_state != ACTION_STATE_EXECUTE) {
         return;
     }
 

@@ -3,9 +3,9 @@
 
 /* WaitMenu game-state handler. Command 7 goes on to choosing a facing. Command 8
  * or 0xff returns to the after-command state, unless the unit's turn is over
- * (battle_action_check_change_of_turn returns 1): then it chooses a facing too. */
+ * (action_check_change_of_turn returns 1): then it chooses a facing too. */
 void battle_state_handle_wait_menu_state(void) {
-    battle_ai_command_t* selected_command_address;
+    ai_command_t* selected_command_address;
     s32 selected_command;
     battle_unit_misc_data_t* source_misc_data;
 
@@ -17,12 +17,12 @@ void battle_state_handle_wait_menu_state(void) {
     switch (selected_command) {
     case 8:
     case 0xff:
-        if (battle_action_check_change_of_turn(source_misc_data->battle_data->misc_unit_id) != 1) {
+        if (action_check_change_of_turn(source_misc_data->battle_data->misc_unit_id) != 1) {
             battle_state_enter_after_command();
             return;
         }
     case 7:
-        battle_action_choose_facing_for_wait();
+        action_choose_facing_for_wait();
         return;
     }
 }

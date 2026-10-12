@@ -10,21 +10,21 @@
  * target; a hit leaving the target at or below 1/5 max HP lets a Train
  * attacker inflict Invite. */
 void battle_formula_apply_poach_and_train(void) {
-    battle_action_data_t* action;
+    action_data_t* action;
     battle_stats_t* target;
     s32 remaining;
 
-    action = g_battle_action_target_data;
-    if (!(action->attack_type & BATTLE_ACTION_TYPE_HP_DAMAGE)) {
+    action = g_action_target_data;
+    if (!(action->attack_type & ACTION_TYPE_HP_DAMAGE)) {
         return;
     }
-    target = g_battle_action_target;
+    target = g_action_target;
     remaining = target->hp - action->hp_damage + action->hp_healing;
     if (target->unit_flags & (UNIT_FLAG_FEMALE | UNIT_FLAG_MALE)) {
         return;
     }
     if ((g_battle_team_golem[(target->initial_team_flags & BATTLE_TEAM_MASK) >> BATTLE_TEAM_SHIFT] != 0)
-        && (g_battle_action_current_ability.range_data.flags_3 & ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM)) {
+        && (g_action_current_ability.range_data.flags_3 & ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM)) {
         return;
     }
     if ((target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
@@ -40,25 +40,25 @@ void battle_formula_apply_poach_and_train(void) {
     if (((remaining <= 0)
             || (action->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)))
-        && (g_battle_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_SECRET_HUNT)
+        && (g_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_SECRET_HUNT)
         && !(target->team_flags & BATTLE_TEAM_FLAG_IMMORTAL)) {
         if (target->job_id < JOB_ID_MONSTER_FIRST || target->job_id > JOB_ID_MONSTER_LAST) {
             return;
         }
-        battle_action_clear_knockback_flag();
+        action_clear_knockback_flag();
         battle_formula_clear_nullify_flags();
-        g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_POACH;
-        g_battle_action_current_ability.post_action_message = BATTLE_POST_ACTION_MESSAGE_POACHED;
+        g_action_target_data->special_effect |= ACTION_SPECIAL_EFFECT_POACH;
+        g_action_current_ability.post_action_message = BATTLE_POST_ACTION_MESSAGE_POACHED;
         return;
     }
-    if ((remaining > 0) && ((g_battle_action_target->max_hp / 5) >= remaining)
-        && (g_battle_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_TRAIN)) {
-        g_battle_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INVITE)]
+    if ((remaining > 0) && ((g_action_target->max_hp / 5) >= remaining)
+        && (g_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_TRAIN)) {
+        g_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INVITE)]
             |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE);
         if (battle_status_modify_inflictions(0) != 0) {
-            g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_TEAM_CHANGE;
-            g_battle_action_target_data->attack_type |= BATTLE_ACTION_TYPE_STATUS_CHANGE;
-            g_battle_action_current_ability.post_action_message = BATTLE_POST_ACTION_MESSAGE_TRAINED;
+            g_action_target_data->special_effect |= ACTION_SPECIAL_EFFECT_TEAM_CHANGE;
+            g_action_target_data->attack_type |= ACTION_TYPE_STATUS_CHANGE;
+            g_action_current_ability.post_action_message = BATTLE_POST_ACTION_MESSAGE_TRAINED;
         }
     }
 }

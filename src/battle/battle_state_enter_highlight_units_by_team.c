@@ -8,5 +8,5 @@ void battle_state_enter_highlight_units_by_team(void) {
     g_battle_cursor_input_mode_saved = g_battle_cursor_input_mode;
     g_battle_cursor_input_mode = BATTLE_CURSOR_INPUT_FREE_CURSOR;
     battle_gfx_tint_all_units_by_team();
-    battle_action_clear_at_list_active();
+    action_clear_at_list_active();
 }

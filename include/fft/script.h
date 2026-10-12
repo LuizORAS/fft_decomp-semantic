@@ -354,7 +354,7 @@ typedef enum event_scenario_condition {
     EVENT_SCENARIO_CONDITION_DATE_ON_OR_AFTER = 17,    /* month id, day value */
     EVENT_SCENARIO_CONDITION_CASUALTIES_AT_LEAST = 18, /* compares with id, not value */
     EVENT_SCENARIO_CONDITION_CASUALTIES_AT_MOST = 19,  /* compares with id, not value */
-    EVENT_SCENARIO_CONDITION_ENEMIES_DEFEATED = 22,    /* battle_action_check_battle_outcome() returns 0 */
+    EVENT_SCENARIO_CONDITION_ENEMIES_DEFEATED = 22,    /* action_check_battle_outcome() returns 0 */
     EVENT_SCENARIO_CONDITION_UNIT_AT_TILE = 24,        /* unit id stands on x value, the y and the elevation */
     /* Stores id as the current event; the result is always RUN_EVENT. */
     EVENT_SCENARIO_CONDITION_RUN_EVENT = 25,
@@ -672,7 +672,7 @@ typedef struct event_jump_parameters {
 } event_jump_parameters_t;
 
 /* work */
-/* Provisional work block at *g_battle_ai_workspace_ptr: the menus build their
+/* Provisional work block at *g_ai_workspace_ptr: the menus build their
  * ability list and the outermost scrolling list's packet pages in it, events
  * keep the staged-status snapshot at 0x5f0. */
 typedef struct event_work {

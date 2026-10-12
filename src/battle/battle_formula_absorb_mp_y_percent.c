@@ -9,6 +9,6 @@ void battle_formula_absorb_mp_y_percent(void) {
         return;
     }
     battle_formula_calculate_mp_percent_damage();
-    g_battle_action_target_data->hp_damage = g_battle_action_target_data->mp_damage;
+    g_action_target_data->hp_damage = g_action_target_data->mp_damage;
     battle_formula_apply_mp_recovery();
 }

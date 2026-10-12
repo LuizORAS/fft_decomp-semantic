@@ -20,7 +20,7 @@ void world_menu_init_at_list(menu_entry_t* entry) {
     s32 i;
     u8* text;
 
-    g_world_thread_call_target = (void (*)(void))battle_action_calculate_at_list;
+    g_world_thread_call_target = (void (*)(void))action_calculate_at_list;
     world_thread_call_on_main_stack(g_world_action_target_list_slots, 0);
     for (i = 0; i < 256; i++) {
         g_world_dead_unit_menu_flags[i] = 0;

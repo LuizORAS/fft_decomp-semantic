@@ -25,7 +25,7 @@ void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const SV
     battle_gfx_sprite_display_data_t* display_0;
     battle_gfx_sprite_display_data_t* display_1;
     battle_gfx_sprite_display_data_t* display_2;
-    battle_action_result_display_t* display;
+    action_result_display_t* display;
     u16 progress;
 
     memcpy(scale_0, g_battle_numeric_digit_0_zoom_curve, sizeof(scale_0));

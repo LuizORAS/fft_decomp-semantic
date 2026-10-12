@@ -1,0 +1,61 @@
+#include "fft/battle_ai.h"
+#include "fft/battle_status.h"
+#include "fft/battle_unit.h"
+
+/*
+ * Select active units for the AI ability search.
+ *
+ * Rebuild all per-unit flags and return whether any unit was selected.
+ * target_id == 0xff excludes the acting unit. Confusion bypasses the
+ * considered flag, but does not bypass untargetability. AI_UNIT_FILTER_ANY and any
+ * value outside the enum allow either side.
+ */
+s32 ai_select_active_units(ai_unit_filter_e mode, s32 target_id) {
+    s32 any_active = 0;
+    s32 i;
+    ai_data_t* ai = &g_ai_data_base;
+    ai_unit_decision_t* decision;
+    battle_stats_t* unit;
+
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
+        decision = &ai->unit_decisions[i];
+        ai->targetability.live.unit_active[i] = 0;
+        if (decision->targeting_flags_2 & AI_TARGET_UNTARGETABLE)
+            continue;
+        if (!(g_battle_unit_stats[i].status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION))
+            && !(decision->flags & AI_DECISION_CONSIDERED))
+            continue;
+        if (i == ai->acting_unit_id && target_id == 0xff)
+            continue;
+        /* Target dispatch uses a signed comparison, including values outside the enum. */
+        switch ((s32)mode) {
+        case AI_UNIT_FILTER_SPECIFIC:
+            if (i != target_id)
+                continue;
+            break;
+        case AI_UNIT_FILTER_ENEMIES:
+            if (!decision->enemy_flag)
+                continue;
+            break;
+        case AI_UNIT_FILTER_ALLIES:
+            if (decision->enemy_flag)
+                continue;
+            break;
+        case AI_UNIT_FILTER_STATUS:
+            unit = &g_battle_unit_stats[i];
+            /* Target lw at 0x80197e10 reads the aligned first four status bytes. */
+            if (!(*(u32*)&unit->status_sets.current[0]
+                    & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_DEAD)
+                        | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_PETRIFY)
+                        | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_CRITICAL)))
+                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
+                continue;
+            break;
+        }
+        ai->targetability.live.unit_active[i] = 1;
+        any_active = 1;
+    }
+    return any_active;
+}

@@ -67,8 +67,8 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
             world_thread_exit_current();
         }
     } else {
-        mode = g_world_menu_row_type_confirm_actions[g_battle_action_menu_row_types
-                [g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index]][0];
+        mode = g_world_menu_row_type_confirm_actions
+            [g_action_menu_row_types[g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index]][0];
         if (mode < 0) {
             g_world_menu_action_slot_row_actions[0] = mode;
             world_menu_confirm_action_silently(parameter);

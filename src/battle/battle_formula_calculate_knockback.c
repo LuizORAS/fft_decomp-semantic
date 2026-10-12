@@ -5,11 +5,11 @@
 
 /* Picks the knockback destination for the current action's target.
  *
- * Runs only while g_battle_action_current_ability.target_count is 1. An immortal target, a target
+ * Runs only while g_action_current_ability.target_count is 1. An immortal target, a target
  * with both low team-flag bits set, the attacker itself and a mounted pair are
  * never pushed. The target moves one tile away from the attacker along the
  * dominant axis, and the tile must be neither untargetable, deep, steep, lava
- * nor an obstacle. On success g_battle_action_current_ability.knockback_flags records the knockback
+ * nor an obstacle. On success g_action_current_ability.knockback_flags records the knockback
  * kind (0x82 for a flier that is neither frog nor chicken, else 0x81),
  * [0xa]..[0xc] the destination x, y and level, and the target's action data
  * gets the knockback special effect.
@@ -31,17 +31,17 @@ void battle_formula_calculate_knockback(void) {
     s32 y;
     s32 level;
 
-    if (g_battle_action_current_ability.target_count != 1) {
+    if (g_action_current_ability.target_count != 1) {
         return;
     }
-    target = g_battle_action_target;
+    target = g_action_target;
     if (target->team_flags & BATTLE_TEAM_FLAG_IMMORTAL) {
         return;
     }
     if ((target->team_flags & BATTLE_TEAM_IMPORTANCE_MASK) == BATTLE_TEAM_IMPORTANCE_MASK) {
         return;
     }
-    attacker = g_battle_action_attacker;
+    attacker = g_action_attacker;
     if (target == attacker) {
         return;
     }
@@ -74,7 +74,7 @@ void battle_formula_calculate_knockback(void) {
             y--;
         }
     }
-    level = battle_move_check_knockback_destination(direction, x, y);
+    level = move_check_knockback_destination(direction, x, y);
     if (level < 0) {
         return;
     }
@@ -92,16 +92,16 @@ void battle_formula_calculate_knockback(void) {
     if (surface == MAP_SURFACE_LAVA || surface == MAP_SURFACE_OBSTACLE) {
         return;
     }
-    if (!(battle_move_get_effective_flags(g_battle_action_target) & BATTLE_EFFECTIVE_MOVEMENT_FLY)) {
-        g_battle_action_current_ability.knockback_flags = BATTLE_KNOCKBACK_PENDING | BATTLE_KNOCKBACK_FALL_DAMAGE;
-    } else if (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+    if (!(move_get_effective_flags(g_action_target) & BATTLE_EFFECTIVE_MOVEMENT_FLY)) {
+        g_action_current_ability.knockback_flags = BATTLE_KNOCKBACK_PENDING | BATTLE_KNOCKBACK_FALL_DAMAGE;
+    } else if (g_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
         & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
-        g_battle_action_current_ability.knockback_flags = BATTLE_KNOCKBACK_PENDING | BATTLE_KNOCKBACK_FALL_DAMAGE;
+        g_action_current_ability.knockback_flags = BATTLE_KNOCKBACK_PENDING | BATTLE_KNOCKBACK_FALL_DAMAGE;
     } else {
-        g_battle_action_current_ability.knockback_flags = BATTLE_KNOCKBACK_PENDING | BATTLE_KNOCKBACK_NO_FALL_DAMAGE;
+        g_action_current_ability.knockback_flags = BATTLE_KNOCKBACK_PENDING | BATTLE_KNOCKBACK_NO_FALL_DAMAGE;
     }
-    g_battle_action_current_ability.target_new_x = x;
-    g_battle_action_current_ability.target_new_y = y;
-    g_battle_action_current_ability.target_new_elevation = level;
-    g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_KNOCKBACK;
+    g_action_current_ability.target_new_x = x;
+    g_action_current_ability.target_new_y = y;
+    g_action_current_ability.target_new_elevation = level;
+    g_action_target_data->special_effect |= ACTION_SPECIAL_EFFECT_KNOCKBACK;
 }

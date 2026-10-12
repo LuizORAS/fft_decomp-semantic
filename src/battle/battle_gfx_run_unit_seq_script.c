@@ -267,7 +267,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                 unit->item_display_active = 0;
                 break;
             case BATTLE_SEQ_OP_WAIT_FOR_INPUT:
-                if (g_battle_action_post_action == 0) {
+                if (g_action_post_action == 0) {
                     offset = (s8)seq->sequences[index][pos];
                     pos += offset - 2;
                 } else {

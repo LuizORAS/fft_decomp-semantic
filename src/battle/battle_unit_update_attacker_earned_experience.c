@@ -15,18 +15,18 @@ void battle_unit_update_attacker_earned_experience(s32 outcome) {
     s16 exp;
     s32 sum;
 
-    if ((g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY) && (outcome != 0)) {
+    if ((g_action_context == ACTION_CONTEXT_PRIMARY) && (outcome != 0)) {
         if (outcome == 1) {
             base = 10;
         } else {
-            divisor = g_battle_action_target->ko_count;
+            divisor = g_action_target->ko_count;
             base = 20;
             if (divisor != 0) {
                 base = 20 / divisor;
             }
         }
-        attacker = g_battle_action_attacker;
-        sum = (base + g_battle_action_target->level) - attacker->level;
+        attacker = g_action_attacker;
+        sum = (base + g_action_target->level) - attacker->level;
         exp = sum;
         if (exp <= 0) {
             exp = 1;
@@ -38,7 +38,7 @@ void battle_unit_update_attacker_earned_experience(s32 outcome) {
             exp = 99;
         }
         signed_exp = exp << 16;
-        best = &g_battle_action_current_ability.earned_experience;
+        best = &g_action_current_ability.earned_experience;
         if (*best < (signed_exp >> 16)) {
             *best = exp;
         }

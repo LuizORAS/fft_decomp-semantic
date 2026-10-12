@@ -27,7 +27,7 @@ void world_menu_reset_unit_record(s32 id) {
     index = id * WORLD_MENU_UNIT_SELECTION_RECORD_BYTES;
     row += index;
     for (i = 0; i < WORLD_MENU_UNIT_SELECTION_RECORD_BYTES; i++) {
-        if (stats->auto_battle_setting == BATTLE_AI_AUTOBATTLE_MANUAL) {
+        if (stats->auto_battle_setting == AI_AUTOBATTLE_MANUAL) {
             row[i] = 0;
             ((u8*)g_world_menu_unit_selection_rows)[index + 1] = fill;
         }

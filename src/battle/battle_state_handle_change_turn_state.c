@@ -15,16 +15,16 @@ void battle_state_handle_change_turn_state(void) {
     command = battle_menu_get_selected_command_address()->kind;
     if (command >= 7) {
         if (command < 9) {
-            g_battle_action_post_action = 1;
+            g_action_post_action = 1;
         } else if (command == 0xFF) {
-            g_battle_action_post_action = 1;
+            g_action_post_action = 1;
         }
     }
-    if (g_battle_action_post_action != 0) {
+    if (g_action_post_action != 0) {
         if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) == 0) {
             if (g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE) {
                 battle_unit_get_source_misc_data();
-                type = g_battle_action_turn_event_type;
+                type = g_action_turn_event_type;
                 if (type == BATTLE_TURN_EVENT_ABILITY_READY) {
                     battle_state_enter_action_cast();
                     return;

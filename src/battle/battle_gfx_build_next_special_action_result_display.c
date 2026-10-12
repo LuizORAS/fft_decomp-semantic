@@ -9,7 +9,7 @@
  * flags into a block-local before clearing keeps the target's and operand
  * order. */
 s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t* unit) {
-    battle_action_result_display_t* display;
+    action_result_display_t* display;
     battle_gfx_sprite_display_data_t* display_0;
     battle_gfx_sprite_display_data_t* display_1;
     battle_gfx_sprite_display_data_t* display_2;
@@ -20,31 +20,31 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
 
     flags = unit->action_display_flags;
     display = &unit->numeric_display;
-    if ((flags & BATTLE_ACTION_DISPLAY_FLAG_GAINED_EXP) != 0) {
+    if ((flags & ACTION_DISPLAY_FLAG_GAINED_EXP) != 0) {
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_GAINED_EXP;
         unit->numeric_display.active = 1;
         unit->numeric_display.value = unit->strike.action_rewards.earned_experience;
-        unit->action_display_flags &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_EXP;
+        unit->action_display_flags &= ~ACTION_DISPLAY_FLAG_GAINED_EXP;
         if (unit->numeric_display.progress >= 22) {
             unit->numeric_display.progress = 21;
         }
-    } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_GAINED_JP) != 0) {
+    } else if ((flags & ACTION_DISPLAY_FLAG_GAINED_JP) != 0) {
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_GAINED_JP;
         unit->numeric_display.active = 1;
         unit->numeric_display.value = unit->strike.action_rewards.earned_jp;
-        unit->action_display_flags &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_JP;
+        unit->action_display_flags &= ~ACTION_DISPLAY_FLAG_GAINED_JP;
         if (unit->numeric_display.progress >= 22) {
             unit->numeric_display.progress = 21;
         }
     } else {
-        if ((flags & BATTLE_ACTION_DISPLAY_FLAG_NO_TARGET) != 0) {
-            clear = ~BATTLE_ACTION_DISPLAY_FLAG_NO_TARGET;
+        if ((flags & ACTION_DISPLAY_FLAG_NO_TARGET) != 0) {
+            clear = ~ACTION_DISPLAY_FLAG_NO_TARGET;
             selector = BATTLE_NUMERIC_DISPLAY_NO_TARGET;
-        } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_SILENCED) != 0) {
-            clear = ~BATTLE_ACTION_DISPLAY_FLAG_SILENCED;
+        } else if ((flags & ACTION_DISPLAY_FLAG_SILENCED) != 0) {
+            clear = ~ACTION_DISPLAY_FLAG_SILENCED;
             selector = BATTLE_NUMERIC_DISPLAY_SILENCED;
-        } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_NO_MP) != 0) {
-            clear = ~BATTLE_ACTION_DISPLAY_FLAG_NO_MP;
+        } else if ((flags & ACTION_DISPLAY_FLAG_NO_MP) != 0) {
+            clear = ~ACTION_DISPLAY_FLAG_NO_MP;
             selector = BATTLE_NUMERIC_DISPLAY_NO_MP;
         } else {
             return 0;
@@ -117,6 +117,6 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
         break;
     }
 
-    battle_map_load_palette_data(&g_battle_action_result_palette, MAP_CLUT_ROW_ACTION_RESULTS, unit->unit_id, 0);
+    battle_map_load_palette_data(&g_action_result_palette, MAP_CLUT_ROW_ACTION_RESULTS, unit->unit_id, 0);
     return 1;
 }

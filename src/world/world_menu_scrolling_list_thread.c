@@ -215,7 +215,7 @@ void world_menu_scrolling_list_thread(void) {
                             layout->columns.text_ids[column][index], buffer, &g_world_menu_text_state.pen);
                         g_world_menu_text_color = layout->columns.text_colors[column][index];
                         if (g_world_thread_contexts[g_world_thread_current_id].function_parameter_4 != 0
-                            && (g_battle_ai_workspace_ptr->ability_list.flags[index] & 1)) {
+                            && (g_ai_workspace_ptr->ability_list.flags[index] & 1)) {
                             world_menu_set_text_origin(layout->columns.x[column] + 0x50, 0);
                             world_menu_display_text_entry(0x5088, buffer, &g_world_menu_text_state.pen);
                         }
@@ -226,8 +226,8 @@ void world_menu_scrolling_list_thread(void) {
                         if ((column == 2 || (column == 1 && layout->columns.mode[2] == MENU_TEXT_COLUMN_HIDDEN))
                             && layout->columns.text_ids[column][index] >= 0
                             && layout->columns.text_ids[column][index] < 2
-                            && (g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0xFF
-                                || g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0)) {
+                            && (g_ai_workspace_ptr->ability_list.skill_ct[index] == 0xFF
+                                || g_ai_workspace_ptr->ability_list.skill_ct[index] == 0)) {
                             g_world_menu_text_state.pen.rect.y += 2;
                             world_menu_draw_stacked_glyph_pair(buffer, &g_world_menu_text_state.pen);
                         } else {

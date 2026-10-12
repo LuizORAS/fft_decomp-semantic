@@ -81,7 +81,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->depth_height_offset = 0;
     unit->float_bob_offset = 0;
     unit->float_bob_phase = 0;
-    unit->step_phase = BATTLE_MOVE_STEP_PHASE_NONE;
+    unit->step_phase = MOVE_STEP_PHASE_NONE;
     unit->path.count = 0;
     unit->sprite_display_flags = 0;
     unit->layer_priority = 0;

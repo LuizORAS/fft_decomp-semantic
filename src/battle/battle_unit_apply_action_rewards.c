@@ -8,7 +8,7 @@
  * action earned no EXP; monsters earn none. Gained JP Up (* 3/2) affects only
  * the actor; other battle slots receive one quarter of the unmodified JP
  * through the callee's team filter. */
-s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_display_t* display) {
+s32 battle_unit_apply_action_rewards(s32 unit_index, action_reward_display_t* display) {
     s32 job_slot;
     battle_stats_t* unit;
     u8* earned_experience;
@@ -28,10 +28,10 @@ s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_displa
     display->level_for_display = 0;
     display->job_level_for_display = 0;
 
-    if (g_battle_action_hamedo_flag != 0) {
+    if (g_action_hamedo_flag != 0) {
         return -1;
     }
-    if (g_battle_action_current_ability.can_earn_exp_jp == 0) {
+    if (g_action_current_ability.can_earn_exp_jp == 0) {
         return 0;
     }
 
@@ -48,16 +48,16 @@ s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_displa
         return -1;
     }
 
-    experience = unit->experience + g_battle_action_current_ability.earned_experience;
+    experience = unit->experience + g_action_current_ability.earned_experience;
     old_level = unit->level;
     if (experience >= 0x100) {
         experience = 0xff;
     }
     unit->experience = experience;
-    if (main_unit_check_level_up(unit) != 0 || g_battle_action_current_ability.level_gained_flag != 0) {
+    if (main_unit_check_level_up(unit) != 0 || g_action_current_ability.level_gained_flag != 0) {
         display->level_for_display = unit->level;
     }
-    earned_experience = &g_battle_action_current_ability.earned_experience;
+    earned_experience = &g_action_current_ability.earned_experience;
     display->earned_experience = *earned_experience;
 
     if (unit->unit_flags & UNIT_FLAG_MONSTER) {

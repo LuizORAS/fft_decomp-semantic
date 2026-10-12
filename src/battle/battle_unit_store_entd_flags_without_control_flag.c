@@ -11,14 +11,14 @@ void battle_unit_store_entd_flags_without_control_flag(battle_unit_misc_data_t* 
 
     entd_flags = unit->battle_data->team_flags;
     unit->team_flags = entd_flags;
-    if (unit->battle_data->auto_battle_setting != BATTLE_AI_AUTOBATTLE_MANUAL) {
+    if (unit->battle_data->auto_battle_setting != AI_AUTOBATTLE_MANUAL) {
         unit->team_flags = entd_flags & ~BATTLE_TEAM_FLAG_PLAYER_CONTROLLED;
     }
     if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
         mount = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
         mount_entd_flags = mount->battle_data->team_flags;
         mount->team_flags = mount_entd_flags;
-        if (mount->battle_data->auto_battle_setting != BATTLE_AI_AUTOBATTLE_MANUAL) {
+        if (mount->battle_data->auto_battle_setting != AI_AUTOBATTLE_MANUAL) {
             mount->team_flags = mount_entd_flags & ~BATTLE_TEAM_FLAG_PLAYER_CONTROLLED;
         }
     }

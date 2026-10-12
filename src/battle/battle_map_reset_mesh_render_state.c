@@ -23,8 +23,8 @@ void battle_map_reset_mesh_render_state(void) {
     unit_scale = g_battle_map_unit_scale_vector;
     g_battle_map_tile_width = 1;
     g_battle_map_tile_depth = 1;
-    g_battle_target_color_tile_x = 1;
-    g_battle_target_color_tile_y = 1;
+    g_target_color_tile_x = 1;
+    g_target_color_tile_y = 1;
     g_battle_map_untextured_otz_mask = 0;
     g_battle_map_untextured_fixed_ot_index = 4;
     g_battle_map_gns_dispatch_held = 0;

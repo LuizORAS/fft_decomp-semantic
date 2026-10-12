@@ -1,0 +1,29 @@
+#include "fft/battle.h"
+#include "fft/battle_action.h"
+
+/* Start the post-action reports: restore the units' facings, apply the source
+ * unit's EXP and JP rewards (clearing the display values when nothing is
+ * awarded), start the earned EXP/JP display and enter the level-up phase of
+ * action_init_learn_ability_on_hit. */
+void action_handle_post_action_xp_jp_ability(void) {
+    battle_unit_misc_data_t* unit;
+    battle_stats_t* stats;
+
+    unit = battle_unit_get_source_misc_data();
+    battle_unit_restore_all_facings_after_attack();
+    if (unit != 0) {
+        stats = unit->battle_data;
+        if (stats != 0 && battle_unit_apply_action_rewards(stats->misc_unit_id, &unit->strike.action_rewards) == -1) {
+            unit->strike.action_rewards.job_level_for_display = 0;
+            unit->strike.action_rewards.level_for_display = 0;
+            unit->strike.action_rewards.earned_jp = 0;
+            unit->strike.action_rewards.earned_experience = 0;
+        }
+    }
+    battle_gfx_init_earned_exp_jp_display(unit);
+    g_action_post_action_display_phase = BATTLE_POST_ACTION_DISPLAY_LEVEL_UP;
+    target_move_cursor_to_unit(unit);
+    action_init_learn_ability_on_hit();
+    g_action_post_action = 0;
+    g_battle_state_animation_continue_check = 0;
+}

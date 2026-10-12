@@ -12,7 +12,7 @@ void battle_formula_damage_pa_plus_y_half_times_pa(void) {
         battle_formula_store_xa_times_ya_damage();
         battle_formula_apply_weather_elemental_effects();
         battle_formula_apply_elemental();
-        if (g_battle_action_target_data->hit != 0) {
+        if (g_action_target_data->hit != 0) {
             battle_formula_apply_elemental_absorption();
             if (battle_formula_roll_conditional_status_proc() == 0) {
                 battle_formula_apply_status();

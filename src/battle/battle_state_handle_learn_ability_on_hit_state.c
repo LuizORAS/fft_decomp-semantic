@@ -10,7 +10,7 @@
  * display, the source unit returns to its status animation and the after-command
  * state begins. */
 void battle_state_handle_learn_ability_on_hit_state(void) {
-    battle_ai_command_t* selected_command_address;
+    ai_command_t* selected_command_address;
     s32 selected_command;
     s32 counter;
     s32 skip_animation;
@@ -26,21 +26,21 @@ void battle_state_handle_learn_ability_on_hit_state(void) {
     selected_command = selected_command_address->kind;
     switch (selected_command) {
     case 7:
-        if (g_battle_action_post_action_display_phase == BATTLE_POST_ACTION_DISPLAY_LEARN_ON_HIT) {
-            target_unit = battle_unit_get_misc_data_by_battle_id(g_battle_action_learn_on_hit_unit_id);
+        if (g_action_post_action_display_phase == BATTLE_POST_ACTION_DISPLAY_LEARN_ON_HIT) {
+            target_unit = battle_unit_get_misc_data_by_battle_id(g_action_learn_on_hit_unit_id);
             battle_unit_learn_used_ability(target_unit->battle_data);
         }
     case 8:
     case 0xff:
-        g_battle_action_post_action_display_phase += 1;
-        if (g_battle_action_post_action_display_phase >= 3) {
-            g_battle_action_post_action = 1;
+        g_action_post_action_display_phase += 1;
+        if (g_action_post_action_display_phase >= 3) {
+            g_action_post_action = 1;
         } else {
-            battle_action_init_learn_ability_on_hit();
+            action_init_learn_ability_on_hit();
         }
         break;
     }
-    if (g_battle_action_post_action != 0 && g_battle_state_animation_continue_check == 0) {
+    if (g_action_post_action != 0 && g_battle_state_animation_continue_check == 0) {
         counter = 0;
         if (casting_unit->numeric_display.active == 0) {
             hit_count = casting_unit->strike.target_count;

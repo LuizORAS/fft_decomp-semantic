@@ -18,7 +18,7 @@ void equip_unit_build_data_from_battle_stats(battle_stats_t* stats, equip_unit_d
     if (!(stats->team_flags & BATTLE_TEAM_OR_PLAYER_CONTROL_MASK)) {
         unit->team_kind = 2;
     }
-    i = battle_action_check_at_list_for_unit_battle_id(stats);
+    i = action_check_at_list_for_unit_battle_id(stats);
     value = -1;
     if (i >= 0) {
         value = i + 1;

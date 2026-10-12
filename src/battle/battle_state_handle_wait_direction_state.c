@@ -10,7 +10,7 @@
  * unit takes its stored facing hint (0-3, in quarter turns) and ends the turn
  * once its state frame counter reaches 0x1f.
  *
- * Ending the turn applies battle_action_end_turn and re-registers the unit's tile
+ * Ending the turn applies action_end_turn and re-registers the unit's tile
  * together with its mount partner. */
 void battle_state_handle_wait_direction_state(void) {
     s32 facing;
@@ -35,11 +35,11 @@ void battle_state_handle_wait_direction_state(void) {
         battle_camera_call_toggle_tilt();
         if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
             if (unit->battle_data != 0) {
-                battle_action_end_turn(unit->battle_data->misc_unit_id);
+                action_end_turn(unit->battle_data->misc_unit_id);
                 battle_unit_set_tile_position_with_mount_partner(unit);
             }
             main_sound_play_sfx(MAIN_SFX_CONFIRM);
-            battle_action_check_between_turn_events();
+            action_check_between_turn_events();
         } else if ((g_main_input_pressed_buttons & PSX_PAD_CROSS) != 0) {
             battle_state_enter_after_command();
         }
@@ -70,10 +70,10 @@ void battle_state_handle_wait_direction_state(void) {
         frame_data = unit->state_frame_counter++;
         if (frame_data >= 0x1f) {
             if (unit->battle_data != 0) {
-                battle_action_end_turn(unit->battle_data->misc_unit_id);
+                action_end_turn(unit->battle_data->misc_unit_id);
                 battle_unit_set_tile_position_with_mount_partner(unit);
             }
-            battle_action_check_between_turn_events();
+            action_check_between_turn_events();
         }
     }
 }

@@ -9,9 +9,9 @@ void battle_formula_magical_stat_reduction(void) {
         battle_formula_store_xa_plus_ya_status_damage();
         battle_formula_calculate_faith();
         battle_formula_use_hp_damage_as_action_hit_percent();
-        if (g_battle_action_target_data->hit == 0) {
+        if (g_action_target_data->hit == 0) {
             /* The target clears the bit in the special_effect 16-bit value. */
-            g_battle_action_target_data->special_effect &= ~BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT;
+            g_action_target_data->special_effect &= ~ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT;
         } else {
             battle_formula_determine_reduced_stat();
         }

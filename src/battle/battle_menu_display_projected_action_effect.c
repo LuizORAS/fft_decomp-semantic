@@ -18,7 +18,7 @@ s32 battle_menu_display_projected_action_effect(
     POLY_FT4* prim, const point16_t* base_load, const RECT* base_screen, image_load_parameters_t* params) {
     menu_number_entry_t* panel;
     u16* label_x;
-    const battle_action_display_image_rect_t* rect;
+    const action_display_image_rect_t* rect;
     s32 value;
     s32 image;
     s32 extra;
@@ -28,7 +28,7 @@ s32 battle_menu_display_projected_action_effect(
     u32 exp;
     u16* digits_x;
     u16* extra_label_x;
-    battle_action_data_t* action;
+    action_data_t* action;
     u8 target_id;
 
     extra = 0;
@@ -60,23 +60,23 @@ s32 battle_menu_display_projected_action_effect(
         g_battle_menu_projected_value_panel[0].kind = 2;
     }
 
-    if (action->attack_type & BATTLE_ACTION_TYPE_HP_DAMAGE) {
+    if (action->attack_type & ACTION_TYPE_HP_DAMAGE) {
         value = action->hp_damage;
-        image = BATTLE_ACTION_DISPLAY_IMAGE_HP;
-    } else if (action->attack_type & BATTLE_ACTION_TYPE_HP_HEALING) {
+        image = ACTION_DISPLAY_IMAGE_HP;
+    } else if (action->attack_type & ACTION_TYPE_HP_HEALING) {
         value = action->hp_healing;
-        image = BATTLE_ACTION_DISPLAY_IMAGE_HP;
+        image = ACTION_DISPLAY_IMAGE_HP;
         g_battle_menu_projected_value_panel[0].format = 0x403;
-    } else if (action->attack_type & BATTLE_ACTION_TYPE_MP_DAMAGE) {
+    } else if (action->attack_type & ACTION_TYPE_MP_DAMAGE) {
         value = action->mp_damage;
-        image = BATTLE_ACTION_DISPLAY_IMAGE_MP;
-    } else if (action->attack_type & BATTLE_ACTION_TYPE_MP_HEALING) {
-        image = BATTLE_ACTION_DISPLAY_IMAGE_MP;
+        image = ACTION_DISPLAY_IMAGE_MP;
+    } else if (action->attack_type & ACTION_TYPE_MP_HEALING) {
+        image = ACTION_DISPLAY_IMAGE_MP;
         value = action->mp_healing;
         g_battle_menu_projected_value_panel[0].format = 0x403;
-    } else if (action->gil_change != 0 && (action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS)) {
+    } else if (action->gil_change != 0 && (action->attack_type & ACTION_TYPE_PSEUDO_STATUS)) {
         value = action->gil_change;
-        image = BATTLE_ACTION_DISPLAY_IMAGE_GIL;
+        image = ACTION_DISPLAY_IMAGE_GIL;
         if (value >= 0) {
             g_battle_menu_projected_value_panel[0].format = 0x404;
         } else {
@@ -89,10 +89,10 @@ s32 battle_menu_display_projected_action_effect(
         panel[0].y += 4;
         *digits_x += 2;
     } else if ((exp = g_battle_menu_preview_target_action->exp_change) != 0
-        && (g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS)) {
+        && (g_battle_menu_preview_target_action->attack_type & ACTION_TYPE_PSEUDO_STATUS)) {
         s32 number_x;
 
-        image = BATTLE_ACTION_DISPLAY_IMAGE_EXP;
+        image = ACTION_DISPLAY_IMAGE_EXP;
         value = exp;
         if (exp & 0x80) {
             value &= 0x7f;
@@ -105,37 +105,37 @@ s32 battle_menu_display_projected_action_effect(
         panel[0].x = number_x;
         *label_x -= 8;
     } else if ((g_battle_menu_preview_target_action->special_effect
-                   & (BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_UP | BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_DOWN))
-        && (g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS)) {
-        image = BATTLE_ACTION_DISPLAY_IMAGE_LEVEL;
+                   & (ACTION_SPECIAL_EFFECT_LEVEL_UP | ACTION_SPECIAL_EFFECT_LEVEL_DOWN))
+        && (g_battle_menu_preview_target_action->attack_type & ACTION_TYPE_PSEUDO_STATUS)) {
+        image = ACTION_DISPLAY_IMAGE_LEVEL;
         value = 1;
-        if (g_battle_menu_preview_target_action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_LEVEL_UP) {
+        if (g_battle_menu_preview_target_action->special_effect & ACTION_SPECIAL_EFFECT_LEVEL_UP) {
             panel[0].format = 0x401;
         } else {
             panel[0].format = 0x801;
         }
         panel[0].x += 12;
-    } else if ((g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS)
-        && g_battle_menu_preview_target_action->ct_change == BATTLE_ACTION_CT_CHANGE_QUICK) {
+    } else if ((g_battle_menu_preview_target_action->attack_type & ACTION_TYPE_PSEUDO_STATUS)
+        && g_battle_menu_preview_target_action->ct_change == ACTION_CT_CHANGE_QUICK) {
         /* The three shifted-label tails are duplicated in the original and
          * merged by cross-jumping; a shared goto tail allocates differently. */
-        image = BATTLE_ACTION_DISPLAY_IMAGE_QUICK;
+        image = ACTION_DISPLAY_IMAGE_QUICK;
         value = 0;
         panel[0].kind = 2;
-        *label_x = *label_x - g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_QUICK].width + 8;
-    } else if ((g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS)
-        && (g_battle_menu_preview_target_action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_STEAL_ITEM)) {
-        image = BATTLE_ACTION_DISPLAY_IMAGE_STOLEN;
+        *label_x = *label_x - g_action_display_image_rects[ACTION_DISPLAY_IMAGE_QUICK].width + 8;
+    } else if ((g_battle_menu_preview_target_action->attack_type & ACTION_TYPE_PSEUDO_STATUS)
+        && (g_battle_menu_preview_target_action->special_effect & ACTION_SPECIAL_EFFECT_STEAL_ITEM)) {
+        image = ACTION_DISPLAY_IMAGE_STOLEN;
         value = 0;
         panel[0].kind = 2;
-        *label_x = *label_x - g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_STOLEN].width + 8;
-    } else if ((g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS)
-        && (g_battle_menu_preview_target_action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT)) {
-        image = BATTLE_ACTION_DISPLAY_IMAGE_BROKEN;
+        *label_x = *label_x - g_action_display_image_rects[ACTION_DISPLAY_IMAGE_STOLEN].width + 8;
+    } else if ((g_battle_menu_preview_target_action->attack_type & ACTION_TYPE_PSEUDO_STATUS)
+        && (g_battle_menu_preview_target_action->special_effect & ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT)) {
+        image = ACTION_DISPLAY_IMAGE_BROKEN;
         value = 0;
         panel[0].kind = 2;
-        *label_x = *label_x - g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_BROKEN].width + 8;
-    } else if (g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_STATUS_CHANGE) {
+        *label_x = *label_x - g_action_display_image_rects[ACTION_DISPLAY_IMAGE_BROKEN].width + 8;
+    } else if (g_battle_menu_preview_target_action->attack_type & ACTION_TYPE_STATUS_CHANGE) {
         g_battle_thread_call_target = (void (*)(void))main_status_find_action_highest_order_effect;
         image = battle_thread_call_on_main_stack(g_battle_menu_preview_target_action);
         if (image > 0) {
@@ -156,7 +156,7 @@ s32 battle_menu_display_projected_action_effect(
             } else {
                 panel[0].kind = 2;
             }
-            width = g_battle_action_display_image_rects[image].width;
+            width = g_action_display_image_rects[image].width;
             x = *label_x - width;
             value = 0;
             *label_x = x + 8;
@@ -166,38 +166,38 @@ s32 battle_menu_display_projected_action_effect(
         } else {
             panel[0].kind = 2;
         }
-    } else if (g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS) {
-        image = BATTLE_ACTION_DISPLAY_IMAGE_NONE;
+    } else if (g_battle_menu_preview_target_action->attack_type & ACTION_TYPE_PSEUDO_STATUS) {
+        image = ACTION_DISPLAY_IMAGE_NONE;
         if (g_battle_menu_preview_target_action->sp_change != 0) {
-            image = BATTLE_ACTION_DISPLAY_IMAGE_SPEED;
+            image = ACTION_DISPLAY_IMAGE_SPEED;
             value = g_battle_menu_preview_target_action->sp_change;
             *label_x -= 0x26;
         } else if (g_battle_menu_preview_target_action->ct_change != 0) {
-            image = BATTLE_ACTION_DISPLAY_IMAGE_CT;
+            image = ACTION_DISPLAY_IMAGE_CT;
             value = g_battle_menu_preview_target_action->ct_change;
             *label_x -= 0x1e;
         } else if (g_battle_menu_preview_target_action->pa_change != 0) {
-            image = BATTLE_ACTION_DISPLAY_IMAGE_PHYSICAL_ATTACK;
+            image = ACTION_DISPLAY_IMAGE_PHYSICAL_ATTACK;
             value = g_battle_menu_preview_target_action->pa_change;
             *label_x -= 0x14;
         } else if (g_battle_menu_preview_target_action->ma_change != 0) {
-            image = BATTLE_ACTION_DISPLAY_IMAGE_MAGICAL_ATTACK;
+            image = ACTION_DISPLAY_IMAGE_MAGICAL_ATTACK;
             value = g_battle_menu_preview_target_action->ma_change;
             *label_x -= 0x14;
         } else if (g_battle_menu_preview_target_action->brave_change != 0) {
-            image = BATTLE_ACTION_DISPLAY_IMAGE_BRAVE;
+            image = ACTION_DISPLAY_IMAGE_BRAVE;
             value = g_battle_menu_preview_target_action->brave_change;
             *label_x -= 0x24;
         } else if (g_battle_menu_preview_target_action->faith_change != 0) {
-            image = BATTLE_ACTION_DISPLAY_IMAGE_FAITH_STAT;
+            image = ACTION_DISPLAY_IMAGE_FAITH_STAT;
             value = g_battle_menu_preview_target_action->faith_change;
             *label_x -= 0x24;
         }
-        if (image >= BATTLE_ACTION_DISPLAY_IMAGE_CT && image <= BATTLE_ACTION_DISPLAY_IMAGE_MAGICAL_ATTACK) {
+        if (image >= ACTION_DISPLAY_IMAGE_CT && image <= ACTION_DISPLAY_IMAGE_MAGICAL_ATTACK) {
             panel[0].x += 0x10;
-            if (value & BATTLE_ACTION_STAT_CHANGE_INCREASE) {
+            if (value & ACTION_STAT_CHANGE_INCREASE) {
                 panel[0].format = 0x402;
-                if (image == BATTLE_ACTION_DISPLAY_IMAGE_CT && value == 0xff) {
+                if (image == ACTION_DISPLAY_IMAGE_CT && value == 0xff) {
                     value = 0x64;
                     panel[0].format = 3;
                     *label_x = *label_x; /* reloads and rewrites x, as the target does */
@@ -205,13 +205,13 @@ s32 battle_menu_display_projected_action_effect(
                 }
             } else {
                 panel[0].format = 0x802;
-                if (image == BATTLE_ACTION_DISPLAY_IMAGE_CT && value == 0x7f) {
+                if (image == ACTION_DISPLAY_IMAGE_CT && value == 0x7f) {
                     value = 0;
                     panel[0].format = 2;
                     *label_x += 8;
                 }
             }
-            value &= BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
+            value &= ACTION_STAT_CHANGE_VALUE_MASK;
         } else {
             panel[0].kind = 2;
             return;
@@ -219,8 +219,8 @@ s32 battle_menu_display_projected_action_effect(
     }
 
     g_battle_menu_active_turn_banner.projected_display_value = value;
-    if (image != BATTLE_ACTION_DISPLAY_IMAGE_NONE && (image != 0 || show_empty != 0)) {
-        rect = &g_battle_action_display_image_rects[image];
+    if (image != ACTION_DISPLAY_IMAGE_NONE && (image != 0 || show_empty != 0)) {
+        rect = &g_action_display_image_rects[image];
         params->x_load = rect->u;
         params->y_load = rect->v;
         params->width = rect->width;
@@ -228,10 +228,10 @@ s32 battle_menu_display_projected_action_effect(
         battle_gfx_init_image_loading((texture_primitive_t*)prim, base_load, base_screen, params);
     }
     prim->clut = 0x7d7c;
-    if (image >= BATTLE_ACTION_DISPLAY_IMAGE_HP && image <= BATTLE_ACTION_DISPLAY_IMAGE_EXP) {
+    if (image >= ACTION_DISPLAY_IMAGE_HP && image <= ACTION_DISPLAY_IMAGE_EXP) {
         prim->clut = 0x7cbc;
     }
-    if (image == BATTLE_ACTION_DISPLAY_IMAGE_PHYSICAL_ATTACK || image == BATTLE_ACTION_DISPLAY_IMAGE_MAGICAL_ATTACK) {
+    if (image == ACTION_DISPLAY_IMAGE_PHYSICAL_ATTACK || image == ACTION_DISPLAY_IMAGE_MAGICAL_ATTACK) {
         prim->clut = 0x7d7c;
     }
 
@@ -239,7 +239,7 @@ s32 battle_menu_display_projected_action_effect(
         prim++;
         params++;
         prim->clut = 0x7d7c;
-        rect = &g_battle_action_display_image_rects[extra];
+        rect = &g_action_display_image_rects[extra];
         params->x_load = rect->u;
         params->y_load = rect->v;
         params->width = rect->width;
@@ -248,8 +248,8 @@ s32 battle_menu_display_projected_action_effect(
         return image;
     }
 
-    if ((g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_STATUS_CHANGE)
-        && g_battle_menu_preview_target_action->attack_type != BATTLE_ACTION_TYPE_STATUS_CHANGE) {
+    if ((g_battle_menu_preview_target_action->attack_type & ACTION_TYPE_STATUS_CHANGE)
+        && g_battle_menu_preview_target_action->attack_type != ACTION_TYPE_STATUS_CHANGE) {
         prim++;
         params++;
         g_battle_thread_call_target = (void (*)(void))main_status_find_action_highest_order_effect;
@@ -262,8 +262,8 @@ s32 battle_menu_display_projected_action_effect(
             }
             image &= MAIN_ACTION_STATUS_RESULT_INDEX_MASK;
             image = g_battle_status_display_image_ids[image - 1];
-            if (image != BATTLE_ACTION_DISPLAY_IMAGE_NONE && image != BATTLE_ACTION_DISPLAY_IMAGE_INVITE) {
-                rect = &g_battle_action_display_image_rects[image];
+            if (image != ACTION_DISPLAY_IMAGE_NONE && image != ACTION_DISPLAY_IMAGE_INVITE) {
+                rect = &g_action_display_image_rects[image];
                 params->x_load = rect->u;
                 params->y_load = rect->v;
                 params->width = rect->width;

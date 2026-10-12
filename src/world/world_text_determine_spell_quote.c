@@ -8,7 +8,7 @@
  * (g_world_spell_quote_last_ability_id), the unit is a Calculator or Mime, the ability is >= 0x170 or
  * lacks the spell-quote flag, status blocks it, options disable it, or
  * EVENT_SCRIPT_VAR_RANDOM_VALUE is 4 or more. Everything else uses command 7. */
-void world_text_determine_spell_quote(battle_action_command_t* action, s32 unit_id, s32 enabled) {
+void world_text_determine_spell_quote(action_command_t* action, s32 unit_id, s32 enabled) {
     ability_data_t* ability;
     main_ability_secondary_pointer_t secondary;
     battle_stats_t* unit;

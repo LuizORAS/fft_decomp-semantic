@@ -635,7 +635,7 @@ s32 battle_gfx_calculate_screen_z_from_misc_battle_map_data(struct battle_unit_m
 s32 battle_gfx_calculate_screen_z_from_misc_move_data(struct battle_unit_misc_data* unit);
 
 /* Returns (s16), but an s16 prototype makes callers such as
- * battle_move_interpolate_height_toward_resting_height re-extend the result; keep s32. */
+ * move_interpolate_height_toward_resting_height re-extend the result; keep s32. */
 s32 battle_gfx_calculate_screen_z_from_misc_screen_data(struct battle_unit_misc_data* unit);
 
 s32 battle_gfx_calculate_screen_z_with_caller_data(struct battle_unit_misc_data* unit, const SVECTOR* coords);

@@ -22,7 +22,7 @@ void battle_menu_open_move_confirm(void) {
     caster = battle_unit_get_casting_misc_data();
     battle_text_set_message_duration_frames(0x3C);
     if (caster->path.flags & BATTLE_EFFECTIVE_MOVEMENT_TELEPORT) {
-        if (caster->last_path_count == BATTLE_MOVE_PATH_TELEPORT_FAILED) {
+        if (caster->last_path_count == MOVE_PATH_TELEPORT_FAILED) {
             battle_menu_init_system_function(
                 BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x183B, source->battle_data->misc_unit_id, 0, 1);
         } else {
@@ -42,8 +42,8 @@ void battle_menu_open_move_confirm(void) {
         }
     }
     if (source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
-        battle_action_set_at_list_active();
+        action_set_at_list_active();
     } else {
-        battle_action_clear_at_list_active();
+        action_clear_at_list_active();
     }
 }

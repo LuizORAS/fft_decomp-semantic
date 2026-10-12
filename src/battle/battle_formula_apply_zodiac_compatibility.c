@@ -26,8 +26,8 @@ void battle_formula_apply_zodiac_compatibility(void) {
     s16 xa;
     u16 product;
 
-    attacker = g_battle_action_attacker;
-    target = g_battle_action_target;
+    attacker = g_action_attacker;
+    target = g_action_target;
     attacker_zodiac = attacker->birthday.zodiac;
     target_zodiac = target->birthday.zodiac;
     attacker_zodiac_compare = (u8)attacker_zodiac;
@@ -46,11 +46,11 @@ void battle_formula_apply_zodiac_compatibility(void) {
 
     compatibility = g_battle_zodiac_compatibility_modifiers[difference];
     if (compatibility == ZODIAC_COMPATIBILITY_GENDER_DEPENDENT) {
-        u8 attacker_flags = g_battle_action_attacker->unit_flags;
+        u8 attacker_flags = g_action_attacker->unit_flags;
 
         compatibility = ZODIAC_COMPATIBILITY_BAD;
         if (!(attacker_flags & UNIT_FLAG_MONSTER)) {
-            u8 target_flags = g_battle_action_target->unit_flags;
+            u8 target_flags = g_action_target->unit_flags;
 
             if (!(target_flags & UNIT_FLAG_MONSTER)) {
                 compatibility = ZODIAC_COMPATIBILITY_BEST;
@@ -62,24 +62,24 @@ void battle_formula_apply_zodiac_compatibility(void) {
         }
     }
 
-    xa = g_battle_action_current_ability.xa;
+    xa = g_action_current_ability.xa;
     product = xa * 25;
     switch (compatibility) {
     case ZODIAC_COMPATIBILITY_GOOD:
-        g_battle_action_current_ability.xa = xa + product / 100;
+        g_action_current_ability.xa = xa + product / 100;
         break;
     case ZODIAC_COMPATIBILITY_BEST:
-        g_battle_action_current_ability.xa = xa + product / 50;
+        g_action_current_ability.xa = xa + product / 50;
         break;
     case ZODIAC_COMPATIBILITY_BAD:
-        g_battle_action_current_ability.xa = xa - product / 100;
+        g_action_current_ability.xa = xa - product / 100;
         break;
     case ZODIAC_COMPATIBILITY_WORST:
-        g_battle_action_current_ability.xa = xa - product / 50;
+        g_action_current_ability.xa = xa - product / 50;
         break;
     }
 
-    if (g_battle_action_current_ability.xa <= 0) {
-        g_battle_action_current_ability.xa = 1;
+    if (g_action_current_ability.xa <= 0) {
+        g_action_current_ability.xa = 1;
     }
 }

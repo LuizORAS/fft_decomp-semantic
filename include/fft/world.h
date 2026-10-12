@@ -2004,7 +2004,7 @@ u8* world_text_advance_cursor_with_backreferences(text_backreference_state_t* st
 u8* world_text_advance_entry_by_char_count(u8* text, s32 count);
 void world_text_concatenate_entries(u8* text_table, u8* destination, const s16* text_ids, s32 separate_entries);
 u8* world_text_find_entry(s32 combined_text_index);
-void world_text_determine_spell_quote(battle_action_command_t* action, s32 unit_id, s32 enabled);
+void world_text_determine_spell_quote(action_command_t* action, s32 unit_id, s32 enabled);
 void world_text_build_unit_name_list(void);
 void world_text_generate_formation_unit_name_string(void);
 const u8* world_text_skip_to_entry(const u8* text, s32 entry_index);
@@ -2325,14 +2325,14 @@ extern u8 g_world_grid_menu_initialized;  /* grid menu initialised */
 extern u32 g_world_menu_new_button_input;
 extern s16 g_world_menu_status_left_text_ids[20];
 extern s16 g_world_menu_status_right_text_ids[20];
-extern battle_action_command_t g_world_menu_preview_action;
+extern action_command_t g_world_menu_preview_action;
 extern s32 g_world_menu_monster_skillset_flag;
 extern u16 g_world_menu_anything_ability_id;
 extern s16 g_world_menu_selected_option;
 extern s16 g_world_menu_action_slot_selected_option;
 extern menu_allocation_t g_world_menu_buffer_allocations[MENU_BUFFER_ALLOCATION_COUNT];
 extern u8 g_world_menu_buffer_arena[WORLD_MENU_BUFFER_PAGE_COUNT][MENU_BUFFER_PAGE_SIZE];
-extern battle_action_data_t* g_world_menu_preview_target_action;
+extern action_data_t* g_world_menu_preview_target_action;
 extern menu_gradient_panel_prims_t g_world_menu_panel_fade_frames[];
 extern s32 g_world_active_menu; /* active menu */
 /* Handed to the dead-unit panel thread as its second parameter. Nothing stores to it and the thread
@@ -2449,7 +2449,7 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
 void world_menu_release_current_thread_slot(void);
 
 s32 world_menu_dispatch_system_function(
-    s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, battle_action_command_t* action);
+    s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, action_command_t* action);
 
 void world_menu_draw_active_window_frames(void);
 

@@ -8,7 +8,7 @@
  * world_menu_init_system_function and world_text_determine_spell_quote.
  */
 s32 world_menu_dispatch_system_function(
-    s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, battle_action_command_t* action) {
+    s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, action_command_t* action) {
     battle_stats_t* unit;
     s32 value;
     s32 count;
@@ -48,7 +48,7 @@ s32 world_menu_dispatch_system_function(
                         count++;
                     }
                 }
-                if ((battle_action_check_battle_outcome() < 0 || count != 0)
+                if ((action_check_battle_outcome() < 0 || count != 0)
                     && world_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) == 0) {
                     if (option != 2) {
                         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_GAME_OVER);
@@ -92,7 +92,7 @@ s32 world_menu_dispatch_system_function(
                         g_world_finish_operation_event_id = EVENT_ID_BATTLE_START;
                     }
                     return MENU_SYSTEM_DISPATCH_EVENT;
-                } else if (battle_action_check_battle_outcome() == 0) {
+                } else if (action_check_battle_outcome() == 0) {
                     if (option != 2) {
                         world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
                         g_world_menu_overlay_state = 1;
@@ -260,23 +260,23 @@ s32 world_menu_dispatch_system_function(
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_POST_ACTION_RESULT) {
         entry = &g_world_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT];
         flags = parameter;
-        if (option >= BATTLE_ACTION_DISPLAY_IMAGE_CT && option <= BATTLE_ACTION_DISPLAY_IMAGE_LEVEL) {
+        if (option >= ACTION_DISPLAY_IMAGE_CT && option <= ACTION_DISPLAY_IMAGE_LEVEL) {
             g_world_text_substitution_values[0] = unit_id;
             g_world_text_substitution_values[1] = option + 0x506B;
-            if (option == BATTLE_ACTION_DISPLAY_IMAGE_LEVEL) {
+            if (option == ACTION_DISPLAY_IMAGE_LEVEL) {
                 flags = 1;
-                if (parameter & BATTLE_ACTION_STAT_CHANGE_INCREASE) {
-                    flags = 1 | BATTLE_ACTION_STAT_CHANGE_INCREASE;
+                if (parameter & ACTION_STAT_CHANGE_INCREASE) {
+                    flags = 1 | ACTION_STAT_CHANGE_INCREASE;
                 }
             }
             g_world_text_substitution_values[2] = flags;
-            if (flags & BATTLE_ACTION_STAT_CHANGE_INCREASE) {
-                g_world_text_substitution_values[2] = flags & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
+            if (flags & ACTION_STAT_CHANGE_INCREASE) {
+                g_world_text_substitution_values[2] = flags & ACTION_STAT_CHANGE_VALUE_MASK;
                 entry->text_id = 0x508C;
             } else {
                 entry->text_id = 0x508D;
             }
-            if (option == BATTLE_ACTION_DISPLAY_IMAGE_CT) {
+            if (option == ACTION_DISPLAY_IMAGE_CT) {
                 if (flags == 0xFF) {
                     entry->text_id = 0x509A;
                 } else if (flags == 0x7F) {
@@ -284,15 +284,15 @@ s32 world_menu_dispatch_system_function(
                 }
             }
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT);
-        } else if (option == BATTLE_ACTION_DISPLAY_IMAGE_GIL) {
+        } else if (option == ACTION_DISPLAY_IMAGE_GIL) {
             g_world_text_substitution_values[0] = parameter < 0 ? -parameter : parameter;
             g_world_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT].text_id = 0x508F;
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT);
-        } else if (option == BATTLE_ACTION_DISPLAY_IMAGE_EXP) {
+        } else if (option == ACTION_DISPLAY_IMAGE_EXP) {
             g_world_text_substitution_values[0] = parameter & 0x7F;
             g_world_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT].text_id = 0x508E;
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT);
-        } else if (option == BATTLE_ACTION_DISPLAY_IMAGE_STOLEN || option == BATTLE_ACTION_DISPLAY_IMAGE_BROKEN) {
+        } else if (option == ACTION_DISPLAY_IMAGE_STOLEN || option == ACTION_DISPLAY_IMAGE_BROKEN) {
             if (parameter & 0x8000) {
                 g_world_text_substitution_values[0] = (parameter & 0xFF) + TEXT_ID_ITEM_NAME_BASE;
                 g_world_system_function_table[BATTLE_SYSTEM_FUNCTION_POST_ACTION_RESULT].text_id = 0x509B;

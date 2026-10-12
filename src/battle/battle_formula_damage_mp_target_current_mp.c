@@ -5,15 +5,15 @@
  * magic evade. */
 void battle_formula_damage_mp_target_current_mp(void) {
     battle_stats_t* target;
-    battle_action_data_t* action;
+    action_data_t* action;
     u16 mp;
 
     if (battle_formula_calculate_magical_evade() == 0) {
         if (battle_formula_calculate_magic_accuracy_no_elemental() == 0) {
-            target = g_battle_action_target;
-            action = g_battle_action_target_data;
+            target = g_action_target;
+            action = g_action_target_data;
             mp = target->mp;
-            action->attack_type = BATTLE_ACTION_TYPE_MP_DAMAGE;
+            action->attack_type = ACTION_TYPE_MP_DAMAGE;
             action->mp_damage = mp;
         }
     }

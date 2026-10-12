@@ -12,12 +12,12 @@
  * expires on a unit that is not undead, and 0 when nothing happens.
  */
 s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
-    battle_action_data_t* action = &unit->action;
+    action_data_t* action = &unit->action;
     s32 roll;
     s32 mask;
     u8 counter;
 
-    battle_action_clear_current_data(action);
+    action_clear_current_data(action);
     roll = rand();
     if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)))
@@ -28,13 +28,13 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD);
         action->status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE);
-        action->attack_type = BATTLE_ACTION_TYPE_HP_HEALING | BATTLE_ACTION_TYPE_STATUS_CHANGE;
+        action->attack_type = ACTION_TYPE_HP_HEALING | ACTION_TYPE_STATUS_CHANGE;
         action->hp_healing = unit->max_hp / 10;
         return 2;
     }
     if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
-        && g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {
+        && g_action_state == ACTION_STATE_EXECUTE) {
         if (unit->team_flags & BATTLE_TEAM_FLAG_IMMORTAL) {
             return 0;
         }
@@ -53,7 +53,7 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
             action->status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
                 = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD);
             action->hp_healing = ((rand() * unit->max_hp) / 0x8000) + 1;
-            action->attack_type = BATTLE_ACTION_TYPE_HP_HEALING | BATTLE_ACTION_TYPE_STATUS_CHANGE;
+            action->attack_type = ACTION_TYPE_HP_HEALING | ACTION_TYPE_STATUS_CHANGE;
             return 2;
         }
         mask = 0x10;
@@ -63,12 +63,12 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
         if (roll & mask) {
             action->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
                 = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL);
-            action->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
+            action->attack_type = ACTION_TYPE_STATUS_CHANGE;
             return 1;
         }
         action->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TREASURE)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TREASURE);
-        action->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
+        action->attack_type = ACTION_TYPE_STATUS_CHANGE;
         return 1;
     }
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
@@ -78,7 +78,7 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
         if (counter == 0) {
             action->status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
                 = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE);
-            action->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
+            action->attack_type = ACTION_TYPE_STATUS_CHANGE;
             if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD))) {
                 action->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
@@ -93,11 +93,11 @@ s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEFENDING)) {
         action->status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEFENDING)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEFENDING);
-        action->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
+        action->attack_type = ACTION_TYPE_STATUS_CHANGE;
     }
     if (unit->brave < 10) {
         action->brave_change = 0x81;
-        action->attack_type |= BATTLE_ACTION_TYPE_PSEUDO_STATUS;
+        action->attack_type |= ACTION_TYPE_PSEUDO_STATUS;
     }
     return (action->attack_type != 0) * 2;
 }

@@ -28,7 +28,7 @@ typedef enum battle_seq_opcode {
     BATTLE_SEQ_OP_HIDE_ITEM = 0xc3,
     BATTLE_SEQ_OP_SET_ITEM_POSITION = 0xc4, /* x, y: signed offsets of the item sprite from the unit */
     BATTLE_SEQ_OP_SHOW_ITEM = 0xc5,         /* draw the unit's item display (battle_gfx_init_item_get_rendering) */
-    BATTLE_SEQ_OP_WAIT_FOR_INPUT = 0xc6,    /* offset: jump while g_battle_action_post_action is 0 */
+    BATTLE_SEQ_OP_WAIT_FOR_INPUT = 0xc6,    /* offset: jump while g_action_post_action is 0 */
     BATTLE_SEQ_OP_UNKNOWN_C7 = 0xc7,        /* two operands */
     BATTLE_SEQ_OP_UNKNOWN_C8 = 0xc8,        /* two operands */
     BATTLE_SEQ_OP_UNKNOWN_C9 = 0xc9,        /* two operands */
@@ -120,7 +120,7 @@ typedef enum battle_unit_animation {
     BATTLE_UNIT_ANIMATION_IDLE_FLYING_HASTE = 7,
     BATTLE_UNIT_ANIMATION_IDLE_FLYING_SLOW = 8,
     BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE
-    = 9, /* in water two or more deep (battle_move_get_water_depth); also the crystal sprite */
+    = 9, /* in water two or more deep (move_get_water_depth); also the crystal sprite */
     BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_HASTE = 10,
     BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_SLOW = 11,
     BATTLE_UNIT_ANIMATION_WALK = 12, /* a movement step on foot (battle_unit_set_idle_animation_for_movement) */
@@ -219,24 +219,24 @@ extern u8 g_battle_rotation_speed_frames[];
 extern u16 g_battle_animation_speed_forced; /* 1 while the event speed is forced */
 
 /* screen */
-typedef struct battle_action_reward_display {
+typedef struct action_reward_display {
     u8 earned_experience;     /* +0x0 */
     u8 earned_jp;             /* +0x1 */
     u8 level_for_display;     /* +0x2; nonzero selects the "Level UP!" display */
     u8 job_level_for_display; /* +0x3 */
-} battle_action_reward_display_t;
-typedef char battle_action_reward_display_size_must_be_4[(sizeof(battle_action_reward_display_t) == 4) ? 1 : -1];
+} action_reward_display_t;
+typedef char action_reward_display_size_must_be_4[(sizeof(action_reward_display_t) == 4) ? 1 : -1];
 
 /* Packed image IDs in the action-result status list. */
 enum {
-    BATTLE_ACTION_STATUS_DISPLAY_IMAGE_MASK = 0x7f,
-    BATTLE_ACTION_STATUS_DISPLAY_REMOVAL = 0x80,
+    ACTION_STATUS_DISPLAY_IMAGE_MASK = 0x7f,
+    ACTION_STATUS_DISPLAY_REMOVAL = 0x80,
 };
 
-enum { BATTLE_ACTION_STATUS_DISPLAY_CAPACITY = 27 };
+enum { ACTION_STATUS_DISPLAY_CAPACITY = 27 };
 
 /* Destination bytes and motion flags share one 32-bit movement record. */
-typedef struct battle_move_destination {
+typedef struct move_destination {
     u8 destination_x;
     u8 destination_y;
     u8 destination_z;
@@ -247,8 +247,8 @@ typedef struct battle_move_destination {
     u32 floating : 1;
     u32 force_animation_update : 1;
     u32 : 2;
-} battle_move_destination_t;
-typedef char battle_move_destination_size_must_be_4[sizeof(battle_move_destination_t) == 4 ? 1 : -1];
+} move_destination_t;
+typedef char move_destination_size_must_be_4[sizeof(move_destination_t) == 4 ? 1 : -1];
 
 /* One frame of an SHP file: a 2-byte header followed by 4-byte parts, each a
  * rectangle of the sheet and where it is drawn (battle_gfx_load_trap_and_unit_frame_parts). */
@@ -381,7 +381,7 @@ typedef char battle_unit_sprite_block_size_must_be_48[(sizeof(battle_unit_sprite
  * The 32-bit facing value overlaps the action's item/type/target-ID bytes. Cursor
  * coordinate readers use signed 16-bit values over the action's target fields. */
 typedef union battle_unit_command_state {
-    battle_ai_command_t ai;
+    ai_command_t ai;
     struct {
         u8 _unused_00[12];
         s32 facing_hint;
@@ -430,15 +430,15 @@ typedef char
 /* Block view of the numeric display fields at misc unit data 0x2bc..0x2cf,
  * taken as one pointer by the action result display builders
  * (battle_gfx_build_next_action_result_display, 0x800808b8, battle_gfx_animate_post_action_text). */
-typedef struct battle_action_result_display {
+typedef struct action_result_display {
     u8 active;                                     /* 0x00 */
     u8 _padding_01;                                /* 0x01; aligns selector */
     u16 selector;                                  /* 0x02; battle_numeric_display_selector_e */
     u16 value;                                     /* 0x04 */
     u16 progress;                                  /* 0x06 */
     battle_gfx_sprite_display_data_t* displays[3]; /* 0x08 */
-} battle_action_result_display_t;
-typedef char battle_action_result_display_size_must_be_20[(sizeof(battle_action_result_display_t) == 20) ? 1 : -1];
+} action_result_display_t;
+typedef char action_result_display_size_must_be_20[(sizeof(action_result_display_t) == 20) ? 1 : -1];
 
 /* Common header of an unpacked unit SEQ table. The pointer tail has 0x100
  * entries in a native table and 0x40 in an EVTCHR slot. */
@@ -518,25 +518,25 @@ typedef char
 
 /* One movement step: a path element, the unit's current step and the step
  * the movement code is working on. */
-typedef struct battle_move_step {
+typedef struct move_step {
     u8 length : 2;    /* extra tiles covered: the jump length */
-    u8 slow : 1;      /* start the step at climb speed (battle_move_update_path_step) */
+    u8 slow : 1;      /* start the step at climb speed (move_update_path_step) */
     u8 climb : 1;     /* continue with a climb-speed step */
     u8 mount : 1;     /* the step ends on another unit */
     u8 higher : 1;    /* destination on the higher elevation */
-    u8 direction : 2; /* battle_move_step_direction_e */
-} battle_move_step_t;
-typedef char battle_move_step_size_must_be_1[sizeof(battle_move_step_t) == 1 ? 1 : -1];
+    u8 direction : 2; /* move_step_direction_e */
+} move_step_t;
+typedef char move_step_size_must_be_1[sizeof(move_step_t) == 1 ? 1 : -1];
 
 /* Packed half-height offsets at 0x8018f86e. A missing presence flag preserves
  * that side's previous value when applying a saved candidate at 0x80177b64. */
-typedef struct battle_move_height_offsets {
+typedef struct move_height_offsets {
     u8 destination_present : 1;
     u8 destination_height_offset : 3;
     u8 source_present : 1;
     u8 source_height_offset : 3;
-} battle_move_height_offsets_t;
-typedef char battle_movement_height_offsets_size_must_be_1[(sizeof(battle_move_height_offsets_t) == 1) ? 1 : -1];
+} move_height_offsets_t;
+typedef char move_height_offsets_size_must_be_1[(sizeof(move_height_offsets_t) == 1) ? 1 : -1];
 
 /* Tile coordinates stored in teleport paths and relocation reservations. */
 typedef struct battle_tile_coordinates {
@@ -551,109 +551,109 @@ typedef char battle_tile_coordinates_size_must_be_3[(sizeof(battle_tile_coordina
  * teleport. Ordinary counts select packed steps, each spanning one or more
  * tiles. Byte alignment preserves the original whole-record copies. */
 typedef struct battle_walk_path {
-    u8 count; /* 0x00; step count or BATTLE_MOVE_PATH_TELEPORT/TELEPORT_FAILED */
+    u8 count; /* 0x00; step count or MOVE_PATH_TELEPORT/TELEPORT_FAILED */
     union {
-        battle_move_step_t steps[0x7c]; /* 0x01; packed direction, elevation and length */
+        move_step_t steps[0x7c]; /* 0x01; packed direction, elevation and length */
         battle_tile_coordinates_t teleport;
     } data;
-    u8 flags;                                    /* 0x7d; battle_move_effective_flags_e */
-    battle_move_height_offsets_t height_offsets; /* 0x7e; source/destination offsets */
-    u8 pending_mount;                            /* 0x7f; BATTLE_PENDING_MOUNT_SET | battle id */
+    u8 flags;                             /* 0x7d; move_effective_flags_e */
+    move_height_offsets_t height_offsets; /* 0x7e; source/destination offsets */
+    u8 pending_mount;                     /* 0x7f; BATTLE_PENDING_MOUNT_SET | battle id */
 } battle_walk_path_t;
 typedef char battle_walk_path_size_must_be_128[sizeof(battle_walk_path_t) == 128 ? 1 : -1];
 typedef char battle_walk_path_flags_must_be_0x7d[((unsigned long)&((battle_walk_path_t*)0)->flags == 0x7d) ? 1 : -1];
 
 /* battle_walk_path_t.count values that are not a step count
- * (battle_move_build_path_to_tile). */
+ * (move_build_path_to_tile). */
 enum {
-    BATTLE_MOVE_PATH_TELEPORT = 0xfe, /* the path bytes hold the destination x, y and level */
-    BATTLE_MOVE_PATH_TELEPORT_FAILED = 0xff,
+    MOVE_PATH_TELEPORT = 0xfe, /* the path bytes hold the destination x, y and level */
+    MOVE_PATH_TELEPORT_FAILED = 0xff,
 };
 
-/* Travel direction of the step in progress, as battle_move_get_direction derives it from the unit's
+/* Travel direction of the step in progress, as move_get_direction derives it from the unit's
  * tile and its destination tile. */
-typedef enum battle_move_direction {
-    BATTLE_MOVE_DIRECTION_SOUTH = 0, /* -y */
-    BATTLE_MOVE_DIRECTION_EAST = 1,  /* +x */
-    BATTLE_MOVE_DIRECTION_NORTH = 2, /* +y */
-    BATTLE_MOVE_DIRECTION_WEST = 3,  /* -x */
-} battle_move_direction_e;
+typedef enum move_direction {
+    MOVE_DIRECTION_SOUTH = 0, /* -y */
+    MOVE_DIRECTION_EAST = 1,  /* +x */
+    MOVE_DIRECTION_NORTH = 2, /* +y */
+    MOVE_DIRECTION_WEST = 3,  /* -x */
+} move_direction_e;
 
-/* battle_move_step_t.direction. */
-typedef enum battle_move_step_direction {
-    BATTLE_MOVE_STEP_DIRECTION_EAST = 0,  /* +x */
-    BATTLE_MOVE_STEP_DIRECTION_WEST = 1,  /* -x */
-    BATTLE_MOVE_STEP_DIRECTION_SOUTH = 2, /* -y */
-    BATTLE_MOVE_STEP_DIRECTION_NORTH = 3, /* +y */
-} battle_move_step_direction_e;
+/* move_step_t.direction. */
+typedef enum move_step_direction {
+    MOVE_STEP_DIRECTION_EAST = 0,  /* +x */
+    MOVE_STEP_DIRECTION_WEST = 1,  /* -x */
+    MOVE_STEP_DIRECTION_SOUTH = 2, /* -y */
+    MOVE_STEP_DIRECTION_NORTH = 3, /* +y */
+} move_step_direction_e;
 
 /* battle_unit_misc_data_t.step_phase: the stage of the movement step in progress. Every stage has one
- * value per battle_move_direction_e direction, in that order. The handlers dispatch on the stage and
+ * value per move_direction_e direction, in that order. The handlers dispatch on the stage and
  * take the direction from the unit's coordinates, and the stores that change stage in the middle of
  * a step write the NORTH value whatever the direction. */
-typedef enum battle_move_step_phase {
-    BATTLE_MOVE_STEP_PHASE_NONE = 0,
+typedef enum move_step_phase {
+    MOVE_STEP_PHASE_NONE = 0,
     /* walking: from the tile centre to its exit edge, then on to the destination centre */
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_SOUTH = 1,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_SOUTH = 2,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_EAST = 3,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_EAST = 4,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_NORTH = 5,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_NORTH = 6,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_WEST = 7,
-    BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_WEST = 8,
+    MOVE_STEP_PHASE_WALK_TO_EDGE_SOUTH = 1,
+    MOVE_STEP_PHASE_WALK_TO_CENTRE_SOUTH = 2,
+    MOVE_STEP_PHASE_WALK_TO_EDGE_EAST = 3,
+    MOVE_STEP_PHASE_WALK_TO_CENTRE_EAST = 4,
+    MOVE_STEP_PHASE_WALK_TO_EDGE_NORTH = 5,
+    MOVE_STEP_PHASE_WALK_TO_CENTRE_NORTH = 6,
+    MOVE_STEP_PHASE_WALK_TO_EDGE_WEST = 7,
+    MOVE_STEP_PHASE_WALK_TO_CENTRE_WEST = 8,
     /* the same two stages at climb speed */
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_SOUTH = 9,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_SOUTH = 10,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_EAST = 11,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_EAST = 12,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_NORTH = 13,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_NORTH = 14,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_EDGE_WEST = 15,
-    BATTLE_MOVE_STEP_PHASE_CLIMB_TO_CENTRE_WEST = 16,
+    MOVE_STEP_PHASE_CLIMB_TO_EDGE_SOUTH = 9,
+    MOVE_STEP_PHASE_CLIMB_TO_CENTRE_SOUTH = 10,
+    MOVE_STEP_PHASE_CLIMB_TO_EDGE_EAST = 11,
+    MOVE_STEP_PHASE_CLIMB_TO_CENTRE_EAST = 12,
+    MOVE_STEP_PHASE_CLIMB_TO_EDGE_NORTH = 13,
+    MOVE_STEP_PHASE_CLIMB_TO_CENTRE_NORTH = 14,
+    MOVE_STEP_PHASE_CLIMB_TO_EDGE_WEST = 15,
+    MOVE_STEP_PHASE_CLIMB_TO_CENTRE_WEST = 16,
     /* jumping: the take-off animation, rising, falling to the destination edge, the landing animation */
-    BATTLE_MOVE_STEP_PHASE_JUMP_START_SOUTH = 17,
-    BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH = 18,
-    BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_SOUTH = 19,
-    BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_SOUTH = 20,
-    BATTLE_MOVE_STEP_PHASE_JUMP_START_EAST = 21,
-    BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_EAST = 22,
-    BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_EAST = 23,
-    BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_EAST = 24,
-    BATTLE_MOVE_STEP_PHASE_JUMP_START_NORTH = 25,
-    BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_NORTH = 26,
-    BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_NORTH = 27,
-    BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_NORTH = 28,
-    BATTLE_MOVE_STEP_PHASE_JUMP_START_WEST = 29,
-    BATTLE_MOVE_STEP_PHASE_JUMP_ASCENT_WEST = 30,
-    BATTLE_MOVE_STEP_PHASE_JUMP_DESCENT_WEST = 31,
-    BATTLE_MOVE_STEP_PHASE_JUMP_LANDING_WEST = 32,
+    MOVE_STEP_PHASE_JUMP_START_SOUTH = 17,
+    MOVE_STEP_PHASE_JUMP_ASCENT_SOUTH = 18,
+    MOVE_STEP_PHASE_JUMP_DESCENT_SOUTH = 19,
+    MOVE_STEP_PHASE_JUMP_LANDING_SOUTH = 20,
+    MOVE_STEP_PHASE_JUMP_START_EAST = 21,
+    MOVE_STEP_PHASE_JUMP_ASCENT_EAST = 22,
+    MOVE_STEP_PHASE_JUMP_DESCENT_EAST = 23,
+    MOVE_STEP_PHASE_JUMP_LANDING_EAST = 24,
+    MOVE_STEP_PHASE_JUMP_START_NORTH = 25,
+    MOVE_STEP_PHASE_JUMP_ASCENT_NORTH = 26,
+    MOVE_STEP_PHASE_JUMP_DESCENT_NORTH = 27,
+    MOVE_STEP_PHASE_JUMP_LANDING_NORTH = 28,
+    MOVE_STEP_PHASE_JUMP_START_WEST = 29,
+    MOVE_STEP_PHASE_JUMP_ASCENT_WEST = 30,
+    MOVE_STEP_PHASE_JUMP_DESCENT_WEST = 31,
+    MOVE_STEP_PHASE_JUMP_LANDING_WEST = 32,
     /* flying */
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_SOUTH = 34,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_SOUTH = 35,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_EAST = 36,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_EAST = 37,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_NORTH = 38,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_NORTH = 39,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_EDGE_WEST = 40,
-    BATTLE_MOVE_STEP_PHASE_FLY_TO_CENTRE_WEST = 41,
+    MOVE_STEP_PHASE_FLY_TO_EDGE_SOUTH = 34,
+    MOVE_STEP_PHASE_FLY_TO_CENTRE_SOUTH = 35,
+    MOVE_STEP_PHASE_FLY_TO_EDGE_EAST = 36,
+    MOVE_STEP_PHASE_FLY_TO_CENTRE_EAST = 37,
+    MOVE_STEP_PHASE_FLY_TO_EDGE_NORTH = 38,
+    MOVE_STEP_PHASE_FLY_TO_CENTRE_NORTH = 39,
+    MOVE_STEP_PHASE_FLY_TO_EDGE_WEST = 40,
+    MOVE_STEP_PHASE_FLY_TO_CENTRE_WEST = 41,
     /* floating: the two walking stages, and the jump up to a higher tile */
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_SOUTH = 43,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_SOUTH = 44,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_SOUTH = 45,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_EAST = 47,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_EAST = 48,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_EAST = 49,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_NORTH = 51,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_NORTH = 52,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_NORTH = 53,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_WEST = 55,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_TO_CENTRE_WEST = 56,
-    BATTLE_MOVE_STEP_PHASE_FLOAT_JUMP_WEST = 57,
-    /* a teleport path (BATTLE_MOVE_PATH_TELEPORT and _FAILED): start the animation, then wait for it */
-    BATTLE_MOVE_STEP_PHASE_TELEPORT_START = 59,
-    BATTLE_MOVE_STEP_PHASE_TELEPORT_ANIMATION = 60,
-} battle_move_step_phase_e;
+    MOVE_STEP_PHASE_FLOAT_TO_EDGE_SOUTH = 43,
+    MOVE_STEP_PHASE_FLOAT_TO_CENTRE_SOUTH = 44,
+    MOVE_STEP_PHASE_FLOAT_JUMP_SOUTH = 45,
+    MOVE_STEP_PHASE_FLOAT_TO_EDGE_EAST = 47,
+    MOVE_STEP_PHASE_FLOAT_TO_CENTRE_EAST = 48,
+    MOVE_STEP_PHASE_FLOAT_JUMP_EAST = 49,
+    MOVE_STEP_PHASE_FLOAT_TO_EDGE_NORTH = 51,
+    MOVE_STEP_PHASE_FLOAT_TO_CENTRE_NORTH = 52,
+    MOVE_STEP_PHASE_FLOAT_JUMP_NORTH = 53,
+    MOVE_STEP_PHASE_FLOAT_TO_EDGE_WEST = 55,
+    MOVE_STEP_PHASE_FLOAT_TO_CENTRE_WEST = 56,
+    MOVE_STEP_PHASE_FLOAT_JUMP_WEST = 57,
+    /* a teleport path (MOVE_PATH_TELEPORT and _FAILED): start the animation, then wait for it */
+    MOVE_STEP_PHASE_TELEPORT_START = 59,
+    MOVE_STEP_PHASE_TELEPORT_ANIMATION = 60,
+} move_step_phase_e;
 
 /* battle_unit_misc_data_t.distortion_animation_id: the motion that
  * battle_unit_dispatch_distortion_animation steps once an animation frame
@@ -704,11 +704,11 @@ typedef struct battle_strike_work {
     u8 target_new_map_level;
     u8 used_weapon_id;
     s16 reaction_ability_id; /* 0x20; misc 0x1ac */
-    /* 0x22; misc 0x1ae. g_battle_action_current_ability.knockback_flags & 0x7f, stored with
+    /* 0x22; misc 0x1ae. g_action_current_ability.knockback_flags & 0x7f, stored with
      * the knockback destination. */
     u8 knockback_flags;
     u8 can_earn_experience;
-    battle_action_reward_display_t action_rewards; /* 0x24; misc 0x1b0..0x1b3 */
+    action_reward_display_t action_rewards; /* 0x24; misc 0x1b0..0x1b3 */
 } battle_strike_work_t;
 typedef char battle_strike_work_must_be_40[sizeof(battle_strike_work_t) == 40 ? 1 : -1];
 typedef char battle_strike_targets_must_be_2[((unsigned long)&((battle_strike_work_t*)0)->target_list == 2) ? 1 : -1];
@@ -769,23 +769,23 @@ typedef struct battle_unit_misc_data {
     u8 map_x;                     /* 0x07c */
     u8 map_y;                     /* 0x07d */
     u8 map_z;                     /* 0x07e */
-    u8 step_phase;                /* 0x07f; battle_move_step_phase_e */
-    battle_move_destination_t movement;
-    u8 previous_map_x;          /* 0x084 */
-    u8 previous_map_y;          /* 0x085 */
-    u8 previous_map_z;          /* 0x086 */
-    u8 distortion_animation_id; /* 0x087; battle_distortion_animation_e */
-    s32 distortion_phase;       /* 0x088; the handler's own step, 0 when the distortion animation starts */
-    s32 distortion_timer;       /* 0x08c; frames left: the second operand of BATTLE_SEQ_OP_START_DISTORTION */
-    s32 distortion_target;      /* 0x090; target real.vy or frame threshold of the distortion step */
-    u16 previous_facing;        /* 0x094 */
-    u8 destination_edge_height; /* 0x096; destination slope corner, as g_battle_move_destination_edge_height */
-    u8 current_edge_height;     /* 0x097; current slope corner, as g_battle_move_current_edge_height */
-    u32 movement_path_offset;   /* 0x098; index of the next packed path step */
-    battle_walk_path_t path;    /* 0x09c..0x11b */
-    battle_move_step_t current_path_step;     /* 0x11c; path step byte being executed */
-    u8 last_path_count;                       /* 0x11d; receives prior movement-path count at 0x8006d7b8 */
-    u8 standing_on_unit_id_plus_one;          /* 0x11e; unit stood on, 0 = none */
+    u8 step_phase;                /* 0x07f; move_step_phase_e */
+    move_destination_t movement;
+    u8 previous_map_x;               /* 0x084 */
+    u8 previous_map_y;               /* 0x085 */
+    u8 previous_map_z;               /* 0x086 */
+    u8 distortion_animation_id;      /* 0x087; battle_distortion_animation_e */
+    s32 distortion_phase;            /* 0x088; the handler's own step, 0 when the distortion animation starts */
+    s32 distortion_timer;            /* 0x08c; frames left: the second operand of BATTLE_SEQ_OP_START_DISTORTION */
+    s32 distortion_target;           /* 0x090; target real.vy or frame threshold of the distortion step */
+    u16 previous_facing;             /* 0x094 */
+    u8 destination_edge_height;      /* 0x096; destination slope corner, as g_move_destination_edge_height */
+    u8 current_edge_height;          /* 0x097; current slope corner, as g_move_current_edge_height */
+    u32 movement_path_offset;        /* 0x098; index of the next packed path step */
+    battle_walk_path_t path;         /* 0x09c..0x11b */
+    move_step_t current_path_step;   /* 0x11c; path step byte being executed */
+    u8 last_path_count;              /* 0x11d; receives prior movement-path count at 0x8006d7b8 */
+    u8 standing_on_unit_id_plus_one; /* 0x11e; unit stood on, 0 = none */
     u8 previous_standing_on_unit_id_plus_one; /* 0x11f; restored when a move is undone */
     s16 camera_relative_x;                    /* 0x120; camera-space x from RotTrans */
     s16 camera_relative_y;                    /* 0x122 */
@@ -814,9 +814,9 @@ typedef struct battle_unit_misc_data {
     u32 statuses_to_remove_5_6;                /* 0x154 */
     battle_unit_command_state_t command_state; /* 0x158..0x16f */
     s32 sp2_ability_id;                        /* 0x170: ability whose SP2 file battle_open_sp2 loads */
-    s32 ability_preview_phase;                 /* 0x174: battle_target_panels_e */
-    /* 0x178; battle_target_calculate_for_menu_types result stored by
-     * battle_target_select_tile: 0/1 preview, 2 stop, -1 back to the menu. */
+    s32 ability_preview_phase;                 /* 0x174: target_panels_e */
+    /* 0x178; target_calculate_for_menu_types result stored by
+     * target_select_tile: 0/1 preview, 2 stop, -1 back to the menu. */
     s32 target_select_result;
     s32 attack_phase_state;    /* 0x17c: battle_attack_preparation_e */
     s32 pending_attack_result; /* 0x180: attack result code; -1 signals death */
@@ -838,20 +838,20 @@ typedef struct battle_unit_misc_data {
     u32 action_display_flags;      /* 0x1b8..0x1bb */
     /* Action-display image IDs, not canonical status IDs.  Bit 0x80 marks a
      * removal; the dispatcher consumes entries from the end. */
-    u8 status_display_image_list[BATTLE_ACTION_STATUS_DISPLAY_CAPACITY]; /* 0x1bc..0x1d6 */
-    u8 _padding_1d7;                                                     /* aligns animation */
-    battle_unit_anim_state_t animation;                                  /* 0x1d8..0x207 */
-    battle_unit_sprite_block_t sprite_blocks[3];                         /* 0x208..0x297 */
-    u8 shadow_graphic_trigger;                                           /* 0x298; nonzero: draw the unit's shadow */
+    u8 status_display_image_list[ACTION_STATUS_DISPLAY_CAPACITY]; /* 0x1bc..0x1d6 */
+    u8 _padding_1d7;                                              /* aligns animation */
+    battle_unit_anim_state_t animation;                           /* 0x1d8..0x207 */
+    battle_unit_sprite_block_t sprite_blocks[3];                  /* 0x208..0x297 */
+    u8 shadow_graphic_trigger;                                    /* 0x298; nonzero: draw the unit's shadow */
     u8 shadow_dirty;        /* 0x299; bit 0 set when a step lands, cleared on shadow redraw */
     u8 shadow_counter;      /* 0x29a; shadow animation counter (battle_gfx_draw_unit_shadow) */
     u8 _padding_29b;        /* aligns shadow_quad */
     SVECTOR shadow_quad[4]; /* 0x29c; shadow corners written by battle_gfx_calculate_sprite_shadow_from_tile_slope */
-    battle_action_result_display_t numeric_display; /* 0x2bc..0x2cf */
-    u8 item_display_active;                         /* 0x2d0; BATTLE_SEQ_OP_SHOW_ITEM: draw item_display */
-    u8 _unused_2d1;                                 /* 0x2d1 */
-    s8 item_get_x_offset;                           /* 0x2d2; BATTLE_SEQ_OP_SET_ITEM_POSITION, in pixels */
-    s8 item_get_y_offset;                           /* 0x2d3 */
+    action_result_display_t numeric_display; /* 0x2bc..0x2cf */
+    u8 item_display_active;                  /* 0x2d0; BATTLE_SEQ_OP_SHOW_ITEM: draw item_display */
+    u8 _unused_2d1;                          /* 0x2d1 */
+    s8 item_get_x_offset;                    /* 0x2d2; BATTLE_SEQ_OP_SET_ITEM_POSITION, in pixels */
+    s8 item_get_y_offset;                    /* 0x2d3 */
     u8 _unused_2d4[4];
     battle_gfx_sprite_display_data_t* item_display; /* 0x2d8; item_t/Equip display pointer */
     /* Status bubble (0x2dc..0x2e7);
@@ -1291,7 +1291,7 @@ s32 battle_unit_save_staged_status_data(s32 unit_id);
 s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* destination);
 void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* unit);
 void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 allow_height_change);
-s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_display_t* display);
+s32 battle_unit_apply_action_rewards(s32 unit_index, action_reward_display_t* display);
 s32 battle_unit_init_deployed_units_data(unit_deployment_coordinates_t* formation, s32 is_red_team_debug);
 s32 battle_unit_set_tile_position(s32 misc_unit_id, u8 map_x, u8 map_y, u8 map_z, u8 facing);
 
@@ -1303,7 +1303,7 @@ void battle_unit_shift_down_or_up(battle_unit_misc_data_t* unit, s8 delta);
 s32 battle_unit_apply_level_up_down_ability(void);
 s32 battle_unit_apply_stat_increment_decrement(s32 mod, u8* stat, u8 max, u8 min);
 s32 battle_unit_build_deployed_units_data(unit_deployment_coordinates_t* formation, s32 unused_1);
-s32 battle_unit_build_gained_exp_jp_level_job_level(battle_stats_t* unit, battle_action_reward_display_t* rewards);
+s32 battle_unit_build_gained_exp_jp_level_job_level(battle_stats_t* unit, action_reward_display_t* rewards);
 void battle_unit_call_bow_hardcoding_by_misc_id(u16 attacker_id, u16 target_id);
 void battle_unit_call_set_animation_based_on_status(struct battle_unit_misc_data* unit);
 s32 battle_unit_get_chocobo_mount_state(battle_stats_t* unit);
@@ -1318,7 +1318,7 @@ void battle_unit_copy_misc_screen_coords(u32 misc_id, SVECTOR* screen_coords);
 void battle_unit_dismount_rider_and_update_display(battle_unit_misc_data_t* rider);
 void battle_unit_face_towards_action_target(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* target);
 battle_stats_t* battle_unit_find_active_data_pointer(void);
-battle_action_command_t* battle_unit_get_action_command_by_battle_id(s32 unit_id);
+action_command_t* battle_unit_get_action_command_by_battle_id(s32 unit_id);
 SVECTOR* battle_unit_get_event_offset_ptr_by_misc_id(u32 misc_id);
 battle_stats_t* battle_unit_get_attacker_data_pointer(void);
 s32 battle_unit_get_facing_nibble_by_misc_id(u32 misc_id);
@@ -1328,12 +1328,12 @@ battle_unit_misc_data_t* battle_unit_find_any_misc_data_at_map_coords(s32 map_x,
 battle_unit_misc_data_t* battle_unit_get_overlapping_misc_data_pointer(
     battle_unit_misc_data_t* self, s32 x, s32 y, s32 z);
 
-battle_action_command_t* battle_unit_get_misc_action_command_by_battle_id(u32 battle_id);
+action_command_t* battle_unit_get_misc_action_command_by_battle_id(u32 battle_id);
 s32 battle_unit_get_tile_center_and_height_by_battle_id(u32 battle_id, SVECTOR* coords);
 s32 battle_unit_add_event_offset_by_misc_id(u32 misc_id, const SVECTOR* amount);
 void battle_unit_increment_or_decrement_height_mod(battle_unit_misc_data_t* unit);
-void battle_move_update_teleport_start(struct battle_unit_misc_data* unit);
-void battle_move_start_teleport_animation(battle_unit_misc_data_t* unit);
+void move_update_teleport_start(struct battle_unit_misc_data* unit);
+void move_start_teleport_animation(battle_unit_misc_data_t* unit);
 void battle_unit_init_deployed_units_data_for_debug_red_team(unit_deployment_coordinates_t* formation, s32 unused_1);
 
 battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id,

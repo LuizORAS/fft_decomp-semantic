@@ -71,7 +71,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         base = page;
     } else {
         /* Outermost list: page pair at +0x388 of the current subsystem workspace. */
-        page = g_battle_ai_workspace_ptr->list_pages;
+        page = g_ai_workspace_ptr->list_pages;
         base = page;
     }
     toggle = 0;
@@ -263,7 +263,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                             layout->columns.text_ids[column][index], buffer, &g_menu_text_state.pen);
                         g_battle_menu_text_palette_offset = layout->columns.text_colors[column][index];
                         if (g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_4 != 0
-                            && (g_battle_ai_workspace_ptr->ability_list.flags[index] & 1)) {
+                            && (g_ai_workspace_ptr->ability_list.flags[index] & 1)) {
                             battle_menu_set_text_origin(layout->columns.x[column] + 0x50, 0);
                             battle_menu_display_text_entry(0x5088, buffer, &g_menu_text_state.pen);
                         }
@@ -274,8 +274,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                         if ((column == 2 || (column == 1 && layout->columns.mode[2] == MENU_TEXT_COLUMN_HIDDEN))
                             && layout->columns.text_ids[column][index] >= 0
                             && layout->columns.text_ids[column][index] < 2
-                            && (g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0xFF
-                                || g_battle_ai_workspace_ptr->ability_list.skill_ct[index] == 0)) {
+                            && (g_ai_workspace_ptr->ability_list.skill_ct[index] == 0xFF
+                                || g_ai_workspace_ptr->ability_list.skill_ct[index] == 0)) {
                             g_menu_text_state.pen.rect.y += 2;
                             battle_menu_draw_stacked_glyph_pair(buffer, &g_menu_text_state.pen);
                         } else {

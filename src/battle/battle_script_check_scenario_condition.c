@@ -100,7 +100,7 @@ s32 battle_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile
     if (type == EVENT_SCENARIO_CONDITION_CASUALTIES_AT_MOST
         && id >= battle_script_get_variable(EVENT_SCRIPT_VAR_CASUALTIES))
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
-    if (type == EVENT_SCENARIO_CONDITION_ENEMIES_DEFEATED && battle_action_check_battle_outcome() == 0)
+    if (type == EVENT_SCENARIO_CONDITION_ENEMIES_DEFEATED && action_check_battle_outcome() == 0)
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type == EVENT_SCENARIO_CONDITION_UNIT_AT_TILE) {
         unit = battle_unit_get_by_unit_id(id);

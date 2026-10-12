@@ -34,13 +34,13 @@ void battle_menu_auto_battle_setting_thread(void) {
     param = (menu_entry_t*)battle_thread_get_current_parameter_1();
     cursor = param->selected_index;
     stats = battle_unit_get_attacker_data_pointer();
-    if (stats->auto_battle_setting == BATTLE_AI_AUTOBATTLE_MANUAL) {
+    if (stats->auto_battle_setting == AI_AUTOBATTLE_MANUAL) {
         cursor = 0;
-    } else if (stats->auto_battle_setting == BATTLE_AI_AUTOBATTLE_TARGETED) {
+    } else if (stats->auto_battle_setting == AI_AUTOBATTLE_TARGETED) {
         cursor = 1;
-    } else if (stats->auto_battle_setting == BATTLE_AI_AUTOBATTLE_RECOVERY) {
+    } else if (stats->auto_battle_setting == AI_AUTOBATTLE_RECOVERY) {
         cursor = 2;
-    } else if (stats->auto_battle_setting == BATTLE_AI_AUTOBATTLE_FADING_LIFE) {
+    } else if (stats->auto_battle_setting == AI_AUTOBATTLE_FADING_LIFE) {
         cursor = 3;
     } else {
         cursor = 4;
@@ -61,7 +61,7 @@ void battle_menu_auto_battle_setting_thread(void) {
                 selected = cursor;
                 if (selected == 0) {
                     before = battle_menu_get_id_based_on_mount_moveable_actable(g_battle_active_turn_unit.battle_id);
-                    stats->auto_battle_setting = BATTLE_AI_AUTOBATTLE_MANUAL;
+                    stats->auto_battle_setting = AI_AUTOBATTLE_MANUAL;
                     g_battle_menu_pending_selection[0] = 0x12;
                     colour[0] = 8;
                     colour[1] = 4;

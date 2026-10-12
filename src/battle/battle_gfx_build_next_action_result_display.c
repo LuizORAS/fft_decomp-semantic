@@ -10,11 +10,11 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
     battle_stats_t* stats;
     u32 scan_flags;
     s32 flags;
-    battle_action_result_display_t* display;
+    action_result_display_t* display;
     battle_gfx_sprite_display_data_t* display_0;
     battle_gfx_sprite_display_data_t* display_1;
     battle_gfx_sprite_display_data_t* display_2;
-    const battle_action_display_image_rect_t* image;
+    const action_display_image_rect_t* image;
     s32 flag;
     s32 index;
     s32 digits[3];
@@ -30,38 +30,38 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
     stats = unit->battle_data;
     display = &unit->numeric_display;
 
-    if ((flags & BATTLE_ACTION_DISPLAY_NUMERIC_FLAGS_MASK) != 0) {
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_HP_DAMAGE] = stats->action.hp_damage;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_HP_HEALING] = stats->action.hp_healing;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_MP_DAMAGE] = stats->action.mp_damage;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_MP_HEALING] = stats->action.mp_healing;
-        change = stats->action.sp_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_SPEED_GAIN] = change;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_SPEED_DAMAGE] = change;
+    if ((flags & ACTION_DISPLAY_NUMERIC_FLAGS_MASK) != 0) {
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_HP_DAMAGE] = stats->action.hp_damage;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_HP_HEALING] = stats->action.hp_healing;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_MP_DAMAGE] = stats->action.mp_damage;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_MP_HEALING] = stats->action.mp_healing;
+        change = stats->action.sp_change & ACTION_STAT_CHANGE_VALUE_MASK;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_SPEED_GAIN] = change;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_SPEED_DAMAGE] = change;
         change = stats->action.ct_change & 0x7f;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_CT_GAIN] = change;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_CT_DAMAGE] = change;
-        change = stats->action.brave_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_BRAVE_GAIN] = change;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_BRAVE_DAMAGE] = change;
-        change = stats->action.faith_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_FAITH_GAIN] = change;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_FAITH_DAMAGE] = change;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_CT_GAIN] = change;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_CT_DAMAGE] = change;
+        change = stats->action.brave_change & ACTION_STAT_CHANGE_VALUE_MASK;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_BRAVE_GAIN] = change;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_BRAVE_DAMAGE] = change;
+        change = stats->action.faith_change & ACTION_STAT_CHANGE_VALUE_MASK;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_FAITH_GAIN] = change;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_FAITH_DAMAGE] = change;
         flag = 1;
-        change = stats->action.pa_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_PA_GAIN] = change;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_PA_DAMAGE] = change;
+        change = stats->action.pa_change & ACTION_STAT_CHANGE_VALUE_MASK;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_PA_GAIN] = change;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_PA_DAMAGE] = change;
         index = 0;
-        change = stats->action.ma_change & BATTLE_ACTION_STAT_CHANGE_VALUE_MASK;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_MA_GAIN] = change;
-        g_battle_action_display_values[BATTLE_NUMERIC_DISPLAY_MA_DAMAGE] = change;
+        change = stats->action.ma_change & ACTION_STAT_CHANGE_VALUE_MASK;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_MA_GAIN] = change;
+        g_action_display_values[BATTLE_NUMERIC_DISPLAY_MA_DAMAGE] = change;
 
         scan_flags = unit->action_display_flags;
-        while (index < BATTLE_ACTION_DISPLAY_VALUE_COUNT) {
+        while (index < ACTION_DISPLAY_VALUE_COUNT) {
             if ((flag & scan_flags) != 0) {
                 flags = index;
-                display->value = g_battle_action_display_values[flags];
-                display->selector = g_battle_action_display_numeric_selectors[flags];
+                display->value = g_action_display_values[flags];
+                display->selector = g_action_display_numeric_selectors[flags];
                 index = unit->action_display_flags;
                 unit->action_display_flags = ~flag & index;
                 break;
@@ -69,60 +69,60 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
             index++;
             flag <<= 1;
         }
-    } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_LEVEL_DOWN) != 0) {
+    } else if ((flags & ACTION_DISPLAY_FLAG_LEVEL_DOWN) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_LEVEL_DOWN;
         branch_flags = unit->action_display_flags;
-        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_LEVEL_DOWN;
-    } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_LEVEL_UP) != 0) {
+        unit->action_display_flags = branch_flags & ~ACTION_DISPLAY_FLAG_LEVEL_DOWN;
+    } else if ((flags & ACTION_DISPLAY_FLAG_LEVEL_UP) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_LEVEL_UP;
         branch_flags = unit->action_display_flags;
-        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_LEVEL_UP;
-    } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_STOLEN) != 0) {
+        unit->action_display_flags = branch_flags & ~ACTION_DISPLAY_FLAG_LEVEL_UP;
+    } else if ((flags & ACTION_DISPLAY_FLAG_STOLEN) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_STOLEN;
         branch_flags = unit->action_display_flags;
-        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_STOLEN;
-    } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_BROKEN) != 0) {
+        unit->action_display_flags = branch_flags & ~ACTION_DISPLAY_FLAG_STOLEN;
+    } else if ((flags & ACTION_DISPLAY_FLAG_BROKEN) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_BROKEN;
         branch_flags = unit->action_display_flags;
-        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_BROKEN;
-    } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_QUICK) != 0) {
+        unit->action_display_flags = branch_flags & ~ACTION_DISPLAY_FLAG_BROKEN;
+    } else if ((flags & ACTION_DISPLAY_FLAG_QUICK) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_QUICK;
         branch_flags = unit->action_display_flags;
-        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_QUICK;
-    } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_CT_ZERO) != 0) {
+        unit->action_display_flags = branch_flags & ~ACTION_DISPLAY_FLAG_QUICK;
+    } else if ((flags & ACTION_DISPLAY_FLAG_CT_ZERO) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_CT_ZERO;
         branch_flags = unit->action_display_flags;
-        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_CT_ZERO;
-    } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_MISSED) != 0) {
+        unit->action_display_flags = branch_flags & ~ACTION_DISPLAY_FLAG_CT_ZERO;
+    } else if ((flags & ACTION_DISPLAY_FLAG_MISSED) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_MISSED;
         branch_flags = unit->action_display_flags;
-        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_MISSED;
-    } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_GUARDED) != 0) {
+        unit->action_display_flags = branch_flags & ~ACTION_DISPLAY_FLAG_MISSED;
+    } else if ((flags & ACTION_DISPLAY_FLAG_GUARDED) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_GUARDED;
         branch_flags = unit->action_display_flags;
-        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_GUARDED;
-    } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_CAUGHT) != 0) {
+        unit->action_display_flags = branch_flags & ~ACTION_DISPLAY_FLAG_GUARDED;
+    } else if ((flags & ACTION_DISPLAY_FLAG_CAUGHT) != 0) {
         u32 branch_flags;
         unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_CAUGHT;
         branch_flags = unit->action_display_flags;
-        unit->action_display_flags = branch_flags & ~BATTLE_ACTION_DISPLAY_FLAG_CAUGHT;
+        unit->action_display_flags = branch_flags & ~ACTION_DISPLAY_FLAG_CAUGHT;
     } else if (unit->status_display_image_count != 0) {
         unit->status_display_image_count--;
         status = unit->status_display_image_list[unit->status_display_image_count];
-        if ((status & BATTLE_ACTION_STATUS_DISPLAY_REMOVAL) != 0) {
+        if ((status & ACTION_STATUS_DISPLAY_REMOVAL) != 0) {
             display->selector = BATTLE_NUMERIC_DISPLAY_STATUS_REMOVED;
         } else {
             display->selector = BATTLE_NUMERIC_DISPLAY_STATUS_INFLICTED;
         }
-        status &= BATTLE_ACTION_STATUS_DISPLAY_IMAGE_MASK;
+        status &= ACTION_STATUS_DISPLAY_IMAGE_MASK;
     } else {
         return 0;
     }
@@ -290,9 +290,9 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
     case BATTLE_NUMERIC_DISPLAY_STATUS_INFLICTED:
     case BATTLE_NUMERIC_DISPLAY_STATUS_REMOVED:
         result = status;
-        battle_gfx_store_sprite_display_data(display_2, 0, -21, -32, g_battle_action_display_image_rects[result].u,
-            g_battle_action_display_image_rects[result].v, g_battle_action_display_image_rects[result].width,
-            (g_battle_action_display_image_rects + result)->height, 0);
+        battle_gfx_store_sprite_display_data(display_2, 0, -21, -32, g_action_display_image_rects[result].u,
+            g_action_display_image_rects[result].v, g_action_display_image_rects[result].width,
+            (g_action_display_image_rects + result)->height, 0);
         break;
     case BATTLE_NUMERIC_DISPLAY_LEVEL_DOWN:
         battle_gfx_store_sprite_display_data(display_1, 0, -7, 16, 0xb0, 0x30, 8, 16, 0);
@@ -303,17 +303,17 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
         battle_gfx_store_sprite_display_data(display_2, 0, 0, -32, 0xb4, 0xc1, 0x0e, 0x0a, 0);
         break;
     case BATTLE_NUMERIC_DISPLAY_STOLEN:
-        image = &g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_STOLEN];
+        image = &g_action_display_image_rects[ACTION_DISPLAY_IMAGE_STOLEN];
         battle_gfx_store_sprite_display_data(
             display_2, 0, -21, -32, image->u, image->v, image->width, image->height, 0);
         break;
     case BATTLE_NUMERIC_DISPLAY_BROKEN:
-        image = &g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_BROKEN];
+        image = &g_action_display_image_rects[ACTION_DISPLAY_IMAGE_BROKEN];
         battle_gfx_store_sprite_display_data(
             display_2, 0, -21, -32, image->u, image->v, image->width, image->height, 0);
         break;
     case BATTLE_NUMERIC_DISPLAY_QUICK:
-        image = &g_battle_action_display_image_rects[BATTLE_ACTION_DISPLAY_IMAGE_QUICK];
+        image = &g_action_display_image_rects[ACTION_DISPLAY_IMAGE_QUICK];
         battle_gfx_store_sprite_display_data(
             display_2, 0, -21, -32, image->u, image->v, image->width, image->height, 0);
         break;
@@ -323,6 +323,6 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
         break;
     }
 
-    battle_map_load_palette_data(&g_battle_action_result_palette, MAP_CLUT_ROW_ACTION_RESULTS, unit->unit_id, 0);
+    battle_map_load_palette_data(&g_action_result_palette, MAP_CLUT_ROW_ACTION_RESULTS, unit->unit_id, 0);
     return 1;
 }

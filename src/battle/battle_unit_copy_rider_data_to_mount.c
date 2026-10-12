@@ -34,11 +34,11 @@ void battle_unit_copy_rider_data_to_mount(battle_unit_misc_data_t* unit, battle_
         }
     }
     unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_MOVED;
-    battle_action_set_only_movement_taken(unit->battle_data->misc_unit_id);
+    action_set_only_movement_taken(unit->battle_data->misc_unit_id);
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED)
         && !(unit->path.flags & BATTLE_EFFECTIVE_MOVEMENT_TELEPORT)) {
         main_sound_play_sfx(MAIN_SFX_CONFIRM);
     }
     battle_gfx_update_unit_palettes();
-    battle_move_init_post_movement_display();
+    move_init_post_movement_display();
 }

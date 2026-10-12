@@ -6,16 +6,16 @@
  * is on team 0 (blue). Nothing to take is a miss. */
 void battle_formula_calculate_stolen_gil(void) {
     battle_stats_t* attacker;
-    battle_action_data_t* action;
-    battle_action_data_t* target_action;
-    battle_action_data_t* other;
+    action_data_t* action;
+    action_data_t* target_action;
+    action_data_t* other;
     s32 amount;
     s32 available;
     s16 stolen;
 
-    attacker = g_battle_action_attacker;
+    attacker = g_action_attacker;
     amount = attacker->attributes[UNIT_ATTRIBUTE_SPEED] * attacker->level;
-    if (!(g_battle_action_target->team_flags & BATTLE_TEAM_MASK)) {
+    if (!(g_action_target->team_flags & BATTLE_TEAM_MASK)) {
         available = battle_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
         if (available < amount) {
             amount = available;
@@ -25,13 +25,13 @@ void battle_formula_calculate_stolen_gil(void) {
         battle_formula_force_attack_miss();
         return;
     }
-    action = g_battle_action_attacker_data;
+    action = g_action_attacker_data;
     action->hit = 1;
-    other = g_battle_action_attacker_data;
+    other = g_action_attacker_data;
     action->gil_change = amount;
-    other->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
-    stolen = g_battle_action_attacker_data->gil_change;
-    target_action = g_battle_action_target_data;
-    target_action->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
+    other->attack_type = ACTION_TYPE_PSEUDO_STATUS;
+    stolen = g_action_attacker_data->gil_change;
+    target_action = g_action_target_data;
+    target_action->attack_type = ACTION_TYPE_PSEUDO_STATUS;
     target_action->gil_change = -stolen;
 }

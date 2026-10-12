@@ -18,7 +18,7 @@ void battle_state_handle_change_map_jumping_in_state(void) {
         battle_camera_update_offset_screen_coord_animation();
         battle_camera_update_zoom_animation();
         battle_camera_update_rotation_animation();
-        battle_move_update_unit_by_misc_id();
+        move_update_unit_by_misc_id();
     }
     battle_gfx_update_status_bubbles_and_graphics();
     battle_gfx_draw_screen_color_modulation_overlay();
@@ -26,7 +26,7 @@ void battle_state_handle_change_map_jumping_in_state(void) {
     case 1:
         break;
     case 0:
-        battle_action_check_between_turn_events();
+        action_check_between_turn_events();
         break;
     case 9:
         battle_state_halve_animation_speed_and_queue_close(8, MAIN_GAME_FLOW_BATTLE);

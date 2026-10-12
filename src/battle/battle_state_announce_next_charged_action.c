@@ -8,7 +8,7 @@
  * the scan.  Returns 1 once an announcement was set up, 0 when all three phases
  * had nothing pending. */
 s32 battle_state_announce_next_charged_action(void) {
-    battle_action_command_t command;
+    action_command_t command;
     battle_unit_misc_data_t* unit;
     battle_unit_misc_data_t* actor;
     s32 result;
@@ -17,8 +17,8 @@ s32 battle_state_announce_next_charged_action(void) {
 
     unit = battle_unit_get_source_misc_data();
     do {
-        switch (g_battle_action_phase) {
-        case BATTLE_ACTION_PHASE_PRE_ACTION:
+        switch (g_action_phase) {
+        case ACTION_PHASE_PRE_ACTION:
             result = battle_reaction_prepare_hamedo_for_pending_action(
                 unit->battle_data->misc_unit_id, &command.ability_id);
             if (result != -1) {
@@ -31,13 +31,13 @@ s32 battle_state_announce_next_charged_action(void) {
                 ability_id = command.ability_id;
                 result = 0;
                 actor->continue_attack_count = 0;
-                g_battle_action_post_action = 0;
+                g_action_post_action = 0;
                 actor->sp2_ability_id = ability_id;
                 actor->used_ability_id = ability_id;
             }
             break;
-        case BATTLE_ACTION_PHASE_ACTING_UNIT:
-            result = battle_action_init_current_data(unit->battle_data->misc_unit_id);
+        case ACTION_PHASE_ACTING_UNIT:
+            result = action_init_current_data(unit->battle_data->misc_unit_id);
             if (result == 0) {
                 g_battle_game_state = BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT;
                 g_battle_casting_unit_id = unit->unit_id;
@@ -45,7 +45,7 @@ s32 battle_state_announce_next_charged_action(void) {
                     &unit->battle_data->action_command, unit->battle_data->misc_unit_id, 1);
                 ability_id = unit->command_state.ai.data.action.ability_id;
                 unit->continue_attack_count = 0;
-                g_battle_action_post_action = 0;
+                g_action_post_action = 0;
                 unit->sp2_ability_id = ability_id;
                 unit->used_ability_id = ability_id;
             } else {
@@ -59,7 +59,7 @@ s32 battle_state_announce_next_charged_action(void) {
                 result = -1;
             }
             break;
-        case BATTLE_ACTION_PHASE_REACTING_UNIT:
+        case ACTION_PHASE_REACTING_UNIT:
             result = battle_reaction_prepare_next(&command.ability_id);
             if (result != -1) {
                 g_battle_game_state = BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT;
@@ -71,7 +71,7 @@ s32 battle_state_announce_next_charged_action(void) {
                 ability_id = command.ability_id;
                 result = 0;
                 actor->continue_attack_count = 0;
-                g_battle_action_post_action = 0;
+                g_action_post_action = 0;
                 actor->sp2_ability_id = ability_id;
                 actor->used_ability_id = ability_id;
             }
@@ -80,7 +80,7 @@ s32 battle_state_announce_next_charged_action(void) {
         if (result != -1) {
             return 1;
         }
-        g_battle_action_phase = g_battle_action_phase + 1;
-    } while (g_battle_action_phase < BATTLE_ACTION_PHASE_COUNT);
+        g_action_phase = g_action_phase + 1;
+    } while (g_action_phase < ACTION_PHASE_COUNT);
     return 0;
 }

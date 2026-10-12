@@ -14,7 +14,7 @@
 /*
  * Build the AT (turn order) list previewing the ability the player is about to
  * confirm: stage the selected ability or item into the shared action record at
- * g_world_menu_preview_action, run battle_action_preview_at_list for the stored unit on the
+ * g_world_menu_preview_action, run action_preview_at_list for the stored unit on the
  * main stack to obtain the previewed turn position and the descriptor list,
  * then write the name text and the four 16-bit columns and size menu entry
  * 52 around them.
@@ -55,7 +55,7 @@ void world_menu_build_ability_preview_at_list(void) {
     menu_entry_t* entry;
     battle_stats_t* stats;
     u8* text;
-    battle_action_command_t* action;
+    action_command_t* action;
     u8* published;
     s32 turn;
     s32 count;
@@ -65,7 +65,7 @@ void world_menu_build_ability_preview_at_list(void) {
     u16 text_id;
     const u16* at_table;
 
-    at_table = g_battle_ai_workspace_ptr->ability_list.ids;
+    at_table = g_ai_workspace_ptr->ability_list.ids;
     work = (menu_at_list_work_t*)g_main_heap_companion_overlay_load_address;
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST].select_text_table = 0x13;
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST].context = &g_world_menu_at_list_layout;
@@ -83,7 +83,7 @@ void world_menu_build_ability_preview_at_list(void) {
     action = &g_world_menu_preview_action;
     action->actor_id = g_world_active_unit_data.battle_id;
     stats = world_unit_get_battle_stats_for_stored();
-    g_world_thread_call_target = (void (*)(void))battle_action_preview_at_list;
+    g_world_thread_call_target = (void (*)(void))action_preview_at_list;
     turn = world_thread_call_on_main_stack(stats, action, work->entries);
     if (staged_item != 0) {
         work->entries[1].unit |= BATTLE_AT_ACTION_ENTRY;

@@ -3,7 +3,7 @@
 
 /* Formula 0x32: damage ((PA + (PA + Y) / 2) * rnd(1..X)); physical evade. */
 void battle_formula_damage_random_x_times_pa_plus_y_half_times_pa(void) {
-    battle_action_data_t* action;
+    action_data_t* action;
     u8* mult;
     s32 rnd;
 
@@ -15,11 +15,11 @@ void battle_formula_damage_random_x_times_pa_plus_y_half_times_pa(void) {
     battle_formula_calculate_critical_hit();
     battle_formula_store_xa_plus_ya_status_damage();
     rnd = battle_formula_get_random_0_7fff();
-    mult = &g_battle_action_current_ability.random_damage_factor;
-    *mult = (rnd * g_battle_action_current_ability.range_data.x) / 32768 + 1;
-    action = g_battle_action_target_data;
+    mult = &g_action_current_ability.random_damage_factor;
+    *mult = (rnd * g_action_current_ability.range_data.x) / 32768 + 1;
+    action = g_action_target_data;
     /* The target loads hp_damage signed (lh) here; keep the cast and the
        multiplier deref separated so `* *` never reads as a comment. */
     action->hp_damage = action->hp_damage * (*mult);
-    action->attack_type = BATTLE_ACTION_TYPE_HP_DAMAGE;
+    action->attack_type = ACTION_TYPE_HP_DAMAGE;
 }

@@ -39,5 +39,5 @@ void battle_unit_apply_poach_morbol_transformation(battle_unit_misc_data_t* unit
     /* The target reads the u16 facing field signed (lh). */
     battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_IDLE, unit->facing, unit);
     battle_unit_transform_into_morbol(unit->battle_data);
-    battle_ai_init_unit_abilities(unit->battle_data->misc_unit_id);
+    ai_init_unit_abilities(unit->battle_data->misc_unit_id);
 }

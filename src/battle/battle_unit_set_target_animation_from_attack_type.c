@@ -10,7 +10,7 @@
 void battle_unit_set_target_animation_from_attack_type(
     battle_unit_misc_data_t* attacker, battle_unit_misc_data_t* target) {
     battle_stats_t* stats;
-    battle_action_data_t* action;
+    action_data_t* action;
     s32 animation;
     s32 delta;
     s16 attacker_height;
@@ -26,7 +26,7 @@ void battle_unit_set_target_animation_from_attack_type(
     if ((target->animation.sequence_id >> 1) == BATTLE_UNIT_ANIMATION_DEATH) {
         return;
     }
-    water_depth = battle_move_get_water_depth(target);
+    water_depth = move_get_water_depth(target);
     animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
     if (water_depth < 2) {
         stats = target->battle_data;
@@ -34,8 +34,8 @@ void battle_unit_set_target_animation_from_attack_type(
             action = &stats->action;
             animation = BATTLE_UNIT_ANIMATION_STAND;
             switch (action->miss_type) {
-            case BATTLE_ACTION_MISS_TYPE_RIGHT_HAND_EVADE:
-            case BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE:
+            case ACTION_MISS_TYPE_RIGHT_HAND_EVADE:
+            case ACTION_MISS_TYPE_LEFT_HAND_EVADE:
                 battle_unit_face_towards_action_target(target, attacker);
                 battle_gfx_set_thrown_item_graphic_palette(action->item_lost, target);
                 attacker_height
@@ -52,24 +52,24 @@ void battle_unit_set_target_animation_from_attack_type(
                     }
                 }
                 break;
-            case BATTLE_ACTION_MISS_TYPE_ACCESSORY_EVADE:
-            case BATTLE_ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD:
-            case BATTLE_ACTION_MISS_TYPE_NULLIFIED:
-            case BATTLE_ACTION_MISS_TYPE_ACCURACY_MISS:
-            case BATTLE_ACTION_MISS_TYPE_FORCED_FAILURE:
-                if (action->miss_display_flags & BATTLE_ACTION_MISS_DISPLAY_DODGE_ANIMATION) {
+            case ACTION_MISS_TYPE_ACCESSORY_EVADE:
+            case ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD:
+            case ACTION_MISS_TYPE_NULLIFIED:
+            case ACTION_MISS_TYPE_ACCURACY_MISS:
+            case ACTION_MISS_TYPE_FORCED_FAILURE:
+                if (action->miss_display_flags & ACTION_MISS_DISPLAY_DODGE_ANIMATION) {
                     battle_unit_face_towards_action_target(target, attacker);
                     animation = BATTLE_UNIT_ANIMATION_DODGE;
                 }
                 break;
-            case BATTLE_ACTION_MISS_TYPE_BLADE_GRASP_OR_FINGER_GUARD:
-            case BATTLE_ACTION_MISS_TYPE_CATCH:
+            case ACTION_MISS_TYPE_BLADE_GRASP_OR_FINGER_GUARD:
+            case ACTION_MISS_TYPE_CATCH:
                 battle_unit_face_towards_action_target(target, attacker);
                 animation = BATTLE_UNIT_ANIMATION_RAISE_HANDS;
                 break;
-            case BATTLE_ACTION_MISS_TYPE_CANCELLED:
-            case BATTLE_ACTION_MISS_TYPE_REFLECTED:
-            case BATTLE_ACTION_MISS_TYPE_GOLEM_GUARD:
+            case ACTION_MISS_TYPE_CANCELLED:
+            case ACTION_MISS_TYPE_REFLECTED:
+            case ACTION_MISS_TYPE_GOLEM_GUARD:
                 break;
             default:
                 if (action->hit != 0) {
@@ -90,20 +90,20 @@ void battle_unit_set_target_animation_from_attack_type(
                         BATTLE_UNIT_ANIMATION_HURT, target->facing, target);
                 }
             }
-            if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_KNOCKBACK) {
-                battle_move_transfer_target_coordinates(attacker, target);
+            if (action->special_effect & ACTION_SPECIAL_EFFECT_KNOCKBACK) {
+                move_transfer_target_coordinates(attacker, target);
             }
-            if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_POACH) {
+            if (action->special_effect & ACTION_SPECIAL_EFFECT_POACH) {
                 target->status_flags_5_6 |= BATTLE_MISC_STATUS_POACHED;
             }
-            if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_MORBOL) {
+            if (action->special_effect & ACTION_SPECIAL_EFFECT_MORBOL) {
                 target->status_flags_5_6 |= BATTLE_MISC_STATUS_MORBOL;
             }
-            if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT) {
-                battle_ai_init_unit_abilities(target->battle_data->misc_unit_id);
+            if (action->special_effect & ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT) {
+                ai_init_unit_abilities(target->battle_data->misc_unit_id);
             }
-            if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_STEAL_ITEM) {
-                battle_ai_init_unit_abilities(target->battle_data->misc_unit_id);
+            if (action->special_effect & ACTION_SPECIAL_EFFECT_STEAL_ITEM) {
+                ai_init_unit_abilities(target->battle_data->misc_unit_id);
             }
             return;
         }

@@ -4,7 +4,7 @@
 /* UnitMovingSetup game-state handler: command 7 starts the move; 8 or 0xff
  * discards the path and returns to choosing a destination. */
 void battle_state_handle_unit_moving_setup_state(void) {
-    battle_ai_command_t* selected_command_address;
+    ai_command_t* selected_command_address;
     s32 selected_command;
     battle_unit_misc_data_t* casting_misc_data;
 

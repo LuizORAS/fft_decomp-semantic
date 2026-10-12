@@ -22,19 +22,19 @@ void battle_state_handle_close_move_help_state(void) {
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if (source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
-        battle_target_move_cursor_by_input();
+        target_move_cursor_by_input();
         battle_camera_handle_rotation_input();
         battle_camera_call_zoom_map();
         battle_camera_call_toggle_tilt();
         buttons = g_main_input_pressed_buttons;
         if (buttons & PSX_PAD_CIRCLE) {
-            path = battle_move_build_path_to_tile(
+            path = move_build_path_to_tile(
                 casting->battle_data->misc_unit_id, g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
             if (path != 0) {
                 /* Copy the 0x80-byte movement block in the renderer-side Misc record. */
                 casting->path = *path;
                 casting->walk_speed = 0x2000;
-                battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
+                target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
                 main_sound_play_sfx(MAIN_SFX_CONFIRM);
                 battle_state_enter_unit_moving_setup();
                 return;
@@ -43,14 +43,14 @@ void battle_state_handle_close_move_help_state(void) {
             return;
         }
         if (buttons & PSX_PAD_CROSS) {
-            battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
-            battle_target_move_cursor_to_unit(source);
+            target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
+            target_move_cursor_to_unit(source);
             battle_menu_open_active_unit_idle_action_menu();
             return;
         }
         if (buttons & PSX_PAD_TRIANGLE) {
-            battle_target_move_cursor_to_unit(battle_unit_get_source_misc_data());
-            battle_target_store_cursor_unit_name_and_data();
+            target_move_cursor_to_unit(battle_unit_get_source_misc_data());
+            target_store_cursor_unit_name_and_data();
         }
         return;
     }
@@ -59,9 +59,9 @@ void battle_state_handle_close_move_help_state(void) {
     if (frame < 0x1f) {
         return;
     }
-    path = battle_move_build_path_to_tile(casting->battle_data->misc_unit_id, source->command_state.ai.data.move.x,
+    path = move_build_path_to_tile(casting->battle_data->misc_unit_id, source->command_state.ai.data.move.x,
         source->command_state.ai.data.move.y, source->command_state.ai.data.move.layer);
-    battle_target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
+    target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
     if (path != 0) {
         x = source->command_state.ai.data.move.x;
         elevation = source->command_state.ai.data.move.layer;

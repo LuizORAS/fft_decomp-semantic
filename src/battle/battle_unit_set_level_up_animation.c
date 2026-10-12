@@ -8,7 +8,7 @@ void battle_unit_set_level_up_animation(battle_unit_misc_data_t* unit) {
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_LEVEL_UP_HOP, unit->facing, unit);
         return;
     }
-    switch (battle_move_get_water_depth(unit)) {
+    switch (move_get_water_depth(unit)) {
     case 0:
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_LEVEL_UP, unit->facing, unit);
         break;

@@ -9,7 +9,7 @@
 #include "psx/types.h"
 
 /* ability */
-/* Provisional ability-list work buffer at *g_battle_ai_workspace_ptr (0x52 rows each).
+/* Provisional ability-list work buffer at *g_ai_workspace_ptr (0x52 rows each).
  * WORLD twin of the BATTLE ability list. */
 typedef struct menu_ability_list {
     u16 ids[0x52];     /* 0x000; 0xffff terminated; the text id base of the names is ORed in */
@@ -819,12 +819,12 @@ typedef struct menu_quad_page {
 typedef char menu_quad_page_size_must_be_324[sizeof(menu_quad_page_t) == 324 ? 1 : -1];
 
 /* turn order */
-/* One 4-byte entry of the 40-entry AT list built by battle_action_calculate_at_list and
- * kept in key order by battle_action_sort_at_list. */
+/* One 4-byte entry of the 40-entry AT list built by action_calculate_at_list and
+ * kept in key order by action_sort_at_list. */
 typedef struct battle_at_entry {
     u8 unit;          /* 0x00; unit id and battle_at_entry_flags_e */
     u8 action_id_low; /* 0x01; low byte of the ability id, or a staged item id */
-    u16 sort_key;     /* 0x02; insertion key for battle_action_sort_at_list */
+    u16 sort_key;     /* 0x02; insertion key for action_sort_at_list */
 } battle_at_entry_t;
 typedef char battle_at_entry_size_must_be_4[(sizeof(battle_at_entry_t) == 4) ? 1 : -1];
 
@@ -983,7 +983,7 @@ typedef enum battle_menu_system_command {
     BATTLE_MENU_SYSTEM_COMMAND_TRAP_RESULT = 14,    /* option: trap id */
     BATTLE_MENU_SYSTEM_COMMAND_MOVE_FIND_ITEM = 15, /* option: item id */
     BATTLE_MENU_SYSTEM_COMMAND_MOVE_CONFIRM_SILENT = 16,
-    BATTLE_MENU_SYSTEM_COMMAND_POST_ACTION_RESULT = 17, /* option: battle_action_display_image_id_e */
+    BATTLE_MENU_SYSTEM_COMMAND_POST_ACTION_RESULT = 17, /* option: action_display_image_id_e */
 } battle_menu_system_command_e;
 
 /* Result of *_menu_dispatch_system_function (and of

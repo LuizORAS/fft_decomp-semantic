@@ -9,7 +9,7 @@
  * bounds; 11 acting unit (g_world_script_acting_unit_id) is the unit or a special-unit
  * (0x78..0x7c) copy of it; 13 party member has item equipped; 14-15 variable
  * war-funds bounds; 16-17 compare the month/day pair before/after; 18-19 compare casualties
- * bounds; 22 battle_action_check_battle_outcome() == 0; 24 unit stands on x/y/level; 37 any
+ * bounds; 22 action_check_battle_outcome() == 0; 24 unit stands on x/y/level; 37 any
  * misc-unit of that sprite palette stands on x/y/level.
  * The range test on unit_id is written as two comparisons: that spelling
  * makes GCC reload the byte (as the target does) where the (u32)(x - 0x78) < 5
@@ -94,7 +94,7 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_
     if (type == EVENT_SCENARIO_CONDITION_CASUALTIES_AT_MOST
         && id >= world_script_get_variable(EVENT_SCRIPT_VAR_CASUALTIES))
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
-    if (type == EVENT_SCENARIO_CONDITION_ENEMIES_DEFEATED && battle_action_check_battle_outcome() == 0)
+    if (type == EVENT_SCENARIO_CONDITION_ENEMIES_DEFEATED && action_check_battle_outcome() == 0)
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type == EVENT_SCENARIO_CONDITION_UNIT_AT_TILE) {
         unit = world_unit_get_by_unit_id(id);

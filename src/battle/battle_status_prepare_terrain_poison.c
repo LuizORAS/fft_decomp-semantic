@@ -10,7 +10,7 @@
 s32 battle_status_prepare_terrain_poison(battle_stats_t* unit) {
     s32 mount_info;
     u8 unit_id;
-    battle_action_data_t* action;
+    action_data_t* action;
 
     mount_info = unit->mount_info;
     if (battle_status_check_crystal_dead_jump_petrify_treasure(unit))
@@ -28,16 +28,16 @@ s32 battle_status_prepare_terrain_poison(battle_stats_t* unit) {
     }
     action = &unit->action;
     unit_id = unit->misc_unit_id;
-    g_battle_action_target = unit;
-    g_battle_action_target_data = action;
-    g_battle_action_current_ability.target_id = unit_id;
-    battle_action_clear_current_data(action);
+    g_action_target = unit;
+    g_action_target_data = action;
+    g_action_current_ability.target_id = unit_id;
+    action_clear_current_data(action);
     if (g_main_terrain_status_flags[g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.type]
         & MAIN_TERRAIN_STATUS_FLAG_POISON) {
-        g_battle_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_POISON)]
+        g_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_POISON)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_POISON);
         if (battle_status_modify_inflictions(0)) {
-            g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
+            g_action_target_data->attack_type = ACTION_TYPE_STATUS_CHANGE;
             return 1;
         }
     }

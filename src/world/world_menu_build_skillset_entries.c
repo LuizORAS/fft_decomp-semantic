@@ -17,13 +17,13 @@ void world_menu_build_skillset_entries(void) {
     g_world_ability_selected_skill_ct = 0;
     g_world_action_menu_skillsets[0] = 0;
     g_world_menu_monster_skillset_flag = battle_menu_build_unit_action_menus(g_world_active_unit_data.battle_id,
-        g_world_action_menu_skillsets, g_battle_menu_skillset_disabled_flags, g_battle_action_menu_row_types);
+        g_world_action_menu_skillsets, g_battle_menu_skillset_disabled_flags, g_action_menu_row_types);
     rows = (menu_text_row_t*)world_text_find_entry(0x5010);
     if (battle_unit_get_action_restriction(world_unit_get_battle_stats_for_stored())
         == BATTLE_UNIT_ACTION_RESTRICTION_DEEP_WATER) {
         for (i = 0; i < 6; i++) {
             g_battle_menu_skillset_disabled_flags[i] = 1;
-            if (g_battle_action_menu_row_types[i] == ACTION_MENU_TYPE_UNKNOWN_0D) {
+            if (g_action_menu_row_types[i] == ACTION_MENU_TYPE_UNKNOWN_0D) {
                 g_battle_menu_skillset_disabled_flags[i] = 0;
             }
         }
