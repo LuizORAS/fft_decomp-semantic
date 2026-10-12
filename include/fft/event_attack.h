@@ -55,7 +55,7 @@ extern u8 g_attack_gfx_portrait_transition_offsets[];
 extern u8 g_attack_gfx_scaled_sprite_count;
 extern point16_t g_attack_gfx_scaled_sprite_scale[];
 extern point16_t g_attack_gfx_scaled_sprite_texture_page[];
-extern main_zodiac_sprite_frame_t g_attack_gfx_scaled_sprite_uv_rects[];
+extern sprite_sheet_frame_t g_attack_gfx_scaled_sprite_uv_rects[];
 extern RECT g_attack_gfx_draw_area_template;
 extern u16 g_attack_gfx_draw_offset_y;
 extern u16 g_attack_portrait_index_by_sprite_set[];
@@ -78,7 +78,7 @@ void attack_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, 
     s32 lower_half, const menu_status_thread_t* thread);
 
 void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_page, const RECT* position,
-    main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, const main_zodiac_draw_offset_t* offset);
+    sprite_sheet_frame_t* sprite_rect, point16_t* scale, const main_zodiac_draw_offset_t* offset);
 
 void attack_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void attack_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
@@ -89,7 +89,7 @@ void attack_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id);
 void attack_gfx_set_formation_icon_uv(POLY_FT4* primitive, s32 icon_id);
 
 void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
-    main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
+    sprite_sheet_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
 
 void attack_gfx_prepare_formation_sprites(void);
 
@@ -366,7 +366,7 @@ extern u8 g_attack_panel_status_group_count;
 extern u8 g_attack_panel_status_group_ids[];
 extern point16_t g_attack_panel_status_scales[];
 extern main_zodiac_draw_offset_t g_attack_panel_status_offsets[];
-extern main_zodiac_sprite_frame_t g_attack_panel_status_uv_rects[];
+extern sprite_sheet_frame_t g_attack_panel_status_uv_rects[];
 
 void attack_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
 

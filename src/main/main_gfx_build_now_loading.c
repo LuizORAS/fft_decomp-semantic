@@ -18,7 +18,7 @@ void main_gfx_build_now_loading(u32 visible, s32 x, s32 y) {
     setRGB0(&prims[0], 0x80, 0x80, 0x80);
     SetSemiTrans(&prims[0], 0);
     prims[0].tpage = 0x1f;
-    prims[0].clut = 0x7887;
+    prims[0].clut = getClut(0x70, 0x1e2);
     for (i = 1; i < 7; i++) {
         prims[i] = prims[0];
     }
@@ -62,6 +62,6 @@ void main_gfx_build_now_loading(u32 visible, s32 x, s32 y) {
     setUV4(poly, 0xEB, 0xA4, 0xF0, 0xA4, 0xEB, 0xAC, 0xF0, 0xAC);
     g_main_gfx_now_loading_primitives[1][6] = *poly;
 
-    /* 16-colour CLUT of the NOW LOADING glyph sheet, loaded to VRAM (0x70, 0x1e2). */
-    LoadClut2(g_main_gfx_now_loading_clut, 0x70, 0x1e2);
+    /* 16-color palette of the NOW LOADING glyph sheet, loaded to VRAM (0x70, 0x1e2). */
+    LoadClut2((u32*)g_main_gfx_now_loading_palette, 0x70, 0x1e2);
 }

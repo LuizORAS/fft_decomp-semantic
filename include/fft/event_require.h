@@ -65,7 +65,7 @@ extern RECT g_require_gfx_portrait_origin;
 extern u8 g_require_gfx_portrait_transition_offsets[];
 extern u8 g_require_gfx_scaled_sprite_count;
 extern point16_t g_require_gfx_scaled_sprite_scale[];
-extern main_zodiac_sprite_frame_t g_require_gfx_scaled_sprite_uv_rects[];
+extern sprite_sheet_frame_t g_require_gfx_scaled_sprite_uv_rects[];
 extern point16_t g_require_gfx_scaled_sprite_texture_page;
 extern u8 g_require_portrait_cell_pixels[];
 extern RECT g_require_portrait_cell_rect;
@@ -99,10 +99,10 @@ void require_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
 void require_gfx_set_clut_rect_from_id(RECT* rect, s32 packed);
 
 void require_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
-    main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
+    sprite_sheet_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
 
 void require_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
-    const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale, const main_zodiac_draw_offset_t* offset);
+    const sprite_sheet_frame_t* uv_rect, const point16_t* scale, const main_zodiac_draw_offset_t* offset);
 
 void require_gfx_set_formation_icon_uv(POLY_FT4* poly, s32 index);
 void require_render_display_condition_general_cases(s32 value);
@@ -155,7 +155,7 @@ extern u8 g_require_panel_status_group_count;
 extern u8 g_require_panel_status_group_ids[];
 extern main_zodiac_draw_offset_t g_require_panel_status_offsets[];
 extern point16_t g_require_panel_status_scales[];
-extern main_zodiac_sprite_frame_t g_require_panel_status_uv_rects[];
+extern sprite_sheet_frame_t g_require_panel_status_uv_rects[];
 extern const u16 g_require_panel_status_y_offsets[];
 extern point16_t g_require_panel_item_icon_texture[];
 extern RECT g_require_panel_origin_offsets[];

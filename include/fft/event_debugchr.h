@@ -72,7 +72,7 @@ extern u8 g_debugchr_gfx_portrait_transition_offsets[];
 extern POLY_FT4 g_debugchr_gfx_render_buffers[2][30];
 extern u8 g_debugchr_gfx_scaled_sprite_count;
 extern point16_t g_debugchr_gfx_scaled_sprite_scale[];
-extern main_zodiac_sprite_frame_t g_debugchr_gfx_scaled_sprite_uv_rects[];
+extern sprite_sheet_frame_t g_debugchr_gfx_scaled_sprite_uv_rects[];
 extern point16_t g_debugchr_gfx_scaled_sprite_texture_page;
 void debugchr_gfx_build_item_graphic_descriptor(menu_icon_source_t* output, u32 item_id);
 void debugchr_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
@@ -85,10 +85,10 @@ void debugchr_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t*
 void debugchr_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
 
 void debugchr_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
-    main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
+    sprite_sheet_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
 
 void debugchr_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
-    const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale, const main_zodiac_draw_offset_t* offset);
+    const sprite_sheet_frame_t* uv_rect, const point16_t* scale, const main_zodiac_draw_offset_t* offset);
 
 void debugchr_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void debugchr_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
@@ -118,7 +118,7 @@ extern u8 g_debugchr_panel_status_group_count;
 extern u8 g_debugchr_panel_status_group_ids[];
 extern main_zodiac_draw_offset_t g_debugchr_panel_status_offsets[];
 extern point16_t g_debugchr_panel_status_scales[];
-extern main_zodiac_sprite_frame_t g_debugchr_panel_status_uv_rects[];
+extern sprite_sheet_frame_t g_debugchr_panel_status_uv_rects[];
 extern const u16 g_debugchr_panel_status_y_offsets[];
 
 /* Selected-unit panel record at 0x801c5324; the comparison panel's twin

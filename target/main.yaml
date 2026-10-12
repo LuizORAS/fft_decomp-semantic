@@ -1228,7 +1228,7 @@ data:
   - {addr: 0x800459d0, name: g_main_font_print_enabled}
   - {addr: 0x800459d8, name: D_800459D8}
   - {addr: 0x800459dc, name: g_battle_entd_selection_mode}
-  - {addr: 0x800459e0, name: g_main_gfx_now_loading_clut}
+  - {addr: 0x800459e0, name: g_main_gfx_now_loading_palette}
   - {addr: 0x80045a00, name: g_main_boot_squaresoft_logo_image_words}
   - {addr: 0x80047080, name: g_main_sound_scenario_smd_files}
   - {addr: 0x800471e8, name: g_main_sound_permanent_smd_files}

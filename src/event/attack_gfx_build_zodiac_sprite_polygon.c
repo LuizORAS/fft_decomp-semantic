@@ -5,7 +5,7 @@
  * This variant selects 8-bit texture mode and adds the PSX screen center to
  * the draw offset. */
 void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_page, const RECT* position,
-    main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, const main_zodiac_draw_offset_t* offset) {
+    sprite_sheet_frame_t* sprite_rect, point16_t* scale, const main_zodiac_draw_offset_t* offset) {
     s32 rx;
     s32 ry;
     s32 rw;
@@ -17,10 +17,10 @@ void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_p
     s32 x1;
     s32 y1;
 
-    ox = sprite_rect->offset_x * scale->x;
-    oy = sprite_rect->offset_y * scale->y;
-    w = sprite_rect->width * scale->x;
-    h = sprite_rect->height * scale->y;
+    ox = sprite_rect->offset.x * scale->x;
+    oy = sprite_rect->offset.y * scale->y;
+    w = sprite_rect->source.w * scale->x;
+    h = sprite_rect->source.h * scale->y;
 
     rx = 0;
     ry = 0;
@@ -51,9 +51,9 @@ void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_p
     }
 
     poly->tpage = GetTPage(1, 0, texture_page->x, texture_page->y & 0xF00);
-    setUV4(poly, sprite_rect->u, sprite_rect->v, sprite_rect->u + sprite_rect->width, sprite_rect->v, sprite_rect->u,
-        sprite_rect->v + sprite_rect->height, sprite_rect->u + sprite_rect->width,
-        sprite_rect->v + sprite_rect->height);
+    setUV4(poly, sprite_rect->source.x, sprite_rect->source.y, sprite_rect->source.x + sprite_rect->source.w,
+        sprite_rect->source.y, sprite_rect->source.x, sprite_rect->source.y + sprite_rect->source.h,
+        sprite_rect->source.x + sprite_rect->source.w, sprite_rect->source.y + sprite_rect->source.h);
 
     x1 = w + 0x100;
     y1 = h + 0x78;

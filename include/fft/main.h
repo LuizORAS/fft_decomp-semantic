@@ -1093,18 +1093,6 @@ void main_unit_increase_casualty_counters(battle_stats_t* unit);
 void main_unit_init_position_and_rewards(battle_stats_t* unit, entd_unit_t* entd);
 
 /* zodiac */
-/* ZODIAC.BIN sprite-table records shared by the builder and polygon helper. */
-typedef struct main_zodiac_sprite_frame {
-    u8 u;
-    u8 _unused_01;
-    u8 v;
-    u8 _padding_03; /* aligns width */
-    s16 width;
-    s16 height;
-    s16 offset_x;
-    s16 offset_y;
-} main_zodiac_sprite_frame_t;
-
 typedef struct main_zodiac_draw_offset {
     u8 _unused_00[8];
     u16 x;
@@ -1185,7 +1173,7 @@ typedef char main_gfx_wldface_sheet_size_must_be_32768[(sizeof(main_gfx_wldface_
 extern RECT g_main_gfx_frame_image_rect;
 extern RECT g_main_gfx_frame_palette_rect;
 extern RECT g_main_gfx_frame_palette_tail_rect;
-extern u32 g_main_gfx_now_loading_clut[];
+extern palette_t g_main_gfx_now_loading_palette;
 extern u32 g_main_gfx_now_loading_frame_counter;
 extern u32 g_main_gfx_now_loading_otags[2][2];
 
@@ -1197,7 +1185,7 @@ extern u32 g_main_gfx_battle_otags[2][0x180];
 extern main_gfx_unit_graphics_load_queue_t g_main_gfx_unit_graphics_load_queue;
 extern upoint16_t g_main_gfx_zodiac_screen_position;
 extern u8 g_main_gfx_zodiac_sprite_count;
-extern main_zodiac_sprite_frame_t g_main_gfx_zodiac_sprite_frames[];
+extern sprite_sheet_frame_t g_main_gfx_zodiac_sprite_frames[];
 extern point16_t g_main_gfx_zodiac_sprite_scales[];
 extern point16_t g_main_gfx_zodiac_texture_position;
 extern DISPENV g_main_gfx_display_envs[2];
@@ -1221,7 +1209,7 @@ void main_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* 
 void main_gfx_call_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly);
 
 void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture, upoint16_t* base,
-    main_zodiac_sprite_frame_t* frame, point16_t* scale, main_zodiac_draw_offset_t* offset);
+    sprite_sheet_frame_t* frame, point16_t* scale, main_zodiac_draw_offset_t* offset);
 
 /* other */
 /* g_main_terrain_status_flags has one byte per map_surface_type_e; only

@@ -9,11 +9,11 @@
  * 8-bit page holding `texture`. CARD copy of
  * world_gfx_set_scaled_poly_ft4_geometry_and_uv. */
 void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
-    const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale, const main_zodiac_draw_offset_t* offset) {
-    s32 xoff = uv_rect->offset_x * scale->x;
-    s32 yoff = uv_rect->offset_y * scale->y;
-    s32 width = uv_rect->width * scale->x;
-    s32 height = uv_rect->height * scale->y;
+    const sprite_sheet_frame_t* uv_rect, const point16_t* scale, const main_zodiac_draw_offset_t* offset) {
+    s32 xoff = uv_rect->offset.x * scale->x;
+    s32 yoff = uv_rect->offset.y * scale->y;
+    s32 width = uv_rect->source.w * scale->x;
+    s32 height = uv_rect->source.h * scale->y;
     s32 round_xoff = 0;
     s32 round_yoff = 0;
     s32 round_width = 0;
@@ -45,8 +45,9 @@ void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_
         height = -height;
 
     poly->tpage = GetTPage(1, 0, texture->x, texture->y & 0xf00);
-    setUV4(poly, uv_rect->u, uv_rect->v, uv_rect->u + uv_rect->width, uv_rect->v, uv_rect->u,
-        uv_rect->v + uv_rect->height, uv_rect->u + uv_rect->width, uv_rect->v + uv_rect->height);
+    setUV4(poly, uv_rect->source.x, uv_rect->source.y, uv_rect->source.x + uv_rect->source.w, uv_rect->source.y,
+        uv_rect->source.x, uv_rect->source.y + uv_rect->source.h, uv_rect->source.x + uv_rect->source.w,
+        uv_rect->source.y + uv_rect->source.h);
     setXY4(poly, position->x + xoff + offset->x, position->y + yoff + offset->y, position->x + xoff + offset->x + width,
         position->y + yoff + offset->y, position->x + xoff + offset->x, position->y + yoff + offset->y + height,
         position->x + xoff + offset->x + width, position->y + yoff + offset->y + height);

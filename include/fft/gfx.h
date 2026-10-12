@@ -107,6 +107,13 @@ typedef struct urect16 {
 typedef char assert_urect16_size[sizeof(urect16_t) == 8 ? 1 : -1];
 
 /* gfx */
+/* Sprite-sheet frame: sampled rectangle and scaled screen offset. */
+typedef struct sprite_sheet_frame {
+    RECT source;
+    point16_t offset;
+} sprite_sheet_frame_t;
+typedef char assert_sprite_sheet_frame_size[sizeof(sprite_sheet_frame_t) == 12 ? 1 : -1];
+
 /* Eight-bit texture coordinates within a PS1 texture page. */
 typedef struct uv8 {
     u8 u;
