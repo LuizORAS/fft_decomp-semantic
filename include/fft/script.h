@@ -461,35 +461,29 @@ typedef struct event_inflict_status_parameters {
 } event_inflict_status_parameters_t;
 typedef char event_inflict_status_parameters_size_must_be_5[sizeof(event_inflict_status_parameters_t) == 5 ? 1 : -1];
 
-typedef struct event_earthquake_pulse {
-    u8 z_delta;
-    u8 frames;
-} event_earthquake_pulse_t;
-
 typedef struct event_earthquake_parameters {
-    event_earthquake_pulse_t pulses[2];
+    struct {
+        u8 z_delta;
+        u8 frames;
+    } pulses[2];
 } event_earthquake_parameters_t;
 typedef char event_earthquake_parameters_size_must_be_4[sizeof(event_earthquake_parameters_t) == 4 ? 1 : -1];
 
-typedef struct event_color_screen_colors {
-    rgb24_t start;
-    rgb24_t end;
-} event_color_screen_colors_t;
-
 typedef struct event_color_screen_parameters {
     u8 mode;
-    event_color_screen_colors_t colors;
+    struct {
+        rgb24_t start;
+        rgb24_t end;
+    } colors;
     u8 duration_le[2];
 } event_color_screen_parameters_t;
 typedef char event_color_screen_parameters_size_must_be_9[sizeof(event_color_screen_parameters_t) == 9 ? 1 : -1];
 
-typedef struct event_map_light_targets {
-    u8 rotation_le[3][2];
-    u8 scale_le[3][2];
-} event_map_light_targets_t;
-
 typedef struct event_map_light_parameters {
-    event_map_light_targets_t targets;
+    struct {
+        u8 rotation_le[3][2];
+        u8 scale_le[3][2];
+    } targets;
     u8 duration_le[2];
 } event_map_light_parameters_t;
 typedef char event_map_light_parameters_size_must_be_14[sizeof(event_map_light_parameters_t) == 14 ? 1 : -1];

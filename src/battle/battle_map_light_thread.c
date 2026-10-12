@@ -31,7 +31,7 @@ void battle_map_light_thread(void) {
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_MAP_LIGHT);
     step = 0;
-    script = (const u8*)(const event_map_light_parameters_t*)battle_thread_get_current_parameter_1();
+    script = (const u8*)battle_thread_get_current_parameter_1();
     /* Indexed operand fields retain a separate base and add four bytes. */
     target = light_values.values;
     do {

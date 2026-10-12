@@ -21,9 +21,9 @@ void battle_script_color_screen_thread(void) {
     s32 duration;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_COLOR_SCREEN);
-    parameters = (u8*)(event_color_screen_parameters_t*)battle_thread_get_current_parameter_1();
+    parameters = (u8*)battle_thread_get_current_parameter_1();
     /* Separate record and RGB cursors drop the original argument-register copy. */
-    mode = ((event_color_screen_parameters_t*)parameters++)->mode;
+    mode = *parameters++;
     for (i = 0; i < 6; i++) {
         color.start_and_end[i] = *parameters++;
     }
