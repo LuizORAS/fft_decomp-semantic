@@ -7,16 +7,28 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Run one frame of BATTLE bookkeeping around the thread scheduler.
+/* Run one frame of an event around the thread scheduler; the battle's EVENT state calls it every
+ * frame.
+ * - Before the threads: the ETC graphic upload, the screen fade overlay, the camera copied into the
+ *   script variables and the window frames; the pad state (battle_script_update_event_input_state),
+ *   with the tutorial's input overrides; the main-loop requests reset to none; JOBSTTS or EQUIP drawn
+ *   into this frame's ordering table while one of them is open.
+ * - Every thread runs once (battle_thread_yield). A change in which threads run, or a button pressed
+ *   outside a tutorial, holds the input off for five frames.
+ * - After them: the camera back from the script variables, the BUNIT, CARD save or stub companion
+ *   overlay a thread asked for, the companion files, and the requests
+ *   (battle_script_process_pending_requests).
  *
- * BATTLE twin of world_script_run_frame: returns the scenario-finish result
- * (9, 0xA, 0xB or 0x13, 0 when no finish operation is pending) once every
- * script thread has stopped, otherwise 1 (or g_battle_script_frame_result_override while it is set, or 0
- * while menu input is disabled with state 2). The three BATTLE-only halfword clears come
- * after the word clears in source; the scheduler still groups them with the
- * other halfword stores, and this order keeps the g_battle_companion_overlay_state load
- * below them as in the target.
- */
+ * Returns 1 while the event runs (0 under tutorial input, g_battle_script_frame_result_override while
+ * that is set). The frame after every thread of slots 1-15 has stopped, it ends the event: 0 when the
+ * event has no scenario finish operation; otherwise the next event goes into
+ * EVENT_SCRIPT_VAR_CURRENT_EVENT and the result names the exit: 9 the world map (also at the end of a
+ * replay, EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS), 0xA the next battle, 0xB a reset, and 0x13 the
+ * ending after EVENT_ID_REUNION_AND_BEYOND.
+ *
+ * The three BATTLE-only halfword clears come after the word clears in source; the scheduler still
+ * groups them with the other halfword stores, and this order keeps the g_battle_companion_overlay_state
+ * load below them as in the target. */
 s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     RECT rect;
     s32 i;

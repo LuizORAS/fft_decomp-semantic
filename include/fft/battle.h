@@ -8586,6 +8586,10 @@ void battle_text_mirror_packed_nibble_region_horizontal(u8* data, world_glyph_bl
 u8* battle_menu_text_advance_cursor_with_backreferences(world_text_backreference_state_t* reader, u8* p);
 
 /* script */
+/* The event-script interpreter (battle_script_*): loading and running an event, its frame, the
+ * script variables and comparisons, the scenario conditions that pick the next event, and the event
+ * input. */
+
 /* Per-byte status removal masks applied while an event stages a unit: three
  * eight-byte sets, of which the first BATTLE_STATUS_BYTE_COUNT bytes are used
  * (0x80169758). */
@@ -8760,6 +8764,10 @@ void battle_script_walkto_event_instruction(const event_walk_to_parameters_t* pa
 void battle_script_warp_unit_display_to_paired_unit(s32 misc_id);
 
 /* event */
+/* What the event instructions share with the main loop: the requests
+ * battle_script_process_pending_requests carries out, the event unit slots, the staged statuses and
+ * the effect, music and background state. */
+
 extern s16 g_battle_event_effect_target_x;
 extern s16 g_battle_event_effect_target_y;
 

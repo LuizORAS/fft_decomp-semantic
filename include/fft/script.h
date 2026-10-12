@@ -8,6 +8,9 @@
 #include "psx/types.h"
 
 /* event */
+/* The event bytecode both interpreters run: the TEST.EVT block, the event ids the engine names,
+ * the instructions and their operands, the CallFunction selectors and the scenario conditions. */
+
 enum {
     EVENT_BLOCK_BYTES = 8192,
     EVENT_BLOCK_SECTORS = 4,
@@ -131,7 +134,7 @@ enum {
  * labels describe BATTLE; WORLD can handle them differently: there WALK_TO
  * does nothing outside a block, ARROW resolves both units and stops,
  * DARK_SCREEN's thread only sets its task id, and the two CHANGE_MAP
- * instructions leave the camera's script transform alone. BETA does not imply
+ * instructions leave the script light transform alone. BETA does not imply
  * unused. JUMP animates a unit, whereas JUMP_FORWARD/JUMP_BACK branch within
  * the script. CALL_FUNCTION selects a built-in operation, not a native
  * function pointer. EFFECT_END starts the staged effect; it does not cancel
@@ -504,6 +507,9 @@ typedef char world_event_work_status_staging_offset_must_be_0x5f0
     [((unsigned long)&((world_event_work_t*)0)->status_staging == 0x5F0) ? 1 : -1];
 
 /* variables */
+/* The script variables: the ids the code names, the packed flag and nibble ranges, and the story,
+ * world-map and Brave Story ranges. */
+
 /* Event-script variable ids shared by the BATTLE and WORLD interpreters.
  * The calendar and location ids are also serialized into the memory-card
  * slot description by CARD 0x801c01ac. */
@@ -665,8 +671,10 @@ typedef enum event_script_variable_id {
      * (Reis returns to human form). */
     EVENT_SCRIPT_VAR_WORKER_7_DEFEATED = 0xab,
     EVENT_SCRIPT_VAR_REIS_RESTORED = 0xac,
-    /* When set, the interpreters skip the DismissUnit, CallFunction,
-     * UnlockDate, and SetDateAdvance side effects. */
+    /* Set while a story event replays from the Brave Story or a tutorial plays from its list
+     * (WLDCORE), and cleared when that event ends. The interpreters then skip the DismissUnit,
+     * CallFunction, UnlockDate and SetDateAdvance side effects, and *_script_run_variable_command
+     * refuses writes outside the scenario locals and the interpreter's working variables. */
     EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS = 0x1fc,
     /* Set by ATTACK when a battle is loaded and cleared at EventEnd; while set,
      * statuses are staged and the turn check starts the battle-start event. */

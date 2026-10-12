@@ -241,7 +241,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
     another. Neither changes the script's course.
   - In WORLD, WalkTo is an empty arm outside a block, Arrow resolves both
     units and never sets the trajectory, and ChangeMap calls an empty
-    function where BATTLE resets the camera script transform.
+    function where BATTLE resets the script light transform.
 - `wldcore_menu_step_location_menu_level` opens the outfitter with shop id 0
   for every town; `world_shop_run_screen` then takes the id from the
   location variable. The fur shop and soldier office pass their own ids.

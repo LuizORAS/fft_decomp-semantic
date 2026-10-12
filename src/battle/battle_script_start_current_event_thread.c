@@ -1,13 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Reset the unit animation states and, when the current-event variable is set,
- * fade the screen colour modulation to zero and start the event thread (slot 1)
- * on battle_script_run_next_event.
+/* Reset the unit animation states and, when the current-event variable is set, fade the screen
+ * colour modulation to zero and start the event thread (NATIVE_THREAD_SLOT_EVENT) on
+ * battle_script_run_next_event.
  *
- * While the battle has not started it first stores the camera in the script
- * variables and resets the script camera transform. Where WORLD's copy calls two
- * empty functions, BATTLE does that camera work. */
+ * While the battle has not started it first stores the camera in the script variables and puts the
+ * script light transform back to the map's light. BATTLE does that work where WORLD's copy calls two
+ * empty functions. */
 void battle_script_start_current_event_thread(void) {
     battle_unit_reset_animation_states();
     g_battle_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_NORMAL;

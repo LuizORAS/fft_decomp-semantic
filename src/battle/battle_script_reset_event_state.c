@@ -1,9 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Battle twin of world_script_reset_event_state. Where WORLD has no-op stubs, BATTLE
- * snapshots the camera into script variables and resets the script camera
- * transform while no thread occupies slot 1. */
+/* Reset the unit animation states and, while no event thread runs (NATIVE_THREAD_SLOT_EVENT), store
+ * the camera in the script variables, put the script light transform back to the map's light and
+ * clear the camera speed curve and position lock. battle_state_enter_event calls it; in WORLD's copy
+ * the camera and light calls are empty functions. */
 void battle_script_reset_event_state(void) {
     battle_unit_reset_animation_states();
     if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_EVENT) == 0) {

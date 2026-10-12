@@ -12,7 +12,18 @@ typedef struct battle_script_weather_environment {
 
 extern battle_script_weather_environment_t g_battle_event_weather_commands[];
 
-/* Advances asynchronous battle-script, map, effect, and graphics requests. */
+/* Carry out, on the main loop, what the event instructions asked for during this frame's threads
+ * (battle_script_run_event_frame resets the requests every frame):
+ * - the units' facings and pending animations;
+ * - the map jump-out, the change-map jump-out and the jump-in;
+ * - 3D object and field object (texture animation) changes, and the flags their wait instructions poll;
+ * - the mesh refresh, the map reload and append loads, and the destruction wait
+ *   (battle_script_set_specialized_map_destroyed);
+ * - the weather (its snow variant on a snowy map) and the time of day;
+ * - the staged effect, on the caster or on a unit, and the unit graphics load;
+ * - EVTCHR slot loads, saves and clears, unit graphics copied to a reserved VRAM slot and its release;
+ * - the sound effect, and the music: the switch between the scenario's two tracks, a slot unloaded, a
+ *   new track and a volume transition. */
 void battle_script_process_pending_requests(void) {
     s16 destruction_state;
     s16 effect_id;
