@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 void wldcore_opcode_nop(void) {
     u16* flags;

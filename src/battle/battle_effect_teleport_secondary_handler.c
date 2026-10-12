@@ -1,4 +1,5 @@
 #include "fft/battle_effect.h"
+#include "psx/libgte.h"
 
 /*
  * Secondary effect function 0x13 (Teleport) in g_battle_effect_secondary_handlers.

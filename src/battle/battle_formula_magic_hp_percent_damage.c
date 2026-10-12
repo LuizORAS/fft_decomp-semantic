@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x09: damage (Y)% of max HP with element, hit F(MA+X)%; magic evade;
  * 19% status. */

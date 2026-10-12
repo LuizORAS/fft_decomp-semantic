@@ -1,6 +1,6 @@
-#include "fft/battle.h"
 #include "fft/battle_event.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_thread.h"
 
 /* Select the CLUT of a menu sprite: the dimmed one while the
  * previous event thread is running or event mode is active, otherwise the

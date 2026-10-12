@@ -1,4 +1,5 @@
 #include "fft/battle_effect.h"
+#include "fft/data.h"
 
 /* Starts the projectile secondary effect of the unit's action: the stone for
  * Throw Stone, the thrown item for the Item and Throw abilities, and for

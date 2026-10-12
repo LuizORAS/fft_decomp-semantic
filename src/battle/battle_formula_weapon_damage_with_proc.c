@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x02: as 0x01, but the 19% roll queues the weapon's proc ability on
  * the target instead of a status. */

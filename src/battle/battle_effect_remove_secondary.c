@@ -1,4 +1,5 @@
 #include "fft/battle_effect.h"
+#include "fft/main.h"
 
 /* Take secondary effect record id (1-16) off the active chain, free its work
  * block and append it to the end of the free chain headed by

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x54: heal (MA * Y) MP. */
 void battle_formula_heal_mp_ma_times_y(void) {

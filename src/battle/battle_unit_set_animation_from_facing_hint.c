@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Faces a unit in a direction given in quarter turns and restarts its animation
  * with that facing, as battle_unit_set_animation_from_facing_nibble does for

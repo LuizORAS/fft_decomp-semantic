@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x24: damage ((PA + Y) / 2 * MA) with element; magic evade; 19%
  * status. */

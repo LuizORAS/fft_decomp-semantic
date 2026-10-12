@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_map.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* The raw weather script variable. battle_map_get_effective_weather applies the

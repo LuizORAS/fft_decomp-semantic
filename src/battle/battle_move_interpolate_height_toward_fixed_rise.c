@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
+#include "psx/libgte.h"
 
 /* Distortion animation 0x02: raise the unit by 0x24000 (36 screen units) in equal
  * steps over distortion_timer frames.

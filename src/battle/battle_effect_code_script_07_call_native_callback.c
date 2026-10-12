@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 07: call the native callback whose catalog id is the second 16-bit value with
  * the record index and the top six bits of the instruction's second byte as

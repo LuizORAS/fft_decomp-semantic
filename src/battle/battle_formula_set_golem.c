@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x14: Golem, hit ((MA+X) * caster Faith / 100)%. */
 void battle_formula_set_golem(void) {

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* The same routine as battle_unit_add_event_offset_by_misc_id, compiled twice. Nothing calls this copy. */

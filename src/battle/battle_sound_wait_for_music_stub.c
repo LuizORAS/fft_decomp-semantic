@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_sound.h"
+#include "fft/battle_thread.h"
 
 /* Wait, one vertical blank at a time, while main_return_zero_80043708 called on
  * the main stack returns nonzero. That function always returns 0, so the wait

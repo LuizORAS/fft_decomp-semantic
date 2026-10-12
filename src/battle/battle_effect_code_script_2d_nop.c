@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 2d: nothing. */
 effect_script_result_e battle_effect_code_script_2d_nop(effect_record_t* record) {

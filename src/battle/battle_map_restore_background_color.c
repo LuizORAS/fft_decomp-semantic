@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 
 void battle_map_restore_background_color(void) {
     g_battle_map_background_color[0] = g_battle_map_background_color_backup[0];

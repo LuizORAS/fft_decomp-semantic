@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
+#include "psx/libgpu.h"
 
 /* Opcode 0b: set the camera rotation from the three 16-bit values that follow. */
 effect_script_result_e battle_effect_code_script_0b_set_camera_rotation(effect_record_t* record) {

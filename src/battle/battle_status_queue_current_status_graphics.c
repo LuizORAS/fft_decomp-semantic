@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
+#include "fft/battle_thread.h"
 #include "psx/types.h"
 
 /* Queue the renderer status flags for each of a unit's current statuses on

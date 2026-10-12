@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 1c: jump to the offset in the third 16-bit value when the counter
  * selected by the second byte's top two bits differs from the second

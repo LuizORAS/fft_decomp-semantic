@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/battle_gfx.h"
+#include "fft/battle_thread.h"
 
 /* Fades the screen out: raises g_battle_screen_fade from 0 by 4 per frame,
  * yielding once per step, and ends on 255. The screen-covering tile uses the

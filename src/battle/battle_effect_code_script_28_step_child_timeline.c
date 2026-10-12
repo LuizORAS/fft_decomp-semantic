@@ -1,4 +1,10 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/map.h"
+#include "psx/suzuki.h"
 #include "psx/types.h"
 
 /* Opcode 28: advance the record's child timeline by one frame, for the

@@ -5,7 +5,6 @@
 
 #include "fft/battle_gfx.h"
 #include "fft/battle_move.h"
-#include "fft/main.h"
 
 /* map */
 /* Four serialized move-find item/trap entries per map. */

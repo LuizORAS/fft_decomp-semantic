@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_thread.h"
 #include "psx/types.h"
 
 /* battle_menu_display_text_entry with a text argument of 1 instead of 0. In WORLD that draws on past

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/unit.h"
 #include "psx/types.h"
 
 /* Formula 0x57: +1 level (a miss at level 99) and the ability's status on the

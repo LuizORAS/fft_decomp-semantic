@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
 #include "fft/world.h"
 
 /* Queue the renderer status flag change (`enabled`) for each of a unit's

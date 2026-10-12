@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Formula 0x16: MP damage equal to the target's current MP, hit F(MA+X)%;

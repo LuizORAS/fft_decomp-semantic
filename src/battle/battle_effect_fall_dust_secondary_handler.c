@@ -1,4 +1,5 @@
 #include "fft/battle_effect.h"
+#include "psx/libgte.h"
 
 /*
  * Secondary effect function 0x08 (the dust of a fall) in g_battle_effect_secondary_handlers.

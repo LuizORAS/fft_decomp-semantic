@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
 #include "fft/main.h"
 
 /* Clears the unit's Charging, Jump, Defending and Performing statuses (action

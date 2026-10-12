@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/data.h"
+#include "fft/unit.h"
 
 /* Formula 0x58 "Set Morbol: Hit(MA+X)%". */
 

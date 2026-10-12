@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 18: jump to the offset in the third 16-bit value when the record has
  * fewer particles than the second 16-bit value says; otherwise step over the

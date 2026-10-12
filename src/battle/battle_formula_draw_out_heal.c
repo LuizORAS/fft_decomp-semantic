@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x23: Draw Out heal (MA * Y) HP with no modifiers (damage to
  * undead); katana break roll. */

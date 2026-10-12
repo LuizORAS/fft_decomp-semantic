@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Stop the blend of CLUT clut_index of a row, or of all sixteen when stop_all is

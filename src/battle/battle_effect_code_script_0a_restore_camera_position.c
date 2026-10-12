@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 0a: restore the camera position opcode 09 saved. */
 effect_script_result_e battle_effect_code_script_0a_restore_camera_position(effect_record_t* record) {

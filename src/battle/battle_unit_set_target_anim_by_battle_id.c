@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Starts the reaction animation of the unit in slot battle_id to the casting
  * unit's action. Always returns 1. No retail code calls it. */

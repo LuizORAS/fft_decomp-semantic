@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_effect.h"
+#include "fft/data.h"
 #include "psx/types.h"
 
 /*

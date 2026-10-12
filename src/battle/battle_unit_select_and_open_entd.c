@@ -1,4 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "fft/script.h"
+#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Dropping either volatile view moves the mode load past the initial ENTD store. */

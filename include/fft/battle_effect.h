@@ -1861,6 +1861,8 @@ extern s32 g_battle_effect_inertia_threshold;
 extern s16 g_battle_effect_load_countdown;
 extern effect_timeline_t* g_battle_effect_timeline;
 extern u8* g_battle_effect_script;
+/* Written by script opcode 05; no reader is known. */
+extern u16 D_801BF000;
 /* Timing-curve section of an effect file: a time scale per timeline frame,
  * packed two nibbles to the byte, low nibble first; values 1-9 are applied
  * (battle_state_set_time_scale). The parent timeline's curve comes first and

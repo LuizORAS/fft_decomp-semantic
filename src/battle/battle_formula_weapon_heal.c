@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x07: heal weapon (XA * YA) HP (damage to undead); no evade. Zodiac
  * compatibility is applied twice. */

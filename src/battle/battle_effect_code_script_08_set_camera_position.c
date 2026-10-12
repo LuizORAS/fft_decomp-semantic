@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
+#include "psx/libgpu.h"
 
 /* Opcode 08: move the camera to the position in the three 16-bit values that
  * follow (x, y, z in world units). */

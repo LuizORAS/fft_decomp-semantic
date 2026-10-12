@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/battle_action.h"
+#include "fft/battle_status.h"
 #include "psx/types.h"
 
 /* Run battle_action_prepare_attack phase 1 on a command, writing the prepared

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
 
 /* Passes a status change on to the unit's display flags
  * (battle_status_queue_misc_graphics_flag_change), but only while an action is

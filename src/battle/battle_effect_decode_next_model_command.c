@@ -1,4 +1,5 @@
 #include "fft/battle_effect.h"
+#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Decode the next effect command and advance the command index.

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "fft/world.h"
 
 /* Start event opcode 0x28 movement for one unit.

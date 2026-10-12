@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_thread.h"
 #include "psx/libgpu.h"
 
 /* Render a text record into a freshly built window image at the record's own

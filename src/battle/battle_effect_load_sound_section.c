@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "psx/suzuki.h"
 #include "psx/types.h"
 
 /* Replace the effect sounds: unregister the sound resource of the previous effect

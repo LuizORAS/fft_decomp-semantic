@@ -85,62 +85,7 @@ void battle_gfx_set_item_icon_sprite(SPRT* sprite, s32 item_id);
 
 #include "fft/battle_event.h"
 
-/* status */
-extern u8 g_battle_player_unit_fallen;
-/* Event infliction helpers number bits LSB-first, unlike stored status IDs. */
-#define BATTLE_STATUS_LSB_INDEX(id) (((id) & ~7) | (7 - ((id) & 7)))
-
-#define BATTLE_STATUS_LSB_MASK(id) ((u8)(1U << ((id) & 7)))
-
-/* The special-status callback table reserves index 0; timed slots begin at Poison. */
-#define BATTLE_STATUS_HANDLER_INDEX(id) ((id) + 1)
-
-#define BATTLE_STATUS_CT_INDEX(id) ((id) - BATTLE_STATUS_ID_POISON)
-
-#define BATTLE_STATUS_PACKED_MASK(id) ((u32)BATTLE_STATUS_BYTE_MASK(id) << (BATTLE_STATUS_BYTE_INDEX(id) * 8))
-
-extern const u8 g_battle_status_display_image_ids[BATTLE_STATUS_COUNT];
-extern s32 g_battle_status_menu_open;
-extern SVECTOR g_battle_status_bubble_zoom;
-extern s16 g_battle_numeric_digit_0_zoom_curve[21];
-extern s16 g_battle_numeric_digit_1_zoom_curve[21];
-extern s16 g_battle_numeric_digit_2_zoom_curve[21];
-extern s16 g_battle_numeric_digit_0_critical_zoom_curve[21];
-extern s16 g_battle_numeric_digit_1_critical_zoom_curve[21];
-extern s16 g_battle_numeric_digit_2_critical_zoom_curve[21];
-
-/* Texture coordinates for the status bubble graphics, indexed by status bubble
- * id (0x800949dc/0x800949f4) and by a counter digit (0x80094a0c/0x80094a24).
- * Each table holds 24 bytes; the pairs are read together as one u/v. */
-extern u8 g_battle_status_bubble_u[24];
-extern u8 g_battle_status_bubble_v[24];
-extern u8 g_battle_status_bubble_digit_u[24];
-extern u8 g_battle_status_bubble_digit_v[24];
-s32 battle_status_check_unit(battle_stats_t* unit);
-void battle_status_disable_acting(battle_stats_t* unit);
-void battle_status_enable_special_flags(s32 status_id, s32 enabled, s32 misc_unit_id);
-void battle_status_queue_current_status_graphics(s32 battle_id, s32 enabled);
-s32 battle_status_inflict_defending_to_battle_id(s32 unit_id);
-s32 battle_status_is_unit_absent_dead_crystal_treasure_petrified_or_ridden(const battle_stats_t* unit);
-s32 battle_status_modify_inflictions(s32 removal_only);
-s32 battle_status_remove_charging_ability_ct(battle_stats_t* unit, s32 do_disable);
-void battle_status_remove_control(battle_stats_t* unit);
-s32 battle_status_resolve_unit_changes(s32 unit_id, s32 removal_only);
-void battle_status_set_inflicted_ct_and_transfer_last_used_ct(s32 unit_idx);
-void battle_status_store_for_current_attack(s32 unit_id, s32 removal_only);
-s32 battle_status_apply_poison_and_regen(battle_stats_t* unit);
-void battle_status_apply_unit_action_removal(battle_stats_t* unit);
-s32 battle_status_build_upkeep_action(s32 unit_id, battle_stats_t* unit);
-s32 battle_status_check_crystal_dead_jump_petrify_treasure(battle_stats_t* unit);
-void battle_status_enable_disable_acting(battle_stats_t* unit);
-void battle_status_inflict_by_entd_unit_id(s32 entd_id, s32 status, s32 which, s32 arg);
-s32 battle_status_init_special_flag_enabling(s32 unit_id);
-s32 battle_status_queue_misc_graphics_flag_change(s32 status, s32 enabled, s32 battle_id);
-void battle_status_reapply_active_flags(battle_stats_t* unit);
-void battle_status_remove(void);
-s32 battle_status_remove_transparent(battle_stats_t* unit);
-void battle_status_remove_transparent_if_jump_used(battle_stats_t* unit);
-void battle_status_update_expiring(s32 unit_id);
+#include "fft/battle_status.h"
 
 /* system */
 /*
@@ -369,155 +314,13 @@ s32 battle_state_sync_and_submit_deployment_frame(u32* ordering_table);
 s32 battle_state_update_deployment_controller_input(void);
 void battle_state_enter_unit_moving_setup(void);
 
-/* thread */
-/* 0x8014ceb4..0x8014cf58 forwards a0-a3 to the callback in 0x80173ca8,
- * using thread 0's stack when necessary. It does not copy stacked arguments
- * across that stack switch; callers must not assume they are transferred.
- * The unspecified argument list is intentional, not a missing prototype. */
-extern void (*g_battle_thread_call_target)(void);
-
-/* Full BATTLE backing array at 0x8016986c. The pointer slot 0x80165f98 is
- * separate. */
-extern native_thread_t g_battle_thread_contexts[];
-
-/* View of g_battle_thread_contexts biased to task_id (0x801698b8): [i][0] is
- * thread i's task_id and [i][1] its task_words[0]. Target code addresses the
- * biased symbol directly, so it must not be rebound to the context base. The
- * WORLD twin is g_world_thread_task_ids. */
-extern s32 g_battle_thread_task_ids[][256];
-
-/* BATTLE's pointer slot at 0x80165f98, set to g_battle_thread_contexts by
- * battle_menu_init_subsystem_pointers. Every access indexes it with a 0x400
- * stride, and the scheduler primitives reach is_running (0x48) and task_id
- * (0x4c) through it, so it is a native_thread_t*, not the u8* placeholder it
- * was spelled as in 22 files. Files doing raw byte arithmetic cast (u8*) at
- * the use site. */
-extern native_thread_t* g_battle_threads;
-void battle_thread_wait_for_unit_view_panels(void);
-s32 battle_thread_call_on_main_stack();
-void battle_thread_exit_current(void);
-s32 battle_thread_find_running_by_task(s32 task_id);
-void* battle_thread_get_current_global_pointer(void);
-s32 battle_thread_get_current_parameter_1(void);
-s32 battle_thread_get_current_parameter_2(void);
-s32 battle_thread_get_current_parameter_3(void);
-s32 battle_thread_get_current_task_id(void);
-s32 battle_thread_is_previous_running(void);
-s32 battle_thread_is_running(s32 thread_id);
-s32 battle_thread_is_running_asm(s32 thread_id);
-void battle_thread_reset_scheduler(void);
-s32 battle_thread_resolve_id(s32 requested_thread_id);
-s32 battle_thread_resolve_id_after_current(s32 requested_thread_id);
-void battle_thread_resume(s32 thread_id);
-void battle_thread_set_current_task_id(s32 task_id);
-void battle_thread_set_parameters(s32 thread_id, s32 first, s32 second, s32 third);
-void battle_thread_set_four_parameters(s32 thread_id, s32 first, s32 second, s32 third, s32 fourth);
-void battle_thread_start(s32 thread_id, void (*function)(void));
-void battle_thread_suspend(s32 thread_id);
-void battle_thread_wait_frames(s32 count);
-void battle_thread_wait_until_inactive(s32 thread_id);
-
-/* 0x8014ca80..0x8014cbb4: save this native context and resume the next
- * active one. Shared state can change before this caller resumes. */
-void battle_thread_yield(void);
+#include "fft/battle_thread.h"
 
 #include "fft/battle_camera.h"
 
-/* sound */
-extern s32 g_battle_sound_primary_weather_sfx_id;
-extern s32 g_battle_sound_secondary_weather_sfx_id;
-extern s32 g_battle_sound_suppressed;
-extern s32 g_battle_sound_tertiary_weather_sfx_id;
-extern u8 g_battle_sound_weather_sfx_enabled;
-extern s32 g_battle_sound_pending_sfx_id; /* main_sfx_e; -1 while the event frame has no request */
-/* main_sfx_e by the weapon's item_type_e (0x20 entries each): the swing, the
- * hit, and the hit a shield or Golem stops (battle_sound_select_weapon_hit). */
-extern u8 g_battle_sound_weapon_miss_sfx_ids[];
-extern u8 g_battle_sound_weapon_hit_sfx_ids[];
-extern u8 g_battle_sound_shield_deflect_sfx_ids[];
-extern s16 g_battle_music_set_track_request;
-
-/* SwitchTrack's first operand is a trigger, not the selected track ID.
- * The consumer toggles the zero-based index, then uses main music slot 1/2. */
-extern s16 g_battle_music_switch_request; /* 0x80165fc8 */
-
-/* u16: the only loads of these three in the tree are in
- * attack_sound_resync_scenario_music_and_apply_map_darkness, which the target
- * reaches with lhu (that file's own comment records the andi a u16 merge would
- * add). Every other use is a store, which is sign-agnostic. */
-extern u16 g_battle_music_track_1_id;          /* 0x80165fd4 */
-extern u16 g_battle_music_track_2_id;          /* 0x80165fd6 */
-extern s16 g_battle_music_unload_slot_request; /* 0x80165fca */
-
-/* 0x80165fc0: -1 absent; volume = low 16 bits,
- * duration = (packed >> 14) & 0x3ffc. Not a linear duration field. */
-extern s32 g_battle_music_volume_transition_request;
-void battle_sound_play_landing_sfx_by_surface_type(battle_unit_misc_data_t* unit);
-void battle_sound_play_movement_sfx(battle_unit_misc_data_t* unit, s32 sound_id);
-void battle_sound_play_music_tracks(s32 slot_1_music_id, s32 slot_2_music_id);
-void battle_sound_select_weapon_hit(battle_unit_misc_data_t* unit, s32 hit);
-void battle_sound_set_effect_to_cancel(void);
-void battle_sound_set_effect_to_confirm(void);
-void battle_sound_set_effect_to_confirm_checked(void);
-void battle_sound_set_effect_to_cursor_move(void);
-void battle_sound_set_effect_to_invalid(void);
-void battle_sound_start_weather_sfx(void);
-s32 battle_sound_stop_weather_sfx(void);
-void battle_sound_wait_for_music_stub(void);
-void battle_sound_bg_thread(void);
-void battle_sound_edit_bg_thread(void);
+#include "fft/battle_sound.h"
 
 #include "fft/battle_effect.h"
-
-/* turn */
-typedef enum battle_turn_status_flags {
-    BATTLE_TURN_STATUS_CT_FROZEN = 0x01,
-    BATTLE_TURN_STATUS_INCAPACITATED = 0x02,
-    BATTLE_TURN_STATUS_DEAD = 0x04,
-    BATTLE_TURN_STATUS_SLEEP = 0x08,
-    BATTLE_TURN_STATUS_HASTE = 0x10,
-    BATTLE_TURN_STATUS_SLOW = 0x20,
-    BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK = 0x0f,
-    BATTLE_TURN_STATUS_BLOCKS_TURN_MASK = 0x0d,
-} battle_turn_status_flags_e;
-
-typedef enum battle_turn_event {
-    BATTLE_TURN_EVENT_UNIT_READY = 0x0100,
-    BATTLE_TURN_EVENT_ABILITY_READY = 0x0200,
-    BATTLE_TURN_EVENT_ACTION_RESULT = 0x0300,
-    BATTLE_TURN_EVENT_UNKNOWN_0400 = 0x0400,
-    BATTLE_TURN_EVENT_MIME = 0x0500,
-    BATTLE_TURN_EVENT_NONE = 0xff00,
-} battle_turn_event_e;
-
-/* g_battle_between_turn_state and g_battle_between_turn_resume_state: the phases of
- * battle_action_run_between_turn_control. */
-typedef enum battle_between_turn_state {
-    BATTLE_BETWEEN_TURN_STATE_ADD_CT = 0,         /* every unit gains CT by its speed */
-    BATTLE_BETWEEN_TURN_STATE_PICK_UNIT = 1,      /* the highest CT of 100 or more takes a turn */
-    BATTLE_BETWEEN_TURN_STATE_TICK_CHARGES = 2,   /* count down every charged_ability_ct */
-    BATTLE_BETWEEN_TURN_STATE_RESOLVE_CHARGE = 3, /* a charge that reached 0 resolves */
-    BATTLE_BETWEEN_TURN_STATE_EXPIRE_STATUSES = 4,
-    BATTLE_BETWEEN_TURN_STATE_COLLECT_PENDING_ACTIONS = 5, /* note the units whose action has an attack type */
-    BATTLE_BETWEEN_TURN_STATE_RUN_PENDING_ACTIONS = 6,
-    BATTLE_BETWEEN_TURN_STATE_PICK_UNIT_AFTER_CHARGE = 9, /* a unit whose CT is 0xff takes a turn at once */
-    BATTLE_BETWEEN_TURN_STATE_UNIT_TURN = 10,             /* end the turn of each unit that has one */
-    BATTLE_BETWEEN_TURN_STATE_MARK_MIMES = 13,
-    BATTLE_BETWEEN_TURN_STATE_RUN_MIMES = 14,
-    BATTLE_BETWEEN_TURN_STATE_TERRAIN_POISON = 15,
-    BATTLE_BETWEEN_TURN_STATE_REMOVE_TRANSPARENT = 17,
-    BATTLE_BETWEEN_TURN_STATE_POISON_AND_REGEN = 19,
-} battle_between_turn_state_e;
-
-extern u8 g_battle_acting_unit_elevation;
-extern u8 g_battle_acting_unit_x;
-extern u8 g_battle_acting_unit_y;
-extern s32 g_battle_acting_unit_id;
-extern menu_active_unit_t g_battle_active_turn_unit;
-extern s32 g_battle_between_turn_resume_state;
-extern s16 g_battle_acting_unit_used_ability_id;
-extern s32 g_battle_between_turn_state;
-extern s32 g_battle_turn_unit_id;
 
 #include "fft/battle_gfx.h"
 
@@ -552,7 +355,6 @@ extern u8 g_battle_mimic_pending_flags[21];
 extern s16 g_battle_preview_target_unit_id;
 extern u16 g_battle_saved_animation_speed; /* animation speed saved while an event thread forces speed 2 */
 
-extern u16 g_battle_team_golem[BATTLE_TEAM_COUNT]; /* 0x8018f5f4 */
 extern s32 g_battle_formation_screen_active;
 
 /* BATTLE flag at 0x80165ff2, set by etc_graphic_open while a full-screen ETC
@@ -564,7 +366,6 @@ extern u16 g_battle_field_object_wait_status; /* 0x80166070 */
 s32 battle_unit_find_slot_by_character_identity(u32 character_identity);
 s32 battle_map_tile_data_15_stub(void);
 s32 battle_fixed_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
-s32 battle_status_prepare_terrain_poison(battle_stats_t* unit);
 s32 battle_return_one(s32 unused_misc_id);
 s32 battle_target_spread_panel_to_neighbors(s32 y, s32 x);
 s32 battle_return_zero(void);
@@ -589,8 +390,5 @@ extern s32 D_801BACC4;
 extern s32 D_801BC0C4;
 extern s32 D_801BC0D4;
 extern s32 D_801BC0D8;
-
-/* Written by battle_effect_code_script_05 but never read. */
-extern u16 D_801BF000;
 
 #endif

@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Sound-novel opcode: add the 16-bit operand (instruction bits 8..23) to the
  * record's counter delta. */

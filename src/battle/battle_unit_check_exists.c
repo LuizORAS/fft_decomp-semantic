@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
+#include "fft/unit.h"
 #include "psx/types.h"
 
 /* Marks a present unit that has a formation index for removal: the slot is

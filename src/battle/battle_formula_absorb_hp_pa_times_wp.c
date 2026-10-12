@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x30: absorb (PA * WP) HP; physical evade. */
 void battle_formula_absorb_hp_pa_times_wp(void) {

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
 
 /* Confusion, Blood Suck, Berserk, Chicken and Charm take the unit out of
  * player control; without them the control bit comes back from the initial

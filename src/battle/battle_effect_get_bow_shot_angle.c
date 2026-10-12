@@ -1,4 +1,5 @@
 #include "fft/battle_effect.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Wrap the current bow-shot yaw into (-0x800, 0x800] then bucket it into

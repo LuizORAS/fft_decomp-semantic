@@ -1,4 +1,6 @@
 #include "fft/battle_effect.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Integrate one frame of motion for every particle in a list.

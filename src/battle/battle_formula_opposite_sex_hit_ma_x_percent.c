@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/unit.h"
 
 /* Formula 0x29: opposite sex only, hit (MA+X)%. */
 void battle_formula_opposite_sex_hit_ma_x_percent(void) {

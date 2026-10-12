@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Formula 0x34: heal (PA*Y) HP and (PA*Y/2) MP. */

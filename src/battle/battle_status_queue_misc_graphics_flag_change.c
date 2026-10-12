@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
 
 /*
  * Queue the renderer-side status flags associated with a simulation status.

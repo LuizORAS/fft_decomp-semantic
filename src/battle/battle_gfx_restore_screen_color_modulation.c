@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* No retail code calls it. */
 void battle_gfx_restore_screen_color_modulation(void) {

@@ -1,4 +1,5 @@
 #include "fft/battle_effect.h"
+#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Return a signed 16-bit value in the half-open interval between two bounds. */

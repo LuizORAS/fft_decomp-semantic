@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* The screen position of the unit in slot battle_id, or 0. No retail code calls
  * it. */

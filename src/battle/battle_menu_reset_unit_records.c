@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "psx/stddef.h"
 #include "psx/types.h"
 
 /* Clear whole records through a byte cursor: indexed record fields change the

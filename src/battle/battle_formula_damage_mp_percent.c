@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x1B: MP damage (Y)% of max MP, hit F(MA+X)%; magic evade. */
 void battle_formula_damage_mp_percent(void) {

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/unit.h"
 
 /* Formula 0x40: undead targets only, hit (SP+X)%. */
 void battle_formula_undead_hit_sp_x_percent(void) {

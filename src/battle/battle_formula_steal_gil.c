@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x27: steal (Level * SP) gil, hit (SP+X)%; physical evade. */
 void battle_formula_steal_gil(void) {

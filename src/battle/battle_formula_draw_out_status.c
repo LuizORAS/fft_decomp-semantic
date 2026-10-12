@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x22: Draw Out status, 100%; katana break roll. */
 void battle_formula_draw_out_status(void) {

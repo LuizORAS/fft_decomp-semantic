@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/battle_map.h"
+#include "fft/battle_sound.h"
 #include "psx/types.h"
 
 /* Stop the weather sound effects and every colour rotation the 32 map texture

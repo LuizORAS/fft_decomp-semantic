@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/main.h"
+#include "psx/libgpu.h"
 
 /* Starts a linear turn of the camera angles by values[0..2] over frame_count
  * frames (divided by the animation speed). No retail code calls it. */

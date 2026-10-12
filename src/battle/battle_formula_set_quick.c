@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x12: Quick, hit F(MA+X)%; no evade. */
 void battle_formula_set_quick(void) {

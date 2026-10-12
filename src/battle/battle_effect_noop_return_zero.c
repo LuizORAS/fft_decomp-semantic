@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/main.h"
 
 /* Effect-table no-op callback; the zero return selects the normal path. */
 s32 battle_effect_noop_return_zero(void) {

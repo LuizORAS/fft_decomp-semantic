@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 19: jump to the offset in the third 16-bit value when the number of
  * occupied child slots equals the second 16-bit value; otherwise step over the

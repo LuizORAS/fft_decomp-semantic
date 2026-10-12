@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_thread.h"
 #include "psx/types.h"
 
 /* Returns thread_id's running flag: the compiled counterpart of the hand-written

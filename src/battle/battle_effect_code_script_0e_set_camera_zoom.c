@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
+#include "psx/libgpu.h"
 
 /* Opcode 0e: set the camera zoom from the three 16-bit values that follow (ONE is
  * no zoom). */

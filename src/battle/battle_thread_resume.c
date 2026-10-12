@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_thread.h"
 #include "psx/types.h"
 
 void battle_thread_resume(s32 thread_id) {

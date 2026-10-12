@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_sound.h"
 #include "psx/types.h"
 
 /* Enable the weather sounds and start the rain sound when the weather has set one

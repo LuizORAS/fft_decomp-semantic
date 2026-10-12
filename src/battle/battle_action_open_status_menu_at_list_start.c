@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/battle_action.h"
+#include "fft/battle_status.h"
 
 /* Open the status menu once: mark it open and restart the AT list cursor at entry
  * 0. */

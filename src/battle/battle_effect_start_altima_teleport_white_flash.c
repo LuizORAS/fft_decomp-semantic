@@ -1,6 +1,7 @@
 #include "fft/battle_effect.h"
 #include "fft/battle_gfx.h"
 #include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 
 /* Teleport distortion: begin the departure flash. Altima's forms release the
  * ability effect that battle_effect_start_altima_teleport_departure requested;

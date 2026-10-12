@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_sound.h"
 #include "fft/battle_unit.h"
 
 /*

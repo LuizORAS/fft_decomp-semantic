@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x17: damage equal to the target's current HP - 1, hit F(MA+X)%;
  * magic evade. */

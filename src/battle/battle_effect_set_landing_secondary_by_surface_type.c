@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+#include "fft/map.h"
 #include "psx/types.h"
 
 /* Start the landing effect that suits the surface of the unit's destination tile:

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 #include "fft/world.h"
 #include "psx/types.h"
 

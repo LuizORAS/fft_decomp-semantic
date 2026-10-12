@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 2b: clear the parent-timeline state (frame, spawn counters and
  * keyframe tracks) that opcode 29 steps. */

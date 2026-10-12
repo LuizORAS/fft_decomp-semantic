@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_thread.h"
 #include "psx/types.h"
 
 /* Per-frame driver of battle_menu_request_open_companion_executable: start the

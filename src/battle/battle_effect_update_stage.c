@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "fft/battle_effect.h"
 #include "fft/battle_map.h"
+#include "fft/battle_menu.h"
+#include "fft/main.h"
+#include "psx/suzuki.h"
 
 /* Runs the loaded effect file one frame and returns 1 while it plays.
  *

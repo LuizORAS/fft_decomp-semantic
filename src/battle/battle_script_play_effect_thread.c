@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/battle_event.h"
+#include "fft/battle_thread.h"
 #include "fft/thread.h"
 
 /* Thread body of EffectEnd: play the effect that Effect and EffectStart prepared

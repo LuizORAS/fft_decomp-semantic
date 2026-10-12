@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 /* The number of records in the misc unit list. No retail code calls it. */
 s32 battle_unit_count_from_misc_data(void) {

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x1E: damage ((MA + Y) / 2 * MA) with element; magic evade; 19%
  * status. Strikes rnd(1..X) times

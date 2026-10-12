@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_text.h"
 #include "psx/types.h"
 
 /* Stores the rectangle at 0x801660ec, where text variables $7E and $7F would be. */

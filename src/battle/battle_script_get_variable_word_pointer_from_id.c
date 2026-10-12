@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/battle_event.h"
+#include "fft/battle_thread.h"
 
 /* Resolve a script variable id to the 32-bit storage value that holds it. Ids below 0x80
  * own a 32-bit value; 0x80..0x35f pack 32 flags per 32-bit value starting at 32-bit variable 0x80, and

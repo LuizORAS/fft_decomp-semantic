@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
 #include "psx/types.h"
 
 /* Returns the BATTLE_TURN_STATUS_* flags that decide how a unit takes part in the

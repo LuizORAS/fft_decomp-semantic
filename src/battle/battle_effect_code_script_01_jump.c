@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 01: jump to the script offset in the second 16-bit value. */
 effect_script_result_e battle_effect_code_script_01_jump(effect_record_t* record) {

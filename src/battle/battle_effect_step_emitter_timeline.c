@@ -1,3 +1,6 @@
+#include "fft/battle_effect.h"
+#include "psx/types.h"
+
 /* Two commutative operand ties decide this function, in opposite directions.
  * The dispatch block at +0xe4 wants its table address built base-first, which
  * hoisting the action array into its own pointer provides.  The keyframe

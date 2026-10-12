@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Seats one unit on another by misc id (battle_unit_mount_rider_onto_unit).
  * Returns 0 when either record is missing. No retail code calls it. */

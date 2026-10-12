@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Saves the screen colour modulation for
  * battle_gfx_restore_screen_color_modulation. No retail code calls either. */

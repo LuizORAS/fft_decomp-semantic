@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 21: subtract 1 from the counter selected by the top two bits of the
  * instruction's second byte. */

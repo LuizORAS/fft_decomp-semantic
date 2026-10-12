@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_thread.h"
 
 /* Start the fixed worker used by the system-function dispatcher.
  *

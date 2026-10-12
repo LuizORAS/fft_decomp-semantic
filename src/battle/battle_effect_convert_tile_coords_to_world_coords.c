@@ -1,5 +1,6 @@
 #include "fft/battle_effect.h"
 #include "fft/battle_map.h"
+#include "fft/map.h"
 
 /* Convert a tile position (x, layer, y) to world coordinates: the tile centre (28
  * units per tile) at the tile's height, 12 units per level and negative upward.

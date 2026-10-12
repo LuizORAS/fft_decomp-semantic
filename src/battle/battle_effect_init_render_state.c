@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_effect.h"
+#include "psx/libgte.h"
 
 /* Initialize the effect renderer's transform, depth, and primitive state.
  *

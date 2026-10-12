@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Request an ability's effect with misc unit 0 as the caster and misc unit 1 as

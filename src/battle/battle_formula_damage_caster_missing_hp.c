@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x4F: damage equal to the caster's missing HP, hit (MA+X)%; physical
  * evade. */

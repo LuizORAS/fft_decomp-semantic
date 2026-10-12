@@ -1,6 +1,10 @@
 #include "fft/battle_effect.h"
 #include "fft/battle_gfx.h"
 #include "fft/battle_map.h"
+#include "fft/battle_unit.h"
+#include "fft/map.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Sets an arrow's source, destination and flight duration.

@@ -1,6 +1,6 @@
-#include "fft/battle.h"
 #include "fft/battle_event.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_thread.h"
 
 /* Returns 1 when a menu thread may act on input: no previous event thread
  * running, no third thread parameter, not in event mode, no help menu open,

@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 1e: jump to the offset in the second 16-bit value once the record's
  * timeline frame reaches the end of the parent timeline (phase 1, a spawn

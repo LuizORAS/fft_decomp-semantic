@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 00: jump to the script offset in the second 16-bit value and end the
  * record's run for this frame. */

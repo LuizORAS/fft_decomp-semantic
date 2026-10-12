@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_thread.h"
 #include "psx/types.h"
 
 /* Yield until thread_id's slot is idle. It yields before the first test. */

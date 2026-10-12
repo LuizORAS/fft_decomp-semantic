@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* How far above the floor of a water tile the unit stands, in half-height steps: the whole
  * depth with Float or ON_WATER movement, one level less with IN_WATER movement, else 0. */

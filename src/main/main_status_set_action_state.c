@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
 #include "fft/main.h"
 
 /* Sets the unit's charging/jump/defending/performing status bit for

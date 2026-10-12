@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_thread.h"
 #include "psx/types.h"
 
 /* Return the id of any OTHER live event thread whose current 32-bit task value

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_sound.h"
 
 /* Queue the confirm sound unless a menu restore is pending
  * (g_battle_menu_restore_pending). */

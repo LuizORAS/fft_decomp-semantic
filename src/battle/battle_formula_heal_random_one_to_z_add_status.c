@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/main.h"
+#include "fft/unit.h"
 
 /* Formula 0x4B: heal rnd(1..Z) HP once its status applies; an undead target
  * takes its current HP as damage instead. */

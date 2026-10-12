@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 0c: save the camera rotation (opcode 0d restores it). */
 effect_script_result_e battle_effect_code_script_0c_save_camera_rotation(effect_record_t* record) {

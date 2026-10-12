@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_thread.h"
 
 /* Start the mini menu in the menu thread slot, on
  * battle_menu_display_triangle_selection with the mini menu's entry, unless the

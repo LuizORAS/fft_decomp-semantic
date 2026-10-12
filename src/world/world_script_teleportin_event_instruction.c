@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "fft/world.h"
 
 /* The interpreter also supplies a1=1; this entry does not consume it. */

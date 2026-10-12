@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
 #include "psx/types.h"
 
 /* 1 when the unit, or its rider when it is a mount, is charging an attack of

@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/battle_event.h"
+#include "fft/battle_thread.h"
 #include "fft/thread.h"
 
 /* Thread body of SpriteMove: run the sprite move with the last operand taken as a

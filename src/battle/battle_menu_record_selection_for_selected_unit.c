@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
 
 /* Record the current menu's selection byte for the selected unit, when that
  * menu appears in the tracked menu-id table. */

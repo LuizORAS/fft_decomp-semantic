@@ -1,3 +1,8 @@
+#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+#include "fft/effect.h"
+
 /* E464.BIN is the effect of effect id 0x21a, one of the ids past the abilities. */
 #include "fft/effect.h"
 

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 03: free the child record in the child slot named by bits 4-5 of
  * the instruction's second byte. */

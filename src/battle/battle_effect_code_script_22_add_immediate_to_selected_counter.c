@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 22: add the second 16-bit value to the counter selected by the top two
  * bits of the instruction's second byte. */

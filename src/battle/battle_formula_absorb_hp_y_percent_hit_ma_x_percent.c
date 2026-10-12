@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x4D: absorb (Y)% of max HP, hit (MA+X)%. */
 void battle_formula_absorb_hp_y_percent_hit_ma_x_percent(void) {

@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* Start loading the effect file of g_battle_ability_effect_id; an effect whose

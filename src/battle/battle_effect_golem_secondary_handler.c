@@ -1,4 +1,5 @@
 #include "fft/battle_effect.h"
+#include "psx/libgte.h"
 
 /* Secondary effect function 0x03 in g_battle_effect_secondary_handlers: the
  * particles of BATTLE_EFFECT_SECONDARY_ANIMATION_GOLEM.

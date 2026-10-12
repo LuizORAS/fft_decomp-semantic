@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_thread.h"
 #include "psx/types.h"
 
 /* Zeroes all 16 thread records (16 * 0x400 bytes), makes thread 0 the current

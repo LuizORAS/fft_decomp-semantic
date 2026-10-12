@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "fft/battle_unit.h"
 
 /* The battle stats of the unit whose turn it is (g_battle_active_turn_unit). */

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
+#include "fft/battle_thread.h"
 #include "psx/types.h"
 
 /* Event-script status change: inflicts (which != 0) or removes one status on the

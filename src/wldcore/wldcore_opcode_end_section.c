@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Sound-novel opcode: end the section; the script branches to the recorded
  * section after yielding this frame. */

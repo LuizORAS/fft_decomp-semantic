@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
 
 /* A second copy of battle_script_run_next_event. Nothing starts it; WORLD has the same pair. */
 void battle_script_run_next_event_unused(void) {

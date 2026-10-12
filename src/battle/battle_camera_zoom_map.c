@@ -1,4 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
+#include "fft/main.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Start a zoom toward ONE (mode 0) or 0xc00 (mode 1) from whichever side the

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x39: +Speed (Y). */
 void battle_formula_add_speed_y(void) {

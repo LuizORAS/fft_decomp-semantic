@@ -1,5 +1,15 @@
+#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 #include "fft/effect.h"
+#include "fft/main.h"
+#include "fft/map.h"
 #include "psx/gte_inline.h"
+#include "psx/libc.h"
+#include "psx/libgpu.h"
+#include "psx/libgte.h"
 
 #define RIBBON_SLOTS    EFFECT_PARTICLE_RIBBON_LONG_SLOTS
 #define RIBBON_POINTS   EFFECT_PARTICLE_RIBBON_LONG_POINTS

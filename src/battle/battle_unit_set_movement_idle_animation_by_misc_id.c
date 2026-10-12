@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* battle_unit_set_idle_animation_for_movement by misc id. No retail code calls

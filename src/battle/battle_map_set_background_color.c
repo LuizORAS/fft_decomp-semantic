@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 
 void battle_map_set_background_color(s32 red, s32 green, s32 blue) {
     g_battle_map_background_color[0] = red;

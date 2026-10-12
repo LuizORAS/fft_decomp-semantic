@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_sound.h"
+#include "fft/battle_thread.h"
 #include "psx/types.h"
 
 /* Thread task 0x35: ramp the volume of an environment sound from volume_from to

@@ -4,8 +4,6 @@
 /* WORLD/WORLD.BIN: world map, menus and event scripts. */
 
 #include "fft/main.h"
-#include "psx/libc.h"
-#include "psx/libetc.h"
 #include "psx/libgs.h"
 
 /* camera */

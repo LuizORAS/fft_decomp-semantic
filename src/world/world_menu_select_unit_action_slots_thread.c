@@ -1,6 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_menu.h"
 #include "fft/world.h"
-#include "psx/stddef.h"
 #include "psx/types.h"
 
 /* g_world_menu_unit_selection_rows holds one 17-byte menu row per unit (compare

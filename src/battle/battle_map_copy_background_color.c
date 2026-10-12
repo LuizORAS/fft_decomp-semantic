@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 
 /* Save the map background colour in the backup that
  * battle_map_restore_background_color reloads. */

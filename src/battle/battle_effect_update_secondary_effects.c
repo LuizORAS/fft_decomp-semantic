@@ -1,4 +1,5 @@
 #include "fft/battle_effect.h"
+#include "fft/main.h"
 
 /* Run the handler of every active secondary effect once, newest first, and remove
  * each one whose handler returns 0. Returns 0 when none is active.

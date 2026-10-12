@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
 
 /* Aim a projectile from one unit at another: set up the direct trajectory to the
  * target's tile and make the target the attacker's only target. Returns 1 when

@@ -1,4 +1,5 @@
 #include "fft/battle_effect.h"
+#include "fft/main.h"
 
 /* Take a secondary effect record from the free chain and append it to the active
  * chain, with its timer and slot ids cleared, and return its id. When no record

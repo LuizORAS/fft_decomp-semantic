@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/battle_ai.h"
+#include "fft/battle_status.h"
 #include "psx/types.h"
 
 /* Clockticks until the unit gets a turn: its Stop CT plus (100 - CT) / Speed

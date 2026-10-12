@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_thread.h"
 
 /* Returns the $gp register; battle_thread_start stores it in a new thread's
  * context. */

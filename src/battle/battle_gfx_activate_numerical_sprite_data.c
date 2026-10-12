@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
 
 /* Queues the failure message for a charged action that cannot start: mode 1 no
  * target, 2 silenced, 3 not enough MP (the result of

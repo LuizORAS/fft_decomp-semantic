@@ -1,4 +1,5 @@
 #include "fft/battle_effect.h"
+#include "psx/libc.h"
 
 /* Random integer between the two arguments, given in either order: at least the
  * smaller and less than the larger. Equal arguments return that value without

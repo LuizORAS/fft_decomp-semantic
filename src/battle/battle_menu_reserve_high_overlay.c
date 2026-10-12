@@ -1,6 +1,6 @@
-#include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
+#include "fft/battle_thread.h"
 #include "psx/types.h"
 
 /* Retry the overlay allocation until it lands at the expected address, yielding and printing a debug message each pass.

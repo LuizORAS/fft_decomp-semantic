@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+#include "psx/libgpu.h"
 
 /* Send an effect file's palette section to VRAM: its two 256-colour blocks go to
  * the CLUT rows MAP_CLUT_ROW_EFFECT and MAP_CLUT_ROW_EFFECT_SECOND, and the

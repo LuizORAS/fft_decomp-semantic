@@ -3,7 +3,7 @@
 
 /* EFFECT/E*.BIN: ability effect overlays that run with BATTLE. */
 
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* callbacks */
 s32 effect_map_set_3d_objects_state_2(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame);

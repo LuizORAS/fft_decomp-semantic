@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 #include "fft/world.h"
 
 /* Thread body: validates the skill chosen in menu entry 3 for the current

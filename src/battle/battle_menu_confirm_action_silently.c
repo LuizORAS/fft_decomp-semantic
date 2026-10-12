@@ -1,6 +1,6 @@
-#include "fft/battle.h"
 #include "fft/battle_event.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_sound.h"
 #include "psx/pad.h"
 
 /* Runs the menu's action handler on a simulated, silent Circle press with

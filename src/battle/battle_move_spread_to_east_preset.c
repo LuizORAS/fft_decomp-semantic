@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Step +x: the slope shifts select the source's exit side and the
  * destination's entry side. */

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
 
 /* Makes the attacker's own action result remove Transparent when its last
  * skillset is Jump and it carries Transparent as an inflicted status. Also points

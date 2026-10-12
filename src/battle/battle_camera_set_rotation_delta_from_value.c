@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/main.h"
+#include "psx/libgpu.h"
 
 /* Starts a linear turn of all three camera angles to the one value
  * *destination_value over frame_count frames (divided by the animation speed),

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/unit.h"
 
 /* Formula 0x63: thrown weapon damage (SP * WP) with the weapon's element;
  * Catch, then physical evade. */

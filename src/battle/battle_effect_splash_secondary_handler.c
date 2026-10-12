@@ -1,5 +1,8 @@
 #include "fft/battle_effect.h"
 #include "fft/battle_map.h"
+#include "fft/battle_unit.h"
+#include "fft/map.h"
+#include "psx/libgte.h"
 
 /*
  * Secondary effect function 0x09 (Splash) in g_battle_effect_secondary_handlers.

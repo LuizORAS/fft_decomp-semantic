@@ -2,8 +2,12 @@
 #include "fft/battle_effect.h"
 #include "fft/battle_gfx.h"
 #include "fft/battle_map.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "psx/libc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
+#include "psx/suzuki.h"
 
 /* The target compares a line's two endpoints as 32-bit values. */
 #define LINE_G2_XY_WORD(line, n) (*(s32*)&line->x##n)

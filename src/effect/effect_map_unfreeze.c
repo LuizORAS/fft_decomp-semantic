@@ -1,3 +1,5 @@
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
 #include "fft/effect.h"
 
 /* Callback handler: unfreezes the map when its keyframe starts. */

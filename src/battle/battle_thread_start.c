@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_thread.h"
 
 /* BATTLE twin of world_thread_start; same context layout (fft/thread.h). */
 void battle_thread_start(s32 thread_id, void (*function)(void)) {

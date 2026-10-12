@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
+#include "fft/map.h"
 
 /* Distortion animation 0x0f: slide a unit away from its target over
  * distortion_timer frames (Rush winds up with it).

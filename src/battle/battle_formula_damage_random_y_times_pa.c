@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Formula 0x37: damage (PA * rnd(1..Y)); physical evade. Knockback when a roll
  * below the target's Brave is under a roll below the attacker's Brave. */

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 02: start a child record on this script at the offset in the second
  * 16-bit value and keep its index in the child slot named by the high nibble of

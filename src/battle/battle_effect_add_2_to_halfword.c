@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Nothing in the game calls this or its three siblings for 4, 6 and 8. */

@@ -7,7 +7,7 @@
 #include "fft/battle_gfx.h"
 #include "fft/main.h"
 
-/* action */
+/* turn */
 /* battle_action_run_between_turn_control modes. */
 typedef enum battle_between_turn_mode {
     BATTLE_BETWEEN_TURN_MODE_RUN = 0,
@@ -15,6 +15,57 @@ typedef enum battle_between_turn_mode {
     BATTLE_BETWEEN_TURN_MODE_FIND_ACTIVE_UNIT = 2,
 } battle_between_turn_mode_e;
 
+typedef enum battle_turn_status_flags {
+    BATTLE_TURN_STATUS_CT_FROZEN = 0x01,
+    BATTLE_TURN_STATUS_INCAPACITATED = 0x02,
+    BATTLE_TURN_STATUS_DEAD = 0x04,
+    BATTLE_TURN_STATUS_SLEEP = 0x08,
+    BATTLE_TURN_STATUS_HASTE = 0x10,
+    BATTLE_TURN_STATUS_SLOW = 0x20,
+    BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK = 0x0f,
+    BATTLE_TURN_STATUS_BLOCKS_TURN_MASK = 0x0d,
+} battle_turn_status_flags_e;
+
+typedef enum battle_turn_event {
+    BATTLE_TURN_EVENT_UNIT_READY = 0x0100,
+    BATTLE_TURN_EVENT_ABILITY_READY = 0x0200,
+    BATTLE_TURN_EVENT_ACTION_RESULT = 0x0300,
+    BATTLE_TURN_EVENT_UNKNOWN_0400 = 0x0400,
+    BATTLE_TURN_EVENT_MIME = 0x0500,
+    BATTLE_TURN_EVENT_NONE = 0xff00,
+} battle_turn_event_e;
+
+/* g_battle_between_turn_state and g_battle_between_turn_resume_state: the phases of
+ * battle_action_run_between_turn_control. */
+typedef enum battle_between_turn_state {
+    BATTLE_BETWEEN_TURN_STATE_ADD_CT = 0,         /* every unit gains CT by its speed */
+    BATTLE_BETWEEN_TURN_STATE_PICK_UNIT = 1,      /* the highest CT of 100 or more takes a turn */
+    BATTLE_BETWEEN_TURN_STATE_TICK_CHARGES = 2,   /* count down every charged_ability_ct */
+    BATTLE_BETWEEN_TURN_STATE_RESOLVE_CHARGE = 3, /* a charge that reached 0 resolves */
+    BATTLE_BETWEEN_TURN_STATE_EXPIRE_STATUSES = 4,
+    BATTLE_BETWEEN_TURN_STATE_COLLECT_PENDING_ACTIONS = 5, /* note the units whose action has an attack type */
+    BATTLE_BETWEEN_TURN_STATE_RUN_PENDING_ACTIONS = 6,
+    BATTLE_BETWEEN_TURN_STATE_PICK_UNIT_AFTER_CHARGE = 9, /* a unit whose CT is 0xff takes a turn at once */
+    BATTLE_BETWEEN_TURN_STATE_UNIT_TURN = 10,             /* end the turn of each unit that has one */
+    BATTLE_BETWEEN_TURN_STATE_MARK_MIMES = 13,
+    BATTLE_BETWEEN_TURN_STATE_RUN_MIMES = 14,
+    BATTLE_BETWEEN_TURN_STATE_TERRAIN_POISON = 15,
+    BATTLE_BETWEEN_TURN_STATE_REMOVE_TRANSPARENT = 17,
+    BATTLE_BETWEEN_TURN_STATE_POISON_AND_REGEN = 19,
+} battle_between_turn_state_e;
+
+extern u8 g_battle_acting_unit_elevation;
+extern u8 g_battle_acting_unit_x;
+extern u8 g_battle_acting_unit_y;
+extern s32 g_battle_acting_unit_id;
+extern menu_active_unit_t g_battle_active_turn_unit;
+extern s32 g_battle_between_turn_resume_state;
+extern s16 g_battle_acting_unit_used_ability_id;
+extern s32 g_battle_between_turn_state;
+extern s32 g_battle_turn_unit_id;
+s32 battle_action_run_between_turn_control(battle_between_turn_mode_e mode);
+
+/* action */
 /* Bitset in battle_action_data_t.attack_type; one result can affect HP and MP. */
 typedef enum battle_action_type_flags {
     BATTLE_ACTION_TYPE_PSEUDO_STATUS = 0x01,
@@ -476,6 +527,8 @@ typedef enum battle_post_action_display_phase {
  * 3 marks the opposition pair whose result depends on sex. */
 extern u8 g_battle_zodiac_compatibility_modifiers[];
 
+/* Golem barrier HP per team, shared by action resolution and AI snapshots. */
+extern u16 g_battle_team_golem[BATTLE_TEAM_COUNT];
 extern s32 g_battle_action_turn_event_type;
 extern s32 g_battle_action_at_list_active;
 extern s32 g_battle_action_at_list_id;
@@ -530,7 +583,6 @@ extern VECTOR g_battle_current_vector;
 extern u32* g_battle_gfx_current_otag_entry;
 extern battle_render_buffer_t* g_battle_target_tile_color_buffer;
 extern u16 g_battle_current_music_track_index; /* 0x80165fd8 */
-extern s32 g_battle_current_thread_id;
 s32 battle_action_add_poached_item_to_fur_shop_inventory(void);
 s32 battle_action_calculate_at_list(battle_at_entry_t* list, s32 mode);
 u32 battle_action_get_number_of_turns_to_resolve(s32 unit_index, s32 ct, battle_at_entry_t* entries);
@@ -618,6 +670,7 @@ s32 battle_formula_apply_elemental_absorption_and_status(void);
 s32 battle_formula_apply_elemental_absorption_and_status_proc(void);
 void battle_formula_apply_elemental_strengthen(void);
 void battle_formula_apply_evasion_changes_due_to_statuses(void);
+void battle_formula_apply_finger_guard(void);
 void battle_formula_apply_full_hp_mp_heal(void);
 void battle_formula_apply_hp_absorption(void);
 void battle_formula_apply_magic_attack_up(void);
@@ -636,6 +689,7 @@ s32 battle_formula_apply_status_and_check_undead(void);
 s32 battle_formula_apply_steal_break_might_sword_hardcoding(void);
 void battle_formula_apply_target_magical_status_xa_modifiers(void);
 void battle_formula_apply_target_xa_affecting_statuses(void);
+void battle_formula_apply_talk_skill(void);
 void battle_formula_apply_undead_absorb_attack(void);
 void battle_formula_apply_undead_reversal(void);
 void battle_formula_apply_weapon_element_strengthen(void);
@@ -747,7 +801,6 @@ s32 battle_action_prepare_attack(battle_action_command_t* action, battle_action_
 s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work);
 void battle_action_init_current_ability_strike_data(battle_stats_t* unit);
 s32 battle_reaction_prepare_next(s16* reaction_id);
-s32 battle_action_run_between_turn_control(battle_between_turn_mode_e mode);
 void battle_formula_calculate_knockback(void);
 void battle_formula_apply_zodiac_compatibility(void);
 void battle_formula_store_physical_evade_values(void);

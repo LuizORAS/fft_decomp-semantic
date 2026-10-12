@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 1b: jump to the offset in the second 16-bit value when the child slot
  * named by the second byte's high nibble is empty; otherwise step over the

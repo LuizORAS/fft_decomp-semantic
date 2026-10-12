@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_thread.h"
 #include "psx/types.h"
 
 /* Returns the slot a thread should start in: a requested id below 16 as it is,

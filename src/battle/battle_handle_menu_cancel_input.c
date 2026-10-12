@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "fft/battle_action.h"
 #include "fft/battle_event.h"
 #include "fft/battle_menu.h"
 /* The `blez` target depends on which reorg pass fills its delay slot, not on

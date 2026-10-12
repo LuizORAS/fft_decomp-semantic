@@ -1,7 +1,10 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
 #include "fft/battle_effect.h"
+#include "fft/battle_unit.h"
+#include "fft/data.h"
 #include "fft/main.h"
+#include "fft/unit.h"
 #include "psx/types.h"
 
 /* Build the secondary-effect init record for an ability and hand it to the
