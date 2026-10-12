@@ -782,18 +782,6 @@ typedef struct battle_effect_script_header {
 } battle_effect_script_header_t;
 typedef char battle_effect_script_header_size_must_be_2[(sizeof(battle_effect_script_header_t) == 2) ? 1 : -1];
 
-/* Opcode 26 reads its emitter selector from the complete 16-bit header. */
-typedef union battle_effect_script_emitter_header {
-    u16 packed;
-    struct {
-        u16 : 10;
-        u16 emitter_index : 4;
-        u16 : 2;
-    } fields;
-} battle_effect_script_emitter_header_t;
-typedef char
-    battle_effect_script_emitter_header_size_must_be_2[sizeof(battle_effect_script_emitter_header_t) == 2 ? 1 : -1];
-
 /* A view at one instruction boundary in a variable-length byte stream.
  * Immediate, branch and camera instructions occupy 4, 6 and 8 bytes respectively;
  * two-byte instructions contain only the header. No array uses this union's stride. */

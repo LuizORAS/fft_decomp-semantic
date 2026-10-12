@@ -3,7 +3,15 @@
 /* Opcode 26: spawn this frame's particles of the emitter named by bits 10-13
  * of the 16-bit instruction header, at the record's frame counter. */
 effect_script_result_e battle_effect_code_script_26_spawn_emitter_particles(effect_record_t* record) {
-    battle_effect_script_emitter_header_t header;
+    /* A 16-bit header cache preserves the address operands; a direct field read changes them. */
+    union {
+        u16 packed;
+        struct {
+            u16 : 10;
+            u16 emitter_index : 4;
+            u16 : 2;
+        } fields;
+    } header;
 
     header.packed = battle_effect_get_current_script_header(record);
 
