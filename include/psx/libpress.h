@@ -13,18 +13,25 @@ typedef struct {
 
 typedef char decdctenv_size_must_be_256[(sizeof(DECDCTENV) == 256) ? 1 : -1];
 
-void DecDCTReset(s32 mode);
+/* environment */
 DECDCTENV* DecDCTGetEnv(DECDCTENV* env);
 DECDCTENV* DecDCTPutEnv(DECDCTENV* env);
+void DecDCTReset(s32 mode);
+
+/* transfer */
 s32 DecDCTBufSize(u32* bs);
 void DecDCTin(u32* buf, s32 mode);
 void DecDCTout(u32* buf, s32 size);
-s32 DecDCTinSync(s32 unused_mode);
-s32 DecDCToutSync(s32 unused_mode);
+
+/* synchronization */
 s32 DecDCTinCallback(psyq_interrupt_callback_t func);
+s32 DecDCTinSync(s32 unused_mode);
 s32 DecDCToutCallback(psyq_interrupt_callback_t func);
-s32 DecDCTvlcSize(s32 words);
+s32 DecDCToutSync(s32 unused_mode);
+
+/* variable-length decoding */
 s32 DecDCTvlc(u32* frame_data, u32* decode_buffer);
+s32 DecDCTvlcSize(s32 words);
 
 /* driver internals */
 
@@ -45,6 +52,8 @@ enum { PSYQ_PRESS_SYNC_POLL_LIMIT = 1048576 };
 #define PSYQ_MDEC_CONTROL_RESET     0x80000000U
 
 enum { PSYQ_PRESS_VLC_DEFAULT_HALFWORDS = 0x00ffffff };
+
+/* variable-length decoding */
 
 /* Resume(NULL) restores this handwritten VLC context; offset0x18 is untouched. */
 typedef struct {
@@ -78,6 +87,8 @@ extern const psyq_press_dc_entry_t g_psyq_press_dc_chroma_table[];
 extern const psyq_press_ac_entry_t g_psyq_press_ac_primary_table[];
 extern const u32 g_psyq_press_ac_secondary_table[];
 
+/* table uploads */
+
 /* Each cached table packet begins with the command that uploads it. */
 typedef struct {
     u32 command;
@@ -108,6 +119,7 @@ extern volatile u32* g_psyq_press_dma_out_bcr;
 extern volatile u32* g_psyq_press_dma_out_chcr;
 extern volatile u32* g_psyq_press_dma_dpcr;
 
+/* diagnostics */
 extern const char g_psyq_press_reset_bad_option_format[];
 extern const char g_psyq_press_in_sync_name[];
 extern const char g_psyq_press_out_sync_name[];
@@ -115,6 +127,7 @@ extern const char g_psyq_press_timeout_dma_format[];
 extern const char g_psyq_press_timeout_fifo_format[];
 extern const char g_psyq_press_timeout_format[];
 
+/* transfers */
 void MDEC_reset(s32 mode);
 void MDEC_in(u32* buf, u32 size);
 void MDEC_out(u32* buf, u32 size);
