@@ -25,7 +25,7 @@ void battle_script_unit_animation_rotate_event_instruction(const u8* parameters)
         battle_unit_set_facing_update_suppression(call_misc_id);
     }
     index = misc_id;
-    rotation_state = &g_battle_unit_misc_rotation_data[index];
+    rotation_state = &g_battle_unit_animation_states[index];
     rotation_state->target_facing = rotation;
     rotation_state->delay = 0;
     rotation_state->rotating = 0;

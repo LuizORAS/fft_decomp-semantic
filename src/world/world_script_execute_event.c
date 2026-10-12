@@ -83,7 +83,7 @@ void world_script_execute_event(void) {
 restart_event:
     world_script_set_event_speed(1U);
     instruction_offset = 0;
-    world_camera_init_yaw_angle();
+    world_camera_normalize_yaw_angle();
     {
         s32 empty_unit_id = EVENT_UNIT_SLOT_EMPTY;
         /* Keep the shared fill value available before the countdown initializer. */
@@ -92,7 +92,7 @@ restart_event:
         }
     }
     for (;;) {
-        instruction = (u8*)g_world_event_script;
+        instruction = (u8*)g_world_event_block;
         instruction += instruction_offset;
         parameters = instruction + 1;
         operand_1 = instruction[1];
@@ -109,7 +109,7 @@ restart_event:
         } else if ((opcode - EVENT_OPCODE_ADD_IMMEDIATE) < 0xFU) {
             operand_1 = first_halfword & 0xFFFF;
             world_script_run_variable_command(opcode, operand_1,
-                world_script_load_halfword(instruction_offset + (g_world_event_script) + 3) & 0xFFFF, 0);
+                world_script_load_halfword(instruction_offset + (g_world_event_block) + 3) & 0xFFFF, 0);
         } else if (opcode == EVENT_OPCODE_REQUEST_MAP_JUMP_IN) {
             g_world_event_map_jump_in_request = operand_1;
             world_thread_wait_frames(2);
@@ -170,7 +170,7 @@ restart_event:
                 world_thread_wait_frames(0x78);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_REQUEST_CAMERA_YAW_WRAP) {
-                g_world_camera_yaw_unwrap_request = 1;
+                g_world_camera_wrap_yaw_pending = 1;
             }
             if (operand_1 == EVENT_CALL_FUNCTION_DISABLE_DEBUG_DISPLAY) {
                 g_main_debug_display_enabled = 0;
@@ -249,7 +249,7 @@ restart_event:
             if (operand_1 == EVENT_CALL_FUNCTION_CLEAR_ZALERA_ACTIVE_STATUS_GRAPHICS) {
                 zalera_misc_id = world_script_get_misc_id(CHARACTER_IDENTITY_ZALERA);
                 if (zalera_misc_id != EVENT_MISC_ID_NONE) {
-                    world_unit_queue_current_status_graphics(
+                    world_status_queue_current_status_graphics(
                         battle_unit_get_battle_index_by_misc_id(zalera_misc_id), 0);
                     g_world_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
                     world_thread_call_on_main_stack(zalera_misc_id);
@@ -287,7 +287,7 @@ restart_event:
             event_flags = (g_main_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8;
             if (g_world_menu_input_mode == MENU_INPUT_PLAYER && event_flags == 0
                 && (operand_1 - EVENT_ID_GENERIC_FIRST) >= 0x1AU && operand_1 != 0) {
-                g_world_script_acting_unit_id = 0xFF;
+                g_world_script_condition_unit_battle_id = 0xFF;
                 world_script_run_scenario_conditions();
                 if (world_script_load_next_event() != 0) {
                     goto restart_event;
@@ -306,7 +306,7 @@ restart_event:
                 }
                 work_index += 1;
             } while (work_index < EVENT_UNIT_SLOT_COUNT);
-            world_camera_init_yaw_angle();
+            world_camera_normalize_yaw_angle();
             world_camera_init_tilt_and_zoom();
             world_thread_exit_current();
         }
@@ -343,7 +343,7 @@ restart_event:
                 instruction_offset, operand_2, &g_world_thread_contexts[operand_1].task_words[6]);
             g_world_thread_contexts[operand_1].function_parameter_1 = operand_2;
             g_world_thread_contexts[operand_1].function_parameter_2 = ((operand_4 << 8) + operand_3) - 1;
-            dialogue_instruction = (u8*)g_world_event_script;
+            dialogue_instruction = (u8*)g_world_event_block;
             dialogue_instruction += instruction_offset;
             operand_4 = dialogue_instruction[6];
             operand_3 = dialogue_instruction[5];
@@ -351,10 +351,10 @@ restart_event:
             g_world_thread_contexts[operand_1].function_parameter_4 = dialogue_instruction[7];
             g_world_thread_contexts[operand_1].task_words[2] = world_script_load_halfword(dialogue_instruction + 8);
             g_world_thread_contexts[operand_1].task_words[3]
-                = world_script_load_halfword(instruction_offset + (g_world_event_script) + 0xA);
+                = world_script_load_halfword(instruction_offset + (g_world_event_block) + 0xA);
             g_world_thread_contexts[operand_1].task_words[4]
-                = world_script_load_halfword(instruction_offset + (g_world_event_script) + 0xC);
-            g_world_thread_contexts[operand_1].task_words[5] = (((g_world_event_script) + instruction_offset))[0xE];
+                = world_script_load_halfword(instruction_offset + (g_world_event_block) + 0xC);
+            g_world_thread_contexts[operand_1].task_words[5] = (((g_world_event_block) + instruction_offset))[0xE];
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_CHANGE_DIALOG) {
             for (work_index = 0; work_index < 6; work_index += 2) {
@@ -362,13 +362,13 @@ restart_event:
                 if ((g_world_menu_window_buffers[work_index].dialogue_selector == operand_1)
                     && (world_thread_is_running_asm(operand_2) == 1)
                     && (g_world_thread_contexts[operand_2].task_id == NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT)) {
-                    operand_1 = world_script_load_halfword(instruction_offset + (g_world_event_script) + 2);
+                    operand_1 = world_script_load_halfword(instruction_offset + (g_world_event_block) + 2);
                     if ((operand_1 & 0xFFFF) != 0xFFFF) {
                         operand_1 -= 1;
                     }
                     g_world_thread_contexts[operand_2].function_parameter_2 = operand_1;
                     g_world_thread_contexts[operand_2].function_parameter_4
-                        = world_script_load_halfword(instruction_offset + (g_world_event_script) + 4);
+                        = world_script_load_halfword(instruction_offset + (g_world_event_block) + 4);
                     g_world_thread_contexts[operand_2].task_id = NATIVE_THREAD_TASK_RESUME;
                     break;
                 }
@@ -465,8 +465,8 @@ restart_event:
         else if (opcode == EVENT_OPCODE_EFFECT) {
             g_world_event_pending_effect_id = first_halfword;
             g_world_event_effect_target_misc_id
-                = world_script_get_misc_id((((g_world_event_script) + instruction_offset))[3]);
-            focus_instruction = (u8*)g_world_event_script;
+                = world_script_get_misc_id((((g_world_event_block) + instruction_offset))[3]);
+            focus_instruction = (u8*)g_world_event_block;
             focus_instruction += instruction_offset;
             g_world_event_effect_target_x = focus_instruction[4];
             g_world_event_effect_target_y = focus_instruction[5];
@@ -518,8 +518,8 @@ restart_event:
             operand_1 = world_script_get_misc_id(first_halfword);
             if (operand_1 != EVENT_MISC_ID_NONE) {
 
-                g_world_unit_pending_animations[operand_1]
-                    = world_script_load_halfword(instruction_offset + (g_world_event_script) + 3);
+                g_world_unit_pending_animation_ids[operand_1]
+                    = world_script_load_halfword(instruction_offset + (g_world_event_block) + 3);
                 g_world_unit_was_moving_latch[operand_1] = 0;
             }
         } else if (opcode == EVENT_OPCODE_WAIT_ALL_UNIT_MOVEMENT) {
@@ -558,7 +558,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_SET_SPEAKER_PAIR) {
             g_world_text_speaker_swap_unit_a = first_halfword;
             g_world_text_speaker_swap_unit_b
-                = world_script_load_halfword(instruction_offset + (g_world_event_script) + 3);
+                = world_script_load_halfword(instruction_offset + (g_world_event_block) + 3);
         } else if (opcode == EVENT_OPCODE_MAP_DARKNESS) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_1, &world_script_map_darkness_thread);
@@ -684,7 +684,7 @@ restart_event:
             operand_2 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_2, world_gfx_load_evtchr_thread);
             world_thread_set_parameters(
-                operand_2, operand_1, world_script_load_halfword(instruction_offset + (g_world_event_script) + 2), 0);
+                operand_2, operand_1, world_script_load_halfword(instruction_offset + (g_world_event_block) + 2), 0);
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_LOAD_EVTCHR_CLEAR) {
             g_world_event_pending_loaded_evtchr_clear_slot = operand_1;
@@ -724,7 +724,7 @@ restart_event:
             if (zalera_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_draw_and_activate_by_misc_id(zalera_misc_id);
                 if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_ZALERA) {
-                    world_unit_queue_current_status_graphics(
+                    world_status_queue_current_status_graphics(
                         battle_unit_get_battle_index_by_misc_id(zalera_misc_id), 1);
                     g_world_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
                     world_thread_call_on_main_stack(zalera_misc_id);
@@ -736,7 +736,7 @@ restart_event:
                 battle_gfx_reset_unit_graphic_trigger(erased_misc_id);
             }
         } else if (opcode == EVENT_OPCODE_ADD_GHOST_UNIT) {
-            ghost_operands = instruction_offset + ((u32)g_world_event_script) + 3;
+            ghost_operands = instruction_offset + ((u32)g_world_event_block) + 3;
             ghost_misc_id = 3;
             do {
                 --ghost_misc_id;
@@ -785,7 +785,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_UNKNOWN_61) {
         } else if (opcode == EVENT_OPCODE_SET_BATTLE_UNIT_POSITION) {
             unit = battle_unit_get_stats_from_battle_id(operand_1);
-            position_instruction = instruction_offset + ((u32)g_world_event_script);
+            position_instruction = instruction_offset + ((u32)g_world_event_block);
             unit->x = ((u8*)position_instruction)[3];
             unit->position.bits.y = ((u8*)position_instruction)[4];
             unit->position.bits.higher_elevation = ((u8*)position_instruction)[5];
@@ -881,7 +881,7 @@ restart_event:
             if (first_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_get_battle_index_by_misc_id(first_misc_id);
                 second_misc_id = world_script_get_misc_id(
-                    world_script_load_halfword(instruction_offset + (g_world_event_script) + 3));
+                    world_script_load_halfword(instruction_offset + (g_world_event_block) + 3));
                 if (second_misc_id != EVENT_MISC_ID_NONE) {
                     battle_unit_get_battle_index_by_misc_id(second_misc_id);
                 }
@@ -931,7 +931,7 @@ restart_event:
         } else {
             break;
         }
-        instruction_offset += 1 + g_world_event_instruction_sizes[opcode];
+        instruction_offset += 1 + g_world_script_event_instruction_sizes[opcode];
     }
     world_thread_exit_current();
 }

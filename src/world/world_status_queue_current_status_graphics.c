@@ -3,7 +3,7 @@
 
 /* Queue the renderer status flag change (`enabled`) for each of a unit's
  * current statuses, on the main stack. */
-void world_unit_queue_current_status_graphics(s32 battle_unit_index, s32 enabled) {
+void world_status_queue_current_status_graphics(s32 battle_unit_index, s32 enabled) {
     battle_stats_t* unit;
     s32 status_index;
     s32 byte_index;

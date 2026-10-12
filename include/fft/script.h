@@ -112,7 +112,7 @@ enum {
 
 /* Retail scenario bytecode, reviewed against BATTLE 0x80143bd8..0x80145f78 and
  * the shared BATTLE/WORLD operand-length tables
- * (g_battle_script_event_instruction_sizes, g_world_event_instruction_sizes).
+ * (g_battle_script_event_instruction_sizes, g_world_script_event_instruction_sizes).
  *
  * Encoding: one opcode byte, then the operand bytes the length table counts
  * for that opcode. Halfword operands are little-endian and unaligned. After a

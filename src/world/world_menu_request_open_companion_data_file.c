@@ -12,7 +12,7 @@ void world_menu_request_open_companion_data_file(s32 request) {
     while (g_world_menu_companion_data_file_request_index != 0) {
         world_thread_yield();
     }
-    if (g_world_frame_result_override == 1) {
+    if (g_world_script_frame_result_override == 1) {
         world_thread_exit_current();
     }
 }

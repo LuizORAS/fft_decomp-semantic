@@ -42,7 +42,7 @@ void world_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_WALK_TO_ANIM) {
             misc_id = world_script_get_misc_id(first_halfword);
             if (misc_id != EVENT_MISC_ID_NONE) {
-                g_world_unit_pending_animations[misc_id] = world_script_load_halfword(script + 3);
+                g_world_unit_pending_animation_ids[misc_id] = world_script_load_halfword(script + 3);
             }
             g_world_unit_was_moving_latch[misc_id] = 0;
         } else if (script[0] == EVENT_OPCODE_JUMP) {
@@ -106,7 +106,7 @@ void world_script_block_start_thread(void) {
                     script[3], script[7], misc_id, (s8)script[4], (s8)script[5], (s8)script[6]);
             }
         }
-        script += 1 + g_world_event_instruction_sizes[script[0]];
+        script += 1 + g_world_script_event_instruction_sizes[script[0]];
         parameters = script + 1;
     }
     world_thread_exit_current();

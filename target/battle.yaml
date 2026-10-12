@@ -2544,10 +2544,10 @@ data:
   - {addr: 0x8016d9b4, name: g_battle_script_unfiltered_controller_input}
   - {addr: 0x8016d9b8, name: g_battle_script_saved_event_input}
   - {addr: 0x8016d9bc, name: g_battle_event_map_jump_in_request}
-  - {addr: 0x8016d9c0, name: g_battle_script_threads_idle}
+  - {addr: 0x8016d9c0, name: g_battle_script_finish_check_pending}
   - {addr: 0x8016d9c4, name: g_battle_companion_overlay_primitives}
   - {addr: 0x8016d9c8, name: g_battle_menu_text_pen}
-  - {addr: 0x8016d9d8, name: g_battle_unit_misc_rotation_data}
+  - {addr: 0x8016d9d8, name: g_battle_unit_animation_states}
   - {addr: 0x8016da6c, name: g_battle_unit_pending_animation_ids}
   - {addr: 0x8016da98, name: g_battle_unit_was_moving_latch}
   - {addr: 0x8016dac4, name: g_battle_event_thread_status_snapshot}
@@ -2563,7 +2563,7 @@ data:
   - {addr: 0x8016e40c, name: g_battle_scratch_coords}
   - {addr: 0x8016e414, name: g_battle_camera_published_rotation_ptr}
   - {addr: 0x8016e418, name: g_battle_event_background_colors}
-  - {addr: 0x8016e420, name: g_battle_script_warp_coords}
+  - {addr: 0x8016e420, name: g_battle_script_warp_unit_coords}
   - {addr: 0x8016e428, name: g_battle_menu_anything_ability_id}
   - {addr: 0x8016e42c, name: g_battle_menu_selected_option}
   - {addr: 0x8016e430, name: g_battle_menu_action_slot_selected_option}

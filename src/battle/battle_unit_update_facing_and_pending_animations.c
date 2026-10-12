@@ -12,7 +12,7 @@ void battle_unit_update_facing_and_pending_animations(void) {
     s32 moving;
     world_unit_animation_state_t* state;
 
-    state = g_battle_unit_misc_rotation_data;
+    state = g_battle_unit_animation_states;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++, state++) {
         if (battle_unit_has_misc_id(i) != 0) {
             if (g_battle_unit_pending_animation_ids[i] != 0) {

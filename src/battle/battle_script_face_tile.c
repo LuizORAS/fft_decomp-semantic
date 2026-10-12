@@ -32,7 +32,7 @@ void battle_script_face_tile(u8* parameters) {
             dx = tile[0] - screen[0];
             dy = tile[2] - screen[2];
             facing = ((-ratan2(dy, dx) + 0xC00) & 0xF00) >> 8;
-            rotation_state = &g_battle_unit_misc_rotation_data[unit_id];
+            rotation_state = &g_battle_unit_animation_states[unit_id];
             rotation_state->target_facing = facing;
             rotation_state->rotate_mode = parameters[5];
             rotation_state->frames_per_step = g_battle_rotation_speed_frames[parameters[6]];

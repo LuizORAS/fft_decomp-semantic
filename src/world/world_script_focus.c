@@ -28,7 +28,7 @@ void world_script_focus(u8* parameters) {
     keep_angle = *parameters;
     parameters++;
     while (*parameters != EVENT_OPCODE_CAMERA) {
-        parameters += g_world_event_instruction_sizes[*parameters] + 1;
+        parameters += g_world_script_event_instruction_sizes[*parameters] + 1;
     }
     parameters++;
     unit_a = first;

@@ -33,7 +33,7 @@ s32 world_script_run_event_frame(u32* ot, u32 buttons) {
     world_camera_store_state_to_script_variables();
     world_menu_draw_active_window_frames();
 
-    if (g_world_event_finish_check_pending != 0) {
+    if (g_world_script_finish_check_pending != 0) {
         for (i = 1; i < 17; i++) {
             if (world_thread_is_running_asm(i) != 0) {
                 break;
@@ -43,12 +43,12 @@ s32 world_script_run_event_frame(u32* ot, u32 buttons) {
             op = world_script_get_current_scenario_finish_operation();
             if (op != 0) {
                 if (world_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) != 0) {
-                    g_world_event_finish_check_pending = 0;
+                    g_world_script_finish_check_pending = 0;
                     world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
                     return 9;
                 }
             } else {
-                g_world_event_finish_check_pending = 0;
+                g_world_script_finish_check_pending = 0;
                 g_world_menu_suspend_state = 0;
                 return 0;
             }
@@ -57,7 +57,7 @@ s32 world_script_run_event_frame(u32* ot, u32 buttons) {
             }
             world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((op & 0xC00) >> 2) | (op & 0xFF));
             op = (op & 0xF300) >> 8;
-            g_world_event_finish_check_pending = 0;
+            g_world_script_finish_check_pending = 0;
             g_world_menu_suspend_state = 0;
             if (op == 0x80) {
                 return 9;
@@ -73,7 +73,7 @@ s32 world_script_run_event_frame(u32* ot, u32 buttons) {
             g_battle_entd_selection_mode = BATTLE_ENTD_SELECTION_MAP_ID;
             return 9;
         }
-        g_world_event_finish_check_pending = 0;
+        g_world_script_finish_check_pending = 0;
     }
 
     world_input_update_menu_repeat(buttons);
@@ -148,8 +148,8 @@ s32 world_script_run_event_frame(u32* ot, u32 buttons) {
         g_world_menu_input_block_frames--;
     }
     world_script_frame_after_threads_stub();
-    if (g_world_frame_result_override != 0) {
-        return g_world_frame_result_override;
+    if (g_world_script_frame_result_override != 0) {
+        return g_world_script_frame_result_override;
     }
 
     if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_STUB) {
@@ -185,7 +185,7 @@ s32 world_script_run_event_frame(u32* ot, u32 buttons) {
         }
     }
     if (i == 17) {
-        g_world_event_finish_check_pending = 1;
+        g_world_script_finish_check_pending = 1;
     }
     return 1;
 }

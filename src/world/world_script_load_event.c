@@ -18,7 +18,7 @@ void world_script_load_event(s32 id) {
         g_world_thread_call_target = main_file_is_still_loading;
     } while (world_thread_call_on_main_stack() != 0);
 
-    block = (event_file_block_t*)g_world_event_script;
+    block = (event_file_block_t*)g_world_event_block;
     off = block->text_offset_or_marker;
     if (off != EVENT_TEXT_OFFSET_PROCESSED) {
         g_world_text_section_pointers[TEXT_SECTION_EVENT_MESSAGES] = (u8*)(off + (u32)block);

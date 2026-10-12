@@ -9,7 +9,7 @@
  * bit for `status_index` in one of them and runs resolve_unit_status_changes
  * on the main stack. Does nothing when no battle unit has that id.
  */
-void world_unit_inflict_status_by_entd_unit_id(
+void world_status_inflict_by_entd_unit_id(
     s32 entd_unit_id, s32 status_index, s32 is_infliction, s32 less_strict_removal) {
     s32 battle_unit_index;
     battle_stats_t* unit;

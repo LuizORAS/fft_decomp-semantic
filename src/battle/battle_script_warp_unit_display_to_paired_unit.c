@@ -4,7 +4,7 @@
 /* Three-halfword map coordinate (x, elevation, y) staged for
  * battle_unit_place_in_new_location; no header declares it. The WORLD copy
  * stages the same triple in g_world_script_warp_unit_coords. */
-extern world_unit_coordinates_t g_battle_script_warp_coords;
+extern world_unit_coordinates_t g_battle_script_warp_unit_coords;
 
 /* CallFunction WARP_UNIT_4_DISPLAY_TO_UNIT_2_POSITION_AND_FACING and its unit 5 / unit 3 sibling:
  * place the misc unit of battle id 3 on the tile and facing of battle id 1, or that of battle id 4 on
@@ -27,15 +27,15 @@ void battle_script_warp_unit_display_to_paired_unit(s32 misc_id) {
     }
     misc_id = battle_unit_get_misc_id_by_battle_id(battle_id);
     if (misc_id != -1) {
-        g_battle_script_warp_coords.x = unit->x;
-        g_battle_script_warp_coords.elevation = unit->position.bits.higher_elevation;
-        g_battle_script_warp_coords.y = unit->position.bits.y;
+        g_battle_script_warp_unit_coords.x = unit->x;
+        g_battle_script_warp_unit_coords.elevation = unit->position.bits.higher_elevation;
+        g_battle_script_warp_unit_coords.y = unit->position.bits.y;
         facing = (unit->position.raw >> 6) & 0x3C;
-        state = &g_battle_unit_misc_rotation_data[misc_id];
+        state = &g_battle_unit_animation_states[misc_id];
         state->delay = 0;
         state->rotating = 0;
         state->target_facing = facing;
-        battle_unit_place_in_new_location(misc_id, (s16*)&g_battle_script_warp_coords, unit->position.bits.facing);
+        battle_unit_place_in_new_location(misc_id, (s16*)&g_battle_script_warp_unit_coords, unit->position.bits.facing);
         battle_unit_set_facing(misc_id, (unit->position.raw >> 6) & 0x3C);
     }
 }

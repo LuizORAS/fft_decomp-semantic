@@ -12,7 +12,7 @@ void battle_script_wait_rotate_event_instruction(s32 unit_id) {
         do {
             battle_thread_yield();
             for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
-                if (g_battle_unit_misc_rotation_data[i].rotating != 0) {
+                if (g_battle_unit_animation_states[i].rotating != 0) {
                     break;
                 }
             }
@@ -22,7 +22,7 @@ void battle_script_wait_rotate_event_instruction(s32 unit_id) {
         if (index != EVENT_MISC_ID_NONE) {
             do {
                 battle_thread_yield();
-            } while (g_battle_unit_misc_rotation_data[index].rotating != 0);
+            } while (g_battle_unit_animation_states[index].rotating != 0);
         }
     }
 }

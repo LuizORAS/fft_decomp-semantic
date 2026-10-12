@@ -54,7 +54,7 @@ functions:
   - {addr: 0x800e1eec, size: 20, name: world_sound_set_effect_to_invalid, hash: 2cded14f2af8d448}
   - {addr: 0x800e1f00, size: 40, name: world_menu_stop_thread_with_invalid_sound, hash: 673200a96478bd69}
   - {addr: 0x800e1f28, size: 48, name: world_camera_wait_until_idle, hash: fecdc06e231e4865}
-  - {addr: 0x800e1f58, size: 36, name: world_camera_init_yaw_angle, hash: 4b9b57139167c4c5}
+  - {addr: 0x800e1f58, size: 36, name: world_camera_normalize_yaw_angle, hash: 4b9b57139167c4c5}
   - {addr: 0x800e1f7c, size: 292, name: world_camera_init_tilt_and_zoom, hash: b488293686882dcf}
   - {addr: 0x800e20a0, size: 52, name: world_camera_wrap_yaw_angle, hash: 2f0e82c3ed1fb39e}
   - {addr: 0x800e20d4, size: 40, name: world_unit_get_active_turn_unit_stats, hash: d8b03fa45f1ad5c5}
@@ -106,7 +106,7 @@ functions:
   - {addr: 0x800e7700, size: 64, name: world_unit_project_misc_to_screen, hash: f71d84cad0b16447}
   - {addr: 0x800e7740, size: 92, name: world_unit_copy_misc_screen_coords, hash: 804df09b5303cc41}
   - {addr: 0x800e779c, size: 76, name: world_unit_copy_misc_screen_location, hash: 0db0657e68cb43ea}
-  - {addr: 0x800e77e8, size: 32, name: world_unit_get_map_coords_from_misc_id, hash: b293d475560aeacb}
+  - {addr: 0x800e77e8, size: 32, name: world_unit_copy_map_coords_from_misc_id, hash: b293d475560aeacb}
   - {addr: 0x800e7808, size: 8, name: world_script_report_missing_unit_stub, hash: 6d64edf91449c1b1}
   - {addr: 0x800e7810, size: 828, name: world_script_get_misc_id, hash: ebe8f110139eeadb}
   - {addr: 0x800e7b4c, size: 8, name: world_return_parameter_1, hash: cc2f57dc1c5c5ee3}
@@ -353,13 +353,13 @@ functions:
   - {addr: 0x800fb418, size: 216, name: world_script_unit_animation_rotate_event_instruction, hash: 14cce9870ae4f8c8}
   - {addr: 0x800fb4f0, size: 512, name: world_script_face_unit, hash: 1dda3ec86c0c41a3}
   - {addr: 0x800fb6f0, size: 516, name: world_script_rotate_unit, hash: be57a905343502c5}
-  - {addr: 0x800fb8f4, size: 180, name: world_unit_queue_current_status_graphics, hash: 61b90cb85376108b}
+  - {addr: 0x800fb8f4, size: 180, name: world_status_queue_current_status_graphics, hash: 61b90cb85376108b}
   - {addr: 0x800fb9a8, size: 68, name: world_unit_clear_status_staging_data, hash: 646a8fb825513b5d}
   - {addr: 0x800fb9ec, size: 808, name: world_unit_save_staged_status_data, hash: 2d5ffba79c302f1b}
   - {addr: 0x800fbd14, size: 1072, name: world_unit_apply_staged_status_data, hash: 3be2d406abbb256c}
   - {addr: 0x800fc144, size: 432, name: world_unit_update_staged_status_data, hash: 269b013af6ab131a}
   - {addr: 0x800fc2f4, size: 632, name: world_script_inflict_status_thread, hash: 2d2fdf0577757d84}
-  - {addr: 0x800fc56c, size: 216, name: world_unit_inflict_status_by_entd_unit_id, hash: 3f69fc963f96b44e}
+  - {addr: 0x800fc56c, size: 216, name: world_status_inflict_by_entd_unit_id, hash: 3f69fc963f96b44e}
   - {addr: 0x800fc644, size: 448, name: world_script_change_stats, hash: c63a08b76749f8fe}
   - {addr: 0x800fc804, size: 248, name: world_script_unit_anim, hash: 2c433dd6a81d7c56}
   - {addr: 0x800fc8fc, size: 156, name: world_script_march_units, hash: 90487a1ab3416a6e}
@@ -1049,9 +1049,9 @@ data:
   - {addr: 0x8013a418, name: g_world_menu_billboard_secondary_skillset_name}
   - {addr: 0x8013a42c, name: g_world_menu_billboard_unit_name}
   - {addr: 0x8013a440, name: g_world_menu_billboard_job_name}
-  - {addr: 0x8013a454, name: g_world_event_instruction_sizes}
+  - {addr: 0x8013a454, name: g_world_script_event_instruction_sizes}
   - {addr: 0x8013a548, name: g_world_menu_ability_display_flags}
-  - {addr: 0x8013a5e8, name: g_world_script_acting_unit_id}
+  - {addr: 0x8013a5e8, name: g_world_script_condition_unit_battle_id}
   - {addr: 0x8013a5ec, name: g_world_spell_quote_last_ability_id}
   - {addr: 0x8013a5f0, name: g_world_menu_resolved_skillset}
   - {addr: 0x8013a5f4, name: g_world_menu_resolved_item_or_ability}
@@ -1252,12 +1252,12 @@ data:
   - {addr: 0x80156734, name: g_world_menu_restriction_message_ids}
   - {addr: 0x80156748, name: g_world_spell_quote_exception_skillsets}
   - {addr: 0x80156750, name: g_world_system_function_table}
-  - {addr: 0x80156b4c, name: g_world_scenario_condition_arg_counts}
-  - {addr: 0x80156b88, name: g_world_camera_yaw_unwrap_request}
+  - {addr: 0x80156b4c, name: g_world_script_condition_param_lengths}
+  - {addr: 0x80156b88, name: g_world_camera_wrap_yaw_pending}
   - {addr: 0x80156b8c, name: g_world_script_loaded_event_id}
-  - {addr: 0x80156b90, name: g_world_map_darkness_wait_frames}
-  - {addr: 0x80156ba8, name: g_world_camera_candidate_yaws}
-  - {addr: 0x80156bb0, name: g_world_unit_face_slot_order}
+  - {addr: 0x80156b90, name: g_world_script_map_darkness_durations}
+  - {addr: 0x80156ba8, name: g_world_camera_diagonal_yaws}
+  - {addr: 0x80156bb0, name: g_world_script_unit_filter_modes}
   - {addr: 0x80156be0, name: g_world_rotation_speed_frames}
   - {addr: 0x80156be8, name: g_world_status_removal_mask_unstaged}
   - {addr: 0x80156bf0, name: g_world_status_removal_mask_staged}
@@ -1871,11 +1871,11 @@ data:
   - {addr: 0x8019a218, name: g_world_input_unfiltered_controller}
   - {addr: 0x8019a21c, name: g_world_script_saved_event_input}
   - {addr: 0x8019a220, name: g_world_event_map_jump_in_request}
-  - {addr: 0x8019a224, name: g_world_event_finish_check_pending}
+  - {addr: 0x8019a224, name: g_world_script_finish_check_pending}
   - {addr: 0x8019a228, name: g_world_companion_overlay_primitives}
   - {addr: 0x8019a22c, name: g_world_text_draw_origin}
   - {addr: 0x8019a23c, name: g_world_unit_animation_states}
-  - {addr: 0x8019a2d0, name: g_world_unit_pending_animations}
+  - {addr: 0x8019a2d0, name: g_world_unit_pending_animation_ids}
   - {addr: 0x8019a2fc, name: g_world_unit_was_moving_latch}
   - {addr: 0x8019a328, name: g_world_event_thread_status_snapshot}
   - {addr: 0x8019a338, name: g_world_text_typewriter_glyph}
@@ -1901,7 +1901,7 @@ data:
   - {addr: 0x801a23e8, name: g_world_menu_buffer_allocation_map}
   - {addr: 0x801a2458, name: g_world_text_player_name}
   - {addr: 0x801a246c, name: g_world_text_line_widths}
-  - {addr: 0x801a256c, name: g_world_misc_unit_screen_coords}
+  - {addr: 0x801a256c, name: g_world_current_misc_screen_coords}
   - {addr: 0x801a2574, name: g_world_text_saved_section_pointers}
   - {addr: 0x801a25f4, name: g_world_menu_preview_target_action}
   - {addr: 0x801a25f8, name: g_world_unit_status_panel_pages}
@@ -1912,14 +1912,14 @@ data:
   - {addr: 0x801a6650, name: g_world_screen_tint_tiles}
   - {addr: 0x801a6688, name: g_world_active_menu}
   - {addr: 0x801a668c, name: g_world_menu_dead_unit_panel_parameter}
-  - {addr: 0x801a6690, name: g_world_finish_operation_event_id}
+  - {addr: 0x801a6690, name: g_world_next_event_id}
   - {addr: 0x801a6694, name: g_world_event_current_input}
   - {addr: 0x801a6698, name: g_world_event_previous_input}
   - {addr: 0x801a669c, name: g_world_event_initial_repeat_counter}
   - {addr: 0x801a66a0, name: g_world_event_repeat_counter}
   - {addr: 0x801a66a4, name: g_world_event_secondary_repeat_counter}
   - {addr: 0x801a66a8, name: g_world_unit_status_staging_data}
-  - {addr: 0x801a66ac, name: g_world_event_random_seed}
+  - {addr: 0x801a66ac, name: g_world_script_rand16_state}
   - {addr: 0x801a66b0, name: g_world_dead_unit_controller_input}
   - {addr: 0x801a66b4, name: g_world_menu_text_page_image}
   - {addr: 0x801ac6b4, name: g_world_at_list_pages}
@@ -2237,7 +2237,7 @@ data:
   - {addr: 0x801cd43c, name: g_world_shop_fitting_room_items}
   - {addr: 0x801cd504, name: g_world_gfx_draw_mode_count}
   - {addr: 0x801cd508, name: POSITION}
-  - {addr: 0x801cd50c, name: g_world_frame_result_override}
+  - {addr: 0x801cd50c, name: g_world_script_frame_result_override}
   - {addr: 0x801cd510, name: g_world_gfx_draw_move_capacity}
   - {addr: 0x801cd514, name: g_world_gfx_tile_count}
   - {addr: 0x801cd518, name: GsOUT_PACKET_P}
@@ -2281,7 +2281,7 @@ data:
   - {addr: 0x801cd750, name: g_world_grid_menu_id}
   - {addr: 0x801cd754, name: g_world_menu_description_text_id}
   - {addr: 0x801cd758, name: g_world_event_pending_loaded_evtchr_clear_slot}
-  - {addr: 0x801cd75c, name: g_world_event_script}
+  - {addr: 0x801cd75c, name: g_world_event_block}
   - {addr: 0x801cd760, name: VWD0}
   - {addr: 0x801cd764, name: GsIDMATRIX}
   - {addr: 0x801cd784, name: g_world_shop_menu_step}
@@ -2303,7 +2303,7 @@ data:
   - {addr: 0x801cd820, name: g_world_event_pending_saved_evtchr_clear_slot}
   - {addr: 0x801cd824, name: g_world_menu_option_count}
   - {addr: 0x801cd828, name: g_world_event_music_switch}
-  - {addr: 0x801cd82c, name: g_world_fixed_math_overflow}
+  - {addr: 0x801cd82c, name: g_world_camera_cross_product_overflow}
   - {addr: 0x801cd830, name: g_world_menu_glyph_image}
   - {addr: 0x801cd838, name: g_world_input_newly_pressed}
   - {addr: 0x801cd83c, name: GsLIGHT_MODE}

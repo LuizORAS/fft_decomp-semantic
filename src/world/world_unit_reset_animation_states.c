@@ -19,7 +19,7 @@ void world_unit_reset_animation_states(void) {
         } else {
             state->initial_facing = 0xff;
         }
-        g_world_unit_pending_animations[i] = 0;
+        g_world_unit_pending_animation_ids[i] = 0;
         g_world_unit_was_moving_latch[i] = 0;
         i++;
         state++;

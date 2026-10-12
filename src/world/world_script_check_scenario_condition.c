@@ -4,7 +4,7 @@
  * 0x27), otherwise 0. Twin: battle_script_check_scenario_condition (0x80142694),
  * identical apart from addresses and the divide checks.
  * Types: 1-3 script variable ==/>=/<=; 4-10 unit exists / HP / HP% / MP
- * bounds; 11 acting unit (g_world_script_acting_unit_id) is the unit or a special-unit
+ * bounds; 11 acting unit (g_world_script_condition_unit_battle_id) is the unit or a special-unit
  * (0x78..0x7c) copy of it; 13 party member has item equipped; 14-15 variable
  * war-funds bounds; 16-17 compare the month/day pair before/after; 18-19 compare casualties
  * bounds; 22 battle_action_check_battle_outcome() == 0; 24 unit stands on x/y/level; 37 any
@@ -19,7 +19,7 @@
  * scenario condition record (event_scenario_condition_e) for world_script_run_scenario_conditions.
  * Returns EVENT_SCENARIO_CONDITION_RESULT_PASS when it holds, RESULT_RUN_EVENT for RUN_EVENT after
  * storing the id as the current event, and RESULT_FAIL otherwise. ACTING_UNIT tests
- * g_world_script_acting_unit_id.
+ * g_world_script_condition_unit_battle_id.
  *
  * The range test on unit_id is written as two comparisons: that spelling makes GCC reload the byte
  * (as the target does) where the (u32)(x - 0x78) < 5 form lets cse reuse the earlier load. */
@@ -55,8 +55,8 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_
                 return EVENT_SCENARIO_CONDITION_RESULT_PASS;
         }
     }
-    if (type == EVENT_SCENARIO_CONDITION_ACTING_UNIT && g_world_script_acting_unit_id != 0xff) {
-        unit = battle_unit_get_stats_from_battle_id(g_world_script_acting_unit_id);
+    if (type == EVENT_SCENARIO_CONDITION_ACTING_UNIT && g_world_script_condition_unit_battle_id != 0xff) {
+        unit = battle_unit_get_stats_from_battle_id(g_world_script_condition_unit_battle_id);
         if (unit->unit_id == id
             || (unit->unit_id >= EVENT_UNIT_ID_DEPLOYED_FIRST && unit->unit_id < EVENT_UNIT_ID_DEPLOYED_END
                 && unit->character_identity == id && id >= 0 && id < CHARACTER_IDENTITY_GENERIC_FIRST

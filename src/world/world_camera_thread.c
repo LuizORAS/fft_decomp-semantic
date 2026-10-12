@@ -45,8 +45,8 @@ void world_camera_thread(void) {
         script += 2;
     }
 
-    if (g_world_camera_yaw_unwrap_request != 0) {
-        g_world_camera_yaw_unwrap_request = 0;
+    if (g_world_camera_wrap_yaw_pending != 0) {
+        g_world_camera_wrap_yaw_pending = 0;
         angle = world_script_get_variable(EVENT_SCRIPT_VAR_CAMERA_YAW);
         yaw_delta = ((angle << 16) >> 16) - target[4];
         yaw = angle;

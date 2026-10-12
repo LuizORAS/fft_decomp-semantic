@@ -44,7 +44,7 @@ void world_camera_fusion_thread(void) {
         if (opcode == EVENT_OPCODE_CAMERA_FUSION_END) {
             break;
         }
-        cursor += g_world_event_instruction_sizes[opcode] + 1;
+        cursor += g_world_script_event_instruction_sizes[opcode] + 1;
     }
     key_count++;
 
@@ -96,9 +96,9 @@ void world_camera_fusion_thread(void) {
                     }
                     break;
                 }
-                cursor += g_world_event_instruction_sizes[*cursor] + 1;
+                cursor += g_world_script_event_instruction_sizes[*cursor] + 1;
             }
-            cursor += g_world_event_instruction_sizes[*cursor] + 1;
+            cursor += g_world_script_event_instruction_sizes[*cursor] + 1;
         }
     }
 

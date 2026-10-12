@@ -6,7 +6,7 @@
  * Parameters: unit id halfword, tile x, tile y, unused byte, rotate mode, speed index
  * into g_world_rotation_speed_frames, and a delay multiplier that staggers successive units by a quarter
  * of its value each. The second argument to world_script_filter_unit_id_by_mode is
- * taken from the g_world_unit_face_slot_order halfword table rather than a local counter. */
+ * taken from the g_world_script_unit_filter_modes halfword table rather than a local counter. */
 void world_script_face_tile(const u8* parameters) {
     s16 position[3];
     s16 target[3];
@@ -25,7 +25,7 @@ void world_script_face_tile(const u8* parameters) {
     unit_id = world_script_load_halfword(parameters);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-            if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_unit_face_slot_order[i], &misc_index) != 0) {
+            if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_script_unit_filter_modes[i], &misc_index) != 0) {
                 world_unit_copy_misc_screen_coords(unit_id, position);
                 dx = target[0] - position[0];
                 dy = target[2] - position[2];

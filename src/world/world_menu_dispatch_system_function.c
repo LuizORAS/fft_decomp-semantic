@@ -41,7 +41,7 @@ s32 world_menu_dispatch_system_function(
                 return BATTLE_MENU_SYSTEM_DISPATCH_DONE;
             } else {
                 count = 0;
-                g_world_script_acting_unit_id = unit_id;
+                g_world_script_condition_unit_battle_id = unit_id;
                 /* Any Ramza form crystallised or turned to treasure. */
                 for (i = 0; i < 3; i++) {
                     if (battle_unit_find_slot_by_character_identity(i + 1) == BATTLE_CHARACTER_SLOT_UNAVAILABLE) {
@@ -57,7 +57,7 @@ s32 world_menu_dispatch_system_function(
                         g_world_scenario_event_active = 1;
                         world_script_start_current_event_thread();
                     } else {
-                        g_world_finish_operation_event_id = EVENT_ID_GAME_OVER;
+                        g_world_next_event_id = EVENT_ID_GAME_OVER;
                     }
                     return BATTLE_MENU_SYSTEM_DISPATCH_EVENT;
                 }
@@ -68,8 +68,7 @@ s32 world_menu_dispatch_system_function(
                             g_world_menu_suspend_state = 1;
                             world_script_start_current_event_thread();
                         } else {
-                            g_world_finish_operation_event_id
-                                = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
+                            g_world_next_event_id = world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
                             world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, value);
                         }
                         return BATTLE_MENU_SYSTEM_DISPATCH_EVENT;
@@ -89,7 +88,7 @@ s32 world_menu_dispatch_system_function(
                         }
                         world_script_start_current_event_thread();
                     } else {
-                        g_world_finish_operation_event_id = EVENT_ID_RANDOM_BATTLE_INITIATE;
+                        g_world_next_event_id = EVENT_ID_RANDOM_BATTLE_INITIATE;
                     }
                     return BATTLE_MENU_SYSTEM_DISPATCH_EVENT;
                 } else if (battle_action_check_battle_outcome() == 0) {
@@ -100,7 +99,7 @@ s32 world_menu_dispatch_system_function(
                         g_world_scenario_event_active = 1;
                         world_script_start_current_event_thread();
                     } else {
-                        g_world_finish_operation_event_id = EVENT_ID_RANDOM_BATTLE_VICTORY;
+                        g_world_next_event_id = EVENT_ID_RANDOM_BATTLE_VICTORY;
                     }
                     return BATTLE_MENU_SYSTEM_DISPATCH_EVENT;
                 } else {

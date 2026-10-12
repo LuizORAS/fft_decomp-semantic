@@ -40,7 +40,7 @@ void battle_script_warp_unit(const u8* parameters) {
     tile[0] = unit->x;
     tile[1] = unit->position.bits.higher_elevation;
     tile[2] = unit->position.bits.y;
-    rotation_state = &g_battle_unit_misc_rotation_data[misc_id];
+    rotation_state = &g_battle_unit_animation_states[misc_id];
     rotation_state->target_facing = parameters[3] * 4;
     rotation_state->delay = 0;
     rotation_state->rotating = 0;

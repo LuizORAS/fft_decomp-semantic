@@ -30,7 +30,8 @@ void world_script_face_unit(const u8* parameters, s32 second_only) {
         misc_id = world_script_get_misc_id(misc_id);
         if (misc_id != EVENT_MISC_ID_NONE) {
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-                if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_unit_face_slot_order[i], &misc_index) != 0
+                if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_script_unit_filter_modes[i], &misc_index)
+                        != 0
                     && misc_id != unit_id) {
                     world_unit_copy_misc_screen_coords(misc_id, position);
                     world_unit_copy_misc_screen_coords(unit_id, target);

@@ -4,7 +4,7 @@
  *
  * Each call samples the two tangent lines of the active key segment at this
  * frame and the next, intersects them (world_cross_product_q12 is a Q12 cross product
- * that sets g_world_fixed_math_overflow on overflow) and moves the value along the resulting
+ * that sets g_world_camera_cross_product_overflow on overflow) and moves the value along the resulting
  * control point. The locals span, frame and lead are reused across the
  * stages, as the target's register map requires. */
 #include "fft/world.h"
@@ -99,7 +99,7 @@ s32 world_camera_step_track(battle_camera_track_t* track, s32 component) {
                 track->keys[track->segment + 1].value, track->keys[track->segment + 2].value, frame, span);
         }
         flag = 0;
-        g_world_fixed_math_overflow = 0;
+        g_world_camera_cross_product_overflow = 0;
         value1 = value[1];
         value0 = value[0];
         time3 = time[3];
@@ -129,7 +129,7 @@ s32 world_camera_step_track(battle_camera_track_t* track, s32 component) {
         } else {
             flag = 1;
         }
-        if (g_world_fixed_math_overflow != 0 || flag != 0) {
+        if (g_world_camera_cross_product_overflow != 0 || flag != 0) {
             result = track->prev_value;
         }
     }

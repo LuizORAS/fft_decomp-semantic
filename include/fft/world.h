@@ -191,11 +191,11 @@ extern u16 g_world_camera_script_variable_indices[7];
 extern u16 g_world_camera_position_locked;
 extern u16 g_world_camera_shake_z_offset;
 extern s32 g_world_camera_yaw_band;
-extern s32 g_world_camera_yaw_unwrap_request;
-extern s16 g_world_camera_candidate_yaws[4];
+extern s32 g_world_camera_wrap_yaw_pending;
+extern s16 g_world_camera_diagonal_yaws[4];
 s32 world_camera_wrap_yaw_angle(void);
 void world_camera_init_tilt_and_zoom(void);
-void world_camera_init_yaw_angle(void);
+void world_camera_normalize_yaw_angle(void);
 s32 world_camera_step_track(battle_camera_track_t* track, s32 component);
 void world_camera_store_yaw_band(s32 value);
 s16 world_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b);
@@ -298,7 +298,7 @@ extern s16 g_world_map_destruction_wait_state;
 extern u16 g_world_map_refresh_pending;
 extern RECT g_world_tile_info_image_location;
 extern world_gfx_image_load_parameters_t g_world_tile_info_image_params[2];
-extern u16 g_world_map_darkness_wait_frames[];
+extern u16 g_world_script_map_darkness_durations[];
 extern s16 g_world_brave_story_request_state; /* world_screen_request_state_e */
 extern s32 g_world_map_light_scale[4];        /* current light scale (VECTOR) */
 extern MATRIX g_world_map_light_base_matrix;
@@ -1526,7 +1526,7 @@ extern u8 g_world_unit_editor_line_colors[8 * WORLD_UNIT_EDITOR_LINE_SIZE];
 extern u16 g_world_unit_editor_sprite_clut_pairs[19][2];
 extern world_unit_view_thread_set_t g_world_unit_view_thread_sets[];
 extern u8 g_world_menu_panel_fade_modes[];
-extern s16 g_world_unit_face_slot_order[];
+extern s16 g_world_script_unit_filter_modes[];
 extern world_unit_status_identity_t g_world_selected_unit_identity;
 extern CVECTOR g_world_unit_panel_bar_colors[];
 extern menu_number_entry_t g_world_selected_unit_number_entries[];
@@ -1556,9 +1556,9 @@ extern s32 g_world_companion_overlay_primitives;
 /* WalkToAnim: the animation each unit takes once it has moved and stopped, and
  * whether it has been seen moving since. Twins of g_battle_unit_pending_animation_ids
  * and g_battle_unit_was_moving_latch. */
-extern u16 g_world_unit_pending_animations[];
+extern u16 g_world_unit_pending_animation_ids[];
 extern u16 g_world_unit_was_moving_latch[];
-extern vec3u16_t g_world_misc_unit_screen_coords;
+extern vec3u16_t g_world_current_misc_screen_coords;
 extern world_unit_status_page_t g_world_unit_status_panel_pages[];
 extern world_unit_editor_frame_t g_world_menu_unit_editor_frames[2];
 extern u8 g_world_selected_unit_summary_packets[];
@@ -1588,16 +1588,16 @@ void world_unit_copy_misc_screen_location(u32 misc_id, VECTOR* destination);
 struct battle_stats* world_unit_get_active_turn_unit_stats(void);
 s32 world_unit_get_battle_index_by_entd_unit_id(s32 entd_unit_id);
 struct battle_stats* world_unit_get_by_unit_id(s32 unit_id);
-s32 world_unit_get_map_coords_from_misc_id(s32 misc_id, s16* out);
+s32 world_unit_copy_map_coords_from_misc_id(s32 misc_id, s16* out);
 s32 world_unit_get_zodiac_for_date(s32 month, s32 day);
 s32 world_unit_has_any_current_status(s32 unit_id);
 void world_unit_increase_blue_team_brave_by_10(void);
-void world_unit_inflict_status_by_entd_unit_id(
+void world_status_inflict_by_entd_unit_id(
     s32 entd_unit_id, s32 status_index, s32 is_infliction, s32 less_strict_removal);
 s32 world_unit_is_moving(s32 id);
 s32 world_unit_is_two_handing_weapon(s16* equipment, s32 two_hands_support);
 void world_unit_project_misc_to_screen(s32 misc_id, s16* screen_coords);
-void world_unit_queue_current_status_graphics(s32 battle_unit_index, s32 enabled);
+void world_status_queue_current_status_graphics(s32 battle_unit_index, s32 enabled);
 void world_unit_reset_animation_states(void);
 s32 world_unit_save_staged_status_data(s32 unit_id);
 void world_unit_set_animation(s32 misc_id, u32 animation);
@@ -3147,7 +3147,7 @@ s32 world_card_write_buffer_to_file(const char* filename, const u8* source, u32 
  * and running an event, its frame, the script variables and the scenario conditions, and the event
  * input. */
 
-extern s32 g_world_script_acting_unit_id;
+extern s32 g_world_script_condition_unit_battle_id;
 extern s32 g_world_script_loaded_event_id;
 
 /* g_main_script_variables: a variable id below EVENT_SCRIPT_VAR_PACKED_BIT_FIRST
@@ -3158,7 +3158,7 @@ extern char g_world_script_pause_message[];
 extern u16 g_world_script_attack_entry_mode; /* script_attack_entry_mode_e */
 extern s16 g_world_script_debug_paused;
 
-extern u8 g_world_scenario_condition_arg_counts[]; /* instruction length by opcode */
+extern u8 g_world_script_condition_param_lengths[]; /* instruction length by opcode */
 extern s32 g_world_script_saved_event_input;
 
 extern world_unit_coordinates_t g_world_script_warp_unit_coords;
@@ -3273,16 +3273,16 @@ extern s16 g_world_event_effect_target_x;
 extern s16 g_world_event_effect_target_y;
 
 extern s16 g_world_event_map_jump_in_request;
-extern s16 g_world_event_finish_check_pending;
+extern s16 g_world_script_finish_check_pending;
 extern u8 g_world_event_thread_status_snapshot[]; /* per-thread running flags sampled before the yield, indexed 1..15 */
 
-extern u32 g_world_event_random_seed;
+extern u32 g_world_script_rand16_state;
 
 extern void* g_world_event_pending_loaded_evtchr_slot;
 extern void* g_world_event_loaded_evtchr_buffer;
 extern s16 g_world_event_effect_target_misc_id;
 extern s16 g_world_event_effect_target_mode;
-extern u8 g_world_event_instruction_sizes[0xf4];
+extern u8 g_world_script_event_instruction_sizes[0xf4];
 extern world_event_command_args_t g_world_event_map_command_80_args;
 extern world_event_command_args_t g_world_event_map_command_83_args;
 extern world_event_music_switch_t g_world_event_music_switch;
@@ -3295,7 +3295,7 @@ extern s16 g_world_event_pending_map_state;
 extern s32 g_world_event_pending_reserved_vram_release_slot;
 extern s32 g_world_event_pending_saved_evtchr_clear_slot;
 extern s32 g_world_event_pending_unit_vram_copy;
-extern const u8* g_world_event_script;
+extern const u8* g_world_event_block;
 extern s16 g_world_event_unit_slots[4];
 extern u8 g_world_event_variable_write_guard; /* WORLD counterpart: 0x80153387 */
 extern s16 g_world_event_weather_request;
@@ -3326,11 +3326,11 @@ extern s8* g_world_sort_key_lists[];
  * slot 1 to ITEM_LIST_FILTER_WEAPON for a Two Swords user, else ITEM_LIST_FILTER_SHIELD. */
 extern u8 g_world_best_fit_slot_categories[5];
 extern game_options_t g_world_saved_game_options;
-extern s32 g_world_finish_operation_event_id;
+extern s32 g_world_next_event_id;
 extern u8 g_world_order_unit_saved_browse_enabled;
 extern u8 g_world_action_menu_skillsets[];
-extern u16 g_world_frame_result_override;
-extern s32 g_world_fixed_math_overflow; /* set by world_cross_product_q12 on Q12 overflow */
+extern u16 g_world_script_frame_result_override;
+extern s32 g_world_camera_cross_product_overflow; /* set by world_cross_product_q12 on Q12 overflow */
 s32 world_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 s32 get_current_facing_byte_from_misc_id(s32 misc_id);
 s32 world_coords_fit_in_byte(s32 x, s32 y);

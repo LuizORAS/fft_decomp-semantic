@@ -11,7 +11,7 @@ vec3u16_t* world_copy_misc_unit_screen_coords(u32 misc_id) {
     source = battle_unit_get_screen_data_ptr_by_misc_id(misc_id);
 
     if (source != (SVECTOR*)-1) {
-        dest = &g_world_misc_unit_screen_coords;
+        dest = &g_world_current_misc_screen_coords;
         dest->x = source->vx;
         dest->y = source->vy;
         dest->z = source->vz;

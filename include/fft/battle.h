@@ -2724,7 +2724,7 @@ extern u16 g_battle_unit_was_moving_latch[]; /* a unit with a pending animation 
 extern s32 g_battle_companion_overlay_state;
 
 /* BATTLE and WORLD use the same seven-byte per-unit rotation state. */
-extern world_unit_animation_state_t g_battle_unit_misc_rotation_data[];
+extern world_unit_animation_state_t g_battle_unit_animation_states[];
 
 /* 0x8016604e: result of battle_gfx_poll_unit_graphics_load, 0 done / 1 pending. */
 extern u16 g_battle_unit_graphics_load_pending;
@@ -8613,7 +8613,7 @@ extern u16 g_battle_script_unit_filter_modes[];
 extern s32 g_battle_script_event_input;
 extern s32 g_battle_script_saved_event_input;
 
-extern s16 g_battle_script_threads_idle;
+extern s16 g_battle_script_finish_check_pending;
 extern s32 g_battle_next_event_id;
 extern u16 g_battle_script_frame_result_override;
 extern VECTOR g_battle_script_light_scale;

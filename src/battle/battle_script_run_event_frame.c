@@ -51,7 +51,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     battle_camera_store_state_to_script_variables();
     battle_menu_draw_active_window_frames();
 
-    if (g_battle_script_threads_idle != 0) {
+    if (g_battle_script_finish_check_pending != 0) {
         for (i = 1; i < 16; i++) {
             if (battle_thread_is_running_asm(i) != 0) {
                 break;
@@ -61,12 +61,12 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
             finish_op = battle_script_get_current_scenario_finish_operation();
             if (finish_op != 0) {
                 if (battle_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) != 0) {
-                    g_battle_script_threads_idle = 0;
+                    g_battle_script_finish_check_pending = 0;
                     battle_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
                     return 9;
                 }
             } else {
-                g_battle_script_threads_idle = 0;
+                g_battle_script_finish_check_pending = 0;
                 g_battle_menu_suspend_state = 0;
                 return 0;
             }
@@ -75,7 +75,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
             }
             battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((finish_op & 0xC00) >> 2) | (finish_op & 0xFF));
             finish_op = (finish_op & 0xF300) >> 8;
-            g_battle_script_threads_idle = 0;
+            g_battle_script_finish_check_pending = 0;
             g_battle_menu_suspend_state = 0;
             if (finish_op == 0x80) {
                 return 9;
@@ -91,7 +91,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
             g_battle_entd_selection_mode = BATTLE_ENTD_SELECTION_MAP_ID;
             return 9;
         }
-        g_battle_script_threads_idle = 0;
+        g_battle_script_finish_check_pending = 0;
     }
 
     battle_script_update_event_input_state(buttons);
@@ -207,7 +207,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         }
     }
     if (i == 16) {
-        g_battle_script_threads_idle = 1;
+        g_battle_script_finish_check_pending = 1;
     }
     return 1;
 }

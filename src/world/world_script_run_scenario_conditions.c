@@ -30,7 +30,7 @@ s32 world_script_run_scenario_conditions(void) {
         do {
             result = world_script_check_scenario_condition(
                 condition[0], condition[1], condition[2], condition[3], condition[4]);
-            condition += g_world_scenario_condition_arg_counts[condition[0]] + 1;
+            condition += g_world_script_condition_param_lengths[condition[0]] + 1;
         } while (result == EVENT_SCENARIO_CONDITION_RESULT_PASS);
         if (result == EVENT_SCENARIO_CONDITION_RESULT_RUN_EVENT) {
             return 1;

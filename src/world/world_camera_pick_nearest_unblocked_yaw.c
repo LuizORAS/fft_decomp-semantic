@@ -4,7 +4,7 @@
 
 /*
  * Picks the camera yaw for a shot of two units: of the four candidate yaws
- * in g_world_camera_candidate_yaws, the one nearest the current yaw whose bit
+ * in g_world_camera_diagonal_yaws, the one nearest the current yaw whose bit
  * is clear in the flat camera-block masks of both units' tiles.
  *
  * Returns the camera-yaw script variable moved by the shorter signed arc to
@@ -28,13 +28,13 @@ s16 world_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
     s32 dist;
 
     yaw = world_camera_wrap_yaw_angle() & 0xFFF;
-    world_unit_get_map_coords_from_misc_id(misc_id_a, g_world_text_speaker_screen_coords);
+    world_unit_copy_map_coords_from_misc_id(misc_id_a, g_world_text_speaker_screen_coords);
     /* The raw result is assigned before it is masked: combine then knows
      * nothing about the mask's high bits and the loop test keeps its sll 16. */
     mask = battle_map_get_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, g_world_text_speaker_screen_coords[0],
         g_world_text_speaker_screen_coords[2], g_world_text_speaker_screen_coords[1]);
     mask &= 0xFF;
-    world_unit_get_map_coords_from_misc_id(misc_id_b, g_world_text_speaker_screen_coords);
+    world_unit_copy_map_coords_from_misc_id(misc_id_b, g_world_text_speaker_screen_coords);
     mask = (mask
                | battle_map_get_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK,
                    g_world_text_speaker_screen_coords[0], g_world_text_speaker_screen_coords[2],
@@ -45,7 +45,7 @@ s16 world_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
     sign = 1;
     for (i = 0; i < 4; i++) {
         if ((s16)(bit & mask) == 0) {
-            delta = g_world_camera_candidate_yaws[i] - yaw;
+            delta = g_world_camera_diagonal_yaws[i] - yaw;
             raw = delta;
             if (delta > 0) {
                 wrapped = delta - 0x1000;
