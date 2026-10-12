@@ -68,9 +68,9 @@ s32 effect_e317_update_particle_ribbons_short_state(s16 record_index, s32 callba
     s32 factor;
     s32 rotate;
     s16 quadrant;
-    s32 abe;
     s32 translucent;
     u16 tpage;
+    effect_texture_page_config_t configuration;
     s16 largest;
     s32 speed;
     s32 row;
@@ -107,9 +107,13 @@ s32 effect_e317_update_particle_ribbons_short_state(s16 record_index, s32 callba
         }
         work = battle_heap_alloc_block(sizeof(effect_particle_ribbon_short_work_t), record_index);
         record->work_slots[callback_slot] = work;
-        abe = entry->particle_ribbon.texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
-        translucent = abe == 0;
-        tpage = ((entry->particle_ribbon.texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
+        configuration = entry->particle_ribbon.texture_page_config;
+        if (configuration.clear_abe) {
+            translucent = 0;
+        } else {
+            translucent = 1;
+        }
+        tpage = (configuration.blend_mode << 5) | 0x86;
         for (k = 0; k < RIBBON_SLOTS; k++) {
             for (i = 0; i < RIBBON_SEGMENTS; i++) {
                 quad = &work->ribbons[k].quads[0][i];

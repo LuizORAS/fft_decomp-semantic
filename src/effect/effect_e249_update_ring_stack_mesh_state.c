@@ -42,13 +42,13 @@ s32 effect_e249_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
     s32 buffer;
     u32* ot;
     effect_record_t* record;
-    s32 abe;
     POLY_GT4* quad;
     POLY_GT4* other;
     POLY_GT4* quads;
     u16 placement;
     s32 translucent;
     u16 tpage;
+    effect_texture_page_config_t configuration;
     u8 target_index;
     s32 j;
     s32 i;
@@ -81,9 +81,13 @@ s32 effect_e249_update_ring_stack_mesh_state(s16 record_index, s32 callback_slot
         }
         work = battle_heap_alloc_block(sizeof(effect_ring_mesh_work_t), record_index);
         record->work_slots[callback_slot] = work;
-        abe = entry->ring_mesh.texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
-        tpage = ((entry->ring_mesh.texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
-        translucent = abe == 0;
+        configuration = entry->ring_mesh.texture_page_config;
+        tpage = (configuration.blend_mode << 5) | 0x86;
+        if (configuration.clear_abe) {
+            translucent = 0;
+        } else {
+            translucent = 1;
+        }
         for (j = 0; j < 2; j++) {
             for (i = 0; i < 64; i++) {
                 quad = &work->quads[j][i];

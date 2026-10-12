@@ -529,7 +529,6 @@ extern SVECTOR g_battle_current_misc_screen_coords;
 extern VECTOR g_battle_current_vector;
 extern u32* g_battle_gfx_current_otag_entry;
 extern battle_render_buffer_t* g_battle_target_tile_color_buffer;
-extern void* g_battle_effect_current_work;
 extern u16 g_battle_current_music_track_index; /* 0x80165fd8 */
 extern s32 g_battle_current_thread_id;
 s32 battle_action_add_poached_item_to_fur_shop_inventory(void);

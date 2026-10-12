@@ -2255,7 +2255,7 @@ data:
   - {addr: 0x80122004, name: g_battle_map_untextured_triangle_positions}
   - {addr: 0x80122604, name: g_battle_map_untextured_quad_positions}
   - {addr: 0x80124604, name: g_battle_map_gns_records}
-  - {addr: 0x801251c4, name: g_battle_effect_current_work}
+  - {addr: 0x801251c4, name: g_battle_effect_map_vertices}
   - {addr: 0x801251c8, name: g_battle_map_background_gradient_colors}
   - {addr: 0x801251d0, name: g_battle_map_mesh_load_buffer}
   - {addr: 0x801251d4, name: g_battle_map_textured_triangle_normals}

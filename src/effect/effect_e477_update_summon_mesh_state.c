@@ -40,8 +40,7 @@ s32 effect_e477_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
     s32 k;
     s32 j;
     u16 tpage;
-    u16 texture_page_flags;
-    s32 abe;
+    effect_texture_page_config_t texture_page_config;
     s32 translucent;
     s32 radius;
     s32 u;
@@ -73,10 +72,13 @@ s32 effect_e477_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
         }
         work = battle_heap_alloc_block(sizeof(effect_summon_mesh_work_t), record_index);
         record->work_slots[callback_slot] = work;
-        texture_page_flags = entry->texture_page_flags;
-        tpage = ((texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
-        abe = texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
-        translucent = abe == 0;
+        texture_page_config = entry->texture_page_config;
+        tpage = (texture_page_config.blend_mode << 5) | 0x86;
+        if (texture_page_config.clear_abe) {
+            translucent = 0;
+        } else {
+            translucent = 1;
+        }
         for (i = 0; i < 2; i++) {
             for (j = 0; j < 128; j++) {
                 quad = &work->quads[i][j];

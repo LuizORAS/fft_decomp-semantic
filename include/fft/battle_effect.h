@@ -981,6 +981,14 @@ enum {
     EFFECT_EMITTER_FLAG_ARRIVAL_DISTANCE_SHIFT = 4,
 };
 
+/* Blend mode and primitive transparency control in a geometry record. */
+typedef struct effect_texture_page_config {
+    u16 blend_mode : 2;
+    u16 clear_abe : 1;
+    u16 _unused_00 : 13;
+} effect_texture_page_config_t;
+typedef char assert_effect_texture_page_config_size[sizeof(effect_texture_page_config_t) == 2 ? 1 : -1];
+
 /* texture_page_flags of the effect geometry records. */
 enum {
     EFFECT_TEXTURE_PAGE_ABR_MASK = 0x03, /* the semi-transparency rate, shifted into bits 5-6 of the tpage */
@@ -1410,8 +1418,8 @@ typedef struct effect_textured_quad_geometry_view {
     u8 _unused_3c[0x02];
     s16 wave_phase_speed_end[2]; /* 0x3e */
     u8 _unused_42[0x0a];
-    s16 texture_page_flags; /* 0x4c: EFFECT_TEXTURE_PAGE_* */
-    s16 brightness_row;     /* 0x4e */
+    effect_texture_page_config_t texture_page_config; /* 0x4c: EFFECT_TEXTURE_PAGE_* */
+    s16 brightness_row;                               /* 0x4e */
     u8 _unused_50[0x04];
     s16 ot_depth; /* 0x54 */
     u8 _unused_56[0x06];
@@ -1440,8 +1448,8 @@ typedef struct effect_particle_ribbon_geometry_view {
     u32 curve_selectors[2];                 /* 0x08 */
     u32 colour_curves;                      /* 0x10 */
     effect_emitter_geometry_view_t emitter; /* 0x14: read by the battle_effect_interpolate_emitter_* helpers */
-    u16 texture_page_flags;                 /* 0x4c */
-    s16 brightness_row;                     /* 0x4e */
+    effect_texture_page_config_t texture_page_config; /* 0x4c */
+    s16 brightness_row;                               /* 0x4e */
     u8 _unused_50[0x04];
     s16 ot_depth; /* 0x54 */
     u8 _unused_56[0x06];
@@ -1510,7 +1518,8 @@ typedef struct effect_polar_mesh_geometry_view {
     u8 _unused_46[0x02];
     s16 angle_end; /* 0x48 */
     u8 _unused_4a[0x02];
-    u16 texture_page_flags; /* 0x4c: bits 0-1 tpage x, bit 2 clears ABE */
+    /* Bit fields change the 16-bit reload and register allocation. */
+    u16 texture_page_flags; /* 0x4c: EFFECT_TEXTURE_PAGE_* */
     s16 brightness_row;     /* 0x4e */
     u8 _unused_50[0x04];
     s16 ot_depth; /* 0x54 */
@@ -1553,15 +1562,15 @@ typedef struct effect_ring_mesh_geometry_view {
     u8 _unused_00[0x02];
     u16 placement_flags; /* 0x02: bits 9-11 select how the origin is placed */
     u8 _unused_04[0x02];
-    u16 flags;              /* 0x06: bit 6 = per-channel colour curves */
-    u32 scroll_curves;      /* 0x08: nibbles 0 origin, 2 texture, 7 spin speed */
-    u32 wave_curves;        /* 0x0c: nibbles 0 growth, 1 growth step, 4 radius */
-    u32 colour_curves;      /* 0x10: nibbles 0-2 = r/g/b */
-    s16 origin_start[3];    /* 0x14 */
-    s16 origin_end[3];      /* 0x1a */
-    s16 u_span;             /* 0x20 */
-    s16 v_span;             /* 0x22 */
-    u16 texture_page_flags; /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
+    u16 flags;                                        /* 0x06: bit 6 = per-channel colour curves */
+    u32 scroll_curves;                                /* 0x08: nibbles 0 origin, 2 texture, 7 spin speed */
+    u32 wave_curves;                                  /* 0x0c: nibbles 0 growth, 1 growth step, 4 radius */
+    u32 colour_curves;                                /* 0x10: nibbles 0-2 = r/g/b */
+    s16 origin_start[3];                              /* 0x14 */
+    s16 origin_end[3];                                /* 0x1a */
+    s16 u_span;                                       /* 0x20 */
+    s16 v_span;                                       /* 0x22 */
+    effect_texture_page_config_t texture_page_config; /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
     u8 _unused_26[0x06];
     s16 u_start;        /* 0x2c */
     s16 v_start;        /* 0x2e */
@@ -1613,15 +1622,15 @@ typedef struct effect_summon_mesh_geometry_view {
     u8 _unused_00[0x02];
     u16 placement_flags; /* 0x02: bits 9-11 select how the origin is placed */
     u8 _unused_04[0x02];
-    u16 flags;              /* 0x06: bit 6 = per-channel colour curves */
-    u32 scroll_curves;      /* 0x08: nibbles 0 origin, 2 texture, 7 spin speed */
-    u32 wave_curves;        /* 0x0c: nibbles 0 growth, 1 growth step, 4 radius */
-    u32 colour_curves;      /* 0x10: nibbles 0-2 = r/g/b */
-    s16 origin_start[3];    /* 0x14 */
-    s16 origin_end[3];      /* 0x1a */
-    s16 u_span;             /* 0x20 */
-    s16 v_span;             /* 0x22 */
-    u16 texture_page_flags; /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
+    u16 flags;                                        /* 0x06: bit 6 = per-channel colour curves */
+    u32 scroll_curves;                                /* 0x08: nibbles 0 origin, 2 texture, 7 spin speed */
+    u32 wave_curves;                                  /* 0x0c: nibbles 0 growth, 1 growth step, 4 radius */
+    u32 colour_curves;                                /* 0x10: nibbles 0-2 = r/g/b */
+    s16 origin_start[3];                              /* 0x14 */
+    s16 origin_end[3];                                /* 0x1a */
+    s16 u_span;                                       /* 0x20 */
+    s16 v_span;                                       /* 0x22 */
+    effect_texture_page_config_t texture_page_config; /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
     u8 _unused_26[0x06];
     s16 u_start;        /* 0x2c */
     s16 v_start;        /* 0x2e */
@@ -1673,8 +1682,8 @@ typedef struct effect_tentacle_mesh_geometry_view {
     u32 curve_selectors[2];                 /* 0x08 */
     u32 colour_curves;                      /* 0x10 */
     effect_emitter_geometry_view_t emitter; /* 0x14: read by the battle_effect_interpolate_emitter_* helpers */
-    u16 texture_page_flags;                 /* 0x4c */
-    s16 brightness_row;                     /* 0x4e */
+    effect_texture_page_config_t texture_page_config; /* 0x4c */
+    s16 brightness_row;                               /* 0x4e */
     u8 _unused_50[0x04];
     s16 ot_depth; /* 0x54: added to each quad's depth */
     u8 _unused_56[0x06];
@@ -1788,6 +1797,8 @@ typedef char effect_animation_curve_table_data_offset_must_be_4
         }                                                                                                              \
     }
 
+/* Vertex work allocated by Banish/Altima and filled by the map renderer. */
+extern VECTOR* g_battle_effect_map_vertices;
 extern battle_effect_charge_params_t g_battle_effect_charge_line_params[2];
 extern battle_effect_death_poof_state_t g_battle_effect_death_poof_states[];
 extern battle_secondary_effect_function_t g_battle_effect_secondary_handlers[23];

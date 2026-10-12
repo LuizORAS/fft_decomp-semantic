@@ -24,6 +24,7 @@ s32 effect_e456_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
     effect_record_t* record;
     s32 translucent;
     u16 texture_page;
+    effect_texture_page_config_t configuration;
     u32 red;
     u32 green;
     u32 blue;
@@ -67,12 +68,13 @@ s32 effect_e456_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         }
         work = record->work_slots[callback_slot]
             = battle_heap_alloc_block(sizeof(effect_wave_mesh_work_t), record_index);
-        if (geometry->textured_quad.texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE) {
+        configuration = geometry->textured_quad.texture_page_config;
+        if (configuration.clear_abe) {
             translucent = 0;
         } else {
             translucent = 1;
         }
-        texture_page = ((geometry->textured_quad.texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
+        texture_page = (configuration.blend_mode << 5) | 0x86;
         for (row = 0; row < 8; row++) {
             for (column = 0; column < 8; column++) {
                 quad = &work->quads[0][row * 8 + column];

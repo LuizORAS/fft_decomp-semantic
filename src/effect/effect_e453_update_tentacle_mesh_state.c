@@ -57,14 +57,13 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
     POLY_GT4* prev_offset_quad;
     map_tile_t* tile;
     u16 placement;
-    u16 texture_page_flags;
+    effect_texture_page_config_t texture_page_config;
     u16 tpage;
     s32 translucent;
     s32 orient;
     s32 target_index;
     s32 curves0;
     s32 curves1;
-    s32 abe;
     s32 index;
     s32 factor;
     s16 len;
@@ -103,10 +102,13 @@ s32 effect_e453_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
         }
         work = record->work_slots[callback_slot]
             = battle_heap_alloc_block(sizeof(effect_tentacle_mesh_work_t), record_index);
-        texture_page_flags = entry->tentacle_mesh.texture_page_flags;
-        abe = texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
-        translucent = abe == 0;
-        tpage = ((texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
+        texture_page_config = entry->tentacle_mesh.texture_page_config;
+        if (texture_page_config.clear_abe) {
+            translucent = 0;
+        } else {
+            translucent = 1;
+        }
+        tpage = (texture_page_config.blend_mode << 5) | 0x86;
         for (i = 0; i < 8; i++) {
             for (scratch = 0; scratch < 8; scratch++) {
                 quad = &work->segments[i].quads[0][scratch];

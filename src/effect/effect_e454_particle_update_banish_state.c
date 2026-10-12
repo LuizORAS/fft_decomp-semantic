@@ -34,7 +34,7 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 callback_slot
         }
         vertex_work = battle_heap_alloc_block(0x200, record_index);
         record->work_slots[callback_slot] = vertex_work;
-        g_battle_effect_current_work = vertex_work;
+        g_battle_effect_map_vertices = vertex_work;
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 1, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 2, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 3, 1, 1);
@@ -95,7 +95,7 @@ s32 effect_e454_particle_update_banish_state(s16 record_index, s32 callback_slot
         if (record->work_slots[callback_slot] != NULL) {
             battle_heap_free_block(record->work_slots[callback_slot]);
             record->work_slots[callback_slot] = NULL;
-            g_battle_effect_current_work = NULL;
+            g_battle_effect_map_vertices = NULL;
         }
         record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
         break;
