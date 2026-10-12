@@ -1808,7 +1808,6 @@ extern u8 g_world_selected_unit_name_text_image[];
 extern world_unit_status_number_images_t g_world_selected_unit_number_text_images;
 extern palette_t g_world_selected_unit_portrait_palettes[2];
 extern u8 g_world_stat_preview_text_image[];
-void set_unit_cannot_exist(s32 unit_index);
 s32 world_get_party_unit_formation_sprite(s32 party_index);
 void resolve_unit_status_changes(void);
 s32 unit_has_adjacent_monster_skill_support(struct battle_stats* unit);

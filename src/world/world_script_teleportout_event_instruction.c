@@ -24,7 +24,7 @@ void world_script_teleportout_event_instruction(s32 unit_id, s32 remove_unit) {
         battle_gfx_init_misc_unit_palette_modulation(misc_id, 2, -0x1f, -0x1f, -0x1f);
         world_thread_wait_frames(0x3c);
         if (remove_unit != 0) {
-            set_unit_cannot_exist(unit_index);
+            battle_unit_set_cannot_exist(unit_index);
         }
     }
 }
