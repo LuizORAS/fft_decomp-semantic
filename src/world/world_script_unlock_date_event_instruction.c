@@ -3,7 +3,7 @@
 
 /* Store an unlock date into a bitmap of 9-bit records: five bits of day
  * followed by four bits of month. */
-void world_script_unlockdate_event_instruction(u32* bits, s32 record, s32 month, s32 day) {
+void world_script_unlock_date_event_instruction(u32* bits, s32 record, s32 month, s32 day) {
     s32 base;
     s32 i;
     u8 mask;

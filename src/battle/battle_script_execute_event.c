@@ -601,7 +601,7 @@ restart_script:
                 = battle_script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 3);
         } else if (opcode == EVENT_OPCODE_MAP_DARKNESS) {
             operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-            battle_thread_start(operand_1, &battle_script_map_darkness);
+            battle_thread_start(operand_1, &battle_script_map_darkness_thread);
             g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
         } else if (opcode == EVENT_OPCODE_COLOR_SCREEN) {
             operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
@@ -609,20 +609,20 @@ restart_script:
             g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
         } else if (opcode == EVENT_OPCODE_EARTHQUAKE_START) {
             operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-            battle_thread_start(operand_1, &battle_script_earthquake_start);
+            battle_thread_start(operand_1, &battle_script_earthquake_thread);
             g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
         } else if ((opcode == EVENT_OPCODE_SPRITE_MOVE) || (opcode == EVENT_OPCODE_SPRITE_MOVE_BETA)) {
             operand_1 = battle_thread_resolve_id_after_current(NATIVE_THREAD_SLOT_FIRST_IDLE);
             if (opcode == EVENT_OPCODE_SPRITE_MOVE) {
-                battle_thread_start(operand_1, &battle_script_sprite_move);
+                battle_thread_start(operand_1, &battle_script_sprite_move_thread);
             } else {
-                battle_thread_start(operand_1, &battle_script_sprite_move_beta);
+                battle_thread_start(operand_1, &battle_script_sprite_move_beta_thread);
             }
             g_battle_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
             g_battle_thread_contexts[operand_1].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;
             g_battle_thread_contexts[operand_1].task_words[0] = battle_script_get_misc_id(first_halfword);
         } else if (opcode == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
-            battle_script_waitspritemove_event_instruction(first_halfword);
+            battle_script_wait_sprite_move_event_instruction(first_halfword);
         } else if (opcode == EVENT_OPCODE_MAP_LIGHT) {
             operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, &battle_map_light_thread);
@@ -682,13 +682,13 @@ restart_script:
                 battle_thread_wait_until_inactive(2);
                 operand_3 = 2;
             }
-            battle_thread_start(operand_3, &battle_script_execute_display_conditions_instruction);
+            battle_thread_start(operand_3, &battle_script_display_conditions_thread);
             battle_thread_set_parameters(operand_3, operand_1, operand_2, 0);
         } else if (opcode == EVENT_OPCODE_SHOW_GRAPHIC) {
             /* Use: the extra operand_2 reference keeps operand_2/operand_3 in $s5/$s6, not swapped. */
             __asm__("" : : "r"(operand_2));
             operand_3 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-            battle_thread_start(operand_3, &battle_script_show_graphic);
+            battle_thread_start(operand_3, &battle_script_show_graphic_thread);
             battle_thread_set_parameters(operand_3, operand_1, 0, 0);
         }
         /* ---- Sound and music ---- */
@@ -912,7 +912,7 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_UNLOCK_DATE) {
             if ((battle_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) && (operand_1 != 0)) {
                 date_month = battle_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-                battle_script_unlockdate_event_instruction(g_main_treasure_acquisition_date_bits, operand_1 - 1,
+                battle_script_unlock_date_event_instruction(g_main_treasure_acquisition_date_bits, operand_1 - 1,
                     date_month, battle_script_get_variable(EVENT_SCRIPT_VAR_DAY));
             }
         } else if (opcode == EVENT_OPCODE_TEMP_WEAPON) {

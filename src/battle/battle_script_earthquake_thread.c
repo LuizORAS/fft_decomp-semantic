@@ -1,14 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Earthquake thread task (task id 0xd): two independent frame counters step
- * the shared shake accumulator at 0x80165ff0.  Parameters: 0x00 first
- * increment, 0x01 its period in yielded frames, 0x02 second increment, 0x03
- * its period.  The loop never terminates; the task is torn down externally,
- * so the emitted epilogue is unreachable.
- */
-void battle_script_earthquake_start(void) {
+/* Thread body of EarthquakeStart (EVENT_OPCODE_EARTHQUAKE_START), task NATIVE_THREAD_TASK_EARTHQUAKE:
+ * every operand-1 frames add operand 0 to the camera shake offset (g_battle_camera_shake_z_offset), and
+ * every operand-3 frames add operand 2. It never ends by itself: EarthquakeEnd suspends the task's
+ * thread, so the emitted epilogue is unreachable. */
+void battle_script_earthquake_thread(void) {
     u8* parameters;
     s32 first_counter;
     s32 second_counter;

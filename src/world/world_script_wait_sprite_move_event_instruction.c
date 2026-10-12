@@ -4,7 +4,7 @@
 /* Block until no thread is still running the sprite-move task (task 0xB) for
  * the calling event's sprite. A misc id of 0x7d0 means the sprite is absent,
  * so there is nothing to wait for. */
-void world_script_waitspritemove_event_instruction(s32 unit_id) {
+void world_script_wait_sprite_move_event_instruction(s32 unit_id) {
     s32 misc_id;
     s32 i;
 

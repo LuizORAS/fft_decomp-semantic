@@ -2,9 +2,9 @@
 
 extern void battle_script_jump_event_instruction(battle_script_jump_instruction_t* parameters);
 
-/* BATTLE twin of world_script_block_start_thread. Thread body for an event BLOCK_START: runs the enclosed instructions
- * up to BLOCK_END on its own thread, dispatching the unit-movement, animation and wait opcodes that may appear inside a
- * block, then exits. */
+/* Thread body of BlockStart (EVENT_OPCODE_BLOCK_START): run the enclosed instructions up to BlockEnd
+ * on its own thread, dispatching the unit-movement, animation and wait opcodes a block may hold, then
+ * exit. */
 void battle_script_block_start_thread(void) {
     /* Preserve the target's unused 40-byte stack area. */
     s32 unused[10];
@@ -81,15 +81,15 @@ void battle_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_SPRITE_MOVE || script[0] == EVENT_OPCODE_SPRITE_MOVE_BETA) {
             thread_id = battle_thread_resolve_id_after_current(NATIVE_THREAD_SLOT_FIRST_IDLE);
             if (script[0] == EVENT_OPCODE_SPRITE_MOVE) {
-                battle_thread_start(thread_id, battle_script_sprite_move);
+                battle_thread_start(thread_id, battle_script_sprite_move_thread);
             } else {
-                battle_thread_start(thread_id, battle_script_sprite_move_beta);
+                battle_thread_start(thread_id, battle_script_sprite_move_beta_thread);
             }
             g_battle_thread_contexts[thread_id].function_parameter_1 = (s32)(script + 1);
             g_battle_thread_contexts[thread_id].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;
             g_battle_thread_contexts[thread_id].task_words[0] = battle_script_get_misc_id(first_halfword);
         } else if (script[0] == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
-            battle_script_waitspritemove_event_instruction(first_halfword);
+            battle_script_wait_sprite_move_event_instruction(first_halfword);
         } else if (script[0] == EVENT_OPCODE_WAIT_ROTATE_UNIT) {
             battle_script_wait_rotate_event_instruction(script[1]);
         } else if (script[0] == EVENT_OPCODE_WAIT_ROTATE_ALL) {

@@ -186,7 +186,7 @@ functions:
   - {addr: 0x800ef82c, size: 168, name: world_menu_request_open_companion_executable, hash: faf65fc74edd17d7}
   - {addr: 0x800ef8d4, size: 168, name: world_menu_request_open_companion_data_file, hash: 14905444a10b31e0}
   - {addr: 0x800ef97c, size: 8, name: world_noop_800ef97c, hash: 6d64edf91449c1b1}
-  - {addr: 0x800ef984, size: 40, name: world_script_execute_display_conditions_instruction, hash: 4d1a28bb93f77d9c}
+  - {addr: 0x800ef984, size: 40, name: world_script_display_conditions_thread, hash: 4d1a28bb93f77d9c}
   - {addr: 0x800ef9ac, size: 32, name: world_script_dark_screen_thread, hash: 564fe6361f9e4ceb}
   - {addr: 0x800ef9cc, size: 8, name: world_noop_800ef9cc, hash: 6d64edf91449c1b1}
   - {addr: 0x800ef9d4, size: 8, name: world_text_run_spell_quote_thread, hash: 6d64edf91449c1b1}
@@ -202,7 +202,7 @@ functions:
   - {addr: 0x800efe54, size: 456, name: world_menu_run_equip_thread, hash: 5d7be1020050c481}
   - {addr: 0x800f001c, size: 252, name: world_menu_open_debugchr_unit_editor, hash: f331fb4b57e97974}
   - {addr: 0x800f0118, size: 168, name: world_menu_open_debugchr, hash: 736276bee06d36ae}
-  - {addr: 0x800f01c0, size: 48, name: world_script_show_graphic, hash: 594b55ee98b22733}
+  - {addr: 0x800f01c0, size: 48, name: world_script_show_graphic_thread, hash: 594b55ee98b22733}
   - {addr: 0x800f01f0, size: 8, name: world_noop_800f01f0, hash: 6d64edf91449c1b1}
   - {addr: 0x800f01f8, size: 124, name: world_menu_load_portrait_image, hash: 497cde13cf361473}
   - {addr: 0x800f0274, size: 228, name: world_gfx_load_evtchr_thread, hash: 8962aec23b32ebaf}
@@ -240,7 +240,7 @@ functions:
   - {addr: 0x800f1390, size: 8, name: world_noop_800f1390, hash: 6d64edf91449c1b1}
   - {addr: 0x800f1398, size: 8, name: world_noop_800f1398, hash: 6d64edf91449c1b1}
   - {addr: 0x800f13a0, size: 92, name: world_script_assign_bitset_flag, hash: 96cfecafc19e267a}
-  - {addr: 0x800f13fc, size: 184, name: world_script_unlockdate_event_instruction, hash: 756a57b269501269}
+  - {addr: 0x800f13fc, size: 184, name: world_script_unlock_date_event_instruction, hash: 756a57b269501269}
   - {addr: 0x800f14b4, size: 1044, name: world_camera_fusion_thread, hash: 29fbdab9fc995bcc}
   - {addr: 0x800f18c8, size: 1432, name: world_camera_step_track, hash: 64ee507b9faf9750}
   - {addr: 0x800f1e60, size: 60, name: world_script_interpolate_range_fixed12, hash: 959b0c6e3237b93a}
@@ -328,13 +328,13 @@ functions:
   - {addr: 0x800f93cc, size: 64, name: world_map_wait_for_refresh, hash: 6eec356e5c6b9a22}
   - {addr: 0x800f940c, size: 44, name: world_camera_clear_zoom_variable_low_bit, hash: ce3ca9e1032c0236}
   - {addr: 0x800f9438, size: 1444, name: world_camera_thread, hash: ba7be01d018fa8b3}
-  - {addr: 0x800f99dc, size: 120, name: world_script_map_darkness, hash: 0d797a52a22d5438}
-  - {addr: 0x800f9a54, size: 176, name: world_script_earthquake_start, hash: 88082e85496cfa40}
+  - {addr: 0x800f99dc, size: 120, name: world_script_map_darkness_thread, hash: 0d797a52a22d5438}
+  - {addr: 0x800f9a54, size: 176, name: world_script_earthquake_thread, hash: 88082e85496cfa40}
   - {addr: 0x800f9b04, size: 392, name: world_script_color_screen_thread, hash: 721b29c5952d0273, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800f9c8c, size: 1480, name: world_script_run_sprite_move, hash: 74f215bd48a3cde4, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
-  - {addr: 0x800fa254, size: 60, name: world_script_sprite_move, hash: 4df4be2d389bc444}
-  - {addr: 0x800fa290, size: 60, name: world_script_sprite_move_beta, hash: 757389eff0f977e2}
-  - {addr: 0x800fa2cc, size: 192, name: world_script_waitspritemove_event_instruction, hash: 6691693858dee2bb}
+  - {addr: 0x800fa254, size: 60, name: world_script_sprite_move_thread, hash: 4df4be2d389bc444}
+  - {addr: 0x800fa290, size: 60, name: world_script_sprite_move_beta_thread, hash: 757389eff0f977e2}
+  - {addr: 0x800fa2cc, size: 192, name: world_script_wait_sprite_move_event_instruction, hash: 6691693858dee2bb}
   - {addr: 0x800fa38c, size: 32, name: world_script_copy_32_bytes, hash: 820dc3ed75e30848}
   - {addr: 0x800fa3ac, size: 888, name: world_map_light_thread, hash: 2075c72a1d728138, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800fa724, size: 60, name: world_camera_store_yaw_band, hash: ab7e1df661cddb5e}

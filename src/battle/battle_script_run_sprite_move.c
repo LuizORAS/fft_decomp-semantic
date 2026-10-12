@@ -1,24 +1,20 @@
-/*
- * BATTLE twin of WORLD world_script_run_sprite_move (identical code except the
- * checked-division guard, which this default-profile copy lacks).
- *
- * Sprite-move worker called by battle_script_sprite_move (mode 0) and
- * battle_script_sprite_move_beta (mode 1) with the script cursor: a unit
- * halfword, three destination halfwords, an easing byte, a weight byte and a
- * halfword that is a frame count (mode 0) or a speed (mode 1). pos[0] is the
- * start, pos[1] the destination, pos[2] the current position and pos[3] the
- * negated previous step, re-applied each frame so the unit's coordinate is
- * rewritten rather than accumulated. The misc id is published as the current
- * thread's record word 1, which battle_script_waitspritemove_event_instruction
- * polls.
- */
 #include "fft/battle.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* The parameters are copied into locals in this order: it is what places the
- * s0 copy before the s2 copy in the prologue. */
-/* Port debt (QUIRKS.md): parameter_address arrives as a thread parameter (s32). */
+/* Move a unit's sprite by an offset along an eased curve: the worker of
+ * battle_script_sprite_move_thread (mode 0, the last operand a frame count) and
+ * battle_script_sprite_move_beta_thread (mode 1, a speed). The operands are a unit halfword, the three
+ * offset halfwords, an easing byte, a weight byte and that last halfword. pos[0] is the start, pos[1]
+ * the destination, pos[2] the current position and pos[3] the negated previous step, re-applied each
+ * frame so the unit's coordinate is rewritten rather than accumulated. The misc id is published as the
+ * current thread's record word 1, which battle_script_wait_sprite_move_event_instruction polls.
+ * WORLD's copy has the checked-division guard this default-profile copy lacks.
+ *
+ * The parameters are copied into locals in this order: it is what places the s0 copy before the s2
+ * copy in the prologue.
+ *
+ * Port debt (QUIRKS.md): parameter_address arrives as a thread parameter (s32). */
 void battle_script_run_sprite_move(s32 parameter_address, s32 use_speed) {
     s32 pos[4][4];
     SVECTOR vec;

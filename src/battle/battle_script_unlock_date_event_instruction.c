@@ -1,8 +1,9 @@
 #include "fft/battle.h"
 
-/* UnlockDate event instruction: store day (5 bits) then month (4 bits) in
- * the 9-bit date slot date_index of bitset. */
-void battle_script_unlockdate_event_instruction(u32* bitset, s32 date_index, s32 month, s32 day) {
+/* UnlockDate (EVENT_OPCODE_UNLOCK_DATE): store a date, day (5 bits) then month (4 bits), in the
+ * 9-bit slot date_index of bitset. The interpreter records today's date for a treasure in
+ * g_main_treasure_acquisition_date_bits. */
+void battle_script_unlock_date_event_instruction(u32* bitset, s32 date_index, s32 month, s32 day) {
     s32 first_bit;
     s32 i;
     s32 mask;

@@ -3,7 +3,7 @@
 
 /* Event instruction 0x41 EarthquakeStart thread: every parameter[1] frames add
  * parameter[0] to g_world_camera_shake_z_offset, every parameter[3] frames add parameter[2]. */
-void world_script_earthquake_start(void) {
+void world_script_earthquake_thread(void) {
     s32 first_frames;
     s32 second_frames;
     u8* parameter;

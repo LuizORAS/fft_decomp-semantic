@@ -838,7 +838,7 @@ functions:
   - {addr: 0x8013bc14, size: 168, name: battle_menu_request_open_companion_executable, hash: 503e6335682fee08}
   - {addr: 0x8013bcbc, size: 168, name: battle_menu_request_open_companion_data_file, hash: f55c56d572db020e}
   - {addr: 0x8013bd64, size: 8, name: battle_noop_8013bd64, hash: 6d64edf91449c1b1}
-  - {addr: 0x8013bd6c, size: 40, name: battle_script_execute_display_conditions_instruction, hash: 889b5b3e5f2d0343}
+  - {addr: 0x8013bd6c, size: 40, name: battle_script_display_conditions_thread, hash: 889b5b3e5f2d0343}
   - {addr: 0x8013bd94, size: 48, name: battle_script_dark_screen_thread, hash: 2379c22e7c612b3a}
   - {addr: 0x8013bdc4, size: 8, name: battle_noop_8013bdc4, hash: 6d64edf91449c1b1}
   - {addr: 0x8013bdcc, size: 352, name: battle_text_run_spell_quote_thread, hash: c85ddcb980c97b80}
@@ -854,7 +854,7 @@ functions:
   - {addr: 0x8013c3a4, size: 456, name: battle_menu_run_equip_thread, hash: b4cfa9beb874f1bc}
   - {addr: 0x8013c56c, size: 252, name: battle_menu_open_debugchr_unit_editor, hash: d3d1ed8f97defebc}
   - {addr: 0x8013c668, size: 168, name: battle_menu_open_debugchr, hash: 6468879416a486b3}
-  - {addr: 0x8013c710, size: 48, name: battle_script_show_graphic, hash: f9a76818dec541a0}
+  - {addr: 0x8013c710, size: 48, name: battle_script_show_graphic_thread, hash: f9a76818dec541a0}
   - {addr: 0x8013c740, size: 8, name: battle_noop_8013c740, hash: 6d64edf91449c1b1}
   - {addr: 0x8013c748, size: 124, name: battle_menu_load_portrait_image, hash: 247f70f8a3e77e31}
   - {addr: 0x8013c7c4, size: 228, name: battle_gfx_load_evtchr_thread, hash: 3a0588d40f275cc2}
@@ -892,7 +892,7 @@ functions:
   - {addr: 0x8013da78, size: 8, name: battle_noop_8013da78, hash: 6d64edf91449c1b1}
   - {addr: 0x8013da80, size: 8, name: battle_noop_8013da80, hash: 6d64edf91449c1b1}
   - {addr: 0x8013da88, size: 92, name: battle_script_assign_bitset_flag, hash: c0268b34d6b54219}
-  - {addr: 0x8013dae4, size: 184, name: battle_script_unlockdate_event_instruction, hash: c9969a2b94237e09}
+  - {addr: 0x8013dae4, size: 184, name: battle_script_unlock_date_event_instruction, hash: c9969a2b94237e09}
   - {addr: 0x8013db9c, size: 1044, name: battle_camera_fusion_thread, hash: b5d064cf95daeba7}
   - {addr: 0x8013dfb0, size: 1432, name: battle_camera_step_track, hash: 7f8a4482ec4d7bae}
   - {addr: 0x8013e548, size: 60, name: battle_script_interpolate_range_fixed12, hash: 61b036d90720a723}
@@ -980,13 +980,13 @@ functions:
   - {addr: 0x801460a4, size: 64, name: battle_map_wait_for_refresh, hash: e988058d047260fa}
   - {addr: 0x801460e4, size: 44, name: battle_camera_clear_zoom_variable_low_bit, hash: 1c850d2a2326188a}
   - {addr: 0x80146110, size: 1444, name: battle_camera_thread, hash: de81056b9403d9c1}
-  - {addr: 0x801466b4, size: 120, name: battle_script_map_darkness, hash: 220b0a8f4c814539}
-  - {addr: 0x8014672c, size: 176, name: battle_script_earthquake_start, hash: 19be186d363036b4}
+  - {addr: 0x801466b4, size: 120, name: battle_script_map_darkness_thread, hash: 220b0a8f4c814539}
+  - {addr: 0x8014672c, size: 176, name: battle_script_earthquake_thread, hash: 19be186d363036b4}
   - {addr: 0x801467dc, size: 356, name: battle_script_color_screen_thread, hash: 8de8d96c93e6ae8f}
   - {addr: 0x80146940, size: 1444, name: battle_script_run_sprite_move, hash: 558aa0057a55a6d2}
-  - {addr: 0x80146ee4, size: 60, name: battle_script_sprite_move, hash: 7decfeacb2be172a}
-  - {addr: 0x80146f20, size: 60, name: battle_script_sprite_move_beta, hash: c9868578c779e0f8}
-  - {addr: 0x80146f5c, size: 192, name: battle_script_waitspritemove_event_instruction, hash: 1432c177a10691bf}
+  - {addr: 0x80146ee4, size: 60, name: battle_script_sprite_move_thread, hash: 7decfeacb2be172a}
+  - {addr: 0x80146f20, size: 60, name: battle_script_sprite_move_beta_thread, hash: c9868578c779e0f8}
+  - {addr: 0x80146f5c, size: 192, name: battle_script_wait_sprite_move_event_instruction, hash: 1432c177a10691bf}
   - {addr: 0x8014701c, size: 32, name: battle_script_copy_32_bytes, hash: cd687ad6c14b8e80}
   - {addr: 0x8014703c, size: 672, name: battle_map_light_thread, hash: 21c64a562f0c9325}
   - {addr: 0x801472dc, size: 60, name: battle_camera_store_yaw_band, hash: 0478745f54a2dc9f}

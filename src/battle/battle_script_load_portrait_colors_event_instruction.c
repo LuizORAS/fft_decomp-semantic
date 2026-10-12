@@ -2,10 +2,10 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* VRAM destination of the 8 portrait pixel columns (x advances by 8) and of
- * the 0x1800-offset palette block. */
-
-/* Loads portrait sector 0x164b + 4 * portrait_id into VRAM (0x2000 bytes). */
+/* PortraitCol (EVENT_OPCODE_PORTRAIT_COL): read the four-sector block `portrait_id` of EVTFACE.BIN
+ * (0x2000 bytes) into a menu buffer, upload its eight 8x48 pixel columns from
+ * g_battle_menu_portrait_pixel_rect (x advancing by 8) and its palette, at +0x1800, to
+ * g_battle_menu_portrait_palette_rect, then free the buffer. */
 void battle_script_load_portrait_colors_event_instruction(s32 portrait_id) {
     RECT rect;
     u8* buffer;

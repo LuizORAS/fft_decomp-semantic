@@ -563,7 +563,7 @@ restart_event:
                 = world_script_load_halfword(instruction_offset + (g_world_event_script) + 3);
         } else if (opcode == EVENT_OPCODE_MAP_DARKNESS) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-            world_thread_start(operand_1, &world_script_map_darkness);
+            world_thread_start(operand_1, &world_script_map_darkness_thread);
             g_world_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
         } else if (opcode == EVENT_OPCODE_COLOR_SCREEN) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
@@ -571,20 +571,20 @@ restart_event:
             g_world_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
         } else if (opcode == EVENT_OPCODE_EARTHQUAKE_START) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-            world_thread_start(operand_1, &world_script_earthquake_start);
+            world_thread_start(operand_1, &world_script_earthquake_thread);
             g_world_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
         } else if (opcode == EVENT_OPCODE_SPRITE_MOVE || opcode == EVENT_OPCODE_SPRITE_MOVE_BETA) {
             operand_1 = world_thread_resolve_id_after_current(NATIVE_THREAD_SLOT_FIRST_IDLE);
             if (opcode == EVENT_OPCODE_SPRITE_MOVE) {
-                world_thread_start(operand_1, &world_script_sprite_move);
+                world_thread_start(operand_1, &world_script_sprite_move_thread);
             } else {
-                world_thread_start(operand_1, &world_script_sprite_move_beta);
+                world_thread_start(operand_1, &world_script_sprite_move_beta_thread);
             }
             g_world_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
             g_world_thread_contexts[operand_1].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;
             g_world_thread_contexts[operand_1].task_words[0] = world_script_get_misc_id(first_halfword);
         } else if (opcode == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
-            world_script_waitspritemove_event_instruction(first_halfword);
+            world_script_wait_sprite_move_event_instruction(first_halfword);
         } else if (opcode == EVENT_OPCODE_MAP_LIGHT) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_1, world_map_light_thread);
@@ -648,11 +648,11 @@ restart_event:
             /* Keep the cached second operand as an allocator input at this join;
              * otherwise GCC exchanges the target s5/s6 operand lifetimes. */
             __asm__("" : : "r"(operand_2));
-            world_thread_start(operand_3, &world_script_execute_display_conditions_instruction);
+            world_thread_start(operand_3, &world_script_display_conditions_thread);
             world_thread_set_parameters(operand_3, operand_1, operand_2, 0);
         } else if (opcode == EVENT_OPCODE_SHOW_GRAPHIC) {
             operand_3 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-            world_thread_start(operand_3, &world_script_show_graphic);
+            world_thread_start(operand_3, &world_script_show_graphic_thread);
             world_thread_set_parameters(operand_3, operand_1, 0, 0);
         }
         /* ---- Sound and music ---- */
@@ -870,7 +870,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_UNLOCK_DATE) {
             if ((world_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) && (operand_1 != 0)) {
                 month = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-                world_script_unlockdate_event_instruction(g_main_treasure_acquisition_date_bits, operand_1 - 1, month,
+                world_script_unlock_date_event_instruction(g_main_treasure_acquisition_date_bits, operand_1 - 1, month,
                     world_script_get_variable(EVENT_SCRIPT_VAR_DAY));
             }
         } else if (opcode == EVENT_OPCODE_TEMP_WEAPON) {

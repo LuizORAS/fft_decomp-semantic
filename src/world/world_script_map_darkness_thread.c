@@ -5,7 +5,7 @@
 /* Thread body of the map darkness event instruction: start the ambient
  * light blend from the five parameter bytes (mode, signed RGB amounts,
  * speed) and wait the number of frames the table gives for that speed. */
-void world_script_map_darkness(void) {
+void world_script_map_darkness_thread(void) {
     u8* parameter;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_MAP_DARKNESS);

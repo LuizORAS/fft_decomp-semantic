@@ -5,7 +5,7 @@
  * operands (blend mode, red, green, blue as s8, duration index), then keep the
  * thread alive under the MapDarkness task id for
  * g_battle_script_map_darkness_durations[duration index] frames (1 to 256). */
-void battle_script_map_darkness(void) {
+void battle_script_map_darkness_thread(void) {
     u8* parameters;
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_MAP_DARKNESS);
