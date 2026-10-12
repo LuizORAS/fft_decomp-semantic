@@ -123,9 +123,9 @@ s32 battle_ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count
         }
         if (skillset >= SKILLSET_ID_MONSTER_FIRST) {
             if (i == 3) {
-                entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_REQUIRES_MONSTER_SKILL << 8);
+                entry->skillset_flags.bits.requires_monster_skill = 1;
             } else {
-                entry->skillset_flags.packed &= ~(BATTLE_AI_ABILITY_ENTRY_REQUIRES_MONSTER_SKILL << 8);
+                entry->skillset_flags.bits.requires_monster_skill = 0;
             }
         }
         entry->skillset_flags.bytes.skillset = skillset;

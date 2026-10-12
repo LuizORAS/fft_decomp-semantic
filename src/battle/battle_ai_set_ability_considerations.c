@@ -44,7 +44,6 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
     s32 usable;
     s32 random_use;
     s32 range;
-    u16 flags;
 
     enemy_harmful = 0;
     enemy_magical = 0;
@@ -71,7 +70,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                 &= ~(BATTLE_AI_TARGETING_FLAG_1_HAS_RANGED_ABILITY | BATTLE_AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES);
             for (i = 0; i < BATTLE_AI_ABILITY_LIST_COUNT; i++) {
                 entry = &ai->ability_lists[ai->unit_compact_indices[unit_id]][i];
-                entry->skillset_flags.packed &= ~(BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
+                entry->skillset_flags.bits.usable = 0;
                 if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
                     break;
                 }
@@ -144,8 +143,8 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                         continue;
                     }
                 }
-                entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
-                if (!(entry->skillset_flags.packed & (BATTLE_AI_ABILITY_ENTRY_REQUIRES_MONSTER_SKILL << 8))) {
+                entry->skillset_flags.bits.usable = 1;
+                if (!entry->skillset_flags.bits.requires_monster_skill) {
                     if (decision->enemy_flag) {
                         if (ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_TARGET_ENEMIES) {
                             enemy_harmful++;
@@ -223,7 +222,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
             break;
         }
         battle_ai_load_ability_entry(entry);
-        if (entry->skillset_flags.packed & (BATTLE_AI_ABILITY_ENTRY_USABLE << 8)) {
+        if (entry->skillset_flags.bits.usable) {
             if (threshold >= enemy_magical) {
                 battle_ai_disable_ability_if_only_inflicts_status(entry, BATTLE_STATUS_ID_SHELL);
             }
@@ -236,7 +235,7 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
             if (enemy_earth <= 0) {
                 battle_ai_disable_ability_if_only_inflicts_status(entry, BATTLE_STATUS_ID_FLOAT);
             }
-            if (entry->skillset_flags.packed & (BATTLE_AI_ABILITY_ENTRY_USABLE << 8)) {
+            if (entry->skillset_flags.bits.usable) {
                 usable++;
                 if (ability->ai_flags.halfwords.target_effect_flags & BATTLE_AI_ABILITY_RANDOM_USE) {
                     random_use++;
@@ -267,20 +266,19 @@ void battle_ai_set_ability_considerations(s32 action_taken) {
                         decision->ally_ability_min_reach = range;
                     }
                 }
-                flags = entry->skillset_flags.packed;
-                if (flags & (BATTLE_AI_ABILITY_ENTRY_FORCE_CONSUME_EVALUATED_ORIGINS << 8)) {
-                    entry->skillset_flags.packed = flags | (BATTLE_AI_ABILITY_ENTRY_CONSUME_EVALUATED_ORIGINS << 8);
-                } else if (!(flags & (BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN << 8))) {
+                if (entry->skillset_flags.bits.force_consume_evaluated_origins) {
+                    entry->skillset_flags.bits.consume_evaluated_origins = 1;
+                } else if (!entry->skillset_flags.bits.exhaustive_origin_scan) {
                     if (ability->ct >= g_battle_ai_data_base.acting_unit_remaining_clockticks
                         || battle_ai_classify_ability_effect(g_battle_ai_data_base.acting_unit_id, 1)
                             == BATTLE_AI_ABILITY_EFFECT_NONE) {
-                        entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_CONSUME_EVALUATED_ORIGINS << 8);
+                        entry->skillset_flags.bits.consume_evaluated_origins = 1;
                     } else {
-                        entry->skillset_flags.packed &= ~(BATTLE_AI_ABILITY_ENTRY_CONSUME_EVALUATED_ORIGINS << 8);
+                        entry->skillset_flags.bits.consume_evaluated_origins = 0;
                     }
                 }
                 if (action_taken != 0) {
-                    entry->skillset_flags.packed &= ~(BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
+                    entry->skillset_flags.bits.usable = 0;
                 }
             }
         }

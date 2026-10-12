@@ -49,5 +49,5 @@ void battle_ai_disable_ability_if_only_inflicts_status(battle_ai_ability_entry_t
             cursor = (battle_ai_data_t*)((u8*)cursor + 1);
         }
     }
-    entry->skillset_flags.packed &= ~(BATTLE_AI_ABILITY_ENTRY_USABLE << 8);
+    entry->skillset_flags.bits.usable = 0;
 }

@@ -395,18 +395,30 @@ enum {
     BATTLE_AI_ABILITY_ENTRY_UNIT_SHIFT = 10,
 };
 
+/* Skillset and runtime policy flags: byte copies and individual flag updates. */
+typedef union battle_ai_ability_entry_flags {
+    struct {
+        u16 skillset : 8;
+        u16 consume_evaluated_origins : 1;
+        u16 force_consume_evaluated_origins : 1;
+        u16 exhaustive_origin_scan : 1;
+        u16 requires_monster_skill : 1;
+        u16 _unknown_00_bit12 : 1;
+        u16 enemies_only : 1;
+        u16 allies_only : 1;
+        u16 usable : 1;
+    } bits;
+    struct {
+        u8 skillset;
+        u8 usage_flags;
+    } bytes;
+} battle_ai_ability_entry_flags_t;
+typedef char battle_ai_ability_entry_flags_size_must_be_2[sizeof(battle_ai_ability_entry_flags_t) == 2 ? 1 : -1];
+
 /* Four-byte entries in each compact unit's AI ability list. */
 typedef struct battle_ai_ability_entry {
     s16 packed_id; /* bits 0..9: ability ID; bits 10..15: physical unit slot */
-    /* The AI updates the flag bits with lhu/sh over both bytes, so the
-     * 16-bit view covers skillset and usage_flags together. */
-    union {
-        u16 packed; /* skillset | usage_flags << 8 */
-        struct {
-            u8 skillset;    /* 0x02; 0xff terminates the list (chose_move_from_move_list) */
-            u8 usage_flags; /* 0x03; battle_ai_ability_entry_flag_e */
-        } bytes;
-    } skillset_flags;
+    battle_ai_ability_entry_flags_t skillset_flags;
 } battle_ai_ability_entry_t;
 typedef char battle_ai_ability_entry_must_be_4[sizeof(battle_ai_ability_entry_t) == 4 ? 1 : -1];
 
