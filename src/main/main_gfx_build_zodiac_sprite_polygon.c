@@ -8,7 +8,7 @@
  * offset + the scaled record offset + (0x100, 0x78), and it samples the unscaled
  * record rectangle from the 8-bit texture page that holds *texture. */
 void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture, upoint16_t* base,
-    sprite_sheet_frame_t* frame, point16_t* scale, main_zodiac_draw_offset_t* offset) {
+    sprite_sheet_frame_t* frame, point16_t* scale, sprite_draw_offset_t* offset) {
     s32 x = frame->offset.x * scale->x;
     s32 y = frame->offset.y * scale->y;
     s32 width = frame->source.w * scale->x;
@@ -62,7 +62,8 @@ void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture, up
     poly->v3 = frame->source.y + frame->source.h;
     right = width + 0x100;
     bottom = height + 0x78;
-    setXY4(poly, base->x + x + offset->x + 0x100, base->y + y + offset->y + 0x78, base->x + x + offset->x + right,
-        base->y + y + offset->y + 0x78, base->x + x + offset->x + 0x100, base->y + y + offset->y + bottom,
-        base->x + x + offset->x + right, base->y + y + offset->y + bottom);
+    setXY4(poly, base->x + x + offset->position.x + 0x100, base->y + y + offset->position.y + 0x78,
+        base->x + x + offset->position.x + right, base->y + y + offset->position.y + 0x78,
+        base->x + x + offset->position.x + 0x100, base->y + y + offset->position.y + bottom,
+        base->x + x + offset->position.x + right, base->y + y + offset->position.y + bottom);
 }

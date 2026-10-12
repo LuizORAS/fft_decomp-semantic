@@ -13,11 +13,11 @@ void card_save_run_menu_graphic_thread(void) {
     s32 frame;
 
     if (g_battle_formation_screen_active != 0) {
-        g_card_input_display_state.offset.x = 0;
-        g_card_input_display_state.offset.y = 8;
+        g_card_input_display_state.offset.position.x = 0;
+        g_card_input_display_state.offset.position.y = 8;
     } else {
-        g_card_input_display_state.offset.x = 0x100;
-        g_card_input_display_state.offset.y = 0x80;
+        g_card_input_display_state.offset.position.x = 0x100;
+        g_card_input_display_state.offset.position.y = 0x80;
     }
 
     /* Start at 2.0 (4.12) and shrink to 1.0 below, or start at 1.0. */

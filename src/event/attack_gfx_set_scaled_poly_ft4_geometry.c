@@ -3,7 +3,7 @@
 
 /* Configure a sprite quad using truncated 4.12 fixed-point geometry. */
 void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
-    sprite_sheet_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base) {
+    sprite_sheet_frame_t* sprite_rect, point16_t* scale, sprite_draw_offset_t* base) {
     s16 scale_x;
     s16 scale_y;
     s32 dx;
@@ -28,7 +28,8 @@ void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* te
     setUV4(poly, sprite_rect->source.x, sprite_rect->source.y, sprite_rect->source.x + sprite_rect->source.w,
         sprite_rect->source.y, sprite_rect->source.x, sprite_rect->source.y + sprite_rect->source.h,
         sprite_rect->source.x + sprite_rect->source.w, sprite_rect->source.y + sprite_rect->source.h);
-    setXY4(poly, position->x + dx + base->x, position->y + dy + base->y, position->x + dx + base->x + w,
-        position->y + dy + base->y, position->x + dx + base->x, position->y + dy + base->y + h,
-        position->x + dx + base->x + w, position->y + dy + base->y + h);
+    setXY4(poly, position->x + dx + base->position.x, position->y + dy + base->position.y,
+        position->x + dx + base->position.x + w, position->y + dy + base->position.y,
+        position->x + dx + base->position.x, position->y + dy + base->position.y + h,
+        position->x + dx + base->position.x + w, position->y + dy + base->position.y + h);
 }

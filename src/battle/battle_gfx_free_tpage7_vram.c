@@ -10,29 +10,14 @@
  * BATTLE twin of world_gfx_free_tpage7_vram.
  */
 void battle_gfx_free_tpage7_vram(RECT* rect) {
-    s32* source;
-    s32* destination;
-    s32 i;
     s32 x;
     s32 y;
-    s32 value;
     if (rect->x != -1 && rect != (void*)-1) {
         g_battle_gfx_tpage7_free_rect_pixels[0] = (rect->x - 0x1c0) * 4;
         g_battle_gfx_tpage7_free_rect_pixels[1] = rect->y & 0xff;
-        source = g_battle_gfx_tpage7_free_rect_pixels;
-        i = 0;
         g_battle_gfx_tpage7_free_rect_pixels[2] = rect->w * 4;
         g_battle_gfx_tpage7_free_rect_pixels[3] = rect->h;
-        destination = g_battle_gfx_tpage7_free_rect_cells;
-        for (; i < 4; i++) {
-            value = *source >> 4;
-            *destination = value;
-            if (*source & 15) {
-                *destination = value + 1;
-            }
-            source++;
-            destination++;
-        }
+        texture_rect_pixels_to_cells(g_battle_gfx_tpage7_free_rect_pixels, g_battle_gfx_tpage7_free_rect_cells);
         for (y = g_battle_gfx_tpage7_free_rect_cells[1];
             y < g_battle_gfx_tpage7_free_rect_cells[1] + g_battle_gfx_tpage7_free_rect_cells[3]; y++) {
             for (x = g_battle_gfx_tpage7_free_rect_cells[0];

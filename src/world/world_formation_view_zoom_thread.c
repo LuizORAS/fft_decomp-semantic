@@ -9,11 +9,11 @@ void world_formation_view_zoom_thread(void) {
     s32 frame;
 
     if (g_world_formation_screen_active != 0) {
-        g_world_formation_view.offset.x = 0;
-        g_world_formation_view.offset.y = 8;
+        g_world_formation_view.offset.position.x = 0;
+        g_world_formation_view.offset.position.y = 8;
     } else {
-        g_world_formation_view.offset.x = 0x100;
-        g_world_formation_view.offset.y = 0x80;
+        g_world_formation_view.offset.position.x = 0x100;
+        g_world_formation_view.offset.position.y = 0x80;
     }
     if (world_thread_get_current_parameter_1() == 0) {
         g_world_formation_view.scale_x = 0x2000;

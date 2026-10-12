@@ -106,6 +106,20 @@ typedef struct urect16 {
 } urect16_t;
 typedef char assert_urect16_size[sizeof(urect16_t) == 8 ? 1 : -1];
 
+/* Round x, y, width and height from texture pixels to 16-pixel cells. */
+static inline void texture_rect_pixels_to_cells(const s32 pixels[4], s32 cells[4]) {
+    s32 i;
+    s32 value;
+
+    for (i = 0; i < 4; i++) {
+        value = pixels[i] >> 4;
+        cells[i] = value;
+        if (pixels[i] & 0xf) {
+            cells[i] = value + 1;
+        }
+    }
+}
+
 /* gfx */
 /* Sprite-sheet frame: sampled rectangle and scaled screen offset. */
 typedef struct sprite_sheet_frame {
@@ -113,6 +127,13 @@ typedef struct sprite_sheet_frame {
     point16_t offset;
 } sprite_sheet_frame_t;
 typedef char assert_sprite_sheet_frame_size[sizeof(sprite_sheet_frame_t) == 12 ? 1 : -1];
+
+/* Screen translation used by the sprite geometry helpers. */
+typedef struct sprite_draw_offset {
+    u8 _unused_00[8];
+    upoint16_t position;
+} sprite_draw_offset_t;
+typedef char sprite_draw_offset_size_must_be_12[sizeof(sprite_draw_offset_t) == 12 ? 1 : -1];
 
 /* Eight-bit texture coordinates within a PS1 texture page. */
 typedef struct uv8 {

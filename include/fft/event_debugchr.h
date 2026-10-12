@@ -85,10 +85,10 @@ void debugchr_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t*
 void debugchr_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
 
 void debugchr_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
-    sprite_sheet_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
+    sprite_sheet_frame_t* sprite_rect, point16_t* scale, sprite_draw_offset_t* base);
 
 void debugchr_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
-    const sprite_sheet_frame_t* uv_rect, const point16_t* scale, const main_zodiac_draw_offset_t* offset);
+    const sprite_sheet_frame_t* uv_rect, const point16_t* scale, const sprite_draw_offset_t* offset);
 
 void debugchr_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void debugchr_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
@@ -116,7 +116,7 @@ extern u8 g_debugchr_panel_status_animation[];
 extern u8 g_debugchr_panel_status_group_bounds[];
 extern u8 g_debugchr_panel_status_group_count;
 extern u8 g_debugchr_panel_status_group_ids[];
-extern main_zodiac_draw_offset_t g_debugchr_panel_status_offsets[];
+extern sprite_draw_offset_t g_debugchr_panel_status_offsets[];
 extern point16_t g_debugchr_panel_status_scales[];
 extern sprite_sheet_frame_t g_debugchr_panel_status_uv_rects[];
 extern const u16 g_debugchr_panel_status_y_offsets[];

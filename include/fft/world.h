@@ -1608,7 +1608,7 @@ s32 world_formation_run_set_ability_menu(void);
 void world_formation_build_job_wheel_availability(void);
 void world_formation_build_job_wheel_job_name(void);
 void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, point16_t* page, const RECT* position,
-    sprite_sheet_frame_t* rect, point16_t* scale, main_zodiac_draw_offset_t* origin);
+    sprite_sheet_frame_t* rect, point16_t* scale, sprite_draw_offset_t* origin);
 /* The mode argument of world_formation_build_record_list: which roster units
  * it lists. */
 typedef enum world_formation_record_list_mode {

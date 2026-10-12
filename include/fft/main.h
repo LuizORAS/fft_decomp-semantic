@@ -1093,12 +1093,6 @@ void main_unit_increase_casualty_counters(battle_stats_t* unit);
 void main_unit_init_position_and_rewards(battle_stats_t* unit, entd_unit_t* entd);
 
 /* zodiac */
-typedef struct main_zodiac_draw_offset {
-    u8 _unused_00[8];
-    u16 x;
-    u16 y;
-} main_zodiac_draw_offset_t;
-
 /* Draw state handed to SCUS Build ZODIAC.BIN (provisional layout). */
 typedef struct zodiac_draw_context {
     u32* ot;             /* 0x00: ordering table entry the primitives link into */
@@ -1107,7 +1101,7 @@ typedef struct zodiac_draw_context {
     s16 scale_x;         /* 0x0c: 12.12 */
     s16 scale_y;         /* 0x0e: 12.12 */
     u8 _unused_10[8];
-    main_zodiac_draw_offset_t offset; /* 0x18 */
+    sprite_draw_offset_t offset; /* 0x18 */
 } zodiac_draw_context_t;
 
 extern const u16 g_main_zodiac_day_limits[ZODIAC_SIGN_ORDINARY_COUNT];
@@ -1209,7 +1203,7 @@ void main_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* 
 void main_gfx_call_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly);
 
 void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture, upoint16_t* base,
-    sprite_sheet_frame_t* frame, point16_t* scale, main_zodiac_draw_offset_t* offset);
+    sprite_sheet_frame_t* frame, point16_t* scale, sprite_draw_offset_t* offset);
 
 /* other */
 /* g_main_terrain_status_flags has one byte per map_surface_type_e; only

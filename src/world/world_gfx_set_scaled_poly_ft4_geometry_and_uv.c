@@ -6,7 +6,7 @@
  * offset and size by a 12-bit fixed scale (rounded to the nearest pixel,
  * size made positive) and places it at position + origin. */
 void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, point16_t* page, const RECT* position,
-    sprite_sheet_frame_t* rect, point16_t* scale, main_zodiac_draw_offset_t* origin) {
+    sprite_sheet_frame_t* rect, point16_t* scale, sprite_draw_offset_t* origin) {
     s32 x_off = rect->offset.x * scale->x;
     s32 y_off = rect->offset.y * scale->y;
     s32 w = rect->source.w * scale->x;
@@ -49,8 +49,8 @@ void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, point16_t* pa
     poly->tpage = GetTPage(1, 0, page->x, page->y & 0xF00);
     setUV4(poly, rect->source.x, rect->source.y, rect->source.x + rect->source.w, rect->source.y, rect->source.x,
         rect->source.y + rect->source.h, rect->source.x + rect->source.w, rect->source.y + rect->source.h);
-    setXY4(poly, (u16)position->x + x_off + origin->x, (u16)position->y + y_off + origin->y,
-        (u16)position->x + x_off + origin->x + w, (u16)position->y + y_off + origin->y,
-        (u16)position->x + x_off + origin->x, (u16)position->y + y_off + origin->y + h,
-        (u16)position->x + x_off + origin->x + w, (u16)position->y + y_off + origin->y + h);
+    setXY4(poly, (u16)position->x + x_off + origin->position.x, (u16)position->y + y_off + origin->position.y,
+        (u16)position->x + x_off + origin->position.x + w, (u16)position->y + y_off + origin->position.y,
+        (u16)position->x + x_off + origin->position.x, (u16)position->y + y_off + origin->position.y + h,
+        (u16)position->x + x_off + origin->position.x + w, (u16)position->y + y_off + origin->position.y + h);
 }

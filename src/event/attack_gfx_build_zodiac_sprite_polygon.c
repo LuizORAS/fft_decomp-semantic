@@ -5,7 +5,7 @@
  * This variant selects 8-bit texture mode and adds the PSX screen center to
  * the draw offset. */
 void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_page, const RECT* position,
-    sprite_sheet_frame_t* sprite_rect, point16_t* scale, const main_zodiac_draw_offset_t* offset) {
+    sprite_sheet_frame_t* sprite_rect, point16_t* scale, const sprite_draw_offset_t* offset) {
     s32 rx;
     s32 ry;
     s32 rw;
@@ -58,7 +58,8 @@ void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_p
     x1 = w + 0x100;
     y1 = h + 0x78;
 
-    setXY4(poly, position->x + ox + offset->x + 0x100, position->y + oy + offset->y + 0x78,
-        position->x + ox + offset->x + x1, position->y + oy + offset->y + 0x78, position->x + ox + offset->x + 0x100,
-        position->y + oy + offset->y + y1, position->x + ox + offset->x + x1, position->y + oy + offset->y + y1);
+    setXY4(poly, position->x + ox + offset->position.x + 0x100, position->y + oy + offset->position.y + 0x78,
+        position->x + ox + offset->position.x + x1, position->y + oy + offset->position.y + 0x78,
+        position->x + ox + offset->position.x + 0x100, position->y + oy + offset->position.y + y1,
+        position->x + ox + offset->position.x + x1, position->y + oy + offset->position.y + y1);
 }

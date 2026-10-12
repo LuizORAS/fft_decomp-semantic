@@ -9,7 +9,7 @@
  * 8-bit page holding `texture`. CARD copy of
  * world_gfx_set_scaled_poly_ft4_geometry_and_uv. */
 void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
-    const sprite_sheet_frame_t* uv_rect, const point16_t* scale, const main_zodiac_draw_offset_t* offset) {
+    const sprite_sheet_frame_t* uv_rect, const point16_t* scale, const sprite_draw_offset_t* offset) {
     s32 xoff = uv_rect->offset.x * scale->x;
     s32 yoff = uv_rect->offset.y * scale->y;
     s32 width = uv_rect->source.w * scale->x;
@@ -48,7 +48,8 @@ void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_
     setUV4(poly, uv_rect->source.x, uv_rect->source.y, uv_rect->source.x + uv_rect->source.w, uv_rect->source.y,
         uv_rect->source.x, uv_rect->source.y + uv_rect->source.h, uv_rect->source.x + uv_rect->source.w,
         uv_rect->source.y + uv_rect->source.h);
-    setXY4(poly, position->x + xoff + offset->x, position->y + yoff + offset->y, position->x + xoff + offset->x + width,
-        position->y + yoff + offset->y, position->x + xoff + offset->x, position->y + yoff + offset->y + height,
-        position->x + xoff + offset->x + width, position->y + yoff + offset->y + height);
+    setXY4(poly, position->x + xoff + offset->position.x, position->y + yoff + offset->position.y,
+        position->x + xoff + offset->position.x + width, position->y + yoff + offset->position.y,
+        position->x + xoff + offset->position.x, position->y + yoff + offset->position.y + height,
+        position->x + xoff + offset->position.x + width, position->y + yoff + offset->position.y + height);
 }
