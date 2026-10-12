@@ -10,26 +10,26 @@ s32 wldcore_proposition_set_based_on_location(s32 index, s32 location) {
     s32 day;
 
     wldcore_unpack_proposition_row(&entry, index);
-    if (entry.fields.location != 0) {
-        if (location != entry.fields.location) {
+    if (entry.location != 0) {
+        if (location != entry.location) {
             return 0;
         }
     }
-    if (entry.fields.condition_flags & WLDCORE_PROPOSITION_CONDITION_SCRIPT_VAR_6F) {
-        if (world_script_get_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY) < entry.fields.required_script_var_6f) {
+    if (entry.condition_flags & WLDCORE_PROPOSITION_CONDITION_SCRIPT_VAR_6F) {
+        if (world_script_get_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY) < entry.required_script_var_6f) {
             return 0;
         }
     }
-    if (entry.fields.condition_flags & WLDCORE_PROPOSITION_CONDITION_MONTH) {
+    if (entry.condition_flags & WLDCORE_PROPOSITION_CONDITION_MONTH) {
         month = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
         day = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
         wldcore_convert_date_to_zodiac_date(&month, &day);
-        if (month != entry.fields.condition_value) {
+        if (month != entry.condition_value) {
             return 0;
         }
     }
-    if (entry.fields.condition_flags & WLDCORE_PROPOSITION_CONDITION_STATUS) {
-        if ((world_script_get_variable(entry.fields.condition_value + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
+    if (entry.condition_flags & WLDCORE_PROPOSITION_CONDITION_STATUS) {
+        if ((world_script_get_variable(entry.condition_value + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
                 & WLDCORE_PROPOSITION_VARIABLE_COMPLETED)
             == 0) {
             return 0;

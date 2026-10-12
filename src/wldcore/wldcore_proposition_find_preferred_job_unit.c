@@ -26,11 +26,11 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
     jobs = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JOB_LISTS);
     count = 0;
 
-    if (g_wldcore_selected_proposition_row[0].fields.preferred_job != 0) {
+    if (g_wldcore_selected_proposition_row[0].preferred_job != 0) {
         for (i = 0; i < participant_count; i++) {
             party_index = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_indices[i];
             unit = wldcore_get_party_data_pointer(party_index);
-            if (g_wldcore_selected_proposition_row[0].fields.preferred_job - 1
+            if (g_wldcore_selected_proposition_row[0].preferred_job - 1
                 == wldcore_map_job_id_to_category_index(unit->job_id)) {
                 candidates[count] = party_index;
                 count++;
@@ -47,7 +47,7 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
         return candidates[0] + 1;
     }
 
-    base = (g_wldcore_selected_proposition_row[0].fields.job_list_index - 1) * 9;
+    base = (g_wldcore_selected_proposition_row[0].job_list_index - 1) * 9;
     for (i = 0; i < participant_count; i++) {
         party_index = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_indices[i];
         if (party_index != g_wldcore_job_selection.excluded_party_index) {

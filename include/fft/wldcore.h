@@ -899,34 +899,30 @@ typedef struct wldcore_proposition_result_level {
     u8 _unused_30[0x2c];
 } wldcore_proposition_result_level_t;
 
-/* One 23-byte proposition row expanded to 16-bit fields by
- * wldcore_unpack_proposition_row; `fields` names the 16-bit values whose use is
- * known. */
-typedef union wldcore_proposition_fields {
-    u16 values[23];
-    struct {
-        u16 category_index;  /* 0x00; 1-based row in proposition data records 3, 10 and 11 */
-        u16 job_list_index;  /* 0x02 */
-        u16 id;              /* 0x04 */
-        u16 _unused_06;      /* 0x06 */
-        u16 fee_a;           /* 0x08; remapped through data record 1 */
-        u16 fee_b;           /* 0x0a; remapped through data record 1 */
-        u16 min_days;        /* 0x0c */
-        u16 max_days;        /* 0x0e */
-        u16 name_text;       /* 0x10; 1-based errand name, text 0xf7ff + n */
-        u16 jp_reward;       /* 0x12 */
-        u16 discovery_kind;  /* 0x14; wldcore_proposition_reward_e TREASURE or UNEXPLORED_LAND, else see random_bonus */
-        u16 random_bonus;    /* 0x16; 1 enables the three-tier random reward */
-        u16 gil_reward;      /* 0x18 */
-        u16 _unused_1a[3];   /* 0x1a */
-        u16 location;        /* 0x20; 0 for any location */
-        u16 condition_flags; /* 0x22; WLDCORE_PROPOSITION_CONDITION_* */
-        u16 _unused_24;      /* 0x24 */
-        u16 speaker_mode;    /* 0x26; wldcore_proposition_speaker_e */
-        u16 preferred_job;   /* 0x28 */
-        u16 required_script_var_6f; /* 0x2a */
-        u16 condition_value;        /* 0x2c; zodiac month or proposition status index */
-    } fields;
+/* One 23-byte proposition row expanded to named 16-bit fields by
+ * wldcore_unpack_proposition_row. */
+typedef struct wldcore_proposition_fields {
+    u16 category_index;  /* 0x00; 1-based row in proposition data records 3, 10 and 11 */
+    u16 job_list_index;  /* 0x02 */
+    u16 id;              /* 0x04 */
+    u16 _unused_06;      /* 0x06 */
+    u16 fee_a;           /* 0x08; remapped through data record 1 */
+    u16 fee_b;           /* 0x0a; remapped through data record 1 */
+    u16 min_days;        /* 0x0c */
+    u16 max_days;        /* 0x0e */
+    u16 name_text;       /* 0x10; 1-based errand name, text 0xf7ff + n */
+    u16 jp_reward;       /* 0x12 */
+    u16 discovery_kind;  /* 0x14; wldcore_proposition_reward_e TREASURE or UNEXPLORED_LAND, else see random_bonus */
+    u16 random_bonus;    /* 0x16; 1 enables the three-tier random reward */
+    u16 gil_reward;      /* 0x18 */
+    u16 _unused_1a[3];   /* 0x1a */
+    u16 location;        /* 0x20; 0 for any location */
+    u16 condition_flags; /* 0x22; WLDCORE_PROPOSITION_CONDITION_* */
+    u16 _unused_24;      /* 0x24 */
+    u16 speaker_mode;    /* 0x26; wldcore_proposition_speaker_e */
+    u16 preferred_job;   /* 0x28 */
+    u16 required_script_var_6f; /* 0x2a */
+    u16 condition_value;        /* 0x2c; zodiac month or proposition status index */
 } wldcore_proposition_fields_t;
 enum {
     WLDCORE_PROPOSITION_CONDITION_SCRIPT_VAR_6F = 1,

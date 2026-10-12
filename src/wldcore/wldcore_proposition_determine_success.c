@@ -52,10 +52,10 @@ void wldcore_proposition_determine_success(void) {
             g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_indices[i]);
 
         g_wldcore_job_selection.participant_scores[i]
-            = job_table_a[(g_wldcore_selected_proposition_row[0].fields.category_index - 1) * 22
+            = job_table_a[(g_wldcore_selected_proposition_row[0].category_index - 1) * 22
                 + wldcore_map_job_id_to_category_index(unit->job_id)];
         g_wldcore_job_selection.participant_scores[i]
-            += job_table_b[(g_wldcore_selected_proposition_row[0].fields.job_list_index - 1) * 22
+            += job_table_b[(g_wldcore_selected_proposition_row[0].job_list_index - 1) * 22
                 + wldcore_map_job_id_to_category_index(unit->job_id)];
 
         value = unit->bravery;
@@ -65,7 +65,7 @@ void wldcore_proposition_determine_success(void) {
             tier = 0;
         }
         g_wldcore_job_selection.participant_scores[i]
-            += tier_table_a[(g_wldcore_selected_proposition_row[0].fields.job_list_index - 1) * 5 + tier];
+            += tier_table_a[(g_wldcore_selected_proposition_row[0].job_list_index - 1) * 5 + tier];
 
         value = unit->faith;
         if (value != 0) {
@@ -74,7 +74,7 @@ void wldcore_proposition_determine_success(void) {
             tier = 0;
         }
         g_wldcore_job_selection.participant_scores[i]
-            += tier_table_b[(g_wldcore_selected_proposition_row[0].fields.job_list_index - 1) * 5 + tier];
+            += tier_table_b[(g_wldcore_selected_proposition_row[0].job_list_index - 1) * 5 + tier];
 
         value = unit->level;
         if (value != 0) {
@@ -83,7 +83,7 @@ void wldcore_proposition_determine_success(void) {
             tier = 0;
         }
         score = g_wldcore_job_selection.participant_scores[i]
-            + tier_table_a[(g_wldcore_selected_proposition_row[0].fields.job_list_index - 1) * 10 + tier];
+            + tier_table_a[(g_wldcore_selected_proposition_row[0].job_list_index - 1) * 10 + tier];
         total += score;
         g_wldcore_job_selection.participant_scores[i] = score;
     }
@@ -98,14 +98,14 @@ void wldcore_proposition_determine_success(void) {
     if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_SUCCESS) {
         return;
     }
-    if (g_wldcore_selected_proposition_row[0].fields.preferred_job == 0) {
+    if (g_wldcore_selected_proposition_row[0].preferred_job == 0) {
         return;
     }
 
     unit = wldcore_get_party_data_pointer(
         g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_indices[i]);
     for (i = 0; i < participant_count; i++) {
-        if (g_wldcore_selected_proposition_row[0].fields.preferred_job - 1
+        if (g_wldcore_selected_proposition_row[0].preferred_job - 1
             == wldcore_map_job_id_to_category_index(unit->job_id)) {
             if (((rand() * 100) >> 15) < 0x3D) {
                 g_wldcore_job_selection.result = WLDCORE_PROPOSITION_RESULT_SUCCESS;

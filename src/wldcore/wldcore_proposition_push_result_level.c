@@ -44,7 +44,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     }
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
-    panel_text = &g_wldcore_selected_proposition_row[0].fields.name_text;
+    panel_text = &g_wldcore_selected_proposition_row[0].name_text;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.render_index = index;
     world_text_measure_pixels(
         &text_width, &text_rows, world_text_find_entry(*panel_text + (TEXT_ID_PROPOSITION_JOB_CONTENTS_BASE - 1)));

@@ -19,7 +19,7 @@ void wldcore_proposition_calculate_base_jp_and_gil(void) {
         value = 0;
 
         for (i = 0; i < count; i++) {
-            value = jp_rewards[g_wldcore_selected_proposition_row[0].fields.jp_reward - 1];
+            value = jp_rewards[g_wldcore_selected_proposition_row[0].jp_reward - 1];
             if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_FAILURE) {
                 value = value / 10;
             }
@@ -31,7 +31,7 @@ void wldcore_proposition_calculate_base_jp_and_gil(void) {
         }
 
         for (i = 0; i < count; i++) {
-            value = gil_rewards[g_wldcore_selected_proposition_row[0].fields.gil_reward - 1];
+            value = gil_rewards[g_wldcore_selected_proposition_row[0].gil_reward - 1];
             if (g_wldcore_job_selection.result == WLDCORE_PROPOSITION_RESULT_FAILURE) {
                 value = value / 5;
             }

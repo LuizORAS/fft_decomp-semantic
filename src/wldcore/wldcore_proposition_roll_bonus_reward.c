@@ -33,7 +33,7 @@ void wldcore_proposition_roll_bonus_reward(void) {
     if (g_wldcore_job_selection.result != WLDCORE_PROPOSITION_RESULT_SUCCESS) {
         return;
     }
-    discovery_kind = g_wldcore_selected_proposition_row[0].fields.discovery_kind;
+    discovery_kind = g_wldcore_selected_proposition_row[0].discovery_kind;
     if (discovery_kind == WLDCORE_PROPOSITION_REWARD_TREASURE) {
         g_wldcore_job_selection.reward_type = WLDCORE_PROPOSITION_REWARD_TREASURE;
         count = 0;
@@ -64,7 +64,7 @@ void wldcore_proposition_roll_bonus_reward(void) {
         g_wldcore_job_selection.reward_index = (rand() * 16) >> 15;
     }
     participant_count = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count;
-    index = (g_wldcore_selected_proposition_row[0].fields.category_index - 1) * 2;
+    index = (g_wldcore_selected_proposition_row[0].category_index - 1) * 2;
     for (i = 0; i < participant_count; i++) {
         bonus = bonus_table[location_pairs[index + 1] - 1];
         g_wldcore_job_selection.participant_jp[i] += bonus;
@@ -73,7 +73,7 @@ void wldcore_proposition_roll_bonus_reward(void) {
     return;
 
 random_reward:
-    if (g_wldcore_selected_proposition_row[0].fields.random_bonus != 1) {
+    if (g_wldcore_selected_proposition_row[0].random_bonus != 1) {
         return;
     }
     g_wldcore_job_selection.reward_type = WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS;
@@ -87,7 +87,7 @@ random_reward:
     } else {
         index = 0;
     }
-    index += (g_wldcore_selected_proposition_row[0].fields.category_index - 1) * 3;
+    index += (g_wldcore_selected_proposition_row[0].category_index - 1) * 3;
     g_wldcore_job_selection.reward_index = index;
     participant_count = g_main_active_propositions[g_wldcore_job_selection.proposition_index].participant_count;
     for (i = 0; i < participant_count; i++) {

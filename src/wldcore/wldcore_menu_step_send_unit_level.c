@@ -44,7 +44,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
             g_wldcore_menu_blocked_buttons = 0;
             g_main_system_flags &= ~MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             g_wldcore_menu_stack_depth--;
-            wldcore_proposition_push_detail_level(g_wldcore_selected_proposition_row[0].fields.id - 1);
+            wldcore_proposition_push_detail_level(g_wldcore_selected_proposition_row[0].id - 1);
             wldcore_window_set_render_palette_2(&level->list_frame);
             wldcore_menu_push_number_panel_level();
         }

@@ -20,7 +20,7 @@ void wldcore_proposition_handle_accept_input(wldcore_window_render_pair_t* owner
         wldcore_list_open_available_propositions();
     } else if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
-        total = g_wldcore_selected_proposition_row[0].fields.fee_a + g_wldcore_selected_proposition_row[0].fields.fee_b;
+        total = g_wldcore_selected_proposition_row[0].fee_a + g_wldcore_selected_proposition_row[0].fee_b;
         g_wldcore_proposition_gil_amount = total;
         if (total != 0) {
             g_world_text_substitution_values[0] = total;

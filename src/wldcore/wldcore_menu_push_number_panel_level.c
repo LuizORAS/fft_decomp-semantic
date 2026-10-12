@@ -12,8 +12,8 @@ void wldcore_menu_push_number_panel_level(void) {
     s32 x;
     s32 y;
 
-    x = g_wldcore_selected_proposition_row[0].fields.min_days;
-    y = g_wldcore_selected_proposition_row[0].fields.max_days;
+    x = g_wldcore_selected_proposition_row[0].min_days;
+    y = g_wldcore_selected_proposition_row[0].max_days;
     g_world_text_substitution_values[0] = x;
     g_world_text_substitution_values[1] = y;
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_CHOOSE_DAYS, 0);

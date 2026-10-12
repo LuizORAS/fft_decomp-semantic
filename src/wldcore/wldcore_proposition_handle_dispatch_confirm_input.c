@@ -41,13 +41,13 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
                 world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) - g_wldcore_proposition_gil_amount);
             g_wldcore_displayed_numeric_value = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
             world_script_set_variable(
-                g_wldcore_selected_proposition_row[0].fields.id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1),
+                g_wldcore_selected_proposition_row[0].id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1),
                 world_script_get_variable(
-                    g_wldcore_selected_proposition_row[0].fields.id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1))
+                    g_wldcore_selected_proposition_row[0].id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1))
                     | WLDCORE_PROPOSITION_VARIABLE_ATTEMPTED);
             g_main_active_propositions[g_main_save_proposition_count].flags = WLDCORE_PROPOSITION_PROGRESS_DISPATCHED;
             g_main_active_propositions[g_main_save_proposition_count].proposition_id
-                = g_wldcore_selected_proposition_row[0].fields.id - 1;
+                = g_wldcore_selected_proposition_row[0].id - 1;
             g_main_active_propositions[g_main_save_proposition_count].elapsed_days = 0;
             g_main_active_propositions[g_main_save_proposition_count].assigned_days
                 = g_wldcore_proposition_dispatch_days;
@@ -62,9 +62,9 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
             }
             g_main_save_proposition_count++;
             world_script_set_variable(
-                g_wldcore_selected_proposition_row[0].fields.id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1),
+                g_wldcore_selected_proposition_row[0].id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1),
                 world_script_get_variable(
-                    g_wldcore_selected_proposition_row[0].fields.id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1))
+                    g_wldcore_selected_proposition_row[0].id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1))
                     | WLDCORE_PROPOSITION_VARIABLE_IN_PROGRESS);
         }
         goto block_tail;
