@@ -2670,13 +2670,6 @@ void world_menu_set_text_origin(s32 x, s32 y);
 
 /* card */
 
-/* Partial card-file header: WORLD 0x8013300c puts byte +3 into the upper
- * half of open's creation mode. The remaining header is not modeled. */
-typedef struct world_card_file_header {
-    u8 _unused_00[3];
-    u8 allocation_blocks;
-} world_card_file_header_t;
-
 extern card_save_buffer_t* g_world_load_work_buffer;
 extern u8 g_world_card_info_pending;
 extern s16 g_world_card_list_scroll_velocity;
@@ -2810,7 +2803,7 @@ s32 world_card_wait_for_selected_status(s32 attempts);
 s32 world_card_write_file_with_retries(s32 descriptor, const void* source, s32 size);
 void world_card_build_save_image(s32 slot);
 s32 world_card_seek_file_with_retries(s32 descriptor, s32 offset, s32 origin);
-s32 world_card_write_buffer_to_file(const char* filename, const u8* source, u32 size, s32 create_file);
+s32 world_card_write_buffer_to_file(const char* filename, const card_save_buffer_t* source, u32 size, s32 create_file);
 
 /* item */
 /* Texture origins of the item-type icons. */

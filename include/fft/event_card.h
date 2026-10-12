@@ -56,7 +56,7 @@ s32 card_file_delete_selected_with_retries(const char* filename);
 s32 card_file_open_selected_with_retries(const char* filename, s32 mode);
 s32 card_file_read_with_retries(s32 descriptor, void* destination, s32 size);
 s32 card_file_seek_with_retries(s32 descriptor, s32 offset, s32 origin);
-s32 card_file_write_buffer(const char* filename, const u8* source, s32 size, s32 create_file);
+s32 card_file_write_buffer(const char* filename, const card_save_buffer_t* source, s32 size, s32 create_file);
 s32 card_file_write_with_retries(s32 descriptor, const void* source, s32 size);
 s32 card_file_count_free_blocks(const DIRENTRY* entries, s32 entry_count);
 s32 card_file_enumerate_saves(DIRENTRY* entries, s32 all_files);

@@ -52,8 +52,8 @@ void card_save_update_slot_write(s32 slot) {
         return;
     }
 
-    write_result = card_file_write_buffer(g_card_save_file_names[slot], (const u8*)g_card_save_buffer_pointer, 0x1e00,
-        g_card_save_slot_file_states[slot]);
+    write_result = card_file_write_buffer(
+        g_card_save_file_names[slot], g_card_save_buffer_pointer, 0x1e00, g_card_save_slot_file_states[slot]);
     card_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
     header_result = 0;
     if (write_result == 0x1e00) {
