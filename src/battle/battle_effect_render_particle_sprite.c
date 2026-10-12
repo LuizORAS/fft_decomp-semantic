@@ -37,8 +37,8 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
                     node->sprite_frame_index = op;
                     node->kind |= EFFECT_LIST_NODE_FRAME_CHANGED;
                 }
-                node->frame_timer = node->sequence_data[node->sequence_offset + 1];
-                node->depth_mode = node->sequence_data[node->sequence_offset + 2];
+                node->frame_timer = battle_effect_get_current_sequence_instruction(node)->frame.hold;
+                node->depth_mode = battle_effect_get_current_sequence_instruction(node)->frame.depth_mode;
                 if (node->frame_timer != 0) {
                     node->sequence_offset += 3;
                 }
@@ -49,15 +49,15 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
                 node->sequence_offset = 0;
                 break;
             case EFFECT_SEQUENCE_OP_SET_OFFSET:
-                node->sprite_offset_x = node->sequence_data[node->sequence_offset + 1]
-                    + (node->sequence_data[node->sequence_offset + 2] << 8);
-                node->sprite_offset_y = node->sequence_data[node->sequence_offset + 3]
-                    + (node->sequence_data[node->sequence_offset + 4] << 8);
+                node->sprite_offset_x = battle_effect_get_current_sequence_instruction(node)->set_offset.x_le[0]
+                    + (battle_effect_get_current_sequence_instruction(node)->set_offset.x_le[1] << 8);
+                node->sprite_offset_y = battle_effect_get_current_sequence_instruction(node)->set_offset.y_le[0]
+                    + (battle_effect_get_current_sequence_instruction(node)->set_offset.y_le[1] << 8);
                 node->sequence_offset += 5;
                 break;
             case EFFECT_SEQUENCE_OP_ADD_OFFSET:
-                node->sprite_offset_x += (s8)node->sequence_data[node->sequence_offset + 1];
-                node->sprite_offset_y += (s8)node->sequence_data[node->sequence_offset + 2];
+                node->sprite_offset_x += battle_effect_get_current_sequence_instruction(node)->add_offset.x;
+                node->sprite_offset_y += battle_effect_get_current_sequence_instruction(node)->add_offset.y;
                 node->sequence_offset += 3;
                 break;
             }

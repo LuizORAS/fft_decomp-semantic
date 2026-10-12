@@ -1143,6 +1143,7 @@ typedef enum effect_list_node_placement {
 /* effect_list_node_t.depth_mode: the third byte of a sequence frame, which adjusts the sprite's
  * ordering-table depth. */
 typedef enum effect_sprite_depth_mode {
+    EFFECT_SPRITE_DEPTH_UNCHANGED = 0,
     EFFECT_SPRITE_DEPTH_NEARER_8 = 1,
     EFFECT_SPRITE_DEPTH_FIXED_8 = 2,
     EFFECT_SPRITE_DEPTH_FIXED_FARTHEST = 3, /* EFFECT_SPRITE_OT_DEPTH_MAX */
@@ -1162,6 +1163,30 @@ enum {
     EFFECT_SEQUENCE_OP_MASK = 0x7f,
     EFFECT_SEQUENCE_OP_FLAG = 0x80,
 };
+
+/* View at a sprite-sequence byte cursor: commands occupy one, three or five
+ * bytes. The coordinate operands are little-endian bytes without alignment. */
+typedef union effect_sequence_instruction {
+    struct {
+        u8 opcode;
+    } header;
+    struct {
+        u8 frame_index;
+        u8 hold;
+        u8 depth_mode; /* effect_sprite_depth_mode_e */
+    } frame;
+    struct {
+        u8 opcode;
+        u8 x_le[2];
+        u8 y_le[2];
+    } set_offset;
+    struct {
+        u8 opcode;
+        s8 x;
+        s8 y;
+    } add_offset;
+} effect_sequence_instruction_t;
+typedef char effect_sequence_instruction_size_must_be_5[sizeof(effect_sequence_instruction_t) == 5 ? 1 : -1];
 
 /* 0x24-byte sprite node at 0x801c00a4: the animated sprite of one particle
  * (effect_work_record_t.data). Links are node indexes into that array; node 0
@@ -1187,6 +1212,11 @@ typedef struct effect_list_node {
     u8 sprite_frame_index;     /* 0x1f: frame id from the sequence opcode */
     battle_effect_sprite_block_t* sprite_block; /* 0x20 */
 } effect_list_node_t;
+
+static __inline__ effect_sequence_instruction_t* battle_effect_get_current_sequence_instruction(
+    effect_list_node_t* node) {
+    return (effect_sequence_instruction_t*)(node->sequence_data + node->sequence_offset);
+}
 typedef char assert_effect_list_node_size[sizeof(effect_list_node_t) == 36 ? 1 : -1];
 
 /* Motion state of an effect slot (battle_effect_slot_t +0x98) and of a
