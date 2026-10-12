@@ -1546,10 +1546,9 @@ typedef struct effect_polar_mesh_geometry_view {
 } effect_polar_mesh_geometry_view_t;
 typedef char assert_effect_polar_mesh_geometry_view_size[sizeof(effect_polar_mesh_geometry_view_t) == 196 ? 1 : -1];
 
-/* This renderer's view of one effect_geometry_entry_t. It shares the layout of
- * effect_summon_mesh_geometry_view_t and adds the per-row radius terms at
- * 0x6c/0x78 and 0x84/0x90. */
-typedef struct effect_ring_mesh_geometry_view {
+/* Geometry parameters shared by ring, tube and summon-dome renderers.
+ * Dome renderers leave the row-radius terms unread. */
+typedef struct effect_radial_mesh_geometry {
     u8 _unused_00[0x02];
     u16 placement_flags; /* 0x02: bits 9-11 select how the origin is placed */
     u8 _unused_04[0x02];
@@ -1603,60 +1602,8 @@ typedef struct effect_ring_mesh_geometry_view {
     u8 _unused_aa[0x02];
     s16 radius_end; /* 0xac */
     u8 _unused_ae[0x16];
-} effect_ring_mesh_geometry_view_t;
-typedef char assert_effect_ring_mesh_geometry_view_size[sizeof(effect_ring_mesh_geometry_view_t) == 196 ? 1 : -1];
-
-/* This renderer's view of one effect_geometry_entry_t. The shared entry type
- * names several of these offsets for other effect kinds; the curve nibbles
- * select rows of g_battle_effect_animation_curve_data. */
-typedef struct effect_summon_mesh_geometry_view {
-    u8 _unused_00[0x02];
-    u16 placement_flags; /* 0x02: bits 9-11 select how the origin is placed */
-    u8 _unused_04[0x02];
-    u16 flags;                                        /* 0x06: bit 6 = per-channel colour curves */
-    u32 scroll_curves;                                /* 0x08: nibbles 0 origin, 2 texture, 7 spin speed */
-    u32 wave_curves;                                  /* 0x0c: nibbles 0 growth, 1 growth step, 4 radius */
-    u32 colour_curves;                                /* 0x10: nibbles 0-2 = r/g/b */
-    s16 origin_start[3];                              /* 0x14 */
-    s16 origin_end[3];                                /* 0x1a */
-    s16 u_span;                                       /* 0x20 */
-    s16 v_span;                                       /* 0x22 */
-    effect_texture_page_config_t texture_page_config; /* 0x24: bits 0-1 blend rate, bit 2 clears ABE */
-    u8 _unused_26[0x06];
-    s16 u_start;        /* 0x2c */
-    s16 v_start;        /* 0x2e */
-    u16 v_scroll_speed; /* 0x30 */
-    s16 u_end;          /* 0x32 */
-    s16 v_end;          /* 0x34 */
-    u8 _unused_36[0x06];
-    s16 brightness_row; /* 0x3c */
-    u8 _unused_3e[0x1e];
-    s16 spin_speed_start; /* 0x5c */
-    u8 _unused_5e[0x02];
-    s16 spin_speed_end; /* 0x60 */
-    u8 _unused_62[0x02];
-    s16 growth_start; /* 0x64 */
-    u8 _unused_66[0x02];
-    s16 height_start; /* 0x68 */
-    u8 _unused_6a[0x06];
-    s16 growth_end; /* 0x70 */
-    u8 _unused_72[0x02];
-    s16 height_end; /* 0x74 */
-    u8 _unused_76[0x06];
-    s16 growth_step_start; /* 0x7c */
-    u8 _unused_7e[0x02];
-    s16 height_step_start; /* 0x80 */
-    u8 _unused_82[0x06];
-    s16 growth_step_end; /* 0x88 */
-    u8 _unused_8a[0x02];
-    s16 height_step_end; /* 0x8c */
-    u8 _unused_8e[0x1a];
-    s16 radius_start; /* 0xa8 */
-    u8 _unused_aa[0x02];
-    s16 radius_end; /* 0xac */
-    u8 _unused_ae[0x16];
-} effect_summon_mesh_geometry_view_t;
-typedef char assert_effect_summon_mesh_geometry_view_size[sizeof(effect_summon_mesh_geometry_view_t) == 196 ? 1 : -1];
+} effect_radial_mesh_geometry_t;
+typedef char assert_effect_radial_mesh_geometry_size[sizeof(effect_radial_mesh_geometry_t) == 196 ? 1 : -1];
 
 /* These renderers' view of one effect_geometry_entry_t. They spawn segments as
  * the BATTLE particle emitter spawns particles, so the fields they share with
@@ -1741,8 +1688,7 @@ typedef union effect_geometry_record {
     effect_textured_quad_geometry_view_t textured_quad;
     effect_particle_ribbon_geometry_view_t particle_ribbon;
     effect_polar_mesh_geometry_view_t polar_mesh;
-    effect_ring_mesh_geometry_view_t ring_mesh;
-    effect_summon_mesh_geometry_view_t summon_mesh;
+    effect_radial_mesh_geometry_t radial_mesh;
     effect_tentacle_mesh_geometry_view_t tentacle_mesh;
     effect_particle_vertex_emitter_view_t particle_vertex_emitter;
 } effect_geometry_record_t;

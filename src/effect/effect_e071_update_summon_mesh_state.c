@@ -28,7 +28,7 @@ s32 effect_e071_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
     s16 depth[9][17];
     SVECTOR map_max;
     effect_record_t* record;
-    effect_summon_mesh_geometry_view_t* entry;
+    effect_radial_mesh_geometry_t* entry;
     effect_summon_mesh_work_t* work;
     POLY_GT4* quad;
     POLY_GT4* other;
@@ -58,7 +58,7 @@ s32 effect_e071_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
     s32 n;
 
     record = &g_battle_effect_state_records[record_index];
-    entry = &g_battle_effect_geometry_table->entries[emitter_index].summon_mesh;
+    entry = &g_battle_effect_geometry_table->entries[emitter_index].radial_mesh;
     placement = entry->placement_flags;
     ot = main_gfx_get_otag();
 
