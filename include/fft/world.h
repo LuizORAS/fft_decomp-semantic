@@ -2112,7 +2112,9 @@ enum {
     WORLD_MENU_SELECTION_PROMPT_RESULT = 4, /* yes/no prompt result (0 confirms) */
 };
 
-extern u8 g_world_menu_buffer_allocation_map[0x70];
+enum { WORLD_MENU_BUFFER_PAGE_COUNT = 112 };
+
+extern u8 g_world_menu_buffer_allocation_map[WORLD_MENU_BUFFER_PAGE_COUNT];
 extern u16 g_world_menu_clut;
 extern u16 g_world_menu_clut_back;
 extern u16 g_world_menu_clut_back_alt;
@@ -2344,8 +2346,8 @@ extern s32 g_world_menu_monster_skillset_flag;
 extern u16 g_world_menu_anything_ability_id;
 extern s16 g_world_menu_selected_option;
 extern s16 g_world_menu_action_slot_selected_option;
-extern menu_allocation_t g_world_menu_buffer_allocations[16];
-extern u8 g_world_menu_buffer_arena[0x70][0x100];
+extern menu_allocation_t g_world_menu_buffer_allocations[MENU_BUFFER_ALLOCATION_COUNT];
+extern u8 g_world_menu_buffer_arena[WORLD_MENU_BUFFER_PAGE_COUNT][MENU_BUFFER_PAGE_SIZE];
 extern battle_action_data_t* g_world_menu_preview_target_action;
 extern menu_gradient_panel_prims_t g_world_menu_panel_fade_frames[];
 extern s32 g_world_active_menu; /* active menu */

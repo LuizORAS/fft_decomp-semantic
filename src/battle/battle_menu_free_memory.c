@@ -9,7 +9,7 @@ void battle_menu_free_memory(void* buffer_pointer) {
     u32 buffer = (u32)buffer_pointer;
     u32 grid_base;
     s32* allocation_size;
-    u8** allocation_buffer;
+    menu_allocation_t* allocation;
     s32* allocation_end;
     u8* allocation_grid;
     s32 invalid_buffer;
@@ -19,12 +19,13 @@ void battle_menu_free_memory(void* buffer_pointer) {
         invalid_buffer = -1;
         grid_base = (buffer - (u32)g_battle_menu_buffer_arena) >> 8;
         allocation_grid = g_battle_menu_buffer_allocation_map;
+        /* A separate page-count cursor preserves the native count-field base. */
         allocation_size = &g_battle_menu_allocator_slot_records[0].page_count;
-        allocation_buffer = &g_battle_menu_allocator_slot_records[0].buffer;
-        allocation_end = &g_battle_menu_allocator_slot_records[16].page_count;
+        allocation = g_battle_menu_allocator_slot_records;
+        allocation_end = &g_battle_menu_allocator_slot_records[MENU_BUFFER_ALLOCATION_COUNT].page_count;
         for (;;) {
-            if ((u32)*allocation_buffer == buffer) {
-                *allocation_buffer = (u8*)invalid_buffer;
+            if ((u32)allocation->buffer == buffer) {
+                allocation->buffer = (u8*)invalid_buffer;
                 /* Written as (index + base) + grid so the two addu operands
                  * come out in the target's order; the size is reloaded
                  * each iteration because the byte store may alias it. */
@@ -34,7 +35,7 @@ void battle_menu_free_memory(void* buffer_pointer) {
                 return;
             }
             allocation_size += sizeof(menu_allocation_t) / sizeof(*allocation_size);
-            allocation_buffer += sizeof(menu_allocation_t) / sizeof(*allocation_buffer);
+            allocation++;
             if ((s32)allocation_size >= (s32)allocation_end) {
                 battle_thread_exit_current();
                 return;

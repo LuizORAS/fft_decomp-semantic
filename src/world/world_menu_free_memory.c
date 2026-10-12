@@ -19,7 +19,7 @@ void world_menu_free_memory(void* buffer_pointer) {
         /* A separate page-count cursor preserves the native count-field base. */
         allocation_size = &g_world_menu_buffer_allocations[0].page_count;
         allocation = g_world_menu_buffer_allocations;
-        allocation_end = &g_world_menu_buffer_allocations[16].page_count;
+        allocation_end = &g_world_menu_buffer_allocations[MENU_BUFFER_ALLOCATION_COUNT].page_count;
         for (;;) {
             if ((u32)allocation->buffer == buffer) {
                 allocation->buffer = (u8*)invalid_buffer;

@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Reset the menu buffer allocator: mark the 16 allocation records free (-1),
- * clear the 0x70-byte allocation map and zero the three window slots' owner
+ * clear the page allocation map and zero the three window slots' owner
  * thread ids and states. */
 void world_menu_init_buffer_allocator(void) {
     s32 fill;
@@ -16,11 +16,11 @@ void world_menu_init_buffer_allocator(void) {
      * before its pointer: this reproduces the target's register assignment
      * without pins. */
     fill = -1;
-    for (slot = 15; slot >= 0; slot--) {
+    for (slot = MENU_BUFFER_ALLOCATION_COUNT - 1; slot >= 0; slot--) {
         g_world_menu_buffer_allocations[slot].buffer = (u8*)fill;
     }
-    count = 0x6f;
-    byte = &g_world_menu_buffer_allocation_map[0x6f];
+    count = WORLD_MENU_BUFFER_PAGE_COUNT - 1;
+    byte = &g_world_menu_buffer_allocation_map[WORLD_MENU_BUFFER_PAGE_COUNT - 1];
     for (; count >= 0; count--) {
         *byte = 0;
         byte--;

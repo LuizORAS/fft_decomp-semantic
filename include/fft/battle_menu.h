@@ -24,9 +24,11 @@ typedef struct battle_menu_status_panel_numeric_geometry {
     RECT draw_area_rect; /* 0x08 */
 } battle_menu_status_panel_numeric_geometry_t;
 
-extern menu_allocation_t g_battle_menu_allocator_slot_records[16];
-extern u8 g_battle_menu_buffer_arena[53][0x100];
-extern u8 g_battle_menu_buffer_allocation_map[53];
+enum { BATTLE_MENU_BUFFER_PAGE_COUNT = 53 };
+
+extern menu_allocation_t g_battle_menu_allocator_slot_records[MENU_BUFFER_ALLOCATION_COUNT];
+extern u8 g_battle_menu_buffer_arena[BATTLE_MENU_BUFFER_PAGE_COUNT][MENU_BUFFER_PAGE_SIZE];
+extern u8 g_battle_menu_buffer_allocation_map[BATTLE_MENU_BUFFER_PAGE_COUNT];
 extern s32 g_battle_menu_companion_executable_loading;
 extern s32 g_battle_menu_companion_executable_request_index;
 extern u8 g_battle_menu_calculator_skillsets[4];

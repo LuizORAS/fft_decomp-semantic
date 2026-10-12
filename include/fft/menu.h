@@ -1224,9 +1224,13 @@ typedef struct battle_menu_id_record {
 } battle_menu_id_record_t;
 typedef char battle_menu_id_record_size_must_be_8[(sizeof(battle_menu_id_record_t) == 8) ? 1 : -1];
 
-/* Menu allocator slot (16 at g_battle_menu_allocator_slot_records, WORLD
- * 0x8019b368); buffer is -1 when the slot is free. The slots hand out runs of
- * the 53 256-byte pages of g_battle_menu_buffer_arena. */
+/* Both menu arenas track sixteen allocations in 256-byte pages. */
+enum {
+    MENU_BUFFER_ALLOCATION_COUNT = 16,
+    MENU_BUFFER_PAGE_SIZE = 256,
+};
+
+/* Buffer is -1 when the slot is free; page_count is the allocated run length. */
 typedef struct menu_allocation {
     u8* buffer;     /* 0x00 */
     s32 page_count; /* 0x04 */

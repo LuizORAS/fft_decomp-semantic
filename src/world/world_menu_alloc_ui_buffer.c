@@ -14,10 +14,10 @@ void* world_menu_alloc_ui_buffer(s32 size) {
 
     size = (size & 0xFF) != 0 ? (size >> 8) + 1 : size >> 8;
     for (;;) {
-        for (page = 0; page < 0x70; page++) {
+        for (page = 0; page < WORLD_MENU_BUFFER_PAGE_COUNT; page++) {
             if (g_world_menu_buffer_allocation_map[page] == 0) {
                 for (pages = 0;; pages++) {
-                    if (pages + page >= 0x70) {
+                    if (pages + page >= WORLD_MENU_BUFFER_PAGE_COUNT) {
                         /* Leaves the run and page loops for the retry wait. */
                         goto fail;
                     }
@@ -29,7 +29,7 @@ void* world_menu_alloc_ui_buffer(s32 size) {
                     for (pages = 0; pages < size; pages++) {
                         g_world_menu_buffer_allocation_map[page + pages] = 1;
                     }
-                    for (i = 0; i < 16; i++) {
+                    for (i = 0; i < MENU_BUFFER_ALLOCATION_COUNT; i++) {
                         if (g_world_menu_buffer_allocations[i].buffer == (u8*)-1) {
                             buffer = g_world_menu_buffer_arena[page];
                             g_world_menu_buffer_allocations[i].buffer = buffer;
