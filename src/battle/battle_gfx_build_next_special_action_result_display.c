@@ -13,7 +13,6 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
     battle_gfx_sprite_display_data_t* display_0;
     battle_gfx_sprite_display_data_t* display_1;
     battle_gfx_sprite_display_data_t* display_2;
-    rgb24_t* color;
     s32 digits[3];
     u32 flags;
     u32 clear;
@@ -105,18 +104,15 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
         }
         break;
     case BATTLE_NUMERIC_DISPLAY_NO_TARGET:
-        color = &display->displays[0]->color;
-        color->r = color->g = color->b = 128;
+        display->displays[0]->color.r = display->displays[0]->color.g = display->displays[0]->color.b = 128;
         battle_gfx_store_sprite_display_data(display_0, 0, -14, -24, 0x1a, 0xdb, 0x25, 10, 0);
         break;
     case BATTLE_NUMERIC_DISPLAY_SILENCED:
-        color = &display->displays[0]->color;
-        color->r = color->g = color->b = 128;
+        display->displays[0]->color.r = display->displays[0]->color.g = display->displays[0]->color.b = 128;
         battle_gfx_store_sprite_display_data(display_0, 0, -14, -24, 0xd8, 0xe9, 0x1e, 8, 0);
         break;
     case BATTLE_NUMERIC_DISPLAY_NO_MP:
-        color = &display->displays[0]->color;
-        color->r = color->g = color->b = 128;
+        display->displays[0]->color.r = display->displays[0]->color.g = display->displays[0]->color.b = 128;
         battle_gfx_store_sprite_display_data(display_0, 0, -14, -24, 0x64, 0x20, 0x1a, 9, 0);
         break;
     }
