@@ -113,7 +113,7 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
  * points[ring][0] rotated by 0x400, closing the quadrant. The renderer never
  * touches the unknown ranges. */
 typedef struct effect_polar_mesh_scratch {
-    s32 red_factor;   /* 0x00: colour curve factors, 0x80 when curves are off */
+    s32 red_factor;   /* 0x00: colour curve factors, 128 when curves are off */
     s32 green_factor; /* 0x04 */
     s32 blue_factor;  /* 0x08 */
     u8 _unused_00c[0x04];
@@ -153,7 +153,7 @@ typedef struct effect_polar_mesh_scratch {
  * renderer in E467, E468, E469, E471 and E472). Its fields shift from
  * effect_polar_mesh_scratch_t, so it is a separate layout, not a view. */
 typedef struct effect_anchored_polar_mesh_scratch {
-    s32 red_factor;   /* 0x00: colour curve factors, 0x80 when curves are off */
+    s32 red_factor;   /* 0x00: colour curve factors, 128 when curves are off */
     s32 green_factor; /* 0x04 */
     s32 blue_factor;  /* 0x08 */
     u8 r;             /* 0x0c: colour bytes of the current ring */

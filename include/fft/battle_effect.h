@@ -854,7 +854,7 @@ typedef enum effect_phase {
 
 /* Emitter spawn origin: bits 9-11 of an emitter's 16-bit placement flags (byte 0x03
  * mask 0x0e). 0xa00 is the map centre:
- * every handler adds battle_map_store_max_coordinates() * 14 there. */
+ * every handler adds half the map geometry width and depth there. */
 typedef enum effect_emitter_origin {
     EFFECT_EMITTER_ORIGIN_WORLD = 0x000,
     EFFECT_EMITTER_ORIGIN_CURSOR_TILE = 0x200, /* centre of g_battle_effect_target_tile */
@@ -978,7 +978,7 @@ enum {
     EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK = 0x000c, /* spawn child_emitter_mid_life every frame it lives */
     EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MODE_1 = 0x0004,
     EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MODE_2 = 0x0008,
-    EFFECT_EMITTER_FLAG_COLOUR_CURVES = 0x0040, /* tint by the three colour curves; clear, a neutral 0x80 */
+    EFFECT_EMITTER_FLAG_COLOUR_CURVES = 0x0040, /* tint by the three colour curves; clear, a neutral 128 */
     /* A particle that comes within this distance of its homing target on all three axes ends its
      * life: the field shifted right by SHIFT is 16, 32 or 48 world units, 0 for never. */
     EFFECT_EMITTER_FLAG_ARRIVAL_DISTANCE_MASK = 0x0300,
@@ -1752,6 +1752,9 @@ typedef char
 
 /* Frames in one animation curve: emitter and particle frame counters wrap here. */
 enum { EFFECT_ANIMATION_CURVE_FRAMES = 160 };
+
+/* Textured RGB intensity that preserves the texture colour. */
+enum { EFFECT_COLOR_NEUTRAL = 128 };
 
 /* One interpolation factor per frame; curve indices select emitter and colour tracks. */
 typedef u8 effect_animation_curve_t[EFFECT_ANIMATION_CURVE_FRAMES];

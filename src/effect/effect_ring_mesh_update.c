@@ -112,7 +112,7 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
                 g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
             origin.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-            origin.vy -= tile->height * 12;
+            origin.vy -= tile->height * MAP_HEIGHT_STEP;
             origin.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             break;
         case EFFECT_EMITTER_ORIGIN_CASTER:
@@ -135,8 +135,8 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             break;
         case EFFECT_EMITTER_ORIGIN_MAP_CENTRE:
             battle_map_store_max_coordinates(&map_max);
-            origin.vx += map_max.vx * 14;
-            origin.vz += map_max.vz * 14;
+            origin.vx += map_max.vx * (MAP_TILE_SIZE / 2);
+            origin.vz += map_max.vz * (MAP_TILE_SIZE / 2);
             break;
         }
 
@@ -404,15 +404,15 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         }
 
         n = entry->radial_mesh.brightness_row;
-        blue = 0x80;
+        blue = EFFECT_COLOR_NEUTRAL;
         if (entry->radial_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             k = entry->radial_mesh.colour_curves & 0xfff;
             red = g_battle_effect_animation_curve_data->curves[k & 0xf][frame];
             green = g_battle_effect_animation_curve_data->curves[(k >> 4) & 0xf][frame];
             blue = g_battle_effect_animation_curve_data->curves[(k >> 8) & 0xf][frame];
         } else {
-            green = 0x80;
-            red = 0x80;
+            green = EFFECT_COLOR_NEUTRAL;
+            red = EFFECT_COLOR_NEUTRAL;
         }
         k = g_effect_ring_mesh_brightness_table[n][0];
         for (i = 0; i < RING_MESH_SEGMENTS; i++) {

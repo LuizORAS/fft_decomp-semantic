@@ -135,9 +135,9 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             green = g_battle_effect_animation_curve_data->curves[(row >> 4) & 0xf][work->frame];
             blue = g_battle_effect_animation_curve_data->curves[(row >> 8) & 0xf][work->frame];
         } else {
-            blue = 0x80;
-            green = 0x80;
-            red = 0x80;
+            blue = EFFECT_COLOR_NEUTRAL;
+            green = EFFECT_COLOR_NEUTRAL;
+            red = EFFECT_COLOR_NEUTRAL;
         }
 
         phase = work->wave_y_phase;

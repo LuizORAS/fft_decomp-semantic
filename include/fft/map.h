@@ -9,6 +9,9 @@
 /* Horizontal X/Z extent of one terrain tile in map geometry units. */
 enum { MAP_TILE_SIZE = 28 };
 
+/* Vertical map geometry units per whole terrain-height step. */
+enum { MAP_HEIGHT_STEP = 12 };
+
 /* Terrain storage has two fixed-size layers, independent of the map dimensions. */
 enum {
     MAP_TERRAIN_LAYER_COUNT = 2,

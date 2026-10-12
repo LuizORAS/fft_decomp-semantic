@@ -116,7 +116,7 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             tile = battle_map_get_tile_data_pointer(g_battle_effect_target_tile.data.tile.vx,
                 g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
             origin.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-            origin.vy -= tile->height * 12;
+            origin.vy -= tile->height * MAP_HEIGHT_STEP;
             origin.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             break;
         case EFFECT_EMITTER_ORIGIN_CASTER:
@@ -137,8 +137,8 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             break;
         case EFFECT_EMITTER_ORIGIN_MAP_CENTRE:
             battle_map_store_max_coordinates(&map_max);
-            origin.vx += map_max.vx * 14;
-            origin.vz += map_max.vz * 14;
+            origin.vx += map_max.vx * (MAP_TILE_SIZE / 2);
+            origin.vz += map_max.vz * (MAP_TILE_SIZE / 2);
             break;
         }
 
@@ -295,7 +295,7 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             green = g_battle_effect_animation_curve_data->curves[(k >> 4) & 0xF][frame];
             blue = g_battle_effect_animation_curve_data->curves[(k >> 8) & 0xF][frame];
         } else {
-            red = green = blue = 0x80;
+            red = green = blue = EFFECT_COLOR_NEUTRAL;
         }
 
         k = g_effect_dome_mesh_brightness_table[n][0];

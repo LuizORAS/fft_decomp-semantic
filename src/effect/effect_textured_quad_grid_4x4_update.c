@@ -73,10 +73,10 @@ s32 effect_textured_quad_grid_4x4_update(s32 record_index, s32 callback_slot, s3
                 }
                 quad->tpage = texture_page;
                 quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
-                quad->x0 = quad->x2 = (column << 6) + 0x80;
+                quad->x0 = quad->x2 = (column << 6) + 128;
                 quad->y0 = quad->y1 = row << 6;
-                quad->x1 = quad->x3 = (column << 6) + 0xc0;
-                quad->y2 = quad->y3 = (row << 6) + 0x40;
+                quad->x1 = quad->x3 = (column << 6) + 192;
+                quad->y2 = quad->y3 = (row << 6) + 64;
                 work->quads[1][row * 4 + column] = *quad;
             }
         }
@@ -113,15 +113,15 @@ s32 effect_textured_quad_grid_4x4_update(s32 record_index, s32 callback_slot, s3
         while (work->scroll_v < 0) {
             work->scroll_v += texture_height << 12;
         }
-        blue = 0x80;
+        blue = EFFECT_COLOR_NEUTRAL;
         if (geometry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             row = geometry->colour_curves & 0xfff;
             red = g_battle_effect_animation_curve_data->curves[row & 0xf][work->frame];
             green = g_battle_effect_animation_curve_data->curves[(row >> 4) & 0xf][work->frame];
             blue = g_battle_effect_animation_curve_data->curves[(row >> 8) & 0xf][work->frame];
         } else {
-            green = 0x80;
-            red = 0x80;
+            green = EFFECT_COLOR_NEUTRAL;
+            red = EFFECT_COLOR_NEUTRAL;
         }
         depth = geometry->ot_depth;
         brightness_row = geometry->brightness_row;

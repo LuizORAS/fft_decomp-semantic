@@ -147,7 +147,7 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
 
     case EFFECT_PHASE_UPDATE:
         i = frame - 1;
-        frame %= 160;
+        frame %= EFFECT_ANIMATION_CURVE_FRAMES;
         work = record->work_slots[callback_slot];
         wave = entry->particle_ribbon.curve_selectors[1];
         target_index = record->timeline.target_index;
@@ -190,7 +190,7 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
                     g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
                 origin.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 origin.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                origin.vy -= tile->height * 12;
+                origin.vy -= tile->height * MAP_HEIGHT_STEP;
                 break;
             case EFFECT_EMITTER_ORIGIN_CASTER:
                 origin.vx += caster.vx;
@@ -206,8 +206,8 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
                 break;
             case EFFECT_EMITTER_ORIGIN_MAP_CENTRE:
                 battle_map_store_max_coordinates(&map_origin);
-                origin.vx += map_origin.vx * 14;
-                origin.vz += map_origin.vz * 14;
+                origin.vx += map_origin.vx * (MAP_TILE_SIZE / 2);
+                origin.vz += map_origin.vz * (MAP_TILE_SIZE / 2);
                 break;
             }
 
@@ -253,8 +253,8 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
                 break;
             case EFFECT_EMITTER_HOMING_MAP_CENTRE:
                 battle_map_store_max_coordinates(&map_max);
-                target_base.vx += map_max.vx * 14;
-                target_base.vz += map_max.vz * 14;
+                target_base.vx += map_max.vx * (MAP_TILE_SIZE / 2);
+                target_base.vz += map_max.vz * (MAP_TILE_SIZE / 2);
                 break;
             case EFFECT_EMITTER_HOMING_CASTER:
                 target_base.vx += caster.vx;
@@ -271,7 +271,7 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
                     g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
                 target_base.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 target_base.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                target_base.vy -= tile->height * 12;
+                target_base.vy -= tile->height * MAP_HEIGHT_STEP;
                 break;
             }
 
@@ -439,9 +439,9 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
                 green = g_battle_effect_animation_curve_data->curves[(factor >> 4) & 0xf][slot->age];
                 blue = g_battle_effect_animation_curve_data->curves[(factor >> 8) & 0xf][slot->age];
             } else {
-                blue = 0x80;
-                green = 0x80;
-                red = 0x80;
+                blue = EFFECT_COLOR_NEUTRAL;
+                green = EFFECT_COLOR_NEUTRAL;
+                red = EFFECT_COLOR_NEUTRAL;
             }
             x = (parent.motion.position.x = slot->position.vx += slot->velocity.vx) >> 12;
             y = (parent.motion.position.y = slot->position.vy += slot->velocity.vy) >> 12;

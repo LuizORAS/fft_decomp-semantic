@@ -181,9 +181,9 @@ s32 effect_anchored_polar_mesh_update(s32 record_index, s32 callback_slot, s32 e
             scratch->green_factor = g_battle_effect_animation_curve_data->curves[(j >> 4) & 0xF][work->frame];
             scratch->blue_factor = g_battle_effect_animation_curve_data->curves[(j >> 8) & 0xF][work->frame];
         } else {
-            scratch->blue_factor = 0x80;
-            scratch->green_factor = 0x80;
-            scratch->red_factor = 0x80;
+            scratch->blue_factor = EFFECT_COLOR_NEUTRAL;
+            scratch->green_factor = EFFECT_COLOR_NEUTRAL;
+            scratch->red_factor = EFFECT_COLOR_NEUTRAL;
         }
         scratch->brightness_row = entry->polar_mesh.brightness_row;
         scratch->ot_depth = entry->polar_mesh.ot_depth;

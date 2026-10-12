@@ -91,7 +91,7 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
         curves1 = entry->tentacle_mesh.curve_selectors[1];
         target_index = record->timeline.target_index;
         curves0 = entry->tentacle_mesh.curve_selectors[0];
-        frame %= 160;
+        frame %= EFFECT_ANIMATION_CURVE_FRAMES;
         BATTLE_EFFECT_READ_CURVE(g_battle_effect_animation_curve_data, index, factor, (curves1 >> 24) & 0xF, frame);
         if (i
                 % battle_effect_lerp_linear(
@@ -129,7 +129,7 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                     g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
                 origin.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 origin.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                origin.vy -= tile->height * 12;
+                origin.vy -= tile->height * MAP_HEIGHT_STEP;
                 break;
             case EFFECT_EMITTER_ORIGIN_CASTER:
                 origin.vx += caster.vx;
@@ -143,8 +143,8 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                 break;
             case EFFECT_EMITTER_ORIGIN_MAP_CENTRE:
                 battle_map_store_max_coordinates(&map_max);
-                origin.vx += map_max.vx * 14;
-                origin.vz += map_max.vz * 14;
+                origin.vx += map_max.vx * (MAP_TILE_SIZE / 2);
+                origin.vz += map_max.vz * (MAP_TILE_SIZE / 2);
                 break;
             }
 
@@ -189,8 +189,8 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                 break;
             case EFFECT_EMITTER_HOMING_MAP_CENTRE:
                 battle_map_store_max_coordinates(&tip_map_max);
-                tip.vx += tip_map_max.vx * 14;
-                tip.vz += tip_map_max.vz * 14;
+                tip.vx += tip_map_max.vx * (MAP_TILE_SIZE / 2);
+                tip.vz += tip_map_max.vz * (MAP_TILE_SIZE / 2);
                 break;
             case EFFECT_EMITTER_HOMING_CASTER:
                 tip.vx += caster.vx;
@@ -207,7 +207,7 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                     g_battle_effect_target_tile.data.tile.vz, g_battle_effect_target_tile.data.tile.vy);
                 tip.vx += g_battle_effect_target_tile.data.tile.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 tip.vz += g_battle_effect_target_tile.data.tile.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                tip.vy -= tile->height * 12;
+                tip.vy -= tile->height * MAP_HEIGHT_STEP;
                 break;
             }
 
