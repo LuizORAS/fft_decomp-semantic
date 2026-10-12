@@ -16,6 +16,14 @@ typedef struct rgb24 {
 } rgb24_t;
 typedef char assert_rgb24_size[sizeof(rgb24_t) == 3 ? 1 : -1];
 
+/* Signed RGB channels for color tracks and per-channel offsets. */
+typedef struct rgb_s8 {
+    s8 r;
+    s8 g;
+    s8 b;
+} rgb_s8_t;
+typedef char rgb_s8_size_must_be_3[sizeof(rgb_s8_t) == 3 ? 1 : -1];
+
 /* Packed PS1 colour: the high bit enables semi-transparency for textured pixels. */
 typedef struct rgba5551 {
     u16 red : 5;

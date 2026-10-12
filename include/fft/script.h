@@ -3,6 +3,7 @@
 
 /* Event-script bytecode and variables shared by the BATTLE and WORLD interpreters. */
 
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/unit.h"
 #include "psx/types.h"
@@ -489,9 +490,7 @@ typedef char event_map_light_parameters_size_must_be_14[sizeof(event_map_light_p
 
 typedef struct event_unit_color {
     u8 mode;
-    s8 red;
-    s8 green;
-    s8 blue;
+    rgb_s8_t rgb;
     u8 duration;
 } event_unit_color_t;
 

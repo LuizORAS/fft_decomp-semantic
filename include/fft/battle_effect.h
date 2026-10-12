@@ -280,21 +280,13 @@ enum {
     BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES = 33,
 };
 
-/* Three-byte colours or signed colour offsets, selected by the keyframe preset. */
-typedef struct battle_effect_track_color {
-    s8 r;
-    s8 g;
-    s8 b;
-} battle_effect_track_color_t;
-typedef char battle_effect_track_color_size_must_be_3[sizeof(battle_effect_track_color_t) == 3 ? 1 : -1];
-
 /* The screen colour track: the palette-track layout with a second colour per
  * keyframe. An APPLY keyframe shifts the map background gradient by twice
  * its colour; any other sets the gradient's two stops to its two colours. */
 typedef struct battle_effect_background_track {
     s16 duration[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
-    battle_effect_track_color_t color[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
-    battle_effect_track_color_t second_color[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
+    rgb_s8_t color[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
+    rgb_s8_t second_color[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
     u8 preset[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
     s16 count;
 } battle_effect_background_track_t;
@@ -312,7 +304,7 @@ enum {
  * frames (one frame for 0); a track of count keyframes plays count - 1. */
 typedef struct battle_effect_palette_track {
     s16 duration[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
-    battle_effect_track_color_t color[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
+    rgb_s8_t color[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
     u8 preset[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
     s16 count;
 } battle_effect_palette_track_t;

@@ -23,7 +23,7 @@ void battle_script_color_unit_event_instruction(const event_color_unit_parameter
         do {
             if (battle_script_filter_unit_id_by_mode(&unit_id, (u16*)&i, &out) != 0) {
                 battle_gfx_start_misc_unit_palette_modulation(
-                    color->mode, color->duration, unit_id, color->red, color->green, color->blue);
+                    color->mode, color->duration, unit_id, color->rgb.r, color->rgb.g, color->rgb.b);
                 if (out == 0) {
                     return;
                 }
