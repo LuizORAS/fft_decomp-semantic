@@ -554,10 +554,17 @@ typedef struct battle_arc_query {
  * obstacle tests. */
 typedef struct battle_effect_obstacle_unit_list {
     s32 count;                                  /* 0x00 */
-    u8 battle_ids[22];                          /* 0x04 */
+    u8 battle_ids[BATTLE_UNIT_SLOT_COUNT];      /* 0x04 */
+    u8 _padding_19;                             /* 0x19; aligns the position vectors */
     SVECTOR positions[BATTLE_UNIT_SLOT_COUNT];  /* 0x1a; tile centre and height */
+    u8 _padding_c2[2];                          /* 0xc2; aligns the sprite heights */
     s32 sprite_heights[BATTLE_UNIT_SLOT_COUNT]; /* 0xc4 */
 } battle_effect_obstacle_unit_list_t;
+typedef char assert_battle_effect_obstacle_unit_list_size[sizeof(battle_effect_obstacle_unit_list_t) == 280 ? 1 : -1];
+typedef char assert_battle_effect_obstacle_positions_offset
+    [((unsigned long)&((battle_effect_obstacle_unit_list_t*)0)->positions == 0x1a) ? 1 : -1];
+typedef char assert_battle_effect_obstacle_heights_offset
+    [((unsigned long)&((battle_effect_obstacle_unit_list_t*)0)->sprite_heights == 0xc4) ? 1 : -1];
 
 /* Header of one packed projectile model command. */
 typedef struct battle_effect_model_command_header {
@@ -569,11 +576,18 @@ typedef struct battle_effect_model_command_header {
 typedef char
     battle_effect_model_command_header_size_must_be_4[sizeof(battle_effect_model_command_header_t) == 4 ? 1 : -1];
 
+typedef struct battle_effect_model_texture {
+    u16 tpage;
+    u16 clut;
+    uv8_t uv[3];
+} battle_effect_model_texture_t;
+typedef char battle_effect_model_texture_size_must_be_10[sizeof(battle_effect_model_texture_t) == 10 ? 1 : -1];
+
 /* Shared output of the model-command decoder and input of the projectile renderer. */
 typedef struct battle_effect_decoded_model_command {
     battle_effect_model_command_header_t header; /* 0x00 */
     CVECTOR colors[4];                           /* 0x04 */
-    u16 texture[5];                              /* 0x14; tpage, CLUT and three packed u/v pairs */
+    battle_effect_model_texture_t texture;       /* 0x14 */
     u8 _unused_1e[0x4a];
     /* The decoder copies two packed pairs; the renderer reads four indices. */
     union {
@@ -706,7 +720,7 @@ typedef struct effect_file_header {
     s32 flags_section;       /* 0x18 */
     s32 timeline;            /* 0x1c: timing, palette and camera tracks */
     s32 sound_section;       /* 0x20: 0 when the effect has no sound */
-    s32 palette;             /* 0x24 */
+    s32 palette_and_texture; /* 0x24: two CLUT blocks followed by the image */
 } effect_file_header_t;
 typedef char effect_file_header_size_must_be_40[sizeof(effect_file_header_t) == 40 ? 1 : -1];
 
@@ -963,7 +977,7 @@ typedef enum battle_effect_primitive_type {
 } battle_effect_primitive_type_e;
 
 /* Size of the per-effect arena used by battle_effect_alloc_primitive. */
-enum { BATTLE_EFFECT_PRIMITIVE_BUFFER_SIZE = 0x8000 };
+enum { BATTLE_EFFECT_PRIMITIVE_BUFFER_SIZE = 32768 };
 
 /* Initial Z coordinate of each particle sprite's four corner vectors. */
 enum { BATTLE_EFFECT_CORNER_Z_DEFAULT = 512 };
@@ -1032,17 +1046,16 @@ enum {
     EFFECT_KEYFRAME_ACTION_ANIMATION_SHIFT = 8,
 };
 
-/* Color and count header followed by one pointer for each sprite part. */
+/* An eight-byte prefix followed by one pointer for each sprite part. */
 typedef struct battle_effect_sprite_block {
     struct {
-        u8 red;
-        u8 green;
-        u8 blue;
+        rgb24_t color;
         u8 sprite_count;
-    } color;
+    } header;
     u8 _unused_04[4];
-    struct battle_effect_sprite_part* frames[1];
+    struct battle_effect_sprite_part* frames[0]; /* 0x08; one pointer per sprite part */
 } battle_effect_sprite_block_t;
+typedef char assert_battle_effect_sprite_block_prefix_size[sizeof(battle_effect_sprite_block_t) == 8 ? 1 : -1];
 
 /* Child timeline counters: twelve active tracks and one extra reset slot. */
 typedef union battle_effect_child_track_counters {

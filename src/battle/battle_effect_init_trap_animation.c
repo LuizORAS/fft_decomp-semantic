@@ -1,14 +1,5 @@
-/* The table is declared `u8[]` and cast only at the 16-bit read.
- *
- * The target has no stack frame. Casting an array symbol away from its
- * declared element type (e.g. `(u8*)table + offset` off a `u16[]`, or
- * `(u32)`, `&table[0]` or a local `u8* p`) allocates an expand-time stack
- * temp that later optimization deletes, and gcc 2.6.3 never shrinks the frame
- * afterwards: an 8-byte frame appears whose `addiu sp` pair displaces the
- * load-delay nop and the `jr ra` delay-slot store. No zero-instruction
- * constraint reaches that temp; only keeping every symbol at its own type
- * avoids it.
- */
+/* Keep the trap animation table as u8[]: another element type introduces an
+ * 8-byte compiler frame and changes the load-delay and return slots. */
 #include "fft/battle_effect.h"
 #include "psx/types.h"
 

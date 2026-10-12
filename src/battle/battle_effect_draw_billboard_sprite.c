@@ -5,6 +5,13 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
+static __inline__ u16 battle_effect_sprite_frame_offset(battle_effect_sprite_group_t* group, u8 frame) {
+    u16* frame_offset;
+
+    frame_offset = (u16*)((u8*)group + (frame * 2 + group->frame_table_offset));
+    return *frame_offset;
+}
+
 /* Queues one effect slot's billboard sprite: projects the slot origin for its
  * ordering-table depth, builds the rotated, camera-scaled 2D matrix from the
  * slot angle, transforms the frame's four corners into the slot's
@@ -18,7 +25,7 @@ void battle_effect_draw_billboard_sprite(battle_effect_slot_t* slot) {
     POLY_FT4* prim;
     battle_effect_sprite_frameset_t* frame;
     u16 offset;
-    u8* frame_group;
+    battle_effect_sprite_group_t* frame_group;
     s32 depth;
     s32 sine;
     s32 cosine;
@@ -53,13 +60,13 @@ void battle_effect_draw_billboard_sprite(battle_effect_slot_t* slot) {
     SetRotMatrix(&g_battle_effect_matrix);
     SetTransMatrix(&g_battle_effect_matrix);
 
-    frame_group = (u8*)g_battle_effect_trap_frame_data.groups;
-    offset = *(u16*)(frame_group + (slot->frame * 2 + g_battle_effect_trap_frame_data.groups[0].frame_table_offset));
+    frame_group = g_battle_effect_trap_frame_data.groups;
+    offset = battle_effect_sprite_frame_offset(frame_group, slot->frame);
     prim = &slot->quads[g_battle_effect_buffer_index];
     /* Copy RGB and the frame byte; the packet header overwrites that last byte. */
     memcpy(&prim->r0, &slot->red, sizeof(CVECTOR));
     setPolyFT4(prim);
-    frame = (battle_effect_sprite_frameset_t*)(frame_group + offset);
+    frame = (battle_effect_sprite_frameset_t*)((u8*)frame_group + offset);
     setSemiTrans(prim, frame->flags & EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT);
     /* Copy x/y while retaining the GTE input's z. */
     memcpy(&g_battle_effect_corner_top_left, &frame->parts[0].corners[0], sizeof(frame->parts[0].corners[0]));

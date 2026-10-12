@@ -16,7 +16,7 @@ void battle_effect_list_valid_unit_targeting_data(s32 first, s32 second, battle_
     s32 slot;
 
     *out = (battle_effect_obstacle_unit_list_t*)0x1F800000;
-    ((battle_effect_obstacle_unit_list_t*)0x1F800000)->count = 0;
+    (*out)->count = 0;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = battle_unit_get_stats_from_battle_id(i);
         if (unit->entd_slot != first && unit->entd_slot != second && unit->entd_slot != BATTLE_ENTD_SLOT_NONE

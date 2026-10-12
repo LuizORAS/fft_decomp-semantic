@@ -71,7 +71,7 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
                                                        + (node->sprite_frame_index * 2 + frame_table_offset))
             + g_battle_effect_frame_data);
         count = frame->count;
-        if (block->color.sprite_count != count) {
+        if (block->header.sprite_count != count) {
             battle_effect_free_sprite_block(block);
             block = battle_effect_alloc_sprite_block(count);
             node->sprite_block = block;
@@ -81,9 +81,9 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
         }
         node->kind &= ~EFFECT_LIST_NODE_FRAME_CHANGED;
     }
-    block->color.red = red;
-    block->color.green = green;
-    block->color.blue = blue;
+    block->header.color.r = red;
+    block->header.color.g = green;
+    block->header.color.b = blue;
     switch (node->kind & EFFECT_LIST_NODE_PLACEMENT_MASK) {
     case EFFECT_LIST_NODE_WORLD:
         SetRotMatrix(&g_battle_camera_matrix);
@@ -102,10 +102,10 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
             depth = EFFECT_SPRITE_OT_DEPTH_MAX;
             break;
         case EFFECT_SPRITE_DEPTH_FIXED_16:
-            depth = 0x10;
+            depth = 16;
             break;
         case EFFECT_SPRITE_DEPTH_NEARER_16:
-            depth -= 0x10;
+            depth -= 16;
             break;
         }
         if (depth < 0) {
@@ -149,10 +149,10 @@ void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red,
             depth = EFFECT_SPRITE_OT_DEPTH_MAX;
             break;
         case EFFECT_SPRITE_DEPTH_FIXED_16:
-            depth = 0x10;
+            depth = 16;
             break;
         case EFFECT_SPRITE_DEPTH_NEARER_16:
-            depth -= 0x10;
+            depth -= 16;
             break;
         }
         if (depth < 0) {

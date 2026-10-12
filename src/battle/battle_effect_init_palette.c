@@ -2,8 +2,8 @@
 #include "fft/battle_map.h"
 #include "psx/libgpu.h"
 
-/* Send an effect file's palette section to VRAM: its two 256-colour blocks go to
- * the CLUT rows MAP_CLUT_ROW_EFFECT and MAP_CLUT_ROW_EFFECT_SECOND, and the
+/* Send an effect file's palette and texture section to VRAM. Its two
+ * 256-colour blocks go to MAP_CLUT_ROW_EFFECT and MAP_CLUT_ROW_EFFECT_SECOND; the
  * texture image that follows them to (0x180, 0).
  *
  * The image is preceded by its byte size as a 24-bit little-endian value and a
@@ -19,7 +19,7 @@ void battle_effect_init_palette(s16 index) {
     s32 height;
 
     base = g_battle_effect_data_ptrs[index];
-    data = (battle_effect_palette_section_t*)((u8*)base + base->palette);
+    data = (battle_effect_palette_section_t*)((u8*)base + base->palette_and_texture);
     g_battle_effect_palette_ptr = data;
     battle_map_load_palette_data(data->primary_palettes, MAP_CLUT_ROW_EFFECT, 0, 1);
     battle_map_load_palette_data(data->secondary_palettes, MAP_CLUT_ROW_EFFECT_SECOND, 0, 1);

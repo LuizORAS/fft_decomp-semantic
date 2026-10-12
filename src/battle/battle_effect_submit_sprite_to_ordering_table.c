@@ -42,7 +42,7 @@ void battle_effect_submit_sprite_to_ordering_table(
     }
     SetRotMatrix(&g_battle_effect_matrix);
     SetTransMatrix(&g_battle_effect_matrix);
-    for (i = 0; i < set->color.sprite_count; i++) {
+    for (i = 0; i < set->header.sprite_count; i++) {
         frame = set->frames[i];
         code = 0x2c;
         /* Copy x/y while retaining the GTE input's z. */
@@ -54,7 +54,8 @@ void battle_effect_submit_sprite_to_ordering_table(
         gte_rtpt_split();
         memcpy(&g_battle_effect_corner_bottom_right, &frame->corners[3], sizeof(frame->corners[3]));
         quad = battle_effect_alloc_primitive(BATTLE_EFFECT_PRIMITIVE_FT4);
-        memcpy(&quad->r0, &set->color, sizeof(CVECTOR));
+        /* The fourth copied byte is the part count; code overwrites it. */
+        memcpy(&quad->r0, &set->header, sizeof(set->header));
         setlen(quad, 9);
         quad->code = code;
         if (frame->flags & EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT) {

@@ -8,9 +8,7 @@
  * 0x37 add five texture operands. Any other opcode is skipped by its length byte.
  *
  * The 0x35/0x37 stream uses variable-length commands, so its index is a 32-bit-element
- * offset rather than a psyq_tmd_packet_t array index. Its texture operands are
- * written through a walking pointer, which keeps the last of them ahead of
- * the command-index update. */
+ * offset rather than a psyq_tmd_packet_t array index. */
 void battle_effect_decode_next_model_command(battle_effect_decoded_model_command_t* out) {
     psyq_tmd_packet_t* command;
     s32 index;
@@ -46,9 +44,6 @@ void battle_effect_decode_next_model_command(battle_effect_decoded_model_command
     case BATTLE_EFFECT_MODEL_COMMAND_GT3_35:
     case BATTLE_EFFECT_MODEL_COMMAND_GT3_37: {
         psyq_tmd_packet_t* extended;
-        /* The walking destination keeps the final texture store before the index update. */
-        u16* texture;
-
         extended = (psyq_tmd_packet_t*)((u8*)g_battle_effect_model_commands
             + g_battle_effect_model_command_word_offset * sizeof(u32));
         memcpy(&dst->colors[0], &extended->gt3.r0, sizeof(dst->colors[0]));
@@ -56,12 +51,11 @@ void battle_effect_decode_next_model_command(battle_effect_decoded_model_command
         memcpy(&dst->colors[2], &extended->gt3.r2, sizeof(dst->colors[2]));
         memcpy(&dst->vertices.pairs[0], &extended->gt3.v0, sizeof(dst->vertices.pairs[0]));
         memcpy(&dst->vertices.pairs[1], &extended->gt3.v2, sizeof(dst->vertices.pairs[1]));
-        texture = out->texture;
-        *texture++ = extended->gt3.tpage;
-        *texture++ = extended->gt3.clut;
-        memcpy(texture++, &extended->gt3.tu0, sizeof(*texture));
-        memcpy(texture++, &extended->gt3.tu1, sizeof(*texture));
-        memcpy(texture++, &extended->gt3.tu2, sizeof(*texture));
+        out->texture.tpage = extended->gt3.tpage;
+        out->texture.clut = extended->gt3.clut;
+        memcpy(&out->texture.uv[0], &extended->gt3.tu0, sizeof(out->texture.uv[0]));
+        memcpy(&out->texture.uv[1], &extended->gt3.tu1, sizeof(out->texture.uv[1]));
+        memcpy(&out->texture.uv[2], &extended->gt3.tu2, sizeof(out->texture.uv[2]));
         g_battle_effect_model_command_word_offset += 9;
         break;
     }

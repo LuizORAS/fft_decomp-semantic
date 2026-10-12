@@ -202,9 +202,9 @@ void battle_effect_draw_projectile_model(
                 setRGB0(tri, command.colors[0].r, command.colors[0].g, command.colors[0].b);
                 setRGB1(tri, command.colors[1].r, command.colors[1].g, command.colors[1].b);
                 setRGB2(tri, command.colors[2].r, command.colors[2].g, command.colors[2].b);
-                memcpy(&tri->u0, &command.texture[2], sizeof(command.texture[2]));
-                memcpy(&tri->u1, &command.texture[3], sizeof(command.texture[3]));
-                memcpy(&tri->u2, &command.texture[4], sizeof(command.texture[4]));
+                memcpy(&tri->u0, &command.texture.uv[0], sizeof(command.texture.uv[0]));
+                memcpy(&tri->u1, &command.texture.uv[1], sizeof(command.texture.uv[1]));
+                memcpy(&tri->u2, &command.texture.uv[2], sizeof(command.texture.uv[2]));
                 tri->x0 = PT(0).vx;
                 tri->y0 = PT(0).vy;
                 z = PT(0).vz;
