@@ -1,4 +1,5 @@
 #include "fft/battle_effect.h"
+#include "psx/suzuki.h"
 #include "psx/types.h"
 
 /*
@@ -9,7 +10,7 @@
  * Sound ids are relative to g_battle_effect_sound_data_base, the effect sound
  * section's id set by battle_effect_load_sound_section.
  */
-void battle_effect_update_on_hit_sound_timer(
+void battle_effect_advance_parent_sound_track(
     battle_effect_sound_track_t* schedule, s16* entry_index, s16* countdown, u8* unused_sound_state) {
     s16 index = *entry_index;
     s32 effect_kind;
@@ -22,7 +23,7 @@ void battle_effect_update_on_hit_sound_timer(
             effect_kind = schedule->channels[index];
 
             if (effect_kind >= 2) {
-                sound_index = battle_effect_get_on_hit_sound_index(effect_kind - 2);
+                sound_index = battle_effect_select_effect_sound_id(effect_kind - 2);
 
                 if (sound_index != 0) {
                     suzuki_sound_play_sfx(g_battle_effect_sound_data_base + sound_index);

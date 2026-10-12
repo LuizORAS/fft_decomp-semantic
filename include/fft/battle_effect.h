@@ -21,6 +21,12 @@ typedef enum battle_effect_secondary_phase {
     BATTLE_SECONDARY_EFFECT_FINALIZING = 3
 } battle_effect_secondary_phase_e;
 
+/* Sixteen secondary effects may run at once; record zero anchors their chains. */
+enum {
+    BATTLE_EFFECT_SECONDARY_SLOT_COUNT = 16,
+    BATTLE_EFFECT_SECONDARY_RECORD_COUNT = BATTLE_EFFECT_SECONDARY_SLOT_COUNT + 1,
+};
+
 /* Verified prefix only: BATTLE 0x801aa7c4 reads/writes a 16-bit value at +6.
  * Neither the full record nor the individual bit meanings are known. */
 typedef struct battle_effect_flag_prefix {
@@ -321,30 +327,35 @@ typedef struct effect_timeline_color_tracks {
     battle_effect_background_track_t screen;    /* 0x258 */
 } effect_timeline_color_tracks_t;
 
+enum {
+    BATTLE_EFFECT_PARTICLE_CHANNEL_COUNT = 5,
+    BATTLE_EFFECT_SOUND_TRACK_COUNT = 3,
+};
+
 /* A sound track of the child timeline: up to 17 entries, each naming an
  * effect sound channel to play when it is entered. The parent timeline's
  * tracks hold nine (effect_timeline_t.sound_tracks). */
-typedef struct battle_effect_tick_sound_track {
+typedef struct battle_effect_child_sound_track {
     u16 duration[17]; /* 0x00; frames each entry lasts */
     u8 channel[17];   /* 0x22; 0 and 1 none, otherwise a sound channel of the flags section + 2 */
     u8 _padding_33;   /* aligns count */
     s16 count;        /* 0x34 */
-} battle_effect_tick_sound_track_t;
+} battle_effect_child_sound_track_t;
 
 /* The child timeline, eight bytes into the timeline section
- * (g_battle_effect_timing_channels): its duration and its channels.
+ * (g_battle_effect_child_timeline): its duration and its channels.
  * effect_timeline_t names the section's other parts. */
-typedef struct battle_effect_tick_channels {
+typedef struct battle_effect_child_timeline {
     u16 _unused_000;
-    u16 duration;                               /* 0x002; frames: effect_timeline_t.child.duration */
-    battle_effect_keyframe_table_t particle[5]; /* 0x004 */
-    battle_effect_tick_sound_track_t sound[3];  /* 0x284 */
-    battle_effect_palette_track_t surroundings; /* 0x326 */
-    battle_effect_palette_track_t caster;       /* 0x3ee */
-    battle_effect_palette_track_t target;       /* 0x4b6 */
-    battle_effect_background_track_t screen;    /* 0x57e */
-} battle_effect_tick_channels_t;
-typedef char battle_effect_tick_channels_size_must_be_1706[sizeof(battle_effect_tick_channels_t) == 1706 ? 1 : -1];
+    u16 duration; /* 0x002; frames: effect_timeline_t.child.duration */
+    battle_effect_keyframe_table_t particle[BATTLE_EFFECT_PARTICLE_CHANNEL_COUNT]; /* 0x004 */
+    battle_effect_child_sound_track_t sound[BATTLE_EFFECT_SOUND_TRACK_COUNT];      /* 0x284 */
+    battle_effect_palette_track_t surroundings;                                    /* 0x326 */
+    battle_effect_palette_track_t caster;                                          /* 0x3ee */
+    battle_effect_palette_track_t target;                                          /* 0x4b6 */
+    battle_effect_background_track_t screen;                                       /* 0x57e */
+} battle_effect_child_timeline_t;
+typedef char battle_effect_child_timeline_size_must_be_1706[sizeof(battle_effect_child_timeline_t) == 1706 ? 1 : -1];
 
 /* target_mode of battle_effect_start_new. */
 typedef enum battle_effect_start_target {
@@ -374,8 +385,8 @@ enum { BATTLE_EFFECT_FILE_ID_COUNT = 512 };
 enum {
     BATTLE_EFFECT_FILE_CURE = 1, /* loaded in place of a file of no size */
     BATTLE_EFFECT_FILE_FIRE = 16,
-    BATTLE_EFFECT_FILE_BOLT = 0x14,
-    BATTLE_EFFECT_FILE_ICE = 0x18,
+    BATTLE_EFFECT_FILE_BOLT = 20,
+    BATTLE_EFFECT_FILE_ICE = 24,
 };
 
 /* What battle_effect_get_ninja_ball makes of an element mask: the position of its first element in
@@ -654,28 +665,29 @@ typedef struct battle_effect_sound_track {
  * timeline ends, for phase2_duration frames. A script without children
  * (opcode 28 on the root record) runs only the child timeline, once.
  *
- * The child timeline's channels are the battle_effect_tick_channels_t that
- * g_battle_effect_timing_channels addresses at 0x008; its camera table is the
+ * The child timeline's channels are the battle_effect_child_timeline_t that
+ * g_battle_effect_child_timeline addresses at 0x008; its camera table is the
  * 17-keyframe one at 0x6b2, laid out like effect_camera_keyframes_21_t. Each
  * phase has five particle channels, three sound tracks, four colour tracks
  * and a 21-keyframe camera table. */
 typedef struct effect_timeline {
     u16 _unused_0000;
-    u16 phase2_duration;                 /* 0x002 */
-    u16 phase1_duration;                 /* 0x004 */
-    u16 spawn_delay;                     /* 0x006; frames between child spawns (see effect_flags_section_t) */
-    battle_effect_tick_channels_t child; /* 0x008; child duration, particle, sound and colour tracks */
-    s16 end_frame[17];                   /* 0x6b2; child camera table: frame each keyframe's moves arrive */
-    vec3s16_t rotation[17];              /* 0x6d4 */
-    vec3s16_t position[17];              /* 0x73a */
-    vec3s16_t zoom[17];                  /* 0x7a0 */
-    s16 command[17];                     /* 0x806; as effect_camera_keyframes_21_t.command */
-    s16 last_keyframe_index;             /* 0x828; highest valid keyframe index */
-    battle_effect_keyframe_table_t particle_channels[2][5]; /* 0x82a; [phase][channel] */
-    battle_effect_sound_track_t sound_tracks[2][3];         /* 0xd2a; [phase][track] */
-    effect_timeline_color_tracks_t color_tracks[2];         /* 0xdde */
-    effect_camera_keyframes_21_t phase1_camera;             /* 0x14e6 */
-    effect_camera_keyframes_21_t phase2_camera;             /* 0x16b6 */
+    u16 phase2_duration;                  /* 0x002 */
+    u16 phase1_duration;                  /* 0x004 */
+    u16 spawn_delay;                      /* 0x006; frames between child spawns (see effect_flags_section_t) */
+    battle_effect_child_timeline_t child; /* 0x008; child duration, particle, sound and colour tracks */
+    s16 end_frame[17];                    /* 0x6b2; child camera table: frame each keyframe's moves arrive */
+    vec3s16_t rotation[17];               /* 0x6d4 */
+    vec3s16_t position[17];               /* 0x73a */
+    vec3s16_t zoom[17];                   /* 0x7a0 */
+    s16 command[17];                      /* 0x806; as effect_camera_keyframes_21_t.command */
+    s16 last_keyframe_index;              /* 0x828; highest valid keyframe index */
+    battle_effect_keyframe_table_t
+        particle_channels[2][BATTLE_EFFECT_PARTICLE_CHANNEL_COUNT];               /* 0x82a; [phase][channel] */
+    battle_effect_sound_track_t sound_tracks[2][BATTLE_EFFECT_SOUND_TRACK_COUNT]; /* 0xd2a; [phase][track] */
+    effect_timeline_color_tracks_t color_tracks[2];                               /* 0xdde */
+    effect_camera_keyframes_21_t phase1_camera;                                   /* 0x14e6 */
+    effect_camera_keyframes_21_t phase2_camera;                                   /* 0x16b6 */
 } effect_timeline_t;
 typedef char effect_timeline_child_offset_must_be_8[((unsigned long)&((effect_timeline_t*)0)->child == 8) ? 1 : -1];
 typedef char
@@ -743,7 +755,10 @@ enum { EFFECT_SCRIPT_OPCODE_MASK = 0x1ff };
 /* Each opcode interprets the selector byte differently. Unnamed bits are ignored
  * by that view. Copy the byte before reading bit fields to retain byte loads. */
 typedef union battle_effect_script_parameters {
-    u8 packed;
+    struct {
+        u8 : 4;
+        u8 high_nibble : 4;
+    } opcode_05;
     struct {
         u8 : 4;
         u8 slot : 4;
@@ -792,7 +807,6 @@ typedef char
  * two-byte instructions contain only the header. No array uses this union's stride. */
 typedef union battle_effect_script_instruction {
     battle_effect_script_header_t header;
-    battle_effect_script_emitter_header_t emitter;
     struct {
         battle_effect_script_header_t header; /* 0x00 */
         s16 value;                            /* 0x02 */
@@ -1057,12 +1071,19 @@ typedef struct battle_effect_sprite_block {
 } battle_effect_sprite_block_t;
 typedef char assert_battle_effect_sprite_block_prefix_size[sizeof(battle_effect_sprite_block_t) == 8 ? 1 : -1];
 
+/* Steppers use the named tracks; resets clear each complete slot array.
+ * The reset extents include slots that no track stepper reads. */
+enum {
+    BATTLE_EFFECT_CHILD_TRACK_RESET_SLOT_COUNT = 13,
+    BATTLE_EFFECT_PARENT_TRACK_RESET_SLOT_COUNT = 26,
+};
+
 /* Child timeline counters: twelve active tracks and one extra reset slot. */
 typedef union battle_effect_child_track_counters {
-    s16 values[13];
+    s16 reset_slots[BATTLE_EFFECT_CHILD_TRACK_RESET_SLOT_COUNT];
     struct {
-        s16 particle[5];
-        s16 sound[3];
+        s16 particle[BATTLE_EFFECT_PARTICLE_CHANNEL_COUNT];
+        s16 sound[BATTLE_EFFECT_SOUND_TRACK_COUNT];
         s16 surroundings;
         s16 caster;
         s16 target;
@@ -1072,10 +1093,10 @@ typedef union battle_effect_child_track_counters {
 } battle_effect_child_track_counters_t;
 
 typedef union battle_effect_child_track_steps {
-    s16 values[13];
+    s16 reset_slots[BATTLE_EFFECT_CHILD_TRACK_RESET_SLOT_COUNT];
     struct {
-        u16 particle[5];     /* loaded unsigned by opcode 28 */
-        u8 _unused_0a[0x10]; /* remaining slots are reset but not stepped */
+        u16 particle[BATTLE_EFFECT_PARTICLE_CHANNEL_COUNT]; /* loaded unsigned by opcode 28 */
+        u8 _unused_0a[0x10];                                /* remaining slots are reset but not stepped */
     } tracks;
 } battle_effect_child_track_steps_t;
 
@@ -1090,27 +1111,27 @@ typedef char
 /* Parent counters: ten particle tracks, fourteen colour/sound tracks and
  * two extra 16-bit values. The reset clears all 26, not just the 24 stepped tracks. */
 typedef union battle_effect_parent_track_counters {
-    s16 values[26];
+    s16 reset_slots[BATTLE_EFFECT_PARENT_TRACK_RESET_SLOT_COUNT];
     struct {
-        s16 particle[2][5];
+        s16 particle[2][BATTLE_EFFECT_PARTICLE_CHANNEL_COUNT];
         s16 surroundings[2];
         s16 caster[2];
         s16 target[2];
         s16 screen[2];
-        s16 sound[3][2];
+        s16 sound[BATTLE_EFFECT_SOUND_TRACK_COUNT][2];
         s16 _unused_30[2]; /* extra 16-bit values cleared by the parent reset */
     } tracks;
 } battle_effect_parent_track_counters_t;
 
 typedef union battle_effect_parent_track_steps {
-    s16 values[26];
+    s16 reset_slots[BATTLE_EFFECT_PARENT_TRACK_RESET_SLOT_COUNT];
     struct {
-        s16 particle[2][5];
+        s16 particle[2][BATTLE_EFFECT_PARTICLE_CHANNEL_COUNT];
         u8 _unused_14[0x10]; /* reset only */
         /* Six two-byte addresses inside the step array. Opcode 29 passes each
          * high byte to the sound helper's unused argument; no sound helper reads it. */
-        u8 _unknown_24[3][2][2]; /* record +0xba; the original purpose is unknown */
-        s16 _unused_30[2];       /* extra 16-bit values cleared by the parent reset */
+        u8 _unknown_24[BATTLE_EFFECT_SOUND_TRACK_COUNT][2][2]; /* record +0xba; the original purpose is unknown */
+        s16 _unused_30[2];                                     /* extra 16-bit values cleared by the parent reset */
     } tracks;
 } battle_effect_parent_track_steps_t;
 
@@ -1773,6 +1794,14 @@ enum { EFFECT_COLOR_NEUTRAL = 128 };
 typedef u8 effect_animation_curve_t[EFFECT_ANIMATION_CURVE_FRAMES];
 typedef char assert_effect_animation_curve_size[sizeof(effect_animation_curve_t) == 160 ? 1 : -1];
 
+/* Parent and child timeline pacing curves, two four-bit values per byte.
+ * Even frames use the low nibble; pacing values 1-9 are applied. */
+typedef struct battle_effect_timing_curves {
+    u8 parent_timeline[300]; /* 0x000 */
+    u8 child_timeline[300];  /* 0x12c */
+} battle_effect_timing_curves_t;
+typedef char battle_effect_timing_curves_size_must_be_600[sizeof(battle_effect_timing_curves_t) == 600 ? 1 : -1];
+
 /* The effect file has one count followed by one 160-byte curve per entry. */
 typedef struct effect_animation_curve_table {
     u32 count;
@@ -1874,24 +1903,15 @@ extern s32 g_battle_effect_inertia_threshold;
 extern s16 g_battle_effect_load_countdown;
 extern effect_timeline_t* g_battle_effect_timeline;
 extern u8* g_battle_effect_script;
-/* Written by script opcode 05; no reader is known. */
+/* Written by effect-script opcode 05; no game source reads it. */
 extern u16 D_801BF000;
-/* Timing-curve section of an effect file: a time scale per timeline frame,
- * packed two nibbles to the byte, low nibble first; values 1-9 are applied
- * (battle_state_set_time_scale). The parent timeline's curve comes first and
- * the child timeline's follows at 0x12c (the second extent is taken to equal
- * the first). */
-typedef struct battle_effect_timing_curves {
-    u8 parent_timeline[0x12c]; /* 0x000 */
-    u8 child_timeline[0x12c];  /* 0x12c */
-} battle_effect_timing_curves_t;
 extern battle_effect_timing_curves_t* g_battle_effect_timing_curves;
-extern battle_effect_tick_channels_t* g_battle_effect_timing_channels;
+extern battle_effect_child_timeline_t* g_battle_effect_child_timeline;
 extern u8* g_battle_effect_animation_sequences;
 extern u8* g_battle_effect_animation_sequences_start;
 extern u32* g_battle_effect_polygon_depth_data;
 extern u16 g_battle_effect_active_slot_tail;
-extern s32 g_battle_effect_primitive_sizes[];
+extern s32 g_battle_effect_primitive_sizes[3];
 extern s32 g_battle_effect_saved_inertia_threshold;
 extern s32 g_battle_effect_sound_data_base;
 extern struct suzuki_sound_resource* g_battle_effect_sound_section_ptr;
@@ -2056,7 +2076,7 @@ s32 battle_effect_find_next_keyframe(s16 frame, s16 mask, s32* out_index, s32* o
 s32 battle_effect_get_bow_shot_angle(void);
 u8 battle_effect_allocate_secondary_slot(void);
 s32 battle_effect_get_ninja_ball(s32 elements);
-s32 battle_effect_get_on_hit_sound_index(s32 channel);
+s32 battle_effect_select_effect_sound_id(s32 channel);
 s16 battle_effect_get_random_between_s16(s16 minimum, s16 maximum);
 battle_effect_secondary_phase_e battle_effect_get_secondary_phase(u8 secondary_id);
 void battle_effect_init_palette(s16 index);
@@ -2192,7 +2212,7 @@ void battle_effect_submit_sprite_to_ordering_table(
 /* Steps the projectile along its trajectory, testing each obstacle. */
 s32 battle_effect_trace_projectile_path(
     VECTOR* delta, SVECTOR* origin, s32* distance, battle_effect_obstacle_unit_list_t* obstacles);
-void battle_effect_update_on_hit_sound_timer(
+void battle_effect_advance_parent_sound_track(
     battle_effect_sound_track_t* schedule, s16* entry_index, s16* countdown, u8* unused_sound_state);
 void battle_effect_add_vector_and_store_q12(const VECTOR* delta, VECTOR* value, VECTOR* out);
 s32 battle_effect_get_random_between(s32 value_a, s32 value_b);

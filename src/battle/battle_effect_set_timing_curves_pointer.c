@@ -1,6 +1,7 @@
 #include "fft/battle_effect.h"
 #include "psx/types.h"
 
+/* A zero section offset binds the pointer to the file header. */
 void battle_effect_set_timing_curves_pointer(s16 effect_id) {
     effect_file_header_t* header;
 

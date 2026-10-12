@@ -166,7 +166,7 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
             if (state->frame == 4) {
                 zoom.vx = zoom.vy = zoom.vz = 0;
                 battle_camera_execute_zoom_command(
-                    BATTLE_EFFECT_CAMERA_SOURCE_SAVED | BATTLE_EFFECT_CAMERA_MODE_COSINE, 0, 0xc, &zoom);
+                    BATTLE_EFFECT_CAMERA_SOURCE_SAVED | BATTLE_EFFECT_CAMERA_MODE_COSINE, 0, 12, &zoom);
                 offset.vx = offset.vy = offset.vz = 4;
                 battle_camera_execute_position_command(
                     BATTLE_EFFECT_CAMERA_SOURCE_GIVEN | BATTLE_EFFECT_CAMERA_MODE_SHAKE_DECAYING, 0, 9, &offset);
@@ -175,7 +175,7 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
         done = state->done;
         result = done != 1;
         state->frame++;
-        if (state->count_a == 0 && state->count_b == 0 && state->frame >= 0x1f) {
+        if (state->count_a == 0 && state->count_b == 0 && state->frame >= 31) {
             state->done = done + 1;
         }
         break;

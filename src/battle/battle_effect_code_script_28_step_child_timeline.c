@@ -30,7 +30,7 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
     battle_effect_keyframe_table_t* table;
     battle_effect_palette_track_t* track;
     battle_effect_background_track_t* screen;
-    battle_effect_tick_sound_track_t* sound;
+    battle_effect_child_sound_track_t* sound;
     s32 i;
     s16 k;
     s16 units_keyframe;
@@ -55,8 +55,8 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
     target = record->timeline.target_index;
     timeline = &record->timeline;
     if (g_battle_effect_context.targets[target].data.unit.result_animation != BATTLE_EFFECT_HIT_REFLECTED) {
-        for (i = 0; i < 5; i++) {
-            table = &g_battle_effect_timing_channels->particle[i];
+        for (i = 0; i < BATTLE_EFFECT_PARTICLE_CHANNEL_COUNT; i++) {
+            table = &g_battle_effect_child_timeline->particle[i];
             if (timeline->state.child.remaining.tracks.particle[i] == 0) {
                 if (timeline->state.child.keyframe.tracks.particle[i] == 0) {
                     timeline->state.child.remaining.tracks.particle[i] = table->frame_start[1] - table->frame_start[0];
@@ -91,7 +91,7 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
             timeline->state.child.remaining.tracks.particle[i]--;
         }
 
-        track = &g_battle_effect_timing_channels->surroundings;
+        track = &g_battle_effect_child_timeline->surroundings;
         units_keyframe = timeline->state.child.keyframe.tracks.surroundings;
         if (units_keyframe < track->count - 1) {
             if (timeline->state.child.remaining.tracks.surroundings == 0) {
@@ -124,7 +124,7 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
             timeline->state.child.remaining.tracks.surroundings--;
         }
 
-        track = &g_battle_effect_timing_channels->caster;
+        track = &g_battle_effect_child_timeline->caster;
         caster_keyframe = timeline->state.child.keyframe.tracks.caster;
         if (caster_keyframe < track->count - 1) {
             if (timeline->state.child.remaining.tracks.caster == 0) {
@@ -154,7 +154,7 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
             timeline->state.child.remaining.tracks.caster--;
         }
 
-        track = &g_battle_effect_timing_channels->target;
+        track = &g_battle_effect_child_timeline->target;
         target_keyframe = timeline->state.child.keyframe.tracks.target;
         if (target_keyframe < track->count - 1) {
             if (timeline->state.child.remaining.tracks.target == 0) {
@@ -182,7 +182,7 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
             timeline->state.child.remaining.tracks.target--;
         }
 
-        screen = &g_battle_effect_timing_channels->screen;
+        screen = &g_battle_effect_child_timeline->screen;
         screen_keyframe = timeline->state.child.keyframe.tracks.screen;
         if (screen_keyframe < screen->count - 1) {
             if (timeline->state.child.remaining.tracks.screen == 0) {
@@ -222,8 +222,8 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
             timeline->state.child.remaining.tracks.screen--;
         }
 
-        for (i = 0; i < 3; i++) {
-            sound = &g_battle_effect_timing_channels->sound[i];
+        for (i = 0; i < BATTLE_EFFECT_SOUND_TRACK_COUNT; i++) {
+            sound = &g_battle_effect_child_timeline->sound[i];
             sound_keyframe = timeline->state.child.keyframe.tracks.sound[i];
             if (sound_keyframe < sound->count) {
                 if (timeline->state.child.remaining.tracks.sound[i] == 0) {
@@ -232,7 +232,7 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
                     timeline->state.child.remaining.tracks.sound[i] = sound->duration[index];
                     kind = sound->channel[index];
                     if (kind >= 2) {
-                        sound_index = battle_effect_get_on_hit_sound_index(kind - 2);
+                        sound_index = battle_effect_select_effect_sound_id(kind - 2);
                         if (sound_index != 0) {
                             suzuki_sound_play_sfx(sound_index + g_battle_effect_sound_data_base);
                         }
@@ -255,7 +255,7 @@ effect_script_result_e battle_effect_code_script_28_step_child_timeline(effect_r
             battle_effect_init_secondary(
                 BATTLE_EFFECT_SECONDARY_ANIMATION_REFLECT, g_battle_effect_timeline->spawn_delay, &init);
         }
-        record->timeline.frame = g_battle_effect_timing_channels->duration;
+        record->timeline.frame = g_battle_effect_child_timeline->duration;
     }
     record->pc += 2;
     return EFFECT_SCRIPT_RESULT_CONTINUE;

@@ -8,8 +8,8 @@ effect_script_result_e battle_effect_code_script_1e_jump_after_total_duration(ef
     effect_timeline_t* timing;
 
     timing = g_battle_effect_timeline;
-    if (record->timeline.frame >= (s32)(timing->phase1_duration + timing->phase2_duration
-            + (g_battle_effect_context.target_count - 1) * timing->spawn_delay + timing->child.duration)) {
+    if (record->timeline.frame >= timing->phase1_duration + timing->phase2_duration
+            + (g_battle_effect_context.target_count - 1) * timing->spawn_delay + timing->child.duration) {
         battle_effect_script_instruction_t* instruction = battle_effect_get_current_script_instruction(record);
 
         record->pc = instruction->immediate.value;

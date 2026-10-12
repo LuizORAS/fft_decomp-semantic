@@ -18,7 +18,7 @@ void battle_effect_remove_secondary(u8 id) {
     s32 tail;
 
     slot = &g_battle_effect_secondary_data[id];
-    if (id != 0 && id < 17) {
+    if (id != 0 && id < BATTLE_EFFECT_SECONDARY_RECORD_COUNT) {
         if (slot->allocation != 0) {
             main_heap_free(slot->allocation);
             slot->allocation = 0;

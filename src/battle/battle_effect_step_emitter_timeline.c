@@ -1,18 +1,6 @@
 #include "fft/battle_effect.h"
 #include "psx/types.h"
 
-/* Two commutative operand ties decide this function, in opposite directions.
- * The dispatch block at +0xe4 wants its table address built base-first, which
- * hoisting the action array into its own pointer provides.  The keyframe
- * loop at +0x68 wants the shared `table + 2*k` address built index-first
- * (`addu s0,s0,s2`).  gcc 2.6.3 keeps the source's operand order through to
- * the addu, so `p[i]` and `*(p + i)` build base-first while the int-first
- * sums `*(i + p)` and `i[p]` build index-first -- see the comment at that
- * call.
- */
-#include "fft/battle_effect.h"
-#include "psx/types.h"
-
 /* Advances one particle channel of the parent timeline by a frame: enters the
  * keyframes that have come due, running each one's 16-bit action value for every
  * effect target, then spawns the current keyframe's emitter, through the
@@ -32,10 +20,7 @@ void battle_effect_step_emitter_timeline(
         while (*remaining == 0) {
             k = *index;
             *index = k + 1;
-            /* The int-first sum is load-bearing: the shared address
-             * `table + 2*k` is CSEd from this first use, and only this
-             * spelling builds it index-first (`addu s0,s0,s2`) as the target
-             * does.  `table->action[k + 1]` builds it base-first. */
+            /* Integer-first pointer addition preserves the native shared-address operands. */
             battle_effect_run_keyframe_actions_all_targets(*(k + 1 + table->action), state);
             *remaining = table->frame_start[k + 1] - table->frame_start[k];
             *step = 0;

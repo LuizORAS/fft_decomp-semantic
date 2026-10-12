@@ -44,7 +44,7 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
         battle_effect_resolve_target_render_coords(
             0, BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_context, &state->center);
         state->brightness = 0;
-        state->center.vy -= 0x18;
+        state->center.vy -= 24;
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 10; j++) {
                 state->points[i][j].vx = state->points[i][j].vy = state->points[i][j].vz = 0;
@@ -67,26 +67,26 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
         result = 1;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
-        if (effect->timer < 0x18) {
+        if (effect->timer < 24) {
             state->radius = effect->timer;
             state->angle_step = effect->timer * 3;
         }
         if (effect->timer < 8) {
             state->brightness = (effect->timer + 1) * 16;
         }
-        if (effect->timer < 0x100) {
+        if (effect->timer < 256) {
             effect->timer++;
         }
         goto update; /* skip the finalizing fade into the shared update */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
-        if (effect->finish_timer < 0x3d) {
+        if (effect->finish_timer < 61) {
             if (effect->finish_timer & 8) {
                 state->radius++;
             }
             state->angle_step++;
-            if (effect->finish_timer < 0x3d) {
-                state->brightness = (0x3c - effect->finish_timer) * 4;
-                if (effect->finish_timer < 0x3d) {
+            if (effect->finish_timer < 61) {
+                state->brightness = (60 - effect->finish_timer) * 4;
+                if (effect->finish_timer < 61) {
                     effect->finish_timer++;
                 }
             }
@@ -128,11 +128,7 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
         if (state->index >= 10) {
             state->index = 0;
         }
-        /* The finished arm comes first. Its jump and barrier then precede the
-         * result = 1 block, so reorg's liveness at the return label no longer
-         * sees a0 from the final call's delay slot and fills the phase-1
-         * branch slot at the dispatch as the target does. */
-        if (g_battle_effect_current_secondary->finish_timer >= 0x3d) {
+        if (g_battle_effect_current_secondary->finish_timer >= 61) {
             for (i = 0; i < BATTLE_EFFECT_RING_SLOT_COUNT; i++) {
                 if (g_battle_effect_current_secondary->slot_ids[i] != 0) {
                     battle_effect_free_slot(g_battle_effect_current_secondary->slot_ids[i]);

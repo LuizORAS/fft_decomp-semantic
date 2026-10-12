@@ -30,7 +30,7 @@ s32 battle_effect_golem_secondary_handler(void) {
         effect->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
-        battle_effect_start_group(BATTLE_EFFECT_PARTICLE_GROUP_GOLEM, 0xD);
+        battle_effect_start_group(BATTLE_EFFECT_PARTICLE_GROUP_GOLEM, 13);
         /* fallthrough */
     case BATTLE_SECONDARY_EFFECT_FINALIZING:
         battle_effect_save_inertia_threshold();

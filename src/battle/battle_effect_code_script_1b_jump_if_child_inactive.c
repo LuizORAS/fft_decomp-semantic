@@ -6,12 +6,10 @@
 effect_script_result_e battle_effect_code_script_1b_jump_if_child_inactive(effect_record_t* record) {
     battle_effect_script_parameters_t parameters;
     battle_effect_script_instruction_t* instruction;
-    u32 slot;
 
     instruction = battle_effect_get_current_script_instruction(record);
     parameters = instruction->header.parameters;
-    slot = parameters.child.slot;
-    if (record->child_indices[slot] == 0) {
+    if (record->child_indices[parameters.child.slot] == 0) {
         record->pc = instruction->immediate.value;
     } else {
         record->pc = record->pc + 4;
