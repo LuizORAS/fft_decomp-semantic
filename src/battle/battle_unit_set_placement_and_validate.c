@@ -8,9 +8,9 @@
 s32 battle_unit_set_placement_and_validate(s32 unit_idx, unit_deployment_coordinates_t* src) {
     battle_stats_t* unit = &g_battle_unit_stats[unit_idx];
 
-    unit->position.higher_elevation = src->flags.value >> 7;
+    unit->position.higher_elevation = src->flags.upper_level;
     unit->position.y = src->y;
     unit->x = src->x;
-    unit->position.facing = src->flags.value & 0xF;
+    unit->position.facing = src->flags.facing;
     return battle_unit_validate_placement(unit_idx);
 }

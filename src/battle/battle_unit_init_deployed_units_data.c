@@ -53,7 +53,7 @@ s32 battle_unit_init_deployed_units_data(unit_deployment_coordinates_t* formatio
                     unit->initial_team_flags = BATTLE_TEAM_RED | BATTLE_TEAM_FLAG_PLAYER_CONTROLLED;
                     unit->sprite_palette = 1;
                 }
-                if (g_main_unit_deployed_coords[i].flags.value & 0x10) {
+                if (g_main_unit_deployed_coords[i].flags.off_field) {
                     unit->existence = BATTLE_UNIT_EXISTENCE_OFF_FIELD;
                     unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
                 } else {

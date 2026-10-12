@@ -808,14 +808,11 @@ typedef struct battle_unit_position {
 typedef char battle_unit_position_size_must_be_2[(sizeof(battle_unit_position_t) == 2) ? 1 : -1];
 
 /* Deployment records share the byte written by ATTACK and read by BATTLE. */
-typedef union unit_deployment_flags {
-    u8 value;
-    struct {
-        u8 facing : 2;
-        u8 _unknown_00_bit2 : 3;
-        u8 _unused_00_bit5 : 2;
-        u8 upper_level : 1;
-    } placement;
+typedef struct unit_deployment_flags {
+    u8 facing : 4;
+    u8 off_field : 1;
+    u8 _unused_00_bit5 : 2;
+    u8 upper_level : 1;
 } unit_deployment_flags_t;
 
 typedef struct unit_deployment_coordinates {
