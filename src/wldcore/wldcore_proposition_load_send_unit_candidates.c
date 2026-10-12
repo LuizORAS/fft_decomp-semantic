@@ -1,10 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Build the list of available non-guest human units for a proposition.
- *
- * Units already assigned to a proposition, absent roster entries, monsters,
- * and special-character sprite sets are excluded. */
+/* List the units that can be sent on a proposition: the generic humans of the first 16 roster slots
+ * (sprite set CHARACTER_IDENTITY_BOY or later, not monsters) who are not away on one, as unit-name rows
+ * with their levels; the ones already chosen are dimmed. Returns how many rows show, at most six. */
 s32 wldcore_proposition_load_send_unit_candidates(wldcore_menu_send_unit_level_t* level) {
     s32 i;
     s32 j;

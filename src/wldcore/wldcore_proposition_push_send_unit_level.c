@@ -7,12 +7,10 @@
  * the target stores it by symbol. */
 extern s16 g_wldcore_menu_scroll_offset;
 
-/* Push the proposition send-unit menu level (type 0x24).
- *
- * Builds the available-unit list into the new level record, starts WORLD
- * thread 12 on the list-panel renderer with the shared panel render state,
- * appends the level's seven window records and five render records, and asks
- * thread 14 for message 0xb812.
+/* Push the level that chooses the units to send (WLDCORE_MENU_LEVEL_PROPOSITION_SEND_UNIT): the list
+ * of units that can go (wldcore_proposition_load_send_unit_candidates) on the list panel thread, the
+ * three chosen slots with a preview of the highlighted unit, and the barkeeper's prompt
+ * (WLDCORE_TEXT_ID_CHOOSE_UNITS).
  *
  * The selected index is written through the panel render state (+0x38):
  * the target derives the thread parameter from that field's address. Each

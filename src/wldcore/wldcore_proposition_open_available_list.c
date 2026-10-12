@@ -1,18 +1,13 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Opens the town menu's proposition-location list (row kind 1 of
- * wldcore_bar_handle_menu_input). If the parent list level's frame is hidden (render flag
- * 0x10), it first unhides its three records, rebuilds it with wldcore_bar_build_menu_rows,
- * publishes text 0xb806 and resets its main window. It then lists the 96
- * propositions whose script variable 0x360 + i has neither bit 1 nor 2 set,
- * whose g_main_proposition_states entry is 0 in its low six bits and which
- * wldcore_proposition_set_based_on_location accepts for the current location
- * (entry values 0xd000 + i). With entries it shows text 0xb80b and up to six
- * rows at (0x4c, 0x50), width 0x96, and pushes a type-7 level; otherwise it
- * resumes the parent, shows text 0xb80d and marks the parent's content
- * published. */
-void wldcore_list_open_available_propositions(void) {
+/* Open the list of propositions on offer at this town (WLDCORE_MENU_LEVEL_AVAILABLE_PROPOSITIONS):
+ * the ones neither in progress nor completed (their variable, EVENT_SCRIPT_VAR_PROPOSITION_FIRST + id),
+ * not waiting out the days after a failure (g_main_proposition_states) and offered here
+ * (wldcore_proposition_is_offered_at), as rows of TEXT_ID_PROPOSITION_NAME_BASE + id with six
+ * visible. When the Bar's menu was hidden it is shown and rebuilt first. With none the barkeeper says
+ * so (WLDCORE_TEXT_ID_NO_PROPOSITIONS) and the Bar's menu stays. */
+void wldcore_proposition_open_available_list(void) {
     wldcore_point32_t dimensions;
     wldcore_point32_t origin;
     s32 count;
@@ -50,7 +45,7 @@ void wldcore_list_open_available_propositions(void) {
         if (!(world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
                 & (WLDCORE_PROPOSITION_VARIABLE_IN_PROGRESS | WLDCORE_PROPOSITION_VARIABLE_COMPLETED))
             && !(g_main_proposition_states[i] & WLDCORE_PROPOSITION_STATE_DAYS_MASK)
-            && wldcore_proposition_set_based_on_location(i, g_wldcore_map_projection_state.marker.kind + 1) != 0) {
+            && wldcore_proposition_is_offered_at(i, g_wldcore_map_projection_state.marker.kind + 1) != 0) {
             g_wldcore_list_entry_values[count] = i + TEXT_ID_PROPOSITION_NAME_BASE;
             g_wldcore_list_row_flags[count] = 0;
             count++;

@@ -2,9 +2,9 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Resume handler of the propositions list: block Circle, Cross and Select for the
- * levels underneath and show prompt 0xB80B again. */
-void wldcore_list_propositions_restore_prompt(void) {
+/* Resume handler of the list of propositions on offer: keep Circle, Cross and Select from the WORLD
+ * menu frame and show its prompt (WLDCORE_TEXT_ID_PROPOSITIONS_INTRO) again. */
+void wldcore_proposition_available_list_restore_prompt(void) {
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_PROPOSITIONS_INTRO, 0);
 }

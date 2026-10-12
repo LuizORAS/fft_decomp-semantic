@@ -1,22 +1,24 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Whether proposition `index` is offered at `location`: the row's location
- * (0 for any), then each condition its flags select. The status condition
- * tests bit 2 of script variable 0x360 + condition_value. */
-s32 wldcore_proposition_set_based_on_location(s32 index, s32 location) {
+/* Whether proposition `index` is offered at a location (`location` is the location + 1): its row's
+ * location must match unless it is 0 (anywhere), and each condition its flags select must hold: the
+ * shop level (EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY) at least required_shop_level, today's zodiac
+ * sign (wldcore_calendar_to_zodiac_date) equal to condition_value, or the proposition condition_value
+ * completed. */
+s32 wldcore_proposition_is_offered_at(s32 index, s32 location) {
     wldcore_proposition_fields_t entry;
     s32 month;
     s32 day;
 
-    wldcore_unpack_proposition_row(&entry, index);
+    wldcore_proposition_unpack_row(&entry, index);
     if (entry.fields.location != 0) {
         if (location != entry.fields.location) {
             return 0;
         }
     }
-    if (entry.fields.condition_flags & WLDCORE_PROPOSITION_CONDITION_SCRIPT_VAR_6F) {
-        if (world_script_get_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY) < entry.fields.required_script_var_6f) {
+    if (entry.fields.condition_flags & WLDCORE_PROPOSITION_CONDITION_SHOP_LEVEL) {
+        if (world_script_get_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY) < entry.fields.required_shop_level) {
             return 0;
         }
     }

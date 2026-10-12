@@ -1,9 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Expand one 23-byte proposition row into halfword fields, then remap the
- * two fields at +0x08/+0x0a through the halfword table of record 1. */
-void wldcore_unpack_proposition_row(wldcore_proposition_fields_t* out, s32 index) {
+/* Expand proposition `index`'s 23-byte row (proposition data record 0) into halfword fields, then
+ * replace the two fee fields by their amounts in record 1. */
+void wldcore_proposition_unpack_row(wldcore_proposition_fields_t* out, s32 index) {
     u8* rows;
     u16* field_lookup;
     s32 i;

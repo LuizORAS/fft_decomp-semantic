@@ -1,13 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Input step of the proposition send-unit level.
- *
- * While the portrait frame is visible, a changed unit in the selected slot is
- * redrawn into the portrait. Cancel (0x40) and confirm (0x20) both close the
- * level; confirm first stores the highlighted list row into the slot, redraws
- * the rows, rebuilds the available-unit list and flags WORLD thread 12. Up and
- * down wrap the slot through 0..2 and move the cursor window.
+/* Step of the send-unit level with three units chosen and a fourth picked: up and down choose which
+ * chosen slot it replaces, Circle replaces it and refreshes the list, Cross keeps the three; either
+ * way the list takes the input again. The slot's unit is shown in the portrait.
  *
  * The target's frame holds two words no instruction touches, reproduced by
  * the unused point. */

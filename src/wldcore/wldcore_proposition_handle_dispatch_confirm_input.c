@@ -1,11 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Input step of the proposition-dispatch yes/no panel built by wldcore_window_build_yes_no_panel:
- * up/down toggle the row, cancel (0x40) and "no" close the panel; "yes" pays
- * g_wldcore_proposition_gil_amount from script variable 0x2c, marks the proposition taken, records
- * it in the next g_main_active_propositions slot with its participants, and
- * closes the panel. */
+/* Step of the dispatch question. Up and down switch the row; Cross and "no" return to the list on
+ * offer. "Yes" pays the fee from the war funds, marks the proposition attempted and in progress, and
+ * records it in the next g_main_active_propositions slot: dispatched, 0 days elapsed, the days chosen,
+ * this town as the place to report, and the units sent, each marked away (proposition_status 1). */
 void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel_level_t* level) {
     s32 row;
     s32 i;
@@ -23,7 +22,7 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
         g_wldcore_window_render_record_count -= 2;
         g_wldcore_window_render_object_count -= 4;
         g_wldcore_menu_stack_depth -= 1;
-        wldcore_list_open_available_propositions();
+        wldcore_proposition_open_available_list();
         return;
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0

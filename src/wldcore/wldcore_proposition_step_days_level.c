@@ -1,12 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Input step of a number-panel level that waits on WORLD thread 12: once the
- * thread finishes, the pending result (level->result) selects which resume
- * handler runs and two levels are popped. Otherwise cancel arms result -1 and
- * confirm arms result 1, publishing the entered number, and either restarts
- * thread 12. */
-void wldcore_menu_number_panel_wait_for_thread_step(wldcore_menu_panel_level_t* level) {
+/* Step of the days level: Circle keeps the number (g_wldcore_proposition_dispatch_days) and Cross
+ * gives up, both closing the number panel; once its thread ends the two levels close and the
+ * dispatch is confirmed (wldcore_proposition_push_dispatch_confirm_level), or the list on offer
+ * returns. */
+void wldcore_proposition_step_days_level(wldcore_menu_panel_level_t* level) {
     if (level->result != 0 && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         g_wldcore_menu_blocked_buttons = 0;
         g_wldcore_menu_ordering_table_offset = 1;
@@ -16,7 +15,7 @@ void wldcore_menu_number_panel_wait_for_thread_step(wldcore_menu_panel_level_t* 
         if (level->result == 1) {
             wldcore_proposition_push_dispatch_confirm_level();
         } else {
-            wldcore_list_open_available_propositions();
+            wldcore_proposition_open_available_list();
         }
         return;
     }

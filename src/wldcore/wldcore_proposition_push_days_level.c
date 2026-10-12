@@ -2,11 +2,11 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Pushes the "how many days" number panel of a proposition: shows prompt
- * 0xB813 with the row's minimum and maximum days, starts the number panel
- * thread on that range starting at the minimum, and withholds Circle and
- * Cross from the WORLD menu threads (the level's own step handles them). */
-void wldcore_menu_push_number_panel_level(void) {
+/* Push the level that asks how many days the units are sent for
+ * (WLDCORE_MENU_LEVEL_PROPOSITION_DAYS): the barkeeper names the row's minimum and maximum
+ * (WLDCORE_TEXT_ID_CHOOSE_DAYS), and the number panel thread runs on that range from the minimum,
+ * with Circle and Cross kept from the WORLD menu threads (the level's own step takes them). */
+void wldcore_proposition_push_days_level(void) {
     wldcore_point32_t origin;
     s32 record_index;
     s32 x;
@@ -26,6 +26,6 @@ void wldcore_menu_push_number_panel_level(void) {
         WLDCORE_THREAD_SLOT_WINDOW_PANEL, x | (y << 16), WLDCORE_TEXT_ID_DAYS_LABEL, &origin);
     record_index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[record_index].panel.result = 0;
-    g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_NUMBER_PANEL;
+    g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_DAYS;
     g_wldcore_menu_stack_depth = record_index + 1;
 }

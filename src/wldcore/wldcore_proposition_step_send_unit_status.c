@@ -1,22 +1,15 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Location-browser step of the proposition send-unit level (modes 3-5,
- * entered from wldcore_menu_step_send_unit_level).
- *
- * Mode 3 waits for WORLD threads 12 and 14, shows the two arrow windows,
- * enters mode 4 and starts the background threads for the highlighted list
- * entry. Mode 4 is interactive: 0x60 hides the arrows, stops threads 8, 12
- * and 9 and enters mode 5; 0x100 parks both arrows in palette 10 and pushes a
- * layout-window level; right (8) and left (4) wrap the slot through
- * unit_count, repaint the arrow sprites 0x66-0x69, set the scroll direction in
- * thread 8's block and reload the entry's text. Mode 5 waits for threads 8,
- * 12 and 9, clears system flags 0x20000 and 0x800, restarts threads 14 and 12
- * and shows the six records hidden on entry.
+/* The unit status view of the send-unit level (Square on the list): WLDCORE_SEND_UNIT_MODE_STATUS_OPEN
+ * waits for the list and message threads, then opens the status panels
+ * (wldcore_start_core_background_threads) of the highlighted unit; in WLDCORE_SEND_UNIT_MODE_STATUS
+ * L1 and R1 step through the listed units, Select opens the layout window, and Circle or Cross
+ * closes the panels; WLDCORE_SEND_UNIT_MODE_STATUS_CLOSE waits for them and shows the list again.
  *
  * Twin of the participant browser wldcore_menu_handle_participant_detail_input; the chained stores and the
  * shared scroll tail follow it. */
-void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* level) {
+void wldcore_proposition_step_send_unit_status(wldcore_menu_send_unit_level_t* level) {
     u32 buttons;
     s32 selected;
     s32 direction;

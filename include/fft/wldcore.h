@@ -1054,7 +1054,7 @@ typedef struct wldcore_proposition_result_level {
 } wldcore_proposition_result_level_t;
 
 /* One 23-byte proposition row expanded to halfword fields by
- * wldcore_unpack_proposition_row; `fields` names the halfwords whose use is
+ * wldcore_proposition_unpack_row; `fields` names the halfwords whose use is
  * known. */
 typedef union wldcore_proposition_fields {
     u16 values[23];
@@ -1073,17 +1073,17 @@ typedef union wldcore_proposition_fields {
         u16 random_bonus;    /* 0x16; 1 enables the three-tier random reward */
         u16 gil_reward;      /* 0x18 */
         u16 _unused_1a[3];   /* 0x1a */
-        u16 location;        /* 0x20; 0 for any location */
+        u16 location;        /* 0x20; location + 1, 0 for any location */
         u16 condition_flags; /* 0x22; WLDCORE_PROPOSITION_CONDITION_* */
         u16 _unused_24;      /* 0x24 */
         u16 speaker_mode;    /* 0x26; wldcore_proposition_speaker_e */
         u16 preferred_job;   /* 0x28 */
-        u16 required_script_var_6f; /* 0x2a */
-        u16 condition_value;        /* 0x2c; zodiac month or proposition status index */
+        u16 required_shop_level; /* 0x2a; WLDCORE_PROPOSITION_CONDITION_SHOP_LEVEL */
+        u16 condition_value;     /* 0x2c; zodiac sign (CONDITION_MONTH) or proposition to complete (CONDITION_STATUS) */
     } fields;
 } wldcore_proposition_fields_t;
 enum {
-    WLDCORE_PROPOSITION_CONDITION_SCRIPT_VAR_6F = 1,
+    WLDCORE_PROPOSITION_CONDITION_SHOP_LEVEL = 1,
     WLDCORE_PROPOSITION_CONDITION_MONTH = 2,
     WLDCORE_PROPOSITION_CONDITION_STATUS = 4,
 };
@@ -1140,14 +1140,16 @@ wldcore_proposition_data_t* wldcore_proposition_get_data_pointer(s32 record);
 s32 wldcore_proposition_load_picture(s32 index);
 void wldcore_proposition_load_picture_data_set(s32 value);
 s32 wldcore_proposition_step_message(wldcore_proposition_report_level_t* state, s32 message);
-void wldcore_unpack_proposition_row(wldcore_proposition_fields_t* out, s32 index);
+void wldcore_proposition_unpack_row(wldcore_proposition_fields_t* out, s32 index);
 void wldcore_proposition_push_cancel_confirm_level(s32 value);
 void wldcore_proposition_push_detail_level(s32 value);
-s32 wldcore_proposition_set_based_on_location(s32 index, s32 location);
+s32 wldcore_proposition_is_offered_at(s32 index, s32 location);
 void wldcore_proposition_push_dispatch_confirm_level(void);
 void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_t* level);
-void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* level);
+void wldcore_proposition_step_send_unit_status(wldcore_menu_send_unit_level_t* level);
 void wldcore_proposition_push_send_unit_level(void);
+void wldcore_proposition_open_available_list(void);
+void wldcore_proposition_push_days_level(void);
 s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_level_t* state, s32 message, s32 speaker);
 void wldcore_proposition_push_result_level(s32 proposition);
 s32 wldcore_proposition_find_preferred_job_unit(void);
@@ -1392,15 +1394,14 @@ void wldcore_list_store_cursor_state(s32 index);
 
 /* The list-level steps hand their menu level to these stubs, which read no
  * argument; the parameter is the argument the target passes in $a0. */
-void wldcore_list_propositions_block_all_buttons(wldcore_menu_panel_level_t* level);
-void wldcore_list_propositions_close_level(wldcore_menu_panel_level_t* level);
+void wldcore_proposition_available_list_block_all_buttons(wldcore_menu_panel_level_t* level);
+void wldcore_proposition_available_list_close_level(wldcore_menu_panel_level_t* level);
 void wldcore_list_unexplored_lands_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_story_events_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_script_variables_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_tutorial_topics_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_formation_tutorials_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_script_flags_block_all_buttons(wldcore_menu_panel_level_t* level);
-void wldcore_list_open_available_propositions(void);
 void wldcore_list_open_completed_propositions(void);
 void wldcore_list_open_propositions(void);
 void wldcore_list_open_tutorial_mask_1_entries(void);
@@ -1881,7 +1882,7 @@ typedef enum wldcore_menu_level_type {
     WLDCORE_MENU_LEVEL_PROPOSITION_DETAIL = 0x09,
     WLDCORE_MENU_LEVEL_PROPOSITION_ACCEPT = 0x0a,
     WLDCORE_MENU_LEVEL_VARIABLE_LIST = 0x0b,
-    WLDCORE_MENU_LEVEL_NUMBER_PANEL = 0x0c,
+    WLDCORE_MENU_LEVEL_PROPOSITION_DAYS = 0x0c,
     WLDCORE_MENU_LEVEL_PROPOSITION_DISPATCH_CONFIRM = 0x0d,
     WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS = 0x0e,
     WLDCORE_MENU_LEVEL_COMPLETED_PROPOSITIONS_BROWSE = 0x0f,
@@ -2173,7 +2174,6 @@ void wldcore_menu_run_shop_and_rebuild_screen(s32 shop_id);
 void wldcore_window_set_render_state_2_from_arg_0x10(s32* level);
 void wldcore_menu_push_variable_list_level(void);
 void wldcore_window_load_party_unit_sprite_record(wldcore_menu_send_unit_level_t* level, s32 unit, s32 render_index);
-void wldcore_menu_push_number_panel_level(void);
 void wldcore_window_set_states_and_blue_tint(wldcore_window_tint_request_t* param);
 void wldcore_menu_push_sound_novel_quit_level(void);
 void wldcore_menu_push_sound_novel_history_level(void);

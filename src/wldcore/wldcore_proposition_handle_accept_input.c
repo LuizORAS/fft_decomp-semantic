@@ -1,10 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Menu input step: cancel (0x40) closes this level and returns through
- * 0x80072a18; confirm (0x20) stores the 0x8009f2f4 + 0x8009f2f6 total, shows
- * message 0xb810 (with the total substituted) or 0xb80f when it is zero,
- * opens the yes/no panel at (0x48, 0x20), and pushes a level tagged 0xa. */
+/* Step of a proposition's detail. Cross returns to the list on offer; Circle asks whether to take the
+ * job, with its fee (the row's two fee amounts, kept in g_wldcore_proposition_gil_amount) when it has
+ * one, on a yes/no panel (WLDCORE_MENU_LEVEL_PROPOSITION_ACCEPT). */
 void wldcore_proposition_handle_accept_input(wldcore_menu_window_render_level_t* owner) {
     s32 total;
     wldcore_point32_t origin;
@@ -17,7 +16,7 @@ void wldcore_proposition_handle_accept_input(wldcore_menu_window_render_level_t*
         g_wldcore_window_render_record_count--;
         g_wldcore_window_render_object_count--;
         g_wldcore_menu_stack_depth--;
-        wldcore_list_open_available_propositions();
+        wldcore_proposition_open_available_list();
     } else if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         total = g_wldcore_selected_proposition_row[0].fields.fee_a + g_wldcore_selected_proposition_row[0].fields.fee_b;

@@ -1,17 +1,13 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Input step of the proposition yes/no confirmation panel.
- *
- * Up/down toggle the highlighted row and move the cursor window by one
- * 16-pixel row. Cancel (0x40) and "no" both tear the panel down and return
- * through wldcore_list_open_available_propositions. "Yes" first checks that at least one non-guest,
- * non-monster, generic party unit is free (the same filter as
- * wldcore_proposition_load_send_unit_candidates) and that script variable 0x2c
- * is at least g_wldcore_proposition_gil_amount; failing either shows message 0xb822 or 0xb811 and
- * parks the level in mode 1 or 3 waiting for a button, and mode 1 then chains
- * message 0xb8e0 before mode 3 closes. A successful confirmation continues
- * into wldcore_proposition_push_send_unit_level.
+/* Step of the take-the-job yes/no panel. Up and down switch the row; Cross and "no" return to the
+ * list on offer. "Yes" needs a unit to send (a generic human of the first 16 roster slots who is not
+ * away on a proposition, the filter of wldcore_proposition_load_send_unit_candidates) and the war funds
+ * for the fee: without a unit the barkeeper says so twice (WLDCORE_TEXT_ID_CHOOSE_MORE_UNITS, then
+ * WLDCORE_TEXT_ID_CHOOSE_HUMAN_UNIT), without the gil once (WLDCORE_TEXT_ID_NOT_ENOUGH_GIL), and the
+ * next press returns to the list; otherwise the units are chosen
+ * (wldcore_proposition_push_send_unit_level).
  *
  * The gotos are the target's shared tails: the mode 3 close, the "no"
  * dismissal and the no-unit failure jump into the cancel and gil-failure
@@ -48,7 +44,7 @@ void wldcore_proposition_handle_accept_confirm_input(wldcore_menu_choice_panel_l
         g_wldcore_window_render_record_count--;
         g_wldcore_window_render_object_count--;
         g_wldcore_menu_stack_depth -= 2;
-        wldcore_list_open_available_propositions();
+        wldcore_proposition_open_available_list();
         return;
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0

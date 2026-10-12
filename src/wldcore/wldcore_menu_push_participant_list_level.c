@@ -12,7 +12,7 @@ void wldcore_menu_push_participant_list_level(s32 proposition) {
     s32 depth;
     s32 window;
 
-    wldcore_unpack_proposition_row(
+    wldcore_proposition_unpack_row(
         g_wldcore_selected_proposition_row, g_main_active_propositions[proposition].proposition_id);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].participant.proposition = proposition;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]

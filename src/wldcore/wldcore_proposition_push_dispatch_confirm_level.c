@@ -1,10 +1,8 @@
 #include "fft/wldcore.h"
 
-/* Pushes menu level type 0xd: a cursor window, an upper window, a 0x28x0x30
- * text record (0xb805) and a text record listing text 0xb84e, the errand
- * name (0xf7ff + g_wldcore_selected_proposition_row[0].fields.name_text), text 0xb821 and
- * g_wldcore_proposition_send_unit_count rows of text 0x4000 + g_wldcore_proposition_send_units[i]. World thread 14
- * shows message 0xb814; both windows are placed against the first text record.
+/* Push the last question before the units leave (WLDCORE_MENU_LEVEL_PROPOSITION_DISPATCH_CONFIRM):
+ * the job's conditions (its name, the days, the place, the units sent) beside a yes/no panel, and the
+ * barkeeper's question (WLDCORE_TEXT_ID_CONFIRM_CONDITIONS).
  *
  * `unused` reproduces the target's 0x78-byte frame. The row offset uses its
  * own local: reusing `row` (then set twice) schedules the loop's `addiu v1`

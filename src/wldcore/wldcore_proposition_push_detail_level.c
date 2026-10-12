@@ -1,15 +1,13 @@
 #include "fft/wldcore.h"
 
-/* Declared with an s32 value here: the target passes the entry value
- * without narrowing it. */
-
-/* Opens the detail view for proposition entry `value`: shows message
- * 0xb879 + value with a chance from its save-data state byte (10, 20 or 40
- * percent), otherwise message 0xb80c with substitution value 0xd000 + value;
- * unpacks the proposition row, builds a render record with text 0x8800 +
- * value and pushes it as a type-9 level, hiding the parent level's windows.
+/* Open a proposition's detail (WLDCORE_MENU_LEVEL_PROPOSITION_DETAIL): its description
+ * (TEXT_ID_WORLD_MESSAGE_BASE + id) in a render record over the Bar's hidden windows, and a line from
+ * the barkeeper: a hint about it (WLDCORE_TEXT_ID_PROPOSITION_HINT_FIRST + id) with a chance of 10 in
+ * 100, 20 after it failed and 40 after it failed badly (g_main_proposition_states), otherwise the
+ * plain introduction. The row is unpacked into g_wldcore_selected_proposition_row.
  *
- * The target stores base_x/base_y through one pointer to the pair. */
+ * Declared with an s32 value here: the target passes the entry value without
+ * narrowing it. The target stores base_x/base_y through one pointer to the pair. */
 void wldcore_proposition_push_detail_level(s32 value) {
     s32 chance;
     s32 index;
@@ -33,7 +31,7 @@ void wldcore_proposition_push_detail_level(s32 value) {
         g_world_text_substitution_values[0] = value + TEXT_ID_PROPOSITION_NAME_BASE;
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_PROPOSITION_ABOUT, 0);
     }
-    wldcore_unpack_proposition_row(g_wldcore_selected_proposition_row, value);
+    wldcore_proposition_unpack_row(g_wldcore_selected_proposition_row, value);
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_render.render_index = index;
