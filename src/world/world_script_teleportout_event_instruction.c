@@ -1,6 +1,8 @@
 #include "fft/battle_effect.h"
 #include "fft/battle_gfx.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -12,11 +14,11 @@ void world_script_teleportout_event_instruction(s32 unit_id, s32 remove_unit) {
     s32 misc_id;
     s32 unit_index;
 
-    misc_id = world_script_get_misc_id(unit_id);
+    misc_id = script_get_misc_id(unit_id);
     if (misc_id != EVENT_MISC_ID_NONE) {
         g_world_sound_effect_id_to_play = MAIN_SFX_TELEPORT_OUT;
-        g_world_thread_call_target = effect_set_secondary_teleport_by_misc_id;
-        world_thread_call_on_main_stack(misc_id);
+        g_thread_call_target = effect_set_secondary_teleport_by_misc_id;
+        thread_call_on_main_stack(misc_id);
         unit_index = wldcore_unit_get_id_from_misc_id(misc_id);
         world_unit_set_animation(misc_id, BATTLE_UNIT_ANIMATION_RAISE_HANDS);
         battle_gfx_init_misc_unit_palette_modulation(misc_id, 2, 0x1f, 0x1f, 0x1f);

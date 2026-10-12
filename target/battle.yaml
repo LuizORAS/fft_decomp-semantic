@@ -998,7 +998,7 @@ functions:
   - {addr: 0x80147928, size: 132, name: battle_unit_try_get_misc_data_by_unit_id, hash: 95c00a3b4735d757}
   - {addr: 0x801479ac, size: 548, name: script_filter_unit_id_by_mode, hash: af495e872ad53a94}
   - {addr: 0x80147bd0, size: 216, name: script_teleportout_event_instruction, hash: ca4b779f8a27569e}
-  - {addr: 0x80147ca8, size: 72, name: script_teleportin_event_instruction, hash: 117e30d62a327134}
+  - {addr: 0x80147ca8, size: 72, name: script_teleportin_event_instruction, hash: 117e30d62a327134, source: src/shared/script/script_teleportin_event_instruction.c}
   - {addr: 0x80147cf0, size: 168, name: script_blue_remove_all_enemy_units, hash: 2274921be941b9ac}
   - {addr: 0x80147d98, size: 200, name: script_blue_remove_unit, hash: acf2f50c451c3612}
   - {addr: 0x80147e60, size: 332, name: script_warp_unit, hash: a4238fc24406e01c}
@@ -2275,7 +2275,7 @@ data:
   - {addr: 0x8014ca80, name: battle_thread_yield}
   - {addr: 0x8014ccb8, name: battle_mul_div_s64}
   - {addr: 0x8014ce08, name: battle_fixed_cross_product_q12}
-  - {addr: 0x8014ceb4, name: battle_thread_call_on_main_stack}
+  - {addr: 0x8014ceb4, name: thread_call_on_main_stack}
   - {addr: 0x8014cf68, name: g_action_display_image_rects}
   - {addr: 0x8014d02c, name: g_map_selected_tile_data}
   - {addr: 0x8014d038, name: g_battle_menu_active_turn_banner}
@@ -2595,7 +2595,7 @@ data:
   - {addr: 0x80173c9c, name: g_battle_event_pending_loaded_evtchr_slot}
   - {addr: 0x80173ca0, name: g_battle_event_pending_loaded_evtchr_clear_slot}
   - {addr: 0x80173ca4, name: g_battle_event_block}
-  - {addr: 0x80173ca8, name: g_battle_thread_call_target}
+  - {addr: 0x80173ca8, name: g_thread_call_target}
   - {addr: 0x80173cac, name: g_battle_event_pending_unit_vram_copy}
   - {addr: 0x80173cb0, name: g_battle_scenario_event_active}
   - {addr: 0x80173cb4, name: g_battle_event_pending_effect_id}

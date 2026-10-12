@@ -2,6 +2,7 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 
 /* BATTLE twin of world_script_block_start_thread. Thread body for an event BLOCK_START: runs the enclosed instructions
@@ -36,8 +37,8 @@ void script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_DEBUG_PAUSE) {
             script_print_debug_message();
         } else if (script[0] == EVENT_OPCODE_WALK_TO) {
-            g_battle_thread_call_target = script_walkto_event_instruction;
-            battle_thread_call_on_main_stack(parameters);
+            g_thread_call_target = script_walkto_event_instruction;
+            thread_call_on_main_stack(parameters);
         } else if (script[0] == EVENT_OPCODE_WALK_TO_ANIM) {
             misc_id = script_get_misc_id(first_halfword);
             if (misc_id != EVENT_MISC_ID_NONE) {

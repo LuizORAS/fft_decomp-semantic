@@ -1,4 +1,5 @@
 #include "fft/event_etc.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Load ETC graphic `graphic_id`: upload it straight to VRAM, or for the full-screen
@@ -20,14 +21,13 @@ void etc_graphic_open(s32 graphic_id) {
 
     do {
         battle_thread_yield();
-        g_battle_thread_call_target = (void (*)(void))main_file_call_build_header;
+        g_thread_call_target = (void (*)(void))main_file_call_build_header;
     } while (
-        battle_thread_call_on_main_stack(g_etc_graphics[graphic_id].lba, g_etc_graphics[graphic_id].size, image_buffer)
-        != 0);
+        thread_call_on_main_stack(g_etc_graphics[graphic_id].lba, g_etc_graphics[graphic_id].size, image_buffer) != 0);
     do {
         battle_thread_yield();
-        g_battle_thread_call_target = (void (*)(void))main_file_is_still_loading;
-    } while (battle_thread_call_on_main_stack() != 0);
+        g_thread_call_target = (void (*)(void))main_file_is_still_loading;
+    } while (thread_call_on_main_stack() != 0);
 
     if (g_etc_graphics[graphic_id].texture_mode < 2U) {
         LoadImage(g_etc_graphics[graphic_id].framebuffer_rect, (u32*)image_buffer);

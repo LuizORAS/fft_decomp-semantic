@@ -159,4 +159,11 @@ typedef enum native_thread_task {
     NATIVE_THREAD_TASK_UNIT_MESSAGE = 70,
 } native_thread_task_e;
 
+/* Main-stack callback dispatch, bound to the resident BATTLE or WORLD scheduler.
+ * It forwards a0-a3 unchanged and switches to thread 0's stack when necessary;
+ * arguments beyond those registers are not copied across the stack switch.
+ * The argument list stays unspecified because callback signatures differ. */
+extern void (*g_thread_call_target)(void);
+s32 thread_call_on_main_stack();
+
 #endif

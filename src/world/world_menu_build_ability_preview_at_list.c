@@ -1,6 +1,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_ai.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -83,8 +84,8 @@ void world_menu_build_ability_preview_at_list(void) {
     action = &g_world_menu_preview_action;
     action->actor_id = g_world_active_unit_data.battle_id;
     stats = world_unit_get_battle_stats_for_stored();
-    g_world_thread_call_target = (void (*)(void))action_preview_at_list;
-    turn = world_thread_call_on_main_stack(stats, action, work->entries);
+    g_thread_call_target = (void (*)(void))action_preview_at_list;
+    turn = thread_call_on_main_stack(stats, action, work->entries);
     if (staged_item != 0) {
         work->entries[1].unit |= BATTLE_AT_ACTION_ENTRY;
         work->entries[1].action_id_low = g_world_menu_preview_action.item_or_equipment;

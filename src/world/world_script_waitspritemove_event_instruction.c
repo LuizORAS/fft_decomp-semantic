@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -8,7 +9,7 @@ void world_script_waitspritemove_event_instruction(s32 unit_id) {
     s32 misc_id;
     s32 i;
 
-    misc_id = world_script_get_misc_id(unit_id);
+    misc_id = script_get_misc_id(unit_id);
     if (misc_id == EVENT_MISC_ID_NONE) {
         return;
     }

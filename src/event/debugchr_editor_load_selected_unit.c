@@ -1,5 +1,6 @@
 #include "fft/event_debugchr.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -105,8 +106,8 @@ void debugchr_editor_load_selected_unit(void) {
             i++;
         } while (i < 5);
 
-        g_battle_thread_call_target = battle_menu_init_monster_skill_check;
-        if (battle_thread_call_on_main_stack(unit) == 0)
+        g_thread_call_target = battle_menu_init_monster_skill_check;
+        if (thread_call_on_main_stack(unit) == 0)
             editor->ability_ids[3] = 0;
 
         output_index = 0;

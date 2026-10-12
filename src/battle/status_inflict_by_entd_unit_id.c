@@ -1,5 +1,5 @@
 #include "fft/battle_status.h"
-#include "fft/battle_thread.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Event-script status change: inflicts (which != 0) or removes one status on the
@@ -33,6 +33,6 @@ void status_inflict_by_entd_unit_id(s32 entd_id, s32 status, s32 which, s32 remo
     } else {
         unit->action.status_changes.removal[byte] = bit;
     }
-    g_battle_thread_call_target = (void (*)(void))status_resolve_unit_changes;
-    battle_thread_call_on_main_stack(idx, removal_only);
+    g_thread_call_target = (void (*)(void))status_resolve_unit_changes;
+    thread_call_on_main_stack(idx, removal_only);
 }

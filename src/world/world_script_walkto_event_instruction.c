@@ -1,4 +1,5 @@
 #include "fft/battle_move.h"
+#include "fft/script.h"
 #include "fft/world.h"
 
 /* Start event opcode 0x28 movement for one unit.
@@ -10,7 +11,7 @@ void world_script_walkto_event_instruction(const event_walk_to_parameters_t* par
     s32 misc_id;
 
     misc_id = world_script_load_halfword(parameters->unit_id_le);
-    misc_id = world_script_get_misc_id(misc_id);
+    misc_id = script_get_misc_id(misc_id);
     if (misc_id != EVENT_MISC_ID_NONE) {
         coords.x = parameters->x;
         coords.y = parameters->y;

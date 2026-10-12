@@ -5,6 +5,8 @@
 #include "fft/battle_thread.h"
 #include "fft/battle_unit.h"
 #include "fft/main.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* TeleportOut: play the teleport sound and secondary effect on the unit, raise
@@ -21,8 +23,8 @@ void script_teleportout_event_instruction(s32 unit_id, s32 remove) {
         return;
     }
     g_sound_pending_sfx_id = MAIN_SFX_TELEPORT_OUT;
-    g_battle_thread_call_target = (void (*)(void))effect_set_secondary_teleport_by_misc_id;
-    battle_thread_call_on_main_stack(misc);
+    g_thread_call_target = (void (*)(void))effect_set_secondary_teleport_by_misc_id;
+    thread_call_on_main_stack(misc);
     idx = battle_unit_get_battle_index_by_misc_id(misc);
     battle_unit_set_animation(misc, BATTLE_UNIT_ANIMATION_RAISE_HANDS);
     battle_gfx_init_misc_unit_palette_modulation(misc, 2, 0x1F, 0x1F, 0x1F);

@@ -2,6 +2,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Menu entry 4's value and the loop counter share $s0 in the target: the
@@ -54,8 +55,8 @@ void battle_menu_select_unit_action_slots_thread(void) {
             g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index = 0;
             battle_menu_run_equip_thread();
         }
-        g_battle_thread_call_target = battle_menu_build_ability_list;
-        battle_thread_call_on_main_stack(i);
+        g_thread_call_target = battle_menu_build_ability_list;
+        thread_call_on_main_stack(i);
         script_pulse_tutorial_wait_value(0xFB);
         battle_menu_run_scrolling_ability_list_thread();
         slot->selected_index = g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index;

@@ -1,6 +1,7 @@
 #include "fft/battle_camera.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Battle twin of world_unit_check_facing_relative_to_camera: nonzero when the

@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* BATTLE twin of world_menu_run_skillset_thread: builds the skillset menu on the main stack,
@@ -17,8 +18,8 @@ void battle_menu_run_skillset_thread(void) {
     s32* param;
 
     battle_menu_check_action_restrictions();
-    g_battle_thread_call_target = battle_menu_build_skillset_entries;
-    battle_thread_call_on_main_stack();
+    g_thread_call_target = battle_menu_build_skillset_entries;
+    thread_call_on_main_stack();
     param_value = 1;
     if (g_battle_menu_action_menu_build_result != 0) {
         g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = 0;

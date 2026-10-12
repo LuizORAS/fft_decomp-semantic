@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 
 /* Uploads the party portrait sprite and palette cells from the 0x18ba portrait
@@ -33,8 +34,8 @@ void attack_gfx_prepare_party_portrait_textures(void) {
         if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
             attack_file_load_sync(DISC_SECTOR_EVENT_WLDFACE_BIN, MENU_WLDFACE_FILE_SIZE, file);
         } else {
-            g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
-            battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MENU_WLDFACE_FILE_SIZE, file);
+            g_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
+            thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MENU_WLDFACE_FILE_SIZE, file);
         }
     } else {
         StoreImage(&g_attack_portrait_sheet_rect_0, (u32*)file[0].pixels);

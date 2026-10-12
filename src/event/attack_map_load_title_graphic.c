@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -29,8 +30,8 @@ void attack_map_load_title_graphic(void) {
 
     if (adjusted != 0xff) {
         title = group_input * 5 + DISC_SECTOR_EVENT_MAPTITLE_BIN;
-        g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
-        battle_thread_call_on_main_stack(title, 0x2800, image);
+        g_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
+        thread_call_on_main_stack(title, 0x2800, image);
     }
 
     LoadImage(&g_attack_map_title_image_rect, (u32*)(image + group * 0xa00));

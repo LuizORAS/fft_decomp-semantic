@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -325,7 +326,7 @@ void world_build_options_menu(void) {
         world_gfx_draw_or_append_gpu_primitive(&page->title);
         world_gfx_draw_or_append_gpu_primitive(&page->text_mode);
         world_gfx_draw_or_append_gpu_primitive(&page->value_area.areas[0]);
-        g_world_thread_call_target = (void (*)(void))suzuki_sound_set_type;
+        g_thread_call_target = (void (*)(void))suzuki_sound_set_type;
         g_main_game_options.fields.cursor_movement = g_world_game_option_values[GAME_OPTION_CURSOR_MOVEMENT];
         g_main_game_options.fields.cursor_repeat_speed = g_world_game_option_values[GAME_OPTION_CURSOR_REPEAT_SPEED];
         g_main_game_options.fields.multi_height_cursor_speed
@@ -345,7 +346,7 @@ void world_build_options_menu(void) {
         g_main_game_options.fields.max_equip_at_job_change
             = g_world_game_option_values[GAME_OPTION_MAX_EQUIP_AT_JOB_CHANGE];
         g_main_game_options.fields.sound_mode = g_world_game_option_values[GAME_OPTION_SOUND_MODE];
-        world_thread_call_on_main_stack(g_world_game_option_values[GAME_OPTION_SOUND_MODE]);
+        thread_call_on_main_stack(g_world_game_option_values[GAME_OPTION_SOUND_MODE]);
         i++;
         column = g_main_game_options.fields.finger_cursor_repeat_speed;
         g_main_input_repeat_initial_delay = g_world_option_input_timing_profiles[column].initial_delay;

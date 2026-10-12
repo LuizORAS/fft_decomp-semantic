@@ -62,6 +62,7 @@ remain excluded. Never modify `meta/`.
 | `src/<module>/` | One C file per function, named after it |
 | `src/shared/gfx/` | Shared graphics helpers, compiled separately in each original module through explicit `source:` paths |
 | `src/shared/menu/` | Shared menu helpers, compiled separately at each original module's addresses |
+| `src/shared/script/` | Shared scenario helpers, retaining each interpreter's original code and state bindings |
 | `src/shared/text/` | Shared text helpers, retaining each original module's copies and call bindings |
 | `src/lib/psyq/<library>/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
 | `src/lib/suzuki/` | Suzuki sound driver, registered with explicit `source:` paths in MAIN |

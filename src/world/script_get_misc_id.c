@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/script.h"
 #include "fft/world.h"
 
 /* Resolve an event-script unit identifier to its active Misc Unit ID.
@@ -7,7 +8,7 @@
  * slots require separate lookup paths. Crystal/treasure records and missing
  * units return EVENT_MISC_ID_NONE.
  */
-s32 world_script_get_misc_id(s32 unit_id) {
+s32 script_get_misc_id(s32 unit_id) {
     s32 battle_id;
     s32 unit_state;
     s32 original_unit_id;

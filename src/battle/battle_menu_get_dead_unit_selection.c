@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Run battle_unit_generate_crystal_or_treasure for the unit on the main stack,
@@ -11,8 +12,8 @@ s32 battle_menu_get_dead_unit_selection(s32 battle_id) {
     crystal_pickup_result_t* result;
 
     stats = battle_unit_get_stats_from_battle_id(battle_id);
-    g_battle_thread_call_target = (void (*)(void))battle_unit_generate_crystal_or_treasure;
-    result = (crystal_pickup_result_t*)battle_thread_call_on_main_stack(stats);
+    g_thread_call_target = (void (*)(void))battle_unit_generate_crystal_or_treasure;
+    result = (crystal_pickup_result_t*)thread_call_on_main_stack(stats);
     g_battle_dead_unit_context = result;
     if (result->result == -1 || result->result == 0) {
         main_system_report_stub(0x11, 7);

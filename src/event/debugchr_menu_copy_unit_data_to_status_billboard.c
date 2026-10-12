@@ -1,4 +1,5 @@
 #include "fft/event_debugchr.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Fills a status billboard (level, team kind, AT position, HP/MP/CT and the
@@ -40,8 +41,8 @@ void debugchr_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu
     output->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = unit->ct;
     output->list_index = 0;
     output->unit_count = 0;
-    g_battle_thread_call_target = (void (*)(void))action_check_at_list_for_unit_battle_id;
-    output->list_index = battle_thread_call_on_main_stack(unit);
+    g_thread_call_target = (void (*)(void))action_check_at_list_for_unit_battle_id;
+    output->list_index = thread_call_on_main_stack(unit);
     if (unit->has_turn != 0)
         output->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = UNIT_TURN_CT_THRESHOLD;
     if (output->list_index >= 0)

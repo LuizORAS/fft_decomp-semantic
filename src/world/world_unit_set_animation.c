@@ -1,5 +1,6 @@
 #include "fft/battle_map.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -17,13 +18,13 @@ void world_unit_set_animation(s32 misc_id, u32 animation) {
             depth = map_get_tile_data_value(
                 MAP_TILE_DATA_DEPTH, stats->x, stats->position.y, stats->position.higher_elevation);
             if ((stats->mount_info & BATTLE_MOUNT_INFO_ROLE_MASK) != 0) {
-                g_world_thread_call_target = (void (*)(void))battle_unit_set_status_animation_by_misc_id;
-                world_thread_call_on_main_stack(misc_id);
+                g_thread_call_target = (void (*)(void))battle_unit_set_status_animation_by_misc_id;
+                thread_call_on_main_stack(misc_id);
                 return;
             }
             if ((depth & 0xFF) >= 2) {
-                g_world_thread_call_target = (void (*)(void))battle_unit_set_mounted_animation_by_misc_id;
-                world_thread_call_on_main_stack(misc_id);
+                g_thread_call_target = (void (*)(void))battle_unit_set_mounted_animation_by_misc_id;
+                thread_call_on_main_stack(misc_id);
                 return;
             }
         }

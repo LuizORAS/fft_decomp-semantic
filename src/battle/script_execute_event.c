@@ -1,6 +1,8 @@
 #include "fft/battle_event.h"
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -39,7 +41,7 @@
  * ResumeWaitingDialog and WaitForInstruction cover slots 1..15 where WORLD's
  * cover 1..16.
  *
- * battle_thread_call_on_main_stack is declared without a parameter list: it
+ * thread_call_on_main_stack is declared without a parameter list: it
  * forwards whatever arguments its current call target takes. */
 void script_execute_event(void) {
     s32 added_unit_state;
@@ -281,8 +283,8 @@ restart_script:
                 draw_misc_id = script_get_misc_id(CHARACTER_IDENTITY_ZALERA);
                 if (draw_misc_id != EVENT_MISC_ID_NONE) {
                     status_queue_current_status_graphics(battle_unit_get_battle_index_by_misc_id(draw_misc_id), 0);
-                    g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                    battle_thread_call_on_main_stack(draw_misc_id);
+                    g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+                    thread_call_on_main_stack(draw_misc_id);
                 }
             }
         } else if (opcode == EVENT_OPCODE_BLUE_REMOVE_UNIT) {
@@ -517,8 +519,8 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_EFFECT_START) {
             do {
                 battle_thread_yield();
-                g_battle_thread_call_target = (void (*)(void))effect_try_init_data;
-            } while (battle_thread_call_on_main_stack() != 0);
+                g_thread_call_target = (void (*)(void))effect_try_init_data;
+            } while (thread_call_on_main_stack() != 0);
         } else if (opcode == EVENT_OPCODE_EFFECT_END) {
             battle_thread_start(battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE), &script_play_effect_thread);
         }
@@ -551,8 +553,8 @@ restart_script:
         }
         /* ---- Unit movement and facing ---- */
         else if (opcode == EVENT_OPCODE_WALK_TO) {
-            g_battle_thread_call_target = (void (*)(void))script_walkto_event_instruction;
-            battle_thread_call_on_main_stack(parameters);
+            g_thread_call_target = (void (*)(void))script_walkto_event_instruction;
+            thread_call_on_main_stack(parameters);
         } else if (opcode == EVENT_OPCODE_JUMP) {
             script_jump_event_instruction((const event_jump_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_WALK) {
@@ -766,8 +768,8 @@ restart_script:
                 battle_unit_draw_and_activate_by_misc_id(draw_misc_id);
                 if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_LIMBERRY_CEMETERY_BATTLE) {
                     status_queue_current_status_graphics(battle_unit_get_battle_index_by_misc_id(draw_misc_id), 1);
-                    g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                    battle_thread_call_on_main_stack(draw_misc_id);
+                    g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+                    thread_call_on_main_stack(draw_misc_id);
                 }
             }
         } else if (opcode == EVENT_OPCODE_ERASE) {
@@ -818,8 +820,8 @@ restart_script:
                         battle_unit_draw_and_activate_by_misc_id(operand_1);
                     }
                     if (battle_unit_save_staged_status_data(added_battle_id) != 0) {
-                        g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                        battle_thread_call_on_main_stack(operand_1);
+                        g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+                        thread_call_on_main_stack(operand_1);
                     }
                 }
             }
@@ -930,8 +932,8 @@ restart_script:
                     = script_get_misc_id(script_load_halfword(instruction_offset + ((u8*)g_battle_event_block) + 3));
                 if (arrow_shooter_misc_id != EVENT_MISC_ID_NONE) {
                     arrow_shooter_battle_id = battle_unit_get_battle_index_by_misc_id(arrow_shooter_misc_id);
-                    g_battle_thread_call_target = (void (*)(void))effect_set_arrow_trajectory;
-                    battle_thread_call_on_main_stack(arrow_shooter_battle_id, &g_battle_scratch_coords, operand_1);
+                    g_thread_call_target = (void (*)(void))effect_set_arrow_trajectory;
+                    thread_call_on_main_stack(arrow_shooter_battle_id, &g_battle_scratch_coords, operand_1);
                 }
             }
         } else if (opcode == EVENT_OPCODE_MAP_FREEZE) {

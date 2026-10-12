@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -21,15 +22,15 @@ void world_gfx_load_evtchr_thread(void) {
 
     do {
         world_thread_yield();
-        g_world_thread_call_target = (void (*)(void))main_file_call_build_header;
-    } while (world_thread_call_on_main_stack(
-                 block * EVTCHR_BLOCK_SECTORS + DISC_SECTOR_EVENT_EVTCHR_BIN, sizeof(*buffer), buffer)
+        g_thread_call_target = (void (*)(void))main_file_call_build_header;
+    } while (
+        thread_call_on_main_stack(block * EVTCHR_BLOCK_SECTORS + DISC_SECTOR_EVENT_EVTCHR_BIN, sizeof(*buffer), buffer)
         != 0);
 
     do {
         world_thread_yield();
-        g_world_thread_call_target = main_file_is_still_loading;
-    } while (world_thread_call_on_main_stack() != 0);
+        g_thread_call_target = main_file_is_still_loading;
+    } while (thread_call_on_main_stack() != 0);
 
     g_world_event_pending_loaded_evtchr_slot = slot;
     g_world_event_loaded_evtchr_buffer = buffer;

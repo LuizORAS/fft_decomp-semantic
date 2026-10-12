@@ -1,5 +1,6 @@
 #include "fft/battle_unit.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -104,8 +105,8 @@ void world_menu_load_selected_unit(void) {
             editor->ability_ids[i] = *innate_items++;
         }
 
-        g_world_thread_call_target = unit_has_adjacent_monster_skill_support;
-        if (world_thread_call_on_main_stack(unit) == 0)
+        g_thread_call_target = unit_has_adjacent_monster_skill_support;
+        if (thread_call_on_main_stack(unit) == 0)
             editor->ability_ids[3] = 0;
 
         output_index = 0;

@@ -53,8 +53,8 @@ void script_add_unit_start_thread(void) {
                         battle_unit_draw_and_activate_by_misc_id(misc_id);
                     }
                     if (battle_unit_save_staged_status_data(slot) != 0) {
-                        g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                        battle_thread_call_on_main_stack(misc_id);
+                        g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+                        thread_call_on_main_stack(misc_id);
                     }
                 }
             }

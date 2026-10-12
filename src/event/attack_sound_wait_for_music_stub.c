@@ -1,4 +1,5 @@
 #include "fft/event_attack.h"
+#include "fft/thread.h"
 #include "psx/libetc.h"
 
 /* Wait, a frame at a time, for the music load poll on the main stack to
@@ -7,6 +8,6 @@
 void attack_sound_wait_for_music_stub(void) {
     do {
         VSync(0);
-        g_battle_thread_call_target = (void (*)(void))main_sound_is_music_loading_stub;
-    } while (battle_thread_call_on_main_stack() != 0);
+        g_thread_call_target = (void (*)(void))main_sound_is_music_loading_stub;
+    } while (thread_call_on_main_stack() != 0);
 }

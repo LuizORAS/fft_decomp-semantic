@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -14,18 +15,18 @@ void require_text_show_battle_congratulations(void) {
     s32 thread_a;
     s32 thread_b;
 
-    g_battle_thread_call_target = main_sound_unload_scenario_music_and_tunes;
-    battle_thread_call_on_main_stack();
-    g_battle_thread_call_target = (void (*)(void))main_sound_open_scenario_smd_files;
-    battle_thread_call_on_main_stack(script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_FINAL_BATTLE_WON
+    g_thread_call_target = main_sound_unload_scenario_music_and_tunes;
+    thread_call_on_main_stack();
+    g_thread_call_target = (void (*)(void))main_sound_open_scenario_smd_files;
+    thread_call_on_main_stack(script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_FINAL_BATTLE_WON
             ? MAIN_MUSIC_CONGRATULATIONS
             : MAIN_MUSIC_CONGRATULATIONS_FINAL_BATTLE);
     do {
         battle_thread_yield();
-        g_battle_thread_call_target = (void (*)(void))main_sound_poll_scenario_smd_load;
-    } while (battle_thread_call_on_main_stack() != 0);
-    g_battle_thread_call_target = (void (*)(void))main_sound_switch_music_track;
-    battle_thread_call_on_main_stack(1, 0x7f, 0);
+        g_thread_call_target = (void (*)(void))main_sound_poll_scenario_smd_load;
+    } while (thread_call_on_main_stack() != 0);
+    g_thread_call_target = (void (*)(void))main_sound_switch_music_track;
+    thread_call_on_main_stack(1, 0x7f, 0);
 
     thread_a = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     battle_thread_start(thread_a, require_render_display_condition_special_cases_thread);

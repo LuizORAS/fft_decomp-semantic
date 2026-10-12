@@ -1,5 +1,6 @@
 #include "fft/battle_action.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -20,8 +21,8 @@ void world_menu_init_at_list(menu_entry_t* entry) {
     s32 i;
     u8* text;
 
-    g_world_thread_call_target = (void (*)(void))action_calculate_at_list;
-    world_thread_call_on_main_stack(g_world_action_target_list_slots, 0);
+    g_thread_call_target = (void (*)(void))action_calculate_at_list;
+    thread_call_on_main_stack(g_world_action_target_list_slots, 0);
     for (i = 0; i < 256; i++) {
         g_world_dead_unit_menu_flags[i] = 0;
         g_world_menu_at_list_flags[i] = 0;

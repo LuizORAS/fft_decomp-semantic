@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* WORLD twin of script_load_event: read one event block from the archive on
@@ -8,15 +9,15 @@ void world_script_load_event(s32 id) {
 
     do {
         world_thread_yield();
-        g_world_thread_call_target = (void (*)(void))main_file_call_build_header;
-    } while (world_thread_call_on_main_stack(
+        g_thread_call_target = (void (*)(void))main_file_call_build_header;
+    } while (thread_call_on_main_stack(
                  id * EVENT_BLOCK_SECTORS + DISC_SECTOR_EVENT_TEST_EVT, EVENT_BLOCK_BYTES, g_main_script_event_block)
         != 0);
 
     do {
         world_thread_yield();
-        g_world_thread_call_target = main_file_is_still_loading;
-    } while (world_thread_call_on_main_stack() != 0);
+        g_thread_call_target = main_file_is_still_loading;
+    } while (thread_call_on_main_stack() != 0);
 
     block = (event_file_block_t*)g_world_event_script;
     off = block->text_offset_or_marker;

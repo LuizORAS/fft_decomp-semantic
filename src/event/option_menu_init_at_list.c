@@ -1,4 +1,5 @@
 #include "fft/event_option.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -21,8 +22,8 @@ void option_menu_init_at_list(menu_entry_t* menu) {
     s32 index;
     u8* text;
 
-    g_battle_thread_call_target = (void (*)(void))action_calculate_at_list;
-    battle_thread_call_on_main_stack(g_option_menu_at_list_descriptors, 0);
+    g_thread_call_target = (void (*)(void))action_calculate_at_list;
+    thread_call_on_main_stack(g_option_menu_at_list_descriptors, 0);
 
     for (index = 0; index < 0x100; index++) {
         g_option_dead_unit_menu_flags[index] = 0;

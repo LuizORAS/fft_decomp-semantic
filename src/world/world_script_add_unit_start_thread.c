@@ -1,5 +1,6 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
@@ -48,8 +49,8 @@ void world_script_add_unit_start_thread(void) {
                         battle_unit_draw_and_activate_by_misc_id(misc_id);
                     }
                     if (world_unit_save_staged_status_data(slot) != 0) {
-                        g_world_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                        world_thread_call_on_main_stack(misc_id);
+                        g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+                        thread_call_on_main_stack(misc_id);
                     }
                 }
             }

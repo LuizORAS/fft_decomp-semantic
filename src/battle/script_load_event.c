@@ -3,6 +3,7 @@
 #include "fft/battle_text.h"
 #include "fft/battle_thread.h"
 #include "fft/main.h"
+#include "fft/thread.h"
 
 /* Read event block `id` (EVENT_BLOCK_SECTORS sectors from the event archive) into
  * the script event block, yielding until the load finishes, then turn the block's
@@ -19,15 +20,15 @@ void script_load_event(s32 id) {
 
     do {
         battle_thread_yield();
-        g_battle_thread_call_target = (void (*)(void))main_file_call_build_header;
-    } while (battle_thread_call_on_main_stack(
+        g_thread_call_target = (void (*)(void))main_file_call_build_header;
+    } while (thread_call_on_main_stack(
                  id * EVENT_BLOCK_SECTORS + DISC_SECTOR_EVENT_TEST_EVT, EVENT_BLOCK_BYTES, g_main_script_event_block)
         != 0);
 
     do {
         battle_thread_yield();
-        g_battle_thread_call_target = main_file_is_still_loading;
-    } while (battle_thread_call_on_main_stack() != 0);
+        g_thread_call_target = main_file_is_still_loading;
+    } while (thread_call_on_main_stack() != 0);
 
     block = g_battle_event_block;
     off = block->text_offset_or_marker;

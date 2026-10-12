@@ -12,6 +12,7 @@
  *   supplies the first). */
 #include "fft/battle_script.h"
 #include "fft/event_option.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -139,8 +140,8 @@ void option_run_option_choice_menu(void) {
     g_main_game_options.fields.show_unequippable_items = g_option_current_values[GAME_OPTION_SHOW_UNEQUIPPABLE_ITEMS];
     g_main_game_options.fields.max_equip_at_job_change = g_option_current_values[GAME_OPTION_MAX_EQUIP_AT_JOB_CHANGE];
     g_main_game_options.fields.sound_mode = g_option_current_values[GAME_OPTION_SOUND_MODE];
-    g_battle_thread_call_target = (void (*)(void))suzuki_sound_set_type;
-    battle_thread_call_on_main_stack(g_option_current_values[GAME_OPTION_SOUND_MODE]);
+    g_thread_call_target = (void (*)(void))suzuki_sound_set_type;
+    thread_call_on_main_stack(g_option_current_values[GAME_OPTION_SOUND_MODE]);
     width = g_main_game_options.fields.finger_cursor_repeat_speed;
     g_main_input_repeat_initial_delay = g_option_input_repeat_timings[width].initial_delay;
     g_main_input_repeat_period = g_option_input_repeat_timings[width].repeat_period;

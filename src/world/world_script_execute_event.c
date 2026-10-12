@@ -1,5 +1,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 
@@ -251,12 +253,12 @@ restart_event:
                 world_script_warp_unit_display_to_paired_unit(operand_1);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_CLEAR_ZALERA_ACTIVE_STATUS_GRAPHICS) {
-                zalera_misc_id = world_script_get_misc_id(CHARACTER_IDENTITY_ZALERA);
+                zalera_misc_id = script_get_misc_id(CHARACTER_IDENTITY_ZALERA);
                 if (zalera_misc_id != EVENT_MISC_ID_NONE) {
                     world_unit_queue_current_status_graphics(
                         battle_unit_get_battle_index_by_misc_id(zalera_misc_id), 0);
-                    g_world_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                    world_thread_call_on_main_stack(zalera_misc_id);
+                    g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+                    thread_call_on_main_stack(zalera_misc_id);
                 }
             }
         } else if (opcode == EVENT_OPCODE_BLUE_REMOVE_UNIT) {
@@ -413,7 +415,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_RESET_PALETTE) {
             world_script_resetpalette_event_instruction((const event_unit_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_SET_FIRST_MISC_UNIT) {
-            operand_1 = world_script_get_misc_id(first_operand);
+            operand_1 = script_get_misc_id(first_operand);
             if (operand_1 != EVENT_MISC_ID_NONE) {
                 battle_unit_move_misc_unit_to_head(operand_1);
             }
@@ -424,7 +426,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_SET_UNIT_MOVEMENT_EFFECT_SUPPRESSION) {
             world_script_set_units_movement_effect_suppression((const event_movement_effect_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_UNIT_READY) {
-            operand_1 = world_script_get_misc_id(first_operand);
+            operand_1 = script_get_misc_id(first_operand);
             if (operand_1 != EVENT_MISC_ID_NONE) {
                 world_script_wait_for_unit_ready(operand_1);
             }
@@ -474,7 +476,7 @@ restart_event:
         else if (opcode == EVENT_OPCODE_EFFECT) {
             g_world_event_pending_effect_id = first_operand;
             g_world_event_effect_target_misc_id
-                = world_script_get_misc_id((((g_world_event_script) + instruction_offset))[3]);
+                = script_get_misc_id((((g_world_event_script) + instruction_offset))[3]);
             focus_instruction = g_world_event_script;
             focus_instruction += instruction_offset;
             g_world_event_effect_target_x = focus_instruction[4];
@@ -485,8 +487,8 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_EFFECT_START) {
             do {
                 world_thread_yield();
-                g_world_thread_call_target = (void (*)(void))effect_try_init_data;
-            } while (world_thread_call_on_main_stack() != 0);
+                g_thread_call_target = (void (*)(void))effect_try_init_data;
+            } while (thread_call_on_main_stack() != 0);
         } else if (opcode == EVENT_OPCODE_EFFECT_END) {
             world_thread_start(
                 world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE), &world_script_play_effect_thread);
@@ -525,7 +527,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_WAIT_WALK) {
             world_script_waitwalk_event_instruction(first_operand);
         } else if (opcode == EVENT_OPCODE_WALK_TO_ANIM) {
-            operand_1 = world_script_get_misc_id(first_operand);
+            operand_1 = script_get_misc_id(first_operand);
             if (operand_1 != EVENT_MISC_ID_NONE) {
 
                 g_world_unit_pending_animations[operand_1]
@@ -590,7 +592,7 @@ restart_event:
             }
             g_world_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
             g_world_thread_contexts[operand_1].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;
-            g_world_thread_contexts[operand_1].task_words[0] = world_script_get_misc_id(first_operand);
+            g_world_thread_contexts[operand_1].task_words[0] = script_get_misc_id(first_operand);
         } else if (opcode == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
             world_script_waitspritemove_event_instruction(first_operand);
         } else if (opcode == EVENT_OPCODE_MAP_LIGHT) {
@@ -707,7 +709,7 @@ restart_event:
             g_world_event_pending_saved_evtchr_clear_slot = operand_1;
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_COPY_UNIT_GRAPHICS_TO_RESERVED_VRAM_SLOT) {
-            g_world_event_pending_unit_vram_copy = (world_script_get_misc_id(first_operand) << 8) | operand_3;
+            g_world_event_pending_unit_vram_copy = (script_get_misc_id(first_operand) << 8) | operand_3;
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_RELEASE_RESERVED_VRAM_SLOT) {
             g_world_event_pending_reserved_vram_release_slot = operand_1;
@@ -716,7 +718,7 @@ restart_event:
         }
         /* ---- Adding and removing units ---- */
         else if (opcode == EVENT_OPCODE_REMOVE_UNIT) {
-            s16 normalized_unit_id = world_script_get_misc_id(first_operand);
+            s16 normalized_unit_id = script_get_misc_id(first_operand);
             if (normalized_unit_id != EVENT_MISC_ID_NONE) {
                 removed_misc_id = normalized_unit_id;
                 while (world_unit_is_moving(removed_misc_id) != 0) {
@@ -731,18 +733,18 @@ restart_event:
                 }
             }
         } else if (opcode == EVENT_OPCODE_DRAW) {
-            zalera_misc_id = world_script_get_misc_id(first_operand);
+            zalera_misc_id = script_get_misc_id(first_operand);
             if (zalera_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_draw_and_activate_by_misc_id(zalera_misc_id);
                 if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_LIMBERRY_CEMETERY_BATTLE) {
                     world_unit_queue_current_status_graphics(
                         battle_unit_get_battle_index_by_misc_id(zalera_misc_id), 1);
-                    g_world_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                    world_thread_call_on_main_stack(zalera_misc_id);
+                    g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+                    thread_call_on_main_stack(zalera_misc_id);
                 }
             }
         } else if (opcode == EVENT_OPCODE_ERASE) {
-            erased_misc_id = world_script_get_misc_id(first_operand);
+            erased_misc_id = script_get_misc_id(first_operand);
             if (erased_misc_id != EVENT_MISC_ID_NONE) {
                 battle_gfx_reset_unit_graphic_trigger(erased_misc_id);
             }
@@ -785,8 +787,8 @@ restart_event:
                         battle_unit_draw_and_activate_by_misc_id(operand_1);
                     }
                     if (world_unit_save_staged_status_data(appearance_battle_id) != 0) {
-                        g_world_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                        world_thread_call_on_main_stack(operand_1);
+                        g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+                        thread_call_on_main_stack(operand_1);
                     }
                 }
             }
@@ -853,7 +855,7 @@ restart_event:
         }
         /* ---- Miscellaneous unit and display commands ---- */
         else if (opcode == EVENT_OPCODE_UNIT_SHADOW) {
-            shadow_misc_id = world_script_get_misc_id(first_operand);
+            shadow_misc_id = script_get_misc_id(first_operand);
             if (shadow_misc_id != EVENT_MISC_ID_NONE) {
                 if (operand_3 != 0) {
                     battle_gfx_clear_shadow_graphic_trigger_by_misc_id(shadow_misc_id);
@@ -866,7 +868,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_WAIT_VALUE) {
             world_script_wait_value_event_instruction((const event_wait_value_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_EVTCHR_PALETTE) {
-            misc_id_for_7f = world_script_get_misc_id(first_operand);
+            misc_id_for_7f = script_get_misc_id(first_operand);
             if (misc_id_for_7f != EVENT_MISC_ID_NONE) {
                 battle_gfx_set_evtchr_palette_by_misc_id(misc_id_for_7f, operand_3, operand_4);
             }
@@ -883,16 +885,16 @@ restart_event:
                     world_script_get_variable(EVENT_SCRIPT_VAR_DAY));
             }
         } else if (opcode == EVENT_OPCODE_TEMP_WEAPON) {
-            palette_misc_id = world_script_get_misc_id(first_operand);
+            palette_misc_id = script_get_misc_id(first_operand);
             if (palette_misc_id != EVENT_MISC_ID_NONE) {
                 battle_gfx_set_thrown_item_palette_by_misc_id(operand_3, palette_misc_id);
             }
         } else if (opcode == EVENT_OPCODE_ARROW) {
-            first_misc_id = world_script_get_misc_id(first_operand);
+            first_misc_id = script_get_misc_id(first_operand);
             if (first_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_get_battle_index_by_misc_id(first_misc_id);
-                second_misc_id = world_script_get_misc_id(
-                    world_script_load_halfword(instruction_offset + (g_world_event_script) + 3));
+                second_misc_id
+                    = script_get_misc_id(world_script_load_halfword(instruction_offset + (g_world_event_script) + 3));
                 if (second_misc_id != EVENT_MISC_ID_NONE) {
                     battle_unit_get_battle_index_by_misc_id(second_misc_id);
                 }
@@ -934,7 +936,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_TELEPORT_OUT) {
             world_script_teleportout_event_instruction(first_operand, 1);
         } else if (opcode == EVENT_OPCODE_TELEPORT_IN) {
-            world_script_teleportin_event_instruction(first_operand, 1);
+            script_teleportin_event_instruction(first_operand, 1);
         } else if (opcode == EVENT_OPCODE_INFLICT_STATUS) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_1, world_script_inflict_status_thread);

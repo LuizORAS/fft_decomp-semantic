@@ -3,6 +3,7 @@
 #include "fft/battle_text.h"
 #include "fft/battle_unit.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Fills the preview-target and selected-unit billboards and the small
@@ -94,8 +95,8 @@ void battle_menu_load_selected_unit(void) {
             i++;
         } while (i < 5);
 
-        g_battle_thread_call_target = battle_menu_init_monster_skill_check;
-        if (battle_thread_call_on_main_stack(unit) == 0)
+        g_thread_call_target = battle_menu_init_monster_skill_check;
+        if (thread_call_on_main_stack(unit) == 0)
             editor->ability_ids[3] = 0;
 
         output_index = 0;

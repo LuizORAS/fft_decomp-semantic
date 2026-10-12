@@ -2,6 +2,7 @@
 #include "fft/battle_event.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 
 /* Snapshot a unit into the event staging record and queue its status removal.
  *
@@ -76,8 +77,8 @@ s32 battle_unit_save_staged_status_data(s32 unit_id) {
             & STATUS_BYTE_MASK(STATUS_ID_CHARM)) {
             stats->team_flags = stats->initial_team_flags;
         }
-        g_battle_thread_call_target = (void (*)(void))status_apply_unit_action_removal;
-        battle_thread_call_on_main_stack(stats);
+        g_thread_call_target = (void (*)(void))status_apply_unit_action_removal;
+        thread_call_on_main_stack(stats);
         g_battle_unit_status_staging_data->state[unit_id] = UNIT_STATUS_STAGING_SAVED;
         return 1;
     }

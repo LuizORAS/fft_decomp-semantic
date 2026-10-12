@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /*
@@ -36,7 +37,7 @@ void world_unit_inflict_status_by_entd_unit_id(
         } else {
             unit->action.status_changes.removal[status_byte_index] = status_mask;
         }
-        g_world_thread_call_target = resolve_unit_status_changes;
-        world_thread_call_on_main_stack(battle_unit_index, less_strict_removal);
+        g_thread_call_target = resolve_unit_status_changes;
+        thread_call_on_main_stack(battle_unit_index, less_strict_removal);
     }
 }

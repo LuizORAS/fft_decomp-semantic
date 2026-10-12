@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 
 /*
  * Restore the saved unit state and replay status changes made during an event.
@@ -37,15 +38,15 @@ void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
         unit->hp = g_battle_unit_status_staging_data->hp[unit_id];
         unit->team_flags = g_battle_unit_status_staging_data->team_flags[unit_id];
         unit->death_counter = g_battle_unit_status_staging_data->death_counter[unit_id];
-        g_battle_thread_call_target = (void (*)(void))status_queue_misc_graphics_flag_change;
+        g_thread_call_target = (void (*)(void))status_queue_misc_graphics_flag_change;
         for (i = 0; i < STATUS_COUNT; i++) {
             byte_index = i / 8;
             mask = 0x80 >> (i % 8);
             if (g_battle_unit_status_staging_data->added[unit_id][byte_index] & mask) {
-                battle_thread_call_on_main_stack(STATUS_HANDLER_INDEX(i), 0, unit_id);
+                thread_call_on_main_stack(STATUS_HANDLER_INDEX(i), 0, unit_id);
             }
             if (g_battle_unit_status_staging_data->removed[unit_id][byte_index] & mask) {
-                battle_thread_call_on_main_stack(STATUS_HANDLER_INDEX(i), 1, unit_id);
+                thread_call_on_main_stack(STATUS_HANDLER_INDEX(i), 1, unit_id);
             }
         }
         if (g_battle_unit_status_staging_data->removed[unit_id][STATUS_BYTE_INDEX(STATUS_ID_JUMP)]
@@ -71,8 +72,8 @@ void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
                 unit->action.status_changes.removal[STATUS_BYTE_INDEX(STATUS_ID_DEAD)]
                     |= STATUS_BYTE_MASK(STATUS_ID_DEAD);
             }
-            g_battle_thread_call_target = (void (*)(void))status_resolve_unit_changes;
-            battle_thread_call_on_main_stack(unit_id, 1);
+            g_thread_call_target = (void (*)(void))status_resolve_unit_changes;
+            thread_call_on_main_stack(unit_id, 1);
         }
         if (!(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CHARGING)]
                 & (STATUS_BYTE_MASK(STATUS_ID_CHARGING) | STATUS_BYTE_MASK(STATUS_ID_JUMP)
@@ -82,7 +83,7 @@ void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
             unit->charged_ability_ct = g_battle_unit_status_staging_data->charged_ability_ct[unit_id];
         }
         g_battle_unit_status_staging_data->state[unit_id] = UNIT_STATUS_STAGING_RESTORED;
-        g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-        battle_thread_call_on_main_stack(misc_id);
+        g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+        thread_call_on_main_stack(misc_id);
     }
 }

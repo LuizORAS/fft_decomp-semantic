@@ -1,6 +1,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_ai.h"
 #include "fft/battle_menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -58,8 +59,8 @@ void world_menu_select_unit_action_slots_thread(void) {
             g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index = 0;
             world_menu_run_equip_thread();
         }
-        g_world_thread_call_target = (void (*)(void))world_menu_build_ability_list;
-        world_thread_call_on_main_stack(i);
+        g_thread_call_target = (void (*)(void))world_menu_build_ability_list;
+        thread_call_on_main_stack(i);
         world_script_pulse_tutorial_wait_value(0xFB);
         world_menu_scrolling_list_thread();
         slot->selected_index = g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index;

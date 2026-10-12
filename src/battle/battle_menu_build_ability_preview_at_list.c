@@ -7,6 +7,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -63,8 +64,8 @@ void battle_menu_build_ability_preview_at_list(void) {
     action = &g_battle_menu_selected_action;
     action->actor_id = g_battle_active_turn_unit.battle_id;
     stats = battle_unit_get_attacker_data_pointer();
-    g_battle_thread_call_target = (void (*)(void))action_preview_at_list;
-    turn = battle_thread_call_on_main_stack(stats, action, work->entries);
+    g_thread_call_target = (void (*)(void))action_preview_at_list;
+    turn = thread_call_on_main_stack(stats, action, work->entries);
     if (staged_item != 0) {
         work->entries[1].unit |= BATTLE_AT_ACTION_ENTRY;
         work->entries[1].action_id_low = g_battle_menu_selected_action.item_or_equipment;

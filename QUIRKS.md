@@ -432,7 +432,7 @@ Where callers pass arguments a callee never reads, the callee declares them as
 written that way.
 
 - `StCdInterrupt`: emulated header/payload copies pass a fourth completion argument to the three-argument `mem2mem` helper, which ignores it.
-- `g_battle_thread_call_target` is the main-stack dispatch slot for callees
+- `g_thread_call_target` is the main-stack dispatch slot for callees
   with different signatures; assignments erase their function types.
 - `target_set_panels_for_action` reads `$v0` after a void-returning
   panel builder; the value is the callee's leftover register contents.

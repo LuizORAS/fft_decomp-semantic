@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -13,7 +14,7 @@ void world_script_mirrorsprite_event_instruction(const event_mirror_sprite_param
 
     unit_id = world_script_load_halfword(parameters->unit_id_le);
     mode = parameters->mode;
-    misc_id = world_script_get_misc_id(unit_id);
+    misc_id = script_get_misc_id(unit_id);
     if (misc_id != EVENT_MISC_ID_NONE) {
         if (mode == 1) {
             battle_unit_set_horizontal_flip_flag(misc_id);

@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 /*
  * Sprite-move worker called by world_script_sprite_move (mode 0) and
  * world_script_sprite_move_beta (mode 1) with the script cursor: a unit
@@ -40,7 +41,7 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
 
     parameters = arg->unit_id_le;
     mode = use_speed;
-    misc_id = world_script_get_misc_id(world_script_load_halfword(parameters));
+    misc_id = script_get_misc_id(world_script_load_halfword(parameters));
     if (misc_id == EVENT_MISC_ID_NONE) {
         return;
     }

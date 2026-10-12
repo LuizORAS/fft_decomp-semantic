@@ -1,8 +1,8 @@
 #ifndef SCRIPT_H
 #define SCRIPT_H
 
-/* Scenario bytecode, operands and variable formats shared by BATTLE and WORLD.
- * Interpreter APIs are declared in battle_script.h and world.h. */
+/* Scenario bytecode, operands, variables and shared helpers for BATTLE and WORLD.
+ * Module interpreter APIs are declared in battle_script.h and world.h. */
 
 #include "fft/gfx.h"
 #include "fft/menu.h"
@@ -27,7 +27,7 @@ enum {
     /* Five ordinary deployed-unit IDs; the end value is exclusive. */
     EVENT_UNIT_ID_DEPLOYED_FIRST = 0x78,
     EVENT_UNIT_ID_DEPLOYED_END = 0x7d,
-    /* script_get_misc_id / world_script_get_misc_id result for an absent unit. */
+    /* script_get_misc_id result for an absent unit. */
     EVENT_MISC_ID_NONE = 2000,
     /* g_*_event_unit_slots[] entry with no ghost unit assigned. */
     EVENT_UNIT_SLOT_EMPTY = 1000,
@@ -50,7 +50,7 @@ enum {
  * Each comment gives the encoded operand byte count, then the operands in the
  * order the handler reads them. A plain name is one unsigned byte, (s8) a
  * signed byte, (u16) or (s16) a 16-bit value, and "unread" a byte no handler
- * reads. A "unit id" names one unit (*_script_get_misc_id); a "unit group"
+ * reads. A "unit id" names one unit (script_get_misc_id); a "unit group"
  * is a unit id, 0 for every unit, or a team selector from
  * EVENT_UNIT_GROUP_FIRST (*_unit_try_get_misc_data_by_unit_id).
  *
@@ -948,5 +948,10 @@ enum {
     EVENT_SCRIPT_PACKED_BIT_WORD_FIRST = 0x80,
     EVENT_SCRIPT_PACKED_NIBBLE_WORD_FIRST = 0x97,
 };
+
+/* Event-unit lookup uses the resident scene's interpreter state. */
+s32 script_get_misc_id(s32 unit_id);
+/* TeleportIn forwards the unit ID; the interpreter's second argument is unused. */
+void script_teleportin_event_instruction(s32 unit_id, s32 unused);
 
 #endif

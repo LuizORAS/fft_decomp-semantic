@@ -330,7 +330,6 @@ void world_script_pause_event_instruction(void);
 void world_script_play_effect_thread(void);
 void world_script_run_condition(event_opcode_e opcode);
 void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 source, s32 unused);
-void world_script_teleportin_event_instruction(s32 unit_id, s32 unused);
 void world_script_unlockdate_event_instruction(u32* date_bits, s32 index, s32 month, s32 day);
 void world_script_waitrotateunit_and_waitrotateall_event_instruction(s32);
 void world_script_waitspritemove_event_instruction(s32);
@@ -447,9 +446,7 @@ enum {
 
 extern u16 g_world_thread_change_cooldown;
 
-/* Inner-subroutine continuation invoked by the WORLD thread scheduler. Five call
- * sites agree on this shape; world_script_teleportin_event_instruction reuses the slot with an
- * argument and keeps a local extern for that. */
+/* Running-state snapshot used while updating event input. */
 extern u8 g_world_thread_status_snapshot[16];
 
 /* Nonzero while a modal task owns the menus (0x8015330c): the announce and
@@ -461,9 +458,6 @@ extern s32 g_world_thread_task_ids[][256];
 extern menu_gradient_panel_prims_t g_world_thread_indicator_packets[2][2];
 extern crystal_pickup_result_t* g_world_thread_inner_subroutine_result;
 
-/* The unspecified argument list is intentional for the same stack-switching
- * callback bridge used by BATTLE. */
-extern void (*g_world_thread_call_target)(void);
 extern native_thread_t g_world_thread_contexts[];
 extern s32 g_world_thread_current_id;
 
@@ -484,7 +478,6 @@ void world_card_input_update_with_message_state(void);
 void world_thread_wait_for_unit_view_panels(void);
 void world_thread_yield_forever(void);
 void world_thread_request_redraw(s32 thread_id);
-s32 world_thread_call_on_main_stack();
 void world_thread_exit_current(void);
 s32 world_thread_find_running_by_task(s32 task_id);
 void* world_thread_get_current_global_pointer(void);
@@ -1841,7 +1834,6 @@ s32 world_unit_try_get_misc_data_by_unit_id(u16* unit_id, s32* misc_index);
 void world_unit_update_staged_status_data(u16 unit_id, u16 restore);
 void world_unit_view_supervisor_thread(void);
 s32 world_unit_save_staged_status_data(s32);
-s32 world_script_get_misc_id(s32 unit_id);
 s32 world_unit_get_battle_index_by_entd_unit_id(s32 entd_unit_id);
 void world_unit_update_monster_breeding(s32 unused);
 

@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/thread.h"
 
 /*
  * Initialize ATTACK resources and select the thread that starts deployment.
@@ -21,9 +22,8 @@ s32 battle_menu_init_attack_resources_and_threads(void) {
     if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
         g_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_PRELOAD_USED;
     } else {
-        g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
-        battle_thread_call_on_main_stack(
-            DISC_SECTOR_EVENT_ATTACK_OUT, 0x20000, g_main_heap_companion_overlay_load_address);
+        g_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
+        thread_call_on_main_stack(DISC_SECTOR_EVENT_ATTACK_OUT, 0x20000, g_main_heap_companion_overlay_load_address);
     }
     result = attack_load_scenario_conditionals();
     if (g_script_attack_entry_mode != SCRIPT_ATTACK_ENTRY_PRELOAD_USED) {

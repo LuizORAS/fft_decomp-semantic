@@ -1,6 +1,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -135,8 +136,8 @@ void attack_deploy_run_select_menu(void) {
                     }
                 } else {
                     text_id = node->help_base;
-                    g_battle_thread_call_target = (void (*)(void))text_find_entry;
-                    if ((*(u8*)battle_thread_call_on_main_stack(text_id) & 0xfe) != 0xfe) {
+                    g_thread_call_target = (void (*)(void))text_find_entry;
+                    if ((*(u8*)thread_call_on_main_stack(text_id) & 0xfe) != 0xfe) {
                         g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                         battle_thread_start(parent_id, battle_text_character_handling_thread);
                         battle_thread_set_parameters(parent_id, 0x3b, text_id, 0);

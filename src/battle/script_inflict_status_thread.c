@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -44,28 +45,28 @@ void script_inflict_status_thread(void) {
     if (mode == EVENT_INFLICT_STATUS_POISON) {
         status_inflict_by_entd_unit_id(unit_id, STATUS_LSB_INDEX(STATUS_ID_POISON), 1, 1);
         g_battle_unit_status_staging_data->inflict_status_mode[battle_unit_index] = UNIT_INFLICT_STATUS_MODE_POISON;
-        g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-        battle_thread_call_on_main_stack(misc_id);
+        g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+        thread_call_on_main_stack(misc_id);
         battle_unit_set_animation(misc_id, BATTLE_UNIT_ANIMATION_KNEEL);
     } else if (mode == EVENT_INFLICT_STATUS_CRYSTAL) {
         status_inflict_by_entd_unit_id(unit_id, STATUS_LSB_INDEX(STATUS_ID_DEAD), 0, 1);
         status_inflict_by_entd_unit_id(unit_id, STATUS_LSB_INDEX(STATUS_ID_CRITICAL), 0, 1);
         status_inflict_by_entd_unit_id(unit_id, STATUS_LSB_INDEX(STATUS_ID_CRYSTAL), 1, 1);
         g_battle_unit_status_staging_data->inflict_status_mode[battle_unit_index] = UNIT_INFLICT_STATUS_MODE_CRYSTAL;
-        g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-        battle_thread_call_on_main_stack(misc_id);
+        g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+        thread_call_on_main_stack(misc_id);
     } else if (mode == EVENT_INFLICT_STATUS_REVIVE) {
         if (state == 0) {
             g_battle_unit_status_staging_data->inflict_status_mode[battle_unit_index] = UNIT_INFLICT_STATUS_MODE_REVIVE;
             status_inflict_by_entd_unit_id(unit_id, STATUS_LSB_INDEX(STATUS_ID_DEAD), 0, 1);
             unit->hp = 1;
             status_inflict_by_entd_unit_id(unit_id, STATUS_LSB_INDEX(STATUS_ID_CRITICAL), 1, 1);
-            g_battle_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-            battle_thread_call_on_main_stack(misc_id);
+            g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+            thread_call_on_main_stack(misc_id);
             g_sound_pending_sfx_id = MAIN_SFX_EVENT_REVIVE;
         } else if (state == 2) {
-            g_battle_thread_call_target = (void (*)(void))battle_unit_set_mounted_animation_by_misc_id;
-            battle_thread_call_on_main_stack(misc_id);
+            g_thread_call_target = (void (*)(void))battle_unit_set_mounted_animation_by_misc_id;
+            thread_call_on_main_stack(misc_id);
         }
     }
     if (wait_frames != 0) {

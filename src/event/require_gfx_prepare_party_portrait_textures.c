@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 
 /* Uploads the 20 party portraits (sprite and palette cells) from the 0x18ba
@@ -29,8 +30,8 @@ void require_gfx_prepare_party_portrait_textures(void) {
 
     file = main_heap_alloc(MENU_WLDFACE_FILE_SIZE);
     if (g_script_attack_entry_mode != 0) {
-        g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
-        battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MENU_WLDFACE_FILE_SIZE, file);
+        g_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
+        thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MENU_WLDFACE_FILE_SIZE, file);
     } else {
         StoreImage(&g_require_portrait_sheet_rect_0, (u32*)file[0].pixels);
         StoreImage(&g_require_portrait_sheet_rect_1, (u32*)file[1].pixels);

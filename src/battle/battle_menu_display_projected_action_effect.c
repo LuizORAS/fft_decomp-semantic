@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
 #include "fft/battle_menu.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -136,8 +137,8 @@ s32 battle_menu_display_projected_action_effect(
         panel[0].kind = 2;
         *label_x = *label_x - g_action_display_image_rects[ACTION_DISPLAY_IMAGE_BROKEN].width + 8;
     } else if (g_battle_menu_preview_target_action->attack_type & ACTION_TYPE_STATUS_CHANGE) {
-        g_battle_thread_call_target = (void (*)(void))main_status_find_action_highest_order_effect;
-        image = battle_thread_call_on_main_stack(g_battle_menu_preview_target_action);
+        g_thread_call_target = (void (*)(void))main_status_find_action_highest_order_effect;
+        image = thread_call_on_main_stack(g_battle_menu_preview_target_action);
         if (image > 0) {
             if (image & MAIN_ACTION_STATUS_RESULT_REMOVAL) {
                 extra = 0x1f;
@@ -252,8 +253,8 @@ s32 battle_menu_display_projected_action_effect(
         && g_battle_menu_preview_target_action->attack_type != ACTION_TYPE_STATUS_CHANGE) {
         prim++;
         params++;
-        g_battle_thread_call_target = (void (*)(void))main_status_find_action_highest_order_effect;
-        image = battle_thread_call_on_main_stack(g_battle_menu_preview_target_action);
+        g_thread_call_target = (void (*)(void))main_status_find_action_highest_order_effect;
+        image = thread_call_on_main_stack(g_battle_menu_preview_target_action);
         if (image > 0) {
             if (image & MAIN_ACTION_STATUS_RESULT_REMOVAL) {
                 setRGB0(prim, 0x30, 0x8c, 0xdc);

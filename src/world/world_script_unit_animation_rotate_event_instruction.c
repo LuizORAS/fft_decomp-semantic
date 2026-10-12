@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -21,7 +22,7 @@ void world_script_unit_animation_rotate_event_instruction(const event_unit_anim_
     misc_id = world_script_load_halfword(data->unit_id_le);
     rotation = data->rotation;
     animation = world_script_load_halfword(data->animation_le);
-    call_misc_id = world_script_get_misc_id(misc_id);
+    call_misc_id = script_get_misc_id(misc_id);
     misc_id = call_misc_id;
     if (data->animation_le[1] == 0) {
         battle_unit_clear_facing_update_suppression(call_misc_id);

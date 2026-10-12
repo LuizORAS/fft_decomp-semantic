@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -27,7 +28,7 @@ void world_script_face_unit(const event_face_unit_parameters_t* parameters, s32 
     misc_id = world_script_load_halfword(parameters->first_unit_id_le);
     unit_id = world_script_load_halfword(parameters->second_unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
-        misc_id = world_script_get_misc_id(misc_id);
+        misc_id = script_get_misc_id(misc_id);
         if (misc_id != EVENT_MISC_ID_NONE) {
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_unit_face_slot_order[i], &misc_index) != 0

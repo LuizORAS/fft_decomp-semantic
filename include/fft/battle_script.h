@@ -150,7 +150,6 @@ void script_resetpalette_event_instruction(const event_unit_parameters_t* parame
 void script_run_condition(event_opcode_e opcode);
 void script_run_variable_command(s32 opcode, s32 destination_id, s32 source, s32 unused);
 void script_set_event_speed(s32 speed);
-void script_teleportin_event_instruction(s32 unit_id, s32 unused);
 void script_teleportout_event_instruction(s32 arg, s32 remove);
 void script_unit_animation_rotate_event_instruction(const event_unit_anim_rotate_parameters_t* parameters);
 void script_unlockdate_event_instruction(u32* bitset, s32 date_index, s32 month, s32 day);
@@ -169,7 +168,6 @@ void script_opcode_74_event_instruction(const u8* unused_parameters);
 void script_dark_screen_thread(void);
 void script_process_inflict_status_commands(void);
 void script_rotate_unit(const event_rotate_unit_parameters_t* parameters);
-s32 script_get_misc_id(s32 unit_id);
 void script_play_effect_and_wait(void);
 
 void script_route_event_input(void);

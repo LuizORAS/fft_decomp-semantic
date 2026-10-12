@@ -3,6 +3,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Battle twin of world_unit_update_staged_status_data. Saves or restores the event status snapshot for every misc
@@ -31,9 +32,8 @@ void battle_unit_update_staged_status_data(u16 unit_id, u16 restore) {
                     if (battle_id >= 0) {
                         if (restore == 0) {
                             if (battle_unit_save_staged_status_data(battle_unit_index) != 0) {
-                                g_battle_thread_call_target
-                                    = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                                battle_thread_call_on_main_stack(unit_id);
+                                g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+                                thread_call_on_main_stack(unit_id);
                             }
                         } else {
                             battle_unit_apply_staged_status_data(battle_unit_index, unit_id);
@@ -53,8 +53,8 @@ void battle_unit_update_staged_status_data(u16 unit_id, u16 restore) {
             battle_thread_wait_frames(40);
         }
         if (restore == 0) {
-            g_battle_thread_call_target = battle_gfx_reset_jumping_unit_graphic_triggers;
-            battle_thread_call_on_main_stack();
+            g_thread_call_target = battle_gfx_reset_jumping_unit_graphic_triggers;
+            thread_call_on_main_stack();
         }
     }
 }

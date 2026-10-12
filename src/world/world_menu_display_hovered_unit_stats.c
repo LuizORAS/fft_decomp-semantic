@@ -1,5 +1,6 @@
 #include "fft/battle_unit.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -64,8 +65,8 @@ void world_menu_display_hovered_unit_stats(
         }
         if (text_id != 0) {
             text = text_find_entry(text_id + TEXT_ID_ABILITY_NAME_BASE);
-            g_world_thread_call_target = (void (*)(void))text_measure_pixels;
-            world_thread_call_on_main_stack(&extent_w, &extent_h, text);
+            g_thread_call_target = (void (*)(void))text_measure_pixels;
+            thread_call_on_main_stack(&extent_w, &extent_h, text);
             if (extent_w & 3) {
                 extent_w = (extent_w & 0xFFFC) + 4;
             }

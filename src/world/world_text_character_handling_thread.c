@@ -1,4 +1,5 @@
 #include "fft/open.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -193,7 +194,7 @@ void world_text_character_handling_thread(void) {
     }
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.options != DIALOG_OPTIONS_NO_TAIL) {
         center = rec.width >> 1;
-        value = world_script_get_misc_id(world_thread_get_current_parameter_3());
+        value = script_get_misc_id(world_thread_get_current_parameter_3());
         world_unit_project_misc_to_screen(value, &g_world_text_speaker_screen_coords);
         cursor_x = center;
         rec.tail_offset = 0;
@@ -204,7 +205,7 @@ void world_text_character_handling_thread(void) {
             } else if (world_thread_get_current_parameter_3() == g_world_text_speaker_swap_unit_b) {
                 value = g_world_text_speaker_swap_unit_a;
             }
-            world_unit_project_misc_to_screen(world_script_get_misc_id(value), &g_world_text_partner_screen_coords);
+            world_unit_project_misc_to_screen(script_get_misc_id(value), &g_world_text_partner_screen_coords);
             if (g_world_text_speaker_screen_coords.vy < 0
                 || g_world_text_partner_screen_coords.vy < g_world_text_speaker_screen_coords.vy) {
                 rec.position = 2;

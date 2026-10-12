@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -35,8 +36,8 @@ void world_script_focus(event_focus_parameters_t* parameters) {
     cursor = ((event_camera_instruction_t*)cursor)->parameters.values.position_le[0];
     unit_a = first;
     unit_b = second;
-    first = world_script_get_misc_id(unit_a);
-    second = world_script_get_misc_id(unit_b);
+    first = script_get_misc_id(unit_a);
+    second = script_get_misc_id(unit_b);
     if (first == EVENT_MISC_ID_NONE || second == EVENT_MISC_ID_NONE) {
         ((event_camera_instruction_t*)(cursor - offsetof(event_camera_instruction_t, parameters)))->opcode
             = EVENT_OPCODE_CAMERA_DISABLED;

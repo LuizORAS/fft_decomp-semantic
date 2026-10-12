@@ -1,6 +1,7 @@
 #include "fft/battle_move.h"
 #include "fft/battle_script.h"
 #include "fft/battle_thread.h"
+#include "fft/script.h"
 
 /* WaitWalk: yield, at least once, until the unit has no movement path left. A
  * unit id that does not resolve returns at once. */

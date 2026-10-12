@@ -1,6 +1,7 @@
 #include "fft/battle_ai.h"
 #include "fft/battle_gfx.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -29,9 +30,8 @@ void world_unit_update_staged_status_data(u16 unit_id, u16 restore) {
                     if (battle_id >= 0) {
                         if (restore == 0) {
                             if (world_unit_save_staged_status_data(battle_unit_index) != 0) {
-                                g_world_thread_call_target
-                                    = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                                world_thread_call_on_main_stack(unit_id);
+                                g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+                                thread_call_on_main_stack(unit_id);
                             }
                         } else {
                             world_unit_apply_staged_status_data(battle_unit_index, unit_id);
@@ -51,8 +51,8 @@ void world_unit_update_staged_status_data(u16 unit_id, u16 restore) {
             world_thread_wait_frames(40);
         }
         if (restore == 0) {
-            g_world_thread_call_target = battle_gfx_reset_jumping_unit_graphic_triggers;
-            world_thread_call_on_main_stack();
+            g_thread_call_target = battle_gfx_reset_jumping_unit_graphic_triggers;
+            thread_call_on_main_stack();
         }
     }
 }

@@ -7,10 +7,6 @@
 
 /* thread */
 extern s32 g_battle_current_thread_id;
-/* 0x8014ceb4..0x8014cf58 forwards a0-a3 to the callback in 0x80173ca8,
- * using thread 0's stack when necessary. It does not copy stacked arguments
- * across that stack switch; callers must not assume they are transferred. */
-extern void (*g_battle_thread_call_target)(void);
 
 /* Full BATTLE backing array at 0x8016986c. The pointer slot 0x80165f98 is
  * separate. */
@@ -30,8 +26,6 @@ extern s32 g_battle_thread_task_ids[][256];
  * the use site. */
 extern native_thread_t* g_battle_threads;
 void battle_thread_wait_for_unit_view_panels(void);
-/* The unspecified argument list forwards a0-a3 to the callback. */
-s32 battle_thread_call_on_main_stack();
 void battle_thread_exit_current(void);
 s32 battle_thread_find_running_by_task(s32 task_id);
 void* battle_thread_get_current_global_pointer(void);

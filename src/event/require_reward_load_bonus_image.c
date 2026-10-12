@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -21,17 +22,16 @@ void require_reward_load_bonus_image(s32 image_id) {
     build_operation = main_file_call_build_header;
     do {
         battle_thread_yield();
-        g_battle_thread_call_target = (void (*)(void))build_operation;
+        g_thread_call_target = (void (*)(void))build_operation;
     } while (
-        battle_thread_call_on_main_stack(image_id * 13 + DISC_SECTOR_EVENT_BONUS_BIN, sizeof(*allocation), allocation)
-        != 0);
+        thread_call_on_main_stack(image_id * 13 + DISC_SECTOR_EVENT_BONUS_BIN, sizeof(*allocation), allocation) != 0);
 
     {
         s32 (*poll_operation)() = main_file_is_still_loading;
         do {
             battle_thread_yield();
-            g_battle_thread_call_target = (void (*)(void))poll_operation;
-        } while (battle_thread_call_on_main_stack() != 0);
+            g_thread_call_target = (void (*)(void))poll_operation;
+        } while (thread_call_on_main_stack() != 0);
     }
 
     /* The 256-row upload includes the reserved suffix beyond the 0x6800-byte file. */

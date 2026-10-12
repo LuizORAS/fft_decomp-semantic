@@ -1,5 +1,6 @@
 #include "fft/battle_action.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -37,8 +38,8 @@ void world_menu_preview_attack_caster_stats(void) {
         || action->skillset_id == SKILLSET_ID_EQUIP_CHANGE) {
         g_world_menu_preview_target_action = 0;
     } else {
-        g_world_thread_call_target = (void (*)(void))action_calculate_projected_effect;
-        world_thread_call_on_main_stack(stored, target, action);
+        g_thread_call_target = (void (*)(void))action_calculate_projected_effect;
+        thread_call_on_main_stack(stored, target, action);
         g_world_menu_preview_target_action = &target->action;
     }
     world_thread_yield();

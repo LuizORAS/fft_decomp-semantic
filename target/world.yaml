@@ -108,7 +108,7 @@ functions:
   - {addr: 0x800e779c, size: 76, name: world_unit_copy_misc_screen_location, hash: 0db0657e68cb43ea}
   - {addr: 0x800e77e8, size: 32, name: world_unit_get_map_coords_from_misc_id, hash: b293d475560aeacb}
   - {addr: 0x800e7808, size: 8, name: world_script_report_missing_unit_stub, hash: 6d64edf91449c1b1}
-  - {addr: 0x800e7810, size: 828, name: world_script_get_misc_id, hash: ebe8f110139eeadb}
+  - {addr: 0x800e7810, size: 828, name: script_get_misc_id, hash: ebe8f110139eeadb}
   - {addr: 0x800e7b4c, size: 8, name: world_return_parameter_1, hash: cc2f57dc1c5c5ee3}
   - {addr: 0x800e7b54, size: 8, name: world_return_argument_800e7b54, hash: cc2f57dc1c5c5ee3}
   - {addr: 0x800e7b5c, size: 196, name: world_text_build_unit_name_list, hash: 9a9afb823d5db8ad}
@@ -346,7 +346,7 @@ functions:
   - {addr: 0x800fad94, size: 132, name: world_unit_try_get_misc_data_by_unit_id, hash: 11ec43c5377ab1bf}
   - {addr: 0x800fae18, size: 548, name: world_script_filter_unit_id_by_mode, hash: 984093d71e63f1ff}
   - {addr: 0x800fb03c, size: 216, name: world_script_teleportout_event_instruction, hash: a33f1da7ceb032c8}
-  - {addr: 0x800fb114, size: 72, name: world_script_teleportin_event_instruction, hash: 93b4c6af1ff33bce}
+  - {addr: 0x800fb114, size: 72, name: script_teleportin_event_instruction, hash: 93b4c6af1ff33bce, source: src/shared/script/script_teleportin_event_instruction.c}
   - {addr: 0x800fb15c, size: 168, name: world_script_blue_remove_all_enemy_units, hash: 2274921be941b9ac}
   - {addr: 0x800fb204, size: 200, name: world_script_blue_remove_unit, hash: acf2f50c451c3612}
   - {addr: 0x800fb2cc, size: 332, name: world_script_warp_unit, hash: 6399d2888030776e}
@@ -1036,7 +1036,7 @@ data:
   - {addr: 0x800fff50, name: world_thread_yield}
   - {addr: 0x80100188, name: world_mul_div_64}
   - {addr: 0x801002d8, name: world_cross_product_q12}
-  - {addr: 0x80100384, name: world_thread_call_on_main_stack}
+  - {addr: 0x80100384, name: thread_call_on_main_stack}
   - {addr: 0x80115a00, name: g_open_movie_cd_stream_ring_buffer}
   - {addr: 0x8013a310, name: g_world_map_selected_tile_data}
   - {addr: 0x8013a31c, name: g_world_unit_selected_status_billboard}
@@ -2285,7 +2285,7 @@ data:
   - {addr: 0x801cd764, name: GsIDMATRIX}
   - {addr: 0x801cd784, name: g_world_shop_menu_step}
   - {addr: 0x801cd788, name: g_world_formation_unit_count}
-  - {addr: 0x801cd78c, name: g_world_thread_call_target}
+  - {addr: 0x801cd78c, name: g_thread_call_target}
   - {addr: 0x801cd790, name: g_world_event_pending_unit_vram_copy}
   - {addr: 0x801cd794, name: g_world_menu_script_callbacks}
   - {addr: 0x801cd7d4, name: g_world_menu_scenario_event_started}

@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -12,7 +13,7 @@ void world_script_jump_event_instruction(const event_jump_parameters_t* paramete
     battle_stats_t* stats;
     u8 saved;
 
-    misc_id = world_script_get_misc_id(world_script_load_halfword(parameters->unit_id_le));
+    misc_id = script_get_misc_id(world_script_load_halfword(parameters->unit_id_le));
     if (misc_id != EVENT_MISC_ID_NONE) {
         coords = battle_unit_get_event_offset_ptr_by_misc_id(misc_id);
         setVector(&vec, -coords->vx, -coords->vy, -coords->vz);
