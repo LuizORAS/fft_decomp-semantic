@@ -280,7 +280,6 @@ extern const u8 g_card_text_job_name[];
 extern const u8 g_card_text_location_name[];
 extern s16 g_card_text_otag_index;
 
-const u8* card_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2);
 void card_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused, s32 max_chars,
     u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags);
 s32 card_text_render_glyph_to_4bpp_image(

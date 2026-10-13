@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Concatenate the text for each entry of a -1 terminated id list into `out`,
@@ -10,7 +11,7 @@ void bunit_text_concatenate_entries(const u8* text_table, u8* out, s16* list, s3
     if (*list != -1) {
         ids = list;
         do {
-            src = bunit_text_find_entry_by_index(text_table, *ids & 0x7FF, 1);
+            src = menu_text_find_entry_by_index(text_table, *ids & 0x7FF, 1);
             while (*src != 0xFE) {
                 *out = *src;
                 src++;

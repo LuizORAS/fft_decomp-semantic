@@ -1802,6 +1802,9 @@ extern const u8 g_text_glyph_widths[];
 /* Text IDs select a section in the upper five bits and an entry in the lower eleven. */
 extern u8* g_text_section_pointers[TEXT_SECTION_COUNT];
 
+/* encoded text entries */
+const u8* menu_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2);
+
 /* decimal text */
 extern glyph_blit_t g_menu_decimal_glyph;
 void menu_text_render_decimal_entry_list(u8* pixels, const menu_number_entry_t* entries, glyph_blit_t* out, s32 count);

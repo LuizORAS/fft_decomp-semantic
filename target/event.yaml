@@ -413,7 +413,7 @@ functions:
   - {addr: 0x801cb2d0, size: 320, name: bunit_menu_scroll_list_by_page, hash: 267e3c7bf3437203}
   - {addr: 0x801cb410, size: 284, name: bunit_input_read_page_scroll_direction, hash: c9c3ae74b59d1149}
   - {addr: 0x801cb52c, size: 308, name: bunit_text_render_glyph_to_4bpp_image, hash: 19147e4fe2464c4d}
-  - {addr: 0x801cb660, size: 92, name: bunit_text_find_entry_by_index, hash: 01a8767dd4ceba70}
+  - {addr: 0x801cb660, size: 92, name: menu_text_find_entry_by_index, hash: 01a8767dd4ceba70, source: src/shared/menu/menu_text_find_entry_by_index.c}
   - {addr: 0x801cb6bc, size: 648, name: bunit_text_render_encoded_ids_to_image, hash: 52056952222908be}
   - {addr: 0x801cb944, size: 208, name: bunit_text_concatenate_entries, hash: e9d08ebd80233029}
   - {addr: 0x801cba14, size: 40, name: bunit_thread_request_stop, hash: ea52b0a734b83ec7}
@@ -905,7 +905,7 @@ functions:
   - {addr: 0x801c69d4, size: 220, name: menu_set_palette_mode, hash: 54dc2b565735014d, source: src/shared/menu/menu_set_palette_mode.c}
   - {addr: 0x801c6ab0, size: 16, name: card_gfx_get_draw_color, hash: d7432486c75c5701}
   - {addr: 0x801c6ac0, size: 308, name: card_text_render_glyph_to_4bpp_image, hash: 57bd6d2052065015}
-  - {addr: 0x801c6bf4, size: 92, name: card_text_find_entry_by_index, hash: f63f536b1105c27b}
+  - {addr: 0x801c6bf4, size: 92, name: menu_text_find_entry_by_index, hash: f63f536b1105c27b, source: src/shared/menu/menu_text_find_entry_by_index.c}
   - {addr: 0x801c6c50, size: 648, name: card_text_render_encoded_ids_to_image, hash: 2c7fd05e27cafa08}
   - {addr: 0x801c6ed8, size: 120, name: card_text_start_character_thread_if_idle, hash: 87c0e98d46e6c909}
   - {addr: 0x801c6f50, size: 224, name: card_text_start_thread_if_idle, hash: 77aa21d89789557e}
@@ -1366,7 +1366,7 @@ functions:
   - {addr: 0x801c894c, size: 36, name: equip_unit_has_two_swords, hash: 1dd41e4a0efc124e}
   - {addr: 0x801c8970, size: 36, name: equip_unit_has_two_hands, hash: c15e201267b4bcbf}
   - {addr: 0x801c8994, size: 308, name: equip_text_render_glyph_to_4bpp_image, hash: b67461b2eb78e979}
-  - {addr: 0x801c8ac8, size: 92, name: equip_text_find_entry_by_index, hash: b89f5b2fce3c6266}
+  - {addr: 0x801c8ac8, size: 92, name: menu_text_find_entry_by_index, hash: b89f5b2fce3c6266, source: src/shared/menu/menu_text_find_entry_by_index.c}
   - {addr: 0x801c8b24, size: 648, name: equip_text_render_encoded_ids_to_image, hash: 7182fd970e4c014a}
   - {addr: 0x801c8dac, size: 120, name: equip_text_start_character_thread_if_idle, hash: 87c0e98d46e6c909}
   - {addr: 0x801c8e24, size: 208, name: equip_text_concatenate_entries, hash: 3d0d184be7c8034b}

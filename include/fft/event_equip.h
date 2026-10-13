@@ -632,7 +632,6 @@ extern s32 g_equip_text_help_message_id;
 extern u8 g_equip_text_restore_pending;
 
 void equip_text_concatenate_entries(const u8* text_table, u8* dst, s16* list, s32 separate);
-const u8* equip_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2);
 void equip_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused, s32 max_chars,
     u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags);
 s32 equip_text_render_glyph_to_4bpp_image(

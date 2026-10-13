@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Renders a -1 terminated list of text ids into a 4bpp image, one entry per
@@ -39,7 +40,7 @@ void card_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bou
                 position.x += card_text_render_glyph_to_4bpp_image(glyph, image, &position, (*colors2 >> 14) | style);
             }
         } else {
-            text = card_text_find_entry_by_index(font, ids[k] & 0xFFF, 2);
+            text = menu_text_find_entry_by_index(font, ids[k] & 0xFFF, 2);
             code = *text++;
             if (code < 0xFE) {
                 colors = &ids[k];
