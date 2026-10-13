@@ -77,7 +77,7 @@ s32 main_ability_get_id_from_skillset(s32 skillset_id, s32 ability_index);
 u16* main_ability_store_skillset_abilities(s32 skillset, s32 flags);
 s32 main_ability_calculate_pointers_and_type(
     s32 id, ability_data_t** out_ability_data, main_ability_secondary_pointer_t* out_secondary_data);
-u32 main_ability_get_known(battle_stats_t* unit, u32 skillset_id);
+u32 main_ability_get_known(const battle_stats_t* unit, u32 skillset_id);
 
 /* card */
 /* Memory-card BIOS event handles opened by main_card_init_events; the CARD,
@@ -1091,7 +1091,7 @@ void main_unit_generate_base_raw_stats(
 void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_type_e unit_type);
 void main_unit_generate_party_base_raw_stats(party_data_t* party, main_unit_generation_type_e unit_type);
 void main_unit_generate_raw_stats(battle_stats_t* unit);
-u8 main_unit_get_spritesheet_palette(battle_stats_t* unit, u8* palette);
+u8 main_unit_get_spritesheet_palette(const battle_stats_t* unit, u8* palette);
 s32 main_unit_has_status_in_set(const battle_stats_t* unit, main_status_check_set_e status_set);
 s32 main_unit_init(entd_encounter_t* entd, s32 unit_id, s32 guest_id, s32 initialize_for_battle);
 void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party_unit);

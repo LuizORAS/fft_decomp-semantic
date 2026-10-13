@@ -109,7 +109,8 @@ typedef enum gns_map_state_comparison {
     GNS_MAP_STATE_REQUESTED_GREATER_THAN_RECORD = 3,
 } gns_map_state_comparison_e;
 
-/* Serialized GNS file-row types. These select a file to load, not a chunk within a mesh file. */
+/* GNS external-file tags in the map-resource ID space. Intervening values
+ * identify mesh chunks, declared below; these tags select whole files. */
 typedef enum gns_file_type {
     GNS_FILE_TEXTURE = 0x17,
     GNS_FILE_MESH_PRIMARY = 0x2e,
@@ -893,7 +894,7 @@ extern map_tile_t* g_map_tile_data_ptr;
 extern u8 g_map_tile_depth;
 extern u8 g_map_tile_width;
 
-s32 map_calculate_location(battle_stats_t* unit);
+s32 map_calculate_location(const battle_stats_t* unit);
 s32 map_get_tile_data_value(s32 field, s32 x, s32 y, s32 layer);
 map_tile_t* map_get_tile_data_pointer(s32 x, s32 y, u32 layer);
 s32 map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value);

@@ -6,7 +6,7 @@
  * 0x80 covers the four adjacent tiles within a narrow height band, otherwise
  * the two rings at distance 1 and 2 use a band that widens with distance.
  */
-void target_calculate_strike_lunge_range(battle_stats_t* unit, u8 flags) {
+void target_calculate_strike_lunge_range(const battle_stats_t* unit, u8 flags) {
     u8 height;
     s32 x;
     s32 y;

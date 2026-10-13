@@ -7,7 +7,7 @@
  * Range bits 0-6 seed the unit's panel on both map levels and bit 7 excludes
  * the unit's own tile afterwards. Panels flagged in flags bits 0-1 are never
  * marked. Returns the number of marked panels. */
-s32 target_calculate_ability_range_with_map_parameters(battle_stats_t* unit, u8 range) {
+s32 target_calculate_ability_range_with_map_parameters(const battle_stats_t* unit, u8 range) {
     /* A byte collision test retains the original single-mask branch. */
     target_panel_t* panel;
     target_panel_t* upper;

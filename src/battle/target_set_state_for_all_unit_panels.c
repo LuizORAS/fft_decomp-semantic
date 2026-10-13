@@ -7,7 +7,7 @@
  * The retail loop never advances the unit pointer, so it re-marks the same
  * panel; the shape is kept as compiled.
  */
-void target_set_state_for_all_unit_panels(battle_stats_t* unit, s32 flags) {
+void target_set_state_for_all_unit_panels(const battle_stats_t* unit, s32 flags) {
     target_panel_t* panel;
     s32 i;
     s32 mark_allies;

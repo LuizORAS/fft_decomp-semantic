@@ -8,7 +8,7 @@
  * (0xc0) or the saved zoom at g_effect_camera_zoom_saved (0x100), the latter two offset by
  * zoom when present. Other modes leave the camera untouched. Bits 0x1e00 are
  * kept in g_effect_camera_zoom_mode. */
-void camera_execute_zoom_command(s32 command, s32 unused, s32 duration, VECTOR* zoom) {
+void camera_execute_zoom_command(s32 command, s32 unused, s32 duration, const VECTOR* zoom) {
     switch (command & EFFECT_CAMERA_SOURCE_MASK) {
     case EFFECT_CAMERA_SOURCE_TARGET:
     case EFFECT_CAMERA_SOURCE_GIVEN:

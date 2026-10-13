@@ -14,7 +14,7 @@
  *
  * Mode 0x40 keeps its own `current` pointer: sharing `rotation` with the other
  * modes changes that case's register allocation. */
-void camera_execute_angle_command(s32 command, s32 target, s32 duration, SVECTOR* angles) {
+void camera_execute_angle_command(s32 command, s32 target, s32 duration, const SVECTOR* angles) {
     SVECTOR coords;
     SVECTOR* rotation;
     SVECTOR* current;

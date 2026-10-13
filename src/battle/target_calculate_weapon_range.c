@@ -10,7 +10,7 @@
  * weapon flags select the special range shapes; direct also removes the close
  * range.
  */
-void target_calculate_weapon_range(battle_stats_t* unit) {
+void target_calculate_weapon_range(const battle_stats_t* unit) {
     s32 y;
     s32 x;
     s32 index;

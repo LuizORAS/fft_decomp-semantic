@@ -4,7 +4,7 @@
 
 /* Build the targeting panels for a weapon attack: the weapon's range around the
  * acting unit, without the unit's own tile. Returns the number of tiles in range. */
-s32 target_set_weapon_attack_panels(action_command_t* source) {
+s32 target_set_weapon_attack_panels(const action_command_t* source) {
     action_command_t action;
     battle_stats_t* unit;
     s32 idx;

@@ -7,7 +7,7 @@
  * away whose distance, less a quarter of the unit's height advantage, is
  * within range. Both elevation levels of each tile are tested.
  */
-void target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags) {
+void target_calculate_arc_range(const battle_stats_t* unit, u8 range, u8 flags) {
     u8 height;
     u8 tile_height;
     s32 ux;

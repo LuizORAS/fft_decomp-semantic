@@ -9,7 +9,7 @@
  * index pseudo the allocation priority the target needs (a2), while keeping the
  * `(elevation * 256 + y * width) + x` operand order.
  */
-s32 target_set_green_panels_for_action(action_command_t* action) {
+s32 target_set_green_panels_for_action(const action_command_t* action) {
     /* A byte collision test retains the original single-mask branch. */
     action_command_t action_copy;
     ability_secondary_data_t* ability;

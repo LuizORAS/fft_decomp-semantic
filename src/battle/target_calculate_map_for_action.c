@@ -9,7 +9,7 @@
  * weapon-range actions use the weapon/direct resolver. Random-fire selection
  * runs only after successful ordinary targeting outside AI simulation.
  */
-s32 target_calculate_map_for_action(action_command_t* action, u8* flags_3) {
+s32 target_calculate_map_for_action(const action_command_t* action, u8* flags_3) {
     ability_secondary_data_t* ability;
     u8 menu_type;
     u8 flags_4;

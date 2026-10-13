@@ -1378,7 +1378,7 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
 void battle_unit_copy_misc_screen_location(u32 misc_id, VECTOR* destination);
 battle_unit_misc_data_t* battle_unit_find_other_chocobo_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
 void battle_unit_project_misc_to_screen(u32 misc_id, SVECTOR* screen_coordinates);
-u8 battle_unit_get_effective_height(battle_stats_t* unit);
+u8 battle_unit_get_effective_height(const battle_stats_t* unit);
 battle_unit_misc_data_t* battle_unit_get_selectable_misc_data_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
 void battle_unit_save_previous_state(battle_unit_misc_data_t* unit);
 void battle_unit_set_real_coords_from_map_coords(battle_unit_misc_data_t* unit);

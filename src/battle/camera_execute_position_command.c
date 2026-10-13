@@ -10,7 +10,7 @@
  * g_effect_camera_position_saved (0x100), the caster entry (0x140), the average of all unit
  * targets (0x180) or the tile at g_effect_target_tile (0x1c0). All but 0x40 add offset
  * when present. Bits 0x1e00 are kept in g_effect_camera_position_mode. */
-void camera_execute_position_command(s32 command, s32 target, s32 duration, VECTOR* offset) {
+void camera_execute_position_command(s32 command, s32 target, s32 duration, const VECTOR* offset) {
     VECTOR sum;
     VECTOR* coords;
     SVECTOR* screen;

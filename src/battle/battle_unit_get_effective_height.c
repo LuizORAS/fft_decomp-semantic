@@ -5,7 +5,7 @@
  *
  * Float and BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER stand on the water surface;
  * BATTLE_MOVEMENT_SET_3_WALK_ON_WATER stands one level below it. */
-u8 battle_unit_get_effective_height(battle_stats_t* unit) {
+u8 battle_unit_get_effective_height(const battle_stats_t* unit) {
     map_tile_t* tile;
     map_tile_depth_t terrain_depth;
     s32 height;
