@@ -12,7 +12,6 @@ void wldcore_proposition_apply_extra_days_multiplier(void) {
     s32 count;
     s32 percent;
     s32 i;
-    s32 value;
 
     if (g_wldcore_proposition_report.recalled != 0) {
         return;
@@ -28,14 +27,13 @@ void wldcore_proposition_apply_extra_days_multiplier(void) {
     if (day >= 10) {
         day = 9;
     }
-    for (percent = reward_scale[day], i = 0; i < count; i++) {
-        value = g_wldcore_proposition_report.participant_jp[i];
-        value *= percent;
-        g_wldcore_proposition_report.participant_jp[i] = value / 100;
+    percent = reward_scale[day];
+    for (i = 0; i < count; i++) {
+        g_wldcore_proposition_report.participant_jp[i] = g_wldcore_proposition_report.participant_jp[i] * percent / 100;
     }
-    for (percent = bonus_scale[day], i = 0; i < count; i++) {
-        value = g_wldcore_proposition_report.participant_gil[i];
-        value *= percent;
-        g_wldcore_proposition_report.participant_gil[i] = value / 100;
+    percent = bonus_scale[day];
+    for (i = 0; i < count; i++) {
+        g_wldcore_proposition_report.participant_gil[i]
+            = g_wldcore_proposition_report.participant_gil[i] * percent / 100;
     }
 }

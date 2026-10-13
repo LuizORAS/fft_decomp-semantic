@@ -9,10 +9,8 @@
 void wldcore_menu_push_scrollable_text_window_level(s32 text) {
     s16 width;
     s16 rows;
-    u8* entry;
 
-    entry = text_find_entry(text);
-    text_measure_pixels(&width, &rows, entry);
+    text_measure_pixels(&width, &rows, text_find_entry(text));
     if (rows > 4) {
         rows = 4;
     }
