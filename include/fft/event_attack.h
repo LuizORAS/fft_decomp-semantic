@@ -21,6 +21,7 @@ typedef enum attack_deployment_orientation {
     ATTACK_DEPLOYMENT_ORIENTATION_ROTATE_180 = 2,
     ATTACK_DEPLOYMENT_ORIENTATION_ROTATE_270 = 3,
 } attack_deployment_orientation_e;
+
 enum {
     ATTACK_DEPLOYMENT_ORIENTATION_MASK = 0x0f,
 };
@@ -44,12 +45,14 @@ typedef struct attack_deployment_squad_data {
     u16 placement_id;      /* 0x0a */
 } attack_deployment_squad_data_t;
 typedef char attack_deployment_squad_data_size_must_be_12[(sizeof(attack_deployment_squad_data_t) == 12) ? 1 : -1];
+
 /* Textured deployment banner followed by its two triangle packets. */
 typedef struct attack_deploy_arrow_gfx {
     POLY_FT4 poly;  /* 0x00 */
     POLY_F3 tri[2]; /* 0x28 */
 } attack_deploy_arrow_gfx_t;
 typedef char attack_deploy_arrow_gfx_size_must_be_80[sizeof(attack_deploy_arrow_gfx_t) == 80 ? 1 : -1];
+
 /* One 0xa2c-byte half of the double-buffered deployment-screen primitive
  * block at 0x801db650 (g_attack_deploy_render_buffers). The 5-by-5 valid-tile
  * sprites occupy its head; the two cursors each own a marker quad ([n][0],
@@ -74,6 +77,7 @@ typedef struct attack_deploy_render_buffer {
     point16_t screen_position;              /* 0xa28; draw-offset input */
 } attack_deploy_render_buffer_t;
 typedef char attack_deploy_render_buffer_size_must_be_2604[(sizeof(attack_deploy_render_buffer_t) == 2604) ? 1 : -1];
+
 /* g_attack_deploy_menu_state: what the deployment cursor is over. It selects
  * the button hint attack_deploy_build_menu_cursor_primitives draws. */
 typedef enum attack_deploy_menu_state {
@@ -396,6 +400,7 @@ typedef enum attack_thread_slot {
     ATTACK_THREAD_SLOT_SCREEN_GRAPHICS = 14, /* attack_deploy_update_screen_graphics, then the map title */
     ATTACK_THREAD_SLOT_DEPLOY_RENDER = 15,   /* attack_deploy_run_render_thread */
 } attack_thread_slot_e;
+
 /* The same slots while the confirm prompt or the unit detail view is up. */
 typedef enum attack_prompt_thread_slot {
     ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU_CHILD = 3, /* the child of the confirm menu */

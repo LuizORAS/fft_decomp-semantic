@@ -16,6 +16,7 @@ typedef enum etc_graphic_id {
     ETC_GRAPHIC_END4 = 11,
     ETC_GRAPHIC_END5 = 12,
 } etc_graphic_id_e;
+
 /* The game-over renderer swaps the screen axes of the chapter-title regions. */
 typedef struct etc_graphic {
     const char* path;

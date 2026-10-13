@@ -25,12 +25,14 @@ typedef enum equip_slot {
     EQUIP_SLOT_HAND_COUNT = 2,
     EQUIP_SLOT_COUNT = 5,
 } equip_unit_equipment_slot_e;
+
 typedef enum equip_slot_item_result {
     EQUIP_SLOT_ITEM_CURRENT_LOCKED = -2,
     EQUIP_SLOT_ITEM_CANNOT_EQUIP = -1,
     EQUIP_SLOT_ITEM_INCOMPATIBLE_PAIR = 0,
     EQUIP_SLOT_ITEM_ALLOWED = 1,
 } equip_item_slot_result_e;
+
 /* EQUIP.OUT's 0x7A-byte unit preview, built from battle_stats_t by
  * equip_unit_build_data_from_battle_stats (0x801C6920). Field names follow
  * the battle_stats_t source; evasion_N maps to the corresponding
@@ -448,6 +450,7 @@ typedef struct equip_gfx_context {
     DR_MODE* draw_modes;      /* 0x60 */
 } equip_gfx_context_t;
 typedef char equip_gfx_context_size_must_be_100[(sizeof(equip_gfx_context_t) == 100) ? 1 : -1];
+
 /* One of the two double-buffered graphics contexts: the pool-pointer table
  * followed by per-buffer state. equip_gfx_swap_context_and_clear_otag and
  * equip_gfx_init_contexts step between the two by 0xec. */

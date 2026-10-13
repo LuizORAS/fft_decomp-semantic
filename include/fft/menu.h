@@ -450,6 +450,7 @@ typedef enum menu_input_mode {
                                 no code stores this value */
     MENU_INPUT_TUTORIAL = 2, /* a tutorial event supplies the input; set by *_menu_start_entry_thread */
 } menu_input_mode_e;
+
 /* The index argument of *_menu_draw_pressable_button: an on-screen button,
  * named after the pad button its callers test. */
 typedef enum menu_pressable_button {
@@ -460,6 +461,7 @@ typedef enum menu_pressable_button {
     MENU_PRESSABLE_BUTTON_L2 = 4,
     MENU_PRESSABLE_BUTTON_R2 = 5,
 } menu_pressable_button_e;
+
 /* State of the item list screen (g_world_item_menu_mode in the formation
  * screen, g_equip_menu_substate in EQUIP). Each state's handler returns the
  * next state. */
@@ -471,6 +473,7 @@ typedef enum menu_item_list_state {
     MENU_ITEM_LIST_STATE_SORT_ORDER = 5,
     MENU_ITEM_LIST_STATE_EQUIPPED_BY = 6, /* WORLD only: the units equipping the selected item */
 } menu_item_list_state_e;
+
 /* Ability list tab of the WORLD, BUNIT and JOBSTTS ability menus
  * (g_world_ability_category, g_bunit_ability_category,
  * g_jobstts_ability_category) and the kind argument of their list builders. */
@@ -489,6 +492,7 @@ typedef enum option_menu_type {
     OPTION_MENU_AT_LIST = 1,
     OPTION_MENU_DEAD_UNIT = 2, /* crystal and treasure panel */
 } option_menu_type_e;
+
 /* A key in the list *_item_sort_id_list / equip_item_sort_list_by_criteria
  * sorts by (g_world_sort_key_lists, g_equip_item_type_order_lists); -1 ends
  * the list. TYPE sorts ascending, the others descending. */
@@ -573,6 +577,7 @@ typedef enum menu_arithmeticks_list {
     MENU_ARITHMETICKS_LIST_MULTIPLES = 1,  /* *_menu_load_math_skill_multiples */
     MENU_ARITHMETICKS_LIST_ATTRIBUTES = 2, /* *_menu_load_math_skill_attributes */
 } menu_arithmeticks_list_e;
+
 /* One cursor animation threshold and its signed screen offset. */
 typedef struct menu_cursor_bob_entry {
     s8 threshold;
@@ -1000,6 +1005,7 @@ typedef enum menu_system_dispatch_result {
     MENU_SYSTEM_DISPATCH_DONE = 1,            /* a system function was started, or nothing had to run */
     MENU_SYSTEM_DISPATCH_EVENT = 2,           /* SCENARIO_CHECK started an event, or queued it for option 2 */
 } menu_system_dispatch_result_e;
+
 /* g_battle_menu_current_id / g_world_menu_current_id: the open battle menu,
  * and the index of its entry in g_battle_menu_idle_action_entries (WORLD:
  * g_world_menu_system_entries), which is also what a row action from 0 to
@@ -1079,6 +1085,7 @@ typedef enum battle_menu_id {
     BATTLE_MENU_ID_EGG_STATUS = 55,              /* EGG's Status row: only the invalid sound */
     BATTLE_MENU_ID_DEAD_UNIT = 105,              /* crystal or treasure options */
 } battle_menu_id_e;
+
 /* Indices of the system function table (g_battle_system_function_table and
  * its WORLD twin) that the dispatcher names; the rest are message variants. */
 typedef enum battle_system_function_id {
@@ -1500,6 +1507,7 @@ typedef enum dialog_options {
     DIALOG_OPTIONS_ALTERNATE_TAIL = 0x04, /* the second tail graphic, 16 rows tall */
     DIALOG_OPTIONS_NO_TAIL = 0x08,        /* plain frame, not placed at the speaker */
 } dialog_options_e;
+
 typedef enum menu_decimal_sign_flag {
     MENU_DECIMAL_SIGN_PLUS = 0x0400,
     MENU_DECIMAL_SIGN_MINUS = 0x0800,

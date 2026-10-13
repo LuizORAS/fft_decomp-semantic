@@ -1883,6 +1883,7 @@ typedef enum world_text_data {
     WORLD_TEXT_DATA_NAME_ENTRY_KEYBOARD = 7,
     WORLD_TEXT_DATA_SHOP_DIALOGUE = 8, /* WORLD_TEXT_SECTION_SHOP_DIALOGUE */
 } world_text_data_e;
+
 /* WORLD text files materialize 32 section pointers after their 0x80-byte
  * offset/header area. The same table is saved and restored around overlays. */
 enum {

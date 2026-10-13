@@ -128,6 +128,7 @@ typedef struct uv8 {
     u8 v;
 } uv8_t;
 typedef char assert_uv8_size[sizeof(uv8_t) == 2 ? 1 : -1];
+
 typedef enum texture_uv_flip {
     TEXTURE_UV_FLIP_NONE = 0,
     TEXTURE_UV_FLIP_X = 1,
@@ -142,6 +143,7 @@ typedef struct sprite_sheet_frame {
     point16_t offset;
 } sprite_sheet_frame_t;
 typedef char assert_sprite_sheet_frame_size[sizeof(sprite_sheet_frame_t) == 12 ? 1 : -1];
+
 /* Screen translation used by the sprite geometry helpers. */
 typedef struct sprite_draw_offset {
     u8 _unused_00[8];
@@ -170,6 +172,7 @@ typedef union texture_primitive {
     SPRT sprt;
     POLY_FT4 ft4;
 } texture_primitive_t;
+
 /* Textured menu quad source for world_gfx_enqueue_textured_quad_corners (0x8012ccd0):
  * four screen points, four texture points (only the low byte of each
  * 16-bit value is used), then the CLUT and texture page. */
@@ -189,6 +192,7 @@ typedef struct textured_quad_source {
     u16 clut;   /* 0x20 */
     u16 tpage;  /* 0x22 */
 } textured_quad_source_t;
+
 /* Twelve-byte texture cell copied by the formation portrait producers and
  * embedded in oriented menu quads. */
 typedef struct texture_source {
@@ -200,6 +204,7 @@ typedef struct texture_source {
     s16 tpage; /* 0x0a */
 } texture_source_t;
 typedef char texture_source_size_must_be_12[sizeof(texture_source_t) == 12 ? 1 : -1];
+
 /* Screen rectangle and texture source, passed to the oriented-quad readers.
  * Equipment-slot marker arrays have a 0x14-byte stride. */
 typedef struct oriented_quad {
@@ -209,6 +214,7 @@ typedef struct oriented_quad {
     texture_source_t source; /* 0x08 */
 } oriented_quad_t;
 typedef char oriented_quad_size_must_be_20[sizeof(oriented_quad_t) == 20 ? 1 : -1];
+
 /* Gouraud-textured rectangle source for world_gfx_enqueue_gouraud_textured_quad
  * (0x8012cfd4) and bunit_gfx_enqueue_gouraud_textured_quad: screen rectangle,
  * texture origin (only the low byte of u/v is used; the texture extent is the
@@ -269,6 +275,7 @@ typedef struct scaled_draw_area_pair {
     RECT rects[2];    /* 0x18 */
 } scaled_draw_area_pair_t;
 typedef char scaled_draw_area_pair_size_must_be_40[sizeof(scaled_draw_area_pair_t) == 40 ? 1 : -1];
+
 /* Full-screen fade primitive pair: a TILE followed by the DR_MODE that
  * selects its texture page and window. */
 typedef struct fade_overlay {
@@ -312,6 +319,7 @@ typedef struct camera_key {
     s32 value; /* 0x04 */
     u8 _unused_08[8];
 } camera_key_t;
+
 /* Provisional per-component camera fusion track (0xa4 bytes), seeded by the
  * *_camera_fusion_thread and advanced by *_camera_step_track. */
 typedef struct camera_track {

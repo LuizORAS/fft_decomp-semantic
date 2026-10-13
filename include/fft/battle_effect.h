@@ -1704,6 +1704,7 @@ typedef struct effect_radial_motion_curve_bindings {
     u32 _unused_01 : 16;
     u32 spin : 4;
 } effect_radial_motion_curve_bindings_t;
+
 typedef struct effect_radial_shape_curve_bindings {
     u16 growth : 4;
     u16 growth_step : 4;

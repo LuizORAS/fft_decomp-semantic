@@ -29,6 +29,7 @@ typedef enum battle_event_status_mask_set {
     /* Monster skillsets, both Altima forms and the six undead jobs. */
     BATTLE_EVENT_STATUS_MASK_PRE_BATTLE_MONSTER_OR_UNDEAD = 2,
 } battle_event_status_mask_set_e;
+
 enum { BATTLE_EVENT_STATUS_MASK_COUNT = 3 };
 
 extern u8 g_battle_event_status_masks[BATTLE_EVENT_STATUS_MASK_COUNT][8];

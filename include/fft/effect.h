@@ -61,6 +61,7 @@ typedef struct effect_particle_ribbon_short {
     u8 _padding_3aa[0x02]; /* tail padding to 4-byte alignment */
 } effect_particle_ribbon_short_t;
 typedef char assert_effect_particle_ribbon_short_size[sizeof(effect_particle_ribbon_short_t) == 940 ? 1 : -1];
+
 /* One long ribbon: the short layout with 16 quads per buffer and a 17-point
  * trail. */
 typedef struct effect_particle_ribbon_long {
@@ -78,6 +79,7 @@ typedef struct effect_particle_ribbon_long {
     u8 _padding_71a[0x02]; /* tail padding to 4-byte alignment */
 } effect_particle_ribbon_long_t;
 typedef char assert_effect_particle_ribbon_long_size[sizeof(effect_particle_ribbon_long_t) == 1820 ? 1 : -1];
+
 /* Work block allocated by the short variant. */
 typedef struct effect_particle_ribbon_short_work {
     s32 buffer;                                                                 /* 0x0000 */
@@ -89,6 +91,7 @@ typedef struct effect_particle_ribbon_short_work {
 } effect_particle_ribbon_short_work_t;
 typedef char
     assert_effect_particle_ribbon_short_work_size[sizeof(effect_particle_ribbon_short_work_t) == 7564 ? 1 : -1];
+
 /* Work block allocated by the long variant. */
 typedef struct effect_particle_ribbon_long_work {
     s32 buffer;                                                               /* 0x0000 */
@@ -156,6 +159,7 @@ typedef struct effect_polar_mesh_scratch {
     s32 ot_depth;                                                                      /* 0xf0: clamped to 4..0x17f */
     point16_t points[POLAR_MESH_RING_COUNT + 1][POLAR_MESH_SEGMENTS_PER_QUADRANT + 1]; /* 0xf4 */
 } effect_polar_mesh_scratch_t;
+
 /* Scratchpad (0x1f800000) layout of the Zodiac Stone glow variant. Its fields shift from
  * effect_polar_mesh_scratch_t, so it is a separate layout, not a view. */
 typedef struct effect_anchored_polar_mesh_scratch {
@@ -202,6 +206,7 @@ typedef struct effect_anchored_polar_mesh_scratch {
     VECTOR screen;         /* 0x110; RotTrans stores flags in the unused fourth 32-bit value */
     point16_t points[POLAR_MESH_RING_COUNT + 1][POLAR_MESH_SEGMENTS_PER_QUADRANT + 1]; /* 0x120 */
 } effect_anchored_polar_mesh_scratch_t;
+
 /* Work block: two POLY_GT4 buffers of four quadrants of 5x4 quads. */
 typedef struct effect_polar_mesh_work {
     s32 buffer;                               /* 0x0000: 0 or 1, flipped after each update */
@@ -246,6 +251,7 @@ typedef struct effect_textured_quad_grid_2x2_work {
 } effect_textured_quad_grid_2x2_work_t;
 typedef char
     assert_effect_textured_quad_grid_2x2_work_size[sizeof(effect_textured_quad_grid_2x2_work_t) == 516 ? 1 : -1];
+
 typedef struct effect_textured_quad_grid_4x4_work {
     s32 buffer;            /* 0x000: quads[buffer] is drawn this frame */
     POLY_GT4 quads[2][16]; /* 0x004: row-major 4x4 grid, double buffered */
@@ -260,6 +266,7 @@ typedef struct effect_textured_quad_grid_4x4_work {
 } effect_textured_quad_grid_4x4_work_t;
 typedef char
     assert_effect_textured_quad_grid_4x4_work_size[sizeof(effect_textured_quad_grid_4x4_work_t) == 1764 ? 1 : -1];
+
 typedef struct effect_textured_quad_grid_8x8_work {
     s32 buffer;            /* 0x000: quads[buffer] is drawn this frame */
     POLY_GT4 quads[2][64]; /* 0x004: row-major 8x8 grid, double buffered */
@@ -307,6 +314,7 @@ typedef struct effect_ring_mesh_work {
     s32 destroy_delay; /* 0x1a18: the destroy phase waits one call before freeing */
 } effect_ring_mesh_work_t;
 typedef char assert_effect_ring_mesh_work_size[sizeof(effect_ring_mesh_work_t) == 6684 ? 1 : -1];
+
 /* Scratchpad (0x1f800000) layout while the ring is rebuilt. points[row][0..8]
  * sweep one quadrant in 0x80 steps; the rotating add helpers reuse them for
  * the other three quadrants. */
@@ -317,6 +325,7 @@ typedef struct effect_ring_mesh_scratch {
     VECTOR screen[4];                       /* 0x1c8: projected quad corners; RotTrans writes its flag to pad */
     s16 depth[3][RING_MESH_SEGMENTS + 1];   /* 0x208 */
 } effect_ring_mesh_scratch_t;
+
 /* Work block of the single-ring variant: two POLY_GT4 buffers of 32 quads. */
 typedef struct effect_single_ring_mesh_work {
     s32 buffer;                            /* 0x000: 0 or 1, flipped after each update */
@@ -329,6 +338,7 @@ typedef struct effect_single_ring_mesh_work {
     s32 destroy_delay; /* 0xd18: the destroy phase waits one call before freeing */
 } effect_single_ring_mesh_work_t;
 typedef char assert_effect_single_ring_mesh_work_size[sizeof(effect_single_ring_mesh_work_t) == 3356 ? 1 : -1];
+
 /* Scratchpad (0x1f800000) layout of the single-ring variant: two lattice
  * rows of one quadrant. */
 typedef struct effect_single_ring_mesh_scratch {
@@ -390,6 +400,7 @@ typedef struct effect_map_vertex_location {
     u8 vertex_index;    /* one of the mesh part's four cached vertices */
     u8 mesh_part_index; /* zero-based among map mesh parts 1-8 */
 } effect_map_vertex_location_t;
+
 /* Eight animated map mesh parts each provide four cached vertices. */
 enum {
     EFFECT_PARTICLE_VERTEX_EMITTER_COUNT = 16,
@@ -424,6 +435,7 @@ typedef struct effect_tentacle_mesh_segment {
     u8 _padding_6ea[0x02]; /* tail padding to 4-byte alignment */
 } effect_tentacle_mesh_segment_t;
 typedef char assert_effect_tentacle_mesh_segment_size[sizeof(effect_tentacle_mesh_segment_t) == 1772 ? 1 : -1];
+
 typedef struct effect_tentacle_mesh_work {
     s32 buffer;                                 /* 0x0000 */
     s16 count;                                  /* 0x0004 */
@@ -433,6 +445,7 @@ typedef struct effect_tentacle_mesh_work {
     s32 destroy_delay;                          /* 0x3788 */
 } effect_tentacle_mesh_work_t;
 typedef char assert_effect_tentacle_mesh_work_size[sizeof(effect_tentacle_mesh_work_t) == 14220 ? 1 : -1];
+
 /* A 17-point particle trail; spawning seeds only points 0-8 (the target's loop bound is 9). */
 typedef struct effect_trail_segment {
     SVECTOR tip;          /* 0x00 */
@@ -445,6 +458,7 @@ typedef struct effect_trail_segment {
     u8 _unused_94[0x04];
 } effect_trail_segment_t;
 typedef char assert_effect_trail_segment_size[sizeof(effect_trail_segment_t) == 152 ? 1 : -1];
+
 typedef struct effect_trail_work {
     s32 buffer;                         /* 0x000 */
     s16 count;                          /* 0x004 */
@@ -484,6 +498,7 @@ typedef struct effect_wave_mesh_work {
     s32 destroy_latched; /* 0x1a58 */
 } effect_wave_mesh_work_t;
 typedef char assert_effect_wave_mesh_work_size[sizeof(effect_wave_mesh_work_t) == 6748 ? 1 : -1];
+
 /* Scratchpad (0x1f800000) layout while the mesh is rebuilt. */
 typedef struct effect_wave_mesh_scratch {
     point16_t points[9][9]; /* 0x000: wave-displaced lattice */

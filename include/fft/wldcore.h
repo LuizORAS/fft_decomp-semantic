@@ -925,6 +925,7 @@ typedef struct wldcore_proposition_fields {
     u16 required_script_var_6f; /* 0x2a */
     u16 condition_value;        /* 0x2c; zodiac month or proposition status index */
 } wldcore_proposition_fields_t;
+
 typedef enum wldcore_proposition_condition_flag {
     WLDCORE_PROPOSITION_CONDITION_SCRIPT_VAR_6F = 0x01,
     WLDCORE_PROPOSITION_CONDITION_MONTH = 0x02,

@@ -20,6 +20,7 @@ typedef struct battle_gfx_packed_unit_shp_frame_set {
 typedef char
     battle_gfx_packed_unit_shp_frame_set_size_must_be_1026[sizeof(battle_gfx_packed_unit_shp_frame_set_t) == 1026 ? 1
                                                                                                                   : -1];
+
 typedef struct battle_gfx_packed_unit_shp_record {
     u8 submerged_frame_set_offset[4]; /* 0x000; 8 means both native tables share the primary set */
     u8 first_attack_frame[2];         /* 0x004; unsigned 16-bit value */
@@ -28,6 +29,7 @@ typedef struct battle_gfx_packed_unit_shp_record {
 } battle_gfx_packed_unit_shp_record_t;
 typedef char
     battle_gfx_packed_unit_shp_record_size_must_be_1034[sizeof(battle_gfx_packed_unit_shp_record_t) == 1034 ? 1 : -1];
+
 /* WEP/EFF SHP has a different header and twice as many frame offsets. */
 typedef struct battle_gfx_packed_weapon_shp_record {
     u8 _unused_000[4];          /* 0x000; loader skips this 32-bit value */
@@ -39,6 +41,7 @@ typedef struct battle_gfx_packed_weapon_shp_record {
 typedef char battle_gfx_packed_weapon_shp_record_size_must_be_2118[sizeof(battle_gfx_packed_weapon_shp_record_t) == 2118
         ? 1
         : -1];
+
 /* WEP/EFF SEQ stores 256 offsets followed by a variable sequence payload. */
 typedef struct battle_gfx_packed_offset_table {
     u8 _unused_000[4];  /* 0x000; WEP/EFF loader skips the 32-bit header value */
@@ -48,6 +51,7 @@ typedef struct battle_gfx_packed_offset_table {
 } battle_gfx_packed_offset_table_t;
 typedef char
     battle_gfx_packed_offset_table_size_must_be_1030[sizeof(battle_gfx_packed_offset_table_t) == 1030 ? 1 : -1];
+
 /* OTHER.SPR: the palette helper copies only the first 21 of 32 palettes. */
 typedef struct battle_gfx_other_sprite_archive {
     palette_t palettes[32]; /* 0x0000 */
@@ -55,6 +59,7 @@ typedef struct battle_gfx_other_sprite_archive {
 } battle_gfx_other_sprite_archive_t;
 typedef char
     battle_gfx_other_sprite_archive_size_must_be_33792[sizeof(battle_gfx_other_sprite_archive_t) == 33792 ? 1 : -1];
+
 /* WEP.SPR contains three CLUT/image pairs: weapons, trails and particles. */
 typedef struct battle_gfx_weapon_sprite_archive {
     clut_t weapon_clut;           /* 0x00000 */
@@ -64,6 +69,7 @@ typedef struct battle_gfx_weapon_sprite_archive {
     clut_t particle_clut;         /* 0x10400 */
     u8 particle_pixels[144][128]; /* 0x10600; 4bpp */
 } battle_gfx_weapon_sprite_archive_t;
+
 /* Texture pages stored in a sprite display record's tpage. */
 enum {
     /* The images of g_battle_gfx_vram_slots[0] and [1]. */
@@ -249,6 +255,7 @@ typedef enum battle_spritesheet_id {
     BATTLE_SPRITESHEET_ID_FROG = 157,
     BATTLE_SPRITESHEET_ID_TREASURE = 158,
 } battle_spritesheet_id_e;
+
 enum {
     BATTLE_SPRITESHEET_ID_RAMZA_END = 4,
     BATTLE_SPRITESHEET_ID_JOB_FIRST = 96, /* the generic job sheets start here; the monsters' follow */
@@ -266,6 +273,7 @@ typedef struct battle_gfx_evtchr_shp {
     u8 data[0x1e0];                            /* 0x688 */
     u8 submerged_data[0x1e0];                  /* 0x868 */
 } battle_gfx_evtchr_shp_t;
+
 /* Four-byte lookup record for the 0x9f ordinary unit spritesheets. */
 typedef struct battle_gfx_spritesheet_data {
     u8 shp_id;         /* battle_shp_type_e */
@@ -274,6 +282,7 @@ typedef struct battle_gfx_spritesheet_data {
     u8 graphic_height; /* height of the standing sprite in pixels */
 } battle_gfx_spritesheet_data_t;
 typedef char battle_gfx_spritesheet_data_size_must_be_4[(sizeof(battle_gfx_spritesheet_data_t) == 4) ? 1 : -1];
+
 /* battle_gfx_spritesheet_data_t.shp_id: index of the sheet's frame table file in
  * g_battle_gfx_sprite_shp_files (BATTLE/TYPE1.SHP ...). Id 5 has no file. */
 typedef enum battle_shp_type {
@@ -285,6 +294,7 @@ typedef enum battle_shp_type {
     BATTLE_SHP_ARUTE = 6,
     BATTLE_SHP_KANZEN = 7,
 } battle_shp_type_e;
+
 /* battle_gfx_spritesheet_data_t.seq_id: index of the sheet's animation file in
  * g_battle_gfx_sprite_seq_files (BATTLE/TYPE1.SEQ ...). */
 typedef enum battle_seq_type {
@@ -297,6 +307,7 @@ typedef enum battle_seq_type {
     BATTLE_SEQ_ARUTE = 6,
     BATTLE_SEQ_KANZEN = 7,
 } battle_seq_type_e;
+
 /* Where a weapon or item graphic sits in WEP.SPR, per item graphic id. */
 typedef struct battle_gfx_item_graphic {
     u8 palettes;    /* 0x00; g_battle_gfx_weapon_clut rows: high nibble for MAP_CLUT_ROW_ITEM_A, low for _B */
@@ -345,25 +356,30 @@ typedef struct battle_gfx_vram_slot {
     u8 image_data[0x6400];       /* 0x1164 */
 } battle_gfx_vram_slot_t;
 typedef char battle_gfx_vram_slot_size_must_be_30052[(sizeof(battle_gfx_vram_slot_t) == 30052) ? 1 : -1];
+
 /* Per-slot summary written by battle_gfx_get_vram_slot_summary. */
 typedef struct battle_gfx_vram_slot_summary {
     u8 spritesheet_id; /* 0xff free, 0xfe saved, 0xfd no unit, else owner's sheet */
     u8 evtchr_state;   /* 0xff none, 0xfe saved, 0xfd loaded */
 } battle_gfx_vram_slot_summary_t;
+
 typedef enum battle_gfx_vram_slot_owner_marker {
     BATTLE_GFX_VRAM_SLOT_OWNER_EVTCHR = 0xfe, /* an EVTCHR image (battle_gfx_save_evtchr_slot) */
     BATTLE_GFX_VRAM_SLOT_OWNER_NONE = 0xff,
 } battle_gfx_vram_slot_owner_marker_e;
+
 /* Otherwise owner is a misc id combined with one of these image-kind bits. */
 typedef enum battle_gfx_vram_slot_owner_flags {
     BATTLE_GFX_VRAM_SLOT_OWNER_SP2 = 0x40,
     BATTLE_GFX_VRAM_SLOT_OWNER_ATTACK_IMAGE = 0x80,
 } battle_gfx_vram_slot_owner_flags_e;
+
 enum { BATTLE_GFX_VRAM_SLOT_OWNER_ID_MASK = 0x1f };
 typedef enum battle_gfx_vram_slot_buffer_marker {
     BATTLE_GFX_VRAM_SLOT_BUFFER_FREE = 0,
     BATTLE_GFX_VRAM_SLOT_BUFFER_EVTCHR = 0xfe, /* an unpacked EVTCHR block, not yet saved to VRAM or cleared */
 } battle_gfx_vram_slot_buffer_marker_e;
+
 /* Other positive buffer values are upload countdowns decremented each frame. */
 enum { BATTLE_GFX_VRAM_SLOT_UPLOAD_FRAMES = 2 };
 /* 0x32d6-byte spritesheet VRAM slot records at 0x800c7ce8 (nine slots);
@@ -401,6 +417,7 @@ typedef enum battle_gfx_unit_load_phase {
     BATTLE_GFX_UNIT_LOAD_PHASE_INSTALL = 2,
     BATTLE_GFX_UNIT_LOAD_PHASE_FINISH = 3,
 } battle_gfx_unit_load_phase_e;
+
 /* g_battle_gfx_unit_graphics_load_state.file_kind, the file kind, counts through one of two lists:
  * battle_gfx_step_queued_unit_graphics_load loads three files per queued unit and
  * battle_gfx_step_load_unit_shp_seq_data the shared sprite, weapon and effect files. */
@@ -409,6 +426,7 @@ typedef enum battle_gfx_queued_load_kind {
     BATTLE_GFX_QUEUED_LOAD_SEQ = 1,
     BATTLE_GFX_QUEUED_LOAD_SPR = 2,
 } battle_gfx_queued_load_kind_e;
+
 typedef enum battle_gfx_shared_load_kind {
     BATTLE_GFX_SHARED_LOAD_SPRITE_SHP = 0,
     BATTLE_GFX_SHARED_LOAD_SPRITE_SEQ = 1,
@@ -419,6 +437,7 @@ typedef enum battle_gfx_shared_load_kind {
     BATTLE_GFX_SHARED_LOAD_WEAPON_SPR = 6,
     BATTLE_GFX_SHARED_LOAD_OTHER_SPR = 7,
 } battle_gfx_shared_load_kind_e;
+
 /* Both load-kind lists start at zero. */
 enum { BATTLE_GFX_UNIT_LOAD_KIND_FIRST = 0 };
 /* Shared by the resident-file and queued-unit loaders. The file kind selects

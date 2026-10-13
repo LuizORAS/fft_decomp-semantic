@@ -248,6 +248,7 @@ typedef struct battle_heap_node {
     u16 size; /* in 8-byte blocks */
     s16 owner;
 } battle_heap_node_t;
+
 typedef struct battle_heap_owner_list {
     battle_heap_node_t* head;
     s32 _unused_04;

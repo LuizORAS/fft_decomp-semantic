@@ -64,6 +64,7 @@ typedef struct require_display_condition_colors {
 } require_display_condition_colors_t;
 typedef char
     require_display_condition_colors_size_must_be_20[sizeof(require_display_condition_colors_t) == 20 ? 1 : -1];
+
 typedef struct require_render_condition_tpage {
     u8 _unused_00;
     u8 _unused_01;
@@ -97,6 +98,7 @@ typedef struct require_reward_war_trophy_primitives {
 typedef char require_reward_war_trophy_primitives_size_must_be_672[sizeof(require_reward_war_trophy_primitives_t) == 672
         ? 1
         : -1];
+
 /* One 12x24 burst tile: a double-buffered flat quad plus its motion state. */
 typedef struct require_reward_burst_tile {
     POLY_F4 poly[2];   /* 0x00 */
@@ -108,6 +110,7 @@ typedef struct require_reward_burst_tile {
     s32 initial_delay; /* 0x44 */
 } require_reward_burst_tile_t;
 typedef char require_reward_burst_tile_size_must_be_72[sizeof(require_reward_burst_tile_t) == 72 ? 1 : -1];
+
 /* BONUS.BIN stores a 256x200 4bpp image, followed by eight 16-color palette slots. */
 typedef struct require_reward_bonus_image_file {
     u32 pixels[200][32];   /* 0x0000; eight 4bpp pixels per 32-bit value */
@@ -118,12 +121,14 @@ typedef char
     require_reward_bonus_image_file_size_must_be_26624[sizeof(require_reward_bonus_image_file_t) == 26624 ? 1 : -1];
 typedef char require_reward_bonus_palettes_must_be_at_offset_0x6400
     [((unsigned long)&((require_reward_bonus_image_file_t*)0)->palettes == 0x6400) ? 1 : -1];
+
 /* g_require_reward_war_trophy_entry_types[]: what a war trophy entry's
  * value in g_require_reward_war_trophy_entry_values is. */
 typedef enum require_war_trophy_entry {
     REQUIRE_WAR_TROPHY_ENTRY_ITEM = 0,        /* an item id */
     REQUIRE_WAR_TROPHY_ENTRY_BONUS_MONEY = 1, /* the gil amount */
 } require_war_trophy_entry_e;
+
 /* The mode byte of the bonus-image burst parameters: the distance that sets
  * each tile's start delay. Any other value measures along a rotated x axis. */
 typedef enum require_reward_burst_mode {

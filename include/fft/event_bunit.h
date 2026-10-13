@@ -321,6 +321,7 @@ typedef enum bunit_vertical_scroll_direction {
     BUNIT_VERTICAL_SCROLL_DOWN = 1,
     BUNIT_VERTICAL_SCROLL_WAIT = 2,
 } bunit_menu_vertical_scroll_direction_e;
+
 /*
  * Row-value getters for the BUNIT menu command stream: a 16-entry table at
  * 0x801ecb70 indexed by a command byte.

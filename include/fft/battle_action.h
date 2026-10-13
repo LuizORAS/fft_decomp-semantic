@@ -157,6 +157,7 @@ typedef enum action_display_flag {
     ACTION_DISPLAY_FLAG_SILENCED = 0x10000000,
     ACTION_DISPLAY_FLAG_NO_MP = 0x20000000,
 } action_display_flag_e;
+
 /* The low 9 bits select a result graphic; bit 9 alters its motion for a
  * critical hit.  Values below 0x10 are also indices into the numeric-value
  * table at 0x800962d4. */
@@ -194,6 +195,7 @@ typedef enum battle_numeric_display_selector {
     BATTLE_NUMERIC_DISPLAY_SILENCED = 0x0f0,
     BATTLE_NUMERIC_DISPLAY_NO_MP = 0x100,
 } battle_numeric_display_selector_e;
+
 /* Encoding in action_result_display_t.selector. */
 enum {
     BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK = 0x1ff,
@@ -263,6 +265,7 @@ typedef struct action_display_image_rect {
     u8 height;
 } action_display_image_rect_t;
 typedef char action_display_image_rect_size_must_be_4[(sizeof(action_display_image_rect_t) == 4) ? 1 : -1];
+
 /* Ordinary SP/PA/MA/Brave/Faith action-result encoding. CT and EXP reuse
  * these bits with distinct sentinel or sign meanings and are excluded. */
 enum {
