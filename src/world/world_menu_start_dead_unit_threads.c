@@ -129,7 +129,7 @@ void world_menu_start_dead_unit_threads(void) {
 
         g_world_dead_unit_menu_result = 0xff;
         if ((context->result == 3 && g_world_dead_unit_move_result == 0) || context->result == 1) {
-            world_thread_start(g_world_thread_current_id - 2, world_build_at_list);
+            world_thread_start(g_world_thread_current_id - 2, world_option_build_at_list);
             world_thread_set_parameters(g_world_thread_current_id - 2, (s32)g_world_menu_thread_menu_data, 0, 0);
             world_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU, world_menu_icon_linked_entry_thread);
             world_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU,

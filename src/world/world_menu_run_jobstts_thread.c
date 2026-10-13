@@ -1,8 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Thread body: loads companion overlay file 7 and runs it with state 3 until
- * it reports completion. */
+/* WORLD twin of battle_menu_run_jobstts_thread. */
 void world_menu_run_jobstts_thread(void) {
     if (world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {
         world_thread_exit_current();

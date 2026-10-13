@@ -2,11 +2,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/*
- * Thread body: loads overlay files 9 and 10, runs the companion overlay
- * with state 4 until it finishes, then restarts menu threads 9..14 and
- * captures the cursors of the icon-list threads 8 and 7.
- */
+/* WORLD twin of battle_menu_run_equip_thread. */
 void world_menu_run_equip_thread(void) {
     s32 saved;
     s32 i;

@@ -6,12 +6,12 @@
 extern world_options_menu_page_t g_world_options_menu_pages[2];
 
 /*
- * Options-menu thread started by world_menu_run_main_mode (mode 0) with
+ * Options-menu thread started by world_option_run_menu (mode 0) with
  * entry->text_binding = &g_world_option_menu_entry_table.
  *
  * Scrolls the two-column option list like world_menu_run_scrolling_ability_list_thread, shows the
  * selected option's value text (g_world_option_menu_first_text_ids[i] + g_world_game_option_values[i]),
- * starts world_run_option_choice_menu on confirm, and each frame packs the option
+ * starts world_option_run_option_choice_menu on confirm, and each frame packs the option
  * values back into g_main_game_options, applies the sound mode on the main
  * stack and reloads the input-repeat timings for the finger-cursor speed.
  *
@@ -19,7 +19,7 @@ extern world_options_menu_page_t g_world_options_menu_pages[2];
  * loop notes keep the input-1 spill and the entry load ahead of the
  * row-count loads, as in the target.
  */
-void world_build_options_menu(void) {
+void world_option_build_options_menu(void) {
     world_menu_text_window_t window;
     RECT image_rect;
     RECT clear;
@@ -232,7 +232,7 @@ void world_build_options_menu(void) {
                 if (world_menu_is_input_allowed() != 0) {
                     *input0 = 0;
                     index = cursor + row_offset + delta;
-                    world_thread_start(g_world_thread_current_id - 1, world_run_option_choice_menu);
+                    world_thread_start(g_world_thread_current_id - 1, world_option_run_option_choice_menu);
                     world_thread_set_parameters(g_world_thread_current_id - 1, index, 0, 0);
                 }
             }

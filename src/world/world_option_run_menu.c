@@ -1,13 +1,12 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Options-menu values: g_world_game_option_values holds the 13 options unpacked from
- * g_main_game_options plus an all-unchanged flag at [13]; g_world_game_option_original_values holds the
- * values they are compared against. */
-
-/* Unpacks the configured options into the options-menu value table, then runs
- * main-menu mode 0 (options thread in the previous slot), 1 or 2. */
-void world_menu_run_main_mode(s32 mode) {
+/* WORLD's copy of option_entrypoint: unpack the game options into the options menu's value table
+ * and run one of OPTION's three menus (option_menu_type_e): the game options in the slot below, the AT
+ * list or the dead-unit panel. Only the game options run in WORLD, from the world menu's Options row
+ * (world_option_open_game_options); the other two belong to WORLD's dead copy of the battle menus
+ * (QUIRKS.md). */
+void world_option_run_menu(s32 mode) {
     world_menu_entry_t* entry;
     u32 options;
     s32 i;
@@ -53,7 +52,7 @@ void world_menu_run_main_mode(s32 mode) {
     last_mode = OPTION_MENU_DEAD_UNIT;
     if (mode == OPTION_MENU_GAME_OPTIONS) {
         world_script_pulse_tutorial_wait_value(0xFD);
-        world_thread_start(g_world_thread_current_id - 1, world_build_options_menu);
+        world_thread_start(g_world_thread_current_id - 1, world_option_build_options_menu);
         entry->select_text_table = 1;
         entry->text_binding = &g_world_option_menu_entry_table;
         world_thread_set_parameters(g_world_thread_current_id - 1, (s32)entry, 0, 0);

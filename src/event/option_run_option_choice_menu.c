@@ -1,6 +1,6 @@
 /* Run the option choice menu.
  *
- * Port of world_run_option_choice_menu (identical apart from the four window constants).
+ * Port of world_option_run_option_choice_menu (identical apart from the four window constants).
  * Two dead-store conditionals are zero-instruction allocation devices: flow deletes each body,
  * post-reload jump deletes each branch, but both stay visible to register allocation.
  * - `if (height <= 0)`: the sixth height reference (6 refs/54 insns) ties the render

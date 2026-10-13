@@ -1,8 +1,6 @@
 #include "fft/world.h"
 
-/* Per-frame driver for world_menu_request_open_companion_executable: start the disc read for the
- * pending request on the main thread, then poll until it finishes and clear
- * the request. */
+/* WORLD twin of battle_menu_open_companion_executable. */
 void world_menu_open_companion_executable(void) {
     s32 request;
 

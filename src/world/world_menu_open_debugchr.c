@@ -2,9 +2,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Thread body that runs the DEBUGCHR character debug session from a WORLD
- * menu: hides the unit view, loads the overlay, stops the menu thread and
- * waits for slots 10..13, runs the session and restores the menu state. */
+/* WORLD twin of battle_menu_open_debugchr. */
 void world_menu_open_debugchr(void) {
     world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
     world_menu_block_help();

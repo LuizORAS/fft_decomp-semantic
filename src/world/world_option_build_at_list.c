@@ -7,7 +7,8 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-void world_build_at_list(void) {
+/* WORLD's copy of option_build_at_list, the AT list's list thread. */
+void world_option_build_at_list(void) {
     world_menu_text_window_t window;
     RECT image_rect;
     RECT clear;

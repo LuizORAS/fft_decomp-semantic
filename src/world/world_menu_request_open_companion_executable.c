@@ -1,9 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Waits until neither companion load request is pending, publishes
- * `request` and yields until the loader clears it. The calling thread then
- * exits when g_world_script_frame_result_override is 1. */
+/* WORLD twin of battle_menu_request_open_companion_executable. */
 void world_menu_request_open_companion_executable(s32 request) {
     while (
         g_world_menu_companion_executable_request_index != 0 || g_world_menu_companion_data_file_request_index != 0) {

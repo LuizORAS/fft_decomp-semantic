@@ -1,9 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* WORLD twin of battle_menu_reserve_high_overlay: retry the overlay
- * allocation until it lands at the expected address, yielding and printing
- * a debug message each pass. */
+/* WORLD twin of battle_menu_reserve_high_overlay. */
 void world_menu_reserve_high_overlay(u32 size) {
     while (1) {
         if (main_heap_reserve_at(g_main_heap_high_overlay_load_address, size)

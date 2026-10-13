@@ -1,8 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Companion of world_menu_request_open_companion_executable: waits for the loader to go idle, posts
- * `request` through g_world_menu_companion_data_file_request_index and blocks until it is consumed. */
+/* WORLD twin of battle_menu_request_open_companion_data_file. */
 void world_menu_request_open_companion_data_file(s32 request) {
     while (
         g_world_menu_companion_executable_request_index != 0 || g_world_menu_companion_data_file_request_index != 0) {

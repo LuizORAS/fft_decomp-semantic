@@ -470,7 +470,7 @@ typedef enum script_attack_entry_mode {
     SCRIPT_ATTACK_ENTRY_PRELOAD_USED = 3, /* *_menu_init_attack_resources_and_threads skipped its loads */
 } script_attack_entry_mode_e;
 
-/* The argument of option_entrypoint and world_menu_run_main_mode: which of
+/* The argument of option_entrypoint and world_option_run_menu: which of
  * the OPTION overlay's screens to run. */
 typedef enum option_menu_type {
     OPTION_MENU_GAME_OPTIONS = 0,
@@ -798,7 +798,7 @@ typedef struct world_menu_icon_record {
 
 /* Provisional: one of the two 0x134-byte packet pages a scrolling text list
  * alternates between frames (world_menu_run_scrolling_ability_list_thread at 0x801a3d58,
- * world_build_at_list at 0x801ac6b4, world_screen_build_at_list at 0x801bfda4). */
+ * world_option_build_at_list at 0x801ac6b4, world_screen_build_at_list at 0x801bfda4). */
 typedef struct world_menu_list_page {
     SPRT frame;                                   /* 0x00: text image / cursor frame */
     SPRT arrows[2];                               /* 0x14: scroll arrows */

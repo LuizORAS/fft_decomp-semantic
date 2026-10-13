@@ -2,8 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Loads one 0x2000-byte image record (sector 0x164b + 4 * index) through the
- * main thread and uploads its two halves to VRAM. */
+/* WORLD twin of battle_menu_load_portrait_image. */
 void world_menu_load_portrait_image(s32 index) {
     u8* buffer;
 

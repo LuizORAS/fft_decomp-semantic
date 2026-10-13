@@ -1,7 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Thread body that swaps in companion overlay 7 behind the option menu. */
+/* Thread of a status list row (BATTLE_MENU_ID_JOBSTTS): unless the menu-building or event thread
+ * runs, block the help, reserve 0x20000 bytes for the high overlay, load JOBSTTS.OUT and run it
+ * (companion overlay state JOBSTTS) until it returns, then free the reservation and unblock the help. */
 void battle_menu_run_jobstts_thread(void) {
     if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {
         battle_thread_exit_current();

@@ -23,7 +23,7 @@ typedef enum world_thread_slot {
     WORLD_THREAD_SLOT_TUTORIAL_TEXT = 16,       /* tutorial script text: the slot past the sixteen reset ones */
 } world_thread_slot_e;
 
-/* world_build_at_list runs its window frame thread in the upper menu's slot. */
+/* world_option_build_at_list runs its window frame thread in the upper menu's slot. */
 enum {
     WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME = 15,
 };
@@ -1704,8 +1704,8 @@ extern RECT g_world_options_menu_window_rect;
 extern RECT g_world_options_menu_title_rect;
 extern RECT g_world_options_menu_value_rect;
 extern world_menu_icon_record_t g_world_option_picker_icon_records[2];
-void world_build_options_menu(void);
-void world_run_option_choice_menu(void);
+void world_option_build_options_menu(void);
+void world_option_run_option_choice_menu(void);
 
 /* panel */
 extern s16 g_world_panel_slide_up_y[];
@@ -1882,7 +1882,7 @@ void world_text_release_current_message_box_slot(void);
 
 /* turn */
 extern world_menu_list_page_t g_world_at_list_pages[2];
-void world_build_at_list(void);
+void world_option_build_at_list(void);
 void world_screen_build_at_list(void);
 
 /* dead unit */
@@ -2495,8 +2495,8 @@ void world_menu_reset_unit_records(void);
 void world_menu_run_bunit_transition_thread(void);
 void world_menu_run_jobstts_thread(void);
 void world_menu_run_icon_selection_loop(void);
-void world_menu_run_main_mode(s32 mode);
-void world_menu_run_main_mode_0_thread(void);
+void world_option_run_menu(s32 mode);
+void world_option_game_options_thread(void);
 void world_menu_run_numeric_display_panel_thread(void);
 void world_menu_run_numeric_editor_thread(void);
 void world_menu_run_script_with_palette_mode(void* output, s32 input, s32 mode);
