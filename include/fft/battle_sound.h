@@ -20,9 +20,6 @@ extern s16 g_sound_music_unload_slot_request; /* 0x80165fca */
  * duration = (packed >> 14) & 0x3ffc. Not a linear duration field. */
 extern s32 g_sound_music_volume_transition_request;
 
-void sound_play_music_tracks(s32 slot_1_music_id, s32 slot_2_music_id);
-void sound_wait_for_music_stub(void);
-
 /* queued effects */
 extern s32 g_sound_pending_sfx_id; /* main_sfx_e; -1 while the event frame has no request */
 extern s32 g_sound_suppressed;

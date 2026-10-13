@@ -28,7 +28,6 @@ s32 script_find_instruction_byte_offset(s32 offset, s32 opcode);
 s32 script_find_jump_target(s32 limit_offset, event_opcode_e target_opcode, s32 alternate_opcode, s32 target_id);
 s32 script_get_current_scenario_finish_operation(void);
 u32 script_get_event_finish_operation(void);
-void script_jump_event_instruction(const event_jump_parameters_t* parameters);
 void script_load_event(s32 id);
 s32 script_load_next_event(void);
 void script_process_pending_requests(void);
@@ -156,7 +155,6 @@ void script_mirrorsprite_event_instruction(const event_mirror_sprite_parameters_
 void script_play_effect_and_wait(void);
 void script_play_effect_thread(void);
 void script_print_debug_message(void);
-void script_resetpalette_event_instruction(const event_unit_parameters_t* parameters);
 void script_set_units_palette_update_suppression(s32 unit_id, s32 enable);
 void script_show_graphic(void);
 void script_toggle_message_portrait_flip(const u8* parameters);

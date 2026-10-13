@@ -1239,6 +1239,7 @@ typedef struct battle_menu_id_record {
 } battle_menu_id_record_t;
 typedef char battle_menu_id_record_size_must_be_8[(sizeof(battle_menu_id_record_t) == 8) ? 1 : -1];
 
+void menu_free_high_overlay(void);
 /* Both menu arenas track sixteen allocations in 256-byte pages. */
 enum {
     MENU_BUFFER_ALLOCATION_COUNT = 16,

@@ -408,13 +408,11 @@ extern s16 g_world_sound_music_unload_slot_request;
 extern s32 g_world_sound_music_volume_transition_request;
 extern u8 g_world_sound_release_held_loop;
 void world_sound_dispatch_effect(void);
-void world_sound_play_music_tracks(s32 slot_1_music_id, s32 slot_2_music_id);
 void world_sound_queue_sfx_cancel(void);
 void world_sound_queue_sfx_confirm(void);
 void world_sound_queue_sfx_confirm_unless_restoring(void);
 void world_sound_queue_sfx_invalid(void);
 void world_sound_queue_sfx_cursor_move(void);
-void world_sound_wait_for_music_stub(void);
 void world_sound_bg_thread(void);
 void world_sound_edit_bg_thread(void);
 
@@ -1077,7 +1075,6 @@ s32 world_gfx_update_fade_in_tile(void);
 s32 world_gfx_update_fade_out_tile(void);
 void world_script_assign_bitset_flag(u32* bits, s32 index, s32 set);
 void world_gfx_load_evtchr_thread(void);
-void world_script_resetpalette_event_instruction(const event_unit_parameters_t* parameters);
 
 /* job */
 
@@ -1851,7 +1848,6 @@ s32 world_unit_is_moving(s32 id);
 void world_menu_load_selected_unit(void);
 void world_unit_reset_animation_states(void);
 void world_unit_set_animation(s32 runtime_id, u32 animation);
-void world_unit_set_facing(s32 runtime_id, s32 rotation);
 void world_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b);
 s32 world_unit_prepare_event_filter(u16* unit_id, s32* filter_mode);
 void world_unit_update_staged_status_data(u16 unit_id, u16 restore);
@@ -2545,7 +2541,6 @@ void world_menu_draw_thread_status_indicators(void);
 void world_menu_enable_all_order_entries(void);
 void world_menu_fade_out_thread(void);
 void world_screen_menu_build_window_image_row(u16* source, u16* dest, s32 count, s32 offset);
-void world_menu_free_high_overlay(void);
 void world_menu_free_memory(void* buffer);
 s32 world_menu_get_entry_item_count(s32 entry_index);
 s32 world_menu_get_entry_item_equipped_count(s32 entry_index);
@@ -3178,7 +3173,6 @@ void world_free_work_buffer(void);
 s32 world_is_skillset_in_spell_quote_exception_list(s32 value);
 void world_script_process_inflict_status_commands(void);
 void world_script_rotate_unit(const event_rotate_unit_parameters_t* parameters);
-void world_script_jump_event_instruction(const event_jump_parameters_t* parameters);
 void world_script_block_start_thread(void);
 
 /* unnamed */

@@ -34,6 +34,6 @@ void world_script_unit_animation_rotate_event_instruction(const event_unit_anim_
     rotation_state->target_facing = rotation;
     rotation_state->delay = 0;
     rotation_state->rotating = 0;
-    world_unit_set_facing(index, rotation);
+    battle_unit_set_facing(index, rotation);
     world_unit_set_animation(index, animation);
 }

@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -24,7 +25,7 @@ void world_menu_fade_out_thread(void) {
         world_thread_wait_frames(1);
     } while (g_world_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
 
-    world_menu_free_high_overlay();
+    menu_free_high_overlay();
     for (i = 2; i < 15; i++) {
         world_thread_set_parameters(i, 0, 0, 1);
     }

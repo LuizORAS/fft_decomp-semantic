@@ -384,7 +384,6 @@ extern s32 g_battle_menu_companion_executable_offsets[];
 extern s32 g_battle_menu_companion_executable_request_index;
 extern s32 g_battle_menu_companion_executable_sizes[];
 
-void battle_menu_free_high_overlay(void);
 void battle_menu_open_bunit(void);
 void battle_menu_open_companion_data_file(void);
 void battle_menu_open_companion_executable(void);

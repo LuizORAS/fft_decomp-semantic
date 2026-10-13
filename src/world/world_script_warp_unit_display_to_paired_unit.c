@@ -33,6 +33,6 @@ s32 world_script_warp_unit_display_to_paired_unit(s32 runtime_id) {
         state->rotating = 0;
         state->target_facing = facing;
         battle_unit_place_in_new_location(runtime_id, &g_world_script_warp_unit_coords, stats->position.facing);
-        world_unit_set_facing(runtime_id, stats->position.facing << 2);
+        battle_unit_set_facing(runtime_id, stats->position.facing << 2);
     }
 }

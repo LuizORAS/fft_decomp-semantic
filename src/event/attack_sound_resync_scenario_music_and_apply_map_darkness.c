@@ -2,6 +2,7 @@
 #include "fft/battle_sound.h"
 #include "fft/event_attack.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -23,7 +24,7 @@ void attack_sound_resync_scenario_music_and_apply_map_darkness(void) {
     if (g_battle_scenario_event_active != 0 && (scenario < 410 || scenario > 425)) {
         if (g_sound_music_track_1_id == 0 && g_sound_music_track_2_id == 0) {
             g_sound_music_track_index = 0;
-            attack_sound_play_music_tracks(g_battle_scenario_music_1_id, g_battle_scenario_music_2_id);
+            sound_play_music_tracks(g_battle_scenario_music_1_id, g_battle_scenario_music_2_id);
         } else {
             if (g_sound_music_track_index == 0) {
                 playing = g_sound_music_track_1_id;
@@ -35,13 +36,13 @@ void attack_sound_resync_scenario_music_and_apply_map_darkness(void) {
 
             if (playing != g_battle_scenario_music_1_id && playing != g_battle_scenario_music_2_id) {
                 g_sound_music_track_index = 0;
-                attack_sound_play_music_tracks(g_battle_scenario_music_1_id, g_battle_scenario_music_2_id);
+                sound_play_music_tracks(g_battle_scenario_music_1_id, g_battle_scenario_music_2_id);
             } else {
                 g_thread_call_target = (void (*)(void))main_sound_unload_scenario_mus;
                 thread_call_on_main_stack((g_sound_music_track_index ^ 1) + 1);
                 g_thread_call_target = (void (*)(void))main_sound_open_and_play_music;
                 thread_call_on_main_stack(replacement, (g_sound_music_track_index ^ 1) + 1);
-                attack_sound_wait_for_music_stub();
+                sound_wait_for_music_stub();
             }
         }
 

@@ -2,6 +2,7 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Thread that runs the unit list overlay (BUNIT.OUT) and returns to the battle;
@@ -28,7 +29,7 @@ void battle_menu_fade_out_thread(void) {
         battle_thread_wait_frames(1);
     } while (g_battle_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
 
-    battle_menu_free_high_overlay();
+    menu_free_high_overlay();
     for (thread_id = 2; thread_id < 15; thread_id++) {
         battle_thread_set_parameters(thread_id, 0, 0, 1);
     }

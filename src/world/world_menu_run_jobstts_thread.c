@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 
 /* Thread body: loads companion overlay file 7 and runs it with state 3 until
@@ -20,7 +21,7 @@ void world_menu_run_jobstts_thread(void) {
         world_thread_yield();
     } while (g_world_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
     g_world_menu_new_button_input = 0;
-    world_menu_free_high_overlay();
+    menu_free_high_overlay();
     world_thread_wait_frames(2);
     world_menu_clear_transition_active_flag();
     world_thread_exit_current();

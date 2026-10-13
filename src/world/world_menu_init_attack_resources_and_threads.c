@@ -1,4 +1,5 @@
 #include "fft/event_attack.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 
@@ -50,7 +51,7 @@ s32 world_menu_init_attack_resources_and_threads(void) {
     } else {
         g_world_sound_music_track_1_id = 0;
         g_world_sound_music_track_2_id = 0;
-        world_sound_play_music_tracks(MAIN_MUSIC_DEPLOYMENT, MAIN_MUSIC_NONE);
+        sound_play_music_tracks(MAIN_MUSIC_DEPLOYMENT, MAIN_MUSIC_NONE);
         attack_text_build_deployment_strings();
         attack_map_load_title_graphic();
         world_thread_start(NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT, attack_deploy_run_screen);

@@ -378,6 +378,5 @@ void require_thread_exit_current(void);
 s32 require_thread_is_running(s32 thread_id);
 
 /* sound */
-void require_sound_wait_for_music_stub(void);
 
 #endif

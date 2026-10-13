@@ -3,6 +3,7 @@
 #include "fft/battle_sound.h"
 #include "fft/battle_thread.h"
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
 
 /* Thread body that swaps in companion overlay 7 behind the option menu. */
 void battle_menu_run_jobstts_thread(void) {
@@ -23,7 +24,7 @@ void battle_menu_run_jobstts_thread(void) {
         battle_thread_yield();
     } while (g_battle_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
     g_script_event_input = 0;
-    battle_menu_free_high_overlay();
+    menu_free_high_overlay();
     battle_thread_wait_frames(2);
     battle_menu_clear_modal_open();
     battle_thread_exit_current();

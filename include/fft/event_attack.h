@@ -409,8 +409,6 @@ s32 attack_thread_is_running(s32 thread_id);
 void attack_thread_wait_forever(void);
 
 /* sound */
-void attack_sound_play_music_tracks(s32 slot_1_music_id, s32 slot_2_music_id);
 void attack_sound_resync_scenario_music_and_apply_map_darkness(void);
-void attack_sound_wait_for_music_stub(void);
 
 #endif

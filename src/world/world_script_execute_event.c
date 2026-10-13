@@ -1,6 +1,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
@@ -200,7 +201,7 @@ restart_event:
                 g_world_sound_current_music_track_index = 0;
                 g_world_sound_music_track_1_id = MAIN_MUSIC_ALTIMA;
                 g_world_sound_music_track_2_id = 0;
-                world_sound_play_music_tracks(MAIN_MUSIC_ALTIMA, MAIN_MUSIC_NONE);
+                sound_play_music_tracks(MAIN_MUSIC_ALTIMA, MAIN_MUSIC_NONE);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_COPY_UNIT_8_POSITION_TO_UNIT_9_AND_RELOAD_GRAPHICS) {
                 unit = battle_unit_get_stats_from_battle_id(7);
@@ -412,7 +413,7 @@ restart_event:
         else if (opcode == EVENT_OPCODE_MIRROR_SPRITE) {
             world_script_mirrorsprite_event_instruction((const event_mirror_sprite_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_RESET_PALETTE) {
-            world_script_resetpalette_event_instruction((const event_unit_parameters_t*)parameters);
+            script_resetpalette_event_instruction((const event_unit_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_SET_FIRST_UNIT) {
             operand_1 = script_resolve_runtime_id(first_operand);
             if (operand_1 != EVENT_RUNTIME_ID_NONE) {
@@ -522,7 +523,7 @@ restart_event:
         /* ---- unit movement and facing ---- */
         else if (opcode == EVENT_OPCODE_WALK_TO) {
         } else if (opcode == EVENT_OPCODE_JUMP) {
-            world_script_jump_event_instruction((const event_jump_parameters_t*)parameters);
+            script_jump_event_instruction((const event_jump_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_WALK) {
             world_script_waitwalk_event_instruction(first_operand);
         } else if (opcode == EVENT_OPCODE_WALK_TO_ANIM) {

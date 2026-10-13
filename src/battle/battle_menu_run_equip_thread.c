@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -50,7 +51,7 @@ void battle_menu_run_equip_thread(void) {
                 = ((menu_entry_t*)g_battle_thread_contexts[8 - j].function_parameter_1)->selected_index;
         }
     }
-    battle_menu_free_high_overlay();
+    menu_free_high_overlay();
     g_battle_menu_suspend_state = 0;
     battle_unit_start_view_thread(saved, 0xFF, 0xFF);
     g_sound_suppressed = 0;

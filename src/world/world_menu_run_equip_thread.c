@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -45,7 +46,7 @@ void world_menu_run_equip_thread(void) {
                 = ((menu_entry_t*)g_world_thread_contexts[8 - j].function_parameter_1)->selected_index;
         }
     }
-    world_menu_free_high_overlay();
+    menu_free_high_overlay();
     g_world_menu_overlay_state = 0;
     world_unit_start_view_thread(saved, 0xFF, 0xFF);
     g_world_menu_sound_muted = 0;
