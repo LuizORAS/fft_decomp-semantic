@@ -835,7 +835,7 @@ functions:
   - {addr: 0x8005e478, size: 112, name: main_unit_init_position_and_rewards, hash: 9421b9d560e38650}
   - {addr: 0x8005e4e8, size: 240, name: main_status_find_action_highest_order_effect, hash: f0565f5aed12ad4b}
   - {addr: 0x8005e5d8, size: 108, name: main_unit_calculate_zodiac_symbol, hash: 0042a97bca78c29a}
-  - {addr: 0x8005e644, size: 44, name: mem_zero, hash: 56f3e9bb00dabbd7}
+  - {addr: 0x8005e644, size: 44, name: mem_zero, hash: 56f3e9bb00dabbd7, source: src/shared/memory/mem_zero.c}
   - {addr: 0x8005e670, size: 92, name: main_unit_increase_casualty_counters, hash: 42b35d6ac1f3c89f}
   - {addr: 0x8005e6cc, size: 120, name: main_status_change_unit, hash: dc7a2bc945f89882}
   - {addr: 0x8005e744, size: 52, name: main_status_store_current, hash: a213e350e165866b}
