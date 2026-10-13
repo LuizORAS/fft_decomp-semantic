@@ -58,14 +58,10 @@ void script_set_current_otag_entry_and_update_input(u32* entry, s32 input);
 void script_update_event_input_state(u32 state);
 
 /* conditions */
-extern u8 g_script_condition_param_lengths[];
-extern s32 g_script_condition_unit_battle_id;
 
-s32 script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation);
 s32 script_is_deployment_running(u32* ot, u32 buttons);
 s32 script_is_tutorial_event_slot(void);
 void script_pulse_tutorial_wait_value(s32 value);
-s32 script_run_scenario_conditions(void);
 
 /* unit creation and removal */
 s32 script_add_ghost_unit_event_instruction(
@@ -125,7 +121,6 @@ void script_color_screen_thread(void);
 void script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
 void script_load_attack_graphics_event_instruction(void);
 void script_load_portrait_colors_event_instruction(s32 portrait_id);
-void script_play_effect_and_wait(void);
 void script_play_effect_thread(void);
 void script_print_debug_message(void);
 void script_set_units_palette_update_suppression(s32 unit_id, s32 enable);

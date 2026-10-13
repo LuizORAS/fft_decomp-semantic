@@ -46,7 +46,7 @@ s32 world_menu_dispatch_system_function(
                 return MENU_SYSTEM_DISPATCH_DONE;
             } else {
                 count = 0;
-                g_world_script_acting_unit_id = unit_id;
+                g_script_condition_unit_battle_id = unit_id;
                 for (i = 0; i < 3; i++) {
                     if (battle_unit_find_slot_by_character_identity(i + 1) == BATTLE_CHARACTER_SLOT_UNAVAILABLE) {
                         count++;
@@ -66,7 +66,7 @@ s32 world_menu_dispatch_system_function(
                     return MENU_SYSTEM_DISPATCH_EVENT;
                 }
                 if (g_world_menu_scenario_event_started != 0) {
-                    if (world_script_run_scenario_conditions() != 0) {
+                    if (script_run_scenario_conditions() != 0) {
                         if (option != 2) {
                             world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
                             g_world_menu_overlay_state = 1;

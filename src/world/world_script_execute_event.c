@@ -297,8 +297,8 @@ restart_event:
             event_flags = (g_main_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8;
             if (g_world_menu_input_mode == MENU_INPUT_PLAYER && event_flags == 0
                 && (operand_1 - EVENT_ID_COMMON_FIRST) >= 0x1AU && operand_1 != 0) {
-                g_world_script_acting_unit_id = 0xFF;
-                world_script_run_scenario_conditions();
+                g_script_condition_unit_battle_id = 0xFF;
+                script_run_scenario_conditions();
                 if (world_script_load_next_event() != 0) {
                     goto restart_event;
                 }

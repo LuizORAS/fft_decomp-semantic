@@ -24,7 +24,7 @@ void world_script_unit_anim(const event_unit_anim_parameters_t* parameters) {
                 animation = script_read_s16(parameters->animation_le);
                 unit_set_animation(unit_id, animation);
                 if (animation >= BATTLE_UNIT_ANIMATION_BOW_HIGH && animation <= BATTLE_UNIT_ANIMATION_BOW_LOW) {
-                    world_script_play_effect_and_wait();
+                    script_play_effect_and_wait();
                 }
                 if (filter_mode == 0) {
                     break;

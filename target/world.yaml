@@ -251,7 +251,7 @@ functions:
   - {addr: 0x800f2020, size: 200, name: script_jump_event_instruction, hash: 01ae5809eeb02805, source: src/shared/script/script_jump_event_instruction.c}
   - {addr: 0x800f20e8, size: 76, name: script_waitwalk_event_instruction, hash: 28b91f66c57395a1, source: src/shared/script/script_waitwalk_event_instruction.c}
   - {addr: 0x800f2134, size: 88, name: world_script_load_attack_graphics_event_instruction, hash: 6996873356d74343}
-  - {addr: 0x800f218c, size: 96, name: world_script_play_effect_and_wait, hash: 071ebe20d78399d5}
+  - {addr: 0x800f218c, size: 96, name: script_play_effect_and_wait, hash: 071ebe20d78399d5, source: src/shared/script/script_play_effect_and_wait.c}
   - {addr: 0x800f21ec, size: 48, name: world_script_play_effect_thread, hash: 23d695acccad5513}
   - {addr: 0x800f221c, size: 1236, name: world_script_block_start_thread, hash: 5ed900a4fe6df008}
   - {addr: 0x800f26f0, size: 468, name: world_script_add_unit_start_thread, hash: 16616b5eb112a78a}
@@ -301,9 +301,9 @@ functions:
   - {addr: 0x800f5304, size: 128, name: world_menu_get_dead_unit_selection, hash: 2cbfb3b781403e89}
   - {addr: 0x800f5384, size: 2556, name: world_menu_dispatch_system_function, hash: d8c0ee3dbff2b5b4}
   - {addr: 0x800f5d80, size: 168, name: battle_unit_get_stats_by_unit_id, hash: 7009f26291692b1c, source: src/shared/unit/battle_unit_get_stats_by_unit_id.c}
-  - {addr: 0x800f5e28, size: 220, name: world_script_run_scenario_conditions, hash: 60f3fa3f123be7c6}
+  - {addr: 0x800f5e28, size: 220, name: script_run_scenario_conditions, hash: 60f3fa3f123be7c6, source: src/shared/script/script_run_scenario_conditions.c}
   - {addr: 0x800f5f04, size: 8, name: world_noop_800f5f04, hash: 6d64edf91449c1b1}
-  - {addr: 0x800f5f0c, size: 1296, name: world_script_check_scenario_condition, hash: 5e07a4b1d51f3ad0, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800f5f0c, size: 1296, name: script_check_scenario_condition, hash: 5e07a4b1d51f3ad0, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck, source: src/shared/script/script_check_scenario_condition.c}
   - {addr: 0x800f641c, size: 72, name: world_script_get_current_scenario_finish_operation, hash: deaa25ecf5628c12}
   - {addr: 0x800f6464, size: 44, name: world_script_get_scenario_finish_operation_flags, hash: 7d999b7e3a6a55c0}
   - {addr: 0x800f6490, size: 84, name: world_script_pulse_tutorial_wait_value, hash: 9e5204eaa009440e}
@@ -1051,7 +1051,7 @@ data:
   - {addr: 0x8013a440, name: g_world_unit_editor_job_name}
   - {addr: 0x8013a454, name: g_world_event_instruction_sizes}
   - {addr: 0x8013a548, name: g_world_menu_ability_display_flags}
-  - {addr: 0x8013a5e8, name: g_world_script_acting_unit_id}
+  - {addr: 0x8013a5e8, name: g_script_condition_unit_battle_id}
   - {addr: 0x8013a5ec, name: g_world_spell_quote_last_ability_id}
   - {addr: 0x8013a5f0, name: g_world_menu_resolved_skillset}
   - {addr: 0x8013a5f4, name: g_world_menu_resolved_ability}
@@ -1252,7 +1252,7 @@ data:
   - {addr: 0x80156734, name: g_world_menu_action_slot_default_messages}
   - {addr: 0x80156748, name: g_world_spell_quote_exception_skillsets}
   - {addr: 0x80156750, name: g_world_system_function_table}
-  - {addr: 0x80156b4c, name: g_world_scenario_condition_arg_counts}
+  - {addr: 0x80156b4c, name: g_script_condition_param_lengths}
   - {addr: 0x80156b88, name: g_world_camera_yaw_unwrap_request}
   - {addr: 0x80156b8c, name: g_world_script_loaded_event_id}
   - {addr: 0x80156b90, name: g_world_map_darkness_wait_frames}

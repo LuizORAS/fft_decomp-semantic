@@ -332,7 +332,7 @@ typedef enum event_rotate_unit_facing {
 } event_rotate_unit_facing_e;
 
 /* First 16-bit value of a scenario condition record, as
- * *_script_check_scenario_condition tests it. The record's next 16-bit values are
+ * script_check_scenario_condition tests it. The record's next 16-bit values are
  * called id and value below; the two tile conditions also read a y and an
  * elevation. Other types fail. */
 typedef enum event_scenario_condition {
@@ -364,8 +364,8 @@ typedef enum event_scenario_condition {
     EVENT_SCENARIO_CONDITION_PALETTE_UNIT_AT_TILE = 37,
 } event_scenario_condition_e;
 
-/* Result of *_script_check_scenario_condition for one condition record.
- * *_script_run_scenario_conditions walks a chain of records while they pass,
+/* Result of script_check_scenario_condition for one condition record.
+ * script_run_scenario_conditions walks a chain of records while they pass,
  * drops the chain at the first failure and reports an event to run when it
  * reaches the record (type 25) that stores the event id. */
 typedef enum event_scenario_condition_result {
@@ -985,6 +985,12 @@ extern s32 g_script_rand16_state;
 s32 script_get_rand16(void);
 void script_seed_random_from_vsync(void);
 
+/* scenario conditions */
+extern u8 g_script_condition_param_lengths[];
+extern s32 g_script_condition_unit_battle_id;
+s32 script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation);
+s32 script_run_scenario_conditions(void);
+
 /* values */
 void script_clamp_s32_to_range(s32* value, s32 minimum, s32 maximum);
 s32 script_scale_music_volume(s32 volume);
@@ -1022,6 +1028,9 @@ void script_wait_value_event_instruction(const event_wait_value_parameters_t* pa
 
 /* camera operands */
 void script_apply_relative_camera(event_camera_values_t* parameters, const s32* camera_values);
+
+/* effects */
+void script_play_effect_and_wait(void);
 
 /* graphic display */
 void script_show_graphic(void);

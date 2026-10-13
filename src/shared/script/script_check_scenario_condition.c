@@ -1,5 +1,4 @@
 #include "fft/battle_action.h"
-#include "fft/battle_script.h"
 #include "fft/battle_unit.h"
 #include "fft/script.h"
 
@@ -20,9 +19,7 @@
  * to 3. The HP percentage is hp * 100 / (max_hp + 1). The casualty conditions
  * compare with id, not value.
  *
- * world_script_check_scenario_condition is the WORLD copy, built with divide
- * checks. The unit id range test is written as two comparisons: that spelling
- * reloads the byte, as retail does. */
+ * Keep the two unit-id range comparisons: retail reloads the byte. */
 s32 script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation) {
     battle_stats_t* unit;
     s32 i;

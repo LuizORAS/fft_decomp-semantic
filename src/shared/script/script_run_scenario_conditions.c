@@ -1,6 +1,5 @@
-#include "fft/battle_script.h"
 #include "fft/main.h"
-#include "psx/types.h"
+#include "fft/script.h"
 
 /* Walk the scenario's condition chains and report whether one selects an event.
  *
@@ -14,8 +13,7 @@
  *
  * The checker always receives the five 16-bit values at the record, whatever the
  * type's length. Called at EventEnd and by the scenario-check command of
- * battle_menu_dispatch_system_function. world_script_run_scenario_conditions is
- * the WORLD copy. */
+ * the scene's menu system-function dispatcher. */
 s32 script_run_scenario_conditions(void) {
     s16* condition;
     s32 i;
