@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
+#include "fft/thread.h"
 
 /* Return a buffer of battle_menu_alloc_memory to the menu arena: its slot record
  * is marked free (-1) and its 256-byte pages are cleared in the occupancy map.
@@ -38,7 +39,7 @@ void battle_menu_free_memory(void* buffer_pointer) {
             allocation_size += sizeof(menu_allocation_t) / sizeof(*allocation_size);
             allocation++;
             if ((s32)allocation_size >= (s32)allocation_end) {
-                battle_thread_exit_current();
+                thread_exit_current();
                 return;
             }
         }

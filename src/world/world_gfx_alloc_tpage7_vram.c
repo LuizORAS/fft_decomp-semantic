@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -80,5 +81,5 @@ void world_gfx_alloc_tpage7_vram(RECT* rect, void* prim, u32* image) {
         next:;
         }
     }
-    world_thread_exit_current();
+    thread_exit_current();
 }

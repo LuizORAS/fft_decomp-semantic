@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -11,9 +12,9 @@
  */
 s32 world_menu_is_input_allowed(void) {
     if ((world_thread_is_running_asm(NATIVE_SCREEN_THREAD_SLOT_TEXT)
-            && (g_world_thread_contexts[NATIVE_SCREEN_THREAD_SLOT_TEXT].function_parameter_1 & 0x70) == 0x30)
+            && (g_native_thread_contexts[NATIVE_SCREEN_THREAD_SLOT_TEXT].function_parameter_1 & 0x70) == 0x30)
         || (world_thread_is_running_asm(NATIVE_SCREEN_THREAD_SLOT_MESSAGE)
-            && (g_world_thread_contexts[NATIVE_SCREEN_THREAD_SLOT_MESSAGE].function_parameter_1 & 0x70) == 0x30)) {
+            && (g_native_thread_contexts[NATIVE_SCREEN_THREAD_SLOT_MESSAGE].function_parameter_1 & 0x70) == 0x30)) {
         g_world_menu_input_block_frames = 5;
         return 0;
     }

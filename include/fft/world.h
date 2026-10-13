@@ -93,7 +93,6 @@ extern VECTOR g_world_map_light_scale;     /* current light scale */
 extern MATRIX g_world_map_light_base_matrix;
 extern SVECTOR g_world_map_light_rotation; /* current light rotation */
 extern MATRIX g_world_map_light_color_matrix;
-void world_map_data_load_complete_thread(void);
 void world_menu_selected_tile_info_display_thread(void);
 s32 world_map_is_busy(void);
 void world_map_store_selected_tile_data(void);
@@ -512,12 +511,6 @@ extern s32 g_world_thread_task_active;
 extern menu_gradient_panel_prims_t g_world_thread_indicator_packets[2][2];
 extern crystal_pickup_result_t* g_world_thread_inner_subroutine_result;
 
-extern native_thread_t g_world_thread_contexts[];
-extern s32 g_world_thread_current_id;
-
-/* WORLD's pointer slot and fixed-array binding refer to the same scheduler
- * storage through different symbols. */
-extern native_thread_t* g_world_threads;
 s32 world_menu_get_cursor_bob_offset(s32 mode);
 void world_text_release_current_message_box_slot(void);
 s32 world_thread_find_first_running_menu_thread(void);
@@ -532,7 +525,6 @@ void world_card_input_update_with_message_state(void);
 void world_thread_wait_for_unit_view_panels(void);
 void world_thread_yield_forever(void);
 void world_thread_request_redraw(s32 thread_id);
-void world_thread_exit_current(void);
 s32 world_thread_find_running_by_task(s32 task_id);
 void* world_thread_get_current_parameter_1(void);
 s32 world_thread_get_current_parameter_2(void);
@@ -545,13 +537,11 @@ void world_thread_reset_scheduler(void);
 s32 world_thread_resolve_id(s32 requested_thread_id);
 s32 world_thread_resolve_id_after_current(s32 requested_thread_id);
 void world_thread_resume(s32 thread_id);
-void world_thread_set_current_task_id(s32 task_id);
 void world_thread_set_parameters(s32 thread_id, s32 first, s32 second, s32 third);
 void world_thread_set_four_parameters(s32 thread_id, s32 first, s32 second, s32 third, s32 fourth);
 void world_thread_set_task_id_to_three(s32 thread_id);
 void world_thread_start(s32 thread_id, void (*function)(void));
 void world_thread_suspend(s32 thread_id);
-void world_thread_wait_frames(s32 ticks);
 void world_thread_wait_until_inactive(s32 thread_id);
 
 /* turn */
@@ -2314,7 +2304,6 @@ extern s16 g_world_menu_list_row_text_ids[];
 extern u16 g_world_menu_list_cursor_anim;
 extern u16 g_world_menu_scroll_hold_counter;
 extern s16 g_world_menu_text_redraw_request;
-extern s16 g_world_menu_pending_selection[4];
 extern world_menu_grid_cell_t g_world_grid_menu_default_cells[];
 extern world_menu_grid_cell_t g_world_grid_menu_shop_cells[];
 extern world_menu_grid_cell_t g_world_grid_menu_shop_scrolled_cells[];

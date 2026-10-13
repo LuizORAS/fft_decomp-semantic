@@ -46,7 +46,7 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
     if (runtime_id == EVENT_RUNTIME_ID_NONE) {
         return;
     }
-    g_world_thread_contexts[g_world_thread_current_id].task_words[0] = runtime_id;
+    g_native_thread_contexts[g_native_current_thread_id].task_words[0] = runtime_id;
     coords = battle_unit_get_event_offset_by_runtime_id(runtime_id);
     parameters += sizeof(arg->unit_id_le);
     pos[0][0] = coords->vx;
@@ -113,7 +113,7 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
             }
         }
         if (battle_unit_has_runtime_id(runtime_id) == 0) {
-            world_thread_exit_current();
+            thread_exit_current();
         }
         vec.vx = pos[3][0];
         vec.vy = pos[3][1];
@@ -128,7 +128,7 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
         pos[3][2] = -vec.vz;
     }
     if (battle_unit_has_runtime_id(runtime_id) == 0) {
-        world_thread_exit_current();
+        thread_exit_current();
     }
     vec.vx = pos[3][0];
     vec.vy = pos[3][1];

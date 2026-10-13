@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -18,7 +19,7 @@ void world_menu_text_entry_wait_thread(void) {
     u16 third;
     menu_text_binding_t* binding;
 
-    param = (menu_entry_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
+    param = (menu_entry_t*)g_native_threads[g_native_current_thread_id].function_parameter_1;
     binding = param->context;
     binding->prepare();
     g_world_input_frame_controller_input = world_input_get_menu_controller(0);
@@ -31,7 +32,7 @@ void world_menu_text_entry_wait_thread(void) {
     world_menu_handle_entry_confirm(param, 0);
     world_thread_start(thread_id, world_text_character_handling_thread);
     world_thread_set_four_parameters(thread_id, first, second, third, third);
-    world_thread_wait_until_inactive(g_world_thread_current_id - 1);
+    world_thread_wait_until_inactive(g_native_current_thread_id - 1);
     world_thread_wait_until_inactive(thread_id);
-    world_thread_exit_current();
+    thread_exit_current();
 }

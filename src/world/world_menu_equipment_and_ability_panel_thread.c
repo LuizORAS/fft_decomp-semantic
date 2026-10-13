@@ -23,8 +23,8 @@ void world_menu_equipment_and_ability_panel_thread(void) {
     s32 mode;
     s32 i;
 
-    world_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (menu_status_thread_t*)g_world_threads[g_world_thread_current_id].function_parameter_1;
+    thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
+    thread = (menu_status_thread_t*)g_native_threads[g_native_current_thread_id].function_parameter_1;
     g_world_input_frame_controller_input = world_input_get_menu_controller(0);
     screen = g_world_change_banner_panel_frames;
     base = g_world_change_banner_panel_frames;
@@ -178,5 +178,5 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         frame++;
     }
     thread_yield();
-    world_thread_exit_current();
+    thread_exit_current();
 }

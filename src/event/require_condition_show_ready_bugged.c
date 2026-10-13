@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Thread body of display condition "ready": runs the hovered-unit stats
@@ -11,5 +12,5 @@ void require_condition_show_ready_bugged(void) {
     require_input_wait_frames_or_skip(0x3c);
     battle_thread_set_parameters(thread_id, 0, 0, 1);
     battle_thread_wait_until_inactive(thread_id);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

@@ -29,8 +29,8 @@ void world_menu_icon_linked_entry_thread(void) {
         g_world_menu_thread_menu_data[parent].window.x
             = (u16)((width >> 1) - (g_world_menu_thread_menu_data[parent].inner_width - 0x102));
         g_world_menu_thread_menu_data[parent].window.y = param->window.y + param->window.h;
-        world_thread_start(g_world_thread_current_id - 1, g_world_menu_thread_menu_data[parent].thread_entry);
-        world_thread_set_parameters(g_world_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[parent], 0, 0);
+        world_thread_start(g_native_current_thread_id - 1, g_world_menu_thread_menu_data[parent].thread_entry);
+        world_thread_set_parameters(g_native_current_thread_id - 1, (s32)&g_world_menu_thread_menu_data[parent], 0, 0);
     }
     buffer = world_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
     g_world_menu_text_state.pen.stride = width;
@@ -46,9 +46,9 @@ void world_menu_icon_linked_entry_thread(void) {
             break;
         }
         if (parent >= 0) {
-            g_world_thread_current_id--;
+            g_native_current_thread_id--;
             world_menu_select_icon_cluts(&records[i & 1].base);
-            g_world_thread_current_id++;
+            g_native_current_thread_id++;
         } else {
             world_menu_select_icon_cluts(&records[i & 1].base);
         }
@@ -61,6 +61,6 @@ void world_menu_icon_linked_entry_thread(void) {
     g_world_menu_sound_muted = 0;
     thread_yield();
     if (world_thread_get_current_parameter_2() == 0) {
-        world_thread_exit_current();
+        thread_exit_current();
     }
 }

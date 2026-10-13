@@ -113,7 +113,7 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     world_formation_update_tutorial_categories_request();
     world_formation_update_debug_variable_list_request();
     world_formation_update_fixed_number_panel_request();
-    g_world_menu_pending_selection[0] = -2;
+    g_menu_pending_selection[0] = -2;
     g_world_gfx_active_otag_entries = otag;
     g_sound_pending_sfx_id = -1;
     world_menu_draw_active_window_frames();
@@ -144,12 +144,12 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     if (g_sound_pending_sfx_id != -1) {
         main_sound_play_sfx_find_channel(g_sound_pending_sfx_id);
     }
-    if (g_world_menu_pending_selection[0] == 0) {
-        world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, g_world_menu_pending_selection[1]);
+    if (g_menu_pending_selection[0] == 0) {
+        world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, g_menu_pending_selection[1]);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_REQUEST_DESTINATION;
     }
     if (g_world_menu_input_block_frames != 0) {
         g_world_menu_input_block_frames--;
     }
-    return g_world_menu_pending_selection[0];
+    return g_menu_pending_selection[0];
 }

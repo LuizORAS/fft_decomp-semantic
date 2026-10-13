@@ -1,4 +1,5 @@
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -59,7 +60,7 @@ void world_menu_auto_battle_setting_thread(void) {
                 if (selected == 0) {
                     before = battle_menu_get_id_based_on_mount_moveable_actable(g_world_active_unit_data.battle_id);
                     stats->auto_battle_setting = AI_AUTOBATTLE_MANUAL;
-                    g_world_menu_pending_selection[0] = 0x12;
+                    g_menu_pending_selection[0] = 0x12;
                     colour[0] = 8;
                     colour[1] = 4;
                     colour[2] = 4;
@@ -115,5 +116,5 @@ void world_menu_auto_battle_setting_thread(void) {
         world_menu_submit_icon_primitives(&record->base);
     }
     thread_yield();
-    world_thread_exit_current();
+    thread_exit_current();
 }

@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_gfx.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Allocate a texture rectangle in the 16-column VRAM allocation grid.
@@ -79,5 +80,5 @@ void battle_gfx_alloc_tpage7_vram(RECT* rect, void* prim, u32* image) {
         next:;
         }
     }
-    battle_thread_exit_current();
+    thread_exit_current();
 }

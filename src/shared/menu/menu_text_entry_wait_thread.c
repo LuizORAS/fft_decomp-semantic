@@ -3,6 +3,7 @@
 #include "fft/battle_text.h"
 #include "fft/battle_thread.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 
 /*
@@ -21,7 +22,7 @@ void menu_text_entry_wait_thread(void) {
     u16 header_id;
     u16 text_id;
 
-    obj = (menu_entry_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    obj = (menu_entry_t*)g_native_threads[g_native_current_thread_id].function_parameter_1;
     {
         menu_text_binding_t* binding = obj->context;
 
@@ -38,7 +39,7 @@ void menu_text_entry_wait_thread(void) {
     battle_menu_handle_action(obj, 0);
     battle_thread_start(id, battle_text_run_dialog_thread);
     battle_thread_set_four_parameters(id, header_id, text_id, arg, arg);
-    battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+    battle_thread_wait_until_inactive(g_native_current_thread_id - 1);
     battle_thread_wait_until_inactive(id);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

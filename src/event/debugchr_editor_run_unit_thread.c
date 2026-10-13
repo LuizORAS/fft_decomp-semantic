@@ -44,7 +44,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
      * loads. */
     volatile u8* unit_ids;
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_DEBUG_UNIT_EDITOR);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_DEBUG_UNIT_EDITOR);
     g_debugchr_editor_active = 0;
     g_menu_panel_status_group_count = 2;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
@@ -162,8 +162,8 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                 g_debugchr_status_display_thread_params.style = one;
                 g_debugchr_numeric_editor_thread_params.style = one;
                 g_debugchr_character_status_frame_config.style = one;
-                battle_thread_start(g_battle_current_thread_id - 1, battle_menu_build_unit_status_list);
-                battle_thread_set_parameters(g_battle_current_thread_id - 1,
+                battle_thread_start(g_native_current_thread_id - 1, battle_menu_build_unit_status_list);
+                battle_thread_set_parameters(g_native_current_thread_id - 1,
                     (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
                 animation[0] = one;
                 animation_second[0] = one;
@@ -176,7 +176,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                         /* Typed polygon indexing reverses the ADDU operands. */
                         menu_build_status_group_primitives((POLY_FT4*)(render_offset + (s32)render_buffers));
                     }
-                    if (battle_thread_is_running_asm(g_battle_current_thread_id - 1) == 0) {
+                    if (battle_thread_is_running_asm(g_native_current_thread_id - 1) == 0) {
                         break;
                     }
                     frame++;

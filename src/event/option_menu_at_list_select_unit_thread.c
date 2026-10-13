@@ -6,10 +6,10 @@ void option_menu_at_list_select_unit_thread(void) {
     g_battle_menu_modal_open = 1;
     g_battle_menu_suspend_state = 2;
 
-    battle_thread_suspend(g_battle_current_thread_id + 1);
-    battle_thread_suspend(g_battle_current_thread_id + 2);
-    battle_thread_suspend(g_battle_current_thread_id + 3);
-    battle_thread_suspend(g_battle_current_thread_id + 4);
+    battle_thread_suspend(g_native_current_thread_id + 1);
+    battle_thread_suspend(g_native_current_thread_id + 2);
+    battle_thread_suspend(g_native_current_thread_id + 3);
+    battle_thread_suspend(g_native_current_thread_id + 4);
 
     while ((g_option_menu_transition_timer = g_option_menu_transition_duration + 100),
         g_battle_menu_at_list_selection_finished == 0) {
@@ -26,12 +26,12 @@ void option_menu_at_list_select_unit_thread(void) {
     battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_TILE_INFO_PANEL);
 
     g_text_section_pointers[TEXT_SECTION_AT_LIST] = g_option_menu_at_list_text;
-    battle_thread_resume(g_battle_current_thread_id + 1);
-    battle_thread_resume(g_battle_current_thread_id + 2);
-    battle_thread_resume(g_battle_current_thread_id + 3);
-    battle_thread_resume(g_battle_current_thread_id + 4);
+    battle_thread_resume(g_native_current_thread_id + 1);
+    battle_thread_resume(g_native_current_thread_id + 2);
+    battle_thread_resume(g_native_current_thread_id + 3);
+    battle_thread_resume(g_native_current_thread_id + 4);
 
     g_battle_menu_modal_open = 0;
     g_battle_menu_suspend_state = 0;
-    battle_thread_exit_current();
+    thread_exit_current();
 }

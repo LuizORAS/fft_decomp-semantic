@@ -2,6 +2,7 @@
 #include "fft/battle_map.h"
 #include "fft/battle_script.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
@@ -30,7 +31,7 @@ void map_light_thread(void) {
     const u8* script;
     s32* target;
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_MAP_LIGHT);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_MAP_LIGHT);
     step = 0;
     script = (const u8*)battle_thread_get_current_parameter_1();
     /* Indexed operand fields retain a separate base and add four bytes. */
@@ -68,9 +69,9 @@ void map_light_thread(void) {
             + light_values.vectors.start.scale[2];
         ScaleMatrixL(&matrix, &translation);
         map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_SET, &matrix, &rotation, 0);
-        battle_thread_wait_frames(1);
+        thread_wait_frames(1);
     }
     battle_copy_bytes(&g_script_light_angles, &color, sizeof(g_script_light_angles));
     battle_copy_bytes(&g_script_light_scale, &translation, sizeof(g_script_light_scale));
-    battle_thread_exit_current();
+    thread_exit_current();
 }

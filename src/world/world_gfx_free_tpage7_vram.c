@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /*
@@ -21,7 +22,7 @@ void world_gfx_free_tpage7_vram(RECT* rect) {
             for (x = g_world_gfx_free_rect_grid_cells[0];
                 x < g_world_gfx_free_rect_grid_cells[0] + g_world_gfx_free_rect_grid_cells[2]; x++) {
                 if (x >= WORLD_TPAGE7_GRID_COLUMNS || y >= WORLD_TPAGE7_GRID_ROWS) {
-                    world_thread_exit_current();
+                    thread_exit_current();
                 }
                 g_world_gfx_texture_allocation_grid[y][x] = 0;
             }

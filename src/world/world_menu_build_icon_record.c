@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -22,7 +23,7 @@ void world_menu_build_icon_record(RECT* rect, menu_entry_t* param, menu_icon_rec
      * frame at zero instructions. Worth the whole prologue and epilogue. */
     u8 unused_scratch[8];
 
-    world_thread_set_current_task_id(NATIVE_THREAD_TASK_MENU_WINDOW_BUILD);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_MENU_WINDOW_BUILD);
     rect->x = param->vram_origin.x;
     rect->y = param->vram_origin.y;
     rect->w = param->inner_width >> 2;

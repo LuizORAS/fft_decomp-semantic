@@ -1,5 +1,6 @@
 #include "fft/battle_unit.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -19,7 +20,7 @@ void world_script_march_units(const event_march_parameters_t* parameters) {
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &filter_mode) != 0) {
                 battle_unit_set_status_animation_by_runtime_id(unit_id);
-                world_thread_wait_frames(parameters->wait_frames);
+                thread_wait_frames(parameters->wait_frames);
                 if (filter_mode == 0) {
                     break;
                 }

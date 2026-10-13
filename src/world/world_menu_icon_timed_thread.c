@@ -52,9 +52,9 @@ void world_menu_icon_timed_thread(void) {
             break;
         }
         if (unset >= 0) {
-            g_world_thread_current_id--;
+            g_native_current_thread_id--;
             world_menu_select_icon_cluts(&records[i & 1].base);
-            g_world_thread_current_id++;
+            g_native_current_thread_id++;
         } else {
             world_menu_select_icon_cluts(&records[i & 1].base);
         }
@@ -70,6 +70,6 @@ void world_menu_icon_timed_thread(void) {
     g_world_menu_sound_muted = 0;
     thread_yield();
     if (world_thread_get_current_parameter_2() == 0) {
-        world_thread_exit_current();
+        thread_exit_current();
     }
 }

@@ -43,5 +43,5 @@ void attack_map_show_title(void) {
         thread_yield();
     } while (width < 0xf9);
 
-    battle_thread_exit_current();
+    thread_exit_current();
 }

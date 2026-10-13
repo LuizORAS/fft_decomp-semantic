@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/battle_thread.h"
+#include "fft/thread.h"
 
 /* Map a script variable id to the position of its field within its 32-bit storage value:
  * bit id & 31 for the one-bit flags (0x80..0x35f), bit (id & 7) * 4 for the
@@ -15,7 +16,7 @@ s32 script_get_variable_bit_position(s32 value) {
         } else if (value < EVENT_SCRIPT_VAR_END) {
             result = (value & 7) * 4;
         } else {
-            battle_thread_exit_current();
+            thread_exit_current();
         }
     }
     return result;

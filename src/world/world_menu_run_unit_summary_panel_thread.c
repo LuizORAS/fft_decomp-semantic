@@ -198,5 +198,5 @@ exit:
     world_gfx_free_tpage7_vram(&rects[1]);
     world_gfx_free_tpage7_vram(&rects[2]);
     world_gfx_free_tpage7_vram(&rects[3]);
-    world_thread_exit_current();
+    thread_exit_current();
 }

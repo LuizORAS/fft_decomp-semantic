@@ -1,5 +1,6 @@
 #include "fft/event_equip.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -26,15 +27,15 @@ void equip_menu_draw_thread_status_indicators(void) {
 
     active = 0;
     if (menu_thread_is_running(EQUIP_THREAD_SLOT_UNIT_STATUS) != 0) {
-        if (g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            display = (menu_status_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
+        if (g_native_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
+            display = (menu_status_thread_t*)g_native_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
             active = (-(display->x == 0)) & 13;
         }
     }
     if (menu_thread_is_running(EQUIP_THREAD_SLOT_COMPARISON_STATUS) != 0) {
-        if (g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
+        if (g_native_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
             descriptor
-                = (menu_status_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;
+                = (menu_status_thread_t*)g_native_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;
             if (descriptor->x == 0) {
                 active = 14;
                 display = descriptor;

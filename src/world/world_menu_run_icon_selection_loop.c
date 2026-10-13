@@ -55,6 +55,6 @@ void world_menu_run_icon_selection_loop(void) {
     }
     thread_yield();
     if (world_thread_get_current_parameter_2() == 0) {
-        world_thread_exit_current();
+        thread_exit_current();
     }
 }

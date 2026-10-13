@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 enum {
@@ -30,12 +31,12 @@ void battle_unit_view_supervisor_thread(void) {
         mode = battle_thread_get_current_parameter_1();
         set = &g_battle_unit_view_thread_sets[mode];
         g_battle_unit_view_mode = mode;
-        g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_1 = 0xff;
+        g_native_thread_contexts[g_native_current_thread_id].function_parameter_1 = 0xff;
         for (i = 15; i >= 0; i--) {
             states[i] = BATTLE_UNIT_VIEW_SLOT_IDLE;
         }
         for (i = 0; i < 4; i++) {
-            thread = &g_battle_thread_contexts[set->thread_ids[i]];
+            thread = &g_native_thread_contexts[set->thread_ids[i]];
             if (thread->is_running != 0) {
                 task = thread->task_id;
                 if (task == set->task_ids[i]
@@ -61,24 +62,24 @@ void battle_unit_view_supervisor_thread(void) {
         for (;;) {
             for (i = 0; i < 4; i++) {
                 if (states[set->thread_ids[i]] == BATTLE_UNIT_VIEW_SLOT_RESTART
-                    && g_battle_thread_contexts[set->thread_ids[i]].is_running != 0) {
+                    && g_native_thread_contexts[set->thread_ids[i]].is_running != 0) {
                     break;
                 }
             }
             if (i == 4) {
                 break;
             }
-            battle_thread_wait_frames(1);
+            thread_wait_frames(1);
         }
         for (i = 0; i < 4; i++) {
             if (states[set->thread_ids[i]] == BATTLE_UNIT_VIEW_SLOT_RESTART && set->entries[i] != (void*)-1) {
                 battle_thread_start(set->thread_ids[i], set->entries[i]);
                 battle_thread_set_parameters(set->thread_ids[i], 0, 0, 0);
-                g_battle_thread_contexts[set->thread_ids[i]].task_id = set->task_ids[i];
+                g_native_thread_contexts[set->thread_ids[i]].task_id = set->task_ids[i];
             }
         }
         if (battle_thread_get_current_parameter_1() == 0xff) {
-            battle_thread_exit_current();
+            thread_exit_current();
         }
     }
 }

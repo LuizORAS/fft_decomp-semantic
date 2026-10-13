@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -79,7 +80,7 @@ u8* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, 
             g_battle_menu_window_sprite_position.rect.y = 0;
         }
         g_battle_menu_window_sprite_position.stride = words * 4;
-        i = g_battle_threads[g_battle_current_thread_id].task_words[5] & 0xF0;
+        i = g_native_threads[g_native_current_thread_id].task_words[5] & 0xF0;
         if (i != 0) {
             if ((mode & DIALOG_TYPE_POSITION_MASK) == 1) {
                 g_battle_menu_window_sprite_position.rect.x -= 0x10;
@@ -103,6 +104,6 @@ u8* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, 
         return (u8*)buf;
     }
     LoadImage(rect, (u32*)buf);
-    battle_thread_wait_frames(1);
+    thread_wait_frames(1);
     battle_menu_free_memory(buf);
 }

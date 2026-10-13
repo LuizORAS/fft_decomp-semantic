@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -44,7 +45,7 @@ u8* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT*
                 upload.h = 0x60;
             } else {
                 LoadImage(&upload, (u32*)buffer);
-                battle_thread_wait_frames(1);
+                thread_wait_frames(1);
                 upload.y += 0x60;
                 if (i - height >= 0x60) {
                     upload.h = 0x60;
@@ -79,7 +80,7 @@ u8* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT*
     }
     if (mode == MENU_WINDOW_FRAME_UPLOAD || mode == MENU_WINDOW_FRAME_ALTERNATE_UPLOAD) {
         LoadImage(&upload, (u32*)buffer);
-        battle_thread_wait_frames(1);
+        thread_wait_frames(1);
         battle_menu_free_memory(buffer);
     }
     return buffer;

@@ -59,5 +59,5 @@ void world_menu_formation_icon_list_thread(void) {
         world_menu_submit_icon_primitives(record);
     }
     thread_yield();
-    world_thread_exit_current();
+    thread_exit_current();
 }

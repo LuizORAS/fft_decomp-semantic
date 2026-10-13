@@ -1,6 +1,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -17,9 +18,9 @@ void require_party_report_brave_faith_changes(void) {
     s32 main_thread;
 
     if (script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0)
-        battle_thread_exit_current();
+        thread_exit_current();
     if (require_party_update_brave_faith_and_collect_warnings() == 0)
-        battle_thread_exit_current();
+        thread_exit_current();
     g_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS]
         = g_require_text_data + g_require_text_section_offsets[1];
     g_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_DEPARTURES]
@@ -42,5 +43,5 @@ void require_party_report_brave_faith_changes(void) {
     battle_thread_set_parameters(main_thread, 0, 0, 2);
     battle_thread_wait_until_inactive(main_thread);
     require_gfx_fade_rgb_31_frames(6, 5, 2);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

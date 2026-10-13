@@ -145,5 +145,5 @@ fade_out:
     } while (scale >= 0x30);
 done:
     thread_yield();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

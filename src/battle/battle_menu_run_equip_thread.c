@@ -45,11 +45,11 @@ void battle_menu_run_equip_thread(void) {
     for (i = 9; i < 15; i++) {
         battle_thread_set_parameters(i, 0, 0, 1);
     }
-    battle_thread_wait_frames(4);
+    thread_wait_frames(4);
     if (g_battle_companion_overlay_primitives != 0) {
         for (j = 0; j < 2; j++) {
-            g_battle_menu_pending_selection[j]
-                = ((menu_entry_t*)g_battle_thread_contexts[8 - j].function_parameter_1)->selected_index;
+            g_menu_pending_selection[j]
+                = ((menu_entry_t*)g_native_thread_contexts[8 - j].function_parameter_1)->selected_index;
         }
     }
     menu_free_high_overlay();
@@ -58,5 +58,5 @@ void battle_menu_run_equip_thread(void) {
     g_sound_suppressed = 0;
     g_script_event_input = 0;
     battle_menu_clear_modal_open();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

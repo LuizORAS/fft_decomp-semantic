@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -17,7 +18,7 @@ void require_condition_dispatch(void) {
     s32 parameter;
     s32 thread;
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_CONDITION_DISPATCH);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_CONDITION_DISPATCH);
     condition = battle_thread_get_current_parameter_1();
     parameter = battle_thread_get_current_parameter_2();
     if (condition >= EVENT_DISPLAY_CONDITION_GENERAL_FIRST)
@@ -57,5 +58,5 @@ void require_condition_dispatch(void) {
     } else if (condition == EVENT_DISPLAY_CONDITION_APPLY_POST_BATTLE_UNIT_CHANGES) {
         require_party_apply_post_battle_changes();
     }
-    battle_thread_exit_current();
+    thread_exit_current();
 }

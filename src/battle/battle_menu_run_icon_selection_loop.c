@@ -59,6 +59,6 @@ void battle_menu_run_icon_selection_loop(void) {
     }
     thread_yield();
     if (battle_thread_get_current_parameter_2() == 0) {
-        battle_thread_exit_current();
+        thread_exit_current();
     }
 }

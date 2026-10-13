@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Route controller input to the running battle event thread. */
@@ -9,14 +10,14 @@ void script_route_event_input(void) {
     if (g_battle_menu_input_mode != MENU_INPUT_TUTORIAL) {
         return;
     }
-    thread = g_battle_current_thread_id;
+    thread = g_native_current_thread_id;
     if (thread == NATIVE_THREAD_SLOT_MAIN) {
         return;
     }
     if (g_script_event_input == 0) {
         g_script_saved_event_input = 0;
     }
-    if (g_battle_thread_contexts[thread].task_id == NATIVE_THREAD_TASK_RESUME) {
+    if (g_native_thread_contexts[thread].task_id == NATIVE_THREAD_TASK_RESUME) {
         g_script_event_input = g_script_unfiltered_controller_input;
     } else {
         g_script_event_input = g_script_saved_event_input;

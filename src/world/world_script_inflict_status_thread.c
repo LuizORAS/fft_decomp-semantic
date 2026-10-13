@@ -23,7 +23,7 @@ void world_script_inflict_status_thread(void) {
     battle_stats_t* unit;
     s32 state;
 
-    world_thread_set_current_task_id(NATIVE_THREAD_TASK_INFLICT_STATUS);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_INFLICT_STATUS);
     parameters = world_thread_get_current_parameter_1();
     unit_id = script_read_s16(parameters->unit_id_le);
     mode = parameters->mode;
@@ -31,7 +31,7 @@ void world_script_inflict_status_thread(void) {
     battle_unit_index = world_unit_get_battle_id_by_event_unit_id(unit_id);
     runtime_id = script_resolve_runtime_id(unit_id);
     if (runtime_id == EVENT_RUNTIME_ID_NONE) {
-        world_thread_exit_current();
+        thread_exit_current();
     }
     world_unit_update_staged_status_data(unit_id, 0);
     unit = battle_unit_get_stats_from_battle_id(battle_unit_index);
@@ -71,7 +71,7 @@ void world_script_inflict_status_thread(void) {
         }
     }
     if (wait_frames != 0) {
-        world_thread_wait_frames(wait_frames);
+        thread_wait_frames(wait_frames);
     }
-    world_thread_exit_current();
+    thread_exit_current();
 }

@@ -436,7 +436,7 @@ editor:
         }
         battle_gfx_draw_or_append_gpu_primitive(PRIM_AT(cursor_prims, buffer));
         battle_gfx_draw_or_append_gpu_primitive(&g_debugchr_editor_cursor_shade_polys[buffer]);
-        battle_thread_wait_frames(1);
+        thread_wait_frames(1);
         i++;
     }
 }

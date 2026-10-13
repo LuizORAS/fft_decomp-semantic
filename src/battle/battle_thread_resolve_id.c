@@ -1,4 +1,5 @@
 #include "fft/battle_thread.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Returns the slot a thread should start in: a requested id below 16 as it is,
@@ -18,5 +19,5 @@ s32 battle_thread_resolve_id(s32 requested_thread_id) {
         }
         i++;
     } while (i < NATIVE_THREAD_SLOT_COUNT);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

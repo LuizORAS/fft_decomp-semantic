@@ -29,9 +29,9 @@ void script_teleportout_event_instruction(s32 unit_id, s32 remove) {
     idx = battle_unit_get_battle_id_by_runtime_id(unit);
     battle_unit_set_animation(unit, BATTLE_UNIT_ANIMATION_RAISE_HANDS);
     battle_gfx_start_event_unit_fade_out(unit, 2, 0x1F, 0x1F, 0x1F);
-    battle_thread_wait_frames(0x3C);
+    thread_wait_frames(0x3C);
     battle_gfx_start_event_unit_fade_out(unit, 2, -0x1F, -0x1F, -0x1F);
-    battle_thread_wait_frames(0x3C);
+    thread_wait_frames(0x3C);
     if (remove != 0) {
         battle_unit_set_cannot_exist(idx);
     }

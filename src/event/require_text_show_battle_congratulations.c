@@ -35,7 +35,7 @@ void require_text_show_battle_congratulations(void) {
     if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_FINAL_BATTLE_WON)
         require_input_wait_frames_or_skip(0x1e);
     else
-        battle_thread_wait_frames(0x1e);
+        thread_wait_frames(0x1e);
 
     thread_b = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     battle_thread_start(thread_b, require_condition_run_special_thread);
@@ -43,11 +43,11 @@ void require_text_show_battle_congratulations(void) {
     if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_FINAL_BATTLE_WON)
         require_input_wait_frames_or_skip(0xb4);
     else
-        battle_thread_wait_frames(0x12c);
+        thread_wait_frames(0x12c);
 
     battle_thread_set_parameters(thread_a, 0, 0, 2);
     battle_thread_set_parameters(thread_b, 0, 0, 2);
     battle_thread_wait_until_inactive(thread_a);
     battle_thread_wait_until_inactive(thread_b);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Menu thread of the Wait command: marks both row actions unset (-2) and
@@ -8,5 +9,5 @@ void world_menu_wait_thread(void) {
     g_world_menu_wait_row_actions[0] = -2;
     g_world_menu_wait_row_actions[1] = -2;
     world_menu_confirm_action_silently(entry);
-    world_thread_exit_current();
+    thread_exit_current();
 }

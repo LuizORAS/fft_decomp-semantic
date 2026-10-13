@@ -1,4 +1,5 @@
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* WORLD 0x800fd4a8..0x800fd7c4. EVENT_SCRIPT_VAR_RANDOM_VALUE is read through the event
@@ -61,7 +62,7 @@ void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 sourc
         value *= operand;
     } else if (opcode < EVENT_OPCODE_MODULO_IMMEDIATE) {
         if (operand == 0) {
-            world_thread_exit_current();
+            thread_exit_current();
         }
         value = value / operand;
     } else if (opcode < EVENT_OPCODE_AND_IMMEDIATE) {

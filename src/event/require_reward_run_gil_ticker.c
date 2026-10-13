@@ -275,5 +275,5 @@ skipped:
         i++;
     } while (pass >= 0x30);
     battle_thread_wait_until_inactive(thread_id);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

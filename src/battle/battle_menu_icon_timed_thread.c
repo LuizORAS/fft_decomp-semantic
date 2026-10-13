@@ -55,9 +55,9 @@ void battle_menu_icon_timed_thread(void) {
             break;
         }
         if (unset >= 0) {
-            g_battle_current_thread_id--;
+            g_native_current_thread_id--;
             battle_menu_select_icon_cluts(&records[i & 1]);
-            g_battle_current_thread_id++;
+            g_native_current_thread_id++;
         } else {
             battle_menu_select_icon_cluts(&records[i & 1]);
         }
@@ -73,6 +73,6 @@ void battle_menu_icon_timed_thread(void) {
     g_sound_suppressed = 0;
     thread_yield();
     if (battle_thread_get_current_parameter_2() == 0) {
-        battle_thread_exit_current();
+        thread_exit_current();
     }
 }

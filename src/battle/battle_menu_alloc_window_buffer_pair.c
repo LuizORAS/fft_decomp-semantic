@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_thread.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -23,7 +24,7 @@ menu_window_buffer_t* battle_menu_alloc_window_buffer_pair(void) {
             buffer = g_battle_menu_buffer_slots[index];
             for (i = 0; i < 1; i++) {
                 buffer->active = 0;
-                buffer->thread_id = g_battle_current_thread_id;
+                buffer->thread_id = g_native_current_thread_id;
                 buffer->portrait_code = -1;
                 buffer->color.r = 0x80;
                 buffer->color.g = 0x80;
@@ -74,5 +75,5 @@ menu_window_buffer_t* battle_menu_alloc_window_buffer_pair(void) {
             return g_battle_menu_buffer_slots[index];
         }
     }
-    battle_thread_exit_current();
+    thread_exit_current();
 }

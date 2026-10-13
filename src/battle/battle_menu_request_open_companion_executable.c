@@ -19,6 +19,6 @@ void battle_menu_request_open_companion_executable(s32 request_index) {
         } while (g_battle_menu_companion_executable_request_index != 0);
     }
     if (g_script_frame_result_override == 1) {
-        battle_thread_exit_current();
+        thread_exit_current();
     }
 }

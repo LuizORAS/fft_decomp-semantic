@@ -46,7 +46,7 @@ void card_save_run_menu_graphic_thread(void) {
             &g_card_input_display_state, g_card_gfx_scaled_sprite_primitive_buffers[frame & 1]);
         thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {
-            battle_thread_exit_current();
+            thread_exit_current();
         }
     }
 }

@@ -9,10 +9,10 @@
 void world_menu_at_list_select_unit_thread(void) {
     g_world_menu_transition_active = 1;
     g_world_menu_overlay_state = 2;
-    world_thread_suspend(g_world_thread_current_id + 1);
-    world_thread_suspend(g_world_thread_current_id + 2);
-    world_thread_suspend(g_world_thread_current_id + 3);
-    world_thread_suspend(g_world_thread_current_id + 4);
+    world_thread_suspend(g_native_current_thread_id + 1);
+    world_thread_suspend(g_native_current_thread_id + 2);
+    world_thread_suspend(g_native_current_thread_id + 3);
+    world_thread_suspend(g_native_current_thread_id + 4);
     while (g_world_menu_transition_timeout = g_world_menu_at_list_state.selected_index + 100,
         g_world_menu_transition_finished == 0) {
         thread_yield();
@@ -25,11 +25,11 @@ void world_menu_at_list_select_unit_thread(void) {
     world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL);
     world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_TILE_INFO_PANEL);
     g_text_section_pointers[TEXT_SECTION_AT_LIST] = g_world_menu_at_list_text;
-    world_thread_resume(g_world_thread_current_id + 1);
-    world_thread_resume(g_world_thread_current_id + 2);
-    world_thread_resume(g_world_thread_current_id + 3);
-    world_thread_resume(g_world_thread_current_id + 4);
+    world_thread_resume(g_native_current_thread_id + 1);
+    world_thread_resume(g_native_current_thread_id + 2);
+    world_thread_resume(g_native_current_thread_id + 3);
+    world_thread_resume(g_native_current_thread_id + 4);
     g_world_menu_transition_active = 0;
     g_world_menu_overlay_state = 0;
-    world_thread_exit_current();
+    thread_exit_current();
 }

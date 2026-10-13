@@ -1,4 +1,6 @@
+#include "fft/menu.h"
 #include "fft/sound.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -12,7 +14,7 @@ void world_map_confirm_destination(void) {
 
     selection = g_world_menu_thread_menu_data[6].selected_index;
     if (g_world_menu_location_list_row_colors[selection] != 4) {
-        s16* pending = g_world_menu_pending_selection;
+        s16* pending = g_menu_pending_selection;
 
         g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
         pending[0] = 0;
@@ -20,11 +22,11 @@ void world_map_confirm_destination(void) {
         pending[1] = value;
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, value);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_REQUEST_DESTINATION;
-        world_thread_set_parameters(g_world_thread_current_id + 1, 0, 0, 1);
-        world_thread_set_parameters(g_world_thread_current_id + 2, 0, 0, 1);
+        world_thread_set_parameters(g_native_current_thread_id + 1, 0, 0, 1);
+        world_thread_set_parameters(g_native_current_thread_id + 2, 0, 0, 1);
     } else {
         g_sound_pending_sfx_id = MAIN_SFX_INVALID;
     }
     g_world_menu_text_color = 0;
-    world_thread_exit_current();
+    thread_exit_current();
 }

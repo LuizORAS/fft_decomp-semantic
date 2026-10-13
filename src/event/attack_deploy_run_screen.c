@@ -535,7 +535,7 @@ ramza_placed:
             break;
         }
     }
-    battle_thread_wait_frames(0x20);
+    thread_wait_frames(0x20);
     g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_CLOSED;
     battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
     thread_yield();
@@ -552,7 +552,7 @@ ramza_placed:
             g_attack_deploy_zodiac_brightness_word[0]--;
         }
     }
-    battle_thread_wait_frames(0x3c);
+    thread_wait_frames(0x3c);
     g_attack_deployed_unit_map_coordinates[0].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
     g_attack_deployed_unit_map_coordinates[1].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
     g_attack_deployed_unit_map_coordinates[2].party_id = ATTACK_DEPLOY_ROSTER_ID_NONE;
@@ -649,7 +649,7 @@ ramza_placed:
     battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 0);
     battle_thread_wait_until_inactive(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS);
     g_sound_music_volume_transition_request = 0x1e0000;
-    battle_thread_wait_frames(0x20);
+    thread_wait_frames(0x20);
     g_battle_screen_fade = 0;
     do {
         thread_yield();
@@ -658,9 +658,9 @@ ramza_placed:
     battle_thread_set_parameters(ATTACK_THREAD_SLOT_DEPLOY_RENDER, 0, 0, 1);
     battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
     battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS, 0, 0, 1);
-    battle_thread_wait_frames(3);
+    thread_wait_frames(3);
     g_battle_screen_fade = 0;
     script_set_event_speed(1);
     main_sound_unload_scenario_music_and_tunes();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

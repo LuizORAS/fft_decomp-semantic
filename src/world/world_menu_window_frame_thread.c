@@ -167,5 +167,5 @@ void world_menu_window_frame_thread(void) {
     }
     thread_yield();
     world_gfx_free_tpage7_vram(&texture);
-    world_thread_exit_current();
+    thread_exit_current();
 }

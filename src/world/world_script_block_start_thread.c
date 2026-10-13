@@ -17,7 +17,7 @@ void world_script_block_start_thread(void) {
     s16 runtime_id;
     s32 thread_id;
 
-    g_world_thread_contexts[g_world_thread_current_id].task_id = NATIVE_THREAD_TASK_EVENT_BLOCK;
+    g_native_thread_contexts[g_native_current_thread_id].task_id = NATIVE_THREAD_TASK_EVENT_BLOCK;
     script = world_thread_get_current_parameter_1();
     parameters = script + 1;
     while (script[0] != EVENT_OPCODE_BLOCK_END) {
@@ -76,7 +76,7 @@ void world_script_block_start_thread(void) {
                 world_script_wait_for_unit_ready(runtime_id);
             }
         } else if (script[0] == EVENT_OPCODE_WAIT) {
-            world_thread_wait_frames(script_read_s16(script + 1));
+            thread_wait_frames(script_read_s16(script + 1));
         } else if (script[0] == EVENT_OPCODE_ROTATE_UNIT) {
             world_script_rotate_unit((const event_rotate_unit_parameters_t*)(script + 1));
         } else if (script[0] == EVENT_OPCODE_FACE_UNIT) {
@@ -88,9 +88,9 @@ void world_script_block_start_thread(void) {
             } else {
                 world_thread_start(thread_id, world_script_sprite_move_beta);
             }
-            g_world_thread_contexts[thread_id].function_parameter_1 = (s32)(script + 1);
-            g_world_thread_contexts[thread_id].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;
-            g_world_thread_contexts[thread_id].task_words[0] = script_resolve_runtime_id(first_halfword);
+            g_native_thread_contexts[thread_id].function_parameter_1 = (s32)(script + 1);
+            g_native_thread_contexts[thread_id].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;
+            g_native_thread_contexts[thread_id].task_words[0] = script_resolve_runtime_id(first_halfword);
         } else if (script[0] == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
             world_script_waitspritemove_event_instruction(first_halfword);
         } else if (script[0] == EVENT_OPCODE_WAIT_ROTATE_UNIT) {
@@ -110,5 +110,5 @@ void world_script_block_start_thread(void) {
         script += 1 + g_world_event_instruction_sizes[script[0]];
         parameters = script + 1;
     }
-    world_thread_exit_current();
+    thread_exit_current();
 }

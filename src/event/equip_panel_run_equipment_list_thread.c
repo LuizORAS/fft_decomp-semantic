@@ -31,10 +31,10 @@ void equip_panel_run_equipment_list_thread(void) {
     s16 id;
     s32 i;
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (menu_status_thread_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
+    thread = (menu_status_thread_t*)g_native_threads[g_native_current_thread_id].function_parameter_1;
     g_menu_input_controller = script_get_controller_input_pointer(0);
-    if (g_battle_current_thread_id == EQUIP_THREAD_SLOT_EQUIPMENT_LIST) {
+    if (g_native_current_thread_id == EQUIP_THREAD_SLOT_EQUIPMENT_LIST) {
         text = g_equip_panel_text_image_a;
         screen = g_equip_panel_frames_a;
         state = &g_equip_unit_editor_stats.state;
@@ -165,5 +165,5 @@ void equip_panel_run_equipment_list_thread(void) {
         frame++;
     }
     thread_yield();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

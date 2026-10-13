@@ -21,7 +21,7 @@ void script_color_screen_thread(void) {
     s32 j;
     s32 duration;
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_COLOR_SCREEN);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_COLOR_SCREEN);
     parameters = (u8*)battle_thread_get_current_parameter_1();
     /* Separate record and RGB cursors drop the original argument-register copy. */
     mode = *parameters++;
@@ -46,5 +46,5 @@ void script_color_screen_thread(void) {
     battle_gfx_start_screen_color_modulation_fade(mode, color.current[0], color.current[1], color.current[2], 2);
     thread_yield();
     thread_yield();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

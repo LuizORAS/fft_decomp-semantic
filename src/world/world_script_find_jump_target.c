@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Resolves the script offset of a jump label.
@@ -52,5 +53,5 @@ s32 world_script_find_jump_target(s32 offset, s32 instruction, s32 alt_instructi
             opcode = event[offset];
         }
     }
-    world_thread_exit_current();
+    thread_exit_current();
 }

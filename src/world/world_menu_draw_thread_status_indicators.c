@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -24,16 +25,16 @@ void world_menu_draw_thread_status_indicators(void) {
 
     active = 0;
     if (world_thread_is_running_by_id(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) != 0) {
-        if (g_world_threads[NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
+        if (g_native_threads[NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
             display
-                = (menu_status_thread_t*)g_world_threads[NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
+                = (menu_status_thread_t*)g_native_threads[NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
             active = (display->x == 0) * 8;
         }
     }
     if (world_thread_is_running_by_id(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) != 0) {
-        if (g_world_threads[NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS].task_id
+        if (g_native_threads[NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS].task_id
             == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            descriptor = (menu_status_thread_t*)g_world_threads[NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS]
+            descriptor = (menu_status_thread_t*)g_native_threads[NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS]
                              .function_parameter_1;
             if (descriptor->x == 0) {
                 active = 7;

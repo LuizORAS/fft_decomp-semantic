@@ -38,7 +38,7 @@ void world_menu_number_entry_thread(void) {
     g_world_menu_list_controller_input = world_input_get_menu_controller(0);
     /* A direct pen pointer folds both member-address adjustments and changes scheduling. */
     stride = &g_world_menu_text_state.pen.stride;
-    thread = &g_world_threads[g_world_thread_current_id];
+    thread = &g_native_threads[g_native_current_thread_id];
     parameter = &thread->function_parameter_1;
     param = (menu_entry_t*)*parameter;
     range = param->context;
@@ -88,7 +88,7 @@ void world_menu_number_entry_thread(void) {
     for (i = 0;; i++) {
         record = &records[i & 1].base;
         *menu_entry_result(param) = value;
-        world_thread_wait_frames(1);
+        thread_wait_frames(1);
         if (redraw == 1) {
             redraw = 0;
             world_menu_free_memory(buffer);
@@ -163,5 +163,5 @@ void world_menu_number_entry_thread(void) {
         world_gfx_draw_or_append_gpu_primitive(record);
     }
     thread_yield();
-    world_thread_exit_current();
+    thread_exit_current();
 }

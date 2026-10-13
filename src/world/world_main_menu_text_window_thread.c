@@ -109,7 +109,7 @@ void world_main_menu_text_window_thread(void) {
             record->text_sprite.clut = 0x7C3C;
             record->frame_sprites[0].clut = 0x7CBC;
         }
-        if (g_world_threads[g_world_thread_current_id].task_id == NATIVE_THREAD_TASK_MENU_GROUP_SECOND_WINDOW) {
+        if (g_native_threads[g_native_current_thread_id].task_id == NATIVE_THREAD_TASK_MENU_GROUP_SECOND_WINDOW) {
             if (g_world_menu_main_scroll_threshold > 0x28 && target == 0) {
                 if (g_world_menu_main_scroll_direction > 0) {
                     if (entry->window.x >= -0x3F) {
@@ -144,5 +144,5 @@ void world_main_menu_text_window_thread(void) {
         world_gfx_draw_or_append_gpu_primitive(&record->text_draw_mode);
     }
     thread_yield();
-    world_thread_exit_current();
+    thread_exit_current();
 }

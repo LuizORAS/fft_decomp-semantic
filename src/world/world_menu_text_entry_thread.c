@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -6,7 +7,7 @@
  * thread for it, then idles until input arrives or the previous thread's
  * third parameter is raised. */
 void world_menu_text_entry_thread(void) {
-    native_thread_t* thread = &g_world_threads[g_world_thread_current_id];
+    native_thread_t* thread = &g_native_threads[g_native_current_thread_id];
     menu_entry_t* entry = (menu_entry_t*)thread->function_parameter_1;
     menu_text_binding_t* binding;
     s32 text_thread;
@@ -35,7 +36,7 @@ void world_menu_text_entry_thread(void) {
         if ((thread - 1)->function_parameter_3 != 0) {
             break;
         }
-        world_thread_wait_frames(1);
+        thread_wait_frames(1);
     }
-    world_thread_exit_current();
+    thread_exit_current();
 }

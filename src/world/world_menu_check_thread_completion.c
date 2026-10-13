@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 
@@ -11,7 +12,7 @@ s32 world_menu_check_thread_completion(u32* input) {
     menu_entry_t* parameter;
     s32 i;
 
-    if (g_world_thread_contexts[NATIVE_SCREEN_THREAD_SLOT_TEXT].is_running == 0 && world_menu_is_input_allowed() != 0
+    if (g_native_thread_contexts[NATIVE_SCREEN_THREAD_SLOT_TEXT].is_running == 0 && world_menu_is_input_allowed() != 0
         && (*input & PSX_PAD_SELECT)) {
         parameter = world_thread_get_current_parameter_1();
         if (parameter->select_text_table != 0) {
@@ -28,8 +29,8 @@ s32 world_menu_check_thread_completion(u32* input) {
         return 0;
     }
     for (i = 0; i < 17; i++) {
-        if (i != g_world_thread_current_id && world_thread_is_running_asm(i) != 0
-            && g_world_thread_contexts[i].task_id == NATIVE_THREAD_TASK_STOP_REQUEST) {
+        if (i != g_native_current_thread_id && world_thread_is_running_asm(i) != 0
+            && g_native_thread_contexts[i].task_id == NATIVE_THREAD_TASK_STOP_REQUEST) {
             *input = 0;
             break;
         }

@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
@@ -76,7 +77,7 @@ u8* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s
             g_world_menu_window_sprite_position.rect.y = 0;
         }
         g_world_menu_window_sprite_position.stride = words * 4;
-        i = g_world_threads[g_world_thread_current_id].task_words[5] & 0xF0;
+        i = g_native_threads[g_native_current_thread_id].task_words[5] & 0xF0;
         if (i != 0) {
             if ((mode & DIALOG_TYPE_POSITION_MASK) == 1) {
                 g_world_menu_window_sprite_position.rect.x -= 0x10;
@@ -100,6 +101,6 @@ u8* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s
         return (u8*)image;
     }
     LoadImage(rect, (u32*)image);
-    world_thread_wait_frames(1);
+    thread_wait_frames(1);
     world_menu_free_memory(image);
 }

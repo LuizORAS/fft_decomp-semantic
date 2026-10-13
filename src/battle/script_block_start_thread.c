@@ -20,7 +20,7 @@ void script_block_start_thread(void) {
     s16 runtime_id;
     s32 thread_id;
 
-    g_battle_thread_contexts[g_battle_current_thread_id].task_id = NATIVE_THREAD_TASK_EVENT_BLOCK;
+    g_native_thread_contexts[g_native_current_thread_id].task_id = NATIVE_THREAD_TASK_EVENT_BLOCK;
     script = battle_thread_get_current_parameter_1();
     parameters = script + 1;
     while (script[0] != EVENT_OPCODE_BLOCK_END) {
@@ -79,7 +79,7 @@ void script_block_start_thread(void) {
                 script_wait_for_unit_ready(runtime_id);
             }
         } else if (script[0] == EVENT_OPCODE_WAIT) {
-            battle_thread_wait_frames(script_read_s16(script + 1));
+            thread_wait_frames(script_read_s16(script + 1));
         } else if (script[0] == EVENT_OPCODE_ROTATE_UNIT) {
             script_rotate_unit((const event_rotate_unit_parameters_t*)(script + 1));
         } else if (script[0] == EVENT_OPCODE_FACE_UNIT) {
@@ -91,9 +91,9 @@ void script_block_start_thread(void) {
             } else {
                 battle_thread_start(thread_id, script_sprite_move_beta);
             }
-            g_battle_thread_contexts[thread_id].function_parameter_1 = (s32)(script + 1);
-            g_battle_thread_contexts[thread_id].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;
-            g_battle_thread_contexts[thread_id].task_words[0] = script_resolve_runtime_id(first_halfword);
+            g_native_thread_contexts[thread_id].function_parameter_1 = (s32)(script + 1);
+            g_native_thread_contexts[thread_id].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;
+            g_native_thread_contexts[thread_id].task_words[0] = script_resolve_runtime_id(first_halfword);
         } else if (script[0] == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
             script_waitspritemove_event_instruction(first_halfword);
         } else if (script[0] == EVENT_OPCODE_WAIT_ROTATE_UNIT) {
@@ -112,5 +112,5 @@ void script_block_start_thread(void) {
         script += 1 + g_script_event_instruction_sizes[script[0]];
         parameters = script + 1;
     }
-    battle_thread_exit_current();
+    thread_exit_current();
 }

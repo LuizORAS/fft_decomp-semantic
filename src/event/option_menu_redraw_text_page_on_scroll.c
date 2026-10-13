@@ -1,6 +1,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_option.h"
 #include "fft/sound.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -28,7 +29,7 @@ u8* option_menu_redraw_text_page_on_scroll(
     }
 
     if (((*secondary_input & PSX_PAD_SQUARE) == 0)
-        && (g_battle_threads[g_battle_current_thread_id].task_words[4] == 0)) {
+        && (g_native_threads[g_native_current_thread_id].task_words[4] == 0)) {
         return 0;
     }
 
@@ -46,9 +47,9 @@ u8* option_menu_redraw_text_page_on_scroll(
         }
         changed = 1;
         g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
-    } else if (g_battle_threads[g_battle_current_thread_id].task_words[4] != 0) {
+    } else if (g_native_threads[g_native_current_thread_id].task_words[4] != 0) {
         changed = 1;
-        g_battle_threads[g_battle_current_thread_id].task_words[4] = 0;
+        g_native_threads[g_native_current_thread_id].task_words[4] = 0;
     }
 
     if (changed == 0) {

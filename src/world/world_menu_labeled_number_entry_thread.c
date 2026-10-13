@@ -35,7 +35,7 @@ void world_menu_labeled_number_entry_thread(void) {
     POLY_FT4* shadow_quad;
 
     g_world_menu_list_controller_input = world_input_get_menu_controller(0);
-    thread = &g_world_threads[g_world_thread_current_id];
+    thread = &g_native_threads[g_native_current_thread_id];
     param = *(menu_entry_t**)thread;
     range = param->context;
     digits = text_count_decimal_digits(range->bounds.max);
@@ -87,7 +87,7 @@ void world_menu_labeled_number_entry_thread(void) {
         if (g_world_formation_screen_active != 0) {
             *menu_entry_result(param) = value;
         }
-        world_thread_wait_frames(1);
+        thread_wait_frames(1);
         if (redraw == 1) {
             world_menu_free_memory(buffer);
             redraw = 0;
@@ -165,5 +165,5 @@ void world_menu_labeled_number_entry_thread(void) {
         world_gfx_draw_or_append_gpu_primitive(&record);
     }
     thread_yield();
-    world_thread_exit_current();
+    thread_exit_current();
 }

@@ -40,11 +40,11 @@ void world_menu_run_equip_thread(void) {
     for (i = 9; i < 15; i++) {
         world_thread_set_parameters(i, 0, 0, 1);
     }
-    world_thread_wait_frames(4);
+    thread_wait_frames(4);
     if (g_world_companion_overlay_prims != 0) {
         for (j = 0; j < 2; j++) {
-            g_world_menu_pending_selection[j]
-                = ((menu_entry_t*)g_world_thread_contexts[8 - j].function_parameter_1)->selected_index;
+            g_menu_pending_selection[j]
+                = ((menu_entry_t*)g_native_thread_contexts[8 - j].function_parameter_1)->selected_index;
         }
     }
     menu_free_high_overlay();
@@ -53,5 +53,5 @@ void world_menu_run_equip_thread(void) {
     g_world_menu_sound_muted = 0;
     g_world_menu_new_button_input = 0;
     world_menu_clear_transition_active_flag();
-    world_thread_exit_current();
+    thread_exit_current();
 }

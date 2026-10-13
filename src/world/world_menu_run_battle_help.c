@@ -1,4 +1,5 @@
 #include "fft/sound.h"
+#include "fft/thread.h"
 /* WORLD copy of the EVENT HELPMENU battle help menu
  * (helpmenu_menu_run_battle_help), identical apart from addresses.
  */
@@ -45,7 +46,7 @@ void world_menu_run_battle_help(void) {
 
     u_mid = 0xB8;
     if (g_world_menu_transition_active != 0) {
-        world_thread_exit_current();
+        thread_exit_current();
     }
     world_script_copy_bytes(
         g_world_text_section_pointer_backup, g_text_section_pointers, sizeof(g_world_text_section_pointer_backup));
@@ -69,7 +70,7 @@ void world_menu_run_battle_help(void) {
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_SKILLSETS];
     g_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
-    self = &g_world_threads[g_world_thread_current_id];
+    self = &g_native_threads[g_native_current_thread_id];
     world_menu_copy_billboard_data_out(setup_banner, setup_unit_data, setup_billboard, setup_cursor_tile);
     if ((g_world_selected_unit_stat_summary.team_kind != 0) || (g_world_unit_join_screen_active != 0)) {
         g_world_help_require_navigation[2].destination[2] = 7;
@@ -91,7 +92,7 @@ void world_menu_run_battle_help(void) {
     if (help_thread_id < 9) {
         frame = help_thread_id;
         missing_value = -1;
-        scan_thread = &g_world_threads[frame];
+        scan_thread = &g_native_threads[frame];
         for (; frame < 9; frame++) {
             request = (menu_entry_t*)scan_thread->function_parameter_1;
             if (request->select_text_table != missing_value) {
@@ -113,13 +114,13 @@ void world_menu_run_battle_help(void) {
                     world_thread_start(help_thread_id - 1, world_text_character_handling_thread);
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                     *g_world_help_controller_state_ptr = 0;
-                    world_thread_wait_frames(1);
+                    thread_wait_frames(1);
                     world_menu_close_help_menu();
                 } else if (request_kind == 4) {
                     help_id = g_world_action_menu_skillsets[request->selected_index];
                     if (help_id == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING) {
                         *g_world_help_controller_state_ptr = 0;
-                        world_thread_wait_frames(1);
+                        thread_wait_frames(1);
                         world_menu_close_help_menu();
                     }
                     help_id |= 0x9800;
@@ -128,7 +129,7 @@ void world_menu_run_battle_help(void) {
                     world_thread_set_parameters(help_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0) {
                     *g_world_help_controller_state_ptr = 0;
-                    world_thread_wait_frames(1);
+                    thread_wait_frames(1);
                     world_menu_close_help_menu();
                 } else if (request_kind == 5) {
                     menu_text_layout_t* layout = request->context;
@@ -144,7 +145,7 @@ void world_menu_run_battle_help(void) {
                     help_id &= 0x7FF;
                     if (help_id == 0) {
                         *g_world_help_controller_state_ptr = 0;
-                        world_thread_wait_frames(1);
+                        thread_wait_frames(1);
                         world_menu_close_help_menu();
                     }
                     help_id |= 0x6800;
@@ -157,7 +158,7 @@ void world_menu_run_battle_help(void) {
                     help_id &= 0x7FF;
                     if (help_id == 0) {
                         *g_world_help_controller_state_ptr = 0;
-                        world_thread_wait_frames(1);
+                        thread_wait_frames(1);
                         world_menu_close_help_menu();
                     }
                     help_id += ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE;
@@ -177,7 +178,7 @@ void world_menu_run_battle_help(void) {
                     help_id &= 0x7FF;
                     if (help_id == 0) {
                         *g_world_help_controller_state_ptr = 0;
-                        world_thread_wait_frames(1);
+                        thread_wait_frames(1);
                         world_menu_close_help_menu();
                     }
                     help_id |= 0xA000;
@@ -218,15 +219,15 @@ void world_menu_run_battle_help(void) {
                 /* Wait for the text thread in the preceding slot. */
                 frame = help_thread_id;
                 do {
-                    world_thread_wait_frames(1);
-                } while (g_world_threads[frame - 1].is_running != 0);
+                    thread_wait_frames(1);
+                } while (g_native_threads[frame - 1].is_running != 0);
                 *g_world_help_controller_state_ptr = 0;
-                world_thread_wait_frames(1);
+                thread_wait_frames(1);
                 world_menu_close_help_menu();
             }
         } else {
             *g_world_help_controller_state_ptr = 0;
-            world_thread_wait_frames(1);
+            thread_wait_frames(1);
             world_menu_close_help_menu();
         }
     }
@@ -240,10 +241,10 @@ void world_menu_run_battle_help(void) {
             world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_character_handling_thread);
             world_thread_set_parameters(
                 NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x3B, g_world_help_menu_cursor_tile.surface_type + 0x5800, 0);
-            g_world_threads[NATIVE_SCREEN_THREAD_SLOT_MESSAGE].task_words[3] = -0x20;
+            g_native_threads[NATIVE_SCREEN_THREAD_SLOT_MESSAGE].task_words[3] = -0x20;
             world_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_MESSAGE);
             *g_world_help_controller_state_ptr = 0;
-            world_thread_wait_frames(1);
+            thread_wait_frames(1);
             world_menu_close_help_menu();
         } else if (view_mode == UNIT_VIEW_MODE_HOVERED_UNIT) {
             /* Unreachable: the arm above already takes modes 1 and 2. */
@@ -258,7 +259,7 @@ void world_menu_run_battle_help(void) {
         }
     }
     frame = 0;
-    help_thread = &g_world_threads[help_thread_id];
+    help_thread = &g_native_threads[help_thread_id];
     while (1) {
         if (help_thread->is_running == 0) {
             if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
@@ -386,10 +387,10 @@ void world_menu_run_battle_help(void) {
         }
         world_gfx_draw_or_append_gpu_primitive(&cursor_quads[buffer]);
         world_gfx_draw_or_append_gpu_primitive(&shadow_quads[buffer]);
-        world_thread_wait_frames(1);
+        thread_wait_frames(1);
         frame++;
     }
     *g_world_help_controller_state_ptr = 0;
-    world_thread_wait_frames(1);
+    thread_wait_frames(1);
     world_menu_close_help_menu();
 }

@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "fft/world.h"
 
@@ -11,5 +12,5 @@ void world_script_reset_event_variables_thread(void) {
     world_script_set_variable(EVENT_SCRIPT_VAR_WEATHER, 0);
     world_script_set_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY, 0);
     g_wldcore_next_map_id[0] = g_world_menu_number_entry_value;
-    world_thread_exit_current();
+    thread_exit_current();
 }

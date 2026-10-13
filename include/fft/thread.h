@@ -44,9 +44,15 @@ enum {
     NATIVE_THREAD_LAST_WORD_OFFSET = 0x3ffc,
 };
 
+/* scheduler storage */
+/* Fixed backing array and the separate pointer used to access its slots. */
+extern native_thread_t g_native_thread_contexts[];
+extern native_thread_t* g_native_threads;
+extern s32 g_native_current_thread_id;
+
 /* slots */
-/* Slot numbers of the cooperative threads: the index into g_battle_threads /
- * g_world_threads and the first argument of the thread calls. Slot 0 is the
+/* Slot numbers of the cooperative threads: the index into g_native_threads
+ * and the first argument of the thread calls. Slot 0 is the
  * program's main loop. No slot belongs to one thread for good: the battle and
  * world programs run their threads in fixed slots, every menu screen runs its
  * own in the same slots while it is up, and a menu thread starts its child
@@ -160,10 +166,17 @@ typedef enum native_thread_task {
     NATIVE_THREAD_TASK_UNIT_MESSAGE = 70,
 } native_thread_task_e;
 
+/* task state */
+void thread_set_current_task_id(s32 task_id);
+
+/* lifecycle */
+void thread_exit_current(void);
+
 /* scheduling */
 /* Yield to the next active context in the resident scene scheduler.
  * BATTLE scans 16 slots; WORLD scans 17. Each keeps its own frame hook. */
 void thread_yield(void);
+void thread_wait_frames(s32 count);
 
 /* context capture */
 /* Read the running CPU's $gp when seeding a native thread context. */

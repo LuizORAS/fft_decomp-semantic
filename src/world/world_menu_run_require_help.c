@@ -1,4 +1,5 @@
 #include "fft/sound.h"
+#include "fft/thread.h"
 /* WORLD copy of the EVENT HELPMENU require-help menu
  * (helpmenu_menu_run_require_help), byte-identical apart from addresses.
  *
@@ -66,7 +67,7 @@ void world_menu_run_require_help(void) {
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_SKILLSETS];
     g_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
-    self = &g_world_threads[g_world_thread_current_id];
+    self = &g_native_threads[g_native_current_thread_id];
     world_menu_copy_billboard_data_out(&g_world_help_active_banner, &g_world_help_active_unit_data,
         &g_world_help_billboard, &g_world_help_menu_cursor_tile);
     if (g_world_selected_unit_stat_summary.team_kind != 0 || g_world_unit_join_screen_active != 0) {
@@ -81,7 +82,7 @@ void world_menu_run_require_help(void) {
     g_world_help_require_navigation[3].destination[0] = 0;
     navigation = g_world_help_require_navigation;
     text_thread_id = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-    text_thread = &g_world_threads[text_thread_id];
+    text_thread = &g_native_threads[text_thread_id];
     for (frame = 0;; frame++) {
         if (text_thread->is_running == 0) {
             if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
@@ -218,9 +219,9 @@ void world_menu_run_require_help(void) {
         }
         world_gfx_draw_or_append_gpu_primitive(&cursor[buffer]);
         world_gfx_draw_or_append_gpu_primitive(&shadow[buffer]);
-        world_thread_wait_frames(1);
+        thread_wait_frames(1);
     }
     *g_world_help_controller_state_ptr = 0;
-    world_thread_wait_frames(1);
+    thread_wait_frames(1);
     world_menu_close_help_menu();
 }

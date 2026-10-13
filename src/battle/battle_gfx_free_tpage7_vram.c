@@ -1,5 +1,6 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_thread.h"
+#include "fft/thread.h"
 
 /*
  * Release a texture rectangle's occupied cells in the 16-by-15 grid.
@@ -24,7 +25,7 @@ void battle_gfx_free_tpage7_vram(RECT* rect) {
             for (x = g_battle_gfx_tpage7_free_rect_cells[0];
                 x < g_battle_gfx_tpage7_free_rect_cells[0] + g_battle_gfx_tpage7_free_rect_cells[2]; x++) {
                 if (x >= 16 || y >= 15) {
-                    battle_thread_exit_current();
+                    thread_exit_current();
                 }
                 g_battle_gfx_tpage7_vram_allocation_grid[y][x] = 0;
             }

@@ -45,5 +45,5 @@ void menu_icon_strip_thread(void) {
         battle_menu_submit_icon_primitives(record);
     }
     thread_yield();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

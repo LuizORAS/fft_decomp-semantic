@@ -199,5 +199,5 @@ exit:
     battle_gfx_free_tpage7_vram(&rects[1]);
     battle_gfx_free_tpage7_vram(&rects[2]);
     battle_gfx_free_tpage7_vram(&rects[3]);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

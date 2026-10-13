@@ -1,3 +1,4 @@
+#include "fft/battle_map.h"
 #include "fft/event_attack.h"
 #include "fft/menu.h"
 #include "fft/sound.h"
@@ -47,7 +48,7 @@ s32 world_menu_init_attack_resources_and_threads(void) {
     }
     attack_deploy_find_fieldable_units();
     if (result != 0) {
-        world_thread_start(NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT, world_map_data_load_complete_thread);
+        world_thread_start(NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT, map_data_load_complete_thread);
         return_value = 1;
     } else {
         g_world_sound_music_track_1_id = 0;

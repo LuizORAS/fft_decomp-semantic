@@ -1,3 +1,5 @@
+#include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -19,17 +21,17 @@ void world_menu_cancel_thread_group(menu_entry_t* context) {
     count = context->thread_count;
     if (count != -1) {
         for (i = 0; i < count; i++) {
-            thread_id = i + g_world_thread_current_id;
-            g_world_thread_contexts[thread_id].function_parameter_3 = 1;
+            thread_id = i + g_native_current_thread_id;
+            g_native_thread_contexts[thread_id].function_parameter_3 = 1;
             if (thread_id == 8) {
                 for (j = 3; j >= 0; j--) {
-                    g_world_menu_pending_selection[j] = -1;
+                    g_menu_pending_selection[j] = -1;
                 }
             }
         }
         for (i = 0; i < 17; i++) {
-            if (g_world_thread_contexts[i].task_id == NATIVE_THREAD_TASK_RESUME) {
-                g_world_thread_contexts[i].task_id = NATIVE_THREAD_TASK_STOP_REQUEST;
+            if (g_native_thread_contexts[i].task_id == NATIVE_THREAD_TASK_RESUME) {
+                g_native_thread_contexts[i].task_id = NATIVE_THREAD_TASK_STOP_REQUEST;
             }
         }
     }

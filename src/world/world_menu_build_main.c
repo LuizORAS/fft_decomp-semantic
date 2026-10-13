@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Menu thread of the main command menu: requests a redraw, runs the icon
@@ -9,8 +10,8 @@ void world_menu_build_main(void) {
 
     entry = world_thread_get_current_parameter_1();
     row = &g_world_menu_unit_selection_rows[g_world_active_unit_data.battle_id];
-    g_world_thread_contexts[g_world_thread_current_id].function_parameter_2 = 1; /* redraw request */
+    g_native_thread_contexts[g_native_current_thread_id].function_parameter_2 = 1; /* redraw request */
     world_menu_run_icon_selection_loop();
     row->command_index = entry->selected_index;
-    world_thread_exit_current();
+    thread_exit_current();
 }

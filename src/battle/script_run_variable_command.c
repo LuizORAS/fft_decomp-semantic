@@ -2,6 +2,7 @@
 #include "fft/battle_script.h"
 #include "fft/battle_text.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 
 /* EVENT_SCRIPT_VAR_RANDOM_VALUE is read through the event
  * RNG, not its ordinary storage. ZERO never reads the uninitialized operand.
@@ -63,7 +64,7 @@ void script_run_variable_command(s32 opcode, s32 destination_id, s32 source, s32
         value *= operand;
     } else if (opcode < EVENT_OPCODE_MODULO_IMMEDIATE) {
         if (operand == 0) {
-            battle_thread_exit_current();
+            thread_exit_current();
         }
         value = value / operand;
     } else if (opcode < EVENT_OPCODE_AND_IMMEDIATE) {

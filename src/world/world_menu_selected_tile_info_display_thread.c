@@ -77,5 +77,5 @@ void world_menu_selected_tile_info_display_thread(void) {
     }
     thread_yield();
     world_gfx_free_tpage7_vram(&rect);
-    world_thread_exit_current();
+    thread_exit_current();
 }

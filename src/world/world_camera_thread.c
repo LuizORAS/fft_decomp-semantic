@@ -41,7 +41,7 @@ void world_camera_thread(void) {
     mode = g_world_camera_speed_curve & EVENT_CAMERA_SPEED_CURVE_MODE_MASK;
     group = (g_world_camera_speed_curve & EVENT_CAMERA_SPEED_CURVE_GROUP_MASK) >> EVENT_CAMERA_SPEED_CURVE_GROUP_SHIFT;
     ease = (g_world_camera_speed_curve & EVENT_CAMERA_SPEED_CURVE_EASING_MASK) >> EVENT_CAMERA_SPEED_CURVE_EASING_SHIFT;
-    world_thread_set_current_task_id(NATIVE_THREAD_TASK_CAMERA);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_CAMERA);
     parameters = world_thread_get_current_parameter_1();
     script = parameters->values.position_le[0];
     for (i = 0; i < EVENT_CAMERA_COMPONENT_COUNT + 1; i++) {
@@ -164,5 +164,5 @@ void world_camera_thread(void) {
     }
     world_camera_clear_zoom_variable_low_bit();
     thread_yield();
-    world_thread_exit_current();
+    thread_exit_current();
 }

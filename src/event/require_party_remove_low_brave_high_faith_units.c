@@ -16,7 +16,7 @@ void require_party_remove_low_brave_high_faith_units(void) {
     s32 main_thread;
 
     if (require_party_find_low_brave_high_faith_departures() == 0)
-        battle_thread_exit_current();
+        thread_exit_current();
     g_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS]
         = g_require_text_data + g_require_text_section_offsets[1];
     g_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_DEPARTURES]
@@ -49,11 +49,11 @@ void require_party_remove_low_brave_high_faith_units(void) {
         battle_thread_wait_until_inactive(unit_thread);
         battle_thread_set_parameters(message_thread, 0, 0, 2);
         battle_thread_wait_until_inactive(message_thread);
-        battle_thread_wait_frames(0x1e);
+        thread_wait_frames(0x1e);
         main_party_remove_unit(unit->formation_index);
     }
     battle_thread_set_parameters(main_thread, 6, 0, 2);
     battle_thread_wait_until_inactive(main_thread);
     require_gfx_fade_rgb_31_frames(6, 5, 2);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

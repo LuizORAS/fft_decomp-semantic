@@ -3,6 +3,8 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -25,13 +27,13 @@ s32 battle_menu_update_menus_and_event_speed(u32* otag, s32 controller_input) {
     map_store_selected_tile_data();
     fill = -2;
     for (i = 3; i >= 0; i--) {
-        g_battle_menu_pending_selection[i] = fill;
+        g_menu_pending_selection[i] = fill;
     }
     script_run_event_frame(otag, controller_input);
     battle_menu_update_panel_fade();
     result = battle_menu_resolve_selection();
     if ((battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU) != 0
-            && g_battle_thread_contexts[NATIVE_THREAD_SLOT_MENU].task_id != NATIVE_THREAD_TASK_MINI_MENU)
+            && g_native_thread_contexts[NATIVE_THREAD_SLOT_MENU].task_id != NATIVE_THREAD_TASK_MINI_MENU)
         || battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_CHILD) != 0
         || battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_GRANDCHILD) != 0) {
         if (g_battle_animation_speed_forced == 0) {

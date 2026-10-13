@@ -39,11 +39,11 @@ void require_party_apply_post_battle_changes(void) {
     s32 screen_fade_max;
 
     if (require_party_save_battle_units_and_find_join_candidates() == 0) {
-        battle_thread_exit_current();
+        thread_exit_current();
     }
     g_battle_post_battle_unit_changes_active = 1;
     battle_thread_suspend(NATIVE_THREAD_SLOT_EVENT);
-    battle_copy_bytes(g_require_saved_thread_block, &g_battle_threads[NATIVE_THREAD_SLOT_EVENT], 0x400);
+    battle_copy_bytes(g_require_saved_thread_block, &g_native_threads[NATIVE_THREAD_SLOT_EVENT], 0x400);
 
     text_data = g_require_text_data;
     g_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS] = text_data + g_require_text_section_offsets[1];
@@ -272,7 +272,7 @@ void require_party_apply_post_battle_changes(void) {
                 battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)&g_require_party_removal_menus[5], 0, 0);
                 battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
             }
-            battle_thread_wait_frames(20);
+            thread_wait_frames(20);
             battle_thread_start(REQUIRE_THREAD_SLOT_MENU, require_condition_run_special_thread);
             battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, 10, 0, 0);
             require_input_wait_frames_or_skip(60);
@@ -283,7 +283,7 @@ void require_party_apply_post_battle_changes(void) {
             unit = battle_unit_get_stats_from_battle_id(*selected_unit_index_ptr);
             unit_index_ptr++;
             main_party_save_unit(unit, unit->unit_flags & UNIT_FLAG_SAVE_FORMATION);
-            battle_thread_wait_frames(20);
+            thread_wait_frames(20);
             goto next_unit;
         not_joining:
             if (g_require_menu_selection_result != one) {
@@ -291,7 +291,7 @@ void require_party_apply_post_battle_changes(void) {
                 goto retry_selection;
             }
             require_panel_set_transition_value(0);
-            battle_thread_wait_frames(10);
+            thread_wait_frames(10);
             unit = battle_unit_get_stats_from_battle_id(*selected_unit_index_ptr);
             unit_index_ptr++;
             require_party_update_bio_variable_for_unit_class(unit->character_identity, 12);
@@ -315,9 +315,9 @@ void require_party_apply_post_battle_changes(void) {
     battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
     battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
     g_battle_post_battle_unit_changes_active = 0;
-    battle_copy_bytes(&g_battle_threads[NATIVE_THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
+    battle_copy_bytes(&g_native_threads[NATIVE_THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
     g_battle_menu_thread_menu_data = saved_menu_descriptor;
     battle_thread_resume(NATIVE_THREAD_SLOT_EVENT);
     thread_yield();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

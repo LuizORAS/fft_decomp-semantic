@@ -61,7 +61,7 @@ void world_menu_run_game_options(void) {
     input0 = world_input_get_menu_controller(0);
     input1 = world_input_get_menu_controller(1);
     do {
-        thread = &g_world_threads[g_world_thread_current_id];
+        thread = &g_native_threads[g_native_current_thread_id];
         entry = (menu_entry_t*)thread->function_parameter_1;
     } while (0);
     page = g_world_options_menu_pages;
@@ -137,7 +137,7 @@ void world_menu_run_game_options(void) {
     ring = 0;
     image_rect.w = g_world_menu_text_state.pen.stride >> 2;
     LoadImage(&image_rect, (u32*)image);
-    world_thread_wait_frames(1);
+    thread_wait_frames(1);
     world_gfx_init_scaled_draw_area_packets(&page->title_area);
     world_gfx_init_scaled_draw_area_packets(&page->value_area);
     world_menu_init_sprite(&base->title);
@@ -150,7 +150,7 @@ void world_menu_run_game_options(void) {
     world_menu_set_text_origin(0x18, 0xE);
     world_menu_display_text_entry(0x502B, image, &g_world_menu_text_state.pen);
     LoadImage(&g_world_options_menu_title_rect, (u32*)image);
-    world_thread_wait_frames(1);
+    thread_wait_frames(1);
     world_menu_free_memory(image);
     value_rect.x = base->title.x0;
     value_rect.y = base->title.y0;
@@ -158,10 +158,10 @@ void world_menu_run_game_options(void) {
     value_rect.h = base->title.h;
     world_script_copy_bytes(
         &g_world_options_menu_window_rect, &entry->window.x, sizeof(g_world_options_menu_window_rect));
-    world_thread_start(g_world_thread_current_id + 1, world_menu_window_frame_thread);
+    world_thread_start(g_native_current_thread_id + 1, world_menu_window_frame_thread);
     g_world_options_menu_window_rect.h += 0xC;
     g_world_options_menu_window_rect.y -= 2;
-    world_thread_set_parameters(g_world_thread_current_id + 1, (s32)&g_world_options_menu_window_rect, 0, 0);
+    world_thread_set_parameters(g_native_current_thread_id + 1, (s32)&g_world_options_menu_window_rect, 0, 0);
     thread_yield();
     world_menu_init_sprite(&base->value);
     world_text_configure_sprite_vram(&g_world_options_menu_value_rect, 0x3C, 0x10, &base->value, 0);
@@ -234,8 +234,8 @@ void world_menu_run_game_options(void) {
                 if (world_menu_is_input_allowed() != 0) {
                     *input0 = 0;
                     index = cursor + row_offset + delta;
-                    world_thread_start(g_world_thread_current_id - 1, world_menu_run_option_choice);
-                    world_thread_set_parameters(g_world_thread_current_id - 1, index, 0, 0);
+                    world_thread_start(g_native_current_thread_id - 1, world_menu_run_option_choice);
+                    world_thread_set_parameters(g_native_current_thread_id - 1, index, 0, 0);
                 }
             }
             if (*input0 & PSX_PAD_CROSS) {
@@ -309,9 +309,9 @@ void world_menu_run_game_options(void) {
             world_gfx_draw_or_append_gpu_primitive(&page->thumb);
         }
         if ((thread - 1)->is_running == 0) {
-            world_thread_set_parameters(g_world_thread_current_id + 1, (s32)&entry->window.x, 0, 0);
+            world_thread_set_parameters(g_native_current_thread_id + 1, (s32)&entry->window.x, 0, 0);
         } else {
-            world_thread_set_parameters(g_world_thread_current_id + 1, (s32)&entry->window.x, 1, 0);
+            world_thread_set_parameters(g_native_current_thread_id + 1, (s32)&entry->window.x, 1, 0);
         }
         world_gfx_build_scaled_draw_area_pair_swapped(
             &page->title_area, &entry->window, i, g_active_graphics_buffer_index);
@@ -360,8 +360,8 @@ void world_menu_run_game_options(void) {
     world_menu_free_memory(buffer);
     world_gfx_free_tpage7_vram(&g_world_options_menu_title_rect);
     world_gfx_free_tpage7_vram(&g_world_options_menu_value_rect);
-    world_thread_wait_frames(1);
+    thread_wait_frames(1);
     g_world_menu_thread_result = 2;
-    world_thread_set_parameters(g_world_thread_current_id + 1, 0, 0, 1);
-    world_thread_exit_current();
+    world_thread_set_parameters(g_native_current_thread_id + 1, 0, 0, 1);
+    thread_exit_current();
 }

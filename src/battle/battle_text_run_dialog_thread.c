@@ -77,11 +77,11 @@ void battle_text_run_dialog_thread(void) {
     s32 no_value;
     s32 resume_task;
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_RESUME);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_RESUME);
     script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
     value_index = 0;
     variable_base = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
-    thread = &g_battle_threads[g_battle_current_thread_id];
+    thread = &g_native_threads[g_native_current_thread_id];
     param = battle_thread_get_current_parameter_1();
     rec.dialog_type = param;
     if ((param & 0x70) == 0x70) {
@@ -510,7 +510,7 @@ void battle_text_run_dialog_thread(void) {
                     if (rec.no_box == 0) {
                         break;
                     }
-                    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT);
+                    thread_set_current_task_id(NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT);
                     resume_task = NATIVE_THREAD_TASK_RESUME;
                     while (battle_thread_get_current_task_id() != resume_task) {
                         if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
@@ -637,7 +637,7 @@ void battle_text_run_dialog_thread(void) {
             NEXT();
             g_battle_text_awaiting_input = 0;
         } else if (character == TEXT_WAIT_FOR_RESUME) {
-            battle_thread_set_current_task_id(NATIVE_THREAD_TASK_WAIT_FOR_RESUME);
+            thread_set_current_task_id(NATIVE_THREAD_TASK_WAIT_FOR_RESUME);
             resume_task = NATIVE_THREAD_TASK_RESUME;
             while (battle_thread_get_current_task_id() != resume_task) {
                 if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
@@ -674,10 +674,10 @@ void battle_text_run_dialog_thread(void) {
             no_wait = 1;
         } else if (character == TEXT_RELEASE_WAITING_THREADS) {
             for (i = 0; i < 0x10; i++) {
-                if (g_battle_current_thread_id != i
-                    && g_battle_thread_contexts[i].task_id == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
+                if (g_native_current_thread_id != i
+                    && g_native_thread_contexts[i].task_id == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
                     && battle_thread_is_running_asm(i)) {
-                    g_battle_thread_contexts[i].task_id = NATIVE_THREAD_TASK_RESUME;
+                    g_native_thread_contexts[i].task_id = NATIVE_THREAD_TASK_RESUME;
                 }
             }
             thread_yield();
@@ -825,5 +825,5 @@ end:
     battle_gfx_free_tpage7_vram(&rec.rect);
     battle_menu_release_current_thread_slot();
     thread_yield();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

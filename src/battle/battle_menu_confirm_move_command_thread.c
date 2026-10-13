@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/sound.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Thread entry of menu entry 0x22, which confirms the Move command.
@@ -21,16 +22,16 @@ void battle_menu_confirm_move_command_thread(void) {
         *stored_actions = -1;
         sound_queue_sfx_invalid();
         battle_menu_icon_linked_entry_thread();
-        battle_thread_exit_current();
+        thread_exit_current();
     }
     menu = g_battle_menu_current_id;
     if (menu == BATTLE_MENU_ID_TURN_MOVED || menu == BATTLE_MENU_ID_TURN_MOVED_ACTED
         || menu == BATTLE_MENU_ID_TURN_NO_ACT_MOVED || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED
         || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED || menu == BATTLE_MENU_ID_RIDER_TURN_NO_ACT_MOVED) {
         sound_queue_sfx_invalid();
-        battle_thread_exit_current();
+        thread_exit_current();
     }
     sound_queue_sfx_confirm_unless_restoring();
     battle_menu_confirm_action_silently(entry);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

@@ -3,6 +3,7 @@
 #include "fft/battle_thread.h"
 #include "fft/gfx.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -29,7 +30,7 @@ void battle_menu_draw_active_window_frames(void) {
             continue;
         }
         buffer = g_battle_menu_buffer_slots[i + g_menu_packet_buffer_index];
-        if (buffer->active != 1 || g_battle_thread_contexts[buffer->thread_id].is_running == 0) {
+        if (buffer->active != 1 || g_native_thread_contexts[buffer->thread_id].is_running == 0) {
             continue;
         }
         window = buffer;

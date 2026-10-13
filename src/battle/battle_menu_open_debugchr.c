@@ -21,5 +21,5 @@ void battle_menu_open_debugchr(void) {
     g_sound_suppressed = 0;
     g_script_event_input = 0;
     battle_menu_clear_modal_open();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

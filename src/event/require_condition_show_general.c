@@ -219,5 +219,5 @@ void require_condition_show_general(s32 hold_frames) {
     } while (frame < 0xa);
 done:
     thread_yield();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

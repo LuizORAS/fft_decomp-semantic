@@ -30,5 +30,5 @@ void attack_deploy_select_previous_roster_unit(void) {
     g_attack_deploy_selected_unit_deployed
         = attack_deploy_is_roster_unit_deployed(g_attack_deploy_selected_roster_index);
     thread_yield();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

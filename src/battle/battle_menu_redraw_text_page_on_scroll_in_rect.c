@@ -1,4 +1,5 @@
 #include "fft/sound.h"
+#include "fft/thread.h"
 /*
  * WORLD twin:
  * world_menu_redraw_text_page_on_scroll_in_rect, plus the mode-2 buffer
@@ -37,7 +38,7 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
     rect.h = area->h;
     changed = 0;
     if (g_battle_menu_input_mode == MENU_INPUT_PLAYER
-        && ((*input2 & PSX_PAD_SQUARE) || g_battle_threads[g_battle_current_thread_id].task_words[4] != 0)) {
+        && ((*input2 & PSX_PAD_SQUARE) || g_native_threads[g_native_current_thread_id].task_words[4] != 0)) {
         if ((*input & PSX_PAD_UP) && *row_offset != 0) {
             offset = *row_offset - layout->row_count;
             *row_offset = offset;
@@ -54,9 +55,9 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
             }
             g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
             changed = 1;
-        } else if (g_battle_threads[g_battle_current_thread_id].task_words[4] != 0) {
+        } else if (g_native_threads[g_native_current_thread_id].task_words[4] != 0) {
             changed = 1;
-            g_battle_threads[g_battle_current_thread_id].task_words[4] = 0;
+            g_native_threads[g_native_current_thread_id].task_words[4] = 0;
         }
         if (changed != 0) {
             if (g_battle_menu_scroll_list_depth == 2) {

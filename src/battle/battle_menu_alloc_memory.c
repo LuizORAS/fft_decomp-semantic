@@ -47,7 +47,7 @@ void* battle_menu_alloc_memory(s32 size) {
         }
     fail:
         if (g_main_font_print_enabled != 0) {
-            FntPrint(g_battle_text_wait_for_allocation_message, g_battle_current_thread_id, size);
+            FntPrint(g_battle_text_wait_for_allocation_message, g_native_current_thread_id, size);
         }
         thread_yield();
     }

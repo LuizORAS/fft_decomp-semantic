@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Applies the auto-battle choice of the menu selection (3 or 4) to the stored unit and confirms the
@@ -14,5 +15,5 @@ void world_menu_confirm_auto_battle_selection_thread(void) {
     }
     g_world_menu_set_auto_battle_row_actions = -3;
     world_menu_confirm_action_silently(entry);
-    world_thread_exit_current();
+    thread_exit_current();
 }

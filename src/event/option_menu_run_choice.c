@@ -33,7 +33,7 @@ void option_menu_run_choice(void) {
 
     input = script_get_controller_input_pointer(0);
     script_get_controller_input_pointer(1);
-    thread = &g_battle_threads[g_battle_current_thread_id];
+    thread = &g_native_threads[g_native_current_thread_id];
     kind = thread->function_parameter_1;
     thread->function_parameter_1 = (s32)&g_option_menu_icon_thread_param;
     param = &g_option_menu_icon_thread_param;
@@ -43,7 +43,7 @@ void option_menu_run_choice(void) {
     }
     height = g_option_choice_counts[kind] * 16 + 16;
     buffer = battle_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
-    battle_thread_wait_frames(1);
+    thread_wait_frames(1);
     g_menu_text_state.pen.stride = width;
     for (i = 0; i < g_option_choice_counts[kind]; i++) {
         battle_menu_set_text_origin(8, i * 16 + 8);
@@ -71,7 +71,7 @@ void option_menu_run_choice(void) {
     battle_copy_bytes(&g_option_picker_icon_records[1], &g_option_picker_icon_records[0], sizeof(*record));
     LoadImage(&rect, (u32*)buffer);
     battle_menu_free_memory(buffer);
-    battle_thread_wait_frames(1);
+    thread_wait_frames(1);
     cursor = g_option_current_values[kind];
     for (width = 0;; width++) {
         battle_menu_should_close_thread(input);
@@ -124,7 +124,7 @@ void option_menu_run_choice(void) {
         battle_menu_select_icon_cluts(record);
         battle_menu_update_icon_cursor_sprites(param, &record->base, width, cursor);
         battle_menu_submit_icon_primitives(record);
-        battle_thread_wait_frames(1);
+        thread_wait_frames(1);
     }
     g_main_game_options.fields.cursor_movement = g_option_current_values[GAME_OPTION_CURSOR_MOVEMENT];
     g_main_game_options.fields.cursor_repeat_speed = g_option_current_values[GAME_OPTION_CURSOR_REPEAT_SPEED];
@@ -151,6 +151,6 @@ void option_menu_run_choice(void) {
     g_main_menu_scroll_slow_step = g_option_input_repeat_timings[width].scroll_slow_step;
     g_main_menu_scroll_fast_step = g_option_input_repeat_timings[width].scroll_fast_step;
     *input = 0;
-    battle_thread_wait_frames(1);
-    battle_thread_exit_current();
+    thread_wait_frames(1);
+    thread_exit_current();
 }

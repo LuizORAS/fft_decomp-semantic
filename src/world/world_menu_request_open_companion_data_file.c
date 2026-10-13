@@ -13,6 +13,6 @@ void world_menu_request_open_companion_data_file(s32 request) {
         thread_yield();
     }
     if (g_world_frame_result_override == 1) {
-        world_thread_exit_current();
+        thread_exit_current();
     }
 }

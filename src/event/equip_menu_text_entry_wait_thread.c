@@ -1,6 +1,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_equip.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -20,7 +21,7 @@ void equip_menu_text_entry_wait_thread(void) {
     u16 child_id;
     u16 task_arg;
 
-    thread = (menu_entry_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
+    thread = (menu_entry_t*)g_native_threads[g_native_current_thread_id].function_parameter_1;
     {
         menu_text_binding_t* binding = thread->context;
 
@@ -39,7 +40,7 @@ void equip_menu_text_entry_wait_thread(void) {
 
     battle_thread_start(child_id, battle_text_run_dialog_thread);
     battle_thread_set_four_parameters(child_id, header_id, text_id, task_arg, task_arg);
-    battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+    battle_thread_wait_until_inactive(g_native_current_thread_id - 1);
     battle_thread_wait_until_inactive(child_id);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

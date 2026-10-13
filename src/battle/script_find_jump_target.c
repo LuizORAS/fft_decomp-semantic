@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_event.h"
 #include "fft/battle_script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -47,5 +48,5 @@ s32 script_find_jump_target(s32 limit_offset, event_opcode_e target_opcode, s32 
         }
     }
     /* Does not return; the target has no return value on this path. */
-    battle_thread_exit_current();
+    thread_exit_current();
 }

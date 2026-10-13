@@ -17,7 +17,7 @@ void world_gfx_load_evtchr_thread(void) {
 
     slot = (s32)world_thread_get_current_parameter_1();
     block = world_thread_get_current_parameter_2();
-    world_thread_set_current_task_id(NATIVE_THREAD_TASK_LOAD_EVTCHR);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_LOAD_EVTCHR);
     buffer = main_heap_alloc(sizeof(*buffer));
 
     do {
@@ -36,5 +36,5 @@ void world_gfx_load_evtchr_thread(void) {
     g_world_event_loaded_evtchr_buffer = buffer;
     thread_yield();
     main_heap_free(buffer);
-    world_thread_exit_current();
+    thread_exit_current();
 }

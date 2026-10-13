@@ -5,6 +5,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Draw the visible rows of a three-column menu text layout (text 8 pixels
@@ -36,7 +37,7 @@ void battle_menu_draw_text_columns_narrow(menu_entry_t* entry, s32* row_offset, 
             }
             if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
                 battle_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_menu_text_state.pen);
-                if (g_battle_threads[g_battle_current_thread_id].function_parameter_4 != 0
+                if (g_native_threads[g_native_current_thread_id].function_parameter_4 != 0
                     && (g_ai_workspace_ptr->ability_list.flags[index] & 1)) {
                     g_battle_menu_text_palette_offset = layout->text_colors[column][index];
                     /* 32-bit x and y, as above. */

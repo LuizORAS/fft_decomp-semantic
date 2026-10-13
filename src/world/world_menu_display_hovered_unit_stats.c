@@ -136,7 +136,7 @@ void world_menu_display_hovered_unit_stats(
             if (world_thread_get_current_parameter_3() != 0) {
                 /* Both exits leave the speed and frame loops for the exit tail. */
                 if (mode == UNIT_STATS_PANEL_HOVERED_UNIT
-                    && g_world_thread_contexts[NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS].task_id
+                    && g_native_thread_contexts[NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS].task_id
                         == NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
                     goto exit;
                 }
@@ -334,5 +334,5 @@ exit:
     }
     world_gfx_free_tpage7_vram(&rects[0]);
     world_gfx_free_tpage7_vram(&rects[1]);
-    world_thread_exit_current();
+    thread_exit_current();
 }

@@ -40,7 +40,7 @@ void world_menu_run_option_choice(void) {
 
     input = world_input_get_menu_controller(0);
     world_input_get_menu_controller(1);
-    thread = &g_world_threads[g_world_thread_current_id];
+    thread = &g_native_threads[g_native_current_thread_id];
     kind = thread->function_parameter_1;
     thread->function_parameter_1 = (s32)&g_world_option_menu_icon_thread_param;
     param = &g_world_option_menu_icon_thread_param;
@@ -50,7 +50,7 @@ void world_menu_run_option_choice(void) {
     }
     height = g_world_option_menu_entry_counts[kind] * 16 + 16;
     buffer = world_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
-    world_thread_wait_frames(1);
+    thread_wait_frames(1);
     g_world_menu_text_state.pen.stride = width;
     for (i = 0; i < g_world_option_menu_entry_counts[kind]; i++) {
         world_menu_set_text_origin(8, i * 16 + 8);
@@ -80,7 +80,7 @@ void world_menu_run_option_choice(void) {
         sizeof(g_world_option_picker_icon_records[1]));
     LoadImage(&rect, buffer);
     world_menu_free_memory(buffer);
-    world_thread_wait_frames(1);
+    thread_wait_frames(1);
     cursor = g_world_game_option_values[kind];
     for (width = 0;; width++) {
         world_menu_check_thread_completion(input);
@@ -133,7 +133,7 @@ void world_menu_run_option_choice(void) {
         world_menu_select_icon_cluts(record);
         world_menu_update_icon_cursor_sprites(param, record, width, cursor);
         world_menu_submit_icon_primitives(record);
-        world_thread_wait_frames(1);
+        thread_wait_frames(1);
     }
     g_main_game_options.fields.cursor_movement = g_world_game_option_values[GAME_OPTION_CURSOR_MOVEMENT];
     g_main_game_options.fields.cursor_repeat_speed = g_world_game_option_values[GAME_OPTION_CURSOR_REPEAT_SPEED];
@@ -162,6 +162,6 @@ void world_menu_run_option_choice(void) {
     g_main_menu_scroll_slow_step = g_world_option_input_timing_profiles[width].scroll_slow_step;
     g_main_menu_scroll_fast_step = g_world_option_input_timing_profiles[width].scroll_fast_step;
     *input = 0;
-    world_thread_wait_frames(1);
-    world_thread_exit_current();
+    thread_wait_frames(1);
+    thread_exit_current();
 }

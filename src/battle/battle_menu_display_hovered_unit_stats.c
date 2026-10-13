@@ -139,7 +139,7 @@ void battle_menu_display_hovered_unit_stats(
         for (i = 0; i < g_script_event_speed; i++) {
             if (battle_thread_get_current_parameter_3() != 0) {
                 if (mode == UNIT_STATS_PANEL_HOVERED_UNIT
-                    && g_battle_thread_contexts[NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS].task_id
+                    && g_native_thread_contexts[NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS].task_id
                         == NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
                     /* Both exits leave the step loop and the frame loop. */
                     goto exit;
@@ -339,5 +339,5 @@ exit:
     }
     battle_gfx_free_tpage7_vram(&rects[0]);
     battle_gfx_free_tpage7_vram(&rects[1]);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

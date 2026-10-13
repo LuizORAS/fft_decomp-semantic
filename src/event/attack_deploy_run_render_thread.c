@@ -29,7 +29,7 @@ void attack_deploy_run_render_thread(void) {
     LoadImage(&g_attack_deploy_tile_clut_rect, (u32*)g_attack_deploy_tile_clut_data);
     StoreImage(&g_attack_deploy_tile_clut_rect, (u32*)g_attack_deploy_tile_clut_buffer);
     StoreImage(&g_attack_deploy_rect_09c, (u32*)g_attack_deploy_semitrans_clut_buffer);
-    battle_thread_wait_frames(1);
+    thread_wait_frames(1);
     for (i = 1; i < 0x30; i++) {
         g_attack_deploy_tile_clut_buffer[i].semi_transparent = 1;
     }
@@ -197,5 +197,5 @@ void attack_deploy_run_render_thread(void) {
         }
         frame++;
     }
-    battle_thread_exit_current();
+    thread_exit_current();
 }

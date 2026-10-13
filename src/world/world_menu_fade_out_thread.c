@@ -23,7 +23,7 @@ void world_menu_fade_out_thread(void) {
     g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_BUNIT;
     g_world_text_overlay_active = 0;
     do {
-        world_thread_wait_frames(1);
+        thread_wait_frames(1);
     } while (g_world_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
 
     menu_free_high_overlay();
@@ -39,5 +39,5 @@ void world_menu_fade_out_thread(void) {
     g_world_screen_fade = 0;
     g_world_menu_transition_timeout = 0;
     world_unit_start_view_thread(UNIT_VIEW_MODE_HOVERED_UNIT, g_world_active_unit_data.battle_id, 0xFF);
-    world_thread_exit_current();
+    thread_exit_current();
 }

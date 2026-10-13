@@ -1,5 +1,6 @@
 #include "fft/battle_sound.h"
 #include "fft/battle_thread.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Thread task 0x35, started by the event script's background-sound instruction:
@@ -17,7 +18,7 @@ void sound_run_background_sfx_thread(void) {
     s32 find_channel;
     s32 resource = SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, 0);
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_BG_SOUND);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_BG_SOUND);
     request = (event_background_sound_parameters_t*)battle_thread_get_current_parameter_1();
     find_channel = request->find_channel;
     sound_id = request->sound_id;

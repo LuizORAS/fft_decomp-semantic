@@ -221,7 +221,7 @@ functions:
   - {addr: 0x800f0af4, size: 20, name: world_menu_request_open_small, hash: 0525dd738699e440}
   - {addr: 0x800f0b08, size: 84, name: world_menu_poll_small_load, hash: beff675275d527cf}
   - {addr: 0x800f0b5c, size: 8, name: world_return_zero_800f0b5c, hash: 207819bf4ebe3078}
-  - {addr: 0x800f0b64, size: 56, name: world_map_data_load_complete_thread, hash: 9d186db038b3c37d}
+  - {addr: 0x800f0b64, size: 56, name: map_data_load_complete_thread, hash: 9d186db038b3c37d, source: src/shared/map/map_data_load_complete_thread.c}
   - {addr: 0x800f0b9c, size: 72, name: sound_wait_for_music_stub, hash: ae5d718d414b6204, source: src/shared/sound/sound_wait_for_music_stub.c}
   - {addr: 0x800f0be4, size: 168, name: sound_play_music_tracks, hash: 99f338e7d1920b8b, source: src/shared/sound/sound_play_music_tracks.c}
   - {addr: 0x800f0c8c, size: 444, name: world_menu_init_attack_resources_and_threads, hash: 1ae51b2896ef360b}
@@ -273,8 +273,8 @@ functions:
   - {addr: 0x800f312c, size: 76, name: world_menu_reset_unit_records, hash: 91497616f5362267}
   - {addr: 0x800f3178, size: 120, name: world_menu_reset_unit_record, hash: 320fd7dcc963f1c3}
   - {addr: 0x800f31f0, size: 16, name: world_menu_get_selected_command_address, hash: f87818707628ad97}
-  - {addr: 0x800f3200, size: 60, name: world_menu_mini_menu_cancel_delay_thread, hash: 1126457f8432f56a}
-  - {addr: 0x800f323c, size: 60, name: world_menu_confirm_sound_delay_thread, hash: f840d996f9d12147}
+  - {addr: 0x800f3200, size: 60, name: menu_mini_menu_cancel_delay_thread, hash: 1126457f8432f56a, source: src/shared/menu/menu_mini_menu_cancel_delay_thread.c}
+  - {addr: 0x800f323c, size: 60, name: menu_confirm_sound_delay_thread, hash: f840d996f9d12147, source: src/shared/menu/menu_confirm_sound_delay_thread.c}
   - {addr: 0x800f3278, size: 56, name: world_menu_copy_ff_terminated_bytes_to_halfwords, hash: 28e77c325ea414b4}
   - {addr: 0x800f32b0, size: 52, name: menu_copy_u8_to_u16, hash: 13d704f494f4f2e9, source: src/shared/menu/menu_copy_u8_to_u16.c}
   - {addr: 0x800f32e4, size: 1980, name: world_menu_build_ability_list, hash: 3c2abc1fea8e3c9c}
@@ -376,7 +376,7 @@ functions:
   - {addr: 0x800fd07c, size: 92, name: world_thread_resolve_id, hash: 674eacc3bba8a117}
   - {addr: 0x800fd0d8, size: 116, name: world_thread_resolve_id_after_current, hash: a367ea7a7bcd9ae1}
   - {addr: 0x800fd14c, size: 140, name: world_thread_find_running_by_task, hash: e98782ca2e2a6940}
-  - {addr: 0x800fd1d8, size: 36, name: world_thread_set_current_task_id, hash: dd9e3f86ea659634}
+  - {addr: 0x800fd1d8, size: 36, name: thread_set_current_task_id, hash: dd9e3f86ea659634, source: src/shared/thread/thread_set_current_task_id.c}
   - {addr: 0x800fd1fc, size: 336, name: world_script_find_jump_target, hash: ab737fa84b87a290}
   - {addr: 0x800fd34c, size: 84, name: world_script_find_instruction_byte_offset, hash: b757188c6a6e7586}
   - {addr: 0x800fd3a0, size: 264, name: world_script_run_condition, hash: e36beb855569d28c}
@@ -416,11 +416,11 @@ functions:
   - {addr: 0x800ff690, size: 796, name: world_menu_build_window_image, hash: af5f5261b59f0b0d}
   - {addr: 0x800ff9ac, size: 636, name: world_menu_build_and_upload_window_frame_image, hash: 36ce56e38867d038}
   - {addr: 0x800ffc28, size: 256, name: menu_build_window_image_row, hash: 03b43cffa473c30c, source: src/shared/menu/menu_build_window_image_row.c}
-  - {addr: 0x800ffd28, size: 72, name: world_thread_wait_frames, hash: 2658b0e5a2a82790}
+  - {addr: 0x800ffd28, size: 72, name: thread_wait_frames, hash: 2658b0e5a2a82790, source: src/shared/thread/thread_wait_frames.c}
   - {addr: 0x800ffd70, size: 132, name: world_thread_start, hash: 8e70b68deed7c2a0}
   - {addr: 0x800ffdf4, size: 28, name: world_thread_resume, hash: 5db3a5c21e753da8}
   - {addr: 0x800ffe10, size: 24, name: world_thread_suspend, hash: 9450e432778af0a6}
-  - {addr: 0x800ffe28, size: 60, name: world_thread_exit_current, hash: ff52c9c9f91306dd}
+  - {addr: 0x800ffe28, size: 60, name: thread_exit_current, hash: ff52c9c9f91306dd, source: src/shared/thread/thread_exit_current.c}
   - {addr: 0x800ffe64, size: 60, name: world_thread_reset_scheduler, hash: d888f2276d3f66e7}
   - {addr: 0x800ffea0, size: 76, name: world_thread_wait_until_inactive, hash: 17872da1aa0db52d}
   - {addr: 0x800ffeec, size: 28, name: world_thread_is_running, hash: 22d1fa2a224de3cd}
@@ -1078,7 +1078,7 @@ data:
   - {addr: 0x801531a8, name: g_world_menu_portrait_palette_rect}
   - {addr: 0x801531b0, name: g_world_gfx_texture_window}
   - {addr: 0x801531b8, name: g_world_camera_script_variable_indices}
-  - {addr: 0x801531c8, name: g_world_menu_pending_selection}
+  - {addr: 0x801531c8, name: g_menu_pending_selection}
   - {addr: 0x801531d8, name: g_text_substitution_values}
   - {addr: 0x80153258, name: g_world_menu_transition_active}
   - {addr: 0x8015325c, name: g_world_dead_unit_action}
@@ -1089,7 +1089,7 @@ data:
   - {addr: 0x80153270, name: g_world_menu_text_color}
   - {addr: 0x80153274, name: g_world_text_glyph_first_row}
   - {addr: 0x80153278, name: g_world_text_glyph_row_limit}
-  - {addr: 0x8015327c, name: g_world_threads}
+  - {addr: 0x8015327c, name: g_native_threads}
   - {addr: 0x80153280, name: g_world_menu_text_state}
   - {addr: 0x80153280, name: g_world_script_variables}
   - {addr: 0x80153294, name: g_world_script_opcode_dc_value}
@@ -1852,7 +1852,7 @@ data:
   - {addr: 0x80195c8c, name: g_world_menu_selected_command}
   - {addr: 0x80195c90, name: g_world_menu_preview_action}
   - {addr: 0x80195ca4, name: g_world_menu_monster_skillset_flag}
-  - {addr: 0x80195cd0, name: g_world_thread_contexts}
+  - {addr: 0x80195cd0, name: g_native_thread_contexts}
   - {addr: 0x80195dd0, name: g_world_unit_summary_digit_images}
   - {addr: 0x80195ed0, name: g_world_numeric_display_palettes}
   - {addr: 0x801995d0, name: g_world_unit_editor_palette}
@@ -2187,7 +2187,7 @@ data:
   - {addr: 0x801cd144, name: g_world_name_entry_text}
   - {addr: 0x801cd164, name: g_world_name_entry_original_name}
   - {addr: 0x801cd16c, name: g_world_name_confirm_result}
-  - {addr: 0x801cd170, name: g_world_thread_current_id}
+  - {addr: 0x801cd170, name: g_native_current_thread_id}
   - {addr: 0x801cd174, name: g_world_thread_inner_subroutine_result}
   - {addr: 0x801cd178, name: g_world_gfx_flat_line_capacity}
   - {addr: 0x801cd17c, name: g_world_gfx_line_f3_capacity}

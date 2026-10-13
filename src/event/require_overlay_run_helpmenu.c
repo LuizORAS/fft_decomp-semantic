@@ -12,7 +12,7 @@
 void require_overlay_run_helpmenu(void) {
     s32 thread_id;
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_HELP_MENU);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_HELP_MENU);
     g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
     g_menu_panel_status_animation[0] = 1;
     g_menu_panel_status_animation[1] = 1;
@@ -26,5 +26,5 @@ void require_overlay_run_helpmenu(void) {
     battle_thread_wait_until_inactive(thread_id);
     g_menu_panel_status_animation[0] = 0;
     g_menu_panel_status_animation[1] = 0;
-    battle_thread_exit_current();
+    thread_exit_current();
 }

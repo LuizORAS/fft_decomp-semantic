@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/event_option.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -70,16 +71,16 @@ void option_menu_start_dead_unit_threads(void) {
     if (context->result == 0) {
         message_id = 0x183c;
         g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MESSAGE].text_id = message_id;
-        battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
+        battle_thread_start(g_native_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
         battle_thread_set_parameters(
-            g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MESSAGE], 0, 0);
-        battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
-        battle_thread_wait_frames(2);
+            g_native_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MESSAGE], 0, 0);
+        battle_thread_wait_until_inactive(g_native_current_thread_id - 1);
+        thread_wait_frames(2);
         g_battle_dead_unit_action = 0;
         g_battle_menu_thread_menu_data = previous_menu_descriptor;
-        g_battle_menu_pending_selection[0] = 0;
+        g_menu_pending_selection[0] = 0;
         /* Thread exit does not return; a source return changes epilogue sharing. */
-        battle_thread_exit_current();
+        thread_exit_current();
     }
 
     g_battle_dead_unit_result = 0;
@@ -96,15 +97,15 @@ void option_menu_start_dead_unit_threads(void) {
             g_battle_dead_unit_result = context->treasure_item;
         }
         g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MESSAGE].text_id = message_id;
-        battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
+        battle_thread_start(g_native_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
         battle_thread_set_parameters(
-            g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MESSAGE], 0, 0);
-        battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
-        battle_thread_wait_frames(2);
+            g_native_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MESSAGE], 0, 0);
+        battle_thread_wait_until_inactive(g_native_current_thread_id - 1);
+        thread_wait_frames(2);
         g_battle_dead_unit_action = 4;
         g_battle_menu_thread_menu_data = previous_menu_descriptor;
-        g_battle_menu_pending_selection[0] = 0;
-        battle_thread_exit_current();
+        g_menu_pending_selection[0] = 0;
+        thread_exit_current();
     }
 
     battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
@@ -119,27 +120,27 @@ void option_menu_start_dead_unit_threads(void) {
     for (;;) {
         if (context->result == 3) {
             g_option_dead_unit_secondary_result = 0xff;
-            battle_thread_start(g_battle_current_thread_id - 1, battle_menu_run_icon_selection_loop);
+            battle_thread_start(g_native_current_thread_id - 1, battle_menu_run_icon_selection_loop);
             battle_thread_set_parameters(
-                g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MOVE], 0, 0);
-            battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+                g_native_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_MOVE], 0, 0);
+            battle_thread_wait_until_inactive(g_native_current_thread_id - 1);
         }
 
         g_option_dead_unit_primary_result = 0xff;
         if ((context->result == 3 && g_option_dead_unit_secondary_result == 0) || context->result == 1) {
-            battle_thread_start(g_battle_current_thread_id - 2, option_menu_run_at_list);
-            battle_thread_set_parameters(g_battle_current_thread_id - 2, (s32)g_battle_menu_thread_menu_data, 0, 0);
+            battle_thread_start(g_native_current_thread_id - 2, option_menu_run_at_list);
+            battle_thread_set_parameters(g_native_current_thread_id - 2, (s32)g_battle_menu_thread_menu_data, 0, 0);
             battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU, battle_menu_icon_linked_entry_thread);
             battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU,
                 (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_AT_LIST], 0, 0);
             for (;;) {
                 thread_yield();
-                if (battle_thread_is_running_asm(g_battle_current_thread_id - 3) != 0) {
+                if (battle_thread_is_running_asm(g_native_current_thread_id - 3) != 0) {
                     battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD, option_thread_wait_forever);
                 } else {
                     battle_thread_suspend(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD);
                 }
-                if (battle_thread_is_running_asm(g_battle_current_thread_id - 1) == 0) {
+                if (battle_thread_is_running_asm(g_native_current_thread_id - 1) == 0) {
                     break;
                 }
                 g_option_dead_unit_controller_input = script_get_controller_input_pointer(0);
@@ -148,7 +149,7 @@ void option_menu_start_dead_unit_threads(void) {
                 }
             }
 
-            battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+            battle_thread_wait_until_inactive(g_native_current_thread_id - 1);
             battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU, 0, 0, 1);
             battle_thread_suspend(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD);
             if (g_option_dead_unit_primary_result == 0) {
@@ -164,10 +165,10 @@ void option_menu_start_dead_unit_threads(void) {
 
         if ((g_option_dead_unit_secondary_result == 1 && context->result == 3) || context->result == 2) {
             g_option_dead_unit_primary_result = 0xff;
-            battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
+            battle_thread_start(g_native_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
             battle_thread_set_parameters(
-                g_battle_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_CONFIRM], 0, 0);
-            battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
+                g_native_current_thread_id - 1, (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_CONFIRM], 0, 0);
+            battle_thread_wait_until_inactive(g_native_current_thread_id - 1);
             if (g_option_dead_unit_primary_result == 0) {
                 g_battle_dead_unit_action = 2;
                 break;
@@ -180,8 +181,8 @@ void option_menu_start_dead_unit_threads(void) {
         break;
     }
 
-    battle_thread_wait_frames(0x14);
+    thread_wait_frames(0x14);
     g_battle_menu_thread_menu_data = previous_menu_descriptor;
-    g_battle_menu_pending_selection[0] = 0;
-    battle_thread_exit_current();
+    g_menu_pending_selection[0] = 0;
+    thread_exit_current();
 }

@@ -17,8 +17,8 @@ void world_script_waitspritemove_event_instruction(s32 unit_id) {
     for (;;) {
         for (i = 0; i < 17; i++) {
             if (world_thread_is_running_asm(i) != 0
-                && g_world_thread_contexts[i].task_id == NATIVE_THREAD_TASK_SPRITE_MOVE
-                && g_world_thread_contexts[i].task_words[0] == runtime_id) {
+                && g_native_thread_contexts[i].task_id == NATIVE_THREAD_TASK_SPRITE_MOVE
+                && g_native_thread_contexts[i].task_words[0] == runtime_id) {
                 break;
             }
         }

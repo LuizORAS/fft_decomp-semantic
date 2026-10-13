@@ -11,7 +11,7 @@ void script_earthquake_start(void) {
     s32 first_counter;
     s32 second_counter;
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_EARTHQUAKE);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_EARTHQUAKE);
     parameters = (event_earthquake_parameters_t*)battle_thread_get_current_parameter_1();
     first_counter = 0;
     second_counter = 0;

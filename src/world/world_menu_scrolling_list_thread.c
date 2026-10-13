@@ -55,7 +55,7 @@ void world_menu_scrolling_list_thread(void) {
     s32 span;
 
     toggle = 0;
-    page = g_world_ability_list_pages[g_world_thread_current_id];
+    page = g_world_ability_list_pages[g_native_current_thread_id];
     entry = world_thread_get_current_parameter_1();
     layout = entry->context;
     entry->window.h = layout->columns.row_count * 16 + 0x1C;
@@ -217,7 +217,7 @@ void world_menu_scrolling_list_thread(void) {
                         world_menu_display_text_entry(
                             layout->columns.text_ids[column][index], buffer, &g_world_menu_text_state.pen);
                         g_world_menu_text_color = layout->columns.text_colors[column][index];
-                        if (g_world_thread_contexts[g_world_thread_current_id].function_parameter_4 != 0
+                        if (g_native_thread_contexts[g_native_current_thread_id].function_parameter_4 != 0
                             && (g_ai_workspace_ptr->ability_list.flags[index] & 1)) {
                             world_menu_set_text_origin(layout->columns.x[column] + 0x50, 0);
                             world_menu_display_text_entry(0x5088, buffer, &g_world_menu_text_state.pen);
@@ -342,7 +342,7 @@ void world_menu_scrolling_list_thread(void) {
         if (entry->header_id >= 5) {
             world_gfx_draw_or_append_gpu_primitive(page->icons.icons[0]);
             world_gfx_draw_or_append_gpu_primitive(page->icons.icons[1]);
-            if (g_world_thread_contexts[g_world_thread_current_id].function_parameter_4 != 0) {
+            if (g_native_thread_contexts[g_native_current_thread_id].function_parameter_4 != 0) {
                 world_gfx_draw_or_append_gpu_primitive(page->icons.icons[2]);
             }
         }
@@ -363,6 +363,6 @@ void world_menu_scrolling_list_thread(void) {
     thread_yield();
     g_world_menu_scrolling_list_depth--;
     if (world_thread_get_current_parameter_2() == 0) {
-        world_thread_exit_current();
+        thread_exit_current();
     }
 }

@@ -10,10 +10,10 @@
 void script_map_darkness(void) {
     event_unit_color_t* parameters;
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_MAP_DARKNESS);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_MAP_DARKNESS);
     parameters = (event_unit_color_t*)battle_thread_get_current_parameter_1();
     map_start_ambient_light_blend(
         parameters->mode, parameters->duration, parameters->rgb.r, parameters->rgb.g, parameters->rgb.b);
-    battle_thread_wait_frames(g_script_map_darkness_durations[parameters->duration]);
-    battle_thread_exit_current();
+    thread_wait_frames(g_script_map_darkness_durations[parameters->duration]);
+    thread_exit_current();
 }

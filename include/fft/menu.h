@@ -1325,8 +1325,12 @@ typedef struct menu_selection_remap {
 } menu_selection_remap_t;
 typedef char menu_selection_remap_size_must_be_5[sizeof(menu_selection_remap_t) == 5 ? 1 : -1];
 
-/* selection restore */
+/* selection state */
 extern u8 g_menu_restore_pending;
+extern s16 g_menu_pending_selection[4];
+
+void menu_mini_menu_cancel_delay_thread(void);
+void menu_confirm_sound_delay_thread(void);
 
 /* horizontal selection */
 extern s16 g_menu_selection_values[];

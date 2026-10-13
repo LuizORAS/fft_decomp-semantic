@@ -29,8 +29,8 @@ void world_menu_run_bunit_transition_thread(void) {
     world_menu_request_open_companion_executable(COMPANION_OVERLAY_BUNIT);
     menu_reserve_high_overlay(0x20000);
     world_menu_request_open_companion_executable(COMPANION_OVERLAY_BUNIT_SECOND_HALF);
-    world_thread_wait_frames(2);
+    thread_wait_frames(2);
     g_world_text_overlay_active = 1;
     world_thread_start(NATIVE_BORROWED_THREAD_SLOT_FADE_OUT, world_menu_fade_out_thread);
-    world_thread_exit_current();
+    thread_exit_current();
 }

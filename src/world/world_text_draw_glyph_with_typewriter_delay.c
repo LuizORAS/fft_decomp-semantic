@@ -44,9 +44,9 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
         for (;;) {
             slot = 16;
             for (i = 0; i < 3; i++) {
-                if (g_world_thread_current_id == g_world_menu_slot_owner_thread_ids[i]) {
+                if (g_native_current_thread_id == g_world_menu_slot_owner_thread_ids[i]) {
                     slot = i;
-                    g_world_menu_slot_owner_thread_ids[i] = g_world_thread_current_id;
+                    g_world_menu_slot_owner_thread_ids[i] = g_native_current_thread_id;
                     break;
                 }
             }
@@ -54,7 +54,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
                 for (row = 0; row < 3; row++) {
                     if (g_world_menu_slot_owner_thread_ids[row] == 0) {
                         slot = row;
-                        g_world_menu_slot_owner_thread_ids[row] = g_world_thread_current_id;
+                        g_world_menu_slot_owner_thread_ids[row] = g_native_current_thread_id;
                         g_world_text_slot_source_columns[row] = 0;
                         g_world_text_slot_row_pitches[row] = 0;
                         break;
@@ -159,7 +159,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
                 if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                     break;
                 }
-                world_thread_wait_frames(1);
+                thread_wait_frames(1);
             }
             g_world_menu_slot_states[slot] = 0;
         } else {
@@ -177,7 +177,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
                     if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                         break;
                     }
-                    world_thread_wait_frames(1);
+                    thread_wait_frames(1);
                 }
                 g_world_menu_slot_states[slot] = 0;
             }

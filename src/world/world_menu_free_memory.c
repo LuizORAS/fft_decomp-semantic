@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -34,7 +35,7 @@ void world_menu_free_memory(void* buffer_pointer) {
             allocation_size += sizeof(menu_allocation_t) / sizeof(*allocation_size);
             allocation++;
             if ((s32)allocation_size >= (s32)allocation_end) {
-                world_thread_exit_current();
+                thread_exit_current();
                 return;
             }
         }

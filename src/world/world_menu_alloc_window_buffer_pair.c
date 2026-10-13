@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -20,7 +21,7 @@ menu_window_buffer_t* world_menu_alloc_window_buffer_pair(void) {
             buffer = g_world_menu_window_buffer_pointers[index];
             for (i = 0; i < 1; i++) {
                 buffer->active = 0;
-                buffer->thread_id = g_world_thread_current_id;
+                buffer->thread_id = g_native_current_thread_id;
                 buffer->portrait_code = -1;
                 buffer->color.r = 0x80;
                 buffer->color.g = 0x80;
@@ -70,5 +71,5 @@ menu_window_buffer_t* world_menu_alloc_window_buffer_pair(void) {
             return g_world_menu_window_buffer_pointers[index];
         }
     }
-    world_thread_exit_current();
+    thread_exit_current();
 }

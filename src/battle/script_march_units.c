@@ -2,6 +2,7 @@
 #include "fft/battle_thread.h"
 #include "fft/battle_unit.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -23,7 +24,7 @@ void script_march_units(const event_march_parameters_t* parameters) {
     do {
         if (script_filter_unit_id_by_mode(&runtime_id, (u16*)&unit_index, &state) != 0) {
             battle_unit_set_status_animation_by_runtime_id(runtime_id);
-            battle_thread_wait_frames(parameters->wait_frames);
+            thread_wait_frames(parameters->wait_frames);
             if (state == 0) {
                 return;
             }

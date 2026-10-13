@@ -82,11 +82,11 @@ void attack_deploy_run_select_menu(void) {
     nodes = g_attack_deploy_select_menu_nodes;
     g_text_section_pointers[TEXT_SECTION_DEPLOYMENT_UNIT_HELP] = g_attack_deploy_unit_text_section;
     g_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_attack_deploy_help_text_section;
-    parent_id = g_battle_current_thread_id - 1;
+    parent_id = g_native_current_thread_id - 1;
     input = script_get_controller_input_pointer(0);
     i = 0;
-    thread = &g_battle_threads[g_battle_current_thread_id];
-    parent = &g_battle_threads[parent_id];
+    thread = &g_native_threads[g_native_current_thread_id];
+    parent = &g_native_threads[parent_id];
     while (1) {
         if (parent->is_running == 0) {
             if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
@@ -254,10 +254,10 @@ void attack_deploy_run_select_menu(void) {
         }
         battle_gfx_draw_or_append_gpu_primitive(&left[buffer]);
         battle_gfx_draw_or_append_gpu_primitive(&right[buffer]);
-        battle_thread_wait_frames(1);
+        thread_wait_frames(1);
         i++;
     }
     g_attack_panel_status_animation[0] = 0;
     g_attack_panel_status_animation[1] = 0;
-    battle_thread_exit_current();
+    thread_exit_current();
 }

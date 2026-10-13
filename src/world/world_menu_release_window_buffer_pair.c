@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Mark both entries unused and clear their headers; a missing key stops
@@ -19,6 +20,6 @@ void world_menu_release_window_buffer_pair(menu_window_buffer_t* value) {
                 return;
             }
         }
-        world_thread_exit_current();
+        thread_exit_current();
     }
 }

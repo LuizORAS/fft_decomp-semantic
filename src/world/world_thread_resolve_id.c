@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Resolve a thread slot argument: a real slot id is returned unchanged; any
@@ -16,5 +17,5 @@ s32 world_thread_resolve_id(s32 thread_id) {
         }
     }
 
-    world_thread_exit_current();
+    thread_exit_current();
 }

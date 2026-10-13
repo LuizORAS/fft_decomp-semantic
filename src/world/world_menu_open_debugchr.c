@@ -20,5 +20,5 @@ void world_menu_open_debugchr(void) {
     g_world_menu_sound_muted = 0;
     g_world_menu_new_button_input = 0;
     world_menu_clear_transition_active_flag();
-    world_thread_exit_current();
+    thread_exit_current();
 }

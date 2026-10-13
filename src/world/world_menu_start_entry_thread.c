@@ -13,7 +13,7 @@ void world_menu_start_entry_thread(void) {
 
     world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
     if (g_world_menu_overlay_state != 0) {
-        world_thread_exit_current();
+        thread_exit_current();
     }
     world_camera_wait_until_idle();
     while (world_thread_find_running_by_task(NATIVE_THREAD_TASK_ATTACK_TARGET_STATS) != 0) {
@@ -25,13 +25,13 @@ void world_menu_start_entry_thread(void) {
             world_script_set_variable(
                 EVENT_SCRIPT_VAR_CURRENT_EVENT, script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) + 1);
             world_script_start_current_event_thread();
-            world_thread_wait_frames(0x1E);
+            thread_wait_frames(0x1E);
         }
         if (g_world_menu_input_mode != MENU_INPUT_PLAYER) {
-            world_thread_wait_frames(2);
+            thread_wait_frames(2);
         }
     } else {
-        world_thread_wait_frames(2);
+        thread_wait_frames(2);
     }
     world_script_pulse_tutorial_wait_value(0xFF);
     if (menu_id == BATTLE_MENU_ID_OTHER_UNIT || menu_id == BATTLE_MENU_ID_OTHER_UNIT_INSPECT) {
@@ -45,24 +45,24 @@ void world_menu_start_entry_thread(void) {
     g_world_menu_new_button_input = 0;
     if (g_menu_restore_pending != 0 && g_world_menu_restore_unit_id == g_world_active_unit_data.battle_id) {
         g_world_text_overlay_active = 1;
-        world_thread_wait_frames(2);
+        thread_wait_frames(2);
         if (count > 0) {
             world_thread_start(NATIVE_THREAD_SLOT_MENU_CHILD, world_menu_run_skillset_thread);
             world_thread_set_parameters(
                 NATIVE_THREAD_SLOT_MENU_CHILD, (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST], 0, 0);
         }
-        world_thread_wait_frames(2);
+        thread_wait_frames(2);
         if (count >= 2) {
             world_thread_start(NATIVE_THREAD_SLOT_MENU_GRANDCHILD, world_menu_select_unit_action_slots_thread);
             world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_GRANDCHILD,
                 (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST], 0, 0);
         }
-        world_thread_wait_frames(2);
+        thread_wait_frames(2);
         g_menu_restore_pending = 0;
         g_world_text_overlay_active = 0;
     } else {
         g_world_menu_restore_depth = 0;
         g_world_menu_restore_unit_id = g_world_active_unit_data.battle_id;
     }
-    world_thread_exit_current();
+    thread_exit_current();
 }

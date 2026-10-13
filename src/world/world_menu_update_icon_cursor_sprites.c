@@ -1,5 +1,6 @@
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -12,7 +13,7 @@
  * reaches 27 frames. The cursor sprites follow the selected row.
  */
 void world_menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprites_t* record, s32 frame, s32 cursor) {
-    native_thread_t* thread = &g_world_threads[g_world_thread_current_id];
+    native_thread_t* thread = &g_native_threads[g_native_current_thread_id];
     s32 x;
     s32 y;
 

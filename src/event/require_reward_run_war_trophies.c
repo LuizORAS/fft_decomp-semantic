@@ -35,7 +35,7 @@ void require_reward_run_war_trophies(void) {
     require_reward_collect_war_trophies_and_bonus_money();
 
     if (g_require_reward_war_trophy_entry_count == 0) {
-        battle_thread_exit_current();
+        thread_exit_current();
     }
     prims = g_require_reward_war_trophy_primitives;
     thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
@@ -173,5 +173,5 @@ void require_reward_run_war_trophies(void) {
     }
     battle_thread_set_parameters(thread, 0, 0, 1);
     battle_thread_wait_until_inactive(thread);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

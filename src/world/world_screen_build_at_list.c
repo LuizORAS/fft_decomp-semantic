@@ -310,5 +310,5 @@ void world_screen_build_at_list(void) {
         world_menu_free_memory(buffer);
     }
     thread_yield();
-    world_thread_exit_current();
+    thread_exit_current();
 }

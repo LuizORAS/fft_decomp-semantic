@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/battle_thread.h"
+#include "fft/thread.h"
 
 /* Resolve a script variable id to the 32-bit storage value that holds it. Ids below 0x80
  * own a 32-bit value; 0x80..0x35f pack 32 flags per 32-bit value starting at 32-bit variable 0x80, and
@@ -18,7 +19,7 @@ s32* script_get_variable_word_pointer_from_id(s32 id) {
         off = ((id - EVENT_SCRIPT_VAR_PACKED_NIBBLE_FIRST) / 8) * 4 + 0x25C;
         result = (s32*)(off + (u32)g_script_variables);
     } else {
-        battle_thread_exit_current();
+        thread_exit_current();
     }
     return result;
 }

@@ -63,11 +63,11 @@ void battle_menu_select_unit_action_slots_thread(void) {
         slot->selected_index = g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index;
         slot->scroll_offset = g_battle_menu_ability_scroll_offset;
         if (menu != ACTION_MENU_TYPE_ARITHMETICKS) {
-            battle_thread_exit_current();
+            thread_exit_current();
         }
         if (g_battle_menu_action_slot_selected_option == -1) {
             if (i == 2) {
-                battle_thread_exit_current();
+                thread_exit_current();
             }
             i += 2;
         } else {
@@ -85,5 +85,5 @@ void battle_menu_select_unit_action_slots_thread(void) {
             }
         }
     }
-    battle_thread_exit_current();
+    thread_exit_current();
 }

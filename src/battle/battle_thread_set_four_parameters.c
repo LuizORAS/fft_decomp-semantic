@@ -1,8 +1,9 @@
 #include "fft/battle_thread.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 void battle_thread_set_four_parameters(s32 slot, s32 first, s32 second, s32 third, s32 fourth) {
-    native_thread_t* thread = &g_battle_threads[slot];
+    native_thread_t* thread = &g_native_threads[slot];
     thread->function_parameter_1 = first;
     thread->function_parameter_2 = second;
     thread->function_parameter_3 = third;

@@ -51,5 +51,5 @@ void debugchr_menu_icon_strip_thread(void) {
         frame++;
     }
     thread_yield();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

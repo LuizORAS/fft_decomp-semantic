@@ -297,5 +297,5 @@ void world_build_at_list(void) {
     world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, 0, 0, 1);
     entry->select_text_table = row_offset;
     thread_yield();
-    world_thread_exit_current();
+    thread_exit_current();
 }

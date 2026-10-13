@@ -1,6 +1,7 @@
 #include "fft/battle_event.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_thread.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Polled by a menu thread each frame; input is the frame's 32-bit input value.
@@ -20,8 +21,8 @@ s32 battle_menu_should_close_thread(u32* input) {
     i = 0;
     task_state = 3;
     for (; i < 16; i++) {
-        if (i != g_battle_current_thread_id && battle_thread_is_running_asm(i) != 0
-            && g_battle_thread_contexts[i].task_id == task_state) {
+        if (i != g_native_current_thread_id && battle_thread_is_running_asm(i) != 0
+            && g_native_thread_contexts[i].task_id == task_state) {
             *input = 0;
             break;
         }

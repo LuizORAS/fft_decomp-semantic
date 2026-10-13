@@ -93,5 +93,5 @@ void attack_deploy_update_screen_graphics(void) {
             break;
         }
     }
-    battle_thread_exit_current();
+    thread_exit_current();
 }

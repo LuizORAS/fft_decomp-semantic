@@ -81,5 +81,5 @@ void battle_menu_selected_tile_info_display_thread(void) {
     }
     thread_yield();
     battle_gfx_free_tpage7_vram(&rect);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

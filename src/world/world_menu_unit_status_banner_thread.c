@@ -64,11 +64,11 @@ void world_menu_unit_status_banner_thread(void) {
     POLY_FT4* portrait_prim;
 
     suppress = 0;
-    world_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
     input = world_input_get_menu_controller(0);
-    thread_id = g_world_thread_current_id;
+    thread_id = g_native_current_thread_id;
     g_world_input_frame_controller_input = input + 1;
-    display = (menu_status_panel_display_thread_t*)g_world_threads[thread_id].function_parameter_1;
+    display = (menu_status_panel_display_thread_t*)g_native_threads[thread_id].function_parameter_1;
     if (thread_id == NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) {
         status = g_world_selected_unit_status_packets;
         summary = g_world_selected_unit_summary_packets;
@@ -448,5 +448,5 @@ void world_menu_unit_status_banner_thread(void) {
     world_gfx_free_tpage7_vram(&rects[3]);
     world_gfx_free_tpage7_vram(&rects[4]);
     world_gfx_free_tpage7_vram(&rects[5]);
-    world_thread_exit_current();
+    thread_exit_current();
 }

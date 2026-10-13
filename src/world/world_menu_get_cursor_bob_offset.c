@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -6,7 +7,7 @@
  * second table as-is. Returns the value paired with the first threshold
  * above the parameter, or 0. */
 s32 world_menu_get_cursor_bob_offset(s32 mode) {
-    s32 value = g_world_thread_contexts[g_world_thread_current_id].task_words[0];
+    s32 value = g_native_thread_contexts[g_native_current_thread_id].task_words[0];
     menu_cursor_bob_entry_t* table;
     s32 threshold;
     s32 result;

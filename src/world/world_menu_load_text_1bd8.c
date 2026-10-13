@@ -18,7 +18,7 @@ void world_menu_load_text_1bd8(void) {
     s32* src;
     u8** dst;
 
-    g_world_thread_current_id = NATIVE_THREAD_SLOT_MAIN;
+    g_native_current_thread_id = NATIVE_THREAD_SLOT_MAIN;
     world_menu_init_subsystem_pointers();
     world_menu_load_common_graphics(0);
     g_thread_call_target = (void (*)(void))main_file_load_checked_to_address;

@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
+#include "fft/thread.h"
 /* Run the help menu over the REQUIRE screen. */
 #include "fft/battle_script.h"
 #include "fft/event_helpmenu.h"
@@ -59,7 +60,7 @@ void helpmenu_menu_run_require_help(void) {
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_SKILLSETS];
     g_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
-    self = &g_battle_threads[g_battle_current_thread_id];
+    self = &g_native_threads[g_native_current_thread_id];
     battle_menu_copy_billboard_data_out(
         &g_helpmenu_active_banner, &g_helpmenu_active_unit_data, &g_helpmenu_billboard, &g_helpmenu_menu_cursor_tile);
     if (g_helpmenu_selected_unit_panel_mode != 0 || g_battle_post_battle_unit_changes_active != 0) {
@@ -74,7 +75,7 @@ void helpmenu_menu_run_require_help(void) {
     g_helpmenu_require_navigation[3].destination[0] = 0;
     navigation = g_helpmenu_require_navigation;
     text_thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-    text_thread = &g_battle_threads[text_thread_id];
+    text_thread = &g_native_threads[text_thread_id];
     for (frame = 0;; frame++) {
         if (text_thread->is_running == 0) {
             if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
@@ -212,9 +213,9 @@ void helpmenu_menu_run_require_help(void) {
         }
         battle_gfx_draw_or_append_gpu_primitive(&cursor[buffer]);
         battle_gfx_draw_or_append_gpu_primitive(&shadow[buffer]);
-        battle_thread_wait_frames(1);
+        thread_wait_frames(1);
     }
     *g_helpmenu_controller_state_ptr = 0;
-    battle_thread_wait_frames(1);
+    thread_wait_frames(1);
     helpmenu_menu_close();
 }

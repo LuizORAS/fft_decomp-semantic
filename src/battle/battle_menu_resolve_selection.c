@@ -18,9 +18,9 @@ s32 battle_menu_resolve_selection(void) {
     s32 i;
     s32 menu;
 
-    command = (u8)g_battle_menu_pending_selection[0];
-    option = (u8)g_battle_menu_pending_selection[1];
-    item = (u16)g_battle_menu_pending_selection[2];
+    command = (u8)g_menu_pending_selection[0];
+    option = (u8)g_menu_pending_selection[1];
+    item = (u16)g_menu_pending_selection[2];
     g_battle_menu_selected_command.kind = command;
     index = option;
     if (command != 0x12 && (command & 0xFE) != 0xFE) {

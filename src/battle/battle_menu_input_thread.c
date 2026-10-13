@@ -22,6 +22,6 @@ void battle_menu_input_thread(void) {
     thread_yield();
     g_sound_suppressed = 0;
     if (battle_thread_get_current_parameter_2() == 0) {
-        battle_thread_exit_current();
+        thread_exit_current();
     }
 }

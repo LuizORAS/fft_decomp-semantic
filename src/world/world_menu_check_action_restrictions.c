@@ -2,6 +2,7 @@
 #include "fft/battle_unit.h"
 #include "fft/menu.h"
 #include "fft/sound.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /*
@@ -26,7 +27,7 @@ void world_menu_check_action_restrictions(void) {
         result = battle_unit_get_action_restriction(unit);
         if (result == BATTLE_UNIT_ACTION_RESTRICTION_NONE) {
             world_sound_queue_sfx_invalid();
-            world_thread_exit_current();
+            thread_exit_current();
         }
         if (result == BATTLE_UNIT_ACTION_RESTRICTION_CANNOT_ACT) {
             message = 0x1002;
@@ -54,13 +55,13 @@ void world_menu_check_action_restrictions(void) {
         } else if (g_menu_restore_pending == 0) {
             world_sound_queue_sfx_invalid();
             g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
-            world_thread_start(g_world_thread_current_id - 1, world_menu_icon_linked_entry_thread);
-            world_thread_set_parameters(g_world_thread_current_id - 1,
+            world_thread_start(g_native_current_thread_id - 1, world_menu_icon_linked_entry_thread);
+            world_thread_set_parameters(g_native_current_thread_id - 1,
                 (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
-            world_thread_wait_until_inactive(g_world_thread_current_id - 1);
+            world_thread_wait_until_inactive(g_native_current_thread_id - 1);
         }
         if (message == 0x1002 || message == 0x1003) {
-            world_thread_exit_current();
+            thread_exit_current();
         }
     } else {
         sound_queue_sfx_confirm_unless_restoring();

@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_thread.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Release the menu window buffer pair whose first buffer is `buffer`: both slot
@@ -30,5 +31,5 @@ void battle_menu_release_window_buffer_pair(menu_window_buffer_t* buffer) {
         }
     }
 
-    battle_thread_exit_current();
+    thread_exit_current();
 }

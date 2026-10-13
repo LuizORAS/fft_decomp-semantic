@@ -62,5 +62,5 @@ void world_menu_icon_clamped_list_thread(void) {
         world_gfx_draw_or_append_gpu_primitive(&sprites->draw_mode);
     }
     thread_yield();
-    world_thread_exit_current();
+    thread_exit_current();
 }

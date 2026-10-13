@@ -4,5 +4,5 @@
 /* Give other event work one turn before terminating this thread. */
 void world_thread_yield_then_stop_current(void) {
     thread_yield();
-    world_thread_exit_current();
+    thread_exit_current();
 }

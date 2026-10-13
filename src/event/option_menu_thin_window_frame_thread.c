@@ -162,5 +162,5 @@ void option_menu_thin_window_frame_thread(void) {
     thread_yield();
     battle_menu_free_memory(pixels);
     battle_gfx_free_tpage7_vram(&texture);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

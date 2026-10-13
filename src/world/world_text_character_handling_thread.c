@@ -17,7 +17,7 @@
    window close-and-release tail at `end`. */
 #define CHECK_ABORT()                                                                                                  \
     if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST                                          \
-        && g_world_thread_current_id != WORLD_THREAD_SLOT_TUTORIAL_TEXT) {                                             \
+        && g_native_current_thread_id != WORLD_THREAD_SLOT_TUTORIAL_TEXT) {                                            \
         goto end;                                                                                                      \
     }
 
@@ -78,11 +78,11 @@ void world_text_character_handling_thread(void) {
     s32 no_value;
 
     party_name_request = 0;
-    world_thread_set_current_task_id(NATIVE_THREAD_TASK_RESUME);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_RESUME);
     world_script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
     value_index = 0;
     variable_id = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
-    thread = (native_thread_t*)((g_world_thread_current_id << 10) + (s32)g_world_threads);
+    thread = (native_thread_t*)((g_native_current_thread_id << 10) + (s32)g_native_threads);
     param = (s32)world_thread_get_current_parameter_1();
     rec.dialog_type = param;
     if ((param & 0x70) == 0x70) {
@@ -556,7 +556,7 @@ void world_text_character_handling_thread(void) {
                     if (rec.no_box == 0) {
                         break;
                     }
-                    world_thread_set_current_task_id(NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT);
+                    thread_set_current_task_id(NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT);
                     while (world_thread_get_current_task_id() != NATIVE_THREAD_TASK_RESUME) {
                         CHECK_ABORT();
                         thread_yield();
@@ -655,7 +655,7 @@ void world_text_character_handling_thread(void) {
             NEXT();
             g_world_menu_event_state_flag = 0;
         } else if (code == TEXT_WAIT_FOR_RESUME) {
-            world_thread_set_current_task_id(NATIVE_THREAD_TASK_WAIT_FOR_RESUME);
+            thread_set_current_task_id(NATIVE_THREAD_TASK_WAIT_FOR_RESUME);
             while (world_thread_get_current_task_id() != NATIVE_THREAD_TASK_RESUME) {
                 if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                     goto end;
@@ -691,10 +691,10 @@ void world_text_character_handling_thread(void) {
             no_wait = 1;
         } else if (code == TEXT_RELEASE_WAITING_THREADS) {
             for (i = 0; i < 0x11; i++) {
-                if (g_world_thread_current_id != i
-                    && g_world_thread_contexts[i].task_id == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
+                if (g_native_current_thread_id != i
+                    && g_native_thread_contexts[i].task_id == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
                     && world_thread_is_running_asm(i)) {
-                    g_world_thread_contexts[i].task_id = NATIVE_THREAD_TASK_RESUME;
+                    g_native_thread_contexts[i].task_id = NATIVE_THREAD_TASK_RESUME;
                 }
             }
             thread_yield();
@@ -850,7 +850,7 @@ end:
             && g_world_formation_screen_active == 0)) {
         world_text_restore_section_pointers();
     }
-    if (g_world_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_TEXT || rec.options != 0xC) {
-        world_thread_exit_current();
+    if (g_native_current_thread_id != NATIVE_SCREEN_THREAD_SLOT_TEXT || rec.options != 0xC) {
+        thread_exit_current();
     }
 }

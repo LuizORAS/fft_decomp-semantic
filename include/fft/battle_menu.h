@@ -39,10 +39,9 @@ extern menu_cursor_bob_entry_t g_battle_cursor_bob_thresholds[];
 extern s32 g_battle_menu_action_menu_build_result;
 extern s16 g_battle_menu_action_slot_selected_option;
 extern u16 g_battle_menu_input_block_frames;
-extern u16 g_battle_menu_input_mode;           /* menu_input_mode_e */
-extern s16 g_battle_menu_pending_selection[4]; /* 4 shorts */
-extern s16 g_battle_menu_result;               /* menu result: -4 pending, -1 cancelled */
-extern s16 g_battle_menu_row_message_ids[];    /* per-row message id */
+extern u16 g_battle_menu_input_mode;        /* menu_input_mode_e */
+extern s16 g_battle_menu_result;            /* menu result: -4 pending, -1 cancelled */
+extern s16 g_battle_menu_row_message_ids[]; /* per-row message id */
 extern s16 g_battle_menu_selected_option;
 extern menu_selection_remap_t g_battle_menu_selection_remaps[8];
 extern menu_unit_selection_record_t g_battle_menu_unit_selection_records[BATTLE_UNIT_SLOT_COUNT];

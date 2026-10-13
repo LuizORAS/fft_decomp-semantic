@@ -1,5 +1,6 @@
 #include "fft/battle_map.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
@@ -24,7 +25,7 @@ void world_map_light_thread(void) {
     s32 i;
     s32 frames;
 
-    world_thread_set_current_task_id(NATIVE_THREAD_TASK_MAP_LIGHT);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_MAP_LIGHT);
     params = world_thread_get_current_parameter_1();
     /* Indexed operand fields retain a separate base and add four bytes. */
     for (i = 0; i < 6; i++) {
@@ -51,9 +52,9 @@ void world_map_light_thread(void) {
         scale.vz = (target.vectors.scale[2] - start.vectors.scale[2]) * i / frames + start.vectors.scale[2];
         ScaleMatrixL(&colour, &scale);
         map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_SET, &colour, &light, 0);
-        world_thread_wait_frames(1);
+        thread_wait_frames(1);
     }
     world_script_copy_bytes(&g_world_map_light_rotation, &rotation, 8);
     world_script_copy_bytes(&g_world_map_light_scale, &scale, 16);
-    world_thread_exit_current();
+    thread_exit_current();
 }

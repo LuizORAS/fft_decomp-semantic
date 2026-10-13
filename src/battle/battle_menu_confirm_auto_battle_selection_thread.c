@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/thread.h"
 
 /* Confirm the current menu action, recording the auto-battle mode it selects. */
 void battle_menu_confirm_auto_battle_selection_thread(void) {
@@ -16,5 +17,5 @@ void battle_menu_confirm_auto_battle_selection_thread(void) {
     }
     g_battle_menu_set_auto_battle_row_actions = -3;
     battle_menu_confirm_action_silently(parameter);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

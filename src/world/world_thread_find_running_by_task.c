@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -7,8 +8,8 @@ s32 world_thread_find_running_by_task(s32 task_id) {
     s32 thread_id;
 
     for (thread_id = 1; thread_id < 17; thread_id++) {
-        if (thread_id != g_world_thread_current_id && world_thread_is_running_asm(thread_id) != 0
-            && g_world_thread_contexts[thread_id].task_id == task_id) {
+        if (thread_id != g_native_current_thread_id && world_thread_is_running_asm(thread_id) != 0
+            && g_native_thread_contexts[thread_id].task_id == task_id) {
             return thread_id;
         }
     }

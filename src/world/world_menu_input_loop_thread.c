@@ -21,6 +21,6 @@ void world_menu_input_loop_thread(void) {
     thread_yield();
     g_world_menu_sound_muted = 0;
     if (world_thread_get_current_parameter_2() == 0) {
-        world_thread_exit_current();
+        thread_exit_current();
     }
 }

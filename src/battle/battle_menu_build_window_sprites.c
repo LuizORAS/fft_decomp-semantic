@@ -12,7 +12,7 @@ void battle_menu_build_window_sprites(RECT* rect, menu_entry_t* param, menu_icon
     s16 style;
     s32 index;
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_MENU_WINDOW_BUILD);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_MENU_WINDOW_BUILD);
     rect->x = param->vram_origin.x;
     rect->y = param->vram_origin.y;
     rect->w = param->inner_width >> 2;

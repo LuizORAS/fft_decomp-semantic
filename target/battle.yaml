@@ -873,7 +873,7 @@ functions:
   - {addr: 0x8013d188, size: 20, name: battle_menu_request_open_small, hash: 2304312a1a158a04}
   - {addr: 0x8013d19c, size: 84, name: battle_menu_poll_small_load, hash: 4db3a15d03401224}
   - {addr: 0x8013d1f0, size: 8, name: battle_return_zero_8013d1f0, hash: 207819bf4ebe3078}
-  - {addr: 0x8013d1f8, size: 56, name: map_data_load_complete_thread, hash: f5d13c78756c2b83}
+  - {addr: 0x8013d1f8, size: 56, name: map_data_load_complete_thread, hash: f5d13c78756c2b83, source: src/shared/map/map_data_load_complete_thread.c}
   - {addr: 0x8013d230, size: 72, name: sound_wait_for_music_stub, hash: 5cf0df43ec1c1bac, source: src/shared/sound/sound_wait_for_music_stub.c}
   - {addr: 0x8013d278, size: 168, name: sound_play_music_tracks, hash: 5321f20b1e27a914, source: src/shared/sound/sound_play_music_tracks.c}
   - {addr: 0x8013d320, size: 444, name: battle_menu_init_attack_resources_and_threads, hash: 289c47ca11bfc49a}
@@ -925,8 +925,8 @@ functions:
   - {addr: 0x8013f8b4, size: 76, name: battle_menu_reset_unit_records, hash: e2c9146172c12401}
   - {addr: 0x8013f900, size: 120, name: battle_menu_reset_unit_record, hash: 01a91c530dee054f}
   - {addr: 0x8013f978, size: 16, name: battle_menu_get_selected_command_address, hash: c365dc2ee8cef471}
-  - {addr: 0x8013f988, size: 60, name: battle_menu_mini_menu_cancel_delay_thread, hash: a19b498310498fbb}
-  - {addr: 0x8013f9c4, size: 60, name: battle_menu_confirm_sound_delay_thread, hash: 9b356d5b71614e62}
+  - {addr: 0x8013f988, size: 60, name: menu_mini_menu_cancel_delay_thread, hash: a19b498310498fbb, source: src/shared/menu/menu_mini_menu_cancel_delay_thread.c}
+  - {addr: 0x8013f9c4, size: 60, name: menu_confirm_sound_delay_thread, hash: 9b356d5b71614e62, source: src/shared/menu/menu_confirm_sound_delay_thread.c}
   - {addr: 0x8013fa00, size: 56, name: battle_menu_copy_ff_terminated_bytes_to_halfwords, hash: 95c73ad7819ea27c}
   - {addr: 0x8013fa38, size: 52, name: menu_copy_u8_to_u16, hash: 13d704f494f4f2e9, source: src/shared/menu/menu_copy_u8_to_u16.c}
   - {addr: 0x8013fa6c, size: 1980, name: battle_menu_build_ability_list, hash: e5703c8ed198f2b4}
@@ -1028,7 +1028,7 @@ functions:
   - {addr: 0x80149bec, size: 92, name: battle_thread_resolve_id, hash: 17686d1630cf7426}
   - {addr: 0x80149c48, size: 116, name: battle_thread_resolve_id_after_current, hash: 4f46f5d743b32d8e}
   - {addr: 0x80149cbc, size: 140, name: battle_thread_find_running_by_task, hash: 3e4172d2ef22f4ec}
-  - {addr: 0x80149d48, size: 36, name: battle_thread_set_current_task_id, hash: 7886a9c202b1848c}
+  - {addr: 0x80149d48, size: 36, name: thread_set_current_task_id, hash: 7886a9c202b1848c, source: src/shared/thread/thread_set_current_task_id.c}
   - {addr: 0x80149d6c, size: 336, name: script_find_jump_target, hash: 422ae30d6a9b16a6}
   - {addr: 0x80149ebc, size: 84, name: script_find_instruction_byte_offset, hash: ac44e561bcf62111}
   - {addr: 0x80149f10, size: 264, name: script_run_condition, hash: 56d22d399c4208fa}
@@ -1070,11 +1070,11 @@ functions:
   - {addr: 0x8014c18c, size: 796, name: battle_menu_build_window_image, hash: c553dd4a8afbd218}
   - {addr: 0x8014c4a8, size: 688, name: battle_menu_build_and_upload_window_frame_image, hash: 99515c0e0a1f017c}
   - {addr: 0x8014c758, size: 256, name: menu_build_window_image_row, hash: 03b43cffa473c30c, source: src/shared/menu/menu_build_window_image_row.c}
-  - {addr: 0x8014c858, size: 72, name: battle_thread_wait_frames, hash: e33123533d666f71}
+  - {addr: 0x8014c858, size: 72, name: thread_wait_frames, hash: e33123533d666f71, source: src/shared/thread/thread_wait_frames.c}
   - {addr: 0x8014c8a0, size: 132, name: battle_thread_start, hash: 72fa1891ea2b8656}
   - {addr: 0x8014c924, size: 28, name: battle_thread_resume, hash: 484df3941212a0b6}
   - {addr: 0x8014c940, size: 24, name: battle_thread_suspend, hash: 6647a9e0cd2b86e9}
-  - {addr: 0x8014c958, size: 60, name: battle_thread_exit_current, hash: 23aa4a3549fe6cb7}
+  - {addr: 0x8014c958, size: 60, name: thread_exit_current, hash: 23aa4a3549fe6cb7, source: src/shared/thread/thread_exit_current.c}
   - {addr: 0x8014c994, size: 60, name: battle_thread_reset_scheduler, hash: fa59753fb674e92c}
   - {addr: 0x8014c9d0, size: 76, name: battle_thread_wait_until_inactive, hash: 29370957c26343c7}
   - {addr: 0x8014ca1c, size: 28, name: battle_thread_is_running, hash: d10e3403d7fec970}
@@ -2317,7 +2317,7 @@ data:
   - {addr: 0x80165ec4, name: g_battle_menu_portrait_palette_rect}
   - {addr: 0x80165ecc, name: g_battle_menu_disabled_texture_window}
   - {addr: 0x80165ed4, name: g_camera_script_variable_indices}
-  - {addr: 0x80165ee4, name: g_battle_menu_pending_selection}
+  - {addr: 0x80165ee4, name: g_menu_pending_selection}
   - {addr: 0x80165ef4, name: g_text_substitution_values}
   - {addr: 0x80165f74, name: g_battle_menu_modal_open}
   - {addr: 0x80165f78, name: g_battle_dead_unit_action}
@@ -2328,7 +2328,7 @@ data:
   - {addr: 0x80165f8c, name: g_battle_menu_text_palette_offset}
   - {addr: 0x80165f90, name: g_battle_text_substitution_value_27}
   - {addr: 0x80165f94, name: g_battle_text_substitution_value_28}
-  - {addr: 0x80165f98, name: g_battle_threads}
+  - {addr: 0x80165f98, name: g_native_threads}
   - {addr: 0x80165f9c, name: g_menu_text_state}
   - {addr: 0x80165f9c, name: g_script_variables}
   - {addr: 0x80165fb0, name: g_script_opcode_dc_value}
@@ -2525,7 +2525,7 @@ data:
   - {addr: 0x80169828, name: g_battle_menu_selected_command}
   - {addr: 0x8016982c, name: g_battle_menu_selected_action}
   - {addr: 0x80169840, name: g_battle_menu_action_menu_build_result}
-  - {addr: 0x8016986c, name: g_battle_thread_contexts}
+  - {addr: 0x8016986c, name: g_native_thread_contexts}
   - {addr: 0x8016996c, name: g_battle_unit_summary_digit_images}
   - {addr: 0x80169a6c, name: g_battle_numeric_display_palettes}
   - {addr: 0x8016d16c, name: g_battle_unit_editor_palette}
@@ -2616,7 +2616,7 @@ data:
   - {addr: 0x8017400c, name: g_battle_event_loaded_evtchr_buffer}
   - {addr: 0x80174010, name: g_script_light_angles}
   - {addr: 0x80174018, name: g_script_light_base_color_matrix}
-  - {addr: 0x80174038, name: g_battle_current_thread_id}
+  - {addr: 0x80174038, name: g_native_current_thread_id}
   - {addr: 0x8017403c, name: g_battle_menu_skillset_disabled_flags}
   - {addr: 0x80174044, name: g_battle_dead_unit_context}
   - {addr: 0x80174048, name: g_ai_workspace_ptr}

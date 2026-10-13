@@ -1,4 +1,5 @@
 #include "fft/event_debugchr.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Target 0x800f001c. Loads the DEBUGCHR overlay (file 0xB) and runs the unit
@@ -24,6 +25,6 @@ void world_menu_open_debugchr_unit_editor(void) {
         world_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, *unit_index, *unit_index);
         world_menu_clear_transition_active_flag();
         battle_menu_leave_status_screen_selection();
-        world_thread_exit_current();
+        thread_exit_current();
     }
 }

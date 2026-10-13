@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Resolve a thread slot argument: a real slot id is returned unchanged; any
@@ -10,9 +11,9 @@ s32 world_thread_resolve_id_after_current(s32 thread_id) {
         return thread_id;
     }
 
-    index = g_world_thread_current_id + 1;
+    index = g_native_current_thread_id + 1;
     if (index >= 17) {
-        world_thread_exit_current();
+        thread_exit_current();
     } else {
         do {
             if (world_thread_is_running_asm(index) == 0) {
@@ -21,6 +22,6 @@ s32 world_thread_resolve_id_after_current(s32 thread_id) {
             index++;
         } while (index < 17);
 
-        world_thread_exit_current();
+        thread_exit_current();
     }
 }

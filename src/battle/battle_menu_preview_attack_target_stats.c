@@ -12,7 +12,7 @@
 void battle_menu_preview_attack_target_stats(void) {
     s32 saved;
 
-    if (g_battle_thread_contexts[NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS].task_id
+    if (g_native_thread_contexts[NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS].task_id
         != NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
         battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS);
     }

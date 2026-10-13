@@ -4,6 +4,7 @@
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -47,7 +48,7 @@ void helpmenu_menu_run_battle_help(void) {
 
     u_mid = 0xB8;
     if (g_battle_menu_modal_open != 0) {
-        battle_thread_exit_current();
+        thread_exit_current();
     }
     battle_copy_bytes(g_helpmenu_text_saved_pointers, g_text_section_pointers, 0x80);
     banner = &g_helpmenu_active_banner;
@@ -70,7 +71,7 @@ void helpmenu_menu_run_battle_help(void) {
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_SKILLSETS];
     g_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
-    self_thread = &g_battle_threads[g_battle_current_thread_id];
+    self_thread = &g_native_threads[g_native_current_thread_id];
     battle_menu_copy_billboard_data_out(banner, unit_data, billboard, cursor_tile);
     if ((g_helpmenu_selected_unit_panel_mode != 0) || (g_battle_post_battle_unit_changes_active != 0)) {
         g_helpmenu_require_navigation[2].destination[2] = 7;
@@ -92,7 +93,7 @@ void helpmenu_menu_run_battle_help(void) {
     if (text_thread_id < 9) {
         frame = text_thread_id;
         missing_value = -1;
-        scan_thread = &g_battle_threads[frame];
+        scan_thread = &g_native_threads[frame];
         for (; frame < 9; frame++) {
             request = (menu_entry_t*)scan_thread->function_parameter_1;
             if (request->select_text_table != missing_value) {
@@ -114,13 +115,13 @@ void helpmenu_menu_run_battle_help(void) {
                     battle_thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
                     battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                     *g_helpmenu_controller_state_ptr = 0;
-                    battle_thread_wait_frames(1);
+                    thread_wait_frames(1);
                     helpmenu_menu_close();
                 } else if (request_kind == 4) {
                     help_id = g_action_menu_skillsets[request->selected_index];
                     if (help_id == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING) {
                         *g_helpmenu_controller_state_ptr = 0;
-                        battle_thread_wait_frames(1);
+                        thread_wait_frames(1);
                         helpmenu_menu_close();
                     }
                     help_id |= 0x9800;
@@ -129,7 +130,7 @@ void helpmenu_menu_run_battle_help(void) {
                     battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0) {
                     *g_helpmenu_controller_state_ptr = 0;
-                    battle_thread_wait_frames(1);
+                    thread_wait_frames(1);
                     helpmenu_menu_close();
                 } else if (request_kind == 5) {
                     menu_text_layout_t* layout = request->context;
@@ -145,7 +146,7 @@ void helpmenu_menu_run_battle_help(void) {
                     help_id &= 0x7FF;
                     if (help_id == 0) {
                         *g_helpmenu_controller_state_ptr = 0;
-                        battle_thread_wait_frames(1);
+                        thread_wait_frames(1);
                         helpmenu_menu_close();
                     }
                     help_id |= 0x6800;
@@ -158,7 +159,7 @@ void helpmenu_menu_run_battle_help(void) {
                     help_id &= 0x7FF;
                     if (help_id == 0) {
                         *g_helpmenu_controller_state_ptr = 0;
-                        battle_thread_wait_frames(1);
+                        thread_wait_frames(1);
                         helpmenu_menu_close();
                     }
                     help_id += ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE;
@@ -178,7 +179,7 @@ void helpmenu_menu_run_battle_help(void) {
                     help_id &= 0x7FF;
                     if (help_id == 0) {
                         *g_helpmenu_controller_state_ptr = 0;
-                        battle_thread_wait_frames(1);
+                        thread_wait_frames(1);
                         helpmenu_menu_close();
                     }
                     help_id |= 0xA000;
@@ -218,15 +219,15 @@ void helpmenu_menu_run_battle_help(void) {
                 }
                 waiting_slot = text_thread_id;
                 do {
-                    battle_thread_wait_frames(1);
-                } while (g_battle_threads[waiting_slot - 1].is_running != 0);
+                    thread_wait_frames(1);
+                } while (g_native_threads[waiting_slot - 1].is_running != 0);
                 *g_helpmenu_controller_state_ptr = 0;
-                battle_thread_wait_frames(1);
+                thread_wait_frames(1);
                 helpmenu_menu_close();
             }
         } else {
             *g_helpmenu_controller_state_ptr = 0;
-            battle_thread_wait_frames(1);
+            thread_wait_frames(1);
             helpmenu_menu_close();
         }
     }
@@ -240,10 +241,10 @@ void helpmenu_menu_run_battle_help(void) {
             battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, battle_text_run_dialog_thread);
             battle_thread_set_parameters(
                 NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x3B, g_helpmenu_menu_cursor_tile.surface_type + 0x5800, 0);
-            g_battle_threads[NATIVE_SCREEN_THREAD_SLOT_MESSAGE].task_words[3] = -0x20;
+            g_native_threads[NATIVE_SCREEN_THREAD_SLOT_MESSAGE].task_words[3] = -0x20;
             battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_MESSAGE);
             *g_helpmenu_controller_state_ptr = 0;
-            battle_thread_wait_frames(1);
+            thread_wait_frames(1);
             helpmenu_menu_close();
         } else if (help_mode == UNIT_VIEW_MODE_HOVERED_UNIT) {
             /* Unreachable: the arm above already takes modes 1 and 2. */
@@ -258,7 +259,7 @@ void helpmenu_menu_run_battle_help(void) {
         }
     }
     frame = 0;
-    text_thread = &g_battle_threads[text_thread_id];
+    text_thread = &g_native_threads[text_thread_id];
     while (1) {
         if (text_thread->is_running == 0) {
             if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
@@ -386,10 +387,10 @@ void helpmenu_menu_run_battle_help(void) {
         }
         battle_gfx_draw_or_append_gpu_primitive(&cursor_polys[buffer]);
         battle_gfx_draw_or_append_gpu_primitive(&shadow_polys[buffer]);
-        battle_thread_wait_frames(1);
+        thread_wait_frames(1);
         frame++;
     }
     *g_helpmenu_controller_state_ptr = 0;
-    battle_thread_wait_frames(1);
+    thread_wait_frames(1);
     helpmenu_menu_close();
 }

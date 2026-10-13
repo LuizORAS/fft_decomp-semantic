@@ -14,6 +14,7 @@
 #include "fft/battle_ai.h"
 #include "fft/battle_menu.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -216,7 +217,7 @@ void world_menu_build_ability_list(s32 mode) {
     }
     /* Menu-thread parameters 2-4 request a redraw, reset the cursor and
      * request a refresh. */
-    g_world_thread_contexts[g_world_thread_current_id].function_parameter_2 = 1;
-    g_world_thread_contexts[g_world_thread_current_id].function_parameter_3 = 0;
-    g_world_thread_contexts[g_world_thread_current_id].function_parameter_4 = 1;
+    g_native_thread_contexts[g_native_current_thread_id].function_parameter_2 = 1;
+    g_native_thread_contexts[g_native_current_thread_id].function_parameter_3 = 0;
+    g_native_thread_contexts[g_native_current_thread_id].function_parameter_4 = 1;
 }

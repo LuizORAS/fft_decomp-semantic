@@ -1,4 +1,5 @@
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 /*
  * WORLD twin:
@@ -64,7 +65,7 @@ void battle_menu_auto_battle_setting_thread(void) {
                 if (selected == 0) {
                     before = battle_menu_get_id_based_on_mount_moveable_actable(g_battle_active_turn_unit.battle_id);
                     stats->auto_battle_setting = AI_AUTOBATTLE_MANUAL;
-                    g_battle_menu_pending_selection[0] = 0x12;
+                    g_menu_pending_selection[0] = 0x12;
                     colour[0] = 8;
                     colour[1] = 4;
                     colour[2] = 4;
@@ -120,5 +121,5 @@ void battle_menu_auto_battle_setting_thread(void) {
         battle_menu_submit_icon_primitives(record);
     }
     thread_yield();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

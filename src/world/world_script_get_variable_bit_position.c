@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -14,7 +15,7 @@ s32 world_script_get_variable_bit_position(s32 variable_id) {
         } else if (variable_id < EVENT_SCRIPT_VAR_END) {
             bit_position = (variable_id & 7) * 4;
         } else {
-            world_thread_exit_current();
+            thread_exit_current();
         }
     }
     return bit_position;

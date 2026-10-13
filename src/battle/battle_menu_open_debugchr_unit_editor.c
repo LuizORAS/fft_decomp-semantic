@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/event_debugchr.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Show the active-turn unit in DEBUGCHR.OUT's unit editor when the unit has mount
@@ -33,5 +34,5 @@ void battle_menu_open_debugchr_unit_editor(void) {
     battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, *selected, *selected);
     battle_menu_clear_modal_open();
     battle_menu_leave_status_screen_selection();
-    battle_thread_exit_current();
+    thread_exit_current();
 }

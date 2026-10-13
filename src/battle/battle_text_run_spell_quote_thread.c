@@ -4,6 +4,7 @@
 #include "fft/battle_text.h"
 #include "fft/battle_unit.h"
 #include "fft/main.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -22,11 +23,11 @@ void battle_text_run_spell_quote_thread(void) {
     s32 message_id;
 
     g_battle_system_function_thread_busy = 1;
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_MESSAGE);
+    thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_MESSAGE);
     script_set_event_speed(2);
     battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
     battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
-    battle_thread_wait_frames(3);
+    thread_wait_frames(3);
     window_mode = 0x11;
     id = battle_thread_get_current_parameter_1();
     g_text_substitution_values[0] = id;
@@ -46,8 +47,8 @@ void battle_text_run_spell_quote_thread(void) {
     battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, window_mode, message_id, id);
     battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
     main_heap_free(g_battle_text_message_buffer);
-    g_battle_menu_pending_selection[0] = 7;
+    g_menu_pending_selection[0] = 7;
     script_set_event_speed(1);
     g_battle_system_function_thread_busy = 0;
-    battle_thread_exit_current();
+    thread_exit_current();
 }

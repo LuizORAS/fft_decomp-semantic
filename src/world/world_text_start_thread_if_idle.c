@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -19,7 +20,7 @@ s32 world_text_start_thread_if_idle(s32 thread_id, s32 param1, s32 text, s32 par
         world_thread_start(thread_id, world_text_character_handling_thread);
         world_thread_set_parameters(thread_id, param1, text, param3);
         g_world_text_thread_active_text = text;
-        g_world_threads[thread_id].task_words[3] = value;
+        g_native_threads[thread_id].task_words[3] = value;
         return 1;
     }
     return running;

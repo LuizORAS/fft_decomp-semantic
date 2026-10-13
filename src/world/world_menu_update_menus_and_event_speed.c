@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -19,13 +21,13 @@ s32 world_menu_update_menus_and_event_speed(u32* ot, u32 input) {
     world_map_store_selected_tile_data();
     value = -2;
     for (i = 3; i >= 0; i--) {
-        g_world_menu_pending_selection[i] = value;
+        g_menu_pending_selection[i] = value;
     }
     world_script_run_frame(ot, input);
     world_menu_update_panel_fade();
     result = world_menu_resolve_selection();
     if ((world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU) != 0
-            && g_world_thread_contexts[NATIVE_THREAD_SLOT_MENU].task_id != NATIVE_THREAD_TASK_MINI_MENU)
+            && g_native_thread_contexts[NATIVE_THREAD_SLOT_MENU].task_id != NATIVE_THREAD_TASK_MINI_MENU)
         || world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_CHILD) != 0
         || world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_GRANDCHILD) != 0) {
         if (g_world_animation_speed_forced == 0) {
