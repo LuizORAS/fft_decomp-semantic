@@ -11,7 +11,7 @@ extern volatile u16 g_bunit_gfx_line_g3_capacity;
  *
  * BUNIT twin of world_gfx_init_double_packet_buffers: one pool argument per
  * frame-buffer pointer, each advanced by its capacity for the second buffer. */
-void bunit_gfx_init_double_packet_buffers(bunit_gfx_context_t* buffers, u32* otags, POLY_F3* flat_triangles,
+void bunit_gfx_init_double_packet_buffers(menu_gfx_context_t* buffers, u32* otags, POLY_F3* flat_triangles,
     POLY_FT3* textured_triangles, POLY_F4* flat_quads, POLY_FT4* textured_quads, POLY_G3* gouraud_triangles,
     POLY_GT3* gouraud_textured_triangles, POLY_G4* gouraud_quads, POLY_GT4* gouraud_textured_quads, LINE_F2* flat_lines,
     LINE_F3* flat_lines_3, LINE_F4* flat_lines_4, LINE_G2* gouraud_lines, LINE_G3* gouraud_lines_3,

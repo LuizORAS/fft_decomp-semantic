@@ -8,7 +8,7 @@
  */
 void bunit_gfx_submit_frame_and_swap_buffers(s32 first_otag, s32 draw_otag) {
     u32* previous_otag = g_bunit_gfx_context->otag;
-    bunit_gfx_context_t* context;
+    menu_gfx_context_t* context;
     /*
      * The target reserves 0x60 bytes of frame it never reads or writes
      * (frame 0x80 with the four register saves at 0x70..0x7c and nothing

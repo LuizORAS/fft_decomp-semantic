@@ -27,7 +27,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
     DR_MODE draw_modes[60];
     DR_AREA draw_areas[60];
     u32 otags[128];
-    bunit_gfx_context_t buffers[2];
+    menu_gfx_context_t buffers[2];
     u8 previous_mode;
     u8 running;
     s32 sound_id;

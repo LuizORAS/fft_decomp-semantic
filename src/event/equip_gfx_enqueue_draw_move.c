@@ -6,7 +6,7 @@
 void equip_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index) {
     DR_MOVE* prim;
 
-    prim = &g_equip_gfx_context->moves[g_equip_gfx_draw_move_count++];
+    prim = &g_equip_gfx_context->draw_moves[g_equip_gfx_draw_move_count++];
     SetDrawMove(prim);
     prim->sx = rect->x;
     prim->sy = rect->y;

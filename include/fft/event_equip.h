@@ -413,53 +413,16 @@ s16 equip_menu_update_wrapped_vertical_selection(u16 entry_count, u8 selection_i
 extern u32 g_equip_help_text_table[];
 
 /* graphics */
-/* Per-buffer primitive-pool pointers used by EQUIP.OUT's renderer. The 25
- * stores at 0x801cda80 establish the offsets in this 0x64-byte table. */
-typedef struct equip_gfx_context {
-    u32* otag;                /* 0x00 */
-    POLY_F3* poly_f3;         /* 0x04 */
-    POLY_FT3* poly_ft3;       /* 0x08 */
-    POLY_F4* poly_f4;         /* 0x0c */
-    POLY_FT4* textured_quads; /* 0x10 */
-    POLY_G3* poly_g3;         /* 0x14 */
-    POLY_GT3* poly_gt3;       /* 0x18 */
-    POLY_G4* poly_g4;         /* 0x1c */
-    POLY_GT4* poly_gt4;       /* 0x20 */
-    LINE_F2* lines;           /* 0x24 */
-    LINE_F3* line_f3;         /* 0x28 */
-    LINE_F4* line_f4;         /* 0x2c */
-    LINE_G2* line_g2;         /* 0x30 */
-    LINE_G3* line_g3;         /* 0x34 */
-    LINE_G4* line_g4;         /* 0x38 */
-    TILE* tiles;              /* 0x3c */
-    TILE_1* tiles_1;          /* 0x40 */
-    TILE_8* tiles_8;          /* 0x44 */
-    TILE_16* tiles_16;        /* 0x48 */
-    SPRT* sprites;            /* 0x4c */
-    SPRT_8* sprites_8;        /* 0x50 */
-    SPRT_16* sprites_16;      /* 0x54 */
-    DR_MOVE* moves;           /* 0x58 */
-    DR_AREA* draw_areas;      /* 0x5c */
-    DR_MODE* draw_modes;      /* 0x60 */
-} equip_gfx_context_t;
-typedef char equip_gfx_context_size_must_be_100[(sizeof(equip_gfx_context_t) == 100) ? 1 : -1];
-
-/* One of the two double-buffered graphics contexts: the pool-pointer table
- * followed by per-buffer state. equip_gfx_swap_context_and_clear_otag and
- * equip_gfx_init_contexts step between the two by 0xec. */
-typedef struct equip_gfx_buffer {
-    equip_gfx_context_t context;
-    u8 _unused_64[0x88];
-} equip_gfx_buffer_t;
-typedef char equip_gfx_buffer_size_must_be_236[(sizeof(equip_gfx_buffer_t) == 236) ? 1 : -1];
+/* The active pointer always refers to one of the 236-byte buffers; EQUIP
+ * uses its primitive pools and leaves the environment suffix untouched. */
 
 /* The scratch marker rect this routine drives; uncatalogued, but the same
  * descriptor equip_menu_draw_equipment_slot_marker feeds to the oriented quad
  * enqueue. */
 extern oriented_quad_t g_equip_gfx_blank_cell_rect;
-extern equip_gfx_context_t* g_equip_gfx_context;
-extern equip_gfx_buffer_t* g_equip_gfx_context_base;
-extern equip_gfx_buffer_t g_equip_gfx_contexts[];
+extern menu_gfx_context_t* g_equip_gfx_context;
+extern menu_gfx_context_t* g_equip_gfx_context_base;
+extern menu_gfx_context_t g_equip_gfx_contexts[];
 extern u32* g_equip_gfx_current_ot;
 extern RECT g_equip_gfx_draw_area;
 extern DR_AREA g_equip_gfx_draw_area_buffer[];
@@ -549,12 +512,12 @@ void equip_gfx_enqueue_textured_quad_list(const menu_sprite_cell_t* quads, const
 void equip_gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, u8 semitrans, s32 otag_index);
 rgb24_t* equip_gfx_get_draw_color(void);
 s32 equip_gfx_get_transition_frame(void);
-void equip_gfx_init_contexts(equip_gfx_buffer_t* base, u32* otag, POLY_F3* poly_f3, POLY_FT3* poly_ft3,
+void equip_gfx_init_contexts(menu_gfx_context_t* base, u32* otag, POLY_F3* poly_f3, POLY_FT3* poly_ft3,
     POLY_F4* poly_f4, POLY_FT4* textured_quads, POLY_G3* poly_g3, POLY_GT3* poly_gt3, POLY_G4* poly_g4,
     POLY_GT4* poly_gt4, LINE_F2* line_f2, LINE_F3* line_f3, LINE_F4* line_f4, LINE_G2* line_g2, LINE_G3* line_g3,
     LINE_G4* line_g4, TILE* tiles, TILE_1* tiles_1, TILE_8* tiles_8, TILE_16* tiles_16, SPRT* sprites,
     SPRT_8* sprites_8, SPRT_16* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
-void equip_gfx_init_primitive_buffers(equip_gfx_context_t* context);
+void equip_gfx_init_primitive_buffers(menu_gfx_context_t* context);
 void equip_gfx_set_draw_color(const rgb24_t* color);
 void equip_gfx_set_otag_index(s32 ot_index);
 void equip_gfx_set_transition_frame(s32 value);

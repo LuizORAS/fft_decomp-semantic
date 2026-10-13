@@ -430,37 +430,6 @@ extern point16_t g_bunit_cursor_trail_points[8];
  * bunit_gfx_init_packet_pools initializes them; g_bunit_gfx_context points at the
  * active buffer. Pools whose packet type has no clean-room libgpu declaration
  * are typed by their packet size. */
-typedef struct bunit_gfx_context {
-    u32* otag;                            /* 0x00 */
-    POLY_F3* flat_triangles;              /* 0x04 */
-    POLY_FT3* textured_triangles;         /* 0x08 */
-    POLY_F4* flat_quads;                  /* 0x0c */
-    POLY_FT4* textured_quads;             /* 0x10 */
-    POLY_G3* gouraud_triangles;           /* 0x14 */
-    POLY_GT3* gouraud_textured_triangles; /* 0x18 */
-    POLY_G4* gouraud_quads;               /* 0x1c */
-    POLY_GT4* gouraud_textured_quads;     /* 0x20 */
-    LINE_F2* flat_lines;                  /* 0x24 */
-    LINE_F3* flat_lines_3;                /* 0x28 */
-    LINE_F4* flat_lines_4;                /* 0x2c */
-    LINE_G2* gouraud_lines;               /* 0x30 */
-    LINE_G3* gouraud_lines_3;             /* 0x34 */
-    LINE_G4* gouraud_lines_4;             /* 0x38 */
-    TILE* tiles;                          /* 0x3c */
-    TILE_1* tiles_1;                      /* 0x40 */
-    TILE_8* tiles_8;                      /* 0x44 */
-    TILE_16* tiles_16;                    /* 0x48 */
-    SPRT* sprites;                        /* 0x4c */
-    SPRT_8* sprites_8;                    /* 0x50 */
-    SPRT_16* sprites_16;                  /* 0x54 */
-    DR_MOVE* draw_moves;                  /* 0x58 */
-    DR_AREA* draw_areas;                  /* 0x5c */
-    DR_MODE* draw_modes;                  /* 0x60 */
-    DRAWENV draw_env;                     /* 0x64 */
-    DISPENV disp_env;                     /* 0xc0 */
-    u8 _unused_d4[0x18];                  /* 0xd4 */
-} bunit_gfx_context_t;
-typedef char bunit_gfx_context_size_must_be_236[(sizeof(bunit_gfx_context_t) == 236) ? 1 : -1];
 
 extern textured_quad_source_t g_bunit_bouncing_cursor_quad;
 extern u16 g_bunit_gfx_background_clut;
@@ -470,9 +439,9 @@ extern u16 g_bunit_gfx_background_tile_layout[2][8]; /* per row parity: four (x,
  * comes from its static initializer. */
 extern oriented_quad_t g_bunit_gfx_blank_cell_rect;
 
-extern bunit_gfx_context_t* g_bunit_gfx_context;
+extern menu_gfx_context_t* g_bunit_gfx_context;
 /* Base of the two frame buffers; g_bunit_gfx_context alternates between them. */
-extern bunit_gfx_context_t* g_bunit_gfx_context_base;
+extern menu_gfx_context_t* g_bunit_gfx_context_base;
 extern u8 g_bunit_gfx_decreasing_fade_active;
 extern RECT g_bunit_gfx_draw_area;
 extern u16 g_bunit_gfx_draw_area_capacity;
@@ -557,13 +526,13 @@ void bunit_gfx_enqueue_textured_quad_list(const menu_sprite_cell_t* quads, const
 void bunit_gfx_enqueue_tile(RECT* rect, rgb24_t* color, u8 semi, s32 idx);
 rgb24_t* bunit_gfx_get_draw_color(void);
 s32 bunit_gfx_get_fade_state(void);
-void bunit_gfx_init_double_packet_buffers(bunit_gfx_context_t* buffers, u32* otags, POLY_F3* flat_triangles,
+void bunit_gfx_init_double_packet_buffers(menu_gfx_context_t* buffers, u32* otags, POLY_F3* flat_triangles,
     POLY_FT3* textured_triangles, POLY_F4* flat_quads, POLY_FT4* textured_quads, POLY_G3* gouraud_triangles,
     POLY_GT3* gouraud_textured_triangles, POLY_G4* gouraud_quads, POLY_GT4* gouraud_textured_quads, LINE_F2* flat_lines,
     LINE_F3* flat_lines_3, LINE_F4* flat_lines_4, LINE_G2* gouraud_lines, LINE_G3* gouraud_lines_3,
     LINE_G4* gouraud_lines_4, TILE* tiles, TILE_1* tiles_1, TILE_8* tiles_8, TILE_16* tiles_16, SPRT* sprites,
     SPRT_8* sprites_8, SPRT_16* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
-void bunit_gfx_init_packet_pools(bunit_gfx_context_t* buffer);
+void bunit_gfx_init_packet_pools(menu_gfx_context_t* buffer);
 void bunit_gfx_init_rhombus_cursor_tpages(void);
 void bunit_gfx_init_vram_and_start_fade(void);
 void bunit_gfx_set_draw_color(const rgb24_t* color);

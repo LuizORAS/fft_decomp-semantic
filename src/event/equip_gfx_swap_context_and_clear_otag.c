@@ -4,7 +4,7 @@
 /* Reset primitive counts, swap packet buffers, and clear the active OT tail. */
 void equip_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused) {
     DRAWENV environment;
-    equip_gfx_buffer_t* buffer;
+    menu_gfx_context_t* buffer;
 
     g_equip_gfx_poly_f3_count = 0;
     g_equip_gfx_poly_ft3_count = 0;
@@ -33,9 +33,9 @@ void equip_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused) {
     GetDrawEnv(&environment);
     buffer = g_equip_gfx_context_base;
     g_equip_gfx_drawenv_y = environment.clip.y;
-    if (g_equip_gfx_context == &buffer->context) {
+    if (g_equip_gfx_context == buffer) {
         buffer++;
     }
-    g_equip_gfx_context = &buffer->context;
-    ClearOTag(&buffer->context.otag[first_otag], g_equip_gfx_otag_length - first_otag);
+    g_equip_gfx_context = buffer;
+    ClearOTag(&buffer->otag[first_otag], g_equip_gfx_otag_length - first_otag);
 }
