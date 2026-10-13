@@ -48,7 +48,7 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         count = 0;
         wldcore_sound_wait_for_queue_drain();
         wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_BRAVE_STORY));
-        wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
+        wldcore_menu_suspend_root_level(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
         if (world_script_get_variable(EVENT_SCRIPT_VAR_FACTS_ENABLED) != 0) {
             for (i = 0; i < EVENT_SCRIPT_VAR_FACT_COUNT; i++) {
                 if (world_script_get_variable(i + EVENT_SCRIPT_VAR_FACT_FIRST) != 0) {
@@ -81,7 +81,7 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
     case WLDCORE_MENU_LEVEL_BATTLE_TUTORIALS:
         wldcore_window_set_render_objects_visible(0);
         world_menu_set_slot_4_cursor_index(3);
-        wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
+        wldcore_menu_suspend_root_level(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
         wldcore_list_open_tutorial_categories(1, 0);
         wldcore_window_close_parent_list_frame_windows();
         g_wldcore_tutorial_entries_cursor_state = g_main_saved_list_cursor_state;

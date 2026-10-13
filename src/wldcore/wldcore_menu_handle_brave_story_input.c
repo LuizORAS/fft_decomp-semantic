@@ -57,7 +57,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
         g_wldcore_menu_stack_depth--;
         g_main_system_flags &= ~(MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE
             | MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL);
-        wldcore_menu_dispatch_publish_handler();
+        wldcore_menu_dispatch_suspend_handler();
         if (g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY) {
             g_main_system_flags
                 = (g_main_system_flags ^ (MAIN_SYSTEM_FLAG_RUNNING | MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY))
@@ -104,7 +104,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
 
     if (buttons & PSX_PAD_SELECT) {
         level->mode = WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP;
-        wldcore_window_set_list_window_states(level);
+        wldcore_menu_suspend_brave_story_level(level);
         wldcore_menu_push_message_level(
             g_wldcore_brave_story_help_text_ids[level->entries[level->selected_entry]] | 0x1000, 1);
         return;
@@ -116,35 +116,35 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
         switch (level->entries[level->selected_entry]) {
         case WLDCORE_BRAVE_STORY_ROW_FACTS:
             wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_FACTS);
-            wldcore_window_set_list_window_states(level);
+            wldcore_menu_suspend_brave_story_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_facts();
             return;
         case WLDCORE_BRAVE_STORY_ROW_STORY_EVENTS:
             wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_STORY_EVENTS);
-            wldcore_window_set_list_window_states(level);
+            wldcore_menu_suspend_brave_story_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_story_events();
             return;
         case WLDCORE_BRAVE_STORY_ROW_PERSONS:
-            wldcore_window_set_list_window_states(level);
+            wldcore_menu_suspend_brave_story_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_persons();
             return;
         case WLDCORE_BRAVE_STORY_ROW_PROPOSITIONS:
             wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_PROPOSITION_HISTORY);
-            wldcore_window_set_list_window_states(level);
+            wldcore_menu_suspend_brave_story_level(level);
             wldcore_menu_push_proposition_category_level();
             return;
         case WLDCORE_BRAVE_STORY_ROW_UNEXPLORED_LANDS:
             wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_UNEXPLORED_LANDS);
-            wldcore_window_set_list_window_states(level);
+            wldcore_menu_suspend_brave_story_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_unexplored_lands();
             return;
         case WLDCORE_BRAVE_STORY_ROW_TREASURES:
             wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_TREASURES);
-            wldcore_window_set_list_window_states(level);
+            wldcore_menu_suspend_brave_story_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_treasures();
             return;

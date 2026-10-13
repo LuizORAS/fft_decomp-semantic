@@ -9,7 +9,7 @@
  * Circle or Cross asks the three panel threads to close and blocks input;
  * once the status banner thread has ended the level pops, the saved screen
  * strip is moved back, line 0xB849 is shown with the proposition's name and
- * the participant list level is pushed again. Select opens the layout window.
+ * the participant list level is pushed again. Select opens the status help.
  * R1 and L1 step to the next or previous participant with wrap-around and
  * request a redraw of the panels (banner direction 1 or 2); with a single
  * participant they only play the page sound. The L1/R1 prompts show their
@@ -55,7 +55,7 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
         g_wldcore_window_records[level->left_window].palette = g_wldcore_window_records[level->right_window].palette
             = 0xA;
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
-        wldcore_menu_push_layout_window_level();
+        wldcore_menu_push_status_help_level();
         return;
     }
     if (!(g_wldcore_current_button_input & (PSX_PAD_L1 | PSX_PAD_R1))) {

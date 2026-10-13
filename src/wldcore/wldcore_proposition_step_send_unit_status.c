@@ -4,7 +4,7 @@
 /* The unit status view of the send-unit level (Square on the list): WLDCORE_SEND_UNIT_MODE_STATUS_OPEN
  * waits for the list and message threads, then opens the status panels
  * (wldcore_start_core_background_threads) of the highlighted unit; in WLDCORE_SEND_UNIT_MODE_STATUS
- * L1 and R1 step through the listed units, Select opens the layout window, and Circle or Cross
+ * L1 and R1 step through the listed units, Select opens the status help, and Circle or Cross
  * closes the panels; WLDCORE_SEND_UNIT_MODE_STATUS_CLOSE waits for them and shows the list again.
  *
  * Twin of the participant browser wldcore_menu_handle_participant_detail_input; the chained stores and the
@@ -43,7 +43,7 @@ void wldcore_proposition_step_send_unit_status(wldcore_menu_send_unit_level_t* l
             g_wldcore_window_records[level->left_arrow].palette = g_wldcore_window_records[level->right_arrow].palette
                 = 0xA;
             wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
-            wldcore_menu_push_layout_window_level();
+            wldcore_menu_push_status_help_level();
             return;
         }
         if (!(g_wldcore_current_button_input & (PSX_PAD_L1 | PSX_PAD_R1))) {

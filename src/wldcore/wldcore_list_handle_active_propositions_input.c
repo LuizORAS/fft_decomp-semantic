@@ -4,7 +4,7 @@
 /* Input handler for the proposition list level (type 0x26).
  *
  * The level's first five words are the window/render indices that
- * wldcore_window_set_layout_states consumes. The wrap-around move is spelled as
+ * wldcore_menu_suspend_active_propositions_level consumes. The wrap-around move is spelled as
  * a subtraction of a negative step: that keeps the window's y operand first
  * in the addition, as the target's register assignment requires. */
 void wldcore_list_handle_active_propositions_input(wldcore_menu_proposition_list_level_t* level) {
@@ -21,7 +21,7 @@ void wldcore_list_handle_active_propositions_input(wldcore_menu_proposition_list
         window = level->cursor_window;
         g_wldcore_window_records[window].anim_counter = 0;
         g_wldcore_window_records[window].frame_index = 0;
-        wldcore_window_set_layout_states(&level->cursor_window);
+        wldcore_menu_suspend_active_propositions_level(&level->cursor_window);
         wldcore_menu_push_message_level(0x105A, 1);
         return;
     }

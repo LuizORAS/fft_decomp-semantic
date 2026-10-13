@@ -55,12 +55,12 @@ void wldcore_menu_handle_proposition_category_input(wldcore_menu_list_window_lev
         entry = level->entries[level->selected_entry];
         switch (entry) {
         case WLDCORE_PROPOSITION_CATEGORY_ROW_ACTIVE:
-            wldcore_window_begin_tint_transition((wldcore_window_tint_request_t*)level);
+            wldcore_menu_suspend_proposition_category_level((wldcore_window_tint_request_t*)level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_active_propositions();
             break;
         case WLDCORE_PROPOSITION_CATEGORY_ROW_BRAVE_STORY:
-            wldcore_window_begin_tint_transition((wldcore_window_tint_request_t*)level);
+            wldcore_menu_suspend_proposition_category_level((wldcore_window_tint_request_t*)level);
             g_wldcore_window_records[level->main_window].sequence = entry;
             wldcore_list_open_proposition_history();
             break;

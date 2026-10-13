@@ -28,6 +28,7 @@ scope:
   - wldcore_gfx_draw_transition_screen()
   - wldcore_menu_push_root_level()
   - wldcore_menu_resume_root_level()
+  - wldcore_menu_suspend_root_level()
   - wldcore_menu_reset_to_root_level()
   - wldcore_menu_step_map_cursor_level()
   - wldcore_menu_push_focus_location_level()

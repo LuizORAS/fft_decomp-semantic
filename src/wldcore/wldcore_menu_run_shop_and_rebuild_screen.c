@@ -17,7 +17,7 @@ void wldcore_menu_run_shop_and_rebuild_screen(s32 shop_id) {
     wldcore_sound_wait_for_queue_drain();
     world_shop_run_screen(shop_id);
     g_wldcore_displayed_numeric_value = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
-    wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]);
+    wldcore_menu_suspend_root_level(&g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]);
     selected = &g_wldcore_map_projection_state.marker.kind;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count
         = wldcore_map_build_location_menu_entries(

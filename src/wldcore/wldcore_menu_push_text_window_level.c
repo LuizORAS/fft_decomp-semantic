@@ -2,7 +2,7 @@
 #include "fft/wldcore.h"
 
 /* Pushes the self-sizing message window as menu level type 2, the windowed
- * sibling of wldcore_menu_push_message_level (0x8006e860, type 3). It stores
+ * sibling of wldcore_menu_push_message_level (level MESSAGE). It stores
  * the reload flag and, when set, re-points the text formatter at
  * g_open_text_section_offsets; appends a window record (sequence 0xe,
  * priority 1); measures the entry, clamped to three rows; fills the shared

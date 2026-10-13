@@ -1,8 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Reset the palette of a level's two window records. */
-void wldcore_window_clear_pair_state(s32* param) {
+/* Resume handler of a participant's status panels, once the status help closes: the L1 and R1 prompt
+ * windows go back to CLUT 0. */
+void wldcore_menu_resume_participant_detail_level(s32* param) {
     s32 first = param[1];
     s32 second = param[0];
 

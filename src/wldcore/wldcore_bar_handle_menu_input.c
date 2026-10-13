@@ -62,7 +62,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
         return;
     }
     if (buttons & PSX_PAD_SELECT) {
-        wldcore_window_publish_slot_b806(level);
+        wldcore_menu_suspend_bar_menu_level(level);
         wldcore_menu_push_message_level(
             g_wldcore_bar_row_help_text_ids[level->entries[level->selected_entry]] | 0x1000, 1);
         return;
@@ -77,20 +77,20 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
         switch (level->entries[level->selected_entry]) {
         case WLDCORE_BAR_MENU_ROW_RUMORS:
             wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_RUMORS);
-            wldcore_window_publish_slot_b806(level);
+            wldcore_menu_suspend_bar_menu_level(level);
             wldcore_bar_open_rumors();
             return;
         case WLDCORE_BAR_MENU_ROW_AVAILABLE_PROPOSITIONS:
             wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_PROPOSITIONS);
-            wldcore_window_publish_slot_b806(level);
+            wldcore_menu_suspend_bar_menu_level(level);
             wldcore_proposition_open_available_list();
             return;
         case WLDCORE_BAR_MENU_ROW_COMPLETED_PROPOSITIONS:
-            wldcore_window_publish_slot_b806(level);
+            wldcore_menu_suspend_bar_menu_level(level);
             wldcore_proposition_open_report_list();
             return;
         case WLDCORE_BAR_MENU_ROW_PROPOSITIONS:
-            wldcore_window_publish_slot_b806(level);
+            wldcore_menu_suspend_bar_menu_level(level);
             wldcore_proposition_open_active_list();
             return;
         case WLDCORE_BAR_MENU_ROW_LEAVE:

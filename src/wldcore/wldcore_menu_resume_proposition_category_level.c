@@ -1,7 +1,9 @@
 #include "fft/wldcore.h"
 
-/* Ends the window tint transition and restores the parent content record. */
-void wldcore_window_end_tint_transition(wldcore_window_tint_request_t* request) {
+/* Resume handler of the Job section: its cursor window and text and the Brave Story menu's content go
+ * back to CLUT 0, the cursor to its idle sequence, and the Brave Story's content and the value display
+ * come back (popping in) if hidden. */
+void wldcore_menu_resume_proposition_category_level(wldcore_window_tint_request_t* request) {
     g_wldcore_window_records[request->window_a].palette = g_wldcore_window_render_records[request->render_a].palette
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 2]
                                               .list_window.content_render]

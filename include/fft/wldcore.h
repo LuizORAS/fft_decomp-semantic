@@ -253,7 +253,7 @@ typedef struct wldcore_window_record {
     s32 frame_index;  /* 0x0c; frame within the sequence, cleared with anim_counter on every sequence change */
     s32 anim_counter; /* 0x10; frames spent on the current frame */
     /* 0x14; CLUT selector: 0 keeps the part's CLUT, otherwise cx = cx_base + (palette - 1) << 4. The
-     * window-state routines at 0x80076744/0x8007688c store 0, 6 or 10. */
+     * menu levels' suspend and resume handlers store 0, 5, 6 or 10. */
     s32 palette;
     wldcore_point32_t position; /* 0x18 */
     CVECTOR color;              /* 0x20; rgb tint, 0x80 grey from the pool init and the append routines */
@@ -1513,39 +1513,36 @@ typedef enum wldcore_anim_sequence_id {
     WLDCORE_ANIM_SEQUENCE_SEND_UNIT_FRAME_A = 0x73,
     WLDCORE_ANIM_SEQUENCE_SEND_UNIT_FRAME_B = 0x74,
     WLDCORE_ANIM_SEQUENCE_SEND_UNIT_PORTRAIT = 0x75,
-    WLDCORE_ANIM_SEQUENCE_LAYOUT_CURSOR_IDLE = 0x78, /* the layout windows' cursor, looping */
+    WLDCORE_ANIM_SEQUENCE_STATUS_HELP_CURSOR = 0x78, /* the status help's cursor on a field of kind 1 */
     WLDCORE_ANIM_SEQUENCE_BRAVE_STORY_MARKER = 0x79, /* the brave-story list's two completion markers */
 } wldcore_anim_sequence_id_e;
 
 typedef char wldcore_window_record_size_must_be_0x24[sizeof(wldcore_window_record_t) == 0x24 ? 1 : -1];
 
-/* Window-layout request at the start of a layout-window menu level. The
- * first three words are what wldcore_window_apply_layout (0x8006f67c) reads. */
-typedef struct wldcore_window_layout_request {
+/* The status help level (WLDCORE_MENU_LEVEL_STATUS_HELP): its cursor window, the field it is on, the
+ * kind of that field's cursor, and the OT offset to restore. */
+typedef struct wldcore_menu_status_help_level {
     s32 window_index;
-    s32 layout; /* 0x04; row of g_wldcore_window_layout_rows */
-    s32 cached_layout_kind;
-    s32 saved_state; /* 0x0c; previous g_wldcore_menu_ordering_table_offset, saved by 0x8006f528 */
-} wldcore_window_layout_request_t;
+    s32 field; /* 0x04; row of g_wldcore_status_help_fields */
+    s32 cached_field_kind;
+    s32 saved_state; /* 0x0c; previous g_wldcore_menu_ordering_table_offset */
+} wldcore_menu_status_help_level_t;
 
-/* Provisional: 16-byte rows of the window-layout table at 0x8009e93c.
- * wldcore_menu_handle_layout_window_input reads the first ten bytes: a pointer
- * to the level's live counter, the base message id, and the four neighbouring
- * layout ids reached by the directional pad. wldcore_window_apply_layout reads
- * the trailing halfwords: the record's x and y extents (plus 14 and 12) and the
- * kind that selects the redraw delay. */
-typedef struct wldcore_window_layout_row {
-    s16* counter;     /* 0x00 */
+/* One field of the status help (g_wldcore_status_help_fields): the value its help text adds to the
+ * base text id (none when 0), the fields that up, down, right and left reach, and the cursor's
+ * position and kind (wldcore_window_move_status_help_cursor). */
+typedef struct wldcore_status_help_field {
+    s16* value;       /* 0x00 */
     u16 message_base; /* 0x04 */
     u8 up;            /* 0x06 */
     u8 down;          /* 0x07 */
-    u8 left;          /* 0x08 */
-    u8 right;         /* 0x09 */
+    u8 right;         /* 0x08 */
+    u8 left;          /* 0x09 */
     s16 x;            /* 0x0a */
     s16 y;            /* 0x0c */
     s16 kind;         /* 0x0e */
-} wldcore_window_layout_row_t;
-typedef char wldcore_window_layout_row_size_must_be_0x10[sizeof(wldcore_window_layout_row_t) == 0x10 ? 1 : -1];
+} wldcore_status_help_field_t;
+typedef char wldcore_status_help_field_size_must_be_0x10[sizeof(wldcore_status_help_field_t) == 0x10 ? 1 : -1];
 
 /* Message menu level pushed by 0x8006e860. */
 typedef struct wldcore_menu_message_level {
@@ -1881,7 +1878,9 @@ typedef struct wldcore_menu_sound_novel_level {
 } wldcore_menu_sound_novel_level_t;
 
 /* Menu-stack level types: the g_wldcore_menu_stack_types value that selects a
- * level's idle, publish and resume handlers. Each value is stored by exactly
+ * level's handlers in g_wldcore_menu_idle_handlers (its per-frame step),
+ * g_wldcore_menu_suspend_handlers (run before a level opens over it) and
+ * g_wldcore_menu_resume_handlers (run once that level has closed). Each value is stored by exactly
  * one push routine, which supplies its name. WLDCORE_MENU_LEVEL_WORLD_MENU is
  * stored by wldcore_menu_push_world_menu_level through a local it shares with
  * the value display mode. */
@@ -1942,7 +1941,7 @@ typedef enum wldcore_menu_level_type {
     WLDCORE_MENU_LEVEL_MAP_PATH = 0x35,
     WLDCORE_MENU_LEVEL_MAP_LOCATION_VISIBILITY = 0x36,
     WLDCORE_MENU_LEVEL_DISCOVERY_MILESTONE = 0x37,
-    WLDCORE_MENU_LEVEL_LAYOUT_WINDOW = 0x38,
+    WLDCORE_MENU_LEVEL_STATUS_HELP = 0x38,
 } wldcore_menu_level_type_e;
 
 /* Provisional: 0x5c-byte menu-stack records at 0x800bb930, one per menu
@@ -1957,7 +1956,7 @@ typedef enum wldcore_menu_level_type {
  * and Persons lists). */
 typedef union wldcore_menu_stack_record {
     s32 window_index;
-    wldcore_window_layout_request_t layout_window;
+    wldcore_menu_status_help_level_t status_help;
     wldcore_menu_message_level_t message;
     wldcore_menu_world_menu_level_t world_menu;
     wldcore_menu_panel_level_t panel;
@@ -2017,7 +2016,7 @@ typedef struct wldcore_window_render_record {
     s32 coordinate_mode;
     s32 anim_counter; /* 0x10; flag-0x100 open-animation counter, cleared on every rebind */
     /* 0x14; CLUT selector: nonzero gives cx = clut_x + (palette - 1) << 4. The window-state
-     * routines at 0x80076744/0x8007688c clear it or set it to 2. */
+     * menu levels' suspend and resume handlers clear it or set it to 2. */
     s32 palette;
     wldcore_point32_t base; /* 0x18 */
     wldcore_point32_t clut; /* 0x20; (0x3c0, 0x1f0) from the pool init */
@@ -2086,7 +2085,7 @@ extern world_menu_text_layout_t g_wldcore_window_panel_label_state;
 extern world_menu_entry_t g_wldcore_window_panel_render_state;
 extern s32 g_wldcore_window_record_count;
 extern wldcore_window_record_t g_wldcore_window_records[];
-extern wldcore_window_layout_row_t g_wldcore_window_layout_rows[];
+extern wldcore_status_help_field_t g_wldcore_status_help_fields[];
 extern s32 g_wldcore_window_render_object_count;
 
 /* Display-object queues drawn by 0x8006ae20 each frame: every entry points at
@@ -2101,7 +2100,7 @@ extern u32 g_wldcore_window_image_buffer[];
 extern s16 g_wldcore_active_menu_value;
 extern void (*g_wldcore_menu_idle_handlers[])(wldcore_menu_stack_record_t*);
 extern s32 g_wldcore_menu_ordering_table_offset;
-extern void (*g_wldcore_menu_publish_handlers[])(wldcore_menu_stack_record_t*);
+extern void (*g_wldcore_menu_suspend_handlers[])(wldcore_menu_stack_record_t*);
 extern void (*g_wldcore_menu_resume_handlers[])(wldcore_menu_stack_record_t*);
 extern struct world_menu_number_range g_wldcore_window_panel_number_state;
 extern wldcore_window_entry_36_rgb_t g_wldcore_window_record_colors[];
@@ -2114,7 +2113,7 @@ void wldcore_gfx_draw_transition_screen(GsOT* ot);
 void wldcore_menu_close_level_and_release_records(wldcore_menu_slot_set_t* slots, s32 restore);
 void wldcore_menu_dispatch_idle_handler(void);
 void wldcore_menu_dispatch_pending_script_requests(void);
-void wldcore_menu_dispatch_publish_handler(void);
+void wldcore_menu_dispatch_suspend_handler(void);
 void wldcore_menu_dispatch_resume_handler(void);
 void wldcore_menu_display_text_entry(s32 index, s32 text_id, wldcore_point32_t point, void* buffer);
 void wldcore_menu_push_message_level(s32 text, s32 reload_text);
@@ -2129,7 +2128,7 @@ void wldcore_proposition_show_next_milestone_message(wldcore_menu_milestone_leve
 /* Both return the appended record's index. */
 s32 wldcore_window_append_record_and_reset_color(s32** queue, s32* count);
 s32 wldcore_window_append_render_record_and_reset_color(s32** queue, s32* count);
-void wldcore_window_apply_layout(wldcore_window_layout_request_t* request);
+void wldcore_window_move_status_help_cursor(wldcore_menu_status_help_level_t* request);
 
 void wldcore_window_build_render_record_image(
     s32 index, wldcore_window_render_bounds16_t bounds, s32 coordinate_mode, u32* image);
@@ -2153,17 +2152,17 @@ void wldcore_window_init_vram_render_record(
     s32 index, wldcore_window_render_bounds16_t bounds, wldcore_point32_t clut, s32 flags);
 
 void wldcore_window_load_image_record_to_vram(s32 index, u32* image);
-void wldcore_window_publish_slot_b806(wldcore_menu_list_window_level_t* level);
-void wldcore_window_publish_slot_b8dd(wldcore_menu_list_window_level_t* level);
-void wldcore_window_reset_state_and_scroll(wldcore_menu_stack_record_t* level);
+void wldcore_menu_suspend_bar_menu_level(wldcore_menu_list_window_level_t* level);
+void wldcore_menu_suspend_tutorial_categories_level(wldcore_menu_list_window_level_t* level);
+void wldcore_menu_suspend_root_level(wldcore_menu_stack_record_t* level);
 void wldcore_window_set_render_objects_visible(s32 clear);
-void wldcore_window_set_render_state_2_from_arg_0x04(s32* param);
+void wldcore_menu_suspend_proposition_detail_level(s32* param);
 
 void wldcore_window_start_panel_render_thread(
     s32 thread_id, s32 extent, wldcore_point32_t* dimensions, wldcore_point32_t* origin);
 
 void wldcore_window_transform_point_for_mode(s32 mode, wldcore_window_render_bounds16_t bounds, s32* output);
-void wldcore_window_set_layout_states(s32* param);
+void wldcore_menu_suspend_active_propositions_level(s32* param);
 void wldcore_menu_push_participant_list_level(s32 proposition);
 void wldcore_menu_push_proposition_attempt_detail_level(s32 value);
 void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 param_b);
@@ -2176,12 +2175,12 @@ void wldcore_menu_push_tutorial_topic_text_level(s32 value);
 void wldcore_menu_push_unexplored_land_detail_level(s32 value);
 void wldcore_menu_push_focus_location_level(s32 id);
 void wldcore_menu_push_map_path_level(s32 value, s32 value_hi, s32 flag);
-void wldcore_window_set_list_window_states(wldcore_menu_list_window_level_t* state);
+void wldcore_menu_suspend_brave_story_level(wldcore_menu_list_window_level_t* state);
 void wldcore_menu_push_proposition_category_level(void);
 void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t* level);
-void wldcore_menu_push_layout_window_level(void);
+void wldcore_menu_push_status_help_level(void);
 void wldcore_menu_push_participant_detail_level(s32 proposition, s32 participant);
-void wldcore_window_begin_tint_transition(wldcore_window_tint_request_t* request);
+void wldcore_menu_suspend_proposition_category_level(wldcore_window_tint_request_t* request);
 void wldcore_proposition_push_report_level(s32 argument);
 void wldcore_menu_build_brave_story_entries(void);
 void wldcore_menu_push_brave_story_level(void);
@@ -2189,13 +2188,13 @@ void wldcore_window_close_parent_list_all_windows(void);
 void wldcore_window_close_parent_list_frame_windows(void);
 void wldcore_menu_push_scrollable_text_window_level(s32 text_id);
 void wldcore_menu_run_shop_and_rebuild_screen(s32 shop_id);
-void wldcore_window_set_render_state_2_from_arg_0x10(s32* level);
+void wldcore_menu_suspend_location_menu_level(s32* level);
 void wldcore_menu_push_variable_list_level(void);
 void wldcore_window_load_party_unit_sprite_record(wldcore_menu_send_unit_level_t* level, s32 unit, s32 render_index);
-void wldcore_window_set_states_and_blue_tint(wldcore_window_tint_request_t* param);
+void wldcore_menu_suspend_proposition_send_unit_level(wldcore_window_tint_request_t* param);
 void wldcore_menu_push_sound_novel_quit_level(void);
 void wldcore_menu_push_sound_novel_history_level(void);
-void wldcore_window_reset_slot_state(s32* param);
+void wldcore_menu_suspend_sound_novel_quit_level(s32* param);
 void wldcore_menu_push_text_window_level(s32 text, s32 reload_text);
 void wldcore_menu_push_sound_novel_level(s32 mode);
 void wldcore_menu_push_sound_novel_resume_level(s32 mode);

@@ -17,15 +17,15 @@ void wldcore_menu_dispatch_pending_script_requests(void) {
     }
     flags = &g_wldcore_script_state.flags;
     if (*flags & WLDCORE_SCRIPT_ACTION_PATH_MASK) {
-        wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
+        wldcore_menu_suspend_root_level(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
         wldcore_menu_push_map_path_level(g_wldcore_script_state.args[0], g_wldcore_script_state.args[1],
             (*flags & WLDCORE_SCRIPT_ACTION_ERASE_PATH) > 0);
     } else if (*flags & WLDCORE_SCRIPT_ACTION_LOCATION_VISIBILITY_MASK) {
-        wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
+        wldcore_menu_suspend_root_level(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
         wldcore_menu_push_map_location_visibility_level(
             g_wldcore_script_state.args[0], (*flags & WLDCORE_SCRIPT_ACTION_ERASE_LOCATION) > 0);
     } else if (*flags & WLDCORE_SCRIPT_ACTION_FOCUS_LOCATION) {
-        wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
+        wldcore_menu_suspend_root_level(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
         id = g_wldcore_script_state.args[0];
         if (id == 0xFF) {
             id = *location;

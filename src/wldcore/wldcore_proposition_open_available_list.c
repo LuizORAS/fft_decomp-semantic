@@ -30,7 +30,7 @@ void wldcore_proposition_open_available_list(void) {
                                             .list_window.frame_render]
             .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         wldcore_bar_build_menu_rows(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth].list_window);
-        wldcore_window_publish_slot_b806(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth].list_window);
+        wldcore_menu_suspend_bar_menu_level(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth].list_window);
         index = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.main_window;
         record = &g_wldcore_window_records[index];
         record->anim_counter = 0;

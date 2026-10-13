@@ -1,8 +1,8 @@
 #include "fft/wldcore.h"
 
-/* Clear the text-task flag and move a window record to the sequence after
- * its current one, restarting the animation with the default palette. */
-void wldcore_window_finalize_record_and_stop_task(s32* param) {
+/* Resume handler of the status help, once a field's help text closes: clear the input lock and undo
+ * the pressed cursor (the sequence after it, CLUT 0, animation restarted). */
+void wldcore_menu_resume_status_help_level(s32* param) {
     s32 index = *param;
     wldcore_window_record_t* entry = &g_wldcore_window_records[index];
 

@@ -101,7 +101,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
                         = wldcore_map_build_location_menu_entries(
                             hit, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entries);
                     if (g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count != 0) {
-                        wldcore_window_reset_state_and_scroll((wldcore_menu_stack_record_t*)level);
+                        wldcore_menu_suspend_root_level((wldcore_menu_stack_record_t*)level);
                         wldcore_menu_push_location_menu_level(hit);
                         return;
                     }
@@ -114,7 +114,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
             buttons = g_wldcore_new_button_presses;
             if (buttons & (PSX_PAD_TRIANGLE | PSX_PAD_START)) {
                 wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
-                wldcore_window_reset_state_and_scroll((wldcore_menu_stack_record_t*)level);
+                wldcore_menu_suspend_root_level((wldcore_menu_stack_record_t*)level);
                 wldcore_menu_push_world_menu_level();
                 return;
             }
@@ -122,7 +122,7 @@ void wldcore_menu_step_map_cursor_level(wldcore_menu_map_cursor_level_t* level) 
                 hit = wldcore_map_find_dot_at_point(g_wldcore_window_position_records[level->window_index].position);
                 if (hit != 0) {
                     hit--;
-                    wldcore_window_reset_state_and_scroll((wldcore_menu_stack_record_t*)level);
+                    wldcore_menu_suspend_root_level((wldcore_menu_stack_record_t*)level);
                     wldcore_gfx_toggle_captured_world_frame(1);
                     wldcore_menu_push_message_level(hit + 0x8000, 1);
                     return;

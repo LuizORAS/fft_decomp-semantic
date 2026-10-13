@@ -114,7 +114,7 @@ void wldcore_map_step_route_travel(void) {
             if (result != -1 && result > 0) {
                 g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_transition.pending_result
                     = result;
-                wldcore_menu_dispatch_publish_handler();
+                wldcore_menu_dispatch_suspend_handler();
                 wldcore_menu_push_location_menu_level(g_wldcore_location_view.location_id);
             }
             return;

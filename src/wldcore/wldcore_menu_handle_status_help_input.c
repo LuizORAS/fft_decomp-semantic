@@ -1,15 +1,13 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Input handler for a layout-window menu level.
- *
- * Circle pops the level, X opens the row's help message, and a direction moves
- * to the neighbouring layout named by the row. A row with a counter pointer
- * adds the counter to the base message id, and suppresses the message entirely
- * when the counter reads 0 or -1 (except for layout 0x0b). */
-void wldcore_menu_handle_layout_window_input(wldcore_window_layout_request_t* request) {
-    s32 layout;
-    s16* counter;
+/* Input step of the status help: the d-pad moves the cursor to the neighbouring field
+ * (g_wldcore_status_help_fields), Circle shows the field's help text (its base text id, plus the
+ * field's current value when it has one; a value of -1 or 0 shows nothing, except on field 0x0b) and
+ * Cross closes the level. */
+void wldcore_menu_handle_status_help_input(wldcore_menu_status_help_level_t* request) {
+    s32 field;
+    s16* value;
     s16 message;
     wldcore_window_record_t* record;
     s32 window;
@@ -25,15 +23,15 @@ void wldcore_menu_handle_layout_window_input(wldcore_window_layout_request_t* re
     }
 
     if ((g_wldcore_new_button_presses & PSX_PAD_CIRCLE) != 0) {
-        layout = request->layout;
-        counter = g_wldcore_window_layout_rows[layout].counter;
-        if (counter != 0) {
-            if (layout != 0xB && *counter >= -1 && *counter < 1) {
+        field = request->field;
+        value = g_wldcore_status_help_fields[field].value;
+        if (value != 0) {
+            if (field != 0xB && *value >= -1 && *value < 1) {
                 return;
             }
-            message = g_wldcore_window_layout_rows[layout].message_base + *counter;
+            message = g_wldcore_status_help_fields[field].message_base + *value;
         } else {
-            message = g_wldcore_window_layout_rows[layout].message_base;
+            message = g_wldcore_status_help_fields[field].message_base;
         }
         wldcore_menu_push_message_level(message, 1);
         g_world_menu_input_lock_mode = 1;
@@ -47,34 +45,34 @@ void wldcore_menu_handle_layout_window_input(wldcore_window_layout_request_t* re
     }
 
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
-        if (g_wldcore_window_layout_rows[request->layout].up != request->layout) {
+        if (g_wldcore_status_help_fields[request->field].up != request->field) {
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
-            request->layout = g_wldcore_window_layout_rows[request->layout].up;
-            wldcore_window_apply_layout(request);
+            request->field = g_wldcore_status_help_fields[request->field].up;
+            wldcore_window_move_status_help_cursor(request);
             return;
         }
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
-        if (g_wldcore_window_layout_rows[request->layout].down != request->layout) {
+        if (g_wldcore_status_help_fields[request->field].down != request->field) {
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
-            request->layout = g_wldcore_window_layout_rows[request->layout].down;
-            wldcore_window_apply_layout(request);
+            request->field = g_wldcore_status_help_fields[request->field].down;
+            wldcore_window_move_status_help_cursor(request);
             return;
         }
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_RIGHT) != 0) {
-        if (g_wldcore_window_layout_rows[request->layout].left != request->layout) {
+        if (g_wldcore_status_help_fields[request->field].right != request->field) {
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
-            request->layout = g_wldcore_window_layout_rows[request->layout].left;
-            wldcore_window_apply_layout(request);
+            request->field = g_wldcore_status_help_fields[request->field].right;
+            wldcore_window_move_status_help_cursor(request);
             return;
         }
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_LEFT) != 0) {
-        if (g_wldcore_window_layout_rows[request->layout].right != request->layout) {
+        if (g_wldcore_status_help_fields[request->field].left != request->field) {
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
-            request->layout = g_wldcore_window_layout_rows[request->layout].right;
-            wldcore_window_apply_layout(request);
+            request->field = g_wldcore_status_help_fields[request->field].left;
+            wldcore_window_move_status_help_cursor(request);
         }
     }
 }

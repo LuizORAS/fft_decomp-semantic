@@ -114,7 +114,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_sound_novel_quit_leve
         return;
     }
     if (buttons & PSX_PAD_SELECT) {
-        wldcore_window_reset_slot_state(&level->cursor_window);
+        wldcore_menu_suspend_sound_novel_quit_level(&level->cursor_window);
         wldcore_menu_push_text_window_level(g_wldcore_sound_novel_quit_help_text_ids[level->choice] | 0x1000, 1);
         return;
     }

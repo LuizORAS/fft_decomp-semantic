@@ -1,10 +1,10 @@
 #include "fft/wldcore.h"
 
-/* Activates the window pair named by a tint request: the window record takes
- * palette 10 and its render record palette 2, the window's three scratch words are
- * cleared, and the current menu level's list content render record is hidden
- * while the transition runs. */
-void wldcore_window_begin_tint_transition(wldcore_window_tint_request_t* request) {
+/* Suspend handler of the Brave Story's Job section (level PROPOSITION_CATEGORY): the cursor window
+ * takes CLUT 10 and the still cursor, the text CLUT 2, and the Brave Story menu's content (the level
+ * underneath) and the value display hide. wldcore_menu_handle_proposition_category_input calls it
+ * before a list opens. */
+void wldcore_menu_suspend_proposition_category_level(wldcore_window_tint_request_t* request) {
     g_wldcore_window_records[request->window_a].palette = 10;
     g_wldcore_window_render_records[request->render_a].palette = 2;
     g_wldcore_window_records[request->window_a].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_STILL;

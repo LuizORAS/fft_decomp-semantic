@@ -1,8 +1,10 @@
 #include "fft/wldcore.h"
 
-/* Clears a list level's window states, restores its hidden records, and
- * queues WORLD thread 14 with message 0xb848. */
-void wldcore_menu_close_list_window_level(wldcore_menu_stack_record_t* level) {
+/* Resume handler of the Brave Story menu: its windows and texts go back to CLUT 0, the cursor to its
+ * idle sequence, WORLD thread 14 shows the Brave Story's prompt (WLDCORE_TEXT_ID_BRAVE_STORY_INTRO)
+ * again, the frame and the content come back (popping in) if a section hid them, and the menu returns
+ * to browsing. */
+void wldcore_menu_resume_brave_story_level(wldcore_menu_stack_record_t* level) {
     g_wldcore_window_records[level->list_window.main_window].palette
         = g_wldcore_window_records[level->list_window.side_window].palette
         = g_wldcore_window_render_records[level->list_window.frame_render].palette

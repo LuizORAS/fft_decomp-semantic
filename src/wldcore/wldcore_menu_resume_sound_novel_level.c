@@ -1,10 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Clears the pending flags for the record selected by g_wldcore_sound_novel_record.picture_render_index and, when
- * g_wldcore_sound_novel_record.state_flags reports flag 0x40, for the two window records named by the
- * parameter, then resumes thread 0xe. */
-void wldcore_window_reload_data_set_and_resume_thread14(s32* param) {
+/* Resume handler of the sound novel reader, once its Quit prompt or history closes: reload the
+ * novel's background set (when it has one) and wait for it, show the picture again, show the two
+ * windows named by the level when the novel keeps them shown
+ * (WLDCORE_SOUND_NOVEL_STATE_PARENT_WINDOWS_VISIBLE), and resume WORLD thread 14, the novel's text. */
+void wldcore_menu_resume_sound_novel_level(s32* param) {
     s16 set = g_wldcore_sound_novel_record.background_set;
 
     if (set != -1) {

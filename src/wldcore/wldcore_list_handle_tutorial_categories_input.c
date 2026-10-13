@@ -31,7 +31,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
                 g_main_system_flags = g_main_system_flags
                     & ~(MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE
                         | MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL);
-                wldcore_menu_dispatch_publish_handler();
+                wldcore_menu_dispatch_suspend_handler();
                 if (g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_TUTORIAL) {
                     g_main_system_flags
                         = (g_main_system_flags ^ (MAIN_SYSTEM_FLAG_RUNNING | MAIN_SYSTEM_FLAG_TITLE_TUTORIAL))
@@ -74,7 +74,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
         return;
     }
     if (buttons & PSX_PAD_SELECT) {
-        wldcore_window_publish_slot_b8dd(level);
+        wldcore_menu_suspend_tutorial_categories_level(level);
         wldcore_menu_push_message_level(level->entries[level->selected_entry] + 0x108B, 1);
         return;
     }
@@ -84,18 +84,18 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
         g_wldcore_tutorial_category_saved_cursor = *selected_entry;
         switch (level->entries[*selected_entry]) {
         case WLDCORE_TUTORIAL_CATEGORY_ROW_FORMATION:
-            wldcore_window_publish_slot_b8dd(level);
+            wldcore_menu_suspend_tutorial_categories_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_formation_tutorials();
             return;
         case WLDCORE_TUTORIAL_CATEGORY_ROW_BATTLE_TUTORIALS:
-            wldcore_window_publish_slot_b8dd(level);
+            wldcore_menu_suspend_tutorial_categories_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_battle_tutorials();
             return;
         case WLDCORE_TUTORIAL_CATEGORY_ROW_TOPICS:
             wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_TUTORIAL_TOPICS);
-            wldcore_window_publish_slot_b8dd(level);
+            wldcore_menu_suspend_tutorial_categories_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_tutorial_topics();
             return;

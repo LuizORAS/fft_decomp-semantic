@@ -27,7 +27,7 @@ void wldcore_proposition_handle_accept_input(wldcore_menu_window_render_level_t*
         } else {
             world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_ACCEPT_JOB_PROMPT, 0);
         }
-        wldcore_window_set_render_state_2_from_arg_0x04((s32*)owner);
+        wldcore_menu_suspend_proposition_detail_level((s32*)owner);
         origin.x = 0x48;
         origin.y = 0x20;
         wldcore_window_build_yes_no_panel(origin);

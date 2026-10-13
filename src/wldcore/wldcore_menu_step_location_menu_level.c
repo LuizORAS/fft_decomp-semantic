@@ -140,7 +140,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
             g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         }
     } else if (g_wldcore_new_button_presses & PSX_PAD_SELECT) {
-        wldcore_window_set_render_state_2_from_arg_0x10((s32*)level);
+        wldcore_menu_suspend_location_menu_level((s32*)level);
         value = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index];
         if ((value & TEXT_ID_SECTION_MASK) == TEXT_ID_MAP_NAME_BASE) {
             /* Map name n: WLDHELP.LZW 0x8801 + n describes the map. */

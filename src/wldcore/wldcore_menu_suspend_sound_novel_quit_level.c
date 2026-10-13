@@ -1,0 +1,20 @@
+#include "fft/wldcore.h"
+#include "psx/types.h"
+
+/* Suspend handler of the sound novel's Quit / Continue prompt (level SOUND_NOVEL_QUIT): the cursor
+ * window takes CLUT 10 and the still cursor, the side window CLUT 6 and the text CLUT 2.
+ * wldcore_menu_step_sound_novel_quit_level calls it before Select opens a row's help.
+ *
+ * The record stores may alias `param`, so they invalidate the cached param loads, which reproduces the
+ * target's reloads between stores. */
+void wldcore_menu_suspend_sound_novel_quit_level(s32* param) {
+    s32 index;
+
+    g_wldcore_window_records[param[0]].palette = 10;
+    g_wldcore_window_records[param[1]].palette = 6;
+    g_wldcore_window_render_records[param[2]].palette = 2;
+    g_wldcore_window_records[param[0]].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_STILL;
+    index = param[0];
+    g_wldcore_window_records[index].anim_counter = 0;
+    g_wldcore_window_records[index].frame_index = 0;
+}
