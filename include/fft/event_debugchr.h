@@ -119,10 +119,6 @@ extern menu_number_entry_t g_debugchr_panel_selected_numeric_entries[];
 void debugchr_editor_run_numeric_thread(void);
 
 /* menus */
-extern s32 g_debugchr_menu_indicator_brightness[2];
-extern s32 g_debugchr_menu_indicator_fade_work[2];
-extern s32 g_debugchr_menu_indicator_packet_index[2];
-extern s32 g_debugchr_menu_indicator_state[2];
 
 /* graphics */
 extern u16 g_debugchr_gfx_draw_offset_y;
@@ -141,8 +137,5 @@ void debugchr_text_render_signed_decimal_entries(
 /* input */
 
 /* threads */
-extern menu_gradient_panel_prims_t g_debugchr_thread_indicator_packets[2][2];
-
-s32 debugchr_thread_is_running(s32 thread_id);
 
 #endif

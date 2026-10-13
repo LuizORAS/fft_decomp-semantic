@@ -9,7 +9,7 @@
  * publishes it, and yields once while tracking thread status changes.
  *
  * Twin of card_input_update_event_state; BUNIT additionally latches
- * `frame_arg`, clears g_battle_menu_hide_numeric_values, and calls bunit_menu_draw_thread_status_indicators after the
+ * `frame_arg`, clears g_battle_menu_hide_numeric_values, and calls menu_draw_thread_status_indicators after the
  * yield. Needs the _divcheck profile for the three repeat-period divisions.
  */
 void bunit_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
@@ -102,7 +102,7 @@ void bunit_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
     if (g_battle_event_input_suppression_frames != 0) {
         g_battle_event_input_suppression_frames--;
     }
-    bunit_menu_draw_thread_status_indicators();
+    menu_draw_thread_status_indicators();
     g_battle_event_frame_counter++;
     g_battle_menu_packet_buffer_index = (g_battle_menu_packet_buffer_index + 1) & 1;
     if (g_battle_menu_input_block_frames != 0) {

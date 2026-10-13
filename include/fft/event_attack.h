@@ -315,10 +315,6 @@ void attack_editor_load_party_unit(s32 mode, s32 roster_index);
 void attack_editor_run_numeric_thread(void);
 
 /* menus */
-extern s32 g_attack_menu_indicator_brightness[2];
-extern s32 g_attack_menu_indicator_fade_work[2];
-extern s32 g_attack_menu_indicator_packet_index[2];
-extern s32 g_attack_menu_indicator_state[2];
 
 /* graphics */
 extern u16 g_attack_gfx_draw_offset_y;
@@ -394,9 +390,6 @@ typedef enum attack_prompt_thread_slot {
     ATTACK_PROMPT_THREAD_SLOT_DETAIL_MARKER = 13,     /* a wait-forever thread while the unit detail panels are open */
 } attack_prompt_thread_slot_e;
 
-extern menu_gradient_panel_prims_t g_attack_thread_indicator_packets[2][2];
-
-s32 attack_thread_is_running(s32 thread_id);
 void attack_thread_wait_forever(void);
 
 /* sound */

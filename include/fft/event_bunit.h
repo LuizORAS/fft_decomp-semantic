@@ -315,10 +315,6 @@ extern s32 g_bunit_menu_cursor_row;
 extern u16 g_bunit_menu_disabled_number_clut;
 extern s8 g_bunit_menu_event_speed;
 extern u16 g_bunit_menu_icon_texture_page;
-extern s32 g_bunit_menu_indicator_brightness[2];
-extern s32 g_bunit_menu_indicator_fade_work[2];
-extern s32 g_bunit_menu_indicator_packet_index[2];
-extern s32 g_bunit_menu_indicator_state[2];
 extern u16 g_bunit_menu_list_cursor_anim_state;
 extern s16* g_bunit_menu_list_entries;
 extern s16 g_bunit_menu_list_entry_count;
@@ -687,12 +683,9 @@ typedef enum bunit_thread_slot {
 } bunit_thread_slot_e;
 
 extern u8 g_bunit_menu_thread_running;
-extern menu_gradient_panel_prims_t g_bunit_thread_indicator_packets[2][2];
 extern u8 g_bunit_thread_status_snapshot[16];
 
-void bunit_menu_draw_thread_status_indicators(void);
 void bunit_menu_update_event_thread_state(void);
-s32 bunit_thread_is_running(s32 thread_id);
 void bunit_thread_request_stop(s32 thread_id);
 
 /* sound */

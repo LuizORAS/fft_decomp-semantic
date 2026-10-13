@@ -25,13 +25,13 @@ void equip_menu_draw_thread_status_indicators(void) {
     s16 y;
 
     active = 0;
-    if (equip_thread_is_running(EQUIP_THREAD_SLOT_UNIT_STATUS) != 0) {
+    if (menu_thread_is_running(EQUIP_THREAD_SLOT_UNIT_STATUS) != 0) {
         if (g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
             display = (menu_status_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
             active = (-(display->x == 0)) & 13;
         }
     }
-    if (equip_thread_is_running(EQUIP_THREAD_SLOT_COMPARISON_STATUS) != 0) {
+    if (menu_thread_is_running(EQUIP_THREAD_SLOT_COMPARISON_STATUS) != 0) {
         if (g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
             descriptor
                 = (menu_status_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;

@@ -432,6 +432,16 @@ void menu_select_status_primitive_color_palette(
 
 void menu_set_status_panel_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
 
+/* thread status indicators */
+extern s32 g_menu_indicator_brightness[2];
+extern s32 g_menu_indicator_fade_work[2];
+extern s32 g_menu_indicator_packet_index[2];
+extern s32 g_menu_indicator_state[2];
+extern menu_gradient_panel_prims_t g_menu_thread_indicator_packets[2][2];
+
+void menu_draw_thread_status_indicators(void);
+s32 menu_thread_is_running(s32 thread_id);
+
 /* panel drawing */
 extern const u16 g_menu_draw_area_scale_percent[12];
 extern RECT g_menu_draw_area_template;

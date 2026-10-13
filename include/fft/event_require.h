@@ -269,10 +269,6 @@ void require_editor_load_selected_unit(void);
 void require_editor_run_numeric_thread(void);
 
 /* menus */
-extern s32 g_require_menu_indicator_brightness[2];
-extern s32 g_require_menu_indicator_fade_work[2];
-extern s32 g_require_menu_indicator_packet_index[2];
-extern s32 g_require_menu_indicator_state[2];
 extern s16 g_require_menu_selection_result;
 extern s16 g_require_message_menu_result;
 
@@ -349,12 +345,10 @@ typedef enum require_thread_slot {
 } require_thread_slot_e;
 
 extern u8 g_require_saved_thread_block[];
-extern menu_gradient_panel_prims_t g_require_thread_indicator_packets[2][2];
 extern s32 g_require_thread_suspended_id;
 
 void require_gfx_run_suspended_thread_transition(void);
 void require_thread_exit_current(void);
-s32 require_thread_is_running(s32 thread_id);
 
 /* sound */
 

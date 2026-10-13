@@ -32,8 +32,8 @@ functions:
   - {addr: 0x801c1954, size: 1380, name: attack_editor_run_numeric_thread, hash: e9ff018f5a716555}
   - {addr: 0x801c1eb8, size: 104, name: menu_build_item_icon_source, hash: 7085296bf6f5bbac, source: src/shared/menu/menu_build_item_icon_source.c}
   - {addr: 0x801c1f20, size: 8, name: attack_input_update_event_state, hash: 6d64edf91449c1b1}
-  - {addr: 0x801c1f28, size: 28, name: attack_thread_is_running, hash: d10e3403d7fec970}
-  - {addr: 0x801c1f44, size: 1236, name: attack_menu_draw_thread_status_indicators, hash: e022f2dec8a0a488}
+  - {addr: 0x801c1f28, size: 28, name: menu_thread_is_running, hash: d10e3403d7fec970, source: src/shared/thread/menu_thread_is_running.c}
+  - {addr: 0x801c1f44, size: 1236, name: menu_draw_thread_status_indicators, hash: e022f2dec8a0a488, source: src/shared/menu/menu_draw_thread_status_indicators.c}
   - {addr: 0x801c2418, size: 580, name: gfx_set_scaled_poly_ft4_4bpp, hash: f989278e90fdce7c, source: src/shared/gfx/gfx_set_scaled_poly_ft4_4bpp.c}
   - {addr: 0x801c265c, size: 740, name: attack_gfx_build_status_group_primitives, hash: e865f008b1735c29}
   - {addr: 0x801c2940, size: 412, name: attack_gfx_build_gradient_grid_primitives, hash: c1250559a6268b13}
@@ -94,10 +94,10 @@ data:
   - {addr: 0x801c9f8c, name: g_attack_deploy_cursor_texture_data}
   - {addr: 0x801c9fac, name: g_attack_deploy_cursor_palette_source}
   - {addr: 0x801c9fec, name: g_attack_deploy_tile_clut_data}
-  - {addr: 0x801ca054, name: g_attack_menu_indicator_packet_index}
-  - {addr: 0x801ca05c, name: g_attack_menu_indicator_brightness}
-  - {addr: 0x801ca064, name: g_attack_menu_indicator_fade_work}
-  - {addr: 0x801ca06c, name: g_attack_menu_indicator_state}
+  - {addr: 0x801ca054, name: g_menu_indicator_packet_index}
+  - {addr: 0x801ca05c, name: g_menu_indicator_brightness}
+  - {addr: 0x801ca064, name: g_menu_indicator_fade_work}
+  - {addr: 0x801ca06c, name: g_menu_indicator_state}
   - {addr: 0x801ca080, name: g_attack_panel_selected_billboard}
   - {addr: 0x801ca0a4, name: g_attack_panel_comparison_billboard}
   - {addr: 0x801ca0c8, name: g_attack_panel_selected_unit_data}
@@ -230,7 +230,7 @@ data:
   - {addr: 0x801d5fc0, name: g_attack_map_title_image_rect}
   - {addr: 0x801d5fc8, name: g_attack_map_title_palette_rect}
   - {addr: 0x801d5ff0, name: g_attack_map_title_palette_data}
-  - {addr: 0x801d6010, name: g_attack_thread_indicator_packets}
+  - {addr: 0x801d6010, name: g_menu_thread_indicator_packets}
   - {addr: 0x801d6500, name: g_attack_input_controller}
   - {addr: 0x801d651c, name: g_attack_gfx_draw_offset_y}
   - {addr: 0x801d6560, name: g_attack_panel_selected_editor_packets}
@@ -314,8 +314,8 @@ functions:
   - {addr: 0x801c23e8, size: 372, name: menu_icon_strip_thread, hash: 88cede358ce214e7, source: src/shared/menu/menu_icon_strip_thread.c}
   - {addr: 0x801c255c, size: 104, name: menu_build_item_icon_source, hash: 7085296bf6f5bbac, source: src/shared/menu/menu_build_item_icon_source.c}
   - {addr: 0x801c25c4, size: 900, name: bunit_input_update_event_state, hash: acd007f8639f10f5, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
-  - {addr: 0x801c2948, size: 28, name: bunit_thread_is_running, hash: d10e3403d7fec970}
-  - {addr: 0x801c2964, size: 1236, name: bunit_menu_draw_thread_status_indicators, hash: 06245ec603b0e42d}
+  - {addr: 0x801c2948, size: 28, name: menu_thread_is_running, hash: d10e3403d7fec970, source: src/shared/thread/menu_thread_is_running.c}
+  - {addr: 0x801c2964, size: 1236, name: menu_draw_thread_status_indicators, hash: 06245ec603b0e42d, source: src/shared/menu/menu_draw_thread_status_indicators.c}
   - {addr: 0x801c2e38, size: 624, name: bunit_gfx_init_vram_and_start_fade, hash: c23f6e3bd5b189f3}
   - {addr: 0x801c30a8, size: 152, name: bunit_input_update_lock_timer, hash: 646e49326a7f1a0f}
   - {addr: 0x801c3140, size: 16, name: bunit_input_get_lock_timer, hash: 5ffe36f037271c3b}
@@ -477,10 +477,10 @@ functions:
 data:
   - {addr: 0x801bf000, name: g_bunit_menu_clut}
   - {addr: 0x801bf200, name: g_bunit_text_decimal_format}
-  - {addr: 0x801ce8d0, name: g_bunit_menu_indicator_packet_index}
-  - {addr: 0x801ce8d8, name: g_bunit_menu_indicator_brightness}
-  - {addr: 0x801ce8e0, name: g_bunit_menu_indicator_fade_work}
-  - {addr: 0x801ce8e8, name: g_bunit_menu_indicator_state}
+  - {addr: 0x801ce8d0, name: g_menu_indicator_packet_index}
+  - {addr: 0x801ce8d8, name: g_menu_indicator_brightness}
+  - {addr: 0x801ce8e0, name: g_menu_indicator_fade_work}
+  - {addr: 0x801ce8e8, name: g_menu_indicator_state}
   - {addr: 0x801ce8fc, name: g_bunit_panel_selected_billboard}
   - {addr: 0x801ce920, name: g_bunit_panel_comparison_billboard}
   - {addr: 0x801ce944, name: g_bunit_panel_selected_unit_data}
@@ -663,7 +663,7 @@ data:
   - {addr: 0x801e3740, name: g_bunit_gfx_decreasing_fade_active}
   - {addr: 0x801e3741, name: g_bunit_gfx_increasing_fade_active}
   - {addr: 0x801e3744, name: g_bunit_gfx_fade_rect}
-  - {addr: 0x801e374c, name: g_bunit_thread_indicator_packets}
+  - {addr: 0x801e374c, name: g_menu_thread_indicator_packets}
   - {addr: 0x801e3c3c, name: g_bunit_frame_arg}
   - {addr: 0x801e3c40, name: g_menu_input_controller}
   - {addr: 0x801e3c44, name: g_bunit_input_event}
@@ -1126,8 +1126,8 @@ functions:
   - {addr: 0x801c2230, size: 372, name: debugchr_menu_icon_strip_thread, hash: 1ab523580e5686a2}
   - {addr: 0x801c23a4, size: 104, name: menu_build_item_icon_source, hash: 7085296bf6f5bbac, source: src/shared/menu/menu_build_item_icon_source.c}
   - {addr: 0x801c240c, size: 8, name: debugchr_input_update_event_state, hash: 6d64edf91449c1b1}
-  - {addr: 0x801c2414, size: 28, name: debugchr_thread_is_running, hash: d10e3403d7fec970}
-  - {addr: 0x801c2430, size: 1236, name: debugchr_menu_draw_thread_status_indicators, hash: 42aee85dfc3d3b51}
+  - {addr: 0x801c2414, size: 28, name: menu_thread_is_running, hash: d10e3403d7fec970, source: src/shared/thread/menu_thread_is_running.c}
+  - {addr: 0x801c2430, size: 1236, name: menu_draw_thread_status_indicators, hash: 42aee85dfc3d3b51, source: src/shared/menu/menu_draw_thread_status_indicators.c}
   - {addr: 0x801c2904, size: 32, name: text_fill_field_with_terminators, hash: 5eaa92c4790153fd, source: src/shared/text/text_fill_field_with_terminators.c}
   - {addr: 0x801c2924, size: 460, name: battle_menu_copy_unit_data_to_status_billboard, hash: dc13403e0a243847, source: src/shared/menu/battle_menu_copy_unit_data_to_status_billboard.c}
   - {addr: 0x801c2af0, size: 1348, name: debugchr_editor_load_selected_unit, hash: 944be0b3f140f098}
@@ -1142,10 +1142,10 @@ functions:
 
 data:
   - {addr: 0x801c52a4, name: g_debugchr_editor_active}
-  - {addr: 0x801c52b0, name: g_debugchr_menu_indicator_packet_index}
-  - {addr: 0x801c52b8, name: g_debugchr_menu_indicator_brightness}
-  - {addr: 0x801c52c0, name: g_debugchr_menu_indicator_fade_work}
-  - {addr: 0x801c52c8, name: g_debugchr_menu_indicator_state}
+  - {addr: 0x801c52b0, name: g_menu_indicator_packet_index}
+  - {addr: 0x801c52b8, name: g_menu_indicator_brightness}
+  - {addr: 0x801c52c0, name: g_menu_indicator_fade_work}
+  - {addr: 0x801c52c8, name: g_menu_indicator_state}
   - {addr: 0x801c52dc, name: g_debugchr_panel_selected_billboard}
   - {addr: 0x801c52e8, name: g_debugchr_editor_values}
   - {addr: 0x801c52ec, name: g_debugchr_editor_first_maximum}
@@ -1225,7 +1225,7 @@ data:
   - {addr: 0x801c68bc, name: g_debugchr_numeric_editor_thread_params}
   - {addr: 0x801c68d0, name: g_debugchr_character_status_frame_config}
   - {addr: 0x801c68e4, name: g_debugchr_editor_unit_ids}
-  - {addr: 0x801c68fc, name: g_debugchr_thread_indicator_packets}
+  - {addr: 0x801c68fc, name: g_menu_thread_indicator_packets}
   - {addr: 0x801c6dec, name: g_menu_input_controller}
   - {addr: 0x801c6e08, name: g_debugchr_gfx_draw_offset_y}
   - {addr: 0x801c6e4c, name: g_debugchr_panel_selected_editor_packets}
@@ -1307,7 +1307,7 @@ functions:
   - {addr: 0x801c3a24, size: 372, name: menu_icon_strip_thread, hash: f8b4eae323227396, source: src/shared/menu/menu_icon_strip_thread.c}
   - {addr: 0x801c3b98, size: 104, name: menu_build_item_icon_source, hash: 7085296bf6f5bbac, source: src/shared/menu/menu_build_item_icon_source.c}
   - {addr: 0x801c3c00, size: 8, name: equip_input_update_event_state, hash: 6d64edf91449c1b1}
-  - {addr: 0x801c3c08, size: 28, name: equip_thread_is_running, hash: d10e3403d7fec970}
+  - {addr: 0x801c3c08, size: 28, name: menu_thread_is_running, hash: d10e3403d7fec970, source: src/shared/thread/menu_thread_is_running.c}
   - {addr: 0x801c3c24, size: 1240, name: equip_menu_draw_thread_status_indicators, hash: a9a11aad5290e5d4}
   - {addr: 0x801c40fc, size: 40, name: equip_thread_wait_forever, hash: 23983331f707d2fa}
   - {addr: 0x801c4124, size: 92, name: equip_menu_get_entry_item_count, hash: 7c0e3a55d7cefb73}
@@ -2197,8 +2197,8 @@ functions:
   - {addr: 0x801c20d0, size: 372, name: menu_icon_strip_thread, hash: 9c2efc75e9d065c4, source: src/shared/menu/menu_icon_strip_thread.c}
   - {addr: 0x801c2244, size: 104, name: menu_build_item_icon_source, hash: 7085296bf6f5bbac, source: src/shared/menu/menu_build_item_icon_source.c}
   - {addr: 0x801c22ac, size: 8, name: require_input_update_event_state, hash: 6d64edf91449c1b1}
-  - {addr: 0x801c22b4, size: 28, name: require_thread_is_running, hash: d10e3403d7fec970}
-  - {addr: 0x801c22d0, size: 1236, name: require_menu_draw_thread_status_indicators, hash: 06809308c5329e70}
+  - {addr: 0x801c22b4, size: 28, name: menu_thread_is_running, hash: d10e3403d7fec970, source: src/shared/thread/menu_thread_is_running.c}
+  - {addr: 0x801c22d0, size: 1236, name: menu_draw_thread_status_indicators, hash: 06809308c5329e70, source: src/shared/menu/menu_draw_thread_status_indicators.c}
   - {addr: 0x801c27a4, size: 32, name: text_fill_field_with_terminators, hash: 5eaa92c4790153fd, source: src/shared/text/text_fill_field_with_terminators.c}
   - {addr: 0x801c27c4, size: 196, name: require_panel_copy_battle_stats_to_gauges, hash: 10a1714f8625994f}
   - {addr: 0x801c2888, size: 1348, name: require_editor_load_selected_unit, hash: b9c009db7e6c8971}
@@ -2257,10 +2257,10 @@ functions:
 
 data:
   - {addr: 0x801bf000, name: g_require_text_wait_for_file_allocation_message}
-  - {addr: 0x801cb2f0, name: g_require_menu_indicator_packet_index}
-  - {addr: 0x801cb2f8, name: g_require_menu_indicator_brightness}
-  - {addr: 0x801cb300, name: g_require_menu_indicator_fade_work}
-  - {addr: 0x801cb308, name: g_require_menu_indicator_state}
+  - {addr: 0x801cb2f0, name: g_menu_indicator_packet_index}
+  - {addr: 0x801cb2f8, name: g_menu_indicator_brightness}
+  - {addr: 0x801cb300, name: g_menu_indicator_fade_work}
+  - {addr: 0x801cb308, name: g_menu_indicator_state}
   - {addr: 0x801cb31c, name: g_require_panel_selected_billboard}
   - {addr: 0x801cb340, name: g_require_panel_comparison_billboard}
   - {addr: 0x801cb364, name: g_require_active_unit_data}
@@ -2379,7 +2379,7 @@ data:
   - {addr: 0x801d0ee8, name: g_require_condition_special_quads}
   - {addr: 0x801d153c, name: g_require_condition_special_quad_ranges}
   - {addr: 0x801d1548, name: g_require_condition_special_vertex_colors}
-  - {addr: 0x801d1b9c, name: g_require_thread_indicator_packets}
+  - {addr: 0x801d1b9c, name: g_menu_thread_indicator_packets}
   - {addr: 0x801d208c, name: g_menu_input_controller}
   - {addr: 0x801d20a8, name: g_require_gfx_draw_offset_y}
   - {addr: 0x801d20ec, name: g_require_panel_selected_editor_packets}
@@ -2436,8 +2436,8 @@ imports:
 
 overrides:
   - {function: menu_build_status_group_primitives, name: battle_gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
+  - {function: menu_draw_thread_status_indicators, name: battle_gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
   - {function: require_editor_run_numeric_thread, name: battle_gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
-  - {function: require_menu_draw_thread_status_indicators, name: battle_gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
 ---
 module: event-small
 file: EVENT/SMALL.OUT
