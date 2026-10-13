@@ -1,6 +1,7 @@
-#include "fft/battle.h"
 #include "fft/battle_unit.h"
 #include "fft/script.h"
+#include "fft/unit.h"
+#include "psx/types.h"
 
 /* Resolve an event-script unit identifier to its active Misc Unit ID.
  *

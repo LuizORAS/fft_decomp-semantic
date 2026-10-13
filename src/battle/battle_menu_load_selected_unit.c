@@ -1,9 +1,12 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "fft/battle_menu.h"
-#include "fft/battle_text.h"
 #include "fft/battle_unit.h"
+#include "fft/data.h"
+#include "fft/main.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
+#include "fft/unit.h"
 #include "psx/types.h"
 
 /* Fills the preview-target and selected-unit billboards and the small

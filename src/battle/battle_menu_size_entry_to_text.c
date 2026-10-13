@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
-#include "fft/battle_text.h"
+#include "fft/menu.h"
+#include "psx/types.h"
 
 /*
  * Size a message window to its text entry.

@@ -1,9 +1,8 @@
-#include "fft/battle.h"
 #include "fft/battle_action.h"
 #include "fft/battle_menu.h"
-#include "fft/battle_script.h"
-#include "fft/battle_text.h"
 #include "fft/battle_unit.h"
+#include "fft/data.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "psx/types.h"
 

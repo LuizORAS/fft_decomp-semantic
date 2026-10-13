@@ -1,9 +1,11 @@
-#include "fft/battle.h"
 #include "fft/battle_event.h"
 #include "fft/battle_script.h"
+#include "fft/battle_thread.h"
 #include "fft/battle_unit.h"
 #include "fft/script.h"
 #include "fft/thread.h"
+#include "fft/unit.h"
+#include "psx/types.h"
 
 /* Run staged status commands for units whose Float or Jump state needs a
  * dedicated update thread.
