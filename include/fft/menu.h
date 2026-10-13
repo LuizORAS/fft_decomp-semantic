@@ -32,7 +32,7 @@ void menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, const RECT* from, const RECT* to
 /* palette */
 /* Two sixteen-colour banks: the normal menu colours followed by their dimmed forms. */
 typedef struct menu_palette_pair {
-    rgba5551_t colors[32];
+    rgba5551_t colors[2 * PALETTE_COLOR_COUNT];
 } menu_palette_pair_t;
 typedef char menu_palette_pair_size_must_be_64[(sizeof(menu_palette_pair_t) == 64) ? 1 : -1];
 
