@@ -1,11 +1,11 @@
 #include "fft/battle_unit.h"
 
 /*
- * Claim a unit runtime record slot and stamp its unit id.
+ * Claim a unit runtime record slot and stamp its runtime ID.
  *
  * Ids below 16 take their own slot, failing if another in-use slot already
  * carries that id or the slot is taken. Larger ids take the first free slot,
- * whose index becomes the stored id; exhausting all 16 raises animation error
+ * whose index becomes the stored runtime ID; exhausting all 16 raises animation error
  * 6. Returns 0 on failure.
  */
 battle_unit_t* battle_unit_claim_slot(s16 requested_runtime_id) {

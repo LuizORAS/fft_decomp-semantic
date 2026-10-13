@@ -3,11 +3,11 @@
 
 /* Resets a unit's item sprite display to one 16 x 16 part of the ITEM.BIN page
  * with CLUT 7 of the sprite row, neutral colour and scale ONE. */
-battle_gfx_sprite_display_data_t* battle_gfx_init_item_sprite_display(s32 unit_index) {
+battle_gfx_sprite_display_data_t* battle_gfx_init_item_sprite_display(s32 runtime_id) {
     battle_gfx_sprite_display_data_t* display;
     s32 i;
 
-    display = &g_battle_units[unit_index].item_sprite_display.header;
+    display = &g_battle_units[runtime_id].item_sprite_display.header;
     display->color.b = 0x80;
     display->color.g = 0x80;
     display->color.r = 0x80;

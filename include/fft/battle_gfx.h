@@ -565,12 +565,12 @@ s32 battle_gfx_get_unit_spritesheet_height_by_runtime_id(u32 runtime_id);
 s32 battle_gfx_get_unit_spritesheet_height_by_unit_id(u32 unit_id);
 void battle_gfx_init_deployment_and_reset_unit_graphics_state(void);
 void battle_gfx_init_item_get_rendering(struct battle_unit* unit);
-battle_gfx_sprite_display_data_t* battle_gfx_init_item_sprite_display(s32 unit_index);
+battle_gfx_sprite_display_data_t* battle_gfx_init_item_sprite_display(s32 runtime_id);
 void battle_gfx_init_position_vector_copies(struct battle_unit* unit);
 void battle_gfx_init_render_buffers(void);
 void battle_gfx_init_render_frame(void);
 void battle_gfx_init_render_state(void);
-battle_gfx_sprite_display_data_t* battle_gfx_init_unit_sprite_display(s32 unit_index);
+battle_gfx_sprite_display_data_t* battle_gfx_init_unit_sprite_display(s32 runtime_id);
 battle_gfx_sprite_display_data_t* battle_gfx_init_weapon_sprite_display(s32 unit_index, s32 display_type);
 void battle_gfx_load_trap_and_unit_frame_parts(
     battle_unit_t* unit, battle_unit_anim_state_t* state, u16 frame, u16 sequence_id);
