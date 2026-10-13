@@ -193,14 +193,14 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_t* unit) {
     display->displays[0]->color.g = display->displays[1]->color.g = display->displays[2]->color.g = green;
     display->displays[0]->color.b = display->displays[1]->color.b = display->displays[2]->color.b = blue;
 
-    if ((display->value / 1000) & 0xffff) {
+    if (display->value / 1000) {
         digits[2] = 9;
         digits[1] = 9;
         digits[0] = 9;
     } else {
-        digits[0] = (display->value % 10) & 0xffff;
-        digits[1] = (((display->value / 10) & 0xffff) % 10) & 0xffff;
-        digits[2] = (display->value / 100) & 0xffff;
+        digits[0] = display->value % 10;
+        digits[1] = (display->value / 10) % 10;
+        digits[2] = display->value / 100;
     }
 
     display_0 = display->displays[0];
