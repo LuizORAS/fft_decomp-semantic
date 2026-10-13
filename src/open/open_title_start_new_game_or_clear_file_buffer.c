@@ -10,7 +10,7 @@ void open_title_start_new_game_or_clear_file_buffer(void) {
     s32* destination;
     s32 index;
     s32 record;
-    s32* position;
+    point32_t* position;
     s32 controller;
     s32 _card_status;
     s32 frame_padding[2];
@@ -38,10 +38,10 @@ void open_title_start_new_game_or_clear_file_buffer(void) {
     g_open_gfx_render_records_36[record].sequence = 0x12;
     g_open_gfx_render_records_36[record].anim_counter = 0;
     g_open_gfx_render_records_36[record].frame_index = 0;
-    position = &g_open_gfx_render_records_36[record].position.x;
+    position = &g_open_gfx_render_records_36[record].position;
     controller = g_open_current_controller_index;
-    position[0] = -4;
-    position[1] = -16;
+    position->x = -4;
+    position->y = -16;
     g_open_controller_records_next[controller].title_exit.state = 0;
     g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_TITLE_EXIT;
     g_open_current_controller_index = controller + 1;
