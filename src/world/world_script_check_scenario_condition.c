@@ -29,7 +29,7 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_
     if (type == EVENT_SCENARIO_CONDITION_VARIABLE_AT_MOST && value >= script_get_variable(id))
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type >= 4 && type <= 10) {
-        unit = world_unit_get_by_unit_id(id);
+        unit = battle_unit_get_by_unit_id(id);
         if (unit != (battle_stats_t*)-1) {
             if (type == EVENT_SCENARIO_CONDITION_UNIT_PRESENT)
                 return EVENT_SCENARIO_CONDITION_RESULT_PASS;
@@ -60,7 +60,7 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_
     }
     if (type == EVENT_SCENARIO_CONDITION_ITEM_EQUIPPED) {
         for (i = 1; i < 4; i++) {
-            unit = world_unit_get_by_unit_id(i);
+            unit = battle_unit_get_by_unit_id(i);
             if (unit != (battle_stats_t*)-1) {
                 for (j = 0; j < 7; j++) {
                     if (unit->equipment[j] == id)
@@ -92,7 +92,7 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_
     if (type == EVENT_SCENARIO_CONDITION_ENEMIES_DEFEATED && action_check_battle_outcome() == 0)
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type == EVENT_SCENARIO_CONDITION_UNIT_AT_TILE) {
-        unit = world_unit_get_by_unit_id(id);
+        unit = battle_unit_get_by_unit_id(id);
         if (unit != (battle_stats_t*)-1 && unit->x == value && unit->position.y == tile_y
             && unit->position.higher_elevation == elevation)
             return EVENT_SCENARIO_CONDITION_RESULT_PASS;

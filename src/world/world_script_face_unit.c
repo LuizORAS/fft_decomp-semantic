@@ -1,3 +1,4 @@
+#include "fft/battle_unit.h"
 #include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -33,8 +34,8 @@ void world_script_face_unit(const event_face_unit_parameters_t* parameters, s32 
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_unit_face_slot_order[i], &misc_index) != 0
                     && misc_id != unit_id) {
-                    world_unit_copy_misc_screen_coords(misc_id, &position);
-                    world_unit_copy_misc_screen_coords(unit_id, &target);
+                    battle_unit_copy_misc_screen_coords(misc_id, &position);
+                    battle_unit_copy_misc_screen_coords(unit_id, &target);
                     dx = target.vx - position.vx;
                     dy = target.vz - position.vz;
                     facing = -ratan2(dy, dx);

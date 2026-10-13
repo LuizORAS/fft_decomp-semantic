@@ -1841,10 +1841,7 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment);
 s32 world_unit_can_equip_item_id(s16 unit_index, s16 item_id);
 s32 world_unit_check_facing_relative_to_camera(s32 unit_id);
 void world_unit_clear_status_staging_data(void);
-void world_unit_copy_misc_screen_location(u32 misc_id, VECTOR* destination);
-void world_unit_copy_misc_screen_coords(s32 misc_id, SVECTOR* out);
 struct battle_stats* world_unit_get_battle_stats_for_stored(void);
-struct battle_stats* world_unit_get_by_unit_id(s32 unit_id);
 s32 world_unit_get_map_coords_from_misc_id(s32 misc_id, SVECTOR* out);
 s32 world_formation_get_unit_palette_index(s32 roster_slot);
 s32 world_unit_get_zodiac_for_date(s32 month, s32 day);
@@ -1856,7 +1853,6 @@ void world_unit_inflict_status_by_entd_unit_id(
 
 s32 world_unit_is_moving(s32 id);
 void world_menu_load_selected_unit(void);
-void world_unit_project_misc_to_screen(s32 misc_id, SVECTOR* screen_coords);
 void world_unit_reset_animation_states(void);
 void world_unit_set_animation(s32 misc_id, u32 animation);
 void world_unit_set_facing(s32 misc_id, s32 rotation);

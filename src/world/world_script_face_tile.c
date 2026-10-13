@@ -1,3 +1,4 @@
+#include "fft/battle_unit.h"
 #include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -27,7 +28,7 @@ void world_script_face_tile(const event_face_tile_parameters_t* parameters) {
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_unit_face_slot_order[i], &misc_index) != 0) {
-                world_unit_copy_misc_screen_coords(unit_id, &position);
+                battle_unit_copy_misc_screen_coords(unit_id, &position);
                 dx = target.vx - position.vx;
                 dy = target.vz - position.vz;
                 facing = ((-ratan2(dy, dx) + 0xC00) & 0xF00) >> 8;

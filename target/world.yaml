@@ -103,9 +103,9 @@ functions:
   - {addr: 0x800e752c, size: 296, name: menu_lerp_rect_to_poly_ft4, hash: 18c92e7328405f4d, source: src/shared/menu/menu_lerp_rect_to_poly_ft4.c}
   - {addr: 0x800e7654, size: 84, name: world_script_pause_event_instruction, hash: c8f0977405c464dd}
   - {addr: 0x800e76a8, size: 88, name: world_copy_misc_unit_screen_coords, hash: 2a62d55b05ed841c}
-  - {addr: 0x800e7700, size: 64, name: world_unit_project_misc_to_screen, hash: f71d84cad0b16447}
-  - {addr: 0x800e7740, size: 92, name: world_unit_copy_misc_screen_coords, hash: 804df09b5303cc41}
-  - {addr: 0x800e779c, size: 76, name: world_unit_copy_misc_screen_location, hash: 0db0657e68cb43ea}
+  - {addr: 0x800e7700, size: 64, name: battle_unit_project_misc_to_screen, hash: f71d84cad0b16447, source: src/battle/battle_unit_project_misc_to_screen.c}
+  - {addr: 0x800e7740, size: 92, name: battle_unit_copy_misc_screen_coords, hash: 804df09b5303cc41, source: src/battle/battle_unit_copy_misc_screen_coords.c}
+  - {addr: 0x800e779c, size: 76, name: battle_unit_copy_misc_screen_location, hash: 0db0657e68cb43ea, source: src/battle/battle_unit_copy_misc_screen_location.c}
   - {addr: 0x800e77e8, size: 32, name: world_unit_get_map_coords_from_misc_id, hash: b293d475560aeacb}
   - {addr: 0x800e7808, size: 8, name: script_report_missing_unit_stub, hash: 6d64edf91449c1b1, source: src/shared/script/script_report_missing_unit_stub.c}
   - {addr: 0x800e7810, size: 828, name: script_get_misc_id, hash: ebe8f110139eeadb, source: src/shared/script/script_get_misc_id.c}
@@ -300,7 +300,7 @@ functions:
   - {addr: 0x800f5230, size: 212, name: world_menu_init_system_function, hash: c537ae196a1827bb}
   - {addr: 0x800f5304, size: 128, name: world_menu_get_dead_unit_selection, hash: 2cbfb3b781403e89}
   - {addr: 0x800f5384, size: 2556, name: world_menu_dispatch_system_function, hash: d8c0ee3dbff2b5b4}
-  - {addr: 0x800f5d80, size: 168, name: world_unit_get_by_unit_id, hash: 7009f26291692b1c}
+  - {addr: 0x800f5d80, size: 168, name: battle_unit_get_by_unit_id, hash: 7009f26291692b1c, source: src/battle/battle_unit_get_by_unit_id.c}
   - {addr: 0x800f5e28, size: 220, name: world_script_run_scenario_conditions, hash: 60f3fa3f123be7c6}
   - {addr: 0x800f5f04, size: 8, name: world_noop_800f5f04, hash: 6d64edf91449c1b1}
   - {addr: 0x800f5f0c, size: 1296, name: world_script_check_scenario_condition, hash: 5e07a4b1d51f3ad0, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}

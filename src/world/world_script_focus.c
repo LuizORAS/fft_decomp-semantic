@@ -1,3 +1,4 @@
+#include "fft/battle_unit.h"
 #include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -44,8 +45,8 @@ void world_script_focus(event_focus_parameters_t* parameters) {
         main_system_handle_malloc_exception(7, 0);
         return;
     }
-    world_unit_copy_misc_screen_location(first, (VECTOR*)coords[0]);
-    world_unit_copy_misc_screen_location(second, (VECTOR*)coords[1]);
+    battle_unit_copy_misc_screen_location(first, (VECTOR*)coords[0]);
+    battle_unit_copy_misc_screen_location(second, (VECTOR*)coords[1]);
     coords[0][1] += 0x20;
     coords[1][1] += 0x20;
     if (unit_a == CHARACTER_IDENTITY_ALTIMA_SECOND_FORM) {
