@@ -15,8 +15,7 @@ s32 ai_count_flagged_tiles_within_map_bounds(u16 rows[MAP_TERRAIN_LAYER_COUNT][A
 
     count = 0;
     ai = &g_ai_data_base;
-    level = 0;
-    do {
+    for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             row = rows[level][y];
             if (row != 0) {
@@ -27,7 +26,6 @@ s32 ai_count_flagged_tiles_within_map_bounds(u16 rows[MAP_TERRAIN_LAYER_COUNT][A
                 }
             }
         }
-        level++;
-    } while (level < MAP_TERRAIN_LAYER_COUNT);
+    }
     return count;
 }

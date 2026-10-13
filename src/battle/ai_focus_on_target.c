@@ -7,9 +7,8 @@
  */
 void ai_focus_on_target(s32 unit_id) {
     ai_unit_decision_t* decision = g_ai_data_base.acting_unit_decision;
-    u8 flags = decision->flags;
 
     decision->main_target_id = unit_id;
-    decision->flags = (flags | AI_DECISION_FOCUS_TARGET) & ~AI_DECISION_STAY_NEAR_COORDINATES;
+    decision->flags = (decision->flags | AI_DECISION_FOCUS_TARGET) & ~AI_DECISION_STAY_NEAR_COORDINATES;
     ai_copy_unit_coordinates(unit_id, &decision->target);
 }
