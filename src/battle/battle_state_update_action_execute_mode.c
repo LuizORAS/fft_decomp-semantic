@@ -35,12 +35,12 @@ void battle_state_update_action_execute_mode(void) {
     battle_gfx_draw_screen_color_modulation_overlay();
     target_calculate_tile_coords_and_glow_from_at_list();
 
-    unit = battle_unit_get_casting_misc_data();
+    unit = battle_unit_get_casting();
     /* The target reads the 16-bit value of g_main_system_animation_speed. */
     unit->state_frame_counter += g_main_system_animation_speed;
     if (unit->strike.target_count != 0) {
         for (i = 0; i < unit->strike.target_count; i++) {
-            target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
+            target = battle_unit_get_by_battle_id(unit->strike.target_list[i]);
             if (target != 0) {
                 move_update_knockback_step(target);
                 g_battle_state_animation_continue_check |= target->step_phase;
@@ -59,18 +59,18 @@ void battle_state_update_action_execute_mode(void) {
             main_sound_replay_bg_sfx();
             if (unit->strike.target_count != 0) {
                 for (i = 0; i < unit->strike.target_count; i++) {
-                    target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
+                    target = battle_unit_get_by_battle_id(unit->strike.target_list[i]);
                     if (target != 0) {
                         if (unit->used_ability_id >= ABILITY_ID_REACTION_FIRST
                             && unit->used_ability_id < ABILITY_ID_SUPPORT_FIRST) {
                             if (effect_load_ability(unit->used_ability_id) != 0
                                 && g_battle_ability_animation_data[unit->used_ability_id].attack_animation
                                     != BATTLE_ATTACK_ANIMATION_USE_WEAPON) {
-                                /* Both arguments are misc records overlaying the declared parameters. */
+                                /* Both arguments are runtime records overlaying the declared parameters. */
                                 battle_unit_start_post_attack_animation_display(unit, target);
                             }
                         } else {
-                            battle_unit_update_display_by_misc_id(target->runtime_id);
+                            battle_unit_update_display_by_runtime_id(target->runtime_id);
                         }
                     }
                 }
@@ -84,12 +84,12 @@ void battle_state_update_action_execute_mode(void) {
             && (unit->animation.wait == 0 || (unit->animation.sequence_id >> 1) < 0x3cU)) {
             if (unit->strike.target_count != 0) {
                 for (i = 0; i < unit->strike.target_count; i++) {
-                    target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
+                    target = battle_unit_get_by_battle_id(unit->strike.target_list[i]);
                     if (target != 0) {
                         if (unit->used_ability_id == ABILITY_ID_KNOCKBACK) {
-                            battle_gfx_prepare_post_action_display_by_misc_id(target->runtime_id);
+                            battle_gfx_prepare_post_action_display_by_runtime_id(target->runtime_id);
                         }
-                        battle_unit_update_display_by_misc_id(target->runtime_id);
+                        battle_unit_update_display_by_runtime_id(target->runtime_id);
                     }
                 }
             }

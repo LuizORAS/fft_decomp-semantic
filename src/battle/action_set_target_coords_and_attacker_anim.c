@@ -23,7 +23,7 @@ void action_set_target_coords_and_attacker_anim(void) {
 
     g_main_system_animation_speed = 1;
     g_battle_game_state = BATTLE_GAME_STATE_SECONDARY_EFFECT;
-    unit = battle_unit_get_casting_misc_data();
+    unit = battle_unit_get_casting();
     unit->state_frame_counter = 0;
     if (unit->continue_attack_count == 0) {
         battle_unit_face_towards_action_target(unit, 0);
@@ -31,7 +31,7 @@ void action_set_target_coords_and_attacker_anim(void) {
     action = &unit->strike;
     if (action->target_count != 0) {
         for (i = 0; i < action->target_count; i++) {
-            target = battle_unit_get_misc_data_by_battle_id(action->target_list[i]);
+            target = battle_unit_get_by_battle_id(action->target_list[i]);
             if (target != 0) {
                 target->pending_attack_result
                     = action_finalize_attack_and_flag_reactions(target->battle_data->battle_id);
@@ -45,19 +45,17 @@ void action_set_target_coords_and_attacker_anim(void) {
     if (g_action_phase == ACTION_PHASE_ACTING_UNIT) {
         if (unit->used_ability_id != 0 && !IS_ELEMENTAL_GUN(unit->used_item_or_weapon_id)
             && action->reaction_occurred == 0) {
-            battle_unit_select_attack_animation_for_ability(
-                unit, battle_unit_get_misc_data_by_battle_id(action->target_list[0]));
+            battle_unit_select_attack_animation_for_ability(unit, battle_unit_get_by_battle_id(action->target_list[0]));
         } else if (unit->used_ability_id == 0 || IS_ELEMENTAL_GUN(unit->used_item_or_weapon_id)) {
             if (action->target_count != 0) {
-                battle_unit_select_weapon_attack_animation(
-                    unit, battle_unit_get_misc_data_by_battle_id(action->target_list[0]));
+                battle_unit_select_weapon_attack_animation(unit, battle_unit_get_by_battle_id(action->target_list[0]));
             } else {
                 battle_unit_select_weapon_attack_animation(unit, 0);
             }
         }
     } else if (unit->used_ability_id == ABILITY_ID_KNOCKBACK) {
         for (i = 0; i < unit->strike.target_count; i++) {
-            target = battle_unit_get_misc_data_by_battle_id(action->target_list[i]);
+            target = battle_unit_get_by_battle_id(action->target_list[i]);
             if (target != 0) {
                 target->map_x = unit->strike.target_new_x;
                 target->map_y = unit->strike.target_new_y;
@@ -72,12 +70,11 @@ void action_set_target_coords_and_attacker_anim(void) {
             && unit->continue_attack_count == 0) {
             if (action->reaction_occurred == 0) {
                 battle_unit_select_attack_animation_for_ability(
-                    unit, battle_unit_get_misc_data_by_battle_id(action->target_list[0]));
+                    unit, battle_unit_get_by_battle_id(action->target_list[0]));
             }
         } else if (unit->used_ability_id == 0 || IS_ELEMENTAL_GUN(unit->used_item_or_weapon_id)) {
             if (action->target_count != 0) {
-                battle_unit_select_weapon_attack_animation(
-                    unit, battle_unit_get_misc_data_by_battle_id(action->target_list[0]));
+                battle_unit_select_weapon_attack_animation(unit, battle_unit_get_by_battle_id(action->target_list[0]));
             } else {
                 battle_unit_select_weapon_attack_animation(unit, 0);
             }

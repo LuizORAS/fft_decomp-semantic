@@ -8,15 +8,15 @@
  * world_script_execute_event recognizes the opcode and does nothing. */
 void world_script_walkto_event_instruction(const event_walk_to_parameters_t* parameters) {
     map_tile_coordinates_t coords;
-    s32 misc_id;
+    s32 runtime_id;
 
-    misc_id = script_read_s16(parameters->unit_id_le);
-    misc_id = script_get_misc_id(misc_id);
-    if (misc_id != EVENT_RUNTIME_ID_NONE) {
+    runtime_id = script_read_s16(parameters->unit_id_le);
+    runtime_id = script_resolve_runtime_id(runtime_id);
+    if (runtime_id != EVENT_RUNTIME_ID_NONE) {
         coords.x = parameters->x;
         coords.y = parameters->y;
         coords.layer = parameters->elevation;
-        move_start_unit_walk_to(misc_id, &coords,
+        move_start_unit_walk_to(runtime_id, &coords,
             MOVE_PATHFIND_IGNORE_TERRAIN_COST - parameters->terrain_cost_flag * MOVE_PATHFIND_IGNORE_TERRAIN_COST, 3,
             script_read_s16(parameters->speed_le));
     }

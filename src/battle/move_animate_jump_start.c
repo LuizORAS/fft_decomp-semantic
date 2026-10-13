@@ -24,7 +24,7 @@ void move_animate_jump_start(battle_unit_t* unit) {
     switch (unit->distortion_phase) {
     case 0:
         speed = SquareRoot12(
-            (-battle_gfx_calculate_screen_z_from_misc_screen_data(unit) + 0x120) * g_move_jump_gravity * 2);
+            (-battle_gfx_calculate_screen_z_from_unit_screen_coords(unit) + 0x120) * g_move_jump_gravity * 2);
         timer = speed / g_move_jump_gravity;
         velocity.vy = -speed;
         battle_gfx_init_position_vector_copies(unit);

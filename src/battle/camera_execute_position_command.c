@@ -19,8 +19,8 @@ void camera_execute_position_command(s32 command, s32 target, s32 duration, cons
     switch (command & EFFECT_CAMERA_SOURCE_MASK) {
     case EFFECT_CAMERA_SOURCE_TARGET:
         if (g_effect_context.targets[target].target_type == EFFECT_TARGET_TYPE_UNIT) {
-            effect_copy_misc_unit_screen_location(
-                g_effect_context.targets[target].data.unit.misc_id, &g_effect_camera_position_target);
+            effect_copy_runtime_screen_location(
+                g_effect_context.targets[target].data.unit.runtime_id, &g_effect_camera_position_target);
         } else {
             effect_convert_tile_coords_to_world_coords(
                 &g_effect_context.targets[target].data.tile, &g_effect_camera_position_target);
@@ -55,8 +55,8 @@ void camera_execute_position_command(s32 command, s32 target, s32 duration, cons
         break;
     case EFFECT_CAMERA_SOURCE_CASTER:
         if (g_effect_context.targets[EFFECT_CASTER_ENTRY].target_type == EFFECT_TARGET_TYPE_UNIT) {
-            effect_copy_misc_unit_screen_location(
-                g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.misc_id, &g_effect_camera_position_target);
+            effect_copy_runtime_screen_location(
+                g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.runtime_id, &g_effect_camera_position_target);
         } else {
             effect_convert_tile_coords_to_world_coords(
                 &g_effect_context.targets[EFFECT_CASTER_ENTRY].data.tile, &g_effect_camera_position_target);
@@ -69,7 +69,7 @@ void camera_execute_position_command(s32 command, s32 target, s32 duration, cons
         setVector(&sum, 0, 0, 0);
         for (i = 0; i < g_effect_context.target_count; i++) {
             if (g_effect_context.targets[i].target_type == EFFECT_TARGET_TYPE_UNIT) {
-                screen = battle_unit_get_screen_data_ptr_by_misc_id(g_effect_context.targets[i].data.unit.misc_id);
+                screen = battle_unit_get_screen_coords_by_runtime_id(g_effect_context.targets[i].data.unit.runtime_id);
                 sum.vx += screen->vx;
                 sum.vy += screen->vy;
                 sum.vz += screen->vz;

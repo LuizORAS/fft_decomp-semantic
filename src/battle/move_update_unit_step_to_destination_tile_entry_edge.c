@@ -20,7 +20,7 @@ void move_update_unit_step_to_destination_tile_entry_edge(battle_unit_t* unit) {
     if (move_has_reached_destination_tile_entry_edge(direction, unit) != 0) {
         unit->velocity.vz = 0;
         unit->velocity.vx = 0;
-        if (unit->screen.vy >= (s16)battle_gfx_calculate_screen_z_from_misc_screen_data(unit)) {
+        if (unit->screen.vy >= (s16)battle_gfx_calculate_screen_z_from_unit_screen_coords(unit)) {
             unit->velocity.vy = 0;
             move_start_float_step(unit, g_move_current_tile, g_move_destination_tile);
             unit->step_phase = g_move_float_to_centre_phases[direction];

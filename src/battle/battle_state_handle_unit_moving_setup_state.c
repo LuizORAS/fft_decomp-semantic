@@ -6,12 +6,12 @@
 void battle_state_handle_unit_moving_setup_state(void) {
     ai_command_t* selected_command_address;
     s32 selected_command;
-    battle_unit_t* casting_misc_data;
+    battle_unit_t* casting_unit;
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     selected_command_address = battle_menu_get_selected_command_address();
-    casting_misc_data = battle_unit_get_casting_misc_data();
+    casting_unit = battle_unit_get_casting();
     selected_command = selected_command_address->kind;
     switch (selected_command) {
     case 7:
@@ -19,7 +19,7 @@ void battle_state_handle_unit_moving_setup_state(void) {
         return;
     case 8:
     case 0xff:
-        casting_misc_data->path.count = 0;
+        casting_unit->path.count = 0;
         battle_menu_close_move_help();
         return;
     }

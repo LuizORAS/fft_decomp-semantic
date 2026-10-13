@@ -111,8 +111,8 @@ effect_script_result_e effect_code_script_28_step_child_timeline(effect_record_t
                     blue = track->color[index].b;
                     map_color_field(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index], red, green, blue);
                     for (i = 0; i < g_effect_context.spectator_count; i++) {
-                        battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
-                            track->duration[index], g_effect_palette_target_misc_ids[i], red, green, blue);
+                        battle_gfx_apply_unit_palette_modulation_to_units(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                            track->duration[index], g_effect_palette_target_runtime_ids[i], red, green, blue);
                     }
                     if (!(g_map_weather_flags & MAP_WEATHER_FLAG_IGNORE_WEATHER)) {
                         map_start_darkness_blend(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index],
@@ -142,8 +142,8 @@ effect_script_result_e effect_code_script_28_step_child_timeline(effect_record_t
                     green = track->color[index].g;
                     blue = track->color[index].b;
                     if (g_effect_context.targets[EFFECT_CASTER_ENTRY].target_type == EFFECT_TARGET_TYPE_UNIT) {
-                        battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
-                            track->duration[index], g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.misc_id,
+                        battle_gfx_apply_unit_palette_modulation_to_units(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                            track->duration[index], g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.runtime_id,
                             red, green, blue);
                     }
                 }
@@ -170,8 +170,8 @@ effect_script_result_e effect_code_script_28_step_child_timeline(effect_record_t
                     green = track->color[index].g;
                     blue = track->color[index].b;
                     if (g_effect_context.targets[target].target_type == EFFECT_TARGET_TYPE_UNIT) {
-                        battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
-                            track->duration[index], g_effect_context.targets[target].data.unit.misc_id, red, green,
+                        battle_gfx_apply_unit_palette_modulation_to_units(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                            track->duration[index], g_effect_context.targets[target].data.unit.runtime_id, red, green,
                             blue);
                     }
                 }

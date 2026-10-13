@@ -26,7 +26,7 @@ void battle_unit_move_toward_action_target(battle_unit_t* unit, s32 allow_height
                 velocity.vz = ((unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)) << 12) - unit->real.vz;
                 velocity.vy = 0;
             } else if (unit->strike.target_count != 0) {
-                target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[0]);
+                target = battle_unit_get_by_battle_id(unit->strike.target_list[0]);
                 setVector(&velocity, target->real.vx - unit->real.vx, target->real.vy - unit->real.vy,
                     target->real.vz - unit->real.vz);
             } else {

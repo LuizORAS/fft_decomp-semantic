@@ -346,13 +346,13 @@ s32 battle_gfx_is_spritesheet_id_loaded(s16 spritesheet_id);
  * target access uses a 0x7564-byte stride.
  */
 typedef struct battle_gfx_vram_slot {
-    u32 owner;                   /* 0x0000; misc id with owner flags, or battle_gfx_vram_slot_owner_marker_e marker */
-    u32 image_buffer_state;      /* 0x0004; upload countdown or battle_gfx_vram_slot_buffer_marker_e marker */
-    u32 evtchr_load_state;       /* 0x0008; set to 0 free, 1 a unit's attack image, 3 an EVTCHR block; never read */
-    RECT image_rect;             /* 0x000c */
-    battle_gfx_unit_seq_t seq;   /* 0x0014 */
+    u32 owner;                 /* 0x0000; runtime id with owner flags, or battle_gfx_vram_slot_owner_marker_e marker */
+    u32 image_buffer_state;    /* 0x0004; upload countdown or battle_gfx_vram_slot_buffer_marker_e marker */
+    u32 evtchr_load_state;     /* 0x0008; set to 0 free, 1 a unit's attack image, 3 an EVTCHR block; never read */
+    RECT image_rect;           /* 0x000c */
+    battle_gfx_unit_seq_t seq; /* 0x0014 */
     battle_gfx_evtchr_shp_t shp; /* 0x051c */
-    clut_t clut;                 /* 0x0f64; filled by battle_gfx_set_evtchr_palette_by_misc_id */
+    clut_t clut;                 /* 0x0f64; filled by battle_gfx_set_evtchr_palette_by_runtime_id */
     u8 image_data[0x6400];       /* 0x1164 */
 } battle_gfx_vram_slot_t;
 typedef char battle_gfx_vram_slot_size_must_be_30052[(sizeof(battle_gfx_vram_slot_t) == 30052) ? 1 : -1];
@@ -368,7 +368,7 @@ typedef enum battle_gfx_vram_slot_owner_marker {
     BATTLE_GFX_VRAM_SLOT_OWNER_NONE = 0xff,
 } battle_gfx_vram_slot_owner_marker_e;
 
-/* Otherwise owner is a misc id combined with one of these image-kind bits. */
+/* Otherwise owner is a runtime id combined with one of these image-kind bits. */
 typedef enum battle_gfx_vram_slot_owner_flags {
     BATTLE_GFX_VRAM_SLOT_OWNER_SP2 = 0x40,
     BATTLE_GFX_VRAM_SLOT_OWNER_ATTACK_IMAGE = 0x80,
@@ -476,13 +476,13 @@ extern file_extent_t g_battle_gfx_weapon_shp_files[];
 extern file_extent_t g_battle_gfx_worker8_sp2_files[];
 
 void battle_gfx_append_unit_graphics_load_descriptor(s32 map_x, s32 map_y, s32 map_level, s16 facing,
-    s16 spritesheet_id, s16 palette_id, s16 misc_id, battle_stats_t* unit, u32 flags);
+    s16 spritesheet_id, s16 palette_id, s16 runtime_id, battle_stats_t* unit, u32 flags);
 void battle_gfx_clear_unit_graphics_load_state(s32 unused_map_id);
 void battle_gfx_copy_shp_data_to_ram(battle_gfx_weapon_shp_t* dst, const battle_gfx_packed_weapon_shp_record_t* src);
 void battle_gfx_decompress_attack_spritesheet(u8* source, u8* destination);
 void battle_gfx_load_casting_unit_graphics(void);
 void battle_gfx_load_evtchr_thread(void);
-s32 battle_gfx_load_misc_unit_into_evtchr_slot(s32 misc_id, s32 slot);
+s32 battle_gfx_load_unit_attack_image_into_evtchr_slot(s32 runtime_id, s32 slot);
 s32 battle_gfx_load_unit_graphics_by_battle_id(s32, s32);
 void battle_gfx_load_unit_into_evtchr_slot(battle_unit_t* unit, s32 slot, s32 image_slot);
 void battle_gfx_load_wep_spr_data(battle_gfx_weapon_sprite_archive_t* archive);
@@ -550,7 +550,7 @@ extern battle_render_buffer_t g_battle_render_buffers[2];
 void battle_gfx_append_gpu_primitive_to_secondary_otag(u32* primitive);
 void battle_gfx_apply_status_spritesheet_change(battle_unit_t* unit, s32 tile_effect_level);
 void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_t* unit);
-s32 battle_gfx_clear_shadow_graphic_trigger_by_misc_id(u32 misc_id);
+s32 battle_gfx_clear_shadow_graphic_trigger_by_runtime_id(u32 runtime_id);
 void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_t* display, s32 end, s32 start,
     SVECTOR* position, s16 angle, s16 mode, SVECTOR* scale, u32* ot);
 void battle_gfx_draw_or_append_gpu_primitive(void* primitive);
@@ -558,9 +558,10 @@ void battle_gfx_draw_unit_shadow(battle_unit_t* unit, u32* ot);
 void battle_gfx_draw_unit_sprite_layers(battle_unit_t* unit);
 void battle_gfx_draw_unit_sprite_position_copies(battle_unit_t* unit);
 s32 battle_gfx_get_spritesheet_vram_by_battle_id(u32 battle_id);
-battle_gfx_source_frame_t* battle_gfx_get_unit_sprite_frame_and_vram_ids(u32 misc_id, battle_unit_sprite_query_t* out);
+battle_gfx_source_frame_t* battle_gfx_get_unit_sprite_frame_and_vram_ids(
+    u32 runtime_id, battle_unit_sprite_query_t* out);
 u32 battle_gfx_get_unit_spritesheet_height(battle_unit_t* unit);
-s32 battle_gfx_get_unit_spritesheet_height_by_misc_id(u32 misc_id);
+s32 battle_gfx_get_unit_spritesheet_height_by_runtime_id(u32 runtime_id);
 s32 battle_gfx_get_unit_spritesheet_height_by_unit_id(u32 unit_id);
 void battle_gfx_init_deployment_and_reset_unit_graphics_state(void);
 void battle_gfx_init_item_get_rendering(struct battle_unit* unit);
@@ -578,10 +579,10 @@ void battle_gfx_load_unit_frame_parts(
 s32 battle_gfx_open_sp2_file(battle_unit_t* unit, u32* destination);
 void battle_gfx_release_unit_sprite_display_stub(battle_gfx_sprite_display_data_t* unused_display);
 void battle_gfx_reset_jumping_unit_graphic_triggers(void);
-s32 battle_gfx_reset_unit_graphic_trigger(u32 misc_id);
+s32 battle_gfx_reset_unit_graphic_trigger(u32 runtime_id);
 void battle_gfx_select_unit_shp_frame(battle_unit_t* unit, battle_unit_anim_state_t* state, u16 frame, u16 sequence_id,
     battle_gfx_unit_shp_frame_tables_t** out_table, battle_gfx_source_frame_t** out_frame);
-s32 battle_gfx_set_shadow_graphic_trigger_by_misc_id(u32 misc_id);
+s32 battle_gfx_set_shadow_graphic_trigger_by_runtime_id(u32 runtime_id);
 void battle_gfx_set_sprite_part_flip(battle_gfx_sprite_display_data_t* display, s32 part_index, u32 flags);
 void battle_gfx_set_sprite_part_semi_transparent(
     battle_gfx_sprite_display_data_t* display, s32 part_index, s32 enabled);
@@ -598,12 +599,12 @@ extern SVECTOR g_battle_gte_rtpt_vxy1;
 extern SVECTOR g_battle_gte_rtpt_vxy2;
 
 s32 battle_gfx_calculate_screen_z_from_input_coords(struct battle_unit* unit, const SVECTOR* coords);
-s32 battle_gfx_calculate_screen_z_from_misc_battle_map_data(struct battle_unit* unit);
-s32 battle_gfx_calculate_screen_z_from_misc_map_data(struct battle_unit* unit);
-s32 battle_gfx_calculate_screen_z_from_misc_move_data(struct battle_unit* unit);
+s32 battle_gfx_calculate_screen_z_from_battle_tile(struct battle_unit* unit);
+s32 battle_gfx_calculate_screen_z_from_unit_tile(struct battle_unit* unit);
+s32 battle_gfx_calculate_screen_z_from_move_destination(struct battle_unit* unit);
 /* Returns (s16), but an s16 prototype makes callers such as
  * move_interpolate_height_toward_resting_height re-extend the result; keep s32. */
-s32 battle_gfx_calculate_screen_z_from_misc_screen_data(struct battle_unit* unit);
+s32 battle_gfx_calculate_screen_z_from_unit_screen_coords(struct battle_unit* unit);
 s32 battle_gfx_calculate_screen_z_with_caller_data(struct battle_unit* unit, const SVECTOR* coords);
 void battle_gfx_update_all_unit_rotation_and_vectors(void);
 
@@ -628,29 +629,28 @@ extern battle_gfx_other_palettes_t g_battle_gfx_other_palettes;
 extern palette_t g_battle_gfx_shadow_palette;
 extern palette_t g_battle_gfx_treasure_palettes[5];
 
-void battle_gfx_apply_misc_unit_palette_modulation(
-    s32 preset_color, s32 time, s32 misc_id, s16 red, s16 green, s16 blue);
-void battle_gfx_apply_weather_time_tile_palette_mod_by_misc_id(u32 misc_id);
+void battle_gfx_apply_unit_palette_modulation(s32 preset_color, s32 time, s32 runtime_id, s16 red, s16 green, s16 blue);
+void battle_gfx_apply_weather_time_tile_palette_mod_by_runtime_id(u32 runtime_id);
 void battle_gfx_check_tile_status_palette_mod(struct battle_unit* unit, s32 tile_effect_level, s32 final_value);
-void battle_gfx_configure_misc_unit_palette_modulation(s32 misc_id, s32 mode, s16 red, s16 green, s16 blue);
-void battle_gfx_configure_misc_unit_palette_modulation_1f(s32 unit_id);
+void battle_gfx_start_unit_fade_out(s32 runtime_id, s32 mode, s16 red, s16 green, s16 blue);
+void battle_gfx_start_unit_fade_out_red(s32 unit_id);
 void battle_gfx_copy_other_spr_palette_data_to_ram(const battle_gfx_other_sprite_archive_t* archive);
 void battle_gfx_extract_deployed_unit_palettes(void);
 void battle_gfx_highlight_all_units_blue_or_red(s32 mode);
-void battle_gfx_init_misc_unit_palette_modulation(s32 misc_id, s32 mode, s16 red, s16 green, s16 blue);
-void battle_gfx_modify_misc_unit_palette(battle_unit_t* misc, s32 mode, s32 clut_row, s32 clut_index, s32 preset,
-    s16 red, s16 green, s16 blue, s32 final_value);
+void battle_gfx_start_event_unit_fade_out(s32 runtime_id, s32 mode, s16 red, s16 green, s16 blue);
+void battle_gfx_modify_unit_palette(battle_unit_t* runtime, s32 mode, s32 clut_row, s32 clut_index, s32 preset, s16 red,
+    s16 green, s16 blue, s32 final_value);
 void battle_gfx_modify_palette_based_on_team(struct battle_unit* unit, s32 amount);
 void battle_gfx_modify_vram_palette(s32 mode, const rgba5551_t* source, s32 clut_row, s32 clut_index, s32 preset,
     s16 red, s16 green, s16 blue, s32 final_value);
-void battle_gfx_set_evtchr_palette_by_misc_id(s32 misc_id, s32 slot_index, s32 clut_index);
+void battle_gfx_set_evtchr_palette_by_runtime_id(s32 runtime_id, s32 slot_index, s32 clut_index);
 void battle_gfx_set_thrown_item_graphic_palette(s32 item_id, battle_unit_t* unit);
-void battle_gfx_set_thrown_item_palette_by_misc_id(u32 item_id, u32 misc_id);
-void battle_gfx_start_misc_unit_palette_modulation(
-    s32 preset_color, s32 time, s32 misc_id, s16 red, s16 green, s16 blue);
+void battle_gfx_set_thrown_item_palette_by_runtime_id(u32 item_id, u32 runtime_id);
+void battle_gfx_apply_unit_palette_modulation_to_units(
+    s32 preset_color, s32 time, s32 runtime_id, s16 red, s16 green, s16 blue);
 void battle_gfx_tint_all_units_by_team(void);
 void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_t* unit, s32 level, s32 final_value);
-void battle_gfx_update_misc_unit_status_palette(battle_unit_t* misc, s32 tile_effect_level, s32 final_value);
+void battle_gfx_update_unit_status_palette(battle_unit_t* runtime, s32 tile_effect_level, s32 final_value);
 void battle_gfx_update_unit_palette_animation(void);
 void battle_gfx_update_unit_palettes(void);
 
@@ -680,7 +680,7 @@ battle_gfx_sprite_display_data_t* battle_gfx_init_numeric_sprite_display(s32 uni
 void battle_gfx_init_status_bubble(battle_unit_t* unit);
 battle_gfx_sprite_display_data_t* battle_gfx_init_status_bubble_sprite_display(s32 unit_index);
 void battle_gfx_prepare_post_action_display(battle_unit_t* unit);
-s32 battle_gfx_prepare_post_action_display_by_misc_id(s32 misc_id);
+s32 battle_gfx_prepare_post_action_display_by_runtime_id(s32 runtime_id);
 void battle_gfx_update_status_bubble_display(struct battle_unit* unit);
 void battle_gfx_update_status_bubble_graphic_trigger(struct battle_unit* unit);
 void battle_gfx_update_status_bubbles_and_graphics(void);

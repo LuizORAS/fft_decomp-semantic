@@ -1,0 +1,17 @@
+#include "fft/battle_action.h"
+#include "fft/battle_unit.h"
+
+battle_unit_t* battle_unit_get_casting(void) {
+    battle_unit_t* unit;
+
+    unit = g_battle_unit_list_head;
+    if (unit != 0) {
+        do {
+            if (unit->runtime_id == g_battle_casting_runtime_id) {
+                return unit;
+            }
+            unit = unit->previous;
+        } while (unit != 0);
+    }
+    return 0;
+}

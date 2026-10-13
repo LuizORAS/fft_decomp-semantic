@@ -11,7 +11,7 @@
  * (0x78..0x7c) copy of it; 13 party member has item equipped; 14-15 variable
  * war-funds bounds; 16-17 compare the month/day pair before/after; 18-19 compare casualties
  * bounds; 22 action_check_battle_outcome() == 0; 24 unit stands on x/y/level; 37 any
- * misc-unit of that sprite palette stands on x/y/level.
+ * runtime-unit of that sprite palette stands on x/y/level.
  * The range test on unit_id is written as two comparisons: that spelling
  * makes GCC reload the byte (as the target does) where the (u32)(x - 0x78) < 5
  * form lets cse reuse the earlier load. */
@@ -29,7 +29,7 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_
     if (type == EVENT_SCENARIO_CONDITION_VARIABLE_AT_MOST && value >= script_get_variable(id))
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type >= 4 && type <= 10) {
-        unit = battle_unit_get_by_unit_id(id);
+        unit = battle_unit_get_stats_by_unit_id(id);
         if (unit != (battle_stats_t*)-1) {
             if (type == EVENT_SCENARIO_CONDITION_UNIT_PRESENT)
                 return EVENT_SCENARIO_CONDITION_RESULT_PASS;
@@ -60,7 +60,7 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_
     }
     if (type == EVENT_SCENARIO_CONDITION_ITEM_EQUIPPED) {
         for (i = 1; i < 4; i++) {
-            unit = battle_unit_get_by_unit_id(i);
+            unit = battle_unit_get_stats_by_unit_id(i);
             if (unit != (battle_stats_t*)-1) {
                 for (j = 0; j < 7; j++) {
                     if (unit->equipment[j] == id)
@@ -92,15 +92,15 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_
     if (type == EVENT_SCENARIO_CONDITION_ENEMIES_DEFEATED && action_check_battle_outcome() == 0)
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type == EVENT_SCENARIO_CONDITION_UNIT_AT_TILE) {
-        unit = battle_unit_get_by_unit_id(id);
+        unit = battle_unit_get_stats_by_unit_id(id);
         if (unit != (battle_stats_t*)-1 && unit->x == value && unit->position.y == tile_y
             && unit->position.higher_elevation == elevation)
             return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     }
     if (type == EVENT_SCENARIO_CONDITION_PALETTE_UNIT_AT_TILE) {
         for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-            if (battle_unit_has_misc_id(i)) {
-                j = battle_unit_get_battle_index_by_misc_id(i);
+            if (battle_unit_has_runtime_id(i)) {
+                j = battle_unit_get_battle_id_by_runtime_id(i);
                 if (j != -1) {
                     unit = battle_unit_get_stats_from_battle_id(j);
                     if (unit->x == value && unit->position.y == tile_y && unit->position.higher_elevation == elevation

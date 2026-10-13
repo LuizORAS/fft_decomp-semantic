@@ -8,7 +8,7 @@
  * 16-bit value that is a frame count (mode 0) or a speed (mode 1). pos[0] is the
  * start, pos[1] the destination, pos[2] the current position and pos[3] the
  * negated previous step, re-applied each frame so the unit's coordinate is
- * rewritten rather than accumulated. The misc id is published as the current
+ * rewritten rather than accumulated. The unit id is published as the current
  * thread's 32-bit task value 1, which script_waitspritemove_event_instruction
  * polls.
  */
@@ -27,7 +27,7 @@ void script_run_sprite_move(const event_sprite_move_parameters_t* instruction, s
     const u8* parameters;
     s32 mode;
     SVECTOR* coords;
-    s32 misc_id;
+    s32 runtime_id;
     s32 weight;
     s32 curve;
     s32 total;
@@ -43,12 +43,13 @@ void script_run_sprite_move(const event_sprite_move_parameters_t* instruction, s
 
     parameters = (const u8*)instruction;
     mode = use_speed;
-    misc_id = script_get_misc_id(script_read_s16(((const event_sprite_move_parameters_t*)parameters)->unit_id_le));
-    if (misc_id == EVENT_RUNTIME_ID_NONE) {
+    runtime_id
+        = script_resolve_runtime_id(script_read_s16(((const event_sprite_move_parameters_t*)parameters)->unit_id_le));
+    if (runtime_id == EVENT_RUNTIME_ID_NONE) {
         return;
     }
-    g_battle_thread_task_ids[g_battle_current_thread_id][1] = misc_id;
-    coords = battle_unit_get_event_offset_ptr_by_misc_id(misc_id);
+    g_battle_thread_task_ids[g_battle_current_thread_id][1] = runtime_id;
+    coords = battle_unit_get_event_offset_by_runtime_id(runtime_id);
     /* One advancing operand cursor preserves the retail register allocation. */
     parameters = ((const event_sprite_move_parameters_t*)parameters)->destination_le[0];
     pos[0][0] = coords->vx;
@@ -114,24 +115,24 @@ void script_run_sprite_move(const event_sprite_move_parameters_t* instruction, s
                 }
             }
         }
-        if (battle_unit_has_misc_id(misc_id) == 0) {
+        if (battle_unit_has_runtime_id(runtime_id) == 0) {
             battle_thread_exit_current();
         }
         setVector(&vec, pos[3][0], pos[3][1], pos[3][2]);
-        battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
+        battle_unit_add_event_offset_by_runtime_id(runtime_id, &vec);
         setVector(&vec, pos[2][0] / 256, pos[2][1] / 256, pos[2][2] / 256);
-        battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
+        battle_unit_add_event_offset_by_runtime_id(runtime_id, &vec);
         pos[3][0] = -vec.vx;
         pos[3][1] = -vec.vy;
         pos[3][2] = -vec.vz;
     }
-    if (battle_unit_has_misc_id(misc_id) == 0) {
+    if (battle_unit_has_runtime_id(runtime_id) == 0) {
         battle_thread_exit_current();
     }
     setVector(&vec, pos[3][0], pos[3][1], pos[3][2]);
-    battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
+    battle_unit_add_event_offset_by_runtime_id(runtime_id, &vec);
     setVector(&vec, pos[1][0] / 256, pos[1][1] / 256, pos[1][2] / 256);
-    battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
+    battle_unit_add_event_offset_by_runtime_id(runtime_id, &vec);
     if (total == 1) {
         battle_thread_yield();
     }

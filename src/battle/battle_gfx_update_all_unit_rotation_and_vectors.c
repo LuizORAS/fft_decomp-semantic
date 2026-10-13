@@ -23,7 +23,7 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
 
     unit = g_battle_unit_list_head;
     while (unit != 0) {
-        battle_unit_copy_misc_data_xyz_values(&screen, unit);
+        battle_unit_copy_draw_coords(&screen, unit);
         RotTrans(&screen, &transformed, &unit->gte_flag);
 
         if ((unit->sprite_display_flags & BATTLE_SPRITE_DISPLAY_HORIZONTAL_FLIP) != 0) {

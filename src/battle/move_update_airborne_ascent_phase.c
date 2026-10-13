@@ -19,7 +19,7 @@ void move_update_airborne_ascent_phase(battle_unit_t* unit) {
         unit->step_phase = g_move_jump_descent_phases[direction];
         unit->map_z = unit->movement.destination_z;
         if (g_move_step_value.mount) {
-            occupant = battle_unit_find_any_misc_data_at_map_coords(
+            occupant = battle_unit_find_runtime_at_tile(
                 unit->movement.destination_x, unit->movement.destination_y, unit->movement.destination_z);
             g_move_tile_occupant = occupant;
             if (occupant != 0) {

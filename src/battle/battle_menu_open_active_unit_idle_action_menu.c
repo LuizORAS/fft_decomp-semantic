@@ -9,17 +9,17 @@
  * cursor returns to it, the idling-action-menus state begins with the unit
  * summary panel, and the menu for its remaining move and action is built. */
 void battle_menu_open_active_unit_idle_action_menu(void) {
-    battle_unit_t* misc_data;
+    battle_unit_t* unit;
 
     camera_disable_map_pan();
-    misc_data = battle_unit_get_source_misc_data();
-    g_battle_casting_unit_id = misc_data->runtime_id;
-    target_move_cursor_to_unit(misc_data);
+    unit = battle_unit_get_source();
+    g_battle_casting_runtime_id = unit->runtime_id;
+    target_move_cursor_to_unit(unit);
     g_battle_game_state = BATTLE_GAME_STATE_IDLING_ACTION_MENUS;
 
-    if (misc_data != 0 && misc_data->battle_data != 0) {
-        battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, misc_data->battle_data->battle_id, 0);
+    if (unit != 0 && unit->battle_data != 0) {
+        battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, unit->battle_data->battle_id, 0);
     }
     battle_menu_build_idle_action_menu(
-        battle_menu_get_id_based_on_mount_moveable_actable(misc_data->battle_data->battle_id));
+        battle_menu_get_id_based_on_mount_moveable_actable(unit->battle_data->battle_id));
 }

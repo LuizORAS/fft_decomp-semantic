@@ -8,7 +8,7 @@
  * After a charged ability (turn event ABILITY_READY) a queued scenario event with
  * a nonzero finish operation starts; otherwise the between-turn events run. On a
  * unit's own turn, a unit whose turn is over (action_check_change_of_turn
- * returns 1) gets its last command and ability copied back into its misc record;
+ * returns 1) gets its last command and ability copied back into its runtime record;
  * a Jump then resets its preparation and goes to the between-turn events, and
  * anything else opens the Wait menu. A unit whose turn goes on gets its action
  * menus back. */
@@ -17,7 +17,7 @@ void battle_state_handle_jp_exp_gain_state(void) {
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     if ((g_camera_step_vector.vx | g_camera_step_vector.vy | g_camera_step_vector.vz) != 0) {
         return;
     }

@@ -117,7 +117,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_t* unit_data) {
                                 }
                                 if (ok == 0) {
                                     if (g_battle_gfx_vram_slots[1].owner - BATTLE_GFX_VRAM_SLOT_OWNER_EVTCHR >= 2) {
-                                        other = battle_unit_get_misc_data_by_misc_id(
+                                        other = battle_unit_get_by_runtime_id(
                                             g_battle_gfx_vram_slots[1].owner & BATTLE_GFX_VRAM_SLOT_OWNER_ID_MASK);
                                         if (other != 0) {
                                             if (other->animation.sequence_id & 1) {
@@ -177,7 +177,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_t* unit_data) {
                     unit->movement.force_animation_update = 0;
                     unit->requested_animation = 0;
                     if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
-                        other = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
+                        other = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
                         if (other != 0) {
                             other->animation.script_pos = 0;
                             other->animation.wait = 0;

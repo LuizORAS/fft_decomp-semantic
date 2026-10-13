@@ -19,7 +19,7 @@ void battle_unit_copy_rider_data_to_mount(battle_unit_t* unit, battle_unit_t* ri
         battle_unit_set_tile_position(
             rider->battle_data->battle_id, rider->map_x, rider->map_y, rider->map_z, (rider->facing / 1024));
         if (rider->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
-            mount = battle_unit_get_misc_data_by_misc_id(rider->mount_partner_runtime_id);
+            mount = battle_unit_get_by_runtime_id(rider->mount_partner_runtime_id);
             if (mount != 0) {
                 mount->map_x = mount->movement.destination_x = rider->map_x;
                 mount->map_y = mount->movement.destination_y = rider->map_y;

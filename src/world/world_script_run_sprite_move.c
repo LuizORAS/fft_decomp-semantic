@@ -25,7 +25,7 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
     const u8* parameters;
     s32 mode;
     SVECTOR* coords;
-    s32 misc_id;
+    s32 runtime_id;
     s32 weight;
     s32 curve;
     s32 total;
@@ -41,12 +41,12 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
 
     parameters = arg->unit_id_le;
     mode = use_speed;
-    misc_id = script_get_misc_id(script_read_s16(parameters));
-    if (misc_id == EVENT_RUNTIME_ID_NONE) {
+    runtime_id = script_resolve_runtime_id(script_read_s16(parameters));
+    if (runtime_id == EVENT_RUNTIME_ID_NONE) {
         return;
     }
-    g_world_thread_contexts[g_world_thread_current_id].task_words[0] = misc_id;
-    coords = battle_unit_get_event_offset_ptr_by_misc_id(misc_id);
+    g_world_thread_contexts[g_world_thread_current_id].task_words[0] = runtime_id;
+    coords = battle_unit_get_event_offset_by_runtime_id(runtime_id);
     parameters += sizeof(arg->unit_id_le);
     pos[0][0] = coords->vx;
     pos[0][1] = coords->vy;
@@ -111,32 +111,32 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
                 }
             }
         }
-        if (battle_unit_has_misc_id(misc_id) == 0) {
+        if (battle_unit_has_runtime_id(runtime_id) == 0) {
             world_thread_exit_current();
         }
         vec.vx = pos[3][0];
         vec.vy = pos[3][1];
         vec.vz = pos[3][2];
-        battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
+        battle_unit_add_event_offset_by_runtime_id(runtime_id, &vec);
         vec.vx = pos[2][0] / 256;
         vec.vy = pos[2][1] / 256;
         vec.vz = pos[2][2] / 256;
-        battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
+        battle_unit_add_event_offset_by_runtime_id(runtime_id, &vec);
         pos[3][0] = -vec.vx;
         pos[3][1] = -vec.vy;
         pos[3][2] = -vec.vz;
     }
-    if (battle_unit_has_misc_id(misc_id) == 0) {
+    if (battle_unit_has_runtime_id(runtime_id) == 0) {
         world_thread_exit_current();
     }
     vec.vx = pos[3][0];
     vec.vy = pos[3][1];
     vec.vz = pos[3][2];
-    battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
+    battle_unit_add_event_offset_by_runtime_id(runtime_id, &vec);
     vec.vx = pos[1][0] / 256;
     vec.vy = pos[1][1] / 256;
     vec.vz = pos[1][2] / 256;
-    battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
+    battle_unit_add_event_offset_by_runtime_id(runtime_id, &vec);
     if (total == 1) {
         world_thread_yield();
     }

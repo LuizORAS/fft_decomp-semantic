@@ -17,8 +17,7 @@ void camera_update_cursor_tile_vector(void) {
 
     if (g_camera_zoom_action == CAMERA_STEP_NONE && g_camera_tilt_action == CAMERA_STEP_NONE
         && g_camera_rotation_action == CAMERA_ROTATION_NONE && g_camera_map_pan_enabled == 0) {
-        unit = battle_unit_get_selectable_misc_data_at_map_coords(
-            g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+        unit = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
         height = 0;
         if (unit != 0) {
             height = (g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height >> 1) * g_camera_zoom.vy / ONE;

@@ -6,8 +6,8 @@
 /*
  * Event instruction: set or clear movement-effect suppression on the addressed unit(s).
  * Parameters: 0x00 unit id (16-bit value), 0x02 nonzero to set, zero to clear.
- * A unit id above 0xff selects a group, so the misc-state loop runs over all
- * 21 unit indices.  WORLD twin: world_unit_update_misc_move_flag_bit_2.
+ * A unit id above 0xff selects a group, so the unit-state loop runs over all
+ * 21 unit indices. WORLD twin: world_script_set_units_movement_effect_suppression.
  */
 void script_set_units_movement_effect_suppression(const event_movement_effect_parameters_t* parameters) {
     u16 unit_id;
@@ -15,7 +15,7 @@ void script_set_units_movement_effect_suppression(const event_movement_effect_pa
     s32 unit_index;
 
     unit_id = script_read_s16(parameters->unit_id_le);
-    if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &state) != 0) {
+    if (battle_unit_prepare_event_filter(&unit_id, &state) != 0) {
         unit_index = 0;
         do {
             if (script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &state) != 0) {

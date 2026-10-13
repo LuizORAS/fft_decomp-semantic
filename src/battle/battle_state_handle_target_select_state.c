@@ -21,9 +21,8 @@ void battle_state_handle_target_select_state(void) {
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if (g_main_input_pressed_buttons & PSX_PAD_CIRCLE) {
-        caster = battle_unit_get_casting_misc_data();
-        target = battle_unit_get_selectable_misc_data_at_map_coords(
-            g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+        caster = battle_unit_get_casting();
+        target = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
         /* The targeted choice requires an enemy, the recovery choice an ally. */
         if (target == 0) {
             battle_state_enter_target_select_denied();
@@ -44,10 +43,10 @@ void battle_state_handle_target_select_state(void) {
         }
         battle_gfx_update_unit_palettes();
     } else if (g_main_input_pressed_buttons & PSX_PAD_CROSS) {
-        target_move_cursor_to_unit(battle_unit_get_casting_misc_data());
+        target_move_cursor_to_unit(battle_unit_get_casting());
         battle_gfx_update_unit_palettes();
         battle_menu_set_next_script_action_menus();
     } else if (g_main_input_pressed_buttons & PSX_PAD_TRIANGLE) {
-        target_move_cursor_to_unit(battle_unit_get_casting_misc_data());
+        target_move_cursor_to_unit(battle_unit_get_casting());
     }
 }

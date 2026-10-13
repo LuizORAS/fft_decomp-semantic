@@ -197,7 +197,7 @@ s32 require_party_select_unit_to_remove(void) {
                 battle_unit = battle_unit_get_stats_from_battle_id(party_index);
                 selected_battle_unit = battle_unit_find_stats_by_entd_unit_id(battle_unit->unit_id, &message_id);
                 if (message_id >= 0 && party_index == message_id
-                    && battle_unit_get_misc_id_by_battle_id(party_index) != -1)
+                    && battle_unit_get_runtime_id_by_battle_id(party_index) != -1)
                     break;
             }
         }

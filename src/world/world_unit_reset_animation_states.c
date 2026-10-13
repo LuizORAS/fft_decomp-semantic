@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Reset the per-unit facing/animation records for all 21 simulation slots and
- * reseed each unit's facing from its misc data, or 0xff when the slot is
+ * reseed each unit's facing from its unit data, or 0xff when the slot is
  * empty. */
 void world_unit_reset_animation_states(void) {
     unit_animation_state_t* state;
@@ -14,8 +14,8 @@ void world_unit_reset_animation_states(void) {
     do {
         state->rotating = 0;
         state->delay = 0;
-        if (battle_unit_has_misc_id(i) != 0) {
-            state->initial_facing = battle_unit_get_facing_nibble_by_misc_id(i);
+        if (battle_unit_has_runtime_id(i) != 0) {
+            state->initial_facing = battle_unit_get_facing_nibble_by_runtime_id(i);
         } else {
             state->initial_facing = 0xff;
         }

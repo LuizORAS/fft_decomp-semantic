@@ -18,8 +18,8 @@ void battle_state_enter_unit_moving_setup(void) {
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_UNIT_MOVING_SETUP;
-    src = battle_unit_get_source_misc_data();
-    cast = battle_unit_get_casting_misc_data();
+    src = battle_unit_get_source();
+    cast = battle_unit_get_casting();
 
     if (cast->path.pending_mount & BATTLE_PENDING_MOUNT_SET) {
         battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK, 1, src->battle_data->battle_id, 0,

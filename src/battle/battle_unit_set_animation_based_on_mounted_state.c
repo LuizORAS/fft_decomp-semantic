@@ -19,7 +19,7 @@ void battle_unit_set_animation_based_on_mounted_state(battle_unit_t* unit) {
         } else if (water_depth < 2) {
             selected = BATTLE_UNIT_ANIMATION_STAND;
             if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
-                other = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
+                other = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
                 if (other != 0) {
                     battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, other);
                 }

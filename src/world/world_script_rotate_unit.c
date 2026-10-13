@@ -25,13 +25,13 @@ void world_script_rotate_unit(const event_rotate_unit_parameters_t* parameters) 
 
     order = 1;
     unit_id = script_read_s16(parameters->unit_id_le);
-    if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &filter_mode) != 0) {
+    if (world_unit_prepare_event_filter(&unit_id, &filter_mode) != 0) {
         for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_unit_face_slot_order[i], &filter_mode) != 0) {
                 facing = parameters->facing;
                 if (facing >= EVENT_ROTATE_UNIT_FACING_RELATIVE_FIRST && facing < EVENT_ROTATE_UNIT_FACING_RESTORE) {
                     facing = facing & 0xF;
-                    facing = battle_unit_get_facing_nibble_by_misc_id(unit_id) + facing * 4;
+                    facing = battle_unit_get_facing_nibble_by_runtime_id(unit_id) + facing * 4;
                     facing = facing & 0xF;
                 } else if (facing == EVENT_ROTATE_UNIT_FACING_CAMERA) {
                     facing = g_world_rotation_speed_frames[4 + ((world_camera_wrap_yaw_angle() & 0xC00) >> 10)] * 4;

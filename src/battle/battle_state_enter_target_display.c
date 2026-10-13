@@ -12,8 +12,8 @@ void battle_state_enter_target_display(void) {
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_TARGET_DISPLAY;
-    cast = battle_unit_get_casting_misc_data()->battle_data;
-    unit = battle_unit_get_misc_data_by_battle_id(cast->auto_battle_target);
+    cast = battle_unit_get_casting()->battle_data;
+    unit = battle_unit_get_by_battle_id(cast->auto_battle_target);
     target_move_cursor_to_unit(unit);
     camera_rotate_when_unit_tile_not_visible(unit);
     if (unit != 0) {

@@ -18,7 +18,7 @@ void battle_state_handle_targeting_range_state(void) {
     battle_unit_t* unit;
     battle_unit_t* target;
 
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
@@ -52,7 +52,7 @@ void battle_state_handle_targeting_range_state(void) {
             }
             return;
         case BATTLE_TARGETING_TYPE_UNIT:
-            target = battle_unit_get_misc_data_by_battle_id(unit->command_state.ai.data.action.target_id);
+            target = battle_unit_get_by_battle_id(unit->command_state.ai.data.action.target_id);
             if (target != 0) {
                 target_update_free_cursor_selection(unit, target);
                 frame_data = unit->state_frame_counter++;

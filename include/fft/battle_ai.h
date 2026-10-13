@@ -569,7 +569,7 @@ typedef enum ai_command_kind {
     AI_COMMAND_UNRESOLVED_FF = 0xff,
 } ai_command_kind_e;
 
-/* The setup dispatcher writes this at Misc +0x158 and copies 24 bytes into
+/* The setup dispatcher writes this at runtime +0x158 and copies 24 bytes into
  * each history slot. ACT copies the 20-byte payload from AI action +0x08;
  * MOVE writes only x/layer/y, and END_TURN leaves the payload unchanged. */
 typedef struct ai_command {

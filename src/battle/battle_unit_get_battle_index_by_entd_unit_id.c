@@ -3,12 +3,12 @@
 #include "psx/types.h"
 
 /* Resolves an event unit id to a battle unit slot through
- * script_get_misc_id. Returns 0x7d0 when the id resolves to no unit with
+ * script_resolve_runtime_id. Returns 0x7d0 when the id resolves to no unit with
  * battle stats. */
 s32 battle_unit_get_battle_index_by_entd_unit_id(s32 unit_id) {
-    s32 misc_id = script_get_misc_id(unit_id);
-    if (misc_id != EVENT_RUNTIME_ID_NONE) {
-        s32 idx = battle_unit_get_battle_index_by_misc_id(misc_id);
+    s32 runtime_id = script_resolve_runtime_id(unit_id);
+    if (runtime_id != EVENT_RUNTIME_ID_NONE) {
+        s32 idx = battle_unit_get_battle_id_by_runtime_id(runtime_id);
         if (idx != -1) {
             return idx;
         }

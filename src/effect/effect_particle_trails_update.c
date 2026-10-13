@@ -108,7 +108,8 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
             orient = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
             caster_target = &g_effect_context.targets[EFFECT_CASTER_ENTRY];
             if (caster_target->target_type == EFFECT_TARGET_TYPE_UNIT) {
-                facing_yaw = ((battle_unit_get_facing_quadrant_by_misc_id(caster_target->data.unit.misc_id) + 1) & 3)
+                facing_yaw
+                    = ((battle_unit_get_facing_quadrant_by_runtime_id(caster_target->data.unit.runtime_id) + 1) & 3)
                     << 10;
                 rotation.vz = 0;
                 rotation.vx = 0;

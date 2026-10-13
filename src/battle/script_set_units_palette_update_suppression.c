@@ -13,7 +13,7 @@ void script_set_units_palette_update_suppression(s32 event_unit_id, s32 enable) 
     s32 i;
 
     unit_id = event_unit_id;
-    if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &mode) != 0) {
+    if (battle_unit_prepare_event_filter(&unit_id, &mode) != 0) {
         i = 0;
         do {
             if (script_filter_unit_id_by_mode(&unit_id, (u16*)&i, &mode) != 0) {

@@ -8,7 +8,7 @@ void battle_state_restart_menu_to_targeting(void) {
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_MENU_TO_TARGETING;
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     unit->state_frame_counter = 0;
     unit->command_ready = 0;
     target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 0);

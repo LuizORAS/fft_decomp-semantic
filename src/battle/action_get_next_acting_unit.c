@@ -18,7 +18,7 @@ void action_get_next_acting_unit(s32 at_index) {
     g_battle_game_state = BATTLE_GAME_STATE_ACTIVE_TURN;
     id = action_calculate_at_list_and_get_specific_unit_id(at_index);
     if (id >= 0) {
-        unit = battle_unit_get_misc_data_by_battle_id(id & 0xFF);
+        unit = battle_unit_get_by_battle_id(id & 0xFF);
         if ((id & 0x100) != 0) {
             target_move_cursor_to_action_target(unit);
             target_calculate_for_menu_types(&unit->battle_data->action_command);

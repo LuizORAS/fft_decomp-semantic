@@ -10,5 +10,5 @@ void battle_gfx_shift_and_fill_position_copies(battle_unit_t* unit) {
         unit->position_copies[index] = unit->position_copies[index - 1];
         index--;
     } while (index > 0);
-    battle_unit_copy_misc_data_xyz_values(unit->position_copies, unit);
+    battle_unit_copy_draw_coords(unit->position_copies, unit);
 }

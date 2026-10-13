@@ -15,21 +15,21 @@
  * battle unit as not existing. A unit id that does not resolve does nothing. The
  * interpreter always passes remove = 1. */
 void script_teleportout_event_instruction(s32 unit_id, s32 remove) {
-    s32 misc;
+    s32 unit;
     s32 idx;
 
-    misc = script_get_misc_id(unit_id);
-    if (misc == EVENT_RUNTIME_ID_NONE) {
+    unit = script_resolve_runtime_id(unit_id);
+    if (unit == EVENT_RUNTIME_ID_NONE) {
         return;
     }
     g_sound_pending_sfx_id = MAIN_SFX_TELEPORT_OUT;
-    g_thread_call_target = (void (*)(void))effect_set_secondary_teleport_by_misc_id;
-    thread_call_on_main_stack(misc);
-    idx = battle_unit_get_battle_index_by_misc_id(misc);
-    battle_unit_set_animation(misc, BATTLE_UNIT_ANIMATION_RAISE_HANDS);
-    battle_gfx_init_misc_unit_palette_modulation(misc, 2, 0x1F, 0x1F, 0x1F);
+    g_thread_call_target = (void (*)(void))effect_set_secondary_teleport_by_runtime_id;
+    thread_call_on_main_stack(unit);
+    idx = battle_unit_get_battle_id_by_runtime_id(unit);
+    battle_unit_set_animation(unit, BATTLE_UNIT_ANIMATION_RAISE_HANDS);
+    battle_gfx_start_event_unit_fade_out(unit, 2, 0x1F, 0x1F, 0x1F);
     battle_thread_wait_frames(0x3C);
-    battle_gfx_init_misc_unit_palette_modulation(misc, 2, -0x1F, -0x1F, -0x1F);
+    battle_gfx_start_event_unit_fade_out(unit, 2, -0x1F, -0x1F, -0x1F);
     battle_thread_wait_frames(0x3C);
     if (remove != 0) {
         battle_unit_set_cannot_exist(idx);

@@ -35,7 +35,7 @@ void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_t* unit) {
     s32 rise;
 
     layer = unit->map_z;
-    battle_unit_copy_misc_data_xyz_values(&coords, unit);
+    battle_unit_copy_draw_coords(&coords, unit);
     tile = map_get_tile_data_pointer((coords.vx / MAP_TILE_SIZE), (coords.vz / MAP_TILE_SIZE), layer);
     depth = tile->depth_half_height;
     height = tile->height + depth.depth;

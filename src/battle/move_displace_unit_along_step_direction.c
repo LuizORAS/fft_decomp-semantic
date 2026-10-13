@@ -40,7 +40,7 @@ void move_displace_unit_along_step_direction(battle_unit_t* unit, s32 x, s32 y, 
         unit->real.vx = axis << 12;
         break;
     }
-    screen_z = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
+    screen_z = battle_gfx_calculate_screen_z_from_unit_screen_coords(unit);
     unit->screen.vy = screen_z;
     unit->real.vy = screen_z << 12;
     unit->shadow_dirty |= 1;

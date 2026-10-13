@@ -38,14 +38,14 @@ void battle_unit_increment_or_decrement_height_mod(battle_unit_t* unit) {
             if (unit->depth_height_offset < 0) {
                 unit->depth_height_offset = 0;
             }
-            screen_z = ((battle_screen_z_halfword_fn_t)battle_gfx_calculate_screen_z_from_misc_screen_data)(unit);
+            screen_z = ((battle_screen_z_halfword_fn_t)battle_gfx_calculate_screen_z_from_unit_screen_coords)(unit);
             unit->screen.vy = screen_z;
             unit->real.vy = screen_z << 12;
         } else {
             unit->float_bob_offset = 0;
         }
     }
-    screen_z = ((battle_screen_z_halfword_fn_t)battle_gfx_calculate_screen_z_from_misc_screen_data)(unit);
+    screen_z = ((battle_screen_z_halfword_fn_t)battle_gfx_calculate_screen_z_from_unit_screen_coords)(unit);
     if (unit->screen.vy > screen_z) {
         unit->screen.vy = screen_z;
         unit->real.vy = screen_z << 12;

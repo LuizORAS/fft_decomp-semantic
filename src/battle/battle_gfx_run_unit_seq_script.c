@@ -110,11 +110,11 @@ void battle_gfx_run_unit_seq_script(battle_unit_t* unit, battle_unit_anim_state_
                     || (attack_id >= ABILITY_ID_JUMP_FIRST && attack_id < ABILITY_ID_MATH_FIRST)) {
                     if (unit->strike.target_count != 0) {
                         for (i = 0; i < unit->strike.target_count; i++) {
-                            target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
+                            target = battle_unit_get_by_battle_id(unit->strike.target_list[i]);
                             if (target != 0) {
                                 battle_unit_set_target_animation_from_attack_type(unit, target);
                                 battle_unit_set_attacker_animation_for_shield_block(unit, target);
-                                battle_gfx_prepare_post_action_display_by_misc_id(target->runtime_id);
+                                battle_gfx_prepare_post_action_display_by_runtime_id(target->runtime_id);
                                 effect_set_evade_type_data_and_weapon_element(unit, 0);
                             }
                         }

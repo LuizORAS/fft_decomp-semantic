@@ -16,7 +16,7 @@ void battle_state_handle_menu_to_targeting_state(void) {
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     if (unit->state_frame_counter >= 31 && !unit->command_ready) {
         g_main_system_animation_speed = 2;
         if (!ai_build_command(unit->battle_data->battle_id, &unit->command_state.ai)) {
@@ -35,13 +35,13 @@ void battle_state_handle_menu_to_targeting_state(void) {
     switch (kind) {
     case AI_COMMAND_MOVE:
         if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
-            g_battle_casting_unit_id = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id)->runtime_id;
+            g_battle_casting_runtime_id = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id)->runtime_id;
             action_handle_move_command();
             return;
         }
         /* fallthrough */
     case AI_COMMAND_MOVE_SELF:
-        g_battle_casting_unit_id = g_battle_unit_source_misc_id;
+        g_battle_casting_runtime_id = g_battle_unit_source_runtime_id;
         action_handle_move_command();
         return;
     case AI_COMMAND_ACT:
@@ -49,7 +49,7 @@ void battle_state_handle_menu_to_targeting_state(void) {
         case SKILLSET_ID_DEFEND:
             status_inflict_defending_to_battle_id(unit->battle_data->battle_id);
             unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
-            battle_unit_update_display_by_misc_id(unit->runtime_id);
+            battle_unit_update_display_by_runtime_id(unit->runtime_id);
             action_set_only_action_taken(unit->battle_data->battle_id);
             battle_state_enter_after_command();
             return;
@@ -57,7 +57,7 @@ void battle_state_handle_menu_to_targeting_state(void) {
             unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
             status_enable_disable_acting(unit->battle_data);
             ai_init_unit_abilities(unit->battle_data->battle_id);
-            battle_unit_update_display_by_misc_id(unit->runtime_id);
+            battle_unit_update_display_by_runtime_id(unit->runtime_id);
             action_set_only_action_taken(unit->battle_data->battle_id);
             battle_state_enter_after_command();
             return;

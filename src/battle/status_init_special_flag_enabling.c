@@ -16,7 +16,7 @@ s32 status_init_special_flag_enabling(s32 unit_id) {
         s32 byte_index = i / 8;
         s32 mask = 0x80 >> (i & 7);
         if (unit->status_sets.current[byte_index] & mask) {
-            status_queue_misc_graphics_flag_change(STATUS_HANDLER_INDEX(i), 1, unit_id);
+            status_queue_runtime_graphics_flag_change(STATUS_HANDLER_INDEX(i), 1, unit_id);
         }
         i += 1;
     } while (i < STATUS_COUNT);

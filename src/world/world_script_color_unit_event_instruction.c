@@ -11,18 +11,18 @@
  */
 void world_script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters) {
     u16 unit_id;
-    s32 misc_index;
+    s32 filter_mode;
     s32 unit_index;
     const event_unit_color_t* color;
 
     unit_id = script_read_s16(parameters->unit_id_le);
-    if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
+    if (world_unit_prepare_event_filter(&unit_id, &filter_mode) != 0) {
         color = &parameters->color;
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
-            if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &misc_index) != 0) {
-                battle_gfx_start_misc_unit_palette_modulation(
+            if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &filter_mode) != 0) {
+                battle_gfx_apply_unit_palette_modulation_to_units(
                     color->mode, color->duration, unit_id, color->rgb.r, color->rgb.g, color->rgb.b);
-                if (misc_index == 0) {
+                if (filter_mode == 0) {
                     break;
                 }
             }

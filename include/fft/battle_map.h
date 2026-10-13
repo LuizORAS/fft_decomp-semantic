@@ -872,7 +872,7 @@ s32 map_calculate_location(const battle_stats_t* unit);
 s32 map_get_tile_data_value(s32 field, s32 x, s32 y, s32 layer);
 map_tile_t* map_get_tile_data_pointer(s32 x, s32 y, u32 layer);
 s32 map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value);
-map_tile_t* map_get_tile_data_ptr_from_misc_id(u32 misc_id);
+map_tile_t* map_get_unit_tile_by_runtime_id(u32 runtime_id);
 void map_store_selected_tile_coordinates(SVECTOR* destination);
 void map_store_selected_tile_data(void);
 s32 map_calculate_slope_height(const SVECTOR* coords, s32 map_z);
@@ -882,7 +882,7 @@ void map_store_max_coordinates(SVECTOR* destination);
 /* A typed terrain parameter loses the first retail byte-cursor increment. */
 void map_copy_xy_coords_and_tile_data(u8* data);
 map_tile_t* map_get_tile_data_ptr_from_battle_id(u32 battle_id);
-map_tile_t* map_get_tile_data_ptr_from_misc_screen_coords(u32 misc_id);
+map_tile_t* map_get_unit_tile_from_runtime_screen_coords(u32 runtime_id);
 
 /* items and traps */
 extern map_move_find_item_data_t g_map_move_find_item_data[MAP_ID_COUNT];

@@ -29,11 +29,12 @@ s32 effect_splash_secondary_handler(void) {
         g_effect_current_secondary->phase = EFFECT_SECONDARY_PHASE_EXECUTING;
         break;
     case EFFECT_SECONDARY_PHASE_EXECUTING:
-        tile = map_get_tile_data_ptr_from_misc_screen_coords(
-            g_effect_current_secondary->target.record.data.unit.misc_id);
+        tile = map_get_unit_tile_from_runtime_screen_coords(
+            g_effect_current_secondary->target.record.data.unit.runtime_id);
         g_effect_trap_particle_configs[EFFECT_PARTICLE_GROUP_SPLASH].position.y
             = -((tile->height + tile->depth_half_height.depth) * 12)
-            - battle_unit_get_screen_data_ptr_by_misc_id(g_effect_current_secondary->target.record.data.unit.misc_id)
+            - battle_unit_get_screen_coords_by_runtime_id(
+                g_effect_current_secondary->target.record.data.unit.runtime_id)
                   ->vy;
         effect_start_group(EFFECT_PARTICLE_GROUP_SPLASH, 11);
         /* fallthrough */

@@ -12,5 +12,5 @@ void battle_unit_set_real_coords_from_map_coords(battle_unit_t* unit) {
     unit->real.vx = tile_center.vx << 12;
     tile_center.vz = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     unit->real.vz = tile_center.vz << 12;
-    unit->real.vy = battle_gfx_calculate_screen_z_from_misc_map_data(unit) << 12;
+    unit->real.vy = battle_gfx_calculate_screen_z_from_unit_tile(unit) << 12;
 }

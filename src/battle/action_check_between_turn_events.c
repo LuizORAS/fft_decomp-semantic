@@ -13,18 +13,18 @@ void action_check_between_turn_events(void) {
     action_clear_at_list_id();
     g_main_system_animation_speed = 1;
     action_run_between_turn_events();
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     if (unit == 0) {
         return;
     }
-    g_battle_casting_unit_id = unit->runtime_id;
+    g_battle_casting_runtime_id = unit->runtime_id;
     battle_unit_store_entd_flags_without_control_flag(unit);
     if (unit->battle_data != 0) {
         battle_menu_reset_unit_record(unit->battle_data->battle_id);
         battle_unit_store_entd_flags_without_control_flag(unit);
         if (g_battle_menu_status_requested != 0 && !(unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED)
             && g_action_turn_event_type == BATTLE_TURN_EVENT_UNIT_READY) {
-            battle_unit_update_display_by_misc_id(unit->runtime_id);
+            battle_unit_update_display_by_runtime_id(unit->runtime_id);
             main_sound_play_sfx(MAIN_SFX_STATUS_MENU_REQUEST);
             action_open_status_menu_at_list_start();
             action_show_next_at_list_entry();
@@ -34,7 +34,7 @@ void action_check_between_turn_events(void) {
         g_action_post_action = 0;
         if (g_action_turn_event_type == BATTLE_TURN_EVENT_UNIT_READY
             || g_action_turn_event_type == BATTLE_TURN_EVENT_NONE) {
-            battle_unit_update_display_by_misc_id(unit->runtime_id);
+            battle_unit_update_display_by_runtime_id(unit->runtime_id);
         }
         if (battle_state_try_enter_scenario_event(unit) == 0) {
             battle_unit_start_view_thread(UNIT_VIEW_MODE_TILE_INFO, 0xff, 0xff);
@@ -42,7 +42,7 @@ void action_check_between_turn_events(void) {
             ai_init_selected_action();
             g_battle_menu_status_enabled = 1;
         } else {
-            battle_unit_update_display_by_misc_id(unit->runtime_id);
+            battle_unit_update_display_by_runtime_id(unit->runtime_id);
         }
         g_battle_menu_status_requested = 0;
     } else {

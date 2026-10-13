@@ -8,7 +8,7 @@
  * Chocobo records share the coordinates.
  */
 battle_unit_t* battle_unit_find_other_chocobo_at_map_coords(s32 x, s32 y, s32 z) {
-    battle_unit_t* misc;
+    battle_unit_t* unit;
     battle_unit_t** cursor;
     s32 count;
     s32 id;
@@ -17,25 +17,25 @@ battle_unit_t* battle_unit_find_other_chocobo_at_map_coords(s32 x, s32 y, s32 z)
     battle_unit_t* result;
     s32 index;
 
-    misc = g_battle_unit_list_head;
+    unit = g_battle_unit_list_head;
     count = 0;
-    if (misc != 0) {
+    if (unit != 0) {
         spritesheet_id = BATTLE_SPRITESHEET_ID_CHOCOBO;
         cursor = list;
         do {
-            if (misc->map_x == x && misc->map_y == y && misc->map_z == z && misc->spritesheet_id == spritesheet_id) {
-                *cursor = misc;
+            if (unit->map_x == x && unit->map_y == y && unit->map_z == z && unit->spritesheet_id == spritesheet_id) {
+                *cursor = unit;
                 cursor += 1;
                 count += 1;
             }
-            misc = misc->previous;
-        } while (misc != 0);
+            unit = unit->previous;
+        } while (unit != 0);
     }
     if (count != 0) {
         for (index = 0; index < count; index++) {
             result = list[index];
             id = result->runtime_id;
-            if (id != g_battle_unit_source_misc_id && id != g_battle_casting_unit_id) {
+            if (id != g_battle_unit_source_runtime_id && id != g_battle_casting_runtime_id) {
                 return result;
             }
         }

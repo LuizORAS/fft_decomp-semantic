@@ -25,7 +25,7 @@ void move_finish_unit_step_at_tile_edge(battle_unit_t* unit) {
     }
     unit->velocity.vz = 0;
     unit->velocity.vx = 0;
-    target_z = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
+    target_z = battle_gfx_calculate_screen_z_from_unit_screen_coords(unit);
     g_move_target_screen_z = target_z;
     if (unit->screen.vy < target_z) {
         return;

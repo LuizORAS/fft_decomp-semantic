@@ -15,7 +15,7 @@
  *
  * With all four directions blocked no candidate replaces the initial distance
  * 0x8000, and the result is the yaw variable plus 0x8000 truncated to s16. */
-s16 camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
+s16 camera_pick_nearest_unblocked_yaw(s32 runtime_id_a, s32 runtime_id_b) {
     s32 yaw;
     s32 mask;
     s32 raw;
@@ -29,13 +29,13 @@ s16 camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
     s32 dist;
 
     yaw = camera_wrap_yaw_angle() & 0xFFF;
-    battle_unit_copy_map_coords_from_misc_id(misc_id_a, &g_battle_scratch_coords);
+    battle_unit_copy_map_coords_by_runtime_id(runtime_id_a, &g_battle_scratch_coords);
     /* The raw result is assigned before it is masked: combine then knows
      * nothing about the mask's high bits and the loop test keeps its sll 16. */
     mask = map_get_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, g_battle_scratch_coords.vx,
         g_battle_scratch_coords.vz, g_battle_scratch_coords.vy);
     mask &= 0xFF;
-    battle_unit_copy_map_coords_from_misc_id(misc_id_b, &g_battle_scratch_coords);
+    battle_unit_copy_map_coords_by_runtime_id(runtime_id_b, &g_battle_scratch_coords);
     mask = (mask
                | map_get_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, g_battle_scratch_coords.vx,
                    g_battle_scratch_coords.vz, g_battle_scratch_coords.vy))

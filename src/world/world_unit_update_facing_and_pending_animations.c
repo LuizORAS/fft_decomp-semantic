@@ -18,16 +18,16 @@ void world_unit_update_facing_and_pending_animations(void) {
 
     state = g_world_unit_animation_states;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++, state++) {
-        if (battle_unit_has_misc_id(i) != 0) {
+        if (battle_unit_has_runtime_id(i) != 0) {
             if (g_world_unit_pending_animations[i] != 0) {
-                moving = move_is_unit_moving_by_misc_id(i);
+                moving = move_is_unit_moving_by_runtime_id(i);
                 if (moving == 0 && g_world_unit_was_moving_latch[i] != 0) {
                     world_unit_set_animation(i, g_world_unit_pending_animations[i]);
                     g_world_unit_pending_animations[i] = 0;
                 }
                 g_world_unit_was_moving_latch[i] = moving;
             }
-            current = get_current_facing_byte_from_misc_id(i);
+            current = world_unit_get_facing_sixteenth_by_runtime_id(i);
             if (state->rotating == 0) {
                 continue;
             }

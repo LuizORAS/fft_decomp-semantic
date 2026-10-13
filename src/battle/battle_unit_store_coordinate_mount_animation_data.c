@@ -18,7 +18,7 @@ void battle_unit_store_coordinate_mount_animation_data(battle_unit_t* unit) {
         /* facing is read signed (lh) here. */
         battle_unit_set_tile_position(data->battle_id, unit->map_x, unit->map_y, unit->map_z, unit->facing / 1024);
         if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
-            mount = battle_unit_get_misc_data_by_misc_id(unit->runtime_id);
+            mount = battle_unit_get_by_runtime_id(unit->runtime_id);
             if (unit->battle_data != 0) {
                 battle_unit_set_tile_position(
                     mount->battle_data->battle_id, unit->map_x, unit->map_y, unit->map_z, unit->facing / 1024);
@@ -26,7 +26,7 @@ void battle_unit_store_coordinate_mount_animation_data(battle_unit_t* unit) {
         }
     }
     battle_unit_set_move_and_screen_coords(unit);
-    battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
+    battle_gfx_calculate_screen_z_from_unit_screen_coords(unit);
     target_move_cursor_to_unit(unit);
     unit->path.count = 0;
     battle_unit_set_animation_based_on_status(unit);

@@ -13,6 +13,6 @@ void action_set_casting_unit_id_ff(void) {
     script_reset_event_state();
     action_clear_at_list_active();
     g_battle_menu_status_enabled = 0;
-    g_battle_casting_unit_id = 0xff;
-    g_battle_unit_source_misc_id = 0xff;
+    g_battle_casting_runtime_id = 0xff;
+    g_battle_unit_source_runtime_id = 0xff;
 }

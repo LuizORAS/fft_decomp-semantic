@@ -918,7 +918,7 @@ typedef enum main_game_flow_state {
 typedef enum main_system_error {
     MAIN_SYSTEM_ERROR_HEAP_ALLOC = 1,            /* main_file_load_to_heap got no block */
     MAIN_SYSTEM_ERROR_FILE_LOAD = 2,             /* a checked file load returned 0 */
-    MAIN_SYSTEM_ERROR_NO_UNIT_RUNTIME_SLOT = 6,  /* battle_unit_claim_misc_slot found none free */
+    MAIN_SYSTEM_ERROR_NO_UNIT_RUNTIME_SLOT = 6,  /* battle_unit_claim_slot found none free */
     MAIN_SYSTEM_ERROR_SHP_FRAME = 8,             /* frame index above 0x200 or frame pointer -1 */
     MAIN_SYSTEM_ERROR_SEQ_ANIMATION = 9,         /* animation index above 0x100 or sequence pointer -1 */
     MAIN_SYSTEM_ERROR_FRAME_PART_COUNT = 10,     /* more than eight parts in a unit frame */
@@ -1154,7 +1154,7 @@ typedef struct main_gfx_unit_graphics_load_descriptor {
     u16 facing;     /* a quarter turn per unit */
     s16 spritesheet_id;
     u16 palette_id;
-    u16 misc_id;
+    u16 runtime_id;
     struct battle_stats* battle_stats;
     u32 flags; /* nonzero: the unit starts undrawn */
 } main_gfx_unit_graphics_load_descriptor_t;

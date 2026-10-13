@@ -38,8 +38,8 @@ void effect_advance_target_palette_track(effect_palette_track_t* track, s16* key
                 blue = track->color[index].b;
                 map_color_field(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index], red, green, blue);
                 for (i = 0; i < g_effect_context.spectator_count; i++) {
-                    battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
-                        track->duration[index], g_effect_palette_target_misc_ids[i], red, green, blue);
+                    battle_gfx_apply_unit_palette_modulation_to_units(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                        track->duration[index], g_effect_palette_target_runtime_ids[i], red, green, blue);
                 }
                 if (!(g_map_weather_flags & MAP_WEATHER_FLAG_IGNORE_WEATHER)) {
                     map_start_darkness_blend(

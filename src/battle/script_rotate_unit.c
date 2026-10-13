@@ -26,18 +26,18 @@ void script_rotate_unit(const event_rotate_unit_parameters_t* parameters) {
 
     order = 1;
     unit_id = script_read_s16(parameters->unit_id_le);
-    if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &filter_mode) != 0) {
+    if (battle_unit_prepare_event_filter(&unit_id, &filter_mode) != 0) {
         for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
             if (script_filter_unit_id_by_mode(&unit_id, &g_script_unit_face_slot_order[i], &filter_mode) != 0) {
                 facing = parameters->facing;
                 if (facing >= EVENT_ROTATE_UNIT_FACING_RELATIVE_FIRST && facing < EVENT_ROTATE_UNIT_FACING_RESTORE) {
                     facing = facing & 0xF;
-                    facing = battle_unit_get_facing_nibble_by_misc_id(unit_id) + facing * 4;
+                    facing = battle_unit_get_facing_nibble_by_runtime_id(unit_id) + facing * 4;
                     facing = facing & 0xF;
                 } else if (facing == EVENT_ROTATE_UNIT_FACING_CAMERA) {
                     facing = g_battle_rotation_speed_frames[4 + ((camera_wrap_yaw_angle() & 0xC00) >> 10)] * 4;
                 } else if (facing == EVENT_ROTATE_UNIT_FACING_RESTORE) {
-                    state = &g_battle_unit_misc_rotation_data[unit_id];
+                    state = &g_battle_unit_animation_states[unit_id];
                     if (state->initial_facing != 0xFF) {
                         state->rotate_mode = UNIT_ROTATE_MODE_SHORTEST;
                         state->target_facing = state->initial_facing;
@@ -54,7 +54,7 @@ void script_rotate_unit(const event_rotate_unit_parameters_t* parameters) {
                     }
                     continue;
                 }
-                state = &g_battle_unit_misc_rotation_data[unit_id];
+                state = &g_battle_unit_animation_states[unit_id];
                 state->target_facing = facing;
                 state->rotate_mode = parameters->mode;
                 state->frames_per_step = g_battle_rotation_speed_frames[parameters->speed];

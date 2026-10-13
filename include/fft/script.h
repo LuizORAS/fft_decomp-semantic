@@ -14,7 +14,7 @@ enum {
     EVENT_BLOCK_BYTES = 8192,
     EVENT_BLOCK_SECTORS = 4,
     EVENT_OPCODE_COUNT = 256,
-    /* Number of simulation unit slots an interpreter scans by misc id. */
+    /* Number of simulation unit slots an interpreter scans by runtime id. */
     EVENT_UNIT_SLOT_COUNT = BATTLE_UNIT_SLOT_COUNT,
     /* External unit-id selectors used by scenario commands. */
     EVENT_UNIT_SELECTOR_SLOT_FIRST = 0x64,
@@ -27,7 +27,7 @@ enum {
     /* Five ordinary deployed-unit IDs; the end value is exclusive. */
     EVENT_UNIT_ID_DEPLOYED_FIRST = 0x78,
     EVENT_UNIT_ID_DEPLOYED_END = 0x7d,
-    /* script_get_misc_id result for an absent unit. */
+    /* script_resolve_runtime_id result for an absent unit. */
     EVENT_RUNTIME_ID_NONE = 2000,
     /* g_script_unit_slots[] entry with no ghost unit assigned. */
     EVENT_UNIT_SLOT_EMPTY = 1000,
@@ -50,9 +50,9 @@ enum {
  * Each comment gives the encoded operand byte count, then the operands in the
  * order the handler reads them. A plain name is one unsigned byte, (s8) a
  * signed byte, (u16) or (s16) a 16-bit value, and "unread" a byte no handler
- * reads. A "unit id" names one unit (script_get_misc_id); a "unit group"
+ * reads. A "unit id" names one unit (script_resolve_runtime_id); a "unit group"
  * is a unit id, 0 for every unit, or a team selector from
- * EVENT_UNIT_GROUP_FIRST (*_unit_try_get_misc_data_by_unit_id).
+ * EVENT_UNIT_GROUP_FIRST (*_unit_prepare_event_filter).
  *
  * UNKNOWN values are explicit dispatch cases, not guesses for otherwise
  * unrecognized byte values. UNHANDLED values have a length in the table but
@@ -183,10 +183,10 @@ typedef enum event_opcode {
     EVENT_OPCODE_SUPPRESS_UNIT_PALETTE_UPDATES = 0x6d, /* 2: unit group (u16) */
     /* 12: unit id (u16), offset x, y, z (s16 each), curve, curve weight, speed (u16) */
     EVENT_OPCODE_SPRITE_MOVE_BETA = 0x6e,
-    EVENT_OPCODE_WAIT_SPRITE_MOVE = 0x6f,    /* 2: unit id (u16) */
-    EVENT_OPCODE_JUMP = 0x70,                /* 4: unit id (u16), jump length + 1, direction */
-    EVENT_OPCODE_SET_FIRST_MISC_UNIT = 0x71, /* 2: unit id (u16) */
-    EVENT_OPCODE_DEBUG_PAUSE = 0x72,         /* 0 */
+    EVENT_OPCODE_WAIT_SPRITE_MOVE = 0x6f, /* 2: unit id (u16) */
+    EVENT_OPCODE_JUMP = 0x70,             /* 4: unit id (u16), jump length + 1, direction */
+    EVENT_OPCODE_SET_FIRST_UNIT = 0x71,   /* 2: unit id (u16) */
+    EVENT_OPCODE_DEBUG_PAUSE = 0x72,      /* 0 */
     /* 14: x, z, y, tilt, yaw, roll, zoom deltas (s16 each; 10000 keeps a component); rewrites the next CAMERA */
     EVENT_OPCODE_RELATIVE_CAMERA = 0x73,
     EVENT_OPCODE_UNKNOWN_74 = 0x74, /* 6: unread; calls an empty function */
@@ -797,7 +797,7 @@ typedef enum event_script_variable_id {
     /* Main story progress counter. */
     EVENT_SCRIPT_VAR_STORY_PROGRESS = 0x6e,
     EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY = 0x6f,
-    /* Special misc-unit count (capped at 4) that selects the Deep Dungeon
+    /* Special runtime-unit count (capped at 4) that selects the Deep Dungeon
      * map state; a change reloads the map. */
     EVENT_SCRIPT_VAR_DEEP_DUNGEON_CRYSTAL_COUNT = 0x70,
     /* ATTACK zeroes these 32 variables each time it loads a scenario, and
@@ -970,7 +970,7 @@ s32 script_get_variable(s32 variable_id);
 void script_report_missing_unit_stub(s32 unused_unit_id);
 
 /* Event-unit lookup uses the resident scene's interpreter state. */
-s32 script_get_misc_id(s32 unit_id);
+s32 script_resolve_runtime_id(s32 unit_id);
 /* TeleportIn forwards the unit ID; the interpreter's second argument is unused. */
 void script_teleportin_event_instruction(s32 unit_id, s32 unused);
 

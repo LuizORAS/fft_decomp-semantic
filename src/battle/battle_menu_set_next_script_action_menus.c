@@ -12,8 +12,8 @@ void battle_menu_set_next_script_action_menus(void) {
     battle_unit_t* unit;
 
     camera_disable_map_pan();
-    casting_unit = battle_unit_get_casting_misc_data();
-    unit = battle_unit_get_source_misc_data();
+    casting_unit = battle_unit_get_casting();
+    unit = battle_unit_get_source();
     action_set_at_list_active();
     battle_unit_store_entd_flags_without_control_flag(casting_unit);
     if (battle_state_try_enter_scenario_event(unit) == 0) {

@@ -9,7 +9,7 @@ void battle_state_enter_target_select_start(void) {
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_TARGET_SELECT_START;
-    unit = battle_unit_get_casting_misc_data();
+    unit = battle_unit_get_casting();
     stats = unit->battle_data;
     battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_TARGETING_PROMPT, 0, stats->battle_id, 0, 1);
     action_set_at_list_active();

@@ -10,8 +10,8 @@ s32 effect_init_single_target_trajectory(u32 attacker_id, u32 target_id) {
     battle_unit_t* target;
     SVECTOR target_position;
 
-    attacker = battle_unit_get_misc_data_by_battle_id(attacker_id);
-    target = battle_unit_get_misc_data_by_battle_id(target_id);
+    attacker = battle_unit_get_by_battle_id(attacker_id);
+    target = battle_unit_get_by_battle_id(target_id);
     if (target != 0) {
         main_util_set_svector(&target_position, target->map_x, target->map_y, target->map_z);
         effect_check_direct_trajectory_to_target(attacker_id, &target_position, target_id);

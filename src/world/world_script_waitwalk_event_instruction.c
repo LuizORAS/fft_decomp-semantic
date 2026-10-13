@@ -5,12 +5,12 @@
 
 /* Event instruction 0x29 WaitWalk: yield until the unit stops moving. */
 void world_script_waitwalk_event_instruction(s32 unit_id) {
-    s32 misc_id;
+    s32 runtime_id;
 
-    misc_id = script_get_misc_id(unit_id);
-    if (misc_id != EVENT_RUNTIME_ID_NONE) {
+    runtime_id = script_resolve_runtime_id(unit_id);
+    if (runtime_id != EVENT_RUNTIME_ID_NONE) {
         do {
             world_thread_yield();
-        } while (move_is_unit_moving_by_misc_id(misc_id) != 0);
+        } while (move_is_unit_moving_by_runtime_id(runtime_id) != 0);
     }
 }

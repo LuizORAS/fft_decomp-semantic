@@ -14,22 +14,22 @@ void world_script_unit_animation_rotate_event_instruction(const event_unit_anim_
     const event_unit_anim_rotate_parameters_t* data = parameters;
     u8 rotation;
     s16 animation;
-    s16 call_misc_id;
-    s16 misc_id;
+    s16 call_runtime_id;
+    s16 runtime_id;
     s32 index;
     unit_animation_state_t* rotation_state;
 
-    misc_id = script_read_s16(data->unit_id_le);
+    runtime_id = script_read_s16(data->unit_id_le);
     rotation = data->rotation;
     animation = script_read_s16(data->animation_le);
-    call_misc_id = script_get_misc_id(misc_id);
-    misc_id = call_misc_id;
+    call_runtime_id = script_resolve_runtime_id(runtime_id);
+    runtime_id = call_runtime_id;
     if (data->animation_le[1] == 0) {
-        battle_unit_clear_facing_update_suppression(call_misc_id);
+        battle_unit_clear_facing_update_suppression(call_runtime_id);
     } else {
-        battle_unit_set_facing_update_suppression(call_misc_id);
+        battle_unit_set_facing_update_suppression(call_runtime_id);
     }
-    index = misc_id;
+    index = runtime_id;
     rotation_state = &g_world_unit_animation_states[index];
     rotation_state->target_facing = rotation;
     rotation_state->delay = 0;

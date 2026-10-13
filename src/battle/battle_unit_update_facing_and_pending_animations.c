@@ -13,18 +13,18 @@ void battle_unit_update_facing_and_pending_animations(void) {
     s32 moving;
     unit_animation_state_t* state;
 
-    state = g_battle_unit_misc_rotation_data;
+    state = g_battle_unit_animation_states;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++, state++) {
-        if (battle_unit_has_misc_id(i) != 0) {
+        if (battle_unit_has_runtime_id(i) != 0) {
             if (g_battle_unit_pending_animation_ids[i] != 0) {
-                moving = move_is_unit_moving_by_misc_id(i);
+                moving = move_is_unit_moving_by_runtime_id(i);
                 if (moving == 0 && g_battle_unit_was_moving_latch[i] != 0) {
                     battle_unit_set_animation(i, g_battle_unit_pending_animation_ids[i]);
                     g_battle_unit_pending_animation_ids[i] = 0;
                 }
                 g_battle_unit_was_moving_latch[i] = moving;
             }
-            current = battle_unit_get_facing_nibble_by_misc_id(i);
+            current = battle_unit_get_facing_nibble_by_runtime_id(i);
             if (state->rotating == 0) {
                 continue;
             }

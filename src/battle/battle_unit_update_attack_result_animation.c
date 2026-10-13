@@ -16,6 +16,6 @@ void battle_unit_update_attack_result_animation(battle_unit_t* unit) {
         battle_unit_find_relocation_tile(unit->battle_data->battle_id, &unit->dismount);
         battle_unit_set_map_coords_after_death_dismount(unit);
     }
-    battle_gfx_prepare_post_action_display_by_misc_id(unit->runtime_id);
-    battle_unit_update_display_by_misc_id(unit->runtime_id);
+    battle_gfx_prepare_post_action_display_by_runtime_id(unit->runtime_id);
+    battle_unit_update_display_by_runtime_id(unit->runtime_id);
 }

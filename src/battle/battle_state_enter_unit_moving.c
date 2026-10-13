@@ -12,10 +12,10 @@ void battle_state_enter_unit_moving(void) {
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_UNIT_MOVING;
     target_store_cursor_unit_name_and_data();
-    unit = battle_unit_get_casting_misc_data();
+    unit = battle_unit_get_casting();
     battle_unit_save_previous_state(unit);
     if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
-        battle_unit_t* mount = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
+        battle_unit_t* mount = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
         if (mount != 0) {
             battle_unit_save_previous_state(mount);
         }

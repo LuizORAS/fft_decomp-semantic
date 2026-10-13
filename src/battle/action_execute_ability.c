@@ -10,7 +10,7 @@ void action_execute_ability(void) {
     s32 result;
 
     battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0, 0);
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     action_set_only_action_taken(unit->battle_data->battle_id);
     unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
     battle_unit_face_toward_cursor(unit);

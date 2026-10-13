@@ -21,7 +21,7 @@ void move_displace_unit_at_destination_tile(battle_unit_t* unit, s32 direction) 
     if (unit->movement_path_offset == unit->path.count) {
         return;
     }
-    other = battle_unit_get_overlapping_misc_data_pointer(
+    other = battle_unit_find_overlapping_at_tile(
         unit, unit->movement.destination_x, unit->movement.destination_y, unit->movement.destination_z);
     if (unit->movement_path_offset == 0) {
         return;

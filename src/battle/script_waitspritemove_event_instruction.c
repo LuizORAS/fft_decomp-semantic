@@ -5,13 +5,13 @@
 #include "psx/types.h"
 
 /* WaitSpriteMove: yield until no running thread carries the sprite-move task for
- * this unit's misc id. A unit id that does not resolve has nothing to wait for.
+ * this unit's unit id. A unit id that does not resolve has nothing to wait for.
  * BATTLE scans thread slots 0..15; WORLD's copy scans 0..16. */
 void script_waitspritemove_event_instruction(s32 unit_id) {
     s32 target;
     s32 i;
 
-    target = script_get_misc_id(unit_id);
+    target = script_resolve_runtime_id(unit_id);
     if (target == EVENT_RUNTIME_ID_NONE) {
         return;
     }

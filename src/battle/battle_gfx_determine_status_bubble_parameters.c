@@ -29,7 +29,7 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_t* unit) {
         if ((unit->status_bubble_timer & 0xF) == 0) {
             status_flags = unit->status_flags_1_4;
             if (((status_flags & BATTLE_UNIT_STATUS_BUBBLE_MASK) == 0)
-                && (unit->runtime_id != g_battle_unit_source_misc_id)) {
+                && (unit->runtime_id != g_battle_unit_source_runtime_id)) {
                 unit->status_bubble_active = 0;
                 return;
             }
@@ -58,7 +58,7 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_t* unit) {
                     if (status_flags & bubble_mask) {
                         break;
                     }
-                } else if (unit->runtime_id == g_battle_unit_source_misc_id) {
+                } else if (unit->runtime_id == g_battle_unit_source_runtime_id) {
                     break;
                 }
             }

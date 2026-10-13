@@ -8,6 +8,6 @@ void battle_state_enter_after_command(void) {
     g_main_system_animation_speed = 1;
     g_battle_game_state = BATTLE_GAME_STATE_AFTER_COMMAND;
     g_action_post_action = 0;
-    target_move_cursor_to_unit(battle_unit_get_source_misc_data());
+    target_move_cursor_to_unit(battle_unit_get_source());
     battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_CLOSE, 0, 0, 0, 0);
 }

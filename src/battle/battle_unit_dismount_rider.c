@@ -6,7 +6,7 @@
 void battle_unit_dismount_rider(battle_unit_t* unit) {
     battle_unit_t* mount;
     if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_RIDER) {
-        mount = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
+        mount = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
         unit->standing_on_battle_id_plus_one = 0;
         unit->mount_state = BATTLE_UNIT_MOUNT_STATE_NONE;
         unit->mount_partner_runtime_id = 0;

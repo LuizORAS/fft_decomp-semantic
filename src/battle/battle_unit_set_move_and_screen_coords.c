@@ -9,6 +9,6 @@ void battle_unit_set_move_and_screen_coords(battle_unit_t* unit) {
     unit->movement.destination_z = unit->map_z;
     unit->screen.vx = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     unit->screen.vz = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-    unit->screen.vy = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
+    unit->screen.vy = battle_gfx_calculate_screen_z_from_unit_screen_coords(unit);
     battle_unit_set_real_coords_from_screen_coords(unit);
 }

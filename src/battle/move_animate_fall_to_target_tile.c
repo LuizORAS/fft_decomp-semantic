@@ -3,8 +3,8 @@
 
 /* The target sets $a1 to the coordinate buffer before this call too, so the
  * original declared both screen-z helpers with the same two arguments. */
-#define screen_z_from_misc_screen_data                                                                                 \
-    ((s32 (*)(battle_unit_t*, const SVECTOR*))battle_gfx_calculate_screen_z_from_misc_screen_data)
+#define screen_z_from_unit_screen_coords                                                                               \
+    ((s32 (*)(battle_unit_t*, const SVECTOR*))battle_gfx_calculate_screen_z_from_unit_screen_coords)
 
 /* Distortion animation 0x0d: drop the unit straight down until it reaches the
  * ground.
@@ -54,10 +54,10 @@ void move_animate_fall_to_target_tile(battle_unit_t* unit) {
             unit->real.vy = y << 12;
             main_util_set_svector(&coords, unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2), unit->map_z,
                 unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
-            coords.vy = screen_z_from_misc_screen_data(unit, &coords);
+            coords.vy = screen_z_from_unit_screen_coords(unit, &coords);
         } else {
             if (unit->strike.target_count != 0) {
-                other = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[0]);
+                other = battle_unit_get_by_battle_id(unit->strike.target_list[0]);
                 main_util_set_svector(&coords, other->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2), other->map_z,
                     other->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
             } else {

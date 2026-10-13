@@ -292,7 +292,7 @@ void battle_state_run_game_loop(void) {
         }
 
         battle_state_stop_map_animations();
-        battle_unit_clear_misc_units();
+        battle_unit_clear_all();
     } while (g_main_system_game_flow_state == MAIN_GAME_FLOW_BATTLE);
 
     DrawSync(0);

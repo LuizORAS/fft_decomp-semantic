@@ -6,15 +6,15 @@
 /* Report a level up recorded in the unit's rewards: message 0x183f for three
  * seconds, the level-up animation and effect, the cursor on the unit and the
  * level-up tune. Returns 1 after reporting one, otherwise 0. */
-s32 action_report_level_up(battle_unit_t* misc) {
-    if (misc->strike.action_rewards.level_for_display != 0) {
+s32 action_report_level_up(battle_unit_t* unit) {
+    if (unit->strike.action_rewards.level_for_display != 0) {
         u8 battle_id;
         battle_text_set_message_duration_frames(0xB4);
-        battle_id = misc->battle_data->battle_id;
+        battle_id = unit->battle_data->battle_id;
         battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x183F, battle_id, battle_id, 1);
-        battle_unit_set_level_up_animation(misc);
-        target_move_cursor_to_unit(misc);
-        effect_set_secondary_level_up(misc);
+        battle_unit_set_level_up_animation(unit);
+        target_move_cursor_to_unit(unit);
+        effect_set_secondary_level_up(unit);
         main_sound_play_tune(MAIN_SOUND_TUNE_LEVEL_UP);
         return 1;
     }

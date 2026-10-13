@@ -16,11 +16,11 @@ void effect_resolve_target_render_coords(
 
     if (target_index == EFFECT_TARGET_INDEX_CASTER) {
         if (coord_data->targets[EFFECT_CASTER_ENTRY].target_type == EFFECT_TARGET_TYPE_UNIT) {
-            *out = *battle_unit_get_screen_data_ptr_by_misc_id(
-                coord_data->targets[EFFECT_CASTER_ENTRY].data.unit.misc_id);
+            *out = *battle_unit_get_screen_coords_by_runtime_id(
+                coord_data->targets[EFFECT_CASTER_ENTRY].data.unit.runtime_id);
             if (add_depth != 0) {
                 s32 height;
-                tile = map_get_tile_data_ptr_from_misc_id(coord_data->targets[EFFECT_CASTER_ENTRY].data.unit.misc_id);
+                tile = map_get_unit_tile_by_runtime_id(coord_data->targets[EFFECT_CASTER_ENTRY].data.unit.runtime_id);
                 height = -((tile->height + tile->depth_half_height.depth) * 12);
                 if (height < out->vy) {
                     out->vy = height;
@@ -40,10 +40,10 @@ void effect_resolve_target_render_coords(
         }
     } else {
         if (coord_data->targets[target_index].target_type == EFFECT_TARGET_TYPE_UNIT) {
-            *out = *battle_unit_get_screen_data_ptr_by_misc_id(coord_data->targets[target_index].data.unit.misc_id);
+            *out = *battle_unit_get_screen_coords_by_runtime_id(coord_data->targets[target_index].data.unit.runtime_id);
             if (add_depth != 0) {
                 s32 height;
-                tile = map_get_tile_data_ptr_from_misc_id(coord_data->targets[target_index].data.unit.misc_id);
+                tile = map_get_unit_tile_by_runtime_id(coord_data->targets[target_index].data.unit.runtime_id);
                 height = -((tile->height + tile->depth_half_height.depth) * 12);
                 if (height < out->vy) {
                     out->vy = height;

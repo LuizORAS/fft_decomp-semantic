@@ -21,21 +21,21 @@
 
 void world_script_execute_event(void) {
     s32 unit_lookup_status;
-    s32 ghost_misc_id;
-    s32 region_misc_id;
-    s16 zalera_misc_id;
+    s32 ghost_runtime_id;
+    s32 region_runtime_id;
+    s16 zalera_runtime_id;
     s32 month;
     s32 appearance_battle_id;
     s32 work_index;
 
     s16 first_operand;
-    s32 removed_misc_id;
-    s16 erased_misc_id;
-    s16 shadow_misc_id;
-    s16 misc_id_for_7f;
-    s16 palette_misc_id;
-    s16 first_misc_id;
-    s16 second_misc_id;
+    s32 removed_runtime_id;
+    s16 erased_runtime_id;
+    s16 shadow_runtime_id;
+    s16 runtime_id_for_7f;
+    s16 palette_runtime_id;
+    s16 first_runtime_id;
+    s16 second_runtime_id;
     battle_stats_t* appearance_unit;
 
     s32 initial_buttons;
@@ -217,22 +217,22 @@ restart_event:
                 world_thread_yield();
             }
             if (operand_1 == EVENT_CALL_FUNCTION_RESET_BETHLA_REGION_UNIT_GRAPHICS) {
-                region_misc_id = 0;
+                region_runtime_id = 0;
                 do {
-                    if (battle_unit_has_misc_id(region_misc_id) != 0) {
-                        operand_1 = battle_unit_get_battle_index_by_misc_id(region_misc_id);
+                    if (battle_unit_has_runtime_id(region_runtime_id) != 0) {
+                        operand_1 = battle_unit_get_battle_id_by_runtime_id(region_runtime_id);
                         if (operand_1 != -1U) {
                             unit = battle_unit_get_stats_from_battle_id(operand_1);
                             if ((unit->x < 4U) && (unit->position.y < 0xBU)) {
-                                battle_gfx_reset_unit_graphic_trigger(region_misc_id);
+                                battle_gfx_reset_unit_graphic_trigger(region_runtime_id);
                             }
                             if (((unit->x - 4) < 3U) && ((unit->position.y - 2) < 6U)) {
-                                battle_gfx_reset_unit_graphic_trigger(region_misc_id);
+                                battle_gfx_reset_unit_graphic_trigger(region_runtime_id);
                             }
                         }
                     }
-                    region_misc_id += 1;
-                } while (region_misc_id < EVENT_UNIT_SLOT_COUNT);
+                    region_runtime_id += 1;
+                } while (region_runtime_id < EVENT_UNIT_SLOT_COUNT);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_COPY_UNIT_2_POSITION_AND_FACING_TO_UNIT_8_AND_RELOAD_GRAPHICS) {
                 unit = battle_unit_get_stats_from_battle_id(1);
@@ -253,12 +253,12 @@ restart_event:
                 world_script_warp_unit_display_to_paired_unit(operand_1);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_CLEAR_ZALERA_ACTIVE_STATUS_GRAPHICS) {
-                zalera_misc_id = script_get_misc_id(CHARACTER_IDENTITY_ZALERA);
-                if (zalera_misc_id != EVENT_RUNTIME_ID_NONE) {
+                zalera_runtime_id = script_resolve_runtime_id(CHARACTER_IDENTITY_ZALERA);
+                if (zalera_runtime_id != EVENT_RUNTIME_ID_NONE) {
                     world_unit_queue_current_status_graphics(
-                        battle_unit_get_battle_index_by_misc_id(zalera_misc_id), 0);
-                    g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                    thread_call_on_main_stack(zalera_misc_id);
+                        battle_unit_get_battle_id_by_runtime_id(zalera_runtime_id), 0);
+                    g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_runtime_id;
+                    thread_call_on_main_stack(zalera_runtime_id);
                 }
             }
         } else if (opcode == EVENT_OPCODE_BLUE_REMOVE_UNIT) {
@@ -303,11 +303,11 @@ restart_event:
             battle_unit_snap_all_facings_to_quadrants();
             world_unit_update_staged_status_data(0, 1);
             do {
-                if (battle_unit_has_misc_id(work_index) != 0) {
-                    operand_1 = battle_unit_get_battle_index_by_misc_id(work_index);
+                if (battle_unit_has_runtime_id(work_index) != 0) {
+                    operand_1 = battle_unit_get_battle_id_by_runtime_id(work_index);
                     if (operand_1 >= 0) {
                         unit = battle_unit_get_stats_from_battle_id(operand_1);
-                        unit->position.facing = battle_unit_get_facing_quadrant_by_misc_id(work_index);
+                        unit->position.facing = battle_unit_get_facing_quadrant_by_runtime_id(work_index);
                     }
                 }
                 work_index += 1;
@@ -413,10 +413,10 @@ restart_event:
             world_script_mirrorsprite_event_instruction((const event_mirror_sprite_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_RESET_PALETTE) {
             world_script_resetpalette_event_instruction((const event_unit_parameters_t*)parameters);
-        } else if (opcode == EVENT_OPCODE_SET_FIRST_MISC_UNIT) {
-            operand_1 = script_get_misc_id(first_operand);
+        } else if (opcode == EVENT_OPCODE_SET_FIRST_UNIT) {
+            operand_1 = script_resolve_runtime_id(first_operand);
             if (operand_1 != EVENT_RUNTIME_ID_NONE) {
-                battle_unit_move_misc_unit_to_head(operand_1);
+                battle_unit_move_to_head(operand_1);
             }
         } else if (opcode == EVENT_OPCODE_UNIT_ANIM) {
             world_script_unit_anim((const event_unit_anim_parameters_t*)parameters);
@@ -425,7 +425,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_SET_UNIT_MOVEMENT_EFFECT_SUPPRESSION) {
             world_script_set_units_movement_effect_suppression((const event_movement_effect_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_UNIT_READY) {
-            operand_1 = script_get_misc_id(first_operand);
+            operand_1 = script_resolve_runtime_id(first_operand);
             if (operand_1 != EVENT_RUNTIME_ID_NONE) {
                 world_script_wait_for_unit_ready(operand_1);
             }
@@ -474,8 +474,8 @@ restart_event:
         /* ---- Effects ---- */
         else if (opcode == EVENT_OPCODE_EFFECT) {
             g_world_event_pending_effect_id = first_operand;
-            g_world_event_effect_target_misc_id
-                = script_get_misc_id((((g_world_event_script) + instruction_offset))[3]);
+            g_world_event_effect_target_runtime_id
+                = script_resolve_runtime_id((((g_world_event_script) + instruction_offset))[3]);
             focus_instruction = g_world_event_script;
             focus_instruction += instruction_offset;
             g_world_event_effect_target_x = focus_instruction[4];
@@ -526,7 +526,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_WAIT_WALK) {
             world_script_waitwalk_event_instruction(first_operand);
         } else if (opcode == EVENT_OPCODE_WALK_TO_ANIM) {
-            operand_1 = script_get_misc_id(first_operand);
+            operand_1 = script_resolve_runtime_id(first_operand);
             if (operand_1 != EVENT_RUNTIME_ID_NONE) {
 
                 g_world_unit_pending_animations[operand_1]
@@ -590,7 +590,7 @@ restart_event:
             }
             g_world_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
             g_world_thread_contexts[operand_1].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;
-            g_world_thread_contexts[operand_1].task_words[0] = script_get_misc_id(first_operand);
+            g_world_thread_contexts[operand_1].task_words[0] = script_resolve_runtime_id(first_operand);
         } else if (opcode == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
             world_script_waitspritemove_event_instruction(first_operand);
         } else if (opcode == EVENT_OPCODE_MAP_LIGHT) {
@@ -707,7 +707,7 @@ restart_event:
             g_world_event_pending_saved_evtchr_clear_slot = operand_1;
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_COPY_UNIT_GRAPHICS_TO_RESERVED_VRAM_SLOT) {
-            g_world_event_pending_unit_vram_copy = (script_get_misc_id(first_operand) << 8) | operand_3;
+            g_world_event_pending_unit_vram_copy = (script_resolve_runtime_id(first_operand) << 8) | operand_3;
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_RELEASE_RESERVED_VRAM_SLOT) {
             g_world_event_pending_reserved_vram_release_slot = operand_1;
@@ -716,49 +716,49 @@ restart_event:
         }
         /* ---- Adding and removing units ---- */
         else if (opcode == EVENT_OPCODE_REMOVE_UNIT) {
-            s16 normalized_unit_id = script_get_misc_id(first_operand);
+            s16 normalized_unit_id = script_resolve_runtime_id(first_operand);
             if (normalized_unit_id != EVENT_RUNTIME_ID_NONE) {
-                removed_misc_id = normalized_unit_id;
-                while (world_unit_is_moving(removed_misc_id) != 0) {
+                removed_runtime_id = normalized_unit_id;
+                while (world_unit_is_moving(removed_runtime_id) != 0) {
                     world_thread_yield();
                 }
-                if (removed_misc_id != EVENT_RUNTIME_ID_NONE) {
-                    operand_1 = battle_unit_get_battle_index_by_misc_id(removed_misc_id);
-                    battle_unit_remove_misc_by_id(removed_misc_id);
+                if (removed_runtime_id != EVENT_RUNTIME_ID_NONE) {
+                    operand_1 = battle_unit_get_battle_id_by_runtime_id(removed_runtime_id);
+                    battle_unit_remove_by_runtime_id(removed_runtime_id);
                     if (operand_1 >= 0) {
                         battle_unit_set_cannot_exist(operand_1);
                     }
                 }
             }
         } else if (opcode == EVENT_OPCODE_DRAW) {
-            zalera_misc_id = script_get_misc_id(first_operand);
-            if (zalera_misc_id != EVENT_RUNTIME_ID_NONE) {
-                battle_unit_draw_and_activate_by_misc_id(zalera_misc_id);
+            zalera_runtime_id = script_resolve_runtime_id(first_operand);
+            if (zalera_runtime_id != EVENT_RUNTIME_ID_NONE) {
+                battle_unit_draw_and_activate_by_runtime_id(zalera_runtime_id);
                 if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_LIMBERRY_CEMETERY_BATTLE) {
                     world_unit_queue_current_status_graphics(
-                        battle_unit_get_battle_index_by_misc_id(zalera_misc_id), 1);
-                    g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                    thread_call_on_main_stack(zalera_misc_id);
+                        battle_unit_get_battle_id_by_runtime_id(zalera_runtime_id), 1);
+                    g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_runtime_id;
+                    thread_call_on_main_stack(zalera_runtime_id);
                 }
             }
         } else if (opcode == EVENT_OPCODE_ERASE) {
-            erased_misc_id = script_get_misc_id(first_operand);
-            if (erased_misc_id != EVENT_RUNTIME_ID_NONE) {
-                battle_gfx_reset_unit_graphic_trigger(erased_misc_id);
+            erased_runtime_id = script_resolve_runtime_id(first_operand);
+            if (erased_runtime_id != EVENT_RUNTIME_ID_NONE) {
+                battle_gfx_reset_unit_graphic_trigger(erased_runtime_id);
             }
         } else if (opcode == EVENT_OPCODE_ADD_GHOST_UNIT) {
             ghost_operands = g_world_event_script + instruction_offset + 3;
-            ghost_misc_id = 3;
+            ghost_runtime_id = 3;
             do {
-                --ghost_misc_id;
-            } while (ghost_misc_id >= 0);
-            for (ghost_misc_id = 0; ghost_misc_id < EVENT_UNIT_SLOT_COUNT; ghost_misc_id++) {
-                if (battle_unit_has_misc_id(ghost_misc_id) == 0) {
-                    g_script_unit_slots[ghost_operands[0]] = ghost_misc_id;
+                --ghost_runtime_id;
+            } while (ghost_runtime_id >= 0);
+            for (ghost_runtime_id = 0; ghost_runtime_id < EVENT_UNIT_SLOT_COUNT; ghost_runtime_id++) {
+                if (battle_unit_has_runtime_id(ghost_runtime_id) == 0) {
+                    g_script_unit_slots[ghost_operands[0]] = ghost_runtime_id;
                     break;
                 }
             }
-            if (ghost_misc_id != EVENT_UNIT_SLOT_COUNT) {
+            if (ghost_runtime_id != EVENT_UNIT_SLOT_COUNT) {
                 script_add_ghost_unit_event_instruction(ghost_operands[1], ghost_operands[2], ghost_operands[3],
                     ghost_operands[4], first_operand, g_script_unit_slots[ghost_operands[0]], ghost_operands[5]);
                 g_world_unit_graphics_load_pending = 1U;
@@ -775,17 +775,17 @@ restart_event:
                         break;
                     }
                 }
-                operand_1 = battle_unit_get_misc_id_by_battle_id(appearance_battle_id);
+                operand_1 = battle_unit_get_runtime_id_by_battle_id(appearance_battle_id);
                 if (operand_1 == -1) {
                     world_unit_save_staged_status_data(appearance_battle_id);
                     battle_gfx_load_unit_graphics_by_battle_id(appearance_battle_id, operand_3);
                     g_world_unit_graphics_load_pending = 1U;
                 } else {
                     if (operand_3 == 0) {
-                        battle_unit_draw_and_activate_by_misc_id(operand_1);
+                        battle_unit_draw_and_activate_by_runtime_id(operand_1);
                     }
                     if (world_unit_save_staged_status_data(appearance_battle_id) != 0) {
-                        g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
+                        g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_runtime_id;
                         thread_call_on_main_stack(operand_1);
                     }
                 }
@@ -853,12 +853,12 @@ restart_event:
         }
         /* ---- Miscellaneous unit and display commands ---- */
         else if (opcode == EVENT_OPCODE_UNIT_SHADOW) {
-            shadow_misc_id = script_get_misc_id(first_operand);
-            if (shadow_misc_id != EVENT_RUNTIME_ID_NONE) {
+            shadow_runtime_id = script_resolve_runtime_id(first_operand);
+            if (shadow_runtime_id != EVENT_RUNTIME_ID_NONE) {
                 if (operand_3 != 0) {
-                    battle_gfx_clear_shadow_graphic_trigger_by_misc_id(shadow_misc_id);
+                    battle_gfx_clear_shadow_graphic_trigger_by_runtime_id(shadow_runtime_id);
                 } else {
-                    battle_gfx_set_shadow_graphic_trigger_by_misc_id(shadow_misc_id);
+                    battle_gfx_set_shadow_graphic_trigger_by_runtime_id(shadow_runtime_id);
                 }
             }
         } else if (opcode == EVENT_OPCODE_DEBUG_PAUSE) {
@@ -866,9 +866,9 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_WAIT_VALUE) {
             world_script_wait_value_event_instruction((const event_wait_value_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_EVTCHR_PALETTE) {
-            misc_id_for_7f = script_get_misc_id(first_operand);
-            if (misc_id_for_7f != EVENT_RUNTIME_ID_NONE) {
-                battle_gfx_set_evtchr_palette_by_misc_id(misc_id_for_7f, operand_3, operand_4);
+            runtime_id_for_7f = script_resolve_runtime_id(first_operand);
+            if (runtime_id_for_7f != EVENT_RUNTIME_ID_NONE) {
+                battle_gfx_set_evtchr_palette_by_runtime_id(runtime_id_for_7f, operand_3, operand_4);
             }
         } else if (opcode == EVENT_OPCODE_LOAD_ATTACK_GRAPHICS) {
             world_script_load_attack_graphics_event_instruction();
@@ -883,17 +883,18 @@ restart_event:
                     script_get_variable(EVENT_SCRIPT_VAR_DAY));
             }
         } else if (opcode == EVENT_OPCODE_TEMP_WEAPON) {
-            palette_misc_id = script_get_misc_id(first_operand);
-            if (palette_misc_id != EVENT_RUNTIME_ID_NONE) {
-                battle_gfx_set_thrown_item_palette_by_misc_id(operand_3, palette_misc_id);
+            palette_runtime_id = script_resolve_runtime_id(first_operand);
+            if (palette_runtime_id != EVENT_RUNTIME_ID_NONE) {
+                battle_gfx_set_thrown_item_palette_by_runtime_id(operand_3, palette_runtime_id);
             }
         } else if (opcode == EVENT_OPCODE_ARROW) {
-            first_misc_id = script_get_misc_id(first_operand);
-            if (first_misc_id != EVENT_RUNTIME_ID_NONE) {
-                battle_unit_get_battle_index_by_misc_id(first_misc_id);
-                second_misc_id = script_get_misc_id(script_read_s16(instruction_offset + (g_world_event_script) + 3));
-                if (second_misc_id != EVENT_RUNTIME_ID_NONE) {
-                    battle_unit_get_battle_index_by_misc_id(second_misc_id);
+            first_runtime_id = script_resolve_runtime_id(first_operand);
+            if (first_runtime_id != EVENT_RUNTIME_ID_NONE) {
+                battle_unit_get_battle_id_by_runtime_id(first_runtime_id);
+                second_runtime_id
+                    = script_resolve_runtime_id(script_read_s16(instruction_offset + (g_world_event_script) + 3));
+                if (second_runtime_id != EVENT_RUNTIME_ID_NONE) {
+                    battle_unit_get_battle_id_by_runtime_id(second_runtime_id);
                 }
             }
         } else if (opcode == EVENT_OPCODE_MAP_FREEZE) {

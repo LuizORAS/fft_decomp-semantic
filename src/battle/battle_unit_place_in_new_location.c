@@ -8,10 +8,10 @@
  * Clears the effect vectors, sets both the current and destination tile, and
  * recomputes the screen and fixed-point world positions from the tile.
  */
-s32 battle_unit_place_in_new_location(u32 misc_id, map_tile_coordinates_t* tile, s32 facing) {
+s32 battle_unit_place_in_new_location(u32 runtime_id, map_tile_coordinates_t* tile, s32 facing) {
     battle_unit_t* unit;
 
-    unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xFFFF);
+    unit = battle_unit_get_by_runtime_id(runtime_id & 0xFFFF);
     if (unit != 0) {
         unit->event_offset.vz = 0;
         unit->event_offset.vy = 0;

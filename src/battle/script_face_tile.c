@@ -28,16 +28,16 @@ void script_face_tile(const event_face_tile_parameters_t* parameters) {
     tile.vx = parameters->x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     tile.vz = parameters->y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     unit_id = script_read_s16(parameters->unit_id_le);
-    if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &state) == 0) {
+    if (battle_unit_prepare_event_filter(&unit_id, &state) == 0) {
         return;
     }
     for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
         if (script_filter_unit_id_by_mode(&unit_id, &g_script_unit_face_slot_order[i], &state) != 0) {
-            battle_unit_copy_misc_screen_coords(unit_id, &screen);
+            battle_unit_copy_screen_coords(unit_id, &screen);
             dx = tile.vx - screen.vx;
             dy = tile.vz - screen.vz;
             facing = ((-ratan2(dy, dx) + 0xC00) & 0xF00) >> 8;
-            rotation_state = &g_battle_unit_misc_rotation_data[unit_id];
+            rotation_state = &g_battle_unit_animation_states[unit_id];
             rotation_state->target_facing = facing;
             rotation_state->rotate_mode = parameters->mode;
             rotation_state->frames_per_step = g_battle_rotation_speed_frames[parameters->speed];

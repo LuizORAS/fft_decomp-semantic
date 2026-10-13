@@ -6,7 +6,7 @@
 #include "fft/thread.h"
 #include "psx/types.h"
 
-/* Request an animation for a unit by misc id: what the event instructions
+/* Request an animation for a unit by unit id: what the event instructions
  * and the pending-animation list call.
  *
  * While EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED is 0 and
@@ -15,29 +15,29 @@
  * animation instead, nor to one in water two or more deep, which takes the
  * one of battle_unit_set_animation_based_on_mounted_state. Both run on the
  * main stack. WORLD twin: world_unit_set_animation. */
-void battle_unit_set_animation(s32 misc_id, u32 animation) {
+void battle_unit_set_animation(s32 runtime_id, u32 animation) {
     s32 battle_id;
     battle_stats_t* stats;
     s32 depth;
 
     if ((script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) == 0)
         && (script_get_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY) != 0)) {
-        battle_id = battle_unit_get_battle_index_by_misc_id(misc_id);
+        battle_id = battle_unit_get_battle_id_by_runtime_id(runtime_id);
         if ((battle_id >= 0) && (animation < BATTLE_SEQUENCE_EVTCHR_SLOT_0)) {
             stats = battle_unit_get_stats_from_battle_id(battle_id);
             depth = map_get_tile_data_value(
                 MAP_TILE_DATA_DEPTH, stats->x, stats->position.y, stats->position.higher_elevation);
             if ((stats->mount_info & BATTLE_MOUNT_INFO_ROLE_MASK) != 0) {
-                g_thread_call_target = (void (*)(void))battle_unit_set_status_animation_by_misc_id;
+                g_thread_call_target = (void (*)(void))battle_unit_set_status_animation_by_runtime_id;
             } else if ((depth & 0xFF) >= 2) {
-                g_thread_call_target = (void (*)(void))battle_unit_set_mounted_animation_by_misc_id;
+                g_thread_call_target = (void (*)(void))battle_unit_set_mounted_animation_by_runtime_id;
             } else {
-                battle_unit_set_specific_animation_by_misc_id(misc_id, animation);
+                battle_unit_set_specific_animation_by_runtime_id(runtime_id, animation);
                 return;
             }
-            thread_call_on_main_stack(misc_id);
+            thread_call_on_main_stack(runtime_id);
             return;
         }
     }
-    battle_unit_set_specific_animation_by_misc_id(misc_id, animation);
+    battle_unit_set_specific_animation_by_runtime_id(runtime_id, animation);
 }

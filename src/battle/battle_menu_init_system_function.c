@@ -13,7 +13,7 @@ s32 battle_menu_init_system_function(s32 type, s32 option, s32 unit_id, s32 para
     action_command_t* action;
 
     if (type != BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK && type != BATTLE_MENU_SYSTEM_COMMAND_CLOSE) {
-        action = battle_unit_get_misc_action_command_by_battle_id(unit_id);
+        action = battle_unit_get_runtime_action_command_by_battle_id(unit_id);
         if (type == BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE) {
             /* The target returns the void callee's leftover $v0. */
             return ((s32 (*)(action_command_t*, s32, s32))battle_text_select_ability_announcement)(

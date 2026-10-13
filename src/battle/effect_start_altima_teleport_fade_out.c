@@ -17,7 +17,7 @@ void effect_start_altima_teleport_fade_out(battle_unit_t* unit) {
     }
     tile = map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);
     battle_gfx_check_tile_status_palette_mod(unit, tile->flags.shading, 1);
-    battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 0, unit->runtime_id, -31, -31, -31);
+    battle_gfx_apply_unit_palette_modulation_to_units(MAP_COLOR_MODE_BASE, 0, unit->runtime_id, -31, -31, -31);
     unit->distortion_phase++;
     unit->distortion_timer = 0;
 }

@@ -4,8 +4,8 @@
 /* Restarts the unit graphics loader with one descriptor, for a unit an event adds
  * during the battle: the unit is put on the field
  * (battle_unit_set_enemy_level_data_by_battle_id) and queued at its map position
- * and facing with its sheet and palette, the caller's flags and misc id 0xff,
- * which takes the first free misc slot. Always returns 1. */
+ * and facing with its sheet and palette, the caller's flags and runtime id 0xff,
+ * which takes the first free runtime slot. Always returns 1. */
 s32 battle_gfx_load_unit_graphics_by_battle_id(s32 battle_id, s32 flags) {
     battle_stats_t* unit;
 

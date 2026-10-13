@@ -27,7 +27,7 @@ void battle_state_handle_resume_attack_phase_state(void) {
     if (selected_command >= 7 && (selected_command < 9 || selected_command == 0xff)) {
         g_action_post_action = 1;
     }
-    unit = battle_unit_get_casting_misc_data();
+    unit = battle_unit_get_casting();
     if (g_action_post_action != 0 && action_resume_attack_phase_control() == 0 && unit->numeric_display.active == 0) {
         if (unit->strike.continue_attack != 0) {
             unit->continue_attack_count += 1;
@@ -51,7 +51,7 @@ void battle_state_handle_resume_attack_phase_state(void) {
         action_store_acting_unit_data(unit->battle_data);
         battle_unit_call_set_animation_based_on_status(unit);
         battle_unit_update_anim_display_for_all_targets(unit);
-        battle_unit_get_source_misc_data();
+        battle_unit_get_source();
         if (g_action_phase != ACTION_PHASE_PRE_ACTION) {
             if (g_action_phase != ACTION_PHASE_REACTING_UNIT) {
                 g_action_phase += 1;

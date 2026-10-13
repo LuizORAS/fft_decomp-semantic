@@ -31,7 +31,7 @@ s32 world_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
         unit->position.y = parameters->y;
         unit->position.higher_elevation = parameters->elevation;
         unit->position.facing = parameters->facing;
-        index = battle_unit_get_misc_id_by_battle_id(index);
+        index = battle_unit_get_runtime_id_by_battle_id(index);
         if (index != -1) {
             state = &g_world_unit_animation_states[index];
             coordinates.x = unit->x;

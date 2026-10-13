@@ -18,8 +18,8 @@ void battle_state_handle_close_move_help_state(void) {
     s32 y;
     battle_unit_command_state_t scratch;
 
-    source = battle_unit_get_source_misc_data();
-    casting = battle_unit_get_casting_misc_data();
+    source = battle_unit_get_source();
+    casting = battle_unit_get_casting();
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if (source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
@@ -32,7 +32,7 @@ void battle_state_handle_close_move_help_state(void) {
             path = move_build_path_to_tile(
                 casting->battle_data->battle_id, g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
             if (path != 0) {
-                /* Copy the 0x80-byte movement block in the renderer-side Misc record. */
+                /* Copy the 0x80-byte movement block in the renderer-side runtime record. */
                 casting->path = *path;
                 casting->walk_speed = 0x2000;
                 target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
@@ -50,7 +50,7 @@ void battle_state_handle_close_move_help_state(void) {
             return;
         }
         if (buttons & PSX_PAD_TRIANGLE) {
-            target_move_cursor_to_unit(battle_unit_get_source_misc_data());
+            target_move_cursor_to_unit(battle_unit_get_source());
             target_store_cursor_unit_name_and_data();
         }
         return;

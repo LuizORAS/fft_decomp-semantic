@@ -124,7 +124,7 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
                 &g_battle_gfx_boss_seq_tables, g_battle_gfx_unit_graphics_load_state.buffer);
             break;
         case BATTLE_GFX_QUEUED_LOAD_SPR:
-            battle_unit_init_misc_data(
+            battle_unit_init(
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index].map_x,
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index].map_y,
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index].map_level,
@@ -132,7 +132,7 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index]
                     .spritesheet_id,
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index].palette_id,
-                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index].misc_id,
+                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index].runtime_id,
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index]
                     .battle_stats,
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index].flags,

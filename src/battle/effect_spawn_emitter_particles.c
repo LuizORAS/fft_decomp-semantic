@@ -98,8 +98,8 @@ s32 effect_spawn_emitter_particles(s16 record_index, s32 frame, s32 emitter_inde
     effect_resolve_target_render_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
         EFFECT_TARGET_INDEX_CASTER, &g_effect_context, &caster);
     if (g_effect_context.targets[EFFECT_CASTER_ENTRY].target_type == EFFECT_TARGET_TYPE_UNIT) {
-        facing = ((battle_unit_get_facing_quadrant_by_misc_id(
-                       g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.misc_id)
+        facing = ((battle_unit_get_facing_quadrant_by_runtime_id(
+                       g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.runtime_id)
                       + 1)
                      & 3)
             << 10;
@@ -111,9 +111,9 @@ s32 effect_spawn_emitter_particles(s16 record_index, s32 frame, s32 emitter_inde
     effect_resolve_target_render_coords(
         g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index, &g_effect_context, &target);
     if (g_effect_context.targets[target_index].target_type == EFFECT_TARGET_TYPE_UNIT) {
-        battle_unit_get_facing_quadrant_by_misc_id(g_effect_context.targets[target_index].data.unit.misc_id);
+        battle_unit_get_facing_quadrant_by_runtime_id(g_effect_context.targets[target_index].data.unit.runtime_id);
         unit_coords
-            = battle_unit_get_event_offset_ptr_by_misc_id(g_effect_context.targets[target_index].data.unit.misc_id);
+            = battle_unit_get_event_offset_by_runtime_id(g_effect_context.targets[target_index].data.unit.runtime_id);
     }
     tile = map_get_tile_data_pointer(
         g_effect_target_tile.data.tile.vx, g_effect_target_tile.data.tile.vz, g_effect_target_tile.data.tile.vy);

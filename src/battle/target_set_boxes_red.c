@@ -14,7 +14,7 @@
 s32 target_set_boxes_red(void) {
     battle_unit_t* unit;
 
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     unit->state_frame_counter = 0;
     switch (unit->ability_preview_phase) {
     case TARGET_PANELS_UNIT_OR_TILE:

@@ -421,11 +421,11 @@ void move_interpolate_partial(struct battle_unit* unit, s32 scale);
 void move_start_unit_step(battle_unit_t* unit, const map_tile_t* from, const map_tile_t* unused_to);
 void move_start_float_step(battle_unit_t* unit, const map_tile_t* from, const map_tile_t* to);
 void move_start_unit_step_at_climb_speed(battle_unit_t* unit, const map_tile_t* from, const map_tile_t* unused_to);
-s32 move_is_unit_moving_by_misc_id(u32 misc_id);
+s32 move_is_unit_moving_by_runtime_id(u32 runtime_id);
 void move_return_to_previous_map_square(battle_unit_t* unit);
 void move_snap_axis_to_current_tile_exit_edge(s32 direction, battle_unit_t* unit);
 void move_snap_axis_to_destination_tile_center(s32 direction, battle_unit_t* unit);
-s32 move_start_unit_walk_to(s32 misc_id, map_tile_coordinates_t* destination, s32 flags, s32 jump, s32 speed);
+s32 move_start_unit_walk_to(s32 runtime_id, map_tile_coordinates_t* destination, s32 flags, s32 jump, s32 speed);
 void move_step_unit_to_map_tile_center_no_height_change(battle_unit_t* unit);
 void move_step_unit_to_map_tile_center_with_height_change(battle_unit_t* unit);
 void move_update_airborne_ascent_phase(battle_unit_t* unit);
@@ -448,7 +448,7 @@ void move_start_unit_jump_step(battle_unit_t* unit, const map_tile_t* unused_fro
 void move_start_fly_step(
     battle_unit_t* unit, const map_tile_t* unused_current_tile, const map_tile_t* unused_destination_tile);
 void move_transfer_target_coordinates(battle_unit_t* src, battle_unit_t* dst);
-void move_update_unit_by_misc_id(void);
+void move_update_all_unit_paths(void);
 void move_update_unit_step_to_current_tile_exit_edge(battle_unit_t* unit);
 void move_update_float_step_to_current_tile_exit_edge(battle_unit_t* unit);
 void move_update_float_step_to_destination_tile_center(battle_unit_t* unit);

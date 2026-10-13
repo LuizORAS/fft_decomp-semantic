@@ -55,7 +55,7 @@ void battle_unit_update_animation_for_status_changes(battle_unit_t* unit) {
         if (unit->statuses_to_add_5_6 & BATTLE_UNIT_STATUS_JUMP) {
             battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_JUMP_DEPART, unit->facing, unit);
         } else if (unit->statuses_to_remove_5_6 & BATTLE_UNIT_STATUS_JUMP) {
-            battle_unit_draw_and_activate_by_misc_id(unit->runtime_id);
+            battle_unit_draw_and_activate_by_runtime_id(unit->runtime_id);
             battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_JUMP_LAND, unit->facing, unit);
         }
         if ((move_get_water_depth(unit) & 0xff) >= 2) {

@@ -11,7 +11,7 @@ void status_queue_current_status_graphics(s32 battle_id, s32 enabled) {
     s32 mask;
 
     stats = battle_unit_get_stats_from_battle_id(battle_id);
-    g_thread_call_target = (void (*)(void))status_queue_misc_graphics_flag_change;
+    g_thread_call_target = (void (*)(void))status_queue_runtime_graphics_flag_change;
     for (i = 0; i < STATUS_COUNT; i++) {
         mask = 0x80 >> (i % 8);
         if ((stats->status_sets.current[i / 8] & mask) != 0) {

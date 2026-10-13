@@ -8,7 +8,7 @@ s32 battle_gfx_calculate_screen_z_with_caller_data(battle_unit_t* unit, const SV
     s32 adjusted_screen_z;
     s32 screen_z;
 
-    mount = battle_unit_get_mount_misc_data(unit);
+    mount = battle_unit_get_mount(unit);
     screen_z = battle_gfx_calculate_screen_z_from_input_coords(mount, coords);
     if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_RIDER) {
         adjusted_screen_z = screen_z - 10;

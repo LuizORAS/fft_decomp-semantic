@@ -15,7 +15,7 @@ void battle_state_handle_ability_preview_state(void) {
     u16 frame_data;
     battle_unit_t* unit;
 
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
         camera_handle_rotation_input();
         camera_update_zoom_input();

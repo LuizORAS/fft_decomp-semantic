@@ -29,7 +29,7 @@ void battle_gfx_draw_wait_direction_arrows(SVECTOR* base, u32* ot) {
     s16 facing_bits;
     s32 i;
 
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     g_battle_gfx_wait_arrow_blink_timer += g_main_system_animation_speed;
     for (i = 0; i < 4; i++) {
         prim = g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter();

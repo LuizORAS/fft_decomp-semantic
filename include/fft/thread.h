@@ -14,7 +14,7 @@
  * The seven 32-bit task values at 0x50 are zeroed by battle_thread_start /
  * world_thread_start; each task gives them its own meaning: menu blink/icon
  * cursor threads use [0] timer and [1] state, event unit/sprite-move threads
- * keep the misc id in [0], and DisplayMessage text threads use [2] x offset,
+ * keep the unit id in [0], and DisplayMessage text threads use [2] x offset,
  * [3] y offset, [4] arrow offset, [5] opening type and [6] width override. The
  * remaining saved context/stack stays provisional. */
 typedef struct native_thread {

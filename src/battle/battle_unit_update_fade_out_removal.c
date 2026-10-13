@@ -8,7 +8,7 @@
  * animation to end.
  *
  * FLASH starts the fade to black and moves to DARKEN. DARKEN then disables the
- * battle unit slot, removes the misc record and returns 1; for the source unit it
+ * battle unit slot, removes the runtime record and returns 1; for the source unit it
  * only resets the graphic trigger. Every other path returns 0. */
 s32 battle_unit_update_fade_out_removal(battle_unit_t* unit) {
     u8 phase;
@@ -23,15 +23,16 @@ s32 battle_unit_update_fade_out_removal(battle_unit_t* unit) {
     switch (phase) {
     case BATTLE_UNIT_FADE_OUT_FLASH:
         unit->fade_out_phase = BATTLE_UNIT_FADE_OUT_DARKEN;
-        battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 4, unit->runtime_id, -0x1f, -0x1f, -0x1f);
+        battle_gfx_apply_unit_palette_modulation_to_units(
+            MAP_COLOR_MODE_BASE, 4, unit->runtime_id, -0x1f, -0x1f, -0x1f);
         return 0;
     case BATTLE_UNIT_FADE_OUT_DARKEN:
-        if (unit->runtime_id != g_battle_unit_source_misc_id) {
+        if (unit->runtime_id != g_battle_unit_source_runtime_id) {
             unit->fade_out_phase = BATTLE_UNIT_FADE_OUT_REMOVED;
             if (unit->battle_data != 0) {
                 battle_unit_disable_remove(unit->battle_data->battle_id);
             }
-            battle_unit_remove_misc(unit);
+            battle_unit_remove(unit);
             return 1;
         }
         battle_gfx_reset_unit_graphic_trigger(unit->runtime_id);

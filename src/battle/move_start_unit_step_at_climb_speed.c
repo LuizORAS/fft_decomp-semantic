@@ -47,7 +47,7 @@ void move_start_unit_step_at_climb_speed(battle_unit_t* unit, const map_tile_t* 
         break;
     }
     if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
-        rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
+        rider = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
         if (rider != 0) {
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, rider);
         }

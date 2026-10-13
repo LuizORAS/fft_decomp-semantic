@@ -16,7 +16,7 @@ void action_choose_wait(void) {
     battle_unit_t* unit;
 
     camera_disable_map_pan();
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     if (battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 2, unit->battle_data->battle_id, 0, 1)
             == 2

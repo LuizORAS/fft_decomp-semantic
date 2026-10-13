@@ -28,7 +28,7 @@ void move_animate_jump_arc_to_own_tile(battle_unit_t* unit) {
     case 0:
         target.vx = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         target.vz = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-        target.vy = battle_gfx_calculate_screen_z_from_misc_map_data(unit);
+        target.vy = battle_gfx_calculate_screen_z_from_unit_tile(unit);
         timer = move_calculate_jump_arc_velocity(&unit->screen, &target, &velocity);
         unit->distortion_phase++;
     case 1:
@@ -47,7 +47,7 @@ void move_animate_jump_arc_to_own_tile(battle_unit_t* unit) {
     case 2:
         main_util_set_svector(&target, unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2), 0,
             unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
-        target.vy = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
+        target.vy = battle_gfx_calculate_screen_z_from_unit_screen_coords(unit);
         if (unit->screen.vy < target.vy) {
             unit->real.vy += velocity.vy;
             velocity.vy += g_move_jump_gravity;

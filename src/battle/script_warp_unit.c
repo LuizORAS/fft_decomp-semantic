@@ -17,7 +17,7 @@ void script_warp_unit(const event_warp_unit_parameters_t* instruction) {
     } cursor;
     battle_stats_t* unit;
     s32 battle_id;
-    s32 misc_id;
+    s32 runtime_id;
     s32 result;
     s16 unit_id;
     map_tile_coordinates_t tile;
@@ -40,17 +40,17 @@ void script_warp_unit(const event_warp_unit_parameters_t* instruction) {
     unit->position.y = cursor.placement->y;
     unit->position.higher_elevation = cursor.placement->elevation;
     unit->position.facing = cursor.placement->facing;
-    misc_id = battle_unit_get_misc_id_by_battle_id(battle_id);
-    if (misc_id == -1) {
+    runtime_id = battle_unit_get_runtime_id_by_battle_id(battle_id);
+    if (runtime_id == -1) {
         return;
     }
     tile.x = unit->x;
     tile.layer = unit->position.higher_elevation;
     tile.y = unit->position.y;
-    rotation_state = &g_battle_unit_misc_rotation_data[misc_id];
+    rotation_state = &g_battle_unit_animation_states[runtime_id];
     rotation_state->target_facing = cursor.placement->facing * 4;
     rotation_state->delay = 0;
     rotation_state->rotating = 0;
-    battle_unit_place_in_new_location(misc_id, &tile, cursor.placement->facing);
-    battle_unit_set_facing(misc_id, cursor.placement->facing * 4);
+    battle_unit_place_in_new_location(runtime_id, &tile, cursor.placement->facing);
+    battle_unit_set_facing(runtime_id, cursor.placement->facing * 4);
 }

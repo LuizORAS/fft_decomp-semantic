@@ -17,7 +17,7 @@ s32 map_check_deep_dungeon_crystal_and_init_state(void) {
 
     if (g_main_system_frontend_world_result == 4) {
         if (g_map_deep_dungeon_load_in_progress == 0) {
-            crystal_count = battle_unit_count_crystal_misc_units();
+            crystal_count = battle_unit_count_crystals();
             if (crystal_count >= 5) {
                 crystal_count = 4;
             }

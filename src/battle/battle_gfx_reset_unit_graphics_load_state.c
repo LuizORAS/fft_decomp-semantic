@@ -11,7 +11,7 @@ void battle_gfx_reset_unit_graphics_load_state(void) {
     g_battle_unit_list_head = 0;
     for (offset = (BATTLE_UNIT_RUNTIME_SLOT_COUNT - 1) * sizeof(battle_unit_slot_state_t); offset >= 0;
         offset -= sizeof(battle_unit_slot_state_t)) {
-        ((battle_unit_slot_state_t*)((u8*)g_battle_unit_slot_flags + offset))->in_use = 0;
+        ((battle_unit_slot_state_t*)((u8*)g_battle_unit_slot_states + offset))->in_use = 0;
     }
     for (offset = 8 * sizeof(battle_gfx_spritesheet_slot_t); offset >= 0;
         offset -= sizeof(battle_gfx_spritesheet_slot_t)) {

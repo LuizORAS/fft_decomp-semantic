@@ -8,11 +8,11 @@ void effect_start_new(s32 ability_id, s32 target_mode, effect_start_target_data_
 
     effect_data.target_count = 1;
     effect_data.targets[EFFECT_CASTER_ENTRY].target_type = EFFECT_TARGET_TYPE_UNIT;
-    effect_data.targets[EFFECT_CASTER_ENTRY].data.unit.misc_id = 0;
+    effect_data.targets[EFFECT_CASTER_ENTRY].data.unit.runtime_id = 0;
 
     if (target_mode == EFFECT_START_ON_UNIT) {
         effect_data.targets[0].target_type = EFFECT_TARGET_TYPE_UNIT;
-        effect_data.targets[0].data.unit.misc_id = target.misc_id;
+        effect_data.targets[0].data.unit.runtime_id = target.runtime_id;
         effect_data.targets[0].data.unit.result_animation = EFFECT_HIT_NORMAL;
     } else if (target_mode == EFFECT_START_ON_TILE) {
         effect_data.targets[0].target_type = EFFECT_TARGET_TYPE_TILE;
@@ -21,9 +21,9 @@ void effect_start_new(s32 ability_id, s32 target_mode, effect_start_target_data_
         effect_data.targets[0].data.tile.vy = target.tile->vy;
     } else {
         effect_data.targets[0].target_type = EFFECT_TARGET_TYPE_UNIT;
-        effect_data.targets[0].data.unit.misc_id = target.misc_id;
+        effect_data.targets[0].data.unit.runtime_id = target.runtime_id;
         effect_data.targets[0].data.unit.result_animation = EFFECT_HIT_NORMAL;
-        effect_data.targets[EFFECT_CASTER_ENTRY].data.unit.misc_id = target.misc_id;
+        effect_data.targets[EFFECT_CASTER_ENTRY].data.unit.runtime_id = target.runtime_id;
     }
 
     effect_data.spectator_count = 0;

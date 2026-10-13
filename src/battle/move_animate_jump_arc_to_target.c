@@ -30,9 +30,9 @@ void move_animate_jump_arc_to_target(battle_unit_t* unit) {
     case 0:
         if (unit->battle_data != 0) {
             if (unit->strike.target_count != 0) {
-                other = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[0]);
+                other = battle_unit_get_by_battle_id(unit->strike.target_list[0]);
                 setVector(&target, other->screen.vx,
-                    other->screen.vy - battle_gfx_get_unit_spritesheet_height_by_misc_id(other->runtime_id) / 2,
+                    other->screen.vy - battle_gfx_get_unit_spritesheet_height_by_runtime_id(other->runtime_id) / 2,
                     other->screen.vz);
             } else {
                 target.vx = unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);

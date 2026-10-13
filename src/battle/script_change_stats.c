@@ -10,7 +10,7 @@
  * 16-bit delta. HP clamps to max HP and the other stats to 0-100. */
 void script_change_stats(const event_change_stats_parameters_t* parameters) {
     u16 unit_id;
-    s32 misc_index;
+    s32 filter_mode;
     s32 unit_index;
     s32 battle_id;
     s32 value;
@@ -20,11 +20,11 @@ void script_change_stats(const event_change_stats_parameters_t* parameters) {
 
     delta = script_read_s16(parameters->delta_le);
     unit_id = script_read_s16(parameters->unit_id_le);
-    if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
+    if (battle_unit_prepare_event_filter(&unit_id, &filter_mode) != 0) {
         unit_index = 0;
         do {
-            if (script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &misc_index) != 0) {
-                battle_unit_index = battle_unit_get_battle_index_by_misc_id(unit_id);
+            if (script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &filter_mode) != 0) {
+                battle_unit_index = battle_unit_get_battle_id_by_runtime_id(unit_id);
                 if (battle_unit_index != -1) {
                     unit = battle_unit_find_stats_by_entd_unit_id(
                         battle_unit_get_stats_from_battle_id(battle_unit_index)->unit_id, &battle_id);
@@ -51,7 +51,7 @@ void script_change_stats(const event_change_stats_parameters_t* parameters) {
                         }
                     }
                 }
-                if (misc_index == 0) {
+                if (filter_mode == 0) {
                     break;
                 }
             }

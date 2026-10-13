@@ -13,15 +13,15 @@ void battle_state_handle_crystal_learn_state(void) {
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     command = battle_menu_get_selected_command_address();
-    source = battle_unit_get_source_misc_data();
-    casting = battle_unit_get_casting_misc_data();
+    source = battle_unit_get_source();
+    casting = battle_unit_get_casting();
     switch ((s32)command->kind) {
     case 2:
         battle_unit_learn_from_crystal(source->battle_data, BATTLE_CRYSTAL_RESTORE_HP_MP);
         g_action_post_action = 1;
         action_finalize_attack_and_flag_reactions(source->battle_data->battle_id);
         battle_gfx_prepare_post_action_display(source);
-        battle_unit_update_display_by_misc_id(source->runtime_id);
+        battle_unit_update_display_by_runtime_id(source->runtime_id);
         break;
     case 0:
     case 1:
@@ -74,7 +74,7 @@ void battle_state_handle_crystal_learn_state(void) {
     } else if (g_move_find_result & MOVE_POST_EVENT_TRAP_TRIGGERED) {
         g_move_find_result &= ~MOVE_POST_EVENT_TRAP_TRIGGERED;
         ai_init_selected_action();
-        battle_unit_update_display_by_misc_id(source->runtime_id);
+        battle_unit_update_display_by_runtime_id(source->runtime_id);
     } else if (g_move_find_result & MOVE_POST_EVENT_CHARGING_CANCEL) {
         g_move_find_result &= ~MOVE_POST_EVENT_CHARGING_CANCEL;
     } else if (g_move_find_result & MOVE_POST_EVENT_SOURCE_DISPLAY) {

@@ -7,17 +7,17 @@
 void battle_state_handle_wait_menu_state(void) {
     ai_command_t* selected_command_address;
     s32 selected_command;
-    battle_unit_t* source_misc_data;
+    battle_unit_t* source_unit;
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     selected_command_address = battle_menu_get_selected_command_address();
-    source_misc_data = battle_unit_get_source_misc_data();
+    source_unit = battle_unit_get_source();
     selected_command = selected_command_address->kind;
     switch (selected_command) {
     case 8:
     case 0xff:
-        if (action_check_change_of_turn(source_misc_data->battle_data->battle_id) != 1) {
+        if (action_check_change_of_turn(source_unit->battle_data->battle_id) != 1) {
             battle_state_enter_after_command();
             return;
         }

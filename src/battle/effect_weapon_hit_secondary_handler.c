@@ -67,12 +67,12 @@ s32 effect_weapon_hit_secondary_handler(void) {
         }
         if (group == EFFECT_PARTICLE_GROUP_WEAPON_HIT_B) {
             if (state->frame == 0) {
-                battle_gfx_start_misc_unit_palette_modulation(
-                    MAP_COLOR_MODE_BASE_HALF, 0, effect->target.record.data.unit.misc_id, 0x1f, 0x1f, 0x1f);
+                battle_gfx_apply_unit_palette_modulation_to_units(
+                    MAP_COLOR_MODE_BASE_HALF, 0, effect->target.record.data.unit.runtime_id, 0x1f, 0x1f, 0x1f);
             }
             if (state->frame == group) {
-                battle_gfx_start_misc_unit_palette_modulation(
-                    MAP_COLOR_MODE_RESTORE, 2, g_effect_current_secondary->target.record.data.unit.misc_id, 0, 0, 0);
+                battle_gfx_apply_unit_palette_modulation_to_units(
+                    MAP_COLOR_MODE_RESTORE, 2, g_effect_current_secondary->target.record.data.unit.runtime_id, 0, 0, 0);
             }
         }
         if (state->frame < 4) {

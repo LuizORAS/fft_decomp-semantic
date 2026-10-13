@@ -23,7 +23,7 @@ void camera_execute_angle_command(s32 command, s32 target, s32 duration, const S
     switch (command & EFFECT_CAMERA_SOURCE_MASK) {
     case EFFECT_CAMERA_SOURCE_TARGET:
         if (g_effect_context.targets[target].target_type == EFFECT_TARGET_TYPE_UNIT) {
-            battle_unit_get_map_coords_from_misc_id(g_effect_context.targets[target].data.unit.misc_id, &coords);
+            battle_unit_get_map_coords_by_runtime_id(g_effect_context.targets[target].data.unit.runtime_id, &coords);
         } else {
             coords = g_effect_context.targets[target].data.tile;
         }
@@ -67,8 +67,8 @@ void camera_execute_angle_command(s32 command, s32 target, s32 duration, const S
         break;
     case EFFECT_CAMERA_SOURCE_CASTER:
         if (g_effect_context.targets[EFFECT_CASTER_ENTRY].target_type == EFFECT_TARGET_TYPE_UNIT) {
-            battle_unit_get_map_coords_from_misc_id(
-                g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.misc_id, &coords);
+            battle_unit_get_map_coords_by_runtime_id(
+                g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.runtime_id, &coords);
         } else {
             coords = g_effect_context.targets[EFFECT_CASTER_ENTRY].data.tile;
         }

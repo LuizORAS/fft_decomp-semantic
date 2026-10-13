@@ -52,14 +52,14 @@ enum {
 };
 
 /* Ten-byte target records at g_effect_context.targets (0x801bad10).
- * Unit targets store a misc id at 0x02; tile targets reuse that 16-bit value for X
+ * Unit targets store a runtime id at 0x02; tile targets reuse that 16-bit value for X
  * and carry map Z/Y at 0x04/0x06. Entry EFFECT_CASTER_ENTRY is the
  * caster. */
 typedef struct effect_target {
     u16 target_type; /* 0x00; effect_target_type_e */
     union {
         struct {
-            u8 misc_id;
+            u8 runtime_id;
             u8 result_animation; /* effect_hit_result_e */
         } unit;
         SVECTOR tile; /* x, layer, y */
@@ -117,7 +117,7 @@ typedef struct effect_secondary_init {
     u8 math_skill_flag; /* 0x03; enables the effect flags' spawn_delay_override */
     effect_target_t targets[EFFECT_TARGET_COUNT_MAX + 1]; /* 0x04; caster at EFFECT_CASTER_ENTRY */
     /* 0xae; living units that are neither targets nor the caster; also accessed
-     * through the separately bound g_effect_palette_target_misc_ids. */
+     * through the separately bound g_effect_palette_target_runtime_ids. */
     u8 spectator_ids[14];
     effect_target_t target_tile; /* 0xbc; post-action destination tile */
     u16 used_weapon_id;          /* 0xc6 */
@@ -161,7 +161,7 @@ typedef struct effect_secondary_animation {
  * `idx * 8`, and only these three fields are ever read or written. */
 typedef struct battle_post_effect_msg {
     u8 code;           /* 0x00 message code passed to battle_menu_init_system_function */
-    u8 unit;           /* 0x01 misc ID of the acting unit */
+    u8 unit;           /* 0x01 runtime ID of the acting unit */
     u8 _padding_02[2]; /* 0x02; aligns value */
     s32 value;         /* 0x04 reported amount */
 } battle_post_effect_msg_t;
@@ -362,7 +362,7 @@ typedef enum effect_start_target {
 /* loading and playback */
 /* target_mode selects the unit id or the tile coordinate pointer. */
 typedef union effect_start_target_data {
-    s32 misc_id;
+    s32 runtime_id;
     const SVECTOR* tile;
 } effect_start_target_data_t;
 typedef char effect_start_target_data_size_must_be_4[sizeof(effect_start_target_data_t) == 4 ? 1 : -1];
@@ -2030,7 +2030,7 @@ void effect_set_secondary_fall_dust(struct battle_unit* unit);
 void effect_set_secondary_level_up(struct battle_unit* unit);
 void effect_set_secondary_splash(struct battle_unit* unit);
 void effect_set_secondary_teleport(struct battle_unit* unit);
-s32 effect_set_secondary_teleport_by_misc_id(u32 misc_id);
+s32 effect_set_secondary_teleport_by_runtime_id(u32 runtime_id);
 void effect_set_secondary_venom_trap(battle_unit_t* unit);
 void effect_set_secondary_zodiac_poof(battle_unit_t* unit);
 s32 effect_spell_charge_secondary_handler(void);
@@ -2053,7 +2053,7 @@ void move_start_teleport_step(battle_unit_t* unit);
 
 /* targets */
 extern effect_secondary_init_t g_effect_context;
-extern u8 g_effect_palette_target_misc_ids[];
+extern u8 g_effect_palette_target_runtime_ids[];
 /* Tile target of the current effect: emitter origin CURSOR_TILE, homing CURSOR_TILE and camera source
  * CURSOR_TILE. */
 extern effect_target_t g_effect_target_tile;
@@ -2061,7 +2061,7 @@ extern effect_target_t g_effect_target_tile;
 void effect_build_secondary_init(struct battle_unit* unit, struct effect_secondary_init* effect);
 void effect_build_secondary_init_from_action(battle_unit_t* unit, effect_secondary_init_t* init);
 void effect_convert_tile_coords_to_world_coords(SVECTOR* in, VECTOR* out);
-void effect_copy_misc_unit_screen_location(u32 misc_id, VECTOR* destination);
+void effect_copy_runtime_screen_location(u32 runtime_id, VECTOR* destination);
 void effect_get_screen_location_by_battle_id(
     s32 adjust_for_tile_height, u32 battle_id, effect_secondary_init_t* effect_coordinates, SVECTOR* destination);
 void effect_init_altima_teleport_data(battle_unit_t* unit, effect_secondary_init_t* teleport_data);
@@ -2334,7 +2334,7 @@ extern rgb24_t g_effect_reflect_palette_colors[6];
 extern rgb24_t g_effect_trap_colors[];
 
 void effect_advance_caster_palette_track(
-    effect_palette_track_t* track, s16* keyframe, s16* remaining_frames, s32 caster_misc_id);
+    effect_palette_track_t* track, s16* keyframe, s16* remaining_frames, s32 caster_runtime_id);
 void effect_advance_coord_target_palette_track(effect_palette_track_t* track, s16* keyframe, s16* remaining_frames);
 void effect_advance_target_palette_track(effect_palette_track_t* track, s16* keyframe, s16* remaining_frames);
 void effect_init_palette(s16 index);

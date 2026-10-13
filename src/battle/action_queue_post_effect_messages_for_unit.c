@@ -6,29 +6,29 @@
  *
  * Walks the 11 reportable outcomes recorded in the unit's
  * action_data_t and appends one 8-byte record per outcome to the
- * queue at g_action_post_effect_msgs: message code at +0, the acting unit's misc ID at +1,
+ * queue at g_action_post_effect_msgs: message code at +0, the acting unit's runtime ID at +1,
  * and the reported value at +4. g_action_post_effect_msg_counter is
  * the record count, drained by action_resume_attack_phase_control.
  *
  * The 11-way dispatch really is a jump table in the target (at 0x80067548),
  * which is why the .ld places a .rodata output section there.
  */
-void action_queue_post_effect_messages_for_unit(battle_unit_t* misc) {
+void action_queue_post_effect_messages_for_unit(battle_unit_t* runtime) {
     action_data_t* action;
     s32 i;
     s32 queued;
     s32 off;
 
-    if (misc == 0) {
+    if (runtime == 0) {
         return;
     }
-    if (misc->battle_data == 0) {
+    if (runtime->battle_data == 0) {
         return;
     }
     if (g_action_post_effect_msg_counter >= 0x10) {
         return;
     }
-    action = &misc->battle_data->action;
+    action = &runtime->battle_data->action;
     if (action->hit == 0) {
         return;
     }
@@ -120,7 +120,7 @@ void action_queue_post_effect_messages_for_unit(battle_unit_t* misc) {
             break;
         }
         if (queued != 0) {
-            g_action_post_effect_msgs[g_action_post_effect_msg_counter].unit = misc->battle_data->battle_id;
+            g_action_post_effect_msgs[g_action_post_effect_msg_counter].unit = runtime->battle_data->battle_id;
             g_action_post_effect_msg_counter += 1;
         }
     }

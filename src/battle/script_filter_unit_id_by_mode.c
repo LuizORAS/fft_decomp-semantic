@@ -3,7 +3,7 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Answer one of six unit queries about the misc id in `in_id`, copying it to
+/* Answer one of six unit queries about the runtime id in `in_id`, copying it to
  * `out_id` first.  `mode` selects the query:
  *
  *   0  the id is always accepted
@@ -28,16 +28,16 @@ s32 script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
         return 1;
     }
     *out_id = *in_id;
-    if (battle_unit_has_misc_id(*out_id) != 0) {
-        index = battle_unit_get_battle_index_by_misc_id(*out_id);
+    if (battle_unit_has_runtime_id(*out_id) != 0) {
+        index = battle_unit_get_battle_id_by_runtime_id(*out_id);
         if (index != -1) {
             unit = battle_unit_get_stats_from_battle_id(index);
         }
     }
     if (*mode == 1) {
-        return battle_unit_has_misc_id(*out_id);
+        return battle_unit_has_runtime_id(*out_id);
     }
-    if (battle_unit_has_misc_id(*out_id) == 0) {
+    if (battle_unit_has_runtime_id(*out_id) == 0) {
         return 0;
     }
     query = *mode;

@@ -285,7 +285,7 @@ extern game_options_t g_battle_saved_game_options;
 extern SVECTOR g_battle_scratch_coords;
 
 /* stubs */
-s32 battle_return_one(s32 unused_misc_id);
+s32 battle_return_one(s32 unused_runtime_id);
 s32 battle_return_zero(void);
 
 /* unnamed */

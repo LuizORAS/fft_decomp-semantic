@@ -2,7 +2,7 @@
 #include "fft/battle_unit.h"
 
 /* The crystal or treasure lying on a tile, or 0. Among several, the source unit
- * (g_battle_unit_source_misc_id) is preferred, then the first in list order. The
+ * (g_battle_unit_source_runtime_id) is preferred, then the first in list order. The
  * candidate array holds 16 entries and is filled without a bound check. */
 battle_unit_t* battle_unit_get_crystal_or_treasure_at_map_coords(s32 map_x, s32 map_y, s32 map_z) {
     battle_unit_t* matches[BATTLE_UNIT_RUNTIME_SLOT_COUNT];
@@ -22,7 +22,7 @@ battle_unit_t* battle_unit_get_crystal_or_treasure_at_map_coords(s32 map_x, s32 
     }
     if (count != 0) {
         for (index = 0; index < count; index++) {
-            if (matches[index]->runtime_id == g_battle_unit_source_misc_id) {
+            if (matches[index]->runtime_id == g_battle_unit_source_runtime_id) {
                 return matches[index];
             }
         }

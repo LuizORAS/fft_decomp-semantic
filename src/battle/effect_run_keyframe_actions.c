@@ -8,33 +8,33 @@
  * register a callback slot.
  */
 void effect_run_keyframe_actions(u16 flags, u8 target, effect_record_t* state) {
-    s32 misc_id;
+    s32 runtime_id;
     u32 animation;
     u16 slot;
 
     if (flags & EFFECT_KEYFRAME_ACTION_FLAG_CASTER_ONLY) {
-        misc_id = -1;
+        runtime_id = -1;
         if (g_effect_context.targets[EFFECT_CASTER_ENTRY].target_type == EFFECT_TARGET_TYPE_UNIT) {
-            misc_id = g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.misc_id;
+            runtime_id = g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.runtime_id;
         }
     } else {
-        misc_id = -1;
+        runtime_id = -1;
         if (g_effect_context.targets[target].target_type == EFFECT_TARGET_TYPE_UNIT) {
-            misc_id = g_effect_context.targets[target].data.unit.misc_id;
+            runtime_id = g_effect_context.targets[target].data.unit.runtime_id;
         }
     }
-    if ((flags & EFFECT_KEYFRAME_ACTION_FLAG_POST_ACTION_DISPLAY) && misc_id != -1) {
-        battle_gfx_prepare_post_action_display_by_misc_id(misc_id);
+    if ((flags & EFFECT_KEYFRAME_ACTION_FLAG_POST_ACTION_DISPLAY) && runtime_id != -1) {
+        battle_gfx_prepare_post_action_display_by_runtime_id(runtime_id);
     }
-    if ((flags & EFFECT_KEYFRAME_ACTION_FLAG_UPDATE_DISPLAY) && misc_id != -1) {
-        battle_unit_update_display_by_misc_id(misc_id);
+    if ((flags & EFFECT_KEYFRAME_ACTION_FLAG_UPDATE_DISPLAY) && runtime_id != -1) {
+        battle_unit_update_display_by_runtime_id(runtime_id);
     }
-    if ((flags & EFFECT_KEYFRAME_ACTION_FLAG_TARGET_ANIMATION) && misc_id != -1) {
-        battle_unit_set_target_anim_by_misc_id(misc_id);
+    if ((flags & EFFECT_KEYFRAME_ACTION_FLAG_TARGET_ANIMATION) && runtime_id != -1) {
+        battle_unit_set_target_animation_by_runtime_id(runtime_id);
     }
     animation = (flags & EFFECT_KEYFRAME_ACTION_ANIMATION_MASK) >> EFFECT_KEYFRAME_ACTION_ANIMATION_SHIFT;
-    if (animation != 0 && misc_id != -1) {
-        battle_unit_set_specific_animation_by_misc_id(misc_id, animation);
+    if (animation != 0 && runtime_id != -1) {
+        battle_unit_set_specific_animation_by_runtime_id(runtime_id, animation);
     }
     if (flags & EFFECT_KEYFRAME_ACTION_CALLBACK_MASK) {
         slot = (flags & EFFECT_KEYFRAME_ACTION_CALLBACK_MASK) - 1;

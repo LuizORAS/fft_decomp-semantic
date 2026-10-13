@@ -18,9 +18,8 @@ void action_confirm(void) {
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_CONFIRM_ACTION;
-    unit = battle_unit_get_source_misc_data();
-    target
-        = battle_unit_get_selectable_misc_data_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+    unit = battle_unit_get_source();
+    target = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     switch (unit->ability_preview_phase) {
     case TARGET_PANELS_UNIT_OR_TILE:
         if (target != 0) {

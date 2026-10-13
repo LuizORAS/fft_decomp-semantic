@@ -90,7 +90,7 @@ s32 script_run_scenario_conditions(void);
 
 /* unit creation and removal */
 s32 script_add_ghost_unit_event_instruction(
-    s32 map_x, s32 map_y, s32 map_level, s16 facing, s16 spritesheet_id, s32 misc_id, s32 flags);
+    s32 map_x, s32 map_y, s32 map_level, s16 facing, s16 spritesheet_id, s32 runtime_id, s32 flags);
 void script_add_unit_start_thread(void);
 void script_add_unit_stub(void);
 void script_blue_remove_all_enemy_units(void);
@@ -105,12 +105,12 @@ void script_run_sprite_move(const event_sprite_move_parameters_t* parameters, s3
 void script_set_units_movement_effect_suppression(const event_movement_effect_parameters_t* parameters);
 void script_sprite_move(void);
 void script_sprite_move_beta(void);
-void script_wait_for_unit_ready(s32 misc_id);
+void script_wait_for_unit_ready(s32 runtime_id);
 void script_waitspritemove_event_instruction(s32 unit_id);
 void script_waitwalk_event_instruction(s32 unit_id);
 void script_walkto_event_instruction(const event_walk_to_parameters_t* parameters);
 void script_warp_unit(const event_warp_unit_parameters_t* parameters);
-void script_warp_unit_display_to_paired_unit(s32 misc_id);
+void script_warp_unit_display_to_paired_unit(s32 runtime_id);
 
 /* unit animation */
 extern u16 g_script_unit_face_slot_order[];

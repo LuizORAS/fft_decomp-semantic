@@ -11,7 +11,7 @@
  * phase 2 table is relative to the end of that window.
  *
  * The conditional-expression header reads keep the entry block from caching
- * the misc-data pointer. */
+ * the unit-data pointer. */
 s32 camera_find_active_keyframe(s16 frame, s16 mask, s32* out_index, s32* out_frame) {
     s32 phase1;
     s32 spawn_delay;

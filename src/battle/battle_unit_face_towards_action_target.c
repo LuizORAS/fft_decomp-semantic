@@ -26,7 +26,7 @@ void battle_unit_face_towards_action_target(battle_unit_t* unit, battle_unit_t* 
         delta.vz = unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)
             - unit->screen.vz;
     } else {
-        other = battle_unit_get_misc_data_by_battle_id(unit->battle_data->action_command.target_id);
+        other = battle_unit_get_by_battle_id(unit->battle_data->action_command.target_id);
         if (other != 0) {
             delta.vx = other->screen.vx - unit->screen.vx;
             delta.vz = other->screen.vz - unit->screen.vz;
@@ -46,7 +46,7 @@ void battle_unit_face_towards_action_target(battle_unit_t* unit, battle_unit_t* 
     battle_unit_set_tile_position(
         unit->battle_data->battle_id, unit->map_x, unit->map_y, unit->map_z, unit->facing / 1024);
     if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
-        battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id)->facing = unit->facing;
+        battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id)->facing = unit->facing;
         battle_unit_set_tile_position(
             unit->battle_data->battle_id, unit->map_x, unit->map_y, unit->map_z, unit->facing / 1024);
     }

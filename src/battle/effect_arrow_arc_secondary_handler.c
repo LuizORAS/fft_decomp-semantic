@@ -43,7 +43,8 @@ s32 effect_arrow_arc_secondary_handler(void) {
         g_effect_arrow_arc_yaw = ratan2(-delta.vz, delta.vx);
         result = 1;
         g_effect_arrow_arc_caster_relative_yaw = g_effect_arrow_arc_yaw
-            - (((battle_unit_get_facing_quadrant_by_misc_id(g_effect_current_secondary->caster.data.unit.misc_id) + 1)
+            - (((battle_unit_get_facing_quadrant_by_runtime_id(g_effect_current_secondary->caster.data.unit.runtime_id)
+                    + 1)
                    & 3)
                 << 10);
         g_effect_arrow_arc_height = g_effect_arc_trajectory_height;
@@ -102,8 +103,8 @@ s32 effect_arrow_arc_secondary_handler(void) {
         effect_draw_projectile_model(&spin, &position, &angles, &scale, parameter);
         if (g_effect_projectile_step_count == 2 && g_effect_trajectory_hit_unit_id != -1
             && g_effect_current_secondary->target_count != 0) {
-            battle_unit_call_bow_hardcoding_by_misc_id(g_effect_current_secondary->caster.data.unit.misc_id,
-                g_effect_current_secondary->target.record.data.unit.misc_id);
+            battle_unit_call_bow_hardcoding_by_runtime_id(g_effect_current_secondary->caster.data.unit.runtime_id,
+                g_effect_current_secondary->target.record.data.unit.runtime_id);
         }
         if (--g_effect_projectile_step_count == 0 || position.vy >= 0) {
             g_effect_current_secondary->phase = EFFECT_SECONDARY_PHASE_FINALIZING;

@@ -13,13 +13,13 @@ void action_choose_facing_for_wait(void) {
     s32 facing;
 
     camera_disable_map_pan();
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     facing = unit->facing;
     g_battle_game_state = BATTLE_GAME_STATE_WAIT_DIRECTION;
     g_battle_state_wait_direction_facing = facing;
     unit->state_frame_counter = 0;
     if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_RIDER) {
-        mounted_unit = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
+        mounted_unit = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
         if (mounted_unit != 0) {
             battle_unit_decide_facing_direction(unit, mounted_unit->facing);
             if (unit->battle_data != 0) {

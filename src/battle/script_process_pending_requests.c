@@ -116,10 +116,10 @@ void script_process_pending_requests(void) {
     effect_id = g_battle_event_pending_effect_id;
     if (effect_id != -1) {
         if (g_battle_event_effect_target_mode == EFFECT_START_ON_CASTER) {
-            effect_target.misc_id = g_battle_event_effect_target_misc_id;
+            effect_target.runtime_id = g_battle_event_effect_target_runtime_id;
             effect_start_new(effect_id, EFFECT_START_ON_CASTER, effect_target);
         } else {
-            effect_target.misc_id = g_battle_event_effect_target_misc_id;
+            effect_target.runtime_id = g_battle_event_effect_target_runtime_id;
             effect_start_new(effect_id, EFFECT_START_ON_UNIT, effect_target);
         }
     }
@@ -145,7 +145,7 @@ void script_process_pending_requests(void) {
         }
         unit_vram_copy = g_battle_event_pending_unit_vram_copy;
         if (unit_vram_copy >= 0) {
-            battle_gfx_load_misc_unit_into_evtchr_slot((unit_vram_copy & 0xFF00) >> 8, unit_vram_copy & 0xFF);
+            battle_gfx_load_unit_attack_image_into_evtchr_slot((unit_vram_copy & 0xFF00) >> 8, unit_vram_copy & 0xFF);
         }
         release_slot = g_battle_event_pending_reserved_vram_release_slot;
         if (release_slot >= 0) {

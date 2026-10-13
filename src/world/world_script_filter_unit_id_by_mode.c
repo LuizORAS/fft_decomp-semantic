@@ -2,7 +2,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Filter a copied misc unit ID by presence, team, and status for modes 0-5.
+/* Filter a copied runtime unit ID by presence, team, and status for modes 0-5.
  *
  * Modes 3 and 5 reject the status check set 8; mode 5 ignores Undead. The
  * target has no defined return value for other modes; callers must pass 0-5.
@@ -20,16 +20,16 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode) {
         return 1;
     }
     *out_id = *(u16*)in_id;
-    if (battle_unit_has_misc_id(*out_id) != 0) {
-        index = battle_unit_get_battle_index_by_misc_id(*out_id);
+    if (battle_unit_has_runtime_id(*out_id) != 0) {
+        index = battle_unit_get_battle_id_by_runtime_id(*out_id);
         if (index != -1) {
             unit = battle_unit_get_stats_from_battle_id(index);
         }
     }
     if (*mode == 1) {
-        return battle_unit_has_misc_id(*out_id);
+        return battle_unit_has_runtime_id(*out_id);
     }
-    if (battle_unit_has_misc_id(*out_id) == 0) {
+    if (battle_unit_has_runtime_id(*out_id) == 0) {
         return 0;
     }
     query = *mode;

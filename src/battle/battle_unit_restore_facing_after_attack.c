@@ -24,7 +24,7 @@ void battle_unit_restore_facing_after_attack(battle_unit_t* unit) {
                 /* Stored as a signed 16-bit value (li -1, not ori 0xffff). */
                 unit->attack_facing = -1;
                 if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
-                    mount = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
+                    mount = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
                     mount->facing = unit->facing;
                     battle_unit_set_tile_position(
                         unit->battle_data->battle_id, unit->map_x, unit->map_y, unit->map_z, unit->facing / 1024);

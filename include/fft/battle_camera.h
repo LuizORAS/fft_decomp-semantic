@@ -20,7 +20,7 @@ extern MATRIX g_camera_matrix;
 extern SVECTOR g_camera_render_state;
 extern u16 g_camera_shake_z_offset;
 
-void camera_convert_screen_coords_by_1_from_misc_id(u32 misc_id, SVECTOR* coords);
+void camera_convert_unit_coords_by_runtime_id(u32 runtime_id, SVECTOR* coords);
 void camera_convert_screen_coords_modify_by_1(const SVECTOR* screen, SVECTOR* destination);
 void camera_convert_screen_coords_modify_by_5(const SVECTOR* screen, SVECTOR* destination);
 void camera_init_defaults(void);
@@ -122,7 +122,7 @@ void camera_choose_unblocked_rotation_for_tile(const SVECTOR* tile_coords, SVECT
 void camera_convert_screen_coords_by_rotation(const SVECTOR* input, SVECTOR* output, s32 offset);
 SVECTOR* camera_get_rotation(void);
 void camera_normalize_yaw_angle(void);
-s16 camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b);
+s16 camera_pick_nearest_unblocked_yaw(s32 runtime_id_a, s32 runtime_id_b);
 void camera_request_rotation(s32 angle);
 void camera_restore_rotation(void);
 void camera_rotate_left(s32 target_angle);

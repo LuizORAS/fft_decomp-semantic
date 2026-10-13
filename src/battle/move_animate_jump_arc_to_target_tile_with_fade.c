@@ -33,11 +33,11 @@ void move_animate_jump_arc_to_target_tile_with_fade(battle_unit_t* unit) {
     case 0:
         target.vx = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         target.vz = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-        target.vy = battle_gfx_calculate_screen_z_from_misc_map_data(unit);
+        target.vy = battle_gfx_calculate_screen_z_from_unit_tile(unit);
         timer = move_calculate_jump_arc_velocity(&unit->screen, &target, &velocity);
         unit->shadow_graphic_trigger = 0;
         unit->sprite_display_flags |= BATTLE_SPRITE_DISPLAY_BLEND_ADD_QUARTER | BATTLE_SPRITE_DISPLAY_SEMI_TRANSPARENT;
-        battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 1, unit->runtime_id, -31, -31, -31);
+        battle_gfx_apply_unit_palette_modulation_to_units(MAP_COLOR_MODE_BASE, 1, unit->runtime_id, -31, -31, -31);
         threshold = 4;
         unit->distortion_phase++;
     case 1:
@@ -47,7 +47,7 @@ void move_animate_jump_arc_to_target_tile_with_fade(battle_unit_t* unit) {
             unit->real.vz += velocity.vz;
             velocity.vy += g_move_jump_gravity;
         } else {
-            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_RESTORE, 1, unit->runtime_id, 0, 0, 0);
+            battle_gfx_apply_unit_palette_modulation_to_units(MAP_COLOR_MODE_RESTORE, 1, unit->runtime_id, 0, 0, 0);
             unit->distortion_phase++;
         }
         timer--;
@@ -68,7 +68,7 @@ void move_animate_jump_arc_to_target_tile_with_fade(battle_unit_t* unit) {
     case 3:
         main_util_set_svector(&target, unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2), 0,
             unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
-        target.vy = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
+        target.vy = battle_gfx_calculate_screen_z_from_unit_screen_coords(unit);
         if (unit->screen.vy < target.vy) {
             unit->real.vy += velocity.vy;
             velocity.vy += g_move_jump_gravity;

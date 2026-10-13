@@ -18,7 +18,7 @@ void action_set_item_throw_stone_ability_display(void) {
     s32 ability;
 
     g_battle_game_state = BATTLE_GAME_STATE_ACTION_EXECUTE;
-    unit = battle_unit_get_casting_misc_data();
+    unit = battle_unit_get_casting();
     ability = unit->used_ability_id;
     unit->state_frame_counter = 0;
     target_move_cursor_to_action_target(unit);

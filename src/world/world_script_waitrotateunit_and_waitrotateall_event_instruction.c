@@ -6,7 +6,7 @@
  * when the id is -1, has finished rotating. */
 void world_script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id) {
     s32 i;
-    s32 misc_id;
+    s32 runtime_id;
 
     if (unit_id == -1) {
         do {
@@ -18,11 +18,11 @@ void world_script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id
             }
         } while (i != EVENT_UNIT_SLOT_COUNT);
     } else {
-        misc_id = script_get_misc_id(unit_id);
-        if (misc_id != EVENT_RUNTIME_ID_NONE) {
+        runtime_id = script_resolve_runtime_id(unit_id);
+        if (runtime_id != EVENT_RUNTIME_ID_NONE) {
             do {
                 world_thread_yield();
-            } while (g_world_unit_animation_states[misc_id].rotating != 0);
+            } while (g_world_unit_animation_states[runtime_id].rotating != 0);
         }
     }
 }

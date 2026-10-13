@@ -13,7 +13,7 @@ void world_script_block_start_thread(void) {
     u8* script;
     u8* parameters;
     s16 first_halfword;
-    s16 misc_id;
+    s16 runtime_id;
     s32 thread_id;
 
     g_world_thread_contexts[g_world_thread_current_id].task_id = NATIVE_THREAD_TASK_EVENT_BLOCK;
@@ -39,11 +39,11 @@ void world_script_block_start_thread(void) {
             g_thread_call_target = (void (*)(void))world_script_walkto_event_instruction;
             thread_call_on_main_stack(parameters);
         } else if (script[0] == EVENT_OPCODE_WALK_TO_ANIM) {
-            misc_id = script_get_misc_id(first_halfword);
-            if (misc_id != EVENT_RUNTIME_ID_NONE) {
-                g_world_unit_pending_animations[misc_id] = script_read_s16(script + 3);
+            runtime_id = script_resolve_runtime_id(first_halfword);
+            if (runtime_id != EVENT_RUNTIME_ID_NONE) {
+                g_world_unit_pending_animations[runtime_id] = script_read_s16(script + 3);
             }
-            g_world_unit_was_moving_latch[misc_id] = 0;
+            g_world_unit_was_moving_latch[runtime_id] = 0;
         } else if (script[0] == EVENT_OPCODE_JUMP) {
             world_script_jump_event_instruction((const event_jump_parameters_t*)parameters);
         } else if (script[0] == EVENT_OPCODE_WAIT_WALK) {
@@ -54,25 +54,25 @@ void world_script_block_start_thread(void) {
             world_script_mirrorsprite_event_instruction((const event_mirror_sprite_parameters_t*)(script + 1));
         } else if (script[0] == EVENT_OPCODE_RESET_PALETTE) {
             world_script_resetpalette_event_instruction((const event_unit_parameters_t*)(script + 1));
-        } else if (script[0] == EVENT_OPCODE_SET_FIRST_MISC_UNIT) {
-            misc_id = script_get_misc_id(first_halfword);
-            if (misc_id != EVENT_RUNTIME_ID_NONE) {
-                battle_unit_move_misc_unit_to_head(misc_id);
+        } else if (script[0] == EVENT_OPCODE_SET_FIRST_UNIT) {
+            runtime_id = script_resolve_runtime_id(first_halfword);
+            if (runtime_id != EVENT_RUNTIME_ID_NONE) {
+                battle_unit_move_to_head(runtime_id);
             }
         } else if (script[0] == EVENT_OPCODE_ERASE) {
-            misc_id = script_get_misc_id(first_halfword);
-            if (misc_id != EVENT_RUNTIME_ID_NONE) {
-                battle_gfx_reset_unit_graphic_trigger(misc_id);
+            runtime_id = script_resolve_runtime_id(first_halfword);
+            if (runtime_id != EVENT_RUNTIME_ID_NONE) {
+                battle_gfx_reset_unit_graphic_trigger(runtime_id);
             }
         } else if (script[0] == EVENT_OPCODE_DRAW) {
-            misc_id = script_get_misc_id(first_halfword);
-            if (misc_id != EVENT_RUNTIME_ID_NONE) {
-                battle_unit_draw_and_activate_by_misc_id(misc_id);
+            runtime_id = script_resolve_runtime_id(first_halfword);
+            if (runtime_id != EVENT_RUNTIME_ID_NONE) {
+                battle_unit_draw_and_activate_by_runtime_id(runtime_id);
             }
         } else if (script[0] == EVENT_OPCODE_WAIT_UNIT_READY) {
-            misc_id = script_get_misc_id(first_halfword);
-            if (misc_id != EVENT_RUNTIME_ID_NONE) {
-                world_script_wait_for_unit_ready(misc_id);
+            runtime_id = script_resolve_runtime_id(first_halfword);
+            if (runtime_id != EVENT_RUNTIME_ID_NONE) {
+                world_script_wait_for_unit_ready(runtime_id);
             }
         } else if (script[0] == EVENT_OPCODE_WAIT) {
             world_thread_wait_frames(script_read_s16(script + 1));
@@ -89,7 +89,7 @@ void world_script_block_start_thread(void) {
             }
             g_world_thread_contexts[thread_id].function_parameter_1 = (s32)(script + 1);
             g_world_thread_contexts[thread_id].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;
-            g_world_thread_contexts[thread_id].task_words[0] = script_get_misc_id(first_halfword);
+            g_world_thread_contexts[thread_id].task_words[0] = script_resolve_runtime_id(first_halfword);
         } else if (script[0] == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
             world_script_waitspritemove_event_instruction(first_halfword);
         } else if (script[0] == EVENT_OPCODE_WAIT_ROTATE_UNIT) {
@@ -100,10 +100,10 @@ void world_script_block_start_thread(void) {
             world_script_unit_animation_rotate_event_instruction(
                 (const event_unit_anim_rotate_parameters_t*)(script + 1));
         } else if (script[0] == EVENT_OPCODE_COLOR_UNIT) {
-            misc_id = script_get_misc_id(first_halfword);
-            if (misc_id != EVENT_RUNTIME_ID_NONE) {
-                battle_gfx_start_misc_unit_palette_modulation(
-                    script[3], script[7], misc_id, (s8)script[4], (s8)script[5], (s8)script[6]);
+            runtime_id = script_resolve_runtime_id(first_halfword);
+            if (runtime_id != EVENT_RUNTIME_ID_NONE) {
+                battle_gfx_apply_unit_palette_modulation_to_units(
+                    script[3], script[7], runtime_id, (s8)script[4], (s8)script[5], (s8)script[6]);
             }
         }
         script += 1 + g_world_event_instruction_sizes[script[0]];

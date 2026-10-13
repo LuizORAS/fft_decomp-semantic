@@ -6,7 +6,7 @@
  * disables it for any other unit. */
 void battle_gfx_update_status_bubble_graphic_trigger(battle_unit_t* unit) {
     if ((unit->status_flags_1_4 & BATTLE_UNIT_STATUS_BUBBLE_MASK) != 0
-        || unit->runtime_id == g_battle_unit_source_misc_id) {
+        || unit->runtime_id == g_battle_unit_source_runtime_id) {
         unit->status_bubble_active = 1;
         unit->status_bubble_timer = 0;
     } else {

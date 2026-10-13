@@ -2,13 +2,13 @@
 
 /* Prepare a unit's one-step movement path and dismount it from its rider.
  *
- * Returns 1, or 0 after raising the pointer exception when the misc record is
+ * Returns 1, or 0 after raising the pointer exception when the runtime record is
  * missing. The 0x11a bit-fields must be cleared before the path step is built:
  * that order fixes the target's constant-load schedule. */
-s32 battle_unit_prepare_rider_dismount(u32 misc_id, s32 direction, s32 jump_length) {
+s32 battle_unit_prepare_rider_dismount(u32 runtime_id, s32 direction, s32 jump_length) {
     battle_unit_t* unit;
 
-    unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xffff);
+    unit = battle_unit_get_by_runtime_id(runtime_id & 0xffff);
     if (unit != 0) {
         unit->path.count = 1;
         unit->walk_speed = 0x2000;

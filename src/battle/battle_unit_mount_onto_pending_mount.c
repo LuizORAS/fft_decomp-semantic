@@ -12,7 +12,7 @@ void battle_unit_mount_onto_pending_mount(battle_unit_t* unit) {
 
     battle_unit_store_coordinate_mount_animation_data(unit);
     if (unit->path.pending_mount & BATTLE_PENDING_MOUNT_SET) {
-        other = battle_unit_get_misc_data_by_battle_id(unit->path.pending_mount & BATTLE_PENDING_MOUNT_ID_MASK);
+        other = battle_unit_get_by_battle_id(unit->path.pending_mount & BATTLE_PENDING_MOUNT_ID_MASK);
         if (other != 0) {
             battle_unit_mount_rider_onto_unit(unit, other);
             sound_play_movement_sfx(unit, MAIN_SFX_LAND_DEFAULT);
@@ -29,7 +29,7 @@ void battle_unit_mount_onto_pending_mount(battle_unit_t* unit) {
     }
 
     if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
-        other = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
+        other = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
         if (other != 0) {
             battle_unit_mount_rider_onto_unit(other, unit);
         }

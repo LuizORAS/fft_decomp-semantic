@@ -12,7 +12,7 @@ void battle_state_enter_pre_attack_animation(void) {
 
     target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 2);
     g_battle_game_state = BATTLE_GAME_STATE_PRE_ATTACK_ANIMATION;
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     ability = unit->used_ability_id;
     unit->state_frame_counter = 0;
     if (g_battle_ability_animation_data[ability].charge_animation_set_id != 0) {

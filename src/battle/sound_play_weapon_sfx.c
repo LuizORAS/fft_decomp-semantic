@@ -25,7 +25,7 @@ void sound_play_weapon_sfx(battle_unit_t* unit, s32 hit) {
         break;
     case 1:
         for (i = 0; i < unit->strike.target_count; i++) {
-            target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
+            target = battle_unit_get_by_battle_id(unit->strike.target_list[i]);
             if (target == 0 || target->battle_data == 0) {
                 continue;
             }

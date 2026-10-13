@@ -8,29 +8,29 @@
  * Phase 0 replaces the frame count in distortion_timer with the per-frame step
  * and stores the destination height in distortion_target; phase 1 steps until the
  * unit reaches it, then snaps and ends the animation. */
-void move_interpolate_height_toward_fixed_rise(battle_unit_t* misc) {
+void move_interpolate_height_toward_fixed_rise(battle_unit_t* unit) {
     s32 step;
     s32 target;
     s32 height;
 
-    step = misc->distortion_timer;
-    target = misc->distortion_target;
-    switch (misc->distortion_phase) {
+    step = unit->distortion_timer;
+    target = unit->distortion_target;
+    switch (unit->distortion_phase) {
     case 0:
         step = -0x24000 / step;
-        target = misc->real.vy + -0x24000;
-        misc->distortion_phase = 1;
+        target = unit->real.vy + -0x24000;
+        unit->distortion_phase = 1;
     case 1:
-        if (target < misc->real.vy) {
-            misc->real.vy = step + misc->real.vy;
+        if (target < unit->real.vy) {
+            unit->real.vy = step + unit->real.vy;
         } else {
-            misc->real.vy = target;
-            misc->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
+            unit->real.vy = target;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
-        height = misc->real.vy;
-        misc->screen.vy = height / ONE;
+        height = unit->real.vy;
+        unit->screen.vy = height / ONE;
         break;
     }
-    misc->distortion_timer = step;
-    misc->distortion_target = target;
+    unit->distortion_timer = step;
+    unit->distortion_target = target;
 }

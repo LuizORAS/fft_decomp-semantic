@@ -14,7 +14,7 @@ void move_displace_overlapping_unit(battle_unit_t* unit, s32 direction) {
     s32 y;
     s32 center;
 
-    other = battle_unit_get_overlapping_misc_data_pointer(unit, unit->map_x, unit->map_y, unit->map_z);
+    other = battle_unit_find_overlapping_at_tile(unit, unit->map_x, unit->map_y, unit->map_z);
     if (unit->movement_path_offset < 2) {
         return;
     }

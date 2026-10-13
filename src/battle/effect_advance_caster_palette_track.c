@@ -4,7 +4,7 @@
 /* Advance the caster colour track one frame: an APPLY keyframe recolours the
  * caster. */
 void effect_advance_caster_palette_track(
-    effect_palette_track_t* track, s16* keyframe, s16* remaining_frames, s32 caster_misc_id) {
+    effect_palette_track_t* track, s16* keyframe, s16* remaining_frames, s32 caster_runtime_id) {
     s16 current;
     s32 index;
     s32 timer;
@@ -30,8 +30,8 @@ void effect_advance_caster_palette_track(
                 red = track->color[index].r;
                 green = track->color[index].g;
                 blue = track->color[index].b;
-                battle_gfx_start_misc_unit_palette_modulation(
-                    preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index], caster_misc_id, red, green, blue);
+                battle_gfx_apply_unit_palette_modulation_to_units(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                    track->duration[index], caster_runtime_id, red, green, blue);
             }
         }
         *remaining_frames = *remaining_frames - 1;

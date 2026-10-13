@@ -10,7 +10,7 @@ void battle_unit_set_tile_position_with_mount_partner(battle_unit_t* unit) {
         (unit->facing / BATTLE_FACING_QUARTER_TURN));
 
     if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
-        mounted_unit = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
+        mounted_unit = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
         if (mounted_unit != 0) {
             mounted_unit->facing = unit->facing;
             mounted_unit->camera_facing_quadrant = unit->camera_facing_quadrant;

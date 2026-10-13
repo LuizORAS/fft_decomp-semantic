@@ -28,8 +28,7 @@ void camera_update_vector_from_game_state(void) {
     s32 height;
 
     if (g_battle_game_state == BATTLE_GAME_STATE_CRYSTAL_LEARN) {
-        unit = battle_unit_get_selectable_misc_data_at_map_coords(
-            g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+        unit = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
         height = 0;
         if (unit != 0) {
             height = (g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height >> 1) * g_camera_zoom.vy / ONE;
@@ -45,7 +44,7 @@ void camera_update_vector_from_game_state(void) {
     }
     if (g_battle_game_state == BATTLE_GAME_STATE_UNIT_MOVING || g_battle_game_state == BATTLE_GAME_STATE_WAIT_DIRECTION
         || g_battle_game_state == BATTLE_GAME_STATE_PRE_ATTACK_ANIMATION) {
-        unit = battle_unit_get_source_misc_data();
+        unit = battle_unit_get_source();
         height = (g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height >> 1) * g_camera_zoom.vy / ONE;
         if (unit->camera_relative_x >= 0xB1 && unit->camera_relative_x < 0x150
             && unit->camera_relative_y - height >= 0x51 && unit->camera_relative_y < 0xA0) {
@@ -67,8 +66,7 @@ void camera_update_vector_from_game_state(void) {
     }
     if (g_camera_zoom_action == CAMERA_STEP_NONE && g_camera_tilt_action == CAMERA_STEP_NONE
         && g_camera_rotation_action == CAMERA_ROTATION_NONE && g_camera_map_pan_enabled == 0) {
-        unit = battle_unit_get_selectable_misc_data_at_map_coords(
-            g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+        unit = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
         height = 0;
         if (unit != 0) {
             height = (g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height >> 1) * g_camera_zoom.vy / ONE;

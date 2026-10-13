@@ -8,16 +8,16 @@
 void script_mirrorsprite_event_instruction(const event_mirror_sprite_parameters_t* parameters) {
     s16 unit_id;
     s32 mirror;
-    s32 misc_id;
+    s32 runtime_id;
 
     unit_id = script_read_s16(parameters->unit_id_le);
     mirror = parameters->mode;
-    misc_id = script_get_misc_id(unit_id);
-    if (misc_id != EVENT_RUNTIME_ID_NONE) {
+    runtime_id = script_resolve_runtime_id(unit_id);
+    if (runtime_id != EVENT_RUNTIME_ID_NONE) {
         if (mirror == 1) {
-            battle_unit_set_horizontal_flip_flag(misc_id);
+            battle_unit_set_horizontal_flip_flag(runtime_id);
         } else {
-            battle_unit_clear_horizontal_flip_flag(misc_id);
+            battle_unit_clear_horizontal_flip_flag(runtime_id);
         }
     }
 }

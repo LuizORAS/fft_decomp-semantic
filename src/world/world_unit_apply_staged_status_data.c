@@ -10,7 +10,7 @@
  * Each changed status is applied through the main-thread dispatcher before
  * the unit graphics are refreshed. State 2 prevents applying the snapshot twice.
  */
-void world_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
+void world_unit_apply_staged_status_data(s32 unit_id, s32 runtime_id) {
     battle_stats_t* unit;
     s32 i;
     s32 status_id;
@@ -38,7 +38,7 @@ void world_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
         unit->hp = g_world_unit_status_staging_data->hp[unit_id];
         unit->team_flags = g_world_unit_status_staging_data->team_flags[unit_id];
         unit->death_counter = g_world_unit_status_staging_data->death_counter[unit_id];
-        g_thread_call_target = (void (*)(void))status_queue_misc_graphics_flag_change;
+        g_thread_call_target = (void (*)(void))status_queue_runtime_graphics_flag_change;
         i = 0;
         status_id = STATUS_HANDLER_INDEX(STATUS_ID_UNNAMED_00);
         for (; i < STATUS_COUNT; i++) {
@@ -86,7 +86,7 @@ void world_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
             unit->charged_ability_ct = g_world_unit_status_staging_data->charged_ability_ct[unit_id];
         }
         g_world_unit_status_staging_data->state[unit_id] = UNIT_STATUS_STAGING_RESTORED;
-        g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-        thread_call_on_main_stack(misc_id);
+        g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_runtime_id;
+        thread_call_on_main_stack(runtime_id);
     }
 }

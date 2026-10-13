@@ -16,7 +16,7 @@ void action_init_learn_ability_on_hit(void) {
 
     g_battle_game_state = BATTLE_GAME_STATE_LEARN_ABILITY_ON_HIT;
     g_main_system_animation_speed = 1;
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0, unit->battle_data->battle_id, 0, 0);
     battle_text_set_message_duration_frames(0x1E);
     switch (g_action_post_action_display_phase) {
@@ -30,7 +30,7 @@ void action_init_learn_ability_on_hit(void) {
         g_action_learn_on_hit_unit_id
             = battle_ability_find_learn_on_hit_unit(unit->battle_data->battle_id, &ability_id);
         if (g_action_learn_on_hit_unit_id != -1) {
-            learner = battle_unit_get_misc_data_by_battle_id(g_action_learn_on_hit_unit_id);
+            learner = battle_unit_get_by_battle_id(g_action_learn_on_hit_unit_id);
             battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_ABILITY_LEARNED, ability_id,
                 unit->battle_data->battle_id, 0, learner->battle_data->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
             target_move_cursor_to_unit(learner);

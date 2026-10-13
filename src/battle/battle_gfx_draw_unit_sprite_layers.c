@@ -71,7 +71,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_t* unit) {
                     display = unit->animation.display;
                     battle_gfx_construct_polygon_data_for_units(
                         display, 3, 0, &position, angle, flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
-                    rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
+                    rider = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
                     if (rider != 0 && rider->draw_enabled != 0) {
                         rider_position.vx = rider->camera_relative_x;
                         rider_position.vy = rider->camera_relative_y;

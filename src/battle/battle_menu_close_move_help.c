@@ -15,8 +15,8 @@ void battle_menu_close_move_help(void) {
     battle_unit_t* casting;
 
     camera_disable_map_pan();
-    unit = battle_unit_get_source_misc_data();
-    casting = battle_unit_get_casting_misc_data();
+    unit = battle_unit_get_source();
+    casting = battle_unit_get_casting();
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
         action_set_at_list_active();
     } else {

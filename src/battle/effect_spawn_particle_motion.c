@@ -45,7 +45,8 @@ s32 effect_spawn_particle_motion(effect_emitter_values_t* values, effect_motion_
     if ((values->motion_flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING) {
         oriented = 1;
         anchor_angle.vy
-            = ((battle_unit_get_facing_quadrant_by_misc_id(g_effect_current_secondary->caster.data.unit.misc_id) + 1)
+            = ((battle_unit_get_facing_quadrant_by_runtime_id(g_effect_current_secondary->caster.data.unit.runtime_id)
+                   + 1)
                   & 3)
             << 10;
         anchor_angle.vz = 0;

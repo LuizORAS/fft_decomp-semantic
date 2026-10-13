@@ -26,11 +26,10 @@ void battle_state_handle_default_state(void) {
     } else if (input & PSX_PAD_CIRCLE) {
         target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 0);
         main_sound_play_sfx(MAIN_SFX_CONFIRM);
-        if (battle_unit_get_selectable_misc_data_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z)
-            != 0) {
+        if (battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z) != 0) {
             battle_menu_dispatch_idle_action_menu();
         } else {
-            unit = battle_unit_get_source_misc_data();
+            unit = battle_unit_get_source();
             if (unit != 0) {
                 target_move_cursor_to_unit(unit);
                 battle_menu_set_next_script_action_menus();
@@ -38,10 +37,9 @@ void battle_state_handle_default_state(void) {
         }
     } else if (input & PSX_PAD_CROSS) {
         action_clear_at_list_id();
-        unit = battle_unit_get_selectable_misc_data_at_map_coords(
-            g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+        unit = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
         if (unit != 0) {
-            g_battle_casting_unit_id = unit->runtime_id;
+            g_battle_casting_runtime_id = unit->runtime_id;
             target_show_move_range_in_free_cursor();
         }
     } else if (input & PSX_PAD_START) {

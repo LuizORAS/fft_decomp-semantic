@@ -10,7 +10,7 @@ void battle_unit_set_bow_hardcoding(battle_unit_t* attacker, battle_unit_t* targ
     if ((attacker != 0) && (target != 0)) {
         sound_play_weapon_sfx(attacker, 1);
         battle_unit_set_target_animation_from_attack_type(attacker, target);
-        battle_gfx_prepare_post_action_display_by_misc_id(target->runtime_id);
+        battle_gfx_prepare_post_action_display_by_runtime_id(target->runtime_id);
         effect_set_evade_type_data_and_weapon_element(attacker, 1);
     }
 }

@@ -17,7 +17,7 @@ void battle_state_start_battle_message_display(void) {
     g_battle_game_state = BATTLE_GAME_STATE_BATTLE_MESSAGE_DISPLAY;
     g_main_system_animation_speed = 1;
     g_action_post_action = 0;
-    unit = battle_unit_get_casting_misc_data();
+    unit = battle_unit_get_casting();
     action_build_targets_post_action_message();
     battle_unit_update_attack_result_animation(unit);
     unit->item_display_active = 0;
@@ -37,7 +37,7 @@ void battle_state_start_battle_message_display(void) {
 
     message = 0;
     for (i = 0; i < unit->strike.target_count; i++) {
-        target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
+        target = battle_unit_get_by_battle_id(unit->strike.target_list[i]);
         if (target != 0 && target->battle_data != 0 && target->battle_data->action.hit != 0) {
             battle_text_set_message_duration_frames(0x3c);
             /* Taking the row first keeps this loop above loop.c's size limit

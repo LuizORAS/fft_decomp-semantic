@@ -48,7 +48,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
             }
         }
     }
-    unit = battle_unit_get_selectable_misc_data_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+    unit = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (unit != 0) {
         scaled = g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height * g_camera_zoom.vy;
         if (scaled < 0) {

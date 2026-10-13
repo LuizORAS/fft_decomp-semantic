@@ -20,7 +20,7 @@ void battle_state_handle_confirm_action_state(void) {
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     selected_command_address = battle_menu_get_selected_command_address();
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
         selected_command = selected_command_address->kind;
         switch (selected_command) {
@@ -32,8 +32,7 @@ void battle_state_handle_confirm_action_state(void) {
             return;
         case 6:
         case 7:
-            target = battle_unit_get_selectable_misc_data_at_map_coords(
-                g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+            target = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
             if (target != 0) {
                 unit->command_state.ai.data.action.targeting_type = selected_command_address->kind;
                 unit->command_state.ai.data.action.target_id = target->battle_data->battle_id;

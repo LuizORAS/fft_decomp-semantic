@@ -73,8 +73,8 @@ void move_apply_unit_step_velocity(battle_unit_t* unit) {
     unit->real.vz += unit->velocity.vz;
     unit->screen.vx = unit->real.vx / ONE;
     unit->screen.vz = unit->real.vz / ONE;
-    ground_z = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
-    move_ground_z = battle_gfx_calculate_screen_z_from_misc_move_data(unit);
+    ground_z = battle_gfx_calculate_screen_z_from_unit_screen_coords(unit);
+    move_ground_z = battle_gfx_calculate_screen_z_from_move_destination(unit);
     switch (unit->step_phase) {
     case MOVE_STEP_PHASE_WALK_TO_EDGE_SOUTH:
     case MOVE_STEP_PHASE_WALK_TO_EDGE_EAST:
@@ -281,7 +281,7 @@ void move_apply_unit_step_velocity(battle_unit_t* unit) {
     }
     battle_unit_set_screen_coords_from_real_coords(unit);
     if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
-        rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
+        rider = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
         if (rider != 0) {
             rider->screen = unit->screen;
             rider->screen.vy -= 10;

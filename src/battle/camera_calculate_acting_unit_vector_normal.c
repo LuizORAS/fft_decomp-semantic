@@ -7,7 +7,7 @@ void camera_calculate_acting_unit_vector_normal(void) {
     VECTOR delta;
     battle_unit_t* unit;
 
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     setVector(&delta, unit->screen.vx - g_camera_current_real_coords.vx / ONE,
         unit->screen.vy - g_camera_current_real_coords.vy / ONE,
         unit->screen.vz - g_camera_current_real_coords.vz / ONE);

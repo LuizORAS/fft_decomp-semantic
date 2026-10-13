@@ -79,8 +79,8 @@ s32 effect_anchored_polar_mesh_update(s32 record_index, s32 callback_slot, s32 e
         scratch->target_index = g_effect_state_records[state_index].timeline.target_index;
         effect_resolve_target_render_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
             scratch->target_index, &g_effect_context, &scratch->position);
-        scratch->unit_coords = battle_unit_get_event_offset_ptr_by_misc_id(
-            g_effect_context.targets[scratch->target_index].data.unit.misc_id);
+        scratch->unit_coords = battle_unit_get_event_offset_by_runtime_id(
+            g_effect_context.targets[scratch->target_index].data.unit.runtime_id);
         scratch->position.vx += scratch->unit_coords->vx;
         scratch->position.vy += scratch->unit_coords->vy;
         scratch->position.vz += scratch->unit_coords->vz;

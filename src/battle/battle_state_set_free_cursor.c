@@ -14,7 +14,7 @@ void battle_state_set_free_cursor(void) {
     g_battle_menu_help_opening = 0;
     target_store_cursor_unit_name_and_data();
     action_set_at_list_active();
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     if (unit != 0) {
         battle_unit_store_entd_flags_without_control_flag(unit);
     }

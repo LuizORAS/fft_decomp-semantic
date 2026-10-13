@@ -8,8 +8,8 @@ void action_build_targets_post_action_message(void) {
     s32 i;
 
     g_action_post_effect_msg_counter = 0;
-    base = battle_unit_get_casting_misc_data();
+    base = battle_unit_get_casting();
     for (i = 0; i < base->strike.target_count; i++) {
-        action_queue_post_effect_messages_for_unit(battle_unit_get_misc_data_by_battle_id(base->strike.target_list[i]));
+        action_queue_post_effect_messages_for_unit(battle_unit_get_by_battle_id(base->strike.target_list[i]));
     }
 }

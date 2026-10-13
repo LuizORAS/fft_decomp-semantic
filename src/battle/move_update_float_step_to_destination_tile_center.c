@@ -22,7 +22,7 @@ void move_update_float_step_to_destination_tile_center(battle_unit_t* unit) {
         move_snap_axis_to_destination_tile_center(direction, unit);
         unit->velocity.vz = 0;
         unit->velocity.vx = 0;
-        screen_z = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
+        screen_z = battle_gfx_calculate_screen_z_from_unit_screen_coords(unit);
         g_move_target_screen_z = screen_z;
         if (unit->screen.vy >= screen_z) {
             unit->map_x = unit->movement.destination_x;

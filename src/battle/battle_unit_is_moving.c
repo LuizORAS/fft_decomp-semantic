@@ -2,18 +2,18 @@
 #include "fft/battle_unit.h"
 #include "psx/types.h"
 
-/* Event instruction 0x39: is the unit with this misc id moving (any of the
- * 21 units when misc id is -1)? */
-s32 battle_unit_is_moving(s32 misc_id) {
+/* Event instruction 0x39: is the unit with this unit id moving (any of the
+ * 21 units when unit id is -1)? */
+s32 battle_unit_is_moving(s32 runtime_id) {
     s32 i;
 
-    if (misc_id != -1) {
-        if (move_is_unit_moving_by_misc_id(misc_id) != 0) {
+    if (runtime_id != -1) {
+        if (move_is_unit_moving_by_runtime_id(runtime_id) != 0) {
             return 1;
         }
     } else {
         for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
-            if ((battle_unit_has_misc_id(i) != 0) && (move_is_unit_moving_by_misc_id(i) != 0)) {
+            if ((battle_unit_has_runtime_id(i) != 0) && (move_is_unit_moving_by_runtime_id(i) != 0)) {
                 return 1;
             }
         }

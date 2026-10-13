@@ -12,40 +12,40 @@
 void action_run_between_turn_events(void) {
     battle_unit_t* unit;
     s32 action;
-    s32 misc_id;
+    s32 runtime_id;
 
     action = action_run_between_turn_control(BATTLE_BETWEEN_TURN_MODE_RUN);
-    misc_id = action & 0xff;
+    runtime_id = action & 0xff;
     g_action_turn_event_type = action & 0xff00;
     if (g_action_turn_event_type == BATTLE_TURN_EVENT_NONE) {
         return;
     }
-    unit = battle_unit_get_misc_data_by_battle_id(misc_id);
+    unit = battle_unit_get_by_battle_id(runtime_id);
     if (unit != 0) {
-        g_battle_unit_source_misc_id = unit->runtime_id;
+        g_battle_unit_source_runtime_id = unit->runtime_id;
     } else {
         main_system_handle_pointer_exception(12);
     }
     switch (g_action_turn_event_type) {
     case BATTLE_TURN_EVENT_UNIT_READY:
     case BATTLE_TURN_EVENT_ABILITY_READY:
-        battle_unit_draw_and_activate_by_misc_id(unit->runtime_id);
+        battle_unit_draw_and_activate_by_runtime_id(unit->runtime_id);
         break;
     case BATTLE_TURN_EVENT_ACTION_RESULT:
-        unit->pending_attack_result = action_finalize_attack_and_flag_reactions(misc_id);
+        unit->pending_attack_result = action_finalize_attack_and_flag_reactions(runtime_id);
         if (unit->pending_attack_result == -1) {
-            battle_unit_find_relocation_tile(misc_id, &unit->dismount);
+            battle_unit_find_relocation_tile(runtime_id, &unit->dismount);
             battle_unit_set_map_coords_after_death_dismount(unit);
         }
         break;
     case BATTLE_TURN_EVENT_UNKNOWN_0400:
-        unit->pending_attack_result = action_finalize_attack_and_flag_reactions(misc_id);
+        unit->pending_attack_result = action_finalize_attack_and_flag_reactions(runtime_id);
         if (unit->pending_attack_result == -1) {
-            battle_unit_find_relocation_tile(misc_id, &unit->dismount);
+            battle_unit_find_relocation_tile(runtime_id, &unit->dismount);
             battle_unit_set_map_coords_after_death_dismount(unit);
         }
-        battle_gfx_prepare_post_action_display_by_misc_id(unit->runtime_id);
-        battle_unit_update_display_by_misc_id(unit->runtime_id);
+        battle_gfx_prepare_post_action_display_by_runtime_id(unit->runtime_id);
+        battle_unit_update_display_by_runtime_id(unit->runtime_id);
         break;
     case BATTLE_TURN_EVENT_MIME:
         break;
@@ -56,7 +56,7 @@ void action_run_between_turn_events(void) {
         main_system_handle_pointer_exception(20);
         break;
     }
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     if (unit != 0) {
         unit->turn_action_flags = 0;
         if (g_action_turn_event_type != BATTLE_TURN_EVENT_UNKNOWN_0400) {

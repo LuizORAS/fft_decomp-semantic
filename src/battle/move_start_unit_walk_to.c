@@ -2,11 +2,11 @@
 #include "psx/types.h"
 
 /* Path a unit to a destination tile and start it walking at the given speed. */
-s32 move_start_unit_walk_to(s32 misc_id, map_tile_coordinates_t* destination, s32 flags, s32 jump, s32 speed) {
+s32 move_start_unit_walk_to(s32 runtime_id, map_tile_coordinates_t* destination, s32 flags, s32 jump, s32 speed) {
     battle_unit_t* unit;
     battle_walk_path_t* path;
 
-    unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xFFFF);
+    unit = battle_unit_get_by_runtime_id(runtime_id & 0xFFFF);
     if (unit != 0) {
         path = move_calculate_walkto_pathing(
             flags, jump, unit->map_x, unit->map_y, unit->map_z, destination->x, destination->y, destination->layer);

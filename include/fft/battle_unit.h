@@ -225,7 +225,7 @@ enum {
     BATTLE_SEQUENCE_EVTCHR_SLOT_1 = 600,
 };
 
-/* Masks for the 32-bit view of the high motion byte at misc-unit +0x83. */
+/* Masks for the 32-bit view of the high motion byte at runtime-unit +0x83. */
 typedef enum battle_motion_flags {
     BATTLE_MOTION_FLAG_SUPPRESS_FACING_UPDATE = 0x01000000,
     BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS = 0x02000000,
@@ -327,7 +327,7 @@ typedef char
 
 /* A sprite display: texture page, CLUT, colour and the parts cut from it.
  * Renderer APIs use this common header and variable part tail; the fixed
- * storage records below describe each slot inside a 0x440-byte misc record. */
+ * storage records below describe each slot inside a 0x440-byte runtime record. */
 typedef struct battle_gfx_sprite_display_data {
     rgb24_t color; /* 0x00 */
     u8 part_count; /* 0x03; parts in use */
@@ -367,12 +367,12 @@ typedef char battle_gfx_single_part_sprite_display_size_must_be_22[sizeof(battle
         ? 1
         : -1];
 
-/* Weapon/effect sprite animation block, misc unit data 0x208, 0x238 and
+/* Weapon/effect sprite animation block, runtime unit data 0x208, 0x238 and
  * 0x268: block 0 plays the weapon sheet's sequences, blocks 1 and 2 the
  * effect sheet's. It shares the first 0x1c bytes of battle_unit_anim_state_t,
  * which has their meanings, but keeps its display pointer at 0x24
  * (battle_gfx_run_wep_eff_seq_script, battle_gfx_draw_unit_sprite_layers,
- * battle_unit_init_misc_data). Its SEQ table has no header: seq[sequence_id]
+ * battle_unit_init). Its SEQ table has no header: seq[sequence_id]
  * is the sequence. */
 typedef struct battle_unit_sprite_block {
     u16 trigger;                               /* 0x00; nonzero while the sprite is drawn */
@@ -449,7 +449,7 @@ typedef struct battle_gfx_unit_shp_frame_tables {
 typedef char
     battle_gfx_unit_shp_frame_tables_size_must_be_1672[sizeof(battle_gfx_unit_shp_frame_tables_t) == 1672 ? 1 : -1];
 
-/* Block view of the numeric display fields at misc unit data 0x2bc..0x2cf,
+/* Block view of the numeric display fields at runtime unit data 0x2bc..0x2cf,
  * taken as one pointer by the action result display builders
  * (battle_gfx_build_next_action_result_display, 0x800808b8, battle_gfx_animate_post_action_text). */
 typedef struct action_result_display {
@@ -575,7 +575,7 @@ typedef struct battle_tile_coordinates {
 } battle_tile_coordinates_t;
 typedef char battle_tile_coordinates_size_must_be_3[(sizeof(battle_tile_coordinates_t) == 3) ? 1 : -1];
 
-/* Complete movement record copied from 0x8018f7f0 into misc +0x9c.
+/* Complete movement record copied from 0x8018f7f0 into runtime +0x9c.
  * Count 0xfe selects the explicit teleport destination; 0xff is a failed
  * teleport. Ordinary counts select packed steps, each spanning one or more
  * tiles. Byte alignment preserves the original whole-record copies. */
@@ -714,7 +714,7 @@ enum {
     BATTLE_DISTORTION_ANIMATION_COUNT = 18, /* the handlers of g_battle_unit_distortion_animation_handlers */
 };
 
-/* The strike work record is embedded in Miscellaneous Unit Data at +0x18c
+/* The strike work record is embedded in unit runtime record at +0x18c
  * and used as a standalone AI work record. Reaction targeting writes its
  * redirected tile at +0x1c..+0x1e before the strike is processed. */
 typedef struct battle_strike_work {
@@ -733,12 +733,12 @@ typedef struct battle_strike_work {
     u8 target_new_y;
     u8 target_new_map_level;
     u8 used_weapon_id;
-    s16 reaction_ability_id; /* 0x20; misc 0x1ac */
-    /* 0x22; misc 0x1ae. g_action_current_ability.knockback_flags & 0x7f, stored with
+    s16 reaction_ability_id; /* 0x20; runtime 0x1ac */
+    /* 0x22; runtime 0x1ae. g_action_current_ability.knockback_flags & 0x7f, stored with
      * the knockback destination. */
     u8 knockback_flags;
     u8 can_earn_experience;
-    action_reward_display_t action_rewards; /* 0x24; misc 0x1b0..0x1b3 */
+    action_reward_display_t action_rewards; /* 0x24; runtime 0x1b0..0x1b3 */
 } battle_strike_work_t;
 typedef char battle_strike_work_must_be_40[sizeof(battle_strike_work_t) == 40 ? 1 : -1];
 typedef char battle_strike_targets_must_be_2[((unsigned long)&((battle_strike_work_t*)0)->target_list == 2) ? 1 : -1];
@@ -747,8 +747,8 @@ typedef char
     battle_strike_continue_must_be_0x18[((unsigned long)&((battle_strike_work_t*)0)->continue_attack == 0x18) ? 1 : -1];
 
 /* unit runtime */
-/* Live on-map units occupy 16 runtime slots, each 0x440 bytes.
- * Movement, animation, commands and displays link to battle_stats_t at 0x134. */
+/* Live on-map units own movement, animation, commands and displays.
+ * runtime_id indexes g_battle_units; battle_data optionally links combat stats. */
 typedef struct battle_unit {
     struct battle_unit* previous; /* 0x000; previous unit in the runtime list */
     u8 runtime_id;                /* 0x004; runtime slot ID */
@@ -778,7 +778,7 @@ typedef struct battle_unit {
     SVECTOR screen; /* 0x040; vx = x, vy = height, vz = map depth */
     u8 _unused_048[8];
     /* The sprite is drawn at screen + event_offset + seq_offset
-     * (battle_unit_copy_misc_data_xyz_values); both offsets are in the units
+     * (battle_unit_copy_draw_coords); both offsets are in the units
      * of screen (vx = x, vy = height, vz = map depth). */
     SVECTOR seq_offset; /* 0x050; the shift of the running sequence's move commands; cleared when one starts */
     /* Added to the projected sprite position, in pixels, by
@@ -852,7 +852,7 @@ typedef struct battle_unit {
     s32 target_select_result;
     s32 attack_phase_state;    /* 0x17c: battle_attack_preparation_e */
     s32 pending_attack_result; /* 0x180: attack result code; -1 signals death */
-    /* Death-by-dismount destination (Miscellaneous unit Data 0x184/0x186/
+    /* Death-by-dismount destination (unit runtime record 0x184/0x186/
      * 0x188); battle_unit_set_map_coords_after_death_dismount copies them to
      * map_x/map_z/map_y.  attack_result_animation_update passes &dismount. */
     map_tile_coordinates_t dismount; /* 0x184 */
@@ -908,7 +908,7 @@ typedef struct battle_unit {
     battle_gfx_single_part_sprite_display_t numeric_sprite_displays[3];   /* 0x3ce */
     battle_gfx_single_part_sprite_display_t status_bubble_sprite_display; /* 0x410 */
     battle_gfx_single_part_sprite_display_t item_sprite_display;          /* 0x426 */
-    u8 _unused_43c[4]; /* 0x43c; the next slot's in-use 32-bit value (g_battle_unit_misc_slot_flags) */
+    u8 _unused_43c[4]; /* 0x43c; the next slot's in-use 32-bit value (g_battle_unit_slot_states) */
 } battle_unit_t;
 typedef char battle_unit_size_must_be_1088[(sizeof(battle_unit_t) == 1088) ? 1 : -1];
 
@@ -948,7 +948,7 @@ typedef enum battle_unit_turn_action_flags {
 } battle_unit_turn_action_flags_e;
 
 /* unit flags */
-/* Miscellaneous Unit Data 0x130 identifies which role 0x131 links. */
+/* unit runtime record 0x130 identifies which role 0x131 links. */
 typedef enum battle_unit_mount_state {
     BATTLE_UNIT_MOUNT_STATE_NONE = 0,
     BATTLE_UNIT_MOUNT_STATE_RIDER = 1,
@@ -1064,10 +1064,10 @@ typedef struct battle_gfx_unit_seq {
 } battle_gfx_unit_seq_t;
 typedef char battle_gfx_unit_seq_size_must_be_1288[sizeof(battle_gfx_unit_seq_t) == 1288 ? 1 : -1];
 
-/* Renderer-side Misc-unit status mirror. These packed masks do not use the
+/* Renderer-side runtime unit status mirror. These packed masks do not use the
  * canonical status_id_e byte order. */
 typedef enum battle_unit_status_flags_1_4 {
-    /* Misc +0x140. Bit 0x00000001 is tested for animation 0x21 and never set. */
+    /* runtime +0x140. Bit 0x00000001 is tested for animation 0x21 and never set. */
     BATTLE_UNIT_STATUS_CONFUSION = 0x00000080,
     BATTLE_UNIT_STATUS_SLEEP = 0x00000040,
     BATTLE_UNIT_STATUS_PETRIFY = 0x00000020,
@@ -1076,7 +1076,7 @@ typedef enum battle_unit_status_flags_1_4 {
     BATTLE_UNIT_STATUS_DEAD = 0x00000004,
     BATTLE_UNIT_STATUS_MOUNTED = 0x00000002,
 
-    /* Misc +0x141. */
+    /* runtime +0x141. */
     BATTLE_UNIT_STATUS_FAITH = 0x00008000,
     BATTLE_UNIT_STATUS_BERSERK = 0x00004000,
     BATTLE_UNIT_STATUS_UNNAMED_0E = 0x00002000,
@@ -1086,7 +1086,7 @@ typedef enum battle_unit_status_flags_1_4 {
     BATTLE_UNIT_STATUS_CHARGING = 0x00000200,
     BATTLE_UNIT_STATUS_PERFORMING = 0x00000100,
 
-    /* Misc +0x142. */
+    /* runtime +0x142. */
     BATTLE_UNIT_STATUS_OIL = 0x00800000,
     BATTLE_UNIT_STATUS_POISON = 0x00400000,
     BATTLE_UNIT_STATUS_PROTECT = 0x00200000,
@@ -1096,7 +1096,7 @@ typedef enum battle_unit_status_flags_1_4 {
     BATTLE_UNIT_STATUS_BLOOD_SUCK = 0x00020000,
     BATTLE_UNIT_STATUS_INNOCENT = 0x00010000,
 
-    /* Misc +0x143. Bit 0x80000000 remains unknown. */
+    /* runtime +0x143. Bit 0x80000000 remains unknown. */
     BATTLE_UNIT_STATUS_UNDEAD = 0x40000000,
     BATTLE_UNIT_STATUS_REGEN = 0x20000000,
     BATTLE_UNIT_STATUS_RERAISE = 0x10000000,
@@ -1112,7 +1112,7 @@ typedef enum battle_unit_status_flags_1_4 {
 } battle_unit_status_flags_1_4_e;
 
 typedef enum battle_unit_status_flags_5_6 {
-    /* Misc +0x144. */
+    /* runtime +0x144. */
     BATTLE_UNIT_STATUS_CRYSTAL = 0x00000001,
     BATTLE_UNIT_STATUS_CHICKEN = 0x00000002,
     BATTLE_UNIT_STATUS_FROG = 0x00000004,
@@ -1122,7 +1122,7 @@ typedef enum battle_unit_status_flags_5_6 {
     BATTLE_UNIT_STATUS_JUMP = 0x00000040,
     BATTLE_UNIT_STATUS_POACHED = 0x00000080,
 
-    /* Misc +0x145. Other bits remain unknown. */
+    /* runtime +0x145. Other bits remain unknown. */
     BATTLE_UNIT_STATUS_MORBOL = 0x00000100,
     BATTLE_UNIT_STATUS_JUMP_HEIGHT_ACTIVE = 0x00000200,
 
@@ -1131,7 +1131,7 @@ typedef enum battle_unit_status_flags_5_6 {
 
 /* unit storage and rewards */
 /* In-use 32-bit values at 0x800b7304, stride 0x440: each sits four bytes ahead of its
- * g_battle_unit_misc_data record, in the previous record's last four bytes. */
+ * g_battle_units record, in the previous record's last four bytes. */
 typedef struct battle_unit_slot_state {
     s32 in_use;
     u8 _unused_004[0x43c];
@@ -1185,7 +1185,7 @@ typedef void (*battle_distortion_animation_handler_t)(battle_unit_t* unit);
 
 /* unit records */
 extern battle_unit_t g_battle_units[BATTLE_UNIT_RUNTIME_SLOT_COUNT];
-extern battle_unit_slot_state_t g_battle_unit_slot_flags[];
+extern battle_unit_slot_state_t g_battle_unit_slot_states[];
 extern s32 g_battle_unit_graphics_load_complete;
 extern battle_unit_t* g_battle_unit_list_head;
 extern battle_stats_t g_battle_unit_stats[BATTLE_UNIT_SLOT_COUNT];
@@ -1193,35 +1193,35 @@ extern battle_stats_t g_battle_unit_stats[BATTLE_UNIT_SLOT_COUNT];
 /* 0x8016604e: result of battle_gfx_poll_unit_graphics_load, 0 done / 1 pending. */
 extern u16 g_battle_unit_graphics_load_pending;
 
-battle_stats_t* battle_unit_get_existing_pointer(u32 unit_id);
+battle_stats_t* battle_unit_get_existing_pointer(u32 battle_id);
 s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters);
-s32 battle_unit_draw_and_activate_by_misc_id(u32 misc_id);
-s32 battle_unit_disable_remove(s32 misc_id);
-s32 battle_unit_get_battle_index_by_misc_id(u32 misc_id);
-battle_stats_t* battle_unit_get_by_unit_id(s32 unit_id);
-battle_unit_t* battle_unit_get_casting_misc_data(void);
-battle_unit_t* battle_unit_get_misc_data_by_battle_id(u16 battle_id);
-battle_unit_t* battle_unit_get_misc_data_by_misc_id(u16 misc_id);
-s32 battle_unit_get_misc_id_by_battle_id(u32 battle_id);
-battle_unit_t* battle_unit_get_source_misc_data(void);
+s32 battle_unit_draw_and_activate_by_runtime_id(u32 runtime_id);
+s32 battle_unit_disable_remove(s32 battle_id);
+s32 battle_unit_get_battle_id_by_runtime_id(u32 runtime_id);
+battle_stats_t* battle_unit_get_stats_by_unit_id(s32 unit_id);
+battle_unit_t* battle_unit_get_casting(void);
+battle_unit_t* battle_unit_get_by_battle_id(u16 battle_id);
+battle_unit_t* battle_unit_get_by_runtime_id(u16 runtime_id);
+s32 battle_unit_get_runtime_id_by_battle_id(u32 battle_id);
+battle_unit_t* battle_unit_get_source(void);
 battle_stats_t* battle_unit_get_stats_from_battle_id(u32 id);
-s32 battle_unit_has_misc_id(u32 misc_id);
-s32 battle_unit_move_misc_unit_to_head(u32 misc_id);
-s32 battle_unit_remove_misc_by_id(u32 misc_id);
+s32 battle_unit_has_runtime_id(u32 runtime_id);
+s32 battle_unit_move_to_head(u32 runtime_id);
+s32 battle_unit_remove_by_runtime_id(u32 runtime_id);
 s32 battle_unit_set_cannot_exist(s32 unit_index);
-s32 battle_unit_try_get_misc_data_by_unit_id(u16* unit_id, s32* state);
+s32 battle_unit_prepare_event_filter(u16* unit_id, s32* filter_mode);
 s32 battle_unit_update_fade_out_removal(battle_unit_t* unit);
-battle_unit_t* battle_unit_claim_misc_slot(s16 unit_id);
+battle_unit_t* battle_unit_claim_slot(s16 requested_runtime_id);
 battle_stats_t* battle_unit_find_active_data_pointer(void);
-action_command_t* battle_unit_get_action_command_by_battle_id(s32 unit_id);
+action_command_t* battle_unit_get_action_command_by_battle_id(s32 battle_id);
 battle_stats_t* battle_unit_get_attacker_data_pointer(void);
-battle_unit_t* battle_unit_get_overlapping_misc_data_pointer(battle_unit_t* self, s32 x, s32 y, s32 z);
-action_command_t* battle_unit_get_misc_action_command_by_battle_id(u32 battle_id);
-battle_unit_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id,
-    s16 palette, s16 misc_id, battle_stats_t* stats, u32 flags, const battle_gfx_unit_sprite_file_t* data);
-void battle_unit_remove_misc(battle_unit_t* unit);
-void battle_unit_clear_misc_units(void);
-s32 battle_unit_is_moving(s32 misc_id);
+battle_unit_t* battle_unit_find_overlapping_at_tile(battle_unit_t* self, s32 x, s32 y, s32 z);
+action_command_t* battle_unit_get_runtime_action_command_by_battle_id(u32 battle_id);
+battle_unit_t* battle_unit_init(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id, s16 palette,
+    s16 requested_runtime_id, battle_stats_t* stats, u32 flags, const battle_gfx_unit_sprite_file_t* data);
+void battle_unit_remove(battle_unit_t* unit);
+void battle_unit_clear_all(void);
+s32 battle_unit_is_moving(s32 runtime_id);
 s32 battle_unit_find_slot_by_character_identity(u32 character_identity);
 
 /* encounters and deployment */
@@ -1240,7 +1240,7 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode);
 s32 battle_unit_set_enemy_level_data_by_battle_id(u32 battle_id);
 s32 battle_unit_get_battle_index_by_entd_unit_id(s32 unit_id);
 s32 battle_unit_init_party_member_battle_data(s32 unused0, s32 unused1, s32 unit_index);
-s32 battle_unit_place_in_new_location(u32 misc_id, map_tile_coordinates_t* tile, s32 facing);
+s32 battle_unit_place_in_new_location(u32 runtime_id, map_tile_coordinates_t* tile, s32 facing);
 s32 battle_unit_poll_and_load_entd_units(void);
 void battle_unit_set_enemy_level_data(battle_stats_t* unit);
 s32 battle_unit_set_placement_and_validate(s32 unit_index, unit_deployment_coordinates_t* src);
@@ -1253,13 +1253,13 @@ s32 battle_unit_select_and_open_entd(void);
 void battle_unit_store_entd_flags_without_control_flag(battle_unit_t* unit);
 
 /* statuses and mounts */
-extern const u32 g_battle_misc_status_mask_by_handler_index[STATUS_COUNT + 1];
+extern const u32 g_battle_unit_status_mask_by_handler_index[STATUS_COUNT + 1];
 extern unit_status_staging_t* g_battle_unit_status_staging_data;
 
 /* The statuses a rider can be inflicted with, one mask per status byte. */
 extern u8 g_battle_rider_status_infliction_mask[STATUS_BYTE_COUNT];
 
-void battle_unit_apply_staged_status_data(s32 unit_id, s32 misc_id);
+void battle_unit_apply_staged_status_data(s32 unit_id, s32 runtime_id);
 void battle_unit_clear_status_staging_data(void);
 void battle_unit_copy_rider_data_to_mount(battle_unit_t* unit, battle_unit_t* rider);
 void battle_unit_dismount_rider(battle_unit_t* unit);
@@ -1270,8 +1270,8 @@ void battle_unit_update_staged_status_data(u16 unit_id, u16 restore);
 s32 battle_unit_save_staged_status_data(s32 unit_id);
 s32 battle_unit_get_chocobo_mount_state(battle_stats_t* unit);
 void battle_unit_mount_onto_pending_mount(battle_unit_t* unit);
-s32 battle_unit_prepare_rider_dismount(u32 misc_id, s32 direction, s32 jump_length);
-struct battle_unit* battle_unit_get_mount_misc_data(struct battle_unit* unit);
+s32 battle_unit_prepare_rider_dismount(u32 runtime_id, s32 direction, s32 jump_length);
+struct battle_unit* battle_unit_get_mount(struct battle_unit* unit);
 s32 battle_unit_has_any_current_status(s32 unit_id);
 s32 battle_unit_get_action_restriction(battle_stats_t* unit);
 
@@ -1303,20 +1303,20 @@ extern u16 g_battle_unit_was_moving_latch[]; /* a unit with a pending animation 
 extern s8 g_battle_unit_float_bob_offsets[24];
 
 /* BATTLE and WORLD use the same seven-byte per-unit rotation state. */
-extern unit_animation_state_t g_battle_unit_misc_rotation_data[];
+extern unit_animation_state_t g_battle_unit_animation_states[];
 
 void battle_unit_restore_all_facings_after_attack(void);
 void battle_unit_clear_distortion_animation_id_10(battle_unit_t* unit);
 void battle_unit_clear_distortion_animation_id_11(battle_unit_t* unit);
-void battle_unit_clear_facing_update_suppression(u32 misc_id);
+void battle_unit_clear_facing_update_suppression(u32 runtime_id);
 void battle_unit_decide_facing_direction(battle_unit_t* unit, s32 facing);
 s32 battle_unit_animate_teleport_distortion(battle_unit_t* unit);
 void battle_unit_dispatch_distortion_animation(battle_unit_t* unit);
 void battle_unit_face_toward_cursor(battle_unit_t* unit);
-void battle_unit_set_facing(s32 misc_id, s32 value);
-s32 battle_unit_set_target_anim_by_misc_id(s32 misc_id);
-void battle_unit_set_facing_update_suppression(u32 misc_id);
-s16 battle_unit_get_facing_quadrant_by_misc_id(u32 misc_id);
+void battle_unit_set_facing(s32 runtime_id, s32 value);
+s32 battle_unit_set_target_animation_by_runtime_id(s32 runtime_id);
+void battle_unit_set_facing_update_suppression(u32 runtime_id);
+s16 battle_unit_get_facing_quadrant_by_runtime_id(u32 runtime_id);
 void battle_unit_reset_animation_states(void);
 void battle_unit_set_animation_based_on_mounted_state(battle_unit_t* unit);
 void battle_unit_set_bow_hardcoding(battle_unit_t* attacker, battle_unit_t* target);
@@ -1324,7 +1324,7 @@ void battle_unit_set_animation_based_on_status(battle_unit_t* unit);
 void battle_unit_set_idle_animation_for_movement(battle_unit_t* unit);
 void battle_unit_set_level_up_animation(battle_unit_t* unit);
 void battle_unit_restore_facing_after_attack(battle_unit_t* unit);
-void battle_unit_set_animation(s32 misc_id, u32 animation);
+void battle_unit_set_animation(s32 runtime_id, u32 animation);
 void battle_unit_snap_all_facings_to_quadrants(void);
 void battle_unit_start_ability_charge_animation(battle_unit_t* unit);
 void battle_unit_start_ability_charge_hold_animation(battle_unit_t* unit);
@@ -1337,25 +1337,25 @@ void battle_unit_update_post_command_animation_display(battle_unit_t* unit);
 void battle_unit_update_animation_for_status_changes(battle_unit_t* unit);
 void battle_unit_set_target_animation_from_attack_type(battle_unit_t* attacker, battle_unit_t* target);
 s16 battle_unit_get_camera_facing_quadrant_by_battle_id(u32 battle_id);
-void battle_unit_call_bow_hardcoding_by_misc_id(u16 attacker_id, u16 target_id);
+void battle_unit_call_bow_hardcoding_by_runtime_id(u16 attacker_id, u16 target_id);
 void battle_unit_call_set_animation_based_on_status(struct battle_unit* unit);
 s32 battle_unit_check_facing_relative_to_camera(s32 unit_id);
-void battle_unit_clear_horizontal_flip_flag(u32 misc_id);
-void battle_unit_clear_movement_effect_suppression(u32 misc_id);
-void battle_unit_clear_palette_update_suppression(u32 misc_id);
+void battle_unit_clear_horizontal_flip_flag(u32 runtime_id);
+void battle_unit_clear_movement_effect_suppression(u32 runtime_id);
+void battle_unit_clear_palette_update_suppression(u32 runtime_id);
 void battle_unit_face_towards_action_target(battle_unit_t* unit, battle_unit_t* target);
-s32 battle_unit_get_facing_nibble_by_misc_id(u32 misc_id);
+s32 battle_unit_get_facing_nibble_by_runtime_id(u32 runtime_id);
 void battle_unit_select_attack_animation_for_ability(battle_unit_t* attacker, battle_unit_t* target);
 void battle_unit_select_weapon_attack_animation(battle_unit_t* attacker, battle_unit_t* target);
 void battle_unit_set_animation_for_item_abilities(battle_unit_t* unit, battle_unit_t* target);
-s32 battle_unit_set_animation_from_facing_nibble(u32 misc_id, s32 facing_nibble);
+s32 battle_unit_set_animation_from_facing_nibble(u32 runtime_id, s32 facing_nibble);
 void battle_unit_set_attacker_animation_for_shield_block(battle_unit_t* attacker, battle_unit_t* target);
-void battle_unit_set_horizontal_flip_flag(u32 misc_id);
-void battle_unit_set_mounted_animation_by_misc_id(u32 misc_id);
-void battle_unit_set_movement_effect_suppression(u32 misc_id);
-void battle_unit_set_palette_update_suppression(u32 misc_id);
-void battle_unit_set_specific_animation_by_misc_id(u32 misc_id, u32 animation);
-void battle_unit_set_status_animation_by_misc_id(u32 misc_id);
+void battle_unit_set_horizontal_flip_flag(u32 runtime_id);
+void battle_unit_set_mounted_animation_by_runtime_id(u32 runtime_id);
+void battle_unit_set_movement_effect_suppression(u32 runtime_id);
+void battle_unit_set_palette_update_suppression(u32 runtime_id);
+void battle_unit_set_specific_animation_by_runtime_id(u32 runtime_id, u32 animation);
+void battle_unit_set_status_animation_by_runtime_id(u32 runtime_id);
 void battle_unit_store_animation_facing_movement_data(s32 animation, s32 facing, battle_unit_t* unit);
 void battle_unit_update_and_animate_units_three_times(void);
 void battle_unit_update_attack_result_animation(battle_unit_t* unit);
@@ -1363,45 +1363,45 @@ void battle_unit_update_facing_and_pending_animations(void);
 void battle_unit_start_post_attack_animation_display(battle_unit_t* attacker, battle_unit_t* target);
 
 /* position and display */
-extern SVECTOR g_battle_current_misc_screen_coords;
+extern SVECTOR g_battle_unit_runtime_coords;
 
 battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_data_t* out, s32 unit_id);
-void battle_unit_copy_misc_screen_location(u32 misc_id, VECTOR* destination);
+void battle_unit_copy_screen_location(u32 runtime_id, VECTOR* destination);
 battle_unit_t* battle_unit_find_other_chocobo_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
-void battle_unit_project_misc_to_screen(u32 misc_id, SVECTOR* screen_coordinates);
+void battle_unit_project_to_screen(u32 runtime_id, SVECTOR* screen_coordinates);
 u8 battle_unit_get_effective_height(const battle_stats_t* unit);
-battle_unit_t* battle_unit_get_selectable_misc_data_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
+battle_unit_t* battle_unit_find_selectable_at_tile(s32 map_x, s32 map_y, s32 map_z);
 void battle_unit_save_previous_state(battle_unit_t* unit);
 void battle_unit_set_real_coords_from_map_coords(battle_unit_t* unit);
 void battle_unit_update_display(battle_unit_t* unit);
-void battle_unit_update_display_by_misc_id(s32 misc_id);
+void battle_unit_update_display_by_runtime_id(s32 runtime_id);
 void battle_unit_update_float_and_jump_height(battle_unit_t* unit);
-void battle_unit_update_graphics_by_misc_id_wrapper(u32 misc_id);
+void battle_unit_update_graphics_by_runtime_id(u32 runtime_id);
 void battle_unit_move_toward_action_target(battle_unit_t* unit, s32 allow_height_change);
 s32 battle_unit_set_tile_position(s32 battle_id, u8 map_x, u8 map_y, u8 map_z, u8 facing);
 void battle_unit_shift_down_or_up(battle_unit_t* unit, s8 delta);
-void battle_unit_copy_map_coords_from_misc_id(u32 misc_id, SVECTOR* coords);
-void battle_unit_copy_misc_data_xyz_values(SVECTOR* destination, const battle_unit_t* misc_data);
-void battle_unit_copy_misc_screen_coords(u32 misc_id, SVECTOR* screen_coords);
+void battle_unit_copy_map_coords_by_runtime_id(u32 runtime_id, SVECTOR* coords);
+void battle_unit_copy_draw_coords(SVECTOR* destination, const battle_unit_t* runtime);
+void battle_unit_copy_screen_coords(u32 runtime_id, SVECTOR* screen_coords);
 void battle_unit_dismount_rider_and_update_display(battle_unit_t* rider);
-SVECTOR* battle_unit_get_event_offset_ptr_by_misc_id(u32 misc_id);
-s32 battle_unit_get_map_coords_from_misc_id(u32 misc_id, SVECTOR* coords);
-battle_unit_t* battle_unit_find_any_misc_data_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
+SVECTOR* battle_unit_get_event_offset_by_runtime_id(u32 runtime_id);
+s32 battle_unit_get_map_coords_by_runtime_id(u32 runtime_id, SVECTOR* coords);
+battle_unit_t* battle_unit_find_runtime_at_tile(s32 map_x, s32 map_y, s32 map_z);
 s32 battle_unit_get_tile_center_and_height_by_battle_id(u32 battle_id, SVECTOR* coords);
-s32 battle_unit_add_event_offset_by_misc_id(u32 misc_id, const SVECTOR* amount);
+s32 battle_unit_add_event_offset_by_runtime_id(u32 runtime_id, const SVECTOR* amount);
 void battle_unit_increment_or_decrement_height_mod(battle_unit_t* unit);
 void battle_unit_set_move_and_screen_coords(battle_unit_t* unit);
 void battle_unit_shift_forward_or_backward(battle_unit_t* unit, s8 delta);
 void battle_unit_shift_right_or_left(battle_unit_t* unit, s8 delta);
-SVECTOR* battle_copy_misc_unit_screen_coords(u32 misc_id);
-SVECTOR* battle_unit_get_screen_data_ptr_by_misc_id(u32 misc_id);
+SVECTOR* battle_unit_copy_screen_coords_to_scratch(u32 runtime_id);
+SVECTOR* battle_unit_get_screen_coords_by_runtime_id(u32 runtime_id);
 void battle_unit_set_real_coords_from_screen_coords(struct battle_unit* unit);
 void battle_unit_set_screen_coords_from_real_coords(struct battle_unit* unit);
 
 /* progression and pickups */
 void battle_unit_apply_poach_morbol_transformation(battle_unit_t* unit);
 u8 battle_unit_calculate_move_exp_jp_up_to_earn(battle_stats_t* unit);
-s32 battle_unit_count_crystal_misc_units(void);
+s32 battle_unit_count_crystals(void);
 void battle_unit_find_war_trophies_and_bonus_money(battle_war_result_t* result);
 battle_unit_t* battle_unit_get_crystal_or_treasure_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
 void battle_unit_increase_blue_team_brave_by_10(void);

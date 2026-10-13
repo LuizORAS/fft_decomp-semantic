@@ -8,7 +8,7 @@
  * turn two units toward each other.
  *
  * Parameters: first 16-bit unit id, second 16-bit unit id, rotate mode, speed index
- * into g_battle_rotation_speed_frames, and a delay multiplier. Every misc record of the second unit turns
+ * into g_battle_rotation_speed_frames, and a delay multiplier. Every unit record of the second unit turns
  * toward the first; unless second_only is set (FaceUnit), the first unit also turns
  * toward the second. Successive second-unit records are staggered like FaceTile.
  * The angle is built in place (negate, then add) so combine cannot fold the two
@@ -17,8 +17,8 @@ void script_face_unit(const event_face_unit_parameters_t* parameters, s32 second
     SVECTOR position;
     SVECTOR target;
     u16 unit_id;
-    s32 misc_index;
-    u16 misc_id;
+    s32 filter_mode;
+    u16 runtime_id;
     s32 i;
     s32 order;
     s32 facing;
@@ -28,16 +28,16 @@ void script_face_unit(const event_face_unit_parameters_t* parameters, s32 second
     unit_animation_state_t* state;
 
     order = 1;
-    misc_id = script_read_s16(parameters->first_unit_id_le);
+    runtime_id = script_read_s16(parameters->first_unit_id_le);
     unit_id = script_read_s16(parameters->second_unit_id_le);
-    if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
-        misc_id = script_get_misc_id(misc_id);
-        if (misc_id != EVENT_RUNTIME_ID_NONE) {
+    if (battle_unit_prepare_event_filter(&unit_id, &filter_mode) != 0) {
+        runtime_id = script_resolve_runtime_id(runtime_id);
+        if (runtime_id != EVENT_RUNTIME_ID_NONE) {
             for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
-                if (script_filter_unit_id_by_mode(&unit_id, &g_script_unit_face_slot_order[i], &misc_index) != 0
-                    && misc_id != unit_id) {
-                    battle_unit_copy_misc_screen_coords(misc_id, &position);
-                    battle_unit_copy_misc_screen_coords(unit_id, &target);
+                if (script_filter_unit_id_by_mode(&unit_id, &g_script_unit_face_slot_order[i], &filter_mode) != 0
+                    && runtime_id != unit_id) {
+                    battle_unit_copy_screen_coords(runtime_id, &position);
+                    battle_unit_copy_screen_coords(unit_id, &target);
                     dx = target.vx - position.vx;
                     dy = target.vz - position.vz;
                     facing = -ratan2(dy, dx);
@@ -48,7 +48,7 @@ void script_face_unit(const event_face_unit_parameters_t* parameters, s32 second
                     facing >>= 8;
                     reverse >>= 8;
                     if (second_only == 0) {
-                        state = &g_battle_unit_misc_rotation_data[misc_id];
+                        state = &g_battle_unit_animation_states[runtime_id];
                         state->target_facing = facing;
                         state->rotate_mode = parameters->mode;
                         state->frames_per_step = g_battle_rotation_speed_frames[parameters->speed];
@@ -56,14 +56,14 @@ void script_face_unit(const event_face_unit_parameters_t* parameters, s32 second
                         state->rotating = 1;
                         state->delay = parameters->delay >> 2;
                     }
-                    state = &g_battle_unit_misc_rotation_data[unit_id];
+                    state = &g_battle_unit_animation_states[unit_id];
                     state->target_facing = reverse;
                     state->rotate_mode = parameters->mode;
                     state->frames_per_step = g_battle_rotation_speed_frames[parameters->speed];
                     state->step_counter = 0;
                     state->rotating = 1;
                     state->delay = parameters->delay * order++ / 4;
-                    if (misc_index == 0) {
+                    if (filter_mode == 0) {
                         break;
                     }
                 }

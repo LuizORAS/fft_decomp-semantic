@@ -14,7 +14,7 @@ void battle_state_enter_action_execution_setup(void) {
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_ACTION_EXECUTE_SETUP;
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     if (unit->ability_preview_phase == TARGET_PANELS_NONE)
         battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_TARGETING_PROMPT, 1, unit->battle_data->battle_id,
             0, unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);

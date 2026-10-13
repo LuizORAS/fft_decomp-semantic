@@ -11,7 +11,7 @@ void battle_state_enter_status_execute(void) {
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_STATUS_EXECUTE;
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     action_clear_at_list_active();
     g_action_post_action = 0;
     if (g_action_turn_event_type == BATTLE_TURN_EVENT_MIME) {
@@ -33,6 +33,6 @@ void battle_state_enter_status_execute(void) {
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0, unit->battle_data->battle_id, 0, 0);
     }
-    battle_unit_update_display_by_misc_id(unit->runtime_id);
-    battle_gfx_prepare_post_action_display_by_misc_id(unit->runtime_id);
+    battle_unit_update_display_by_runtime_id(unit->runtime_id);
+    battle_gfx_prepare_post_action_display_by_runtime_id(unit->runtime_id);
 }

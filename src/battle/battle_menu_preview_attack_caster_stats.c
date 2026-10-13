@@ -21,7 +21,7 @@ void battle_menu_preview_attack_caster_stats(void) {
     target = battle_unit_get_stats_from_battle_id(g_battle_preview_target_unit_id);
     /* One address register serves both reads, as in the target. */
     selected = &g_battle_active_turn_unit.battle_id;
-    action = battle_unit_get_misc_action_command_by_battle_id(*selected);
+    action = battle_unit_get_runtime_action_command_by_battle_id(*selected);
     action->actor_id = *selected;
     if (action->ability_id < ABILITY_ID_ITEM_FIRST) {
         main_ability_calculate_pointers_and_type(action->ability_id & ABILITY_ID_MASK, &ability_data, &secondary);

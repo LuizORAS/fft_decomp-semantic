@@ -21,7 +21,7 @@
  *
  * With two frames left and a unit hit by the trajectory
  * (g_effect_trajectory_hit_unit_id), the target's hit reaction
- * (battle_unit_call_bow_hardcoding_by_misc_id) starts, unless the item is one of
+ * (battle_unit_call_bow_hardcoding_by_runtime_id) starts, unless the item is one of
  * the balls or a consumable (ITEM_ID_POTION to ITEM_ID_PHOENIX_DOWN). When the
  * count runs out the icon slot is freed; a unit target whose result is neither
  * MISSED nor NO_EFFECT releases the requested ability effect at animation speed
@@ -167,8 +167,8 @@ s32 effect_linear_projectile_secondary_handler(void) {
             if ((kind < ITEM_ID_FIRE_BALL || kind > ITEM_ID_LIGHTNING_BALL)
                 && (kind < ITEM_ID_POTION || kind > ITEM_ID_PHOENIX_DOWN)
                 && g_effect_current_secondary->target_count != 0) {
-                battle_unit_call_bow_hardcoding_by_misc_id(g_effect_current_secondary->caster.data.unit.misc_id,
-                    g_effect_current_secondary->target.record.data.unit.misc_id);
+                battle_unit_call_bow_hardcoding_by_runtime_id(g_effect_current_secondary->caster.data.unit.runtime_id,
+                    g_effect_current_secondary->target.record.data.unit.runtime_id);
             }
         }
         if (g_effect_projectile_spin_passes > 0) {
@@ -186,8 +186,9 @@ s32 effect_linear_projectile_secondary_handler(void) {
                 battle_state_set_animation_speed(2);
             } else if (effect_get_playback_phase() == EFFECT_PLAYBACK_PHASE_REQUESTED) {
                 if (g_effect_current_secondary->target_count != 0) {
-                    battle_unit_call_bow_hardcoding_by_misc_id(g_effect_current_secondary->caster.data.unit.misc_id,
-                        g_effect_current_secondary->target.record.data.unit.misc_id);
+                    battle_unit_call_bow_hardcoding_by_runtime_id(
+                        g_effect_current_secondary->caster.data.unit.runtime_id,
+                        g_effect_current_secondary->target.record.data.unit.runtime_id);
                 }
                 effect_cancel_playback_request();
             }

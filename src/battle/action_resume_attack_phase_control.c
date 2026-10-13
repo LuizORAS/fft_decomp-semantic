@@ -11,7 +11,7 @@ s32 action_resume_attack_phase_control(void) {
 
     g_battle_game_state = BATTLE_GAME_STATE_RESUME_ATTACK_PHASE;
     g_main_system_animation_speed = 1;
-    battle_unit_get_casting_misc_data();
+    battle_unit_get_casting();
     idx = g_action_post_effect_msg_counter;
     if (idx != 0) {
         idx -= 1;

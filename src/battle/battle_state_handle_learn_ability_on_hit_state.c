@@ -22,12 +22,12 @@ void battle_state_handle_learn_ability_on_hit_state(void) {
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     selected_command_address = battle_menu_get_selected_command_address();
-    casting_unit = battle_unit_get_casting_misc_data();
+    casting_unit = battle_unit_get_casting();
     selected_command = selected_command_address->kind;
     switch (selected_command) {
     case 7:
         if (g_action_post_action_display_phase == BATTLE_POST_ACTION_DISPLAY_LEARN_ON_HIT) {
-            target_unit = battle_unit_get_misc_data_by_battle_id(g_action_learn_on_hit_unit_id);
+            target_unit = battle_unit_get_by_battle_id(g_action_learn_on_hit_unit_id);
             battle_unit_learn_used_ability(target_unit->battle_data);
         }
     case 8:
@@ -47,7 +47,7 @@ void battle_state_handle_learn_ability_on_hit_state(void) {
             skip_animation = 0;
             if (hit_count > 0) {
                 do {
-                    target_unit = battle_unit_get_misc_data_by_battle_id(casting_unit->strike.target_list[counter]);
+                    target_unit = battle_unit_get_by_battle_id(casting_unit->strike.target_list[counter]);
                     if (target_unit != 0 && target_unit->numeric_display.active != 0) {
                         skip_animation = 1;
                         break;
@@ -57,7 +57,7 @@ void battle_state_handle_learn_ability_on_hit_state(void) {
                 } while (counter < hit_count);
             }
             if (skip_animation == 0) {
-                casting_unit = battle_unit_get_source_misc_data();
+                casting_unit = battle_unit_get_source();
                 battle_unit_call_set_animation_based_on_status(casting_unit);
                 battle_unit_update_post_command_animation_display(casting_unit);
             }

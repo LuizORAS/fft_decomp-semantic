@@ -19,7 +19,7 @@ void target_select_tile(void) {
     s32 result;
     s32 prev;
 
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     unit->state_frame_counter = 0;
     if (unit->ability_preview_phase == TARGET_PANELS_NO_TARGETING) {
         main_util_set_svector(

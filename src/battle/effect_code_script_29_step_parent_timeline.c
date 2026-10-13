@@ -43,7 +43,7 @@ effect_script_result_e effect_code_script_29_step_parent_timeline(effect_record_
         if (g_effect_context.targets[EFFECT_CASTER_ENTRY].target_type == EFFECT_TARGET_TYPE_UNIT) {
             effect_advance_caster_palette_track(&g_effect_timeline->color_tracks[0].caster,
                 &timeline->state.parent.keyframe.tracks.caster[0], &timeline->state.parent.remaining.tracks.caster[0],
-                g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.misc_id);
+                g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.runtime_id);
         }
         effect_advance_coord_target_palette_track(&g_effect_timeline->color_tracks[0].target,
             &timeline->state.parent.keyframe.tracks.target[0], &timeline->state.parent.remaining.tracks.target[0]);
@@ -77,7 +77,7 @@ effect_script_result_e effect_code_script_29_step_parent_timeline(effect_record_
         if (g_effect_context.targets[EFFECT_CASTER_ENTRY].target_type == EFFECT_TARGET_TYPE_UNIT) {
             effect_advance_caster_palette_track(&g_effect_timeline->color_tracks[1].caster,
                 &timeline->state.parent.keyframe.tracks.caster[1], &timeline->state.parent.remaining.tracks.caster[1],
-                g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.misc_id);
+                g_effect_context.targets[EFFECT_CASTER_ENTRY].data.unit.runtime_id);
         }
         effect_advance_coord_target_palette_track(&g_effect_timeline->color_tracks[1].target,
             &timeline->state.parent.keyframe.tracks.target[1], &timeline->state.parent.remaining.tracks.target[1]);

@@ -122,7 +122,7 @@ typedef enum action_phase {
 enum { ACTION_PHASE_COUNT = 3 };
 
 /* result display types */
-/* Pending post-action displays are queued as one little-endian 32-bit value in Misc
+/* Pending post-action displays are queued as one little-endian 32-bit value in runtime
  * Unit Data 0x1b8..0x1bb.  The two dispatchers at 0x8007f5f8 and 0x800808b8
  * consume one bit at a time in ascending order. */
 typedef enum action_display_flag {
@@ -361,7 +361,7 @@ enum {
 };
 
 /* battle_current_ability_t.post_action_message, copied to the strike work and
- * the misc unit record: the message the post-action state opens. */
+ * the runtime unit record: the message the post-action state opens. */
 typedef enum battle_post_action_message {
     BATTLE_POST_ACTION_MESSAGE_NONE = 0,
     BATTLE_POST_ACTION_MESSAGE_POACHED = 6,
@@ -489,10 +489,10 @@ extern action_state_e g_action_state;
 extern battle_stats_t* g_action_target;
 extern action_data_t* g_action_target_data;
 extern s16 g_battle_acting_unit_used_ability_id;
-extern s32 g_battle_casting_unit_id;
+extern s32 g_battle_casting_runtime_id;
 /* Golem barrier HP per team, shared by action resolution and AI snapshots. */
 extern u16 g_battle_team_golem[BATTLE_TEAM_COUNT];
-extern s32 g_battle_unit_source_misc_id;
+extern s32 g_battle_unit_source_runtime_id;
 
 /* Preview action calculation entry run on the main stack. */
 s32 action_calculate_projected_effect(battle_stats_t* attacker, battle_stats_t* target, action_command_t* command);
@@ -540,7 +540,7 @@ void action_check_reflect_blade_grasp_and_arrow_guard(void);
 void action_check_reflect_reaction(void);
 void action_check_stat_save_and_restore_reaction_usability(void);
 void action_dispatch_target_reaction_ability(void);
-s32 action_finalize_attack_and_flag_reactions(s32 misc_id);
+s32 action_finalize_attack_and_flag_reactions(s32 runtime_id);
 s32 action_is_reaction_blocked(battle_stats_t* unit);
 s32 action_perform_reaction_ability(void);
 s32 action_select_auto_potion_item(battle_stats_t* unit);
@@ -584,8 +584,8 @@ s32 action_init_movement_ability_benefit(battle_stats_t* unit);
 void action_post_action_facing_stub(battle_stats_t* unused_unit, s32 unused_facing);
 void action_queue_post_effect_messages_for_unit(battle_unit_t* unit);
 s32 action_remove_broken_or_stolen_equipment(void);
-s32 action_report_job_level_up(battle_unit_t* misc);
-s32 action_report_level_up(battle_unit_t* misc);
+s32 action_report_job_level_up(battle_unit_t* runtime);
+s32 action_report_level_up(battle_unit_t* runtime);
 void action_set_damage_display_type_based_on_ability(void);
 void action_set_item_throw_stone_ability_display(void);
 s32 action_set_move_act_flags(s32 unit_id, s32 move_flag, s32 act_flag);

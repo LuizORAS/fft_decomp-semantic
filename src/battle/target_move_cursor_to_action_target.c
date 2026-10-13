@@ -13,5 +13,5 @@ void target_move_cursor_to_action_target(const battle_unit_t* unit) {
         g_battle_cursor_y = unit->battle_data->action_command.target_position.vz;
         return;
     }
-    target_move_cursor_to_unit(battle_unit_get_misc_data_by_battle_id(bd->action_command.target_id));
+    target_move_cursor_to_unit(battle_unit_get_by_battle_id(bd->action_command.target_id));
 }

@@ -21,6 +21,6 @@ void battle_unit_mount_rider_onto_unit(battle_unit_t* rider, battle_unit_t* moun
     rider->status_flags_1_4 |= BATTLE_UNIT_STATUS_MOUNTED;
     battle_unit_set_animation_based_on_status(rider);
     rider->animation.script_pos = mount->animation.script_pos;
-    battle_unit_update_display_by_misc_id(rider->runtime_id);
-    battle_unit_update_display_by_misc_id(mount->runtime_id);
+    battle_unit_update_display_by_runtime_id(rider->runtime_id);
+    battle_unit_update_display_by_runtime_id(mount->runtime_id);
 }

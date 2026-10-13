@@ -7,7 +7,7 @@
 void action_show_caster_post_effect_messages(void) {
     battle_unit_t* unit;
 
-    unit = battle_unit_get_casting_misc_data();
+    unit = battle_unit_get_casting();
     action_queue_post_effect_messages_for_unit(unit);
     if (g_main_game_options.fields.effect_messages != GAME_OPTION_ON) {
         g_action_post_effect_msg_counter = 0;

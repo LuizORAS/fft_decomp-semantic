@@ -28,7 +28,7 @@ void world_menu_preview_attack_caster_stats(void) {
     target = battle_unit_get_stats_from_battle_id(g_world_unit_comparison_battle_id);
     /* Local pointer keeps the stored-unit address in one base register. */
     stored_unit = &g_world_active_unit_data.battle_id;
-    action = battle_unit_get_misc_action_command_by_battle_id(*stored_unit);
+    action = battle_unit_get_runtime_action_command_by_battle_id(*stored_unit);
     action->actor_id = *stored_unit;
     ability_id = action->ability_id;
     if (action->ability_id < ABILITY_ID_ITEM_FIRST) {

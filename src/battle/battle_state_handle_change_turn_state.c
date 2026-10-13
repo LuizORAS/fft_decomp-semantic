@@ -24,7 +24,7 @@ void battle_state_handle_change_turn_state(void) {
     if (g_action_post_action != 0) {
         if ((g_camera_step_vector.vx | g_camera_step_vector.vy | g_camera_step_vector.vz) == 0) {
             if (g_camera_rotation_action == CAMERA_ROTATION_NONE) {
-                battle_unit_get_source_misc_data();
+                battle_unit_get_source();
                 type = g_action_turn_event_type;
                 if (type == BATTLE_TURN_EVENT_ABILITY_READY) {
                     battle_state_enter_action_cast();

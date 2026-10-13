@@ -41,11 +41,11 @@ extern s32 g_battle_event_pending_loaded_evtchr_clear_slot; /* 0x80173ca0 */
 extern s32 g_battle_event_pending_loaded_evtchr_slot;
 extern s32 g_battle_event_pending_reserved_vram_release_slot; /* 0x80173f48 */
 extern s32 g_battle_event_pending_saved_evtchr_clear_slot;    /* 0x80173f50 */
-/* 0x80173cac: packed misc ID << 8 | reserved VRAM slot; -1 absent. */
+/* 0x80173cac: packed unit ID << 8 | reserved VRAM slot; -1 absent. */
 extern s32 g_battle_event_pending_unit_vram_copy;
 
 /* effect requests */
-extern u16 g_battle_event_effect_target_misc_id; /* 0x80165ff8 */
+extern u16 g_battle_event_effect_target_runtime_id; /* 0x80165ff8 */
 /* 0x80166000: consumer passes mode 2 when equal to 2, otherwise mode 0.
  * The last Effect operand is not a second Y coordinate. */
 extern s16 g_battle_event_effect_target_mode;

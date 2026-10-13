@@ -13,7 +13,7 @@ void move_init_post_movement_display(void) {
     battle_stats_t* stats;
 
     camera_disable_map_pan();
-    stats = battle_unit_get_casting_misc_data()->battle_data;
+    stats = battle_unit_get_casting()->battle_data;
     if (stats != 0) {
         g_move_find_result = move_set_target_for_mounted_unit_and_find_item(stats);
     } else {
