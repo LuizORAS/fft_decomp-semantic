@@ -796,9 +796,9 @@ functions:
   - {addr: 0x80126968, size: 304, name: world_menu_script_draw_sprite, hash: 4a873d36faa2542a, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80126a98, size: 124, name: world_menu_script_draw_menu_line, hash: f0545118219cdcfc, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80126b14, size: 284, name: world_menu_script_draw_callback_sprite, hash: cb30f26ba1aafc43, profile: gcc-2.6.3_O1_aspsx-2.34}
-  - {addr: 0x80126c30, size: 2216, name: world_menu_parse_draw_window_frame, hash: 0ba3477aee89496b, profile: gcc-2.6.3_O1_aspsx-2.34}
-  - {addr: 0x801274d8, size: 328, name: world_menu_handle_window_command_with_scaled_clip, hash: 1dc44983c009e572, profile: gcc-2.6.3_O1_aspsx-2.34}
-  - {addr: 0x80127620, size: 988, name: world_menu_parse_draw_tiled_rectangle, hash: cd7d0f979d1186e2, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80126c30, size: 2216, name: world_menu_script_draw_window_frame, hash: 0ba3477aee89496b, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x801274d8, size: 328, name: world_menu_script_draw_opening_window_frame, hash: 1dc44983c009e572, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80127620, size: 988, name: world_menu_script_draw_tiled_rectangle, hash: cd7d0f979d1186e2, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x801279fc, size: 88, name: world_menu_script_set_fixed_clut, hash: e9ee041b02676021, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80127a54, size: 124, name: world_menu_script_set_clut, hash: 7d7cd0cb6965b146, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80127ad0, size: 84, name: world_menu_script_set_texture_page, hash: dcf6b618f6392030, profile: gcc-2.6.3_O1_aspsx-2.34}
@@ -823,7 +823,7 @@ functions:
   - {addr: 0x80129ab4, size: 96, name: world_menu_script_reregister_temporary_draw_area, hash: 37c6d54df36d5721, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80129b14, size: 16, name: world_menu_set_window_scale_step, hash: 7b9f925f5e6d3828}
   - {addr: 0x80129b24, size: 16, name: world_menu_get_window_scale_step, hash: c135caf12190d2f9}
-  - {addr: 0x80129b34, size: 56, name: world_menu_advance_window_scale_step, hash: 1258601e93a9f653}
+  - {addr: 0x80129b34, size: 56, name: world_menu_script_advance_window_scale_step, hash: 1258601e93a9f653}
   - {addr: 0x80129b6c, size: 16, name: world_menu_get_sprite_color, hash: 3e15f7d69ea12f45}
   - {addr: 0x80129b7c, size: 368, name: world_menu_scroll_list_page, hash: 6d4d2dd3c505b695, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80129cec, size: 352, name: world_input_read_menu_scroll_repeat, hash: c4407d3709b24d54, profile: gcc-2.6.3_O1_aspsx-2.34}

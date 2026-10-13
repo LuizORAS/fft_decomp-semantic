@@ -173,7 +173,7 @@ void world_card_update_and_draw_slot_list(s32 input) {
         world_menu_set_draw_priority(10);
         value = row != g_world_card_slot_cursor_row || busy != 0;
         world_menu_set_palette_mode(value);
-        world_menu_parse_draw_window_frame(&g_world_card_slot_window_command);
+        world_menu_script_draw_window_frame(&g_world_card_slot_window_command);
         g_world_card_slot_quad_3.y = g_world_card_slot_quad_4.y = g_world_card_slot_quad_0.y
             = g_world_card_slot_quad_1.y = g_world_card_slot_window.rect.y - 14;
         g_world_card_slot_quad_3.y = g_world_card_slot_quad_3.y + 1;

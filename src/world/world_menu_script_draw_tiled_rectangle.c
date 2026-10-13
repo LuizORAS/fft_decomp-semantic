@@ -5,7 +5,7 @@
  *
  * Source 2 uses the signed shared rectangle; other sources use byte operands.
  */
-world_menu_window_command_t* world_menu_parse_draw_tiled_rectangle(world_menu_window_command_t* command) {
+world_menu_window_command_t* world_menu_script_draw_tiled_rectangle(world_menu_window_command_t* command) {
     RECT rect;
     s32 base_x;
     s32 full_rows;

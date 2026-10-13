@@ -23,7 +23,7 @@ u8* world_menu_script_draw_sprite(u8* cmd) {
     rect.y = y;
     rect.w = cmd[5];
     rect.h = cmd[6];
-    if (cmd[0] == 4) {
+    if (cmd[0] == MENU_SCRIPT_OP_UNCOLOURED_QUAD) {
         color = 0;
     } else {
         color = &g_world_menu_sprite_color;

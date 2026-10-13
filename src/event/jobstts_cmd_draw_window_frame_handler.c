@@ -3,7 +3,7 @@
 /* Draw a window's 5x9/5x7 border pieces around its rectangle and tile the
  * interior through jobstts_cmd_draw_background_tiles_handler.
  *
- * JOBSTTS copy of world_menu_parse_draw_window_frame without the rectangle
+ * JOBSTTS copy of world_menu_script_draw_window_frame without the rectangle
  * source selection. Reassigning the command pointer before the return keeps
  * its reference count high enough for global allocation to place it in s6.
  */

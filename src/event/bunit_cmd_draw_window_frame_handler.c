@@ -5,7 +5,7 @@
  * and tile its interior through bunit_cmd_draw_background_tiles_handler.
  *
  * BUNIT twin of EQUIP equip_cmd_draw_window_frame_handler (and of WORLD
- * world_menu_parse_draw_window_frame without its shared-rectangle source);
+ * world_menu_script_draw_window_frame without its shared-rectangle source);
  * source 1 selects the alternate border texture coordinates. The reassigned command pointer before the return keeps its
  * reference count high enough for global allocation to place it in s5. */
 world_menu_window_command_t* bunit_cmd_draw_window_frame_handler(world_menu_window_command_t* command) {

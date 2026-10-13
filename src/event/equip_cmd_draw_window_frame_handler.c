@@ -4,7 +4,7 @@
 /* Draw a menu window's 5x9/5x7 border pieces around the command's rectangle
  * and tile its interior through equip_cmd_draw_tiled_rectangle_handler.
  *
- * EQUIP twin of WORLD world_menu_parse_draw_window_frame without its
+ * EQUIP twin of WORLD world_menu_script_draw_window_frame without its
  * shared-rectangle source; source 1 selects the alternate border texture
  * coordinates. The reassigned command pointer before the return keeps its
  * reference count high enough for global allocation to place it in s5. */

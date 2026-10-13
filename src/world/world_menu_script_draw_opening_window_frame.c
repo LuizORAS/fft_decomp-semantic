@@ -1,12 +1,10 @@
 #include "fft/world.h"
 
-/*
- * Apply the centered opening-animation clip before processing a window command.
- *
- * Steps 0-3 scale width and height by the signed percentage table. Later
- * steps disable the temporary clip; the downstream command still runs.
- */
-void world_menu_handle_window_command_with_scaled_clip(world_menu_window_command_t* command) {
+/* Opcode 0x12: draw a window frame (world_menu_script_draw_window_frame) through the clip of the
+ * window's opening animation. While the scale step is below 4 the clip is the window's rectangle scaled
+ * by g_world_menu_window_scale_table about its centre (and below 3 the script input is cleared); from
+ * step 4 no clip is set. */
+void world_menu_script_draw_opening_window_frame(world_menu_window_command_t* command) {
     RECT clip;
     s32 scale;
 
@@ -24,5 +22,5 @@ void world_menu_handle_window_command_with_scaled_clip(world_menu_window_command
     } else {
         g_world_menu_temporary_draw_area_active = 0;
     }
-    world_menu_parse_draw_window_frame(command);
+    world_menu_script_draw_window_frame(command);
 }

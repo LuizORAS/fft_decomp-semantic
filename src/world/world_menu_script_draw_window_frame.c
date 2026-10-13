@@ -2,7 +2,7 @@
 
 /*
  * Draw a menu window's 5x9/5x7 border pieces around its rectangle and tile
- * the interior through world_menu_parse_draw_tiled_rectangle.
+ * the interior through world_menu_script_draw_tiled_rectangle.
  *
  * Source 2 takes the signed rectangle from the shared window record; other
  * sources use the command's byte operands. Source 1 selects the alternate
@@ -10,7 +10,7 @@
  * pointer's reference count above the draw priority's, so global allocation
  * places them in s6 and s7 like the target.
  */
-world_menu_window_command_t* world_menu_parse_draw_window_frame(world_menu_window_command_t* command) {
+world_menu_window_command_t* world_menu_script_draw_window_frame(world_menu_window_command_t* command) {
     RECT rect;
     s32 left;
     s32 top;
@@ -129,7 +129,7 @@ world_menu_window_command_t* world_menu_parse_draw_window_frame(world_menu_windo
         g_world_menu_window_interior_command.width = command->width;
         g_world_menu_window_interior_command.height = command->height;
     }
-    world_menu_parse_draw_tiled_rectangle(&g_world_menu_window_interior_command);
+    world_menu_script_draw_tiled_rectangle(&g_world_menu_window_interior_command);
 
     top = top + 9 + partial_height + full_rows * 16;
     rect.x = left;

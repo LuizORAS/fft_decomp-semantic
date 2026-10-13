@@ -581,21 +581,45 @@ typedef struct world_menu_window_command {
     u8 height;
 } world_menu_window_command_t;
 
-/* Opcode byte of a menu script command, the index of its handler in the
- * *_cmd_handlers table of BUNIT, EQUIP and JOBSTTS (CARD calls the same
- * handlers directly). Only the opcodes the code tests are named. Each
- * overlay ends a stream with its own opcode, the first one past its table
- * (BUNIT_CMD_END, EQUIP_CMD_END, JOBSTTS_CMD_END). */
+/* Opcode byte of a menu display script command: the index of its handler in
+ * g_world_menu_script_handlers and in the *_cmd_handlers tables of BUNIT, EQUIP
+ * and JOBSTTS (CARD calls the same handlers directly). A command is the opcode,
+ * its length and its operands. The comments name WORLD's handler; an overlay's
+ * table leaves the commands it does not use empty. Opcode 8 has no handler.
+ * WORLD ends a stream with MENU_SCRIPT_OP_WORLD_END, each overlay with its own
+ * opcode, the first one past its table (BUNIT_CMD_END, EQUIP_CMD_END,
+ * JOBSTTS_CMD_END). */
 typedef enum menu_script_opcode {
-    MENU_SCRIPT_OP_IF_GROUP = 1,           /* *_cmd_run_if_group_handler */
-    MENU_SCRIPT_OP_IF_ELSE_GROUP = 2,      /* *_cmd_run_if_else_group_handler */
-    MENU_SCRIPT_OP_UNCOLOURED_QUAD = 4,    /* *_cmd_draw_textured_quad_handler; opcode 5 applies the draw colour */
-    MENU_SCRIPT_OP_SCROLLABLE_LIST = 0x10, /* the list geometry *_menu_draw_scrollable_list reads */
+    MENU_SCRIPT_OP_WINDOW_FRAME = 0,            /* world_menu_script_draw_window_frame */
+    MENU_SCRIPT_OP_IF_GROUP = 1,                /* world_menu_script_conditional */
+    MENU_SCRIPT_OP_IF_ELSE_GROUP = 2,           /* world_menu_script_if_else */
+    MENU_SCRIPT_OP_TILE = 3,                    /* world_menu_script_draw_tile */
+    MENU_SCRIPT_OP_UNCOLOURED_QUAD = 4,         /* world_menu_script_draw_sprite, without the draw colour */
+    MENU_SCRIPT_OP_COLOURED_QUAD = 5,           /* world_menu_script_draw_sprite, with the draw colour */
+    MENU_SCRIPT_OP_CALLBACK_QUAD = 6,           /* world_menu_script_draw_callback_sprite */
+    MENU_SCRIPT_OP_LINE = 7,                    /* world_menu_script_draw_menu_line */
+    MENU_SCRIPT_OP_FIXED_CLUT = 9,              /* world_menu_script_set_fixed_clut */
+    MENU_SCRIPT_OP_CLUT = 0x0a,                 /* world_menu_script_set_clut */
+    MENU_SCRIPT_OP_DRAW_COLOUR = 0x0b,          /* world_menu_script_set_sprite_color */
+    MENU_SCRIPT_OP_TEXTURE_PAGE = 0x0c,         /* world_menu_script_set_texture_page */
+    MENU_SCRIPT_OP_NUMBER = 0x0d,               /* world_menu_script_draw_formatted_number */
+    MENU_SCRIPT_OP_SEMI_TRANS = 0x0e,           /* world_menu_script_set_semi_trans */
+    MENU_SCRIPT_OP_DRAW_PRIORITY = 0x0f,        /* world_menu_script_set_draw_priority */
+    MENU_SCRIPT_OP_SCROLLABLE_LIST = 0x10,      /* world_menu_script_draw_scrollable_list */
+    MENU_SCRIPT_OP_TILED_RECTANGLE = 0x11,      /* world_menu_script_draw_tiled_rectangle */
+    MENU_SCRIPT_OP_OPENING_WINDOW_FRAME = 0x12, /* world_menu_script_draw_opening_window_frame */
+    MENU_SCRIPT_OP_CLEAR_DRAW_AREA = 0x13,      /* world_menu_script_clear_temporary_draw_area */
+    MENU_SCRIPT_OP_DRAW_AREA = 0x14,            /* world_menu_script_set_draw_area */
+    MENU_SCRIPT_OP_REPEAT_DRAW_AREA = 0x15,     /* world_menu_script_reregister_temporary_draw_area */
+    MENU_SCRIPT_OP_ADVANCE_WINDOW_SCALE = 0x16, /* world_menu_script_advance_window_scale_step */
+    MENU_SCRIPT_OP_PLAIN_NUMBER = 0x17,         /* world_menu_script_draw_plain_number */
+    MENU_SCRIPT_OP_BLEND_DRAW_MODE = 0x18,      /* world_menu_script_add_blend_draw_mode */
     /* The "draw number" opcodes of the WORLD and BUNIT scripts that
      * *_menu_script_draw_formatted_number tells apart from its plain form (0x0d). */
     MENU_SCRIPT_OP_NUMBER_TINTED_NO_LEADING_ZEROS = 0x19, /* sprite colour; leading zeros not drawn */
     MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS = 0x1a,       /* leading zeros in the disabled clut */
     MENU_SCRIPT_OP_NUMBER_TINTED = 0x1b,                  /* sprite colour */
+    MENU_SCRIPT_OP_WORLD_END = 0x1c,                      /* ends a WORLD stream */
 } menu_script_opcode_e;
 
 /* Provisional: record reached through world_menu_entry_t::text_binding.
