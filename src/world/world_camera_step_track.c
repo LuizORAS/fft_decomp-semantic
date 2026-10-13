@@ -75,16 +75,16 @@ s32 world_camera_step_track(camera_track_t* track, s32 component) {
         for (i = 0; i < 2; i++) {
             frame = i + track->segment_frame;
             if (track->segment == 0) {
-                time[i * 2] = world_script_interpolate_range_fixed12(track->keys[track->segment].time,
+                time[i * 2] = script_interpolate_range_fixed12(track->keys[track->segment].time,
                     track->keys[track->segment + 1].time, frame, track->segment_duration);
-                value[i * 2] = world_script_interpolate_range_fixed12(track->keys[track->segment].value,
+                value[i * 2] = script_interpolate_range_fixed12(track->keys[track->segment].value,
                     track->keys[track->segment + 1].value, frame, track->segment_duration);
             } else {
-                time[i * 2] = world_script_interpolate_range_fixed12(track->keys[track->segment].time,
+                time[i * 2] = script_interpolate_range_fixed12(track->keys[track->segment].time,
                                   track->keys[track->segment + 1].time, frame, track->segment_duration * 2)
                     - track->keys[track->segment].time
                     + (track->keys[track->segment + 1].time - track->keys[track->segment].time) / 2;
-                value[i * 2] = world_script_interpolate_range_fixed12(track->keys[track->segment].value,
+                value[i * 2] = script_interpolate_range_fixed12(track->keys[track->segment].value,
                                    track->keys[track->segment + 1].value, frame, track->segment_duration * 2)
                     - track->keys[track->segment].value
                     + (track->keys[track->segment + 1].value - track->keys[track->segment].value) / 2;
@@ -93,9 +93,9 @@ s32 world_camera_step_track(camera_track_t* track, s32 component) {
             if (track->segment != track->key_count - 3) {
                 span *= 2;
             }
-            time[i * 2 + 1] = world_script_interpolate_range_fixed12(
+            time[i * 2 + 1] = script_interpolate_range_fixed12(
                 track->keys[track->segment + 1].time, track->keys[track->segment + 2].time, frame, span);
-            value[i * 2 + 1] = world_script_interpolate_range_fixed12(
+            value[i * 2 + 1] = script_interpolate_range_fixed12(
                 track->keys[track->segment + 1].value, track->keys[track->segment + 2].value, frame, span);
         }
         flag = 0;

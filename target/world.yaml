@@ -243,7 +243,7 @@ functions:
   - {addr: 0x800f13fc, size: 184, name: script_unlockdate_event_instruction, hash: 756a57b269501269, source: src/shared/script/script_unlockdate_event_instruction.c}
   - {addr: 0x800f14b4, size: 1044, name: world_camera_fusion_thread, hash: 29fbdab9fc995bcc}
   - {addr: 0x800f18c8, size: 1432, name: world_camera_step_track, hash: 64ee507b9faf9750}
-  - {addr: 0x800f1e60, size: 60, name: world_script_interpolate_range_fixed12, hash: 959b0c6e3237b93a}
+  - {addr: 0x800f1e60, size: 60, name: script_interpolate_range_fixed12, hash: 959b0c6e3237b93a, source: src/shared/script/script_interpolate_range_fixed12.c}
   - {addr: 0x800f1e9c, size: 60, name: world_script_print_debug_message, hash: 452ccd9750915554}
   - {addr: 0x800f1ed8, size: 156, name: script_walkto_event_instruction, hash: df0e7f67144df7b9, source: src/shared/script/script_walkto_event_instruction.c}
   - {addr: 0x800f1f74, size: 104, name: script_mirrorsprite_event_instruction, hash: 2f6891a168cbc54d, source: src/shared/script/script_mirrorsprite_event_instruction.c}
@@ -2349,6 +2349,7 @@ imports:
   - {addr: 0x801df198, name: jobstts_entrypoint}
 
 overrides:
+  - {function: script_interpolate_range_fixed12, name: battle_mul_div_s64, addr: 0x80100188}
   - {function: script_run_next_event, name: script_execute_event, addr: 0x800f6f20}
   - {function: script_run_next_event, name: script_load_next_event, addr: 0x800f92a0}
   - {function: script_run_next_event_unused, name: script_execute_event, addr: 0x800f6f20}
