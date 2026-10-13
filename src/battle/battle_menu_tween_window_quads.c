@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_event.h"
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Animates a window's two quads from their current corners towards `to`
@@ -48,16 +49,15 @@ void battle_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, REC
                     buffers[buffer_index].color.r = fade;
                 }
             }
-            battle_menu_lerp_rect_to_poly_ft4(&buffers[g_battle_menu_packet_buffer_index].quads[0], &from, to, step);
+            menu_lerp_rect_to_poly_ft4(&buffers[g_battle_menu_packet_buffer_index].quads[0], &from, to, step);
             if (to2->x != 0) {
-                battle_menu_lerp_rect_to_poly_ft4(
-                    &buffers[g_battle_menu_packet_buffer_index].quads[1], &from2, to2, step);
+                menu_lerp_rect_to_poly_ft4(&buffers[g_battle_menu_packet_buffer_index].quads[1], &from2, to2, step);
             }
         }
     } while (*easing++ != ONE);
     battle_thread_yield();
-    battle_menu_lerp_rect_to_poly_ft4(&buffers[g_battle_menu_packet_buffer_index].quads[0], &from, to, step);
+    menu_lerp_rect_to_poly_ft4(&buffers[g_battle_menu_packet_buffer_index].quads[0], &from, to, step);
     if (to2->x != 0) {
-        battle_menu_lerp_rect_to_poly_ft4(&buffers[g_battle_menu_packet_buffer_index].quads[1], &from2, to2, step);
+        menu_lerp_rect_to_poly_ft4(&buffers[g_battle_menu_packet_buffer_index].quads[1], &from2, to2, step);
     }
 }

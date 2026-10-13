@@ -27,6 +27,7 @@ void menu_copy_u8_to_u16(u16* destination, const u8* source, s32 count);
 /* primitives */
 void menu_init_default_poly_ft4(POLY_FT4* poly);
 s32 menu_lerp_fixed12(s32 start, s32 end, s32 factor);
+void menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, const RECT* from, const RECT* to, s32 factor);
 
 /* palette */
 /* Two sixteen-colour banks: the normal menu colours followed by their dimmed forms. */

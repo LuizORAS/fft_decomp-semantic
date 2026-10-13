@@ -356,7 +356,6 @@ void battle_menu_init_palette_and_text(s32 unused_0);
 void battle_menu_init_panel_fade_tiles(void);
 void battle_menu_init_primitive_colors_dimmed(menu_palette_primitives_t* menu);
 void battle_menu_init_primitive_colors_normal(menu_palette_primitives_t* menu);
-void battle_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 factor);
 void battle_menu_update_panel_fade(void);
 
 /* buffer allocation */

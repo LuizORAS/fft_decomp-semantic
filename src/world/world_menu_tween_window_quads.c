@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -45,16 +46,15 @@ void world_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, RECT
                     buffers[buffer_index].color.r = fade;
                 }
             }
-            world_menu_lerp_rect_to_poly_ft4(&buffers[g_world_menu_packet_buffer_index].quads[0], &from, to, step);
+            menu_lerp_rect_to_poly_ft4(&buffers[g_world_menu_packet_buffer_index].quads[0], &from, to, step);
             if (to2->x != 0) {
-                world_menu_lerp_rect_to_poly_ft4(
-                    &buffers[g_world_menu_packet_buffer_index].quads[1], &from2, to2, step);
+                menu_lerp_rect_to_poly_ft4(&buffers[g_world_menu_packet_buffer_index].quads[1], &from2, to2, step);
             }
         }
     } while (*easing++ != ONE);
     world_thread_yield();
-    world_menu_lerp_rect_to_poly_ft4(&buffers[g_world_menu_packet_buffer_index].quads[0], &from, to, step);
+    menu_lerp_rect_to_poly_ft4(&buffers[g_world_menu_packet_buffer_index].quads[0], &from, to, step);
     if (to2->x != 0) {
-        world_menu_lerp_rect_to_poly_ft4(&buffers[g_world_menu_packet_buffer_index].quads[1], &from2, to2, step);
+        menu_lerp_rect_to_poly_ft4(&buffers[g_world_menu_packet_buffer_index].quads[1], &from2, to2, step);
     }
 }
