@@ -1,384 +1,96 @@
 # AGENTS.md
 
-A byte-exact matching decompilation of the USA PlayStation release of *Final
-Fantasy Tactics* (`SCUS-94221`). Every game function is C that compiles to the
-original bytes. The work now is making that C better (names, types, structure)
-without changing a single byte.
+A byte-exact C decompilation of the USA PlayStation release of *Final Fantasy
+Tactics* (`SCUS-94221`). Improve names, types, organization and readability while
+preserving every original byte.
 
-## Linked libraries
+## Invariants
 
-Linked Psy-Q, runtime/startup and Suzuki library reconstructions are normal
-repository source. Keep public SDK entry-point names, use `include/psx/`, and
-put one reconstructed function per file under `src/lib/psyq/<library>/`. Register
-it in the original module's `target/` configuration with an explicit `source:`
-path. A routine or global with no established SDK name is `psyq_<lib>_…` or
-`g_psyq_<lib>_…`. LIBGS (WORLD) is `src/lib/psyq/libgs/` and LIBPRESS (OPENING)
-`src/lib/psyq/libpress/`. The Suzuki sound driver is in `src/lib/suzuki/`, with
-declarations in `include/psx/suzuki.h`. Driver names use `suzuki_` and
-`g_suzuki_`; it remains linked into MAIN at the original addresses and profiles.
-Game-specific sound adapters, music slots and file loading remain in
-`src/main/` and `include/fft/main.h`.
+- Never weaken checks or change hashes to accept edited code. Only
+  `make checksums` updates hashes, using original bytes.
+- `target/*.yaml` owns each function's address, size, compiler profile, hash and
+  source binding. Preserve these contracts; shared sources still compile at
+  every original entrypoint with that entry's profile and bindings.
+- Preserve retail bugs and ABI disagreements. Explain them briefly in source
+  comments or `QUIRKS.md`.
+- Keep drafts, experiments, extracted files and generated output under ignored
+  `build/`. Never commit game media or copied reference material.
+- Stage explicit paths and inspect the staged diff. Preserve pushed history;
+  make coherent commits with short subject lines when the user authorizes them.
 
-Library C has the same byte-exact requirements as game C. Every completed
-function must match all original bytes; unmatched drafts stay in ignored
-`build/`. Generate hashes only from original bytes through `make checksums`.
-Never weaken checks, accept mismatches, or change a hash to bless edited code.
-Use `make library-diff ARGS="--name=NAME --source=build/.../NAME.c
---addr=0xADDRESS --size=BYTES"` for scratch candidates before integration; it
-uses the normal historical compiler pipeline without modifying target metadata.
+## Organization
 
-Library headers and sources must never include `fft/` game headers. Move
-shared library declarations to the library that logically owns them; game
-headers may consume those declarations. Startup declares the program's `main`
-as an external runtime contract. Keep ordinary declarations and driver
-internals together; isolate or localize architectural register views so an
-ordinary include cannot reserve CPU registers in unrelated callers.
+- `src/<module>/`: module-specific code, one file per function, named after it.
+- `src/shared/<subsystem>/`: proven shared implementations. Register explicit
+  `source:` paths in each original module; preserve meaningful separate entries.
+- `src/lib/psyq/<library>/` and `src/lib/suzuki/`: reconstructed linked libraries.
+  Keep established public names, signatures and original module bindings.
+- `include/fft/`: game module, subsystem and shared-type headers.
+  `include/psx/`: library and PS1 hardware interfaces. Library code never
+  includes game headers.
+- `tools/`: Go build/check tooling. `tools/target.go` owns the original disc size
+  and hash. `QUIRKS.md` records unusual behavior worth preserving.
 
-Keep useful behavior and matching constraints in source comments and
-`QUIRKS.md`, not research diaries or duplicate inventories. Retain a register
-pin or empty assembly barrier only when it implements a real architectural ABI
-or its removal changes the original bytes. Re-measure speculative workarounds
-and remove those that prove unnecessary. Document uncertainty honestly.
+Put declarations in their owning header. Sources include their own declaration
+header and the focused headers for APIs they use. Group related declarations
+under short subsystem comments: types, globals, then functions. Leave blank
+lines between type blocks; subsystem headers include their own dependencies,
+not the module umbrella.
 
-These files implement the original PS1 behavior. BIOS firmware remains
-external; linked BIOS veneers and hardware helpers are reconstructed here.
-Game media, SDK archives/objects, extracted binaries and copied table dumps
-remain excluded. Never modify `meta/`.
+## Code style
 
-## Target
+- Prefer ordinary C, named fields, direct assignments and conventional loops.
+  Remove redundant locals where the clean spelling still matches.
+- Trace casts, shifts, masks and unions through readers and writers before
+  changing types. Keep genuine encoded data and format-dispatch boundaries;
+  avoid invented overlays or splitting records without evidence.
+- Do not introduce register pins, asm barriers, `volatile` or raw offsets to
+  force a cleanup. Retain existing residue only when measured necessary, with
+  a concise reason. Keep architectural register access isolated.
+- Use established module/subsystem prefixes and concise, behavior-based names.
+  Prefer `subsystem_verb_noun_variant` where natural. Preserve game terminology
+  and evidence-based unknown names rather than guessing.
+- Use snake_case, `_t` for struct typedefs, `_e` for enum typedefs, uppercase
+  enumerators, and `_init_`. Use decimal for counts/ordinary enum values and
+  hex for flags and encoded values. Header guards have no `FFT_` prefix.
+- Unknown members are `_unknown_XX`; `_unused_XX` means no named access;
+  `_padding_XX` means proven alignment/size filler. Offsets are relative to the
+  member's own struct. Never access unused or padding members by name.
+- Use `ONE` for fixed-point 1.0 (4096). Add `const` only for genuinely read-only
+  inputs and verify all callers under their historical compiler profiles.
+- Keep comments factual and short: explain behavior or a necessary constraint.
+  Reference library material validates our interfaces; do not copy
+  implementations or comments into the repository.
 
-- Input: `scus-94221.bin` at the repo root (raw Mode 2/2352, 541,315,152
-  bytes, SHA-256 `29e63bb6d2e7b842fe87f7c0ee03b7076681c34bcc47095cca27ec53236bf4f9`).
-- Output: `build/disc/output-scus-94221.bin` + `.cue`, byte-identical to the
-  input. These constants live in `tools/target.go`.
-- Never add, stage or embed game media, extracted files, build output or
-  proprietary SDK material. `meta/` is the user's private reference folder:
-  never modify it.
+## Workflow
 
-## Layout
-
-| Path | Contents |
-|---|---|
-| `src/<module>/` | One C file per function, named after it |
-| `src/shared/gfx/` | Shared graphics helpers, compiled separately in each original module through explicit `source:` paths |
-| `src/shared/menu/` | Shared menu helpers, compiled separately at each original module's addresses |
-| `src/shared/script/` | Shared scenario helpers, retaining each interpreter's original code and state bindings |
-| `src/shared/text/` | Shared text helpers, retaining each original module's copies and call bindings |
-| `src/lib/psyq/<library>/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
-| `src/lib/suzuki/` | Suzuki sound driver, registered with explicit `source:` paths in MAIN |
-| `include/fft/` | Module headers (`main.h`, `battle.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), focused `battle_<subsystem>.h` headers, and shared type headers (`thread.h`, `gfx.h`, `data.h`, `unit.h`, `map.h`, `menu.h`, `menu_script.h`, `script.h`) |
-| `include/psx/` | Psy-Q SDK, library and PS1 hardware declarations (keep SDK names and signatures) |
-| `target/*.yaml` | Every disc module: functions with hashes, data names, libraries, regions |
-| `tools/` | Go tooling (its own module), rebuilt from the working tree on every `make` call |
-| `QUIRKS.md` | Index of retail bugs and code that looks wrong on purpose |
-| `build/` | Ignored: extracted disc, caches, outputs, scratch work |
-
-| Module | File | Load | Role |
-|---|---|---|---|
-| main | `SCUS_942.21` | `0x80010000` | Resident executable (`load: 0x8000f800` covers the 0x800-byte header) |
-| battle | `BATTLE.BIN` | `0x80067000` | Battle engine |
-| wldcore | `WORLD/WLDCORE.BIN` | `0x80067000` | World core, runs with WORLD |
-| world | `WORLD/WORLD.BIN` | `0x800e0000` | World map, menus, event scripts |
-| opening | `OPEN/OPEN.BIN` | `0x80067000` | Opening and title |
-| event-* | `EVENT/*.OUT` | `0x801bf000`… | Menu screens run with BATTLE (`target/event.yaml`) |
-| effect-* | `EFFECT/E*.BIN` | `0x801c2500` | 110 ability effects run with BATTLE (`target/effect.yaml`) |
-
-File offset = address − `load`. Linked library ranges are declared under
-`libraries:`. The linked Psy-Q and startup functions, LIBGS (WORLD), LIBPRESS
-(OPENING), and Suzuki sound driver are reconstructed C. This includes the four
-Suzuki heap routines at `0x8001423c`–`0x8001442c`, which use the original
-`-G8` profile and `$gp` binding. Original padding, tables and executable
-patch templates remain data in their original modules. `target/*.yaml` is
-authoritative for each function's source, address, size, profile and hash.
-
-## Commands
+Use the Makefile for compilation, containers and verification. Inspect callers,
+callees and layouts before editing; measure uncertain candidates in `build/`.
+Use `make symbols` for function/global renames and `make config-fmt` after target
+changes. Shared-source consolidation must retain every original address and
+call binding, without runtime wrappers or invented alias machinery.
 
 ```sh
-make bootstrap             # build the Docker image (extracts the BIN if present)
-make check [MODULE=x]      # compile and compare with target/ hashes; no BIN needed
-make build [MODULE=x]      # full byte-exact build and disc (needs the BIN)
-make extract               # extract the BIN (build/checksums/diff do it on demand)
-make checksums             # refresh hashes from the ORIGINAL bytes only
-make check-config          # validate target/, sources and declarations
-make config-fmt            # rewrite target/*.yaml in canonical form
-make declarations          # report conflicting declarations in detail
-make symbols ACTION=rename-function|rename-global ARGS="--old A --new B"
-make diff FUNC=f           # compare one function with the original bytes (needs the BIN)
-make library-diff ARGS="..." # compare a scratch library candidate without registering it
-make permute FUNC=f        # run decomp-permuter on it [DURATION=300 JOBS=4]
-make test                  # vet and test the Go tooling
-make fmt                   # clang-format src/ and include/ in place
-make fmt-check             # fail on any formatting drift
-make shell                 # interactive shell in the image
-make run                   # build and launch PCSX-Redux (PCSX_REDUX=/path on Linux)
-make compile-commands      # editor compile_commands.json (host clang)
+make fmt                         # always before checking and committing C/headers
+make check [MODULE=x]             # compile and compare original function hashes
+make check-config                # sources, declarations and target metadata
+make fmt-check                   # formatting drift
+make test                        # Go tooling tests
+make build                       # rebuild the byte-identical disc
+make diff FUNC=f [MODULE=x]       # inspect one original-byte mismatch
+make library-diff ARGS="..."      # measure a scratch library candidate
+make compile-commands            # refresh editor metadata after source moves
 ```
 
-`MODULE` takes an id (`battle`, `event-attack`) or an alias (`attack`,
-`bunit`, `equip`, `jobstts`); for `check` it may be a list, and `event` or
-`effect` selects every such module. `diff` and `permute` need it only when
-several modules define `FUNC`. Both compile exactly as `check` does. Every change
-ends with `make check` passing. Before handing off, also run `make build`
-(disc exact), `make check-config` and `make fmt-check`.
+`MODULE` accepts module IDs, overlay aliases, lists, `event` or `effect`.
+`make check` needs no disc; `make build` and `make diff` use `scus-94221.bin`.
+Run `make fmt` after C/header edits, then matching checks. Before handing off,
+run full `check`, `check-config`, `fmt-check`, `test` and `build`. Formatting,
+parameter widths, signedness and qualifiers can affect the original bytes.
 
-Every target runs in a fresh `docker run --rm` container of the pinned
-`Dockerfile` image as the host user, with the checkout mounted at `/work`;
-the image is tagged by a checksum of its inputs, built on first use (its last
-layer proves every tool runs) and rebuilt by `make bootstrap`. It holds the
-old GCC `cc1` binaries (native on x86-64, through `qemu-i386` elsewhere), maspsx, mipsel binutils and
-`cpp`, mkpsxiso, asm-differ (`make diff` listings), decomp-permuter, Go and
-clang-format 22.1.8. CI (`.github/workflows/check.yml`) runs `fmt-check`,
-`check-config` and `test` in one job and `check` in four module shards,
-without the BIN; `check-config` fails unless the shards' module lists cover
-every module once. Optional overrides: `JOBS`, `CACHE=0`, `WORK_DIR`,
-`REPORT_ALL=1`, `DURATION` (see the Makefile).
+## Agents
 
-## target/*.yaml
-
-One YAML document per module; `event.yaml` and `effect.yaml` hold many,
-separated by `---`. `make config-fmt` defines the canonical form (unquoted hex
-addresses, decimal sizes, one flow mapping per line, sorted rows) and
-`make check-config` rejects anything else.
-
-- Header: `module`, `file`, `lba`, `size`, `sha256`, `load`, `source_dir`,
-  `profile` (module default), `links` (modules resident alongside).
-- `functions`: `{addr, size, name, hash}`, plus `profile`, `rodata` or `asm`
-  only when needed. `hash` is the first 16 hex digits of the SHA-256 of the
-  original bytes; only `make checksums` writes it.
-- `data`: named addresses with no reconstruction (globals, library entry
-  points). `imports`: names from overlays that linking cannot otherwise
-  reach. `overrides`: per-function bindings. `regions`: bytes deliberately
-  left original, with the reason.
-- Linking one function binds each name it uses from its own module, then
-  each `links` module in order, then main.
-
-To add a function: write `src/<module>/<name>.c`, add its `functions` row and
-any new `data` rows, then `make config-fmt`, `make checksums`,
-`make check MODULE=…`, `make build`. Rename with `make symbols` so sources,
-headers, `target/` and the file name change together.
-
-## Compiler profiles
-
-Default: GCC 2.6.3 `-O2 -G0`, soft-float R3000, ASPSX 2.34 via maspsx. A
-module's `profile` is the toolchain its translation units were built with; a
-function carries its own `profile` only where it differs:
-
-- WLDCORE and OPENING are GCC 2.7.2 with ASPSX 2.21 and checked division
-  (`gcc-2.7.2_O2_aspsx-2.21_divcheck`): a separate `mfhi` in constant
-  divisions, no delay-slot fill from past an if-body join, `lui/addiu/addu`
-  for an indexed global, and the zero/overflow `break` checks around each
-  division. No function there needs another profile. A load through a
-  `const` pointee is never reloaded after a store under this compiler, so a
-  parameter or table retail reloads is not `const`.
-- `-O1` and `-O0`: parts of WORLD and the CARD screen.
-- ASPSX 2.21 and `_divcheck`: a few functions in BATTLE, WORLD and MAIN.
-- `gcc-2.6.3_O2_G8_aspsx-2.34`: the four Suzuki CPU heap routines require
-  `$gp`-relative small data with `$gp = 0x800329bc`. The measured assembler
-  load-delay correction applies only to this profile; the default remains G0.
-
-Translation units were contiguous, so profiles come in address runs. Move a
-function to another profile only when it then matches with fewer levers (or
-none), and prefer the profile of its neighbours.
-
-## Code rules
-
-- Byte-exact always. Never weaken a check or edit a hash to accept a mismatch.
-- C only. The single `.s` file (`main_restore_game_loop_stack_pointer.s`) is
-  an ABI boundary. Instruction-emitting inline asm remains in the hand-written
-  thread/copy helpers and the PS1 hardware/ABI helpers in `include/psx/`.
-  Library algorithms stay C; each hardware instruction or register constraint
-  must have a measured PS1 dependency or byte-exact ABI reason.
-- Typed access: structs and named fields, never raw offsets such as
-  `*(s16*)((u8*)x + 0x218)`. Add a missing field to its shared header with a
-  provisional name. A raw offset, cast, register pin or empty asm barrier stays
-  only when the clean spelling provably changes the bytes, with a one-line
-  comment saying so.
-- Names carry the module prefix (`battle_`, `world_`, `wldcore_`, `open_`,
-  `main_`, `<overlay>_`; globals `g_battle_`, …). BATTLE subsystems use `ai_`,
-  `move_`, `target_`, `action_`, `camera_`, `map_`, `sound_`, `status_`,
-  `script_`, `formula_` and `effect_` (globals `g_ai_`, …), while retaining their BATTLE
-  source and header ownership. Event orchestration keeps `battle_event_`.
-  Resident effect code and native EFFECT overlays share `effect_`; their headers
-  keep runtime/shared layouts separate from native exports and work records.
-  Proven shared overlay helpers use their subsystem prefix and an explicit
-  `source:` binding in each original module; each compiled copy keeps its address.
-  Unknowns stay
-  `func_ADDRESS` or `D_ADDRESS` until the code supports a name. Unnamed
-  struct members are `_unknown_XX` (code accesses it, meaning unknown),
-  `_unused_XX` (no source accesses it by name) or `_padding_XX` (alignment
-  or size filler, with an inline comment saying which), where XX is the
-  hex offset in the member's own struct, zero-padded to the same width
-  throughout the struct. `make check-config` fails on any access to an
-  `_unused_` or `_padding_` member. snake_case; `_t` struct and `_e` enum typedefs; uppercase enum values;
-  `_init_`, not `_initialize_`. `include/psx/` keeps SDK names. Header guards
-  use descriptive header/path names without an `FFT_` prefix. A library
-  header groups its SDK interface and reconstructed driver internals together;
-  register-reserving ABI helpers stay in focused separate headers.
-  In partial SDK/BIOS views, a field absent from this game's accesses remains
-  `_unknown_XX`; use `_unused_XX` only when broader library/BIOS evidence proves
-  it unused. Proven register spacing and alignment remain `_padding_XX`.
-- Fixed point is 1.3.12 / 20.12 with 1.0 = `ONE` (4096, `psx/libgte.h`), also
-  one full rsin/rcos turn. Write `ONE` for 1.0; `>> 12` rescales after a
-  multiply.
-- One declaration per symbol, in its header. `make check-config` fails on
-  conflicting declarations. Globals and prototypes go in the header of their
-  name's module prefix. A type goes in the most specific module header that
-  every user can see: the owning `battle_<subsystem>.h` for BATTLE and its
-  overlays (`battle.h` includes these as the module umbrella), `world.h` for
-  WORLD, WLDCORE and OPENING, and a shared type
-  header only when both families use it. Two exceptions: `main_` types stay
-  in `main.h`, and MAIN-only table or unit records (item, ability, job,
-  party, ENTD) sit with their siblings in `data.h` and `unit.h`. A `volatile`
-  or otherwise one-function view of a global stays local to that source
-  file, with its reason. A source file includes the header declaring its own
-  function and the headers owning the other declarations it uses. Prefer a
-  focused subsystem header over a module umbrella when it provides the needed
-  declarations (MAIN and WORLD callers of BATTLE do the same). `main.h`
-  includes every shared header. Each header groups its declarations under
-  short lowercase subsystem labels (`/* ai */`), types first, then globals,
-  then functions. A subsystem header includes its own dependencies and compiles
-  independently; it never includes the module umbrella.
-- Comments: an optional short summary above a function, then only the
-  rationale needed to read the code. State facts, not history. Record retail
-  bugs and caller/callee disagreements with one line in `QUIRKS.md`.
-- Run `make fmt` after editing C or headers, then `make check`: cc1 emits
-  line notes, so formatting can change the bytes.
-
-## Matching levers
-
-When a cleanup changes the bytes, look here first.
-
-- Stores ignore signedness; loads, compares, shifts and divisions don't. To
-  get `lh` from a `u16` (or `lhu` from an `s16`), cast the lvalue
-  (`*(s16*)&g`), not the value.
-- A narrow prototype adds `andi` or `sll`/`sra` at callers; widening removes
-  them. Give a parameter the type whose conversion the callers show
-  (`sll`/`sra`: `s16` or `s8`; `andi`: `u16` or `u8`; none and a narrow read
-  in the callee: the argument was already that narrow), in the prototype and
-  the definition alike, and the casts at the call sites go. Where callers
-  pass 32-bit values and the callee narrows, declare the parameter `s32` and
-  narrow at its uses (one narrow local). A callee that loads a narrow stack
-  parameter (`lhu 0x10(sp)`) is the first case with the right signedness, not
-  a reason for an old-style definition: none is left in the tree.
-- Callers and callees agree in the source. An argument every caller passes and
-  the callee never reads is an `unused_` parameter; a parameter no caller
-  passes is a local. A function-pointer cast at a call site is the last
-  resort: try the plain call first (an "extra argument" is often only a
-  register the cast forced), and state the retail fact in one line if the
-  cast stays.
-- A register read before any write is a local the source never assigned on
-  that path: a `switch` without `default`, an early exit, a call with too few
-  arguments. Declare it and leave it unset (`T x;`), with a `QUIRKS.md` line,
-  rather than pinning a register or adding an `"=r"` barrier.
-- A fresh `lui` for each neighbouring global means separate symbols. A struct
-  view gives GCC one base register and reshapes the body; keep the aliases.
-- Raw offset versus field access changes scheduling (`MEM_IN_STRUCT_P`):
-  re-measure after converting.
-- Two single-bit tests on one `u16` (`(f & 0x100) && !(f & 0x10)`) merge into
-  one 32-bit `lw`+`andi` test.
-- One variable in two roles across a call forces a callee-saved register;
-  split or merge variables before trying priority tricks. Read conflicts
-  with `cc1 -da` (`.greg`).
-- Single-set constants and temps schedule late (birthing boost); a multi-set
-  variable of the same width moves them earlier.
-- Any store through a pointer drops CSE of cached field loads; one store
-  placed before a reload reproduces a target reload. To force a reload of
-  one field, use a `volatile` lvalue on that field only.
-- `count = obj->count;` before the loop is one instruction shorter than
-  `i < obj->count`.
-- One `volatile` access in the fall-through block stops reorg filling a delay
-  slot from past the join.
-- `if (x) continue; break;` gives `bnez x,next; j out`; `if (!x) break;` gives
-  the inverted branch.
-- A prologue that copies `$a2` before `$a1` means the loop walks a local copy
-  (`p = param;`).
-- `switch` emits all compares (a tree under 5 cases, a jump table above), then
-  the bodies; an `if` chain puts each body between compares. Write case bodies
-  in the target's physical order.
-- Two stores sharing one `la` base (`sw 0(v1)` / `sw -4(v1)`) point to `-O1`:
-  `-O2`'s second CSE pass folds them back to absolute stores.
-- A frame bigger than its spills means unused locals in the original;
-  declaration order sets slot order. Eight untouched bytes are more often a
-  compiler ghost: an `s16` local read both sign-extended and as 16 bits, or
-  a `for` whose entry test folded away.
-
-### Reading residue
-
-A pin, barrier, `volatile` or `goto` usually stands for something the source
-said plainly. What each has turned out to be, most common first:
-
-- Narrower locals (`u8 mask`, `s16 code`, `u16 value`): a temp plus a copy
-  plus a barrier, a pinned "copy in `$v1`", a reload after a store.
-- One variable where the code has two, or two where it has one: two pins on
-  one register are one variable reused (`i` holding an id before it counts);
-  a `thread_id = id - 1` pinned in a callee-saved register is no variable.
-  In a long function, one function-scope variable per role (one `unit`, one
-  index) instead of one per block.
-- Indexed access written out: `for (i = 0; a[i] != END; i++)`, `g[i].f`,
-  the global named in every arm. Pointer walkers, "base + offset" cursors and
-  reversed scans are strength reduction's output, not source.
-- A global read directly in each argument or test instead of a local copy
-  ("memory" barriers, reloads). A range written as two comparisons
-  (`x < A || x > B`) reloads where a folded range test does not.
-- Chained assignment `a.x = a.y = b.z = v;` for same-value stores that come
-  out in reverse order or keep one base register; the same store written in
-  both arms of an `if` where a fence kept it early; `p = base; p += n;` as
-  two statements where a cursor keeps its own register.
-- Statement and declaration order: a tied barrier after a call is the
-  mask/or written before the call; exact allocation ties go to the earlier
-  declaration.
-- Return shapes: `if (a && b) return 1; return 0;` (a `$2` pin zeroed before
-  the tests); a `?:` inside the returned expression (a temp pinned to `$2`);
-  the failure `return` last; `if (c) { ...; return 0; } return 0;` (a
-  constant load sitting last); a callee declared `int` that returns nothing
-  (`li v0` in a delay slot after a call).
-- Bit-field members and struct-typed globals: separate loads of one packed
-  byte, a load kept after a struct store.
-- SDK macros (`setXY4`, `setRGB0`, `setSemiTrans`, `getTPage`, `addPrim` in
-  `psx/libgpu.h`): several stores on one source line.
-- A `do { } while (0)` wrapper is itself a lever (a loop note doubles
-  reference weights and fences scheduling); remove it with the pins it
-  caused.
-- `goto`: a shared `return` tail is `return` written at each place; a
-  backward jump is a loop; a jump past the next block is the same condition
-  tested again; bound tests to one label are case ranges; `default: common:`
-  is code after the `switch`. The AI's resume dispatch
-  (`switch (phase) { case N: goto stage_n; }`) is real.
-
-When only registers differ, compute instead of permuting: `cc1 -da` writes
-`.lreg`/`.greg`; local-alloc and global-alloc rank pseudos by
-`floor_log2(refs) * refs / live_length` with references doubled per loop
-depth, and loop.c hoists an invariant while `threshold * uses * lifetime >=
-loop length` (threshold 26 with a call in the loop, 52 without, minus 3 per
-value already moved).
-
-Tolerated residue (zero-instruction only, each with a comment): the tied
-operand barrier `__asm__("" : "=r"(x) : "0"(x))`, an empty `asm volatile`, a
-`register … __asm__("$N")` pin, a dead local kept for frame size, and a
-second link name for one address. Each is debt: try removing it, and keep it
-only if removal changes the bytes.
-
-## Improving the code
-
-Useful work, each step verified with `make check`:
-
-- Name the remaining `D_` globals, `func_` functions and `_unknown_`
-  members from what the code does with them, and examine `_unused_` members
-  (they may still be touched by whole-struct copies or another view).
-- Remove register pins, asm barriers, casts and raw offsets where a natural
-  spelling matches. Most pins stand for something the source said another
-  way: an unset local, one variable where the code has two (or two where it
-  has one), a narrower local, an unused parameter, another statement order.
-- Replace artificial `goto` with the loops, `if`/`else` and `switch`
-  the compiler actually produced.
-- Fold adjacent globals the code proves are one record; keep separate
-  symbols where the original reloads each address.
-- Give `s32` handles and `void*` parameters their real types.
-
-## Working with agents
-
-For large tasks, split the work into disjoint files or modules and give each
-worker its own scratch path under `build/`. One lead edits shared headers and
-`target/*.yaml`, integrates results and runs the final `make build`. Workers
-report the address range, match result and any proposed header change. Never
-commit; the user commits.
+Split large work into disjoint files and give each worker its own ignored
+`build/` scratch path. One lead owns shared headers/target integration and final
+verification. Workers report affected entries, match evidence and proposed
+header changes; only the lead commits when authorized.
