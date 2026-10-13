@@ -457,14 +457,14 @@ functions:
   - {addr: 0x801ccf74, size: 976, name: bunit_ability_update_list_menu, hash: 4b1c6e2d1806893f}
   - {addr: 0x801cd344, size: 256, name: bunit_gfx_enqueue_tile, hash: 50c95427e7c5d200}
   - {addr: 0x801cd444, size: 460, name: bunit_gfx_enqueue_gouraud_quad, hash: 8f11049e7f2e617c}
-  - {addr: 0x801cd610, size: 632, name: bunit_gfx_enqueue_textured_quad_list, hash: 89e1989b186692ef}
-  - {addr: 0x801cd888, size: 532, name: bunit_gfx_enqueue_textured_quad, hash: 9f5ded393ed34318}
+  - {addr: 0x801cd610, size: 632, name: menu_gfx_enqueue_textured_quad_list, hash: 89e1989b186692ef, source: src/shared/menu/menu_gfx_enqueue_textured_quad_list.c}
+  - {addr: 0x801cd888, size: 532, name: menu_gfx_enqueue_textured_quad, hash: 9f5ded393ed34318, source: src/shared/menu/menu_gfx_enqueue_textured_quad.c}
   - {addr: 0x801cda9c, size: 648, name: bunit_gfx_enqueue_gouraud_textured_quad, hash: b012086d3eed574e}
-  - {addr: 0x801cdd24, size: 1044, name: bunit_gfx_enqueue_oriented_textured_quad, hash: 487cd03ab6bba3e3}
+  - {addr: 0x801cdd24, size: 1044, name: menu_gfx_enqueue_oriented_textured_quad, hash: 487cd03ab6bba3e3, source: src/shared/menu/menu_gfx_enqueue_oriented_textured_quad.c}
   - {addr: 0x801ce138, size: 508, name: bunit_gfx_enqueue_textured_quad_corners, hash: b88c80b508ead92e}
-  - {addr: 0x801ce334, size: 216, name: bunit_gfx_enqueue_draw_mode, hash: 0b17bfff3c7058c9}
-  - {addr: 0x801ce40c, size: 228, name: bunit_gfx_enqueue_draw_area, hash: 612f894d2c6e6ab6}
-  - {addr: 0x801ce4f0, size: 264, name: bunit_gfx_enqueue_draw_move, hash: 895f33d0562e664e}
+  - {addr: 0x801ce334, size: 216, name: menu_gfx_enqueue_draw_mode, hash: 0b17bfff3c7058c9, source: src/shared/menu/menu_gfx_enqueue_draw_mode.c}
+  - {addr: 0x801ce40c, size: 228, name: menu_gfx_enqueue_draw_area, hash: 612f894d2c6e6ab6, source: src/shared/menu/menu_gfx_enqueue_draw_area.c}
+  - {addr: 0x801ce4f0, size: 264, name: menu_gfx_enqueue_draw_move, hash: 895f33d0562e664e, source: src/shared/menu/menu_gfx_enqueue_draw_move.c}
   - {addr: 0x801ce5f8, size: 28, name: bunit_gfx_get_fade_state, hash: b5f1545375670598}
   - {addr: 0x801ce614, size: 32, name: bunit_gfx_start_decreasing_fade, hash: a932dc92ed5cf2b6}
   - {addr: 0x801ce634, size: 28, name: bunit_gfx_start_increasing_fade, hash: 43d7509c21f01101}
@@ -785,10 +785,10 @@ data:
   - {addr: 0x801eca78, name: g_bunit_menu_palette_clut}
   - {addr: 0x801eca7c, name: g_bunit_gfx_poly_ft3_count}
   - {addr: 0x801eca80, name: g_bunit_gfx_poly_gt3_count}
-  - {addr: 0x801eca84, name: g_bunit_gfx_poly_ft4_count}
+  - {addr: 0x801eca84, name: g_menu_gfx_poly_ft4_count}
   - {addr: 0x801eca88, name: g_bunit_gfx_poly_gt4_count}
   - {addr: 0x801eca8c, name: g_bunit_gfx_sprite_8_capacity}
-  - {addr: 0x801eca90, name: g_bunit_gfx_drawenv_y}
+  - {addr: 0x801eca90, name: g_menu_gfx_drawenv_y}
   - {addr: 0x801eca94, name: g_bunit_menu_alternate_number_clut}
   - {addr: 0x801eca98, name: g_bunit_menu_list_selected_index}
   - {addr: 0x801eca9c, name: g_bunit_gfx_sprite_16_capacity}
@@ -796,14 +796,14 @@ data:
   - {addr: 0x801ecaa4, name: g_bunit_gfx_draw_area_capacity}
   - {addr: 0x801ecaa8, name: g_bunit_input_primary_repeat}
   - {addr: 0x801ecaac, name: g_bunit_sound_queued_effect_id}
-  - {addr: 0x801ecab0, name: g_bunit_gfx_draw_area_count}
+  - {addr: 0x801ecab0, name: g_menu_gfx_draw_area_count}
   - {addr: 0x801ecab4, name: g_bunit_gfx_draw_mode_capacity}
   - {addr: 0x801ecab8, name: g_bunit_gfx_tile_capacity}
-  - {addr: 0x801ecabc, name: g_bunit_gfx_draw_mode_count}
+  - {addr: 0x801ecabc, name: g_menu_gfx_draw_mode_count}
   - {addr: 0x801ecac0, name: g_bunit_gfx_draw_move_capacity}
   - {addr: 0x801ecac4, name: g_bunit_gfx_tile_count}
-  - {addr: 0x801ecac8, name: g_bunit_gfx_draw_move_count}
-  - {addr: 0x801ecacc, name: g_bunit_gfx_context}
+  - {addr: 0x801ecac8, name: g_menu_gfx_draw_move_count}
+  - {addr: 0x801ecacc, name: g_menu_gfx_context}
   - {addr: 0x801ecad0, name: g_bunit_menu_input_active_mask}
   - {addr: 0x801ecad4, name: g_bunit_input_secondary_repeat}
   - {addr: 0x801ecad8, name: g_bunit_gfx_sprite_count}
@@ -1388,13 +1388,13 @@ functions:
   - {addr: 0x801c9880, size: 32, name: equip_input_clear_state, hash: b52e8464d8df1dd7}
   - {addr: 0x801c98a0, size: 256, name: equip_gfx_enqueue_tile, hash: 9d6c6dff6c1087ff}
   - {addr: 0x801c99a0, size: 260, name: equip_gfx_enqueue_line_f2, hash: 7409b09d6428807a}
-  - {addr: 0x801c9aa4, size: 632, name: equip_gfx_enqueue_textured_quad_list, hash: 5f606e521d761091}
-  - {addr: 0x801c9d1c, size: 532, name: equip_gfx_enqueue_textured_quad, hash: e79e4c2c08e12fd9}
-  - {addr: 0x801c9f30, size: 1044, name: equip_gfx_enqueue_oriented_textured_quad, hash: 25f4a04133164df8}
+  - {addr: 0x801c9aa4, size: 632, name: menu_gfx_enqueue_textured_quad_list, hash: 5f606e521d761091, source: src/shared/menu/menu_gfx_enqueue_textured_quad_list.c}
+  - {addr: 0x801c9d1c, size: 532, name: menu_gfx_enqueue_textured_quad, hash: e79e4c2c08e12fd9, source: src/shared/menu/menu_gfx_enqueue_textured_quad.c}
+  - {addr: 0x801c9f30, size: 1044, name: menu_gfx_enqueue_oriented_textured_quad, hash: 25f4a04133164df8, source: src/shared/menu/menu_gfx_enqueue_oriented_textured_quad.c}
   - {addr: 0x801ca344, size: 508, name: equip_gfx_enqueue_textured_quad_corners, hash: 282146b88b2b5bc9}
-  - {addr: 0x801ca540, size: 264, name: equip_gfx_enqueue_draw_move, hash: c74d384fcfbeac4a}
-  - {addr: 0x801ca648, size: 228, name: equip_gfx_enqueue_draw_area, hash: 0b025d4219863d75}
-  - {addr: 0x801ca72c, size: 216, name: equip_gfx_enqueue_draw_mode, hash: 39d3f71dc37474b8}
+  - {addr: 0x801ca540, size: 264, name: menu_gfx_enqueue_draw_move, hash: c74d384fcfbeac4a, source: src/shared/menu/menu_gfx_enqueue_draw_move.c}
+  - {addr: 0x801ca648, size: 228, name: menu_gfx_enqueue_draw_area, hash: 0b025d4219863d75, source: src/shared/menu/menu_gfx_enqueue_draw_area.c}
+  - {addr: 0x801ca72c, size: 216, name: menu_gfx_enqueue_draw_mode, hash: 39d3f71dc37474b8, source: src/shared/menu/menu_gfx_enqueue_draw_mode.c}
   - {addr: 0x801ca804, size: 48, name: gfx_load_image_and_wait, hash: be3db739ba4a6ec6, source: src/shared/gfx/gfx_load_image_and_wait.c}
   - {addr: 0x801ca834, size: 48, name: gfx_store_image_and_wait, hash: 42b445a1713fca16, source: src/shared/gfx/gfx_store_image_and_wait.c}
   - {addr: 0x801ca864, size: 60, name: gfx_move_image_and_wait, hash: 2dee44c691484772, source: src/shared/gfx/gfx_move_image_and_wait.c}
@@ -1718,10 +1718,10 @@ data:
   - {addr: 0x801e90d0, name: g_equip_menu_palette_clut}
   - {addr: 0x801e90d4, name: g_equip_gfx_poly_ft3_count}
   - {addr: 0x801e90d8, name: g_equip_gfx_poly_gt3_count}
-  - {addr: 0x801e90dc, name: g_equip_gfx_poly_ft4_count}
+  - {addr: 0x801e90dc, name: g_menu_gfx_poly_ft4_count}
   - {addr: 0x801e90e0, name: g_equip_gfx_poly_gt4_count}
   - {addr: 0x801e90e4, name: g_equip_gfx_sprite_8_capacity}
-  - {addr: 0x801e90e8, name: g_equip_gfx_drawenv_y}
+  - {addr: 0x801e90e8, name: g_menu_gfx_drawenv_y}
   - {addr: 0x801e90ec, name: g_equip_menu_result_rows}
   - {addr: 0x801e90f4, name: g_equip_menu_alternate_number_clut}
   - {addr: 0x801e90f8, name: g_equip_menu_selected_list_index}
@@ -1729,14 +1729,14 @@ data:
   - {addr: 0x801e9100, name: g_equip_gfx_otag_length}
   - {addr: 0x801e9104, name: g_equip_gfx_draw_area_capacity}
   - {addr: 0x801e9108, name: g_equip_item_list_entries}
-  - {addr: 0x801e9220, name: g_equip_gfx_draw_area_count}
+  - {addr: 0x801e9220, name: g_menu_gfx_draw_area_count}
   - {addr: 0x801e9224, name: g_equip_gfx_draw_mode_capacity}
   - {addr: 0x801e9228, name: g_equip_gfx_tile_capacity}
-  - {addr: 0x801e922c, name: g_equip_gfx_draw_mode_count}
+  - {addr: 0x801e922c, name: g_menu_gfx_draw_mode_count}
   - {addr: 0x801e9230, name: g_equip_gfx_draw_move_capacity}
   - {addr: 0x801e9234, name: g_equip_gfx_tile_count}
-  - {addr: 0x801e9238, name: g_equip_gfx_draw_move_count}
-  - {addr: 0x801e923c, name: g_equip_gfx_context}
+  - {addr: 0x801e9238, name: g_menu_gfx_draw_move_count}
+  - {addr: 0x801e923c, name: g_menu_gfx_context}
   - {addr: 0x801e9240, name: g_menu_input_primary_repeat}
   - {addr: 0x801e9244, name: g_equip_gfx_sprite_count}
   - {addr: 0x801e9248, name: g_equip_menu_scroll_base_index}

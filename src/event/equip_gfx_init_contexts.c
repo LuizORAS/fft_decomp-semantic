@@ -14,7 +14,7 @@ void equip_gfx_init_contexts(menu_gfx_context_t* base, u32* otag, POLY_F3* poly_
     menu_gfx_context_t* context;
 
     g_equip_gfx_context_base = base;
-    g_equip_gfx_context = base;
+    g_menu_gfx_context = base;
 
     for (index = 0; index < EQUIP_GFX_CONTEXT_COUNT; index++) {
         context = &g_equip_gfx_context_base[index];

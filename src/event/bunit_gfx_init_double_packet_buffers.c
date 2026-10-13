@@ -20,7 +20,7 @@ void bunit_gfx_init_double_packet_buffers(menu_gfx_context_t* buffers, u32* otag
     s32 i;
 
     g_bunit_gfx_context_base = buffers;
-    g_bunit_gfx_context = buffers;
+    g_menu_gfx_context = buffers;
     for (i = 0; i < 2; i++) {
         g_bunit_gfx_context_base[i].otag = otags + g_bunit_gfx_otag_count * i;
         g_bunit_gfx_context_base[i].flat_triangles = flat_triangles + g_bunit_gfx_poly_f3_capacity * i;

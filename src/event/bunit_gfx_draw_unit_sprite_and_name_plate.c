@@ -73,7 +73,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
                 value = 6;
             }
         }
-        bunit_gfx_enqueue_oriented_textured_quad((oriented_quad_t*)&quad, &rgb, orientation, 0, value);
+        menu_gfx_enqueue_oriented_textured_quad((oriented_quad_t*)&quad, &rgb, orientation, 0, value);
     }
     if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
         return;
@@ -81,7 +81,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     g_bunit_unit_shadow_sprite.position.x = x + 0x12;
     g_bunit_unit_shadow_sprite.position.y = y + base_y - 4;
     g_bunit_unit_shadow_sprite.source.tpage = GetTPage(0, 2, 0x3C0, 0x100);
-    bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_shadow_sprite, 0, TEXTURE_UV_FLIP_NONE, 1, 5);
+    menu_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_shadow_sprite, 0, TEXTURE_UV_FLIP_NONE, 1, 5);
     g_bunit_unit_dot_sprite.position.x = x;
     g_bunit_unit_dot_sprite.position.y = y;
     if (g_bunit_unit_data[unit]->team_kind == 1) {
@@ -102,5 +102,5 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
         rgb.g += g_bunit_unit_dot_glow_timer;
         rgb.b += g_bunit_unit_dot_glow_timer;
     }
-    bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_dot_sprite, &rgb, TEXTURE_UV_FLIP_NONE, 1, 8);
+    menu_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_dot_sprite, &rgb, TEXTURE_UV_FLIP_NONE, 1, 8);
 }

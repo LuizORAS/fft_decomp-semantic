@@ -121,7 +121,7 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
                     rect.w = g_equip_menu_list_vram_width;
                     rect.h = height;
                     rect.y = (j - 1) * height + 0x30;
-                    equip_gfx_enqueue_draw_move(&rect, 0x100, height * j + 0x30, ot_index - 1);
+                    menu_gfx_enqueue_draw_move(&rect, 0x100, height * j + 0x30, ot_index - 1);
                 }
             }
         }
@@ -142,7 +142,7 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
                 rect.y = g_equip_menu_list_row_height + 0x30;
                 rect.w = g_equip_menu_list_vram_width;
                 rect.h = g_equip_menu_list_row_height * g_equip_menu_list_visible_rows;
-                equip_gfx_enqueue_draw_move(&rect, 0x100, 0x30, ot_index - 1);
+                menu_gfx_enqueue_draw_move(&rect, 0x100, 0x30, ot_index - 1);
             }
         }
     }
@@ -152,7 +152,7 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
             rect.y = command->list.y - 5;
             rect.w = g_equip_menu_list_vram_width * 4;
             rect.h = g_equip_menu_list_row_height * g_equip_menu_list_visible_rows + 10;
-            equip_gfx_enqueue_textured_quad(&rect, 0, g_equip_menu_list_scroll_offset + 0x2b, 0,
+            menu_gfx_enqueue_textured_quad(&rect, 0, g_equip_menu_list_scroll_offset + 0x2b, 0,
                 g_equip_gfx_semitransparency, g_equip_text_digit_texture_page, g_equip_menu_window_clut,
                 g_equip_gfx_sprite_ot_index);
         } else {
@@ -160,7 +160,7 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
             rect.y = command->list.y;
             rect.w = g_equip_menu_list_vram_width * 4;
             rect.h = g_equip_menu_list_row_height * g_equip_menu_list_visible_rows;
-            equip_gfx_enqueue_textured_quad(&rect, 0, 0x30, 0, g_equip_gfx_semitransparency,
+            menu_gfx_enqueue_textured_quad(&rect, 0, 0x30, 0, g_equip_gfx_semitransparency,
                 g_equip_text_digit_texture_page, g_equip_menu_window_clut, g_equip_gfx_sprite_ot_index);
         }
     }
@@ -170,7 +170,7 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
             rect.y = command->list.arrow_up_y;
             rect.w = 8;
             rect.h = 0x10;
-            equip_gfx_enqueue_textured_quad(&rect, 0xd8, 0, 0, g_equip_gfx_semitransparency,
+            menu_gfx_enqueue_textured_quad(&rect, 0xd8, 0, 0, g_equip_gfx_semitransparency,
                 g_equip_menu_cursor_texture_page, g_equip_menu_cursor_mode0_foreground_clut,
                 g_equip_gfx_sprite_ot_index);
         }
@@ -179,7 +179,7 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
             rect.y = command->list.arrow_down_y;
             rect.w = 8;
             rect.h = 0x10;
-            equip_gfx_enqueue_textured_quad(&rect, 0xe0, 0, 0, g_equip_gfx_semitransparency,
+            menu_gfx_enqueue_textured_quad(&rect, 0xe0, 0, 0, g_equip_gfx_semitransparency,
                 g_equip_menu_cursor_texture_page, g_equip_menu_cursor_mode0_foreground_clut,
                 g_equip_gfx_sprite_ot_index);
         }
@@ -194,7 +194,7 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
             rect.h = 8;
             rect.x = g_equip_menu_window_right_x;
             rect.y = j;
-            equip_gfx_enqueue_textured_quad(&rect, 0x10, 0x10, 0, g_equip_gfx_semitransparency,
+            menu_gfx_enqueue_textured_quad(&rect, 0x10, 0x10, 0, g_equip_gfx_semitransparency,
                 g_equip_menu_cursor_texture_page, g_equip_menu_cursor_mode0_foreground_clut,
                 g_equip_gfx_sprite_ot_index);
         }

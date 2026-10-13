@@ -74,7 +74,7 @@ menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* 
             glyph.rect.w = 6;
             glyph.rect.h = 3;
             glyph.rect.x = dash_x - 1;
-            equip_gfx_enqueue_textured_quad(&glyph.rect, 0xBA, 0x13, 0, g_equip_gfx_semitransparency,
+            menu_gfx_enqueue_textured_quad(&glyph.rect, 0xBA, 0x13, 0, g_equip_gfx_semitransparency,
                 g_equip_text_digit_texture_page, clut, g_equip_gfx_sprite_ot_index);
             value = cell;
         }
@@ -93,7 +93,7 @@ menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* 
             minus_rect.y = y + 2;
             minus_rect.w = 6;
             minus_rect.h = 0xB;
-            equip_gfx_enqueue_textured_quad(&minus_rect, 0xBA, 0x10, 0, g_equip_gfx_semitransparency,
+            menu_gfx_enqueue_textured_quad(&minus_rect, 0xBA, 0x10, 0, g_equip_gfx_semitransparency,
                 g_equip_text_digit_texture_page, clut, g_equip_gfx_sprite_ot_index);
             negative = 0;
         } else {
@@ -105,7 +105,7 @@ menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* 
                 pos += 1;
             }
             if (data->number.style < 2) {
-                equip_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + (glyph.w * digit), glyph.v, 0,
+                menu_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + (glyph.w * digit), glyph.v, 0,
                     g_equip_gfx_semitransparency, g_equip_text_digit_texture_page, clut, g_equip_gfx_sprite_ot_index);
             } else {
                 if (digit < 8) {
@@ -115,7 +115,7 @@ menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* 
                     glyph.v = 0x10;
                     glyph.u = glyph.w * (digit - 8) + 0x20;
                 }
-                equip_gfx_enqueue_textured_quad(&glyph.rect, glyph.u, glyph.v, 0, g_equip_gfx_semitransparency,
+                menu_gfx_enqueue_textured_quad(&glyph.rect, glyph.u, glyph.v, 0, g_equip_gfx_semitransparency,
                     g_equip_text_digit_texture_page, g_equip_menu_window_clut, g_equip_gfx_sprite_ot_index);
             }
         }

@@ -23,7 +23,7 @@ menu_instruction_t* equip_cmd_draw_right_aligned_number_handler(menu_instruction
     g_equip_gfx_blank_cell_rect.position.y = y + 4;
     for (i = blanks - 1; i != -1; i--) {
         g_equip_gfx_blank_cell_rect.position.x = x;
-        equip_gfx_enqueue_oriented_textured_quad(
+        menu_gfx_enqueue_oriented_textured_quad(
             &g_equip_gfx_blank_cell_rect, 0, TEXTURE_UV_FLIP_NONE, 0, g_equip_gfx_sprite_ot_index);
         x += 8;
     }
@@ -32,7 +32,7 @@ menu_instruction_t* equip_cmd_draw_right_aligned_number_handler(menu_instruction
     rect.w = 8;
     rect.h = 0x10;
     for (j = 0; j < count; j++) {
-        equip_gfx_enqueue_textured_quad(&rect, (buf[j] * 8) - 0xD8, 0x30, 0, 0, g_equip_menu_cursor_texture_page,
+        menu_gfx_enqueue_textured_quad(&rect, (buf[j] * 8) - 0xD8, 0x30, 0, 0, g_equip_menu_cursor_texture_page,
             g_equip_text_clut_1_mode0, g_equip_gfx_sprite_ot_index);
         rect.x += 8;
     }

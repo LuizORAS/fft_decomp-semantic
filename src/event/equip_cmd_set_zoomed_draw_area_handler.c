@@ -21,7 +21,7 @@ menu_instruction_t* equip_cmd_set_zoomed_draw_area_handler(menu_instruction_t* c
         area.h = command->window.height * scale / 100;
         area.x = command->window.x + (command->window.width >> 1) - (area.w >> 1);
         area.y = command->window.y + (command->window.height >> 1) - (area.h >> 1);
-        equip_gfx_enqueue_draw_area(&area, g_equip_gfx_sprite_ot_index - 1);
+        menu_gfx_enqueue_draw_area(&area, g_equip_gfx_sprite_ot_index - 1);
         g_equip_gfx_zoom_draw_area_active = 1;
     } else {
         g_equip_gfx_zoom_draw_area_active = 0;

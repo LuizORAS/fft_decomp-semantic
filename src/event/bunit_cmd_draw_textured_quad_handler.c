@@ -29,7 +29,7 @@ menu_instruction_t* bunit_cmd_draw_textured_quad_handler(menu_instruction_t* cmd
         table = 0;
     }
 
-    bunit_gfx_enqueue_textured_quad(&rect, cmd->sprite.sprite.u, cmd->sprite.sprite.v, table,
+    menu_gfx_enqueue_textured_quad(&rect, cmd->sprite.sprite.u, cmd->sprite.sprite.v, table,
         g_bunit_gfx_semitrans_enabled, g_menu_gfx_texture_page, g_menu_gfx_clut_id, g_bunit_gfx_otag_index);
     return menu_next_instruction(cmd);
 }

@@ -68,7 +68,7 @@ void bunit_menu_draw_pressable_button(s16 slot, s16 x, s16 y, s16 pressed, s16 b
             if (scale_y < 0) {
                 orientation += 2;
             }
-            bunit_gfx_enqueue_oriented_textured_quad(&desc, 0, orientation, 0, i + 0x32);
+            menu_gfx_enqueue_oriented_textured_quad(&desc, 0, orientation, 0, i + 0x32);
             i += 1;
             entry += 1;
         } while (i < count);

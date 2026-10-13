@@ -62,23 +62,23 @@ void bunit_gfx_update_rhombus_cursor_trail(point16_t* target) {
             = g_bunit_cursor_shadow_sprite.source.h = 0x10;
         g_bunit_cursor_shadow_sprite.position.y = g_bunit_cursor_trail_points[i].y;
         g_bunit_cursor_sprite.position.y = g_bunit_cursor_trail_points[i].y - 1;
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_NONE, 1, 3);
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, TEXTURE_UV_FLIP_NONE, 1, 4);
+        menu_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_NONE, 1, 3);
+        menu_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, TEXTURE_UV_FLIP_NONE, 1, 4);
         g_bunit_cursor_shadow_sprite.position.x += 0x1F;
         g_bunit_cursor_sprite.position.x += 0x1F;
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_X, 1, 3);
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, TEXTURE_UV_FLIP_X, 1, 4);
+        menu_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_X, 1, 3);
+        menu_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, TEXTURE_UV_FLIP_X, 1, 4);
         x2 = g_bunit_cursor_trail_points[i].x;
         g_bunit_cursor_sprite.h = g_bunit_cursor_sprite.source.h = g_bunit_cursor_shadow_sprite.h
             = g_bunit_cursor_shadow_sprite.source.h = 0xF;
         g_bunit_cursor_sprite.position.x = g_bunit_cursor_shadow_sprite.position.x = x2;
         g_bunit_cursor_shadow_sprite.position.y = g_bunit_cursor_trail_points[i].y + 0x10;
         g_bunit_cursor_sprite.position.y = g_bunit_cursor_trail_points[i].y + 0xF;
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_Y, 1, 3);
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, TEXTURE_UV_FLIP_Y, 1, 4);
+        menu_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_Y, 1, 3);
+        menu_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, TEXTURE_UV_FLIP_Y, 1, 4);
         g_bunit_cursor_shadow_sprite.position.x += 0x1F;
         g_bunit_cursor_sprite.position.x += 0x1F;
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_XY, 1, 3);
-        bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, TEXTURE_UV_FLIP_XY, 1, 4);
+        menu_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_XY, 1, 3);
+        menu_gfx_enqueue_oriented_textured_quad(&g_bunit_cursor_sprite, color, TEXTURE_UV_FLIP_XY, 1, 4);
     }
 }

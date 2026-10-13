@@ -1,16 +1,15 @@
-#include "fft/event_equip.h"
-#include "psx/types.h"
+#include "fft/menu.h"
 
 /* Takes one POLY_FT4 from the pool per sprite cell, fills it as a w x h quad
  * at (x + 0x80, y) with texture origin (u, v), and links it into ordering
  * table entry otag_index. With `color` the quads are shaded with that
  * colour. */
-void equip_gfx_enqueue_textured_quad_list(const menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
+void menu_gfx_enqueue_textured_quad_list(const menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
     u16 texture_page, u16 clut, s32 otag_index, s32 count) {
     POLY_FT4* poly;
 
     for (count -= 1; count >= 0; count--) {
-        poly = &g_equip_gfx_context->textured_quads[g_equip_gfx_poly_ft4_count++];
+        poly = &g_menu_gfx_context->textured_quads[g_menu_gfx_poly_ft4_count++];
 
         if (color != 0) {
             SetShadeTex(poly, 0);
@@ -27,8 +26,8 @@ void equip_gfx_enqueue_textured_quad_list(const menu_sprite_cell_t* quads, const
         poly->clut = clut;
         poly->tpage = texture_page;
 
-        setaddr(poly, g_equip_gfx_context->otag[otag_index]);
-        catPrim(&g_equip_gfx_context->otag[otag_index], poly);
+        setaddr(poly, g_menu_gfx_context->otag[otag_index]);
+        catPrim(&g_menu_gfx_context->otag[otag_index], poly);
         quads++;
     }
 }

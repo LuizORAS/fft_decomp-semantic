@@ -30,7 +30,7 @@ void equip_menu_draw_equipment_slot_marker(s32 unused, s32 slot, s32 override) {
     marker = &g_equip_menu_slot_marker_rects[slot];
     marker->position.x = x;
     marker->position.y = width - (slot == 0);
-    equip_gfx_enqueue_oriented_textured_quad(
+    menu_gfx_enqueue_oriented_textured_quad(
         marker, equip_gfx_get_draw_color(), TEXTURE_UV_FLIP_NONE, 0, EQUIP_SLOT_MARKER_FIRST_OTAG);
     secondary = &g_equip_menu_secondary_slot_marker;
     secondary_x = x + 9;
@@ -39,5 +39,5 @@ void equip_menu_draw_equipment_slot_marker(s32 unused, s32 slot, s32 override) {
     }
     secondary->position.x = secondary_x;
     g_equip_menu_secondary_slot_marker.position.y = width + 10;
-    equip_gfx_enqueue_oriented_textured_quad(secondary, 0, TEXTURE_UV_FLIP_NONE, 0, EQUIP_SLOT_MARKER_SECOND_OTAG);
+    menu_gfx_enqueue_oriented_textured_quad(secondary, 0, TEXTURE_UV_FLIP_NONE, 0, EQUIP_SLOT_MARKER_SECOND_OTAG);
 }

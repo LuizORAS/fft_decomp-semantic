@@ -413,29 +413,21 @@ s16 equip_menu_update_wrapped_vertical_selection(u16 entry_count, u8 selection_i
 extern u32 g_equip_help_text_table[];
 
 /* graphics */
-/* The active pointer always refers to one of the 236-byte buffers; EQUIP
- * uses its primitive pools and leaves the environment suffix untouched. */
-
 /* The scratch marker rect this routine drives; uncatalogued, but the same
  * descriptor equip_menu_draw_equipment_slot_marker feeds to the oriented quad
  * enqueue. */
 extern oriented_quad_t g_equip_gfx_blank_cell_rect;
-extern menu_gfx_context_t* g_equip_gfx_context;
 extern menu_gfx_context_t* g_equip_gfx_context_base;
 extern menu_gfx_context_t g_equip_gfx_contexts[];
 extern u32* g_equip_gfx_current_ot;
 extern RECT g_equip_gfx_draw_area;
 extern DR_AREA g_equip_gfx_draw_area_buffer[];
 extern u16 g_equip_gfx_draw_area_capacity;
-extern u16 g_equip_gfx_draw_area_count;
 extern DR_MODE g_equip_gfx_draw_mode_buffer[];
 extern u16 g_equip_gfx_draw_mode_capacity;
-extern u16 g_equip_gfx_draw_mode_count;
 extern DR_MOVE g_equip_gfx_draw_move_buffer[];
 extern u16 g_equip_gfx_draw_move_capacity;
-extern u16 g_equip_gfx_draw_move_count;
 extern u16 g_equip_gfx_draw_offset_y;
-extern u16 g_equip_gfx_drawenv_y;
 extern LINE_F2 g_equip_gfx_line_f2_buffer[];
 extern u16 g_equip_gfx_line_f2_capacity;
 extern u16 g_equip_gfx_line_f2_count;
@@ -461,7 +453,6 @@ extern u16 g_equip_gfx_poly_ft3_capacity;
 extern u16 g_equip_gfx_poly_ft3_count;
 extern POLY_FT4 g_equip_gfx_poly_ft4_buffer[];
 extern u16 g_equip_gfx_poly_ft4_capacity;
-extern u16 g_equip_gfx_poly_ft4_count;
 extern u16 g_equip_gfx_poly_g3_capacity;
 extern u16 g_equip_gfx_poly_g3_count;
 extern u16 g_equip_gfx_poly_g4_capacity;
@@ -495,20 +486,11 @@ extern s8 g_equip_gfx_transition_frame;
 extern s16 g_equip_gfx_window_zoom_percent[];
 extern s8 g_equip_gfx_zoom_draw_area_active;
 
-void equip_gfx_enqueue_draw_area(RECT* rect, s32 idx);
-void equip_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx);
-void equip_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);
 void equip_gfx_enqueue_line_f2(const RECT* rect, const rgb24_t* color, u8 semitrans, s32 otag_index);
-void equip_gfx_enqueue_oriented_textured_quad(
-    const oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
-void equip_gfx_enqueue_textured_quad(
-    const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
 void equip_gfx_enqueue_textured_quad_corners(
     const textured_quad_source_t* descriptor, const rgb24_t* color, s32 semitrans, s32 otag_index);
 void equip_gfx_enqueue_textured_quad_current_ot(const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans,
     u16 texture_page, u16 clut, s32 unused_priority);
-void equip_gfx_enqueue_textured_quad_list(const menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
-    u16 texture_page, u16 clut, s32 otag_index, s32 count);
 void equip_gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, u8 semitrans, s32 otag_index);
 rgb24_t* equip_gfx_get_draw_color(void);
 s32 equip_gfx_get_transition_frame(void);

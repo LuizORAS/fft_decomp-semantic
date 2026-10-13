@@ -21,7 +21,7 @@ menu_instruction_t* bunit_cmd_draw_right_aligned_number_handler(menu_instruction
     g_bunit_gfx_blank_cell_rect.position.y = y + 4;
     for (i = blanks - 1; i != -1; i--) {
         g_bunit_gfx_blank_cell_rect.position.x = x;
-        bunit_gfx_enqueue_oriented_textured_quad(
+        menu_gfx_enqueue_oriented_textured_quad(
             &g_bunit_gfx_blank_cell_rect, 0, TEXTURE_UV_FLIP_NONE, 0, g_bunit_gfx_otag_index);
         x += 8;
     }
@@ -30,7 +30,7 @@ menu_instruction_t* bunit_cmd_draw_right_aligned_number_handler(menu_instruction
     glyph_rect.w = 8;
     glyph_rect.h = 0x10;
     for (j = 0; j < count; j++) {
-        bunit_gfx_enqueue_textured_quad(&glyph_rect, (digits[j] - '0') * 8 + 0xA8, 0x30, 0, 0,
+        menu_gfx_enqueue_textured_quad(&glyph_rect, (digits[j] - '0') * 8 + 0xA8, 0x30, 0, 0,
             g_bunit_menu_icon_texture_page, 0x3ED3, g_bunit_gfx_otag_index);
         glyph_rect.x += 8;
     }

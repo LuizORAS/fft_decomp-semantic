@@ -9,7 +9,7 @@ void equip_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused) {
     g_equip_gfx_poly_f3_count = 0;
     g_equip_gfx_poly_ft3_count = 0;
     g_equip_gfx_poly_f4_count = 0;
-    g_equip_gfx_poly_ft4_count = 0;
+    g_menu_gfx_poly_ft4_count = 0;
     g_equip_gfx_poly_g3_count = 0;
     g_equip_gfx_poly_gt3_count = 0;
     g_equip_gfx_poly_g4_count = 0;
@@ -27,15 +27,15 @@ void equip_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused) {
     g_equip_gfx_sprite_count = 0;
     g_equip_gfx_sprite_8_count = 0;
     g_equip_gfx_sprite_16_count = 0;
-    g_equip_gfx_draw_move_count = 0;
-    g_equip_gfx_draw_area_count = 0;
-    g_equip_gfx_draw_mode_count = 0;
+    g_menu_gfx_draw_move_count = 0;
+    g_menu_gfx_draw_area_count = 0;
+    g_menu_gfx_draw_mode_count = 0;
     GetDrawEnv(&environment);
     buffer = g_equip_gfx_context_base;
-    g_equip_gfx_drawenv_y = environment.clip.y;
-    if (g_equip_gfx_context == buffer) {
+    g_menu_gfx_drawenv_y = environment.clip.y;
+    if (g_menu_gfx_context == buffer) {
         buffer++;
     }
-    g_equip_gfx_context = buffer;
+    g_menu_gfx_context = buffer;
     ClearOTag(&buffer->otag[first_otag], g_equip_gfx_otag_length - first_otag);
 }

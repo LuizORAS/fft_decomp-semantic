@@ -95,7 +95,7 @@ menu_instruction_t* bunit_menu_script_draw_formatted_number(menu_instruction_t* 
             rect.y = y + 5;
             rect.w = 6;
             rect.h = 3;
-            bunit_gfx_enqueue_textured_quad(&rect, 0xBA, 0x13, color, g_bunit_gfx_semitrans_enabled,
+            menu_gfx_enqueue_textured_quad(&rect, 0xBA, 0x13, color, g_bunit_gfx_semitrans_enabled,
                 g_bunit_text_digit_texture_page, clut, g_bunit_gfx_otag_index);
             value = next_remaining;
         }
@@ -113,7 +113,7 @@ menu_instruction_t* bunit_menu_script_draw_formatted_number(menu_instruction_t* 
                 minus_rect.y = y + 2;
                 minus_rect.w = 6;
                 minus_rect.h = 0xB;
-                bunit_gfx_enqueue_textured_quad(&minus_rect, 0xBA, 0x10, color, g_bunit_gfx_semitrans_enabled,
+                menu_gfx_enqueue_textured_quad(&minus_rect, 0xBA, 0x10, color, g_bunit_gfx_semitrans_enabled,
                     g_bunit_text_digit_texture_page, clut, g_bunit_gfx_otag_index);
                 negative = 0;
             } else {
@@ -135,7 +135,7 @@ menu_instruction_t* bunit_menu_script_draw_formatted_number(menu_instruction_t* 
                     text_index++;
                 }
                 if (command->number.style < 2) {
-                    bunit_gfx_enqueue_textured_quad(&rect, glyph.x + glyph.w * digit, glyph.y, color,
+                    menu_gfx_enqueue_textured_quad(&rect, glyph.x + glyph.w * digit, glyph.y, color,
                         g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut, g_bunit_gfx_otag_index);
                 }
             }

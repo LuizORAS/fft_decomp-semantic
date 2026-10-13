@@ -424,13 +424,6 @@ extern u8 g_bunit_cursor_trail_brightness[];
 extern point16_t g_bunit_cursor_trail_points[8];
 
 /* graphics */
-/* One of BUNIT.OUT's two 0xec-byte frame buffers: 25 primitive-pool pointers
- * in libgpu primitive order, then the draw and display environments.
- * bunit_gfx_init_double_packet_buffers binds the pools of both buffers and
- * bunit_gfx_init_packet_pools initializes them; g_bunit_gfx_context points at the
- * active buffer. Pools whose packet type has no clean-room libgpu declaration
- * are typed by their packet size. */
-
 extern textured_quad_source_t g_bunit_bouncing_cursor_quad;
 extern u16 g_bunit_gfx_background_clut;
 extern u16 g_bunit_gfx_background_tile_layout[2][8]; /* per row parity: four (x, u) column pairs */
@@ -439,19 +432,14 @@ extern u16 g_bunit_gfx_background_tile_layout[2][8]; /* per row parity: four (x,
  * comes from its static initializer. */
 extern oriented_quad_t g_bunit_gfx_blank_cell_rect;
 
-extern menu_gfx_context_t* g_bunit_gfx_context;
-/* Base of the two frame buffers; g_bunit_gfx_context alternates between them. */
+/* Base of the two frame buffers; g_menu_gfx_context alternates between them. */
 extern menu_gfx_context_t* g_bunit_gfx_context_base;
 extern u8 g_bunit_gfx_decreasing_fade_active;
 extern RECT g_bunit_gfx_draw_area;
 extern u16 g_bunit_gfx_draw_area_capacity;
-extern u16 g_bunit_gfx_draw_area_count;
 extern u16 g_bunit_gfx_draw_mode_capacity;
-extern u16 g_bunit_gfx_draw_mode_count;
 extern u16 g_bunit_gfx_draw_move_capacity;
-extern u16 g_bunit_gfx_draw_move_count;
 extern u16 g_bunit_gfx_draw_offset_y;
-extern u16 g_bunit_gfx_drawenv_y;
 extern rgb24_t g_bunit_gfx_fade_color;
 extern s16 g_bunit_gfx_fade_intensity;
 extern RECT g_bunit_gfx_fade_rect[];
@@ -478,7 +466,6 @@ extern s16 g_bunit_gfx_poly_f4_count;
 extern u16 g_bunit_gfx_poly_ft3_capacity;
 extern s16 g_bunit_gfx_poly_ft3_count;
 extern u16 g_bunit_gfx_poly_ft4_capacity;
-extern u16 g_bunit_gfx_poly_ft4_count;
 extern u16 g_bunit_gfx_poly_g3_capacity;
 extern s16 g_bunit_gfx_poly_g3_count;
 extern u16 g_bunit_gfx_poly_g4_capacity;
@@ -510,19 +497,10 @@ extern u8 g_bunit_sprite_cell_sizes[][2];
 s32 bunit_gfx_calculate_distance_falloff(s32 x, s32 y, s32 base_value, s32 minimum);
 void bunit_gfx_draw_falloff_shaded_rows(s32 y);
 void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y);
-void bunit_gfx_enqueue_draw_area(RECT* rect, s32 idx);
-void bunit_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx);
-void bunit_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);
 void bunit_gfx_enqueue_gouraud_quad(const upoint16_t* pts, rgb24_t* color, s32 semi, s32 idx);
 void bunit_gfx_enqueue_gouraud_textured_quad(
     const textured_rect_source_t* rect, const rgb24_t* color, s32 semitrans, s32 otag_index);
-void bunit_gfx_enqueue_oriented_textured_quad(
-    const oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
-void bunit_gfx_enqueue_textured_quad(
-    const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
 void bunit_gfx_enqueue_textured_quad_corners(textured_quad_source_t* src, rgb24_t* color, s32 semi, s32 idx);
-void bunit_gfx_enqueue_textured_quad_list(const menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
-    u16 texture_page, u16 clut, s32 otag_index, s32 count);
 void bunit_gfx_enqueue_tile(RECT* rect, rgb24_t* color, u8 semi, s32 idx);
 rgb24_t* bunit_gfx_get_draw_color(void);
 s32 bunit_gfx_get_fade_state(void);

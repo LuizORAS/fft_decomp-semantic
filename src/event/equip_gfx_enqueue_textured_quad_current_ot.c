@@ -9,7 +9,7 @@ void equip_gfx_enqueue_textured_quad_current_ot(const RECT* rect, s32 u, s32 v, 
     u16 texture_page, u16 clut, s32 unused_priority) {
     POLY_FT4* poly;
 
-    poly = &g_equip_gfx_context->textured_quads[g_equip_gfx_poly_ft4_count++];
+    poly = &g_menu_gfx_context->textured_quads[g_menu_gfx_poly_ft4_count++];
 
     if (color != 0) {
         SetShadeTex(poly, 0);

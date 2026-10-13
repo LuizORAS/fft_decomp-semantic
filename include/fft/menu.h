@@ -885,6 +885,29 @@ typedef struct menu_quad_page {
 } menu_quad_page_t;
 typedef char menu_quad_page_size_must_be_324[sizeof(menu_quad_page_t) == 324 ? 1 : -1];
 
+/* primitive queues */
+extern menu_gfx_context_t* g_menu_gfx_context;
+extern u16 g_menu_gfx_poly_ft4_count;
+extern u16 g_menu_gfx_draw_mode_count;
+extern u16 g_menu_gfx_draw_area_count;
+extern u16 g_menu_gfx_draw_move_count;
+extern u16 g_menu_gfx_drawenv_y;
+
+void menu_gfx_enqueue_draw_area(RECT* rect, s32 idx);
+
+void menu_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx);
+
+void menu_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);
+
+void menu_gfx_enqueue_oriented_textured_quad(
+    const oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
+
+void menu_gfx_enqueue_textured_quad(
+    const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans, u16 texture_page, u16 clut, s32 otag_index);
+
+void menu_gfx_enqueue_textured_quad_list(const menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
+    u16 texture_page, u16 clut, s32 otag_index, s32 count);
+
 /* turn order */
 enum {
     BATTLE_AT_LIST_CAPACITY = 40,

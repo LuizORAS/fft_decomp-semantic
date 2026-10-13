@@ -39,14 +39,14 @@ menu_instruction_t* bunit_cmd_draw_background_tiles_handler(menu_instruction_t* 
         rect.y = origin_y + (row * 16);
         rect.w = partial_width;
         rect.h = 16;
-        bunit_gfx_enqueue_textured_quad(
+        menu_gfx_enqueue_textured_quad(
             &rect, 8, 8, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut_id, otag_index);
         for (column = 0; column < full_columns; column++) {
             rect.x = origin_x + partial_width + (column * 16);
             rect.y = origin_y + (row * 16);
             rect.w = 16;
             rect.h = 16;
-            bunit_gfx_enqueue_textured_quad(
+            menu_gfx_enqueue_textured_quad(
                 &rect, 8, 8, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut_id, otag_index);
         }
     }
@@ -56,14 +56,14 @@ menu_instruction_t* bunit_cmd_draw_background_tiles_handler(menu_instruction_t* 
         rect.y = origin_y + (row * 16);
         rect.w = partial_width;
         rect.h = partial_height;
-        bunit_gfx_enqueue_textured_quad(
+        menu_gfx_enqueue_textured_quad(
             &rect, 8, 8, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut_id, otag_index);
         for (column = 0; column < full_columns; column++) {
             rect.x = origin_x + partial_width + (column * 16);
             rect.y = origin_y + (row * 16);
             rect.w = 16;
             rect.h = partial_height;
-            bunit_gfx_enqueue_textured_quad(
+            menu_gfx_enqueue_textured_quad(
                 &rect, 8, 8, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut_id, otag_index);
         }
     }

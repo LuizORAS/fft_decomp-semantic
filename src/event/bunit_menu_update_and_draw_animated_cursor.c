@@ -79,8 +79,8 @@ void bunit_menu_update_and_draw_animated_cursor(point16_t* pos, u16* state, s32 
     rect.y = pos->y;
     rect.w = 0x10;
     rect.h = 0x10;
-    bunit_gfx_enqueue_textured_quad(&rect, 0xA8, 0, 0, 0, g_bunit_menu_icon_texture_page, cursor_clut, 0x3C);
+    menu_gfx_enqueue_textured_quad(&rect, 0xA8, 0, 0, 0, g_bunit_menu_icon_texture_page, cursor_clut, 0x3C);
     rect.x += 2;
     rect.y += 2;
-    bunit_gfx_enqueue_textured_quad(&rect, 0xB8, 0, 0, 1, 0x5F, shadow_clut, 0x3B);
+    menu_gfx_enqueue_textured_quad(&rect, 0xB8, 0, 0, 1, 0x5F, shadow_clut, 0x3B);
 }

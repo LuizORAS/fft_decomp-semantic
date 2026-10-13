@@ -7,12 +7,12 @@
 void equip_gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, u8 semitrans, s32 otag_index) {
     TILE* tile;
 
-    tile = &g_equip_gfx_context->tiles[g_equip_gfx_tile_count++];
+    tile = &g_menu_gfx_context->tiles[g_equip_gfx_tile_count++];
     setRGB0(tile, color->r, color->g, color->b);
     SetSemiTrans(tile, semitrans & 0xff);
     tile->x0 = rect->x + 0x80;
     tile->y0 = rect->y;
     tile->w = rect->w;
     tile->h = rect->h;
-    addPrim(&g_equip_gfx_context->otag[otag_index], tile);
+    addPrim(&g_menu_gfx_context->otag[otag_index], tile);
 }

@@ -1,17 +1,16 @@
-#include "fft/event_bunit.h"
-#include "psx/types.h"
+#include "fft/menu.h"
 
 /* Queue a textured quad for `descriptor` at ordering-table entry `otag_index`,
  * its texture cell mirrored by `orientation` (TEXTURE_UV_FLIP_*). A non-null
  * `color` modulates the texture with that RGB triple; the screen x is offset
  * by 0x80. */
-void bunit_gfx_enqueue_oriented_textured_quad(
+void menu_gfx_enqueue_oriented_textured_quad(
     const oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index) {
     s32 quad_semitrans = semitrans;
     s32 quad_orientation = orientation;
     POLY_FT4* poly;
 
-    poly = &g_bunit_gfx_context->textured_quads[g_bunit_gfx_poly_ft4_count++];
+    poly = &g_menu_gfx_context->textured_quads[g_menu_gfx_poly_ft4_count++];
 
     if (color != 0) {
         SetShadeTex(poly, 0);
@@ -65,5 +64,5 @@ void bunit_gfx_enqueue_oriented_textured_quad(
 
     poly->clut = descriptor->source.clut;
     poly->tpage = descriptor->source.tpage;
-    addPrim(&g_bunit_gfx_context->otag[otag_index], poly);
+    addPrim(&g_menu_gfx_context->otag[otag_index], poly);
 }

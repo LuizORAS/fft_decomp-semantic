@@ -72,10 +72,10 @@ s32 equip_item_run_rearrange_mode(void) {
         rect.h = 0x10;
         rect.x = 0;
         rect.y = row * 16 + 0x5E - g_equip_menu_list_scroll_offset;
-        equip_gfx_enqueue_textured_quad(&rect, 0xA8, 0, 0, 0, 0x5F, tile, 0x1F);
+        menu_gfx_enqueue_textured_quad(&rect, 0xA8, 0, 0, 0, 0x5F, tile, 0x1F);
         rect.x += 2;
         rect.y += 2;
-        equip_gfx_enqueue_textured_quad(&rect, 0xB8, 0, 0, 1, 0x5F, tile2, 0x1F);
+        menu_gfx_enqueue_textured_quad(&rect, 0xB8, 0, 0, 1, 0x5F, tile2, 0x1F);
     }
     if (g_equip_menu_selected_list_index != g_equip_rearrange_preview_cursor) {
         if (g_equip_menu_list_entry_count != 0) {

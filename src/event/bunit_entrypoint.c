@@ -91,10 +91,10 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
                 bunit_menu_is_active_or_transitioning());
         }
         bunit_menu_update_unit_browser();
-        g_battle_gfx_current_otag_entry = g_bunit_gfx_context->otag + 0x3d;
+        g_battle_gfx_current_otag_entry = g_menu_gfx_context->otag + 0x3d;
         battle_menu_draw_active_window_frames();
         bunit_input_update_event_state(
-            g_bunit_gfx_context->otag + 9, bunit_input_read_pad1_unless_locked(), g_bunit_gfx_drawenv_y);
+            g_menu_gfx_context->otag + 9, bunit_input_read_pad1_unless_locked(), g_menu_gfx_drawenv_y);
         sound_request = g_sound_pending_sfx_id;
         if (sound_request == MAIN_SFX_CURSOR_MOVE || sound_request == MAIN_SFX_CANCEL) {
             g_bunit_sound_queued_effect_id = g_sound_pending_sfx_id;

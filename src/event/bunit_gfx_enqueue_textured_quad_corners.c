@@ -11,7 +11,7 @@
 void bunit_gfx_enqueue_textured_quad_corners(textured_quad_source_t* src, rgb24_t* color, s32 semi, s32 idx) {
     POLY_FT4* poly;
 
-    poly = &g_bunit_gfx_context->textured_quads[g_bunit_gfx_poly_ft4_count++];
+    poly = &g_menu_gfx_context->textured_quads[g_menu_gfx_poly_ft4_count++];
     if (color != 0) {
         SetShadeTex(poly, 0);
         setRGB0(poly, color->r, color->g, color->b);
@@ -23,5 +23,5 @@ void bunit_gfx_enqueue_textured_quad_corners(textured_quad_source_t* src, rgb24_
     setUV4(poly, src->u0, src->v0, src->u1, src->v1, src->u2, src->v2, src->u3, src->v3);
     poly->clut = src->clut;
     poly->tpage = src->tpage;
-    addPrim(&g_bunit_gfx_context->otag[idx], poly);
+    addPrim(&g_menu_gfx_context->otag[idx], poly);
 }
