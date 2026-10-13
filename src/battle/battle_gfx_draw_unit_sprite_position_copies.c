@@ -22,7 +22,7 @@ void battle_gfx_draw_unit_sprite_position_copies(battle_unit_misc_data_t* unit) 
 
     for (i = 0; i < 6; i++) {
         camera_update_matrices(
-            &g_camera_matrix, &g_camera_render_state, &g_battle_offset_screen_coords, &g_camera_zoom);
+            &g_camera_matrix, &g_camera_render_state, &g_camera_current_screen_offset, &g_camera_zoom);
         SetRotMatrix(&g_camera_matrix);
         SetTransMatrix(&g_camera_matrix);
         RotTrans(&unit->position_copies[i], &transformed, &flag);

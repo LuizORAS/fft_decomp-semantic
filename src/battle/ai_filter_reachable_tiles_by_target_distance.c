@@ -32,7 +32,7 @@ s32 ai_filter_reachable_tiles_by_target_distance(s32 distance_limit) {
         }
     }
     if (found == 0) {
-        ai_transfer_halfword_values(
+        ai_copy_u16_values(
             ai->reachable_tiles[ai->movement_scenario], ai->reachable_tiles[0], sizeof(ai->reachable_tiles[0]));
         return 0;
     }

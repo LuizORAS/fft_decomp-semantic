@@ -13,7 +13,7 @@ void battle_state_handle_target_display_start_state(void) {
     if ((id >= 7) && ((id < 9) || (id == 0xFF))) {
         g_action_post_action = 1;
     }
-    if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) == 0) {
+    if ((g_camera_step_vector.vx | g_camera_step_vector.vy | g_camera_step_vector.vz) == 0) {
         if (g_camera_rotation_action == CAMERA_ROTATION_NONE) {
             if (g_action_post_action != 0) {
                 battle_state_enter_target_display();

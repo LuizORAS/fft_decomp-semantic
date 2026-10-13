@@ -13,7 +13,7 @@ void battle_state_handle_open_action_menus_state(void) {
     if (selected_command >= 7 && (selected_command < 9 || selected_command == 0xff)) {
         g_action_post_action = 1;
     }
-    if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) == 0
+    if ((g_camera_step_vector.vx | g_camera_step_vector.vy | g_camera_step_vector.vz) == 0
         && g_camera_rotation_action == CAMERA_ROTATION_NONE && g_action_post_action != 0) {
         battle_menu_dispatch_idle_action_menu();
     }

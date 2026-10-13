@@ -8,7 +8,7 @@
  * (0, 0), no acting or casting unit, no rotation, tilt or zoom in progress and
  * directional panning off. */
 void camera_init_defaults(void) {
-    main_util_set_vector(&g_battle_offset_screen_coords, 0x100, 0xA0, 0x280);
+    main_util_set_vector(&g_camera_current_screen_offset, 0x100, 0xA0, 0x280);
     main_util_set_vector(&g_camera_zoom, ONE, ONE, ONE);
     main_util_set_svector(&g_camera_render_state, 0x12E, 0xE00, 0);
     main_util_set_vector(&g_camera_current_real_coords, 0, 0, 0);

@@ -27,7 +27,7 @@ void battle_menu_check_action_restrictions(void) {
         || menu == BATTLE_MENU_ID_RIDER_TURN_ACTED || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED) {
         result = battle_unit_get_action_restriction(unit);
         if (result == BATTLE_UNIT_ACTION_RESTRICTION_NONE) {
-            sound_set_effect_to_invalid();
+            sound_queue_sfx_invalid();
             battle_thread_exit_current();
         }
         if (result == BATTLE_UNIT_ACTION_RESTRICTION_CANNOT_ACT) {
@@ -52,9 +52,9 @@ void battle_menu_check_action_restrictions(void) {
     if (message != 0) {
         mode = g_main_game_options.value & GAME_OPTIONS_NAVIGATION_MESSAGES_MASK;
         if (mode == GAME_OPTIONS_NAVIGATION_MESSAGES_OFF_BITS && (message & 0xff00) == mode) {
-            sound_set_effect_to_confirm_checked();
+            sound_queue_sfx_confirm_unless_restoring();
         } else if (g_battle_menu_restore_pending == 0) {
-            sound_set_effect_to_invalid();
+            sound_queue_sfx_invalid();
             g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
             battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
             battle_thread_set_parameters(g_battle_current_thread_id - 1,
@@ -65,6 +65,6 @@ void battle_menu_check_action_restrictions(void) {
             battle_thread_exit_current();
         }
     } else {
-        sound_set_effect_to_confirm_checked();
+        sound_queue_sfx_confirm_unless_restoring();
     }
 }

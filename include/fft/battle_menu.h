@@ -7,11 +7,13 @@
 #include "fft/menu.h"
 
 /* menu state */
-extern s32 g_battle_active_menu;     /* active menu */
+extern s32 g_battle_active_menu; /* active menu */
+extern u16 g_battle_menu_at_list_selection_finished;
 extern s32 g_battle_menu_current_id; /* battle_menu_id_e */
 extern s32 g_battle_menu_help_open;
 extern s32 g_battle_menu_help_opening;
 extern battle_menu_id_record_t g_battle_menu_id_records[31];
+extern u16 g_battle_menu_modal_open;
 extern s32 g_battle_menu_packet_buffer_index;
 extern u8 g_battle_menu_restore_depth;
 extern u8 g_battle_menu_restore_pending;
@@ -20,19 +22,17 @@ extern s32 g_battle_menu_slot_states[3];
 extern u16 g_battle_menu_suspend_state;
 extern u16 g_battle_menu_transition_state;
 extern u16 g_battle_saved_animation_speed; /* animation speed saved while an event thread forces speed 2 */
-extern u16 g_option_menu_open;
-extern u16 g_option_menu_transition_finished;
 
-void battle_menu_clear_option_menu_open(void);
+void battle_menu_clear_modal_open(void);
 void battle_menu_clear_status_menu_state(void);
+void battle_menu_finish_at_list_selection(void);
 void battle_menu_init_stub(void);
 void battle_menu_init_subsystem_pointers(void);
 void battle_menu_init_subsystems(void);
 void battle_menu_reset_subsystems(void);
 void battle_menu_reset_unit_record(s32 record_index);
 void battle_menu_reset_unit_records(void);
-void battle_menu_set_option_menu_open(void);
-void battle_menu_set_option_transition_finished(void);
+void battle_menu_set_modal_open(void);
 s32 battle_menu_update_menus_and_event_speed(u32* otag, s32 controller_input);
 
 /* input and selection */
@@ -245,6 +245,8 @@ extern RECT g_battle_numeric_display_text_rect_b;
 extern RECT g_battle_numeric_display_text_rect_c;
 extern RECT g_battle_numeric_display_texture_window;
 
+void battle_menu_display_number_entry(s32 value, u8 digit_count, u8* image, glyph_blit_t* origin);
+void battle_menu_draw_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* pos);
 void battle_menu_draw_numeric_display_entries(
     u8* buffer, menu_number_entry_t* entries, glyph_blit_t* position, s32 count);
 void battle_menu_enable_height_display(void);
@@ -411,6 +413,7 @@ s32 battle_menu_init_attack_resources_and_threads(void);
 s32 battle_menu_is_still_building(void);
 void battle_menu_run_equip_thread(void);
 void battle_menu_run_helpmenu_thread(void);
+void battle_menu_run_invalid_choice_thread(void);
 void battle_menu_run_jobstts_thread(void);
 void battle_menu_selected_tile_info_display_thread(void);
 s32 battle_menu_should_close_thread(u32* input);

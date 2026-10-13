@@ -62,7 +62,7 @@ void battle_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_u
                 (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
         }
         if (mode == 2) {
-            sound_set_effect_to_invalid();
+            sound_queue_sfx_invalid();
             if (g_main_game_options.fields.navigation_messages == GAME_OPTION_ON) {
                 battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
             }

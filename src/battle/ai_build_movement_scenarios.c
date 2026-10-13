@@ -50,7 +50,7 @@ s32 ai_build_movement_scenarios(void) {
                 if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE
                     && (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)]
                         & STATUS_BYTE_MASK(STATUS_ID_CRYSTAL))) {
-                    ai_transfer_unit_coordinates(g_ai_movement_unit_index, &ai->considered_unit_coords);
+                    ai_copy_unit_coordinates(g_ai_movement_unit_index, &ai->considered_unit_coords);
                     ai->tile_target_distance[ai->considered_unit_coords.fields.elevation]
                                             [ai->considered_unit_coords.fields.y][ai->considered_unit_coords.fields.x]
                         = 1;

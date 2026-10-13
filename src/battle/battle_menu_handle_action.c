@@ -80,6 +80,6 @@ void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option) {
     g_script_event_input = 0;
     *menu_entry_result(entry) = selected_option;
     if (g_sound_suppressed == 0 && silent == 0) {
-        sound_set_effect_to_confirm();
+        sound_queue_sfx_confirm();
     }
 }

@@ -25,7 +25,7 @@ void camera_update_cursor_tile_vector(void) {
         }
         if (g_battle_cursor_screen_x >= 0xB1 && g_battle_cursor_screen_x < 0x150
             && g_battle_cursor_screen_y - height >= 0x51 && g_battle_cursor_screen_y < 0xA0) {
-            main_util_set_vector(&g_battle_current_vector, 0, 0, 0);
+            main_util_set_vector(&g_camera_step_vector, 0, 0, 0);
             return;
         }
         if (g_battle_cursor_screen_x >= 0xA1 && g_battle_cursor_screen_x < 0x160

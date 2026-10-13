@@ -38,7 +38,7 @@ s32 ai_select_action_random(void) {
         ai->current_action.command.calculator_multiplier = value + ABILITY_ID_MATH_FIRST;
     }
     if (ai->considered_ability.ai_flags.word & AI_ABILITY_TARGET_MAP_TILES) {
-        ai_transfer_halfword_values(ai->targetable_tiles, ai->reachable_tiles[0], sizeof(ai->targetable_tiles));
+        ai_copy_u16_values(ai->targetable_tiles, ai->reachable_tiles[0], sizeof(ai->targetable_tiles));
         ai->movable_tile_count = ai_count_flagged_tiles_within_map_bounds(ai->targetable_tiles);
         if (!ai->movable_tile_count)
             return 0;
@@ -93,6 +93,6 @@ s32 ai_select_action_random(void) {
     }
     return 0;
 selected: /* shared success tail */
-    ai_transfer_halfword_values(&ai->selected_action, &ai->current_action, sizeof(ai_action_data_t));
+    ai_copy_u16_values(&ai->selected_action, &ai->current_action, sizeof(ai_action_data_t));
     return 1;
 }

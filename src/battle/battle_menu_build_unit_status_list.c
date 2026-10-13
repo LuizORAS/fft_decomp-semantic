@@ -54,7 +54,7 @@ void battle_menu_build_unit_status_list(void) {
             mask >>= 1;
         }
     }
-    sound_set_effect_to_confirm();
+    sound_queue_sfx_confirm();
     if (count == 0) {
         battle_menu_run_jobstts_thread();
     }

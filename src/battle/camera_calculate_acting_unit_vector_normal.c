@@ -11,6 +11,6 @@ void camera_calculate_acting_unit_vector_normal(void) {
     setVector(&delta, unit->screen.vx - g_camera_current_real_coords.vx / ONE,
         unit->screen.vy - g_camera_current_real_coords.vy / ONE,
         unit->screen.vz - g_camera_current_real_coords.vz / ONE);
-    VectorNormal(&delta, &g_battle_current_vector);
-    g_battle_current_vector.vy = g_battle_current_vector.vy << 2;
+    VectorNormal(&delta, &g_camera_step_vector);
+    g_camera_step_vector.vy = g_camera_step_vector.vy << 2;
 }

@@ -19,7 +19,7 @@ void battle_menu_step_wrapping_cursor_on_scroll_buttons(menu_entry_t* ctx, s32* 
                 selection = selection - 1;
             }
             *sel = selection;
-            sound_set_effect_to_cursor_move();
+            sound_queue_sfx_cursor_move();
         }
         if (g_script_event_input & PSX_PAD_DOWN) {
             max = ctx->max_row_index;
@@ -29,7 +29,7 @@ void battle_menu_step_wrapping_cursor_on_scroll_buttons(menu_entry_t* ctx, s32* 
             } else {
                 *sel = cur + 1;
             }
-            sound_set_effect_to_cursor_move();
+            sound_queue_sfx_cursor_move();
         }
     }
 }

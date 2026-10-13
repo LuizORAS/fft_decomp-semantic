@@ -36,7 +36,7 @@ void ai_init_target_consideration(void) {
             if (ai->autobattle_setting)
                 return;
             if (flags & AI_DECISION_FOCUS_TARGET) {
-                ai_transfer_unit_coordinates(decision->main_target_id, &decision->target);
+                ai_copy_unit_coordinates(decision->main_target_id, &decision->target);
                 target = ai_check_target_type(decision->main_target_id);
             } else {
                 target = ai->single_enemy_remaining;

@@ -31,8 +31,8 @@ void battle_state_handle_wait_direction_state(void) {
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
         camera_handle_rotation_input();
-        camera_call_zoom_map();
-        camera_call_toggle_tilt();
+        camera_update_zoom_input();
+        camera_update_tilt_input();
         if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
             if (unit->battle_data != 0) {
                 action_end_turn(unit->battle_data->misc_unit_id);

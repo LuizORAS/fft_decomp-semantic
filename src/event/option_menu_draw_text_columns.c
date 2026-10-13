@@ -33,9 +33,9 @@ void option_menu_draw_text_columns(menu_entry_t* entry, s32* row_offset, u8* buf
             if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
                 battle_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_menu_text_state.pen);
             } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
-                battle_display_menu_number_entry(layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
+                battle_menu_display_number_entry(layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
             } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
-                battle_draw_menu_number_glyphs(layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
+                battle_menu_draw_number_glyphs(layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
             }
             g_battle_menu_text_palette_offset = 0;
             g_menu_text_state.pen.color = 0;

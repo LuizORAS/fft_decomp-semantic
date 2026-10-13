@@ -49,29 +49,29 @@ extern s32 g_battle_cursor_input_mode_saved;
 /* Held directions pan the map instead of following the cursor tile. */
 extern s32 g_camera_map_pan_enabled;
 
-void camera_call_toggle_tilt(void);
-void camera_call_zoom_map(void);
 void camera_disable_map_pan(void);
 void camera_enable_map_pan(void);
 s32 camera_get_input_direction(s32 source);
 void camera_handle_rotation_input(void);
 void camera_update_map_pan(void);
+void camera_update_tilt_input(void);
+void camera_update_zoom_input(void);
 
 /* position */
-extern VECTOR g_battle_current_vector;
 extern VECTOR g_camera_current_real_coords;
 extern SVECTOR g_camera_integer_coords;
 extern u16 g_camera_position_locked;
 extern u16 g_camera_real_coord_countdown;
 extern VECTOR g_camera_real_coord_delta;
 extern VECTOR g_camera_saved_real_coords;
+extern VECTOR g_camera_step_vector;
 
 void camera_calculate_acting_unit_vector_normal(void);
 s32 camera_calculate_cursor_tile_vector_normal(void);
-void camera_copy_current_real_coords(void);
 VECTOR* camera_get_current_real_coords(void);
 s32 camera_is_active(void);
 void camera_restore_current_real_coords(void);
+void camera_save_current_real_coords(void);
 s32 camera_scale_cursor_tile_vector(void);
 void camera_set_current_real_coords(const VECTOR* coords);
 void camera_shift_acting_unit_vector(void);
@@ -83,12 +83,18 @@ void camera_update_real_coord_animation(void);
 void camera_update_vector_from_game_state(void);
 
 /* screen offset */
-extern VECTOR g_battle_offset_screen_coords;
-extern u16 g_camera_offset_screen_coord_countdown;
-extern VECTOR g_camera_offset_screen_coords;
-extern VECTOR g_camera_offset_screen_coords_fixed;
+extern VECTOR g_camera_current_screen_offset;
+extern VECTOR g_camera_saved_screen_offset;
+extern u16 g_camera_screen_offset_countdown;
+extern VECTOR g_camera_screen_offset_fixed;
 
-void camera_update_offset_screen_coord_animation(void);
+VECTOR* camera_get_screen_offset(void);
+void camera_restore_screen_offset(void);
+void camera_save_screen_offset(void);
+void camera_set_screen_offset(VECTOR* coords);
+void camera_start_screen_offset_move_relative(const VECTOR* values, s32 frame_count);
+void camera_start_screen_offset_move_uniform(const s32* destination_value, s32 frame_count);
+void camera_update_screen_offset_animation(void);
 
 /* rotation */
 /* g_camera_rotation_action. */
@@ -98,7 +104,6 @@ typedef enum camera_rotation_action {
     CAMERA_ROTATION_RIGHT = 2, /* the yaw rises to its destination */
 } camera_rotation_action_e;
 
-extern s32 g_battle_destination_camera_yaw;
 extern s32 g_battle_previous_camera_yaw;
 extern s16 g_camera_diagonal_yaws[4];
 /* Maps a camera quadrant index to its map-tile camera-block direction. */
@@ -110,12 +115,10 @@ extern SVECTOR g_camera_rotation_delta;
 extern s32 g_camera_rotation_increment;
 extern s32 g_camera_wrap_yaw_pending;
 extern s32 g_camera_yaw_band;
+extern s32 g_camera_yaw_target;
 
-void camera_call_rotate_left(s32 target_angle);
-void camera_call_rotate_right(s32 target_angle);
 void camera_choose_unblocked_rotation_for_tile(const SVECTOR* tile_coords, SVECTOR* rotation_out);
 void camera_convert_screen_coords_by_rotation(const SVECTOR* input, SVECTOR* output, s32 offset);
-void camera_copy_rotation(void);
 SVECTOR* camera_get_rotation(void);
 void camera_normalize_yaw_angle(void);
 s16 camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b);
@@ -124,7 +127,10 @@ void camera_restore_rotation(void);
 void camera_rotate_left(s32 target_angle);
 void camera_rotate_right(s32 target_angle);
 void camera_rotate_when_unit_tile_not_visible(struct battle_unit_misc_data* unit);
+void camera_save_rotation(void);
 void camera_set_rotation(const SVECTOR* rotation);
+void camera_start_rotation_left(s32 target_angle);
+void camera_start_rotation_right(s32 target_angle);
 void camera_store_yaw_band(s32 value);
 void camera_update_rotation(void);
 void camera_update_rotation_animation(void);
@@ -167,9 +173,9 @@ extern VECTOR g_camera_zoom_delta;
 extern s32 g_camera_zoom_increment;
 
 void camera_clear_zoom_variable_low_bit(void);
-void camera_copy_zoom(void);
 VECTOR* camera_get_zoom(void);
 void camera_restore_zoom(void);
+void camera_save_zoom(void);
 void camera_set_zoom(const VECTOR* zoom);
 void camera_toggle_zoom(void);
 void camera_update_zoom(void);

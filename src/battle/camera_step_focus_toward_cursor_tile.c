@@ -39,9 +39,9 @@
  * half a tile of bias); the caller supplies the height bound directly.
  */
 void camera_step_focus_toward_cursor_tile(s16 height) {
-    CAMERA_STEP_TOWARD(&g_camera_current_real_coords.vx, g_battle_current_vector.vx,
+    CAMERA_STEP_TOWARD(&g_camera_current_real_coords.vx, g_camera_step_vector.vx,
         g_battle_cursor_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
-    CAMERA_STEP_TOWARD(&g_camera_current_real_coords.vy, g_battle_current_vector.vy, height);
-    CAMERA_STEP_TOWARD(&g_camera_current_real_coords.vz, g_battle_current_vector.vz,
+    CAMERA_STEP_TOWARD(&g_camera_current_real_coords.vy, g_camera_step_vector.vy, height);
+    CAMERA_STEP_TOWARD(&g_camera_current_real_coords.vz, g_camera_step_vector.vz,
         g_battle_cursor_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
 }

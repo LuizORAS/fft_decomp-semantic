@@ -41,8 +41,6 @@ extern u32 g_battle_text_decimal_divisors[];
 extern const char g_battle_text_decimal_format[];
 extern glyph_blit_t g_battle_text_large_number_glyph_rect; /* glyph source rectangle in the large number font */
 
-void battle_display_menu_number_entry(s32 value, u8 digit_count, u8* image, glyph_blit_t* origin);
-void battle_draw_menu_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* pos);
 void battle_text_draw_large_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* pos);
 void battle_text_print_fnt_value_and_next(s32 value);
 
@@ -76,7 +74,7 @@ extern u16 g_battle_text_speaker_swap_unit_b;
 
 void battle_text_build_display_message(s32 offset, s32 flags, s32* out_width);
 void battle_text_build_unit_name_list(void);
-void battle_text_character_handling_thread(void);
+void battle_text_run_dialog_thread(void);
 void battle_text_set_message_duration_frames(u16 frames);
 
 /* typewriter */
@@ -96,9 +94,9 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
 extern u8 g_battle_spell_quote_exception_skillsets[];
 extern s32 g_battle_spell_quote_last_ability_id;
 
-s32 battle_is_skillset_in_spell_quote_exception_list(s32 skillset_id);
-void battle_text_determine_spell_quote(action_command_t* action, s32 unit_id, s32 enabled);
+s32 battle_text_is_spell_quote_exception_skillset(s32 skillset_id);
 void battle_text_run_spell_quote_thread(void);
+void battle_text_select_ability_announcement(action_command_t* action, s32 unit_id, s32 enabled);
 
 /* diagnostics */
 extern const char g_battle_text_heap_dp_format[];      /* "DP %x\n" */

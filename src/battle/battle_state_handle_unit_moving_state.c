@@ -7,8 +7,8 @@ void battle_state_handle_unit_moving_state(void) {
     battle_unit_misc_data_t* casting_misc_data;
 
     camera_handle_rotation_input();
-    camera_call_zoom_map();
-    camera_call_toggle_tilt();
+    camera_update_zoom_input();
+    camera_update_tilt_input();
     casting_misc_data = battle_unit_get_casting_misc_data();
     move_update_path_step(casting_misc_data);
     if (casting_misc_data->step_phase == MOVE_STEP_PHASE_NONE

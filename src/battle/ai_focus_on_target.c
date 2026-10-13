@@ -11,5 +11,5 @@ void ai_focus_on_target(s32 unit_id) {
 
     decision->main_target_id = unit_id;
     decision->flags = (flags | AI_DECISION_FOCUS_TARGET) & ~AI_DECISION_STAY_NEAR_COORDINATES;
-    ai_transfer_unit_coordinates(unit_id, &decision->target);
+    ai_copy_unit_coordinates(unit_id, &decision->target);
 }

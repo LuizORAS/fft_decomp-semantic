@@ -7,8 +7,8 @@
  * back, so the camera always comes to rest on a diagonal. */
 void camera_rotate_left(s32 target_angle) {
     g_battle_previous_camera_yaw = g_camera_render_state.vy & 0xfe00;
-    g_battle_destination_camera_yaw = target_angle;
+    g_camera_yaw_target = target_angle;
     if ((target_angle & 0x3ff) == 0) {
-        g_battle_destination_camera_yaw = target_angle + 0x200;
+        g_camera_yaw_target = target_angle + 0x200;
     }
 }

@@ -15,8 +15,8 @@ void camera_update_rotation(void) {
     if (g_camera_rotation_action == CAMERA_ROTATION_LEFT) {
         s16* yaw = &g_camera_render_state.vy;
         *yaw -= g_camera_rotation_increment;
-        if (*yaw <= g_battle_destination_camera_yaw) {
-            angle = (u16)g_battle_destination_camera_yaw & 0xFFF;
+        if (*yaw <= g_camera_yaw_target) {
+            angle = (u16)g_camera_yaw_target & 0xFFF;
             *yaw = angle;
             if (g_main_input_previous_buttons & PSX_PAD_L1) {
                 if (g_battle_game_state != BATTLE_GAME_STATE_EVENT) {
@@ -32,8 +32,8 @@ void camera_update_rotation(void) {
     } else if (g_camera_rotation_action == CAMERA_ROTATION_RIGHT) {
         s16* yaw = &g_camera_render_state.vy;
         *yaw += g_camera_rotation_increment;
-        if (*yaw >= g_battle_destination_camera_yaw) {
-            angle = (u16)g_battle_destination_camera_yaw & 0xFFF;
+        if (*yaw >= g_camera_yaw_target) {
+            angle = (u16)g_camera_yaw_target & 0xFFF;
             *yaw = angle;
             if (g_main_input_previous_buttons & PSX_PAD_R1) {
                 if (g_battle_game_state != BATTLE_GAME_STATE_EVENT) {

@@ -27,7 +27,7 @@ void action_check_between_turn_events(void) {
             battle_unit_update_display_by_misc_id(unit->unit_id);
             main_sound_play_sfx(MAIN_SFX_STATUS_MENU_REQUEST);
             action_open_status_menu_at_list_start();
-            action_is_at_list_unit_charging_ability();
+            action_show_next_at_list_entry();
             battle_menu_set_next_script_action_menus();
             return;
         }

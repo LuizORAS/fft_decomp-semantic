@@ -8,7 +8,7 @@ void camera_project_world_coords_to_screen(SVECTOR* world_coords, SVECTOR* scree
     VECTOR transformed_coords;
     s32 result;
 
-    camera_update_matrices(&g_camera_matrix, &g_camera_render_state, &g_battle_offset_screen_coords, &g_camera_zoom);
+    camera_update_matrices(&g_camera_matrix, &g_camera_render_state, &g_camera_current_screen_offset, &g_camera_zoom);
     SetRotMatrix(&g_camera_matrix);
     SetTransMatrix(&g_camera_matrix);
     RotTrans(world_coords, &transformed_coords, &result);

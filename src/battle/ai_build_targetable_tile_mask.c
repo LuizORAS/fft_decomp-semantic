@@ -68,5 +68,5 @@ void ai_build_targetable_tile_mask(ai_tile_mask_mode_e mode, s32 radius) {
             }
         }
     }
-    ai_transfer_halfword_values(ai->targetable_tiles[1], ai->targetable_tiles[0], sizeof(ai->targetable_tiles[0]));
+    ai_copy_u16_values(ai->targetable_tiles[1], ai->targetable_tiles[0], sizeof(ai->targetable_tiles[0]));
 }

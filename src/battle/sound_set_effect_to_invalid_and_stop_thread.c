@@ -1,9 +1,0 @@
-#include "fft/battle_sound.h"
-#include "fft/battle_thread.h"
-
-/* Thread entry in g_battle_menu_idle_action_entries: queue the invalid-choice
- * sound and end the thread. */
-void sound_set_effect_to_invalid_and_stop_thread(void) {
-    sound_set_effect_to_invalid();
-    battle_thread_exit_current();
-}

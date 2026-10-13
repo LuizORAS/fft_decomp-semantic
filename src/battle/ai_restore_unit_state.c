@@ -30,28 +30,28 @@ void ai_restore_unit_state(ai_snapshot_mode_e mode) {
         }
         unit->entd_slot = status->entd_slot;
         unit->death_counter = status->death_counter;
-        ai_transfer_byte_values(unit->status_sets.current, status->current_status, sizeof(status->current_status));
+        ai_copy_bytes(unit->status_sets.current, status->current_status, sizeof(status->current_status));
         if (mode != AI_SNAPSHOT_BASELINE) {
             unit->status_ct[STATUS_CT_INDEX(STATUS_ID_DEATH_SENTENCE)] = status->death_sentence_ct;
         } else {
             snapshot = (ai_extended_snapshot_t*)status;
             unit->team_flags = snapshot->team_flags;
-            ai_transfer_byte_values(unit->status_ct, snapshot->status_ct, BATTLE_TIMED_STATUS_COUNT);
-            ai_transfer_byte_values(unit->equipment, snapshot->equipment, sizeof(snapshot->equipment));
+            ai_copy_bytes(unit->status_ct, snapshot->status_ct, BATTLE_TIMED_STATUS_COUNT);
+            ai_copy_bytes(unit->equipment, snapshot->equipment, sizeof(snapshot->equipment));
             unit->brave = snapshot->brave;
-            ai_transfer_byte_values(&unit->faith, &snapshot->faith, 4);
+            ai_copy_bytes(&unit->faith, &snapshot->faith, 4);
             unit->mp = snapshot->mp;
-            ai_transfer_byte_values(unit->base_attributes, snapshot->base_attributes, 3);
-            ai_transfer_byte_values(unit->attributes, snapshot->attributes, 4);
-            ai_transfer_byte_values(&unit->x, &snapshot->x, 3);
+            ai_copy_bytes(unit->base_attributes, snapshot->base_attributes, 3);
+            ai_copy_bytes(unit->attributes, snapshot->attributes, 4);
+            ai_copy_bytes(&unit->x, &snapshot->x, 3);
             unit->charged_ability_ct = snapshot->charged_ability_ct;
-            ai_transfer_byte_values(&unit->has_turn, &snapshot->has_turn, 3);
+            ai_copy_bytes(&unit->has_turn, &snapshot->has_turn, 3);
             unit->mount_info = snapshot->mount_info;
-            ai_transfer_byte_values(&unit->auto_battle_setting, &snapshot->auto_battle_setting, 8);
-            ai_transfer_halfword_values(&unit->action_command, &ai->unit_action_records[id], 20);
+            ai_copy_bytes(&unit->auto_battle_setting, &snapshot->auto_battle_setting, 8);
+            ai_copy_u16_values(&unit->action_command, &ai->unit_action_records[id], 20);
         }
     }
     if (mode == AI_SNAPSHOT_BASELINE) {
-        ai_transfer_byte_values(g_battle_team_golem, ai->team_golem, sizeof(ai->team_golem));
+        ai_copy_bytes(g_battle_team_golem, ai->team_golem, sizeof(ai->team_golem));
     }
 }

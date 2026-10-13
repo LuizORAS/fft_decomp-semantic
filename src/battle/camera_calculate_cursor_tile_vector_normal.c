@@ -8,7 +8,7 @@
  *
  * The tile surface height is (height + depth) * 12 + half-height * 6 world
  * units above the floor, negated because world Y points down. The focus
- * offset is normalized by VectorNormal into g_battle_current_vector and
+ * offset is normalized by VectorNormal into g_camera_step_vector and
  * tripled. Returns the negated tile height. */
 s32 camera_calculate_cursor_tile_vector_normal(void) {
     map_tile_t* tile;
@@ -25,9 +25,9 @@ s32 camera_calculate_cursor_tile_vector_normal(void) {
         g_battle_cursor_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
     setVector(&delta, tile_position.vx - g_camera_current_real_coords.vx / ONE,
         height - g_camera_current_real_coords.vy / ONE, tile_position.vz - g_camera_current_real_coords.vz / ONE);
-    VectorNormal(&delta, &g_battle_current_vector);
-    g_battle_current_vector.vx *= 3;
-    g_battle_current_vector.vy *= 3;
-    g_battle_current_vector.vz *= 3;
+    VectorNormal(&delta, &g_camera_step_vector);
+    g_camera_step_vector.vx *= 3;
+    g_camera_step_vector.vy *= 3;
+    g_camera_step_vector.vz *= 3;
     return height;
 }

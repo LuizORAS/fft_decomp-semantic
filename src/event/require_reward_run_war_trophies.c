@@ -88,7 +88,7 @@ void require_reward_run_war_trophies(void) {
                         &g_menu_text_state.pen);
                 } else {
                     battle_menu_set_text_origin(0, 0);
-                    battle_draw_menu_number_glyphs(g_require_reward_war_trophy_entry_values[last],
+                    battle_menu_draw_number_glyphs(g_require_reward_war_trophy_entry_values[last],
                         text_count_decimal_digits(g_require_reward_war_trophy_entry_values[last]), image,
                         &g_menu_text_state.pen);
                 }

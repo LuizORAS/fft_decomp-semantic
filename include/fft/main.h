@@ -643,8 +643,8 @@ typedef enum main_sfx {
     MAIN_SFX_WORLD_MAP_ZOOM_OUT = 16,
     MAIN_SFX_CAMERA_ZOOM_OUT = 17,
     MAIN_SFX_WINDOW_OPEN = 18, /* help, message or text window opens */
-    /* The weapon sounds of sound_select_weapon_hit, by the weapon's
-     * item_type_e: g_sound_weapon_miss_sfx_ids (the swing, played
+    /* The weapon sounds of sound_play_weapon_sfx, by the weapon's
+     * item_type_e: g_sound_weapon_swing_sfx_ids (the swing, played
      * before the hit is known), g_sound_weapon_hit_sfx_ids and
      * g_sound_shield_deflect_sfx_ids. */
     MAIN_SFX_HIT_BLADE = 19,    /* knife, ninja blade, sword, knight sword, katana */
@@ -671,7 +671,7 @@ typedef enum main_sfx {
     MAIN_SFX_SHIELD_DEFLECT_HEAVY = 47, /* axe, flail */
     /* An error message opens: a memory-card load, save or scan failure, or a
      * refused equip, dismissal, job change or ability.
-     * sound_select_weapon_hit plays it for an attack stopped by an
+     * sound_play_weapon_sfx plays it for an attack stopped by an
      * accessory or class evade, a forced failure, a blade grasp or a catch,
      * and as the shield deflect of an instrument or book. */
     MAIN_SFX_ERROR_MESSAGE = 48,
@@ -712,7 +712,7 @@ typedef enum main_sfx {
     MAIN_SFX_EVENT_TRANSITION_MODE_1 = 109,
     MAIN_SFX_STATUS_MENU_REQUEST
     = 113,                       /* Triangle queues the status menu on another unit's turn; again when it opens */
-    MAIN_SFX_CRITICAL_HIT = 114, /* a weapon hit whose action is critical (sound_select_weapon_hit) */
+    MAIN_SFX_CRITICAL_HIT = 114, /* a weapon hit whose action is critical (sound_play_weapon_sfx) */
     MAIN_SFX_TEXT_GLYPH = 115,   /* typewriter tick after a dialogue glyph */
     MAIN_SFX_HIT_ARROW = 116,    /* crossbow, bow */
     /* World map: 0x76 when a path animation starts, drawing or erasing; 0x77

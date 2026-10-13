@@ -82,7 +82,7 @@ void ai_init_unit_abilities(s32 unit_id) {
     decision->silence_mod = ai_calculate_ratio_times_4(ability_count, silence_count);
     decision->mp_ability_mod = ai_calculate_ratio_times_4(ability_count, mp_count);
     decision->evade_mod = ai_calculate_ratio_times_4(ability_count, evade_count);
-    ai_transfer_byte_values(&decision->flags, &unit->ai_flags, 5);
+    ai_copy_bytes(&decision->flags, &unit->ai_flags, 5);
     decision->target.fields.x = unit->ai_target_x;
     decision->target.fields.y = unit->ai_target_y;
     decision->target.fields.elevation = unit->ai_flags >> 7;

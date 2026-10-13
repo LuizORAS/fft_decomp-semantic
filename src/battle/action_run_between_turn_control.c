@@ -65,7 +65,7 @@ s32 action_run_between_turn_control(battle_between_turn_mode_e mode) {
         case BATTLE_BETWEEN_TURN_STATE_ADD_CT:
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
-                flags = status_check_unit(unit);
+                flags = status_calculate_turn_flags(unit);
                 if (!(flags & BATTLE_TURN_STATUS_CT_FROZEN)) {
                     speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];
                     if (flags & BATTLE_TURN_STATUS_SLOW) {
@@ -87,7 +87,7 @@ s32 action_run_between_turn_control(battle_between_turn_mode_e mode) {
             best = 0xff;
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
-                flags = status_check_unit(unit);
+                flags = status_calculate_turn_flags(unit);
                 if (!(flags & BATTLE_TURN_STATUS_CT_FROZEN)) {
                     if (max_ct < unit->ct) {
                         best = i;
@@ -116,7 +116,7 @@ s32 action_run_between_turn_control(battle_between_turn_mode_e mode) {
                         return result;
                     }
                 }
-                flags = status_check_unit(unit);
+                flags = status_calculate_turn_flags(unit);
                 if (!(flags
                         & (BATTLE_TURN_STATUS_CT_FROZEN | BATTLE_TURN_STATUS_INCAPACITATED | BATTLE_TURN_STATUS_DEAD))
                     || ret == 2) {
@@ -140,7 +140,7 @@ s32 action_run_between_turn_control(battle_between_turn_mode_e mode) {
             i = 0;
             do {
                 unit = &g_battle_unit_stats[i];
-                flags = status_check_unit(unit);
+                flags = status_calculate_turn_flags(unit);
                 if (!(flags & BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK)) {
                     value = unit->charged_ability_ct;
                     if (value != 0xff && value != 0) {
@@ -155,7 +155,7 @@ s32 action_run_between_turn_control(battle_between_turn_mode_e mode) {
         case BATTLE_BETWEEN_TURN_STATE_RESOLVE_CHARGE:
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
-                flags = status_check_unit(unit);
+                flags = status_calculate_turn_flags(unit);
                 if (!(flags & BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK) && unit->charged_ability_ct == 0) {
                     if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_PERFORMING)]
                         & STATUS_BYTE_MASK(STATUS_ID_PERFORMING)) {
@@ -212,7 +212,7 @@ s32 action_run_between_turn_control(battle_between_turn_mode_e mode) {
             max_ct = 0xfe;
             best = 0xff;
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-                flags = status_check_unit(&g_battle_unit_stats[i]);
+                flags = status_calculate_turn_flags(&g_battle_unit_stats[i]);
                 if (!(flags & BATTLE_TURN_STATUS_CT_FROZEN)) {
                     if (max_ct < g_battle_unit_stats[i].ct) {
                         best = i;
@@ -243,7 +243,7 @@ s32 action_run_between_turn_control(battle_between_turn_mode_e mode) {
                     s32 unit_status;
                     s32 end_turn;
 
-                    unit_status = status_check_unit(unit);
+                    unit_status = status_calculate_turn_flags(unit);
                     end_turn = action_should_end_unit_turn(unit);
                     if ((unit_status & BATTLE_TURN_STATUS_CT_FROZEN) || end_turn != 0) {
                         action_end_turn(i);

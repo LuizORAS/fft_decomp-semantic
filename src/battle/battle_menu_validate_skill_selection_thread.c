@@ -58,23 +58,23 @@ void battle_menu_validate_skill_selection_thread(void) {
     g_battle_menu_result = -4;
     if (message != 0) {
         if (g_main_game_options.fields.navigation_messages == GAME_OPTION_OFF) {
-            sound_set_effect_to_confirm_checked();
+            sound_queue_sfx_confirm_unless_restoring();
         } else {
-            g_option_menu_open = 1;
+            g_battle_menu_modal_open = 1;
             g_battle_menu_selected_option = 0;
             g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
             battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
             battle_thread_set_parameters(g_battle_current_thread_id - 1,
                 (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
-            sound_set_effect_to_invalid();
+            sound_queue_sfx_invalid();
             battle_thread_wait_until_inactive(g_battle_current_thread_id - 1);
-            g_option_menu_open = 0;
+            g_battle_menu_modal_open = 0;
         }
         if ((message != 0x800A && message != 0x8013) || g_battle_menu_selected_option == -1) {
             g_battle_menu_result = -1;
         }
     } else {
-        sound_set_effect_to_confirm_checked();
+        sound_queue_sfx_confirm_unless_restoring();
     }
     battle_menu_confirm_action_silently(parameter);
     battle_thread_exit_current();

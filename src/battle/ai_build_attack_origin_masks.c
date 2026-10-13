@@ -20,12 +20,11 @@ void ai_build_attack_origin_masks(void) {
         ai->attack_origin_tiles[1][i] = 0;
     }
     if (ai->considered_ability.ai_flags.word & AI_ABILITY_ARC_TRAJECTORY) {
-        ai_transfer_halfword_values(
-            ai->movable_tiles, ai->reachable_tiles[ai->movement_scenario][0], sizeof(ai->movable_tiles));
+        ai_copy_u16_values(ai->movable_tiles, ai->reachable_tiles[ai->movement_scenario][0], sizeof(ai->movable_tiles));
     } else {
         for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
             if (ai->targetability.live.unit_targetable[unit_id]) {
-                ai_transfer_unit_coordinates(unit_id, &ai->considered_unit_coords);
+                ai_copy_unit_coordinates(unit_id, &ai->considered_unit_coords);
                 if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
                     ai_build_targetable_tile_mask(AI_TILE_MASK_RANGE, 0);
                 else
@@ -76,7 +75,7 @@ void ai_build_attack_origin_masks(void) {
     }
     for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
         if (ai->targetability.live.unit_targetable[unit_id]) {
-            ai_transfer_unit_coordinates(unit_id, &ai->considered_unit_coords);
+            ai_copy_unit_coordinates(unit_id, &ai->considered_unit_coords);
             if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
                 ai_build_targetable_tile_mask(AI_TILE_MASK_EXPLICIT, 0);
             else

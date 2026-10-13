@@ -27,7 +27,7 @@ void action_choose_wait(void) {
         action_set_casting_unit_id_ff();
         return;
     }
-    if (status_check_unit(unit->battle_data) & BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK) {
+    if (status_calculate_turn_flags(unit->battle_data) & BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK) {
         action_check_between_turn_events();
     } else {
         g_battle_game_state = BATTLE_GAME_STATE_WAIT_MENU;

@@ -52,7 +52,7 @@ void battle_state_run_game_loop(void) {
             camera_integer->vz = -camera_fixed->vz / ONE;
 
             camera_update_matrices(
-                &g_camera_matrix, &g_camera_render_state, &g_battle_offset_screen_coords, &g_camera_zoom);
+                &g_camera_matrix, &g_camera_render_state, &g_camera_current_screen_offset, &g_camera_zoom);
             map_draw_mesh_and_weather(&g_camera_matrix);
             if (effect_update_cycle() != 0) {
                 g_battle_state_animation_continue_check = 2;

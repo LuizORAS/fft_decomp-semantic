@@ -96,7 +96,7 @@ s32 ai_build_command(s32 unit_id, ai_command_t* command) {
         command->kind = AI_COMMAND_END_TURN;
     } else {
         command->kind = AI_COMMAND_ACT;
-        ai_transfer_halfword_values(&command->data.action, &ai->selected_action.command, sizeof(command->data.action));
+        ai_copy_u16_values(&command->data.action, &ai->selected_action.command, sizeof(command->data.action));
     }
 preserve:
     moved = ai->acting_unit->movement_taken;
@@ -106,7 +106,7 @@ preserve:
     ai_move_temp_unit_to_coords(&ai->acting_unit_coords);
     history = &g_ai_command_history[0];
     last_command = history + 1;
-    ai_transfer_halfword_values(history, last_command, sizeof(*history));
-    ai_transfer_halfword_values(last_command, command, sizeof(*last_command));
+    ai_copy_u16_values(history, last_command, sizeof(*history));
+    ai_copy_u16_values(last_command, command, sizeof(*last_command));
     return 0;
 }

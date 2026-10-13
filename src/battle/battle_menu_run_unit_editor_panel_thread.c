@@ -34,11 +34,11 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
     battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
     battle_menu_record_selection_for_selected_unit();
-    battle_menu_set_option_menu_open();
+    battle_menu_set_modal_open();
     do {
         battle_thread_yield();
     } while (g_battle_menu_hovered_stats_frame_count < 2);
-    battle_menu_clear_option_menu_open();
+    battle_menu_clear_modal_open();
 
     frame_record = g_battle_menu_unit_editor_frames;
     records = frame_record;
@@ -251,7 +251,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     g_battle_unit_summary_panel_rect.y = 0xAA;
     g_battle_menu_panel_fade_mode = MENU_PANEL_FADE_IN;
     g_battle_unit_status_bounce_step = 6;
-    sound_set_effect_to_cancel();
+    sound_queue_sfx_cancel();
     do {
         battle_thread_yield();
     } while (g_battle_unit_status_bounce_step != 0);

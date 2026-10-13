@@ -44,16 +44,14 @@ status_action:
         || ((ai->acting_unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DONT_ACT)]
                 & STATUS_BYTE_MASK(STATUS_ID_DONT_ACT))
             && (ai->acting_unit_decision->flags & AI_DECISION_FOCUS_TARGET))) {
-        ai_transfer_halfword_values(
-            &ai->saved_acting_unit_decision, ai->acting_unit_decision, sizeof(ai_unit_decision_t));
+        ai_copy_u16_values(&ai->saved_acting_unit_decision, ai->acting_unit_decision, sizeof(ai_unit_decision_t));
     /* Resume after the save; restore the decision only when this pass ends. */
     retreat_action:
         if (ai_select_action_retreat() == -1) {
             ai->initial_selection_stage = AI_INITIAL_SELECTION_RETREAT;
             return -1;
         }
-        ai_transfer_halfword_values(
-            ai->acting_unit_decision, &ai->saved_acting_unit_decision, sizeof(ai_unit_decision_t));
+        ai_copy_u16_values(ai->acting_unit_decision, &ai->saved_acting_unit_decision, sizeof(ai_unit_decision_t));
         return 0;
     }
 autobattle_action:

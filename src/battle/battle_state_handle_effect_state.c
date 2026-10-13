@@ -11,7 +11,7 @@ void battle_state_handle_effect_state(void) {
         battle_unit_update_and_animate_units();
         battle_gfx_update_screen_color_modulation_fade();
         camera_update_real_coord_animation();
-        camera_update_offset_screen_coord_animation();
+        camera_update_screen_offset_animation();
         camera_update_zoom_animation();
         camera_update_rotation_animation();
     }

@@ -25,8 +25,8 @@ void battle_state_handle_close_move_help_state(void) {
     if (source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
         target_move_cursor_by_input();
         camera_handle_rotation_input();
-        camera_call_zoom_map();
-        camera_call_toggle_tilt();
+        camera_update_zoom_input();
+        camera_update_tilt_input();
         buttons = g_main_input_pressed_buttons;
         if (buttons & PSX_PAD_CIRCLE) {
             path = move_build_path_to_tile(

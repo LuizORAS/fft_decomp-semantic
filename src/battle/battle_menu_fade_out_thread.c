@@ -38,7 +38,7 @@ void battle_menu_fade_out_thread(void) {
         battle_thread_yield();
     }
 
-    battle_menu_clear_option_menu_open();
+    battle_menu_clear_modal_open();
     g_battle_menu_suspend_state = 0;
     g_battle_screen_fade = 0;
     g_battle_menu_transition_state = 0;

@@ -1427,7 +1427,7 @@ enum {
 };
 
 /* Encoded menu-string controls. The 0xe2-0xfd meanings come from the dialog
- * interpreter branches (battle_text_character_handling_thread and its WORLD
+ * interpreter branches (battle_text_run_dialog_thread and its WORLD
  * twin) and, for 0xe7, the menu text-image renderers; codes with an operand
  * consume the following byte. F5/F6 are the {0xF5xx}{0xF6xx} "Alter String"
  * controls. The 0xe0-0xeb substitution codes are text_format_code_e. */
@@ -1669,7 +1669,7 @@ typedef struct text_dialog_record {
 } text_dialog_record_t;
 
 /* One pending text glyph: BATTLE's dialogue renderer state at 0x8016dad4
- * (filled by battle_text_character_handling_thread, drawn by
+ * (filled by battle_text_run_dialog_thread, drawn by
  * battle_text_draw_glyph_with_typewriter_delay), WORLD's typewriter request at 0x8019a338
  * (world_text_draw_glyph_with_typewriter_delay) and message-box glyph at
  * 0x801c3474 (world_text_message_box_thread, ..._delay_2). The menu text state

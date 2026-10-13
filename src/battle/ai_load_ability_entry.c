@@ -115,7 +115,7 @@ void ai_load_ability_entry(ai_ability_entry_t* entry) {
         return;
     }
     }
-    ai_transfer_halfword_values(&ai->considered_ability.ai_flags, &g_main_ability_data[ability_id].ai_flags, 4);
+    ai_copy_u16_values(&ai->considered_ability.ai_flags, &g_main_ability_data[ability_id].ai_flags, 4);
     if (menu == ACTION_MENU_TYPE_ITEM_INVENTORY || menu == ACTION_MENU_TYPE_WEAPON_INVENTORY)
         ai->considered_ability.ai_flags.word |= AI_ABILITY_DIRECT_TRAJECTORY;
     ai->considered_ability.ai_flags.fields.flags_4 = entry->usage.flags;
@@ -146,7 +146,7 @@ void ai_load_ability_entry(ai_ability_entry_t* entry) {
     else if (unit->ability_flags.support[3] & BATTLE_SUPPORT_SET_4_DEFEND)
         ai->considered_ability.ct = 0;
 copy_status:
-    ai_transfer_byte_values(ai->considered_ability.parameters.fields.status_infliction,
+    ai_copy_bytes(ai->considered_ability.parameters.fields.status_infliction,
         g_main_status_infliction_data[status_id].statuses,
         sizeof(ai->considered_ability.parameters.fields.status_infliction));
 }

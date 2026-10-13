@@ -57,7 +57,7 @@ s32 ai_select_action_status(void) {
         if (ai_select_action_random())
             return 1;
     copy_target:
-        ai_transfer_unit_coordinates(target_or_count, &ai->considered_unit_coords);
+        ai_copy_unit_coordinates(target_or_count, &ai->considered_unit_coords);
     movement:
         if (ai_fill_target_distance_grid(&ai->considered_unit_coords) == -1) {
             ai->action_selection_phase = AI_STATUS_SELECTION_TARGET_DISTANCE;

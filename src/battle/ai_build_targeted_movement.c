@@ -48,7 +48,7 @@ s32 ai_build_targeted_movement(void) {
         ai_set_candidate_and_actor_reachable_tiles();
     }
     ai->movement_scenario = 2;
-    ai_transfer_halfword_values(ai->reachable_tiles[2], ai->reachable_tiles[0], sizeof(ai->reachable_tiles[0]));
+    ai_copy_u16_values(ai->reachable_tiles[2], ai->reachable_tiles[0], sizeof(ai->reachable_tiles[0]));
     if (!ai->acting_unit->action_taken) {
         s32 closer_distance = distance - 1;
         if (closer_distance < limit) {

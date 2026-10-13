@@ -65,7 +65,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
             battle_clear_menu_render_buffer(buffer, 0x100);
             g_menu_text_state.pen.stride = 0x18;
             battle_menu_set_text_origin(0x10, 0);
-            battle_draw_menu_number_glyphs(g_map_selected_tile_data.depth, 1, buffer, &g_menu_text_state.pen);
+            battle_menu_draw_number_glyphs(g_map_selected_tile_data.depth, 1, buffer, &g_menu_text_state.pen);
             if (g_battle_menu_height_display_suppressed == 0) {
                 LoadImage(&rect, buffer);
                 page->sprites[0].clut = 0x7CBC;

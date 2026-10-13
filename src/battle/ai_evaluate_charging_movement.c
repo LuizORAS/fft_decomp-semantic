@@ -45,7 +45,7 @@ evaluate_with_charge:
         ai->charging_state = AI_CHARGING_WITH_CHARGE;
         return -1;
     }
-    ai_transfer_halfword_values(&ai->selected_action, &ai->current_action, sizeof(ai_action_data_t));
+    ai_copy_u16_values(&ai->selected_action, &ai->current_action, sizeof(ai_action_data_t));
     ai->saved_ability_ct = ai->acting_unit->charged_ability_ct;
     ai->saved_current_status = ai->acting_unit->status_sets.current[0];
     ai->saved_inflicted_status = ai->acting_unit->inflicted_status[0];

@@ -37,7 +37,7 @@ s32 ai_choose_wait_facing(void) {
     if (ai->selected_action.wait_facing_hint != AI_DIRECTION_CHOOSE_AT_WAIT)
         return ai->selected_action.wait_facing_hint;
 
-    ai_transfer_unit_coordinates(ai->acting_unit_id, &ai->acting_unit_coords);
+    ai_copy_unit_coordinates(ai->acting_unit_id, &ai->acting_unit_coords);
     for (direction = 0; direction < AI_CARDINAL_DIRECTION_COUNT; direction++) {
         work.target_coords.fields.x
             = ai->acting_unit_coords.fields.x + g_ai_facing_tile_offsets.by_direction[direction][0];
@@ -65,7 +65,7 @@ s32 ai_choose_wait_facing(void) {
             target_id = ai_find_nearest_target(AI_NEAREST_ENEMY);
             tried_any_enemy = 1;
         }
-        ai_transfer_unit_coordinates(target_id, &work.target_coords);
+        ai_copy_unit_coordinates(target_id, &work.target_coords);
         direction = ai_find_direction_of_target(&work.target_coords, &ai->acting_unit_coords);
         if (work.viability.by_direction[direction] != 0)
             return direction;

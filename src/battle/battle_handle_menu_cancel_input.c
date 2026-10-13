@@ -77,7 +77,7 @@ void battle_handle_menu_cancel_input(menu_entry_t* menu) {
         cur = menu->value;
         g_script_event_input = 0;
         *cur = -1;
-        sound_set_effect_to_cancel();
+        sound_queue_sfx_cancel();
         g_battle_event_input_suppression_frames = 5;
     }
 }

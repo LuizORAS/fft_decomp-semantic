@@ -18,8 +18,8 @@
 /* turn flags */
 extern u8 g_battle_player_unit_fallen;
 
+s32 status_calculate_turn_flags(battle_stats_t* unit);
 s32 status_check_crystal_dead_jump_petrify_treasure(battle_stats_t* unit);
-s32 status_check_unit(battle_stats_t* unit);
 void status_disable_acting(battle_stats_t* unit);
 void status_enable_disable_acting(battle_stats_t* unit);
 s32 status_is_unit_absent_dead_crystal_treasure_petrified_or_ridden(const battle_stats_t* unit);

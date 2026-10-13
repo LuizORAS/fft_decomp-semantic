@@ -11,8 +11,8 @@ void battle_state_handle_default_state(void) {
     RECT rect; /* never used; retail reserves its 8 bytes */
 
     camera_handle_rotation_input();
-    camera_call_zoom_map();
-    camera_call_toggle_tilt();
+    camera_update_zoom_input();
+    camera_update_tilt_input();
     target_move_cursor_by_input();
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
@@ -47,7 +47,7 @@ void battle_state_handle_default_state(void) {
     } else if (input & PSX_PAD_START) {
         if (g_main_game_options.fields.multi_height_cursor_speed != GAME_MULTI_HEIGHT_CURSOR_SPEED_STOP) {
             main_sound_play_sfx(MAIN_SFX_CONFIRM);
-            action_is_at_list_unit_charging_ability();
+            action_show_next_at_list_entry();
             target_store_cursor_unit_name_and_data();
         }
     } else if (input & PSX_PAD_TRIANGLE) {

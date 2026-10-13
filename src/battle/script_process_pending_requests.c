@@ -155,29 +155,29 @@ void script_process_pending_requests(void) {
         if (sfx_id != -1) {
             main_sound_play_sfx(sfx_id);
         }
-        if (g_battle_music_switch_request >= 0) {
+        if (g_sound_music_switch_request >= 0) {
             main_sound_stop_current_music();
-            g_battle_current_music_track_index = g_battle_current_music_track_index ^ 1;
-            if (g_battle_current_music_track_index == 0) {
-                music_track_id = g_battle_music_track_1_id;
+            g_sound_music_track_index = g_sound_music_track_index ^ 1;
+            if (g_sound_music_track_index == 0) {
+                music_track_id = g_sound_music_track_1_id;
             } else {
-                music_track_id = g_battle_music_track_2_id;
+                music_track_id = g_sound_music_track_2_id;
             }
             if (music_track_id != 0) {
-                main_sound_switch_music_track(g_battle_current_music_track_index + 1,
+                main_sound_switch_music_track(g_sound_music_track_index + 1,
                     script_scale_music_volume(g_battle_event_music_switch_volume),
                     g_battle_event_music_switch_fade * 4);
             }
         }
-        if (g_battle_music_unload_slot_request >= 0) {
+        if (g_sound_music_unload_slot_request >= 0) {
             main_sound_stop_current_music();
-            main_sound_unload_scenario_mus(g_battle_music_unload_slot_request);
+            main_sound_unload_scenario_mus(g_sound_music_unload_slot_request);
         }
-        if (g_battle_music_set_track_request != -1) {
+        if (g_sound_music_set_track_request != -1) {
             main_sound_unload_current_scenario_music();
-            main_sound_set_current_music_track(g_battle_music_set_track_request);
+            main_sound_set_current_music_track(g_sound_music_set_track_request);
         }
-        volume_transition = g_battle_music_volume_transition_request;
+        volume_transition = g_sound_music_volume_transition_request;
         if (volume_transition != -1U) {
             main_sound_set_current_music_target(volume_transition & 0xFFFF, (volume_transition >> 0xE) & 0x3FFC);
         }

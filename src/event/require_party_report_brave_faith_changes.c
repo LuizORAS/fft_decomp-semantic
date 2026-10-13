@@ -34,7 +34,7 @@ void require_party_report_brave_faith_changes(void) {
     for (i = 0; i < g_require_party_affected_unit_count; i++) {
         s32 unit_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
         g_text_substitution_values[0] = g_require_party_affected_battle_unit_indices[i];
-        battle_thread_start(unit_thread, battle_text_character_handling_thread);
+        battle_thread_start(unit_thread, battle_text_run_dialog_thread);
         battle_thread_set_parameters(unit_thread, 0x1b, g_require_party_affected_unit_message_ids[i],
             g_require_party_affected_unit_message_args[i]);
         battle_thread_wait_until_inactive(unit_thread);

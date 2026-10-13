@@ -154,7 +154,7 @@ s32 battle_menu_dispatch_system_function(
         }
         battle_menu_start_system_function_thread(value);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK) {
-        sound_set_effect_to_confirm();
+        sound_queue_sfx_confirm();
         if (option == 0) {
             battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
         } else if (option == 1) {
@@ -162,7 +162,7 @@ s32 battle_menu_dispatch_system_function(
         } else if (option == 4) {
             battle_menu_start_system_function_thread(0x30);
         } else {
-            sound_set_effect_to_invalid();
+            sound_queue_sfx_invalid();
             battle_menu_start_system_function_thread(option + 0xD);
         }
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_WAIT_MENU) {

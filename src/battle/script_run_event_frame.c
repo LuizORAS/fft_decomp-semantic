@@ -115,10 +115,10 @@ s32 script_run_event_frame(u32* ot, u32 buttons) {
     g_battle_event_pending_unit_vram_copy = -1;
     g_battle_event_pending_reserved_vram_release_slot = -1;
     g_sound_pending_sfx_id = -1;
-    g_battle_music_volume_transition_request = -1;
-    g_battle_music_set_track_request = -1;
-    g_battle_music_switch_request = -1;
-    g_battle_music_unload_slot_request = -1;
+    g_sound_music_volume_transition_request = -1;
+    g_sound_music_set_track_request = -1;
+    g_sound_music_switch_request = -1;
+    g_sound_music_unload_slot_request = -1;
     g_battle_event_map_jump_in_request = 0;
     g_battle_3d_object_use_request = 0;
     g_battle_field_object_use_request = 0;

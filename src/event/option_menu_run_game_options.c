@@ -214,7 +214,7 @@ void option_menu_run_game_options(void) {
                             battle_menu_display_text_entry(
                                 layout->text_ids[column][index], image, &g_menu_text_state.pen);
                         } else {
-                            battle_display_menu_number_entry(
+                            battle_menu_display_number_entry(
                                 layout->text_ids[column][index], 2, image, &g_menu_text_state.pen);
                         }
                     }

@@ -42,7 +42,7 @@ void battle_text_run_spell_quote_thread(void) {
     g_battle_text_message_buffer = main_heap_alloc(0x4000);
     battle_menu_request_open_companion_data_file(BATTLE_COMPANION_FILE_SPELL_MES);
     g_text_section_pointers[TEXT_SECTION_UNIT_MESSAGE] = g_battle_text_message_buffer;
-    battle_thread_start(NATIVE_THREAD_SLOT_MENU, battle_text_character_handling_thread);
+    battle_thread_start(NATIVE_THREAD_SLOT_MENU, battle_text_run_dialog_thread);
     battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, window_mode, message_id, id);
     battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
     main_heap_free(g_battle_text_message_buffer);

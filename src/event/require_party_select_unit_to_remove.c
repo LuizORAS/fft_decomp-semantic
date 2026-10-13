@@ -128,7 +128,7 @@ s32 require_party_select_unit_to_remove(void) {
         goto selection_menu;
 
     show_unit_message:
-        battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_text_character_handling_thread);
+        battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_text_run_dialog_thread);
         battle_thread_set_four_parameters(
             REQUIRE_THREAD_SLOT_MESSAGE, 0x19, message_id, selected_battle_unit->unit_id, should_restore);
         g_battle_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_words[3] = 0x18;
@@ -240,7 +240,7 @@ s32 require_party_select_unit_to_remove(void) {
         if (party_unit->sprite_set < CHARACTER_IDENTITY_RAMZA_END)
             goto show_unit_message;
         g_require_menu_selection_result = 0xff;
-        battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_text_character_handling_thread);
+        battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_text_run_dialog_thread);
         battle_thread_set_four_parameters(
             REQUIRE_THREAD_SLOT_MESSAGE, 0x19, message_id, selected_battle_unit->unit_id, should_restore);
         g_battle_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_words[3] = 0x18;

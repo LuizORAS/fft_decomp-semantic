@@ -21,32 +21,32 @@ void attack_sound_resync_scenario_music_and_apply_map_darkness(void) {
 
     scenario = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
     if (g_battle_scenario_event_active != 0 && (scenario < 410 || scenario > 425)) {
-        if (g_battle_music_track_1_id == 0 && g_battle_music_track_2_id == 0) {
-            g_battle_current_music_track_index = 0;
+        if (g_sound_music_track_1_id == 0 && g_sound_music_track_2_id == 0) {
+            g_sound_music_track_index = 0;
             attack_sound_play_music_tracks(g_battle_scenario_music_1_id, g_battle_scenario_music_2_id);
         } else {
-            if (g_battle_current_music_track_index == 0) {
-                playing = g_battle_music_track_1_id;
+            if (g_sound_music_track_index == 0) {
+                playing = g_sound_music_track_1_id;
                 replacement = g_battle_scenario_music_1_id;
             } else {
-                playing = g_battle_music_track_2_id;
+                playing = g_sound_music_track_2_id;
                 replacement = g_battle_scenario_music_2_id;
             }
 
             if (playing != g_battle_scenario_music_1_id && playing != g_battle_scenario_music_2_id) {
-                g_battle_current_music_track_index = 0;
+                g_sound_music_track_index = 0;
                 attack_sound_play_music_tracks(g_battle_scenario_music_1_id, g_battle_scenario_music_2_id);
             } else {
                 g_thread_call_target = (void (*)(void))main_sound_unload_scenario_mus;
-                thread_call_on_main_stack((g_battle_current_music_track_index ^ 1) + 1);
+                thread_call_on_main_stack((g_sound_music_track_index ^ 1) + 1);
                 g_thread_call_target = (void (*)(void))main_sound_open_and_play_music;
-                thread_call_on_main_stack(replacement, (g_battle_current_music_track_index ^ 1) + 1);
+                thread_call_on_main_stack(replacement, (g_sound_music_track_index ^ 1) + 1);
                 attack_sound_wait_for_music_stub();
             }
         }
 
-        g_battle_music_track_1_id = g_battle_scenario_music_1_id;
-        g_battle_music_track_2_id = g_battle_scenario_music_2_id;
+        g_sound_music_track_1_id = g_battle_scenario_music_1_id;
+        g_sound_music_track_2_id = g_battle_scenario_music_2_id;
     }
 
     map_light_state_command(MAP_LIGHT_COMMAND_SET_DARKNESS_COLOR, &darkness);
