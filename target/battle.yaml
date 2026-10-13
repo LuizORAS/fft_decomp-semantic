@@ -703,9 +703,9 @@ functions:
   - {addr: 0x8012dcf8, size: 20, name: battle_menu_set_modal_open, hash: 8dbb087dee3cfcef}
   - {addr: 0x8012dd0c, size: 16, name: battle_menu_clear_modal_open, hash: 998fd7a33c6ac225}
   - {addr: 0x8012dd1c, size: 20, name: sound_queue_sfx_confirm, hash: 79d48c635cbe6203, source: src/shared/sound/sound_queue_sfx_confirm.c}
-  - {addr: 0x8012dd30, size: 20, name: sound_queue_sfx_cancel, hash: cc13a0fa61e77c81}
-  - {addr: 0x8012dd44, size: 20, name: sound_queue_sfx_cursor_move, hash: 0d96b1a9f196cc3f}
-  - {addr: 0x8012dd58, size: 20, name: sound_queue_sfx_invalid, hash: e0c92d85f77badd5}
+  - {addr: 0x8012dd30, size: 20, name: sound_queue_sfx_cancel, hash: cc13a0fa61e77c81, source: src/shared/sound/sound_queue_sfx_cancel.c}
+  - {addr: 0x8012dd44, size: 20, name: sound_queue_sfx_cursor_move, hash: 0d96b1a9f196cc3f, source: src/shared/sound/sound_queue_sfx_cursor_move.c}
+  - {addr: 0x8012dd58, size: 20, name: sound_queue_sfx_invalid, hash: e0c92d85f77badd5, source: src/shared/sound/sound_queue_sfx_invalid.c}
   - {addr: 0x8012dd6c, size: 40, name: battle_menu_run_invalid_choice_thread, hash: ee6f22f6b5675647}
   - {addr: 0x8012dd94, size: 48, name: camera_wait_until_idle, hash: c9beddd4e8635e8d, source: src/shared/camera/camera_wait_until_idle.c}
   - {addr: 0x8012ddc4, size: 36, name: camera_normalize_yaw_angle, hash: d8594f5ae28d378e, source: src/shared/camera/camera_normalize_yaw_angle.c}
@@ -904,7 +904,7 @@ functions:
   - {addr: 0x8013e7d0, size: 76, name: script_waitwalk_event_instruction, hash: 24021c0deeb954e0, source: src/shared/script/script_waitwalk_event_instruction.c}
   - {addr: 0x8013e81c, size: 88, name: script_load_attack_graphics_event_instruction, hash: 03c63298566511f4}
   - {addr: 0x8013e874, size: 96, name: script_play_effect_and_wait, hash: fdc04e1986faf430, source: src/shared/script/script_play_effect_and_wait.c}
-  - {addr: 0x8013e8d4, size: 48, name: script_play_effect_thread, hash: 014b4d70b5118cb2}
+  - {addr: 0x8013e8d4, size: 48, name: script_play_effect_thread, hash: 014b4d70b5118cb2, source: src/shared/script/script_play_effect_thread.c}
   - {addr: 0x8013e904, size: 1236, name: script_block_start_thread, hash: 74b4fb7297f0daea}
   - {addr: 0x8013edd8, size: 468, name: script_add_unit_start_thread, hash: e015fe2ea756d0dd}
   - {addr: 0x8013efac, size: 72, name: battle_menu_init_subsystems, hash: 4a2f2ce670dbb523}

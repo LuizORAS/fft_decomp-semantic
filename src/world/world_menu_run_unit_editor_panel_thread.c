@@ -3,6 +3,7 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 /* BATTLE twin: battle_menu_run_unit_editor_panel_thread. */
 #include "fft/world.h"
@@ -250,7 +251,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     g_world_unit_summary_panel_rect.y = 0xAA;
     g_world_menu_panel_fade_mode = MENU_PANEL_FADE_IN;
     g_world_unit_status_bounce_step = 6;
-    world_sound_queue_sfx_cancel();
+    sound_queue_sfx_cancel();
     do {
         thread_yield();
     } while (g_world_unit_status_bounce_step != 0);

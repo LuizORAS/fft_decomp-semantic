@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
@@ -37,6 +38,6 @@ void world_menu_cancel_thread_group(menu_entry_t* context) {
     }
     g_world_menu_new_button_input = 0;
     *menu_entry_result(context) = -1;
-    world_sound_queue_sfx_cancel();
+    sound_queue_sfx_cancel();
     g_world_thread_change_cooldown = 5;
 }

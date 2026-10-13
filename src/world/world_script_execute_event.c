@@ -493,7 +493,7 @@ restart_event:
                 g_thread_call_target = (void (*)(void))effect_try_init_data;
             } while (thread_call_on_main_stack() != 0);
         } else if (opcode == EVENT_OPCODE_EFFECT_END) {
-            thread_start(world_thread_resolve_id(THREAD_SLOT_FIRST_IDLE), &world_script_play_effect_thread);
+            thread_start(world_thread_resolve_id(THREAD_SLOT_FIRST_IDLE), &script_play_effect_thread);
         }
         /* ---- Camera ---- */
         else if (opcode == EVENT_OPCODE_FOCUS) {

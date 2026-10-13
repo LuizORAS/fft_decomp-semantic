@@ -19,7 +19,7 @@ void world_menu_confirm_move_command_thread(void) {
     if (world_unit_get_active_stats()->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DONT_MOVE)]
         & STATUS_BYTE_MASK(STATUS_ID_DONT_MOVE)) {
         *result = -1;
-        world_sound_queue_sfx_invalid();
+        sound_queue_sfx_invalid();
         world_menu_icon_linked_entry_thread();
         thread_exit_current();
     }
@@ -27,7 +27,7 @@ void world_menu_confirm_move_command_thread(void) {
     if (menu_id == BATTLE_MENU_ID_TURN_MOVED || menu_id == BATTLE_MENU_ID_TURN_MOVED_ACTED
         || menu_id == BATTLE_MENU_ID_TURN_NO_ACT_MOVED || menu_id == BATTLE_MENU_ID_RIDER_TURN_MOVED
         || menu_id == BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED || menu_id == BATTLE_MENU_ID_RIDER_TURN_NO_ACT_MOVED) {
-        world_sound_queue_sfx_invalid();
+        sound_queue_sfx_invalid();
         thread_exit_current();
     }
     sound_queue_sfx_confirm_unless_restoring();

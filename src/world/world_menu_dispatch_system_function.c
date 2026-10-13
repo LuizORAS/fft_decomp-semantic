@@ -151,7 +151,7 @@ s32 world_menu_dispatch_system_function(
         } else if (option == 4) {
             world_menu_start_system_function_thread(0x30);
         } else {
-            world_sound_queue_sfx_invalid();
+            sound_queue_sfx_invalid();
             world_menu_start_system_function_thread(option + 0xD);
         }
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_WAIT_MENU) {

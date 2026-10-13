@@ -1,3 +1,4 @@
+#include "fft/sound.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -13,7 +14,7 @@ void world_menu_step_wrapping_cursor_on_scroll_buttons(menu_entry_t* bounds, s32
         } else {
             *cursor = *cursor - 1;
         }
-        world_sound_queue_sfx_cursor_move();
+        sound_queue_sfx_cursor_move();
     }
     if (g_world_menu_new_button_input & PSX_PAD_DOWN) {
         if (*cursor == bounds->max_row_index) {
@@ -21,6 +22,6 @@ void world_menu_step_wrapping_cursor_on_scroll_buttons(menu_entry_t* bounds, s32
         } else {
             *cursor = *cursor + 1;
         }
-        world_sound_queue_sfx_cursor_move();
+        sound_queue_sfx_cursor_move();
     }
 }

@@ -1,4 +1,3 @@
-#include "fft/battle_script.h"
 #include "fft/script.h"
 #include "fft/thread.h"
 

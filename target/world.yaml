@@ -49,9 +49,9 @@ functions:
   - {addr: 0x800e1e8c, size: 20, name: world_menu_set_transition_active_flag, hash: edfede6075ee1f04}
   - {addr: 0x800e1ea0, size: 16, name: world_menu_clear_transition_active_flag, hash: d7f503c035758c32}
   - {addr: 0x800e1eb0, size: 20, name: sound_queue_sfx_confirm, hash: dcec320743e88359, source: src/shared/sound/sound_queue_sfx_confirm.c}
-  - {addr: 0x800e1ec4, size: 20, name: world_sound_queue_sfx_cancel, hash: 2e72a265e93b98c6}
-  - {addr: 0x800e1ed8, size: 20, name: world_sound_queue_sfx_cursor_move, hash: 7684f65afee83ab4}
-  - {addr: 0x800e1eec, size: 20, name: world_sound_queue_sfx_invalid, hash: 2cded14f2af8d448}
+  - {addr: 0x800e1ec4, size: 20, name: sound_queue_sfx_cancel, hash: 2e72a265e93b98c6, source: src/shared/sound/sound_queue_sfx_cancel.c}
+  - {addr: 0x800e1ed8, size: 20, name: sound_queue_sfx_cursor_move, hash: 7684f65afee83ab4, source: src/shared/sound/sound_queue_sfx_cursor_move.c}
+  - {addr: 0x800e1eec, size: 20, name: sound_queue_sfx_invalid, hash: 2cded14f2af8d448, source: src/shared/sound/sound_queue_sfx_invalid.c}
   - {addr: 0x800e1f00, size: 40, name: world_menu_stop_thread_with_invalid_sound, hash: 673200a96478bd69}
   - {addr: 0x800e1f28, size: 48, name: camera_wait_until_idle, hash: fecdc06e231e4865, source: src/shared/camera/camera_wait_until_idle.c}
   - {addr: 0x800e1f58, size: 36, name: camera_normalize_yaw_angle, hash: 4b9b57139167c4c5, source: src/shared/camera/camera_normalize_yaw_angle.c}
@@ -252,7 +252,7 @@ functions:
   - {addr: 0x800f20e8, size: 76, name: script_waitwalk_event_instruction, hash: 28b91f66c57395a1, source: src/shared/script/script_waitwalk_event_instruction.c}
   - {addr: 0x800f2134, size: 88, name: world_script_load_attack_graphics_event_instruction, hash: 6996873356d74343}
   - {addr: 0x800f218c, size: 96, name: script_play_effect_and_wait, hash: 071ebe20d78399d5, source: src/shared/script/script_play_effect_and_wait.c}
-  - {addr: 0x800f21ec, size: 48, name: world_script_play_effect_thread, hash: 23d695acccad5513}
+  - {addr: 0x800f21ec, size: 48, name: script_play_effect_thread, hash: 23d695acccad5513, source: src/shared/script/script_play_effect_thread.c}
   - {addr: 0x800f221c, size: 1236, name: world_script_block_start_thread, hash: 5ed900a4fe6df008}
   - {addr: 0x800f26f0, size: 468, name: world_script_add_unit_start_thread, hash: 16616b5eb112a78a}
   - {addr: 0x800f28c4, size: 72, name: world_menu_init_subsystems, hash: 5c83298d75f82198}

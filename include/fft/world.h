@@ -356,7 +356,6 @@ s32 world_script_find_jump_target(s32, s32, s32, s32);
 void world_script_inflict_status_thread(void);
 void world_script_load_portrait_colors_event_instruction(s32);
 void world_script_pause_event_instruction(void);
-void world_script_play_effect_thread(void);
 void world_script_waitspritemove_event_instruction(s32);
 
 /* sound */
@@ -368,9 +367,6 @@ extern s16 g_world_sound_music_unload_slot_request;
 extern s32 g_world_sound_music_volume_transition_request;
 extern u8 g_world_sound_release_held_loop;
 void world_sound_dispatch_effect(void);
-void world_sound_queue_sfx_cancel(void);
-void world_sound_queue_sfx_invalid(void);
-void world_sound_queue_sfx_cursor_move(void);
 void world_sound_bg_thread(void);
 void world_sound_edit_bg_thread(void);
 

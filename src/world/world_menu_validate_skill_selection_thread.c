@@ -68,7 +68,7 @@ void world_menu_validate_skill_selection_thread(void) {
             thread_start(g_thread_current_id - 1, world_menu_icon_linked_entry_thread);
             thread_set_parameters(g_thread_current_id - 1,
                 (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
-            world_sound_queue_sfx_invalid();
+            sound_queue_sfx_invalid();
             thread_wait_until_inactive(g_thread_current_id - 1);
             g_world_menu_transition_active = 0;
         }

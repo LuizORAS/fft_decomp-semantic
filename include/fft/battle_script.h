@@ -121,7 +121,6 @@ void script_color_screen_thread(void);
 void script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
 void script_load_attack_graphics_event_instruction(void);
 void script_load_portrait_colors_event_instruction(s32 portrait_id);
-void script_play_effect_thread(void);
 void script_print_debug_message(void);
 void script_set_units_palette_update_suppression(s32 unit_id, s32 enable);
 void script_toggle_message_portrait_flip(const u8* parameters);

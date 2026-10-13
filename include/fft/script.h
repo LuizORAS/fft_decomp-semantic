@@ -1032,6 +1032,7 @@ void script_apply_relative_camera(event_camera_values_t* parameters, const s32* 
 
 /* effects */
 void script_play_effect_and_wait(void);
+void script_play_effect_thread(void);
 
 /* graphic display */
 void script_show_graphic(void);

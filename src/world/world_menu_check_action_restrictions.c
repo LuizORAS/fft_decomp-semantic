@@ -26,7 +26,7 @@ void world_menu_check_action_restrictions(void) {
         || menu == BATTLE_MENU_ID_RIDER_TURN_ACTED || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED) {
         result = battle_unit_get_action_restriction(unit);
         if (result == BATTLE_UNIT_ACTION_RESTRICTION_NONE) {
-            world_sound_queue_sfx_invalid();
+            sound_queue_sfx_invalid();
             thread_exit_current();
         }
         if (result == BATTLE_UNIT_ACTION_RESTRICTION_CANNOT_ACT) {
@@ -53,7 +53,7 @@ void world_menu_check_action_restrictions(void) {
         if (mode == GAME_OPTIONS_NAVIGATION_MESSAGES_OFF_BITS && (message & 0xff00) == mode) {
             sound_queue_sfx_confirm_unless_restoring();
         } else if (g_menu_restore_pending == 0) {
-            world_sound_queue_sfx_invalid();
+            sound_queue_sfx_invalid();
             g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
             thread_start(g_thread_current_id - 1, world_menu_icon_linked_entry_thread);
             thread_set_parameters(g_thread_current_id - 1,

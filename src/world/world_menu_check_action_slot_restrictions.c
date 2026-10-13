@@ -1,5 +1,6 @@
 #include "fft/battle_action.h"
 #include "fft/battle_unit.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 
@@ -60,7 +61,7 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
                 (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
         }
         if (mode == 2) {
-            world_sound_queue_sfx_invalid();
+            sound_queue_sfx_invalid();
             if (g_main_game_options.fields.navigation_messages == GAME_OPTION_ON) {
                 thread_wait_until_inactive(g_thread_current_id - 1);
             }
