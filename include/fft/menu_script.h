@@ -5,19 +5,7 @@
 
 #include "fft/menu.h"
 
-/* instructions */
-/* Seven-byte window command in the menu script streams. The length field
- * advances to the next command, which may have a different size. */
-typedef struct menu_window_command {
-    u8 opcode;
-    u8 length;
-    u8 rectangle_source;
-    u8 x;
-    u8 y;
-    u8 width;
-    u8 height;
-} menu_window_command_t;
-
+/* opcodes */
 /* Opcode byte of a menu script command, the index of its handler in the
  * handler table of WORLD, BUNIT, EQUIP and JOBSTTS (CARD calls the same
  * handlers directly). Only the opcodes the code tests are named. Each
@@ -34,6 +22,19 @@ typedef enum menu_script_opcode {
     MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS = 0x1a,       /* leading zeros in the disabled clut */
     MENU_SCRIPT_OP_NUMBER_TINTED = 0x1b,                  /* sprite colour */
 } menu_script_opcode_e;
+
+/* instructions */
+/* Seven-byte window command in the menu script streams. The length field
+ * advances to the next command, which may have a different size. */
+typedef struct menu_window_command {
+    u8 opcode;
+    u8 length;
+    u8 rectangle_source;
+    u8 x;
+    u8 y;
+    u8 width;
+    u8 height;
+} menu_window_command_t;
 
 /* Flags a menu-script number getter (a row callback) returns above its
  * value, read by *_menu_script_draw_formatted_number and the overlays'

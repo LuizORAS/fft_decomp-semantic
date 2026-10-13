@@ -5,6 +5,7 @@
 
 #include "psx/types.h"
 
+/* context */
 /* Native cooperative scheduler context, not scenario bytecode or its operand
  * buffer. BATTLE 0x8014c8a0 and WORLD 0x800ffd70 initialize the same layout;
  * both index slots with thread_id << 10 and start SP/FP at slot + 0x3f0.
@@ -45,6 +46,7 @@ enum {
     NATIVE_THREAD_LAST_WORD_OFFSET = 0x3ffc,
 };
 
+/* slots */
 /* Slot numbers of the cooperative threads: the index into g_battle_threads /
  * g_world_threads and the first argument of the thread calls. Slot 0 is the
  * program's main loop. No slot belongs to one thread for good: the battle and
@@ -101,6 +103,7 @@ typedef enum native_borrowed_thread_slot {
     NATIVE_BORROWED_THREAD_SLOT_FADE_OUT = 13, /* the fade-out thread that follows the unit list overlay */
 } native_borrowed_thread_slot_e;
 
+/* tasks */
 /* task_id values shared by the BATTLE and WORLD schedulers. Each named id is
  * set by one family of twin thread functions (set_current_task_id or a
  * direct task_id store) and is looked up with *_thread_find_running_by_task.
@@ -159,6 +162,7 @@ typedef enum native_thread_task {
     NATIVE_THREAD_TASK_UNIT_MESSAGE = 70,
 } native_thread_task_e;
 
+/* callbacks */
 /* Main-stack callback dispatch, bound to the resident BATTLE or WORLD scheduler.
  * It forwards a0-a3 unchanged and switches to thread 0's stack when necessary;
  * arguments beyond those registers are not copied across the stack switch.

@@ -41,7 +41,6 @@ typedef union main_ability_secondary_pointer {
     main_ability_charge_record_t* charge;
     u8* math_rsm;
 } main_ability_secondary_pointer_t;
-
 typedef char main_ability_secondary_pointer_size_must_be_4[(sizeof(main_ability_secondary_pointer_t) == 4) ? 1 : -1];
 typedef char main_ability_jump_record_size_must_be_2[(sizeof(main_ability_jump_record_t) == 2) ? 1 : -1];
 
@@ -72,7 +71,8 @@ extern const u8 g_main_reaction_behavior_flags[ABILITY_ID_SUPPORT_FIRST - ABILIT
 extern main_ability_human_skillset_t g_main_ability_human_skillset_abilities[];
 extern main_ability_monster_skillset_t g_main_ability_monster_skillset_abilities[];
 extern u16 g_main_ability_temp_list[SKILLSET_ABILITY_LIST_COUNT];
-extern u32 g_main_secondary_saved_data_bits[2];
+extern u8 g_main_calculator_primes[CALCULATOR_PRIME_COUNT];
+
 s32 main_ability_get_id_from_skillset(s32 skillset_id, s32 ability_index);
 u16* main_ability_store_skillset_abilities(s32 skillset, s32 flags);
 s32 main_ability_calculate_pointers_and_type(
@@ -204,10 +204,17 @@ typedef struct card_save_buffer {
     u8 item_page_order[0x15];      /* 0x1da9 */
     u8 _unused_1dbe[0x42];         /* 0x1dbe; parity-covered tail */
 } card_save_buffer_t;
+
 typedef char
     card_save_buffer_options_offset_must_be_0x1c84[((unsigned long)&((card_save_buffer_t*)0)->options == 0x1c84) ? 1
                                                                                                                  : -1];
 typedef char card_save_buffer_size_must_be_7680[(sizeof(card_save_buffer_t) == 7680) ? 1 : -1];
+
+/* One selectable save-file icon: 16-colour CLUT plus 16x16 4bpp image. */
+typedef struct card_save_icon {
+    palette_t clut; /* 0x00 */
+    u8 image[0x80]; /* 0x20 */
+} card_save_icon_t;
 
 /* Hours, minutes and seconds shown for one memory-card save slot. */
 typedef struct card_save_play_time {
@@ -224,6 +231,7 @@ extern u8 g_card_save_selected_slot;
 extern s8 g_card_save_slot_file_states[];
 extern card_save_summary_t g_main_card_save_slot_metadata[CARD_SAVE_SLOT_COUNT];
 extern card_save_play_time_t g_main_card_save_slot_playtimes[CARD_SAVE_SLOT_COUNT];
+
 void main_card_init_events(void);
 
 /* file */
@@ -320,6 +328,7 @@ typedef char main_file_load_descriptor_size_must_be_36[sizeof(main_file_load_des
 
 extern main_file_load_descriptor_t g_main_file_cd_state;
 extern u32 g_main_file_still_loading;
+extern s32 g_main_battle_bin_sector;
 
 /* File-header wrapper at 0x80011bd0 forwards main_file_build_header's result. */
 s32 main_file_build_header_nnl(main_file_load_descriptor_t* header, s32 sector, s32 sectors, void* destination);
@@ -329,10 +338,8 @@ void main_file_reset_cd_subsystems(void);
 void main_file_handle_cd_read_callback(u8 event, u8* result);
 void main_file_handle_cd_ready_callback(u8 event, u8* result);
 void main_file_reset_cdrom_cpu_ram(void);
-
 int main_file_build_header(
     main_file_load_descriptor_t* state, int lba, int sector_count, void* destination, int loading_display_mode);
-
 void* main_file_load_checked_to_heap(int sector, int size);
 void* main_file_load_checked_to_address(int sector, int size, void* destination);
 suzuki_smd_header_t* main_file_get_smd(int sector, u32 size);
@@ -401,6 +408,10 @@ extern item_evade_t g_main_item_accessory_data[]; /* 0x80063f58; unit accessory 
 extern armor_data_t g_main_item_helm_armor_secondary_data[];
 extern item_data_t g_main_item_primary_data[];
 extern item_evade_t g_main_item_shield_data[]; /* 0x80063eb8; unit right/left shield evade slots */
+extern u8 g_main_accessory_page_order[0x21];
+extern u8 g_main_armor_page_order[0x25];
+extern u8 g_main_helmet_page_order[0x1d];
+
 void main_item_init_new_game_inventory(void);
 void main_item_init_order_tables(void);
 item_data_t* main_item_get_data_pointer(s32 item_id);
@@ -412,6 +423,7 @@ extern job_data_t* g_main_job_data_pointer;
 extern const u16 g_main_job_level_jp_requirements[UNIT_JOB_LEVEL_MAX];
 extern u16 g_main_job_jp_requirements_by_level[];
 extern const u8 g_main_job_unlock_requirements[UNIT_CAREER_JOB_COUNT - 1][UNIT_JOB_LEVEL_BYTE_COUNT];
+
 s32 main_job_add_proposition_jp(u32 party_index, s32 jp);
 u32 main_job_calculate_level(u16 job_jp);
 u32 main_job_calculate_unlocked(const u8* packed_job_levels, u32 gender_flags);
@@ -435,11 +447,6 @@ typedef struct wldcore_proposition_progress {
     u8 participant_indices[3]; /* 0x06; 0x80074a8c passes each index to party lookup before 0x80074ab4 stores it */
 } wldcore_proposition_progress_t;
 typedef char wldcore_proposition_progress_size_must_be_9[sizeof(wldcore_proposition_progress_t) == 9 ? 1 : -1];
-
-/* Saved-data records at 0x80059594. The exact caller at 0x8008aba8 establishes
- * the 0x38 stride; 0x8008abe4 selectively resets these fields. Field meanings
- * beyond those stores remain provisional. */
-struct wldcore_sound_novel_script_file;
 
 typedef struct wldcore_saved_record {
     /* 0x00: loaded sound-novel script, including its section-offset table. */
@@ -473,6 +480,15 @@ typedef struct wldcore_saved_record {
 } wldcore_saved_record_t;
 typedef char wldcore_saved_record_size_must_be_56[sizeof(wldcore_saved_record_t) == 56 ? 1 : -1];
 
+/* Saved-data records at 0x80059594. The exact caller at 0x8008aba8 establishes
+ * the 0x38 stride; 0x8008abe4 selectively resets these fields. Field meanings
+ * beyond those stores remain provisional. */
+struct wldcore_sound_novel_script_file;
+
+extern u8 D_800473A7;
+
+extern u8 D_80057b1c;
+
 extern u8 g_main_save_proposition_count;
 extern s32 g_main_saved_animation_speed;
 extern s32 g_main_saved_weather_variable;
@@ -488,14 +504,19 @@ extern u32 g_main_saved_data_bits[40];
 extern menu_cursor_state_t g_main_saved_list_cursor_state;
 extern wldcore_proposition_progress_t g_main_active_propositions[8];
 extern wldcore_saved_record_t g_main_saved_records[];
+extern u8* g_main_brave_story_ages_source;
+extern u32 g_main_tutorial_progress_masks[];
+extern u8 g_main_brave_story_character_ages[0x40];
+extern u32 g_main_secondary_saved_data_bits[2];
+
 void main_save_init_data_tables(void);
 void main_save_init_state_and_options(void);
 
 /* script */
 extern u16 g_main_scenario_event_finish_operations[];
+
 /* The script variables: 32-bit values first (event_script_variable_id_e), then the packed flags. */
 extern s32 g_main_script_variables[0x100];
-extern u8* g_main_heap_companion_overlay_load_address;
 extern u16 g_main_scenario_condition_offsets[];
 extern s16 g_main_scenario_condition_data[];
 extern event_file_block_t g_main_script_event_block[];
@@ -720,11 +741,11 @@ typedef enum main_env_sfx {
 
 extern u8 g_main_sound_env_sed_data[];
 extern u8 g_main_sound_system_sed_data[];
-
 extern main_sound_music_t g_main_sound_music;
 extern file_extent_t g_main_sound_scenario_smd_files[];
 extern file_extent_t g_main_sound_permanent_smd_files[5];
 extern s32 g_main_sound_weather_sfx_id; /* the background sound main_sound_play_bg_sfx started, 0 for none */
+
 void main_sound_set_sfx_echo(int sound_id, int volume);
 void main_sound_stop_weather_sfx_music(void);
 void main_sound_stop_current_weather_sfx(void);
@@ -761,10 +782,20 @@ s32 main_sound_unload_scenario_mus(s32 slot);
 void main_sound_unload_scenario_music_and_tunes(void);
 s32 main_sound_update_tunes(void);
 s32 main_sound_wait_for_scenario_smd_load(s32 music_id);
-
 void main_sound_replay_bg_sfx(void);
+s32 main_sound_is_music_loading_stub(void);
 
 /* status */
+/* Values accepted by main_status_set_action_state. */
+typedef enum main_unit_action_state {
+    MAIN_UNIT_ACTION_STATE_NONE = 0,
+    MAIN_UNIT_ACTION_STATE_CHARGING = 5,
+    MAIN_UNIT_ACTION_STATE_JUMPING = 6,
+    MAIN_UNIT_ACTION_STATE_DEFENDING = 7,
+    MAIN_UNIT_ACTION_STATE_PERFORMING = 8,
+    MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING = 255
+} main_unit_action_state_e;
+
 /* Packed highest-order action status: a one-based index, or zero for none. */
 enum {
     MAIN_ACTION_STATUS_RESULT_INDEX_MASK = 0x7f,
@@ -785,6 +816,7 @@ extern const status_effect_data_t g_main_status_effect_data[STATUS_COUNT];
 
 /* Built status masks, indexed by main_status_check_set_e. */
 extern u8 g_main_status_check_sets[MAIN_STATUS_CHECK_SET_COUNT][STATUS_BYTE_COUNT];
+
 void main_status_init_check_data(void);
 void main_status_change_unit(battle_stats_t* unit, s32 status_byte_index, u8 status_flag, s32 change_type);
 void main_status_init_ct(battle_stats_t* unit);
@@ -862,20 +894,6 @@ typedef enum main_system_flags {
     MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY = 0x20000000,
 } main_system_flags_e;
 
-/* Game and music heaps allocate whole pages, tagged by these byte tables. */
-enum {
-    MAIN_HEAP_PAGE_SHIFT = 11,
-    MAIN_HEAP_PAGE_SIZE = 1 << MAIN_HEAP_PAGE_SHIFT,
-    MAIN_HEAP_GAME_PAGE_COUNT = 64,
-    MAIN_HEAP_SMD_PAGE_COUNT = 16,
-};
-
-extern u8 g_main_heap_game_allocator_table[MAIN_HEAP_GAME_PAGE_COUNT];
-extern u8 g_main_heap_smd_allocator_table[MAIN_HEAP_SMD_PAGE_COUNT];
-extern u8 g_main_heap_smd_base[];
-extern game_options_t g_main_game_options;
-extern game_options_t g_main_game_options_defaults;
-
 /* g_main_system_game_flow_state: what follows when the BATTLE.BIN loop
  * closes a battle or event. */
 typedef enum main_game_flow_state {
@@ -900,6 +918,8 @@ typedef enum main_system_error {
     MAIN_SYSTEM_ERROR_DISTORTION_ANIMATION = 23, /* distortion animation id without a handler */
 } main_system_error_e;
 
+extern s32 D_800459D8;
+
 extern s32 g_main_system_frontend_world_result;
 extern u32 g_main_system_game_flow_state; /* main_game_flow_state_e */
 extern u32 g_main_system_game_loop_stack_pointer;
@@ -909,35 +929,22 @@ extern s32 g_main_system_play_time_frames;
 extern s32 g_main_system_play_time_hours;
 extern s32 g_main_system_play_time_minutes;
 extern s32 g_main_system_play_time_seconds;
+
 /* main_system_flags_e bits; cleared by main_save_init_data_tables. */
 extern u32 g_main_system_flags;
 extern s32 g_main_system_session_frames;
 extern s32 g_main_system_animation_speed;
 extern s32 g_main_system_battle_frame_hsync_count;
 extern s32 g_main_system_battle_frame_hsync_count_max;
+extern s32 g_main_debug_display_enabled;
+extern s32 g_main_replay_story_event_index;
 
-/* The packed 32-bit view of the options record; g_main_game_options names the
- * same address under its union type. The scalar name is retained because GCC
- * otherwise coalesces the saved 32-bit load with the following bitfield writes
- * and changes the target instruction order. */
-
-extern s32 g_main_boot_startup2_has_run;
-extern u32 g_main_boot_squaresoft_logo_image_words[];
-extern u8* g_main_heap_high_overlay_load_address;
-extern u8* g_main_heap_low_overlay_load_address;
-extern u8* g_main_heap_world_overlay_load_address;
 /* 0x800449ec: empty (nop, jr ra). Every main loop and every blocking wait calls it once per frame. */
 void main_system_frame_stub(void);
 
 /* 0x800449f8: a return-only hook. Main and overlay callers supply two 32-bit arguments,
  * but neither their original meaning nor the hook's original name is proven. */
 void main_system_report_stub(s32 category, s32 code);
-void main_overlay_call_battle_entrypoint(void);
-void main_overlay_exec_battle_bin(void);
-int main_overlay_exec_open_bin_main_loop(int mode);
-void main_overlay_exec_open_bin_ending(void);
-int main_overlay_open_world_and_wldcore(int load_world);
-void main_overlay_open_world_bin(s32 mode);
 void main_restore_game_loop_stack_pointer(u32* source);
 void main_system_handle_error(int error_code);
 void main_system_handle_battle_load_exception(s32 value);
@@ -947,18 +954,46 @@ void main_system_reset_game(void);
 void main_system_run_game_loop(void);
 void main_system_stop_display_and_audio_for_game_reset(void);
 void main_system_store_stack_pointer(u32* destination);
-s32 main_util_roll_pass_fail(s32 maximum, s32 threshold);
-void main_boot_run_startup(void);
-void main_boot_reset_game_state(void);
 void main_system_handle_draw_sync_callback(void);
 void main_system_handle_vsync_callback(void);
+
+/* boot */
+extern s32 g_main_boot_startup2_has_run;
+extern u32 g_main_boot_squaresoft_logo_image_words[];
+
+void main_boot_run_startup(void);
+void main_boot_reset_game_state(void);
 void main_boot_build_and_draw_sceap_logo(void);
 void main_boot_build_and_draw_squaresoft_logo(void);
 int main_boot_draw_sceap_logo(u32* otag, u32* image);
 int main_boot_draw_squaresoft_logo(u32* otag, u32* image);
 void main_boot_fade_out_squaresoft_logo(void);
-void main_util_set_svector(SVECTOR* vector, s32 x, s32 y, s32 z);
-void main_util_set_vector(VECTOR* vector, s32 x, s32 y, s32 z);
+
+/* overlay */
+void main_overlay_call_battle_entrypoint(void);
+void main_overlay_exec_battle_bin(void);
+int main_overlay_exec_open_bin_main_loop(int mode);
+void main_overlay_exec_open_bin_ending(void);
+int main_overlay_open_world_and_wldcore(int load_world);
+void main_overlay_open_world_bin(s32 mode);
+
+/* heap */
+/* Game and music heaps allocate whole pages, tagged by these byte tables. */
+enum {
+    MAIN_HEAP_PAGE_SHIFT = 11,
+    MAIN_HEAP_PAGE_SIZE = 1 << MAIN_HEAP_PAGE_SHIFT,
+    MAIN_HEAP_GAME_PAGE_COUNT = 64,
+    MAIN_HEAP_SMD_PAGE_COUNT = 16,
+};
+
+extern u8 g_main_heap_game_allocator_table[MAIN_HEAP_GAME_PAGE_COUNT];
+extern u8 g_main_heap_smd_allocator_table[MAIN_HEAP_SMD_PAGE_COUNT];
+extern u8 g_main_heap_smd_base[];
+extern u8* g_main_heap_high_overlay_load_address;
+extern u8* g_main_heap_low_overlay_load_address;
+extern u8* g_main_heap_world_overlay_load_address;
+extern u8* g_main_heap_companion_overlay_load_address;
+
 void* main_heap_alloc(u32 size);
 void* main_heap_alloc_smd(u32 size);
 void main_heap_call_free(void* allocation);
@@ -966,13 +1001,18 @@ void main_heap_clear_game_allocator_table(void);
 s32 main_heap_free(void* allocation);
 u8* main_heap_reserve_at(u8* allocation, u32 size);
 s32 main_heap_free_smd(void* allocation);
+void main_heap_clear_smd_allocator_table(void);
+
+/* utilities */
+s32 main_util_roll_pass_fail(s32 maximum, s32 threshold);
+void main_util_set_svector(SVECTOR* vector, s32 x, s32 y, s32 z);
+void main_util_set_vector(VECTOR* vector, s32 x, s32 y, s32 z);
 void main_util_clear_byte_data(void* destination, s32 count);
 
 /* SCUS byte loops at 0x8005e254 (copy) and 0x8005e644 (clear).
  * Copy takes source first; both routines do nothing for a nonpositive count. */
 void main_util_copy_byte_data(const void* source, void* destination, s32 count);
 void main_util_copy_action_data(const action_command_t* source, action_command_t* destination);
-void main_heap_clear_smd_allocator_table(void);
 void main_util_copy_bytes(const void* source, void* destination, int count);
 
 /* unit */
@@ -994,16 +1034,6 @@ typedef struct main_unit_generation_base_data {
 } main_unit_generation_base_data_t;
 typedef char main_unit_generation_base_data_size_must_be_12[(sizeof(main_unit_generation_base_data_t) == 12) ? 1 : -1];
 
-/* Values accepted by main_status_set_action_state. */
-typedef enum main_unit_action_state {
-    MAIN_UNIT_ACTION_STATE_NONE = 0,
-    MAIN_UNIT_ACTION_STATE_CHARGING = 5,
-    MAIN_UNIT_ACTION_STATE_JUMPING = 6,
-    MAIN_UNIT_ACTION_STATE_DEFENDING = 7,
-    MAIN_UNIT_ACTION_STATE_PERFORMING = 8,
-    MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING = 255
-} main_unit_action_state_e;
-
 extern u8 g_main_party_highest_level;
 extern s32 g_main_entd_current_event_id;
 extern entd_file_t* g_main_entd_set;
@@ -1012,6 +1042,12 @@ extern party_data_t g_main_party_data[PARTY_ROSTER_SLOT_COUNT];
 extern main_unit_generation_base_data_t g_main_unit_generation_base_data[MAIN_UNIT_TYPE_COUNT];
 extern u8 g_main_unit_generation_raw_stat_variance[MAIN_UNIT_TYPE_COUNT][UNIT_RAW_STAT_COUNT];
 extern u32 g_main_unit_name_uses_world_text;
+extern unit_deployment_coordinates_t* g_main_unit_deployed_coords;
+extern u8 g_main_crystal_learnable_abilities[];
+extern crystal_pickup_result_t g_main_crystal_pickup_result;
+extern u8 g_main_crystal_treasure_item_id;
+extern unit_deployment_coordinates_t g_main_deployed_unit_map_coordinates[6];
+
 void main_unit_update_formation_stats(battle_stats_t* unit);
 
 /* Current encounter, NULL while loading, or (entd_encounter_t *)-1 when
@@ -1041,10 +1077,8 @@ void main_unit_calculate_entd_equipment(battle_stats_t* unit, entd_unit_t* entd)
 void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, const entd_unit_t* entd);
 void main_unit_calculate_move_jump(battle_stats_t* unit, s32 keep_position);
 u8 main_unit_calculate_palette_spritesheet(battle_stats_t* unit, u8* palette);
-
 s32 main_unit_calculate_random_equipment(
     battle_stats_t* unit, u8 item_type_flag, u8 weapon_flag_mask, u8 required_item_type);
-
 u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, entd_unit_t* entd);
 s32 main_unit_calculate_zodiac_symbol(u16 birthday);
 s32 main_unit_check_level_up(battle_stats_t* unit);
@@ -1098,9 +1132,9 @@ typedef struct zodiac_draw_context {
 
 extern const u16 g_main_zodiac_day_limits[ZODIAC_SIGN_ORDINARY_COUNT];
 extern POLY_FT4 g_main_zodiac_primitives[2][30];
+extern u16 g_main_month_start_day_offsets[13];
 
 /* gfx */
-
 /* Resident unit-graphics queue, filled and consumed by the BATTLE loader. */
 typedef struct main_gfx_unit_graphics_load_descriptor {
     u8 map_x;
@@ -1157,6 +1191,12 @@ extern DISPENV g_main_gfx_display_envs[2];
 extern DRAWENV g_main_gfx_draw_envs[2];
 extern s32 g_main_gfx_loading_display_frame_counter;
 extern s32 g_main_gfx_screen_polarity;
+extern volatile u8 g_fntload_clut_y_offset_immediate;
+extern s32 g_main_font_print_enabled;
+extern u8 g_main_common_menu_graphics_loaded;
+extern u8 g_main_special_portrait_unit_id;
+extern u8 g_main_special_portrait_wldface_id;
+
 void main_gfx_add_now_loading_to_otag(u32* otag);
 void main_gfx_build_now_loading(u32 visible, s32 x, s32 y);
 void main_gfx_draw_now_loading_message(void);
@@ -1172,11 +1212,18 @@ void main_set_display_draw_new_game(int width, int height, int projection, u8 re
 void main_gfx_build_now_loading_center(u32 visible);
 void main_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* poly);
 void main_gfx_call_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly);
-
 void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture, upoint16_t* base,
     sprite_sheet_frame_t* frame, point16_t* scale, sprite_draw_offset_t* offset);
 
-/* other */
+/* menu */
+extern u8 g_main_menu_scroll_accel_delay;
+extern u8 g_main_menu_scroll_slow_step;
+extern u8 g_main_menu_scroll_fast_step;
+extern u8 g_main_action_menu_types_by_skillset[0xe0];
+extern game_options_t g_main_game_options;
+extern game_options_t g_main_game_options_defaults;
+
+/* terrain */
 /* g_main_terrain_status_flags has one byte per map_surface_type_e; only
  * MAP_SURFACE_POISONED_MARSH has a bit. */
 enum {
@@ -1201,43 +1248,11 @@ enum {
     MAIN_TERRAIN_COST_BLOCKED = 0xff, /* stays so under Any Ground */
 };
 
-extern volatile u8 g_fntload_clut_y_offset_immediate;
-extern s32 g_main_font_print_enabled;
-extern u8* g_main_brave_story_ages_source;
-extern u8 g_main_menu_scroll_accel_delay;
-extern u8 g_main_menu_scroll_slow_step;
-extern u8 g_main_menu_scroll_fast_step;
-extern u8 g_main_accessory_page_order[0x21];
-extern u8 g_main_armor_page_order[0x25];
-extern u8 g_main_helmet_page_order[0x1d];
-extern u8 g_main_action_menu_types_by_skillset[0xe0];
-extern s32 g_main_battle_bin_sector;
-extern u8 g_main_common_menu_graphics_loaded;
-extern u32 g_main_tutorial_progress_masks[];
-extern u8 g_main_special_portrait_unit_id;
-extern u8 g_main_calculator_primes[CALCULATOR_PRIME_COUNT];
-extern u16 g_main_month_start_day_offsets[13];
-extern unit_deployment_coordinates_t* g_main_unit_deployed_coords;
-extern u8 g_main_crystal_learnable_abilities[];
-extern crystal_pickup_result_t g_main_crystal_pickup_result;
-extern u8 g_main_crystal_treasure_item_id;
-extern u8 g_main_brave_story_character_ages[0x40];
-extern s32 g_main_debug_display_enabled;
-extern s32 g_main_replay_story_event_index;
-extern u8 g_main_special_portrait_wldface_id;
-extern unit_deployment_coordinates_t g_main_deployed_unit_map_coordinates[6];
 extern u8 g_main_terrain_movement_cost_tables[][64];
 extern const u8 g_main_terrain_status_flags[64];
 extern u8 g_main_terrain_geomancy_abilities[];
-s32 main_sound_is_music_loading_stub(void);
 
-/* unnamed */
-extern s32 D_800459D8;
-extern u8 D_800473A7;
-extern u8 D_80057b1c;
 /* Two bytes per map_surface_type_e; all 64 pairs are 0x19, 0x19. */
 extern u8 g_main_terrain_tile_info_pairs[64][2];
-
-/* entry */
 
 #endif

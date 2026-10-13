@@ -474,14 +474,6 @@ typedef enum menu_ability_category {
     MENU_ABILITY_CATEGORY_MOVEMENT = 3,
     MENU_ABILITY_CATEGORY_ALL = 15, /* the list builders take any other value as all */
 } menu_ability_category_e;
-/* g_script_attack_entry_mode / g_world_script_attack_entry_mode:
- * whether an event instruction loaded the ATTACK overlay and its graphics
- * before the deployment screen starts. */
-typedef enum script_attack_entry_mode {
-    SCRIPT_ATTACK_ENTRY_NORMAL = 1,       /* set when an event thread starts */
-    SCRIPT_ATTACK_ENTRY_PRELOADED = 2,    /* *_script_load_attack_graphics_event_instruction ran */
-    SCRIPT_ATTACK_ENTRY_PRELOAD_USED = 3, /* *_menu_init_attack_resources_and_threads skipped its loads */
-} script_attack_entry_mode_e;
 
 /* The argument of option_entrypoint and world_menu_run_main_mode: which of
  * the OPTION overlay's screens to run. */
@@ -669,6 +661,8 @@ typedef char menu_entry_size_must_be_60[(sizeof(menu_entry_t) == 60) ? 1 : -1];
 static inline s16* menu_entry_result(menu_entry_t* entry) {
     return entry->value;
 }
+
+void menu_copy_sprite_position_uv_and_size(const menu_entry_t* entry, SPRT* sprite, s32 unused_frame);
 
 /* menu text */
 /* menu_text_layout_t.mode[]: what a column of the layout draws. */
@@ -1801,15 +1795,5 @@ typedef struct menu_unit_view_thread_set {
     s32 task_ids[4];          /* 0x20 */
 } menu_unit_view_thread_set_t;
 typedef char menu_unit_view_thread_set_size_must_be_48[(sizeof(menu_unit_view_thread_set_t) == 48) ? 1 : -1];
-
-/* other */
-/* One selectable save-file icon: 16-colour CLUT plus 16x16 4bpp image. */
-typedef struct card_save_icon {
-    palette_t clut; /* 0x00 */
-    u8 image[0x80]; /* 0x20 */
-} card_save_icon_t;
-
-/* sprites */
-void menu_copy_sprite_position_uv_and_size(const menu_entry_t* entry, SPRT* sprite, s32 unused_frame);
 
 #endif

@@ -9,7 +9,7 @@
 #include "fft/unit.h"
 #include "psx/types.h"
 
-/* event */
+/* bytecode */
 enum {
     EVENT_BLOCK_BYTES = 8192,
     EVENT_BLOCK_SECTORS = 4,
@@ -29,7 +29,7 @@ enum {
     EVENT_UNIT_ID_DEPLOYED_END = 0x7d,
     /* script_get_misc_id result for an absent unit. */
     EVENT_MISC_ID_NONE = 2000,
-    /* g_*_event_unit_slots[] entry with no ghost unit assigned. */
+    /* g_script_unit_slots[] entry with no ghost unit assigned. */
     EVENT_UNIT_SLOT_EMPTY = 1000,
 };
 
@@ -282,6 +282,7 @@ typedef enum event_opcode {
     EVENT_OPCODE_NOP = 0xf2,                  /* 0 */
 } event_opcode_e;
 
+/* built-in commands */
 /* Built-in operation selected by EVENT_OPCODE_CALL_FUNCTION. The PSX domain
  * is 0x01..0x12 and is shared by the structurally parallel BATTLE and WORLD
  * interpreters. BLOCK_START handles only the mute/unmute selectors. */
@@ -389,6 +390,7 @@ typedef enum event_inflict_status {
     EVENT_INFLICT_STATUS_POISON = 0x02,
 } event_inflict_status_e;
 
+/* instruction formats */
 /* EVENT/TEST.EVT record. The first 32-bit value is relative to the block base, not
  * data[]. script_load_event converts it to a text pointer, then overwrites
  * it with EVENT_TEXT_OFFSET_PROCESSED. This is not a decoded instruction
@@ -672,7 +674,7 @@ typedef struct event_jump_parameters {
     u8 direction;
 } event_jump_parameters_t;
 
-/* work */
+/* overlay workspace */
 /* Provisional work block at *g_ai_workspace_ptr: the menus build their
  * ability list and the outermost scrolling list's packet pages in it, events
  * keep the staged-status snapshot at 0x5f0. */
@@ -685,6 +687,16 @@ typedef struct event_work {
 typedef char
     event_work_status_staging_offset_must_be_0x5f0[((unsigned long)&((event_work_t*)0)->status_staging == 0x5F0) ? 1
                                                                                                                  : -1];
+
+/* interpreter state */
+/* g_script_attack_entry_mode / g_world_script_attack_entry_mode:
+ * whether an event instruction loaded the ATTACK overlay and its graphics
+ * before the deployment screen starts. */
+typedef enum script_attack_entry_mode {
+    SCRIPT_ATTACK_ENTRY_NORMAL = 1,       /* set when an event thread starts */
+    SCRIPT_ATTACK_ENTRY_PRELOADED = 2,    /* *_script_load_attack_graphics_event_instruction ran */
+    SCRIPT_ATTACK_ENTRY_PRELOAD_USED = 3, /* *_menu_init_attack_resources_and_threads skipped its loads */
+} script_attack_entry_mode_e;
 
 /* variables */
 /* Event-script variable ids shared by the BATTLE and WORLD interpreters.
