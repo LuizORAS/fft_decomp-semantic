@@ -1779,10 +1779,9 @@ extern u8 g_world_unit_status_banner_active;
 extern menu_entry_t g_world_unit_status_banner_menu;
 extern s8 g_world_unit_status_banner_state; /* banner state: 0 idle, 1 finishing, else countdown */
 
-/* Panel scratch areas inside the stack bytes of g_world_thread_contexts[0]
- * (+0x100, +0x200) and [14] (+0x100, +0x200). native_thread_t leaves those
- * bytes unnamed, so a member spelling would be raw offset arithmetic; they
- * stay separate symbols. The palette areas hold one slot per page. */
+/* Panel scratch aliases inside g_native_thread_contexts[0] and [14], at
+ * +0x100 and +0x200 in each slot's stack. These stay separate symbols;
+ * the palette areas hold one slot per page. */
 extern world_unit_status_number_images_t g_world_unit_summary_digit_images;
 extern menu_palette_primitives_t g_world_unit_editor_palette;
 extern menu_palette_slot_t g_world_unit_summary_palettes[];

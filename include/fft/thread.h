@@ -16,22 +16,31 @@
  * cursor threads use [0] timer and [1] state, event unit/sprite-move threads
  * keep the unit id in [0], and DisplayMessage text threads use [2] x offset,
  * [3] y offset, [4] arrow offset, [5] opening type and [6] width override. The
- * remaining saved context/stack stays provisional. */
+ * scheduler saves s0-s7 and k0/k1 before the GP, SP, FP and return address. */
 typedef struct native_thread {
-    s32 function_parameter_1; /* 0x00 */
-    s32 function_parameter_2; /* 0x04 */
-    s32 function_parameter_3; /* 0x08 */
-    s32 function_parameter_4; /* 0x0c; set by WORLD's four-parameter helper */
-    u8 _unused_010[0x28];
-    void* global_pointer;         /* 0x38 */
-    u32* stack_pointer;           /* 0x3c */
-    u32* frame_pointer;           /* 0x40 */
-    void (*code_pointer)(void);   /* 0x44 */
-    s32 is_running;               /* 0x48 */
-    s32 task_id;                  /* 0x4c: native_thread_task_e */
-    s32 task_words[7];            /* 0x50: per-task 32-bit values, see above */
-    u8 _unused_06c[0x3f0 - 0x6c]; /* 0x6c: the thread's stack */
-    u32 stack_top[4];             /* 0x3f0: initial SP/FP; the stack grows down from here */
+    s32 function_parameter_1;   /* 0x00 */
+    s32 function_parameter_2;   /* 0x04 */
+    s32 function_parameter_3;   /* 0x08 */
+    s32 function_parameter_4;   /* 0x0c; set by WORLD's four-parameter helper */
+    u32 saved_s0;               /* 0x10 */
+    u32 saved_s1;               /* 0x14 */
+    u32 saved_s2;               /* 0x18 */
+    u32 saved_s3;               /* 0x1c */
+    u32 saved_s4;               /* 0x20 */
+    u32 saved_s5;               /* 0x24 */
+    u32 saved_s6;               /* 0x28 */
+    u32 saved_s7;               /* 0x2c */
+    u32 saved_k0;               /* 0x30 */
+    u32 saved_k1;               /* 0x34 */
+    void* global_pointer;       /* 0x38 */
+    u32* stack_pointer;         /* 0x3c */
+    u32* frame_pointer;         /* 0x40 */
+    void (*code_pointer)(void); /* 0x44 */
+    s32 is_running;             /* 0x48 */
+    s32 task_id;                /* 0x4c: native_thread_task_e */
+    s32 task_words[7];          /* 0x50: per-task 32-bit values, see above */
+    u8 stack[0x3f0 - 0x6c];     /* 0x6c: the thread's stack */
+    u32 stack_top[4];           /* 0x3f0: initial SP/FP; the stack grows down from here */
 } native_thread_t;
 typedef char native_thread_size_must_be_1024[(sizeof(native_thread_t) == 1024) ? 1 : -1];
 
