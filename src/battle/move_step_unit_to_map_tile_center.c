@@ -17,11 +17,11 @@ void move_step_unit_to_map_tile_center(battle_unit_t* unit, s32 allow_height_cha
     velocity = unit->velocity;
     switch (unit->distortion_phase) {
     case 0:
-        velocity.vx = (unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2) - unit->screen.vx) << 12;
-        velocity.vz = (unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2) - unit->screen.vz) << 12;
+        velocity.vx = (unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2) - unit->world_coords.vx) << 12;
+        velocity.vz = (unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2) - unit->world_coords.vz) << 12;
         tile_center.vx = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         tile_center.vz = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-        velocity.vy = (map_calculate_slope_height(&tile_center, unit->map_z) - unit->screen.vy) << 12;
+        velocity.vy = (map_calculate_slope_height(&tile_center, unit->map_z) - unit->world_coords.vy) << 12;
         velocity.vx /= timer;
         velocity.vy /= timer;
         velocity.vz /= timer;
@@ -41,7 +41,7 @@ void move_step_unit_to_map_tile_center(battle_unit_t* unit, s32 allow_height_cha
         break;
     }
     unit->velocity = velocity;
-    battle_unit_set_screen_coords_from_real_coords(unit);
+    battle_unit_set_world_coords_from_real_coords(unit);
     unit->distortion_timer = timer;
     unit->distortion_target = target_z;
 }

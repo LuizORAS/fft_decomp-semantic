@@ -38,9 +38,9 @@ void battle_unit_set_target_animation_from_attack_type(battle_unit_t* attacker, 
                 battle_unit_face_towards_action_target(target, attacker);
                 battle_gfx_set_thrown_item_graphic_palette(action->item_lost, target);
                 attacker_height = battle_gfx_get_unit_spritesheet_height_by_runtime_id(attacker->runtime_id) / 2
-                    - attacker->screen.vy;
-                target_height
-                    = battle_gfx_get_unit_spritesheet_height_by_runtime_id(target->runtime_id) / 2 - target->screen.vy;
+                    - attacker->world_coords.vy;
+                target_height = battle_gfx_get_unit_spritesheet_height_by_runtime_id(target->runtime_id) / 2
+                    - target->world_coords.vy;
                 delta = attacker_height - target_height;
                 if (delta < -0xb) {
                     animation = BATTLE_UNIT_ANIMATION_WEAPON_GUARD_LOW;

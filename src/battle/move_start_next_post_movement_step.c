@@ -66,7 +66,7 @@ s32 move_start_next_post_movement_step(void) {
         }
         battle_gfx_start_unit_fade_out_red(target->runtime_id);
         target->depth_height_offset
-            = 0x24 - (battle_gfx_calculate_screen_z_from_unit_screen_coords(source) - target->screen.vy);
+            = 0x24 - (battle_gfx_calculate_world_height_from_world_coords(source) - target->world_coords.vy);
         main_sound_play_sfx_find_channel(MAIN_SFX_COMPLETE);
         return 1;
     }

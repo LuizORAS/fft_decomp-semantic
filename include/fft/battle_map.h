@@ -882,7 +882,7 @@ void map_store_max_coordinates(SVECTOR* destination);
 /* A typed terrain parameter loses the first retail byte-cursor increment. */
 void map_copy_xy_coords_and_tile_data(u8* data);
 map_tile_t* map_get_tile_data_ptr_from_battle_id(u32 battle_id);
-map_tile_t* map_get_unit_tile_from_runtime_screen_coords(u32 runtime_id);
+map_tile_t* map_get_unit_tile_from_world_coords(u32 runtime_id);
 
 /* items and traps */
 extern map_move_find_item_data_t g_map_move_find_item_data[MAP_ID_COUNT];

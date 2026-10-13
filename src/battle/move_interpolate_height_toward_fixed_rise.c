@@ -28,7 +28,7 @@ void move_interpolate_height_toward_fixed_rise(battle_unit_t* unit) {
             unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         height = unit->real.vy;
-        unit->screen.vy = height / ONE;
+        unit->world_coords.vy = height / ONE;
         break;
     }
     unit->distortion_timer = step;

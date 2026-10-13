@@ -5,7 +5,7 @@
  *
  * Each snapshot receives the rotation masked to 12 bits, the current real
  * coordinates in whole units (Q12 shifted down), and the camera zoom vector. */
-void effect_copy_camera_angles_and_screen_coords(void) {
+void effect_copy_camera_angles_and_world_coords(void) {
     SVECTOR* rotation;
     VECTOR* coords;
 

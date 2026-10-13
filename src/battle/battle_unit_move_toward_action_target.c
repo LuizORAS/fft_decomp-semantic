@@ -31,10 +31,10 @@ void battle_unit_move_toward_action_target(battle_unit_t* unit, s32 allow_height
                     target->real.vz - unit->real.vz);
             } else {
                 velocity.vx = (unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE
-                                  + (MAP_TILE_SIZE / 2) - unit->screen.vx)
+                                  + (MAP_TILE_SIZE / 2) - unit->world_coords.vx)
                     << 12;
                 velocity.vz = (unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE
-                                  + (MAP_TILE_SIZE / 2) - unit->screen.vz)
+                                  + (MAP_TILE_SIZE / 2) - unit->world_coords.vz)
                     << 12;
                 tile_center.vx
                     = unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
@@ -42,7 +42,7 @@ void battle_unit_move_toward_action_target(battle_unit_t* unit, s32 allow_height
                     = unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 velocity.vy
                     = (map_calculate_slope_height(&tile_center, unit->battle_data->action_command.target_position.vy)
-                          - unit->screen.vy)
+                          - unit->world_coords.vy)
                     << 12;
             }
             velocity.vx /= timer;
@@ -67,7 +67,7 @@ void battle_unit_move_toward_action_target(battle_unit_t* unit, s32 allow_height
         break;
     }
     unit->velocity = velocity;
-    battle_unit_set_screen_coords_from_real_coords(unit);
+    battle_unit_set_world_coords_from_real_coords(unit);
     unit->distortion_timer = timer;
     unit->distortion_target = target_z;
 }

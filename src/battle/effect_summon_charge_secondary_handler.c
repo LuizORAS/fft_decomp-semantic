@@ -41,7 +41,7 @@ s32 effect_summon_charge_secondary_handler(void) {
         state->radius = 0;
         state->angle_step = 0;
         state->angle = 0;
-        effect_resolve_target_render_coords(0, EFFECT_TARGET_INDEX_CASTER, &g_effect_context, &state->center);
+        effect_resolve_target_world_coords(0, EFFECT_TARGET_INDEX_CASTER, &g_effect_context, &state->center);
         state->brightness = 0;
         state->center.vy -= 24;
         for (i = 0; i < 3; i++) {

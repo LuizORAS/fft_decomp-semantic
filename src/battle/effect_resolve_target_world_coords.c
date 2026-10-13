@@ -4,19 +4,19 @@
 #include "fft/map.h"
 #include "psx/types.h"
 
-/* Resolve one effect target to renderer-space coordinates.
+/* Resolve one effect target to integer world coordinates.
  *
- * A unit target copies the unit's screen coordinate record, and when
+ * A unit target copies the unit's world-coordinate record, and when
  * add_depth is set lowers Y to the tile's own surface height. A tile target
- * projects the tile centre (x * 28 + 14, y * 28 + 14) and takes its height
+ * uses the tile centre (x * 28 + 14, y * 28 + 14) and takes its height
  * from the tile record, adding the slope depth when add_depth is set. */
-void effect_resolve_target_render_coords(
+void effect_resolve_target_world_coords(
     s32 add_depth, s32 target_index, effect_secondary_init_t* coord_data, SVECTOR* out) {
     map_tile_t* tile;
 
     if (target_index == EFFECT_TARGET_INDEX_CASTER) {
         if (coord_data->targets[EFFECT_CASTER_ENTRY].target_type == EFFECT_TARGET_TYPE_UNIT) {
-            *out = *battle_unit_get_screen_coords_by_runtime_id(
+            *out = *battle_unit_get_world_coords_by_runtime_id(
                 coord_data->targets[EFFECT_CASTER_ENTRY].data.unit.runtime_id);
             if (add_depth != 0) {
                 s32 height;
@@ -40,7 +40,7 @@ void effect_resolve_target_render_coords(
         }
     } else {
         if (coord_data->targets[target_index].target_type == EFFECT_TARGET_TYPE_UNIT) {
-            *out = *battle_unit_get_screen_coords_by_runtime_id(coord_data->targets[target_index].data.unit.runtime_id);
+            *out = *battle_unit_get_world_coords_by_runtime_id(coord_data->targets[target_index].data.unit.runtime_id);
             if (add_depth != 0) {
                 s32 height;
                 tile = map_get_unit_tile_by_runtime_id(coord_data->targets[target_index].data.unit.runtime_id);

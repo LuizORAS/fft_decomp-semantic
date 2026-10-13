@@ -25,8 +25,8 @@ void battle_unit_copy_rider_data_to_mount(battle_unit_t* unit, battle_unit_t* ri
                 mount->map_y = mount->movement.destination_y = rider->map_y;
                 mount->map_z = mount->movement.destination_z = rider->map_z;
                 mount->real = rider->real;
-                mount->screen = rider->screen;
-                mount->screen.vy -= 10;
+                mount->world_coords = rider->world_coords;
+                mount->world_coords.vy -= 10;
                 mount->real.vy -= 0xa000;
                 battle_unit_set_tile_position(
                     mount->battle_data->battle_id, rider->map_x, rider->map_y, rider->map_z, (rider->facing / 1024));

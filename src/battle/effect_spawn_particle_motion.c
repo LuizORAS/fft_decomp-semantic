@@ -37,9 +37,9 @@ s32 effect_spawn_particle_motion(effect_emitter_values_t* values, effect_motion_
     s16 speed;
 
     init.targets[EFFECT_CASTER_ENTRY] = g_effect_current_secondary->caster;
-    effect_resolve_target_render_coords(0, EFFECT_TARGET_INDEX_CASTER, &init, &origin);
+    effect_resolve_target_world_coords(0, EFFECT_TARGET_INDEX_CASTER, &init, &origin);
     init.targets[0] = g_effect_current_secondary->target.record;
-    effect_resolve_target_render_coords(0, 0, &init, &target);
+    effect_resolve_target_world_coords(0, 0, &init, &target);
     oriented = 0;
     SetTransMatrix(&g_effect_projectile_matrix);
     if ((values->motion_flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING) {

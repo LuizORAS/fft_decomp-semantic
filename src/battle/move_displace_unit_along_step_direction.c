@@ -21,27 +21,27 @@ void move_displace_unit_along_step_direction(battle_unit_t* unit, s32 x, s32 y, 
     switch (g_move_displacement_direction) {
     case MOVE_DIRECTION_SOUTH:
         axis = y - delta;
-        unit->screen.vz = axis;
+        unit->world_coords.vz = axis;
         unit->real.vz = axis << 12;
         break;
     case MOVE_DIRECTION_NORTH:
         axis = y + delta;
-        unit->screen.vz = axis;
+        unit->world_coords.vz = axis;
         unit->real.vz = axis << 12;
         break;
     case MOVE_DIRECTION_EAST:
         axis = x + delta;
-        unit->screen.vx = axis;
+        unit->world_coords.vx = axis;
         unit->real.vx = axis << 12;
         break;
     case MOVE_DIRECTION_WEST:
         axis = x - delta;
-        unit->screen.vx = axis;
+        unit->world_coords.vx = axis;
         unit->real.vx = axis << 12;
         break;
     }
-    screen_z = battle_gfx_calculate_screen_z_from_unit_screen_coords(unit);
-    unit->screen.vy = screen_z;
+    screen_z = battle_gfx_calculate_world_height_from_world_coords(unit);
+    unit->world_coords.vy = screen_z;
     unit->real.vy = screen_z << 12;
     unit->shadow_dirty |= 1;
 }

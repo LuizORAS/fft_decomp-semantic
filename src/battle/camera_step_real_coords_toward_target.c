@@ -10,48 +10,48 @@
  * while it moves, chooses its wait direction or starts an attack animation. */
 void camera_step_real_coords_toward_target(const battle_unit_t* target) {
     if (g_camera_step_vector.vx < 0) {
-        if (g_camera_current_real_coords.vx / ONE > target->screen.vx) {
+        if (g_camera_current_real_coords.vx / ONE > target->world_coords.vx) {
             g_camera_current_real_coords.vx += g_camera_step_vector.vx;
-            if (g_camera_current_real_coords.vx / ONE < target->screen.vx) {
-                g_camera_current_real_coords.vx = target->screen.vx << 12;
+            if (g_camera_current_real_coords.vx / ONE < target->world_coords.vx) {
+                g_camera_current_real_coords.vx = target->world_coords.vx << 12;
             }
         }
     } else {
-        if (g_camera_current_real_coords.vx / ONE < target->screen.vx) {
+        if (g_camera_current_real_coords.vx / ONE < target->world_coords.vx) {
             g_camera_current_real_coords.vx += g_camera_step_vector.vx;
-            if (g_camera_current_real_coords.vx / ONE > target->screen.vx) {
-                g_camera_current_real_coords.vx = target->screen.vx << 12;
+            if (g_camera_current_real_coords.vx / ONE > target->world_coords.vx) {
+                g_camera_current_real_coords.vx = target->world_coords.vx << 12;
             }
         }
     }
     if (g_camera_step_vector.vy < 0) {
-        if (g_camera_current_real_coords.vy / ONE > target->screen.vy) {
+        if (g_camera_current_real_coords.vy / ONE > target->world_coords.vy) {
             g_camera_current_real_coords.vy += g_camera_step_vector.vy;
-            if (g_camera_current_real_coords.vy / ONE < target->screen.vy) {
-                g_camera_current_real_coords.vy = target->screen.vy << 12;
+            if (g_camera_current_real_coords.vy / ONE < target->world_coords.vy) {
+                g_camera_current_real_coords.vy = target->world_coords.vy << 12;
             }
         }
     } else {
-        if (g_camera_current_real_coords.vy / ONE < target->screen.vy) {
+        if (g_camera_current_real_coords.vy / ONE < target->world_coords.vy) {
             g_camera_current_real_coords.vy += g_camera_step_vector.vy;
-            if (g_camera_current_real_coords.vy / ONE > target->screen.vy) {
-                g_camera_current_real_coords.vy = target->screen.vy << 12;
+            if (g_camera_current_real_coords.vy / ONE > target->world_coords.vy) {
+                g_camera_current_real_coords.vy = target->world_coords.vy << 12;
             }
         }
     }
     if (g_camera_step_vector.vz < 0) {
-        if (g_camera_current_real_coords.vz / ONE > target->screen.vz) {
+        if (g_camera_current_real_coords.vz / ONE > target->world_coords.vz) {
             g_camera_current_real_coords.vz += g_camera_step_vector.vz;
-            if (g_camera_current_real_coords.vz / ONE < target->screen.vz) {
-                g_camera_current_real_coords.vz = target->screen.vz << 12;
+            if (g_camera_current_real_coords.vz / ONE < target->world_coords.vz) {
+                g_camera_current_real_coords.vz = target->world_coords.vz << 12;
             }
         }
     } else {
-        if (g_camera_current_real_coords.vz / ONE < target->screen.vz) {
+        if (g_camera_current_real_coords.vz / ONE < target->world_coords.vz) {
             /* Retail quirk: only this positive map-depth step doubles the component. */
             g_camera_current_real_coords.vz += g_camera_step_vector.vz * 2;
-            if (g_camera_current_real_coords.vz / ONE > target->screen.vz) {
-                g_camera_current_real_coords.vz = target->screen.vz << 12;
+            if (g_camera_current_real_coords.vz / ONE > target->world_coords.vz) {
+                g_camera_current_real_coords.vz = target->world_coords.vz << 12;
             }
         }
     }

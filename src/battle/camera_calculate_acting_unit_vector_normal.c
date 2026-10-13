@@ -8,9 +8,9 @@ void camera_calculate_acting_unit_vector_normal(void) {
     battle_unit_t* unit;
 
     unit = battle_unit_get_source();
-    setVector(&delta, unit->screen.vx - g_camera_current_real_coords.vx / ONE,
-        unit->screen.vy - g_camera_current_real_coords.vy / ONE,
-        unit->screen.vz - g_camera_current_real_coords.vz / ONE);
+    setVector(&delta, unit->world_coords.vx - g_camera_current_real_coords.vx / ONE,
+        unit->world_coords.vy - g_camera_current_real_coords.vy / ONE,
+        unit->world_coords.vz - g_camera_current_real_coords.vz / ONE);
     VectorNormal(&delta, &g_camera_step_vector);
     g_camera_step_vector.vy = g_camera_step_vector.vy << 2;
 }

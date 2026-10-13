@@ -30,7 +30,8 @@ void move_start_unit_climb_jump_step(battle_unit_t* unit, const map_tile_t* from
     }
     /* Grouping each constant with the gravity term keeps the target's order
      * (scale, then multiply by gravity); the flat spelling scales gravity first. */
-    speed = SquareRoot12((height - -unit->screen.vy / 6 + (step->length + 1) * 2) * (6 * g_move_jump_gravity) * 2);
+    speed
+        = SquareRoot12((height - -unit->world_coords.vy / 6 + (step->length + 1) * 2) * (6 * g_move_jump_gravity) * 2);
     time = speed / g_move_jump_gravity;
     unit->velocity.vy = -speed;
     time += SquareRoot12((step->length + 1) * (12 * g_move_jump_gravity) * 2) / g_move_jump_gravity;

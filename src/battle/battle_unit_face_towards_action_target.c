@@ -18,18 +18,18 @@ void battle_unit_face_towards_action_target(battle_unit_t* unit, battle_unit_t* 
     delta.vz = 0;
     delta.vx = 0;
     if (target != 0) {
-        delta.vx = target->screen.vx - unit->screen.vx;
-        delta.vz = target->screen.vz - unit->screen.vz;
+        delta.vx = target->world_coords.vx - unit->world_coords.vx;
+        delta.vz = target->world_coords.vz - unit->world_coords.vz;
     } else if (unit->battle_data->action_command.targeting_type == BATTLE_TARGETING_TYPE_TILE) {
         delta.vx = unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)
-            - unit->screen.vx;
+            - unit->world_coords.vx;
         delta.vz = unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)
-            - unit->screen.vz;
+            - unit->world_coords.vz;
     } else {
         other = battle_unit_get_by_battle_id(unit->battle_data->action_command.target_id);
         if (other != 0) {
-            delta.vx = other->screen.vx - unit->screen.vx;
-            delta.vz = other->screen.vz - unit->screen.vz;
+            delta.vx = other->world_coords.vx - unit->world_coords.vx;
+            delta.vz = other->world_coords.vz - unit->world_coords.vz;
         }
     }
     if (unit->status_flags_1_4 & BATTLE_UNIT_STATUS_PREVENT_FACING_MASK) {

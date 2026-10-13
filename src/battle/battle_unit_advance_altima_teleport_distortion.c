@@ -38,7 +38,7 @@ s32 battle_unit_advance_altima_teleport_distortion(battle_unit_t* unit) {
             unit->map_y = unit->movement.destination_y;
             unit->map_z = unit->movement.destination_z;
             battle_unit_set_real_coords_from_map_coords(unit);
-            battle_unit_set_screen_coords_from_real_coords(unit);
+            battle_unit_set_world_coords_from_real_coords(unit);
             if (effect_start_altima_teleport_arrival(unit) == 0) {
                 effect_start_altima_teleport_fade_out(unit);
             }

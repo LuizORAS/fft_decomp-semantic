@@ -49,10 +49,10 @@ void battle_unit_select_weapon_attack_animation(battle_unit_t* attacker, battle_
             }
         }
         /* The target loads the attacker's screen_z zero-extended (lhu). */
-        attacker_centre
-            = battle_gfx_get_unit_spritesheet_height_by_runtime_id(attacker->runtime_id) / 2 - attacker->screen.vy;
+        attacker_centre = battle_gfx_get_unit_spritesheet_height_by_runtime_id(attacker->runtime_id) / 2
+            - attacker->world_coords.vy;
         target_centre
-            = battle_gfx_get_unit_spritesheet_height_by_runtime_id(target->runtime_id) / 2 - target->screen.vy;
+            = battle_gfx_get_unit_spritesheet_height_by_runtime_id(target->runtime_id) / 2 - target->world_coords.vy;
         difference = attacker_centre - target_centre;
         if (difference < -11) {
             battle_unit_store_animation_facing_movement_data(

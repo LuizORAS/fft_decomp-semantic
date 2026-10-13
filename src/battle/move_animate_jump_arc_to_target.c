@@ -31,15 +31,16 @@ void move_animate_jump_arc_to_target(battle_unit_t* unit) {
         if (unit->battle_data != 0) {
             if (unit->strike.target_count != 0) {
                 other = battle_unit_get_by_battle_id(unit->strike.target_list[0]);
-                setVector(&target, other->screen.vx,
-                    other->screen.vy - battle_gfx_get_unit_spritesheet_height_by_runtime_id(other->runtime_id) / 2,
-                    other->screen.vz);
+                setVector(&target, other->world_coords.vx,
+                    other->world_coords.vy
+                        - battle_gfx_get_unit_spritesheet_height_by_runtime_id(other->runtime_id) / 2,
+                    other->world_coords.vz);
             } else {
                 target.vx = unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 target.vz = unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 target.vy = map_calculate_slope_height(&target, unit->battle_data->action_command.target_position.vy);
             }
-            timer = move_calculate_jump_arc_velocity(&unit->screen, &target, &velocity);
+            timer = move_calculate_jump_arc_velocity(&unit->world_coords, &target, &velocity);
             unit->distortion_phase++;
         } else {
             unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
@@ -58,6 +59,6 @@ void move_animate_jump_arc_to_target(battle_unit_t* unit) {
         break;
     }
     unit->velocity = velocity;
-    battle_unit_set_screen_coords_from_real_coords(unit);
+    battle_unit_set_world_coords_from_real_coords(unit);
     unit->distortion_timer = timer;
 }

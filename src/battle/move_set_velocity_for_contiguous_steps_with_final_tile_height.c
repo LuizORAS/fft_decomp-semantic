@@ -38,9 +38,9 @@ void move_set_velocity_for_contiguous_steps_with_final_tile_height(
     x = unit->map_x;
     y = unit->map_y;
     index = unit->movement_path_offset - 1;
-    start_x = unit->screen.vx;
-    start_y = unit->screen.vz;
-    start_z = unit->screen.vy;
+    start_x = unit->world_coords.vx;
+    start_y = unit->world_coords.vz;
+    start_z = unit->world_coords.vy;
 
     while (index < path->count) {
         current = &path->data.steps[index];

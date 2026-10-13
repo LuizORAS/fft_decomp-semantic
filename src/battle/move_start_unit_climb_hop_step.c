@@ -27,7 +27,7 @@ void move_start_unit_climb_hop_step(battle_unit_t* unit, const map_tile_t* from,
     } else {
         height = to->height * 2 + to->depth_half_height.half_height * unit->destination_edge_height;
     }
-    rise_height = (height - -unit->screen.vy / 6) * 6 + 1;
+    rise_height = (height - -unit->world_coords.vy / 6) * 6 + 1;
     rise = SquareRoot12(rise_height * g_move_jump_gravity * 2);
     unit->velocity.vy = -rise;
     frames = rise / g_move_jump_gravity;

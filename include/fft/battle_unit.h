@@ -749,19 +749,19 @@ typedef struct battle_unit {
     /* 0x014; BATTLE_SEQ_OP_SET_LAYER_PRIORITY: the row of g_battle_gfx_animation_layer_priorities. */
     u16 layer_priority;
     u8 _padding_016[2]; /* aligns real */
-    VECTOR real;        /* 0x018; vx = x, vy = height, vz = map depth */
+    VECTOR real;        /* 0x018; world coordinates in 20.12 */
     /* Per-frame real-coordinate velocity; the jump-start distortion animation
      * (0x8008a35c) copies all four 32-bit values as one block. */
     VECTOR velocity; /* 0x028 */
     /* Movement interpolation speed, stored and passed as a signed 32-bit value. */
-    s32 walk_speed; /* 0x038 */
-    s32 step_speed; /* 0x03c; interpolation speed of the current step; 0x2000 when a move/climb starts, raised by
-                       jump gravity */
-    SVECTOR screen; /* 0x040; vx = x, vy = height, vz = map depth */
+    s32 walk_speed;       /* 0x038 */
+    s32 step_speed;       /* 0x03c; interpolation speed of the current step; 0x2000 when a move/climb starts, raised by
+                             jump gravity */
+    SVECTOR world_coords; /* 0x040; integer world coordinates: x, height, map depth */
     u8 _unused_048[8];
-    /* The sprite is drawn at screen + event_offset + seq_offset
+    /* The sprite is drawn at world_coords + event_offset + seq_offset
      * (battle_unit_copy_draw_coords); both offsets are in the units
-     * of screen (vx = x, vy = height, vz = map depth). */
+     * of world_coords (vx = x, vy = height, vz = map depth). */
     SVECTOR seq_offset; /* 0x050; the shift of the running sequence's move commands; cleared when one starts */
     /* Added to the projected sprite position, in pixels, by
      * BATTLE_SEQ_OP_MOVE_SCREEN_OFFSET; cleared when a sequence starts and,
@@ -882,7 +882,7 @@ typedef struct battle_unit {
      * battle_gfx_init_position_vector_copies. */
     u32 position_copies_active;
     /* Six vectors used during sprite rotation/scaling render (0x2ec);
-     * battle_gfx_init_position_vector_copies seeds all six from screen_x/z/y. */
+     * battle_gfx_init_position_vector_copies seeds all six from world_coords. */
     SVECTOR position_copies[6]; /* 0x2ec..0x31b */
     /* Fixed sprite-display storage; API pointers address each header. */
     battle_gfx_unit_sprite_display_t unit_sprite_display;                 /* 0x31c; 8 parts */
@@ -1323,11 +1323,20 @@ void battle_unit_update_attack_result_animation(battle_unit_t* unit);
 void battle_unit_update_facing_and_pending_animations(void);
 void battle_unit_start_post_attack_animation_display(battle_unit_t* attacker, battle_unit_t* target);
 
-/* position and display */
+/* world coordinates */
 extern SVECTOR g_battle_unit_runtime_coords;
 
+SVECTOR* battle_unit_get_world_coords_by_runtime_id(u32 runtime_id);
+SVECTOR* battle_unit_get_world_coords_by_battle_id(u32 battle_id);
+void battle_unit_copy_world_coords(u32 runtime_id, SVECTOR* world_coords);
+void battle_unit_copy_world_coords_to_vector(u32 runtime_id, VECTOR* destination);
+SVECTOR* battle_unit_copy_world_coords_to_scratch(u32 runtime_id);
+void battle_unit_set_real_coords_from_world_coords(struct battle_unit* unit);
+void battle_unit_set_world_coords_from_real_coords(struct battle_unit* unit);
+void battle_unit_set_move_and_world_coords(battle_unit_t* unit);
+
+/* position and display */
 battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_data_t* out, s32 unit_id);
-void battle_unit_copy_screen_location(u32 runtime_id, VECTOR* destination);
 battle_unit_t* battle_unit_find_other_chocobo_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
 void battle_unit_project_to_screen(u32 runtime_id, SVECTOR* screen_coordinates);
 u8 battle_unit_get_effective_height(const battle_stats_t* unit);
@@ -1343,7 +1352,6 @@ s32 battle_unit_set_tile_position(s32 battle_id, u8 map_x, u8 map_y, u8 map_z, u
 void battle_unit_shift_down_or_up(battle_unit_t* unit, s8 delta);
 void battle_unit_copy_map_coords_by_runtime_id(u32 runtime_id, SVECTOR* coords);
 void battle_unit_copy_draw_coords(SVECTOR* destination, const battle_unit_t* runtime);
-void battle_unit_copy_screen_coords(u32 runtime_id, SVECTOR* screen_coords);
 void battle_unit_dismount_rider_and_update_display(battle_unit_t* rider);
 SVECTOR* battle_unit_get_event_offset_by_runtime_id(u32 runtime_id);
 s32 battle_unit_get_map_coords_by_runtime_id(u32 runtime_id, SVECTOR* coords);
@@ -1351,13 +1359,8 @@ battle_unit_t* battle_unit_find_runtime_at_tile(s32 map_x, s32 map_y, s32 map_z)
 s32 battle_unit_get_tile_center_and_height_by_battle_id(u32 battle_id, SVECTOR* coords);
 s32 battle_unit_add_event_offset_by_runtime_id(u32 runtime_id, const SVECTOR* amount);
 void battle_unit_increment_or_decrement_height_mod(battle_unit_t* unit);
-void battle_unit_set_move_and_screen_coords(battle_unit_t* unit);
 void battle_unit_shift_forward_or_backward(battle_unit_t* unit, s8 delta);
 void battle_unit_shift_right_or_left(battle_unit_t* unit, s8 delta);
-SVECTOR* battle_unit_copy_screen_coords_to_scratch(u32 runtime_id);
-SVECTOR* battle_unit_get_screen_coords_by_runtime_id(u32 runtime_id);
-void battle_unit_set_real_coords_from_screen_coords(struct battle_unit* unit);
-void battle_unit_set_screen_coords_from_real_coords(struct battle_unit* unit);
 
 /* progression and pickups */
 void battle_unit_apply_poach_morbol_transformation(battle_unit_t* unit);

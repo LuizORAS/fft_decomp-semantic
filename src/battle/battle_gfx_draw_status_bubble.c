@@ -80,8 +80,9 @@ void battle_gfx_draw_status_bubble(battle_unit_t* unit, const DVECTOR* unused_sc
 
     SetRotMatrix(&g_camera_matrix);
     SetTransMatrix(&g_camera_matrix);
-    main_util_set_svector(&base, unit->screen.vx + unit->event_offset.vx,
-        unit->screen.vy + unit->event_offset.vy + unit->status_bubble_y, unit->screen.vz + unit->event_offset.vz);
+    main_util_set_svector(&base, unit->world_coords.vx + unit->event_offset.vx,
+        unit->world_coords.vy + unit->event_offset.vy + unit->status_bubble_y,
+        unit->world_coords.vz + unit->event_offset.vz);
     RotTrans(&base, &transformed, &unit->gte_flag);
     position.vx = unit->status_bubble_x + (transformed.vx + unit->screen_offset.vx);
     y = transformed.vy + unit->screen_offset.vy;

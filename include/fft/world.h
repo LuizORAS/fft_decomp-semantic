@@ -1834,6 +1834,7 @@ s32 world_unit_check_facing_relative_to_camera(s32 unit_id);
 void world_unit_clear_status_staging_data(void);
 struct battle_stats* world_unit_get_battle_stats_for_stored(void);
 s32 world_unit_get_map_coords_by_runtime_id(s32 runtime_id, SVECTOR* out);
+vec3u16_t* world_unit_copy_world_coords_to_scratch(u32 runtime_id);
 s32 world_formation_get_unit_palette_index(s32 roster_slot);
 s32 world_unit_get_zodiac_for_date(s32 month, s32 day);
 s32 world_unit_has_any_current_status(s32 unit_id);

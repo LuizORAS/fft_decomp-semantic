@@ -64,9 +64,9 @@ typedef char ranges32_size_must_be_8[sizeof(ranges32_t) == 8 ? 1 : -1];
 /* geometry */
 /* Use DVECTOR for GTE screen coordinates, SVECTOR/VECTOR for padded GTE
  * vectors, RECT for signed rectangles and CVECTOR for r/g/b plus a code byte.
- * The point types below cover other field widths and signedness. Battle real
- * positions use VECTOR (vx = x, vy = height, vz = map depth); screen positions
- * and rotations use SVECTOR in the same order. */
+ * The point types below cover other field widths and signedness. Battle world
+ * positions use VECTOR for 20.12 values and SVECTOR for integer values
+ * (vx = x, vy = height, vz = map depth). Rotations also use SVECTOR. */
 /* Signed 16-bit x/y pair: screen offsets, sprite positions and per-axis
  * factors that are not GTE output. */
 typedef struct point16 {

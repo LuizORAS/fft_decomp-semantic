@@ -10,8 +10,8 @@ void battle_unit_mount_rider_onto_unit(battle_unit_t* rider, battle_unit_t* moun
     rider->facing = mount->facing;
     rider->camera_facing_quadrant = mount->camera_facing_quadrant;
     rider->camera_facing_sixteenth = mount->camera_facing_sixteenth;
-    rider->screen = mount->screen;
-    rider->screen.vy -= 10;
+    rider->world_coords = mount->world_coords;
+    rider->world_coords.vy -= 10;
     rider->real = mount->real;
     rider->standing_on_battle_id_plus_one = 0;
     rider->real.vy += -0xa000;

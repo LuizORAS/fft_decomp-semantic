@@ -57,7 +57,7 @@ s32 effect_weapon_hit_secondary_handler(void) {
         }
         result = 1;
         g_effect_current_secondary->phase = EFFECT_SECONDARY_PHASE_EXECUTING;
-        effect_copy_camera_angles_and_screen_coords();
+        effect_copy_camera_angles_and_world_coords();
         break;
     case EFFECT_SECONDARY_PHASE_EXECUTING:
         state = effect->allocation;

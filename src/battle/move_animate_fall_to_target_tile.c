@@ -4,7 +4,7 @@
 /* The target sets $a1 to the coordinate buffer before this call too, so the
  * original declared both screen-z helpers with the same two arguments. */
 #define screen_z_from_unit_screen_coords                                                                               \
-    ((s32 (*)(battle_unit_t*, const SVECTOR*))battle_gfx_calculate_screen_z_from_unit_screen_coords)
+    ((s32 (*)(battle_unit_t*, const SVECTOR*))battle_gfx_calculate_world_height_from_world_coords)
 
 /* Distortion animation 0x0d: drop the unit straight down until it reaches the
  * ground.
@@ -44,10 +44,10 @@ void move_animate_fall_to_target_tile(battle_unit_t* unit) {
         if (g_battle_game_state == BATTLE_GAME_STATE_EVENT) {
             unit->strike.target_count = 0;
             x = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-            unit->screen.vx = x;
+            unit->world_coords.vx = x;
             unit->real.vx = x << 12;
             y = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-            unit->screen.vz = y;
+            unit->world_coords.vz = y;
             /* Retail stores the tile-centre depth into real.vy (the height),
              * not real.vz. The first frame adds the fall speed to it and the
              * next one snaps the height to the ground. */
@@ -67,9 +67,9 @@ void move_animate_fall_to_target_tile(battle_unit_t* unit) {
                     stats->action_command.target_position.vy,
                     stats->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
             }
-            coords.vy = battle_gfx_calculate_screen_z_with_caller_data(unit, &coords);
+            coords.vy = battle_gfx_calculate_world_height_with_caller_coords(unit, &coords);
         }
-        if (unit->screen.vy < coords.vy) {
+        if (unit->world_coords.vy < coords.vy) {
             unit->real.vy += velocity.vy;
             velocity.vy += g_move_jump_gravity;
         } else {
@@ -80,6 +80,6 @@ void move_animate_fall_to_target_tile(battle_unit_t* unit) {
         break;
     }
     unit->velocity = velocity;
-    battle_unit_set_screen_coords_from_real_coords(unit);
+    battle_unit_set_world_coords_from_real_coords(unit);
     unit->distortion_timer = timer;
 }

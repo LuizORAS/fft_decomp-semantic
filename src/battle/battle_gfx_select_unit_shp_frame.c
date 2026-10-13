@@ -22,7 +22,8 @@ void battle_gfx_select_unit_shp_frame(battle_unit_t* unit, battle_unit_anim_stat
     s32 height;
     s32 z;
 
-    tile = map_get_tile_data_pointer((unit->screen.vx / MAP_TILE_SIZE), (unit->screen.vz / MAP_TILE_SIZE), unit->map_z);
+    tile = map_get_tile_data_pointer(
+        (unit->world_coords.vx / MAP_TILE_SIZE), (unit->world_coords.vz / MAP_TILE_SIZE), unit->map_z);
     if (frame < BATTLE_SHP_FRAME_EVTCHR_FIRST) {
         table = state->shp;
         if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_RIDER) {
@@ -46,14 +47,14 @@ void battle_gfx_select_unit_shp_frame(battle_unit_t* unit, battle_unit_anim_stat
                     selected = table->frames[frame];
                 } else if (unit->spritesheet_id == BATTLE_SPRITESHEET_ID_CHICKEN
                     || unit->spritesheet_id == BATTLE_SPRITESHEET_ID_FROG) {
-                    if ((tile->height + tile->depth_half_height.depth) * 12 >= -unit->screen.vy + 4) {
+                    if ((tile->height + tile->depth_half_height.depth) * 12 >= -unit->world_coords.vy + 4) {
                         selected = table->submerged_frames[frame];
                     } else {
                         selected = table->frames[frame];
                     }
                 } else {
                     height = (tile->height + tile->depth_half_height.depth) * 12;
-                    z = -unit->screen.vy;
+                    z = -unit->world_coords.vy;
                     if (height >= z + 0x24) {
                         selected = table->submerged_frames[0];
                     } else if (height >= z + 0xc) {
@@ -64,7 +65,7 @@ void battle_gfx_select_unit_shp_frame(battle_unit_t* unit, battle_unit_anim_stat
                 }
             } else {
                 height = (tile->height + tile->depth_half_height.depth) * 12;
-                z = -unit->screen.vy;
+                z = -unit->world_coords.vy;
                 if (height >= z + 0x24) {
                     selected = table->submerged_frames[0];
                 } else if (height >= z + 0xc) {

@@ -149,8 +149,8 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_t* unit, s32 
         }
     }
 
-    screen_z = battle_gfx_calculate_screen_z_from_unit_screen_coords(unit);
-    if (!(g_map_weather_flags & MAP_WEATHER_FLAG_IGNORE_WEATHER) && screen_z - 0x30 > unit->screen.vy) {
+    screen_z = battle_gfx_calculate_world_height_from_world_coords(unit);
+    if (!(g_map_weather_flags & MAP_WEATHER_FLAG_IGNORE_WEATHER) && screen_z - 0x30 > unit->world_coords.vy) {
         blue = 0;
         green = 0;
         red = 0;

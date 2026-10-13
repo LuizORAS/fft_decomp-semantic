@@ -26,12 +26,12 @@ s32 battle_unit_place_in_new_location(u32 runtime_id, map_tile_coordinates_t* ti
         unit->map_y = unit->movement.destination_y = tile->y;
         unit->map_z = unit->movement.destination_z = tile->layer;
         unit->facing = facing << 10;
-        unit->screen.vx = tile->x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-        unit->screen.vz = tile->y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-        unit->screen.vy = map_calculate_slope_height(&unit->screen, unit->map_z);
-        unit->real.vx = unit->screen.vx << 12;
-        unit->real.vz = unit->screen.vz << 12;
-        unit->real.vy = unit->screen.vy << 12;
+        unit->world_coords.vx = tile->x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+        unit->world_coords.vz = tile->y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+        unit->world_coords.vy = map_calculate_slope_height(&unit->world_coords, unit->map_z);
+        unit->real.vx = unit->world_coords.vx << 12;
+        unit->real.vz = unit->world_coords.vz << 12;
+        unit->real.vy = unit->world_coords.vy << 12;
         if (unit->battle_data != 0) {
             battle_unit_set_tile_position(
                 unit->battle_data->battle_id, unit->map_x, unit->map_y, unit->map_z, unit->facing);

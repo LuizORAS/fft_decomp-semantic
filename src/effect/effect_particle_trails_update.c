@@ -116,9 +116,9 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                 rotation.vy = facing_yaw;
                 RotMatrix(&rotation, &facing);
             }
-            effect_resolve_target_render_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+            effect_resolve_target_world_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
                 EFFECT_TARGET_INDEX_CASTER, &g_effect_context, &caster);
-            effect_resolve_target_render_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+            effect_resolve_target_world_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
                 target_index, &g_effect_context, &target);
 
             EFFECT_READ_CURVE(index, factor,

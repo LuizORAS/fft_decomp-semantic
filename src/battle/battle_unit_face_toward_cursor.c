@@ -18,10 +18,10 @@ void battle_unit_face_toward_cursor(battle_unit_t* unit) {
         difference.vz = 0;
         difference.vx = 0;
         tile_x = cursor_x * MAP_TILE_SIZE;
-        unit_x = unit->screen.vx - MAP_TILE_SIZE / 2;
+        unit_x = unit->world_coords.vx - MAP_TILE_SIZE / 2;
         difference.vx = tile_x - unit_x;
         tile_y = cursor_y * MAP_TILE_SIZE;
-        unit_y = unit->screen.vz - MAP_TILE_SIZE / 2;
+        unit_y = unit->world_coords.vz - MAP_TILE_SIZE / 2;
         difference.vz = tile_y - unit_y;
         if (difference.vx != 0 || difference.vz != 0) {
             unit->facing = (ratan2(-difference.vz, difference.vx) - 0x200) & 0xC00;

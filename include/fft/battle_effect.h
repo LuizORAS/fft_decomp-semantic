@@ -47,7 +47,7 @@ typedef enum effect_target_type {
 enum {
     EFFECT_TARGET_COUNT_MAX = BATTLE_UNIT_RUNTIME_SLOT_COUNT,
     EFFECT_CASTER_ENTRY = EFFECT_TARGET_COUNT_MAX, /* index of the caster's record in effect_secondary_init_t.targets */
-    /* the target index that makes effect_resolve_target_render_coords resolve the caster */
+    /* the target index that makes effect_resolve_target_world_coords resolve the caster */
     EFFECT_TARGET_INDEX_CASTER = -1,
 };
 
@@ -828,7 +828,7 @@ typedef char effect_flags_section_size_must_be_24[(sizeof(effect_flags_section_t
 
 /* effect_flags_section_t::flags bits read by the engine. */
 enum {
-    /* caster and target anchors take the tile's surface height: effect_resolve_target_render_coords */
+    /* caster and target anchors take the tile's surface height: effect_resolve_target_world_coords */
     EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST = 0x08,
     EFFECT_FLAG_QUIET_MUSIC = 0x10,         /* lower the music while the effect loads and plays */
     EFFECT_FLAG_TIMING_CURVE_PHASE1 = 0x20, /* phase 1 of the parent timeline sets the time scale from its curve */
@@ -2039,11 +2039,11 @@ extern effect_target_t g_effect_target_tile;
 void effect_build_secondary_init(struct battle_unit* unit, struct effect_secondary_init* effect);
 void effect_build_secondary_init_from_action(battle_unit_t* unit, effect_secondary_init_t* init);
 void effect_convert_tile_coords_to_world_coords(SVECTOR* in, VECTOR* out);
-void effect_copy_runtime_screen_location(u32 runtime_id, VECTOR* destination);
-void effect_get_screen_location_by_battle_id(
+void effect_copy_unit_world_coords_to_vector(u32 runtime_id, VECTOR* destination);
+void effect_get_world_coords_by_battle_id(
     s32 adjust_for_tile_height, u32 battle_id, effect_secondary_init_t* effect_coordinates, SVECTOR* destination);
 void effect_init_altima_teleport_data(battle_unit_t* unit, effect_secondary_init_t* teleport_data);
-void effect_resolve_target_render_coords(
+void effect_resolve_target_world_coords(
     s32 add_depth, s32 target_index, effect_secondary_init_t* coord_data, SVECTOR* out);
 void effect_store_map_center_coordinates(VECTOR* destination);
 void effect_store_targets_and_display_types(s32 ability_id, battle_unit_t* unit);
@@ -2302,7 +2302,7 @@ extern VECTOR g_effect_camera_zoom_saved;
 extern VECTOR g_effect_camera_zoom_start;
 extern VECTOR g_effect_camera_zoom_target;
 
-void effect_copy_camera_angles_and_screen_coords(void);
+void effect_copy_camera_angles_and_world_coords(void);
 void effect_init_camera_and_screen_data(void);
 
 /* palettes */

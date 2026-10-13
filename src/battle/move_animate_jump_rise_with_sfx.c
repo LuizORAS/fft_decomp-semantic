@@ -21,9 +21,9 @@ void move_animate_jump_rise_with_sfx(battle_unit_t* unit) {
     velocity = unit->velocity;
     switch (unit->distortion_phase) {
     case 0:
-        height = -battle_gfx_calculate_screen_z_from_unit_screen_coords(unit) + 0x120;
+        height = -battle_gfx_calculate_world_height_from_world_coords(unit) + 0x120;
         unit->status_flags_5_6 |= BATTLE_UNIT_STATUS_JUMP_HEIGHT_ACTIVE;
-        if (-unit->screen.vy >= height) {
+        if (-unit->world_coords.vy >= height) {
             unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
             break;
         }
@@ -44,6 +44,6 @@ void move_animate_jump_rise_with_sfx(battle_unit_t* unit) {
         break;
     }
     unit->velocity = velocity;
-    battle_unit_set_screen_coords_from_real_coords(unit);
+    battle_unit_set_world_coords_from_real_coords(unit);
     unit->distortion_timer = timer;
 }

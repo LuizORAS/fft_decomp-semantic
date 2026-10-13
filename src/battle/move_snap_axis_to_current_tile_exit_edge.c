@@ -14,22 +14,22 @@ void move_snap_axis_to_current_tile_exit_edge(s32 direction, battle_unit_t* unit
     switch (direction) {
     case MOVE_DIRECTION_NORTH:
         coordinate = (unit->map_y + 1) * MAP_TILE_SIZE - TILE_EDGE_MARGIN;
-        unit->screen.vz = coordinate;
+        unit->world_coords.vz = coordinate;
         unit->real.vz = coordinate << REAL_COORD_SHIFT;
         return;
     case MOVE_DIRECTION_SOUTH:
         coordinate = unit->map_y * MAP_TILE_SIZE + TILE_EDGE_MARGIN;
-        unit->screen.vz = coordinate;
+        unit->world_coords.vz = coordinate;
         unit->real.vz = coordinate << REAL_COORD_SHIFT;
         return;
     case MOVE_DIRECTION_WEST:
         coordinate = unit->map_x * MAP_TILE_SIZE + TILE_EDGE_MARGIN;
-        unit->screen.vx = coordinate;
+        unit->world_coords.vx = coordinate;
         unit->real.vx = coordinate << REAL_COORD_SHIFT;
         return;
     case MOVE_DIRECTION_EAST:
         coordinate = (unit->map_x + 1) * MAP_TILE_SIZE - TILE_EDGE_MARGIN;
-        unit->screen.vx = coordinate;
+        unit->world_coords.vx = coordinate;
         unit->real.vx = coordinate << REAL_COORD_SHIFT;
         return;
     }

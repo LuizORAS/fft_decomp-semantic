@@ -54,8 +54,9 @@ void battle_gfx_draw_unit_shadow(battle_unit_t* unit, u32* ot) {
     prim->x3 = transformed.vx;
     prim->y3 = transformed.vy;
     prim->code |= 2;
-    tile = map_get_tile_data_pointer((unit->screen.vx / MAP_TILE_SIZE), (unit->screen.vz / MAP_TILE_SIZE), unit->map_z);
-    if (tile->depth_half_height.depth && -(tile->height + tile->depth_half_height.depth) * 12 < unit->screen.vy) {
+    tile = map_get_tile_data_pointer(
+        (unit->world_coords.vx / MAP_TILE_SIZE), (unit->world_coords.vz / MAP_TILE_SIZE), unit->map_z);
+    if (tile->depth_half_height.depth && -(tile->height + tile->depth_half_height.depth) * 12 < unit->world_coords.vy) {
         unit->shadow_counter += g_main_system_animation_speed;
         frame = unit->shadow_counter;
         prim->tpage = 0x3f;
@@ -96,10 +97,10 @@ void battle_gfx_draw_unit_shadow(battle_unit_t* unit, u32* ot) {
         prim->v0 = prim->v1 = 0x40;
         prim->v2 = prim->v3 = 0x53;
     }
-    main_util_set_svector(&position, unit->screen.vx + unit->event_offset.vx + unit->seq_offset.vx, 0,
-        unit->screen.vz + unit->event_offset.vz + unit->seq_offset.vz);
+    main_util_set_svector(&position, unit->world_coords.vx + unit->event_offset.vx + unit->seq_offset.vx, 0,
+        unit->world_coords.vz + unit->event_offset.vz + unit->seq_offset.vz);
     position.vy = map_calculate_slope_height(&position, unit->map_z);
-    if (unit->screen.vy >= position.vy) {
+    if (unit->world_coords.vy >= position.vy) {
         packet = ot;
     } else {
         tile = map_get_tile_data_pointer((position.vx / MAP_TILE_SIZE), (position.vz / MAP_TILE_SIZE), unit->map_z);

@@ -22,14 +22,14 @@ void move_update_float_step_to_destination_tile_center(battle_unit_t* unit) {
         move_snap_axis_to_destination_tile_center(direction, unit);
         unit->velocity.vz = 0;
         unit->velocity.vx = 0;
-        screen_z = battle_gfx_calculate_screen_z_from_unit_screen_coords(unit);
+        screen_z = battle_gfx_calculate_world_height_from_world_coords(unit);
         g_move_target_screen_z = screen_z;
-        if (unit->screen.vy >= screen_z) {
+        if (unit->world_coords.vy >= screen_z) {
             unit->map_x = unit->movement.destination_x;
             unit->map_y = unit->movement.destination_y;
             unit->velocity.vy = 0;
             unit->real.vy = g_move_target_screen_z << 12;
-            unit->screen.vy = unit->real.vy / ONE;
+            unit->world_coords.vy = unit->real.vy / ONE;
             unit->step_phase = MOVE_STEP_PHASE_NONE;
             unit->shadow_dirty |= 1;
         }

@@ -9,12 +9,12 @@
 s32 move_has_reached_destination_tile_center(s32 direction, battle_unit_t* unit) {
     switch (direction) {
     case MOVE_DIRECTION_NORTH:
-        return unit->screen.vz >= unit->movement.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+        return unit->world_coords.vz >= unit->movement.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     case MOVE_DIRECTION_SOUTH:
-        return unit->movement.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2) >= unit->screen.vz;
+        return unit->movement.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2) >= unit->world_coords.vz;
     case MOVE_DIRECTION_WEST:
-        return unit->movement.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2) >= unit->screen.vx;
+        return unit->movement.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2) >= unit->world_coords.vx;
     case MOVE_DIRECTION_EAST:
-        return unit->screen.vx >= unit->movement.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+        return unit->world_coords.vx >= unit->movement.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     }
 }

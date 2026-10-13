@@ -95,7 +95,7 @@ s32 effect_spawn_emitter_particles(s16 record_index, s32 frame, s32 emitter_inde
     SetTransMatrix(&g_effect_emitter_matrix);
     target_index = g_effect_state_records[record_index].timeline.target_index;
     rotate = (behavior_flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
-    effect_resolve_target_render_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+    effect_resolve_target_world_coords(g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
         EFFECT_TARGET_INDEX_CASTER, &g_effect_context, &caster);
     if (g_effect_context.targets[EFFECT_CASTER_ENTRY].target_type == EFFECT_TARGET_TYPE_UNIT) {
         facing = ((battle_unit_get_facing_quadrant_by_runtime_id(
@@ -108,7 +108,7 @@ s32 effect_spawn_emitter_particles(s16 record_index, s32 frame, s32 emitter_inde
         rotation.vy = facing;
         RotMatrix(&rotation, &matrix);
     }
-    effect_resolve_target_render_coords(
+    effect_resolve_target_world_coords(
         g_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, target_index, &g_effect_context, &target);
     if (g_effect_context.targets[target_index].target_type == EFFECT_TARGET_TYPE_UNIT) {
         battle_unit_get_facing_quadrant_by_runtime_id(g_effect_context.targets[target_index].data.unit.runtime_id);

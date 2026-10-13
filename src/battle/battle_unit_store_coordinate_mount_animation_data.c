@@ -25,8 +25,8 @@ void battle_unit_store_coordinate_mount_animation_data(battle_unit_t* unit) {
             }
         }
     }
-    battle_unit_set_move_and_screen_coords(unit);
-    battle_gfx_calculate_screen_z_from_unit_screen_coords(unit);
+    battle_unit_set_move_and_world_coords(unit);
+    battle_gfx_calculate_world_height_from_world_coords(unit);
     target_move_cursor_to_unit(unit);
     unit->path.count = 0;
     battle_unit_set_animation_based_on_status(unit);

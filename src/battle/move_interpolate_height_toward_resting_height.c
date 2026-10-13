@@ -20,8 +20,8 @@ void move_interpolate_height_toward_resting_height(battle_unit_t* unit) {
     z = unit->distortion_target;
     switch (unit->distortion_phase) {
     case 0:
-        z = battle_gfx_calculate_screen_z_from_unit_screen_coords(unit) << 12;
-        step = (z - (unit->screen.vy << 12)) / step;
+        z = battle_gfx_calculate_world_height_from_world_coords(unit) << 12;
+        step = (z - (unit->world_coords.vy << 12)) / step;
         unit->distortion_phase = unit->distortion_phase + 1;
     case 1:
         if (unit->real.vy < z) {
@@ -31,7 +31,7 @@ void move_interpolate_height_toward_resting_height(battle_unit_t* unit) {
             unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         real_z = unit->real.vy;
-        unit->screen.vy = real_z / ONE;
+        unit->world_coords.vy = real_z / ONE;
         break;
     }
     unit->distortion_timer = step;

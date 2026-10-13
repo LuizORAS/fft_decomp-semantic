@@ -9,6 +9,6 @@ void effect_init_camera_and_screen_data(void) {
     g_effect_camera_zoom_mode = EFFECT_CAMERA_MODE_IDLE;
     D_801B8B1C = 0;
     D_801B8B18 = 0;
-    effect_copy_camera_angles_and_screen_coords();
+    effect_copy_camera_angles_and_world_coords();
     (void)pad;
 }

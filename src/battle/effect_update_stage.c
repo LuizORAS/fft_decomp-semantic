@@ -39,7 +39,7 @@ s32 effect_update_stage(void) {
         battle_heap_init(
             (battle_heap_node_t*)g_effect_palette_ptr, g_battle_heap_end_address - (u32)g_effect_palette_ptr);
         effect_reset_subsystems();
-        effect_copy_camera_angles_and_screen_coords();
+        effect_copy_camera_angles_and_world_coords();
         battle_state_clear_frame_pacing();
         effect_set_frame_data_pointer(g_battle_ability_effect_id);
         effect_set_animation_sequences_pointer(g_battle_ability_effect_id);

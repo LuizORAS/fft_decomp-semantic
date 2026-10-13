@@ -37,19 +37,19 @@ void move_displace_unit_at_destination_tile(battle_unit_t* unit, s32 direction) 
     switch (direction) {
     case MOVE_DIRECTION_NORTH:
         center = unit->movement.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-        dist = center - unit->screen.vz;
+        dist = center - unit->world_coords.vz;
         break;
     case MOVE_DIRECTION_SOUTH:
         center = unit->movement.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-        dist = unit->screen.vz - center;
+        dist = unit->world_coords.vz - center;
         break;
     case MOVE_DIRECTION_WEST:
         center = unit->movement.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-        dist = unit->screen.vx - center;
+        dist = unit->world_coords.vx - center;
         break;
     case MOVE_DIRECTION_EAST:
         center = unit->movement.destination_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-        dist = center - unit->screen.vx;
+        dist = center - unit->world_coords.vx;
         break;
     }
     if (dist >= 8) {

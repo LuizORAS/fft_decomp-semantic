@@ -2,17 +2,17 @@
 #include "psx/types.h"
 
 /*
- * Calculate screen Z at the grounded unit's map-tile center.
+ * Calculate world height at the grounded unit's map-tile center.
  *
  * A mounted rider uses the mount's map position, then applies its mounted
  * height offset and the original -10 adjustment.
  */
-s32 battle_gfx_calculate_screen_z_from_battle_tile(battle_unit_t* unit) {
+s32 battle_gfx_calculate_world_height_from_battle_tile(battle_unit_t* unit) {
     SVECTOR coord;
     battle_stats_t* battle_data;
     battle_unit_t* mount;
-    s32 adjusted_screen_z;
-    s32 screen_z;
+    s32 adjusted_world_height;
+    s32 world_height;
 
     mount = battle_unit_get_mount(unit);
     battle_data = mount->battle_data;
@@ -20,10 +20,10 @@ s32 battle_gfx_calculate_screen_z_from_battle_tile(battle_unit_t* unit) {
     battle_data = mount->battle_data;
     coord.vz = battle_data->position.y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     coord.vy = mount->map_z;
-    screen_z = battle_gfx_calculate_screen_z_from_input_coords(mount, &coord);
+    world_height = battle_gfx_calculate_world_height_from_coords(mount, &coord);
     if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_RIDER) {
-        adjusted_screen_z = screen_z - 10;
-        screen_z = mount->float_bob_offset + adjusted_screen_z;
+        adjusted_world_height = world_height - 10;
+        world_height = mount->float_bob_offset + adjusted_world_height;
     }
-    return (s16)screen_z;
+    return (s16)world_height;
 }

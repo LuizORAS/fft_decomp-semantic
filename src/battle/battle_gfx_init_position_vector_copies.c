@@ -8,7 +8,8 @@ void battle_gfx_init_position_vector_copies(battle_unit_t* unit) {
     unit->position_copies_active = 1;
     i = 0;
     do {
-        main_util_set_svector(&unit->position_copies[i], unit->screen.vx, unit->screen.vy, unit->screen.vz);
+        main_util_set_svector(
+            &unit->position_copies[i], unit->world_coords.vx, unit->world_coords.vy, unit->world_coords.vz);
         i++;
     } while (i < 6);
 }

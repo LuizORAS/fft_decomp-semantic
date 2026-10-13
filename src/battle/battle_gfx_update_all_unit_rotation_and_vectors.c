@@ -37,7 +37,8 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
             unit->camera_relative_y = transformed.vy + unit->screen_offset.vy;
         }
 
-        tile = map_get_tile_data_pointer(unit->screen.vx / MAP_TILE_SIZE, unit->screen.vz / MAP_TILE_SIZE, unit->map_z);
+        tile = map_get_tile_data_pointer(
+            unit->world_coords.vx / MAP_TILE_SIZE, unit->world_coords.vz / MAP_TILE_SIZE, unit->map_z);
         if (unit->step_phase != MOVE_STEP_PHASE_NONE) {
             if ((tile->surface.depth_bias) != 0) {
                 camera_calculate_relative_offset_by_5(&screen, &adjusted);

@@ -25,9 +25,9 @@ void move_finish_unit_step_at_tile_edge(battle_unit_t* unit) {
     }
     unit->velocity.vz = 0;
     unit->velocity.vx = 0;
-    target_z = battle_gfx_calculate_screen_z_from_unit_screen_coords(unit);
+    target_z = battle_gfx_calculate_world_height_from_world_coords(unit);
     g_move_target_screen_z = target_z;
-    if (unit->screen.vy < target_z) {
+    if (unit->world_coords.vy < target_z) {
         return;
     }
     if (((unit->animation.sequence_id >> 1) - BATTLE_UNIT_ANIMATION_HOP) < 2U) {
@@ -48,7 +48,7 @@ void move_finish_unit_step_at_tile_edge(battle_unit_t* unit) {
             if (tile->depth_half_height.depth == 0) {
                 return;
             }
-            if (-unit->screen.vy >= (tile->height + tile->depth_half_height.depth) * 12) {
+            if (-unit->world_coords.vy >= (tile->height + tile->depth_half_height.depth) * 12) {
                 return;
             }
             sound_play_landing_sfx_by_surface_type(unit);

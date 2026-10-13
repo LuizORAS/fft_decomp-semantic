@@ -18,7 +18,7 @@ s32 battle_unit_get_tile_center_and_height_by_battle_id(u32 battle_id, SVECTOR* 
             unit->battle_data->x, unit->battle_data->position.y, unit->battle_data->position.higher_elevation);
         coords->vx = unit->battle_data->x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         coords->vz = unit->battle_data->position.y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-        coords->vy = battle_gfx_calculate_screen_z_from_battle_tile(unit);
+        coords->vy = battle_gfx_calculate_world_height_from_battle_tile(unit);
         return 1;
     }
     return 0;

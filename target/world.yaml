@@ -102,10 +102,10 @@ functions:
   - {addr: 0x800e7508, size: 36, name: menu_lerp_fixed12, hash: c8c076c648585d00, source: src/shared/menu/menu_lerp_fixed12.c}
   - {addr: 0x800e752c, size: 296, name: menu_lerp_rect_to_poly_ft4, hash: 18c92e7328405f4d, source: src/shared/menu/menu_lerp_rect_to_poly_ft4.c}
   - {addr: 0x800e7654, size: 84, name: world_script_pause_event_instruction, hash: c8f0977405c464dd}
-  - {addr: 0x800e76a8, size: 88, name: world_unit_copy_screen_coords_to_scratch, hash: 2a62d55b05ed841c}
+  - {addr: 0x800e76a8, size: 88, name: world_unit_copy_world_coords_to_scratch, hash: 2a62d55b05ed841c}
   - {addr: 0x800e7700, size: 64, name: battle_unit_project_to_screen, hash: f71d84cad0b16447, source: src/shared/unit/battle_unit_project_to_screen.c}
-  - {addr: 0x800e7740, size: 92, name: battle_unit_copy_screen_coords, hash: 804df09b5303cc41, source: src/shared/unit/battle_unit_copy_screen_coords.c}
-  - {addr: 0x800e779c, size: 76, name: battle_unit_copy_screen_location, hash: 0db0657e68cb43ea, source: src/shared/unit/battle_unit_copy_screen_location.c}
+  - {addr: 0x800e7740, size: 92, name: battle_unit_copy_world_coords, hash: 804df09b5303cc41, source: src/shared/unit/battle_unit_copy_world_coords.c}
+  - {addr: 0x800e779c, size: 76, name: battle_unit_copy_world_coords_to_vector, hash: 0db0657e68cb43ea, source: src/shared/unit/battle_unit_copy_world_coords_to_vector.c}
   - {addr: 0x800e77e8, size: 32, name: world_unit_get_map_coords_by_runtime_id, hash: b293d475560aeacb}
   - {addr: 0x800e7808, size: 8, name: script_report_missing_unit_stub, hash: 6d64edf91449c1b1, source: src/shared/script/script_report_missing_unit_stub.c}
   - {addr: 0x800e7810, size: 828, name: script_resolve_runtime_id, hash: ebe8f110139eeadb, source: src/shared/script/script_resolve_runtime_id.c}

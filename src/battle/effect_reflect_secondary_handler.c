@@ -90,8 +90,8 @@ s32 effect_reflect_secondary_handler(void) {
         rect.w = 6;
         rect.h = 1;
         LoadImage(&rect, (u32*)work->clut[g_effect_buffer_index]);
-        caster = battle_unit_get_screen_coords_by_runtime_id(g_effect_current_secondary->caster.data.unit.runtime_id);
-        target = battle_unit_get_screen_coords_by_runtime_id(
+        caster = battle_unit_get_world_coords_by_runtime_id(g_effect_current_secondary->caster.data.unit.runtime_id);
+        target = battle_unit_get_world_coords_by_runtime_id(
             g_effect_current_secondary->target.record.data.unit.runtime_id);
         setVector(&delta, caster->vx - target->vx, caster->vy - target->vy, caster->vz - target->vz);
         position.vx = target->vx;

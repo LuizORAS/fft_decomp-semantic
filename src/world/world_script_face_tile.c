@@ -28,7 +28,7 @@ void world_script_face_tile(const event_face_tile_parameters_t* parameters) {
     if (world_unit_prepare_event_filter(&unit_id, &filter_mode) != 0) {
         for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_unit_face_slot_order[i], &filter_mode) != 0) {
-                battle_unit_copy_screen_coords(unit_id, &position);
+                battle_unit_copy_world_coords(unit_id, &position);
                 dx = target.vx - position.vx;
                 dy = target.vz - position.vz;
                 facing = ((-ratan2(dy, dx) + 0xC00) & 0xF00) >> 8;
