@@ -1,4 +1,5 @@
 #include "fft/memory.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -43,7 +44,7 @@ void world_menu_icon_linked_entry_thread(void) {
         if (i == 0) {
             world_menu_free_memory(buffer);
         }
-        if (world_menu_check_thread_completion(&g_world_menu_new_button_input) != 0) {
+        if (world_menu_check_thread_completion(&g_script_event_input) != 0) {
             break;
         }
         if (parent >= 0) {

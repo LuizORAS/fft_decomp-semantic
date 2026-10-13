@@ -1,6 +1,7 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -66,7 +67,7 @@ void world_menu_unit_status_banner_thread(void) {
 
     suppress = 0;
     thread_set_current_task_id(THREAD_TASK_UNIT_STATUS_BANNER);
-    input = world_input_get_menu_controller(0);
+    input = script_get_controller_input_pointer(0);
     thread_id = g_thread_current_id;
     g_world_input_frame_controller_input = input + 1;
     display = (menu_status_panel_display_thread_t*)g_threads[thread_id].function_parameter_1;

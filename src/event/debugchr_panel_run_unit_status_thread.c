@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/gfx.h"
 #include "fft/memory.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 /* Profile gcc-2.6.3_O2_aspsx-2.34_divcheck: the bar-width division at
  * 0x801c021c carries the full ASPSX checked-division expansion

@@ -40,19 +40,11 @@ void script_set_event_speed(s32 speed);
 void script_start_current_event_thread(void);
 
 /* input */
-extern u32 g_script_event_current_input;
-extern u32 g_script_event_initial_repeat_counter;
-extern u32 g_script_event_input;
-extern u32 g_script_event_previous_input;
-extern u32 g_script_event_repeat_counter;
-extern u32 g_script_event_secondary_repeat_counter;
 extern u32 g_script_saved_event_input;
 extern u32 g_script_unfiltered_controller_input;
 
 void script_filter_controller_input(u32* input);
-u32* script_get_controller_input_pointer(s32 use_current);
 u32 script_get_event_initial_repeat_counter(void);
-void script_load_event_input_state(const menu_input_state_t* saved);
 void script_route_event_input(void);
 void script_set_current_otag_entry_and_update_input(u32* entry, s32 input);
 void script_update_event_input_state(u32 state);
@@ -61,7 +53,6 @@ void script_update_event_input_state(u32 state);
 
 s32 script_is_deployment_running(u32* ot, u32 buttons);
 s32 script_is_tutorial_event_slot(void);
-void script_pulse_tutorial_wait_value(s32 value);
 
 /* unit creation and removal */
 s32 script_add_ghost_unit_event_instruction(

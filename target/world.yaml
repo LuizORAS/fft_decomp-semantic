@@ -306,7 +306,7 @@ functions:
   - {addr: 0x800f5f0c, size: 1296, name: script_check_scenario_condition, hash: 5e07a4b1d51f3ad0, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck, source: src/shared/script/script_check_scenario_condition.c}
   - {addr: 0x800f641c, size: 72, name: world_script_get_current_scenario_finish_operation, hash: deaa25ecf5628c12}
   - {addr: 0x800f6464, size: 44, name: world_script_get_scenario_finish_operation_flags, hash: 7d999b7e3a6a55c0}
-  - {addr: 0x800f6490, size: 84, name: world_script_pulse_tutorial_wait_value, hash: 9e5204eaa009440e}
+  - {addr: 0x800f6490, size: 84, name: script_pulse_tutorial_wait_value, hash: 9e5204eaa009440e, source: src/shared/script/script_pulse_tutorial_wait_value.c}
   - {addr: 0x800f64e4, size: 132, name: script_apply_input_overrides, hash: a3e515891d532a57, source: src/shared/script/script_apply_input_overrides.c}
   - {addr: 0x800f6568, size: 604, name: world_script_update_event_input_state, hash: 9e2593c6e781c5b6, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800f67c4, size: 44, name: world_script_filter_controller_input, hash: fe99b31bcc328180}
@@ -388,8 +388,8 @@ functions:
   - {addr: 0x800fd964, size: 76, name: script_get_rand16, hash: 9347ed63e047087b, source: src/shared/script/script_get_rand16.c}
   - {addr: 0x800fd9b0, size: 68, name: script_wait_for_unit_ready, hash: 27f4fb7c909f3472, source: src/shared/script/script_wait_for_unit_ready.c}
   - {addr: 0x800fd9f4, size: 64, name: world_text_init_section_pointers, hash: 27bf3bcb9a9d726b}
-  - {addr: 0x800fda34, size: 32, name: world_input_get_menu_controller, hash: d9e49e9436e88942}
-  - {addr: 0x800fda54, size: 80, name: world_script_load_event_input_state, hash: 83c70cd7e27a4998}
+  - {addr: 0x800fda34, size: 32, name: script_get_controller_input_pointer, hash: d9e49e9436e88942, source: src/shared/script/script_get_controller_input_pointer.c}
+  - {addr: 0x800fda54, size: 80, name: script_load_event_input_state, hash: 83c70cd7e27a4998, source: src/shared/script/script_load_event_input_state.c}
   - {addr: 0x800fdaa4, size: 120, name: gfx_draw_or_append_gpu_primitive, hash: dca627eb5cafa52b, source: src/shared/gfx/gfx_draw_or_append_gpu_primitive.c}
   - {addr: 0x800fdb1c, size: 68, name: gfx_append_gpu_primitive_to_secondary_otag, hash: 02bbf18f6b22cc78, source: src/shared/gfx/gfx_append_gpu_primitive_to_secondary_otag.c}
   - {addr: 0x800fdb60, size: 40, name: world_text_set_substitution_values_7e_7f, hash: a16257863fe24cf9}
@@ -1112,7 +1112,7 @@ data:
   - {addr: 0x801532d4, name: g_world_camera_shake_z_offset}
   - {addr: 0x801532d6, name: g_gfx_draw_primitives_immediately}
   - {addr: 0x801532d8, name: g_world_script_debug_paused}
-  - {addr: 0x801532da, name: g_world_menu_input_mode}
+  - {addr: 0x801532da, name: g_menu_input_mode}
   - {addr: 0x801532dc, name: g_world_event_effect_target_runtime_id}
   - {addr: 0x801532e0, name: g_world_event_effect_target_x}
   - {addr: 0x801532e2, name: g_world_event_effect_target_y}
@@ -1846,7 +1846,7 @@ data:
   - {addr: 0x80195bd4, name: g_world_name_confirm_menu}
   - {addr: 0x80195c10, name: g_world_name_confirm_initialized}
   - {addr: 0x80195c14, name: g_psyq_gs_clear_tile}
-  - {addr: 0x80195c34, name: g_world_menu_new_button_input}
+  - {addr: 0x80195c34, name: g_script_event_input}
   - {addr: 0x80195c3c, name: g_world_menu_status_left_text_ids}
   - {addr: 0x80195c64, name: g_world_menu_status_right_text_ids}
   - {addr: 0x80195c8c, name: g_world_menu_selected_command}
@@ -1860,11 +1860,11 @@ data:
   - {addr: 0x8019a0d0, name: g_world_gfx_texture_allocation_grid}
   - {addr: 0x8019a1c0, name: g_world_menu_palette_colors}
   - {addr: 0x8019a200, name: g_world_saved_game_options}
-  - {addr: 0x8019a204, name: g_world_menu_current_button_input}
-  - {addr: 0x8019a208, name: g_world_menu_previous_button_input}
-  - {addr: 0x8019a20c, name: g_world_menu_input_initial_repeat_counter}
-  - {addr: 0x8019a210, name: g_world_menu_input_repeat_counter}
-  - {addr: 0x8019a214, name: g_world_menu_input_secondary_repeat_counter}
+  - {addr: 0x8019a204, name: g_script_event_current_input}
+  - {addr: 0x8019a208, name: g_script_event_previous_input}
+  - {addr: 0x8019a20c, name: g_script_event_initial_repeat_counter}
+  - {addr: 0x8019a210, name: g_script_event_repeat_counter}
+  - {addr: 0x8019a214, name: g_script_event_secondary_repeat_counter}
   - {addr: 0x8019a218, name: g_world_input_unfiltered_controller}
   - {addr: 0x8019a21c, name: g_world_script_saved_event_input}
   - {addr: 0x8019a220, name: g_world_event_map_jump_in_request}

@@ -1,4 +1,6 @@
 #include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -23,14 +25,14 @@ u8* world_menu_redraw_text_page_on_scroll_in_rect(
     s32 offset;
     u8* buffer;
 
-    input0 = world_input_get_menu_controller(0);
-    input1 = world_input_get_menu_controller(1);
+    input0 = script_get_controller_input_pointer(0);
+    input1 = script_get_controller_input_pointer(1);
     rect.x = (area->x / 4) + entry->vram_origin.x;
     rect.y = 0x80;
     rect.w = area->w / 4;
     rect.h = area->h;
     changed = 0;
-    if (g_world_menu_input_mode != MENU_INPUT_PLAYER) {
+    if (g_menu_input_mode != MENU_INPUT_PLAYER) {
         return 0;
     }
     if (!(*input1 & PSX_PAD_SQUARE) && g_threads[g_thread_current_id].task_words[4] == 0) {

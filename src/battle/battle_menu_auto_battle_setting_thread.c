@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 /*
  * WORLD twin:

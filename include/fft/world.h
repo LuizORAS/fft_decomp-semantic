@@ -328,7 +328,6 @@ s32 world_script_load_next_event(void);
 void world_script_map_darkness(void);
 void world_script_march_units(const event_march_parameters_t* parameters);
 void world_script_print_debug_message(void);
-void world_script_pulse_tutorial_wait_value(s32 value);
 s32 world_script_run_frame(u32* ot, u32 buttons);
 void world_script_run_next_event(void);
 void world_script_set_event_speed(s32 speed);
@@ -1201,13 +1200,11 @@ extern s32 g_world_input_secondary_repeat_latched;
 void world_input_clear_state(void);
 s32 world_input_filter_menu(void);
 s32 world_input_get_lockout_timer(void);
-u32* world_input_get_menu_controller(s32 player);
 s32 world_input_get_menu_repeat_counter(void);
 s32 world_input_get_tutorial_buttons(void);
 s32 world_input_read_controller(s32 unused);
 s32 world_input_read_menu_scroll_repeat(void);
 s32 world_input_read_tutorial_or_controller(s32 unused_0);
-void world_script_load_event_input_state(const menu_input_state_t* state);
 void world_input_update_controller(void);
 void world_input_update_menu_repeat(u32 buttons);
 void world_input_update_menu_state(void);
@@ -2033,7 +2030,6 @@ extern u16 g_world_menu_clut_front_alt;
 extern s32 g_world_menu_color_blue;
 extern s32 g_world_menu_color_green;
 extern s32 g_world_menu_color_red;
-extern u32 g_world_menu_current_button_input;
 extern s32 g_world_menu_current_id; /* battle_menu_id_e */
 extern s16 g_world_menu_cursor_position;
 extern s16 g_world_menu_cursor_positions[16];
@@ -2041,10 +2037,6 @@ extern s32 g_world_menu_description_text_id;
 extern s16 g_world_menu_draw_priority;
 extern s32 g_world_menu_event_state_flag;
 extern u16 g_world_menu_icon_tpage;
-extern u16 g_world_menu_input_mode; /* menu_input_mode_e */
-extern u32 g_world_menu_input_initial_repeat_counter;
-extern u32 g_world_menu_input_repeat_counter;
-extern u32 g_world_menu_input_secondary_repeat_counter;
 extern s16 g_world_menu_learn_unlocked_jobs[];
 extern s32 g_world_menu_main_scroll_direction;
 extern s32 g_world_menu_main_scroll_threshold;
@@ -2056,7 +2048,6 @@ extern u16 g_world_menu_palette_clut;
 extern menu_palette_pair_t g_world_menu_palette_colors;
 extern s32 g_world_menu_panel_fade_intensity;
 extern s32 g_world_menu_panel_fade_mode; /* menu_panel_fade_mode_e */
-extern u32 g_world_menu_previous_button_input;
 extern u8 g_world_menu_prompt_active;
 extern const RECT g_world_option_gfx_draw_area_template;
 extern s16 g_world_menu_row_height;
@@ -2228,7 +2219,6 @@ extern world_menu_grid_cell_t g_world_grid_menu_shop_scrolled_cells[];
 extern world_menu_grid_cell_t* g_world_active_grid_menu_cells;
 extern u16 g_world_grid_menu_cursor_anim; /* grid cursor animation state */
 extern u8 g_world_grid_menu_initialized;  /* grid menu initialised */
-extern u32 g_world_menu_new_button_input;
 extern s16 g_world_menu_status_left_text_ids[20];
 extern s16 g_world_menu_status_right_text_ids[20];
 extern action_command_t g_world_menu_preview_action;

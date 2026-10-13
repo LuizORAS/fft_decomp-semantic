@@ -1030,6 +1030,18 @@ void script_wait_value_event_instruction(const event_wait_value_parameters_t* pa
 /* camera operands */
 void script_apply_relative_camera(event_camera_values_t* parameters, const s32* camera_values);
 
+/* controller input */
+extern u32 g_script_event_input;
+extern u32 g_script_event_current_input;
+extern u32 g_script_event_previous_input;
+extern u32 g_script_event_initial_repeat_counter;
+extern u32 g_script_event_repeat_counter;
+extern u32 g_script_event_secondary_repeat_counter;
+
+u32* script_get_controller_input_pointer(s32 use_current);
+void script_load_event_input_state(const menu_input_state_t* saved);
+void script_pulse_tutorial_wait_value(s32 value);
+
 /* effects */
 void script_play_effect_and_wait(void);
 void script_play_effect_thread(void);

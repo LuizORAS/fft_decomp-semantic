@@ -1,5 +1,6 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -19,7 +20,7 @@ void world_menu_icon_clamped_list_thread(void) {
     menu_icon_record_t* record;
     menu_icon_sprites_t* sprites;
 
-    g_world_menu_list_controller_input = world_input_get_menu_controller(0);
+    g_world_menu_list_controller_input = script_get_controller_input_pointer(0);
     param = world_thread_get_current_parameter_1();
     cursor = param->selected_index;
     record = &records[0];

@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -31,6 +32,6 @@ void world_gfx_submit_screen_fade_overlay(fade_overlay_t* prims, s32 intensity) 
             gfx_draw_or_append_gpu_primitive(&prims->tile);
             gfx_draw_or_append_gpu_primitive(&prims->mode);
         }
-        g_world_menu_new_button_input = 0;
+        g_script_event_input = 0;
     }
 }

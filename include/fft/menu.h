@@ -527,14 +527,15 @@ typedef enum action_menu_pseudo_skillset {
     ACTION_MENU_PSEUDO_SKILLSET_ANYTHING = 188,
 } action_menu_pseudo_skillset_e;
 
-/* g_battle_menu_input_mode / g_world_menu_input_mode: who drives the
- * battle menus. */
+/* The controller or tutorial event that drives the scene menus. */
 typedef enum menu_input_mode {
     MENU_INPUT_PLAYER = 0,   /* the controller */
     MENU_INPUT_BLOCKED = 1,  /* the event frame returns early and no idle action menu is built;
                                 no code stores this value */
     MENU_INPUT_TUTORIAL = 2, /* a tutorial event supplies the input; set by *_menu_start_entry_thread */
 } menu_input_mode_e;
+
+extern u16 g_menu_input_mode; /* menu_input_mode_e */
 
 /* The index argument of *_menu_draw_pressable_button: an on-screen button,
  * named after the pad button its callers test. */

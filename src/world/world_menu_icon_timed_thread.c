@@ -46,10 +46,10 @@ void world_menu_icon_timed_thread(void) {
         }
         if (g_world_text_message_duration_frames < i * g_script_event_speed) {
             hold = 0;
-            g_world_menu_new_button_input = PSX_PAD_CIRCLE;
+            g_script_event_input = PSX_PAD_CIRCLE;
             g_world_menu_sound_muted = 1;
         }
-        if (world_menu_check_thread_completion(&g_world_menu_new_button_input) != 0) {
+        if (world_menu_check_thread_completion(&g_script_event_input) != 0) {
             break;
         }
         if (unset >= 0) {

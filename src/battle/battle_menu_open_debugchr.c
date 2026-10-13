@@ -2,6 +2,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_debugchr.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 
 /* Thread entry of menu entry 0x2c: close the unit panels and the menu thread,

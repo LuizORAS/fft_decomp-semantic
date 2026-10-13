@@ -2,6 +2,7 @@
 #include "fft/event_option.h"
 #include "fft/gfx.h"
 #include "fft/memory.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
@@ -170,8 +171,7 @@ void option_menu_run_game_options(void) {
     for (;;) {
         page = &g_option_menu_pages[i & 1];
         if (delta == 0 && battle_menu_can_accept_input() != 0) {
-            if ((*input0 & PSX_PAD_UP)
-                && (!(*input1 & PSX_PAD_SQUARE) || g_battle_menu_input_mode != MENU_INPUT_PLAYER)) {
+            if ((*input0 & PSX_PAD_UP) && (!(*input1 & PSX_PAD_SQUARE) || g_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != 0) {
                     cursor--;
                     g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
@@ -183,7 +183,7 @@ void option_menu_run_game_options(void) {
                     g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
             } else if ((*input0 & PSX_PAD_DOWN)
-                && (!(*input1 & PSX_PAD_SQUARE) || g_battle_menu_input_mode != MENU_INPUT_PLAYER)) {
+                && (!(*input1 & PSX_PAD_SQUARE) || g_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != layout->row_count - 1) {
                     cursor++;
                     g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;

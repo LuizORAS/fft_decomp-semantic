@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -13,7 +14,7 @@ void world_menu_cancel_thread_group(menu_entry_t* context) {
     s32 thread_id;
     s32 count;
 
-    if (!(g_world_menu_new_button_input & PSX_PAD_CROSS)) {
+    if (!(g_script_event_input & PSX_PAD_CROSS)) {
         return;
     }
     if (world_menu_is_input_allowed() == 0) {
@@ -36,7 +37,7 @@ void world_menu_cancel_thread_group(menu_entry_t* context) {
             }
         }
     }
-    g_world_menu_new_button_input = 0;
+    g_script_event_input = 0;
     *menu_entry_result(context) = -1;
     sound_queue_sfx_cancel();
     g_world_thread_change_cooldown = 5;

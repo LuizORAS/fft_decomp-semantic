@@ -57,8 +57,8 @@ void world_screen_build_at_list(void) {
 
     page = g_world_text_list_pages;
     timer = 0;
-    input0 = world_input_get_menu_controller(0);
-    input1 = world_input_get_menu_controller(1);
+    input0 = script_get_controller_input_pointer(0);
+    input1 = script_get_controller_input_pointer(1);
     row_offset = 0;
     cursor = 0;
     entry = world_thread_get_current_parameter_1();

@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 /* Menu thread: resolves the current entry's display value (kind 0x11 reads
@@ -49,6 +50,6 @@ void world_menu_announce_entry_value_thread(void) {
     world_text_character_handling_thread();
     g_world_formation_menu_new_buttons = 0;
     g_world_thread_task_active = 0;
-    world_script_load_event_input_state(&g_world_formation_menu_input_state);
+    script_load_event_input_state(&g_world_formation_menu_input_state);
     thread_exit_current();
 }

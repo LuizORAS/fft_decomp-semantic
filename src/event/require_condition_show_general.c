@@ -1,6 +1,7 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 /* 0x801c8f80-0x801c9fa4, 4132 bytes.
  *

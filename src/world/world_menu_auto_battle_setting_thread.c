@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -52,11 +53,10 @@ void world_menu_auto_battle_setting_thread(void) {
     colour = g_world_auto_battle_option_colors;
     for (;; i++) {
         record = &records[i & 1];
-        if (i == 0 || (g_world_menu_new_button_input & PSX_PAD_CIRCLE)) {
+        if (i == 0 || (g_script_event_input & PSX_PAD_CIRCLE)) {
             buffer = world_menu_build_and_upload_window_frame_image(
                 param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
-            if (((g_world_menu_new_button_input & PSX_PAD_CIRCLE) && world_thread_is_previous_running() == 0)
-                || i == 0) {
+            if (((g_script_event_input & PSX_PAD_CIRCLE) && world_thread_is_previous_running() == 0) || i == 0) {
                 selected = cursor;
                 if (selected == 0) {
                     before = battle_menu_get_id_based_on_mount_moveable_actable(g_world_active_unit_data.battle_id);
@@ -107,7 +107,7 @@ void world_menu_auto_battle_setting_thread(void) {
             fresh = 0;
         }
         param->selected_index = cursor;
-        if (world_menu_check_thread_completion(&g_world_menu_new_button_input) != 0) {
+        if (world_menu_check_thread_completion(&g_script_event_input) != 0) {
             break;
         }
         world_menu_step_wrapping_cursor_on_scroll_buttons(param, &cursor);

@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
@@ -22,7 +23,7 @@ void world_menu_text_entry_wait_thread(void) {
     param = (menu_entry_t*)g_threads[g_thread_current_id].function_parameter_1;
     binding = param->context;
     binding->prepare();
-    g_world_input_frame_controller_input = world_input_get_menu_controller(0);
+    g_world_input_frame_controller_input = script_get_controller_input_pointer(0);
     second = param->text_id;
     task = param->context;
     first = param->header_id;

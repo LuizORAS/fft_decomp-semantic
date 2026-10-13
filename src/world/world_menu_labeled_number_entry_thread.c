@@ -1,5 +1,6 @@
 #include "fft/gfx.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -35,7 +36,7 @@ void world_menu_labeled_number_entry_thread(void) {
     POLY_FT4* cursor_quad;
     POLY_FT4* shadow_quad;
 
-    g_world_menu_list_controller_input = world_input_get_menu_controller(0);
+    g_world_menu_list_controller_input = script_get_controller_input_pointer(0);
     thread = &g_threads[g_thread_current_id];
     param = *(menu_entry_t**)thread;
     range = param->context;

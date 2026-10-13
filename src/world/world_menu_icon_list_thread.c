@@ -1,4 +1,5 @@
 #include "fft/memory.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -18,7 +19,7 @@ void world_menu_icon_list_thread(void) {
     menu_icon_record_t* record;
     s16* redraw;
 
-    g_world_input_frame_controller_input = world_input_get_menu_controller(0);
+    g_world_input_frame_controller_input = script_get_controller_input_pointer(0);
     param = world_thread_get_current_parameter_1();
     param->window.y &= ~1;
     cursor = param->selected_index;

@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/memory.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"

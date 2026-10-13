@@ -32,7 +32,7 @@ s32 world_menu_dispatch_system_function(
                 world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
             }
             return MENU_SYSTEM_DISPATCH_DONE;
-        } else if (g_world_menu_input_mode != MENU_INPUT_PLAYER) {
+        } else if (g_menu_input_mode != MENU_INPUT_PLAYER) {
             if (option != 2) {
                 world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
             }

@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 
@@ -6,6 +7,6 @@
 void world_formation_request_fixed_number_panel(void) {
     g_world_fixed_number_panel_request_state = 1;
     g_world_formation_menu_new_buttons = 0;
-    world_script_load_event_input_state(&g_world_formation_menu_input_state);
+    script_load_event_input_state(&g_world_formation_menu_input_state);
     thread_exit_current();
 }

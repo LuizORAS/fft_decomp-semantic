@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_script.h"
+#include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -7,7 +9,7 @@
 void script_route_event_input(void) {
     s32 thread;
 
-    if (g_battle_menu_input_mode != MENU_INPUT_TUTORIAL) {
+    if (g_menu_input_mode != MENU_INPUT_TUTORIAL) {
         return;
     }
     thread = g_thread_current_id;

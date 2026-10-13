@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 
 enum {
@@ -27,7 +28,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
     menu_entry_t* entry;
     s16* selected_index;
 
-    if (g_battle_menu_input_mode != MENU_INPUT_BLOCKED) {
+    if (g_menu_input_mode != MENU_INPUT_BLOCKED) {
         if ((g_battle_menu_suspend_state == 0) && (g_battle_menu_help_open == 0)
             && (g_battle_menu_building_thread_started == 0) && (menu_id != BATTLE_MENU_ID_NONE)) {
             g_battle_menu_current_id = menu_id;

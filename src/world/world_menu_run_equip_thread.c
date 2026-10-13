@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
@@ -26,13 +27,13 @@ void world_menu_run_equip_thread(void) {
     thread_suspend(THREAD_SLOT_MENU_CHILD);
     g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_EQUIP;
     do {
-        g_world_menu_new_button_input = 0;
+        g_script_event_input = 0;
         thread_yield();
     } while (g_world_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
     g_world_menu_thread_menu_data = g_world_menu_system_entries;
     g_world_menu_action_slot_row_actions[0] = -3;
     g_world_menu_sound_muted = 1;
-    g_world_menu_new_button_input |= PSX_PAD_CIRCLE;
+    g_script_event_input |= PSX_PAD_CIRCLE;
     if (g_world_companion_overlay_prims == 0) {
         thread_resume(THREAD_SLOT_MENU);
         thread_resume(THREAD_SLOT_MENU_CHILD);
@@ -51,7 +52,7 @@ void world_menu_run_equip_thread(void) {
     g_world_menu_overlay_state = 0;
     world_unit_start_view_thread(saved, 0xFF, 0xFF);
     g_world_menu_sound_muted = 0;
-    g_world_menu_new_button_input = 0;
+    g_script_event_input = 0;
     world_menu_clear_transition_active_flag();
     thread_exit_current();
 }

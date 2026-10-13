@@ -3,6 +3,7 @@
 #include "fft/event_debugchr.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/unit.h"

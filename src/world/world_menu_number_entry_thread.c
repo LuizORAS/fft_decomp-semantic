@@ -1,6 +1,7 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -37,7 +38,7 @@ void world_menu_number_entry_thread(void) {
     POLY_FT4* shadow_quad;
     s32* stride;
 
-    g_world_menu_list_controller_input = world_input_get_menu_controller(0);
+    g_world_menu_list_controller_input = script_get_controller_input_pointer(0);
     /* A direct pen pointer folds both member-address adjustments and changes scheduling. */
     stride = &g_world_menu_text_state.pen.stride;
     thread = &g_threads[g_thread_current_id];

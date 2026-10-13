@@ -27,7 +27,7 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
 
     g_gfx_current_otag_entry = otag;
     g_world_frame_arg = frame_arg;
-    g_world_input_frame_controller_input = world_input_get_menu_controller(0);
+    g_world_input_frame_controller_input = script_get_controller_input_pointer(0);
     g_world_formation_screen_active = 0;
     if (input == 0) {
         g_world_input_frame_initial_repeat_counter = 0;
@@ -78,8 +78,8 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
     }
 
     g_sound_pending_sfx_id = -1;
-    world_script_load_event_input_state(&g_world_input_frame_state);
-    world_script_load_event_input_state(&g_world_input_frame_state);
+    script_load_event_input_state(&g_world_input_frame_state);
+    script_load_event_input_state(&g_world_input_frame_state);
     if (g_world_input_frame_new != PSX_PAD_SELECT && g_world_input_frame_new != 0) {
         g_world_thread_change_cooldown = 5;
     }

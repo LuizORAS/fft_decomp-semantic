@@ -1,4 +1,5 @@
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -27,7 +28,7 @@ s32 battle_menu_is_still_building(void) {
         }
         i += 1;
     } while (i < 0xA);
-    if (g_battle_menu_input_mode != MENU_INPUT_BLOCKED) {
+    if (g_menu_input_mode != MENU_INPUT_BLOCKED) {
         result = i != 0xA;
         return result * 4;
     }

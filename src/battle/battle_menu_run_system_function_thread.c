@@ -3,6 +3,8 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_text.h"
+#include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -24,7 +26,7 @@ void battle_menu_run_system_function_thread(void) {
         id = g_battle_system_function_table[id].alternate_id;
     }
     thread_wait_until_inactive(THREAD_SLOT_MENU);
-    if (g_battle_menu_input_mode == MENU_INPUT_PLAYER) {
+    if (g_menu_input_mode == MENU_INPUT_PLAYER) {
         while (battle_thread_is_running_asm(THREAD_SLOT_EVENT) != 0) {
             if (g_thread_contexts[THREAD_SLOT_EVENT].task_id == THREAD_TASK_EXECUTE_EVENT) {
                 thread_exit_current();

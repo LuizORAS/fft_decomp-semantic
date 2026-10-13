@@ -76,7 +76,7 @@ void world_menu_run_require_help(void) {
         g_world_help_require_navigation[2].destination[2] = 7;
         g_world_help_require_navigation[7].destination[3] = 2;
     }
-    g_world_help_controller_state_ptr = world_input_get_menu_controller(0);
+    g_world_help_controller_state_ptr = script_get_controller_input_pointer(0);
     menu_index = 0;
     g_world_help_require_navigation[0].x = 0xC4;
     g_world_help_require_navigation[2].x = 0xE0;

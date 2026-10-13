@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
+#include "fft/script.h"
 
 /* Thread body started from the ability list: build the AT list preview for the
  * highlighted ability, pulse tutorial wait value 0xfa and run it as a scrolling

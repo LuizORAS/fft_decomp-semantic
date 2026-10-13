@@ -2,6 +2,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 
 /*

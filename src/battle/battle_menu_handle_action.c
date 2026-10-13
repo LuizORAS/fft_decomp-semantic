@@ -23,7 +23,7 @@ void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option) {
     s32 j;
     s32 thread_id;
 
-    if (g_battle_menu_input_mode == MENU_INPUT_TUTORIAL
+    if (g_menu_input_mode == MENU_INPUT_TUTORIAL
         && ((script_get_variable(EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS) >> selected_option) & 1)) {
         return;
     }

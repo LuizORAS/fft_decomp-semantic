@@ -94,7 +94,7 @@ s32 script_run_event_frame(u32* ot, u32 buttons) {
     }
 
     script_update_event_input_state(buttons);
-    if (g_battle_menu_input_mode == MENU_INPUT_TUTORIAL) {
+    if (g_menu_input_mode == MENU_INPUT_TUTORIAL) {
         g_script_unfiltered_controller_input = g_script_event_input;
         script_apply_input_overrides(&g_script_event_input);
         g_script_saved_event_input = g_script_event_input;
@@ -193,10 +193,10 @@ s32 script_run_event_frame(u32* ot, u32 buttons) {
     battle_menu_open_companion_data_file();
     script_process_pending_requests();
     script_frame_after_requests_stub();
-    if (g_battle_menu_input_mode == MENU_INPUT_BLOCKED) {
+    if (g_menu_input_mode == MENU_INPUT_BLOCKED) {
         return 1;
     }
-    if (g_battle_menu_input_mode == MENU_INPUT_TUTORIAL) {
+    if (g_menu_input_mode == MENU_INPUT_TUTORIAL) {
         return 0;
     }
     for (i = 1; i < 16; i++) {

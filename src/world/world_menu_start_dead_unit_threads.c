@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
@@ -141,7 +142,7 @@ void world_menu_start_dead_unit_threads(void) {
                 if (world_thread_is_running_asm(g_thread_current_id - 1) == 0) {
                     break;
                 }
-                g_world_dead_unit_controller_input = world_input_get_menu_controller(0);
+                g_world_dead_unit_controller_input = script_get_controller_input_pointer(0);
                 if ((*g_world_dead_unit_controller_input & PSX_PAD_SELECT) != 0) {
                     world_menu_start_building_thread();
                 }

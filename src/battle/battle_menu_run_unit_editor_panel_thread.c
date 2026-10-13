@@ -2,6 +2,7 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 /*
  * WORLD twin: world_menu_run_unit_editor_panel_thread (same code, globals and callees rebound).

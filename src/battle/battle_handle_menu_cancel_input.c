@@ -3,6 +3,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 /* The `blez` target depends on which reorg pass fills its delay slot, not on
  * how the two `i = 0` insns are spelled (they are identical RTL by then).

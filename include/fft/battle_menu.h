@@ -39,7 +39,6 @@ extern menu_cursor_bob_entry_t g_battle_cursor_bob_thresholds[];
 extern s32 g_battle_menu_action_menu_build_result;
 extern s16 g_battle_menu_action_slot_selected_option;
 extern u16 g_battle_menu_input_block_frames;
-extern u16 g_battle_menu_input_mode;        /* menu_input_mode_e */
 extern s16 g_battle_menu_result;            /* menu result: -4 pending, -1 cancelled */
 extern s16 g_battle_menu_row_message_ids[]; /* per-row message id */
 extern s16 g_battle_menu_selected_option;

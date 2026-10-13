@@ -19,12 +19,12 @@ void world_menu_handle_entry_confirm(menu_entry_t* entry, s32 row_index) {
     s32 menu_thread_id;
     s16* row_actions;
 
-    if (g_world_menu_input_mode == MENU_INPUT_TUTORIAL
+    if (g_menu_input_mode == MENU_INPUT_TUTORIAL
         && ((script_get_variable(EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS) >> row_index) & 1)) {
         return;
     }
     silent = 0;
-    if ((g_world_menu_new_button_input & PSX_PAD_CIRCLE) && world_menu_is_input_allowed() != 0) {
+    if ((g_script_event_input & PSX_PAD_CIRCLE) && world_menu_is_input_allowed() != 0) {
         if (g_thread_contexts[g_thread_current_id].task_words[1] == 0) {
             g_thread_contexts[g_thread_current_id].task_words[1] = 2;
             g_thread_contexts[g_thread_current_id].task_words[0] = 0;
@@ -68,7 +68,7 @@ void world_menu_handle_entry_confirm(menu_entry_t* entry, s32 row_index) {
                 }
             }
         }
-        g_world_menu_new_button_input = 0;
+        g_script_event_input = 0;
         *menu_entry_result(entry) = row_index;
         if (g_world_menu_sound_muted == 0 && silent == 0) {
             sound_queue_sfx_confirm();

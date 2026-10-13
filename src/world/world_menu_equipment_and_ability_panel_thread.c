@@ -1,6 +1,7 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -27,7 +28,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
 
     thread_set_current_task_id(THREAD_TASK_STATUS_PANEL);
     thread = (menu_status_thread_t*)g_threads[g_thread_current_id].function_parameter_1;
-    g_world_input_frame_controller_input = world_input_get_menu_controller(0);
+    g_world_input_frame_controller_input = script_get_controller_input_pointer(0);
     screen = g_world_change_banner_panel_frames;
     base = g_world_change_banner_panel_frames;
     state = &g_world_selected_unit_stat_detail.state;

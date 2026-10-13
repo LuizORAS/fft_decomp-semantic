@@ -1,6 +1,8 @@
 #include "fft/battle_script.h"
 #include "fft/event_option.h"
 #include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 #include "psx/pad.h"
@@ -25,7 +27,7 @@ u8* option_menu_redraw_text_page_on_scroll(
     source.h = menu->inner_height;
     changed = 0;
 
-    if (g_battle_menu_input_mode != MENU_INPUT_PLAYER) {
+    if (g_menu_input_mode != MENU_INPUT_PLAYER) {
         return 0;
     }
 

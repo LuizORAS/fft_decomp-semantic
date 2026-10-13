@@ -1,4 +1,5 @@
 #include "fft/memory.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -46,7 +47,7 @@ void world_menu_run_icon_selection_loop(void) {
             records[0]._unknown_78 = 0;
             records[1]._unknown_78 = 0;
         }
-        if (world_menu_check_thread_completion(&g_world_menu_new_button_input) != 0) {
+        if (world_menu_check_thread_completion(&g_script_event_input) != 0) {
             break;
         }
         world_menu_handle_entry_confirm(param, cursor);

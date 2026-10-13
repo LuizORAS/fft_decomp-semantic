@@ -1,4 +1,5 @@
 #include "fft/memory.h"
+#include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -22,8 +23,8 @@ u8* world_screen_menu_redraw_text_page_on_scroll(
     s32 offset;
     u8* buffer;
 
-    input0 = world_input_get_menu_controller(0);
-    input1 = world_input_get_menu_controller(1);
+    input0 = script_get_controller_input_pointer(0);
+    input1 = script_get_controller_input_pointer(1);
     rect.x = entry->vram_origin.x;
     rect.y = entry->vram_origin.y;
     rect.w = entry->inner_width >> 2;

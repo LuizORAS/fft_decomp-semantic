@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -42,7 +43,7 @@ void world_menu_run_main_mode(s32 mode) {
      * mode 0 and mode 1 calls, so it is its own variable. */
     last_mode = OPTION_MENU_DEAD_UNIT;
     if (mode == OPTION_MENU_GAME_OPTIONS) {
-        world_script_pulse_tutorial_wait_value(0xFD);
+        script_pulse_tutorial_wait_value(0xFD);
         thread_start(g_thread_current_id - 1, world_menu_run_game_options);
         entry->select_text_table = 1;
         entry->context = &g_world_option_menu_entry_table;
@@ -51,7 +52,7 @@ void world_menu_run_main_mode(s32 mode) {
         thread_exit_current();
     }
     if (mode == OPTION_MENU_AT_LIST) {
-        world_script_pulse_tutorial_wait_value(0xF9);
+        script_pulse_tutorial_wait_value(0xF9);
         world_menu_start_at_list_thread();
     }
     if (mode == last_mode) {

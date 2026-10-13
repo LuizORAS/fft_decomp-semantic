@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 
 /* Thread entry of the mini menu (the Triangle menu): wait for the camera and any

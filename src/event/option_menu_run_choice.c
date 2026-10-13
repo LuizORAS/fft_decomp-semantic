@@ -1,4 +1,5 @@
 #include "fft/memory.h"
+#include "fft/script.h"
 #include "fft/sound.h"
 /* Run the option choice menu.
  *

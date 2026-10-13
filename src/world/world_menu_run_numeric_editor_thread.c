@@ -1,6 +1,7 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -30,7 +31,7 @@ void world_menu_run_numeric_editor_thread(void) {
 
     thread_set_current_task_id(THREAD_TASK_STATUS_PANEL);
     thread = (menu_status_thread_t*)g_threads[g_thread_current_id].function_parameter_1;
-    g_world_input_frame_controller_input = world_input_get_menu_controller(0) + 1;
+    g_world_input_frame_controller_input = script_get_controller_input_pointer(0) + 1;
     if (g_thread_current_id == THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
         buffer = g_world_editor_numeric_state_a;
         buffers = buffer;

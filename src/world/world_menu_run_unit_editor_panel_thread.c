@@ -2,6 +2,7 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/unit.h"
@@ -207,12 +208,11 @@ void world_menu_run_unit_editor_panel_thread(void) {
             world_menu_init_primitive_colors_dimmed(frame_record->palette);
         }
         if (world_menu_is_input_allowed() != 0) {
-            if (g_world_menu_new_button_input & PSX_PAD_CROSS) {
+            if (g_script_event_input & PSX_PAD_CROSS) {
                 thread_set_parameters(THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
                 break;
             }
-            if ((g_world_menu_new_button_input & PSX_PAD_CIRCLE)
-                && world_thread_is_running_asm(THREAD_SLOT_MENU_BUILDING) == 0
+            if ((g_script_event_input & PSX_PAD_CIRCLE) && world_thread_is_running_asm(THREAD_SLOT_MENU_BUILDING) == 0
                 && (unit_has_any_current_status(g_world_active_unit_data.battle_id) != 0
                     || (g_world_unit_editor_fields.state.generic_monster == 0
                         && g_world_unit_selected_status_billboard.team_kind != 1))) {

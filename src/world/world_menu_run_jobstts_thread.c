@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -19,10 +20,10 @@ void world_menu_run_jobstts_thread(void) {
     thread_wait_frames(2);
     g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_JOBSTTS;
     do {
-        g_world_menu_new_button_input = 0;
+        g_script_event_input = 0;
         thread_yield();
     } while (g_world_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
-    g_world_menu_new_button_input = 0;
+    g_script_event_input = 0;
     menu_free_high_overlay();
     thread_wait_frames(2);
     world_menu_clear_transition_active_flag();

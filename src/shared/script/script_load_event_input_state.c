@@ -1,4 +1,4 @@
-#include "fft/battle_script.h"
+#include "fft/script.h"
 
 /* Copy a saved input state of six 32-bit values (pressed, held and previous buttons and the
  * three repeat counters) into the event input globals. The BUNIT and CARD

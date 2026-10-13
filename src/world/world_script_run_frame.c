@@ -88,10 +88,10 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     }
 
     world_input_update_menu_repeat(buttons);
-    if (g_world_menu_input_mode == MENU_INPUT_TUTORIAL) {
-        g_world_input_unfiltered_controller = g_world_menu_new_button_input;
-        script_apply_input_overrides(&g_world_menu_new_button_input);
-        g_world_script_saved_event_input = g_world_menu_new_button_input;
+    if (g_menu_input_mode == MENU_INPUT_TUTORIAL) {
+        g_world_input_unfiltered_controller = g_script_event_input;
+        script_apply_input_overrides(&g_script_event_input);
+        g_world_script_saved_event_input = g_script_event_input;
         script_set_variable(EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS, 0);
     }
     if (g_world_map_reload_state >= 3) {
@@ -135,9 +135,9 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         }
     }
 
-    world_script_load_event_input_state((menu_input_state_t*)&g_world_menu_new_button_input);
-    if (world_script_check_tutorial_event_slot() == 0 && g_world_menu_new_button_input != PSX_PAD_SELECT
-        && g_world_menu_new_button_input != 0) {
+    script_load_event_input_state((menu_input_state_t*)&g_script_event_input);
+    if (world_script_check_tutorial_event_slot() == 0 && g_script_event_input != PSX_PAD_SELECT
+        && g_script_event_input != 0) {
         g_world_thread_change_cooldown = 5;
     }
     for (i = 1; i < 16; i++) {
@@ -184,10 +184,10 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     world_menu_open_companion_data_file();
     world_script_process_pending_requests();
     world_script_frame_after_requests_stub();
-    if (g_world_menu_input_mode == MENU_INPUT_BLOCKED) {
+    if (g_menu_input_mode == MENU_INPUT_BLOCKED) {
         return 1;
     }
-    if (g_world_menu_input_mode == MENU_INPUT_TUTORIAL) {
+    if (g_menu_input_mode == MENU_INPUT_TUTORIAL) {
         return 0;
     }
     for (i = 1; i < 17; i++) {

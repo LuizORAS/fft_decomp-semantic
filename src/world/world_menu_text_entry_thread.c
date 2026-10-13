@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
@@ -18,7 +19,7 @@ void world_menu_text_entry_thread(void) {
 
     prepare_binding = entry->context;
     prepare_binding->prepare();
-    g_world_menu_list_controller_input = world_input_get_menu_controller(0);
+    g_world_menu_list_controller_input = script_get_controller_input_pointer(0);
     text_id = entry->text_id;
     second = entry->header_id;
     binding = entry->context;

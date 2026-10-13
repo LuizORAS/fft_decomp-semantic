@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Relocate the 31 embedded menu-text offsets into the active section table.
@@ -17,7 +18,7 @@ void battle_text_init_menu_section_pointers(void) {
 
     source = g_battle_menu_text_section_offsets;
     index = 0;
-    menu_input_mode = g_battle_menu_input_mode;
+    menu_input_mode = g_menu_input_mode;
     text = source + 32;
     destination = g_text_section_pointers;
     do {

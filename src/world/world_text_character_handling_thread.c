@@ -457,7 +457,7 @@ void world_text_character_handling_thread(void) {
                 if (no_wait == 0) {
                     for (tick = 0;; tick += g_script_event_speed) {
                         YIELD_OR_INPUT();
-                        if (g_world_menu_new_button_input & (PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT)) {
+                        if (g_script_event_input & (PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT)) {
                             break;
                         }
                         CHECK_ABORT();
@@ -485,7 +485,7 @@ void world_text_character_handling_thread(void) {
                                 arrow_window->sprites[2].x0 = rec.arrow_x;
                                 arrow_window->sprites[2].y0 = rec.arrow_y;
                             }
-                            if (g_world_menu_current_button_input & PSX_PAD_SQUARE) {
+                            if (g_script_event_current_input & PSX_PAD_SQUARE) {
                                 while (1) {
                                     if (rec.line != rec.lines) {
                                         scroll_window = WINDOW_AT(g_menu_packet_buffer_index);
@@ -501,14 +501,14 @@ void world_text_character_handling_thread(void) {
                                                 |= MENU_WINDOW_ICON_SCROLL_DOWN;
                                         }
                                     }
-                                    if ((g_world_menu_new_button_input & PSX_PAD_UP) && rec.first_line != 0) {
+                                    if ((g_script_event_input & PSX_PAD_UP) && rec.first_line != 0) {
                                         g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                                         WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                         rec.first_line += no_value;
                                         rec.last_line = rec.first_line + rec.lines;
                                         world_menu_render_text_image_at_record_origin(&rec);
                                     }
-                                    if ((g_world_menu_new_button_input & PSX_PAD_DOWN)
+                                    if ((g_script_event_input & PSX_PAD_DOWN)
                                         && rec.first_line != rec.line - rec.lines) {
                                         g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                                         WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
@@ -516,7 +516,7 @@ void world_text_character_handling_thread(void) {
                                         rec.last_line = rec.first_line + rec.lines;
                                         world_menu_render_text_image_at_record_origin(&rec);
                                     }
-                                    if (!(g_world_menu_current_button_input & PSX_PAD_SQUARE)) {
+                                    if (!(g_script_event_current_input & PSX_PAD_SQUARE)) {
                                         win[0].icon_flags = 0;
                                         win[1].icon_flags = 0;
                                         break;
@@ -629,15 +629,15 @@ void world_text_character_handling_thread(void) {
                     if (thread_get_current_task_id() == THREAD_TASK_WAIT_FOR_RESUME) {
                         continue;
                     }
-                    if ((g_world_menu_new_button_input & PSX_PAD_UP) && choice != rec.mark) {
+                    if ((g_script_event_input & PSX_PAD_UP) && choice != rec.mark) {
                         g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                         choice += no_value;
                     }
-                    if ((g_world_menu_new_button_input & PSX_PAD_DOWN) && choice != column) {
+                    if ((g_script_event_input & PSX_PAD_DOWN) && choice != column) {
                         g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                         choice++;
                     }
-                    if (g_world_menu_new_button_input & PSX_PAD_CIRCLE) {
+                    if (g_script_event_input & PSX_PAD_CIRCLE) {
                         if (rec.box_type != DIALOG_BOX_TYPE_CENTERED) {
                             g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                         }

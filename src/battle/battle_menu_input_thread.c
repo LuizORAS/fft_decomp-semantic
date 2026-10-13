@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_script.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 
 /* Thread entry of system function 0x28 (the silent move confirmation): with menu

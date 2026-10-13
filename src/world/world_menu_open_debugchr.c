@@ -1,5 +1,6 @@
 #include "fft/event_debugchr.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 
@@ -19,7 +20,7 @@ void world_menu_open_debugchr(void) {
     debugchr_editor_run_session();
     g_world_menu_overlay_state = 0;
     g_world_menu_sound_muted = 0;
-    g_world_menu_new_button_input = 0;
+    g_script_event_input = 0;
     world_menu_clear_transition_active_flag();
     thread_exit_current();
 }

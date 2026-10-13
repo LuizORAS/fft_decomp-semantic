@@ -99,7 +99,7 @@ void script_execute_event(void) {
     if (script_is_tutorial_event_slot() != 0) {
         battle_gfx_ramp_screen_overlay_intensity_to_zero();
     }
-    if (g_battle_menu_input_mode == MENU_INPUT_PLAYER) {
+    if (g_menu_input_mode == MENU_INPUT_PLAYER) {
         for (work_index = 2; work_index < 0xE; work_index++) {
             thread_wait_until_inactive(work_index);
         }
@@ -310,7 +310,7 @@ restart_script:
                 script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
                 battle_state_start_close_battle(0x20);
             }
-            if (g_battle_menu_input_mode == MENU_INPUT_PLAYER) {
+            if (g_menu_input_mode == MENU_INPUT_PLAYER) {
                 for (work_index = 2; work_index < 0xE; work_index++) {
                     thread_wait_until_inactive(work_index);
                 }
@@ -324,7 +324,7 @@ restart_script:
              * 0x190..0x1a9, checks the scenario conditions and chains into
              * the event they select. */
             finish_operation = (g_main_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8;
-            if (g_battle_menu_input_mode == MENU_INPUT_PLAYER && finish_operation == 0
+            if (g_menu_input_mode == MENU_INPUT_PLAYER && finish_operation == 0
                 && (operand_1 - EVENT_ID_COMMON_FIRST) >= 0x1AU && operand_1 != 0) {
                 g_script_condition_unit_battle_id = 0xFF;
                 script_run_scenario_conditions();

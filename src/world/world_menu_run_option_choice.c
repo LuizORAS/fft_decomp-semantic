@@ -1,4 +1,5 @@
 #include "fft/memory.h"
+#include "fft/script.h"
 #include "fft/sound.h"
 /* Two dead-store conditionals are zero-instruction allocation devices: flow deletes each body,
  * post-reload jump deletes each branch, but both stay visible to register allocation.
@@ -39,8 +40,8 @@ void world_menu_run_option_choice(void) {
     s32 cursor;
     menu_icon_sprites_t* record;
 
-    input = world_input_get_menu_controller(0);
-    world_input_get_menu_controller(1);
+    input = script_get_controller_input_pointer(0);
+    script_get_controller_input_pointer(1);
     thread = &g_threads[g_thread_current_id];
     kind = thread->function_parameter_1;
     thread->function_parameter_1 = (s32)&g_world_option_menu_icon_thread_param;

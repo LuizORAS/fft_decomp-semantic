@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -36,7 +37,7 @@ void world_menu_run_skillset_thread(void) {
     row = &g_world_menu_unit_selection_rows[g_world_active_unit_data.battle_id];
     g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = row->skillset_index;
     g_world_menu_restore_depth = 1;
-    world_script_pulse_tutorial_wait_value(0xFC);
+    script_pulse_tutorial_wait_value(0xFC);
     world_menu_run_icon_selection_loop();
     row->skillset_index = g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index;
     thread_exit_current();
