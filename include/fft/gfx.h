@@ -284,6 +284,7 @@ typedef struct fade_overlay {
 } fade_overlay_t;
 typedef char fade_overlay_size_must_be_28[(sizeof(fade_overlay_t) == 28) ? 1 : -1];
 
+void gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* source, RECT* rectangle);
 void gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 

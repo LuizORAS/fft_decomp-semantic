@@ -1,9 +1,8 @@
-#include "fft/open.h"
-#include "psx/libgpu.h"
-#include "psx/types.h"
+#include "fft/gfx.h"
 
-/* Build the centred, 4-aligned source rectangle for a scale mode and quad size. */
-void open_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* quad, RECT* rectangle) {
+/* Build the centred sub-rectangle of the source area for a scale mode
+ * (20%, 50%, 80%, 90% or 100%), aligned to 4 pixels. */
+void gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* source, RECT* rectangle) {
     s32 scale;
     s32 source_width;
     s32 source_height;
@@ -30,8 +29,8 @@ void open_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* quad, RECT*
         break;
     }
 
-    source_width = quad->w;
-    source_height = quad->h;
+    source_width = source->w;
+    source_height = source->h;
     half_width = (source_width / 2) & 0xfffc;
     half_height = (source_height / 2) & 0xfffc;
     width = (source_width * scale / 200) & 0xfffc;

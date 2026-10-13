@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/wldcore.h"
 #include "psx/libgs.h"
 #include "psx/types.h"
@@ -65,7 +66,7 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* obje
         s32 ox;
         s32 oy;
 
-        wldcore_gfx_calculate_scaled_rectangle(object->anim_counter / 2, &object->bounds, &frame);
+        gfx_calculate_scaled_rectangle(object->anim_counter / 2, &object->bounds, &frame);
         ox = object->base.x;
         fx = frame.x;
         fy = frame.y;

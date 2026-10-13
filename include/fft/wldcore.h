@@ -433,8 +433,6 @@ void wldcore_gfx_draw_number_digits(s32 value, s32 digits, GsSPRITE* sprite, GsO
 void wldcore_gfx_draw_number_digits_with_fill(s32 value, s32 digits, GsSPRITE* sprite, GsOT* ot, s32 zero_pad);
 void wldcore_gfx_draw_cursor_sprite_and_underline(GsOT* ot, GsSPRITE* sprite, GsLINE* line);
 
-void wldcore_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* source, RECT* rectangle);
-
 s32 wldcore_gfx_step_dissolve_image_upload(GsIMAGE* im, s32 step);
 
 void wldcore_gfx_load_background_set(s32 set);

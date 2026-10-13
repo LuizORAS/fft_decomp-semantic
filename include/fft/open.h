@@ -698,7 +698,6 @@ void open_gfx_draw_transition_line_strips(s32 intensity);
 s32 open_gfx_append_animated_render_record(void** list, s32* count);
 s32 open_gfx_append_window_record(void** list, s32* count);
 void open_gfx_restore_frame_vram_page(void);
-void open_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* quad, RECT* rectangle);
 void open_gfx_clear_and_draw_current_frame(void);
 void open_gfx_clear_current_otag(void);
 void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index);

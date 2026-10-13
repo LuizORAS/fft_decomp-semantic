@@ -68,7 +68,7 @@ functions:
   - {addr: 0x8006b26c, size: 500, name: wldcore_gfx_draw_display_object_sprite, hash: 3a72d1b76b19a115}
   - {addr: 0x8006b460, size: 232, name: wldcore_window_append_record_and_reset_color, hash: 9d472c712e7475fd}
   - {addr: 0x8006b548, size: 304, name: wldcore_window_append_render_record_and_reset_color, hash: 8b95487b55821e0b}
-  - {addr: 0x8006b678, size: 276, name: wldcore_gfx_calculate_scaled_rectangle, hash: 63903852735eac70}
+  - {addr: 0x8006b678, size: 276, name: gfx_calculate_scaled_rectangle, hash: 63903852735eac70, source: src/shared/gfx/gfx_calculate_scaled_rectangle.c}
   - {addr: 0x8006b78c, size: 840, name: wldcore_gfx_draw_context_value_display, hash: a64c4fe093eb72d2, rodata: [{addr: 0x80067020, size: 20, hash: ec1dbbcbf2752505}]}
   - {addr: 0x8006bad4, size: 244, name: wldcore_gfx_draw_cursor_sprite_and_underline, hash: 477515410b583ab3}
   - {addr: 0x8006bbc8, size: 444, name: wldcore_gfx_draw_number_digits, hash: 4f4c1a14ea91b92e}

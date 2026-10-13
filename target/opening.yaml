@@ -52,7 +52,7 @@ functions:
   - {addr: 0x8006920c, size: 1212, name: open_gfx_draw_window_record, hash: 6c7b3dae23c3f006}
   - {addr: 0x800696c8, size: 232, name: open_gfx_append_animated_render_record, hash: a3135d544f819f6f}
   - {addr: 0x800697b0, size: 272, name: open_gfx_append_window_record, hash: 6a95dfcd435c9a47}
-  - {addr: 0x800698c0, size: 276, name: open_gfx_calculate_scaled_rectangle, hash: 9676150bdf1ed31c}
+  - {addr: 0x800698c0, size: 276, name: gfx_calculate_scaled_rectangle, hash: 9676150bdf1ed31c, source: src/shared/gfx/gfx_calculate_scaled_rectangle.c}
   - {addr: 0x800699d4, size: 96, name: open_file_wait_then_build_header, hash: b839cd0a4c5eb016}
   - {addr: 0x80069a34, size: 92, name: open_file_wait_for_pending, hash: 5e8c5303cf510992}
   - {addr: 0x80069a90, size: 220, name: open_file_load_main_menu_graphics, hash: c9dcd99baa6edbc0}

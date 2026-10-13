@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/open.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -7,7 +8,7 @@
  *
  * Flags bit 2 and bits 6-7 select the texture page, bit 5 enables
  * semi-transparency, and bit 8 runs the pop-in scale: pop_in_step counts the
- * animation, open_gfx_calculate_scaled_rectangle turns half of it into a
+ * animation, gfx_calculate_scaled_rectangle turns half of it into a
  * shrunken source rectangle, and the flag clears once the record is at full
  * size. A nonzero palette picks the CLUT (palette - 1) * 16 pixels right of tail.clut.
  *
@@ -59,7 +60,7 @@ void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot) {
     }
 
     if (record->flags & WORLD_RENDER_RECORD_POP_IN) {
-        open_gfx_calculate_scaled_rectangle(record->pop_in_step / 2, &record->tail.quad, &scaled);
+        gfx_calculate_scaled_rectangle(record->pop_in_step / 2, &record->tail.quad, &scaled);
         g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.x0
             = scaled.x + (px = record->x);
         g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.y0
