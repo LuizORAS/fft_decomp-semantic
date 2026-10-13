@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -152,7 +153,7 @@ s32 require_party_select_unit_to_remove(void) {
                 continue;
             }
             if (*g_require_input_controller & PSX_PAD_R1) {
-                g_require_panel_status_animation[1] = 7;
+                g_menu_panel_status_animation[1] = 7;
                 for (;;) {
                     selected_party_index++;
                     if (selected_party_index == 0x14)
@@ -171,7 +172,7 @@ s32 require_party_select_unit_to_remove(void) {
                     }
                 }
             } else if (*g_require_input_controller & PSX_PAD_L1) {
-                g_require_panel_status_animation[0] = 7;
+                g_menu_panel_status_animation[0] = 7;
                 do {
                     selected_party_index--;
                     if (selected_party_index == -1)

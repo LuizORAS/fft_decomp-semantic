@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -7,7 +8,7 @@
  *
  * The first rectangle is `source` moved left one page (0x80), shifted by the
  * thread's x and y, and cropped about its centre to
- * g_require_gfx_draw_area_scale_percent[scale_index] percent of its size;
+ * g_menu_draw_area_scale_percent[scale_index] percent of its size;
  * scale_index is doubled at event speed 2 and capped at 11. The second
  * rectangle is the frame buffer's own area. With `lower_half` zero both are
  * placed in the buffer at y 0xF0. REQUIRE then forces both
@@ -26,7 +27,7 @@ void require_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet,
     if (scale_index >= 12) {
         scale_index = 11;
     }
-    percent = g_require_gfx_draw_area_scale_percent[scale_index];
+    percent = g_menu_draw_area_scale_percent[scale_index];
     battle_copy_bytes(&packet->rects[0], source, 8);
     w = packet->rects[0].w;
     h = packet->rects[0].h;

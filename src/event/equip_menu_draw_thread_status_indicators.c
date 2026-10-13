@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -64,7 +65,7 @@ draw_panels:
         flip = g_equip_menu_indicator_buffer_index[i] ^ 1;
         g_equip_menu_indicator_buffer_index[i] = flip;
         prims = &g_equip_thread_indicator_packets[i][flip];
-        SetDrawMode(&prims->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_equip_gfx_draw_area_template);
+        SetDrawMode(&prims->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_menu_draw_area_template);
         SetTile(&prims->center);
         setRGB0(&prims->center, 0, 0, 0);
         SetSemiTrans(&prims->center, 1);

@@ -321,8 +321,6 @@ extern s32 g_attack_menu_indicator_packet_index[2];
 extern s32 g_attack_menu_indicator_state[2];
 
 /* graphics */
-extern const u16 g_attack_gfx_draw_area_scale_percent[12];
-extern RECT g_attack_gfx_draw_area_template;
 extern u16 g_attack_gfx_draw_offset_y;
 extern POLY_FT4 g_attack_gfx_frame_ft4[];
 extern RECT g_attack_gfx_portrait_origin;
@@ -337,13 +335,10 @@ extern const CVECTOR g_attack_map_darkness_color;
 void attack_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
-void attack_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
-    s32 lower_half, const menu_status_thread_t* thread);
 void attack_gfx_build_status_group_primitives(POLY_FT4* poly);
 void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_page, const RECT* position,
     sprite_sheet_frame_t* sprite_rect, point16_t* scale, const sprite_draw_offset_t* offset);
 void attack_gfx_init_frame_ft4_array(void);
-void attack_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* data);
 
 /* portraits */
 extern u16 g_attack_portrait_index_by_sprite_set[];

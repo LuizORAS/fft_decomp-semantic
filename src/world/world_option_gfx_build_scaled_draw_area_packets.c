@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /*
- * WORLD's copy of option_gfx_build_scaled_draw_area_packets, beside its copy of the OPTION.OUT list
+ * WORLD's copy of menu_build_scaled_draw_area_packets, beside its copy of the OPTION.OUT list
  * code; nothing calls it.
  * Build a double-buffered draw-area pair whose rectangle is `source` moved
  * left one page, shifted by `offset` (x by offset->x, y by offset->w) and

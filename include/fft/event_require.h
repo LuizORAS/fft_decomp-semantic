@@ -224,15 +224,6 @@ extern menu_status_panel_packet_t g_require_panel_selected_packets[2];
 extern palette_t g_require_panel_selected_portrait_palettes[2];
 extern RECT g_require_panel_selected_portrait_rect;
 extern image_load_parameters_t g_require_panel_sprite_cells[];
-extern u8 g_require_panel_status_animation[];
-extern u8 g_require_panel_status_group_bounds[];
-extern u8 g_require_panel_status_group_count;
-extern u8 g_require_panel_status_group_ids[];
-extern sprite_draw_offset_t g_require_panel_status_offsets[];
-extern point16_t g_require_panel_status_scales[];
-extern const point16_t g_require_panel_status_texture;
-extern sprite_sheet_frame_t g_require_panel_status_uv_rects[];
-extern const u16 g_require_panel_status_y_offsets[];
 extern u8 g_require_panel_text_image_a[];
 extern u8 g_require_panel_text_image_b[];
 extern RECT g_require_panel_text_upload_rect_a;
@@ -302,8 +293,6 @@ extern RECT g_require_special_portrait_palette_rect;
 extern RECT g_require_special_portrait_rect;
 
 /* graphics */
-extern const u16 g_require_gfx_draw_area_scale_percent[12];
-extern RECT g_require_gfx_draw_area_template;
 extern s16 g_require_gfx_draw_offset_y;
 extern u8 g_require_gfx_fade_rgb[3];
 extern u8 g_require_gfx_formation_sprite_groups[][3];
@@ -313,10 +302,6 @@ extern POLY_GT4 g_require_gfx_poly_gt4_array_8[];
 extern POLY_GT4 g_require_gfx_poly_gt4_buffers[2][40];
 extern RECT g_require_gfx_portrait_origin;
 extern u8 g_require_gfx_portrait_transition_offsets[];
-extern u8 g_require_gfx_scaled_sprite_count;
-extern point16_t g_require_gfx_scaled_sprite_scale[];
-extern point16_t g_require_gfx_scaled_sprite_texture_page;
-extern sprite_sheet_frame_t g_require_gfx_scaled_sprite_uv_rects[];
 
 void require_gfx_build_gradient_grid_primitives(POLY_GT4* poly);
 void require_gfx_build_portrait_poly_ft4(s32 flags, POLY_FT4* output);
@@ -324,11 +309,9 @@ void require_gfx_build_portrait_transition_primitives(const RECT* texture_rect, 
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 void require_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
     s32 lower_half, const menu_status_thread_t* thread);
-void require_gfx_build_status_group_primitives(POLY_FT4* poly);
 void require_gfx_fade_rgb_31_frames(s32 target_0, s32 target_1, s32 target_2);
 void require_gfx_init_poly_gt4_array_32(s32 x, s32 y);
 void require_gfx_init_poly_gt4_array_8(s32 x, s32 y);
-void require_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
 void require_gfx_scale_poly_gt4_vertex_colors(
     const require_display_condition_colors_t* colors, s32 scale, POLY_GT4* poly);
 

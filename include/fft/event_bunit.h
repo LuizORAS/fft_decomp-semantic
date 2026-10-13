@@ -506,8 +506,6 @@ extern u8 g_bunit_gfx_decreasing_fade_active;
 extern RECT g_bunit_gfx_draw_area;
 extern u16 g_bunit_gfx_draw_area_capacity;
 extern u16 g_bunit_gfx_draw_area_count;
-extern const u16 g_bunit_gfx_draw_area_scale_percent[12];
-extern RECT g_bunit_gfx_draw_area_template;
 extern u16 g_bunit_gfx_draw_mode_capacity;
 extern u16 g_bunit_gfx_draw_mode_count;
 extern u16 g_bunit_gfx_draw_move_capacity;
@@ -574,8 +572,6 @@ extern u8 g_bunit_sprite_cell_sizes[][2];
 
 void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
-void bunit_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
-    s32 lower_half, const menu_status_thread_t* thread);
 s32 bunit_gfx_calculate_distance_falloff(s32 x, s32 y, s32 base_value, s32 minimum);
 void bunit_gfx_draw_falloff_shaded_rows(s32 y);
 void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y);
@@ -603,7 +599,6 @@ void bunit_gfx_init_double_packet_buffers(bunit_gfx_context_t* buffers, u32* ota
     SPRT_8* sprites_8, SPRT_16* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
 void bunit_gfx_init_packet_pools(bunit_gfx_context_t* buffer);
 void bunit_gfx_init_rhombus_cursor_tpages(void);
-void bunit_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
 void bunit_gfx_init_vram_and_start_fade(void);
 void bunit_gfx_set_draw_color(const rgb24_t* color);
 void bunit_gfx_set_otag_index(s16 value);

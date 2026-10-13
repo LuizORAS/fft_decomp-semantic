@@ -298,6 +298,17 @@ void gfx_set_scaled_poly_ft4_8bpp(POLY_FT4* poly, const point16_t* texture, cons
 void gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness);
 void gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction);
 
+/* Draw state handed to SCUS Build ZODIAC.BIN (provisional layout). */
+typedef struct zodiac_draw_context {
+    u32* ot;             /* 0x00: ordering table entry the primitives link into */
+    s32 brightness;      /* 0x04: low byte is r0/g0/b0 of every sprite; WORLD stores g_world_menu_color_red */
+    s32 link_primitives; /* 0x08: nonzero: link each sprite into the OT */
+    s16 scale_x;         /* 0x0c: 12.12 */
+    s16 scale_y;         /* 0x0e: 12.12 */
+    u8 _unused_10[8];
+    sprite_draw_offset_t offset; /* 0x18 */
+} zodiac_draw_context_t;
+
 /* event character graphics */
 /* One of the 137 fixed-size blocks in EVTCHR.BIN. No native pointer tables
  * or widened 32-bit unit-animation headers are present in the file. */

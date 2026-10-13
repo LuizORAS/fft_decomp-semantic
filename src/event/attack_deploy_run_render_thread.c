@@ -1,5 +1,6 @@
 #include "fft/battle_gfx.h"
 #include "fft/event_attack.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -40,16 +41,16 @@ void attack_deploy_run_render_thread(void) {
     g_attack_deploy_semitrans_clut_buffer[0].red = g_attack_deploy_semitrans_clut_buffer[0].green
         = g_attack_deploy_semitrans_clut_buffer[0].blue = g_attack_deploy_semitrans_clut_buffer[0].semi_transparent = 0;
     LoadImage(&g_attack_deploy_rect_0ac, (u32*)g_attack_deploy_semitrans_clut_buffer);
-    SetDrawMode(&g_attack_deploy_render_buffers[0].draw_mode_9c4, 0, 0, GetTPage(0, 1, 0x100, 0),
-        &g_attack_gfx_draw_area_template);
-    SetDrawMode(&g_attack_deploy_render_buffers[0].draw_mode_9d0, 0, 0, GetTPage(0, 1, 0x100, 0),
-        &g_attack_gfx_draw_area_template);
-    SetDrawMode(&g_attack_deploy_render_buffers[0].draw_mode_9dc, 0, 0, GetTPage(0, 1, 0x100, 0),
-        &g_attack_gfx_draw_area_template);
-    SetDrawMode(&g_attack_deploy_render_buffers[0].draw_mode_9e8, 0, 0, GetTPage(0, 1, 0x100, 0),
-        &g_attack_gfx_draw_area_template);
+    SetDrawMode(
+        &g_attack_deploy_render_buffers[0].draw_mode_9c4, 0, 0, GetTPage(0, 1, 0x100, 0), &g_menu_draw_area_template);
+    SetDrawMode(
+        &g_attack_deploy_render_buffers[0].draw_mode_9d0, 0, 0, GetTPage(0, 1, 0x100, 0), &g_menu_draw_area_template);
+    SetDrawMode(
+        &g_attack_deploy_render_buffers[0].draw_mode_9dc, 0, 0, GetTPage(0, 1, 0x100, 0), &g_menu_draw_area_template);
+    SetDrawMode(
+        &g_attack_deploy_render_buffers[0].draw_mode_9e8, 0, 0, GetTPage(0, 1, 0x100, 0), &g_menu_draw_area_template);
     SetDrawMode(&g_attack_deploy_render_buffers[0].draw_mode_9f4, 0, 0, GetTPage(0, 1, 0x3c0, 0x100),
-        &g_attack_gfx_draw_area_template);
+        &g_menu_draw_area_template);
     attack_deploy_prepare_valid_tiles(g_attack_deploy_render_buffers[0].tiles[0]);
     battle_copy_bytes(
         &g_attack_deploy_render_buffers[1], &g_attack_deploy_render_buffers[0], sizeof(attack_deploy_render_buffer_t));

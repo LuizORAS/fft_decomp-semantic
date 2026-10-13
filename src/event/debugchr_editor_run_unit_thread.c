@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/event_debugchr.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -43,7 +44,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_DEBUG_UNIT_EDITOR);
     g_debugchr_editor_active = 0;
-    g_debugchr_panel_status_group_count = 2;
+    g_menu_panel_status_group_count = 2;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     unit_ids = g_debugchr_editor_unit_ids;
     unit_ids[0] = unit_id;
@@ -102,7 +103,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
     frame = 0;
     render_buffers = g_debugchr_gfx_render_buffers[0];
     one = 1;
-    animation = g_debugchr_panel_status_animation;
+    animation = g_menu_panel_status_animation;
     animation_second = animation + 1;
     animation_third = animation + 2;
     selected_unit = &g_debugchr_panel_selected_unit_data.battle_id;
@@ -115,7 +116,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             s32 render_offset;
             render_offset = (frame & 1) * sizeof(g_debugchr_gfx_render_buffers[0]);
             /* Typed polygon indexing reverses the ADDU operands. */
-            debugchr_gfx_build_status_group_primitives((POLY_FT4*)(render_offset + (s32)render_buffers));
+            menu_build_status_group_primitives((POLY_FT4*)(render_offset + (s32)render_buffers));
         }
 
         if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {
@@ -171,7 +172,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                         s32 render_offset;
                         render_offset = (frame & 1) * sizeof(g_debugchr_gfx_render_buffers[0]);
                         /* Typed polygon indexing reverses the ADDU operands. */
-                        debugchr_gfx_build_status_group_primitives((POLY_FT4*)(render_offset + (s32)render_buffers));
+                        menu_build_status_group_primitives((POLY_FT4*)(render_offset + (s32)render_buffers));
                     }
                     if (battle_thread_is_running_asm(g_battle_current_thread_id - 1) == 0) {
                         break;
@@ -193,7 +194,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
 
             slot = g_debugchr_editor_selected_unit_slot;
             g_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
-            g_debugchr_panel_status_animation[1] = 7;
+            g_menu_panel_status_animation[1] = 7;
             slot ^= 1;
             g_debugchr_editor_selected_unit_slot = slot;
             chosen_unit = &g_debugchr_editor_unit_ids[slot];
@@ -216,7 +217,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
 
             slot = g_debugchr_editor_selected_unit_slot;
             g_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
-            g_debugchr_panel_status_animation[0] = 7;
+            g_menu_panel_status_animation[0] = 7;
             slot ^= 1;
             g_debugchr_editor_selected_unit_slot = slot;
             chosen_unit = &g_debugchr_editor_unit_ids[slot];

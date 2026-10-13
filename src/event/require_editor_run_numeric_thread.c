@@ -50,7 +50,7 @@ void require_editor_run_numeric_thread(void) {
     battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[2], MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_menu_init_numeric_display_frame_primitives(
         &g_require_editor_numeric_table.texture_rect, &buffer->numeric_frame);
-    require_gfx_init_scaled_draw_area_packets(&buffer->portrait);
+    menu_init_scaled_draw_area_packets(&buffer->portrait);
     i = 0;
     descriptor = g_require_editor_numeric_texture;
     for (; i < 18; i++) {

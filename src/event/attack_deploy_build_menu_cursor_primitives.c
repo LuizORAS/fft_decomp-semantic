@@ -18,8 +18,8 @@ void attack_deploy_build_menu_cursor_primitives(s32 frame, u32 mode, attack_depl
         SetSemiTrans(ptr, 0);
         SetShadeTex(ptr, 1);
         /* The draw area's x/y serve as the screen base point. */
-        gfx_init_image_loading(ptr, g_attack_deploy_texture_location, &g_attack_gfx_draw_area_template,
-            &g_attack_deploy_menu_cursor_cells[i]);
+        gfx_init_image_loading(
+            ptr, g_attack_deploy_texture_location, &g_menu_draw_area_template, &g_attack_deploy_menu_cursor_cells[i]);
         i += 1;
     } while (i < 4);
 

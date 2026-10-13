@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 /* Animate the reward bonus image as a burst of tiles.
  *
  * Profile gcc-2.6.3_O2_aspsx-2.34_divcheck: the per-tile delay is an unsigned
@@ -106,10 +107,8 @@ void require_reward_animate_bonus_image_burst(void) {
             battle_copy_bytes(&tile->poly[1], &tile->poly[0], sizeof(POLY_F4));
         }
     }
-    SetDrawMode(
-        &g_require_reward_burst_draw_modes[0], 0, 0, GetTPage(0, 0, 0x180, 0), &g_require_gfx_draw_area_template);
-    SetDrawMode(
-        &g_require_reward_burst_draw_modes[1], 0, 0, GetTPage(0, 0, 0x180, 0), &g_require_gfx_draw_area_template);
+    SetDrawMode(&g_require_reward_burst_draw_modes[0], 0, 0, GetTPage(0, 0, 0x180, 0), &g_menu_draw_area_template);
+    SetDrawMode(&g_require_reward_burst_draw_modes[1], 0, 0, GetTPage(0, 0, 0x180, 0), &g_menu_draw_area_template);
     frame = 0;
     for (phase = 0; phase < 2; phase++) {
         done = 0;

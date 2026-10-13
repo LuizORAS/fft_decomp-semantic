@@ -87,15 +87,6 @@ extern menu_active_unit_t g_debugchr_panel_selected_unit_data;
 extern s16 g_debugchr_panel_slide_down_y[];
 extern s16 g_debugchr_panel_slide_up_y[];
 extern image_load_parameters_t g_debugchr_panel_sprite_cells[];
-extern u8 g_debugchr_panel_status_animation[];
-extern u8 g_debugchr_panel_status_group_bounds[];
-extern u8 g_debugchr_panel_status_group_count;
-extern u8 g_debugchr_panel_status_group_ids[];
-extern sprite_draw_offset_t g_debugchr_panel_status_offsets[];
-extern point16_t g_debugchr_panel_status_scales[];
-extern const point16_t g_debugchr_panel_status_texture;
-extern sprite_sheet_frame_t g_debugchr_panel_status_uv_rects[];
-extern const u16 g_debugchr_panel_status_y_offsets[];
 extern u8 g_debugchr_panel_text_image_a[];
 extern u8 g_debugchr_panel_text_image_b[];
 extern RECT g_debugchr_panel_text_upload_rect_a;
@@ -134,23 +125,13 @@ extern s32 g_debugchr_menu_indicator_packet_index[2];
 extern s32 g_debugchr_menu_indicator_state[2];
 
 /* graphics */
-extern const u16 g_debugchr_gfx_draw_area_scale_percent[12];
-extern RECT g_debugchr_gfx_draw_area_template;
 extern u16 g_debugchr_gfx_draw_offset_y;
 extern RECT g_debugchr_gfx_portrait_origin;
 extern u8 g_debugchr_gfx_portrait_transition_offsets[];
 extern POLY_FT4 g_debugchr_gfx_render_buffers[2][30];
-extern u8 g_debugchr_gfx_scaled_sprite_count;
-extern point16_t g_debugchr_gfx_scaled_sprite_scale[];
-extern point16_t g_debugchr_gfx_scaled_sprite_texture_page;
-extern sprite_sheet_frame_t g_debugchr_gfx_scaled_sprite_uv_rects[];
 
 void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
-void debugchr_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
-    s32 lower_half, const menu_status_thread_t* thread);
-void debugchr_gfx_build_status_group_primitives(POLY_FT4* poly);
-void debugchr_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
 
 /* text */
 

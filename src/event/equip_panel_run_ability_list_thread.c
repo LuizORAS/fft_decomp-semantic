@@ -44,7 +44,7 @@ void equip_panel_run_ability_list_thread(void) {
     }
     battle_menu_init_numeric_display_frame_primitives(&g_equip_right_panel_frame_rect, &screen->numeric_frame);
     menu_init_status_panel_primitives(screen);
-    equip_gfx_init_scaled_draw_area_packets(&screen->portrait);
+    menu_init_scaled_draw_area_packets(&screen->portrait);
     /* The tile/line fixups must read g_equip_panel_origin_offsets as an array
      * element: a cast of a u8[] view folds the loop's y reads to absolute
      * addresses instead of the target's pointer-relative loads. */
@@ -123,7 +123,7 @@ void equip_panel_run_ability_list_thread(void) {
         SetDrawOffset(&screen->draw_offsets[1].packet, (u16*)&screen->draw_offsets[1].position);
         offset.x = thread->x - 0x73;
         offset.y = thread->y;
-        equip_gfx_build_scaled_draw_area_packets(&screen->portrait, &g_equip_character_status_frame_rect[2], frame,
+        menu_build_scaled_draw_area_packets(&screen->portrait, &g_equip_character_status_frame_rect[2], frame,
             g_main_gfx_screen_polarity * 0xf0, &offset);
         menu_set_status_panel_primitive_colors(screen, thread);
         menu_select_status_primitive_color_palette(&screen->numeric_frame, thread);

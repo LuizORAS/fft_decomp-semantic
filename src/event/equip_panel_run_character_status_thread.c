@@ -29,7 +29,7 @@ void equip_panel_run_character_status_thread(void) {
     rect = g_equip_character_status_frame_rect;
     battle_menu_init_numeric_display_frame_primitives(rect, &screen->numeric_frame);
     menu_init_status_panel_primitives(screen);
-    equip_gfx_init_scaled_draw_area_packets(&screen->portrait);
+    menu_init_scaled_draw_area_packets(&screen->portrait);
     for (i = 0; i < 2; i++) {
         screen->tiles[i].x0 += rect->x;
         screen->tiles[i].y0 += rect->y;
@@ -135,7 +135,7 @@ void equip_panel_run_character_status_thread(void) {
         mask = scale ^ 0xf0;
         mask = -(mask != 0);
         g_equip_gfx_draw_offset_y = mask & 0xf0;
-        equip_gfx_build_scaled_draw_area_packets(
+        menu_build_scaled_draw_area_packets(
             &screen->portrait, &g_equip_character_status_draw_area_rect, frame, scale, thread);
         screen->draw_offsets[0].position.x = thread->x - 0x80;
         screen->draw_offsets[0].position.y = thread->y + g_equip_gfx_draw_offset_y;

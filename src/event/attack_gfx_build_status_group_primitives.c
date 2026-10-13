@@ -42,11 +42,11 @@ void attack_gfx_build_status_group_primitives(POLY_FT4* poly) {
         for (cell = 0; cell < count; cell++) {
             menu_init_default_poly_ft4(poly);
             index = first + count - cell;
-            g_attack_gfx_draw_area_template.y += *g_attack_panel_status_y_offsets[entry];
-            gfx_set_scaled_poly_ft4_4bpp(poly, g_attack_editor_numeric_geometry, &g_attack_gfx_draw_area_template,
+            g_menu_draw_area_template.y += *g_attack_panel_status_y_offsets[entry];
+            gfx_set_scaled_poly_ft4_4bpp(poly, g_attack_editor_numeric_geometry, &g_menu_draw_area_template,
                 &g_attack_panel_status_uv_rects[index], &g_attack_panel_status_scales[index],
                 &g_attack_panel_status_offsets[entry]);
-            g_attack_gfx_draw_area_template.y -= *g_attack_panel_status_y_offsets[entry];
+            g_menu_draw_area_template.y -= *g_attack_panel_status_y_offsets[entry];
             if (g_attack_panel_status_animation[entry] == 0x40) {
                 setRGB0(poly, 0x80, 0x80, 0x80);
                 g_attack_panel_status_animation[entry] = 0;

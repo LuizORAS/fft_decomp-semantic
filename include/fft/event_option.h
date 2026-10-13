@@ -61,12 +61,6 @@ u8* option_menu_redraw_text_page_on_scroll(menu_entry_t* menu, s32* first_row, s
 void option_menu_window_frame_thread(void);
 
 /* graphics */
-extern const u16 g_option_gfx_draw_area_scale_percent[12];
-extern RECT g_option_gfx_draw_area_template;
-
-void option_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
-    s32 lower_half, const menu_status_thread_t* thread);
-void option_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
 
 /* text */
 extern glyph_blit_t g_option_text_glyph_dest;

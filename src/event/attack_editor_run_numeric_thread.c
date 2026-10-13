@@ -50,7 +50,7 @@ void attack_editor_run_numeric_thread(void) {
     battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[2], MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_menu_init_numeric_display_frame_primitives(
         &g_attack_editor_numeric_table.texture_rect, &buffer->numeric_frame);
-    attack_gfx_init_scaled_draw_area_packets(&buffer->portrait);
+    menu_init_scaled_draw_area_packets(&buffer->portrait);
     i = 0;
     descriptor = g_attack_editor_numeric_texture;
     for (; i < 18; i++) {
@@ -102,7 +102,7 @@ void attack_editor_run_numeric_thread(void) {
         field_y = g_main_gfx_screen_polarity * 0xF0;
         use_offset = field_y != 0xF0;
         g_attack_gfx_draw_offset_y = -use_offset & 0xF0;
-        attack_gfx_build_scaled_draw_area_packets(
+        menu_build_scaled_draw_area_packets(
             &buffer->portrait, &g_attack_editor_numeric_table.draw_area_rect, frame, field_y, thread);
         buffer->draw_offsets[0].position.x = thread->x - 0x80;
         buffer->draw_offsets[0].position.y = thread->y + g_attack_gfx_draw_offset_y;

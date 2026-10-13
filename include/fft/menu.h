@@ -412,6 +412,28 @@ void menu_select_status_primitive_color_palette(
 
 void menu_set_status_panel_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
 
+/* panel drawing */
+extern const u16 g_menu_draw_area_scale_percent[12];
+extern RECT g_menu_draw_area_template;
+extern u8 g_menu_gfx_scaled_sprite_count;
+extern point16_t g_menu_gfx_scaled_sprite_scale[];
+extern point16_t g_menu_gfx_scaled_sprite_texture_page;
+extern sprite_sheet_frame_t g_menu_gfx_scaled_sprite_uv_rects[];
+extern u8 g_menu_panel_status_animation[];
+extern u8 g_menu_panel_status_group_bounds[];
+extern u8 g_menu_panel_status_group_count;
+extern u8 g_menu_panel_status_group_ids[];
+extern sprite_draw_offset_t g_menu_panel_status_offsets[];
+extern point16_t g_menu_panel_status_scales[];
+extern const point16_t g_menu_panel_status_texture;
+extern sprite_sheet_frame_t g_menu_panel_status_uv_rects[];
+extern const u16 g_menu_panel_status_y_offsets[];
+void menu_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
+    s32 lower_half, const menu_status_thread_t* thread);
+void menu_build_status_group_primitives(POLY_FT4* poly);
+void menu_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* poly);
+void menu_init_scaled_draw_area_packets(scaled_draw_area_pair_t* data);
+
 /* menu commands */
 /* Per-skillset menu behavior stored at 0x80065cb4. Values select specialized
  * inventory, targeting, and ability-loading paths; they are not menu command

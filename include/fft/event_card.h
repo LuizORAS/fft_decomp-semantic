@@ -158,7 +158,6 @@ typedef char card_graphics_context_size_must_be_244[(sizeof(card_graphics_contex
 extern card_graphics_context_t* g_card_gfx_context;
 extern card_graphics_context_t* g_card_gfx_context_base;
 extern u8 g_card_gfx_decreasing_fade_active;
-extern RECT g_card_gfx_draw_area_template;
 extern u16 g_card_gfx_draw_clut;
 extern s16 g_card_gfx_draw_semitrans;
 extern u16 g_card_gfx_drawenv_y;
@@ -173,12 +172,8 @@ extern POLY_FT4 g_card_gfx_poly_ft4_buffers[];
 extern u16 g_card_gfx_poly_ft4_capacity;
 extern u16 g_card_gfx_poly_ft4_count;
 extern u32* g_card_gfx_render_otag;
-extern u8 g_card_gfx_scaled_sprite_count;
 /* Double-buffered ZODIAC sprite chains (0x4b0 bytes each). */
 extern POLY_FT4 g_card_gfx_scaled_sprite_primitive_buffers[2][30];
-extern point16_t g_card_gfx_scaled_sprite_scale[];
-extern point16_t g_card_gfx_scaled_sprite_texture_page;
-extern sprite_sheet_frame_t g_card_gfx_scaled_sprite_uv_rects[];
 extern u16 g_card_gfx_texture_page;
 extern u16 g_card_gfx_tile_capacity;
 extern u16 g_card_gfx_tile_count;
@@ -186,7 +181,6 @@ extern u16 g_card_gfx_tile_count;
  * parser's store-back only matches as RECT field stores. */
 extern RECT g_card_gfx_tiled_rect;
 
-void card_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* poly);
 void card_gfx_enqueue_oriented_textured_quad(
     const oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index);
 void card_gfx_enqueue_textured_quad(

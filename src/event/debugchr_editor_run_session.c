@@ -63,7 +63,7 @@ void debugchr_editor_run_session(void) {
     s32 shadow_bob_x;
 
     g_debugchr_editor_active = 1;
-    g_debugchr_panel_status_group_count = 2;
+    g_menu_panel_status_group_count = 2;
     for (i = 0; i < 0x15; i++) {
         battle_unit_find_stats_by_entd_unit_id(battle_unit_get_stats_from_battle_id(i)->unit_id, &battle_id);
         if ((battle_id >= 0) && (i == battle_id)) {
@@ -115,7 +115,7 @@ loop_outer:
         /* Removing the tied use changes the marker and menu-pointer allocation. */
         __asm__("" : "=r"(mark) : "0"(mark));
         battle_thread_yield();
-        debugchr_gfx_build_status_group_primitives(g_debugchr_gfx_render_buffers[i & 1]);
+        menu_build_status_group_primitives(g_debugchr_gfx_render_buffers[i & 1]);
         input = script_get_controller_input_pointer(0);
         g_debugchr_input_controller = input;
         buttons = *input;
@@ -129,7 +129,7 @@ loop_outer:
             return;
         }
         if (buttons & PSX_PAD_R1) {
-            g_debugchr_panel_status_animation[1] = 7;
+            g_menu_panel_status_animation[1] = 7;
             /* Label loops: a do-while's loop notes change the allocation. */
         next_unit:
             g_debugchr_editor_selected_unit_slot += 1;
@@ -155,7 +155,7 @@ loop_outer:
             g_debugchr_character_status_frame_config.redraw_request = 1;
         }
         if (*g_debugchr_input_controller & PSX_PAD_L1) {
-            g_debugchr_panel_status_animation[0] = 7;
+            g_menu_panel_status_animation[0] = 7;
         prev_unit:
             g_debugchr_editor_selected_unit_slot -= 1;
             if (g_debugchr_editor_selected_unit_slot == -1) {

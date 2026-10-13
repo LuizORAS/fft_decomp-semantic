@@ -1126,16 +1126,6 @@ void main_unit_increase_casualty_counters(battle_stats_t* unit);
 void main_unit_init_position_and_rewards(battle_stats_t* unit, entd_unit_t* entd);
 
 /* zodiac */
-/* Draw state handed to SCUS Build ZODIAC.BIN (provisional layout). */
-typedef struct zodiac_draw_context {
-    u32* ot;             /* 0x00: ordering table entry the primitives link into */
-    s32 brightness;      /* 0x04: low byte is r0/g0/b0 of every sprite; WORLD stores g_world_menu_color_red */
-    s32 link_primitives; /* 0x08: nonzero: link each sprite into the OT */
-    s16 scale_x;         /* 0x0c: 12.12 */
-    s16 scale_y;         /* 0x0e: 12.12 */
-    u8 _unused_10[8];
-    sprite_draw_offset_t offset; /* 0x18 */
-} zodiac_draw_context_t;
 
 extern const u16 g_main_zodiac_day_limits[ZODIAC_SIGN_ORDINARY_COUNT];
 extern POLY_FT4 g_main_zodiac_primitives[2][30];

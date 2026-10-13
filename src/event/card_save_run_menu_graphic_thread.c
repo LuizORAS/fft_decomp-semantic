@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /*
@@ -39,7 +40,7 @@ void card_save_run_menu_graphic_thread(void) {
             g_card_input_display_state.scale_y -= delta;
         }
         g_card_input_display_state.brightness = 0x80;
-        card_gfx_build_zodiac_primitives(
+        menu_build_zodiac_primitives(
             &g_card_input_display_state, g_card_gfx_scaled_sprite_primitive_buffers[frame & 1]);
         battle_thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {

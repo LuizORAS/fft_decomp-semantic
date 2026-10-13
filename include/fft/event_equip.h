@@ -470,8 +470,6 @@ extern RECT g_equip_gfx_draw_area;
 extern DR_AREA g_equip_gfx_draw_area_buffer[];
 extern u16 g_equip_gfx_draw_area_capacity;
 extern u16 g_equip_gfx_draw_area_count;
-extern const u16 g_equip_gfx_draw_area_scale_percent[12];
-extern RECT g_equip_gfx_draw_area_template;
 extern DR_MODE g_equip_gfx_draw_mode_buffer[];
 extern u16 g_equip_gfx_draw_mode_capacity;
 extern u16 g_equip_gfx_draw_mode_count;
@@ -544,8 +542,6 @@ extern s8 g_equip_gfx_zoom_draw_area_active;
 
 void equip_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
-void equip_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
-    s32 lower_half, const menu_status_thread_t* thread);
 void equip_gfx_enqueue_draw_area(RECT* rect, s32 idx);
 void equip_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx);
 void equip_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);
@@ -569,7 +565,6 @@ void equip_gfx_init_contexts(equip_gfx_buffer_t* base, u32* otag, POLY_F3* poly_
     LINE_G4* line_g4, TILE* tiles, TILE_1* tiles_1, TILE_8* tiles_8, TILE_16* tiles_16, SPRT* sprites,
     SPRT_8* sprites_8, SPRT_16* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
 void equip_gfx_init_primitive_buffers(equip_gfx_context_t* context);
-void equip_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* data);
 void equip_gfx_set_draw_color(const rgb24_t* color);
 void equip_gfx_set_otag_index(s32 ot_index);
 void equip_gfx_set_transition_frame(s32 value);

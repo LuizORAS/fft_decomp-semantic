@@ -51,7 +51,7 @@ void equip_panel_run_equipment_list_thread(void) {
     area = g_equip_panel_origin_offsets;
     battle_menu_init_numeric_display_frame_primitives(area, &screen->numeric_frame);
     menu_init_status_panel_primitives(screen);
-    equip_gfx_init_scaled_draw_area_packets(&screen->portrait);
+    menu_init_scaled_draw_area_packets(&screen->portrait);
     screen->tiles[0].x0 += area->x;
     screen->tiles[0].y0 += area->y;
     for (i = 0; i < 4; i++) {
@@ -130,7 +130,7 @@ void equip_panel_run_equipment_list_thread(void) {
         screen->draw_offsets[1].position.x = -0x80;
         screen->draw_offsets[1].position.y = g_equip_gfx_draw_offset_y;
         SetDrawOffset(&screen->draw_offsets[1].packet, (u16*)&screen->draw_offsets[1].position);
-        equip_gfx_build_scaled_draw_area_packets(&screen->portrait, &g_equip_character_status_frame_rect[1], frame,
+        menu_build_scaled_draw_area_packets(&screen->portrait, &g_equip_character_status_frame_rect[1], frame,
             g_main_gfx_screen_polarity * 0xf0, thread);
         menu_set_status_panel_primitive_colors(screen, thread);
         menu_select_status_primitive_color_palette(&screen->numeric_frame, thread);
