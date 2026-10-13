@@ -5,7 +5,7 @@
 void attack_deploy_select_unit_for_stats_display(void) {
     attack_deploy_mark_other_squad_units_undeployable();
     while (1) {
-        if (g_attack_deploy_selected_roster_index >= 20) {
+        if (g_attack_deploy_selected_roster_index >= PARTY_ROSTER_SLOT_COUNT) {
             g_attack_deploy_selected_roster_index = 0;
         }
         if (g_attack_deploy_roster_unit_deployable[g_attack_deploy_selected_roster_index] != 0) {

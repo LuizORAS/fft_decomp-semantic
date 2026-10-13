@@ -126,7 +126,7 @@ extern RECT g_attack_deploy_rect_0cc;
 extern attack_deploy_render_buffer_t g_attack_deploy_render_buffers[2];
 extern u8 g_attack_deploy_roster_id_by_tile[5][5];
 extern s32 g_attack_deploy_roster_navigation_direction;
-extern u8 g_attack_deploy_roster_unit_deployable[20];
+extern u8 g_attack_deploy_roster_unit_deployable[PARTY_ROSTER_SLOT_COUNT];
 /* Alias of render_buffers[0].screen_arrow, addressed separately by the constructor. */
 extern attack_deploy_arrow_gfx_t g_attack_deploy_screen_arrow;
 extern s32 g_attack_deploy_second_pass;
