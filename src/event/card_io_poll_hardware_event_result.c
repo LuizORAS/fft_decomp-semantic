@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* Test the four hardware card events (done, error, timeout, new card) and return

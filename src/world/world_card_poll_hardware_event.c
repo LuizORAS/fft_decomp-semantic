@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/world.h"
 #include "psx/libapi.h"
 #include "psx/types.h"
@@ -18,7 +19,7 @@ s32 world_card_poll_hardware_event(void) {
         result = CARD_IO_RESULT_NEW_CARD;
     }
     if (result != CARD_IO_RESULT_PENDING) {
-        world_card_consume_hardware_events();
+        card_io_consume_hardware_events();
     }
     return result;
 }

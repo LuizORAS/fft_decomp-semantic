@@ -97,9 +97,6 @@ extern s8 g_card_io_open_result;
 extern u8 g_card_io_operation_pending;
 extern u8 g_card_io_selected_slot;
 
-void card_io_consume_all_events(void);
-void card_io_consume_bios_events(void);
-void card_io_consume_hardware_events(void);
 s32 card_io_create_new_with_retries(s32 port, s32 retry_limit);
 s32 card_io_format_selected_slot(void);
 s32 card_io_get_info_with_retries(s32 port, s32 retry_limit);

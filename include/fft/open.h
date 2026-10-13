@@ -10,9 +10,6 @@
 extern u8 g_open_card_info_pending;
 extern u8 g_open_card_slot;
 s32 open_card_check_slots(void);
-void open_card_consume_all_events(void);
-void open_card_consume_bios_events(void);
-void open_card_consume_hardware_events(void);
 s32 open_card_get_info_with_retries(s32 port, s32 retry_limit);
 s32 open_card_poll_bios_event(void);
 s32 open_card_poll_hardware_event(void);

@@ -1,4 +1,4 @@
-#include "fft/event_card.h"
+#include "fft/main.h"
 
 void card_io_consume_all_events(void) {
     card_io_consume_bios_events();

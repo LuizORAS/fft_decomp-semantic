@@ -1,8 +1,7 @@
-#include "fft/world.h"
+#include "fft/main.h"
 
-/* Clear the four BIOS card events (done, error, timeout, new card) by
- * testing each. */
-void world_card_consume_bios_events(void) {
+/* Consume the four software-card event notifications in handle order. */
+void card_io_consume_bios_events(void) {
     TestEvent(g_main_card_bios_events[MAIN_CARD_EVENT_BIOS_DONE]);
     TestEvent(g_main_card_bios_events[MAIN_CARD_EVENT_BIOS_ERROR]);
     TestEvent(g_main_card_bios_events[MAIN_CARD_EVENT_BIOS_TIMEOUT]);

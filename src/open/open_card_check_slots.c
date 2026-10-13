@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/open.h"
 
 /* 1 when a memory card answers in either slot, 0 when neither does. Slot 1 is
@@ -7,7 +8,7 @@ s32 open_card_check_slots(void) {
     s32 card_present = 0;
     s32 result;
 
-    open_card_consume_all_events();
+    card_io_consume_all_events();
 
     open_card_set_slot(1);
     result = open_card_poll_info_until_stable(3);

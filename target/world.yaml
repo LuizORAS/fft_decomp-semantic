@@ -930,13 +930,13 @@ functions:
   - {addr: 0x801325b4, size: 16, name: world_card_set_selected_slot, hash: 8e9eef48eb3a3f03}
   - {addr: 0x801325c4, size: 16, name: world_card_get_selected_slot, hash: 8d33fa5b18f710e8}
   - {addr: 0x801325d4, size: 8, name: world_card_close_stub, hash: 6d64edf91449c1b1}
-  - {addr: 0x801325dc, size: 40, name: world_card_clear_events, hash: d50e65e30401bfa0}
+  - {addr: 0x801325dc, size: 40, name: card_io_consume_all_events, hash: d50e65e30401bfa0, source: src/shared/card/card_io_consume_all_events.c}
   - {addr: 0x80132604, size: 192, name: world_card_poll_bios_event, hash: a218caae57cebc0c}
   - {addr: 0x801326c4, size: 72, name: world_card_wait_for_bios_event, hash: 7293c9920879ff4f}
-  - {addr: 0x8013270c, size: 88, name: world_card_consume_bios_events, hash: bd2def49b8e92c22}
+  - {addr: 0x8013270c, size: 88, name: card_io_consume_bios_events, hash: bd2def49b8e92c22, source: src/shared/card/card_io_consume_bios_events.c}
   - {addr: 0x80132764, size: 192, name: world_card_poll_hardware_event, hash: 04e2550b4a630150}
   - {addr: 0x80132824, size: 72, name: world_card_wait_for_hardware_event, hash: 7ee571b3a42d0cd1}
-  - {addr: 0x8013286c, size: 88, name: world_card_consume_hardware_events, hash: 0ab881784cfa1d2d}
+  - {addr: 0x8013286c, size: 88, name: card_io_consume_hardware_events, hash: 0ab881784cfa1d2d, source: src/shared/card/card_io_consume_hardware_events.c}
   - {addr: 0x801328c4, size: 140, name: world_card_poll_info_with_retries, hash: db96017ced25904c}
   - {addr: 0x80132950, size: 148, name: world_card_load_with_retries, hash: 6e6c44664a65aece}
   - {addr: 0x801329e4, size: 180, name: world_card_create_new_with_retries, hash: f3bd49bc815f1c09}

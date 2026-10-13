@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -67,7 +68,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     music_handle = main_sound_open_music_into_free_slot(MAIN_MUSIC_SAVE);
     while (main_sound_is_music_loading_stub() != 0) { }
     main_sound_switch_music_track(music_handle, 0x7f, 0);
-    world_card_clear_events();
+    card_io_consume_all_events();
     g_world_card_directory_buffer = directory_buffer;
     world_card_init_menu_state();
     world_thread_start(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, world_formation_view_zoom_thread);

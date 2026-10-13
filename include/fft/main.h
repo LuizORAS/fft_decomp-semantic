@@ -232,6 +232,9 @@ extern s8 g_main_card_save_slot_file_states[];
 extern card_save_summary_t g_main_card_save_slot_metadata[CARD_SAVE_SLOT_COUNT];
 extern card_save_play_time_t g_main_card_save_slot_playtimes[CARD_SAVE_SLOT_COUNT];
 
+void card_io_consume_all_events(void);
+void card_io_consume_bios_events(void);
+void card_io_consume_hardware_events(void);
 void main_card_init_events(void);
 
 /* file */
