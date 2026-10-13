@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/libgs.h"
 
-/* Handler of the unexplored-land detail level (type 0x19).
+/* Per-frame step of an unexplored land's detail (level UNEXPLORED_LAND_DETAIL).
  *
  * Phase 1 waits for the render record at saved_record_index to leave its 0x100
  * state, although the push never sets that word (QUIRKS.md).

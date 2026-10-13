@@ -1,9 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Opens a panel list of the set script flags 0x321-0x34f (entry values
- * 0xe000 + flag index), shows up to eight rows at (0x88, 0x50) with width
- * 0x5a, and appends its 0x5c-byte record tagged 0x1a. Twin of 0x8007dfcc. */
+/* Open the Brave Story's Treasure section (level TREASURES): one row per treasure found (the script
+ * variables from EVENT_SCRIPT_VAR_TREASURE_FIRST, named by text TEXT_ID_TREASURE_NAME_BASE + index), up to
+ * eight rows at (0x88, 0x50) with width 0x5a, with the saved cursor (slot TREASURES) clamped to the
+ * list. Twin of wldcore_list_open_unexplored_lands. */
 void wldcore_list_open_treasures(void) {
     wldcore_point32_t dimensions;
     wldcore_point32_t origin;

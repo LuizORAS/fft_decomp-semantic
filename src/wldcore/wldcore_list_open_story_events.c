@@ -1,10 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Opens a panel list of the set script flags 0x1bc-0x1fb (entry values
- * 0xe800 + flag index), shows up to eight rows at (0x4c, 0x4f) with width
- * 0x94, and appends its 0x5c-byte record tagged 0x1d. Twin of
- * wldcore_list_open_treasures, but walks the output arrays by pointer. */
+/* Open the Brave Story's Record (level STORY_EVENTS): one row per story event seen (the script
+ * variables from EVENT_SCRIPT_VAR_STORY_EVENT_FIRST, named by text TEXT_ID_STORY_EVENT_NAME_BASE + index),
+ * up to eight rows at (0x4c, 0x4f) with width 0x94, with the saved cursor (slot STORY_EVENTS) clamped
+ * to the list; the value display hides. Twin of wldcore_list_open_treasures, but walks the output arrays
+ * by pointer. */
 void wldcore_list_open_story_events(void) {
     wldcore_point32_t dimensions;
     wldcore_point32_t origin;

@@ -3,25 +3,24 @@
 #include "psx/libgs.h"
 #include "psx/pad.h"
 
-/* Handler of a treasure's detail (level TREASURE_DETAIL), which opens a book's sound novel: the phases mirror the
- * unexplored-land detail handler at 0x8007e6f4.
+/* Per-frame step of a treasure's detail (level TREASURE_DETAIL); the phases mirror
+ * wldcore_menu_step_unexplored_land_detail_level.
  *
- * Phase 1 waits for the render record at saved_record_index to leave its 0x100
- * state, although the push never sets that word (QUIRKS.md).
- * Phase 2, once file loading finishes, uploads the preview TIM's CLUT, binds
- * the level's render record to the VRAM image with its right edge at x -0x3e
- * and centred on y 0x10, starts the progressive upload at 0x8007f998 and
- * publishes the record index, position and image rectangle in
- * g_wldcore_scrollable_text_window (extra_render_index, extra_base, extra_bounds). Phase
- * 3 advances that upload one step per frame. Phase 0 tears the level down once the fade started through system flag 4
- * and WORLD thread 14 finish (then opens the saved record through 0x8007fbf0 or 0x8007bab8), restores the parent
- * list-window level and reopens the treasure list when the text window finishes, and on button 0x10 selects the saved
- * record named by g_wldcore_treasure_sound_novel_ids[value].
+ * Phase 1 waits for the render record at saved_record_index to leave its 0x100 state, although the push
+ * never sets that word (QUIRKS.md). Phase 2, once file loading finishes, uploads the picture's CLUT,
+ * binds the level's render record to the VRAM image with its right edge at x -0x3e and centred on y
+ * 0x10, starts the dissolve upload (wldcore_gfx_step_dissolve_image_upload) and hands the record index,
+ * position and image rectangle to the text window (g_wldcore_scrollable_text_window extra_render_index,
+ * extra_base, extra_bounds). Phase 3 advances the dissolve one step per frame. Then Triangle on a book
+ * with a sound novel (g_wldcore_treasure_sound_novel_ids) closes the text, fading out unless the novel
+ * has a saved place; once WORLD thread 14 has stopped, the detail's windows are released and the novel
+ * opens (wldcore_menu_push_sound_novel_resume_level with a saved place, else
+ * wldcore_menu_push_sound_novel_level). When the text window finishes instead, the Brave Story's windows
+ * come back and the Treasure list opens again.
  *
- * The record index is staged in `saved` before the depth store: the target
- * reloads the full word for the halfword store instead of narrowing the load.
- * The button path's byte uses its own local; sharing `slot` changes the
- * register allocation. */
+ * The record index is staged in `saved` before the depth store: the target reloads the full word for the
+ * halfword store instead of narrowing the load. The button path's byte uses its own local; sharing
+ * `slot` changes the register allocation. */
 void wldcore_menu_step_treasure_detail_level(wldcore_menu_detail_level_t* level) {
     GsIMAGE image;
     wldcore_window_render_bounds16_t bounds;

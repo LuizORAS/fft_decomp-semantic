@@ -1,13 +1,12 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Treasure-list level input step (cursor slot 8); twin of wldcore_list_handle_unexplored_lands_input.
- * Cancel (0x40) and confirm (0x20) wait for file loading, start thread 12's
- * closing animation and record the choice in result; 0x100 on a non-empty
- * list opens help message 0x101f. Once thread 12 finishes, the level closes
- * and a confirmed choice passes the selected entry's value to 0x8007efa0.
+/* Input step of the Treasure list: Circle opens the treasure's detail
+ * (wldcore_menu_push_treasure_detail_level), Cross closes the list, and Select shows help message 0x101f
+ * after wldcore_list_unexplored_lands_block_all_buttons, the Unexplored Land list's suspend handler.
+ * Circle and Cross wait for file loading to finish. Twin of wldcore_list_handle_unexplored_lands_input.
  *
- * The target passes the level to 0x8007e178, which reads no argument. */
+ * The target passes the level to that function, which reads no argument. */
 void wldcore_list_handle_treasures_input(wldcore_menu_panel_level_t* level) {
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
         && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {

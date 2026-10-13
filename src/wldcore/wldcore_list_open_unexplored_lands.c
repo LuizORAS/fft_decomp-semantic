@@ -1,9 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Opens a panel list of the set script flags 0x350-0x35f (entry values
- * 0xd800 + flag index), shows up to eight rows at (0x80, 0x50) with width
- * 0x60, and appends its 0x5c-byte record tagged 0x18. */
+/* Open the Brave Story's Unexplored Land section (level UNEXPLORED_LANDS): one row per land found (the
+ * script variables from EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST, named by text
+ * TEXT_ID_UNEXPLORED_LAND_NAME_BASE + index), up to eight rows at (0x80, 0x50) with width 0x60, with the
+ * saved cursor (slot UNEXPLORED_LANDS) clamped to the list. */
 void wldcore_list_open_unexplored_lands(void) {
     wldcore_point32_t dimensions;
     wldcore_point32_t origin;

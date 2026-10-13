@@ -1,31 +1,22 @@
 #include "fft/wldcore.h"
 
-/* Pushes the active-proposition list level (type 0x26).
- *
- * Starts WORLD thread 14 on entry point 0xb848, re-shows the parent level's
- * cursor window and list panel (popping the panel in) when the panel is
- * hidden, then appends a cursor window and
- * three column-header windows (sequences 2 / 0x63 / 0x64 / 0x65) plus one
- * render record sized to g_main_save_proposition_count rows.  One row is
- * seeded per saved proposition, and the panel image is drawn in three passes:
- * the proposition name at x=8 (text 0xd000 | proposition_id), the participant
- * count at x=0x9c (text 0xb866) and the days remaining at x=0xb6
- * (text 0xb867, assigned_days - elapsed_days); both numeric columns go
- * through g_world_text_substitution_values[0].  Finally the saved cursor row
- * in g_wldcore_active_propositions_saved_cursor is clamped, the four windows are positioned relative to the
- * render record's origin, and the level is committed at depth + 1.
- *
- * The 0xb8 frame carries 0x50 bytes of locals the original never reads;
- * `dead_locals` reproduces them.
- *
- * The seeding loop's entry test is spelled `i < count` (the target's signed
- * `blez`) around a do-while that re-reads the u8 count, which gives the
- * hoisted bound copy the target keeps in $a0.  The cursor row is folded as
- * base_y - row * -16 + 14 to keep base_y as the first addu operand.
- */
 #define LEVEL  g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list
 #define PARENT g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].proposition_list
 
+/* Open the Job section's Advancing list (level ACTIVE_PROPOSITIONS): one row per proposition in
+ * progress (g_main_save_proposition_count) with its name (text 0xd000 | proposition id), the number of
+ * units sent (text 0xb866) and the days left (text 0xb867, assigned minus elapsed days), a cursor
+ * window and three column-header windows, and the saved cursor row
+ * (g_wldcore_active_propositions_saved_cursor) clamped to the list. WORLD thread 14 shows the Brave
+ * Story's prompt, and the Job section's cursor window and list come back if hidden.
+ *
+ * The 0xb8 frame carries 0x50 bytes of locals the original never reads; `dead_locals` reproduces
+ * them.
+ *
+ * The seeding loop's entry test is spelled `i < count` (the target's signed `blez`) around a
+ * do-while that re-reads the u8 count, which gives the hoisted bound copy the target keeps in $a0.
+ * The cursor row is folded as base_y - row * -16 + 14 to keep base_y as the first addu operand.
+ */
 void wldcore_list_open_active_propositions(void) {
     wldcore_point32_t point;
     wldcore_window_render_bounds16_t bounds;

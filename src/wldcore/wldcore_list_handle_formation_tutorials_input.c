@@ -1,11 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* List level input step for cursor slot 18 (help message 0x108b). A confirmed
- * entry starts fade 2 and thread 12's closing animation; once it finishes the
- * level switches to state 2, sets system flag 0x40 and starts thread 14. When
- * thread 14 ends, the selected index is marked in the bitset at 0x8004c6bc,
- * menu brightness is restored and the formation screen opens for it. */
+/* Input step of the Organization tutorial list: Circle fades out and, once the panel and WORLD
+ * thread 14 have closed, marks the lesson watched (its bit of g_main_tutorial_progress_masks), runs it
+ * on the Formation screen (world_formation_run_tutorial_screen) and returns through a screen transition
+ * to this list; Cross closes the list, and Select shows help message 0x108b. */
 void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* level) {
     if (level->result == 2) {
         if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {

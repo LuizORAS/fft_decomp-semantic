@@ -1,8 +1,7 @@
 #include "fft/wldcore.h"
 
-/* Pushes the treasure detail text window as menu level 0x1b; the twin of
- * wldcore_menu_push_unexplored_land_detail_level (unexplored lands, level 0x19) and
- * wldcore_menu_push_story_event_text_level (level 0x1e).
+/* Open a treasure's detail (level TREASURE_DETAIL); the twin of
+ * wldcore_menu_push_unexplored_land_detail_level and wldcore_menu_push_story_event_text_level.
  *
  * Records the treasure on the new level, loads its picture data set from
  * g_wldcore_treasure_picture_sets, appends a render record for the picture and hides it with flag
@@ -11,8 +10,8 @@
  * up the shared scrollable text window at g_wldcore_scrollable_text_window for text 0x8800 + value
  * with the month name (0xb84f + month) and the day as its two substitutions.
  * It then hides the parent list-window level's four window records and its
- * frame render record and starts WORLD thread 14 on text 0xb849 with
- * substitution value 0xe000 + value.
+ * frame render record and starts WORLD thread 14 on Alazlam's line
+ * (WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO) with the treasure's name 0xe000 + value.
  *
  * Unlike wldcore_menu_push_unexplored_land_detail_level this one does not reposition the picture render
  * record, and it clears the new level's timer as well as setting its

@@ -1,9 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* List level input step (cursor slot 10); twin of wldcore_list_handle_persons_input with help
- * message 0x1055. Cancel and confirm wait for file loading to finish; a
- * confirmed entry's value is passed to 0x80082e14. */
+/* Input step of the Record list: Circle opens the event's text
+ * (wldcore_menu_push_story_event_text_level), Cross closes the list and pops the Brave Story's content
+ * back in, and Select shows help message 0x1055. Circle and Cross wait for file loading to finish. Twin
+ * of wldcore_list_handle_persons_input. */
 void wldcore_list_handle_story_events_input(wldcore_menu_panel_level_t* level) {
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
         && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {

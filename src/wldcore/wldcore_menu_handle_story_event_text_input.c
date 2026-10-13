@@ -1,7 +1,12 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Handle confirm/cancel input for the story-event list level. */
+/* Input step of a Record entry's text. Triangle replays the event: it sets the event
+ * (g_wldcore_story_event_ids) and EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, fades the screen and the
+ * music out and closes the text; once the fade and WORLD thread 14 are done, the world map ends with
+ * MAIN_SYSTEM_FLAG_STORY_EVENT_REPLAY, keeping the Record's cursor, the entry and the weather so that
+ * wldcore_menu_restore_level_on_world_entry can return to the list. When the text window finishes
+ * instead, the level pops, the Brave Story's windows come back and the Record list opens again. */
 void wldcore_menu_handle_story_event_text_input(s32* selection) {
     s32 depth;
     s32 index;

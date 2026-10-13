@@ -1,31 +1,27 @@
 #include "fft/wldcore.h"
 
-/* Pushes the shared scrollable text window as menu level 0x1e for a story
- * event entry, the partner of the wldcore_menu_wait_tutorial_topic_text_then_pop_level pop: records the entry on the
- * new level, sets up the window at g_wldcore_scrollable_text_window for text 0x8800 + entry with no
- * substitutions, then hides the parent list-window level's four window records
- * and its frame render record with flag 0x10 and starts WORLD thread 14 on
- * text 0xb849 with substitution value 0xe800 + entry.
+/* Open a Record entry's text (level STORY_EVENT_TEXT): the shared scrollable text window
+ * (g_wldcore_scrollable_text_window) shows text 0x8800 + entry with no substitutions, the Brave Story's
+ * windows hide, and WORLD thread 14 shows Alazlam's line on the entry
+ * (WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, with the event's name 0xe800 + entry).
+ * wldcore_menu_handle_story_event_text_input steps it.
  *
- * Masked-identical to wldcore_menu_push_fact_detail_level across all 165 instructions.
- * The two differ only in the substitution addend (0x9800 there, 0xe800 here),
- * the menu level type (0x2f there, 0x1e here) and the frame size; the text id
- * is value + 0x8800 in both, so 0xe800 is the substitution value and not a
- * text id.
+ * Masked-identical to wldcore_menu_push_fact_detail_level across all 165 instructions. The two differ
+ * only in the substitution addend (0x9800 there, 0xe800 here), the menu level type (0x2f there, 0x1e
+ * here) and the frame size; the text id is value + 0x8800 in both, so 0xe800 is the substitution value
+ * and not a text id.
  *
- * The coordinate mode is a constant local, yet retail still switched on it to
- * choose the text image origin: (0, 0x60) for mode 0, (0, 0x70) for mode 1.
- * The compiler folds the switch in its first CSE pass, after the stores were
- * split around it, which is why image_y keeps its absolute address while the
- * later stores go through the text_id base register. That only happens when
- * the live case is the last one.
+ * The coordinate mode is a constant local, yet retail still switched on it to choose the text image
+ * origin: (0, 0x60) for mode 0, (0, 0x70) for mode 1. The compiler folds the switch in its first CSE
+ * pass, after the stores were split around it, which is why image_y keeps its absolute address while the
+ * later stores go through the text_id base register. That only happens when the live case is the last
+ * one.
  *
- * The depth is spelled as the global at every use rather than cached in a
- * local: the target re-reads g_wldcore_menu_stack_depth after each call.
+ * The depth is spelled as the global at every use rather than cached in a local: the target re-reads
+ * g_wldcore_menu_stack_depth after each call.
  *
- * The frame is 32 bytes against the twin's 24: the target reserves eight bytes
- * below its two saved registers that it never touches, reproduced by the
- * unused local. */
+ * The frame is 32 bytes against the twin's 24: the target reserves eight bytes below its two saved
+ * registers that it never touches, reproduced by the unused local. */
 void wldcore_menu_push_story_event_text_level(s32 value) {
     s32 unused[2];
     s32 coordinate_mode = 1;

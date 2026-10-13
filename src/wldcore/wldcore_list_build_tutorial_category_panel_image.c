@@ -1,10 +1,11 @@
 #include "fft/wldcore.h"
 
-/* Build the image of a 0x44-wide text list panel: one 16-pixel row per text id
- * (text 0xb8d9 + id), anchored at (-0x78, -0x28) in coordinate mode 0xa.
+/* Build the image of Professor Daravon's tutorial menu: one 16-pixel row per category (text
+ * WLDCORE_TEXT_ID_TUTORIAL_CATEGORY_ROW_FIRST + row), 0x44 wide, anchored at (-0x78, -0x28) with priority
+ * 0xa, then upload it.
  *
- * The base coordinates are written through a point view of base_x/base_y; the
- * target addresses them from &base_x, not from the record start. */
+ * The base coordinates are written through a point view of base_x/base_y; the target addresses them from
+ * &base_x, not from the record start. */
 void wldcore_list_build_tutorial_category_panel_image(wldcore_text_list_panel_t* panel) {
     wldcore_window_render_bounds16_t bounds;
     wldcore_point32_t point;

@@ -1,11 +1,13 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Twin of wldcore_bar_handle_rumors_input for cursor slot 7: closes the level inline, opens
- * help message 0x1058 on 0x100, and hands a confirmed entry to 0x8007e360.
- * Cancel (0x40) is accepted even while a file is loading.
+/* Input step of the Unexplored Land list: Circle opens the land's detail
+ * (wldcore_menu_push_unexplored_land_detail_level), Cross closes the list, and Select shows help message
+ * 0x1058. Circle and Select wait for file loading to finish; Cross does not. Twin of
+ * wldcore_bar_handle_rumors_input.
  *
- * The target passes the level to 0x8007e178, which reads no argument. */
+ * The target passes the level to wldcore_list_unexplored_lands_block_all_buttons, which reads no
+ * argument. */
 void wldcore_list_handle_unexplored_lands_input(wldcore_menu_panel_level_t* level) {
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
         && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {

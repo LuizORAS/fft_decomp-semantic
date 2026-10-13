@@ -1,12 +1,12 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Input handler for the proposition list level (type 0x26).
+/* Input step of the Job section's Advancing list: Up and Down move the cursor with wrap-around, Circle
+ * opens the proposition's participants (wldcore_menu_push_participant_list_level) and keeps the cursor
+ * row, Cross closes the list and forgets it, and Select shows help message 0x105a.
  *
- * The level's first five words are the window/render indices that
- * wldcore_menu_suspend_active_propositions_level consumes. The wrap-around move is spelled as
- * a subtraction of a negative step: that keeps the window's y operand first
- * in the addition, as the target's register assignment requires. */
+ * The wrap-around move is spelled as a subtraction of a negative step: that keeps the window's y operand
+ * first in the addition, as the target's register assignment requires. */
 void wldcore_list_handle_active_propositions_input(wldcore_menu_proposition_list_level_t* level) {
     u32 buttons;
     s32 count;

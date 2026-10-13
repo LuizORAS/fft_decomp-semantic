@@ -1,33 +1,25 @@
 #include "fft/wldcore.h"
 
-/* Pushes the unexplored-land detail text window as menu level 0x19. Records
- * the land on the new level, loads that land's picture data set, appends a
- * render record for the picture and places it at (-116, -34), decodes the
- * land's discovery date out of the packed nine-bit array at
- * g_main_land_discovery_date_bits (date[0] month 1-12, date[1] day 1-31), and
- * sets up the shared scrollable text window at g_wldcore_scrollable_text_window for text
- * 0x8800 + land with the month name (0xb84f + month) and the day as its two
- * substitutions. Then hides the parent list-window level's four window records
- * and its frame render record with flag 0x10 and starts WORLD thread 14 on
- * text 0xb849 with substitution value 0xd800 + land.
+/* Open an unexplored land's detail (level UNEXPLORED_LAND_DETAIL): load the land's picture set
+ * (g_wldcore_unexplored_land_picture_sets), append a hidden render record for the picture at
+ * (-116, -34), and show text 0x8800 + land in the shared scrollable text window with the discovery date
+ * (month name 0xb84f + month, then the day) from g_main_land_discovery_date_bits. The Brave Story's
+ * windows hide and WORLD thread 14 shows Alazlam's line on the entry (WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO,
+ * with the land's name 0xd800 + land). wldcore_menu_step_unexplored_land_detail_level steps it.
  *
- * The coordinate mode is a constant local, yet retail still switched on it to
- * choose the text image origin: (0, 0x60) for mode 0, (0, 0x70) for mode 1.
- * The compiler folds the switch in its first CSE pass, after the stores were
- * split around it, which is why image_y keeps its absolute address while the
- * later stores go through the text_id base register. That only happens when
- * the live case is the last one.
+ * The coordinate mode is a constant local, yet retail still switched on it to choose the text image
+ * origin: (0, 0x60) for mode 0, (0, 0x70) for mode 1. The compiler folds the switch in its first CSE
+ * pass, after the stores were split around it, which is why image_y keeps its absolute address while the
+ * later stores go through the text_id base register. That only happens when the live case is the last
+ * one.
  *
- * The render record's position is written through a pointer to its base_x: the
- * target reaches base_x/base_y at 0 and 4 off one register holding
- * &g_wldcore_window_render_records[index].base_x, while the flags update above
- * it still uses the $at absolute form. Spelling both coordinates as ordinary
- * indexed field stores recomputes the $at base twice and costs four
- * instructions. The cast is over adjacent s32 base_x/base_y; the header would
- * express it better as a wldcore_point32_t member.
+ * The render record's position is written through a pointer to its base_x: the target reaches
+ * base_x/base_y at 0 and 4 off one register holding &g_wldcore_window_render_records[index].base_x, while
+ * the flags update above it still uses the $at absolute form. Spelling both coordinates as ordinary
+ * indexed field stores recomputes the $at base twice and costs four instructions. The cast is over
+ * adjacent s32 base_x/base_y; the header would express it better as a wldcore_point32_t member.
  *
- * `unused` reproduces eight bytes of locals below the date bytes that the
- * target never touches. */
+ * `unused` reproduces eight bytes of locals below the date bytes that the target never touches. */
 void wldcore_menu_push_unexplored_land_detail_level(s32 value) {
     s32 index;
     wldcore_point32_t* base;
