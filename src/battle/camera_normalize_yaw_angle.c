@@ -1,5 +1,6 @@
 #include "fft/battle_camera.h"
 #include "fft/battle_script.h"
+#include "fft/script.h"
 
 /* Wraps the yaw script variable into 0..0xfff. The 0xa000 added first is a
  * multiple of a full turn and does not change the result. */

@@ -7,6 +7,7 @@
  * reads each track through a `track` pointer taken first in the body: that
  * makes loop.c discover the track giv before the script-variable and values
  * givs, which gives the target's induction-increment order. */
+#include "fft/battle_camera.h"
 #include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -46,13 +47,13 @@ void world_camera_fusion_thread(void) {
     key_count++;
 
     cursor = script;
-    world_camera_store_yaw_band(g_world_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW]);
+    camera_store_yaw_band(g_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW]);
 
     for (key_index = 0; key_index < key_count; key_index++) {
         if (key_index == 0) {
             for (i = 0; i < EVENT_CAMERA_COMPONENT_COUNT; i++) {
                 track = &tracks[i];
-                track->keys[key_index].value = g_world_script_variables[g_world_camera_script_variable_indices[i]];
+                track->keys[key_index].value = g_script_variables[g_world_camera_script_variable_indices[i]];
                 values[i] = track->keys[key_index].value;
                 if (i < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
                     track->keys[key_index].value = track->keys[key_index].value / 1024;
@@ -90,7 +91,7 @@ void world_camera_fusion_thread(void) {
                             values[i] = component << 10;
                         }
                         if (i == EVENT_CAMERA_COMPONENT_YAW) {
-                            world_camera_store_yaw_band(key->value);
+                            camera_store_yaw_band(key->value);
                         }
                     }
                     break;
@@ -106,12 +107,12 @@ void world_camera_fusion_thread(void) {
         for (key_index = 0; key_index < EVENT_CAMERA_POSITION_COMPONENT_COUNT; key_index++, track++) {
             /* The target tests this flag with lhu; the s16 declaration gives lh. */
             if (g_world_camera_position_locked == 0) {
-                g_world_script_variables[g_world_camera_script_variable_indices[key_index]]
+                g_script_variables[g_world_camera_script_variable_indices[key_index]]
                     = world_camera_step_track(track, key_index);
             }
         }
         for (key_index = EVENT_CAMERA_COMPONENT_TILT; key_index < EVENT_CAMERA_COMPONENT_COUNT; key_index++, track++) {
-            g_world_script_variables[g_world_camera_script_variable_indices[key_index]]
+            g_script_variables[g_world_camera_script_variable_indices[key_index]]
                 = world_camera_step_track(track, key_index);
         }
         if (tracks[EVENT_CAMERA_COMPONENT_TILT].finished == 1) {

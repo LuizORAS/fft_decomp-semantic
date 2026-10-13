@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/battle_thread.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 
 /* Resolve a script variable id to the 32-bit storage value that holds it. Ids below 0x80

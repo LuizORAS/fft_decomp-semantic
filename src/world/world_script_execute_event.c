@@ -317,13 +317,13 @@ restart_event:
                 work_index += 1;
             } while (work_index < EVENT_UNIT_SLOT_COUNT);
             world_camera_init_yaw_angle();
-            world_camera_init_tilt_and_zoom();
+            camera_init_tilt_and_zoom();
             thread_exit_current();
         }
         /* ---- Flow control: forward and backward jumps ---- */
         else if (opcode == EVENT_OPCODE_UNKNOWN_DA) {
         } else if (opcode == EVENT_OPCODE_JUMP_FORWARD_IF_ZERO) {
-            if (g_world_script_variables[EVENT_SCRIPT_VAR_COMPARISON_RESULT] == 0) {
+            if (g_script_variables[EVENT_SCRIPT_VAR_COMPARISON_RESULT] == 0) {
                 instruction_offset = world_script_find_jump_target(
                     instruction_offset + 2, EVENT_OPCODE_FORWARD_TARGET, EVENT_OPCODE_FORWARD_TARGET_EXIT, operand_1);
                 continue;
@@ -497,15 +497,15 @@ restart_event:
         }
         /* ---- Camera ---- */
         else if (opcode == EVENT_OPCODE_FOCUS) {
-            world_camera_store_yaw_band(g_world_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW]);
+            camera_store_yaw_band(g_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW]);
             world_script_focus((event_focus_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_FOCUS_SPEED) {
-            event_words = g_world_script_variables;
+            event_words = g_script_variables;
             world_script_focus_speed(
                 parameters, event_words + EVENT_SCRIPT_VAR_CAMERA_X, event_words + EVENT_SCRIPT_VAR_CAMERA_TILT);
         } else if (opcode == EVENT_OPCODE_RELATIVE_CAMERA) {
             script_apply_relative_camera(
-                (event_camera_values_t*)parameters, g_world_script_variables + EVENT_SCRIPT_VAR_CAMERA_X);
+                (event_camera_values_t*)parameters, g_script_variables + EVENT_SCRIPT_VAR_CAMERA_X);
         } else if (opcode == EVENT_OPCODE_CAMERA) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             thread_start(operand_1, world_camera_thread);

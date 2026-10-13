@@ -1,9 +1,8 @@
 #include "fft/battle_camera.h"
-#include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
-/* The yaw script variable raised by whole turns until it is not negative. A yaw
- * of 0x1000 or more is returned as it is. */
+/* Raise negative yaw by whole turns; retain positive values of ONE or greater. */
 s32 camera_wrap_yaw_angle(void) {
     s32 yaw;
 

@@ -1,3 +1,4 @@
+#include "fft/battle_camera.h"
 #include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -9,7 +10,7 @@ s32 world_unit_check_facing_relative_to_camera(s32 unit_id) {
     s32 camera_facing;
 
     runtime_id = script_resolve_runtime_id(unit_id);
-    camera_facing = world_camera_wrap_yaw_angle();
+    camera_facing = camera_wrap_yaw_angle();
     camera_facing += 0x200;
     camera_facing &= 0xf00;
     /* Preserve the retail arithmetic shift after the masked camera angle. */

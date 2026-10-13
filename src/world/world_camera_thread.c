@@ -61,7 +61,7 @@ void world_camera_thread(void) {
     }
 
     for (i = 0; i < EVENT_CAMERA_COMPONENT_COUNT; i++) {
-        start[i] = g_world_script_variables[g_world_camera_script_variable_indices[i]];
+        start[i] = g_script_variables[g_world_camera_script_variable_indices[i]];
     }
     for (i = 0; i < EVENT_CAMERA_POSITION_COMPONENT_COUNT; i++) {
         start[i] &= ~0xFFF;
@@ -73,7 +73,7 @@ void world_camera_thread(void) {
         weight = 16 - ease;
         ramp = (duration - i) * i;
         for (j = 0; j < EVENT_CAMERA_COMPONENT_COUNT; j++) {
-            variable = &g_world_script_variables[g_world_camera_script_variable_indices[j]];
+            variable = &g_script_variables[g_world_camera_script_variable_indices[j]];
             if (target[j] == CAMERA_FUSION_HOLD_SENTINEL) {
                 continue;
             }
@@ -153,13 +153,13 @@ void world_camera_thread(void) {
     if (g_world_camera_position_locked == 0) {
         for (i = 0; i < EVENT_CAMERA_POSITION_COMPONENT_COUNT; i++) {
             if (target[i] != CAMERA_FUSION_HOLD_SENTINEL) {
-                g_world_script_variables[g_world_camera_script_variable_indices[i]] = target[i] << 10;
+                g_script_variables[g_world_camera_script_variable_indices[i]] = target[i] << 10;
             }
         }
     }
     for (i = EVENT_CAMERA_COMPONENT_TILT; i < EVENT_CAMERA_COMPONENT_COUNT; i++) {
         if (target[i] != CAMERA_FUSION_HOLD_SENTINEL) {
-            g_world_script_variables[g_world_camera_script_variable_indices[i]] = target[i];
+            g_script_variables[g_world_camera_script_variable_indices[i]] = target[i];
         }
     }
     world_camera_clear_zoom_variable_low_bit();

@@ -12,7 +12,7 @@
  * in bit 15 and weather in bits 12..14.
  */
 s32 script_get_variable(s32 variable_id) {
-    s32 saved = *g_world_script_variables;
+    s32 saved = *g_script_variables;
     s32 result;
 
     if (variable_id == EVENT_SCRIPT_VAR_WEATHER_AND_TIME) {
@@ -29,7 +29,7 @@ s32 script_get_variable(s32 variable_id) {
     }
     world_script_run_variable_command(EVENT_OPCODE_ZERO_VARIABLE, EVENT_SCRIPT_VAR_COMPARISON_RESULT, 0, 0);
     world_script_run_variable_command(EVENT_OPCODE_ADD_VARIABLE, EVENT_SCRIPT_VAR_COMPARISON_RESULT, variable_id, 0);
-    result = *g_world_script_variables;
-    *g_world_script_variables = saved;
+    result = *g_script_variables;
+    *g_script_variables = saved;
     return result;
 }

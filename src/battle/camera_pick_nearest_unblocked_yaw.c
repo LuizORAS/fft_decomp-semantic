@@ -2,6 +2,7 @@
 #include "fft/battle_camera.h"
 #include "fft/battle_map.h"
 #include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Returns the yaw a Focus instruction gives the camera for a pair of units.

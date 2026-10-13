@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -10,12 +11,12 @@ s32* world_script_get_variable_word_pointer_from_id(s32 variable_id) {
     s32* word;
 
     if (variable_id < EVENT_SCRIPT_VAR_PACKED_BIT_FIRST) {
-        word = &g_world_script_variables[variable_id];
+        word = &g_script_variables[variable_id];
     } else if (variable_id < EVENT_SCRIPT_VAR_PACKED_NIBBLE_FIRST) {
-        word = &g_world_script_variables[EVENT_SCRIPT_PACKED_BIT_WORD_FIRST
+        word = &g_script_variables[EVENT_SCRIPT_PACKED_BIT_WORD_FIRST
             + ((variable_id - EVENT_SCRIPT_VAR_PACKED_BIT_FIRST) / 32)];
     } else if (variable_id < EVENT_SCRIPT_VAR_END) {
-        word = &g_world_script_variables[EVENT_SCRIPT_PACKED_NIBBLE_WORD_FIRST
+        word = &g_script_variables[EVENT_SCRIPT_PACKED_NIBBLE_WORD_FIRST
             + ((variable_id - EVENT_SCRIPT_VAR_PACKED_NIBBLE_FIRST) / 8)];
     } else {
         thread_exit_current();

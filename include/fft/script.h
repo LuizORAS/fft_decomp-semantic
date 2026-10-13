@@ -962,6 +962,9 @@ enum {
     EVENT_SCRIPT_PACKED_NIBBLE_WORD_FIRST = 0x97,
 };
 
+/* Each scene points to the resident script-variable bank. */
+extern s32* g_script_variables;
+
 /* Four unit bindings used by the scenario's slot selectors. */
 extern s16 g_script_unit_slots[EVENT_UNIT_SELECTOR_SLOT_COUNT];
 

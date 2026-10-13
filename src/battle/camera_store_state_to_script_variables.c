@@ -1,5 +1,6 @@
 #include "fft/battle_camera.h"
 #include "fft/battle_script.h"
+#include "fft/script.h"
 
 /* Publish the live camera rotation, zoom, and position to the script variable
  * block.

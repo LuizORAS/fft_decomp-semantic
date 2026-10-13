@@ -42,9 +42,6 @@ void script_start_current_event_thread(void);
 /* variables */
 /* 0x801660a3: suppress recursive write filtering while getters use operand 0. */
 extern u8 g_script_variable_write_guard;
-/* g_main_script_variables: a variable id below EVENT_SCRIPT_VAR_PACKED_BIT_FIRST
- * (event_script_variable_id_e) is its index into the 32-bit array. */
-extern s32* g_script_variables;
 
 /* Encoded variable IDs select 32-bit values, bits, or nibbles. The command runner's
  * fourth argument is supplied by existing callers but is not read. */

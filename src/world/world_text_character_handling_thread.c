@@ -650,7 +650,7 @@ void world_text_character_handling_thread(void) {
                 choice_hidden_window_2 = WINDOW_AT(g_menu_packet_buffer_index);
                 choice_hidden_window_2->sprites[0].x0 = 0x200;
                 choice_hidden_window_2->sprites[1].x0 = 0x200;
-                g_world_script_variables[EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION] = choice - rec.mark;
+                g_script_variables[EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION] = choice - rec.mark;
             }
             NEXT();
             g_world_menu_event_state_flag = 0;

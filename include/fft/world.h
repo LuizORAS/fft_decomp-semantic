@@ -12,14 +12,10 @@ extern s32 g_world_camera_speed_curve;
 extern u16 g_world_camera_script_variable_indices[EVENT_CAMERA_COMPONENT_COUNT];
 extern u16 g_world_camera_position_locked;
 extern u16 g_world_camera_shake_z_offset;
-extern s32 g_world_camera_yaw_band;
 extern s32 g_world_camera_yaw_unwrap_request;
 extern s16 g_world_camera_candidate_yaws[4];
-s32 world_camera_wrap_yaw_angle(void);
-void world_camera_init_tilt_and_zoom(void);
 void world_camera_init_yaw_angle(void);
 s32 world_camera_step_track(camera_track_t* track, s32 component);
-void world_camera_store_yaw_band(s32 value);
 s16 world_camera_pick_nearest_unblocked_yaw(s32 runtime_id_a, s32 runtime_id_b);
 void world_camera_fusion_thread(void);
 void world_camera_thread(void);
@@ -262,9 +258,6 @@ extern u8 g_world_script_tutorial_id;
 extern u16 g_world_script_tutorial_shift_command_bit;
 extern s16 g_world_script_tutorial_wait_time_remaining;
 extern s16 g_world_script_tutorial_wait_timer;
-/* g_main_script_variables: a variable id below EVENT_SCRIPT_VAR_PACKED_BIT_FIRST
- * (event_script_variable_id_e) is its 32-bit element index. */
-extern s32* g_world_script_variables;
 extern char g_world_script_pause_message[];
 extern u16 g_world_script_attack_entry_mode; /* script_attack_entry_mode_e */
 extern s16 g_world_script_debug_paused;

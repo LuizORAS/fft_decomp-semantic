@@ -709,8 +709,8 @@ functions:
   - {addr: 0x8012dd6c, size: 40, name: battle_menu_run_invalid_choice_thread, hash: ee6f22f6b5675647}
   - {addr: 0x8012dd94, size: 48, name: camera_wait_until_idle, hash: c9beddd4e8635e8d, source: src/shared/camera/camera_wait_until_idle.c}
   - {addr: 0x8012ddc4, size: 36, name: camera_normalize_yaw_angle, hash: d8594f5ae28d378e}
-  - {addr: 0x8012dde8, size: 292, name: camera_init_tilt_and_zoom, hash: 2bfaf1895687be29}
-  - {addr: 0x8012df0c, size: 52, name: camera_wrap_yaw_angle, hash: 40b97089558b718b}
+  - {addr: 0x8012dde8, size: 292, name: camera_init_tilt_and_zoom, hash: 2bfaf1895687be29, source: src/shared/camera/camera_init_tilt_and_zoom.c}
+  - {addr: 0x8012df0c, size: 52, name: camera_wrap_yaw_angle, hash: 40b97089558b718b, source: src/shared/camera/camera_wrap_yaw_angle.c}
   - {addr: 0x8012df40, size: 40, name: battle_unit_get_attacker_data_pointer, hash: 34ff5c65d4712d47}
   - {addr: 0x8012df68, size: 48, name: script_clamp_s32_to_range, hash: 5dad512952649360, source: src/shared/script/script_clamp_s32_to_range.c}
   - {addr: 0x8012df98, size: 504, name: script_update_event_input_state, hash: e554290105b145d9}
@@ -989,7 +989,7 @@ functions:
   - {addr: 0x80146f5c, size: 192, name: script_waitspritemove_event_instruction, hash: 1432c177a10691bf}
   - {addr: 0x8014701c, size: 32, name: script_copy_matrix, hash: cd687ad6c14b8e80}
   - {addr: 0x8014703c, size: 672, name: map_light_thread, hash: 21c64a562f0c9325}
-  - {addr: 0x801472dc, size: 60, name: camera_store_yaw_band, hash: 0478745f54a2dc9f}
+  - {addr: 0x801472dc, size: 60, name: camera_store_yaw_band, hash: 0478745f54a2dc9f, source: src/shared/camera/camera_store_yaw_band.c}
   - {addr: 0x80147318, size: 396, name: camera_pick_nearest_unblocked_yaw, hash: 57b2b9572ab8317c}
   - {addr: 0x801474a4, size: 224, name: script_apply_relative_camera, hash: e7c8b47bcb236e25, source: src/shared/script/script_apply_relative_camera.c}
   - {addr: 0x80147584, size: 508, name: script_focus, hash: 3724d62c11a28f48}

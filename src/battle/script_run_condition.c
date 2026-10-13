@@ -1,4 +1,5 @@
 #include "fft/battle_script.h"
+#include "fft/script.h"
 
 /* Comparison opcodes 0xa0..0xa5: replace the comparison-result variable (32-bit script
  * variable 0) with the truth value of comparing it against the operand variable (variable

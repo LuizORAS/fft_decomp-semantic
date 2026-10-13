@@ -55,8 +55,8 @@ functions:
   - {addr: 0x800e1f00, size: 40, name: world_menu_stop_thread_with_invalid_sound, hash: 673200a96478bd69}
   - {addr: 0x800e1f28, size: 48, name: camera_wait_until_idle, hash: fecdc06e231e4865, source: src/shared/camera/camera_wait_until_idle.c}
   - {addr: 0x800e1f58, size: 36, name: world_camera_init_yaw_angle, hash: 4b9b57139167c4c5}
-  - {addr: 0x800e1f7c, size: 292, name: world_camera_init_tilt_and_zoom, hash: b488293686882dcf}
-  - {addr: 0x800e20a0, size: 52, name: world_camera_wrap_yaw_angle, hash: 2f0e82c3ed1fb39e}
+  - {addr: 0x800e1f7c, size: 292, name: camera_init_tilt_and_zoom, hash: b488293686882dcf, source: src/shared/camera/camera_init_tilt_and_zoom.c}
+  - {addr: 0x800e20a0, size: 52, name: camera_wrap_yaw_angle, hash: 2f0e82c3ed1fb39e, source: src/shared/camera/camera_wrap_yaw_angle.c}
   - {addr: 0x800e20d4, size: 40, name: world_unit_get_battle_stats_for_stored, hash: d8b03fa45f1ad5c5}
   - {addr: 0x800e20fc, size: 48, name: script_clamp_s32_to_range, hash: a979e7abbcee5781, source: src/shared/script/script_clamp_s32_to_range.c}
   - {addr: 0x800e212c, size: 612, name: world_input_update_menu_repeat, hash: ec1118bb42efe382, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
@@ -337,7 +337,7 @@ functions:
   - {addr: 0x800fa2cc, size: 192, name: world_script_waitspritemove_event_instruction, hash: 6691693858dee2bb}
   - {addr: 0x800fa38c, size: 32, name: world_script_copy_matrix, hash: 820dc3ed75e30848}
   - {addr: 0x800fa3ac, size: 888, name: world_map_light_thread, hash: 2075c72a1d728138, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
-  - {addr: 0x800fa724, size: 60, name: world_camera_store_yaw_band, hash: ab7e1df661cddb5e}
+  - {addr: 0x800fa724, size: 60, name: camera_store_yaw_band, hash: ab7e1df661cddb5e, source: src/shared/camera/camera_store_yaw_band.c}
   - {addr: 0x800fa760, size: 396, name: world_camera_pick_nearest_unblocked_yaw, hash: 3f1d46a5c3271ec2}
   - {addr: 0x800fa8ec, size: 224, name: script_apply_relative_camera, hash: 29e183114c9c011b, source: src/shared/script/script_apply_relative_camera.c}
   - {addr: 0x800fa9cc, size: 508, name: world_script_focus, hash: ccd62b29dabd8f4a}
@@ -1090,8 +1090,8 @@ data:
   - {addr: 0x80153274, name: g_world_text_glyph_first_row}
   - {addr: 0x80153278, name: g_world_text_glyph_row_limit}
   - {addr: 0x8015327c, name: g_native_threads}
+  - {addr: 0x80153280, name: g_script_variables}
   - {addr: 0x80153280, name: g_world_menu_text_state}
-  - {addr: 0x80153280, name: g_world_script_variables}
   - {addr: 0x80153294, name: g_world_script_opcode_dc_value}
   - {addr: 0x80153298, name: g_sound_pending_sfx_id}
   - {addr: 0x801532a0, name: g_world_menu_sound_muted}
@@ -1143,7 +1143,7 @@ data:
   - {addr: 0x80153340, name: g_world_map_destruction_wait_state}
   - {addr: 0x80153344, name: g_world_menu_panel_fade_mode}
   - {addr: 0x80153348, name: g_world_menu_panel_fade_intensity}
-  - {addr: 0x8015334c, name: g_world_camera_yaw_band}
+  - {addr: 0x8015334c, name: g_camera_yaw_band}
   - {addr: 0x80153350, name: g_world_map_refresh_pending}
   - {addr: 0x80153352, name: g_world_3d_object_wait_status}
   - {addr: 0x80153354, name: g_world_field_object_wait_status}

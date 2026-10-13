@@ -1,3 +1,4 @@
+#include "fft/battle_camera.h"
 #include "fft/battle_unit.h"
 #include "fft/script.h"
 #include "fft/world.h"
@@ -34,7 +35,7 @@ void world_script_rotate_unit(const event_rotate_unit_parameters_t* parameters) 
                     facing = battle_unit_get_facing_nibble_by_runtime_id(unit_id) + facing * 4;
                     facing = facing & 0xF;
                 } else if (facing == EVENT_ROTATE_UNIT_FACING_CAMERA) {
-                    facing = g_world_rotation_speed_frames[4 + ((world_camera_wrap_yaw_angle() & 0xC00) >> 10)] * 4;
+                    facing = g_world_rotation_speed_frames[4 + ((camera_wrap_yaw_angle() & 0xC00) >> 10)] * 4;
                 } else if (facing == EVENT_ROTATE_UNIT_FACING_RESTORE) {
                     state = &g_unit_animation_states[unit_id];
                     if (state->initial_facing != 0xFF) {

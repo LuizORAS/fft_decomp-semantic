@@ -1434,7 +1434,7 @@ extern s32 g_menu_hide_numeric_values; /* non-zero: draw digits as blanks (0x48,
  * WORLD 0x80153280 (g_world_menu_text_state): the script-variable pointer,
  * then the pen the glyph renderers receive. */
 typedef struct menu_text_state {
-    s32* script_variables; /* 0x00; also bound as g_world_script_variables / g_script_variables */
+    s32* script_variables; /* 0x00; also bound as g_script_variables in each scene */
     /* 0x04: rect.x/rect.y are the text origin (battle_menu_set_text_origin) and
      * the rect's size is not used; stride (0x0c) is the rect width * 4
      * (the inner window width); color (0x10) is the glyph blit fill,

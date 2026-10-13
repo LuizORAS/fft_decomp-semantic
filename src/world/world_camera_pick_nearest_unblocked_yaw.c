@@ -1,4 +1,6 @@
+#include "fft/battle_camera.h"
 #include "fft/battle_map.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -27,7 +29,7 @@ s16 world_camera_pick_nearest_unblocked_yaw(s32 runtime_id_a, s32 runtime_id_b) 
     s32 wrapped;
     s32 dist;
 
-    yaw = world_camera_wrap_yaw_angle() & 0xFFF;
+    yaw = camera_wrap_yaw_angle() & 0xFFF;
     world_unit_get_map_coords_by_runtime_id(runtime_id_a, &g_world_text_speaker_screen_coords);
     /* The raw result is assigned before it is masked: combine then knows
      * nothing about the mask's high bits and the loop test keeps its sll 16. */
@@ -75,5 +77,5 @@ s16 world_camera_pick_nearest_unblocked_yaw(s32 runtime_id_a, s32 runtime_id_b) 
         }
         bit <<= 1;
     }
-    return g_world_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW] + sign * best;
+    return g_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW] + sign * best;
 }
