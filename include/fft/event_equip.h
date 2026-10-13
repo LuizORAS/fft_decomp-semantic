@@ -556,7 +556,7 @@ extern u8* g_equip_bits_reader_2_stream;
 
 void equip_bits_init_primary_reader(const u8* data);
 void equip_bits_init_secondary_reader(const u8* data);
-s32 equip_bits_read_primary(s32 count);
+u32 equip_bits_read_primary(s32 count);
 s32 equip_bits_read_secondary(s32 count);
 
 /* threads */
