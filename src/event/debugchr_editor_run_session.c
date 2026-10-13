@@ -88,7 +88,7 @@ void debugchr_editor_run_session(void) {
     }
     debugchr_editor_load_selected_unit();
     g_debugchr_editor_selected_unit_slot = 0;
-    if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
+    if (g_menu_status_panel_fields.state.generic_monster != 0) {
         mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
         g_debugchr_editor_fields[15].destination[0] = 0xE;
     } else {
@@ -102,7 +102,7 @@ void debugchr_editor_run_session(void) {
     thread_set_parameters(THREAD_SCREEN_SLOT_UNIT_STATUS, (s32)&g_debugchr_status_display_thread_params, 0, 0);
     thread_start(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, debugchr_editor_run_numeric_thread);
     thread_set_parameters(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, (s32)&g_debugchr_numeric_editor_thread_params, 0, 0);
-    thread_start(THREAD_SCREEN_SLOT_CHARACTER_STATUS, debugchr_panel_run_character_status_thread);
+    thread_start(THREAD_SCREEN_SLOT_CHARACTER_STATUS, menu_run_status_panel_thread);
     thread_set_parameters(THREAD_SCREEN_SLOT_CHARACTER_STATUS, (s32)&g_debugchr_character_status_frame_config, 0, 0);
     row = 0;
     /* The unit menu and the field editor re-enter each other by label: an
@@ -145,7 +145,7 @@ loop_outer:
             selected_battle_id[-5] = unit_index;
             g_debugchr_panel_selected_billboard.unit_index = unit_index;
             debugchr_editor_load_selected_unit();
-            if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
+            if (g_menu_status_panel_fields.state.generic_monster != 0) {
                 mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
             } else {
                 mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
@@ -170,7 +170,7 @@ loop_outer:
             selected_battle_id[-5] = unit_index;
             g_debugchr_panel_selected_billboard.unit_index = unit_index;
             debugchr_editor_load_selected_unit();
-            if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
+            if (g_menu_status_panel_fields.state.generic_monster != 0) {
                 mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
             } else {
                 mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);

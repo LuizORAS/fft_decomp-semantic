@@ -177,10 +177,6 @@ extern s8 g_equip_slot_item_browser_initialized;
 extern s8 g_equip_slot_item_browser_previewed_index;
 extern point16_t g_equip_slot_marker_rect;
 
-/* character status */
-extern RECT g_equip_character_status_draw_area_rect;
-extern RECT g_equip_character_status_frame_rect[];
-
 /* unit panels */
 extern menu_instruction_t g_equip_armor_bonus_render_commands;
 extern u8 g_equip_equipment_panel_params[];
@@ -210,16 +206,8 @@ extern image_load_parameters_t g_equip_panel_editor_mode_cells[];
 extern image_load_parameters_t g_equip_panel_editor_value_cells[];
 extern u16 g_equip_panel_editor_value_cluts[][2];
 extern RECT g_equip_panel_frame_rect;
-extern menu_status_panel_buffer_t g_equip_panel_frames_a[];
 extern menu_status_panel_buffer_t g_equip_panel_frames_b[];
 extern CVECTOR g_equip_panel_gauge_bar_colors[];
-extern image_load_parameters_t g_equip_panel_item_icon_layouts[];
-extern point16_t g_equip_panel_item_icon_texture[];
-extern image_load_parameters_t g_equip_panel_label_layouts_mode0[];
-extern image_load_parameters_t g_equip_panel_label_layouts_mode1[];
-extern image_load_parameters_t g_equip_panel_label_layouts_mode2[];
-extern image_load_parameters_t g_equip_panel_label_layouts_mode3[];
-extern RECT g_equip_panel_origin_offsets[];
 extern image_load_parameters_t g_equip_panel_portrait_cell[];
 extern menu_status_panel_editor_packet_t g_equip_panel_selected_editor_packets[2];
 extern u8 g_equip_panel_selected_large_number_image[];
@@ -233,12 +221,8 @@ extern menu_unit_status_identity_t g_equip_panel_selected_unit_data;
 extern s16 g_equip_panel_slide_down_y[];
 extern s16 g_equip_panel_slide_up_y[];
 extern image_load_parameters_t g_equip_panel_sprite_cells[];
-extern u8 g_equip_panel_text_image_a[];
-extern u8 g_equip_panel_text_image_b[];
-extern RECT g_equip_panel_text_upload_rect_a;
-extern RECT g_equip_panel_text_upload_rect_b;
-/* RECT[1] (right panel) of g_equip_panel_origin_offsets. Kept as its own symbol: spelling it as an element lets GCC
- * derive the table base from this address and changes equip_panel_run_ability_list_thread. */
+/* RECT[1] (right panel) of g_menu_status_panel_origin_offsets. Kept as its own symbol: spelling it as an element lets
+ * GCC derive the table base from this address and changes equip_panel_run_ability_list_thread. */
 extern RECT g_equip_right_panel_frame_rect;
 /* Status image rects, the EQUIP.OUT copy of WORLD's
  * g_world_status_display_image_rects (0x8018cf68). */
@@ -265,7 +249,6 @@ extern RECT g_equip_editor_numeric_entries_c;
 extern RECT g_equip_editor_numeric_entries_d;
 extern RECT g_equip_editor_numeric_entries_e;
 extern RECT g_equip_editor_numeric_entries_f;
-extern point16_t g_equip_editor_numeric_geometry[];
 extern menu_status_panel_numeric_buffer_t g_equip_editor_numeric_state_a[2];
 extern menu_status_panel_numeric_buffer_t g_equip_editor_numeric_state_b[2];
 /* Per-thread-slot window rect, upload rects, sprite descriptors and number
@@ -274,7 +257,6 @@ extern battle_menu_status_panel_numeric_geometry_t g_equip_editor_numeric_table;
 extern menu_unit_stat_number_images_t g_equip_editor_numeric_text_a;
 extern menu_unit_stat_number_images_t g_equip_editor_numeric_text_b;
 extern image_load_parameters_t g_equip_editor_numeric_texture[];
-extern menu_status_panel_slot_storage_t g_equip_unit_editor_stats;
 
 void equip_editor_run_numeric_thread(void);
 
@@ -425,7 +407,6 @@ extern DR_MODE g_equip_gfx_draw_mode_buffer[];
 extern u16 g_equip_gfx_draw_mode_capacity;
 extern DR_MOVE g_equip_gfx_draw_move_buffer[];
 extern u16 g_equip_gfx_draw_move_capacity;
-extern u16 g_equip_gfx_draw_offset_y;
 extern LINE_F2 g_equip_gfx_line_f2_buffer[];
 extern u16 g_equip_gfx_line_f2_capacity;
 extern u16 g_equip_gfx_line_f2_count;

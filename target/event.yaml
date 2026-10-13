@@ -1114,7 +1114,7 @@ functions:
   - {addr: 0x801c0914, size: 544, name: menu_init_status_panel_primitives, hash: c0c46a118253c8ae, source: src/shared/menu/menu_init_status_panel_primitives.c}
   - {addr: 0x801c0b34, size: 40, name: debugchr_panel_run_equipment_list_thread, hash: fbcd24ded43d67df}
   - {addr: 0x801c0b5c, size: 40, name: debugchr_panel_run_ability_list_thread, hash: fbcd24ded43d67df}
-  - {addr: 0x801c0b84, size: 1932, name: debugchr_panel_run_character_status_thread, hash: c6c24e466ddf3b87}
+  - {addr: 0x801c0b84, size: 1932, name: menu_run_status_panel_thread, hash: c6c24e466ddf3b87, source: src/shared/menu/menu_run_status_panel_thread.c}
   - {addr: 0x801c1310, size: 380, name: menu_set_status_panel_primitive_colors, hash: 76cde603c79a62bb, source: src/shared/menu/menu_set_status_panel_primitive_colors.c}
   - {addr: 0x801c148c, size: 84, name: menu_select_status_primitive_color_palette, hash: 2f9f4012d54fe639, source: src/shared/menu/menu_select_status_primitive_color_palette.c}
   - {addr: 0x801c14e0, size: 268, name: debugchr_text_render_signed_decimal_entries, hash: 83b20a6522686833}
@@ -1155,17 +1155,17 @@ data:
   - {addr: 0x801c5324, name: g_debugchr_panel_selected_unit_data}
   - {addr: 0x801c5334, name: g_debugchr_panel_comparison_unit_data}
   - {addr: 0x801c5344, name: g_debugchr_editor_move}
-  - {addr: 0x801c5344, name: g_debugchr_editor_unit_fields}
+  - {addr: 0x801c5344, name: g_menu_status_panel_fields}
   - {addr: 0x801c5346, name: g_debugchr_editor_speed}
   - {addr: 0x801c5348, name: g_debugchr_editor_jump}
   - {addr: 0x801c53c4, name: g_debugchr_editor_primary_skillset_name}
   - {addr: 0x801c53d8, name: g_debugchr_editor_secondary_skillset_name}
   - {addr: 0x801c53ec, name: g_debugchr_editor_unit_name}
   - {addr: 0x801c5400, name: g_debugchr_editor_job_name}
-  - {addr: 0x801c5414, name: g_debugchr_editor_numeric_geometry}
   - {addr: 0x801c5414, name: g_menu_panel_status_texture}
+  - {addr: 0x801c5414, name: g_menu_status_panel_numeric_geometry}
   - {addr: 0x801c541a, name: g_debugchr_panel_slide_up_y}
-  - {addr: 0x801c541c, name: g_debugchr_panel_item_icon_texture}
+  - {addr: 0x801c541c, name: g_menu_status_panel_item_icon_texture}
   - {addr: 0x801c5422, name: g_debugchr_panel_slide_down_y}
   - {addr: 0x801c543c, name: g_menu_portrait_origin}
   - {addr: 0x801c5444, name: g_debugchr_panel_gauge_bar_colors}
@@ -1185,16 +1185,16 @@ data:
   - {addr: 0x801c56cc, name: g_debugchr_panel_selected_portrait_rect}
   - {addr: 0x801c56d4, name: g_debugchr_panel_comparison_portrait_rect}
   - {addr: 0x801c56dc, name: g_menu_portrait_transition_offsets}
-  - {addr: 0x801c5710, name: g_debugchr_panel_origin_offsets}
-  - {addr: 0x801c5720, name: g_debugchr_character_status_frame_rect}
-  - {addr: 0x801c5738, name: g_debugchr_character_status_draw_area_rect}
-  - {addr: 0x801c5740, name: g_debugchr_panel_text_upload_rect_a}
-  - {addr: 0x801c5748, name: g_debugchr_panel_text_upload_rect_b}
-  - {addr: 0x801c5750, name: g_debugchr_panel_label_layouts_mode0}
-  - {addr: 0x801c5834, name: g_debugchr_panel_label_layouts_mode1}
-  - {addr: 0x801c5918, name: g_debugchr_panel_label_layouts_mode2}
-  - {addr: 0x801c59fc, name: g_debugchr_panel_label_layouts_mode3}
-  - {addr: 0x801c5b40, name: g_debugchr_panel_item_icon_layouts}
+  - {addr: 0x801c5710, name: g_menu_status_panel_origin_offsets}
+  - {addr: 0x801c5720, name: g_menu_status_panel_frame_rect}
+  - {addr: 0x801c5738, name: g_menu_status_panel_draw_area_rect}
+  - {addr: 0x801c5740, name: g_menu_status_panel_text_upload_rect_a}
+  - {addr: 0x801c5748, name: g_menu_status_panel_text_upload_rect_b}
+  - {addr: 0x801c5750, name: g_menu_status_panel_label_layouts_mode0}
+  - {addr: 0x801c5834, name: g_menu_status_panel_label_layouts_mode1}
+  - {addr: 0x801c5918, name: g_menu_status_panel_label_layouts_mode2}
+  - {addr: 0x801c59fc, name: g_menu_status_panel_label_layouts_mode3}
+  - {addr: 0x801c5b40, name: g_menu_status_panel_item_icon_layouts}
   - {addr: 0x801c5b7c, name: g_debugchr_editor_numeric_table}
   - {addr: 0x801c5b8c, name: g_debugchr_editor_numeric_entries_a}
   - {addr: 0x801c5b94, name: g_debugchr_editor_numeric_entries_b}
@@ -1227,7 +1227,7 @@ data:
   - {addr: 0x801c68e4, name: g_debugchr_editor_unit_ids}
   - {addr: 0x801c68fc, name: g_menu_thread_indicator_packets}
   - {addr: 0x801c6dec, name: g_menu_input_controller}
-  - {addr: 0x801c6e08, name: g_debugchr_gfx_draw_offset_y}
+  - {addr: 0x801c6e08, name: g_menu_gfx_draw_offset_y}
   - {addr: 0x801c6e4c, name: g_debugchr_panel_selected_editor_packets}
   - {addr: 0x801c7464, name: g_debugchr_panel_selected_packets}
   - {addr: 0x801c7814, name: g_debugchr_panel_comparison_editor_packets}
@@ -1240,9 +1240,9 @@ data:
   - {addr: 0x801c9bcc, name: g_debugchr_panel_comparison_large_number_image}
   - {addr: 0x801c9cbc, name: g_debugchr_panel_selected_portrait_palettes}
   - {addr: 0x801c9cfc, name: g_debugchr_panel_comparison_portrait_palettes}
-  - {addr: 0x801c9d3c, name: g_debugchr_panel_frames_a}
-  - {addr: 0x801cac9c, name: g_debugchr_panel_text_image_a}
-  - {addr: 0x801cb91c, name: g_debugchr_panel_text_image_b}
+  - {addr: 0x801c9d3c, name: g_menu_status_panel_frames}
+  - {addr: 0x801cac9c, name: g_menu_status_panel_text_image_a}
+  - {addr: 0x801cb91c, name: g_menu_status_panel_text_image_b}
   - {addr: 0x801cc59c, name: g_debugchr_editor_numeric_state_a}
   - {addr: 0x801ccb1c, name: g_debugchr_editor_numeric_state_b}
   - {addr: 0x801cd09c, name: g_debugchr_editor_numeric_text_a}
@@ -1295,7 +1295,7 @@ functions:
   - {addr: 0x801c1524, size: 544, name: menu_init_status_panel_primitives, hash: c0c46a118253c8ae, source: src/shared/menu/menu_init_status_panel_primitives.c}
   - {addr: 0x801c1744, size: 1612, name: equip_panel_run_equipment_list_thread, hash: 7da830216ec8b83b}
   - {addr: 0x801c1d90, size: 1492, name: equip_panel_run_ability_list_thread, hash: 6a196898819bd812}
-  - {addr: 0x801c2364, size: 1932, name: equip_panel_run_character_status_thread, hash: 1dda05d5a5262c06}
+  - {addr: 0x801c2364, size: 1932, name: menu_run_status_panel_thread, hash: 1dda05d5a5262c06, source: src/shared/menu/menu_run_status_panel_thread.c}
   - {addr: 0x801c2af0, size: 380, name: menu_set_status_panel_primitive_colors, hash: 20be337bba8e7497, source: src/shared/menu/menu_set_status_panel_primitive_colors.c}
   - {addr: 0x801c2c6c, size: 84, name: menu_select_status_primitive_color_palette, hash: b8ce70f8b32f6547, source: src/shared/menu/menu_select_status_primitive_color_palette.c}
   - {addr: 0x801c2cc0, size: 268, name: equip_text_render_signed_decimal_entries, hash: 92b05110dccf3eff}
@@ -1479,11 +1479,11 @@ data:
   - {addr: 0x801ce448, name: g_equip_panel_comparison_billboard}
   - {addr: 0x801ce46c, name: g_equip_panel_selected_unit_data}
   - {addr: 0x801ce47c, name: g_equip_panel_comparison_unit_data}
-  - {addr: 0x801ce48c, name: g_equip_unit_editor_stats}
+  - {addr: 0x801ce48c, name: g_menu_status_panel_fields}
   - {addr: 0x801ce4cc, name: g_equip_item_preview_stat_detail}
-  - {addr: 0x801ce55c, name: g_equip_editor_numeric_geometry}
+  - {addr: 0x801ce55c, name: g_menu_status_panel_numeric_geometry}
   - {addr: 0x801ce562, name: g_equip_panel_slide_up_y}
-  - {addr: 0x801ce564, name: g_equip_panel_item_icon_texture}
+  - {addr: 0x801ce564, name: g_menu_status_panel_item_icon_texture}
   - {addr: 0x801ce56a, name: g_equip_panel_slide_down_y}
   - {addr: 0x801ce584, name: g_menu_portrait_origin}
   - {addr: 0x801ce58c, name: g_equip_panel_gauge_bar_colors}
@@ -1503,17 +1503,17 @@ data:
   - {addr: 0x801ce874, name: g_equip_panel_selected_portrait_rect}
   - {addr: 0x801ce87c, name: g_equip_panel_comparison_portrait_rect}
   - {addr: 0x801ce884, name: g_menu_portrait_transition_offsets}
-  - {addr: 0x801ce8b8, name: g_equip_panel_origin_offsets}
+  - {addr: 0x801ce8b8, name: g_menu_status_panel_origin_offsets}
   - {addr: 0x801ce8c0, name: g_equip_right_panel_frame_rect}
-  - {addr: 0x801ce8c8, name: g_equip_character_status_frame_rect}
-  - {addr: 0x801ce8e0, name: g_equip_character_status_draw_area_rect}
-  - {addr: 0x801ce8e8, name: g_equip_panel_text_upload_rect_a}
-  - {addr: 0x801ce8f0, name: g_equip_panel_text_upload_rect_b}
-  - {addr: 0x801ce8f8, name: g_equip_panel_label_layouts_mode0}
-  - {addr: 0x801ce9dc, name: g_equip_panel_label_layouts_mode1}
-  - {addr: 0x801ceac0, name: g_equip_panel_label_layouts_mode2}
-  - {addr: 0x801ceba4, name: g_equip_panel_label_layouts_mode3}
-  - {addr: 0x801cece8, name: g_equip_panel_item_icon_layouts}
+  - {addr: 0x801ce8c8, name: g_menu_status_panel_frame_rect}
+  - {addr: 0x801ce8e0, name: g_menu_status_panel_draw_area_rect}
+  - {addr: 0x801ce8e8, name: g_menu_status_panel_text_upload_rect_a}
+  - {addr: 0x801ce8f0, name: g_menu_status_panel_text_upload_rect_b}
+  - {addr: 0x801ce8f8, name: g_menu_status_panel_label_layouts_mode0}
+  - {addr: 0x801ce9dc, name: g_menu_status_panel_label_layouts_mode1}
+  - {addr: 0x801ceac0, name: g_menu_status_panel_label_layouts_mode2}
+  - {addr: 0x801ceba4, name: g_menu_status_panel_label_layouts_mode3}
+  - {addr: 0x801cece8, name: g_menu_status_panel_item_icon_layouts}
   - {addr: 0x801ced24, name: g_equip_editor_numeric_table}
   - {addr: 0x801ced34, name: g_equip_editor_numeric_entries_a}
   - {addr: 0x801ced3c, name: g_equip_editor_numeric_entries_b}
@@ -1618,7 +1618,7 @@ data:
   - {addr: 0x801e12c4, name: g_equip_menu_selection_entries}
   - {addr: 0x801e12e4, name: g_equip_thread_indicator_packets}
   - {addr: 0x801e17d4, name: g_menu_input_controller}
-  - {addr: 0x801e17f0, name: g_equip_gfx_draw_offset_y}
+  - {addr: 0x801e17f0, name: g_menu_gfx_draw_offset_y}
   - {addr: 0x801e1834, name: g_equip_panel_selected_editor_packets}
   - {addr: 0x801e1e4c, name: g_equip_panel_selected_packets}
   - {addr: 0x801e21fc, name: g_equip_panel_comparison_editor_packets}
@@ -1631,10 +1631,10 @@ data:
   - {addr: 0x801e45b4, name: g_equip_panel_comparison_large_number_image}
   - {addr: 0x801e46a4, name: g_equip_panel_selected_portrait_palettes}
   - {addr: 0x801e46e4, name: g_equip_panel_comparison_portrait_palettes}
-  - {addr: 0x801e4724, name: g_equip_panel_frames_a}
+  - {addr: 0x801e4724, name: g_menu_status_panel_frames}
   - {addr: 0x801e4ed4, name: g_equip_panel_frames_b}
-  - {addr: 0x801e5684, name: g_equip_panel_text_image_a}
-  - {addr: 0x801e6304, name: g_equip_panel_text_image_b}
+  - {addr: 0x801e5684, name: g_menu_status_panel_text_image_a}
+  - {addr: 0x801e6304, name: g_menu_status_panel_text_image_b}
   - {addr: 0x801e6f84, name: g_equip_editor_numeric_state_a}
   - {addr: 0x801e7504, name: g_equip_editor_numeric_state_b}
   - {addr: 0x801e7a84, name: g_equip_editor_numeric_text_a}

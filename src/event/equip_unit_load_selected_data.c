@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Load the selected unit into the EQUIP panels: clamp its HP and MP to their
@@ -22,9 +23,9 @@ void equip_unit_load_selected_data(void) {
     bcopy(g_equip_unit_data[g_equip_unit_selected_index], &g_equip_selected_unit_stat_summary, 0x22);
     bcopy(&g_equip_unit_data[g_equip_unit_selected_index]->identity, &g_equip_panel_selected_unit_data,
         sizeof(menu_unit_status_identity_t));
-    bcopy(&g_equip_unit_data[g_equip_unit_selected_index]->move, &g_equip_unit_editor_stats, 0x40);
+    bcopy(&g_equip_unit_data[g_equip_unit_selected_index]->move, &g_menu_status_panel_fields, 0x40);
     equip_item_sum_equipment_stat_details(
-        &g_equip_unit_editor_stats, g_equip_unit_data[g_equip_unit_selected_index]->equipment);
+        &g_menu_status_panel_fields, g_equip_unit_data[g_equip_unit_selected_index]->equipment);
     equip_unit_copy_data_to_compare_slot(g_equip_unit_selected_index, 1);
     equip_menu_reset_state_flags();
 }

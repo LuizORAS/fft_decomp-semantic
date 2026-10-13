@@ -112,8 +112,8 @@ void equip_panel_run_unit_status_thread(void) {
     battle_text_configure_sprite_vram(&rects[0], 0x38, 0x28, &editor->value_sprites[0], 2);
     battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, &editor->value_sprites[1], 2);
     for (frame = 0; frame < 4; frame++) {
-        gfx_init_image_loading(&editor->value_sprites[frame], g_equip_editor_numeric_geometry, &g_menu_portrait_origin,
-            &g_equip_panel_editor_value_cells[frame]);
+        gfx_init_image_loading(&editor->value_sprites[frame], g_menu_status_panel_numeric_geometry,
+            &g_menu_portrait_origin, &g_equip_panel_editor_value_cells[frame]);
     }
     if (state->team_kind >= 4) {
         state->team_kind = 0;
@@ -125,8 +125,8 @@ void equip_panel_run_unit_status_thread(void) {
         mem_copy_bytes_nonempty(g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells, 0xC);
     }
     for (frame = 0; frame < 7; frame++) {
-        gfx_init_image_loading(&editor->label_sprites[frame], g_equip_editor_numeric_geometry, &g_menu_portrait_origin,
-            &g_equip_panel_editor_label_cells[frame]);
+        gfx_init_image_loading(&editor->label_sprites[frame], g_menu_status_panel_numeric_geometry,
+            &g_menu_portrait_origin, &g_equip_panel_editor_label_cells[frame]);
     }
     mem_copy_bytes_nonempty(editor + 1, editor, sizeof(menu_status_panel_editor_packet_t));
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
@@ -140,11 +140,11 @@ void equip_panel_run_unit_status_thread(void) {
     battle_text_configure_sprite_vram(&rects[4], 0x10, 0xA, &panel->sprites[2], 0);
     battle_text_configure_sprite_vram(&rects[5], 0x10, 0xA, &panel->sprites[3], 0);
     for (frame = 0; frame < 7; frame++) {
-        gfx_init_image_loading(&panel->sprites[frame], g_equip_editor_numeric_geometry, &g_equip_panel_frame_rect,
+        gfx_init_image_loading(&panel->sprites[frame], g_menu_status_panel_numeric_geometry, &g_equip_panel_frame_rect,
             &g_equip_panel_sprite_cells[frame]);
     }
     gfx_init_image_loading(
-        &panel->portrait, g_equip_editor_numeric_geometry, &g_equip_panel_frame_rect, g_equip_panel_portrait_cell);
+        &panel->portrait, g_menu_status_panel_numeric_geometry, &g_equip_panel_frame_rect, g_equip_panel_portrait_cell);
     if (state->team_kind == 1) {
         panel->portrait.clut = 0x7FFD;
     } else {
@@ -169,7 +169,7 @@ void equip_panel_run_unit_status_thread(void) {
         } else {
             mem_copy_bytes_nonempty(g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells, 0xC);
         }
-        gfx_init_image_loading(&editor->label_sprites[6], g_equip_editor_numeric_geometry, &g_menu_portrait_origin,
+        gfx_init_image_loading(&editor->label_sprites[6], g_menu_status_panel_numeric_geometry, &g_menu_portrait_origin,
             g_equip_panel_editor_mode_cell);
         if (state->team_kind == 1) {
             panel->portrait.clut = 0x7FFD;
@@ -228,7 +228,7 @@ void equip_panel_run_unit_status_thread(void) {
         } else {
             setRGB0(&panel->portrait, 0x80, 0x80, 0x80);
         }
-        g_equip_gfx_draw_offset_y = ((g_main_gfx_screen_polarity * 0xF0) != 0xF0) ? 0xF0 : 0;
+        g_menu_gfx_draw_offset_y = ((g_main_gfx_screen_polarity * 0xF0) != 0xF0) ? 0xF0 : 0;
         if ((thread->flags & MENU_STATUS_PANEL_SLIDE_DOWN) && (shake == 0)) {
             shake = 1;
         }
@@ -259,22 +259,22 @@ void equip_panel_run_unit_status_thread(void) {
             }
         }
         panel_x = thread->x;
-        panel_offset_y = g_equip_gfx_draw_offset_y;
+        panel_offset_y = g_menu_gfx_draw_offset_y;
         panel->draw_offset_a.position.x = panel_x - 0x80;
         panel_shake_y = (u16)thread->shake_y;
         panel->draw_offset_a.position.y = panel_shake_y + panel_offset_y;
         SetDrawOffset(&panel->draw_offset_a.packet, (u16*)&panel->draw_offset_a.position);
-        panel_base_offset_y = g_equip_gfx_draw_offset_y;
+        panel_base_offset_y = g_menu_gfx_draw_offset_y;
         panel->draw_offset_b.position.x = -0x80;
         panel->draw_offset_b.position.y = panel_base_offset_y;
         SetDrawOffset(&panel->draw_offset_b.packet, (u16*)&panel->draw_offset_b.position);
         editor_x = thread->x;
-        editor_offset_y = g_equip_gfx_draw_offset_y;
+        editor_offset_y = g_menu_gfx_draw_offset_y;
         editor->draw_offset_a.position.x = editor_x - 0x80;
         editor_shake_y = (u16)thread->shake_y;
         editor->draw_offset_a.position.y = editor_shake_y + editor_offset_y;
         SetDrawOffset(&editor->draw_offset_a.packet, (u16*)&editor->draw_offset_a.position);
-        editor_base_offset_y = g_equip_gfx_draw_offset_y;
+        editor_base_offset_y = g_menu_gfx_draw_offset_y;
         editor->draw_offset_b.position.x = -0x80;
         editor->draw_offset_b.position.y = editor_base_offset_y;
         SetDrawOffset(&editor->draw_offset_b.packet, (u16*)&editor->draw_offset_b.position);

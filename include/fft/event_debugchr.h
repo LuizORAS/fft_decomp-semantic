@@ -27,7 +27,6 @@ extern ranges32_t g_debugchr_editor_template[21];
 extern u8 g_debugchr_editor_template_normal[];
 extern u8 g_debugchr_editor_template_special[];
 extern s16 g_debugchr_editor_ct_max;
-extern menu_status_panel_slot_storage_t g_debugchr_editor_unit_fields;
 extern u8 g_debugchr_editor_unit_ids[];
 extern u8 g_debugchr_editor_unit_name[];
 /* Views of g_debugchr_panel_selected_billboard.gauges[i].value (values[3 * i])
@@ -42,9 +41,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id);
 void debugchr_editor_run_session(void);
 
 /* character status */
-extern RECT g_debugchr_character_status_draw_area_rect;
 extern menu_status_thread_t g_debugchr_character_status_frame_config;
-extern RECT g_debugchr_character_status_frame_rect[];
 
 /* unit panels */
 extern menu_unit_status_record_t g_debugchr_panel_comparison_billboard;
@@ -63,15 +60,7 @@ extern image_load_parameters_t g_debugchr_panel_editor_mode_cells[];
 extern image_load_parameters_t g_debugchr_panel_editor_value_cells[];
 extern u16 g_debugchr_panel_editor_value_cluts[][2];
 extern RECT g_debugchr_panel_frame_rect;
-extern menu_status_panel_buffer_t g_debugchr_panel_frames_a[];
 extern CVECTOR g_debugchr_panel_gauge_bar_colors[];
-extern image_load_parameters_t g_debugchr_panel_item_icon_layouts[];
-extern point16_t g_debugchr_panel_item_icon_texture[];
-extern image_load_parameters_t g_debugchr_panel_label_layouts_mode0[];
-extern image_load_parameters_t g_debugchr_panel_label_layouts_mode1[];
-extern image_load_parameters_t g_debugchr_panel_label_layouts_mode2[];
-extern image_load_parameters_t g_debugchr_panel_label_layouts_mode3[];
-extern RECT g_debugchr_panel_origin_offsets[];
 extern image_load_parameters_t g_debugchr_panel_portrait_cell[];
 extern menu_unit_status_record_t g_debugchr_panel_selected_billboard;
 extern menu_status_panel_editor_packet_t g_debugchr_panel_selected_editor_packets[2];
@@ -87,13 +76,8 @@ extern menu_active_unit_t g_debugchr_panel_selected_unit_data;
 extern s16 g_debugchr_panel_slide_down_y[];
 extern s16 g_debugchr_panel_slide_up_y[];
 extern image_load_parameters_t g_debugchr_panel_sprite_cells[];
-extern u8 g_debugchr_panel_text_image_a[];
-extern u8 g_debugchr_panel_text_image_b[];
-extern RECT g_debugchr_panel_text_upload_rect_a;
-extern RECT g_debugchr_panel_text_upload_rect_b;
 extern menu_status_thread_t g_debugchr_status_display_thread_params;
 
-void debugchr_panel_run_character_status_thread(void);
 void debugchr_panel_run_unit_status_thread(void);
 
 /* numeric editor */
@@ -105,7 +89,6 @@ extern RECT g_debugchr_editor_numeric_entries_c;
 extern RECT g_debugchr_editor_numeric_entries_d;
 extern RECT g_debugchr_editor_numeric_entries_e;
 extern RECT g_debugchr_editor_numeric_entries_f;
-extern point16_t g_debugchr_editor_numeric_geometry[];
 extern menu_status_panel_numeric_buffer_t g_debugchr_editor_numeric_state_a[2];
 extern menu_status_panel_numeric_buffer_t g_debugchr_editor_numeric_state_b[2];
 extern battle_menu_status_panel_numeric_geometry_t g_debugchr_editor_numeric_table;
@@ -121,7 +104,6 @@ void debugchr_editor_run_numeric_thread(void);
 /* menus */
 
 /* graphics */
-extern u16 g_debugchr_gfx_draw_offset_y;
 extern POLY_FT4 g_debugchr_gfx_render_buffers[2][30];
 
 /* text */

@@ -66,7 +66,7 @@ void equip_editor_run_numeric_thread(void) {
     descriptor = g_equip_editor_numeric_texture;
     for (; i < 18; i++) {
         battle_menu_init_semitransparent_sprt(&buffer->sprites[i]);
-        gfx_init_image_loading(&buffer->sprites[i], g_equip_editor_numeric_geometry,
+        gfx_init_image_loading(&buffer->sprites[i], g_menu_status_panel_numeric_geometry,
             &g_equip_editor_numeric_table.texture_rect, descriptor);
         descriptor++;
     }
@@ -111,14 +111,14 @@ void equip_editor_run_numeric_thread(void) {
         }
         field_y = g_main_gfx_screen_polarity * 0xF0;
         use_offset = field_y != 0xF0;
-        g_equip_gfx_draw_offset_y = -use_offset & 0xF0;
+        g_menu_gfx_draw_offset_y = -use_offset & 0xF0;
         menu_build_scaled_draw_area_packets(
             &buffer->portrait, &g_equip_editor_numeric_table.draw_area_rect, frame, field_y, thread);
         buffer->draw_offsets[0].position.x = thread->x - 0x80;
-        buffer->draw_offsets[0].position.y = thread->y + g_equip_gfx_draw_offset_y;
+        buffer->draw_offsets[0].position.y = thread->y + g_menu_gfx_draw_offset_y;
         SetDrawOffset(&buffer->draw_offsets[0].packet, (u16*)&buffer->draw_offsets[0].position);
         buffer->draw_offsets[1].position.x = -0x80;
-        buffer->draw_offsets[1].position.y = g_equip_gfx_draw_offset_y;
+        buffer->draw_offsets[1].position.y = g_menu_gfx_draw_offset_y;
         SetDrawOffset(&buffer->draw_offsets[1].packet, (u16*)&buffer->draw_offsets[1].position);
         if (thread->style == 1 || g_battle_menu_input_lock_mode == 1) {
             for (i = 17; i >= 0; i--) {

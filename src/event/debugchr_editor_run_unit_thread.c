@@ -74,7 +74,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
     /* The template store is repeated in both arms: jump2 cross-jumps the
      * identical tails only after sched2, so the join keeps the store ahead of
      * the thread-setup constant loads. */
-    if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
+    if (g_menu_status_panel_fields.state.generic_monster != 0) {
         mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xa8);
         g_debugchr_editor_fields[15].destination[0] = 0xe;
     } else {
@@ -100,7 +100,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         thread_start(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, debugchr_editor_run_numeric_thread);
         thread_set_parameters(
             THREAD_SCREEN_SLOT_NUMERIC_EDITOR, (u8*)refresh_b - offsetof(menu_status_thread_t, style), 0, 0);
-        thread_start(THREAD_SCREEN_SLOT_CHARACTER_STATUS, debugchr_panel_run_character_status_thread);
+        thread_start(THREAD_SCREEN_SLOT_CHARACTER_STATUS, menu_run_status_panel_thread);
         thread_set_parameters(
             THREAD_SCREEN_SLOT_CHARACTER_STATUS, (u8*)refresh_c - offsetof(menu_status_thread_t, style), 0, 0);
     }
@@ -161,7 +161,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             }
             if ((input & PSX_PAD_CIRCLE) != 0 && battle_thread_is_running_asm(THREAD_SLOT_MENU_BUILDING) == 0
                 && (unit_has_any_current_status(g_debugchr_panel_selected_unit_data.battle_id) != 0
-                    || g_debugchr_editor_unit_fields.state.generic_monster == 0)) {
+                    || g_menu_status_panel_fields.state.generic_monster == 0)) {
                 g_debugchr_status_display_thread_params.style = one;
                 g_debugchr_numeric_editor_thread_params.style = one;
                 g_debugchr_character_status_frame_config.style = one;
@@ -211,7 +211,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             debugchr_editor_load_selected_unit();
             battle_menu_copy_billboard_data_in(&g_debugchr_panel_selected_billboard,
                 ((menu_active_unit_t*)((u8*)selected_unit - offsetof(menu_active_unit_t, battle_id))),
-                &g_debugchr_editor_unit_fields);
+                &g_menu_status_panel_fields);
             g_debugchr_status_display_thread_params.redraw_request = one;
             g_debugchr_numeric_editor_thread_params.redraw_request = one;
             g_debugchr_character_status_frame_config.redraw_request = one;
@@ -234,7 +234,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             debugchr_editor_load_selected_unit();
             battle_menu_copy_billboard_data_in(&g_debugchr_panel_selected_billboard,
                 ((menu_active_unit_t*)((u8*)selected_unit - offsetof(menu_active_unit_t, battle_id))),
-                &g_debugchr_editor_unit_fields);
+                &g_menu_status_panel_fields);
             g_debugchr_status_display_thread_params.redraw_request = 2;
             g_debugchr_numeric_editor_thread_params.redraw_request = one;
             g_debugchr_character_status_frame_config.redraw_request = one;
@@ -258,6 +258,6 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         *unit_type_id_ptr = g_debugchr_editor_unit_ids[0];
         debugchr_editor_load_selected_unit();
         battle_menu_copy_billboard_data_in(
-            &g_debugchr_panel_selected_billboard, &g_debugchr_panel_selected_unit_data, &g_debugchr_editor_unit_fields);
+            &g_debugchr_panel_selected_billboard, &g_debugchr_panel_selected_unit_data, &g_menu_status_panel_fields);
     }
 }

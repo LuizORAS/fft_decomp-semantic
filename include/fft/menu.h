@@ -455,6 +455,27 @@ typedef struct menu_status_panel_buffer {
 } menu_status_panel_buffer_t;
 typedef char menu_status_panel_buffer_size_must_be_984[(sizeof(menu_status_panel_buffer_t) == 984) ? 1 : -1];
 
+/* status panel rendering */
+extern u16 g_menu_gfx_draw_offset_y;
+extern RECT g_menu_status_panel_draw_area_rect;
+extern menu_status_panel_slot_storage_t g_menu_status_panel_fields;
+extern RECT g_menu_status_panel_frame_rect[];
+extern menu_status_panel_buffer_t g_menu_status_panel_frames[];
+extern image_load_parameters_t g_menu_status_panel_item_icon_layouts[];
+extern point16_t g_menu_status_panel_item_icon_texture[];
+extern image_load_parameters_t g_menu_status_panel_label_layouts_mode0[];
+extern image_load_parameters_t g_menu_status_panel_label_layouts_mode1[];
+extern image_load_parameters_t g_menu_status_panel_label_layouts_mode2[];
+extern image_load_parameters_t g_menu_status_panel_label_layouts_mode3[];
+extern point16_t g_menu_status_panel_numeric_geometry[];
+extern RECT g_menu_status_panel_origin_offsets[];
+extern u8 g_menu_status_panel_text_image_a[];
+extern u8 g_menu_status_panel_text_image_b[];
+extern RECT g_menu_status_panel_text_upload_rect_a;
+extern RECT g_menu_status_panel_text_upload_rect_b;
+
+void menu_run_status_panel_thread(void);
+
 void menu_clear_stat_preview(menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail);
 void menu_init_status_panel_primitives(menu_status_panel_buffer_t* menu);
 void menu_subtract_scaled_stat_preview(menu_status_panel_slot_storage_t* out,
