@@ -1,5 +1,6 @@
 #include "fft/event_equip.h"
 #include "fft/menu.h"
+#include "fft/menu_script.h"
 #include "psx/types.h"
 
 /* Draw the selected callback's icon for the literal or current list row,
@@ -11,12 +12,12 @@ menu_instruction_t* equip_cmd_draw_row_callback_quad_handler(menu_instruction_t*
     u16 tpage;
     u16 clut;
 
-    fn = g_equip_menu_list_row_callbacks[cmd->callback_sprite.callback_index].icon;
-    if (g_equip_menu_list_row_mode == 0) {
+    fn = g_menu_row_callbacks[cmd->callback_sprite.callback_index].icon;
+    if (g_menu_list_row_mode == 0) {
         row = cmd->callback_sprite.row;
     } else {
-        row = g_equip_menu_scroll_base_index + g_equip_menu_list_row_index;
-        if (g_equip_menu_list_scroll_offset < 0) {
+        row = g_menu_scroll_base_index + g_menu_list_row_index;
+        if (g_menu_list_scroll_offset < 0) {
             row--;
         }
     }

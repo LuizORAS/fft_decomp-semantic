@@ -304,14 +304,10 @@ extern s16 g_equip_menu_list_entry_count;
 
 extern u8 g_equip_menu_list_glyph_width;
 extern s8 g_equip_menu_list_redraw_pending; /* read with lb (equip_cmd_draw_scrollable_list_body_handler) */
-extern menu_callback_t g_equip_menu_list_row_callbacks[16];
 extern s16 g_equip_menu_list_row_group_count;
 extern s16 g_equip_menu_list_row_height;
-extern s32 g_equip_menu_list_row_index;
-extern s16 g_equip_menu_list_row_mode;
 extern s8 g_equip_menu_list_scroll_direction; /* -1/0/1; read with lb */
 extern s16 g_equip_menu_list_scroll_entry_ids;
-extern s16 g_equip_menu_list_scroll_offset;
 extern u16 g_equip_menu_list_scroll_progress;
 extern u8 g_equip_menu_list_text_columns;
 extern u8* g_equip_menu_list_text_table;
@@ -325,7 +321,6 @@ extern s16 g_equip_menu_result_rows[4]; /* [2]: type-order row picked in the sub
 extern u8 g_equip_menu_screen_state;    /* equip_screen_state_e */
 extern void (*g_equip_menu_screen_state_handlers[])(void);
 
-extern s16 g_equip_menu_scroll_base_index;
 extern oriented_quad_t g_equip_menu_secondary_slot_marker;
 /* Signed 16-bit value: EQUIP reads this state with lh at 0x801c4584,
  * 0x801c45bc, and 0x801c4614. */
@@ -492,15 +487,11 @@ s32 equip_input_read_page_scroll_direction(void);
 void equip_input_update_with_message_state(void);
 
 /* menu commands */
-/* Render-command stream callbacks: every handler consumes and returns a
- * command pointer; every row callback is indexed by a list row. */
-typedef menu_instruction_t* (*equip_command_handler_t)(menu_instruction_t* instruction);
 /* The opcode that ends an EQUIP menu display stream. */
 enum {
     EQUIP_CMD_END = 0x19,
 };
 
-extern equip_command_handler_t g_equip_cmd_handlers[25];
 extern menu_sprite_command_t g_equip_cmd_row_sprite_command;
 extern s32 g_equip_cmd_stream_input;
 extern menu_window_command_t g_equip_cmd_window_interior_command;
@@ -523,8 +514,6 @@ menu_instruction_t* equip_cmd_draw_translucent_tile_handler(menu_instruction_t* 
 menu_instruction_t* equip_cmd_draw_window_frame_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_enqueue_draw_mode_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_release_otag_lock_handler(menu_instruction_t* instruction);
-menu_instruction_t* equip_cmd_run_if_else_group_handler(menu_instruction_t* instruction);
-menu_instruction_t* equip_cmd_run_if_group_handler(menu_instruction_t* instruction);
 void equip_cmd_run_stream(menu_instruction_t* instruction, s32 input);
 menu_instruction_t* equip_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_set_otag_index_handler(menu_instruction_t* instruction);

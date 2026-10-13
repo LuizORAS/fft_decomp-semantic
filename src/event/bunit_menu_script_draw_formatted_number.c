@@ -1,5 +1,6 @@
 #include "fft/event_bunit.h"
 #include "fft/menu.h"
+#include "fft/menu_script.h"
 #include "psx/types.h"
 
 /* Draw a row-callback value as a row of digit glyphs (opcodes 0x19-0x1B).
@@ -34,16 +35,15 @@ menu_instruction_t* bunit_menu_script_draw_formatted_number(menu_instruction_t* 
     s32 next_remaining;
     u8 opcode;
 
-    getter = g_bunit_menu_row_callbacks[command->number.getter].value;
+    getter = g_menu_row_callbacks[command->number.getter].value;
     negative = 0;
-    if (g_bunit_menu_scroll_list_active == 0) {
+    if (g_menu_list_row_mode == 0) {
         row = command->number.value;
         y = command->number.y;
     } else {
-        row = g_bunit_menu_scroll_base_index + g_bunit_menu_cursor_row;
-        y = g_bunit_menu_list_row_height * g_bunit_menu_cursor_row + command->number.y
-            - g_bunit_menu_scroll_pixel_offset;
-        if (g_bunit_menu_scroll_pixel_offset < 0) {
+        row = g_menu_scroll_base_index + g_menu_list_row_index;
+        y = g_bunit_menu_list_row_height * g_menu_list_row_index + command->number.y - g_menu_list_scroll_offset;
+        if (g_menu_list_scroll_offset < 0) {
             row--;
             y -= g_bunit_menu_list_row_height;
         }

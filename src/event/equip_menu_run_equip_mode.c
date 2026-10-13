@@ -1,5 +1,6 @@
 #include "fft/event_equip.h"
 #include "fft/menu.h"
+#include "fft/menu_script.h"
 #include "fft/thread.h"
 #include "psx/libc.h"
 #include "psx/pad.h"
@@ -71,10 +72,10 @@ s32 equip_menu_run_equip_mode(void) {
                 &scroll, g_equip_item_list_entries);
             equip_menu_init_scrollable_list(
                 g_equip_item_list_entries, selected, scroll, g_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
-            g_equip_menu_list_row_callbacks[0].value = equip_menu_get_entry_item_equipped_count;
-            g_equip_menu_list_row_callbacks[1].value = equip_menu_get_entry_item_count;
-            g_equip_menu_list_row_callbacks[2].icon = equip_item_build_type_icon_source;
-            g_equip_menu_list_row_callbacks[3].icon = equip_menu_get_entry_item_icon_source;
+            g_menu_row_callbacks[0].value = equip_menu_get_entry_item_equipped_count;
+            g_menu_row_callbacks[1].value = equip_menu_get_entry_item_count;
+            g_menu_row_callbacks[2].icon = equip_item_build_type_icon_source;
+            g_menu_row_callbacks[3].icon = equip_menu_get_entry_item_icon_source;
             g_equip_sound_queued_effect_id = MAIN_SFX_CONFIRM;
             g_equip_equip_item_previewed_cursor = -1;
         }
@@ -134,7 +135,7 @@ s32 equip_menu_run_equip_mode(void) {
         g_equip_unit_status_panel_redraw = 1;
         thread_resume(EQUIP_THREAD_SLOT_COMMAND_MENU);
         equip_menu_set_selection_record(g_equip_equip_item_slot != 0 ? g_equip_equip_item_slot - 1 : 0,
-            g_equip_menu_selected_list_index, g_equip_menu_scroll_base_index, g_equip_item_list_entries);
+            g_equip_menu_selected_list_index, g_menu_scroll_base_index, g_equip_item_list_entries);
         g_equip_equip_item_list_refresh = 0;
     }
     equip_panel_toggle_item_numeric_thread(g_equip_equip_item_preview_active);

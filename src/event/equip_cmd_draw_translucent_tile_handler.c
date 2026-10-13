@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu_script.h"
 #include "psx/types.h"
 
 /* Stream command: draw a flat tile of size (cmd->tile.width, cmd->tile.height) at
@@ -10,12 +11,12 @@ menu_instruction_t* equip_cmd_draw_translucent_tile_handler(menu_instruction_t* 
     s32 y;
     s32 base;
 
-    if (g_equip_menu_list_row_mode == 0) {
+    if (g_menu_list_row_mode == 0) {
         y = cmd->tile.y;
     } else {
-        base = g_equip_menu_list_row_height * g_equip_menu_list_row_index + cmd->tile.y;
-        y = base + g_equip_menu_list_scroll_offset;
-        if (g_equip_menu_list_scroll_offset < 0) {
+        base = g_equip_menu_list_row_height * g_menu_list_row_index + cmd->tile.y;
+        y = base + g_menu_list_scroll_offset;
+        if (g_menu_list_scroll_offset < 0) {
             y = y - g_equip_menu_list_row_height;
         }
     }

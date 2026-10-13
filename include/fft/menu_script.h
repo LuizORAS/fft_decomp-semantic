@@ -230,6 +230,18 @@ typedef char menu_callback_size_must_be_4[sizeof(menu_callback_t) == 4 ? 1 : -1]
 /* drawing color */
 menu_instruction_t* menu_cmd_set_draw_color_handler(menu_instruction_t* command);
 
+/* command dispatch */
+/* Each display stream has its own handler table and end opcode. */
+extern menu_instruction_t* (*g_menu_cmd_handlers[])(menu_instruction_t* instruction);
+extern menu_callback_t g_menu_row_callbacks[16];
+extern s16 g_menu_list_row_mode;
+extern s16 g_menu_scroll_base_index;
+extern s16 g_menu_list_scroll_offset;
+extern s32 g_menu_list_row_index;
+
+menu_instruction_t* menu_cmd_run_if_group_handler(menu_instruction_t* command);
+menu_instruction_t* menu_cmd_run_if_else_group_handler(menu_instruction_t* command);
+
 /* palette commands */
 menu_instruction_t* menu_cmd_set_clut_handler(menu_instruction_t* command);
 menu_instruction_t* menu_cmd_set_layout_clut_handler(menu_instruction_t* command);

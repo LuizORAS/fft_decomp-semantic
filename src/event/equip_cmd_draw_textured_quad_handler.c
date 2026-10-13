@@ -1,5 +1,6 @@
 #include "fft/event_equip.h"
 #include "fft/menu.h"
+#include "fft/menu_script.h"
 #include "psx/types.h"
 
 /* Stream command: draw a textured quad of size (cmd->sprite.sprite.w, cmd->sprite.sprite.h) at
@@ -12,12 +13,11 @@ menu_instruction_t* equip_cmd_draw_textured_quad_handler(menu_instruction_t* cmd
     s32 y;
     rgb24_t* color;
 
-    if (g_equip_menu_list_row_mode == 0) {
+    if (g_menu_list_row_mode == 0) {
         y = cmd->sprite.sprite.y;
     } else {
-        y = g_equip_menu_list_row_height * g_equip_menu_list_row_index + cmd->sprite.sprite.y
-            - g_equip_menu_list_scroll_offset;
-        if (g_equip_menu_list_scroll_offset < 0) {
+        y = g_equip_menu_list_row_height * g_menu_list_row_index + cmd->sprite.sprite.y - g_menu_list_scroll_offset;
+        if (g_menu_list_scroll_offset < 0) {
             y -= g_equip_menu_list_row_height;
         }
     }

@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu_script.h"
 #include "psx/types.h"
 
 /* Draw the getter's signed decimal value or dashes in the requested digit style. */
@@ -21,16 +22,15 @@ menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* 
     s32 digit;
     u16 clut;
 
-    callback = g_equip_menu_list_row_callbacks[data->number.getter].value;
+    callback = g_menu_row_callbacks[data->number.getter].value;
     negative = 0;
-    if (g_equip_menu_list_row_mode == 0) {
+    if (g_menu_list_row_mode == 0) {
         arg = data->number.value;
         y = data->number.y;
     } else {
-        arg = g_equip_menu_scroll_base_index + g_equip_menu_list_row_index;
-        y = ((g_equip_menu_list_row_height * g_equip_menu_list_row_index) + data->number.y)
-            - g_equip_menu_list_scroll_offset;
-        if (g_equip_menu_list_scroll_offset < 0) {
+        arg = g_menu_scroll_base_index + g_menu_list_row_index;
+        y = ((g_equip_menu_list_row_height * g_menu_list_row_index) + data->number.y) - g_menu_list_scroll_offset;
+        if (g_menu_list_scroll_offset < 0) {
             arg -= 1;
             y -= g_equip_menu_list_row_height;
         }

@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu_script.h"
 
 /* Draw the visible rows of a scrollable list.
  *
@@ -35,16 +36,16 @@ void equip_menu_draw_scrollable_list(const menu_instruction_t* script) {
         g_equip_menu_selected_list_index = entry_count - 1;
     }
     selected = g_equip_menu_selected_list_index;
-    if (selected - g_equip_menu_scroll_base_index >= visible_rows) {
-        g_equip_menu_scroll_base_index = selected;
+    if (selected - g_menu_scroll_base_index >= visible_rows) {
+        g_menu_scroll_base_index = selected;
     }
-    if (selected < g_equip_menu_scroll_base_index) {
-        g_equip_menu_scroll_base_index = selected;
+    if (selected < g_menu_scroll_base_index) {
+        g_menu_scroll_base_index = selected;
     }
     if (entry_count < visible_rows) {
-        g_equip_menu_scroll_base_index = 0;
-    } else if (entry_count - g_equip_menu_scroll_base_index < visible_rows) {
-        g_equip_menu_scroll_base_index = entry_count - visible_rows;
+        g_menu_scroll_base_index = 0;
+    } else if (entry_count - g_menu_scroll_base_index < visible_rows) {
+        g_menu_scroll_base_index = entry_count - visible_rows;
     }
 
     if (g_equip_menu_selected_list_index >= g_equip_menu_list_entry_count) {
@@ -58,7 +59,7 @@ void equip_menu_draw_scrollable_list(const menu_instruction_t* script) {
         rect.h = g_equip_menu_list_visible_rows * 16;
         ClearImage(&rect, 0, 0, 0);
         for (i = 0; i < g_equip_menu_list_visible_rows; i++) {
-            row_ids[i] = g_equip_menu_list_entries[i + g_equip_menu_scroll_base_index];
+            row_ids[i] = g_equip_menu_list_entries[i + g_menu_scroll_base_index];
         }
         row_ids[i] = -1;
         rect.x = 0x100;

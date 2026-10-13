@@ -1,5 +1,6 @@
 #include "fft/event_bunit.h"
 #include "fft/menu.h"
+#include "fft/menu_script.h"
 #include "psx/types.h"
 
 /* Draw a textured quad at its literal position or current list row, using
@@ -9,12 +10,11 @@ menu_instruction_t* bunit_cmd_draw_textured_quad_handler(menu_instruction_t* cmd
     s32 index;
     rgb24_t* table;
 
-    if (g_bunit_menu_scroll_list_active == 0) {
+    if (g_menu_list_row_mode == 0) {
         index = cmd->sprite.sprite.y;
     } else {
-        index = g_bunit_menu_list_row_height * g_bunit_menu_cursor_row + cmd->sprite.sprite.y
-            - g_bunit_menu_scroll_pixel_offset;
-        if (g_bunit_menu_scroll_pixel_offset < 0) {
+        index = g_bunit_menu_list_row_height * g_menu_list_row_index + cmd->sprite.sprite.y - g_menu_list_scroll_offset;
+        if (g_menu_list_scroll_offset < 0) {
             index -= g_bunit_menu_list_row_height;
         }
     }

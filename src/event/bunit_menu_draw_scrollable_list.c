@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu_script.h"
 
 /* Draw the visible rows of a scrollable list.
  *
@@ -35,16 +36,16 @@ void bunit_menu_draw_scrollable_list(const menu_instruction_t* script) {
         g_bunit_menu_list_selected_index = entry_count - 1;
     }
     selected = g_bunit_menu_list_selected_index;
-    if (selected - g_bunit_menu_scroll_base_index >= visible_rows) {
-        g_bunit_menu_scroll_base_index = selected;
+    if (selected - g_menu_scroll_base_index >= visible_rows) {
+        g_menu_scroll_base_index = selected;
     }
-    if (selected < g_bunit_menu_scroll_base_index) {
-        g_bunit_menu_scroll_base_index = selected;
+    if (selected < g_menu_scroll_base_index) {
+        g_menu_scroll_base_index = selected;
     }
     if (entry_count < visible_rows) {
-        g_bunit_menu_scroll_base_index = 0;
-    } else if (entry_count - g_bunit_menu_scroll_base_index < visible_rows) {
-        g_bunit_menu_scroll_base_index = entry_count - visible_rows;
+        g_menu_scroll_base_index = 0;
+    } else if (entry_count - g_menu_scroll_base_index < visible_rows) {
+        g_menu_scroll_base_index = entry_count - visible_rows;
     }
 
     if (g_bunit_menu_list_selected_index >= g_bunit_menu_list_entry_count) {
@@ -58,7 +59,7 @@ void bunit_menu_draw_scrollable_list(const menu_instruction_t* script) {
         rect.h = g_bunit_menu_list_visible_rows * 16;
         ClearImage(&rect, 0, 0, 0);
         for (i = 0; i < g_bunit_menu_list_visible_rows; i++) {
-            row_ids[i] = g_bunit_menu_list_entries[i + g_bunit_menu_scroll_base_index];
+            row_ids[i] = g_bunit_menu_list_entries[i + g_menu_scroll_base_index];
         }
         row_ids[i] = -1;
         rect.x = 0x100;

@@ -1,20 +1,19 @@
-#include "fft/event_bunit.h"
-#include "psx/types.h"
+#include "fft/menu_script.h"
 
 /* Run the following group if its predicate succeeds for the literal or
  * current list row; otherwise skip it. */
-menu_instruction_t* bunit_cmd_run_if_group_handler(menu_instruction_t* cmd) {
+menu_instruction_t* menu_cmd_run_if_group_handler(menu_instruction_t* cmd) {
     s32 (*callback)(s32);
     s32 count;
     s32 row;
 
-    callback = g_bunit_menu_row_callbacks[cmd->conditional.predicate].value;
+    callback = g_menu_row_callbacks[cmd->conditional.predicate].value;
     count = cmd->conditional.count;
-    if (g_bunit_menu_scroll_list_active == 0) {
+    if (g_menu_list_row_mode == 0) {
         row = cmd->conditional.value;
     } else {
-        row = g_bunit_menu_scroll_base_index + g_bunit_menu_cursor_row;
-        if (g_bunit_menu_scroll_pixel_offset < 0) {
+        row = g_menu_scroll_base_index + g_menu_list_row_index;
+        if (g_menu_list_scroll_offset < 0) {
             row -= 1;
         }
     }
@@ -25,7 +24,7 @@ menu_instruction_t* bunit_cmd_run_if_group_handler(menu_instruction_t* cmd) {
         }
     } else {
         while (--count != -1) {
-            cmd = g_bunit_cmd_handlers[cmd->header.opcode](cmd);
+            cmd = g_menu_cmd_handlers[cmd->header.opcode](cmd);
         }
     }
     return cmd;

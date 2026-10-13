@@ -3,7 +3,7 @@
 #include "fft/menu.h"
 #include "psx/types.h"
 
-/* Also returns the value: callers read it through g_bunit_menu_row_callbacks. */
+/* Also returns the value: callers read it through g_menu_row_callbacks. */
 s32 bunit_job_calculate_current_jp(s32 index) {
     s32 generic_job;
 

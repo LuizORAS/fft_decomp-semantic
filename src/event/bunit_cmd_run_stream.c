@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu_script.h"
 #include "psx/types.h"
 
 /* Twin of jobstts_cmd_run_stream; BUNIT's stream terminator is 0x1C. */
@@ -9,7 +10,7 @@ void bunit_cmd_run_stream(menu_instruction_t* instruction, s32 flags) {
     g_bunit_gfx_otag_index_locked = 0;
     if (instruction->header.opcode != BUNIT_CMD_END) {
         do {
-            instruction = g_bunit_cmd_handlers[instruction->header.opcode](instruction);
+            instruction = g_menu_cmd_handlers[instruction->header.opcode](instruction);
         } while (instruction->header.opcode != BUNIT_CMD_END);
     }
 }

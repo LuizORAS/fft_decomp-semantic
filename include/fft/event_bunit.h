@@ -298,7 +298,6 @@ extern u16 g_bunit_menu_cursor_mode0_foreground_clut;
 extern u16 g_bunit_menu_cursor_mode1_background_clut;
 extern u16 g_bunit_menu_cursor_mode1_foreground_clut;
 extern s8 g_bunit_menu_cursor_reverse_offset_keyframes[];
-extern s32 g_bunit_menu_cursor_row;
 extern u16 g_bunit_menu_disabled_number_clut;
 extern u16 g_bunit_menu_icon_texture_page;
 extern u16 g_bunit_menu_list_cursor_anim_state;
@@ -326,10 +325,6 @@ extern u8 g_bunit_menu_reorder_list_initialized;
 
 extern s16 g_bunit_menu_reorder_list_redraw_request;
 extern s16 g_bunit_menu_reorder_result;
-extern menu_callback_t g_bunit_menu_row_callbacks[];
-extern s16 g_bunit_menu_scroll_base_index;
-extern s16 g_bunit_menu_scroll_list_active;
-extern s16 g_bunit_menu_scroll_pixel_offset;
 extern menu_selection_record_t g_bunit_menu_selection_records[BUNIT_MENU_SELECTION_RECORD_COUNT];
 extern u16 g_bunit_menu_window_clut;
 extern s16 g_bunit_menu_window_right_x;
@@ -542,7 +537,6 @@ enum {
     BUNIT_CMD_END = 0x1c,
 };
 
-extern menu_instruction_t* (*g_bunit_cmd_handlers[28])(menu_instruction_t* instruction);
 extern menu_sprite_command_t g_bunit_cmd_row_quad;
 extern u32 g_bunit_cmd_stream_input;
 extern menu_window_command_t g_bunit_cmd_window_interior_command;
@@ -556,8 +550,6 @@ menu_instruction_t* bunit_cmd_draw_textured_quad_handler(menu_instruction_t* ins
 menu_instruction_t* bunit_cmd_draw_window_frame_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_enqueue_draw_mode_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_release_otag_lock_handler(menu_instruction_t* instruction);
-menu_instruction_t* bunit_cmd_run_if_else_group_handler(menu_instruction_t* instruction);
-menu_instruction_t* bunit_cmd_run_if_group_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_run_scrollable_list_handler(menu_instruction_t* instruction);
 void bunit_cmd_run_stream(menu_instruction_t* instruction, s32 flags);
 menu_instruction_t* bunit_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* instruction);

@@ -1,5 +1,6 @@
 #include "fft/event_bunit.h"
 #include "fft/menu.h"
+#include "fft/menu_script.h"
 #include "psx/types.h"
 
 /* Draw the selected callback's icon for the literal or current list row,
@@ -9,12 +10,12 @@ menu_instruction_t* bunit_cmd_draw_row_callback_quad_handler(menu_instruction_t*
     s32 row;
     menu_icon_source_t* (*callback)(s32);
 
-    callback = g_bunit_menu_row_callbacks[cmd->callback_sprite.callback_index].icon;
-    if (g_bunit_menu_scroll_list_active == 0) {
+    callback = g_menu_row_callbacks[cmd->callback_sprite.callback_index].icon;
+    if (g_menu_list_row_mode == 0) {
         row = cmd->callback_sprite.row;
     } else {
-        row = g_bunit_menu_scroll_base_index + g_bunit_menu_cursor_row;
-        if (g_bunit_menu_scroll_pixel_offset < 0) {
+        row = g_menu_scroll_base_index + g_menu_list_row_index;
+        if (g_menu_list_scroll_offset < 0) {
             row -= 1;
         }
     }
