@@ -9,33 +9,34 @@
 void formula_unfaith_magical_damage(void) {
     action_data_t* action;
 
-    if (formula_calculate_magical_evade() == 0) {
-        formula_store_ma_and_ma_plus_y_divided_by_two();
-        formula_apply_elemental_strengthen();
-        formula_apply_magical_support_status_compatibility();
-        if (formula_calculate_elemental_xa_times_ya() == 0) {
-            if (g_action_attacker->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FAITH)]
-                & STATUS_BYTE_MASK(STATUS_ID_FAITH)) {
-                g_action_current_ability.attacker_faith = 0;
-            }
-            if (g_action_attacker->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_INNOCENT)]
-                & STATUS_BYTE_MASK(STATUS_ID_INNOCENT)) {
-                g_action_current_ability.attacker_faith = 100;
-            }
-            if (g_action_target->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FAITH)]
-                & STATUS_BYTE_MASK(STATUS_ID_FAITH)) {
-                g_action_current_ability.target_faith = 0;
-            }
-            if (g_action_target->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_INNOCENT)]
-                & STATUS_BYTE_MASK(STATUS_ID_INNOCENT)) {
-                g_action_current_ability.target_faith = 100;
-            }
-            action = g_action_target_data;
-            action->hp_damage = action->hp_damage * (100 - g_action_current_ability.target_faith)
-                * (100 - g_action_current_ability.attacker_faith) / 10000;
-            if (formula_apply_elemental_absorption_and_status_proc() == 0) {
-                formula_apply_status();
-            }
-        }
+    if (formula_calculate_magical_evade() != 0) {
+        return;
+    }
+    formula_store_ma_and_ma_plus_y_divided_by_two();
+    formula_apply_elemental_strengthen();
+    formula_apply_magical_support_status_compatibility();
+    if (formula_calculate_elemental_xa_times_ya() != 0) {
+        return;
+    }
+    if (g_action_attacker->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FAITH)]
+        & STATUS_BYTE_MASK(STATUS_ID_FAITH)) {
+        g_action_current_ability.attacker_faith = 0;
+    }
+    if (g_action_attacker->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_INNOCENT)]
+        & STATUS_BYTE_MASK(STATUS_ID_INNOCENT)) {
+        g_action_current_ability.attacker_faith = 100;
+    }
+    if (g_action_target->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_FAITH)] & STATUS_BYTE_MASK(STATUS_ID_FAITH)) {
+        g_action_current_ability.target_faith = 0;
+    }
+    if (g_action_target->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_INNOCENT)]
+        & STATUS_BYTE_MASK(STATUS_ID_INNOCENT)) {
+        g_action_current_ability.target_faith = 100;
+    }
+    action = g_action_target_data;
+    action->hp_damage = action->hp_damage * (100 - g_action_current_ability.target_faith)
+        * (100 - g_action_current_ability.attacker_faith) / 10000;
+    if (formula_apply_elemental_absorption_and_status_proc() == 0) {
+        formula_apply_status();
     }
 }

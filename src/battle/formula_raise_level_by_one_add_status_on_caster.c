@@ -12,18 +12,16 @@ void formula_raise_level_by_one_add_status_on_caster(void) {
     action_data_t* saved_action;
     battle_stats_t* attacker;
     action_data_t* attacker_action;
-    s32 one;
 
     formula_apply_full_hp_mp_heal();
     formula_apply_undead_reversal();
-    one = 1;
     if (g_action_target->level >= UNIT_LEVEL_MAX) {
         g_action_target_data->attack_type = 0;
         formula_force_attack_miss();
         return;
     }
     action = g_action_target_data;
-    action->attack_type = one;
+    action->attack_type = ACTION_TYPE_PSEUDO_STATUS;
     saved_unit = g_action_target;
     saved_action = g_action_target_data;
     attacker = g_action_attacker;
@@ -32,7 +30,7 @@ void formula_raise_level_by_one_add_status_on_caster(void) {
     action->special_effect = ACTION_SPECIAL_EFFECT_LEVEL_UP;
     g_action_target = attacker;
     g_action_target_data = attacker_action;
-    attacker_action->hit = one;
+    attacker_action->hit = 1;
     formula_apply_status_to_action();
     g_action_target = saved_unit;
     g_action_target_data = saved_action;
