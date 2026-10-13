@@ -1148,9 +1148,9 @@ data:
   - {addr: 0x801c52c8, name: g_menu_indicator_state}
   - {addr: 0x801c52dc, name: g_debugchr_panel_selected_billboard}
   - {addr: 0x801c52e8, name: g_debugchr_editor_values}
-  - {addr: 0x801c52ec, name: g_debugchr_editor_first_maximum}
-  - {addr: 0x801c52f2, name: g_debugchr_editor_second_maximum}
-  - {addr: 0x801c52f8, name: g_debugchr_editor_third_maximum}
+  - {addr: 0x801c52ec, name: g_debugchr_editor_hp_max}
+  - {addr: 0x801c52f2, name: g_debugchr_editor_mp_max}
+  - {addr: 0x801c52f8, name: g_debugchr_editor_ct_max}
   - {addr: 0x801c5300, name: g_debugchr_panel_comparison_billboard}
   - {addr: 0x801c5324, name: g_debugchr_panel_selected_unit_data}
   - {addr: 0x801c5334, name: g_debugchr_panel_comparison_unit_data}

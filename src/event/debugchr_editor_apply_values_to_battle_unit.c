@@ -12,12 +12,12 @@ void debugchr_editor_apply_values_to_battle_unit(s32 unit_id) {
 
     unit = battle_unit_get_stats_from_battle_id(unit_id);
 
-    if (g_debugchr_editor_first_maximum < g_debugchr_editor_values[0])
-        g_debugchr_editor_values[0] = g_debugchr_editor_first_maximum;
-    if (g_debugchr_editor_second_maximum < g_debugchr_editor_values[3])
-        g_debugchr_editor_values[3] = g_debugchr_editor_second_maximum;
-    if (g_debugchr_editor_third_maximum < g_debugchr_editor_values[6])
-        g_debugchr_editor_values[6] = g_debugchr_editor_third_maximum;
+    if (g_debugchr_editor_hp_max < g_debugchr_editor_values[0])
+        g_debugchr_editor_values[0] = g_debugchr_editor_hp_max;
+    if (g_debugchr_editor_mp_max < g_debugchr_editor_values[3])
+        g_debugchr_editor_values[3] = g_debugchr_editor_mp_max;
+    if (g_debugchr_editor_ct_max < g_debugchr_editor_values[6])
+        g_debugchr_editor_values[6] = g_debugchr_editor_ct_max;
     unit->hp = g_debugchr_editor_values[0];
     unit->mp = g_debugchr_editor_values[3];
     unit->ct = g_debugchr_editor_values[6];
