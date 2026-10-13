@@ -7,6 +7,7 @@
  * that sets g_world_fixed_math_overflow on overflow) and moves the value along the resulting
  * control point. The locals span, frame and lead are reused across the
  * stages, as the target's register map requires. */
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 

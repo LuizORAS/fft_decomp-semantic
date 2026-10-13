@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_camera.h"
-#include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Advances one camera-track component by a frame and returns its new value.
