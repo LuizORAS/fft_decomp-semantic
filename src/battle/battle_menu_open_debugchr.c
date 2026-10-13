@@ -15,7 +15,7 @@ void battle_menu_open_debugchr(void) {
     battle_thread_wait_for_unit_view_panels();
     battle_thread_yield();
     battle_thread_yield();
-    debugchr_run_character_debug_session();
+    debugchr_editor_run_session();
     g_battle_menu_suspend_state = 0;
     g_battle_sound_suppressed = 0;
     g_battle_script_event_input = 0;

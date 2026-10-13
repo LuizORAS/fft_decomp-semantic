@@ -1,16 +1,24 @@
 #ifndef EVENT_DEBUGCHR_H
 #define EVENT_DEBUGCHR_H
 
-/* EVENT/DEBUGCHR.OUT: menu screen overlay that runs with BATTLE. */
+/* EVENT/DEBUGCHR.OUT: a debug editor of the battle units (level, experience, HP, MP, CT, Brave, Faith,
+ * zodiac sign, Move, Jump, Speed), which no menu row opens in retail, and the Status screen of a rider or
+ * a mount, which BATTLE draws with its panels (battle_menu_open_rider_status_screen). */
 
 #include "fft/battle.h"
 
 /* thread */
+/* The status indicator packets and the running-thread check. */
+
 extern battle_menu_status_panel_indicator_prims_t g_debugchr_thread_indicator_packets[2][2];
 
 s32 debugchr_thread_is_running(s32 thread_id);
 
 /* editor */
+/* The debug unit editor: its session, the editable fields and their value ranges (a normal unit's or
+ * a generic monster's), the values written back to the battle unit and the cursors; and the read-only
+ * Status screen of a rider or a mount (debugchr_editor_run_unit_thread). */
+
 /* Inclusive value range for one editable field row. */
 typedef struct debug_range {
     s32 lo; /* 0x00 */
@@ -72,44 +80,14 @@ void debugchr_editor_run_numeric_thread(void);
 void debugchr_editor_run_unit_thread(s32 unit_id);
 void debugchr_editor_apply_values_to_battle_unit(s32 unit_id);
 
-/* gfx */
-extern const u16 g_debugchr_gfx_draw_area_scale_percent[12];
-extern RECT g_debugchr_gfx_draw_area_template;
-extern u16 g_debugchr_gfx_draw_offset_y;
-extern RECT g_debugchr_gfx_portrait_origin;
-extern u8 g_debugchr_gfx_portrait_transition_offsets[];
-extern POLY_FT4 g_debugchr_gfx_render_buffers[2][30];
-extern u8 g_debugchr_gfx_scaled_sprite_count;
-extern point16_t g_debugchr_gfx_scaled_sprite_scale[];
-extern main_zodiac_sprite_frame_t g_debugchr_gfx_scaled_sprite_uv_rects[];
-extern world_image_location_t g_debugchr_gfx_scaled_sprite_texture_page;
-void debugchr_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
+extern u32* g_debugchr_input_controller;
 
-void debugchr_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
-    s32 scale_index, s32 lower_half, const world_status_thread_t* thread);
-
-void debugchr_gfx_build_status_group_primitives(POLY_FT4* poly);
-void debugchr_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
-void debugchr_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
-
-void debugchr_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const world_image_location_t* texture_page,
-    const RECT* position, main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
-
-void debugchr_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const world_image_location_t* texture,
-    const RECT* position, const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale,
-    const main_zodiac_draw_offset_t* offset);
-
-void debugchr_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
-void debugchr_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
-void debugchr_gfx_set_clut_rect_from_id(RECT* rect, s32 packed);
-
-void debugchr_menu_select_primitive_color_palette(
-    world_menu_palette_primitives_t* output, const world_status_thread_t* context);
-
-void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, u16* image, POLY_FT4* poly, s32 direction);
+void debugchr_editor_run_session(void);
 
 /* panel */
+/* The panels: the unit status banner thread and the character status panel, with the selected
+ * and comparison units' billboards, images, gauges and layouts. */
+
 extern battle_unit_status_record_t g_debugchr_panel_comparison_billboard;
 extern world_status_thread_t g_debugchr_status_display_thread_params;
 extern world_status_thread_t g_debugchr_numeric_editor_thread_params;
@@ -171,14 +149,56 @@ extern menu_number_entry_t g_debugchr_panel_comparison_numeric_entries[];
 extern CVECTOR g_debugchr_panel_gauge_bar_colors[];
 extern menu_number_entry_t g_debugchr_panel_selected_numeric_entries[];
 extern const world_image_location_t g_debugchr_panel_status_texture;
-void debugchr_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle_unit_status_record_t* output);
 
 void debugchr_panel_set_primitive_colors(
     battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state);
 
 void debugchr_panel_run_character_status_thread(void);
 
+extern RECT g_debugchr_character_status_frame_rect[];
+extern RECT g_debugchr_character_status_draw_area_rect;
+void debugchr_render_unit_status_panel_thread(void);
+
+/* gfx */
+/* Drawing: portraits and their cross-fade, the scaled status sprites, the frame tiles and lines, the
+ * gradient grid, draw areas and CLUT rectangles. */
+
+extern const u16 g_debugchr_gfx_draw_area_scale_percent[12];
+extern RECT g_debugchr_gfx_draw_area_template;
+extern u16 g_debugchr_gfx_draw_offset_y;
+extern RECT g_debugchr_gfx_portrait_origin;
+extern u8 g_debugchr_gfx_portrait_transition_offsets[];
+extern POLY_FT4 g_debugchr_gfx_render_buffers[2][30];
+extern u8 g_debugchr_gfx_scaled_sprite_count;
+extern point16_t g_debugchr_gfx_scaled_sprite_scale[];
+extern main_zodiac_sprite_frame_t g_debugchr_gfx_scaled_sprite_uv_rects[];
+extern world_image_location_t g_debugchr_gfx_scaled_sprite_texture_page;
+void debugchr_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
+
+void debugchr_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
+    s32 scale_index, s32 lower_half, const world_status_thread_t* thread);
+
+void debugchr_gfx_build_status_group_primitives(POLY_FT4* poly);
+void debugchr_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
+void debugchr_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
+
+void debugchr_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const world_image_location_t* texture_page,
+    const RECT* position, main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
+
+void debugchr_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const world_image_location_t* texture,
+    const RECT* position, const main_zodiac_sprite_frame_t* uv_rect, const point16_t* scale,
+    const main_zodiac_draw_offset_t* offset);
+
+void debugchr_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
+void debugchr_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
+void debugchr_gfx_set_clut_rect_from_id(RECT* rect, s32 packed);
+
+void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
+    const s32* first_portrait, const s32* second_portrait, u16* image, POLY_FT4* poly, s32 direction);
+
 /* text */
+/* Decimal numbers rendered into the panels' text images, and the string buffer. */
+
 extern battle_menu_status_panel_glyph_t g_debugchr_text_decimal_glyph;
 void debugchr_text_clear_string_buffer(u8* output);
 
@@ -191,16 +211,17 @@ void debugchr_text_render_signed_decimal_entries(
     u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* output, s32 count);
 
 /* menu */
+/* The menu primitives' colours, the status indicators' fade state, and the copy of a battle unit
+ * into a status billboard. */
+
+void debugchr_menu_select_primitive_color_palette(
+    world_menu_palette_primitives_t* output, const world_status_thread_t* context);
+
+void debugchr_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, battle_unit_status_record_t* output);
+
 extern s32 g_debugchr_menu_indicator_brightness[2];
 extern s32 g_debugchr_menu_indicator_fade_work[2];
 extern s32 g_debugchr_menu_indicator_packet_index[2];
 extern s32 g_debugchr_menu_indicator_state[2];
-
-/* other */
-extern u32* g_debugchr_input_controller;
-extern RECT g_debugchr_character_status_frame_rect[];
-extern RECT g_debugchr_character_status_draw_area_rect;
-void debugchr_render_unit_status_panel_thread(void);
-void debugchr_run_character_debug_session(void);
 
 #endif

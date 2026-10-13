@@ -2340,7 +2340,7 @@ imports:
   - {addr: 0x801c34b4, name: attack_load_scenario_conditionals}
   - {addr: 0x801c3d84, name: debugchr_editor_run_unit_thread}
   - {addr: 0x801c3f44, name: attack_deploy_run_screen}
-  - {addr: 0x801c438c, name: debugchr_run_character_debug_session}
+  - {addr: 0x801c438c, name: debugchr_editor_run_session}
   - {addr: 0x801c7fe4, name: attack_gfx_build_formation_sprites}
   - {addr: 0x801c8004, name: attack_gfx_load_portraits}
   - {addr: 0x801c9488, name: attack_text_build_deployment_strings}

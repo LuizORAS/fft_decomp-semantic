@@ -1,7 +1,33 @@
-/* Character debug session: pick a unit, then edit its fields with the pad.
+#include "fft/event_debugchr.h"
+#include "psx/libgpu.h"
+#include "psx/pad.h"
+#include "psx/types.h"
+
+/* Non-volatile view of debugchr.h's volatile array: volatile accesses change this function. */
+#define EDITOR_UNIT_IDS ((u8*)g_debugchr_editor_unit_ids)
+
+/* `index + base`, not `base + index`: GCC canonicalises a PLUS of two
+   registers, but a MINUS over a NEGATE keeps the source operand order, which
+   is the target's `addu rd,index,base` at the five primitive bases. */
+#define PRIM_AT(base, index) ((POLY_FT4*)((s32)((index) * sizeof(POLY_FT4)) - -(s32)(base)))
+
+/* Run the debug unit editor, which battle_menu_open_debugchr and world_menu_open_debugchr start for
+ * menu entry BATTLE_MENU_ID_DEBUGCHR (no menu row opens it in retail). Mark each battle unit that
+ * battle_unit_find_stats_by_entd_unit_id finds for its own unit id, load the first into the panels with
+ * the value ranges of a normal unit or of a generic monster (g_debugchr_editor_template_normal, _special),
+ * and start the status banner, numeric editor and character status threads.
+ * - Unit step: L1 and R1 step to the previous or next marked unit, Circle enters the field editor, Cross
+ *   stops the three threads and returns.
+ * - Field editor: the directional buttons move between the fields of g_debugchr_editor_fields (level,
+ *   experience, HP, MP, job, Brave, Faith, zodiac sign, Move, Jump, Speed, the five equipment slots and the
+ *   five ability rows); Circle starts or ends editing a field. While editing, Up or Right raises and Down or
+ *   Left lowers the value within its range, ten steps at a time with L1 held; each step is written to the
+ *   battle unit (debugchr_editor_apply_values_to_battle_unit) and read back, and a level step also applies
+ *   a level of growth (main_unit_apply_level_growth). Triangle empties an equipment field. Cross ends
+ *   editing, or goes back to the unit step.
+ * The job, equipment and ability fields do not keep their edits (QUIRKS.md).
  *
- * Matching notes (all barriers below are zero-instruction and each is
- * required):
+ * Matching notes (all barriers below are zero-instruction and each is required):
  *  - The step loops' `cur_u`/`cur_d` are separate single-set locals. Combine
  *    only splits `lh` into a fresh register plus a copy (the target's
  *    `lh v0; move a0,v0`) when the destination has no tracked nonzero bits;
@@ -11,24 +37,8 @@
  *    operands, the empty volatile asm in `prev_unit` and the two
  *    `"r"(clearable)` uses each fix a scheduling or allocation difference
  *    described where they appear.
- *  - `PRIM_AT` keeps the target's `addu rd,index,base` operand order.
- */
-#include "fft/event_debugchr.h"
-#include "psx/libgpu.h"
-#include "psx/pad.h"
-#include "psx/types.h"
-
-/* Non-volatile view of debugchr.h's volatile array: volatile accesses change this function. */
-#define EDITOR_UNIT_IDS ((u8*)g_debugchr_editor_unit_ids)
-
-void battle_thread_start(s32 thread_id, void (*function)(void));
-
-/* `index + base`, not `base + index`: GCC canonicalises a PLUS of two
-   registers, but a MINUS over a NEGATE keeps the source operand order, which
-   is the target's `addu rd,index,base` at the five primitive bases. */
-#define PRIM_AT(base, index) ((POLY_FT4*)((s32)((index) * sizeof(POLY_FT4)) - -(s32)(base)))
-
-void debugchr_run_character_debug_session(void) {
+ *  - `PRIM_AT` keeps the target's `addu rd,index,base` operand order. */
+void debugchr_editor_run_session(void) {
     s32 battle_id;
     help_navigation_record_t* field;
     s32* input;
