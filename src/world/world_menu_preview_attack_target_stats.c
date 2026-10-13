@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -16,8 +17,8 @@ void world_menu_preview_attack_target_stats(void) {
         != NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
         world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS);
     }
-    world_thread_yield();
-    world_thread_yield();
+    thread_yield();
+    thread_yield();
     saved = g_world_active_unit_data.battle_id;
     g_world_active_unit_data.battle_id = g_world_unit_comparison_battle_id;
     world_menu_load_selected_unit();

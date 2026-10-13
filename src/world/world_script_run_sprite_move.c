@@ -1,5 +1,6 @@
 #include "fft/battle_unit.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 /*
  * Sprite-move worker called by world_script_sprite_move (mode 0) and
  * world_script_sprite_move_beta (mode 1) with the script cursor: a unit
@@ -72,7 +73,7 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
         pos[1][i] <<= 8;
     }
     for (i = 1; i < total; i++) {
-        world_thread_yield();
+        thread_yield();
         for (j = 0; j < 3; j++) {
             delta = pos[1][j] - pos[0][j];
             if (curve == 0) {
@@ -138,6 +139,6 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
     vec.vz = pos[1][2] / 256;
     battle_unit_add_event_offset_by_runtime_id(runtime_id, &vec);
     if (total == 1) {
-        world_thread_yield();
+        thread_yield();
     }
 }

@@ -57,7 +57,7 @@ void attack_gfx_prepare_formation_sprites(void) {
     }
     LoadImage(&g_attack_formation_sheet_rect, (u32*)(buffer + 0x8000));
     if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
-        battle_thread_yield();
+        thread_yield();
     } else {
         DrawSync(0);
     }
@@ -181,7 +181,7 @@ void attack_gfx_prepare_formation_sprites(void) {
         g_attack_portrait_palette_upload_rect.h = 1;
         LoadImage(&g_attack_portrait_palette_upload_rect, (u32*)(buffer + offset));
         if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
-            battle_thread_yield();
+            thread_yield();
         } else {
             DrawSync(0);
         }

@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Fade g_require_gfx_fade_rgb linearly from its current value to eight times
@@ -25,6 +26,6 @@ void require_gfx_fade_rgb_31_frames(s32 target_0, s32 target_1, s32 target_2) {
             i++;
         } while (i < 3);
         frame++;
-        battle_thread_yield();
+        thread_yield();
     } while (frame < 31);
 }

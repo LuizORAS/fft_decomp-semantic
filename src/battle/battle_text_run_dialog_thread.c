@@ -324,9 +324,9 @@ void battle_text_run_dialog_thread(void) {
     win[0].active = 1;
     win[1].active = 1;
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
-        battle_menu_tween_window_quads(win, &from, &to, thread->task_words[5] & 0xF);
+        menu_tween_window_quads(win, &from, &to, thread->task_words[5] & 0xF);
     } else {
-        battle_menu_animate_window_quad_crop(win, &from, &to);
+        menu_animate_window_quad_crop(win, &from, &to);
     }
     window_u = win->quads[0].u0;
     rec.x = window_u + 8;
@@ -401,24 +401,24 @@ void battle_text_run_dialog_thread(void) {
                     column = 0;
                 }
                 if (no_wait == 0) {
-                    for (k = 0;; k += g_battle_event_speed) {
+                    for (k = 0;; k += g_script_event_speed) {
                         if (rec.box_type == DIALOG_BOX_TYPE_CENTERED && character != TEXT_PAGE_BREAK) {
                             for (k = 0x80; k > 0x30; k -= 8) {
-                                WINDOW_AT(g_battle_menu_packet_buffer_index)->color.r = k;
-                                WINDOW_AT(g_battle_menu_packet_buffer_index)->color.g = k;
-                                WINDOW_AT(g_battle_menu_packet_buffer_index)->color.b = k;
-                                battle_thread_yield();
+                                WINDOW_AT(g_menu_packet_buffer_index)->color.r = k;
+                                WINDOW_AT(g_menu_packet_buffer_index)->color.g = k;
+                                WINDOW_AT(g_menu_packet_buffer_index)->color.b = k;
+                                thread_yield();
                             }
                             break;
                         }
-                        battle_thread_yield();
+                        thread_yield();
                         if (g_script_event_input & (PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT)) {
                             break;
                         }
                         CHECK_ABORT();
                         if (character == TEXT_PAGE_BREAK) {
                             if (rec.box_type != DIALOG_BOX_TYPE_PORTRAIT) {
-                                cursor_window = WINDOW_AT(g_battle_menu_packet_buffer_index);
+                                cursor_window = WINDOW_AT(g_menu_packet_buffer_index);
                                 cursor_window->sprites[0].x0 = cursor_x
                                     + (cursor_window->quads[0].x0 + rec.x - cursor_window->quads[0].u0)
                                     + (s16)(((k >> 4) & 3) - 8);
@@ -433,16 +433,16 @@ void battle_text_run_dialog_thread(void) {
                                 g_battle_text_awaiting_input = 1;
                             }
                             if (character == TEXT_NEWLINE) {
-                                WINDOW_AT(g_battle_menu_packet_buffer_index)->sprites[2].u0 = (k & 0x30) - 0x58;
-                                WINDOW_AT(g_battle_menu_packet_buffer_index)->sprites[2].v0 = 0x10;
-                                arrow_window = WINDOW_AT(g_battle_menu_packet_buffer_index);
+                                WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].u0 = (k & 0x30) - 0x58;
+                                WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].v0 = 0x10;
+                                arrow_window = WINDOW_AT(g_menu_packet_buffer_index);
                                 arrow_window->sprites[2].x0 = rec.arrow_x;
                                 arrow_window->sprites[2].y0 = rec.arrow_y;
                             }
                             if (g_script_event_current_input & PSX_PAD_SQUARE) {
                                 while (1) {
                                     if (rec.line != rec.lines) {
-                                        scroll_window = WINDOW_AT(g_battle_menu_packet_buffer_index);
+                                        scroll_window = WINDOW_AT(g_menu_packet_buffer_index);
                                         scroll_window->scroll_range = rec.line - rec.lines;
                                         scroll_window->scroll_position = rec.first_line;
                                         scroll_window->icon_flags = MENU_WINDOW_ICON_SCROLL_MARKER;
@@ -451,13 +451,13 @@ void battle_text_run_dialog_thread(void) {
                                                 = MENU_WINDOW_ICON_SCROLL_UP | MENU_WINDOW_ICON_SCROLL_MARKER;
                                         }
                                         if (rec.first_line != rec.line - rec.lines) {
-                                            WINDOW_AT(g_battle_menu_packet_buffer_index)->icon_flags
+                                            WINDOW_AT(g_menu_packet_buffer_index)->icon_flags
                                                 |= MENU_WINDOW_ICON_SCROLL_DOWN;
                                         }
                                     }
                                     if ((g_script_event_input & PSX_PAD_UP) && rec.first_line != 0) {
                                         g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
-                                        WINDOW_AT(g_battle_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
+                                        WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                         rec.first_line += no_value;
                                         rec.last_line = rec.first_line + rec.lines;
                                         battle_menu_render_text_image_at_record_origin(&rec);
@@ -465,7 +465,7 @@ void battle_text_run_dialog_thread(void) {
                                     if ((g_script_event_input & PSX_PAD_DOWN)
                                         && rec.first_line != rec.line - rec.lines) {
                                         g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
-                                        WINDOW_AT(g_battle_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
+                                        WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                         rec.first_line++;
                                         rec.last_line = rec.first_line + rec.lines;
                                         battle_menu_render_text_image_at_record_origin(&rec);
@@ -474,15 +474,15 @@ void battle_text_run_dialog_thread(void) {
                                         break;
                                     }
                                     CHECK_ABORT();
-                                    WINDOW_AT(g_battle_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
-                                    battle_thread_yield();
+                                    WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
+                                    thread_yield();
                                 }
                                 win[0].icon_flags = 0;
                                 win[1].icon_flags = 0;
                             }
                             for (;;) {
                                 if (rec.line - rec.lines != rec.first_line) {
-                                    WINDOW_AT(g_battle_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
+                                    WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                     rec.first_line++;
                                     rec.last_line = rec.first_line + rec.lines;
                                     battle_menu_render_text_image_at_record_origin(&rec);
@@ -494,13 +494,13 @@ void battle_text_run_dialog_thread(void) {
                     }
                 }
                 g_battle_text_awaiting_input = 0;
-                hidden_window = WINDOW_AT(g_battle_menu_packet_buffer_index);
+                hidden_window = WINDOW_AT(g_menu_packet_buffer_index);
                 hidden_window->sprites[0].x0 = 0x200;
                 hidden_window->sprites[1].x0 = 0x200;
                 hidden_window->sprites[2].x0 = 0x200;
                 hidden_window->icon_flags = 0;
-                battle_thread_yield();
-                hidden_window_next = WINDOW_AT(g_battle_menu_packet_buffer_index);
+                thread_yield();
+                hidden_window_next = WINDOW_AT(g_menu_packet_buffer_index);
                 hidden_window_next->sprites[0].x0 = 0x200;
                 hidden_window_next->sprites[1].x0 = 0x200;
                 hidden_window_next->sprites[2].x0 = 0x200;
@@ -515,7 +515,7 @@ void battle_text_run_dialog_thread(void) {
                         if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                             goto end;
                         }
-                        battle_thread_yield();
+                        thread_yield();
                     }
                     win->message_id = win[1].message_id = rec.text = battle_thread_get_current_parameter_2();
                     if ((rec.text & no_value) == no_value) {
@@ -540,7 +540,7 @@ void battle_text_run_dialog_thread(void) {
                     saved = (u8*)-1;
                     repeat = 0;
                     win[1].portrait_code = rec.portrait;
-                    battle_thread_yield();
+                    thread_yield();
                     continue;
                 }
                 if (character == TEXT_PAGE_BREAK) {
@@ -551,7 +551,7 @@ void battle_text_run_dialog_thread(void) {
                         rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
                 } else if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
                     ClearImage(&rec.rect, 0, 0, 0);
-                    battle_thread_yield();
+                    thread_yield();
                     for (k = 0; k < 2; k++) {
                         win[k].color.r = 0x80;
                         win[k].color.g = 0x80;
@@ -564,7 +564,7 @@ void battle_text_run_dialog_thread(void) {
                     battle_menu_render_text_image_at_record_origin(&rec);
                 }
                 cursor_y = rec.y - 0x10;
-                battle_thread_yield();
+                thread_yield();
             }
             if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
                 event_id = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
@@ -595,16 +595,16 @@ void battle_text_run_dialog_thread(void) {
         } else if (character == TEXT_CHOICE_SELECT) {
             if (rec.mark != -1) {
                 selection = rec.mark;
-                for (i = 0;; i += g_battle_event_speed) {
+                for (i = 0;; i += g_script_event_speed) {
                     g_battle_text_awaiting_input = 1;
-                    select_window = WINDOW_AT(g_battle_menu_packet_buffer_index);
+                    select_window = WINDOW_AT(g_menu_packet_buffer_index);
                     select_window->sprites[0].x0
                         = mark_x + (select_window->quads[0].x0 + rec.x - select_window->quads[0].u0) - ((i >> 4) & 3);
                     select_window->sprites[0].y0
                         = (select_window->quads[0].y0 + rec.y - select_window->quads[0].v0) + selection * 16;
                     select_window->sprites[1].x0 = select_window->sprites[0].x0 + 2;
                     select_window->sprites[1].y0 = select_window->sprites[0].y0 + 2;
-                    battle_thread_yield();
+                    thread_yield();
                     if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                         goto end;
                     }
@@ -624,11 +624,11 @@ void battle_text_run_dialog_thread(void) {
                         break;
                     }
                 }
-                select_hidden_window = WINDOW_AT(g_battle_menu_packet_buffer_index);
+                select_hidden_window = WINDOW_AT(g_menu_packet_buffer_index);
                 select_hidden_window->sprites[0].x0 = 0x200;
                 select_hidden_window->sprites[1].x0 = 0x200;
-                battle_thread_yield();
-                select_hidden_window_next = WINDOW_AT(g_battle_menu_packet_buffer_index);
+                thread_yield();
+                select_hidden_window_next = WINDOW_AT(g_menu_packet_buffer_index);
                 select_hidden_window_next->sprites[0].x0 = 0x200;
                 select_hidden_window_next->sprites[1].x0 = 0x200;
                 g_script_variables[EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION] = selection - rec.mark;
@@ -642,7 +642,7 @@ void battle_text_run_dialog_thread(void) {
                 if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                     goto end;
                 }
-                battle_thread_yield();
+                thread_yield();
             }
             if (rec.no_box != 0) {
                 win->message_id = win[1].message_id = rec.text = battle_thread_get_current_parameter_2();
@@ -665,10 +665,10 @@ void battle_text_run_dialog_thread(void) {
                 saved = (u8*)-1;
                 repeat = 0;
                 g_battle_text_awaiting_input = 0;
-                battle_thread_yield();
+                thread_yield();
                 continue;
             }
-            battle_thread_yield();
+            thread_yield();
             NEXT();
             no_wait = 1;
         } else if (character == TEXT_RELEASE_WAITING_THREADS) {
@@ -679,7 +679,7 @@ void battle_text_run_dialog_thread(void) {
                     g_battle_thread_contexts[i].task_id = NATIVE_THREAD_TASK_RESUME;
                 }
             }
-            battle_thread_yield();
+            thread_yield();
             NEXT();
         } else if (character == TEXT_SET_PORTRAIT) {
             NEXT();
@@ -816,13 +816,13 @@ end:
         from.x = right;
         from.y = bottom;
         battle_copy_bytes(&to, &from, 8);
-        battle_menu_tween_window_quads(win, &from, &to, 4);
+        menu_tween_window_quads(win, &from, &to, 4);
     }
     g_battle_text_awaiting_input = 0;
     win->active = 0;
     battle_menu_release_window_buffer_pair(win);
     battle_gfx_free_tpage7_vram(&rec.rect);
     battle_menu_release_current_thread_slot();
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

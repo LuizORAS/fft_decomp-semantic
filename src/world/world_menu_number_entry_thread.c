@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -161,6 +162,6 @@ void world_menu_number_entry_thread(void) {
         world_gfx_draw_or_append_gpu_primitive(&record->sprites[0]);
         world_gfx_draw_or_append_gpu_primitive(record);
     }
-    world_thread_yield();
+    thread_yield();
     world_thread_exit_current();
 }

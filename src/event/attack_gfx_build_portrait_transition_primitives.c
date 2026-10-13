@@ -1,5 +1,6 @@
 #include "fft/event_attack.h"
 #include "fft/gfx.h"
+#include "fft/script.h"
 
 /*
  * Build the primitives of the status banner's portrait cross-fade. ATTACK
@@ -46,7 +47,7 @@ void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s
         gfx_set_clut_rect_from_id(&first_rect, poly->clut);
         StoreImage(&first_rect, (u32*)palettes[0]);
         StoreImage(&second_rect, (u32*)palettes[1]);
-        *transition += g_battle_event_speed;
+        *transition += g_script_event_speed;
     } else if (*transition < 10) {
         if (*transition == 4) {
             for (i = 0; i < 0x10; i++) {
@@ -98,6 +99,6 @@ void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s
         } else {
             gfx_clip_portrait_poly_from_right(poly, 0x1f - g_attack_gfx_portrait_transition_offsets[i + 8]);
         }
-        *transition += g_battle_event_speed;
+        *transition += g_script_event_speed;
     }
 }

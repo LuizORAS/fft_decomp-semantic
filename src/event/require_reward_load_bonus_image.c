@@ -16,13 +16,13 @@ void require_reward_load_bonus_image(s32 image_id) {
     s32 (*build_operation)(s32 sector, u32 size, void* destination);
 
     do {
-        battle_thread_yield();
+        thread_yield();
         allocation = main_heap_reserve_at(g_main_heap_high_overlay_load_address, 0x8000);
     } while (allocation != g_main_heap_high_overlay_load_address);
 
     build_operation = main_file_call_build_header;
     do {
-        battle_thread_yield();
+        thread_yield();
         g_thread_call_target = (void (*)(void))build_operation;
     } while (
         thread_call_on_main_stack(image_id * 13 + DISC_SECTOR_EVENT_BONUS_BIN, sizeof(*allocation), allocation) != 0);
@@ -30,7 +30,7 @@ void require_reward_load_bonus_image(s32 image_id) {
     {
         int (*poll_operation)(void) = main_file_is_still_loading;
         do {
-            battle_thread_yield();
+            thread_yield();
             g_thread_call_target = (void (*)(void))poll_operation;
         } while (thread_call_on_main_stack() != 0);
     }
@@ -38,6 +38,6 @@ void require_reward_load_bonus_image(s32 image_id) {
     /* The 256-row upload includes the reserved suffix beyond the 0x6800-byte file. */
     LoadImage(&g_require_reward_bonus_image_rect, allocation->pixels[0]);
     LoadImage(&g_require_reward_bonus_palette_rect, (u32*)allocation->palettes);
-    battle_thread_yield();
+    thread_yield();
     main_heap_free(allocation);
 }

@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -30,7 +31,7 @@ void world_menu_icon_strip_thread(void) {
             world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.pen);
             LoadImage(&rect, buffer);
         }
-        world_thread_yield();
+        thread_yield();
         if (fresh == 1) {
             world_menu_free_memory(buffer);
             fresh = 0;
@@ -42,6 +43,6 @@ void world_menu_icon_strip_thread(void) {
         world_menu_select_icon_cluts(&record->base);
         world_menu_submit_icon_primitives(&record->base);
     }
-    world_thread_yield();
+    thread_yield();
     world_thread_exit_current();
 }

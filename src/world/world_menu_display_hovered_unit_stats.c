@@ -1,6 +1,7 @@
 #include "fft/battle_unit.h"
 #include "fft/gfx.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -131,7 +132,7 @@ void world_menu_display_hovered_unit_stats(
             world_menu_free_memory(buffer);
             text_loaded = 0;
         }
-        for (i = 0; i < g_world_event_speed; i++) {
+        for (i = 0; i < g_script_event_speed; i++) {
             if (world_thread_get_current_parameter_3() != 0) {
                 /* Both exits leave the speed and frame loops for the exit tail. */
                 if (mode == UNIT_STATS_PANEL_HOVERED_UNIT
@@ -320,14 +321,14 @@ void world_menu_display_hovered_unit_stats(
         }
         world_menu_submit_numeric_display_frame_primitives(&page->palette);
         world_gfx_draw_or_append_gpu_primitive(&offs->a);
-        world_thread_yield();
+        thread_yield();
         g_world_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
         if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
             g_world_menu_hovered_stats_frame_count++;
         }
     }
 exit:
-    world_thread_yield();
+    thread_yield();
     if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
         g_world_menu_hovered_stats_frame_count = 0;
     }

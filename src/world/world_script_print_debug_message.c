@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
@@ -5,6 +6,6 @@
  * flag. */
 void world_script_print_debug_message(void) {
     FntPrint(g_world_script_pause_message);
-    world_thread_yield();
+    thread_yield();
     g_world_script_debug_paused = 1;
 }

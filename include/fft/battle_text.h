@@ -105,6 +105,5 @@ extern const char g_battle_text_heap_task_format[];    /* "TASK %d %x\n" */
 extern const char g_battle_text_min_heap_format[];     /* "MIN HEAP %x " */
 extern char g_battle_text_reading_character_message[]; /* "reading charactor%d \n" */
 extern char g_battle_text_wait_for_allocation_message[];
-extern char g_battle_text_wait_for_file_allocation_message[];
 
 #endif

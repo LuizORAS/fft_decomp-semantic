@@ -1,3 +1,5 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -25,13 +27,13 @@ void world_formation_view_zoom_thread(void) {
     for (frame = 0;; frame++) {
         g_world_formation_view.ot = g_world_formation_ordering_table;
         if (g_world_formation_view.scale_x > ONE) {
-            s32 step = g_world_event_speed << 8;
+            s32 step = g_script_event_speed << 8;
             g_world_formation_view.scale_x -= step;
             g_world_formation_view.scale_y -= step;
         }
         g_world_formation_view.brightness = g_world_menu_color_red;
         world_gfx_build_zodiac_primitives(&g_world_formation_view, g_world_formation_view_quads[frame & 1]);
-        world_thread_yield();
+        thread_yield();
         if (world_thread_get_current_parameter_3() != 0) {
             world_thread_exit_current();
         }

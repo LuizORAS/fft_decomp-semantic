@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/gfx.h"
+#include "fft/thread.h"
 /* Profile gcc-2.6.3_O2_aspsx-2.34_divcheck: the bar-width division at
  * 0x801c021c carries the full ASPSX checked-division expansion
  * (`bnez`/`break 0x7`, then the INT_MIN/-1 test and `break 0x6`) at
@@ -450,13 +451,13 @@ void debugchr_panel_run_unit_status_thread(void) {
             battle_menu_submit_numeric_display_frame_primitives(&panel->numeric_frame);
             battle_gfx_draw_or_append_gpu_primitive(&panel->draw_offset_a);
         }
-        battle_thread_yield();
+        thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {
             break;
         }
         frame++;
     }
-    battle_thread_yield();
+    thread_yield();
     battle_gfx_free_tpage7_vram(&rects[0]);
     battle_gfx_free_tpage7_vram(&rects[1]);
     battle_gfx_free_tpage7_vram(&rects[2]);

@@ -181,7 +181,7 @@ restart_script:
                     battle_menu_request_open_companion_executable(COMPANION_OVERLAY_CARD);
                     g_battle_companion_overlay_state = COMPANION_OVERLAY_STATE_CARD_SAVE;
                     do {
-                        battle_thread_yield();
+                        thread_yield();
                     } while (g_battle_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
                     script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 0);
                     operand_1 = 2;
@@ -221,7 +221,7 @@ restart_script:
                 script_set_specialized_map_destroyed();
                 if (g_map_destruction_wait_state != 0) {
                     do {
-                        battle_thread_yield();
+                        thread_yield();
                     } while (g_map_destruction_wait_state != 0);
                 }
             }
@@ -240,10 +240,10 @@ restart_script:
                 battle_gfx_load_unit_graphics_by_battle_id(8, 1U);
                 g_battle_unit_graphics_load_pending = 1;
                 do {
-                    battle_thread_yield();
+                    thread_yield();
                 } while (g_battle_unit_graphics_load_pending != 0);
-                battle_thread_yield();
-                battle_thread_yield();
+                thread_yield();
+                thread_yield();
             }
             if (operand_1 == EVENT_CALL_FUNCTION_RESET_BETHLA_REGION_UNIT_GRAPHICS) {
                 region_runtime_id = 0;
@@ -273,10 +273,10 @@ restart_script:
                 battle_gfx_load_unit_graphics_by_battle_id(7, 1U);
                 g_battle_unit_graphics_load_pending = 1U;
                 do {
-                    battle_thread_yield();
+                    thread_yield();
                 } while (g_battle_unit_graphics_load_pending != 0);
-                battle_thread_yield();
-                battle_thread_yield();
+                thread_yield();
+                thread_yield();
             }
             if ((operand_1 - EVENT_CALL_FUNCTION_WARP_UNIT_4_DISPLAY_TO_UNIT_2_POSITION_AND_FACING) < 2U) {
                 script_warp_unit_display_to_paired_unit(operand_1);
@@ -294,12 +294,12 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_END || opcode == EVENT_OPCODE_END_2) {
             map_wait_for_refresh();
             do {
-                battle_thread_yield();
+                thread_yield();
             } while (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_EVENT_BLOCK) != 0);
             do {
-                battle_thread_yield();
+                thread_yield();
             } while (main_file_is_still_loading() != 0);
-            battle_thread_yield();
+            thread_yield();
             if (script_is_tutorial_event_slot() != 0) {
                 battle_gfx_ramp_screen_overlay_intensity_to_max();
                 g_main_game_options = g_battle_saved_game_options;
@@ -396,7 +396,7 @@ restart_script:
             message_cursor += instruction_offset;
             g_battle_thread_contexts[operand_1].task_words[5]
                 = ((event_display_message_instruction_t*)message_cursor)->window_options;
-            battle_thread_yield();
+            thread_yield();
         } else if (opcode == EVENT_OPCODE_CHANGE_DIALOG) {
             for (work_index = 0; work_index < 6; work_index += 2) {
                 operand_2 = g_battle_menu_window_buffers[work_index].thread_id;
@@ -425,21 +425,21 @@ restart_script:
             g_battle_3d_object_use_request = 1;
             g_battle_event_3d_object_id = operand_1;
             g_battle_event_3d_object_state = operand_2;
-            battle_thread_yield();
+            thread_yield();
         } else if (opcode == EVENT_OPCODE_WAIT_3D_OBJECT) {
             g_battle_3d_object_wait_status = 1;
             do {
-                battle_thread_yield();
+                thread_yield();
             } while (g_battle_3d_object_wait_status != 0);
         } else if (opcode == EVENT_OPCODE_USE_FIELD_OBJECT) {
             g_battle_field_object_use_request = 1;
             g_battle_event_map_command_83_arg1 = operand_1;
             g_battle_event_map_command_83_arg2 = operand_2;
-            battle_thread_yield();
+            thread_yield();
         } else if (opcode == EVENT_OPCODE_WAIT_FIELD_OBJECT) {
             g_battle_field_object_wait_status = 1;
             do {
-                battle_thread_yield();
+                thread_yield();
             } while (g_battle_field_object_wait_status != 0);
         }
         /* ---- Unit sprites and animation ---- */
@@ -484,12 +484,12 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_RELOAD_MAP_STATE) {
             g_map_reload_state = 1;
             do {
-                battle_thread_yield();
+                thread_yield();
             } while (g_map_reload_state != 0);
         } else if (opcode == EVENT_OPCODE_APPEND_MAP_STATE) {
             g_map_append_state = 1;
             do {
-                battle_thread_yield();
+                thread_yield();
             } while (g_map_append_state != 0);
         } else if (opcode == EVENT_OPCODE_PAUSE) {
             script_pause_event_instruction();
@@ -520,7 +520,7 @@ restart_script:
             battle_thread_wait_frames(2);
         } else if (opcode == EVENT_OPCODE_EFFECT_START) {
             do {
-                battle_thread_yield();
+                thread_yield();
                 g_thread_call_target = (void (*)(void))effect_try_init_data;
             } while (thread_call_on_main_stack() != 0);
         } else if (opcode == EVENT_OPCODE_EFFECT_END) {
@@ -570,11 +570,11 @@ restart_script:
             }
         } else if (opcode == EVENT_OPCODE_WAIT_ALL_UNIT_MOVEMENT) {
             do {
-                battle_thread_yield();
+                thread_yield();
             } while (battle_unit_is_moving(-1) != 0);
         } else if (opcode == EVENT_OPCODE_WAIT_FILE_LOAD) {
             do {
-                battle_thread_yield();
+                thread_yield();
             } while (main_file_is_still_loading() != 0);
         } else if (opcode == EVENT_OPCODE_ROTATE_UNIT) {
             script_rotate_unit((const event_rotate_unit_parameters_t*)parameters);
@@ -712,16 +712,16 @@ restart_script:
             g_sound_music_switch_request = operand_1;
             g_battle_event_music_switch_volume = operand_2;
             g_battle_event_music_switch_fade = operand_3;
-            battle_thread_yield();
+            thread_yield();
         } else if (opcode == EVENT_OPCODE_FADE_SOUND) {
             /* Matching limitation: target sllv masks its count to five bits.
              * An explicit &31 adds an instruction with GCC 2.6.3, so counts
              * above 31 remain undefined in C; no script restriction is proven. */
             g_sound_music_volume_transition_request = operand_2 << (operand_1 + 0x10);
-            battle_thread_yield();
+            thread_yield();
         } else if (opcode == EVENT_OPCODE_END_TRACK) {
             g_sound_music_unload_slot_request = operand_1;
-            battle_thread_yield();
+            thread_yield();
         }
         /* ---- EVTCHR and reserved VRAM slots ---- */
         else if (opcode == EVENT_OPCODE_LOAD_EVTCHR) {
@@ -729,22 +729,22 @@ restart_script:
             battle_thread_start(operand_2, battle_gfx_load_evtchr_thread);
             battle_thread_set_parameters(
                 operand_2, operand_1, script_read_s16(instruction_offset + ((u8*)g_battle_event_block) + 2), 0);
-            battle_thread_yield();
+            thread_yield();
         } else if (opcode == EVENT_OPCODE_LOAD_EVTCHR_CLEAR) {
             g_battle_event_pending_loaded_evtchr_clear_slot = operand_1;
-            battle_thread_yield();
+            thread_yield();
         } else if (opcode == EVENT_OPCODE_SAVE_EVTCHR) {
             g_battle_event_pending_evtchr_save_slot = operand_1;
-            battle_thread_yield();
+            thread_yield();
         } else if (opcode == EVENT_OPCODE_SAVE_EVTCHR_CLEAR) {
             g_battle_event_pending_saved_evtchr_clear_slot = operand_1;
-            battle_thread_yield();
+            thread_yield();
         } else if (opcode == EVENT_OPCODE_COPY_UNIT_GRAPHICS_TO_RESERVED_VRAM_SLOT) {
             g_battle_event_pending_unit_vram_copy = (script_resolve_runtime_id(first_operand) << 8) | operand_3;
-            battle_thread_yield();
+            thread_yield();
         } else if (opcode == EVENT_OPCODE_RELEASE_RESERVED_VRAM_SLOT) {
             g_battle_event_pending_reserved_vram_release_slot = operand_1;
-            battle_thread_yield();
+            thread_yield();
         } else if (opcode == EVENT_OPCODE_UNKNOWN_E0) {
         }
         /* ---- Adding and removing units ---- */
@@ -753,7 +753,7 @@ restart_script:
             if (remove_unit_runtime_id != EVENT_RUNTIME_ID_NONE) {
                 work_index = remove_unit_runtime_id;
                 while (battle_unit_is_moving(work_index) != 0) {
-                    battle_thread_yield();
+                    thread_yield();
                 }
                 if (work_index != EVENT_RUNTIME_ID_NONE) {
                     operand_1 = battle_unit_get_battle_id_by_runtime_id(work_index);
@@ -841,11 +841,11 @@ restart_script:
             unit->position.facing = position_instruction->placement.facing;
         } else if (opcode == EVENT_OPCODE_WAIT_ADD_UNIT) {
             do {
-                battle_thread_yield();
+                thread_yield();
             } while (g_battle_unit_graphics_load_pending != 0);
         } else if (opcode == EVENT_OPCODE_WAIT_ADD_UNIT_END) {
             do {
-                battle_thread_yield();
+                thread_yield();
             } while (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_ADD_UNIT) != 0);
         } else if (opcode == EVENT_OPCODE_ADD_UNIT_START) {
             operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
@@ -862,7 +862,7 @@ restart_script:
             operand_3 = (operand_2 << 8) + operand_1;
             threads = g_battle_thread_contexts;
         wait_matching_task:
-            battle_thread_yield();
+            thread_yield();
             for (work_index = 1; work_index < 0x10; work_index++) {
                 /* Typed indexing reverses the target addu operands; keep the 32-bit address sum. */
                 thread = (native_thread_t*)((work_index * sizeof(native_thread_t)) + (u32)threads);
@@ -874,7 +874,7 @@ restart_script:
                 goto wait_matching_task;
             }
         } else if (opcode == EVENT_OPCODE_YIELD) {
-            battle_thread_yield();
+            thread_yield();
         } else if (opcode == EVENT_OPCODE_WAIT) {
             if (script_is_tutorial_event_slot() != 0 && first_operand >= 3) {
                 battle_thread_wait_frames(first_operand / battle_state_get_animation_speed());
@@ -883,7 +883,7 @@ restart_script:
             }
         } else if (opcode == EVENT_OPCODE_TUTORIAL_BUTTON_WAIT) {
             do {
-                battle_thread_yield();
+                thread_yield();
             } while (!(first_operand & g_script_unfiltered_controller_input));
         } else if (opcode == EVENT_OPCODE_END_SOUND) {
             main_sound_stop_weather_sfx_music();
@@ -943,9 +943,9 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_UNIT_ANIM_ROTATE) {
             script_unit_animation_rotate_event_instruction((const event_unit_anim_rotate_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_GRAPHIC_PRINT) {
-            battle_thread_yield();
+            thread_yield();
             do {
-                battle_thread_yield();
+                thread_yield();
                 operand_1 = battle_thread_find_running_by_task(NATIVE_THREAD_TASK_SHOW_GRAPHIC);
             } while (operand_1 != 0 && g_battle_thread_contexts[operand_1].function_parameter_4 == 0);
         } else if (opcode == EVENT_OPCODE_LOCK_MENU_INPUT) {
@@ -954,7 +954,7 @@ restart_script:
             while (g_battle_cursor_x != operand_1 || g_battle_cursor_y != operand_2
                 || ((confirm_buttons = g_script_unfiltered_controller_input) & PSX_PAD_CIRCLE) == 0
                 || (confirm_buttons & (PSX_PAD_UP | PSX_PAD_RIGHT | PSX_PAD_DOWN | PSX_PAD_LEFT)) != 0) {
-                battle_thread_yield();
+                thread_yield();
             }
         }
         /* ---- Map title, dates, teleports, and status ---- */

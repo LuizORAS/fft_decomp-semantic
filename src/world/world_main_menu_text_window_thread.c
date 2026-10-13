@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -94,7 +95,7 @@ void world_main_menu_text_window_thread(void) {
                 sizeof(g_text_substitution_values));
             LoadImage(&rect, buffer);
         }
-        world_thread_yield();
+        thread_yield();
         if (phase == 0) {
             world_menu_free_memory(buffer);
         }
@@ -142,6 +143,6 @@ void world_main_menu_text_window_thread(void) {
         world_gfx_draw_or_append_gpu_primitive(&record->text_sprite);
         world_gfx_draw_or_append_gpu_primitive(&record->text_draw_mode);
     }
-    world_thread_yield();
+    thread_yield();
     world_thread_exit_current();
 }

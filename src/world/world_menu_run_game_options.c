@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -160,7 +161,7 @@ void world_menu_run_game_options(void) {
     g_world_options_menu_window_rect.h += 0xC;
     g_world_options_menu_window_rect.y -= 2;
     world_thread_set_parameters(g_world_thread_current_id + 1, (s32)&g_world_options_menu_window_rect, 0, 0);
-    world_thread_yield();
+    thread_yield();
     world_menu_init_sprite(&base->value);
     world_text_configure_sprite_vram(&g_world_options_menu_value_rect, 0x3C, 0x10, &base->value, 0);
     base->value.x0 = entry->window.x + 0x5C;
@@ -249,7 +250,7 @@ void world_menu_run_game_options(void) {
                 buffer, &g_world_menu_text_state.pen);
             LoadImage(&g_world_options_menu_value_rect, (u32*)buffer);
         }
-        world_thread_yield();
+        thread_yield();
         if (world_menu_check_thread_completion(input0) != 0) {
             break;
         }
@@ -262,7 +263,7 @@ void world_menu_run_game_options(void) {
         page->icons.base.sprites[1].y0 += 2;
         page->icons.base.sprites[2].y0 += 2;
         entry->selected_index = row_offset + cursor;
-        if ((g_world_event_speed == 1 && !(world_input_get_menu_repeat_counter() & 1)) || g_world_event_speed == 2) {
+        if ((g_script_event_speed == 1 && !(world_input_get_menu_repeat_counter() & 1)) || g_script_event_speed == 2) {
             if (timer < g_main_menu_scroll_accel_delay) {
                 step = g_main_menu_scroll_slow_step * 2;
             } else {
@@ -270,7 +271,7 @@ void world_menu_run_game_options(void) {
             }
             accum += delta * step;
         }
-        timer += g_world_event_speed;
+        timer += g_script_event_speed;
         frame = &page->frame;
         if (accum < -0xF || accum > 0xF) {
             ring += delta;
@@ -278,7 +279,7 @@ void world_menu_run_game_options(void) {
             repeat = world_input_get_menu_repeat_counter();
             delta = 0;
             accum = 0;
-            if (repeat >= g_main_input_repeat_initial_delay / g_world_event_speed) {
+            if (repeat >= g_main_input_repeat_initial_delay / g_script_event_speed) {
                 *input0 |= *input1 & (PSX_PAD_UP | PSX_PAD_DOWN);
             }
         }

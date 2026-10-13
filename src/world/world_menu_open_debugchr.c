@@ -1,4 +1,5 @@
 #include "fft/event_debugchr.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Thread body that runs the DEBUGCHR character debug session from a WORLD
@@ -12,8 +13,8 @@ void world_menu_open_debugchr(void) {
     world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
     world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
     world_thread_wait_for_unit_view_panels();
-    world_thread_yield();
-    world_thread_yield();
+    thread_yield();
+    thread_yield();
     debugchr_editor_run_session();
     g_world_menu_overlay_state = 0;
     g_world_menu_sound_muted = 0;

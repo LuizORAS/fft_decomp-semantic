@@ -7,7 +7,7 @@
  * task id becomes the stop request. */
 void script_pause_event_instruction(void) {
     do {
-        battle_thread_yield();
+        thread_yield();
         if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
             return;
         }

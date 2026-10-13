@@ -4,6 +4,7 @@
 #include "fft/event_require.h"
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -85,12 +86,12 @@ s32 require_party_select_unit_to_remove(void) {
     g_require_status_display_redraw_request = 1;
     g_require_numeric_editor_redraw_request = 1;
     g_require_character_status_redraw_request = 1;
-    battle_thread_yield();
+    thread_yield();
     battle_thread_start(REQUIRE_THREAD_SLOT_TRANSITION, require_gfx_run_suspended_thread_transition);
     battle_thread_set_parameters(REQUIRE_THREAD_SLOT_TRANSITION, 0, 0, 0);
     g_battle_screen_fade = 0xff;
     do {
-        battle_thread_yield();
+        thread_yield();
         g_battle_screen_fade -= 0x10;
     } while (g_battle_screen_fade > 0);
     g_battle_screen_fade = 0;
@@ -144,7 +145,7 @@ s32 require_party_select_unit_to_remove(void) {
         for (;;) {
             s32 helpmenu_thread;
 
-            battle_thread_yield();
+            thread_yield();
             g_menu_input_controller = script_get_controller_input_pointer(0);
             if (*g_menu_input_controller & PSX_PAD_SELECT) {
                 helpmenu_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
@@ -283,7 +284,7 @@ s32 require_party_select_unit_to_remove(void) {
     require_panel_set_transition_value(0);
     g_battle_screen_fade = 0;
     do {
-        battle_thread_yield();
+        thread_yield();
         g_battle_screen_fade += 0x10;
     } while (g_battle_screen_fade < 0x100);
     g_battle_screen_fade = 0xff;

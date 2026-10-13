@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_event.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 
 /*
  * Build the status banner's unit portrait cross-fade.
@@ -45,7 +46,7 @@ void menu_build_unit_portrait_transition(const RECT* texture_rect, s32* transiti
         gfx_set_clut_rect_from_id(&first_rect, poly->clut);
         StoreImage(&first_rect, (u32*)palettes[0]);
         StoreImage(&second_rect, (u32*)palettes[1]);
-        *transition += g_battle_event_speed;
+        *transition += g_script_event_speed;
     } else if (*transition < 10) {
         if (*transition == 4) {
             for (i = 0; i < 0x10; i++) {
@@ -97,6 +98,6 @@ void menu_build_unit_portrait_transition(const RECT* texture_rect, s32* transiti
         } else {
             gfx_clip_portrait_poly_from_right(poly, 0x1f - g_menu_portrait_transition_offsets[i + 8]);
         }
-        *transition += g_battle_event_speed;
+        *transition += g_script_event_speed;
     }
 }

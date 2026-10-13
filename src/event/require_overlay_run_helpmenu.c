@@ -1,6 +1,7 @@
 #include "fft/event_helpmenu.h"
 #include "fft/event_require.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Thread body that runs the HELPMENU overlay from the REQUIRE screen: waits
@@ -16,7 +17,7 @@ void require_overlay_run_helpmenu(void) {
     g_menu_panel_status_animation[1] = 1;
     while (
         main_heap_reserve_at(g_main_heap_high_overlay_load_address, 0x10000) != g_main_heap_high_overlay_load_address) {
-        battle_thread_yield();
+        thread_yield();
     }
     battle_menu_request_open_companion_executable(COMPANION_OVERLAY_HELPMENU);
     thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);

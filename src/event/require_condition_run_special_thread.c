@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -85,7 +86,7 @@ void require_condition_run_special_thread(void) {
                 battle_gfx_draw_or_append_gpu_primitive(poly);
             }
         }
-        battle_thread_yield();
+        thread_yield();
         scale += 8;
     }
     for (;;) {
@@ -113,7 +114,7 @@ void require_condition_run_special_thread(void) {
                 battle_gfx_draw_or_append_gpu_primitive(poly);
             }
         }
-        battle_thread_yield();
+        thread_yield();
     }
 fade_out:
     scale = 0x80;
@@ -139,10 +140,10 @@ fade_out:
                 battle_gfx_draw_or_append_gpu_primitive(poly);
             }
         }
-        battle_thread_yield();
+        thread_yield();
         scale -= 0xc;
     } while (scale >= 0x30);
 done:
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

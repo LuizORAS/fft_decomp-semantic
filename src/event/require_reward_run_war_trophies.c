@@ -1,5 +1,6 @@
 #include "fft/event_require.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -44,7 +45,7 @@ void require_reward_run_war_trophies(void) {
     for (start = 0; start < g_require_reward_war_trophy_entry_count; start += 8) {
         row = 0;
         ClearImage(&g_require_reward_war_trophy_clear_rect, 0, 0, 0);
-        battle_thread_yield();
+        thread_yield();
         buffer = g_require_reward_war_trophy_primitives;
         battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_mode, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
         for (i = 0; i < 16; i++) {
@@ -104,7 +105,7 @@ void require_reward_run_war_trophies(void) {
                 loaded = 1;
                 LoadImage(&g_require_reward_war_trophy_image_rect, (u32*)image);
             }
-            battle_thread_yield();
+            thread_yield();
             if (loaded) {
                 battle_menu_free_memory(image);
                 loaded = 0;

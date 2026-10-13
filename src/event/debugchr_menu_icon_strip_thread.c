@@ -1,4 +1,5 @@
 #include "fft/event_debugchr.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Menu window thread without a cursor: rebuilds the text image every seventh
@@ -36,7 +37,7 @@ void debugchr_menu_icon_strip_thread(void) {
                 state->text_id, render, (glyph_blit_t*)(stride - offsetof(glyph_blit_t, stride) / sizeof(*stride)));
             LoadImage(&rect, (u32*)render);
         }
-        battle_thread_yield();
+        thread_yield();
         if (redraw == 1) {
             battle_menu_free_memory(render);
             redraw = 0;
@@ -49,6 +50,6 @@ void debugchr_menu_icon_strip_thread(void) {
         battle_menu_submit_icon_primitives(frame_pair);
         frame++;
     }
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

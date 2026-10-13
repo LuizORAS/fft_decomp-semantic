@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -152,11 +153,11 @@ void world_menu_run_numeric_editor_thread(void) {
         if (frame < 13) {
             world_gfx_draw_or_append_gpu_primitive(&buffer->portrait);
         }
-        world_thread_yield();
+        thread_yield();
         if (world_thread_get_current_parameter_3() != 0) {
             break;
         }
     }
-    world_thread_yield();
+    thread_yield();
     world_thread_exit_current();
 }

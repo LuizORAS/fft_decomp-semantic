@@ -1,3 +1,5 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -37,11 +39,11 @@ void world_menu_icon_timed_thread(void) {
     world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.pen);
     LoadImage(&rect, buffer);
     for (;; i++) {
-        world_thread_yield();
+        thread_yield();
         if (i == 0) {
             world_menu_free_memory(buffer);
         }
-        if (g_world_text_message_duration_frames < i * g_world_event_speed) {
+        if (g_world_text_message_duration_frames < i * g_script_event_speed) {
             hold = 0;
             g_world_menu_new_button_input = PSX_PAD_CIRCLE;
             g_world_menu_sound_muted = 1;
@@ -66,7 +68,7 @@ void world_menu_icon_timed_thread(void) {
     }
     g_world_menu_panel_fade_intensity = 0;
     g_world_menu_sound_muted = 0;
-    world_thread_yield();
+    thread_yield();
     if (world_thread_get_current_parameter_2() == 0) {
         world_thread_exit_current();
     }

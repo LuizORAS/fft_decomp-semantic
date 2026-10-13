@@ -63,7 +63,7 @@ void script_add_unit_start_thread(void) {
                 }
             }
             while (1) {
-                battle_thread_yield();
+                thread_yield();
                 if (g_battle_unit_graphics_load_pending == 0) {
                     break;
                 }

@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -50,7 +51,7 @@ void world_menu_run_numeric_display_panel_thread(void) {
     world_menu_init_numeric_display_frame_primitives(&g_world_numeric_display_frame_rect, record[0].palette);
     world_menu_init_numeric_display_frame_primitives(&g_world_numeric_display_frame_rect, record[1].palette);
     for (frame = 0;; frame++) {
-        world_thread_yield();
+        thread_yield();
         record = &records[frame & 1];
         world_gfx_build_scaled_draw_area_pair_swapped(
             &record->draw_areas, &g_world_numeric_display_texture_window, frame, g_main_gfx_screen_polarity);
@@ -86,6 +87,6 @@ void world_menu_run_numeric_display_panel_thread(void) {
         world_menu_submit_numeric_display_frame_primitives(record->palette);
         world_gfx_draw_or_append_gpu_primitive(&record->draw_areas.areas[0]);
     }
-    world_thread_yield();
+    thread_yield();
     world_thread_exit_current();
 }

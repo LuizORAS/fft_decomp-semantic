@@ -1,6 +1,9 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_script.h"
 #include "fft/event_card.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -50,7 +53,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
         g_card_input_event = ~previous_input & input;
         g_card_input_initial_repeat_counter = 0;
     } else {
-        initial_delay = g_main_input_repeat_initial_delay / g_battle_event_speed;
+        initial_delay = g_main_input_repeat_initial_delay / g_script_event_speed;
         counter = ++g_card_input_initial_repeat_counter;
         if (counter == initial_delay) {
             g_card_input_event = filtered_input;
@@ -58,7 +61,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
         if (counter >= initial_delay) {
             counter = ++g_card_input_repeat_counter;
             g_card_input_secondary_repeat_counter++;
-            repeat_delay = g_main_input_repeat_period / g_battle_event_speed;
+            repeat_delay = g_main_input_repeat_period / g_script_event_speed;
             if (counter >= repeat_delay) {
                 g_card_input_repeat_counter = 0;
                 if ((input & PSX_PAD_SQUARE) != 0) {
@@ -67,7 +70,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
                     g_card_input_event = input & (PSX_PAD_UP | PSX_PAD_RIGHT | PSX_PAD_DOWN | PSX_PAD_LEFT);
                 }
             }
-            secondary_delay = g_main_input_secondary_repeat_period / g_battle_event_speed;
+            secondary_delay = g_main_input_secondary_repeat_period / g_script_event_speed;
             if (g_card_input_secondary_repeat_counter >= secondary_delay) {
                 g_card_input_secondary_repeat_counter = 0;
                 if ((g_card_input_current & PSX_PAD_SQUARE) != 0) {
@@ -95,7 +98,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
         thread_id++;
     } while (thread_id < 16);
 
-    battle_thread_yield();
+    thread_yield();
     thread_id = 1;
     do {
         status = g_card_thread_status_snapshot[thread_id];
@@ -109,7 +112,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
         g_battle_event_input_suppression_frames--;
     }
     g_battle_event_frame_counter++;
-    g_battle_menu_packet_buffer_index = (g_battle_menu_packet_buffer_index + 1) & 1;
+    g_menu_packet_buffer_index = (g_menu_packet_buffer_index + 1) & 1;
     if (g_battle_menu_input_block_frames != 0) {
         g_battle_menu_input_block_frames--;
     }

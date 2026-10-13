@@ -1,4 +1,5 @@
 #include "fft/battle_menu.h"
+#include "fft/script.h"
 /* Run the help menu over the REQUIRE screen. */
 #include "fft/battle_script.h"
 #include "fft/event_helpmenu.h"
@@ -156,7 +157,7 @@ void helpmenu_menu_run_require_help(void) {
         } else {
             bob = battle_menu_get_cursor_bob_offset(0);
         }
-        self->task_words[0] += g_battle_event_speed;
+        self->task_words[0] += g_script_event_speed;
         bob -= 4;
         buffer = frame & 1;
         if (entry->vertical_cursor != 0) {

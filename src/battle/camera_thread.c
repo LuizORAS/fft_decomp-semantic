@@ -2,6 +2,7 @@
 #include "fft/battle_camera.h"
 #include "fft/battle_script.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 #define ABS(x) (x < 0 ? -(x) : x)
@@ -157,7 +158,7 @@ void camera_thread(void) {
             *variable = value;
         }
         camera_clear_zoom_variable_low_bit();
-        battle_thread_yield();
+        thread_yield();
     }
 
     if (g_camera_position_locked == 0) {
@@ -173,6 +174,6 @@ void camera_thread(void) {
         }
     }
     camera_clear_zoom_variable_low_bit();
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

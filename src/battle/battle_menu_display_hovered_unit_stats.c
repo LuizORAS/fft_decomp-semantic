@@ -6,6 +6,7 @@
 #include "fft/battle_unit.h"
 #include "fft/gfx.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -135,7 +136,7 @@ void battle_menu_display_hovered_unit_stats(
             battle_menu_free_memory(buffer);
             text_loaded = 0;
         }
-        for (i = 0; i < g_battle_event_speed; i++) {
+        for (i = 0; i < g_script_event_speed; i++) {
             if (battle_thread_get_current_parameter_3() != 0) {
                 if (mode == UNIT_STATS_PANEL_HOVERED_UNIT
                     && g_battle_thread_contexts[NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS].task_id
@@ -325,14 +326,14 @@ void battle_menu_display_hovered_unit_stats(
         }
         battle_menu_submit_numeric_display_frame_primitives(&page->palette);
         battle_gfx_draw_or_append_gpu_primitive(&offs->a);
-        battle_thread_yield();
+        thread_yield();
         g_battle_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
         if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
             g_battle_menu_hovered_stats_frame_count++;
         }
     }
 exit:
-    battle_thread_yield();
+    thread_yield();
     if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
         g_battle_menu_hovered_stats_frame_count = 0;
     }

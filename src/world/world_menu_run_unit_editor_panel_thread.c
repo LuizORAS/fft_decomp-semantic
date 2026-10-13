@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/gfx.h"
+#include "fft/thread.h"
 /* BATTLE twin: battle_menu_run_unit_editor_panel_thread. */
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -35,7 +36,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     world_menu_record_selection_for_selected_unit();
     world_menu_set_transition_active_flag();
     do {
-        world_thread_yield();
+        thread_yield();
     } while (g_world_menu_hovered_stats_frame_count < 2);
     world_menu_clear_transition_active_flag();
 
@@ -126,7 +127,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
         }
     }
     LoadImage(&g_world_unit_editor_text_rect_a, (u32*)buffer);
-    world_thread_yield();
+    thread_yield();
     world_clear_menu_render_buffer(buffer, 0xC80);
     g_world_menu_text_state.pen.stride = 0x50;
     world_menu_set_text_origin(0, 0);
@@ -159,7 +160,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
         }
     }
     LoadImage(&g_world_unit_editor_text_rect_b, (u32*)buffer);
-    world_thread_yield();
+    thread_yield();
     world_menu_free_memory(buffer);
 
     world_script_copy_bytes(&records[1], frame_record, sizeof(menu_unit_editor_frame_t));
@@ -169,11 +170,11 @@ void world_menu_run_unit_editor_panel_thread(void) {
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_editor_panel_rect, records[1].palette);
     world_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, world_menu_run_numeric_display_panel_thread);
     world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
-    world_thread_yield();
+    thread_yield();
 
     frame = 0;
     for (;;) {
-        world_thread_yield();
+        thread_yield();
         frame_record = &records[frame & 1];
         world_gfx_build_scaled_draw_area_pair_swapped(
             &frame_record->draw_areas, &g_world_unit_editor_cursor_rect, frame, g_main_gfx_screen_polarity);
@@ -248,7 +249,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     g_world_unit_status_bounce_step = 6;
     world_sound_queue_sfx_cancel();
     do {
-        world_thread_yield();
+        thread_yield();
     } while (g_world_unit_status_bounce_step != 0);
     world_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, world_menu_selected_tile_info_display_thread);
     world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);

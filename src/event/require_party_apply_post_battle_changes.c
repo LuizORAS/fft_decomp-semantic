@@ -3,6 +3,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -109,7 +110,7 @@ void require_party_apply_post_battle_changes(void) {
                     g_require_numeric_editor_origin_x = transition;
                     g_require_character_status_origin_x = transition;
                     transition += 0x20;
-                    battle_thread_yield();
+                    thread_yield();
                 } while (transition < 0x101);
 
                 battle_unit_get_stats_from_battle_id(*unit_index_ptr);
@@ -124,7 +125,7 @@ void require_party_apply_post_battle_changes(void) {
                 g_require_numeric_editor_redraw_request = one;
                 g_require_character_status_redraw_request = one;
                 g_require_panel_selected_billboard.unit_index = index_value;
-                battle_thread_yield();
+                thread_yield();
             }
 
             transition = 0;
@@ -133,7 +134,7 @@ void require_party_apply_post_battle_changes(void) {
                 g_require_numeric_editor_origin_x = transition - 0x100;
                 g_require_character_status_origin_x = transition - 0x100;
                 transition += 0x20;
-                battle_thread_yield();
+                thread_yield();
             } while (transition < 0x101);
 
             /* The removal retry re-enters the selection loop and the
@@ -151,7 +152,7 @@ void require_party_apply_post_battle_changes(void) {
                 while (1) {
                     require_panel_set_transition_value(0);
                     do {
-                        battle_thread_yield();
+                        thread_yield();
                         g_menu_input_controller = script_get_controller_input_pointer(0);
                         input = *g_menu_input_controller;
                         if (input & PSX_PAD_CIRCLE) {
@@ -225,7 +226,7 @@ void require_party_apply_post_battle_changes(void) {
 
                     g_battle_screen_fade = 0;
                     do {
-                        battle_thread_yield();
+                        thread_yield();
                         g_battle_screen_fade += 0x10;
                     } while (g_battle_screen_fade < 0x100);
                     screen_fade_max = 0xff;
@@ -260,7 +261,7 @@ void require_party_apply_post_battle_changes(void) {
                         &g_require_panel_selected_billboard, unit_display_data, &g_require_editor_unit_fields);
                     g_battle_screen_fade = screen_fade_max;
                     do {
-                        battle_thread_yield();
+                        thread_yield();
                         g_battle_screen_fade -= 0x10;
                     } while (g_battle_screen_fade > 0);
                     g_battle_screen_fade = 0;
@@ -305,7 +306,7 @@ void require_party_apply_post_battle_changes(void) {
         g_require_numeric_editor_origin_x = transition;
         g_require_character_status_origin_x = transition;
         transition += 0x20;
-        battle_thread_yield();
+        thread_yield();
     } while (transition < 0x101);
     battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
     battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
@@ -317,6 +318,6 @@ void require_party_apply_post_battle_changes(void) {
     battle_copy_bytes(&g_battle_threads[NATIVE_THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
     g_battle_menu_thread_menu_data = saved_menu_descriptor;
     battle_thread_resume(NATIVE_THREAD_SLOT_EVENT);
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

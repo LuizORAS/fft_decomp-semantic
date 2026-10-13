@@ -31,8 +31,8 @@ void script_color_screen_thread(void) {
     /* The RGB scan leaves the cursor at duration_le. */
     duration = script_read_s16(parameters);
     for (i = 0; i < duration; i += 2) {
-        battle_thread_yield();
-        battle_thread_yield();
+        thread_yield();
+        thread_yield();
         for (j = 0; j < 3; j++) {
             s32 end = color.start_and_end[j + 3];
             s32 start = color.start_and_end[j];
@@ -44,7 +44,7 @@ void script_color_screen_thread(void) {
         color.current[j] = color.start_and_end[j + 3];
     }
     battle_gfx_start_screen_color_modulation_fade(mode, color.current[0], color.current[1], color.current[2], 2);
-    battle_thread_yield();
-    battle_thread_yield();
+    thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

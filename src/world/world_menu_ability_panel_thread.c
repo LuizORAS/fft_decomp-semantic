@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/thread.h"
 /*
  * Thread task 0x3b: a two-column status panel that lists five ability labels
  * of an item stat-detail record. Thread 10 draws g_world_selected_unit_stat_detail into the first
@@ -143,12 +144,12 @@ void world_menu_ability_panel_thread(void) {
         world_menu_submit_numeric_display_frame_primitives(&screen->numeric_frame);
         world_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
         world_gfx_draw_or_append_gpu_primitive(&screen->portrait);
-        world_thread_yield();
+        thread_yield();
         if (world_thread_get_current_parameter_3() != 0) {
             break;
         }
         frame++;
     }
-    world_thread_yield();
+    thread_yield();
     world_thread_exit_current();
 }

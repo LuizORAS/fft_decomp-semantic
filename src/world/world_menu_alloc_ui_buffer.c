@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -45,6 +46,6 @@ void* world_menu_alloc_ui_buffer(s32 size) {
         if (g_main_font_print_enabled != 0) {
             FntPrint(g_world_text_wait_for_allocation_message, g_world_thread_current_id, size);
         }
-        world_thread_yield();
+        thread_yield();
     }
 }

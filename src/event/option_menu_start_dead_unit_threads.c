@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/event_option.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -132,7 +133,7 @@ void option_menu_start_dead_unit_threads(void) {
             battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU,
                 (s32)&g_battle_menu_thread_menu_data[DEAD_UNIT_MENU_AT_LIST], 0, 0);
             for (;;) {
-                battle_thread_yield();
+                thread_yield();
                 if (battle_thread_is_running_asm(g_battle_current_thread_id - 3) != 0) {
                     battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD, option_thread_wait_forever);
                 } else {

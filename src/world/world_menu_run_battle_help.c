@@ -2,6 +2,7 @@
  * (helpmenu_menu_run_battle_help), identical apart from addresses.
  */
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -340,7 +341,7 @@ void world_menu_run_battle_help(void) {
         } else {
             bob = world_menu_get_cursor_bob_offset(0);
         }
-        self->task_words[0] += g_world_event_speed;
+        self->task_words[0] += g_script_event_speed;
         bob -= 4;
         buffer = frame & 1;
         if (node->vertical_cursor != 0) {

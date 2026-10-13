@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -16,7 +17,7 @@ void world_menu_fade_out_thread(void) {
 
     g_world_menu_transition_timeout = 4;
     do {
-        world_thread_yield();
+        thread_yield();
     } while (world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_GRANDCHILD) != 0);
 
     g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_BUNIT;
@@ -31,7 +32,7 @@ void world_menu_fade_out_thread(void) {
     }
     for (i = 0; i < 0x100; i += 8) {
         g_world_screen_fade = 0xFF - i;
-        world_thread_yield();
+        thread_yield();
     }
     world_menu_clear_transition_active_flag();
     g_world_menu_overlay_state = 0;

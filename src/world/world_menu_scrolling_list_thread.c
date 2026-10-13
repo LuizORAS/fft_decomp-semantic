@@ -1,5 +1,8 @@
 #include "fft/battle_ai.h"
 #include "fft/gfx.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -254,7 +257,7 @@ void world_menu_scrolling_list_thread(void) {
                 ClearImage(&clear, 0, 0, 0);
             }
         }
-        world_thread_yield();
+        thread_yield();
         if (redraw_pending != 0) {
             world_menu_free_memory(buffer);
             redraw_pending = 0;
@@ -300,7 +303,7 @@ void world_menu_scrolling_list_thread(void) {
             world_menu_handle_entry_confirm(entry, cursor);
         }
         world_menu_cancel_thread_group(entry);
-        if ((g_world_event_speed == 1 && !(world_input_get_menu_repeat_counter() & 1)) || g_world_event_speed == 2) {
+        if ((g_script_event_speed == 1 && !(world_input_get_menu_repeat_counter() & 1)) || g_script_event_speed == 2) {
             if (timer < g_main_menu_scroll_accel_delay) {
                 step = g_main_menu_scroll_slow_step;
             } else {
@@ -308,24 +311,24 @@ void world_menu_scrolling_list_thread(void) {
             }
             accum += delta * (step << 1);
         }
-        timer += g_world_event_speed;
+        timer += g_script_event_speed;
         if (accum < -0xF || accum > 0xF) {
             ring += delta;
             row_offset += delta;
             repeat = world_input_get_menu_repeat_counter();
             accum = 0;
             delta = 0;
-            if (repeat >= g_main_input_repeat_initial_delay / g_world_event_speed) {
+            if (repeat >= g_main_input_repeat_initial_delay / g_script_event_speed) {
                 g_world_menu_new_button_input |= g_world_menu_current_button_input & (PSX_PAD_UP | PSX_PAD_DOWN);
             }
             world_menu_free_memory(buffer);
             row_buffer_live = 0;
         }
         frame->v0 = (ring * 16 + accum - 2) & 0x7F;
-        if (i * g_world_event_speed < 12) {
+        if (i * g_script_event_speed < 12) {
             gfx_init_image_loading(
                 &page->frame, &entry->vram_origin, &entry->window, (const image_load_parameters_t*)&window);
-            world_menu_zoom_cursor_frame(entry, frame, i * g_world_event_speed);
+            menu_zoom_cursor_frame(entry, frame, i * g_script_event_speed);
         }
         if (layout->columns.mode[1] == MENU_TEXT_COLUMN_TEXT && toggle == 1) {
             menu_text_layout_t* columns = entry->context;
@@ -357,7 +360,7 @@ void world_menu_scrolling_list_thread(void) {
     if (row_buffer_live != 0) {
         world_menu_free_memory(buffer);
     }
-    world_thread_yield();
+    thread_yield();
     g_world_menu_scrolling_list_depth--;
     if (world_thread_get_current_parameter_2() == 0) {
         world_thread_exit_current();

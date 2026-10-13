@@ -1,4 +1,6 @@
 #include "fft/gfx.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 /* The target's lone dead `lw t1,0xe0(sp)` (reload of the spilled `layout`)
  * at +0x4d4 comes from a conditional on `layout` whose body is a dead store: flow deletes
  * the store, the now-empty branch survives until after reload, and the post-reload jump
@@ -214,7 +216,7 @@ void world_build_at_list(void) {
                 ClearImage(&clear, 0, 0, 0);
             }
         }
-        world_thread_yield();
+        thread_yield();
         if (redraw_pending != 0) {
             redraw_pending = 0;
         }
@@ -231,7 +233,7 @@ void world_build_at_list(void) {
             world_menu_handle_entry_confirm(entry, cursor);
         }
         world_menu_cancel_thread_group(entry);
-        if ((g_world_event_speed == 1 && !(world_input_get_menu_repeat_counter() & 1)) || g_world_event_speed == 2) {
+        if ((g_script_event_speed == 1 && !(world_input_get_menu_repeat_counter() & 1)) || g_script_event_speed == 2) {
             if (timer < g_main_menu_scroll_accel_delay) {
                 step = g_main_menu_scroll_slow_step << 1;
             } else {
@@ -239,14 +241,14 @@ void world_build_at_list(void) {
             }
             accum += delta * step;
         }
-        timer += g_world_event_speed;
+        timer += g_script_event_speed;
         if (accum < -0xF || accum > 0xF) {
             ring += delta;
             row_offset += delta;
             repeat = world_input_get_menu_repeat_counter();
             delta = 0;
             accum = 0;
-            if (repeat >= g_main_input_repeat_initial_delay / g_world_event_speed) {
+            if (repeat >= g_main_input_repeat_initial_delay / g_script_event_speed) {
                 *input0 |= *input1 & (PSX_PAD_UP | PSX_PAD_DOWN);
             }
         }
@@ -293,6 +295,6 @@ void world_build_at_list(void) {
     }
     world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, 0, 0, 1);
     entry->select_text_table = row_offset;
-    world_thread_yield();
+    thread_yield();
     world_thread_exit_current();
 }

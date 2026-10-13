@@ -1,4 +1,6 @@
 #include "fft/event_etc.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -25,8 +27,8 @@ void etc_graphic_show_chapter_title(s32 graphic_id) {
             etc_graphic_build_chapter_polygons(
                 graphic_id, fade, 0, 1, g_etc_graphic_chapter_primitives_b[frame & 1], 0x80);
             frame++;
-            battle_thread_yield();
-            fade += g_battle_event_speed;
+            thread_yield();
+            fade += g_script_event_speed;
         } while (fade < dimensions[2].source.w);
     }
 
@@ -37,8 +39,8 @@ void etc_graphic_show_chapter_title(s32 graphic_id) {
         etc_graphic_build_chapter_polygons(
             graphic_id, dimensions[2].source.w, 0, 1, g_etc_graphic_chapter_primitives_b[frame & 1], 0x80);
         frame++;
-        battle_thread_yield();
-        fade += g_battle_event_speed;
+        thread_yield();
+        fade += g_script_event_speed;
     } while (fade < 0x50);
 
     color = 0x80;
@@ -48,9 +50,9 @@ void etc_graphic_show_chapter_title(s32 graphic_id) {
             graphic_id, dimensions[2].source.w, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], color);
         etc_graphic_build_chapter_polygons(
             graphic_id, dimensions[2].source.w, 0, 1, g_etc_graphic_chapter_primitives_b[frame & 1], color);
-        color -= g_battle_event_speed;
-        battle_thread_yield();
-        fade += g_battle_event_speed;
+        color -= g_script_event_speed;
+        thread_yield();
+        fade += g_script_event_speed;
         frame++;
     } while (fade < 0x80);
 }

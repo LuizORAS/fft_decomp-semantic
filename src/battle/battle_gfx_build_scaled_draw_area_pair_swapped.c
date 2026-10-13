@@ -2,6 +2,8 @@
 #include "fft/battle_event.h"
 #include "fft/battle_gfx.h"
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
+#include "fft/script.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -17,13 +19,13 @@ void battle_gfx_build_scaled_draw_area_pair_swapped(
     s16 height;
     s32 offset;
 
-    if (g_battle_event_speed == 2) {
+    if (g_script_event_speed == 2) {
         step *= 2;
     }
     if (step >= 12) {
         step = 11;
     }
-    percent = g_battle_menu_zoom_percentages[step];
+    percent = g_menu_cursor_zoom_percentages[step];
     battle_copy_bytes(&packets->rects[0], geometry, sizeof(*geometry));
     if (packets->rects[0].x < 0x80) {
         packets->rects[0].x += 0x80;

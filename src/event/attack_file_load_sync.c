@@ -11,13 +11,13 @@ void attack_file_load_sync(s32 lba, s32 size, void* destination) {
         if (thread_call_on_main_stack(lba, size, destination) == 0) {
             break;
         }
-        battle_thread_yield();
+        thread_yield();
     }
     while (1) {
         g_thread_call_target = (void (*)(void))main_file_is_still_loading;
         if (thread_call_on_main_stack() == 0) {
             break;
         }
-        battle_thread_yield();
+        thread_yield();
     }
 }

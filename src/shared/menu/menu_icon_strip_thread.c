@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_thread.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 
 /* Menu window thread without a cursor: rebuilds the text image every seventh
  * frame and alternates between two sprite records until the menu closes. */
@@ -31,7 +32,7 @@ void menu_icon_strip_thread(void) {
             battle_menu_display_text_entry(state->text_id, buffer, &g_menu_text_state.pen);
             LoadImage(&rect, (u32*)buffer);
         }
-        battle_thread_yield();
+        thread_yield();
         if (fresh == 1) {
             battle_menu_free_memory(buffer);
             fresh = 0;
@@ -43,6 +44,6 @@ void menu_icon_strip_thread(void) {
         battle_menu_select_icon_cluts(record);
         battle_menu_submit_icon_primitives(record);
     }
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

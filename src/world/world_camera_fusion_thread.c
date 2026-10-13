@@ -8,6 +8,7 @@
  * makes loop.c discover the track giv before the script-variable and values
  * givs, which gives the target's induction-increment order. */
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -117,7 +118,7 @@ void world_camera_fusion_thread(void) {
             break;
         }
         world_camera_clear_zoom_variable_low_bit();
-        world_thread_yield();
+        thread_yield();
     }
 
     world_menu_free_memory(tracks);

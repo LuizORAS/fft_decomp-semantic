@@ -1,6 +1,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_option.h"
 #include "fft/gfx.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -153,7 +154,7 @@ void option_menu_run_game_options(void) {
     g_option_menu_entry_panel_rect.h += 0xC;
     g_option_menu_entry_panel_rect.y -= 2;
     battle_thread_set_parameters(g_battle_current_thread_id + 1, (s32)&g_option_menu_entry_panel_rect, 0, 0);
-    battle_thread_yield();
+    thread_yield();
     battle_menu_init_semitransparent_sprt(&base->value);
     battle_text_configure_sprite_vram(&g_option_menu_value_image_rect, 0x3C, 0x10, &base->value, 0);
     base->value.x0 = entry->window.x + 0x5C;
@@ -242,7 +243,7 @@ void option_menu_run_game_options(void) {
                 g_option_value_text_id_bases[index] + g_option_current_values[index], buffer, &g_menu_text_state.pen);
             LoadImage(&g_option_menu_value_image_rect, (u32*)buffer);
         }
-        battle_thread_yield();
+        thread_yield();
         if (battle_menu_should_close_thread(input0) != 0) {
             break;
         }
@@ -255,8 +256,8 @@ void option_menu_run_game_options(void) {
         page->icons.base.sprites[1].y0 += 2;
         page->icons.base.sprites[2].y0 += 2;
         entry->selected_index = row_offset + cursor;
-        if ((g_battle_event_speed == 1 && !(script_get_event_initial_repeat_counter() & 1))
-            || g_battle_event_speed == 2) {
+        if ((g_script_event_speed == 1 && !(script_get_event_initial_repeat_counter() & 1))
+            || g_script_event_speed == 2) {
             if (timer < g_main_menu_scroll_accel_delay) {
                 step = g_main_menu_scroll_slow_step * 2;
             } else {
@@ -264,7 +265,7 @@ void option_menu_run_game_options(void) {
             }
             accum += delta * step;
         }
-        timer += g_battle_event_speed;
+        timer += g_script_event_speed;
         frame = &page->frame;
         if (accum < -0xF || accum > 0xF) {
             ring += delta;
@@ -272,7 +273,7 @@ void option_menu_run_game_options(void) {
             repeat = script_get_event_initial_repeat_counter();
             delta = 0;
             accum = 0;
-            if (repeat >= g_main_input_repeat_initial_delay / g_battle_event_speed) {
+            if (repeat >= g_main_input_repeat_initial_delay / g_script_event_speed) {
                 *input0 |= *input1 & (PSX_PAD_UP | PSX_PAD_DOWN);
             }
         }

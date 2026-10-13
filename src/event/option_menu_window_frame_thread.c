@@ -6,6 +6,7 @@
  * and lays the border out with 8-pixel instead of 16-pixel corners.
  */
 #include "fft/event_option.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 void option_menu_window_frame_thread(void) {
@@ -157,9 +158,9 @@ void option_menu_window_frame_thread(void) {
         battle_gfx_draw_or_append_gpu_primitive(&prim->modes[5]);
         battle_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[0]);
         frame++;
-        battle_thread_yield();
+        thread_yield();
     }
-    battle_thread_yield();
+    thread_yield();
     battle_gfx_free_tpage7_vram(&texture);
     battle_thread_exit_current();
 }

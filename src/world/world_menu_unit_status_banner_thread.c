@@ -1,5 +1,6 @@
 #include "fft/gfx.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
@@ -434,13 +435,13 @@ void world_menu_unit_status_banner_thread(void) {
             world_menu_submit_numeric_display_frame_primitives(&status->numeric_frame);
             world_gfx_draw_or_append_gpu_primitive(&status->draw_offset_a);
         }
-        world_thread_yield();
+        thread_yield();
         if (world_thread_get_current_parameter_3() != 0) {
             break;
         }
         frame += 1;
     }
-    world_thread_yield();
+    thread_yield();
     world_gfx_free_tpage7_vram(&rects[0]);
     world_gfx_free_tpage7_vram(&rects[1]);
     world_gfx_free_tpage7_vram(&rects[2]);

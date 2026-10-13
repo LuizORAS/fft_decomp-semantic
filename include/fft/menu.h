@@ -109,6 +109,15 @@ typedef struct menu_window_buffer {
 } menu_window_buffer_t;
 typedef char menu_window_buffer_size_must_be_280[(sizeof(menu_window_buffer_t) == 280) ? 1 : -1];
 
+extern s32 g_menu_packet_buffer_index;
+extern u16* g_menu_window_tween_easing_tables[];
+/* Twelve crop percentages, indexed by step. */
+extern u16 g_menu_cursor_zoom_percentages[];
+
+void menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
+void menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, RECT* to2, s32 table);
+void menu_zoom_cursor_frame(const void* unused_source, SPRT* sprite, s32 step);
+
 /* portrait */
 /* One EVTFACE.BIN block: pixels followed by eight 16-color palettes. */
 typedef struct menu_portrait_image_file {
@@ -1231,7 +1240,10 @@ typedef enum companion_overlay_state {
     COMPANION_OVERLAY_STATE_CARD_SAVE = 5, /* card_save_run_menu */
 } companion_overlay_state_e;
 
+extern char g_menu_wait_for_file_allocation_message[];
+
 void menu_free_high_overlay(void);
+void menu_reserve_high_overlay(u32 size);
 
 /* g_*_menu_indicator_state[]: state of each of the two translucent panels
  * *_menu_draw_thread_status_indicators draws behind the unit status banners. */

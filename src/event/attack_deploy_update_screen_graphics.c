@@ -4,6 +4,7 @@
 #include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -80,7 +81,7 @@ void attack_deploy_update_screen_graphics(void) {
             }
             battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_text_polys[parity][i]);
         }
-        battle_thread_yield();
+        thread_yield();
         if (battle_thread_get_current_parameter_3() == 0) {
             continue;
         }

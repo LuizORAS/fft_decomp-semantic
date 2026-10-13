@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/menu.h"
 #include "fft/world.h"
 
 /*
@@ -28,7 +29,7 @@ void world_menu_draw_active_window_frames(void) {
         if (g_world_menu_window_buffer_pointers[i] == (menu_window_buffer_t*)-1) {
             continue;
         }
-        buffer = g_world_menu_window_buffer_pointers[i + g_world_menu_packet_buffer_index];
+        buffer = g_world_menu_window_buffer_pointers[i + g_menu_packet_buffer_index];
         if (buffer->active != 1 || g_world_thread_contexts[buffer->thread_id].is_running == 0) {
             continue;
         }
@@ -71,11 +72,11 @@ void world_menu_draw_active_window_frames(void) {
         top = window->icon_sprites[0].y0 + window->icon_sprites[0].h;
         bottom -= top;
         /* Reload the pointer cell: retaining buffer removes target loads. */
-        span = (bottom - 4) * g_world_menu_window_buffer_pointers[i + g_world_menu_packet_buffer_index]->scroll_position
-            / g_world_menu_window_buffer_pointers[i + g_world_menu_packet_buffer_index]->scroll_range;
+        span = (bottom - 4) * g_world_menu_window_buffer_pointers[i + g_menu_packet_buffer_index]->scroll_position
+            / g_world_menu_window_buffer_pointers[i + g_menu_packet_buffer_index]->scroll_range;
         window->icon_sprites[2].x0 = window->quads[0].x0 + offset;
         window->icon_sprites[2].y0 = top + span;
-        flags = g_world_menu_window_buffer_pointers[i + g_world_menu_packet_buffer_index]->icon_flags;
+        flags = g_world_menu_window_buffer_pointers[i + g_menu_packet_buffer_index]->icon_flags;
         if (flags & MENU_WINDOW_ICON_SCROLL_UP) {
             world_gfx_draw_or_append_gpu_primitive(&window->icon_sprites[0]);
         }

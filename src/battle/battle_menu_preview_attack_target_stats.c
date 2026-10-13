@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Thread entry of the attack-target stats panel (unit view thread sets).
@@ -15,8 +16,8 @@ void battle_menu_preview_attack_target_stats(void) {
         != NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
         battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS);
     }
-    battle_thread_yield();
-    battle_thread_yield();
+    thread_yield();
+    thread_yield();
     saved = g_battle_active_turn_unit.battle_id;
     /* The target loads the preview unit id unsigned (lhu). */
     g_battle_active_turn_unit.battle_id = g_battle_preview_target_unit_id;

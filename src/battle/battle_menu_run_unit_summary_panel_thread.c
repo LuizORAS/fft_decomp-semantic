@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "fft/gfx.h"
 #include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -101,14 +103,14 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     battle_menu_init_numeric_display_frame_primitives(&g_battle_unit_summary_panel_rect, frames[1].palette);
 
     for (frame = 0;; frame++) {
-        battle_thread_yield();
+        thread_yield();
         g_battle_menu_hide_numeric_values = battle_unit_get_attacker_data_pointer()->unit_flags & UNIT_FLAG_EGG;
         frame_record = &frames[frame & 1];
         if (frame == 0) {
             battle_menu_free_memory(buffer);
         }
         value = (g_main_gfx_screen_polarity & 1) == 0 ? 0xF0 : 0;
-        for (i = 0; i < g_battle_event_speed; i++) {
+        for (i = 0; i < g_script_event_speed; i++) {
             if (battle_thread_get_current_parameter_3() != 0) {
                 slide += 0x1E;
                 if (slide > 0x80) {
@@ -192,7 +194,7 @@ void battle_menu_run_unit_summary_panel_thread(void) {
         battle_gfx_draw_or_append_gpu_primitive(&frame_record->draw_offset_a);
     }
 exit:
-    battle_thread_yield();
+    thread_yield();
     battle_gfx_free_tpage7_vram(&rects[0]);
     battle_gfx_free_tpage7_vram(&rects[1]);
     battle_gfx_free_tpage7_vram(&rects[2]);

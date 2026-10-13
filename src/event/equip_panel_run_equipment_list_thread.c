@@ -2,6 +2,7 @@
 #include "fft/event_equip.h"
 #include "fft/gfx.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -157,12 +158,12 @@ void equip_panel_run_equipment_list_thread(void) {
         battle_menu_submit_numeric_display_frame_primitives(&screen->numeric_frame);
         battle_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
         battle_gfx_draw_or_append_gpu_primitive(&screen->portrait);
-        battle_thread_yield();
+        thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {
             break;
         }
         frame++;
     }
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

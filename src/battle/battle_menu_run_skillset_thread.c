@@ -31,7 +31,7 @@ void battle_menu_run_skillset_thread(void) {
             battle_thread_wait_frames(2);
         }
         for (;;) {
-            battle_thread_yield();
+            thread_yield();
             if (battle_thread_is_running_asm(g_battle_current_thread_id - 1) == 0) {
                 battle_thread_exit_current();
             }

@@ -1,4 +1,5 @@
 #include "fft/battle_menu.h"
+#include "fft/thread.h"
 /*
  * WORLD twin:
  * world_menu_auto_battle_setting_thread (same code, globals and callees
@@ -103,7 +104,7 @@ void battle_menu_auto_battle_setting_thread(void) {
             LoadImage(&rect, (u32*)buffer);
             fresh = 1;
         }
-        battle_thread_yield();
+        thread_yield();
         if (fresh != 0) {
             battle_menu_free_memory(buffer);
             fresh = 0;
@@ -118,6 +119,6 @@ void battle_menu_auto_battle_setting_thread(void) {
         battle_menu_update_icon_cursor_sprites(param, &record->base, i, cursor);
         battle_menu_submit_icon_primitives(record);
     }
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

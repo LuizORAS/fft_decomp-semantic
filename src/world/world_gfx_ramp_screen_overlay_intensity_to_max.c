@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -8,7 +9,7 @@ void world_gfx_ramp_screen_overlay_intensity_to_max(void) {
 
     g_world_screen_fade = 0;
     do {
-        world_thread_yield();
+        thread_yield();
         level = g_world_screen_fade + 4;
         g_world_screen_fade = level;
     } while (level < 256);

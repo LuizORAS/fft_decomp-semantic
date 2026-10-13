@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -19,14 +20,14 @@ void world_menu_run_equip_thread(void) {
     g_world_menu_overlay_state = 1;
     world_thread_wait_for_unit_view_panels();
     world_menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP);
-    world_menu_reserve_high_overlay(0x20000);
+    menu_reserve_high_overlay(0x20000);
     world_menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP_SECOND_HALF);
     world_thread_suspend(NATIVE_THREAD_SLOT_MENU);
     world_thread_suspend(NATIVE_THREAD_SLOT_MENU_CHILD);
     g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_EQUIP;
     do {
         g_world_menu_new_button_input = 0;
-        world_thread_yield();
+        thread_yield();
     } while (g_world_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
     g_world_menu_thread_menu_data = g_world_menu_system_entries;
     g_world_menu_action_slot_row_actions[0] = -3;

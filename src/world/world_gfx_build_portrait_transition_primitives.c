@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
@@ -44,7 +45,7 @@ void world_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
         gfx_set_clut_rect_from_id(&first_rect, poly->clut);
         StoreImage(&first_rect, (u32*)palettes[0]);
         StoreImage(&second_rect, (u32*)palettes[1]);
-        *transition += g_world_event_speed;
+        *transition += g_script_event_speed;
     } else if (*transition < 10) {
         if (*transition == 4) {
             for (i = 0; i < 0x10; i++) {
@@ -92,6 +93,6 @@ void world_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
             gfx_clip_portrait_poly_from_left(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i + 8]);
         else
             gfx_clip_portrait_poly_from_right(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i + 8]);
-        *transition += g_world_event_speed;
+        *transition += g_script_event_speed;
     }
 }

@@ -16,6 +16,7 @@
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
@@ -75,7 +76,7 @@ void script_run_sprite_move(const event_sprite_move_parameters_t* instruction, s
         pos[1][i] <<= 8;
     }
     for (i = 1; i < total; i++) {
-        battle_thread_yield();
+        thread_yield();
         for (j = 0; j < 3; j++) {
             delta = pos[1][j] - pos[0][j];
             if (curve == 0) {
@@ -133,6 +134,6 @@ void script_run_sprite_move(const event_sprite_move_parameters_t* instruction, s
     setVector(&vec, pos[1][0] / 256, pos[1][1] / 256, pos[1][2] / 256);
     battle_unit_add_event_offset_by_runtime_id(runtime_id, &vec);
     if (total == 1) {
-        battle_thread_yield();
+        thread_yield();
     }
 }

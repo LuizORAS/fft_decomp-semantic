@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/thread.h"
 /* Animate the reward bonus image as a burst of tiles.
  *
  * Profile gcc-2.6.3_O2_aspsx-2.34_divcheck: the per-tile delay is an unsigned
@@ -114,7 +115,7 @@ void require_reward_animate_bonus_image_burst(void) {
         done = 0;
         for (;;) {
             any = 0;
-            battle_thread_yield();
+            thread_yield();
             for (row = 0; row < 12; row++) {
                 for (col = 0; col < 24; col++) {
                     tile = &g_require_reward_burst_tiles[row][col];
@@ -214,7 +215,7 @@ void require_reward_animate_bonus_image_burst(void) {
         frame++;
         battle_thread_set_current_task_id(NATIVE_THREAD_TASK_DARK_SCREEN_HOLD);
         for (;;) {
-            battle_thread_yield();
+            thread_yield();
             g_require_reward_burst_flash_polys[frame & 1].r0 = g_require_gfx_fade_rgb[0];
             g_require_reward_burst_flash_polys[frame & 1].g0 = g_require_gfx_fade_rgb[1];
             g_require_reward_burst_flash_polys[frame & 1].b0 = g_require_gfx_fade_rgb[2];

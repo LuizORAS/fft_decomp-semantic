@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/thread.h"
 /*
  * WORLD twin: world_menu_run_unit_editor_panel_thread (same code, globals and callees rebound).
  */
@@ -37,7 +38,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     battle_menu_record_selection_for_selected_unit();
     battle_menu_set_modal_open();
     do {
-        battle_thread_yield();
+        thread_yield();
     } while (g_battle_menu_hovered_stats_frame_count < 2);
     battle_menu_clear_modal_open();
 
@@ -130,7 +131,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
         }
     }
     LoadImage(&g_battle_unit_editor_text_rect_a, (u32*)buffer);
-    battle_thread_yield();
+    thread_yield();
     battle_clear_menu_render_buffer(buffer, 0xC80);
     g_menu_text_state.pen.stride = 0x50;
     battle_menu_set_text_origin(0, 0);
@@ -163,7 +164,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
         }
     }
     LoadImage(&g_battle_unit_editor_text_rect_b, (u32*)buffer);
-    battle_thread_yield();
+    thread_yield();
     battle_menu_free_memory(buffer);
 
     battle_copy_bytes(&records[1], frame_record, sizeof(menu_unit_editor_frame_t));
@@ -173,11 +174,11 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     battle_menu_init_numeric_display_frame_primitives(&g_battle_unit_editor_panel_rect, records[1].palette);
     battle_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, battle_menu_run_numeric_display_panel_thread);
     battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
-    battle_thread_yield();
+    thread_yield();
 
     frame = 0;
     for (;;) {
-        battle_thread_yield();
+        thread_yield();
         frame_record = &records[frame & 1];
         battle_gfx_build_scaled_draw_area_pair_swapped(
             &frame_record->draw_areas, &g_battle_unit_editor_cursor_rect, frame, g_main_gfx_screen_polarity);
@@ -254,7 +255,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     g_battle_unit_status_bounce_step = 6;
     sound_queue_sfx_cancel();
     do {
-        battle_thread_yield();
+        thread_yield();
     } while (g_battle_unit_status_bounce_step != 0);
     battle_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, battle_menu_selected_tile_info_display_thread);
     battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);

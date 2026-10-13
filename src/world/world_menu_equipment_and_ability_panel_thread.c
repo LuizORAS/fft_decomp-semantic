@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -170,12 +171,12 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         if (frame < 13) {
             world_gfx_draw_or_append_gpu_primitive(&screen->portrait);
         }
-        world_thread_yield();
+        thread_yield();
         if (world_thread_get_current_parameter_3() != 0) {
             break;
         }
         frame++;
     }
-    world_thread_yield();
+    thread_yield();
     world_thread_exit_current();
 }

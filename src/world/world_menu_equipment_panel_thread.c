@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/thread.h"
 /*
  * Thread task 0x3b: the equipment twin of world_menu_ability_panel_thread (same 0x3d8-byte
  * frame pair, thread record and callee sequence). It lists the five
@@ -153,12 +154,12 @@ void world_menu_equipment_panel_thread(void) {
         world_menu_submit_numeric_display_frame_primitives(&screen->numeric_frame);
         world_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
         world_gfx_draw_or_append_gpu_primitive(&screen->portrait);
-        world_thread_yield();
+        thread_yield();
         if (world_thread_get_current_parameter_3() != 0) {
             break;
         }
         frame++;
     }
-    world_thread_yield();
+    thread_yield();
     world_thread_exit_current();
 }

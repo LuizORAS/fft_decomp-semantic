@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/gfx.h"
+#include "fft/thread.h"
 /* REQUIRE twin of debugchr_panel_run_unit_status_thread: the same doubled
  * 0x30C editor / 0x1D8 panel packets (fft/menu.h), without the shake
  * offsets, the bar division and the zodiac branch.
@@ -378,13 +379,13 @@ void require_panel_run_unit_status_thread(void) {
             battle_menu_submit_numeric_display_frame_primitives(&panel->numeric_frame);
             battle_gfx_draw_or_append_gpu_primitive(&panel->draw_offset_a);
         }
-        battle_thread_yield();
+        thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {
             break;
         }
         frame += 1;
     }
-    battle_thread_yield();
+    thread_yield();
     battle_gfx_free_tpage7_vram(&rects[0]);
     battle_gfx_free_tpage7_vram(&rects[1]);
     battle_gfx_free_tpage7_vram(&rects[2]);

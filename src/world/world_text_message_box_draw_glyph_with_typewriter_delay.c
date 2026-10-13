@@ -1,3 +1,5 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -22,7 +24,7 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
 
     if (g_world_text_message_box_glyph.mode != DIALOG_BOX_TYPE_PORTRAIT
         && g_world_text_message_box_glyph.mode != DIALOG_BOX_TYPE_CHECK && g_world_text_message_box_glyph.mode != 0) {
-        world_thread_yield();
+        thread_yield();
         return;
     }
     for (;;) {
@@ -48,7 +50,7 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
         if (slot != 0x10) {
             break;
         }
-        world_thread_yield();
+        thread_yield();
     }
 
     ring = g_world_text_message_box_slot_glyph_counters[slot];
@@ -144,7 +146,7 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
         DrawSync(0);
         g_world_text_message_box_slot_glyph_counters[slot] = 0;
     } else if (wait >= 2) {
-        for (i = 0; i < wait * (3 - g_world_event_speed); i++) {
+        for (i = 0; i < wait * (3 - g_script_event_speed); i++) {
             world_thread_wait_frames(1);
         }
         g_world_text_message_box_slot_glyph_counters[slot] = 0;
@@ -159,7 +161,7 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
             g_world_text_message_box_glyph_delay = 1;
         }
         if (g_world_text_message_box_slot_glyph_counters[slot] >= g_world_text_message_box_glyph_delay) {
-            for (i = 0; i < 3 - g_world_event_speed; i++) {
+            for (i = 0; i < 3 - g_script_event_speed; i++) {
                 world_thread_wait_frames(1);
             }
             g_world_text_message_box_slot_glyph_counters[slot] = 0;

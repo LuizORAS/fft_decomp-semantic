@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Claims enough 256-byte arena pages for size bytes and records them in a free slot.
@@ -48,6 +49,6 @@ void* battle_menu_alloc_memory(s32 size) {
         if (g_main_font_print_enabled != 0) {
             FntPrint(g_battle_text_wait_for_allocation_message, g_battle_current_thread_id, size);
         }
-        battle_thread_yield();
+        thread_yield();
     }
 }

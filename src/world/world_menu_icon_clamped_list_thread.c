@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -34,7 +35,7 @@ void world_menu_icon_clamped_list_thread(void) {
     LoadImage(&rect, buffer);
     for (i = 0;; i++) {
         record = &records[i & 1];
-        world_thread_yield();
+        thread_yield();
         if (i == 0) {
             world_menu_free_memory(buffer);
         }
@@ -60,6 +61,6 @@ void world_menu_icon_clamped_list_thread(void) {
         world_gfx_draw_or_append_gpu_primitive(&sprites->sprites[1].tag);
         world_gfx_draw_or_append_gpu_primitive(&sprites->draw_mode);
     }
-    world_thread_yield();
+    thread_yield();
     world_thread_exit_current();
 }

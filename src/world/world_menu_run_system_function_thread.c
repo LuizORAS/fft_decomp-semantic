@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /*
@@ -22,7 +23,7 @@ void world_menu_run_system_function_thread(void) {
             if (g_world_thread_contexts[NATIVE_THREAD_SLOT_EVENT].task_id == NATIVE_THREAD_TASK_EXECUTE_EVENT) {
                 world_thread_exit_current();
             }
-            world_thread_yield();
+            thread_yield();
         }
     }
     world_camera_wait_until_idle();

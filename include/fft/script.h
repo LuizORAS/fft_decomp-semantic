@@ -696,6 +696,8 @@ typedef enum script_attack_entry_mode {
     SCRIPT_ATTACK_ENTRY_PRELOAD_USED = 3, /* *_menu_init_attack_resources_and_threads skipped its loads */
 } script_attack_entry_mode_e;
 
+extern s32 g_script_event_speed;
+
 /* variables */
 /* Event-script variable ids shared by the BATTLE and WORLD interpreters.
  * The calendar and location ids are also serialized into the memory-card

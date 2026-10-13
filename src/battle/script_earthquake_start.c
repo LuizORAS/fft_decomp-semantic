@@ -16,7 +16,7 @@ void script_earthquake_start(void) {
     first_counter = 0;
     second_counter = 0;
     for (;;) {
-        battle_thread_yield();
+        thread_yield();
         first_counter++;
         if (first_counter == parameters->pulses[0].frames) {
             g_camera_shake_z_offset += parameters->pulses[0].z_delta;

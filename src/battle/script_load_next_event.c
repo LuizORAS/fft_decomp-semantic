@@ -1,6 +1,7 @@
 #include "fft/battle_script.h"
 #include "fft/battle_thread.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Pump event-thread execution until no other running thread has a task ID
@@ -12,7 +13,7 @@ s32 script_load_next_event(void) {
     s32 event_id;
 
     do {
-        battle_thread_yield();
+        thread_yield();
         for (task_id = 4; task_id < 15; task_id++) {
             if (battle_thread_find_running_by_task(task_id) != 0) {
                 break;

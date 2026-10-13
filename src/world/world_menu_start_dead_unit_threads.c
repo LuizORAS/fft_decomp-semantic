@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -130,7 +131,7 @@ void world_menu_start_dead_unit_threads(void) {
             world_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU,
                 (s32)&g_world_menu_thread_menu_data[DEAD_UNIT_MENU_AT_LIST], 0, 0);
             for (;;) {
-                world_thread_yield();
+                thread_yield();
                 if (world_thread_is_running_asm(g_world_thread_current_id - 3) != 0) {
                     world_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD, world_thread_yield_forever);
                 } else {

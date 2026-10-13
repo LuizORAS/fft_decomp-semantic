@@ -3,6 +3,7 @@
  * byte-identical apart from addresses). Layout notes below are the OPTION
  * twin's; the WORLD helpers are the same routines.
  */
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -165,9 +166,9 @@ void world_menu_thin_window_frame_thread(void) {
         world_gfx_draw_or_append_gpu_primitive(&prim->modes[5]);
         world_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[0]);
         frame++;
-        world_thread_yield();
+        thread_yield();
     }
-    world_thread_yield();
+    thread_yield();
     world_menu_free_memory(pixels);
     world_gfx_free_tpage7_vram(&texture);
     world_thread_exit_current();

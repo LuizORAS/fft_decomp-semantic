@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -35,7 +36,7 @@ void battle_menu_run_icon_selection_loop(void) {
     battle_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
     LoadImage(&rect, (u32*)buffer);
     for (i = 0;; i++) {
-        battle_thread_yield();
+        thread_yield();
         if (i == 0) {
             battle_menu_free_memory(buffer);
         }
@@ -56,7 +57,7 @@ void battle_menu_run_icon_selection_loop(void) {
         battle_handle_menu_cancel_input(param);
         battle_menu_submit_icon_primitives(record);
     }
-    battle_thread_yield();
+    thread_yield();
     if (battle_thread_get_current_parameter_2() == 0) {
         battle_thread_exit_current();
     }

@@ -1,4 +1,6 @@
 #include "fft/gfx.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 /* Build the AT list.
  *
  * Port of world_build_at_list. The do/while (0) around the scroll redraw puts its render-buffer
@@ -214,7 +216,7 @@ void option_menu_run_at_list(void) {
                 } while (0);
             }
         }
-        battle_thread_yield();
+        thread_yield();
         if (redraw_pending != 0) {
             redraw_pending = 0;
         }
@@ -230,8 +232,8 @@ void option_menu_run_at_list(void) {
             battle_menu_handle_action(entry, cursor);
         }
         battle_handle_menu_cancel_input(entry);
-        if ((g_battle_event_speed == 1 && !(script_get_event_initial_repeat_counter() & 1))
-            || g_battle_event_speed == 2) {
+        if ((g_script_event_speed == 1 && !(script_get_event_initial_repeat_counter() & 1))
+            || g_script_event_speed == 2) {
             if (timer < g_main_menu_scroll_accel_delay) {
                 step = g_main_menu_scroll_slow_step << 1;
             } else {
@@ -239,14 +241,14 @@ void option_menu_run_at_list(void) {
             }
             accum += delta * step;
         }
-        timer += g_battle_event_speed;
+        timer += g_script_event_speed;
         if (accum < -0xF || accum > 0xF) {
             ring += delta;
             row_offset += delta;
             repeat = script_get_event_initial_repeat_counter();
             delta = 0;
             accum = 0;
-            if (repeat >= g_main_input_repeat_initial_delay / g_battle_event_speed) {
+            if (repeat >= g_main_input_repeat_initial_delay / g_script_event_speed) {
                 *input |= *input2 & (PSX_PAD_UP | PSX_PAD_DOWN);
             }
         }
@@ -292,6 +294,6 @@ void option_menu_run_at_list(void) {
         battle_menu_submit_icon_primitives(&page->icons);
     }
     battle_thread_set_parameters(g_battle_current_thread_id + 1, 0, 0, 1);
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

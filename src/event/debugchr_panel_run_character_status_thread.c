@@ -2,6 +2,7 @@
 #include "fft/event_debugchr.h"
 #include "fft/gfx.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -173,12 +174,12 @@ void debugchr_panel_run_character_status_thread(void) {
         if (frame < 13) {
             battle_gfx_draw_or_append_gpu_primitive(&screen->portrait);
         }
-        battle_thread_yield();
+        thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {
             break;
         }
         frame++;
     }
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

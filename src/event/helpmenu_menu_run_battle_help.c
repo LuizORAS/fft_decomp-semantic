@@ -2,6 +2,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_helpmenu.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -340,7 +341,7 @@ void helpmenu_menu_run_battle_help(void) {
         } else {
             bob = battle_menu_get_cursor_bob_offset(0);
         }
-        self_thread->task_words[0] += g_battle_event_speed;
+        self_thread->task_words[0] += g_script_event_speed;
         bob -= 4;
         buffer = frame & 1;
         if (node->vertical_cursor != 0) {

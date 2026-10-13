@@ -56,7 +56,7 @@ void world_script_add_unit_start_thread(void) {
                 }
             }
             while (1) {
-                world_thread_yield();
+                thread_yield();
                 if (g_world_unit_graphics_load_pending == 0) {
                     break;
                 }

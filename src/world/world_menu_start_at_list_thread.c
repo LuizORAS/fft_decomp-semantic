@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -14,7 +15,7 @@ void world_menu_start_at_list_thread(void) {
     world_thread_start(g_world_thread_current_id - 2, world_build_at_list);
     world_thread_set_parameters(g_world_thread_current_id - 2, (s32)list, 0, 0);
     do {
-        world_thread_yield();
+        thread_yield();
     } while (world_thread_is_running_asm(g_world_thread_current_id - 2) != 0
         || world_thread_is_running_asm(g_world_thread_current_id - 3) != 0);
     g_world_menu_thread_menu_data = saved;

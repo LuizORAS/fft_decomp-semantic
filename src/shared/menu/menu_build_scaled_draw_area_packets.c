@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_event.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 
 /*
  * Build the double-buffered draw-area pair of a window's open/close zoom.
@@ -19,7 +20,7 @@ void menu_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const 
     s32 h;
     s32 scaled;
 
-    if (g_battle_event_speed == 2) {
+    if (g_script_event_speed == 2) {
         scale_index *= 2;
     }
     if (scale_index >= 12) {

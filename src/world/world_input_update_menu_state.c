@@ -1,4 +1,5 @@
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -18,7 +19,7 @@ void world_input_update_menu_state(void) {
 
     g_world_menu_new_button_input = 0;
     world_script_load_event_input_state(&g_world_menu_new_button_input);
-    world_thread_yield();
+    thread_yield();
     input = PadRead(1);
     if (input == 0
         || (world_script_check_tutorial_event_slot() != 0
@@ -37,13 +38,13 @@ void world_input_update_menu_state(void) {
         g_world_menu_new_button_input = ~previous_input & input;
         g_world_menu_input_initial_repeat_counter = 0;
     } else {
-        initial_delay = g_main_input_repeat_initial_delay / g_world_event_speed;
+        initial_delay = g_main_input_repeat_initial_delay / g_script_event_speed;
         counter = ++g_world_menu_input_initial_repeat_counter;
         if (counter == initial_delay) {
             g_world_menu_new_button_input = input & (PSX_PAD_L1 | PSX_PAD_R1 | PSX_PAD_DPAD_MASK);
         }
         if (counter >= initial_delay) {
-            repeat_delay = g_main_input_repeat_period / g_world_event_speed;
+            repeat_delay = g_main_input_repeat_period / g_script_event_speed;
             counter = ++g_world_menu_input_repeat_counter;
             g_world_menu_input_secondary_repeat_counter++;
             if (counter >= repeat_delay) {
@@ -54,7 +55,7 @@ void world_input_update_menu_state(void) {
                     g_world_menu_new_button_input = input & PSX_PAD_DPAD_MASK;
                 }
             }
-            secondary_repeat_delay = g_main_input_secondary_repeat_period / g_world_event_speed;
+            secondary_repeat_delay = g_main_input_secondary_repeat_period / g_script_event_speed;
             if (g_world_menu_input_secondary_repeat_counter >= secondary_repeat_delay) {
                 g_world_menu_input_secondary_repeat_counter = 0;
                 if ((g_world_menu_current_button_input & PSX_PAD_SQUARE) != 0) {

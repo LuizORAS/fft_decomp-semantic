@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -23,12 +24,12 @@ void require_party_remove_low_brave_high_faith_units(void) {
     g_text_section_pointers[REQUIRE_TEXT_SECTION_DISMISS_UNIT_REPLIES]
         = g_require_text_data + g_require_text_section_offsets[3];
     g_text_section_pointers[TEXT_SECTION_JOB_NAMES] = g_require_text_data + g_require_text_section_offsets[4];
-    battle_thread_yield();
+    thread_yield();
     main_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     battle_thread_start(main_thread, require_condition_run_special_thread);
     battle_thread_set_parameters(main_thread, 6, 0, 0);
     require_gfx_fade_rgb_31_frames(0xd, 5, 2);
-    battle_thread_yield();
+    thread_yield();
     for (i = 0; i < g_require_party_affected_unit_count; i++) {
         battle_stats_t* unit;
         s32 unit_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);

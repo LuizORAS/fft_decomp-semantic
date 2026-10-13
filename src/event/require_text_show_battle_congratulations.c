@@ -23,7 +23,7 @@ void require_text_show_battle_congratulations(void) {
             ? MAIN_MUSIC_CONGRATULATIONS
             : MAIN_MUSIC_CONGRATULATIONS_FINAL_BATTLE);
     do {
-        battle_thread_yield();
+        thread_yield();
         g_thread_call_target = (void (*)(void))main_sound_poll_scenario_smd_load;
     } while (thread_call_on_main_stack() != 0);
     g_thread_call_target = (void (*)(void))main_sound_switch_music_track;

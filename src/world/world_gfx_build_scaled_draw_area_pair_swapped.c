@@ -1,3 +1,5 @@
+#include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -14,13 +16,13 @@ void world_gfx_build_scaled_draw_area_pair_swapped(
     s16 h;
     s32 half_extent;
 
-    if (g_world_event_speed == 2) {
+    if (g_script_event_speed == 2) {
         step *= 2;
     }
     if (step >= 12) {
         step = 11;
     }
-    percent = g_world_menu_cursor_zoom_percentages[step];
+    percent = g_menu_cursor_zoom_percentages[step];
     world_script_copy_bytes(&packets->rects[0], geometry, sizeof(*geometry));
     if (packets->rects[0].x < 0x80) {
         packets->rects[0].x += 0x80;

@@ -1,3 +1,6 @@
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -39,7 +42,7 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
         g_world_input_frame_new = ~previous_input & input;
         g_world_input_frame_initial_repeat_counter = 0;
     } else {
-        initial_delay = g_main_input_repeat_initial_delay / g_world_event_speed;
+        initial_delay = g_main_input_repeat_initial_delay / g_script_event_speed;
         counter = ++g_world_input_frame_initial_repeat_counter;
         if (counter == initial_delay) {
             g_world_input_frame_new = filtered_input;
@@ -47,7 +50,7 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
         if (counter >= initial_delay) {
             counter = ++g_world_input_frame_repeat_counter;
             g_world_input_frame_secondary_repeat_counter++;
-            repeat_delay = g_main_input_repeat_period / g_world_event_speed;
+            repeat_delay = g_main_input_repeat_period / g_script_event_speed;
             if (counter >= repeat_delay) {
                 g_world_input_frame_repeat_counter = 0;
                 if ((input & PSX_PAD_SQUARE) != 0) {
@@ -56,7 +59,7 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
                     g_world_input_frame_new = input & PSX_PAD_DPAD_MASK;
                 }
             }
-            secondary_delay = g_main_input_secondary_repeat_period / g_world_event_speed;
+            secondary_delay = g_main_input_secondary_repeat_period / g_script_event_speed;
             if (g_world_input_frame_secondary_repeat_counter >= secondary_delay) {
                 g_world_input_frame_secondary_repeat_counter = 0;
                 if ((g_world_input_frame_current & PSX_PAD_SQUARE) != 0) {
@@ -83,7 +86,7 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
         g_world_thread_status_snapshot[thread_id] = world_thread_is_running_asm(thread_id);
     }
 
-    world_thread_yield();
+    thread_yield();
     for (thread_id = 1; thread_id < 16; thread_id++) {
         status = g_world_thread_status_snapshot[thread_id];
         if (status != world_thread_is_running_asm(thread_id)) {
@@ -96,7 +99,7 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
     }
     world_menu_draw_thread_status_indicators();
     g_world_frame_counter++;
-    g_world_menu_packet_buffer_index = (g_world_menu_packet_buffer_index + 1) & 1;
+    g_menu_packet_buffer_index = (g_menu_packet_buffer_index + 1) & 1;
     if (g_world_menu_input_block_frames != 0) {
         g_world_menu_input_block_frames--;
     }

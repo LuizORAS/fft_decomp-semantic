@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -35,7 +36,7 @@ void world_menu_update_entry_cursor_quads(
         } else {
             y = world_menu_get_cursor_bob_offset(0);
         }
-        thread->task_words[0] += g_world_event_speed;
+        thread->task_words[0] += g_script_event_speed;
         x = -(cursor + 1) * 6;
         y -= 0x17;
         setXY4(quad, entry->window.x + (entry->inner_width + x) - 0x13, entry->window.y - y + 4,

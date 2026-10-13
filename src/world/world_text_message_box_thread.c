@@ -1,5 +1,6 @@
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -178,7 +179,7 @@ void world_text_message_box_thread(void) {
         if (world_thread_get_current_parameter_2() != message) {
             if ((world_thread_get_current_parameter_2() & no_value) != no_value) {
                 while (base_entry != text_find_entry(world_thread_get_current_parameter_2() & 0xF800)) {
-                    world_thread_yield();
+                    thread_yield();
                 }
             }
             message = world_thread_get_current_parameter_2();
@@ -216,7 +217,7 @@ void world_text_message_box_thread(void) {
                 win[0].portrait_code = script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
                 win[1].portrait_code = script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
             }
-            world_thread_yield();
+            thread_yield();
             continue;
         }
         if (code == TEXT_NEWLINE || code == TEXT_END_WAIT_FOR_CONFIRM || code == TEXT_END_AUTO_CLOSE
@@ -252,13 +253,13 @@ void world_text_message_box_thread(void) {
                     column = 0;
                 }
                 if (no_wait == 0) {
-                    for (i = 0;; i += g_world_event_speed) {
-                        world_thread_yield();
+                    for (i = 0;; i += g_script_event_speed) {
+                        thread_yield();
                         if (world_thread_get_current_parameter_2() != message) {
                             break;
                         }
                         if (code == TEXT_PAGE_BREAK) {
-                            cursor_window = WINDOW_AT(g_world_menu_packet_buffer_index);
+                            cursor_window = WINDOW_AT(g_menu_packet_buffer_index);
                             cursor_window->sprites[0].x0 = cursor_x
                                 + (x + cursor_window->quads[0].x0 - cursor_window->quads[0].u0)
                                 + (s16)(((i >> 4) & 3) - 8);
@@ -269,9 +270,9 @@ void world_text_message_box_thread(void) {
                             cursor_window->sprites[1].y0 = cursor_window->sprites[0].y0 + 2;
                         } else {
                             if (code == TEXT_NEWLINE) {
-                                WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].u0 = (i & 0x30) - 0x58;
-                                WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].v0 = 0x10;
-                                arrow_window = WINDOW_AT(g_world_menu_packet_buffer_index);
+                                WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].u0 = (i & 0x30) - 0x58;
+                                WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].v0 = 0x10;
+                                arrow_window = WINDOW_AT(g_menu_packet_buffer_index);
                                 arrow_window->sprites[2].x0 = cursor_x + arrow_window->quads[0].x0;
                                 arrow_window->sprites[2].y0
                                     = cursor_y + arrow_window->quads[0].y0 - arrow_window->quads[0].v0;
@@ -280,7 +281,7 @@ void world_text_message_box_thread(void) {
                                `while` is rotated to test at the bottom. */
                             for (;;) {
                                 if (rec.line - rec.lines != rec.first_line) {
-                                    WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].x0 = 0;
+                                    WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].x0 = 0;
                                     rec.first_line++;
                                     rec.last_line = rec.first_line + rec.lines;
                                     world_menu_render_text_image_at_fixed_origin(&rec);
@@ -291,12 +292,12 @@ void world_text_message_box_thread(void) {
                         }
                     }
                 }
-                hidden_window = WINDOW_AT(g_world_menu_packet_buffer_index);
+                hidden_window = WINDOW_AT(g_menu_packet_buffer_index);
                 hidden_window->sprites[0].x0 = 0x200;
                 hidden_window->sprites[1].x0 = 0x200;
                 hidden_window->sprites[2].x0 = 0x200;
-                world_thread_yield();
-                hidden_window = WINDOW_AT(g_world_menu_packet_buffer_index);
+                thread_yield();
+                hidden_window = WINDOW_AT(g_menu_packet_buffer_index);
                 hidden_window->sprites[0].x0 = 0x200;
                 hidden_window->sprites[1].x0 = 0x200;
                 hidden_window->sprites[2].x0 = 0x200;
@@ -314,7 +315,7 @@ void world_text_message_box_thread(void) {
                         rec.width, rec.height, &rec.rect, MENU_WINDOW_FRAME_UPLOAD);
                 }
                 cursor_y = y - 0x10;
-                world_thread_yield();
+                thread_yield();
             }
             no_wait = 0;
             cursor_x = x;
@@ -328,7 +329,7 @@ void world_text_message_box_thread(void) {
             NEXT();
             no_wait = 1;
         } else if (code == TEXT_RELEASE_WAITING_THREADS) {
-            world_thread_yield();
+            thread_yield();
             NEXT();
         } else if (code == TEXT_SET_PORTRAIT) {
             NEXT();
@@ -451,6 +452,6 @@ void world_text_message_box_thread(void) {
     world_menu_release_window_buffer_pair(win);
     world_gfx_free_tpage7_vram(&rec.rect);
     world_text_release_current_message_box_slot();
-    world_thread_yield();
+    thread_yield();
     world_thread_exit_current();
 }

@@ -5,6 +5,7 @@
 #include "fft/battle_text.h"
 #include "fft/gfx.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -49,7 +50,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
         page = &g_battle_menu_height_display_pages[frame & 1];
         /* The target loads the display height signed (lh). */
         i = menu_build_quad_pieces(g_map_selected_tile_data.display_height, page->quads) - 1;
-        battle_thread_yield();
+        thread_yield();
         if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_DARK_SCREEN) != 0) {
             continue;
         }
@@ -78,7 +79,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
             }
         }
     }
-    battle_thread_yield();
+    thread_yield();
     battle_gfx_free_tpage7_vram(&rect);
     battle_thread_exit_current();
 }

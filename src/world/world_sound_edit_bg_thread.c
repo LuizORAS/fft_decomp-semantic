@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -28,7 +29,7 @@ void world_sound_edit_bg_thread(void) {
         delta = volume_to - volume_from;
         accumulator = 0;
         do {
-            world_thread_yield();
+            thread_yield();
             volume = (accumulator / steps) + volume_from;
             if (volume < 0) {
                 volume = -volume;

@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -20,7 +21,7 @@ void world_option_gfx_build_scaled_draw_area_packets(
     s16 h;
     s32 crop;
 
-    if (g_world_event_speed == 2) {
+    if (g_script_event_speed == 2) {
         step *= 2;
     }
     if (step >= 12) {

@@ -3,6 +3,7 @@
 #include "fft/battle_thread.h"
 #include "fft/event_attack.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -48,12 +49,12 @@ void attack_deploy_run_screen(void) {
     g_battle_menu_thread_menu_data = g_attack_deploy_menu_entries;
     MoveImage(&g_attack_deploy_vram_copy_rect, g_attack_deploy_vram_copy_x, g_attack_deploy_vram_copy_y);
     LoadImage(&g_attack_deploy_arrow_clut_rect, g_attack_deploy_arrow_clut_data);
-    battle_thread_yield();
+    thread_yield();
     g_attack_deploy_current_squad_id = script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID);
     g_attack_deploy_current_squad_data = &g_attack_deploy_squad_data[g_attack_deploy_current_squad_id];
     script_set_event_speed(1);
     g_battle_screen_fade = 0xff;
-    battle_thread_yield();
+    thread_yield();
     g_attack_deploy_grid_slide_y = 0x9c;
     g_attack_deploy_deployed_unit_count = 0;
     g_world_shop_purchase_unit_price = 0;
@@ -158,7 +159,7 @@ ramza_placed:
             }
             for (i = 0; i < 0x100; i += 8) {
                 g_attack_deploy_grid_slide_x -= 8;
-                battle_thread_yield();
+                thread_yield();
             }
         } else if (transition == 2) {
             battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
@@ -170,7 +171,7 @@ ramza_placed:
             }
             for (i = 0; i < 0x100; i += 8) {
                 g_attack_deploy_grid_slide_x += 8;
-                battle_thread_yield();
+                thread_yield();
             }
         }
         if (first_pass != 0) {
@@ -197,7 +198,7 @@ ramza_placed:
                     && g_attack_deploy_grid_slide_y == 0) {
                     break;
                 }
-                battle_thread_yield();
+                thread_yield();
             }
             first_pass = 0;
         } else {
@@ -208,7 +209,7 @@ ramza_placed:
         battle_thread_start(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, attack_deploy_update_screen_graphics);
         battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 0);
         while (1) {
-            battle_thread_yield();
+            thread_yield();
             g_attack_deploy_selected_unit_deployed
                 = attack_deploy_is_roster_unit_deployed(g_attack_deploy_selected_roster_index);
             input = script_get_controller_input_pointer(0);
@@ -323,7 +324,7 @@ ramza_placed:
                         battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
                         for (i = 0; i < 0x100; i += 8) {
                             g_attack_deploy_grid_slide_x += 8;
-                            battle_thread_yield();
+                            thread_yield();
                         }
                     } else {
                         s32* deployed = &g_attack_deploy_selected_unit_deployed;
@@ -366,7 +367,7 @@ ramza_placed:
                 battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
                 for (i = 0; i < 0x100; i += 8) {
                     g_attack_deploy_grid_slide_x -= 8;
-                    battle_thread_yield();
+                    thread_yield();
                 }
                 battle_copy_bytes(g_attack_deploy_units_by_squad[g_attack_deploy_current_squad],
                     g_attack_deploy_roster_id_by_tile, 25);
@@ -493,7 +494,7 @@ ramza_placed:
                     NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)g_attack_character_status_frame_config, 0, 0);
                 battle_thread_start(ATTACK_PROMPT_THREAD_SLOT_DETAIL_MARKER, attack_thread_wait_forever);
                 do {
-                    battle_thread_yield();
+                    thread_yield();
                     if (*input & PSX_PAD_SELECT) {
                         battle_thread_start(ATTACK_THREAD_SLOT_SELECT_MENU, attack_deploy_run_select_menu);
                         battle_thread_set_parameters(ATTACK_THREAD_SLOT_SELECT_MENU, 0, 0, 0);
@@ -536,7 +537,7 @@ ramza_placed:
     battle_thread_wait_frames(0x20);
     g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_CLOSED;
     battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
-    battle_thread_yield();
+    thread_yield();
     for (i = 0; i < 0x100; i += 2) {
         g_attack_status_display_offset_y[0] = -i;
         g_attack_deploy_grid_slide_y = i;
@@ -545,7 +546,7 @@ ramza_placed:
         g_attack_deploy_slot_offsets[2] = i;
         g_attack_deploy_slot_offsets[3] = i;
         g_attack_deploy_slot_offsets[4] = i;
-        battle_thread_yield();
+        thread_yield();
         if (!(i & 3)) {
             g_attack_deploy_zodiac_brightness_word[0]--;
         }
@@ -650,7 +651,7 @@ ramza_placed:
     battle_thread_wait_frames(0x20);
     g_battle_screen_fade = 0;
     do {
-        battle_thread_yield();
+        thread_yield();
         g_battle_screen_fade += 4;
     } while (g_battle_screen_fade < 0x100);
     battle_thread_set_parameters(ATTACK_THREAD_SLOT_DEPLOY_RENDER, 0, 0, 1);

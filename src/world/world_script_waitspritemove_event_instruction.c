@@ -1,4 +1,5 @@
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -24,6 +25,6 @@ void world_script_waitspritemove_event_instruction(s32 unit_id) {
         if (i == 17) {
             return;
         }
-        world_thread_yield();
+        thread_yield();
     }
 }

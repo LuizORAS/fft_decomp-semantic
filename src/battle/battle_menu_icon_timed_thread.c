@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_script.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -40,11 +42,11 @@ void battle_menu_icon_timed_thread(void) {
     battle_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
     LoadImage(&rect, (u32*)buffer);
     for (;; i++) {
-        battle_thread_yield();
+        thread_yield();
         if (i == 0) {
             battle_menu_free_memory(buffer);
         }
-        if (g_battle_text_message_duration_frames < i * g_battle_event_speed) {
+        if (g_battle_text_message_duration_frames < i * g_script_event_speed) {
             hold = 0;
             g_script_event_input = PSX_PAD_CIRCLE;
             g_sound_suppressed = 1;
@@ -69,7 +71,7 @@ void battle_menu_icon_timed_thread(void) {
     }
     g_battle_menu_panel_fade_intensity = 0;
     g_sound_suppressed = 0;
-    battle_thread_yield();
+    thread_yield();
     if (battle_thread_get_current_parameter_2() == 0) {
         battle_thread_exit_current();
     }

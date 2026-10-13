@@ -4,6 +4,7 @@
 #include "fft/battle_script.h"
 #include "fft/battle_text.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -58,7 +59,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
             if (slot != 16) {
                 break;
             }
-            battle_thread_yield();
+            thread_yield();
         }
 
         ring = g_battle_menu_slot_states[slot];
@@ -149,7 +150,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
             DrawSync(0);
             g_battle_menu_slot_states[slot] = 0;
         } else if (delay >= 2) {
-            for (i = 0; i < delay * (3 - g_battle_event_speed); i++) {
+            for (i = 0; i < delay * (3 - g_script_event_speed); i++) {
                 if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                     break;
                 }
@@ -167,7 +168,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
                 g_battle_text_glyphs_per_wait = 1;
             }
             if (g_battle_menu_slot_states[slot] >= g_battle_text_glyphs_per_wait) {
-                for (i = 0; i < 3 - g_battle_event_speed; i++) {
+                for (i = 0; i < 3 - g_script_event_speed; i++) {
                     if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                         break;
                     }

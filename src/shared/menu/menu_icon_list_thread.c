@@ -3,6 +3,7 @@
 #include "fft/battle_script.h"
 #include "fft/battle_thread.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 
 /* Menu window thread: rebuilds the text image whenever the entry's refresh
  * flag is raised and alternates between two sprite records until the menu
@@ -44,7 +45,7 @@ void menu_icon_list_thread(void) {
             LoadImage(&rect, (u32*)buffer);
         }
         record = &records[i & 1];
-        battle_thread_yield();
+        thread_yield();
         if (fresh == 1) {
             battle_menu_free_memory(buffer);
             fresh = 0;
@@ -60,6 +61,6 @@ void menu_icon_list_thread(void) {
         battle_menu_update_icon_cursor_sprites(state, &record->base, i, cursor);
         battle_menu_submit_icon_primitives(record);
     }
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

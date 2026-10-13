@@ -126,7 +126,7 @@ void camera_fusion_thread(void) {
             break;
         }
         camera_clear_zoom_variable_low_bit();
-        battle_thread_yield();
+        thread_yield();
     }
 
     battle_menu_free_memory(tracks);

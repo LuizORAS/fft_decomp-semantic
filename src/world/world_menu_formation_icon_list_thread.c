@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -35,7 +36,7 @@ void world_menu_formation_icon_list_thread(void) {
     world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.pen);
     LoadImage(&rect, buffer);
     for (i = 0;; i++) {
-        world_thread_yield();
+        thread_yield();
         if (i == 0) {
             world_menu_free_memory(buffer);
         }
@@ -57,6 +58,6 @@ void world_menu_formation_icon_list_thread(void) {
         setRGB0(&record->sprites[3], g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
         world_menu_submit_icon_primitives(record);
     }
-    world_thread_yield();
+    thread_yield();
     world_thread_exit_current();
 }

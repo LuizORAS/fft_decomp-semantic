@@ -2,6 +2,7 @@
 #include "fft/event_require.h"
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -128,7 +129,7 @@ void require_reward_run_gil_ticker(void) {
     i = 0;
     for (;;) {
         buffer = i & 1;
-        battle_thread_yield();
+        thread_yield();
         battle_gfx_draw_or_append_gpu_primitive(&areas[buffer + 2]);
         for (pass = 0; pass < 2; pass++, tick++) {
             for (j = 0; j < digits; j++) {
@@ -215,7 +216,7 @@ skipped:
     tick = 0;
     for (;;) {
         buffer = i & 1;
-        battle_thread_yield();
+        thread_yield();
         battle_gfx_draw_or_append_gpu_primitive(&areas[buffer + 2]);
         for (j = 0; j < digits; j++) {
             POLY_FT4* digit_quad;
@@ -244,7 +245,7 @@ skipped:
     pass = 0x80;
     do {
         buffer = i & 1;
-        battle_thread_yield();
+        thread_yield();
         battle_gfx_draw_or_append_gpu_primitive(&areas[buffer + 2]);
         for (j = 0; j < digits; j++) {
             POLY_FT4* digit_quad;

@@ -4,6 +4,7 @@
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Menu thread: waits for thread 8, runs the tutorial event if pending, then
@@ -21,7 +22,7 @@ void battle_menu_start_entry_thread(void) {
     }
     camera_wait_until_idle();
     while (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_ATTACK_TARGET_STATS) != 0) {
-        battle_thread_yield();
+        thread_yield();
     }
     if (g_battle_menu_input_mode == MENU_INPUT_PLAYER) {
         if (script_is_tutorial_event_slot() != 0) {

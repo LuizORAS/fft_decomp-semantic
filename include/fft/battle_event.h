@@ -9,7 +9,6 @@
 /* BATTLE pointer slot 0x80173ca4; WORLD pointer slot 0x801cd75c. */
 extern event_file_block_t* g_battle_event_block;
 extern s32 g_battle_event_frame_counter;
-extern s32 g_battle_event_speed;
 extern u8
     g_battle_event_thread_status_snapshot[]; /* per-thread running flags sampled before the yield, indexed 1..15 */
 extern s32 g_battle_next_event_id;

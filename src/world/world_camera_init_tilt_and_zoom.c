@@ -1,5 +1,6 @@
 #include "fft/battle_camera.h"
 #include "fft/battle_map.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -32,14 +33,14 @@ void world_camera_init_tilt_and_zoom(void) {
     if (step < 0) {
         while (target < tilt) {
             g_world_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = tilt;
-            world_thread_yield();
+            thread_yield();
             tilt += step;
         }
         g_world_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = target;
     } else {
         while (tilt < target) {
             g_world_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = tilt;
-            world_thread_yield();
+            thread_yield();
             tilt += step;
         }
         g_world_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = target;

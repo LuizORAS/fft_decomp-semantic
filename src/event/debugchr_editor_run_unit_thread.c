@@ -2,6 +2,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_debugchr.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -110,7 +111,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
     g_battle_menu_modal_open = 0;
 
     for (;; frame++) {
-        battle_thread_yield();
+        thread_yield();
         g_menu_input_controller = script_get_controller_input_pointer(0);
         {
             s32 render_offset;
@@ -167,7 +168,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                 animation_second[0] = one;
                 animation_third[0] = one;
                 for (;;) {
-                    battle_thread_yield();
+                    thread_yield();
                     {
                         s32 render_offset;
                         render_offset = (frame & 1) * sizeof(g_debugchr_gfx_render_buffers[0]);

@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_thread.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 
 /* Render a text record into a freshly built window image at the record's own
@@ -24,7 +25,7 @@ void battle_menu_render_text_image_at_record_origin(text_dialog_record_t* record
         g_battle_menu_text_param_24 = record->last_line;
         battle_menu_display_text_entry(record->text, record->buffer, &g_menu_text_state.pen);
         LoadImage(&record->rect, record->buffer);
-        battle_thread_yield();
+        thread_yield();
         battle_menu_free_memory(record->buffer);
     }
 }

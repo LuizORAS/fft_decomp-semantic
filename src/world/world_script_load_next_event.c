@@ -1,4 +1,5 @@
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -11,7 +12,7 @@ s32 world_script_load_next_event(void) {
     s32 event_id;
 
     do {
-        world_thread_yield();
+        thread_yield();
         for (task_id = 4; task_id < 15; task_id++) {
             if (world_thread_find_running_by_task(task_id) != 0) {
                 break;

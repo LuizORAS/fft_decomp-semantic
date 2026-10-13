@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -14,7 +15,7 @@ void world_script_earthquake_start(void) {
     second_frames = 0;
     for (;;) {
         first_frames++;
-        world_thread_yield();
+        thread_yield();
         second_frames++;
         if (first_frames == parameter->pulses[0].frames) {
             first_frames = 0;

@@ -3,7 +3,9 @@
 #include "fft/event_card.h"
 #include "fft/event_equip.h"
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -37,8 +39,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         LoadImage(&rect, (u32*)g_main_heap_high_overlay_load_address);
     }
     g_world_gfx_active_otag_entries = ot;
-    world_gfx_submit_screen_fade_overlay(
-        &g_world_screen_tint_tiles[g_world_menu_packet_buffer_index], g_world_screen_fade);
+    world_gfx_submit_screen_fade_overlay(&g_world_screen_tint_tiles[g_menu_packet_buffer_index], g_world_screen_fade);
     world_camera_store_state_to_script_variables();
     world_menu_draw_active_window_frames();
 
@@ -141,7 +142,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     for (i = 1; i < 16; i++) {
         g_world_event_thread_status_snapshot[i] = world_thread_is_running_asm(i);
     }
-    world_thread_yield();
+    thread_yield();
     for (i = 1; i < 16; i++) {
         if (g_world_event_thread_status_snapshot[i] != world_thread_is_running_asm(i)) {
             g_world_thread_change_cooldown = 5;
@@ -152,7 +153,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     }
     world_camera_load_state_from_script_variables();
     g_world_frame_counter++;
-    g_world_menu_packet_buffer_index = (g_world_menu_packet_buffer_index + 1) & 1;
+    g_menu_packet_buffer_index = (g_menu_packet_buffer_index + 1) & 1;
     if (g_world_menu_input_block_frames != 0) {
         g_world_menu_input_block_frames--;
     }

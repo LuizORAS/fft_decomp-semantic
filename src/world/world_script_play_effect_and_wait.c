@@ -8,7 +8,7 @@ void world_script_play_effect_and_wait(void) {
     g_thread_call_target = effect_call_play;
     thread_call_on_main_stack();
     do {
-        world_thread_yield();
+        thread_yield();
         g_thread_call_target = (void (*)(void))battle_state_get_animation_continue_check;
     } while (thread_call_on_main_stack() != 0);
 }

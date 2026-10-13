@@ -1,6 +1,7 @@
 #include "fft/battle_gfx.h"
 #include "fft/event_attack.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -56,7 +57,7 @@ void attack_deploy_run_render_thread(void) {
         &g_attack_deploy_render_buffers[1], &g_attack_deploy_render_buffers[0], sizeof(attack_deploy_render_buffer_t));
     frame = 0;
     while (1) {
-        battle_thread_yield();
+        thread_yield();
         if (g_attack_deploy_tiles_only_mode == 0 && g_attack_deploy_menu_state != ATTACK_DEPLOY_MENU_HIDDEN) {
             attack_deploy_build_menu_cursor_primitives(
                 frame, g_attack_deploy_menu_state, &g_attack_deploy_render_buffers[frame & 1]);

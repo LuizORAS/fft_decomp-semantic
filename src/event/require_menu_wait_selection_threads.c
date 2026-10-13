@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Wait until the menu thread ends or a selection result (-1, 0 or 1) is in,
@@ -16,9 +17,9 @@ void require_menu_wait_selection_threads(void) {
         if (selection == 0) {
             break;
         }
-        battle_thread_yield();
+        thread_yield();
     }
-    battle_thread_yield();
+    thread_yield();
     g_battle_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_id = NATIVE_THREAD_TASK_STOP_REQUEST;
     battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE, 0, 0, 2);
     battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MESSAGE);

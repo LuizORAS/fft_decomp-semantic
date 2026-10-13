@@ -8,7 +8,9 @@
 #include "fft/event_card.h"
 #include "fft/event_equip.h"
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -42,7 +44,7 @@ s32 script_run_event_frame(u32* ot, u32 buttons) {
     }
     g_battle_gfx_current_otag_entry = ot;
     battle_gfx_submit_screen_fade_overlay(
-        &g_battle_gfx_screen_fade_overlays[g_battle_menu_packet_buffer_index], g_battle_screen_fade);
+        &g_battle_gfx_screen_fade_overlays[g_menu_packet_buffer_index], g_battle_screen_fade);
     camera_store_state_to_script_variables();
     battle_menu_draw_active_window_frames();
 
@@ -148,7 +150,7 @@ s32 script_run_event_frame(u32* ot, u32 buttons) {
     for (i = 1; i < 16; i++) {
         g_battle_event_thread_status_snapshot[i] = battle_thread_is_running_asm(i);
     }
-    battle_thread_yield();
+    thread_yield();
     for (i = 1; i < 16; i++) {
         if (g_battle_event_thread_status_snapshot[i] != battle_thread_is_running_asm(i)) {
             g_battle_event_input_suppression_frames = 5;
@@ -159,7 +161,7 @@ s32 script_run_event_frame(u32* ot, u32 buttons) {
     }
     camera_load_state_from_script_variables();
     g_battle_event_frame_counter++;
-    g_battle_menu_packet_buffer_index = (g_battle_menu_packet_buffer_index + 1) & 1;
+    g_menu_packet_buffer_index = (g_menu_packet_buffer_index + 1) & 1;
     if (g_battle_menu_input_block_frames != 0) {
         g_battle_menu_input_block_frames--;
     }

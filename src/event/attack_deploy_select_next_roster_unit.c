@@ -1,4 +1,5 @@
 #include "fft/event_attack.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Thread body: step the deployment roster cursor to the next deployable
@@ -28,6 +29,6 @@ void attack_deploy_select_next_roster_unit(void) {
     g_attack_character_status_redraw_request = 1;
     g_attack_deploy_selected_unit_deployed
         = attack_deploy_is_roster_unit_deployed(g_attack_deploy_selected_roster_index);
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

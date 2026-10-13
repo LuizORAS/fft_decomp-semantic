@@ -1,5 +1,6 @@
 #include "fft/battle_sound.h"
 #include "fft/battle_thread.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Thread task 0x35: ramp the volume of an environment sound from volume_from to
@@ -36,7 +37,7 @@ void sound_run_background_fade_thread(void) {
         delta = volume_to - volume_from;
         scaled = 0;
         do {
-            battle_thread_yield();
+            thread_yield();
             volume = (scaled / steps) + volume_from;
             if (volume < 0) {
                 volume = -volume;

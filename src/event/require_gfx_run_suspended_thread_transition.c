@@ -1,5 +1,6 @@
 #include "fft/event_require.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -22,7 +23,7 @@ void require_gfx_run_suspended_thread_transition(void) {
         s32 buffer = frame & 1;
         require_gfx_build_gradient_grid_primitives(g_require_gfx_poly_gt4_buffers[buffer]);
         menu_build_status_group_primitives(g_require_gfx_poly_ft4_buffers[buffer]);
-        battle_thread_yield();
+        thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {
             break;
         }
@@ -31,6 +32,6 @@ void require_gfx_run_suspended_thread_transition(void) {
     battle_copy_bytes(&g_battle_threads[g_require_thread_suspended_id], saved, NATIVE_THREAD_STRIDE);
     battle_menu_free_memory(saved);
     battle_thread_resume(g_require_thread_suspended_id);
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

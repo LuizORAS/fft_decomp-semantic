@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_thread.h"
+#include "fft/thread.h"
 
 /* Thread entry of the mini menu (the Triangle menu): wait for the camera and any
  * menu transition to finish, pulse tutorial wait value 0xfe, show numeric values
@@ -9,7 +10,7 @@
 void battle_menu_display_triangle_selection(void) {
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_MINI_MENU);
     while (camera_is_active() != 0 || g_battle_menu_transition_state != 0) {
-        battle_thread_yield();
+        thread_yield();
     }
     script_pulse_tutorial_wait_value(0xFE);
     g_battle_menu_hide_numeric_values = 0;

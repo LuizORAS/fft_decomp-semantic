@@ -1,5 +1,6 @@
 #include "fft/gfx.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -45,7 +46,7 @@ void world_menu_selected_tile_info_display_thread(void) {
 
         page = &g_world_menu_selected_tile_info_pages[frame & 1];
         i = menu_build_quad_pieces(tile->display_height, page->quads) - 1;
-        world_thread_yield();
+        thread_yield();
         if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_DARK_SCREEN) != 0) {
             continue;
         }
@@ -74,7 +75,7 @@ void world_menu_selected_tile_info_display_thread(void) {
             }
         }
     }
-    world_thread_yield();
+    thread_yield();
     world_gfx_free_tpage7_vram(&rect);
     world_thread_exit_current();
 }

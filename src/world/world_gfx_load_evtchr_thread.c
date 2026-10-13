@@ -21,20 +21,20 @@ void world_gfx_load_evtchr_thread(void) {
     buffer = main_heap_alloc(sizeof(*buffer));
 
     do {
-        world_thread_yield();
+        thread_yield();
         g_thread_call_target = (void (*)(void))main_file_call_build_header;
     } while (
         thread_call_on_main_stack(block * EVTCHR_BLOCK_SECTORS + DISC_SECTOR_EVENT_EVTCHR_BIN, sizeof(*buffer), buffer)
         != 0);
 
     do {
-        world_thread_yield();
+        thread_yield();
         g_thread_call_target = main_file_is_still_loading;
     } while (thread_call_on_main_stack() != 0);
 
     g_world_event_pending_loaded_evtchr_slot = slot;
     g_world_event_loaded_evtchr_buffer = buffer;
-    world_thread_yield();
+    thread_yield();
     main_heap_free(buffer);
     world_thread_exit_current();
 }

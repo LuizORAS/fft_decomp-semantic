@@ -3,6 +3,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_text.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -28,7 +29,7 @@ void battle_menu_run_system_function_thread(void) {
             if (g_battle_thread_contexts[NATIVE_THREAD_SLOT_EVENT].task_id == NATIVE_THREAD_TASK_EXECUTE_EVENT) {
                 battle_thread_exit_current();
             }
-            battle_thread_yield();
+            thread_yield();
         }
     }
     camera_wait_until_idle();

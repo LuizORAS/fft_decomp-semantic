@@ -139,7 +139,7 @@ void attack_gfx_prepare_party_portrait_textures(void) {
             LoadImage(&g_attack_portrait_palette_upload_rect, (u32*)((u8*)&file[sheet] + pal_offset));
         }
         if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
-            battle_thread_yield();
+            thread_yield();
         } else {
             DrawSync(0);
         }

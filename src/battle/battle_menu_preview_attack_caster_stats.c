@@ -34,8 +34,8 @@ void battle_menu_preview_attack_caster_stats(void) {
         thread_call_on_main_stack(attacker, target, action);
         g_battle_menu_preview_target_action = &target->action;
     }
-    battle_thread_yield();
-    battle_thread_yield();
+    thread_yield();
+    thread_yield();
     battle_menu_load_selected_unit();
     battle_menu_display_hovered_unit_stats(&g_battle_menu_attack_caster_stats_display, UNIT_STATS_PANEL_ATTACK_CASTER,
         g_battle_menu_attack_caster_stats_setup, &g_battle_menu_active_turn_banner);

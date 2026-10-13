@@ -2,6 +2,8 @@
 #include "fft/battle_script.h"
 #include "fft/event_debugchr.h"
 #include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -114,7 +116,7 @@ loop_outer:
         mark = 0xE;
         /* Removing the tied use changes the marker and menu-pointer allocation. */
         __asm__("" : "=r"(mark) : "0"(mark));
-        battle_thread_yield();
+        thread_yield();
         menu_build_status_group_primitives(g_debugchr_gfx_render_buffers[i & 1]);
         input = script_get_controller_input_pointer(0);
         g_menu_input_controller = input;
@@ -197,7 +199,7 @@ editor:
     g_debugchr_editor_field_table = g_debugchr_editor_fields;
     cursor_prims = g_debugchr_editor_cursor_polys;
     i = 0;
-    battle_thread_yield();
+    thread_yield();
     for (;;) {
         field = &g_debugchr_editor_field_table[row];
         x = field->x;
@@ -357,7 +359,7 @@ editor:
             if (g_debugchr_editor_field_edit_active == 0) {
                 cursor_v = PRIM_AT(cursor_prims, buffer);
                 shadow_v = &g_debugchr_editor_cursor_shade_polys[buffer];
-                bob_y = y - (((i * g_battle_event_speed) >> 4) & 3);
+                bob_y = y - (((i * g_script_event_speed) >> 4) & 3);
                 setXY4(cursor_v, x, bob_y, x + 0x10, bob_y, x, bob_y + 0x10, x + 0x10, bob_y + 0x10);
                 setXY4(shadow_v, x + 2, bob_y + 2, x + 0x12, bob_y + 2, x + 2, bob_y + 0x12, x + 0x12, bob_y + 0x12);
                 g_debugchr_editor_cursor_polys[buffer].clut = 0x7D7C;
@@ -394,7 +396,7 @@ editor:
             shadow_h->v2 = 0x10;
             shadow_h->u3 = uv_h_far;
             shadow_h->v3 = 0x10;
-            bob_x = ((i * g_battle_event_speed) >> 4) & 3;
+            bob_x = ((i * g_script_event_speed) >> 4) & 3;
             setXY4(cursor_h, x - bob_x, y, (x - bob_x) + 0x10, y, x - bob_x, y + 0x10, (x - bob_x) + 0x10, y + 0x10);
             /* A separate temporary schedules the decrement after the
              * `(x - bob_x) + 0x10` sum; `bob_x -= 2` would move it ahead. */

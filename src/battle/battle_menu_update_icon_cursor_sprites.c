@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_thread.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -35,7 +36,7 @@ void battle_menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprit
         } else {
             x = battle_menu_get_cursor_bob_offset(0);
         }
-        thread->task_words[0] += g_battle_event_speed;
+        thread->task_words[0] += g_script_event_speed;
         x -= 12;
         y = cursor * 16 + 10;
         record->sprites[1].x0 = param->window.x + x;
@@ -43,9 +44,9 @@ void battle_menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprit
         record->sprites[2].x0 = param->window.x + x + 2;
         record->sprites[2].y0 = param->window.y + y + 2;
     }
-    if (g_battle_event_speed == 2) {
+    if (g_script_event_speed == 2) {
         frame *= 2;
     }
     menu_copy_sprite_position_uv_and_size(param, &record->sprites[0], frame);
-    battle_menu_zoom_cursor_frame(param, &record->sprites[0], frame);
+    menu_zoom_cursor_frame(param, &record->sprites[0], frame);
 }

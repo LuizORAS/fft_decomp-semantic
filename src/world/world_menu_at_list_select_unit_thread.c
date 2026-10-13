@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Thread body: pauses the four worker threads after this one, yields until
@@ -14,7 +15,7 @@ void world_menu_at_list_select_unit_thread(void) {
     world_thread_suspend(g_world_thread_current_id + 4);
     while (g_world_menu_transition_timeout = g_world_menu_at_list_state.selected_index + 100,
         g_world_menu_transition_finished == 0) {
-        world_thread_yield();
+        thread_yield();
     }
     g_world_menu_transition_finished = 0;
     g_world_menu_transition_timeout = 0;

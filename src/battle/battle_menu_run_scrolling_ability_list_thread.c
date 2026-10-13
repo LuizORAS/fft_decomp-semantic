@@ -4,6 +4,9 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/gfx.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -188,7 +191,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
             } else if ((g_script_event_input & (PSX_PAD_RIGHT | PSX_PAD_LEFT)) && g_battle_menu_scroll_list_depth == 1
                 && layout->columns.mode[1] != MENU_TEXT_COLUMN_HIDDEN && i != 0
                 && layout->columns.text_ids[0][entry->selected_index] != 0x7000) {
-                battle_thread_yield();
+                thread_yield();
                 sound_queue_sfx_cursor_move();
                 battle_thread_start(g_battle_current_thread_id - 1, battle_menu_preview_ability_turn_at_list);
                 battle_thread_set_parameters(g_battle_current_thread_id - 1,
@@ -205,7 +208,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                         LoadImage(&g_battle_menu_ability_list_clut_rect, (u32*)(saved_clut + 32));
                     }
                     column++;
-                    battle_thread_yield();
+                    thread_yield();
                 }
             }
             if ((g_script_event_input & PSX_PAD_UP)
@@ -303,7 +306,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                 ClearImage(&clear, 0, 0, 0);
             }
         }
-        battle_thread_yield();
+        thread_yield();
         if (i == 0) {
             for (column = 0; column < 16; column++) {
                 clut = &saved_clut[column];
@@ -372,8 +375,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
             battle_menu_handle_action(entry, cursor);
         }
         battle_handle_menu_cancel_input(entry);
-        if ((g_battle_event_speed == 1 && !(script_get_event_initial_repeat_counter() & 1))
-            || g_battle_event_speed == 2) {
+        if ((g_script_event_speed == 1 && !(script_get_event_initial_repeat_counter() & 1))
+            || g_script_event_speed == 2) {
             if (hold_time < g_main_menu_scroll_accel_delay) {
                 step = g_main_menu_scroll_slow_step;
             } else {
@@ -381,24 +384,24 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
             }
             scroll_accum += scroll_delta * (step << 1);
         }
-        hold_time += g_battle_event_speed;
+        hold_time += g_script_event_speed;
         if (scroll_accum < -0xF || scroll_accum > 0xF) {
             ring += scroll_delta;
             row_offset += scroll_delta;
             repeat = script_get_event_initial_repeat_counter();
             scroll_accum = 0;
             scroll_delta = 0;
-            if (repeat >= g_main_input_repeat_initial_delay / g_battle_event_speed) {
+            if (repeat >= g_main_input_repeat_initial_delay / g_script_event_speed) {
                 g_script_event_input |= g_script_event_current_input & (PSX_PAD_UP | PSX_PAD_DOWN);
             }
             battle_menu_free_memory(buffer);
             row_buffer_live = 0;
         }
         frame->v0 = (ring * 16 + scroll_accum - 2) & 0x7F;
-        if (i * g_battle_event_speed < 12) {
+        if (i * g_script_event_speed < 12) {
             gfx_init_image_loading(
                 &page->frame, &entry->vram_origin, &entry->window, (const image_load_parameters_t*)&window);
-            battle_menu_zoom_cursor_frame(entry, frame, i * g_battle_event_speed);
+            menu_zoom_cursor_frame(entry, frame, i * g_script_event_speed);
         }
         if (layout->columns.mode[1] == MENU_TEXT_COLUMN_TEXT && toggle == 1) {
             {
@@ -435,7 +438,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     if (row_buffer_live != 0) {
         battle_menu_free_memory(buffer);
     }
-    battle_thread_yield();
+    thread_yield();
     g_battle_menu_scroll_list_depth--;
     if (battle_thread_get_current_parameter_2() == 0) {
         battle_thread_exit_current();

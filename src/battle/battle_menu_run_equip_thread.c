@@ -3,6 +3,7 @@
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -24,14 +25,14 @@ void battle_menu_run_equip_thread(void) {
     g_battle_menu_suspend_state = 1;
     battle_thread_wait_for_unit_view_panels();
     battle_menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP);
-    battle_menu_reserve_high_overlay(0x20000);
+    menu_reserve_high_overlay(0x20000);
     battle_menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP_SECOND_HALF);
     battle_thread_suspend(NATIVE_THREAD_SLOT_MENU);
     battle_thread_suspend(NATIVE_THREAD_SLOT_MENU_CHILD);
     g_battle_companion_overlay_state = COMPANION_OVERLAY_STATE_EQUIP;
     do {
         g_script_event_input = 0;
-        battle_thread_yield();
+        thread_yield();
     } while (g_battle_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
     g_battle_menu_thread_menu_data = g_battle_menu_idle_action_entries;
     g_battle_menu_action_slot_row_actions[0] = -3;

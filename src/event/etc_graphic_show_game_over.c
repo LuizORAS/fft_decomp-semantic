@@ -1,4 +1,5 @@
 #include "fft/event_etc.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -22,7 +23,7 @@ void etc_graphic_show_game_over(s32 graphic_id) {
     g_thread_call_target = (void (*)(void))main_sound_open_scenario_smd_files;
     thread_call_on_main_stack(MAIN_MUSIC_GAME_OVER);
     do {
-        battle_thread_yield();
+        thread_yield();
         g_thread_call_target = (void (*)(void))main_sound_poll_scenario_smd_load;
     } while (thread_call_on_main_stack() != 0);
     g_thread_call_target = (void (*)(void))main_sound_switch_music_track;
@@ -36,8 +37,8 @@ void etc_graphic_show_game_over(s32 graphic_id) {
             etc_graphic_build_game_over_polygons(
                 graphic_id, fade, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], 0x80);
             frame++;
-            battle_thread_yield();
-            fade += g_battle_event_speed;
+            thread_yield();
+            fade += g_script_event_speed;
         } while (fade < dimensions[2].source.h);
     }
 
@@ -46,8 +47,8 @@ void etc_graphic_show_game_over(s32 graphic_id) {
         etc_graphic_build_game_over_polygons(
             graphic_id, dimensions[2].source.h, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], 0x80);
         frame++;
-        battle_thread_yield();
-        fade += g_battle_event_speed;
+        thread_yield();
+        fade += g_script_event_speed;
     } while (fade < 0x258);
 
     color = 0x80;
@@ -55,9 +56,9 @@ void etc_graphic_show_game_over(s32 graphic_id) {
     do {
         etc_graphic_build_game_over_polygons(
             graphic_id, dimensions[2].source.h, 2, 0, g_etc_graphic_chapter_primitives_a[frame & 1], color);
-        color -= g_battle_event_speed;
-        battle_thread_yield();
-        fade += g_battle_event_speed;
+        color -= g_script_event_speed;
+        thread_yield();
+        fade += g_script_event_speed;
         frame++;
     } while (fade < 0x80);
 }

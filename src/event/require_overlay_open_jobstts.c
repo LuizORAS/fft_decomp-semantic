@@ -2,6 +2,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 
 /*
  * Thread body that runs the JOBSTTS overlay from the REQUIRE screen.
@@ -22,7 +23,7 @@ void require_overlay_open_jobstts(void) {
         if (allocation == g_main_heap_high_overlay_load_address) {
             break;
         }
-        battle_thread_yield();
+        thread_yield();
         if (g_main_font_print_enabled != 0) {
             FntPrint(g_require_text_wait_for_file_allocation_message);
         }
@@ -33,7 +34,7 @@ void require_overlay_open_jobstts(void) {
     do {
         g_menu_input_controller = script_get_controller_input_pointer(0);
         *g_menu_input_controller = 0;
-        battle_thread_yield();
+        thread_yield();
     } while (g_battle_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
     *g_menu_input_controller = 0;
     main_heap_free(allocation);

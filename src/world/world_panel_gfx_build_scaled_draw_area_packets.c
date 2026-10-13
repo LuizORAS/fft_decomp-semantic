@@ -1,5 +1,6 @@
 /* One `scaled` local is shared across both /200 divisions, as the target puts
  * both results in $t3. */
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -13,7 +14,7 @@ void world_panel_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* pac
     s32 h;
     s32 scaled;
 
-    if (g_world_event_speed == 2) {
+    if (g_script_event_speed == 2) {
         scale_index *= 2;
     }
     if (scale_index >= 12) {

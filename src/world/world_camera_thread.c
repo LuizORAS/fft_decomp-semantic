@@ -4,6 +4,7 @@
  * allocation-sensitive spellings.
  */
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -146,7 +147,7 @@ void world_camera_thread(void) {
             *variable = value;
         }
         world_camera_clear_zoom_variable_low_bit();
-        world_thread_yield();
+        thread_yield();
     }
 
     if (g_world_camera_position_locked == 0) {
@@ -162,6 +163,6 @@ void world_camera_thread(void) {
         }
     }
     world_camera_clear_zoom_variable_low_bit();
-    world_thread_yield();
+    thread_yield();
     world_thread_exit_current();
 }

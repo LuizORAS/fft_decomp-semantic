@@ -43,8 +43,5 @@ void battle_thread_suspend(s32 thread_id);
 void battle_thread_wait_for_unit_view_panels(void);
 void battle_thread_wait_frames(s32 count);
 void battle_thread_wait_until_inactive(s32 thread_id);
-/* 0x8014ca80..0x8014cbb4: save this native context and resume the next
- * active one. Shared state can change before this caller resumes. */
-void battle_thread_yield(void);
 
 #endif

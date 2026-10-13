@@ -29,6 +29,6 @@ void script_waitspritemove_event_instruction(s32 unit_id) {
         if (i == 16) {
             return;
         }
-        battle_thread_yield();
+        thread_yield();
     } while (1);
 }

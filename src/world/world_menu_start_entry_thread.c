@@ -1,4 +1,5 @@
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -15,7 +16,7 @@ void world_menu_start_entry_thread(void) {
     }
     world_camera_wait_until_idle();
     while (world_thread_find_running_by_task(NATIVE_THREAD_TASK_ATTACK_TARGET_STATS) != 0) {
-        world_thread_yield();
+        thread_yield();
     }
     if (g_world_menu_input_mode == MENU_INPUT_PLAYER) {
         if (world_script_check_tutorial_event_slot() != 0) {

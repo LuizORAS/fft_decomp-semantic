@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/thread.h"
 /*
  * WORLD twin: world_menu_run_numeric_display_panel_thread
  * (same code, globals and callees rebound).
@@ -57,7 +58,7 @@ void battle_menu_run_numeric_display_panel_thread(void) {
     battle_menu_init_numeric_display_frame_primitives(&g_battle_numeric_display_frame_rect, record[0].palette);
     battle_menu_init_numeric_display_frame_primitives(&g_battle_numeric_display_frame_rect, record[1].palette);
     for (frame = 0;; frame++) {
-        battle_thread_yield();
+        thread_yield();
         record = &records[frame & 1];
         battle_gfx_build_scaled_draw_area_pair_swapped(
             &record->draw_areas, &g_battle_numeric_display_texture_window, frame, g_main_gfx_screen_polarity);
@@ -93,6 +94,6 @@ void battle_menu_run_numeric_display_panel_thread(void) {
         battle_menu_submit_numeric_display_frame_primitives(record->palette);
         battle_gfx_draw_or_append_gpu_primitive(&record->draw_areas.areas[0]);
     }
-    battle_thread_yield();
+    thread_yield();
     battle_thread_exit_current();
 }

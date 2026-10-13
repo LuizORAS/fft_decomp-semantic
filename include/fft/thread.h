@@ -160,6 +160,11 @@ typedef enum native_thread_task {
     NATIVE_THREAD_TASK_UNIT_MESSAGE = 70,
 } native_thread_task_e;
 
+/* scheduling */
+/* Yield to the next active context in the resident scene scheduler.
+ * BATTLE scans 16 slots; WORLD scans 17. Each keeps its own frame hook. */
+void thread_yield(void);
+
 /* context capture */
 /* Read the running CPU's $gp when seeding a native thread context. */
 void* thread_get_current_global_pointer(void);

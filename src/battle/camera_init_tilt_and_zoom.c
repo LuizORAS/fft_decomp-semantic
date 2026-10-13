@@ -2,6 +2,7 @@
 #include "fft/battle_camera.h"
 #include "fft/battle_map.h"
 #include "fft/battle_script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Steps the camera tilt script variable by 0x10 per frame to the nearer of the
@@ -39,14 +40,14 @@ void camera_init_tilt_and_zoom(void) {
     if (tilt_step < 0) {
         while (target_tilt < current_tilt) {
             g_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = current_tilt;
-            battle_thread_yield();
+            thread_yield();
             current_tilt += tilt_step;
         }
         g_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = target_tilt;
     } else {
         while (current_tilt < target_tilt) {
             g_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = current_tilt;
-            battle_thread_yield();
+            thread_yield();
             current_tilt += tilt_step;
         }
         g_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = target_tilt;

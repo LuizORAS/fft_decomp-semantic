@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
@@ -19,7 +20,7 @@ void world_menu_render_text_image_at_record_origin(text_dialog_record_t* record)
         g_world_menu_text_param_24 = record->last_line;
         world_menu_display_text_entry(record->text, record->buffer, &g_world_menu_text_state.pen);
         LoadImage(&record->rect, record->buffer);
-        world_thread_yield();
+        thread_yield();
         world_menu_free_memory(record->buffer);
     }
 }

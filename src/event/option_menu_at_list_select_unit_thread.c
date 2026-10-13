@@ -1,4 +1,5 @@
 #include "fft/event_option.h"
+#include "fft/thread.h"
 
 /* Close the AT list's worker set and restore the parent option threads. */
 void option_menu_at_list_select_unit_thread(void) {
@@ -12,7 +13,7 @@ void option_menu_at_list_select_unit_thread(void) {
 
     while ((g_option_menu_transition_timer = g_option_menu_transition_duration + 100),
         g_battle_menu_at_list_selection_finished == 0) {
-        battle_thread_yield();
+        thread_yield();
     }
 
     g_battle_menu_at_list_selection_finished = 0;

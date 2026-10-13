@@ -1,6 +1,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -175,7 +176,7 @@ void attack_deploy_run_select_menu(void) {
         } else {
             bob = battle_menu_get_cursor_bob_offset(0);
         }
-        thread->task_words[0] += g_battle_event_speed;
+        thread->task_words[0] += g_script_event_speed;
         bob -= 4;
         buffer = i & 1;
         if (node->vertical_cursor != 0) {

@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_thread.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Waits until neither companion executable request is pending, publishes
@@ -9,12 +10,12 @@
 void battle_menu_request_open_companion_executable(s32 request_index) {
     while (
         g_battle_menu_companion_executable_request_index != 0 || g_battle_menu_companion_data_file_request_index != 0) {
-        battle_thread_yield();
+        thread_yield();
     }
     g_battle_menu_companion_executable_request_index = request_index;
     if (request_index != 0) {
         do {
-            battle_thread_yield();
+            thread_yield();
         } while (g_battle_menu_companion_executable_request_index != 0);
     }
     if (g_script_frame_result_override == 1) {

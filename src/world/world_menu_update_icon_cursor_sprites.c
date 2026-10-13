@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -34,7 +35,7 @@ void world_menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprite
         } else {
             x = world_menu_get_cursor_bob_offset(0);
         }
-        thread->task_words[0] += g_world_event_speed;
+        thread->task_words[0] += g_script_event_speed;
         x -= 12;
         y = cursor * 16 + 10;
         record->sprites[1].x0 = param->window.x + x;
@@ -42,9 +43,9 @@ void world_menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprite
         record->sprites[2].x0 = param->window.x + x + 2;
         record->sprites[2].y0 = param->window.y + y + 2;
     }
-    if (g_world_event_speed == 2) {
+    if (g_script_event_speed == 2) {
         frame *= 2;
     }
     menu_copy_sprite_position_uv_and_size(param, &record->sprites[0], frame);
-    world_menu_zoom_cursor_frame(param, &record->sprites[0], frame);
+    menu_zoom_cursor_frame(param, &record->sprites[0], frame);
 }

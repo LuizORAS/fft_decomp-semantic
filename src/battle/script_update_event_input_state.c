@@ -47,7 +47,7 @@ void script_update_event_input_state(u32 input) {
         g_script_event_input = ~previous_input & input;
         g_script_event_initial_repeat_counter = 0;
     } else {
-        initial_delay = g_main_input_repeat_initial_delay / g_battle_event_speed;
+        initial_delay = g_main_input_repeat_initial_delay / g_script_event_speed;
         counter = ++g_script_event_initial_repeat_counter;
         if (counter == initial_delay) {
             g_script_event_input = filtered_input;
@@ -55,7 +55,7 @@ void script_update_event_input_state(u32 input) {
         if (counter >= initial_delay) {
             counter = ++g_script_event_repeat_counter;
             g_script_event_secondary_repeat_counter++;
-            repeat_delay = g_main_input_repeat_period / g_battle_event_speed;
+            repeat_delay = g_main_input_repeat_period / g_script_event_speed;
             if (counter >= repeat_delay) {
                 g_script_event_repeat_counter = 0;
                 if ((input & PSX_PAD_SQUARE) != 0) {
@@ -67,7 +67,7 @@ void script_update_event_input_state(u32 input) {
             secondary_repeat_delay = g_main_input_secondary_repeat_period;
             {
                 s32 event_speed;
-                event_speed = g_battle_event_speed;
+                event_speed = g_script_event_speed;
                 secondary_repeat_delay /= event_speed;
             }
             if (g_script_event_secondary_repeat_counter >= secondary_repeat_delay) {

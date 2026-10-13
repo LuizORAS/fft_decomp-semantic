@@ -1,4 +1,5 @@
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -62,7 +63,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
             if (slot != 16) {
                 break;
             }
-            world_thread_yield();
+            thread_yield();
         }
 
         ring = g_world_menu_slot_states[slot];
@@ -153,7 +154,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
             DrawSync(0);
             g_world_menu_slot_states[slot] = 0;
         } else if (delay >= 2) {
-            for (i = 0; i < delay * (3 - g_world_event_speed); i++) {
+            for (i = 0; i < delay * (3 - g_script_event_speed); i++) {
                 if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                     break;
                 }
@@ -171,7 +172,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
                 g_world_text_glyphs_per_wait = 1;
             }
             if (g_world_menu_slot_states[slot] >= g_world_text_glyphs_per_wait) {
-                for (i = 0; i < 3 - g_world_event_speed; i++) {
+                for (i = 0; i < 3 - g_script_event_speed; i++) {
                     if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                         break;
                     }

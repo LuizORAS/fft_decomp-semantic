@@ -14,7 +14,6 @@ extern s32 g_battle_menu_help_open;
 extern s32 g_battle_menu_help_opening;
 extern battle_menu_id_record_t g_battle_menu_id_records[31];
 extern u16 g_battle_menu_modal_open;
-extern s32 g_battle_menu_packet_buffer_index;
 extern u8 g_battle_menu_restore_depth;
 extern u8 g_battle_menu_restore_pending;
 extern u8 g_battle_menu_restore_unit_id;
@@ -235,8 +234,6 @@ extern s32 g_battle_menu_hide_numeric_values; /* non-zero: draw digits as blanks
 extern u8 g_battle_menu_numeric_display_frame_offsets[12][8];
 extern menu_panel_record_t g_battle_menu_numeric_display_panel_records[2];
 extern RECT g_battle_menu_numeric_display_texture_window;
-/* Twelve crop percentages, indexed by step. */
-extern u16 g_battle_menu_zoom_percentages[];
 extern menu_number_entry_t g_battle_numeric_display_entries[15];
 extern RECT g_battle_numeric_display_frame_rect;
 extern image_load_parameters_t g_battle_numeric_display_image_params[18];
@@ -254,7 +251,6 @@ void battle_menu_init_numeric_display_frame_primitives(RECT* bounds, menu_palett
 void battle_menu_run_numeric_display_panel_thread(void);
 void battle_menu_submit_numeric_display_frame_primitives(menu_palette_primitives_t* display);
 void battle_menu_suppress_height_display(void);
-void battle_menu_zoom_cursor_frame(const void* unused_source, SPRT* sprite, s32 step);
 
 /* windows and sprites */
 /* BATTLE scratch at 0x801cc074, in the event-overlay area past BATTLE.BIN:
@@ -283,9 +279,7 @@ extern menu_unit_editor_frame_t g_battle_menu_unit_editor_frames[2];
 extern menu_window_buffer_t g_battle_menu_window_buffers[6]; /* 0x8016e43c */
 extern glyph_blit_t g_battle_menu_window_sprite_glyph;
 extern glyph_blit_t g_battle_menu_window_sprite_position;
-extern u16* g_battle_menu_window_tween_easing_tables[];
 
-void battle_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
 u8* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode);
 void battle_menu_build_and_upload_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset);
 void battle_menu_build_sprite_page(s32 page_index, RECT* base_screen);
@@ -301,7 +295,6 @@ void battle_menu_select_icon_cluts(struct menu_icon_record* frame);
 void battle_menu_select_icon_sprite_clut(SPRT* sprite);
 void battle_menu_select_sprite_clut(SPRT* sprite);
 void battle_menu_submit_icon_primitives(struct menu_icon_record* frame);
-void battle_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, RECT* to2, s32 table);
 void battle_menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprites_t* record, s32 frame, s32 cursor);
 
 /* text rendering */
@@ -387,7 +380,6 @@ s32 battle_menu_poll_small_load(void);
 void battle_menu_request_open_companion_data_file(s32 request_index);
 void battle_menu_request_open_companion_executable(s32 request_index);
 void battle_menu_request_open_small(void);
-void battle_menu_reserve_high_overlay(u32 byte_length);
 void battle_menu_run_bunit_transition_thread(void);
 void battle_menu_run_companion_overlay_stub(void);
 

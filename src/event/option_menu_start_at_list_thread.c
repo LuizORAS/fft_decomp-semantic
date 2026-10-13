@@ -1,4 +1,5 @@
 #include "fft/event_option.h"
+#include "fft/thread.h"
 
 /* Install the AT-list menu context until both builder threads finish. */
 void option_menu_start_at_list_thread(void) {
@@ -13,7 +14,7 @@ void option_menu_start_at_list_thread(void) {
     battle_thread_set_parameters(g_battle_current_thread_id - 2, g_option_menu_at_list_state, 0, 0);
 
     do {
-        battle_thread_yield();
+        thread_yield();
     } while (battle_thread_is_running_asm(g_battle_current_thread_id - 2) != 0
         || battle_thread_is_running_asm(g_battle_current_thread_id - 3) != 0);
 

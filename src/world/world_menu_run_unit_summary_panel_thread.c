@@ -1,5 +1,7 @@
 #include "fft/gfx.h"
 #include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -100,14 +102,14 @@ void world_menu_run_unit_summary_panel_thread(void) {
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_summary_panel_rect, frames[1].palette);
 
     for (frame = 0;; frame++) {
-        world_thread_yield();
+        thread_yield();
         g_world_menu_hide_numeric_values = world_unit_get_battle_stats_for_stored()->unit_flags & UNIT_FLAG_EGG;
         frame_record = &frames[frame & 1];
         if (frame == 0) {
             world_menu_free_memory(buffer);
         }
         value = (g_main_gfx_screen_polarity & 1) == 0 ? 0xF0 : 0;
-        for (i = 0; i < g_world_event_speed; i++) {
+        for (i = 0; i < g_script_event_speed; i++) {
             if (world_thread_get_current_parameter_3() != 0) {
                 slide += 0x1E;
                 if (slide > 0x80) {
@@ -191,7 +193,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
         world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_offset_a);
     }
 exit:
-    world_thread_yield();
+    thread_yield();
     world_gfx_free_tpage7_vram(&rects[0]);
     world_gfx_free_tpage7_vram(&rects[1]);
     world_gfx_free_tpage7_vram(&rects[2]);
