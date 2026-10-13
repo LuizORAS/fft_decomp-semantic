@@ -1,9 +1,10 @@
-#include "fft/event_equip.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Render gauge values with sign colors, drawing a zero value as a placeholder. */
-void equip_text_render_decimal_entry_list(
-    u8* pixels, const menu_number_entry_t* entries, glyph_blit_t* out, s32 count) {
+void menu_text_render_decimal_entry_list(u8* pixels, const menu_number_entry_t* entries, glyph_blit_t* out, s32 count) {
     s32 i;
 
     for (i = 0; i < count; entries++, i++, out->color = 0) {
@@ -25,6 +26,6 @@ void equip_text_render_decimal_entry_list(
             flags &= MENU_DECIMAL_FIELD_WIDTH_CLEAR_MASK;
             flags |= MENU_DECIMAL_ZERO_PLACEHOLDER_FLAGS;
         }
-        equip_text_render_decimal_value(amount, flags, pixels, out);
+        menu_text_render_decimal_value(amount, flags, pixels, out);
     }
 }

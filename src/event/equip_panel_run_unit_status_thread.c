@@ -17,7 +17,7 @@
  * 0x801bf750): the same unit editor/status display thread, with thread slot
  * 0xD selecting the first packet set. When g_equip_item_numeric_thread_enabled is set, the first
  * numeric block is drawn as five separate entries (two through
- * equip_text_render_decimal_entry_list), as in world_menu_unit_status_banner_thread; the
+ * menu_text_render_decimal_entry_list), as in world_menu_unit_status_banner_thread; the
  * zodiac/g_debugchr_editor_active branch of the DEBUGCHR version is absent.
  */
 void equip_panel_run_unit_status_thread(void) {
@@ -373,8 +373,8 @@ void equip_panel_run_unit_status_thread(void) {
                         number_image, numeric_entries, (glyph_blit_t*)(stride - 2), 6);
                 } else {
                     position = (glyph_blit_t*)(stride - 2);
-                    equip_text_render_decimal_entry_list(number_image, &numeric_entries[10], position, 1);
-                    equip_text_render_decimal_entry_list(number_image, &numeric_entries[12], position, 1);
+                    menu_text_render_decimal_entry_list(number_image, &numeric_entries[10], position, 1);
+                    menu_text_render_decimal_entry_list(number_image, &numeric_entries[12], position, 1);
                     battle_menu_draw_numeric_display_entries(number_image, &numeric_entries[11], position, 1);
                     battle_menu_draw_numeric_display_entries(number_image, &numeric_entries[13], position, 1);
                     battle_menu_draw_numeric_display_entries(number_image, &numeric_entries[4], position, 2);

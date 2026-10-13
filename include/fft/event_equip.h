@@ -650,15 +650,12 @@ extern u16 g_equip_text_clut_3_mode1;
 extern u8 g_equip_text_data[];
 /* The "%d" format string at the head of the overlay. */
 extern const char g_equip_text_decimal_format[];
-extern glyph_blit_t g_equip_text_decimal_glyph;
 extern u16 g_equip_text_digit_texture_page;
 extern s32 g_equip_text_help_message_id;
 extern u8 g_equip_text_restore_pending;
 
 void equip_text_concatenate_entries(const u8* text_table, u8* dst, s16* list, s32 separate);
 const u8* equip_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2);
-void equip_text_render_decimal_entry_list(u8* pixels, const menu_number_entry_t* entries, glyph_blit_t* out, s32 count);
-void equip_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
 void equip_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused, s32 max_chars,
     u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags);
 s32 equip_text_render_glyph_to_4bpp_image(

@@ -1,4 +1,6 @@
-#include "fft/event_require.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Render a decimal value into a text image at `position`.
@@ -8,7 +10,7 @@
  * sign and leading zeros, and widen the field for the value 100. A zero with
  * the minus flag draws only the sign glyph. Digits are drawn right to left,
  * at most the low byte of `flags` of them. */
-void require_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position) {
+void menu_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position) {
     s32 saved_color;
     s32 plus;
     s32 digits;
@@ -22,24 +24,24 @@ void require_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_b
     }
     if (flags & MENU_DECIMAL_SLASH_PREFIX) {
         position->rect.x -= 2;
-        g_require_text_decimal_glyph.rect.x = 0xb4;
-        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_require_text_decimal_glyph, position);
+        g_menu_decimal_glyph.rect.x = 0xb4;
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_menu_decimal_glyph, position);
         position->rect.x += 7;
     }
     if (flags & MENU_DECIMAL_DOTS_PREFIX) {
-        g_require_text_decimal_glyph.rect.x = 0x78;
-        g_require_text_decimal_glyph.rect.y = 0x1a;
-        g_require_text_decimal_glyph.rect.h = 4;
+        g_menu_decimal_glyph.rect.x = 0x78;
+        g_menu_decimal_glyph.rect.y = 0x1a;
+        g_menu_decimal_glyph.rect.h = 4;
         position->rect.y += 3;
-        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_require_text_decimal_glyph, position);
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_menu_decimal_glyph, position);
         position->rect.x += 7;
         position->rect.y -= 3;
-        g_require_text_decimal_glyph.rect.y = 0x10;
-        g_require_text_decimal_glyph.rect.h = 0x0a;
+        g_menu_decimal_glyph.rect.y = 0x10;
+        g_menu_decimal_glyph.rect.h = 0x0a;
     }
     position->color = saved_color;
     if (flags & MENU_DECIMAL_SIGN_MINUS) {
-        g_require_text_decimal_glyph.rect.x = 0xba;
+        g_menu_decimal_glyph.rect.x = 0xba;
         if (value == 0) {
             if ((flags & MENU_DECIMAL_FIELD_WIDTH_MASK) == 4) {
                 position->rect.x += 10;
@@ -47,7 +49,7 @@ void require_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_b
                 position->rect.x += 5;
             }
         }
-        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_require_text_decimal_glyph, position);
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_menu_decimal_glyph, position);
         position->rect.x += 5;
         if (value == 0) {
             return;
@@ -55,8 +57,8 @@ void require_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_b
     }
     plus = flags & MENU_DECIMAL_SIGN_PLUS;
     if (plus) {
-        g_require_text_decimal_glyph.rect.x = 0xc8;
-        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_require_text_decimal_glyph, position);
+        g_menu_decimal_glyph.rect.x = 0xc8;
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_menu_decimal_glyph, position);
         position->rect.x += 5;
     }
     digits = flags & MENU_DECIMAL_FIELD_WIDTH_MASK;
@@ -81,8 +83,8 @@ void require_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_b
         position->rect.x += (digits - min_digits) * 5;
     }
     for (i = 0; i < (flags & 0xff); i++) {
-        g_require_text_decimal_glyph.rect.x = value % 10 * 6 + 0x78;
-        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_require_text_decimal_glyph, position);
+        g_menu_decimal_glyph.rect.x = value % 10 * 6 + 0x78;
+        blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_menu_decimal_glyph, position);
         position->rect.x -= 5;
         value /= 10;
         if (!(flags & MENU_DECIMAL_LEADING_ZEROS) && value == 0) {

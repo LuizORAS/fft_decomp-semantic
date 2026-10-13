@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Render signed gauge values with their positive, negative, or zero color. */
@@ -22,7 +23,7 @@ void equip_text_render_signed_decimal_entries(u8* pixels, menu_number_entry_t* e
             out->color = 0;
             entry->format |= MENU_DECIMAL_SIGN_MINUS;
         }
-        equip_text_render_decimal_value(value, entry->format, pixels, out);
+        menu_text_render_decimal_value(value, entry->format, pixels, out);
         out->color = 0;
         entry++;
     }

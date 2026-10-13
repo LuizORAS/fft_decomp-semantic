@@ -1715,6 +1715,11 @@ extern const u8 g_text_glyph_widths[];
 /* Text IDs select a section in the upper five bits and an entry in the lower eleven. */
 extern u8* g_text_section_pointers[TEXT_SECTION_COUNT];
 
+/* decimal text */
+extern glyph_blit_t g_menu_decimal_glyph;
+void menu_text_render_decimal_entry_list(u8* pixels, const menu_number_entry_t* entries, glyph_blit_t* out, s32 count);
+void menu_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
+
 void text_measure(s16* columns, s16* rows, const u8* text);
 void text_measure_pixels(s16* width, s16* rows, const u8* text);
 u8* text_find_entry(u32 text_id);
