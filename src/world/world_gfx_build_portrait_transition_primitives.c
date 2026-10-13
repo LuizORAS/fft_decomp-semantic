@@ -38,10 +38,10 @@ void world_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
     }
     if (*transition < 4) {
         world_gfx_set_party_unit_portrait_poly_texture(*second_portrait, poly);
-        world_gfx_set_clut_rect_from_id(&second_rect, poly->clut);
+        gfx_set_clut_rect_from_id(&second_rect, poly->clut);
         poly++;
         world_gfx_set_party_unit_portrait_poly_texture(*first_portrait, poly);
-        world_gfx_set_clut_rect_from_id(&first_rect, poly->clut);
+        gfx_set_clut_rect_from_id(&first_rect, poly->clut);
         StoreImage(&first_rect, (u32*)palettes[0]);
         StoreImage(&second_rect, (u32*)palettes[1]);
         *transition += g_world_event_speed;

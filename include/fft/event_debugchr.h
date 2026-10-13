@@ -156,7 +156,6 @@ void debugchr_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet
     s32 lower_half, const menu_status_thread_t* thread);
 void debugchr_gfx_build_status_group_primitives(POLY_FT4* poly);
 void debugchr_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
-void debugchr_gfx_set_clut_rect_from_id(RECT* rect, s32 packed);
 
 /* text */
 extern glyph_blit_t g_debugchr_text_decimal_glyph;

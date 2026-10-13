@@ -40,10 +40,10 @@ void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
     }
     if (*transition < 4) {
         bunit_gfx_build_portrait_poly_ft4(*second_portrait, poly);
-        bunit_gfx_set_clut_rect_from_id(&second_rect, poly->clut);
+        gfx_set_clut_rect_from_id(&second_rect, poly->clut);
         poly++;
         bunit_gfx_build_portrait_poly_ft4(*first_portrait, poly);
-        bunit_gfx_set_clut_rect_from_id(&first_rect, poly->clut);
+        gfx_set_clut_rect_from_id(&first_rect, poly->clut);
         StoreImage(&first_rect, (u32*)palettes[0]);
         StoreImage(&second_rect, (u32*)palettes[1]);
         *transition += g_battle_event_speed;

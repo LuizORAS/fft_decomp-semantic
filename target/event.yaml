@@ -13,7 +13,7 @@ links: [battle]
 functions:
   - {addr: 0x801bf004, size: 464, name: attack_gfx_build_scaled_draw_area_packets, hash: 89323ef0080a45f6}
   - {addr: 0x801bf1d4, size: 52, name: attack_gfx_init_scaled_draw_area_packets, hash: 8568902b86f9d430}
-  - {addr: 0x801bf208, size: 44, name: attack_gfx_set_clut_rect_from_id, hash: 0538beffdf7c2276}
+  - {addr: 0x801bf208, size: 44, name: gfx_set_clut_rect_from_id, hash: 0538beffdf7c2276, source: src/shared/gfx/gfx_set_clut_rect_from_id.c}
   - {addr: 0x801bf234, size: 88, name: attack_gfx_build_portrait_poly_ft4, hash: a8a2d7a5b553b63f}
   - {addr: 0x801bf28c, size: 100, name: gfx_clip_portrait_poly_from_right, hash: 8b8f88a21b561ac0, source: src/shared/gfx/gfx_clip_portrait_poly_from_right.c}
   - {addr: 0x801bf2f0, size: 100, name: gfx_clip_portrait_poly_from_left, hash: 0e59600fae531215, source: src/shared/gfx/gfx_clip_portrait_poly_from_left.c}
@@ -292,7 +292,7 @@ links: [battle]
 functions:
   - {addr: 0x801bf204, size: 464, name: bunit_gfx_build_scaled_draw_area_packets, hash: 6d2b5d586ec77661}
   - {addr: 0x801bf3d4, size: 52, name: bunit_gfx_init_scaled_draw_area_packets, hash: ec5e4bf6bd7e4dd9}
-  - {addr: 0x801bf408, size: 44, name: bunit_gfx_set_clut_rect_from_id, hash: 0538beffdf7c2276}
+  - {addr: 0x801bf408, size: 44, name: gfx_set_clut_rect_from_id, hash: 0538beffdf7c2276, source: src/shared/gfx/gfx_set_clut_rect_from_id.c}
   - {addr: 0x801bf434, size: 48, name: bunit_gfx_build_portrait_poly_ft4, hash: cb86608938578cd2}
   - {addr: 0x801bf464, size: 100, name: gfx_clip_portrait_poly_from_right, hash: 4632c34e611fc393, source: src/shared/gfx/gfx_clip_portrait_poly_from_right.c}
   - {addr: 0x801bf4c8, size: 100, name: gfx_clip_portrait_poly_from_left, hash: e0267807ec7b0b13, source: src/shared/gfx/gfx_clip_portrait_poly_from_left.c}
@@ -1104,7 +1104,7 @@ links: [battle]
 functions:
   - {addr: 0x801bf000, size: 464, name: debugchr_gfx_build_scaled_draw_area_packets, hash: c8fda5f772410a7c}
   - {addr: 0x801bf1d0, size: 52, name: debugchr_gfx_init_scaled_draw_area_packets, hash: 50cc2b9872fcf539}
-  - {addr: 0x801bf204, size: 44, name: debugchr_gfx_set_clut_rect_from_id, hash: 0538beffdf7c2276}
+  - {addr: 0x801bf204, size: 44, name: gfx_set_clut_rect_from_id, hash: 0538beffdf7c2276, source: src/shared/gfx/gfx_set_clut_rect_from_id.c}
   - {addr: 0x801bf230, size: 48, name: debugchr_gfx_build_portrait_poly_ft4, hash: cb86608938578cd2}
   - {addr: 0x801bf260, size: 100, name: gfx_clip_portrait_poly_from_right, hash: b486060e906e736a, source: src/shared/gfx/gfx_clip_portrait_poly_from_right.c}
   - {addr: 0x801bf2c4, size: 100, name: gfx_clip_portrait_poly_from_left, hash: acc71cf2f3953a3f, source: src/shared/gfx/gfx_clip_portrait_poly_from_left.c}
@@ -1285,7 +1285,7 @@ functions:
   - {addr: 0x801bfacc, size: 252, name: equip_menu_restore_list_selection, hash: cc67bd98802fd36b}
   - {addr: 0x801bfbc8, size: 464, name: equip_gfx_build_scaled_draw_area_packets, hash: a19dedeaac3d305d}
   - {addr: 0x801bfd98, size: 52, name: equip_gfx_init_scaled_draw_area_packets, hash: d2f5c8f99a47b099}
-  - {addr: 0x801bfdcc, size: 44, name: equip_gfx_set_clut_rect_from_id, hash: 0538beffdf7c2276}
+  - {addr: 0x801bfdcc, size: 44, name: gfx_set_clut_rect_from_id, hash: 0538beffdf7c2276, source: src/shared/gfx/gfx_set_clut_rect_from_id.c}
   - {addr: 0x801bfdf8, size: 48, name: equip_gfx_build_portrait_poly_ft4, hash: cb86608938578cd2}
   - {addr: 0x801bfe28, size: 100, name: gfx_clip_portrait_poly_from_right, hash: 3e2eceefe192cbe3, source: src/shared/gfx/gfx_clip_portrait_poly_from_right.c}
   - {addr: 0x801bfe8c, size: 100, name: gfx_clip_portrait_poly_from_left, hash: 3d34b3a8acab0923, source: src/shared/gfx/gfx_clip_portrait_poly_from_left.c}
@@ -2175,7 +2175,7 @@ links: [battle]
 functions:
   - {addr: 0x801bf01c, size: 472, name: require_gfx_build_scaled_draw_area_packets, hash: 79a90437bb46609d}
   - {addr: 0x801bf1f4, size: 52, name: require_gfx_init_scaled_draw_area_packets, hash: 9f34b6fd6a40f6d7}
-  - {addr: 0x801bf228, size: 44, name: require_gfx_set_clut_rect_from_id, hash: 0538beffdf7c2276}
+  - {addr: 0x801bf228, size: 44, name: gfx_set_clut_rect_from_id, hash: 0538beffdf7c2276, source: src/shared/gfx/gfx_set_clut_rect_from_id.c}
   - {addr: 0x801bf254, size: 88, name: require_gfx_build_portrait_poly_ft4, hash: 5531851d002cce17}
   - {addr: 0x801bf2ac, size: 100, name: gfx_clip_portrait_poly_from_right, hash: f06c2f5b8900d3fa, source: src/shared/gfx/gfx_clip_portrait_poly_from_right.c}
   - {addr: 0x801bf310, size: 100, name: gfx_clip_portrait_poly_from_left, hash: ca2ed33a312f5e93, source: src/shared/gfx/gfx_clip_portrait_poly_from_left.c}

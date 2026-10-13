@@ -643,7 +643,6 @@ void bunit_gfx_init_packet_pools(bunit_gfx_context_t* buffer);
 void bunit_gfx_init_rhombus_cursor_tpages(void);
 void bunit_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
 void bunit_gfx_init_vram_and_start_fade(void);
-void bunit_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id);
 void bunit_gfx_set_draw_color(const rgb24_t* color);
 void bunit_gfx_set_otag_index(s16 value);
 void bunit_gfx_set_transition_frame(s32 frame);

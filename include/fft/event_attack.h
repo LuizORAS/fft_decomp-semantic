@@ -349,7 +349,6 @@ void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_p
     sprite_sheet_frame_t* sprite_rect, point16_t* scale, const sprite_draw_offset_t* offset);
 void attack_gfx_init_frame_ft4_array(void);
 void attack_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* data);
-void attack_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id);
 
 /* portraits */
 extern u16 g_attack_portrait_index_by_sprite_set[];

@@ -336,7 +336,6 @@ void require_gfx_init_poly_gt4_array_8(s32 x, s32 y);
 void require_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
 void require_gfx_scale_poly_gt4_vertex_colors(
     const require_display_condition_colors_t* colors, s32 scale, POLY_GT4* poly);
-void require_gfx_set_clut_rect_from_id(RECT* rect, s32 packed);
 void require_gfx_set_formation_icon_uv(POLY_FT4* poly, s32 index);
 
 /* text */

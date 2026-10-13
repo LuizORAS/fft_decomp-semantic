@@ -1070,7 +1070,6 @@ void world_gfx_load_wldface_to_frame_buffer(void);
 void world_gfx_present_frame_and_swap_packet_buffer(s32 first_otag, s32 draw_otag);
 void world_gfx_ramp_screen_overlay_intensity_to_max(void);
 void world_gfx_set_blit_source_rect(s16 x, s16 y, s16 width, s16 height);
-void world_gfx_set_clut_rect_from_id(RECT* rect, u16 clut_id);
 void world_gfx_set_draw_mode_from_origin(DR_MODE* mode, const point16_t* origin);
 void world_gfx_set_image_blit_destination_origin(s16 x, s16 y);
 void world_gfx_set_image_blit_source_rect(s16 x, s16 y, s16 width, s16 height);
