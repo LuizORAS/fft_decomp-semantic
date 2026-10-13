@@ -450,7 +450,7 @@ extern s32 g_action_at_list_id;
 
 s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode);
 s32 action_calculate_at_list_and_get_specific_unit_id(s32 unit_idx);
-s32 action_check_at_list_for_unit_battle_id(battle_stats_t* unit);
+s32 action_check_at_list_for_unit_battle_id(const battle_stats_t* unit);
 void action_clear_at_list_active(void);
 void action_clear_at_list_id(void);
 void action_get_next_acting_unit(s32 arg);

@@ -2027,7 +2027,6 @@ s32 effect_update_secondary_effects(void);
 s32 effect_venom_trap_secondary_handler(void);
 s32 effect_weapon_hit_secondary_handler(void);
 s32 effect_zodiac_poof_secondary_handler(void);
-void move_start_teleport_step(battle_unit_t* unit);
 
 /* targets */
 extern effect_secondary_init_t g_effect_context;

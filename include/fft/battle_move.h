@@ -413,7 +413,7 @@ s32 move_has_reached_destination_tile_entry_edge(s32 direction, battle_unit_t* u
 s32 move_calculate_jump_arc_velocity(const SVECTOR* from, const SVECTOR* to, VECTOR* out);
 
 /* Scales each velocity component by scale / ONE. */
-void move_interpolate_partial(struct battle_unit* unit, s32 scale);
+void move_interpolate_partial(battle_unit_t* unit, s32 scale);
 void move_start_unit_step(battle_unit_t* unit, const map_tile_t* from, const map_tile_t* unused_to);
 void move_start_float_step(battle_unit_t* unit, const map_tile_t* from, const map_tile_t* to);
 void move_start_unit_step_at_climb_speed(battle_unit_t* unit, const map_tile_t* from, const map_tile_t* unused_to);
@@ -426,7 +426,7 @@ void move_step_unit_to_map_tile_center_no_height_change(battle_unit_t* unit);
 void move_step_unit_to_map_tile_center_with_height_change(battle_unit_t* unit);
 void move_update_airborne_ascent_phase(battle_unit_t* unit);
 void move_update_unit_step_to_destination_tile_center(battle_unit_t* unit);
-s32 move_get_direction(const battle_unit_t* unit);
+move_direction_e move_get_direction(const battle_unit_t* unit);
 void move_set_unit_step_delta_center_to_edge(
     battle_unit_t* unit, const move_step_t* step, const map_tile_t* tile, s32 edge_height);
 void move_set_float_step_delta_center_to_edge(
@@ -443,7 +443,7 @@ void move_start_float_climb_jump_step(battle_unit_t* unit, const map_tile_t* fro
 void move_start_unit_jump_step(battle_unit_t* unit, const map_tile_t* unused_from, const map_tile_t* unused_to);
 void move_start_fly_step(
     battle_unit_t* unit, const map_tile_t* unused_current_tile, const map_tile_t* unused_destination_tile);
-void move_transfer_target_coordinates(battle_unit_t* src, battle_unit_t* dst);
+void move_transfer_target_coordinates(const battle_unit_t* src, battle_unit_t* dst);
 void move_update_all_unit_paths(void);
 void move_update_unit_step_to_current_tile_exit_edge(battle_unit_t* unit);
 void move_update_float_step_to_current_tile_exit_edge(battle_unit_t* unit);
@@ -453,7 +453,8 @@ void move_update_unit_vertical_step_to_destination_tile_center(battle_unit_t* un
 
 /* teleport */
 s32 move_calculate_teleport_chances(void);
-void move_update_teleport_start(struct battle_unit* unit);
+void move_start_teleport_step(battle_unit_t* unit);
+void move_update_teleport_start(battle_unit_t* unit);
 void move_start_teleport_animation(battle_unit_t* unit);
 
 /* knockback */

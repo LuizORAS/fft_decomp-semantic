@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_target.h"
+#include "fft/menu.h"
 
 /* Start the hovered-unit stats panel for the unit on the cursor tile, or the tile
  * info panel when the tile is empty. */
@@ -10,10 +11,10 @@ void target_store_cursor_unit_name_and_data(void) {
 
     unit = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (unit != 0) {
-        mode = 2;
+        mode = UNIT_VIEW_MODE_HOVERED_UNIT;
         unit_id = unit->battle_data->battle_id;
     } else {
-        mode = 1;
+        mode = UNIT_VIEW_MODE_TILE_INFO;
         unit_id = 0xFF;
     }
     battle_unit_start_view_thread(mode, unit_id, 0xFF);
