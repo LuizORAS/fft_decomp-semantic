@@ -7,11 +7,9 @@ void equip_item_store_category_list(s32 category_index, const s16* source) {
 
     base = g_equip_item_category_lists[category_index];
     count = 0;
-    if (*source != -1) {
-        do {
-            base[count] = *source++;
-            count++;
-        } while (*source != -1);
+    while (*source != -1) {
+        base[count] = *source++;
+        count++;
     }
     base[count] = EQUIP_ITEM_LIST_END;
 }

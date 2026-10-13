@@ -5,14 +5,14 @@
  * entries hold a unit (anything but 0xff). */
 s32 target_copy_ability_targets(u8* out) {
     s32 count = 0;
-    s32 i = 0;
-    do {
+    s32 i;
+
+    for (i = 0; i < BATTLE_UNIT_RUNTIME_SLOT_COUNT; i++) {
         u8 target_id = g_target_ability_targets_list[i];
         *out++ = target_id;
         if (target_id != 0xFF) {
             count++;
         }
-        i++;
-    } while (i < BATTLE_UNIT_RUNTIME_SLOT_COUNT);
+    }
     return count;
 }

@@ -7,10 +7,8 @@
 void status_remove(void) {
     s32 i;
     if (g_action_current_ability.status_infliction.type & STATUS_INFLICTION_TYPE_CANCEL) {
-        i = 0;
-        do {
+        for (i = 0; i < STATUS_BYTE_COUNT; i++) {
             g_action_canceled_statuses[i] = g_action_current_ability.status_infliction.statuses[i];
-            i++;
-        } while (i < STATUS_BYTE_COUNT);
+        }
     }
 }

@@ -4,14 +4,10 @@
 battle_unit_t* battle_unit_get_casting(void) {
     battle_unit_t* unit;
 
-    unit = g_battle_unit_list_head;
-    if (unit != 0) {
-        do {
-            if (unit->runtime_id == g_battle_casting_runtime_id) {
-                return unit;
-            }
-            unit = unit->previous;
-        } while (unit != 0);
+    for (unit = g_battle_unit_list_head; unit != 0; unit = unit->previous) {
+        if (unit->runtime_id == g_battle_casting_runtime_id) {
+            return unit;
+        }
     }
     return 0;
 }

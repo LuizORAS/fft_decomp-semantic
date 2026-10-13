@@ -50,6 +50,5 @@ s16 world_menu_update_wrapped_vertical_selection(u16 count, u8 index, s32 button
         }
         *cursor = next;
     }
-    next = g_world_menu_cursor_positions[index];
-    return next;
+    return g_world_menu_cursor_positions[index];
 }

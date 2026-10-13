@@ -22,14 +22,13 @@ battle_unit_t* battle_unit_find_other_chocobo_at_map_coords(s32 x, s32 y, s32 z)
     if (unit != 0) {
         spritesheet_id = BATTLE_SPRITESHEET_ID_CHOCOBO;
         cursor = list;
-        do {
+        for (; unit != 0; unit = unit->previous) {
             if (unit->map_x == x && unit->map_y == y && unit->map_z == z && unit->spritesheet_id == spritesheet_id) {
                 *cursor = unit;
                 cursor += 1;
                 count += 1;
             }
-            unit = unit->previous;
-        } while (unit != 0);
+        }
     }
     if (count != 0) {
         for (index = 0; index < count; index++) {

@@ -19,12 +19,10 @@ void require_gfx_fade_rgb_31_frames(s32 target_0, s32 target_1, s32 target_2) {
     current[1] = g_require_gfx_fade_rgb[1];
     current[2] = g_require_gfx_fade_rgb[2];
     do {
-        i = 0;
-        do {
+        for (i = 0; i < 3; i++) {
             interpolated[i] = (((target[i] - current[i]) * frame) / 30) + current[i];
             g_require_gfx_fade_rgb[i] = interpolated[i];
-            i++;
-        } while (i < 3);
+        }
         frame++;
         thread_yield();
     } while (frame < 31);

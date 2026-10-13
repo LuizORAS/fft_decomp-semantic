@@ -8,12 +8,11 @@ battle_unit_t* battle_unit_get_source(void) {
     unit = g_battle_unit_list_head;
     if (unit != 0) {
         source_id = g_battle_unit_source_runtime_id;
-        do {
+        for (; unit != 0; unit = unit->previous) {
             if (unit->runtime_id == source_id) {
                 return unit;
             }
-            unit = unit->previous;
-        } while (unit != 0);
+        }
     }
     return 0;
 }
