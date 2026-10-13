@@ -57,27 +57,32 @@ s32 action_build_reaction_targets(s32 actor_id, battle_strike_work_t* work, s32*
         target_or_count = 0;
         actor_team = actor->team_flags & BATTLE_TEAM_MASK;
         for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
-            if (unit_id != actor_id) {
-                unit = &unit_base[unit_id];
-                if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
-                    if (!(unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT)) {
-                        if (unit->hp != unit->max_hp) {
-                            if (!(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)]
-                                    & (STATUS_BYTE_MASK(STATUS_ID_CRYSTAL) | STATUS_BYTE_MASK(STATUS_ID_DEAD)
-                                        | STATUS_BYTE_MASK(STATUS_ID_JUMP)))) {
-                                if (!(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_PETRIFY)]
-                                        & (STATUS_BYTE_MASK(STATUS_ID_PETRIFY)
-                                            | STATUS_BYTE_MASK(STATUS_ID_TREASURE)))) {
-                                    /* Retail keeps the candidate's team in the tile-index stack slot. */
-                                    tile_index = unit->initial_team_flags & BATTLE_TEAM_MASK;
-                                    if (tile_index == actor_team) {
-                                        target_ids[target_or_count++] = unit_id;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+            if (unit_id == actor_id) {
+                continue;
+            }
+            unit = &unit_base[unit_id];
+            if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
+                continue;
+            }
+            if (unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
+                continue;
+            }
+            if (unit->hp == unit->max_hp) {
+                continue;
+            }
+            if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)]
+                & (STATUS_BYTE_MASK(STATUS_ID_CRYSTAL) | STATUS_BYTE_MASK(STATUS_ID_DEAD)
+                    | STATUS_BYTE_MASK(STATUS_ID_JUMP))) {
+                continue;
+            }
+            if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_PETRIFY)]
+                & (STATUS_BYTE_MASK(STATUS_ID_PETRIFY) | STATUS_BYTE_MASK(STATUS_ID_TREASURE))) {
+                continue;
+            }
+            /* Retail keeps the candidate's team in the tile-index stack slot. */
+            tile_index = unit->initial_team_flags & BATTLE_TEAM_MASK;
+            if (tile_index == actor_team) {
+                target_ids[target_or_count++] = unit_id;
             }
         }
         g_battle_distribute_target_count = target_or_count;

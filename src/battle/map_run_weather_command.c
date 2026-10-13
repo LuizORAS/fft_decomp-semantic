@@ -33,26 +33,24 @@ void map_run_weather_command(s32 command) {
             if (g_map_weather_flags & MAP_WEATHER_FLAG_SNOW) {
                 sound_stop_weather_sfx();
                 map_run_weather_command(MAP_WEATHER_COMMAND_LIGHT_SNOW);
-                map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             } else {
                 sound_stop_weather_sfx();
                 map_run_weather_command(MAP_WEATHER_COMMAND_LIGHT_RAIN);
-                map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             }
+            map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
         }
         if (weather == BATTLE_WEATHER_STORM) {
             if (g_map_weather_flags & MAP_WEATHER_FLAG_SNOW) {
                 sound_stop_weather_sfx();
                 map_run_weather_command(MAP_WEATHER_COMMAND_SNOW);
-                map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             } else {
                 g_sound_primary_weather_sfx_id = SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN);
                 if (g_sound_weather_sfx_enabled != 0) {
                     main_sound_play_bg_sfx(SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN));
                 }
                 map_run_weather_command(MAP_WEATHER_COMMAND_RAIN);
-                map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             }
+            map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
         }
         if (weather == BATTLE_WEATHER_STRONG_STORM) {
             if (g_map_weather_flags & MAP_WEATHER_FLAG_SNOW) {

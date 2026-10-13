@@ -45,14 +45,15 @@ s32 map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 deployment_
         }
         break;
     case 5:
-        if (battle_unit_poll_and_load_entd_units() == 0) {
-            if (g_battle_unit_graphics_load_complete != 0) {
-                battle_gfx_clear_unit_graphics_load_state(map_id);
-                step = 7;
-            } else {
-                step++;
-                battle_gfx_reset_unit_graphics_load_state();
-            }
+        if (battle_unit_poll_and_load_entd_units() != 0) {
+            break;
+        }
+        if (g_battle_unit_graphics_load_complete != 0) {
+            battle_gfx_clear_unit_graphics_load_state(map_id);
+            step = 7;
+        } else {
+            step++;
+            battle_gfx_reset_unit_graphics_load_state();
         }
         break;
     case 6:
