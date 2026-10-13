@@ -47,9 +47,8 @@ void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index) {
             source_index = source_offset + column++;
             destination_index <<= 1;
             pixels = g_open_gfx_image_copy_file_pixels;
-            source_index <<= 1;
-            /* index + (u32)pointer: the retail addu sums index first. */
-            value = *(u16*)(source_index + (u32)pixels);
+            value = pixels[source_index];
+            /* Destination indexing hoists pointer loads; byte-pointer arithmetic changes registers. */
             *(u16*)(destination_index + (u32)g_open_gfx_image_copy_destination_buffer) = value;
         }
         g_open_gfx_image_copy_row_flags[row + 2] = 0;
