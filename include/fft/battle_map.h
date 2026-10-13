@@ -110,7 +110,10 @@ typedef enum gns_map_state_comparison {
 } gns_map_state_comparison_e;
 
 /* Map resource IDs used by both GNS file rows and mesh chunk dispatch.
- * Chunk IDs also index the mesh file's 49-entry byte-offset table. */
+ * Mesh chunk IDs index a 49-entry table of 32-bit values, so each entry's
+ * header byte position is ID * sizeof(u32): LIGHTING (0x19) is at 0x64,
+ * and PALETTES (0x11) is at 0x44. Each value is a byte offset from the
+ * beginning of the mesh file. */
 typedef enum map_resource_type {
     /* Primary mesh data. */
     MAP_RESOURCE_GEOMETRY_PRIMARY = 0x10,
