@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Event instruction 0x37 (unused by the scenario scripts): toggles bit 0 of
@@ -14,7 +15,7 @@ void script_toggle_message_portrait_flip(const u8* parameters) {
     s16 record_id;
     menu_window_buffer_t* record;
 
-    record_id = script_load_halfword(parameters);
+    record_id = script_read_s16(parameters);
     for (i = 0; i < 6; i++) {
         if (g_battle_menu_window_buffers[record_index].message_id == record_id) {
             record = &g_battle_menu_window_buffers[record_index];

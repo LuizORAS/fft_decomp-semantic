@@ -1,4 +1,5 @@
 #include "fft/battle_map.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
@@ -27,11 +28,11 @@ void world_map_light_thread(void) {
     params = world_thread_get_current_parameter_1();
     /* Indexed operand fields retain a separate base and add four bytes. */
     for (i = 0; i < 6; i++) {
-        target.values[i] = world_script_load_halfword(params);
+        target.values[i] = script_read_s16(params);
         params += 2;
     }
     /* The six-target scan leaves the cursor at duration_le. */
-    frames = world_script_load_halfword(params);
+    frames = script_read_s16(params);
     start.vectors.rotation[0] = g_world_map_light_rotation.vx;
     start.vectors.rotation[1] = g_world_map_light_rotation.vy;
     start.vectors.rotation[2] = g_world_map_light_rotation.vz;

@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -29,12 +30,12 @@ void world_script_apply_relative_camera(event_camera_values_t* parameters, const
         if (index < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
             delta = delta / 1024;
         }
-        if (world_script_load_halfword(source) == CAMERA_FUSION_HOLD_SENTINEL) {
+        if (script_read_s16(source) == CAMERA_FUSION_HOLD_SENTINEL) {
             value = CAMERA_FUSION_HOLD_SENTINEL;
         } else {
-            value = delta + world_script_load_halfword(source);
+            value = delta + script_read_s16(source);
         }
-        world_script_store_halfword(destination, value);
+        script_write_s16(destination, value);
         source += 2;
         destination += 2;
         deltas++;

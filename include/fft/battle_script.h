@@ -175,13 +175,7 @@ void script_unlockdate_event_instruction(u32* bitset, s32 date_index, s32 month,
 void script_clamp_s32_to_range(s32* value, s32 minimum, s32 maximum);
 void script_copy_matrix(MATRIX* destination, const MATRIX* source);
 s32 script_interpolate_range_fixed12(s32 start, s32 end, s32 fraction, s32 value);
-/* The byte-stream reader at 0x80146078 preserves signed 16-bit values. Some
- * callers forward their incoming a0 without an additional argument move.
- * unit_t lookup at 0x80133158 accepts and returns full 32-bit values; narrowing is
- * caller-specific, not part of its interface. */
-s16 script_load_halfword(const void* source);
 s32 script_scale_music_volume(s32 x);
-void script_store_halfword(u8* destination, s16 value);
 
 /* debug */
 extern s16 g_script_debug_paused;

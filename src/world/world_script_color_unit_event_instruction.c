@@ -1,4 +1,5 @@
 #include "fft/battle_gfx.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -14,7 +15,7 @@ void world_script_color_unit_event_instruction(const event_color_unit_parameters
     s32 unit_index;
     const event_unit_color_t* color;
 
-    unit_id = world_script_load_halfword(parameters->unit_id_le);
+    unit_id = script_read_s16(parameters->unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         color = &parameters->color;
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {

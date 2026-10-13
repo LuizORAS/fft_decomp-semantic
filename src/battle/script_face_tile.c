@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /*
@@ -26,7 +27,7 @@ void script_face_tile(const event_face_tile_parameters_t* parameters) {
     order = 1;
     tile.vx = parameters->x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     tile.vz = parameters->y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-    unit_id = script_load_halfword(parameters->unit_id_le);
+    unit_id = script_read_s16(parameters->unit_id_le);
     if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &state) == 0) {
         return;
     }

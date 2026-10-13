@@ -21,7 +21,7 @@ void script_block_start_thread(void) {
     script = battle_thread_get_current_parameter_1();
     parameters = script + 1;
     while (script[0] != EVENT_OPCODE_BLOCK_END) {
-        first_halfword = script_load_halfword(parameters);
+        first_halfword = script_read_s16(parameters);
         if (script[0] == EVENT_OPCODE_CALL_FUNCTION) {
             if (script[1] == EVENT_CALL_FUNCTION_MUTE_TEXT_AUDIO_CUE) {
                 script_set_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE, 1);
@@ -42,7 +42,7 @@ void script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_WALK_TO_ANIM) {
             misc_id = script_get_misc_id(first_halfword);
             if (misc_id != EVENT_MISC_ID_NONE) {
-                g_battle_unit_pending_animation_ids[misc_id] = script_load_halfword(script + 3);
+                g_battle_unit_pending_animation_ids[misc_id] = script_read_s16(script + 3);
             }
             g_battle_unit_was_moving_latch[misc_id] = 0;
         } else if (script[0] == EVENT_OPCODE_JUMP) {
@@ -76,7 +76,7 @@ void script_block_start_thread(void) {
                 script_wait_for_unit_ready(misc_id);
             }
         } else if (script[0] == EVENT_OPCODE_WAIT) {
-            battle_thread_wait_frames(script_load_halfword(script + 1));
+            battle_thread_wait_frames(script_read_s16(script + 1));
         } else if (script[0] == EVENT_OPCODE_ROTATE_UNIT) {
             script_rotate_unit((const event_rotate_unit_parameters_t*)(script + 1));
         } else if (script[0] == EVENT_OPCODE_FACE_UNIT) {

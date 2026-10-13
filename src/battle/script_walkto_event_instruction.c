@@ -8,7 +8,7 @@ void script_walkto_event_instruction(const event_walk_to_parameters_t* parameter
     s32 id;
     map_tile_coordinates_t coordinates;
 
-    id = script_load_halfword(parameters->unit_id_le);
+    id = script_read_s16(parameters->unit_id_le);
     id = script_get_misc_id(id);
     if (id != EVENT_MISC_ID_NONE) {
         coordinates.x = parameters->x;
@@ -16,6 +16,6 @@ void script_walkto_event_instruction(const event_walk_to_parameters_t* parameter
         coordinates.layer = parameters->elevation;
         move_start_unit_walk_to(id, &coordinates,
             MOVE_PATHFIND_IGNORE_TERRAIN_COST - parameters->terrain_cost_flag * MOVE_PATHFIND_IGNORE_TERRAIN_COST, 3,
-            script_load_halfword(parameters->speed_le));
+            script_read_s16(parameters->speed_le));
     }
 }

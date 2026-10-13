@@ -323,8 +323,8 @@ functions:
   - {addr: 0x800f6f20, size: 9088, name: world_script_execute_event, hash: 21ced132f429744a, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800f92a0, size: 140, name: world_script_load_next_event, hash: d45e2f3e6f0fd4c5}
   - {addr: 0x800f932c, size: 116, name: world_unit_is_moving, hash: ed75e6a8a8e26ab2}
-  - {addr: 0x800f93a0, size: 28, name: world_script_load_halfword, hash: 7f613d531c790362}
-  - {addr: 0x800f93bc, size: 16, name: world_script_store_halfword, hash: 71c4790146d56d2c}
+  - {addr: 0x800f93a0, size: 28, name: script_read_s16, hash: 7f613d531c790362, source: src/shared/script/script_read_s16.c}
+  - {addr: 0x800f93bc, size: 16, name: script_write_s16, hash: 71c4790146d56d2c, source: src/shared/script/script_write_s16.c}
   - {addr: 0x800f93cc, size: 64, name: world_map_wait_for_refresh, hash: 6eec356e5c6b9a22}
   - {addr: 0x800f940c, size: 44, name: world_camera_clear_zoom_variable_low_bit, hash: ce3ca9e1032c0236}
   - {addr: 0x800f9438, size: 1444, name: world_camera_thread, hash: ba7be01d018fa8b3}

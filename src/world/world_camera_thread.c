@@ -44,7 +44,7 @@ void world_camera_thread(void) {
     parameters = world_thread_get_current_parameter_1();
     script = parameters->values.position_le[0];
     for (i = 0; i < EVENT_CAMERA_COMPONENT_COUNT + 1; i++) {
-        target[i] = world_script_load_halfword(script);
+        target[i] = script_read_s16(script);
         script += 2;
     }
 

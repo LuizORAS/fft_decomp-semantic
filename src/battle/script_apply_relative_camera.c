@@ -1,4 +1,5 @@
 #include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* RelativeCamera: rewrite the next Camera instruction's seven 16-bit operands
@@ -29,12 +30,12 @@ void script_apply_relative_camera(event_camera_values_t* operands, s32* camera_v
         if (i < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
             delta = delta / 1024;
         }
-        if (script_load_halfword(parameters) == CAMERA_FUSION_HOLD_SENTINEL) {
+        if (script_read_s16(parameters) == CAMERA_FUSION_HOLD_SENTINEL) {
             val = CAMERA_FUSION_HOLD_SENTINEL;
         } else {
-            val = delta + script_load_halfword(parameters);
+            val = delta + script_read_s16(parameters);
         }
-        script_store_halfword(dst, val);
+        script_write_s16(dst, val);
         parameters += 2;
         dst += 2;
         src++;

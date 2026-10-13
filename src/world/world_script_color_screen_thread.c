@@ -1,4 +1,5 @@
 #include "fft/battle_gfx.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -25,7 +26,7 @@ void world_script_color_screen_thread(void) {
         color.start_and_end[i] = *parameters++;
     }
     /* The RGB scan leaves the cursor at duration_le. */
-    duration = world_script_load_halfword(parameters);
+    duration = script_read_s16(parameters);
     for (i = 0; i < duration; i += 2) {
         world_thread_yield();
         world_thread_yield();

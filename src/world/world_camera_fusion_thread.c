@@ -7,6 +7,7 @@
  * reads each track through a `track` pointer taken first in the body: that
  * makes loop.c discover the track giv before the script-variable and values
  * givs, which gives the target's induction-increment order. */
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -69,8 +70,8 @@ void world_camera_fusion_thread(void) {
                 } else if (*cursor == EVENT_OPCODE_CAMERA) {
                     for (i = 0; i < EVENT_CAMERA_COMPONENT_COUNT; i++) {
                         /* Indexed field access replaces retail's two additions with a shift. */
-                        value = world_script_load_halfword(
-                            cursor + i + i + offsetof(event_camera_instruction_t, parameters.values));
+                        value
+                            = script_read_s16(cursor + i + i + offsetof(event_camera_instruction_t, parameters.values));
                         if (value == CAMERA_FUSION_HOLD_SENTINEL) {
                             if (i < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
                                 value = values[i] / 1024;
@@ -80,8 +81,7 @@ void world_camera_fusion_thread(void) {
                         }
                         key = &tracks[i].keys[key_index];
                         key->value = value;
-                        key->time
-                            = world_script_load_halfword(((event_camera_instruction_t*)cursor)->parameters.duration_le);
+                        key->time = script_read_s16(((event_camera_instruction_t*)cursor)->parameters.duration_le);
                         key->time += tracks[i].keys[key_index - 1].time;
                         component = key->value;
                         values[i] = component;

@@ -10,7 +10,7 @@ void script_mirrorsprite_event_instruction(const event_mirror_sprite_parameters_
     s32 mirror;
     s32 misc_id;
 
-    unit_id = script_load_halfword(parameters->unit_id_le);
+    unit_id = script_read_s16(parameters->unit_id_le);
     mirror = parameters->mode;
     misc_id = script_get_misc_id(unit_id);
     if (misc_id != EVENT_MISC_ID_NONE) {

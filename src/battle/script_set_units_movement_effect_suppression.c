@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /*
@@ -13,7 +14,7 @@ void script_set_units_movement_effect_suppression(const event_movement_effect_pa
     s32 state;
     s32 unit_index;
 
-    unit_id = script_load_halfword(parameters->unit_id_le);
+    unit_id = script_read_s16(parameters->unit_id_le);
     if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &state) != 0) {
         unit_index = 0;
         do {

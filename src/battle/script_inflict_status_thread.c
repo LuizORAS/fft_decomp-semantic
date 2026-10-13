@@ -24,9 +24,9 @@ void script_inflict_status_thread(void) {
 
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_INFLICT_STATUS);
     parameters = (event_inflict_status_parameters_t*)battle_thread_get_current_parameter_1();
-    unit_id = script_load_halfword(parameters->unit_id_le);
+    unit_id = script_read_s16(parameters->unit_id_le);
     mode = parameters->mode;
-    wait_frames = script_load_halfword(parameters->wait_frames_le);
+    wait_frames = script_read_s16(parameters->wait_frames_le);
     battle_unit_index = battle_unit_get_battle_index_by_entd_unit_id(unit_id);
     misc_id = script_get_misc_id(unit_id);
     if (misc_id == EVENT_MISC_ID_NONE) {

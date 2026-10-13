@@ -28,8 +28,8 @@ void script_face_unit(const event_face_unit_parameters_t* parameters, s32 second
     unit_animation_state_t* state;
 
     order = 1;
-    misc_id = script_load_halfword(parameters->first_unit_id_le);
-    unit_id = script_load_halfword(parameters->second_unit_id_le);
+    misc_id = script_read_s16(parameters->first_unit_id_le);
+    unit_id = script_read_s16(parameters->second_unit_id_le);
     if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         misc_id = script_get_misc_id(misc_id);
         if (misc_id != EVENT_MISC_ID_NONE) {

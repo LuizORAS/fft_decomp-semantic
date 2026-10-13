@@ -1,5 +1,6 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -23,7 +24,7 @@ void world_script_add_unit_start_thread(void) {
     slot = 0;
     script = world_thread_get_current_parameter_1();
     while (1) {
-        unit_id = world_script_load_halfword(script + 1);
+        unit_id = script_read_s16(script + 1);
         opcode = script[0];
         flag = script[3];
         if (opcode == EVENT_OPCODE_ADD_UNIT_END) {

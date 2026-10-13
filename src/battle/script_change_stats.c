@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Battle twin of world_script_change_stats. ChangeStats event instruction: add a signed delta to one stat of each
@@ -17,8 +18,8 @@ void script_change_stats(const event_change_stats_parameters_t* parameters) {
     s32 battle_unit_index;
     battle_stats_t* unit;
 
-    delta = script_load_halfword(parameters->delta_le);
-    unit_id = script_load_halfword(parameters->unit_id_le);
+    delta = script_read_s16(parameters->delta_le);
+    unit_id = script_read_s16(parameters->unit_id_le);
     if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         unit_index = 0;
         do {

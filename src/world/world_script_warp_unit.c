@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -16,7 +17,7 @@ s32 world_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
     s32 unit_id;
     u8 facing;
 
-    unit_id = world_script_load_halfword(((const event_warp_unit_parameters_t*)parameters)->unit_id_le);
+    unit_id = script_read_s16(((const event_warp_unit_parameters_t*)parameters)->unit_id_le);
     parameters = &((const event_warp_unit_parameters_t*)parameters)->placement;
     unit = battle_unit_find_stats_by_entd_unit_id(unit_id, &resolved_id);
     index = 0;

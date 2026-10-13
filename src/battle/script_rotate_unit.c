@@ -1,6 +1,7 @@
 #include "fft/battle_camera.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* RotateUnit event instruction: turn the addressed unit(s) to a facing.
@@ -24,7 +25,7 @@ void script_rotate_unit(const event_rotate_unit_parameters_t* parameters) {
     unit_animation_state_t* state;
 
     order = 1;
-    unit_id = script_load_halfword(parameters->unit_id_le);
+    unit_id = script_read_s16(parameters->unit_id_le);
     if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &filter_mode) != 0) {
         for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
             if (script_filter_unit_id_by_mode(&unit_id, &g_script_unit_face_slot_order[i], &filter_mode) != 0) {

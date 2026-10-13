@@ -106,7 +106,7 @@ restart_event:
         operand_3 = instruction[3];
         operand_4 = instruction[4];
         opcode = instruction[0];
-        first_operand = world_script_load_halfword(parameters);
+        first_operand = script_read_s16(parameters);
         /* ---- Control: NOPs, conditions, and script variable arithmetic ---- */
         if (opcode == EVENT_OPCODE_CAMERA_DISABLED) {
         } else if (opcode == EVENT_OPCODE_NOP) {
@@ -114,8 +114,8 @@ restart_event:
             world_script_run_condition(opcode);
         } else if ((opcode - EVENT_OPCODE_ADD_IMMEDIATE) < 0xFU) {
             operand_1 = (u16)first_operand;
-            world_script_run_variable_command(opcode, operand_1,
-                world_script_load_halfword(instruction_offset + (g_world_event_script) + 3) & 0xFFFF, 0);
+            world_script_run_variable_command(
+                opcode, operand_1, script_read_s16(instruction_offset + (g_world_event_script) + 3) & 0xFFFF, 0);
         } else if (opcode == EVENT_OPCODE_REQUEST_MAP_JUMP_IN) {
             g_world_event_map_jump_in_request = operand_1;
             world_thread_wait_frames(2);
@@ -356,11 +356,10 @@ restart_event:
             operand_3 = dialogue_instruction->unit_id_le[0];
             g_world_thread_contexts[operand_1].function_parameter_3 = (operand_4 << 8) + operand_3;
             g_world_thread_contexts[operand_1].function_parameter_4 = dialogue_instruction->portrait_selector;
-            g_world_thread_contexts[operand_1].task_words[2]
-                = world_script_load_halfword(dialogue_instruction->x_offset_le);
-            g_world_thread_contexts[operand_1].task_words[3] = world_script_load_halfword(
+            g_world_thread_contexts[operand_1].task_words[2] = script_read_s16(dialogue_instruction->x_offset_le);
+            g_world_thread_contexts[operand_1].task_words[3] = script_read_s16(
                 ((event_display_message_instruction_t*)(instruction_offset + g_world_event_script))->y_offset_le);
-            g_world_thread_contexts[operand_1].task_words[4] = world_script_load_halfword(
+            g_world_thread_contexts[operand_1].task_words[4] = script_read_s16(
                 ((event_display_message_instruction_t*)(instruction_offset + g_world_event_script))->arrow_offset_le);
             g_world_thread_contexts[operand_1].task_words[5]
                 = ((event_display_message_instruction_t*)(g_world_event_script + instruction_offset))->window_options;
@@ -371,13 +370,13 @@ restart_event:
                 if ((g_world_menu_window_buffers[work_index].dialogue_selector == operand_1)
                     && (world_thread_is_running_asm(operand_2) == 1)
                     && (g_world_thread_contexts[operand_2].task_id == NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT)) {
-                    operand_1 = world_script_load_halfword(
+                    operand_1 = script_read_s16(
                         ((event_change_dialog_instruction_t*)(instruction_offset + g_world_event_script))->text_id_le);
                     if ((u16)operand_1 != 0xFFFF) {
                         operand_1 -= 1;
                     }
                     g_world_thread_contexts[operand_2].function_parameter_2 = operand_1;
-                    g_world_thread_contexts[operand_2].function_parameter_4 = world_script_load_halfword(
+                    g_world_thread_contexts[operand_2].function_parameter_4 = script_read_s16(
                         ((event_change_dialog_instruction_t*)(instruction_offset + g_world_event_script))
                             ->portrait_selector_le);
                     g_world_thread_contexts[operand_2].task_id = NATIVE_THREAD_TASK_RESUME;
@@ -531,7 +530,7 @@ restart_event:
             if (operand_1 != EVENT_MISC_ID_NONE) {
 
                 g_world_unit_pending_animations[operand_1]
-                    = world_script_load_halfword(instruction_offset + (g_world_event_script) + 3);
+                    = script_read_s16(instruction_offset + (g_world_event_script) + 3);
                 g_world_unit_was_moving_latch[operand_1] = 0;
             }
         } else if (opcode == EVENT_OPCODE_WAIT_ALL_UNIT_MOVEMENT) {
@@ -569,8 +568,7 @@ restart_event:
             world_thread_suspend(world_thread_find_running_by_task(NATIVE_THREAD_TASK_EARTHQUAKE));
         } else if (opcode == EVENT_OPCODE_SET_SPEAKER_PAIR) {
             g_world_text_speaker_swap_unit_a = first_operand;
-            g_world_text_speaker_swap_unit_b
-                = world_script_load_halfword(instruction_offset + (g_world_event_script) + 3);
+            g_world_text_speaker_swap_unit_b = script_read_s16(instruction_offset + (g_world_event_script) + 3);
         } else if (opcode == EVENT_OPCODE_MAP_DARKNESS) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_1, &world_script_map_darkness);
@@ -697,7 +695,7 @@ restart_event:
             operand_2 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_2, world_gfx_load_evtchr_thread);
             world_thread_set_parameters(
-                operand_2, operand_1, world_script_load_halfword(instruction_offset + (g_world_event_script) + 2), 0);
+                operand_2, operand_1, script_read_s16(instruction_offset + (g_world_event_script) + 2), 0);
             world_thread_yield();
         } else if (opcode == EVENT_OPCODE_LOAD_EVTCHR_CLEAR) {
             g_world_event_pending_loaded_evtchr_clear_slot = operand_1;
@@ -893,8 +891,7 @@ restart_event:
             first_misc_id = script_get_misc_id(first_operand);
             if (first_misc_id != EVENT_MISC_ID_NONE) {
                 battle_unit_get_battle_index_by_misc_id(first_misc_id);
-                second_misc_id
-                    = script_get_misc_id(world_script_load_halfword(instruction_offset + (g_world_event_script) + 3));
+                second_misc_id = script_get_misc_id(script_read_s16(instruction_offset + (g_world_event_script) + 3));
                 if (second_misc_id != EVENT_MISC_ID_NONE) {
                     battle_unit_get_battle_index_by_misc_id(second_misc_id);
                 }

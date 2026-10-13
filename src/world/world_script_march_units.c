@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -13,7 +14,7 @@ void world_script_march_units(const event_march_parameters_t* parameters) {
     s32 misc_index;
     s32 unit_index;
 
-    unit_id = world_script_load_halfword(parameters->unit_id_le);
+    unit_id = script_read_s16(parameters->unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &misc_index) != 0) {

@@ -975,8 +975,8 @@ functions:
   - {addr: 0x80143bd8, size: 9120, name: script_execute_event, hash: f5e240270b084a49}
   - {addr: 0x80145f78, size: 140, name: script_load_next_event, hash: 86e825112a99969c}
   - {addr: 0x80146004, size: 116, name: battle_unit_is_moving, hash: eddabf1eb74277bd}
-  - {addr: 0x80146078, size: 28, name: script_load_halfword, hash: 7f613d531c790362}
-  - {addr: 0x80146094, size: 16, name: script_store_halfword, hash: 71c4790146d56d2c}
+  - {addr: 0x80146078, size: 28, name: script_read_s16, hash: 7f613d531c790362, source: src/shared/script/script_read_s16.c}
+  - {addr: 0x80146094, size: 16, name: script_write_s16, hash: 71c4790146d56d2c, source: src/shared/script/script_write_s16.c}
   - {addr: 0x801460a4, size: 64, name: map_wait_for_refresh, hash: e988058d047260fa}
   - {addr: 0x801460e4, size: 44, name: camera_clear_zoom_variable_low_bit, hash: 1c850d2a2326188a}
   - {addr: 0x80146110, size: 1444, name: camera_thread, hash: de81056b9403d9c1}

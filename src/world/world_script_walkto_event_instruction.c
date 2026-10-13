@@ -10,7 +10,7 @@ void world_script_walkto_event_instruction(const event_walk_to_parameters_t* par
     map_tile_coordinates_t coords;
     s32 misc_id;
 
-    misc_id = world_script_load_halfword(parameters->unit_id_le);
+    misc_id = script_read_s16(parameters->unit_id_le);
     misc_id = script_get_misc_id(misc_id);
     if (misc_id != EVENT_MISC_ID_NONE) {
         coords.x = parameters->x;
@@ -18,6 +18,6 @@ void world_script_walkto_event_instruction(const event_walk_to_parameters_t* par
         coords.layer = parameters->elevation;
         move_start_unit_walk_to(misc_id, &coords,
             MOVE_PATHFIND_IGNORE_TERRAIN_COST - parameters->terrain_cost_flag * MOVE_PATHFIND_IGNORE_TERRAIN_COST, 3,
-            world_script_load_halfword(parameters->speed_le));
+            script_read_s16(parameters->speed_le));
     }
 }

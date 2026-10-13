@@ -974,4 +974,9 @@ s32 script_get_misc_id(s32 unit_id);
 /* TeleportIn forwards the unit ID; the interpreter's second argument is unused. */
 void script_teleportin_event_instruction(s32 unit_id, s32 unused);
 
+/* operand access */
+/* Read and write unaligned little-endian signed 16-bit operands. */
+s16 script_read_s16(const void* source);
+void script_write_s16(u8* destination, s16 value);
+
 #endif

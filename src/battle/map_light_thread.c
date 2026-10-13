@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_map.h"
 #include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
@@ -35,13 +36,13 @@ void map_light_thread(void) {
     /* Indexed operand fields retain a separate base and add four bytes. */
     target = light_values.values;
     do {
-        target[6] = script_load_halfword(script);
+        target[6] = script_read_s16(script);
         script += 2;
         step++;
         target++;
     } while (step < 6);
     /* The six-target scan leaves the cursor at duration_le. */
-    frames = script_load_halfword(script);
+    frames = script_read_s16(script);
     step = 0;
     light_values.vectors.start.rotation[0] = g_script_light_angles.vx;
     light_values.vectors.start.rotation[1] = g_script_light_angles.vy;

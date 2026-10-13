@@ -1,6 +1,7 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* ColorUnit: start a palette modulation on a unit or a unit group.
@@ -16,7 +17,7 @@ void script_color_unit_event_instruction(const event_color_unit_parameters_t* pa
     s32 out;
     s32 i;
 
-    unit_id = script_load_halfword(parameters->unit_id_le);
+    unit_id = script_read_s16(parameters->unit_id_le);
     if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &out) != 0) {
         color = &parameters->color;
         i = 0;

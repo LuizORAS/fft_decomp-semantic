@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -23,7 +24,7 @@ void world_script_rotate_unit(const event_rotate_unit_parameters_t* parameters) 
     unit_animation_state_t* state;
 
     order = 1;
-    unit_id = world_script_load_halfword(parameters->unit_id_le);
+    unit_id = script_read_s16(parameters->unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &filter_mode) != 0) {
         for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_unit_face_slot_order[i], &filter_mode) != 0) {

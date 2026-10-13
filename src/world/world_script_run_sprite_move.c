@@ -41,7 +41,7 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
 
     parameters = arg->unit_id_le;
     mode = use_speed;
-    misc_id = script_get_misc_id(world_script_load_halfword(parameters));
+    misc_id = script_get_misc_id(script_read_s16(parameters));
     if (misc_id == EVENT_MISC_ID_NONE) {
         return;
     }
@@ -55,12 +55,12 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
     pos[3][1] = -coords->vy;
     pos[3][2] = -coords->vz;
     for (i = 0; i < 3; i++) {
-        pos[1][i] = world_script_load_halfword(parameters);
+        pos[1][i] = script_read_s16(parameters);
         parameters += sizeof(arg->destination_le[0]);
     }
     curve = *parameters++;
     weight = *parameters++;
-    total = world_script_load_halfword(parameters);
+    total = script_read_s16(parameters);
     if (mode == 1) {
         for (j = 0; j < 3; j++) {
             pos[2][j] = ((pos[1][j] - pos[0][j]) * (pos[1][j] - pos[0][j])) << 4;

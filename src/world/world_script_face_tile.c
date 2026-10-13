@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -22,7 +23,7 @@ void world_script_face_tile(const event_face_tile_parameters_t* parameters) {
     order = 1;
     target.vx = parameters->x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     target.vz = parameters->y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-    unit_id = world_script_load_halfword(parameters->unit_id_le);
+    unit_id = script_read_s16(parameters->unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &g_world_unit_face_slot_order[i], &misc_index) != 0) {

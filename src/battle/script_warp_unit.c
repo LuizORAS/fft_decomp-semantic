@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /*
@@ -23,7 +24,7 @@ void script_warp_unit(const event_warp_unit_parameters_t* instruction) {
     unit_animation_state_t* rotation_state;
 
     cursor.instruction = instruction;
-    unit_id = script_load_halfword(cursor.instruction->unit_id_le);
+    unit_id = script_read_s16(cursor.instruction->unit_id_le);
     cursor.placement = &cursor.instruction->placement;
     unit = battle_unit_find_stats_by_entd_unit_id(unit_id, &result);
     battle_id = 0;

@@ -27,9 +27,9 @@ void script_focus(event_focus_parameters_t* parameters) {
     u8* cursor;
 
     cursor = parameters->first_unit_id_le;
-    first = script_load_halfword(cursor);
+    first = script_read_s16(cursor);
     cursor += sizeof(parameters->first_unit_id_le);
-    second = script_load_halfword(cursor);
+    second = script_read_s16(cursor);
     cursor += sizeof(parameters->second_unit_id_le);
     keep_angle = *cursor;
     cursor++;
@@ -61,11 +61,11 @@ void script_focus(event_focus_parameters_t* parameters) {
     }
     for (i = 0; i < 3; i++) {
         coords[0][i] = (coords[0][i] + coords[1][i]) * 2;
-        script_store_halfword(cursor, coords[0][i]);
+        script_write_s16(cursor, coords[0][i]);
         cursor += sizeof(((event_camera_values_t*)0)->position_le[0]);
     }
     if (keep_angle == 0) {
         cursor += sizeof(((event_camera_values_t*)0)->position_le[0]);
-        script_store_halfword(cursor, camera_pick_nearest_unblocked_yaw(first, second));
+        script_write_s16(cursor, camera_pick_nearest_unblocked_yaw(first, second));
     }
 }

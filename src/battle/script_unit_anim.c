@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /*
@@ -15,7 +16,7 @@ void script_unit_anim(const event_unit_anim_parameters_t* parameters) {
     s32 animation;
     s32 move_flag_mode;
 
-    misc_id = script_load_halfword(parameters->unit_id_le);
+    misc_id = script_read_s16(parameters->unit_id_le);
     if (battle_unit_try_get_misc_data_by_unit_id(&misc_id, &state) == 0) {
         return;
     }
@@ -28,7 +29,7 @@ void script_unit_anim(const event_unit_anim_parameters_t* parameters) {
             } else if (move_flag_mode == 1) {
                 battle_unit_set_facing_update_suppression(misc_id);
             }
-            animation = script_load_halfword(parameters->animation_le);
+            animation = script_read_s16(parameters->animation_le);
             battle_unit_set_animation(misc_id, animation);
             if (animation >= BATTLE_UNIT_ANIMATION_BOW_HIGH && animation <= BATTLE_UNIT_ANIMATION_BOW_LOW) {
                 script_play_effect_and_wait();

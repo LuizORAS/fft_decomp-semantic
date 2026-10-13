@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -11,7 +12,7 @@ void world_script_unit_anim(const event_unit_anim_parameters_t* parameters) {
     s32 unit_index;
     s32 animation;
 
-    unit_id = world_script_load_halfword(parameters->unit_id_le);
+    unit_id = script_read_s16(parameters->unit_id_le);
     if (world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &misc_index) != 0) {
@@ -20,7 +21,7 @@ void world_script_unit_anim(const event_unit_anim_parameters_t* parameters) {
                 } else if (parameters->facing_update_mode == 1) {
                     battle_unit_set_facing_update_suppression(unit_id);
                 }
-                animation = world_script_load_halfword(parameters->animation_le);
+                animation = script_read_s16(parameters->animation_le);
                 world_unit_set_animation(unit_id, animation);
                 if (animation >= BATTLE_UNIT_ANIMATION_BOW_HIGH && animation <= BATTLE_UNIT_ANIMATION_BOW_LOW) {
                     world_script_play_effect_and_wait();

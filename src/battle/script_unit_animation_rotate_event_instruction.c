@@ -15,9 +15,9 @@ void script_unit_animation_rotate_event_instruction(const event_unit_anim_rotate
     s32 index;
     unit_animation_state_t* rotation_state;
 
-    misc_id = script_load_halfword(parameters->unit_id_le);
+    misc_id = script_read_s16(parameters->unit_id_le);
     rotation = parameters->rotation;
-    animation = script_load_halfword(parameters->animation_le);
+    animation = script_read_s16(parameters->animation_le);
     call_misc_id = script_get_misc_id(misc_id);
     misc_id = call_misc_id;
     if (parameters->animation_le[1] == 0) {

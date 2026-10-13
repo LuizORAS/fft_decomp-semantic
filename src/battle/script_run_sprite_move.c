@@ -43,7 +43,7 @@ void script_run_sprite_move(const event_sprite_move_parameters_t* instruction, s
 
     parameters = (const u8*)instruction;
     mode = use_speed;
-    misc_id = script_get_misc_id(script_load_halfword(((const event_sprite_move_parameters_t*)parameters)->unit_id_le));
+    misc_id = script_get_misc_id(script_read_s16(((const event_sprite_move_parameters_t*)parameters)->unit_id_le));
     if (misc_id == EVENT_MISC_ID_NONE) {
         return;
     }
@@ -58,12 +58,12 @@ void script_run_sprite_move(const event_sprite_move_parameters_t* instruction, s
     pos[3][1] = -coords->vy;
     pos[3][2] = -coords->vz;
     for (i = 0; i < 3; i++) {
-        pos[1][i] = script_load_halfword(parameters);
+        pos[1][i] = script_read_s16(parameters);
         parameters += sizeof(instruction->destination_le[i]);
     }
     curve = *parameters++;
     weight = *parameters++;
-    total = script_load_halfword(parameters);
+    total = script_read_s16(parameters);
     if (mode == 1) {
         for (j = 0; j < 3; j++) {
             pos[2][j] = ((pos[1][j] - pos[0][j]) * (pos[1][j] - pos[0][j])) << 4;
