@@ -1,9 +1,10 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
-/* Thread body of display condition "ready": runs the hovered-unit stats
- * display thread for 60 frames, or until Circle, then stops it. */
-void require_condition_show_ready_bugged(void) {
+/* Thread of display condition EVENT_DISPLAY_CONDITION_HOVERED_UNIT_STATS: run BATTLE's hovered-unit
+ * stats panel (battle_menu_refresh_hovered_unit_stats_display) in the first idle slot for 60 frames, or
+ * until Circle, then stop it. */
+void require_condition_show_hovered_unit_stats(void) {
     s32 thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
 
     battle_thread_start(thread_id, battle_menu_refresh_hovered_unit_stats_display);

@@ -303,6 +303,11 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `require_party_save_battle_units_and_find_join_candidates` searches the formation sprite groups
   for the unit's row, remaps 0x49 to 0 and 0x47 to 0x48, and never uses the
   result.
+- `require_overlay_open_jobstts` reserves 0x1f000 bytes (62 cells) at the game heap's base before
+  loading JOBSTTS.OUT, but BATTLE's companion overlay 7 reads 0x20000 bytes there
+  (`g_battle_menu_companion_executable_sizes`), so the top two cells (0x801fe000-0x801ff000) are
+  overwritten without being claimed; JOBSTTS.OUT is 0x1b85c bytes, so they receive the disc bytes past
+  its end. `battle_menu_run_jobstts_thread` reserves the full 0x20000.
 - `helpmenu_menu_run_battle_help` and `world_menu_run_battle_help`: the
   `UNIT_VIEW_MODE_HOVERED_UNIT` arm and its navigation table cannot be reached
   (the first arm, which closes the help, takes modes 1 and 2); request

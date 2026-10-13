@@ -25,7 +25,7 @@ void require_party_remove_low_brave_high_faith_units(void) {
     g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = g_require_text_data + g_require_text_section_offsets[4];
     battle_thread_yield();
     main_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-    battle_thread_start(main_thread, require_render_display_condition_special_cases_thread);
+    battle_thread_start(main_thread, require_condition_show_special_banner_thread);
     battle_thread_set_parameters(main_thread, 6, 0, 0);
     require_gfx_fade_rgb_31_frames(0xd, 5, 2);
     battle_thread_yield();
@@ -39,7 +39,7 @@ void require_party_remove_low_brave_high_faith_units(void) {
             g_require_party_affected_unit_message_args[i]);
         unit = battle_unit_get_stats_from_battle_id(g_require_party_affected_battle_unit_indices[i]);
         message_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-        battle_thread_start(message_thread, require_render_display_condition_special_cases_thread);
+        battle_thread_start(message_thread, require_condition_show_special_banner_thread);
         if (unit->unit_flags & UNIT_FLAG_FEMALE) {
             battle_thread_set_parameters(message_thread, 9, 1, 0);
         } else {

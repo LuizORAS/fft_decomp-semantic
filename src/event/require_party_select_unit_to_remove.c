@@ -25,7 +25,7 @@
    inside it), while the L1 search stays a do-while (with both blocks inside
    their loops should_restore outranks selected_battle_unit for s4); the
    formation search is a goto loop so the 3 bound stays in place. */
-s32 require_select_party_unit_to_remove(void) {
+s32 require_party_select_unit_to_remove(void) {
     s32 party_index;
     u8* text;
     s32 selected_party_index;

@@ -2,8 +2,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-void battle_thread_start(s32 thread_id, void (*function)(void));
-
 /* Applies the post-battle party changes for each affected battle unit.
  *
  * Shows each unit's status panel, lets the player choose whether to recruit
@@ -11,7 +9,7 @@ void battle_thread_start(s32 thread_id, void (*function)(void));
  * to the party or updates its bio variable. Restores the saved thread block
  * and menu descriptor on exit.
  */
-void require_apply_post_battle_unit_changes(void) {
+void require_party_apply_post_battle_unit_changes(void) {
     s16 text_width_px;
     s16 text_height_px;
     world_menu_entry_t* saved_menu_descriptor;
@@ -218,7 +216,7 @@ void require_apply_post_battle_unit_changes(void) {
                     screen_fade_max = 0xff;
                     g_battle_screen_fade = screen_fade_max;
                     g_battle_post_battle_unit_changes_active = 0;
-                    removal_result = require_select_party_unit_to_remove();
+                    removal_result = require_party_select_unit_to_remove();
                     /* The target loads *selected_unit_index_ptr at 0x514,
                      * above both global stores. GCC 2.6.3 emits a
                      * straight-line block in strict source order, so the
@@ -259,7 +257,7 @@ void require_apply_post_battle_unit_changes(void) {
                 battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
             }
             battle_thread_wait_frames(20);
-            battle_thread_start(REQUIRE_THREAD_SLOT_MENU, require_render_display_condition_special_cases_thread);
+            battle_thread_start(REQUIRE_THREAD_SLOT_MENU, require_condition_show_special_banner_thread);
             battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, 10, 0, 0);
             require_input_wait_frames_or_skip(60);
             battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, 0, 0, 2);

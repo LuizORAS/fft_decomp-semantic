@@ -1,21 +1,3 @@
-/* 0x801c8f80-0x801c9fa4, 4132 bytes.
- *
- * General-case display-condition banner: builds one POLY_GT4 per quad into
- * buffer 0, mirrors it into buffer 1, then plays a 20-frame reveal (the lower
- * three quads from frame 0, the upper three from frame 9), an optional
- * `hold_frames` hold and a 10-frame hide. Circle aborts reveal and hold.
- *
- * Load-bearing spellings: the tables are function-lifetime locals and the
- * range row is `&range[condition]` with `condition = 0` (a spilled
- * constant-equivalent pseudo), which reproduces the target's constant-address
- * count read and its `addiu sN,t0,0` range rematerialisation per phase;
- * `tpage` is a local copy so the page load keeps its +2 offset; `x + 0x100 +
- * width` / `y + (height + 0x78) - offset` / `y + 0x78 + offset` fix operand
- * order; declaring `frame` before `quad_count` fixes their stack slots.
- *
- * `buffer` is read before it is first written (the target's s7 is live out of
- * the prologue), so it is left uninitialised on purpose.
- */
 #include "fft/event_require.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -93,7 +75,22 @@ extern require_render_condition_tpage_t g_require_condition_general_tpages[];
     poly->x3 = QUAD(index).x + 0x100 + QUAD(index).width;                                                              \
     poly->y3 = QUAD(index).y + ((offset) + 0x78) + (QUAD(index).height - offset)
 
-void require_render_display_condition_general_cases(s32 hold_frames) {
+/* Show a display condition from EVENT_DISPLAY_CONDITION_GENERAL_FIRST on as a banner of BONUS.BIN
+ * image (thread parameter 1 - EVENT_DISPLAY_CONDITION_GENERAL_FIRST): load the image
+ * (require_bonus_load_image), build one POLY_GT4 per quad of the first layout of
+ * g_require_condition_general_quads into buffer 0 and mirror it into buffer 1, then play a 20-frame reveal
+ * (the lower three quads from frame 0, the upper three from frame 9), hold it `hold_frames` frames and hide
+ * it over 10 frames. Circle cuts the reveal and the hold short. require_condition_dispatch calls it inline.
+ *
+ * Load-bearing spellings: the tables are function-lifetime locals and the range row is `&range[condition]`
+ * with `condition = 0` (a spilled constant-equivalent pseudo), which reproduces the target's
+ * constant-address count read and its `addiu sN,t0,0` range rematerialisation per phase; `tpage` is a local
+ * copy so the page load keeps its +2 offset; `x + 0x100 + width` / `y + (height + 0x78) - offset` /
+ * `y + 0x78 + offset` fix operand order; declaring `frame` before `quad_count` fixes their stack slots.
+ *
+ * `buffer` is read before it is first written (the target's s7 is live out of the prologue), so it is left
+ * uninitialised on purpose. */
+void require_condition_show_bonus_banner(s32 hold_frames) {
     require_display_condition_quad_t* quads;
     u8* range;
     u8* colors;
@@ -112,7 +109,7 @@ void require_render_display_condition_general_cases(s32 hold_frames) {
     colors = g_require_condition_general_vertex_colors;
     tpage = g_require_condition_general_tpages;
     condition = 0;
-    require_reward_load_bonus_image(battle_thread_get_current_parameter_1() - EVENT_DISPLAY_CONDITION_GENERAL_FIRST);
+    require_bonus_load_image(battle_thread_get_current_parameter_1() - EVENT_DISPLAY_CONDITION_GENERAL_FIRST);
     {
         u8* parameters = &range[condition];
 

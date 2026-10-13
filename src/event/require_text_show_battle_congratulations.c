@@ -28,7 +28,7 @@ void require_text_show_battle_congratulations(void) {
     battle_thread_call_on_main_stack(1, 0x7f, 0);
 
     thread_a = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-    battle_thread_start(thread_a, require_render_display_condition_special_cases_thread);
+    battle_thread_start(thread_a, require_condition_show_special_banner_thread);
     battle_thread_set_parameters(thread_a, 1, 0, 0);
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_GRAVEYARD_OF_AIRSHIPS_VICTORY)
         require_input_wait_frames_or_skip(0x1e);
@@ -36,7 +36,7 @@ void require_text_show_battle_congratulations(void) {
         battle_thread_wait_frames(0x1e);
 
     thread_b = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-    battle_thread_start(thread_b, require_render_display_condition_special_cases_thread);
+    battle_thread_start(thread_b, require_condition_show_special_banner_thread);
     battle_thread_set_parameters(thread_b, 7, 1, 0);
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_GRAVEYARD_OF_AIRSHIPS_VICTORY)
         require_input_wait_frames_or_skip(0xb4);

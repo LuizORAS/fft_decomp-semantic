@@ -7,8 +7,10 @@
 
 #define VERTEX_COLORS (&color_table[(parameters[0] + quad_index) * 0x14])
 
-/* Fade a condition's sprites in over the two primitive buffers, hold them until
- * thread parameter 3 becomes 2, then fade them out.
+/* Thread of display condition 0 (EVENT_DISPLAY_CONDITION_SPECIAL_CASES, started by
+ * require_condition_dispatch): fade the sprites of special banner `thread parameter 1` (a row of
+ * g_require_condition_special_quad_ranges) in over the two primitive buffers, hold them until thread
+ * parameter 3 becomes 2, then fade them out.
  *
  * `table` and `color_table` are function-lifetime copies of the table
  * addresses; the target rematerialises them in each loop instead of folding
@@ -16,7 +18,7 @@
  * g_require_gfx_poly_gt4_buffers, the second symbol at the address of
  * g_require_gfx_poly_gt4_array_32: sharing that base lets the hoisted
  * small-array address derive from the copy source, which keeps it live in s0. */
-void require_render_display_condition_special_cases_thread(void) {
+void require_condition_show_special_banner_thread(void) {
     s32 parameter_index;
     s32 use_small_array;
     s32 quad_count;

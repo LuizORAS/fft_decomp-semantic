@@ -382,11 +382,11 @@ typedef enum event_call_function {
 } event_call_function_e;
 
 /* Display selected by the first EVENT_OPCODE_DISPLAY_CONDITIONS operand and
- * run by require_condition_dispatch. Values from GENERAL_FIRST up show bonus
- * image (value - GENERAL_FIRST) as a banner. */
+ * run by require_condition_dispatch. Values from GENERAL_FIRST up show BONUS.BIN
+ * image (value - GENERAL_FIRST) as a banner (require_condition_show_bonus_banner). */
 typedef enum event_display_condition {
     EVENT_DISPLAY_CONDITION_SPECIAL_CASES = 0x00,
-    EVENT_DISPLAY_CONDITION_SHOW_READY_BUGGED = 0x01,
+    EVENT_DISPLAY_CONDITION_HOVERED_UNIT_STATS = 0x01,
     EVENT_DISPLAY_CONDITION_BATTLE_CONGRATULATIONS = 0x02,
     EVENT_DISPLAY_CONDITION_GIL_REWARD = 0x03,
     EVENT_DISPLAY_CONDITION_WAR_TROPHIES = 0x04,

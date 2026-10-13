@@ -9,7 +9,7 @@
  * the file there on the main stack, uploads the pixels and the palette that
  * follows them, and frees the buffer after one more frame.
  */
-void require_reward_load_bonus_image(s32 image_id) {
+void require_bonus_load_image(s32 image_id) {
     void* allocation;
     s32 (*build_operation)();
 
@@ -33,8 +33,8 @@ void require_reward_load_bonus_image(s32 image_id) {
     }
 
     /* The 256-row upload includes the reserved suffix beyond the 0x6800-byte file. */
-    LoadImage(&g_require_reward_bonus_image_rect, allocation);
-    LoadImage(&g_require_reward_bonus_palette_rect, (u32*)((require_reward_bonus_image_file_t*)allocation)->palette);
+    LoadImage(&g_require_bonus_image_rect, allocation);
+    LoadImage(&g_require_bonus_palette_rect, (u32*)((require_bonus_image_file_t*)allocation)->palette);
     battle_thread_yield();
     main_heap_free(allocation);
 }

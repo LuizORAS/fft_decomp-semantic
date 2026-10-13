@@ -4,7 +4,7 @@
 /* After a battle, list the war trophies (the bonus money when it is not 0, then each trophy item
  * from battle_unit_find_war_trophies_and_bonus_money) and pay them: each item adds a copy to the
  * inventory, or a quarter of its price in gil when 99 are already owned (equipped copies count), and
- * the bonus money goes to the war funds. require_render_gil_reward_ticker pays the level money. */
+ * the bonus money goes to the war funds. require_reward_render_gil_ticker pays the level money. */
 void require_reward_collect_war_trophies_and_bonus_money(void) {
     s32 i;
     s32 item_id;
