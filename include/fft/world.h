@@ -2564,7 +2564,6 @@ void world_menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprite
 void world_menu_update_panel_fade(void);
 void world_menu_update_thread_7_idle_countdown(void);
 void world_menu_load_sort_key_list(s32 index, s16* out);
-s32 world_menu_copy_ff_terminated_bytes_to_halfwords(u16* destination, const u8* source);
 void world_menu_window_frame_thread(void);
 void world_menu_set_slot_4_cursor_index(s32 index);
 s32 world_menu_get_thread_activity(void);

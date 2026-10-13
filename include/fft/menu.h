@@ -23,6 +23,7 @@ typedef struct menu_ability_list {
     u8 skill_ct[82]; /* 0x334 */
 } menu_ability_list_t;
 
+s32 menu_copy_u8_to_u16_terminated(u16* destination, const u8* source);
 void menu_copy_u8_to_u16(u16* destination, const u8* source, s32 count);
 
 /* ability callbacks */

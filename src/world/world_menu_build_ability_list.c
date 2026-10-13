@@ -104,7 +104,7 @@ void world_menu_build_ability_list(s32 mode) {
     g_world_ability_menu_layout.extras_x = 0x7E;
     g_world_ability_menu_layout.ids_mode = MENU_TEXT_COLUMN_TEXT;
     if (g_world_menu_row_type_confirm_actions[type][1] == 1) {
-        count = world_menu_copy_ff_terminated_bytes_to_halfwords(
+        count = menu_copy_u8_to_u16_terminated(
             g_ai_workspace_ptr->ability_list.ids, g_ai_workspace_ptr->ability_list.mp_costs);
         menu_copy_u8_to_u16(g_ai_workspace_ptr->ability_list.extras, g_ai_workspace_ptr->ability_list.turns, count);
         found = 0;
@@ -155,7 +155,7 @@ void world_menu_build_ability_list(s32 mode) {
             row_mode = 9;
         } else {
             if (found != 0 && type == ACTION_MENU_TYPE_DEFAULT) {
-                world_menu_copy_ff_terminated_bytes_to_halfwords(
+                menu_copy_u8_to_u16_terminated(
                     g_ai_workspace_ptr->ability_list.values, g_ai_workspace_ptr->ability_list.mp_costs);
                 window_x -= 8;
                 menu_copy_u8_to_u16(

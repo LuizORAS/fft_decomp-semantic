@@ -101,7 +101,7 @@ void battle_menu_build_ability_list(s32 mode) {
     g_battle_ability_menu_layout.x[2] = 0x7E;
     g_battle_ability_menu_layout.mode[0] = MENU_TEXT_COLUMN_TEXT;
     if (g_battle_menu_action_type_modes[type][1] == 1) { /* lists by id */
-        count = battle_menu_copy_ff_terminated_bytes_to_halfwords(
+        count = menu_copy_u8_to_u16_terminated(
             g_ai_workspace_ptr->ability_list.ids, g_ai_workspace_ptr->ability_list.mp_costs);
         menu_copy_u8_to_u16(g_ai_workspace_ptr->ability_list.extras, g_ai_workspace_ptr->ability_list.turns, count);
         found = 0;
@@ -152,7 +152,7 @@ void battle_menu_build_ability_list(s32 mode) {
             row_mode = 9;
         } else {
             if (found != 0 && type == ACTION_MENU_TYPE_DEFAULT) {
-                battle_menu_copy_ff_terminated_bytes_to_halfwords(
+                menu_copy_u8_to_u16_terminated(
                     g_ai_workspace_ptr->ability_list.values, g_ai_workspace_ptr->ability_list.mp_costs);
                 window_x -= 8;
                 menu_copy_u8_to_u16(

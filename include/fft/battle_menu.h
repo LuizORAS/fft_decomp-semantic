@@ -134,7 +134,6 @@ s32 battle_menu_collect_draw_out_katanas(s32 unit_id, u8 skillset, u8* out_item_
 s32 battle_menu_collect_math_skill_abilities_by_flags(s32 unit_id, u8 skillset, s16* out, u8 mask);
 s32 battle_menu_collect_monster_skill_abilities(s32 unit_id, u8 skillset, s16* out, s32 unused, u8* flags_out);
 s32 battle_menu_collect_throwable_items(s32 unit_id, u8 ability, u8* items);
-s32 battle_menu_copy_ff_terminated_bytes_to_halfwords(u16* dst, u8* src);
 s32 battle_menu_display_item_inventory_ability(s32 unit_id, s32 skillset, u8* out_item_ids);
 s32 battle_menu_get_unit_skillset_ability_data(
     s32 unit_id, u8 skillset, s16* ability_ids, u8* mp_out, u8* ct_out, s32 unused, u8* flags_out, u8* turns_out);

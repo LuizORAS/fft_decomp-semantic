@@ -1,7 +1,7 @@
-#include "fft/world.h"
-#include "psx/types.h"
+#include "fft/menu.h"
 
-s32 world_menu_copy_ff_terminated_bytes_to_halfwords(u16* destination, const u8* source) {
+/* Widen a 0xff-terminated byte list without copying the terminator; return the count. */
+s32 menu_copy_u8_to_u16_terminated(u16* destination, const u8* source) {
     s32 count = 0;
 
     for (;;) {

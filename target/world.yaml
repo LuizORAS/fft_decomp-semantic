@@ -275,7 +275,7 @@ functions:
   - {addr: 0x800f31f0, size: 16, name: world_menu_get_selected_command_address, hash: f87818707628ad97}
   - {addr: 0x800f3200, size: 60, name: menu_mini_menu_cancel_delay_thread, hash: 1126457f8432f56a, source: src/shared/menu/menu_mini_menu_cancel_delay_thread.c}
   - {addr: 0x800f323c, size: 60, name: menu_confirm_sound_delay_thread, hash: f840d996f9d12147, source: src/shared/menu/menu_confirm_sound_delay_thread.c}
-  - {addr: 0x800f3278, size: 56, name: world_menu_copy_ff_terminated_bytes_to_halfwords, hash: 28e77c325ea414b4}
+  - {addr: 0x800f3278, size: 56, name: menu_copy_u8_to_u16_terminated, hash: 28e77c325ea414b4, source: src/shared/menu/menu_copy_u8_to_u16_terminated.c}
   - {addr: 0x800f32b0, size: 52, name: menu_copy_u8_to_u16, hash: 13d704f494f4f2e9, source: src/shared/menu/menu_copy_u8_to_u16.c}
   - {addr: 0x800f32e4, size: 1980, name: world_menu_build_ability_list, hash: 3c2abc1fea8e3c9c}
   - {addr: 0x800f3aa0, size: 676, name: world_menu_select_unit_action_slots_thread, hash: f8f5c64ec1b3af4c}
