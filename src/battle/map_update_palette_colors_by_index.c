@@ -7,11 +7,9 @@ void map_update_palette_colors_by_index(s32 mode, s32 clut_index, const palette_
     s32 index;
 
     if (clut_index >= MAP_CLUTS_PER_ROW) {
-        index = 0;
-        do {
+        for (index = 0; index < MAP_CLUTS_PER_ROW; index++) {
             map_update_palette_colors(mode, MAP_CLUT_ROW_UNITS, index, 0, color_data);
-            index++;
-        } while (index < MAP_CLUTS_PER_ROW);
+        }
     } else {
         map_update_palette_colors(mode, MAP_CLUT_ROW_UNITS, clut_index, 0, color_data);
     }

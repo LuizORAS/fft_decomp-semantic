@@ -5,10 +5,8 @@
 void battle_gfx_shift_and_fill_position_copies(battle_unit_t* unit) {
     s32 index;
 
-    index = 5;
-    do {
+    for (index = 5; index > 0; index--) {
         unit->position_copies[index] = unit->position_copies[index - 1];
-        index--;
-    } while (index > 0);
+    }
     battle_unit_copy_draw_coords(unit->position_copies, unit);
 }
