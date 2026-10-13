@@ -210,8 +210,6 @@ void card_gfx_set_draw_color(const rgb24_t* color);
 void card_gfx_set_draw_mode_and_link_ot(s32 dfe, s32 dtd, s32 tpage, RECT* texture_window, s32 otag_index);
 void card_gfx_set_otag_index(s32 value);
 void card_gfx_set_render_otag(u32* otag);
-void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
-    const sprite_sheet_frame_t* uv_rect, const point16_t* scale, const sprite_draw_offset_t* offset);
 void card_gfx_start_decreasing_fade(void);
 void card_gfx_start_increasing_fade(void);
 void card_gfx_submit_frame_and_swap_buffers(s32 first_otag, s32 draw_otag);

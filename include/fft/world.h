@@ -1640,8 +1640,6 @@ s32 world_formation_run_item_submenu_step(void);
 s32 world_formation_run_set_ability_menu(void);
 void world_formation_build_job_wheel_availability(void);
 void world_formation_build_job_wheel_job_name(void);
-void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, point16_t* page, const RECT* position,
-    sprite_sheet_frame_t* rect, point16_t* scale, sprite_draw_offset_t* origin);
 s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** unused_list, s32 mode);
 
 void world_formation_build_unit_graphic_entry(s16 formation_index, texture_source_t* destination, s32 unused);

@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -34,8 +35,8 @@ void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* po
         y /= ONE;
         scale.x = x;
         scale.y = y;
-        world_gfx_set_scaled_poly_ft4_geometry_and_uv(poly, &g_world_formation_view_texture_page,
-            &g_world_gfx_full_texture_window, &g_world_formation_view_graphic_rects[i], &scale, &view->offset);
+        gfx_set_scaled_poly_ft4_8bpp(poly, &g_world_formation_view_texture_page, &g_world_gfx_full_texture_window,
+            &g_world_formation_view_graphic_rects[i], &scale, &view->offset);
         if (view->link_primitives != 0) {
             addPrim(view->ot, poly);
             poly++;

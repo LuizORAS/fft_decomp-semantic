@@ -337,10 +337,6 @@ void require_gfx_scale_poly_gt4_vertex_colors(
     const require_display_condition_colors_t* colors, s32 scale, POLY_GT4* poly);
 void require_gfx_set_clut_rect_from_id(RECT* rect, s32 packed);
 void require_gfx_set_formation_icon_uv(POLY_FT4* poly, s32 index);
-void require_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
-    sprite_sheet_frame_t* sprite_rect, point16_t* scale, sprite_draw_offset_t* base);
-void require_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
-    const sprite_sheet_frame_t* uv_rect, const point16_t* scale, const sprite_draw_offset_t* offset);
 
 /* text */
 /* Section offsets of the REQUIRE text file, relative to g_require_text_data (0x80 bytes before it). */

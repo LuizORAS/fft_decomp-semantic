@@ -1,4 +1,5 @@
 #include "fft/event_debugchr.h"
+#include "fft/gfx.h"
 #include "psx/types.h"
 
 /* DEBUGCHR copy of main_gfx_build_zodiac_primitives. */
@@ -28,7 +29,7 @@ void debugchr_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_F
         y /= ONE;
         scale.x = x;
         scale.y = y;
-        debugchr_gfx_set_scaled_poly_ft4_geometry_and_uv(poly, &g_debugchr_gfx_scaled_sprite_texture_page,
+        gfx_set_scaled_poly_ft4_8bpp(poly, &g_debugchr_gfx_scaled_sprite_texture_page,
             &g_debugchr_gfx_draw_area_template, &g_debugchr_gfx_scaled_sprite_uv_rects[i], &scale, &context->offset);
         if (context->link_primitives != 0) {
             addPrim(context->ot, poly);

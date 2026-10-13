@@ -1,13 +1,7 @@
-#include "fft/event_require.h"
-#include "psx/libgpu.h"
-#include "psx/types.h"
+#include "fft/gfx.h"
 
-/* Fills one POLY_FT4 for a sprite-sheet frame: scales the frame's offset and
- * size by a 12-bit fixed scale (rounded to the nearest pixel, size made
- * positive) and places it at position + offset. The texture page is the
- * 8-bit page holding `texture`. REQUIRE copy of
- * world_gfx_set_scaled_poly_ft4_geometry_and_uv. */
-void require_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
+/* Build an 8bpp sprite quad, rounding positive fixed-point remainders at half a pixel. */
+void gfx_set_scaled_poly_ft4_8bpp(POLY_FT4* poly, const point16_t* texture, const RECT* position,
     const sprite_sheet_frame_t* uv_rect, const point16_t* scale, const sprite_draw_offset_t* offset) {
     s32 xoff = uv_rect->offset.x * scale->x;
     s32 yoff = uv_rect->offset.y * scale->y;
@@ -23,16 +17,16 @@ void require_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point
     s32 height_quotient;
 
     xoff_quotient = xoff / ONE;
-    if (xoff - xoff_quotient * ONE >= 2048)
+    if (xoff % ONE >= ONE / 2)
         round_xoff = 1;
     yoff_quotient = yoff / ONE;
-    if (yoff - yoff_quotient * ONE >= 2048)
+    if (yoff % ONE >= ONE / 2)
         round_yoff = 1;
     width_quotient = width / ONE;
-    if (width - width_quotient * ONE >= 2048)
+    if (width % ONE >= ONE / 2)
         round_width = 1;
     height_quotient = height / ONE;
-    if (height - height_quotient * ONE >= 2048)
+    if (height % ONE >= ONE / 2)
         round_height = 1;
     xoff = xoff_quotient + round_xoff;
     yoff = yoff_quotient + round_yoff;

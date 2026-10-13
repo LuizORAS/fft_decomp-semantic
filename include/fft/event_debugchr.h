@@ -162,10 +162,6 @@ void debugchr_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
 void debugchr_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 void debugchr_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
 void debugchr_gfx_set_clut_rect_from_id(RECT* rect, s32 packed);
-void debugchr_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
-    sprite_sheet_frame_t* sprite_rect, point16_t* scale, sprite_draw_offset_t* base);
-void debugchr_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_t* texture, const RECT* position,
-    const sprite_sheet_frame_t* uv_rect, const point16_t* scale, const sprite_draw_offset_t* offset);
 
 /* text */
 extern glyph_blit_t g_debugchr_text_decimal_glyph;

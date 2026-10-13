@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/gfx.h"
 #include "psx/types.h"
 
 /* REQUIRE copy of main_gfx_build_zodiac_primitives. */
@@ -28,8 +29,8 @@ void require_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT
         y /= ONE;
         scale.x = x;
         scale.y = y;
-        require_gfx_set_scaled_poly_ft4_geometry_and_uv(poly, &g_require_gfx_scaled_sprite_texture_page,
-            &g_require_gfx_draw_area_template, &g_require_gfx_scaled_sprite_uv_rects[i], &scale, &context->offset);
+        gfx_set_scaled_poly_ft4_8bpp(poly, &g_require_gfx_scaled_sprite_texture_page, &g_require_gfx_draw_area_template,
+            &g_require_gfx_scaled_sprite_uv_rects[i], &scale, &context->offset);
         if (context->link_primitives != 0) {
             addPrim(context->ot, poly);
             poly++;

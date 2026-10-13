@@ -1,8 +1,7 @@
-#include "fft/event_attack.h"
-#include "psx/libgpu.h"
+#include "fft/gfx.h"
 
-/* Configure a sprite quad using truncated 4.12 fixed-point geometry. */
-void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
+/* Build a 4bpp sprite quad; fixed-point geometry truncates toward zero. */
+void gfx_set_scaled_poly_ft4_4bpp(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
     sprite_sheet_frame_t* sprite_rect, point16_t* scale, sprite_draw_offset_t* base) {
     s16 scale_x;
     s16 scale_y;

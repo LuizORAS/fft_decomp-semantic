@@ -1,4 +1,5 @@
 #include "fft/event_debugchr.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "psx/types.h"
 
@@ -39,9 +40,9 @@ void debugchr_gfx_build_status_group_primitives(POLY_FT4* poly) {
             menu_init_default_poly_ft4(poly);
             status = first + count - index;
             g_debugchr_gfx_draw_area_template.y += g_debugchr_panel_status_y_offsets[group * 2];
-            debugchr_gfx_set_scaled_poly_ft4_geometry(poly, &g_debugchr_panel_status_texture,
-                &g_debugchr_gfx_draw_area_template, &g_debugchr_panel_status_uv_rects[status],
-                &g_debugchr_panel_status_scales[status], &g_debugchr_panel_status_offsets[group]);
+            gfx_set_scaled_poly_ft4_4bpp(poly, &g_debugchr_panel_status_texture, &g_debugchr_gfx_draw_area_template,
+                &g_debugchr_panel_status_uv_rects[status], &g_debugchr_panel_status_scales[status],
+                &g_debugchr_panel_status_offsets[group]);
             g_debugchr_gfx_draw_area_template.y -= g_debugchr_panel_status_y_offsets[group * 2];
 
             if (g_debugchr_panel_status_animation[group] == 0x40) {
