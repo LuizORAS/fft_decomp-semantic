@@ -1,14 +1,11 @@
-/*
- * Thread task 0x3b: a two-column status panel that lists five ability labels
- * of an item stat-detail record. Thread 10 draws g_world_selected_unit_stat_detail into the first
- * frame pair, other threads draw g_world_item_preview_stat_detail into the
- * second. A trimmed relative of attack_panel_run_character_status_thread
- * (same 0x3d8-byte frame layout and callee sequence).
- */
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Thread task 0x3b: a two-column status panel that lists five ability labels of an item stat-detail
+ * record. Thread 10 draws g_world_selected_unit_stat_detail into the first frame pair, other threads
+ * draw g_world_item_preview_stat_detail into the second. A trimmed relative of
+ * attack_panel_run_character_status_thread (same 0x3d8-byte frame layout and callee sequence). */
 void world_menu_ability_panel_thread(void) {
     s32 offset[2];
     /* Never referenced: the target frame has these 16 bytes between the

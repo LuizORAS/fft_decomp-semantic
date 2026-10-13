@@ -19,7 +19,7 @@ void world_menu_toggle_change_banner_panel_thread(s32 enable) {
             world_menu_toggle_numeric_editor_thread(state);
         }
     } else {
-        world_menu_stop_unit_status_banner_thread(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL);
-        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+        world_menu_request_thread_stop(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL);
+        world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
     }
 }

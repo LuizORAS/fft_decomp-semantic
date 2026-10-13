@@ -28,7 +28,7 @@ void world_shop_run_recruit_unit_preview_step(void) {
         g_world_formation_unit_browse_enabled = 0;
         g_world_formation_unit_banner_enabled = 0;
         world_menu_toggle_numeric_editor_thread(0);
-        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+        world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
         world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
         world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF826, 0);
         g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;

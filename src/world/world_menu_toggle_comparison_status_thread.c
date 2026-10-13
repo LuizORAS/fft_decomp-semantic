@@ -11,6 +11,6 @@ void world_menu_toggle_comparison_status_thread(s32 flag) {
                 NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS, (s32)&g_world_comparison_display_thread_params, 0, 0);
         }
     } else {
-        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS);
+        world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS);
     }
 }

@@ -21,8 +21,8 @@ void world_formation_run_order_unit_menu(void) {
         g_world_formation_unit_banner_enabled = 0;
         g_world_order_unit_saved_browse_enabled = g_world_formation_unit_browse_enabled;
         g_world_formation_unit_browse_enabled = 0;
-        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
-        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+        world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+        world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
         g_world_menu_order_unit_cursor = 0;
         g_world_menu_order_unit_open = 1;
     }

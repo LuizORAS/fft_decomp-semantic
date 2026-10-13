@@ -157,7 +157,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
         for (i = 1; i < 16; i++) {
             if (world_thread_is_running(i) != 0) {
                 buttons = 1;
-                world_menu_stop_unit_status_banner_thread(i);
+                world_menu_request_thread_stop(i);
             }
         }
         if (world_thread_is_running(WORLD_THREAD_SLOT_TUTORIAL_TEXT) != 0) {

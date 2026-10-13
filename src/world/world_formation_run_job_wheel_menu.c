@@ -35,8 +35,8 @@ void world_formation_run_job_wheel_menu(void) {
         world_text_bind_section_data(WORLD_TEXT_DATA_JOB_DESCRIPTIONS);
         g_world_job_wheel_saved_browse_enabled = g_world_formation_unit_browse_enabled;
         g_world_formation_unit_browse_enabled = 0;
-        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
-        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+        world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+        world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
         world_menu_init_scrollable_list_core(0, 0, 0);
         g_world_menu_script_callbacks[0] = world_formation_get_job_wheel_cursor_job_level;
         g_world_menu_script_callbacks[1] = world_formation_is_job_wheel_selection_available;

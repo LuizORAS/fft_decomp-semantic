@@ -37,9 +37,9 @@ s32 world_item_show_units_equipping_selected(void) {
                 0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
             g_world_formation_selected_unit_index = g_world_item_saved_selected_unit_index;
             world_formation_stage_selected_unit();
-            world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
-            world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
-            world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS);
+            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS);
             g_world_item_equipping_units_initialized = 0;
             g_world_formation_unit_cycle_mode = 0;
             g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;

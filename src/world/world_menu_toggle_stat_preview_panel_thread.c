@@ -14,7 +14,7 @@ void world_menu_toggle_stat_preview_panel_thread(s32 enable) {
         }
         enable = 1;
     } else {
-        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+        world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
     }
     g_world_change_banner_panel_thread_params.style = enable;
 }

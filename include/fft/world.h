@@ -648,6 +648,7 @@ void world_gfx_init_image_loading(void* prim, const void* load_origin, const voi
     const world_gfx_image_load_parameters_t* parameters);
 
 void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
+void world_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
 void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
 void world_gfx_mirror_4bpp_rect(u8* pixels, world_glyph_blit_t* rect);
 void world_gfx_move_image_and_wait(RECT* rect, s16 x, s16 y);
@@ -2521,6 +2522,7 @@ void world_menu_set_palette_mode(s32 mode);
 void world_menu_set_sprite_color(u8* src);
 void world_menu_block_help(void);
 void world_menu_set_window_scale_step(s8 step);
+void world_menu_size_entry_to_text(world_menu_entry_t* entry, s16* width, s16* height, s32* out_pad, s32 pad_short);
 void world_menu_start_at_list_thread(void);
 void world_menu_start_dead_unit_threads(void);
 void world_menu_start_description_text_thread(world_menu_description_record_t* record);
@@ -2533,7 +2535,7 @@ s32 world_menu_update_horizontal_selection_and_mark_change(u16 count, u8 index, 
 s32 world_menu_update_wrapped_grid_selection(s32 columns, s32 rows, s32 last_index, s32 old_index, s32 input);
 void world_menu_stop_thread(s32 thread_id);
 void world_menu_stop_thread_and_wait(s32 thread_id);
-void world_menu_stop_unit_status_banner_thread(s32 thread_id);
+void world_menu_request_thread_stop(s32 thread_id);
 void world_menu_record_selection_for_selected_unit(void);
 void world_menu_switch_item_category(s32 input);
 void world_menu_text_entry_wait_thread(void);

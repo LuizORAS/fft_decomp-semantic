@@ -15,7 +15,7 @@ s32 world_menu_run_unit_status_banner_countdown(s32 message_id, s32 frames) {
     }
     current = g_world_unit_status_banner_state;
     if (current == 1) {
-        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_MENU);
+        world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_MENU);
         if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU) == 0) {
             g_world_unit_status_banner_active = 0;
             g_world_unit_status_banner_state = 0;

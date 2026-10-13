@@ -1,10 +1,10 @@
-/* Menu thread: resolves the current entry's display value (kind 0x11 reads
- * the text binding's halfword table, masked to 11 bits, with 0x2b remapped
- * to 0x63 and bit 15 set; other kinds index g_world_menu_entry_text_id_tables) and hands it to the
- * text-character handler before parking the menu input state. */
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Menu thread: resolve the current entry's display value (kind 0x11 reads the text binding's
+ * halfword table, masked to 11 bits, with 0x2b remapped to 0x63 and bit 15 set; other kinds index
+ * g_world_menu_entry_text_id_tables) and hand it to the text-character handler before parking the menu
+ * input state. */
 void world_menu_announce_entry_value_thread(void) {
     world_menu_entry_t* entry;
     native_thread_t* thread;

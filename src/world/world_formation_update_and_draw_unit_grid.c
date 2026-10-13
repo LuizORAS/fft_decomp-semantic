@@ -87,8 +87,8 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
                 g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
                 enabled = 0;
                 g_world_formation_unit_browse_enabled = 0;
-                world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
-                world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+                world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+                world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
             }
         }
         if (toggle_banner != 0 && world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0

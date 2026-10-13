@@ -31,8 +31,8 @@ void world_formation_run_unit_grid_menu(void) {
                 g_world_formation_unit_browse_enabled = 0;
                 g_world_numeric_editor_thread_params.style = 0;
                 g_world_equipment_ability_panel_thread_params.style = 0;
-                world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
-                world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+                world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+                world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
                 g_world_formation_triangle_menu_open = 0;
             }
             g_world_formation_main_menu_initialized = 1;
@@ -83,8 +83,8 @@ void world_formation_run_unit_grid_menu(void) {
                     if (g_world_menu_selection_results[0] != -1) {
                         g_world_formation_saved_banner_enabled = g_world_formation_unit_banner_enabled;
                         if (g_world_formation_current_menu != WORLD_FORMATION_MENU_DISMISS_UNIT) {
-                            world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
-                            world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+                            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+                            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
                         } else {
                             g_world_equipment_ability_panel_thread_params.style = 1;
                             g_world_numeric_editor_thread_params.style = 1;
