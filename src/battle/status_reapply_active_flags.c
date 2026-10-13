@@ -16,6 +16,6 @@ void status_reapply_active_flags(unit_stats_t* unit) {
             status_queue_runtime_graphics_flag_change(STATUS_HANDLER_INDEX(i), 0, battle_id);
         }
     }
-    main_util_clear_byte_data(unit->status_sets.innate, 0x1F);
-    main_util_clear_byte_data(unit->inflicted_status, STATUS_BYTE_COUNT);
+    mem_zero(unit->status_sets.innate, 0x1F);
+    mem_zero(unit->inflicted_status, STATUS_BYTE_COUNT);
 }

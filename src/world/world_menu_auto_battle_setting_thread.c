@@ -46,7 +46,7 @@ void world_menu_auto_battle_setting_thread(void) {
     }
     previous = cursor;
     world_menu_build_icon_record(&rect, param, &records[0]);
-    copy_bytes_nonempty(&records[1], &records[0], sizeof(records[1]));
+    mem_copy_bytes_nonempty(&records[1], &records[0], sizeof(records[1]));
     fresh = 0;
     i = 0;
     colour = g_world_auto_battle_option_colors;

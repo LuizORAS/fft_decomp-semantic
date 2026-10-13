@@ -28,7 +28,7 @@ void battle_menu_run_icon_selection_loop(void) {
         cursor = 0;
     }
     battle_menu_build_window_sprites(&rect, param, record);
-    copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
+    mem_copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
     buffer = battle_menu_build_and_upload_window_frame_image(
         param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
     g_menu_text_state.pen.stride = param->inner_width;

@@ -21,7 +21,7 @@ void debugchr_menu_icon_strip_thread(void) {
 
     frame_pair = frames;
     battle_menu_build_window_sprites(&rect, state, frame_pair);
-    copy_bytes_nonempty(&frame_pair[1], frame_pair, sizeof(*frame_pair));
+    mem_copy_bytes_nonempty(&frame_pair[1], frame_pair, sizeof(*frame_pair));
     redraw = 1;
     frame = 0;
     stride = &g_menu_text_state.pen.stride;

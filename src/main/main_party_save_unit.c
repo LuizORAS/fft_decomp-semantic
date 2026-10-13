@@ -59,12 +59,12 @@ s32 main_party_save_unit(unit_stats_t* unit, s32 allow_guest) {
     birthday = unit->birthday.birthday | (unit->birthday.zodiac << 12);
     party->birthday_day = birthday;
     party->zodiac = birthday >> 8;
-    main_util_copy_byte_data(&unit->secondary_skillset, &party->secondary_skillset, 0x10);
+    mem_copy_byte_data_source_first(&unit->secondary_skillset, &party->secondary_skillset, 0x10);
     party->bravery = unit->original_brave;
     party->faith = unit->original_faith;
-    main_util_copy_byte_data(unit->raw_stats, party->raw_stats, sizeof(party->raw_stats));
+    mem_copy_byte_data_source_first(unit->raw_stats, party->raw_stats, sizeof(party->raw_stats));
     /* The saved span includes the career record and following 16-byte name. */
-    main_util_copy_byte_data(&unit->career, &party->career, sizeof(party->career) + sizeof(party->name));
+    mem_copy_byte_data_source_first(&unit->career, &party->career, sizeof(party->career) + sizeof(party->name));
     /* name_id is stored as two byte writes (lbu / lhu+srl), not one sh. */
     party->name_id.fields.index = unit->quote_name_id.value;
     party->name_id.fields.name_class = unit->quote_name_id.value >> 8;

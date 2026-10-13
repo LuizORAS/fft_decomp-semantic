@@ -37,7 +37,7 @@ s32 ai_set_movement_panel_data(s32 movement_taken) {
         } else {
             g_ai_data_base.water_penalty = 1;
         }
-        ai_clear_words(ai->walkable_tiles, sizeof(ai->walkable_tiles));
+        mem_zero_32bit_values(ai->walkable_tiles, sizeof(ai->walkable_tiles));
         for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
             for (y = 0; y < ai->map_max_y; y++) {
                 for (x = 0; x < ai->map_max_x; x++) {

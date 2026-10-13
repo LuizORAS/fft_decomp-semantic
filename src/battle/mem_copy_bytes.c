@@ -1,6 +1,6 @@
 #include "fft/memory.h"
 
-void ai_copy_bytes(void* destination, const void* source, s32 len) {
+void mem_copy_bytes(void* destination, const void* source, s32 len) {
     u8* dst = destination;
     const u8* src = source;
     s32 end;

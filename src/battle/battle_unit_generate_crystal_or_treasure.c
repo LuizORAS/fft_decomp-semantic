@@ -63,7 +63,7 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(unit_stats_t* 
                 + mover->career.unlocked_jobs[2];
             mover_identity = mover->character_identity;
             crystal_identity = crystal->character_identity;
-            main_util_clear_byte_data(g_main_crystal_pickup_result.learned_abilities, 0x40);
+            mem_zero(g_main_crystal_pickup_result.learned_abilities, 0x40);
             for (job_index = UNIT_CAREER_JOB_INDEX_BASE; job_index < UNIT_LEARNED_ABILITY_JOB_COUNT; job_index++) {
                 for (j = 0; j < UNIT_LEARNED_ABILITY_BYTES_PER_JOB; j++) {
                     g_main_crystal_pickup_result.learned[job_index][j] = 0;

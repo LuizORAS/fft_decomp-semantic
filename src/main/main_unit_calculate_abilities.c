@@ -18,7 +18,7 @@ void main_unit_calculate_abilities(unit_stats_t* unit, entd_unit_t* entd) {
     u16 value;
 
     if (entd == 0) {
-        main_util_clear_byte_data(&unit->abilities, sizeof(unit->abilities));
+        mem_zero(&unit->abilities, sizeof(unit->abilities));
         return;
     }
 
@@ -30,7 +30,7 @@ void main_unit_calculate_abilities(unit_stats_t* unit, entd_unit_t* entd) {
     }
 
     if (gender & (UNIT_FLAG_MALE | UNIT_FLAG_FEMALE)) {
-        main_util_clear_byte_data(unit->career.learned_abilities, UNIT_LEARNED_ABILITY_BYTE_COUNT);
+        mem_zero(unit->career.learned_abilities, UNIT_LEARNED_ABILITY_BYTE_COUNT);
         for (i = 0; i < UNIT_JOB_LEVEL_BYTE_COUNT; i++) {
             byte = unit->career.job_levels[i];
             level = byte >> 4;

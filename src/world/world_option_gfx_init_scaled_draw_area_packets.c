@@ -5,5 +5,5 @@
 void world_option_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair) {
     pair->rects[0].w = 0;
     pair->rects[1].h = 0;
-    copy_bytes_nonempty(&pair->rects[1], &g_world_option_gfx_draw_area_template, sizeof(pair->rects[1]));
+    mem_copy_bytes_nonempty(&pair->rects[1], &g_world_option_gfx_draw_area_template, sizeof(pair->rects[1]));
 }

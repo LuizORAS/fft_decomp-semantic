@@ -6,6 +6,6 @@
  * the action state to execute. */
 void ai_end_action_simulation(void) {
     g_action_state = ACTION_STATE_EXECUTE;
-    main_util_copy_byte_data(
+    mem_copy_byte_data_source_first(
         &g_ai_current_attacker_backup, &g_action_current_attacker, sizeof(g_action_current_attacker));
 }

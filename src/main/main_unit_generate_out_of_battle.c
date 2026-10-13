@@ -70,11 +70,11 @@ void main_unit_generate_out_of_battle(party_unit_t* party, main_unit_generation_
         party->faith = (rand() * 31) / 0x8000 + 40;
     }
 
-    main_util_clear_byte_data(&party->secondary_skillset, 7);
+    mem_zero(&party->secondary_skillset, 7);
     main_unit_generate_party_base_raw_stats(party, unit_type);
     party->level = 1;
     party->experience = 0;
-    main_util_clear_byte_data(&party->career, sizeof(party->career));
+    mem_zero(&party->career, sizeof(party->career));
 
     gender = party->gender_flags;
     if (gender & (UNIT_FLAG_FEMALE | UNIT_FLAG_MALE)) {
@@ -134,7 +134,7 @@ void main_unit_generate_out_of_battle(party_unit_t* party, main_unit_generation_
     party->name_id.fields.index = name_id.fields.index;
     party->name_id.fields.name_class = name_id.fields.name_class;
     name_flags += name_id.fields.index;
-    main_util_copy_bytes(world_text_find_entry(name_flags), party->name, sizeof(party->name));
+    mem_copy_bytes_source_first(world_text_find_entry(name_flags), party->name, sizeof(party->name));
     party->proposition_status = 0;
     party->egg_color = 0;
     if (unit_type == MAIN_UNIT_TYPE_RAMZA) {

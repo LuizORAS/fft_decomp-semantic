@@ -18,7 +18,7 @@ void battle_unit_transform_into_morbol(unit_stats_t* unit) {
     unit_id = unit->unit_id;
     unit->job_id = JOB_ID_MORBOL;
     unit->character_identity = CHARACTER_IDENTITY_MONSTER;
-    main_util_copy_byte_data(name, saved_name, 0x10);
+    mem_copy_byte_data_source_first(name, saved_name, 0x10);
     formation_index = unit->formation_index;
     x = unit->x;
     y = unit->position.y;
@@ -31,7 +31,7 @@ void battle_unit_transform_into_morbol(unit_stats_t* unit) {
     unit->formation_index = formation_index;
     unit->position.higher_elevation = higher_elevation;
     unit->position.facing = facing;
-    main_util_copy_byte_data(saved_name, name, 0x10);
+    mem_copy_byte_data_source_first(saved_name, name, 0x10);
     unit->unit_id = unit_id;
     main_unit_calculate_palette_spritesheet(unit, palette);
 }

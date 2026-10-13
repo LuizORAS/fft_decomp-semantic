@@ -61,7 +61,7 @@ void require_reward_run_war_trophies(void) {
         prims->banner.h = 0x78;
         prims->banner.w = 0xf0;
         prims->banner.clut = 0x7cbc;
-        copy_bytes_nonempty(
+        mem_copy_bytes_nonempty(
             &prims[1], g_require_reward_war_trophy_primitives, sizeof(require_reward_war_trophy_primitives_t));
         frame = 0;
         while (1) {

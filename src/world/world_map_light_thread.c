@@ -55,7 +55,7 @@ void world_map_light_thread(void) {
         map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_SET, &colour, &light, 0);
         thread_wait_frames(1);
     }
-    copy_bytes_nonempty(&g_world_map_light_rotation, &rotation, sizeof(g_world_map_light_rotation));
-    copy_bytes_nonempty(&g_world_map_light_scale, &scale, sizeof(g_world_map_light_scale));
+    mem_copy_bytes_nonempty(&g_world_map_light_rotation, &rotation, sizeof(g_world_map_light_rotation));
+    mem_copy_bytes_nonempty(&g_world_map_light_scale, &scale, sizeof(g_world_map_light_scale));
     thread_exit_current();
 }

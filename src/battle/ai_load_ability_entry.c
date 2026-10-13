@@ -15,8 +15,8 @@ void ai_load_ability_entry(const ai_ability_entry_t* entry) {
     ability_secondary_data_t* secondary;
     s32 value;
 
-    ai_clear_words(&ai->considered_ability, sizeof(ai_considered_ability_t));
-    ai_clear_words(&ai->current_action.command.calculator_type, 4);
+    mem_zero_32bit_values(&ai->considered_ability, sizeof(ai_considered_ability_t));
+    mem_zero_32bit_values(&ai->current_action.command.calculator_type, 4);
     ai->considered_ability.skillset = entry->skillset;
     ability_id = g_ai_data_base.considered_ability.ability_id = entry->packed_id & AI_ABILITY_ENTRY_ABILITY_MASK;
     unit_id = entry->packed_id >> AI_ABILITY_ENTRY_UNIT_SHIFT;
@@ -116,7 +116,7 @@ void ai_load_ability_entry(const ai_ability_entry_t* entry) {
         return;
     }
     }
-    ai_copy_u16_values(&ai->considered_ability.ai_flags, &g_main_ability_data[ability_id].ai_flags, 4);
+    mem_copy_u16_values(&ai->considered_ability.ai_flags, &g_main_ability_data[ability_id].ai_flags, 4);
     if (menu == ACTION_MENU_TYPE_ITEM_INVENTORY || menu == ACTION_MENU_TYPE_WEAPON_INVENTORY)
         ai->considered_ability.ai_flags.word |= AI_ABILITY_DIRECT_TRAJECTORY;
     ai->considered_ability.ai_flags.fields.flags_4 = entry->usage.flags;
@@ -147,7 +147,7 @@ void ai_load_ability_entry(const ai_ability_entry_t* entry) {
     else if (unit->ability_flags.support[3] & BATTLE_SUPPORT_SET_4_DEFEND)
         ai->considered_ability.ct = 0;
 copy_status:
-    ai_copy_bytes(ai->considered_ability.parameters.fields.status_infliction,
+    mem_copy_bytes(ai->considered_ability.parameters.fields.status_infliction,
         g_main_status_infliction_data[status_id].statuses,
         sizeof(ai->considered_ability.parameters.fields.status_infliction));
 }

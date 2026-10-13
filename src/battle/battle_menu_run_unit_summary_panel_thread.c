@@ -97,7 +97,7 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     zodiac = g_battle_active_turn_unit.zodiac;
     frames[0].sprites[6].u0 = zodiac % 7 * 0x18;
     frames[0].sprites[6].v0 = zodiac / 7 * 0x14 + 0x2A;
-    copy_bytes_nonempty(&frames[1], &frames[0], sizeof(menu_unit_summary_frame_t));
+    mem_copy_bytes_nonempty(&frames[1], &frames[0], sizeof(menu_unit_summary_frame_t));
     frames[0].palette = &g_battle_unit_summary_palettes[0].primitives;
     frames[1].palette = &g_battle_unit_summary_palettes[1].primitives;
     battle_menu_init_numeric_display_frame_primitives(&g_battle_unit_summary_panel_rect, frames[0].palette);

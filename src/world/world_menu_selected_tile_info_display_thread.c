@@ -38,7 +38,7 @@ void world_menu_selected_tile_info_display_thread(void) {
             &g_world_tile_info_image_params[i]);
     }
     world_text_configure_sprite_vram(&rect, 0x18, 0x10, &page->sprites[0], 0);
-    copy_bytes_nonempty(
+    mem_copy_bytes_nonempty(
         &g_world_menu_selected_tile_info_pages[1], &g_world_menu_selected_tile_info_pages[0], sizeof(menu_quad_page_t));
 
     for (frame = 0;; frame++) {

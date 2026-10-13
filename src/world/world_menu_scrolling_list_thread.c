@@ -144,7 +144,7 @@ void world_menu_scrolling_list_thread(void) {
     image_rect.w = window.rect.w / 4;
     image_rect.h = window.rect.h;
     LoadImage(&image_rect, (u32*)buffer);
-    copy_bytes_nonempty(&base[1], base, sizeof(menu_list_page_t));
+    mem_copy_bytes_nonempty(&base[1], base, sizeof(menu_list_page_t));
     for (i = 0; i < 2; i++) {
         base[i].icons.icons[0] = &icons0[i];
         base[i].icons.icons[1] = &icons1[i];

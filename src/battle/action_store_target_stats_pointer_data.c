@@ -25,7 +25,7 @@ s32 action_store_target_stats_pointer_data(s32 unit_id) {
     if (stats->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return -1;
     }
-    main_util_copy_byte_data(&g_action_attacker_action_data, action, 0x2C);
+    mem_copy_byte_data_source_first(&g_action_attacker_action_data, action, 0x2C);
     result = action_finalize_attack_and_flag_reactions(unit_id);
     if (g_action_target_data->hit == 0) {
         g_action_target_data->miss_type = ACTION_MISS_TYPE_CANCELLED;

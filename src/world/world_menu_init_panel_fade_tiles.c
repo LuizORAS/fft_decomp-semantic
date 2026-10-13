@@ -37,6 +37,6 @@ void world_menu_init_panel_fade_tiles(void) {
         frame->bottom[i].y0 = i + 0xde;
     }
 
-    copy_bytes_nonempty(
+    mem_copy_bytes_nonempty(
         &g_world_menu_panel_fade_frames[1], &g_world_menu_panel_fade_frames[0], sizeof(menu_gradient_panel_prims_t));
 }

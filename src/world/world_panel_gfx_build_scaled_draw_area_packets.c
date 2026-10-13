@@ -22,7 +22,7 @@ void world_panel_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* pac
         scale_index = 11;
     }
     percent = g_world_gfx_panel_draw_area_scale_percent[scale_index];
-    copy_bytes_nonempty(&packets->rects[0], geometry, sizeof(*geometry));
+    mem_copy_bytes_nonempty(&packets->rects[0], geometry, sizeof(*geometry));
     w = packets->rects[0].w;
     h = packets->rects[0].h;
     packets->rects[0].x -= 0x80;

@@ -6,6 +6,6 @@
 void ai_begin_action_simulation(void) {
     g_action_state = ACTION_STATE_AI_SIMULATION;
     g_action_hamedo_flag = 0;
-    main_util_copy_byte_data(
+    mem_copy_byte_data_source_first(
         &g_action_current_attacker, &g_ai_current_attacker_backup, sizeof(g_action_current_attacker));
 }

@@ -20,7 +20,7 @@ void world_menu_icon_strip_thread(void) {
     param = world_thread_get_current_parameter_1();
     record = &records[0];
     world_menu_build_icon_record(&rect, param, record);
-    copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
+    mem_copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
     fresh = 1;
     for (i = 0;; i++) {
         if (i % 7 == 0) {

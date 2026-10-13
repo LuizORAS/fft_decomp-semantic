@@ -30,7 +30,7 @@ s32 ai_select_action_status(void) {
             ai->action_selection_phase = AI_STATUS_SELECTION_CHICKEN;
             return -1;
         }
-        ai_clear_words(ai->tile_target_distance, sizeof(ai->tile_target_distance));
+        mem_zero_32bit_values(ai->tile_target_distance, sizeof(ai->tile_target_distance));
         ai_select_destination(255, AI_DESTINATION_DISTANCE_FIRST);
         coords = ai->candidate_coords[0];
         ai->selected_action.act_before_move = 0;

@@ -81,7 +81,7 @@ s32 ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
     }
 
     if (ai->ranked_actions[0].rank.base_hit_percent != 0) {
-        ai_copy_u16_values(&ai->selected_action, &ai->ranked_actions[0], sizeof(ai_action_data_t));
+        mem_copy_u16_values(&ai->selected_action, &ai->ranked_actions[0], sizeof(ai_action_data_t));
         return 2;
     }
     if (g_ai_status_candidate_count == 0)

@@ -130,7 +130,7 @@ void option_menu_window_frame_thread(void) {
     prim->sprites[8].h = border_wide;
 
     battle_gfx_init_scaled_draw_area_packets(&prim->draw_areas);
-    copy_bytes_nonempty(&g_option_menu_panel_frames[1], &g_option_menu_panel_frames[0], sizeof(menu_panel_frame_t));
+    mem_copy_bytes_nonempty(&g_option_menu_panel_frames[1], &g_option_menu_panel_frames[0], sizeof(menu_panel_frame_t));
 
     frame = 0;
     while (battle_thread_get_current_parameter_3() == 0) {

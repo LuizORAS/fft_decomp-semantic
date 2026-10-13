@@ -60,7 +60,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     frame_record->tiles[0].h = 0x5A;
     frame_record->tiles[0].x0 = g_battle_unit_editor_panel_rect.x;
     frame_record->tiles[0].y0 = g_battle_unit_editor_panel_rect.y + 1;
-    copy_bytes_nonempty(&frame_record->tiles[1], &frame_record->tiles[0], sizeof(TILE));
+    mem_copy_bytes_nonempty(&frame_record->tiles[1], &frame_record->tiles[0], sizeof(TILE));
     frame_record->tiles[0].x0 += 0x12;
     frame_record->tiles[1].x0 += 0x7C;
     line = frame_record->lines;
@@ -82,22 +82,22 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     /* Each arm copies all four rows itself; the compiler cross-jumps the
        common tails, leaving only the first call's table loads in the arms. */
     if (g_battle_menu_billboard_data.state.two_hands != 0) {
-        copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_a[2], g_battle_unit_editor_row_image_params_b,
+        mem_copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_a[2], g_battle_unit_editor_row_image_params_b,
             2 * sizeof(image_load_parameters_t));
-        copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_a[14],
+        mem_copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_a[14],
             &g_battle_unit_editor_row_image_params_b[2], 2 * sizeof(image_load_parameters_t));
-        copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_b[2], g_battle_unit_editor_row_image_params_b,
+        mem_copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_b[2], g_battle_unit_editor_row_image_params_b,
             2 * sizeof(image_load_parameters_t));
-        copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_b[14],
+        mem_copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_b[14],
             &g_battle_unit_editor_row_image_params_b[2], 2 * sizeof(image_load_parameters_t));
     } else {
-        copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_a[2], g_battle_unit_editor_row_image_params_a,
+        mem_copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_a[2], g_battle_unit_editor_row_image_params_a,
             2 * sizeof(image_load_parameters_t));
-        copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_a[14],
+        mem_copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_a[14],
             &g_battle_unit_editor_row_image_params_a[2], 2 * sizeof(image_load_parameters_t));
-        copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_b[2], g_battle_unit_editor_row_image_params_a,
+        mem_copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_b[2], g_battle_unit_editor_row_image_params_a,
             2 * sizeof(image_load_parameters_t));
-        copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_b[14],
+        mem_copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_b[14],
             &g_battle_unit_editor_row_image_params_a[2], 2 * sizeof(image_load_parameters_t));
     }
     /* These sprite and rectangle records share the fields read by the image loader. */
@@ -170,7 +170,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     thread_yield();
     battle_menu_free_memory(buffer);
 
-    copy_bytes_nonempty(&records[1], frame_record, sizeof(menu_unit_editor_frame_t));
+    mem_copy_bytes_nonempty(&records[1], frame_record, sizeof(menu_unit_editor_frame_t));
     records[0].palette = &palette.primitives;
     records[1].palette = &g_battle_unit_editor_palette;
     battle_menu_init_numeric_display_frame_primitives(&g_battle_unit_editor_panel_rect, records[0].palette);

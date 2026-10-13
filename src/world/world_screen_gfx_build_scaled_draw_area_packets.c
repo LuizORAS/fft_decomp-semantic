@@ -28,7 +28,7 @@ void world_screen_gfx_build_scaled_draw_area_packets(
         step = 11;
     }
     percent = g_world_menu_zoom_percentages[step];
-    copy_bytes_nonempty(&pair->rects[0], source, sizeof(pair->rects[0]));
+    mem_copy_bytes_nonempty(&pair->rects[0], source, sizeof(pair->rects[0]));
     w = pair->rects[0].w;
     h = pair->rects[0].h;
     pair->rects[0].x -= 0x80;

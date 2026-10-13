@@ -3,5 +3,5 @@
 #include "fft/memory.h"
 
 void script_copy_matrix(MATRIX* destination, const MATRIX* source) {
-    copy_bytes_nonempty(destination, source, sizeof(*destination));
+    mem_copy_bytes_nonempty(destination, source, sizeof(*destination));
 }

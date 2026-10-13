@@ -15,8 +15,8 @@ void main_status_init_check_data(void) {
     int byte;
     u8 mask;
 
-    main_util_clear_byte_data(g_main_item_location_flags, sizeof(g_main_item_location_flags));
-    main_util_clear_byte_data(g_main_status_check_sets, sizeof(g_main_status_check_sets));
+    mem_zero(g_main_item_location_flags, sizeof(g_main_item_location_flags));
+    mem_zero(g_main_status_check_sets, sizeof(g_main_status_check_sets));
     for (status = 0; status < STATUS_COUNT; status++) {
         flags4 = g_main_status_effect_data[status].flags_1;
         flags5 = g_main_status_effect_data[status].flags_2;

@@ -20,13 +20,13 @@ s32 ai_select_action_ranked(void) {
             any = 1;
         }
         if ((rand() % 100) < chance) {
-            ai_copy_u16_values(&ai->selected_action, &ai->ranked_actions[i], sizeof(ai_action_data_t));
+            mem_copy_u16_values(&ai->selected_action, &ai->ranked_actions[i], sizeof(ai_action_data_t));
             return 1;
         }
     }
     if (any == 0) {
         return 0;
     }
-    ai_copy_u16_values(&ai->selected_action, &ai->ranked_actions[0], sizeof(ai_action_data_t));
+    mem_copy_u16_values(&ai->selected_action, &ai->ranked_actions[0], sizeof(ai_action_data_t));
     return 1;
 }

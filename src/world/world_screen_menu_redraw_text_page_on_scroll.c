@@ -60,7 +60,7 @@ u8* world_screen_menu_redraw_text_page_on_scroll(
     world_screen_menu_draw_text_columns(entry, row_offset, buffer);
     *redraw = 0;
     LoadImage(&rect, buffer);
-    copy_bytes_nonempty(&clear, &rect, sizeof(clear));
+    mem_copy_bytes_nonempty(&clear, &rect, sizeof(clear));
     clear.h = 2;
     clear.x = rect.x;
     clear.y = ((rect.y - 2) & 0xFF) + (rect.y & 0xFF00);

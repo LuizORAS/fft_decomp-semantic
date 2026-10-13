@@ -145,7 +145,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
         }
 
         g_battle_menu_slot_states[slot] = g_battle_menu_slot_states[slot] + 1;
-        copy_bytes_nonempty(previous, image, 0x54);
+        mem_copy_bytes_nonempty(previous, image, 0x54);
 
         if (delay == 0) {
             DrawSync(0);

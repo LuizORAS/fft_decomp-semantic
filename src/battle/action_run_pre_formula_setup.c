@@ -67,9 +67,9 @@ s32 action_run_pre_formula_setup(const action_command_t* source, u8 target_id) {
         ability_id = 0;
     }
     weapon = &g_main_item_weapon_data[id];
-    main_util_copy_byte_data(&g_main_ability_range_data[ability_id], &g_action_current_ability_view.range_data,
+    mem_copy_byte_data_source_first(&g_main_ability_range_data[ability_id], &g_action_current_ability_view.range_data,
         sizeof(ability_secondary_data_t));
-    main_util_copy_byte_data(weapon, &g_action_current_ability_view.weapon_data, sizeof(weapon_data_t));
+    mem_copy_byte_data_source_first(weapon, &g_action_current_ability_view.weapon_data, sizeof(weapon_data_t));
     g_action_current_ability.proc_id = weapon->proc_id;
     g_action_current_ability.charge_power = 0;
     g_action_current_ability.formula = ABILITY_FORMULA_WEAPON_DAMAGE;
@@ -109,11 +109,11 @@ s32 action_run_pre_formula_setup(const action_command_t* source, u8 target_id) {
                     & STATUS_BYTE_MASK(STATUS_ID_FROG))
                 && g_action_current_ability_view.weapon_proc_pending == 0) {
                 g_action_current_ability_view.weapon_id = ITEM_ID_NOTHING;
-                main_util_copy_byte_data(
+                mem_copy_byte_data_source_first(
                     g_main_item_weapon_data, &g_action_current_ability_view.weapon_data, sizeof(weapon_data_t));
             }
             ability = &g_main_ability_range_data[action.ability_id];
-            main_util_copy_byte_data(
+            mem_copy_byte_data_source_first(
                 ability, &g_action_current_ability_view.range_data, sizeof(ability_secondary_data_t));
             g_action_current_ability.proc_id = ability->status_infliction_id;
             formula = ability->formula;
@@ -133,7 +133,7 @@ s32 action_run_pre_formula_setup(const action_command_t* source, u8 target_id) {
             item = &g_main_item_secondary_data[id];
             g_action_current_ability.used_item_id = id;
             g_action_current_ability.proc_id = item->status_infliction_id;
-            main_util_clear_byte_data(&g_action_current_ability_view.range_data, sizeof(ability_secondary_data_t));
+            mem_zero(&g_action_current_ability_view.range_data, sizeof(ability_secondary_data_t));
             formula = item->formula;
         }
         break;
@@ -178,8 +178,8 @@ s32 action_run_pre_formula_setup(const action_command_t* source, u8 target_id) {
     if (formula == ABILITY_FORMULA_GUN_DAMAGE) {
         id = 0;
     }
-    main_util_copy_byte_data(&g_main_status_infliction_data[id], &g_action_current_ability_view.status_infliction,
-        sizeof(status_infliction_data_t));
+    mem_copy_byte_data_source_first(&g_main_status_infliction_data[id],
+        &g_action_current_ability_view.status_infliction, sizeof(status_infliction_data_t));
     status_remove();
     g_action_current_ability.formula = formula;
     action_check_reflect_blade_grasp_and_arrow_guard();

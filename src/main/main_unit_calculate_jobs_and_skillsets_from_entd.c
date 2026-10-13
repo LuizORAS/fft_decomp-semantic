@@ -11,7 +11,7 @@ void main_unit_calculate_jobs_and_skillsets_from_entd(unit_stats_t* unit, const 
     u16 skillset;
     u8 levels;
 
-    main_util_clear_byte_data(unit->career.job_levels, UNIT_JOB_LEVEL_BYTE_COUNT);
+    mem_zero(unit->career.job_levels, UNIT_JOB_LEVEL_BYTE_COUNT);
     unlocked = 0;
     if (!entd) {
         main_unit_copy_job_data(unit);

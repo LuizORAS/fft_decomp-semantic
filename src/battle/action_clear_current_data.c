@@ -7,9 +7,9 @@
  * last_received_attack (0x26) keep their values. The cancelled-status list is
  * cleared with the record's status changes. */
 void action_clear_current_data(action_data_t* action) {
-    main_util_clear_byte_data(action, 0xE);
-    main_util_clear_byte_data(&action->special_effect, 0x16);
-    main_util_clear_byte_data(&action->exp_change, 2);
+    mem_zero(action, 0xE);
+    mem_zero(&action->special_effect, 0x16);
+    mem_zero(&action->exp_change, 2);
     /* The target stores the accuracy as a 16-bit value (0x2a..0x2b). */
     action->attack_accuracy = 100;
     action->attack_type = 0;

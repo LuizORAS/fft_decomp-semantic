@@ -27,7 +27,7 @@ void world_menu_icon_list_thread(void) {
         cursor = 0;
     }
     world_menu_build_icon_record(&rect, param, record);
-    copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
+    mem_copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
     fresh = 0;
     redraw = param->context;
     *redraw = 1;

@@ -26,9 +26,10 @@ void main_unit_copy_job_data(unit_stats_t* unit) {
 
     job = g_main_job_data_pointer + unit->job_id;
     unit->primary_skillset = job->skillset;
-    main_util_copy_byte_data(job->innate_abilities, unit->innate_abilities, sizeof(unit->innate_abilities));
-    main_util_copy_byte_data(job->equipment_categories, unit->equipment_categories, sizeof(unit->equipment_categories));
-    main_util_copy_byte_data(job->stat_growths, unit->stat_growths, sizeof(unit->stat_growths));
+    mem_copy_byte_data_source_first(job->innate_abilities, unit->innate_abilities, sizeof(unit->innate_abilities));
+    mem_copy_byte_data_source_first(
+        job->equipment_categories, unit->equipment_categories, sizeof(unit->equipment_categories));
+    mem_copy_byte_data_source_first(job->stat_growths, unit->stat_growths, sizeof(unit->stat_growths));
     unit->move = job->move;
     unit->jump = job->jump & JOB_JUMP_VALUE_MASK;
     if (job->jump & JOB_JUMP_STEPPING_STONE) {
@@ -36,7 +37,7 @@ void main_unit_copy_job_data(unit_stats_t* unit) {
     } else {
         unit->position.stepping_stone = 0;
     }
-    main_util_copy_byte_data(&job->status_sets, &unit->status_sets, sizeof(job->status_sets));
+    mem_copy_byte_data_source_first(&job->status_sets, &unit->status_sets, sizeof(job->status_sets));
 
     flag_a = unit->team_flags & BATTLE_TEAM_FLAG_IMMORTAL;
     flag_b = unit->unit_flags & (UNIT_FLAG_SAVE_FORMATION | UNIT_FLAG_LOAD_FORMATION);
@@ -52,7 +53,7 @@ void main_unit_copy_job_data(unit_stats_t* unit) {
         }
     }
 
-    main_util_copy_byte_data(job->elemental_affinity, unit->elemental_affinity, sizeof(job->elemental_affinity));
+    mem_copy_byte_data_source_first(job->elemental_affinity, unit->elemental_affinity, sizeof(job->elemental_affinity));
     unit->elemental_affinity[ELEMENTAL_AFFINITY_STRENGTHEN] = 0;
     unit->spritesheet_id = job->spritesheet_id;
     unit->job_portrait_palette = job->job_portrait_palette;

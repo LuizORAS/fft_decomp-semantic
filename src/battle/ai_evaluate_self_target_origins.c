@@ -43,7 +43,7 @@ prepare_origin:
     if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
         mode = AI_TILE_MASK_EXPLICIT;
     ai_build_targetable_tile_mask(mode, 0);
-    ai_copy_u16_values(ai->attack_origin_tiles, ai->targetable_tiles, sizeof(ai->attack_origin_tiles));
+    mem_copy_u16_values(ai->attack_origin_tiles, ai->targetable_tiles, sizeof(ai->attack_origin_tiles));
     if (ai_is_ability_origin_allowed(&ai->acting_unit_coords)) {
     evaluate_targets:
         if (ai_evaluate_target_tiles() == -1) {

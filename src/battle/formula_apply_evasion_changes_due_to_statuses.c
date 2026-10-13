@@ -26,7 +26,7 @@ void formula_apply_evasion_changes_due_to_statuses(void) {
         flag = 1;
     }
     if (flag) {
-        main_util_clear_byte_data(&g_action_current_ability.accessory_evade, 4);
+        mem_zero(&g_action_current_ability.accessory_evade, 4);
     }
     if (g_action_target->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DEFENDING)]
         & STATUS_BYTE_MASK(STATUS_ID_DEFENDING)) {

@@ -10,7 +10,7 @@ void attack_deploy_mark_other_squad_units_undeployable(void) {
     s32 i;
     s32 unit_id;
 
-    copy_bytes_nonempty(
+    mem_copy_bytes_nonempty(
         g_attack_deploy_roster_unit_deployable, g_attack_deploy_unit_fieldable, PARTY_ROSTER_SLOT_COUNT);
     for (squad_id = 0; squad_id < 4; squad_id++) {
         if (squad_id != g_attack_deploy_current_squad) {

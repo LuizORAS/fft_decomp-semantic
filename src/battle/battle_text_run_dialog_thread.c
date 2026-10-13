@@ -323,7 +323,7 @@ void battle_text_run_dialog_thread(void) {
         win->sprites[3].h = 8;
         win->sprites[3].clut = 0x7CBC;
     }
-    copy_bytes_nonempty(&win[1], win, 0x118);
+    mem_copy_bytes_nonempty(&win[1], win, 0x118);
     win[0].active = 1;
     win[1].active = 1;
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
@@ -817,7 +817,7 @@ end:
         from.h = 0;
         from.x = right;
         from.y = bottom;
-        copy_bytes_nonempty(&to, &from, 8);
+        mem_copy_bytes_nonempty(&to, &from, 8);
         menu_tween_window_quads(win, &from, &to, 4);
     }
     g_battle_text_awaiting_input = 0;

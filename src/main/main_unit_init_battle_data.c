@@ -31,21 +31,22 @@ void main_unit_init_battle_data(unit_stats_t* unit, const party_unit_t* party) {
     unit->abilities.reaction = party->reaction_ability[0] + (party->reaction_ability[1] << 8);
     unit->abilities.support = party->support_ability[0] + (party->support_ability[1] << 8);
     unit->abilities.movement = party->movement_ability[0] + (party->movement_ability[1] << 8);
-    main_util_copy_byte_data(party->equipment, unit->equipment, UNIT_EQUIPMENT_SLOT_COUNT);
+    mem_copy_byte_data_source_first(party->equipment, unit->equipment, UNIT_EQUIPMENT_SLOT_COUNT);
     unit->experience = party->experience;
     unit->level = party->level;
     unit->original_brave = unit->brave = party->bravery;
     unit->original_faith = unit->faith = party->faith;
-    main_util_copy_byte_data(party->raw_stats, unit->raw_stats, sizeof(unit->raw_stats));
+    mem_copy_byte_data_source_first(party->raw_stats, unit->raw_stats, sizeof(unit->raw_stats));
     for (i = 0; i < UNIT_UNLOCKED_JOB_BYTE_COUNT; i++) {
         unit->career.unlocked_jobs[i] = party->career.unlocked_jobs[i];
     }
-    main_util_copy_byte_data(
+    mem_copy_byte_data_source_first(
         party->career.learned_abilities, unit->career.learned_abilities, UNIT_LEARNED_ABILITY_BYTE_COUNT);
-    main_util_copy_byte_data(party->career.job_levels, unit->career.job_levels, UNIT_JOB_LEVEL_BYTE_COUNT);
+    mem_copy_byte_data_source_first(party->career.job_levels, unit->career.job_levels, UNIT_JOB_LEVEL_BYTE_COUNT);
     /* Copy the adjacent current/total JP tables as their 80 serialized bytes. */
-    main_util_copy_byte_data(&party->career.job_points, &unit->career.job_points, sizeof(unit->career.job_points));
-    main_util_copy_byte_data(party->name, unit->name, sizeof(unit->name));
+    mem_copy_byte_data_source_first(
+        &party->career.job_points, &unit->career.job_points, sizeof(unit->career.job_points));
+    mem_copy_byte_data_source_first(party->name, unit->name, sizeof(unit->name));
     unit->quote_name_id.value = party->name_id.fields.index + (party->name_id.fields.name_class << 8);
-    main_util_clear_byte_data(&unit->ai_target_x, 7);
+    mem_zero(&unit->ai_target_x, 7);
 }

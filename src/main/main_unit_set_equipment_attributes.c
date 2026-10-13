@@ -20,7 +20,7 @@ void main_unit_set_equipment_attributes(unit_stats_t* unit, s32 level_up_check) 
     u8* source;
     u8* target;
 
-    main_util_clear_byte_data(unit->equipment_attributes, sizeof(unit->equipment_attributes));
+    mem_zero(unit->equipment_attributes, sizeof(unit->equipment_attributes));
     cap = UNIT_HP_MP_MAX;
     main_unit_calculate_actual_stats(unit, level_up_check + 1);
     unit->equipped_flags = 0;

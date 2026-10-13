@@ -57,7 +57,7 @@ void require_condition_run_special_thread(void) {
             QUAD.offset.y + 0x78, QUAD.offset.x + 0x100, QUAD.offset.y + 0x78 + QUAD.source.h,
             QUAD.offset.x + 0x100 + QUAD.source.w, QUAD.offset.y + 0x78 + QUAD.source.h);
     }
-    copy_bytes_nonempty(g_require_gfx_poly_gt4_buffers[1], g_require_gfx_poly_gt4_buffers, 40 * sizeof(POLY_GT4));
+    mem_copy_bytes_nonempty(g_require_gfx_poly_gt4_buffers[1], g_require_gfx_poly_gt4_buffers, 40 * sizeof(POLY_GT4));
 
     buffer = 0;
     scale = 0x30;

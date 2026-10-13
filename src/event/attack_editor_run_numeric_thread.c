@@ -67,7 +67,7 @@ void attack_editor_run_numeric_thread(void) {
         buffer->sprites[16].v0 += 0x4C;
     }
     buffer->sprites[10].clut = 0x7D7C;
-    copy_bytes_nonempty(&buffer[1], buffer, sizeof(menu_status_panel_numeric_buffer_t));
+    mem_copy_bytes_nonempty(&buffer[1], buffer, sizeof(menu_status_panel_numeric_buffer_t));
 
     for (frame = 0;; frame++) {
         buffer = &buffers[frame & 1];

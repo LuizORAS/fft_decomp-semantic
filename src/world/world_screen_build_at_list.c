@@ -135,7 +135,7 @@ void world_screen_build_at_list(void) {
     clear.y = ((image_rect.y - 2) & 0xFF) + (image_rect.y & 0xFF00);
     clear.w = image_rect.w;
     ClearImage(&clear, 0, 0, 0);
-    copy_bytes_nonempty(&g_world_text_list_pages[1], g_world_text_list_pages, sizeof(menu_list_page_t));
+    mem_copy_bytes_nonempty(&g_world_text_list_pages[1], g_world_text_list_pages, sizeof(menu_list_page_t));
     for (i = 0; i < 2; i++) {
         g_world_text_list_pages[i].icons.icons[0] = &icons0[i];
         g_world_text_list_pages[i].icons.icons[1] = &icons1[i];

@@ -40,8 +40,9 @@ s32 ai_evaluate_math_targets(void) {
                 if (ai->math_ability_id == special_abilities[i])
                     ai_is_ability_known(ai->acting_unit_id, g_ai_math_skillset_id, g_ai_math_ability_index + 1);
             }
-            ai_copy_u16_values(&ai->considered_ability.ai_flags, &g_main_ability_data[ai->math_ability_id].ai_flags, 4);
-            ai_copy_bytes(ai->considered_ability.parameters.fields.status_infliction,
+            mem_copy_u16_values(
+                &ai->considered_ability.ai_flags, &g_main_ability_data[ai->math_ability_id].ai_flags, 4);
+            mem_copy_bytes(ai->considered_ability.parameters.fields.status_infliction,
                 g_main_status_infliction_data[g_main_ability_range_data[ai->math_ability_id].status_infliction_id]
                     .statuses,
                 5);

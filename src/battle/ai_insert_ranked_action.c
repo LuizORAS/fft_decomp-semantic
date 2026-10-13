@@ -21,8 +21,8 @@ void ai_insert_ranked_action(void) {
             }
             if (i != AI_RANKED_ACTION_COUNT) {
                 for (j = AI_RANKED_ACTION_COUNT - 1; i < j; j--)
-                    ai_copy_u16_values(&ai->ranked_actions[j], &ai->ranked_actions[j - 1], sizeof(ai_action_data_t));
-                ai_copy_u16_values(&ai->ranked_actions[j], &ai->best_action, sizeof(ai_action_data_t));
+                    mem_copy_u16_values(&ai->ranked_actions[j], &ai->ranked_actions[j - 1], sizeof(ai_action_data_t));
+                mem_copy_u16_values(&ai->ranked_actions[j], &ai->best_action, sizeof(ai_action_data_t));
             }
         }
     }

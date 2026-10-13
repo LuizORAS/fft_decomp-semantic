@@ -19,7 +19,7 @@ void attack_deploy_update_cursor_primitives(s32 frame, attack_deploy_render_buff
     u8(*tiles)[5];
 
     thread->task_words[0] += g_script_event_speed;
-    copy_bytes_nonempty(
+    mem_copy_bytes_nonempty(
         &g_attack_deploy_cursor_clut[1], &g_attack_deploy_cursor_palette_cycle[0][1 + (frame / 4) % 14], 0x1e);
     g_attack_deploy_cursor_clut[0].red = g_attack_deploy_cursor_clut[0].green = g_attack_deploy_cursor_clut[0].blue
         = g_attack_deploy_cursor_clut[0].semi_transparent = 0;

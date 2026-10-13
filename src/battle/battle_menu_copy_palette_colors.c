@@ -7,6 +7,6 @@ void battle_menu_copy_palette_colors(const menu_palette_pair_t* source) {
     rgba5551_t* destination;
 
     destination = g_battle_menu_palette_colors.colors;
-    copy_bytes_nonempty(destination, source->colors, sizeof(palette_t));
-    copy_bytes_nonempty(destination + PALETTE_COLOR_COUNT, source->colors + PALETTE_COLOR_COUNT, sizeof(palette_t));
+    mem_copy_bytes_nonempty(destination, source->colors, sizeof(palette_t));
+    mem_copy_bytes_nonempty(destination + PALETTE_COLOR_COUNT, source->colors + PALETTE_COLOR_COUNT, sizeof(palette_t));
 }

@@ -45,7 +45,7 @@ s32 ai_evaluate_reflected_target_origins(void) {
         if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
             mode = AI_TILE_MASK_EXPLICIT;
         ai_build_targetable_tile_mask(mode, 0);
-        ai_copy_u16_values(ai->attack_origin_tiles, ai->targetable_tiles, sizeof(ai->attack_origin_tiles));
+        mem_copy_u16_values(ai->attack_origin_tiles, ai->targetable_tiles, sizeof(ai->attack_origin_tiles));
         for (ai->reflected_target_unit_index = 0; ai->reflected_target_unit_index < BATTLE_UNIT_SLOT_COUNT;
             ai->reflected_target_unit_index++) {
             if (!ai->targetability.live.unit_targetable[ai->reflected_target_unit_index])

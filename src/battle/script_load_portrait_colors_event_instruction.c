@@ -26,7 +26,7 @@ void script_load_portrait_colors_event_instruction(s32 portrait_id) {
     } while (thread_call_on_main_stack() != 0);
 
     palette = buffer->palettes;
-    copy_bytes_nonempty(&rect, &g_battle_menu_portrait_pixel_rect, sizeof(rect));
+    mem_copy_bytes_nonempty(&rect, &g_battle_menu_portrait_pixel_rect, sizeof(rect));
     i = 0;
     pixels = buffer->pixels;
     rect.w = 8;

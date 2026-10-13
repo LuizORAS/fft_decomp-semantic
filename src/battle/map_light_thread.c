@@ -72,7 +72,7 @@ void map_light_thread(void) {
         map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_SET, &matrix, &rotation, 0);
         thread_wait_frames(1);
     }
-    copy_bytes_nonempty(&g_script_light_angles, &color, sizeof(g_script_light_angles));
-    copy_bytes_nonempty(&g_script_light_scale, &translation, sizeof(g_script_light_scale));
+    mem_copy_bytes_nonempty(&g_script_light_angles, &color, sizeof(g_script_light_angles));
+    mem_copy_bytes_nonempty(&g_script_light_scale, &translation, sizeof(g_script_light_scale));
     thread_exit_current();
 }

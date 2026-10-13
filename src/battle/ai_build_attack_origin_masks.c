@@ -21,7 +21,8 @@ void ai_build_attack_origin_masks(void) {
         ai->attack_origin_tiles[1][i] = 0;
     }
     if (ai->considered_ability.ai_flags.word & AI_ABILITY_ARC_TRAJECTORY) {
-        ai_copy_u16_values(ai->movable_tiles, ai->reachable_tiles[ai->movement_scenario][0], sizeof(ai->movable_tiles));
+        mem_copy_u16_values(
+            ai->movable_tiles, ai->reachable_tiles[ai->movement_scenario][0], sizeof(ai->movable_tiles));
     } else {
         for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
             if (ai->targetability.live.unit_targetable[unit_id]) {

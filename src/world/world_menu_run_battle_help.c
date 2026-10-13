@@ -50,7 +50,7 @@ void world_menu_run_battle_help(void) {
     if (g_world_menu_transition_active != 0) {
         thread_exit_current();
     }
-    copy_bytes_nonempty(
+    mem_copy_bytes_nonempty(
         g_world_text_section_pointer_backup, g_text_section_pointers, sizeof(g_world_text_section_pointer_backup));
     setup_banner = &g_world_help_active_banner;
     setup_unit_data = &g_world_help_active_unit_data;

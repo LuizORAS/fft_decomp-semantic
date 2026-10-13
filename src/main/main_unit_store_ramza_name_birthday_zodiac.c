@@ -20,7 +20,7 @@ void main_unit_store_ramza_name_birthday_zodiac(unit_stats_t* unit) {
         }
         unit->birthday.birthday = party->birthday_day + (party->zodiac << 8);
         unit->birthday.zodiac = party->zodiac >> PARTY_ZODIAC_SHIFT;
-        main_util_copy_byte_data(party->name, unit->name, sizeof(unit->name));
+        mem_copy_byte_data_source_first(party->name, unit->name, sizeof(unit->name));
         return;
     }
 }

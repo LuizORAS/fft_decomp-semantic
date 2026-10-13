@@ -117,17 +117,17 @@ void world_menu_unit_status_banner_thread(void) {
         state->team_kind = 0;
     }
     if (g_world_unit_join_screen_active == 0) {
-        copy_bytes_nonempty(&g_world_unit_summary_label_sprite_params[6],
+        mem_copy_bytes_nonempty(&g_world_unit_summary_label_sprite_params[6],
             &g_world_unit_summary_mode_row_params[state->team_kind], sizeof(image_load_parameters_t));
     } else {
-        copy_bytes_nonempty(&g_world_unit_summary_label_sprite_params[6], g_world_unit_summary_mode_row_params,
+        mem_copy_bytes_nonempty(&g_world_unit_summary_label_sprite_params[6], g_world_unit_summary_mode_row_params,
             sizeof(image_load_parameters_t));
     }
     for (frame = 0; frame < 7; frame++) {
         gfx_init_image_loading(&summary->label_sprites[frame], g_world_editor_numeric_geometry,
             &g_world_gfx_portrait_origin, &g_world_unit_summary_label_sprite_params[frame]);
     }
-    copy_bytes_nonempty(summary + 1, summary, sizeof(menu_status_panel_editor_packet_t));
+    mem_copy_bytes_nonempty(summary + 1, summary, sizeof(menu_status_panel_editor_packet_t));
     world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
     world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_b, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_status_panel_origin, &status->numeric_frame);
@@ -149,7 +149,7 @@ void world_menu_unit_status_banner_thread(void) {
         status->portrait.clut = 0x7FBD;
     }
     status->portrait.tpage = GetTPage(0, 1, 0x3C0, 0x100);
-    copy_bytes_nonempty(status + 1, status, sizeof(menu_status_panel_packet_t));
+    mem_copy_bytes_nonempty(status + 1, status, sizeof(menu_status_panel_packet_t));
     frame = 0;
     anim_state = 0;
     prev_unit = state->unit_index;
@@ -162,10 +162,10 @@ void world_menu_unit_status_banner_thread(void) {
             state->gauges[MENU_UNIT_STATUS_GAUGE_CT].value = UNIT_TURN_CT_THRESHOLD;
         }
         if (g_world_unit_join_screen_active == 0) {
-            copy_bytes_nonempty(&g_world_unit_summary_label_sprite_params[6],
+            mem_copy_bytes_nonempty(&g_world_unit_summary_label_sprite_params[6],
                 &g_world_unit_summary_mode_row_params[state->team_kind], sizeof(image_load_parameters_t));
         } else {
-            copy_bytes_nonempty(&g_world_unit_summary_label_sprite_params[6], g_world_unit_summary_mode_row_params,
+            mem_copy_bytes_nonempty(&g_world_unit_summary_label_sprite_params[6], g_world_unit_summary_mode_row_params,
                 sizeof(image_load_parameters_t));
         }
         gfx_init_image_loading(&summary->label_sprites[6], g_world_editor_numeric_geometry,

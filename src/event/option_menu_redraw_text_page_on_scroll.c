@@ -60,7 +60,7 @@ u8* option_menu_redraw_text_page_on_scroll(
     option_menu_draw_text_columns(menu, first_row, g_option_menu_render_buffer);
     *render_pending = 0;
     LoadImage(&source, (u32*)g_option_menu_render_buffer);
-    copy_bytes_nonempty(&clear_strip, &source, sizeof(RECT));
+    mem_copy_bytes_nonempty(&clear_strip, &source, sizeof(RECT));
     clear_strip.h = 2;
     clear_strip.x = source.x;
     clear_strip.y = ((source.y - 2) & 0xff) + (source.y & 0xff00);
