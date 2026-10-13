@@ -657,7 +657,7 @@ void ai_build_unit_ability_list(s32 unit_id);
 void ai_disable_ability_if_only_inflicts_status(ai_ability_entry_t* entry, s32 status_id);
 void ai_init_unit_abilities(s32 unit_id);
 s32 ai_is_ability_known(s32 unit_id, s32 skillset_id, s32 bit);
-void ai_load_ability_entry(ai_ability_entry_t* entry);
+void ai_load_ability_entry(const ai_ability_entry_t* entry);
 void ai_set_ability_considerations(s32 action_taken);
 void ai_store_weapon_attack_data(ai_weapon_data_t* out, s32 item_id, s32* flags_out);
 
@@ -731,7 +731,7 @@ extern s32 g_ai_propagation_resume_pass;
 s32 ai_build_movement_scenarios(void);
 s32 ai_build_targeted_movement(void);
 void ai_fill_foe_proximity_grid(void);
-s32 ai_fill_target_distance_grid(ai_coords_t* target);
+s32 ai_fill_target_distance_grid(const ai_coords_t* target);
 s32 ai_filter_reachable_tiles_by_target_distance(s32 distance_limit);
 s32 ai_get_movement_range(void);
 s32 ai_is_pathfinding_budget_exhausted(void);
@@ -874,7 +874,7 @@ extern ai_extended_snapshot_t* g_ai_unit_snapshots; /* 0x8019f3c0 */
 
 void ai_begin_action_simulation(void);
 void ai_end_action_simulation(void);
-void ai_move_temp_unit_to_coords(ai_coords_t* coordinates);
+void ai_move_temp_unit_to_coords(const ai_coords_t* coordinates);
 void ai_restore_unit_state(ai_snapshot_mode_e mode);
 void ai_save_unit_state(ai_snapshot_mode_e mode);
 s32 ai_simulate_action_and_score(void);

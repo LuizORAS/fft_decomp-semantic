@@ -10,7 +10,7 @@
  * selected row, leaving zero-mask rows unchanged. Return -1 when the child
  * suspends through its out-parameter, or 0 after filling the grid.
  */
-s32 ai_fill_target_distance_grid(ai_coords_t* target) {
+s32 ai_fill_target_distance_grid(const ai_coords_t* target) {
     ai_data_t* ai = &g_ai_data_base;
     s32 suspended = 0;
     s32 use_manhattan;
