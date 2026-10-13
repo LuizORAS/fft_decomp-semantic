@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
@@ -57,7 +58,7 @@ u8* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s
         row = image + i * words + x_offset;
         row[words - 1] = 0;
         row[words - 2] = 0;
-        world_menu_build_window_image_row(sheet, row, words, sheet_offset);
+        menu_build_window_image_row(sheet, row, words, sheet_offset);
     }
     if (kind != DIALOG_OPTIONS_NO_TAIL) {
         g_world_menu_window_sprite_source.rect.x = 0x58;

@@ -1,13 +1,8 @@
-#include "fft/battle_menu.h"
-#include "psx/types.h"
+#include "fft/menu.h"
 
-/* Fill one row of a window image from the eight 16-bit patterns at tiles[index].
- *
- * Entries 0-1 are the left border, written to the first two cells, and entries 6-7
- * the right border, written to row[count - 4] and row[count - 3]. Entries 2-5
- * repeat every fourth cell across the interior. The last two cells of the row are
- * the caller's. BATTLE twin of world_menu_build_window_image_row. */
-void battle_menu_build_window_image_row(const u16* tiles, u16* row, s32 count, s32 index) {
+/* Fill the borders and repeating interior from an eight-pattern row.
+ * The caller fills the final two destination cells. */
+void menu_build_window_image_row(const u16* tiles, u16* row, s32 count, s32 index) {
     u16* cell;
     u16 tile;
     s32 i;

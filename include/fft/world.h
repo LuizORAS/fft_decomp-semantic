@@ -2552,7 +2552,6 @@ void world_menu_draw_text_columns(menu_entry_t* entry, s32* row_offset, u8* buff
 void world_menu_draw_thread_status_indicators(void);
 void world_menu_enable_all_order_entries(void);
 void world_menu_fade_out_thread(void);
-void world_menu_build_window_image_row(u16* source, u16* dest, s32 count, s32 offset);
 void world_screen_menu_build_window_image_row(u16* source, u16* dest, s32 count, s32 offset);
 void world_menu_free_high_overlay(void);
 void world_menu_free_memory(void* buffer);

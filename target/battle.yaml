@@ -1069,7 +1069,7 @@ functions:
   - {addr: 0x8014c164, size: 40, name: battle_menu_build_and_upload_window_image, hash: e90647c567bcb102}
   - {addr: 0x8014c18c, size: 796, name: battle_menu_build_window_image, hash: c553dd4a8afbd218}
   - {addr: 0x8014c4a8, size: 688, name: battle_menu_build_and_upload_window_frame_image, hash: 99515c0e0a1f017c}
-  - {addr: 0x8014c758, size: 256, name: battle_menu_build_window_image_row, hash: 03b43cffa473c30c}
+  - {addr: 0x8014c758, size: 256, name: menu_build_window_image_row, hash: 03b43cffa473c30c, source: src/shared/menu/menu_build_window_image_row.c}
   - {addr: 0x8014c858, size: 72, name: battle_thread_wait_frames, hash: e33123533d666f71}
   - {addr: 0x8014c8a0, size: 132, name: battle_thread_start, hash: 72fa1891ea2b8656}
   - {addr: 0x8014c924, size: 28, name: battle_thread_resume, hash: 484df3941212a0b6}

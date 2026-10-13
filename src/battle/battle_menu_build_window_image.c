@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -60,7 +61,7 @@ u8* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, 
         row = buf + i * words + x_off;
         row[words - 1] = 0;
         row[words - 2] = 0;
-        battle_menu_build_window_image_row(src, row, words, src_index);
+        menu_build_window_image_row(src, row, words, src_index);
     }
     if (kind != DIALOG_OPTIONS_NO_TAIL) {
         g_battle_menu_window_sprite_glyph.rect.x = 0x58;

@@ -415,7 +415,7 @@ functions:
   - {addr: 0x800ff668, size: 40, name: world_menu_build_and_upload_window_image, hash: c452a59dd99e0cda}
   - {addr: 0x800ff690, size: 796, name: world_menu_build_window_image, hash: af5f5261b59f0b0d}
   - {addr: 0x800ff9ac, size: 636, name: world_menu_build_and_upload_window_frame_image, hash: 36ce56e38867d038}
-  - {addr: 0x800ffc28, size: 256, name: world_menu_build_window_image_row, hash: 03b43cffa473c30c}
+  - {addr: 0x800ffc28, size: 256, name: menu_build_window_image_row, hash: 03b43cffa473c30c, source: src/shared/menu/menu_build_window_image_row.c}
   - {addr: 0x800ffd28, size: 72, name: world_thread_wait_frames, hash: 2658b0e5a2a82790}
   - {addr: 0x800ffd70, size: 132, name: world_thread_start, hash: 8e70b68deed7c2a0}
   - {addr: 0x800ffdf4, size: 28, name: world_thread_resume, hash: 5db3a5c21e753da8}

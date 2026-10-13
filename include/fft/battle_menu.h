@@ -295,7 +295,6 @@ void battle_menu_build_and_upload_window_image(s32 width, s32 height, RECT* rect
 s32 battle_menu_build_quad_pieces(s32 group, POLY_GT4* poly);
 void battle_menu_build_sprite_page(s32 page_index, RECT* base_screen);
 u8* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset, s32 keep);
-void battle_menu_build_window_image_row(const u16* tiles, u16* row, s32 count, s32 index);
 void battle_menu_build_window_sprites(RECT* rect, menu_entry_t* param, menu_icon_record_t* record);
 void battle_menu_draw_active_window_frames(void);
 void battle_menu_icon_linked_entry_thread(void);

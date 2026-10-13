@@ -43,6 +43,8 @@ typedef struct menu_glyph_sheet {
 } menu_glyph_sheet_t;
 typedef char menu_glyph_sheet_size_must_be_4160[(sizeof(menu_glyph_sheet_t) == 4160) ? 1 : -1];
 
+void menu_build_window_image_row(const u16* tiles, u16* row, s32 count, s32 index);
+
 /* menu_window_buffer_t::icon_flags: which of the window's three icon sprites
  * are drawn. */
 typedef enum menu_window_icon_flags {

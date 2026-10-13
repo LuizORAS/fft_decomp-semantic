@@ -1,7 +1,8 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* The menu-screen library's copy of world_menu_build_window_image_row (the same routine compiled twice);
+/* The menu-screen library's copy of menu_build_window_image_row (the same routine compiled twice);
  * world_menu_build_window_frame_image calls this one. Copies a 16-bit pattern row: the two
  * leading and two trailing entries verbatim, then the four interior entries repeated every fourth slot across the row.
  */

@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -72,7 +73,7 @@ u8* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* 
         row = (u16*)(buffer + (i - first) * words * sizeof(u16));
         row[words - 1] = src[src_index + 9];
         row[words - 2] = src[src_index + 8];
-        world_menu_build_window_image_row(src, row, words, src_index);
+        menu_build_window_image_row(src, row, words, src_index);
     }
     if (mode == MENU_WINDOW_FRAME_UPLOAD || mode == MENU_WINDOW_FRAME_ALTERNATE_UPLOAD) {
         LoadImage(&upload, (u32*)buffer);
