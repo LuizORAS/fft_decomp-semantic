@@ -1915,7 +1915,7 @@ extern s16 g_effect_ability_files[];
 extern effect_file_header_t* g_effect_data_ptrs[EFFECT_FILE_ID_COUNT];
 extern file_extent_t g_effect_disc_entries[EFFECT_FILE_ID_COUNT];
 
-extern effect_flags_section_t* g_effect_flags_section;
+extern const effect_flags_section_t* g_effect_flags_section;
 extern s16 g_effect_load_countdown;
 extern u8 g_effect_load_state;      /* effect_load_state_e */
 extern s32 g_effect_playback_phase; /* effect_playback_phase_e */
@@ -2114,7 +2114,7 @@ s32 effect_init_model_sections(psyq_tmd_header_t* resource, s32 unused_1);
 /* timelines */
 extern effect_child_timeline_t* g_effect_child_timeline;
 extern effect_timeline_t* g_effect_timeline;
-extern effect_timing_curves_t* g_effect_timing_curves;
+extern const effect_timing_curves_t* g_effect_timing_curves;
 
 void effect_advance_map_background_track(effect_background_track_t* track, s16* keyframe, s16* remaining_frames);
 s32 effect_find_next_keyframe(s16 frame, s16 mask, s32* out_index, s32* out_frame);
@@ -2146,9 +2146,9 @@ void effect_set_script_pointer(s16 effect_id);
 s16 effect_start_script_record(u8* script, s16 start_pc, s16 parent_index);
 
 /* particle motion */
-extern effect_animation_curve_table_t* g_effect_animation_curve_data;
+extern const effect_animation_curve_table_t* g_effect_animation_curve_data;
 extern MATRIX g_effect_emitter_matrix;
-extern effect_geometry_table_t* g_effect_geometry_table;
+extern const effect_geometry_table_t* g_effect_geometry_table;
 /* Particle gravity; secondary handlers save it while using (0, ONE, 0). */
 extern vec3s32_t g_effect_gravity;
 extern s32 g_effect_gravity_modifier;
@@ -2171,7 +2171,7 @@ void effect_restore_inertia_threshold(void);
 void effect_save_gravity(void);
 void effect_save_inertia_threshold(void);
 void effect_set_animation_curve_data_pointer(s16 effect_id);
-void effect_set_gravity(vec3s32_t* src);
+void effect_set_gravity(const vec3s32_t* src);
 void effect_set_inertia_threshold(s32 threshold);
 void effect_set_particle_system_data_pointer(s16 effect_id);
 /* parent is the particle a child emitter spawns from, read only for the
@@ -2356,8 +2356,8 @@ void effect_interpolate_vector_q13_cos_q12(
     const VECTOR* from, const VECTOR* to, s32 duration, s32 current, VECTOR* out);
 void effect_interpolate_vector_q13_linear(const VECTOR* from, const VECTOR* to, s32 duration, s32 current, VECTOR* out);
 void effect_lerp_component_q13(s32 from, s32 to, s32 t, s32* out);
-void effect_load_svector(vec3s16_t* src, SVECTOR* dst);
-void effect_load_vector(vec3s16_t* src, VECTOR* dst);
+void effect_load_svector(const vec3s16_t* src, SVECTOR* dst);
+void effect_load_vector(const vec3s16_t* src, VECTOR* dst);
 void effect_mask_vector_low_12_bits(const SVECTOR* src, SVECTOR* dst);
 s16 effect_select_larger_magnitude_s16(s16 first, s16 second);
 s16 effect_select_largest_magnitude_s16(s16 first, s16 second, s16 third);

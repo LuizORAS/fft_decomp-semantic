@@ -38,7 +38,7 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     s16 depth[TUBE_MESH_LATTICE_ROW_COUNT][TUBE_MESH_SEGMENT_COUNT];
     SVECTOR map_max;
     effect_ring_mesh_work_t* work;
-    effect_geometry_record_t* entry;
+    const effect_geometry_record_t* entry;
     s32 radius;
     s32 u;
     s32 v;

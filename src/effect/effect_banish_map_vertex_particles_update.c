@@ -21,7 +21,7 @@ s32 effect_banish_map_vertex_particles_update(
     s32 group;
     s32 i;
     s32 byte_offset;
-    effect_particle_vertex_emitter_view_t* emitter;
+    const effect_particle_vertex_emitter_view_t* emitter;
     VECTOR* vertex;
     VECTOR* vertex_work;
 

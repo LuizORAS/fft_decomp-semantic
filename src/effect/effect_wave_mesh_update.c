@@ -31,7 +31,7 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     s32 amplitude_step;
     s32 amplitude;
     s32 phase_step;
-    effect_geometry_record_t* geometry;
+    const effect_geometry_record_t* geometry;
     effect_wave_mesh_scratch_t* scratch;
     effect_wave_mesh_work_t* work;
     POLY_GT4* quad;

@@ -36,7 +36,7 @@ s32 effect_spawn_emitter_particles(s16 record_index, s32 frame, s32 emitter_inde
     SVECTOR target_offset;
     SVECTOR map_max;
     SVECTOR tile_anchor;
-    effect_geometry_record_t* entry;
+    const effect_geometry_record_t* entry;
     effect_work_record_t* particle;
     SVECTOR* unit_coords;
     s32 time;

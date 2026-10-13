@@ -23,7 +23,7 @@ s32 effect_single_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emit
     s16 depth[2][RING_MESH_SEGMENTS + 1];
     SVECTOR map_max;
     effect_single_ring_mesh_work_t* work;
-    effect_geometry_record_t* entry;
+    const effect_geometry_record_t* entry;
     s32 radius;
     s32 u;
     s32 v;

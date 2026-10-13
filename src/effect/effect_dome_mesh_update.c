@@ -29,7 +29,7 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
     s16 depth[DOME_MESH_ROWS + 1][DOME_MESH_SEGMENTS + 1];
     SVECTOR map_max;
     effect_record_t* record;
-    effect_radial_mesh_geometry_t* entry;
+    const effect_radial_mesh_geometry_t* entry;
     effect_dome_mesh_work_t* work;
     POLY_GT4* quad;
     POLY_GT4* other;

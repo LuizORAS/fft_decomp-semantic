@@ -51,7 +51,7 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
     SVECTOR map_origin;
     effect_record_t* record;
     effect_particle_ribbon_short_work_t* work;
-    effect_geometry_record_t* entry;
+    const effect_geometry_record_t* entry;
     s16 speed_min;
     s16 speed_max;
     s16 lifetime_min;

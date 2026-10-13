@@ -37,7 +37,7 @@ s32 effect_ring_stack_mesh_update(s32 record_index, s32 callback_slot, s32 emitt
     VECTOR unused_5c0[3]; /* frame padding */
     SVECTOR map_max;
     effect_ring_mesh_work_t* work;
-    effect_geometry_record_t* entry;
+    const effect_geometry_record_t* entry;
     s32 radius;
     s32 u;
     s32 v;

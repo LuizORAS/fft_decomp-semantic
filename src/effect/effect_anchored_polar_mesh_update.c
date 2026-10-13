@@ -17,7 +17,7 @@ s32 effect_anchored_polar_mesh_update(s32 record_index, s32 callback_slot, s32 e
     s16 state_index = record_index;
     effect_anchored_polar_mesh_scratch_t* scratch;
     effect_record_t* record;
-    effect_geometry_record_t* entry;
+    const effect_geometry_record_t* entry;
     u32* ot;
     effect_polar_mesh_work_t* work;
     POLY_GT4* quad;

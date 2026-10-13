@@ -29,7 +29,7 @@ s32 effect_textured_quad_grid_4x4_update(s32 record_index, s32 callback_slot, s3
     s32 texture_width;
     s32 texture_height;
     u32* ot;
-    effect_textured_quad_geometry_view_t* geometry;
+    const effect_textured_quad_geometry_view_t* geometry;
     effect_textured_quad_grid_4x4_work_t* work;
     POLY_GT4* quad;
     /* Keep unsigned bindings separate from the signed curve-index scratch. */

@@ -32,7 +32,7 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
     SVECTOR map_max;
     effect_record_t* record;
     effect_trail_work_t* work;
-    effect_geometry_record_t* entry;
+    const effect_geometry_record_t* entry;
     s16 speed_min;
     s16 speed_max;
     s16 length_min;
