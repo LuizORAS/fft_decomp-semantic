@@ -1860,7 +1860,7 @@ functions:
   - {addr: 0x801dfba0, size: 24, name: jobstts_ability_is_reaction_tab, hash: 9193e1ed081fc9db}
   - {addr: 0x801dfbb8, size: 24, name: jobstts_ability_is_support_tab, hash: 90d8dec8477e7386}
   - {addr: 0x801dfbd0, size: 24, name: jobstts_ability_is_movement_tab, hash: fea6a458f383390e}
-  - {addr: 0x801dfbe8, size: 952, name: jobstts_update_ability_list_menu, hash: f11f323916cdc7a9}
+  - {addr: 0x801dfbe8, size: 952, name: jobstts_ability_run_list_menu, hash: f11f323916cdc7a9}
   - {addr: 0x801dffa0, size: 32, name: jobstts_job_is_special_monster, hash: f4362856b8ecd185}
   - {addr: 0x801dffc0, size: 360, name: jobstts_unit_copy_job_data, hash: 8549998d0529a4c8}
   - {addr: 0x801e0128, size: 64, name: jobstts_unit_init_job_data, hash: 2f5b68b9627401dd}
@@ -1875,7 +1875,7 @@ functions:
   - {addr: 0x801e079c, size: 648, name: jobstts_text_render_encoded_ids_to_image, hash: 8d74937185196c66}
   - {addr: 0x801e0a24, size: 264, name: jobstts_text_render_id_rows_to_vram, hash: 5241f714170cf25b}
   - {addr: 0x801e0b2c, size: 124, name: jobstts_text_start_help_thread, hash: f382afd4abb92b11}
-  - {addr: 0x801e0ba8, size: 832, name: jobstts_update_controller_input, hash: bbe451779e50aed3}
+  - {addr: 0x801e0ba8, size: 832, name: jobstts_input_update_controller, hash: bbe451779e50aed3}
   - {addr: 0x801e0ee8, size: 360, name: jobstts_input_update_with_message_state, hash: 150bea20a0faa1ea}
   - {addr: 0x801e1050, size: 36, name: jobstts_menu_clear_selection_values, hash: f714166590860d01}
   - {addr: 0x801e1074, size: 168, name: jobstts_menu_update_wrapped_horizontal_selection, hash: 5953cfbb7a4e9efe}

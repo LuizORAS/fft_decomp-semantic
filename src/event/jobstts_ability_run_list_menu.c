@@ -6,7 +6,7 @@
 /* Selected job's ability list: tabbed by category, with the selected
  * ability's description text. Returns 1 while open, 0 on cancel, -1 on
  * confirm. */
-s32 jobstts_update_ability_list_menu(void) {
+s32 jobstts_ability_run_list_menu(void) {
     RECT rect;
     s16 selected_index;
     s16 scroll_index;

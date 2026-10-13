@@ -547,7 +547,7 @@ typedef enum menu_unit_readout {
 /* Step of the job list menus (WORLD learn and view-abilities menus, BUNIT job
  * menu, the JOBSTTS page); each list's handler returns the next step. In
  * JOBSTTS, JOBS is jobstts_menu_update_job_list, ABILITIES is
- * jobstts_update_ability_list_menu and CLOSE makes jobstts_entrypoint close
+ * jobstts_ability_run_list_menu and CLOSE makes jobstts_entrypoint close
  * the screen. */
 typedef enum menu_job_list_step {
     MENU_JOB_LIST_STEP_CLOSE = -1,

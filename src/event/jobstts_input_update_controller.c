@@ -7,7 +7,7 @@
  * Port of card_input_update_controller with the event
  * speed fixed at 2; the divisor stays a variable, which is why the target
  * divides with divu rather than shifting. */
-void jobstts_update_controller_input(void) {
+void jobstts_input_update_controller(void) {
     s16 bit;
     s32 index;
     /* Pinned: the copies a hard-register variable costs keep the third loop above

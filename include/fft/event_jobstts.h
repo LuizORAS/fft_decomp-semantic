@@ -6,6 +6,9 @@
 #include "fft/battle.h"
 
 /* bits */
+/* The two bit readers (most significant bit first); the primary one reads glyph pixels, the unit's
+ * unlocked jobs and its learned abilities. */
+
 extern u8 g_jobstts_bits_primary_reset;
 extern const u8* g_jobstts_bits_primary_source;
 extern s32 g_jobstts_bits_reader_1_index;
@@ -41,7 +44,12 @@ void jobstts_menu_run_display_script(u8* data, s32 flags);
 void jobstts_menu_run_display_script_with_mode(u8* data, s32 flags, s32 event_mode);
 u8* jobstts_menu_script_skip_group(u8* data);
 
+u8* jobstts_menu_script_draw_window_frame(u8* command);
+
 /* input */
+/* The pad: newly pressed buttons, the two repeat rates and the page scroll, cleared while the windows
+ * open and while the text thread runs. */
+
 typedef enum jobstts_page_scroll_direction {
     JOBSTTS_PAGE_SCROLL_UP = -1,
     JOBSTTS_PAGE_SCROLL_NONE = 0,
@@ -59,9 +67,11 @@ extern u16 g_jobstts_input_previous;
 extern u8 g_jobstts_input_activation_timer;
 jobstts_menu_page_scroll_direction_e jobstts_input_read_page_scroll_direction(void);
 void jobstts_input_update_with_message_state(void);
-void jobstts_update_controller_input(void);
+void jobstts_input_update_controller(void);
 
 /* unit */
+/* The unit whose jobs are shown: its job data, copied from BATTLE's unit into the overlay's one record. */
+
 /* Job and ability data copied into JOBSTTS.OUT for the selected unit. */
 typedef struct jobstts_unit_job_data {
     s16 job_id;               /* 0x00 */
@@ -83,6 +93,9 @@ void jobstts_unit_copy_job_data(battle_stats_t* unit, jobstts_unit_job_data_t* o
 void jobstts_unit_init_job_data(s32 unit_id);
 
 /* ability */
+/* The chosen job's ability list: the abilities it lists under each category tab, its row conditions
+ * and values (learned, CT, MP and JP cost) and its menu. */
+
 extern s16 g_jobstts_ability_category;  /* menu_ability_category_e */
 extern s16 g_jobstts_ability_entries[]; /* Packed ability IDs/flags; -1 terminates the list. */
 extern u8* g_jobstts_selected_ability_secondary_data;
@@ -107,7 +120,7 @@ s32 jobstts_ability_is_non_action_learned(s32 index);
 s32 jobstts_ability_is_non_action_unlearned(s32 index);
 s32 jobstts_ability_is_reaction_tab(s32 unused_row);
 s32 jobstts_ability_is_support_tab(s32 unused_row);
-s32 jobstts_update_ability_list_menu(void);
+s32 jobstts_ability_run_list_menu(void);
 
 /* job */
 /* The job list of JOBSTTS's screen, as BUNIT's (bunit_job_*) for the one unit the screen shows. */
@@ -139,6 +152,9 @@ s32 jobstts_job_is_current_mastered(s32 unused_row);
 s32 jobstts_job_is_special_monster(s32 job_id);
 
 /* gfx */
+/* Drawing: the two graphics contexts and their primitive pools, quads, draw areas, VRAM transfers and
+ * the window-opening step. */
+
 /* Per-buffer primitive-pool pointers used by JOBSTTS.OUT's renderer. */
 typedef struct jobstts_gfx_context {
     u32* otag;                /* 0x00 */
@@ -257,6 +273,9 @@ void jobstts_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused);
 void jobstts_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);
 
 /* text */
+/* Text: glyphs rendered into 4bpp images, text-id rows uploaded to VRAM, the palette CLUTs, the help
+ * thread and the help text table. */
+
 extern u8 g_jobstts_text_color[3];
 extern u8 g_jobstts_text_thread_running_state;
 extern u16 g_jobstts_text_clut_2_mode0;
@@ -287,11 +306,17 @@ void jobstts_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, 
 s32 jobstts_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
 
-void jobstts_menu_set_palette_mode(s32 mode);
 const u8* jobstts_text_find_entry_by_index(const u8* text, s16 terminators, s32 unused_2);
 void jobstts_text_start_help_thread(s32 thread_data);
 
+extern u32 g_jobstts_help_text_table[];
+
 /* menu */
+/* The job list and the ability list as scrollable lists with saved positions, the selectors, the cursor
+ * and the palette mode. */
+
+void jobstts_menu_set_palette_mode(s32 mode);
+
 extern s8 g_jobstts_menu_event_speed;
 extern s16* g_jobstts_menu_list_entries;
 extern s16 g_jobstts_menu_list_entry_count;
@@ -340,7 +365,10 @@ void jobstts_menu_load_images_and_clear_selection(void);
 void jobstts_menu_get_selection_record(s32 index, s16* out_selected_index, s16* out_scroll_index, const s16* abilities);
 void jobstts_menu_update_and_draw_animated_cursor(RECT* anchor, u16* state, s32 mode);
 
-/* other */
+/* screen */
+/* The entry point, which BATTLE's event frame calls once a frame while the companion overlay state is
+ * JOBSTTS, the page it runs and the queued sound. */
+
 enum {
     JOBSTTS_LIST_COMMAND_VISIBLE_ROWS_INDEX = 6,
 };
@@ -348,9 +376,9 @@ enum {
 extern u8 g_jobstts_sound_queued_effect_id; /* main_sfx_e */
 extern s8 g_jobstts_active_page;            /* menu_job_list_step_e; each page's function returns the next one */
 extern u8 g_jobstts_initialized;
-extern u32 g_jobstts_help_text_table[];
+
 extern u8 g_jobstts_previous_event_mode;
-u8* jobstts_menu_script_draw_window_frame(u8* command);
+
 s32 jobstts_entrypoint(s32 unit, void* unused_otag);
 
 #endif
