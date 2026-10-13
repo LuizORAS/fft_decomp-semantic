@@ -1,5 +1,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
+#include "fft/sound.h"
 #include "fft/world.h"
 
 /*
@@ -48,8 +50,8 @@ void world_menu_check_action_restrictions(void) {
     if (message != 0) {
         mode = g_main_game_options.value & GAME_OPTIONS_NAVIGATION_MESSAGES_MASK;
         if (mode == GAME_OPTIONS_NAVIGATION_MESSAGES_OFF_BITS && (message & 0xff00) == mode) {
-            world_sound_queue_sfx_confirm_unless_restoring();
-        } else if (g_world_menu_restore_pending == 0) {
+            sound_queue_sfx_confirm_unless_restoring();
+        } else if (g_menu_restore_pending == 0) {
             world_sound_queue_sfx_invalid();
             g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
             world_thread_start(g_world_thread_current_id - 1, world_menu_icon_linked_entry_thread);
@@ -61,6 +63,6 @@ void world_menu_check_action_restrictions(void) {
             world_thread_exit_current();
         }
     } else {
-        world_sound_queue_sfx_confirm_unless_restoring();
+        sound_queue_sfx_confirm_unless_restoring();
     }
 }

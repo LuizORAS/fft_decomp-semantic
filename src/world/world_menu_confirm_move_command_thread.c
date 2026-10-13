@@ -1,3 +1,4 @@
+#include "fft/sound.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -28,7 +29,7 @@ void world_menu_confirm_move_command_thread(void) {
         world_sound_queue_sfx_invalid();
         world_thread_exit_current();
     }
-    world_sound_queue_sfx_confirm_unless_restoring();
+    sound_queue_sfx_confirm_unless_restoring();
     world_menu_confirm_action_silently(entry);
     world_thread_exit_current();
 }

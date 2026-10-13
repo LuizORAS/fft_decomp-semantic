@@ -1,6 +1,7 @@
 #include "fft/event_helpmenu.h"
 #include "fft/event_require.h"
 #include "fft/menu.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 

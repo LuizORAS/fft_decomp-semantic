@@ -24,7 +24,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
     menu_quad_page_t* page;
     POLY_GT4* quad;
 
-    g_battle_menu_hide_numeric_values = 0;
+    g_menu_hide_numeric_values = 0;
     page = &g_battle_menu_height_display_pages[0];
     battle_gfx_set_draw_mode_for_texture_page(&page->modes[0], MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_gfx_set_draw_mode_for_texture_page(&page->modes[1], MENU_TEXTURE_PAGE_FRAME);
@@ -57,7 +57,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
         if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_DARK_SCREEN_HOLD) != 0) {
             continue;
         }
-        g_battle_menu_hide_numeric_values = 0;
+        g_menu_hide_numeric_values = 0;
         if (battle_thread_get_current_parameter_3() != 0) {
             break;
         }

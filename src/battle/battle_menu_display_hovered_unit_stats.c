@@ -60,7 +60,7 @@ void battle_menu_display_hovered_unit_stats(
     speed = 0x16;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     slide = 0x84;
-    g_battle_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
+    g_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
     if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
         g_battle_menu_hovered_stats_frame_count++;
     }
@@ -214,7 +214,7 @@ void battle_menu_display_hovered_unit_stats(
             if (width == 0) {
                 extent_w = 0;
             }
-            hide_values = g_battle_menu_hide_numeric_values;
+            hide_values = g_menu_hide_numeric_values;
             if (hide_values != 0) {
                 width = 0x20;
             }
@@ -261,16 +261,16 @@ void battle_menu_display_hovered_unit_stats(
             *stride = 0x28;
             battle_menu_draw_numeric_display_entries(buffer, entries, origin, 6);
             LoadImage(&rects[0], (u32*)buffer);
-            i = g_battle_menu_hide_numeric_values;
+            i = g_menu_hide_numeric_values;
             *stride = 0x60;
-            g_battle_menu_hide_numeric_values = 0;
+            g_menu_hide_numeric_values = 0;
             if (mode == UNIT_STATS_PANEL_HOVERED_UNIT || mode == UNIT_STATS_PANEL_RIGHT_UNIT) {
                 battle_menu_draw_numeric_display_entries(buffer + 0x400, entries + 6, origin, 2);
-                g_battle_menu_hide_numeric_values = i;
+                g_menu_hide_numeric_values = i;
                 battle_menu_draw_numeric_display_entries(buffer + 0x400, entries + 8, origin, 2);
             } else if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
                 battle_menu_draw_numeric_display_entries(buffer + 0x400, entries + 6, origin, 2);
-                g_battle_menu_hide_numeric_values = i;
+                g_menu_hide_numeric_values = i;
             } else if (text_id != 0) {
                 battle_menu_set_text_origin(2, 0);
                 battle_menu_display_text_string(buffer + 0x400, origin, text);
@@ -327,7 +327,7 @@ void battle_menu_display_hovered_unit_stats(
         battle_menu_submit_numeric_display_frame_primitives(&page->palette);
         battle_gfx_draw_or_append_gpu_primitive(&offs->a);
         thread_yield();
-        g_battle_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
+        g_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
         if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
             g_battle_menu_hovered_stats_frame_count++;
         }

@@ -1,3 +1,4 @@
+#include "fft/sound.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -39,7 +40,7 @@ u8* world_menu_redraw_text_page_on_scroll_in_rect(
         if (offset < 0) {
             *row_offset = 0;
         }
-        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
         changed = 1;
     } else if ((*input0 & PSX_PAD_DOWN) && *row_offset != layout->hidden_rows) {
         offset = layout->row_count + *row_offset;
@@ -47,7 +48,7 @@ u8* world_menu_redraw_text_page_on_scroll_in_rect(
         if (layout->hidden_rows < offset) {
             *row_offset = layout->hidden_rows;
         }
-        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
         changed = 1;
     } else if (g_world_threads[g_world_thread_current_id].task_words[4] != 0) {
         changed = 1;

@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -54,7 +55,7 @@ void world_menu_draw_number_glyphs(s32 value, s32 digits, u8* resource, glyph_bl
     for (i = 0; i < (digits & 0xFF); i++) {
         src->rect.y = 0;
         src->rect.x = (value % 10) * 8 + 0x78;
-        if (g_world_menu_hide_numeric_values != 0) {
+        if (g_menu_hide_numeric_values != 0) {
             src->rect.x = 0x48;
             src->rect.y = 0x10;
         }

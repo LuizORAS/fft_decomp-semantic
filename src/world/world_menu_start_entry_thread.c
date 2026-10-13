@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -42,7 +43,7 @@ void world_menu_start_entry_thread(void) {
     world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, (s32)&g_world_menu_thread_menu_data[menu_id], 0, 0);
     count = g_world_menu_restore_depth;
     g_world_menu_new_button_input = 0;
-    if (g_world_menu_restore_pending != 0 && g_world_menu_restore_unit_id == g_world_active_unit_data.battle_id) {
+    if (g_menu_restore_pending != 0 && g_world_menu_restore_unit_id == g_world_active_unit_data.battle_id) {
         g_world_text_overlay_active = 1;
         world_thread_wait_frames(2);
         if (count > 0) {
@@ -57,7 +58,7 @@ void world_menu_start_entry_thread(void) {
                 (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST], 0, 0);
         }
         world_thread_wait_frames(2);
-        g_world_menu_restore_pending = 0;
+        g_menu_restore_pending = 0;
         g_world_text_overlay_active = 0;
     } else {
         g_world_menu_restore_depth = 0;

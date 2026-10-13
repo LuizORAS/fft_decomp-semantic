@@ -21,12 +21,9 @@ extern s16 g_sound_music_unload_slot_request; /* 0x80165fca */
 extern s32 g_sound_music_volume_transition_request;
 
 /* queued effects */
-extern s32 g_sound_pending_sfx_id; /* main_sfx_e; -1 while the event frame has no request */
 extern s32 g_sound_suppressed;
 
 void sound_queue_sfx_cancel(void);
-void sound_queue_sfx_confirm(void);
-void sound_queue_sfx_confirm_unless_restoring(void);
 void sound_queue_sfx_cursor_move(void);
 void sound_queue_sfx_invalid(void);
 

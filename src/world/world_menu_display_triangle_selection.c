@@ -1,4 +1,5 @@
 #include "fft/battle_camera.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 
@@ -11,6 +12,6 @@ void world_menu_display_triangle_selection(void) {
         thread_yield();
     }
     world_script_pulse_tutorial_wait_value(0xFE);
-    g_world_menu_hide_numeric_values = 0;
+    g_menu_hide_numeric_values = 0;
     world_menu_run_icon_selection_loop();
 }

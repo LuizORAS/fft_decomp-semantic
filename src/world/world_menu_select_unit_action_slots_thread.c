@@ -1,6 +1,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_ai.h"
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -31,7 +32,7 @@ void world_menu_select_unit_action_slots_thread(void) {
     s16 text;
 
     /* Typed list indexing changes the address order; these byte views retain it. */
-    for (i = (g_world_menu_restore_pending == 0) ? 2 : 0; i >= 0; i--) {
+    for (i = (g_menu_restore_pending == 0) ? 2 : 0; i >= 0; i--) {
         world_menu_check_action_slot_restrictions(menu, i, check_unit);
         if (menu == ACTION_MENU_TYPE_ARITHMETICKS) {
             slot = (menu_list_selection_t*)((u8*)row + (i + offsetof(menu_unit_selection_record_t, lists[4])) + i);

@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_option.h"
+#include "fft/sound.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 

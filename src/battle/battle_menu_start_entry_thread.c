@@ -3,6 +3,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/types.h"
@@ -48,7 +49,7 @@ void battle_menu_start_entry_thread(void) {
     battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, (s32)&g_battle_menu_thread_menu_data[menu_id], 0, 0);
     count = g_battle_menu_restore_depth;
     g_script_event_input = 0;
-    if (g_battle_menu_restore_pending != 0 && g_battle_menu_restore_unit_id == g_battle_active_turn_unit.battle_id) {
+    if (g_menu_restore_pending != 0 && g_battle_menu_restore_unit_id == g_battle_active_turn_unit.battle_id) {
         g_battle_menu_help_open = 1;
         battle_thread_wait_frames(2);
         if (count > 0) {
@@ -63,7 +64,7 @@ void battle_menu_start_entry_thread(void) {
                 (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST], 0, 0);
         }
         battle_thread_wait_frames(2);
-        g_battle_menu_restore_pending = 0;
+        g_menu_restore_pending = 0;
         g_battle_menu_help_open = 0;
     } else {
         g_battle_menu_restore_depth = 0;

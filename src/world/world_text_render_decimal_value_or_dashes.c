@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -35,7 +36,7 @@ void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, u8* pixels,
         }
         return;
     }
-    if (g_world_menu_hide_numeric_values == 0) {
+    if (g_menu_hide_numeric_values == 0) {
         if ((flags & 0x200) && value == 100) {
             flags = work + 3;
         }

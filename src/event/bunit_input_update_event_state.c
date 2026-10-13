@@ -3,6 +3,7 @@
 #include "fft/event_bunit.h"
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -11,7 +12,7 @@
  * publishes it, and yields once while tracking thread status changes.
  *
  * Twin of card_input_update_event_state; BUNIT additionally latches
- * `frame_arg`, clears g_battle_menu_hide_numeric_values, and calls menu_draw_thread_status_indicators after the
+ * `frame_arg`, clears g_menu_hide_numeric_values, and calls menu_draw_thread_status_indicators after the
  * yield. Needs the _divcheck profile for the three repeat-period divisions.
  */
 void bunit_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
@@ -27,7 +28,7 @@ void bunit_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
     g_battle_gfx_current_otag_entry = otag;
     g_bunit_frame_arg = frame_arg;
     g_menu_input_controller = script_get_controller_input_pointer(0);
-    g_battle_menu_hide_numeric_values = 0;
+    g_menu_hide_numeric_values = 0;
     if (input == 0) {
         g_bunit_input_initial_repeat_counter = 0;
         g_bunit_input_repeat_counter = 0;

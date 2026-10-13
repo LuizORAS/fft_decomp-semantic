@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -35,7 +36,7 @@ void world_menu_run_main_mode(s32 mode) {
         }
     }
     g_world_menu_transition_active = 0;
-    g_world_menu_hide_numeric_values = 0;
+    g_menu_hide_numeric_values = 0;
     /* The target keeps this constant in a callee-saved register across the
      * mode 0 and mode 1 calls, so it is its own variable. */
     last_mode = OPTION_MENU_DEAD_UNIT;

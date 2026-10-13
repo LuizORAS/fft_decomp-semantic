@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_thread.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 
 /* Thread entry of the mini menu (the Triangle menu): wait for the camera and any
@@ -13,6 +14,6 @@ void battle_menu_display_triangle_selection(void) {
         thread_yield();
     }
     script_pulse_tutorial_wait_value(0xFE);
-    g_battle_menu_hide_numeric_values = 0;
+    g_menu_hide_numeric_values = 0;
     battle_menu_run_icon_selection_loop();
 }

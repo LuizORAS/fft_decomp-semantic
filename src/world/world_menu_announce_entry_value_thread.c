@@ -1,3 +1,4 @@
+#include "fft/sound.h"
 /* Menu thread: resolves the current entry's display value (kind 0x11 reads
  * the text binding's 16-bit table, masked to 11 bits, with 0x2b remapped
  * to 0x63 and bit 15 set; other kinds index g_world_menu_entry_text_id_tables) and hands it to the
@@ -42,7 +43,7 @@ void world_menu_announce_entry_value_thread(void) {
     } else {
         value = g_world_menu_entry_text_id_tables[kind][index];
     }
-    g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
+    g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
     world_thread_set_parameters(g_world_thread_current_id, 0x3F, value, 0);
     world_text_character_handling_thread();
     g_world_formation_menu_new_buttons = 0;

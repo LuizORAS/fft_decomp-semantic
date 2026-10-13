@@ -1,3 +1,4 @@
+#include "fft/sound.h"
 /*
  * WORLD twin:
  * world_menu_redraw_text_page_on_scroll_in_rect, plus the mode-2 buffer

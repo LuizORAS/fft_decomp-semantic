@@ -2,6 +2,7 @@
 #include "fft/event_option.h"
 #include "fft/gfx.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"

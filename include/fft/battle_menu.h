@@ -15,7 +15,6 @@ extern s32 g_battle_menu_help_opening;
 extern battle_menu_id_record_t g_battle_menu_id_records[31];
 extern u16 g_battle_menu_modal_open;
 extern u8 g_battle_menu_restore_depth;
-extern u8 g_battle_menu_restore_pending;
 extern u8 g_battle_menu_restore_unit_id;
 extern s32 g_battle_menu_slot_states[3];
 extern u16 g_battle_menu_suspend_state;
@@ -230,7 +229,6 @@ typedef struct battle_menu_status_panel_numeric_geometry {
 
 extern menu_quad_page_t g_battle_menu_height_display_pages[2];
 extern u16 g_battle_menu_height_display_suppressed;
-extern s32 g_battle_menu_hide_numeric_values; /* non-zero: draw digits as blanks (0x48, 0x10) */
 extern u8 g_battle_menu_numeric_display_frame_offsets[12][8];
 extern menu_panel_record_t g_battle_menu_numeric_display_panel_records[2];
 extern RECT g_battle_menu_numeric_display_texture_window;

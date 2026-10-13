@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "fft/main.h"
+#include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/world.h"
 
 /*
@@ -20,7 +22,7 @@ s32 world_menu_dispatch_system_function(
 
     g_world_menu_thread_menu_data = g_world_menu_system_entries;
     g_world_menu_current_id = BATTLE_MENU_ID_NONE;
-    g_world_menu_restore_pending = 0;
+    g_menu_restore_pending = 0;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     if (command == BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK) {
         value = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
@@ -126,7 +128,7 @@ s32 world_menu_dispatch_system_function(
                 value = 0x31;
             }
         } else if (g_world_menu_resolved_command == 1) {
-            g_world_menu_restore_pending = 1;
+            g_menu_restore_pending = 1;
             value = 6;
             if (option == 1) {
                 value = 0x29;
@@ -140,7 +142,7 @@ s32 world_menu_dispatch_system_function(
         }
         world_menu_start_system_function_thread(value);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK) {
-        world_sound_queue_sfx_confirm();
+        sound_queue_sfx_confirm();
         if (option == 0) {
             world_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
         } else if (option == 1) {
@@ -178,7 +180,7 @@ s32 world_menu_dispatch_system_function(
                 }
             }
         }
-        g_world_menu_restore_pending = 1;
+        g_menu_restore_pending = 1;
         world_menu_start_system_function_thread(value);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE) {
         g_world_spell_quote_last_ability_id = action->ability_id & ABILITY_ID_MASK;

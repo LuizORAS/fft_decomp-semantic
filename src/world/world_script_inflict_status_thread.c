@@ -1,6 +1,7 @@
 #include "fft/battle_status.h"
 #include "fft/battle_unit.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -63,7 +64,7 @@ void world_script_inflict_status_thread(void) {
             world_unit_inflict_status_by_event_unit_id(unit_id, STATUS_LSB_INDEX(STATUS_ID_CRITICAL), 1, 1);
             g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_runtime_id;
             thread_call_on_main_stack(runtime_id);
-            g_world_sound_pending_sfx_id = MAIN_SFX_EVENT_REVIVE;
+            g_sound_pending_sfx_id = MAIN_SFX_EVENT_REVIVE;
         } else if (state == 2) {
             g_thread_call_target = (void (*)(void))battle_unit_set_mounted_animation_by_runtime_id;
             thread_call_on_main_stack(runtime_id);

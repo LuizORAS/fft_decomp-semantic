@@ -1,4 +1,5 @@
 #include "fft/battle_ai.h"
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -52,7 +53,7 @@ s32 world_menu_resolve_selection(void) {
             g_world_menu_preview_action.targeting_type = command;
         }
         if (command == 1) {
-            g_world_menu_restore_pending = 1;
+            g_menu_restore_pending = 1;
         }
         if (command == 12) {
             if (option < 3) {

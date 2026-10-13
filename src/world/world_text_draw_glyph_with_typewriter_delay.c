@@ -1,4 +1,5 @@
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -183,7 +184,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
         }
 
         if (script_get_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE) == 0 && request->mode != 0) {
-            g_world_sound_pending_sfx_id = MAIN_SFX_TEXT_GLYPH;
+            g_sound_pending_sfx_id = MAIN_SFX_TEXT_GLYPH;
         }
     }
 }

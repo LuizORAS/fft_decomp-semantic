@@ -1,4 +1,5 @@
 #include "fft/battle_ai.h"
+#include "fft/sound.h"
 #include "fft/world.h"
 
 /* Thread body: validates the skill chosen in menu entry 3 for the current
@@ -58,7 +59,7 @@ void world_menu_validate_skill_selection_thread(void) {
     g_world_menu_result = -4;
     if (message != 0) {
         if (g_main_game_options.fields.navigation_messages == GAME_OPTION_OFF) {
-            world_sound_queue_sfx_confirm_unless_restoring();
+            sound_queue_sfx_confirm_unless_restoring();
         } else {
             g_world_menu_transition_active = 1;
             g_world_menu_selected_option = 0;
@@ -74,7 +75,7 @@ void world_menu_validate_skill_selection_thread(void) {
             g_world_menu_result = -1;
         }
     } else {
-        world_sound_queue_sfx_confirm_unless_restoring();
+        sound_queue_sfx_confirm_unless_restoring();
     }
     world_menu_confirm_action_silently(parameter);
     world_thread_exit_current();

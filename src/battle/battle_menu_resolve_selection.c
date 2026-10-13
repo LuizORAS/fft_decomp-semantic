@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /**
@@ -53,7 +54,7 @@ s32 battle_menu_resolve_selection(void) {
             g_battle_menu_selected_action.targeting_type = command;
         }
         if (command == 1) {
-            g_battle_menu_restore_pending = 1;
+            g_menu_restore_pending = 1;
         }
         if (command == 12) {
             if (option < 3) {

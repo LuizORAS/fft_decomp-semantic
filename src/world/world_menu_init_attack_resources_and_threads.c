@@ -1,4 +1,5 @@
 #include "fft/event_attack.h"
+#include "fft/menu.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -14,7 +15,7 @@ s32 world_menu_init_attack_resources_and_threads(void) {
     s32 result;
     s32 return_value;
     game_options_fields_t* options;
-    g_world_menu_hide_numeric_values = 0;
+    g_menu_hide_numeric_values = 0;
     world_menu_init_subsystems();
     world_unit_reset_animation_states();
     world_menu_reset_unit_records();

@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/menu.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 
@@ -16,7 +17,7 @@ s32 battle_menu_init_attack_resources_and_threads(void) {
     s32 result;
     s32 return_value;
     game_options_fields_t* options;
-    g_battle_menu_hide_numeric_values = 0;
+    g_menu_hide_numeric_values = 0;
     battle_menu_init_subsystems();
     battle_unit_reset_animation_states();
     battle_menu_reset_unit_records();

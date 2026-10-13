@@ -978,6 +978,9 @@ void script_teleportin_event_instruction(s32 unit_id, s32 unused);
 void script_jump_event_instruction(const event_jump_parameters_t* parameters);
 void script_resetpalette_event_instruction(const event_unit_parameters_t* parameters);
 
+/* display conditions */
+void script_execute_display_conditions_instruction(void);
+
 /* party operations */
 void script_dismiss_unit_event_instruction(s32 sprite_set);
 void script_join_units_silently(void);

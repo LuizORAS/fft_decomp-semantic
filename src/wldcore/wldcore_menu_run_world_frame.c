@@ -1,3 +1,4 @@
+#include "fft/sound.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -27,8 +28,8 @@ void wldcore_menu_run_world_frame(GsOT* context) {
         sprite_entries = (u32*)context->org;
         world_input_update_event_state(sprite_entries + g_wldcore_menu_ordering_table_offset + 2,
             g_wldcore_input_current_buttons, g_active_graphics_buffer_index * 240);
-        if (g_world_sound_pending_sfx_id != -1) {
-            wldcore_sound_play_effect(g_world_sound_pending_sfx_id);
+        if (g_sound_pending_sfx_id != -1) {
+            wldcore_sound_play_effect(g_sound_pending_sfx_id);
         }
     } else {
         menu_entries = (u32*)context->org;

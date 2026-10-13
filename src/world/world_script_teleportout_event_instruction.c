@@ -2,6 +2,7 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_unit.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "fft/world.h"
@@ -16,7 +17,7 @@ void world_script_teleportout_event_instruction(s32 unit_id, s32 remove_unit) {
 
     runtime_id = script_resolve_runtime_id(unit_id);
     if (runtime_id != EVENT_RUNTIME_ID_NONE) {
-        g_world_sound_pending_sfx_id = MAIN_SFX_TELEPORT_OUT;
+        g_sound_pending_sfx_id = MAIN_SFX_TELEPORT_OUT;
         g_thread_call_target = effect_set_secondary_teleport_by_runtime_id;
         thread_call_on_main_stack(runtime_id);
         unit_index = wldcore_unit_get_battle_id_by_runtime_id(runtime_id);

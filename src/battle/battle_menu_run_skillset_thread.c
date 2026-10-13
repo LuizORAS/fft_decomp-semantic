@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -23,7 +24,7 @@ void battle_menu_run_skillset_thread(void) {
     param_value = 1;
     if (g_battle_menu_action_menu_build_result != 0) {
         g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = 0;
-        if (g_battle_menu_restore_pending == 0) {
+        if (g_menu_restore_pending == 0) {
             battle_thread_start(g_battle_current_thread_id - 1, battle_menu_select_unit_action_slots_thread);
             battle_thread_set_parameters(g_battle_current_thread_id - 1,
                 (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST], 0, 0);

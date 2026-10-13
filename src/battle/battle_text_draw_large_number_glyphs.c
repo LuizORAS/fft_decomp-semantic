@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -35,7 +36,7 @@ void battle_text_draw_large_number_glyphs(s32 value, s32 digits, u8* pixels, gly
         blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, src, pos);
         pos->rect.x += 7;
     }
-    if (g_battle_menu_hide_numeric_values == 0) {
+    if (g_menu_hide_numeric_values == 0) {
         if ((digits & 0x200) && value == 0x64) {
             digits = cursor + 3;
         }
@@ -70,7 +71,7 @@ void battle_text_draw_large_number_glyphs(s32 value, s32 digits, u8* pixels, gly
     cursor = pos->rect.x + 5;
     for (i = 0; i < (digits & 0xFF); i++) {
         src->rect.x = (value % 10) * 6 + 0x78;
-        if (g_battle_menu_hide_numeric_values != 0) {
+        if (g_menu_hide_numeric_values != 0) {
             src->rect.x = 0xD0;
         }
         blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_battle_text_large_number_glyph_rect, pos);

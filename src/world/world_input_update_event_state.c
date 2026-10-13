@@ -1,5 +1,6 @@
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
@@ -75,7 +76,7 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
         }
     }
 
-    g_world_sound_pending_sfx_id = -1;
+    g_sound_pending_sfx_id = -1;
     world_script_load_event_input_state(&g_world_input_frame_state);
     world_script_load_event_input_state(&g_world_input_frame_state);
     if (g_world_input_frame_new != PSX_PAD_SELECT && g_world_input_frame_new != 0) {

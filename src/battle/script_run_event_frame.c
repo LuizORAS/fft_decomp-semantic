@@ -10,6 +10,7 @@
 #include "fft/event_jobstts.h"
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"

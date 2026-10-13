@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 
@@ -12,7 +13,7 @@ void world_menu_run_jobstts_thread(void) {
         world_thread_exit_current();
     }
     world_menu_set_transition_active_flag();
-    world_sound_queue_sfx_confirm();
+    sound_queue_sfx_confirm();
     menu_reserve_high_overlay(0x20000);
     world_menu_request_open_companion_executable(COMPANION_OVERLAY_JOBSTTS);
     world_thread_wait_frames(2);

@@ -1,5 +1,6 @@
 #include "fft/gfx.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -179,25 +180,25 @@ void world_menu_run_game_options(void) {
                 && (!(*input1 & PSX_PAD_SQUARE) || g_world_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != 0) {
                     cursor--;
-                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset != 0) {
                     delta = -1;
-                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (layout->hidden_rows == 0) {
                     cursor = layout->row_count - 1;
-                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
             } else if ((*input0 & PSX_PAD_DOWN)
                 && (!(*input1 & PSX_PAD_SQUARE) || g_world_menu_input_mode != MENU_INPUT_PLAYER)) {
                 if (cursor != layout->row_count - 1) {
                     cursor++;
-                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset != layout->hidden_rows) {
                     delta++;
-                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 } else if (row_offset == 0) {
                     cursor = 0;
-                    g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
             } else {
                 timer = 0;
@@ -229,7 +230,7 @@ void world_menu_run_game_options(void) {
                 LoadImage(&image_rect, (u32*)image);
             }
             if (*input0 & PSX_PAD_CIRCLE) {
-                g_world_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
+                g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                 if (world_menu_is_input_allowed() != 0) {
                     *input0 = 0;
                     index = cursor + row_offset + delta;

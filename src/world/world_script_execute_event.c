@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
@@ -640,7 +641,7 @@ restart_event:
         else if (opcode == EVENT_OPCODE_EVENT_SPEED) {
             world_script_set_event_speed(operand_1);
         } else if (opcode == EVENT_OPCODE_DARK_SCREEN) {
-            g_world_menu_hide_numeric_values = 0;
+            g_menu_hide_numeric_values = 0;
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_1, &world_script_dark_screen_thread);
             world_thread_set_parameters(operand_1, 0, (s32)parameters, 0);
@@ -658,7 +659,7 @@ restart_event:
             /* Keep the cached second operand as an allocator input at this join;
              * otherwise GCC exchanges the target s5/s6 operand lifetimes. */
             __asm__("" : : "r"(operand_2));
-            world_thread_start(operand_3, &world_script_execute_display_conditions_instruction);
+            world_thread_start(operand_3, &script_execute_display_conditions_instruction);
             world_thread_set_parameters(operand_3, operand_1, operand_2, 0);
         } else if (opcode == EVENT_OPCODE_SHOW_GRAPHIC) {
             operand_3 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
@@ -667,7 +668,7 @@ restart_event:
         }
         /* ---- Sound and music ---- */
         else if (opcode == EVENT_OPCODE_SOUND_EFFECT) {
-            g_world_sound_pending_sfx_id = first_operand;
+            g_sound_pending_sfx_id = first_operand;
         } else if (opcode == EVENT_OPCODE_BG_SOUND) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             world_thread_start(operand_1, world_sound_bg_thread);

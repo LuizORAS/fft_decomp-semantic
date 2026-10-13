@@ -1,5 +1,6 @@
 #include "fft/gfx.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 /* Build the AT list.
  *

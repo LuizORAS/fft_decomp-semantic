@@ -1325,6 +1325,9 @@ typedef struct menu_selection_remap {
 } menu_selection_remap_t;
 typedef char menu_selection_remap_size_must_be_5[sizeof(menu_selection_remap_t) == 5 ? 1 : -1];
 
+/* selection restore */
+extern u8 g_menu_restore_pending;
+
 /* horizontal selection */
 extern s16 g_menu_selection_values[];
 s16 menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, s32 input_mask);
@@ -1416,6 +1419,8 @@ typedef struct menu_number_entry {
     s16 kind;   /* 0x0a */
 } menu_number_entry_t;
 typedef char menu_number_entry_size_must_be_12[(sizeof(menu_number_entry_t) == 12) ? 1 : -1];
+
+extern s32 g_menu_hide_numeric_values; /* non-zero: draw digits as blanks (0x48, 0x10) */
 
 /* The menu text state block at BATTLE 0x80165f9c (g_menu_text_state) and
  * WORLD 0x80153280 (g_world_menu_text_state): the script-variable pointer,

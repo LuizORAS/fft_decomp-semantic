@@ -80,7 +80,6 @@ extern u8 g_script_condition_param_lengths[];
 extern s32 g_script_condition_unit_battle_id;
 
 s32 script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation);
-void script_execute_display_conditions_instruction(void);
 s32 script_is_deployment_running(u32* ot, u32 buttons);
 s32 script_is_tutorial_event_slot(void);
 void script_pulse_tutorial_wait_value(s32 value);

@@ -5,6 +5,7 @@
 #include "fft/battle_unit.h"
 #include "fft/main.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/unit.h"
 #include "psx/types.h"

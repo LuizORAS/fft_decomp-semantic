@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -16,7 +17,7 @@ void world_menu_run_skillset_thread(void) {
     param_value = 1;
     if (g_world_menu_monster_skillset_flag != 0) {
         g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = 0;
-        if (g_world_menu_restore_pending == 0) {
+        if (g_menu_restore_pending == 0) {
             world_thread_start(g_world_thread_current_id - 1, world_menu_select_unit_action_slots_thread);
             world_thread_set_parameters(
                 g_world_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST], 0, 0);

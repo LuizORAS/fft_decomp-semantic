@@ -379,7 +379,6 @@ s32 world_script_get_variable_bit_position(s32 variable_id);
 void world_script_add_unit_start_thread(void);
 s32 world_script_check_tutorial_event_slot(void);
 void world_script_color_screen_thread(void);
-void world_script_execute_display_conditions_instruction(void);
 void world_script_execute_event(void);
 s32 world_script_find_instruction_byte_offset(s32 offset, s32 instruction);
 s32 world_script_find_jump_target(s32, s32, s32, s32);
@@ -399,7 +398,6 @@ void world_script_waitwalk_event_instruction(s32 unit_id);
 
 /* sound */
 extern s16 g_world_sound_current_music_track_index;
-extern s32 g_world_sound_pending_sfx_id; /* main_sfx_e; -1 while the event frame has no request */
 extern s16 g_world_sound_music_switch_request;
 extern s16 g_world_sound_music_track_1_id;
 extern s16 g_world_sound_music_track_2_id;
@@ -408,8 +406,6 @@ extern s32 g_world_sound_music_volume_transition_request;
 extern u8 g_world_sound_release_held_loop;
 void world_sound_dispatch_effect(void);
 void world_sound_queue_sfx_cancel(void);
-void world_sound_queue_sfx_confirm(void);
-void world_sound_queue_sfx_confirm_unless_restoring(void);
 void world_sound_queue_sfx_invalid(void);
 void world_sound_queue_sfx_cursor_move(void);
 void world_sound_bg_thread(void);
@@ -2155,7 +2151,6 @@ extern s32 g_world_menu_panel_fade_mode; /* menu_panel_fade_mode_e */
 extern u32 g_world_menu_previous_button_input;
 extern u8 g_world_menu_prompt_active;
 extern const RECT g_world_option_gfx_draw_area_template;
-extern u8 g_world_menu_restore_pending;
 extern s16 g_world_menu_row_height;
 extern s16 g_world_menu_screen_open_request;
 extern s16 g_world_menu_scroll_offset;
@@ -2202,7 +2197,6 @@ extern menu_palette_pair_t g_world_menu_default_palette_colors;
 extern RECT g_world_menu_portrait_pixel_rect;
 extern RECT g_world_menu_portrait_palette_rect;
 extern s32 g_world_menu_scrolling_list_depth;
-extern s32 g_world_menu_hide_numeric_values;
 extern menu_quad_page_t g_world_menu_selected_tile_info_pages[2];
 extern u16 g_world_menu_overlay_state;
 extern u16 g_world_menu_transition_finished;

@@ -3,6 +3,7 @@
 #include "fft/battle_thread.h"
 #include "fft/event_attack.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"

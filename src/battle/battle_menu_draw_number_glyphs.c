@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -55,7 +56,7 @@ void battle_menu_draw_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_bli
     for (i = 0; i < (digits & 0xFF); i++) {
         src->rect.y = 0;
         src->rect.x = (value % 10) * 8 + 0x78;
-        if (g_battle_menu_hide_numeric_values != 0) {
+        if (g_menu_hide_numeric_values != 0) {
             src->rect.x = 0x48;
             src->rect.y = 0x10;
         }

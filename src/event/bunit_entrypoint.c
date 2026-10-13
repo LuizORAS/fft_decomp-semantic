@@ -1,4 +1,5 @@
 #include "fft/battle_gfx.h"
+#include "fft/sound.h"
 /* Initialize the unit-list gfx capacities and run the BUNIT menu frame loop
  * until the list closes.
  *

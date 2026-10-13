@@ -4,6 +4,7 @@
 #include "fft/battle_script.h"
 #include "fft/battle_text.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"

@@ -1,4 +1,5 @@
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 
@@ -69,7 +70,7 @@ void world_menu_handle_entry_confirm(menu_entry_t* entry, s32 row_index) {
         g_world_menu_new_button_input = 0;
         *menu_entry_result(entry) = row_index;
         if (g_world_menu_sound_muted == 0 && silent == 0) {
-            world_sound_queue_sfx_confirm();
+            sound_queue_sfx_confirm();
         }
     }
 }

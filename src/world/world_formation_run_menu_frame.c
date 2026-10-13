@@ -1,5 +1,6 @@
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
@@ -114,7 +115,7 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     world_formation_update_fixed_number_panel_request();
     g_world_menu_pending_selection[0] = -2;
     g_world_gfx_active_otag_entries = otag;
-    g_world_sound_pending_sfx_id = -1;
+    g_sound_pending_sfx_id = -1;
     world_menu_draw_active_window_frames();
     world_script_load_event_input_state(&g_world_formation_menu_input_state);
     if (g_world_formation_menu_new_buttons != 0x100 && g_world_formation_menu_new_buttons != 0) {
@@ -140,8 +141,8 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     }
     g_world_frame_counter++;
     g_menu_packet_buffer_index = (g_menu_packet_buffer_index + 1) & 1;
-    if (g_world_sound_pending_sfx_id != -1) {
-        main_sound_play_sfx_find_channel(g_world_sound_pending_sfx_id);
+    if (g_sound_pending_sfx_id != -1) {
+        main_sound_play_sfx_find_channel(g_sound_pending_sfx_id);
     }
     if (g_world_menu_pending_selection[0] == 0) {
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, g_world_menu_pending_selection[1]);

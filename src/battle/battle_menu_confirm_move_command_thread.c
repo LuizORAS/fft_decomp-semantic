@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/sound.h"
 #include "psx/types.h"
 
 /* Thread entry of menu entry 0x22, which confirms the Move command.

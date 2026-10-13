@@ -2,6 +2,7 @@
 #include "fft/battle_script.h"
 #include "fft/battle_sound.h"
 #include "fft/event_attack.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
@@ -673,7 +674,7 @@ restart_script:
         else if (opcode == EVENT_OPCODE_EVENT_SPEED) {
             script_set_event_speed(operand_1);
         } else if (opcode == EVENT_OPCODE_DARK_SCREEN) {
-            g_battle_menu_hide_numeric_values = 0;
+            g_menu_hide_numeric_values = 0;
             operand_1 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
             battle_thread_start(operand_1, &script_dark_screen_thread);
             battle_thread_set_parameters(operand_1, 0, (s32)parameters, 0);

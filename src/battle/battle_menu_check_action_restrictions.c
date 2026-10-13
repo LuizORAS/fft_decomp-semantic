@@ -3,6 +3,8 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
+#include "fft/sound.h"
 #include "psx/types.h"
 
 /*
@@ -53,7 +55,7 @@ void battle_menu_check_action_restrictions(void) {
         mode = g_main_game_options.value & GAME_OPTIONS_NAVIGATION_MESSAGES_MASK;
         if (mode == GAME_OPTIONS_NAVIGATION_MESSAGES_OFF_BITS && (message & 0xff00) == mode) {
             sound_queue_sfx_confirm_unless_restoring();
-        } else if (g_battle_menu_restore_pending == 0) {
+        } else if (g_menu_restore_pending == 0) {
             sound_queue_sfx_invalid();
             g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
             battle_thread_start(g_battle_current_thread_id - 1, battle_menu_icon_linked_entry_thread);

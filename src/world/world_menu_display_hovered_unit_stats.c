@@ -56,7 +56,7 @@ void world_menu_display_hovered_unit_stats(
     speed = 0x16;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     slide = 0x84;
-    g_world_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
+    g_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
     if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
         g_world_menu_hovered_stats_frame_count++;
     }
@@ -211,7 +211,7 @@ void world_menu_display_hovered_unit_stats(
             if (width == 0) {
                 extent_w = 0;
             }
-            flag = g_world_menu_hide_numeric_values;
+            flag = g_menu_hide_numeric_values;
             if (flag != 0) {
                 width = 0x20;
             }
@@ -256,16 +256,16 @@ void world_menu_display_hovered_unit_stats(
             g_world_menu_text_state.pen.stride = 0x28;
             world_menu_draw_numeric_display_entries(buffer, entries, &g_world_menu_text_state.pen, 6);
             LoadImage(&rects[0], (u32*)buffer);
-            i = g_world_menu_hide_numeric_values;
+            i = g_menu_hide_numeric_values;
             g_world_menu_text_state.pen.stride = 0x60;
-            g_world_menu_hide_numeric_values = 0;
+            g_menu_hide_numeric_values = 0;
             if (mode == UNIT_STATS_PANEL_HOVERED_UNIT || mode == UNIT_STATS_PANEL_RIGHT_UNIT) {
                 world_menu_draw_numeric_display_entries(buffer + 0x400, entries + 6, &g_world_menu_text_state.pen, 2);
-                g_world_menu_hide_numeric_values = i;
+                g_menu_hide_numeric_values = i;
                 world_menu_draw_numeric_display_entries(buffer + 0x400, entries + 8, &g_world_menu_text_state.pen, 2);
             } else if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
                 world_menu_draw_numeric_display_entries(buffer + 0x400, entries + 6, &g_world_menu_text_state.pen, 2);
-                g_world_menu_hide_numeric_values = i;
+                g_menu_hide_numeric_values = i;
             } else if (text_id != 0) {
                 world_menu_set_text_origin(2, 0);
                 world_menu_display_text_string(buffer + 0x400, &g_world_menu_text_state.pen, text);
@@ -322,7 +322,7 @@ void world_menu_display_hovered_unit_stats(
         world_menu_submit_numeric_display_frame_primitives(&page->palette);
         world_gfx_draw_or_append_gpu_primitive(&offs->a);
         thread_yield();
-        g_world_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
+        g_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
         if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
             g_world_menu_hovered_stats_frame_count++;
         }

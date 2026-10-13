@@ -1,3 +1,4 @@
+#include "fft/sound.h"
 /* Run the option choice menu.
  *
  * Port of world_menu_run_option_choice (identical apart from the four window constants).
