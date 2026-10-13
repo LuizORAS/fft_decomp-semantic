@@ -988,7 +988,8 @@ void script_seed_random_from_vsync(void);
 /* scenario conditions */
 extern u8 g_script_condition_param_lengths[];
 extern s32 g_script_condition_unit_battle_id;
-s32 script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation);
+event_scenario_condition_result_e script_check_scenario_condition(
+    event_scenario_condition_e type, s32 id, s32 value, s32 tile_y, s32 elevation);
 s32 script_run_scenario_conditions(void);
 
 /* values */

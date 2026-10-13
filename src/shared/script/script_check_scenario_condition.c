@@ -20,7 +20,8 @@
  * compare with id, not value.
  *
  * Keep the two unit-id range comparisons: retail reloads the byte. */
-s32 script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation) {
+event_scenario_condition_result_e script_check_scenario_condition(
+    event_scenario_condition_e type, s32 id, s32 value, s32 tile_y, s32 elevation) {
     battle_stats_t* unit;
     s32 i;
     s32 j; /* equipment slot, then battle index: one variable (a0 in both loops) */
