@@ -9,7 +9,7 @@
  * instructions, so it silences the warning without affecting the output. */
 __asm__(".set noat");
 
-/* The hand-assembled twin of world_thread_is_running; the menu and event code
+/* The hand-assembled twin of thread_is_running; the menu and event code
  * call this one. Returns g_threads[thread_id].is_running. */
 s32 world_thread_is_running_asm(s32 thread_id) {
     register s32 offset __asm__("$8") = thread_id << 10;

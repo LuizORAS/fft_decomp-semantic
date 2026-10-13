@@ -298,7 +298,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
     case -1:
     case 18:
     case 99:
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
         level->state++;

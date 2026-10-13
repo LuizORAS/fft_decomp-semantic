@@ -25,7 +25,7 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
     s32 participant;
 
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(THREAD_SCREEN_SLOT_UNIT_STATUS) == 0) {
+        && thread_is_running(THREAD_SCREEN_SLOT_UNIT_STATUS) == 0) {
         rect.x = 0x200;
         rect.y = 0x100;
         rect.w = 0x40;

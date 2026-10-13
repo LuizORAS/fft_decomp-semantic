@@ -9,7 +9,7 @@
  * menu brightness is restored and the formation screen opens for it. */
 void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* level) {
     if (level->result == 2) {
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
             s16* selected = &g_wldcore_window_panel_render_state.selected_index;
 
             wldcore_set_bit_value(g_main_tutorial_progress_masks, *selected, 1);
@@ -27,7 +27,7 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
         return;
     }
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        && thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         if (level->result != 0) {
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_FORMATION_TUTORIALS);
             level->result = 2;

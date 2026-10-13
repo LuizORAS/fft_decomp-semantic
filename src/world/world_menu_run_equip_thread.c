@@ -18,7 +18,7 @@ void world_menu_run_equip_thread(void) {
     saved = g_world_unit_view_mode;
     world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
     g_world_menu_overlay_state = 1;
-    world_thread_wait_for_unit_view_panels();
+    thread_wait_for_unit_view_panels();
     menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP);
     menu_reserve_high_overlay(0x20000);
     menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP_SECOND_HALF);

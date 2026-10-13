@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -11,7 +12,7 @@ u8* world_name_run_entry_keyboard_frame(u8* list, s32 unused_1) {
     s32 busy;
 
     if (g_world_name_entry_started == 0) {
-        if (world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
             g_world_name_keyboard_last_state = -1;
             world_menu_open_scrollable_list(list);
             g_world_name_entry_started = 1;

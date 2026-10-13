@@ -11,7 +11,7 @@
  * The target passes the level to 0x8007e178, which reads no argument. */
 void wldcore_list_handle_treasures_input(wldcore_menu_panel_level_t* level) {
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        && thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         g_wldcore_menu_ordering_table_offset = 1;
         g_wldcore_menu_blocked_buttons = 0;
         g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;

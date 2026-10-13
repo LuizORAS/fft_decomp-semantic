@@ -21,7 +21,7 @@ void wldcore_menu_step_number_panel_level(wldcore_menu_panel_level_t* level) {
     world_animated_render_record_t* record;
     u32 buttons;
 
-    if (level->result != 0 && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+    if (level->result != 0 && thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         g_wldcore_menu_blocked_buttons = 0;
         g_wldcore_menu_ordering_table_offset = 1;
         depth = g_wldcore_menu_stack_depth - 1;

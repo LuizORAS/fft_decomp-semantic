@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -6,7 +7,7 @@
 void world_menu_update_thread_7_idle_countdown(void) {
     s32 value;
 
-    if (world_thread_is_running(THREAD_SCREEN_SLOT_COMPARISON_STATUS) != 0) {
+    if (thread_is_running(THREAD_SCREEN_SLOT_COMPARISON_STATUS) != 0) {
         value = 10;
     } else if (g_world_status_display_thread_params.flags
         & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP)) {

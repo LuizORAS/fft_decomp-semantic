@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 
@@ -81,7 +82,7 @@ s8 world_item_run_action_menu(void) {
     if (selected != -1) {
         if (selected == 0) {
             g_world_preview_stats_thread_params.style = 1;
-            if (world_thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) != 0) {
+            if (thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) != 0) {
                 return MENU_ITEM_LIST_STATE_ACTION;
             }
             if (g_world_menu_selection_results[5] == 0) {
@@ -117,7 +118,7 @@ s8 world_item_run_action_menu(void) {
                 }
                 g_world_item_action_menu_initialized = g_world_menu_sound_effect_id != MAIN_SFX_NONE ? 100 : 1;
             }
-            if (world_thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) != 0) {
+            if (thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) != 0) {
                 return MENU_ITEM_LIST_STATE_ACTION;
             }
             if (g_world_menu_selection_results[5] == 0) {
@@ -140,7 +141,7 @@ s8 world_item_run_action_menu(void) {
             return MENU_ITEM_LIST_STATE_ACTION;
         }
     } else {
-        if (world_thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) != 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) != 0) {
             return MENU_ITEM_LIST_STATE_ACTION;
         }
         result = world_menu_update_horizontal_selection_and_mark_change(

@@ -18,7 +18,7 @@ void world_shop_run_sell_equipped_item_menu(void) {
 
     close = 0;
     if (g_world_shop_sell_equipped_menu_open == 0) {
-        if (world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
             thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_message_box_thread);
             thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xf80c, 0);
             g_world_shop_sell_equipped_prompt_active = 0;

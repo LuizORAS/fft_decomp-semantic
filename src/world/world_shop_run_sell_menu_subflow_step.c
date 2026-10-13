@@ -9,7 +9,7 @@
  */
 void world_shop_run_sell_menu_subflow_step(void) {
     if (g_world_shop_sell_subflow_initialized == 0) {
-        if (world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) != 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) != 0) {
             return;
         }
         thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_message_box_thread);

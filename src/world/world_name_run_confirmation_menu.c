@@ -42,7 +42,7 @@ void world_name_run_confirmation_menu(void) {
         g_world_menu_prompt_active = 1;
     }
     if (g_world_name_confirm_finished != 0) {
-        if (world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
             g_world_name_confirm_initialized = 0;
             g_world_name_entry_state = 0xff;
             g_world_menu_prompt_active = 0;

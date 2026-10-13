@@ -6,5 +6,5 @@
  * 6) is still running. */
 s32 script_is_deployment_running(u32* ot, u32 buttons) {
     script_run_event_frame(ot, buttons);
-    return battle_thread_is_running(THREAD_BORROWED_SLOT_DEPLOYMENT);
+    return thread_is_running(THREAD_BORROWED_SLOT_DEPLOYMENT);
 }

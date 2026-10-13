@@ -49,7 +49,7 @@ void open_menu_update_music_test(open_controller_record_t* record) {
             open_title_push_menu_controller(0);
         }
     } else if (state->step == OPEN_MUSIC_TEST_STEP_CLOSE) {
-        if (world_thread_is_running(OPEN_THREAD_SLOT_MUSIC_TEST_LIST) == 0) {
+        if (thread_is_running(OPEN_THREAD_SLOT_MUSIC_TEST_LIST) == 0) {
             state->step = OPEN_MUSIC_TEST_STEP_FADE_OUT;
             open_gfx_start_overlay_fade_in(0x20);
         }

@@ -18,6 +18,6 @@ void card_menu_start_or_poll_thread(s32 thread_id, menu_entry_t* descriptor) {
         }
         g_card_thread_state = 1;
     } else {
-        g_card_thread_state = battle_thread_is_running(thread_id);
+        g_card_thread_state = thread_is_running(thread_id);
     }
 }

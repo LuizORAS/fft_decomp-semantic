@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /*
- * The hand-assembled twin of battle_thread_is_running; the menu and event code
+ * The hand-assembled twin of thread_is_running; the menu and event code
  * call this one. Reads g_threads[thread_id].is_running (thread records
  * are 0x400 bytes; the 32-bit value sits at +0x48).
  *

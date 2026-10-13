@@ -58,7 +58,7 @@ void card_save_run_menu(s32 unused) {
         card_gfx_enqueue_tile(&g_card_gfx_fullscreen_fade_rect, &g_card_gfx_fade_overlay_color, 0, 0);
 
         menu_input = g_card_save_menu_state == CARD_SAVE_MENU_SELECT_SAVE
-                && battle_thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) == 0
+                && thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) == 0
             ? g_card_input_primary_repeat
             : 0;
         if (g_card_save_menu_state >= CARD_SAVE_MENU_SELECT_SAVE && g_card_save_menu_state <= CARD_SAVE_MENU_WRITING) {
@@ -89,8 +89,8 @@ void card_save_run_menu(s32 unused) {
         input = PadRead(0) & (PSX_PAD_UP | PSX_PAD_RIGHT | PSX_PAD_DOWN | PSX_PAD_LEFT);
         buttons = g_card_input_newly_pressed & 0x0fff;
         input |= buttons;
-        if (battle_thread_is_running(THREAD_SCREEN_SLOT_TEXT) == 0
-            && battle_thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) == 0 && battle_thread_is_running(14) == 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_TEXT) == 0 && thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) == 0
+            && thread_is_running(14) == 0) {
             input &= 0xff00;
         }
         card_input_update_event_state(g_card_gfx_context->otag + 0x3c, input, g_card_gfx_drawenv_y == 0 ? 0xf0 : 0);

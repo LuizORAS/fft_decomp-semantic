@@ -12,7 +12,7 @@
  * neither reads an argument; their local prototypes here take it. */
 void wldcore_list_handle_rumors_input(wldcore_menu_panel_level_t* level) {
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        && thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         wldcore_list_rumors_close_level(level);
         if (level->result != 0) {
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_RUMORS);

@@ -47,7 +47,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
         if (level->mode != WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT) {
             return;
         }
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
         if ((g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY) && g_wldcore_audio_queue.count != 0) {

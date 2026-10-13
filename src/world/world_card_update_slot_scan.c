@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libc.h"
 #include "psx/libetc.h"
@@ -19,7 +20,7 @@ void world_card_update_slot_scan(void) {
     RECT rect;
 
     if (g_world_card_error_message_closing != 0) {
-        if (world_thread_is_running(THREAD_SCREEN_SLOT_MENU) == 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MENU) == 0) {
             g_world_card_slot_scan_active = 0;
             g_world_card_menu_step = WORLD_CARD_MENU_STEP_SELECT_CARD;
             g_world_card_error_message_closing = 0;

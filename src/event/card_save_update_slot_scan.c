@@ -18,7 +18,7 @@ void card_save_update_slot_scan(void) {
     RECT rect;
 
     if (g_card_save_error_prompt_closing != 0) {
-        if (battle_thread_is_running(THREAD_SCREEN_SLOT_MENU) == 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MENU) == 0) {
             g_card_save_slot_scan_active = 0;
             g_card_save_menu_state = CARD_SAVE_MENU_SELECT_CARD;
             g_card_save_error_prompt_closing = 0;

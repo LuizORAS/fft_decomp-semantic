@@ -90,7 +90,7 @@ s32 world_formation_run_item_submenu_step(void) {
     world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_ITEM_LIST_TRIANGLE, 0xB8, 0x3C,
         g_world_input_primary_repeat & PSX_PAD_TRIANGLE, disabled, MAIN_SFX_CONFIRM);
     busy = 0;
-    if (world_thread_is_task_active(0) != 0 || world_thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) != 0) {
+    if (world_thread_is_task_active(0) != 0 || thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) != 0) {
         busy = 1;
     }
     world_menu_run_script_with_palette_mode(&g_world_item_list_window_script, input, busy);

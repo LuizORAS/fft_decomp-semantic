@@ -8,7 +8,7 @@
  * the thread is still running, 0 once it has ended. */
 s32 card_thread_start_managed(s32 thread_id, menu_entry_t* descriptor) {
     if (g_card_thread_state == 0) {
-        if (battle_thread_is_running(thread_id) != 0) {
+        if (thread_is_running(thread_id) != 0) {
             return 1;
         }
         g_battle_menu_thread_menu_data = descriptor;
@@ -17,6 +17,6 @@ s32 card_thread_start_managed(s32 thread_id, menu_entry_t* descriptor) {
         g_card_thread_state = 1;
         return 1;
     }
-    g_card_thread_state = battle_thread_is_running(thread_id);
+    g_card_thread_state = thread_is_running(thread_id);
     return g_card_thread_state;
 }

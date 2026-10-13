@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -29,7 +30,7 @@ s32 world_item_show_units_equipping_selected(void) {
         world_script_set_vsync_mode_and_event_speed(0);
         g_world_formation_unit_cycle_mode = 2;
     }
-    if (world_thread_is_running(THREAD_SCREEN_SLOT_COMPARISON_STATUS) == 0) {
+    if (thread_is_running(THREAD_SCREEN_SLOT_COMPARISON_STATUS) == 0) {
         if ((g_world_input_newly_pressed & PSX_PAD_CROSS) || (g_world_input_newly_pressed & PSX_PAD_CIRCLE)) {
             g_world_formation_unit_browse_enabled = 0;
             g_world_formation_unit_banner_enabled = 0;

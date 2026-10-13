@@ -8,8 +8,8 @@ void world_menu_toggle_ability_panel_thread(s32 enable) {
 
     if (enable != 0) {
         enable = 1;
-        if (world_thread_is_running(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL) == 0
-            && world_thread_is_running(THREAD_SCREEN_SLOT_CHARACTER_STATUS) == 0) {
+        if (thread_is_running(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL) == 0
+            && thread_is_running(THREAD_SCREEN_SLOT_CHARACTER_STATUS) == 0) {
             thread_start(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL, world_menu_ability_panel_thread);
             thread_set_parameters(
                 WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL, (s32)&g_world_ability_panel_thread_params, 0, 0);

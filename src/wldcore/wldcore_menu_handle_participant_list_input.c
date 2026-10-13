@@ -22,8 +22,7 @@ void wldcore_menu_handle_participant_list_input(wldcore_menu_stack_record_t* lev
     if (g_wldcore_window_render_records[level->participant_list.render_index].flags & WORLD_RENDER_RECORD_POP_IN) {
         return;
     }
-    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
+    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) && thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         g_wldcore_menu_stack_depth--;
         g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_menu_push_participant_detail_level(level->participant_list.proposition, level->participant_list.cursor);

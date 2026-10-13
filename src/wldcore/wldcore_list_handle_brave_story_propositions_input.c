@@ -11,7 +11,7 @@ void wldcore_list_handle_brave_story_propositions_input(wldcore_menu_panel_level
     s32 depth;
 
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        && thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         depth = g_wldcore_menu_stack_depth;
         g_wldcore_menu_blocked_buttons = 0;
         g_wldcore_menu_ordering_table_offset = 1;

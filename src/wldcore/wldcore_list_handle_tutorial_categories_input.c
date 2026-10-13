@@ -23,8 +23,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
             level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT;
             wldcore_gfx_clear_vram_and_scratch(1);
         }
-        if (level->mode == WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT
-            && world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
+        if (level->mode == WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT && thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
             if ((g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_TUTORIAL) == 0 || g_wldcore_audio_queue.count == 0) {
                 g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
                 wldcore_window_set_render_objects_visible(1);

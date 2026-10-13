@@ -48,7 +48,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
         return;
     }
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        && thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         wldcore_gfx_toggle_captured_world_frame(0);
         g_main_system_flags = (g_main_system_flags | MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
             & ~(MAIN_SYSTEM_FLAG_DRAW_MAP | MAIN_SYSTEM_FLAG_FREEZE_ANIMATION);

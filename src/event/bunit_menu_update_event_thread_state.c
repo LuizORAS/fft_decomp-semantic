@@ -14,7 +14,7 @@ void bunit_menu_update_event_thread_state(void) {
     s32 running;
 
     bunit_input_update_controller();
-    running = battle_thread_is_running(THREAD_SCREEN_SLOT_TEXT);
+    running = thread_is_running(THREAD_SCREEN_SLOT_TEXT);
 
     if (running != 0 || g_bunit_help_screen_id != MENU_GRID_HELP_NONE) {
         bunit_input_clear_state();

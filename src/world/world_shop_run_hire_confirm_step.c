@@ -15,7 +15,7 @@ void world_shop_run_hire_confirm_step(void) {
         if (g_world_input_primary_repeat & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE)) {
             thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, -1, 0);
         }
-        if (world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
             g_world_shop_hire_confirm_message_wait = 0;
             g_world_shop_menu_step = WORLD_SHOP_STEP_HIRE_NAME_ENTRY;
         }

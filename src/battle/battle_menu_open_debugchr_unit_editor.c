@@ -24,7 +24,7 @@ void battle_menu_open_debugchr_unit_editor(void) {
     menu_request_open_companion_executable(COMPANION_OVERLAY_DEBUGCHR);
     thread_set_parameters(THREAD_SLOT_MENU, 0, 0, 1);
     thread_wait_until_inactive(THREAD_SLOT_MENU);
-    battle_thread_wait_for_unit_view_panels();
+    thread_wait_for_unit_view_panels();
     battle_menu_record_selection_for_selected_unit();
     battle_menu_enter_status_screen_selection();
     debugchr_editor_run_unit_thread(*selected);

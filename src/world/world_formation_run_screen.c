@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -146,12 +147,12 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
     do {
         buttons = 0;
         for (i = 1; i < 16; i++) {
-            if (world_thread_is_running(i) != 0) {
+            if (thread_is_running(i) != 0) {
                 buttons = 1;
                 world_menu_stop_unit_status_banner_thread(i);
             }
         }
-        if (world_thread_is_running(WORLD_THREAD_SLOT_TUTORIAL_TEXT) != 0) {
+        if (thread_is_running(WORLD_THREAD_SLOT_TUTORIAL_TEXT) != 0) {
             buttons = 1;
             world_text_resume_printing(WORLD_THREAD_SLOT_TUTORIAL_TEXT);
         }

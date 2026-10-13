@@ -15,7 +15,7 @@ void world_shop_run_recruit_unit_preview_step(void) {
         if (g_world_input_primary_repeat & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE)) {
             thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, -1, 0);
         }
-        if (world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
             g_world_formation_unit_browse_enabled = 1;
             g_world_formation_unit_banner_enabled = 1;
             g_world_formation_unit_banner_at_bottom = 0;

@@ -42,7 +42,7 @@ void wldcore_list_open_completed_propositions(void) {
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[previous].window_pair_render.render_index]
             .flags |= WORLD_RENDER_RECORD_POP_IN;
     }
-    if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
+    if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     }
     thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_JOBS_RETURNED, 0);

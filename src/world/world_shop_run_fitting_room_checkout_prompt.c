@@ -16,7 +16,7 @@ s32 world_shop_run_fitting_room_checkout_prompt(void) {
     s32 cost;
 
     if (g_world_shop_checkout_prompt_initialized == 0) {
-        if (world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) != 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) != 0) {
             return WORLD_SHOP_CHECKOUT_PROMPT_OPEN;
         }
         g_world_shop_checkout_confirm_menu.selected_index = 0;

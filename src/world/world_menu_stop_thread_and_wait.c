@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -6,7 +7,7 @@
 void world_menu_stop_thread_and_wait(s32 thread_id) {
     u32 unused[2];
 
-    while (world_thread_is_running(thread_id) != 0) {
+    while (thread_is_running(thread_id) != 0) {
         world_menu_stop_unit_status_banner_thread(thread_id);
         world_input_update_event_state(unused, 0, 0);
     }

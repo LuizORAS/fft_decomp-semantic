@@ -32,7 +32,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
     s32 unused[4];
 
     if (level->mode == WLDCORE_SEND_UNIT_MODE_CANCEL) {
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
             g_wldcore_menu_blocked_buttons = 0;
             g_main_system_flags &= ~MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             g_wldcore_menu_stack_depth--;
@@ -41,7 +41,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
         return;
     }
     if (level->mode == WLDCORE_SEND_UNIT_MODE_ACCEPT) {
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
             g_wldcore_menu_blocked_buttons = 0;
             g_main_system_flags &= ~MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             g_wldcore_menu_stack_depth--;

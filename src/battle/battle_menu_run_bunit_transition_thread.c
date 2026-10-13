@@ -24,7 +24,7 @@ void battle_menu_run_bunit_transition_thread(void) {
     thread_set_parameters(THREAD_SLOT_UNIT_SUMMARY_PANEL, 0, 0, 1);
     thread_set_parameters(THREAD_SLOT_RIGHT_UNIT_STATS, 0, 0, 1);
     thread_set_parameters(THREAD_SLOT_HOVERED_UNIT_STATS, 0, 0, 1);
-    battle_thread_wait_for_unit_view_panels();
+    thread_wait_for_unit_view_panels();
     menu_request_open_companion_executable(COMPANION_OVERLAY_BUNIT);
     menu_reserve_high_overlay(0x20000);
     menu_request_open_companion_executable(COMPANION_OVERLAY_BUNIT_SECOND_HALF);

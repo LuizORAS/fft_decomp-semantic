@@ -19,7 +19,7 @@ void world_menu_start_or_poll_thread(s32 thread_id, menu_entry_t* data) {
         }
         status = 1;
     } else {
-        status = world_thread_is_running(thread_id);
+        status = thread_is_running(thread_id);
     }
     g_world_menu_thread_running_status = status;
 }

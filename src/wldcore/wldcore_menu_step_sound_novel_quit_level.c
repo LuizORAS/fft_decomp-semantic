@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -83,7 +84,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
             g_wldcore_screen_fade_state.boxes[0].b = fade;
             return;
         }
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
         g_wldcore_screen_brightness_rgb.r = 0;
@@ -140,7 +141,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t*
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count--;
             g_wldcore_window_render_object_count -= 3;
-            if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
+            if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
                 world_thread_request_stop(WLDCORE_THREAD_SLOT_MESSAGE);
             }
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x20);

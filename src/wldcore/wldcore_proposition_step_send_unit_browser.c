@@ -24,10 +24,10 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
     s16* menu_selected_index;
 
     if (level->mode == WLDCORE_SEND_UNIT_MODE_STATUS_OPEN) {
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) != 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) != 0) {
             return;
         }
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
         g_wldcore_window_records[level->left_arrow].flags ^= WORLD_RENDER_RECORD_HIDDEN;
@@ -104,13 +104,13 @@ void wldcore_proposition_step_send_unit_browser(wldcore_menu_send_unit_level_t* 
     done:
         wldcore_sound_play_effect(MAIN_SFX_PAGE_SWITCH);
     } else if (level->mode == WLDCORE_SEND_UNIT_MODE_STATUS_CLOSE) {
-        if (world_thread_is_running(THREAD_SCREEN_SLOT_UNIT_STATUS) != 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_UNIT_STATUS) != 0) {
             return;
         }
-        if (world_thread_is_running(THREAD_SCREEN_SLOT_NUMERIC_EDITOR) != 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_NUMERIC_EDITOR) != 0) {
             return;
         }
-        if (world_thread_is_running(THREAD_SCREEN_SLOT_CHARACTER_STATUS) != 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_CHARACTER_STATUS) != 0) {
             return;
         }
         level->mode = WLDCORE_SEND_UNIT_MODE_SELECT;

@@ -20,7 +20,7 @@ void equip_menu_update_screen_state(void) {
     s16* value_ptr;
 
     if (g_equip_menu_thread_running == 0) {
-        if (battle_thread_is_running(EQUIP_THREAD_SLOT_COMMAND_MENU) == 0) {
+        if (thread_is_running(EQUIP_THREAD_SLOT_COMMAND_MENU) == 0) {
             g_equip_command_menu.selected_index = 0;
             g_battle_menu_thread_menu_data = &g_equip_command_menu;
             thread_start(EQUIP_THREAD_SLOT_COMMAND_MENU, menu_icon_list_thread);
@@ -49,7 +49,7 @@ void equip_menu_update_screen_state(void) {
             equip_menu_set_selection_value(2, 0);
             equip_menu_reset_selection_indices();
         }
-        g_equip_menu_thread_running = battle_thread_is_running(EQUIP_THREAD_SLOT_COMMAND_MENU);
+        g_equip_menu_thread_running = thread_is_running(EQUIP_THREAD_SLOT_COMMAND_MENU);
         if (g_equip_menu_thread_running == 0) {
             g_equip_menu_screen_state = EQUIP_SCREEN_STATE_CLOSED;
         }

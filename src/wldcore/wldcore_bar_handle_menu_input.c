@@ -26,7 +26,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
     if (flags & MAIN_SYSTEM_FLAG_FADING) {
         return;
     }
-    if ((flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) && world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
+    if ((flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) && thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_menu_pop_level_and_rebuild_screen(level);
         return;

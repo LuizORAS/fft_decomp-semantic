@@ -7,7 +7,7 @@
  * matches `key` and has finished, 1 when a new thread was started, otherwise
  * the running status. */
 s32 card_text_start_thread_if_idle(s32 thread_id, s32 parameter_0, s32 key, s32 parameter_2, s32 thread_field_5c) {
-    s32 status = battle_thread_is_running(thread_id);
+    s32 status = thread_is_running(thread_id);
 
     if (status == 0) {
         if (g_card_thread_active_key == key) {

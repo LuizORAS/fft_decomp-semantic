@@ -1,4 +1,5 @@
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -121,7 +122,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
     }
 
     if (g_world_formation_dismiss_step == 2) {
-        running = world_thread_is_running(THREAD_SCREEN_SLOT_TEXT);
+        running = thread_is_running(THREAD_SCREEN_SLOT_TEXT);
         g_world_dismiss_unit_prompt_running = running;
         if (running != 0) {
             return;
@@ -134,7 +135,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
     step = g_world_formation_dismiss_step;
     g_world_dismiss_unit_prompt_running = running;
     if (step != 0) {
-        if (world_thread_is_running(3) != 0) {
+        if (thread_is_running(3) != 0) {
             step = g_world_formation_dismiss_step;
             if (step == 1) {
                 selection = g_world_menu_selection_results[10];

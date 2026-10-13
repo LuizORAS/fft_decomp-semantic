@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -39,7 +40,7 @@ void world_menu_update_grid_cursor(s16 alternate) {
             g_world_active_grid_menu_cells = g_world_grid_menu_default_cells;
         }
     }
-    busy = world_thread_is_running(THREAD_SCREEN_SLOT_TEXT);
+    busy = thread_is_running(THREAD_SCREEN_SLOT_TEXT);
     if (busy == 0) {
         input = g_world_input_primary_repeat_latched;
         cell = g_world_grid_menu_selected_cell;

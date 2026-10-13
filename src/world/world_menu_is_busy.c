@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -10,7 +11,7 @@ s32 world_menu_is_busy(s32 unused) {
 
     if (g_world_thread_task_active != 0) {
         result = 1;
-    } else if (world_thread_is_running(THREAD_SCREEN_SLOT_MENU) != 0) {
+    } else if (thread_is_running(THREAD_SCREEN_SLOT_MENU) != 0) {
         result = 1;
     }
     return result;

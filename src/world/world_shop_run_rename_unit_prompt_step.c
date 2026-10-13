@@ -46,7 +46,7 @@ void world_shop_run_rename_unit_prompt_step(void) {
             thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, -1, 0);
         }
     }
-    if (world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0 && world_formation_is_unit_list_scroll_needed() == 0) {
+    if (thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0 && world_formation_is_unit_list_scroll_needed() == 0) {
         input = g_world_input_primary_repeat;
         if (input & PSX_PAD_CIRCLE) {
             if (g_world_unit_pointers[g_world_formation_selected_unit_index]->sprite_set

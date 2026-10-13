@@ -20,7 +20,7 @@ void jobstts_input_update_with_message_state(void) {
     menu_input_update_controller();
     frame = jobstts_gfx_get_transition_frame();
     if (frame < 1 || frame > 7) {
-        running = battle_thread_is_running(THREAD_SCREEN_SLOT_TEXT);
+        running = thread_is_running(THREAD_SCREEN_SLOT_TEXT);
         if (running != 0) {
             g_menu_input_newly_pressed = 0;
             g_menu_input_primary_repeat = 0;

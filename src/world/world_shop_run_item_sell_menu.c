@@ -28,14 +28,14 @@ s32 world_shop_run_item_sell_menu(void) {
         g_world_menu_sound_muted = 1;
     }
     g_world_shop_sell_result = world_menu_run_thread(WORLD_THREAD_SLOT_UPPER_MENU, g_world_shop_quantity_menu_data);
-    if (world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU_CHILD) != 0 && g_world_shop_sell_confirm_shown == 0) {
+    if (thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU_CHILD) != 0 && g_world_shop_sell_confirm_shown == 0) {
         g_text_substitution_values[0] = world_item_get_half_price(g_world_shop_sell_item)
             * g_world_menu_selection_results[WORLD_MENU_SELECTION_SHOP_QUANTITY];
         thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xF810, 0);
         g_world_shop_sell_confirm_shown = 1;
         g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
     }
-    if (world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU_CHILD) == 0 && g_world_shop_sell_confirm_shown != 0) {
+    if (thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU_CHILD) == 0 && g_world_shop_sell_confirm_shown != 0) {
         g_world_shop_sell_confirm_shown = 0;
         thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xF80F, 0);
     }

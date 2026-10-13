@@ -15,7 +15,7 @@ void wldcore_list_handle_tutorial_mask_1_entries_input(wldcore_menu_panel_level_
     s16* selected;
 
     if (level->result == 2) {
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
             selected = &g_wldcore_window_panel_render_state.selected_index;
             wldcore_set_bit_value(&g_main_tutorial_progress_masks[1], *selected, 1);
             script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 1);

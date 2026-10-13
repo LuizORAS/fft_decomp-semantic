@@ -42,8 +42,8 @@ typedef struct thread {
 } thread_t;
 typedef char thread_size_must_be_1024[(sizeof(thread_t) == 1024) ? 1 : -1];
 
-/* Reset loops cover sixteen 0x400-byte slots. WORLD's scheduler also scans
- * slot 16, which lies beyond this reset span. */
+/* Reset loops clear sixteen 0x400-byte slots. WORLD also uses slot 16 for
+ * tutorial text; the scheduler scans it, but reset does not clear it. */
 enum {
     THREAD_SLOT_COUNT = 16,
     THREAD_STRIDE = 1024,
@@ -201,13 +201,11 @@ void thread_resume(s32 thread_id);
 void thread_suspend(s32 thread_id);
 void thread_exit_current(void);
 s32 battle_thread_is_previous_running(void);
-s32 battle_thread_is_running(s32 thread_id);
+s32 thread_is_running(s32 thread_id);
 s32 battle_thread_is_running_asm(s32 thread_id);
-void battle_thread_reset_scheduler(void);
+void thread_reset_scheduler(void);
 s32 world_thread_is_previous_running(void);
-s32 world_thread_is_running(s32 thread_id);
 s32 world_thread_is_running_asm(s32 thread_id);
-void world_thread_reset_scheduler(void);
 
 /* scheduling */
 /* Yield to the next active context in the resident scene scheduler.
@@ -215,8 +213,7 @@ void world_thread_reset_scheduler(void);
 void thread_yield(void);
 void thread_wait_frames(s32 count);
 void thread_wait_until_inactive(s32 thread_id);
-void battle_thread_wait_for_unit_view_panels(void);
-void world_thread_wait_for_unit_view_panels(void);
+void thread_wait_for_unit_view_panels(void);
 
 /* context capture */
 /* Read the running CPU's $gp when seeding a native thread context. */

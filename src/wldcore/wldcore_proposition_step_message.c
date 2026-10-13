@@ -13,7 +13,7 @@ s32 wldcore_proposition_step_message(wldcore_proposition_report_level_t* state, 
     if (state->phase == 0) {
         s32* party_index;
         state->phase = 1;
-        if (!world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE))
+        if (!thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE))
             thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
         party_index = &g_wldcore_proposition_report.excluded_party_index;
         g_text_substitution_values[0] = *party_index + TEXT_ID_UNIT_NAME_BASE;

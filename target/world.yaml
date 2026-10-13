@@ -233,7 +233,7 @@ functions:
   - {addr: 0x800f0f64, size: 208, name: world_unit_start_view_thread, hash: 6f0d3ab168703f5f}
   - {addr: 0x800f1034, size: 764, name: world_unit_view_supervisor_thread, hash: 1635c86375bb55b0}
   - {addr: 0x800f1330, size: 16, name: world_script_set_event_speed, hash: 78a0268c8e691a6d}
-  - {addr: 0x800f1340, size: 56, name: world_thread_wait_for_unit_view_panels, hash: da96c880c05276fb}
+  - {addr: 0x800f1340, size: 56, name: thread_wait_for_unit_view_panels, hash: da96c880c05276fb, source: src/shared/thread/thread_wait_for_unit_view_panels.c}
   - {addr: 0x800f1378, size: 8, name: world_noop_800f1378, hash: 6d64edf91449c1b1}
   - {addr: 0x800f1380, size: 8, name: world_noop_800f1380, hash: 6d64edf91449c1b1}
   - {addr: 0x800f1388, size: 8, name: world_script_frame_after_threads_stub, hash: 6d64edf91449c1b1}
@@ -421,9 +421,9 @@ functions:
   - {addr: 0x800ffdf4, size: 28, name: thread_resume, hash: 5db3a5c21e753da8, source: src/shared/thread/thread_resume.c}
   - {addr: 0x800ffe10, size: 24, name: thread_suspend, hash: 9450e432778af0a6, source: src/shared/thread/thread_suspend.c}
   - {addr: 0x800ffe28, size: 60, name: thread_exit_current, hash: ff52c9c9f91306dd, source: src/shared/thread/thread_exit_current.c}
-  - {addr: 0x800ffe64, size: 60, name: world_thread_reset_scheduler, hash: d888f2276d3f66e7}
+  - {addr: 0x800ffe64, size: 60, name: thread_reset_scheduler, hash: d888f2276d3f66e7, source: src/shared/thread/thread_reset_scheduler.c}
   - {addr: 0x800ffea0, size: 76, name: thread_wait_until_inactive, hash: 17872da1aa0db52d, source: src/shared/thread/thread_wait_until_inactive.c}
-  - {addr: 0x800ffeec, size: 28, name: world_thread_is_running, hash: 22d1fa2a224de3cd}
+  - {addr: 0x800ffeec, size: 28, name: thread_is_running, hash: 22d1fa2a224de3cd, source: src/shared/thread/thread_is_running.c}
   - {addr: 0x800fff08, size: 32, name: thread_set_parameters, hash: 9a58f319d509b5e5, source: src/shared/thread/thread_set_parameters.c}
   - {addr: 0x800fff28, size: 40, name: thread_set_four_parameters, hash: 5d14fd3dbdba4502, source: src/shared/thread/thread_set_four_parameters.c}
   - {addr: 0x80100084, size: 12, name: thread_get_current_global_pointer, hash: 153190eb0d500e3a, source: src/shared/thread/thread_get_current_global_pointer.c}

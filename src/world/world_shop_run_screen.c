@@ -137,7 +137,7 @@ void world_shop_run_screen(s32 shop_type) {
             if (disabled == 0) {
                 buttons = g_world_input_secondary_repeat;
             }
-            if (world_thread_is_running(THREAD_SCREEN_SLOT_COMPARISON_STATUS) == 0) {
+            if (thread_is_running(THREAD_SCREEN_SLOT_COMPARISON_STATUS) == 0) {
                 if (buttons & PSX_PAD_L1) {
                     g_world_formation_selected_unit_index = g_world_formation_selected_unit_index == 0
                         ? g_world_formation_unit_count - 1

@@ -41,7 +41,7 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_leve
         state->phase++;
         break;
     case 1:
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE))
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE))
             return 0;
         state->phase++;
         break;
@@ -68,7 +68,7 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_leve
         state->phase++;
         break;
     case 5:
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE))
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE))
             return 0;
         state->phase = 0;
         return 1;

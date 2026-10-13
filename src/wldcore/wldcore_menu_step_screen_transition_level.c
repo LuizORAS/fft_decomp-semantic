@@ -34,7 +34,7 @@ void wldcore_menu_step_screen_transition_level(wldcore_menu_screen_transition_le
             level->phase++;
             return;
         }
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_TRANSITION) != 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_TRANSITION) != 0) {
             return;
         }
         g_wldcore_menu_stack_depth--;

@@ -12,7 +12,7 @@ void world_shop_handle_item_purchase_menu(void) {
     s8 result;
 
     if (g_world_shop_purchase_list_initialized == 0) {
-        if (world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
             thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_message_box_thread);
         }
         thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xF804, 0);
@@ -34,7 +34,7 @@ void world_shop_handle_item_purchase_menu(void) {
     world_script_set_vsync_mode_and_event_speed(2);
     if (g_world_shop_purchase_equip_check_pending != 0) {
         thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, -1, 0);
-        result = world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE);
+        result = thread_is_running(THREAD_SCREEN_SLOT_MESSAGE);
         g_world_shop_purchase_equip_check_pending = result;
         if (result == 0) {
             g_world_shop_purchase_list_initialized = 0;

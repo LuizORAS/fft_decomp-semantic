@@ -61,7 +61,7 @@ s32 equip_menu_update_equipment(void) {
         g_equip_input_page_scroll_disabled = 1;
     }
     override = 0;
-    if (g_battle_menu_input_lock_mode != 0 || battle_thread_is_running(2) != 0) {
+    if (g_battle_menu_input_lock_mode != 0 || thread_is_running(2) != 0) {
         override = 1;
     }
     equip_menu_dispatch_with_override(&g_equip_equipment_render_commands, input, override);

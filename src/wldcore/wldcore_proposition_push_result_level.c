@@ -91,7 +91,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     base = &g_wldcore_window_render_records[index].base;
     base->x = -0x7A;
     base->y = -0x2A;
-    if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
+    if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     }
     party = &g_wldcore_proposition_report.excluded_party_index;
@@ -101,7 +101,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     if (g_wldcore_proposition_report.recalled != 0) {
         message = 0xA2;
     }
-    if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
+    if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     }
     thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,

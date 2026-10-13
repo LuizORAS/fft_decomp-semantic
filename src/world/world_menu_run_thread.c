@@ -10,7 +10,7 @@ s32 world_menu_run_thread(s32 thread_id, menu_entry_t* arg) {
     void (*fn)(void);
 
     if (g_world_menu_thread_running_status == 0) {
-        if (world_thread_is_running(thread_id) != 0) {
+        if (thread_is_running(thread_id) != 0) {
             return 1;
         }
         fn = arg->thread_entry;
@@ -20,7 +20,7 @@ s32 world_menu_run_thread(s32 thread_id, menu_entry_t* arg) {
         g_world_menu_thread_running_status = 1;
         return 1;
     }
-    status = world_thread_is_running(thread_id);
+    status = thread_is_running(thread_id);
     g_world_menu_thread_running_status = status;
     return status;
 }

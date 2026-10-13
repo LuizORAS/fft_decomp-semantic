@@ -14,7 +14,7 @@ void battle_menu_open_debugchr(void) {
     menu_request_open_companion_executable(COMPANION_OVERLAY_DEBUGCHR);
     thread_set_parameters(THREAD_SLOT_MENU, 0, 0, 1);
     thread_wait_until_inactive(THREAD_SLOT_MENU);
-    battle_thread_wait_for_unit_view_panels();
+    thread_wait_for_unit_view_panels();
     thread_yield();
     thread_yield();
     debugchr_editor_run_session();

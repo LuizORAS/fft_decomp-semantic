@@ -48,7 +48,7 @@ void world_formation_item_menu(void) {
         }
         return;
     }
-    if (g_world_item_menu_initialized == 0 && world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU) == 0) {
+    if (g_world_item_menu_initialized == 0 && thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU) == 0) {
         g_world_item_icon_menu.selected_index = 0;
         g_world_menu_thread_menu_data = &g_world_item_icon_menu;
         thread_start(WORLD_THREAD_SLOT_UPPER_MENU, world_menu_icon_list_thread);
@@ -92,7 +92,7 @@ void world_formation_item_menu(void) {
             world_menu_set_cursor_position(WORLD_MENU_CURSOR_REMOVE_SLOT, 0);
             world_menu_set_cursor_position(WORLD_MENU_CURSOR_ITEM_TAB, 0);
         }
-        running = world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU);
+        running = thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU);
         g_world_item_menu_initialized = running;
         if (running == 0) {
             world_menu_toggle_change_banner_panel_thread(0);

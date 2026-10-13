@@ -15,8 +15,7 @@ void wldcore_menu_handle_story_event_text_input(wldcore_menu_stack_record_t* lev
         != 0) {
         return;
     }
-    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
+    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) && thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         flags = g_main_system_flags;
         if ((flags & MAIN_SYSTEM_FLAG_FADING) == 0) {
             value = level->story_event_index;

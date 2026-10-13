@@ -226,7 +226,7 @@ ramza_placed:
                     g_attack_panel_status_animation[2] = 1;
                 }
             }
-            if (battle_thread_is_running(ATTACK_PROMPT_THREAD_SLOT_DETAIL_MARKER) == 0
+            if (thread_is_running(ATTACK_PROMPT_THREAD_SLOT_DETAIL_MARKER) == 0
                 && g_attack_panel_status_animation[3] < 2) {
                 g_attack_panel_status_animation[3] = 0;
             }
@@ -511,7 +511,7 @@ ramza_placed:
                     != ATTACK_DEPLOY_ROSTER_ID_NONE) {
                     g_attack_panel_status_animation[2] = 7;
                     g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
-                    if (battle_thread_is_running(ATTACK_THREAD_SLOT_ROSTER_STEP) == 0) {
+                    if (thread_is_running(ATTACK_THREAD_SLOT_ROSTER_STEP) == 0) {
                         g_attack_deploy_pending_roster_index = g_attack_deploy_roster_id_by_tile
                             [g_attack_deploy_cursor_row[g_attack_deploy_active_cursor]]
                             [g_attack_deploy_cursor_column[g_attack_deploy_active_cursor]];

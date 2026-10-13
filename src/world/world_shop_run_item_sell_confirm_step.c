@@ -43,6 +43,6 @@ void world_shop_run_item_sell_confirm_step(void) {
     }
     world_menu_switch_item_category(0);
     world_menu_run_script_with_palette_mode(
-        &g_world_shop_sell_list_menu_script, 0, world_thread_is_running(THREAD_SCREEN_SLOT_TEXT));
+        &g_world_shop_sell_list_menu_script, 0, thread_is_running(THREAD_SCREEN_SLOT_TEXT));
     world_shop_run_obtain_gil_menu();
 }
