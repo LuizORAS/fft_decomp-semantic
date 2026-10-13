@@ -1,6 +1,7 @@
 #include "fft/main.h"
 
 /* Low immediate byte of FntLoad's CLUT-Y addiu instruction. */
+extern u8 g_fntload_clut_y_offset_immediate;
 
 void main_gfx_load_efc_fnt(void) {
     TIM_IMAGE image;

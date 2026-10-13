@@ -1191,7 +1191,6 @@ extern DISPENV g_main_gfx_display_envs[2];
 extern DRAWENV g_main_gfx_draw_envs[2];
 extern s32 g_main_gfx_loading_display_frame_counter;
 extern s32 g_main_gfx_screen_polarity;
-extern volatile u8 g_fntload_clut_y_offset_immediate;
 extern s32 g_main_font_print_enabled;
 extern u8 g_main_common_menu_graphics_loaded;
 extern u8 g_main_special_portrait_unit_id;
