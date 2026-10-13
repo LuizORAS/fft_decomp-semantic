@@ -2,8 +2,6 @@
 #include "fft/menu.h"
 #include "psx/libetc.h"
 
-#define TEXT_STATE ((text_reader_state_t*)getScratchAddr(0))
-
 /* Measure a text entry in pixels, recording each line's width and returning
  * the widest line and line count. Spaces are 4 pixels and numeric digits 6;
  * other glyphs use their prefix page's width table. */
@@ -25,16 +23,16 @@ void text_measure_pixels(s16* width, s16* rows, const u8* text) {
     for (i = 0; i < 16; i++) {
         g_text_player_name_buffer[i] = party->name[i];
     }
-    TEXT_STATE->return_cursor = (u8*)-1;
-    TEXT_STATE->value_cursor = g_text_substitution_values;
-    TEXT_STATE->remaining_bytes = 0;
-    TEXT_STATE->column = 0;
-    TEXT_STATE->max_column = 0;
-    TEXT_STATE->row = 0;
-    TEXT_STATE->pending_width = 0xFFFF;
-    TEXT_STATE->glyph_page = 0;
+    state = (text_reader_state_t*)getScratchAddr(0);
+    state->return_cursor = (u8*)-1;
+    state->value_cursor = g_text_substitution_values;
+    state->remaining_bytes = 0;
+    state->column = 0;
+    state->max_column = 0;
+    state->row = 0;
+    state->pending_width = 0xFFFF;
+    state->glyph_page = 0;
 
-    state = TEXT_STATE;
     while (1) {
         state->command = *cursor;
         if (state->command == TEXT_NEWLINE || state->command == TEXT_END_WAIT_FOR_CONFIRM
