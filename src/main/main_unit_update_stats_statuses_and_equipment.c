@@ -1,5 +1,6 @@
 #include "fft/battle_status.h"
 #include "fft/main.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* Re-derives the job-dependent stats (move/jump, equippable categories,

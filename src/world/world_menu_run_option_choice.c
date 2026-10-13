@@ -1,3 +1,4 @@
+#include "fft/memory.h"
 #include "fft/sound.h"
 /* Two dead-store conditionals are zero-instruction allocation devices: flow deletes each body,
  * post-reload jump deletes each branch, but both stay visible to register allocation.
@@ -76,7 +77,7 @@ void world_menu_run_option_choice(void) {
     }
     param->text_image.width -= 4;
     world_menu_build_icon_record(&rect, param, &g_world_option_picker_icon_records[0]);
-    world_script_copy_bytes(&g_world_option_picker_icon_records[1], &g_world_option_picker_icon_records[0],
+    copy_bytes_nonempty(&g_world_option_picker_icon_records[1], &g_world_option_picker_icon_records[0],
         sizeof(g_world_option_picker_icon_records[1]));
     LoadImage(&rect, buffer);
     world_menu_free_memory(buffer);

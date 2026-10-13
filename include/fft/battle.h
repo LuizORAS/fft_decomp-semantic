@@ -272,9 +272,6 @@ void battle_heap_print_stats(void);
 #define RANDOM_BETWEEN(min, max)                                                                                       \
     ((min) == (max) ? (min) : (max) < (min) ? rand() % ((min) - (max)) + (max) : rand() % ((max) - (min)) + (min))
 
-/* BATTLE 0x8014bf54..0x8014bf7c: destination first. This do-while loop
- * requires a positive count; it is not a general-purpose memcpy. */
-void battle_copy_bytes(void* destination, const void* source, s32 count);
 s32 battle_fixed_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 s32 battle_mul_div_s64(s32 a, s32 b, s32 c);
 

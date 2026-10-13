@@ -4,6 +4,7 @@
 #include "fft/battle_unit.h"
 #include "fft/event_attack.h"
 #include "fft/main.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
@@ -637,8 +638,8 @@ restart_script:
         }
         /* ---- Background, palettes, and terrain ---- */
         else if (opcode == EVENT_OPCODE_BACKGROUND) {
-            battle_copy_bytes(&g_battle_event_background_colors.colors[MAP_BACKGROUND_GRADIENT_TOP], parameters, 3);
-            battle_copy_bytes(
+            copy_bytes_nonempty(&g_battle_event_background_colors.colors[MAP_BACKGROUND_GRADIENT_TOP], parameters, 3);
+            copy_bytes_nonempty(
                 &g_battle_event_background_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM], parameters + 3, 3);
             if (parameters[7] == 0) {
                 map_transition_and_store_background_gradient(parameters[6], &g_battle_event_background_colors);

@@ -1,5 +1,6 @@
 #include "fft/battle_ai.h"
 #include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /*
  * Initialize a unit's ability-use statistics and scenario targeting.

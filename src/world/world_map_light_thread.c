@@ -1,4 +1,5 @@
 #include "fft/battle_map.h"
+#include "fft/memory.h"
 #include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -54,7 +55,7 @@ void world_map_light_thread(void) {
         map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_SET, &colour, &light, 0);
         thread_wait_frames(1);
     }
-    world_script_copy_bytes(&g_world_map_light_rotation, &rotation, sizeof(g_world_map_light_rotation));
-    world_script_copy_bytes(&g_world_map_light_scale, &scale, sizeof(g_world_map_light_scale));
+    copy_bytes_nonempty(&g_world_map_light_rotation, &rotation, sizeof(g_world_map_light_rotation));
+    copy_bytes_nonempty(&g_world_map_light_scale, &scale, sizeof(g_world_map_light_scale));
     thread_exit_current();
 }

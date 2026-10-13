@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
+#include "fft/memory.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -38,6 +39,6 @@ void battle_menu_init_panel_fade_tiles(void) {
         frame->bottom[i].y0 = i + 0xde;
     }
 
-    battle_copy_bytes(
+    copy_bytes_nonempty(
         &g_battle_menu_panel_fade_frames[1], &g_battle_menu_panel_fade_frames[0], sizeof(menu_gradient_panel_prims_t));
 }

@@ -1,4 +1,5 @@
 #include "fft/main.h"
+#include "fft/memory.h"
 #include "fft/world.h"
 
 /* Fills a fresh party record for a generic male (0), generic female (1),

@@ -1,4 +1,4 @@
-#include "fft/battle_ai.h"
+#include "fft/memory.h"
 
 /* Zero byte_count / 4 32-bit values starting at dst. */
 void ai_clear_words(void* destination, s32 byte_count) {

@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
@@ -123,7 +124,7 @@ void world_build_at_list(void) {
     clear.y = ((image_rect.y - 2) & 0xFF) + (image_rect.y & 0xFF00);
     clear.w = image_rect.w;
     ClearImage(&clear, 0, 0, 0);
-    world_script_copy_bytes(&g_world_at_list_pages[1], g_world_at_list_pages, sizeof(menu_list_page_t));
+    copy_bytes_nonempty(&g_world_at_list_pages[1], g_world_at_list_pages, sizeof(menu_list_page_t));
     for (i = 0; i < 2; i++) {
         g_world_at_list_pages[i].icons.icons[0] = &icons0[i];
         g_world_at_list_pages[i].icons.icons[1] = &icons1[i];

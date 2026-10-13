@@ -3,6 +3,7 @@
 #include "fft/battle_formula.h"
 #include "fft/battle_map.h"
 #include "fft/battle_move.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* g_action_current_ability bound a second time. Spelling every field through one

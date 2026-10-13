@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -38,14 +39,14 @@ void world_main_menu_text_window_thread(void) {
     world_gfx_set_draw_mode_from_origin(&record->text_draw_mode, &entry->vram_origin);
     world_gfx_set_draw_mode_for_texture_page(&record->frame_draw_mode, MENU_TEXTURE_PAGE_FRAME);
     world_menu_build_layout_sprites(entry, record->frame_sprites, 0);
-    world_script_copy_bytes(g_world_text_substitution_values_backup, g_text_substitution_values,
+    copy_bytes_nonempty(g_world_text_substitution_values_backup, g_text_substitution_values,
         sizeof(g_world_text_substitution_values_backup));
     text_values = entry->value;
     g_text_substitution_values[0] = text_values[0];
     text_values = entry->value;
     g_text_substitution_values[1] = text_values[1];
     text_measure(&width, &height, text_find_entry(entry->text_id));
-    world_script_copy_bytes(
+    copy_bytes_nonempty(
         g_text_substitution_values, g_world_text_substitution_values_backup, sizeof(g_text_substitution_values));
     /* 10-pixel columns plus a 0x18 border, rounded up past the next multiple of four. */
     x = width * 10;
@@ -74,7 +75,7 @@ void world_main_menu_text_window_thread(void) {
     SetShadeTex(&record->text_sprite, 0);
     SetSemiTrans(&record->frame_sprites[0], 1);
     SetShadeTex(&record->frame_sprites[0], 0);
-    world_script_copy_bytes(&records[1], &records[0], sizeof(world_menu_text_window_record_t));
+    copy_bytes_nonempty(&records[1], &records[0], sizeof(world_menu_text_window_record_t));
     target = 0;
     for (i = 0;; i++) {
         record = &records[i & 1];
@@ -85,14 +86,14 @@ void world_main_menu_text_window_thread(void) {
             g_world_menu_text_state.pen.stride = entry->inner_width;
             world_menu_set_text_origin(10, 8);
             g_world_menu_text_color = 0;
-            world_script_copy_bytes(g_world_text_substitution_values_backup, g_text_substitution_values,
+            copy_bytes_nonempty(g_world_text_substitution_values_backup, g_text_substitution_values,
                 sizeof(g_world_text_substitution_values_backup));
             text_values = entry->value;
             g_text_substitution_values[0] = text_values[0];
             text_values = entry->value;
             g_text_substitution_values[1] = text_values[1];
             world_menu_display_text_entry(entry->text_id, buffer, &g_world_menu_text_state.pen);
-            world_script_copy_bytes(g_text_substitution_values, g_world_text_substitution_values_backup,
+            copy_bytes_nonempty(g_text_substitution_values, g_world_text_substitution_values_backup,
                 sizeof(g_text_substitution_values));
             LoadImage(&rect, buffer);
         }

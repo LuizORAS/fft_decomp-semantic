@@ -1,4 +1,5 @@
 #include "fft/battle_ai.h"
+#include "fft/memory.h"
 
 /*
  * Select an action by testing ranked entries in order.

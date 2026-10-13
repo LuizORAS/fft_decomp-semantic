@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
+#include "fft/memory.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -26,7 +27,7 @@ void battle_menu_icon_linked_entry_thread(void) {
     param = (menu_entry_t*)battle_thread_get_current_parameter_1();
     battle_menu_size_entry_to_text(param, &width, &height, &pad, 0);
     battle_menu_build_window_sprites(&rect, param, &records[0]);
-    battle_copy_bytes(&records[1], &records[0], 0x7C);
+    copy_bytes_nonempty(&records[1], &records[0], 0x7C);
     parent = param->row_actions[0];
     if (parent >= 0) {
         /* Unsigned narrowing keeps the retail 16-bit centering expression. */

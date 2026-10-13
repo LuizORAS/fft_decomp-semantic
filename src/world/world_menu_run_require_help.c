@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 /* WORLD copy of the EVENT HELPMENU require-help menu
@@ -50,8 +51,7 @@ void world_menu_run_require_help(void) {
         shadow_poly->tpage = GetTPage(0, 2, 0x3C0, 0x100);
         shadow_poly->clut = 0x7DBC;
     }
-    world_script_copy_bytes(
-        g_world_text_section_pointer_backup, g_text_section_pointers, WORLD_TEXT_SECTION_TABLE_BYTES);
+    copy_bytes_nonempty(g_world_text_section_pointer_backup, g_text_section_pointers, WORLD_TEXT_SECTION_TABLE_BYTES);
     g_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_UNIT_STATUS];
     g_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]

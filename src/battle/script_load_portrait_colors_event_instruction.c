@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/main.h"
+#include "fft/memory.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -25,7 +26,7 @@ void script_load_portrait_colors_event_instruction(s32 portrait_id) {
     } while (thread_call_on_main_stack() != 0);
 
     palette = buffer->palettes;
-    battle_copy_bytes(&rect, &g_battle_menu_portrait_pixel_rect, sizeof(rect));
+    copy_bytes_nonempty(&rect, &g_battle_menu_portrait_pixel_rect, sizeof(rect));
     i = 0;
     pixels = buffer->pixels;
     rect.w = 8;

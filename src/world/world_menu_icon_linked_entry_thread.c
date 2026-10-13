@@ -1,3 +1,4 @@
+#include "fft/memory.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -22,7 +23,7 @@ void world_menu_icon_linked_entry_thread(void) {
     param = world_thread_get_current_parameter_1();
     world_menu_size_entry_to_text(param, &width, &height, &pad, 0);
     world_menu_build_icon_record(&rect, param, &records[0]);
-    world_script_copy_bytes(&records[1], &records[0], sizeof(records[1]));
+    copy_bytes_nonempty(&records[1], &records[0], sizeof(records[1]));
     parent = param->row_actions[0];
     if (parent >= 0) {
         /* Unsigned narrowing keeps the retail 16-bit centering expression. */

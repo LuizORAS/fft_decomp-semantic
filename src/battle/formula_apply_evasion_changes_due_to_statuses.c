@@ -1,5 +1,6 @@
 #include "fft/battle_action.h"
 #include "fft/battle_formula.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* Target statuses on the evades: Don't Act, Sleep, Stop, Confusion, Charging

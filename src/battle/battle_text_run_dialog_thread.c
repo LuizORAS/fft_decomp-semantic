@@ -5,6 +5,7 @@
 #include "fft/battle_text.h"
 #include "fft/battle_unit.h"
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
@@ -322,7 +323,7 @@ void battle_text_run_dialog_thread(void) {
         win->sprites[3].h = 8;
         win->sprites[3].clut = 0x7CBC;
     }
-    battle_copy_bytes(&win[1], win, 0x118);
+    copy_bytes_nonempty(&win[1], win, 0x118);
     win[0].active = 1;
     win[1].active = 1;
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
@@ -816,7 +817,7 @@ end:
         from.h = 0;
         from.x = right;
         from.y = bottom;
-        battle_copy_bytes(&to, &from, 8);
+        copy_bytes_nonempty(&to, &from, 8);
         menu_tween_window_quads(win, &from, &to, 4);
     }
     g_battle_text_awaiting_input = 0;

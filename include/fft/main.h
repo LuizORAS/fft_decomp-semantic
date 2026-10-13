@@ -989,13 +989,8 @@ void main_heap_clear_smd_allocator_table(void);
 s32 main_util_roll_pass_fail(s32 maximum, s32 threshold);
 void main_util_set_svector(SVECTOR* vector, s32 x, s32 y, s32 z);
 void main_util_set_vector(VECTOR* vector, s32 x, s32 y, s32 z);
-void main_util_clear_byte_data(void* destination, s32 count);
 
-/* SCUS byte loops at 0x8005e254 (copy) and 0x8005e644 (clear).
- * Copy takes source first; both routines do nothing for a nonpositive count. */
-void main_util_copy_byte_data(const void* source, void* destination, s32 count);
 void main_util_copy_action_data(const action_command_t* source, action_command_t* destination);
-void main_util_copy_bytes(const void* source, void* destination, int count);
 
 /* unit */
 /* Selects rows in the base-data (0x8005e90c) and variance (0x8005e93c)

@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/types.h"
@@ -17,7 +18,7 @@ void require_gfx_run_suspended_thread_transition(void) {
 
     thread_suspend(g_require_thread_suspended_id);
     saved = battle_menu_alloc_memory(THREAD_STRIDE);
-    battle_copy_bytes(saved, &g_threads[g_require_thread_suspended_id], THREAD_STRIDE);
+    copy_bytes_nonempty(saved, &g_threads[g_require_thread_suspended_id], THREAD_STRIDE);
     g_menu_panel_status_group_count = 2;
     while (1) {
         s32 buffer = frame & 1;
@@ -29,7 +30,7 @@ void require_gfx_run_suspended_thread_transition(void) {
         }
         frame++;
     }
-    battle_copy_bytes(&g_threads[g_require_thread_suspended_id], saved, THREAD_STRIDE);
+    copy_bytes_nonempty(&g_threads[g_require_thread_suspended_id], saved, THREAD_STRIDE);
     battle_menu_free_memory(saved);
     thread_resume(g_require_thread_suspended_id);
     thread_yield();

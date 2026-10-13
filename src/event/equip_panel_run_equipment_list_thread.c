@@ -1,6 +1,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_equip.h"
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
@@ -65,7 +66,7 @@ void equip_panel_run_equipment_list_thread(void) {
     battle_menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
     screen->sprites[0].clut = 0x7cbc;
     screen->sprites[1].clut = 0x7cbc;
-    battle_copy_bytes(&screen[1], screen, sizeof(menu_status_panel_buffer_t));
+    copy_bytes_nonempty(&screen[1], screen, sizeof(menu_status_panel_buffer_t));
 
     frame = 0;
     for (;;) {

@@ -1,4 +1,5 @@
 #include "fft/main.h"
+#include "fft/memory.h"
 
 /* Build g_main_status_check_sets, the status bit masks the engine tests units
  * against, and clear the 0x80 bytes of g_main_item_location_flags.

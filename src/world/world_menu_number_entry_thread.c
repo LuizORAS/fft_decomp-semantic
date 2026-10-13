@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -50,7 +51,7 @@ void world_menu_number_entry_thread(void) {
         value = range->bounds.min;
     }
     world_menu_build_icon_record(&rect, param, &records[0]);
-    world_script_copy_bytes(&records[1], &records[0], sizeof(records[1]));
+    copy_bytes_nonempty(&records[1], &records[0], sizeof(records[1]));
     for (j = 0; j < 2; j++) {
         menu_init_default_poly_ft4(&cursor_quads[j]);
         SetSemiTrans(&cursor_quads[j], 0);

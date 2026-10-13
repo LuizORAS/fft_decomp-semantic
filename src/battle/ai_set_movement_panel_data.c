@@ -3,6 +3,7 @@
 #include "fft/battle_move.h"
 #include "fft/battle_status.h"
 #include "fft/battle_unit.h"
+#include "fft/memory.h"
 #include "psx/libetc.h"
 
 /* Build the AI walkable and reachable tile rows for the acting unit.

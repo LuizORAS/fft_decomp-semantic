@@ -4,6 +4,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
@@ -43,7 +44,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
             &g_battle_tile_info_image_params[i]);
     }
     battle_text_configure_sprite_vram(&rect, 0x18, 0x10, &page->sprites[0], 0);
-    battle_copy_bytes(
+    copy_bytes_nonempty(
         &g_battle_menu_height_display_pages[1], &g_battle_menu_height_display_pages[0], sizeof(menu_quad_page_t));
 
     for (frame = 0;; frame++) {

@@ -1,3 +1,4 @@
+#include "fft/memory.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -21,7 +22,7 @@ void world_script_load_portrait_colors_event_instruction(s32 index) {
         g_thread_call_target = (void (*)(void))main_file_is_still_loading;
     } while (thread_call_on_main_stack() != 0);
     palettes = buffer->palettes;
-    world_script_copy_bytes(&rect, &g_world_menu_portrait_pixel_rect, sizeof(rect));
+    copy_bytes_nonempty(&rect, &g_world_menu_portrait_pixel_rect, sizeof(rect));
     i = 0;
     pixels = buffer->pixels;
     rect.w = 8;

@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_script.h"
+#include "fft/memory.h"
 #include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
@@ -35,7 +36,7 @@ void battle_menu_icon_timed_thread(void) {
     param = (menu_entry_t*)battle_thread_get_current_parameter_1();
     battle_menu_size_entry_to_text(param, &width, &height, &pad, 1);
     battle_menu_build_window_sprites(&rect, param, &records[0]);
-    battle_copy_bytes(&records[1], &records[0], 0x7C);
+    copy_bytes_nonempty(&records[1], &records[0], 0x7C);
     buffer = battle_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
     g_menu_text_state.pen.stride = width;
     battle_menu_set_text_origin(pad + 8, 9);

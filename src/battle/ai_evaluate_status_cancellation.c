@@ -1,5 +1,6 @@
 #include "fft/battle_ai.h"
 #include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /* Evaluate the actor's abilities for removing one status from a target.
  *

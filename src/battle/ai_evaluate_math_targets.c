@@ -1,4 +1,5 @@
 #include "fft/battle_ai.h"
+#include "fft/memory.h"
 
 /*
  * Evaluate learned Math Skill ability and parameter combinations.

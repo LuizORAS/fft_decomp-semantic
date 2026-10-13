@@ -1,4 +1,5 @@
 #include "fft/battle_status.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* Disable the renderer flags of every current status, then clear the unit's

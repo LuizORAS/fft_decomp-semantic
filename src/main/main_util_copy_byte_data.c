@@ -1,4 +1,4 @@
-#include "fft/main.h"
+#include "fft/memory.h"
 
 void main_util_copy_byte_data(const void* source, void* destination, s32 count) {
     const u8* src = source;

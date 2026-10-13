@@ -1,4 +1,5 @@
 #include "fft/battle_ai.h"
+#include "fft/memory.h"
 
 /*
  * Choose a random action from the candidate movement and target masks.

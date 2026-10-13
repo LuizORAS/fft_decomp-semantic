@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 
@@ -27,7 +28,7 @@ void menu_icon_list_thread(void) {
         cursor = 0;
     }
     battle_menu_build_window_sprites(&rect, state, record);
-    battle_copy_bytes(&records[1], record, sizeof(records[1]));
+    copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
     fresh = 0;
     redraw = state->context;
     *redraw = 1;

@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -46,7 +47,7 @@ void world_menu_run_numeric_display_panel_thread(void) {
         gfx_init_image_loading(&record->sprites[i], &g_world_gfx_menu_image_source, &g_world_numeric_display_frame_rect,
             &g_world_numeric_display_image_params[i]);
     }
-    world_script_copy_bytes(&record[1], record, sizeof(record[1]));
+    copy_bytes_nonempty(&record[1], record, sizeof(record[1]));
     record[0].palette = &g_world_numeric_display_palettes[0].primitives;
     record[1].palette = &g_world_numeric_display_palettes[1].primitives;
     world_menu_init_numeric_display_frame_primitives(&g_world_numeric_display_frame_rect, record[0].palette);

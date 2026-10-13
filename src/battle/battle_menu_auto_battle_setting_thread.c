@@ -1,4 +1,5 @@
 #include "fft/battle_menu.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 /*
@@ -51,7 +52,7 @@ void battle_menu_auto_battle_setting_thread(void) {
     }
     previous = cursor;
     battle_menu_build_window_sprites(&rect, param, &records[0]);
-    battle_copy_bytes(&records[1], &records[0], sizeof(records[1]));
+    copy_bytes_nonempty(&records[1], &records[0], sizeof(records[1]));
     fresh = 0;
     i = 0;
     colour = g_battle_auto_battle_option_colors;

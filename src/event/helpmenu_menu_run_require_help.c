@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
@@ -44,7 +45,7 @@ void helpmenu_menu_run_require_help(void) {
         shadow_poly->tpage = GetTPage(0, 2, 0x3C0, 0x100);
         shadow_poly->clut = 0x7DBC;
     }
-    battle_copy_bytes(g_helpmenu_text_saved_pointers, g_text_section_pointers, 0x80);
+    copy_bytes_nonempty(g_helpmenu_text_saved_pointers, g_text_section_pointers, 0x80);
     g_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_UNIT_STATUS];
     g_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]

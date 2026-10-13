@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 /* 0x801c8f80-0x801c9fa4, 4132 bytes.
@@ -130,7 +131,7 @@ void require_condition_show_general(s32 hold_frames) {
         POLY_GT4* destination = &g_require_gfx_poly_gt4_buffers[1][0];
         POLY_GT4* source = destination - 40;
 
-        battle_copy_bytes(destination, source, 0x820);
+        copy_bytes_nonempty(destination, source, 0x820);
     }
 
     reveal_offset_top = 0;

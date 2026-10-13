@@ -1,5 +1,6 @@
 #include "fft/battle_ai.h"
 #include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /*
  * Load an ability-list entry into the considered AI ability.

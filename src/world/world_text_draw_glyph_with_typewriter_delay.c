@@ -1,3 +1,4 @@
+#include "fft/memory.h"
 #include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
@@ -149,7 +150,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
         }
 
         g_world_menu_slot_states[slot] = g_world_menu_slot_states[slot] + 1;
-        world_script_copy_bytes(previous, image, 0x54);
+        copy_bytes_nonempty(previous, image, 0x54);
 
         if (delay == 0) {
             DrawSync(0);

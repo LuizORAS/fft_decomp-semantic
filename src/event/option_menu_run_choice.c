@@ -1,3 +1,4 @@
+#include "fft/memory.h"
 #include "fft/sound.h"
 /* Run the option choice menu.
  *
@@ -68,7 +69,7 @@ void option_menu_run_choice(void) {
     }
     param->text_image.width -= 4;
     battle_menu_build_window_sprites(&rect, param, &g_option_picker_icon_records[0]);
-    battle_copy_bytes(&g_option_picker_icon_records[1], &g_option_picker_icon_records[0], sizeof(*record));
+    copy_bytes_nonempty(&g_option_picker_icon_records[1], &g_option_picker_icon_records[0], sizeof(*record));
     LoadImage(&rect, (u32*)buffer);
     battle_menu_free_memory(buffer);
     thread_wait_frames(1);

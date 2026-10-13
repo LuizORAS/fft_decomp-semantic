@@ -1,5 +1,6 @@
 #include "fft/battle_unit.h"
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
@@ -122,7 +123,7 @@ void world_menu_display_hovered_unit_stats(
             gfx_init_image_loading(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
         }
     }
-    world_script_copy_bytes(&page[1], page, sizeof(menu_unit_status_page_t));
+    copy_bytes_nonempty(&page[1], page, sizeof(menu_unit_status_page_t));
     text_loaded = 0;
     for (frame = 0;; frame++) {
         if (status->gauges[MENU_UNIT_STATUS_GAUGE_CT].value > UNIT_TURN_CT_THRESHOLD) {
@@ -180,8 +181,7 @@ void world_menu_display_hovered_unit_stats(
         if (g_world_unit_status_bounce_step == 0) {
             setXY4(&page->portrait, frame_rect->x + 2, frame_rect->y + 2, frame_rect->x + 0x21, frame_rect->y + 2,
                 frame_rect->x + 2, frame_rect->y + 0x32, frame_rect->x + 0x21, frame_rect->y + 0x32);
-            world_script_copy_bytes(
-                &params[6], &g_world_unit_status_icon_image_params[status->team_kind], sizeof(*params));
+            copy_bytes_nonempty(&params[6], &g_world_unit_status_icon_image_params[status->team_kind], sizeof(*params));
             for (i = 0; i < 7; i++, params++) {
                 gfx_init_image_loading(&page->sprites[i], &g_world_gfx_menu_image_source, frame_rect, params);
             }

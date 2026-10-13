@@ -2,6 +2,7 @@
 #include "fft/battle_ai.h"
 #include "fft/battle_status.h"
 #include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /*
  * Restore baseline unit data or suspended simulation status.

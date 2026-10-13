@@ -2,6 +2,7 @@
 #include "fft/battle_map.h"
 #include "fft/battle_move.h"
 #include "fft/battle_target.h"
+#include "fft/memory.h"
 #include "psx/libetc.h"
 #include "psx/types.h"
 

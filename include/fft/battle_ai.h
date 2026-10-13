@@ -909,10 +909,7 @@ s32 ai_choose_wait_facing(void);
 ai_direction_e ai_find_direction_of_target(const ai_coords_t* target, const ai_coords_t* origin);
 s32 ai_is_facing_tile_blocked(const ai_coords_t* source, const ai_coords_t* target);
 
-/* copy and arithmetic */
+/* arithmetic */
 s32 ai_calculate_ratio_times_4(s32 divisor, s32 dividend);
-void ai_clear_words(void* destination, s32 byte_count);
-void ai_copy_bytes(void* destination, const void* source, s32 byte_count);
-void ai_copy_u16_values(void* destination, const void* source, s32 byte_count);
 
 #endif

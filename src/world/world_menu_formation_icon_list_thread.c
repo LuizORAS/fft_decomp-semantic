@@ -1,3 +1,4 @@
+#include "fft/memory.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -27,7 +28,7 @@ void world_menu_formation_icon_list_thread(void) {
     SetShadeTex(&record->sprites[1], 0);
     SetShadeTex(&record->sprites[2], 0);
     SetShadeTex(&record->sprites[3], 0);
-    world_script_copy_bytes(&records[1], record, sizeof(records[1]));
+    copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
     buffer = world_menu_build_and_upload_window_frame_image(
         param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
     g_world_menu_text_state.pen.stride = param->inner_width;

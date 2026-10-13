@@ -1,5 +1,6 @@
 #include "fft/battle_action.h"
 #include "fft/battle_ai.h"
+#include "fft/memory.h"
 
 /* End an AI simulation: copy the saved current-attacker block back and return
  * the action state to execute. */

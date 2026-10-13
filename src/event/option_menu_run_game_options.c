@@ -1,6 +1,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_option.h"
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
@@ -150,7 +151,7 @@ void option_menu_run_game_options(void) {
     value_rect.y = base->title.y0;
     value_rect.w = base->title.w;
     value_rect.h = base->title.h;
-    battle_copy_bytes(&g_option_menu_entry_panel_rect, &entry->window.x, 8);
+    copy_bytes_nonempty(&g_option_menu_entry_panel_rect, &entry->window.x, 8);
     thread_start(g_thread_current_id + 1, option_menu_window_frame_thread);
     g_option_menu_entry_panel_rect.h += 0xC;
     g_option_menu_entry_panel_rect.y -= 2;
@@ -165,7 +166,7 @@ void option_menu_run_game_options(void) {
     battle_menu_set_text_origin(0, 0);
     battle_menu_display_text_entry(0x5021, buffer, &g_menu_text_state.pen);
     LoadImage(&g_option_menu_value_image_rect, (u32*)buffer);
-    battle_copy_bytes(&base[1], base, sizeof(options_menu_page_t));
+    copy_bytes_nonempty(&base[1], base, sizeof(options_menu_page_t));
     for (;;) {
         page = &g_option_menu_pages[i & 1];
         if (delta == 0 && battle_menu_can_accept_input() != 0) {

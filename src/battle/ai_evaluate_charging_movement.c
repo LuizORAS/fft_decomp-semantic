@@ -1,4 +1,5 @@
 #include "fft/battle_ai.h"
+#include "fft/memory.h"
 
 /* Evaluate movement while keeping or removing the acting unit's charge.
  *

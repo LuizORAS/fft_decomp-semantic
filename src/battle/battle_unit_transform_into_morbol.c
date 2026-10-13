@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /* Transform a unit into a Morbol, keeping its name, position and facing. */
 void battle_unit_transform_into_morbol(unit_stats_t* unit) {

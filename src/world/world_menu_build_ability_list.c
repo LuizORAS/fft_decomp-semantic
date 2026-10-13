@@ -1,3 +1,4 @@
+#include "fft/memory.h"
 /* Builds the ability list for the active skillset menu entry (menu entry 4's
  * selected_index selects the skillset; g_action_menu_row_types gives its list type). Each type
  * fills the 0x52-row work buffer at *g_ai_workspace_ptr through its own loader, then
@@ -61,7 +62,7 @@ void world_menu_build_ability_list(s32 mode) {
         battle_menu_get_unit_skillset_ability_data(unit_index, skillset, (s16*)g_ai_workspace_ptr->ability_list.ids,
             g_ai_workspace_ptr->ability_list.mp_costs, g_ai_workspace_ptr->ability_list.ct, 0,
             g_ai_workspace_ptr->ability_list.flags, g_ai_workspace_ptr->ability_list.turns);
-        world_script_copy_bytes(g_ai_workspace_ptr->ability_list.skill_ct, g_ai_workspace_ptr->ability_list.ct, 0x50);
+        copy_bytes_nonempty(g_ai_workspace_ptr->ability_list.skill_ct, g_ai_workspace_ptr->ability_list.ct, 0x50);
     }
     if (type == ACTION_MENU_TYPE_ITEM_INVENTORY) {
         battle_menu_display_item_inventory_ability(unit_index, skillset, g_ai_workspace_ptr->ability_list.mp_costs);
@@ -90,8 +91,7 @@ void world_menu_build_ability_list(s32 mode) {
     if (type == ACTION_MENU_TYPE_CHARGE) {
         battle_menu_load_charge_skillset(unit_index, skillset, (s16*)g_ai_workspace_ptr->ability_list.ids,
             g_ai_workspace_ptr->ability_list.mp_costs, g_ai_workspace_ptr->ability_list.turns);
-        world_script_copy_bytes(
-            g_ai_workspace_ptr->ability_list.skill_ct, g_ai_workspace_ptr->ability_list.mp_costs, 0x50);
+        copy_bytes_nonempty(g_ai_workspace_ptr->ability_list.skill_ct, g_ai_workspace_ptr->ability_list.mp_costs, 0x50);
     }
     window_x = 0xAC;
     if (type != ACTION_MENU_TYPE_ARITHMETICKS) {

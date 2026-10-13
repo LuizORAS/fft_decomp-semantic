@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/memory.h"
 /*
  * WORLD copy of the EVENT OPTION window frame thread (option_menu_thin_window_frame_thread; second WORLD copy with its
  * own blit descriptors, blit setters and texture-window table (the frame block at 0x801cc074 is shared with
@@ -137,7 +138,7 @@ void world_screen_menu_thin_window_frame_thread(void) {
     prim->sprites[8].h = border_thin;
 
     world_gfx_init_scaled_draw_area_packets(&prim->draw_areas);
-    world_script_copy_bytes(&g_world_menu_panel_buffer.panel_frames[1], &g_world_menu_panel_buffer.panel_frames[0],
+    copy_bytes_nonempty(&g_world_menu_panel_buffer.panel_frames[1], &g_world_menu_panel_buffer.panel_frames[0],
         sizeof(menu_panel_frame_t));
 
     frame = 0;

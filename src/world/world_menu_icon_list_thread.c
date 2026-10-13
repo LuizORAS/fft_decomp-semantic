@@ -1,3 +1,4 @@
+#include "fft/memory.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -26,7 +27,7 @@ void world_menu_icon_list_thread(void) {
         cursor = 0;
     }
     world_menu_build_icon_record(&rect, param, record);
-    world_script_copy_bytes(&records[1], record, sizeof(records[1]));
+    copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
     fresh = 0;
     redraw = param->context;
     *redraw = 1;

@@ -1,4 +1,5 @@
 #include "fft/battle_ai.h"
+#include "fft/memory.h"
 
 /*
  * Choose or resume an action imposed by an AI-control status.

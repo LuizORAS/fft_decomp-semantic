@@ -303,7 +303,6 @@ void world_script_blue_remove_unit(s32 unit_id);
 void world_script_change_stats(const event_change_stats_parameters_t* parameters);
 void world_script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
 void world_script_copy_matrix(MATRIX* destination, const MATRIX* source);
-void world_script_copy_bytes(void* destination, const void* source, s32 count);
 void world_script_earthquake_start(void);
 void world_script_toggle_message_portrait_flip(const u8* parameters);
 void world_script_face_tile(const event_face_tile_parameters_t* parameters);

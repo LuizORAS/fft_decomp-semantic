@@ -1,4 +1,5 @@
 #include "fft/battle_ai.h"
+#include "fft/memory.h"
 
 /*
  * Evaluate self-target alternatives from the actor and candidate coordinates.

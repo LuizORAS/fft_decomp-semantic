@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/memory.h"
 /*
  * OPTION menu window frame thread, variant A: started by the options menu and AT list builders.
  *
@@ -129,7 +130,7 @@ void option_menu_window_frame_thread(void) {
     prim->sprites[8].h = border_wide;
 
     battle_gfx_init_scaled_draw_area_packets(&prim->draw_areas);
-    battle_copy_bytes(&g_option_menu_panel_frames[1], &g_option_menu_panel_frames[0], sizeof(menu_panel_frame_t));
+    copy_bytes_nonempty(&g_option_menu_panel_frames[1], &g_option_menu_panel_frames[0], sizeof(menu_panel_frame_t));
 
     frame = 0;
     while (battle_thread_get_current_parameter_3() == 0) {

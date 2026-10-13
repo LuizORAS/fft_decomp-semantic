@@ -4,6 +4,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
@@ -169,7 +170,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
     image_rect.w = window.rect.w / 4;
     image_rect.h = window.rect.h;
     LoadImage(&image_rect, (u32*)buffer);
-    battle_copy_bytes(&base[1], base, sizeof(menu_list_page_t));
+    copy_bytes_nonempty(&base[1], base, sizeof(menu_list_page_t));
     for (i = 0; i < 2; i++) {
         base[i].icons.icons[0] = &icons0[i];
         base[i].icons.icons[1] = &icons1[i];

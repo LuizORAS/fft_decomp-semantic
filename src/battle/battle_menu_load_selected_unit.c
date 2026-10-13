@@ -4,6 +4,7 @@
 #include "fft/battle_unit.h"
 #include "fft/data.h"
 #include "fft/main.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/unit.h"
@@ -155,8 +156,8 @@ void battle_menu_load_selected_unit(void) {
     text_fill_field_with_terminators(g_battle_menu_billboard_secondary_skillset_name);
     /* The editor uses 16-byte windows at each text destination, including
      * the two eight-byte skillset names; preserve those target copy lengths. */
-    battle_copy_bytes(g_battle_menu_billboard_unit_name, unit->name, 0x10);
-    battle_copy_bytes(g_battle_menu_billboard_job_name, unit->job_name, 0x10);
-    battle_copy_bytes(g_battle_menu_billboard_skillset_name, unit->primary_skillset_name, 0x10);
-    battle_copy_bytes(g_battle_menu_billboard_secondary_skillset_name, unit->secondary_skillset_name, 0x10);
+    copy_bytes_nonempty(g_battle_menu_billboard_unit_name, unit->name, 0x10);
+    copy_bytes_nonempty(g_battle_menu_billboard_job_name, unit->job_name, 0x10);
+    copy_bytes_nonempty(g_battle_menu_billboard_skillset_name, unit->primary_skillset_name, 0x10);
+    copy_bytes_nonempty(g_battle_menu_billboard_secondary_skillset_name, unit->secondary_skillset_name, 0x10);
 }

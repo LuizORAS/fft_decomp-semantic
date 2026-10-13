@@ -2,6 +2,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_helpmenu.h"
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
@@ -51,7 +52,7 @@ void helpmenu_menu_run_battle_help(void) {
     if (g_battle_menu_modal_open != 0) {
         thread_exit_current();
     }
-    battle_copy_bytes(g_helpmenu_text_saved_pointers, g_text_section_pointers, 0x80);
+    copy_bytes_nonempty(g_helpmenu_text_saved_pointers, g_text_section_pointers, 0x80);
     banner = &g_helpmenu_active_banner;
     unit_data = &g_helpmenu_active_unit_data;
     billboard = &g_helpmenu_billboard;

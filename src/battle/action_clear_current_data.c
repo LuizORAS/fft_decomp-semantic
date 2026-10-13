@@ -1,4 +1,5 @@
 #include "fft/battle_action.h"
+#include "fft/memory.h"
 
 /* Reset an action result record to "hit, 100% accuracy, no effect".
  *

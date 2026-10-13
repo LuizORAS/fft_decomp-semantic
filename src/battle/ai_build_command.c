@@ -1,5 +1,6 @@
 #include "fft/battle_ai.h"
 #include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /*
  * Prepare the next AI movement, action or end-turn command.

@@ -1,4 +1,5 @@
 #include "fft/main.h"
+#include "fft/memory.h"
 
 /* Initialize packed job levels, unlocked jobs, and ENTD skillset overrides. */
 

@@ -2,6 +2,7 @@
 #include "fft/battle_event.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
+#include "fft/memory.h"
 #include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
@@ -144,7 +145,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
         }
 
         g_battle_menu_slot_states[slot] = g_battle_menu_slot_states[slot] + 1;
-        battle_copy_bytes(previous, image, 0x54);
+        copy_bytes_nonempty(previous, image, 0x54);
 
         if (delay == 0) {
             DrawSync(0);

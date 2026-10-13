@@ -1,5 +1,6 @@
 #include "fft/event_require.h"
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/script.h"
 
 /*
@@ -19,8 +20,8 @@ void require_gfx_build_portrait_transition_primitives(const RECT* texture_rect, 
     RECT first_rect;
     s32 i;
 
-    battle_copy_bytes(&first_rect, texture_rect, sizeof(first_rect));
-    battle_copy_bytes(&second_rect, texture_rect, sizeof(second_rect));
+    copy_bytes_nonempty(&first_rect, texture_rect, sizeof(first_rect));
+    copy_bytes_nonempty(&second_rect, texture_rect, sizeof(second_rect));
     second_rect.x += 0x10;
 
     for (i = 0; i < 4; i++) {

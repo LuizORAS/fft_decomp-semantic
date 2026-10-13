@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 
@@ -26,7 +27,7 @@ void menu_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const 
         scale_index = 11;
     }
     percent = g_menu_draw_area_scale_percent[scale_index];
-    battle_copy_bytes(&packet->rects[0], source, 8);
+    copy_bytes_nonempty(&packet->rects[0], source, 8);
     w = packet->rects[0].w;
     h = packet->rects[0].h;
     packet->rects[0].x -= 0x80;

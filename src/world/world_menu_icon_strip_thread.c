@@ -1,3 +1,4 @@
+#include "fft/memory.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -19,7 +20,7 @@ void world_menu_icon_strip_thread(void) {
     param = world_thread_get_current_parameter_1();
     record = &records[0];
     world_menu_build_icon_record(&rect, param, record);
-    world_script_copy_bytes(&records[1], record, sizeof(records[1]));
+    copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
     fresh = 1;
     for (i = 0;; i++) {
         if (i % 7 == 0) {

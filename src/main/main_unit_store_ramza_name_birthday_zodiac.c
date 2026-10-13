@@ -1,4 +1,5 @@
 #include "fft/main.h"
+#include "fft/memory.h"
 
 /* For a unit with one of Ramza's three identities, copy the name, birthday and
  * zodiac sign from the first roster record that has one of them. */

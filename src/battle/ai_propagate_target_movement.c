@@ -3,6 +3,7 @@
 #include "fft/battle_move.h"
 #include "fft/battle_target.h"
 #include "fft/battle_unit.h"
+#include "fft/memory.h"
 #include "psx/libetc.h"
 
 /* Propagate the acting unit's movement budget outward from a target tile.

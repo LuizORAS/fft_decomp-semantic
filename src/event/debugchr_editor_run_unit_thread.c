@@ -2,6 +2,7 @@
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
 #include "fft/event_debugchr.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
@@ -73,10 +74,10 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
      * identical tails only after sched2, so the join keeps the store ahead of
      * the thread-setup constant loads. */
     if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
-        battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xa8);
+        copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xa8);
         g_debugchr_editor_fields[15].destination[0] = 0xe;
     } else {
-        battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xa8);
+        copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xa8);
         g_debugchr_editor_fields[15].destination[0] = 0xe;
     }
 

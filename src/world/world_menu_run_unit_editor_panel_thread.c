@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 /* BATTLE twin: battle_menu_run_unit_editor_panel_thread. */
@@ -57,7 +58,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     frame_record->tiles[0].h = 0x5A;
     frame_record->tiles[0].x0 = g_world_unit_editor_panel_rect.x;
     frame_record->tiles[0].y0 = g_world_unit_editor_panel_rect.y + 1;
-    world_script_copy_bytes(&frame_record->tiles[1], &frame_record->tiles[0], sizeof(TILE));
+    copy_bytes_nonempty(&frame_record->tiles[1], &frame_record->tiles[0], sizeof(TILE));
     frame_record->tiles[0].x0 += 0x12;
     frame_record->tiles[1].x0 += 0x7C;
     line = frame_record->lines;
@@ -79,23 +80,23 @@ void world_menu_run_unit_editor_panel_thread(void) {
     /* Each arm copies all four rows itself; the compiler cross-jumps the
        common tails, leaving only the first call's table loads in the arms. */
     if (g_world_unit_editor_fields.state.two_hands != 0) {
-        world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_a[2], g_world_unit_editor_row_image_params_b,
+        copy_bytes_nonempty(&g_world_unit_editor_sprite_image_params_a[2], g_world_unit_editor_row_image_params_b,
             2 * sizeof(image_load_parameters_t));
-        world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_a[14],
-            &g_world_unit_editor_row_image_params_b[2], 2 * sizeof(image_load_parameters_t));
-        world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_b[2], g_world_unit_editor_row_image_params_b,
+        copy_bytes_nonempty(&g_world_unit_editor_sprite_image_params_a[14], &g_world_unit_editor_row_image_params_b[2],
             2 * sizeof(image_load_parameters_t));
-        world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_b[14],
-            &g_world_unit_editor_row_image_params_b[2], 2 * sizeof(image_load_parameters_t));
+        copy_bytes_nonempty(&g_world_unit_editor_sprite_image_params_b[2], g_world_unit_editor_row_image_params_b,
+            2 * sizeof(image_load_parameters_t));
+        copy_bytes_nonempty(&g_world_unit_editor_sprite_image_params_b[14], &g_world_unit_editor_row_image_params_b[2],
+            2 * sizeof(image_load_parameters_t));
     } else {
-        world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_a[2], g_world_unit_editor_row_image_params_a,
+        copy_bytes_nonempty(&g_world_unit_editor_sprite_image_params_a[2], g_world_unit_editor_row_image_params_a,
             2 * sizeof(image_load_parameters_t));
-        world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_a[14],
-            &g_world_unit_editor_row_image_params_a[2], 2 * sizeof(image_load_parameters_t));
-        world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_b[2], g_world_unit_editor_row_image_params_a,
+        copy_bytes_nonempty(&g_world_unit_editor_sprite_image_params_a[14], &g_world_unit_editor_row_image_params_a[2],
             2 * sizeof(image_load_parameters_t));
-        world_script_copy_bytes(&g_world_unit_editor_sprite_image_params_b[14],
-            &g_world_unit_editor_row_image_params_a[2], 2 * sizeof(image_load_parameters_t));
+        copy_bytes_nonempty(&g_world_unit_editor_sprite_image_params_b[2], g_world_unit_editor_row_image_params_a,
+            2 * sizeof(image_load_parameters_t));
+        copy_bytes_nonempty(&g_world_unit_editor_sprite_image_params_b[14], &g_world_unit_editor_row_image_params_a[2],
+            2 * sizeof(image_load_parameters_t));
     }
     if (g_world_unit_editor_fields.state.generic_monster == 0) {
         for (i = 0; i < 19; i++) {
@@ -165,7 +166,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
     thread_yield();
     world_menu_free_memory(buffer);
 
-    world_script_copy_bytes(&records[1], frame_record, sizeof(menu_unit_editor_frame_t));
+    copy_bytes_nonempty(&records[1], frame_record, sizeof(menu_unit_editor_frame_t));
     records[0].palette = &palette.primitives;
     records[1].palette = &g_world_unit_editor_palette;
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_editor_panel_rect, records[0].palette);

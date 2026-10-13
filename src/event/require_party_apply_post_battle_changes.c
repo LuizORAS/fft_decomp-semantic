@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/pad.h"
@@ -43,7 +44,7 @@ void require_party_apply_post_battle_changes(void) {
     }
     g_battle_post_battle_unit_changes_active = 1;
     thread_suspend(THREAD_SLOT_EVENT);
-    battle_copy_bytes(g_require_saved_thread_block, &g_threads[THREAD_SLOT_EVENT], 0x400);
+    copy_bytes_nonempty(g_require_saved_thread_block, &g_threads[THREAD_SLOT_EVENT], 0x400);
 
     text_data = g_require_text_data;
     g_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS] = text_data + g_require_text_section_offsets[1];
@@ -314,7 +315,7 @@ void require_party_apply_post_battle_changes(void) {
     thread_wait_until_inactive(THREAD_SCREEN_SLOT_NUMERIC_EDITOR);
     thread_wait_until_inactive(THREAD_SCREEN_SLOT_CHARACTER_STATUS);
     g_battle_post_battle_unit_changes_active = 0;
-    battle_copy_bytes(&g_threads[THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
+    copy_bytes_nonempty(&g_threads[THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
     g_battle_menu_thread_menu_data = saved_menu_descriptor;
     thread_resume(THREAD_SLOT_EVENT);
     thread_yield();

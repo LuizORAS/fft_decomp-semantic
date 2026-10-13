@@ -1,5 +1,6 @@
 #include "fft/battle_action.h"
 #include "fft/battle_formula.h"
+#include "fft/memory.h"
 
 /* A Transparent attacker cannot be evaded: the four evades become 0. */
 void formula_calculate_transparent(void) {

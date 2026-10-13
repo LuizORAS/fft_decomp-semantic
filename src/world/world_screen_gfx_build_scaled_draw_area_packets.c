@@ -1,3 +1,4 @@
+#include "fft/memory.h"
 #include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -27,7 +28,7 @@ void world_screen_gfx_build_scaled_draw_area_packets(
         step = 11;
     }
     percent = g_world_menu_zoom_percentages[step];
-    world_script_copy_bytes(&pair->rects[0], source, sizeof(pair->rects[0]));
+    copy_bytes_nonempty(&pair->rects[0], source, sizeof(pair->rects[0]));
     w = pair->rects[0].w;
     h = pair->rects[0].h;
     pair->rects[0].x -= 0x80;

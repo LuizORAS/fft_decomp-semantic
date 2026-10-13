@@ -1,3 +1,4 @@
+#include "fft/memory.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 /*
@@ -69,7 +70,7 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
             battle_menu_draw_text_columns_narrow(entry, row_offset, buffer);
             *redraw = 0;
             LoadImage(&rect, buffer);
-            battle_copy_bytes(&clear, &rect, sizeof(clear));
+            copy_bytes_nonempty(&clear, &rect, sizeof(clear));
             clear.h = 2;
             clear.x = rect.x;
             clear.y = ((rect.y - 2) & 0xFF) + (rect.y & 0xFF00);

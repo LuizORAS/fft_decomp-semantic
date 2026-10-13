@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 /* Animate the reward bonus image as a burst of tiles.
@@ -106,7 +107,7 @@ void require_reward_animate_bonus_image_burst(void) {
             }
             SetPolyF4(&tile->poly[0]);
             SetSemiTrans(&tile->poly[0], 1);
-            battle_copy_bytes(&tile->poly[1], &tile->poly[0], sizeof(POLY_F4));
+            copy_bytes_nonempty(&tile->poly[1], &tile->poly[0], sizeof(POLY_F4));
         }
     }
     SetDrawMode(&g_require_reward_burst_draw_modes[0], 0, 0, GetTPage(0, 0, 0x180, 0), &g_menu_draw_area_template);
@@ -211,7 +212,7 @@ void require_reward_animate_bonus_image_burst(void) {
         g_require_reward_burst_flash_polys[0].g0 = 0x28;
         g_require_reward_burst_flash_polys[0].b0 = 0x10;
         SetSemiTrans(&g_require_reward_burst_flash_polys[0], 1);
-        battle_copy_bytes(
+        copy_bytes_nonempty(
             &g_require_reward_burst_flash_polys[1], &g_require_reward_burst_flash_polys[0], sizeof(POLY_F4));
         frame++;
         thread_set_current_task_id(THREAD_TASK_DARK_SCREEN_HOLD);

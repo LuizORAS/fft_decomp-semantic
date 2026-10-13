@@ -1,4 +1,5 @@
 #include "fft/main.h"
+#include "fft/memory.h"
 
 /* Fill unit->equipment_stats from the equipped items: the job's class evade, the
  * accessory's and each shield's physical and magic evade, and each weapon's power

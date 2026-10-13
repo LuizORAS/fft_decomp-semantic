@@ -1,3 +1,4 @@
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/world.h"
@@ -23,7 +24,7 @@ void world_gfx_build_scaled_draw_area_pair_swapped(
         step = 11;
     }
     percent = g_menu_cursor_zoom_percentages[step];
-    world_script_copy_bytes(&packets->rects[0], geometry, sizeof(*geometry));
+    copy_bytes_nonempty(&packets->rects[0], geometry, sizeof(*geometry));
     if (packets->rects[0].x < 0x80) {
         packets->rects[0].x += 0x80;
         packets->rects[0].y += 0x78;

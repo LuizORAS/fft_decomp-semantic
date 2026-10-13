@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 /*
@@ -53,7 +54,7 @@ void battle_menu_run_numeric_display_panel_thread(void) {
         gfx_init_image_loading(&record->sprites[i], &g_battle_menu_texture_location,
             &g_battle_numeric_display_frame_rect, &g_battle_numeric_display_image_params[i]);
     }
-    battle_copy_bytes(&record[1], record, sizeof(*record));
+    copy_bytes_nonempty(&record[1], record, sizeof(*record));
     record[0].palette = &g_battle_numeric_display_palettes[0].primitives;
     record[1].palette = &g_battle_numeric_display_palettes[1].primitives;
     battle_menu_init_numeric_display_frame_primitives(&g_battle_numeric_display_frame_rect, record[0].palette);

@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/battle_unit.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* Resolve a crystal or treasure pickup for the unit that moved onto its tile.

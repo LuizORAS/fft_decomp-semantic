@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/open.h"
 #include "fft/script.h"
@@ -383,7 +384,7 @@ void world_text_character_handling_thread(void) {
         win->sprites[3].h = 8;
         win->sprites[3].clut = 0x7CBC;
     }
-    world_script_copy_bytes(&win[1], win, sizeof(win[1]));
+    copy_bytes_nonempty(&win[1], win, sizeof(win[1]));
     win[0].active = 1;
     win[1].active = 1;
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
@@ -832,7 +833,7 @@ end:
         from.h = 0;
         from.x = right;
         from.y = bottom;
-        world_script_copy_bytes(&to, &from, sizeof(to));
+        copy_bytes_nonempty(&to, &from, sizeof(to));
         menu_tween_window_quads(win, &from, &to, 4);
     }
     g_world_menu_event_state_flag = 0;

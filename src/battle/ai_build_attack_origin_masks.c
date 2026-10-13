@@ -1,6 +1,7 @@
 #include "fft/battle_ai.h"
 #include "fft/battle_map.h"
 #include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /* Build attack-origin and movable tile masks for the considered ability. */
 void ai_build_attack_origin_masks(void) {

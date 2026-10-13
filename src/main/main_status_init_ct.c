@@ -1,4 +1,5 @@
 #include "fft/main.h"
+#include "fft/memory.h"
 
 /* Clear the timed-status CTs and start the death counter at 3, or at 0xff for
  * an immortal unit and for one with a save- or load-formation flag. */

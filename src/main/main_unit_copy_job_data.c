@@ -1,4 +1,5 @@
 #include "fft/main.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* Load a battle unit's job-derived fields from its job record: skillsets, innate

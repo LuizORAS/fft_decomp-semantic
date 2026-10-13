@@ -1,5 +1,6 @@
 #include "fft/battle_ai.h"
 #include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /*
  * Evaluate reachable origins for reflecting an ability onto another unit.

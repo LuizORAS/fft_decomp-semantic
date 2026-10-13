@@ -1,4 +1,5 @@
 #include "fft/main.h"
+#include "fft/memory.h"
 
 void main_unit_copy_job_growths_and_multipliers(unit_stats_t* unit) {
     main_util_copy_byte_data(

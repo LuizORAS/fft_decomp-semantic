@@ -1,4 +1,5 @@
 #include "fft/main.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* Fills a unit's ability data from its ENTD entry: primary skillset, random
