@@ -51,7 +51,7 @@ s32 map_load_mesh_variant(s32 palette_mode) {
 
             mesh_data = g_map_mesh_load_buffer;
             /* Retail scales this byte offset as a 32-bit-element index. */
-            mesh_data_offset = mesh_data->mesh_file.palettes_offset * 4;
+            mesh_data_offset = mesh_data->mesh_file.offsets[MAP_RESOURCE_PALETTES] * 4;
             mesh_data = (map_resource_t*)(mesh_data->bytes + mesh_data_offset);
             map_update_palette_colors(palette_mode, MAP_CLUT_ROW_MARKED_TILES, 0, 1, mesh_data->clut);
             main_heap_free(g_map_mesh_load_buffer);

@@ -18,7 +18,6 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
     /* 16-bit cursor of the light, camera and weather-modifier cases.
      * Direct command payload-vector access removes four bytes from each arm. */
     s16* vector;
-    u32* resource_offset;
     map_state_record_t* cursor;
     s32 result;
     s32 i;
@@ -230,13 +229,10 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
     case MAP_RESOURCE_MESH_PRIMARY:
     case MAP_RESOURCE_MESH_OVERRIDE:
     case MAP_RESOURCE_MESH_ALTERNATE:
-        i = MAP_RESOURCE_GEOMETRY_PRIMARY;
-        resource_offset = &data->mesh_file.primary_geometry_offset;
-        for (; i < GNS_RESOURCE_TABLE_COUNT; i++) {
-            if (*resource_offset != 0) {
-                map_dispatch_gns_resource(i, (map_resource_t*)(data->bytes + *resource_offset));
+        for (i = MAP_RESOURCE_GEOMETRY_PRIMARY; i < GNS_RESOURCE_TABLE_COUNT; i++) {
+            if (data->mesh_file.offsets[i] != 0) {
+                map_dispatch_gns_resource(i, (map_resource_t*)(data->bytes + data->mesh_file.offsets[i]));
             }
-            resource_offset++;
         }
         break;
     case MAP_RESOURCE_LIGHTING:
