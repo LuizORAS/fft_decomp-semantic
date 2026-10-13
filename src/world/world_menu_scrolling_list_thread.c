@@ -220,7 +220,7 @@ void world_menu_scrolling_list_thread(void) {
                             world_menu_display_text_entry(0x5088, buffer, &g_world_menu_text_state.pen);
                         }
                     } else if (layout->columns.mode[column] == MENU_TEXT_COLUMN_NUMBER) {
-                        world_display_menu_number_entry(
+                        world_menu_display_number_entry(
                             layout->columns.text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
                     } else if (layout->columns.mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
                         if ((column == 2 || (column == 1 && layout->columns.mode[2] == MENU_TEXT_COLUMN_HIDDEN))
@@ -238,7 +238,7 @@ void world_menu_scrolling_list_thread(void) {
                                     g_world_menu_text_state.pen.rect.x += 3;
                                     world_menu_display_text_entry(0x509D, buffer, &g_world_menu_text_state.pen);
                                 } else {
-                                    world_draw_menu_number_glyphs(value, 2, buffer, &g_world_menu_text_state.pen);
+                                    world_menu_draw_number_glyphs(value, 2, buffer, &g_world_menu_text_state.pen);
                                 }
                             }
                         }

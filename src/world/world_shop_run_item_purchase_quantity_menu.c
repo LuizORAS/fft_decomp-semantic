@@ -20,7 +20,7 @@ s32 world_shop_run_item_purchase_quantity_menu(void) {
             world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF807, 0);
             return WORLD_SHOP_QUANTITY_HOLDING_MAX;
         }
-        count = world_shop_obtain_gil(0);
+        count = world_shop_adjust_gil(0);
         g_world_shop_purchase_unit_price = world_item_get_price(g_world_shop_purchase_item);
         count /= g_world_shop_purchase_unit_price;
         limit = 99 - owned;

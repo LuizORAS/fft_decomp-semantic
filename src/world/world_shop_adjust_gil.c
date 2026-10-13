@@ -4,7 +4,7 @@
 
 /* Add `delta` to the war funds, clamped to 0..99,999,999, and return the new
  * amount. */
-s32 world_shop_obtain_gil(s32 delta) {
+s32 world_shop_adjust_gil(s32 delta) {
     s32 gil;
 
     gil = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) + delta;

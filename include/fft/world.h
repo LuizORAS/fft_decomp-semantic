@@ -226,8 +226,8 @@ extern RECT g_world_options_menu_title_rect;
 extern RECT g_world_options_menu_value_rect;
 extern options_menu_page_t g_world_options_menu_pages[2];
 extern menu_icon_record_t g_world_option_picker_icon_records[2];
-void world_build_options_menu(void);
-void world_run_option_choice_menu(void);
+void world_menu_run_game_options(void);
+void world_menu_run_option_choice(void);
 
 /* screen */
 
@@ -1000,7 +1000,7 @@ extern u16 g_world_gfx_sprite_capacity;
 extern s32 g_active_graphics_buffer_index;
 void world_gfx_set_party_unit_portrait_poly_texture(s32 portrait_id, POLY_FT4* poly);
 void world_menu_display_text_string(u8* image, glyph_blit_t* origin, u8* text);
-void world_display_menu_number_entry(s32 value, u8 digit_count, u8* image, glyph_blit_t* origin);
+void world_menu_display_number_entry(s32 value, u8 digit_count, u8* image, glyph_blit_t* origin);
 
 void world_panel_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packets, const RECT* geometry,
     s32 scale_index, s32 frame_offset, const menu_status_thread_t* thread);
@@ -2477,7 +2477,7 @@ void world_clear_menu_render_buffer(void* dst, u32 count);
 void world_menu_zoom_cursor_frame(const void* unused_source, SPRT* sprite, s32 step);
 void world_draw_menu_text_columns_narrow(menu_entry_t* entry, s32* row_offset, u8* buffer);
 void world_menu_init_panel_fade_tiles(void);
-void world_draw_menu_number_glyphs(s32 value, s32 digits, u8* resource, glyph_blit_t* pos);
+void world_menu_draw_number_glyphs(s32 value, s32 digits, u8* resource, glyph_blit_t* pos);
 void world_menu_labeled_number_entry_thread(void);
 menu_window_buffer_t* world_menu_alloc_window_buffer_pair(void);
 void world_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
@@ -2893,7 +2893,7 @@ extern menu_entry_t* g_world_item_category_icon_strip;
 extern u16 g_world_item_saved_selected_unit_index;
 extern u8 g_world_item_menu_category;
 void world_gfx_set_item_icon_sprite(SPRT* sprite, s32 item_id);
-s32 world_count_item_equipped_by_party(s32 item_id);
+s32 world_item_count_equipped_by_party(s32 item_id);
 s32 world_item_build_category_list(s16 unit_id, s16 sort_mode, s8 category, s16* entries, u8 mode);
 void world_gfx_build_item_graphic_descriptor(menu_icon_source_t* source, s32 item_id);
 void world_item_build_status_list_polygons(s16 item_id);
@@ -3135,7 +3135,7 @@ s32 world_shop_fitting_room_get_unit_marker(s32 unused_unit_index);
 s32 world_shop_get_gil_minus_fitting_room_cost(s32 unused_row);
 s32 world_shop_get_selected_poached_item_quantity(s32 unused_row);
 void world_shop_install_callbacks_and_run(void);
-s32 world_shop_obtain_gil(s32 delta);
+s32 world_shop_adjust_gil(s32 delta);
 s32 world_shop_get_soldier_office_entry_fee(s32 unused_row);
 void world_shop_return_unit_equip_to_fitting_room(s16 unit_index, s16 equipment_index);
 void world_shop_run_equip_candidate_step(void);

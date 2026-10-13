@@ -83,7 +83,7 @@ s32 world_formation_run_item_submenu_step(void) {
     }
     disabled = 0;
     if (world_map_is_busy() != 0 || g_world_item_menu_mode != MENU_ITEM_LIST_STATE_BROWSE
-        || world_count_item_equipped_by_party(g_world_menu_entry_ids[g_world_menu_cursor_position]) == 0) {
+        || world_item_count_equipped_by_party(g_world_menu_entry_ids[g_world_menu_cursor_position]) == 0) {
         disabled = 1;
     }
     world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_ITEM_LIST_TRIANGLE, 0xB8, 0x3C,

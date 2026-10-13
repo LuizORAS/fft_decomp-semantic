@@ -24,7 +24,7 @@
  * sound mode is applied on the main stack and the input-repeat timing is
  * reloaded from the finger-cursor speed profile.
  */
-void world_run_option_choice_menu(void) {
+void world_menu_run_option_choice(void) {
     RECT rect;
     u32* input;
     native_thread_t* thread;

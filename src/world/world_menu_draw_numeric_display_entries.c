@@ -12,7 +12,7 @@ void world_menu_draw_numeric_display_entries(
         if (entries->kind == 0) {
             world_text_render_decimal_value_or_dashes(*entries->value, entries->format, pixels, position);
         } else if (entries->kind == 1) {
-            world_draw_menu_number_glyphs(*entries->value, entries->format, pixels, position);
+            world_menu_draw_number_glyphs(*entries->value, entries->format, pixels, position);
         }
         entries++;
     }

@@ -21,7 +21,7 @@ s32 world_shop_run_fitting_room_checkout_prompt(void) {
         g_world_shop_checkout_confirm_menu.selected_index = 0;
         g_world_shop_checkout_short_gil_menu.selected_index = 0;
         world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-        balance = world_shop_obtain_gil(0) - (cost = world_shop_add_fitting_room_cost(0));
+        balance = world_shop_adjust_gil(0) - (cost = world_shop_add_fitting_room_cost(0));
         if (cost == 0) {
             world_shop_buy_from_fitting_room();
             return WORLD_SHOP_CHECKOUT_DONE;
@@ -51,7 +51,7 @@ s32 world_shop_run_fitting_room_checkout_prompt(void) {
             g_world_menu_sound_muted = 0;
             if (g_world_shop_checkout_prompt_result == 0) {
                 balance = -world_shop_add_fitting_room_cost(0);
-                world_shop_obtain_gil(balance);
+                world_shop_adjust_gil(balance);
                 world_shop_add_fitting_room_cost(balance);
                 world_shop_buy_from_fitting_room();
                 world_formation_save_records_to_party_data();

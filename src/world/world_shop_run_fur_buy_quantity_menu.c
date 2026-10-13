@@ -20,7 +20,7 @@ s32 world_shop_run_fur_buy_quantity_menu(void) {
             world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF834, 0);
             return WORLD_SHOP_QUANTITY_HOLDING_MAX;
         }
-        count = world_shop_obtain_gil(0);
+        count = world_shop_adjust_gil(0);
         price = world_item_get_price(g_world_shop_fur_purchase_item) >> 1;
         count /= price;
         g_world_shop_fur_purchase_price = price;

@@ -18,7 +18,7 @@
  * loop notes keep the input-1 spill and the entry load ahead of the
  * row-count loads, as in the target.
  */
-void world_build_options_menu(void) {
+void world_menu_run_game_options(void) {
     image_load_parameters_t image_parameters;
     RECT image_rect;
     RECT clear;
@@ -221,7 +221,7 @@ void world_build_options_menu(void) {
                             world_menu_display_text_entry(
                                 layout->text_ids[column][index], image, &g_world_menu_text_state.pen);
                         } else {
-                            world_display_menu_number_entry(
+                            world_menu_display_number_entry(
                                 layout->text_ids[column][index], 2, image, &g_world_menu_text_state.pen);
                         }
                     }
@@ -233,7 +233,7 @@ void world_build_options_menu(void) {
                 if (world_menu_is_input_allowed() != 0) {
                     *input0 = 0;
                     index = cursor + row_offset + delta;
-                    world_thread_start(g_world_thread_current_id - 1, world_run_option_choice_menu);
+                    world_thread_start(g_world_thread_current_id - 1, world_menu_run_option_choice);
                     world_thread_set_parameters(g_world_thread_current_id - 1, index, 0, 0);
                 }
             }
