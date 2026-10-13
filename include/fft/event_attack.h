@@ -343,8 +343,6 @@ void attack_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, 
 void attack_gfx_build_status_group_primitives(POLY_FT4* poly);
 void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_page, const RECT* position,
     sprite_sheet_frame_t* sprite_rect, point16_t* scale, const sprite_draw_offset_t* offset);
-void attack_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
-void attack_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 void attack_gfx_init_frame_ft4_array(void);
 void attack_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* data);
 void attack_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id);

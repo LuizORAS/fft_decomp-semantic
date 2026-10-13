@@ -1025,12 +1025,6 @@ void world_menu_clear_selection_record(s32 index);
 void world_menu_clear_selection_records(void);
 void world_gfx_clear_tpage7_vram_allocation_grid(void);
 
-/* Portrait primitive helpers shared with the EVENT debug character editor.
- * world_gfx_clip_portrait_poly_from_right/right are named for the way they move the
- * quad: _right shifts x right and trims the trailing texture edge (debugchr's
- * clip_portrait_poly_from_left), _left is debugchr's clip_..._from_right. */
-void world_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 delta);
-void world_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 delta);
 void world_menu_copy_billboard_data_in(const menu_unit_status_record_t* status,
     const menu_unit_status_identity_t* identity, const menu_status_panel_slot_storage_t* detail);
 void world_menu_copy_billboard_data_out(menu_unit_status_record_t* status, menu_active_unit_t* identity,

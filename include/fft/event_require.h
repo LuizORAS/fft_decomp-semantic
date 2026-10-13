@@ -325,8 +325,6 @@ void require_gfx_build_portrait_transition_primitives(const RECT* texture_rect, 
 void require_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
     s32 lower_half, const menu_status_thread_t* thread);
 void require_gfx_build_status_group_primitives(POLY_FT4* poly);
-void require_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
-void require_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 void require_gfx_fade_rgb_31_frames(s32 target_0, s32 target_1, s32 target_2);
 void require_gfx_init_poly_gt4_array_32(s32 x, s32 y);
 void require_gfx_init_poly_gt4_array_8(s32 x, s32 y);

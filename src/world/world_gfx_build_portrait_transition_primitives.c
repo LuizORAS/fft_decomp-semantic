@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
@@ -59,16 +60,16 @@ void world_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
         i = *transition - 4;
         world_gfx_set_party_unit_portrait_poly_texture(*second_portrait, poly);
         if (direction == 1)
-            world_gfx_clip_portrait_poly_from_right(poly, g_world_gfx_portrait_transition_offsets[i]);
+            gfx_clip_portrait_poly_from_right(poly, g_world_gfx_portrait_transition_offsets[i]);
         else
-            world_gfx_clip_portrait_poly_from_left(poly, g_world_gfx_portrait_transition_offsets[i]);
+            gfx_clip_portrait_poly_from_left(poly, g_world_gfx_portrait_transition_offsets[i]);
         poly++;
 
         world_gfx_set_party_unit_portrait_poly_texture(*first_portrait, poly);
         if (direction == 1)
-            world_gfx_clip_portrait_poly_from_left(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i]);
+            gfx_clip_portrait_poly_from_left(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i]);
         else
-            world_gfx_clip_portrait_poly_from_right(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i]);
+            gfx_clip_portrait_poly_from_right(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i]);
         poly++;
 
         world_gfx_set_party_unit_portrait_poly_texture(*second_portrait, poly);
@@ -77,9 +78,9 @@ void world_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
         SetShadeTex(poly, 0);
         SetSemiTrans(poly, 1);
         if (direction == 1)
-            world_gfx_clip_portrait_poly_from_right(poly, g_world_gfx_portrait_transition_offsets[i + 8]);
+            gfx_clip_portrait_poly_from_right(poly, g_world_gfx_portrait_transition_offsets[i + 8]);
         else
-            world_gfx_clip_portrait_poly_from_left(poly, g_world_gfx_portrait_transition_offsets[i + 8]);
+            gfx_clip_portrait_poly_from_left(poly, g_world_gfx_portrait_transition_offsets[i + 8]);
         poly++;
 
         world_gfx_set_party_unit_portrait_poly_texture(*first_portrait, poly);
@@ -88,9 +89,9 @@ void world_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
         SetShadeTex(poly, 0);
         SetSemiTrans(poly, 1);
         if (direction == 1)
-            world_gfx_clip_portrait_poly_from_left(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i + 8]);
+            gfx_clip_portrait_poly_from_left(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i + 8]);
         else
-            world_gfx_clip_portrait_poly_from_right(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i + 8]);
+            gfx_clip_portrait_poly_from_right(poly, 0x1f - g_world_gfx_portrait_transition_offsets[i + 8]);
         *transition += g_world_event_speed;
     }
 }

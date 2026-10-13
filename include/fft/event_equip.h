@@ -547,8 +547,6 @@ void equip_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 void equip_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
     s32 lower_half, const menu_status_thread_t* thread);
-void equip_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
-void equip_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 void equip_gfx_enqueue_draw_area(RECT* rect, s32 idx);
 void equip_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx);
 void equip_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);

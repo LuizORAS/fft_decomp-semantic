@@ -1,4 +1,5 @@
 #include "fft/event_attack.h"
+#include "fft/gfx.h"
 
 /*
  * Build the primitives of the status banner's portrait cross-fade. ATTACK
@@ -61,17 +62,17 @@ void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s
         i = *transition - 4;
         attack_gfx_build_portrait_poly_ft4(*second_portrait, poly);
         if (direction == 1) {
-            attack_gfx_clip_portrait_poly_from_right(poly, g_attack_gfx_portrait_transition_offsets[i]);
+            gfx_clip_portrait_poly_from_right(poly, g_attack_gfx_portrait_transition_offsets[i]);
         } else {
-            attack_gfx_clip_portrait_poly_from_left(poly, g_attack_gfx_portrait_transition_offsets[i]);
+            gfx_clip_portrait_poly_from_left(poly, g_attack_gfx_portrait_transition_offsets[i]);
         }
         poly++;
 
         attack_gfx_build_portrait_poly_ft4(*first_portrait, poly);
         if (direction == 1) {
-            attack_gfx_clip_portrait_poly_from_left(poly, 0x1f - g_attack_gfx_portrait_transition_offsets[i]);
+            gfx_clip_portrait_poly_from_left(poly, 0x1f - g_attack_gfx_portrait_transition_offsets[i]);
         } else {
-            attack_gfx_clip_portrait_poly_from_right(poly, 0x1f - g_attack_gfx_portrait_transition_offsets[i]);
+            gfx_clip_portrait_poly_from_right(poly, 0x1f - g_attack_gfx_portrait_transition_offsets[i]);
         }
         poly++;
 
@@ -81,9 +82,9 @@ void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s
         SetShadeTex(poly, 0);
         SetSemiTrans(poly, 1);
         if (direction == 1) {
-            attack_gfx_clip_portrait_poly_from_right(poly, g_attack_gfx_portrait_transition_offsets[i + 8]);
+            gfx_clip_portrait_poly_from_right(poly, g_attack_gfx_portrait_transition_offsets[i + 8]);
         } else {
-            attack_gfx_clip_portrait_poly_from_left(poly, g_attack_gfx_portrait_transition_offsets[i + 8]);
+            gfx_clip_portrait_poly_from_left(poly, g_attack_gfx_portrait_transition_offsets[i + 8]);
         }
         poly++;
 
@@ -93,9 +94,9 @@ void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s
         SetShadeTex(poly, 0);
         SetSemiTrans(poly, 1);
         if (direction == 1) {
-            attack_gfx_clip_portrait_poly_from_left(poly, 0x1f - g_attack_gfx_portrait_transition_offsets[i + 8]);
+            gfx_clip_portrait_poly_from_left(poly, 0x1f - g_attack_gfx_portrait_transition_offsets[i + 8]);
         } else {
-            attack_gfx_clip_portrait_poly_from_right(poly, 0x1f - g_attack_gfx_portrait_transition_offsets[i + 8]);
+            gfx_clip_portrait_poly_from_right(poly, 0x1f - g_attack_gfx_portrait_transition_offsets[i + 8]);
         }
         *transition += g_battle_event_speed;
     }

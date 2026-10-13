@@ -156,8 +156,6 @@ void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect,
 void debugchr_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
     s32 lower_half, const menu_status_thread_t* thread);
 void debugchr_gfx_build_status_group_primitives(POLY_FT4* poly);
-void debugchr_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
-void debugchr_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 void debugchr_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
 void debugchr_gfx_set_clut_rect_from_id(RECT* rect, s32 packed);
 

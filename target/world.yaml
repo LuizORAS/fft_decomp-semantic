@@ -542,8 +542,8 @@ functions:
   - {addr: 0x8010ca4c, size: 56, name: world_menu_get_party_unit_name_id, hash: 670faa307ba2388a}
   - {addr: 0x8010ca84, size: 44, name: world_gfx_set_clut_rect_from_id, hash: 0538beffdf7c2276}
   - {addr: 0x8010cab0, size: 300, name: world_gfx_set_party_unit_portrait_poly_texture, hash: c8d46ff7c855ad89}
-  - {addr: 0x8010cbdc, size: 100, name: world_gfx_clip_portrait_poly_from_right, hash: 8dbafe04d187ec9c}
-  - {addr: 0x8010cc40, size: 100, name: world_gfx_clip_portrait_poly_from_left, hash: 5da216204bc6267a}
+  - {addr: 0x8010cbdc, size: 100, name: gfx_clip_portrait_poly_from_right, hash: 8dbafe04d187ec9c, source: src/shared/gfx/gfx_clip_portrait_poly_from_right.c}
+  - {addr: 0x8010cc40, size: 100, name: gfx_clip_portrait_poly_from_left, hash: 5da216204bc6267a, source: src/shared/gfx/gfx_clip_portrait_poly_from_left.c}
   - {addr: 0x8010cca4, size: 1064, name: world_gfx_build_portrait_transition_primitives, hash: a5f7b7348800076e}
   - {addr: 0x8010d0cc, size: 4604, name: world_menu_unit_status_banner_thread, hash: 0b97631dce90efde}
   - {addr: 0x8010e2c8, size: 232, name: world_menu_render_text_image_at_fixed_origin, hash: be71dc6ab1cdcef5}

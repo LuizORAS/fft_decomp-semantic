@@ -618,8 +618,6 @@ void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
 void bunit_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
     s32 lower_half, const menu_status_thread_t* thread);
 s32 bunit_gfx_calculate_distance_falloff(s32 x, s32 y, s32 base_value, s32 minimum);
-void bunit_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
-void bunit_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 void bunit_gfx_draw_falloff_shaded_rows(s32 y);
 void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y);
 void bunit_gfx_enqueue_draw_area(RECT* rect, s32 idx);

@@ -277,6 +277,9 @@ typedef struct fade_overlay {
 } fade_overlay_t;
 typedef char fade_overlay_size_must_be_28[(sizeof(fade_overlay_t) == 28) ? 1 : -1];
 
+void gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
+void gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
+
 void gfx_set_scaled_poly_ft4_4bpp(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
     sprite_sheet_frame_t* sprite_rect, point16_t* scale, sprite_draw_offset_t* base);
 void gfx_set_scaled_poly_ft4_8bpp(POLY_FT4* poly, const point16_t* texture, const RECT* position,
