@@ -11,7 +11,6 @@
 s32 battle_unit_apply_action_rewards(s32 unit_index, action_reward_display_t* display) {
     s32 job_slot;
     battle_stats_t* unit;
-    u8* earned_experience;
     u8 old_level;
     s32 experience;
     s32 jp;
@@ -57,8 +56,7 @@ s32 battle_unit_apply_action_rewards(s32 unit_index, action_reward_display_t* di
     if (main_unit_check_level_up(unit) != 0 || g_action_current_ability.level_gained_flag != 0) {
         display->level_for_display = unit->level;
     }
-    earned_experience = &g_action_current_ability.earned_experience;
-    display->earned_experience = *earned_experience;
+    display->earned_experience = g_action_current_ability.earned_experience;
 
     if (unit->unit_flags & UNIT_FLAG_MONSTER) {
         return 0;
@@ -69,7 +67,7 @@ s32 battle_unit_apply_action_rewards(s32 unit_index, action_reward_display_t* di
     job_component = old_job_level * 2;
     level_component = (old_level >> 2) + 8;
     jp = job_component + level_component;
-    if (*earned_experience == 0) {
+    if (g_action_current_ability.earned_experience == 0) {
         jp = 0;
     }
 

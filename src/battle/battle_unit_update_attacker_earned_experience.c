@@ -11,7 +11,6 @@ void battle_unit_update_attacker_earned_experience(s32 outcome) {
     s32 signed_exp;
     s32 divisor;
     battle_stats_t* attacker;
-    u8* best;
     s16 exp;
     s32 sum;
 
@@ -38,9 +37,8 @@ void battle_unit_update_attacker_earned_experience(s32 outcome) {
             exp = 99;
         }
         signed_exp = exp << 16;
-        best = &g_action_current_ability.earned_experience;
-        if (*best < (signed_exp >> 16)) {
-            *best = exp;
+        if (g_action_current_ability.earned_experience < (signed_exp >> 16)) {
+            g_action_current_ability.earned_experience = exp;
         }
     }
 }
