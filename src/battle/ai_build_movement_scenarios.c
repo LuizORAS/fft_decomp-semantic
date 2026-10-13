@@ -103,13 +103,13 @@ score_tiles:
         ai->reachable_tiles[2][0][g_ai_movement_unit_index] = low;
         ai->reachable_tiles[2][1][g_ai_movement_unit_index] = high;
     }
-    ai->candidate_coords[2].word = ai->candidate_coords[1].word;
+    ai->candidate_coords[2] = ai->candidate_coords[1];
     ai->movement_scenario = 0;
     if (!ai->acting_unit->action_taken && (decision->flags & AI_DECISION_FOCUS_TARGET) && g_ai_target_in_range
         && !(decision->targeting_flags_1 & AI_TARGETING_FLAG_1_REFLECTED_ACTION)) {
         ai_select_destination_with_range_floor(g_ai_target_distance - 1);
     } else {
-        ai->candidate_coords[0].word = ai->candidate_coords[1].word;
+        ai->candidate_coords[0] = ai->candidate_coords[1];
     }
     ai->reachable_tiles[1][ai->acting_unit_coords.fields.elevation][ai->acting_unit_coords.fields.y]
         |= 0x8000 >> ai->acting_unit_coords.fields.x;

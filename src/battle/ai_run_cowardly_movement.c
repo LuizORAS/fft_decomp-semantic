@@ -30,7 +30,7 @@ fill_target_distance:
     }
     ai_select_destination(0xff, AI_DESTINATION_PRIORITY_FIRST);
     ai->movement_scenario = 1;
-    ai->candidate_coords[1].word = ai->candidate_coords[0].word;
+    ai->candidate_coords[1] = ai->candidate_coords[0];
     ai_set_candidate_and_actor_reachable_tiles();
     return 0;
 }
