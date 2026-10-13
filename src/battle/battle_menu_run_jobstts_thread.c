@@ -18,7 +18,7 @@ void battle_menu_run_jobstts_thread(void) {
     battle_menu_set_modal_open();
     sound_queue_sfx_confirm();
     menu_reserve_high_overlay(0x20000);
-    battle_menu_request_open_companion_executable(COMPANION_OVERLAY_JOBSTTS);
+    menu_request_open_companion_executable(COMPANION_OVERLAY_JOBSTTS);
     thread_wait_frames(2);
     g_battle_companion_overlay_state = COMPANION_OVERLAY_STATE_JOBSTTS;
     do {

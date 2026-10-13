@@ -136,8 +136,8 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     if (g_world_thread_change_cooldown != 0) {
         g_world_thread_change_cooldown--;
     }
-    if (g_world_bin_load_request != 0) {
-        g_world_bin_load_request = 0;
+    if (g_menu_companion_executable_request_index != 0) {
+        g_menu_companion_executable_request_index = 0;
     }
     g_world_frame_counter++;
     g_menu_packet_buffer_index = (g_menu_packet_buffer_index + 1) & 1;

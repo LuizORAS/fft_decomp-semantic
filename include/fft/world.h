@@ -357,7 +357,6 @@ void world_script_set_event_speed(s32 speed);
 void world_script_set_current_otag_entry_and_update_input(u32* ot, s32 buttons);
 void world_script_set_variable(s32 variable_id, s32 value);
 void world_script_set_vsync_mode_and_event_speed(s32 value);
-void world_script_show_graphic(void);
 void world_script_sprite_move(void);
 void world_script_sprite_move_beta(void);
 void world_script_start_current_event_thread(void);
@@ -436,12 +435,10 @@ void world_menu_run_battle_help(void);
 /* System-function table. Declared as an array: as a scalar, GCC hoists
  * world_menu_run_system_function_thread's menu-index reload above its store. */
 extern menu_system_function_t g_world_system_function_table[];
-extern s32 g_world_bin_load_request;
 extern s32 g_world_primary_bit_read_index;
 extern s32 g_world_primary_bit_write_index;
 extern u8 g_world_primary_bit_cursor_reset;
 extern u8* g_world_primary_bit_cursor;
-extern s32 g_world_pending_bin_load_index;
 extern s32 g_world_pending_bin_load_destination;
 extern s32 g_world_system_function_thread_busy;
 extern s32 g_world_bin_load_sectors[];         /* 0x80156388, indexed by request */
@@ -453,7 +450,6 @@ extern s32 g_world_pending_bin_load_in_progress;
 extern s32 g_world_bin_load_in_progress; /* 0x801564cc */
 extern s32 g_world_game_option_original_values[14];
 extern s32 g_world_game_option_values[14];
-void world_menu_request_open_companion_executable(s32 request);
 s32 world_bits_read_primary(s32 bit_count);
 s32 world_bits_read_secondary(s32 bit_count);
 void world_bit_cursor_set_primary(u8* ptr);
@@ -3129,7 +3125,6 @@ extern game_options_t g_world_saved_game_options;
 extern s32 g_world_finish_operation_event_id;
 extern u8 g_world_order_unit_saved_browse_enabled;
 extern u8 g_world_action_menu_skillsets[];
-extern u16 g_world_frame_result_override;
 extern s32 g_world_fixed_math_overflow; /* set by world_cross_product_q12 on Q12 overflow */
 s32 world_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 s32 world_unit_get_facing_sixteenth_by_runtime_id(s32 runtime_id);

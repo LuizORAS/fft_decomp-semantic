@@ -1241,9 +1241,13 @@ typedef enum companion_overlay_state {
 } companion_overlay_state_e;
 
 extern char g_menu_wait_for_file_allocation_message[];
+extern s32 g_menu_companion_executable_request_index;
+extern s32 g_menu_companion_data_file_request_index;
 
 void menu_free_high_overlay(void);
 void menu_reserve_high_overlay(u32 size);
+void menu_request_open_companion_executable(s32 request_index);
+void menu_request_open_companion_data_file(s32 request_index);
 
 /* g_*_menu_indicator_state[]: state of each of the two translucent panels
  * *_menu_draw_thread_status_indicators draws behind the unit status banners. */

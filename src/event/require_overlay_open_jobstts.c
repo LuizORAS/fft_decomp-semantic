@@ -28,7 +28,7 @@ void require_overlay_open_jobstts(void) {
             FntPrint(g_require_text_wait_for_file_allocation_message);
         }
     }
-    battle_menu_request_open_companion_executable(COMPANION_OVERLAY_JOBSTTS);
+    menu_request_open_companion_executable(COMPANION_OVERLAY_JOBSTTS);
     thread_wait_frames(2);
     g_battle_companion_overlay_state = COMPANION_OVERLAY_STATE_JOBSTTS;
     do {

@@ -12,6 +12,6 @@ void world_menu_run_helpmenu_thread(void) {
         sound_queue_sfx_confirm();
     }
     menu_reserve_high_overlay(0x20000);
-    world_menu_request_open_companion_executable(COMPANION_OVERLAY_HELPMENU);
+    menu_request_open_companion_executable(COMPANION_OVERLAY_HELPMENU);
     world_menu_run_battle_help();
 }

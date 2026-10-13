@@ -12,7 +12,6 @@ extern u16 g_script_attack_entry_mode; /* script_attack_entry_mode_e */
 /* Operand-byte counts, excluding the opcode; not per-operand width schemas.
  * BATTLE 0x8014d170, WORLD 0x8013a454. The tables end after opcode 0xf3. */
 extern u8 g_script_event_instruction_sizes[0xf4];
-extern u16 g_script_frame_result_override;
 extern s32 g_script_loaded_event_id;
 extern s16 g_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
 extern s16 g_script_threads_idle;
@@ -155,7 +154,6 @@ void script_play_effect_and_wait(void);
 void script_play_effect_thread(void);
 void script_print_debug_message(void);
 void script_set_units_palette_update_suppression(s32 unit_id, s32 enable);
-void script_show_graphic(void);
 void script_toggle_message_portrait_flip(const u8* parameters);
 
 /* date and random */

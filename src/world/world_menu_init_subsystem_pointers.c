@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -14,5 +15,5 @@ void world_menu_init_subsystem_pointers(void) {
     g_world_help_active_text_id_tables = (u16* const*)-1;
     g_world_unit_graphics_load_pending = 0;
     g_world_event_finish_check_pending = 0;
-    g_world_frame_result_override = 0;
+    g_script_frame_result_override = 0;
 }

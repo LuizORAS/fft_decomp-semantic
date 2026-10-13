@@ -19,9 +19,9 @@ void world_menu_run_equip_thread(void) {
     world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
     g_world_menu_overlay_state = 1;
     world_thread_wait_for_unit_view_panels();
-    world_menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP);
+    menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP);
     menu_reserve_high_overlay(0x20000);
-    world_menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP_SECOND_HALF);
+    menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP_SECOND_HALF);
     world_thread_suspend(NATIVE_THREAD_SLOT_MENU);
     world_thread_suspend(NATIVE_THREAD_SLOT_MENU_CHILD);
     g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_EQUIP;

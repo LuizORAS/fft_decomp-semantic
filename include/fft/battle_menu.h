@@ -361,12 +361,10 @@ void battle_menu_release_window_buffer_pair(menu_window_buffer_t* buffer);
 /* overlay loading */
 extern s32 g_battle_menu_companion_data_file_lbas[];
 extern s32 g_battle_menu_companion_data_file_loading;
-extern s32 g_battle_menu_companion_data_file_request_index;
 extern s32 g_battle_menu_companion_data_file_sizes[];
 extern s32 g_battle_menu_companion_executable_lbas[];
 extern s32 g_battle_menu_companion_executable_loading;
 extern s32 g_battle_menu_companion_executable_offsets[];
-extern s32 g_battle_menu_companion_executable_request_index;
 extern s32 g_battle_menu_companion_executable_sizes[];
 
 void battle_menu_open_bunit(void);
@@ -374,8 +372,6 @@ void battle_menu_open_companion_data_file(void);
 void battle_menu_open_companion_executable(void);
 void battle_menu_open_debugchr_unit_editor(void);
 s32 battle_menu_poll_small_load(void);
-void battle_menu_request_open_companion_data_file(s32 request_index);
-void battle_menu_request_open_companion_executable(s32 request_index);
 void battle_menu_request_open_small(void);
 void battle_menu_run_bunit_transition_thread(void);
 void battle_menu_run_companion_overlay_stub(void);

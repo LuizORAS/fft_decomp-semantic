@@ -697,6 +697,7 @@ typedef enum script_attack_entry_mode {
 } script_attack_entry_mode_e;
 
 extern s32 g_script_event_speed;
+extern u16 g_script_frame_result_override;
 
 /* variables */
 /* Event-script variable ids shared by the BATTLE and WORLD interpreters.
@@ -977,6 +978,9 @@ s32 script_resolve_runtime_id(s32 unit_id);
 void script_teleportin_event_instruction(s32 unit_id, s32 unused);
 void script_jump_event_instruction(const event_jump_parameters_t* parameters);
 void script_resetpalette_event_instruction(const event_unit_parameters_t* parameters);
+
+/* graphic display */
+void script_show_graphic(void);
 
 /* display conditions */
 void script_execute_display_conditions_instruction(void);

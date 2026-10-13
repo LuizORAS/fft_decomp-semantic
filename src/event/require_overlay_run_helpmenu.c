@@ -20,7 +20,7 @@ void require_overlay_run_helpmenu(void) {
         main_heap_reserve_at(g_main_heap_high_overlay_load_address, 0x10000) != g_main_heap_high_overlay_load_address) {
         thread_yield();
     }
-    battle_menu_request_open_companion_executable(COMPANION_OVERLAY_HELPMENU);
+    menu_request_open_companion_executable(COMPANION_OVERLAY_HELPMENU);
     thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     battle_thread_start(thread_id, helpmenu_menu_run_require_help);
     battle_thread_wait_until_inactive(thread_id);

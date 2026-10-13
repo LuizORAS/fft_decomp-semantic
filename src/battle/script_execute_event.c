@@ -179,7 +179,7 @@ restart_script:
                         script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
                     }
                     script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
-                    battle_menu_request_open_companion_executable(COMPANION_OVERLAY_CARD);
+                    menu_request_open_companion_executable(COMPANION_OVERLAY_CARD);
                     g_battle_companion_overlay_state = COMPANION_OVERLAY_STATE_CARD_SAVE;
                     do {
                         thread_yield();
@@ -961,7 +961,7 @@ restart_script:
         /* ---- Map title, dates, teleports, and status ---- */
         else if (opcode == EVENT_OPCODE_SHOW_MAP_TITLE) {
             operand_4 = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-            battle_menu_request_open_companion_executable(COMPANION_OVERLAY_ATTACK);
+            menu_request_open_companion_executable(COMPANION_OVERLAY_ATTACK);
             attack_map_load_title_graphic();
             battle_thread_start(operand_4, attack_map_show_title);
             battle_thread_set_parameters(operand_4, (s8)operand_1, (s8)operand_2, (s8)operand_3);

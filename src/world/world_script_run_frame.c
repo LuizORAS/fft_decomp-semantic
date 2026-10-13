@@ -15,7 +15,7 @@
  *
  * Returns the scenario-finish result (9, 0xA, 0xB or 0x13, 0 when no finish
  * operation is pending) once every script thread has stopped, otherwise 1
- * (or g_world_frame_result_override while it is set, or 0 while menu input is disabled with state
+ * (or g_script_frame_result_override while it is set, or 0 while menu input is disabled with state
  * 2). The companion-overlay entry points at 0x801BF3B8-0x801DF198 are overlay
  * addresses whose owner depends on what is loaded, so they keep func_ names.
  * The finish-operation getter is called through an s32-returning cast: the
@@ -158,8 +158,8 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         g_world_menu_input_block_frames--;
     }
     world_script_frame_after_threads_stub();
-    if (g_world_frame_result_override != 0) {
-        return g_world_frame_result_override;
+    if (g_script_frame_result_override != 0) {
+        return g_script_frame_result_override;
     }
 
     if (g_world_companion_overlay_state == COMPANION_OVERLAY_STATE_STUB) {

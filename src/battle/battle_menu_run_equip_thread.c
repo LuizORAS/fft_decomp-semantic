@@ -24,9 +24,9 @@ void battle_menu_run_equip_thread(void) {
     battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
     g_battle_menu_suspend_state = 1;
     battle_thread_wait_for_unit_view_panels();
-    battle_menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP);
+    menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP);
     menu_reserve_high_overlay(0x20000);
-    battle_menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP_SECOND_HALF);
+    menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP_SECOND_HALF);
     battle_thread_suspend(NATIVE_THREAD_SLOT_MENU);
     battle_thread_suspend(NATIVE_THREAD_SLOT_MENU_CHILD);
     g_battle_companion_overlay_state = COMPANION_OVERLAY_STATE_EQUIP;
