@@ -135,6 +135,10 @@ func (resolver symbolResolver) linkerBindings(m *moduleSpec, f *functionSpec, us
 			bindings[override.Name] = override.Addr
 		}
 	}
+	// The shared C definition is this entry's self symbol, not another entry.
+	if f.SourceSymbol != "" {
+		bindings[f.sourceSymbol()] = f.Addr
+	}
 	return bindings
 }
 
@@ -149,6 +153,10 @@ func linkerScript(f *functionSpec, bindings map[string]uint32) (string, error) {
 	var script strings.Builder
 	script.WriteString("OUTPUT_ARCH(mips)\n")
 	for _, name := range names {
+		// The mapped definition must come from the object, never PROVIDE.
+		if f.SourceSymbol != "" && name == f.sourceSymbol() {
+			continue
+		}
 		if name == "_gp" {
 			// GPREL relocations consult this linker symbol implicitly; PROVIDE
 			// can omit it because the object has no explicit _gp reference.
@@ -167,6 +175,9 @@ func linkerScript(f *functionSpec, bindings map[string]uint32) (string, error) {
 	}
 	fmt.Fprintf(&script, "  .text 0x%x : SUBALIGN(4) { *(.text) }\n", f.Addr)
 	script.WriteString("  /DISCARD/ : { *(.reginfo) *(.pdr) *(.comment) *(.gnu.attributes) }\n}\n")
+	if f.SourceSymbol != "" {
+		fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"source definition must begin at original entry\");\n", f.sourceSymbol(), f.Addr)
+	}
 	return script.String(), nil
 }
 
