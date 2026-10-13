@@ -549,7 +549,7 @@ typedef enum wldcore_message_block {
     WLDCORE_MESSAGE_BLOCK_STORY_EVENTS = 0x04,
     WLDCORE_MESSAGE_BLOCK_TUTORIAL_TOPICS = 0x05,
     WLDCORE_MESSAGE_BLOCK_BRAVE_STORY_PROPOSITIONS = 0x0a,
-    WLDCORE_MESSAGE_BLOCK_SCRIPT_FLAGS_01A4_01BB = 0x0b,
+    WLDCORE_MESSAGE_BLOCK_FACTS = 0x0b,
     WLDCORE_MESSAGE_BLOCK_PROPOSITION_REPORT_FIRST = 0x10, /* one block per proposition id */
 } wldcore_message_block_e;
 
@@ -1331,9 +1331,9 @@ typedef enum wldcore_bar_menu_row {
 /* Row kinds of the brave-story list (wldcore_menu_build_brave_story_entries),
  * named after the level each row opens. */
 typedef enum wldcore_brave_story_row {
-    WLDCORE_BRAVE_STORY_ROW_SCRIPT_FLAGS_01A4_01BB = 0,
+    WLDCORE_BRAVE_STORY_ROW_FACTS = 0,
     WLDCORE_BRAVE_STORY_ROW_STORY_EVENTS = 1,
-    WLDCORE_BRAVE_STORY_ROW_SET_SCRIPT_VARIABLES_03C0_03FF = 2,
+    WLDCORE_BRAVE_STORY_ROW_PERSONS = 2,
     WLDCORE_BRAVE_STORY_ROW_PROPOSITIONS = 3,
     WLDCORE_BRAVE_STORY_ROW_UNEXPLORED_LANDS = 4,
     WLDCORE_BRAVE_STORY_ROW_TREASURES = 5,
@@ -1343,7 +1343,7 @@ typedef enum wldcore_brave_story_row {
 /* Row kinds of the tutorial category list (wldcore_list_open_tutorial_categories). */
 typedef enum wldcore_tutorial_category_row {
     WLDCORE_TUTORIAL_CATEGORY_ROW_FORMATION = 0,
-    WLDCORE_TUTORIAL_CATEGORY_ROW_MASK_1_ENTRIES = 1,
+    WLDCORE_TUTORIAL_CATEGORY_ROW_BATTLE_TUTORIALS = 1,
     WLDCORE_TUTORIAL_CATEGORY_ROW_TOPICS = 2,
     WLDCORE_TUTORIAL_CATEGORY_ROW_LEAVE = 3,
 } wldcore_tutorial_category_row_e;
@@ -1401,7 +1401,7 @@ typedef struct wldcore_menu_window_pair_render_level {
 extern s16 g_wldcore_list_row_flags[];
 
 void wldcore_proposition_report_list_block_all_buttons(s32* unused);
-void wldcore_list_open_script_flags_01a4_01bb(void);
+void wldcore_list_open_facts(void);
 void wldcore_list_build_tutorial_category_panel_image(wldcore_text_list_panel_t* panel);
 void wldcore_list_clamp_cursor_state(s32 index, s32 count, s32 visible);
 void wldcore_list_clear_cursor_state(s32 index);
@@ -1414,18 +1414,18 @@ void wldcore_proposition_available_list_block_all_buttons(wldcore_menu_panel_lev
 void wldcore_proposition_available_list_close_level(wldcore_menu_panel_level_t* level);
 void wldcore_list_unexplored_lands_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_story_events_block_all_buttons(wldcore_menu_panel_level_t* level);
-void wldcore_list_script_variables_block_all_buttons(wldcore_menu_panel_level_t* level);
+void wldcore_list_persons_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_tutorial_topics_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_formation_tutorials_block_all_buttons(wldcore_menu_panel_level_t* level);
-void wldcore_list_script_flags_block_all_buttons(wldcore_menu_panel_level_t* level);
+void wldcore_list_facts_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_proposition_open_report_list(void);
-void wldcore_list_open_tutorial_mask_1_entries(void);
+void wldcore_list_open_battle_tutorials(void);
 void wldcore_list_open_formation_tutorials(void);
-void wldcore_list_tutorial_mask_1_block_all_buttons(wldcore_menu_panel_level_t* unused_level);
+void wldcore_list_battle_tutorials_block_all_buttons(wldcore_menu_panel_level_t* unused_level);
 void wldcore_list_open_story_events(void);
 void wldcore_list_open_unexplored_lands(void);
 void wldcore_list_open_treasures(void);
-void wldcore_list_open_set_script_variables_03c0_03ff(void);
+void wldcore_list_open_persons(void);
 void wldcore_list_open_active_propositions(void);
 void wldcore_list_open_brave_story_propositions(void);
 
@@ -1457,13 +1457,13 @@ typedef enum wldcore_cursor_slot {
     WLDCORE_CURSOR_SLOT_UNEXPLORED_LANDS = 0x07,
     WLDCORE_CURSOR_SLOT_TREASURES = 0x08,
     WLDCORE_CURSOR_SLOT_STORY_EVENTS = 0x0a,
-    WLDCORE_CURSOR_SLOT_SET_SCRIPT_VARIABLES_03C0_03FF = 0x0b,
+    WLDCORE_CURSOR_SLOT_PERSONS = 0x0b,
     WLDCORE_CURSOR_SLOT_TUTORIAL_TOPICS = 0x0c,
     WLDCORE_CURSOR_SLOT_PARTICIPANT_LIST = 0x0f,
     WLDCORE_CURSOR_SLOT_BRAVE_STORY_PROPOSITIONS = 0x10,
     WLDCORE_CURSOR_SLOT_FORMATION_TUTORIALS = 0x12,
-    WLDCORE_CURSOR_SLOT_TUTORIAL_MASK_1_ENTRIES = 0x13,
-    WLDCORE_CURSOR_SLOT_SCRIPT_FLAGS_01A4_01BB = 0x14,
+    WLDCORE_CURSOR_SLOT_BATTLE_TUTORIALS = 0x13,
+    WLDCORE_CURSOR_SLOT_FACTS = 0x14,
 } wldcore_cursor_slot_e;
 
 typedef struct wldcore_menu_cursor_state {
@@ -1647,8 +1647,8 @@ typedef struct wldcore_menu_participant_level {
     s32 participant;  /* 0x14; slot in participant_indices */
 } wldcore_menu_participant_level_t;
 
-/* wldcore_menu_variable_detail_level_t.phase, shared by the variable,
- * treasure and unexplored-land detail steps. */
+/* wldcore_menu_detail_level_t.phase, shared by the person, treasure and
+ * unexplored-land detail steps. */
 typedef enum wldcore_detail_phase {
     WLDCORE_DETAIL_PHASE_SHOWN = 0,
     WLDCORE_DETAIL_PHASE_LOAD = 1,   /* waits for the file */
@@ -1659,7 +1659,7 @@ typedef enum wldcore_detail_phase {
 /* Provisional: script-variable detail level (type 0x20) pushed by
  * 0x8008389c over the list-window level; it keeps the selected entry value
  * (variable index * 16 + value) and the render record it appends. */
-typedef struct wldcore_menu_variable_detail_level {
+typedef struct wldcore_menu_detail_level {
     s32 value;        /* 0x00 */
     s32 render_index; /* 0x04 */
     /* 0x08; treasure detail: the saved record picked with Triangle. The detail
@@ -1667,7 +1667,7 @@ typedef struct wldcore_menu_variable_detail_level {
     s32 saved_record_index;
     s32 phase; /* 0x0c; wldcore_detail_phase_e; LOAD at push */
     s32 timer; /* 0x10; cleared at push; text delay or dissolve step, counted per frame */
-} wldcore_menu_variable_detail_level_t;
+} wldcore_menu_detail_level_t;
 
 /* wldcore_menu_event_transition_level_t.mode, the argument of
  * wldcore_menu_push_event_transition_level and the second operand of the
@@ -1917,8 +1917,8 @@ typedef enum wldcore_menu_level_type {
     WLDCORE_MENU_LEVEL_BRAVE_STORY = 0x1c,
     WLDCORE_MENU_LEVEL_STORY_EVENTS = 0x1d,
     WLDCORE_MENU_LEVEL_STORY_EVENT_TEXT = 0x1e,
-    WLDCORE_MENU_LEVEL_SET_SCRIPT_VARIABLES_03C0_03FF = 0x1f,
-    WLDCORE_MENU_LEVEL_VARIABLE_DETAIL = 0x20,
+    WLDCORE_MENU_LEVEL_PERSONS = 0x1f,
+    WLDCORE_MENU_LEVEL_PERSON_DETAIL = 0x20,
     WLDCORE_MENU_LEVEL_TUTORIAL_TOPICS = 0x21,
     WLDCORE_MENU_LEVEL_TUTORIAL_TOPIC_TEXT = 0x22,
     WLDCORE_MENU_LEVEL_EVENT_TRANSITION = 0x23,
@@ -1931,9 +1931,9 @@ typedef enum wldcore_menu_level_type {
     WLDCORE_MENU_LEVEL_PROPOSITION_ATTEMPT_DETAIL = 0x2a,
     WLDCORE_MENU_LEVEL_TUTORIAL_CATEGORIES = 0x2b,
     WLDCORE_MENU_LEVEL_FORMATION_TUTORIALS = 0x2c,
-    WLDCORE_MENU_LEVEL_TUTORIAL_MASK_1_ENTRIES = 0x2d,
-    WLDCORE_MENU_LEVEL_SCRIPT_FLAGS_01A4_01BB = 0x2e,
-    WLDCORE_MENU_LEVEL_SCRIPT_FLAG_01A4_DETAIL = 0x2f,
+    WLDCORE_MENU_LEVEL_BATTLE_TUTORIALS = 0x2d,
+    WLDCORE_MENU_LEVEL_FACTS = 0x2e,
+    WLDCORE_MENU_LEVEL_FACT_DETAIL = 0x2f,
     WLDCORE_MENU_LEVEL_NUMBER_PANEL_WITH_ARGUMENT = 0x30,
     WLDCORE_MENU_LEVEL_SCREEN_TRANSITION = 0x31,
     WLDCORE_MENU_LEVEL_FOCUS_LOCATION = 0x32,
@@ -1953,8 +1953,8 @@ typedef enum wldcore_menu_level_type {
  * current depth; spelling that as g_wldcore_menu_stack_records[depth + 1]
  * changes their address arithmetic. g_wldcore_menu_stack_types_next is the
  * same view of the type array, kept only where types[depth + 1] reschedules
- * the push routine (proposition detail, tutorial topic text, brave-story and
- * 0x03c0-0x03ff variable lists). */
+ * the push routine (proposition detail, tutorial topic text, the Brave Story
+ * and Persons lists). */
 typedef union wldcore_menu_stack_record {
     s32 window_index;
     wldcore_window_layout_request_t layout_window;
@@ -1970,7 +1970,7 @@ typedef union wldcore_menu_stack_record {
     wldcore_menu_proposition_list_level_t proposition_list;
     wldcore_menu_variable_list_level_t variable_list;
     wldcore_menu_participant_level_t participant;
-    wldcore_menu_variable_detail_level_t variable_detail;
+    wldcore_menu_detail_level_t detail;
     wldcore_menu_event_transition_level_t event_transition;
     wldcore_menu_sound_novel_resume_level_t sound_novel_resume;
     wldcore_menu_screen_transition_level_t screen_transition;
@@ -2167,8 +2167,8 @@ void wldcore_window_set_layout_states(s32* param);
 void wldcore_menu_push_participant_list_level(s32 proposition);
 void wldcore_menu_push_proposition_attempt_detail_level(s32 value);
 void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 param_b);
-void wldcore_menu_push_script_flag_01a4_detail_level(s32 value);
-void wldcore_menu_push_variable_detail_level(s32 value);
+void wldcore_menu_push_fact_detail_level(s32 value);
+void wldcore_menu_push_person_detail_level(s32 value);
 void wldcore_menu_push_story_event_text_level(s32 value);
 void wldcore_menu_push_treasure_detail_level(s32 value);
 void wldcore_menu_push_world_menu_level(void);

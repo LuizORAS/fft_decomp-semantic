@@ -16,7 +16,7 @@
  * The TIM widths are read unsigned (`lhu`), as Psy-Q's GsIMAGE declares
  * pw/ph. The text window's base and image rectangle are each copied as one
  * aggregate: the target loads both words before either store. */
-void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_variable_detail_level_t* level) {
+void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_detail_level_t* level) {
     GsIMAGE image;
     wldcore_window_render_bounds16_t bounds;
     wldcore_point32_t clut_position;

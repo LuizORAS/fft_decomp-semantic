@@ -1,11 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Opens a panel list of the set script variables 0x1a4-0x1bb (entry values
- * 0x9800 + index), shows up to eight rows at (0x58, 0x50) with width 0x8c,
- * hides the parent list window's content render record and appends its
- * 0x5c-byte record tagged 0x2e. Twin of 0x80087b94. */
-void wldcore_list_open_script_flags_01a4_01bb(void) {
+/* Open the Brave Story's Facts list: one row per fact that is set (the script variables from
+ * EVENT_SCRIPT_VAR_FACT_FIRST, text TEXT_ID_FACT_NAME_BASE + index), up to eight rows at (0x58, 0x50)
+ * with width 0x8c from the saved cursor. It hides the Brave Story list's content and shows the Brave
+ * Story prompt. Twin of wldcore_list_open_brave_story_propositions. */
+void wldcore_list_open_facts(void) {
     wldcore_point32_t dimensions;
     wldcore_point32_t origin;
     s16* values;
@@ -37,7 +37,7 @@ void wldcore_list_open_script_flags_01a4_01bb(void) {
     origin.x = 0x58;
     dimensions.y = i;
     origin.y = 0x50;
-    wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_SCRIPT_FLAGS_01A4_01BB, count, i);
+    wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_FACTS, count, i);
     wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
     g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
@@ -48,6 +48,6 @@ void wldcore_list_open_script_flags_01a4_01bb(void) {
     record_index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_ordering_table_offset = 9;
-    g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_SCRIPT_FLAGS_01A4_01BB;
+    g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_FACTS;
     g_wldcore_menu_stack_depth = record_index + 1;
 }

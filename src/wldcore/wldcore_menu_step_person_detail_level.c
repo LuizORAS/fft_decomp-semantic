@@ -1,19 +1,19 @@
 #include "fft/wldcore.h"
 
-/* Per-frame step of the brave-story detail level.
+/* Per-frame step of a person's profile (menu level PERSON_DETAIL).
  *
  * Phase 1 waits for the character's portrait file, phase 2 sets up the shared
  * scrollable text window for text 0x8800 + entry and binds the
  * portrait render record to the texture rectangle of the portrait POLY_FT4 (the
  * portrait id selects a 16x16 cell of the 0x280,0x1f0 page). Phase 3 waits for
  * the text window's render record and returns to phase 0, which pops the level
- * back to the brave-story list once the text window has finished scrolling.
+ * back to the Persons list once the text window has finished scrolling.
  *
  * The loading test reads g_main_file_cd_state.state (the same word as
  * g_main_file_still_loading): only a struct-member load stays behind the
  * delay store. The unused RECT reserves the 8 bytes that put the descriptor
  * at sp+0x18, and page_x keeps the target's (column + 0x280) association. */
-void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_t* level) {
+void wldcore_menu_step_person_detail_level(wldcore_menu_detail_level_t* level) {
     RECT rect;
     POLY_FT4 portrait;
     s32 entry;
@@ -117,7 +117,7 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
             g_wldcore_window_render_object_count = g_wldcore_window_render_object_count - 1;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.lower_window].flags
                 &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-            wldcore_list_open_set_script_variables_03c0_03ff();
+            wldcore_list_open_persons();
         }
     }
 }

@@ -662,7 +662,7 @@ written that way.
 - `g_wldcore_sound_quad_command_bytes` (`0x8009ec18`) starts one row before
   the sound rows, which begin at `0x8009ec1c` for sound id 1: its row 0 is the
   eighth word of `g_wldcore_tutorial_event_ids`, whose eight entries
-  `wldcore_list_handle_tutorial_mask_1_entries_input` indexes.
+  `wldcore_list_handle_battle_tutorials_input` indexes.
 - `g_battle_effect_ending_secondary_function_id` (`0x801b8530`) is
   `g_battle_effect_secondary_animations[BATTLE_EFFECT_SECONDARY_ANIMATION_ENDING].function_id`
   under a second name; the table's own symbol covers the 21 records before
@@ -691,7 +691,7 @@ translation unit. Share their types and constants through headers.
   `world_script_run_scenario_conditions.c`), action-slot restrictions, the
   portrait-flip toggle (instruction `0x37`), staged status, selected-tile data,
   and the event interpreters.
-- `src/wldcore/wldcore_menu_push_script_flag_01a4_detail_level.c` and
+- `src/wldcore/wldcore_menu_push_fact_detail_level.c` and
   `src/wldcore/wldcore_menu_push_story_event_text_level.c` are one routine at
   menu levels `0x2f` and `0x1e`; the second reserves 8 unused stack bytes.
 - `battle_map_blend_ambient_light_color.c` and

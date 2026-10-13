@@ -39,7 +39,7 @@ void wldcore_list_open_tutorial_categories(s32 selected_entry, s32 reset) {
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[0]
         = WLDCORE_TUTORIAL_CATEGORY_ROW_FORMATION;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[1]
-        = WLDCORE_TUTORIAL_CATEGORY_ROW_MASK_1_ENTRIES;
+        = WLDCORE_TUTORIAL_CATEGORY_ROW_BATTLE_TUTORIALS;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[2]
         = WLDCORE_TUTORIAL_CATEGORY_ROW_TOPICS;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[3]

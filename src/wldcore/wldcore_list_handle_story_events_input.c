@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* List level input step (cursor slot 10); twin of wldcore_list_handle_set_script_variables_03c0_03ff_input with help
+/* List level input step (cursor slot 10); twin of wldcore_list_handle_persons_input with help
  * message 0x1055. Cancel and confirm wait for file loading to finish; a
  * confirmed entry's value is passed to 0x80082e14. */
 void wldcore_list_handle_story_events_input(wldcore_menu_panel_level_t* level) {

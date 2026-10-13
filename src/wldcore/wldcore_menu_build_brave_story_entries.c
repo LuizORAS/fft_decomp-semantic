@@ -23,7 +23,7 @@ void wldcore_menu_build_brave_story_entries(void) {
         }
         if (count != 0) {
             g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[0]
-                = WLDCORE_BRAVE_STORY_ROW_SCRIPT_FLAGS_01A4_01BB;
+                = WLDCORE_BRAVE_STORY_ROW_FACTS;
             g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count = 1;
         }
     }
@@ -32,7 +32,7 @@ void wldcore_menu_build_brave_story_entries(void) {
         = WLDCORE_BRAVE_STORY_ROW_STORY_EVENTS;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
         .list_window.entries[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count + 1]
-        = WLDCORE_BRAVE_STORY_ROW_SET_SCRIPT_VARIABLES_03C0_03FF;
+        = WLDCORE_BRAVE_STORY_ROW_PERSONS;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count += 2;
 
     count = g_main_save_proposition_count;

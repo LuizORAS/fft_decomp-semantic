@@ -1,11 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Opens a panel list of the set script variables 0x3c0-0x3ff (entry values
- * 0xf000 + index * 16 + variable value), shows up to eight rows at
- * (0x80, 0x50) with width 0x60, appends its 0x5c-byte record tagged 0x1f and
- * hides the parent list window's content render record. Twin of 0x80087b94. */
-void wldcore_list_open_set_script_variables_03c0_03ff(void) {
+/* Open the Brave Story's Persons list: one row per person with a profile (the script variables from
+ * EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST; entry value person * 16 + the variable's value less 0x1000),
+ * up to eight rows at (0x80, 0x50) with width 0x60 from the saved cursor. It hides the Brave Story
+ * list's content and shows the Brave Story prompt. Twin of wldcore_list_open_brave_story_propositions. */
+void wldcore_list_open_persons(void) {
     wldcore_point32_t dimensions;
     wldcore_point32_t origin;
     s16* values;
@@ -40,7 +40,7 @@ void wldcore_list_open_set_script_variables_03c0_03ff(void) {
     origin.x = 0x80;
     dimensions.y = i;
     origin.y = 0x50;
-    wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_SET_SCRIPT_VARIABLES_03C0_03FF, count, i);
+    wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_PERSONS, count, i);
     wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
@@ -49,6 +49,6 @@ void wldcore_list_open_set_script_variables_03c0_03ff(void) {
     g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index - 1].list_window.content_render]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_wldcore_menu_stack_types_next[record_index] = WLDCORE_MENU_LEVEL_SET_SCRIPT_VARIABLES_03C0_03FF;
+    g_wldcore_menu_stack_types_next[record_index] = WLDCORE_MENU_LEVEL_PERSONS;
     g_wldcore_menu_stack_depth = record_index + 1;
 }

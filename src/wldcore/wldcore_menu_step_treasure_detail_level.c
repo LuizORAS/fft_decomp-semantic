@@ -22,7 +22,7 @@
  * reloads the full word for the halfword store instead of narrowing the load.
  * The button path's byte uses its own local; sharing `slot` changes the
  * register allocation. */
-void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_t* level) {
+void wldcore_menu_step_treasure_detail_level(wldcore_menu_detail_level_t* level) {
     GsIMAGE image;
     wldcore_window_render_bounds16_t bounds;
     wldcore_point32_t clut_position;

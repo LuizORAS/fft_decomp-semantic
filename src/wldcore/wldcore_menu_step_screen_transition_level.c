@@ -67,7 +67,7 @@ void wldcore_menu_step_screen_transition_level(wldcore_menu_screen_transition_le
                 .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             wldcore_list_open_formation_tutorials();
             break;
-        case WLDCORE_MENU_LEVEL_TUTORIAL_MASK_1_ENTRIES:
+        case WLDCORE_MENU_LEVEL_BATTLE_TUTORIALS:
             world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
             world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_TUTORIAL_WELCOME, 0);
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
@@ -79,7 +79,7 @@ void wldcore_menu_step_screen_transition_level(wldcore_menu_screen_transition_le
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                                 .list_window.frame_render]
                 .flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
-            wldcore_list_open_tutorial_mask_1_entries();
+            wldcore_list_open_battle_tutorials();
             break;
         case WLDCORE_MENU_LEVEL_TREASURE_DETAIL:
             world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);

@@ -230,12 +230,12 @@ functions:
   - {addr: 0x80082bcc, size: 584, name: wldcore_list_handle_story_events_input, hash: 687e758feb87a6bc}
   - {addr: 0x80082e14, size: 660, name: wldcore_menu_push_story_event_text_level, hash: 932a2bbf2294502a}
   - {addr: 0x800830a8, size: 916, name: wldcore_menu_handle_story_event_text_input, hash: 9fa6a8c6931dda4e}
-  - {addr: 0x8008343c, size: 516, name: wldcore_list_open_set_script_variables_03c0_03ff, hash: ab5203a1cd4ca07b}
-  - {addr: 0x80083640, size: 56, name: wldcore_list_script_variables_restore_prompt, hash: cc6cff34f9f35e2c}
-  - {addr: 0x80083678, size: 20, name: wldcore_list_script_variables_block_all_buttons, hash: 11034aa27eaa3095}
-  - {addr: 0x8008368c, size: 528, name: wldcore_list_handle_set_script_variables_03c0_03ff_input, hash: 484d14b345a99210}
-  - {addr: 0x8008389c, size: 808, name: wldcore_menu_push_variable_detail_level, hash: d3a3f0e072dc202d}
-  - {addr: 0x80083bc4, size: 1644, name: wldcore_menu_step_variable_detail_level, hash: 4e228c7ab54b932c}
+  - {addr: 0x8008343c, size: 516, name: wldcore_list_open_persons, hash: ab5203a1cd4ca07b}
+  - {addr: 0x80083640, size: 56, name: wldcore_list_persons_restore_prompt, hash: cc6cff34f9f35e2c}
+  - {addr: 0x80083678, size: 20, name: wldcore_list_persons_block_all_buttons, hash: 11034aa27eaa3095}
+  - {addr: 0x8008368c, size: 528, name: wldcore_list_handle_persons_input, hash: 484d14b345a99210}
+  - {addr: 0x8008389c, size: 808, name: wldcore_menu_push_person_detail_level, hash: d3a3f0e072dc202d}
+  - {addr: 0x80083bc4, size: 1644, name: wldcore_menu_step_person_detail_level, hash: 4e228c7ab54b932c}
   - {addr: 0x80084230, size: 316, name: wldcore_list_open_tutorial_topics, hash: d524d48690bf9b58}
   - {addr: 0x8008436c, size: 20, name: wldcore_list_tutorial_topics_restore_blocked_buttons, hash: 7e9ed99f23ab0769}
   - {addr: 0x80084380, size: 20, name: wldcore_list_tutorial_topics_block_all_buttons, hash: 11034aa27eaa3095}
@@ -276,10 +276,10 @@ functions:
   - {addr: 0x80089fec, size: 20, name: wldcore_list_formation_tutorials_restore_blocked_buttons, hash: 7e9ed99f23ab0769}
   - {addr: 0x8008a000, size: 20, name: wldcore_list_formation_tutorials_block_all_buttons, hash: 11034aa27eaa3095}
   - {addr: 0x8008a014, size: 668, name: wldcore_list_handle_formation_tutorials_input, hash: 336a3953d3a822c5}
-  - {addr: 0x8008a2b0, size: 400, name: wldcore_list_open_tutorial_mask_1_entries, hash: e92287c06d325aed}
-  - {addr: 0x8008a440, size: 20, name: wldcore_list_tutorial_mask_1_restore_blocked_buttons, hash: 7e9ed99f23ab0769}
-  - {addr: 0x8008a454, size: 20, name: wldcore_list_tutorial_mask_1_block_all_buttons, hash: 11034aa27eaa3095}
-  - {addr: 0x8008a468, size: 656, name: wldcore_list_handle_tutorial_mask_1_entries_input, hash: 132f4218798f9469}
+  - {addr: 0x8008a2b0, size: 400, name: wldcore_list_open_battle_tutorials, hash: e92287c06d325aed}
+  - {addr: 0x8008a440, size: 20, name: wldcore_list_battle_tutorials_restore_blocked_buttons, hash: 7e9ed99f23ab0769}
+  - {addr: 0x8008a454, size: 20, name: wldcore_list_battle_tutorials_block_all_buttons, hash: 11034aa27eaa3095}
+  - {addr: 0x8008a468, size: 656, name: wldcore_list_handle_battle_tutorials_input, hash: 132f4218798f9469}
   - {addr: 0x8008a6f8, size: 1200, name: wldcore_sound_novel_restore_saved_state, hash: 86252cb2803b332b}
   - {addr: 0x8008aba8, size: 60, name: wldcore_sound_novel_reset_selected_record, hash: 23177777d1486fca}
   - {addr: 0x8008abe4, size: 76, name: wldcore_sound_novel_reset_record, hash: 8362564a9498299c}
@@ -436,12 +436,12 @@ functions:
   - {addr: 0x800920e8, size: 96, name: wldcore_set_bit_value, hash: 56450a38fe0bff9f}
   - {addr: 0x80092148, size: 56, name: wldcore_test_bit, hash: 822830daaa9c0843}
   - {addr: 0x80092180, size: 136, name: wldcore_sound_novel_calculate_completion_percent, hash: 0ecc0e3f3f1d9117}
-  - {addr: 0x80092208, size: 516, name: wldcore_list_open_script_flags_01a4_01bb, hash: 53ae90c287d3c5a4}
-  - {addr: 0x8009240c, size: 20, name: wldcore_list_script_flags_restore_blocked_buttons, hash: 7e9ed99f23ab0769}
-  - {addr: 0x80092420, size: 20, name: wldcore_list_script_flags_block_all_buttons, hash: 11034aa27eaa3095}
-  - {addr: 0x80092434, size: 484, name: wldcore_list_handle_script_flags_01a4_01bb_input, hash: 3f569f76520bc273}
-  - {addr: 0x80092618, size: 660, name: wldcore_menu_push_script_flag_01a4_detail_level, hash: 611be9a64cdbcc3a}
-  - {addr: 0x800928ac, size: 600, name: wldcore_menu_close_script_flag_01a4_detail_level, hash: f5c8d454f1752f2f}
+  - {addr: 0x80092208, size: 516, name: wldcore_list_open_facts, hash: 53ae90c287d3c5a4}
+  - {addr: 0x8009240c, size: 20, name: wldcore_list_facts_restore_blocked_buttons, hash: 7e9ed99f23ab0769}
+  - {addr: 0x80092420, size: 20, name: wldcore_list_facts_block_all_buttons, hash: 11034aa27eaa3095}
+  - {addr: 0x80092434, size: 484, name: wldcore_list_handle_facts_input, hash: 3f569f76520bc273}
+  - {addr: 0x80092618, size: 660, name: wldcore_menu_push_fact_detail_level, hash: 611be9a64cdbcc3a}
+  - {addr: 0x800928ac, size: 600, name: wldcore_menu_close_fact_detail_level, hash: f5c8d454f1752f2f}
   - {addr: 0x8009de1c, size: 720, name: wldcore_calendar_advance_days, hash: 3ddb67c3d1ca1de9}
 
 data:

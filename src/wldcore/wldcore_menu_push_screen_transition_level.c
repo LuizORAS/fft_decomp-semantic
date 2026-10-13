@@ -78,7 +78,7 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
             &g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth].text_list);
         wldcore_window_close_parent_list_frame_windows();
         break;
-    case WLDCORE_MENU_LEVEL_TUTORIAL_MASK_1_ENTRIES:
+    case WLDCORE_MENU_LEVEL_BATTLE_TUTORIALS:
         wldcore_window_set_render_objects_visible(0);
         world_menu_set_slot_4_cursor_index(3);
         wldcore_window_reset_state_and_scroll(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);

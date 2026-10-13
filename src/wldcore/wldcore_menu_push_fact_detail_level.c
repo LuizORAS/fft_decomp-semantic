@@ -1,22 +1,20 @@
 #include "fft/wldcore.h"
 
-/* Pushes the script-variable detail text window as menu level 0x2f, the
- * partner of the wldcore_menu_close_script_flag_01a4_detail_level pop: records the entry on the new level, sets
- * up the shared scrollable text window at g_wldcore_scrollable_text_window for text 0x8800 + entry
- * with no substitutions, then hides the parent list-window level's four
- * window records and its frame render record with flag 0x10 and starts WORLD
- * thread 14 on text 0xb849 with substitution value 0x9800 + entry.
+/* Push a fact's text as menu level FACT_DETAIL, the partner of the
+ * wldcore_menu_close_fact_detail_level pop: record the entry on the new level, set up the shared
+ * scrollable text window (g_wldcore_scrollable_text_window) for text 0x8800 + entry with no
+ * substitutions, hide the Brave Story list's four window records and frame render record, and start
+ * WORLD thread 14 on text 0xb849 with the fact's name (TEXT_ID_FACT_NAME_BASE + entry) substituted.
  *
- * The coordinate mode is a constant local, yet retail still switched on it to
- * choose the text image origin: (0, 0x60) for mode 0, (0, 0x70) for mode 1.
- * The compiler folds the switch in its first CSE pass, after the stores were
- * split around it, which is why image_y keeps its absolute address while the
- * later stores go through the text_id base register. That only happens when
- * the live case is the last one.
+ * The coordinate mode is a constant local, yet retail still switched on it to choose the text image
+ * origin: (0, 0x60) for mode 0, (0, 0x70) for mode 1. The compiler folds the switch in its first CSE
+ * pass, after the stores were split around it, which is why image_y keeps its absolute address while
+ * the later stores go through the text_id base register. That only happens when the live case is the
+ * last one.
  *
- * The depth is spelled as the global at every use rather than cached in a
- * local: the target re-reads g_wldcore_menu_stack_depth after each call. */
-void wldcore_menu_push_script_flag_01a4_detail_level(s32 value) {
+ * The depth is spelled as the global at every use rather than cached in a local: the target re-reads
+ * g_wldcore_menu_stack_depth after each call. */
+void wldcore_menu_push_fact_detail_level(s32 value) {
     s32 coordinate_mode = 1;
 
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = value;
@@ -54,6 +52,6 @@ void wldcore_menu_push_script_flag_01a4_detail_level(s32 value) {
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_world_text_substitution_values[0] = value + TEXT_ID_FACT_NAME_BASE;
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
-    g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_SCRIPT_FLAG_01A4_DETAIL;
+    g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_FACT_DETAIL;
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth + 1;
 }

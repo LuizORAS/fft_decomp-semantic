@@ -33,11 +33,11 @@ void wldcore_menu_push_treasure_detail_level(s32 value) {
     u8 unused[8];
     u8 date[2];
 
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.value = value;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].detail.value = value;
     wldcore_gfx_load_picture_set(g_wldcore_treasure_picture_sets[value]);
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.render_index = index;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].detail.render_index = index;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     wldcore_calendar_read_date(g_main_treasure_acquisition_date_bits, value, date);
     g_wldcore_scrollable_text_window.text_id = value + TEXT_ID_WORLD_MESSAGE_BASE;
@@ -74,8 +74,8 @@ void wldcore_menu_push_treasure_detail_level(s32 value) {
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_world_text_substitution_values[0] = value + TEXT_ID_TREASURE_NAME_BASE;
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.phase = WLDCORE_DETAIL_PHASE_LOAD;
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].variable_detail.timer = 0;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].detail.phase = WLDCORE_DETAIL_PHASE_LOAD;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].detail.timer = 0;
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_TREASURE_DETAIL;
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth + 1;
 }

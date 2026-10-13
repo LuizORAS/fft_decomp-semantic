@@ -4,7 +4,7 @@
 /* Per-frame step of the tutorial menu list level.
  *
  * Mode 0 runs the cursor and the four entries: formation tutorials, the
- * wldcore_list_open_tutorial_mask_1_entries list, the chapter-5 tutorial topics, and entry 3 (or cancel),
+ * wldcore_list_open_battle_tutorials list, the chapter-5 tutorial topics, and entry 3 (or cancel),
  * which starts WORLD thread 14 on text 0xb8de and moves to mode 1. Mode 1
  * waits for confirm/cancel and starts the fade out, mode 2 clears VRAM once
  * the fade flag has cleared and mode 3 pops the level: with system flag 0x80000 it
@@ -88,10 +88,10 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_formation_tutorials();
             return;
-        case WLDCORE_TUTORIAL_CATEGORY_ROW_MASK_1_ENTRIES:
+        case WLDCORE_TUTORIAL_CATEGORY_ROW_BATTLE_TUTORIALS:
             wldcore_window_publish_slot_b8dd(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
-            wldcore_list_open_tutorial_mask_1_entries();
+            wldcore_list_open_battle_tutorials();
             return;
         case WLDCORE_TUTORIAL_CATEGORY_ROW_TOPICS:
             wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_TUTORIAL_TOPICS);

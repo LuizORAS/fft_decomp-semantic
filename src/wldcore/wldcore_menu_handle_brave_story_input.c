@@ -114,11 +114,11 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         g_wldcore_brave_story_saved_cursor[0] = level->selected_entry;
         switch (level->entries[level->selected_entry]) {
-        case WLDCORE_BRAVE_STORY_ROW_SCRIPT_FLAGS_01A4_01BB:
-            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_SCRIPT_FLAGS_01A4_01BB);
+        case WLDCORE_BRAVE_STORY_ROW_FACTS:
+            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_FACTS);
             wldcore_window_set_list_window_states(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
-            wldcore_list_open_script_flags_01a4_01bb();
+            wldcore_list_open_facts();
             return;
         case WLDCORE_BRAVE_STORY_ROW_STORY_EVENTS:
             wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_STORY_EVENTS);
@@ -126,10 +126,10 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_story_events();
             return;
-        case WLDCORE_BRAVE_STORY_ROW_SET_SCRIPT_VARIABLES_03C0_03FF:
+        case WLDCORE_BRAVE_STORY_ROW_PERSONS:
             wldcore_window_set_list_window_states(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
-            wldcore_list_open_set_script_variables_03c0_03ff();
+            wldcore_list_open_persons();
             return;
         case WLDCORE_BRAVE_STORY_ROW_PROPOSITIONS:
             wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_BRAVE_STORY_PROPOSITIONS);

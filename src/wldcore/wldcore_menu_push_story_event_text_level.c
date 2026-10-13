@@ -7,7 +7,7 @@
  * and its frame render record with flag 0x10 and starts WORLD thread 14 on
  * text 0xb849 with substitution value 0xe800 + entry.
  *
- * Masked-identical to wldcore_menu_push_script_flag_01a4_detail_level across all 165 instructions.
+ * Masked-identical to wldcore_menu_push_fact_detail_level across all 165 instructions.
  * The two differ only in the substitution addend (0x9800 there, 0xe800 here),
  * the menu level type (0x2f there, 0x1e here) and the frame size; the text id
  * is value + 0x8800 in both, so 0xe800 is the substitution value and not a
