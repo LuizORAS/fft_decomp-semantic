@@ -216,6 +216,13 @@ void thread_wait_until_inactive(s32 thread_id);
 void thread_wait_for_unit_view_panels(void);
 
 /* context capture */
+/* Named relocations preserve the assembled helpers' $at load sequence. */
+#define THREAD_LOAD_GLOBAL(result, global)                                                                             \
+    __asm__("lui $1, %%hi(%1)\naddu $1,$1,$zero\nlw %0, %%lo(%1)($1)"                                                  \
+        : "=r"(result)                                                                                                 \
+        : "i"(&(global)), "m"(global)                                                                                  \
+        : "$1")
+
 /* Read the running CPU's $gp when seeding a native thread context. */
 void* thread_get_current_global_pointer(void);
 
