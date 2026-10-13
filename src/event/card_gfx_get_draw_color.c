@@ -1,6 +1,7 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Return CARD's draw colour, three RGB bytes (g_card_text_color). */
 u8* card_gfx_get_draw_color(void) {
     return g_card_text_color;
 }
