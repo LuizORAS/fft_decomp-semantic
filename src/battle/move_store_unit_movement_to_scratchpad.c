@@ -30,7 +30,7 @@ void move_store_unit_movement_to_scratchpad(s32 unit_id) {
     s32 count;
     s32 weather;
     s32 ignore_terrain;
-    u8* table;
+    const u8* table;
     u8 value;
     u8 movement_3;
     u8 team;

@@ -1219,9 +1219,9 @@ enum {
     MAIN_TERRAIN_COST_BLOCKED = 0xff, /* stays so under Any Ground */
 };
 
-extern u8 g_main_terrain_movement_cost_tables[][64];
+extern const u8 g_main_terrain_movement_cost_tables[][64];
 extern const u8 g_main_terrain_status_flags[64];
-extern u8 g_main_terrain_geomancy_abilities[];
+extern const u8 g_main_terrain_geomancy_abilities[];
 
 /* Two bytes per map_surface_type_e; all 64 pairs are 0x19, 0x19. */
 extern u8 g_main_terrain_tile_info_pairs[64][2];
