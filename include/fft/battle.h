@@ -609,10 +609,14 @@ extern const RECT g_battle_deployment_clear_rect;
 extern u16 g_battle_deployed_unit_palettes[2][16];
 extern s32 g_battle_deployment_skipped;
 
-/* dead unit */
-extern s32 g_battle_dead_unit_action;
-extern main_crystal_pickup_result_t* g_battle_dead_unit_context; /* the pickup the panel shows */
-extern s32 g_battle_dead_unit_result;
+/* crystal pickup */
+/* The crystal or chest a unit stepped on: the pickup that OPTION.OUT's panel shows
+ * (g_battle_crystal_pickup_context) and the choice it returns, the action and the chest's item, which
+ * BATTLE_GAME_STATE_CRYSTAL_LEARN applies. */
+
+extern s32 g_battle_crystal_pickup_action;
+extern main_crystal_pickup_result_t* g_battle_crystal_pickup_context; /* the pickup the panel shows */
+extern s32 g_battle_crystal_pickup_item;
 
 /* formula */
 /* The damage, hit and status rules of an action: g_battle_formula_handlers runs one handler per
@@ -8213,9 +8217,9 @@ extern battle_menu_scratch_buffer_t g_battle_menu_scratch_buffer;
 extern s32 g_battle_help_text_id_tables_ptr;
 extern u16 g_battle_menu_anything_ability_id;
 extern s16 g_battle_menu_action_slot_selected_option;
-extern s32 g_battle_active_menu;                    /* active menu */
-extern s32 g_battle_menu_dead_unit_panel_parameter; /* always 0 (never written); passed to the option menu thread, which
-                                                       ignores it */
+extern s32 g_battle_active_menu;                         /* active menu */
+extern s32 g_battle_menu_crystal_pickup_panel_parameter; /* always 0 (never written); passed to the option menu thread,
+                                                       which ignores it */
 extern RECT g_battle_menu_ability_list_clut_rect;
 extern s16 g_battle_menu_ability_scroll_offset;
 extern s16 g_battle_menu_action_type_modes[][2];
@@ -8322,7 +8326,7 @@ void battle_menu_open_companion_executable(void);
 void battle_script_dark_screen_thread(void);
 void battle_menu_open_rider_status_screen(void);
 void battle_menu_open_non_active_unit_idle_action_menu(void);
-void battle_menu_open_option_dead_unit_panel(void);
+void battle_menu_open_option_crystal_pickup_panel(void);
 void battle_menu_run_jobstts_thread(void);
 void battle_menu_refresh_hovered_unit_stats_display(void);
 void battle_menu_request_open_small(void);
@@ -8391,7 +8395,7 @@ void battle_menu_draw_numeric_display_entries(
     u8* buffer, menu_number_entry_t* entries, world_glyph_blit_t* position, s32 count);
 
 void battle_menu_release_window_buffer_pair(s32 buffer);
-s32 battle_menu_get_dead_unit_selection(s32 battle_id);
+s32 battle_menu_get_crystal_pickup_selection(s32 battle_id);
 s32 battle_unit_has_any_current_status(s32 unit_id);
 s32 battle_menu_init_attack_resources_and_threads(void);
 void battle_menu_init_numeric_display_frame_primitives(RECT* bounds, world_menu_palette_primitives_t* menu);

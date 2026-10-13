@@ -2111,7 +2111,7 @@ functions:
   - {addr: 0x801c0894, size: 1436, name: option_menu_thin_window_frame_thread, hash: 43c0e695459c989f}
   - {addr: 0x801c0e30, size: 40, name: option_thread_wait_forever, hash: 19480d7e83b49e1f}
   - {addr: 0x801c0e58, size: 40, name: option_thread_stop_after_yield, hash: fbcd24ded43d67df}
-  - {addr: 0x801c0e80, size: 1644, name: option_menu_start_dead_unit_threads, hash: d96dca0d02aaa010}
+  - {addr: 0x801c0e80, size: 1644, name: option_menu_start_crystal_pickup_threads, hash: d96dca0d02aaa010}
   - {addr: 0x801c14ec, size: 808, name: option_menu_init_at_list, hash: 0e222271dd330fe9}
   - {addr: 0x801c1814, size: 328, name: option_menu_at_list_select_unit_thread, hash: 2d768b550d19a17f}
   - {addr: 0x801c195c, size: 224, name: option_menu_start_at_list_thread, hash: 5bf5050f008c2b98}
@@ -2127,8 +2127,8 @@ data:
   - {addr: 0x801c3514, name: g_option_gfx_draw_area_scale_percent}
   - {addr: 0x801c3580, name: g_option_menu_entry_table}
   - {addr: 0x801c35ac, name: g_option_menu_at_list_entry_table}
-  - {addr: 0x801c35d8, name: g_option_dead_unit_menu_entries}
-  - {addr: 0x801c3628, name: g_option_dead_unit_menu}
+  - {addr: 0x801c35d8, name: g_option_crystal_pickup_menu_entries}
+  - {addr: 0x801c3628, name: g_option_crystal_pickup_menu}
   - {addr: 0x801c38ac, name: g_option_menu_at_list_state}
   - {addr: 0x801c38dc, name: g_option_menu_at_list_entry_table_pointer}
   - {addr: 0x801c38e4, name: g_option_menu_transition_duration}
@@ -2139,7 +2139,7 @@ data:
   - {addr: 0x801c39cc, name: g_option_choice_counts}
   - {addr: 0x801c3a04, name: g_option_value_text_id_bases}
   - {addr: 0x801c3a3c, name: g_option_menu_icon_thread_param}
-  - {addr: 0x801c3a78, name: g_option_dead_unit_controller_input}
+  - {addr: 0x801c3a78, name: g_option_crystal_pickup_controller_input}
   - {addr: 0x801c3a7c, name: g_option_menu_render_buffer}
   - {addr: 0x801c9a7c, name: g_option_at_list_pages}
   - {addr: 0x801c9ce4, name: g_option_text_glyph_source}
@@ -2149,10 +2149,10 @@ data:
   - {addr: 0x801ca10c, name: g_option_menu_at_list_primary_values}
   - {addr: 0x801ca50c, name: g_option_menu_at_list_secondary_values}
   - {addr: 0x801ca70c, name: g_option_menu_at_list_indices}
-  - {addr: 0x801ca90c, name: g_option_dead_unit_menu_flags}
+  - {addr: 0x801ca90c, name: g_option_crystal_pickup_menu_flags}
   - {addr: 0x801cad0c, name: g_option_menu_at_list_flags}
-  - {addr: 0x801caf14, name: g_option_dead_unit_primary_result}
-  - {addr: 0x801caf18, name: g_option_dead_unit_secondary_result}
+  - {addr: 0x801caf14, name: g_option_crystal_pickup_primary_result}
+  - {addr: 0x801caf18, name: g_option_crystal_pickup_secondary_result}
   - {addr: 0x801cb6fc, name: g_option_menu_at_list_descriptors}
   - {addr: 0x801cb79c, name: g_option_menu_at_list_text}
   - {addr: 0x801cbc4c, name: g_option_menu_title_image_rect}

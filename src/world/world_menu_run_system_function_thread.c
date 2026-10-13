@@ -29,8 +29,8 @@ void world_menu_run_system_function_thread(void) {
     g_world_menu_current_id = value;
     g_world_menu_thread_menu_data[entry->menu_entry_index].cancel_thread_count = entry->cancel_thread_count;
     if (id == BATTLE_SYSTEM_FUNCTION_CRYSTAL_OR_TREASURE) {
-        world_thread_start(NATIVE_THREAD_SLOT_MENU, world_menu_open_option_dead_unit_panel);
-        world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, g_world_menu_dead_unit_panel_parameter, 0);
+        world_thread_start(NATIVE_THREAD_SLOT_MENU, world_menu_open_option_crystal_pickup_panel);
+        world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, g_world_menu_crystal_pickup_panel_parameter, 0);
         world_thread_exit_current();
     }
     if (id != BATTLE_SYSTEM_FUNCTION_CLOSE) {

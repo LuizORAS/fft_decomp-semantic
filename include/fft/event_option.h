@@ -112,21 +112,21 @@ void option_menu_run_options_thread(void);
 
 void option_menu_run_option_choice_thread(void);
 
-/* dead unit */
+/* crystal pickup */
 /* The panel of the crystal or chest a dead unit leaves: its menu record, its ability list and
- * the choices it returns to BATTLE (g_battle_dead_unit_action). */
+ * the choices it returns to BATTLE (g_battle_crystal_pickup_action). */
 
-void option_menu_start_dead_unit_threads(void);
+void option_menu_start_crystal_pickup_threads(void);
 
-extern u32* g_option_dead_unit_controller_input;
+extern u32* g_option_crystal_pickup_controller_input;
 
-extern dead_unit_menu_t g_option_dead_unit_menu;
-extern dead_unit_entry_counts_t g_option_dead_unit_menu_entries;
-extern s16 g_option_dead_unit_menu_flags[];
+extern crystal_pickup_menu_t g_option_crystal_pickup_menu;
+extern crystal_pickup_entry_counts_t g_option_crystal_pickup_menu_entries;
+extern s16 g_option_crystal_pickup_menu_flags[];
 
-extern s16 g_option_dead_unit_primary_result;
+extern s16 g_option_crystal_pickup_primary_result;
 
-extern s16 g_option_dead_unit_secondary_result;
+extern s16 g_option_crystal_pickup_secondary_result;
 
 /* screen */
 /* The entry point that BATTLE's menu threads call with the menu to run (option_menu_type_e). */

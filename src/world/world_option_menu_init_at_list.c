@@ -35,7 +35,7 @@ void world_option_menu_init_at_list(world_menu_entry_t* entry) {
     g_world_thread_call_target = (void (*)(void))battle_turn_build_at_list;
     world_thread_call_on_main_stack(g_world_action_target_list_slots, 0);
     for (i = 0; i < 256; i++) {
-        g_world_dead_unit_menu_flags[i] = 0;
+        g_world_crystal_pickup_menu_flags[i] = 0;
         g_world_menu_at_list_flags[i] = 0;
     }
     g_world_text_section_pointers[TEXT_SECTION_AT_LIST] = g_world_menu_at_list_text;

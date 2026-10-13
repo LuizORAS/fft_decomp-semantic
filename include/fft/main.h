@@ -683,7 +683,7 @@ typedef struct main_ability_monster_skillset {
 
 /* The crystal or chest a unit stepped on (battle_unit_generate_crystal_or_treasure,
  * g_main_crystal_pickup_result): the CRYSTAL_LEARN state applies it and the pickup panel
- * (option_menu_start_dead_unit_threads) offers its choices. */
+ * (option_menu_start_crystal_pickup_threads) offers its choices. */
 typedef struct crystal_pickup_result {
     s32 result;          /* 0x00; -1 nothing there, 2 crystal, 3 crystal offering abilities, 4 chest */
     u8 _unused_04[0x14]; /* 0x04 */

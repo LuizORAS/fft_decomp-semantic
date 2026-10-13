@@ -98,7 +98,7 @@ extern u8 g_world_thread_status_snapshot[16];
 extern s32 g_world_menu_input_lock_mode;
 extern s32 g_world_thread_task_ids[][256];
 extern battle_menu_status_panel_indicator_prims_t g_world_thread_indicator_packets[2][2];
-extern main_crystal_pickup_result_t* g_world_dead_unit_context; /* the crystal pickup */
+extern main_crystal_pickup_result_t* g_world_crystal_pickup_context; /* the crystal pickup */
 
 extern native_thread_t g_world_thread_contexts[]; /* 17 equipment: g_world_gfx_tpage7_vram_allocation_grid follows */
 extern s32 g_world_thread_current_id;
@@ -208,6 +208,14 @@ void world_camera_thread(void);
 extern s32 g_world_screen_fade;
 extern RECT g_world_screen_clear_rect;
 extern battle_gfx_fade_overlay_t g_world_screen_tint_tiles[]; /* one tint tile per packet buffer */
+
+extern RECT g_world_screen_menu_thin_panel_texture_windows[7];
+
+/* One libgpu texture window per DR_MODE packet (the seven RECTs after
+ * g_world_screen_menu_thin_panel_texture_windows). The static table holds each
+ * window's w/h; world_screen_menu_window_frame_thread fills in the runtime x/y.
+ * Indexing the array reproduces the target's symbol-plus-byte-offset addressing. */
+extern RECT g_world_screen_menu_panel_texture_windows[7];
 
 /* sound */
 extern s16 g_world_sound_current_music_track_index;
@@ -1718,7 +1726,7 @@ void world_option_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_p
 void world_option_run_menu(s32 mode);
 void world_option_game_options_thread(void);
 void world_option_menu_start_at_list_thread(void);
-void world_option_menu_start_dead_unit_threads(void);
+void world_option_menu_start_crystal_pickup_threads(void);
 void world_option_menu_window_frame_thread(void);
 void world_option_thread_wait_forever(void);
 void world_option_text_set_blit_destination(s16 x, s16 y);
@@ -1900,22 +1908,18 @@ void world_text_release_current_message_box_slot(void);
 /* turn */
 void world_screen_build_at_list(void);
 
-/* dead unit */
-extern s32 g_world_dead_unit_action; /* committed action */
-extern s32 g_world_dead_unit_result;
-extern dead_unit_entry_counts_t g_world_dead_unit_menu_entries;
-extern dead_unit_menu_t g_world_dead_unit_menu;
-extern RECT g_world_screen_menu_thin_panel_texture_windows[7];
+/* crystal pickup */
+/* The globals of WORLD's copy of the crystal pickup panel (world_option_menu_start_crystal_pickup_threads),
+ * which only WORLD's dead copy of the battle menus would open. */
 
-/* One libgpu texture window per DR_MODE packet (the seven RECTs after
- * g_world_screen_menu_thin_panel_texture_windows). The static table holds each
- * window's w/h; world_screen_menu_window_frame_thread fills in the runtime x/y.
- * Indexing the array reproduces the target's symbol-plus-byte-offset addressing. */
-extern RECT g_world_screen_menu_panel_texture_windows[7];
-extern u32* g_world_dead_unit_controller_input;
-extern s16 g_world_dead_unit_menu_flags[256];
-extern s16 g_world_dead_unit_menu_result; /* primary menu result */
-extern s16 g_world_dead_unit_move_result; /* secondary (move) menu result */
+extern s32 g_world_crystal_pickup_action; /* committed action */
+extern s32 g_world_crystal_pickup_item;
+extern crystal_pickup_entry_counts_t g_world_crystal_pickup_menu_entries;
+extern crystal_pickup_menu_t g_world_crystal_pickup_menu;
+extern u32* g_world_crystal_pickup_controller_input;
+extern s16 g_world_crystal_pickup_menu_flags[256];
+extern s16 g_world_crystal_pickup_menu_result; /* primary menu result */
+extern s16 g_world_crystal_pickup_move_result; /* secondary (move) menu result */
 
 /* menu */
 /* WORLD's menus (world_menu_*): its copy of BATTLE's menu engine, the world menu's rows, the display
@@ -2025,7 +2029,7 @@ typedef struct world_menu_window {
     u16 h;
 } world_menu_window_t;
 
-/* The primitive block at 0x801cc074: the dead-unit and window-frame panels
+/* The primitive block at 0x801cc074: the crystal pickup and window-frame panels
  * lay it out as two panel frames, world_menu_build_sprite_page as two sprite
  * pages. */
 typedef union world_menu_panel_buffer {
@@ -2296,8 +2300,8 @@ extern battle_menu_allocation_t g_world_menu_allocator_slot_records[16];
 extern u8 g_world_menu_buffer_arena[0x70][0x100];
 extern s32 g_world_menu_preview_target_action;
 extern world_fade_tile_frame_t g_world_menu_panel_fade_frames[];
-extern s32 g_world_active_menu;                    /* active menu */
-extern s32 g_world_menu_dead_unit_panel_parameter; /* WORLD twin of g_battle_menu_dead_unit_panel_parameter */
+extern s32 g_world_active_menu;                         /* active menu */
+extern s32 g_world_menu_crystal_pickup_panel_parameter; /* WORLD twin of g_battle_menu_crystal_pickup_panel_parameter */
 extern u8 g_world_menu_text_page_image[];
 extern u8 g_world_menu_window_frame_image[];
 extern s16 g_world_menu_at_list_primary_values[];
@@ -2536,7 +2540,7 @@ void world_menu_block_help(void);
 void world_menu_set_window_scale_step(s8 step);
 void world_menu_size_entry_to_text(world_menu_entry_t* entry, s16* width, s16* height, s32* out_pad, s32 pad_short);
 void world_menu_start_description_text_thread(world_menu_description_record_t* record);
-void world_menu_open_option_dead_unit_panel(void);
+void world_menu_open_option_crystal_pickup_panel(void);
 void world_menu_start_or_poll_thread(s32 thread_id, world_menu_thread_data_t* data);
 void world_menu_start_system_function_thread(s32 parameter);
 void world_menu_start_thread_group(s32 parameter, s32 location_id, s32 window_x, s32 window_y);

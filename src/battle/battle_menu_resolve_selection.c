@@ -29,9 +29,9 @@ s32 battle_menu_resolve_selection(void) {
         for (i = 0; i < 31; i++) {
             if (menu == g_battle_menu_command_maps[i].menu_id) {
                 if (command != 0xFF) {
-                    if (menu == BATTLE_MENU_ID_DEAD_UNIT) {
-                        command = g_battle_dead_unit_action;
-                        g_battle_menu_selected_action.item_id = g_battle_dead_unit_result;
+                    if (menu == BATTLE_MENU_ID_CRYSTAL_PICKUP) {
+                        command = g_battle_crystal_pickup_action;
+                        g_battle_menu_selected_action.item_id = g_battle_crystal_pickup_item;
                         option = MENU_SELECTION_NONE;
                     } else if (menu == 0x19 || menu >= 0x64) {
                         command = *(g_battle_menu_command_maps[i].map + option + 1);

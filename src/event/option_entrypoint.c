@@ -6,7 +6,7 @@
  * (GAME_OPTION_UNCHANGED) is 1 while every option equals g_option_reference_values. Except for the crystal
  * panel, stop the four unit panels. Then run the game options (option_menu_run_options_thread in the slot
  * below, waiting for it), the AT list (option_menu_start_at_list_thread) or the crystal or chest panel
- * (option_menu_start_dead_unit_threads). BATTLE's battle_menu_open_option_* threads start it after loading
+ * (option_menu_start_crystal_pickup_threads). BATTLE's battle_menu_open_option_* threads start it after loading
  * the overlay; world_option_run_menu is WORLD's copy. */
 void option_entrypoint(s32 menu_type) {
     world_menu_entry_t* menu = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
@@ -46,7 +46,7 @@ void option_entrypoint(s32 menu_type) {
         }
     }
 
-    if (menu_type != OPTION_MENU_DEAD_UNIT) {
+    if (menu_type != OPTION_MENU_CRYSTAL_PICKUP) {
         battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
         battle_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL, 0, 0, 1);
         battle_thread_set_parameters(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS, 0, 0, 1);
@@ -75,7 +75,7 @@ void option_entrypoint(s32 menu_type) {
         battle_script_pulse_tutorial_wait_value(0xf9);
         option_menu_start_at_list_thread();
     }
-    if (menu_type == OPTION_MENU_DEAD_UNIT) {
-        option_menu_start_dead_unit_threads();
+    if (menu_type == OPTION_MENU_CRYSTAL_PICKUP) {
+        option_menu_start_crystal_pickup_threads();
     }
 }

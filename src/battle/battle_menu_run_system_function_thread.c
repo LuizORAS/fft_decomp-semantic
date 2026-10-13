@@ -5,7 +5,7 @@
  * when navigation messages are off). It waits for the menu slot to free up and, under player input,
  * for the event thread (exiting if an event runs), then for the camera; it copies the record's text
  * and cancel count into its menu entry, its row action and menu id into the menu state, and starts the
- * record's thread in the menu slot. CRYSTAL_OR_TREASURE opens OPTION.OUT's dead-unit panel instead. */
+ * record's thread in the menu slot. CRYSTAL_OR_TREASURE opens OPTION.OUT's crystal pickup panel instead. */
 void battle_menu_run_system_function_thread(void) {
     s32 id;
     s32 value;
@@ -34,8 +34,8 @@ void battle_menu_run_system_function_thread(void) {
     g_battle_menu_current_id = value;
     g_battle_menu_thread_menu_data[entry->menu_entry_index].cancel_thread_count = entry->cancel_thread_count;
     if (id == BATTLE_SYSTEM_FUNCTION_CRYSTAL_OR_TREASURE) {
-        battle_thread_start(NATIVE_THREAD_SLOT_MENU, battle_menu_open_option_dead_unit_panel);
-        battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, g_battle_menu_dead_unit_panel_parameter, 0);
+        battle_thread_start(NATIVE_THREAD_SLOT_MENU, battle_menu_open_option_crystal_pickup_panel);
+        battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, g_battle_menu_crystal_pickup_panel_parameter, 0);
         battle_thread_exit_current();
     }
     if (id != BATTLE_SYSTEM_FUNCTION_CLOSE) {

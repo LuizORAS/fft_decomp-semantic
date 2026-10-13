@@ -475,7 +475,7 @@ typedef enum script_attack_entry_mode {
 typedef enum option_menu_type {
     OPTION_MENU_GAME_OPTIONS = 0,
     OPTION_MENU_AT_LIST = 1,
-    OPTION_MENU_DEAD_UNIT = 2, /* crystal and treasure panel */
+    OPTION_MENU_CRYSTAL_PICKUP = 2, /* crystal and treasure panel */
 } option_menu_type_e;
 
 /* A key in the list *_item_sort_id_list / equip_item_sort_list_by_criteria
@@ -946,17 +946,17 @@ typedef struct world_menu_button_piece {
     u16 y_offset; /* 0x0a */
 } world_menu_button_piece_t;
 
-/* Provisional layouts for the dead-unit ("treasure/crystal") result panel
- * started by option_menu_start_dead_unit_threads and
- * world_option_menu_start_dead_unit_threads. Only the fields those routines touch are
- * named; the surrounding bytes stay anonymous. dead_unit_menu_t opens with the
+/* Provisional layouts for the crystal pickup panel (FFHacktics: "crystal/treasure menus")
+ * started by option_menu_start_crystal_pickup_threads and
+ * world_option_menu_start_crystal_pickup_threads. Only the fields those routines touch are
+ * named; the surrounding bytes stay anonymous. crystal_pickup_menu_t opens with the
  * 0x3c menu record and uses the world_menu_entry_t names. */
-typedef struct dead_unit_entry_counts {
+typedef struct crystal_pickup_entry_counts {
     s16 visible_count;  /* 0x00 */
     s16 overflow_count; /* 0x02 */
-} dead_unit_entry_counts_t;
+} crystal_pickup_entry_counts_t;
 
-typedef struct dead_unit_menu {
+typedef struct crystal_pickup_menu {
     u8 _unused_000[4];
     s16 inner_width; /* 0x04 */
     u8 _unused_006[2];
@@ -966,7 +966,7 @@ typedef struct dead_unit_menu {
     u8 _unused_00e[6];
     s16 overall_width; /* 0x14 */
     u8 _unused_016[0x18];
-    dead_unit_entry_counts_t* entries; /* 0x30 */
+    crystal_pickup_entry_counts_t* entries; /* 0x30 */
     u8 _unused_034[6];
     s16 menu_type;         /* 0x3a */
     u8 at_list_menu[0x78]; /* 0x3c */
@@ -975,9 +975,9 @@ typedef struct dead_unit_menu {
     s16 message_id;        /* 0x148 */
     u8 _unused_14a[0x1e];
     u8 move_menu[4]; /* 0x168 */
-} dead_unit_menu_t;
+} crystal_pickup_menu_t;
 
-typedef char dead_unit_menu_size_must_be_0x16c[sizeof(dead_unit_menu_t) == 0x16c ? 1 : -1];
+typedef char crystal_pickup_menu_size_must_be_0x16c[sizeof(crystal_pickup_menu_t) == 0x16c ? 1 : -1];
 
 /* Menu descriptor for a pending help request. It is reached through the
  * native thread record's first function-parameter word, so its offsets are
@@ -1144,7 +1144,7 @@ typedef enum battle_menu_id {
     BATTLE_MENU_ID_ABILITY_PREVIEW_MESSAGE = 0x35, /* shown instead when that ability gets no turn */
     BATTLE_MENU_ID_EGG = 0x36,                     /* replaces OTHER_UNIT and OTHER_UNIT_INSPECT for an egg */
     BATTLE_MENU_ID_EGG_STATUS = 0x37,              /* EGG's Status row: only the invalid sound */
-    BATTLE_MENU_ID_DEAD_UNIT = 0x69,               /* crystal or treasure options */
+    BATTLE_MENU_ID_CRYSTAL_PICKUP = 0x69,          /* crystal or treasure options */
 } battle_menu_id_e;
 
 /* A row action (world_menu_entry_t::row_actions) from 0 to 0xff is the

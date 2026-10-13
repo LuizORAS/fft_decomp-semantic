@@ -117,9 +117,9 @@ category tab, with what is learned and each ability's costs.
   ([[option_menu_init_at_list]]) in the scrolling list thread
   ([[option_menu_run_list_thread]]); a row opens the unit view until BATTLE's
   mini menu state releases it ([[battle_menu_end_at_list_unit_view]]).
-- **Crystal or chest.** [[option_menu_start_dead_unit_threads]] offers the
+- **Crystal or chest.** [[option_menu_start_crystal_pickup_threads]] offers the
   crystal's abilities or a restore of HP and MP, or shows the chest's item, and
-  returns the choice in `g_battle_dead_unit_action`.
+  returns the choice in `g_battle_crystal_pickup_action`.
 - WORLD.BIN carries a copy (`world_option_*`) for the world menu's Options row
   ([[Menus]]).
 
@@ -213,7 +213,7 @@ retail. The same overlay draws the Status screen of a rider or a mount
 | What a screen's windows show | Its display scripts and its `<overlay>_menu_script_*` handlers |
 | The status banner | The five `<overlay>_panel_unit_status_banner_thread` copies and WORLD's |
 | The game options' values and defaults | [[option_entrypoint]], `g_option_reference_values`, [[option_menu_run_option_choice_thread]] |
-| The crystal's choices | [[option_menu_start_dead_unit_threads]], and BATTLE's [[battle_unit_generate_crystal_or_treasure]] |
+| The crystal's choices | [[option_menu_start_crystal_pickup_threads]], and BATTLE's [[battle_unit_generate_crystal_or_treasure]] |
 | Brave and Faith after a battle | [[require_party_apply_permanent_brave_faith_changes_and_collect_warnings]], [[require_party_find_low_brave_high_faith_departures]] |
 | Who joins after a battle | [[require_party_save_battle_units_and_find_join_candidates]], [[require_party_apply_post_battle_unit_changes]] |
 | The war trophies | [[require_reward_collect_war_trophies_and_bonus_money]] |

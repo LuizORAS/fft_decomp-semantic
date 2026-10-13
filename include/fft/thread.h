@@ -95,7 +95,7 @@ typedef enum native_borrowed_thread_slot {
     NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP = 2, /* the memory card screen's zooming backdrop */
     NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT = 6,    /* attack_deploy_run_screen, or the map-data-load-complete thread
                                                     * when a battle has no deployment */
-    /* The AT list of the dead-unit menu, once the unit view's panels have stopped. */
+    /* The AT list of the crystal pickup menu, once the unit view's panels have stopped. */
     NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD = 9, /* a wait-forever thread while the AT list's child runs */
     NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU = 10,
     NATIVE_BORROWED_THREAD_SLOT_FADE_OUT = 13, /* the fade-out thread that follows the unit list overlay */

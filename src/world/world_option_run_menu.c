@@ -3,7 +3,7 @@
 
 /* WORLD's copy of option_entrypoint: unpack the game options into the options menu's value table
  * and run one of OPTION's three menus (option_menu_type_e): the game options in the slot below, the AT
- * list or the dead-unit panel. Only the game options run in WORLD, from the world menu's Options row
+ * list or the crystal pickup panel. Only the game options run in WORLD, from the world menu's Options row
  * (world_option_open_game_options); the other two belong to WORLD's dead copy of the battle menus
  * (QUIRKS.md). */
 void world_option_run_menu(s32 mode) {
@@ -49,7 +49,7 @@ void world_option_run_menu(s32 mode) {
     g_world_menu_hide_numeric_values = 0;
     /* The target keeps this constant in a callee-saved register across the
      * mode 0 and mode 1 calls, so it is its own variable. */
-    last_mode = OPTION_MENU_DEAD_UNIT;
+    last_mode = OPTION_MENU_CRYSTAL_PICKUP;
     if (mode == OPTION_MENU_GAME_OPTIONS) {
         world_script_pulse_tutorial_wait_value(0xFD);
         world_thread_start(g_world_thread_current_id - 1, world_option_menu_run_options_thread);
@@ -64,6 +64,6 @@ void world_option_run_menu(s32 mode) {
         world_option_menu_start_at_list_thread();
     }
     if (mode == last_mode) {
-        world_option_menu_start_dead_unit_threads();
+        world_option_menu_start_crystal_pickup_threads();
     }
 }

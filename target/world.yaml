@@ -192,7 +192,7 @@ functions:
   - {addr: 0x800ef9d4, size: 8, name: world_text_run_spell_quote_thread, hash: 6d64edf91449c1b1}
   - {addr: 0x800ef9dc, size: 48, name: world_menu_open_option_game_options, hash: e3dd995d2b018a16}
   - {addr: 0x800efa0c, size: 48, name: world_menu_open_option_at_list, hash: 43fc42c9790bdf43}
-  - {addr: 0x800efa3c, size: 48, name: world_menu_open_option_dead_unit_panel, hash: e76892b74fd58b3a}
+  - {addr: 0x800efa3c, size: 48, name: world_menu_open_option_crystal_pickup_panel, hash: e76892b74fd58b3a}
   - {addr: 0x800efa6c, size: 108, name: world_menu_display_triangle_selection, hash: 11df91715534e82a}
   - {addr: 0x800efad8, size: 264, name: world_menu_fade_out_thread, hash: 9a5b4e6efe2ee31f}
   - {addr: 0x800efbe0, size: 260, name: world_menu_run_bunit_transition_thread, hash: eb985a136265b699}
@@ -298,7 +298,7 @@ functions:
   - {addr: 0x800f4f94, size: 64, name: world_menu_store_auto_battle_main_target_id, hash: eba4aacd9409368b}
   - {addr: 0x800f4fd4, size: 604, name: world_text_determine_spell_quote, hash: 6c48e87881d46ff1}
   - {addr: 0x800f5230, size: 212, name: world_menu_init_system_function, hash: c537ae196a1827bb}
-  - {addr: 0x800f5304, size: 128, name: world_menu_get_dead_unit_selection, hash: 2cbfb3b781403e89}
+  - {addr: 0x800f5304, size: 128, name: world_menu_get_crystal_pickup_selection, hash: 2cbfb3b781403e89}
   - {addr: 0x800f5384, size: 2556, name: world_menu_dispatch_system_function, hash: d8c0ee3dbff2b5b4}
   - {addr: 0x800f5d80, size: 168, name: world_unit_get_by_unit_id, hash: 7009f26291692b1c}
   - {addr: 0x800f5e28, size: 220, name: world_script_run_scenario_conditions, hash: 60f3fa3f123be7c6}
@@ -444,7 +444,7 @@ functions:
   - {addr: 0x80101cd0, size: 1436, name: world_option_menu_thin_window_frame_thread, hash: 96f16acf0efe9d12}
   - {addr: 0x8010226c, size: 40, name: world_option_thread_wait_forever, hash: ea714444aa8272b8}
   - {addr: 0x80102294, size: 40, name: world_option_thread_stop_after_yield, hash: f772d01efefb807c}
-  - {addr: 0x801022bc, size: 1644, name: world_option_menu_start_dead_unit_threads, hash: 349e8c6a75055eaf}
+  - {addr: 0x801022bc, size: 1644, name: world_option_menu_start_crystal_pickup_threads, hash: 349e8c6a75055eaf}
   - {addr: 0x80102928, size: 808, name: world_option_menu_init_at_list, hash: fa3c7133afaf86b2}
   - {addr: 0x80102c50, size: 328, name: world_option_menu_at_list_select_unit_thread, hash: 9767ee804f9e3394}
   - {addr: 0x80102d98, size: 224, name: world_option_menu_start_at_list_thread, hash: c8919ff036b5a45b}
@@ -1081,8 +1081,8 @@ data:
   - {addr: 0x801531c8, name: g_world_menu_pending_selection}
   - {addr: 0x801531d8, name: g_world_text_substitution_values}
   - {addr: 0x80153258, name: g_world_menu_help_blocked}
-  - {addr: 0x8015325c, name: g_world_dead_unit_action}
-  - {addr: 0x80153260, name: g_world_dead_unit_result}
+  - {addr: 0x8015325c, name: g_world_crystal_pickup_action}
+  - {addr: 0x80153260, name: g_world_crystal_pickup_item}
   - {addr: 0x80153264, name: g_world_unit_view_mode}
   - {addr: 0x80153268, name: g_world_menu_current_id}
   - {addr: 0x8015326c, name: g_world_event_speed}
@@ -1275,8 +1275,8 @@ data:
   - {addr: 0x80156d24, name: g_world_gfx_draw_area_scale_percent}
   - {addr: 0x80156d90, name: g_world_option_menu_entry_table}
   - {addr: 0x80156dbc, name: g_world_menu_at_list_entry_table}
-  - {addr: 0x80156de8, name: g_world_dead_unit_menu_entries}
-  - {addr: 0x80156e38, name: g_world_dead_unit_menu}
+  - {addr: 0x80156de8, name: g_world_crystal_pickup_menu_entries}
+  - {addr: 0x80156e38, name: g_world_crystal_pickup_menu}
   - {addr: 0x801570bc, name: g_world_menu_at_list_state}
   - {addr: 0x80157134, name: g_world_game_option_original_values}
   - {addr: 0x8015716c, name: g_world_game_option_values}
@@ -1911,7 +1911,7 @@ data:
   - {addr: 0x801a63d8, name: g_world_menu_panel_fade_frames}
   - {addr: 0x801a6650, name: g_world_screen_tint_tiles}
   - {addr: 0x801a6688, name: g_world_active_menu}
-  - {addr: 0x801a668c, name: g_world_menu_dead_unit_panel_parameter}
+  - {addr: 0x801a668c, name: g_world_menu_crystal_pickup_panel_parameter}
   - {addr: 0x801a6690, name: g_world_next_event_id}
   - {addr: 0x801a6694, name: g_world_event_current_input}
   - {addr: 0x801a6698, name: g_world_event_previous_input}
@@ -1920,7 +1920,7 @@ data:
   - {addr: 0x801a66a4, name: g_world_event_secondary_repeat_counter}
   - {addr: 0x801a66a8, name: g_world_unit_status_staging_data}
   - {addr: 0x801a66ac, name: g_world_script_rand16_state}
-  - {addr: 0x801a66b0, name: g_world_dead_unit_controller_input}
+  - {addr: 0x801a66b0, name: g_world_crystal_pickup_controller_input}
   - {addr: 0x801a66b4, name: g_world_menu_text_page_image}
   - {addr: 0x801ac6b4, name: g_world_at_list_pages}
   - {addr: 0x801ac91c, name: g_world_gfx_image_blit_source}
@@ -1930,10 +1930,10 @@ data:
   - {addr: 0x801acd44, name: g_world_menu_at_list_primary_values}
   - {addr: 0x801ad144, name: g_world_menu_at_list_secondary_values}
   - {addr: 0x801ad344, name: g_world_menu_at_list_indices}
-  - {addr: 0x801ad544, name: g_world_dead_unit_menu_flags}
+  - {addr: 0x801ad544, name: g_world_crystal_pickup_menu_flags}
   - {addr: 0x801ad944, name: g_world_menu_at_list_flags}
-  - {addr: 0x801adb4c, name: g_world_dead_unit_menu_result}
-  - {addr: 0x801adb50, name: g_world_dead_unit_move_result}
+  - {addr: 0x801adb4c, name: g_world_crystal_pickup_menu_result}
+  - {addr: 0x801adb50, name: g_world_crystal_pickup_move_result}
   - {addr: 0x801ae334, name: g_world_action_target_list_slots}
   - {addr: 0x801ae3d4, name: g_world_menu_at_list_text}
   - {addr: 0x801ae884, name: g_world_options_menu_title_rect}
@@ -2190,7 +2190,7 @@ data:
   - {addr: 0x801cd164, name: g_world_name_entry_original_name}
   - {addr: 0x801cd16c, name: g_world_name_confirm_result}
   - {addr: 0x801cd170, name: g_world_thread_current_id}
-  - {addr: 0x801cd174, name: g_world_dead_unit_context}
+  - {addr: 0x801cd174, name: g_world_crystal_pickup_context}
   - {addr: 0x801cd178, name: g_world_gfx_flat_line_capacity}
   - {addr: 0x801cd17c, name: g_world_gfx_line_f3_capacity}
   - {addr: 0x801cd180, name: g_world_gfx_gradient_line_capacity}
