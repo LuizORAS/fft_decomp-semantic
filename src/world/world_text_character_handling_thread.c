@@ -483,7 +483,7 @@ void world_text_character_handling_thread(void) {
                             }
                         } else {
                             if (code == TEXT_END_WAIT_FOR_CONFIRM && rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
-                                g_world_menu_event_state_flag = 1;
+                                g_world_menu_message_waiting_for_confirm = 1;
                             }
                             if (code == TEXT_NEWLINE
                                 || (code == TEXT_END_WAIT_FOR_CONFIRM && rec.box_type == DIALOG_BOX_TYPE_CENTERED)) {
@@ -549,7 +549,7 @@ void world_text_character_handling_thread(void) {
                         }
                     }
                 }
-                g_world_menu_event_state_flag = 0;
+                g_world_menu_message_waiting_for_confirm = 0;
                 hidden_window = WINDOW_AT(g_world_menu_packet_buffer_index);
                 hidden_window->sprites[0].x0 = 0x200;
                 hidden_window->sprites[1].x0 = 0x200;
@@ -587,7 +587,7 @@ void world_text_character_handling_thread(void) {
                     rec.color = 0;
                     rec.line = 0;
                     rec.portrait = thread->function_parameter_4 - 1;
-                    g_world_menu_event_state_flag = 0;
+                    g_world_menu_message_waiting_for_confirm = 0;
                     win->portrait_code = rec.portrait;
                     value_index = 0;
                     saved = (u8*)-1;
@@ -622,7 +622,7 @@ void world_text_character_handling_thread(void) {
             if (rec.mark != -1) {
                 choice = rec.mark;
                 for (i = 0;; i += g_world_event_speed) {
-                    g_world_menu_event_state_flag = 1;
+                    g_world_menu_message_waiting_for_confirm = 1;
                     choice_window = WINDOW_AT(g_world_menu_packet_buffer_index);
                     choice_window->sprites[0].x0
                         = mark_x + (choice_window->quads[0].x0 + rec.x - choice_window->quads[0].u0) - ((i >> 4) & 3);
@@ -662,7 +662,7 @@ void world_text_character_handling_thread(void) {
                 g_world_script_variables[EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION] = choice - rec.mark;
             }
             NEXT();
-            g_world_menu_event_state_flag = 0;
+            g_world_menu_message_waiting_for_confirm = 0;
         } else if (code == TEXT_WAIT_FOR_RESUME) {
             world_thread_set_current_task_id(NATIVE_THREAD_TASK_WAIT_FOR_RESUME);
             while (world_thread_get_current_task_id() != NATIVE_THREAD_TASK_RESUME) {
@@ -690,7 +690,7 @@ void world_text_character_handling_thread(void) {
                 rec.mark = -1;
                 rec.line = 0;
                 repeat = 0;
-                g_world_menu_event_state_flag = 0;
+                g_world_menu_message_waiting_for_confirm = 0;
                 saved = (u8*)-1;
                 world_thread_yield();
                 continue;
@@ -845,7 +845,7 @@ end:
         world_copy_bytes(&to, &from, 8);
         world_menu_tween_window_quads(win, &from, &to, 4);
     }
-    g_world_menu_event_state_flag = 0;
+    g_world_menu_message_waiting_for_confirm = 0;
     win->active = 0;
     world_menu_release_window_buffer_pair(win);
     world_gfx_free_tpage7_vram(&rec.rect);

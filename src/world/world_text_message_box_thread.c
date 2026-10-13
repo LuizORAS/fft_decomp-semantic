@@ -65,7 +65,7 @@ void world_text_message_box_thread(void) {
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_MESSAGE_BOX);
     value_index = 0;
     script_variable_base = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
-    g_world_menu_event_state_flag = 0;
+    g_world_menu_message_waiting_for_confirm = 0;
     param = (s32)world_thread_get_current_parameter_1();
     rec.box_type = param & 0x70;
     rec.dialog_type = param;
@@ -195,7 +195,7 @@ void world_text_message_box_thread(void) {
             }
             message = world_thread_get_current_parameter_2();
             if ((message & no_value) == no_value) {
-                g_world_menu_event_state_flag = 0;
+                g_world_menu_message_waiting_for_confirm = 0;
                 break;
             }
             text = world_text_find_entry(message);
@@ -216,7 +216,7 @@ void world_text_message_box_thread(void) {
             rec.color = 0;
             rec.mark = -1;
             rec.line = 0;
-            g_world_menu_event_state_flag = 0;
+            g_world_menu_message_waiting_for_confirm = 0;
             width_override = no_value;
             rec.text = message;
             repeat = 0;
@@ -237,7 +237,7 @@ void world_text_message_box_thread(void) {
                 break;
             }
             if (code == TEXT_END_WAIT_FOR_CONFIRM) {
-                g_world_menu_event_state_flag = 1;
+                g_world_menu_message_waiting_for_confirm = 1;
                 if (saved != (u8*)-1) {
                     text = saved;
                     saved = (u8*)-1;

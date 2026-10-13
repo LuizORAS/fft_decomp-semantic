@@ -18,7 +18,7 @@ s32 wldcore_proposition_step_message(wldcore_proposition_report_level_t* state, 
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,
             wldcore_proposition_adjust_message_index(message, *party_index) + TEXT_ID_WORLD_MESSAGE_BASE, 0);
     } else if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
-        if (world_menu_get_event_state_flag()) {
+        if (world_menu_is_message_waiting_for_confirm()) {
             state->phase = 0;
             return 1;
         }

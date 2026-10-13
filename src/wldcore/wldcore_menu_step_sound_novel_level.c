@@ -88,7 +88,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
             g_wldcore_window_records[level->overlay_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         }
 
-        if (world_menu_get_event_state_flag() != 0) {
+        if (world_menu_is_message_waiting_for_confirm() != 0) {
             buttons = g_wldcore_new_button_presses;
             if (buttons & PSX_PAD_CIRCLE) {
                 return;

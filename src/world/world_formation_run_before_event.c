@@ -12,7 +12,7 @@ void world_formation_run_before_event(void) {
     ClearImage(&g_world_screen_clear_rect, 0, 0, 0);
     DrawSync(0);
     VSync(0);
-    world_menu_load_text_1bd8_with_face();
+    world_menu_init_with_world_text_and_faces();
     DrawSync(0);
     VSync(0);
     world_menu_reset_context();

@@ -12,7 +12,7 @@ enum {
  * from its ENTD (mode 2); any other mode leaves it empty. WORLD's menu text, which holds the unit
  * names, is loaded first. The inventory is reset to the new-game stock and the war funds to 2000. */
 void main_party_init_new_game(int mode) {
-    world_menu_load_text_1bd8();
+    world_menu_init_with_world_text();
     main_party_clear_all();
 
     if (mode == NEW_GAME_GENERATE_DEFAULT_UNIT) {

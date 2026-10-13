@@ -34,7 +34,7 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
         }
         return;
     case WLDCORE_DETAIL_PHASE_BUILD:
-        if (level->timer < 8 || world_menu_get_event_state_flag() == 0) {
+        if (level->timer < 8 || world_menu_is_message_waiting_for_confirm() == 0) {
             level->timer = level->timer + 1;
             return;
         }

@@ -24,7 +24,7 @@ void wldcore_proposition_step_milestone_level(wldcore_menu_milestone_level_t* mi
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_IN, 0x10);
         }
     } else if (milestone->phase == WLDCORE_MILESTONE_PHASE_LAST_MESSAGE) {
-        if (world_menu_get_event_state_flag() != 0
+        if (world_menu_is_message_waiting_for_confirm() != 0
             && g_wldcore_audio_queue.current_command == WLDCORE_AUDIO_COMMAND_NONE
             && g_wldcore_audio_queue.count == 0) {
             wldcore_sound_enqueue_audio_command(

@@ -1,23 +1,24 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Variant of world_menu_load_text_1bd8 for a caller that is not the main
- * thread: it leaves g_world_thread_current_id alone, loads the common
- * graphics in mode 1 and also uploads the WLDFACE portraits.
- */
-void world_menu_load_text_1bd8_with_face(void) {
+/* Set up WORLD's menus from the main thread for a new game (main_party_init_new_game): the common
+ * graphics, the menu text file EVENT/WORLD.LZW (0xe800 bytes) and the default menu entries.
+ *
+ * The file opens with 0x20 section offsets relative to its byte 0x80; they become
+ * g_world_text_section_pointers, with the location names taken from the resident copy. The deployment
+ * script variables are reset to one squad. */
+void world_menu_init_with_world_text(void) {
     s32 i;
     s32 value;
     s32 base;
     s32* src;
     s32* dst;
 
+    g_world_thread_current_id = NATIVE_THREAD_SLOT_MAIN;
     world_menu_init_subsystem_pointers();
-    world_menu_load_common_graphics(1);
-    world_gfx_load_wldface_to_frame_buffer();
+    world_menu_load_common_graphics(0);
     g_world_thread_call_target = (void (*)(void))main_file_load_to_address_checked;
-    world_thread_call_on_main_stack(DISC_SECTOR_EVENT_WORLD_LZW, 0xE800, g_world_menu_text_file_buffer);
+    world_thread_call_on_main_stack(DISC_SECTOR_EVENT_WORLD_LZW, 0xe800, g_world_menu_text_file_buffer);
     world_menu_reset_subsystems();
     world_script_set_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE, 0);
     g_world_menu_thread_menu_data = g_world_menu_default_entries;

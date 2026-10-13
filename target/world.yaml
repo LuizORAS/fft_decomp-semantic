@@ -464,12 +464,12 @@ functions:
   - {addr: 0x801061e0, size: 404, name: world_menu_load_common_graphics, hash: 4f4893c1bf04f5c3}
   - {addr: 0x80106374, size: 32, name: world_menu_set_default_entry_0_text_values, hash: e951445d9ba69499}
   - {addr: 0x80106394, size: 24, name: world_menu_set_default_entry_1_text_values, hash: e5187cb39ef48e11}
-  - {addr: 0x801063ac, size: 208, name: world_menu_load_text_1c18, hash: 85a51106e23b2564}
-  - {addr: 0x8010647c, size: 240, name: world_menu_load_text_1bd8_with_face, hash: 2949453965a504d1}
-  - {addr: 0x8010656c, size: 244, name: world_menu_load_text_1bd8, hash: 9b77898a804f0646}
+  - {addr: 0x801063ac, size: 208, name: world_menu_init_with_open_text, hash: 85a51106e23b2564}
+  - {addr: 0x8010647c, size: 240, name: world_menu_init_with_world_text_and_faces, hash: 2949453965a504d1}
+  - {addr: 0x8010656c, size: 244, name: world_menu_init_with_world_text, hash: 9b77898a804f0646}
   - {addr: 0x80106660, size: 400, name: world_formation_run_before_event, hash: b1f839992ab561c6}
   - {addr: 0x801067f0, size: 24, name: world_menu_take_and_clear_thread_result, hash: f911e25bccbe7ecc}
-  - {addr: 0x80106808, size: 16, name: world_menu_get_event_state_flag, hash: 5aa3f020305cf4e4}
+  - {addr: 0x80106808, size: 16, name: world_menu_is_message_waiting_for_confirm, hash: 5aa3f020305cf4e4}
   - {addr: 0x80106818, size: 28, name: world_thread_request_stop, hash: c5d1a355242deb8b}
   - {addr: 0x80106834, size: 52, name: world_text_resume_printing, hash: 48d03c8b58af46be}
   - {addr: 0x80106868, size: 36, name: world_text_is_printing, hash: 9e115a06329f757e}
@@ -1130,7 +1130,7 @@ data:
   - {addr: 0x80153310, name: g_world_menu_help_open}
   - {addr: 0x80153314, name: g_world_menu_hosted_frame}
   - {addr: 0x80153318, name: g_world_menu_cursor_confirm_hold}
-  - {addr: 0x8015331c, name: g_world_menu_event_state_flag}
+  - {addr: 0x8015331c, name: g_world_menu_message_waiting_for_confirm}
   - {addr: 0x80153320, name: g_world_screen_fade}
   - {addr: 0x80153328, name: g_world_menu_hide_numeric_values}
   - {addr: 0x8015332c, name: g_world_menu_suspend_state}
