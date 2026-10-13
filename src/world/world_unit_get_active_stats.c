@@ -1,4 +1,4 @@
-#include "fft/battle_unit.h"
+#include "fft/unit.h"
 #include "fft/world.h"
 
 unit_stats_t* world_unit_get_active_stats(void) {

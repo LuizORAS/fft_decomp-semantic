@@ -860,6 +860,33 @@ typedef enum ai_autobattle_mode {
 } ai_autobattle_mode_e;
 
 /* unit stats */
+/* Battle Stats 0x182 links the two simulation records in a mounted pair. */
+typedef enum battle_mount_info_flags {
+    BATTLE_MOUNT_INFO_PARTNER_ID_MASK = 0x1f,
+    BATTLE_MOUNT_INFO_FLAG_MOUNT = 0x40,
+    BATTLE_MOUNT_INFO_FLAG_RIDER = 0x80,
+    BATTLE_MOUNT_INFO_ROLE_MASK = 0xc0,
+} battle_mount_info_flags_e;
+
+/* Lifecycle states stored in Battle Stats 0x183. */
+typedef enum battle_unit_existence_state {
+    BATTLE_UNIT_EXISTENCE_OFF_FIELD = 0, /* defined but not placed; AddUnit can use the slot */
+    BATTLE_UNIT_EXISTENCE_ACTIVE = 1,
+    BATTLE_UNIT_EXISTENCE_PENDING_REMOVAL = 2,
+    BATTLE_UNIT_EXISTENCE_DISABLED = 128,
+    BATTLE_UNIT_EXISTENCE_NONE = 255, /* empty slot */
+} battle_unit_existence_state_e;
+
+typedef enum battle_unit_equipped_flags {
+    BATTLE_UNIT_EQUIPPED_FLAG_MATERIA_BLADE = 0x04,
+    BATTLE_UNIT_EQUIPPED_FLAG_SWORD = 0x08,
+} battle_unit_equipped_flags_e;
+
+/* unit_stats_t.entd_slot value for an unused or removed slot. */
+enum {
+    BATTLE_ENTD_SLOT_NONE = 0xff,
+};
+
 /* Current and calculated unit attributes, also built for WORLD menus. BATTLE
  * stores 21 consecutive 448-byte records at 0x801908cc. A live battle_unit_t
  * points to its stats through the member at 0x134. */
@@ -959,6 +986,13 @@ typedef enum battle_unit_ability_outcome {
     BATTLE_ABILITY_OUTCOME_AFFECTED = 0x02,      /* that action changed the unit */
     BATTLE_ABILITY_OUTCOME_LEARN_CHECKED = 0x04, /* the learn-on-hit pass consumed AFFECTED */
 } battle_unit_ability_outcome_e;
+
+extern unit_stats_t g_battle_unit_stats[BATTLE_UNIT_SLOT_COUNT];
+
+unit_stats_t* battle_unit_get_existing_pointer(u32 battle_id);
+unit_stats_t* battle_unit_get_stats_from_battle_id(u32 battle_id);
+s32 unit_has_any_current_status(s32 battle_id);
+void unit_increase_blue_team_brave_by_10(void);
 
 /* encounters */
 enum {

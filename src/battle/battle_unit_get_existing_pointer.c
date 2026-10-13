@@ -1,4 +1,4 @@
-#include "fft/battle_unit.h"
+#include "fft/unit.h"
 #include "psx/types.h"
 
 /* The battle stats of an occupied unit slot, or 0 for an empty slot or an id past

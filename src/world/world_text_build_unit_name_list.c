@@ -1,4 +1,4 @@
-#include "fft/battle_unit.h"
+#include "fft/unit.h"
 #include "fft/world.h"
 
 /* Battle-unit twin of world_text_generate_formation_unit_name_string: packs

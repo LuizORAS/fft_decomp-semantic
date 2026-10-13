@@ -1,10 +1,10 @@
 #include "fft/battle_menu.h"
-#include "fft/battle_unit.h"
 #include "fft/gfx.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
+#include "fft/unit.h"
 /* BATTLE twin: battle_menu_run_unit_editor_panel_thread. */
 #include "fft/world.h"
 #include "psx/libgpu.h"

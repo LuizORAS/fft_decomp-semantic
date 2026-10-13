@@ -1,5 +1,5 @@
-#include "fft/battle_unit.h"
 #include "fft/thread.h"
+#include "fft/unit.h"
 #include "fft/world.h"
 
 /*

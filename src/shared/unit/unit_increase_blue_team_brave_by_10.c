@@ -1,4 +1,4 @@
-#include "fft/battle_unit.h"
+#include "fft/unit.h"
 
 /* Visit every blue-team slot, including empty ones; the byte addition precedes the cap. */
 void unit_increase_blue_team_brave_by_10(void) {

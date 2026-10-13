@@ -1,4 +1,4 @@
-#include "fft/battle_unit.h"
+#include "fft/unit.h"
 
 /* Returns 1 when any current status byte is set; missing battle IDs remain unchecked. */
 s32 unit_has_any_current_status(s32 battle_id) {

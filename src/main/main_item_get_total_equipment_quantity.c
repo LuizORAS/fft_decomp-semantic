@@ -1,5 +1,5 @@
-#include "fft/battle_unit.h"
 #include "fft/main.h"
+#include "fft/unit.h"
 #include "psx/types.h"
 
 /* Counts how many of `item_id` the player owns: the inventory stock plus the

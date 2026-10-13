@@ -1,5 +1,5 @@
-#include "fft/battle_unit.h"
 #include "fft/script.h"
+#include "fft/unit.h"
 #include "fft/world.h"
 
 /* Chooses whether an ability announcement shows a spell quote.

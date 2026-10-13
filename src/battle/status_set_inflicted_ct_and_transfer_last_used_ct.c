@@ -1,4 +1,5 @@
 #include "fft/battle_status.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* Apply the removals of the unit's action result: each removed status leaves

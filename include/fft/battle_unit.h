@@ -916,14 +916,6 @@ typedef enum battle_unit_mount_state {
     BATTLE_UNIT_MOUNT_STATE_MOUNT = 2,
 } battle_unit_mount_state_e;
 
-/* Battle Stats 0x182 links the two simulation records in a mounted pair. */
-typedef enum battle_mount_info_flags {
-    BATTLE_MOUNT_INFO_PARTNER_ID_MASK = 0x1f,
-    BATTLE_MOUNT_INFO_FLAG_MOUNT = 0x40,
-    BATTLE_MOUNT_INFO_FLAG_RIDER = 0x80,
-    BATTLE_MOUNT_INFO_ROLE_MASK = 0xc0,
-} battle_mount_info_flags_e;
-
 /* Result of battle_unit_get_chocobo_mount_state. */
 typedef enum battle_chocobo_mount_state {
     BATTLE_CHOCOBO_MOUNT_NONE = 0, /* not a chocobo, or one in an unmountable status */
@@ -957,15 +949,6 @@ typedef enum battle_unit_action_restriction {
     BATTLE_UNIT_ACTION_RESTRICTION_DEEP_WATER = 2,
 } battle_unit_action_restriction_e;
 
-/* Lifecycle states stored in Battle Stats 0x183. */
-typedef enum battle_unit_existence_state {
-    BATTLE_UNIT_EXISTENCE_OFF_FIELD = 0, /* defined but not placed; AddUnit can use the slot */
-    BATTLE_UNIT_EXISTENCE_ACTIVE = 1,
-    BATTLE_UNIT_EXISTENCE_PENDING_REMOVAL = 2,
-    BATTLE_UNIT_EXISTENCE_DISABLED = 128,
-    BATTLE_UNIT_EXISTENCE_NONE = 255, /* empty slot */
-} battle_unit_existence_state_e;
-
 /* How battle_gfx_construct_polygon_data_for_units draws a sprite part. The
  * unit's sprite_display_flags, its horizontal_flip_flag, the flags a
  * sequence toggles and each part's own are XORed together. */
@@ -987,11 +970,6 @@ typedef enum battle_sprite_display_blend_mode {
 
 enum { BATTLE_SPRITE_DISPLAY_BLEND_MASK = 0x60 };
 
-typedef enum battle_unit_equipped_flags {
-    BATTLE_UNIT_EQUIPPED_FLAG_MATERIA_BLADE = 0x04,
-    BATTLE_UNIT_EQUIPPED_FLAG_SWORD = 0x08,
-} battle_unit_equipped_flags_e;
-
 typedef enum battle_unit_height_flags {
     BATTLE_UNIT_HEIGHT_NON_CHOCOBO = 0x20,
     BATTLE_UNIT_HEIGHT_SHARED_TILE = 0x40,
@@ -1009,11 +987,6 @@ typedef enum battle_unit_tile_filter {
     BATTLE_UNIT_TILE_STATUS_FILTERS
     = BATTLE_UNIT_TILE_FILTER_TREASURE | BATTLE_UNIT_TILE_FILTER_TRANSPARENT | BATTLE_UNIT_TILE_FILTER_CRYSTAL,
 } battle_unit_tile_filter_e;
-
-/* unit_stats_t.entd_slot value for an unused or removed slot. */
-enum {
-    BATTLE_ENTD_SLOT_NONE = 0xff,
-};
 
 /* unit sequences and statuses */
 /* An EVTCHR slot's fixed SEQ storage. Its 32-bit header fields are unset and unread;
@@ -1149,12 +1122,10 @@ extern battle_unit_t g_battle_units[BATTLE_UNIT_RUNTIME_SLOT_COUNT];
 extern battle_unit_slot_state_t g_battle_unit_slot_states[];
 extern s32 g_battle_unit_graphics_load_complete;
 extern battle_unit_t* g_battle_unit_list_head;
-extern unit_stats_t g_battle_unit_stats[BATTLE_UNIT_SLOT_COUNT];
 
 /* 0x8016604e: result of battle_gfx_poll_unit_graphics_load, 0 done / 1 pending. */
 extern u16 g_battle_unit_graphics_load_pending;
 
-unit_stats_t* battle_unit_get_existing_pointer(u32 battle_id);
 s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters);
 s32 battle_unit_draw_and_activate_by_runtime_id(u32 runtime_id);
 s32 battle_unit_disable_remove(s32 battle_id);
@@ -1165,7 +1136,6 @@ battle_unit_t* battle_unit_get_by_battle_id(u16 battle_id);
 battle_unit_t* battle_unit_get_by_runtime_id(u16 runtime_id);
 s32 battle_unit_get_runtime_id_by_battle_id(u32 battle_id);
 battle_unit_t* battle_unit_get_source(void);
-unit_stats_t* battle_unit_get_stats_from_battle_id(u32 battle_id);
 s32 battle_unit_has_runtime_id(u32 runtime_id);
 s32 battle_unit_move_to_head(u32 runtime_id);
 s32 battle_unit_remove_by_runtime_id(u32 runtime_id);
@@ -1232,7 +1202,6 @@ battle_chocobo_mount_state_e battle_unit_get_chocobo_mount_state(const unit_stat
 void battle_unit_mount_onto_pending_mount(battle_unit_t* unit);
 s32 battle_unit_prepare_rider_dismount(u32 runtime_id, s32 direction, s32 jump_length);
 struct battle_unit* battle_unit_get_mount(struct battle_unit* unit);
-s32 unit_has_any_current_status(s32 battle_id);
 battle_unit_action_restriction_e battle_unit_get_action_restriction(const unit_stats_t* unit);
 
 /* battle_unit_animation_e of each item type's attack at a higher, a level and a lower target. */
@@ -1366,7 +1335,6 @@ u8 battle_unit_calculate_move_exp_jp_up_to_earn(const unit_stats_t* unit);
 s32 battle_unit_count_crystals(void);
 void battle_unit_find_war_trophies_and_bonus_money(battle_war_result_t* result);
 battle_unit_t* battle_unit_get_crystal_or_treasure_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
-void unit_increase_blue_team_brave_by_10(void);
 void battle_unit_learn_used_ability(unit_stats_t* unit);
 void battle_unit_transform_into_morbol(unit_stats_t* unit);
 void battle_unit_update_attacker_earned_experience(s32 outcome);

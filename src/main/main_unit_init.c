@@ -1,5 +1,5 @@
-#include "fft/battle_unit.h"
 #include "fft/main.h"
+#include "fft/unit.h"
 
 /* Build a battle unit from one ENTD unit slot on the stack and save it into the
  * party roster. Returns -2 for an empty ENTD slot, otherwise
