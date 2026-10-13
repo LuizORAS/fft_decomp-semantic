@@ -18,9 +18,9 @@ s32 bunit_ability_update_list_menu(void) {
     s32 category;
 
     if (g_bunit_ability_list_ready == 0) {
-        g_bunit_menu_row_callbacks[0].value = bunit_job_get_current_level;
+        g_bunit_menu_row_callbacks[0].value = menu_job_get_current_level;
         g_bunit_menu_row_callbacks[1].value = bunit_job_get_current_total_jp;
-        g_bunit_menu_row_callbacks[2].value = bunit_job_get_next_level_jp_requirement;
+        g_bunit_menu_row_callbacks[2].value = menu_job_get_next_level_jp_requirement;
         g_bunit_menu_row_callbacks[3].value = bunit_job_get_current_jp;
         g_bunit_menu_row_callbacks[4].value = menu_ability_is_non_action_learned;
         g_bunit_menu_row_callbacks[5].value = bunit_job_is_current_mastered;
@@ -28,13 +28,13 @@ s32 bunit_ability_update_list_menu(void) {
         g_bunit_menu_row_callbacks[7].value = menu_ability_get_mp_cost_display_value;
         g_bunit_menu_row_callbacks[8].value = menu_ability_get_ct_display_value;
         g_bunit_menu_row_callbacks[9].value = menu_ability_get_jp_cost_display_value;
-        g_bunit_menu_row_callbacks[10].value = bunit_ability_is_movement_tab;
-        g_bunit_menu_row_callbacks[11].value = bunit_ability_is_support_tab;
-        g_bunit_menu_row_callbacks[12].value = bunit_ability_is_reaction_tab;
-        g_bunit_menu_row_callbacks[13].value = bunit_ability_is_action_tab;
-        g_bunit_menu_row_callbacks[14].value = bunit_ability_is_non_action_unlearned;
+        g_bunit_menu_row_callbacks[10].value = menu_ability_is_movement_tab;
+        g_bunit_menu_row_callbacks[11].value = menu_ability_is_support_tab;
+        g_bunit_menu_row_callbacks[12].value = menu_ability_is_reaction_tab;
+        g_bunit_menu_row_callbacks[13].value = menu_ability_is_action_tab;
+        g_bunit_menu_row_callbacks[14].value = menu_ability_is_non_action_unlearned;
         g_bunit_ability_list_confirm_prompt_state = 0;
-        g_bunit_menu_row_callbacks[15].value = bunit_ability_is_action;
+        g_bunit_menu_row_callbacks[15].value = menu_ability_is_action;
         bunit_menu_clear_selection_record(10);
         bunit_menu_clear_selection_record(11);
         bunit_menu_clear_selection_record(12);
@@ -46,9 +46,9 @@ s32 bunit_ability_update_list_menu(void) {
         g_bunit_ability_list_job_name_row[0] = g_bunit_job_selected_id;
         bunit_text_render_id_rows_to_vram(
             g_text_section_pointers[TEXT_SECTION_JOB_NAMES], g_bunit_ability_list_job_name_row, &rect, 0);
-        g_bunit_ability_category = menu_update_wrapped_horizontal_selection(4, 0, 0);
+        g_menu_ability_category = menu_update_wrapped_horizontal_selection(4, 0, 0);
         bunit_ability_build_list(
-            g_bunit_unit_selected_index, g_bunit_job_selected_id, g_bunit_ability_category, g_menu_ability_entries, 0);
+            g_bunit_unit_selected_index, g_bunit_job_selected_id, g_menu_ability_category, g_menu_ability_entries, 0);
         bunit_menu_init_scrollable_list_core(
             g_menu_ability_entries, 0, g_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
         g_bunit_ability_list_ready = 1;
@@ -71,13 +71,13 @@ s32 bunit_ability_update_list_menu(void) {
     }
     category = bunit_menu_update_horizontal_selection_and_mark_change(
         4, 0, g_bunit_menu_input_repeat_mask, MAIN_SFX_PAGE_SWITCH);
-    if (category != g_bunit_ability_category) {
-        bunit_menu_set_selection_record(g_bunit_ability_category + 10, g_bunit_menu_list_selected_index,
+    if (category != g_menu_ability_category) {
+        bunit_menu_set_selection_record(g_menu_ability_category + 10, g_bunit_menu_list_selected_index,
             g_bunit_menu_scroll_base_index, g_menu_ability_entries);
-        g_bunit_ability_category = category;
+        g_menu_ability_category = category;
         bunit_ability_build_list(
-            g_bunit_unit_selected_index, g_bunit_job_selected_id, g_bunit_ability_category, g_menu_ability_entries, 0);
-        bunit_menu_get_selection_record(g_bunit_ability_category + 10, &selected, &scroll, g_menu_ability_entries);
+            g_bunit_unit_selected_index, g_bunit_job_selected_id, g_menu_ability_category, g_menu_ability_entries, 0);
+        bunit_menu_get_selection_record(g_menu_ability_category + 10, &selected, &scroll, g_menu_ability_entries);
         bunit_menu_init_scrollable_list(
             g_menu_ability_entries, selected, scroll, g_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
         bunit_gfx_set_transition_frame(10);

@@ -27,12 +27,19 @@ s32 menu_copy_u8_to_u16_terminated(u16* destination, const u8* source);
 void menu_copy_u8_to_u16(u16* destination, const u8* source, s32 count);
 
 /* ability callbacks */
+extern s16 g_menu_ability_category;  /* menu_ability_category_e; BUNIT and JOBSTTS tab selection */
 extern s16 g_menu_ability_entries[]; /* Packed ability IDs/flags; -1 terminates the list. */
 extern s32 g_menu_ability_type;
 extern ability_data_t* g_menu_selected_ability_data;
 extern main_ability_secondary_pointer_t g_menu_selected_ability_secondary_data;
 
+s32 menu_ability_is_action(s32 unused_row);
+s32 menu_ability_is_action_tab(s32 unused_row);
+s32 menu_ability_is_movement_tab(s32 unused_row);
 s32 menu_ability_is_non_action_learned(s32 index);
+s32 menu_ability_is_non_action_unlearned(s32 index);
+s32 menu_ability_is_reaction_tab(s32 unused_row);
+s32 menu_ability_is_support_tab(s32 unused_row);
 s32 menu_ability_get_mp_cost_display_value(s32 index);
 s32 menu_ability_get_ct_display_value(s32 index);
 s32 menu_ability_get_jp_cost_display_value(s32 index);
@@ -44,6 +51,8 @@ extern s32 g_menu_job_current_level;
 extern u32 g_menu_job_next_level_jp_requirement;
 
 s32 menu_job_calculate_next_level_jp_requirement(s32 index);
+s32 menu_job_get_current_level(s32 unused_row);
+s32 menu_job_get_next_level_jp_requirement(s32 unused_row);
 
 /* primitives */
 void menu_init_default_poly_ft4(POLY_FT4* poly);
@@ -542,8 +551,8 @@ typedef enum menu_item_list_state {
 } menu_item_list_state_e;
 
 /* Ability list tab of the WORLD, BUNIT and JOBSTTS ability menus
- * (g_world_ability_category, g_bunit_ability_category,
- * g_jobstts_ability_category) and the kind argument of their list builders. */
+ * (g_world_ability_category and g_menu_ability_category) and the kind
+ * argument of their list builders. */
 typedef enum menu_ability_category {
     MENU_ABILITY_CATEGORY_ACTION = 0,
     MENU_ABILITY_CATEGORY_REACTION = 1,

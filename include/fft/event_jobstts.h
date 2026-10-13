@@ -33,7 +33,6 @@ void jobstts_unit_copy_job_data(battle_stats_t* unit, jobstts_unit_job_data_t* d
 void jobstts_unit_init_job_data(s32 unit_id);
 
 /* ability */
-extern s16 g_jobstts_ability_category; /* menu_ability_category_e */
 
 extern u8 g_jobstts_ability_list_initialized;
 extern s16 g_jobstts_ability_list_job_name_ids[];
@@ -41,12 +40,6 @@ extern menu_instruction_t g_jobstts_ability_list_render_commands;
 
 s32 jobstts_ability_build_list(
     s16 unit_index, s16 job_id, menu_ability_category_e ability_category, s16* list, s32 unlearned_only);
-s32 jobstts_ability_is_action(s32 unused_row);
-s32 jobstts_ability_is_action_tab(s32 unused_row);
-s32 jobstts_ability_is_movement_tab(s32 unused_row);
-s32 jobstts_ability_is_non_action_unlearned(s32 index);
-s32 jobstts_ability_is_reaction_tab(s32 unused_row);
-s32 jobstts_ability_is_support_tab(s32 unused_row);
 s32 jobstts_ability_update_list_menu(void);
 
 /* job */
@@ -63,9 +56,7 @@ s32 jobstts_job_calculate_current_mastered(s32 index);
 s32 jobstts_job_calculate_current_total_jp(s32 index);
 s32 jobstts_job_get_base(s16 unit_id);
 s32 jobstts_job_get_current_jp(s32 unused_row);
-s32 jobstts_job_get_current_level(s32 unused_row);
 s32 jobstts_job_get_current_total_jp(s32 unused_row);
-s32 jobstts_job_get_next_level_jp_requirement(s32 unused_row);
 s32 jobstts_job_is_current_mastered(s32 unused_row);
 
 /* menus */

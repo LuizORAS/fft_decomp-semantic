@@ -136,18 +136,11 @@ s32 bunit_unit_get_max_stat(s32 unit_index);
 void bunit_unit_sort_index_list_by_order_keys(s32 sort_mode);
 
 /* ability */
-extern s16 g_bunit_ability_category; /* menu_ability_category_e */
 extern s8 g_bunit_ability_list_confirm_prompt_state;
 
 extern s16 g_bunit_ability_list_job_name_row[];
 extern u8 g_bunit_ability_list_ready;
 
-s32 bunit_ability_is_action(s32 unused_row);
-s32 bunit_ability_is_action_tab(s32 unused_row);
-s32 bunit_ability_is_movement_tab(s32 unused_row);
-s32 bunit_ability_is_non_action_unlearned(s32 index);
-s32 bunit_ability_is_reaction_tab(s32 unused_row);
-s32 bunit_ability_is_support_tab(s32 unused_row);
 s32 bunit_ability_build_list(s16 unit_index, s16 job_id, s32 ability_category, s16* ability_list, s32 mode);
 s32 bunit_ability_update_list_menu(void);
 
@@ -167,9 +160,7 @@ s32 bunit_job_calculate_current_mastered(s32 index);
 s32 bunit_job_calculate_current_total_jp(s32 index);
 s32 bunit_job_get_base(s16 unit_id);
 s32 bunit_job_get_current_jp(s32 unused_row);
-s32 bunit_job_get_current_level(s32 unused_row);
 s32 bunit_job_get_current_total_jp(s32 unused_row);
-s32 bunit_job_get_next_level_jp_requirement(s32 unused_row);
 s32 bunit_job_is_current_mastered(s32 unused_row);
 
 /* comparison */
