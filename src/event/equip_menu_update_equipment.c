@@ -47,7 +47,7 @@ s32 equip_menu_update_equipment(void) {
     } else if (g_equip_menu_substate == MENU_ITEM_LIST_STATE_ACTION) {
         g_equip_menu_substate = equip_menu_update_item_action_state();
     } else if (g_equip_menu_substate == MENU_ITEM_LIST_STATE_SORT_ORDER) {
-        g_equip_menu_substate = equip_run_item_type_order_mode();
+        g_equip_menu_substate = equip_item_run_type_order_mode();
     }
 
     input = 0;

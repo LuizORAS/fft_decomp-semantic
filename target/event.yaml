@@ -1325,7 +1325,7 @@ functions:
   - {addr: 0x801c526c, size: 944, name: equip_menu_run_slot_item_browser, hash: 0db836beeb548c8f}
   - {addr: 0x801c561c, size: 772, name: equip_item_run_rearrange_mode, hash: 07c6315c51d8cbdd}
   - {addr: 0x801c5920, size: 328, name: equip_menu_update_item_action_state, hash: 6b38592770b7b8bc}
-  - {addr: 0x801c5a68, size: 872, name: equip_run_item_type_order_mode, hash: 609e5be9bdf31b35}
+  - {addr: 0x801c5a68, size: 872, name: equip_item_run_type_order_mode, hash: 609e5be9bdf31b35}
   - {addr: 0x801c5dd0, size: 220, name: equip_menu_draw_equipment_slot_marker, hash: 67526a8c92d2999e}
   - {addr: 0x801c5eac, size: 808, name: equip_menu_draw_weapon_hand_icons, hash: 0e13bfdaa6abb47a}
   - {addr: 0x801c61d4, size: 964, name: equip_menu_draw_item_status_list, hash: 540adc3d6181c1fd}
@@ -1347,7 +1347,7 @@ functions:
   - {addr: 0x801c79d4, size: 104, name: equip_item_prepend_to_category_list, hash: ea719a53cf244b40}
   - {addr: 0x801c7a3c, size: 128, name: equip_item_remove_from_category_list, hash: 71937d05d6e62d46}
   - {addr: 0x801c7abc, size: 72, name: equip_item_clear_stat_sums, hash: 740a9e32a9c766bb}
-  - {addr: 0x801c7b04, size: 552, name: equip_collect_item_stat_deltas, hash: 0ac56f16113047c1}
+  - {addr: 0x801c7b04, size: 552, name: equip_item_collect_stat_deltas, hash: 0ac56f16113047c1}
   - {addr: 0x801c7d2c, size: 188, name: equip_item_calculate_swap_stat_delta, hash: b8cc1a11e7a4d8e7}
   - {addr: 0x801c7de8, size: 424, name: equip_item_subtract_scaled_stats, hash: 7621477fabb93d49}
   - {addr: 0x801c7f90, size: 216, name: equip_item_calculate_equipment_swap_stat_delta, hash: f6342e487bb56d15}
@@ -1374,7 +1374,7 @@ functions:
   - {addr: 0x801c9024, size: 40, name: equip_thread_stop_and_clear_state, hash: be4dbfe6e8168a66}
   - {addr: 0x801c904c, size: 156, name: equip_thread_start_managed, hash: 8a302f302bc0aafe}
   - {addr: 0x801c90e8, size: 124, name: equip_text_start_help_thread, hash: 214e1e5f54bfe73c}
-  - {addr: 0x801c9164, size: 832, name: equip_update_controller_input, hash: 65ff61bb1c34603f}
+  - {addr: 0x801c9164, size: 832, name: equip_input_update_controller, hash: 65ff61bb1c34603f}
   - {addr: 0x801c94a4, size: 16, name: equip_set_s16_801d86ac, hash: aadf313708db9276}
   - {addr: 0x801c94b4, size: 336, name: equip_input_update_with_message_state, hash: 63f30df9b75d076f}
   - {addr: 0x801c9604, size: 36, name: equip_menu_clear_selection_values, hash: 8592e44c9c9b0dea}

@@ -17,7 +17,7 @@ void equip_item_sum_equipment_stat_details(world_item_stat_detail_t* total, u16*
     total->magical_shield_evade = 0;
     total->magical_accessory_evade = 0;
     for (i = 0; i < 5; i++) {
-        equip_collect_item_stat_deltas(equipment[i] & EQUIP_ITEM_ID_MASK, &summary, &detail, i);
+        equip_item_collect_stat_deltas(equipment[i] & EQUIP_ITEM_ID_MASK, &summary, &detail, i);
         total->right_weapon_power += detail.right_weapon_power;
         total->left_weapon_power += detail.left_weapon_power;
         total->right_weapon_evade += detail.right_weapon_evade;

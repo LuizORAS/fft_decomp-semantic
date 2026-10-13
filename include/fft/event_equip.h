@@ -6,16 +6,21 @@
 #include "fft/battle.h"
 
 /* thread */
+/* The screen's menus, panels and text run as BATTLE threads: starting a menu record's thread and
+ * polling it, the stop request (third thread parameter 1), parking a thread, and the indicator packets. */
+
 extern u8 g_equip_thread_idle_stop_pending;
 extern s32 g_equip_thread_state;
 extern battle_menu_status_panel_indicator_prims_t g_equip_thread_indicator_packets[2][2];
 void equip_thread_request_stop(s32 id);
-void equip_text_start_character_thread_if_idle(s32 thread_id, s32 parameter_0, s32 parameter_1, s32 parameter_2);
+
 s32 equip_thread_start_managed(s32 thread_id, world_menu_entry_t* desc);
 void equip_thread_stop_and_clear_state(s32 id);
 void equip_thread_wait_forever(void);
 
 /* bits */
+/* The two bit readers (most significant bit first); the primary one reads glyph pixels. */
+
 extern s32 g_equip_bits_reader_1_index;
 extern u8 g_equip_bits_reader_1_reset;
 extern s32 g_equip_bits_reader_2_index;
@@ -51,6 +56,9 @@ world_menu_window_command_t* equip_menu_script_draw_window_frame(world_menu_wind
 u8* equip_menu_script_draw_tiled_rectangle(u8* command);
 
 /* input */
+/* The pad: newly pressed buttons, the two repeat rates and the page scroll, cleared while the
+ * windows open and while the text thread runs. */
+
 enum {
     EQUIP_ITEM_LIST_END = 0xFF,
     EQUIP_ITEM_ID_MASK = 0x3FF,
@@ -73,7 +81,7 @@ extern u16 g_equip_input_previous;
 void equip_input_clear_state(void);
 s32 equip_input_read_page_scroll_direction(void);
 void equip_input_update_with_message_state(void);
-void equip_update_controller_input(void);
+void equip_input_update_controller(void);
 
 /* item */
 /* EQUIP's item lists, as WORLD's (world_item_*): the owned items of each category, their sorts and
@@ -126,12 +134,11 @@ world_item_icon_source_t* equip_item_build_type_icon_source(s32 index);
 void equip_item_calculate_swap_stat_delta(
     struct world_item_stat_detail* output, struct world_item_stat_summary* out, s16 from, s16 to, s32 slot);
 
-void equip_menu_load_sort_key_list(s32 list_index, s16* destination);
 s32 equip_item_get_equipped_count(s32 item_entry);
-s32 equip_menu_get_entry_item_equipped_count(s32 row);
+
 item_menu_category_e equip_item_get_menu_category(s16 item_id);
 s32 equip_item_get_total_count(s16 item_id);
-s32 equip_menu_get_entry_item_count(s32 row);
+
 s32 equip_item_get_type(s32 item_id);
 void equip_item_get_type_icon_rect(s32 item_type, world_item_icon_source_t* output);
 s32 equip_item_is_in_category_list(s32 item_id, s32 category_index);
@@ -140,17 +147,33 @@ void equip_item_rebuild_category_list(s32 category);
 void equip_item_remove_from_category_list(s32 item_id, s32 category_index);
 s32 equip_item_sort_list_by_category_order(s32 category_index, s16* list);
 void equip_item_store_category_list(s32 category_index, const s16* source);
-void equip_menu_store_sort_key_list(s32 list_index, const s16* source);
-s32 equip_run_item_type_order_mode(void);
+
+s32 equip_item_run_type_order_mode(void);
 void equip_item_sort_list_by_criteria(s32 mode, s16* list);
 s32 equip_item_build_filtered_list(s16 unit_index, s16 sort_mode, s8 category, s16* list, u8 equip_filter);
-battle_menu_status_panel_graphic_descriptor_t* equip_menu_get_entry_item_icon_source(s32 row);
+
 s32 equip_item_get_ranking_value(s32 item_id);
 
 void equip_item_subtract_scaled_stats(struct world_item_stat_detail* out, struct world_item_stat_detail* scaled,
     struct world_item_stat_detail* base, s32 scale);
 
+void equip_item_calculate_equipment_swap_stat_delta(
+    struct world_item_stat_detail* detail_total, struct world_item_stat_summary* acc, u16* froms, u16* tos);
+
+void equip_item_sum_equipment_stat_details(world_item_stat_detail_t* total, u16* equipment);
+
+s32 equip_item_run_rearrange_mode(void);
+
+extern world_menu_entry_t g_equip_type_order_menu_hand_body;
+extern world_menu_entry_t g_equip_type_order_menu_other_slots;
+extern s8 g_equip_type_order_ready;
+
+void equip_item_collect_stat_deltas(
+    s16 raw_item, struct world_item_stat_summary* summary, struct world_item_stat_detail* detail, s32 alternate);
+
 /* equip */
+/* The Equip mode: the slot being changed, its item list and the stat preview of the item under the cursor. */
+
 extern u16 g_equip_equip_item_cursor_anim[];
 extern s8 g_equip_equip_item_list_open;
 extern s8 g_equip_equip_item_list_refresh;
@@ -161,6 +184,8 @@ extern s8 g_equip_equip_item_slot;
 extern s8 g_equip_equip_mode_initialized;
 
 /* equipment */
+/* The equipment panel (equip_panel_run_equipment_list_thread): its parameters, style and render commands. */
+
 extern u8 g_equip_equipment_panel_params[];
 extern s32 g_equip_equipment_panel_redraw;
 extern s32 g_equip_equipment_panel_style;
@@ -272,9 +297,6 @@ extern s16 g_equip_unit_saved_mp;
 extern equip_unit_data_t g_equip_unit_records[];
 extern struct world_item_stat_summary g_equip_selected_unit_stat_summary;
 
-void equip_item_calculate_equipment_swap_stat_delta(
-    struct world_item_stat_detail* detail_total, struct world_item_stat_summary* acc, u16* froms, u16* tos);
-
 s32 equip_unit_can_equip_item_id(s16 unit_index, s16 item_entry);
 s32 equip_unit_has_two_hands(s16 unit_index);
 s32 equip_unit_has_two_swords(s16 unit_index);
@@ -285,11 +307,12 @@ s32 equip_unit_set_slot_item(s16 unit_index, s16 slot, s32 item_id);
 equip_item_slot_result_e equip_unit_validate_slot_item(s16 unit_index, s16 slot, s32 item_id);
 void equip_unit_build_data_from_battle_stats(struct battle_stats* stats, equip_unit_data_t* unit);
 void equip_unit_commit_loadout_to_battle_stats(void);
-void equip_item_sum_equipment_stat_details(world_item_stat_detail_t* total, u16* equipment);
-void equip_render_unit_status_panel_thread(void);
+
 s32 equip_unit_is_two_handing_weapon(weapon_pair_t* slots, s32 two_hands_support);
 
 /* rearrange */
+/* The rearrange mode of an item list: the picked row and the preview under the cursor. */
+
 extern s8 g_equip_rearrange_active;
 extern u8 g_equip_rearrange_anim_frame;
 extern s16 g_equip_rearrange_picked_cursor;
@@ -297,6 +320,9 @@ extern u16 g_equip_rearrange_picked_scroll;
 extern s16 g_equip_rearrange_preview_cursor;
 
 /* editor */
+/* The numeric (stats) panel thread in screen thread slot NUMERIC_EDITOR (equip_editor_run_numeric_thread),
+ * with its geometry and buffers. */
+
 extern world_image_location_t g_equip_editor_numeric_geometry[];
 extern menu_number_entry_t g_equip_editor_numeric_descriptor_a[];
 extern menu_number_entry_t g_equip_editor_numeric_descriptor_b[];
@@ -318,6 +344,11 @@ extern world_gfx_image_load_parameters_t g_equip_editor_numeric_texture[];
 void equip_editor_run_numeric_thread(void);
 
 /* panel */
+/* The panels around the lists: starting and stopping their threads, the unit status banner, the
+ * character status frame and its images, and the colours of the status panel's sprites. */
+
+void equip_render_unit_status_panel_thread(void);
+
 extern s16 g_equip_panel_selected_unit_data[];
 extern world_image_location_t g_equip_panel_item_icon_texture[];
 extern RECT g_equip_panel_origin_offsets[];
@@ -372,7 +403,23 @@ void equip_panel_toggle_numeric_editor_thread(s32 enable);
 void equip_panel_toggle_unit_status_thread(s32 enable);
 void equip_panel_run_equipment_list_thread(void);
 
+/* RECT[1] (right panel) of g_equip_panel_origin_offsets. Kept as its own symbol: spelling it as an element lets GCC
+ * derive the table base from this address and changes equip_panel_run_ability_list_thread. */
+extern RECT g_equip_right_panel_frame_rect;
+extern RECT g_equip_character_status_frame_rect[];
+extern RECT g_equip_character_status_draw_area_rect;
+extern u8 g_equip_status_label_image[];
+extern u8 g_equip_armor_bonus_render_commands[];
+extern RECT g_equip_status_label_image_rect;
+
+/* Status image rects, the EQUIP.OUT copy of WORLD's
+ * g_world_status_display_image_rects (0x8018cf68). */
+extern RECT g_equip_status_display_image_rects[];
+
 /* gfx */
+/* Drawing: the two graphics contexts and their primitive pools, portraits, quads, tiles, lines, draw
+ * areas and VRAM transfers. */
+
 /* Per-buffer primitive-pool pointers used by EQUIP.OUT's renderer. The 25
  * stores at 0x801cda80 establish the offsets in this 0x64-byte table. */
 typedef struct equip_gfx_context {
@@ -500,8 +547,7 @@ extern u16 g_equip_gfx_sprite_16_count;
  * descriptor equip_menu_draw_equipment_slot_marker feeds to the oriented quad
  * enqueue. */
 extern world_oriented_quad_t g_equip_gfx_blank_cell_rect;
-void equip_menu_select_primitive_color_palette(
-    world_menu_palette_primitives_t* primitives, const world_status_thread_t* thread);
+
 void equip_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 
 void equip_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const void* source,
@@ -549,6 +595,11 @@ void equip_gfx_enqueue_textured_quad_current_ot(
     const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut, s32 unused_priority);
 
 /* text */
+/* Text: glyphs and number fields rendered into 4bpp images, text-id rows uploaded to VRAM, the help and
+ * message threads and the help text table. */
+
+void equip_text_start_character_thread_if_idle(s32 thread_id, s32 parameter_0, s32 parameter_1, s32 parameter_2);
+
 /* Slots of the equip screen's own threads. The WORLD formation screen runs
  * the same threads in other slots (world_thread_slot_e and
  * native_screen_thread_slot_e); here BATTLE's suspended menu threads stay in 7 and 8. */
@@ -598,7 +649,6 @@ void equip_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_gly
 s32 equip_text_render_glyph_to_4bpp_image(
     s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style);
 
-void equip_menu_set_palette_mode(s32 mode);
 void equip_text_start_help_thread(s32 text_id);
 void equip_text_concatenate_entries(const u8* text_table, u8* dst, s16* list, s32 separate);
 
@@ -613,11 +663,32 @@ void equip_text_render_signed_decimal_entries(
 void equip_text_show_message_with_sound(s32 message_id, s32 sound_id);
 const u8* equip_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2);
 
+extern u32 g_equip_help_text_table[];
+
 /* menu */
+/* The screen's state machine and its menus: the command menu, the Equip and Remove modes with the
+ * clear-all prompt, the slot item browser, scrollable lists with their saved positions, the selectors,
+ * the cursors, the item detail panel's icons and the palette mode. */
+
+void equip_menu_load_sort_key_list(s32 list_index, s16* destination);
+
+s32 equip_menu_get_entry_item_equipped_count(s32 row);
+
+s32 equip_menu_get_entry_item_count(s32 row);
+
+void equip_menu_store_sort_key_list(s32 list_index, const s16* source);
+
+battle_menu_status_panel_graphic_descriptor_t* equip_menu_get_entry_item_icon_source(s32 row);
+
+void equip_menu_select_primitive_color_palette(
+    world_menu_palette_primitives_t* primitives, const world_status_thread_t* thread);
+
+void equip_menu_set_palette_mode(s32 mode);
+
 typedef s32 (*equip_row_callback_t)(s32 row);
 
 /* EQUIP's 0x3c-byte menu records: the main commands, the item actions and
- * (in equip_run_item_type_order_mode) the item-type order menus. Each is
+ * (in equip_item_run_type_order_mode) the item-type order menus. Each is
  * started through equip_thread_start_managed, which makes it the current
  * g_battle_menu_thread_menu_data. */
 extern world_menu_entry_t g_equip_menu_command_entry;
@@ -693,7 +764,7 @@ void equip_menu_load_images_and_reset_lists(void);
 void equip_menu_reset_selection_indices(void);
 void equip_menu_reset_state_flags(void);
 void equip_menu_restore_list_selection(s32 idx, s16* p1, s16* p2, s16* list);
-s32 equip_item_run_rearrange_mode(void);
+
 void equip_menu_icon_list_thread(void);
 void equip_menu_scroll_list_by_page(s32 direction, const u8* menu);
 void equip_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_index, s16* items);
@@ -721,32 +792,16 @@ s32 equip_menu_update_vertical_selection_and_mark_change(
 s16 equip_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, s32 input_mask);
 s16 equip_menu_update_wrapped_vertical_selection(u16 entry_count, u8 selection_index, s32 input_mask);
 
-/* other */
-extern u8 g_equip_sound_queued_effect_id; /* main_sfx_e */
-extern u8 g_equip_sound_suppress_queued;
-
-/* RECT[1] (right panel) of g_equip_panel_origin_offsets. Kept as its own symbol: spelling it as an element lets GCC
- * derive the table base from this address and changes equip_panel_run_ability_list_thread. */
-extern RECT g_equip_right_panel_frame_rect;
-extern RECT g_equip_character_status_frame_rect[];
-extern RECT g_equip_character_status_draw_area_rect;
-extern u8 g_equip_status_label_image[];
-extern u8 g_equip_armor_bonus_render_commands[];
-extern RECT g_equip_status_label_image_rect;
-extern u32 g_equip_help_text_table[];
 extern u16 g_equip_remove_all_equipment_ids[];
 extern s8 g_equip_remove_all_equipment_prompt_active;
 extern s8 g_equip_remove_mode_initialized;
 
-/* Status image rects, the EQUIP.OUT copy of WORLD's
- * g_world_status_display_image_rects (0x8018cf68). */
-extern RECT g_equip_status_display_image_rects[];
-extern world_menu_entry_t g_equip_type_order_menu_hand_body;
-extern world_menu_entry_t g_equip_type_order_menu_other_slots;
-extern s8 g_equip_type_order_ready;
+/* screen */
+/* The entry point, which BATTLE's event frame calls once a frame while the companion overlay state is
+ * EQUIP, and the queued sound. */
 
-void equip_collect_item_stat_deltas(
-    s16 raw_item, struct world_item_stat_summary* summary, struct world_item_stat_detail* detail, s32 alternate);
+extern u8 g_equip_sound_queued_effect_id; /* main_sfx_e */
+extern u8 g_equip_sound_suppress_queued;
 
 s32 equip_entrypoint(s32 unit, void* otag);
 

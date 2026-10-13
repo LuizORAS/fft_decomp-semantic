@@ -77,7 +77,7 @@ s32 equip_menu_run_slot_item_browser(void) {
             slot = 0;
         }
         g_equip_slot_item_browser_previewed_index = g_equip_menu_selected_list_index;
-        equip_collect_item_stat_deltas(slot, &g_equip_selected_unit_stat_summary, &g_equip_item_preview_stat_detail, 0);
+        equip_item_collect_stat_deltas(slot, &g_equip_selected_unit_stat_summary, &g_equip_item_preview_stat_detail, 0);
         g_equip_unit_status_panel_redraw = 1;
         g_equip_item_numeric_panel_redraw = 1;
     }

@@ -1,7 +1,9 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-/* `rect` carries the two rect as (x0, y0, x1, y1). */
+/* Take the next LINE_F2 packet from the pool, draw it from (rect x, y) to (rect w, h) with an x bias of
+ * 0x80 in `color`, semi-transparent when `semitrans` is set, and link it into ordering-table entry
+ * `otag_index`; twin of world_gfx_enqueue_line_f2. */
 void equip_gfx_enqueue_line_f2(const RECT* rect, const u8* color, u8 semitrans, s32 otag_index) {
     LINE_F2* line;
 

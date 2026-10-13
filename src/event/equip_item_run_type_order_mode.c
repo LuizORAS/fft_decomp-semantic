@@ -6,7 +6,7 @@
  * A picked item type moves to the front of the slot's type-order list, after
  * which the item list is re-sorted and redrawn. Returns 5 while the sub-menu
  * thread runs and 2 once it closes. */
-s32 equip_run_item_type_order_mode(void) {
+s32 equip_item_run_type_order_mode(void) {
     s16 names[8];
     s32 i;
     s32 picked;
@@ -64,7 +64,7 @@ s32 equip_run_item_type_order_mode(void) {
         equip_menu_init_scrollable_list_core(g_equip_item_list_entries, g_equip_menu_selected_list_index,
             g_battle_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         equip_gfx_set_transition_frame(10);
-        equip_collect_item_stat_deltas(g_equip_item_list_entries[g_equip_menu_selected_list_index],
+        equip_item_collect_stat_deltas(g_equip_item_list_entries[g_equip_menu_selected_list_index],
             &g_equip_selected_unit_stat_summary, &g_equip_item_preview_stat_detail, 0);
         g_equip_item_numeric_panel_redraw = 1;
     }
