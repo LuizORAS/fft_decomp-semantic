@@ -8048,6 +8048,10 @@ gns_record_view_t* battle_map_load_gns_and_move_find_items(s32 map_id);
 void battle_map_reset_mesh_render_state(void);
 
 /* menu */
+/* The battle menus (battle_menu_*): menu entries run as threads in slots 3 to 8, the turn menus and
+ * their lists, the system-function prompts, the windows, text images and cursors they draw, the unit
+ * panels and the companion overlays they open. WORLD carries a copy (world_menu_*). */
+
 /* BATTLE scratch at 0x801cc074, in the event-overlay area past BATTLE.BIN:
  * battle_menu_build_sprite_page lays it out as two sprite pages and the
  * scrolling ability list saves its five 16-colour CLUTs there. WORLD keeps

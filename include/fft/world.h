@@ -1904,6 +1904,10 @@ extern s16 g_world_dead_unit_menu_result; /* primary menu result */
 extern s16 g_world_dead_unit_move_result; /* secondary (move) menu result */
 
 /* menu */
+/* WORLD's menus (world_menu_*): its copy of BATTLE's menu engine, the world menu's rows, the display
+ * scripts, scrollable lists and saved positions of the full-screen menus, and the copies of HELPMENU's
+ * code. WORLD's copy of OPTION's code is world_option_*. */
+
 /* The builder walks the table with a byte offset stepping by 8 (the
  * target's induction variable), so it addresses these fields by offset. */
 enum world_menu_line_layout_offset {
