@@ -34,9 +34,9 @@ void action_set_target_coords_and_attacker_anim(void) {
             target = battle_unit_get_misc_data_by_battle_id(action->target_list[i]);
             if (target != 0) {
                 target->pending_attack_result
-                    = action_finalize_attack_and_flag_reactions(target->battle_data->misc_unit_id);
+                    = action_finalize_attack_and_flag_reactions(target->battle_data->battle_id);
                 if (target->pending_attack_result == -1) {
-                    battle_unit_find_relocation_tile(target->battle_data->misc_unit_id, &target->dismount);
+                    battle_unit_find_relocation_tile(target->battle_data->battle_id, &target->dismount);
                 }
             }
         }
@@ -62,8 +62,8 @@ void action_set_target_coords_and_attacker_anim(void) {
                 target->map_x = unit->strike.target_new_x;
                 target->map_y = unit->strike.target_new_y;
                 target->map_z = unit->strike.target_new_map_level;
-                battle_unit_set_tile_position(target->battle_data->misc_unit_id, target->map_x, target->map_y,
-                    target->map_z, target->facing / 1024);
+                battle_unit_set_tile_position(
+                    target->battle_data->battle_id, target->map_x, target->map_y, target->map_z, target->facing / 1024);
                 battle_unit_set_move_and_screen_coords(target);
             }
         }

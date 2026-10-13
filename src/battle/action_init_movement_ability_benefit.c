@@ -15,7 +15,7 @@ s32 action_init_movement_ability_benefit(battle_stats_t* unit) {
     s32 amount;
     action_data_t* action;
 
-    unit_id = unit->misc_unit_id;
+    unit_id = unit->battle_id;
     g_action_target = unit;
     g_action_target_data = &unit->action;
     g_action_current_ability.target_id = unit_id;

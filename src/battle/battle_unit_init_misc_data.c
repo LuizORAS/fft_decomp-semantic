@@ -197,7 +197,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     *head = unit;
     battle_gfx_set_thrown_item_graphic_palette(
         unit->battle_data->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON], unit);
-    status_init_special_flag_enabling(unit->battle_data->misc_unit_id);
+    status_init_special_flag_enabling(unit->battle_data->battle_id);
     unit->movement.suppress_sfx_and_landing_effects = 1;
     battle_unit_update_display_by_misc_id(unit->unit_id);
     battle_unit_set_animation_based_on_status(unit);

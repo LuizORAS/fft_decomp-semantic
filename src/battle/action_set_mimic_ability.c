@@ -35,7 +35,7 @@ s32 action_set_mimic_ability(battle_stats_t* unit) {
     if ((unit->team_flags & BATTLE_TEAM_MASK) != g_action_current_attacker.team) {
         return 0;
     }
-    if (unit->misc_unit_id == current->actor_id) {
+    if (unit->battle_id == current->actor_id) {
         return 0;
     }
     menu_type = g_main_action_menu_types_by_skillset[current->skillset_id];
@@ -60,8 +60,8 @@ s32 action_set_mimic_ability(battle_stats_t* unit) {
     }
     main_util_copy_action_data(current, &action);
     action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
-    action.actor_id = unit->misc_unit_id;
-    unit_id = unit->misc_unit_id;
+    action.actor_id = unit->battle_id;
+    unit_id = unit->battle_id;
     action.target_position.vx = x;
     action.target_position.vy = z;
     weapon_id = g_action_current_attacker.right_hand_weapon_id;

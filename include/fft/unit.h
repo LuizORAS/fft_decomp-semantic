@@ -949,7 +949,7 @@ typedef struct battle_stats {
     u8 movement_taken;      /* 0x187 */
     u8 action_taken;        /* 0x188 */
     u8 ability_outcome;     /* 0x189 */
-    u8 misc_unit_id;        /* 0x18a */
+    u8 battle_id;           /* 0x18a; index in g_battle_unit_stats */
     u8 ability_ct;          /* 0x18b */
     action_data_t action;   /* 0x18c through 0x1b7 */
     u8 auto_battle_setting; /* 0x1b8; ai_autobattle_mode_e */

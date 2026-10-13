@@ -29,7 +29,7 @@ s32 battle_unit_update_fade_out_removal(battle_unit_misc_data_t* unit) {
         if (unit->unit_id != g_battle_unit_source_misc_id) {
             unit->fade_out_phase = BATTLE_MISC_FADE_OUT_REMOVED;
             if (unit->battle_data != 0) {
-                battle_unit_disable_remove(unit->battle_data->misc_unit_id);
+                battle_unit_disable_remove(unit->battle_data->battle_id);
             }
             battle_unit_remove_misc(unit);
             return 1;

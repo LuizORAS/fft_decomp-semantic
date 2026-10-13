@@ -8,7 +8,7 @@ s32 battle_gfx_get_spritesheet_vram_by_battle_id(u32 battle_id) {
     while (unit != 0) {
         battle_stats_t* battle_data = unit->battle_data;
 
-        if (battle_data != 0 && battle_data->misc_unit_id == battle_id) {
+        if (battle_data != 0 && battle_data->battle_id == battle_id) {
             return unit->spritesheet_vram_slot;
         }
         unit = unit->previous;

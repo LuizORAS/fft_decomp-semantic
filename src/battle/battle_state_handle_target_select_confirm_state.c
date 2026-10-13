@@ -16,8 +16,7 @@ void battle_state_handle_target_select_confirm_state(void) {
         caster = battle_unit_get_casting_misc_data();
         target = battle_unit_get_selectable_misc_data_at_map_coords(
             g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
-        battle_menu_store_auto_battle_main_target_id(
-            target->battle_data->misc_unit_id, caster->battle_data->misc_unit_id);
+        battle_menu_store_auto_battle_main_target_id(target->battle_data->battle_id, caster->battle_data->battle_id);
         target_move_cursor_to_unit(caster);
         battle_menu_set_next_script_action_menus();
         break;

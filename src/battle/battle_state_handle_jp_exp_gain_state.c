@@ -26,19 +26,19 @@ void battle_state_handle_jp_exp_gain_state(void) {
     }
     if (g_action_turn_event_type == BATTLE_TURN_EVENT_ABILITY_READY) {
         if (battle_menu_init_system_function(
-                BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 2, unit->battle_data->misc_unit_id, 0, 1)
+                BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 2, unit->battle_data->battle_id, 0, 1)
                 == 2
             && script_get_event_finish_operation() != 0) {
             g_battle_previous_game_state = g_battle_game_state;
             battle_menu_init_system_function(
-                BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 0, unit->battle_data->misc_unit_id, 0, 1);
+                BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK, 0, unit->battle_data->battle_id, 0, 1);
             action_set_casting_unit_id_ff();
             return;
         }
         action_check_between_turn_events();
         return;
     }
-    if (action_check_change_of_turn(unit->battle_data->misc_unit_id) == 1) {
+    if (action_check_change_of_turn(unit->battle_data->battle_id) == 1) {
         /* battle_stats_t +0x16e holds the same 20-byte command payload. */
         unit->command_state.ai.data.action = unit->battle_data->action_command;
         unit->used_ability_id = unit->battle_data->action_command.ability_id;

@@ -35,7 +35,7 @@ void battle_state_handle_wait_direction_state(void) {
         camera_update_tilt_input();
         if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
             if (unit->battle_data != 0) {
-                action_end_turn(unit->battle_data->misc_unit_id);
+                action_end_turn(unit->battle_data->battle_id);
                 battle_unit_set_tile_position_with_mount_partner(unit);
             }
             main_sound_play_sfx(MAIN_SFX_CONFIRM);
@@ -70,7 +70,7 @@ void battle_state_handle_wait_direction_state(void) {
         frame_data = unit->state_frame_counter++;
         if (frame_data >= 0x1f) {
             if (unit->battle_data != 0) {
-                action_end_turn(unit->battle_data->misc_unit_id);
+                action_end_turn(unit->battle_data->battle_id);
                 battle_unit_set_tile_position_with_mount_partner(unit);
             }
             action_check_between_turn_events();

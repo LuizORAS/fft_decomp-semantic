@@ -6,7 +6,7 @@
  * transformation preparation). */
 void status_reapply_active_flags(battle_stats_t* unit) {
     s32 i;
-    s32 misc_unit_id = unit->misc_unit_id;
+    s32 misc_unit_id = unit->battle_id;
 
     for (i = 0; i < STATUS_COUNT; i++) {
         s32 byte_index = i / 8;

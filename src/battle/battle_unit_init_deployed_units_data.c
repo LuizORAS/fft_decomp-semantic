@@ -33,7 +33,7 @@ s32 battle_unit_init_deployed_units_data(unit_deployment_coordinates_t* formatio
         u8 sprite;
         u32 identity;
 
-        unit->misc_unit_id = battle_id;
+        unit->battle_id = battle_id;
         if (g_main_unit_deployed_coords[i].party_id != PARTY_ID_NONE) {
             unit->entd_slot = battle_id;
             unit->existence = BATTLE_UNIT_EXISTENCE_ACTIVE;
@@ -73,7 +73,7 @@ s32 battle_unit_init_deployed_units_data(unit_deployment_coordinates_t* formatio
     if (is_red_team_debug) {
         for (i = 5; i < ENTD_UNITS_PER_ENCOUNTER; i++) {
             battle_stats_t* unit = &g_battle_unit_stats[i];
-            unit->misc_unit_id = i;
+            unit->battle_id = i;
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
             unit->existence = BATTLE_UNIT_EXISTENCE_NONE;
         }

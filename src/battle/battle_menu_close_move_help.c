@@ -23,8 +23,7 @@ void battle_menu_close_move_help(void) {
         action_clear_at_list_active();
     }
 
-    if (move_set_reachable_tiles(casting->battle_data->misc_unit_id, casting->map_x, casting->map_y, casting->map_z)
-        > 0) {
+    if (move_set_reachable_tiles(casting->battle_data->battle_id, casting->map_x, casting->map_y, casting->map_z) > 0) {
         target_set_tile_background_color(BATTLE_TILE_MARK_SHOW_MOVE, 1);
         g_battle_game_state = BATTLE_GAME_STATE_CLOSE_MOVE_HELP;
         casting->state_frame_counter = 0;

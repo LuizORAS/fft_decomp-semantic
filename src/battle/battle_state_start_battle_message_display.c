@@ -26,12 +26,12 @@ void battle_state_start_battle_message_display(void) {
     case BATTLE_POST_ACTION_MESSAGE_POACHED:
         main_sound_play_tune(MAIN_SOUND_TUNE_ITEM_FOUND);
         battle_menu_init_system_function(
-            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x1838, unit->battle_data->misc_unit_id, 0, 1);
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x1838, unit->battle_data->battle_id, 0, 1);
         return;
     case BATTLE_POST_ACTION_MESSAGE_TRAINED:
         main_sound_play_tune(MAIN_SOUND_TUNE_ITEM_FOUND);
         battle_menu_init_system_function(
-            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x1828, unit->battle_data->misc_unit_id, 0, 1);
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x1828, unit->battle_data->battle_id, 0, 1);
         return;
     }
 
@@ -56,12 +56,12 @@ void battle_state_start_battle_message_display(void) {
 
     if (message == 6 || message == 0x2b) {
         battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, message | 0x1800,
-            unit->battle_data->misc_unit_id, target->battle_data->misc_unit_id, 1);
+            unit->battle_data->battle_id, target->battle_data->battle_id, 1);
     } else if (message != 0) {
         battle_menu_init_system_function(
-            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, message | 0x1800, unit->battle_data->misc_unit_id, 0, 1);
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, message | 0x1800, unit->battle_data->battle_id, 0, 1);
     } else {
         battle_menu_init_system_function(
-            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0, unit->battle_data->misc_unit_id, 0, 0);
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0, unit->battle_data->battle_id, 0, 0);
     }
 }

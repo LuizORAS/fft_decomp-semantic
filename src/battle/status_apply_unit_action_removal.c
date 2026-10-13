@@ -16,7 +16,7 @@ void status_apply_unit_action_removal(battle_stats_t* unit) {
     s32 mask;
 
     g_action_target_data = &unit->action;
-    misc_unit_id = unit->misc_unit_id;
+    misc_unit_id = unit->battle_id;
     for (i = 0; i < STATUS_BYTE_COUNT; i++) {
         g_action_target_data->status_changes.removal[i] &= unit->status_sets.current[i];
     }

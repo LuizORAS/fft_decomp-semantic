@@ -100,10 +100,10 @@ void battle_unit_set_target_animation_from_attack_type(
                 target->status_flags_5_6 |= BATTLE_MISC_STATUS_MORBOL;
             }
             if (action->special_effect & ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT) {
-                ai_init_unit_abilities(target->battle_data->misc_unit_id);
+                ai_init_unit_abilities(target->battle_data->battle_id);
             }
             if (action->special_effect & ACTION_SPECIAL_EFFECT_STEAL_ITEM) {
-                ai_init_unit_abilities(target->battle_data->misc_unit_id);
+                ai_init_unit_abilities(target->battle_data->battle_id);
             }
             return;
         }

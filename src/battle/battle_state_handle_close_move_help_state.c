@@ -30,7 +30,7 @@ void battle_state_handle_close_move_help_state(void) {
         buttons = g_main_input_pressed_buttons;
         if (buttons & PSX_PAD_CIRCLE) {
             path = move_build_path_to_tile(
-                casting->battle_data->misc_unit_id, g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+                casting->battle_data->battle_id, g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
             if (path != 0) {
                 /* Copy the 0x80-byte movement block in the renderer-side Misc record. */
                 casting->path = *path;
@@ -60,7 +60,7 @@ void battle_state_handle_close_move_help_state(void) {
     if (frame < 0x1f) {
         return;
     }
-    path = move_build_path_to_tile(casting->battle_data->misc_unit_id, source->command_state.ai.data.move.x,
+    path = move_build_path_to_tile(casting->battle_data->battle_id, source->command_state.ai.data.move.x,
         source->command_state.ai.data.move.y, source->command_state.ai.data.move.layer);
     target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 1);
     if (path != 0) {

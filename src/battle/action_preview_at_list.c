@@ -29,7 +29,7 @@ s32 action_preview_at_list(battle_stats_t* unit, action_command_t* action, battl
     }
     turns = action_calculate_at_list(at_list, BATTLE_AT_LIST_MODE_PREVIEW);
     if (turns != -1) {
-        turns = action_get_number_of_turns_to_resolve(unit->misc_unit_id, unit->charged_ability_ct, at_list) & 0xFF;
+        turns = action_get_number_of_turns_to_resolve(unit->battle_id, unit->charged_ability_ct, at_list) & 0xFF;
     }
     g_action_state = old_state;
     unit->movement_taken = old_movement_taken;

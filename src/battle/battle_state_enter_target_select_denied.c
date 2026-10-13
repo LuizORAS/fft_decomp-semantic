@@ -20,23 +20,23 @@ void battle_state_enter_target_select_denied(void) {
     if (misc != 0) {
         stats = misc->battle_data;
         if (stats != 0) {
-            battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, stats->misc_unit_id, 0);
+            battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, stats->battle_id, 0);
         }
     }
     unit = battle_unit_get_casting_misc_data();
     if (misc == 0) {
         battle_menu_init_system_function(
-            BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 3, unit->battle_data->misc_unit_id, 0, 1);
+            BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 3, unit->battle_data->battle_id, 0, 1);
         return;
     }
     kind = unit->target_select_command;
     if (kind == AI_COMMAND_AUTOBATTLE_TARGETED_SELECT) {
         battle_menu_init_system_function(
-            BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 1, unit->battle_data->misc_unit_id, 0, 1);
+            BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 1, unit->battle_data->battle_id, 0, 1);
         return;
     }
     if (kind == AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT) {
         battle_menu_init_system_function(
-            BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 2, unit->battle_data->misc_unit_id, 0, 1);
+            BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 2, unit->battle_data->battle_id, 0, 1);
     }
 }

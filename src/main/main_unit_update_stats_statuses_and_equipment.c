@@ -20,7 +20,7 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
     u8 formation_index;
     job_data_t* job;
 
-    misc_unit_id = unit->misc_unit_id;
+    misc_unit_id = unit->battle_id;
     main_status_store_current(unit);
     for (i = 0; i < STATUS_BYTE_COUNT; i++) {
         saved_current[i] = unit->status_sets.current[i];

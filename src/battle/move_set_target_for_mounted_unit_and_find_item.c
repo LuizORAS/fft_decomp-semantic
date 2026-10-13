@@ -36,7 +36,7 @@ u32 move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit) {
         }
         if (status_modify_inflictions(0) != 0) {
             g_action_target_data->attack_type = ACTION_TYPE_STATUS_CHANGE;
-            status_resolve_unit_changes(target->misc_unit_id, 0);
+            status_resolve_unit_changes(target->battle_id, 0);
             flags |= MOVE_POST_EVENT_MOUNT_STATUS_CHANGE;
         }
     }

@@ -13,9 +13,9 @@ void battle_state_enter_target_select_confirm(void) {
     if (misc != 0) {
         stats = misc->battle_data;
         if (stats != 0) {
-            battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, stats->misc_unit_id, 0);
+            battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, stats->battle_id, 0);
         }
     }
     stats = battle_unit_get_casting_misc_data()->battle_data;
-    battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 0, stats->misc_unit_id, 0, 1);
+    battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 0, stats->battle_id, 0, 1);
 }

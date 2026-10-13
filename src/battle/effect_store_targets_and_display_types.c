@@ -76,7 +76,7 @@ void effect_store_targets_and_display_types(s32 ability, battle_unit_misc_data_t
                 stats = spectator->battle_data;
                 if (stats != 0) {
                     for (j = 0; j < block->target_count; j++) {
-                        if (stats->misc_unit_id == block->target_list[j]) {
+                        if (stats->battle_id == block->target_list[j]) {
                             break;
                         }
                     }

@@ -14,7 +14,7 @@ s32 battle_unit_draw_and_activate_by_misc_id(u32 misc_id) {
         unit->draw_enabled = 1;
         unit->animation.trigger = 1;
         if (battle_data != 0) {
-            battle_unit_set_enemy_level_data_by_battle_id(battle_data->misc_unit_id);
+            battle_unit_set_enemy_level_data_by_battle_id(battle_data->battle_id);
         }
         return 1;
     }

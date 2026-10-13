@@ -42,7 +42,7 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
     battle_unit_add_unique_entd_spritesheet(0xff, 0, 0);
     for (battle_id = 0, entd = entd_list; battle_id < ENTD_UNITS_PER_ENCOUNTER; entd++, battle_id++) {
         unit = &g_battle_unit_stats[battle_id];
-        unit->misc_unit_id = battle_id;
+        unit->battle_id = battle_id;
         g_main_entd_current_unit = entd;
         if (entd->sprite_set == CHARACTER_IDENTITY_ENTD_NONE) {
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;

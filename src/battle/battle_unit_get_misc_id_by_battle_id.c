@@ -7,7 +7,7 @@ s32 battle_unit_get_misc_id_by_battle_id(u32 battle_id) {
     while (unit != 0) {
         battle_stats_t* battle_data = unit->battle_data;
 
-        if (battle_data != 0 && battle_data->misc_unit_id == battle_id) {
+        if (battle_data != 0 && battle_data->battle_id == battle_id) {
             return unit->unit_id;
         }
         unit = unit->previous;

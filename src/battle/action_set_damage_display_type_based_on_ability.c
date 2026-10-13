@@ -16,7 +16,7 @@ void action_set_damage_display_type_based_on_ability(void) {
 
     g_main_system_animation_speed = 1;
     misc = battle_unit_get_casting_misc_data();
-    action_resolve_ability_strike(misc->battle_data->misc_unit_id, &misc->strike);
+    action_resolve_ability_strike(misc->battle_data->battle_id, &misc->strike);
     raw = misc->strike.last_attack_id;
     /* The target reads 0x1a6 as a signed 16-bit value. */
     target = misc->strike.reaction_id;

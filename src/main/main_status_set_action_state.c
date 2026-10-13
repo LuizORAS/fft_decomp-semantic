@@ -15,7 +15,7 @@ void main_status_set_action_state(battle_stats_t* unit, u8 action_state) {
     u8 changed;
 
     old_status = unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CHARGING)];
-    misc_unit_id = unit->misc_unit_id;
+    misc_unit_id = unit->battle_id;
     if (action_state == MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING) {
         action_state = (old_status & STATUS_BYTE_MASK(STATUS_ID_PERFORMING)) << 3;
     }

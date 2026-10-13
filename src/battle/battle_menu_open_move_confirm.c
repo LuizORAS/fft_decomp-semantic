@@ -25,21 +25,21 @@ void battle_menu_open_move_confirm(void) {
     if (caster->path.flags & BATTLE_EFFECTIVE_MOVEMENT_TELEPORT) {
         if (caster->last_path_count == MOVE_PATH_TELEPORT_FAILED) {
             battle_menu_init_system_function(
-                BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x183B, source->battle_data->misc_unit_id, 0, 1);
+                BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x183B, source->battle_data->battle_id, 0, 1);
         } else {
             battle_menu_init_system_function(
-                BATTLE_MENU_SYSTEM_COMMAND_MOVE_CONFIRM, 0, source->battle_data->misc_unit_id, 0, 0);
+                BATTLE_MENU_SYSTEM_COMMAND_MOVE_CONFIRM, 0, source->battle_data->battle_id, 0, 0);
         }
         caster->last_path_count = 0;
     } else {
         if (g_main_game_options.fields.navigation_messages != GAME_OPTION_ON) {
             battle_gfx_modify_palette_based_on_team(source, 2);
             battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_CONFIRM_SILENT, 0,
-                source->battle_data->misc_unit_id, 0, source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+                source->battle_data->battle_id, 0, source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         } else {
             battle_gfx_modify_palette_based_on_team(source, 2);
-            battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_CONFIRM, 0,
-                source->battle_data->misc_unit_id, 0, source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
+            battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_CONFIRM, 0, source->battle_data->battle_id,
+                0, source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
         }
     }
     if (source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {

@@ -34,7 +34,7 @@ void action_finalize_target_current_action(void) {
         invalid = 1;
     }
     if (invalid != 0) {
-        target_sort_list(g_action_target->misc_unit_id);
+        target_sort_list(g_action_target->battle_id);
         action_clear_data();
         formula_clear_nullify_flags();
         action_clear_knockback_flag();

@@ -17,7 +17,7 @@ void battle_state_enter_status_execute(void) {
     if (g_action_turn_event_type == BATTLE_TURN_EVENT_MIME) {
         battle_text_set_message_duration_frames(0x3C);
         battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x183A,
-            unit->battle_data->misc_unit_id, unit->battle_data->misc_unit_id, 1);
+            unit->battle_data->battle_id, unit->battle_data->battle_id, 1);
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_KNEEL, unit->facing, unit);
         return;
     }
@@ -25,13 +25,13 @@ void battle_state_enter_status_execute(void) {
     statuses = unit->statuses_to_add_5_6;
     if (statuses & BATTLE_MISC_STATUS_CRYSTAL) {
         battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x183D,
-            unit->battle_data->misc_unit_id, unit->battle_data->misc_unit_id, 1);
+            unit->battle_data->battle_id, unit->battle_data->battle_id, 1);
     } else if (statuses & BATTLE_MISC_STATUS_TREASURE) {
         battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x183C,
-            unit->battle_data->misc_unit_id, unit->battle_data->misc_unit_id, 1);
+            unit->battle_data->battle_id, unit->battle_data->battle_id, 1);
     } else {
         battle_menu_init_system_function(
-            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0, unit->battle_data->misc_unit_id, 0, 0);
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0, unit->battle_data->battle_id, 0, 0);
     }
     battle_unit_update_display_by_misc_id(unit->unit_id);
     battle_gfx_prepare_post_action_display_by_misc_id(unit->unit_id);

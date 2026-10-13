@@ -120,7 +120,7 @@ void action_queue_post_effect_messages_for_unit(battle_unit_misc_data_t* misc) {
             break;
         }
         if (queued != 0) {
-            g_action_post_effect_msgs[g_action_post_effect_msg_counter].unit = misc->battle_data->misc_unit_id;
+            g_action_post_effect_msgs[g_action_post_effect_msg_counter].unit = misc->battle_data->battle_id;
             g_action_post_effect_msg_counter += 1;
         }
     }

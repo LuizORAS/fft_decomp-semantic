@@ -34,7 +34,7 @@ s32 battle_unit_place_in_new_location(u32 misc_id, map_tile_coordinates_t* tile,
         unit->real.vy = unit->screen.vy << 12;
         if (unit->battle_data != 0) {
             battle_unit_set_tile_position(
-                unit->battle_data->misc_unit_id, unit->map_x, unit->map_y, unit->map_z, unit->facing);
+                unit->battle_data->battle_id, unit->map_x, unit->map_y, unit->map_z, unit->facing);
         }
         return 1;
     }

@@ -38,7 +38,7 @@ s32 action_calculate_projected_effect(battle_stats_t* attacker, battle_stats_t* 
     g_action_current_ability.defaulted_to_attack = 0;
     g_action_context = ACTION_CONTEXT_PRIMARY;
     target->action.reaction_id = 0;
-    action_run_pre_formula_setup(&attacker->action_command, target->misc_unit_id);
+    action_run_pre_formula_setup(&attacker->action_command, target->battle_id);
     g_action_context = saved_action_context;
     g_action_state = saved_action_state;
     main_util_copy_action_data(&g_action_saved_command, &attacker->action_command);

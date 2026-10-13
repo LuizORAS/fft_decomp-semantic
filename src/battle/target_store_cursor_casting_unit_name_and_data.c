@@ -13,8 +13,8 @@ void target_store_cursor_casting_unit_name_and_data(void) {
     source = battle_unit_get_source_misc_data();
     if (target != 0) {
         battle_unit_start_view_thread(
-            UNIT_VIEW_MODE_ATTACK_PREVIEW, source->battle_data->misc_unit_id, target->battle_data->misc_unit_id);
+            UNIT_VIEW_MODE_ATTACK_PREVIEW, source->battle_data->battle_id, target->battle_data->battle_id);
     } else {
-        battle_unit_start_view_thread(UNIT_VIEW_MODE_HOVERED_UNIT, source->battle_data->misc_unit_id, 0xFF);
+        battle_unit_start_view_thread(UNIT_VIEW_MODE_HOVERED_UNIT, source->battle_data->battle_id, 0xFF);
     }
 }

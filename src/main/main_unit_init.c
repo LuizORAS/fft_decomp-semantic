@@ -16,7 +16,7 @@ s32 main_unit_init(entd_encounter_t* entd, s32 unit_id, s32 guest_id, s32 initia
         battle_stats_t unit;
         battle_stats_t* unit_data = &unit;
 
-        unit_data->misc_unit_id = 0xff;
+        unit_data->battle_id = 0xff;
         unit_data->entd_slot = 0x20;
         unit_data->existence = BATTLE_UNIT_EXISTENCE_ACTIVE;
         unit_data->formation_index = BATTLE_FORMATION_INDEX_NONE;

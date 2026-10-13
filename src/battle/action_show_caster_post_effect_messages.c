@@ -14,6 +14,6 @@ void action_show_caster_post_effect_messages(void) {
     }
     if (action_resume_attack_phase_control() == 0) {
         battle_menu_init_system_function(
-            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0, unit->battle_data->misc_unit_id, 0, 0);
+            BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0, unit->battle_data->battle_id, 0, 0);
     }
 }

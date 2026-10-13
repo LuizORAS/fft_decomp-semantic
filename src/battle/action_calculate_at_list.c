@@ -45,7 +45,7 @@ s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
     if (mode != BATTLE_AT_LIST_MODE_ACTIONS_ONLY) {
         unit = battle_unit_find_active_data_pointer();
         if (unit != 0) {
-            action_sort_at_list(unit->misc_unit_id, 0, 0, list);
+            action_sort_at_list(unit->battle_id, 0, 0, list);
         }
     }
 

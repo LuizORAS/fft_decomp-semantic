@@ -26,7 +26,7 @@ s32 status_prepare_terrain_poison(battle_stats_t* unit) {
         return 0;
     }
     action = &unit->action;
-    unit_id = unit->misc_unit_id;
+    unit_id = unit->battle_id;
     g_action_target = unit;
     g_action_target_data = action;
     g_action_current_ability.target_id = unit_id;
