@@ -3,7 +3,7 @@
 
 /* Returns the first nonzero result of the three checks, or the action
  * restriction check's zero. */
-s32 action_is_reaction_blocked(unit_stats_t* unit) {
+s32 action_is_reaction_blocked(const unit_stats_t* unit) {
     s32 result;
 
     if ((result = action_is_reaction_prevented(unit)) == 0 && (result = action_check_reaction(unit)) == 0) {

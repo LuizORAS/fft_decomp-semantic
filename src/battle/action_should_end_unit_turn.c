@@ -1,7 +1,7 @@
 #include "fft/battle_action.h"
 
 /* Returns whether a unit with no remaining move or action should end its turn. */
-s32 action_should_end_unit_turn(unit_stats_t* unit) {
+s32 action_should_end_unit_turn(const unit_stats_t* unit) {
     s32 cannot_act;
     u8 no_move;
     u8 no_action;

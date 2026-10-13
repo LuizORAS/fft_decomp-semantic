@@ -86,9 +86,9 @@ void battle_menu_confirm_action_silently(menu_entry_t* menu);
 void battle_menu_dispatch_idle_action_menu(void);
 s32 battle_menu_dispatch_system_function(
     s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, action_command_t* action);
-s32 battle_menu_get_id_based_on_mount_moveable_actable(s32 runtime_id);
+battle_menu_id_e battle_menu_get_id_based_on_mount_moveable_actable(s32 battle_id);
 ai_command_t* battle_menu_get_selected_command_address(void);
-s32 battle_menu_get_unit_action_menu_id(unit_stats_t* unit);
+battle_menu_id_e battle_menu_get_unit_action_menu_id(const unit_stats_t* unit);
 void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option);
 s32 battle_menu_init_system_function(s32 type, s32 option, s32 unit_id, s32 parameter, s32 enabled);
 void battle_menu_open_active_unit_idle_action_menu(void);

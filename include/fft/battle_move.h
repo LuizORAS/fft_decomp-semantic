@@ -301,7 +301,7 @@ extern u8 g_move_weather_terrain_cost;
 u8 move_calculate_tile_ceiling(s32 x, s32 y, s32 exit_slope_shift, u8 exit_height);
 s32 move_calculate_tile_layer_step_offset(s32 x, s32 y, u32 layer);
 move_effective_flags_e move_get_effective_flags(const unit_stats_t* unit);
-s32 move_get_support_flags(unit_stats_t* unit);
+s32 move_get_support_flags(const unit_stats_t* unit);
 s32 move_calculate_water_lift(battle_unit_t* unit, map_tile_t* tile);
 u8 move_get_water_depth(battle_unit_t* unit);
 s32 move_clamp_z_to_tile_headroom(s32 value, s32 x, s32 y, u32 layer);

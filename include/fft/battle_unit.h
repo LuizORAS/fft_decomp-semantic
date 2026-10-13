@@ -1228,12 +1228,12 @@ void battle_unit_set_map_coords_after_death_dismount(battle_unit_t* unit);
 void battle_unit_set_tile_position_with_mount_partner(battle_unit_t* unit);
 void battle_unit_update_staged_status_data(u16 unit_id, u16 restore);
 s32 battle_unit_save_staged_status_data(s32 battle_id);
-battle_chocobo_mount_state_e battle_unit_get_chocobo_mount_state(unit_stats_t* unit);
+battle_chocobo_mount_state_e battle_unit_get_chocobo_mount_state(const unit_stats_t* unit);
 void battle_unit_mount_onto_pending_mount(battle_unit_t* unit);
 s32 battle_unit_prepare_rider_dismount(u32 runtime_id, s32 direction, s32 jump_length);
 struct battle_unit* battle_unit_get_mount(struct battle_unit* unit);
 s32 unit_has_any_current_status(s32 battle_id);
-battle_unit_action_restriction_e battle_unit_get_action_restriction(unit_stats_t* unit);
+battle_unit_action_restriction_e battle_unit_get_action_restriction(const unit_stats_t* unit);
 
 /* battle_unit_animation_e of each item type's attack at a higher, a level and a lower target. */
 extern u8 g_battle_weapon_attack_animations[][3];
@@ -1362,7 +1362,7 @@ void battle_unit_shift_right_or_left(battle_unit_t* unit, s8 delta);
 
 /* progression and pickups */
 void battle_unit_apply_poach_morbol_transformation(battle_unit_t* unit);
-u8 battle_unit_calculate_move_exp_jp_up_to_earn(unit_stats_t* unit);
+u8 battle_unit_calculate_move_exp_jp_up_to_earn(const unit_stats_t* unit);
 s32 battle_unit_count_crystals(void);
 void battle_unit_find_war_trophies_and_bonus_money(battle_war_result_t* result);
 battle_unit_t* battle_unit_get_crystal_or_treasure_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
