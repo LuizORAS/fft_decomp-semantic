@@ -1,5 +1,5 @@
-#include "fft/battle_thread.h"
 #include "fft/event_bunit.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* BUNIT.OUT 001c360c - True while a menu transition (thread 15), event mode, or

@@ -1,5 +1,5 @@
-#include "fft/battle_thread.h"
 #include "fft/event_card.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Ask a thread to stop and run input-update frames until it has ended; then

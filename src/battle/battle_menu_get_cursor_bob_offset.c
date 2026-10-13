@@ -1,5 +1,4 @@
 #include "fft/battle_menu.h"
-#include "fft/battle_thread.h"
 #include "fft/thread.h"
 
 /* Return the cursor's vertical animation offset for the current menu frame.

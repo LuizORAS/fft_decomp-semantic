@@ -1,5 +1,4 @@
 #include "fft/battle_gfx.h"
-#include "fft/battle_thread.h"
 #include "fft/thread.h"
 
 /*

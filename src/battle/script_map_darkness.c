@@ -1,6 +1,5 @@
 #include "fft/battle_map.h"
 #include "fft/battle_script.h"
-#include "fft/battle_thread.h"
 #include "fft/thread.h"
 
 /* Thread body of MapDarkness: start the ambient-light blend described by the

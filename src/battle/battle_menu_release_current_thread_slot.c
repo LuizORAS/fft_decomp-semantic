@@ -1,5 +1,4 @@
 #include "fft/battle_menu.h"
-#include "fft/battle_thread.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 

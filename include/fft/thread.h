@@ -1,7 +1,7 @@
 #ifndef THREAD_H
 #define THREAD_H
 
-/* Native cooperative threads shared by the BATTLE and WORLD schedulers. */
+/* Native cooperative threads and the BATTLE/WORLD scheduler interfaces. */
 
 #include "psx/types.h"
 
@@ -173,9 +173,23 @@ typedef enum native_thread_task {
     NATIVE_THREAD_TASK_UNIT_MESSAGE = 70,
 } native_thread_task_e;
 
+/* thread ids */
+s32 battle_thread_find_running_by_task(s32 task_id);
+s32 battle_thread_resolve_id(s32 requested_thread_id);
+s32 battle_thread_resolve_id_after_current(s32 requested_thread_id);
+s32 world_thread_find_running_by_task(s32 task_id);
+s32 world_thread_resolve_id(s32 requested_thread_id);
+s32 world_thread_resolve_id_after_current(s32 requested_thread_id);
+
 /* task parameters */
 void thread_set_parameters(s32 thread_id, s32 first, s32 second, s32 third);
 void thread_set_four_parameters(s32 thread_id, s32 first, s32 second, s32 third, s32 fourth);
+s32 battle_thread_get_current_parameter_1(void);
+s32 battle_thread_get_current_parameter_2(void);
+s32 battle_thread_get_current_parameter_3(void);
+void* world_thread_get_current_parameter_1(void);
+s32 world_thread_get_current_parameter_2(void);
+s32 world_thread_get_current_parameter_3(void);
 
 /* task state */
 s32 thread_get_current_task_id(void);
@@ -186,6 +200,14 @@ void thread_start(s32 thread_id, void (*function)(void));
 void thread_resume(s32 thread_id);
 void thread_suspend(s32 thread_id);
 void thread_exit_current(void);
+s32 battle_thread_is_previous_running(void);
+s32 battle_thread_is_running(s32 thread_id);
+s32 battle_thread_is_running_asm(s32 thread_id);
+void battle_thread_reset_scheduler(void);
+s32 world_thread_is_previous_running(void);
+s32 world_thread_is_running(s32 thread_id);
+s32 world_thread_is_running_asm(s32 thread_id);
+void world_thread_reset_scheduler(void);
 
 /* scheduling */
 /* Yield to the next active context in the resident scene scheduler.
@@ -193,6 +215,8 @@ void thread_exit_current(void);
 void thread_yield(void);
 void thread_wait_frames(s32 count);
 void thread_wait_until_inactive(s32 thread_id);
+void battle_thread_wait_for_unit_view_panels(void);
+void world_thread_wait_for_unit_view_panels(void);
 
 /* context capture */
 /* Read the running CPU's $gp when seeding a native thread context. */

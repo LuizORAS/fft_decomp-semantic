@@ -1,5 +1,4 @@
 #include "fft/battle_gfx.h"
-#include "fft/battle_thread.h"
 #include "fft/thread.h"
 
 /* Fades the screen out: raises g_battle_screen_fade from 0 by 4 per frame,

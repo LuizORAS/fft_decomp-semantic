@@ -1,6 +1,5 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_sound.h"
-#include "fft/battle_thread.h"
 #include "fft/thread.h"
 
 /* Thread entry in g_battle_menu_idle_action_entries: queue the invalid-choice

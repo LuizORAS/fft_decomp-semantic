@@ -1,5 +1,4 @@
 #include "fft/thread.h"
-#include "fft/world.h"
 
 /* Zeroes all 16 thread records (16 * 0x400 bytes), makes the main thread
  * current and marks it running. */

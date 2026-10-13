@@ -1,5 +1,4 @@
 #include "fft/thread.h"
-#include "fft/world.h"
 #include "psx/types.h"
 
 /* Return the id of another running thread whose 32-bit current task value equals

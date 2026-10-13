@@ -1,6 +1,5 @@
 #include "fft/battle_camera.h"
 #include "fft/battle_script.h"
-#include "fft/battle_thread.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 

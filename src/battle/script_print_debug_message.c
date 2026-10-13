@@ -1,5 +1,4 @@
 #include "fft/battle_script.h"
-#include "fft/battle_thread.h"
 #include "fft/thread.h"
 
 /* DebugPause: print "PAUSE" to the debug font stream, yield one frame and set

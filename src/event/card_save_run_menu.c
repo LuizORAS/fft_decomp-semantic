@@ -1,5 +1,4 @@
 #include "fft/battle_gfx.h"
-#include "fft/battle_thread.h"
 #include "fft/event_card.h"
 #include "fft/main.h"
 #include "fft/sound.h"

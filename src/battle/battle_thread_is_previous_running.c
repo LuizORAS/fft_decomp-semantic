@@ -1,4 +1,4 @@
-#include "fft/battle_thread.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Returns whether the scheduler slot immediately before the current thread is

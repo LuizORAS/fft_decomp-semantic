@@ -483,19 +483,8 @@ s32 world_thread_is_task_active(s32 unused_0);
 void world_script_dark_screen_thread(void);
 void world_input_update_with_message_state(void);
 void world_card_input_update_with_message_state(void);
-void world_thread_wait_for_unit_view_panels(void);
 void world_thread_yield_forever(void);
 void world_thread_request_redraw(s32 thread_id);
-s32 world_thread_find_running_by_task(s32 task_id);
-void* world_thread_get_current_parameter_1(void);
-s32 world_thread_get_current_parameter_2(void);
-s32 world_thread_get_current_parameter_3(void);
-s32 world_thread_is_previous_running(void);
-s32 world_thread_is_running(s32 thread_id);
-s32 world_thread_is_running_asm(s32 thread_id);
-void world_thread_reset_scheduler(void);
-s32 world_thread_resolve_id(s32 requested_thread_id);
-s32 world_thread_resolve_id_after_current(s32 requested_thread_id);
 void world_thread_set_task_id_to_three(s32 thread_id);
 
 /* turn */

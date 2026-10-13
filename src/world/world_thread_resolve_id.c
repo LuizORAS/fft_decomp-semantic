@@ -1,5 +1,4 @@
 #include "fft/thread.h"
-#include "fft/world.h"
 
 /* Resolve a thread slot argument: a real slot id is returned unchanged; any
  * other value picks the first idle slot from 1 to 16. With none idle the

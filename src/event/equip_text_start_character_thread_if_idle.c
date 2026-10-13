@@ -1,4 +1,3 @@
-#include "fft/battle_thread.h"
 #include "fft/event_equip.h"
 #include "fft/thread.h"
 #include "psx/types.h"

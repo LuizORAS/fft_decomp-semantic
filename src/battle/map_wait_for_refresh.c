@@ -1,5 +1,4 @@
 #include "fft/battle_map.h"
-#include "fft/battle_thread.h"
 #include "fft/thread.h"
 
 /* Yield until g_map_refresh_pending is clear:

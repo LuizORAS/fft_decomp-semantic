@@ -1,4 +1,3 @@
-#include "fft/battle_thread.h"
 #include "fft/thread.h"
 
 /* Wait until the unit view's four panel threads (slots 13 down to 10) have stopped. */

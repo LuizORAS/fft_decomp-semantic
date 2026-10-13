@@ -1,7 +1,6 @@
 #include "fft/battle_camera.h"
 #include "fft/battle_map.h"
 #include "fft/battle_script.h"
-#include "fft/battle_thread.h"
 #include "fft/battle_unit.h"
 #include "fft/thread.h"
 

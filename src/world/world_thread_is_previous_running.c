@@ -1,4 +1,4 @@
-#include "fft/world.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Hand-assembled in the retail binary: the loads go through $at as a base

@@ -18,9 +18,9 @@
 #include "fft/battle_status.h"
 #include "fft/battle_target.h"
 #include "fft/battle_text.h"
-#include "fft/battle_thread.h"
 #include "fft/battle_unit.h"
 #include "fft/main.h"
+#include "fft/thread.h"
 #include "psx/libc.h"
 
 /* engine state */

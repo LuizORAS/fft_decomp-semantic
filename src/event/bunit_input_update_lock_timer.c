@@ -1,5 +1,5 @@
-#include "fft/battle_thread.h"
 #include "fft/event_bunit.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Hold the menu input masks at zero while the comparison banner thread runs,
