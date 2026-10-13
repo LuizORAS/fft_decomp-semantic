@@ -146,7 +146,6 @@ void equip_item_build_inventory_totals(void);
 menu_icon_source_t* equip_item_build_type_icon_source(s32 index);
 void equip_item_calculate_swap_stat_delta(
     menu_status_panel_slot_storage_t* output, menu_unit_status_record_t* out, s16 from, s16 to, s32 slot);
-void equip_item_clear_stat_sums(menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail);
 s32 equip_item_get_equipped_count(s32 item_entry);
 s32 equip_item_get_ranking_value(s32 item_id);
 s32 equip_item_get_total_count(s16 item_id);
@@ -159,8 +158,6 @@ void equip_item_remove_from_category_list(s32 item_id, s32 category_index);
 s32 equip_item_sort_list_by_category_order(s32 category_index, s16* list);
 void equip_item_sort_list_by_criteria(s32 mode, s16* list);
 void equip_item_store_category_list(s32 category_index, const s16* source);
-void equip_item_subtract_scaled_stats(menu_status_panel_slot_storage_t* out, menu_status_panel_slot_storage_t* scaled,
-    menu_status_panel_slot_storage_t* base, s32 scale);
 s32 equip_item_run_type_order_mode(void);
 
 /* rearrange */
@@ -365,7 +362,6 @@ extern s16 g_equip_menu_window_right_x;
 extern menu_entry_t g_equip_type_order_menu_hand_body;
 extern menu_entry_t g_equip_type_order_menu_other_slots;
 
-void equip_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu);
 item_menu_category_e equip_item_get_menu_category(s16 item_id);
 s32 equip_item_run_rearrange_mode(void);
 void equip_menu_clear_selection_records(void);
@@ -546,7 +542,6 @@ extern s8 g_equip_gfx_transition_frame;
 extern s16 g_equip_gfx_window_zoom_percent[];
 extern s8 g_equip_gfx_zoom_draw_area_active;
 
-void equip_gfx_build_item_graphic_descriptor(menu_icon_source_t* descriptor, s32 item_id);
 void equip_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 void equip_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);

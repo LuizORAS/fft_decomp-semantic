@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -48,7 +49,7 @@ void equip_panel_run_equipment_list_thread(void) {
     }
     area = g_equip_panel_origin_offsets;
     battle_menu_init_numeric_display_frame_primitives(area, &screen->numeric_frame);
-    equip_gfx_init_menu_tile_and_line_primitives(screen);
+    menu_init_status_panel_primitives(screen);
     equip_gfx_init_scaled_draw_area_packets(&screen->portrait);
     screen->tiles[0].x0 += area->x;
     screen->tiles[0].y0 += area->y;

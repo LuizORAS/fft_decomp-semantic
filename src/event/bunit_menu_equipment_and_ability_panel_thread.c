@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -24,7 +25,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
     base = g_bunit_character_status_frames;
     state = &g_bunit_editor_unit_fields;
     battle_menu_init_numeric_display_frame_primitives(&g_bunit_character_status_frame_rect, &screen->numeric_frame);
-    bunit_gfx_init_menu_tile_and_line_primitives(screen);
+    menu_init_status_panel_primitives(screen);
     bunit_gfx_init_scaled_draw_area_packets(&screen->portrait);
     for (i = 0; i < 2; i++) {
         screen->tiles[i].x0 += g_bunit_character_status_frame_rect.x;

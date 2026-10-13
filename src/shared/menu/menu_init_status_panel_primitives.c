@@ -1,12 +1,8 @@
-#include "fft/event_bunit.h"
-#include "psx/libgpu.h"
-#include "psx/types.h"
+#include "fft/battle_gfx.h"
+#include "fft/menu.h"
 
-/* Initialise the frame primitives of a status panel buffer: two
- * semi-transparent 16x90 column tiles at x 0x12 and 0x7c, the two vertical
- * edge lines on either side of each, and the draw modes for the frame, text
- * image and item icon texture pages. */
-void bunit_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu) {
+/* Build the two-column status-panel frame and its texture draw modes. */
+void menu_init_status_panel_primitives(menu_status_panel_buffer_t* menu) {
     s32 i;
 
     SetTile(&menu->tiles[0]);

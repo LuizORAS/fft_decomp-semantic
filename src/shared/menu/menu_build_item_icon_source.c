@@ -1,9 +1,8 @@
-#include "fft/event_require.h"
-#include "psx/libgpu.h"
-#include "psx/types.h"
+#include "fft/battle_gfx.h"
+#include "fft/menu.h"
 
-/* Fill a 16x16 item icon descriptor: VRAM u/v, size, CLUT and texture page. */
-void require_gfx_build_item_graphic_descriptor(menu_icon_source_t* output, u32 item_id) {
+/* Build the 16x16 item icon texture source. */
+void menu_build_item_icon_source(menu_icon_source_t* output, u32 item_id) {
     SPRT graphic;
 
     battle_gfx_set_item_icon_sprite(&graphic, item_id);

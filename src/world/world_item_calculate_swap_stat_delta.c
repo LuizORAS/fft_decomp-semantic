@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -15,5 +16,5 @@ void world_item_calculate_swap_stat_delta(menu_status_panel_slot_storage_t* outp
         - summary_before.gauges[MENU_UNIT_STATUS_GAUGE_HP].bonus;
     delta->gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus = summary_after.gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus
         - summary_before.gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus;
-    world_item_combine_stat_details(output, &detail_before, &detail_after, 1);
+    menu_subtract_scaled_stat_preview(output, &detail_before, &detail_after, 1);
 }

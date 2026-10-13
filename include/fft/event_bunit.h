@@ -413,7 +413,6 @@ extern menu_button_piece_t g_bunit_slot_sprite_entries[];
 extern u8 g_bunit_text_menu_section[];
 extern u8 g_bunit_unit_list_triangle_menu_open;
 
-void bunit_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu);
 void bunit_menu_clear_selection_record(s32 index);
 void bunit_menu_clear_selection_records(void);
 void bunit_menu_dispatch_with_override(menu_instruction_t* script, s32 state, s32 override);
@@ -613,7 +612,6 @@ extern s8 g_bunit_gfx_transition_frame;
 extern s16 g_bunit_gfx_window_zoom_percent[];
 extern u8 g_bunit_sprite_cell_sizes[][2];
 
-void bunit_gfx_build_item_graphic_descriptor(menu_icon_source_t* output, s32 item_id);
 void bunit_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);

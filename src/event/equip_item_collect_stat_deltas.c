@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 
 /*
  * Extract an item's equipment stats and attribute bonuses for comparison.
@@ -14,7 +15,7 @@ void equip_item_collect_stat_deltas(
     s32 lo;
     s32 hi;
 
-    equip_item_clear_stat_sums(summary, detail);
+    menu_clear_stat_preview(summary, detail);
     item_id = raw_item & EQUIP_ITEM_ID_MASK;
     if (item_id > 0) {
         attribute = g_main_item_primary_data[item_id].attributes;

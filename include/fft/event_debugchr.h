@@ -134,7 +134,6 @@ extern s32 g_debugchr_menu_indicator_fade_work[2];
 extern s32 g_debugchr_menu_indicator_packet_index[2];
 extern s32 g_debugchr_menu_indicator_state[2];
 
-void debugchr_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu);
 void debugchr_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu_unit_status_record_t* output);
 void debugchr_menu_select_primitive_color_palette(
     menu_palette_primitives_t* output, const menu_status_thread_t* context);
@@ -151,7 +150,6 @@ extern point16_t g_debugchr_gfx_scaled_sprite_scale[];
 extern point16_t g_debugchr_gfx_scaled_sprite_texture_page;
 extern sprite_sheet_frame_t g_debugchr_gfx_scaled_sprite_uv_rects[];
 
-void debugchr_gfx_build_item_graphic_descriptor(menu_icon_source_t* output, u32 item_id);
 void debugchr_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);

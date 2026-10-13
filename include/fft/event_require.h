@@ -283,7 +283,6 @@ extern s32 g_require_menu_indicator_state[2];
 extern s16 g_require_menu_selection_result;
 extern s16 g_require_message_menu_result;
 
-void require_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu);
 void require_menu_icon_strip_thread(void);
 /* find (BATTLE) */
 void require_menu_select_primitive_color_palette(
@@ -320,7 +319,6 @@ extern point16_t g_require_gfx_scaled_sprite_texture_page;
 extern sprite_sheet_frame_t g_require_gfx_scaled_sprite_uv_rects[];
 
 void require_gfx_build_gradient_grid_primitives(POLY_GT4* poly);
-void require_gfx_build_item_graphic_descriptor(menu_icon_source_t* output, u32 item_id);
 void require_gfx_build_portrait_poly_ft4(s32 flags, POLY_FT4* output);
 void require_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);

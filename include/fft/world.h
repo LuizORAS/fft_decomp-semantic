@@ -1652,7 +1652,6 @@ s32 world_formation_can_dismiss_unit(s16 formation_idx);
 s32 world_formation_can_equip_item_in_slot(s16 unit_index, s16 slot, s16 item_id);
 s32 world_formation_is_selected_unit_in_upper_rows(s32 scroll_position);
 s32 world_formation_change_unit_job(s16 unit_id, s16 job_id, s32 update_equipment);
-void world_formation_clear_stat_preview(menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail);
 void world_formation_copy_unit_to_temp(s16 index, s32 unused_slot);
 s32 world_formation_cursor_distance_falloff(s32 x, s32 y, s32 base, s32 floor);
 void world_formation_cycle_selected_unit(s16 pad_buttons);
@@ -2911,9 +2910,6 @@ void world_item_calculate_swap_stat_delta(menu_status_panel_slot_storage_t* outp
 
 void world_item_cash_out_excess_inventory(void);
 s32 world_item_adjust_inventory_count(s16 item_id, s32 delta);
-
-void world_item_combine_stat_details(menu_status_panel_slot_storage_t* output, menu_status_panel_slot_storage_t* before,
-    menu_status_panel_slot_storage_t* after, s32 multiplier);
 
 s32 world_unit_is_two_handing_weapon(s16* equipment, s32 two_hands_support);
 s32 world_item_count_owned_and_equipped(s16 item_id);

@@ -745,12 +745,12 @@ functions:
   - {addr: 0x801228cc, size: 36, name: world_ability_has_secret_hunt, hash: d2861f612ae1e6a8}
   - {addr: 0x801228f0, size: 816, name: world_ability_find_unit_abilities, hash: 67540f592c51f8f1}
   - {addr: 0x80122c20, size: 544, name: world_ability_build_equippable_rsm_list, hash: e568d793cd50e453}
-  - {addr: 0x80122e40, size: 72, name: world_formation_clear_stat_preview, hash: 740a9e32a9c766bb}
+  - {addr: 0x80122e40, size: 72, name: menu_clear_stat_preview, hash: 740a9e32a9c766bb, source: src/shared/menu/menu_clear_stat_preview.c}
   - {addr: 0x80122e88, size: 132, name: world_ability_get_move_and_jump_increase_values, hash: 15a592818d5c12ca}
   - {addr: 0x80122f0c, size: 144, name: world_ability_find_stat_changes_due_to_equipped, hash: 1f6bb186e388a569}
   - {addr: 0x80122f9c, size: 560, name: world_item_populate_stat_preview, hash: 610e237773cc8653}
   - {addr: 0x801231cc, size: 188, name: world_item_calculate_swap_stat_delta, hash: 9c961874f326897c}
-  - {addr: 0x80123288, size: 424, name: world_item_combine_stat_details, hash: 7621477fabb93d49}
+  - {addr: 0x80123288, size: 424, name: menu_subtract_scaled_stat_preview, hash: 7621477fabb93d49, source: src/shared/menu/menu_subtract_scaled_stat_preview.c}
   - {addr: 0x80123430, size: 216, name: world_item_calculate_equipment_swap_stat_delta, hash: 8ea97edaf0f06225}
   - {addr: 0x80123508, size: 288, name: world_item_sum_equipment_stat_details, hash: d8d37dd10e923a90}
   - {addr: 0x80123628, size: 224, name: world_menu_has_items, hash: c12a4e942063fca4}

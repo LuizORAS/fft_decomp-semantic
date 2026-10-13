@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Compute the HP/MP and detailed stat changes for one equipment replacement. */
@@ -15,5 +16,5 @@ void equip_item_calculate_swap_stat_delta(menu_status_panel_slot_storage_t* outp
         - summary_before.gauges[MENU_UNIT_STATUS_GAUGE_HP].bonus;
     delta->gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus = summary_after.gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus
         - summary_before.gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus;
-    equip_item_subtract_scaled_stats(output, &detail_before, &detail_after, 1);
+    menu_subtract_scaled_stat_preview(output, &detail_before, &detail_after, 1);
 }

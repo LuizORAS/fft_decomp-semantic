@@ -405,6 +405,11 @@ typedef struct menu_status_panel_buffer {
 } menu_status_panel_buffer_t;
 typedef char menu_status_panel_buffer_size_must_be_984[(sizeof(menu_status_panel_buffer_t) == 984) ? 1 : -1];
 
+void menu_clear_stat_preview(menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail);
+void menu_init_status_panel_primitives(menu_status_panel_buffer_t* menu);
+void menu_subtract_scaled_stat_preview(menu_status_panel_slot_storage_t* out, menu_status_panel_slot_storage_t* scaled,
+    menu_status_panel_slot_storage_t* base, s32 scale);
+
 /* menu commands */
 /* Per-skillset menu behavior stored at 0x80065cb4. Values select specialized
  * inventory, targeting, and ability-loading paths; they are not menu command
@@ -1275,6 +1280,8 @@ typedef struct menu_icon_source {
     u16 tpage; /* 0x0a */
 } menu_icon_source_t;
 typedef char menu_icon_source_size_must_be_12[sizeof(menu_icon_source_t) == 12 ? 1 : -1];
+
+void menu_build_item_icon_source(menu_icon_source_t* output, u32 item_id);
 
 /* One 12-byte positioned number: a text position, a pointer to the live
  * value and the decimal format. *_menu_draw_numeric_display_entries draws

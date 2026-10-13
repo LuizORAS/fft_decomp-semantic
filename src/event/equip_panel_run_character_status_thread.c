@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -26,7 +27,7 @@ void equip_panel_run_character_status_thread(void) {
     state = &g_equip_unit_editor_stats.state;
     rect = g_equip_character_status_frame_rect;
     battle_menu_init_numeric_display_frame_primitives(rect, &screen->numeric_frame);
-    equip_gfx_init_menu_tile_and_line_primitives(screen);
+    menu_init_status_panel_primitives(screen);
     equip_gfx_init_scaled_draw_area_packets(&screen->portrait);
     for (i = 0; i < 2; i++) {
         screen->tiles[i].x0 += rect->x;

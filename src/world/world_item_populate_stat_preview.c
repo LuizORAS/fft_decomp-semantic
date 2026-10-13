@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 
 /*
@@ -13,7 +14,7 @@ void world_item_populate_stat_preview(
     s32 secondary;
     u8 power;
     u8 evade;
-    world_formation_clear_stat_preview(summary, detail);
+    menu_clear_stat_preview(summary, detail);
     item_id &= WORLD_ITEM_ID_MASK;
     if (item_id >= 1 && item_id <= ITEM_ID_END - 1) {
         attribute = g_main_item_primary_data[item_id].attributes;

@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -26,7 +27,7 @@ void require_panel_run_character_status_thread(void) {
     state = &g_require_editor_unit_fields.state;
     rect = g_require_character_status_frame_rect;
     battle_menu_init_numeric_display_frame_primitives(rect, &screen->numeric_frame);
-    require_gfx_init_menu_tile_and_line_primitives(screen);
+    menu_init_status_panel_primitives(screen);
     require_gfx_init_scaled_draw_area_packets(&screen->portrait);
     for (i = 0; i < 2; i++) {
         screen->tiles[i].x0 += rect->x;

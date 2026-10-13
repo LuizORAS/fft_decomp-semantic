@@ -318,7 +318,6 @@ extern s32 g_attack_menu_indicator_fade_work[2];
 extern s32 g_attack_menu_indicator_packet_index[2];
 extern s32 g_attack_menu_indicator_state[2];
 
-void attack_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu);
 void attack_menu_select_primitive_color_palette(
     menu_palette_primitives_t* primitives, const menu_status_thread_t* thread);
 
@@ -336,7 +335,6 @@ extern sprite_sheet_frame_t g_attack_gfx_scaled_sprite_uv_rects[];
 /* Map darkness uses RGB and ignores the fourth byte. */
 extern const CVECTOR g_attack_map_darkness_color;
 
-void attack_gfx_build_item_graphic_descriptor(menu_icon_source_t* output, u32 item_id);
 void attack_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);

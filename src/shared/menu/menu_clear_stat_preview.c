@@ -1,7 +1,7 @@
-#include "fft/event_equip.h"
+#include "fft/menu.h"
 
-/* Zero the 16-bit HP/MP bonuses of an item stat summary and the stat block of its detail record. */
-void equip_item_clear_stat_sums(menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail) {
+/* Clear the HP/MP preview bonuses and equipment-detail stats. */
+void menu_clear_stat_preview(menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail) {
     summary->gauges[MENU_UNIT_STATUS_GAUGE_HP].bonus = 0;
     summary->gauges[MENU_UNIT_STATUS_GAUGE_MP].bonus = 0;
     detail->state.move = 0;

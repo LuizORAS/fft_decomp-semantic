@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 
 /* Stat preview for swapping one movement ability for another: clears
@@ -9,7 +10,7 @@ void world_ability_find_stat_changes_due_to_equipped(
     menu_status_panel_slot_storage_t old_stats;
     menu_status_panel_slot_storage_t new_stats;
 
-    world_formation_clear_stat_preview(&summary, stat_diff);
+    menu_clear_stat_preview(&summary, stat_diff);
     world_ability_get_move_and_jump_increase_values(old_ability, &old_stats);
     world_ability_get_move_and_jump_increase_values(new_ability, &new_stats);
     stat_diff->state.move = new_stats.state.move - old_stats.state.move;
