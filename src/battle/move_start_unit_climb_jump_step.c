@@ -7,7 +7,7 @@
  * battle_unit_calculate_height_data) or, when the tile is empty or that unit
  * is flagged 0x80, the tile height plus its slope scaled by destination_edge_height. The
  * vertical speed and frame count come from the rise over the unit's current
- * screen height plus a clearance of two half-heights per tile of jump length.
+ * world height plus a clearance of two half-heights per tile of jump length.
  * The step byte's top two bits give the direction, as in
  * move_start_unit_jump_step. `unused_10` reproduces an unreferenced
  * 16-byte frame slot below the height data. */

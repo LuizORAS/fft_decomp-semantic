@@ -4,7 +4,7 @@
 /* Start a unit's climb jump from its current tile onto the higher tile `to`.
  *
  * The rise velocity is sqrt(2 * gravity * height) for the height difference in
- * half-tile steps (6 screen units each) plus two half-steps per tile of jump
+ * half-height steps (6 world units each) plus two half-steps per tile of jump
  * length; a second apex term extends the frame count. The step byte's top two
  * bits pick the direction, which sets the centre-tile offset, facing, the
  * destination coordinate, and a half-tile horizontal displacement spread over

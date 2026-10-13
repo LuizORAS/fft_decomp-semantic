@@ -6,7 +6,7 @@
  * Move a display unit to the supplied tile and facing.
  *
  * Clears the effect vectors, sets both the current and destination tile, and
- * recomputes the screen and fixed-point world positions from the tile.
+ * recomputes the integer and fixed-point world positions from the tile.
  */
 s32 battle_unit_place_in_new_location(u32 runtime_id, map_tile_coordinates_t* tile, s32 facing) {
     battle_unit_t* unit;

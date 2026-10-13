@@ -1,11 +1,11 @@
 #include "fft/battle_move.h"
 #include "psx/types.h"
 
-/* Place a unit that shares a tile with a mover delta screen units from the point
+/* Place a unit that shares a tile with a mover delta world units from the point
  * (x, y) along g_move_displacement_direction, at the ground height there,
  * and mark its shadow for redrawing.
  *
- * y is the map depth axis (screen.vz). Dead, crystal, treasure and jumping units
+ * y is the map depth axis (world_coords.vz). Dead, crystal, treasure and jumping units
  * are left where they are. */
 void move_displace_unit_along_step_direction(battle_unit_t* unit, s32 x, s32 y, s32 delta) {
     s16 axis;

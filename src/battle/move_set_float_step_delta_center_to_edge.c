@@ -1,17 +1,13 @@
 #include "fft/battle_move.h"
 #include "psx/types.h"
 
-enum {
-    MOVE_STEP_HEIGHT_SCALE = 6,
-};
-
 /* Set a floating unit's per-frame velocity from the tile centre to its exit edge.
  * The body is the same as move_set_unit_step_delta_center_to_edge. */
 void move_set_float_step_delta_center_to_edge(
     battle_unit_t* unit, const move_step_t* step, const map_tile_t* tile, s32 edge_height) {
     VECTOR direction;
 
-    direction.vy = -((edge_height - 1) * tile->depth_half_height.half_height * MOVE_STEP_HEIGHT_SCALE);
+    direction.vy = -((edge_height - 1) * tile->depth_half_height.half_height * (MAP_HEIGHT_STEP / 2));
     switch (step->direction) {
     case MOVE_STEP_DIRECTION_EAST:
         direction.vx = MAP_TILE_SIZE;

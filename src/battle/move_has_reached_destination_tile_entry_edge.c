@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Whether a walking unit has reached the near edge of its movement destination
- * tile in the given direction.  Tiles are 28 screen units wide and the test
+ * tile in the given direction.  Tiles are 28 world units wide and the test
  * keeps a 7-unit margin. */
 s32 move_has_reached_destination_tile_entry_edge(s32 direction, battle_unit_t* unit) {
     switch (direction) {
