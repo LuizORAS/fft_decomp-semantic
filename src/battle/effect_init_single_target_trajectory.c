@@ -6,8 +6,8 @@
  * target's tile and make the target the attacker's only target. Returns 1 when
  * both units exist. Nothing in the game calls it. */
 s32 effect_init_single_target_trajectory(u32 attacker_id, u32 target_id) {
-    battle_unit_misc_data_t* attacker;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* attacker;
+    battle_unit_t* target;
     SVECTOR target_position;
 
     attacker = battle_unit_get_misc_data_by_battle_id(attacker_id);

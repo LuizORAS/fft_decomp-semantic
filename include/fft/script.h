@@ -28,7 +28,7 @@ enum {
     EVENT_UNIT_ID_DEPLOYED_FIRST = 0x78,
     EVENT_UNIT_ID_DEPLOYED_END = 0x7d,
     /* script_get_misc_id result for an absent unit. */
-    EVENT_MISC_ID_NONE = 2000,
+    EVENT_RUNTIME_ID_NONE = 2000,
     /* g_script_unit_slots[] entry with no ghost unit assigned. */
     EVENT_UNIT_SLOT_EMPTY = 1000,
 };

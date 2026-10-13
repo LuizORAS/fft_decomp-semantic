@@ -6,8 +6,8 @@
  */
 void battle_state_handle_crystal_learn_state(void) {
     ai_command_t* command;
-    battle_unit_misc_data_t* source;
-    battle_unit_misc_data_t* casting;
+    battle_unit_t* source;
+    battle_unit_t* casting;
     u16 counter;
 
     battle_state_handle_free_cursor_input();
@@ -21,7 +21,7 @@ void battle_state_handle_crystal_learn_state(void) {
         g_action_post_action = 1;
         action_finalize_attack_and_flag_reactions(source->battle_data->battle_id);
         battle_gfx_prepare_post_action_display(source);
-        battle_unit_update_display_by_misc_id(source->unit_id);
+        battle_unit_update_display_by_misc_id(source->runtime_id);
         break;
     case 0:
     case 1:
@@ -74,7 +74,7 @@ void battle_state_handle_crystal_learn_state(void) {
     } else if (g_move_find_result & MOVE_POST_EVENT_TRAP_TRIGGERED) {
         g_move_find_result &= ~MOVE_POST_EVENT_TRAP_TRIGGERED;
         ai_init_selected_action();
-        battle_unit_update_display_by_misc_id(source->unit_id);
+        battle_unit_update_display_by_misc_id(source->runtime_id);
     } else if (g_move_find_result & MOVE_POST_EVENT_CHARGING_CANCEL) {
         g_move_find_result &= ~MOVE_POST_EVENT_CHARGING_CANCEL;
     } else if (g_move_find_result & MOVE_POST_EVENT_SOURCE_DISPLAY) {

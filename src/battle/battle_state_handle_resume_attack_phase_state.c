@@ -19,7 +19,7 @@ void battle_state_handle_resume_attack_phase_state(void) {
     s32 facing;
     battle_stats_t* battle_data;
     s32 selected_command;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);

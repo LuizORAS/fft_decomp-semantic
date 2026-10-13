@@ -3,7 +3,7 @@
 /* Per-frame float and status-bubble update of one unit: adjusts its float height
  * except during the four float-jump step phases, then advances its status bubble
  * when one is active. */
-void battle_gfx_init_status_bubble(battle_unit_misc_data_t* unit) {
+void battle_gfx_init_status_bubble(battle_unit_t* unit) {
     u8 phase;
 
     phase = unit->step_phase;

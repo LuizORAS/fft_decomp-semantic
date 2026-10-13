@@ -7,7 +7,7 @@
 void world_script_resetpalette_event_instruction(const event_unit_parameters_t* parameters) {
     s32 misc_id = script_get_misc_id(script_read_s16(parameters->unit_id_le));
 
-    if (misc_id != EVENT_MISC_ID_NONE) {
+    if (misc_id != EVENT_RUNTIME_ID_NONE) {
         battle_gfx_apply_weather_time_tile_palette_mod_by_misc_id(misc_id);
     }
 }

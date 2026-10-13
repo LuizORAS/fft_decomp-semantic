@@ -12,7 +12,7 @@
  * targeting selects its tile at once. With no valid panels the idle action menu
  * reopens. */
 s32 target_set_boxes_red(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     unit = battle_unit_get_source_misc_data();
     unit->state_frame_counter = 0;

@@ -12,7 +12,7 @@
  * The block-scoped bubble_mask keeps GCC from rotating the loop's leading exit
  * tests to the bottom, and indexing g_battle_gfx_status_bubble_status_masks inside the loop lets loop.c
  * strength-reduce it into the target's pointer walk. */
-void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit) {
+void battle_gfx_determine_status_bubble_parameters(battle_unit_t* unit) {
     s32 frame;
     s32 bubble;
     u32 status_flags;
@@ -28,8 +28,8 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
 
         if ((unit->status_bubble_timer & 0xF) == 0) {
             status_flags = unit->status_flags_1_4;
-            if (((status_flags & BATTLE_MISC_STATUS_BUBBLE_MASK) == 0)
-                && (unit->unit_id != g_battle_unit_source_misc_id)) {
+            if (((status_flags & BATTLE_UNIT_STATUS_BUBBLE_MASK) == 0)
+                && (unit->runtime_id != g_battle_unit_source_misc_id)) {
                 unit->status_bubble_active = 0;
                 return;
             }
@@ -38,11 +38,11 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                 s32 bubble_mask;
 
                 if (bubble == 0) {
-                    if (status_flags & BATTLE_MISC_STATUS_DEAD) {
+                    if (status_flags & BATTLE_UNIT_STATUS_DEAD) {
                         break;
                     }
                 } else if (bubble == 0x14) {
-                    if (status_flags & BATTLE_MISC_STATUS_DEATH_SENTENCE) {
+                    if (status_flags & BATTLE_UNIT_STATUS_DEATH_SENTENCE) {
                         break;
                     }
                 }
@@ -58,7 +58,7 @@ void battle_gfx_determine_status_bubble_parameters(battle_unit_misc_data_t* unit
                     if (status_flags & bubble_mask) {
                         break;
                     }
-                } else if (unit->unit_id == g_battle_unit_source_misc_id) {
+                } else if (unit->runtime_id == g_battle_unit_source_misc_id) {
                     break;
                 }
             }

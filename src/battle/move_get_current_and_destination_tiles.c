@@ -7,8 +7,7 @@
  * one step away, as encoded by current_path_step: bits 6-7 select the axis and
  * sign, bit 5 selects the map layer and bits 0-1 add extra distance.
  */
-void move_get_current_and_destination_tiles(
-    battle_unit_misc_data_t* unit, map_tile_t** out_current, map_tile_t** out_target) {
+void move_get_current_and_destination_tiles(battle_unit_t* unit, map_tile_t** out_current, map_tile_t** out_target) {
     u8 movement;
     u32 flags;
     s32 dir;

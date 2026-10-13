@@ -6,7 +6,7 @@
  * along the given facing.  Tile centres are 28 screen units apart with a
  * half-tile offset of 14.
  */
-s32 move_has_reached_destination_tile_center(s32 direction, battle_unit_misc_data_t* unit) {
+s32 move_has_reached_destination_tile_center(s32 direction, battle_unit_t* unit) {
     switch (direction) {
     case MOVE_DIRECTION_NORTH:
         return unit->screen.vz >= unit->movement.destination_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);

@@ -9,7 +9,7 @@
  * skillset's completion explicit so its distinct call tail is preserved.
  */
 void battle_state_handle_menu_to_targeting_state(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 kind;
     s32 result;
     u16 frame;
@@ -34,8 +34,8 @@ void battle_state_handle_menu_to_targeting_state(void) {
     kind = unit->command_state.ai.kind;
     switch (kind) {
     case AI_COMMAND_MOVE:
-        if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
-            g_battle_casting_unit_id = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id)->unit_id;
+        if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
+            g_battle_casting_unit_id = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id)->runtime_id;
             action_handle_move_command();
             return;
         }
@@ -48,16 +48,16 @@ void battle_state_handle_menu_to_targeting_state(void) {
         switch (unit->command_state.ai.data.action.skillset_id) {
         case SKILLSET_ID_DEFEND:
             status_inflict_defending_to_battle_id(unit->battle_data->battle_id);
-            unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
-            battle_unit_update_display_by_misc_id(unit->unit_id);
+            unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
+            battle_unit_update_display_by_misc_id(unit->runtime_id);
             action_set_only_action_taken(unit->battle_data->battle_id);
             battle_state_enter_after_command();
             return;
         case SKILLSET_ID_EQUIP_CHANGE:
-            unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
+            unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
             status_enable_disable_acting(unit->battle_data);
             ai_init_unit_abilities(unit->battle_data->battle_id);
-            battle_unit_update_display_by_misc_id(unit->unit_id);
+            battle_unit_update_display_by_misc_id(unit->runtime_id);
             action_set_only_action_taken(unit->battle_data->battle_id);
             battle_state_enter_after_command();
             return;
@@ -108,7 +108,7 @@ void battle_state_handle_menu_to_targeting_state(void) {
     default:
         return;
     }
-    unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_MOVED | BATTLE_MISC_TURN_ACTION_ACTED;
+    unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_MOVED | BATTLE_UNIT_TURN_ACTION_ACTED;
     action_end_turn(unit->battle_data->battle_id);
     battle_state_enter_after_command();
 }

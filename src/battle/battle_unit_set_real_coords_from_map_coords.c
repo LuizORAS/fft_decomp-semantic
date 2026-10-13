@@ -5,7 +5,7 @@
  *
  * Vertical position is derived separately from the unit's terrain and mount
  * state. The stack-backed SVECTOR preserves the target's narrow stores. */
-void battle_unit_set_real_coords_from_map_coords(battle_unit_misc_data_t* unit) {
+void battle_unit_set_real_coords_from_map_coords(battle_unit_t* unit) {
     SVECTOR tile_center;
 
     tile_center.vx = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);

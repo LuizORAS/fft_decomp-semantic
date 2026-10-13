@@ -32,7 +32,7 @@ void script_face_unit(const event_face_unit_parameters_t* parameters, s32 second
     unit_id = script_read_s16(parameters->second_unit_id_le);
     if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
         misc_id = script_get_misc_id(misc_id);
-        if (misc_id != EVENT_MISC_ID_NONE) {
+        if (misc_id != EVENT_RUNTIME_ID_NONE) {
             for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
                 if (script_filter_unit_id_by_mode(&unit_id, &g_script_unit_face_slot_order[i], &misc_index) != 0
                     && misc_id != unit_id) {

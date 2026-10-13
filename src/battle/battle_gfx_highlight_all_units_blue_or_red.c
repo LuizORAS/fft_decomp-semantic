@@ -7,12 +7,12 @@
  * team for AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT. Other modes tint
  * nothing. */
 void battle_gfx_highlight_all_units_blue_or_red(s32 mode) {
-    battle_unit_misc_data_t* caster;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* caster;
+    battle_unit_t* unit;
     s32 i;
 
     caster = battle_unit_get_casting_misc_data();
-    for (i = 0; i < BATTLE_UNIT_MISC_SLOT_COUNT; i++) {
+    for (i = 0; i < BATTLE_UNIT_RUNTIME_SLOT_COUNT; i++) {
         unit = battle_unit_get_misc_data_by_misc_id(i);
         if (unit == 0) {
             continue;

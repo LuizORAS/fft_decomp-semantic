@@ -8,12 +8,12 @@
  * Q12 steps: during an event the unit's own map tile, else the first entry of
  * the target list, else the recorded action target panel.  Phase 1 applies the
  * steps (height only when allow_height_change is set). */
-void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 allow_height_change) {
+void battle_unit_move_toward_action_target(battle_unit_t* unit, s32 allow_height_change) {
     SVECTOR tile_center;
     VECTOR velocity;
     s32 timer;
     s32 target_z;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* target;
 
     timer = unit->distortion_timer;
     target_z = unit->distortion_target;

@@ -11,7 +11,7 @@
  * operation is nonzero and the unit's spritesheet is not one of Ramza's. In every
  * other case, and for the remaining turn event types, the check only closes the
  * menu (option 1) and no event starts. */
-s32 battle_state_try_enter_scenario_event(battle_unit_misc_data_t* unit) {
+s32 battle_state_try_enter_scenario_event(battle_unit_t* unit) {
     s32 result;
 
     if (g_action_turn_event_type == BATTLE_TURN_EVENT_UNIT_READY

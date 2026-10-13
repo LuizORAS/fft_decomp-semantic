@@ -188,7 +188,7 @@ void battle_state_start_close_battle(s32 duration);
 void battle_state_start_map_jump_out(s32 map_id, s32 duration);
 void battle_state_stop_map_animations(void);
 s32 battle_state_sync_frame(u32* ordering_table);
-s32 battle_state_try_enter_scenario_event(battle_unit_misc_data_t* unit);
+s32 battle_state_try_enter_scenario_event(battle_unit_t* unit);
 void battle_state_update_action_execute_mode(void);
 s32 battle_state_update_controller_input(void);
 void battle_state_update_event_mode(void);

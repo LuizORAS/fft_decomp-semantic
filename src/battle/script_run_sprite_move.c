@@ -44,7 +44,7 @@ void script_run_sprite_move(const event_sprite_move_parameters_t* instruction, s
     parameters = (const u8*)instruction;
     mode = use_speed;
     misc_id = script_get_misc_id(script_read_s16(((const event_sprite_move_parameters_t*)parameters)->unit_id_le));
-    if (misc_id == EVENT_MISC_ID_NONE) {
+    if (misc_id == EVENT_RUNTIME_ID_NONE) {
         return;
     }
     g_battle_thread_task_ids[g_battle_current_thread_id][1] = misc_id;

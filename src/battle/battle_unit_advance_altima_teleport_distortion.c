@@ -10,7 +10,7 @@
  * epilogue is what leaves the switch range check's delay slot empty, matching
  * the target.  Nothing reads the result: the distortion dispatcher calls its
  * handlers as void. */
-s32 battle_unit_advance_altima_teleport_distortion(battle_unit_misc_data_t* unit) {
+s32 battle_unit_advance_altima_teleport_distortion(battle_unit_t* unit) {
     unit->distortion_timer++;
     switch (unit->distortion_phase) {
     case 0:
@@ -27,7 +27,7 @@ s32 battle_unit_advance_altima_teleport_distortion(battle_unit_misc_data_t* unit
         break;
     case 2:
         if (unit->distortion_timer >= 0x11) {
-            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 4, unit->unit_id, -31, -31, -31);
+            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 4, unit->runtime_id, -31, -31, -31);
             unit->distortion_timer = 0;
             unit->distortion_phase++;
         }
@@ -52,13 +52,13 @@ s32 battle_unit_advance_altima_teleport_distortion(battle_unit_misc_data_t* unit
         break;
     case 5:
         if (unit->distortion_timer >= 0x11) {
-            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 4, unit->unit_id, 31, 31, 31);
+            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 4, unit->runtime_id, 31, 31, 31);
             unit->distortion_phase++;
         }
         break;
     case 6:
         if (unit->distortion_timer >= 0x21) {
-            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_RESTORE, 2, unit->unit_id, 0, 0, 0);
+            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_RESTORE, 2, unit->runtime_id, 0, 0, 0);
             unit->distortion_timer = 0;
             unit->distortion_phase++;
         }
@@ -66,7 +66,7 @@ s32 battle_unit_advance_altima_teleport_distortion(battle_unit_misc_data_t* unit
     case 7:
         if (g_battle_state_animation_continue_check == 0) {
             unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
-            unit->sprite_display_flags &= ~BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
+            unit->sprite_display_flags &= ~BATTLE_SPRITE_DISPLAY_SEMI_TRANSPARENT;
         }
         break;
     }

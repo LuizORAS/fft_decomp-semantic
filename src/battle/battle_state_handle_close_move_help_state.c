@@ -8,8 +8,8 @@
  * enters the moving state. Without player control the same happens from the
  * unit's own stored target after 0x1f frames. */
 void battle_state_handle_close_move_help_state(void) {
-    battle_unit_misc_data_t* source;
-    battle_unit_misc_data_t* casting;
+    battle_unit_t* source;
+    battle_unit_t* casting;
     battle_walk_path_t* path;
     s32 buttons;
     u16 frame;

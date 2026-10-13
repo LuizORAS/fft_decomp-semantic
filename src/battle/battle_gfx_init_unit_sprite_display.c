@@ -7,7 +7,7 @@ battle_gfx_sprite_display_data_t* battle_gfx_init_unit_sprite_display(s32 unit_i
     s32 body_part;
     battle_gfx_sprite_display_data_t* display;
 
-    display = &g_battle_unit_misc_data[unit_index].unit_sprite_display.header;
+    display = &g_battle_units[unit_index].unit_sprite_display.header;
     display->color.b = 0x80;
     display->color.g = 0x80;
     display->color.r = 0x80;

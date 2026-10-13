@@ -8,7 +8,7 @@
  * terrain depth, movement behavior and sprite-specific adjustments.
  * A unit-height record marked unavailable falls back to terrain projection.
  */
-s32 battle_gfx_calculate_screen_z_from_input_coords(battle_unit_misc_data_t* unit, const SVECTOR* coords) {
+s32 battle_gfx_calculate_screen_z_from_input_coords(battle_unit_t* unit, const SVECTOR* coords) {
     battle_unit_height_data_t height;
     map_tile_t* tile;
     s32 flags;
@@ -17,8 +17,8 @@ s32 battle_gfx_calculate_screen_z_from_input_coords(battle_unit_misc_data_t* uni
     s32 animation;
     s16 raised;
 
-    if (unit->standing_on_unit_id_plus_one != 0) {
-        battle_unit_calculate_height_data(&height, unit->standing_on_unit_id_plus_one - 1);
+    if (unit->standing_on_battle_id_plus_one != 0) {
+        battle_unit_calculate_height_data(&height, unit->standing_on_battle_id_plus_one - 1);
         if (height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) {
             screen_z = map_calculate_slope_height(coords, coords->vy & 0xff);
         } else {

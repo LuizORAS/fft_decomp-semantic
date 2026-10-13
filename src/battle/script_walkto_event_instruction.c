@@ -10,7 +10,7 @@ void script_walkto_event_instruction(const event_walk_to_parameters_t* parameter
 
     id = script_read_s16(parameters->unit_id_le);
     id = script_get_misc_id(id);
-    if (id != EVENT_MISC_ID_NONE) {
+    if (id != EVENT_RUNTIME_ID_NONE) {
         coordinates.x = parameters->x;
         coordinates.y = parameters->y;
         coordinates.layer = parameters->elevation;

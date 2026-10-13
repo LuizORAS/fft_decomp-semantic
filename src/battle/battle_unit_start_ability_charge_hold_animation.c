@@ -5,7 +5,7 @@
 
 /* Start the second animation of the used ability's charge set, the one held
  * while charging or performing; the submerged idle in water two or more deep. */
-void battle_unit_start_ability_charge_hold_animation(battle_unit_misc_data_t* unit) {
+void battle_unit_start_ability_charge_hold_animation(battle_unit_t* unit) {
     u8 animation;
     u8 water_depth;
     s32 selected_animation;

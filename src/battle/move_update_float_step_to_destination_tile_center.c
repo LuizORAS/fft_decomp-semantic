@@ -9,7 +9,7 @@
  * centre the horizontal motion stops; once the unit is also down at the ground
  * height there, it takes the destination tile as its map position and the step
  * ends. */
-void move_update_float_step_to_destination_tile_center(battle_unit_misc_data_t* unit) {
+void move_update_float_step_to_destination_tile_center(battle_unit_t* unit) {
     s32 direction;
     s16 screen_z;
 

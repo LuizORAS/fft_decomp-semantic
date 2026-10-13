@@ -28,7 +28,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     s32 duration[8] = { 16, 8, 2, 2, 6, 4, 4, 10 };
     long flag;
     POLY_FT4* prim;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 height;
     s32 scaled;
     s32 half_width;

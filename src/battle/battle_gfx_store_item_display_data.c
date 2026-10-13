@@ -3,7 +3,7 @@
 
 /* Make the unit's item display show an item's 16x16 icon, centred on the
  * display's origin. */
-void battle_gfx_store_item_display_data(battle_unit_misc_data_t* unit, u32 item_id) {
+void battle_gfx_store_item_display_data(battle_unit_t* unit, u32 item_id) {
     SPRT data;
 
     battle_gfx_set_item_icon_sprite(&data, item_id);

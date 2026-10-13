@@ -4,7 +4,7 @@
 #include "fft/battle_unit.h"
 
 /* Apply a unit's pending status add/remove masks and refresh its display state. */
-void battle_unit_update_display(battle_unit_misc_data_t* unit) {
+void battle_unit_update_display(battle_unit_t* unit) {
     map_tile_t* tile;
 
     if (unit != 0) {

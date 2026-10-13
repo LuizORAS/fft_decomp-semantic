@@ -5,7 +5,7 @@
  * state. Any other action starts the pre-action phase and announces the next
  * action that is due. */
 void battle_state_handle_commence_attack_phase_state(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);

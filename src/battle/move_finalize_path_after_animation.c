@@ -3,7 +3,7 @@
 
 /* Step handler of the TELEPORT_ANIMATION phase: once the animation countdown
  * reaches 0, end the path and keep its count in last_path_count. */
-void move_finalize_path_after_animation(battle_unit_misc_data_t* unit) {
+void move_finalize_path_after_animation(battle_unit_t* unit) {
     u8 path_count;
 
     if (unit->animation.wait == 0) {

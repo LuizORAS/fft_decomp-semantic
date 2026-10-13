@@ -9,7 +9,7 @@
  * climb and mount bits are cleared and its higher bit (0x2000) takes the
  * destination layer.
  */
-void move_init_knockback(battle_unit_misc_data_t* unit) {
+void move_init_knockback(battle_unit_t* unit) {
     u32* path_word = (u32*)&unit->path;
     u32 state;
     u32 knockback_state;

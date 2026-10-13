@@ -37,7 +37,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
 
     i = bunit_gfx_calculate_distance_falloff(x, y, 0xC8, 0x50);
     rgb.r = rgb.g = rgb.b = i > 0x80 ? 0x80 : i;
-    frame = battle_gfx_get_unit_sprite_frame_and_vram_ids(g_bunit_unit_data[unit]->misc_unit_id, &quad.query);
+    frame = battle_gfx_get_unit_sprite_frame_and_vram_ids(g_bunit_unit_data[unit]->runtime_id, &quad.query);
     base_y = (quad.query.graphic_height >> 1) + 0x16;
     if (frame == (battle_gfx_source_frame_t*)-1) {
         return;

@@ -18,7 +18,7 @@
  * recalculated on every call.
  *
  * `unused` reproduces the target's 0x58-byte frame. */
-void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
+void battle_gfx_draw_unit_shadow(battle_unit_t* unit, u32* ot) {
     VECTOR transformed;
     SVECTOR position;
     SVECTOR offset;

@@ -16,9 +16,9 @@
  * Separate animation and sprite-block pointers change register allocation.
  * The contradictory weapon range test (<0x86, <0x3c, >=0x4a, !=0x5d) is
  * literally what the target branches encode (the call is dead code). */
-battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id,
+battle_unit_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id,
     s16 palette, s16 misc_id, battle_stats_t* stats, u32 flags, const battle_gfx_unit_sprite_file_t* data) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     union {
         battle_unit_anim_state_t* animation;
         battle_unit_sprite_block_t* block;
@@ -28,7 +28,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     s32 slot;
     u16 id;
     s32 i;
-    battle_unit_misc_data_t** head;
+    battle_unit_t** head;
     u8 tile_x;
     u8 tile_y;
     u8 tile_z;
@@ -38,11 +38,11 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     if (unit == 0) {
         return 0;
     }
-    unit_id = unit->unit_id;
+    unit_id = unit->runtime_id;
     unit->spritesheet_id = id;
     slot = unit->spritesheet_vram_slot = battle_gfx_claim_spritesheet_slot(spritesheet_id);
     if (slot == 0xffff) {
-        g_battle_unit_misc_slot_flags[unit->unit_id].in_use = 0;
+        g_battle_unit_slot_flags[unit->runtime_id].in_use = 0;
         return 0;
     }
     if (id >= BATTLE_SPRITESHEET_ID_JOB_FIRST && id < BATTLE_SPRITESHEET_ID_CHOCOBO && stats != 0) {
@@ -71,12 +71,12 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
         unit->draw_enabled = 0;
         unit->animation.trigger = 0;
     }
-    unit->standing_on_unit_id_plus_one = 0;
+    unit->standing_on_battle_id_plus_one = 0;
     unit->battle_data = stats;
     unit->requested_animation = 0;
     unit->facing = facing * 1024;
     unit->camera_facing_sixteenth = unit->camera_facing_quadrant = unit->attack_facing = -1;
-    unit->mount_state = BATTLE_MISC_MOUNT_STATE_NONE;
+    unit->mount_state = BATTLE_UNIT_MOUNT_STATE_NONE;
     unit->horizontal_flip_flag = 0;
     unit->depth_height_offset = 0;
     unit->float_bob_offset = 0;
@@ -118,7 +118,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->event_offset.vz = 0;
     unit->event_offset.vy = 0;
     unit->event_offset.vx = 0;
-    unit->fade_out_phase = BATTLE_MISC_FADE_OUT_NONE;
+    unit->fade_out_phase = BATTLE_UNIT_FADE_OUT_NONE;
     unit->shadow_graphic_trigger = 1;
     unit->shadow_dirty = 1;
     unit->shadow_counter = 0;
@@ -192,14 +192,14 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
             battle_gfx_run_wep_eff_seq_script(unit, &unit->sprite_blocks[i], i, 1);
         }
     }
-    head = &g_battle_unit_misc_list_head;
+    head = &g_battle_unit_list_head;
     unit->previous = *head;
     *head = unit;
     battle_gfx_set_thrown_item_graphic_palette(
         unit->battle_data->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON], unit);
     status_init_special_flag_enabling(unit->battle_data->battle_id);
     unit->movement.suppress_sfx_and_landing_effects = 1;
-    battle_unit_update_display_by_misc_id(unit->unit_id);
+    battle_unit_update_display_by_misc_id(unit->runtime_id);
     battle_unit_set_animation_based_on_status(unit);
     unit->movement.suppress_sfx_and_landing_effects = 0;
     return unit;

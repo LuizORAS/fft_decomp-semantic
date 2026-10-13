@@ -13,7 +13,7 @@
  * the count runs out. `unused_10` reproduces an unreferenced 16-byte frame
  * slot below the velocity copy.
  */
-void move_animate_jump_start(battle_unit_misc_data_t* unit) {
+void move_animate_jump_start(battle_unit_t* unit) {
     VECTOR unused_10;
     VECTOR velocity;
     s32 timer;
@@ -28,7 +28,7 @@ void move_animate_jump_start(battle_unit_misc_data_t* unit) {
         timer = speed / g_move_jump_gravity;
         velocity.vy = -speed;
         battle_gfx_init_position_vector_copies(unit);
-        unit->status_flags_5_6 |= BATTLE_MISC_STATUS_JUMP_HEIGHT_ACTIVE;
+        unit->status_flags_5_6 |= BATTLE_UNIT_STATUS_JUMP_HEIGHT_ACTIVE;
         unit->distortion_phase++;
     case 1:
         if (timer > 0) {

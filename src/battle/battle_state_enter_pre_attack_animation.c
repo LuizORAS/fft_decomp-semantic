@@ -7,7 +7,7 @@
  * ability's charge animation, or the standing animation when the ability has no
  * charge animation set. */
 void battle_state_enter_pre_attack_animation(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     u16 ability;
 
     target_set_tile_background_color(BATTLE_TILE_MARK_NONE, 2);

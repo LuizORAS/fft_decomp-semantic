@@ -27,13 +27,13 @@
  *
  * The first switch repeats the layer test that the statement before it has just
  * made false, so its bodies never run. */
-void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
+void move_apply_unit_step_velocity(battle_unit_t* unit) {
     s16 tile[2];
     u8 layer;
     s16 ground_z;
     s16 move_ground_z;
     map_tile_t* map_tile;
-    battle_unit_misc_data_t* rider;
+    battle_unit_t* rider;
     s32 depth;
 
     tile[0] = (unit->real.vx + unit->velocity.vx) / (MAP_TILE_SIZE * ONE);
@@ -280,8 +280,8 @@ void move_apply_unit_step_velocity(battle_unit_misc_data_t* unit) {
         break;
     }
     battle_unit_set_screen_coords_from_real_coords(unit);
-    if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
-        rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+    if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
+        rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
         if (rider != 0) {
             rider->screen = unit->screen;
             rider->screen.vy -= 10;

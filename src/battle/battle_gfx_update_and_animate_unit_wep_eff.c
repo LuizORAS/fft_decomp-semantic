@@ -21,15 +21,15 @@
  *
  * unit is initialized in its declaration so its copy precedes the table
  * copies, and the unread unused_10 sizes the target's frame. */
-void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_data) {
-    battle_unit_misc_data_t* unit = unit_data;
+void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_t* unit_data) {
+    battle_unit_t* unit = unit_data;
     s16 unused_10[4]; /* Unread; occupies sp+0x10 like the target. */
-    /* The flip tables hold BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP for the views drawn mirrored. */
+    /* The flip tables hold BATTLE_SPRITE_DISPLAY_HORIZONTAL_FLIP for the views drawn mirrored. */
     s16 flip_by_quadrant[4] = { 0, 0, 2, 2 };
     s16 back_by_quadrant[4] = { 0, 1, 1, 0 };
     s16 flip_by_direction[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 0 };
     s16 stand_by_direction[16] = { 1, 2, 2, 3, 3, 4, 4, 5, 5, 4, 4, 3, 3, 2, 2, 1 };
-    battle_unit_misc_data_t* other;
+    battle_unit_t* other;
     battle_gfx_unit_seq_table_t* seq;
     s32 direction;
     s16 quadrant;
@@ -58,7 +58,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
             unit->animation.sequence_id = stand_by_direction[sixteenth];
             unit->sprite_display_flags
                 = (unit->sprite_display_flags
-                      & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
+                      & ~(BATTLE_SPRITE_DISPLAY_HORIZONTAL_FLIP | BATTLE_SPRITE_DISPLAY_VERTICAL_FLIP))
                 | flip_by_direction[sixteenth];
             unit->camera_facing_quadrant = quadrant;
             unit->camera_facing_sixteenth = sixteenth;
@@ -78,7 +78,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
             battle_gfx_run_unit_seq_script(unit, &unit->animation, 1);
             unit->requested_animation = 0;
             battle_gfx_release_unit_vram_slot(unit);
-        } else if (unit->requested_animation >= 12 || (unit->unit_id & 3) == g_battle_frame_counter % 4
+        } else if (unit->requested_animation >= 12 || (unit->runtime_id & 3) == g_battle_frame_counter % 4
             || (unit->movement.force_animation_update)) {
             /* An animation below 11 waits for the unit's frame in four. */
             ok = 1;
@@ -92,7 +92,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                         if (index >= (u32)seq->first_attack_sequence) {
                             for (i = 0; i < 2; i++) {
                                 if ((g_battle_gfx_vram_slots[i].owner & BATTLE_GFX_VRAM_SLOT_OWNER_ID_MASK)
-                                    == unit->unit_id) {
+                                    == unit->runtime_id) {
                                     break;
                                 }
                             }
@@ -156,7 +156,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                     }
                     unit->sprite_display_flags
                         = (unit->sprite_display_flags
-                              & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
+                              & ~(BATTLE_SPRITE_DISPLAY_HORIZONTAL_FLIP | BATTLE_SPRITE_DISPLAY_VERTICAL_FLIP))
                         | flip_by_quadrant[quadrant];
                     unit->camera_facing_quadrant = quadrant;
                     unit->camera_facing_sixteenth = sixteenth;
@@ -176,8 +176,8 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                     battle_gfx_run_unit_seq_script(unit, &unit->animation, 1);
                     unit->movement.force_animation_update = 0;
                     unit->requested_animation = 0;
-                    if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
-                        other = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+                    if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
+                        other = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
                         if (other != 0) {
                             other->animation.script_pos = 0;
                             other->animation.wait = 0;
@@ -205,13 +205,13 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                 unit->animation.sequence_id = stand_by_direction[sixteenth];
                 unit->sprite_display_flags
                     = (unit->sprite_display_flags
-                          & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
+                          & ~(BATTLE_SPRITE_DISPLAY_HORIZONTAL_FLIP | BATTLE_SPRITE_DISPLAY_VERTICAL_FLIP))
                     | flip_by_direction[sixteenth];
             } else {
                 unit->animation.sequence_id = (sequence_id & 0xfffe) + back_by_quadrant[quadrant];
                 unit->sprite_display_flags
                     = (unit->sprite_display_flags
-                          & ~(BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP | BATTLE_MISC_DISPLAY_VERTICAL_FLIP))
+                          & ~(BATTLE_SPRITE_DISPLAY_HORIZONTAL_FLIP | BATTLE_SPRITE_DISPLAY_VERTICAL_FLIP))
                     | flip_by_quadrant[quadrant];
             }
             unit->camera_facing_quadrant = quadrant;

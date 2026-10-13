@@ -12,7 +12,7 @@ void script_waitspritemove_event_instruction(s32 unit_id) {
     s32 i;
 
     target = script_get_misc_id(unit_id);
-    if (target == EVENT_MISC_ID_NONE) {
+    if (target == EVENT_RUNTIME_ID_NONE) {
         return;
     }
 

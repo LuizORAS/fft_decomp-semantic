@@ -6,7 +6,7 @@
 /* Start the departure effect of a teleport. Altima's two forms request their own
  * ability effect and the result is 1; any other unit gets the teleport secondary
  * effect and the teleport-out sound, and the result is 0. */
-s32 effect_start_altima_teleport_departure(battle_unit_misc_data_t* unit) {
+s32 effect_start_altima_teleport_departure(battle_unit_t* unit) {
     effect_secondary_init_t teleport_data;
 
     effect_init_altima_teleport_data(unit, &teleport_data);

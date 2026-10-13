@@ -14,7 +14,7 @@
  * g_move_jump_gravity each frame, then stops the horizontal motion. Phase
  * 2 keeps falling until the unit reaches the ground under it, snaps it to the
  * tile and ends the animation. */
-void move_animate_jump_arc_to_own_tile(battle_unit_misc_data_t* unit) {
+void move_animate_jump_arc_to_own_tile(battle_unit_t* unit) {
     /* Unreferenced 8-byte frame slot below the target point, like the one in
      * move_animate_jump_start; it puts `target` at sp+0x18. */
     SVECTOR unused_10;

@@ -8,8 +8,8 @@
  * must remain s16 to preserve the target's register allocation and tail
  * sharing.
  */
-void battle_gfx_modify_misc_unit_palette(battle_unit_misc_data_t* misc, s32 mode, s32 clut_row, s32 clut_index,
-    s32 preset, s16 red, s16 green, s16 blue, s32 final_value) {
+void battle_gfx_modify_misc_unit_palette(battle_unit_t* misc, s32 mode, s32 clut_row, s32 clut_index, s32 preset,
+    s16 red, s16 green, s16 blue, s32 final_value) {
     s32 slot;
     s32 sheet;
     s32 palette;

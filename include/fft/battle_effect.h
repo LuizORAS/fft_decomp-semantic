@@ -45,7 +45,7 @@ typedef enum effect_target_type {
 } effect_target_type_e;
 
 enum {
-    EFFECT_TARGET_COUNT_MAX = BATTLE_UNIT_MISC_SLOT_COUNT,
+    EFFECT_TARGET_COUNT_MAX = BATTLE_UNIT_RUNTIME_SLOT_COUNT,
     EFFECT_CASTER_ENTRY = EFFECT_TARGET_COUNT_MAX, /* index of the caster's record in effect_secondary_init_t.targets */
     /* the target index that makes effect_resolve_target_render_coords resolve the caster */
     EFFECT_TARGET_INDEX_CASTER = -1,
@@ -2022,24 +2022,24 @@ s32 effect_null_secondary_handler(void);
 s32 effect_red_orbs_secondary_handler(void);
 s32 effect_reflect_secondary_handler(void);
 void effect_remove_secondary(u8 id);
-void effect_set_evade_type_data_and_weapon_element(struct battle_unit_misc_data* unit, s32 is_bow);
-void effect_set_landing_secondary_by_surface_type(battle_unit_misc_data_t* unit);
-void effect_set_secondary(struct battle_unit_misc_data* unit, s32 effect);
-void effect_set_secondary_death_smoke(battle_unit_misc_data_t* unit);
-void effect_set_secondary_fall_dust(struct battle_unit_misc_data* unit);
-void effect_set_secondary_level_up(struct battle_unit_misc_data* unit);
-void effect_set_secondary_splash(struct battle_unit_misc_data* unit);
-void effect_set_secondary_teleport(struct battle_unit_misc_data* unit);
+void effect_set_evade_type_data_and_weapon_element(struct battle_unit* unit, s32 is_bow);
+void effect_set_landing_secondary_by_surface_type(battle_unit_t* unit);
+void effect_set_secondary(struct battle_unit* unit, s32 effect);
+void effect_set_secondary_death_smoke(battle_unit_t* unit);
+void effect_set_secondary_fall_dust(struct battle_unit* unit);
+void effect_set_secondary_level_up(struct battle_unit* unit);
+void effect_set_secondary_splash(struct battle_unit* unit);
+void effect_set_secondary_teleport(struct battle_unit* unit);
 s32 effect_set_secondary_teleport_by_misc_id(u32 misc_id);
-void effect_set_secondary_venom_trap(battle_unit_misc_data_t* unit);
-void effect_set_secondary_zodiac_poof(battle_unit_misc_data_t* unit);
+void effect_set_secondary_venom_trap(battle_unit_t* unit);
+void effect_set_secondary_zodiac_poof(battle_unit_t* unit);
 s32 effect_spell_charge_secondary_handler(void);
 s32 effect_splash_secondary_handler(void);
-void effect_start_action_projectile_secondary(battle_unit_misc_data_t* unit);
-s32 effect_start_altima_teleport_arrival(battle_unit_misc_data_t* unit);
-s32 effect_start_altima_teleport_departure(battle_unit_misc_data_t* unit);
-void effect_start_altima_teleport_fade_out(battle_unit_misc_data_t* unit);
-void effect_start_altima_teleport_white_flash(battle_unit_misc_data_t* unit);
+void effect_start_action_projectile_secondary(battle_unit_t* unit);
+s32 effect_start_altima_teleport_arrival(battle_unit_t* unit);
+s32 effect_start_altima_teleport_departure(battle_unit_t* unit);
+void effect_start_altima_teleport_fade_out(battle_unit_t* unit);
+void effect_start_altima_teleport_white_flash(battle_unit_t* unit);
 void effect_start_group(s32 group, s32 clut_index);
 s32 effect_summon_charge_secondary_handler(void);
 s32 effect_teleport_secondary_handler(void);
@@ -2049,7 +2049,7 @@ s32 effect_update_secondary_effects(void);
 s32 effect_venom_trap_secondary_handler(void);
 s32 effect_weapon_hit_secondary_handler(void);
 s32 effect_zodiac_poof_secondary_handler(void);
-void move_start_teleport_step(battle_unit_misc_data_t* unit);
+void move_start_teleport_step(battle_unit_t* unit);
 
 /* targets */
 extern effect_secondary_init_t g_effect_context;
@@ -2058,17 +2058,17 @@ extern u8 g_effect_palette_target_misc_ids[];
  * CURSOR_TILE. */
 extern effect_target_t g_effect_target_tile;
 
-void effect_build_secondary_init(struct battle_unit_misc_data* unit, struct effect_secondary_init* effect);
-void effect_build_secondary_init_from_action(battle_unit_misc_data_t* unit, effect_secondary_init_t* init);
+void effect_build_secondary_init(struct battle_unit* unit, struct effect_secondary_init* effect);
+void effect_build_secondary_init_from_action(battle_unit_t* unit, effect_secondary_init_t* init);
 void effect_convert_tile_coords_to_world_coords(SVECTOR* in, VECTOR* out);
 void effect_copy_misc_unit_screen_location(u32 misc_id, VECTOR* destination);
 void effect_get_screen_location_by_battle_id(
     s32 adjust_for_tile_height, u32 battle_id, effect_secondary_init_t* effect_coordinates, SVECTOR* destination);
-void effect_init_altima_teleport_data(battle_unit_misc_data_t* unit, effect_secondary_init_t* teleport_data);
+void effect_init_altima_teleport_data(battle_unit_t* unit, effect_secondary_init_t* teleport_data);
 void effect_resolve_target_render_coords(
     s32 add_depth, s32 target_index, effect_secondary_init_t* coord_data, SVECTOR* out);
 void effect_store_map_center_coordinates(VECTOR* destination);
-void effect_store_targets_and_display_types(s32 ability_id, battle_unit_misc_data_t* unit);
+void effect_store_targets_and_display_types(s32 ability_id, battle_unit_t* unit);
 
 /* elements */
 extern u8 g_effect_element_masks[];

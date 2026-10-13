@@ -4,7 +4,7 @@
 /* Start the hovered-unit stats panel for the unit on the cursor tile, or the tile
  * info panel when the tile is empty. */
 void target_store_cursor_unit_name_and_data(void) {
-    battle_unit_misc_data_t* misc;
+    battle_unit_t* misc;
     s32 mode;
     s32 unit_id;
 

@@ -2044,7 +2044,7 @@ data:
   - {addr: 0x8009839c, name: g_battle_gfx_boss_shp_frame_tables}
   - {addr: 0x80098a24, name: g_camera_matrix}
   - {addr: 0x80098a44, name: g_camera_screen_offset_fixed}
-  - {addr: 0x80098a54, name: g_battle_unit_misc_list_head}
+  - {addr: 0x80098a54, name: g_battle_unit_list_head}
   - {addr: 0x80098d70, name: g_battle_gfx_sp2_data}
   - {addr: 0x80098d74, name: g_battle_gfx_unit_graphics_load_state}
   - {addr: 0x80098d84, name: g_action_turn_event_type}
@@ -2085,8 +2085,8 @@ data:
   - {addr: 0x800b669c, name: g_battle_gfx_effect_graphics}
   - {addr: 0x800b72dc, name: g_battle_screen_fade_draw_modes}
   - {addr: 0x800b72f4, name: g_camera_real_coord_delta}
-  - {addr: 0x800b7304, name: g_battle_unit_misc_slot_flags}
-  - {addr: 0x800b7308, name: g_battle_unit_misc_data}
+  - {addr: 0x800b7304, name: g_battle_unit_slot_flags}
+  - {addr: 0x800b7308, name: g_battle_units}
   - {addr: 0x800bdf04, name: g_battle_gfx_previous_counter}
   - {addr: 0x800bdf08, name: g_battle_gfx_counter}
   - {addr: 0x800bdf0c, name: g_battle_gfx_weapon_graphics}

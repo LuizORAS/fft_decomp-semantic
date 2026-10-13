@@ -4,7 +4,7 @@
 
 /* The same routine as battle_unit_add_event_offset_by_misc_id, compiled twice. Nothing calls this copy. */
 s32 battle_unit_add_event_offset_by_misc_id_unused(u32 misc_id, const SVECTOR* amount) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xffff);
     if (unit != 0) {

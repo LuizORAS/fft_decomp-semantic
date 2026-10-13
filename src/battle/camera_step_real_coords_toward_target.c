@@ -8,7 +8,7 @@
  * while it is still short of the target in the step's direction, and is set to
  * the target exactly when the step carries it past. Called for the acting unit
  * while it moves, chooses its wait direction or starts an attack animation. */
-void camera_step_real_coords_toward_target(const battle_unit_misc_data_t* target) {
+void camera_step_real_coords_toward_target(const battle_unit_t* target) {
     if (g_camera_step_vector.vx < 0) {
         if (g_camera_current_real_coords.vx / ONE > target->screen.vx) {
             g_camera_current_real_coords.vx += g_camera_step_vector.vx;

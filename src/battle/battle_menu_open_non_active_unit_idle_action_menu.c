@@ -7,7 +7,7 @@
 /* Opens the non-active-unit idle action menu for the unit under the cursor;
  * g_status_menu_open switches menu ids 0xf/0x10 to 0x11/0x12. */
 void battle_menu_open_non_active_unit_idle_action_menu(void) {
-    battle_unit_misc_data_t* misc;
+    battle_unit_t* misc;
     battle_stats_t* unit;
     s32 menu_id;
 

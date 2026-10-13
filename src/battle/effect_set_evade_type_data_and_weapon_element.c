@@ -4,7 +4,7 @@
 /* Starts the weapon-hit secondary effect of the unit's action, in the element
  * of the used weapon; is_bow is 1 for the bow hardcoding path and 0
  * otherwise, and unused. */
-void effect_set_evade_type_data_and_weapon_element(battle_unit_misc_data_t* unit, s32 is_bow) {
+void effect_set_evade_type_data_and_weapon_element(battle_unit_t* unit, s32 is_bow) {
     effect_secondary_init_t secondary_init;
     effect_build_secondary_init_from_action(unit, &secondary_init);
     effect_init_weapon_hit_secondary(

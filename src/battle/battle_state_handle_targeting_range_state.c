@@ -15,8 +15,8 @@
  * The two tile pointers fetched on the AI path are not used. */
 void battle_state_handle_targeting_range_state(void) {
     u16 frame_data;
-    battle_unit_misc_data_t* unit;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* unit;
+    battle_unit_t* target;
 
     unit = battle_unit_get_source_misc_data();
     battle_state_handle_free_cursor_input();

@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Start the first animation of the used ability's charge set, if it has one. */
-void battle_unit_start_ability_charge_animation(battle_unit_misc_data_t* unit) {
+void battle_unit_start_ability_charge_animation(battle_unit_t* unit) {
     u8 animation;
 
     animation = g_battle_ability_charge_animation_sets[g_battle_ability_animation_data[unit->used_ability_id]

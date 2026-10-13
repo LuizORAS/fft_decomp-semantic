@@ -16,12 +16,12 @@
  * velocity to all three real coordinates for that many frames, the height speed
  * gaining g_move_jump_gravity each frame, and ends the animation where the
  * arc leaves the unit. */
-void move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
+void move_animate_jump_arc_to_target(battle_unit_t* unit) {
     SVECTOR target;
     /* The retail frame reserves eight bytes beyond the target vector. */
     u8 unused_target_tail[8];
     VECTOR velocity;
-    battle_unit_misc_data_t* other;
+    battle_unit_t* other;
     s32 timer;
 
     timer = unit->distortion_timer;
@@ -32,7 +32,7 @@ void move_animate_jump_arc_to_target(battle_unit_misc_data_t* unit) {
             if (unit->strike.target_count != 0) {
                 other = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[0]);
                 setVector(&target, other->screen.vx,
-                    other->screen.vy - battle_gfx_get_unit_spritesheet_height_by_misc_id(other->unit_id) / 2,
+                    other->screen.vy - battle_gfx_get_unit_spritesheet_height_by_misc_id(other->runtime_id) / 2,
                     other->screen.vz);
             } else {
                 target.vx = unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);

@@ -18,7 +18,7 @@ s32 battle_state_update_controller_input(void) {
     u32 previous;
     u32 current;
     u32 released;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     g_main_input_current_buttons = PadRead(1);
     if (script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) != 0) {

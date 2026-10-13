@@ -11,10 +11,10 @@
  * then snaps to the centre, clears velocity, adopts the destination map
  * coordinates and sets shadow_dirty bit 0.
  */
-void move_update_unit_vertical_step_to_destination_tile_center(battle_unit_misc_data_t* unit) {
+void move_update_unit_vertical_step_to_destination_tile_center(battle_unit_t* unit) {
     s32 done;
     s32 direction;
-    battle_unit_misc_data_t* mount;
+    battle_unit_t* mount;
 
     done = 0;
     direction = move_get_direction(unit);

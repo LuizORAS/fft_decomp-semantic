@@ -12,9 +12,9 @@
  * AI-controlled unit keeps the target it already chose: 5, 6 and 7 only enter the
  * pre-attack animation. */
 void battle_state_handle_confirm_action_state(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     ai_command_t* selected_command_address;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* target;
     s32 selected_command;
 
     battle_state_handle_free_cursor_input();

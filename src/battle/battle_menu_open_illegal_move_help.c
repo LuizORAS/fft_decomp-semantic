@@ -6,7 +6,7 @@
 /* Enter the illegal-move state and show move feedback option 2, which rejects the
  * chosen destination. */
 void battle_menu_open_illegal_move_help(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_ILLEGAL_MOVE_MENU;
     unit = battle_unit_get_source_misc_data();

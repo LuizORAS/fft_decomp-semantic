@@ -5,7 +5,7 @@
 
 /* Enter the unit-move state and show the source unit's targeting prompt. */
 void action_handle_move_command(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_UNIT_MOVE;

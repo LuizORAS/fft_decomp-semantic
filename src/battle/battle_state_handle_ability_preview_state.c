@@ -13,7 +13,7 @@
  * unit confirms by itself once its state frame counter reaches 0x1f. */
 void battle_state_handle_ability_preview_state(void) {
     u16 frame_data;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     unit = battle_unit_get_source_misc_data();
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {

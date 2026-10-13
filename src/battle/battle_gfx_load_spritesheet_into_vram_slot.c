@@ -5,8 +5,8 @@
  * and enable STP on each palette's entries 1..15.
  * Indexed byte copies preserve the original loop scheduling. Three RECT
  * locals preserve the 0x50-byte frame and its otherwise unused x/y stores. */
-void battle_gfx_load_spritesheet_into_vram_slot(const battle_gfx_unit_sprite_file_t* source, u32 index, s32 unused,
-    battle_unit_misc_data_t* unit, s16 unused_palette) {
+void battle_gfx_load_spritesheet_into_vram_slot(
+    const battle_gfx_unit_sprite_file_t* source, u32 index, s32 unused, battle_unit_t* unit, s16 unused_palette) {
     const u8* data;
     u32 column;
     u8* clut_bytes;

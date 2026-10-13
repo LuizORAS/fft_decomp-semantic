@@ -5,7 +5,7 @@
  * effect messages turned off, or nothing to report, an effect message with text
  * id 0 is requested instead. */
 void action_show_caster_post_effect_messages(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     unit = battle_unit_get_casting_misc_data();
     action_queue_post_effect_messages_for_unit(unit);

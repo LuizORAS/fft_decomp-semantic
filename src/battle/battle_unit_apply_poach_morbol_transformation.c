@@ -10,23 +10,23 @@
  * for the Morbol spritesheet (VRAM slot, SHP, SEQ, texture page), refreshes the
  * tile palette and the idle animation, then rewrites the battle stats as a Morbol
  * and reinitialises the unit's AI ability data. */
-void battle_unit_apply_poach_morbol_transformation(battle_unit_misc_data_t* unit) {
+void battle_unit_apply_poach_morbol_transformation(battle_unit_t* unit) {
     u32 flags;
     map_tile_t* tile;
 
     flags = unit->status_flags_5_6;
-    if ((flags & (BATTLE_MISC_STATUS_POACHED | BATTLE_MISC_STATUS_MORBOL)) == 0) {
+    if ((flags & (BATTLE_UNIT_STATUS_POACHED | BATTLE_UNIT_STATUS_MORBOL)) == 0) {
         return;
     }
-    if (flags & BATTLE_MISC_STATUS_POACHED) {
-        unit->status_flags_5_6 = flags & ~BATTLE_MISC_STATUS_POACHED;
-        battle_gfx_configure_misc_unit_palette_modulation_1f(unit->unit_id);
+    if (flags & BATTLE_UNIT_STATUS_POACHED) {
+        unit->status_flags_5_6 = flags & ~BATTLE_UNIT_STATUS_POACHED;
+        battle_gfx_configure_misc_unit_palette_modulation_1f(unit->runtime_id);
         return;
     }
-    if ((flags & BATTLE_MISC_STATUS_MORBOL) == 0) {
+    if ((flags & BATTLE_UNIT_STATUS_MORBOL) == 0) {
         return;
     }
-    unit->status_flags_5_6 = flags & ~BATTLE_MISC_STATUS_MORBOL;
+    unit->status_flags_5_6 = flags & ~BATTLE_UNIT_STATUS_MORBOL;
     unit->special_graphic_y_offset = 0;
     unit->spritesheet_id = BATTLE_SPRITESHEET_ID_MORBOL;
     unit->spritesheet_vram_slot = battle_gfx_claim_spritesheet_slot(BATTLE_SPRITESHEET_ID_MORBOL);

@@ -3,9 +3,9 @@
 
 /* Restore the facing each unit in the attacker's target list had before the
    attack. */
-void battle_unit_restore_target_facings_after_attack(battle_unit_misc_data_t* unit) {
+void battle_unit_restore_target_facings_after_attack(battle_unit_t* unit) {
     s32 i;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* target;
 
     if (unit->strike.target_count != 0) {
         i = 0;

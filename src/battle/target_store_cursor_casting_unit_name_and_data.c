@@ -5,8 +5,8 @@
  * source unit against the unit on the cursor tile, or the source unit's own stats
  * when the tile is empty. */
 void target_store_cursor_casting_unit_name_and_data(void) {
-    battle_unit_misc_data_t* target;
-    battle_unit_misc_data_t* source;
+    battle_unit_t* target;
+    battle_unit_t* source;
 
     target
         = battle_unit_get_selectable_misc_data_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);

@@ -2,7 +2,7 @@
 
 /* How far above the floor of a water tile the unit stands, in half-height steps: the whole
  * depth with Float or ON_WATER movement, one level less with IN_WATER movement, else 0. */
-s32 move_calculate_water_lift(battle_unit_misc_data_t* unit, map_tile_t* tile) {
+s32 move_calculate_water_lift(battle_unit_t* unit, map_tile_t* tile) {
     s32 movement_flags;
 
     if (unit->battle_data != 0) {

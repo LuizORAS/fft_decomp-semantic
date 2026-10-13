@@ -7,7 +7,7 @@ battle_gfx_sprite_display_data_t* battle_gfx_init_status_bubble_sprite_display(s
     battle_gfx_sprite_display_data_t* display;
     s32 i;
 
-    display = &g_battle_unit_misc_data[unit_index].status_bubble_sprite_display.header;
+    display = &g_battle_units[unit_index].status_bubble_sprite_display.header;
     display->color.b = 0x80;
     display->color.g = 0x80;
     display->color.r = 0x80;

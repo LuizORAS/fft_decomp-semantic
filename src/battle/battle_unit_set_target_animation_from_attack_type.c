@@ -7,8 +7,7 @@
  * Pick and start the reaction animation a target plays after an action
  * resolves, then apply the action's special-effect side effects.
  */
-void battle_unit_set_target_animation_from_attack_type(
-    battle_unit_misc_data_t* attacker, battle_unit_misc_data_t* target) {
+void battle_unit_set_target_animation_from_attack_type(battle_unit_t* attacker, battle_unit_t* target) {
     battle_stats_t* stats;
     action_data_t* action;
     s32 animation;
@@ -39,9 +38,9 @@ void battle_unit_set_target_animation_from_attack_type(
                 battle_unit_face_towards_action_target(target, attacker);
                 battle_gfx_set_thrown_item_graphic_palette(action->item_lost, target);
                 attacker_height
-                    = battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->unit_id) / 2 - attacker->screen.vy;
+                    = battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->runtime_id) / 2 - attacker->screen.vy;
                 target_height
-                    = battle_gfx_get_unit_spritesheet_height_by_misc_id(target->unit_id) / 2 - target->screen.vy;
+                    = battle_gfx_get_unit_spritesheet_height_by_misc_id(target->runtime_id) / 2 - target->screen.vy;
                 delta = attacker_height - target_height;
                 if (delta < -0xb) {
                     animation = BATTLE_UNIT_ANIMATION_WEAPON_GUARD_LOW;
@@ -94,10 +93,10 @@ void battle_unit_set_target_animation_from_attack_type(
                 move_transfer_target_coordinates(attacker, target);
             }
             if (action->special_effect & ACTION_SPECIAL_EFFECT_POACH) {
-                target->status_flags_5_6 |= BATTLE_MISC_STATUS_POACHED;
+                target->status_flags_5_6 |= BATTLE_UNIT_STATUS_POACHED;
             }
             if (action->special_effect & ACTION_SPECIAL_EFFECT_MORBOL) {
-                target->status_flags_5_6 |= BATTLE_MISC_STATUS_MORBOL;
+                target->status_flags_5_6 |= BATTLE_UNIT_STATUS_MORBOL;
             }
             if (action->special_effect & ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT) {
                 ai_init_unit_abilities(target->battle_data->battle_id);

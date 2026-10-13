@@ -20,7 +20,7 @@ enum {
  * byte again, cse reuses the direction test's load and the reload is lost.
  */
 void move_set_velocity_for_contiguous_clamped_steps(
-    battle_unit_misc_data_t* unit, const battle_walk_path_t* path, const move_step_t* step) {
+    battle_unit_t* unit, const battle_walk_path_t* path, const move_step_t* step) {
     VECTOR direction;
     const move_step_t* current;
     s32 start_x;

@@ -8,8 +8,8 @@
  * scenario check, and unless it starts an event enter the open-action-menus state
  * and turn the camera when the casting unit's tile is hidden. */
 void battle_menu_set_next_script_action_menus(void) {
-    battle_unit_misc_data_t* casting_unit;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* casting_unit;
+    battle_unit_t* unit;
 
     camera_disable_map_pan();
     casting_unit = battle_unit_get_casting_misc_data();

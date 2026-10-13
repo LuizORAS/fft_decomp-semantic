@@ -7,7 +7,7 @@
  * awarded), start the earned EXP/JP display and enter the level-up phase of
  * action_init_learn_ability_on_hit. */
 void action_handle_post_action_xp_jp_ability(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     battle_stats_t* stats;
 
     unit = battle_unit_get_source_misc_data();

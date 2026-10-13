@@ -11,10 +11,10 @@
  * velocity.vy in each branch keeps its division, which GCC folds away when the
  * zero is stored once after the branches. `unused_10` reproduces an
  * unreferenced 8-byte frame slot below the velocity copy. */
-void battle_unit_advance_slide_to_target_distortion(battle_unit_misc_data_t* unit) {
+void battle_unit_advance_slide_to_target_distortion(battle_unit_t* unit) {
     s32 unused_10[2];
     VECTOR velocity;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* target;
     s32 timer;
 
     timer = unit->distortion_timer;

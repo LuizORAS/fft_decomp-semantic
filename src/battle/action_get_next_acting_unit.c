@@ -12,7 +12,7 @@
  * alone. */
 void action_get_next_acting_unit(s32 at_index) {
     s32 id;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_ACTIVE_TURN;

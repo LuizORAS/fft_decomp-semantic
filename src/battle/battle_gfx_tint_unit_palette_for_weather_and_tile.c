@@ -17,7 +17,7 @@
  * cross-jumping merges them only after register allocation, so the extra
  * references still rank clut_index above unit in global allocation. The two snow
  * (weather bit 0) branches are identical. */
-void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* unit, s32 level, s32 final_value) {
+void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_t* unit, s32 level, s32 final_value) {
     s32 clut_index;
     s32 stored_palette;
     s32 slot;
@@ -29,7 +29,7 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
 
     slot = unit->spritesheet_vram_slot;
     stored_palette = unit->stored_palette;
-    clut_index = unit->unit_id;
+    clut_index = unit->runtime_id;
 
     if (g_battle_gfx_spritesheet_slots[slot].spritesheet_id >= BATTLE_SPRITESHEET_ID_JOB_FIRST
         && g_battle_gfx_spritesheet_slots[slot].spritesheet_id <= BATTLE_SPRITESHEET_ID_STEEL_GIANT) {

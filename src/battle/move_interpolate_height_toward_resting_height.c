@@ -11,7 +11,7 @@
  * frame count in distortion_timer with the per-frame step; phase 1 steps while
  * the unit is above the ground, then snaps and ends the animation. A unit that
  * starts at or below the ground snaps on the first frame. */
-void move_interpolate_height_toward_resting_height(battle_unit_misc_data_t* misc) {
+void move_interpolate_height_toward_resting_height(battle_unit_t* misc) {
     s32 step;
     s32 z;
     s32 real_z;

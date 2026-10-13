@@ -20,10 +20,10 @@
  * block: the target keeps that block, and a pre-initialized `packed` lets GCC
  * thread the failing tests straight to the call. Items 0x4a..0x4c (the
  * elemental guns) and ability 0x189 (Ninja Ball) are hard-coded exceptions. */
-void effect_store_targets_and_display_types(s32 ability, battle_unit_misc_data_t* unit) {
+void effect_store_targets_and_display_types(s32 ability, battle_unit_t* unit) {
     effect_secondary_init_t init;
-    battle_unit_misc_data_t* target;
-    battle_unit_misc_data_t* spectator;
+    battle_unit_t* target;
+    battle_unit_t* spectator;
     battle_stats_t* stats;
     s32 i;
     s32 j;
@@ -34,7 +34,7 @@ void effect_store_targets_and_display_types(s32 ability, battle_unit_misc_data_t
 
     init.target_count = unit->strike.target_count;
     init.targets[EFFECT_CASTER_ENTRY].target_type = EFFECT_TARGET_TYPE_UNIT;
-    init.targets[EFFECT_CASTER_ENTRY].data.unit.misc_id = unit->unit_id;
+    init.targets[EFFECT_CASTER_ENTRY].data.unit.misc_id = unit->runtime_id;
     main_util_set_svector(&init.target_tile.data.tile, unit->strike.target_new_x, unit->strike.target_new_map_level,
         unit->strike.target_new_y);
     block = &unit->strike;
@@ -42,7 +42,7 @@ void effect_store_targets_and_display_types(s32 ability, battle_unit_misc_data_t
         for (i = 0; i < init.target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(block->target_list[i]);
             init.targets[i].target_type = EFFECT_TARGET_TYPE_UNIT;
-            init.targets[i].data.unit.misc_id = target->unit_id;
+            init.targets[i].data.unit.misc_id = target->runtime_id;
             {
                 battle_stats_t* target_stats;
 
@@ -69,8 +69,8 @@ void effect_store_targets_and_display_types(s32 ability, battle_unit_misc_data_t
         init.targets[0].data.tile.vy = unit->strike.target_new_map_level;
     }
     spectators = 0;
-    for (i = 0; i < BATTLE_UNIT_MISC_SLOT_COUNT; i++) {
-        if (i != unit->unit_id) {
+    for (i = 0; i < BATTLE_UNIT_RUNTIME_SLOT_COUNT; i++) {
+        if (i != unit->runtime_id) {
             spectator = battle_unit_get_misc_data_by_misc_id(i);
             if (spectator != 0) {
                 stats = spectator->battle_data;
@@ -83,7 +83,7 @@ void effect_store_targets_and_display_types(s32 ability, battle_unit_misc_data_t
                     if (j < block->target_count) {
                         continue;
                     }
-                    init.spectator_ids[spectators++] = spectator->unit_id;
+                    init.spectator_ids[spectators++] = spectator->runtime_id;
                 }
             }
         }

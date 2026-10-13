@@ -6,7 +6,7 @@
  * The step byte's top two bits pick the direction, which sets the facing and
  * edge offset; its low two bits extend the destination tile coordinate. The
  * second tile argument is unused. */
-void move_start_float_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to) {
+void move_start_float_step(battle_unit_t* unit, const map_tile_t* from, const map_tile_t* to) {
     move_step_t current_step;
     move_step_t* step;
     s32 edge_height;

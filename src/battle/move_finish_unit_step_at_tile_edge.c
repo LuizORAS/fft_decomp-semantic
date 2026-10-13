@@ -8,7 +8,7 @@
  * drops the horizontal velocity, and either starts the next step (walk or
  * climb) or lands the unit, playing the landing sound and terrain effect.
  */
-void move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
+void move_finish_unit_step_at_tile_edge(battle_unit_t* unit) {
     s32 direction;
     s16 target_z;
     map_tile_t* tile;

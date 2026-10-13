@@ -10,8 +10,8 @@
  * The weapon type comes from the unit's used weapon; Throwing and later types use
  * type 1. In hit mode each target's action miss type selects the table, and a
  * critical hit plays sound 0x72. */
-void sound_play_weapon_sfx(battle_unit_misc_data_t* unit, s32 hit) {
-    battle_unit_misc_data_t* target;
+void sound_play_weapon_sfx(battle_unit_t* unit, s32 hit) {
+    battle_unit_t* target;
     s32 weapon_type;
     s32 i;
 

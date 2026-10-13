@@ -16,8 +16,8 @@
  * continue_attack_count is nonzero on the follow-up strikes of a continued
  * attack. */
 void action_set_target_coords_and_attacker_anim(void) {
-    battle_unit_misc_data_t* unit;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* unit;
+    battle_unit_t* target;
     battle_strike_work_t* action;
     s32 i;
 

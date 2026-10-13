@@ -127,7 +127,7 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
         record->abilities[4] = unit->abilities.movement;
     }
 
-    record->misc_unit_id = battle_unit_get_misc_id_by_battle_id(unit->entd_slot);
+    record->runtime_id = battle_unit_get_misc_id_by_battle_id(unit->entd_slot);
     record->initial_team_flags = unit->initial_team_flags;
     record->mount_info = unit->mount_info;
     record->two_handed = bunit_unit_is_two_handing_weapon(

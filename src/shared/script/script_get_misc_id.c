@@ -7,7 +7,7 @@
  *
  * Character identities, Ramza/allied-turn aliases, and the four event-unit
  * slots require separate lookup paths. Crystal/treasure records and missing
- * units return EVENT_MISC_ID_NONE.
+ * units return EVENT_RUNTIME_ID_NONE.
  */
 s32 script_get_misc_id(s32 unit_id) {
     s32 battle_id;
@@ -34,7 +34,7 @@ s32 script_get_misc_id(s32 unit_id) {
         }
         if (battle_id == ENTD_UNITS_PER_ENCOUNTER) {
             script_report_missing_unit_stub(original_unit_id);
-            return EVENT_MISC_ID_NONE;
+            return EVENT_RUNTIME_ID_NONE;
         }
         unit_id = unit->unit_id;
     } else if (unit_id == EVENT_UNIT_SELECTOR_ACTIVE_TURN) {
@@ -66,7 +66,7 @@ s32 script_get_misc_id(s32 unit_id) {
             if (battle_id == 3
                 || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_JUMP)] & STATUS_BYTE_MASK(STATUS_ID_JUMP))) {
                 script_report_missing_unit_stub(original_unit_id);
-                return EVENT_MISC_ID_NONE;
+                return EVENT_RUNTIME_ID_NONE;
             }
         }
     }
@@ -88,7 +88,7 @@ s32 script_get_misc_id(s32 unit_id) {
         misc_id = (u16)g_script_unit_slots[unit_id - EVENT_UNIT_SELECTOR_SLOT_FIRST];
         if (misc_id == EVENT_UNIT_SLOT_EMPTY) {
             script_report_missing_unit_stub(original_unit_id);
-            return EVENT_MISC_ID_NONE;
+            return EVENT_RUNTIME_ID_NONE;
         }
         return misc_id;
     }
@@ -97,7 +97,7 @@ s32 script_get_misc_id(s32 unit_id) {
     if (unit_state < 0 && unit_state != -2
         && script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_GAME_OVER_RAMZA) {
         script_report_missing_unit_stub(original_unit_id);
-        return EVENT_MISC_ID_NONE;
+        return EVENT_RUNTIME_ID_NONE;
     }
     for (battle_id = 0; battle_id < BATTLE_UNIT_SLOT_COUNT; battle_id++) {
         if (battle_unit_get_stats_from_battle_id(battle_id) == unit)
@@ -107,7 +107,7 @@ s32 script_get_misc_id(s32 unit_id) {
     if (unit_id == -1
         || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TREASURE)] & STATUS_BYTE_MASK(STATUS_ID_TREASURE))) {
         script_report_missing_unit_stub(original_unit_id);
-        return EVENT_MISC_ID_NONE;
+        return EVENT_RUNTIME_ID_NONE;
     }
     return unit_id;
 }

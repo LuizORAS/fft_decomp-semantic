@@ -6,7 +6,7 @@
  * Phase 0 splits the remaining screen-to-tile distance into equal Q12 steps;
  * phase 1 applies them (height only when allow_height_change is set) and
  * snaps to the tile once the timer runs out. */
-void move_step_unit_to_map_tile_center(battle_unit_misc_data_t* unit, s32 allow_height_change) {
+void move_step_unit_to_map_tile_center(battle_unit_t* unit, s32 allow_height_change) {
     SVECTOR tile_center;
     VECTOR velocity;
     s32 timer;

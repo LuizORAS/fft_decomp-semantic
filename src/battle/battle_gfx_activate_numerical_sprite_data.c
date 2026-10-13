@@ -7,7 +7,7 @@
  *
  * The three numeric displays are pointed at the FRAME.BIN page, and the first
  * display is built at once unless one is already running. */
-void battle_gfx_activate_numerical_sprite_data(battle_unit_misc_data_t* unit, s32 mode) {
+void battle_gfx_activate_numerical_sprite_data(battle_unit_t* unit, s32 mode) {
     battle_gfx_sprite_display_data_t* display_0 = unit->numeric_display.displays[0];
     battle_gfx_sprite_display_data_t* display_1 = unit->numeric_display.displays[1];
     battle_gfx_sprite_display_data_t* display_2 = unit->numeric_display.displays[2];

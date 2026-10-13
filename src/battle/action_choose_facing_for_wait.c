@@ -8,8 +8,8 @@
  * A rider first takes its mount's facing. A unit the player does not control gets
  * its facing from ai_choose_wait_facing as the cursor's facing hint. */
 void action_choose_facing_for_wait(void) {
-    battle_unit_misc_data_t* mounted_unit;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* mounted_unit;
+    battle_unit_t* unit;
     s32 facing;
 
     camera_disable_map_pan();
@@ -18,8 +18,8 @@ void action_choose_facing_for_wait(void) {
     g_battle_game_state = BATTLE_GAME_STATE_WAIT_DIRECTION;
     g_battle_state_wait_direction_facing = facing;
     unit->state_frame_counter = 0;
-    if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
-        mounted_unit = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+    if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_RIDER) {
+        mounted_unit = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
         if (mounted_unit != 0) {
             battle_unit_decide_facing_direction(unit, mounted_unit->facing);
             if (unit->battle_data != 0) {

@@ -4,7 +4,7 @@
 
 /* Enter the menu-to-targeting state and restart the source unit's command. */
 void battle_state_restart_menu_to_targeting(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_MENU_TO_TARGETING;

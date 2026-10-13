@@ -8,9 +8,9 @@
  * partner, and is written back to the unit's battle position; units with
  * Sleep, Petrify, Stop, Dead, Don't Act, or reaction_ability_id 0x1b8 (Reflect) keep their
  * facing. */
-void battle_unit_face_towards_action_target(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* target) {
+void battle_unit_face_towards_action_target(battle_unit_t* unit, battle_unit_t* target) {
     VECTOR delta;
-    battle_unit_misc_data_t* other;
+    battle_unit_t* other;
 
     if (unit == 0) {
         return;
@@ -32,7 +32,7 @@ void battle_unit_face_towards_action_target(battle_unit_misc_data_t* unit, battl
             delta.vz = other->screen.vz - unit->screen.vz;
         }
     }
-    if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_PREVENT_FACING_MASK) {
+    if (unit->status_flags_1_4 & BATTLE_UNIT_STATUS_PREVENT_FACING_MASK) {
         return;
     }
     if (unit->strike.reaction_ability_id == ABILITY_ID_REACTION_REFLECT) {
@@ -45,8 +45,8 @@ void battle_unit_face_towards_action_target(battle_unit_misc_data_t* unit, battl
     unit->facing = (ratan2(-delta.vz, delta.vx) - 0x200) & 0xc00;
     battle_unit_set_tile_position(
         unit->battle_data->battle_id, unit->map_x, unit->map_y, unit->map_z, unit->facing / 1024);
-    if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
-        battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id)->facing = unit->facing;
+    if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
+        battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id)->facing = unit->facing;
         battle_unit_set_tile_position(
             unit->battle_data->battle_id, unit->map_x, unit->map_y, unit->map_z, unit->facing / 1024);
     }

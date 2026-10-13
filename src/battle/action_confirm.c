@@ -13,8 +13,8 @@
  * with no target choice, 2 for an empty tile in all three, and 0 for any other
  * mode. */
 void action_confirm(void) {
-    battle_unit_misc_data_t* unit;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* unit;
+    battle_unit_t* target;
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_CONFIRM_ACTION;

@@ -13,7 +13,7 @@
  * the cursor unit's panel. The AT-list-active flag follows whether the player
  * controls the unit. */
 void action_choose_wait(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     camera_disable_map_pan();
     unit = battle_unit_get_source_misc_data();

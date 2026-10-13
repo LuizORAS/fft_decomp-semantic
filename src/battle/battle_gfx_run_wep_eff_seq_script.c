@@ -22,7 +22,7 @@
  * block-local and `mode` is single-set, which gives the target's register
  * ties and schedule. */
 void battle_gfx_run_wep_eff_seq_script(
-    battle_unit_misc_data_t* unit, battle_unit_sprite_block_t* sprite, s32 index, s32 advance) {
+    battle_unit_t* unit, battle_unit_sprite_block_t* sprite, s32 index, s32 advance) {
     battle_gfx_weapon_shp_t* shp;
     u8** seq;
     u8 op;
@@ -65,10 +65,10 @@ void battle_gfx_run_wep_eff_seq_script(
             op = seq[sequence_id][pos++];
             switch (op) {
             case BATTLE_SEQ_OP_FLIP_HORIZONTAL:
-                sprite->flags ^= BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP;
+                sprite->flags ^= BATTLE_SPRITE_DISPLAY_HORIZONTAL_FLIP;
                 break;
             case BATTLE_SEQ_OP_FLIP_VERTICAL:
-                sprite->flags ^= BATTLE_MISC_DISPLAY_VERTICAL_FLIP;
+                sprite->flags ^= BATTLE_SPRITE_DISPLAY_VERTICAL_FLIP;
                 break;
             case BATTLE_SEQ_OP_END_ANIMATION:
                 sprite->trigger = 0;
@@ -215,7 +215,7 @@ void battle_gfx_run_wep_eff_seq_script(
             display = sprite->display;
             parts = display->part_count = (src->part_count_and_rotation & 7) + 1;
             display->rotation = g_battle_gfx_sprite_y_rotations[src->part_count_and_rotation >> 3];
-            if (unit->sprite_display_flags & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) {
+            if (unit->sprite_display_flags & BATTLE_SPRITE_DISPLAY_HORIZONTAL_FLIP) {
                 display->rotation = -display->rotation;
             }
             if (parts > 3) {
@@ -224,7 +224,7 @@ void battle_gfx_run_wep_eff_seq_script(
             flags = src->flags;
             switch (sprite->graphic_type) {
             case BATTLE_SPRITE_GRAPHIC_WEAPON:
-                display->tpage = (flags & BATTLE_MISC_DISPLAY_BLEND_MASK) | BATTLE_GFX_TPAGE_WEAPON;
+                display->tpage = (flags & BATTLE_SPRITE_DISPLAY_BLEND_MASK) | BATTLE_GFX_TPAGE_WEAPON;
                 display->clut = unit->clut + index * 64 + 0x80; /* MAP_CLUT_ROW_ITEM_A or _B */
                 for (i = 0; i < parts; i++) {
                     u32 size;
@@ -243,14 +243,14 @@ void battle_gfx_run_wep_eff_seq_script(
                     tile = attr & BATTLE_SHP_PART_TILE_MASK;
                     u = (tile & 0x1f) * 8;
                     v = (tile >> 5) * 8 + graphic_v;
-                    mode = (flags & (BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT | BATTLE_MISC_DISPLAY_BLEND_MASK))
+                    mode = (flags & (BATTLE_SPRITE_DISPLAY_SEMI_TRANSPARENT | BATTLE_SPRITE_DISPLAY_BLEND_MASK))
                         | ((attr & BATTLE_SHP_PART_FLIP_MASK) >> 13);
                     battle_gfx_store_sprite_display_data(
                         display, i, part->x_shift, part->y_shift, u, v, width * 8, height * 8, mode);
                 }
                 break;
             case BATTLE_SPRITE_GRAPHIC_EFFECT:
-                display->tpage = (flags & BATTLE_MISC_DISPLAY_BLEND_MASK) | BATTLE_GFX_TPAGE_EFFECT;
+                display->tpage = (flags & BATTLE_SPRITE_DISPLAY_BLEND_MASK) | BATTLE_GFX_TPAGE_EFFECT;
                 display->clut = unit->clut + index * 64 + 0x80; /* MAP_CLUT_ROW_ITEM_A or _B */
                 for (i = 0; i < parts; i++) {
                     u32 size;
@@ -269,7 +269,7 @@ void battle_gfx_run_wep_eff_seq_script(
                     tile = attr & BATTLE_SHP_PART_TILE_MASK;
                     u = (tile & 0x1f) * 8;
                     v = (tile >> 5) * 8;
-                    mode = (flags & (BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT | BATTLE_MISC_DISPLAY_BLEND_MASK))
+                    mode = (flags & (BATTLE_SPRITE_DISPLAY_SEMI_TRANSPARENT | BATTLE_SPRITE_DISPLAY_BLEND_MASK))
                         | ((attr & BATTLE_SHP_PART_FLIP_MASK) >> 13);
                     battle_gfx_store_sprite_display_data(
                         display, i, part->x_shift, part->y_shift, u, v, width * 8, height * 8, mode);

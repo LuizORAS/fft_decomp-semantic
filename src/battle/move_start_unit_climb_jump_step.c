@@ -11,7 +11,7 @@
  * The step byte's top two bits give the direction, as in
  * move_start_unit_jump_step. `unused_10` reproduces an unreferenced
  * 16-byte frame slot below the height data. */
-void move_start_unit_climb_jump_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to) {
+void move_start_unit_climb_jump_step(battle_unit_t* unit, const map_tile_t* from, const map_tile_t* to) {
     VECTOR unused_10;
     battle_unit_height_data_t height_data;
     move_step_t* step;
@@ -21,8 +21,8 @@ void move_start_unit_climb_jump_step(battle_unit_misc_data_t* unit, const map_ti
     u8 next;
 
     step = &unit->current_path_step;
-    if (unit->standing_on_unit_id_plus_one != 0
-        && (battle_unit_calculate_height_data(&height_data, unit->standing_on_unit_id_plus_one - 1),
+    if (unit->standing_on_battle_id_plus_one != 0
+        && (battle_unit_calculate_height_data(&height_data, unit->standing_on_battle_id_plus_one - 1),
             (height_data.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) == 0)) {
         height = height_data.total_height;
     } else {

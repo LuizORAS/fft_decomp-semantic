@@ -8,7 +8,7 @@
  * water and marsh surfaces, MAIN_SFX_LAND_WOOD for wooden floor, tree and box,
  * and MAIN_SFX_LAND_DEFAULT otherwise. Nothing plays for a unit whose motion
  * flags suppress landing effects, or when the destination tile does not exist. */
-void sound_play_landing_sfx_by_surface_type(battle_unit_misc_data_t* unit) {
+void sound_play_landing_sfx_by_surface_type(battle_unit_t* unit) {
     map_tile_t* tile;
     s32 surface;
     s32 sfx;

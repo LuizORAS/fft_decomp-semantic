@@ -6,7 +6,7 @@
 /* Free-cursor game state: camera and cursor input, then the button actions
  * (help, team highlight, act menu, move range, AT list and mini menu). */
 void battle_state_handle_default_state(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 input;
     RECT rect; /* never used; retail reserves its 8 bytes */
 
@@ -41,7 +41,7 @@ void battle_state_handle_default_state(void) {
         unit = battle_unit_get_selectable_misc_data_at_map_coords(
             g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
         if (unit != 0) {
-            g_battle_casting_unit_id = unit->unit_id;
+            g_battle_casting_unit_id = unit->runtime_id;
             target_show_move_range_in_free_cursor();
         }
     } else if (input & PSX_PAD_START) {

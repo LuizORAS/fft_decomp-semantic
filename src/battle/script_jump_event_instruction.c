@@ -15,7 +15,7 @@ void script_jump_event_instruction(const event_jump_parameters_t* parameters) {
     u8 saved;
 
     misc_id = script_get_misc_id(script_read_s16(parameters->unit_id_le));
-    if (misc_id != EVENT_MISC_ID_NONE) {
+    if (misc_id != EVENT_RUNTIME_ID_NONE) {
         coords = battle_unit_get_event_offset_ptr_by_misc_id(misc_id);
         setVector(&vec, -coords->vx, -coords->vy, -coords->vz);
         battle_unit_add_event_offset_by_misc_id(misc_id, &vec);

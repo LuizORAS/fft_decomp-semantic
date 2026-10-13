@@ -13,7 +13,7 @@
  * anything else opens the Wait menu. A unit whose turn goes on gets its action
  * menus back. */
 void battle_state_handle_jp_exp_gain_state(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
@@ -44,7 +44,7 @@ void battle_state_handle_jp_exp_gain_state(void) {
         unit->used_ability_id = unit->battle_data->action_command.ability_id;
         if (unit->attack_phase_state == BATTLE_ATTACK_PREPARATION_JUMP) {
             unit->attack_phase_state = BATTLE_ATTACK_PREPARATION_CHARGE;
-            battle_gfx_reset_unit_graphic_trigger(unit->unit_id);
+            battle_gfx_reset_unit_graphic_trigger(unit->runtime_id);
             action_check_between_turn_events();
             return;
         }

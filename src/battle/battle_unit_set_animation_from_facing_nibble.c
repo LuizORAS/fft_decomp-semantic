@@ -4,7 +4,7 @@
  * current animation with that facing; an animation below idle becomes standing.
  * Returns the misc id, or -1 when no record has it. */
 s32 battle_unit_set_animation_from_facing_nibble(u32 misc_id, s32 facing_nibble) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 animation;
     s16 facing;
 

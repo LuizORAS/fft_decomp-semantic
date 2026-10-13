@@ -7,7 +7,7 @@
  * slot is in another state or no buffer is free. The buffer marked as
  * uploading is the slot's own, whichever one was used. */
 s32 battle_gfx_load_misc_unit_into_evtchr_slot(s32 misc_id, s32 slot) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 i;
     u8* image_data;
     RECT rect;

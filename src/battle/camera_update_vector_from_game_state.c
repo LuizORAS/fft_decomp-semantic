@@ -24,7 +24,7 @@
  * statement. Written the natural way, the merged block lands mid-function
  * with an extra `j`. */
 void camera_update_vector_from_game_state(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 height;
 
     if (g_battle_game_state == BATTLE_GAME_STATE_CRYSTAL_LEARN) {

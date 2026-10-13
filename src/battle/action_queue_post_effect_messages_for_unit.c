@@ -13,7 +13,7 @@
  * The 11-way dispatch really is a jump table in the target (at 0x80067548),
  * which is why the .ld places a .rodata output section there.
  */
-void action_queue_post_effect_messages_for_unit(battle_unit_misc_data_t* misc) {
+void action_queue_post_effect_messages_for_unit(battle_unit_t* misc) {
     action_data_t* action;
     s32 i;
     s32 queued;

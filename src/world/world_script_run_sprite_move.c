@@ -42,7 +42,7 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
     parameters = arg->unit_id_le;
     mode = use_speed;
     misc_id = script_get_misc_id(script_read_s16(parameters));
-    if (misc_id == EVENT_MISC_ID_NONE) {
+    if (misc_id == EVENT_RUNTIME_ID_NONE) {
         return;
     }
     g_world_thread_contexts[g_world_thread_current_id].task_words[0] = misc_id;

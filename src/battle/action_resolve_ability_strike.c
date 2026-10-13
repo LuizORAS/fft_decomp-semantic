@@ -66,7 +66,7 @@ s32 action_resolve_ability_strike(s32 battle_id, battle_strike_work_t* work) {
             target_disable_green_panel_flags();
             count = 1;
             targets[0] = g_action_current_ability.post_action_target_id;
-            for (i = 1; i < BATTLE_UNIT_MISC_SLOT_COUNT; i++) {
+            for (i = 1; i < BATTLE_UNIT_RUNTIME_SLOT_COUNT; i++) {
                 targets[i] = 0xff;
             }
             tile = &g_map_tile_data[map_calculate_location(

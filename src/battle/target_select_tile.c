@@ -15,7 +15,7 @@
  * unit and stops game flow, and -1 returns to the idle action menu.
  */
 void target_select_tile(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 result;
     s32 prev;
 

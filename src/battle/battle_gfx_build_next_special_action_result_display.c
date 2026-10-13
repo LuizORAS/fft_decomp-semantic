@@ -8,7 +8,7 @@
  * 0x02000000 and above. Returns 0 when no flag is pending. Reading the
  * flags into a block-local before clearing keeps the target's and operand
  * order. */
-s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t* unit) {
+s32 battle_gfx_build_next_special_action_result_display(battle_unit_t* unit) {
     action_result_display_t* display;
     battle_gfx_sprite_display_data_t* display_0;
     battle_gfx_sprite_display_data_t* display_1;
@@ -117,6 +117,6 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
         break;
     }
 
-    map_load_palette_data(&g_action_result_palette, MAP_CLUT_ROW_ACTION_RESULTS, unit->unit_id, 0);
+    map_load_palette_data(&g_action_result_palette, MAP_CLUT_ROW_ACTION_RESULTS, unit->runtime_id, 0);
     return 1;
 }

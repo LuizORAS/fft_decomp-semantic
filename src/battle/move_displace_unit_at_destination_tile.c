@@ -10,8 +10,8 @@
  * The case order and the reused `dist` temporary reproduce the target's
  * cross-jumped tails and its s1 allocation; spelling the second path index as
  * offset + base reproduces the offset-before-base address add. */
-void move_displace_unit_at_destination_tile(battle_unit_misc_data_t* unit, s32 direction) {
-    battle_unit_misc_data_t* other;
+void move_displace_unit_at_destination_tile(battle_unit_t* unit, s32 direction) {
+    battle_unit_t* other;
     s32 dist;
     s32 x;
     s32 y;

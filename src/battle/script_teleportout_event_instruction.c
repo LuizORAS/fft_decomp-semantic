@@ -19,7 +19,7 @@ void script_teleportout_event_instruction(s32 unit_id, s32 remove) {
     s32 idx;
 
     misc = script_get_misc_id(unit_id);
-    if (misc == EVENT_MISC_ID_NONE) {
+    if (misc == EVENT_RUNTIME_ID_NONE) {
         return;
     }
     g_sound_pending_sfx_id = MAIN_SFX_TELEPORT_OUT;

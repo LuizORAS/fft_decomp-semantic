@@ -2,11 +2,11 @@
 #include "fft/battle_unit.h"
 
 s32 battle_unit_count_crystal_misc_units(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 count;
 
     count = 0;
-    unit = g_battle_unit_misc_list_head;
+    unit = g_battle_unit_list_head;
     while (unit != 0) {
         if (unit->spritesheet_id == BATTLE_SPRITESHEET_ID_CRYSTAL) {
             count++;

@@ -14,8 +14,8 @@
  * silently when navigation messages are off. The AT-list-active flag follows
  * whether the player controls the unit. */
 void battle_menu_open_move_confirm(void) {
-    battle_unit_misc_data_t* source;
-    battle_unit_misc_data_t* caster;
+    battle_unit_t* source;
+    battle_unit_t* caster;
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_MOVE_CONFIRM_MENU;

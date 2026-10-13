@@ -17,7 +17,7 @@
  * two-value range above 0x19 disables the jump table (range > 10 * count). */
 void battle_state_handle_idling_action_menus_state(void) {
     ai_command_t* command;
-    battle_unit_misc_data_t* misc;
+    battle_unit_t* misc;
     s32 result;
 
     if (battle_menu_is_still_building() == 0) {
@@ -32,8 +32,8 @@ void battle_state_handle_idling_action_menus_state(void) {
     misc = battle_unit_get_casting_misc_data();
     switch ((s32)command->kind) {
     case AI_COMMAND_MOVE:
-        if (misc->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
-            g_battle_casting_unit_id = battle_unit_get_misc_data_by_misc_id(misc->mount_partner_misc_id)->unit_id;
+        if (misc->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
+            g_battle_casting_unit_id = battle_unit_get_misc_data_by_misc_id(misc->mount_partner_runtime_id)->runtime_id;
         } else {
             g_battle_casting_unit_id = g_battle_unit_source_misc_id;
         }
@@ -51,17 +51,17 @@ void battle_state_handle_idling_action_menus_state(void) {
         case SKILLSET_ID_DEFEND:
             misc->command_state.ai = *command;
             status_inflict_defending_to_battle_id(misc->battle_data->battle_id);
-            misc->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
-            battle_unit_update_display_by_misc_id(misc->unit_id);
+            misc->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
+            battle_unit_update_display_by_misc_id(misc->runtime_id);
             action_set_only_action_taken(misc->battle_data->battle_id);
             battle_state_enter_after_command();
             break;
         case SKILLSET_ID_EQUIP_CHANGE:
             misc->command_state.ai = *command;
-            misc->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
+            misc->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
             status_enable_disable_acting(misc->battle_data);
             ai_init_unit_abilities(misc->battle_data->battle_id);
-            battle_unit_update_display_by_misc_id(misc->unit_id);
+            battle_unit_update_display_by_misc_id(misc->runtime_id);
             action_set_only_action_taken(misc->battle_data->battle_id);
         case SKILLSET_ID_BLANK_04:
         case SKILLSET_ID_MIMIC:

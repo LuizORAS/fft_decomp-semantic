@@ -7,12 +7,12 @@
 void target_sort_list(s32 target_battle_id) {
     s32 i;
 
-    for (i = 0; i < BATTLE_UNIT_MISC_SLOT_COUNT; i++) {
+    for (i = 0; i < BATTLE_UNIT_RUNTIME_SLOT_COUNT; i++) {
         if (g_target_ability_targets_list[i] == (target_battle_id & 0xFF)) {
-            for (; i < BATTLE_UNIT_MISC_SLOT_COUNT - 1; i++) {
+            for (; i < BATTLE_UNIT_RUNTIME_SLOT_COUNT - 1; i++) {
                 g_target_ability_targets_list[i] = g_target_ability_targets_list[i + 1];
             }
-            g_target_ability_targets_list[BATTLE_UNIT_MISC_SLOT_COUNT - 1] = 0xFF;
+            g_target_ability_targets_list[BATTLE_UNIT_RUNTIME_SLOT_COUNT - 1] = 0xFF;
             return;
         }
     }

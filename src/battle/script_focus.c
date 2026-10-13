@@ -41,7 +41,7 @@ void script_focus(event_focus_parameters_t* parameters) {
     unit_b = second;
     first = script_get_misc_id(unit_a);
     second = script_get_misc_id(unit_b);
-    if (first == EVENT_MISC_ID_NONE || second == EVENT_MISC_ID_NONE) {
+    if (first == EVENT_RUNTIME_ID_NONE || second == EVENT_RUNTIME_ID_NONE) {
         ((event_camera_instruction_t*)(cursor - offsetof(event_camera_instruction_t, parameters)))->opcode
             = EVENT_OPCODE_CAMERA_DISABLED;
         main_system_handle_malloc_exception(7, 0);

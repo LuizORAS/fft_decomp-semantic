@@ -1,15 +1,15 @@
 #include "fft/battle_action.h"
 #include "fft/battle_unit.h"
 
-battle_unit_misc_data_t* battle_unit_get_source_misc_data(void) {
-    battle_unit_misc_data_t* unit;
+battle_unit_t* battle_unit_get_source_misc_data(void) {
+    battle_unit_t* unit;
     s32 source_id;
 
-    unit = g_battle_unit_misc_list_head;
+    unit = g_battle_unit_list_head;
     if (unit != 0) {
         source_id = g_battle_unit_source_misc_id;
         do {
-            if (unit->unit_id == source_id) {
+            if (unit->runtime_id == source_id) {
                 return unit;
             }
             unit = unit->previous;

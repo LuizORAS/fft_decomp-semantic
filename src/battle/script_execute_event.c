@@ -282,7 +282,7 @@ restart_script:
             }
             if (operand_1 == EVENT_CALL_FUNCTION_CLEAR_ZALERA_ACTIVE_STATUS_GRAPHICS) {
                 draw_misc_id = script_get_misc_id(CHARACTER_IDENTITY_ZALERA);
-                if (draw_misc_id != EVENT_MISC_ID_NONE) {
+                if (draw_misc_id != EVENT_RUNTIME_ID_NONE) {
                     status_queue_current_status_graphics(battle_unit_get_battle_index_by_misc_id(draw_misc_id), 0);
                     g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
                     thread_call_on_main_stack(draw_misc_id);
@@ -448,7 +448,7 @@ restart_script:
             script_resetpalette_event_instruction((const event_unit_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_SET_FIRST_MISC_UNIT) {
             operand_1 = script_get_misc_id(first_operand);
-            if (operand_1 != EVENT_MISC_ID_NONE) {
+            if (operand_1 != EVENT_RUNTIME_ID_NONE) {
                 battle_unit_move_misc_unit_to_head(operand_1);
             }
         } else if (opcode == EVENT_OPCODE_UNIT_ANIM) {
@@ -459,7 +459,7 @@ restart_script:
             script_set_units_movement_effect_suppression((const event_movement_effect_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_UNIT_READY) {
             operand_1 = script_get_misc_id(first_operand);
-            if (operand_1 != EVENT_MISC_ID_NONE) {
+            if (operand_1 != EVENT_RUNTIME_ID_NONE) {
                 script_wait_for_unit_ready(operand_1);
             }
         }
@@ -562,7 +562,7 @@ restart_script:
             script_waitwalk_event_instruction(first_operand);
         } else if (opcode == EVENT_OPCODE_WALK_TO_ANIM) {
             operand_1 = script_get_misc_id(first_operand);
-            if (operand_1 != EVENT_MISC_ID_NONE) {
+            if (operand_1 != EVENT_RUNTIME_ID_NONE) {
                 g_battle_unit_pending_animation_ids[operand_1]
                     = script_read_s16(instruction_offset + ((u8*)g_battle_event_block) + 3);
                 g_battle_unit_was_moving_latch[operand_1] = 0;
@@ -749,12 +749,12 @@ restart_script:
         /* ---- Adding and removing units ---- */
         else if (opcode == EVENT_OPCODE_REMOVE_UNIT) {
             remove_unit_misc_id = script_get_misc_id(first_operand);
-            if (remove_unit_misc_id != EVENT_MISC_ID_NONE) {
+            if (remove_unit_misc_id != EVENT_RUNTIME_ID_NONE) {
                 work_index = remove_unit_misc_id;
                 while (battle_unit_is_moving(work_index) != 0) {
                     battle_thread_yield();
                 }
-                if (work_index != EVENT_MISC_ID_NONE) {
+                if (work_index != EVENT_RUNTIME_ID_NONE) {
                     operand_1 = battle_unit_get_battle_index_by_misc_id(work_index);
                     battle_unit_remove_misc_by_id(work_index);
                     if (operand_1 >= 0) {
@@ -764,7 +764,7 @@ restart_script:
             }
         } else if (opcode == EVENT_OPCODE_DRAW) {
             draw_misc_id = script_get_misc_id(first_operand);
-            if (draw_misc_id != EVENT_MISC_ID_NONE) {
+            if (draw_misc_id != EVENT_RUNTIME_ID_NONE) {
                 battle_unit_draw_and_activate_by_misc_id(draw_misc_id);
                 if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_LIMBERRY_CEMETERY_BATTLE) {
                     status_queue_current_status_graphics(battle_unit_get_battle_index_by_misc_id(draw_misc_id), 1);
@@ -774,7 +774,7 @@ restart_script:
             }
         } else if (opcode == EVENT_OPCODE_ERASE) {
             reset_graphic_misc_id = script_get_misc_id(first_operand);
-            if (reset_graphic_misc_id != EVENT_MISC_ID_NONE) {
+            if (reset_graphic_misc_id != EVENT_RUNTIME_ID_NONE) {
                 battle_gfx_reset_unit_graphic_trigger(reset_graphic_misc_id);
             }
         } else if (opcode == EVENT_OPCODE_ADD_GHOST_UNIT) {
@@ -890,7 +890,7 @@ restart_script:
         /* ---- Miscellaneous unit and display commands ---- */
         else if (opcode == EVENT_OPCODE_UNIT_SHADOW) {
             shadow_misc_id = script_get_misc_id(first_operand);
-            if (shadow_misc_id != EVENT_MISC_ID_NONE) {
+            if (shadow_misc_id != EVENT_RUNTIME_ID_NONE) {
                 if (operand_3 != 0) {
                     battle_gfx_clear_shadow_graphic_trigger_by_misc_id(shadow_misc_id);
                 } else {
@@ -903,7 +903,7 @@ restart_script:
             script_wait_value_event_instruction((const event_wait_value_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_EVTCHR_PALETTE) {
             evtchr_palette_misc_id = script_get_misc_id(first_operand);
-            if (evtchr_palette_misc_id != EVENT_MISC_ID_NONE) {
+            if (evtchr_palette_misc_id != EVENT_RUNTIME_ID_NONE) {
                 battle_gfx_set_evtchr_palette_by_misc_id(evtchr_palette_misc_id, operand_3, operand_4);
             }
         } else if (opcode == EVENT_OPCODE_LOAD_ATTACK_GRAPHICS) {
@@ -920,16 +920,16 @@ restart_script:
             }
         } else if (opcode == EVENT_OPCODE_TEMP_WEAPON) {
             thrown_item_misc_id = script_get_misc_id(first_operand);
-            if (thrown_item_misc_id != EVENT_MISC_ID_NONE) {
+            if (thrown_item_misc_id != EVENT_RUNTIME_ID_NONE) {
                 battle_gfx_set_thrown_item_palette_by_misc_id(operand_3, thrown_item_misc_id);
             }
         } else if (opcode == EVENT_OPCODE_ARROW) {
             arrow_target_misc_id = script_get_misc_id(first_operand);
-            if (arrow_target_misc_id != EVENT_MISC_ID_NONE) {
+            if (arrow_target_misc_id != EVENT_RUNTIME_ID_NONE) {
                 operand_1 = battle_unit_get_battle_index_by_misc_id(arrow_target_misc_id);
                 arrow_shooter_misc_id
                     = script_get_misc_id(script_read_s16(instruction_offset + ((u8*)g_battle_event_block) + 3));
-                if (arrow_shooter_misc_id != EVENT_MISC_ID_NONE) {
+                if (arrow_shooter_misc_id != EVENT_RUNTIME_ID_NONE) {
                     arrow_shooter_battle_id = battle_unit_get_battle_index_by_misc_id(arrow_shooter_misc_id);
                     g_thread_call_target = (void (*)(void))effect_set_arrow_trajectory;
                     thread_call_on_main_stack(arrow_shooter_battle_id, &g_battle_scratch_coords, operand_1);

@@ -4,7 +4,7 @@
  * the last step has ended and no animation is pending, refresh its display and
  * open the move confirmation. */
 void battle_state_handle_unit_moving_state(void) {
-    battle_unit_misc_data_t* casting_misc_data;
+    battle_unit_t* casting_misc_data;
 
     camera_handle_rotation_input();
     camera_update_zoom_input();
@@ -14,7 +14,7 @@ void battle_state_handle_unit_moving_state(void) {
     if (casting_misc_data->step_phase == MOVE_STEP_PHASE_NONE
         && casting_misc_data->movement_path_offset >= casting_misc_data->path.count
         && g_battle_state_animation_continue_check == 0) {
-        battle_unit_update_display_by_misc_id(casting_misc_data->unit_id);
+        battle_unit_update_display_by_misc_id(casting_misc_data->runtime_id);
         battle_menu_open_move_confirm();
     }
     battle_state_handle_free_cursor_input();

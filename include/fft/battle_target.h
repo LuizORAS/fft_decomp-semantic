@@ -35,7 +35,7 @@ typedef enum target_line_direction {
 } target_line_direction_e;
 
 /* Result of target_set_panels_for_action, kept in
- * battle_unit_misc_data_t.ability_preview_phase: how the action's target is chosen. */
+ * battle_unit_t.ability_preview_phase: how the action's target is chosen. */
 typedef enum target_panels {
     TARGET_PANELS_INVALID = -1,
     TARGET_PANELS_UNIT_OR_TILE = 0, /* the ability can follow a unit */
@@ -114,7 +114,7 @@ s32 target_validate_weapon_target(const action_command_t* source);
 extern s32 g_battle_sort_targets_nearest_first;
 
 /* target lists */
-extern u8 g_target_ability_targets_list[BATTLE_UNIT_MISC_SLOT_COUNT];
+extern u8 g_target_ability_targets_list[BATTLE_UNIT_RUNTIME_SLOT_COUNT];
 
 s32 target_copy_ability_targets(u8* out);
 s32 target_list_units_on_panels(u8* list, const battle_stats_t* origin);
@@ -123,17 +123,16 @@ void target_set_coordinates_for_ability(const battle_stats_t* acting, battle_str
 void target_sort_list(s32 target_battle_id);
 
 /* cursor */
-void target_move_cursor_to_action_target(const battle_unit_misc_data_t* unit);
+void target_move_cursor_to_action_target(const battle_unit_t* unit);
 s32 target_move_cursor_by_input(void);
 s32 target_move_cursor_to_battle_id(u32 battle_id);
-void target_move_cursor_to_unit(const battle_unit_misc_data_t* unit);
+void target_move_cursor_to_unit(const battle_unit_t* unit);
 void target_project_cursor_tile_to_screen(VECTOR* projected, SVECTOR* position, SVECTOR* raised);
 void target_select_tile(void);
 void target_store_cursor_casting_unit_name_and_data(void);
 void target_store_cursor_unit_as_preview_target(void);
 void target_store_cursor_unit_name_and_data(void);
-void target_update_free_cursor_selection(
-    const battle_unit_misc_data_t* unit, const battle_unit_misc_data_t* selected_unit);
+void target_update_free_cursor_selection(const battle_unit_t* unit, const battle_unit_t* selected_unit);
 
 /* tile highlights */
 extern u16 g_target_color_tile_x;

@@ -17,7 +17,7 @@ enum {
  * twin: read through the byte again, cse reuses the direction test's load.
  */
 void move_set_velocity_for_contiguous_steps_with_final_tile_height(
-    battle_unit_misc_data_t* unit, const battle_walk_path_t* path, const move_step_t* step) {
+    battle_unit_t* unit, const battle_walk_path_t* path, const move_step_t* step) {
     VECTOR direction;
     map_tile_t* tile;
     const move_step_t* current;

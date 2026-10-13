@@ -10,7 +10,7 @@
  * ability-ready events resolve an ability, while action-result events dispatch
  * the queued per-unit result. The meaning of 0x400 remains uncertain. */
 void action_run_between_turn_events(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 action;
     s32 misc_id;
 
@@ -22,14 +22,14 @@ void action_run_between_turn_events(void) {
     }
     unit = battle_unit_get_misc_data_by_battle_id(misc_id);
     if (unit != 0) {
-        g_battle_unit_source_misc_id = unit->unit_id;
+        g_battle_unit_source_misc_id = unit->runtime_id;
     } else {
         main_system_handle_pointer_exception(12);
     }
     switch (g_action_turn_event_type) {
     case BATTLE_TURN_EVENT_UNIT_READY:
     case BATTLE_TURN_EVENT_ABILITY_READY:
-        battle_unit_draw_and_activate_by_misc_id(unit->unit_id);
+        battle_unit_draw_and_activate_by_misc_id(unit->runtime_id);
         break;
     case BATTLE_TURN_EVENT_ACTION_RESULT:
         unit->pending_attack_result = action_finalize_attack_and_flag_reactions(misc_id);
@@ -44,8 +44,8 @@ void action_run_between_turn_events(void) {
             battle_unit_find_relocation_tile(misc_id, &unit->dismount);
             battle_unit_set_map_coords_after_death_dismount(unit);
         }
-        battle_gfx_prepare_post_action_display_by_misc_id(unit->unit_id);
-        battle_unit_update_display_by_misc_id(unit->unit_id);
+        battle_gfx_prepare_post_action_display_by_misc_id(unit->runtime_id);
+        battle_unit_update_display_by_misc_id(unit->runtime_id);
         break;
     case BATTLE_TURN_EVENT_MIME:
         break;

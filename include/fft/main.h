@@ -918,7 +918,7 @@ typedef enum main_game_flow_state {
 typedef enum main_system_error {
     MAIN_SYSTEM_ERROR_HEAP_ALLOC = 1,            /* main_file_load_to_heap got no block */
     MAIN_SYSTEM_ERROR_FILE_LOAD = 2,             /* a checked file load returned 0 */
-    MAIN_SYSTEM_ERROR_NO_MISC_UNIT_SLOT = 6,     /* battle_unit_claim_misc_slot found none free */
+    MAIN_SYSTEM_ERROR_NO_UNIT_RUNTIME_SLOT = 6,  /* battle_unit_claim_misc_slot found none free */
     MAIN_SYSTEM_ERROR_SHP_FRAME = 8,             /* frame index above 0x200 or frame pointer -1 */
     MAIN_SYSTEM_ERROR_SEQ_ANIMATION = 9,         /* animation index above 0x100 or sequence pointer -1 */
     MAIN_SYSTEM_ERROR_FRAME_PART_COUNT = 10,     /* more than eight parts in a unit frame */
@@ -1163,8 +1163,8 @@ typedef char main_gfx_unit_graphics_load_descriptor_size_must_be_20
 
 /* The 0x144-byte queue occupies 0x80049c18..0x80049d5c. */
 typedef struct main_gfx_unit_graphics_load_queue {
-    s32 count;                                                                         /* 0x00 */
-    main_gfx_unit_graphics_load_descriptor_t descriptors[BATTLE_UNIT_MISC_SLOT_COUNT]; /* 0x04 */
+    s32 count;                                                                            /* 0x00 */
+    main_gfx_unit_graphics_load_descriptor_t descriptors[BATTLE_UNIT_RUNTIME_SLOT_COUNT]; /* 0x04 */
 } main_gfx_unit_graphics_load_queue_t;
 
 typedef char

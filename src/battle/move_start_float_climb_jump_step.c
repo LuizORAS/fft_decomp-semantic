@@ -13,7 +13,7 @@
  * in-place accumulation register; `rise_height` and `apex` keep the multiplication
  * order (term * 6 or 12 before gravity) that one folded expression reassociates.
  */
-void move_start_float_climb_jump_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to) {
+void move_start_float_climb_jump_step(battle_unit_t* unit, const map_tile_t* from, const map_tile_t* to) {
     move_step_t current_step;
     s32 rise;
     s32 frames;

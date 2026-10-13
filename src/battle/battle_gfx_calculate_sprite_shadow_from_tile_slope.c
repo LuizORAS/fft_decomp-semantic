@@ -18,7 +18,7 @@
  *   under the unit.
  *
  * battle_gfx_draw_unit_shadow calls it before projecting the quad. */
-void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t* unit) {
+void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_t* unit) {
     SVECTOR coords;
     SVECTOR unused; /* unreferenced; keeps the 0x30-byte target frame */
     map_tile_t* tile;

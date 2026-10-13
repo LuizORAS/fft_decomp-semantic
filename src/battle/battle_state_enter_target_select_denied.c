@@ -9,8 +9,8 @@
  * 2 for a recovery selection. Any other selection command over a unit opens no
  * prompt. */
 void battle_state_enter_target_select_denied(void) {
-    battle_unit_misc_data_t* misc;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* misc;
+    battle_unit_t* unit;
     battle_stats_t* stats;
     s32 kind;
 

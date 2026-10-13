@@ -11,7 +11,7 @@
 void battle_gfx_apply_misc_unit_palette_modulation(
     s32 preset_color, s32 time, s32 misc_id, s16 red, s16 green, s16 blue) {
     SVECTOR screen_coordinates;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     map_tile_t* tile;
 
     unit = battle_unit_get_misc_data_by_misc_id(misc_id);

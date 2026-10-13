@@ -11,12 +11,12 @@
  * The height-mode result is deliberately truncated to its low byte, and
  * facing is read signed (`lh`) throughout.
  */
-void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) {
+void battle_unit_set_idle_animation_for_movement(battle_unit_t* unit) {
     s32 anim;
     s32 walk_speed;
-    battle_unit_misc_data_t* mount;
+    battle_unit_t* mount;
 
-    if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
+    if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_RIDER) {
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, unit);
         return;
     }
@@ -32,8 +32,8 @@ void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) 
                 anim = BATTLE_UNIT_ANIMATION_WALK_SLOW;
             }
         }
-        if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
-            mount = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+        if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
+            mount = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
             if (mount != 0) {
                 battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, mount);
             }

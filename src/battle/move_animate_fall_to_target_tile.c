@@ -4,7 +4,7 @@
 /* The target sets $a1 to the coordinate buffer before this call too, so the
  * original declared both screen-z helpers with the same two arguments. */
 #define screen_z_from_misc_screen_data                                                                                 \
-    ((s32 (*)(battle_unit_misc_data_t*, const SVECTOR*))battle_gfx_calculate_screen_z_from_misc_screen_data)
+    ((s32 (*)(battle_unit_t*, const SVECTOR*))battle_gfx_calculate_screen_z_from_misc_screen_data)
 
 /* Distortion animation 0x0d: drop the unit straight down until it reaches the
  * ground.
@@ -20,13 +20,13 @@
  * During an event the unit is also centred on its tile, but retail writes the
  * depth coordinate into real.vy instead of real.vz. The height then sits below
  * the ground on the next frame, so an event fall ends on its second frame. */
-void move_animate_fall_to_target_tile(battle_unit_misc_data_t* unit) {
+void move_animate_fall_to_target_tile(battle_unit_t* unit) {
     SVECTOR coords;
     /* Unreferenced 8-byte frame slot above `coords`; it puts `velocity` at
      * sp+0x20, matching the sibling distortion handlers. */
     SVECTOR unused_18;
     VECTOR velocity;
-    battle_unit_misc_data_t* other;
+    battle_unit_t* other;
     battle_stats_t* stats;
     s32 timer;
     s32 x;

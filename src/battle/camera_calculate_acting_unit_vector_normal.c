@@ -5,7 +5,7 @@
  * unit-length direction (ONE) with its height component multiplied by four. */
 void camera_calculate_acting_unit_vector_normal(void) {
     VECTOR delta;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     unit = battle_unit_get_source_misc_data();
     setVector(&delta, unit->screen.vx - g_camera_current_real_coords.vx / ONE,

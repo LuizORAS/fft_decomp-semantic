@@ -7,17 +7,17 @@
  * Mounting logic excludes the acting and casting records when multiple
  * Chocobo records share the coordinates.
  */
-battle_unit_misc_data_t* battle_unit_find_other_chocobo_at_map_coords(s32 x, s32 y, s32 z) {
-    battle_unit_misc_data_t* misc;
-    battle_unit_misc_data_t** cursor;
+battle_unit_t* battle_unit_find_other_chocobo_at_map_coords(s32 x, s32 y, s32 z) {
+    battle_unit_t* misc;
+    battle_unit_t** cursor;
     s32 count;
     s32 id;
     s32 spritesheet_id;
-    battle_unit_misc_data_t* list[BATTLE_UNIT_MISC_SLOT_COUNT];
-    battle_unit_misc_data_t* result;
+    battle_unit_t* list[BATTLE_UNIT_RUNTIME_SLOT_COUNT];
+    battle_unit_t* result;
     s32 index;
 
-    misc = g_battle_unit_misc_list_head;
+    misc = g_battle_unit_list_head;
     count = 0;
     if (misc != 0) {
         spritesheet_id = BATTLE_SPRITESHEET_ID_CHOCOBO;
@@ -34,7 +34,7 @@ battle_unit_misc_data_t* battle_unit_find_other_chocobo_at_map_coords(s32 x, s32
     if (count != 0) {
         for (index = 0; index < count; index++) {
             result = list[index];
-            id = result->unit_id;
+            id = result->runtime_id;
             if (id != g_battle_unit_source_misc_id && id != g_battle_casting_unit_id) {
                 return result;
             }

@@ -7,7 +7,7 @@
 void battle_state_handle_wait_menu_state(void) {
     ai_command_t* selected_command_address;
     s32 selected_command;
-    battle_unit_misc_data_t* source_misc_data;
+    battle_unit_t* source_misc_data;
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);

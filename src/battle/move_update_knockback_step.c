@@ -9,7 +9,7 @@
  * no step is active, the next path byte starts a new step, or the mount
  * animation coordinates are stored when the path is exhausted.
  */
-void move_update_knockback_step(battle_unit_misc_data_t* unit) {
+void move_update_knockback_step(battle_unit_t* unit) {
     u32 offset;
     s32 speed;
 

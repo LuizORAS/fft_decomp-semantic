@@ -3,7 +3,7 @@
 
 /* Move the cursor to the target of the unit's stored action: the target tile, or
  * the tile of the target unit. */
-void target_move_cursor_to_action_target(const battle_unit_misc_data_t* unit) {
+void target_move_cursor_to_action_target(const battle_unit_t* unit) {
     battle_stats_t* bd;
 
     bd = unit->battle_data;

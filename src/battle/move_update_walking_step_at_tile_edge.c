@@ -13,7 +13,7 @@
  * (the WALK_TO_CENTRE phase) or a climb-speed step (CLIMB_TO_CENTRE); up to seven
  * starts move_start_unit_climb_hop_step, and anything higher
  * move_start_unit_climb_jump_step. */
-void move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit) {
+void move_update_walking_step_at_tile_edge(battle_unit_t* unit) {
     s32 direction;
     u8 rider;
 
@@ -27,7 +27,7 @@ void move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     }
     move_snap_axis_to_current_tile_exit_edge(direction, unit);
     if (g_move_step_value.length == 0) {
-        rider = unit->standing_on_unit_id_plus_one;
+        rider = unit->standing_on_battle_id_plus_one;
         if (rider != 0) {
             battle_unit_calculate_height_data(&g_move_tile_occupant_height, rider - 1);
             if (g_move_tile_occupant_height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) {
@@ -45,7 +45,7 @@ void move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit) {
         if (g_move_step_value.mount) {
             g_move_tile_occupant = battle_unit_find_any_misc_data_at_map_coords(
                 unit->movement.destination_x, unit->movement.destination_y, unit->movement.destination_z);
-            unit->standing_on_unit_id_plus_one = g_move_tile_occupant->battle_data->battle_id + 1;
+            unit->standing_on_battle_id_plus_one = g_move_tile_occupant->battle_data->battle_id + 1;
             battle_unit_calculate_height_data(
                 &g_move_tile_occupant_height, g_move_tile_occupant->battle_data->battle_id);
             if (g_move_tile_occupant_height.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) {
@@ -55,7 +55,7 @@ void move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit) {
                 g_move_destination_edge_height = g_move_tile_occupant_height.total_height;
             }
         } else {
-            unit->standing_on_unit_id_plus_one = 0;
+            unit->standing_on_battle_id_plus_one = 0;
             g_move_destination_edge_height = g_move_destination_tile->height * 2
                 + g_move_destination_tile->depth_half_height.half_height * unit->destination_edge_height;
             g_move_current_edge_height += move_calculate_water_lift(unit, g_move_destination_tile);
@@ -80,15 +80,15 @@ void move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit) {
             battle_unit_dismount_rider(unit);
             unit->step_speed = 0x2000;
             move_start_unit_climb_hop_step(unit, g_move_current_tile, g_move_destination_tile);
-            unit->standing_on_unit_id_plus_one = 0;
+            unit->standing_on_battle_id_plus_one = 0;
             return;
         }
         unit->step_speed = 0x2000;
         move_start_unit_climb_jump_step(unit, g_move_current_tile, g_move_destination_tile);
-        unit->standing_on_unit_id_plus_one = 0;
+        unit->standing_on_battle_id_plus_one = 0;
     } else {
         unit->step_speed = 0x2000;
         move_start_unit_jump_step(unit, g_move_current_tile, g_move_destination_tile);
-        unit->standing_on_unit_id_plus_one = 0;
+        unit->standing_on_battle_id_plus_one = 0;
     }
 }

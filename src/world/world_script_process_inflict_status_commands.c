@@ -19,7 +19,7 @@ void world_script_process_inflict_status_commands(void) {
         instruction = g_world_event_script;
         if (instruction[instruction_offset] == EVENT_OPCODE_INFLICT_STATUS) {
             misc_id = script_get_misc_id(script_read_s16(instruction + instruction_offset + 1));
-            if (misc_id != EVENT_MISC_ID_NONE) {
+            if (misc_id != EVENT_RUNTIME_ID_NONE) {
                 battle_id = battle_unit_get_battle_index_by_misc_id(misc_id);
                 if (battle_id != 0x7d0) {
                     unit = battle_unit_get_stats_from_battle_id(battle_id);

@@ -40,7 +40,7 @@ void world_script_block_start_thread(void) {
             thread_call_on_main_stack(parameters);
         } else if (script[0] == EVENT_OPCODE_WALK_TO_ANIM) {
             misc_id = script_get_misc_id(first_halfword);
-            if (misc_id != EVENT_MISC_ID_NONE) {
+            if (misc_id != EVENT_RUNTIME_ID_NONE) {
                 g_world_unit_pending_animations[misc_id] = script_read_s16(script + 3);
             }
             g_world_unit_was_moving_latch[misc_id] = 0;
@@ -56,22 +56,22 @@ void world_script_block_start_thread(void) {
             world_script_resetpalette_event_instruction((const event_unit_parameters_t*)(script + 1));
         } else if (script[0] == EVENT_OPCODE_SET_FIRST_MISC_UNIT) {
             misc_id = script_get_misc_id(first_halfword);
-            if (misc_id != EVENT_MISC_ID_NONE) {
+            if (misc_id != EVENT_RUNTIME_ID_NONE) {
                 battle_unit_move_misc_unit_to_head(misc_id);
             }
         } else if (script[0] == EVENT_OPCODE_ERASE) {
             misc_id = script_get_misc_id(first_halfword);
-            if (misc_id != EVENT_MISC_ID_NONE) {
+            if (misc_id != EVENT_RUNTIME_ID_NONE) {
                 battle_gfx_reset_unit_graphic_trigger(misc_id);
             }
         } else if (script[0] == EVENT_OPCODE_DRAW) {
             misc_id = script_get_misc_id(first_halfword);
-            if (misc_id != EVENT_MISC_ID_NONE) {
+            if (misc_id != EVENT_RUNTIME_ID_NONE) {
                 battle_unit_draw_and_activate_by_misc_id(misc_id);
             }
         } else if (script[0] == EVENT_OPCODE_WAIT_UNIT_READY) {
             misc_id = script_get_misc_id(first_halfword);
-            if (misc_id != EVENT_MISC_ID_NONE) {
+            if (misc_id != EVENT_RUNTIME_ID_NONE) {
                 world_script_wait_for_unit_ready(misc_id);
             }
         } else if (script[0] == EVENT_OPCODE_WAIT) {
@@ -101,7 +101,7 @@ void world_script_block_start_thread(void) {
                 (const event_unit_anim_rotate_parameters_t*)(script + 1));
         } else if (script[0] == EVENT_OPCODE_COLOR_UNIT) {
             misc_id = script_get_misc_id(first_halfword);
-            if (misc_id != EVENT_MISC_ID_NONE) {
+            if (misc_id != EVENT_RUNTIME_ID_NONE) {
                 battle_gfx_start_misc_unit_palette_modulation(
                     script[3], script[7], misc_id, (s8)script[4], (s8)script[5], (s8)script[6]);
             }

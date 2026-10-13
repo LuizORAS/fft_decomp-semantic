@@ -6,8 +6,7 @@
 /* Start the attacker's animation for the ability it uses: the cast for the
  * RUKA, ARUTE and KANZEN sequences, else the ability table's attack
  * animation, which may ask for the weapon's attack or the item animation. */
-void battle_unit_select_attack_animation_for_ability(
-    battle_unit_misc_data_t* attacker, battle_unit_misc_data_t* target) {
+void battle_unit_select_attack_animation_for_ability(battle_unit_t* attacker, battle_unit_t* target) {
     s32 animation;
     s32 seq_type;
 

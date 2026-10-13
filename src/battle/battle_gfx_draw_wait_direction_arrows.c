@@ -22,7 +22,7 @@ void battle_gfx_draw_wait_direction_arrows(SVECTOR* base, u32* ot) {
     s32 dx[4] = { 0, -14, 0, 14 };
     s32 dz[4] = { -14, 0, 14, 0 };
     long flag;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     POLY_FT4* prim;
     /* Signed 16-bit value: the target's division emits the `bgez`/`addiu 0x3ff`
      * correction, so the quadrant bits are not held in an unsigned type. */

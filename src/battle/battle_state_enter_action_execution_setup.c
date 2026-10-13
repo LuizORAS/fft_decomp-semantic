@@ -10,7 +10,7 @@
  * follows the unit's control flag after the setup call returns.
  */
 void battle_state_enter_action_execution_setup(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_ACTION_EXECUTE_SETUP;

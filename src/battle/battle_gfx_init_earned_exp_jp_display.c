@@ -4,7 +4,7 @@
 /* Queues the gained Exp and JP displays after an action, when the Display Gained
  * Exp/JP option is on and the amount is not 0. The first display is built at once
  * unless one is already running. */
-void battle_gfx_init_earned_exp_jp_display(battle_unit_misc_data_t* unit) {
+void battle_gfx_init_earned_exp_jp_display(battle_unit_t* unit) {
     battle_gfx_sprite_display_data_t* display_0;
     battle_gfx_sprite_display_data_t* display_1;
     battle_gfx_sprite_display_data_t* display_2;

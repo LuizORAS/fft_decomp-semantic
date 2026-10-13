@@ -7,8 +7,8 @@
  * centre along direction. It is skipped while the mover's step before last
  * carries movement flag 0x10. The case order and per-case centre temporaries
  * reproduce the target's cross-jumped tails. */
-void move_displace_overlapping_unit(battle_unit_misc_data_t* unit, s32 direction) {
-    battle_unit_misc_data_t* other;
+void move_displace_overlapping_unit(battle_unit_t* unit, s32 direction) {
+    battle_unit_t* other;
     s32 dist;
     s32 x;
     s32 y;

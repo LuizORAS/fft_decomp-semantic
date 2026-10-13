@@ -4,12 +4,12 @@
 /* Queues the unit's item icon at its item-get offset from the unit's screen
  * position, at the unit's ordering-table depth and scale ONE. The x offset is
  * negated unless the sprite is flipped horizontally. */
-void battle_gfx_init_item_get_rendering(battle_unit_misc_data_t* unit) {
+void battle_gfx_init_item_get_rendering(battle_unit_t* unit) {
     SVECTOR position;
     SVECTOR zoom;
     u32* otag;
 
-    if ((unit->sprite_display_flags & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) != 0) {
+    if ((unit->sprite_display_flags & BATTLE_SPRITE_DISPLAY_HORIZONTAL_FLIP) != 0) {
         position.vx = unit->item_get_x_offset;
     } else {
         position.vx = -unit->item_get_x_offset;

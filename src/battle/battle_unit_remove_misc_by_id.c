@@ -3,7 +3,7 @@
 /* battle_unit_remove_misc by misc id. Returns 1, or 0 after raising pointer
  * exception 12 when no record has the id. */
 s32 battle_unit_remove_misc_by_id(u32 misc_id) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xFFFF);
     if (unit != 0) {

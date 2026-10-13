@@ -4,7 +4,7 @@
  * is unlinked, the unit takes the relocation tile in dismount as its map position
  * and screen position, its battle stats follow, and the pending result is
  * cleared. */
-void battle_unit_set_map_coords_after_death_dismount(battle_unit_misc_data_t* unit) {
+void battle_unit_set_map_coords_after_death_dismount(battle_unit_t* unit) {
     /* pending_attack_result is -1 when the action killed a rider on its mount. */
     if (unit->pending_attack_result != 0) {
         battle_unit_dismount_rider_and_update_display(unit);

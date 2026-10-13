@@ -2,7 +2,7 @@
 
 /* Starts the teleport animation and sets the step destination: the tile in the path bytes,
  * or the unit's own tile when the teleport failed. */
-void move_start_teleport_animation(battle_unit_misc_data_t* unit) {
+void move_start_teleport_animation(battle_unit_t* unit) {
     unit->step_phase = MOVE_STEP_PHASE_TELEPORT_ANIMATION;
     battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_TELEPORT, unit->facing, unit);
     if (unit->path.count == MOVE_PATH_TELEPORT) {

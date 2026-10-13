@@ -4,7 +4,7 @@
 
 /* Start the animation of an item ability: the item held up for a target on
  * the unit's own tile or beside it, thrown for one further away. */
-void battle_unit_set_animation_for_item_abilities(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* target) {
+void battle_unit_set_animation_for_item_abilities(battle_unit_t* unit, battle_unit_t* target) {
     s32 dx;
     s32 dy;
 

@@ -3,7 +3,7 @@
 
 /* Path a unit to a destination tile and start it walking at the given speed. */
 s32 move_start_unit_walk_to(s32 misc_id, map_tile_coordinates_t* destination, s32 flags, s32 jump, s32 speed) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     battle_walk_path_t* path;
 
     unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xFFFF);

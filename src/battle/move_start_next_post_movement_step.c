@@ -12,9 +12,9 @@
  * started, otherwise refreshes both units, re-enters the after-command state
  * unless the Deep Dungeon map refresh takes over, and returns 0. */
 s32 move_start_next_post_movement_step(void) {
-    battle_unit_misc_data_t* source;
-    battle_unit_misc_data_t* casting;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* source;
+    battle_unit_t* casting;
+    battle_unit_t* target;
     battle_stats_t* stats;
     s32 item;
     s32 animation;
@@ -49,7 +49,7 @@ s32 move_start_next_post_movement_step(void) {
                 battle_unit_learn_from_crystal(source->battle_data, BATTLE_CRYSTAL_RESTORE_HP_MP);
                 action_finalize_attack_and_flag_reactions(source->battle_data->battle_id);
                 battle_gfx_prepare_post_action_display(source);
-                battle_unit_update_display_by_misc_id(source->unit_id);
+                battle_unit_update_display_by_misc_id(source->runtime_id);
             }
         } else {
             if (!(source->battle_data->initial_team_flags & BATTLE_TEAM_MASK)) {
@@ -64,7 +64,7 @@ s32 move_start_next_post_movement_step(void) {
                 battle_unit_learn_from_crystal(source->battle_data, BATTLE_CRYSTAL_TAKE_TREASURE);
             }
         }
-        battle_gfx_configure_misc_unit_palette_modulation_1f(target->unit_id);
+        battle_gfx_configure_misc_unit_palette_modulation_1f(target->runtime_id);
         target->depth_height_offset
             = 0x24 - (battle_gfx_calculate_screen_z_from_misc_screen_data(source) - target->screen.vy);
         main_sound_play_sfx_find_channel(MAIN_SFX_COMPLETE);
@@ -123,24 +123,24 @@ s32 move_start_next_post_movement_step(void) {
     if (g_move_find_result & MOVE_POST_EVENT_SOURCE_DISPLAY) {
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_CRYSTAL_OR_TREASURE, 0, source->battle_data->battle_id, 0, 0);
-        battle_gfx_prepare_post_action_display_by_misc_id(source->unit_id);
-        battle_unit_update_display_by_misc_id(source->unit_id);
+        battle_gfx_prepare_post_action_display_by_misc_id(source->runtime_id);
+        battle_unit_update_display_by_misc_id(source->runtime_id);
         return 1;
     }
     if (g_move_find_result & MOVE_POST_EVENT_MOUNT_STATUS_CHANGE) {
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_CRYSTAL_OR_TREASURE, 0, source->battle_data->battle_id, 0, 0);
-        if (source->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
-            target = battle_unit_get_misc_data_by_misc_id(source->mount_partner_misc_id);
+        if (source->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
+            target = battle_unit_get_misc_data_by_misc_id(source->mount_partner_runtime_id);
             if (target != 0) {
-                battle_gfx_prepare_post_action_display_by_misc_id(target->unit_id);
-                battle_unit_update_display_by_misc_id(target->unit_id);
+                battle_gfx_prepare_post_action_display_by_misc_id(target->runtime_id);
+                battle_unit_update_display_by_misc_id(target->runtime_id);
             }
         }
         return 1;
     }
-    battle_unit_update_display_by_misc_id(source->unit_id);
-    battle_unit_update_display_by_misc_id(casting->unit_id);
+    battle_unit_update_display_by_misc_id(source->runtime_id);
+    battle_unit_update_display_by_misc_id(casting->runtime_id);
     if (map_refresh_deep_dungeon() == 0) {
         battle_state_enter_after_command();
     }

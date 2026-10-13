@@ -5,7 +5,7 @@
 /* Falls off the end: the original returns int, so $v0 stays live at the exit and the
  * dispatch branch's delay slot is left empty. Nothing reads the result: the distortion
  * dispatcher calls its handlers as void. */
-s32 battle_unit_animate_teleport_distortion(battle_unit_misc_data_t* unit) {
+s32 battle_unit_animate_teleport_distortion(battle_unit_t* unit) {
     s32 angle;
     s32 fade;
 

@@ -4,7 +4,7 @@
 /* Enter the action-cast state for the source unit, unless the scenario check
  * starts an event first; the camera turns when the unit's tile is hidden. */
 void battle_state_enter_action_cast(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_ACTION_CAST;

@@ -10,7 +10,7 @@
  * request call it. The loop has no exit when every entry is empty. */
 void action_show_next_at_list_entry(void) {
     s32 id;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     for (;;) {
         id = action_calculate_at_list_and_get_specific_unit_id(g_action_at_list_id);

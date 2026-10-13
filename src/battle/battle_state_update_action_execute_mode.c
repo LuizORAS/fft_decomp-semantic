@@ -18,8 +18,8 @@
  * the cursor tile and runs the menu layer each frame; Knockback prepares each
  * target's post-action display before the refresh. */
 void battle_state_update_action_execute_mode(void) {
-    battle_unit_misc_data_t* unit;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* unit;
+    battle_unit_t* target;
     s32 i;
 
     battle_gfx_update_all_unit_rotation_and_vectors();
@@ -70,7 +70,7 @@ void battle_state_update_action_execute_mode(void) {
                                 battle_unit_start_post_attack_animation_display(unit, target);
                             }
                         } else {
-                            battle_unit_update_display_by_misc_id(target->unit_id);
+                            battle_unit_update_display_by_misc_id(target->runtime_id);
                         }
                     }
                 }
@@ -87,9 +87,9 @@ void battle_state_update_action_execute_mode(void) {
                     target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
                     if (target != 0) {
                         if (unit->used_ability_id == ABILITY_ID_KNOCKBACK) {
-                            battle_gfx_prepare_post_action_display_by_misc_id(target->unit_id);
+                            battle_gfx_prepare_post_action_display_by_misc_id(target->runtime_id);
                         }
-                        battle_unit_update_display_by_misc_id(target->unit_id);
+                        battle_unit_update_display_by_misc_id(target->runtime_id);
                     }
                 }
             }

@@ -5,8 +5,8 @@
 /* Advances a jumping unit's ascent. Once its vertical velocity is no longer
  * negative, the unit takes the destination level and, when step flag 0x10 is
  * set, records the unit standing on the destination tile (id plus one). */
-void move_update_airborne_ascent_phase(battle_unit_misc_data_t* unit) {
-    battle_unit_misc_data_t* occupant;
+void move_update_airborne_ascent_phase(battle_unit_t* unit) {
+    battle_unit_t* occupant;
     s32 direction;
 
     battle_gfx_load_trap_and_unit_frame_parts(
@@ -23,10 +23,10 @@ void move_update_airborne_ascent_phase(battle_unit_misc_data_t* unit) {
                 unit->movement.destination_x, unit->movement.destination_y, unit->movement.destination_z);
             g_move_tile_occupant = occupant;
             if (occupant != 0) {
-                unit->standing_on_unit_id_plus_one = occupant->battle_data->battle_id + 1;
+                unit->standing_on_battle_id_plus_one = occupant->battle_data->battle_id + 1;
                 return;
             }
         }
-        unit->standing_on_unit_id_plus_one = 0;
+        unit->standing_on_battle_id_plus_one = 0;
     }
 }

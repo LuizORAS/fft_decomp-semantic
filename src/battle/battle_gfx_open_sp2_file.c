@@ -10,7 +10,7 @@
  * for the read and returns 0 when it started, 1 when the loader was busy.
  * Sheet 0x9a has a file for each animation from 0x73 up
  * (g_battle_gfx_worker8_sp2_files); every other sheet has one file. */
-s32 battle_gfx_open_sp2_file(battle_unit_misc_data_t* unit, u32* destination) {
+s32 battle_gfx_open_sp2_file(battle_unit_t* unit, u32* destination) {
     s32 spritesheet_id;
     u8 animation_id;
     s32 index;

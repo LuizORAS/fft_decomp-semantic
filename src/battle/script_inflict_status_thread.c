@@ -33,7 +33,7 @@ void script_inflict_status_thread(void) {
     wait_frames = script_read_s16(parameters->wait_frames_le);
     battle_unit_index = battle_unit_get_battle_index_by_entd_unit_id(unit_id);
     misc_id = script_get_misc_id(unit_id);
-    if (misc_id == EVENT_MISC_ID_NONE) {
+    if (misc_id == EVENT_RUNTIME_ID_NONE) {
         battle_thread_exit_current();
     }
     battle_unit_update_staged_status_data(unit_id, 0);

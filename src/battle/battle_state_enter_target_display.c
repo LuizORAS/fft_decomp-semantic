@@ -7,7 +7,7 @@
  * summary panel. */
 void battle_state_enter_target_display(void) {
     battle_stats_t* cast;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     battle_stats_t* target;
 
     camera_disable_map_pan();

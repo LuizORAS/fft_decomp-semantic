@@ -58,7 +58,7 @@ typedef struct bunit_unit_data {
                                   * bunit_unit_build_data_from_battle_stats; bunit_ability_build_list reads [0]) */
     u8 _unused_068[8];           /* 0x68; spare tail of the stat-detail block */
     u8 gender_flags;             /* 0x70; Bard/Dancer restrictions */
-    u8 misc_unit_id;             /* 0x71 */
+    u8 runtime_id;               /* 0x71 */
     u8 initial_team_flags;       /* 0x72 */
     u8 mount_info;               /* 0x73; battle_stats_t.mount_info */
     u8 character_identity;       /* 0x74; special character, generic male/female/monster */

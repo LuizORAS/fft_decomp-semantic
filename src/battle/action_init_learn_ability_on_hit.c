@@ -10,8 +10,8 @@
  * Phase 0 reports a level up, phase 1 a job level up, and phase 2 looks for a
  * unit that learns the used ability on hit; without one the phase advances. */
 void action_init_learn_ability_on_hit(void) {
-    battle_unit_misc_data_t* unit;
-    battle_unit_misc_data_t* learner;
+    battle_unit_t* unit;
+    battle_unit_t* learner;
     u16 ability_id;
 
     g_battle_game_state = BATTLE_GAME_STATE_LEARN_ABILITY_ON_HIT;

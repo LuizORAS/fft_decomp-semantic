@@ -4,7 +4,7 @@
 /* Enter the illegal-range state, reached when the chosen tile lacks the
  * ability-range mark: opens action-confirm option 5 for the source unit. */
 void battle_state_enter_target_out_of_range(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     battle_stats_t* stats;
 
     camera_disable_map_pan();

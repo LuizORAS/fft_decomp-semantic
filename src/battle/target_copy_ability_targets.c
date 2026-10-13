@@ -13,6 +13,6 @@ s32 target_copy_ability_targets(u8* out) {
             count++;
         }
         i++;
-    } while (i < BATTLE_UNIT_MISC_SLOT_COUNT);
+    } while (i < BATTLE_UNIT_RUNTIME_SLOT_COUNT);
     return count;
 }

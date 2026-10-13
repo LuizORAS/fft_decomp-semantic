@@ -8,7 +8,7 @@ enum { TILE_EDGE_MARGIN = 7, REAL_COORD_SHIFT = 12 };
  * band of the tile it currently occupies, mirroring
  * move_snap_axis_to_destination_tile_center against map_x/map_y.
  */
-void move_snap_axis_to_current_tile_exit_edge(s32 direction, battle_unit_misc_data_t* unit) {
+void move_snap_axis_to_current_tile_exit_edge(s32 direction, battle_unit_t* unit) {
     s16 coordinate;
 
     switch (direction) {

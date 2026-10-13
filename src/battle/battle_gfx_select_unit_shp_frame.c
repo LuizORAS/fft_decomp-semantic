@@ -13,8 +13,8 @@
  * treasure keep the plain table, and a chicken or a frog changes at 4.
  * Higher frame ids index the SHP of an EVTCHR slot: slot 0 for the sequences
  * below 600 and slot 1 for the rest, the submerged table on a water tile. */
-void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, u16 frame,
-    u16 sequence_id, battle_gfx_unit_shp_frame_tables_t** out_table, battle_gfx_source_frame_t** out_frame) {
+void battle_gfx_select_unit_shp_frame(battle_unit_t* unit, battle_unit_anim_state_t* state, u16 frame, u16 sequence_id,
+    battle_gfx_unit_shp_frame_tables_t** out_table, battle_gfx_source_frame_t** out_frame) {
     map_tile_t* tile;
     battle_gfx_unit_shp_frame_tables_t* table;
     battle_gfx_source_frame_t* selected;
@@ -25,8 +25,8 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
     tile = map_get_tile_data_pointer((unit->screen.vx / MAP_TILE_SIZE), (unit->screen.vz / MAP_TILE_SIZE), unit->map_z);
     if (frame < BATTLE_SHP_FRAME_EVTCHR_FIRST) {
         table = state->shp;
-        if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
-            if (unit->status_flags_5_6 & (BATTLE_MISC_STATUS_JUMP | BATTLE_MISC_STATUS_JUMP_HEIGHT_ACTIVE)) {
+        if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_RIDER) {
+            if (unit->status_flags_5_6 & (BATTLE_UNIT_STATUS_JUMP | BATTLE_UNIT_STATUS_JUMP_HEIGHT_ACTIVE)) {
                 selected = table->frames[frame];
             } else {
                 selected = table->submerged_frames[frame];
@@ -36,7 +36,7 @@ void battle_gfx_select_unit_shp_frame(battle_unit_misc_data_t* unit, battle_unit
                 flags = move_get_effective_flags(unit->battle_data);
                 /* The combined test keeps the table pointer's reference count
                  * low enough for the target's s0/s1 allocation. */
-                if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_FLOAT) {
+                if (unit->status_flags_5_6 & BATTLE_UNIT_STATUS_FLOAT) {
                     selected = table->frames[frame];
                 } else if ((flags & BATTLE_EFFECTIVE_MOVEMENT_ON_WATER) || (flags & BATTLE_EFFECTIVE_MOVEMENT_FLOAT)) {
                     selected = table->frames[frame];

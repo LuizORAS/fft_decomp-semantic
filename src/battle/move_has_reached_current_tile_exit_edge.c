@@ -3,7 +3,7 @@
 
 /* Mirror of move_has_reached_destination_tile_entry_edge against the tile the unit currently occupies rather
  * than its movement destination. */
-s32 move_has_reached_current_tile_exit_edge(s32 direction, battle_unit_misc_data_t* unit) {
+s32 move_has_reached_current_tile_exit_edge(s32 direction, battle_unit_t* unit) {
     switch (direction) {
     case MOVE_DIRECTION_NORTH:
         return unit->screen.vz >= (((unit->map_y + 1) * MAP_TILE_SIZE) - 7);

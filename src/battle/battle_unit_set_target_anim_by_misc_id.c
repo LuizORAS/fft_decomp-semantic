@@ -3,8 +3,8 @@
 /* Starts a unit's reaction animation to the casting unit's action
  * (battle_unit_set_target_animation_from_attack_type). Always returns 1. */
 s32 battle_unit_set_target_anim_by_misc_id(s32 misc_id) {
-    battle_unit_misc_data_t* target = battle_unit_get_misc_data_by_misc_id(misc_id);
-    battle_unit_misc_data_t* caster = battle_unit_get_casting_misc_data();
+    battle_unit_t* target = battle_unit_get_misc_data_by_misc_id(misc_id);
+    battle_unit_t* caster = battle_unit_get_casting_misc_data();
 
     battle_unit_set_target_animation_from_attack_type(caster, target);
     return 1;

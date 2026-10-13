@@ -7,29 +7,29 @@
  * the animation. The first swap away from a regular sheet saves its SHP/SEQ
  * pointers; with no transformation status the saved pointers and the VRAM
  * slot's sheet id are restored. */
-void battle_gfx_apply_status_spritesheet_change(battle_unit_misc_data_t* unit, s32 tile_effect_level) {
+void battle_gfx_apply_status_spritesheet_change(battle_unit_t* unit, s32 tile_effect_level) {
     u32 flags;
     u16 spritesheet_id;
     u8 original_id;
 
     flags = unit->status_flags_5_6;
-    if (flags & BATTLE_MISC_STATUS_TRANSFORMATION_MASK) {
-        if (flags & BATTLE_MISC_STATUS_CRYSTAL) {
+    if (flags & BATTLE_UNIT_STATUS_TRANSFORMATION_MASK) {
+        if (flags & BATTLE_UNIT_STATUS_CRYSTAL) {
             spritesheet_id = BATTLE_SPRITESHEET_ID_CRYSTAL;
             unit->special_graphic_y_offset = 0x60;
-            unit->status_flags_5_6 = BATTLE_MISC_STATUS_CRYSTAL;
+            unit->status_flags_5_6 = BATTLE_UNIT_STATUS_CRYSTAL;
             unit->status_flags_1_4 = 0;
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE, unit->facing, unit);
-        } else if (flags & BATTLE_MISC_STATUS_TREASURE) {
+        } else if (flags & BATTLE_UNIT_STATUS_TREASURE) {
             spritesheet_id = BATTLE_SPRITESHEET_ID_TREASURE;
             unit->special_graphic_y_offset = 0;
-            unit->status_flags_5_6 = BATTLE_MISC_STATUS_TREASURE;
+            unit->status_flags_5_6 = BATTLE_UNIT_STATUS_TREASURE;
             unit->status_flags_1_4 = 0;
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_TREASURE, unit->facing, unit);
-        } else if (flags & BATTLE_MISC_STATUS_CHICKEN) {
+        } else if (flags & BATTLE_UNIT_STATUS_CHICKEN) {
             spritesheet_id = BATTLE_SPRITESHEET_ID_CHICKEN;
             unit->special_graphic_y_offset = 0;
-        } else if (flags & BATTLE_MISC_STATUS_FROG) {
+        } else if (flags & BATTLE_UNIT_STATUS_FROG) {
             spritesheet_id = BATTLE_SPRITESHEET_ID_FROG;
             unit->special_graphic_y_offset = 0x30;
         }

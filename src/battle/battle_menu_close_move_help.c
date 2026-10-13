@@ -11,8 +11,8 @@
  * panel. With no reachable tile the move-range exception state is entered
  * instead. The AT-list-active flag follows whether the player controls the unit. */
 void battle_menu_close_move_help(void) {
-    battle_unit_misc_data_t* unit;
-    battle_unit_misc_data_t* casting;
+    battle_unit_t* unit;
+    battle_unit_t* casting;
 
     camera_disable_map_pan();
     unit = battle_unit_get_source_misc_data();

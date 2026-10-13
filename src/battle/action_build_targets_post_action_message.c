@@ -4,7 +4,7 @@
 /* Empty the post-effect message queue, then queue the messages of every target of
  * the casting unit. */
 void action_build_targets_post_action_message(void) {
-    battle_unit_misc_data_t* base;
+    battle_unit_t* base;
     s32 i;
 
     g_action_post_effect_msg_counter = 0;

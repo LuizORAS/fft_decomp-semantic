@@ -10,7 +10,7 @@
  *
  * Nothing starts when the unit's 32-bit movement value carries
  * BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS. */
-void effect_set_landing_secondary_by_surface_type(battle_unit_misc_data_t* unit) {
+void effect_set_landing_secondary_by_surface_type(battle_unit_t* unit) {
     map_tile_t* tile;
     s32 surface;
 

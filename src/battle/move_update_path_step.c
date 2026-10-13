@@ -17,7 +17,7 @@
  * movement_flags pick their own starters, and bit 2 of the step byte picks the
  * climb speed).
  */
-void move_update_path_step(battle_unit_misc_data_t* unit) {
+void move_update_path_step(battle_unit_t* unit) {
     u32 offset;
     u8 count;
     u8 flags;

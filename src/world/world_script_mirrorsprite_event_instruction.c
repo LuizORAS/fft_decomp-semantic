@@ -15,7 +15,7 @@ void world_script_mirrorsprite_event_instruction(const event_mirror_sprite_param
     unit_id = script_read_s16(parameters->unit_id_le);
     mode = parameters->mode;
     misc_id = script_get_misc_id(unit_id);
-    if (misc_id != EVENT_MISC_ID_NONE) {
+    if (misc_id != EVENT_RUNTIME_ID_NONE) {
         if (mode == 1) {
             battle_unit_set_horizontal_flip_flag(misc_id);
         } else {

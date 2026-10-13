@@ -8,7 +8,7 @@
  * CLUTs of the ITEM_A and ITEM_B rows, and its type selects the frame set of
  * the weapon SHP; a thrown weapon, any Throw ability and Throw Stone use
  * set 0x15. */
-void battle_gfx_set_thrown_item_graphic_palette(s32 item_id, battle_unit_misc_data_t* unit) {
+void battle_gfx_set_thrown_item_graphic_palette(s32 item_id, battle_unit_t* unit) {
     item_data_t* item;
     u32 weapon_type;
     s32 clut_index;
@@ -24,7 +24,7 @@ void battle_gfx_set_thrown_item_graphic_palette(s32 item_id, battle_unit_misc_da
         || ((ability_id = unit->used_ability_id), ability_id == ABILITY_ID_BASIC_SKILL_THROW_STONE)) {
         weapon_type = 0x15;
     }
-    clut_index = unit->unit_id;
+    clut_index = unit->runtime_id;
     map_load_palette_data(&g_battle_gfx_weapon_clut[g_battle_gfx_item_graphic_data[item_id].palettes >> 4],
         MAP_CLUT_ROW_ITEM_A, clut_index, 0);
     map_load_palette_data(&g_battle_gfx_weapon_clut[g_battle_gfx_item_graphic_data[item_id].palettes & 0xF],

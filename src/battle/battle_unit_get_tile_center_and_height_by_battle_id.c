@@ -10,7 +10,7 @@
  * that call because it is part of the target instruction stream.
  */
 s32 battle_unit_get_tile_center_and_height_by_battle_id(u32 battle_id, SVECTOR* coords) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     unit = battle_unit_get_misc_data_by_battle_id(battle_id & 0xffff);
     if (unit != 0) {

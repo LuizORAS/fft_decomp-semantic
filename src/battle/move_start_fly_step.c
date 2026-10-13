@@ -10,11 +10,11 @@
  * takes animation 0x32 with the mount's facing. The caller also passes the
  * current and destination tiles, which this variant never reads. */
 void move_start_fly_step(
-    battle_unit_misc_data_t* unit, const map_tile_t* unused_current_tile, const map_tile_t* unused_destination_tile) {
+    battle_unit_t* unit, const map_tile_t* unused_current_tile, const map_tile_t* unused_destination_tile) {
     move_step_t current_step;
     s32 facing;
     move_step_t* step;
-    battle_unit_misc_data_t* rider;
+    battle_unit_t* rider;
     u8 next;
 
     battle_unit_dismount_rider(unit);
@@ -49,8 +49,8 @@ void move_start_fly_step(
     }
 
     battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FLY, facing, unit);
-    if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
-        rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+    if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
+        rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
         if (rider != 0) {
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, rider);
         }

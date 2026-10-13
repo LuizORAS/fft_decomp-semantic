@@ -9,7 +9,7 @@
  * destination tile's entry edge the horizontal motion stops, and once the unit is
  * down at the ground height there a float step starts into the FLOAT_TO_CENTRE
  * stage of the direction. */
-void move_update_unit_step_to_destination_tile_entry_edge(battle_unit_misc_data_t* unit) {
+void move_update_unit_step_to_destination_tile_entry_edge(battle_unit_t* unit) {
     s32 direction;
 
     direction = move_get_direction(unit);

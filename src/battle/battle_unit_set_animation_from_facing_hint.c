@@ -4,7 +4,7 @@
  * with that facing, as battle_unit_set_animation_from_facing_nibble does for
  * sixteenths. No retail code calls it. */
 s32 battle_unit_set_animation_from_facing_hint(u32 misc_id, s32 facing_hint) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 animation;
     s16 facing;
 

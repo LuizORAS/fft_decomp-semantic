@@ -18,10 +18,10 @@
  * g_battle_gfx_targeted_frame_front or _back frame with a wait of 0. The
  * unpackers resolve a missing sequence to the start of the sequence data,
  * never to -1, so the MAIN_SYSTEM_ERROR_SEQ_ANIMATION test cannot fire. */
-void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, s32 advance) {
+void battle_gfx_run_unit_seq_script(battle_unit_t* unit, battle_unit_anim_state_t* state, s32 advance) {
     battle_gfx_unit_seq_table_t* seq;
     battle_unit_sprite_block_t* block;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* target;
     u16 sequence_id;
     u16 index;
     u16 frame;
@@ -60,10 +60,10 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
             op = seq->sequences[index][pos++];
             switch (op) {
             case BATTLE_SEQ_OP_FLIP_HORIZONTAL:
-                state->flags ^= BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP;
+                state->flags ^= BATTLE_SPRITE_DISPLAY_HORIZONTAL_FLIP;
                 break;
             case BATTLE_SEQ_OP_FLIP_VERTICAL:
-                state->flags ^= BATTLE_MISC_DISPLAY_VERTICAL_FLIP;
+                state->flags ^= BATTLE_SPRITE_DISPLAY_VERTICAL_FLIP;
                 break;
             case BATTLE_SEQ_OP_SHOW_SHADOW:
                 unit->shadow_graphic_trigger = 1;
@@ -114,7 +114,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                             if (target != 0) {
                                 battle_unit_set_target_animation_from_attack_type(unit, target);
                                 battle_unit_set_attacker_animation_for_shield_block(unit, target);
-                                battle_gfx_prepare_post_action_display_by_misc_id(target->unit_id);
+                                battle_gfx_prepare_post_action_display_by_misc_id(target->runtime_id);
                                 effect_set_evade_type_data_and_weapon_element(unit, 0);
                             }
                         }

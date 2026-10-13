@@ -14,7 +14,7 @@
  * paused; an item effect is held back until the unit shows its hold-item
  * animation. The AT-list-active flag is cleared on every path. */
 void action_set_item_throw_stone_ability_display(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 ability;
 
     g_battle_game_state = BATTLE_GAME_STATE_ACTION_EXECUTE;

@@ -9,23 +9,22 @@
  * Among several, the source unit (g_battle_unit_source_misc_id) is preferred,
  * then the first in list order. Returns 0 for none. The candidate array holds 16
  * entries and is filled without a bound check. */
-battle_unit_misc_data_t* battle_unit_get_overlapping_misc_data_pointer(
-    battle_unit_misc_data_t* self, s32 x, s32 y, s32 z) {
-    battle_unit_misc_data_t* list[BATTLE_UNIT_MISC_SLOT_COUNT];
-    battle_unit_misc_data_t* unit;
+battle_unit_t* battle_unit_get_overlapping_misc_data_pointer(battle_unit_t* self, s32 x, s32 y, s32 z) {
+    battle_unit_t* list[BATTLE_UNIT_RUNTIME_SLOT_COUNT];
+    battle_unit_t* unit;
     battle_stats_t* stats;
     s32 count;
     s32 i;
 
     count = 0;
-    unit = g_battle_unit_misc_list_head;
+    unit = g_battle_unit_list_head;
     if (unit != 0) {
         do {
             if (unit != self && unit->map_x == x && unit->map_y == y && unit->map_z == z) {
                 stats = unit->battle_data;
                 if (stats != 0 && stats->entd_slot != BATTLE_ENTD_SLOT_NONE) {
-                    if (self->mount_state == BATTLE_MISC_MOUNT_STATE_NONE
-                        || unit->unit_id != self->mount_partner_misc_id) {
+                    if (self->mount_state == BATTLE_UNIT_MOUNT_STATE_NONE
+                        || unit->runtime_id != self->mount_partner_runtime_id) {
                         list[count] = unit;
                         count += 1;
                     }
@@ -36,7 +35,7 @@ battle_unit_misc_data_t* battle_unit_get_overlapping_misc_data_pointer(
     }
     if (count != 0) {
         for (i = 0; i < count; i++) {
-            if (list[i]->unit_id == g_battle_unit_source_misc_id) {
+            if (list[i]->runtime_id == g_battle_unit_source_misc_id) {
                 return list[i];
             }
         }

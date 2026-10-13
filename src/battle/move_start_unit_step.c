@@ -8,7 +8,7 @@
  * two bits pick the direction, which sets the facing and edge offset; its low
  * two bits extend the destination tile coordinate. The switch has no default, so `facing` is unset
  * for a direction outside 0-3 (none exists), and game state 0x2d leaves the unit's facing unchanged. */
-void move_start_unit_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* unused_to) {
+void move_start_unit_step(battle_unit_t* unit, const map_tile_t* from, const map_tile_t* unused_to) {
     move_step_t* step;
     move_step_t current_step;
     s32 edge_height;

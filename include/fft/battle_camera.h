@@ -78,7 +78,7 @@ void camera_set_current_real_coords(const VECTOR* coords);
 void camera_shift_acting_unit_vector(void);
 void camera_step_focus_toward_cursor_tile(s16 height);
 /* Some routines address these components as separate linker symbols. */
-void camera_step_real_coords_toward_target(const battle_unit_misc_data_t* target);
+void camera_step_real_coords_toward_target(const battle_unit_t* target);
 void camera_update_cursor_tile_vector(void);
 void camera_update_real_coord_animation(void);
 void camera_update_vector_from_game_state(void);
@@ -127,7 +127,7 @@ void camera_request_rotation(s32 angle);
 void camera_restore_rotation(void);
 void camera_rotate_left(s32 target_angle);
 void camera_rotate_right(s32 target_angle);
-void camera_rotate_when_unit_tile_not_visible(const struct battle_unit_misc_data* unit);
+void camera_rotate_when_unit_tile_not_visible(const struct battle_unit* unit);
 void camera_save_rotation(void);
 void camera_set_rotation(const SVECTOR* rotation);
 void camera_start_rotation_left(s32 target_angle);

@@ -8,7 +8,7 @@
  *
  * Case bodies store the destination before clearing the other velocity axis;
  * that order gives the target's map_x/step load order. */
-void move_start_unit_climb_hop_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to) {
+void move_start_unit_climb_hop_step(battle_unit_t* unit, const map_tile_t* from, const map_tile_t* to) {
     s32 unused[4];
     battle_unit_height_data_t height_data;
     s32 rise;
@@ -20,8 +20,8 @@ void move_start_unit_climb_hop_step(battle_unit_misc_data_t* unit, const map_til
     u8 next;
 
     step = &unit->current_path_step;
-    if (unit->standing_on_unit_id_plus_one != 0
-        && (battle_unit_calculate_height_data(&height_data, unit->standing_on_unit_id_plus_one - 1),
+    if (unit->standing_on_battle_id_plus_one != 0
+        && (battle_unit_calculate_height_data(&height_data, unit->standing_on_battle_id_plus_one - 1),
             (height_data.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) == 0)) {
         height = height_data.total_height;
     } else {

@@ -10,7 +10,7 @@
  * transition.
  */
 s32 status_queue_misc_graphics_flag_change(s32 status, s32 enabled, s32 battle_id) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     unit = battle_unit_get_misc_data_by_battle_id(battle_id & 0xffff);
     if (unit == 0) {
@@ -21,12 +21,12 @@ s32 status_queue_misc_graphics_flag_change(s32 status, s32 enabled, s32 battle_i
         switch (status) {
         case STATUS_HANDLER_INDEX(STATUS_ID_CRYSTAL):
         case STATUS_HANDLER_INDEX(STATUS_ID_CHICKEN):
-            unit->statuses_to_remove_5_6 |= BATTLE_MISC_STATUS_CHICKEN;
-            unit->statuses_to_add_5_6 &= ~BATTLE_MISC_STATUS_CHICKEN;
+            unit->statuses_to_remove_5_6 |= BATTLE_UNIT_STATUS_CHICKEN;
+            unit->statuses_to_add_5_6 &= ~BATTLE_UNIT_STATUS_CHICKEN;
             break;
         case STATUS_HANDLER_INDEX(STATUS_ID_FROG):
-            unit->statuses_to_remove_5_6 |= BATTLE_MISC_STATUS_FROG;
-            unit->statuses_to_add_5_6 &= ~BATTLE_MISC_STATUS_FROG;
+            unit->statuses_to_remove_5_6 |= BATTLE_UNIT_STATUS_FROG;
+            unit->statuses_to_add_5_6 &= ~BATTLE_UNIT_STATUS_FROG;
             ai_init_unit_abilities(battle_id);
             return 1;
         case STATUS_HANDLER_INDEX(STATUS_ID_JUMP):
@@ -49,21 +49,21 @@ s32 status_queue_misc_graphics_flag_change(s32 status, s32 enabled, s32 battle_i
     case 1:
         switch (status) {
         case STATUS_HANDLER_INDEX(STATUS_ID_CRYSTAL):
-            unit->statuses_to_add_5_6 |= BATTLE_MISC_STATUS_CRYSTAL;
-            unit->statuses_to_remove_5_6 &= ~BATTLE_MISC_STATUS_CRYSTAL;
+            unit->statuses_to_add_5_6 |= BATTLE_UNIT_STATUS_CRYSTAL;
+            unit->statuses_to_remove_5_6 &= ~BATTLE_UNIT_STATUS_CRYSTAL;
             break;
         case STATUS_HANDLER_INDEX(STATUS_ID_CHICKEN):
-            unit->statuses_to_add_5_6 |= BATTLE_MISC_STATUS_CHICKEN;
-            unit->statuses_to_remove_5_6 &= ~BATTLE_MISC_STATUS_CHICKEN;
+            unit->statuses_to_add_5_6 |= BATTLE_UNIT_STATUS_CHICKEN;
+            unit->statuses_to_remove_5_6 &= ~BATTLE_UNIT_STATUS_CHICKEN;
             break;
         case STATUS_HANDLER_INDEX(STATUS_ID_FROG):
-            unit->statuses_to_add_5_6 |= BATTLE_MISC_STATUS_FROG;
-            unit->statuses_to_remove_5_6 &= ~BATTLE_MISC_STATUS_FROG;
+            unit->statuses_to_add_5_6 |= BATTLE_UNIT_STATUS_FROG;
+            unit->statuses_to_remove_5_6 &= ~BATTLE_UNIT_STATUS_FROG;
             ai_init_unit_abilities(battle_id);
             return 1;
         case STATUS_HANDLER_INDEX(STATUS_ID_TREASURE):
-            unit->statuses_to_add_5_6 |= BATTLE_MISC_STATUS_TREASURE;
-            unit->statuses_to_remove_5_6 &= ~BATTLE_MISC_STATUS_TREASURE;
+            unit->statuses_to_add_5_6 |= BATTLE_UNIT_STATUS_TREASURE;
+            unit->statuses_to_remove_5_6 &= ~BATTLE_UNIT_STATUS_TREASURE;
             break;
         case STATUS_HANDLER_INDEX(STATUS_ID_JUMP):
         case STATUS_HANDLER_INDEX(STATUS_ID_FLOAT):

@@ -6,7 +6,7 @@
  * missing. The 0x11a bit-fields must be cleared before the path step is built:
  * that order fixes the target's constant-load schedule. */
 s32 battle_unit_prepare_rider_dismount(u32 misc_id, s32 direction, s32 jump_length) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xffff);
     if (unit != 0) {

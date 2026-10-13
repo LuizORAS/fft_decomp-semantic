@@ -15,11 +15,11 @@
  * reload, but the duplicated RTL makes the mount loop large enough that
  * loop.c leaves `row * 16 + g_battle_gfx_animation_layer_priorities` inside it, which is why the target
  * recomputes the table address each iteration and spills `row`. */
-void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
+void battle_gfx_draw_unit_sprite_layers(battle_unit_t* unit) {
     SVECTOR position;
     SVECTOR rider_position;
     SVECTOR zoom = { ONE, ONE, ONE };
-    battle_unit_misc_data_t* rider;
+    battle_unit_t* rider;
     battle_gfx_sprite_display_data_t* display;
     battle_gfx_sprite_display_data_t* rider_display;
     s32 row;
@@ -55,9 +55,9 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
     if (unit->item_display_active) {
         battle_gfx_init_item_get_rendering(unit);
     }
-    if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
-        if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
-        } else if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
+    if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
+        if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_RIDER) {
+        } else if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
             for (i = 0; i < 4; i++) {
                 entry = g_battle_gfx_animation_layer_priorities[row][i];
                 if (entry != 0) {
@@ -71,7 +71,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                     display = unit->animation.display;
                     battle_gfx_construct_polygon_data_for_units(
                         display, 3, 0, &position, angle, flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
-                    rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+                    rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
                     if (rider != 0 && rider->draw_enabled != 0) {
                         rider_position.vx = rider->camera_relative_x;
                         rider_position.vy = rider->camera_relative_y;

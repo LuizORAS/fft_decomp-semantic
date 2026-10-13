@@ -11,7 +11,7 @@ void battle_gfx_draw_wait_direction_unit(void) {
     SVECTOR raised;
     VECTOR transformed;
     long flag;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 depth;
     u32* ot;
 

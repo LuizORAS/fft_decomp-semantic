@@ -8,7 +8,7 @@
  * compute and show its reachable tiles, and switch the cursor input to
  * free-cursor mode with the previous mode saved. */
 void target_show_move_range_in_free_cursor(void) {
-    battle_unit_misc_data_t* misc;
+    battle_unit_t* misc;
     battle_stats_t* stats;
     s32 prev;
 

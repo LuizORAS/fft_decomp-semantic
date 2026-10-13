@@ -14,24 +14,24 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
     SVECTOR screen;
     SVECTOR adjusted;
     long gte_flag;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     map_tile_t* tile;
     move_effective_flags_e movement_flags;
 
     SetRotMatrix(&g_camera_matrix);
     SetTransMatrix(&g_camera_matrix);
 
-    unit = g_battle_unit_misc_list_head;
+    unit = g_battle_unit_list_head;
     while (unit != 0) {
         battle_unit_copy_misc_data_xyz_values(&screen, unit);
         RotTrans(&screen, &transformed, &unit->gte_flag);
 
-        if ((unit->sprite_display_flags & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) != 0) {
+        if ((unit->sprite_display_flags & BATTLE_SPRITE_DISPLAY_HORIZONTAL_FLIP) != 0) {
             unit->camera_relative_x = transformed.vx - unit->screen_offset.vx;
         } else {
             unit->camera_relative_x = transformed.vx + unit->screen_offset.vx;
         }
-        if ((unit->sprite_display_flags & BATTLE_MISC_DISPLAY_VERTICAL_FLIP) != 0) {
+        if ((unit->sprite_display_flags & BATTLE_SPRITE_DISPLAY_VERTICAL_FLIP) != 0) {
             unit->camera_relative_y = transformed.vy - unit->screen_offset.vy;
         } else {
             unit->camera_relative_y = transformed.vy + unit->screen_offset.vy;

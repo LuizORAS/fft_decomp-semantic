@@ -12,7 +12,7 @@
  * bubble is drawn one tile above the unit's feet and offset by status_bubble_x
  * and status_bubble_y.
  */
-void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR* unused_screen_coords) {
+void battle_gfx_draw_status_bubble(battle_unit_t* unit, const DVECTOR* unused_screen_coords) {
     SVECTOR position;
     SVECTOR zoom = g_status_bubble_zoom;
     VECTOR transformed;
@@ -45,7 +45,7 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const DVECTOR*
         }
     } else if (bubble_id == 0) {
         table_index = unit->battle_data->death_counter;
-        if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_RERAISE) {
+        if (unit->status_flags_1_4 & BATTLE_UNIT_STATUS_RERAISE) {
             display->parts[0].u = g_status_bubble_u[10];
             flag_row = g_status_bubble_v[10];
             display->parts[0].v = flag_row;

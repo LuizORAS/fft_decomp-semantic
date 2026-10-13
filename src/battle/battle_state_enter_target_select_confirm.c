@@ -4,7 +4,7 @@
 /* Enter the target-select-confirm state: show the summary of the unit under the
  * cursor and open the target-confirm prompt (option 0) for the casting unit. */
 void battle_state_enter_target_select_confirm(void) {
-    battle_unit_misc_data_t* misc;
+    battle_unit_t* misc;
     battle_stats_t* stats;
 
     camera_disable_map_pan();

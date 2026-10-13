@@ -2,7 +2,7 @@
 
 /* Enables the unit's six-copy position trail and seeds every copy with its
  * current position. */
-void battle_gfx_init_position_vector_copies(battle_unit_misc_data_t* unit) {
+void battle_gfx_init_position_vector_copies(battle_unit_t* unit) {
     s32 i;
 
     unit->position_copies_active = 1;

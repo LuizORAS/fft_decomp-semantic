@@ -8,8 +8,8 @@
  * ability animation table's third byte; 0x06 (and only 0x06) also plays tune 2,
  * and 0x06/0x2b are the two messages that name both units. */
 void battle_state_start_battle_message_display(void) {
-    battle_unit_misc_data_t* unit;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* unit;
+    battle_unit_t* target;
     battle_ability_animation_data_t* animation;
     s32 message;
     s32 i;

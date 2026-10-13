@@ -12,7 +12,7 @@
  * is used as is, otherwise doubled. The tile height left in $v0 by either
  * vector routine is passed on to camera_step_focus_toward_cursor_tile. */
 void camera_update_cursor_tile_vector(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 height;
 
     if (g_camera_zoom_action == CAMERA_STEP_NONE && g_camera_tilt_action == CAMERA_STEP_NONE

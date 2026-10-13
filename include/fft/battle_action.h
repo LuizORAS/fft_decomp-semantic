@@ -405,7 +405,7 @@ typedef enum battle_at_list_mode {
     BATTLE_AT_LIST_MODE_PREVIEW = 3,      /* as ALL, with the acting unit's new charge counted from this tick */
 } battle_at_list_mode_e;
 
-/* Result of action_prepare_attack, kept in battle_unit_misc_data_t.attack_phase_state. */
+/* Result of action_prepare_attack, kept in battle_unit_t.attack_phase_state. */
 typedef enum battle_attack_preparation {
     BATTLE_ATTACK_PREPARATION_INVALID = -1,
     BATTLE_ATTACK_PREPARATION_CHARGE = 0, /* the action has a charge time; also Defend */
@@ -582,10 +582,10 @@ s32 action_increment_item_quantity_for_steal_break(battle_stats_t* unit, u8 item
 void action_init_learn_ability_on_hit(void);
 s32 action_init_movement_ability_benefit(battle_stats_t* unit);
 void action_post_action_facing_stub(battle_stats_t* unused_unit, s32 unused_facing);
-void action_queue_post_effect_messages_for_unit(battle_unit_misc_data_t* unit);
+void action_queue_post_effect_messages_for_unit(battle_unit_t* unit);
 s32 action_remove_broken_or_stolen_equipment(void);
-s32 action_report_job_level_up(battle_unit_misc_data_t* misc);
-s32 action_report_level_up(battle_unit_misc_data_t* misc);
+s32 action_report_job_level_up(battle_unit_t* misc);
+s32 action_report_level_up(battle_unit_t* misc);
 void action_set_damage_display_type_based_on_ability(void);
 void action_set_item_throw_stone_ability_display(void);
 s32 action_set_move_act_flags(s32 unit_id, s32 move_flag, s32 act_flag);

@@ -6,8 +6,8 @@
  * cursor as the casting unit's auto-battle target and opens the next action
  * menus; 8 or 0xff returns to target selection. */
 void battle_state_handle_target_select_confirm_state(void) {
-    battle_unit_misc_data_t* caster;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* caster;
+    battle_unit_t* target;
 
     battle_state_handle_free_cursor_input();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);

@@ -6,7 +6,7 @@
  * and y -0x1f..0x10f, the ordering-table depth within 1..0x17f,
  * sprite_graphic_trigger is set, the unit is not a mount carrying its rider and
  * status_bubble_active is set. */
-void battle_gfx_update_status_bubble_display(battle_unit_misc_data_t* unit) {
+void battle_gfx_update_status_bubble_display(battle_unit_t* unit) {
     DVECTOR screen_coords;
 
     /* The camera-relative position is read unsigned (lhu) here. */
@@ -24,7 +24,7 @@ void battle_gfx_update_status_bubble_display(battle_unit_misc_data_t* unit) {
     if (unit->animation.trigger == 0) {
         return;
     }
-    if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
+    if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
         return;
     }
     if (unit->status_bubble_active == 0) {

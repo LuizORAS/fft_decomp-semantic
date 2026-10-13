@@ -10,7 +10,7 @@
  * plays sound 0x27 and ends the animation at once when the unit is already
  * high enough; the end of phase 1 only clears the animation id.
  */
-void move_animate_jump_rise_with_sfx(battle_unit_misc_data_t* unit) {
+void move_animate_jump_rise_with_sfx(battle_unit_t* unit) {
     VECTOR unused_10;
     VECTOR velocity;
     s32 timer;
@@ -22,7 +22,7 @@ void move_animate_jump_rise_with_sfx(battle_unit_misc_data_t* unit) {
     switch (unit->distortion_phase) {
     case 0:
         height = -battle_gfx_calculate_screen_z_from_misc_screen_data(unit) + 0x120;
-        unit->status_flags_5_6 |= BATTLE_MISC_STATUS_JUMP_HEIGHT_ACTIVE;
+        unit->status_flags_5_6 |= BATTLE_UNIT_STATUS_JUMP_HEIGHT_ACTIVE;
         if (-unit->screen.vy >= height) {
             unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
             break;

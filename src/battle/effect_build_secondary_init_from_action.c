@@ -10,20 +10,20 @@
  * derived from its action data. With no targets the first block instead holds
  * the cursor tile position. The record's target blocks form an array of up to
  * 16 entries starting at the header's first `target` block. */
-void effect_build_secondary_init_from_action(battle_unit_misc_data_t* unit, effect_secondary_init_t* init) {
-    battle_unit_misc_data_t* target;
+void effect_build_secondary_init_from_action(battle_unit_t* unit, effect_secondary_init_t* init) {
+    battle_unit_t* target;
     action_data_t* action;
     s32 i;
 
     init->target_count = unit->strike.target_count;
     init->targets[EFFECT_CASTER_ENTRY].target_type = EFFECT_TARGET_TYPE_UNIT;
-    init->targets[EFFECT_CASTER_ENTRY].data.unit.misc_id = unit->unit_id;
+    init->targets[EFFECT_CASTER_ENTRY].data.unit.misc_id = unit->runtime_id;
     init->used_weapon_id = unit->strike.used_weapon_id;
     if (init->target_count != 0) {
         for (i = 0; i < init->target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(unit->strike.target_list[i]);
             init->targets[i].target_type = EFFECT_TARGET_TYPE_UNIT;
-            init->targets[i].data.unit.misc_id = target->unit_id;
+            init->targets[i].data.unit.misc_id = target->runtime_id;
             action = &target->battle_data->action;
             switch (action->miss_type) {
             case ACTION_MISS_TYPE_ACCESSORY_EVADE:

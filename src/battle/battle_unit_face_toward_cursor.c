@@ -5,7 +5,7 @@
  *
  * The 14-pixel adjustment compares the projected unit position with the tile
  * center; masking the fixed-point angle selects one of four cardinal facings. */
-void battle_unit_face_toward_cursor(battle_unit_misc_data_t* unit) {
+void battle_unit_face_toward_cursor(battle_unit_t* unit) {
     VECTOR difference;
     s32 unit_x;
     s32 unit_y;

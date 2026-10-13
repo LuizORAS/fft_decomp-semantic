@@ -9,7 +9,7 @@
  * starts directly. Otherwise the game enters the effect-file-open state with the
  * targets and their result animations stored for the effect. */
 void action_set_damage_display_type_based_on_ability(void) {
-    battle_unit_misc_data_t* misc;
+    battle_unit_t* misc;
     u16 raw;
     s32 ability;
     s32 target;

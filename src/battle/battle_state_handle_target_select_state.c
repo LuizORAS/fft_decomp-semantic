@@ -11,8 +11,8 @@
  * action menus; triangle only recentres the cursor on the caster.
  */
 void battle_state_handle_target_select_state(void) {
-    battle_unit_misc_data_t* caster;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* caster;
+    battle_unit_t* target;
 
     camera_handle_rotation_input();
     camera_update_zoom_input();

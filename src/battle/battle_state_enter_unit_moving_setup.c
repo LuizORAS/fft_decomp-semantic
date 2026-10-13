@@ -11,9 +11,9 @@
  * walked path opens feedback option 4 when a crystal lies on the cursor tile and
  * option 0 when not. */
 void battle_state_enter_unit_moving_setup(void) {
-    battle_unit_misc_data_t* src;
-    battle_unit_misc_data_t* cast;
-    battle_unit_misc_data_t* at_tile;
+    battle_unit_t* src;
+    battle_unit_t* cast;
+    battle_unit_t* at_tile;
     u8 path_count;
 
     camera_disable_map_pan();
@@ -40,7 +40,7 @@ void battle_state_enter_unit_moving_setup(void) {
     at_tile
         = battle_unit_get_crystal_or_treasure_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (at_tile != 0) {
-        if (at_tile->status_flags_5_6 & BATTLE_MISC_STATUS_CRYSTAL) {
+        if (at_tile->status_flags_5_6 & BATTLE_UNIT_STATUS_CRYSTAL) {
             battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_MOVE_FEEDBACK, 4, src->battle_data->battle_id,
                 0, src->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED);
             return;

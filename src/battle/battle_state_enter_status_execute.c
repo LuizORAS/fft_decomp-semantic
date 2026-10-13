@@ -6,7 +6,7 @@
  * statuses to add select message 0x183d, 0x183c or none, followed by the
  * post-action display. */
 void battle_state_enter_status_execute(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     u32 statuses;
 
     camera_disable_map_pan();
@@ -23,16 +23,16 @@ void battle_state_enter_status_execute(void) {
     }
     battle_text_set_message_duration_frames(0xB4);
     statuses = unit->statuses_to_add_5_6;
-    if (statuses & BATTLE_MISC_STATUS_CRYSTAL) {
+    if (statuses & BATTLE_UNIT_STATUS_CRYSTAL) {
         battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x183D,
             unit->battle_data->battle_id, unit->battle_data->battle_id, 1);
-    } else if (statuses & BATTLE_MISC_STATUS_TREASURE) {
+    } else if (statuses & BATTLE_UNIT_STATUS_TREASURE) {
         battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x183C,
             unit->battle_data->battle_id, unit->battle_data->battle_id, 1);
     } else {
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0, unit->battle_data->battle_id, 0, 0);
     }
-    battle_unit_update_display_by_misc_id(unit->unit_id);
-    battle_gfx_prepare_post_action_display_by_misc_id(unit->unit_id);
+    battle_unit_update_display_by_misc_id(unit->runtime_id);
+    battle_gfx_prepare_post_action_display_by_misc_id(unit->runtime_id);
 }

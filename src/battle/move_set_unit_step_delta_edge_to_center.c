@@ -13,7 +13,7 @@ enum {
  * is not negated, so entering over a high side (slope height 2) moves the unit
  * down to the centre. */
 void move_set_unit_step_delta_edge_to_center(
-    battle_unit_misc_data_t* unit, const move_step_t* step, const map_tile_t* tile, s32 edge_height) {
+    battle_unit_t* unit, const move_step_t* step, const map_tile_t* tile, s32 edge_height) {
     VECTOR direction;
 
     direction.vy = (edge_height - 1) * tile->depth_half_height.half_height * MOVE_STEP_HEIGHT_SCALE;

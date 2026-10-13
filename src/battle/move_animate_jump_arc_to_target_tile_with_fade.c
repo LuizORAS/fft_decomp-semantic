@@ -15,9 +15,9 @@
  * frames remain (the threshold kept in distortion_target), then restores the
  * palette. Phase 2 flies the remaining frames and stops the horizontal motion.
  * Phase 3 falls to the ground, snaps the unit to the tile, shows the shadow,
- * clears BATTLE_MISC_STATUS_JUMP_HEIGHT_ACTIVE and the semi-transparency bit, and
+ * clears BATTLE_UNIT_STATUS_JUMP_HEIGHT_ACTIVE and the semi-transparency bit, and
  * ends the animation. */
-void move_animate_jump_arc_to_target_tile_with_fade(battle_unit_misc_data_t* unit) {
+void move_animate_jump_arc_to_target_tile_with_fade(battle_unit_t* unit) {
     /* Unreferenced 8-byte frame slot below the target point, like the one in
      * move_animate_jump_arc_to_own_tile; it puts `target` at sp+0x20. */
     SVECTOR unused_18;
@@ -36,8 +36,8 @@ void move_animate_jump_arc_to_target_tile_with_fade(battle_unit_misc_data_t* uni
         target.vy = battle_gfx_calculate_screen_z_from_misc_map_data(unit);
         timer = move_calculate_jump_arc_velocity(&unit->screen, &target, &velocity);
         unit->shadow_graphic_trigger = 0;
-        unit->sprite_display_flags |= BATTLE_MISC_DISPLAY_BLEND_ADD_QUARTER | BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
-        battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 1, unit->unit_id, -31, -31, -31);
+        unit->sprite_display_flags |= BATTLE_SPRITE_DISPLAY_BLEND_ADD_QUARTER | BATTLE_SPRITE_DISPLAY_SEMI_TRANSPARENT;
+        battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_BASE, 1, unit->runtime_id, -31, -31, -31);
         threshold = 4;
         unit->distortion_phase++;
     case 1:
@@ -47,7 +47,7 @@ void move_animate_jump_arc_to_target_tile_with_fade(battle_unit_misc_data_t* uni
             unit->real.vz += velocity.vz;
             velocity.vy += g_move_jump_gravity;
         } else {
-            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_RESTORE, 1, unit->unit_id, 0, 0, 0);
+            battle_gfx_start_misc_unit_palette_modulation(MAP_COLOR_MODE_RESTORE, 1, unit->runtime_id, 0, 0, 0);
             unit->distortion_phase++;
         }
         timer--;
@@ -75,9 +75,9 @@ void move_animate_jump_arc_to_target_tile_with_fade(battle_unit_misc_data_t* uni
         } else {
             battle_unit_set_real_coords_from_map_coords(unit);
             unit->shadow_graphic_trigger = 1;
-            unit->status_flags_5_6 &= ~BATTLE_MISC_STATUS_JUMP_HEIGHT_ACTIVE;
+            unit->status_flags_5_6 &= ~BATTLE_UNIT_STATUS_JUMP_HEIGHT_ACTIVE;
             unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
-            unit->sprite_display_flags &= ~BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
+            unit->sprite_display_flags &= ~BATTLE_SPRITE_DISPLAY_SEMI_TRANSPARENT;
         }
         break;
     }

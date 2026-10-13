@@ -6,7 +6,7 @@ battle_gfx_sprite_display_data_t* battle_gfx_init_weapon_sprite_display(s32 unit
     s32 weapon_part;
     battle_gfx_sprite_display_data_t* display;
 
-    display = &g_battle_unit_misc_data[unit_index].weapon_sprite_displays[display_type].header;
+    display = &g_battle_units[unit_index].weapon_sprite_displays[display_type].header;
     display->color.b = 0x80;
     display->color.g = 0x80;
     display->color.r = 0x80;

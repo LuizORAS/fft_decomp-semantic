@@ -8,8 +8,7 @@
  * When the cursor tile changes, the unit panels are refreshed for the current
  * game state: the cursor unit's panel in the free-cursor, close-move-help and
  * target-select states, the preview target's panel in the targeting-range state. */
-void target_update_free_cursor_selection(
-    const battle_unit_misc_data_t* unit, const battle_unit_misc_data_t* selected_unit) {
+void target_update_free_cursor_selection(const battle_unit_t* unit, const battle_unit_t* selected_unit) {
     s32 old_x;
     s32 old_z;
     s32 old_y;

@@ -5,21 +5,21 @@
  * the submerged idle in water two or more deep; a mount on land also puts
  * its rider back in the riding animation. The depth is a byte, so its
  * negative test never holds. */
-void battle_unit_set_animation_based_on_mounted_state(battle_unit_misc_data_t* unit) {
+void battle_unit_set_animation_based_on_mounted_state(battle_unit_t* unit) {
     s32 anim;
     s32 selected;
     s32 water_depth;
-    battle_unit_misc_data_t* other;
+    battle_unit_t* other;
 
     anim = BATTLE_UNIT_ANIMATION_RIDING;
-    if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_RIDER) {
+    if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_RIDER) {
         water_depth = move_get_water_depth(unit) & 0xFF;
         if (water_depth < 0) {
             selected = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
         } else if (water_depth < 2) {
             selected = BATTLE_UNIT_ANIMATION_STAND;
-            if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
-                other = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+            if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
+                other = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_runtime_id);
                 if (other != 0) {
                     battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, other);
                 }

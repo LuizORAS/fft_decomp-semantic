@@ -40,9 +40,9 @@ extern u8 g_sound_weapon_hit_sfx_ids[];
  * hit, and the hit a shield or Golem stops (sound_play_weapon_sfx). */
 extern u8 g_sound_weapon_swing_sfx_ids[];
 
-void sound_play_landing_sfx_by_surface_type(battle_unit_misc_data_t* unit);
-void sound_play_movement_sfx(battle_unit_misc_data_t* unit, s32 sound_id);
-void sound_play_weapon_sfx(battle_unit_misc_data_t* unit, s32 hit);
+void sound_play_landing_sfx_by_surface_type(battle_unit_t* unit);
+void sound_play_movement_sfx(battle_unit_t* unit, s32 sound_id);
+void sound_play_weapon_sfx(battle_unit_t* unit, s32 hit);
 
 /* weather */
 extern s32 g_sound_primary_weather_sfx_id;

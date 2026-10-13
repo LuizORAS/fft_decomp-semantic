@@ -8,7 +8,7 @@
  * Phase 0 replaces the frame count in distortion_timer with the per-frame step
  * and stores the destination height in distortion_target; phase 1 steps until the
  * unit reaches it, then snaps and ends the animation. */
-void move_interpolate_height_toward_fixed_rise(battle_unit_misc_data_t* misc) {
+void move_interpolate_height_toward_fixed_rise(battle_unit_t* misc) {
     s32 step;
     s32 target;
     s32 height;

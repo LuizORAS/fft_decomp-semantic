@@ -15,8 +15,8 @@ void battle_state_handle_learn_ability_on_hit_state(void) {
     s32 counter;
     s32 skip_animation;
     s32 hit_count;
-    battle_unit_misc_data_t* casting_unit;
-    battle_unit_misc_data_t* target_unit;
+    battle_unit_t* casting_unit;
+    battle_unit_t* target_unit;
     u8 compiler_stack_pad[8];
 
     battle_state_handle_free_cursor_input();
