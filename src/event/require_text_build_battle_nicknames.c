@@ -9,8 +9,7 @@ void require_text_build_battle_nicknames(void) {
     s32 unit_id;
 
     output = g_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
-    unit_id = 0;
-    do {
+    for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
         battle_stats_t* unit = battle_unit_get_stats_from_battle_id(unit_id);
         s32 length = 0;
 
@@ -28,6 +27,5 @@ void require_text_build_battle_nicknames(void) {
             }
             length++;
         } while (length < 16);
-        unit_id++;
-    } while (unit_id < BATTLE_UNIT_SLOT_COUNT);
+    }
 }
