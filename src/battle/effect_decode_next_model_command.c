@@ -20,7 +20,8 @@ void effect_decode_next_model_command(effect_decoded_model_command_t* out) {
     command = (psyq_tmd_packet_t*)((u8*)g_effect_model_commands + index * sizeof(u32));
     header = command->id;
     memcpy(&out->header, &command->id, sizeof(out->header));
-    /* Struct assignments use unaligned copies; memcpy preserves the 32-bit transfers. */
+    /* Struct assignments use unaligned copies; memcpy preserves the 32-bit transfers.
+     * The cached header preserves dispatch load/store order and the unsigned range test. */
     switch (header >> 24) {
     case EFFECT_MODEL_COMMAND_G4:
         memcpy(&out->colors[0], &command->g4.r0, sizeof(out->colors[0]));
