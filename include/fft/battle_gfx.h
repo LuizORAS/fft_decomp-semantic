@@ -747,7 +747,7 @@ extern s32 g_battle_gfx_tpage7_free_rect_cells[4];
 extern s32 g_battle_gfx_tpage7_free_rect_pixels[4];
 extern u8 g_battle_gfx_tpage7_vram_allocation_grid[15][16];
 
-void battle_gfx_alloc_tpage7_vram(RECT* rect, texture_primitive_t* prim, u32* image);
+void battle_gfx_alloc_tpage7_vram(RECT* rect, void* prim, u32* image);
 void battle_gfx_build_scaled_draw_area_pair_swapped(
     scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag);
 void battle_gfx_clear_tpage7_vram_allocation_grid(void);

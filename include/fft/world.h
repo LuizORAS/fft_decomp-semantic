@@ -1011,7 +1011,7 @@ void world_gfx_enqueue_draw_move(RECT* src, s32 x, s32 y, s32 ot_index);
 void world_gfx_enqueue_textured_quad_list(
     menu_sprite_cell_t* cell, rgb24_t* rgb, s32 semi_trans, u16 tpage, u16 clut, s32 ot_index, s32 count);
 
-void world_gfx_alloc_tpage7_vram(RECT* rect, texture_primitive_t* prim, u32* image);
+void world_gfx_alloc_tpage7_vram(RECT* rect, void* prim, u32* image);
 void world_gfx_enqueue_textured_quad_corners(
     textured_quad_source_t* source, rgb24_t* rgb, s32 semi_trans, s32 ot_index);
 void world_gfx_enqueue_gouraud_quad(point16_t* xy, rgb24_t* colors, s32 semi_trans, s32 ot_index);

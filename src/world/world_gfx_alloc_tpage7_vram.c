@@ -9,7 +9,7 @@
  * for POLY_FT4) are pointed at it, and rect is rewritten to the 4bpp VRAM
  * area at x 0x1c0 before image (unless -1) is uploaded. A full grid stops
  * this thread. Counterpart of world_gfx_free_tpage7_vram. */
-void world_gfx_alloc_tpage7_vram(RECT* rect, texture_primitive_t* prim, u32* image) {
+void world_gfx_alloc_tpage7_vram(RECT* rect, void* prim, u32* image) {
     s16 width;
     s16 height;
     s32 width_cells;
@@ -49,22 +49,26 @@ void world_gfx_alloc_tpage7_vram(RECT* rect, texture_primitive_t* prim, u32* ima
             }
             x = column * WORLD_TPAGE7_CELL_PIXELS;
             y = row * WORLD_TPAGE7_CELL_PIXELS;
-            if ((prim->sprt.code & 0xFC) == 0x64) {
-                prim->sprt.u0 = x;
-                prim->sprt.v0 = y;
-                prim->sprt.w = rect->w;
-                prim->sprt.h = rect->h;
-                prim->sprt.clut = 0x7C3C;
+            if ((getcode(prim) & 0xFC) == 0x64) {
+                SPRT* sprite = prim;
+
+                sprite->u0 = x;
+                sprite->v0 = y;
+                sprite->w = rect->w;
+                sprite->h = rect->h;
+                sprite->clut = 0x7C3C;
             } else {
-                prim->ft4.u0 = prim->ft4.u2 = x;
-                prim->ft4.v0 = prim->ft4.v1 = y;
+                POLY_FT4* quad = prim;
+
+                quad->u0 = quad->u2 = x;
+                quad->v0 = quad->v1 = y;
                 if (x + rect->w >= 0x100) {
                     x--;
                 }
-                prim->ft4.u1 = prim->ft4.u3 = rect->w + x;
-                prim->ft4.v2 = prim->ft4.v3 = rect->h + y;
-                prim->ft4.tpage = GetTPage(0, 0, 0x1C0, 0);
-                prim->ft4.clut = 0x7C3C;
+                quad->u1 = quad->u3 = rect->w + x;
+                quad->v2 = quad->v3 = rect->h + y;
+                quad->tpage = GetTPage(0, 0, 0x1C0, 0);
+                quad->clut = 0x7C3C;
             }
             rect->x = column * 4 + 0x1C0;
             rect->y = y;
