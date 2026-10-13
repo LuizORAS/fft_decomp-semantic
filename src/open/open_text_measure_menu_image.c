@@ -8,10 +8,8 @@
 void open_text_measure_menu_image(s32 combined_text_index, size32_t* dimensions) {
     s16 columns;
     s16 rows;
-    const u8* text;
 
-    text = text_find_entry(combined_text_index);
-    text_measure(&columns, &rows, text);
+    text_measure(&columns, &rows, text_find_entry(combined_text_index));
     dimensions->width = ((columns * 10) + 24) & 0xfffc;
     dimensions->height = (rows << 4) + 16;
 }

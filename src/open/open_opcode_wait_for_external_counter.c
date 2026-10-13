@@ -5,15 +5,13 @@
  * call that arms the wait. Four bytes. */
 void open_opcode_wait_for_external_counter(s16* entry) {
     u32 flags;
-    s32 limit;
     open_script_dispatch_state_t* state;
 
     state = &g_open_script_state.dispatch;
     flags = state->flags;
     entry++;
     if (flags & OPEN_SCRIPT_DISPATCH_WAITING) {
-        limit = *entry;
-        if (state->external_counter >= limit) {
+        if (state->external_counter >= *entry) {
             state->flags = flags ^ OPEN_SCRIPT_DISPATCH_WAITING;
             state->cursor.byte_offset = state->cursor.byte_offset + 4;
         } else {

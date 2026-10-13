@@ -14,8 +14,7 @@ s32 main_heap_free_smd(void* ptr) {
     }
     entry = &g_main_heap_smd_allocator_table[index];
     do {
-        *entry = 0;
-        entry += 1;
+        *entry++ = 0;
     } while (*entry == tag);
     return 1;
 }

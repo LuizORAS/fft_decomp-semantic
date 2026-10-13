@@ -7,7 +7,6 @@
 void main_unit_set_rsm_flag(battle_stats_t* unit, u32 ability_id) {
     u16 index;
     u16 original_ability_id;
-    u8 bit_index;
     u8* rsm_flags;
 
     index = ability_id - ABILITY_ID_REACTION_FIRST;
@@ -19,7 +18,6 @@ void main_unit_set_rsm_flag(battle_stats_t* unit, u32 ability_id) {
         }
         rsm_flags = (u8*)&unit->ability_flags;
         rsm_flags += ability_id >> 3;
-        bit_index = ability_id & 7;
-        *rsm_flags |= 0x80 >> bit_index;
+        *rsm_flags |= 0x80 >> (ability_id & 7);
     }
 }
