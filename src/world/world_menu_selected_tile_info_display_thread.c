@@ -1,10 +1,11 @@
 #include "fft/gfx.h"
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Display thread at 0x800e8ab0: draws the selected tile's quad group
- * (the selected tile's display height, built by world_menu_build_quad_pieces) every frame and, when
+ * (the selected tile's display height, built by menu_build_quad_pieces) every frame and, when
  * the tile depth is non-zero, renders it as a one-digit
  * number into the icon sprite.  Runs until the third thread parameter is set. */
 void world_menu_selected_tile_info_display_thread(void) {
@@ -43,7 +44,7 @@ void world_menu_selected_tile_info_display_thread(void) {
         s16* value = &tile->depth;
 
         page = &g_world_menu_selected_tile_info_pages[frame & 1];
-        i = world_menu_build_quad_pieces(tile->display_height, page->quads) - 1;
+        i = menu_build_quad_pieces(tile->display_height, page->quads) - 1;
         world_thread_yield();
         if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_DARK_SCREEN) != 0) {
             continue;

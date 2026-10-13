@@ -810,7 +810,7 @@ typedef struct menu_scroll_text_layout {
 
 /* Provisional: 12-byte textured-quad piece record (table at 0x80154e20)
  * consumed by the POLY_GT4 builder at 0x800e8d6c: texture origin, size and
- * screen position relative to g_world_menu_quad_origin. */
+ * screen position relative to g_menu_quad_origin. */
 typedef struct menu_quad_piece {
     u8 u; /* 0x00 */
     u8 _unused_01;
@@ -828,6 +828,13 @@ typedef struct menu_quad_colors {
     u32 _unused_00;
     CVECTOR vertex[4]; /* 0x04; one colour per POLY_GT4 corner */
 } menu_quad_colors_t;
+
+extern menu_quad_colors_t g_menu_quad_colors;
+extern u8 g_menu_quad_group_starts[]; /* [group + 1] ends each group */
+extern point16_t g_menu_quad_origin;
+extern menu_quad_piece_t g_menu_quad_pieces[];
+
+s32 menu_build_quad_pieces(s32 group, POLY_GT4* poly);
 
 /* Provisional: one 5-byte row of a WORLD menu text entry as rewritten by
  * world_menu_build_skillset_entries (0x800f3d44): the style byte at +1 is

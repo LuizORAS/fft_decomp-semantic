@@ -271,10 +271,6 @@ extern image_load_parameters_t g_battle_menu_attack_caster_quad_image_params[2][
 extern menu_window_buffer_t* g_battle_menu_buffer_slots[6];
 extern RECT g_battle_menu_disabled_texture_window;
 extern image_load_parameters_t g_battle_menu_icon_strip_image_params[20];
-extern menu_quad_colors_t g_battle_menu_quad_colors;  /* vertex colours */
-extern u8 g_battle_menu_quad_group_starts[];          /* first piece index per group; [n + 1] ends group n */
-extern point16_t g_battle_menu_quad_origin;           /* screen origin */
-extern menu_quad_piece_t g_battle_menu_quad_pieces[]; /* quad piece table */
 extern battle_menu_scratch_buffer_t g_battle_menu_scratch_buffer;
 extern image_load_parameters_t g_battle_menu_single_icon_image_params[5];
 /* Entries 5..7 above; a separate alias preserves the original template base. */
@@ -292,7 +288,6 @@ extern u16* g_battle_menu_window_tween_easing_tables[];
 void battle_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
 u8* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode);
 void battle_menu_build_and_upload_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset);
-s32 battle_menu_build_quad_pieces(s32 group, POLY_GT4* poly);
 void battle_menu_build_sprite_page(s32 page_index, RECT* base_screen);
 u8* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset, s32 keep);
 void battle_menu_build_window_sprites(RECT* rect, menu_entry_t* param, menu_icon_record_t* record);

@@ -132,7 +132,7 @@ functions:
   - {addr: 0x800e8a58, size: 80, name: world_text_configure_sprite_vram, hash: 172593e7561a8a5f}
   - {addr: 0x800e8aa8, size: 8, name: world_noop_800e8aa8, hash: 6d64edf91449c1b1}
   - {addr: 0x800e8ab0, size: 700, name: world_menu_selected_tile_info_display_thread, hash: 8648619103f31884}
-  - {addr: 0x800e8d6c, size: 588, name: world_menu_build_quad_pieces, hash: d2e36de075951781}
+  - {addr: 0x800e8d6c, size: 588, name: menu_build_quad_pieces, hash: d2e36de075951781, source: src/shared/menu/menu_build_quad_pieces.c}
   - {addr: 0x800e8fb8, size: 300, name: world_menu_build_sprite_page, hash: 0677e90df05e1cdb}
   - {addr: 0x800e90e4, size: 8, name: world_noop_800e90e4, hash: 6d64edf91449c1b1}
   - {addr: 0x800e90ec, size: 8, name: world_menu_display_projected_action_effect, hash: 6d64edf91449c1b1}
@@ -1187,10 +1187,10 @@ data:
   - {addr: 0x80154dfe, name: g_world_menu_hovered_stats_frame_count}
   - {addr: 0x80154e00, name: g_world_tile_info_image_location}
   - {addr: 0x80154e08, name: g_world_tile_info_image_params}
-  - {addr: 0x80154e20, name: g_world_menu_quad_pieces}
-  - {addr: 0x801557b0, name: g_world_menu_quad_group_starts}
-  - {addr: 0x801557f4, name: g_world_menu_quad_colors}
-  - {addr: 0x80155808, name: g_world_menu_quad_origin}
+  - {addr: 0x80154e20, name: g_menu_quad_pieces}
+  - {addr: 0x801557b0, name: g_menu_quad_group_starts}
+  - {addr: 0x801557f4, name: g_menu_quad_colors}
+  - {addr: 0x80155808, name: g_menu_quad_origin}
   - {addr: 0x80155810, name: g_world_menu_sprite_page_texture_windows}
   - {addr: 0x80155838, name: g_world_menu_sprite_page_image_params}
   - {addr: 0x80155874, name: g_world_menu_sprite_page_image_params_from_5}

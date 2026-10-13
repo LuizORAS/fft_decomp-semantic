@@ -2234,10 +2234,6 @@ extern s8
 
 extern u16* g_world_menu_window_tween_easing_tables[];
 extern u16 g_world_menu_hovered_stats_frame_count;
-extern menu_quad_piece_t g_world_menu_quad_pieces[]; /* quad piece table */
-extern u8 g_world_menu_quad_group_starts[];          /* first piece index per group; [n + 1] ends group n */
-extern menu_quad_colors_t g_world_menu_quad_colors;  /* vertex colours */
-extern point16_t g_world_menu_quad_origin;           /* screen origin */
 extern RECT g_world_menu_sprite_page_texture_windows[5];
 extern image_load_parameters_t g_world_menu_sprite_page_image_params[30];
 extern RECT g_world_menu_hovered_unit_stats_display;
@@ -2510,7 +2506,6 @@ void world_menu_build_icon_record(RECT* rect, menu_entry_t* param, menu_icon_rec
 void world_menu_submit_icon_primitives(menu_icon_sprites_t* prims);
 void world_menu_build_layout_sprites(menu_entry_t* entry, SPRT sprite[2], s32 unused_2);
 void world_menu_init_numeric_display_frame_primitives(RECT* rect, menu_palette_primitives_t* menu);
-s32 world_menu_build_quad_pieces(s32 group, POLY_GT4* poly);
 void world_menu_build_skillset_entries(void);
 void world_menu_build_unit_status_list(void);
 s32 world_menu_build_window_frame_image(s32 width, s32 height, u16* destination);

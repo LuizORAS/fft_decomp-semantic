@@ -4,12 +4,13 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
 #include "fft/gfx.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Display thread for the selected tile: draws its quad group
  * (the selected tile's display height, built by
- * battle_menu_build_quad_pieces) every frame and, when its depth is
+ * menu_build_quad_pieces) every frame and, when its depth is
  * non-zero, renders it as a one-digit number into the icon sprite. Runs
  * until the third thread parameter is set. BATTLE twin of
  * world_menu_selected_tile_info_display_thread. */
@@ -47,7 +48,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
     for (frame = 0;; frame++) {
         page = &g_battle_menu_height_display_pages[frame & 1];
         /* The target loads the display height signed (lh). */
-        i = battle_menu_build_quad_pieces(g_map_selected_tile_data.display_height, page->quads) - 1;
+        i = menu_build_quad_pieces(g_map_selected_tile_data.display_height, page->quads) - 1;
         battle_thread_yield();
         if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_DARK_SCREEN) != 0) {
             continue;
