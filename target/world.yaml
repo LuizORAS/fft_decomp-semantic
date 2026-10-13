@@ -426,7 +426,7 @@ functions:
   - {addr: 0x800ffeec, size: 28, name: world_thread_is_running, hash: 22d1fa2a224de3cd}
   - {addr: 0x800fff08, size: 32, name: world_thread_set_parameters, hash: 9a58f319d509b5e5}
   - {addr: 0x800fff28, size: 40, name: world_thread_set_four_parameters, hash: 5d14fd3dbdba4502}
-  - {addr: 0x80100084, size: 12, name: world_thread_get_current_global_pointer, hash: 153190eb0d500e3a}
+  - {addr: 0x80100084, size: 12, name: thread_get_current_global_pointer, hash: 153190eb0d500e3a, source: src/shared/thread/thread_get_current_global_pointer.c}
   - {addr: 0x80100090, size: 52, name: world_thread_get_current_parameter_1, hash: 6e27c290b74e8721}
   - {addr: 0x801000c4, size: 52, name: world_thread_get_current_parameter_2, hash: 520e69329eb48696}
   - {addr: 0x801000f8, size: 52, name: world_thread_get_current_parameter_3, hash: 2eb16d761d6d87fe}

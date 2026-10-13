@@ -162,6 +162,10 @@ typedef enum native_thread_task {
     NATIVE_THREAD_TASK_UNIT_MESSAGE = 70,
 } native_thread_task_e;
 
+/* context capture */
+/* Read the running CPU's $gp when seeding a native thread context. */
+void* thread_get_current_global_pointer(void);
+
 /* callbacks */
 /* Main-stack callback dispatch, bound to the resident BATTLE or WORLD scheduler.
  * It forwards a0-a3 unchanged and switches to thread 0's stack when necessary;

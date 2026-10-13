@@ -542,7 +542,6 @@ void world_thread_yield_forever(void);
 void world_thread_request_redraw(s32 thread_id);
 void world_thread_exit_current(void);
 s32 world_thread_find_running_by_task(s32 task_id);
-void* world_thread_get_current_global_pointer(void);
 void* world_thread_get_current_parameter_1(void);
 s32 world_thread_get_current_parameter_2(void);
 s32 world_thread_get_current_parameter_3(void);

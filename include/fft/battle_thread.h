@@ -26,7 +26,6 @@ s32 battle_thread_resolve_id(s32 requested_thread_id);
 s32 battle_thread_resolve_id_after_current(s32 requested_thread_id);
 
 /* task parameters */
-void* battle_thread_get_current_global_pointer(void);
 s32 battle_thread_get_current_parameter_1(void);
 s32 battle_thread_get_current_parameter_2(void);
 s32 battle_thread_get_current_parameter_3(void);

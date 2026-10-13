@@ -1080,7 +1080,7 @@ functions:
   - {addr: 0x8014ca1c, size: 28, name: battle_thread_is_running, hash: d10e3403d7fec970}
   - {addr: 0x8014ca38, size: 32, name: battle_thread_set_parameters, hash: 40bfd9d6b347f675}
   - {addr: 0x8014ca58, size: 40, name: battle_thread_set_four_parameters, hash: f24ec1f8ce5a962b}
-  - {addr: 0x8014cbb4, size: 12, name: battle_thread_get_current_global_pointer, hash: 153190eb0d500e3a}
+  - {addr: 0x8014cbb4, size: 12, name: thread_get_current_global_pointer, hash: 153190eb0d500e3a, source: src/shared/thread/thread_get_current_global_pointer.c}
   - {addr: 0x8014cbc0, size: 52, name: battle_thread_get_current_parameter_1, hash: 4427bc41b35c9c1f}
   - {addr: 0x8014cbf4, size: 52, name: battle_thread_get_current_parameter_2, hash: 7ffeb5877d79f219}
   - {addr: 0x8014cc28, size: 52, name: battle_thread_get_current_parameter_3, hash: d1fc2dccdda1feee}
