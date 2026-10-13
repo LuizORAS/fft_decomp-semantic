@@ -370,7 +370,6 @@ void battle_menu_open_companion_data_file(void);
 void battle_menu_open_companion_executable(void);
 void battle_menu_open_debugchr_unit_editor(void);
 s32 battle_menu_poll_small_load(void);
-void battle_menu_request_open_small(void);
 void battle_menu_run_bunit_transition_thread(void);
 void battle_menu_run_companion_overlay_stub(void);
 

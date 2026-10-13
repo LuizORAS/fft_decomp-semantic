@@ -870,7 +870,7 @@ functions:
   - {addr: 0x8013ccf4, size: 612, name: battle_menu_start_entry_thread, hash: 611133d05022177f}
   - {addr: 0x8013cf58, size: 340, name: battle_menu_build_idle_action_menu, hash: bccc6338e9ba2dd5}
   - {addr: 0x8013d0ac, size: 220, name: battle_menu_start_building_thread, hash: 16b01027bdfcec7d}
-  - {addr: 0x8013d188, size: 20, name: battle_menu_request_open_small, hash: 2304312a1a158a04}
+  - {addr: 0x8013d188, size: 20, name: menu_request_open_small, hash: 2304312a1a158a04, source: src/shared/menu/menu_request_open_small.c}
   - {addr: 0x8013d19c, size: 84, name: battle_menu_poll_small_load, hash: 4db3a15d03401224}
   - {addr: 0x8013d1f0, size: 8, name: battle_return_zero_8013d1f0, hash: 207819bf4ebe3078}
   - {addr: 0x8013d1f8, size: 56, name: map_data_load_complete_thread, hash: f5d13c78756c2b83, source: src/shared/map/map_data_load_complete_thread.c}

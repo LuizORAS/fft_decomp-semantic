@@ -1266,6 +1266,7 @@ extern s32 g_menu_companion_data_file_request_index;
 void menu_free_high_overlay(void);
 void menu_reserve_high_overlay(u32 size);
 void menu_request_open_companion_executable(s32 request_index);
+void menu_request_open_small(void);
 void menu_request_open_companion_data_file(s32 request_index);
 
 /* g_*_menu_indicator_state[]: state of each of the two translucent panels

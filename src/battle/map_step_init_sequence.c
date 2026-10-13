@@ -3,6 +3,7 @@
 #include "fft/battle_map.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "psx/types.h"
 
@@ -24,7 +25,7 @@ s32 map_step_init_sequence(s32 map_id, s32 step) {
         map_init_palette_state();
         map_load_palette_data(&g_map_weather_particle_palette, MAP_CLUT_ROW_SPRITES, 0, 0);
         g_main_gfx_unit_graphics_load_queue.count = 0;
-        battle_menu_request_open_small();
+        menu_request_open_small();
         break;
     case 1:
         if (battle_menu_poll_small_load() == 0) {
