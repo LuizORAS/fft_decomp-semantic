@@ -446,7 +446,6 @@ extern u16 g_equip_gfx_sprite_16_count;
 extern u16 g_equip_gfx_sprite_8_capacity;
 extern u16 g_equip_gfx_sprite_8_count;
 extern u16 g_equip_gfx_sprite_capacity;
-extern rgb24_t g_equip_gfx_sprite_color;
 extern u16 g_equip_gfx_sprite_count;
 extern s16 g_equip_gfx_sprite_ot_index;
 extern u16 g_equip_gfx_tile_16_capacity;
@@ -471,7 +470,6 @@ void equip_gfx_enqueue_textured_quad_corners(
 void equip_gfx_enqueue_textured_quad_current_ot(const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans,
     u16 texture_page, u16 clut, s32 unused_priority);
 void equip_gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, u8 semitrans, s32 otag_index);
-rgb24_t* equip_gfx_get_draw_color(void);
 s32 equip_gfx_get_transition_frame(void);
 void equip_gfx_init_contexts(menu_gfx_context_t* base, u32* otag, POLY_F3* poly_f3, POLY_FT3* poly_ft3,
     POLY_F4* poly_f4, POLY_FT4* textured_quads, POLY_G3* poly_g3, POLY_GT3* poly_gt3, POLY_G4* poly_g4,
@@ -529,11 +527,9 @@ menu_instruction_t* equip_cmd_run_if_else_group_handler(menu_instruction_t* inst
 menu_instruction_t* equip_cmd_run_if_group_handler(menu_instruction_t* instruction);
 void equip_cmd_run_stream(menu_instruction_t* instruction, s32 input);
 menu_instruction_t* equip_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* instruction);
-menu_instruction_t* equip_cmd_set_draw_color_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_set_otag_index_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_set_semitrans_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_set_zoomed_draw_area_handler(menu_instruction_t* instruction);
-menu_instruction_t* equip_cmd_skip_group(menu_instruction_t* instruction);
 
 /* text */
 extern u16 g_equip_text_clut_0_mode0;

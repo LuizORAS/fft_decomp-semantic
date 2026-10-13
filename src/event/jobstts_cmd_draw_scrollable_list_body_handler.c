@@ -1,5 +1,6 @@
 #include "fft/event_jobstts.h"
 #include "fft/menu.h"
+#include "fft/menu_script.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 
@@ -41,7 +42,7 @@ menu_instruction_t* jobstts_cmd_draw_scrollable_list_body_handler(menu_instructi
     if (g_jobstts_menu_list_entry_count <= 0) {
         count = command->list.skip_count + 1;
         while (--count != -1) {
-            command = jobstts_cmd_skip_group(command);
+            command = menu_cmd_skip_group(command);
         }
         return command;
     }

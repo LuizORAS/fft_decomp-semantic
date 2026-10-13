@@ -227,12 +227,17 @@ typedef union menu_callback {
 } menu_callback_t;
 typedef char menu_callback_size_must_be_4[sizeof(menu_callback_t) == 4 ? 1 : -1];
 
+/* drawing color */
+menu_instruction_t* menu_cmd_set_draw_color_handler(menu_instruction_t* command);
+
 /* palette commands */
 menu_instruction_t* menu_cmd_set_clut_handler(menu_instruction_t* command);
 menu_instruction_t* menu_cmd_set_layout_clut_handler(menu_instruction_t* command);
 menu_instruction_t* menu_cmd_set_tpage_handler(menu_instruction_t* command);
 
 /* instruction cursors */
+menu_instruction_t* menu_cmd_skip_group(menu_instruction_t* command);
+
 static __inline__ menu_instruction_t* menu_next_instruction(menu_instruction_t* instruction) {
     return (menu_instruction_t*)((u8*)instruction + instruction->header.length);
 }

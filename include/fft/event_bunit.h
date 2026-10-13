@@ -464,7 +464,6 @@ extern s16 g_bunit_gfx_sprite_16_count;
 extern u16 g_bunit_gfx_sprite_8_capacity;
 extern s16 g_bunit_gfx_sprite_8_count;
 extern u16 g_bunit_gfx_sprite_capacity;
-extern rgb24_t g_bunit_gfx_sprite_color;
 extern s16 g_bunit_gfx_sprite_count;
 extern u16 g_bunit_gfx_tile_16_capacity;
 extern s16 g_bunit_gfx_tile_16_count;
@@ -487,7 +486,6 @@ void bunit_gfx_enqueue_gouraud_textured_quad(
 void bunit_gfx_enqueue_textured_quad_corners(
     const textured_quad_source_t* src, const rgb24_t* color, s32 semi, s32 idx);
 void bunit_gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, u8 semi, s32 idx);
-rgb24_t* bunit_gfx_get_draw_color(void);
 s32 bunit_gfx_get_fade_state(void);
 void bunit_gfx_init_double_packet_buffers(menu_gfx_context_t* buffers, u32* otags, POLY_F3* flat_triangles,
     POLY_FT3* textured_triangles, POLY_F4* flat_quads, POLY_FT4* textured_quads, POLY_G3* gouraud_triangles,
@@ -563,11 +561,9 @@ menu_instruction_t* bunit_cmd_run_if_group_handler(menu_instruction_t* instructi
 menu_instruction_t* bunit_cmd_run_scrollable_list_handler(menu_instruction_t* instruction);
 void bunit_cmd_run_stream(menu_instruction_t* instruction, s32 flags);
 menu_instruction_t* bunit_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* instruction);
-menu_instruction_t* bunit_cmd_set_draw_color_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_set_otag_index_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_set_semitrans_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_set_zoomed_draw_area_handler(menu_instruction_t* instruction);
-menu_instruction_t* bunit_cmd_skip_group(menu_instruction_t* instruction);
 
 /* text */
 extern u8 g_bunit_help_text_state;

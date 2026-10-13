@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Draw a row-callback value as a row of digit glyphs (opcodes 0x19-0x1B).
@@ -58,7 +59,7 @@ menu_instruction_t* bunit_menu_script_draw_formatted_number(menu_instruction_t* 
     }
     opcode = command->number.opcode;
     if (opcode == MENU_SCRIPT_OP_NUMBER_TINTED || opcode == MENU_SCRIPT_OP_NUMBER_TINTED_NO_LEADING_ZEROS) {
-        color = &g_bunit_gfx_sprite_color;
+        color = &g_menu_gfx_sprite_color;
     } else {
         color = 0;
     }

@@ -943,6 +943,7 @@ typedef struct menu_quad_page {
 typedef char menu_quad_page_size_must_be_324[sizeof(menu_quad_page_t) == 324 ? 1 : -1];
 
 /* primitive queues */
+extern rgb24_t g_menu_gfx_sprite_color;
 extern menu_gfx_context_t* g_menu_gfx_context;
 extern u16 g_menu_gfx_poly_ft4_count;
 extern u16 g_menu_gfx_draw_mode_count;
@@ -950,6 +951,7 @@ extern u16 g_menu_gfx_draw_area_count;
 extern u16 g_menu_gfx_draw_move_count;
 extern u16 g_menu_gfx_drawenv_y;
 
+rgb24_t* menu_gfx_get_draw_color(void);
 void menu_gfx_enqueue_draw_area(RECT* rect, s32 idx);
 
 void menu_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx);

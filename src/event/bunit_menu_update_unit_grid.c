@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -181,7 +182,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
     cell.h = 0x30;
     bunit_gfx_set_otag_index(8);
     unit = 0;
-    color = bunit_gfx_get_draw_color();
+    color = menu_gfx_get_draw_color();
     saved_color.r = color->r;
     saved_color.g = color->g;
     saved_color.b = color->b;

@@ -1,5 +1,6 @@
 #include "fft/event_equip.h"
 #include "fft/menu.h"
+#include "fft/menu_script.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -36,7 +37,7 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
     if (g_equip_menu_list_entry_count <= 0) {
         j = command->list.skip_count;
         while (j != -1) {
-            command = equip_cmd_skip_group(command);
+            command = menu_cmd_skip_group(command);
             j -= 1;
         }
         return command;

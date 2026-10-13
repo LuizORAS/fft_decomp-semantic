@@ -27,7 +27,7 @@ menu_instruction_t* equip_cmd_draw_textured_quad_handler(menu_instruction_t* cmd
     rect.w = cmd->sprite.sprite.w;
     rect.h = cmd->sprite.sprite.h;
 
-    color = &g_equip_gfx_sprite_color;
+    color = &g_menu_gfx_sprite_color;
     if (cmd->header.opcode == MENU_SCRIPT_OP_UNCOLOURED_QUAD) {
         color = 0;
     }

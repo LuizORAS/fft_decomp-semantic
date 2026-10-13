@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 
 enum {
     EQUIP_SLOT_MARKER_WINDOW_STATE = 0,
@@ -31,7 +32,7 @@ void equip_menu_draw_equipment_slot_marker(s32 unused, s32 slot, s32 override) {
     marker->position.x = x;
     marker->position.y = width - (slot == 0);
     menu_gfx_enqueue_oriented_textured_quad(
-        marker, equip_gfx_get_draw_color(), TEXTURE_UV_FLIP_NONE, 0, EQUIP_SLOT_MARKER_FIRST_OTAG);
+        marker, menu_gfx_get_draw_color(), TEXTURE_UV_FLIP_NONE, 0, EQUIP_SLOT_MARKER_FIRST_OTAG);
     secondary = &g_equip_menu_secondary_slot_marker;
     secondary_x = x + 9;
     if (slot == 3) {

@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Point the scrollable list menu at a new -1 terminated entry list and reset
@@ -19,9 +20,9 @@ void equip_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* 
         g_equip_menu_scroll_base_index = 0;
     }
 
-    g_equip_gfx_sprite_color.r = 0x80;
-    g_equip_gfx_sprite_color.g = 0x80;
-    g_equip_gfx_sprite_color.b = 0x80;
+    g_menu_gfx_sprite_color.r = 0x80;
+    g_menu_gfx_sprite_color.g = 0x80;
+    g_menu_gfx_sprite_color.b = 0x80;
     g_equip_gfx_sprite_ot_index = 0;
     g_equip_menu_list_row_mode = 0;
     g_equip_menu_list_scroll_offset = 0;

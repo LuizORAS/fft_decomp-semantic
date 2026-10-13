@@ -275,7 +275,6 @@ void jobstts_cmd_run_stream_with_mode(menu_instruction_t* script, s32 flags, s32
 menu_instruction_t* jobstts_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* instruction);
 menu_instruction_t* jobstts_cmd_set_otag_index_if_unlocked_handler(menu_instruction_t* instruction);
 menu_instruction_t* jobstts_cmd_set_semitrans_handler(menu_instruction_t* instruction);
-menu_instruction_t* jobstts_cmd_skip_group(menu_instruction_t* instruction);
 
 /* text */
 /* The "%d" literal that JOBSTTS.OUT keeps at overlay file offset 0, i.e. the

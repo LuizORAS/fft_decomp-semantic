@@ -24,7 +24,7 @@ menu_instruction_t* bunit_cmd_draw_textured_quad_handler(menu_instruction_t* cmd
     rect.w = cmd->sprite.sprite.w;
     rect.h = cmd->sprite.sprite.h;
 
-    table = &g_bunit_gfx_sprite_color;
+    table = &g_menu_gfx_sprite_color;
     if (cmd->header.opcode == MENU_SCRIPT_OP_UNCOLOURED_QUAD) {
         table = 0;
     }
