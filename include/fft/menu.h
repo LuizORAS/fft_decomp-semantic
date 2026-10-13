@@ -138,7 +138,12 @@ enum {
 };
 typedef char menu_portrait_sheet_size_must_be_32768[(sizeof(menu_portrait_sheet_t) == 32768) ? 1 : -1];
 
+extern RECT g_menu_portrait_origin;
+extern u8 g_menu_portrait_transition_offsets[];
+
 void menu_build_unflagged_portrait_poly(s32 portrait_id, POLY_FT4* poly);
+void menu_build_unit_portrait_transition(const RECT* texture_rect, s32* transition, const s32* first_portrait,
+    const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 
 /* status panels */
 /* Battle menu status and character-editor panel records. The EVENT overlays
@@ -1919,5 +1924,7 @@ typedef struct menu_unit_view_thread_set {
     s32 task_ids[4];          /* 0x20 */
 } menu_unit_view_thread_set_t;
 typedef char menu_unit_view_thread_set_size_must_be_48[(sizeof(menu_unit_view_thread_set_t) == 48) ? 1 : -1];
+
+/* Unit portrait transition primitives. */
 
 #endif

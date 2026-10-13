@@ -518,8 +518,6 @@ extern u16 g_bunit_gfx_poly_gt3_capacity;
 extern s16 g_bunit_gfx_poly_gt3_count;
 extern u16 g_bunit_gfx_poly_gt4_capacity;
 extern u16 g_bunit_gfx_poly_gt4_count;
-extern RECT g_bunit_gfx_portrait_origin;
-extern u8 g_bunit_gfx_portrait_transition_offsets[];
 extern s16 g_bunit_gfx_semitrans_enabled;
 extern u16 g_bunit_gfx_sprite_16_capacity;
 extern s16 g_bunit_gfx_sprite_16_count;
@@ -540,8 +538,6 @@ extern s8 g_bunit_gfx_transition_frame;
 extern s16 g_bunit_gfx_window_zoom_percent[];
 extern u8 g_bunit_sprite_cell_sizes[][2];
 
-void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 s32 bunit_gfx_calculate_distance_falloff(s32 x, s32 y, s32 base_value, s32 minimum);
 void bunit_gfx_draw_falloff_shaded_rows(s32 y);
 void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y);

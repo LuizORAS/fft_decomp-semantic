@@ -98,7 +98,7 @@ void debugchr_panel_run_unit_status_thread(void) {
     }
     shake = 0;
 
-    battle_menu_init_numeric_display_frame_primitives(&g_debugchr_gfx_portrait_origin, &editor->numeric_frame);
+    battle_menu_init_numeric_display_frame_primitives(&g_menu_portrait_origin, &editor->numeric_frame);
     battle_gfx_set_draw_mode_for_texture_page(&editor->draw_mode_a, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_gfx_set_draw_mode_for_texture_page(&editor->draw_mode_b, MENU_TEXTURE_PAGE_FRAME);
     battle_menu_init_sprite_array(&editor->label_sprites[0], 7, 0x7CBC);
@@ -110,7 +110,7 @@ void debugchr_panel_run_unit_status_thread(void) {
     battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, &editor->value_sprites[1], 2);
     for (frame = 0; frame < 4; frame++) {
         gfx_init_image_loading(&editor->value_sprites[frame], g_debugchr_editor_numeric_geometry,
-            &g_debugchr_gfx_portrait_origin, &g_debugchr_panel_editor_value_cells[frame]);
+            &g_menu_portrait_origin, &g_debugchr_panel_editor_value_cells[frame]);
     }
     if (state->team_kind >= 4) {
         state->team_kind = 0;
@@ -123,7 +123,7 @@ void debugchr_panel_run_unit_status_thread(void) {
     }
     for (frame = 0; frame < 7; frame++) {
         gfx_init_image_loading(&editor->label_sprites[frame], g_debugchr_editor_numeric_geometry,
-            &g_debugchr_gfx_portrait_origin, &g_debugchr_panel_editor_label_cells[frame]);
+            &g_menu_portrait_origin, &g_debugchr_panel_editor_label_cells[frame]);
     }
     battle_copy_bytes(editor + 1, editor, sizeof(menu_status_panel_editor_packet_t));
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
@@ -166,8 +166,8 @@ void debugchr_panel_run_unit_status_thread(void) {
         } else {
             battle_copy_bytes(g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells, 0xC);
         }
-        gfx_init_image_loading(&editor->label_sprites[6], g_debugchr_editor_numeric_geometry,
-            &g_debugchr_gfx_portrait_origin, g_debugchr_panel_editor_mode_cell);
+        gfx_init_image_loading(&editor->label_sprites[6], g_debugchr_editor_numeric_geometry, &g_menu_portrait_origin,
+            g_debugchr_panel_editor_mode_cell);
         if (state->team_kind == 1) {
             panel->portrait.clut = 0x7FFD;
         } else {
@@ -297,7 +297,7 @@ void debugchr_panel_run_unit_status_thread(void) {
                 anim_state = 2;
             }
         }
-        debugchr_gfx_build_portrait_transition_primitives(
+        menu_build_unit_portrait_transition(
             transition, &anim_state, &cur_unit, &prev_unit, portrait_palettes, &editor->portrait[0], portrait_request);
         {
             CVECTOR* color;
@@ -311,7 +311,7 @@ void debugchr_panel_run_unit_status_thread(void) {
                 s32 y;
 
                 SetPolyG4(&editor->bars[i]);
-                x0 = g_debugchr_gfx_portrait_origin.x + 0x2F;
+                x0 = g_menu_portrait_origin.x + 0x2F;
                 if (bar->max == 0) {
                     w = 4;
                 } else {
@@ -322,13 +322,13 @@ void debugchr_panel_run_unit_status_thread(void) {
                 }
                 editor->bars[i].x0 = x0;
                 y = i * 0xB + 0x18;
-                editor->bars[i].y0 = g_debugchr_gfx_portrait_origin.y + y;
+                editor->bars[i].y0 = g_menu_portrait_origin.y + y;
                 editor->bars[i].x1 = x0 + w;
-                editor->bars[i].y1 = g_debugchr_gfx_portrait_origin.y + y;
+                editor->bars[i].y1 = g_menu_portrait_origin.y + y;
                 editor->bars[i].x2 = x0;
-                editor->bars[i].y2 = g_debugchr_gfx_portrait_origin.y + y + 3;
+                editor->bars[i].y2 = g_menu_portrait_origin.y + y + 3;
                 editor->bars[i].x3 = x0 + w;
-                editor->bars[i].y3 = g_debugchr_gfx_portrait_origin.y + y + 3;
+                editor->bars[i].y3 = g_menu_portrait_origin.y + y + 3;
                 editor->bars[i].x2 -= 3;
                 editor->bars[i].x3 -= 3;
                 if (dimmed != 0) {

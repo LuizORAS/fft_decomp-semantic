@@ -1,10 +1,9 @@
-#include "fft/event_debugchr.h"
-#include "fft/gfx.h"
+#include "fft/battle.h"
+#include "fft/battle_event.h"
 #include "fft/menu.h"
 
 /*
- * Build the primitives of the status banner's portrait cross-fade. DEBUGCHR
- * copy of world_gfx_build_portrait_transition_primitives.
+ * Build the status banner's unit portrait cross-fade.
  *
  * *transition counts the steps: 0 shows the first portrait, 1 the second,
  * 2-3 capture both CLUTs, 4-9 wipe between the two portraits with two opaque
@@ -13,8 +12,8 @@
  * second leaves to the left; anything else mirrors that. `i` serves the
  * vertex loop, the CLUT loops and the wipe step alike.
  */
-void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction) {
+void menu_build_unit_portrait_transition(const RECT* texture_rect, s32* transition, const s32* first_portrait,
+    const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction) {
     RECT second_rect;
     RECT first_rect;
     s32 i;
@@ -24,10 +23,9 @@ void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect,
     second_rect.x += 0x10;
 
     for (i = 0; i < 4; i++) {
-        setXY4(&poly[i], g_debugchr_gfx_portrait_origin.x + 2, g_debugchr_gfx_portrait_origin.y + 2,
-            g_debugchr_gfx_portrait_origin.x + 0x21, g_debugchr_gfx_portrait_origin.y + 2,
-            g_debugchr_gfx_portrait_origin.x + 2, g_debugchr_gfx_portrait_origin.y + 0x32,
-            g_debugchr_gfx_portrait_origin.x + 0x21, g_debugchr_gfx_portrait_origin.y + 0x32);
+        setXY4(&poly[i], g_menu_portrait_origin.x + 2, g_menu_portrait_origin.y + 2, g_menu_portrait_origin.x + 0x21,
+            g_menu_portrait_origin.y + 2, g_menu_portrait_origin.x + 2, g_menu_portrait_origin.y + 0x32,
+            g_menu_portrait_origin.x + 0x21, g_menu_portrait_origin.y + 0x32);
     }
 
     if (*transition == 0) {
@@ -63,17 +61,17 @@ void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect,
         i = *transition - 4;
         menu_build_unflagged_portrait_poly(*second_portrait, poly);
         if (direction == 1) {
-            gfx_clip_portrait_poly_from_right(poly, g_debugchr_gfx_portrait_transition_offsets[i]);
+            gfx_clip_portrait_poly_from_right(poly, g_menu_portrait_transition_offsets[i]);
         } else {
-            gfx_clip_portrait_poly_from_left(poly, g_debugchr_gfx_portrait_transition_offsets[i]);
+            gfx_clip_portrait_poly_from_left(poly, g_menu_portrait_transition_offsets[i]);
         }
         poly++;
 
         menu_build_unflagged_portrait_poly(*first_portrait, poly);
         if (direction == 1) {
-            gfx_clip_portrait_poly_from_left(poly, 0x1f - g_debugchr_gfx_portrait_transition_offsets[i]);
+            gfx_clip_portrait_poly_from_left(poly, 0x1f - g_menu_portrait_transition_offsets[i]);
         } else {
-            gfx_clip_portrait_poly_from_right(poly, 0x1f - g_debugchr_gfx_portrait_transition_offsets[i]);
+            gfx_clip_portrait_poly_from_right(poly, 0x1f - g_menu_portrait_transition_offsets[i]);
         }
         poly++;
 
@@ -83,9 +81,9 @@ void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect,
         SetShadeTex(poly, 0);
         SetSemiTrans(poly, 1);
         if (direction == 1) {
-            gfx_clip_portrait_poly_from_right(poly, g_debugchr_gfx_portrait_transition_offsets[i + 8]);
+            gfx_clip_portrait_poly_from_right(poly, g_menu_portrait_transition_offsets[i + 8]);
         } else {
-            gfx_clip_portrait_poly_from_left(poly, g_debugchr_gfx_portrait_transition_offsets[i + 8]);
+            gfx_clip_portrait_poly_from_left(poly, g_menu_portrait_transition_offsets[i + 8]);
         }
         poly++;
 
@@ -95,9 +93,9 @@ void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect,
         SetShadeTex(poly, 0);
         SetSemiTrans(poly, 1);
         if (direction == 1) {
-            gfx_clip_portrait_poly_from_left(poly, 0x1f - g_debugchr_gfx_portrait_transition_offsets[i + 8]);
+            gfx_clip_portrait_poly_from_left(poly, 0x1f - g_menu_portrait_transition_offsets[i + 8]);
         } else {
-            gfx_clip_portrait_poly_from_right(poly, 0x1f - g_debugchr_gfx_portrait_transition_offsets[i + 8]);
+            gfx_clip_portrait_poly_from_right(poly, 0x1f - g_menu_portrait_transition_offsets[i + 8]);
         }
         *transition += g_battle_event_speed;
     }

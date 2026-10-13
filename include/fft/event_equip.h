@@ -507,8 +507,6 @@ extern u16 g_equip_gfx_poly_gt3_capacity;
 extern u16 g_equip_gfx_poly_gt3_count;
 extern u16 g_equip_gfx_poly_gt4_capacity;
 extern u16 g_equip_gfx_poly_gt4_count;
-extern RECT g_equip_gfx_portrait_origin;
-extern u8 g_equip_gfx_portrait_transition_offsets[];
 extern s16 g_equip_gfx_semitransparency;
 extern u16 g_equip_gfx_sprite_16_capacity;
 extern u16 g_equip_gfx_sprite_16_count;
@@ -534,8 +532,6 @@ extern s8 g_equip_gfx_transition_frame;
 extern s16 g_equip_gfx_window_zoom_percent[];
 extern s8 g_equip_gfx_zoom_draw_area_active;
 
-void equip_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 void equip_gfx_enqueue_draw_area(RECT* rect, s32 idx);
 void equip_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* tw, s32 idx);
 void equip_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_index);

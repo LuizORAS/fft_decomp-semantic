@@ -122,12 +122,7 @@ void debugchr_editor_run_numeric_thread(void);
 
 /* graphics */
 extern u16 g_debugchr_gfx_draw_offset_y;
-extern RECT g_debugchr_gfx_portrait_origin;
-extern u8 g_debugchr_gfx_portrait_transition_offsets[];
 extern POLY_FT4 g_debugchr_gfx_render_buffers[2][30];
-
-void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 
 /* text */
 
