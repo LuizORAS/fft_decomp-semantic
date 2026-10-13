@@ -3,8 +3,6 @@
 #include "psx/libetc.h"
 #include "psx/types.h"
 
-#define TEXT_STATE ((text_reader_state_t*)getScratchAddr(128))
-
 /* Render a WORLD text entry glyph by glyph into a menu window image.
  *
  * `text` of 0 or 1 selects `text_id` from the text tables; 1 also lets the
@@ -38,15 +36,15 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
     } else {
         cursor = text;
     }
-    state = TEXT_STATE;
+    state = (text_reader_state_t*)getScratchAddr(128);
     variable_id = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
-    TEXT_STATE->return_cursor = (u8*)-1;
-    TEXT_STATE->value_cursor = g_text_substitution_values;
-    TEXT_STATE->pending_width = 0xFFFF;
-    TEXT_STATE->remaining_bytes = 0;
-    TEXT_STATE->column = 0;
-    TEXT_STATE->max_column = 0;
-    TEXT_STATE->row = 0;
+    state->return_cursor = (u8*)-1;
+    state->value_cursor = g_text_substitution_values;
+    state->pending_width = 0xFFFF;
+    state->remaining_bytes = 0;
+    state->column = 0;
+    state->max_column = 0;
+    state->row = 0;
     g_world_text_draw_origin.rect.x = origin->rect.x;
     g_world_text_glyph_first_row = 0;
     g_world_text_draw_origin.rect.y = origin->rect.y;
