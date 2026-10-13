@@ -312,7 +312,7 @@ extern s8 g_equip_menu_cursor_reverse_offset_keyframes[];
 extern u16 g_equip_menu_cursor_texture_page;
 extern u16 g_equip_menu_disabled_number_clut;
 extern s8 g_equip_menu_event_speed;
-/* [2]: type-order row picked in the sub-menu, or -1 */
+
 extern s32 g_equip_menu_indicator_brightness[2];
 /* Double-buffer index, current level, fade level and state, one pair each for
  * the two status panels. */
@@ -322,15 +322,15 @@ extern s32 g_equip_menu_indicator_state[2];
 extern u16 g_equip_menu_list_cursor_anim_state[];
 extern s16* g_equip_menu_list_entries;
 extern s16 g_equip_menu_list_entry_count;
-/* read with lb (equip_cmd_draw_scrollable_list_body_handler) */
+
 extern u8 g_equip_menu_list_glyph_width;
-extern s8 g_equip_menu_list_redraw_pending;
+extern s8 g_equip_menu_list_redraw_pending; /* read with lb (equip_cmd_draw_scrollable_list_body_handler) */
 extern menu_callback_t g_equip_menu_list_row_callbacks[16];
 extern s16 g_equip_menu_list_row_group_count;
 extern s16 g_equip_menu_list_row_height;
 extern s32 g_equip_menu_list_row_index;
 extern s16 g_equip_menu_list_row_mode;
-extern s8 g_equip_menu_list_scroll_direction;
+extern s8 g_equip_menu_list_scroll_direction; /* -1/0/1; read with lb */
 extern s16 g_equip_menu_list_scroll_entry_ids;
 extern s16 g_equip_menu_list_scroll_offset;
 extern u16 g_equip_menu_list_scroll_progress;
@@ -341,11 +341,11 @@ extern u16 g_equip_menu_list_vram_width;
 extern u16 g_equip_menu_palette_clut;
 extern clut_t g_equip_menu_palette_image;
 extern s8 g_equip_menu_ready;
-/* -1/0/1; read with lb */
-extern s16 g_equip_menu_result_rows[4];
-extern u8 g_equip_menu_screen_state;
+
+extern s16 g_equip_menu_result_rows[4]; /* [2]: type-order row picked in the sub-menu, or -1 */
+extern u8 g_equip_menu_screen_state;    /* equip_screen_state_e */
 extern void (*g_equip_menu_screen_state_handlers[])(void);
-/* equip_screen_state_e */
+
 extern s16 g_equip_menu_scroll_base_index;
 extern oriented_quad_t g_equip_menu_secondary_slot_marker;
 /* Signed 16-bit value: EQUIP reads this state with lh at 0x801c4584,
@@ -356,11 +356,11 @@ extern s16 g_equip_menu_selection_values[4];
 extern oriented_quad_t g_equip_menu_slot_marker_rects[];
 extern menu_instruction_t g_equip_menu_slot_marker_window;
 extern u8 g_equip_menu_slot_marker_x[];
-extern s8 g_equip_menu_substate;
+extern s8 g_equip_menu_substate; /* menu_item_list_state_e */
 extern s16 g_equip_menu_text_redraw_flag;
 extern u8 g_equip_menu_use_alternate_palette;
 extern u16 g_equip_menu_window_clut;
-/* menu_item_list_state_e */
+
 extern s16 g_equip_menu_window_right_x;
 extern menu_entry_t g_equip_type_order_menu_hand_body;
 extern menu_entry_t g_equip_type_order_menu_other_slots;
@@ -487,15 +487,15 @@ extern u16 g_equip_gfx_drawenv_y;
 extern LINE_F2 g_equip_gfx_line_f2_buffer[];
 extern u16 g_equip_gfx_line_f2_capacity;
 extern u16 g_equip_gfx_line_f2_count;
-/* LINE_G2 capacity; load order matters in 0x801cda80 */
+
 extern u16 g_equip_gfx_line_f3_capacity;
 extern u16 g_equip_gfx_line_f3_count;
-/* LINE_G3 capacity; load order matters in 0x801cda80 */
+
 extern u16 g_equip_gfx_line_f4_capacity;
 extern u16 g_equip_gfx_line_f4_count;
-extern volatile u16 g_equip_gfx_line_g2_capacity;
+extern volatile u16 g_equip_gfx_line_g2_capacity; /* LINE_G2 capacity; load order matters in 0x801cda80 */
 extern u16 g_equip_gfx_line_g2_count;
-extern volatile u16 g_equip_gfx_line_g3_capacity;
+extern volatile u16 g_equip_gfx_line_g3_capacity; /* LINE_G3 capacity; load order matters in 0x801cda80 */
 extern u16 g_equip_gfx_line_g3_count;
 extern u16 g_equip_gfx_line_g4_capacity;
 extern u16 g_equip_gfx_line_g4_count;
@@ -721,8 +721,8 @@ void equip_thread_stop_and_clear_state(s32 id);
 void equip_thread_wait_forever(void);
 
 /* sound */
-extern u8 g_equip_sound_queued_effect_id;
-/* main_sfx_e */
+extern u8 g_equip_sound_queued_effect_id; /* main_sfx_e */
+
 extern u8 g_equip_sound_suppress_queued;
 
 /* unknown */

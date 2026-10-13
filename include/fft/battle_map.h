@@ -1149,4 +1149,6 @@ void map_run_weather_command(s32 command);
 void battle_weather_randomize_from_calendar(void);
 void map_init_weather_particles(s32 command);
 
+s32 map_tile_data_15_stub(void);
+
 #endif

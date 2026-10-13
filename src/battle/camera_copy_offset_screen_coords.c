@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* Saves the screen offset for camera_restore_offset_screen_coords. No
  * retail code calls either. */

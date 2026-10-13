@@ -111,6 +111,8 @@ s32 target_validate_height_overlap(s32 attacker_id, s32 target_x, s32 target_y, 
 s32 target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevation, s32 target_id);
 s32 target_validate_weapon_target(const action_command_t* source);
 
+extern s32 g_battle_sort_targets_nearest_first;
+
 /* target lists */
 extern u8 g_target_ability_targets_list[BATTLE_UNIT_MISC_SLOT_COUNT];
 

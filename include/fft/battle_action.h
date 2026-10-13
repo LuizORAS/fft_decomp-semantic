@@ -596,4 +596,8 @@ void action_handle_steal_exp(battle_stats_t* unit, u8 amount);
 s32 action_remove_broken_or_stolen_equipment(void);
 void action_apply_jp_change(battle_stats_t* unit);
 
+void action_post_action_facing_stub(battle_stats_t* unused_unit, s32 unused_facing);
+
+extern u8 g_battle_mimic_pending_flags[21];
+
 #endif

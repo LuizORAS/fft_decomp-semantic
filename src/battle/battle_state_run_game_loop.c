@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* Run deployment and advance the battle state one rendered frame at a time. */
 void battle_state_run_game_loop(void) {

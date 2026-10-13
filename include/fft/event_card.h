@@ -119,7 +119,7 @@ extern const char g_card_file_all_pattern[];
 extern s32 g_card_file_open_descriptor;
 extern const char g_card_file_slot_0_path[];
 extern const char g_card_file_slot_1_path[];
-/* main_sfx_e */
+
 extern s8 g_card_free_block_count;
 
 s32 card_file_close_with_retries(s32 descriptor);
@@ -278,8 +278,8 @@ extern u16 g_card_menu_window_clut;
 extern menu_window_rect_source_t* g_card_menu_window_rect_source;
 extern s16 g_card_menu_window_right_x;
 extern clut_t g_card_save_menu_clut;
-extern u8 g_card_save_menu_state;
-/* card_save_menu_state_e */
+extern u8 g_card_save_menu_state; /* card_save_menu_state_e */
+
 extern DIRENTRY* g_card_save_menu_work_buffer;
 
 s32 card_menu_get_event_speed(void);
@@ -353,7 +353,7 @@ s32 card_thread_start_managed(s32 thread_id, menu_entry_t* descriptor);
 void card_thread_stop_and_clear_state(s32 id);
 
 /* sound */
-extern u8 g_card_sound_queued_effect_id;
+extern u8 g_card_sound_queued_effect_id; /* main_sfx_e */
 
 /* unknown */
 extern u8 D_801ca964;

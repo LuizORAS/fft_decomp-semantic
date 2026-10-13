@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Thread entry of the attack-target stats panel (unit view thread sets).

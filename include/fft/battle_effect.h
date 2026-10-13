@@ -1935,11 +1935,11 @@ typedef char effect_animation_curve_table_data_offset_must_be_4
 extern s16 g_effect_ability_files[];
 extern effect_file_header_t* g_effect_data_ptrs[EFFECT_FILE_ID_COUNT];
 extern file_extent_t g_effect_disc_entries[EFFECT_FILE_ID_COUNT];
-/* id of the charge secondary effect started with the ability; 0 none */
+
 extern effect_flags_section_t* g_effect_flags_section;
 extern s16 g_effect_load_countdown;
-extern u8 g_effect_load_state;
-extern s32 g_effect_playback_phase;
+extern u8 g_effect_load_state;      /* effect_load_state_e */
+extern s32 g_effect_playback_phase; /* effect_playback_phase_e */
 
 void effect_call_play(void);
 void effect_cancel_playback_request(void);
@@ -1962,7 +1962,6 @@ s32 effect_update_stage(void);
 /* secondary effects */
 extern u16 g_effect_secondary_active_tail;
 extern s32 g_effect_buffer_index;
-/* angle track counter; reset by camera_execute_angle_command */
 
 extern DVECTOR g_effect_charge_line_direction_offsets[];
 extern u8 g_effect_charge_line_fade_levels[];
@@ -1970,7 +1969,7 @@ extern effect_charge_params_t g_effect_charge_line_params[2];
 extern struct effect_secondary_data* g_effect_current_secondary;
 extern u32 g_effect_current_slot_id;
 extern effect_death_poof_state_t g_effect_death_poof_states[];
-extern u8 g_effect_ending_secondary_function_id;
+extern u8 g_effect_ending_secondary_function_id; /* function byte to store; 5 = nothing */
 extern u16 g_effect_secondary_free_head;
 extern u32* g_effect_polygon_depth_data;
 extern effect_secondary_animation_t g_effect_secondary_animations[];
@@ -1980,18 +1979,17 @@ extern u8 g_effect_secondary_by_charge_animation[];
 extern effect_secondary_data_t g_effect_secondary_data[];
 extern effect_secondary_callback_t g_effect_secondary_handlers[23];
 extern effect_secondary_state_t g_effect_secondary_state;
-/* per-channel call counts */
 
 /* Brightness (out of 128) of each of a summon-charge ring's ten slots, newest point first. */
 extern u8 g_effect_summon_ring_brightness[];
-extern u8 g_effect_charge_secondary_id;
+extern u8 g_effect_charge_secondary_id; /* id of the charge secondary effect started with the ability; 0 none */
 /* Per-group trap emitter records (0x801b8564, stride 0x2e). The secondary-effect
  * handlers spawn while spawn_start_frame <= timer < spawn_end_frame and finish
  * once timer passes spawn_start_frame with no live slots;
  * effect_update_active_slots walks count active slots. The level-up
  * handler seeds group 5's position.y with -8, then lowers it by 3 per frame. */
 extern effect_emitter_values_t g_effect_trap_particle_configs[17];
-/* effect_load_state_e */
+
 /* Projectile secondary animation of each weapon item type: BOW_ARROW for bows, CROSSBOW_BOLT for
  * crossbows, NONE for the rest. */
 extern u8 g_effect_weapon_projectile_animations[];
@@ -2095,12 +2093,12 @@ extern s16 g_effect_projectile_step_count;
 extern SVECTOR g_effect_trajectory_destination;
 extern s32 g_effect_trajectory_hit_unit_id;
 extern SVECTOR g_effect_trajectory_origin;
-extern SVECTOR g_effect_trajectory_position;
+extern SVECTOR g_effect_trajectory_position; /* final projectile position */
 extern s32 g_effect_trajectory_source_id;
-extern VECTOR g_effect_trajectory_step;
+extern VECTOR g_effect_trajectory_step; /* last step's movement */
 extern s32 g_effect_trajectory_step_count;
 extern map_tile_coordinates_t g_effect_trajectory_tile;
-/* last step's movement */
+
 extern s32 g_effect_trajectory_tile_flags;
 
 s32 effect_calculate_arc_height_term(s32 distance);
@@ -2157,7 +2155,7 @@ void effect_step_emitter_timeline(
 /* Written by effect-script opcode 05; no game source reads it. */
 extern u16 D_801BF000;
 extern effect_callback_t g_effect_callback_slots[];
-/* function byte to store; 5 = nothing */
+
 extern effect_script_result_e (*g_effect_instructions[120])(effect_record_t*);
 extern effect_callback_t g_effect_native_callbacks[EFFECT_NATIVE_CALLBACK_COUNT];
 extern u8* g_effect_script;
@@ -2278,15 +2276,15 @@ extern SVECTOR g_effect_corner_top_left __attribute__((aligned(4)));
 extern SVECTOR g_effect_corner_top_right __attribute__((aligned(4)));
 extern s32 g_effect_frame_parity;
 extern s32 g_effect_frame_start_prim_buffer_offset;
-extern MATRIX g_effect_matrix;
-/* 0x801bc09c */
+extern MATRIX g_effect_matrix; /* 0x801bc09c */
+
 extern u32* g_effect_otag;
 /* Work-kind handlers, indexed by kind_flags >> 12. The int return type is
  * load-bearing even though the result is ignored: the value-returning call is
  * a second set of $2, so sched1 no longer boosts the final `$2 = 1` to the end
  * of its block, and the pc update is allocated $3 as in the target. */
 extern s32 (*g_effect_particle_render_handlers[])(effect_record_t* record, effect_work_record_t* work);
-/* effect_playback_phase_e */
+
 extern u8* g_effect_prim_buffer;
 extern s32 g_effect_prim_buffer_offset;
 extern s32 g_effect_primitive_sizes[3];
@@ -2311,8 +2309,8 @@ extern VECTOR g_effect_camera_position_saved;
 extern VECTOR g_effect_camera_position_start;
 extern VECTOR g_effect_camera_position_target;
 extern SVECTOR g_effect_camera_rotation_current;
-extern s32 g_effect_camera_rotation_duration;
-extern s32 g_effect_camera_rotation_frame;
+extern s32 g_effect_camera_rotation_duration; /* angle track duration */
+extern s32 g_effect_camera_rotation_frame;    /* angle track counter; reset by camera_execute_angle_command */
 extern u32 g_effect_camera_rotation_mode;
 extern SVECTOR g_effect_camera_rotation_saved;
 extern SVECTOR g_effect_camera_rotation_start;
@@ -2341,7 +2339,7 @@ void effect_advance_target_palette_track(effect_palette_track_t* track, s16* key
 void effect_init_palette(s16 index);
 
 /* sound */
-extern u8 g_effect_sound_call_counts[];
+extern u8 g_effect_sound_call_counts[]; /* per-channel call counts */
 extern s32 g_effect_sound_data_base;
 extern struct suzuki_sound_resource* g_effect_sound_section_ptr;
 

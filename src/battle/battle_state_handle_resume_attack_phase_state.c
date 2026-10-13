@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* ResumeAttackPhase game-state handler: show the remaining post-effect messages,
  * then finish the strike.

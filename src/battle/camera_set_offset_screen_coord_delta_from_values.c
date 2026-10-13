@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* Starts a linear move of the screen offset by the vector `values` over
  * frame_count frames (divided by the animation speed).

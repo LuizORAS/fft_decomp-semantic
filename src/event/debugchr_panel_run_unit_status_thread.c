@@ -1,3 +1,4 @@
+#include "fft/battle_menu.h"
 /* Profile gcc-2.6.3_O2_aspsx-2.34_divcheck: the bar-width division at
  * 0x801c021c carries the full ASPSX checked-division expansion
  * (`bnez`/`break 0x7`, then the INT_MIN/-1 test and `break 0x6`) at

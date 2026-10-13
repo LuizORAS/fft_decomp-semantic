@@ -495,6 +495,11 @@ void battle_gfx_run_wep_eff_seq_script(
     battle_unit_misc_data_t* unit, battle_unit_sprite_block_t* sprite, s32 index, s32 advance);
 void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit);
 
+/* BATTLE flag at 0x80165ff2, set by etc_graphic_open while a full-screen ETC
+ * graphic is shown; BATTLE then draws primitives immediately instead of
+ * linking them into the ordering table. */
+extern u16 g_battle_etc_graphics_enabled;
+
 /* sprite rendering */
 /* One of the two 60968-byte battle render buffers. The primitive pools are
  * pre-initialised once; main_gfx_swap_and_clear_otag reads the ordering table
@@ -512,7 +517,6 @@ typedef struct battle_render_buffer {
 } battle_render_buffer_t;
 typedef char battle_render_buffer_size_must_be_60968[(sizeof(battle_render_buffer_t) == 60968) ? 1 : -1];
 
-/* 0x8016606e */
 /* The 24 orders in which battle_gfx_draw_unit_sprite_layers queues a unit's
  * four layers: 0 is the unit's own sprite, n its sprite block n - 1. */
 extern s32 g_battle_gfx_animation_layer_priorities[][4];
@@ -598,10 +602,10 @@ typedef char battle_gfx_other_palettes_size_must_be_672[sizeof(battle_gfx_other_
 
 extern palette_t g_battle_gfx_crystal_palettes[6];
 extern palette_t g_battle_gfx_cycled_deployed_palettes[2];
-/* the first 0x200 bytes of WEP.SPR */
+
 extern clut_t g_battle_gfx_trail_clut;
 extern palette_t g_battle_gfx_frog_palettes[5];
-extern clut_t g_battle_gfx_weapon_clut;
+extern clut_t g_battle_gfx_weapon_clut; /* the first 0x200 bytes of WEP.SPR */
 extern battle_gfx_other_palettes_t g_battle_gfx_other_palettes;
 extern palette_t g_battle_gfx_shadow_palette;
 extern palette_t g_battle_gfx_treasure_palettes[5];
@@ -702,7 +706,7 @@ extern u16 g_battle_gfx_screen_color_modulation_fade_frames;
 extern u16 g_battle_gfx_screen_color_modulation_step[3];
 extern rgb24_t g_battle_gfx_screen_color_modulation_target;
 extern u16 g_battle_gfx_screen_color_modulation_value[3];
-extern fade_overlay_t g_battle_gfx_screen_fade_overlays[];
+extern fade_overlay_t g_battle_gfx_screen_fade_overlays[]; /* one fade overlay per packet buffer */
 /* Overlay draw-mode primitives, one per screen polarity. */
 extern DR_MODE g_battle_gfx_screen_modulation_draw_modes[2];
 extern POLY_F4 g_battle_gfx_screen_modulation_polygons[2];
@@ -732,14 +736,5 @@ void battle_gfx_free_tpage7_vram(RECT* rect);
 void battle_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair);
 void battle_gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 page);
 void battle_gfx_set_draw_mode_from_origin(DR_MODE* mode, const point16_t* origin);
-
-/* event graphics requests */
-/* Separate triggers, command arguments, and completion status. Argument
- * domains remain provisional: map commands 0x80/0x83, polls 0x81/0x84.
- * The u16 requests and arguments are read with lhu by the consumer
- * script_process_pending_requests; every other access is a store. */
-extern u16 g_battle_3d_object_use_request;
-/* 0x80165fe2 */
-extern u16 g_battle_3d_object_wait_status;
 
 #endif

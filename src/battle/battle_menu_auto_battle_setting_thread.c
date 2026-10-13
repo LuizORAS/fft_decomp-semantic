@@ -1,3 +1,4 @@
+#include "fft/battle_menu.h"
 /*
  * WORLD twin:
  * world_menu_auto_battle_setting_thread (same code, globals and callees

@@ -1280,6 +1280,13 @@ struct battle_unit_misc_data* battle_unit_get_mount_misc_data(struct battle_unit
 s32 battle_unit_has_any_current_status(s32 unit_id);
 s32 battle_unit_get_action_restriction(battle_stats_t* unit);
 
+/* battle_unit_animation_e of each item type's attack at a higher, a level and a lower target. */
+extern u8 g_battle_weapon_attack_animations[][3];
+
+extern u16 g_battle_enemy_level_sum;
+
+extern u8 g_battle_highest_enemy_level;
+
 /* animation */
 extern battle_ability_animation_data_t g_battle_ability_animation_data[BATTLE_ABILITY_ANIMATION_COUNT];
 

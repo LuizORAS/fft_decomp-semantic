@@ -7,7 +7,7 @@
 
 /* screen */
 extern u8 g_attack_event_condition_blocks[];
-/* indexed by sprite code - 0x3f */
+
 extern u8 g_attack_scenario_table[];
 
 void attack_file_load_sync(s32 lba, s32 size, void* destination);
@@ -113,8 +113,8 @@ extern s32 g_attack_deploy_grid_slide_y;
 extern u8* g_attack_deploy_help_text_section;
 extern image_load_parameters_t g_attack_deploy_menu_cursor_cells[];
 extern menu_entry_t g_attack_deploy_menu_entries[];
-extern s32 g_attack_deploy_menu_state;
-/* attack_deploy_menu_state_e */
+extern s32 g_attack_deploy_menu_state; /* attack_deploy_menu_state_e */
+
 extern s32 g_attack_deploy_pending_roster_index;
 extern RECT g_attack_deploy_rect_09c;
 extern RECT g_attack_deploy_rect_0ac;
@@ -187,7 +187,7 @@ extern RECT g_attack_formation_sheet_rect;
 extern RECT g_attack_formation_sheet_source_rect;
 extern u8 g_attack_formation_sprite_staging[];
 extern u8 g_attack_formation_sprite_tall_cell[];
-extern u8 g_attack_monster_formation_sprite_table[20];
+extern u8 g_attack_monster_formation_sprite_table[20]; /* indexed by sprite code - 0x3f */
 
 void attack_gfx_build_formation_sprites(void);
 void attack_gfx_prepare_formation_sprites(void);

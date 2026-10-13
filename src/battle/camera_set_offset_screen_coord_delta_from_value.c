@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* Starts a linear move of all three screen-offset components to the one value
  * *destination_value over frame_count frames (divided by the animation speed).

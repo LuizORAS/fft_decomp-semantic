@@ -6,9 +6,9 @@
 #include "fft/battle.h"
 
 /* screen */
-/* main_sfx_e */
-extern s8 g_jobstts_active_page;
-/* menu_job_list_step_e; each page's function returns the next one */
+
+extern s8 g_jobstts_active_page; /* menu_job_list_step_e; each page's function returns the next one */
+
 extern u8 g_jobstts_initialized;
 extern u8 g_jobstts_previous_event_mode;
 
@@ -33,16 +33,17 @@ void jobstts_unit_copy_job_data(battle_stats_t* unit, jobstts_unit_job_data_t* d
 void jobstts_unit_init_job_data(s32 unit_id);
 
 /* ability */
-extern s16 g_jobstts_ability_category;
-/* menu_ability_category_e */
-extern s16 g_jobstts_ability_entries[];
+extern s16 g_jobstts_ability_category; /* menu_ability_category_e */
+
+extern s16 g_jobstts_ability_entries[]; /* Packed ability IDs/flags; -1 terminates the list. */
 extern u8 g_jobstts_ability_list_initialized;
 extern s16 g_jobstts_ability_list_job_name_ids[];
 extern menu_instruction_t g_jobstts_ability_list_render_commands;
-/* the same 32-bit value: both outputs of the ability lookup land in it */
+
 extern s32 g_jobstts_ability_type;
-extern ability_data_t* g_jobstts_selected_ability_data;
-/* Packed ability IDs/flags; -1 terminates the list. */
+extern ability_data_t*
+    g_jobstts_selected_ability_data; /* the same 32-bit value: both outputs of the ability lookup land in it */
+
 extern main_ability_secondary_pointer_t g_jobstts_selected_ability_secondary_data;
 
 s32 jobstts_ability_build_list(
@@ -107,7 +108,7 @@ extern s8 g_jobstts_menu_cursor_reverse_offset_keyframes[];
 extern u16 g_jobstts_menu_cursor_texture_page;
 extern u16 g_jobstts_menu_disabled_number_clut;
 extern s8 g_jobstts_menu_event_speed;
-/* read with lb (jobstts_cmd_draw_scrollable_list_body_handler) */
+
 extern u16 g_jobstts_menu_list_cursor_anim_state;
 extern s16* g_jobstts_menu_list_entries;
 extern s16 g_jobstts_menu_list_entry_count;
@@ -117,7 +118,7 @@ extern s16 g_jobstts_menu_list_row_group_count;
 extern s16 g_jobstts_menu_list_row_height;
 extern s32 g_jobstts_menu_list_row_index;
 extern s16 g_jobstts_menu_list_row_rendering;
-extern s8 g_jobstts_menu_list_scroll_direction;
+extern s8 g_jobstts_menu_list_scroll_direction; /* read with lb (jobstts_cmd_draw_scrollable_list_body_handler) */
 extern s16 g_jobstts_menu_list_scroll_entry_ids;
 extern s16 g_jobstts_menu_list_scroll_offset_y;
 extern u16 g_jobstts_menu_list_scroll_progress;
@@ -205,15 +206,15 @@ extern u16 g_jobstts_gfx_draw_move_count;
 extern u16 g_jobstts_gfx_drawenv_y;
 extern u16 g_jobstts_gfx_line_f2_capacity;
 extern s16 g_jobstts_gfx_line_f2_count;
-/* LINE_G2 capacity; load order matters in 0x801e49f0 */
+
 extern u16 g_jobstts_gfx_line_f3_capacity;
 extern s16 g_jobstts_gfx_line_f3_count;
-/* LINE_G3 capacity; load order matters in 0x801e49f0 */
+
 extern u16 g_jobstts_gfx_line_f4_capacity;
 extern s16 g_jobstts_gfx_line_f4_count;
-extern volatile u16 g_jobstts_gfx_line_g2_capacity;
+extern volatile u16 g_jobstts_gfx_line_g2_capacity; /* LINE_G2 capacity; load order matters in 0x801e49f0 */
 extern s16 g_jobstts_gfx_line_g2_count;
-extern volatile u16 g_jobstts_gfx_line_g3_capacity;
+extern volatile u16 g_jobstts_gfx_line_g3_capacity; /* LINE_G3 capacity; load order matters in 0x801e49f0 */
 extern s16 g_jobstts_gfx_line_g3_count;
 extern u16 g_jobstts_gfx_line_g4_capacity;
 extern s16 g_jobstts_gfx_line_g4_count;
@@ -372,6 +373,6 @@ u32 jobstts_bits_read_primary(s32 count);
 extern u8 g_jobstts_text_thread_running_state;
 
 /* sound */
-extern u8 g_jobstts_sound_queued_effect_id;
+extern u8 g_jobstts_sound_queued_effect_id; /* main_sfx_e */
 
 #endif
