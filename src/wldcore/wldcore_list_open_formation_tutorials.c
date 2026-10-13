@@ -1,12 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Opens a seven-row panel list (entry values 0xc000 + row) whose rows are
- * flagged 8 when the matching bit of 0x8004c6bc is set, shown at
- * (0x54, 0x50) with width 0x8c; appends its record tagged 0x2c.
+/* Open the Organization tutorials: the Formation screen's seven lessons (entry values 0xc000 + row,
+ * "About Formation" to "Online Help"), each row flagged 8 once watched (its bit of
+ * g_main_tutorial_progress_masks), shown at (0x54, 0x50) with width 0x8c.
  *
- * The flag value lives in its own variable so the target keeps 8 in a saved
- * register across the loop. */
+ * The flag value lives in its own variable so the target keeps 8 in a saved register across the loop. */
 void wldcore_list_open_formation_tutorials(void) {
     wldcore_point32_t dimensions;
     wldcore_point32_t origin;

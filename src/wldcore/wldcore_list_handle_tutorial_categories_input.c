@@ -1,15 +1,15 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Per-frame step of the tutorial menu list level.
+/* Per-frame step of Professor Daravon's tutorial menu (level TUTORIAL_CATEGORIES).
  *
- * Mode 0 runs the cursor and the four entries: formation tutorials, the
- * wldcore_list_open_battle_tutorials list, the chapter-5 tutorial topics, and entry 3 (or cancel),
- * which starts WORLD thread 14 on text 0xb8de and moves to mode 1. Mode 1
- * waits for confirm/cancel and starts the fade out, mode 2 clears VRAM once
- * the fade flag has cleared and mode 3 pops the level: with system flag 0x80000 it
- * hands back to the caller through 0x10000000, otherwise it fades in and calls
- * wldcore_menu_push_world_menu_level. */
+ * Mode 0 runs the cursor over the four rows: Organization (the Formation screen's tutorials,
+ * wldcore_list_open_formation_tutorials), Battle (the battle tutorials,
+ * wldcore_list_open_battle_tutorials), Tips (wldcore_list_open_tutorial_topics) and Return, which (like
+ * Cross) starts WORLD thread 14 on Daravon's text 0xb8de and moves to mode 1. Mode 1 waits for
+ * confirm or cancel and starts the fade out, mode 2 clears VRAM once the fade flag has cleared and mode
+ * 3 pops the level: with system flag 0x80000 it hands back to the caller through 0x10000000, otherwise
+ * it fades in and calls wldcore_menu_push_world_menu_level. */
 void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_level_t* level) {
     u32 buttons;
     s32* selected_entry;

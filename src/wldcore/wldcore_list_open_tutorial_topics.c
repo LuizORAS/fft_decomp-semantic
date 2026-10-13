@@ -17,7 +17,7 @@
         count = (count) + 1;                                                                                           \
     } while (0)
 
-/* Opens a 41-entry panel list (halfword values 0x8000-0x8028), shows up to
+/* Opens the tutorial's Tips, a 41-entry panel list (halfword values 0x8000-0x8028), shows up to
  * eight rows at (0x54, 0x50) with width 0x8c, and appends its 0x5c-byte
  * record tagged 0x21.
  *

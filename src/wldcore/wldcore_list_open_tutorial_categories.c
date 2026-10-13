@@ -1,6 +1,7 @@
 #include "fft/wldcore.h"
 
-/* Pushes the tutorial-category list level (type 0x2b).
+/* Pushes Professor Daravon's tutorial menu (level TUTORIAL_CATEGORIES): Organization, Battle, Tips
+ * and Return (text 0xb8d9 + row).
  *
  * Appends a cursor window, a header window and the frame render record, seeds
  * the four category entries, and positions both windows relative to the render

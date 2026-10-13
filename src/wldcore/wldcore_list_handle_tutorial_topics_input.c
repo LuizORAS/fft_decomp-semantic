@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Tutorial-topic list level input step (cursor slot 12); twin of
+/* Input step of the tutorial's Tips list (cursor slot 12); twin of
  * wldcore_list_handle_treasures_input with help message 0x108d. A confirmed topic's value is
  * passed to 0x80084578, which opens the tutorial text window. */
 void wldcore_list_handle_tutorial_topics_input(wldcore_menu_panel_level_t* level) {
