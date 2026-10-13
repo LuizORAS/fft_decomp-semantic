@@ -831,8 +831,8 @@ typedef enum main_system_flags {
     MAIN_SYSTEM_FLAG_UNLOCK_ALL = 0x00400000,
     /* Set by world_menu_update_debug_variable_list_request: the return level opens the variable list. */
     MAIN_SYSTEM_FLAG_REQUEST_VARIABLE_LIST = 0x00800000,
-    /* Set by world_menu_update_fixed_number_panel_request: the return level opens the fixed number panel. */
-    MAIN_SYSTEM_FLAG_REQUEST_FIXED_NUMBER_PANEL = 0x01000000,
+    /* Set by world_menu_update_party_number_panel_request: the return level opens the debug Party number panel. */
+    MAIN_SYSTEM_FLAG_REQUEST_PARTY_NUMBER_PANEL = 0x01000000,
     /* The location menu chose a deep-dungeon battle: wldcore_entrypoint returns 4. */
     MAIN_SYSTEM_FLAG_DEEP_DUNGEON_BATTLE = 0x02000000,
     /* Set by wldcore_clear_screen_and_set_map_clip_rect; the return level then recaptures the world frame. */

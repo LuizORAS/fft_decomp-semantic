@@ -5,7 +5,7 @@
  * buttons; a screen clear in between (MAIN_SYSTEM_FLAG_SCREEN_CLEARED) shows the map again and
  * restarts the delay. When WORLD's menu threads have ended it shows the map, pops the level and acts
  * on what the menu asked:
- *  - Brave Story, the tutorials, the debug variable list or the fixed number panel open that screen;
+ *  - Brave Story, the tutorials, the debug variable list or the Party number panel open that screen;
  *  - a destination (MAIN_SYSTEM_FLAG_REQUEST_DESTINATION, from the location list) captures the map
  *    again, resumes the root level and travels to EVENT_SCRIPT_VAR_CURRENT_MAP;
  *  - a loaded game (MAIN_SYSTEM_FLAG_RESTART, set by the card menu) ends the visit: a new visit
@@ -70,8 +70,8 @@ void wldcore_menu_step_world_menu_level(wldcore_menu_world_menu_level_t* level) 
         wldcore_menu_push_variable_list_level();
         return;
     }
-    if (flags & MAIN_SYSTEM_FLAG_REQUEST_FIXED_NUMBER_PANEL) {
-        wldcore_menu_push_fixed_number_panel_level();
+    if (flags & MAIN_SYSTEM_FLAG_REQUEST_PARTY_NUMBER_PANEL) {
+        wldcore_menu_push_party_number_panel_level();
         return;
     }
     if (flags & MAIN_SYSTEM_FLAG_RESTART) {

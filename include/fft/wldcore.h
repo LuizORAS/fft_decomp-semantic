@@ -1933,11 +1933,11 @@ typedef enum wldcore_menu_level_type {
     WLDCORE_MENU_LEVEL_BATTLE_TUTORIALS = 0x2d,
     WLDCORE_MENU_LEVEL_FACTS = 0x2e,
     WLDCORE_MENU_LEVEL_FACT_DETAIL = 0x2f,
-    WLDCORE_MENU_LEVEL_NUMBER_PANEL_WITH_ARGUMENT = 0x30,
+    WLDCORE_MENU_LEVEL_VARIABLE_VALUE_PANEL = 0x30,
     WLDCORE_MENU_LEVEL_SCREEN_TRANSITION = 0x31,
     WLDCORE_MENU_LEVEL_FOCUS_LOCATION = 0x32,
     WLDCORE_MENU_LEVEL_SCROLLABLE_TEXT_WINDOW = 0x33,
-    WLDCORE_MENU_LEVEL_FIXED_NUMBER_PANEL = 0x34,
+    WLDCORE_MENU_LEVEL_PARTY_NUMBER_PANEL = 0x34,
     WLDCORE_MENU_LEVEL_MAP_PATH = 0x35,
     WLDCORE_MENU_LEVEL_MAP_LOCATION_VISIBILITY = 0x36,
     WLDCORE_MENU_LEVEL_DISCOVERY_MILESTONE = 0x37,
@@ -2117,8 +2117,8 @@ void wldcore_menu_dispatch_suspend_handler(void);
 void wldcore_menu_dispatch_resume_handler(void);
 void wldcore_menu_display_text_entry(s32 index, s32 text_id, wldcore_point32_t point, void* buffer);
 void wldcore_menu_push_message_level(s32 text, s32 reload_text);
-void wldcore_menu_push_number_panel_level_with_argument(s32 variable_id, s32 value);
-void wldcore_menu_push_fixed_number_panel_level(void);
+void wldcore_menu_push_variable_value_panel_level(s32 variable_id, s32 value);
+void wldcore_menu_push_party_number_panel_level(void);
 void wldcore_menu_reset_to_root_level(void);
 void wldcore_menu_push_root_level(void);
 void wldcore_menu_restore_level_on_world_entry(void);

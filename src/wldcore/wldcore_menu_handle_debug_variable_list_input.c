@@ -1,9 +1,10 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Input handler for the debug script-variable list level (type 0xb).
+/* Input step of the debug script-variable list (level VARIABLE_LIST).
  *
- * Circle opens the number panel for the selected variable, X pops the level.
+ * Circle opens the variable editor (wldcore_menu_push_variable_value_panel_level) for the selected
+ * variable, Cross pops the level.
  * Up/down move the cursor, or scroll the first displayed variable by 10 with
  * L1 held and by 100 with R1 held. Scrolling redraws the rows through
  * wldcore_menu_render_debug_variable_list and clamps the cursor; a plain cursor move only repositions
@@ -28,7 +29,7 @@ void wldcore_menu_handle_debug_variable_list_input(wldcore_menu_variable_list_le
         g_wldcore_window_records[level->window_index].anim_counter
             = g_wldcore_window_records[level->window_index].frame_index = 0;
         variable = level->first_variable + level->cursor;
-        wldcore_menu_push_number_panel_level_with_argument(variable, world_script_get_variable(variable));
+        wldcore_menu_push_variable_value_panel_level(variable, world_script_get_variable(variable));
         return;
     }
     if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {

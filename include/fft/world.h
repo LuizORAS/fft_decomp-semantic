@@ -1773,7 +1773,7 @@ extern u16 g_world_text_message_duration_frames;
 extern world_glyph_blit_t g_world_text_large_number_glyph_rect;
 extern world_glyph_blit_t g_world_menu_stacked_glyph_lower[];
 extern world_glyph_blit_t g_world_menu_stacked_glyph_upper[];
-extern s16 g_world_fixed_number_panel_request_state;
+extern s16 g_world_party_number_panel_request_state;
 extern s32 g_world_text_message_box_digit_divisors[];
 extern s32 g_world_text_message_box_slot_threads[3];
 extern s32 g_world_text_message_box_slot_glyph_counters[3];
@@ -2581,7 +2581,7 @@ void world_menu_set_cursor_confirm_hold(s32 hold);
 void world_menu_set_zodiac_backdrop_otag(void* ordering_table);
 void world_menu_update_brave_story_request(void);
 void world_menu_update_debug_variable_list_request(void);
-void world_menu_update_fixed_number_panel_request(void);
+void world_menu_update_party_number_panel_request(void);
 void world_menu_update_tutorial_categories_request(void);
 void world_menu_zodiac_backdrop_thread(void);
 

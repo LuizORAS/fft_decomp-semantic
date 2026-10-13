@@ -2,8 +2,8 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Proposition participant-chooser level pushed over the
- * proposition list (0x80085760). One cursor window rides a render record
+/* Proposition participant-chooser level, opened from the Advancing list
+ * (wldcore_list_open_active_propositions). One cursor window rides a render record
  * listing entry_count participant rows. */
 typedef struct wldcore_menu_participant_list_level {
     s32 cursor_window; /* 0x00 */

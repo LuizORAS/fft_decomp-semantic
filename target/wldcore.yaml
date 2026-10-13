@@ -101,8 +101,8 @@ functions:
   - {addr: 0x8006ea90, size: 672, name: wldcore_menu_push_variable_list_level, hash: c7322cd10daebffd}
   - {addr: 0x8006ed30, size: 444, name: wldcore_menu_render_debug_variable_list, hash: c07707ad0a38ca8a}
   - {addr: 0x8006eeec, size: 936, name: wldcore_menu_handle_debug_variable_list_input, hash: b5774ea3eeddc98a}
-  - {addr: 0x8006f294, size: 200, name: wldcore_menu_push_number_panel_level_with_argument, hash: 689a5bb4d25e4b5d}
-  - {addr: 0x8006f35c, size: 460, name: wldcore_menu_step_number_panel_level, hash: b55a89b6140634a4}
+  - {addr: 0x8006f294, size: 200, name: wldcore_menu_push_variable_value_panel_level, hash: 689a5bb4d25e4b5d}
+  - {addr: 0x8006f35c, size: 460, name: wldcore_menu_step_variable_value_panel_level, hash: b55a89b6140634a4}
   - {addr: 0x8006f528, size: 340, name: wldcore_menu_push_status_help_level, hash: ab1438ef2fc8d3e1}
   - {addr: 0x8006f67c, size: 212, name: wldcore_window_move_status_help_cursor, hash: 4fed0d29e1d2fe7b}
   - {addr: 0x8006f750, size: 104, name: wldcore_menu_resume_status_help_level, hash: 9e9129e51d124b70}
@@ -116,8 +116,8 @@ functions:
   - {addr: 0x80070aa8, size: 316, name: wldcore_menu_run_shop_and_rebuild_screen, hash: 3dcf9c23a2dd9c21}
   - {addr: 0x80070be4, size: 796, name: wldcore_menu_push_scrollable_text_window_level, hash: 23808f2560fecd67}
   - {addr: 0x80070f00, size: 488, name: wldcore_menu_step_scrollable_text_window_level, hash: b63d983cca36c974}
-  - {addr: 0x800710e8, size: 176, name: wldcore_menu_push_fixed_number_panel_level, hash: 33b0f93444bd91a8}
-  - {addr: 0x80071198, size: 280, name: wldcore_menu_step_unit_browser_panel, hash: 1dbc6b949132b78d}
+  - {addr: 0x800710e8, size: 176, name: wldcore_menu_push_party_number_panel_level, hash: 33b0f93444bd91a8}
+  - {addr: 0x80071198, size: 280, name: wldcore_menu_step_party_number_panel_level, hash: 1dbc6b949132b78d}
   - {addr: 0x800712b0, size: 476, name: wldcore_bar_push_menu_level, hash: bf1acfda6e80fa75}
   - {addr: 0x8007148c, size: 1092, name: wldcore_bar_build_menu_rows, hash: 0bf2b1b02faf6e4f}
   - {addr: 0x800718d0, size: 236, name: wldcore_menu_resume_bar_menu_level, hash: a6d8e7a5dc83c4a5}

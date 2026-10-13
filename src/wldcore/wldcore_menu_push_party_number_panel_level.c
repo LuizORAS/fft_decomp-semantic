@@ -1,9 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Queue the fixed "9999"-style number panel used on the world map and append
- * its 0x5c-byte record. Sibling of wldcore_menu_push_number_panel_level_with_argument. */
-void wldcore_menu_push_fixed_number_panel_level(void) {
+/* Open the debug Party number panel (level PARTY_NUMBER_PANEL) that the world menu's debug row
+ * requests: a number panel labelled "Party number:" (WLDCORE_TEXT_ID_PARTY_NUMBER_LABEL), range word
+ * 0x3e70000, starting at 0, run by the panel thread (WLDCORE_THREAD_SLOT_WINDOW_PANEL), with Circle and
+ * Cross withheld from WORLD's menus. */
+void wldcore_menu_push_party_number_panel_level(void) {
     wldcore_point32_t origin;
     s32 record_index;
 
@@ -16,6 +18,6 @@ void wldcore_menu_push_fixed_number_panel_level(void) {
         WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0x3E70000, WLDCORE_TEXT_ID_PARTY_NUMBER_LABEL, &origin);
     record_index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[record_index].panel.result = 0;
-    g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_FIXED_NUMBER_PANEL;
+    g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_PARTY_NUMBER_PANEL;
     g_wldcore_menu_stack_depth = record_index + 1;
 }

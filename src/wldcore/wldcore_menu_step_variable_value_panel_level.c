@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Step handler for the number-panel menu level (type 0x30). While the panel
+/* Step of the debug variable editor (level VARIABLE_VALUE_PANEL). While the panel
  * runs it accepts the confirm button (0x20), which plays sound 1 and writes
  * the panel's value to the level's script variable, or the cancel button
  * (0x40); either way it restarts thread 0xC to close the panel. Once the
@@ -12,7 +12,7 @@
  * Reading the parent window index before the render-record store is what
  * lets the scheduler place that load inside the render index's multiply
  * sequence, as the target does. */
-void wldcore_menu_step_number_panel_level(wldcore_menu_panel_level_t* level) {
+void wldcore_menu_step_variable_value_panel_level(wldcore_menu_panel_level_t* level) {
     s32 depth;
     s32 parent;
     s32 slot;

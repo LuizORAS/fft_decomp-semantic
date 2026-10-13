@@ -1,15 +1,14 @@
 #include "fft/wldcore.h"
 
-/* Pushes the debug script-variable list level (type 0xb): one cursor window
- * record and one render record, laid out by 0x8006ed30 and then positioned
- * from the render record's origin.
+/* Open the debug script-variable list (level VARIABLE_LIST) that the world menu's debug row
+ * requests: one cursor window and one render record, drawn by wldcore_menu_render_debug_variable_list
+ * and then positioned from the render record's origin.
  *
- * Both appended indices share one local, which is what holds them in $a2.
- * The window position is written after 0x8006ed30 returns, from the render
- * record origin the callee filled in, so the level fields are read back out
- * of the stack record rather than kept in locals; the `- -` keeps the row
- * offset's constant on the multiply chain, which a plain `+` reassociates
- * onto base_y. */
+ * Both appended indices share one local, which is what holds them in $a2. The window position is
+ * written after wldcore_menu_render_debug_variable_list returns, from the render record origin the callee
+ * filled in, so the level fields are read back out of the stack record rather than kept in locals; the
+ * `- -` keeps the row offset's constant on the multiply chain, which a plain `+` reassociates onto
+ * base_y. */
 void wldcore_menu_push_variable_list_level(void) {
     s32 index;
     s32 record_index;

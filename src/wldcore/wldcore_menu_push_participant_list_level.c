@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 
-/* Pushes the proposition participant list level (type 0x27) for
- * g_main_active_propositions[proposition].
+/* Opens the participant list (level PARTICIPANT_LIST) of g_main_active_propositions[proposition]:
+ * the units sent on a proposition in progress, chosen from the Advancing list.
  *
  * The 0x40 frame needs 32 bytes of locals the body never uses. The `- -`
  * spellings keep the target's operand order (render-record base first) that a

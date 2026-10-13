@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/libgpu.h"
 
-/* Push the proposition participant detail level (type 0x28).
+/* Open a participant's status panels (level PARTICIPANT_DETAIL).
  *
  * Copies the 0x40x0x100 VRAM block at (0x180, 0) to (0x200, 0x100), appends
  * the two frame windows, draws the selected participant and restarts the

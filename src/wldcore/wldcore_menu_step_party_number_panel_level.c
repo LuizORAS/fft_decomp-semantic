@@ -1,11 +1,13 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Poll the confirm/cancel buttons for the world-map unit browser panel and
- * tear it down once the panel's render thread has finished.
+/* Input step of the Party number panel: Circle or Cross closes it. Once the panel thread has ended
+ * the level pops and, after Circle with a number below 0x200, the party is rebuilt from that ENTD
+ * (main_entd_init_event_unit_data), the formation names are regenerated and the map redraws; the level
+ * underneath resumes either way.
  *
  * level->result is 0 while waiting, 1 on confirm and -1 on cancel. */
-void wldcore_menu_step_unit_browser_panel(wldcore_menu_panel_level_t* level) {
+void wldcore_menu_step_party_number_panel_level(wldcore_menu_panel_level_t* level) {
     u32 buttons;
 
     if ((level->result != 0) && (world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0)) {

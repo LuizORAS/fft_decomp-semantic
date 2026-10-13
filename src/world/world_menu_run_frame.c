@@ -13,7 +13,7 @@ extern u32 g_world_menu_frame_current_input, g_world_menu_frame_previous_input,
  * title menus) and return the menu result, g_world_menu_pending_selection[0] (-2 while pending; 0 also
  * asks WLDCORE to travel to the chosen map). It derives the new and repeated presses with the input
  * timing of the game options, masked by g_world_menu_allowed_buttons and dropped while a screen request
- * runs; steps the formation, Brave Story, card, tutorial, debug list and fixed number panel requests;
+ * runs; steps the formation, Brave Story, card, tutorial, debug list and Party number panel requests;
  * hands the input to the menu threads and yields to them once, starting a five-frame cooldown
  * (g_world_event_input_suppression_frames) when a thread started or stopped. It sets g_world_menu_hosted_frame.
  * Sibling of world_input_update_event_state, which WORLD's own screens use. */
@@ -99,7 +99,7 @@ s16 world_menu_run_frame(u32* otag, u32 input) {
     if (g_world_brave_story_request_state != WORLD_SCREEN_REQUEST_IDLE) {
         g_world_menu_frame_new_buttons = 0;
     }
-    if (g_world_fixed_number_panel_request_state != 0) {
+    if (g_world_party_number_panel_request_state != 0) {
         g_world_menu_frame_new_buttons = 0;
     }
     g_world_menu_hosted_frame = 1;
@@ -108,7 +108,7 @@ s16 world_menu_run_frame(u32* otag, u32 input) {
     world_card_update_menu_request();
     world_menu_update_tutorial_categories_request();
     world_menu_update_debug_variable_list_request();
-    world_menu_update_fixed_number_panel_request();
+    world_menu_update_party_number_panel_request();
     g_world_menu_pending_selection[0] = -2;
     g_world_gfx_current_otag_entry = otag;
     g_world_sound_pending_sfx_id = -1;
