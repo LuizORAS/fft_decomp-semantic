@@ -52,7 +52,7 @@ s32 main_ability_get_id_from_skillset(s32 skillset_id, s32 ability_index);
 u16* main_ability_store_skillset_abilities(s32 skillset, s32 flags);
 s32 main_ability_calculate_pointers_and_type(
     s32 id, ability_data_t** out_ability_data, main_ability_secondary_pointer_t* out_secondary_data);
-u32 main_ability_get_known(const battle_stats_t* unit, u32 skillset_id);
+u32 main_ability_get_known(const unit_stats_t* unit, u32 skillset_id);
 
 /* card */
 /* Memory-card BIOS event handles opened by main_card_init_events; the CARD,
@@ -155,7 +155,7 @@ typedef struct card_save_buffer {
     u8 proposition_count;                        /* 0x438 */
     u8 active_propositions[8][9];                /* 0x439 */
     u8 _unused_0481[3];                          /* 0x481; serialized and parity-covered */
-    u8 party_records[PARTY_ROSTER_SLOT_COUNT][0xe0]; /* 0x484; party_data_t records truncated to 0xe0 bytes */
+    u8 party_records[PARTY_ROSTER_SLOT_COUNT][0xe0]; /* 0x484; party_unit_t records truncated to 0xe0 bytes */
     u8 item_quantities[ITEM_ID_COUNT];               /* 0x1604; g_main_item_quantities */
     u8 poached_item_quantities[ITEM_ID_COUNT];       /* 0x1704; g_main_item_poached_quantities */
     /* 0x1804; first 0x40 bytes are Move-Find-Item flags, second half unknown. */
@@ -401,7 +401,7 @@ extern const u16 g_main_job_level_jp_requirements[UNIT_JOB_LEVEL_MAX];
 extern u16 g_main_job_jp_requirements_by_level[];
 extern const u8 g_main_job_unlock_requirements[UNIT_CAREER_JOB_COUNT - 1][UNIT_JOB_LEVEL_BYTE_COUNT];
 
-void job_calculate_and_store_unlocks(party_data_t* party, u8 unlocked_jobs[UNIT_UNLOCKED_JOB_BYTE_COUNT]);
+void job_calculate_and_store_unlocks(party_unit_t* party, u8 unlocked_jobs[UNIT_UNLOCKED_JOB_BYTE_COUNT]);
 s32 job_find_first_for_skillset(s32 skillset);
 s32 job_get_generic_index(s32 job_id);
 s32 job_get_skillset(s32 job_id);
@@ -411,7 +411,7 @@ u32 main_job_calculate_level(u16 job_jp);
 u32 main_job_calculate_unlocked(const u8* packed_job_levels, u32 gender_flags);
 s32 main_job_find_by_skillset(u8 skillset_id);
 job_data_t* main_job_get_data_pointer(s32 job_id);
-s32 main_job_get_random_unlocked(const battle_stats_t* unit);
+s32 main_job_get_random_unlocked(const unit_stats_t* unit);
 void main_job_store_unlock_bitset(u8 destination[UNIT_UNLOCKED_JOB_BYTE_COUNT], u32 unlocked_jobs);
 
 /* save */
@@ -800,13 +800,13 @@ extern const status_effect_data_t g_main_status_effect_data[STATUS_COUNT];
 extern u8 g_main_status_check_sets[MAIN_STATUS_CHECK_SET_COUNT][STATUS_BYTE_COUNT];
 
 void main_status_init_check_data(void);
-void main_status_change_unit(battle_stats_t* unit, s32 status_byte_index, u8 status_flag, s32 change_type);
-void main_status_init_ct(battle_stats_t* unit);
-void main_status_init_unit(battle_stats_t* unit);
-void main_status_set_action_state(battle_stats_t* unit, u8 action_state);
-s32 main_status_set_ct(battle_stats_t* unit, s32 status_id, s32 removing);
-void main_status_store_current(battle_stats_t* unit);
-void main_status_update_unit_flags_and_ct(battle_stats_t* unit);
+void main_status_change_unit(unit_stats_t* unit, s32 status_byte_index, u8 status_flag, s32 change_type);
+void main_status_init_ct(unit_stats_t* unit);
+void main_status_init_unit(unit_stats_t* unit);
+void main_status_set_action_state(unit_stats_t* unit, u8 action_state);
+s32 main_status_set_ct(unit_stats_t* unit, s32 status_id, s32 removing);
+void main_status_store_current(unit_stats_t* unit);
+void main_status_update_unit_flags_and_ct(unit_stats_t* unit);
 s32 main_status_find_action_highest_order_effect(const action_data_t* action);
 
 /* system */
@@ -1020,7 +1020,7 @@ extern u8 g_main_party_highest_level;
 extern s32 g_main_entd_current_event_id;
 extern entd_file_t* g_main_entd_set;
 extern entd_unit_t* g_main_entd_current_unit;
-extern party_data_t g_main_party_data[PARTY_ROSTER_SLOT_COUNT];
+extern party_unit_t g_main_party_data[PARTY_ROSTER_SLOT_COUNT];
 extern main_unit_generation_base_data_t g_main_unit_generation_base_data[MAIN_UNIT_TYPE_COUNT];
 extern u8 g_main_unit_generation_raw_stat_variance[MAIN_UNIT_TYPE_COUNT][UNIT_RAW_STAT_COUNT];
 extern u32 g_main_unit_name_uses_world_text;
@@ -1030,7 +1030,7 @@ extern crystal_pickup_result_t g_main_crystal_pickup_result;
 extern u8 g_main_crystal_treasure_item_id;
 extern unit_deployment_coordinates_t g_main_deployed_unit_map_coordinates[6];
 
-void main_unit_update_formation_stats(battle_stats_t* unit);
+void main_unit_update_formation_stats(unit_stats_t* unit);
 
 /* Current encounter, NULL while loading, or (entd_encounter_t *)-1 when
  * no encounter is selected. */
@@ -1045,60 +1045,60 @@ s32 main_party_find_slot_by_sprite_set(s32 sprite_set);
 /* Out-of-battle generation normalizes every value except male, female and
  * monster to Ramza. The raw-stat generator indexes the tables directly. */
 s32 main_party_generate_unit(main_unit_generation_type_e unit_type);
-party_data_t* main_party_get_data_pointer(s32 party_index);
+party_unit_t* main_party_get_data_pointer(s32 party_index);
 void main_party_init_new_game(s32 mode);
-u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta);
+u32 main_party_level_unit_to_target(party_unit_t* party_unit, s32 level_delta);
 void main_party_remove_unit(u32 index);
-s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest);
-void main_unit_apply_equipment_move_jump_and_name(battle_stats_t* unit);
-void main_unit_apply_level_growth(battle_stats_t* unit, s32 level_down);
-void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd);
-void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode);
-s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd);
-void main_unit_calculate_entd_equipment(battle_stats_t* unit, entd_unit_t* entd);
-void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, const entd_unit_t* entd);
-void main_unit_calculate_move_jump(battle_stats_t* unit, s32 keep_position);
-u8 main_unit_calculate_palette_spritesheet(battle_stats_t* unit, u8* palette);
+s32 main_party_save_unit(unit_stats_t* unit, s32 allow_guest);
+void main_unit_apply_equipment_move_jump_and_name(unit_stats_t* unit);
+void main_unit_apply_level_growth(unit_stats_t* unit, s32 level_down);
+void main_unit_calculate_abilities(unit_stats_t* unit, entd_unit_t* entd);
+void main_unit_calculate_actual_stats(unit_stats_t* unit, s32 mode);
+s32 main_unit_calculate_entd_data(unit_stats_t* unit, entd_unit_t* entd);
+void main_unit_calculate_entd_equipment(unit_stats_t* unit, entd_unit_t* entd);
+void main_unit_calculate_jobs_and_skillsets_from_entd(unit_stats_t* unit, const entd_unit_t* entd);
+void main_unit_calculate_move_jump(unit_stats_t* unit, s32 keep_position);
+u8 main_unit_calculate_palette_spritesheet(unit_stats_t* unit, u8* palette);
 s32 main_unit_calculate_random_equipment(
-    battle_stats_t* unit, u8 item_type_flag, u8 weapon_flag_mask, u8 required_item_type);
-u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, entd_unit_t* entd);
+    unit_stats_t* unit, u8 item_type_flag, u8 weapon_flag_mask, u8 required_item_type);
+u16 main_unit_calculate_rsm(unit_stats_t* unit, u16 ability_id, s32 flags, entd_unit_t* entd);
 s32 main_unit_calculate_zodiac_symbol(u16 birthday);
-s32 main_unit_check_level_up(battle_stats_t* unit);
-void main_unit_copy_job_data(battle_stats_t* unit);
-void main_unit_copy_job_growths_and_multipliers(battle_stats_t* unit);
-void main_unit_copy_last_ability_ct(battle_stats_t* unit);
-void main_unit_enable_rsm_flags(battle_stats_t* unit);
+s32 main_unit_check_level_up(unit_stats_t* unit);
+void main_unit_copy_job_data(unit_stats_t* unit);
+void main_unit_copy_job_growths_and_multipliers(unit_stats_t* unit);
+void main_unit_copy_last_ability_ct(unit_stats_t* unit);
+void main_unit_enable_rsm_flags(unit_stats_t* unit);
 void main_unit_generate_base_raw_stats(
     unit_raw_stat_t raw_stats[UNIT_RAW_STAT_COUNT], main_unit_generation_type_e unit_type);
-void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_type_e unit_type);
-void main_unit_generate_party_base_raw_stats(party_data_t* party, main_unit_generation_type_e unit_type);
-void main_unit_generate_raw_stats(battle_stats_t* unit);
-u8 main_unit_get_spritesheet_palette(const battle_stats_t* unit, u8* palette);
-s32 main_unit_has_status_in_set(const battle_stats_t* unit, main_status_check_set_e status_set);
+void main_unit_generate_out_of_battle(party_unit_t* party, main_unit_generation_type_e unit_type);
+void main_unit_generate_party_base_raw_stats(party_unit_t* party, main_unit_generation_type_e unit_type);
+void main_unit_generate_raw_stats(unit_stats_t* unit);
+u8 main_unit_get_spritesheet_palette(const unit_stats_t* unit, u8* palette);
+s32 main_unit_has_status_in_set(const unit_stats_t* unit, main_status_check_set_e status_set);
 s32 main_unit_init(entd_encounter_t* entd, s32 unit_id, s32 guest_id, s32 initialize_for_battle);
-void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party_unit);
-s32 main_unit_init_for_battle(battle_stats_t* unit, entd_unit_t* entd, u32 use_world_text, s32 kind);
-s32 main_unit_init_job_data(battle_stats_t* unit, s32 slot, s32 use_world_text);
-s32 main_unit_init_job_data_from_entd(battle_stats_t* unit, entd_unit_t* entd);
+void main_unit_init_battle_data(unit_stats_t* unit, const party_unit_t* party_unit);
+s32 main_unit_init_for_battle(unit_stats_t* unit, entd_unit_t* entd, u32 use_world_text, s32 kind);
+s32 main_unit_init_job_data(unit_stats_t* unit, s32 slot, s32 use_world_text);
+s32 main_unit_init_job_data_from_entd(unit_stats_t* unit, entd_unit_t* entd);
 void main_unit_init_job_levels(u16* unit_job_jp, u8* unit_job_levels);
-void main_unit_init_status_and_rewards(battle_stats_t* unit, s32 clear_rewards);
-void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_unit_t* entd);
-void main_unit_refresh_stats_and_statuses(battle_stats_t* unit);
-void main_unit_reset_battle_state(battle_stats_t* unit);
-void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 level_up_check);
+void main_unit_init_status_and_rewards(unit_stats_t* unit, s32 clear_rewards);
+void main_unit_learn_job_abilities(unit_stats_t* unit, s32 job_id, const entd_unit_t* entd);
+void main_unit_refresh_stats_and_statuses(unit_stats_t* unit);
+void main_unit_reset_battle_state(unit_stats_t* unit);
+void main_unit_set_equipment_attributes(unit_stats_t* unit, s32 level_up_check);
 
 /* SCUS_942.21 unit equipment/name pipeline, 0x8005ab00 and
  * 0x8005c398..0x8005cbd0. Signatures are shared with the matching definitions. */
-void main_unit_set_equipment_stats(battle_stats_t* unit);
-void main_unit_set_equippable_items(battle_stats_t* unit);
-void main_unit_set_rsm_flag(battle_stats_t* unit, u32 ability_id);
-void main_unit_store_character_names(battle_stats_t* unit);
-void main_unit_store_monster_equipment(battle_stats_t* unit, const entd_unit_t* entd);
-void main_unit_store_ramza_name_birthday_zodiac(battle_stats_t* unit);
-void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 skip_status_check, s32 initializing);
+void main_unit_set_equipment_stats(unit_stats_t* unit);
+void main_unit_set_equippable_items(unit_stats_t* unit);
+void main_unit_set_rsm_flag(unit_stats_t* unit, u32 ability_id);
+void main_unit_store_character_names(unit_stats_t* unit);
+void main_unit_store_monster_equipment(unit_stats_t* unit, const entd_unit_t* entd);
+void main_unit_store_ramza_name_birthday_zodiac(unit_stats_t* unit);
+void main_unit_update_stats_statuses_and_equipment(unit_stats_t* unit, s32 skip_status_check, s32 initializing);
 u8 main_party_calculate_highest_level(void);
-void main_unit_increase_casualty_counters(battle_stats_t* unit);
-void main_unit_init_position_and_rewards(battle_stats_t* unit, entd_unit_t* entd);
+void main_unit_increase_casualty_counters(unit_stats_t* unit);
+void main_unit_init_position_and_rewards(unit_stats_t* unit, entd_unit_t* entd);
 
 /* zodiac */
 
@@ -1117,7 +1117,7 @@ typedef struct main_gfx_unit_graphics_load_descriptor {
     s16 spritesheet_id;
     u16 palette_id;
     u16 runtime_id;
-    struct battle_stats* battle_stats;
+    struct unit_stats* battle_stats;
     u32 flags; /* nonzero: the unit starts undrawn */
 } main_gfx_unit_graphics_load_descriptor_t;
 typedef char main_gfx_unit_graphics_load_descriptor_size_must_be_20

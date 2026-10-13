@@ -13,7 +13,7 @@
  * slot so loop.c strength-reduces it into the record pointer; with an explicit
  * pointer walk the smaller loop lets loop.c hoist the constant 3 into $s6. The
  * caller also passes its shown-list slot, which is not read. */
-void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_data_t* record, s32 unused_slot) {
+void bunit_unit_build_data_from_battle_stats(unit_stats_t* unit, bunit_unit_t* record, s32 unused_slot) {
     s16* abilities;
     s32 count;
     s32 i;
@@ -23,7 +23,7 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
     u32 evade;
     u32 other;
 
-    memset(record, 0, sizeof(bunit_unit_data_t));
+    memset(record, 0, sizeof(bunit_unit_t));
     record->level = unit->level <= UNIT_LEVEL_MAX ? unit->level : UNIT_LEVEL_MAX;
     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
         record->team_kind = 1;

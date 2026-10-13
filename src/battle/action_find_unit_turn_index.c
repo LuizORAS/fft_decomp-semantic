@@ -5,7 +5,7 @@
  *
  * Returns -1 for an empty slot, -3 for a unit that cannot act and -2 when the
  * unit is not on the list. */
-s32 action_find_unit_turn_index(const battle_stats_t* unit) {
+s32 action_find_unit_turn_index(const unit_stats_t* unit) {
     battle_at_entry_t at_list[BATTLE_AT_LIST_CAPACITY];
     s32 i;
     battle_at_entry_t* entry;

@@ -15,7 +15,7 @@
  * copies, and the repeated tail uses give the strength-reduced status walker
  * the target's s1 over the stats pointer. */
 s32 world_unit_save_staged_status_data(s32 unit_id) {
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     s32 i;
     s32 value;
     unit_status_staging_t* st;

@@ -1,7 +1,7 @@
 #include "fft/battle_unit.h"
 
 /* Transform a unit into a Morbol, keeping its name, position and facing. */
-void battle_unit_transform_into_morbol(battle_stats_t* unit) {
+void battle_unit_transform_into_morbol(unit_stats_t* unit) {
     u8 saved_name[0x10];
     u8 palette[8];
     u8* name;

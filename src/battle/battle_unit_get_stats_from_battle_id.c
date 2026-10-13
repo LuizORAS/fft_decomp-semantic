@@ -3,7 +3,7 @@
 
 /* The battle stats in a unit slot, occupied or not; 0 for an battle_id past the last
  * slot. */
-battle_stats_t* battle_unit_get_stats_from_battle_id(u32 battle_id) {
+unit_stats_t* battle_unit_get_stats_from_battle_id(u32 battle_id) {
     if (battle_id >= BATTLE_UNIT_SLOT_COUNT) {
         return 0;
     }

@@ -4,14 +4,14 @@
 
 /*
  * Write each formation record's job, abilities, and equipment back into its
- * roster party_data_t, then rebuild the record from the refreshed unit.
+ * roster party_unit_t, then rebuild the record from the refreshed unit.
  *
  * Records using monster skillsets keep their party equipment, learned
  * abilities, and JP. Shields go to the hand's shield byte.
  */
 void world_formation_save_records_to_party_data(void) {
-    battle_stats_t unit;
-    party_data_t* party;
+    unit_stats_t unit;
+    party_unit_t* party;
     s32 i;
     s16 slot;
     u32 item;

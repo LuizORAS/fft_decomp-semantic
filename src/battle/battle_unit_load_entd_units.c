@@ -27,7 +27,7 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
     u8 spritesheet_id;
     s32 unit_id;
     u8 presence;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     entd_unit_t* entd;
     entd_unit_t* entd_list = entd_data->units;
 

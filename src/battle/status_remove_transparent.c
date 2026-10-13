@@ -10,8 +10,8 @@
  * Transparent. Returns the result's attack type, nonzero when there is a change
  * to show. Crystals, treasures, dead, petrified and jumping units return 0
  * untouched. */
-s32 status_remove_transparent(battle_stats_t* unit) {
-    battle_stats_t* target;
+s32 status_remove_transparent(unit_stats_t* unit) {
+    unit_stats_t* target;
 
     if (status_check_crystal_dead_jump_petrify_treasure(unit) != 0) {
         return 0;

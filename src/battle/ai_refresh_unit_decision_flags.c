@@ -8,7 +8,7 @@
  */
 s32 ai_refresh_unit_decision_flags(void) {
     ai_data_t* ai = &g_ai_data_base;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     ai_unit_decision_t* decision;
     s32 unit_id;
 

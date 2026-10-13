@@ -15,7 +15,7 @@
  * that finds nothing leaves the slot empty, and item 0 is stored as ITEM_ID_NONE.
  *
  * The body-armor preference tests Equip Shield, not Equip Armor. */
-void main_unit_calculate_entd_equipment(battle_stats_t* unit, entd_unit_t* entd) {
+void main_unit_calculate_entd_equipment(unit_stats_t* unit, entd_unit_t* entd) {
     u8 item;
     u8 flags;
     s32 i;

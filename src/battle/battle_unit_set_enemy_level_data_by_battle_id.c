@@ -8,7 +8,7 @@
  * Returns 0, also for a unit already present, or -1 when the slot is empty in any
  * state other than off-field. */
 s32 battle_unit_set_enemy_level_data_by_battle_id(u32 battle_id) {
-    battle_stats_t* stats = &g_battle_unit_stats[battle_id];
+    unit_stats_t* stats = &g_battle_unit_stats[battle_id];
 
     if (stats->entd_slot != BATTLE_ENTD_SLOT_NONE)
         return 0;

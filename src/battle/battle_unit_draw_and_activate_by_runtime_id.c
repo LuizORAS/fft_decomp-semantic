@@ -6,7 +6,7 @@
  * Returns 0 when no record has the runtime id. */
 s32 battle_unit_draw_and_activate_by_runtime_id(u32 runtime_id) {
     battle_unit_t* unit;
-    battle_stats_t* battle_data;
+    unit_stats_t* battle_data;
 
     unit = battle_unit_get_by_runtime_id(runtime_id & 0xffff);
     if (unit != 0) {

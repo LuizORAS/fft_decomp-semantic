@@ -12,7 +12,7 @@
  * attacker inflict Invite. */
 void formula_apply_poach_and_train(void) {
     action_data_t* action;
-    battle_stats_t* target;
+    unit_stats_t* target;
     s32 remaining;
 
     action = g_action_target_data;

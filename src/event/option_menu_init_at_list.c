@@ -36,7 +36,7 @@ void option_menu_init_at_list(menu_entry_t* menu) {
     text = g_option_menu_at_list_text;
 
     for (index = 0; index < BATTLE_AT_LIST_CAPACITY; index++) {
-        battle_stats_t* unit;
+        unit_stats_t* unit;
         s32 name_index;
 
         if ((g_option_menu_at_list_descriptors[index].unit_code & BATTLE_AT_UNIT_ID_MASK) == BATTLE_AT_END_OF_LIST) {

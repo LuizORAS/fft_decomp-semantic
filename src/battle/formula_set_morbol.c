@@ -9,7 +9,7 @@
  * Morbol-type jobs are 0x82 Morbol, 0x83 Ochu, 0x84 Great Morbol. */
 void formula_set_morbol(void) {
     action_data_t* action;
-    battle_stats_t* target;
+    unit_stats_t* target;
 
     formula_store_ma_and_x();
     formula_apply_elemental_strengthen();

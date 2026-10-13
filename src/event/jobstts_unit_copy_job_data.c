@@ -7,7 +7,7 @@
  * Player-controlled units and special monsters preserve the stored unlock
  * bits. Other units recalculate them from job levels and gender. Job-point
  * totals are capped to the four-digit value supported by the menu. */
-void jobstts_unit_copy_job_data(battle_stats_t* unit, jobstts_unit_job_data_t* out) {
+void jobstts_unit_copy_job_data(unit_stats_t* unit, jobstts_unit_job_data_t* out) {
     s32 i;
     s32 kind;
     s32 flags;

@@ -3,7 +3,7 @@
 /* Ramza's sprite sets and guest roster slots cannot be
  * dismissed. */
 s32 world_formation_can_dismiss_unit(s16 formation_idx) {
-    world_formation_unit_t* unit = g_world_formation_unit_pointers[formation_idx];
+    world_unit_t* unit = g_world_formation_unit_pointers[formation_idx];
     s32 sprite_set = unit->sprite_set;
     s32 roster_slot = unit->identity.roster_slot;
     if (sprite_set <= CHARACTER_IDENTITY_RAMZA_CHAPTER_4)

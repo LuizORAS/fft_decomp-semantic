@@ -8,7 +8,7 @@
  * no longer be disabled by Stop, Don't Act, Sleep, Chicken, or Charm then. */
 s32 ai_should_exclude_from_imminent_enemies(s32 unit_id) {
     ai_data_t* ai = &g_ai_data_base;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 limit;
 
     if (g_ai_data_base.unit_decisions[unit_id].enemy_flag == 0)

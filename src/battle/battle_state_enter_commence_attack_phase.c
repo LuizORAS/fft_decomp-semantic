@@ -2,11 +2,11 @@
 #include "fft/battle_camera.h"
 
 /*
- * Copies the caster's action target data (battle_stats_t 0x16e..0x181) into
+ * Copies the caster's action target data (unit_stats_t 0x16e..0x181) into
  * its runtime command state's action, then latches the used ability id.
  */
 void battle_state_enter_commence_attack_phase(void) {
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     battle_unit_t* unit;
 
     camera_disable_map_pan();

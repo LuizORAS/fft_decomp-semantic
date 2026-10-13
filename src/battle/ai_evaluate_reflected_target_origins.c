@@ -11,7 +11,7 @@
  */
 s32 ai_evaluate_reflected_target_origins(void) {
     ai_data_t* ai = &g_ai_data_base;
-    battle_stats_t* reflector;
+    unit_stats_t* reflector;
     ai_unit_decision_t* decision;
     ai_tile_mask_mode_e mode;
     s32 ct;

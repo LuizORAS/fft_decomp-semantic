@@ -500,7 +500,7 @@ typedef struct ai_data {
      * OR the acting physical slot into bits 10..15 before loading the entry. */
     ai_ability_entry_t hardcoded_status_abilities[2];         /* 0x1770 */
     ai_weapon_data_t unit_weapon_data[AI_COMPACT_UNIT_COUNT]; /* 0x1778 */
-    battle_stats_t* acting_unit;                              /* 0x17f8 */
+    unit_stats_t* acting_unit;                                /* 0x17f8 */
     ai_action_data_t selected_action;                         /* 0x17fc */
     /* Triggered trap tiles are excluded from movement choices unless
      * the acting unit has Confusion or Berserk. */
@@ -701,12 +701,12 @@ void ai_update_team_targeting_flags(void);
 
 /* status and turn timing */
 s32 ai_calculate_clockticks_until_death_counter_expires();
-s32 ai_calculate_clockticks_until_unit_acts(const battle_stats_t* unit);
-s32 ai_can_cancel_current_status(const battle_stats_t* unit, s32 status_bit);
-s32 ai_can_status_cancellation_affect_turn(const battle_stats_t* unit, s32 status);
+s32 ai_calculate_clockticks_until_unit_acts(const unit_stats_t* unit);
+s32 ai_can_cancel_current_status(const unit_stats_t* unit, s32 status_bit);
+s32 ai_can_status_cancellation_affect_turn(const unit_stats_t* unit, s32 status);
 s32 ai_can_unit_act_within_charge_time(s32 unit_index);
 s32 ai_exclude_enemies_acting_before_ct(void);
-s32 ai_is_status_active_through_delay(s32 delay, const battle_stats_t* unit, s32 status_id);
+s32 ai_is_status_active_through_delay(s32 delay, const unit_stats_t* unit, s32 status_id);
 s32 ai_is_unit_active_after_delay(s32 limit, s32 unit_id);
 
 /* movement */
@@ -761,8 +761,8 @@ void ai_build_attack_origin_masks(void);
 void ai_build_monster_skill_tile_mask(void);
 void ai_build_targetable_tile_mask(ai_tile_mask_mode_e mode, s32 radius);
 s32 ai_calculate_ability_range(void);
-s32 ai_calculate_distance_between_units(const battle_stats_t* a, const battle_stats_t* b);
-s32 ai_calculate_height_difference_between_units(const ai_coords_t* coords, const battle_stats_t* unit);
+s32 ai_calculate_distance_between_units(const unit_stats_t* a, const unit_stats_t* b);
+s32 ai_calculate_height_difference_between_units(const ai_coords_t* coords, const unit_stats_t* unit);
 s32 ai_can_use_geomancy(const ai_coords_t* coords);
 void ai_copy_unit_coordinates(s32 unit_index, ai_coords_t* destination);
 s32 ai_count_flagged_tiles_within_map_bounds(u16 rows[MAP_TERRAIN_LAYER_COUNT][AI_GRID_ROW_COUNT]);

@@ -18,7 +18,7 @@ void world_menu_run_battle_help(void) {
     help_navigation_record_t* navigation;
     s32 menu_index;
     s32 x;
-    native_thread_t* help_thread;
+    thread_t* help_thread;
     help_navigation_record_t* node;
     s32 y;
     s32 bob;
@@ -35,9 +35,9 @@ void world_menu_run_battle_help(void) {
     s32 frame; /* first walks the thread slots looking for a help request */
     /* Unbinding this id swaps its register with the navigation pointer. */
     register s32 help_thread_id __asm__("$21");
-    native_thread_t* scan_thread;
+    thread_t* scan_thread;
     menu_entry_t* request;
-    native_thread_t* self;
+    thread_t* self;
     menu_unit_status_record_t* setup_banner;
     menu_active_unit_t* setup_unit_data;
     menu_status_panel_slot_storage_t* setup_billboard;

@@ -5,7 +5,7 @@
  * movement scenario; the Defend skillset marks a Defend when the unit has it. */
 void ai_select_action_fallback(void) {
     u8 scenario = g_ai_data_base.movement_scenario;
-    battle_stats_t* unit = g_ai_data_base.acting_unit;
+    unit_stats_t* unit = g_ai_data_base.acting_unit;
     u32 coords;
     s32 support;
 

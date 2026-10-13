@@ -18,7 +18,7 @@ void wldcore_proposition_determine_success(void) {
     const u8* job_table_b;
     const u8* tier_table_a;
     const u8* tier_table_b;
-    party_data_t* unit;
+    party_unit_t* unit;
     s32 participant_count;
     s32 total;
     s32 score;

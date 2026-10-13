@@ -6,7 +6,7 @@
  * or Performing clear all four; Defending halves the base hit, which doubles
  * them. */
 void formula_apply_evasion_changes_due_to_statuses(void) {
-    battle_stats_t* target;
+    unit_stats_t* target;
     u8 flag;
     u8* base_hit;
 

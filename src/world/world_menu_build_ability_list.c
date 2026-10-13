@@ -21,7 +21,7 @@
 void world_menu_build_ability_list(s32 mode) {
     s32 unit_index;
     s32 window_x;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
     s32 type;
     s32 skillset;

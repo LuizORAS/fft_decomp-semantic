@@ -20,8 +20,8 @@ void move_store_unit_movement_to_scratchpad(s32 unit_id) {
     move_pathfind_scratch_t* config;
     move_record_t* record;
     move_record_t* current;
-    battle_stats_t* unit;
-    battle_stats_t* other;
+    unit_stats_t* unit;
+    unit_stats_t* other;
     map_tile_t* tile;
     /* Byte access retains the original packed load and field-extraction order. */
     u8 movement[3];

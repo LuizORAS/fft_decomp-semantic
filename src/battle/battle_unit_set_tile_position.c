@@ -8,8 +8,8 @@
  * stale mount link is dropped first.  Returns -1 without moving anything when
  * the destination tile is blocked or untargetable, 0 otherwise. */
 s32 battle_unit_set_tile_position(s32 battle_id, u8 x, u8 y, u8 level, u8 facing) {
-    battle_stats_t* unit;
-    battle_stats_t* partner;
+    unit_stats_t* unit;
+    unit_stats_t* partner;
     s32 occupant;
     u8 rider;
     s32 has_rider;

@@ -7,7 +7,7 @@
 #include "fft/wldcore.h"
 
 s32 wldcore_proposition_select_report_speaker(s32 index) {
-    party_data_t* unit;
+    party_unit_t* unit;
     s32 best;
     s32 i;
     s32 selected;

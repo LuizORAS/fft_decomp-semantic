@@ -5,7 +5,7 @@
 /* Reset the base hit to 100 and load the target's accessory and shield
  * magic evades; monsters get no equipment evade. */
 void formula_store_magical_evade_values(void) {
-    battle_stats_t* target;
+    unit_stats_t* target;
     item_data_t* items;
     item_data_t* item;
     s32 secondary;

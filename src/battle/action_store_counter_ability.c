@@ -7,10 +7,10 @@
  * target of skillset/ability and runs the attack preview.  Returns -1 when the
  * action itself fails, -2 when the acting unit's tile is not targetable and
  * -3 when the preview fails; 0 otherwise. */
-s32 action_store_counter_ability(battle_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target) {
+s32 action_store_counter_ability(unit_stats_t* unit, s8 skillset_id, s16 ability_id, s32 validate_target) {
     /* A byte flag test retains the original compound-condition scheduling. */
     action_command_t* action;
-    battle_stats_t* acting_unit;
+    unit_stats_t* acting_unit;
     s32 result;
     s32 acting_unit_id;
     s32 preview_result;

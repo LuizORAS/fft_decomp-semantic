@@ -14,7 +14,7 @@
  * above bit 15); spelled as one expression it is one instruction short.
  */
 s32 battle_menu_load_item_abilities(s32 unit_id, u8 skillset, u8* out_item_ids) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u16 abilities[0x14];
     u8 mp_costs[0x18];
     u8 ability_ct[0x18];

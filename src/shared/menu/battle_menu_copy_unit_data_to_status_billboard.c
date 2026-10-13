@@ -5,7 +5,7 @@
 #include "psx/types.h"
 
 /* Fill the level, team, AT-list position, HP/MP/CT and live-unit count. */
-void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu_unit_status_record_t* output) {
+void battle_menu_copy_unit_data_to_status_billboard(unit_stats_t* unit, menu_unit_status_record_t* output) {
     s32 resolved_id;
     s32 count;
     s32 i;

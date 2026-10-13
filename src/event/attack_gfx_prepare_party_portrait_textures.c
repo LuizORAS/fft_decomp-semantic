@@ -17,7 +17,7 @@ void attack_gfx_prepare_party_portrait_textures(void) {
     s32 pal_offset;
     s32 i;
     s32 value;
-    party_data_t* unit;
+    party_unit_t* unit;
     s32 job_id;
     s32 base;
     s32 cell;

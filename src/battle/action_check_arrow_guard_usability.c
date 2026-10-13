@@ -5,7 +5,7 @@
  * A successful Brave-based reaction changes the target result to the shared
  * class-evade/Arrow Guard miss type. */
 void action_check_arrow_guard_usability(void) {
-    battle_stats_t* target;
+    unit_stats_t* target;
     action_data_t* action;
 
     if ((g_action_current_ability.range_data.flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE) == 0) {

@@ -28,10 +28,10 @@ s32 require_party_save_battle_units_and_find_join_candidates(void) {
 
     g_require_party_affected_unit_count = 0;
     for (party_index = 0; party_index < PARTY_ROSTER_SLOT_COUNT; party_index++) {
-        party_data_t* party_unit = main_party_get_data_pointer(party_index);
+        party_unit_t* party_unit = main_party_get_data_pointer(party_index);
 
         if (party_unit->party_id != PARTY_ID_NONE) {
-            battle_stats_t* unit;
+            unit_stats_t* unit;
 
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = battle_unit_get_stats_from_battle_id(i);
@@ -68,8 +68,8 @@ s32 require_party_save_battle_units_and_find_join_candidates(void) {
     }
 
     for (party_index = 0; party_index < BATTLE_UNIT_SLOT_COUNT; party_index++) {
-        battle_stats_t* unit;
-        battle_stats_t* battle_unit;
+        unit_stats_t* unit;
+        unit_stats_t* battle_unit;
 
         battle_unit = battle_unit_get_stats_from_battle_id(party_index);
         unit = battle_unit_find_stats_by_entd_unit_id(battle_unit->unit_id, &found_index);

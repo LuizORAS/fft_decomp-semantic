@@ -3,7 +3,7 @@
 
 /* Confirm the current menu action, recording the auto-battle mode it selects. */
 void battle_menu_confirm_auto_battle_selection_thread(void) {
-    battle_stats_t* attacker;
+    unit_stats_t* attacker;
     s32 menu;
     menu_entry_t* parameter;
 

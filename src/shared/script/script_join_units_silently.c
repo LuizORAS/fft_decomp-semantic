@@ -6,7 +6,7 @@
 void script_join_units_silently(void) {
     s32 out_idx;
     s32 i;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u8 first;
     u8 flags;
 

@@ -30,7 +30,7 @@ void battle_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_u
     s32 mode;
     s32 message;
     menu_entry_t* parameter;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     g_battle_active_menu = menu;
     parameter = (menu_entry_t*)battle_thread_get_current_parameter_1();

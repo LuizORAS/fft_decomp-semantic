@@ -10,7 +10,7 @@
  * tile's height.
  */
 s32 map_resolve_rotated_offset_layer(
-    battle_stats_t* unit, s32 dx, s32 dy, s32 flags, s32* out_x, s32* out_y, s32* out_flag) {
+    unit_stats_t* unit, s32 dx, s32 dy, s32 flags, s32* out_x, s32* out_y, s32* out_flag) {
     map_tile_t* current;
     map_tile_t* lower;
     map_tile_t* upper;

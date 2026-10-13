@@ -1,7 +1,7 @@
 #include "fft/battle_action.h"
 
 /* Make the unit the current target and reset its action result record. */
-void action_set_target_variables(battle_stats_t* unit) {
+void action_set_target_variables(unit_stats_t* unit) {
     action_data_t* action = &unit->action;
     g_action_target = unit;
     g_action_target_data = action;

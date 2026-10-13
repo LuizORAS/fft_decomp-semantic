@@ -8,7 +8,7 @@ s32 bunit_unit_find_index_by_battle_id(s16 battle_id) {
     s32 count;
     s32 i;
     s32 search_value;
-    bunit_unit_data_t** unit_data;
+    bunit_unit_t** unit_data;
 
     count = g_bunit_unit_count;
     i = 0;

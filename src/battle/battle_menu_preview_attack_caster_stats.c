@@ -10,8 +10,8 @@
  * target's action results through g_battle_menu_preview_target_action (0 when skipped).
  */
 void battle_menu_preview_attack_caster_stats(void) {
-    battle_stats_t* attacker;
-    battle_stats_t* target;
+    unit_stats_t* attacker;
+    unit_stats_t* target;
     action_command_t* action;
     ability_data_t* ability_data;
     main_ability_secondary_pointer_t secondary;

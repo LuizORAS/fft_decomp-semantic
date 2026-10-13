@@ -10,7 +10,7 @@
  * For a mounted pair the partner lookup uses the unit's own unit_id, so the
  * second battle_unit_set_tile_position call repeats the first for the same unit. */
 void battle_unit_store_coordinate_mount_animation_data(battle_unit_t* unit) {
-    battle_stats_t* data;
+    unit_stats_t* data;
     battle_unit_t* mount;
 
     data = unit->battle_data;

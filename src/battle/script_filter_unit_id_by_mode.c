@@ -16,7 +16,7 @@
  * Unsupported modes fall off the end without a defined return value.
  */
 s32 script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 index;
     s32 i;
     s32 blocked;

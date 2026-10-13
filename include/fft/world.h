@@ -1269,7 +1269,7 @@ enum {
     WORLD_MONSTER_BREED_ENTRY_COUNT = JOB_ID_TIAMAT - JOB_ID_CHOCOBO + 1,
 };
 
-/* world_formation_unit_t::proposition_status, copied from the party record:
+/* world_unit_t::proposition_status, copied from the party record:
  * the label the formation grid draws below a unit that is away. */
 typedef enum world_formation_unit_proposition {
     WORLD_FORMATION_UNIT_PROPOSITION_LEAVING = 1,
@@ -1296,12 +1296,11 @@ typedef char world_formation_abilities_size_must_be_10[(sizeof(world_formation_a
  * Records at 0x801c8638 have stride 0x128; roster_slot preserves their roster
  * identity. The builder and sorter produce the
  * ordered g_world_formation_unit_pointers list, not a roster-indexed array.
- * The byte fields from 0x70 on mirror the party_data_t layout above. Magical
+ * The byte fields from 0x70 on mirror the party_unit_t layout above. Magical
  * shield/accessory evade are provisionally placed at 0x50/0x52, after the
- * physical fields at 0x40/0x42, to follow the 16-bit sequence. Other bytes
- * stay as padding.
+ * physical fields at 0x40/0x42, to follow the 16-bit sequence.
  */
-typedef struct world_formation_unit {
+typedef struct world_unit {
     menu_unit_status_record_t status;     /* 0x000; copied whole to the status banner */
     menu_unit_status_identity_t identity; /* 0x022 */
     s16 move;                             /* 0x030 */
@@ -1327,7 +1326,7 @@ typedef struct world_formation_unit {
     u8 _unused_068[8];                         /* 0x068; spare tail of the stat-detail block */
     u8 gender_flags;                           /* 0x070; unit_flags_e (fft/unit.h) */
     u8 _unused_071;
-    u8 sprite_set;               /* 0x072; "Sprite Set ID": party_data_t.sprite_set / character identity */
+    u8 sprite_set;               /* 0x072; "Sprite Set ID": party_unit_t.sprite_set / character identity */
     u8 equippable_item_types[4]; /* 0x073; bit per item type, read by can_unit_equip_item_id */
     u8 unlocked_jobs[UNIT_UNLOCKED_JOB_BYTE_COUNT];                                           /* 0x077 */
     u8 learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT][UNIT_LEARNED_ABILITY_BYTES_PER_JOB]; /* 0x07a through 0x0b2 */
@@ -1338,13 +1337,13 @@ typedef struct world_formation_unit {
     u8 monster_graphic;           /* 0x11e; added to formation graphic entry 0x3d when sprite_set == 0x82
                                      (world_formation_build_unit_graphic_entry) */
     u8 proposition_status;        /* 0x11f; "Proposition Byte": world_formation_unit_proposition_e, 0 when present */
-    u16 birthday;                 /* 0x120; battle_stats_t birthday & 0x1ff; egg readers split
+    u16 birthday;                 /* 0x120; unit_stats_t birthday & 0x1ff; egg readers split
                                      it into nibbles */
-    u16 egg_color; /* 0x122; party_data_t 0xd2; the formation sprite drawer (0x8011751c) loads it as a 16-bit palette
+    u16 egg_color; /* 0x122; party_unit_t 0xd2; the formation sprite drawer (0x8011751c) loads it as a 16-bit palette
                       index */
-    u8 support_abilities[4]; /* 0x124; copy of battle_stats_t.ability_flags.support, BATTLE_SUPPORT_SET_1..4_* */
-} world_formation_unit_t;
-typedef char world_formation_unit_t_size_must_be_296[(sizeof(world_formation_unit_t) == 296) ? 1 : -1];
+    u8 support_abilities[4]; /* 0x124; copy of unit_stats_t.ability_flags.support, BATTLE_SUPPORT_SET_1..4_* */
+} world_unit_t;
+typedef char world_unit_size_must_be_296[(sizeof(world_unit_t) == 296) ? 1 : -1];
 
 /* The mode argument of world_formation_build_record_list: which roster units
  * it lists. */
@@ -1420,7 +1419,7 @@ extern u8 g_world_formation_unit_banner_at_bottom;
 extern u8 g_world_formation_unit_banner_at_bottom_latch;
 extern s16 g_world_formation_selected_unit_index;
 extern s16 g_world_formation_selected_unit_index_latch;
-extern struct world_formation_unit* g_world_formation_temp_unit;
+extern struct world_unit* g_world_formation_temp_unit;
 extern u8 g_world_formation_unit_banner_enabled;
 extern u8 g_world_formation_unit_browse_enabled;
 
@@ -1522,7 +1521,7 @@ extern point16_t g_world_formation_cursor_trail[8];
 extern u8 g_world_formation_dismiss_step;
 extern menu_entry_t* g_world_formation_dismiss_menu_data;
 extern s16 g_world_formation_record_order[];
-extern struct world_formation_unit g_world_formation_unit_records[WORLD_FORMATION_UNIT_RECORD_COUNT];
+extern struct world_unit g_world_formation_unit_records[WORLD_FORMATION_UNIT_RECORD_COUNT];
 extern u8 g_world_formation_menu_text_buffer[];
 
 /* Signed count of accepted roster records; the sorter also installs the
@@ -1532,7 +1531,7 @@ extern s16 g_world_formation_record_count; /* 0x801c8634 */
 /* Menu callers cache the builder's return here; rebuilding the record list
  * does not itself refresh this byte. */
 extern u8 g_world_formation_unit_count;
-extern world_formation_unit_t* g_world_formation_unit_pointers[];
+extern world_unit_t* g_world_formation_unit_pointers[];
 void world_formation_run_screen(s32 tutorial, s32 unused);
 s32 world_formation_is_unit_list_scroll_needed(void);
 void world_formation_draw_unit_slots(point16_t* positions, s32 shade);
@@ -1545,12 +1544,11 @@ s32 world_formation_run_item_submenu_step(void);
 s32 world_formation_run_set_ability_menu(void);
 void world_formation_build_job_wheel_availability(void);
 void world_formation_build_job_wheel_job_name(void);
-s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** unused_list, s32 mode);
+s16 world_formation_build_record_list(s32 item_id, world_unit_t** unused_list, s32 mode);
 
 void world_formation_build_unit_graphic_entry(s16 formation_index, texture_source_t* destination, s32 unused);
 
-void world_formation_build_unit_record(
-    struct battle_stats* unit, struct world_formation_unit* record, struct party_data* party);
+void world_formation_build_unit_record(struct unit_stats* unit, struct world_unit* record, struct party_unit* party);
 
 void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* poly);
 s32 world_formation_can_dismiss_unit(s16 formation_idx);
@@ -1743,14 +1741,14 @@ extern palette_t g_world_selected_unit_portrait_palettes[2];
 extern u8 g_world_stat_preview_text_image[];
 s32 world_get_party_unit_formation_sprite(s32 party_index);
 void resolve_unit_status_changes(void);
-s32 unit_has_adjacent_monster_skill_support(struct battle_stats* unit);
+s32 unit_has_adjacent_monster_skill_support(struct unit_stats* unit);
 void world_unit_apply_staged_status_data(s32 unit_id, s32 runtime_id);
 void world_unit_queue_current_status_graphics(s32 battle_unit_index, s32 enabled);
 void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment);
 s32 world_unit_can_equip_item_id(s16 unit_index, s16 item_id);
 s32 world_unit_check_facing_relative_to_camera(s32 unit_id);
 void world_unit_clear_status_staging_data(void);
-struct battle_stats* world_unit_get_battle_stats_for_stored(void);
+struct unit_stats* world_unit_get_battle_stats_for_stored(void);
 s32 world_unit_get_map_coords_by_runtime_id(s32 runtime_id, SVECTOR* out);
 vec3u16_t* world_unit_copy_world_coords_to_scratch(u32 runtime_id);
 s32 world_formation_get_unit_palette_index(s32 roster_slot);
@@ -2446,7 +2444,7 @@ s32 world_menu_get_item_price_display_value(s32 entry_index);
 s32 world_menu_get_learn_job_jp(s32 index);
 s32 world_job_calculate_current_level(s32 index);
 s32 world_menu_get_window_scale_step(void);
-void world_menu_copy_unit_data_to_status_billboard(struct battle_stats* unit, menu_unit_status_record_t* output);
+void world_menu_copy_unit_data_to_status_billboard(struct unit_stats* unit, menu_unit_status_record_t* output);
 void world_menu_init_quad_from_record(RECT* out, const menu_entry_t* record, SPRT* primitive);
 void world_menu_run_display_script(menu_instruction_t* script, s32 value);
 rgb24_t* world_menu_get_sprite_color(void);

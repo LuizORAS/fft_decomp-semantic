@@ -1,6 +1,6 @@
 #include "fft/main.h"
 
-void main_unit_reset_battle_state(battle_stats_t* unit) {
+void main_unit_reset_battle_state(unit_stats_t* unit) {
     unit->auto_battle_setting = AI_AUTOBATTLE_MANUAL;
     unit->auto_battle_target = 0;
     unit->ct = 0;

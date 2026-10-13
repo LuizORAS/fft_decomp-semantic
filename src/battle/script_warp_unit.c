@@ -15,7 +15,7 @@ void script_warp_unit(const event_warp_unit_parameters_t* instruction) {
         const event_warp_unit_parameters_t* instruction;
         const event_unit_placement_t* placement;
     } cursor;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 battle_id;
     s32 runtime_id;
     s32 result;

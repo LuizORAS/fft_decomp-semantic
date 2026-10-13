@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Apply Float and reconcile the unit's status flags and status CT. */
-void main_status_update_unit_flags_and_ct(battle_stats_t* unit) {
+void main_status_update_unit_flags_and_ct(unit_stats_t* unit) {
     s32 status;
     u8 immunity;
 

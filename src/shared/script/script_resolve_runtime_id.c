@@ -14,7 +14,7 @@ s32 script_resolve_runtime_id(s32 unit_id) {
     s32 unit_state;
     s32 original_unit_id;
     s32 runtime_id;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     if (unit_id >= CHARACTER_IDENTITY_RAMZA_CHAPTER_1 && unit_id < CHARACTER_IDENTITY_GENERIC_FIRST) {
         battle_id = battle_unit_find_slot_by_character_identity(unit_id);

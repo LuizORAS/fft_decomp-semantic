@@ -31,7 +31,7 @@ void require_party_remove_low_brave_high_faith_units(void) {
     require_gfx_fade_rgb_31_frames(0xd, 5, 2);
     thread_yield();
     for (i = 0; i < g_require_party_affected_unit_count; i++) {
-        battle_stats_t* unit;
+        unit_stats_t* unit;
         s32 unit_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
         s32 message_thread;
         g_text_substitution_values[0] = g_require_party_affected_battle_unit_indices[i];

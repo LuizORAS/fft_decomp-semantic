@@ -10,7 +10,7 @@
 s32 ai_select_action_targeted(void) {
     s32 target = g_ai_data_base.acting_unit->auto_battle_target;
     ai_data_t* ai = &g_ai_data_base;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i, result;
 
     /* Reload the persistent target before every resume dispatch. */

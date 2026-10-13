@@ -7,7 +7,7 @@
  * Mounts cannot receive the terrain effect. A rider uses the linked mount's
  * Float status because that unit determines whether the pair touches the
  * terrain. The resident terrain table marks surfaces that inflict Poison. */
-s32 status_prepare_terrain_poison(battle_stats_t* unit) {
+s32 status_prepare_terrain_poison(unit_stats_t* unit) {
     s32 mount_info;
     u8 unit_id;
     action_data_t* action;

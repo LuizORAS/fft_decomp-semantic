@@ -10,7 +10,7 @@
  * removal_only. Nothing happens when the id resolves to no unit on the field. */
 void status_inflict_by_event_unit_id(s32 event_unit_id, s32 status, s32 which, s32 removal_only) {
     s32 idx;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
     s32 byte;
     s32 bit;

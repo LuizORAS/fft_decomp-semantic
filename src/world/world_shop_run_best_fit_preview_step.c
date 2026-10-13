@@ -74,7 +74,7 @@ void world_shop_run_best_fit_preview_step(void) {
     s32 item;
 
     if (g_world_shop_best_fit_menu_open == 0) {
-        world_formation_unit_t** unit_slot;
+        world_unit_t** unit_slot;
         s16* room_base;
         s16* reserved;
 

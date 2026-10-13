@@ -39,7 +39,7 @@ void battle_state_handle_jp_exp_gain_state(void) {
         return;
     }
     if (action_check_change_of_turn(unit->battle_data->battle_id) == 1) {
-        /* battle_stats_t +0x16e holds the same 20-byte command payload. */
+        /* unit_stats_t +0x16e holds the same 20-byte command payload. */
         unit->command_state.ai.data.action = unit->battle_data->action_command;
         unit->used_ability_id = unit->battle_data->action_command.ability_id;
         if (unit->attack_phase_state == BATTLE_ATTACK_PREPARATION_JUMP) {

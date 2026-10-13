@@ -10,7 +10,7 @@
  * post-action display starts at the level-up report. When any step is pending the
  * map cursor and its tile glow are hidden. */
 void move_init_post_movement_display(void) {
-    battle_stats_t* stats;
+    unit_stats_t* stats;
 
     camera_disable_map_pan();
     stats = battle_unit_get_casting()->battle_data;

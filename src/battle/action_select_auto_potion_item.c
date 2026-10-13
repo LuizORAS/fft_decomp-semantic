@@ -4,7 +4,7 @@
 /* The item Auto Potion uses: the first of Potion, Hi-Potion and X-Potion the
  * party has in stock, or -1 with none. A unit that did not start on the blue team
  * always uses a Potion. */
-s32 action_select_auto_potion_item(battle_stats_t* unit) {
+s32 action_select_auto_potion_item(unit_stats_t* unit) {
     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
         return ITEM_ID_POTION;
     }

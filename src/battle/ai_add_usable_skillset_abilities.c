@@ -28,7 +28,7 @@ s32 ai_add_usable_skillset_abilities(s32 unit_id, s32 skillset, s32 count) {
     ai_ability_entry_t* entry;
     ai_ability_entry_t* slot;
     ai_ability_entry_t* row;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 ability_id;
     s32 unit_bits;
     u8 mp_cost;

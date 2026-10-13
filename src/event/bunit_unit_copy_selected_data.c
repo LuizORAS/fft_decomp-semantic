@@ -2,7 +2,7 @@
 /* Copy the selected unit's stat summary, identity and stat detail blocks
  * into the panel records and request a redraw of all four panels. */
 void bunit_unit_copy_selected_data(void) {
-    bunit_unit_data_t* unit_data;
+    bunit_unit_t* unit_data;
 
     g_bunit_unit_comparison_index = g_bunit_unit_selected_index;
     unit_data = g_bunit_unit_data[g_bunit_unit_comparison_index];

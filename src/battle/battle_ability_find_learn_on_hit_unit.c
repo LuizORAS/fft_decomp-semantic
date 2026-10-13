@@ -18,7 +18,7 @@ enum {
 s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id) {
     u8 known[BATTLE_LEARN_ON_HIT_ROW_BYTES];
     ability_data_t* ability;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
     s32 j;
     s32 row;

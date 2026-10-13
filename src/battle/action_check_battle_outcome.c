@@ -9,7 +9,7 @@ s32 action_check_battle_outcome(void) {
     s32 enemy_unit_count;
     s32 unit_index;
     s32 selected;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     player_unit_count = 0;
     enemy_unit_count = 0;

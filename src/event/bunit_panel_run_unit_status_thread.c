@@ -381,7 +381,7 @@ void bunit_panel_run_unit_status_thread(void) {
             battle_text_draw_large_number_glyphs(scroll[3], 0x202, cur3, origin);
             LoadImage(&rects[4], (u32*)cur3);
             if (g_battle_post_battle_unit_changes_active == 0) {
-                battle_stats_t* stats;
+                unit_stats_t* stats;
                 battle_menu_set_text_origin(0, 0);
                 stats = battle_unit_get_stats_from_battle_id(scroll[5]);
                 if (scroll[5] >= 0x10) {

@@ -8,7 +8,7 @@
  * takes none. */
 void move_apply_knockback(void) {
     u8* flags;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     action_data_t* action;
     s32 amount;
     s32 diff;

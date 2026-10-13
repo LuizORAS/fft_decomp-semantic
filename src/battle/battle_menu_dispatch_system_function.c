@@ -26,7 +26,7 @@
  */
 s32 battle_menu_dispatch_system_function(
     s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, action_command_t* action) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 value;
     s32 count;
     s32 i;

@@ -4,7 +4,7 @@
 /* Mark the unit's move and/or action as taken and end its turn once nothing is
  * left to do. -1 for an absent unit, 1 when the turn ended, otherwise 0. */
 s32 action_set_move_act_flags(s32 idx, s32 move_flag, s32 act_flag) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 ret;
     unit = &g_battle_unit_stats[idx];
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE)

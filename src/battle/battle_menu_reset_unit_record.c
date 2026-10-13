@@ -3,7 +3,7 @@
 
 /* Reset one unit's menu record while the unit is not under auto-battle control. */
 void battle_menu_reset_unit_record(s32 battle_id) {
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     menu_unit_selection_record_t* records;
     s32 i;
 

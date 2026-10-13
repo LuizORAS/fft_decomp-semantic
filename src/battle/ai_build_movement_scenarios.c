@@ -16,7 +16,7 @@ extern s32 g_ai_stay_near_destination_fixed; /* 1 after a reachable Stay Near de
 s32 ai_build_movement_scenarios(void) {
     ai_unit_decision_t* decision;
     ai_data_t* ai;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 limit;
     s32 low;
     s32 high;

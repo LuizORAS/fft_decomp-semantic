@@ -5,7 +5,7 @@
  * `action_state` (clearing the other three) and notifies the battle status
  * handlers about every bit that changed.  0xff keeps performing only when the
  * unit is already performing. */
-void main_status_set_action_state(battle_stats_t* unit, u8 action_state) {
+void main_status_set_action_state(unit_stats_t* unit, u8 action_state) {
     u8 old_status;
     s32 battle_id;
     u8 status;

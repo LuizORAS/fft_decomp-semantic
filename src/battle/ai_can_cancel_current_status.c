@@ -6,7 +6,7 @@
  * Innate statuses are excluded. The cancellation mask aggregates the actor's
  * usable ability list; it does not describe only the considered ability.
  */
-s32 ai_can_cancel_current_status(const battle_stats_t* unit, s32 status_bit) {
+s32 ai_can_cancel_current_status(const unit_stats_t* unit, s32 status_bit) {
     ai_data_t* ai = &g_ai_data_base;
     s32 byte_off;
     s32 bit;

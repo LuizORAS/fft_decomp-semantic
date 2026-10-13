@@ -16,8 +16,8 @@
  * distinct comparison copy without a compiler constraint.
  */
 void formula_apply_zodiac_compatibility(void) {
-    battle_stats_t* attacker;
-    battle_stats_t* target;
+    unit_stats_t* attacker;
+    unit_stats_t* target;
     u16 attacker_zodiac;
     u32 attacker_zodiac_compare;
     u16 target_zodiac;

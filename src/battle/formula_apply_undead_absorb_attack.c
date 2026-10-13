@@ -8,7 +8,7 @@
  *
  * Status byte 1: 0x20 Dead, 0x10 Undead. */
 void formula_apply_undead_absorb_attack(void) {
-    battle_stats_t* unit = g_action_target;
+    unit_stats_t* unit = g_action_target;
 
     if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_UNDEAD)] & STATUS_BYTE_MASK(STATUS_ID_UNDEAD)) {
         u16 amount;

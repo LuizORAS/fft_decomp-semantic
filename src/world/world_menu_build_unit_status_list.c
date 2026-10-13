@@ -10,7 +10,7 @@
  * iteration as the target does; the columns are s16 so `index + 0x8800`
  * stays a 32-bit addition with the constant hoisted into a register. */
 void world_menu_build_unit_status_list(void) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u16 i;
     u16 bit;
     u16 count;

@@ -16,8 +16,8 @@
  * is still read before the id is tested.
  */
 void world_menu_preview_attack_caster_stats(void) {
-    battle_stats_t* stored;
-    battle_stats_t* target;
+    unit_stats_t* stored;
+    unit_stats_t* target;
     action_command_t* action;
     ability_data_t* ability_data;
     main_ability_secondary_pointer_t secondary_data;

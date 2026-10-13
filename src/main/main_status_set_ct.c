@@ -7,7 +7,7 @@
  * 0xff for an immortal unit and for one with a save- or load-formation flag.
  * Returns -1 when Death Sentence is already counting, so a second one does not
  * restart it; otherwise 0. */
-s32 main_status_set_ct(battle_stats_t* unit, s32 status_id, s32 removing) {
+s32 main_status_set_ct(unit_stats_t* unit, s32 status_id, s32 removing) {
     u32 ct_index;
     s32 stored_index;
 

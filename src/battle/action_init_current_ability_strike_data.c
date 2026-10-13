@@ -19,7 +19,7 @@
  * straight into the global instead sinks the load past the store and drops
  * that instruction.
  */
-void action_init_current_ability_strike_data(battle_stats_t* unit) {
+void action_init_current_ability_strike_data(unit_stats_t* unit) {
     ability_secondary_data_t* data;
     u8 menu_type;
     u8 weapon_kind;

@@ -4,7 +4,7 @@
 /* Disable the renderer flags of every current status, then clear the unit's
  * innate, immune, current, status CT and inflicted status bytes (Morbol
  * transformation preparation). */
-void status_reapply_active_flags(battle_stats_t* unit) {
+void status_reapply_active_flags(unit_stats_t* unit) {
     s32 i;
     s32 battle_id = unit->battle_id;
 

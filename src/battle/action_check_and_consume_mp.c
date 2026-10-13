@@ -7,7 +7,7 @@
  * non-Mime abilities consume MP; the effective cost is recorded first.
  * Preview skips only subtraction; earlier bookkeeping still runs.
  */
-s32 action_check_and_consume_mp(battle_stats_t* unit) {
+s32 action_check_and_consume_mp(unit_stats_t* unit) {
     s16 ability_id;
     u8 menu;
     s32 result;

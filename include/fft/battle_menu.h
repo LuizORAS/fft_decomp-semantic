@@ -88,7 +88,7 @@ s32 battle_menu_dispatch_system_function(
     s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, action_command_t* action);
 s32 battle_menu_get_id_based_on_mount_moveable_actable(s32 runtime_id);
 ai_command_t* battle_menu_get_selected_command_address(void);
-s32 battle_menu_get_unit_action_menu_id(battle_stats_t* unit);
+s32 battle_menu_get_unit_action_menu_id(unit_stats_t* unit);
 void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option);
 s32 battle_menu_init_system_function(s32 type, s32 option, s32 unit_id, s32 parameter, s32 enabled);
 void battle_menu_open_active_unit_idle_action_menu(void);
@@ -138,7 +138,7 @@ s32 battle_menu_display_item_inventory_ability(s32 unit_id, s32 skillset, u8* ou
 s32 battle_menu_get_unit_skillset_ability_data(
     s32 unit_id, u8 skillset, s16* ability_ids, u8* mp_out, u8* ct_out, s32 unused, u8* flags_out, u8* turns_out);
 s32 battle_menu_has_monster_skill_supporter_at_tile(s32 team_flags, s32 x, s32 y, s32 total_height);
-s32 battle_menu_init_monster_skill_check(battle_stats_t* unit);
+s32 battle_menu_init_monster_skill_check(unit_stats_t* unit);
 s32 battle_menu_load_charge_skillset(s32 unit_id, s32 skillset, s16* abilities, u8* ability_ct, u8* turns);
 s32 battle_menu_load_draw_out_abilities(s32 unit_id, s32 skillset, u8* out_item_ids);
 u16 battle_menu_load_elemental_abilities(s32 skillset_slot, u8 unit_id);
@@ -190,7 +190,7 @@ void battle_menu_copy_billboard_data_in(const menu_unit_status_record_t* banner,
     const menu_status_panel_slot_storage_t* billboard);
 void battle_menu_copy_billboard_data_out(menu_unit_status_record_t* banner, menu_active_unit_t* unit,
     menu_status_panel_slot_storage_t* billboard, map_selected_tile_t* cursor_tile);
-void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu_unit_status_record_t* output);
+void battle_menu_copy_unit_data_to_status_billboard(unit_stats_t* unit, menu_unit_status_record_t* output);
 void battle_menu_display_hovered_unit_stats(
     RECT* frame_rect, s32 mode, menu_number_entry_t* entries, menu_unit_status_record_t* status);
 s32 battle_menu_display_projected_action_effect(

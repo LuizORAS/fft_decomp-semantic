@@ -11,7 +11,7 @@
  */
 void ai_build_monster_skill_tile_mask(void) {
     ai_data_t* ai = &g_ai_data_base;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
     s32 direction;
     s32 x;

@@ -7,7 +7,7 @@
  * low byte in action_id_low, battle ID - 0x40 for an ability id of 0x100 or more, or
  * battle ID + 0x60 for Jump. Returns 1 when the entry was placed. */
 s32 action_sort_at_list(s32 battle_id, s32 mode, s32 sort_key, battle_at_entry_t* list) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
     s32 j;
     s32 unit_code;

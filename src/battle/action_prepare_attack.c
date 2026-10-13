@@ -8,7 +8,7 @@
  */
 s32 action_prepare_attack(action_command_t* source, action_command_t* dest, s32 phase) {
     action_command_t action;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     ability_secondary_data_t* entry;
     s16 ability;
     u8* table;

@@ -13,7 +13,7 @@
 s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters) {
     /* A byte collision test retains the original single-mask branch. */
     s32 unit_index;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     map_tile_t* tile;
     u8 mount_info;
     /* The unit loop tests a byte copy of the filters. */

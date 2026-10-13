@@ -11,7 +11,7 @@
 void world_formation_stage_selected_unit(void) {
     /* Preserve the target's unused 128-byte stack area. */
     u8 unused[128];
-    world_formation_unit_t** units;
+    world_unit_t** units;
     s32 index;
 
     g_world_formation_selected_unit_index_latch = g_world_formation_selected_unit_index;

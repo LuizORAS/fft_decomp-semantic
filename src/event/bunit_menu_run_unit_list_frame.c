@@ -5,7 +5,7 @@
 
 s32 bunit_menu_run_unit_list_frame(void) {
     s32 input;
-    bunit_unit_data_t* unit;
+    bunit_unit_t* unit;
     u8 mode_b3;
     u8 mode_b4;
 

@@ -7,7 +7,7 @@
 /* Request a runtime animation, selecting mount/status animations when battle rules require them. */
 void unit_set_animation(s32 runtime_id, u32 animation) {
     s32 battle_id;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     s32 depth;
 
     if ((script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) == 0)

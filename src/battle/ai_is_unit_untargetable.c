@@ -9,7 +9,7 @@
  * only when its mount is not also Transparent. */
 s32 ai_is_unit_untargetable(s32 unit_idx) {
     ai_data_t* ai = &g_ai_data_base;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 mount;
 
     unit = &g_battle_unit_stats[unit_idx];

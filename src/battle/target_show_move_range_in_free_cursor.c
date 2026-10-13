@@ -9,7 +9,7 @@
  * free-cursor mode with the previous mode saved. */
 void target_show_move_range_in_free_cursor(void) {
     battle_unit_t* unit;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     s32 prev;
 
     camera_enable_map_pan();

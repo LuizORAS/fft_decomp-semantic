@@ -7,7 +7,7 @@
  * Frog and Chicken suppress Fly, while the Float status supplies Float even
  * when it is not equipped as a movement ability.
  */
-move_effective_flags_e move_get_effective_flags(const battle_stats_t* unit) {
+move_effective_flags_e move_get_effective_flags(const unit_stats_t* unit) {
     u8 flags;
     s32 movement_abilities_2;
     s32 movement_abilities_3;

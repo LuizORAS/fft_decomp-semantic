@@ -11,7 +11,7 @@ enum {
 /* Copies the unit's name, job name and skillset names into its battle
  * record.  Units without a party slot get a random unused generic name for
  * their gender. */
-void main_unit_store_character_names(battle_stats_t* unit) {
+void main_unit_store_character_names(unit_stats_t* unit) {
     /* Removing this unused array reduces the native stack frame by 0x100. */
     u8 unused[0x100];
     u8* (*prepare_text)(u32 text_id);
@@ -24,8 +24,8 @@ void main_unit_store_character_names(battle_stats_t* unit) {
     s32 name_available;
     s32 i;
     u8* text;
-    party_data_t* party;
-    battle_stats_t* other;
+    party_unit_t* party;
+    unit_stats_t* other;
     const unit_name_id_t* name_id_record;
 
     prepare_text = battle_text_find_entry;

@@ -19,7 +19,7 @@ void world_script_handle_tutorial_command_display_message(void) {
                 + 0xB800)),
         0);
     /* Direct slot/member indexing splits this address at -O0. */
-    *(s32*)((u8*)g_native_threads + (u32) & ((native_thread_t*)0)[WORLD_THREAD_SLOT_TUTORIAL_TEXT].task_words[3])
+    *(s32*)((u8*)g_native_threads + (u32) & ((thread_t*)0)[WORLD_THREAD_SLOT_TUTORIAL_TEXT].task_words[3])
         = *(&((world_tutorial_message_instruction_t*)g_world_script_tutorial_command_ptr)->y_offset);
     g_world_script_tutorial_command_ptr += 4;
 }

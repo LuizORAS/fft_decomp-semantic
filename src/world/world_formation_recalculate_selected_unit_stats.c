@@ -13,8 +13,8 @@
 void world_formation_recalculate_selected_unit_stats(void) {
     /* Preserve the target's unused 128-byte stack area. */
     u8 unused[128];
-    world_formation_unit_t record;
-    battle_stats_t unit;
+    world_unit_t record;
+    unit_stats_t unit;
     s32 roster_slot;
     s32 i;
     s32 item;

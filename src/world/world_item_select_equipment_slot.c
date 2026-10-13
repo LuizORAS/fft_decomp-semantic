@@ -5,7 +5,7 @@
  * Weapons and shields choose a hand based on what the unit already holds.
  */
 world_unit_equipment_slot_e world_item_select_equipment_slot(s16 unit_index, s32 item_id) {
-    world_formation_unit_t* unit = g_world_formation_unit_pointers[unit_index];
+    world_unit_t* unit = g_world_formation_unit_pointers[unit_index];
     s32 right_hand;
     s32 left_hand;
     world_unit_equipment_slot_e slot;

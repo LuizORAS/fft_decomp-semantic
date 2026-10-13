@@ -10,8 +10,8 @@
  * the tile's Move-Find Item entry then reports a found item (Move-Find Item
  * holders only) or a trap.
  */
-u32 move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit) {
-    battle_stats_t* target;
+u32 move_set_target_for_mounted_unit_and_find_item(unit_stats_t* unit) {
+    unit_stats_t* target;
     u32 flags;
     s32 i;
     s32 find_item;

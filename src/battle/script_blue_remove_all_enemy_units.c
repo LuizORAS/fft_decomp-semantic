@@ -9,8 +9,8 @@ void script_blue_remove_all_enemy_units(void) {
     s32 i;
     s32 idx;
     s32 out_index;
-    battle_stats_t* stats;
-    battle_stats_t* found;
+    unit_stats_t* stats;
+    unit_stats_t* found;
 
     i = 0;
     do {

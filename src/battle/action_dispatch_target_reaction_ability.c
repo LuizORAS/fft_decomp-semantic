@@ -6,7 +6,7 @@
  * Counter Magic (byte 1) is tested last, after the byte-2 reactions, so
  * Absorb Used MP or Counter takes precedence over it. */
 void action_dispatch_target_reaction_ability(void) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     if (g_action_current_ability.formula == ABILITY_FORMULA_WEAPON_HEAL)
         return;

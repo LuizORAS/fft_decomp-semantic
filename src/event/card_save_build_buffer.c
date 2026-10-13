@@ -22,7 +22,7 @@ void card_save_build_buffer(s32 slot) {
     u8 parity;
     s32 unused_38[0x40];
     s32 unused_138;
-    party_data_t* unit;
+    party_unit_t* unit;
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
         unit = main_party_get_data_pointer(i);

@@ -8,8 +8,8 @@
  */
 void ai_init_acting_unit_data(void) {
     ai_data_t* ai;
-    battle_stats_t* unit;
-    battle_stats_t* acting;
+    unit_stats_t* unit;
+    unit_stats_t* acting;
     s32 mount_info;
     s32 id;
 

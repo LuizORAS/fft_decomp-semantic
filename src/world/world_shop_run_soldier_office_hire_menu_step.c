@@ -5,7 +5,7 @@
 /* Soldier Office hire step: runs the hire menu and charges for the new
  * unit's starting equipment. */
 void world_shop_run_soldier_office_hire_menu_step(void) {
-    battle_stats_t unit;
+    unit_stats_t unit;
     s32 i;
     s32 result;
     s32 slot;

@@ -13,7 +13,7 @@
  */
 s32 target_set_ability_panels(const action_command_t* source) {
     action_command_t action;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     ability_secondary_data_t* ability;
     target_panel_t* panels;
     target_panel_t* origin;

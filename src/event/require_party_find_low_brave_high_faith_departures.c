@@ -7,8 +7,8 @@
 s32 require_party_find_low_brave_high_faith_departures(void) {
     s32 battle_index;
     s32 departure_count = 0;
-    battle_stats_t* battle_unit;
-    battle_stats_t* unit;
+    unit_stats_t* battle_unit;
+    unit_stats_t* unit;
     s32 found_battle_index;
     s32 brave;
     s32 faith;

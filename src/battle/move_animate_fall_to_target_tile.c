@@ -27,7 +27,7 @@ void move_animate_fall_to_target_tile(battle_unit_t* unit) {
     SVECTOR unused_18;
     VECTOR velocity;
     battle_unit_t* other;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     s32 timer;
     s32 x;
     s32 y;

@@ -8,7 +8,7 @@
  * g_status_menu_open switches menu ids 0xf/0x10 to 0x11/0x12. */
 void battle_menu_open_non_active_unit_idle_action_menu(void) {
     battle_unit_t* runtime;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 menu_id;
 
     runtime = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);

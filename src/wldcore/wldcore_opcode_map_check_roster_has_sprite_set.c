@@ -6,7 +6,7 @@ void wldcore_opcode_map_check_roster_has_sprite_set(void) {
     s32 sprite_set;
     u16* ipp;
     u16 ip;
-    party_data_t* unit;
+    party_unit_t* unit;
     s32* flags;
 
     ipp = &g_wldcore_script_state.ip;

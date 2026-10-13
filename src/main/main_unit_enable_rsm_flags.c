@@ -4,7 +4,7 @@
 /* Rebuilds the unit's active reaction/support/movement bitfields
  * (0x8b..0x95) from its four innate abilities and equipped R/S/M
  * abilities. */
-void main_unit_enable_rsm_flags(battle_stats_t* unit) {
+void main_unit_enable_rsm_flags(unit_stats_t* unit) {
     s32 i;
 
     main_util_clear_byte_data(&unit->ability_flags, sizeof(unit->ability_flags));

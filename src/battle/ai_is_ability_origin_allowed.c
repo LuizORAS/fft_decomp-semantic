@@ -14,7 +14,7 @@ s32 ai_is_ability_origin_allowed(const ai_coords_t* coords) {
     s32 dx;
     s32 dy;
     s32 height;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     if (g_ai_data_base.water_penalty) {
         s32 depth = g_map_tile_data[coords->fields.y * g_ai_data_base.map_max_x + coords->fields.x

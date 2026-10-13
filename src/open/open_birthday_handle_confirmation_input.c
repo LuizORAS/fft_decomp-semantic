@@ -11,7 +11,7 @@ void open_birthday_handle_confirmation_input(open_controller_record_t* record) {
     s32 month;
     s32 day;
     s32 value;
-    party_data_t* member;
+    party_unit_t* member;
     u32 buttons;
 
     if ((g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_INPUT_DISABLED)

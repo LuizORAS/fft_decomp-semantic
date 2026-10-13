@@ -10,7 +10,7 @@ void formula_apply_attack_up_and_martial_arts(void) {
 
     {
         u8 weapon_id = g_action_current_ability.weapon_id;
-        battle_stats_t* attacker = g_action_attacker;
+        unit_stats_t* attacker = g_action_attacker;
         u8 weapon_type = g_main_item_primary_data[weapon_id].type;
         u8 has_martial_arts = attacker->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_MARTIAL_ARTS;
 

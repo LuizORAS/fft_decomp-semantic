@@ -13,13 +13,13 @@
 void helpmenu_menu_run_require_help(void) {
     POLY_FT4 cursor[2];
     POLY_FT4 shadow[2];
-    native_thread_t* self;
+    thread_t* self;
     help_navigation_record_t* navigation;
     help_navigation_record_t* entry;
     POLY_FT4* poly;
     POLY_FT4* shadow_poly;
     s32 menu_index;
-    native_thread_t* text_thread;
+    thread_t* text_thread;
     s32 text_thread_id;
     s32 frame;
     s32 buffer;

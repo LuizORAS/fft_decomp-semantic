@@ -14,12 +14,12 @@
 s32 bunit_job_build_unit_job_list(s32 unit_id, s16* job_ids, s32 unused_2) {
     s32 saved_unit_id = unit_id;
     u32 unit_index = (u8)saved_unit_id;
-    bunit_unit_data_t** unit_table = g_bunit_unit_data;
-    bunit_unit_data_t** slot;
+    bunit_unit_t** unit_table = g_bunit_unit_data;
+    bunit_unit_t** slot;
     s16* out;
     s16* job_ids_output;
-    bunit_unit_data_t* unit_data;
-    bunit_unit_data_t** unit_data_cursor;
+    bunit_unit_t* unit_data;
+    bunit_unit_t** unit_data_cursor;
     s32 job_count;
     s32 generic_job_index;
 

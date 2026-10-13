@@ -10,7 +10,7 @@
  */
 s32 ai_build_command(s32 unit_id, ai_command_t* command) {
     ai_data_t* ai;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     ai_command_t* last_command;
     ai_command_t* history;
     s32 i;

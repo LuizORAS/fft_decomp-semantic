@@ -31,8 +31,8 @@ s32 effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_position
     s32 arc_a;
     s32 arc_b;
     map_tile_t* tile;
-    battle_stats_t* stats;
-    battle_stats_t* other;
+    unit_stats_t* stats;
+    unit_stats_t* other;
     s32 hit;
     s32 second_hit;
     s32 first_unit;

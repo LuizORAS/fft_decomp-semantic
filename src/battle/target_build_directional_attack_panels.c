@@ -12,7 +12,7 @@
  * (g_battle_sort_targets_nearest_first). */
 void target_build_directional_attack_panels(const action_command_t* source, u8 mode) {
     action_command_t action;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     target_panel_t* panel;
     s32 target_x;
     s32 target_y;

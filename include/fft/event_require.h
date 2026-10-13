@@ -233,7 +233,7 @@ extern s32 g_require_status_display_origin_x;
 extern s32 g_require_status_display_redraw_request;
 extern menu_status_thread_t g_require_status_display_thread_params;
 
-void require_panel_copy_battle_stats_to_gauges(struct battle_stats* unit, menu_unit_status_record_t* output);
+void require_panel_copy_battle_stats_to_gauges(struct unit_stats* unit, menu_unit_status_record_t* output);
 void require_panel_run_character_status_thread(void);
 void require_panel_set_transition_value(s32 value);
 void require_panel_run_unit_status_thread(void);
@@ -254,7 +254,7 @@ extern battle_menu_status_panel_numeric_geometry_t g_require_editor_numeric_tabl
 extern menu_unit_stat_number_images_t g_require_editor_numeric_text_a;
 extern menu_unit_stat_number_images_t g_require_editor_numeric_text_b;
 extern image_load_parameters_t g_require_editor_numeric_texture[];
-extern struct battle_stats g_require_editor_party_unit_stats;
+extern struct unit_stats g_require_editor_party_unit_stats;
 extern u8 g_require_editor_primary_skillset_name[];
 extern u8 g_require_editor_secondary_skillset_name[];
 extern menu_status_panel_slot_storage_t g_require_editor_unit_fields;

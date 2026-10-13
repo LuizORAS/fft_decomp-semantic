@@ -12,7 +12,7 @@
  * Frog Attack.
  */
 s32 battle_menu_collect_monster_skill_abilities(s32 unit_id, u8 skillset, s16* out, s32 unused, u8* flags_out) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 count;
     s32 berserk;
     s32 i;

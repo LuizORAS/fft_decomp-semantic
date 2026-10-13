@@ -48,7 +48,7 @@ void battle_text_run_dialog_thread(void) {
     u16 no_wait;
     u16 variable_base;
     u16 value_index;
-    native_thread_t* thread;
+    thread_t* thread;
     menu_window_buffer_t* win;
     menu_window_buffer_t* cursor_window;
     menu_window_buffer_t* arrow_window;

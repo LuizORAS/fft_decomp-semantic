@@ -13,8 +13,8 @@
 s32 target_run_calculator(const action_command_t* source) {
     battle_unit_height_data_t height;
     action_command_t action;
-    battle_stats_t* actor;
-    battle_stats_t* unit;
+    unit_stats_t* actor;
+    unit_stats_t* unit;
     map_tile_t* tile;
     s16 type;
     s16 multiplier;

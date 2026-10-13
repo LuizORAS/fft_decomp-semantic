@@ -8,8 +8,8 @@
  */
 s32 ai_select_action_status(void) {
     ai_data_t* ai = &g_ai_data_base;
-    battle_stats_t* unit;
-    battle_stats_t* berserk_unit;
+    unit_stats_t* unit;
+    unit_stats_t* berserk_unit;
     ai_ability_entry_t* entry;
     s32 i, target_or_count;
     ai_coords_t coords;

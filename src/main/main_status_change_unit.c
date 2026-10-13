@@ -1,7 +1,7 @@
 #include "fft/main.h"
 
 /* Add, remove, or replace a status-set flag and refresh the unit's current status. */
-void main_status_change_unit(battle_stats_t* unit, s32 status_byte_index, u8 status_flag, s32 change_type) {
+void main_status_change_unit(unit_stats_t* unit, s32 status_byte_index, u8 status_flag, s32 change_type) {
     u8 updated;
     u8 current;
 

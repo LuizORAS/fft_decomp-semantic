@@ -25,7 +25,7 @@ void option_menu_run_game_options(void) {
     s32 row_offset;
     s32 ring;
     s32 cursor;
-    native_thread_t* thread;
+    thread_t* thread;
     u8* buffer;
     u32* input0;
     u32* input1;

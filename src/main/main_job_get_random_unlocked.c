@@ -8,7 +8,7 @@ enum {
 /* Return a random unlocked generic job ID below Mime, or 0 when none are unlocked.
  *
  * The ENTD caller explicitly normalizes the zero-extended job byte. */
-s32 main_job_get_random_unlocked(const battle_stats_t* unit) {
+s32 main_job_get_random_unlocked(const unit_stats_t* unit) {
     u8 candidates[RANDOM_JOB_COUNT];
     s32 job_mask = UNIT_UNLOCKED_JOB_SQUIRE;
     s32 candidate_count = 0;

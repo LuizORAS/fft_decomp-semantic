@@ -11,7 +11,7 @@ s32 world_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
     const event_unit_placement_t* parameters = (const event_unit_placement_t*)instruction;
     map_tile_coordinates_t coordinates;
     s32 resolved_id;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     unit_animation_state_t* state;
     s32 index;
     s32 unit_id;

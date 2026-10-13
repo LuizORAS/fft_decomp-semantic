@@ -33,7 +33,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
     menu_sprite_cell_t* cells;
     menu_instruction_t* window;
     rgb24_t* color;
-    world_formation_unit_t* unit;
+    world_unit_t* unit;
 
     if (locked != 0) {
         input = 0;

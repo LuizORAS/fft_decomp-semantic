@@ -5,7 +5,7 @@
  * inflicted_status, has its CT cleared and, when executing, its graphics flag
  * switched off; then the current set is rebuilt as innate | inflicted. */
 void status_set_inflicted_ct_and_transfer_last_used_ct(s32 unit_idx) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
     s32 mask;
     s32 idx;

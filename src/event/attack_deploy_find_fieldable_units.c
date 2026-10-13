@@ -23,7 +23,7 @@ void attack_deploy_find_fieldable_units(void) {
     s32 index;
     s32 name_index;
     u8* name_cursor;
-    party_data_t* party_unit;
+    party_unit_t* party_unit;
 
     name_cursor = g_text_section_pointers[TEXT_SECTION_PARTY_UNIT_NAMES];
     g_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES]

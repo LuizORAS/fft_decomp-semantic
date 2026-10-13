@@ -18,7 +18,7 @@ void open_title_step_new_game_start(open_controller_record_t* record) {
     open_title_new_game_state_t* state = &record->new_game;
     RECT rect;
     u8* name;
-    party_data_t* party;
+    party_unit_t* party;
 
     if (state->step == 5) {
         if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) {

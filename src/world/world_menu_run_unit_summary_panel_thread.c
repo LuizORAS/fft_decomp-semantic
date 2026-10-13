@@ -19,7 +19,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
     RECT rects[4];
     menu_unit_summary_frame_t frames[2];
     menu_unit_summary_frame_t* frame_record;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u8* buffer;
     world_unit_status_number_images_t* number_images;
     SPRT* sprite;

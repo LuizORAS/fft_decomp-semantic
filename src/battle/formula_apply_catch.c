@@ -4,7 +4,7 @@
 
 /* Catch the thrown weapon when the target's Brave-based reaction roll succeeds. */
 void formula_apply_catch(void) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     action_data_t* action;
     /* Loaded through a pointer so GCC keeps it between the struct stores
      * (a plain scalar load is assumed not to alias them and floats). */

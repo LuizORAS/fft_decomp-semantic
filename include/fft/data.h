@@ -1178,7 +1178,7 @@ typedef enum item_id {
 
 #define EQUIPPABLE_ITEM_TYPE_BYTE_MASK(type) (0x80 >> ((type) & 7))
 
-/* world_formation_unit_t.equipment 16-bit values carry the item id in the low ten
+/* world_unit_t.equipment 16-bit values carry the item id in the low ten
  * bits and flags above (bit 14 is tested by world_shop_buy_from_fitting_room
  * and the job wheel); the WORLD item tables are indexed by the masked id
  * (world_item_get_price, world_item_get_type). The range boundaries follow the
@@ -1236,8 +1236,8 @@ typedef struct weapon_data {
     u8 flags;      /* 0x01; weapon_flag_e */
     u8 formula;    /* 0x02; ability_formula_e */
     u8 _unused_03; /* 0x03 */
-    u8 power;      /* 0x04; copied to battle_stats_t equipment-stat slots 0x3c/0x3d */
-    u8 evade;      /* 0x05; copied to battle_stats_t 0x3e/0x3f */
+    u8 power;      /* 0x04; copied to unit_stats_t equipment-stat slots 0x3c/0x3d */
+    u8 evade;      /* 0x05; copied to unit_stats_t 0x3e/0x3f */
     u8 element;    /* 0x06 */
     u8 proc_id;    /* 0x07; status-infliction or spell ID copied to the active ability */
 } weapon_data_t;
@@ -1269,8 +1269,8 @@ typedef struct item_poach {
 typedef char item_poach_size_must_be_2[(sizeof(item_poach_t) == 2) ? 1 : -1];
 
 typedef struct armor_data {
-    u8 hp_bonus; /* 0x00; added to battle_stats_t.max_hp */
-    u8 mp_bonus; /* 0x01; added to battle_stats_t.max_mp */
+    u8 hp_bonus; /* 0x00; added to unit_stats_t.max_hp */
+    u8 mp_bonus; /* 0x01; added to unit_stats_t.max_mp */
 } armor_data_t;
 
 /* Static innate, immunity and starting-status masks embedded in item and job
@@ -1336,21 +1336,21 @@ typedef char job_stat_growth_size_must_be_2[(sizeof(job_stat_growth_t) == 2) ? 1
 /*
  * 0x30-byte job record (g_main_job_data_pointer). The named fields are those copied
  * by main_unit_copy_job_data, main_unit_calculate_abilities and
- * main_unit_set_equipment_stats into battle_stats_t.
+ * main_unit_set_equipment_stats into unit_stats_t.
  */
 typedef struct job_data {
     u8 skillset;                       /* 0x00 */
     u8 innate_abilities[8];            /* 0x01; four little-endian u16 ability ids, byte-copied */
     u8 equipment_categories[4];        /* 0x09 */
-    job_stat_growth_t stat_growths[5]; /* 0x0d; HP, MP, Speed, PA, MA; copied to battle_stats_t 0x81 */
+    job_stat_growth_t stat_growths[5]; /* 0x0d; HP, MP, Speed, PA, MA; copied to unit_stats_t 0x81 */
     u8 move;                           /* 0x17 */
     u8 jump;                           /* 0x18; JOB_JUMP_* */
-    u8 class_evade;                    /* 0x19; battle_stats_t equipment-stat slot 0x43 */
+    u8 class_evade;                    /* 0x19; unit_stats_t equipment-stat slot 0x43 */
     initial_status_sets_t status_sets; /* 0x1a */
     u8 elemental_affinity[4];          /* 0x29; affinity indices 0 through 3 */
     u8 spritesheet_id;                 /* 0x2d */
     u8 job_portrait_palette;           /* 0x2e */
-    u8 monster_graphic;                /* 0x2f; copied to battle_stats_t 0x15e */
+    u8 monster_graphic;                /* 0x2f; copied to unit_stats_t 0x15e */
 } job_data_t;
 typedef char job_data_size_must_be_48[(sizeof(job_data_t) == 48) ? 1 : -1];
 

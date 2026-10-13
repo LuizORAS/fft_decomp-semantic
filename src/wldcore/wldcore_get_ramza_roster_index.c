@@ -5,7 +5,7 @@
 s32 wldcore_get_ramza_roster_index(void) {
     s32 i;
     for (i = 0; i < PARTY_MEMBER_SLOT_COUNT; i++) {
-        party_data_t* party = wldcore_get_party_data_pointer(i);
+        party_unit_t* party = wldcore_get_party_data_pointer(i);
         if (party->party_id != PARTY_ID_NONE && party->sprite_set != CHARACTER_IDENTITY_ENTD_NONE
             && party->sprite_set < CHARACTER_IDENTITY_RAMZA_END) {
             return i;

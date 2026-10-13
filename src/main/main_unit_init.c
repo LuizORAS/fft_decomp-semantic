@@ -13,8 +13,8 @@ s32 main_unit_init(entd_encounter_t* entd, s32 unit_id, s32 guest_id, s32 initia
         return -2;
     }
     {
-        battle_stats_t unit;
-        battle_stats_t* unit_data = &unit;
+        unit_stats_t unit;
+        unit_stats_t* unit_data = &unit;
 
         unit_data->battle_id = 0xff;
         unit_data->entd_slot = 0x20;

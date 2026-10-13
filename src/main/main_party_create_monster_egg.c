@@ -8,7 +8,7 @@
  * in both nibbles. */
 s32 main_party_create_monster_egg(s32 monster_job, s32 egg_modifier, s32 egg_color) {
     s32 party_index;
-    party_data_t* party_data;
+    party_unit_t* party_data;
     u16 birthday;
     s32 zodiac;
 

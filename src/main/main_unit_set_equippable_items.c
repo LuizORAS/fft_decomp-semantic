@@ -3,7 +3,7 @@
 /* Add to the unit's equippable item types those its Equip support abilities grant
  * (Equip Armor covers helmets and armor), and the ribbon, bag and perfume types
  * for a female unit. */
-void main_unit_set_equippable_items(battle_stats_t* unit) {
+void main_unit_set_equippable_items(unit_stats_t* unit) {
     s32 support = unit->ability_flags.support[0];
 
     if (support & BATTLE_SUPPORT_SET_1_EQUIP_ARMOR) {

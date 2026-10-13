@@ -11,7 +11,7 @@
 void battle_text_build_unit_name_list(void) {
     u8* output;
     s32 unit_id;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 length;
 
     battle_text_init_menu_section_pointers();

@@ -33,10 +33,10 @@ typedef enum equip_slot_item_result {
     EQUIP_SLOT_ITEM_ALLOWED = 1,
 } equip_item_slot_result_e;
 
-/* EQUIP.OUT's 0x7A-byte unit preview, built from battle_stats_t by
+/* EQUIP.OUT's 0x7A-byte unit preview, built from unit_stats_t by
  * equip_unit_build_data_from_battle_stats (0x801C6920). Field names follow
- * the battle_stats_t source; evasion_N maps to the corresponding
- * battle_stats_t equipment-stat slot. The
+ * the unit_stats_t source; evasion_N maps to the corresponding
+ * unit_stats_t equipment-stat slot. The
  * first 0x1E bytes share the unit-status-billboard layout. */
 typedef struct equip_unit_data {
     s16 level;                            /* 0x00; capped at 99 */
@@ -44,7 +44,7 @@ typedef struct equip_unit_data {
     s16 list_index;                       /* 0x04; AT-list lookup + 1, or -1 */
     s16 unit_count;                       /* 0x06; units still present, set by equip_unit_load_data_from_battle_stats */
     s16 experience;                       /* 0x08; capped at 99 */
-    s16 unit_index;                       /* 0x0a; battle_stats_t.entd_slot */
+    s16 unit_index;                       /* 0x0a; unit_stats_t.entd_slot */
     menu_unit_status_gauge_t gauges[3];   /* 0x0c; HP, MP and CT */
     s16 battle_id;                        /* 0x1e */
     s16 _unused_20;                       /* 0x20 */
@@ -70,8 +70,8 @@ typedef struct equip_unit_data {
     u16 equipment[5];                     /* 0x54; equip_unit_equipment_slot_e order */
     u8 _unused_5e[0x12];                  /* 0x5e; ability ids and the spare tail of the stat-detail block, left zero */
     u8 equipment_categories[4];           /* 0x70 */
-    u8 support_abilities[4];              /* 0x74; copy of battle_stats_t.ability_flags.support */
-    u8 party_index;                       /* 0x78; battle_stats_t.formation_index */
+    u8 support_abilities[4];              /* 0x74; copy of unit_stats_t.ability_flags.support */
+    u8 party_index;                       /* 0x78; unit_stats_t.formation_index */
     u8 _padding_79;                       /* tail padding to 2-byte alignment */
 } equip_unit_data_t;
 typedef char equip_unit_data_size_must_be_122[(sizeof(equip_unit_data_t) == 122) ? 1 : -1];
@@ -90,7 +90,7 @@ extern u8 g_equip_unit_selected_index;
 void equip_item_calculate_equipment_swap_stat_delta(
     menu_status_panel_slot_storage_t* detail_total, menu_unit_status_record_t* acc, u16* froms, u16* tos);
 void equip_item_sum_equipment_stat_details(menu_status_panel_slot_storage_t* total, u16* equipment);
-void equip_unit_build_data_from_battle_stats(struct battle_stats* stats, equip_unit_data_t* unit);
+void equip_unit_build_data_from_battle_stats(struct unit_stats* stats, equip_unit_data_t* unit);
 s32 equip_unit_can_equip_item_id(s16 unit_index, s16 item_entry);
 void equip_unit_commit_loadout_to_battle_stats(void);
 void equip_unit_copy_data_to_compare_slot(s32 unused_selected_index, s32 unused_1);

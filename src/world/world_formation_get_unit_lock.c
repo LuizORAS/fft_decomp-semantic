@@ -5,7 +5,7 @@
  * value: away on a proposition, a monster, an egg or a Mime, tested in that
  * order; WORLD_FORMATION_UNIT_UNLOCKED otherwise. */
 s32 world_formation_get_unit_lock(s32 unit_id) {
-    world_formation_unit_t* unit;
+    world_unit_t* unit;
 
     unit = g_world_formation_unit_pointers[unit_id];
     if (unit->proposition_status != 0)

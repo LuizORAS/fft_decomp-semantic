@@ -32,7 +32,7 @@ void world_menu_init_at_list(menu_entry_t* entry) {
     bracketed = 0;
     text = g_world_menu_at_list_text;
     for (i = 0; i < BATTLE_AT_LIST_CAPACITY; i++) {
-        battle_stats_t* unit;
+        unit_stats_t* unit;
         s32 name_index;
 
         if ((g_world_action_target_list_slots[i].unit_code & BATTLE_AT_UNIT_ID_MASK) == BATTLE_AT_END_OF_LIST) {

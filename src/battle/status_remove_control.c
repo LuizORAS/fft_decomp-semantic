@@ -4,7 +4,7 @@
  * player control; without them the control bit comes back from the initial
  * team flags. Without Charm the team bits come back from the initial team as
  * well. */
-void status_remove_control(battle_stats_t* unit) {
+void status_remove_control(unit_stats_t* unit) {
     if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CONFUSION)]
             & (STATUS_BYTE_MASK(STATUS_ID_CONFUSION) | STATUS_BYTE_MASK(STATUS_ID_BLOOD_SUCK)))
         || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_BERSERK)]

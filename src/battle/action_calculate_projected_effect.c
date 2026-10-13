@@ -9,7 +9,7 @@
  * The attacker's 20 command bytes are saved, replaced by command, and
  * restored afterwards. Without the Auto flag in the loaded ability data, the
  * target's tile must be targetable; otherwise its action data is cleared. */
-s32 action_calculate_projected_effect(battle_stats_t* attacker, battle_stats_t* target, action_command_t* command) {
+s32 action_calculate_projected_effect(unit_stats_t* attacker, unit_stats_t* target, action_command_t* command) {
     u8 flags_3;
     s32 result;
     s32 saved_action_state;

@@ -6,7 +6,7 @@
  * Job skillsets 5..23 map to learned_abilities rows 0..18; the unit's own
  * primary or base-job skillset maps to row 0. */
 s32 ai_is_ability_known(s32 unit_id, s32 skillset_id, s32 bit) {
-    battle_stats_t* unit = &g_battle_unit_stats[unit_id];
+    unit_stats_t* unit = &g_battle_unit_stats[unit_id];
     s32 byte;
     u8* row;
 

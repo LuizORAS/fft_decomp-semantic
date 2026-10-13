@@ -11,7 +11,7 @@
  * levels the target down, 1 and 2 inflict Death Sentence and Sleep (status
  * byte 4 bits 0x01 and 0x10) when status_modify_inflictions allows it, and 3
  * deals max HP / 5 damage. Returns the trap id, or 0xff for none. */
-s32 action_apply_tile_trap(battle_stats_t* unit) {
+s32 action_apply_tile_trap(unit_stats_t* unit) {
     u8 trap;
     action_data_t* action;
 

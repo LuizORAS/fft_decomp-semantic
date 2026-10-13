@@ -14,7 +14,7 @@ enum { WORLD_MENU_UNIT_SELECTION_RECORD_BYTES = (s32)sizeof(menu_unit_selection_
  * their target registers. */
 void world_menu_reset_unit_record(s32 id) {
     u8* table;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     u8* row;
     s32 index;
     s32 i;

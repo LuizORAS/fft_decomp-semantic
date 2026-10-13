@@ -9,7 +9,7 @@
  * human gets 100..199 JP and job level 1 in every job but the one its sex
  * cannot take (Bard, Dancer). The name is drawn until no party member of the
  * same kind has it. */
-void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_type_e unit_type) {
+void main_unit_generate_out_of_battle(party_unit_t* party, main_unit_generation_type_e unit_type) {
     s32 name_flags;
     unit_name_id_t name_base;
     unit_name_id_t name_id;
@@ -21,7 +21,7 @@ void main_unit_generate_out_of_battle(party_data_t* party, main_unit_generation_
     u8 generic_id;
     main_unit_generation_base_data_t* base;
     main_unit_generation_base_data_t* table;
-    party_data_t* other;
+    party_unit_t* other;
     s32 found;
     s32 jp;
 

@@ -10,7 +10,7 @@
  * argument-register scratch reproduces the target's a1/a2 allocation; callers
  * supply only the unit pointer.
  */
-s32 ai_calculate_clockticks_until_death_counter_expires(battle_stats_t* unit, s32 total, s32 speed) {
+s32 ai_calculate_clockticks_until_death_counter_expires(unit_stats_t* unit, s32 total, s32 speed) {
     s32 counter;
     s32 ticks;
     s32 sum;

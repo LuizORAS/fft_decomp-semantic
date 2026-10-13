@@ -6,7 +6,7 @@
 void ai_update_tile_pickup(void) {
     ai_data_t* ai = &g_ai_data_base;
     s32 unit_id;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     g_ai_data_base.tile_pickup_kind = AI_TILE_PICKUP_NONE;
     unit_id = ai_find_unit_at_coordinates(&ai->current_action.coords);

@@ -13,7 +13,7 @@
  * directly follows the loop and is hoisted with the table base, as in the
  * target (a spilled invariant rematerialised as `li a2,N`). */
 s32 action_run_between_turn_control(battle_between_turn_mode_e mode) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 result;
     s32 count;
     s32 i;

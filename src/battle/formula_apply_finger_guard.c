@@ -4,7 +4,7 @@
 
 /* Cancel the action with Finger Guard when the target's Brave-based reaction roll succeeds. */
 void formula_apply_finger_guard(void) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 chance;
 
     if (action_is_reaction_blocked(g_action_target) != 0)

@@ -19,8 +19,8 @@
  * bgez/move/negu sequence. The coordinate stores are array elements so their
  * aggregate aliasing keeps the special-effect load after them. */
 void formula_calculate_knockback(void) {
-    battle_stats_t* target;
-    battle_stats_t* attacker;
+    unit_stats_t* target;
+    unit_stats_t* attacker;
     map_tile_t* tile;
     u8 surface;
     s32 dx;

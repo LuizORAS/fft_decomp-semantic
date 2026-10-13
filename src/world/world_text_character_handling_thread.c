@@ -45,7 +45,7 @@ void world_text_character_handling_thread(void) {
     u16 no_wait;
     u16 variable_id;
     u16 value_index;
-    native_thread_t* thread;
+    thread_t* thread;
     s32 party_name_request;
     menu_window_buffer_t* win;
     menu_window_buffer_t* cursor_window;
@@ -56,7 +56,7 @@ void world_text_character_handling_thread(void) {
     menu_window_buffer_t* choice_window;
     menu_window_buffer_t* choice_hidden_window;
     menu_window_buffer_t* choice_hidden_window_2;
-    party_data_t* party;
+    party_unit_t* party;
     job_data_t* job;
     u8* text;
     s16 cursor_x;
@@ -82,7 +82,7 @@ void world_text_character_handling_thread(void) {
     script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
     value_index = 0;
     variable_id = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
-    thread = (native_thread_t*)((g_native_current_thread_id << 10) + (s32)g_native_threads);
+    thread = (thread_t*)((g_native_current_thread_id << 10) + (s32)g_native_threads);
     param = (s32)world_thread_get_current_parameter_1();
     rec.dialog_type = param;
     if ((param & 0x70) == 0x70) {

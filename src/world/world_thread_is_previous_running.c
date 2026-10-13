@@ -22,5 +22,5 @@ s32 world_thread_is_previous_running(void) {
     __asm__("move $1,$1" : "=r"(global_pointer) : "0"(global_pointer));
     thread_array = *(u8**)((u8*)global_pointer + 0x327c);
     __asm__("nop\nadd $8,$8,$9" : "=r"(offset) : "0"(offset), "r"(thread_array));
-    return ((native_thread_t*)offset)->is_running;
+    return ((thread_t*)offset)->is_running;
 }

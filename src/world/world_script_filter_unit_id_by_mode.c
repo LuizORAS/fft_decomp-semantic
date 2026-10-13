@@ -9,7 +9,7 @@
  * `in_id` is read as a 16-bit value: callers pass the address of an int slot
  * counter or of an s16 slot-order entry. */
 s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 index;
     s32 i;
     s32 blocked;

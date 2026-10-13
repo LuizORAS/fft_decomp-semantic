@@ -6,7 +6,7 @@
 s32 ai_find_unit_on_target_panel(void) {
     ai_data_t* ai = &g_ai_data_base;
     s32 i;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u16 x;
     u16 y;
     u16 elevation;

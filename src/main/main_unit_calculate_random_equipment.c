@@ -6,7 +6,7 @@
  * accepted WEAPON_FLAG_*, and required_item_type is the type required by an
  * Equip X skill, or ITEM_TYPE_FILTER_ANY for any type. */
 s32 main_unit_calculate_random_equipment(
-    battle_stats_t* unit, u8 item_type_flag, u8 weapon_flag_mask, u8 required_item_type) {
+    unit_stats_t* unit, u8 item_type_flag, u8 weapon_flag_mask, u8 required_item_type) {
     u8 candidates[128];
     s32 first;
     s32 last;

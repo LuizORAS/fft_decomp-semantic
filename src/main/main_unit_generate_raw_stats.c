@@ -2,7 +2,7 @@
 
 /* Roll the unit's raw stats by its sex flags; a unit with neither flag is rolled
  * as a monster. */
-void main_unit_generate_raw_stats(battle_stats_t* unit) {
+void main_unit_generate_raw_stats(unit_stats_t* unit) {
     main_unit_generation_type_e unit_type;
 
     if ((unit->unit_flags & UNIT_FLAG_MALE) != 0) {

@@ -22,7 +22,7 @@
  * Keep the two unit-id range comparisons: retail reloads the byte. */
 event_scenario_condition_result_e script_check_scenario_condition(
     event_scenario_condition_e type, s32 id, s32 value, s32 tile_y, s32 elevation) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
     s32 j; /* equipment slot, then battle index: one variable (a0 in both loops) */
 
@@ -34,7 +34,7 @@ event_scenario_condition_result_e script_check_scenario_condition(
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type >= 4 && type <= 10) {
         unit = battle_unit_get_stats_by_unit_id(id);
-        if (unit != (battle_stats_t*)-1) {
+        if (unit != (unit_stats_t*)-1) {
             if (type == EVENT_SCENARIO_CONDITION_UNIT_PRESENT)
                 return EVENT_SCENARIO_CONDITION_RESULT_PASS;
             if (type == EVENT_SCENARIO_CONDITION_UNIT_HP_AT_LEAST && unit->hp >= value)
@@ -65,7 +65,7 @@ event_scenario_condition_result_e script_check_scenario_condition(
     if (type == EVENT_SCENARIO_CONDITION_ITEM_EQUIPPED) {
         for (i = 1; i < 4; i++) {
             unit = battle_unit_get_stats_by_unit_id(i);
-            if (unit != (battle_stats_t*)-1) {
+            if (unit != (unit_stats_t*)-1) {
                 for (j = 0; j < 7; j++) {
                     if (unit->equipment[j] == id)
                         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
@@ -97,7 +97,7 @@ event_scenario_condition_result_e script_check_scenario_condition(
         return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     if (type == EVENT_SCENARIO_CONDITION_UNIT_AT_TILE) {
         unit = battle_unit_get_stats_by_unit_id(id);
-        if (unit != (battle_stats_t*)-1 && unit->x == value && unit->position.y == tile_y
+        if (unit != (unit_stats_t*)-1 && unit->x == value && unit->position.y == tile_y
             && unit->position.higher_elevation == elevation)
             return EVENT_SCENARIO_CONDITION_RESULT_PASS;
     }

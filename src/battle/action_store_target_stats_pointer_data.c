@@ -9,7 +9,7 @@
  * Returns that routine's result, or -1 for an invalid or empty slot. A result
  * that is not a hit is marked as cancelled. */
 s32 action_store_target_stats_pointer_data(s32 unit_id) {
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     action_data_t* action;
     s32 result;
 

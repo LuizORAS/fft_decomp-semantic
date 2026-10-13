@@ -5,7 +5,7 @@
  * A nonzero save_formation searches the four guest slots (16..19), zero the
  * sixteen ordinary slots. *palette is always set to 0. */
 s32 main_party_find_free_slot(s32 save_formation, u8* palette) {
-    party_data_t* party_data[PARTY_ROSTER_SLOT_COUNT];
+    party_unit_t* party_data[PARTY_ROSTER_SLOT_COUNT];
     s32 party_index;
     s32 start_index;
     s32 limit;

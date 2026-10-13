@@ -5,7 +5,7 @@
  * and 20 when it neither acted nor has Don't Act or Performing; the result is
  * capped at 60. Always returns 1. */
 s32 action_end_turn(s32 unit_id) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u16 ct;
     u8 status4;
     u8 movement_check;

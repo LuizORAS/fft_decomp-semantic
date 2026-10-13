@@ -20,7 +20,7 @@ void world_script_inflict_status_thread(void) {
     s32 wait_frames;
     s32 battle_unit_index;
     s32 runtime_id;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 state;
 
     thread_set_current_task_id(NATIVE_THREAD_TASK_INFLICT_STATUS);

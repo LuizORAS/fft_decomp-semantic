@@ -26,7 +26,7 @@ void world_unit_update_monster_breeding(s32 unused) {
     s32 day;
     s32 month;
     u8** name_buffer;
-    party_data_t* unit;
+    party_unit_t* unit;
 
     srand(g_main_system_play_time_frames * 100 + g_main_system_play_time_seconds * 10 + g_main_system_play_time_minutes
         + g_main_system_play_time_hours + g_main_system_play_time_frames);

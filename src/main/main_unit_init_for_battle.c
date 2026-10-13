@@ -7,7 +7,7 @@
  * setup. A temporary formation index enables level growth for generated units.
  * Mode 0x82 is the transformed-monster recalculation path and preserves the
  * existing runtime/ENTD-derived state. */
-s32 main_unit_init_for_battle(battle_stats_t* unit, entd_unit_t* entd, u32 use_world_text, s32 kind) {
+s32 main_unit_init_for_battle(unit_stats_t* unit, entd_unit_t* entd, u32 use_world_text, s32 kind) {
     g_main_unit_name_uses_world_text = use_world_text;
     /* Kind 0x82 skips the reset and the ENTD calculation. */
     if (kind != 0x82) {

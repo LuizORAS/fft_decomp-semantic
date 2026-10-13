@@ -7,7 +7,7 @@
  * equipment bonuses), then reconciles the status bits.  `skip_status_check`
  * leaves the critical/status notifications alone; `initializing` seeds the
  * inflicted statuses from the current ones and clears their CTs. */
-void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 skip_status_check, s32 initializing) {
+void main_unit_update_stats_statuses_and_equipment(unit_stats_t* unit, s32 skip_status_check, s32 initializing) {
     u8 saved_inflicted[STATUS_BYTE_COUNT];
     u8 saved_current[STATUS_BYTE_COUNT];
     s32 i;

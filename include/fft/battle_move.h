@@ -92,8 +92,8 @@ typedef struct move_pathfind_scratch {
     u8 jump_or_1f;     /* 0x04 */
     u8 jump_half;      /* 0x05 */
     u8 move;           /* 0x06 */
-    u8 x;              /* 0x07; battle_stats_t 0x47 */
-    u8 y;              /* 0x08; battle_stats_t 0x48 */
+    u8 x;              /* 0x07; unit_stats_t 0x47 */
+    u8 y;              /* 0x08; unit_stats_t 0x48 */
     u8 high_elevation; /* 0x09 */
     u8 target_x;       /* 0x0a */
     u8 target_y;       /* 0x0b */
@@ -300,8 +300,8 @@ extern u8 g_move_weather_terrain_cost;
 
 u8 move_calculate_tile_ceiling(s32 x, s32 y, s32 exit_slope_shift, u8 exit_height);
 s32 move_calculate_tile_layer_step_offset(s32 x, s32 y, u32 layer);
-move_effective_flags_e move_get_effective_flags(const battle_stats_t* unit);
-s32 move_get_support_flags(battle_stats_t* unit);
+move_effective_flags_e move_get_effective_flags(const unit_stats_t* unit);
+s32 move_get_support_flags(unit_stats_t* unit);
 s32 move_calculate_water_lift(battle_unit_t* unit, map_tile_t* tile);
 u8 move_get_water_depth(battle_unit_t* unit);
 s32 move_clamp_z_to_tile_headroom(s32 value, s32 x, s32 y, u32 layer);
@@ -488,6 +488,6 @@ extern s32 g_move_find_result;
 
 s32 move_start_next_post_movement_step(void);
 void move_init_post_movement_display(void);
-u32 move_set_target_for_mounted_unit_and_find_item(battle_stats_t* unit);
+u32 move_set_target_for_mounted_unit_and_find_item(unit_stats_t* unit);
 
 #endif

@@ -11,9 +11,9 @@
  * Returns 0 only for a reaction that targets the attacker.
  */
 s32 action_build_reaction_targets(s32 actor_id, battle_strike_work_t* work, s32* target_count, u8* target_ids) {
-    battle_stats_t* actor = &g_battle_unit_stats[actor_id];
-    battle_stats_t* unit_base = g_battle_unit_stats;
-    battle_stats_t* unit;
+    unit_stats_t* actor = &g_battle_unit_stats[actor_id];
+    unit_stats_t* unit_base = g_battle_unit_stats;
+    unit_stats_t* unit;
     s32 tile_index;
     /* One variable: the Reflect target id, then the Distribute target count. */
     s32 target_or_count;

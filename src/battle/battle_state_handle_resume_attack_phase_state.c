@@ -17,7 +17,7 @@
  * action_post_action_facing_stub, which is empty. */
 void battle_state_handle_resume_attack_phase_state(void) {
     s32 facing;
-    battle_stats_t* battle_data;
+    unit_stats_t* battle_data;
     s32 selected_command;
     battle_unit_t* unit;
 

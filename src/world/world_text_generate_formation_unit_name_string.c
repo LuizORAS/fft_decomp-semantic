@@ -6,7 +6,7 @@
  * revision. */
 void world_text_generate_formation_unit_name_string(void) {
     u8* out;
-    party_data_t* unit;
+    party_unit_t* unit;
     s32 i;
     s32 j;
     u8 character;

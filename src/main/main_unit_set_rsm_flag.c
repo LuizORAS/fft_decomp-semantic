@@ -4,7 +4,7 @@
  *
  * IDs 0x1a6..0x1fd map contiguously into the unit's MSB-first active flags.
  * A reaction ID also becomes the unit's currently equipped reaction ability. */
-void main_unit_set_rsm_flag(battle_stats_t* unit, u32 ability_id) {
+void main_unit_set_rsm_flag(unit_stats_t* unit, u32 ability_id) {
     u16 index;
     u16 original_ability_id;
     u8* rsm_flags;

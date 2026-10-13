@@ -17,7 +17,7 @@ void ai_fill_foe_proximity_grid(void) {
     s32 distance;
     s32 dy;
     u16 row;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         ai->targetability.live.unit_targetable[i] = 0;
@@ -26,7 +26,7 @@ void ai_fill_foe_proximity_grid(void) {
         }
     }
     for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
-        battle_stats_t* units = g_battle_unit_stats;
+        unit_stats_t* units = g_battle_unit_stats;
         s32 proximity_limit = 10;
         for (y = 0; y < ai->map_max_y; y++) {
             row = ai->reachable_tiles[0][level][y];

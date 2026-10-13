@@ -5,7 +5,7 @@
 /* Formula 0x16: MP damage equal to the target's current MP, hit F(MA+X)%;
  * magic evade. */
 void formula_damage_mp_target_current_mp(void) {
-    battle_stats_t* target;
+    unit_stats_t* target;
     action_data_t* action;
     u16 mp;
 

@@ -18,7 +18,7 @@
  * is masked out, applies it to the caller's portrait sprite record.
  */
 void world_gfx_set_party_unit_portrait_poly_texture(s32 roster_slot, POLY_FT4* poly) {
-    party_data_t* party;
+    party_unit_t* party;
     job_data_t* job;
     u32 sprite;
     u8 job_id;

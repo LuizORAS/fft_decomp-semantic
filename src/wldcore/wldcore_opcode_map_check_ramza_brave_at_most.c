@@ -2,7 +2,7 @@
 
 /* Reject the MCBrave<= condition when Ramza's Brave is above the operand. */
 void wldcore_opcode_map_check_ramza_brave_at_most(void) {
-    party_data_t* party;
+    party_unit_t* party;
     u16 ip;
     s32 val;
 

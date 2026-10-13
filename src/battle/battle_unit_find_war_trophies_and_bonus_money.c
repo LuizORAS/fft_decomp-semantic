@@ -14,7 +14,7 @@ void battle_unit_find_war_trophies_and_bonus_money(battle_war_result_t* result) 
     s32 money;
     u8 lowest;
     s32 i;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u8 value;
 
     count = 0;

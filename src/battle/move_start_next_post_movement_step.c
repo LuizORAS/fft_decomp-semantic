@@ -15,7 +15,7 @@ s32 move_start_next_post_movement_step(void) {
     battle_unit_t* source;
     battle_unit_t* casting;
     battle_unit_t* target;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     s32 item;
     s32 animation;
     s32 trap;

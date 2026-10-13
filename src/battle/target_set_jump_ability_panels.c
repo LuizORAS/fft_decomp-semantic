@@ -22,7 +22,7 @@ s32 target_set_jump_ability_panels(const action_command_t* source) {
     u8 usable[0x18];
     u8 turns[0x18];
     action_command_t action;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     map_tile_t* tile;
     map_tile_t* upper;
     map_tile_t* lower;

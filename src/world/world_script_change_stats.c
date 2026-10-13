@@ -15,7 +15,7 @@ void world_script_change_stats(const event_change_stats_parameters_t* parameters
     s32 value;
     s16 delta;
     s32 battle_unit_index;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     delta = script_read_s16(parameters->delta_le);
     unit_id = script_read_s16(parameters->unit_id_le);

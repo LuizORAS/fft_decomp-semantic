@@ -16,7 +16,7 @@
  * register, which an index loop keeps. Only level's destination store is an
  * assignment chain; that shape alone gives the target's register choices. */
 s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* destination) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     map_tile_t* tile;
     /* Byte access retains the original packed load and field-extraction order. */
     s32 origin_x;

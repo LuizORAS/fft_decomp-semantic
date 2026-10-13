@@ -15,7 +15,7 @@ s32 ai_select_active_units(ai_unit_filter_e mode, s32 target_id) {
     s32 i;
     ai_data_t* ai = &g_ai_data_base;
     ai_unit_decision_t* decision;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         decision = &ai->unit_decisions[i];

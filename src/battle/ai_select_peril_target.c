@@ -16,7 +16,7 @@ s32 ai_select_peril_target(void) {
 
     g_ai_data_base.acting_unit->auto_battle_target = g_ai_data_base.acting_unit_id;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        battle_stats_t* unit = &g_battle_unit_stats[i];
+        unit_stats_t* unit = &g_battle_unit_stats[i];
         ai_unit_decision_t* decision = &ai->unit_decisions[i];
         s32 distance_score, missing_hp, team_bits, status_score, score;
 

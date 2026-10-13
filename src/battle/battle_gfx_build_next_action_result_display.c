@@ -7,7 +7,7 @@
  * EXP/JP and the three failure messages above bit 0x01000000 are handled by
  * the following dispatcher at 0x800808b8. */
 s32 battle_gfx_build_next_action_result_display(battle_unit_t* unit) {
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     u32 scan_flags;
     s32 flags;
     action_result_display_t* display;

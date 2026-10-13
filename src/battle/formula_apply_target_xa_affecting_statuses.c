@@ -4,7 +4,7 @@
 /* Target statuses on physical XA: Protect * 2/3; Sleep or Charging * 3/2;
  * Chicken or Frog * 3/2. */
 void formula_apply_target_xa_affecting_statuses(void) {
-    battle_stats_t* target;
+    unit_stats_t* target;
 
     if (g_action_target->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_PROTECT)]
         & STATUS_BYTE_MASK(STATUS_ID_PROTECT)) {

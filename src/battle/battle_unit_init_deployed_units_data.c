@@ -29,7 +29,7 @@ s32 battle_unit_init_deployed_units_data(unit_deployment_coordinates_t* formatio
     }
     for (i = 0; i < 5; i++, weight *= 2) {
         s32 battle_id = i + slot_start;
-        battle_stats_t* unit = &g_battle_unit_stats[battle_id];
+        unit_stats_t* unit = &g_battle_unit_stats[battle_id];
         u8 sprite;
         u32 identity;
 
@@ -72,7 +72,7 @@ s32 battle_unit_init_deployed_units_data(unit_deployment_coordinates_t* formatio
     }
     if (is_red_team_debug) {
         for (i = 5; i < ENTD_UNITS_PER_ENCOUNTER; i++) {
-            battle_stats_t* unit = &g_battle_unit_stats[i];
+            unit_stats_t* unit = &g_battle_unit_stats[i];
             unit->battle_id = i;
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
             unit->existence = BATTLE_UNIT_EXISTENCE_NONE;

@@ -11,8 +11,8 @@
  * last record when there is none).
  */
 s32 require_party_get_free_slot_status(s32 unit_id) {
-    party_data_t* party;
-    battle_stats_t* unit;
+    party_unit_t* party;
+    unit_stats_t* unit;
     s32 index;
 
     unit = battle_unit_get_stats_from_battle_id(unit_id);

@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Increment the battle casualty or injured counter for a unit, capped at 9999. */
-void main_unit_increase_casualty_counters(battle_stats_t* unit) {
+void main_unit_increase_casualty_counters(unit_stats_t* unit) {
     s32 id;
     s32 count;
 

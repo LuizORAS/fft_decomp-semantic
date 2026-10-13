@@ -10,7 +10,7 @@
  * through the callee's team filter. */
 s32 battle_unit_apply_action_rewards(s32 unit_index, action_reward_display_t* display) {
     s32 job_slot;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u8 old_level;
     s32 experience;
     s32 jp;

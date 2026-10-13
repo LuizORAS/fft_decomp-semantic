@@ -810,7 +810,7 @@ typedef struct battle_unit {
     u8 mount_partner_runtime_id;          /* 0x131; linked rider or mount runtime ID */
     u8 previous_mount_state;              /* 0x132; battle_unit_mount_state_e */
     u8 previous_mount_partner_runtime_id; /* 0x133 */
-    battle_stats_t* battle_data;          /* 0x134; battle_stats_t backlink */
+    unit_stats_t* battle_data;            /* 0x134; unit_stats_t backlink */
     u16 used_ability_id;                  /* 0x138 */
     u8 used_item_or_weapon_id;            /* 0x13a; the item the weapon and effect blocks draw */
     u8 equipped_weapon_type;              /* 0x13b; its item type, or 0x15 thrown: the frame set of the weapon SHP */
@@ -1010,7 +1010,7 @@ typedef enum battle_unit_tile_filter {
     = BATTLE_UNIT_TILE_FILTER_TREASURE | BATTLE_UNIT_TILE_FILTER_TRANSPARENT | BATTLE_UNIT_TILE_FILTER_CRYSTAL,
 } battle_unit_tile_filter_e;
 
-/* battle_stats_t.entd_slot value for an unused or removed slot. */
+/* unit_stats_t.entd_slot value for an unused or removed slot. */
 enum {
     BATTLE_ENTD_SLOT_NONE = 0xff,
 };
@@ -1149,36 +1149,36 @@ extern battle_unit_t g_battle_units[BATTLE_UNIT_RUNTIME_SLOT_COUNT];
 extern battle_unit_slot_state_t g_battle_unit_slot_states[];
 extern s32 g_battle_unit_graphics_load_complete;
 extern battle_unit_t* g_battle_unit_list_head;
-extern battle_stats_t g_battle_unit_stats[BATTLE_UNIT_SLOT_COUNT];
+extern unit_stats_t g_battle_unit_stats[BATTLE_UNIT_SLOT_COUNT];
 
 /* 0x8016604e: result of battle_gfx_poll_unit_graphics_load, 0 done / 1 pending. */
 extern u16 g_battle_unit_graphics_load_pending;
 
-battle_stats_t* battle_unit_get_existing_pointer(u32 battle_id);
+unit_stats_t* battle_unit_get_existing_pointer(u32 battle_id);
 s32 battle_unit_find_at_tile(s32 x, s32 y, u32 level, s32 filters);
 s32 battle_unit_draw_and_activate_by_runtime_id(u32 runtime_id);
 s32 battle_unit_disable_remove(s32 battle_id);
 s32 battle_unit_get_battle_id_by_runtime_id(u32 runtime_id);
-battle_stats_t* battle_unit_get_stats_by_unit_id(s32 unit_id);
+unit_stats_t* battle_unit_get_stats_by_unit_id(s32 unit_id);
 battle_unit_t* battle_unit_get_casting(void);
 battle_unit_t* battle_unit_get_by_battle_id(u16 battle_id);
 battle_unit_t* battle_unit_get_by_runtime_id(u16 runtime_id);
 s32 battle_unit_get_runtime_id_by_battle_id(u32 battle_id);
 battle_unit_t* battle_unit_get_source(void);
-battle_stats_t* battle_unit_get_stats_from_battle_id(u32 battle_id);
+unit_stats_t* battle_unit_get_stats_from_battle_id(u32 battle_id);
 s32 battle_unit_has_runtime_id(u32 runtime_id);
 s32 battle_unit_move_to_head(u32 runtime_id);
 s32 battle_unit_remove_by_runtime_id(u32 runtime_id);
 s32 battle_unit_set_cannot_exist(s32 battle_id);
 s32 battle_unit_update_fade_out_removal(battle_unit_t* unit);
 battle_unit_t* battle_unit_claim_slot(s16 requested_runtime_id);
-battle_stats_t* battle_unit_find_active_data_pointer(void);
+unit_stats_t* battle_unit_find_active_data_pointer(void);
 action_command_t* battle_unit_get_action_command_by_battle_id(s32 battle_id);
-battle_stats_t* battle_unit_get_attacker_data_pointer(void);
+unit_stats_t* battle_unit_get_attacker_data_pointer(void);
 battle_unit_t* battle_unit_find_overlapping_at_tile(battle_unit_t* self, s32 x, s32 y, s32 z);
 action_command_t* battle_unit_get_runtime_action_command_by_battle_id(u32 battle_id);
 battle_unit_t* battle_unit_init(s32 map_x, s32 map_y, s32 map_level, s16 facing, s32 spritesheet_id, s16 palette,
-    s16 requested_runtime_id, battle_stats_t* stats, u32 flags, const battle_gfx_unit_sprite_file_t* data);
+    s16 requested_runtime_id, unit_stats_t* stats, u32 flags, const battle_gfx_unit_sprite_file_t* data);
 void battle_unit_remove(battle_unit_t* unit);
 void battle_unit_clear_all(void);
 s32 unit_is_moving(s32 runtime_id);
@@ -1194,7 +1194,7 @@ extern battle_tile_coordinates_t g_battle_relocated_unit_coords[];
 extern s16 g_battle_unit_entd_spritesheet_ids[];
 extern s32 g_battle_unit_entd_spritesheet_count;
 
-battle_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_battle_id);
+unit_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_battle_id);
 s32 battle_unit_add_unique_entd_spritesheet(s32 mode, s16 value, s32 limit);
 void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode);
 s32 battle_unit_set_enemy_level_data_by_battle_id(u32 battle_id);
@@ -1202,7 +1202,7 @@ s32 battle_unit_get_battle_id_by_event_unit_id(s32 event_unit_id);
 s32 battle_unit_init_party_member_battle_data(s32 unused0, s32 unused1, s32 unit_index);
 s32 battle_unit_place_in_new_location(u32 runtime_id, map_tile_coordinates_t* tile, s32 facing);
 s32 battle_unit_poll_and_load_entd_units(void);
-void battle_unit_set_enemy_level_data(battle_stats_t* unit);
+void battle_unit_set_enemy_level_data(unit_stats_t* unit);
 s32 battle_unit_set_placement_and_validate(s32 unit_index, unit_deployment_coordinates_t* src);
 s32 battle_unit_validate_placement(s32 unit_index);
 s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* destination);
@@ -1228,12 +1228,12 @@ void battle_unit_set_map_coords_after_death_dismount(battle_unit_t* unit);
 void battle_unit_set_tile_position_with_mount_partner(battle_unit_t* unit);
 void battle_unit_update_staged_status_data(u16 unit_id, u16 restore);
 s32 battle_unit_save_staged_status_data(s32 battle_id);
-battle_chocobo_mount_state_e battle_unit_get_chocobo_mount_state(battle_stats_t* unit);
+battle_chocobo_mount_state_e battle_unit_get_chocobo_mount_state(unit_stats_t* unit);
 void battle_unit_mount_onto_pending_mount(battle_unit_t* unit);
 s32 battle_unit_prepare_rider_dismount(u32 runtime_id, s32 direction, s32 jump_length);
 struct battle_unit* battle_unit_get_mount(struct battle_unit* unit);
 s32 unit_has_any_current_status(s32 battle_id);
-battle_unit_action_restriction_e battle_unit_get_action_restriction(battle_stats_t* unit);
+battle_unit_action_restriction_e battle_unit_get_action_restriction(unit_stats_t* unit);
 
 /* battle_unit_animation_e of each item type's attack at a higher, a level and a lower target. */
 extern u8 g_battle_weapon_attack_animations[][3];
@@ -1337,7 +1337,7 @@ void battle_unit_set_move_and_world_coords(battle_unit_t* unit);
 battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_data_t* out, s32 unit_id);
 battle_unit_t* battle_unit_find_other_chocobo_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
 void battle_unit_project_to_screen(u32 runtime_id, SVECTOR* screen_coordinates);
-u8 battle_unit_get_effective_height(const battle_stats_t* unit);
+u8 battle_unit_get_effective_height(const unit_stats_t* unit);
 battle_unit_t* battle_unit_find_selectable_at_tile(s32 map_x, s32 map_y, s32 map_z);
 void battle_unit_save_previous_state(battle_unit_t* unit);
 void battle_unit_set_real_coords_from_map_coords(battle_unit_t* unit);
@@ -1362,23 +1362,23 @@ void battle_unit_shift_right_or_left(battle_unit_t* unit, s8 delta);
 
 /* progression and pickups */
 void battle_unit_apply_poach_morbol_transformation(battle_unit_t* unit);
-u8 battle_unit_calculate_move_exp_jp_up_to_earn(battle_stats_t* unit);
+u8 battle_unit_calculate_move_exp_jp_up_to_earn(unit_stats_t* unit);
 s32 battle_unit_count_crystals(void);
 void battle_unit_find_war_trophies_and_bonus_money(battle_war_result_t* result);
 battle_unit_t* battle_unit_get_crystal_or_treasure_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
 void unit_increase_blue_team_brave_by_10(void);
-void battle_unit_learn_used_ability(battle_stats_t* unit);
-void battle_unit_transform_into_morbol(battle_stats_t* unit);
+void battle_unit_learn_used_ability(unit_stats_t* unit);
+void battle_unit_transform_into_morbol(unit_stats_t* unit);
 void battle_unit_update_attacker_earned_experience(s32 outcome);
 s32 battle_unit_apply_action_rewards(s32 unit_index, action_reward_display_t* display);
 s32 battle_unit_apply_level_up_down_ability(void);
 s32 battle_unit_apply_stat_increment_decrement(s32 mod, u8* stat, u8 max, u8 min);
-s32 battle_unit_build_gained_exp_jp_level_job_level(battle_stats_t* unit, action_reward_display_t* rewards);
-s32 battle_unit_learn_from_crystal(battle_stats_t* unit, s32 flags);
-s32 battle_unit_load_job_level(battle_stats_t* unit, s32 job_id, s32* out_slot);
+s32 battle_unit_build_gained_exp_jp_level_job_level(unit_stats_t* unit, action_reward_display_t* rewards);
+s32 battle_unit_learn_from_crystal(unit_stats_t* unit, s32 flags);
+s32 battle_unit_load_job_level(unit_stats_t* unit, s32 job_id, s32* out_slot);
 s32 battle_unit_store_jp_and_calculate_unlocked_jobs(s32 unit_index, s32 jp, s32 team, s32 slot);
-u8 battle_unit_generate_treasure(battle_stats_t* unit);
-crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t* mover);
+u8 battle_unit_generate_treasure(unit_stats_t* unit);
+crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(unit_stats_t* mover);
 
 /* unit views */
 extern u16 g_battle_unit_view_started_battle_id;

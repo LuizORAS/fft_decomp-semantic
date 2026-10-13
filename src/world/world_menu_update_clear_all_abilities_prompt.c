@@ -5,7 +5,7 @@
 /* volatile: the target re-reads the counter right after incrementing it */
 
 s32 world_menu_update_clear_all_abilities_prompt(void) {
-    world_formation_unit_t* unit;
+    world_unit_t* unit;
     u16 value;
     s32 unused[16];
     s32 i;

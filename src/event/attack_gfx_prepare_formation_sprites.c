@@ -26,7 +26,7 @@ void attack_gfx_prepare_formation_sprites(void) {
     u8 unused[0x10];
     u8* buffer;
     s32 i;
-    party_data_t* party;
+    party_unit_t* party;
     s32 base;
     s32 code;
     u8* pixel;

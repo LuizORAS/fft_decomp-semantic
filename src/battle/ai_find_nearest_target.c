@@ -13,7 +13,7 @@ s32 ai_find_nearest_target(ai_nearest_target_mode_e mode) {
     s32 nearest_distance = 0x7fffffff;
     s32 nearest_id = g_ai_data_base.acting_unit_id;
     s32 i;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     ai_unit_decision_t* decision;
     s32 distance;
 

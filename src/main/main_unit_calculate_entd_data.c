@@ -13,9 +13,9 @@
  * birthday whose month is outside 1..12 or day outside 1..31 becomes a random
  * day of the year. Brave and Faith above 100 are rolled in 45..74, and
  * experience of 100 or more in 0..99. */
-s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
+s32 main_unit_calculate_entd_data(unit_stats_t* unit, entd_unit_t* entd) {
     const job_data_t* ramza_jobs;
-    party_data_t* party_unit;
+    party_unit_t* party_unit;
     s32 party_slot;
     s32 party_index;
     s32 i;
@@ -71,7 +71,7 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
      * ai_initial_enemy_flag).  The byte-shifted struct view reproduces the
      * target's `addu unit,i` operand order; (&unit->ai_target_x)[i] swaps it. */
     for (i = 0; i < 7; i++) {
-        ((battle_stats_t*)((u8*)unit + i))->ai_target_x = g_main_entd_current_unit->ai_target_xy[i];
+        ((unit_stats_t*)((u8*)unit + i))->ai_target_x = g_main_entd_current_unit->ai_target_xy[i];
     }
     if (value & UNIT_FLAG_LOAD_FORMATION) {
         return party_slot;

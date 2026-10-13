@@ -10,8 +10,8 @@ void ai_build_attack_origin_masks(void) {
     s32 x;
     s32 unit_id;
     s32 depth;
-    battle_stats_t* unit;
-    battle_stats_t* pos;
+    unit_stats_t* unit;
+    unit_stats_t* pos;
     s32 jumping;
     u8 status;
 

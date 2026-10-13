@@ -11,7 +11,7 @@
  * also has a save- or load-formation flag gains the immunity check sets 5 and 6;
  * the tests inside that loop repeat the outer condition. The strengthened
  * elements are cleared. */
-void main_unit_copy_job_data(battle_stats_t* unit) {
+void main_unit_copy_job_data(unit_stats_t* unit) {
     job_data_t* job;
     s32 i;
     s32 flag_a;

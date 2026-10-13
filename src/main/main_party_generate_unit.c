@@ -4,7 +4,7 @@
  * roster slot (0..15), with palette 0. Returns the slot, or -1 when all sixteen
  * are taken. */
 s32 main_party_generate_unit(main_unit_generation_type_e unit_type) {
-    party_data_t* party_data[PARTY_ROSTER_SLOT_COUNT];
+    party_unit_t* party_data[PARTY_ROSTER_SLOT_COUNT];
     s32 party_index;
     s32 palette = 0;
 

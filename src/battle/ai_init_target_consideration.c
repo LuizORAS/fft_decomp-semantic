@@ -10,7 +10,7 @@
 void ai_init_target_consideration(void) {
     ai_unit_decision_t* decision;
     ai_data_t* ai;
-    battle_stats_t* acting;
+    unit_stats_t* acting;
     s32 flags;
     u8 targeting_flags;
     ai_nearest_target_mode_e mode;

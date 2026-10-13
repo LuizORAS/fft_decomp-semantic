@@ -9,7 +9,7 @@
  * doubled by Gained EXP Up or Gained JP Up. Return -1 for a blocking status
  * and 0 otherwise, including when no movement benefit is present. The caller
  * applies and displays the result. */
-s32 action_init_movement_ability_benefit(battle_stats_t* unit) {
+s32 action_init_movement_ability_benefit(unit_stats_t* unit) {
     s32 flags;
     u8 unit_id;
     s32 amount;

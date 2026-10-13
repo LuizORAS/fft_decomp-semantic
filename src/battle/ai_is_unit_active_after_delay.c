@@ -6,7 +6,7 @@
  * not crystal, petrified or treasure, with no Stop, Don't Move or Sleep that
  * lasts that long, and alive, or dead with Reraise and due a turn by then. */
 s32 ai_is_unit_active_after_delay(s32 limit, s32 unit_id) {
-    battle_stats_t* unit = &g_battle_unit_stats[unit_id];
+    unit_stats_t* unit = &g_battle_unit_stats[unit_id];
 
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return 0;

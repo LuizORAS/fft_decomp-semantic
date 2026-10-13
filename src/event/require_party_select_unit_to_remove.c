@@ -40,8 +40,8 @@ s32 require_party_select_unit_to_remove(void) {
     s32 should_restore;
     s32 message_id;
     s32 formation_index;
-    party_data_t* party_unit;
-    battle_stats_t* selected_battle_unit;
+    party_unit_t* party_unit;
+    unit_stats_t* selected_battle_unit;
     RECT* portrait_rect;
     s16* portrait_destination;
     RECT* palette_rect;
@@ -194,7 +194,7 @@ s32 require_party_select_unit_to_remove(void) {
         }
 
         {
-            battle_stats_t* battle_unit;
+            unit_stats_t* battle_unit;
 
             for (party_index = 0; party_index < 0x15; party_index++) {
                 battle_unit = battle_unit_get_stats_from_battle_id(party_index);

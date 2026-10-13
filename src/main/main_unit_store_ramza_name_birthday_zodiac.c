@@ -2,9 +2,9 @@
 
 /* For a unit with one of Ramza's three identities, copy the name, birthday and
  * zodiac sign from the first roster record that has one of them. */
-void main_unit_store_ramza_name_birthday_zodiac(battle_stats_t* unit) {
+void main_unit_store_ramza_name_birthday_zodiac(unit_stats_t* unit) {
     s32 slot;
-    party_data_t* party;
+    party_unit_t* party;
 
     if (unit->character_identity > CHARACTER_IDENTITY_RAMZA_CHAPTER_4) {
         return;

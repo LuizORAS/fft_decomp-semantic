@@ -28,7 +28,7 @@ void ai_set_ability_considerations(s32 action_taken) {
     s32 unit_id;
     s32 i;
     ai_unit_decision_t* decision;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     ai_ability_entry_t* entry;
     s32 ability_id;
     u8 menu;

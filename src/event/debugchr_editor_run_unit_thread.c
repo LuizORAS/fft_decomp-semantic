@@ -35,7 +35,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
     u8* animation_third;
     s32 sound_latched;
     s32 event_mode;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 input;
     /* Shared by the R1 and L1 blocks: set twice in the loop, the address is
      * not a loop invariant candidate and is rebuilt in each block. */

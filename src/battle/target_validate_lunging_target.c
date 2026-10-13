@@ -15,7 +15,7 @@
  * keeps the target's instruction order for the upper-layer tile address. */
 s32 target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevation, s32 target_id) {
     battle_unit_height_data_t height;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     map_tile_t* lower;
     map_tile_t* upper;
     s32 unit_x;

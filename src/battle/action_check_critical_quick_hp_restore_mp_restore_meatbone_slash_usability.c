@@ -4,7 +4,7 @@
 /* Record reaction_id for a target that is in Critical, is taking HP damage and
  * passes its reaction roll. */
 void action_check_critical_quick_hp_restore_mp_restore_meatbone_slash_usability(s16 reaction_id) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     unit = g_action_target;
     if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRITICAL)] & STATUS_BYTE_MASK(STATUS_ID_CRITICAL))

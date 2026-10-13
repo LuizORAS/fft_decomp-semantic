@@ -9,7 +9,7 @@ s32 world_item_count_equipped_by_party(s32 item_id) {
     s32 count;
     s32 unit_index;
     s32 slot;
-    world_formation_unit_t* unit;
+    world_unit_t* unit;
 
     count = 0;
     item_id &= WORLD_ITEM_ID_MASK;

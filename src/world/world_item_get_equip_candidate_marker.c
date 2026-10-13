@@ -4,7 +4,7 @@
 /* Equip-menu marker for the selected item: 8 when the unit already wears it
  * or cannot equip it, -1 when it is a fresh equippable choice. */
 s32 world_item_get_equip_candidate_marker(s32 unit_index) {
-    world_formation_unit_t* unit = g_world_formation_unit_pointers[unit_index];
+    world_unit_t* unit = g_world_formation_unit_pointers[unit_index];
     s32 i;
 
     for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {

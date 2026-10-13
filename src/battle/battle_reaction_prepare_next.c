@@ -23,7 +23,7 @@ enum {
  * the unit pointer can change for Damage Split.
  */
 s32 battle_reaction_prepare_next(s16* out_ability) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     action_command_t* action;
     s32 i;
     s32 outcome;

@@ -8,7 +8,7 @@
  * Rebuild the menu's name strings after updating both records.
  */
 void world_formation_set_unit_name(s16 formation_index, const u8* name) {
-    party_data_t* party;
+    party_unit_t* party;
     s32 i;
     u8 character;
 

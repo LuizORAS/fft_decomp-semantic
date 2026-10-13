@@ -28,7 +28,7 @@
 void world_menu_run_option_choice(void) {
     RECT rect;
     u32* input;
-    native_thread_t* thread;
+    thread_t* thread;
     s32 kind;
     s32 height;
     menu_entry_t* param;

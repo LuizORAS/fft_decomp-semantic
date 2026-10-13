@@ -12,8 +12,8 @@
 s32 require_party_update_brave_faith_and_collect_warnings(void) {
     s32 battle_index;
     s32 warning_count = 0;
-    battle_stats_t* battle_unit;
-    battle_stats_t* unit;
+    unit_stats_t* battle_unit;
+    unit_stats_t* unit;
     s32 found_battle_index;
     s32 brave;
     s32 faith;

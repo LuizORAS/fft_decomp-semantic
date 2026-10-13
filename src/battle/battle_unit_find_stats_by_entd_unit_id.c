@@ -9,8 +9,8 @@
  * Otherwise returns 0 with -3. Both loops compare against (unit_id & 0xff):
  * the (u8) cast adds a loop insn and stops loop.c hoisting the constant 2 in
  * the second loop. */
-battle_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_battle_id) {
-    battle_stats_t* unit;
+unit_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_battle_id) {
+    unit_stats_t* unit;
     s32 i;
 
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {

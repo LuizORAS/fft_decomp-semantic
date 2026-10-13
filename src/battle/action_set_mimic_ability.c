@@ -11,7 +11,7 @@
  * assignments retain the target's evaluation order. The tile index and saved
  * action state share a temporary because their lifetimes do not overlap.
  */
-s32 action_set_mimic_ability(battle_stats_t* unit) {
+s32 action_set_mimic_ability(unit_stats_t* unit) {
     /* A byte flag test retains the original compound-condition scheduling. */
     action_command_t action;
     action_command_t* current;

@@ -13,7 +13,7 @@
 void world_unit_inflict_status_by_event_unit_id(
     s32 event_unit_id, s32 status_index, s32 is_infliction, s32 less_strict_removal) {
     s32 battle_unit_index;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 clear_index;
     s32 status_byte_index;
     s32 status_bit_index;

@@ -3,5 +3,5 @@
 
 /* Empty. Called when the acting unit's own action has ended, with its stats and the quadrant
  * (0 to 3) its sprite faces. */
-void action_post_action_facing_stub(battle_stats_t* unused_unit, s32 unused_facing) {
+void action_post_action_facing_stub(unit_stats_t* unused_unit, s32 unused_facing) {
 }

@@ -12,7 +12,7 @@ s32 equip_entrypoint(s32 unit, u32* otag) {
     s32 i;
     u8 changed;
     s32 message_idle;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
 
     if (g_equip_menu_screen_state == EQUIP_SCREEN_STATE_INIT) {
         equip_menu_init_screen(unit);

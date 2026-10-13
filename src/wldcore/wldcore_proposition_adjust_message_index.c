@@ -8,7 +8,7 @@ s32 wldcore_proposition_adjust_message_index(s32 base, s32 party_index) {
     s32 faith_band;
     s32 bravery_band;
     u32 is_not_male;
-    party_data_t* party;
+    party_unit_t* party;
     const u8* adjustments;
 
     party = wldcore_get_party_data_pointer(party_index);

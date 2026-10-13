@@ -10,7 +10,7 @@
  */
 s32 ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
     ai_data_t* ai = &g_ai_data_base;
-    battle_stats_t* unit = &g_battle_unit_stats[unit_id];
+    unit_stats_t* unit = &g_battle_unit_stats[unit_id];
     ai_unit_decision_t* decision;
     ai_ability_entry_t* entry;
     s32 flags;

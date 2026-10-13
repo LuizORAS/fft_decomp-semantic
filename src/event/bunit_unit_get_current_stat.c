@@ -5,7 +5,7 @@
  * never assigned. */
 s32 bunit_unit_get_current_stat(s32 unit_index) {
     menu_unit_readout_e mode;
-    bunit_unit_data_t* entry;
+    bunit_unit_t* entry;
     s32 value;
 
     mode = g_bunit_unit_stat_mode;

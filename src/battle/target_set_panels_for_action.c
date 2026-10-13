@@ -23,7 +23,7 @@
  * UNIT_OR_TILE. */
 s32 target_set_panels_for_action(const action_command_t* source) {
     action_command_t action;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     ability_secondary_data_t* ability;
     s32 mode;
     s32 range;

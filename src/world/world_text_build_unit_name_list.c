@@ -5,7 +5,7 @@
  * the names of the 21 battle units into the name string buffer. */
 void world_text_build_unit_name_list(void) {
     u8* out;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
     s32 j;
     u8 character;

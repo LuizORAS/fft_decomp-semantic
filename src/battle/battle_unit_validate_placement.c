@@ -8,8 +8,8 @@
  * already occupied by an earlier unit slot at the same elevation; 0 otherwise. */
 s32 battle_unit_validate_placement(s32 unit_idx) {
     /* A byte collision test retains the original single-mask branch. */
-    battle_stats_t* unit = &g_battle_unit_stats[unit_idx];
-    battle_stats_t* other;
+    unit_stats_t* unit = &g_battle_unit_stats[unit_idx];
+    unit_stats_t* other;
     map_tile_t* tile;
     u8 x;
     u8 y;

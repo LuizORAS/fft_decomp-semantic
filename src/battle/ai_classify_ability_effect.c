@@ -9,7 +9,7 @@
  */
 ai_ability_effect_e ai_classify_ability_effect(s32 unit_id, s32 check_reflect) {
     ai_data_t* ai = &g_ai_data_base;
-    battle_stats_t* unit = &g_battle_unit_stats[unit_id];
+    unit_stats_t* unit = &g_battle_unit_stats[unit_id];
     ai_unit_decision_t* decision = &ai->unit_decisions[unit_id];
     s32 ct = g_ai_data_base.considered_ability.ct;
     s32 i;

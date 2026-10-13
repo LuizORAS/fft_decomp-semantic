@@ -25,5 +25,5 @@ s32 world_thread_get_current_parameter_2(void) {
     __asm__("move $1,$1" : "=r"(global_pointer) : "0"(global_pointer));
     thread_array = *(u8**)((u8*)global_pointer + 0x327c);
     __asm__("nop\nadd $8,$8,$9" : "=r"(thread_offset) : "0"(thread_offset), "r"(thread_array));
-    return ((native_thread_t*)thread_offset)->function_parameter_2;
+    return ((thread_t*)thread_offset)->function_parameter_2;
 }

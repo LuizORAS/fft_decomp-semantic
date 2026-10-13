@@ -34,7 +34,7 @@
 void battle_menu_build_ability_preview_at_list(void) {
     menu_at_list_work_t* work;
     menu_entry_t* entry;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     u8* text;
     action_command_t* action;
     u8* published;

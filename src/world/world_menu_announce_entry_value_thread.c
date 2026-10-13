@@ -9,7 +9,7 @@
 
 void world_menu_announce_entry_value_thread(void) {
     menu_entry_t* entry;
-    native_thread_t* thread;
+    thread_t* thread;
     s32 kind;
     s32 index;
     s32 value;

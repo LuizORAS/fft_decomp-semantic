@@ -15,7 +15,7 @@ s32 battle_menu_collect_throwable_items(s32 unit_id, u8 skillset, u8* out) {
     u8 charge_times[0x14];
     u8 ability_flags[0x14];
     u8 turn_counts[0x14];
-    struct battle_stats* unit;
+    struct unit_stats* unit;
     s32 count;
     s32 ability_count;
     s32 i;

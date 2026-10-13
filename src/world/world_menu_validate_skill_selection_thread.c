@@ -14,7 +14,7 @@ void world_menu_validate_skill_selection_thread(void) {
     s32 mp_cost;
     s32 message;
     s32 blocked;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     menu_ability_list_t* skill_tables;
 
     skill = g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index;

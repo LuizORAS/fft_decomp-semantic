@@ -4,7 +4,7 @@
  *
  * Only unit_index is observed; no direct caller or callback table is proven. */
 s32 battle_unit_init_party_member_battle_data(s32 unused0, s32 unused1, s32 unit_index) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 formation_id;
 
     unit = &g_battle_unit_stats[unit_index];

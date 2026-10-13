@@ -5,7 +5,7 @@
  *
  * Only an executing action (not a preview or simulation) is converted. */
 void action_check_mp_switch_usability(void) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     action_data_t* action;
     action_data_t* action2;
 

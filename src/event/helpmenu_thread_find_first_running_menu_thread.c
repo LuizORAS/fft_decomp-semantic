@@ -5,7 +5,7 @@
  * or 9 when none runs. */
 s32 helpmenu_thread_find_first_running_menu_thread(void) {
     s32 thread_id;
-    native_thread_t* thread;
+    thread_t* thread;
 
     thread_id = 4;
     thread = g_native_threads + 4;

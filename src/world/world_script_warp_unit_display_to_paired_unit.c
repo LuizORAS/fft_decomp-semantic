@@ -10,7 +10,7 @@
  * Declared to return a value but none is set.
  */
 s32 world_script_warp_unit_display_to_paired_unit(s32 runtime_id) {
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     unit_animation_state_t* state;
     s32 facing;
     s32 battle_id;

@@ -11,8 +11,8 @@
  * units with that item equipped. The list argument is unused here; the sorter
  * at 0x80121c60 fills g_world_formation_unit_pointers.
  */
-s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** unused_list, s32 mode) {
-    battle_stats_t unit;
+s16 world_formation_build_record_list(s32 item_id, world_unit_t** unused_list, s32 mode) {
+    unit_stats_t unit;
     s32 slot;
     s32 count;
     s32 id;

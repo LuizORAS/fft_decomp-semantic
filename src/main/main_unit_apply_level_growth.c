@@ -4,7 +4,7 @@
 /* Applies one level of growth (or its inverse for a level down) to each
  * 24-bit raw stat: raw +/- raw / (growth + level), a zero growth counting as
  * 1, capped at 0xffffff; then refreshes the derived stats and clamps HP/MP. */
-void main_unit_apply_level_growth(battle_stats_t* unit, s32 level_down) {
+void main_unit_apply_level_growth(unit_stats_t* unit, s32 level_down) {
     unit_raw_stat_t* raw_stats;
     job_stat_growth_t* growth;
     u32 value;

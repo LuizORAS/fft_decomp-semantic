@@ -14,7 +14,7 @@ s32 action_resolve_ability_strike(s32 battle_id, battle_strike_work_t* work) {
     u8 targets[BATTLE_UNIT_SLOT_COUNT];
     s32 count;
     u8 flags_3;
-    battle_stats_t* attacker;
+    unit_stats_t* attacker;
     s32 i;
     s32 reaction_targeted;
     u8 target_id;

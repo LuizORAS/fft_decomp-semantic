@@ -4,7 +4,7 @@
 /* Makes the attacker's own action result remove Transparent when its last
  * skillset is Jump and it carries Transparent as an inflicted status. Also points
  * g_action_attacker_data at the attacker's result. */
-void status_remove_transparent_if_jump_used(battle_stats_t* unit) {
+void status_remove_transparent_if_jump_used(unit_stats_t* unit) {
     action_data_t* action = &g_action_attacker_action_data;
     g_action_attacker_data = action;
     /* Inflicted status byte 2 bit 0x10 is Transparent. */

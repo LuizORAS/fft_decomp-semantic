@@ -5,7 +5,7 @@
  * ability-range mark: opens action-confirm option 5 for the source unit. */
 void battle_state_enter_target_out_of_range(void) {
     battle_unit_t* unit;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_ILLEGAL_RANGE;

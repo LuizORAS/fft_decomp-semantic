@@ -11,7 +11,7 @@ s32 world_formation_generate_unit(s16 unit_type) {
     u8** name_buffer = &g_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
     u8* saved_names;
     s32 roster_slot;
-    party_data_t* party;
+    party_unit_t* party;
 
     saved_names = *name_buffer;
     *name_buffer = g_text_section_pointers[TEXT_SECTION_UNIT_NAMES];

@@ -8,7 +8,7 @@
  * resolves, then apply the action's special-effect side effects.
  */
 void battle_unit_set_target_animation_from_attack_type(battle_unit_t* attacker, battle_unit_t* target) {
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     action_data_t* action;
     s32 animation;
     s32 delta;

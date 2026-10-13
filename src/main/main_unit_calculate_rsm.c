@@ -6,7 +6,7 @@
 /* Picks a random reaction/support/movement ability (selected by `flags` from
  * rsm_ability_filter_e) from the abilities the unit has learned
  * across its unlocked jobs, or returns `ability_id` when it is not random. */
-u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, entd_unit_t* entd) {
+u16 main_unit_calculate_rsm(unit_stats_t* unit, u16 ability_id, s32 flags, entd_unit_t* entd) {
     u16 candidates[RSM_CANDIDATE_COUNT];
     u16 innate[4];
     u8 known;

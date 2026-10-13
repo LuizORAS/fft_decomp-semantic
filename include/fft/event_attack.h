@@ -303,7 +303,7 @@ extern battle_menu_status_panel_numeric_geometry_t g_attack_editor_numeric_table
 extern menu_unit_stat_number_images_t g_attack_editor_numeric_text_a;
 extern menu_unit_stat_number_images_t g_attack_editor_numeric_text_b;
 extern image_load_parameters_t g_attack_editor_numeric_texture[];
-extern struct battle_stats g_attack_editor_party_unit_stats;
+extern struct unit_stats g_attack_editor_party_unit_stats;
 extern u8 g_attack_editor_primary_skillset_name[];
 extern u8 g_attack_editor_secondary_skillset_name[];
 /* Status editor at 0x801ca0e8 (monster-skillset and two-hands flags at +0x0e/+0x10). */

@@ -11,7 +11,7 @@
  * that heals the missing HP and MP. LEARN_ABILITIES ORs
  * g_main_crystal_learnable_abilities into the unit's learned-ability bits. These
  * return 0. */
-s32 battle_unit_learn_from_crystal(battle_stats_t* unit, s32 flags) {
+s32 battle_unit_learn_from_crystal(unit_stats_t* unit, s32 flags) {
     s32 i;
     u8* dst;
     u8* src;

@@ -10,7 +10,7 @@ void battle_unit_update_attacker_earned_experience(s32 outcome) {
     s16 base;
     s32 signed_exp;
     s32 divisor;
-    battle_stats_t* attacker;
+    unit_stats_t* attacker;
     s16 exp;
     s32 sum;
 

@@ -15,7 +15,7 @@
  * count that use of the CSE'd &g_main_crystal_pickup_result pseudo two loop levels deeper
  * (8 refs), so global-alloc ranks it above `mover` and gives it s1 as in the
  * target. */
-crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t* mover) {
+crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(unit_stats_t* mover) {
     u8 gained[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
     u8 known[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
     u8 offered[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
@@ -25,7 +25,7 @@ crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t
     s32 mover_flags;
     s32 crystal_flags;
     s32 unlocked_jobs_mask;
-    battle_stats_t* crystal;
+    unit_stats_t* crystal;
     s32 crystal_index;
     s32 job_id;
     s32 job_index;

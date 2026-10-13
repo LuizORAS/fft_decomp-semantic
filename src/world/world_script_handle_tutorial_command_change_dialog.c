@@ -21,7 +21,7 @@ void world_script_handle_tutorial_command_change_dialog(void) {
             0);
         g_world_script_tutorial_command_ptr += 3;
         /* Direct slot/member indexing splits this address at -O0. */
-        *(s32*)((u8*)g_native_threads + (u32) & ((native_thread_t*)0)[WORLD_THREAD_SLOT_TUTORIAL_TEXT].task_id)
+        *(s32*)((u8*)g_native_threads + (u32) & ((thread_t*)0)[WORLD_THREAD_SLOT_TUTORIAL_TEXT].task_id)
             = NATIVE_THREAD_TASK_RESUME;
     }
 }

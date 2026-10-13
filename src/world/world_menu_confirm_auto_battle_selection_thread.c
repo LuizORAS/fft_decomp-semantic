@@ -5,7 +5,7 @@
  * thread's menu entry without a sound. */
 void world_menu_confirm_auto_battle_selection_thread(void) {
     menu_entry_t* entry = world_thread_get_current_parameter_1();
-    battle_stats_t* unit = world_unit_get_battle_stats_for_stored();
+    unit_stats_t* unit = world_unit_get_battle_stats_for_stored();
     menu_entry_t* menu = g_world_menu_thread_menu_data;
 
     if (menu[1].selected_index == 3) {

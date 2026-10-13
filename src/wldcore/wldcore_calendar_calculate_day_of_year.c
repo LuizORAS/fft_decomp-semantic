@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Inverse of wldcore_calendar_calculate_month_and_day: 1-based month and day to a
- * 0-based day-of-year index (party_data_t.birthday_day). */
+ * 0-based day-of-year index (party_unit_t.birthday_day). */
 s32 wldcore_calendar_calculate_day_of_year(s32 month, s32 day) {
     s32 index;
     s32 days_before_month;

@@ -14,8 +14,8 @@
  */
 battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_data_t* out, s32 unit_id) {
     battle_unit_height_data_t height;
-    battle_stats_t* unit;
-    battle_stats_t* candidate;
+    unit_stats_t* unit;
+    unit_stats_t* candidate;
     map_tile_t* tile;
     /* Byte access retains the original packed load and field-extraction order. */
     s32 offset;

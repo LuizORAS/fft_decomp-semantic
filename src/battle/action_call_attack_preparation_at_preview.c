@@ -9,7 +9,7 @@
  * Defending and Performing statuses, but only in the primary action context.
  * Returns the battle_attack_preparation_e result. */
 s32 action_call_attack_preparation_at_preview(action_command_t* command) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 result;
 
     unit = &g_battle_unit_stats[command->actor_id];

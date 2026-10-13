@@ -7,7 +7,7 @@
  * EQUIP unit record. */
 void equip_unit_commit_loadout_to_battle_stats(void) {
     menu_status_panel_slot_storage_t bonuses;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     s16 unit_id;
     s32 item_id;
     s32 saved;

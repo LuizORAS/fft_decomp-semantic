@@ -5,7 +5,7 @@
 /* Measure a text entry in characters, following substitutions and backreferences. */
 void text_measure(s16* columns, s16* rows, const u8* text) {
     text_backref_t* backref;
-    party_data_t* party;
+    party_unit_t* party;
     u8* cursor;
     s32 i;
     u8* fill = g_text_player_name_buffer;

@@ -13,8 +13,8 @@
  * `||` lets the delay-slot pass steal `li v0,-3` into the first branch.
  */
 s32 battle_unit_find_slot_by_character_identity(u32 character_identity) {
-    battle_stats_t* unit;
-    party_data_t* party;
+    unit_stats_t* unit;
+    party_unit_t* party;
     s32 i;
     u8* status;
     u8 identity;

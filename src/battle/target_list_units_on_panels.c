@@ -10,7 +10,7 @@
  * ordering is enabled the list is insertion-sorted by Manhattan distance from
  * `origin`.
  */
-s32 target_list_units_on_panels(u8* list, const battle_stats_t* origin) {
+s32 target_list_units_on_panels(u8* list, const unit_stats_t* origin) {
     /* A byte flag test retains the original compound-condition scheduling. */
     s32 distance[BATTLE_UNIT_SLOT_COUNT];
     s32 tile;
@@ -23,7 +23,7 @@ s32 target_list_units_on_panels(u8* list, const battle_stats_t* origin) {
     s32 dist;
     s32 x;
     s32 y;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     count = 0;
     x = origin->x;

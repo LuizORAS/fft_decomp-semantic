@@ -4,8 +4,8 @@
  * Copies an in-battle unit record into its persistent party slot.
  * Returns 0 on success and -1 when no free party slot exists.
  */
-s32 main_party_save_unit(battle_stats_t* unit, s32 allow_guest) {
-    party_data_t* party;
+s32 main_party_save_unit(unit_stats_t* unit, s32 allow_guest) {
+    party_unit_t* party;
     s32 slot;
     s32 index;
     u32 unit_slot;

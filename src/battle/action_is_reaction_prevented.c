@@ -3,7 +3,7 @@
 /* Nonzero when the unit cannot react: it has a status of the prevent-reaction
  * set, or the current action is itself a reaction or a simulation (anything but
  * the primary context), which never provokes one. */
-s32 action_is_reaction_prevented(const battle_stats_t* unit) {
+s32 action_is_reaction_prevented(const unit_stats_t* unit) {
     if (g_action_context != ACTION_CONTEXT_PRIMARY) {
         return 1;
     }

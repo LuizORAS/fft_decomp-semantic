@@ -2,7 +2,7 @@
 
 /* Visit every blue-team slot, including empty ones; the byte addition precedes the cap. */
 void unit_increase_blue_team_brave_by_10(void) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 unit_id;
 
     for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {

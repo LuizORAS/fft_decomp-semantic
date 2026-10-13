@@ -6,7 +6,7 @@
  *
  * The rare item is chosen with a (100 - Brave)% chance; the tile is the
  * unit's x and position (y in the low byte, the layer in bit 15). */
-move_found_item_t* map_determine_rare_common_item(battle_stats_t* unit) {
+move_found_item_t* map_determine_rare_common_item(unit_stats_t* unit) {
     move_find_result_data_t* find_result;
     u8 item_id;
 

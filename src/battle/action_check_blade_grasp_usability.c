@@ -4,7 +4,7 @@
  * 100 - Brave of the target; when the target passes its reaction roll during
  * execution the strike becomes a miss and the reaction is recorded. */
 void action_check_blade_grasp_usability(void) {
-    battle_stats_t* attacker;
+    unit_stats_t* attacker;
     action_data_t* target;
 
     if ((g_action_current_ability.range_data.flags_4 & ABILITY_SECONDARY_FLAG_4_BLADE_GRASP_ELIGIBLE) == 0)

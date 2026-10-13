@@ -3,7 +3,7 @@
 
 /* Build the equipment data and HP/MP for `battle_id` and count the units still present on the field. */
 void equip_unit_load_data_from_battle_stats(s32 battle_id) {
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     s32 i;
     s32 unit_count;
     u16 hp;

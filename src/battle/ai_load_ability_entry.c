@@ -9,7 +9,7 @@
 void ai_load_ability_entry(const ai_ability_entry_t* entry) {
     ai_data_t* ai = &g_ai_data_base;
     s32 ability_id, unit_id, menu, status_id;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     ai_weapon_data_t* weapon;
     ability_secondary_data_t* secondary;
     s32 value;

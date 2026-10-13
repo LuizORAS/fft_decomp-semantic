@@ -6,7 +6,7 @@
  * quarter of its price instead and removed from the unit. Returns 1 when
  * it sold anything. */
 s32 require_party_store_equipment_or_sell_overflow(s32 unit_id) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 sold_equipment;
     s32 equipment_slot;
 

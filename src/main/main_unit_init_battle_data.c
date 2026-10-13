@@ -3,7 +3,7 @@
 /*
  * Fills an in-battle unit record from its persistent party record.
  */
-void main_unit_init_battle_data(battle_stats_t* unit, const party_data_t* party) {
+void main_unit_init_battle_data(unit_stats_t* unit, const party_unit_t* party) {
     s32 team;
     s32 i;
     s32 value;

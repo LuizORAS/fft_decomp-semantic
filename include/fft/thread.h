@@ -1,7 +1,7 @@
 #ifndef THREAD_H
 #define THREAD_H
 
-/* Native cooperative threads and the BATTLE/WORLD scheduler interfaces. */
+/* Cooperative game threads and the BATTLE/WORLD scheduler interfaces. */
 
 #include "psx/types.h"
 
@@ -15,7 +15,7 @@
  * blink/icon cursor threads use [0] timer and [1] state, event unit/sprite-move threads keep the unit id in [0], and
  * DisplayMessage text threads use [2] x offset, [3] y offset, [4] arrow offset, [5] opening type and [6] width
  * override. The scheduler saves s0-s7 and k0/k1 before the GP, SP, FP and return address. */
-typedef struct native_thread {
+typedef struct thread {
     s32 function_parameter_1;   /* 0x00 */
     s32 function_parameter_2;   /* 0x04 */
     s32 function_parameter_3;   /* 0x08 */
@@ -39,8 +39,8 @@ typedef struct native_thread {
     s32 task_words[7];          /* 0x50: per-task 32-bit values, see above */
     u8 stack[0x3f0 - 0x6c];     /* 0x6c: the thread's stack */
     u32 stack_top[4];           /* 0x3f0: initial SP/FP; the stack grows down from here */
-} native_thread_t;
-typedef char native_thread_size_must_be_1024[(sizeof(native_thread_t) == 1024) ? 1 : -1];
+} thread_t;
+typedef char thread_size_must_be_1024[(sizeof(thread_t) == 1024) ? 1 : -1];
 
 /* Reset loops cover sixteen 0x400-byte slots. WORLD's scheduler also scans
  * slot 16, which lies beyond this reset span. */
@@ -53,8 +53,8 @@ enum {
 
 /* scheduler storage */
 /* Fixed backing array and the separate pointer used to access its slots. */
-extern native_thread_t g_native_thread_contexts[];
-extern native_thread_t* g_native_threads;
+extern thread_t g_native_thread_contexts[];
+extern thread_t* g_native_threads;
 extern s32 g_native_current_thread_id;
 
 /* slots */

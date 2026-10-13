@@ -19,8 +19,8 @@
 s32 target_validate_weapon_target(const action_command_t* source) {
     action_command_t action;
     s16 x;
-    battle_stats_t* unit;
-    battle_stats_t* target;
+    unit_stats_t* unit;
+    unit_stats_t* target;
     s32 flags;
     u8 unit_id;
     u8 menu_type;

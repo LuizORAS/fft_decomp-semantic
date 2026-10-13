@@ -12,7 +12,7 @@
 void world_text_determine_spell_quote(action_command_t* action, s32 unit_id, s32 enabled) {
     ability_data_t* ability;
     main_ability_secondary_pointer_t secondary;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 known;
 
     main_ability_calculate_pointers_and_type(action->ability_id & ABILITY_ID_MASK, &ability, &secondary);

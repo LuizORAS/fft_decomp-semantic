@@ -38,7 +38,7 @@ void world_menu_display_hovered_unit_stats(
     s32 slide;
     s32 speed;
     s32 text_id;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     menu_unit_status_page_t* page;
     image_load_parameters_t* params;
     menu_unit_status_offsets_t* offs;

@@ -11,7 +11,7 @@
  * battle. A zero maximum HP or MP is stored as 1. list_index is always 1
  * here; unit_count counts the runtime ids whose battle unit is the first holder
  * of a nonzero ENTD unit id. */
-void world_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu_unit_status_record_t* output) {
+void world_menu_copy_unit_data_to_status_billboard(unit_stats_t* unit, menu_unit_status_record_t* output) {
     s32 resolved_id;
     s32 count;
     s32 i;

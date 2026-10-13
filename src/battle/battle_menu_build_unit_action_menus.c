@@ -16,7 +16,7 @@
  * the incremented pointer instead of offsets from the saved base. `supports`
  * is declared first so it wins the allocation tie with `primary`. */
 s32 battle_menu_build_unit_action_menus(s32 unit_id, u8* entries, u8* empty, u8* menu_types) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u8* list;
     u8 supports;
     u8 primary;

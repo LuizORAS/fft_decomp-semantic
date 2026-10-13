@@ -9,7 +9,7 @@ void world_formation_draw_unit_slots(point16_t* positions, s32 shade) {
     s32 i;
     s32 ot_index;
     s32 palette;
-    world_formation_unit_t* unit;
+    world_unit_t* unit;
     s32 brightness;
     s8 rgb_value;
 

@@ -6,7 +6,7 @@
  * or with nothing equipped one of the thirteen consumables other than Elixir.
  * Decided only when executing; in any other state the function returns without
  * a value. */
-u8 battle_unit_generate_treasure(battle_stats_t* unit) {
+u8 battle_unit_generate_treasure(unit_stats_t* unit) {
     u8 candidates[UNIT_EQUIPMENT_SLOT_COUNT];
     s32 count;
     s32 i;

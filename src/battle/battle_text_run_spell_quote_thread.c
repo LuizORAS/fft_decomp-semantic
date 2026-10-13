@@ -17,7 +17,7 @@
  * buffer. */
 void battle_text_run_spell_quote_thread(void) {
     SVECTOR screen_coords;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 id; /* Battle id, then the unit's unit_id: one variable in the target. */
     s32 window_mode;
     s32 message_id;

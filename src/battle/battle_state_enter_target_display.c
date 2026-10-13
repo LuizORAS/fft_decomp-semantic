@@ -6,9 +6,9 @@
  * auto-battle target, turn the camera when its tile is hidden and show its
  * summary panel. */
 void battle_state_enter_target_display(void) {
-    battle_stats_t* cast;
+    unit_stats_t* cast;
     battle_unit_t* unit;
-    battle_stats_t* target;
+    unit_stats_t* target;
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_TARGET_DISPLAY;

@@ -8,7 +8,7 @@
  * Random JP for a job level: g_main_job_jp_requirements_by_level[level] (the
  * JP needed to reach it; 0x80066182, entry 0 is 0) plus rand(0..99), or
  * 100 + rand(0..99) for level 0. */
-void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
+void main_unit_calculate_abilities(unit_stats_t* unit, entd_unit_t* entd) {
     u8 job_id = unit->job_id;
     u8 gender = unit->unit_flags;
     u8 byte;

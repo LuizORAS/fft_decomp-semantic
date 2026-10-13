@@ -5,7 +5,7 @@
  *
  * Preserve the party unit's kind flags while taking the ENTD persistence
  * controls and team assignment. Returns -1 when no matching party slot exists. */
-s32 main_unit_init_job_data_from_entd(battle_stats_t* unit, entd_unit_t* entd_unit) {
+s32 main_unit_init_job_data_from_entd(unit_stats_t* unit, entd_unit_t* entd_unit) {
     s32 slot;
 
     slot = main_party_find_slot_by_sprite_set(entd_unit->sprite_set);

@@ -1,6 +1,6 @@
 #include "fft/main.h"
 
-void main_unit_init_position_and_rewards(battle_stats_t* unit, entd_unit_t* entd) {
+void main_unit_init_position_and_rewards(unit_stats_t* unit, entd_unit_t* entd) {
     unit->x = entd->x;
     unit->position.y = entd->position.y;
     unit->position.higher_elevation = entd->position.higher_elevation;

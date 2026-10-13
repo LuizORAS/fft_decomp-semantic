@@ -71,12 +71,12 @@ extern target_panel_t g_target_panels[];
 
 void target_apply_vertical_fixed(s32 x, s32 y);
 void target_apply_vertical_tolerance(u8 ref_height, u8 tolerance, s32 single_layer);
-s32 target_calculate_ability_range_with_map_parameters(const battle_stats_t* unit, u8 range);
+s32 target_calculate_ability_range_with_map_parameters(const unit_stats_t* unit, u8 range);
 void target_calculate_aoe_vertical_tolerance(s32 x, s32 y, s32 lo, s32 hi);
-void target_calculate_arc_range(const battle_stats_t* unit, u8 range, u8 flags);
+void target_calculate_arc_range(const unit_stats_t* unit, u8 range, u8 flags);
 void target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y);
-void target_calculate_strike_lunge_range(const battle_stats_t* unit, u8 flags);
-void target_calculate_weapon_range(const battle_stats_t* unit);
+void target_calculate_strike_lunge_range(const unit_stats_t* unit, u8 flags);
+void target_calculate_weapon_range(const unit_stats_t* unit);
 void target_clear_range_on_untargetable_tiles(void);
 void target_clear_panel_data(void);
 void target_clear_panel_spread_flags(void);
@@ -85,7 +85,7 @@ s32 target_clear_selection_state_of_all_panels(void);
 void target_disable_green_panel_flags(void);
 s32 target_disable_green_panel_on_all_but_target_tile(const action_command_t* source);
 void target_remove_close_range(s32 x, s32 y, s32 range);
-void target_set_state_for_all_unit_panels(const battle_stats_t* unit, s32 flags);
+void target_set_state_for_all_unit_panels(const unit_stats_t* unit, s32 flags);
 s32 target_spread_panel_to_neighbors(s32 y, s32 x);
 void target_spread_panels(u8 passes, s32 unused);
 
@@ -102,7 +102,7 @@ s32 target_set_panels_for_action(const action_command_t* action);
 s32 target_set_weapon_attack_panels(const action_command_t* source);
 
 /* eligibility and reflection */
-s32 target_apply_reflect(battle_stats_t* unit);
+s32 target_apply_reflect(unit_stats_t* unit);
 void target_apply_unit_team_eligibility(s32 raw_unit_id, u8 allow_allies, u8 allow_enemies, u8 aoe_is_0xff);
 void target_check_moldball_virus_depth(s16 ability_id);
 s32 target_find_unit_at_tile(s32 x, s32 y, s32 level);
@@ -117,9 +117,9 @@ extern s32 g_battle_sort_targets_nearest_first;
 extern u8 g_target_ability_targets_list[BATTLE_UNIT_RUNTIME_SLOT_COUNT];
 
 s32 target_copy_ability_targets(u8* out);
-s32 target_list_units_on_panels(u8* list, const battle_stats_t* origin);
+s32 target_list_units_on_panels(u8* list, const unit_stats_t* origin);
 void target_select_random_tile_for_random_fire_abilities(void);
-void target_set_coordinates_for_ability(const battle_stats_t* acting, battle_strike_work_t* out);
+void target_set_coordinates_for_ability(const unit_stats_t* acting, battle_strike_work_t* out);
 void target_sort_list(s32 target_battle_id);
 
 /* cursor */

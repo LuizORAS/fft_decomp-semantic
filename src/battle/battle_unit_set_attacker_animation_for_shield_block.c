@@ -6,7 +6,7 @@
  * attacker's unarmed, swing or thrust animation with its recoil at the same
  * height. Only the TYPE1 and TYPE2 sheets have the recoils. */
 void battle_unit_set_attacker_animation_for_shield_block(battle_unit_t* attacker, battle_unit_t* target) {
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     s32 kind;
     s32 anim;
 

@@ -6,9 +6,9 @@
  * counter. It ends with the current ability's weapon_proc_pending and reaction_id
  * cleared. */
 void action_switch_ability_to_default_attack(void) {
-    battle_stats_t* unit;
-    battle_stats_t* u2;
-    battle_stats_t* u3;
+    unit_stats_t* unit;
+    unit_stats_t* u2;
+    unit_stats_t* u3;
     u8* pc3;
     u8 saved_c3;
     u8 saved_skillset;

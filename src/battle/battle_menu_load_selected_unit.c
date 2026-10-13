@@ -16,7 +16,7 @@
  * BATTLE twin of debugchr_editor_load_selected_unit and
  * require_editor_load_selected_unit. */
 void battle_menu_load_selected_unit(void) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     menu_status_panel_slot_state_t* editor;
     u16* innate_items;
     item_data_t* item;

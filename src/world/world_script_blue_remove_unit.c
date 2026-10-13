@@ -11,7 +11,7 @@ void world_script_blue_remove_unit(s32 unit_id) {
     s32 resolved_id;
     s32 unit_index;
     s32 runtime_id;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     for (runtime_id = 0; runtime_id < BATTLE_UNIT_SLOT_COUNT; runtime_id++) {
         if (battle_unit_has_runtime_id(runtime_id) != 0) {

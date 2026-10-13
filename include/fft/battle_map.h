@@ -868,7 +868,7 @@ extern map_tile_t* g_map_tile_data_ptr;
 extern u8 g_map_tile_depth;
 extern u8 g_map_tile_width;
 
-s32 map_calculate_location(const battle_stats_t* unit);
+s32 map_calculate_location(const unit_stats_t* unit);
 s32 map_get_tile_data_value(s32 field, s32 x, s32 y, s32 layer);
 map_tile_t* map_get_tile_data_pointer(s32 x, s32 y, u32 layer);
 s32 map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value);
@@ -876,7 +876,7 @@ map_tile_t* map_get_unit_tile_by_runtime_id(u32 runtime_id);
 void map_store_selected_tile_coordinates(SVECTOR* destination);
 void map_store_selected_tile_data(void);
 s32 map_calculate_slope_height(const SVECTOR* coords, s32 map_z);
-s32 map_resolve_rotated_offset_layer(battle_stats_t*, s32, s32, s32, s32*, s32*, s32*);
+s32 map_resolve_rotated_offset_layer(unit_stats_t*, s32, s32, s32, s32*, s32*, s32*);
 void map_store_max_coordinates(SVECTOR* destination);
 
 /* A typed terrain parameter loses the first retail byte-cursor increment. */
@@ -891,7 +891,7 @@ extern move_found_item_t g_map_rare_item_result;
 
 s32 map_calculate_move_find_item_flag(s32 map_id, s32 tile_index, s32 mode);
 void map_load_move_find_item_data(map_move_find_item_data_t* map_data);
-move_found_item_t* map_determine_rare_common_item(battle_stats_t* unit);
+move_found_item_t* map_determine_rare_common_item(unit_stats_t* unit);
 move_find_result_data_t* map_set_item_trap_data(s32 x, u8 y, u8 layer);
 gns_record_t* map_load_gns_and_move_find_items(s32 map_id);
 

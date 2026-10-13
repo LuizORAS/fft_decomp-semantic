@@ -3,7 +3,7 @@
 
 /* Dispatch the target's first active MP Switch, Distribute, or Damage Split reaction. */
 void action_check_mp_switch_distribute_and_damage_split_usability(void) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u8 flags;
 
     if (g_action_current_ability.formula == ABILITY_FORMULA_WEAPON_HEAL)

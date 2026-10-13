@@ -21,7 +21,7 @@ void world_unit_view_supervisor_thread(void) {
     s32 mode;
     s32 i;
     s32 task;
-    native_thread_t* thread;
+    thread_t* thread;
 
     for (;;) {
         mode = (s32)world_thread_get_current_parameter_1();

@@ -8,7 +8,7 @@
  */
 s32 ai_evaluate_charging_movement(void) {
     ai_data_t* ai = &g_ai_data_base;
-    battle_stats_t* unit = g_ai_data_base.acting_unit;
+    unit_stats_t* unit = g_ai_data_base.acting_unit;
     action_command_t* action = &unit->action_command;
     ai_charging_stage_e state;
 

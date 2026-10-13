@@ -7,7 +7,7 @@
  * Return their signed half-height difference divided by 2, truncating
  * toward 0. unit body height and water depth are not included.
  */
-s32 ai_calculate_height_difference_between_units(const ai_coords_t* coords, const battle_stats_t* unit) {
+s32 ai_calculate_height_difference_between_units(const ai_coords_t* coords, const unit_stats_t* unit) {
     map_tile_t* tile;
     s32 h1;
     s32 h2;

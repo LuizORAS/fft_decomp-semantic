@@ -9,7 +9,7 @@
  * gets its CT cleared and its special flags dropped, then the bits are cleared
  * from both the current and innate status sets.
  */
-void status_apply_unit_action_removal(battle_stats_t* unit) {
+void status_apply_unit_action_removal(unit_stats_t* unit) {
     s32 i;
     s32 battle_id;
     s32 idx;

@@ -13,8 +13,8 @@ s32 target_set_green_panels_for_action(const action_command_t* action) {
     /* A byte collision test retains the original single-mask branch. */
     action_command_t action_copy;
     ability_secondary_data_t* ability;
-    battle_stats_t* unit;
-    battle_stats_t* target;
+    unit_stats_t* unit;
+    unit_stats_t* target;
     map_tile_t* tile;
     /* Byte access retains the original packed load and field-extraction order. */
     target_panel_t* panel;

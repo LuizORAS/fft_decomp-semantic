@@ -14,7 +14,7 @@
  * divisor table inside the digit loop, rather than walking a pointer, is
  * what gives the target's strength-reduced pointer and register choice. */
 void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* text) {
-    party_data_t* party;
+    party_unit_t* party;
     u8* cursor;
     s32 i;
     u8* fill = g_text_player_name_buffer;

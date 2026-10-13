@@ -19,7 +19,7 @@ void helpmenu_menu_run_battle_help(void) {
     help_navigation_record_t* navigation;
     s32 menu_index;
     s32 x;
-    native_thread_t* text_thread;
+    thread_t* text_thread;
     help_navigation_record_t* node;
     s32 y;
     s32 bob;
@@ -37,9 +37,9 @@ void helpmenu_menu_run_battle_help(void) {
     /* Unbinding this id swaps its register with the navigation pointer. */
     register s32 text_thread_id __asm__("$21");
     s32 waiting_slot;
-    native_thread_t* scan_thread;
+    thread_t* scan_thread;
     menu_entry_t* request;
-    native_thread_t* self_thread;
+    thread_t* self_thread;
     menu_unit_status_record_t* banner;
     menu_active_unit_t* unit_data;
     menu_status_panel_slot_storage_t* billboard;

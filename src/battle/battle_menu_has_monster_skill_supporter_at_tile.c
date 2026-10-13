@@ -23,7 +23,7 @@ s32 battle_menu_has_monster_skill_supporter_at_tile(s32 team_flags, s32 x, s32 y
         unit_index = 0;
         reference_height = total_height & 0xff;
         do {
-            battle_stats_t* unit = &g_battle_unit_stats[unit_index];
+            unit_stats_t* unit = &g_battle_unit_stats[unit_index];
 
             if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE || unit->x != x || unit->position.y != y
                 || action_is_reaction_prevented(unit) != 0

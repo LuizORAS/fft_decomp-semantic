@@ -38,7 +38,7 @@ void attack_text_build_deployment_strings(void) {
     s32 j;
     u8* src;
     s32 k;
-    party_data_t* unit;
+    party_unit_t* unit;
 
     dst = g_attack_scenario_table;
     file = main_heap_alloc(0x18000);

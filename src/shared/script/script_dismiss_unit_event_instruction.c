@@ -6,7 +6,7 @@
  * (slot 0 is never considered), returning its seven equipped items to the
  * inventory. */
 void script_dismiss_unit_event_instruction(s32 sprite_set) {
-    party_data_t* party_data;
+    party_unit_t* party_data;
     s32 party_index = 1;
     s32 empty_party_id = PARTY_ID_NONE;
     s32 empty_item;

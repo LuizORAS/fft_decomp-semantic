@@ -8,7 +8,7 @@
  * action_init_learn_ability_on_hit. */
 void action_handle_post_action_xp_jp_ability(void) {
     battle_unit_t* unit;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
 
     unit = battle_unit_get_source();
     battle_unit_restore_all_facings_after_attack();

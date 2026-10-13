@@ -8,9 +8,9 @@
  * overwritten by the level change's. */
 void formula_raise_level_by_one_add_status_on_caster(void) {
     action_data_t* action;
-    battle_stats_t* saved_unit;
+    unit_stats_t* saved_unit;
     action_data_t* saved_action;
-    battle_stats_t* attacker;
+    unit_stats_t* attacker;
     action_data_t* attacker_action;
 
     formula_apply_full_hp_mp_heal();

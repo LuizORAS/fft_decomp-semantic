@@ -24,7 +24,7 @@ void world_menu_labeled_number_entry_thread(void) {
     u8* buffer;
     s16 original;
     s32 digits;
-    native_thread_t* thread;
+    thread_t* thread;
     menu_entry_t* param;
     s16 value;
     s32 i;

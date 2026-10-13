@@ -13,7 +13,7 @@ s32 battle_state_announce_next_charged_action(void) {
     battle_unit_t* actor;
     s32 result;
     s32 ability_id;
-    battle_stats_t* actor_stats;
+    unit_stats_t* actor_stats;
 
     unit = battle_unit_get_source();
     do {

@@ -6,8 +6,8 @@
  *
  * A Mime's own action is not recorded. For a tile target only the low byte of
  * each coordinate is used. */
-void action_set_current_attacker_data(battle_stats_t* unit) {
-    battle_stats_t* target;
+void action_set_current_attacker_data(unit_stats_t* unit) {
+    unit_stats_t* target;
     u8 x;
     u8 y;
 

@@ -24,7 +24,7 @@ void effect_store_targets_and_display_types(s32 ability, battle_unit_t* unit) {
     effect_secondary_init_t init;
     battle_unit_t* target;
     battle_unit_t* spectator;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     s32 i;
     s32 j;
     s32 spectators;
@@ -44,7 +44,7 @@ void effect_store_targets_and_display_types(s32 ability, battle_unit_t* unit) {
             init.targets[i].target_type = EFFECT_TARGET_TYPE_UNIT;
             init.targets[i].data.unit.runtime_id = target->runtime_id;
             {
-                battle_stats_t* target_stats;
+                unit_stats_t* target_stats;
 
                 target_stats = target->battle_data;
 

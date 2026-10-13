@@ -12,7 +12,7 @@
  */
 void effect_list_valid_unit_targeting_data(s32 first, s32 second, effect_obstacle_unit_list_t** out) {
     SVECTOR position;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
     s32 slot;
 

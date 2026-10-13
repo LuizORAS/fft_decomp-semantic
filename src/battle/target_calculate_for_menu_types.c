@@ -11,7 +11,7 @@
  * argument, so it is declared with one here. */
 s32 target_calculate_for_menu_types(const action_command_t* source) {
     action_command_t action;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u16 ability_id;
     u8 item;
     s32 mode;

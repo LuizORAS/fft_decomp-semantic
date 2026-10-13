@@ -3,7 +3,7 @@
 
 /* HP damage equal to the target's current HP - 1 (0 when it has none). */
 void formula_calculate_gravi2_damage(void) {
-    battle_stats_t* target;
+    unit_stats_t* target;
 
     target = g_action_target;
     if (target->hp != 0) {

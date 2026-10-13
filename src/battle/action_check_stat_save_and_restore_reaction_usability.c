@@ -4,7 +4,7 @@
 /* Dispatch the first active stat-save or resource-restoring reaction. A weapon
  * that heals never triggers them. */
 void action_check_stat_save_and_restore_reaction_usability(void) {
-    battle_stats_t* target;
+    unit_stats_t* target;
     u8 reaction_flags;
 
     if (g_action_current_ability.formula == ABILITY_FORMULA_WEAPON_HEAL

@@ -7,7 +7,7 @@
  * Returns -1 when the party owns none, otherwise 0. One item is removed only when
  * always_one is nonzero and the action is executing (not a preview or an AI
  * simulation); with always_one 0 the call only tests the stock. */
-s32 action_decrement_player_item_quantity(battle_stats_t* unit, s32 item_id, s32 always_one) {
+s32 action_decrement_player_item_quantity(unit_stats_t* unit, s32 item_id, s32 always_one) {
     u32 idx;
     s32 qty;
 

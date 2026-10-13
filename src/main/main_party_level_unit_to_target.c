@@ -4,7 +4,7 @@
 /* Raises a roster unit by `level_delta` levels (capped at 99), growing each
  * 24-bit raw stat by raw / (level + growth) per level, and returns the new
  * level.  The growth table is the job's stat_growths pairs. */
-u32 main_party_level_unit_to_target(party_data_t* party_unit, s32 level_delta) {
+u32 main_party_level_unit_to_target(party_unit_t* party_unit, s32 level_delta) {
     u32 current_level = party_unit->level;
     u32 level = current_level + level_delta;
     job_stat_growth_t* growth_table;

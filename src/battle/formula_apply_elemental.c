@@ -9,7 +9,7 @@
 void formula_apply_elemental(void) {
     u8 element;
     action_data_t* action;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 mount_info;
 
     element = g_action_current_ability.range_data.element;

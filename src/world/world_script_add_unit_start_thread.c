@@ -14,7 +14,7 @@ void world_script_add_unit_start_thread(void) {
     s32 index;
     s32 slot;
     const u8* script;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 runtime_id;
     s16 unit_id;
     u8 opcode;

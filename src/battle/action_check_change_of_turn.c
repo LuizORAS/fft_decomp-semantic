@@ -5,7 +5,7 @@
 /* 1 when the unit's turn is over. A status that blocks turns
  * (status_calculate_turn_flags) ends it here. */
 s32 action_check_change_of_turn(s32 unit_id) {
-    battle_stats_t* unit = &g_battle_unit_stats[unit_id];
+    unit_stats_t* unit = &g_battle_unit_stats[unit_id];
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return 1;
     }

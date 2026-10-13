@@ -5,7 +5,7 @@
  *
  * Inventory quantities saturate at 0xff. */
 s32 action_add_poached_item_to_fur_shop_inventory(void) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 idx;
     s32 item;
     s32 count;

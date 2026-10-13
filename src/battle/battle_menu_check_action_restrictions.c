@@ -19,7 +19,7 @@
  */
 void battle_menu_check_action_restrictions(void) {
     s32 message = 0;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 menu;
     s32 result;
     s32 mode;

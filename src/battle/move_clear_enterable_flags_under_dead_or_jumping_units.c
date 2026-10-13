@@ -7,7 +7,7 @@ void move_clear_enterable_flags_under_dead_or_jumping_units(void) {
     s32 unit_id;
 
     for (unit_id = 0; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
-        battle_stats_t* unit = &g_battle_unit_stats[unit_id];
+        unit_stats_t* unit = &g_battle_unit_stats[unit_id];
 
         if ((unit->entd_slot != BATTLE_ENTD_SLOT_NONE)
             && ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DEAD)]

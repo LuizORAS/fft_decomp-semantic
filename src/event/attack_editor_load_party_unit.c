@@ -9,10 +9,10 @@
 /* ATTACK twin of require_editor_load_party_unit. Load a party roster unit into the ATTACK status/editor display.
  *
  * Party counterpart of require_editor_load_selected_unit: the unit is
- * rebuilt from the roster into a scratch battle_stats_t, shown at full HP/MP
+ * rebuilt from the roster into a scratch unit_stats_t, shown at full HP/MP
  * and CT, and without the monster-skill or name-text refresh. */
 void attack_editor_load_party_unit(s32 unused, s32 party_index) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     menu_status_panel_slot_state_t* editor;
     u16* innate_items;
     item_data_t* item;

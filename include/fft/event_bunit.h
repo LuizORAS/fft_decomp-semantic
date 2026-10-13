@@ -13,12 +13,9 @@ extern u8 g_bunit_saved_unit_browse_enabled;
 s32 bunit_entrypoint(s32 unused_unit, void* unused_otag);
 
 /* unit */
-/*
- * BUNIT.OUT unit-data record. This is the formation/menu representation,
- * distinct from party_data_t, entd_unit_t, and battle_stats_t. Unnamed fields
- * remain padding until their uses establish a meaning.
- */
-typedef struct bunit_unit_data {
+/* Unit List menu snapshot built from unit_stats_t, with display values and
+ * the battle_id used to return the selected unit. */
+typedef struct bunit_unit {
     s16 level;      /* 0x00; getters at 0x801c4054..0x801c4163 read level, experience, brave and faith */
     s16 team_kind;  /* 0x02 */
     s16 list_index; /* 0x04 */
@@ -60,15 +57,15 @@ typedef struct bunit_unit_data {
     u8 gender_flags;             /* 0x70; Bard/Dancer restrictions */
     u8 runtime_id;               /* 0x71 */
     u8 initial_team_flags;       /* 0x72 */
-    u8 mount_info;               /* 0x73; battle_stats_t.mount_info */
+    u8 mount_info;               /* 0x73; unit_stats_t.mount_info */
     u8 character_identity;       /* 0x74; special character, generic male/female/monster */
     u8 unlocked_jobs[UNIT_UNLOCKED_JOB_BYTE_COUNT]; /* 0x75; bit reader consumes Squire through Mime */
     u8 learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT][UNIT_LEARNED_ABILITY_BYTES_PER_JOB]; /* 0x78 */
     u8 job_levels[UNIT_JOB_LEVEL_BYTE_COUNT]; /* 0xb1; two packed job-level nibbles per byte */
     u8 _padding_0bb;                          /* aligns job_points */
     unit_job_points_t job_points;             /* 0xbc; current JP followed by total JP */
-} bunit_unit_data_t;
-typedef char bunit_unit_data_size_must_be_268[(sizeof(bunit_unit_data_t) == 268) ? 1 : -1];
+} bunit_unit_t;
+typedef char bunit_unit_size_must_be_268[(sizeof(bunit_unit_t) == 268) ? 1 : -1];
 
 extern s8 g_bunit_selected_battle_id;
 extern s16 g_bunit_shown_unit_indices[];
@@ -77,7 +74,7 @@ extern u8 g_bunit_unit_browse_enabled;
 extern s16 g_bunit_unit_comparison_index;
 extern s16 g_bunit_unit_count;
 extern s16 g_bunit_unit_current_stat_value;
-extern bunit_unit_data_t* g_bunit_unit_data[];
+extern bunit_unit_t* g_bunit_unit_data[];
 extern s8 g_bunit_unit_dot_glow_direction;
 extern s8 g_bunit_unit_dot_glow_timer;
 extern oriented_quad_t g_bunit_unit_dot_sprite;
@@ -111,7 +108,7 @@ extern s8 g_bunit_unit_list_page_offset;
 extern s8 g_bunit_unit_list_scroll_step;
 extern menu_entry_t g_bunit_unit_list_triangle_menu;
 extern s16 g_bunit_unit_max_stat_value;
-extern bunit_unit_data_t g_bunit_unit_records[];
+extern bunit_unit_t g_bunit_unit_records[];
 extern u8 g_bunit_unit_reorderable_count;
 extern u8 g_bunit_unit_reorderable_indices[];
 extern s16 g_bunit_unit_selected_index;
@@ -233,7 +230,7 @@ void bunit_panel_toggle_comparison_status_thread(s32 enable);
 void bunit_panel_toggle_equipment_and_numeric_editor_threads(s32 enable);
 void bunit_panel_toggle_unit_status_thread(s32 enable);
 void bunit_panel_run_unit_status_thread(void);
-void bunit_unit_build_data_from_battle_stats(struct battle_stats* unit, bunit_unit_data_t* record, s32 unused_slot);
+void bunit_unit_build_data_from_battle_stats(struct unit_stats* unit, bunit_unit_t* record, s32 unused_slot);
 s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode);
 
 /* numeric editor */

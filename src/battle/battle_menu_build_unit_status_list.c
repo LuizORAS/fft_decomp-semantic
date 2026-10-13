@@ -13,7 +13,7 @@
  *
  * BATTLE twin of world_menu_build_unit_status_list. */
 void battle_menu_build_unit_status_list(void) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u16 i;
     u16 bit;
     u16 count;

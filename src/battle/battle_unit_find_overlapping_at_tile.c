@@ -12,7 +12,7 @@
 battle_unit_t* battle_unit_find_overlapping_at_tile(battle_unit_t* self, s32 x, s32 y, s32 z) {
     battle_unit_t* list[BATTLE_UNIT_RUNTIME_SLOT_COUNT];
     battle_unit_t* unit;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     s32 count;
     s32 i;
 

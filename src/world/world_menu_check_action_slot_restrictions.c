@@ -27,7 +27,7 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
     s32 mode;
     s32 message;
     menu_entry_t* parameter;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     g_world_active_menu = menu;
     parameter = world_thread_get_current_parameter_1();

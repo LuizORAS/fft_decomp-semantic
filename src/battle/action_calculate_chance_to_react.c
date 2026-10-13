@@ -3,7 +3,7 @@
 
 /* Reaction roll: returns 0 when the unit reacts, a Brave in 100 chance.
  * Outside execution it always returns 0. */
-s32 action_calculate_chance_to_react(const battle_stats_t* unit) {
+s32 action_calculate_chance_to_react(const unit_stats_t* unit) {
     if (g_action_state != ACTION_STATE_EXECUTE) {
         return 0;
     }

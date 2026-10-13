@@ -6,7 +6,7 @@
  * the main stack; the Draw event instruction runs this only for the Zalera
  * event. */
 void status_queue_current_status_graphics(s32 battle_id, s32 enabled) {
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     s32 i;
     s32 mask;
 

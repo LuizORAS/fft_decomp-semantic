@@ -13,7 +13,7 @@ void ai_restore_unit_state(ai_snapshot_mode_e mode) {
     ai_data_t* ai = &g_ai_data_base;
     ai_status_snapshot_t* status;
     ai_extended_snapshot_t* snapshot;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
     s32 id;
 

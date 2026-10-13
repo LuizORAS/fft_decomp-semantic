@@ -9,7 +9,7 @@
  */
 s32 battle_gfx_calculate_world_height_from_battle_tile(battle_unit_t* unit) {
     SVECTOR coord;
-    battle_stats_t* battle_data;
+    unit_stats_t* battle_data;
     battle_unit_t* mount;
     s32 adjusted_world_height;
     s32 world_height;

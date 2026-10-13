@@ -18,7 +18,7 @@
  * sequence, with the wait cleared so that the sequence starts at once.
  */
 void battle_unit_update_animation_for_status_changes(battle_unit_t* unit) {
-    battle_stats_t* stats;
+    unit_stats_t* stats;
 
     if (unit->statuses_to_add_5_6 & BATTLE_UNIT_STATUS_CHICKEN) {
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_IDLE, unit->facing, unit);

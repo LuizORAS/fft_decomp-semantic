@@ -1,7 +1,7 @@
 #include "fft/battle_status.h"
 
 /* Return 1 when the unit cannot participate in the AT list. */
-s32 status_is_unit_absent_dead_crystal_treasure_petrified_or_ridden(const battle_stats_t* unit) {
+s32 status_is_unit_absent_dead_crystal_treasure_petrified_or_ridden(const unit_stats_t* unit) {
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return 1;
     }

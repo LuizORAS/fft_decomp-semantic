@@ -6,7 +6,7 @@
  * katana did not break, the action becomes a pseudo-status hit. When the
  * katana broke, retail copies can_earn_experience onto itself (lbu/sb of the
  * same byte): a genuine no-op kept for the match. */
-void action_finalize_draw_out_katana_result(battle_stats_t* attacker, battle_strike_work_t* work, u8 hit_count) {
+void action_finalize_draw_out_katana_result(unit_stats_t* attacker, battle_strike_work_t* work, u8 hit_count) {
     u16 flags;
 
     if (g_main_action_menu_types_by_skillset[attacker->action_command.skillset_id] != ACTION_MENU_TYPE_KATANA_INVENTORY)

@@ -6,7 +6,7 @@
 /* Formula 0x4B: heal rnd(1..Z) HP once its status applies; an undead target
  * takes its current HP as damage instead. */
 void formula_heal_random_one_to_z_add_status(void) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     if (formula_apply_status_and_check_undead() == 0)
         return;

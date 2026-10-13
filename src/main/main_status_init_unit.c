@@ -3,7 +3,7 @@
 /* Seed inflicted_status with the current statuses the unit does not have
  * innately, then set up the status CTs (main_status_init_ct) and reconcile the
  * status flags. */
-void main_status_init_unit(battle_stats_t* unit) {
+void main_status_init_unit(unit_stats_t* unit) {
     s32 status_set;
 
     for (status_set = 0; status_set < STATUS_BYTE_COUNT; status_set++) {

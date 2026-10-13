@@ -19,7 +19,7 @@ typedef union unit_name_id {
 typedef char unit_name_id_size_must_be_2[(sizeof(unit_name_id_t) == 2) ? 1 : -1];
 
 /* ability flags */
-/* Active reaction abilities occupy four MSB-first bytes in battle_stats_t. */
+/* Active reaction abilities occupy four MSB-first bytes in unit_stats_t. */
 typedef enum battle_unit_reaction_set_1 {
     BATTLE_REACTION_SET_1_BRAVE_UP = 0x01,
     BATTLE_REACTION_SET_1_REGENERATOR = 0x02,
@@ -64,8 +64,8 @@ typedef enum battle_unit_reaction_set_4 {
     BATTLE_REACTION_SET_4_DAMAGE_SPLIT = 0x80,
 } battle_unit_reaction_set_4_e;
 
-/* Active support abilities occupy four MSB-first bitsets in battle_stats_t
- * at +0x08f..+0x092. WORLD copies them to world_formation_unit_t at +0x124;
+/* Active support abilities occupy four MSB-first bitsets in unit_stats_t
+ * at +0x08f..+0x092. WORLD copies them to world_unit_t at +0x124;
  * these masks name the shared byte domain, not ability IDs. */
 typedef enum battle_unit_support_set_1 {
     BATTLE_SUPPORT_SET_1_EQUIP_GUN = 0x01,
@@ -108,7 +108,7 @@ typedef enum battle_unit_support_set_4 {
     BATTLE_SUPPORT_SET_4_MONSTER_SKILL = 0x80,
 } battle_unit_support_set_4_e;
 
-/* Active movement abilities occupy three MSB-first bytes in battle_stats_t.
+/* Active movement abilities occupy three MSB-first bytes in unit_stats_t.
  * MAIN reads these when calculating move, jump and Float behavior. */
 typedef enum battle_unit_movement_set_1 {
     BATTLE_MOVEMENT_SET_1_MOVE_HP_UP = 0x01,
@@ -175,7 +175,7 @@ typedef struct unit_action_status_changes {
 typedef char unit_action_status_changes_size_must_be_10[(sizeof(unit_action_status_changes_t) == 10) ? 1 : -1];
 
 /*
- * Temporary action results, 0x2c bytes at battle_stats_t+0x18c (0x18c..0x1b7).
+ * Temporary action results, 0x2c bytes at unit_stats_t+0x18c (0x18c..0x1b7).
  * The action target/attacker pointers address this block directly.
  * status_changes.infliction/removal mirror the five status_sets.current bytes.
  */
@@ -402,7 +402,7 @@ typedef enum battle_equipment_categories_4 {
 } battle_unit_equipment_categories_4_e;
 
 /*
- * Seven-slot equipment order serialized by party_data_t and battle_stats_t.
+ * Seven-slot equipment order serialized by party_unit_t and unit_stats_t.
  * This differs from the five-slot right-hand-first order used by menu records.
  */
 typedef enum unit_equipment_slot {
@@ -764,15 +764,6 @@ typedef enum battle_unit_equipment_stat_index {
     BATTLE_UNIT_EQUIPMENT_STAT_COUNT = 11,
 } battle_unit_equipment_stat_index_e;
 
-/*
- * Battle Stats are the simulation-side unit records.  They occupy 0x1c0
- * bytes, with 21 consecutive slots beginning at 0x801908cc in BATTLE.BIN.
- * Do not confuse this with unit runtime record, the renderer-side record that
- * points back to battle_stats_t at offset 0x134.
- *
- * Unidentified areas intentionally remain explicit padding until evidence
- * supports a name and type.
- */
 /* Packed birthday and zodiac at unit offset 0x008. Field updates preserve
  * the three reserved bits between the day-of-year and zodiac. */
 typedef struct battle_unit_birthday {
@@ -858,7 +849,7 @@ typedef enum battle_team_flags {
     BATTLE_TEAM_PRESENCE_MASK = 0xc0,
 } battle_unit_team_flags_e;
 
-/* battle_stats_t.auto_battle_setting and the AI copies of it. The BATTLE and
+/* unit_stats_t.auto_battle_setting and the AI copies of it. The BATTLE and
  * WORLD auto-battle menus store it and the AI reads it. */
 typedef enum ai_autobattle_mode {
     AI_AUTOBATTLE_MANUAL = 0, /* the player gives the orders */
@@ -868,8 +859,11 @@ typedef enum ai_autobattle_mode {
     AI_AUTOBATTLE_RETREAT = 17,
 } ai_autobattle_mode_e;
 
-/* battle stats */
-typedef struct battle_stats {
+/* unit stats */
+/* Current and calculated unit attributes, also built for WORLD menus. BATTLE
+ * stores 21 consecutive 448-byte records at 0x801908cc. A live battle_unit_t
+ * points to its stats through the member at 0x134. */
+typedef struct unit_stats {
     u8 character_identity;                               /* 0x000 */
     u8 entd_slot;                                        /* 0x001; 0xff means absent */
     u8 formation_index;                                  /* 0x002 */
@@ -956,10 +950,10 @@ typedef struct battle_stats {
     u8 auto_battle_target;  /* 0x1b9 */
     u8 initial_team_flags;  /* 0x1ba */
     u8 inflicted_status[5]; /* 0x1bb */
-} battle_stats_t;
-typedef char battle_stats_size_must_be_448[(sizeof(battle_stats_t) == 448) ? 1 : -1];
+} unit_stats_t;
+typedef char unit_stats_size_must_be_448[(sizeof(unit_stats_t) == 448) ? 1 : -1];
 
-/* battle_stats_t.ability_outcome. */
+/* unit_stats_t.ability_outcome. */
 typedef enum battle_unit_ability_outcome {
     BATTLE_ABILITY_OUTCOME_TARGETED = 0x01,      /* target of a primary action */
     BATTLE_ABILITY_OUTCOME_AFFECTED = 0x02,      /* that action changed the unit */
@@ -993,14 +987,14 @@ enum {
 enum { BATTLE_DEPLOYED_UNIT_SLOT_FIRST = ENTD_UNITS_PER_ENCOUNTER };
 
 /* The persistent roster at 0x80057f74 contains 16 formation slots followed
- * by four guest slots, each with the party_data_t 0x100-byte stride. */
+ * by four guest slots, each with the party_unit_t 0x100-byte stride. */
 enum {
     PARTY_MEMBER_SLOT_COUNT = 16,
     PARTY_GUEST_SLOT_FIRST = PARTY_MEMBER_SLOT_COUNT,
     PARTY_ROSTER_SLOT_COUNT = 20,
 };
 
-/* party_data_t.party_id sentinel: `0xff` means the unit does not appear on
+/* party_unit_t.party_id sentinel: `0xff` means the unit does not appear on
  * Formation; tested by the roster scans in src/main and the WORLD/WLDCORE
  * party walks. */
 enum {
@@ -1010,7 +1004,7 @@ enum {
 /*
  * An ENTD entry is the static 0x28-byte encounter definition read from an
  * ENTD#.ENT file.  It is input to the SCUS unit initializers; it is neither a
- * persistent party_data_t record nor a runtime battle_stats_t record.
+ * persistent party_unit_t record nor a runtime unit_stats_t record.
  * The current-ENTD pointer at 0x80066238 selects one entry, not an encounter.
  *
  * Names below are established by target SCUS initialization routines.
@@ -1050,11 +1044,11 @@ typedef struct entd_unit {
     u8 war_trophy;                           /* 0x1e; 0x8005e478 copies to battle +0x163 */
     u8 bonus_money_modifier;                 /* 0x1f; same initializer copies to battle +0x164 */
     u8 unit_id;                              /* 0x20 */
-    /* 0x21-0x27 are copied as seven bytes to battle_stats_t ai_target_x onward
+    /* 0x21-0x27 are copied as seven bytes to unit_stats_t ai_target_x onward
      * by a loop that indexes ai_target_xy, so nothing names the members after it. */
     u8 ai_target_xy[2];       /* 0x21; AI "stay near" X, Y */
     u8 ai_flags;              /* 0x23; ai_decision_flags_e; 0x80 = upper level of the stay-near tile */
-    u8 ai_target_unit_id;     /* 0x24; battle_stats_t prioritized_target */
+    u8 ai_target_unit_id;     /* 0x24; unit_stats_t prioritized_target */
     u8 ai_targeting_flags_1;  /* 0x25; copied to ai_unit_decision_t +0x06 */
     u8 ai_targeting_flags_2;  /* 0x26; ai_targeting_flags_2_e */
     u8 ai_initial_enemy_flag; /* 0x27 */
@@ -1091,9 +1085,9 @@ enum {
 /*
  * Persistent roster record. Its 0x100-byte stride is established by the
  * indexed SCUS lookup, while its named prefix is established by the target
- * party_data_t-to-battle_stats_t initializer. It is distinct from entd_unit_t.
+ * party_unit_t-to-unit_stats_t initializer. It is distinct from entd_unit_t.
  */
-typedef struct party_data {
+typedef struct party_unit {
     u8 sprite_set;         /* 0x00 */
     u8 party_id;           /* 0x01 */
     u8 job_id;             /* 0x02 */
@@ -1119,8 +1113,8 @@ typedef struct party_data {
     u8 _unused_d1;
     u8 egg_color;        /* 0xd2; create/save/generate unit stores */
     u8 _unused_d3[0x2d]; /* 0xd3; saves and loads copy 0xe0 bytes per record, so 0xe0..0xff is not saved */
-} party_data_t;
-typedef char party_data_size_must_be_256[(sizeof(party_data_t) == 256) ? 1 : -1];
+} party_unit_t;
+typedef char party_unit_size_must_be_256[(sizeof(party_unit_t) == 256) ? 1 : -1];
 
 /* Shared by ENTD definitions, persistent party records, and runtime battle
  * units. The byte combines persistence controls with unit-kind flags. */

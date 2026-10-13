@@ -6,7 +6,7 @@
 void equip_item_build_inventory_totals(void) {
     s32 i;
     s32 j;
-    party_data_t* unit;
+    party_unit_t* unit;
     u32 item;
 
     bcopy(g_main_item_quantities, g_equip_item_inventory_totals, 0x100);

@@ -16,9 +16,9 @@
  */
 s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) {
     u8 targets[BATTLE_UNIT_SLOT_COUNT];
-    battle_stats_t* unit;
-    battle_stats_t* base;
-    battle_stats_t* target;
+    unit_stats_t* unit;
+    unit_stats_t* base;
+    unit_stats_t* target;
     action_command_t* action;
     s32 i;
     s32 count;

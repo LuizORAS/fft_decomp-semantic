@@ -6,7 +6,7 @@
  * suppresses the partner's update. */
 void battle_unit_set_facing(s32 runtime_id, s32 facing) {
     s32 battle_id;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
 
     if (script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) == 0) {
         battle_id = battle_unit_get_battle_id_by_runtime_id(runtime_id);

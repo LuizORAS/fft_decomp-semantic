@@ -7,7 +7,7 @@
 /* Gil stolen: attacker Level * Speed, capped at the war funds when the target
  * is on team 0 (blue). Nothing to take is a miss. */
 void formula_calculate_stolen_gil(void) {
-    battle_stats_t* attacker;
+    unit_stats_t* attacker;
     action_data_t* action;
     action_data_t* target_action;
     action_data_t* other;

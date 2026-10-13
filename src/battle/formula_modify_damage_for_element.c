@@ -5,7 +5,7 @@
  * cancels it, half halves, weak doubles. Half and weak both apply. */
 void formula_modify_damage_for_element(s32 element) {
     u8 element_mask;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     action_data_t* absorb_action;
     action_data_t* half_action;
     action_data_t* weak_action;

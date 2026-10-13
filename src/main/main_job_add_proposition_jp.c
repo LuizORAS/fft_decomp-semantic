@@ -6,7 +6,7 @@
  * Returns -1 when the unit or JP amount is invalid. */
 s32 main_job_add_proposition_jp(u32 party_index, s32 jp) {
     s32 slot;
-    party_data_t* party;
+    party_unit_t* party;
     u8 job;
     s32 total;
     s32 level;

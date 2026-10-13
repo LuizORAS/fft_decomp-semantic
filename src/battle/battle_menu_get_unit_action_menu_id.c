@@ -12,8 +12,8 @@
  * restriction), and any other unit gets PLAYER_UNIT or OTHER_UNIT.
  *
  * The local can_evade holds the action restriction. */
-s32 battle_menu_get_unit_action_menu_id(battle_stats_t* unit) {
-    battle_stats_t* act;
+s32 battle_menu_get_unit_action_menu_id(unit_stats_t* unit) {
+    unit_stats_t* act;
     s32 flag;
     s32 player_controlled;
     s32 player_flag;

@@ -4,7 +4,7 @@
  * accessory's and each shield's physical and magic evade, and each weapon's power
  * and evade. A slot whose item is not of the expected kind leaves zeros, and a
  * monster gets only the class evade. */
-void main_unit_set_equipment_stats(battle_stats_t* unit) {
+void main_unit_set_equipment_stats(unit_stats_t* unit) {
     item_data_t* item;
     item_evade_t* shield;
     weapon_data_t* weapon;

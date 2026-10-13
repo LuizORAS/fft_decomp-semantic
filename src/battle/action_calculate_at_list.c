@@ -15,7 +15,7 @@
  * and lands after the a1 load. The 0x50-byte array is the unreferenced frame
  * area the target reserves. */
 s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u8 unused[0x50];
     s32 placed;
     s32 slot;

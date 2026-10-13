@@ -11,7 +11,7 @@
  * the unit graphics are refreshed. State 2 prevents applying the snapshot twice.
  */
 void battle_unit_apply_staged_status_data(s32 battle_id, s32 runtime_id) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
     s32 byte_index;
     s32 mask;

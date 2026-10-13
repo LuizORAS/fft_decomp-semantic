@@ -6,7 +6,7 @@
  * emptied and its existence set to pending removal. Returns -1 when the slot is
  * empty or has no formation index, else 0. No retail code calls it. */
 s32 battle_unit_check_exists(s32 unit_id) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     unit = &g_battle_unit_stats[unit_id];
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE)

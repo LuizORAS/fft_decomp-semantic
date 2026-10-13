@@ -3,11 +3,11 @@
 
 /*
  * Returns the unit's level (0..8) in the generic job job_id, from the
- * nibble-packed battle_stats_t.career.job_levels bytes at 0xd2.
+ * nibble-packed unit_stats_t.career.job_levels bytes at 0xd2.
  * *out_slot receives the zero-based job slot (Chemist = 1 ... Mime = 19),
  * or 0 for Squire and non-generic jobs.
  */
-s32 battle_unit_load_job_level(battle_stats_t* unit, s32 job_id, s32* out_slot) {
+s32 battle_unit_load_job_level(unit_stats_t* unit, s32 job_id, s32* out_slot) {
     s32 slot;
     s32 packed;
     if (job_id >= JOB_ID_CHEMIST && job_id <= JOB_ID_MIME) {

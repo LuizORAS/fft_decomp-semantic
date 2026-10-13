@@ -4,7 +4,7 @@
 /* Enable the renderer status flags for each of a unit's current statuses.
  * Returns -1 for an empty unit slot, otherwise 0. */
 s32 status_init_special_flag_enabling(s32 unit_id) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
 
     unit = &g_battle_unit_stats[unit_id];

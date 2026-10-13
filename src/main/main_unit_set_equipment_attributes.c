@@ -6,7 +6,7 @@
  * Clears the equipment PA/MA/SP bonuses, recomputes the base stats, then
  * folds in each equipped item's attribute record and head/body HP/MP bonuses.
  * Actual PA/MA cap at 99 and Speed at 50. */
-void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 level_up_check) {
+void main_unit_set_equipment_attributes(unit_stats_t* unit, s32 level_up_check) {
     s32 i;
     s32 j;
     u32 value;

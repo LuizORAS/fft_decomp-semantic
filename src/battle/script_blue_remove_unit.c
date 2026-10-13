@@ -10,7 +10,7 @@
 void script_blue_remove_unit(s32 unit_id) {
     s32 runtime_id;
     s32 battle_index;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 found_battle_id[2];
 
     for (runtime_id = 0; runtime_id < EVENT_UNIT_SLOT_COUNT; runtime_id++) {

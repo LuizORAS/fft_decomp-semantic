@@ -8,7 +8,7 @@
  * marked 0x80); a miss queues MISSED, GUARDED or CAUGHT by miss type. The
  * first display is built immediately unless a numeric display is active. */
 void battle_gfx_prepare_post_action_display(battle_unit_t* unit) {
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     action_data_t* action;
     s32 i;
     s32 j;

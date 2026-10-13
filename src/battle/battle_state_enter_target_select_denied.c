@@ -11,7 +11,7 @@
 void battle_state_enter_target_select_denied(void) {
     battle_unit_t* runtime;
     battle_unit_t* unit;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     s32 kind;
 
     camera_disable_map_pan();

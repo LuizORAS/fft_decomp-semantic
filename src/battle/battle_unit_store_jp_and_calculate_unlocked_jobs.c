@@ -7,7 +7,7 @@
  * the Bard slot for females and the Dancer slot for males. The battle twin of
  * main_job_add_proposition_jp; returns -1 when nothing is stored. */
 s32 battle_unit_store_jp_and_calculate_unlocked_jobs(s32 unit_index, s32 jp, s32 team, s32 slot) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 total;
     s32 level;
     s32 levels;

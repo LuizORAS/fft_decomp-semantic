@@ -5,7 +5,7 @@
 u8 main_party_calculate_highest_level(void) {
     u8 highest;
     s32 i;
-    party_data_t* unit;
+    party_unit_t* unit;
 
     highest = 0;
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {

@@ -17,7 +17,7 @@ void world_menu_auto_battle_setting_thread(void) {
     menu_icon_record_t records[2];
     s32 cursor;
     s32 previous;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
     menu_entry_t* param;
     u8* buffer;
     s32 i;

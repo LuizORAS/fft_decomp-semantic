@@ -2,7 +2,7 @@
 
 /* Initialize packed job levels, unlocked jobs, and ENTD skillset overrides. */
 
-void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, const entd_unit_t* entd) {
+void main_unit_calculate_jobs_and_skillsets_from_entd(unit_stats_t* unit, const entd_unit_t* entd) {
     s32 i;
     u32 unlocked;
     u32 flags;

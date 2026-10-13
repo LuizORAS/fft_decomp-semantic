@@ -4,7 +4,7 @@
 /* Return the first present unit's slot at these coordinates, or BATTLE_UNIT_ID_NONE if absent. */
 s32 ai_find_unit_at_coordinates(const ai_coords_t* coords) {
     s32 i;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];

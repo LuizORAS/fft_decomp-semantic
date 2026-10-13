@@ -11,9 +11,9 @@
  * rejection code of action_check_and_consume_mp; on those failures only
  * the acting-unit data is stored. */
 s32 action_init_current_data(s32 id) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
-    battle_stats_t* base;
+    unit_stats_t* base;
     s32 mp_result;
     u16 ability;
 

@@ -10,8 +10,8 @@ s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle) {
     s32 total;
     s32 i;
     s32 j;
-    party_data_t* party;
-    battle_stats_t* unit;
+    party_unit_t* party;
+    unit_stats_t* unit;
     s32 deployed;
     s32 party_id;
 

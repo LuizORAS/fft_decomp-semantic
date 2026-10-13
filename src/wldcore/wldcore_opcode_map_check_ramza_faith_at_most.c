@@ -2,7 +2,7 @@
 
 /* Reject the MCFaith<= condition when Ramza's Faith is above the operand. */
 void wldcore_opcode_map_check_ramza_faith_at_most(void) {
-    party_data_t* party;
+    party_unit_t* party;
     u16 ip;
     s32 val;
 

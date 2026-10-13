@@ -4,7 +4,7 @@
 /* Resolve a party member's 32-bit formation sprite value: bits 0-9 select the
  * sprite, and for monsters bits 10-11 carry the job's portrait palette. */
 s32 world_get_party_unit_formation_sprite(s32 party_index) {
-    party_data_t* party_unit;
+    party_unit_t* party_unit;
     job_data_t* job_data;
     u32 sprite_set;
     s32 portrait_id;

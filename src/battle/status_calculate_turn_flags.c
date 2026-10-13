@@ -9,7 +9,7 @@
  * a ridden mount; INCAPACITATED | DEAD for a dead unit; otherwise INCAPACITATED |
  * SLEEP for Sleep plus the HASTE and SLOW bits. The retail status data puts Sleep
  * in the freeze-CT set, which leaves the SLEEP result unreachable. */
-s32 status_calculate_turn_flags(const battle_stats_t* unit) {
+s32 status_calculate_turn_flags(const unit_stats_t* unit) {
     s32 status1;
     s32 status4;
     s32 status5;

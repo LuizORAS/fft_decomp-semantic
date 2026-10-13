@@ -11,7 +11,7 @@ void world_script_process_inflict_status_commands(void) {
     s32 battle_id;
     s32 thread_id;
     const u8* instruction;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
 
     instruction_offset = 0;
     while ((instruction_offset

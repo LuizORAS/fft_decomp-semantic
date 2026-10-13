@@ -6,7 +6,7 @@
  * record and sort the shown list; returns the number of shown units. `mode`
  * and `unit_data` are not read. */
 s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 i;
     s32 shown;
     s32 total;

@@ -7,7 +7,7 @@ s32 battle_unit_get_battle_id_by_runtime_id(u32 runtime_id) {
     battle_unit_t* unit = battle_unit_get_by_runtime_id(runtime_id & 0xffff);
 
     if (unit != 0) {
-        battle_stats_t* battle_data = unit->battle_data;
+        unit_stats_t* battle_data = unit->battle_data;
 
         if (battle_data != 0) {
             return battle_data->battle_id;

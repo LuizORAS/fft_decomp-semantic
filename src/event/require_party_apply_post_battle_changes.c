@@ -28,7 +28,7 @@ void require_party_apply_post_battle_changes(void) {
     u8* menu_fields;
     menu_active_unit_t* unit_display_data;
     s32 one;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 input;
     s32 thread_id;
     s32 text_width;

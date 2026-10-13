@@ -5,7 +5,7 @@
  * cursor and open the target-confirm prompt (option 0) for the casting unit. */
 void battle_state_enter_target_select_confirm(void) {
     battle_unit_t* unit;
-    battle_stats_t* stats;
+    unit_stats_t* stats;
 
     camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_TARGET_SELECT_CONFIRM;

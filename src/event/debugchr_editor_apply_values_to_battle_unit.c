@@ -6,7 +6,7 @@
  * zodiac sign (the top nibble of the birthday 16-bit value), move, speed and
  * jump. */
 void debugchr_editor_apply_values_to_battle_unit(s32 unit_id) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     s32 zodiac;
     u32 unit_flags;
 

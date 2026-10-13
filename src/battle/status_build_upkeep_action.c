@@ -11,7 +11,7 @@
  * runs out and the unit becomes a crystal or treasure, 3 when Death Sentence
  * expires on a unit that is not undead, and 0 when nothing happens.
  */
-s32 status_build_upkeep_action(s32 unit_id, battle_stats_t* unit) {
+s32 status_build_upkeep_action(s32 unit_id, unit_stats_t* unit) {
     action_data_t* action = &unit->action;
     s32 roll;
     s32 mask;

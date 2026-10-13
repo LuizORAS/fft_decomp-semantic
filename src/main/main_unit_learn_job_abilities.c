@@ -7,7 +7,7 @@
  * The original reuses two scratch variables: `i` doubles as the unlocked-job
  * mask and `scratch` holds both the unlocked-job bits and the learn chance;
  * separate locals change the register allocation. */
-void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_unit_t* entd) {
+void main_unit_learn_job_abilities(unit_stats_t* unit, s32 job_id, const entd_unit_t* entd) {
     s32 job_index;
     s32 skillset;
     s32 auto_learn;

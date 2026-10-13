@@ -7,7 +7,7 @@
  * it never will: Speed 0, crystal, petrified, treasure, or dead without
  * Reraise (from its decision record). Don't Act and Don't Move are not looked
  * at. */
-s32 ai_calculate_clockticks_until_unit_acts(const battle_stats_t* unit) {
+s32 ai_calculate_clockticks_until_unit_acts(const unit_stats_t* unit) {
     ai_data_t* ai;
     s32 speed;
     s32 ticks;

@@ -16,7 +16,7 @@
  * shows. */
 s32 ai_set_movement_panel_data(s32 movement_taken) {
     ai_data_t* ai = &g_ai_data_base;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     map_tile_t* tile;
     s32 level;
     s32 y;

@@ -6,7 +6,7 @@
  * is given (action_increment_item_quantity_for_steal_break passes one
  * the stock is full of). Only for a unit on team 0 and only when executing;
  * the funds stay within 0..99,999,999. Returns the amount added. */
-s32 action_add_war_funds(battle_stats_t* unit, s32 total, u8 item_id) {
+s32 action_add_war_funds(unit_stats_t* unit, s32 total, u8 item_id) {
     s32 value;
 
     if (g_action_state != ACTION_STATE_EXECUTE) {

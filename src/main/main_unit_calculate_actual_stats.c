@@ -9,7 +9,7 @@
  * Mode 0 also fills HP and MP and, for a generated unit, first replays the
  * growth of levels 2 to its level (raw += raw / (growth + level - 1) for
  * each). A mode with bit 0 set leaves Speed, PA and MA as they are. */
-void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
+void main_unit_calculate_actual_stats(unit_stats_t* unit, s32 mode) {
     u32 value;
     u32 multiplier;
     s32 cap;

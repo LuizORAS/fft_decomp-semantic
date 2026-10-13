@@ -543,7 +543,7 @@ written that way.
 
 ## Declaration leads
 
-- The heads of `equip_unit_data_t` and `bunit_unit_data_t` overlap
+- The heads of `equip_unit_data_t` and `bunit_unit_t` overlap
   `menu_unit_status_record_t`, but their fields at 0x1e and 0x20 differ.
 - BUNIT and EQUIP use the 236-byte `menu_gfx_context_t`; WORLD's
   `world_gfx_packet_buffer_t` has the same stride but leaves unused pools

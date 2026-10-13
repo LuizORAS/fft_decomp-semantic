@@ -40,7 +40,7 @@ void world_script_execute_event(void) {
     s16 palette_runtime_id;
     s16 first_runtime_id;
     s16 second_runtime_id;
-    battle_stats_t* appearance_unit;
+    unit_stats_t* appearance_unit;
 
     s32 initial_buttons;
     s32 event_flags;
@@ -57,14 +57,14 @@ void world_script_execute_event(void) {
     u8* parameters;
     /* One unit pointer, one thread pointer and one index serve every handler;
      * separate ones per handler change the saved-register allocation. */
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     u8* instruction;
     u8* ghost_operands;
     map_tile_t* tile;
-    battle_stats_t* copy_destination;
+    unit_stats_t* copy_destination;
     u8* focus_instruction;
-    native_thread_t* thread;
-    native_thread_t* threads;
+    thread_t* thread;
+    thread_t* threads;
 
     thread_set_current_task_id(NATIVE_THREAD_TASK_EXECUTE_EVENT);
     if (world_script_check_tutorial_event_slot() != 0) {
@@ -831,7 +831,7 @@ restart_event:
             thread_yield();
             for (work_index = 1; work_index < 0x11; work_index++) {
                 /* Typed indexing reverses the target addu operands; keep the 32-bit address sum. */
-                thread = (native_thread_t*)((work_index * sizeof(native_thread_t)) + (u32)threads);
+                thread = (thread_t*)((work_index * sizeof(thread_t)) + (u32)threads);
                 if (thread->is_running != 0 && thread->task_id == operand_3) {
                     break;
                 }

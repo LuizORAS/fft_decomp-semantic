@@ -12,7 +12,7 @@ s32 action_remove_broken_or_stolen_equipment(void) {
     s32 i;
     s32 count;
     u8 item;
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     action_data_t* action;
 
     count = 0;

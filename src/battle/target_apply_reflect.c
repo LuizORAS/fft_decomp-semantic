@@ -7,7 +7,7 @@
  * Black Magic skillset, at the tile as far beyond it as the caster is in front
  * of it. -1 when the caster stands on the unit's tile or that tile is off the
  * map or blocked. */
-s32 target_apply_reflect(battle_stats_t* unit) {
+s32 target_apply_reflect(unit_stats_t* unit) {
     action_command_t* act;
     s32 x;
     s32 y;

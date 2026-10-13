@@ -8,7 +8,7 @@ void status_update_expiring(s32 unit_id) {
     s32 i;
     s32 byte_idx;
     s32 mask;
-    battle_stats_t* target;
+    unit_stats_t* target;
     action_data_t* action;
     s32 remaining_ct;
 

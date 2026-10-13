@@ -9,7 +9,7 @@
  */
 s32 ai_select_action_recovery(void) {
     ai_data_t* ai = &g_ai_data_base;
-    battle_stats_t* acting = g_ai_data_base.acting_unit;
+    unit_stats_t* acting = g_ai_data_base.acting_unit;
     u8 statuses[AI_RECOVERY_STATUS_COUNT];
     s32 target;
     u32 status;

@@ -7,7 +7,7 @@
  * a zero ability id is decremented to -1. Monsters show their primary
  * skillset's first five abilities instead of their equipped ability set. */
 void wldcore_unit_build_status_panel_data(s32 party_index) {
-    battle_stats_t* unit;
+    unit_stats_t* unit;
     menu_unit_status_record_t* gauges;
     menu_unit_status_identity_t* identity;
     menu_status_panel_slot_state_t* detail;

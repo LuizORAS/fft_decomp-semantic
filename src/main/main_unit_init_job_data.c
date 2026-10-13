@@ -5,8 +5,8 @@
  *
  * use_world_text selects the name-text provider used by the shared final
  * setup. Returns -1 when the requested party slot is unavailable. */
-s32 main_unit_init_job_data(battle_stats_t* unit, s32 slot, s32 use_world_text) {
-    party_data_t* party_unit;
+s32 main_unit_init_job_data(unit_stats_t* unit, s32 slot, s32 use_world_text) {
+    party_unit_t* party_unit;
 
     g_main_unit_name_uses_world_text = use_world_text;
     party_unit = main_party_get_data_pointer(slot);

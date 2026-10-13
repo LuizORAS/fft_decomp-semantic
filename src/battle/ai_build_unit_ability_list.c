@@ -17,7 +17,7 @@ typedef char ai_ability_entry_byte_view_must_be_4[sizeof(ai_ability_entry_byte_v
  * is appended for every unit; a terminator is written only if space remains.
  */
 void ai_build_unit_ability_list(s32 unit_id) {
-    battle_stats_t* unit = &g_battle_unit_stats[unit_id];
+    unit_stats_t* unit = &g_battle_unit_stats[unit_id];
     ai_data_t* ai = &g_ai_data_base;
     ai_weapon_data_t* weapon;
     s32 list_id = ai->unit_compact_indices[unit_id];
