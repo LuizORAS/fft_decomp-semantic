@@ -1040,7 +1040,6 @@ void script_unlockdate_event_instruction(u32* bitset, s32 date_index, s32 month,
 
 /* date */
 void script_advance_date_by_one_year(void);
-void world_script_advance_date_by_one_year(void);
 
 /* units */
 /* Event-unit lookup uses the resident scene's interpreter state. */

@@ -171,7 +171,7 @@ restart_event:
             }
             if ((operand_1 == EVENT_CALL_FUNCTION_ADVANCE_YEAR)
                 || (operand_1 == EVENT_CALL_FUNCTION_ADVANCE_YEAR_ALTERNATE)) {
-                world_script_advance_date_by_one_year();
+                script_advance_date_by_one_year();
             }
             if (operand_1 == EVENT_CALL_FUNCTION_INCREASE_BLUE_TEAM_BRAVE) {
                 unit_increase_blue_team_brave_by_10();
