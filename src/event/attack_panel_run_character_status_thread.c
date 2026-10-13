@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -58,19 +59,19 @@ void attack_panel_run_character_status_thread(void) {
         }
         for (i = 0; i < 19; i++) {
             if (mode == 0) {
-                gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_attack_editor_numeric_geometry,
+                gfx_init_image_loading(&screen->sprites[i], g_attack_editor_numeric_geometry,
                     g_attack_panel_origin_offsets, &g_attack_panel_label_layouts_mode0[i]);
             }
             if (mode == 1) {
-                gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_attack_editor_numeric_geometry,
+                gfx_init_image_loading(&screen->sprites[i], g_attack_editor_numeric_geometry,
                     g_attack_panel_origin_offsets, &g_attack_panel_label_layouts_mode1[i]);
             }
             if (mode == 2) {
-                gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_attack_editor_numeric_geometry,
+                gfx_init_image_loading(&screen->sprites[i], g_attack_editor_numeric_geometry,
                     g_attack_panel_origin_offsets, &g_attack_panel_label_layouts_mode2[i]);
             }
             if (mode == 3) {
-                gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_attack_editor_numeric_geometry,
+                gfx_init_image_loading(&screen->sprites[i], g_attack_editor_numeric_geometry,
                     g_attack_panel_origin_offsets, &g_attack_panel_label_layouts_mode3[i]);
             }
         }
@@ -120,7 +121,7 @@ void attack_panel_run_character_status_thread(void) {
             thread->redraw_request = 0;
         }
         for (i = 0; i < 5; i++) {
-            gfx_init_image_loading((texture_primitive_t*)&screen->sprites[19 + i], g_attack_panel_item_icon_texture,
+            gfx_init_image_loading(&screen->sprites[19 + i], g_attack_panel_item_icon_texture,
                 g_attack_character_status_frame_rect, &g_attack_panel_item_icon_layouts[i]);
             if ((state->equipment[i] & ITEM_ID_MASK) != ITEM_ID_NONE) {
                 battle_gfx_set_item_icon_sprite(&screen->sprites[19 + i], state->equipment[i]);

@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 /*
  * WORLD twin: world_menu_run_numeric_display_panel_thread
  * (same code, globals and callees rebound).
@@ -47,7 +48,7 @@ void battle_menu_run_numeric_display_panel_thread(void) {
     battle_menu_free_memory(number_images);
     for (i = 0; i < 18; i++) {
         battle_menu_init_semitransparent_sprt(&record->sprites[i]);
-        gfx_init_image_loading((texture_primitive_t*)&record->sprites[i], &g_battle_menu_texture_location,
+        gfx_init_image_loading(&record->sprites[i], &g_battle_menu_texture_location,
             &g_battle_numeric_display_frame_rect, &g_battle_numeric_display_image_params[i]);
     }
     battle_copy_bytes(&record[1], record, sizeof(*record));

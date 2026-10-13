@@ -242,8 +242,8 @@ typedef struct image_load_parameters {
     u16 y_screen_offset;
 } image_load_parameters_t;
 
-void gfx_init_image_loading(texture_primitive_t* primitive, const point16_t* base_load, const RECT* base_screen,
-    const image_load_parameters_t* parameters);
+void gfx_init_image_loading(
+    void* primitive, const point16_t* base_load, const RECT* base_screen, const image_load_parameters_t* parameters);
 void gfx_load_image_and_wait(RECT* rect, void* data);
 void gfx_move_image_and_wait(RECT* rect, s16 x, s16 y);
 void gfx_store_image_and_wait(RECT* rect, void* data);

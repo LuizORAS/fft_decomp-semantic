@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -53,8 +54,8 @@ void world_menu_run_numeric_editor_thread(void) {
     descriptor = g_world_editor_numeric_texture;
     for (; i < 18; i++) {
         world_menu_init_sprite(&buffer->sprites[i]);
-        gfx_init_image_loading((texture_primitive_t*)&buffer->sprites[i], g_world_editor_numeric_geometry,
-            &g_world_editor_numeric_table[0], descriptor);
+        gfx_init_image_loading(
+            &buffer->sprites[i], g_world_editor_numeric_geometry, &g_world_editor_numeric_table[0], descriptor);
         descriptor++;
     }
     if (g_world_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {

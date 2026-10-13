@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -101,28 +102,23 @@ void world_menu_display_hovered_unit_stats(
     world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (texture_primitive_t*)&page->quads[1], 2);
     params = g_world_unit_status_quad_image_params_by_mode[mode];
     if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
-        gfx_init_image_loading(
-            (texture_primitive_t*)&page->quads[4], &g_world_gfx_menu_image_source, frame_rect, &params[4]);
+        gfx_init_image_loading(&page->quads[4], &g_world_gfx_menu_image_source, frame_rect, &params[4]);
         for (frame = 0; frame < 2; frame++, params++) {
-            gfx_init_image_loading(
-                (texture_primitive_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
+            gfx_init_image_loading(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
             page->quads[frame].clut = 0x7CBC;
         }
         world_menu_display_projected_action_effect(
             &page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
     } else if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
         for (frame = 0; frame < 2; frame++, params++) {
-            gfx_init_image_loading(
-                (texture_primitive_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
+            gfx_init_image_loading(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
         }
         if (text_id != 0) {
-            gfx_init_image_loading(
-                (texture_primitive_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
+            gfx_init_image_loading(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
         }
     } else {
         for (frame = 0; frame < 4; frame++, params++) {
-            gfx_init_image_loading(
-                (texture_primitive_t*)&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
+            gfx_init_image_loading(&page->quads[frame], &g_world_gfx_menu_image_source, frame_rect, params);
         }
     }
     world_script_copy_bytes(&page[1], page, sizeof(menu_unit_status_page_t));
@@ -187,8 +183,7 @@ void world_menu_display_hovered_unit_stats(
             world_script_copy_bytes(
                 &params[6], &g_world_unit_status_icon_image_params[status->team_kind], sizeof(*params));
             for (i = 0; i < 7; i++, params++) {
-                gfx_init_image_loading(
-                    (texture_primitive_t*)&page->sprites[i], &g_world_gfx_menu_image_source, frame_rect, params);
+                gfx_init_image_loading(&page->sprites[i], &g_world_gfx_menu_image_source, frame_rect, params);
             }
         }
         if (mode != UNIT_STATS_PANEL_ATTACK_CASTER) {

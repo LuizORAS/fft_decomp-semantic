@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
@@ -9,5 +10,5 @@ void world_menu_init_quad_from_record(RECT* out, const menu_entry_t* record, SPR
     out->h = record->inner_height;
     world_menu_init_sprite(primitive);
     primitive->clut = 0x7C3C;
-    gfx_init_image_loading((texture_primitive_t*)primitive, &record->vram_origin, &record->window, &record->text_image);
+    gfx_init_image_loading(primitive, &record->vram_origin, &record->window, &record->text_image);
 }

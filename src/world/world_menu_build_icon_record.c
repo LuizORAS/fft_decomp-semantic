@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -29,8 +30,7 @@ void world_menu_build_icon_record(RECT* rect, menu_entry_t* param, menu_icon_rec
     record->_unknown_74 = 0;
     record->_unknown_78 = 0;
     world_menu_init_sprite_array(record->base.sprites, 4, 0x7cfc);
-    gfx_init_image_loading(
-        (texture_primitive_t*)record->base.sprites, &param->vram_origin, &param->window, &param->text_image);
+    gfx_init_image_loading(record->base.sprites, &param->vram_origin, &param->window, &param->text_image);
     SetSemiTrans(&record->base.sprites[1], 0);
     SetSemiTrans(&record->base.sprites[2], 1);
     size = 0x10;
@@ -56,11 +56,11 @@ void world_menu_build_icon_record(RECT* rect, menu_entry_t* param, menu_icon_rec
         image_params = param->context;
         record->icons[0]->x0 = image_params->height + param->window.x + 7;
         record->icons[0]->y0 = param->window.y - 1;
-        gfx_init_image_loading((texture_primitive_t*)&record->base.sprites[3], &g_world_gfx_menu_image_source,
-            &param->window, &g_world_menu_single_icon_image_params[1]);
+        gfx_init_image_loading(&record->base.sprites[3], &g_world_gfx_menu_image_source, &param->window,
+            &g_world_menu_single_icon_image_params[1]);
     } else if (kind < 5) {
-        gfx_init_image_loading((texture_primitive_t*)&record->base.sprites[3], &g_world_gfx_menu_image_source,
-            &param->window, &g_world_menu_single_icon_image_params[kind]);
+        gfx_init_image_loading(&record->base.sprites[3], &g_world_gfx_menu_image_source, &param->window,
+            &g_world_menu_single_icon_image_params[kind]);
     } else {
         if (index >= 5 && index < 0x10) {
             world_menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
@@ -70,14 +70,14 @@ void world_menu_build_icon_record(RECT* rect, menu_entry_t* param, menu_icon_rec
              * `kind * 4 + n`, fold collapses it to one x48 whose 3-op synth is an
              * instruction short; `(kind << 2) + n` selects the target's 4-op form. */
             kind -= 5;
-            gfx_init_image_loading((texture_primitive_t*)&record->base.sprites[3], &g_world_gfx_menu_image_source,
-                &param->window, &g_world_menu_icon_strip_image_params[(kind << 2)]);
-            gfx_init_image_loading((texture_primitive_t*)record->icons[0], &g_world_gfx_menu_image_source,
-                &param->window, &g_world_menu_icon_strip_image_params[(kind << 2) + 1]);
-            gfx_init_image_loading((texture_primitive_t*)record->icons[1], &g_world_gfx_menu_image_source,
-                &param->window, &g_world_menu_icon_strip_image_params[(kind << 2) + 2]);
-            gfx_init_image_loading((texture_primitive_t*)record->icons[2], &g_world_gfx_menu_image_source,
-                &param->window, &g_world_menu_icon_strip_image_params[(kind << 2) + 3]);
+            gfx_init_image_loading(&record->base.sprites[3], &g_world_gfx_menu_image_source, &param->window,
+                &g_world_menu_icon_strip_image_params[(kind << 2)]);
+            gfx_init_image_loading(record->icons[0], &g_world_gfx_menu_image_source, &param->window,
+                &g_world_menu_icon_strip_image_params[(kind << 2) + 1]);
+            gfx_init_image_loading(record->icons[1], &g_world_gfx_menu_image_source, &param->window,
+                &g_world_menu_icon_strip_image_params[(kind << 2) + 2]);
+            gfx_init_image_loading(record->icons[2], &g_world_gfx_menu_image_source, &param->window,
+                &g_world_menu_icon_strip_image_params[(kind << 2) + 3]);
         } else {
             record->icons[0] = 0;
             record->icons[1] = 0;

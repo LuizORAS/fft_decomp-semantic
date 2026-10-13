@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 /*
  * Thread task 0x3b: a two-column status panel that lists five ability labels
  * of an item stat-detail record. Thread 10 draws g_world_selected_unit_stat_detail into the first
@@ -65,12 +66,12 @@ void world_menu_ability_panel_thread(void) {
         screen = &base[frame & 1];
         if (state->generic_monster == 0) {
             for (i = 0; i < 19; i++) {
-                gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
+                gfx_init_image_loading(&screen->sprites[i], g_world_editor_numeric_geometry,
                     &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_0[i]);
             }
         } else {
             for (i = 0; i < 19; i++) {
-                gfx_init_image_loading((texture_primitive_t*)&screen->sprites[i], g_world_editor_numeric_geometry,
+                gfx_init_image_loading(&screen->sprites[i], g_world_editor_numeric_geometry,
                     &g_world_equipment_panel_origin, &g_world_equipment_panel_sprite_params_1[i]);
             }
         }

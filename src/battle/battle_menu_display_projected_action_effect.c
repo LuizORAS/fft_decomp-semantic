@@ -230,7 +230,7 @@ s32 battle_menu_display_projected_action_effect(
         params->y_load = rect->v;
         params->width = rect->width;
         params->height = rect->height;
-        gfx_init_image_loading((texture_primitive_t*)prim, base_load, base_screen, params);
+        gfx_init_image_loading(prim, base_load, base_screen, params);
     }
     prim->clut = 0x7d7c;
     if (image >= ACTION_DISPLAY_IMAGE_HP && image <= ACTION_DISPLAY_IMAGE_EXP) {
@@ -249,7 +249,7 @@ s32 battle_menu_display_projected_action_effect(
         params->y_load = rect->v;
         params->width = rect->width;
         params->height = rect->height;
-        gfx_init_image_loading((texture_primitive_t*)prim, base_load, base_screen, params);
+        gfx_init_image_loading(prim, base_load, base_screen, params);
         return image;
     }
 
@@ -273,7 +273,7 @@ s32 battle_menu_display_projected_action_effect(
                 params->y_load = rect->v;
                 params->width = rect->width;
                 params->height = rect->height;
-                gfx_init_image_loading((texture_primitive_t*)prim, base_load, base_screen, params);
+                gfx_init_image_loading(prim, base_load, base_screen, params);
                 value = prim->x1 - prim->x0;
                 if (value >= 0x18) {
                     prim->x0 += 0x18 - value;

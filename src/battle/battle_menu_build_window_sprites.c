@@ -20,8 +20,7 @@ void battle_menu_build_window_sprites(RECT* rect, menu_entry_t* param, menu_icon
     record->_unknown_74 = 0;
     record->_unknown_78 = 0;
     battle_menu_init_sprite_array(record->base.sprites, 4, 0x7cfc);
-    gfx_init_image_loading(
-        (texture_primitive_t*)record->base.sprites, &param->vram_origin, &param->window, &param->text_image);
+    gfx_init_image_loading(record->base.sprites, &param->vram_origin, &param->window, &param->text_image);
     SetSemiTrans(&record->base.sprites[1], 0);
     SetSemiTrans(&record->base.sprites[2], 1);
     record->base.sprites[1].w = 0x10;
@@ -34,20 +33,20 @@ void battle_menu_build_window_sprites(RECT* rect, menu_entry_t* param, menu_icon
     record->base.sprites[2].v0 = 0;
     style = param->header_id;
     if (style < 5) {
-        gfx_init_image_loading((texture_primitive_t*)&record->base.sprites[3], &g_battle_menu_texture_location,
-            &param->window, &g_battle_menu_single_icon_image_params[style]);
+        gfx_init_image_loading(&record->base.sprites[3], &g_battle_menu_texture_location, &param->window,
+            &g_battle_menu_single_icon_image_params[style]);
     } else if (style >= 5 && style <= 15) {
         index = (style - 5) * 4;
         battle_menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
         battle_menu_init_sprite_array(record->icons[1], 1, 0x7cfc);
         battle_menu_init_sprite_array(record->icons[2], 1, 0x7cfc);
-        gfx_init_image_loading((texture_primitive_t*)&record->base.sprites[3], &g_battle_menu_texture_location,
-            &param->window, &g_battle_menu_icon_strip_image_params[index]);
-        gfx_init_image_loading((texture_primitive_t*)record->icons[0], &g_battle_menu_texture_location, &param->window,
+        gfx_init_image_loading(&record->base.sprites[3], &g_battle_menu_texture_location, &param->window,
+            &g_battle_menu_icon_strip_image_params[index]);
+        gfx_init_image_loading(record->icons[0], &g_battle_menu_texture_location, &param->window,
             &g_battle_menu_icon_strip_image_params[index + 1]);
-        gfx_init_image_loading((texture_primitive_t*)record->icons[1], &g_battle_menu_texture_location, &param->window,
+        gfx_init_image_loading(record->icons[1], &g_battle_menu_texture_location, &param->window,
             &g_battle_menu_icon_strip_image_params[index + 2]);
-        gfx_init_image_loading((texture_primitive_t*)record->icons[2], &g_battle_menu_texture_location, &param->window,
+        gfx_init_image_loading(record->icons[2], &g_battle_menu_texture_location, &param->window,
             &g_battle_menu_icon_strip_image_params[index + 3]);
     } else {
         record->icons[0] = 0;

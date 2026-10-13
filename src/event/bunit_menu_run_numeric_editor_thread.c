@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_bunit.h"
+#include "fft/gfx.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -54,7 +55,7 @@ void bunit_menu_run_numeric_editor_thread(void) {
     descriptor = g_bunit_editor_numeric_texture;
     for (; i < 18; i++) {
         battle_menu_init_semitransparent_sprt(&buffer->sprites[i]);
-        gfx_init_image_loading((texture_primitive_t*)&buffer->sprites[i], g_bunit_editor_numeric_geometry,
+        gfx_init_image_loading(&buffer->sprites[i], g_bunit_editor_numeric_geometry,
             &g_bunit_editor_numeric_table.texture_rect, descriptor);
         descriptor++;
     }

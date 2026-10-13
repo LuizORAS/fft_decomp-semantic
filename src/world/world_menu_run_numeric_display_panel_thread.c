@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -40,8 +41,8 @@ void world_menu_run_numeric_display_panel_thread(void) {
     world_menu_free_memory(number_images);
     for (i = 0; i < 18; i++) {
         world_menu_init_sprite(&record->sprites[i]);
-        gfx_init_image_loading((texture_primitive_t*)&record->sprites[i], &g_world_gfx_menu_image_source,
-            &g_world_numeric_display_frame_rect, &g_world_numeric_display_image_params[i]);
+        gfx_init_image_loading(&record->sprites[i], &g_world_gfx_menu_image_source, &g_world_numeric_display_frame_rect,
+            &g_world_numeric_display_image_params[i]);
     }
     world_script_copy_bytes(&record[1], record, sizeof(record[1]));
     record[0].palette = &g_world_numeric_display_palettes[0].primitives;

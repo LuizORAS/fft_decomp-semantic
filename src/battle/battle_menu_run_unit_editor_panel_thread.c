@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 /*
  * WORLD twin: world_menu_run_unit_editor_panel_thread (same code, globals and callees rebound).
  */
@@ -98,18 +99,18 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     /* These sprite and rectangle records share the fields read by the image loader. */
     if (g_battle_menu_billboard_data.state.generic_monster == 0) {
         for (i = 0; i < 19; i++) {
-            gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[i], &g_battle_menu_texture_location,
+            gfx_init_image_loading(&frame_record->sprites[i], &g_battle_menu_texture_location,
                 &g_battle_unit_editor_panel_rect, &g_battle_unit_editor_sprite_image_params_a[i]);
         }
     } else {
         for (i = 0; i < 19; i++) {
-            gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[i], &g_battle_menu_texture_location,
+            gfx_init_image_loading(&frame_record->sprites[i], &g_battle_menu_texture_location,
                 &g_battle_unit_editor_panel_rect, &g_battle_unit_editor_sprite_image_params_b[i]);
         }
     }
     battle_menu_init_sprite_array(&frame_record->sprites[19], 5, 0x7CFC);
     for (i = 0; i < 5; i++) {
-        gfx_init_image_loading((texture_primitive_t*)&frame_record->sprites[19 + i], &g_battle_item_icon_image_location,
+        gfx_init_image_loading(&frame_record->sprites[19 + i], &g_battle_item_icon_image_location,
             &g_battle_unit_editor_panel_rect, &g_battle_unit_editor_item_icon_image_params[i]);
         battle_gfx_set_item_icon_sprite(
             &frame_record->sprites[19 + i], g_battle_menu_billboard_data.state.equipment[i]);
