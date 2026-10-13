@@ -14,6 +14,7 @@ typedef enum battle_between_turn_mode {
     BATTLE_BETWEEN_TURN_MODE_RESET = 1,
     BATTLE_BETWEEN_TURN_MODE_FIND_ACTIVE_UNIT = 2,
 } battle_between_turn_mode_e;
+
 typedef enum battle_turn_status_flags {
     BATTLE_TURN_STATUS_CT_FROZEN = 0x01,
     BATTLE_TURN_STATUS_INCAPACITATED = 0x02,
@@ -24,6 +25,7 @@ typedef enum battle_turn_status_flags {
     BATTLE_TURN_STATUS_BLOCKS_WAIT_MENU_MASK = 0x0f,
     BATTLE_TURN_STATUS_BLOCKS_TURN_MASK = 0x0d,
 } battle_turn_status_flags_e;
+
 typedef enum battle_turn_event {
     BATTLE_TURN_EVENT_UNIT_READY = 0x0100,
     BATTLE_TURN_EVENT_ABILITY_READY = 0x0200,
@@ -32,6 +34,7 @@ typedef enum battle_turn_event {
     BATTLE_TURN_EVENT_MIME = 0x0500,
     BATTLE_TURN_EVENT_NONE = 0xff00,
 } battle_turn_event_e;
+
 /* g_battle_between_turn_state and g_battle_between_turn_resume_state: the phases of
  * action_run_between_turn_control. */
 typedef enum battle_between_turn_state {
@@ -61,6 +64,7 @@ typedef enum action_type_flags {
     ACTION_TYPE_HP_HEALING = 0x40,
     ACTION_TYPE_HP_DAMAGE = 0x80,
 } action_type_flags_e;
+
 typedef enum action_miss_type {
     ACTION_MISS_TYPE_HIT = 0,
     ACTION_MISS_TYPE_ACCESSORY_EVADE = 1,
@@ -77,6 +81,7 @@ typedef enum action_miss_type {
     ACTION_MISS_TYPE_BUGGED_REFLECTION = 12,
     ACTION_MISS_TYPE_CATCH = 13,
 } action_miss_type_e;
+
 typedef enum action_special_effect {
     ACTION_SPECIAL_EFFECT_SET_GOLEM = 0x0001,
     ACTION_SPECIAL_EFFECT_MORBOL = 0x0002,
@@ -100,17 +105,20 @@ typedef enum action_context {
     ACTION_CONTEXT_PRIMARY = 0,
     ACTION_CONTEXT_REACTION_OR_SIMULATION = 1,
 } action_context_e;
+
 typedef enum action_state {
     ACTION_STATE_EXECUTE = 0,
     ACTION_STATE_AI_SIMULATION = 1,
     ACTION_STATE_PREVIEW = 2,
 } action_state_e;
+
 /* g_action_phase: which unit's action the attack phase is announcing. */
 typedef enum action_phase {
     ACTION_PHASE_PRE_ACTION = 0,    /* a reaction that pre-empts the pending action (Hamedo) */
     ACTION_PHASE_ACTING_UNIT = 1,   /* the acting unit's own action */
     ACTION_PHASE_REACTING_UNIT = 2, /* the reactions it provoked */
 } action_phase_e;
+
 enum { ACTION_PHASE_COUNT = 3 };
 
 /* result display types */
@@ -191,11 +199,13 @@ enum {
     BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK = 0x1ff,
     BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL = 0x200,
 };
+
 /* Numeric values correspond to the first sixteen action display flags. */
 enum {
     ACTION_DISPLAY_VALUE_COUNT = 16,
     ACTION_DISPLAY_NUMERIC_FLAGS_MASK = 0x0000ffff,
 };
+
 /* Image IDs used by the projected-action display. These index the 49-entry
  * texture-source table at 0x8014cf68; they are not battle status IDs. */
 typedef enum action_display_image_id {
@@ -244,6 +254,7 @@ typedef enum action_display_image_id {
     ACTION_DISPLAY_IMAGE_FROG = 48,
     ACTION_DISPLAY_IMAGE_NONE = 255,
 } action_display_image_id_e;
+
 enum { ACTION_DISPLAY_IMAGE_COUNT = ACTION_DISPLAY_IMAGE_FROG + 1 };
 typedef struct action_display_image_rect {
     u8 u;
@@ -272,6 +283,7 @@ typedef enum action_equipment_slot_mask {
     /* Every slot bit: stored by the Steal/Break slot picker before it chooses one. */
     ACTION_EQUIPMENT_SLOT_ALL = 0xfe,
 } action_equipment_slot_mask_e;
+
 /* Current ability data at 0x801938c0: the attacker/target pair, weapons, formula
  * inputs and results of the strike being resolved, with copies of the ability's
  * secondary data, the weapon's data and the status-infliction record that
@@ -331,17 +343,20 @@ typedef struct battle_current_ability {
     u8 random_fire_flag;                        /* 0x4f */
 } battle_current_ability_t;
 typedef char battle_current_ability_size_must_be_80[(sizeof(battle_current_ability_t) == 80) ? 1 : -1];
+
 /* battle_current_ability_t.knockback_flags: the kind of knockback found by
  * formula_calculate_knockback, with PENDING set until it is applied. */
 typedef enum battle_knockback_kind {
     BATTLE_KNOCKBACK_FALL_DAMAGE = 1,    /* a grounded target: the fall height can hurt */
     BATTLE_KNOCKBACK_NO_FALL_DAMAGE = 2, /* a flying target */
 } battle_knockback_kind_e;
+
 /* Encoding of the kind and pending marker in the same byte. */
 enum {
     BATTLE_KNOCKBACK_KIND_MASK = 0x7f,
     BATTLE_KNOCKBACK_PENDING = 0x80,
 };
+
 /* battle_current_ability_t.post_action_message, copied to the strike work and
  * the misc unit record: the message the post-action state opens. */
 typedef enum battle_post_action_message {
@@ -367,6 +382,7 @@ typedef struct battle_current_attacker_data {
     action_command_t action; /* 0x0a: copy of battle_stats_t +0x16e */
 } battle_current_attacker_data_t;
 typedef char battle_current_attacker_data_size_must_be_30[(sizeof(battle_current_attacker_data_t) == 30) ? 1 : -1];
+
 /* Reaction behavior flags (g_main_reaction_behavior_flags). */
 typedef enum battle_reaction_behavior_flag {
     BATTLE_REACTION_BEHAVIOR_FLAG_TRIGGER_ABILITY = 0x01,
@@ -385,6 +401,7 @@ typedef enum battle_at_list_mode {
     BATTLE_AT_LIST_MODE_ACTIONS_ONLY = 2, /* leave out the active unit and the simulated turns */
     BATTLE_AT_LIST_MODE_PREVIEW = 3,      /* as ALL, with the acting unit's new charge counted from this tick */
 } battle_at_list_mode_e;
+
 /* Result of action_prepare_attack, kept in battle_unit_misc_data_t.attack_phase_state. */
 typedef enum battle_attack_preparation {
     BATTLE_ATTACK_PREPARATION_INVALID = -1,
@@ -393,6 +410,7 @@ typedef enum battle_attack_preparation {
     BATTLE_ATTACK_PREPARATION_CHANGE_EQUIPMENT = 2,
     BATTLE_ATTACK_PREPARATION_JUMP = 3,
 } battle_attack_preparation_e;
+
 /* g_action_post_action_display_phase: the reports shown one after another once an action
  * has resolved. The post-movement reports use the first two. */
 typedef enum battle_post_action_display_phase {

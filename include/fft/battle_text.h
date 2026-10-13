@@ -14,6 +14,7 @@ typedef struct battle_menu_text_image_bounds {
     u16 row_stride;
     s16 line_height;
 } battle_menu_text_image_bounds_t;
+
 /* Pen of the BUNIT, CARD, EQUIP and JOBSTTS *_text_render_glyph_to_4bpp_image: x in pixels (two per byte),
  * y in rows, and the image's row stride in 16-bit values. */
 typedef struct battle_text_image_position {

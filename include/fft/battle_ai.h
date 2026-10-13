@@ -16,20 +16,24 @@ enum {
     AI_GRID_ROW_COUNT = 18,
     AI_GRID_COLUMN_COUNT = 16,
 };
+
 enum {
     AI_MATH_SOURCE_SKILLSET_COUNT = 4,
     AI_MATH_EXTRA_KNOWN_ABILITY_COUNT = 10,
 };
+
 /* Scanlines since vertical blank at which each search yields. */
 enum {
     AI_TURN_SIMULATION_SCANLINE_LIMIT = 313,
     AI_PATHFIND_SCANLINE_LIMIT = 325,
     AI_DECISION_SCANLINE_LIMIT = 441,
 };
+
 /* Turn-event iteration limit for one simulated action. */
 enum {
     AI_SIMULATED_TURN_LIMIT = 256,
 };
+
 /* Shares of usable abilities are measured in 128ths. */
 enum {
     AI_ABILITY_SHARE_SCALE = 128,
@@ -43,11 +47,13 @@ enum {
     AI_ABILITY_FLAG_1_TARGET_ENEMIES = 0x02,
     AI_ABILITY_FLAG_1_AFFECTS_HP = 0x80,
 };
+
 enum {
     AI_ABILITY_FLAG_2_EVADEABLE = 0x02,
     AI_ABILITY_FLAG_2_UNDEAD_REVERSE = 0x20,
     AI_ABILITY_FLAG_2_TARGET_MAP_TILES = 0x80,
 };
+
 enum {
     AI_ABILITY_FLAG_3_PHYSICAL_ATTACK = 0x01,
     AI_ABILITY_FLAG_3_MAGICAL_ATTACK = 0x02,
@@ -59,10 +65,12 @@ enum {
     AI_ABILITY_FLAG_3_DIRECT_TRAJECTORY = 0x40,
     AI_ABILITY_FLAG_3_ARC_TRAJECTORY = 0x80,
 };
+
 enum {
     AI_ABILITY_FLAG_4_EVADE_WITH_MOTION = 0x01, /* the static table's bit; the AI working copy reuses byte 4 */
     AI_ABILITY_FLAG_4_USABLE_BY_AI = 0x80,
 };
+
 /* 32-bit flags of the considered ability. Bytes 1..3 retain the static table
  * meanings, but byte 4 is replaced by ai_ability_entry_flag_e: its
  * low bit means CONSUME_EVALUATED_ORIGINS, not the static EVADE_WITH_MOTION.
@@ -206,11 +214,13 @@ typedef char ai_status_tail_must_be_at_offset_8
 enum {
     AI_ACTION_DECIDED = 0xff,
 };
+
 /* How an action follows its target, in the AI/menu command and stored unit command. */
 typedef enum battle_targeting_type {
     BATTLE_TARGETING_TYPE_TILE = 5, /* aims at target_position */
     BATTLE_TARGETING_TYPE_UNIT = 6, /* follows the unit target_id */
 } battle_targeting_type_e;
+
 /* The ranking tail of an action, compared by
  * ai_compare_target_priority_and_hit_rate. */
 typedef struct ai_action_rank {
@@ -221,6 +231,7 @@ typedef struct ai_action_rank {
     s16 priority;
 } ai_action_rank_t;
 typedef char ai_action_rank_size_must_be_4[(sizeof(ai_action_rank_t) == 4) ? 1 : -1];
+
 /*
  * One considered/recorded action, 0x20 bytes.  The current action lives at
  * base+0x14, the best so far at +0x34, eight ranked outcomes at +0x54, the
@@ -237,11 +248,13 @@ typedef struct ai_action_data {
 } ai_action_data_t;
 typedef char ai_action_data_size_must_be_32[(sizeof(ai_action_data_t) == 32) ? 1 : -1];
 typedef char ai_action_command_must_be_at_offset_8[((unsigned long)&((ai_action_data_t*)0)->command == 8) ? 1 : -1];
+
 /* The packed 16-bit value combines an ability ID and a physical unit slot. */
 enum {
     AI_ABILITY_ENTRY_ABILITY_MASK = 0x03ff,
     AI_ABILITY_ENTRY_UNIT_SHIFT = 10,
 };
+
 /* Runtime policy byte in ai_ability_entry_t. The low three bits control
  * how the AI searches and consumes candidate action origins; initialization
  * recomputes them while preserving the remaining bits. */
@@ -255,6 +268,7 @@ typedef enum ai_ability_entry_flag {
     AI_ABILITY_ENTRY_USABLE = 0x80,
     AI_ABILITY_ENTRY_INIT_PRESERVE_MASK = 0xf8,
 } ai_ability_entry_flag_e;
+
 /* Four-byte entries in each compact unit's AI ability list. Whole usage
  * bytes are copied into considered flags4; policy updates address its bits. */
 typedef struct ai_ability_entry {
@@ -286,6 +300,7 @@ typedef enum ai_weapon_formula_flags {
     AI_WEAPON_FORMULA_ABSORB_HP = 0x02,
     AI_WEAPON_FORMULA_HEAL = 0x04,
 } ai_weapon_formula_flags_e;
+
 /* Per-compact-unit weapon summary. The builder at 0x8019a2f0 clears two
  * 32-bit values, then merges weapon properties through named fields. */
 typedef union ai_weapon_data {
@@ -301,6 +316,7 @@ typedef union ai_weapon_data {
     } fields;
 } ai_weapon_data_t;
 typedef char ai_weapon_data_must_be_8[sizeof(ai_weapon_data_t) == 8 ? 1 : -1];
+
 /* Per-unit AI behavior flags copied from ENTD data to decision +0x04. The
  * three transient status bits are rebuilt during action simulation. */
 typedef enum ai_decision_flags {
@@ -318,12 +334,14 @@ typedef enum ai_decision_flags {
      * record leaves the stay-near tile's level here until the first refresh. */
     AI_DECISION_CONSIDERED = 0x80,
 } ai_decision_flags_e;
+
 typedef enum ai_targeting_flags_1 {
     AI_TARGETING_FLAG_1_HAS_RANGED_ABILITY = 0x01, /* a usable ability has a direct or arc trajectory */
     AI_TARGETING_FLAG_1_CAN_HEAL_ALLIES = 0x02,    /* a usable ability affects HP and targets allies */
     AI_TARGETING_FLAG_1_MOSTLY_SUPPORT = 0x04,     /* ally-targeting share of the usable abilities >= 77/128 */
     AI_TARGETING_FLAG_1_REFLECTED_ACTION = 0x08,
 } ai_targeting_flags_1_e;
+
 /* Targeting policy copied from ENTD AI Flags 2 to decision +0x07. The low
  * policy bits survive ai_refresh_unit_decision_flags; the remaining
  * target-state bits are rebuilt there before action simulation. */
@@ -337,12 +355,14 @@ typedef enum ai_targeting_flags_2 {
     AI_TARGET_DEAD_WITH_RERAISE = 0x40,
     AI_TARGET_HP_BELOW_THREE_QUARTERS = 0x80,
 } ai_targeting_flags_2_e;
+
 typedef enum ai_target_setting_flags {
     AI_TARGET_SETTING_REFRESH_UNIT_STATUS_FLAGS = 0x01000000,
     AI_TARGET_SETTING_CONSUME_EVALUATED_ORIGINS = 0x02000000,
     AI_TARGET_SETTING_HAS_HOLY_WATER = 0x20000000, /* the acting unit can use the Holy Water item ability */
     AI_TARGET_SETTING_RETREAT_SUPPORT_AVAILABLE = 0x40000000,
 } ai_target_setting_flags_e;
+
 /*
  * Per-unit AI decision record, 0x10 bytes at base+0x182c (unit*16 + 0x182c).
  * acting_unit_decision points at the acting unit's record.
@@ -386,6 +406,7 @@ typedef union ai_targetability {
     } snapshot;
 } ai_targetability_t;
 typedef char ai_targetability_size_must_be_64[(sizeof(ai_targetability_t) == 64) ? 1 : -1];
+
 typedef struct ai_data {
     ai_considered_ability_t considered_ability;              /* 0x0000 */
     ai_action_data_t current_action;                         /* 0x0014 */
@@ -547,6 +568,7 @@ typedef enum ai_command_kind {
     AI_COMMAND_UNRESOLVED_FE = 0xfe,
     AI_COMMAND_UNRESOLVED_FF = 0xff,
 } ai_command_kind_e;
+
 /* The setup dispatcher writes this at Misc +0x158 and copies 24 bytes into
  * each history slot. ACT copies the 20-byte payload from AI action +0x08;
  * MOVE writes only x/layer/y, and END_TURN leaves the payload unchanged. */
@@ -558,6 +580,7 @@ typedef struct ai_command {
     } data;
 } ai_command_t;
 typedef char ai_command_size_must_be_24[sizeof(ai_command_t) == 24 ? 1 : -1];
+
 typedef enum ai_command_build_stage {
     AI_COMMAND_BUILD_REFRESH = 0,
     AI_COMMAND_BUILD_MOVEMENT = 1,
@@ -576,16 +599,19 @@ typedef enum ai_initial_selection_stage {
     AI_INITIAL_SELECTION_AUTOBATTLE = 3,
     AI_INITIAL_SELECTION_GENERAL = 7,
 } ai_initial_selection_stage_e;
+
 typedef enum ai_status_selection_stage {
     AI_STATUS_SELECTION_CHICKEN = 0,
     AI_STATUS_SELECTION_TARGET_DISTANCE = 1,
 } ai_status_selection_stage_e;
+
 /* These three suspend points use their own byte; other values resume abilities. */
 typedef enum ai_autobattle_stage {
     AI_AUTOBATTLE_CHARGING = 2,
     AI_AUTOBATTLE_MOVEMENT = 4,
     AI_AUTOBATTLE_ABILITIES = 7,
 } ai_autobattle_stage_e;
+
 typedef enum ai_targeted_selection_stage {
     AI_TARGETED_SELECTION_SCORE_TILES = 0,
     AI_TARGETED_SELECTION_MOVEMENT = 1,
@@ -593,6 +619,7 @@ typedef enum ai_targeted_selection_stage {
     AI_TARGETED_SELECTION_TARGET_ABILITIES = 3,
     AI_TARGETED_SELECTION_OTHER_ABILITIES = 4,
 } ai_targeted_selection_stage_e;
+
 /* No pass saves stage 5; it follows the same ally-search fallback as stage 6. */
 typedef enum ai_recovery_selection_stage {
     AI_RECOVERY_SELECTION_SCORE_TILES = 0,
@@ -603,12 +630,14 @@ typedef enum ai_recovery_selection_stage {
     AI_RECOVERY_SELECTION_ALLY_ABILITIES = 6,
     AI_RECOVERY_SELECTION_CANCEL_STATUS = 7,
 } ai_recovery_selection_stage_e;
+
 typedef enum ai_retreat_stage {
     AI_RETREAT_MOVEMENT = 0,
     AI_RETREAT_SELF_ABILITIES = 1,
     AI_RETREAT_CHARGING = 2,
     AI_RETREAT_OTHER_ABILITIES = 3,
 } ai_retreat_stage_e;
+
 enum {
     AI_RECOVERY_STATUS_COUNT = 3,
 };
@@ -650,6 +679,7 @@ typedef enum ai_unit_filter {
     AI_UNIT_FILTER_SPECIFIC = 3,
     AI_UNIT_FILTER_STATUS = 4,
 } ai_unit_filter_e;
+
 typedef enum ai_nearest_target_mode {
     AI_NEAREST_WITHOUT_BLOOD_SUCK = 0,
     AI_NEAREST_IMMINENT_ENEMY = 1,
@@ -658,6 +688,7 @@ typedef enum ai_nearest_target_mode {
     AI_NEAREST_ELIGIBLE_ENEMY = 4,
     AI_NEAREST_HEALER_OR_CRYSTAL = 5,
 } ai_nearest_target_mode_e;
+
 /* Classification from the acting unit's side, not the sign of HP damage.
  * A useful effect may include deliberately hitting an ally to affect status. */
 typedef enum ai_ability_effect {
@@ -693,10 +724,12 @@ typedef enum ai_movement_stage {
     AI_MOVEMENT_TARGET_DISTANCE = 0,
     AI_MOVEMENT_SCORE_TILES = 1,
 } ai_movement_stage_e;
+
 typedef enum ai_cowardly_movement_stage {
     AI_COWARDLY_MOVEMENT_SCORE_TILES = 0,
     AI_COWARDLY_MOVEMENT_TARGET_DISTANCE = 1,
 } ai_cowardly_movement_stage_e;
+
 typedef enum ai_destination_order {
     AI_DESTINATION_PRIORITY_FIRST = 0,
     AI_DESTINATION_DISTANCE_FIRST = 1,
@@ -758,15 +791,18 @@ typedef enum ai_ability_evaluation_stage {
     AI_ABILITY_EVALUATION_PREPARE = 7,
     AI_ABILITY_EVALUATION_MAP_TARGETS = 8,
 } ai_ability_evaluation_stage_e;
+
 typedef enum ai_origin_evaluation_stage {
     AI_ORIGIN_EVALUATION_PREPARE = 0,
     AI_ORIGIN_EVALUATION_RANKED = 1,
     AI_ORIGIN_EVALUATION_SCANNED = 2,
 } ai_origin_evaluation_stage_e;
+
 typedef enum ai_cast_origin_stage {
     AI_CAST_ORIGIN_ACT_BEFORE_MOVE = 0,
     AI_CAST_ORIGIN_MOVE_BEFORE_ACT = 1,
 } ai_cast_origin_stage_e;
+
 typedef enum ai_charging_stage {
     AI_CHARGING_SONG_DANCE = 0,
     AI_CHARGING_WITH_CHARGE = 1,
@@ -826,11 +862,13 @@ typedef enum ai_snapshot_mode {
     AI_SNAPSHOT_BASELINE = 0,
     AI_SNAPSHOT_SIMULATED_STATUS = 1,
 } ai_snapshot_mode_e;
+
 typedef enum ai_simulation_phase {
     AI_SIMULATION_PREPARE_ACTION = 0,
     AI_SIMULATION_ADVANCE_TURNS = 1,
     AI_SIMULATION_SCORE_STATE = 2,
 } ai_simulation_phase_e;
+
 /* Pickup occupant on the current action tile; treasure takes precedence. */
 typedef enum ai_tile_pickup_kind {
     AI_TILE_PICKUP_NONE = 0,
@@ -860,6 +898,7 @@ void ai_update_tile_pickup(void);
 enum {
     AI_CARDINAL_DIRECTION_COUNT = 4,
 };
+
 typedef enum ai_direction {
     AI_DIRECTION_SOUTH = 0,
     AI_DIRECTION_WEST = 1,
@@ -868,6 +907,7 @@ typedef enum ai_direction {
     AI_DIRECTION_OVERLAP = 4,
     AI_DIRECTION_CHOOSE_AT_WAIT = 5,
 } ai_direction_e;
+
 /* Cardinal map-tile deltas stored as wrapping unsigned bytes. */
 typedef struct ai_facing_tile_offsets {
     u8 by_direction[AI_CARDINAL_DIRECTION_COUNT][2];

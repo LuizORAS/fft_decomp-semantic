@@ -36,6 +36,7 @@ typedef enum camera_input_source {
     CAMERA_INPUT_PRESSED = 1, /* newly pressed, repeating at the cursor repeat speed while held */
     CAMERA_INPUT_RELEASED = 2,
 } camera_input_source_e;
+
 /* g_battle_cursor_input_mode: how the directional buttons map to map directions. The first two are
  * the Cursor Movement option's settings; FREE_CURSOR sends the four buttons along the screen's axes. */
 typedef enum battle_cursor_input_mode {
@@ -144,6 +145,7 @@ typedef enum camera_step_action {
     CAMERA_STEP_INCREASE = 2, /* tilt up; zoom in */
     CAMERA_STEP_DECREASE = 4, /* tilt down; zoom out */
 } camera_step_action_e;
+
 /* g_map_tilt_target values the tilt code tests; the target is a tilt band plus one, and
  * bands 3 and 4 have no pitch here. */
 enum {
