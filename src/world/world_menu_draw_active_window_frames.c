@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/world.h"
 
 /*

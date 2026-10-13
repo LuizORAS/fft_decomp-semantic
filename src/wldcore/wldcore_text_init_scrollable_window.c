@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/wldcore.h"
 
 /* Opens the paged text window: appends its four frame windows and the text

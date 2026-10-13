@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/wldcore.h"
 
 /* Initialize and start a numeric panel renderer.

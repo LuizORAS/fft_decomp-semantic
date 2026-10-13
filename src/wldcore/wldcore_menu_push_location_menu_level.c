@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/wldcore.h"
 #include "psx/libgs.h"
 #include "psx/pad.h"

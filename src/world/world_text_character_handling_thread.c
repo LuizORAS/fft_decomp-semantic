@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
 #include "fft/open.h"
 #include "fft/script.h"
 #include "fft/world.h"

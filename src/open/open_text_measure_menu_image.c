@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/open.h"
 
 /* Padded pixel size of the window image for a text entry: 10 pixels per column

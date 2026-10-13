@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/wldcore.h"
 
 /* Pushes the wide scrollable text window (0x8009eef8) as menu level type

@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/open.h"
 #include "psx/types.h"
 

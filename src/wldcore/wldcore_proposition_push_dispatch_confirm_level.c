@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/wldcore.h"
 
 /* Pushes menu level type 0xd: a cursor window, an upper window, a 0x28x0x30

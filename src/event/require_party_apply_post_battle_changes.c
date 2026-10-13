@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 

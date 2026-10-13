@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libetc.h"

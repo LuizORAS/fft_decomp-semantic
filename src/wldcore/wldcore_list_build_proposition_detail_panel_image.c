@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/wldcore.h"
 
 /* Build the image of the proposition detail panel for g_main_active_propositions[proposition]:

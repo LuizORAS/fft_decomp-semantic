@@ -1,4 +1,5 @@
 #include "fft/event_attack.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 
 /* Appends one 0xfe/0xff-terminated string. Overflowing the arena jumps

@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_text.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "psx/libetc.h"
 #include "psx/types.h"

@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/wldcore.h"
 
 /* Build the proposition-result panel, total its gil reward, start the reporting
