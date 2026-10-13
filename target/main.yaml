@@ -680,7 +680,7 @@ functions:
   - {addr: 0x80042ab0, size: 108, name: main_party_init_new_game, hash: f14ad7433eefb74c}
   - {addr: 0x80042b1c, size: 16, name: main_util_set_svector, hash: 694486283a46f5f8}
   - {addr: 0x80042b2c, size: 16, name: main_util_set_vector, hash: 28901a8f332a5d7a}
-  - {addr: 0x80042b3c, size: 476, name: main_set_display_draw_new_game, hash: 8715c0b670c3f523, rodata: [{addr: 0x8004091c, size: 8, hash: b6d79f3197c64574}]}
+  - {addr: 0x80042b3c, size: 476, name: main_set_display_draw_new_game, hash: 8715c0b670c3f523, source: src/main/main_set_display_draw.c, source_symbol: main_set_display_draw, rodata: [{addr: 0x8004091c, size: 8, hash: b6d79f3197c64574}]}
   - {addr: 0x80042d18, size: 188, name: main_gfx_swap_display_area, hash: 18f2c8600c046389}
   - {addr: 0x80042dd4, size: 904, name: main_gfx_fade_in_orbonne_monastery, hash: 1ce397677ccb4bb6, rodata: [{addr: 0x80040924, size: 8, hash: af5570f5a1810b7a}]}
   - {addr: 0x8004315c, size: 896, name: main_gfx_fade_out_orbonne_monastery, hash: 588fa5761ae61f7b, rodata: [{addr: 0x80040924, size: 8, hash: af5570f5a1810b7a}]}
