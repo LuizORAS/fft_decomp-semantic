@@ -1,11 +1,8 @@
 #include "fft/main.h"
 
-/* Claim the game-heap pages that cover size bytes at a fixed address.
- *
- * allocation must lie in the heap's 0x20000 bytes and every page of the range
- * must be free; otherwise the result is 0. The pages take the lowest tag no page
- * in the table uses, and the page-aligned address is returned. The overlays use
- * it to claim the start of the heap for a companion overlay or an image buffer. */
+/* Reserve free heap pages at a fixed address, using the lowest unused tag.
+ * Only the starting address is bounds-checked; the page range may extend
+ * beyond the heap. Returns the page-aligned address, or 0 on failure. */
 u8* main_heap_reserve_at(u8* allocation, u32 size) {
     u32 addr;
     u32 base;

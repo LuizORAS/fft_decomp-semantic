@@ -2,7 +2,7 @@
 
 #define OPEN_MOVIE_ACQUIRE_MAX_ATTEMPTS 0x80
 
-/* Wait (up to 0x80 vertical blanks) for the next movie frame, track the
+/* Wait for the next movie frame (at most 129 vertical blanks), track the
  * stream position, adopt a changed frame size (clearing the screen), and size
  * the decode rectangles: 24-bit rows take three 16-bit values per two pixels.
  * Returns the frame data, or NULL on timeout. */

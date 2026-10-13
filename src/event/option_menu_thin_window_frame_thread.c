@@ -10,12 +10,6 @@
 
 void option_menu_thin_window_frame_thread(void) {
     RECT texture;
-    /* The target holds the frame record base in one callee-saved register across
-       the whole setup section. The address is a constant, so it picks up a
-       REG_EQUIV note and reload rematerializes it at every use instead; the
-       tied empty asm below breaks that equivalence. The two stride pointers are
-       locals for the same reason: the target keeps each one live and re-derives
-       the descriptor base from it (addiu -8) for the glyph calls. */
     menu_panel_frame_t* prim = g_option_menu_panel_frames;
     s32* source_stride = &g_option_text_glyph_source.stride;
     s32* dest_stride = &g_option_text_glyph_dest.stride;

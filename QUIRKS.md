@@ -147,6 +147,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `map_control_gte_background_color` returns `result` unset for DISABLE
   and RESTORE (every caller issues SET); `open_card_get_info_with_retries`
   returns `result` unset for a retry limit below 1 (its caller passes 2);
+  `open_card_poll_info_until_stable` has the same empty-loop result for a
+  nonpositive retry limit (its callers pass 3);
   `sound_stop_weather_sfx` returns an unset `result` no caller reads.
 - `world_card_read_file_chunked` sets `result` to -1 when the last read was
   short and then returns `total`; the test has no effect.
@@ -354,7 +356,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   block tagged 3: allocating 1, 1 and 2 pages gives tags 1, 2, 3).
   `main_heap_free` tells blocks apart by tag alone: freeing the lower block
   frees both, and freeing the upper one returns 0 and frees nothing.
-  `main_heap_reserve_at` picks an unused tag.
+  `main_heap_reserve_at` picks an unused tag but bounds-checks only the starting
+  address, allowing the requested page range to extend beyond the heap.
 - `main_unit_calculate_entd_equipment`: the random body-armor roll tests
   `BATTLE_SUPPORT_SET_1_EQUIP_SHIELD` before asking for `ITEM_TYPE_ARMOR`;
   Equip Armor is tested only for the helmet.
