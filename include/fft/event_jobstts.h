@@ -295,9 +295,6 @@ void jobstts_text_start_help_thread(s32 thread_data);
 extern u8 g_jobstts_bits_primary_reset;
 extern const u8* g_jobstts_bits_primary_source;
 extern s32 g_jobstts_bits_reader_1_index;
-extern s32 g_jobstts_bits_reader_2_index;
-extern u8 g_jobstts_bits_secondary_reset;
-extern const u8* g_jobstts_bits_secondary_source;
 
 void jobstts_bits_init_primary_reader(const u8* data);
 u32 jobstts_bits_read_primary(s32 count);

@@ -288,15 +288,10 @@ void card_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32
 extern u8* g_card_bits_primary_cursor;
 extern u8 g_card_bits_primary_reset;
 extern s32 g_card_bits_reader_1_index;
-extern s32 g_card_bits_reader_2_index;
-extern u8 g_card_bits_reader_2_reset;
-extern const u8* g_card_bits_reader_2_stream;
 extern s32 g_card_bits_writer_1_index;
 
 void card_bits_init_primary_reader(const u8* data);
-void card_bits_init_secondary_reader(const u8* data);
 u32 card_bits_read_primary(s32 count);
-u32 card_bits_read_secondary(s32 count);
 void card_bits_write_primary(s32 value);
 
 /* threads */

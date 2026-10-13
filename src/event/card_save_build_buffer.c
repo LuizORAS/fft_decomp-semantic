@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "psx/types.h"
 
@@ -94,9 +95,9 @@ void card_save_build_buffer(s32 slot) {
     block = (u8*)g_card_save_buffer_pointer;
     for (i = 0; (u32)i < CARD_SAVE_PARITY_BLOCK_COUNT; i++) {
         parity = 0;
-        card_bits_init_secondary_reader(block);
+        menu_bits_init_secondary_reader(block);
         for (j = 0; j < CARD_SAVE_PARITY_BITS_PER_BLOCK; j++) {
-            parity += card_bits_read_secondary(1);
+            parity += menu_bits_read_secondary(1);
         }
         block += CARD_SAVE_PARITY_BLOCK_BYTES;
         card_bits_write_primary(parity & 1);
