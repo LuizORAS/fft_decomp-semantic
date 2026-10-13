@@ -10,7 +10,6 @@ void world_menu_build_location_list(void) {
     s32 i;
     s32 count;
     s32 selected;
-    menu_entry_t* menu;
 
     for (i = 0, count = 0; i < WORLD_LOCATION_COUNT; i++) {
         if (script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) != 0) {
@@ -39,8 +38,7 @@ void world_menu_build_location_list(void) {
     } else {
         g_world_menu_location_list_layout.row_offset = selected;
     }
-    menu = g_world_menu_thread_menu_data;
-    menu[6].selected_index = selected;
-    menu[6].window.y = (7 - g_world_menu_location_list_layout.columns.row_count) * 8 - 0x48;
+    g_world_menu_thread_menu_data[6].selected_index = selected;
+    g_world_menu_thread_menu_data[6].window.y = (7 - g_world_menu_location_list_layout.columns.row_count) * 8 - 0x48;
     world_menu_scrolling_list_thread();
 }

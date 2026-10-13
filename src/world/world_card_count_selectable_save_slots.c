@@ -24,13 +24,13 @@ s32 world_card_count_selectable_save_slots(void) {
         }
     }
     i = 0;
-    do {
+    while (i < 10) {
         world_card_scroll_menu_list(g_world_card_slot_cursor_row);
         if (g_world_card_list_scroll_velocity != 0) {
             i = 0;
         } else {
             i++;
         }
-    } while (i < 10);
+    }
     return count;
 }

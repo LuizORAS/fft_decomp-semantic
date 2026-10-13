@@ -13,10 +13,8 @@ s32 world_menu_update_wrapped_grid_selection(s32 columns, s32 rows, s32 last_ind
         index -= columns;
         if (index < 0) {
             index += columns * rows;
-            if (last_index < index) {
-                do {
-                    index -= columns;
-                } while (last_index < index);
+            while (last_index < index) {
+                index -= columns;
             }
         }
     } else if (input & PSX_PAD_DOWN) {

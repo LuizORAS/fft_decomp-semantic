@@ -19,9 +19,8 @@ void world_unit_update_staged_status_data(u16 unit_id, u16 restore) {
     g_world_unit_status_staging_data = &g_ai_workspace_ptr->status_staging;
     if (g_world_menu_input_mode == MENU_INPUT_PLAYER
         && world_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
-        unit_index = 0;
         g_world_unit_status_staging_data->jump_float_flags = 0;
-        do {
+        for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &misc_index) != 0) {
                 battle_unit_index = battle_unit_get_battle_index_by_misc_id(unit_id);
                 if (battle_unit_index != -1) {
@@ -42,8 +41,7 @@ void world_unit_update_staged_status_data(u16 unit_id, u16 restore) {
                     break;
                 }
             }
-            unit_index++;
-        } while (unit_index < BATTLE_UNIT_SLOT_COUNT);
+        }
         if (g_world_unit_status_staging_data->jump_float_flags != 0) {
             world_thread_wait_frames(40);
         }

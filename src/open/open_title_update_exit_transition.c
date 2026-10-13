@@ -27,16 +27,12 @@ void open_title_update_exit_transition(open_controller_record_t* record) {
             s32 index;
 
             SetDispMask(0);
-            index = 0;
             source = (s32*)g_open_work_buffer_0;
             g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED;
             destination = g_open_file_destination;
-            do {
-                *destination = *source;
-                source++;
-                index++;
-                destination++;
-            } while (index < 0x7800);
+            for (index = 0; index < 0x7800; index++) {
+                destination[index] = source[index];
+            }
             open_title_push_menu_controller(0);
         } else if (state == OPEN_TITLE_EXIT_CONFIRM) {
             open_title_start_new_game_transition();
