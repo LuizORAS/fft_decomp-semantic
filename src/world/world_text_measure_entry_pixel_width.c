@@ -4,7 +4,7 @@
 /* Sum the pixel widths of a 0xFE-terminated text entry. Bytes 0xD0..0xDF
  * introduce a two-byte glyph index; 0xFA advances a fixed four pixels and
  * 0xE7 carries an explicit one-byte advance. */
-s32 world_text_measure_entry_pixel_width(u8* text) {
+s32 world_text_measure_entry_pixel_width(const u8* text) {
     s32 width;
     s32 code;
 

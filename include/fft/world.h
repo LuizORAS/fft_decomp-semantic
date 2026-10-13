@@ -956,7 +956,7 @@ void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u3
     void* unused_21, void* unused_22, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
 
 void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
-void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
+void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, const RECT* from, const RECT* to, s32 t);
 void world_gfx_mirror_4bpp_rect(u8* pixels, const glyph_blit_t* rect);
 void world_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu);
 void world_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair);
@@ -1548,7 +1548,7 @@ void world_formation_dismiss_unit(s16 formation_idx);
 void world_formation_draw_background_tiles(s32 y, s32 unused_1);
 void world_formation_draw_cursor_trail(point16_t* cursor);
 void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_y);
-void world_formation_draw_sprite_with_shadow(oriented_quad_t* pos, const rgb24_t* rgb, s32 ot_index);
+void world_formation_draw_sprite_with_shadow(const oriented_quad_t* pos, const rgb24_t* rgb, s32 ot_index);
 
 void world_formation_draw_egg_sprite(
     point16_t* pos, s32 palette, const rgb24_t* rgb, s32 hatch_countdown, s32 ot_index);
@@ -1912,7 +1912,7 @@ void world_text_relocate_pointer_table(s32* offset_table);
 void world_text_init_section_pointers(void);
 s32 world_text_is_printing(s32 thread_id);
 void world_text_kern_into_command_buffer(u8* text, s16* name, RECT* rect, s32 palette);
-s32 world_text_measure_entry_pixel_width(u8* entry);
+s32 world_text_measure_entry_pixel_width(const u8* entry);
 void world_text_restore_section_pointers(void);
 void world_menu_close_help_menu(void);
 void world_text_resume_printing(s32 thread_id);
