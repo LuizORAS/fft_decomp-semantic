@@ -2678,7 +2678,7 @@ s32 world_card_read_file_chunked(const char* filename, u8* destination, u32 size
 void world_card_build_save_file_header(s32 slot, s32 level, struct card_save_header* header);
 s32 world_card_check_selected(void);
 s32 world_card_close_file_with_retries(s32 descriptor);
-s32 world_card_count_free_blocks(struct DIRENTRY* entries, s32 count);
+s32 world_card_count_free_blocks(const struct DIRENTRY* entries, s32 count);
 s32 world_card_count_save_files(struct DIRENTRY* dir, s32 all);
 s32 world_card_count_selectable_save_slots(void);
 s32 world_card_create_new_with_retries(s32 port, s32 retry_limit);

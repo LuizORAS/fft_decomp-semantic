@@ -7,7 +7,7 @@
  * The card has 15 usable blocks. Indexed traversal and the early full-card
  * return preserve the target's loop scheduling and common return.
  */
-s32 world_card_count_free_blocks(DIRENTRY* entries, s32 count) {
+s32 world_card_count_free_blocks(const DIRENTRY* entries, s32 count) {
     s32 used = 0;
     s32 i;
 
