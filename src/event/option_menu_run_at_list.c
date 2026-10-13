@@ -287,7 +287,7 @@ void option_menu_run_at_list(void) {
         gfx_draw_or_append_gpu_primitive(frame);
         gfx_draw_or_append_gpu_primitive(&page->text_mode);
         gfx_draw_or_append_gpu_primitive(&page->draw_areas);
-        battle_menu_select_icon_cluts(&page->icons);
+        battle_menu_select_icon_cluts(&page->icons.base);
         battle_menu_update_icon_cursor_sprites(entry, &page->icons.base, i, cursor);
         i++;
         page->icons.base.sprites[0].x0 = 1000;

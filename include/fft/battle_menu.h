@@ -285,7 +285,7 @@ void battle_menu_init_semitransparent_sprt(SPRT* sprite);
 void battle_menu_init_sprite_array(SPRT* sprites, s32 count, s32 clut);
 void battle_menu_reset_buffer_slots(void);
 void battle_menu_run_icon_selection_loop(void);
-void battle_menu_select_icon_cluts(struct menu_icon_record* frame);
+void battle_menu_select_icon_cluts(menu_icon_sprites_t* frame);
 void battle_menu_select_icon_sprite_clut(SPRT* sprite);
 void battle_menu_select_sprite_clut(SPRT* sprite);
 void battle_menu_submit_icon_primitives(struct menu_icon_record* frame);

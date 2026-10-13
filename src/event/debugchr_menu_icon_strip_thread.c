@@ -47,7 +47,7 @@ void debugchr_menu_icon_strip_thread(void) {
             break;
         frame_parity = frame & 1;
         frame_pair = &frame_base[frame_parity];
-        battle_menu_select_icon_cluts(frame_pair);
+        battle_menu_select_icon_cluts(&frame_pair->base);
         battle_menu_submit_icon_primitives(frame_pair);
         frame++;
     }

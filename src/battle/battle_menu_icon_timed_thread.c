@@ -57,10 +57,10 @@ void battle_menu_icon_timed_thread(void) {
         }
         if (unset >= 0) {
             g_thread_current_id--;
-            battle_menu_select_icon_cluts(&records[i & 1]);
+            battle_menu_select_icon_cluts(&records[i & 1].base);
             g_thread_current_id++;
         } else {
-            battle_menu_select_icon_cluts(&records[i & 1]);
+            battle_menu_select_icon_cluts(&records[i & 1].base);
         }
         record = &records[i & 1];
         battle_menu_update_icon_cursor_sprites(param, &record->base, i, -1);

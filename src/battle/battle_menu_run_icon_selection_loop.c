@@ -44,7 +44,7 @@ void battle_menu_run_icon_selection_loop(void) {
         }
         record = &records[i & 1];
         param->selected_index = cursor;
-        battle_menu_select_icon_cluts(record);
+        battle_menu_select_icon_cluts(&record->base);
         battle_menu_update_icon_cursor_sprites(param, &record->base, i, cursor);
         if ((records[0]._unknown_78 == 0 && records[1]._unknown_78 == 2)
             || (records[0]._unknown_78 == 2 && records[1]._unknown_78 == 0)) {

@@ -253,7 +253,7 @@ void option_menu_run_game_options(void) {
             option_menu_redraw_text_page_on_scroll(entry, &row_offset, &ring, &cursor);
             ClearImage(&clear, 0, 0, 0);
         }
-        battle_menu_select_icon_cluts(&page->icons);
+        battle_menu_select_icon_cluts(&page->icons.base);
         battle_menu_update_icon_cursor_sprites(entry, &page->icons.base, i, cursor);
         page->icons.base.sprites[1].y0 += 2;
         page->icons.base.sprites[2].y0 += 2;

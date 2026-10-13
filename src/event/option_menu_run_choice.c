@@ -123,7 +123,7 @@ void option_menu_run_choice(void) {
                 g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
             }
         }
-        battle_menu_select_icon_cluts(record);
+        battle_menu_select_icon_cluts(&record->base);
         battle_menu_update_icon_cursor_sprites(param, &record->base, width, cursor);
         battle_menu_submit_icon_primitives(record);
         thread_wait_frames(1);

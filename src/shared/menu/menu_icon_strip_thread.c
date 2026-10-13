@@ -41,7 +41,7 @@ void menu_icon_strip_thread(void) {
             break;
         }
         record = &records[i & 1];
-        battle_menu_select_icon_cluts(record);
+        battle_menu_select_icon_cluts(&record->base);
         battle_menu_submit_icon_primitives(record);
     }
     thread_yield();

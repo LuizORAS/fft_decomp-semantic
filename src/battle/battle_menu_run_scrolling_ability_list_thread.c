@@ -343,7 +343,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         if (battle_menu_should_close_thread(&g_script_event_input) != 0) {
             break;
         }
-        battle_menu_select_icon_cluts(&page->icons);
+        battle_menu_select_icon_cluts(&page->icons.base);
         battle_menu_select_icon_sprite_clut(page->icons.icons[0]);
         battle_menu_select_icon_sprite_clut(page->icons.icons[1]);
         battle_menu_select_icon_sprite_clut(page->icons.icons[2]);
