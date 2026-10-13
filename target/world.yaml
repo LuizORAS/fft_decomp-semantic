@@ -309,7 +309,7 @@ functions:
   - {addr: 0x800f6490, size: 84, name: script_pulse_tutorial_wait_value, hash: 9e5204eaa009440e, source: src/shared/script/script_pulse_tutorial_wait_value.c}
   - {addr: 0x800f64e4, size: 132, name: script_apply_input_overrides, hash: a3e515891d532a57, source: src/shared/script/script_apply_input_overrides.c}
   - {addr: 0x800f6568, size: 604, name: world_script_update_event_input_state, hash: 9e2593c6e781c5b6, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
-  - {addr: 0x800f67c4, size: 44, name: world_script_filter_controller_input, hash: fe99b31bcc328180}
+  - {addr: 0x800f67c4, size: 44, name: script_filter_controller_input, hash: fe99b31bcc328180, source: src/shared/script/script_filter_controller_input.c}
   - {addr: 0x800f67f0, size: 1596, name: world_script_run_frame, hash: eac0cd402d9dd578}
   - {addr: 0x800f6e2c, size: 60, name: world_script_set_current_otag_entry_and_update_input, hash: d5b6fdd929637d19}
   - {addr: 0x800f6e68, size: 48, name: world_script_set_specialized_map_destroyed, hash: d1d0b33651696dd9}
@@ -1865,7 +1865,7 @@ data:
   - {addr: 0x8019a20c, name: g_script_event_initial_repeat_counter}
   - {addr: 0x8019a210, name: g_script_event_repeat_counter}
   - {addr: 0x8019a214, name: g_script_event_secondary_repeat_counter}
-  - {addr: 0x8019a218, name: g_world_input_unfiltered_controller}
+  - {addr: 0x8019a218, name: g_script_unfiltered_controller_input}
   - {addr: 0x8019a21c, name: g_world_script_saved_event_input}
   - {addr: 0x8019a220, name: g_world_event_map_jump_in_request}
   - {addr: 0x8019a224, name: g_world_event_finish_check_pending}

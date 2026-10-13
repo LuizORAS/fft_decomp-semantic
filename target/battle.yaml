@@ -961,7 +961,7 @@ functions:
   - {addr: 0x80142bd0, size: 84, name: script_pulse_tutorial_wait_value, hash: aa9e33de4476a4c0, source: src/shared/script/script_pulse_tutorial_wait_value.c}
   - {addr: 0x80142c24, size: 132, name: script_apply_input_overrides, hash: 6b06c6da216b8414, source: src/shared/script/script_apply_input_overrides.c}
   - {addr: 0x80142ca8, size: 132, name: script_route_event_input, hash: 7b610c69d3745c90}
-  - {addr: 0x80142d2c, size: 44, name: script_filter_controller_input, hash: 9fe5b57eca447db5}
+  - {addr: 0x80142d2c, size: 44, name: script_filter_controller_input, hash: 9fe5b57eca447db5, source: src/shared/script/script_filter_controller_input.c}
   - {addr: 0x80142d58, size: 1620, name: script_run_event_frame, hash: d4dd1211bca4f542}
   - {addr: 0x801433ac, size: 60, name: script_set_current_otag_entry_and_update_input, hash: 584c5bad6246264b}
   - {addr: 0x801433e8, size: 48, name: script_set_specialized_map_destroyed, hash: 6fdd321db8d2c523}

@@ -850,7 +850,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_TUTORIAL_BUTTON_WAIT) {
             do {
                 thread_yield();
-            } while (!(first_operand & g_world_input_unfiltered_controller));
+            } while (!(first_operand & g_script_unfiltered_controller_input));
         } else if (opcode == EVENT_OPCODE_END_SOUND) {
             main_sound_stop_weather_sfx_music();
         }
@@ -916,7 +916,7 @@ restart_event:
             g_world_thread_task_active = operand_1;
         } else if (opcode == EVENT_OPCODE_TUTORIAL_COORDINATE_CONFIRM) {
             while (g_battle_cursor_x != operand_1 || g_battle_cursor_y != operand_2
-                || ((initial_buttons = g_world_input_unfiltered_controller) & PSX_PAD_CIRCLE) == 0
+                || ((initial_buttons = g_script_unfiltered_controller_input) & PSX_PAD_CIRCLE) == 0
                 || (initial_buttons & PSX_PAD_DPAD_MASK) != 0) {
                 thread_yield();
             }

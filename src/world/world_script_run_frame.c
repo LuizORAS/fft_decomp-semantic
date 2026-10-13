@@ -89,7 +89,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
 
     world_input_update_menu_repeat(buttons);
     if (g_menu_input_mode == MENU_INPUT_TUTORIAL) {
-        g_world_input_unfiltered_controller = g_script_event_input;
+        g_script_unfiltered_controller_input = g_script_event_input;
         script_apply_input_overrides(&g_script_event_input);
         g_world_script_saved_event_input = g_script_event_input;
         script_set_variable(EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS, 0);

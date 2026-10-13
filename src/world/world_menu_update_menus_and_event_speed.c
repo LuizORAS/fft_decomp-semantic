@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -16,7 +17,7 @@ s32 world_menu_update_menus_and_event_speed(u32* ot, u32 input) {
 
     g_ai_workspace_ptr = (event_work_t*)g_ai_workspace;
     if (g_menu_input_mode != MENU_INPUT_PLAYER) {
-        input = g_world_input_unfiltered_controller;
+        input = g_script_unfiltered_controller_input;
     }
     world_map_store_selected_tile_data();
     value = -2;

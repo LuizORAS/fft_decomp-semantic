@@ -1172,7 +1172,6 @@ extern volatile u8 g_world_input_lockout_timer;
 extern u16 g_world_input_previous, g_world_input_latched_button, g_world_input_newly_pressed;
 extern s32 g_world_input_repeat_counters[16];
 extern u32 g_world_input_primary_repeat, g_world_input_secondary_repeat;
-extern u32 g_world_input_unfiltered_controller;
 extern menu_input_timing_profile_t g_world_input_timing_profiles[];
 extern u8 g_world_input_triangle_latched;
 extern u8 g_world_input_triangle_latch;
