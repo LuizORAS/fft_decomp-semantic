@@ -404,7 +404,7 @@ functions:
   - {addr: 0x8001e5c4, size: 80, name: startIntrDMA, hash: 1e06eeedd3314b7f, source: src/lib/psyq/libetc/startIntrDMA.c}
   - {addr: 0x8001e614, size: 388, name: trapIntrDMA, hash: 6c1a415bee4243b0, source: src/lib/psyq/libetc/trapIntrDMA.c}
   - {addr: 0x8001e798, size: 168, name: setIntrDMA, hash: ffb6a94751436bfa, source: src/lib/psyq/libetc/setIntrDMA.c}
-  - {addr: 0x8001e840, size: 44, name: psyq_etc_clear_dma_callbacks, hash: 10a6fc24d646f22b, source: src/lib/psyq/libetc/psyq_etc_clear_dma_callbacks.c}
+  - {addr: 0x8001e840, size: 44, name: psyq_etc_clear_dma_callbacks, hash: 10a6fc24d646f22b, source: src/lib/psyq/libetc/psyq_etc_clear_vblank_callbacks.c, source_symbol: psyq_etc_clear_vblank_callbacks}
   - {addr: 0x8001e86c, size: 24, name: SetVideoMode, hash: 45263d86bd70fcfa, source: src/lib/psyq/libetc/SetVideoMode.c}
   - {addr: 0x8001e884, size: 16, name: GetVideoMode, hash: ed29fc988c603726, source: src/lib/psyq/libetc/GetVideoMode.c}
   - {addr: 0x8001e894, size: 48, name: StSetRing, hash: 607587394bd69202, source: src/lib/psyq/libcd/StSetRing.c}
