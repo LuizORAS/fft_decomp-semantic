@@ -35,7 +35,7 @@ void world_menu_labeled_number_entry_thread(void) {
     POLY_FT4* shadow_quad;
 
     g_world_menu_list_controller_input = world_input_get_menu_controller(0);
-    thread = &g_native_threads[g_native_current_thread_id];
+    thread = &g_threads[g_thread_current_id];
     param = *(menu_entry_t**)thread;
     range = param->context;
     digits = text_count_decimal_digits(range->bounds.max);

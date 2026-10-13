@@ -1,5 +1,5 @@
 #include "fft/thread.h"
 
 void thread_resume(s32 thread_id) {
-    g_native_threads[thread_id].is_running = 1;
+    g_threads[thread_id].is_running = 1;
 }

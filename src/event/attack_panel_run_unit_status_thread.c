@@ -57,11 +57,11 @@ void attack_panel_run_unit_status_thread(void) {
     POLY_FT4* panel_portrait;
 
     hide_portrait = 0;
-    thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
+    thread_set_current_task_id(THREAD_TASK_UNIT_STATUS_BANNER);
     g_attack_input_controller = script_get_controller_input_pointer(0) + 1;
-    thread_id = g_native_current_thread_id;
-    thread = (menu_status_panel_display_thread_t*)g_native_threads[thread_id].function_parameter_1;
-    if (thread_id == NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) {
+    thread_id = g_thread_current_id;
+    thread = (menu_status_panel_display_thread_t*)g_threads[thread_id].function_parameter_1;
+    if (thread_id == THREAD_SCREEN_SLOT_UNIT_STATUS) {
         panel = g_attack_panel_selected_packets;
         editor = g_attack_panel_selected_editor_packets;
         number_pixels = g_attack_panel_selected_number_image;
@@ -164,7 +164,7 @@ void attack_panel_run_unit_status_thread(void) {
             panel->portrait.clut = 0x7FBD;
         }
         dimmed = 0;
-        if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_STATUS_PANEL) != 0) {
+        if (battle_thread_find_running_by_task(THREAD_TASK_STATUS_PANEL) != 0) {
             dimmed = g_battle_menu_input_lock_mode != 0;
         }
         if (thread->dimmed != 0) {

@@ -31,9 +31,9 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
     for (;;) {
         slot = 0x10;
         for (i = 0; i < 3; i++) {
-            if (g_native_current_thread_id == g_world_text_message_box_slot_threads[i]) {
+            if (g_thread_current_id == g_world_text_message_box_slot_threads[i]) {
                 slot = i;
-                g_world_text_message_box_slot_threads[i] = g_native_current_thread_id;
+                g_world_text_message_box_slot_threads[i] = g_thread_current_id;
                 break;
             }
         }
@@ -41,7 +41,7 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
             for (j = 0; j < 3; j++) {
                 if (g_world_text_message_box_slot_threads[j] == 0) {
                     slot = j;
-                    g_world_text_message_box_slot_threads[j] = g_native_current_thread_id;
+                    g_world_text_message_box_slot_threads[j] = g_thread_current_id;
                     g_world_text_message_box_slot_carry_offset[slot] = 0;
                     g_world_text_message_box_slot_prev_width[slot] = 0;
                     break;

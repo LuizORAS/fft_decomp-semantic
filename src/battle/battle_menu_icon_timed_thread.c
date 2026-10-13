@@ -55,9 +55,9 @@ void battle_menu_icon_timed_thread(void) {
             break;
         }
         if (unset >= 0) {
-            g_native_current_thread_id--;
+            g_thread_current_id--;
             battle_menu_select_icon_cluts(&records[i & 1]);
-            g_native_current_thread_id++;
+            g_thread_current_id++;
         } else {
             battle_menu_select_icon_cluts(&records[i & 1]);
         }

@@ -13,8 +13,8 @@ void world_shop_run_hire_name_entry_step(void) {
     if (g_world_shop_entered_unit_name != 0) {
         g_world_shop_hire_name_entry_initialized = 0;
         g_text_substitution_values[0] = g_world_shop_service_fee;
-        thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF82A, 0);
+        thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_message_box_thread);
+        thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xF82A, 0);
         g_world_shop_menu_step = WORLD_SHOP_STEP_HIRE_FEE_CONFIRM;
     }
 }

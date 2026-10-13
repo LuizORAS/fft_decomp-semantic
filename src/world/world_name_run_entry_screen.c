@@ -62,8 +62,8 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         tiles, 0, 0, 0, 0, 0, 0, draw_moves, draw_areas, draw_modes);
     g_world_menu_context_id = WORLD_MENU_CONTEXT_NAME_ENTRY;
     world_formation_init_menu_display();
-    thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x21, 0xC015, 0);
+    thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_message_box_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x21, 0xC015, 0);
     world_menu_open_scrollable_list(list);
     g_world_name_entry_last_state = -1;
     world_gfx_set_fade_disabled(1);

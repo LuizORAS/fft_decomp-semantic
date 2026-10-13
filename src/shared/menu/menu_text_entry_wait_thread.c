@@ -21,7 +21,7 @@ void menu_text_entry_wait_thread(void) {
     u16 header_id;
     u16 text_id;
 
-    obj = (menu_entry_t*)g_native_threads[g_native_current_thread_id].function_parameter_1;
+    obj = (menu_entry_t*)g_threads[g_thread_current_id].function_parameter_1;
     {
         menu_text_binding_t* binding = obj->context;
 
@@ -38,7 +38,7 @@ void menu_text_entry_wait_thread(void) {
     battle_menu_handle_action(obj, 0);
     thread_start(id, battle_text_run_dialog_thread);
     thread_set_four_parameters(id, header_id, text_id, arg, arg);
-    thread_wait_until_inactive(g_native_current_thread_id - 1);
+    thread_wait_until_inactive(g_thread_current_id - 1);
     thread_wait_until_inactive(id);
     thread_exit_current();
 }

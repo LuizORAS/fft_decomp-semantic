@@ -8,7 +8,7 @@
  * menu transition to finish, pulse tutorial wait value 0xfe, show numeric values
  * again and run the icon selection loop. */
 void battle_menu_display_triangle_selection(void) {
-    thread_set_current_task_id(NATIVE_THREAD_TASK_MINI_MENU);
+    thread_set_current_task_id(THREAD_TASK_MINI_MENU);
     while (camera_is_active() != 0 || g_battle_menu_transition_state != 0) {
         thread_yield();
     }

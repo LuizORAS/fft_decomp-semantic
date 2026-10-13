@@ -25,20 +25,20 @@ void battle_menu_run_skillset_thread(void) {
     if (g_battle_menu_action_menu_build_result != 0) {
         g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = 0;
         if (g_menu_restore_pending == 0) {
-            thread_start(g_native_current_thread_id - 1, battle_menu_select_unit_action_slots_thread);
-            thread_set_parameters(g_native_current_thread_id - 1,
-                (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST], 0, 0);
+            thread_start(g_thread_current_id - 1, battle_menu_select_unit_action_slots_thread);
+            thread_set_parameters(
+                g_thread_current_id - 1, (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST], 0, 0);
         } else {
             thread_wait_frames(2);
         }
         for (;;) {
             thread_yield();
-            if (battle_thread_is_running_asm(g_native_current_thread_id - 1) == 0) {
+            if (battle_thread_is_running_asm(g_thread_current_id - 1) == 0) {
                 thread_exit_current();
             }
         }
     }
-    param = &g_native_thread_contexts[g_native_current_thread_id].function_parameter_2;
+    param = &g_thread_contexts[g_thread_current_id].function_parameter_2;
     *param = param_value;
     record = &g_battle_menu_unit_selection_records[g_battle_active_turn_unit.battle_id];
     g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = record->skillset_index;

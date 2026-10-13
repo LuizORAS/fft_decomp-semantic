@@ -26,10 +26,10 @@ void require_editor_run_numeric_thread(void) {
     s32 field_y;
     s32 use_offset;
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (menu_status_thread_t*)g_native_threads[g_native_current_thread_id].function_parameter_1;
+    thread_set_current_task_id(THREAD_TASK_STATUS_PANEL);
+    thread = (menu_status_thread_t*)g_threads[g_thread_current_id].function_parameter_1;
     g_menu_input_controller = script_get_controller_input_pointer(0) + 1;
-    if (g_native_current_thread_id == NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
+    if (g_thread_current_id == THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
         buffer = g_require_editor_numeric_state;
         buffers = buffer;
         number_images = &g_require_editor_numeric_text_a;
@@ -60,7 +60,7 @@ void require_editor_run_numeric_thread(void) {
             &g_require_editor_numeric_table.texture_rect, descriptor);
         descriptor++;
     }
-    if (g_native_current_thread_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
+    if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
         buffer->sprites[14].v0 += 0x4C;
         buffer->sprites[15].v0 += 0x4C;
         buffer->sprites[16].v0 += 0x4C;
@@ -74,14 +74,14 @@ void require_editor_run_numeric_thread(void) {
             battle_clear_menu_render_buffer(number_images, sizeof(*number_images));
             g_menu_text_state.pen.stride = 0x14;
             battle_menu_set_text_origin(0, 0);
-            if (g_native_current_thread_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
+            if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
                 require_text_render_signed_decimal_entries(number_images->mobility, entries, &g_menu_text_state.pen, 3);
             } else {
                 battle_menu_draw_numeric_display_entries(number_images->mobility, entries, &g_menu_text_state.pen, 3);
             }
             g_menu_text_state.pen.stride = 0x40;
             battle_menu_set_text_origin(0, 0);
-            if (g_native_current_thread_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
+            if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
                 require_text_render_signed_decimal_entries(
                     number_images->weapons, entries + 3, &g_menu_text_state.pen, 4);
             } else {
@@ -90,7 +90,7 @@ void require_editor_run_numeric_thread(void) {
             }
             g_menu_text_state.pen.stride = 0x64;
             battle_menu_set_text_origin(0, 0);
-            if (g_native_current_thread_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
+            if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
                 require_text_render_signed_decimal_entries(
                     number_images->combat, entries + 7, &g_menu_text_state.pen, 8);
             } else {
@@ -141,7 +141,7 @@ void require_editor_run_numeric_thread(void) {
         for (; i < 17; i++) {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->sprites[i]);
         }
-        if (g_native_current_thread_id == NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {
+        if (g_thread_current_id == THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[1]);
         } else {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[2]);

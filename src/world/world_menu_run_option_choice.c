@@ -40,7 +40,7 @@ void world_menu_run_option_choice(void) {
 
     input = world_input_get_menu_controller(0);
     world_input_get_menu_controller(1);
-    thread = &g_native_threads[g_native_current_thread_id];
+    thread = &g_threads[g_thread_current_id];
     kind = thread->function_parameter_1;
     thread->function_parameter_1 = (s32)&g_world_option_menu_icon_thread_param;
     param = &g_world_option_menu_icon_thread_param;

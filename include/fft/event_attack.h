@@ -372,8 +372,8 @@ extern u32* g_attack_input_controller;
 
 /* threads */
 /* Slots of the deployment screen's own threads; the screen itself runs in
- * NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT and its panels in the
- * native_screen_thread_slot_e slots (unit status 8, character status 9,
+ * THREAD_BORROWED_SLOT_DEPLOYMENT and its panels in the
+ * thread_screen_slot_e slots (unit status 8, character status 9,
  * numeric editor 12). */
 typedef enum attack_thread_slot {
     ATTACK_THREAD_SLOT_SELECT_MENU = 3,      /* attack_deploy_run_select_menu */

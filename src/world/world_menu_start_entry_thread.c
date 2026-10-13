@@ -12,12 +12,12 @@ void world_menu_start_entry_thread(void) {
     s32 menu_id = (s32)world_thread_get_current_parameter_1();
     s32 count;
 
-    thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
+    thread_wait_until_inactive(THREAD_SLOT_MENU);
     if (g_world_menu_overlay_state != 0) {
         thread_exit_current();
     }
     camera_wait_until_idle();
-    while (world_thread_find_running_by_task(NATIVE_THREAD_TASK_ATTACK_TARGET_STATS) != 0) {
+    while (world_thread_find_running_by_task(THREAD_TASK_ATTACK_TARGET_STATS) != 0) {
         thread_yield();
     }
     if (g_world_menu_input_mode == MENU_INPUT_PLAYER) {
@@ -40,23 +40,23 @@ void world_menu_start_entry_thread(void) {
             menu_id = BATTLE_MENU_ID_EGG;
         }
     }
-    thread_start(NATIVE_THREAD_SLOT_MENU, g_world_menu_thread_menu_data[menu_id].thread_entry);
-    thread_set_parameters(NATIVE_THREAD_SLOT_MENU, (s32)&g_world_menu_thread_menu_data[menu_id], 0, 0);
+    thread_start(THREAD_SLOT_MENU, g_world_menu_thread_menu_data[menu_id].thread_entry);
+    thread_set_parameters(THREAD_SLOT_MENU, (s32)&g_world_menu_thread_menu_data[menu_id], 0, 0);
     count = g_world_menu_restore_depth;
     g_world_menu_new_button_input = 0;
     if (g_menu_restore_pending != 0 && g_world_menu_restore_unit_id == g_world_active_unit_data.battle_id) {
         g_world_text_overlay_active = 1;
         thread_wait_frames(2);
         if (count > 0) {
-            thread_start(NATIVE_THREAD_SLOT_MENU_CHILD, world_menu_run_skillset_thread);
+            thread_start(THREAD_SLOT_MENU_CHILD, world_menu_run_skillset_thread);
             thread_set_parameters(
-                NATIVE_THREAD_SLOT_MENU_CHILD, (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST], 0, 0);
+                THREAD_SLOT_MENU_CHILD, (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST], 0, 0);
         }
         thread_wait_frames(2);
         if (count >= 2) {
-            thread_start(NATIVE_THREAD_SLOT_MENU_GRANDCHILD, world_menu_select_unit_action_slots_thread);
-            thread_set_parameters(NATIVE_THREAD_SLOT_MENU_GRANDCHILD,
-                (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST], 0, 0);
+            thread_start(THREAD_SLOT_MENU_GRANDCHILD, world_menu_select_unit_action_slots_thread);
+            thread_set_parameters(
+                THREAD_SLOT_MENU_GRANDCHILD, (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST], 0, 0);
         }
         thread_wait_frames(2);
         g_menu_restore_pending = 0;

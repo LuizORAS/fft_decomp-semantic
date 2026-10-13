@@ -77,7 +77,7 @@ u8* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s
             g_world_menu_window_sprite_position.rect.y = 0;
         }
         g_world_menu_window_sprite_position.stride = words * 4;
-        i = g_native_threads[g_native_current_thread_id].task_words[5] & 0xF0;
+        i = g_threads[g_thread_current_id].task_words[5] & 0xF0;
         if (i != 0) {
             if ((mode & DIALOG_TYPE_POSITION_MASK) == 1) {
                 g_world_menu_window_sprite_position.rect.x -= 0x10;

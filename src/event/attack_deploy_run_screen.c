@@ -82,8 +82,8 @@ ramza_placed:
     thread_start(ATTACK_THREAD_SLOT_DEPLOY_RENDER, attack_deploy_run_render_thread);
     thread_set_parameters(ATTACK_THREAD_SLOT_DEPLOY_RENDER, 0, 0, 0);
     attack_deploy_select_unit_for_stats_display();
-    thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, attack_panel_run_unit_status_thread);
-    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (s32)&g_attack_status_display_thread_params, 0, 0);
+    thread_start(THREAD_SCREEN_SLOT_UNIT_STATUS, attack_panel_run_unit_status_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_UNIT_STATUS, (s32)&g_attack_status_display_thread_params, 0, 0);
     transition = 0;
     for (g_attack_deploy_current_squad = 0;
         g_attack_deploy_current_squad < script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT);
@@ -482,12 +482,12 @@ ramza_placed:
                 if (g_attack_panel_status_animation[4] < 2) {
                     g_attack_panel_status_animation[4] = 1;
                 }
-                thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, attack_editor_run_numeric_thread);
+                thread_start(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, attack_editor_run_numeric_thread);
                 thread_set_parameters(
-                    NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (s32)g_attack_numeric_editor_thread_params, 0, 0);
-                thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, attack_panel_run_character_status_thread);
+                    THREAD_SCREEN_SLOT_NUMERIC_EDITOR, (s32)g_attack_numeric_editor_thread_params, 0, 0);
+                thread_start(THREAD_SCREEN_SLOT_CHARACTER_STATUS, attack_panel_run_character_status_thread);
                 thread_set_parameters(
-                    NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)g_attack_character_status_frame_config, 0, 0);
+                    THREAD_SCREEN_SLOT_CHARACTER_STATUS, (s32)g_attack_character_status_frame_config, 0, 0);
                 thread_start(ATTACK_PROMPT_THREAD_SLOT_DETAIL_MARKER, attack_thread_wait_forever);
                 do {
                     thread_yield();
@@ -499,10 +499,10 @@ ramza_placed:
                     attack_deploy_handle_roster_navigation_input();
                 } while (!(*input & PSX_PAD_CROSS));
                 g_sound_pending_sfx_id = MAIN_SFX_CANCEL;
-                thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
-                thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
-                thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
-                thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+                thread_set_parameters(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+                thread_set_parameters(THREAD_SCREEN_SLOT_CHARACTER_STATUS, 0, 0, 1);
+                thread_wait_until_inactive(THREAD_SCREEN_SLOT_NUMERIC_EDITOR);
+                thread_wait_until_inactive(THREAD_SCREEN_SLOT_CHARACTER_STATUS);
                 script_set_event_speed(1);
             }
             if (*input & PSX_PAD_TRIANGLE) {
@@ -651,8 +651,8 @@ ramza_placed:
         g_battle_screen_fade += 4;
     } while (g_battle_screen_fade < 0x100);
     thread_set_parameters(ATTACK_THREAD_SLOT_DEPLOY_RENDER, 0, 0, 1);
-    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
-    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS, 0, 0, 1);
+    thread_set_parameters(THREAD_SCREEN_SLOT_UNIT_STATUS, 0, 0, 1);
+    thread_set_parameters(THREAD_SCREEN_SLOT_COMPARISON_STATUS, 0, 0, 1);
     thread_wait_frames(3);
     g_battle_screen_fade = 0;
     script_set_event_speed(1);

@@ -39,7 +39,7 @@ void world_menu_update_grid_cursor(s16 alternate) {
             g_world_active_grid_menu_cells = g_world_grid_menu_default_cells;
         }
     }
-    busy = world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT);
+    busy = world_thread_is_running(THREAD_SCREEN_SLOT_TEXT);
     if (busy == 0) {
         input = g_world_input_primary_repeat_latched;
         cell = g_world_grid_menu_selected_cell;

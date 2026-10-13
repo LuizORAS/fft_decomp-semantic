@@ -15,8 +15,8 @@ void world_menu_thread_group_supervisor_thread(void) {
     s32 thread_id;
 
     for (;;) {
-        index = g_native_threads[g_native_current_thread_id].function_parameter_1;
-        g_native_threads[g_native_current_thread_id].function_parameter_1 = 0;
+        index = g_threads[g_thread_current_id].function_parameter_1;
+        g_threads[g_thread_current_id].function_parameter_1 = 0;
         if (index >= 4) {
             index = 0;
         }
@@ -27,8 +27,8 @@ void world_menu_thread_group_supervisor_thread(void) {
         for (i = 0; i < 3; i++) {
             thread_id = group->thread_id[i];
             if (thread_id != -1) {
-                if (g_native_threads[thread_id].is_running != 0) {
-                    if (g_native_threads[thread_id].task_id != group->task_id[i]) {
+                if (g_threads[thread_id].is_running != 0) {
+                    if (g_threads[thread_id].task_id != group->task_id[i]) {
                         state[thread_id] = 1;
                         thread_set_parameters(group->thread_id[i], 0, 0, 1);
                     } else {
@@ -41,7 +41,7 @@ void world_menu_thread_group_supervisor_thread(void) {
         }
         for (;;) {
             for (i = 0; i < 3; i++) {
-                if (state[group->thread_id[i]] == 1 && g_native_threads[group->thread_id[i]].is_running != 0) {
+                if (state[group->thread_id[i]] == 1 && g_threads[group->thread_id[i]].is_running != 0) {
                     break;
                 }
             }
@@ -54,10 +54,10 @@ void world_menu_thread_group_supervisor_thread(void) {
             if (state[group->thread_id[i]] != 0 && group->function[i] != (void (*)(void))-1) {
                 thread_start(group->thread_id[i], group->function[i]);
                 thread_set_parameters(group->thread_id[i], (s32)&g_world_menu_thread_menu_data[i], 0, 0);
-                g_native_threads[group->thread_id[i]].task_id = group->task_id[i];
+                g_threads[group->thread_id[i]].task_id = group->task_id[i];
             }
         }
-        if (g_native_threads[g_native_current_thread_id].function_parameter_1 == 0) {
+        if (g_threads[g_thread_current_id].function_parameter_1 == 0) {
             thread_exit_current();
         }
     }

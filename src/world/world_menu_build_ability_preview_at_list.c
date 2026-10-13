@@ -93,8 +93,8 @@ void world_menu_build_ability_preview_at_list(void) {
     count = 0;
     if (turn < 0 || turn == 0xff) {
         g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_MESSAGE].text_id = 0x1023;
-        thread_set_parameters(g_native_current_thread_id,
-            (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_MESSAGE], 0, 0);
+        thread_set_parameters(
+            g_thread_current_id, (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_MESSAGE], 0, 0);
         count = 0;
         world_menu_icon_linked_entry_thread();
     }

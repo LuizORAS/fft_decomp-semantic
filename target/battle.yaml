@@ -2328,7 +2328,7 @@ data:
   - {addr: 0x80165f8c, name: g_battle_menu_text_palette_offset}
   - {addr: 0x80165f90, name: g_battle_text_substitution_value_27}
   - {addr: 0x80165f94, name: g_battle_text_substitution_value_28}
-  - {addr: 0x80165f98, name: g_native_threads}
+  - {addr: 0x80165f98, name: g_threads}
   - {addr: 0x80165f9c, name: g_menu_text_state}
   - {addr: 0x80165f9c, name: g_script_variables}
   - {addr: 0x80165fb0, name: g_script_opcode_dc_value}
@@ -2525,7 +2525,7 @@ data:
   - {addr: 0x80169828, name: g_battle_menu_selected_command}
   - {addr: 0x8016982c, name: g_battle_menu_selected_action}
   - {addr: 0x80169840, name: g_battle_menu_action_menu_build_result}
-  - {addr: 0x8016986c, name: g_native_thread_contexts}
+  - {addr: 0x8016986c, name: g_thread_contexts}
   - {addr: 0x8016996c, name: g_battle_unit_summary_digit_images}
   - {addr: 0x80169a6c, name: g_battle_numeric_display_palettes}
   - {addr: 0x8016d16c, name: g_battle_unit_editor_palette}
@@ -2616,7 +2616,7 @@ data:
   - {addr: 0x8017400c, name: g_battle_event_loaded_evtchr_buffer}
   - {addr: 0x80174010, name: g_script_light_angles}
   - {addr: 0x80174018, name: g_script_light_base_color_matrix}
-  - {addr: 0x80174038, name: g_native_current_thread_id}
+  - {addr: 0x80174038, name: g_thread_current_id}
   - {addr: 0x8017403c, name: g_battle_menu_skillset_disabled_flags}
   - {addr: 0x80174044, name: g_battle_dead_unit_context}
   - {addr: 0x80174048, name: g_ai_workspace_ptr}

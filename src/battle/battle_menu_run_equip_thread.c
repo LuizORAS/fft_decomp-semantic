@@ -27,8 +27,8 @@ void battle_menu_run_equip_thread(void) {
     menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP);
     menu_reserve_high_overlay(0x20000);
     menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP_SECOND_HALF);
-    thread_suspend(NATIVE_THREAD_SLOT_MENU);
-    thread_suspend(NATIVE_THREAD_SLOT_MENU_CHILD);
+    thread_suspend(THREAD_SLOT_MENU);
+    thread_suspend(THREAD_SLOT_MENU_CHILD);
     g_battle_companion_overlay_state = COMPANION_OVERLAY_STATE_EQUIP;
     do {
         g_script_event_input = 0;
@@ -39,8 +39,8 @@ void battle_menu_run_equip_thread(void) {
     g_sound_suppressed = 1;
     g_script_event_input |= PSX_PAD_CIRCLE;
     if (g_battle_companion_overlay_primitives == 0) {
-        thread_resume(NATIVE_THREAD_SLOT_MENU);
-        thread_resume(NATIVE_THREAD_SLOT_MENU_CHILD);
+        thread_resume(THREAD_SLOT_MENU);
+        thread_resume(THREAD_SLOT_MENU_CHILD);
     }
     for (i = 9; i < 15; i++) {
         thread_set_parameters(i, 0, 0, 1);
@@ -49,7 +49,7 @@ void battle_menu_run_equip_thread(void) {
     if (g_battle_companion_overlay_primitives != 0) {
         for (j = 0; j < 2; j++) {
             g_menu_pending_selection[j]
-                = ((menu_entry_t*)g_native_thread_contexts[8 - j].function_parameter_1)->selected_index;
+                = ((menu_entry_t*)g_thread_contexts[8 - j].function_parameter_1)->selected_index;
         }
     }
     menu_free_high_overlay();

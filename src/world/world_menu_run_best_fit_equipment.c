@@ -34,7 +34,7 @@ s32 world_menu_run_best_fit_equipment(void) {
         g_world_menu_sound_muted = 1;
     }
     g_world_item_best_remove_initialized
-        = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_best_fit_confirm_menu);
+        = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, &g_world_best_fit_confirm_menu);
     if (g_world_item_best_remove_initialized == 0) {
         choice = &g_world_menu_selection_results[11];
         if (*choice == 0) {

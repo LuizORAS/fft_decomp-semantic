@@ -4,7 +4,7 @@
 /* Thread body: run the sprite move of parameter 1 in mode 1 (the plain
  * sprite-move thread uses mode 0). */
 void world_script_sprite_move_beta(void) {
-    thread_set_current_task_id(NATIVE_THREAD_TASK_SPRITE_MOVE);
+    thread_set_current_task_id(THREAD_TASK_SPRITE_MOVE);
     world_script_run_sprite_move(world_thread_get_current_parameter_1(), 1);
     thread_exit_current();
 }

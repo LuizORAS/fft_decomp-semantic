@@ -12,8 +12,8 @@ void battle_menu_open_debugchr(void) {
     battle_menu_set_modal_open();
     g_battle_menu_suspend_state = 1;
     menu_request_open_companion_executable(COMPANION_OVERLAY_DEBUGCHR);
-    thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
-    thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
+    thread_set_parameters(THREAD_SLOT_MENU, 0, 0, 1);
+    thread_wait_until_inactive(THREAD_SLOT_MENU);
     battle_thread_wait_for_unit_view_panels();
     thread_yield();
     thread_yield();

@@ -18,7 +18,7 @@ s32 world_thread_get_current_parameter_2(void) {
     global_pointer = (void*)0x801d0000;
     __asm__("move $1,$1" : "=r"(global_pointer) : "0"(global_pointer));
     /* Raw: $at holds a fabricated lui base, not a struct; the displacements
-     * address the current-thread id and the g_native_threads pointer. */
+     * address the current-thread id and the g_threads pointer. */
     thread_offset = *(s32*)((u8*)global_pointer - 0x2e90);
     __asm__("nop\nsll $8,$8,10" : "=r"(thread_offset) : "0"(thread_offset));
     global_pointer = (void*)0x80150000;

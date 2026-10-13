@@ -18,7 +18,7 @@ void world_menu_fade_out_thread(void) {
     g_world_menu_transition_timeout = 4;
     do {
         thread_yield();
-    } while (world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_GRANDCHILD) != 0);
+    } while (world_thread_is_running_asm(THREAD_SLOT_MENU_GRANDCHILD) != 0);
 
     g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_BUNIT;
     g_world_text_overlay_active = 0;

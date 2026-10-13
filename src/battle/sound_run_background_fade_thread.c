@@ -27,7 +27,7 @@ void sound_run_background_fade_thread(void) {
      * accounts for; the pad reproduces the 0x40-byte frame. */
     s32 stack_pad[2];
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_BG_SOUND);
+    thread_set_current_task_id(THREAD_TASK_BG_SOUND);
     step = 0;
     request = (event_background_sound_parameters_t*)battle_thread_get_current_parameter_1();
     sound_id = request->sound_id;

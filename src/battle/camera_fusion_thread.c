@@ -30,7 +30,7 @@ void camera_fusion_thread(void) {
     s32 component;
     s32 opcode;
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_CAMERA);
+    thread_set_current_task_id(THREAD_TASK_CAMERA);
     tracks = battle_menu_alloc_memory(sizeof(camera_track_t) * EVENT_CAMERA_COMPONENT_COUNT);
     script = (u8*)battle_thread_get_current_parameter_1();
     battle_clear_menu_render_buffer(tracks, sizeof(camera_track_t) * EVENT_CAMERA_COMPONENT_COUNT);

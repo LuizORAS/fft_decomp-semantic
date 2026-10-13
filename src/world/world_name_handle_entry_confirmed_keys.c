@@ -15,7 +15,7 @@ void world_name_handle_entry_confirmed_keys(void) {
 
     if (g_world_name_entry_confirm_message_shown == 0) {
         g_world_name_entry_input_delay = 0;
-        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x21, 0xC015, 0);
+        thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x21, 0xC015, 0);
         g_world_name_entry_confirm_message_shown = 1;
     }
     if (g_world_name_entry_input_delay < 10) {

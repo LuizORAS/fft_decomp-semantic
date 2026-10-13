@@ -14,5 +14,5 @@ void equip_panel_toggle_equipment_threads(s32 enable) {
         return;
     }
     equip_thread_request_stop(EQUIP_THREAD_SLOT_EQUIPMENT_LIST);
-    equip_thread_request_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+    equip_thread_request_stop(THREAD_SCREEN_SLOT_NUMERIC_EDITOR);
 }

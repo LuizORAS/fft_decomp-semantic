@@ -1722,7 +1722,7 @@ extern u8 g_world_unit_status_banner_active;
 extern menu_entry_t g_world_unit_status_banner_menu;
 extern s8 g_world_unit_status_banner_state; /* banner state: 0 idle, 1 finishing, else countdown */
 
-/* Panel scratch aliases inside g_native_thread_contexts[0] and [14], at
+/* Panel scratch aliases inside g_thread_contexts[0] and [14], at
  * +0x100 and +0x200 in each slot's stack. These stay separate symbols;
  * the palette areas hold one slot per page. */
 extern world_unit_status_number_images_t g_world_unit_summary_digit_images;

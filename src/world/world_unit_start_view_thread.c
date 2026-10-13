@@ -17,9 +17,9 @@ void world_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b) {
             g_world_unit_comparison_battle_id = unit_b;
             g_world_unit_comparison_status_billboard.unit_index = unit_b;
         }
-        if (world_thread_is_running_asm(NATIVE_THREAD_SLOT_UNIT_VIEW) == 0) {
-            thread_start(NATIVE_THREAD_SLOT_UNIT_VIEW, world_unit_view_supervisor_thread);
+        if (world_thread_is_running_asm(THREAD_SLOT_UNIT_VIEW) == 0) {
+            thread_start(THREAD_SLOT_UNIT_VIEW, world_unit_view_supervisor_thread);
         }
-        thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_VIEW, mode, 0, 0);
+        thread_set_parameters(THREAD_SLOT_UNIT_VIEW, mode, 0, 0);
     }
 }

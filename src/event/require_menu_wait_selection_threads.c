@@ -5,7 +5,7 @@
 /* Wait until the menu thread ends or a selection result (-1, 0 or 1) is in,
  * then ask the message thread to close and wait for both threads. */
 void require_menu_wait_selection_threads(void) {
-    while (g_native_threads[REQUIRE_THREAD_SLOT_MENU].is_running != 0) {
+    while (g_threads[REQUIRE_THREAD_SLOT_MENU].is_running != 0) {
         s32 selection = g_require_menu_selection_result;
 
         if (selection == -1) {
@@ -20,7 +20,7 @@ void require_menu_wait_selection_threads(void) {
         thread_yield();
     }
     thread_yield();
-    g_native_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_id = NATIVE_THREAD_TASK_STOP_REQUEST;
+    g_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_id = THREAD_TASK_STOP_REQUEST;
     thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE, 0, 0, 2);
     thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MESSAGE);
     thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);

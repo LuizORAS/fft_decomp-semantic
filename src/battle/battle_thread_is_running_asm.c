@@ -3,12 +3,12 @@
 
 /*
  * The hand-assembled twin of battle_thread_is_running; the menu and event code
- * call this one. Reads g_native_threads[thread_id].is_running (thread records
+ * call this one. Reads g_threads[thread_id].is_running (thread records
  * are 0x400 bytes; the 32-bit value sits at +0x48).
  *
- * The 36-byte target is not compiler output: it loads the g_native_threads
+ * The 36-byte target is not compiler output: it loads the g_threads
  * pointer through $at and contains a redundant `move at,at`, so no C form can
- * reproduce it (the plain `g_native_threads + (thread_id << 10)` version
+ * reproduce it (the plain `g_threads + (thread_id << 10)` version
  * compiles to 28 bytes with $v0 as the base). The $at pin and the two asm
  * statements are therefore required, and so is the file-scope `.set noat`:
  * it emits nothing and only silences the assembler's "used $at without

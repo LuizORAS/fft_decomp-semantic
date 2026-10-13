@@ -20,8 +20,8 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
     s32 mode;
     s32 i;
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (menu_status_thread_t*)g_native_threads[g_native_current_thread_id].function_parameter_1;
+    thread_set_current_task_id(THREAD_TASK_STATUS_PANEL);
+    thread = (menu_status_thread_t*)g_threads[g_thread_current_id].function_parameter_1;
     g_menu_input_controller = script_get_controller_input_pointer(0);
     screen = g_bunit_character_status_frames;
     base = g_bunit_character_status_frames;

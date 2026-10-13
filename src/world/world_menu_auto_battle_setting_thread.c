@@ -68,7 +68,7 @@ void world_menu_auto_battle_setting_thread(void) {
                     colour[4] = 4;
                     after = battle_menu_get_id_based_on_mount_moveable_actable(g_world_active_unit_data.battle_id);
                     if (before != after) {
-                        thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
+                        thread_set_parameters(THREAD_SLOT_MENU, 0, 0, 1);
                         world_menu_build_idle_action_stub(after);
                     }
                 } else {

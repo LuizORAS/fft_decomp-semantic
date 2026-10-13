@@ -42,8 +42,8 @@ void require_party_apply_post_battle_changes(void) {
         thread_exit_current();
     }
     g_battle_post_battle_unit_changes_active = 1;
-    thread_suspend(NATIVE_THREAD_SLOT_EVENT);
-    battle_copy_bytes(g_require_saved_thread_block, &g_native_threads[NATIVE_THREAD_SLOT_EVENT], 0x400);
+    thread_suspend(THREAD_SLOT_EVENT);
+    battle_copy_bytes(g_require_saved_thread_block, &g_threads[THREAD_SLOT_EVENT], 0x400);
 
     text_data = g_require_text_data;
     g_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS] = text_data + g_require_text_section_offsets[1];
@@ -93,14 +93,14 @@ void require_party_apply_post_battle_changes(void) {
              * call slot on reorg's second pass. */
             transition = 0;
             if (affected_index == 0) {
-                thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, require_panel_run_unit_status_thread);
+                thread_start(THREAD_SCREEN_SLOT_UNIT_STATUS, require_panel_run_unit_status_thread);
                 thread_set_parameters(
-                    NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (s32)&g_require_status_display_thread_params, 0, 0);
-                thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, require_editor_run_numeric_thread);
+                    THREAD_SCREEN_SLOT_UNIT_STATUS, (s32)&g_require_status_display_thread_params, 0, 0);
+                thread_start(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, require_editor_run_numeric_thread);
                 thread_set_parameters(
-                    NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (s32)&g_require_numeric_editor_thread_params, 0, 0);
-                thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, require_panel_run_character_status_thread);
-                thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)transition_c_ptr, 0, 0);
+                    THREAD_SCREEN_SLOT_NUMERIC_EDITOR, (s32)&g_require_numeric_editor_thread_params, 0, 0);
+                thread_start(THREAD_SCREEN_SLOT_CHARACTER_STATUS, require_panel_run_character_status_thread);
+                thread_set_parameters(THREAD_SCREEN_SLOT_CHARACTER_STATUS, (s32)transition_c_ptr, 0, 0);
             } else {
                 u16 index_value;
 
@@ -158,7 +158,7 @@ void require_party_apply_post_battle_changes(void) {
                             break;
                         }
                         if (input & PSX_PAD_SELECT) {
-                            thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
+                            thread_id = battle_thread_resolve_id(THREAD_SLOT_FIRST_IDLE);
                             thread_start(thread_id, require_overlay_run_helpmenu);
                             thread_wait_until_inactive(thread_id);
                         }
@@ -307,16 +307,16 @@ void require_party_apply_post_battle_changes(void) {
         transition += 0x20;
         thread_yield();
     } while (transition < 0x101);
-    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
-    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
-    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
-    thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS);
-    thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
-    thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+    thread_set_parameters(THREAD_SCREEN_SLOT_UNIT_STATUS, 0, 0, 1);
+    thread_set_parameters(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+    thread_set_parameters(THREAD_SCREEN_SLOT_CHARACTER_STATUS, 0, 0, 1);
+    thread_wait_until_inactive(THREAD_SCREEN_SLOT_UNIT_STATUS);
+    thread_wait_until_inactive(THREAD_SCREEN_SLOT_NUMERIC_EDITOR);
+    thread_wait_until_inactive(THREAD_SCREEN_SLOT_CHARACTER_STATUS);
     g_battle_post_battle_unit_changes_active = 0;
-    battle_copy_bytes(&g_native_threads[NATIVE_THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
+    battle_copy_bytes(&g_threads[THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
     g_battle_menu_thread_menu_data = saved_menu_descriptor;
-    thread_resume(NATIVE_THREAD_SLOT_EVENT);
+    thread_resume(THREAD_SLOT_EVENT);
     thread_yield();
     thread_exit_current();
 }

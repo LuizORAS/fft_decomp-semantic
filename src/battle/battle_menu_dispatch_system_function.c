@@ -52,7 +52,7 @@ s32 battle_menu_dispatch_system_function(
             }
             return MENU_SYSTEM_DISPATCH_DONE;
         } else if (option != 1) {
-            if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_EVENT) != 0) {
+            if (battle_thread_is_running_asm(THREAD_SLOT_EVENT) != 0) {
                 main_system_report_stub(7, 3);
                 if (option != 2) {
                     battle_menu_start_system_function_thread(BATTLE_SYSTEM_FUNCTION_CLOSE);
@@ -199,8 +199,8 @@ s32 battle_menu_dispatch_system_function(
         battle_menu_start_system_function_thread(value);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE) {
         g_battle_spell_quote_last_ability_id = action->ability_id & ABILITY_ID_MASK;
-        thread_start(NATIVE_THREAD_SLOT_SYSTEM_FUNCTION, battle_text_run_spell_quote_thread);
-        thread_set_parameters(NATIVE_THREAD_SLOT_SYSTEM_FUNCTION, unit_id, g_battle_spell_quote_last_ability_id, 0);
+        thread_start(THREAD_SLOT_SYSTEM_FUNCTION, battle_text_run_spell_quote_thread);
+        thread_set_parameters(THREAD_SLOT_SYSTEM_FUNCTION, unit_id, g_battle_spell_quote_last_ability_id, 0);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT) {
         battle_text_set_message_duration_frames(0x3C);
         if (g_main_action_menu_types_by_skillset[unit->action_command.skillset_id] == ACTION_MENU_TYPE_ARITHMETICKS) {

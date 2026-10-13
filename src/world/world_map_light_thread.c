@@ -25,7 +25,7 @@ void world_map_light_thread(void) {
     s32 i;
     s32 frames;
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_MAP_LIGHT);
+    thread_set_current_task_id(THREAD_TASK_MAP_LIGHT);
     params = world_thread_get_current_parameter_1();
     /* Indexed operand fields retain a separate base and add four bytes. */
     for (i = 0; i < 6; i++) {

@@ -46,7 +46,7 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* arg, s32
     if (runtime_id == EVENT_RUNTIME_ID_NONE) {
         return;
     }
-    g_native_thread_contexts[g_native_current_thread_id].task_words[0] = runtime_id;
+    g_thread_contexts[g_thread_current_id].task_words[0] = runtime_id;
     coords = battle_unit_get_event_offset_by_runtime_id(runtime_id);
     parameters += sizeof(arg->unit_id_le);
     pos[0][0] = coords->vx;

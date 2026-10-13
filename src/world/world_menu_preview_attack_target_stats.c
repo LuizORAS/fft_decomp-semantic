@@ -13,9 +13,8 @@
 void world_menu_preview_attack_target_stats(void) {
     s32 saved;
 
-    if (g_native_thread_contexts[NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS].task_id
-        != NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
-        thread_wait_until_inactive(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS);
+    if (g_thread_contexts[THREAD_SLOT_RIGHT_UNIT_STATS].task_id != THREAD_TASK_ATTACK_CASTER_STATS) {
+        thread_wait_until_inactive(THREAD_SLOT_RIGHT_UNIT_STATS);
     }
     thread_yield();
     thread_yield();

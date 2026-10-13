@@ -155,7 +155,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
         frame_record->offset_b.y = value;
         SetDrawOffset(&frame_record->draw_offset_b, (u16*)&frame_record->offset_b);
         world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_offset_b);
-        value = world_thread_find_running_by_task(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
+        value = world_thread_find_running_by_task(THREAD_TASK_UNIT_EDITOR_PANEL);
         if (value != 0 && world_thread_is_running_asm(value - 1) == 0) {
             value = 0;
         }

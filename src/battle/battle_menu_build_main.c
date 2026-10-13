@@ -13,7 +13,7 @@ void battle_menu_build_main(void) {
     unit_id = g_battle_active_turn_unit.battle_id;
     record = &g_battle_menu_unit_selection_records[unit_id];
     /* A nonzero second parameter makes the icon loop return here instead of exiting. */
-    g_native_thread_contexts[g_native_current_thread_id].function_parameter_2 = 1;
+    g_thread_contexts[g_thread_current_id].function_parameter_2 = 1;
     battle_menu_run_icon_selection_loop();
     record->command_index = parameter->selected_index;
     thread_exit_current();

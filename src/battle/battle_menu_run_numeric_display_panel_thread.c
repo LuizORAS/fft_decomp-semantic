@@ -24,7 +24,7 @@ void battle_menu_run_numeric_display_panel_thread(void) {
 
     record = g_battle_menu_numeric_display_panel_records;
     records = record;
-    thread_set_current_task_id(NATIVE_THREAD_TASK_NUMERIC_DISPLAY_PANEL);
+    thread_set_current_task_id(THREAD_TASK_NUMERIC_DISPLAY_PANEL);
     battle_gfx_set_draw_mode_for_texture_page(&record->mode0, MENU_TEXTURE_PAGE_FRAME);
     battle_gfx_set_draw_mode_for_texture_page(&record->mode1, MENU_TEXTURE_PAGE_TEXT_IMAGES);
     battle_gfx_init_scaled_draw_area_packets(&record->draw_areas);
@@ -65,7 +65,7 @@ void battle_menu_run_numeric_display_panel_thread(void) {
         if (battle_thread_get_current_parameter_3() != 0) {
             break;
         }
-        if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_GRANDCHILD) != 0) {
+        if (battle_thread_is_running_asm(THREAD_SLOT_MENU_GRANDCHILD) != 0) {
             for (i = 17; i >= 0; i--) {
                 record->sprites[i].clut = 0x7D3C;
             }

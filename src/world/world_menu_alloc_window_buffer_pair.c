@@ -21,7 +21,7 @@ menu_window_buffer_t* world_menu_alloc_window_buffer_pair(void) {
             buffer = g_world_menu_window_buffer_pointers[index];
             for (i = 0; i < 1; i++) {
                 buffer->active = 0;
-                buffer->thread_id = g_native_current_thread_id;
+                buffer->thread_id = g_thread_current_id;
                 buffer->portrait_code = -1;
                 buffer->color.r = 0x80;
                 buffer->color.g = 0x80;

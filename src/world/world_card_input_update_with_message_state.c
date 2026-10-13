@@ -13,7 +13,7 @@ void world_card_input_update_with_message_state(void) {
     if (step >= 1 && step <= 3) {
         world_input_clear_state();
     } else {
-        running = world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT);
+        running = world_thread_is_running(THREAD_SCREEN_SLOT_TEXT);
         if (running != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE) {
             world_input_clear_state();
             if (running != 0 && g_world_thread_task_active != 0) {

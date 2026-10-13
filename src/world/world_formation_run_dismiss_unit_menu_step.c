@@ -121,7 +121,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
     }
 
     if (g_world_formation_dismiss_step == 2) {
-        running = world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT);
+        running = world_thread_is_running(THREAD_SCREEN_SLOT_TEXT);
         g_world_dismiss_unit_prompt_running = running;
         if (running != 0) {
             return;
@@ -130,7 +130,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
         return;
     }
 
-    running = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_formation_dismiss_menu_data);
+    running = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, g_world_formation_dismiss_menu_data);
     step = g_world_formation_dismiss_step;
     g_world_dismiss_unit_prompt_running = running;
     if (step != 0) {

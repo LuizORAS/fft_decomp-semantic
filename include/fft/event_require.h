@@ -336,7 +336,7 @@ void require_text_show_battle_congratulations(void);
 void require_input_wait_frames_or_skip(s32 frames);
 
 /* threads */
-/* Slots of the post-battle screens' own threads; native_screen_thread_slot_e
+/* Slots of the post-battle screens' own threads; thread_screen_slot_e
  * has the shared ones. */
 typedef enum require_thread_slot {
     REQUIRE_THREAD_SLOT_MENU = 5,        /* selection menus, prompts and the special-case display */

@@ -13,7 +13,7 @@ void world_menu_resize_parent_entry_to_digits(void) {
     s32 old_width;
     s32 margin;
 
-    entry = (menu_entry_t*)g_native_threads[g_native_current_thread_id].function_parameter_1;
+    entry = (menu_entry_t*)g_threads[g_thread_current_id].function_parameter_1;
     index = entry->row_actions[0];
     if (index < 1000) {
         entry = &g_world_menu_thread_menu_data[index];

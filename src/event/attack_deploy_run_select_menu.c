@@ -82,14 +82,14 @@ void attack_deploy_run_select_menu(void) {
     nodes = g_attack_deploy_select_menu_nodes;
     g_text_section_pointers[TEXT_SECTION_DEPLOYMENT_UNIT_HELP] = g_attack_deploy_unit_text_section;
     g_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_attack_deploy_help_text_section;
-    parent_id = g_native_current_thread_id - 1;
+    parent_id = g_thread_current_id - 1;
     input = script_get_controller_input_pointer(0);
     i = 0;
-    thread = &g_native_threads[g_native_current_thread_id];
-    parent = &g_native_threads[parent_id];
+    thread = &g_threads[g_thread_current_id];
+    parent = &g_threads[parent_id];
     while (1) {
         if (parent->is_running == 0) {
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
                 g_battle_menu_input_lock_mode = 0;
             }
             g_battle_menu_input_lock_mode = 0;
@@ -100,10 +100,10 @@ void attack_deploy_run_select_menu(void) {
             node = &nodes[selected];
             y = node->y;
             x = node->x;
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_DEBUG_UNIT_EDITOR) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_DEBUG_UNIT_EDITOR) != 0) {
                 y += 8;
             }
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
                 y += 8;
             }
             buttons = *input;
@@ -163,7 +163,7 @@ void attack_deploy_run_select_menu(void) {
                 selected = node->destination[text_id];
             }
         } else {
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
                 g_battle_menu_input_lock_mode = 1;
             }
             g_battle_menu_input_lock_mode = 1;

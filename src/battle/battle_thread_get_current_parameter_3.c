@@ -18,7 +18,7 @@ s32 battle_thread_get_current_parameter_3(void) {
     global_pointer = (void*)0x80170000;
     __asm__("addu $1,$1,$zero" : "=r"(global_pointer) : "0"(global_pointer));
     /* Raw: $at holds a fabricated lui base, not a struct; 0x4038/0x5f98 are the
-     * low halves of g_native_current_thread_id and g_native_threads. */
+     * low halves of g_thread_current_id and g_threads. */
     thread_offset = *(s32*)((u8*)global_pointer + 0x4038);
     __asm__("nop\nsll $8,$8,10" : "=r"(thread_offset) : "0"(thread_offset));
     global_pointer = (void*)0x80160000;

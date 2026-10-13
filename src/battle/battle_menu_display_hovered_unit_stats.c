@@ -16,8 +16,8 @@
  * mode 2, the reaction-ability name), the BATTLE twin of world_menu_display_hovered_unit_stats.
  * Builds two alternating 0x2ec-byte pages, slides the panel in by
  * `slide`/`speed` each event tick and out when the thread's third parameter
- * is set (mode 0 also leaves immediately while g_native_thread_contexts[12].task_id is
- NATIVE_THREAD_TASK_ATTACK_CASTER_STATS). A running
+ * is set (mode 0 also leaves immediately while g_thread_contexts[12].task_id is
+ THREAD_TASK_ATTACK_CASTER_STATS). A running
  * task-0x15 thread dims the portrait, gauges and CLUTs.
  *
  * `i` doubles as the saved hide-numbers flag in the first-frame text pass, as
@@ -61,7 +61,7 @@ void battle_menu_display_hovered_unit_stats(
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     slide = 0x84;
     g_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
-    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
+    if (thread_get_current_task_id() == THREAD_TASK_HOVERED_UNIT_STATS) {
         g_battle_menu_hovered_stats_frame_count++;
     }
     if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
@@ -139,8 +139,7 @@ void battle_menu_display_hovered_unit_stats(
         for (i = 0; i < g_script_event_speed; i++) {
             if (battle_thread_get_current_parameter_3() != 0) {
                 if (mode == UNIT_STATS_PANEL_HOVERED_UNIT
-                    && g_native_thread_contexts[NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS].task_id
-                        == NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
+                    && g_thread_contexts[THREAD_SLOT_RIGHT_UNIT_STATS].task_id == THREAD_TASK_ATTACK_CASTER_STATS) {
                     /* Both exits leave the step loop and the frame loop. */
                     goto exit;
                 }
@@ -160,7 +159,7 @@ void battle_menu_display_hovered_unit_stats(
                 }
             }
         }
-        running = battle_thread_find_running_by_task(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
+        running = battle_thread_find_running_by_task(THREAD_TASK_UNIT_EDITOR_PANEL);
         if (running != 0 && battle_thread_is_running_asm(running - 1) == 0) {
             running = 0;
         }
@@ -328,13 +327,13 @@ void battle_menu_display_hovered_unit_stats(
         battle_gfx_draw_or_append_gpu_primitive(&offs->a);
         thread_yield();
         g_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
-        if (thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
+        if (thread_get_current_task_id() == THREAD_TASK_HOVERED_UNIT_STATS) {
             g_battle_menu_hovered_stats_frame_count++;
         }
     }
 exit:
     thread_yield();
-    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
+    if (thread_get_current_task_id() == THREAD_TASK_HOVERED_UNIT_STATS) {
         g_battle_menu_hovered_stats_frame_count = 0;
     }
     battle_gfx_free_tpage7_vram(&rects[0]);

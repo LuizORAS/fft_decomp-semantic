@@ -17,7 +17,7 @@
 #define NEXT() text = text_advance_cursor_with_separate_backreference_state(&repeat, text, &saved)
 
 #define CHECK_ABORT()                                                                                                  \
-    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {                                             \
+    if (thread_get_current_task_id() == THREAD_TASK_STOP_REQUEST) {                                                    \
         goto end;                                                                                                      \
     }
 
@@ -25,7 +25,7 @@
  * by thread parameter 2 glyph by glyph, handling the control bytes.
  *
  * The 0xFE/0xFD waits compare against resume_task rather than the constant
- * NATIVE_THREAD_TASK_RESUME (1): with a constant, loop.c pools every constant 1
+ * THREAD_TASK_RESUME (1): with a constant, loop.c pools every constant 1
  * of the main loop into one hoisted (and spilled) pseudo, where the target
  * keeps each wait's 1 in a saved register. The 0xE4/0xE6 dispatch shares the digit printer through a
  * label; the WORLD twin's `character == 0xE4 || character == 0xE6` form is not threaded here
@@ -77,11 +77,11 @@ void battle_text_run_dialog_thread(void) {
     s32 no_value;
     s32 resume_task;
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_RESUME);
+    thread_set_current_task_id(THREAD_TASK_RESUME);
     script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
     value_index = 0;
     variable_base = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
-    thread = &g_native_threads[g_native_current_thread_id];
+    thread = &g_threads[g_thread_current_id];
     param = battle_thread_get_current_parameter_1();
     rec.dialog_type = param;
     if ((param & 0x70) == 0x70) {
@@ -510,10 +510,10 @@ void battle_text_run_dialog_thread(void) {
                     if (rec.no_box == 0) {
                         break;
                     }
-                    thread_set_current_task_id(NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT);
-                    resume_task = NATIVE_THREAD_TASK_RESUME;
+                    thread_set_current_task_id(THREAD_TASK_DIALOG_AWAIT_TEXT);
+                    resume_task = THREAD_TASK_RESUME;
                     while (thread_get_current_task_id() != resume_task) {
-                        if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+                        if (thread_get_current_task_id() == THREAD_TASK_STOP_REQUEST) {
                             goto end;
                         }
                         thread_yield();
@@ -606,10 +606,10 @@ void battle_text_run_dialog_thread(void) {
                     select_window->sprites[1].x0 = select_window->sprites[0].x0 + 2;
                     select_window->sprites[1].y0 = select_window->sprites[0].y0 + 2;
                     thread_yield();
-                    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+                    if (thread_get_current_task_id() == THREAD_TASK_STOP_REQUEST) {
                         goto end;
                     }
-                    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_WAIT_FOR_RESUME) {
+                    if (thread_get_current_task_id() == THREAD_TASK_WAIT_FOR_RESUME) {
                         continue;
                     }
                     if ((g_script_event_input & PSX_PAD_UP) && selection != rec.mark) {
@@ -637,10 +637,10 @@ void battle_text_run_dialog_thread(void) {
             NEXT();
             g_battle_text_awaiting_input = 0;
         } else if (character == TEXT_WAIT_FOR_RESUME) {
-            thread_set_current_task_id(NATIVE_THREAD_TASK_WAIT_FOR_RESUME);
-            resume_task = NATIVE_THREAD_TASK_RESUME;
+            thread_set_current_task_id(THREAD_TASK_WAIT_FOR_RESUME);
+            resume_task = THREAD_TASK_RESUME;
             while (thread_get_current_task_id() != resume_task) {
-                if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+                if (thread_get_current_task_id() == THREAD_TASK_STOP_REQUEST) {
                     goto end;
                 }
                 thread_yield();
@@ -674,10 +674,9 @@ void battle_text_run_dialog_thread(void) {
             no_wait = 1;
         } else if (character == TEXT_RELEASE_WAITING_THREADS) {
             for (i = 0; i < 0x10; i++) {
-                if (g_native_current_thread_id != i
-                    && g_native_thread_contexts[i].task_id == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
+                if (g_thread_current_id != i && g_thread_contexts[i].task_id == THREAD_TASK_WAIT_FOR_RESUME
                     && battle_thread_is_running_asm(i)) {
-                    g_native_thread_contexts[i].task_id = NATIVE_THREAD_TASK_RESUME;
+                    g_thread_contexts[i].task_id = THREAD_TASK_RESUME;
                 }
             }
             thread_yield();

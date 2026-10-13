@@ -606,7 +606,7 @@ void bunit_bits_init_reader(const u8* data);
 s32 bunit_bits_read(s32 bit_count);
 
 /* threads */
-/* Slots of the unit list screen's own menus; native_screen_thread_slot_e
+/* Slots of the unit list screen's own menus; thread_screen_slot_e
  * has the shared ones. */
 typedef enum bunit_thread_slot {
     BUNIT_THREAD_SLOT_MENU = 5,          /* the unit list's triangle menu */

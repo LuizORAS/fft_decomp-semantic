@@ -19,7 +19,7 @@ void world_script_color_screen_thread(void) {
     s32 j;
     s32 duration;
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_COLOR_SCREEN);
+    thread_set_current_task_id(THREAD_TASK_COLOR_SCREEN);
     parameters = world_thread_get_current_parameter_1();
     /* Separate record and RGB cursors drop the original argument-register copy. */
     mode = *parameters++;

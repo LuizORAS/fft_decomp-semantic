@@ -49,7 +49,7 @@ s32 world_menu_init_attack_resources_and_threads(void) {
     }
     attack_deploy_find_fieldable_units();
     if (result != 0) {
-        thread_start(NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT, map_data_load_complete_thread);
+        thread_start(THREAD_BORROWED_SLOT_DEPLOYMENT, map_data_load_complete_thread);
         return_value = 1;
     } else {
         g_world_sound_music_track_1_id = 0;
@@ -57,7 +57,7 @@ s32 world_menu_init_attack_resources_and_threads(void) {
         sound_play_music_tracks(MAIN_MUSIC_DEPLOYMENT, MAIN_MUSIC_NONE);
         attack_text_build_deployment_strings();
         attack_map_load_title_graphic();
-        thread_start(NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT, attack_deploy_run_screen);
+        thread_start(THREAD_BORROWED_SLOT_DEPLOYMENT, attack_deploy_run_screen);
         return_value = 0;
     }
     return return_value;

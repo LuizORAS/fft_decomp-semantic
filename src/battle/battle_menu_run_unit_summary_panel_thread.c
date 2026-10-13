@@ -156,7 +156,7 @@ void battle_menu_run_unit_summary_panel_thread(void) {
         frame_record->offset_b.y = value;
         SetDrawOffset(&frame_record->draw_offset_b, (u16*)&frame_record->offset_b);
         battle_gfx_draw_or_append_gpu_primitive(&frame_record->draw_offset_b);
-        value = battle_thread_find_running_by_task(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
+        value = battle_thread_find_running_by_task(THREAD_TASK_UNIT_EDITOR_PANEL);
         if (value != 0 && battle_thread_is_running_asm(value - 1) == 0) {
             value = 0;
         }

@@ -27,7 +27,7 @@ u8* world_menu_redraw_text_page_on_scroll(menu_entry_t* entry, s32* row_offset, 
     if (g_world_menu_input_mode != MENU_INPUT_PLAYER) {
         return 0;
     }
-    if (!(*input2 & PSX_PAD_SQUARE) && g_native_threads[g_native_current_thread_id].task_words[4] == 0) {
+    if (!(*input2 & PSX_PAD_SQUARE) && g_threads[g_thread_current_id].task_words[4] == 0) {
         return 0;
     }
     if ((*input & PSX_PAD_UP) && *row_offset != 0) {
@@ -46,9 +46,9 @@ u8* world_menu_redraw_text_page_on_scroll(menu_entry_t* entry, s32* row_offset, 
         }
         g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
         changed = 1;
-    } else if (g_native_threads[g_native_current_thread_id].task_words[4] != 0) {
+    } else if (g_threads[g_thread_current_id].task_words[4] != 0) {
         changed = 1;
-        g_native_threads[g_native_current_thread_id].task_words[4] = 0;
+        g_threads[g_thread_current_id].task_words[4] = 0;
     }
     if (changed == 0) {
         return 0;

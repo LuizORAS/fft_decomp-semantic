@@ -12,8 +12,8 @@ void world_menu_open_scrollable_list(u8* list) {
     g_world_name_entry_original_name = list;
     g_world_name_entry_cursor_index = 0;
     g_world_name_entry_list_cursor = 1;
-    thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x21, 0xC015, 0);
+    thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_message_box_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x21, 0xC015, 0);
     world_menu_init_scrollable_list_core(0, 0, 0);
     g_world_menu_cursor_position = 1;
     world_text_bind_section_data(WORLD_TEXT_DATA_NAME_ENTRY_KEYBOARD);

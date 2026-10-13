@@ -25,7 +25,7 @@ void script_inflict_status_thread(void) {
     unit_stats_t* unit;
     s32 state;
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_INFLICT_STATUS);
+    thread_set_current_task_id(THREAD_TASK_INFLICT_STATUS);
     parameters = (event_inflict_status_parameters_t*)battle_thread_get_current_parameter_1();
     unit_id = script_read_s16(parameters->unit_id_le);
     mode = parameters->mode;

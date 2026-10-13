@@ -26,6 +26,6 @@ void script_start_current_event_thread(void) {
         g_camera_position_locked = 0;
         g_camera_speed_curve = 0;
         battle_gfx_start_screen_color_modulation_fade(2, 0, 0, 0, 2);
-        thread_start(NATIVE_THREAD_SLOT_EVENT, script_run_next_event);
+        thread_start(THREAD_SLOT_EVENT, script_run_next_event);
     }
 }

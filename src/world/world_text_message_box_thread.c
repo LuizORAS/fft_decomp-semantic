@@ -65,7 +65,7 @@ void world_text_message_box_thread(void) {
     s32* substitution;
     s32 no_value;
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_MESSAGE_BOX);
+    thread_set_current_task_id(THREAD_TASK_MESSAGE_BOX);
     value_index = 0;
     script_variable_base = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
     g_world_menu_event_state_flag = 0;

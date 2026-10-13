@@ -6,11 +6,11 @@
 s32 world_thread_resolve_id_after_current(s32 thread_id) {
     s32 index;
 
-    if (thread_id < NATIVE_THREAD_SLOT_COUNT) {
+    if (thread_id < THREAD_SLOT_COUNT) {
         return thread_id;
     }
 
-    index = g_native_current_thread_id + 1;
+    index = g_thread_current_id + 1;
     if (index >= 17) {
         thread_exit_current();
     } else {

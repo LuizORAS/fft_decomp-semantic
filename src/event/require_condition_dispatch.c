@@ -18,12 +18,12 @@ void require_condition_dispatch(void) {
     s32 parameter;
     s32 thread;
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_CONDITION_DISPATCH);
+    thread_set_current_task_id(THREAD_TASK_CONDITION_DISPATCH);
     condition = battle_thread_get_current_parameter_1();
     parameter = battle_thread_get_current_parameter_2();
     if (condition >= EVENT_DISPLAY_CONDITION_GENERAL_FIRST)
         require_condition_show_general(parameter);
-    thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
+    thread = battle_thread_resolve_id(THREAD_SLOT_FIRST_IDLE);
 
     if (condition == EVENT_DISPLAY_CONDITION_SPECIAL_CASES) {
         thread_start(thread, require_condition_run_special_thread);

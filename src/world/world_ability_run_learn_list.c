@@ -74,7 +74,7 @@ s32 world_ability_run_learn_list(void) {
                 g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
             } else {
                 g_world_learn_confirm_prompt_state
-                    = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_learn_confirm_menu);
+                    = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, g_world_learn_confirm_menu);
                 g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
                 g_world_learn_confirm_submenu.selected_index = 0;
                 g_world_menu_sound_muted = 1;
@@ -99,8 +99,7 @@ s32 world_ability_run_learn_list(void) {
             world_menu_set_window_scale_step(10);
         }
     } else {
-        g_world_learn_confirm_prompt_state
-            = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_learn_confirm_menu);
+        g_world_learn_confirm_prompt_state = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, g_world_learn_confirm_menu);
         if (g_world_learn_confirm_prompt_state == 0) {
             if (g_world_menu_selection_results[5] == 0) {
                 world_ability_learn(g_world_formation_selected_unit_index, g_world_learn_selected_job,

@@ -217,7 +217,7 @@ void world_menu_build_ability_list(s32 mode) {
     }
     /* Menu-thread parameters 2-4 request a redraw, reset the cursor and
      * request a refresh. */
-    g_native_thread_contexts[g_native_current_thread_id].function_parameter_2 = 1;
-    g_native_thread_contexts[g_native_current_thread_id].function_parameter_3 = 0;
-    g_native_thread_contexts[g_native_current_thread_id].function_parameter_4 = 1;
+    g_thread_contexts[g_thread_current_id].function_parameter_2 = 1;
+    g_thread_contexts[g_thread_current_id].function_parameter_3 = 0;
+    g_thread_contexts[g_thread_current_id].function_parameter_4 = 1;
 }

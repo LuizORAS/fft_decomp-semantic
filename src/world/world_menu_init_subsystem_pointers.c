@@ -6,7 +6,7 @@
 /* Bind the WORLD scheduler, script and menu subsystems to their backing
    storage and clear the per-scene state they share. */
 void world_menu_init_subsystem_pointers(void) {
-    g_native_threads = g_native_thread_contexts;
+    g_threads = g_thread_contexts;
     g_world_text_glyph_bitmap_data = g_world_text_glyph_bitmaps;
     g_world_menu_glyph_sheet = &g_world_menu_glyph_image;
     g_world_event_script = (u8*)g_main_script_event_block;

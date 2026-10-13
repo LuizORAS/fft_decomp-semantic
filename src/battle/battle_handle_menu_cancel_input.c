@@ -50,10 +50,10 @@ void battle_handle_menu_cancel_input(menu_entry_t* menu) {
                and the branch is retargeted one instruction later. */
             i = 0;
             if (count > 0) {
-                thread = g_native_current_thread_id;
+                thread = g_thread_current_id;
                 do {
                     idx = i + thread;
-                    g_native_thread_contexts[idx].function_parameter_3 = 1;
+                    g_thread_contexts[idx].function_parameter_3 = 1;
                     if (idx == 8) {
                         j = 3;
                         pending = &g_menu_pending_selection[j];
@@ -70,8 +70,8 @@ void battle_handle_menu_cancel_input(menu_entry_t* menu) {
             j = 0;
             do {
                 i++;
-                if (g_native_thread_contexts[j].task_id == NATIVE_THREAD_TASK_RESUME) {
-                    g_native_thread_contexts[j].task_id = NATIVE_THREAD_TASK_STOP_REQUEST;
+                if (g_thread_contexts[j].task_id == THREAD_TASK_RESUME) {
+                    g_thread_contexts[j].task_id = THREAD_TASK_STOP_REQUEST;
                 }
                 j++;
             } while (i < 0x10);

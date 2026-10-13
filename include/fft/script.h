@@ -276,7 +276,7 @@ typedef enum event_opcode {
     EVENT_OPCODE_UNHANDLED_E2 = 0xe2,         /* 1 */
     EVENT_OPCODE_END_2 = 0xe3,                /* 0 */
     EVENT_OPCODE_UNHANDLED_E4 = 0xe4,         /* 1 */
-    EVENT_OPCODE_WAIT_FOR_INSTRUCTION = 0xe5, /* 2: native_thread_task_e (u16); waits until no thread runs it */
+    EVENT_OPCODE_WAIT_FOR_INSTRUCTION = 0xe5, /* 2: thread_task_e (u16); waits until no thread runs it */
     EVENT_OPCODE_YIELD = 0xf0,                /* 0 */
     EVENT_OPCODE_WAIT = 0xf1,                 /* 2: frames (s16) */
     EVENT_OPCODE_NOP = 0xf2,                  /* 0 */

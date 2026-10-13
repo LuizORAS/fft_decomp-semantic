@@ -13,9 +13,9 @@
 void world_shop_run_recruit_unit_preview_step(void) {
     if (g_world_shop_recruit_preview_initialized == 0) {
         if (g_world_input_primary_repeat & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE)) {
-            thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+            thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, -1, 0);
         }
-        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE) == 0) {
+        if (world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
             g_world_formation_unit_browse_enabled = 1;
             g_world_formation_unit_banner_enabled = 1;
             g_world_formation_unit_banner_at_bottom = 0;
@@ -31,9 +31,9 @@ void world_shop_run_recruit_unit_preview_step(void) {
         g_world_formation_unit_browse_enabled = 0;
         g_world_formation_unit_banner_enabled = 0;
         world_menu_toggle_numeric_editor_thread(0);
-        world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
-        thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF826, 0);
+        world_menu_stop_unit_status_banner_thread(THREAD_SCREEN_SLOT_CHARACTER_STATUS);
+        thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_message_box_thread);
+        thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xF826, 0);
         g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
         g_world_shop_recruit_preview_initialized = 0;
     }

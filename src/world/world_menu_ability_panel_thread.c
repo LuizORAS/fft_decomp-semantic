@@ -27,10 +27,10 @@ void world_menu_ability_panel_thread(void) {
     s32 i;
     s32 id;
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread = (menu_status_thread_t*)g_native_threads[g_native_current_thread_id].function_parameter_1;
+    thread_set_current_task_id(THREAD_TASK_STATUS_PANEL);
+    thread = (menu_status_thread_t*)g_threads[g_thread_current_id].function_parameter_1;
     g_world_input_frame_controller_input = world_input_get_menu_controller(0);
-    if (g_native_current_thread_id == WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL) {
+    if (g_thread_current_id == WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL) {
         text = g_world_change_banner_text_image;
         screen = g_world_change_banner_panel_frames;
         state = &g_world_selected_unit_stat_detail.state;

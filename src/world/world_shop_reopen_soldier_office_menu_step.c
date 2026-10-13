@@ -4,7 +4,7 @@
 /* Return to the soldier office menu with message 0xf821, redrawing the gil,
  * fee and roster-count displays for this frame. */
 void world_shop_reopen_soldier_office_menu_step(void) {
-    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf821, 0);
+    thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xf821, 0);
     g_world_shop_menu_step = WORLD_SHOP_STEP_SOLDIER_OFFICE_MENU;
     g_world_shop_hire_menu_initialized = 0;
     world_shop_run_obtain_gil_menu();

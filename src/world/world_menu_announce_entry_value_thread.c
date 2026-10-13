@@ -18,8 +18,8 @@ void world_menu_announce_entry_value_thread(void) {
     entry = world_thread_get_current_parameter_1();
     kind = entry->select_text_table;
     if (kind == 2 || kind == -1) {
-        next = g_native_current_thread_id + 1;
-        thread = &g_native_threads[next];
+        next = g_thread_current_id + 1;
+        thread = &g_threads[next];
         while (1) {
             if (thread->is_running != 0) {
                 entry = (menu_entry_t*)thread->function_parameter_1;
@@ -45,7 +45,7 @@ void world_menu_announce_entry_value_thread(void) {
         value = g_world_menu_entry_text_id_tables[kind][index];
     }
     g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-    thread_set_parameters(g_native_current_thread_id, 0x3F, value, 0);
+    thread_set_parameters(g_thread_current_id, 0x3F, value, 0);
     world_text_character_handling_thread();
     g_world_formation_menu_new_buttons = 0;
     g_world_thread_task_active = 0;

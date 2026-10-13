@@ -71,7 +71,7 @@ void helpmenu_menu_run_battle_help(void) {
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_SKILLSETS];
     g_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
-    self_thread = &g_native_threads[g_native_current_thread_id];
+    self_thread = &g_threads[g_thread_current_id];
     battle_menu_copy_billboard_data_out(banner, unit_data, billboard, cursor_tile);
     if ((g_helpmenu_selected_unit_panel_mode != 0) || (g_battle_post_battle_unit_changes_active != 0)) {
         g_helpmenu_require_navigation[2].destination[2] = 7;
@@ -93,7 +93,7 @@ void helpmenu_menu_run_battle_help(void) {
     if (text_thread_id < 9) {
         frame = text_thread_id;
         missing_value = -1;
-        scan_thread = &g_native_threads[frame];
+        scan_thread = &g_threads[frame];
         for (; frame < 9; frame++) {
             request = (menu_entry_t*)scan_thread->function_parameter_1;
             if (request->select_text_table != missing_value) {
@@ -220,7 +220,7 @@ void helpmenu_menu_run_battle_help(void) {
                 waiting_slot = text_thread_id;
                 do {
                     thread_wait_frames(1);
-                } while (g_native_threads[waiting_slot - 1].is_running != 0);
+                } while (g_threads[waiting_slot - 1].is_running != 0);
                 *g_helpmenu_controller_state_ptr = 0;
                 thread_wait_frames(1);
                 helpmenu_menu_close();
@@ -238,11 +238,11 @@ void helpmenu_menu_run_battle_help(void) {
         help_mode = g_battle_unit_view_mode;
         if (help_mode == UNIT_VIEW_MODE_TILE_INFO || help_mode == UNIT_VIEW_MODE_HOVERED_UNIT) {
             g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-            thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, battle_text_run_dialog_thread);
+            thread_start(THREAD_SCREEN_SLOT_MESSAGE, battle_text_run_dialog_thread);
             thread_set_parameters(
-                NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x3B, g_helpmenu_menu_cursor_tile.surface_type + 0x5800, 0);
-            g_native_threads[NATIVE_SCREEN_THREAD_SLOT_MESSAGE].task_words[3] = -0x20;
-            thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_MESSAGE);
+                THREAD_SCREEN_SLOT_MESSAGE, 0x3B, g_helpmenu_menu_cursor_tile.surface_type + 0x5800, 0);
+            g_threads[THREAD_SCREEN_SLOT_MESSAGE].task_words[3] = -0x20;
+            thread_wait_until_inactive(THREAD_SCREEN_SLOT_MESSAGE);
             *g_helpmenu_controller_state_ptr = 0;
             thread_wait_frames(1);
             helpmenu_menu_close();
@@ -259,10 +259,10 @@ void helpmenu_menu_run_battle_help(void) {
         }
     }
     frame = 0;
-    text_thread = &g_native_threads[text_thread_id];
+    text_thread = &g_threads[text_thread_id];
     while (1) {
         if (text_thread->is_running == 0) {
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
                 g_battle_menu_input_lock_mode = 0;
             }
             if (self_thread->task_words[1] != 0) {
@@ -272,10 +272,10 @@ void helpmenu_menu_run_battle_help(void) {
             node = &navigation[menu_index];
             y = node->y;
             x = node->x;
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_DEBUG_UNIT_EDITOR) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_DEBUG_UNIT_EDITOR) != 0) {
                 y += 8;
             }
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
                 y += 8;
             }
             input = *g_helpmenu_controller_state_ptr;
@@ -330,7 +330,7 @@ void helpmenu_menu_run_battle_help(void) {
                 menu_index = node->destination[help_id];
             }
         } else {
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
                 g_battle_menu_input_lock_mode = 1;
             }
             if (self_thread->task_words[1] == 0) {

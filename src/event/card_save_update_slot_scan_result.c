@@ -19,14 +19,14 @@ void card_save_update_slot_scan_result(void) {
         g_card_save_slot_scan_prompt_descriptor = 0;
         g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
         card_menu_stop_thread_and_wait(14);
-        card_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
+        card_menu_stop_thread_and_wait(THREAD_SCREEN_SLOT_MENU);
         g_card_save_menu_state = CARD_SAVE_MENU_SCANNING;
     } else if (g_card_save_slot_scan_prompt_descriptor != 0) {
-        card_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_card_save_slot_scan_prompt_descriptor);
+        card_menu_start_or_poll_thread(THREAD_SCREEN_SLOT_MENU, g_card_save_slot_scan_prompt_descriptor);
         if ((g_card_input_primary_repeat & PSX_PAD_CROSS) != 0 || (g_card_input_primary_repeat & PSX_PAD_CIRCLE) != 0) {
             g_card_save_slot_scan_prompt_descriptor = 0;
             g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
-            card_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
+            card_menu_stop_thread_and_wait(THREAD_SCREEN_SLOT_MENU);
             g_card_save_menu_state = CARD_SAVE_MENU_SELECT_CARD;
         }
     } else {

@@ -33,7 +33,7 @@ void option_menu_run_choice(void) {
 
     input = script_get_controller_input_pointer(0);
     script_get_controller_input_pointer(1);
-    thread = &g_native_threads[g_native_current_thread_id];
+    thread = &g_threads[g_thread_current_id];
     kind = thread->function_parameter_1;
     thread->function_parameter_1 = (s32)&g_option_menu_icon_thread_param;
     param = &g_option_menu_icon_thread_param;

@@ -14,10 +14,10 @@ void world_shop_run_fur_buy_list_step(void) {
     s8 result;
 
     if (g_world_shop_fur_purchase_list_initialized == 0) {
-        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE) == 0) {
-            thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        if (world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
+            thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_message_box_thread);
         }
-        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF832, 0);
+        thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xF832, 0);
         g_world_shop_fur_purchase_list_initialized = 1;
         world_shop_build_item_list(-1, g_world_menu_context_id,
             g_world_shop_item_category != 4 ? g_world_shop_item_category + 1 : ITEM_LIST_FILTER_OTHER,
@@ -36,8 +36,8 @@ void world_shop_run_fur_buy_list_step(void) {
     }
     world_script_set_vsync_mode_and_event_speed(2);
     if (g_world_shop_fur_equip_check_pending != 0) {
-        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
-        result = world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE);
+        thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, -1, 0);
+        result = world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE);
         g_world_shop_fur_equip_check_pending = result;
         if (result == 0) {
             world_menu_set_selection_record(g_world_shop_item_category, g_world_menu_cursor_position,
@@ -51,7 +51,7 @@ void world_shop_run_fur_buy_list_step(void) {
         if (input & PSX_PAD_CROSS) {
             g_world_shop_fur_purchase_list_initialized = 0;
             g_world_shop_menu_step = WORLD_SHOP_STEP_FUR_MENU;
-            thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF830, 0);
+            thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xF830, 0);
             g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
         } else if ((input & PSX_PAD_TRIANGLE) && g_world_menu_option_count != 0 && g_world_shop_item_category != 4) {
             g_world_shop_fur_equip_check_pending = 1;

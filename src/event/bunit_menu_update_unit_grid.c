@@ -91,12 +91,12 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
     }
     unit = 1;
     if (allow_browse != 0 && bunit_input_get_lock_timer() == 0
-        && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) == 0
+        && battle_thread_is_running(THREAD_SCREEN_SLOT_COMPARISON_STATUS) == 0
         && !(g_bunit_status_display_flags & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP))
         && g_bunit_status_banner_slide_step == 0 && g_bunit_unit_list_scroll_step == 0) {
         if (buttons & PSX_PAD_CIRCLE) {
             if (g_bunit_unit_browse_enabled == 0
-                && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0) {
+                && battle_thread_is_running(THREAD_SCREEN_SLOT_CHARACTER_STATUS) == 0) {
                 g_bunit_unit_browse_enabled = 1;
                 g_bunit_sound_queued_effect_id = MAIN_SFX_CONFIRM;
             }
@@ -113,13 +113,13 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
     }
     if (allow_banner_toggle != 0 && g_bunit_unit_browse_enabled == 0 && (buttons & PSX_PAD_SQUARE)
         && bunit_menu_is_unit_list_scroll_needed() == 0
-        && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0
-        && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) == 0
+        && battle_thread_is_running(THREAD_SCREEN_SLOT_CHARACTER_STATUS) == 0
+        && battle_thread_is_running(THREAD_SCREEN_SLOT_COMPARISON_STATUS) == 0
         && !(g_bunit_status_display_flags & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP))) {
         g_bunit_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
         g_bunit_status_banner_enabled = g_bunit_status_banner_enabled == 0;
     }
-    if (battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0
+    if (battle_thread_is_running(THREAD_SCREEN_SLOT_CHARACTER_STATUS) == 0
         && g_bunit_help_screen_id == MENU_GRID_HELP_NONE && bunit_gfx_get_fade_state() == 0) {
         g_bunit_unit_grid_selected_cell = bunit_menu_update_wrapped_grid_selection(
             4, 5, g_bunit_unit_reorderable_count - 1, g_bunit_unit_grid_selected_cell, buttons);

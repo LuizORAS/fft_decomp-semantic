@@ -13,8 +13,8 @@ void open_controller_start_text_message(s32 parameter, s32 run_followup) {
         world_text_relocate_pointer_table(g_open_text_section_offsets);
     }
 
-    thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_character_handling_thread);
-    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x33, parameter, 0);
+    thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_character_handling_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x33, parameter, 0);
 
     {
         s32 controller = g_open_current_controller_index;

@@ -20,7 +20,7 @@ void world_script_add_unit_start_thread(void) {
     u8 opcode;
     u8 flag;
 
-    g_native_thread_contexts[g_native_current_thread_id].task_id = NATIVE_THREAD_TASK_ADD_UNIT;
+    g_thread_contexts[g_thread_current_id].task_id = THREAD_TASK_ADD_UNIT;
     slot = 0;
     script = world_thread_get_current_parameter_1();
     while (1) {

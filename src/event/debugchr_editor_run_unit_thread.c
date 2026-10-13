@@ -18,7 +18,7 @@
  * (refused for a generic monster with no status), and Cross closes the
  * panels and ends the loop, after which the first unit is loaded again. The
  * menu-building thread holds the status groups' animation bytes at 1 while
- * it runs, and the panels are dimmed only while a NATIVE_THREAD_TASK_RESUME
+ * it runs, and the panels are dimmed only while a THREAD_TASK_RESUME
  * thread is running as well.
  *
  * `sound_latched` is read before anything assigns it when the menu-building
@@ -45,7 +45,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
      * loads. */
     volatile u8* unit_ids;
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_DEBUG_UNIT_EDITOR);
+    thread_set_current_task_id(THREAD_TASK_DEBUG_UNIT_EDITOR);
     g_debugchr_editor_active = 0;
     g_menu_panel_status_group_count = 2;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
@@ -92,15 +92,15 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         *refresh_a = 0;
         *refresh_b = 0;
         *refresh_c = 0;
-        thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, debugchr_panel_run_unit_status_thread);
+        thread_start(THREAD_SCREEN_SLOT_UNIT_STATUS, debugchr_panel_run_unit_status_thread);
         thread_set_parameters(
-            NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (u8*)refresh_a - offsetof(menu_status_thread_t, style), 0, 0);
-        thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, debugchr_editor_run_numeric_thread);
+            THREAD_SCREEN_SLOT_UNIT_STATUS, (u8*)refresh_a - offsetof(menu_status_thread_t, style), 0, 0);
+        thread_start(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, debugchr_editor_run_numeric_thread);
         thread_set_parameters(
-            NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (u8*)refresh_b - offsetof(menu_status_thread_t, style), 0, 0);
-        thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, debugchr_panel_run_character_status_thread);
+            THREAD_SCREEN_SLOT_NUMERIC_EDITOR, (u8*)refresh_b - offsetof(menu_status_thread_t, style), 0, 0);
+        thread_start(THREAD_SCREEN_SLOT_CHARACTER_STATUS, debugchr_panel_run_character_status_thread);
         thread_set_parameters(
-            NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (u8*)refresh_c - offsetof(menu_status_thread_t, style), 0, 0);
+            THREAD_SCREEN_SLOT_CHARACTER_STATUS, (u8*)refresh_c - offsetof(menu_status_thread_t, style), 0, 0);
     }
 
     frame = 0;
@@ -122,12 +122,12 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             menu_build_status_group_primitives((POLY_FT4*)(render_offset + (s32)render_buffers));
         }
 
-        if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {
+        if (battle_thread_is_running_asm(THREAD_SLOT_MENU_BUILDING) != 0) {
             if (sound_latched == 0) {
                 g_sound_pending_sfx_id = one;
                 sound_latched = 1;
             }
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_RESUME) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_RESUME) != 0) {
                 g_debugchr_status_display_thread_params.style = one;
                 g_debugchr_numeric_editor_thread_params.style = one;
                 g_debugchr_character_status_frame_config.style = one;
@@ -151,21 +151,21 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         if (event_mode == 0 && g_battle_menu_help_open == 0 && battle_thread_is_previous_running() == 0) {
             input = *g_menu_input_controller;
             if ((input & PSX_PAD_CROSS) != 0) {
-                thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
-                thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
-                thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
+                thread_set_parameters(THREAD_SCREEN_SLOT_UNIT_STATUS, 0, 0, 1);
+                thread_set_parameters(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+                thread_set_parameters(THREAD_SCREEN_SLOT_CHARACTER_STATUS, 0, 0, 1);
                 g_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 break;
             }
-            if ((input & PSX_PAD_CIRCLE) != 0 && battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0
+            if ((input & PSX_PAD_CIRCLE) != 0 && battle_thread_is_running_asm(THREAD_SLOT_MENU_BUILDING) == 0
                 && (unit_has_any_current_status(g_debugchr_panel_selected_unit_data.battle_id) != 0
                     || g_debugchr_editor_unit_fields.state.generic_monster == 0)) {
                 g_debugchr_status_display_thread_params.style = one;
                 g_debugchr_numeric_editor_thread_params.style = one;
                 g_debugchr_character_status_frame_config.style = one;
-                thread_start(g_native_current_thread_id - 1, battle_menu_build_unit_status_list);
-                thread_set_parameters(g_native_current_thread_id - 1,
-                    (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
+                thread_start(g_thread_current_id - 1, battle_menu_build_unit_status_list);
+                thread_set_parameters(
+                    g_thread_current_id - 1, (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
                 animation[0] = one;
                 animation_second[0] = one;
                 animation_third[0] = one;
@@ -177,7 +177,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                         /* Typed polygon indexing reverses the ADDU operands. */
                         menu_build_status_group_primitives((POLY_FT4*)(render_offset + (s32)render_buffers));
                     }
-                    if (battle_thread_is_running_asm(g_native_current_thread_id - 1) == 0) {
+                    if (battle_thread_is_running_asm(g_thread_current_id - 1) == 0) {
                         break;
                     }
                     frame++;

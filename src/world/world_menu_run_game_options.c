@@ -61,7 +61,7 @@ void world_menu_run_game_options(void) {
     input0 = world_input_get_menu_controller(0);
     input1 = world_input_get_menu_controller(1);
     do {
-        thread = &g_native_threads[g_native_current_thread_id];
+        thread = &g_threads[g_thread_current_id];
         entry = (menu_entry_t*)thread->function_parameter_1;
     } while (0);
     page = g_world_options_menu_pages;
@@ -158,10 +158,10 @@ void world_menu_run_game_options(void) {
     value_rect.h = base->title.h;
     world_script_copy_bytes(
         &g_world_options_menu_window_rect, &entry->window.x, sizeof(g_world_options_menu_window_rect));
-    thread_start(g_native_current_thread_id + 1, world_menu_window_frame_thread);
+    thread_start(g_thread_current_id + 1, world_menu_window_frame_thread);
     g_world_options_menu_window_rect.h += 0xC;
     g_world_options_menu_window_rect.y -= 2;
-    thread_set_parameters(g_native_current_thread_id + 1, (s32)&g_world_options_menu_window_rect, 0, 0);
+    thread_set_parameters(g_thread_current_id + 1, (s32)&g_world_options_menu_window_rect, 0, 0);
     thread_yield();
     world_menu_init_sprite(&base->value);
     world_text_configure_sprite_vram(&g_world_options_menu_value_rect, 0x3C, 0x10, &base->value, 0);
@@ -234,8 +234,8 @@ void world_menu_run_game_options(void) {
                 if (world_menu_is_input_allowed() != 0) {
                     *input0 = 0;
                     index = cursor + row_offset + delta;
-                    thread_start(g_native_current_thread_id - 1, world_menu_run_option_choice);
-                    thread_set_parameters(g_native_current_thread_id - 1, index, 0, 0);
+                    thread_start(g_thread_current_id - 1, world_menu_run_option_choice);
+                    thread_set_parameters(g_thread_current_id - 1, index, 0, 0);
                 }
             }
             if (*input0 & PSX_PAD_CROSS) {
@@ -309,9 +309,9 @@ void world_menu_run_game_options(void) {
             world_gfx_draw_or_append_gpu_primitive(&page->thumb);
         }
         if ((thread - 1)->is_running == 0) {
-            thread_set_parameters(g_native_current_thread_id + 1, (s32)&entry->window.x, 0, 0);
+            thread_set_parameters(g_thread_current_id + 1, (s32)&entry->window.x, 0, 0);
         } else {
-            thread_set_parameters(g_native_current_thread_id + 1, (s32)&entry->window.x, 1, 0);
+            thread_set_parameters(g_thread_current_id + 1, (s32)&entry->window.x, 1, 0);
         }
         world_gfx_build_scaled_draw_area_pair_swapped(
             &page->title_area, &entry->window, i, g_active_graphics_buffer_index);
@@ -362,6 +362,6 @@ void world_menu_run_game_options(void) {
     world_gfx_free_tpage7_vram(&g_world_options_menu_value_rect);
     thread_wait_frames(1);
     g_world_menu_thread_result = 2;
-    thread_set_parameters(g_native_current_thread_id + 1, 0, 0, 1);
+    thread_set_parameters(g_thread_current_id + 1, 0, 0, 1);
     thread_exit_current();
 }

@@ -6,10 +6,10 @@
 /* Thread body: loads companion overlay file 7 and runs it with state 3 until
  * it reports completion. */
 void world_menu_run_jobstts_thread(void) {
-    if (world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {
+    if (world_thread_is_running_asm(THREAD_SLOT_MENU_BUILDING) != 0) {
         thread_exit_current();
     }
-    if (world_thread_is_running_asm(NATIVE_THREAD_SLOT_EVENT) != 0) {
+    if (world_thread_is_running_asm(THREAD_SLOT_EVENT) != 0) {
         thread_exit_current();
     }
     world_menu_set_transition_active_flag();

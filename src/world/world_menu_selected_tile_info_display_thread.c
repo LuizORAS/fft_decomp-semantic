@@ -47,10 +47,10 @@ void world_menu_selected_tile_info_display_thread(void) {
         page = &g_world_menu_selected_tile_info_pages[frame & 1];
         i = menu_build_quad_pieces(tile->display_height, page->quads) - 1;
         thread_yield();
-        if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_DARK_SCREEN) != 0) {
+        if (world_thread_find_running_by_task(THREAD_TASK_DARK_SCREEN) != 0) {
             continue;
         }
-        if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_DARK_SCREEN_HOLD) != 0) {
+        if (world_thread_find_running_by_task(THREAD_TASK_DARK_SCREEN_HOLD) != 0) {
             continue;
         }
         g_menu_hide_numeric_values = 0;

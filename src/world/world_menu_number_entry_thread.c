@@ -38,7 +38,7 @@ void world_menu_number_entry_thread(void) {
     g_world_menu_list_controller_input = world_input_get_menu_controller(0);
     /* A direct pen pointer folds both member-address adjustments and changes scheduling. */
     stride = &g_world_menu_text_state.pen.stride;
-    thread = &g_native_threads[g_native_current_thread_id];
+    thread = &g_threads[g_thread_current_id];
     parameter = &thread->function_parameter_1;
     param = (menu_entry_t*)*parameter;
     range = param->context;

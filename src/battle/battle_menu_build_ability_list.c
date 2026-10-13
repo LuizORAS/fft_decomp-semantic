@@ -213,7 +213,7 @@ void battle_menu_build_ability_list(s32 mode) {
         g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window.y += (6 - count) * 8;
     }
     /* The menu thread's redraw, cursor and refresh parameters. */
-    g_native_thread_contexts[g_native_current_thread_id].function_parameter_2 = 1;
-    g_native_thread_contexts[g_native_current_thread_id].function_parameter_3 = 0;
-    g_native_thread_contexts[g_native_current_thread_id].function_parameter_4 = 1;
+    g_thread_contexts[g_thread_current_id].function_parameter_2 = 1;
+    g_thread_contexts[g_thread_current_id].function_parameter_3 = 0;
+    g_thread_contexts[g_thread_current_id].function_parameter_4 = 1;
 }

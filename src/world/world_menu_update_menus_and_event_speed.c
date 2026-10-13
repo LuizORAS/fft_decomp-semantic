@@ -26,10 +26,10 @@ s32 world_menu_update_menus_and_event_speed(u32* ot, u32 input) {
     world_script_run_frame(ot, input);
     world_menu_update_panel_fade();
     result = world_menu_resolve_selection();
-    if ((world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU) != 0
-            && g_native_thread_contexts[NATIVE_THREAD_SLOT_MENU].task_id != NATIVE_THREAD_TASK_MINI_MENU)
-        || world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_CHILD) != 0
-        || world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_GRANDCHILD) != 0) {
+    if ((world_thread_is_running_asm(THREAD_SLOT_MENU) != 0
+            && g_thread_contexts[THREAD_SLOT_MENU].task_id != THREAD_TASK_MINI_MENU)
+        || world_thread_is_running_asm(THREAD_SLOT_MENU_CHILD) != 0
+        || world_thread_is_running_asm(THREAD_SLOT_MENU_GRANDCHILD) != 0) {
         if (g_world_animation_speed_forced == 0) {
             g_world_animation_speed_forced = 1;
             g_world_saved_animation_speed = battle_state_get_animation_speed();

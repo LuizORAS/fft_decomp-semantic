@@ -12,7 +12,7 @@
 void require_overlay_run_helpmenu(void) {
     s32 thread_id;
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_HELP_MENU);
+    thread_set_current_task_id(THREAD_TASK_HELP_MENU);
     g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
     g_menu_panel_status_animation[0] = 1;
     g_menu_panel_status_animation[1] = 1;
@@ -21,7 +21,7 @@ void require_overlay_run_helpmenu(void) {
         thread_yield();
     }
     menu_request_open_companion_executable(COMPANION_OVERLAY_HELPMENU);
-    thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
+    thread_id = battle_thread_resolve_id(THREAD_SLOT_FIRST_IDLE);
     thread_start(thread_id, helpmenu_menu_run_require_help);
     thread_wait_until_inactive(thread_id);
     g_menu_panel_status_animation[0] = 0;

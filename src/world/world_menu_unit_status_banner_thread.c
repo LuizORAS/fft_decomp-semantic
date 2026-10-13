@@ -64,12 +64,12 @@ void world_menu_unit_status_banner_thread(void) {
     POLY_FT4* portrait_prim;
 
     suppress = 0;
-    thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
+    thread_set_current_task_id(THREAD_TASK_UNIT_STATUS_BANNER);
     input = world_input_get_menu_controller(0);
-    thread_id = g_native_current_thread_id;
+    thread_id = g_thread_current_id;
     g_world_input_frame_controller_input = input + 1;
-    display = (menu_status_panel_display_thread_t*)g_native_threads[thread_id].function_parameter_1;
-    if (thread_id == NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) {
+    display = (menu_status_panel_display_thread_t*)g_threads[thread_id].function_parameter_1;
+    if (thread_id == THREAD_SCREEN_SLOT_UNIT_STATUS) {
         status = g_world_selected_unit_status_packets;
         summary = g_world_selected_unit_summary_packets;
         stat_image = g_world_selected_unit_stat_text_image;
@@ -175,7 +175,7 @@ void world_menu_unit_status_banner_thread(void) {
             status->portrait.clut = 0x7FBD;
         }
         dimmed = 0;
-        if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_STATUS_PANEL) != 0) {
+        if (world_thread_find_running_by_task(THREAD_TASK_STATUS_PANEL) != 0) {
             dimmed = g_world_thread_task_active != 0;
         }
         if (display->dimmed != 0) {

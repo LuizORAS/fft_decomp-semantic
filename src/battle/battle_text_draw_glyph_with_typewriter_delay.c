@@ -39,9 +39,9 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
         for (;;) {
             slot = 16;
             for (i = 0; i < 3; i++) {
-                if (g_native_current_thread_id == g_battle_menu_slot_owner_thread_ids[i]) {
+                if (g_thread_current_id == g_battle_menu_slot_owner_thread_ids[i]) {
                     slot = i;
-                    g_battle_menu_slot_owner_thread_ids[i] = g_native_current_thread_id;
+                    g_battle_menu_slot_owner_thread_ids[i] = g_thread_current_id;
                     break;
                 }
             }
@@ -49,7 +49,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
                 for (row = 0; row < 3; row++) {
                     if (g_battle_menu_slot_owner_thread_ids[row] == 0) {
                         slot = row;
-                        g_battle_menu_slot_owner_thread_ids[row] = g_native_current_thread_id;
+                        g_battle_menu_slot_owner_thread_ids[row] = g_thread_current_id;
                         g_battle_text_slot_source_columns[slot] = 0;
                         g_battle_text_slot_row_pitches[slot] = 0;
                         break;
@@ -151,7 +151,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
             g_battle_menu_slot_states[slot] = 0;
         } else if (delay >= 2) {
             for (i = 0; i < delay * (3 - g_script_event_speed); i++) {
-                if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+                if (thread_get_current_task_id() == THREAD_TASK_STOP_REQUEST) {
                     break;
                 }
                 thread_wait_frames(1);
@@ -169,7 +169,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
             }
             if (g_battle_menu_slot_states[slot] >= g_battle_text_glyphs_per_wait) {
                 for (i = 0; i < 3 - g_script_event_speed; i++) {
-                    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+                    if (thread_get_current_task_id() == THREAD_TASK_STOP_REQUEST) {
                         break;
                     }
                     thread_wait_frames(1);

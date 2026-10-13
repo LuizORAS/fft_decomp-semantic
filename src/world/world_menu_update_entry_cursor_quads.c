@@ -14,7 +14,7 @@
  */
 void world_menu_update_entry_cursor_quads(
     menu_entry_t* entry, POLY_FT4* quad, POLY_FT4* shadow, s32 unused, s32 cursor) {
-    thread_t* thread = &g_native_threads[g_native_current_thread_id];
+    thread_t* thread = &g_threads[g_thread_current_id];
     s32 x;
     s32 y;
 

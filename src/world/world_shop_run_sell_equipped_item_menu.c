@@ -18,9 +18,9 @@ void world_shop_run_sell_equipped_item_menu(void) {
 
     close = 0;
     if (g_world_shop_sell_equipped_menu_open == 0) {
-        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE) == 0) {
-            thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-            thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf80c, 0);
+        if (world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
+            thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_message_box_thread);
+            thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xf80c, 0);
             g_world_shop_sell_equipped_prompt_active = 0;
             g_world_formation_unit_cycle_mode = 1;
             g_world_shop_sell_equipped_menu_open = 1;
@@ -30,7 +30,7 @@ void world_shop_run_sell_equipped_item_menu(void) {
         if (g_world_shop_sell_equipped_result_shown != 0) {
             if (g_world_input_primary_repeat
                 & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_DPAD_MASK)) {
-                thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf80d, 0);
+                thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xf80d, 0);
                 g_world_shop_sell_equipped_result_shown = 0;
             }
         } else if (g_world_shop_sell_equipped_prompt_active == 0) {
@@ -59,7 +59,7 @@ void world_shop_run_sell_equipped_item_menu(void) {
                     g_world_shop_sell_equipped_prompt_active = 1;
                     g_world_shop_sell_equipped_menu.selected_index = 0;
                     g_text_substitution_values[0] = world_item_get_half_price(item);
-                    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf810, 0);
+                    thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xf810, 0);
                 }
             } else if (input & PSX_PAD_CROSS) {
                 close = 1;
@@ -67,10 +67,10 @@ void world_shop_run_sell_equipped_item_menu(void) {
         } else {
             g_world_menu_description_text_id = 0;
             g_world_menu_sound_muted = g_world_shop_sell_equipped_prompt_active
-                = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_shop_sell_equipped_menu);
+                = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, &g_world_shop_sell_equipped_menu);
             if (g_world_shop_sell_equipped_prompt_active == 0) {
                 if (g_world_menu_selection_results[WORLD_MENU_SELECTION_PROMPT_RESULT] == 0) {
-                    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf811, 0);
+                    thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xf811, 0);
                     world_shop_adjust_gil(g_text_substitution_values[0]);
                     g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
                         ->equipment[g_world_shop_sell_equipped_slot] = ITEM_ID_NOTHING;
@@ -80,7 +80,7 @@ void world_shop_run_sell_equipped_item_menu(void) {
                     if (g_world_menu_selection_results[WORLD_MENU_SELECTION_PROMPT_RESULT] == 1) {
                         g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
                     }
-                    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf80a, 0);
+                    thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xf80a, 0);
                 }
                 g_world_shop_sell_equipped_result_shown = 1;
             }
@@ -90,7 +90,7 @@ void world_shop_run_sell_equipped_item_menu(void) {
             g_world_formation_unit_cycle_mode = 2;
             g_world_shop_sell_equipped_menu_open = 0;
             g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM;
-            thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+            thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, -1, 0);
         }
         g_world_shop_sell_equipped_cursor_point.y = g_world_shop_sell_equipped_slot * 16 + 0x90;
         world_menu_set_draw_priority(0x3d);

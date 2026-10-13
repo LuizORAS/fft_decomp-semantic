@@ -19,7 +19,7 @@ void world_menu_text_entry_wait_thread(void) {
     u16 third;
     menu_text_binding_t* binding;
 
-    param = (menu_entry_t*)g_native_threads[g_native_current_thread_id].function_parameter_1;
+    param = (menu_entry_t*)g_threads[g_thread_current_id].function_parameter_1;
     binding = param->context;
     binding->prepare();
     g_world_input_frame_controller_input = world_input_get_menu_controller(0);
@@ -32,7 +32,7 @@ void world_menu_text_entry_wait_thread(void) {
     world_menu_handle_entry_confirm(param, 0);
     thread_start(thread_id, world_text_character_handling_thread);
     thread_set_four_parameters(thread_id, first, second, third, third);
-    thread_wait_until_inactive(g_native_current_thread_id - 1);
+    thread_wait_until_inactive(g_thread_current_id - 1);
     thread_wait_until_inactive(thread_id);
     thread_exit_current();
 }

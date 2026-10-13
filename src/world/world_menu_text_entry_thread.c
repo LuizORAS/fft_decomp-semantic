@@ -7,7 +7,7 @@
  * thread for it, then idles until input arrives or the previous thread's
  * third parameter is raised. */
 void world_menu_text_entry_thread(void) {
-    thread_t* thread = &g_native_threads[g_native_current_thread_id];
+    thread_t* thread = &g_threads[g_thread_current_id];
     menu_entry_t* entry = (menu_entry_t*)thread->function_parameter_1;
     menu_text_binding_t* binding;
     s32 text_thread;

@@ -48,7 +48,7 @@ void script_run_sprite_move(const event_sprite_move_parameters_t* instruction, s
     if (runtime_id == EVENT_RUNTIME_ID_NONE) {
         return;
     }
-    g_native_thread_contexts[g_native_current_thread_id].task_words[0] = runtime_id;
+    g_thread_contexts[g_thread_current_id].task_words[0] = runtime_id;
     coords = battle_unit_get_event_offset_by_runtime_id(runtime_id);
     /* One advancing operand cursor preserves the retail register allocation. */
     parameters = instruction->destination_le[0];

@@ -58,21 +58,21 @@ void etc_graphic_open(s32 graphic_id) {
             do {
                 frame++;
                 thread_yield();
-                g_native_threads[g_native_current_thread_id].function_parameter_4 = 1;
+                g_threads[g_thread_current_id].function_parameter_4 = 1;
             } while (frame < 0x4ec);
         } else if (graphic_id == ETC_GRAPHIC_END3) {
             frame = 0;
             do {
                 frame++;
                 thread_yield();
-                g_native_threads[g_native_current_thread_id].function_parameter_4 = 1;
+                g_threads[g_thread_current_id].function_parameter_4 = 1;
             } while (frame < 0x5a0);
         } else if (graphic_id == ETC_GRAPHIC_END4) {
             frame = 0;
             do {
                 frame++;
                 thread_yield();
-                g_native_threads[g_native_current_thread_id].function_parameter_4 = 1;
+                g_threads[g_thread_current_id].function_parameter_4 = 1;
             } while (frame < 0x8ac);
         } else {
             frame = 0;
@@ -80,13 +80,13 @@ void etc_graphic_open(s32 graphic_id) {
                 do {
                     frame++;
                     thread_yield();
-                    g_native_threads[g_native_current_thread_id].function_parameter_4 = 1;
+                    g_threads[g_thread_current_id].function_parameter_4 = 1;
                 } while (frame < 0x258);
             } else {
                 do {
                     frame++;
                     thread_yield();
-                    g_native_threads[g_native_current_thread_id].function_parameter_4 = 1;
+                    g_threads[g_thread_current_id].function_parameter_4 = 1;
                 } while (frame < 0x17e8);
             }
         }

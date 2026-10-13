@@ -134,7 +134,7 @@ s32 require_party_select_unit_to_remove(void) {
         thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_text_run_dialog_thread);
         thread_set_four_parameters(
             REQUIRE_THREAD_SLOT_MESSAGE, 0x19, message_id, selected_battle_unit->unit_id, should_restore);
-        g_native_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_words[3] = 0x18;
+        g_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_words[3] = 0x18;
         thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MESSAGE);
         continue;
 
@@ -149,7 +149,7 @@ s32 require_party_select_unit_to_remove(void) {
             thread_yield();
             g_menu_input_controller = script_get_controller_input_pointer(0);
             if (*g_menu_input_controller & PSX_PAD_SELECT) {
-                helpmenu_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
+                helpmenu_thread = battle_thread_resolve_id(THREAD_SLOT_FIRST_IDLE);
                 thread_start(helpmenu_thread, require_overlay_run_helpmenu);
                 thread_wait_until_inactive(helpmenu_thread);
                 continue;
@@ -246,7 +246,7 @@ s32 require_party_select_unit_to_remove(void) {
         thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_text_run_dialog_thread);
         thread_set_four_parameters(
             REQUIRE_THREAD_SLOT_MESSAGE, 0x19, message_id, selected_battle_unit->unit_id, should_restore);
-        g_native_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_words[3] = 0x18;
+        g_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_words[3] = 0x18;
         thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
         thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)&g_require_party_removal_menus[0], 0, 0);
         require_menu_wait_selection_threads();

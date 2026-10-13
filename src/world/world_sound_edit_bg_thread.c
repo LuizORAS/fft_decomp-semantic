@@ -17,7 +17,7 @@ void world_sound_edit_bg_thread(void) {
     s32 resource;
     u8 unused[8]; /* retail frame reserves eight bytes of locals */
 
-    thread_set_current_task_id(NATIVE_THREAD_TASK_BG_SOUND);
+    thread_set_current_task_id(THREAD_TASK_BG_SOUND);
     step = 0;
     parameter = world_thread_get_current_parameter_1();
     sound_id = parameter->sound_id;

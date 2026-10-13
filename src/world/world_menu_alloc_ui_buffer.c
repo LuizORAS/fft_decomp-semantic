@@ -44,7 +44,7 @@ void* world_menu_alloc_ui_buffer(s32 size) {
         }
     fail:
         if (g_main_font_print_enabled != 0) {
-            FntPrint(g_world_text_wait_for_allocation_message, g_native_current_thread_id, size);
+            FntPrint(g_world_text_wait_for_allocation_message, g_thread_current_id, size);
         }
         thread_yield();
     }

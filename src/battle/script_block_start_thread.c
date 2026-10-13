@@ -18,7 +18,7 @@ void script_block_start_thread(void) {
     s16 runtime_id;
     s32 thread_id;
 
-    g_native_thread_contexts[g_native_current_thread_id].task_id = NATIVE_THREAD_TASK_EVENT_BLOCK;
+    g_thread_contexts[g_thread_current_id].task_id = THREAD_TASK_EVENT_BLOCK;
     script = battle_thread_get_current_parameter_1();
     parameters = script + 1;
     while (script[0] != EVENT_OPCODE_BLOCK_END) {
@@ -83,15 +83,15 @@ void script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_FACE_UNIT) {
             script_face_unit((const event_face_unit_parameters_t*)(script + 1), 1);
         } else if (script[0] == EVENT_OPCODE_SPRITE_MOVE || script[0] == EVENT_OPCODE_SPRITE_MOVE_BETA) {
-            thread_id = battle_thread_resolve_id_after_current(NATIVE_THREAD_SLOT_FIRST_IDLE);
+            thread_id = battle_thread_resolve_id_after_current(THREAD_SLOT_FIRST_IDLE);
             if (script[0] == EVENT_OPCODE_SPRITE_MOVE) {
                 thread_start(thread_id, script_sprite_move);
             } else {
                 thread_start(thread_id, script_sprite_move_beta);
             }
-            g_native_thread_contexts[thread_id].function_parameter_1 = (s32)(script + 1);
-            g_native_thread_contexts[thread_id].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;
-            g_native_thread_contexts[thread_id].task_words[0] = script_resolve_runtime_id(first_halfword);
+            g_thread_contexts[thread_id].function_parameter_1 = (s32)(script + 1);
+            g_thread_contexts[thread_id].task_id = THREAD_TASK_SPRITE_MOVE;
+            g_thread_contexts[thread_id].task_words[0] = script_resolve_runtime_id(first_halfword);
         } else if (script[0] == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
             script_waitspritemove_event_instruction(first_halfword);
         } else if (script[0] == EVENT_OPCODE_WAIT_ROTATE_UNIT) {

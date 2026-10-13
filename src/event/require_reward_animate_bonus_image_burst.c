@@ -45,7 +45,7 @@ void require_reward_animate_bonus_image_burst(void) {
     require_reward_burst_tile_t* tile;
     POLY_F4* poly;
 
-    g_require_thread_suspended_id = g_native_current_thread_id;
+    g_require_thread_suspended_id = g_thread_current_id;
     g_text_section_pointers[TEXT_SECTION_UNIT_MESSAGE] = g_text_section_pointers[TEXT_SECTION_SKILLSET_NAMES_COPY];
     if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_FINAL_BATTLE_WON) {
         require_reward_load_bonus_image(0);
@@ -213,7 +213,7 @@ void require_reward_animate_bonus_image_burst(void) {
         battle_copy_bytes(
             &g_require_reward_burst_flash_polys[1], &g_require_reward_burst_flash_polys[0], sizeof(POLY_F4));
         frame++;
-        thread_set_current_task_id(NATIVE_THREAD_TASK_DARK_SCREEN_HOLD);
+        thread_set_current_task_id(THREAD_TASK_DARK_SCREEN_HOLD);
         for (;;) {
             thread_yield();
             g_require_reward_burst_flash_polys[frame & 1].r0 = g_require_gfx_fade_rgb[0];
@@ -221,7 +221,7 @@ void require_reward_animate_bonus_image_burst(void) {
             g_require_reward_burst_flash_polys[frame & 1].b0 = g_require_gfx_fade_rgb[2];
             battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)&g_require_reward_burst_flash_polys[frame & 1]);
             battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)&g_require_reward_burst_draw_modes[frame & 1]);
-            if (g_native_threads[g_native_current_thread_id].task_id == NATIVE_THREAD_TASK_DARK_SCREEN) {
+            if (g_threads[g_thread_current_id].task_id == THREAD_TASK_DARK_SCREEN) {
                 break;
             }
             frame++;

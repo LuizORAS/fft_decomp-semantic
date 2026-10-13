@@ -18,8 +18,8 @@ void script_waitspritemove_event_instruction(s32 unit_id) {
     do {
         for (i = 0; i < 16; i++) {
             if (battle_thread_is_running_asm(i) != 0) {
-                if (g_native_thread_contexts[i].task_id == NATIVE_THREAD_TASK_SPRITE_MOVE) {
-                    if (g_native_thread_contexts[i].task_words[0] == target) {
+                if (g_thread_contexts[i].task_id == THREAD_TASK_SPRITE_MOVE) {
+                    if (g_thread_contexts[i].task_words[0] == target) {
                         break;
                     }
                 }

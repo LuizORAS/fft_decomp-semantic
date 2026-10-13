@@ -11,10 +11,10 @@
  * overlay is active and the block has run out.
  */
 s32 world_menu_is_input_allowed(void) {
-    if ((world_thread_is_running_asm(NATIVE_SCREEN_THREAD_SLOT_TEXT)
-            && (g_native_thread_contexts[NATIVE_SCREEN_THREAD_SLOT_TEXT].function_parameter_1 & 0x70) == 0x30)
-        || (world_thread_is_running_asm(NATIVE_SCREEN_THREAD_SLOT_MESSAGE)
-            && (g_native_thread_contexts[NATIVE_SCREEN_THREAD_SLOT_MESSAGE].function_parameter_1 & 0x70) == 0x30)) {
+    if ((world_thread_is_running_asm(THREAD_SCREEN_SLOT_TEXT)
+            && (g_thread_contexts[THREAD_SCREEN_SLOT_TEXT].function_parameter_1 & 0x70) == 0x30)
+        || (world_thread_is_running_asm(THREAD_SCREEN_SLOT_MESSAGE)
+            && (g_thread_contexts[THREAD_SCREEN_SLOT_MESSAGE].function_parameter_1 & 0x70) == 0x30)) {
         g_world_menu_input_block_frames = 5;
         return 0;
     }

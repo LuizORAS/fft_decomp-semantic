@@ -96,14 +96,12 @@ void debugchr_editor_run_session(void) {
     g_debugchr_status_display_thread_params.style = 0;
     g_debugchr_numeric_editor_thread_params.style = 0;
     g_debugchr_character_status_frame_config.style = 0;
-    thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, debugchr_panel_run_unit_status_thread);
-    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (s32)&g_debugchr_status_display_thread_params, 0, 0);
-    thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, debugchr_editor_run_numeric_thread);
-    thread_set_parameters(
-        NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (s32)&g_debugchr_numeric_editor_thread_params, 0, 0);
-    thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, debugchr_panel_run_character_status_thread);
-    thread_set_parameters(
-        NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)&g_debugchr_character_status_frame_config, 0, 0);
+    thread_start(THREAD_SCREEN_SLOT_UNIT_STATUS, debugchr_panel_run_unit_status_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_UNIT_STATUS, (s32)&g_debugchr_status_display_thread_params, 0, 0);
+    thread_start(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, debugchr_editor_run_numeric_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, (s32)&g_debugchr_numeric_editor_thread_params, 0, 0);
+    thread_start(THREAD_SCREEN_SLOT_CHARACTER_STATUS, debugchr_panel_run_character_status_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_CHARACTER_STATUS, (s32)&g_debugchr_character_status_frame_config, 0, 0);
     row = 0;
     /* The unit menu and the field editor re-enter each other by label: an
        enclosing loop's notes reweight the allocation of the whole body. */
@@ -124,9 +122,9 @@ loop_outer:
             goto editor;
         }
         if (buttons & PSX_PAD_CROSS) {
-            thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
-            thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
-            thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
+            thread_set_parameters(THREAD_SCREEN_SLOT_UNIT_STATUS, 0, 0, 1);
+            thread_set_parameters(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+            thread_set_parameters(THREAD_SCREEN_SLOT_CHARACTER_STATUS, 0, 0, 1);
             return;
         }
         if (buttons & PSX_PAD_R1) {
