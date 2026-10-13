@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Takes one POLY_FT4 from the pool, fills it as the rect->w x rect->h quad at

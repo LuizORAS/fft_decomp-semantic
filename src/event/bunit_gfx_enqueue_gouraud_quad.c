@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /*
@@ -7,7 +8,7 @@
  * `pts` holds the four corners as x, y pairs and `color` four RGB triples.
  * Screen x coordinates use the menu's +0x80 origin.
  */
-void bunit_gfx_enqueue_gouraud_quad(const upoint16_t* pts, rgb24_t* color, s32 semi, s32 idx) {
+void bunit_gfx_enqueue_gouraud_quad(const upoint16_t* pts, const rgb24_t* color, s32 semi, s32 idx) {
     POLY_G4* poly;
 
     poly = &g_menu_gfx_context->gouraud_quads[g_bunit_gfx_poly_g4_count++];

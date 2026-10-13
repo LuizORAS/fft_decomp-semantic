@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 
 #define EQUIP_GFX_CONTEXT_COUNT 2
 

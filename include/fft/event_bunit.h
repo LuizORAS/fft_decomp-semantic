@@ -497,11 +497,12 @@ extern u8 g_bunit_sprite_cell_sizes[][2];
 s32 bunit_gfx_calculate_distance_falloff(s32 x, s32 y, s32 base_value, s32 minimum);
 void bunit_gfx_draw_falloff_shaded_rows(s32 y);
 void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y);
-void bunit_gfx_enqueue_gouraud_quad(const upoint16_t* pts, rgb24_t* color, s32 semi, s32 idx);
+void bunit_gfx_enqueue_gouraud_quad(const upoint16_t* pts, const rgb24_t* color, s32 semi, s32 idx);
 void bunit_gfx_enqueue_gouraud_textured_quad(
     const textured_rect_source_t* rect, const rgb24_t* color, s32 semitrans, s32 otag_index);
-void bunit_gfx_enqueue_textured_quad_corners(textured_quad_source_t* src, rgb24_t* color, s32 semi, s32 idx);
-void bunit_gfx_enqueue_tile(RECT* rect, rgb24_t* color, u8 semi, s32 idx);
+void bunit_gfx_enqueue_textured_quad_corners(
+    const textured_quad_source_t* src, const rgb24_t* color, s32 semi, s32 idx);
+void bunit_gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, u8 semi, s32 idx);
 rgb24_t* bunit_gfx_get_draw_color(void);
 s32 bunit_gfx_get_fade_state(void);
 void bunit_gfx_init_double_packet_buffers(menu_gfx_context_t* buffers, u32* otags, POLY_F3* flat_triangles,
