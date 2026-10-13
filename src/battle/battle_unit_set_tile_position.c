@@ -7,7 +7,7 @@
  * A unit already standing on the destination becomes this unit's rider; any
  * stale mount link is dropped first.  Returns -1 without moving anything when
  * the destination tile is blocked or untargetable, 0 otherwise. */
-s32 battle_unit_set_tile_position(s32 unit_id, u8 x, u8 y, u8 level, u8 facing) {
+s32 battle_unit_set_tile_position(s32 battle_id, u8 x, u8 y, u8 level, u8 facing) {
     battle_stats_t* unit;
     battle_stats_t* partner;
     s32 occupant;
@@ -17,9 +17,9 @@ s32 battle_unit_set_tile_position(s32 unit_id, u8 x, u8 y, u8 level, u8 facing) 
     map_tile_flags_t tile_flags;
 
     has_rider = 0;
-    unit = &g_battle_unit_stats[unit_id];
+    unit = &g_battle_unit_stats[battle_id];
     occupant = battle_unit_find_at_tile(x, y, level, BATTLE_UNIT_TILE_FILTER_MOUNTABLE_CHOCOBO);
-    if (occupant >= 0 && occupant != unit_id) {
+    if (occupant >= 0 && occupant != battle_id) {
         rider = occupant;
         has_rider = 1;
     }
@@ -42,7 +42,7 @@ s32 battle_unit_set_tile_position(s32 unit_id, u8 x, u8 y, u8 level, u8 facing) 
     }
     if (has_rider != 0) {
         unit->mount_info = rider + BATTLE_MOUNT_INFO_FLAG_RIDER;
-        g_battle_unit_stats[rider].mount_info = unit_id + BATTLE_MOUNT_INFO_FLAG_MOUNT;
+        g_battle_unit_stats[rider].mount_info = battle_id + BATTLE_MOUNT_INFO_FLAG_MOUNT;
     }
 
     unit->position.y = y;

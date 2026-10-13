@@ -15,12 +15,12 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
     s32 mask;
     s32 byte_index;
     s32 current_bit;
-    s32 misc_unit_id;
+    s32 battle_id;
     s32 saved_bit;
     u8 formation_index;
     job_data_t* job;
 
-    misc_unit_id = unit->battle_id;
+    battle_id = unit->battle_id;
     main_status_store_current(unit);
     for (i = 0; i < STATUS_BYTE_COUNT; i++) {
         saved_current[i] = unit->status_sets.current[i];
@@ -73,9 +73,9 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
                 if (initializing != 0) {
                     main_status_set_ct(unit, i, 0);
                 }
-                status_enable_special_flags(status_id, 1, misc_unit_id);
+                status_enable_special_flags(status_id, 1, battle_id);
             } else {
-                status_enable_special_flags(status_id, 0, misc_unit_id);
+                status_enable_special_flags(status_id, 0, battle_id);
             }
         }
     }

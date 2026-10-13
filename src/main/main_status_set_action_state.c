@@ -7,7 +7,7 @@
  * unit is already performing. */
 void main_status_set_action_state(battle_stats_t* unit, u8 action_state) {
     u8 old_status;
-    s32 misc_unit_id;
+    s32 battle_id;
     u8 status;
     u8 cleared;
     s32 status_id;
@@ -15,7 +15,7 @@ void main_status_set_action_state(battle_stats_t* unit, u8 action_state) {
     u8 changed;
 
     old_status = unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CHARGING)];
-    misc_unit_id = unit->battle_id;
+    battle_id = unit->battle_id;
     if (action_state == MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING) {
         action_state = (old_status & STATUS_BYTE_MASK(STATUS_ID_PERFORMING)) << 3;
     }
@@ -52,9 +52,9 @@ void main_status_set_action_state(battle_stats_t* unit, u8 action_state) {
         status_id++) {
         if (changed & mask) {
             if ((old_status & mask) != 0) {
-                status_enable_special_flags(status_id, 0, misc_unit_id);
+                status_enable_special_flags(status_id, 0, battle_id);
             } else {
-                status_enable_special_flags(status_id, 1, misc_unit_id);
+                status_enable_special_flags(status_id, 1, battle_id);
             }
         }
         mask >>= 1;

@@ -25,7 +25,7 @@ void status_enable_disable_acting(battle_stats_t* unit);
 s32 status_is_unit_absent_dead_crystal_treasure_petrified_or_ridden(const battle_stats_t* unit);
 
 /* infliction and removal */
-void status_enable_special_flags(s32 status_id, s32 enabled, s32 misc_unit_id);
+void status_enable_special_flags(s32 status_id, s32 enabled, s32 battle_id);
 void status_inflict_by_entd_unit_id(s32 entd_id, s32 status, s32 which, s32 arg);
 s32 status_inflict_defending_to_battle_id(s32 unit_id);
 s32 status_init_special_flag_enabling(s32 unit_id);

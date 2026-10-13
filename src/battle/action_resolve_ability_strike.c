@@ -10,7 +10,7 @@
  * otherwise. After the clearing loop i holds 21, which the target reuses as
  * the Math skillset id in the control-value test. The (u16*)/(s16*) views
  * reproduce the target's load forms and memory-access ordering. */
-s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) {
+s32 action_resolve_ability_strike(s32 battle_id, battle_strike_work_t* work) {
     u8 targets[BATTLE_UNIT_SLOT_COUNT];
     s32 count;
     u8 flags_3;
@@ -27,10 +27,10 @@ s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) 
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         targets[i] = 0xff;
     }
-    if (misc_unit_id >= BATTLE_UNIT_SLOT_COUNT) {
+    if (battle_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
-    attacker = &g_battle_unit_stats[misc_unit_id];
+    attacker = &g_battle_unit_stats[battle_id];
     action_clear_current_data(&attacker->action);
     attacker->action.hit = 0;
     attacker->action.miss_type = ACTION_MISS_TYPE_CANCELLED;
@@ -43,7 +43,7 @@ s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) 
     reaction_targeted = 0;
     if (g_action_context != ACTION_CONTEXT_PRIMARY) {
         work->reaction_ability_id = g_battle_current_reaction_ability_id;
-        if (action_build_reaction_targets(misc_unit_id, work, &count, targets)) {
+        if (action_build_reaction_targets(battle_id, work, &count, targets)) {
             if (g_battle_current_reaction_ability_id == ABILITY_ID_REACTION_REFLECT) {
                 flags_3 = ABILITY_SECONDARY_FLAG_3_ANIMATE_ON_MISS;
             } else {
@@ -94,7 +94,7 @@ s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) 
     }
     work->can_earn_experience = 0;
     action_finalize_draw_out_katana_result(attacker, work, count);
-    work->actor_id = misc_unit_id;
+    work->actor_id = battle_id;
     work->used_weapon_id = g_action_current_ability.weapon_id;
     work->reaction_occurred = 0;
     work->current_hit_number = g_action_current_ability.strike_counter;

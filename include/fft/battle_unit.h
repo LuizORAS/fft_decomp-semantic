@@ -1387,7 +1387,7 @@ void battle_unit_update_display_by_misc_id(s32 misc_id);
 void battle_unit_update_float_and_jump_height(battle_unit_misc_data_t* unit);
 void battle_unit_update_graphics_by_misc_id_wrapper(u32 misc_id);
 void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 allow_height_change);
-s32 battle_unit_set_tile_position(s32 misc_unit_id, u8 map_x, u8 map_y, u8 map_z, u8 facing);
+s32 battle_unit_set_tile_position(s32 battle_id, u8 map_x, u8 map_y, u8 map_z, u8 facing);
 void battle_unit_shift_down_or_up(battle_unit_misc_data_t* unit, s8 delta);
 void battle_unit_copy_map_coords_from_misc_id(u32 misc_id, SVECTOR* coords);
 void battle_unit_copy_misc_data_xyz_values(SVECTOR* destination, const battle_unit_misc_data_t* misc_data);

@@ -504,7 +504,7 @@ void action_execute_ability(void);
 void action_finalize_target_current_action(void);
 void action_init_current_ability_strike_data(battle_stats_t* unit);
 s32 action_init_current_data(s32 unit_id);
-s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work);
+s32 action_resolve_ability_strike(s32 battle_id, battle_strike_work_t* work);
 s32 action_resume_attack_phase_control(void);
 s32 action_run_pre_formula_setup(const action_command_t* source, u8 target_id);
 void action_set_target_coords_and_attacker_anim(void);

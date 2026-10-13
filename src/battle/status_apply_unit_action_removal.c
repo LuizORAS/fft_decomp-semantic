@@ -11,12 +11,12 @@
  */
 void status_apply_unit_action_removal(battle_stats_t* unit) {
     s32 i;
-    s32 misc_unit_id;
+    s32 battle_id;
     s32 idx;
     s32 mask;
 
     g_action_target_data = &unit->action;
-    misc_unit_id = unit->battle_id;
+    battle_id = unit->battle_id;
     for (i = 0; i < STATUS_BYTE_COUNT; i++) {
         g_action_target_data->status_changes.removal[i] &= unit->status_sets.current[i];
     }
@@ -25,7 +25,7 @@ void status_apply_unit_action_removal(battle_stats_t* unit) {
         mask = 0x80 >> (i & 7);
         if (g_action_target_data->status_changes.removal[idx] & mask) {
             main_status_set_ct(unit, i, 0);
-            status_enable_special_flags(STATUS_HANDLER_INDEX(i), 0, misc_unit_id);
+            status_enable_special_flags(STATUS_HANDLER_INDEX(i), 0, battle_id);
         }
     }
     for (i = 0; i < STATUS_BYTE_COUNT; i++) {
