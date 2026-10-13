@@ -409,8 +409,8 @@ typedef char menu_status_panel_buffer_size_must_be_984[(sizeof(menu_status_panel
 
 void menu_clear_stat_preview(menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail);
 void menu_init_status_panel_primitives(menu_status_panel_buffer_t* menu);
-void menu_subtract_scaled_stat_preview(menu_status_panel_slot_storage_t* out, menu_status_panel_slot_storage_t* scaled,
-    menu_status_panel_slot_storage_t* base, s32 scale);
+void menu_subtract_scaled_stat_preview(menu_status_panel_slot_storage_t* out,
+    const menu_status_panel_slot_storage_t* scaled, const menu_status_panel_slot_storage_t* base, s32 scale);
 
 /* menu commands */
 /* Per-skillset menu behavior stored at 0x80065cb4. Values select specialized
