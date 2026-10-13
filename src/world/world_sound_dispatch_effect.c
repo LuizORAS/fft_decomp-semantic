@@ -3,7 +3,7 @@
 
 /* Per-frame WORLD sound effect dispatch. A queued text glyph or page sound
  * plays at once on a free channel pair, as does an error message sound in
- * the menu queue. Then the id in g_world_sound_effect_id_to_play (dropped
+ * the menu queue. Then the id in g_world_sound_pending_sfx_id (dropped
  * when negative or while the menu sounds are muted), or failing that the one
  * in g_world_menu_sound_effect_id, plays on the main_sound_play_sfx channels
  * and both queues are cleared. Cancel and Cursor Move are copied to the menu

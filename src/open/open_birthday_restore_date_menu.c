@@ -1,7 +1,7 @@
 #include "fft/open.h"
 
 /* Restore the date-selection records after leaving the confirmation prompt. */
-void open_restore_birthday_date_menu(open_birthday_date_state_t* menu) {
+void open_birthday_restore_date_menu(open_birthday_date_state_t* menu) {
     open_render_record_56_t* records_56 = g_open_gfx_render_records_56;
     /* The target reserves a 24-byte frame it never touches, as in the twin
      * open_birthday_build_confirmation_menu. */

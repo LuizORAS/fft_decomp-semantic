@@ -691,7 +691,7 @@ typedef enum main_sfx {
     MAIN_SFX_DEATH_MONSTER = 70,
     MAIN_SFX_SHIELD_DEFLECT_BULLET = 71, /* gun */
     MAIN_SFX_SHIELD_DEFLECT_ARROW = 73,  /* crossbow, bow */
-    /* Proposition result (g_wldcore_job_selection.result): 0 plays the
+    /* Proposition result (g_wldcore_proposition_report.result): 0 plays the
      * 0x4d/0x4e pair through suzuki_sound_play_2_sfx, 1 the 0x4f/0x50 pair,
      * 2 plays 0x51. */
     MAIN_SFX_PROPOSITION_SUCCESS_A = 77,

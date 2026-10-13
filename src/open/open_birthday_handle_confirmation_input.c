@@ -48,7 +48,7 @@ void open_birthday_handle_confirmation_input(open_controller_record_t* record) {
         g_open_gfx_next_render_record_56 -= 1;
         g_open_gfx_next_render_record_36 -= 2;
         g_open_current_controller_index -= 1;
-        open_restore_birthday_date_menu(&g_open_controller_records[g_open_current_controller_index].birthday_date);
+        open_birthday_restore_date_menu(&g_open_controller_records[g_open_current_controller_index].birthday_date);
         return;
     }
     if (buttons & PSX_PAD_CROSS) {
@@ -58,7 +58,7 @@ void open_birthday_handle_confirmation_input(open_controller_record_t* record) {
         g_open_gfx_next_render_record_56 -= 1;
         g_open_gfx_next_render_record_36 -= 2;
         g_open_current_controller_index -= 1;
-        open_restore_birthday_date_menu(&g_open_controller_records[g_open_current_controller_index].birthday_date);
+        open_birthday_restore_date_menu(&g_open_controller_records[g_open_current_controller_index].birthday_date);
         return;
     }
 

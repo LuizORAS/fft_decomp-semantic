@@ -357,7 +357,7 @@ void open_birthday_draw_menu_text_entry(s32 record_index, s32 combined_text_inde
 void open_birthday_load_window_image(s32 record_index, u32* image);
 void open_birthday_push_confirmation_controller(void);
 
-void open_restore_birthday_date_menu(open_birthday_date_state_t* menu);
+void open_birthday_restore_date_menu(open_birthday_date_state_t* menu);
 
 /* menu */
 

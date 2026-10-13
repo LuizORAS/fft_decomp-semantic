@@ -36,7 +36,7 @@ functions:
   - {addr: 0x80068d74, size: 48, name: wldcore_gfx_set_display_rect, hash: 318e2bd701eb87fa}
   - {addr: 0x80068da4, size: 204, name: wldcore_reset_game_if_special_keycode_is_pressed, hash: 6121aaec16ecf650}
   - {addr: 0x80068e70, size: 312, name: wldcore_map_update_scroll_axis_speed, hash: 847c2250f4204453}
-  - {addr: 0x80068fa8, size: 104, name: wldcore_init_input_repeat_state, hash: cd033db34fcf2c41}
+  - {addr: 0x80068fa8, size: 104, name: wldcore_input_init_repeat_state, hash: cd033db34fcf2c41}
   - {addr: 0x80069010, size: 668, name: wldcore_input_update_repeat, hash: f5ac2d626cd95e19}
   - {addr: 0x800692ac, size: 340, name: wldcore_window_set_render_objects_visible, hash: 082e633a45d41f5d}
   - {addr: 0x80069400, size: 168, name: wldcore_fade_start_screen, hash: 3278f2a87335c5a6}
@@ -197,7 +197,7 @@ functions:
   - {addr: 0x8007cca8, size: 208, name: wldcore_window_clear_slot_state, hash: b5918d30a7aa2ca2}
   - {addr: 0x8007cd78, size: 224, name: wldcore_window_reset_slot_state, hash: 7b292ddd6e01673f}
   - {addr: 0x8007ce58, size: 1332, name: wldcore_menu_step_sound_novel_quit_level, hash: fd7f34ad68cc922f}
-  - {addr: 0x8007d38c, size: 132, name: wldcore_capture_state_and_play_time, hash: 133f43f6ea4a69d0}
+  - {addr: 0x8007d38c, size: 132, name: wldcore_gfx_prepare_play_time_display, hash: 133f43f6ea4a69d0}
   - {addr: 0x8007d410, size: 1336, name: wldcore_menu_push_sound_novel_history_level, hash: e6d72d860bf58c21}
   - {addr: 0x8007d948, size: 1596, name: wldcore_menu_step_sound_novel_history_level, hash: 67c60f0dcfe436af}
   - {addr: 0x8007df84, size: 72, name: wldcore_window_draw_indexed_text, hash: 4045135c6ffd37ae}

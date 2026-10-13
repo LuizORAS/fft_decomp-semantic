@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 
 /* Pushes a countdown menu level (type 0x37): the first message is 0xb8f9
- * when g_wldcore_job_selection.reward_type is 1, otherwise 0xb904; a count of 1 from 0x8007a72c runs
+ * when g_wldcore_proposition_report.reward_type is 1, otherwise 0xb904; a count of 1 from 0x8007a72c runs
  * four messages, any other count runs one message starting count + 2 further
  * on. Starts thread 14 if idle and shows the first message. */
 void wldcore_menu_push_countdown_level(void) {

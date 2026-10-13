@@ -8,7 +8,7 @@
  * publishes text 0xb806 and resets its main window. It then lists the 96
  * propositions whose script variable 0x360 + i has neither bit 1 nor 2 set,
  * whose g_main_proposition_states entry is 0 in its low six bits and which
- * wldcore_proposition_set_based_on_location accepts for the current location
+ * wldcore_proposition_is_available_at_location accepts for the current location
  * (entry values 0xd000 + i). With entries it shows text 0xb80b and up to six
  * rows at (0x4c, 0x50), width 0x96, and pushes a type-7 level; otherwise it
  * resumes the parent, shows text 0xb80d and marks the parent's content

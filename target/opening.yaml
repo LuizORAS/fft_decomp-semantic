@@ -77,7 +77,7 @@ functions:
   - {addr: 0x8006b420, size: 540, name: open_title_step_new_game_start, hash: 88dab4035996c1ea}
   - {addr: 0x8006b63c, size: 852, name: open_birthday_push_date_controller, hash: 0e45678d3fb3cbd5}
   - {addr: 0x8006b990, size: 484, name: open_birthday_build_menu_text, hash: acb5e3a1a8e68d6e}
-  - {addr: 0x8006bb74, size: 296, name: open_restore_birthday_date_menu, hash: 620158889f7f74a3}
+  - {addr: 0x8006bb74, size: 296, name: open_birthday_restore_date_menu, hash: 620158889f7f74a3}
   - {addr: 0x8006bc9c, size: 324, name: open_birthday_build_confirmation_menu, hash: bb0bedfc73251381}
   - {addr: 0x8006bde0, size: 752, name: open_birthday_handle_menu_input, hash: 4fcabd119932ad53}
   - {addr: 0x8006c0d0, size: 916, name: open_birthday_push_confirmation_controller, hash: 16fd129a48959bf2}

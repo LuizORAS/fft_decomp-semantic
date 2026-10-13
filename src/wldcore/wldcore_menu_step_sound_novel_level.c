@@ -34,7 +34,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
             }
             g_wldcore_menu_blocked_buttons = 0;
             g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
-            wldcore_capture_state_and_play_time();
+            wldcore_gfx_prepare_play_time_display();
             fade = &g_wldcore_screen_fade_state;
             g_wldcore_screen_fade_state.priorities[0] = 0xF;
             g_wldcore_screen_fade_state.flags[1] = 0;

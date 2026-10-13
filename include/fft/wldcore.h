@@ -44,7 +44,7 @@ extern s32 g_wldcore_input_repeat_counter_l1;
 extern s32 g_wldcore_input_repeat_initial_delay;
 extern s32 g_wldcore_input_repeat_period;
 extern s32 g_wldcore_input_secondary_repeat_period;
-void wldcore_init_input_repeat_state(void);
+void wldcore_input_init_repeat_state(void);
 u32 wldcore_input_update_repeat(u32 buttons);
 
 /* opcode */
@@ -438,7 +438,7 @@ void wldcore_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* source, 
 s32 wldcore_gfx_step_dissolve_image_upload(GsIMAGE* im, s32 step);
 
 void wldcore_gfx_load_background_set(s32 set);
-void wldcore_capture_state_and_play_time(void);
+void wldcore_gfx_prepare_play_time_display(void);
 /* location */
 /* Provisional: four-byte per-location records reached through g_wldcore_location_records. */
 typedef struct wldcore_state_record {

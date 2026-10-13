@@ -33,7 +33,7 @@ void wldcore_menu_step_return_level(wldcore_menu_return_level_t* level) {
     if (world_menu_get_thread_activity() != 0) {
         return;
     }
-    wldcore_init_input_repeat_state();
+    wldcore_input_init_repeat_state();
     flags = g_main_system_flags;
     wldcore_gfx_toggle_captured_world_frame(0);
     cleared = g_main_system_flags & ~MAIN_SYSTEM_FLAG_FREEZE_ANIMATION;

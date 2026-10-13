@@ -1,4 +1,4 @@
-/* The target keeps &g_wldcore_job_selection.proposition_index in s5 and
+/* The target keeps &g_wldcore_proposition_report.proposition_index in s5 and
  * reaches excluded_party_index, 12 bytes below, off the same base, which is
  * why it saves one more callee-saved register than a per-field access would.
  *

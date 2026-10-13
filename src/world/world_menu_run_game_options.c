@@ -10,7 +10,7 @@
  *
  * Scrolls the two-column option list like world_menu_scrolling_list_thread, shows the
  * selected option's value text (g_world_option_menu_first_text_ids[i] + g_world_game_option_values[i]),
- * starts world_run_option_choice_menu on confirm, and each frame packs the option
+ * starts world_menu_run_option_choice on confirm, and each frame packs the option
  * values back into g_main_game_options, applies the sound mode on the main
  * stack and reloads the input-repeat timings for the finger-cursor speed.
  *

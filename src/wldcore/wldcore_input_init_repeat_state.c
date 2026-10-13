@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
 
-void wldcore_init_input_repeat_state(void) {
+void wldcore_input_init_repeat_state(void) {
     g_wldcore_input_repeat_counter_l1 = 0;
     g_wldcore_input_repeat_counter_r1 = 0;
     g_wldcore_input_repeat_counter_right = 0;

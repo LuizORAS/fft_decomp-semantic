@@ -1,14 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/*
- * Copies a snapshot of two 32-bit coordinates, sets its control flags, and captures the
- * current play time.
- *
- * Cache the flag and time source values before publishing their destinations;
- * this preserves the target's load/store schedule.
- */
-void wldcore_capture_state_and_play_time(void) {
+/* Restore the HUD position and display the current play time.
+ * Cache the flags and time before publishing the display fields. */
+void wldcore_gfx_prepare_play_time_display(void) {
     u32 flags;
     s32 hours;
     s32 minutes;

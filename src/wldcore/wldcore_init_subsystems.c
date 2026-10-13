@@ -5,7 +5,7 @@
 void wldcore_init_subsystems(void) {
     SetDispMask(0);
     wldcore_init_world_map_state();
-    wldcore_init_input_repeat_state();
+    wldcore_input_init_repeat_state();
     wldcore_load_scratch_data_blocking();
     wldcore_gfx_init_subsystem();
     wldcore_window_init_record_pools();

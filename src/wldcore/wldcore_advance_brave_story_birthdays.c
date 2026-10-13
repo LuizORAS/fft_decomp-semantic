@@ -2,7 +2,7 @@
 #include "fft/wldcore.h"
 
 /*
- * The daily birthday sweep, run by wldcore_advance_calendar_day after the
+ * The daily birthday sweep, run by wldcore_calendar_advance_day after the
  * calendar rolls over: every brave-story character whose stored birthday is
  * today gets a year older, capped at 99.
  *

@@ -12,7 +12,7 @@
  * preferred-job scan reads the party record once, with the scoring loop's
  * leftover index, as the target does. The target builds the row walk pointers
  * from the proposition_index address, which needs the arrays and that 32-bit value to be
- * members of one object (g_wldcore_job_selection). */
+ * members of one object (g_wldcore_proposition_report). */
 void wldcore_proposition_determine_success(void) {
     const u8* job_table_a;
     const u8* job_table_b;

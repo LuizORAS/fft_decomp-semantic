@@ -1,13 +1,8 @@
 #include "fft/script.h"
 #include "fft/wldcore.h"
 
-/* Reports which completion milestone the party has just reached, as a
- * one-based rank, or 0 when g_wldcore_job_selection.result blocks it, the world phase in
- * g_wldcore_job_selection.reward_type is neither 1 nor 2, or the set-flag count is not exactly on a
- * milestone. Phase 1 counts script flags 0x321-0x33f against the eight
- * thresholds at 0x8009eb34; phase 2 counts flags 0x350-0x35f against those at
- * 0x8009eb3c. Callers push a countdown menu level when the rank is nonzero.
- */
+/* Return the one-based treasure or unexplored-land collection milestone
+ * reached by a successful proposition, or zero when the count is not a milestone. */
 s32 wldcore_get_completion_milestone_rank(void) {
     s32 count;
     s32 i;
