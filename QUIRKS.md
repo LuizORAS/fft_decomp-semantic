@@ -63,7 +63,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   offsets are loaded unsigned (+255), so only `+x`/`+y` survive, and the level
   loop runs for level 0 only.
 - `src/battle/ai_build_targetable_tile_mask.c`: radii 8–15 index past
-  the 8-entry template table into the following status weights.
+  the 8-entry template table into the following status weights. Jump Level 8
+  can reach this path with a non-arcing weapon.
 - `src/battle/ai_evaluate_self_target_origins.c`: suspension during the
   first origin's target search marks the second-origin stage, so resuming skips
   the moved-origin pass.

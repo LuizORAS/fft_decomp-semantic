@@ -6,8 +6,8 @@
  * Modes 0, 1, and 2 select range, area, or their sum; other modes use radius.
  * Radius 16 or greater fills both masks without applying the linear filter.
  * Radii 8 through 15 read the following status-priority weights instead of
- * row templates. This helper does not guard those inputs; caller restrictions
- * are not established.
+ * row templates. Jump Level 8 can supply radius 8 on non-arcing origin scans.
+ * The lookup is unchecked.
  */
 void ai_build_targetable_tile_mask(ai_tile_mask_mode_e mode, s32 radius) {
     ai_data_t* ai = &g_ai_data_base;

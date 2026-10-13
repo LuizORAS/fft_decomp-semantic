@@ -40,6 +40,7 @@ s32 ai_calculate_ability_range(void) {
     }
 
     level = 0;
+    /* Direct typed row pointers change the original loop bytes. */
     for (level_address = (u32)ai; level < MAP_TERRAIN_LAYER_COUNT;
         level++, level_address += AI_GRID_ROW_COUNT * sizeof(u16)) {
         for (y = 0; y < ai->map_max_y; y++) {
