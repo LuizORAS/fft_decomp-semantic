@@ -449,18 +449,18 @@ extern s32 g_action_at_list_active;
 extern s32 g_action_at_list_id;
 
 s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode);
-s32 action_calculate_at_list_and_get_specific_unit_id(s32 unit_idx);
-s32 action_check_at_list_for_unit_battle_id(const battle_stats_t* unit);
+s32 action_calculate_at_list_and_get_specific_unit_id(s32 at_index);
+s32 action_find_unit_turn_index(const battle_stats_t* unit);
 void action_clear_at_list_active(void);
 void action_clear_at_list_id(void);
 void action_get_next_acting_unit(s32 arg);
-u32 action_get_number_of_turns_to_resolve(s32 unit_index, s32 ct, battle_at_entry_t* entries);
+u32 action_get_number_of_turns_to_resolve(s32 battle_id, s32 ct, const battle_at_entry_t* entries);
 void action_increment_at_list_id(void);
 void action_open_status_menu_at_list_start(void);
 s32 action_preview_at_list(battle_stats_t* unit, action_command_t* action, battle_at_entry_t* at_list);
 void action_set_at_list_active(void);
 void action_show_next_at_list_entry(void);
-s32 action_sort_at_list(s32 unit_id, s32 mode, s32 sort_key, battle_at_entry_t* list);
+s32 action_sort_at_list(s32 battle_id, s32 mode, s32 sort_key, battle_at_entry_t* list);
 
 /* preparation */
 extern u8 g_action_menu_row_types[]; /* per-row skillset kind; 13 keeps the row active */

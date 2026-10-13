@@ -1250,7 +1250,7 @@ functions:
   - {addr: 0x80183078, size: 596, name: status_build_upkeep_action, hash: 2b39ea72993f160c}
   - {addr: 0x801832cc, size: 168, name: status_calculate_turn_flags, hash: 698a9630926bf0a1}
   - {addr: 0x80183374, size: 328, name: action_check_battle_outcome, hash: e089ef307f2b5b2c}
-  - {addr: 0x801834bc, size: 136, name: action_check_at_list_for_unit_battle_id, hash: 458cc1f77decbd50}
+  - {addr: 0x801834bc, size: 136, name: action_find_unit_turn_index, hash: 458cc1f77decbd50}
   - {addr: 0x80183544, size: 100, name: action_calculate_at_list_and_get_specific_unit_id, hash: 1c8bc8bcda750bbc}
   - {addr: 0x801835a8, size: 80, name: status_is_unit_absent_dead_crystal_treasure_petrified_or_ridden, hash: 7f9bf09700201ba6}
   - {addr: 0x801835f8, size: 276, name: action_preview_at_list, hash: 3b32f157117983c5}
