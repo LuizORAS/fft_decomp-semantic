@@ -29,6 +29,7 @@ void wldcore_file_wait_then_build_header(
 
 void wldcore_wait_for_file_load(void);
 
+void wldcore_load_scratch_data_blocking(void);
 /* input */
 extern u32 g_wldcore_input_current_buttons;
 extern u32 g_wldcore_input_new_button_presses;
@@ -78,6 +79,11 @@ typedef struct wldcore_opcode_state {
     s16 y; /* 0x28 */
 } wldcore_opcode_state_t;
 
+/* Scalar view of g_wldcore_active_saved_record.state_flags for opcode
+ * handlers that read-modify-write it beside another record store: the member
+ * spelling shares one base register where the target uses absolute addresses. */
+extern u16 g_wldcore_state_flags;
+
 extern wldcore_opcode_state_t g_wldcore_opcode_state;
 extern void (*g_wldcore_opcode_handlers[])(void);
 void wldcore_opcode_apply_pending_delta_and_clamp_value(void);
@@ -122,6 +128,9 @@ typedef struct wldcore_deep_dungeon_battle {
     u8 entd_ids[8];
 } wldcore_deep_dungeon_battle_t;
 
+extern s32 g_wldcore_random_battle_entd_id;
+extern s32 g_wldcore_random_battle_map_id;
+extern s32 g_wldcore_random_battle_squad_id;
 extern wldcore_encounter_entry_t (*g_wldcore_random_battle_data)[3];
 extern wldcore_deep_dungeon_battle_t* g_wldcore_deep_dungeon_battles;
 
@@ -160,12 +169,12 @@ extern s32 g_wldcore_route_search_depth;
 extern s32 g_wldcore_route_search_cost;
 extern wldcore_route_path_t g_wldcore_route_search_path;
 
+/* sound */
 /* wldcore_audio_music_slots_t.flags. */
 typedef enum wldcore_audio_music_flag {
     WLDCORE_AUDIO_MUSIC_PLAYING = 0x01, /* the current slot's music is audible: a new start fades it out first */
 } wldcore_audio_music_flag_e;
 
-/* sound */
 /* Playback flags followed by the loaded music IDs for slots 1 and 2. */
 typedef struct wldcore_audio_music_slots {
     s32 flags; /* wldcore_audio_music_flag_e */
@@ -226,8 +235,6 @@ extern u32 g_wldcore_sound_novel_local_flags[];
 extern s32 g_wldcore_sound_novel_wait_counter;
 extern wldcore_audio_queue_t g_wldcore_audio_queue;
 
-/* The branch opcodes subtract this 16-bit value sign-extended, so it is signed;
- * the three flag-0x04 handlers reach the same storage through a u16 view. */
 /* Unsigned views of g_wldcore_active_saved_record.text_history_0..3 for the
  * two history shifters, which load them with lhu; the record keeps s16 for
  * the -1 stores of wldcore_reset_saved_record_fields. */
@@ -250,13 +257,13 @@ void wldcore_sound_play_pending_script_sounds(s32 low, s32 high, s32 value);
 s32 wldcore_sound_novel_update_countdown_timer(void);
 void wldcore_load_sound_novel_files(s32 chapter);
 
+/* story */
 /* wldcore_slideshow_t.flags. */
 typedef enum wldcore_slideshow_flag {
     WLDCORE_SLIDESHOW_RUNNING = 0x01,  /* the page timer runs */
     WLDCORE_SLIDESHOW_REVERSED = 0x02, /* the route is shown end to start */
 } wldcore_slideshow_flag_e;
 
-/* story */
 /* Provisional: the slideshow page list at 0x800d3bbc. A route travel reuses
  * the record: the route id is the script variable (offset by 0x22c, the
  * route-visible variables), each page is one two-point segment of the route
@@ -290,28 +297,22 @@ extern u8 g_wldcore_unexplored_land_picture_sets[];
 void wldcore_advance_brave_story_birthdays(void);
 
 /* system */
-/* Provisional: four-byte per-location records reached through g_wldcore_location_records. */
-typedef struct wldcore_state_record {
-    u8 _unused_00[2];
-    u8 picture; /* 0x02; proposition picture + 1, 0 for none */
-    u8 is_town; /* 0x03; 1 offers the fixed town entries 0xb85d-0xb85f in the location menu */
-} wldcore_state_record_t;
-
 /* g_main_system_flags as wldcore_process_frame_gate last saw it (main_system_flags_e). */
 extern u32 g_wldcore_previous_system_flags;
 
-/* Scalar view of g_wldcore_active_saved_record.state_flags for opcode
- * handlers that read-modify-write it beside another record store: the member
- * spelling shares one base register where the target uses absolute addresses. */
-extern u16 g_wldcore_state_flags;
-extern s32 g_wldcore_random_battle_entd_id;
-extern s32 g_wldcore_random_battle_map_id;
-extern s32 g_wldcore_random_battle_squad_id;
 void wldcore_restore_previous_stack(void);
 void wldcore_init_stub(void);
-void wldcore_window_number_panel_noop_callback(void);
 void wldcore_reset_game_if_special_keycode_is_pressed(void);
 
+void wldcore_init_world_map_state(void);
+void wldcore_switch_to_stack(void*);
+s32 wldcore_handle_exit_request(void);
+s32 wldcore_entrypoint(void);
+void wldcore_finalize_loop(void);
+void wldcore_init_core(void);
+void wldcore_init_runtime_state(void);
+void wldcore_init_subsystems(void);
+void wldcore_process_frame_gate(void);
 /* thread */
 /* Slots that the WLDCORE screens use for threads of their own. */
 typedef enum wldcore_thread_slot {
@@ -327,12 +328,13 @@ extern menu_status_thread_t g_wldcore_thread9_params;
 extern menu_status_thread_t g_wldcore_threadc_params;
 
 /* unit */
-extern s32 g_wldcore_participant_list_saved_cursor;
+extern battle_stats_t g_wldcore_status_unit;
 party_data_t* wldcore_get_party_data_pointer(s32 party_index);
 s32 wldcore_get_ramza_roster_index(void);
 s32 wldcore_unit_get_id_from_misc_id(s32 misc_id);
 void wldcore_unit_build_status_panel_data(s32 party_index);
 
+void wldcore_load_formation_unit_name_and_face(void);
 /* gfx */
 /* g_wldcore_context_value_display_mode: the layout of the HUD numeric readout
  * (wldcore_gfx_draw_context_value_display). */
@@ -385,6 +387,9 @@ extern PACKET g_wldcore_gfx_world_primitive_buffers[];
 extern s32 g_wldcore_picture_sector_offsets[];
 extern s32 g_wldcore_background_sector_offsets[];
 
+extern s32 g_wldcore_context_value_display_mode;
+extern world_sprite_animation_sequence_t** g_wldcore_anim_sequence_table;
+extern world_sprite_cel_header_t** g_wldcore_anim_cel_table;
 /* Colour of the context-value display, tinted by wldcore_gfx_copy_color_with_tint. */
 extern CVECTOR g_wldcore_hud_color;
 
@@ -406,11 +411,6 @@ extern u32* g_wldcore_scratch_buffer;
 extern rgb24_t g_wldcore_screen_brightness_rgb;
 extern wldcore_sortbox_state_t g_wldcore_screen_fade_state;
 
-/* 32-bit views of g_wldcore_screen_fade_state.flags[1] and priorities[0..1]:
- * the sound-novel setters store whole 32-bit values where the sort reads a 16-bit value,
- * and the sound-novel menu stores flags[1] by absolute address beside a live
- * &g_wldcore_screen_fade_state base, which the member spelling does not
- * reproduce. */
 void wldcore_gfx_draw_world_frame_with_map(void);
 s32 wldcore_fade_step_screen(void);
 void wldcore_gfx_toggle_captured_world_frame(s32 capture);
@@ -437,7 +437,16 @@ void wldcore_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* source, 
 
 s32 wldcore_gfx_step_dissolve_image_upload(GsIMAGE* im, s32 step);
 
+void wldcore_gfx_load_background_set(s32 set);
+void wldcore_capture_state_and_play_time(void);
 /* location */
+/* Provisional: four-byte per-location records reached through g_wldcore_location_records. */
+typedef struct wldcore_state_record {
+    u8 _unused_00[2];
+    u8 picture; /* 0x02; proposition picture + 1, 0 for none */
+    u8 is_town; /* 0x03; 1 offers the fixed town entries 0xb85d-0xb85f in the location menu */
+} wldcore_state_record_t;
+
 /* Provisional: the type-4 location list level as wldcore_menu_push_location_menu_level
  * fills it. */
 typedef struct wldcore_location_list_level {
@@ -488,6 +497,7 @@ typedef struct wldcore_location_entry_state {
 } wldcore_location_entry_state_t;
 typedef char wldcore_location_entry_state_size_must_be_148[sizeof(wldcore_location_entry_state_t) == 148 ? 1 : -1];
 
+extern u8 g_wldcore_choice_hidden_variable_offsets[];
 extern wldcore_location_entry_state_t g_wldcore_location_entry_state;
 extern wldcore_state_record_t* g_wldcore_location_records;
 extern s32 g_wldcore_location_marker_shade;
@@ -731,6 +741,7 @@ void wldcore_text_init_scrollable_window(wldcore_text_scrollable_window_t* state
 s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* window);
 void wldcore_text_update_scroll_indicators(wldcore_text_scrollable_window_t* state);
 
+void wldcore_text_update_page_prompt_visibility(wldcore_text_scrollable_window_t* state);
 /* proposition */
 /* Provisional: the job-report confirmation level. The cursor window at +0x00
  * is moved between the two rows of the render record at +0x04, and +0x08
@@ -952,6 +963,12 @@ typedef struct wldcore_menu_send_unit_level {
 } wldcore_menu_send_unit_level_t;
 typedef char wldcore_menu_send_unit_level_size_must_be_92[sizeof(wldcore_menu_send_unit_level_t) == 92 ? 1 : -1];
 
+/* Saved proposition-list cursor row. Declared as an array: GCC's alias
+ * heuristic needs an in-struct object to keep the target's load order in
+ * wldcore_list_handle_active_propositions_input; a scalar does not. */
+extern s32 g_wldcore_active_propositions_saved_cursor[];
+
+extern s32 g_wldcore_participant_list_saved_cursor;
 extern wldcore_proposition_report_t g_wldcore_proposition_report;
 extern s32* g_wldcore_proposition_data_base;
 extern s32 g_wldcore_proposition_selected_entry;
@@ -996,6 +1013,7 @@ void wldcore_proposition_push_result_level(s32 proposition);
 s32 wldcore_map_job_id_to_category_index(s32 job_id);
 s32 wldcore_proposition_find_preferred_job_unit(void);
 
+s32 wldcore_get_completion_milestone_rank(void);
 /* scroll */
 typedef enum wldcore_scroll_limits {
     WLDCORE_SCROLL_MIN_X = -116,
@@ -1102,6 +1120,9 @@ typedef struct wldcore_menu_window_pair_render_level {
     s32 panel_rows;    /* 0x0c; cleared by 0x800712b0 */
 } wldcore_menu_window_pair_render_level_t;
 
+extern menu_cursor_state_t g_wldcore_tutorial_entries_cursor_state;
+extern s32 g_wldcore_tutorial_category_saved_cursor;
+extern s32 g_wldcore_tutorial_event_ids[];
 /* Per-row flag column of the world list panels; the list steps compare it
  * signed, and the two writers that only store into it agree on the width. */
 extern s16 g_wldcore_list_row_flags[];
@@ -1948,6 +1969,7 @@ typedef struct wldcore_window_panel_layout {
     s32 visible_rows;
 } wldcore_window_panel_layout_t;
 
+extern s16 g_wldcore_panel_row_actions[16];
 extern menu_cursor_state_t g_wldcore_menu_cursor_states[];
 
 /* libgs sprite sorted by wldcore_draw_close_indicator_if_pending through
@@ -2110,41 +2132,14 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text);
 void wldcore_menu_push_sound_novel_level(s32 mode);
 void wldcore_menu_push_sound_novel_resume_level(s32 mode);
 void wldcore_menu_push_countdown_level(void);
-void wldcore_text_update_page_prompt_visibility(wldcore_text_scrollable_window_t* state);
 
-/* other */
-extern s16 g_wldcore_panel_row_actions[16];
-extern menu_cursor_state_t g_wldcore_tutorial_entries_cursor_state;
-extern s32 g_wldcore_context_value_display_mode;
+void wldcore_window_number_panel_noop_callback(void);
+/* bits */
 
-/* Saved proposition-list cursor row. Declared as an array: GCC's alias
- * heuristic needs an in-struct object to keep the target's load order in
- * wldcore_list_handle_active_propositions_input; a scalar does not. */
-extern s32 g_wldcore_active_propositions_saved_cursor[];
-extern world_sprite_animation_sequence_t** g_wldcore_anim_sequence_table;
-extern world_sprite_cel_header_t** g_wldcore_anim_cel_table;
-extern u8 g_wldcore_choice_hidden_variable_offsets[];
-extern battle_stats_t g_wldcore_status_unit;
-extern s32 g_wldcore_tutorial_category_saved_cursor;
-extern s32 g_wldcore_tutorial_event_ids[];
-void wldcore_init_world_map_state(void);
-void wldcore_switch_to_stack(void*);
-s32 wldcore_handle_exit_request(void);
-void wldcore_gfx_load_background_set(s32 set);
-void wldcore_load_formation_unit_name_and_face(void);
-void wldcore_load_scratch_data_blocking(void);
 void wldcore_set_bit_value(u32* bits, s32 index, s32 set);
 s32 wldcore_test_bit(u32* bits, s32 index);
-s32 wldcore_entrypoint(void);
-void wldcore_finalize_loop(void);
-void wldcore_init_core(void);
-void wldcore_init_runtime_state(void);
-void wldcore_init_subsystems(void);
-void wldcore_process_frame_gate(void);
 
 void wldcore_write_nine_bit_record(u32* bits, s32 record, calendar_date_t* source);
-s32 wldcore_get_completion_milestone_rank(void);
 void wldcore_read_nine_bit_record(u32* bits, s32 record, calendar_date_t* dest);
-void wldcore_capture_state_and_play_time(void);
 
 #endif

@@ -38,26 +38,7 @@ void open_file_wait_then_build_header(
 
 s32 open_file_get_cd_sync_state_delta(void);
 
-/* Rows of g_open_controller_handlers: the value a push stores in
- * g_open_controller_handler_indices. */
-typedef enum open_controller_handler {
-    OPEN_CONTROLLER_FFTST_MOVIE = 0,           /* open_movie_finish_stream_controller_if_ready_or_skipped */
-    OPEN_CONTROLLER_FFTOP_MOVIE = 1,           /* open_movie_finish_fftop_controller_if_ready_or_skipped */
-    OPEN_CONTROLLER_TITLE_MENU = 2,            /* open_title_update_menu */
-    OPEN_CONTROLLER_SOUND_TYPE_MENU = 3,       /* open_menu_handle_sound_type_input */
-    OPEN_CONTROLLER_NEW_GAME_START = 4,        /* open_title_step_new_game_start */
-    OPEN_CONTROLLER_BIRTHDAY_DATE = 5,         /* open_birthday_handle_menu_input */
-    OPEN_CONTROLLER_BIRTHDAY_CONFIRMATION = 6, /* open_birthday_handle_confirmation_input */
-    OPEN_CONTROLLER_MUSIC_TEST = 7,            /* open_menu_update_music_test */
-    OPEN_CONTROLLER_TEXT_MESSAGE = 8,          /* open_controller_wait_text_message */
-    OPEN_CONTROLLER_FFTEND_MOVIE = 9,          /* open_movie_finish_fftend_controller_if_ready_or_skipped */
-    OPEN_CONTROLLER_SCRIPT = 10,               /* open_script_update_controller */
-    OPEN_CONTROLLER_TITLE_DEMO_MOVIE = 11,     /* open_movie_start_fftst_or_skip_controller */
-    OPEN_CONTROLLER_TITLE_EXIT = 12,           /* open_title_update_exit_transition */
-} open_controller_handler_e;
-
 /* input */
-extern s32 g_open_controller_handler_indices[]; /* open_controller_handler_e */
 extern u32 g_open_input_current_buttons;
 extern s32 g_open_input_left_repeat_counter;
 extern s32 g_open_input_right_repeat_counter;
@@ -71,9 +52,6 @@ extern volatile u32 g_open_input_new_button_presses;
 extern u32 g_open_input_polled_buttons;
 extern u32 g_open_input_previous_buttons;
 extern s32 g_open_input_up_repeat_counter;
-extern s32 g_open_controller_selected_options[];
-void open_controller_dispatch_current(void);
-void open_controller_start_text_message(s32 parameter, s32 run_followup);
 u32 open_input_update_repeat(u32 buttons);
 void open_input_init_directional_state(void);
 void open_input_update_buttons_and_check_game_reset(void);
@@ -186,7 +164,25 @@ typedef struct open_render_record_56_position {
     /* 0x08 */ u8 _unused_08[0x38 - 8];
 } open_render_record_56_position_t;
 
-/* birthday */
+/* controllers */
+/* Rows of g_open_controller_handlers: the value a push stores in
+ * g_open_controller_handler_indices. */
+typedef enum open_controller_handler {
+    OPEN_CONTROLLER_FFTST_MOVIE = 0,           /* open_movie_finish_stream_controller_if_ready_or_skipped */
+    OPEN_CONTROLLER_FFTOP_MOVIE = 1,           /* open_movie_finish_fftop_controller_if_ready_or_skipped */
+    OPEN_CONTROLLER_TITLE_MENU = 2,            /* open_title_update_menu */
+    OPEN_CONTROLLER_SOUND_TYPE_MENU = 3,       /* open_menu_handle_sound_type_input */
+    OPEN_CONTROLLER_NEW_GAME_START = 4,        /* open_title_step_new_game_start */
+    OPEN_CONTROLLER_BIRTHDAY_DATE = 5,         /* open_birthday_handle_menu_input */
+    OPEN_CONTROLLER_BIRTHDAY_CONFIRMATION = 6, /* open_birthday_handle_confirmation_input */
+    OPEN_CONTROLLER_MUSIC_TEST = 7,            /* open_menu_update_music_test */
+    OPEN_CONTROLLER_TEXT_MESSAGE = 8,          /* open_controller_wait_text_message */
+    OPEN_CONTROLLER_FFTEND_MOVIE = 9,          /* open_movie_finish_fftend_controller_if_ready_or_skipped */
+    OPEN_CONTROLLER_SCRIPT = 10,               /* open_script_update_controller */
+    OPEN_CONTROLLER_TITLE_DEMO_MOVIE = 11,     /* open_movie_start_fftst_or_skip_controller */
+    OPEN_CONTROLLER_TITLE_EXIT = 12,           /* open_title_update_exit_transition */
+} open_controller_handler_e;
+
 /* open_title_controller_t.cursor: the four title menu entries. */
 typedef enum open_title_menu_entry {
     OPEN_TITLE_MENU_NEW_GAME = 0,
@@ -208,15 +204,6 @@ typedef enum open_title_exit_state_id {
     OPEN_TITLE_EXIT_CANCEL = 1,  /* cross: back to the title menu */
     OPEN_TITLE_EXIT_CONFIRM = 2, /* circle or start: the new-game transition */
 } open_title_exit_state_id_e;
-
-/* Step of the music test controller (open_menu_update_music_test). */
-typedef enum open_music_test_step {
-    OPEN_MUSIC_TEST_STEP_IDLE = 0,
-    OPEN_MUSIC_TEST_STEP_CLOSE = 1,       /* waits for the list thread, then fades the screen */
-    OPEN_MUSIC_TEST_STEP_FADE_OUT = 2,    /* waits for the fade, then returns to the title menu */
-    OPEN_MUSIC_TEST_STEP_START_TRACK = 3, /* waits for the music to load, then plays it */
-    OPEN_MUSIC_TEST_STEP_OPEN = 4,        /* waits for the fade, then starts the list thread */
-} open_music_test_step_e;
 
 /* Title-menu controller state (handler 2), pushed into the next controller
  * record by open_title_push_menu_controller and run by open_title_update_menu. */
@@ -260,46 +247,6 @@ typedef struct open_birthday_confirmation_state {
 typedef char
     open_birthday_confirmation_state_size_must_be_100[(sizeof(open_birthday_confirmation_state_t) == 100) ? 1 : -1];
 
-/* Days in each month of the birthday entry. February has 28, so 29 February cannot be entered. */
-extern u8 g_open_birthday_month_lengths[12];
-extern u8 g_open_birthday_title_image[];
-extern u8 g_open_birthday_window_image[];
-
-/* Start date of each ordinary sign as {month, day} byte pairs, Aries first
- * ({3, 21}, {4, 20}, ...). open_birthday_convert_to_zodiac_position indexes
- * it flat ([i * 2], [i * 2 + 1]), and it is not const: that routine reloads a
- * day after storing through its month pointer. */
-extern u8 g_open_birthday_zodiac_start_dates[ZODIAC_SIGN_ORDINARY_COUNT * 2];
-void open_birthday_push_date_controller(void);
-void open_birthday_build_confirmation_menu(open_birthday_date_state_t* state);
-void open_birthday_build_menu_text(open_birthday_date_state_t* menu);
-s32 open_birthday_calculate_day_of_year(s32 month, s32 day);
-void open_birthday_convert_date_to_zodiac(s32* month, s32* day);
-
-void open_birthday_draw_menu_text_entry(s32 record_index, s32 combined_text_index, point32_t position, u8* image);
-
-void open_birthday_load_window_image(s32 record_index, u32* image);
-void open_birthday_push_confirmation_controller(void);
-
-/* menu */
-
-/* Pad buttons withheld from the WORLD menu frame (open_menu_update_world_formation); -1 blocks all. */
-extern s32 g_open_menu_blocked_buttons;
-extern s32 g_open_menu_formation_otag_index;
-
-/* The slot of the music test's list thread. */
-enum {
-    OPEN_THREAD_SLOT_MUSIC_TEST_LIST = 12,
-};
-void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, point32_t* extent, point32_t* origin);
-
-void open_menu_start_music_test_controller(void);
-void open_menu_update_world_formation(void);
-void open_menu_push_sound_type_controller(void);
-void open_menu_init_render_record_fields(
-    s32 record_index, point16_t vram_position, point16_t image_size, point32_t clut_position, u32 flags);
-
-/* sound */
 /* Sound-type menu controller state (handler 3). */
 enum { OPEN_SOUND_MENU_ENTRY_COUNT = 3 };
 
@@ -368,6 +315,12 @@ extern open_controller_handler_t g_open_controller_handlers[];
 extern open_controller_record_t g_open_controller_records[];
 extern open_controller_record_t g_open_controller_records_next[];
 
+extern s32 g_open_controller_handler_indices[]; /* open_controller_handler_e */
+extern s32 g_open_controller_selected_options[];
+extern s32 g_open_current_controller_index;
+
+void open_controller_dispatch_current(void);
+void open_controller_start_text_message(s32 parameter, s32 run_followup);
 void open_movie_finish_stream_controller_if_ready_or_skipped(open_controller_record_t* record);
 void open_movie_finish_fftop_controller_if_ready_or_skipped(open_controller_record_t* unused_record);
 void open_title_update_menu(open_controller_record_t* record);
@@ -382,6 +335,56 @@ void open_script_update_controller(open_controller_record_t* unused_record);
 void open_movie_start_fftst_or_skip_controller(open_controller_record_t* unused_record);
 void open_title_update_exit_transition(open_controller_record_t* record);
 
+/* birthday */
+/* Days in each month of the birthday entry. February has 28, so 29 February cannot be entered. */
+extern u8 g_open_birthday_month_lengths[12];
+extern u8 g_open_birthday_title_image[];
+extern u8 g_open_birthday_window_image[];
+
+/* Start date of each ordinary sign as {month, day} byte pairs, Aries first
+ * ({3, 21}, {4, 20}, ...). open_birthday_convert_date_to_zodiac indexes
+ * it flat ([i * 2], [i * 2 + 1]), and it is not const: that routine reloads a
+ * day after storing through its month pointer. */
+extern u8 g_open_birthday_zodiac_start_dates[ZODIAC_SIGN_ORDINARY_COUNT * 2];
+void open_birthday_push_date_controller(void);
+void open_birthday_build_confirmation_menu(open_birthday_date_state_t* state);
+void open_birthday_build_menu_text(open_birthday_date_state_t* menu);
+s32 open_birthday_calculate_day_of_year(s32 month, s32 day);
+void open_birthday_convert_date_to_zodiac(s32* month, s32* day);
+
+void open_birthday_draw_menu_text_entry(s32 record_index, s32 combined_text_index, point32_t position, u8* image);
+
+void open_birthday_load_window_image(s32 record_index, u32* image);
+void open_birthday_push_confirmation_controller(void);
+
+void open_restore_birthday_date_menu(open_birthday_date_state_t* menu);
+
+/* menu */
+
+/* Pad buttons withheld from the WORLD menu frame (open_menu_update_world_formation); -1 blocks all. */
+extern s32 g_open_menu_blocked_buttons;
+extern s32 g_open_menu_formation_otag_index;
+
+void open_menu_update_world_formation(void);
+void open_menu_push_sound_type_controller(void);
+void open_menu_init_render_record_fields(
+    s32 record_index, point16_t vram_position, point16_t image_size, point32_t clut_position, u32 flags);
+
+/* music test */
+/* Step of the music test controller (open_menu_update_music_test). */
+typedef enum open_music_test_step {
+    OPEN_MUSIC_TEST_STEP_IDLE = 0,
+    OPEN_MUSIC_TEST_STEP_CLOSE = 1,       /* waits for the list thread, then fades the screen */
+    OPEN_MUSIC_TEST_STEP_FADE_OUT = 2,    /* waits for the fade, then returns to the title menu */
+    OPEN_MUSIC_TEST_STEP_START_TRACK = 3, /* waits for the music to load, then plays it */
+    OPEN_MUSIC_TEST_STEP_OPEN = 4,        /* waits for the fade, then starts the list thread */
+} open_music_test_step_e;
+
+/* The slot of the music test's list thread. */
+enum {
+    OPEN_THREAD_SLOT_MUSIC_TEST_LIST = 12,
+};
+
 extern s16 g_open_music_test_row_actions[16];
 extern menu_entry_t g_open_music_test_list_params;
 extern menu_text_layout_t g_open_music_test_list_state;
@@ -390,6 +393,18 @@ extern s16 g_open_music_test_list_entries[96];
 extern s16 g_open_music_test_selected_option;
 extern u8 g_open_music_test_music_ids[];               /* music test entry -> scenario music id */
 extern suzuki_music_t* g_open_music_test_sound_handle; /* handle of the playing music test track */
+
+void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, point32_t* extent, point32_t* origin);
+
+void open_menu_start_music_test_controller(void);
+
+/* sound */
+typedef enum game_sound_mode {
+    GAME_SOUND_MODE_MONO = 0,
+    GAME_SOUND_MODE_STEREO = 1,
+    GAME_SOUND_MODE_WIDE = 2,
+} game_sound_mode_e;
+
 /* Fades the CD audio in at the given mix level (suzuki_sound_put_type), or out when it is 0. */
 void open_sound_set_cd_mix_and_volume(s32 cd_mix_level, s32 duration);
 
@@ -727,24 +742,16 @@ typedef enum open_system_runtime_flag {
     OPEN_SYSTEM_RUNTIME_FLAG_SOFT_RESET_DISABLED = 0x80000,
 } open_system_runtime_flag_e;
 
-typedef enum game_sound_mode {
-    GAME_SOUND_MODE_MONO = 0,
-    GAME_SOUND_MODE_STEREO = 1,
-    GAME_SOUND_MODE_WIDE = 2,
-} game_sound_mode_e;
-
 extern s32 g_open_system_result;
 extern u32 g_open_system_runtime_flags;
 extern s32 g_open_system_vsync_mode;
 extern open_gfx_transition_entry_t** g_open_new_game_transition_entries;
-void open_restore_birthday_date_menu(open_birthday_date_state_t* menu);
 void open_gfx_transition_finished_stub(void);
 void open_system_init_runtime_state(void);
 s32 open_system_run_main_loop(s32 skip_movie);
 void open_system_run_ending_cutscene(void);
 
 /* other */
-extern s32 g_open_current_controller_index;
 extern u8 g_open_work_buffer_0[];
 extern u8 g_open_work_buffer_1[];
 
