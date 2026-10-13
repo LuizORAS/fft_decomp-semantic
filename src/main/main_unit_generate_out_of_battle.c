@@ -117,7 +117,7 @@ void main_unit_generate_out_of_battle(party_unit_t* party, main_unit_generation_
             found = 1;
             name_id.value = name_base.value + (rand() * 255) / 0x8000;
             for (i = 0; i < PARTY_MEMBER_SLOT_COUNT; i++) {
-                other = &g_main_party_data[i];
+                other = &g_main_party_units[i];
                 if (other->party_id != PARTY_ID_NONE && (other->sprite_set & -(other->sprite_set >> 7)) == generic_id) {
                     existing_name.value = 0;
                     existing_name.fields.name_class = other->name_id.fields.name_class;

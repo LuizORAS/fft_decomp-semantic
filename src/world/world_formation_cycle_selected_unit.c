@@ -19,7 +19,7 @@ void world_formation_cycle_selected_unit(s16 pad_buttons) {
                 index = g_world_formation_selected_unit_index - 1;
             }
             g_world_formation_selected_unit_index = index;
-        } while (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG);
+        } while (g_world_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG);
     } else if (index & PSX_PAD_R1) {
         g_world_menu_sound_effect_id = MAIN_SFX_PAGE_SWITCH;
         do {
@@ -27,6 +27,6 @@ void world_formation_cycle_selected_unit(s16 pad_buttons) {
                 ? g_world_formation_selected_unit_index + 1
                 : 0;
             g_world_formation_selected_unit_index = index;
-        } while (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG);
+        } while (g_world_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG);
     }
 }

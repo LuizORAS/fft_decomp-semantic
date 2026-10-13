@@ -127,7 +127,7 @@ void wldcore_init_world_map_state(void) {
         script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY, day);
         day_of_year = wldcore_calendar_calculate_day_of_year(month, day);
         wldcore_calendar_convert_date_to_zodiac(&month, &day);
-        party = main_party_get_data_pointer(0);
+        party = main_party_get_unit(0);
         party->birthday_day = day_of_year;
         /* The separate s32 temp keeps the `month` reload a full 32-bit value: folding
          * the expression straight into the u8 field narrows it to an lbu. */

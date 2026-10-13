@@ -33,8 +33,8 @@ void battle_gfx_select_unit_shp_frame(battle_unit_t* unit, battle_unit_anim_stat
                 selected = table->submerged_frames[frame];
             }
         } else if (tile->depth_half_height.depth) {
-            if (unit->battle_data != 0) {
-                flags = move_get_effective_flags(unit->battle_data);
+            if (unit->stats != 0) {
+                flags = move_get_effective_flags(unit->stats);
                 /* The combined test keeps the table pointer's reference count
                  * low enough for the target's s0/s1 allocation. */
                 if (unit->status_flags_5_6 & BATTLE_UNIT_STATUS_FLOAT) {

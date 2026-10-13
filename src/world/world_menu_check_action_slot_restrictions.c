@@ -33,7 +33,7 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
     parameter = world_thread_get_current_parameter_1();
     mode = 0;
     message = 0;
-    unit = world_unit_get_battle_stats_for_stored();
+    unit = world_unit_get_active_stats();
     if (check_unit != 0) {
         if (battle_unit_get_action_restriction(unit) == BATTLE_UNIT_ACTION_RESTRICTION_DEEP_WATER) {
             message = 0x1003;

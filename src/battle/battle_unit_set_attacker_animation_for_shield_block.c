@@ -10,7 +10,7 @@ void battle_unit_set_attacker_animation_for_shield_block(battle_unit_t* attacker
     s32 kind;
     s32 anim;
 
-    stats = target->battle_data;
+    stats = target->stats;
     if (stats == 0) {
         return;
     }

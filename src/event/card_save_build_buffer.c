@@ -25,7 +25,7 @@ void card_save_build_buffer(s32 slot) {
     party_unit_t* unit;
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        unit = main_party_get_data_pointer(i);
+        unit = main_party_get_unit(i);
         if (unit->party_id != PARTY_ID_NONE && unit->sprite_set < CHARACTER_IDENTITY_RAMZA_END) {
             break;
         }
@@ -49,7 +49,7 @@ void card_save_build_buffer(s32 slot) {
     card_save_build_file_header(slot, unit->level, &g_card_save_buffer_pointer->header);
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        bcopy(&g_main_party_data[i], g_card_save_buffer_pointer->party_records[i],
+        bcopy(&g_main_party_units[i], g_card_save_buffer_pointer->party_records[i],
             sizeof(g_card_save_buffer_pointer->party_records[i]));
     }
 

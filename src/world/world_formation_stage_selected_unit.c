@@ -16,7 +16,7 @@ void world_formation_stage_selected_unit(void) {
 
     g_world_formation_selected_unit_index_latch = g_world_formation_selected_unit_index;
     index = g_world_formation_selected_unit_index;
-    units = g_world_formation_unit_pointers;
+    units = g_world_unit_pointers;
     units[index]->status.gauges[MENU_UNIT_STATUS_GAUGE_HP].value
         = units[index]->status.gauges[MENU_UNIT_STATUS_GAUGE_HP].max;
     units[index]->status.gauges[MENU_UNIT_STATUS_GAUGE_MP].value
@@ -31,7 +31,7 @@ void world_formation_stage_selected_unit(void) {
             = !(units[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG);
     } else {
         g_world_status_display_thread_params.flags
-            = (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG)
+            = (g_world_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG)
             ? MENU_STATUS_PANEL_HIDDEN
             : 0;
     }

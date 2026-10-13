@@ -11,7 +11,7 @@ void effect_set_secondary(battle_unit_t* unit, s32 effect_type) {
     effect_secondary_init_t data;
 
     effect_build_secondary_init(unit, &data);
-    if (unit->battle_data != 0) {
-        effect_init_secondary(effect_type, unit->battle_data->sprite_palette, &data);
+    if (unit->stats != 0) {
+        effect_init_secondary(effect_type, unit->stats->sprite_palette, &data);
     }
 }

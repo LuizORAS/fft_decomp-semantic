@@ -21,7 +21,7 @@ void battle_unit_advance_slide_to_target_distortion(battle_unit_t* unit) {
     velocity = unit->velocity;
     switch (unit->distortion_phase) {
     case 0:
-        if (unit->battle_data != 0) {
+        if (unit->stats != 0) {
             if (unit->strike.target_count != 0) {
                 target = battle_unit_get_by_battle_id(unit->strike.target_list[0]);
                 velocity.vx = unit->real.vx - target->real.vx;
@@ -30,14 +30,14 @@ void battle_unit_advance_slide_to_target_distortion(battle_unit_t* unit) {
                 velocity.vz = (velocity.vz - velocity.vz / 8) % 0xe000;
                 velocity.vy = 0;
             } else {
-                velocity.vx = (unit->world_coords.vx
-                                  - (unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE
-                                      + (MAP_TILE_SIZE / 2)))
+                velocity.vx
+                    = (unit->world_coords.vx
+                          - (unit->stats->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)))
                     << 12;
                 velocity.vx = (velocity.vx - velocity.vx / 8) % 0xe000;
-                velocity.vz = (unit->world_coords.vz
-                                  - (unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE
-                                      + (MAP_TILE_SIZE / 2)))
+                velocity.vz
+                    = (unit->world_coords.vz
+                          - (unit->stats->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)))
                     << 12;
                 velocity.vz = (velocity.vz - velocity.vz / 8) % 0xe000;
                 velocity.vy = 0;

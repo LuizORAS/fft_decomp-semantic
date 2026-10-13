@@ -333,7 +333,7 @@ typedef char menu_unit_status_gauge_size_must_be_6[(sizeof(menu_unit_status_gaug
  * and status billboard at 0x8014d05c, WORLD's selected and comparison records
  * at 0x8018aa98 / 0x8018aabc and each overlay's pair of panel billboards (all
  * 0x24 apart). The *_copy_unit_data_to_status_billboard builders (and
- * require_panel_copy_battle_stats_to_gauges, wldcore_unit_build_status_panel_data)
+ * require_panel_copy_stats_to_gauges, wldcore_unit_build_status_panel_data)
  * fill the first 0x1e bytes, *_menu_display_hovered_unit_stats and the
  * *_render_unit_status_panel_thread editors draw it, and
  * battle_menu_copy_billboard_data_out saves the banner whole as 0x22 bytes.

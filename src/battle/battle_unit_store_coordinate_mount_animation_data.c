@@ -13,15 +13,15 @@ void battle_unit_store_coordinate_mount_animation_data(battle_unit_t* unit) {
     unit_stats_t* data;
     battle_unit_t* mount;
 
-    data = unit->battle_data;
+    data = unit->stats;
     if (data != 0) {
         /* facing is read signed (lh) here. */
         battle_unit_set_tile_position(data->battle_id, unit->map_x, unit->map_y, unit->map_z, unit->facing / 1024);
         if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
             mount = battle_unit_get_by_runtime_id(unit->runtime_id);
-            if (unit->battle_data != 0) {
+            if (unit->stats != 0) {
                 battle_unit_set_tile_position(
-                    mount->battle_data->battle_id, unit->map_x, unit->map_y, unit->map_z, unit->facing / 1024);
+                    mount->stats->battle_id, unit->map_x, unit->map_y, unit->map_z, unit->facing / 1024);
             }
         }
     }

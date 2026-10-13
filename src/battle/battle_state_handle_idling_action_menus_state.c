@@ -50,19 +50,19 @@ void battle_state_handle_idling_action_menus_state(void) {
         switch (command->data.action.skillset_id) {
         case SKILLSET_ID_DEFEND:
             unit->command_state.ai = *command;
-            status_inflict_defending_to_battle_id(unit->battle_data->battle_id);
+            status_inflict_defending_to_battle_id(unit->stats->battle_id);
             unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
             battle_unit_update_display_by_runtime_id(unit->runtime_id);
-            action_set_only_action_taken(unit->battle_data->battle_id);
+            action_set_only_action_taken(unit->stats->battle_id);
             battle_state_enter_after_command();
             break;
         case SKILLSET_ID_EQUIP_CHANGE:
             unit->command_state.ai = *command;
             unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
-            status_enable_disable_acting(unit->battle_data);
-            ai_init_unit_abilities(unit->battle_data->battle_id);
+            status_enable_disable_acting(unit->stats);
+            ai_init_unit_abilities(unit->stats->battle_id);
             battle_unit_update_display_by_runtime_id(unit->runtime_id);
-            action_set_only_action_taken(unit->battle_data->battle_id);
+            action_set_only_action_taken(unit->stats->battle_id);
         case SKILLSET_ID_BLANK_04:
         case SKILLSET_ID_MIMIC:
             battle_state_enter_after_command();
@@ -70,7 +70,7 @@ void battle_state_handle_idling_action_menus_state(void) {
         case SKILLSET_ID_ATTACK:
         default:
             unit->command_state.ai = *command;
-            unit->command_state.ai.data.action.actor_id = unit->battle_data->battle_id;
+            unit->command_state.ai.data.action.actor_id = unit->stats->battle_id;
             unit->command_state.ai.data.action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
             action_call_attack_preparation(&unit->command_state.ai.data.action);
             unit->used_ability_id = unit->command_state.ai.data.action.ability_id;

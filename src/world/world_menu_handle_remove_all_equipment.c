@@ -33,8 +33,7 @@ s32 world_menu_handle_remove_all_equipment(void) {
     if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
         changed = 0;
         for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
-            if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i]
-                != ITEM_ID_NOTHING) {
+            if (g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment[i] != ITEM_ID_NOTHING) {
                 changed = 1;
                 world_formation_equip_item_to_unit_slot(g_world_formation_selected_unit_index, i, ITEM_ID_NOTHING);
             }

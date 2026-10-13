@@ -29,9 +29,9 @@ void world_formation_sort_roster(s32 index) {
         for (i = 0; i < count; i++) {
             k = 0;
             do {
-                rec = (s16*)&g_world_formation_unit_records[g_world_formation_record_order[i]];
+                rec = (s16*)&g_world_unit_records[g_world_formation_record_order[i]];
                 lhs = rec[g_world_formation_sort_field_indices[keys[k]]];
-                rec = (s16*)&g_world_formation_unit_records[g_world_formation_record_order[i + 1]];
+                rec = (s16*)&g_world_unit_records[g_world_formation_record_order[i + 1]];
                 swap = rec[g_world_formation_sort_field_indices[keys[k]]];
                 diff = swap - lhs;
                 k++;
@@ -49,7 +49,7 @@ void world_formation_sort_roster(s32 index) {
     }
     count = 0;
     for (i = 0; i < g_world_formation_record_count; i++) {
-        if (g_world_formation_unit_records[g_world_formation_record_order[i]].gender_flags & UNIT_FLAG_EGG) {
+        if (g_world_unit_records[g_world_formation_record_order[i]].gender_flags & UNIT_FLAG_EGG) {
             egg_indices[count++] = g_world_formation_record_order[i];
         }
     }
@@ -80,8 +80,8 @@ void world_formation_sort_roster(s32 index) {
         g_world_formation_record_order[g_world_formation_record_count - 1 - i] = egg_indices[i];
     }
     for (i = 0; i < g_world_formation_record_count; i++) {
-        g_world_formation_unit_pointers[i] = &g_world_formation_unit_records[g_world_formation_record_order[i]];
+        g_world_unit_pointers[i] = &g_world_unit_records[g_world_formation_record_order[i]];
     }
-    g_world_formation_unit_pointers[WORLD_FORMATION_PREVIEW_UNIT_INDEX]
-        = &g_world_formation_unit_records[WORLD_FORMATION_PREVIEW_UNIT_INDEX];
+    g_world_unit_pointers[WORLD_FORMATION_PREVIEW_UNIT_INDEX]
+        = &g_world_unit_records[WORLD_FORMATION_PREVIEW_UNIT_INDEX];
 }

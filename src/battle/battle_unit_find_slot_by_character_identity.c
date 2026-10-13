@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /*
- * Classify a character identity for battle entry: the battle_stats slot when
+ * Classify a character identity for battle entry: the stats slot when
  * an active unit has it (-3 if it is crystallised or a treasure), -2/-3 for an
  * absent unit whose existence byte is 0/BATTLE_UNIT_EXISTENCE_DISABLED, -4
  * when a party roster entry
@@ -49,7 +49,7 @@ s32 battle_unit_find_slot_by_character_identity(u32 character_identity) {
         }
     }
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        party = main_party_get_data_pointer(i);
+        party = main_party_get_unit(i);
         if (party->party_id != PARTY_ID_NONE && party->sprite_set == identity) {
             return BATTLE_CHARACTER_SLOT_IN_PARTY;
         }

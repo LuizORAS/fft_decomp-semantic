@@ -12,8 +12,8 @@ void battle_unit_set_map_coords_after_death_dismount(battle_unit_t* unit) {
         unit->map_y = unit->dismount.y;
         unit->map_z = unit->dismount.layer;
         battle_unit_set_move_and_world_coords(unit);
-        battle_unit_set_tile_position(unit->battle_data->battle_id, unit->map_x, unit->map_y, unit->map_z,
-            (unit->facing / BATTLE_FACING_QUARTER_TURN));
+        battle_unit_set_tile_position(
+            unit->stats->battle_id, unit->map_x, unit->map_y, unit->map_z, (unit->facing / BATTLE_FACING_QUARTER_TURN));
         unit->pending_attack_result = 0;
     }
 }

@@ -10,6 +10,6 @@ void world_formation_dismiss_unit(s16 formation_idx) {
         for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
             world_formation_equip_item_to_unit_slot(formation_idx, i, ITEM_ID_NOTHING);
         }
-        main_party_remove_unit(g_world_formation_unit_pointers[formation_idx]->identity.roster_slot);
+        main_party_remove_unit(g_world_unit_pointers[formation_idx]->identity.roster_slot);
     }
 }

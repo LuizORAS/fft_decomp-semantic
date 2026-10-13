@@ -13,7 +13,7 @@ void action_handle_post_action_xp_jp_ability(void) {
     unit = battle_unit_get_source();
     battle_unit_restore_all_facings_after_attack();
     if (unit != 0) {
-        stats = unit->battle_data;
+        stats = unit->stats;
         if (stats != 0 && battle_unit_apply_action_rewards(stats->battle_id, &unit->strike.action_rewards) == -1) {
             unit->strike.action_rewards.job_level_for_display = 0;
             unit->strike.action_rewards.level_for_display = 0;

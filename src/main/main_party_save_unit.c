@@ -41,7 +41,7 @@ s32 main_party_save_unit(unit_stats_t* unit, s32 allow_guest) {
         slot = unit_slot;
     }
 
-    party = main_party_get_data_pointer(slot);
+    party = main_party_get_unit(slot);
     sprite_set = unit->character_identity;
     party->party_id = slot;
     party->sprite_set = sprite_set;

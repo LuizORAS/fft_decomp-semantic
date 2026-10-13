@@ -21,7 +21,7 @@ s32 require_party_get_free_slot_status(s32 unit_id) {
     }
 
     for (index = 0; index < PARTY_ROSTER_SLOT_COUNT; index++) {
-        party = main_party_get_data_pointer(index);
+        party = main_party_get_unit(index);
         if ((party->party_id != PARTY_ID_NONE) && (party->sprite_set != CHARACTER_IDENTITY_ENTD_NONE)
             && (party->sprite_set < CHARACTER_IDENTITY_RAMZA_END)) {
             break;

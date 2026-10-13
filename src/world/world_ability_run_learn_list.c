@@ -105,7 +105,7 @@ s32 world_ability_run_learn_list(void) {
                 world_ability_learn(g_world_formation_selected_unit_index, g_world_learn_selected_job,
                     g_menu_ability_entries[g_world_menu_cursor_position]);
                 category = g_main_ability_data[g_menu_ability_entries[g_world_menu_cursor_position]].jp_cost;
-                g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
+                g_world_unit_pointers[g_world_formation_selected_unit_index]
                     ->job_points.current.values[g_world_learn_selected_job_index] -= category;
                 main_sound_play_sfx_find_channel(MAIN_SFX_ABILITY_LEARNED);
             } else if (g_world_menu_selection_results[5] == 1) {

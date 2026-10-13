@@ -16,8 +16,8 @@ battle_unit_t* battle_unit_find_selectable_at_tile(s32 map_x, s32 map_y, s32 map
     count = 0;
     unit = g_battle_unit_list_head;
     while (unit != 0) {
-        if ((unit->map_x == map_x) && (unit->map_y == map_y) && (unit->map_z == map_z) && (unit->battle_data != 0)
-            && (unit->battle_data->entd_slot != BATTLE_ENTD_SLOT_NONE)
+        if ((unit->map_x == map_x) && (unit->map_y == map_y) && (unit->map_z == map_z) && (unit->stats != 0)
+            && (unit->stats->entd_slot != BATTLE_ENTD_SLOT_NONE)
             && ((unit->status_flags_5_6
                     & (BATTLE_UNIT_STATUS_CRYSTAL | BATTLE_UNIT_STATUS_TREASURE | BATTLE_UNIT_STATUS_JUMP))
                 == 0)) {

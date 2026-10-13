@@ -43,7 +43,7 @@ void world_item_sort_id_list(s32 mode, s16* list) {
     memset(counts, 0, 0x100);
     for (j = 0; j < g_world_formation_record_count; j++) {
         for (i = 0; i < 5; i++) {
-            counts[g_world_formation_unit_pointers[j]->equipment[i]]++;
+            counts[g_world_unit_pointers[j]->equipment[i]]++;
         }
     }
     passes = count - 1;

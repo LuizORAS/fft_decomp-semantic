@@ -46,7 +46,7 @@ void effect_store_targets_and_display_types(s32 ability, battle_unit_t* unit) {
             {
                 unit_stats_t* target_stats;
 
-                target_stats = target->battle_data;
+                target_stats = target->stats;
 
                 if (target_stats == 0) {
                     init.targets[i].data.unit.result_animation = EFFECT_HIT_NORMAL;
@@ -73,7 +73,7 @@ void effect_store_targets_and_display_types(s32 ability, battle_unit_t* unit) {
         if (i != unit->runtime_id) {
             spectator = battle_unit_get_by_runtime_id(i);
             if (spectator != 0) {
-                stats = spectator->battle_data;
+                stats = spectator->stats;
                 if (stats != 0) {
                     for (j = 0; j < block->target_count; j++) {
                         if (stats->battle_id == block->target_list[j]) {

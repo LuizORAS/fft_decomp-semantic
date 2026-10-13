@@ -29,8 +29,8 @@ s32 battle_unit_update_fade_out_removal(battle_unit_t* unit) {
     case BATTLE_UNIT_FADE_OUT_DARKEN:
         if (unit->runtime_id != g_battle_unit_source_runtime_id) {
             unit->fade_out_phase = BATTLE_UNIT_FADE_OUT_REMOVED;
-            if (unit->battle_data != 0) {
-                battle_unit_disable_remove(unit->battle_data->battle_id);
+            if (unit->stats != 0) {
+                battle_unit_disable_remove(unit->stats->battle_id);
             }
             battle_unit_remove(unit);
             return 1;

@@ -11,8 +11,8 @@ void world_shop_run_rename_name_entry_step(void) {
     }
     world_formation_update_and_draw_unit_grid(
         1, 0, 0, 0, g_world_thread_task_active, world_shop_rename_unit_get_unit_marker, 0);
-    g_world_shop_entered_unit_name = world_name_run_entry_keyboard_frame(
-        g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->name, 0);
+    g_world_shop_entered_unit_name
+        = world_name_run_entry_keyboard_frame(g_world_unit_pointers[g_world_formation_selected_unit_index]->name, 0);
     if (g_world_shop_entered_unit_name != 0) {
         g_world_shop_menu_step = WORLD_SHOP_STEP_SOLDIER_OFFICE_REOPEN;
         world_formation_set_unit_name(g_world_formation_selected_unit_index, g_world_shop_entered_unit_name);

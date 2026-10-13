@@ -17,9 +17,8 @@ void battle_menu_open_active_unit_idle_action_menu(void) {
     target_move_cursor_to_unit(unit);
     g_battle_game_state = BATTLE_GAME_STATE_IDLING_ACTION_MENUS;
 
-    if (unit != 0 && unit->battle_data != 0) {
-        battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, unit->battle_data->battle_id, 0);
+    if (unit != 0 && unit->stats != 0) {
+        battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, unit->stats->battle_id, 0);
     }
-    battle_menu_build_idle_action_menu(
-        battle_menu_get_id_based_on_mount_moveable_actable(unit->battle_data->battle_id));
+    battle_menu_build_idle_action_menu(battle_menu_get_id_based_on_mount_moveable_actable(unit->stats->battle_id));
 }

@@ -10,7 +10,7 @@
  * expanded by the job's portrait palette.
  */
 s32 world_formation_get_unit_palette_index(s32 party_index) {
-    party_unit_t* unit = main_party_get_data_pointer(party_index);
+    party_unit_t* unit = main_party_get_unit(party_index);
     job_data_t* job;
     s32 portrait;
     s32 product;

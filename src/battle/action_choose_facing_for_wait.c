@@ -22,8 +22,8 @@ void action_choose_facing_for_wait(void) {
         mounted_unit = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
         if (mounted_unit != 0) {
             battle_unit_decide_facing_direction(unit, mounted_unit->facing);
-            if (unit->battle_data != 0) {
-                battle_unit_set_tile_position(unit->battle_data->battle_id, unit->map_x, unit->map_y, unit->map_z,
+            if (unit->stats != 0) {
+                battle_unit_set_tile_position(unit->stats->battle_id, unit->map_x, unit->map_y, unit->map_z,
                     (mounted_unit->facing / BATTLE_FACING_QUARTER_TURN));
             }
         }

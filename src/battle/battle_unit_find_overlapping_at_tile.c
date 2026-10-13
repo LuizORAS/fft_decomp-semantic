@@ -19,7 +19,7 @@ battle_unit_t* battle_unit_find_overlapping_at_tile(battle_unit_t* self, s32 x, 
     count = 0;
     for (unit = g_battle_unit_list_head; unit != 0; unit = unit->previous) {
         if (unit != self && unit->map_x == x && unit->map_y == y && unit->map_z == z) {
-            stats = unit->battle_data;
+            stats = unit->stats;
             if (stats != 0 && stats->entd_slot != BATTLE_ENTD_SLOT_NONE) {
                 if (self->mount_state == BATTLE_UNIT_MOUNT_STATE_NONE
                     || unit->runtime_id != self->mount_partner_runtime_id) {

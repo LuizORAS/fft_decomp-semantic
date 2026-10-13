@@ -54,7 +54,7 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
             g_main_active_propositions[g_main_save_proposition_count].participant_count
                 = g_wldcore_proposition_send_unit_count;
             for (i = 0; i < g_wldcore_proposition_send_unit_count; i++) {
-                wldcore_get_party_data_pointer(g_wldcore_proposition_send_units[i])->proposition_status = 1;
+                wldcore_get_party_unit(g_wldcore_proposition_send_units[i])->proposition_status = 1;
                 g_main_active_propositions[g_main_save_proposition_count].participant_indices[i]
                     = g_wldcore_proposition_send_units[i];
             }

@@ -27,15 +27,13 @@ void battle_state_handle_target_select_state(void) {
         if (target == 0) {
             battle_state_enter_target_select_denied();
         } else if (caster->target_select_command == AI_COMMAND_AUTOBATTLE_TARGETED_SELECT) {
-            if ((caster->battle_data->team_flags & BATTLE_TEAM_MASK)
-                == (target->battle_data->team_flags & BATTLE_TEAM_MASK)) {
+            if ((caster->stats->team_flags & BATTLE_TEAM_MASK) == (target->stats->team_flags & BATTLE_TEAM_MASK)) {
                 battle_state_enter_target_select_denied();
             } else {
                 battle_state_enter_target_select_confirm();
             }
         } else if (caster->target_select_command == AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT) {
-            if ((caster->battle_data->team_flags & BATTLE_TEAM_MASK)
-                == (target->battle_data->team_flags & BATTLE_TEAM_MASK)) {
+            if ((caster->stats->team_flags & BATTLE_TEAM_MASK) == (target->stats->team_flags & BATTLE_TEAM_MASK)) {
                 battle_state_enter_target_select_confirm();
             } else {
                 battle_state_enter_target_select_denied();

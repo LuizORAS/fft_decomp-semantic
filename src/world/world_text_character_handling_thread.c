@@ -125,7 +125,7 @@ void world_text_character_handling_thread(void) {
         if (party_name_request == 0) {
             rec.portrait = thread->function_parameter_4;
         }
-        party = main_party_get_data_pointer(rec.portrait);
+        party = main_party_get_unit(rec.portrait);
         if (party->sprite_set >= CHARACTER_IDENTITY_SELECTOR_FIRST) {
             if (party->sprite_set == CHARACTER_IDENTITY_GENERIC_MALE) {
                 s32 base = (party->job_id - JOB_ID_GENERIC_FIRST) * 2;

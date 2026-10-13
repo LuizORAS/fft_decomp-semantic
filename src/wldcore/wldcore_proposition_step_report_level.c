@@ -94,7 +94,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
         g_wldcore_proposition_report.preferred_unit = count;
         if (count != 0) {
             g_wldcore_proposition_report.preferred_unit = count - 1;
-            g_text_substitution_values[1] = wldcore_get_party_data_pointer(count - 1)->job_id + TEXT_ID_JOB_NAME_BASE;
+            g_text_substitution_values[1] = wldcore_get_party_unit(count - 1)->job_id + TEXT_ID_JOB_NAME_BASE;
             level->state = 4;
             return;
         }

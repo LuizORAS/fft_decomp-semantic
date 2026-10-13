@@ -96,8 +96,8 @@ void world_formation_item_menu(void) {
         g_world_item_menu_initialized = running;
         if (running == 0) {
             world_menu_toggle_change_banner_panel_thread(0);
-            roster_slot = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->identity.roster_slot;
-            world_formation_build_record_list(0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
+            roster_slot = g_world_unit_pointers[g_world_formation_selected_unit_index]->identity.roster_slot;
+            world_formation_build_record_list(0, g_world_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
             g_world_formation_selected_unit_index = world_formation_find_index_by_roster_slot(roster_slot);
             g_world_formation_current_menu = WORLD_FORMATION_MENU_ITEM_LEAVE;
             g_world_formation_unit_browse_enabled = g_world_item_menu_saved_browse_enabled;

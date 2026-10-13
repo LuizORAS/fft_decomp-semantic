@@ -15,7 +15,7 @@ void target_show_move_range_in_free_cursor(void) {
     camera_enable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_DISPLAY_MOVE_AREA;
     unit = battle_unit_get_casting();
-    stats = unit->battle_data;
+    stats = unit->stats;
     move_set_reachable_tiles(stats->battle_id, unit->map_x, unit->map_y, unit->map_z);
     target_set_tile_background_color(BATTLE_TILE_MARK_SHOW_MOVE, 1);
     prev = g_battle_cursor_input_mode;

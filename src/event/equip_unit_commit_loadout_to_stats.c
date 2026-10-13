@@ -5,7 +5,7 @@
 /* Write the edited loadout back to the unit's battle stats and party record,
  * refresh its stats, restore HP/MP up to the new maxima and rebuild the
  * EQUIP unit record. */
-void equip_unit_commit_loadout_to_battle_stats(void) {
+void equip_unit_commit_loadout_to_stats(void) {
     menu_status_panel_slot_storage_t bonuses;
     unit_stats_t* stats;
     s16 unit_id;
@@ -46,7 +46,7 @@ void equip_unit_commit_loadout_to_battle_stats(void) {
     stats->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY] = g_equip_unit_data[0]->equipment[EQUIP_SLOT_ACCESSORY] != 0
         ? g_equip_unit_data[0]->equipment[EQUIP_SLOT_ACCESSORY]
         : ITEM_ID_NONE;
-    bcopy(stats->equipment, main_party_get_data_pointer(g_equip_unit_data[0]->party_index)->equipment, 7);
+    bcopy(stats->equipment, main_party_get_unit(g_equip_unit_data[0]->party_index)->equipment, 7);
     main_unit_refresh_stats_and_statuses(stats);
     stats = battle_unit_get_stats_from_battle_id(unit_id);
     hp = g_equip_unit_saved_hp;
@@ -64,7 +64,7 @@ void equip_unit_commit_loadout_to_battle_stats(void) {
     stats->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_EVADE] = bonuses.state.right_weapon_evade;
     stats->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_EVADE] = bonuses.state.left_weapon_evade;
     saved = g_equip_unit_data[0]->unit_count;
-    equip_unit_build_data_from_battle_stats(stats, g_equip_unit_data[0]);
+    equip_unit_build_data_from_stats(stats, g_equip_unit_data[0]);
     g_equip_unit_data[0]->unit_count = saved;
     g_equip_unit_data[0]->battle_id = unit_id;
 }

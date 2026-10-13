@@ -133,8 +133,7 @@ s32 battle_gfx_step_queued_unit_graphics_load(void) {
                     .spritesheet_id,
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index].palette_id,
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index].runtime_id,
-                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index]
-                    .battle_stats,
+                g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index].stats,
                 g_main_gfx_unit_graphics_load_queue.descriptors[g_battle_gfx_unit_graphics_load_state.index].flags,
                 g_battle_gfx_unit_graphics_load_state.buffer);
             battle_unit_update_and_animate_units_three_times();

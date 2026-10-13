@@ -36,7 +36,7 @@ void battle_unit_update_animation_for_status_changes(battle_unit_t* unit) {
             effect_set_secondary_death_smoke(unit);
         }
         if (g_battle_game_state != BATTLE_GAME_STATE_EVENT) {
-            stats = unit->battle_data;
+            stats = unit->stats;
             if (stats != 0) {
                 if (stats->unit_flags & UNIT_FLAG_MALE) {
                     sound_play_movement_sfx(unit, MAIN_SFX_DEATH_MALE);

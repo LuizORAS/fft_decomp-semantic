@@ -31,7 +31,7 @@ void world_unit_update_monster_breeding(s32 unused) {
     srand(g_main_system_play_time_frames * 100 + g_main_system_play_time_seconds * 10 + g_main_system_play_time_minutes
         + g_main_system_play_time_hours + g_main_system_play_time_frames);
     do {
-        unit = main_party_get_data_pointer(i);
+        unit = main_party_get_unit(i);
         if (unit->party_id != PARTY_ID_NONE) {
             if (unit->gender_flags & UNIT_FLAG_EGG) {
                 n = unit->birthday_day & 0xF;
@@ -76,7 +76,7 @@ void world_unit_update_monster_breeding(s32 unused) {
         return;
     }
     monster_count = rand() % monster_count;
-    n = g_world_unit_monster_breed_table[main_party_get_data_pointer(monsters[monster_count])->job_id - JOB_ID_CHOCOBO]
+    n = g_world_unit_monster_breed_table[main_party_get_unit(monsters[monster_count])->job_id - JOB_ID_CHOCOBO]
             .offspring_job_by_rarity[n - WORLD_MONSTER_BREED_RARITY_COMMON];
     i = rand() % g_world_unit_monster_breed_table[n - JOB_ID_CHOCOBO].hatch_range + 1;
     if (i < 2) {
@@ -88,7 +88,7 @@ void world_unit_update_monster_breeding(s32 unused) {
     n = main_party_create_monster_egg(n, i + i * 0x10, rand() % 4);
     *name_buffer = (u8*)value;
     if (n != -1) {
-        unit = main_party_get_data_pointer(n);
+        unit = main_party_get_unit(n);
         main_party_level_unit_to_target(unit, levels[rand() % unit_count] - 1);
     }
 }

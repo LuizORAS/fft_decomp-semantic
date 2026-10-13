@@ -1020,7 +1020,7 @@ extern u8 g_main_party_highest_level;
 extern s32 g_main_entd_current_event_id;
 extern entd_file_t* g_main_entd_set;
 extern entd_unit_t* g_main_entd_current_unit;
-extern party_unit_t g_main_party_data[PARTY_ROSTER_SLOT_COUNT];
+extern party_unit_t g_main_party_units[PARTY_ROSTER_SLOT_COUNT];
 extern main_unit_generation_base_data_t g_main_unit_generation_base_data[MAIN_UNIT_TYPE_COUNT];
 extern u8 g_main_unit_generation_raw_stat_variance[MAIN_UNIT_TYPE_COUNT][UNIT_RAW_STAT_COUNT];
 extern u32 g_main_unit_name_uses_world_text;
@@ -1045,7 +1045,7 @@ s32 main_party_find_slot_by_sprite_set(s32 sprite_set);
 /* Out-of-battle generation normalizes every value except male, female and
  * monster to Ramza. The raw-stat generator indexes the tables directly. */
 s32 main_party_generate_unit(main_unit_generation_type_e unit_type);
-party_unit_t* main_party_get_data_pointer(s32 party_index);
+party_unit_t* main_party_get_unit(s32 party_index);
 void main_party_init_new_game(s32 mode);
 u32 main_party_level_unit_to_target(party_unit_t* party_unit, s32 level_delta);
 void main_party_remove_unit(u32 index);
@@ -1117,7 +1117,7 @@ typedef struct main_gfx_unit_graphics_load_descriptor {
     s16 spritesheet_id;
     u16 palette_id;
     u16 runtime_id;
-    struct unit_stats* battle_stats;
+    unit_stats_t* stats;
     u32 flags; /* nonzero: the unit starts undrawn */
 } main_gfx_unit_graphics_load_descriptor_t;
 typedef char main_gfx_unit_graphics_load_descriptor_size_must_be_20

@@ -28,7 +28,7 @@ void battle_state_handle_learn_ability_on_hit_state(void) {
     case 7:
         if (g_action_post_action_display_phase == BATTLE_POST_ACTION_DISPLAY_LEARN_ON_HIT) {
             target_unit = battle_unit_get_by_battle_id(g_action_learn_on_hit_unit_id);
-            battle_unit_learn_used_ability(target_unit->battle_data);
+            battle_unit_learn_used_ability(target_unit->stats);
         }
     case 8:
     case 0xff:

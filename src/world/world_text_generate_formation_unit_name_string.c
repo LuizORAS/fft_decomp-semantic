@@ -13,7 +13,7 @@ void world_text_generate_formation_unit_name_string(void) {
 
     out = g_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        unit = main_party_get_data_pointer(i);
+        unit = main_party_get_unit(i);
         if (unit->party_id == PARTY_ID_NONE) {
             *out = 0xFE;
             out++;

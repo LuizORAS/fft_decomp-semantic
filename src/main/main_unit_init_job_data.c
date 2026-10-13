@@ -9,7 +9,7 @@ s32 main_unit_init_job_data(unit_stats_t* unit, s32 slot, s32 use_world_text) {
     party_unit_t* party_unit;
 
     g_main_unit_name_uses_world_text = use_world_text;
-    party_unit = main_party_get_data_pointer(slot);
+    party_unit = main_party_get_unit(slot);
     if (party_unit == 0) {
         return -1;
     }

@@ -9,7 +9,7 @@
  * monster skillset, or a special-monster job; mode 2 excludes eggs
  * and human units. A nonzero item id keeps only
  * units with that item equipped. The list argument is unused here; the sorter
- * at 0x80121c60 fills g_world_formation_unit_pointers.
+ * at 0x80121c60 fills g_world_unit_pointers.
  */
 s16 world_formation_build_record_list(s32 item_id, world_unit_t** unused_list, s32 mode) {
     unit_stats_t unit;
@@ -26,33 +26,32 @@ s16 world_formation_build_record_list(s32 item_id, world_unit_t** unused_list, s
         if (main_unit_init_job_data(&unit, slot, 1) != 0) {
             continue;
         }
-        world_formation_build_unit_record(
-            &unit, &g_world_formation_unit_records[count], main_party_get_data_pointer(slot));
+        world_formation_build_unit_record(&unit, &g_world_unit_records[count], main_party_get_unit(slot));
         if (mode == WORLD_FORMATION_RECORD_LIST_AVAILABLE_HUMANS) {
-            if (g_world_formation_unit_records[count].proposition_status != 0) {
+            if (g_world_unit_records[count].proposition_status != 0) {
                 continue;
             }
-            if (g_world_formation_unit_records[count].gender_flags & UNIT_FLAG_EGG) {
+            if (g_world_unit_records[count].gender_flags & UNIT_FLAG_EGG) {
                 continue;
             }
-            if (g_world_formation_unit_records[count].uses_monster_skillset != 0) {
+            if (g_world_unit_records[count].uses_monster_skillset != 0) {
                 continue;
             }
-            if (job_is_special_monster(g_world_formation_unit_records[count].identity.job_id) != 0) {
+            if (job_is_special_monster(g_world_unit_records[count].identity.job_id) != 0) {
                 continue;
             }
         } else if (mode == WORLD_FORMATION_RECORD_LIST_MONSTERS) {
-            if (g_world_formation_unit_records[count].gender_flags & UNIT_FLAG_EGG) {
+            if (g_world_unit_records[count].gender_flags & UNIT_FLAG_EGG) {
                 continue;
             }
-            if ((g_world_formation_unit_records[count].gender_flags >> 6) != 0) {
+            if ((g_world_unit_records[count].gender_flags >> 6) != 0) {
                 continue;
             }
         }
         if (id > 0) {
             found = 0;
             for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
-                if (g_world_formation_unit_records[count].equipment[i] == id) {
+                if (g_world_unit_records[count].equipment[i] == id) {
                     found = 1;
                 }
             }

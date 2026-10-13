@@ -61,7 +61,7 @@ void move_animate_fall_to_target_tile(battle_unit_t* unit) {
                 main_util_set_svector(&coords, other->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2), other->map_z,
                     other->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
             } else {
-                stats = unit->battle_data;
+                stats = unit->stats;
                 main_util_set_svector(&coords,
                     stats->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2),
                     stats->action_command.target_position.vy,

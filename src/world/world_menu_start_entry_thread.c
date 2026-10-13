@@ -36,7 +36,7 @@ void world_menu_start_entry_thread(void) {
     }
     world_script_pulse_tutorial_wait_value(0xFF);
     if (menu_id == BATTLE_MENU_ID_OTHER_UNIT || menu_id == BATTLE_MENU_ID_OTHER_UNIT_INSPECT) {
-        if (world_unit_get_battle_stats_for_stored()->unit_flags & UNIT_FLAG_EGG) {
+        if (world_unit_get_active_stats()->unit_flags & UNIT_FLAG_EGG) {
             menu_id = BATTLE_MENU_ID_EGG;
         }
     }

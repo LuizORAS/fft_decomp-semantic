@@ -49,7 +49,7 @@ void world_shop_run_rename_unit_prompt_step(void) {
     if (world_thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0 && world_formation_is_unit_list_scroll_needed() == 0) {
         input = g_world_input_primary_repeat;
         if (input & PSX_PAD_CIRCLE) {
-            if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->sprite_set
+            if (g_world_unit_pointers[g_world_formation_selected_unit_index]->sprite_set
                 == CHARACTER_IDENTITY_REIS_DRAGON) {
                 if (g_world_formation_unit_banner_at_bottom != 0) {
                     mode = 1;

@@ -355,7 +355,7 @@ functions:
   - {addr: 0x801c66e0, size: 192, name: bunit_menu_is_unit_list_scroll_needed, hash: 28f8eae91bb947ee}
   - {addr: 0x801c67a0, size: 148, name: unit_is_two_handing_weapon, hash: 90d336abe9d84508, source: src/shared/unit/unit_is_two_handing_weapon.c}
   - {addr: 0x801c6834, size: 32, name: job_is_special_monster, hash: f4362856b8ecd185, source: src/shared/job/job_is_special_monster.c}
-  - {addr: 0x801c6854, size: 1460, name: bunit_unit_build_data_from_battle_stats, hash: e893beb59f02bf6f}
+  - {addr: 0x801c6854, size: 1460, name: bunit_unit_build_record_from_stats, hash: e893beb59f02bf6f}
   - {addr: 0x801c6e08, size: 320, name: bunit_unit_build_data_list, hash: 72f9d3d86b9a4098}
   - {addr: 0x801c6f48, size: 380, name: bunit_unit_sort_index_list_by_order_keys, hash: d11b39851ebec6b1}
   - {addr: 0x801c70c4, size: 64, name: bunit_unit_copy_orders_to_reorder_list, hash: cac2171590658656}
@@ -814,7 +814,7 @@ data:
   - {addr: 0x801ecaec, name: g_bunit_gfx_tile_1_count}
   - {addr: 0x801ecaf0, name: g_bunit_menu_active_clut_front}
   - {addr: 0x801ecaf4, name: g_bunit_gfx_tile_8_count}
-  - {addr: 0x801ecaf8, name: g_bunit_unit_data}
+  - {addr: 0x801ecaf8, name: g_bunit_unit_pointers}
   - {addr: 0x801ecb4c, name: g_bunit_gfx_context_base}
   - {addr: 0x801ecb50, name: g_bunit_menu_input_repeat_mask}
   - {addr: 0x801ecb54, name: g_bunit_gfx_sprite_8_count}
@@ -1334,9 +1334,9 @@ functions:
   - {addr: 0x801c6788, size: 196, name: equip_item_build_inventory_totals, hash: 14d058972e7d099b}
   - {addr: 0x801c684c, size: 64, name: equip_item_adjust_inventory_count, hash: 06c575284b115ff1}
   - {addr: 0x801c688c, size: 148, name: equip_unit_is_two_handing_weapon, hash: 297f434c62da4e59}
-  - {addr: 0x801c6920, size: 896, name: equip_unit_build_data_from_battle_stats, hash: 878bbd7ad76933c0}
-  - {addr: 0x801c6ca0, size: 276, name: equip_unit_load_data_from_battle_stats, hash: e23d868f93ea3956}
-  - {addr: 0x801c6db4, size: 600, name: equip_unit_commit_loadout_to_battle_stats, hash: 83c2cd7ae34a8020}
+  - {addr: 0x801c6920, size: 896, name: equip_unit_build_data_from_stats, hash: 878bbd7ad76933c0}
+  - {addr: 0x801c6ca0, size: 276, name: equip_unit_load_data_from_stats, hash: e23d868f93ea3956}
+  - {addr: 0x801c6db4, size: 600, name: equip_unit_commit_loadout_to_stats, hash: 83c2cd7ae34a8020}
   - {addr: 0x801c700c, size: 236, name: equip_item_get_ranking_value, hash: 182f2f01a7256fdd}
   - {addr: 0x801c70f8, size: 1492, name: equip_item_sort_list_by_criteria, hash: 34f1458a5685682d}
   - {addr: 0x801c76cc, size: 88, name: equip_menu_load_sort_key_list, hash: 680fa5ae6e9a89b3}
@@ -2200,7 +2200,7 @@ functions:
   - {addr: 0x801c22b4, size: 28, name: menu_thread_is_running, hash: d10e3403d7fec970, source: src/shared/thread/menu_thread_is_running.c}
   - {addr: 0x801c22d0, size: 1236, name: menu_draw_thread_status_indicators, hash: 06809308c5329e70, source: src/shared/menu/menu_draw_thread_status_indicators.c}
   - {addr: 0x801c27a4, size: 32, name: text_fill_field_with_terminators, hash: 5eaa92c4790153fd, source: src/shared/text/text_fill_field_with_terminators.c}
-  - {addr: 0x801c27c4, size: 196, name: require_panel_copy_battle_stats_to_gauges, hash: 10a1714f8625994f}
+  - {addr: 0x801c27c4, size: 196, name: require_panel_copy_stats_to_gauges, hash: 10a1714f8625994f}
   - {addr: 0x801c2888, size: 1348, name: require_editor_load_selected_unit, hash: b9c009db7e6c8971}
   - {addr: 0x801c2dcc, size: 580, name: gfx_set_scaled_poly_ft4_4bpp, hash: f989278e90fdce7c, source: src/shared/gfx/gfx_set_scaled_poly_ft4_4bpp.c}
   - {addr: 0x801c3010, size: 700, name: menu_build_status_group_primitives, hash: 61b10189a9c6f7fc, source: src/shared/menu/menu_build_status_group_primitives.c}

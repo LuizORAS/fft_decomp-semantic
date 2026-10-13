@@ -10,7 +10,7 @@ s32 world_get_party_unit_formation_sprite(s32 party_index) {
     s32 portrait_id;
     s32 formation_sprite;
 
-    party_unit = main_party_get_data_pointer(party_index);
+    party_unit = main_party_get_unit(party_index);
     sprite_set = party_unit->sprite_set;
     portrait_id = sprite_set;
     if (sprite_set >= CHARACTER_IDENTITY_SELECTOR_FIRST) {

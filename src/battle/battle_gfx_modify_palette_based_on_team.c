@@ -8,10 +8,10 @@ void battle_gfx_modify_palette_based_on_team(battle_unit_t* unit, s32 amount) {
     if (unit == 0) {
         return;
     }
-    if (unit->battle_data == 0) {
+    if (unit->stats == 0) {
         return;
     }
-    switch ((unit->battle_data->team_flags & BATTLE_TEAM_MASK) >> BATTLE_TEAM_SHIFT) {
+    switch ((unit->stats->team_flags & BATTLE_TEAM_MASK) >> BATTLE_TEAM_SHIFT) {
     case BATTLE_TEAM_BLUE >> BATTLE_TEAM_SHIFT:
         map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT, amount, MAP_CLUT_ROW_UNITS, unit->runtime_id, 0, 0, 0, 0x18);
         break;

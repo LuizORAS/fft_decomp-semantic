@@ -21,12 +21,12 @@ s32 bunit_ability_build_list(s16 unit_index, s16 job_id, s32 ability_category, s
     s16 ability_id;
     s16 encoded_ability_id;
     s32 byte_offset;
-    bunit_unit_t* unit_data;
+    bunit_unit_t* unit;
 
     skillset = job_get_skillset(job_id);
     generic_index = job_get_generic_index(job_id);
     if (job_find_first_for_skillset(skillset) == -1) {
-        skillset = g_bunit_unit_data[unit_index]->abilities[0];
+        skillset = g_bunit_unit_pointers[unit_index]->abilities[0];
     }
     abilities = (s16*)main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ALL);
 
@@ -54,14 +54,14 @@ s32 bunit_ability_build_list(s16 unit_index, s16 job_id, s32 ability_category, s
     }
 
     count = 0;
-    unit_data = g_bunit_unit_data[unit_index];
+    unit = g_bunit_unit_pointers[unit_index];
     /* Integer address arithmetic preserves the final ADDU operand order. */
     byte_offset = generic_index * UNIT_LEARNED_ABILITY_BYTES_PER_JOB + (s32) & ((bunit_unit_t*)0)->learned_abilities;
-    bunit_bits_init_reader((const u8*)(byte_offset + (s32)unit_data));
+    bunit_bits_init_reader((const u8*)(byte_offset + (s32)unit));
     for (i = 0; i < SKILLSET_ABILITY_LIST_COUNT; i++) {
-        if (job_is_special_monster(g_bunit_unit_data[unit_index]->job_id)) {
+        if (job_is_special_monster(g_bunit_unit_pointers[unit_index]->job_id)) {
             kind = 1;
-        } else if (g_bunit_unit_data[unit_index]->uses_monster_skillset != 0) {
+        } else if (g_bunit_unit_pointers[unit_index]->uses_monster_skillset != 0) {
             if (i >= 3) {
                 break;
             }

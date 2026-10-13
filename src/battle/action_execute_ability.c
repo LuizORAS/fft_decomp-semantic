@@ -11,7 +11,7 @@ void action_execute_ability(void) {
 
     battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0, 0);
     unit = battle_unit_get_source();
-    action_set_only_action_taken(unit->battle_data->battle_id);
+    action_set_only_action_taken(unit->stats->battle_id);
     unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
     battle_unit_face_toward_cursor(unit);
     result = action_call_attack_preparation_at_preview(&unit->command_state.ai.data.action);

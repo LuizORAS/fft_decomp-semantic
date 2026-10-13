@@ -17,19 +17,17 @@ void battle_gfx_highlight_all_units_blue_or_red(s32 mode) {
         if (unit == 0) {
             continue;
         }
-        if (unit->battle_data == 0) {
+        if (unit->stats == 0) {
             continue;
         }
         switch (mode) {
         case AI_COMMAND_AUTOBATTLE_TARGETED_SELECT:
-            if ((unit->battle_data->team_flags & BATTLE_TEAM_MASK)
-                != (caster->battle_data->team_flags & BATTLE_TEAM_MASK)) {
+            if ((unit->stats->team_flags & BATTLE_TEAM_MASK) != (caster->stats->team_flags & BATTLE_TEAM_MASK)) {
                 map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT, 4, MAP_CLUT_ROW_UNITS, i, 0, 0x10, 0, 0);
             }
             continue;
         case AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT:
-            if ((unit->battle_data->team_flags & BATTLE_TEAM_MASK)
-                == (caster->battle_data->team_flags & BATTLE_TEAM_MASK)) {
+            if ((unit->stats->team_flags & BATTLE_TEAM_MASK) == (caster->stats->team_flags & BATTLE_TEAM_MASK)) {
                 map_modify_palette(MAP_COLOR_MODE_BASE_REPEAT, 4, MAP_CLUT_ROW_UNITS, i, 0, 0, 0, 0x18);
             }
             continue;

@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Build the equipment data and HP/MP for `battle_id` and count the units still present on the field. */
-void equip_unit_load_data_from_battle_stats(s32 battle_id) {
+void equip_unit_load_data_from_stats(s32 battle_id) {
     unit_stats_t* stats;
     s32 i;
     s32 unit_count;
@@ -10,7 +10,7 @@ void equip_unit_load_data_from_battle_stats(s32 battle_id) {
     u16 mp;
 
     stats = battle_unit_get_stats_from_battle_id(battle_id);
-    equip_unit_build_data_from_battle_stats(stats, g_equip_unit_records);
+    equip_unit_build_data_from_stats(stats, g_equip_unit_records);
     unit_count = 0;
     hp = stats->hp;
     mp = stats->mp;

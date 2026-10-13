@@ -16,7 +16,7 @@ void world_formation_rebuild_unit_list(void) {
             mode = WORLD_FORMATION_RECORD_LIST_AVAILABLE_HUMANS;
         }
     }
-    g_world_formation_unit_count = world_formation_build_record_list(0, g_world_formation_unit_pointers, mode);
+    g_world_formation_unit_count = world_formation_build_record_list(0, g_world_unit_pointers, mode);
     world_item_reconcile_sorted_list(0);
     world_item_reconcile_sorted_list(1);
     world_item_reconcile_sorted_list(2);

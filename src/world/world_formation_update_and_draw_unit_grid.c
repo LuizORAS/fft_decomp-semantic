@@ -60,8 +60,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             && world_formation_is_unit_list_scroll_needed() == 0) {
             if (input & PSX_PAD_CIRCLE) {
                 if (g_world_formation_unit_browse_enabled == 0) {
-                    if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags
-                        & UNIT_FLAG_EGG) {
+                    if (g_world_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG) {
                         g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
                     } else if (world_thread_is_running(THREAD_SCREEN_SLOT_CHARACTER_STATUS) == 0) {
                         g_world_formation_unit_browse_enabled = 1;
@@ -168,12 +167,11 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
                 continue;
             }
             if (g_world_formation_unit_browse_enabled == 0) {
-                if (g_world_formation_unit_pointers[i]->proposition_status & WORLD_FORMATION_UNIT_PROPOSITION_LEAVING) {
+                if (g_world_unit_pointers[i]->proposition_status & WORLD_FORMATION_UNIT_PROPOSITION_LEAVING) {
                     mode = MENU_UNIT_READOUT_LEAVING;
-                } else if (g_world_formation_unit_pointers[i]->gender_flags & UNIT_FLAG_EGG) {
+                } else if (g_world_unit_pointers[i]->gender_flags & UNIT_FLAG_EGG) {
                     mode = MENU_UNIT_READOUT_EGG;
-                } else if (g_world_formation_unit_pointers[i]->proposition_status
-                    & WORLD_FORMATION_UNIT_PROPOSITION_MISSING) {
+                } else if (g_world_unit_pointers[i]->proposition_status & WORLD_FORMATION_UNIT_PROPOSITION_MISSING) {
                     mode = MENU_UNIT_READOUT_MISSING;
                 } else if (get_mode != NULL) {
                     mode = get_mode(i);
@@ -184,7 +182,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
                     i, mode, pos.position.x, pos.position.y, color, get_shade, 0, 8);
             }
             value = 0x50;
-            if (g_world_formation_unit_pointers[i]->proposition_status == 0) {
+            if (g_world_unit_pointers[i]->proposition_status == 0) {
                 if (get_shade != NULL) {
                     value = get_shade(i);
                 } else {
@@ -198,7 +196,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             rgb.b = rgb_value;
             rgb.g = rgb_value;
             rgb.r = rgb_value;
-            unit = g_world_formation_unit_pointers[i];
+            unit = g_world_unit_pointers[i];
             if (unit->gender_flags & UNIT_FLAG_EGG) {
                 world_formation_draw_egg_sprite(&pos.position, unit->egg_color, &rgb, unit->birthday & 0xf, 6);
             } else {

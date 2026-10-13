@@ -25,7 +25,7 @@ s32 world_menu_run_learn(void) {
         } else if (result == MENU_JOB_LIST_STEP_CLOSE) {
             g_world_learn_menu_initialized = 0;
             g_world_formation_unit_banner_enabled = 1;
-            world_formation_save_records_to_party_data();
+            world_formation_save_records_to_party();
             return 0;
         }
     } else {

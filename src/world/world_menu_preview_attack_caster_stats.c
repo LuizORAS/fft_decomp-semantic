@@ -24,7 +24,7 @@ void world_menu_preview_attack_caster_stats(void) {
     s16 ability_id;
     s16* stored_unit;
 
-    stored = world_unit_get_battle_stats_for_stored();
+    stored = world_unit_get_active_stats();
     target = battle_unit_get_stats_from_battle_id(g_world_unit_comparison_battle_id);
     /* Local pointer keeps the stored-unit address in one base register. */
     stored_unit = &g_world_active_unit_data.battle_id;

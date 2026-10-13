@@ -17,7 +17,7 @@
  * action_post_action_facing_stub, which is empty. */
 void battle_state_handle_resume_attack_phase_state(void) {
     s32 facing;
-    unit_stats_t* battle_data;
+    unit_stats_t* stats;
     s32 selected_command;
     battle_unit_t* unit;
 
@@ -45,10 +45,10 @@ void battle_state_handle_resume_attack_phase_state(void) {
                 facing += 0x3ff;
             }
             facing = (u32)facing >> 10;
-            battle_data = unit->battle_data;
-            action_post_action_facing_stub(battle_data, facing & 0xff);
+            stats = unit->stats;
+            action_post_action_facing_stub(stats, facing & 0xff);
         }
-        action_store_acting_unit_data(unit->battle_data);
+        action_store_acting_unit_data(unit->stats);
         battle_unit_call_set_animation_based_on_status(unit);
         battle_unit_update_anim_display_for_all_targets(unit);
         battle_unit_get_source();

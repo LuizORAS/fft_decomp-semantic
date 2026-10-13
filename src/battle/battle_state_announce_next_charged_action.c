@@ -19,14 +19,13 @@ s32 battle_state_announce_next_charged_action(void) {
     do {
         switch (g_action_phase) {
         case ACTION_PHASE_PRE_ACTION:
-            result
-                = battle_reaction_prepare_hamedo_for_pending_action(unit->battle_data->battle_id, &command.ability_id);
+            result = battle_reaction_prepare_hamedo_for_pending_action(unit->stats->battle_id, &command.ability_id);
             if (result != -1) {
                 g_battle_game_state = BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT;
                 actor = battle_unit_get_by_battle_id(result & 0xffff);
                 g_battle_casting_runtime_id = actor->runtime_id;
                 command.skillset_id = 0;
-                actor_stats = actor->battle_data;
+                actor_stats = actor->stats;
                 battle_text_select_ability_announcement(&command, actor_stats->battle_id, 1);
                 ability_id = command.ability_id;
                 result = 0;
@@ -37,12 +36,11 @@ s32 battle_state_announce_next_charged_action(void) {
             }
             break;
         case ACTION_PHASE_ACTING_UNIT:
-            result = action_init_current_data(unit->battle_data->battle_id);
+            result = action_init_current_data(unit->stats->battle_id);
             if (result == 0) {
                 g_battle_game_state = BATTLE_GAME_STATE_ACTION_ANNOUNCEMENT;
                 g_battle_casting_runtime_id = unit->runtime_id;
-                battle_text_select_ability_announcement(
-                    &unit->battle_data->action_command, unit->battle_data->battle_id, 1);
+                battle_text_select_ability_announcement(&unit->stats->action_command, unit->stats->battle_id, 1);
                 ability_id = unit->command_state.ai.data.action.ability_id;
                 unit->continue_attack_count = 0;
                 g_action_post_action = 0;
@@ -66,7 +64,7 @@ s32 battle_state_announce_next_charged_action(void) {
                 actor = battle_unit_get_by_battle_id(result & 0xffff);
                 g_battle_casting_runtime_id = actor->runtime_id;
                 command.skillset_id = 0;
-                actor_stats = actor->battle_data;
+                actor_stats = actor->stats;
                 battle_text_select_ability_announcement(&command, actor_stats->battle_id, 1);
                 ability_id = command.ability_id;
                 result = 0;

@@ -22,13 +22,13 @@ void action_queue_post_effect_messages_for_unit(battle_unit_t* runtime) {
     if (runtime == 0) {
         return;
     }
-    if (runtime->battle_data == 0) {
+    if (runtime->stats == 0) {
         return;
     }
     if (g_action_post_effect_msg_counter >= 0x10) {
         return;
     }
-    action = &runtime->battle_data->action;
+    action = &runtime->stats->action;
     if (action->hit == 0) {
         return;
     }
@@ -120,7 +120,7 @@ void action_queue_post_effect_messages_for_unit(battle_unit_t* runtime) {
             break;
         }
         if (queued != 0) {
-            g_action_post_effect_msgs[g_action_post_effect_msg_counter].unit = runtime->battle_data->battle_id;
+            g_action_post_effect_msgs[g_action_post_effect_msg_counter].unit = runtime->stats->battle_id;
             g_action_post_effect_msg_counter += 1;
         }
     }

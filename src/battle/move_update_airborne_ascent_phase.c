@@ -23,7 +23,7 @@ void move_update_airborne_ascent_phase(battle_unit_t* unit) {
                 unit->movement.destination_x, unit->movement.destination_y, unit->movement.destination_z);
             g_move_tile_occupant = occupant;
             if (occupant != 0) {
-                unit->standing_on_battle_id_plus_one = occupant->battle_data->battle_id + 1;
+                unit->standing_on_battle_id_plus_one = occupant->stats->battle_id + 1;
                 return;
             }
         }

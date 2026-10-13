@@ -20,7 +20,7 @@ s32 world_ability_build_equippable_rsm_list(s16 unit_index, s32 slot, s16* out) 
     s32 n;
     s32 swap;
     s32 last;
-    s16 job_id = g_world_formation_unit_pointers[unit_index]->identity.job_id;
+    s16 job_id = g_world_unit_pointers[unit_index]->identity.job_id;
 
     count = world_ability_find_unit_abilities(
         unit_index, world_job_get_base(unit_index), slot, abilities, WORLD_ABILITY_LIST_MODE_LEARNED_ONLY);

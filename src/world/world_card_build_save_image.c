@@ -26,7 +26,7 @@ void world_card_build_save_image(s32 slot) {
     s32 unused[64]; /* unreferenced locals: the target frame is 0x130 */
 
     for (i = 0; i < g_world_formation_unit_count; i++) {
-        if (g_world_formation_unit_pointers[i]->sprite_set < CHARACTER_IDENTITY_RAMZA_END) {
+        if (g_world_unit_pointers[i]->sprite_set < CHARACTER_IDENTITY_RAMZA_END) {
             break;
         }
     }
@@ -34,11 +34,11 @@ void world_card_build_save_image(s32 slot) {
         i = 0;
     }
 
-    bcopy(g_world_formation_unit_pointers[i]->name, g_world_load_work_buffer->summary.name,
+    bcopy(g_world_unit_pointers[i]->name, g_world_load_work_buffer->summary.name,
         sizeof(g_world_load_work_buffer->summary.name));
     g_world_load_work_buffer->summary.name_terminator = 0xfe;
-    g_world_load_work_buffer->summary.job_id = g_world_formation_unit_pointers[i]->identity.job_id;
-    g_world_load_work_buffer->summary.level = g_world_formation_unit_pointers[i]->status.level;
+    g_world_load_work_buffer->summary.job_id = g_world_unit_pointers[i]->identity.job_id;
+    g_world_load_work_buffer->summary.level = g_world_unit_pointers[i]->status.level;
 
     script_var_2f = script_get_variable(EVENT_SCRIPT_VAR_DAY);
     script_var_2e = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
@@ -52,11 +52,10 @@ void world_card_build_save_image(s32 slot) {
         = g_main_system_play_time_minutes * 60 + g_main_system_play_time_seconds + g_main_system_play_time_hours * 3600;
     g_world_load_work_buffer->summary.format_version = 4;
 
-    world_card_build_save_file_header(
-        slot, g_world_formation_unit_pointers[i]->status.level, &g_world_load_work_buffer->header);
+    world_card_build_save_file_header(slot, g_world_unit_pointers[i]->status.level, &g_world_load_work_buffer->header);
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        bcopy(&g_main_party_data[i], g_world_load_work_buffer->party_records[i],
+        bcopy(&g_main_party_units[i], g_world_load_work_buffer->party_records[i],
             sizeof(g_world_load_work_buffer->party_records[i]));
     }
 

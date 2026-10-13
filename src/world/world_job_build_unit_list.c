@@ -21,27 +21,27 @@ s32 world_job_build_unit_list(u8 unit_index, s16* jobs, s32 mode) {
     s32 unlocked;
 
     count = 0;
-    world_bit_cursor_set_primary(g_world_formation_unit_pointers[unit_index]->unlocked_jobs);
+    world_bit_cursor_set_primary(g_world_unit_pointers[unit_index]->unlocked_jobs);
     job = world_job_get_base(unit_index);
     if (mode == WORLD_JOB_LIST_MODE_INCLUDE_OTHER_UNIT_UNLOCKS
-        && job == g_world_formation_unit_pointers[unit_index]->identity.job_id) {
+        && job == g_world_unit_pointers[unit_index]->identity.job_id) {
         job |= WORLD_JOB_LIST_ENTRY_UNAVAILABLE;
     }
     jobs[count++] = job;
-    if (job_is_special_monster(g_world_formation_unit_pointers[unit_index]->identity.job_id) == 0
-        && g_world_formation_unit_pointers[unit_index]->uses_monster_skillset == 0) {
+    if (job_is_special_monster(g_world_unit_pointers[unit_index]->identity.job_id) == 0
+        && g_world_unit_pointers[unit_index]->uses_monster_skillset == 0) {
         world_bits_read_primary(1);
         for (i = 1; i < JOB_ID_GENERIC_COUNT; i++) {
             job = i + JOB_ID_SQUIRE;
             unlocked = world_bits_read_primary(1);
-            if (job == JOB_ID_BARD && (g_world_formation_unit_pointers[unit_index]->gender_flags & UNIT_FLAG_FEMALE)) {
+            if (job == JOB_ID_BARD && (g_world_unit_pointers[unit_index]->gender_flags & UNIT_FLAG_FEMALE)) {
                 continue;
             }
-            if (job == JOB_ID_DANCER && (g_world_formation_unit_pointers[unit_index]->gender_flags & UNIT_FLAG_MALE)) {
+            if (job == JOB_ID_DANCER && (g_world_unit_pointers[unit_index]->gender_flags & UNIT_FLAG_MALE)) {
                 continue;
             }
             if (mode == WORLD_JOB_LIST_MODE_INCLUDE_OTHER_UNIT_UNLOCKS
-                && job == g_world_formation_unit_pointers[unit_index]->identity.job_id) {
+                && job == g_world_unit_pointers[unit_index]->identity.job_id) {
                 jobs[count++] = job | WORLD_JOB_LIST_ENTRY_UNAVAILABLE;
             } else if (unlocked != 0) {
                 jobs[count++] = job;

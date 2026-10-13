@@ -60,7 +60,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
         0, 0, 0, 0, 0, 0, draw_moves, draw_areas, draw_modes);
     world_formation_init_menu_display();
     g_world_formation_unit_count
-        = world_formation_build_record_list(0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
+        = world_formation_build_record_list(0, g_world_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
     g_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_world_card_slot_text_table;
     world_text_bind_section_data(WORLD_TEXT_DATA_FORMATION_MESSAGES);
     g_world_card_menu_step = WORLD_CARD_MENU_STEP_SELECT_CARD;

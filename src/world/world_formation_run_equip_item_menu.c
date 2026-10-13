@@ -76,8 +76,7 @@ s32 world_formation_run_equip_item_menu(void) {
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
             g_world_equip_item_previewed_cursor = -1;
         }
-        equipped = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
-                       ->equipment[g_world_equip_item_slot];
+        equipped = g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment[g_world_equip_item_slot];
         value = -1;
         if (equipped != ITEM_ID_NOTHING) {
             value = equipped + 0x6800;
@@ -119,9 +118,9 @@ s32 world_formation_run_equip_item_menu(void) {
                 g_world_preview_stats_thread_params.redraw_request = 1;
                 world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,
                     &g_world_selected_unit_stat_summary,
-                    g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
+                    g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment,
                     g_world_formation_temp_unit->equipment);
-                bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
+                bcopy(g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment,
                     g_world_formation_temp_unit->equipment, 10);
             } else {
                 g_world_equip_item_preview_active = 0;

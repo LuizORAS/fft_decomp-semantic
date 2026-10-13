@@ -22,18 +22,18 @@ s32 world_formation_equip_item_to_unit_slot(s16 unit, s16 slot, s16 item_id) {
         return status;
     }
     if (unit != WORLD_FORMATION_PREVIEW_UNIT_INDEX) {
-        world_item_adjust_inventory_count(g_world_formation_unit_pointers[unit]->equipment[slot], 1);
+        world_item_adjust_inventory_count(g_world_unit_pointers[unit]->equipment[slot], 1);
     }
     if (slot < 2 && status != 1) {
         other = slot == 0;
         if (unit != WORLD_FORMATION_PREVIEW_UNIT_INDEX) {
-            world_item_adjust_inventory_count(g_world_formation_unit_pointers[unit]->equipment[other], 1);
+            world_item_adjust_inventory_count(g_world_unit_pointers[unit]->equipment[other], 1);
         }
-        g_world_formation_unit_pointers[unit]->equipment[other] = ITEM_ID_NOTHING;
+        g_world_unit_pointers[unit]->equipment[other] = ITEM_ID_NOTHING;
     }
-    g_world_formation_unit_pointers[unit]->equipment[slot] = item;
+    g_world_unit_pointers[unit]->equipment[slot] = item;
     if (unit != WORLD_FORMATION_PREVIEW_UNIT_INDEX) {
-        world_formation_save_records_to_party_data();
+        world_formation_save_records_to_party();
     }
     return 1;
 }

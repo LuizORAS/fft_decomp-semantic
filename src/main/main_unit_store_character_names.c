@@ -55,7 +55,7 @@ void main_unit_store_character_names(unit_stats_t* unit) {
                 name_available = 1;
                 name_id.value = name_base.value + (rand() * 255) / 0x8000;
                 for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-                    party = &g_main_party_data[i];
+                    party = &g_main_party_units[i];
                     if (party->party_id != PARTY_ID_NONE && gender == (party->gender_flags & NAME_GENDER_MASK)) {
                         name_id_record = &party->name_id;
                         existing_name.value = 0;
@@ -82,7 +82,7 @@ void main_unit_store_character_names(unit_stats_t* unit) {
         text_id += name_index;
         text = prepare_text(text_id);
     } else {
-        text = main_party_get_data_pointer(unit->formation_index)->name;
+        text = main_party_get_unit(unit->formation_index)->name;
     }
     main_util_copy_bytes(text, unit->name, sizeof(unit->name));
     text_id = unit->job_id | TEXT_ID_JOB_NAME_BASE;

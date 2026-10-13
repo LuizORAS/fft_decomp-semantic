@@ -3,7 +3,7 @@
 
 /* Bubble-sort g_bunit_shown_unit_indices (the shown-unit index list) by the
  * successive keys of g_main_item_type_order_tables.order_0, then publish the
- * sorted record pointers into g_bunit_unit_data. `sort_mode` is not read.
+ * sorted record pointers into g_bunit_unit_pointers. `sort_mode` is not read.
  * BUNIT twin of world_formation_sort_roster. */
 void bunit_unit_sort_index_list_by_order_keys(s32 sort_mode) {
     s32 count;
@@ -37,6 +37,6 @@ void bunit_unit_sort_index_list_by_order_keys(s32 sort_mode) {
         }
     }
     for (j = 0; j < g_bunit_unit_count; j++) {
-        g_bunit_unit_data[j] = &g_bunit_unit_records[g_bunit_shown_unit_indices[j]];
+        g_bunit_unit_pointers[j] = &g_bunit_unit_records[g_bunit_shown_unit_indices[j]];
     }
 }

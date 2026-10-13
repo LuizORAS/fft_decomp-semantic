@@ -27,7 +27,7 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_t* unit) {
     u8 status;
 
     flags = unit->action_display_flags;
-    stats = unit->battle_data;
+    stats = unit->stats;
     display = &unit->numeric_display;
 
     if ((flags & ACTION_DISPLAY_NUMERIC_FLAGS_MASK) != 0) {
@@ -127,7 +127,7 @@ s32 battle_gfx_build_next_action_result_display(battle_unit_t* unit) {
         return 0;
     }
 
-    if (unit->battle_data->action.critical != 0) {
+    if (unit->stats->action.critical != 0) {
         display->selector |= BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL;
     } else {
         display->selector &= ~BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL;

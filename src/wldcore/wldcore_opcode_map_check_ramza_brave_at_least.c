@@ -6,7 +6,7 @@ void wldcore_opcode_map_check_ramza_brave_at_least(void) {
     u16 ip;
     s32 val;
 
-    party = wldcore_get_party_data_pointer(wldcore_get_ramza_roster_index());
+    party = wldcore_get_party_unit(wldcore_get_ramza_roster_index());
     ip = g_wldcore_script_state.ip;
     val = g_wldcore_script_state.data[ip];
     g_wldcore_script_state.ip = ip + 1;

@@ -7,7 +7,7 @@
  * sheet file to VRAM; slot 20 uses the portrait id in g_main_special_portrait_wldface_id.
  *
  * Port of require_gfx_prepare_party_portrait_textures. Here `value` is the party
- * index passed to main_party_get_data_pointer, so the pixel-row counter is a
+ * index passed to main_party_get_unit, so the pixel-row counter is a
  * separate variable `j`. The never-taken `j <= 0` test after the row loop only
  * adds one reference to `j`, raising its global-allocation priority above the
  * source pointer's so the counter gets $a3 as in the target. */
@@ -51,7 +51,7 @@ void attack_gfx_prepare_party_portrait_textures(void) {
             value = i;
         }
         if (i != 20) {
-            unit = main_party_get_data_pointer(value);
+            unit = main_party_get_unit(value);
             if (unit->sprite_set < CHARACTER_IDENTITY_SELECTOR_FIRST) {
                 value = unit->sprite_set;
             } else {

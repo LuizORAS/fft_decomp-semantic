@@ -28,10 +28,10 @@ s32 battle_gfx_calculate_world_height_from_coords(battle_unit_t* unit, const SVE
     } else {
         world_height = map_calculate_slope_height(coords, coords->vy & 0xff);
     }
-    if (unit->battle_data != 0) {
+    if (unit->stats != 0) {
         tile = map_get_tile_data_pointer(coords->vx / MAP_TILE_SIZE, coords->vz / MAP_TILE_SIZE, coords->vy);
         if (tile->depth_half_height.depth) {
-            flags = move_get_effective_flags(unit->battle_data);
+            flags = move_get_effective_flags(unit->stats);
             sprite = unit->spritesheet_id;
             animation = unit->animation.sequence_id >> 1;
             if ((flags & BATTLE_EFFECTIVE_MOVEMENT_FLOAT) || (flags & BATTLE_EFFECTIVE_MOVEMENT_ON_WATER)) {

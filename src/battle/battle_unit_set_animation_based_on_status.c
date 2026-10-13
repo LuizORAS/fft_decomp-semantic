@@ -52,10 +52,10 @@ void battle_unit_set_animation_based_on_status(battle_unit_t* unit) {
                 } else if (unit->status_flags_1_4 & BATTLE_UNIT_STATUS_CONFUSION) {
                     animation = BATTLE_UNIT_ANIMATION_CONFUSION;
                 } else if (unit->status_flags_1_4 & BATTLE_UNIT_STATUS_PERFORMING) {
-                    unit->used_ability_id = unit->battle_data->action_command.ability_id;
+                    unit->used_ability_id = unit->stats->action_command.ability_id;
                     battle_unit_start_ability_charge_hold_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_UNIT_STATUS_CHARGING) {
-                    unit->used_ability_id = unit->battle_data->action_command.ability_id;
+                    unit->used_ability_id = unit->stats->action_command.ability_id;
                     battle_unit_start_ability_charge_hold_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_UNIT_STATUS_DEFENDING) {
                     animation = BATTLE_UNIT_ANIMATION_DEFEND;
@@ -96,10 +96,10 @@ void battle_unit_set_animation_based_on_status(battle_unit_t* unit) {
                 } else if (unit->status_flags_1_4 & BATTLE_UNIT_STATUS_CONFUSION) {
                     animation = BATTLE_UNIT_ANIMATION_CONFUSION;
                 } else if (unit->status_flags_1_4 & BATTLE_UNIT_STATUS_PERFORMING) {
-                    unit->used_ability_id = unit->battle_data->action_command.ability_id;
+                    unit->used_ability_id = unit->stats->action_command.ability_id;
                     battle_unit_start_ability_charge_hold_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_UNIT_STATUS_CHARGING) {
-                    unit->used_ability_id = unit->battle_data->action_command.ability_id;
+                    unit->used_ability_id = unit->stats->action_command.ability_id;
                     battle_unit_start_ability_charge_hold_animation(unit);
                 } else if (unit->status_flags_1_4 & BATTLE_UNIT_STATUS_DEFENDING) {
                     animation = BATTLE_UNIT_ANIMATION_DEFEND;

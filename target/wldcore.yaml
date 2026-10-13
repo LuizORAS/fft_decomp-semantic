@@ -49,7 +49,7 @@ functions:
   - {addr: 0x80069adc, size: 212, name: wldcore_calendar_advance_day, hash: fa23d9cb75d2330b}
   - {addr: 0x80069bb0, size: 400, name: wldcore_calendar_convert_date_to_zodiac, hash: 8d40642805cd5ac8}
   - {addr: 0x80069d40, size: 248, name: wldcore_advance_brave_story_birthdays, hash: 093651326def3e0f}
-  - {addr: 0x80069e38, size: 32, name: wldcore_get_party_data_pointer, hash: 94137dd4e32ea227}
+  - {addr: 0x80069e38, size: 32, name: wldcore_get_party_unit, hash: 94137dd4e32ea227}
   - {addr: 0x80069e58, size: 172, name: wldcore_write_nine_bit_record, hash: a100a01dd3458fa8}
   - {addr: 0x80069f04, size: 276, name: wldcore_read_nine_bit_record, hash: 337a6e03c2eb3680}
   - {addr: 0x8006a018, size: 148, name: wldcore_gfx_clear_vram_and_scratch, hash: 6d07a88a3d3e8359}

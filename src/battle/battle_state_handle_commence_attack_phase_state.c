@@ -12,7 +12,7 @@ void battle_state_handle_commence_attack_phase_state(void) {
     unit = battle_unit_get_source();
     if (unit->attack_phase_state == BATTLE_ATTACK_PREPARATION_JUMP) {
         if (unit->animation.wait == 0) {
-            action_set_only_action_taken(unit->battle_data->battle_id);
+            action_set_only_action_taken(unit->stats->battle_id);
             battle_unit_update_post_command_animation_display(unit);
         }
     } else {

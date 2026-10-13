@@ -17,7 +17,7 @@ void move_init_knockback(battle_unit_t* unit) {
 
     unit->movement_path_offset = 0;
     unit->path.count = 1;
-    unit->path.flags = move_get_effective_flags(unit->battle_data);
+    unit->path.flags = move_get_effective_flags(unit->stats);
 
     state = *path_word;
     state &= ~0x300;

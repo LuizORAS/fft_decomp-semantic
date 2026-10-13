@@ -38,6 +38,6 @@ void battle_unit_apply_poach_morbol_transformation(battle_unit_t* unit) {
     battle_gfx_check_tile_status_palette_mod(unit, tile->flags.shading, 1);
     /* The target reads the u16 facing field signed (lh). */
     battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_IDLE, unit->facing, unit);
-    battle_unit_transform_into_morbol(unit->battle_data);
-    ai_init_unit_abilities(unit->battle_data->battle_id);
+    battle_unit_transform_into_morbol(unit->stats);
+    ai_init_unit_abilities(unit->stats->battle_id);
 }

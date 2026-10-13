@@ -36,13 +36,13 @@ void require_editor_load_selected_unit(void) {
     unit = battle_unit_get_stats_from_battle_id(g_require_panel_comparison_unit_data.battle_id);
     editor = &g_require_editor_unit_fields.state;
     if (unit != 0) {
-        require_panel_copy_battle_stats_to_gauges(unit, &g_require_panel_comparison_billboard);
+        require_panel_copy_stats_to_gauges(unit, &g_require_panel_comparison_billboard);
     }
 
     unit = battle_unit_get_stats_from_battle_id(g_require_active_unit_data.battle_id);
     if (unit == 0)
         return;
-    require_panel_copy_battle_stats_to_gauges(unit, &g_require_panel_selected_billboard);
+    require_panel_copy_stats_to_gauges(unit, &g_require_panel_selected_billboard);
 
     g_require_active_unit_data.job_id = unit->job_id;
     g_require_active_unit_data.brave = unit->brave;

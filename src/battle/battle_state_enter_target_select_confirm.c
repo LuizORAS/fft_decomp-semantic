@@ -11,11 +11,11 @@ void battle_state_enter_target_select_confirm(void) {
     g_battle_game_state = BATTLE_GAME_STATE_TARGET_SELECT_CONFIRM;
     unit = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (unit != 0) {
-        stats = unit->battle_data;
+        stats = unit->stats;
         if (stats != 0) {
             battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, stats->battle_id, 0);
         }
     }
-    stats = battle_unit_get_casting()->battle_data;
+    stats = battle_unit_get_casting()->stats;
     battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 0, stats->battle_id, 0, 1);
 }

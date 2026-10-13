@@ -73,7 +73,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             }
             if (g_world_grid_menu_id != MENU_GRID_HELP_NONE) {
                 world_menu_update_grid_cursor(
-                    g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->uses_monster_skillset);
+                    g_world_unit_pointers[g_world_formation_selected_unit_index]->uses_monster_skillset);
             }
             world_menu_set_palette_mode(g_world_thread_task_active);
             g_world_formation_menu_handlers[g_world_formation_current_menu]();
@@ -160,7 +160,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
     if (tutorial == 0) {
         main_sound_unload_scenario_mus(g_world_menu_music_slot);
     }
-    world_formation_save_records_to_party_data();
+    world_formation_save_records_to_party();
     world_formation_stop_menu_threads();
     world_script_set_vsync_mode_and_event_speed(0);
     world_formation_reset_menu_context();

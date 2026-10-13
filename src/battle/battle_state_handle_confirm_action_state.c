@@ -35,7 +35,7 @@ void battle_state_handle_confirm_action_state(void) {
             target = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
             if (target != 0) {
                 unit->command_state.ai.data.action.targeting_type = selected_command_address->kind;
-                unit->command_state.ai.data.action.target_id = target->battle_data->battle_id;
+                unit->command_state.ai.data.action.target_id = target->stats->battle_id;
             } else {
                 unit->command_state.ai.data.action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
             }

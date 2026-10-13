@@ -10,7 +10,7 @@ s32 action_report_level_up(battle_unit_t* unit) {
     if (unit->strike.action_rewards.level_for_display != 0) {
         u8 battle_id;
         battle_text_set_message_duration_frames(0xB4);
-        battle_id = unit->battle_data->battle_id;
+        battle_id = unit->stats->battle_id;
         battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_EFFECT_MESSAGE, 0x183F, battle_id, battle_id, 1);
         battle_unit_set_level_up_animation(unit);
         target_move_cursor_to_unit(unit);

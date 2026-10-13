@@ -44,7 +44,7 @@ void battle_gfx_draw_status_bubble(battle_unit_t* unit, const DVECTOR* unused_sc
             display->parts[0].v = 0xBC;
         }
     } else if (bubble_id == 0) {
-        table_index = unit->battle_data->death_counter;
+        table_index = unit->stats->death_counter;
         if (unit->status_flags_1_4 & BATTLE_UNIT_STATUS_RERAISE) {
             display->parts[0].u = g_status_bubble_u[10];
             flag_row = g_status_bubble_v[10];
@@ -64,7 +64,7 @@ void battle_gfx_draw_status_bubble(battle_unit_t* unit, const DVECTOR* unused_sc
             }
         }
     } else if (bubble_id == 20) {
-        table_index = unit->battle_data->status_ct[STATUS_CT_INDEX(STATUS_ID_DEATH_SENTENCE)] & 3;
+        table_index = unit->stats->status_ct[STATUS_CT_INDEX(STATUS_ID_DEATH_SENTENCE)] & 3;
         display->parts[0].u = g_status_bubble_digit_u[table_index];
         display->parts[0].v = g_status_bubble_digit_v[table_index];
     } else {

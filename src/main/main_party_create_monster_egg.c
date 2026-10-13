@@ -8,7 +8,7 @@
  * in both nibbles. */
 s32 main_party_create_monster_egg(s32 monster_job, s32 egg_modifier, s32 egg_color) {
     s32 party_index;
-    party_unit_t* party_data;
+    party_unit_t* party;
     u16 birthday;
     s32 zodiac;
 
@@ -16,16 +16,16 @@ s32 main_party_create_monster_egg(s32 monster_job, s32 egg_modifier, s32 egg_col
     if (party_index == -1) {
         return party_index;
     }
-    party_data = main_party_get_data_pointer(party_index);
-    party_data->job_id = monster_job;
-    party_data->egg_color = egg_color;
-    party_data->gender_flags |= UNIT_FLAG_EGG;
+    party = main_party_get_unit(party_index);
+    party->job_id = monster_job;
+    party->egg_color = egg_color;
+    party->gender_flags |= UNIT_FLAG_EGG;
     birthday = egg_modifier;
     if (birthday >= 0x16e) {
         birthday = 1;
     }
     zodiac = main_unit_calculate_zodiac_symbol(birthday);
-    party_data->birthday_day = birthday;
-    party_data->zodiac = ((birthday & 0x100) >> 8) + (zodiac << 4);
+    party->birthday_day = birthday;
+    party->zodiac = ((birthday & 0x100) >> 8) + (zodiac << 4);
     return party_index;
 }

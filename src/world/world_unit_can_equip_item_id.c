@@ -14,7 +14,7 @@ s32 world_unit_can_equip_item_id(s16 unit_index, s16 item_id) {
     if (world_item_get_menu_category(id) == ITEM_MENU_CATEGORY_OTHER) {
         return -1;
     }
-    world_bit_cursor_set_primary(g_world_formation_unit_pointers[unit_index]->equippable_item_types);
+    world_bit_cursor_set_primary(g_world_unit_pointers[unit_index]->equippable_item_types);
     world_bits_read_primary(world_item_get_type(id));
     if (world_bits_read_primary(1) == 0) {
         result = -1;

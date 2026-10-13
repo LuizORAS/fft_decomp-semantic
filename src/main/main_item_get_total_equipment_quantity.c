@@ -17,7 +17,7 @@ s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle) {
 
     total = g_main_item_quantities[item_id];
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        party = main_party_get_data_pointer(i);
+        party = main_party_get_unit(i);
         party_id = party->party_id;
         if (party_id == PARTY_ID_NONE) {
             continue;

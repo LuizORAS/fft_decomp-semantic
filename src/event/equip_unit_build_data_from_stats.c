@@ -3,7 +3,7 @@
 
 /* Build EQUIP.OUT's unit preview from a unit_stats_t record, clamping the
  * displayed values and folding empty equipment slots (0xFF and above) to 0. */
-void equip_unit_build_data_from_battle_stats(unit_stats_t* stats, equip_unit_data_t* unit) {
+void equip_unit_build_data_from_stats(unit_stats_t* stats, equip_unit_data_t* unit) {
     s32 i;
     s32 value;
     u8 larger;

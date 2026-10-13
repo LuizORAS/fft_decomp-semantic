@@ -48,7 +48,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
             return;
         }
         for (i = 0; g_world_formation_dismiss_entries[i].sprite_set != -1; i++) {
-            if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->sprite_set
+            if (g_world_unit_pointers[g_world_formation_selected_unit_index]->sprite_set
                 == g_world_formation_dismiss_entries[i].sprite_set) {
                 script_set_variable(g_world_formation_dismiss_entries[i].variable_id, 0xC);
             }
@@ -61,7 +61,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
 
     if (g_world_dismiss_unit_prompt_running == 0) {
         sprite = g_world_formation_selected_unit_index;
-        if (g_world_formation_unit_pointers[sprite]->proposition_status != 0) {
+        if (g_world_unit_pointers[sprite]->proposition_status != 0) {
             world_text_show_message_and_play_sound(0xC012, MAIN_SFX_ERROR_MESSAGE);
             g_world_formation_dismiss_step = 2;
             g_world_dismiss_unit_prompt_running = 1;
@@ -72,8 +72,8 @@ void world_formation_run_dismiss_unit_menu_step(void) {
                 g_world_formation_unit_cycle_mode = 1;
             }
             g_text_substitution_values[0]
-                = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->identity.roster_slot;
-            unit = g_world_formation_unit_pointers[g_world_formation_selected_unit_index];
+                = g_world_unit_pointers[g_world_formation_selected_unit_index]->identity.roster_slot;
+            unit = g_world_unit_pointers[g_world_formation_selected_unit_index];
             sprite = unit->sprite_set;
             if (sprite >= 0x4B) {
                 flags = unit->gender_flags;

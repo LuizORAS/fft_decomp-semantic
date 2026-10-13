@@ -20,7 +20,7 @@ void battle_unit_move_toward_action_target(battle_unit_t* unit, s32 allow_height
     velocity = unit->velocity;
     switch (unit->distortion_phase) {
     case 0:
-        if (unit->battle_data != 0) {
+        if (unit->stats != 0) {
             if (g_battle_game_state == BATTLE_GAME_STATE_EVENT) {
                 velocity.vx = ((unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)) << 12) - unit->real.vx;
                 velocity.vz = ((unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)) << 12) - unit->real.vz;
@@ -30,19 +30,16 @@ void battle_unit_move_toward_action_target(battle_unit_t* unit, s32 allow_height
                 setVector(&velocity, target->real.vx - unit->real.vx, target->real.vy - unit->real.vy,
                     target->real.vz - unit->real.vz);
             } else {
-                velocity.vx = (unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE
-                                  + (MAP_TILE_SIZE / 2) - unit->world_coords.vx)
+                velocity.vx = (unit->stats->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)
+                                  - unit->world_coords.vx)
                     << 12;
-                velocity.vz = (unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE
-                                  + (MAP_TILE_SIZE / 2) - unit->world_coords.vz)
+                velocity.vz = (unit->stats->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)
+                                  - unit->world_coords.vz)
                     << 12;
-                tile_center.vx
-                    = unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                tile_center.vz
-                    = unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                velocity.vy
-                    = (map_calculate_slope_height(&tile_center, unit->battle_data->action_command.target_position.vy)
-                          - unit->world_coords.vy)
+                tile_center.vx = unit->stats->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                tile_center.vz = unit->stats->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                velocity.vy = (map_calculate_slope_height(&tile_center, unit->stats->action_command.target_position.vy)
+                                  - unit->world_coords.vy)
                     << 12;
             }
             velocity.vx /= timer;

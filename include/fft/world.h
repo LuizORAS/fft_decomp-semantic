@@ -1295,7 +1295,7 @@ typedef char world_formation_abilities_size_must_be_10[(sizeof(world_formation_a
  * WORLD menu unit record, compacted after roster and menu-specific filtering.
  * Records at 0x801c8638 have stride 0x128; roster_slot preserves their roster
  * identity. The builder and sorter produce the
- * ordered g_world_formation_unit_pointers list, not a roster-indexed array.
+ * ordered g_world_unit_pointers list, not a roster-indexed array.
  * The byte fields from 0x70 on mirror the party_unit_t layout above. Magical
  * shield/accessory evade are provisionally placed at 0x50/0x52, after the
  * physical fields at 0x40/0x42, to follow the 16-bit sequence.
@@ -1521,7 +1521,7 @@ extern point16_t g_world_formation_cursor_trail[8];
 extern u8 g_world_formation_dismiss_step;
 extern menu_entry_t* g_world_formation_dismiss_menu_data;
 extern s16 g_world_formation_record_order[];
-extern struct world_unit g_world_formation_unit_records[WORLD_FORMATION_UNIT_RECORD_COUNT];
+extern struct world_unit g_world_unit_records[WORLD_FORMATION_UNIT_RECORD_COUNT];
 extern u8 g_world_formation_menu_text_buffer[];
 
 /* Signed count of accepted roster records; the sorter also installs the
@@ -1531,7 +1531,7 @@ extern s16 g_world_formation_record_count; /* 0x801c8634 */
 /* Menu callers cache the builder's return here; rebuilding the record list
  * does not itself refresh this byte. */
 extern u8 g_world_formation_unit_count;
-extern world_unit_t* g_world_formation_unit_pointers[];
+extern world_unit_t* g_world_unit_pointers[];
 void world_formation_run_screen(s32 tutorial, s32 unused);
 s32 world_formation_is_unit_list_scroll_needed(void);
 void world_formation_draw_unit_slots(point16_t* positions, s32 shade);
@@ -1603,7 +1603,7 @@ void world_formation_run_job_wheel_menu(void);
 s16 world_formation_run_menu_frame(u32* otag, u32 input);
 void world_formation_run_screen_for_menu_index(s32 menu_index);
 void world_formation_save_and_set_system_flags(void);
-void world_formation_save_records_to_party_data(void);
+void world_formation_save_records_to_party(void);
 void world_formation_set_display_mode(s32 mode);
 void world_formation_set_menu_allowed_buttons(u32 mask);
 void world_formation_set_ordering_table_pointer(u32* ordering_table);
@@ -1748,7 +1748,7 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment);
 s32 world_unit_can_equip_item_id(s16 unit_index, s16 item_id);
 s32 world_unit_check_facing_relative_to_camera(s32 unit_id);
 void world_unit_clear_status_staging_data(void);
-struct unit_stats* world_unit_get_battle_stats_for_stored(void);
+struct unit_stats* world_unit_get_active_stats(void);
 s32 world_unit_get_map_coords_by_runtime_id(s32 runtime_id, SVECTOR* out);
 vec3u16_t* world_unit_copy_world_coords_to_scratch(u32 runtime_id);
 s32 world_formation_get_unit_palette_index(s32 roster_slot);

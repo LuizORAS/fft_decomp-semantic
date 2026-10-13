@@ -24,7 +24,7 @@ void effect_build_secondary_init_from_action(battle_unit_t* unit, effect_seconda
             target = battle_unit_get_by_battle_id(unit->strike.target_list[i]);
             init->targets[i].target_type = EFFECT_TARGET_TYPE_UNIT;
             init->targets[i].data.unit.runtime_id = target->runtime_id;
-            action = &target->battle_data->action;
+            action = &target->stats->action;
             switch (action->miss_type) {
             case ACTION_MISS_TYPE_ACCESSORY_EVADE:
             case ACTION_MISS_TYPE_RIGHT_HAND_EVADE:

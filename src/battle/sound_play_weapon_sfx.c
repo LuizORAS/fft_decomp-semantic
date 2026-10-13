@@ -28,10 +28,10 @@ void sound_play_weapon_sfx(battle_unit_t* unit, s32 hit) {
     case 1:
         for (i = 0; i < unit->strike.target_count; i++) {
             target = battle_unit_get_by_battle_id(unit->strike.target_list[i]);
-            if (target == 0 || target->battle_data == 0) {
+            if (target == 0 || target->stats == 0) {
                 continue;
             }
-            switch (target->battle_data->action.miss_type) {
+            switch (target->stats->action.miss_type) {
             case ACTION_MISS_TYPE_RIGHT_HAND_EVADE:
             case ACTION_MISS_TYPE_LEFT_HAND_EVADE:
             case ACTION_MISS_TYPE_GOLEM_GUARD:
@@ -49,7 +49,7 @@ void sound_play_weapon_sfx(battle_unit_t* unit, s32 hit) {
             case ACTION_MISS_TYPE_CANCELLED:
                 break;
             default:
-                if (target->battle_data->action.critical != 0) {
+                if (target->stats->action.critical != 0) {
                     sound_play_movement_sfx(unit, MAIN_SFX_CRITICAL_HIT);
                 } else {
                     sound_play_movement_sfx(unit, g_sound_weapon_hit_sfx_ids[weapon_type]);

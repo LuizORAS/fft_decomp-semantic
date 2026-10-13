@@ -9,16 +9,16 @@ void battle_unit_store_entd_flags_without_control_flag(battle_unit_t* unit) {
     u8 mount_entd_flags;
     battle_unit_t* mount;
 
-    entd_flags = unit->battle_data->team_flags;
+    entd_flags = unit->stats->team_flags;
     unit->team_flags = entd_flags;
-    if (unit->battle_data->auto_battle_setting != AI_AUTOBATTLE_MANUAL) {
+    if (unit->stats->auto_battle_setting != AI_AUTOBATTLE_MANUAL) {
         unit->team_flags = entd_flags & ~BATTLE_TEAM_FLAG_PLAYER_CONTROLLED;
     }
     if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
         mount = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
-        mount_entd_flags = mount->battle_data->team_flags;
+        mount_entd_flags = mount->stats->team_flags;
         mount->team_flags = mount_entd_flags;
-        if (mount->battle_data->auto_battle_setting != AI_AUTOBATTLE_MANUAL) {
+        if (mount->stats->auto_battle_setting != AI_AUTOBATTLE_MANUAL) {
             mount->team_flags = mount_entd_flags & ~BATTLE_TEAM_FLAG_PLAYER_CONTROLLED;
         }
     }

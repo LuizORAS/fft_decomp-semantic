@@ -730,7 +730,7 @@ typedef char battle_strike_work_must_be_40[sizeof(battle_strike_work_t) == 40 ? 
 
 /* unit runtime */
 /* Live on-map units own movement, animation, commands and displays.
- * runtime_id indexes g_battle_units; battle_data optionally links combat stats. */
+ * runtime_id indexes g_battle_units; stats optionally links combat stats. */
 typedef struct battle_unit {
     struct battle_unit* previous; /* 0x000; previous unit in the runtime list */
     u8 runtime_id;                /* 0x004; runtime slot ID */
@@ -810,7 +810,7 @@ typedef struct battle_unit {
     u8 mount_partner_runtime_id;          /* 0x131; linked rider or mount runtime ID */
     u8 previous_mount_state;              /* 0x132; battle_unit_mount_state_e */
     u8 previous_mount_partner_runtime_id; /* 0x133 */
-    unit_stats_t* battle_data;            /* 0x134; unit_stats_t backlink */
+    unit_stats_t* stats;                  /* 0x134; unit_stats_t backlink */
     u16 used_ability_id;                  /* 0x138 */
     u8 used_item_or_weapon_id;            /* 0x13a; the item the weapon and effect blocks draw */
     u8 equipped_weapon_type;              /* 0x13b; its item type, or 0x15 thrown: the frame set of the weapon SHP */
@@ -938,7 +938,7 @@ enum {
     BATTLE_CRYSTAL_TAKE_TREASURE = 0x4, /* add the treasure's item instead */
 };
 
-/* Results of battle_unit_find_slot_by_character_identity that are not a battle_stats slot. */
+/* Results of battle_unit_find_slot_by_character_identity that are not a stats slot. */
 typedef enum battle_character_slot {
     BATTLE_CHARACTER_SLOT_SELECTOR = -1, /* the identity is a selector value, not a character */
     BATTLE_CHARACTER_SLOT_OFF_FIELD = -2,

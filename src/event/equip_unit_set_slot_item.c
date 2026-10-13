@@ -32,7 +32,7 @@ s32 equip_unit_set_slot_item(s16 unit_index, s16 slot, s32 item_id) {
     }
     ((s16*)g_equip_unit_data[unit_index])[slot + 42] = value;
     if (unit_index != 1) {
-        equip_unit_commit_loadout_to_battle_stats();
+        equip_unit_commit_loadout_to_stats();
     }
     return EQUIP_SLOT_ITEM_ALLOWED;
 }

@@ -72,7 +72,7 @@ battle_unit_t* battle_unit_init(s32 map_x, s32 map_y, s32 map_level, s16 facing,
         unit->animation.trigger = 0;
     }
     unit->standing_on_battle_id_plus_one = 0;
-    unit->battle_data = stats;
+    unit->stats = stats;
     unit->requested_animation = 0;
     unit->facing = facing * 1024;
     unit->camera_facing_sixteenth = unit->camera_facing_quadrant = unit->attack_facing = -1;
@@ -195,9 +195,8 @@ battle_unit_t* battle_unit_init(s32 map_x, s32 map_y, s32 map_level, s16 facing,
     head = &g_battle_unit_list_head;
     unit->previous = *head;
     *head = unit;
-    battle_gfx_set_thrown_item_graphic_palette(
-        unit->battle_data->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON], unit);
-    status_init_special_flag_enabling(unit->battle_data->battle_id);
+    battle_gfx_set_thrown_item_graphic_palette(unit->stats->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON], unit);
+    status_init_special_flag_enabling(unit->stats->battle_id);
     unit->movement.suppress_sfx_and_landing_effects = 1;
     battle_unit_update_display_by_runtime_id(unit->runtime_id);
     battle_unit_set_animation_based_on_status(unit);

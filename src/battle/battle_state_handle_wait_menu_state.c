@@ -17,7 +17,7 @@ void battle_state_handle_wait_menu_state(void) {
     switch (selected_command) {
     case 8:
     case 0xff:
-        if (action_check_change_of_turn(source_unit->battle_data->battle_id) != 1) {
+        if (action_check_change_of_turn(source_unit->stats->battle_id) != 1) {
             battle_state_enter_after_command();
             return;
         }

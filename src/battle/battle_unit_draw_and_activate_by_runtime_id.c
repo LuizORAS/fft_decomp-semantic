@@ -6,15 +6,15 @@
  * Returns 0 when no record has the runtime id. */
 s32 battle_unit_draw_and_activate_by_runtime_id(u32 runtime_id) {
     battle_unit_t* unit;
-    unit_stats_t* battle_data;
+    unit_stats_t* stats;
 
     unit = battle_unit_get_by_runtime_id(runtime_id & 0xffff);
     if (unit != 0) {
-        battle_data = unit->battle_data;
+        stats = unit->stats;
         unit->draw_enabled = 1;
         unit->animation.trigger = 1;
-        if (battle_data != 0) {
-            battle_unit_set_enemy_level_data_by_battle_id(battle_data->battle_id);
+        if (stats != 0) {
+            battle_unit_set_enemy_level_data_by_battle_id(stats->battle_id);
         }
         return 1;
     }

@@ -37,7 +37,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
 
     i = bunit_gfx_calculate_distance_falloff(x, y, 0xC8, 0x50);
     rgb.r = rgb.g = rgb.b = i > 0x80 ? 0x80 : i;
-    frame = battle_gfx_get_unit_sprite_frame_and_vram_ids(g_bunit_unit_data[unit]->runtime_id, &quad.query);
+    frame = battle_gfx_get_unit_sprite_frame_and_vram_ids(g_bunit_unit_pointers[unit]->runtime_id, &quad.query);
     base_y = (quad.query.graphic_height >> 1) + 0x16;
     if (frame == (battle_gfx_source_frame_t*)-1) {
         return;
@@ -47,7 +47,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
         size = (cells[i].attributes >> 10) & (BATTLE_SHP_PART_SIZE_MASK >> 10);
         quad.uw = quad.w = g_bunit_sprite_cell_sizes[size][0];
         quad.vh = quad.h = g_bunit_sprite_cell_sizes[size][1];
-        value = battle_unit_get_camera_facing_quadrant_by_battle_id(g_bunit_unit_data[unit]->battle_id);
+        value = battle_unit_get_camera_facing_quadrant_by_battle_id(g_bunit_unit_pointers[unit]->battle_id);
         dx = cells[i].x_shift;
         orientation = TEXTURE_UV_FLIP_NONE;
         if (value >= 2) {
@@ -58,7 +58,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
          * reassociate it onto x. */
         quad.x = x + (s16)(dx + 0x1C);
         quad.y = cells[i].y_shift + (y + base_y);
-        if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
+        if (g_bunit_unit_pointers[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
             quad.y -= 8;
         }
         tile = cells[i].attributes & BATTLE_SHP_PART_TILE_MASK;
@@ -67,7 +67,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
         tile = cells[i].attributes & BATTLE_SHP_PART_TILE_MASK;
         quad.v = tile / 32 * 8 + quad.query.graphic_y_offset;
         value = 7;
-        if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
+        if (g_bunit_unit_pointers[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
             value = 8;
             if (i >= 3) {
                 value = 6;
@@ -75,7 +75,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
         }
         menu_gfx_enqueue_oriented_textured_quad((oriented_quad_t*)&quad, &rgb, orientation, 0, value);
     }
-    if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
+    if (g_bunit_unit_pointers[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
         return;
     }
     g_bunit_unit_shadow_sprite.position.x = x + 0x12;
@@ -84,7 +84,7 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     menu_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_shadow_sprite, 0, TEXTURE_UV_FLIP_NONE, 1, 5);
     g_bunit_unit_dot_sprite.position.x = x;
     g_bunit_unit_dot_sprite.position.y = y;
-    if (g_bunit_unit_data[unit]->team_kind == 1) {
+    if (g_bunit_unit_pointers[unit]->team_kind == 1) {
         g_bunit_unit_dot_sprite.source.clut = 0x3F12;
     } else {
         g_bunit_unit_dot_sprite.source.clut = 0x3F13;

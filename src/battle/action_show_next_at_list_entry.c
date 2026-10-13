@@ -18,7 +18,7 @@ void action_show_next_at_list_entry(void) {
             unit = battle_unit_get_by_battle_id(id & 0xFF);
             if ((id & 0x100) != 0) {
                 target_move_cursor_to_action_target(unit);
-                target_calculate_for_menu_types(&unit->battle_data->action_command);
+                target_calculate_for_menu_types(&unit->stats->action_command);
                 target_set_tile_background_color(BATTLE_TILE_MARK_SHOW_TARGETS, 3);
             } else {
                 target_move_cursor_to_unit(unit);

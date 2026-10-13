@@ -52,7 +52,7 @@ typedef struct bunit_unit {
     s16 magical_accessory_evade; /* 0x52 */
     s16 equipment[5];            /* 0x54 */
     s16 abilities[5];            /* 0x5e; primary skillset, secondary, reaction, support, movement (filled by
-                                  * bunit_unit_build_data_from_battle_stats; bunit_ability_build_list reads [0]) */
+                                  * bunit_unit_build_record_from_stats; bunit_ability_build_list reads [0]) */
     u8 _unused_068[8];           /* 0x68; spare tail of the stat-detail block */
     u8 gender_flags;             /* 0x70; Bard/Dancer restrictions */
     u8 runtime_id;               /* 0x71 */
@@ -74,7 +74,7 @@ extern u8 g_bunit_unit_browse_enabled;
 extern s16 g_bunit_unit_comparison_index;
 extern s16 g_bunit_unit_count;
 extern s16 g_bunit_unit_current_stat_value;
-extern bunit_unit_t* g_bunit_unit_data[];
+extern bunit_unit_t* g_bunit_unit_pointers[];
 extern s8 g_bunit_unit_dot_glow_direction;
 extern s8 g_bunit_unit_dot_glow_timer;
 extern oriented_quad_t g_bunit_unit_dot_sprite;
@@ -230,7 +230,7 @@ void bunit_panel_toggle_comparison_status_thread(s32 enable);
 void bunit_panel_toggle_equipment_and_numeric_editor_threads(s32 enable);
 void bunit_panel_toggle_unit_status_thread(s32 enable);
 void bunit_panel_run_unit_status_thread(void);
-void bunit_unit_build_data_from_battle_stats(struct unit_stats* unit, bunit_unit_t* record, s32 unused_slot);
+void bunit_unit_build_record_from_stats(struct unit_stats* unit, bunit_unit_t* record, s32 unused_slot);
 s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode);
 
 /* numeric editor */

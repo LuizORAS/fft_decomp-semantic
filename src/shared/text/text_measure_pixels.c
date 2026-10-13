@@ -15,7 +15,7 @@ void text_measure_pixels(s16* width, s16* rows, const u8* text) {
     text_reader_state_t* state;
 
     cursor = (u8*)text;
-    party = main_party_get_data_pointer(0);
+    party = main_party_get_unit(0);
     terminator = TEXT_END_WAIT_FOR_CONFIRM;
     for (i = 19; i >= 0; i--) {
         fill[i] = terminator;

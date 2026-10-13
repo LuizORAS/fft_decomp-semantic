@@ -28,7 +28,7 @@ void move_animate_jump_arc_to_target(battle_unit_t* unit) {
     velocity = unit->velocity;
     switch (unit->distortion_phase) {
     case 0:
-        if (unit->battle_data != 0) {
+        if (unit->stats != 0) {
             if (unit->strike.target_count != 0) {
                 other = battle_unit_get_by_battle_id(unit->strike.target_list[0]);
                 setVector(&target, other->world_coords.vx,
@@ -36,9 +36,9 @@ void move_animate_jump_arc_to_target(battle_unit_t* unit) {
                         - battle_gfx_get_unit_spritesheet_height_by_runtime_id(other->runtime_id) / 2,
                     other->world_coords.vz);
             } else {
-                target.vx = unit->battle_data->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                target.vz = unit->battle_data->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-                target.vy = map_calculate_slope_height(&target, unit->battle_data->action_command.target_position.vy);
+                target.vx = unit->stats->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                target.vz = unit->stats->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
+                target.vy = map_calculate_slope_height(&target, unit->stats->action_command.target_position.vy);
             }
             timer = move_calculate_jump_arc_velocity(&unit->world_coords, &target, &velocity);
             unit->distortion_phase++;

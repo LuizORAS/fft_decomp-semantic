@@ -20,7 +20,7 @@ s32 main_job_add_proposition_jp(u32 party_index, s32 jp) {
     if (party_index >= PARTY_ROSTER_SLOT_COUNT) {
         return -1;
     }
-    party = main_party_get_data_pointer(party_index);
+    party = main_party_get_unit(party_index);
     if (party->party_id == PARTY_ID_NONE) {
         return -1;
     }

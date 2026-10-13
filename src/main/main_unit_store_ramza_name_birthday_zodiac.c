@@ -10,7 +10,7 @@ void main_unit_store_ramza_name_birthday_zodiac(unit_stats_t* unit) {
         return;
     }
     for (slot = 0; slot < PARTY_ROSTER_SLOT_COUNT; slot++) {
-        party = main_party_get_data_pointer(slot);
+        party = main_party_get_unit(slot);
         if (party->party_id == PARTY_ID_NONE) {
             continue;
         }

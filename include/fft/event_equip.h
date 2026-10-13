@@ -34,7 +34,7 @@ typedef enum equip_slot_item_result {
 } equip_item_slot_result_e;
 
 /* EQUIP.OUT's 0x7A-byte unit preview, built from unit_stats_t by
- * equip_unit_build_data_from_battle_stats (0x801C6920). Field names follow
+ * equip_unit_build_data_from_stats (0x801C6920). Field names follow
  * the unit_stats_t source; evasion_N maps to the corresponding
  * unit_stats_t equipment-stat slot. The
  * first 0x1E bytes share the unit-status-billboard layout. */
@@ -42,7 +42,7 @@ typedef struct equip_unit_data {
     s16 level;                            /* 0x00; capped at 99 */
     s16 team_kind;                        /* 0x02; 1 enemy, 2 neutral */
     s16 list_index;                       /* 0x04; AT-list lookup + 1, or -1 */
-    s16 unit_count;                       /* 0x06; units still present, set by equip_unit_load_data_from_battle_stats */
+    s16 unit_count;                       /* 0x06; units still present, set by equip_unit_load_data_from_stats */
     s16 experience;                       /* 0x08; capped at 99 */
     s16 unit_index;                       /* 0x0a; unit_stats_t.entd_slot */
     menu_unit_status_gauge_t gauges[3];   /* 0x0c; HP, MP and CT */
@@ -90,14 +90,14 @@ extern u8 g_equip_unit_selected_index;
 void equip_item_calculate_equipment_swap_stat_delta(
     menu_status_panel_slot_storage_t* detail_total, menu_unit_status_record_t* acc, u16* froms, u16* tos);
 void equip_item_sum_equipment_stat_details(menu_status_panel_slot_storage_t* total, u16* equipment);
-void equip_unit_build_data_from_battle_stats(struct unit_stats* stats, equip_unit_data_t* unit);
+void equip_unit_build_data_from_stats(struct unit_stats* stats, equip_unit_data_t* unit);
 s32 equip_unit_can_equip_item_id(s16 unit_index, s16 item_entry);
-void equip_unit_commit_loadout_to_battle_stats(void);
+void equip_unit_commit_loadout_to_stats(void);
 void equip_unit_copy_data_to_compare_slot(s32 unused_selected_index, s32 unused_1);
 s32 equip_unit_has_two_hands(s16 unit_index);
 s32 equip_unit_has_two_swords(s16 unit_index);
 s32 equip_unit_is_two_handing_weapon(const s16* slots, s32 two_hands_support);
-void equip_unit_load_data_from_battle_stats(s32 battle_id);
+void equip_unit_load_data_from_stats(s32 battle_id);
 void equip_unit_load_selected_data(void);
 s32 equip_unit_set_slot_item(s16 unit_index, s16 slot, s32 item_id);
 equip_item_slot_result_e equip_unit_validate_slot_item(s16 unit_index, s16 slot, s32 item_id);

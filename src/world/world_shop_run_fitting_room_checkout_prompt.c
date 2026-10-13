@@ -55,7 +55,7 @@ s32 world_shop_run_fitting_room_checkout_prompt(void) {
                 world_shop_adjust_gil(balance);
                 world_shop_add_fitting_room_cost(balance);
                 world_shop_buy_from_fitting_room();
-                world_formation_save_records_to_party_data();
+                world_formation_save_records_to_party();
                 g_world_menu_sound_effect_id = MAIN_SFX_SHOP_TRANSACTION;
                 world_item_reconcile_sorted_list(0);
                 world_item_reconcile_sorted_list(1);

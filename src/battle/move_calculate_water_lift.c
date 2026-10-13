@@ -5,8 +5,8 @@
 s32 move_calculate_water_lift(battle_unit_t* unit, map_tile_t* tile) {
     s32 movement_flags;
 
-    if (unit->battle_data != 0) {
-        movement_flags = move_get_effective_flags(unit->battle_data);
+    if (unit->stats != 0) {
+        movement_flags = move_get_effective_flags(unit->stats);
     } else {
         movement_flags = 0;
     }

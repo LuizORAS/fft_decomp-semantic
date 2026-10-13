@@ -17,16 +17,16 @@ void battle_state_handle_crystal_learn_state(void) {
     casting = battle_unit_get_casting();
     switch ((s32)command->kind) {
     case 2:
-        battle_unit_learn_from_crystal(source->battle_data, BATTLE_CRYSTAL_RESTORE_HP_MP);
+        battle_unit_learn_from_crystal(source->stats, BATTLE_CRYSTAL_RESTORE_HP_MP);
         g_action_post_action = 1;
-        action_finalize_attack_and_flag_reactions(source->battle_data->battle_id);
+        action_finalize_attack_and_flag_reactions(source->stats->battle_id);
         battle_gfx_prepare_post_action_display(source);
         battle_unit_update_display_by_runtime_id(source->runtime_id);
         break;
     case 0:
     case 1:
     case 4:
-        battle_unit_learn_from_crystal(source->battle_data, command->kind);
+        battle_unit_learn_from_crystal(source->stats, command->kind);
         g_action_post_action = 1;
         break;
     case 7:

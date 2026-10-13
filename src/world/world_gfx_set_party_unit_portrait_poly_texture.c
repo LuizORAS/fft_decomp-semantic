@@ -25,7 +25,7 @@ void world_gfx_set_party_unit_portrait_poly_texture(s32 roster_slot, POLY_FT4* p
     s32 offset;
     s32 current_job;
 
-    party = main_party_get_data_pointer(roster_slot);
+    party = main_party_get_unit(roster_slot);
     sprite = party->sprite_set;
     if (sprite >= CHARACTER_IDENTITY_GENERIC_MALE) {
         if (sprite == CHARACTER_IDENTITY_GENERIC_MALE) {

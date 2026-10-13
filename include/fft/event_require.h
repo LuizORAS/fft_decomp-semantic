@@ -233,7 +233,7 @@ extern s32 g_require_status_display_origin_x;
 extern s32 g_require_status_display_redraw_request;
 extern menu_status_thread_t g_require_status_display_thread_params;
 
-void require_panel_copy_battle_stats_to_gauges(struct unit_stats* unit, menu_unit_status_record_t* output);
+void require_panel_copy_stats_to_gauges(struct unit_stats* unit, menu_unit_status_record_t* output);
 void require_panel_run_character_status_thread(void);
 void require_panel_set_transition_value(s32 value);
 void require_panel_run_unit_status_thread(void);

@@ -11,7 +11,7 @@ s32 wldcore_proposition_adjust_message_index(s32 base, s32 party_index) {
     party_unit_t* party;
     const u8* adjustments;
 
-    party = wldcore_get_party_data_pointer(party_index);
+    party = wldcore_get_party_unit(party_index);
     if (party->bravery < 0x65) {
         bravery_band = 2;
     }

@@ -19,8 +19,8 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
     s16 retry;
 
     two_swords = 0;
-    right_hand = g_world_formation_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND];
-    left_hand = g_world_formation_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND];
+    right_hand = g_world_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND];
+    left_hand = g_world_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND];
     if (world_ability_has_two_swords(unit_index)) {
         two_swords = world_ability_has_two_hands(unit_index) == 0;
     }
@@ -110,7 +110,7 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
                 world_item_sort_id_list(7, list);
             }
         } else {
-            list[length++] = g_world_formation_unit_pointers[unit_index]->equipment[slot];
+            list[length++] = g_world_unit_pointers[unit_index]->equipment[slot];
             list[length] = -1;
             world_item_sort_id_list(7, list);
         }
@@ -121,7 +121,7 @@ void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment) {
     }
 
     i = 0; /* reused as the swap flag (the target keeps it in i's register) */
-    if (g_world_formation_unit_pointers[unit_index]->support_abilities[2] & BATTLE_SUPPORT_SET_3_MARTIAL_ARTS) {
+    if (g_world_unit_pointers[unit_index]->support_abilities[2] & BATTLE_SUPPORT_SET_3_MARTIAL_ARTS) {
         equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND] = ITEM_ID_NOTHING;
         equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND] = ITEM_ID_NOTHING;
     }

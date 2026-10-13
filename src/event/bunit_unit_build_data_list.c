@@ -24,7 +24,7 @@ s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode) {
                 && !(unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_TREASURE)]
                     & STATUS_BYTE_MASK(STATUS_ID_TREASURE))) {
                 total++;
-                bunit_unit_build_data_from_battle_stats(unit, &g_bunit_unit_records[shown], shown);
+                bunit_unit_build_record_from_stats(unit, &g_bunit_unit_records[shown], shown);
                 g_bunit_shown_unit_indices[shown] = shown;
                 shown++;
             }

@@ -19,7 +19,7 @@ void battle_gfx_prepare_post_action_display(battle_unit_t* unit) {
 
     unit->numeric_display.displays[0]->tpage = unit->numeric_display.displays[1]->tpage
         = unit->numeric_display.displays[2]->tpage = BATTLE_GFX_TPAGE_FRAME;
-    stats = unit->battle_data;
+    stats = unit->stats;
     action = &stats->action;
     if (action->hit != 0) {
         if (action->attack_type & ACTION_TYPE_HP_DAMAGE) {

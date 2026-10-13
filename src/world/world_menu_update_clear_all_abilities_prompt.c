@@ -28,7 +28,7 @@ s32 world_menu_update_clear_all_abilities_prompt(void) {
     if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
         changed = 0;
         for (i = 1; i < 5; i++) {
-            unit = g_world_formation_unit_pointers[g_world_formation_selected_unit_index];
+            unit = g_world_unit_pointers[g_world_formation_selected_unit_index];
             if (unit->abilities.slots[i] != 0) {
                 changed = 1;
                 world_formation_set_unit_ability_slot(g_world_formation_selected_unit_index, i, 0,

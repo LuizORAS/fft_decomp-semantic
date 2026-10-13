@@ -62,7 +62,7 @@ void attack_gfx_prepare_formation_sprites(void) {
         DrawSync(0);
     }
     for (i = 0; i < 0x10; i++) {
-        party = main_party_get_data_pointer(i);
+        party = main_party_get_unit(i);
         if (party->sprite_set >= CHARACTER_IDENTITY_SELECTOR_FIRST) {
             if (party->sprite_set == CHARACTER_IDENTITY_GENERIC_MALE) {
                 base = (party->job_id - JOB_ID_SQUIRE) * 2;

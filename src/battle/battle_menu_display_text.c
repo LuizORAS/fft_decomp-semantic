@@ -29,7 +29,7 @@ void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* 
     s32 count;
     u8 variable_base;
 
-    main_party_get_data_pointer(0);
+    main_party_get_unit(0);
     if (text == 0 || text == (u8*)1) {
         cursor = text_find_entry(text_id);
     } else {

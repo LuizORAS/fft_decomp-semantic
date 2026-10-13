@@ -35,7 +35,7 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
     skillset = job_get_skillset(job);
     generic = job_get_generic_index(job);
     if (job_find_first_for_skillset(skillset) == -1) {
-        skillset = g_world_formation_unit_pointers[unit]->abilities.fields.primary_skillset;
+        skillset = g_world_unit_pointers[unit]->abilities.fields.primary_skillset;
     }
     abilities = (s16*)main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ALL);
     if (kind == MENU_ABILITY_CATEGORY_ACTION) {
@@ -60,12 +60,12 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
         }
     }
     count = 0;
-    jp = g_world_formation_unit_pointers[unit]->job_points.current.values[generic];
-    world_bit_cursor_set_primary(g_world_formation_unit_pointers[unit]->learned_abilities[generic]);
+    jp = g_world_unit_pointers[unit]->job_points.current.values[generic];
+    world_bit_cursor_set_primary(g_world_unit_pointers[unit]->learned_abilities[generic]);
     for (i = 0; i < SKILLSET_ABILITY_LIST_COUNT; i++) {
-        if (job_is_special_monster(g_world_formation_unit_pointers[unit]->identity.job_id) != 0) {
+        if (job_is_special_monster(g_world_unit_pointers[unit]->identity.job_id) != 0) {
             learned = 1;
-        } else if (g_world_formation_unit_pointers[unit]->uses_monster_skillset != 0) {
+        } else if (g_world_unit_pointers[unit]->uses_monster_skillset != 0) {
             if (i >= 3) {
                 break;
             }

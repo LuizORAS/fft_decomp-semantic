@@ -31,8 +31,8 @@ s32 world_menu_run_remove_item(void) {
     g_world_remove_item_saved_primary_input = g_world_input_primary_repeat;
     g_world_remove_item_saved_newly_pressed = g_world_input_newly_pressed;
     if (g_world_item_best_remove_initialized == 0) {
-        bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
-            g_world_remove_item_equipment, sizeof(g_world_remove_item_equipment));
+        bcopy(g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment, g_world_remove_item_equipment,
+            sizeof(g_world_remove_item_equipment));
         g_world_remove_item_previewed_slot = -1;
         g_world_formation_unit_cycle_mode = 2;
         g_world_remove_all_equipment_prompt_active = 0;
@@ -61,7 +61,7 @@ s32 world_menu_run_remove_item(void) {
         g_world_remove_all_equipment_prompt_active = world_menu_handle_remove_all_equipment();
         if (g_world_remove_all_equipment_prompt_active == 0) {
             g_world_remove_item_previewed_slot = -2;
-            bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
+            bcopy(g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment,
                 g_world_remove_item_equipment, sizeof(g_world_remove_item_equipment));
             return 1;
         }
@@ -71,8 +71,7 @@ s32 world_menu_run_remove_item(void) {
         g_world_remove_all_equipment_prompt_active = 1;
         world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,
             &g_world_selected_unit_stat_summary,
-            g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
-            g_world_remove_all_equipment_ids);
+            g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment, g_world_remove_all_equipment_ids);
         g_world_status_display_thread_params.redraw_request = 1;
         g_world_preview_stats_thread_params.redraw_request = 1;
         world_menu_toggle_preview_stats_window(1);
@@ -99,7 +98,7 @@ s32 world_menu_run_remove_item(void) {
             g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
         } else {
             world_formation_equip_item_to_unit_slot(g_world_formation_selected_unit_index, slot, ITEM_ID_NOTHING);
-            bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, items,
+            bcopy(g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment, items,
                 sizeof(g_world_remove_item_equipment));
             world_formation_stage_selected_unit();
             g_world_menu_sound_effect_id = MAIN_SFX_UNEQUIP;
@@ -117,9 +116,9 @@ s32 world_menu_run_remove_item(void) {
             world_formation_equip_item_to_unit_slot(WORLD_FORMATION_PREVIEW_UNIT_INDEX, slot, ITEM_ID_NOTHING);
             world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,
                 &g_world_selected_unit_stat_summary,
-                g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
+                g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment,
                 g_world_formation_temp_unit->equipment);
-            bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
+            bcopy(g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment,
                 g_world_formation_temp_unit->equipment, sizeof(g_world_formation_temp_unit->equipment));
             g_world_preview_stats_thread_params.redraw_request = 1;
         }

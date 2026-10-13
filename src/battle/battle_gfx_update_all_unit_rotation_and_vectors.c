@@ -51,8 +51,8 @@ void battle_gfx_update_all_unit_rotation_and_vectors(void) {
             camera_convert_screen_coords_modify_by_1(&screen, &adjusted);
         }
 
-        if (unit->battle_data != 0) {
-            movement_flags = move_get_effective_flags(unit->battle_data);
+        if (unit->stats != 0) {
+            movement_flags = move_get_effective_flags(unit->stats);
             if ((movement_flags & BATTLE_EFFECTIVE_MOVEMENT_IN_WATER) != 0) {
                 if (tile->depth_half_height.depth != 0) {
                     adjusted.vy -= 12;

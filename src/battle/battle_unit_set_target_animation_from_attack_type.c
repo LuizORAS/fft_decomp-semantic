@@ -28,7 +28,7 @@ void battle_unit_set_target_animation_from_attack_type(battle_unit_t* attacker, 
     water_depth = move_get_water_depth(target);
     animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
     if (water_depth < 2) {
-        stats = target->battle_data;
+        stats = target->stats;
         if (stats != 0) {
             action = &stats->action;
             animation = BATTLE_UNIT_ANIMATION_STAND;
@@ -99,10 +99,10 @@ void battle_unit_set_target_animation_from_attack_type(battle_unit_t* attacker, 
                 target->status_flags_5_6 |= BATTLE_UNIT_STATUS_MORBOL;
             }
             if (action->special_effect & ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT) {
-                ai_init_unit_abilities(target->battle_data->battle_id);
+                ai_init_unit_abilities(target->stats->battle_id);
             }
             if (action->special_effect & ACTION_SPECIAL_EFFECT_STEAL_ITEM) {
-                ai_init_unit_abilities(target->battle_data->battle_id);
+                ai_init_unit_abilities(target->stats->battle_id);
             }
             return;
         }

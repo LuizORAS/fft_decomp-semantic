@@ -31,7 +31,7 @@ void equip_menu_init_screen(s32 battle_id) {
     equip_gfx_init_contexts(g_equip_gfx_contexts, g_equip_gfx_otag_buffer, 0, 0, 0, g_equip_gfx_poly_ft4_buffer, 0, 0,
         0, 0, g_equip_gfx_line_f2_buffer, 0, 0, 0, 0, 0, g_equip_gfx_tile_buffer, 0, 0, 0, 0, 0, 0,
         g_equip_gfx_draw_move_buffer, g_equip_gfx_draw_area_buffer, g_equip_gfx_draw_mode_buffer);
-    equip_unit_load_data_from_battle_stats(battle_id);
+    equip_unit_load_data_from_stats(battle_id);
     equip_menu_load_images_and_reset_lists();
     g_equip_unit_status_panel_flags = battle_id;
     g_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_equip_text_data;

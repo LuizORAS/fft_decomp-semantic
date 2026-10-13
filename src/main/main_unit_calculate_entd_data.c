@@ -45,7 +45,7 @@ s32 main_unit_calculate_entd_data(unit_stats_t* unit, entd_unit_t* entd) {
         party_slot = main_unit_init_job_data_from_entd(unit, entd);
     } else if (entd->sprite_set < CHARACTER_IDENTITY_RAMZA_END && entd->birth_month == 0) {
         for (party_index = 0, ramza_jobs = &g_main_job_data[1]; party_index < PARTY_ROSTER_SLOT_COUNT; party_index++) {
-            party_unit = main_party_get_data_pointer(party_index);
+            party_unit = main_party_get_unit(party_index);
             if (party_unit->party_id == PARTY_ID_NONE) {
                 continue;
             }

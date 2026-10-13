@@ -11,7 +11,7 @@ s32 world_ability_list_secondary_skillsets(s16 unit_id, s16* skillsets) {
     s32 job;
     s16 own_job;
 
-    own_job = g_world_formation_unit_pointers[unit_id]->identity.job_id;
+    own_job = g_world_unit_pointers[unit_id]->identity.job_id;
     world_job_build_unit_list(unit_id, jobs, 1);
     count = 0;
     for (i = 0; jobs[i] != -1; i++) {

@@ -6,7 +6,7 @@
  * (slot 0 is never considered), returning its seven equipped items to the
  * inventory. */
 void script_dismiss_unit_event_instruction(s32 sprite_set) {
-    party_unit_t* party_data;
+    party_unit_t* party;
     s32 party_index = 1;
     s32 empty_party_id = PARTY_ID_NONE;
     s32 empty_item;
@@ -14,8 +14,8 @@ void script_dismiss_unit_event_instruction(s32 sprite_set) {
     u8 item;
 
     for (; party_index < PARTY_ROSTER_SLOT_COUNT; party_index++) {
-        party_data = main_party_get_data_pointer(party_index);
-        if (party_data->party_id != empty_party_id && party_data->sprite_set == sprite_set) {
+        party = main_party_get_unit(party_index);
+        if (party->party_id != empty_party_id && party->sprite_set == sprite_set) {
             break;
         }
     }
@@ -24,7 +24,7 @@ void script_dismiss_unit_event_instruction(s32 sprite_set) {
         slot = 0;
         empty_item = ITEM_ID_NONE;
         for (; slot < 7; slot++) {
-            item = party_data->equipment[slot];
+            item = party->equipment[slot];
             if (item != ITEM_ID_NOTHING && item != empty_item) {
                 g_main_item_quantities[item]++;
             }

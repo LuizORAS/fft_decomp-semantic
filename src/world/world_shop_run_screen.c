@@ -118,7 +118,7 @@ void world_shop_run_screen(s32 shop_type) {
         }
         if (g_world_grid_menu_id != MENU_GRID_HELP_NONE) {
             world_menu_update_grid_cursor(
-                g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->uses_monster_skillset);
+                g_world_unit_pointers[g_world_formation_selected_unit_index]->uses_monster_skillset);
         }
         world_menu_set_palette_mode(g_world_thread_task_active);
         if (g_world_shop_background_visible != 0) {
@@ -187,7 +187,7 @@ void world_shop_run_screen(s32 shop_type) {
         world_sound_dispatch_effect();
     }
     main_sound_unload_scenario_mus(g_world_menu_music_slot);
-    world_formation_save_records_to_party_data();
+    world_formation_save_records_to_party();
     world_script_set_vsync_mode_and_event_speed(0);
     world_formation_reset_menu_context();
     gfx_load_image_and_wait(&g_world_shop_background_vram_rect, tim);

@@ -11,8 +11,8 @@ u8 move_get_water_depth(battle_unit_t* unit) {
 
     tile = map_get_tile_data_pointer(
         unit->world_coords.vx / MAP_TILE_SIZE, unit->world_coords.vz / MAP_TILE_SIZE, unit->map_z);
-    if (unit->battle_data != 0) {
-        status = move_get_effective_flags(unit->battle_data);
+    if (unit->stats != 0) {
+        status = move_get_effective_flags(unit->stats);
         if (status & BATTLE_EFFECTIVE_MOVEMENT_ON_WATER) {
             return 0;
         }

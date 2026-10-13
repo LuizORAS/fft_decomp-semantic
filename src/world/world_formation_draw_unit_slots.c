@@ -22,14 +22,13 @@ void world_formation_draw_unit_slots(point16_t* positions, s32 shade) {
             continue;
         }
         if (i != g_world_formation_selected_unit_index) {
-            if (g_world_formation_unit_pointers[i]->proposition_status & WORLD_FORMATION_UNIT_PROPOSITION_LEAVING) {
+            if (g_world_unit_pointers[i]->proposition_status & WORLD_FORMATION_UNIT_PROPOSITION_LEAVING) {
                 palette = MENU_UNIT_READOUT_LEAVING;
             } else {
-                if (g_world_formation_unit_pointers[i]->gender_flags & UNIT_FLAG_EGG) {
+                if (g_world_unit_pointers[i]->gender_flags & UNIT_FLAG_EGG) {
                     palette = MENU_UNIT_READOUT_EGG;
                 } else {
-                    if (g_world_formation_unit_pointers[i]->proposition_status
-                        & WORLD_FORMATION_UNIT_PROPOSITION_MISSING) {
+                    if (g_world_unit_pointers[i]->proposition_status & WORLD_FORMATION_UNIT_PROPOSITION_MISSING) {
                         palette = MENU_UNIT_READOUT_MISSING;
                     } else {
                         palette = g_world_formation_stat_display_mode;
@@ -42,7 +41,7 @@ void world_formation_draw_unit_slots(point16_t* positions, s32 shade) {
         } else {
             ot_index = 10;
         }
-        unit = g_world_formation_unit_pointers[i];
+        unit = g_world_unit_pointers[i];
         if (unit->gender_flags & UNIT_FLAG_EGG) {
             world_formation_draw_egg_sprite(&positions[i], unit->egg_color, 0, unit->birthday & 0xF, ot_index);
         } else {

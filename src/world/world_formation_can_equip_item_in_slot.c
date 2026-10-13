@@ -49,7 +49,7 @@ s32 world_formation_can_equip_item_in_slot(s16 unit_index, s16 slot, s16 item_id
             two_swords = flags & WEAPON_FLAG_TWO_SWORDS_COMPATIBLE;
         }
         other_slot = slot == WORLD_EQUIPMENT_SLOT_RIGHT_HAND;
-        other = g_world_formation_unit_pointers[unit_index]->equipment[other_slot] & WORLD_ITEM_ID_MASK;
+        other = g_world_unit_pointers[unit_index]->equipment[other_slot] & WORLD_ITEM_ID_MASK;
         other_is_nonstandard_weapon = other >= ITEM_ID_THROWABLE_FIRST;
         other_forced_two_hands = 0;
         if (other_is_nonstandard_weapon) {

@@ -759,7 +759,7 @@ functions:
   - {addr: 0x80059854, size: 620, name: main_status_init_check_data, hash: c4a7f36df3f82f32}
   - {addr: 0x80059ac0, size: 8, name: main_noop_80059ac0, hash: 6d64edf91449c1b1}
   - {addr: 0x80059ac8, size: 40, name: main_party_clear_all, hash: a26cc5df81715e07}
-  - {addr: 0x80059af0, size: 40, name: main_party_get_data_pointer, hash: 1d19410c46f4c04e}
+  - {addr: 0x80059af0, size: 40, name: main_party_get_unit, hash: 1d19410c46f4c04e}
   - {addr: 0x80059b18, size: 152, name: main_unit_init, hash: 1462a0da6719f387}
   - {addr: 0x80059bb0, size: 428, name: main_party_save_unit, hash: 3462bca0bc65c7dd}
   - {addr: 0x80059d5c, size: 188, name: main_party_find_free_slot, hash: c3e5d4aff4ee2bd5}
@@ -1314,7 +1314,7 @@ data:
   - {addr: 0x80057d84, name: g_main_card_save_slot_metadata}
   - {addr: 0x80057eec, name: g_main_active_propositions}
   - {addr: 0x80057f34, name: g_main_brave_story_character_ages}
-  - {addr: 0x80057f74, name: g_main_party_data}
+  - {addr: 0x80057f74, name: g_main_party_units}
   - {addr: 0x80059374, name: g_main_saved_data_bits}
   - {addr: 0x80059414, name: g_main_item_location_flags}
   - {addr: 0x80059494, name: g_main_item_poached_quantities}

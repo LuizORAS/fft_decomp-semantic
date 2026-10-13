@@ -27,7 +27,7 @@ s32 world_menu_run_remove_ability(void) {
         g_world_remove_ability_unit_index = (u8)g_world_formation_selected_unit_index;
     }
     if (g_world_remove_ability_initialized == 0) {
-        bcopy(g_world_formation_unit_pointers[unit_index]->abilities.slots, g_world_remove_ability_slots,
+        bcopy(g_world_unit_pointers[unit_index]->abilities.slots, g_world_remove_ability_slots,
             sizeof(g_world_remove_ability_slots));
         g_world_remove_ability_cursor = -1;
         g_world_formation_unit_cycle_mode = 2;
@@ -57,7 +57,7 @@ s32 world_menu_run_remove_ability(void) {
         g_world_clear_abilities_prompt_active = world_menu_update_clear_all_abilities_prompt();
         if (g_world_clear_abilities_prompt_active == 0) {
             g_world_remove_ability_cursor = -1;
-            bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->abilities.slots,
+            bcopy(g_world_unit_pointers[g_world_formation_selected_unit_index]->abilities.slots,
                 g_world_remove_ability_slots, sizeof(g_world_remove_ability_slots));
             return 1;
         }
@@ -80,7 +80,7 @@ s32 world_menu_run_remove_ability(void) {
     world_menu_set_draw_priority(0x28);
     world_menu_draw_animated_cursor(
         &g_world_remove_ability_cursor_point, &g_world_remove_ability_cursor_anim, g_world_thread_task_active);
-    ability = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->abilities.slots[slot_index];
+    ability = g_world_unit_pointers[g_world_formation_selected_unit_index]->abilities.slots[slot_index];
     g_world_menu_description_text_id = ability;
     if (ability == 0) {
         g_world_menu_description_text_id = -1;
@@ -98,7 +98,7 @@ s32 world_menu_run_remove_ability(void) {
         } else {
             world_formation_set_unit_ability_slot(g_world_formation_selected_unit_index, slot, 0,
                 world_ability_is_equip_support_change(g_world_formation_selected_unit_index,
-                    g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->abilities.slots[slot]));
+                    g_world_unit_pointers[g_world_formation_selected_unit_index]->abilities.slots[slot]));
             g_world_ability_menu_slots_changed = 1;
             *saved_slot = 0;
             g_world_remove_ability_cursor = -1;

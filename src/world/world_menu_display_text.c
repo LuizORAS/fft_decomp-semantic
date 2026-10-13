@@ -24,7 +24,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
     s32 line;
     s32 started;
 
-    party = main_party_get_data_pointer(0);
+    party = main_party_get_unit(0);
     terminator = TEXT_END_WAIT_FOR_CONFIRM;
     for (i = 19; i >= 0; i--) {
         fill[i] = terminator;

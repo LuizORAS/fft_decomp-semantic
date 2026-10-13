@@ -31,7 +31,7 @@ void world_menu_auto_battle_setting_thread(void) {
 
     param = world_thread_get_current_parameter_1();
     cursor = param->selected_index;
-    stats = world_unit_get_battle_stats_for_stored();
+    stats = world_unit_get_active_stats();
     if (stats->auto_battle_setting == AI_AUTOBATTLE_MANUAL) {
         cursor = 0;
     } else if (stats->auto_battle_setting == AI_AUTOBATTLE_TARGETED) {

@@ -74,7 +74,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
             bunit_text_start_selection_thread(3);
         }
         if (g_bunit_help_screen_id != MENU_GRID_HELP_NONE) {
-            bunit_menu_update_node_cursor(g_bunit_unit_data[g_bunit_unit_selected_index]->uses_monster_skillset);
+            bunit_menu_update_node_cursor(g_bunit_unit_pointers[g_bunit_unit_selected_index]->uses_monster_skillset);
         }
         if (previous_mode != 0 && g_battle_menu_input_lock_mode == 0) {
             battle_text_restore_section_pointers();

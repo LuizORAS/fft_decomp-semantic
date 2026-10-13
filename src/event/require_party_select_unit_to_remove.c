@@ -53,7 +53,7 @@ s32 require_party_select_unit_to_remove(void) {
         s32 name_character_index;
 
         for (party_index = 0; party_index < 0x14; party_index++) {
-            party_unit = main_party_get_data_pointer(party_index);
+            party_unit = main_party_get_unit(party_index);
             if (party_unit->party_id == PARTY_ID_NONE || party_index >= 0x10 || party_unit->proposition_status != 0
                 || (party_unit->gender_flags & UNIT_FLAG_EGG) != 0) {
                 g_require_party_removable_flags[party_index] = 0;
@@ -204,7 +204,7 @@ s32 require_party_select_unit_to_remove(void) {
                     break;
             }
         }
-        party_unit = main_party_get_data_pointer(selected_party_index);
+        party_unit = main_party_get_unit(selected_party_index);
         formation_index = 0;
         if (party_unit->sprite_set & CHARACTER_IDENTITY_HIGH_BIT_MASK) {
             message_id = ((party_unit->sprite_set - CHARACTER_IDENTITY_SELECTOR_FIRST) * 8)

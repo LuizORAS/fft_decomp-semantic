@@ -327,7 +327,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     g_bunit_unit_grid_brave_number.x = cell.x + 13;
                     g_bunit_unit_grid_brave_number_wide.y = g_bunit_unit_grid_brave_number.y = upper_y4;
                     g_bunit_unit_grid_brave_number_wide.value = g_bunit_unit_grid_brave_number.value = unit_index;
-                    if (g_bunit_unit_data[unit_index]->brave >= 100) {
+                    if (g_bunit_unit_pointers[unit_index]->brave >= 100) {
                         g_bunit_unit_grid_brave_number_wide.x = cell.x + 10;
                         bunit_menu_script_draw_formatted_number(
                             (menu_instruction_t*)&g_bunit_unit_grid_brave_number_wide);
@@ -337,7 +337,7 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     g_bunit_unit_grid_faith_number.x = cell.x + 45;
                     g_bunit_unit_grid_faith_number_wide.y = g_bunit_unit_grid_faith_number.y = lower_y4;
                     g_bunit_unit_grid_faith_number_wide.value = g_bunit_unit_grid_faith_number.value = unit_index;
-                    if (g_bunit_unit_data[unit_index]->faith >= 100) {
+                    if (g_bunit_unit_pointers[unit_index]->faith >= 100) {
                         g_bunit_unit_grid_faith_number_wide.x = cell.x + 40;
                         bunit_menu_script_draw_formatted_number(
                             (menu_instruction_t*)&g_bunit_unit_grid_faith_number_wide);
@@ -346,10 +346,11 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                 }
             }
             bunit_gfx_draw_unit_sprite_and_name_plate(g_bunit_unit_reorderable_indices[unit], cell.x, cell.y);
-            if (g_bunit_unit_data[g_bunit_unit_reorderable_indices[unit]]->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
+            if (g_bunit_unit_pointers[g_bunit_unit_reorderable_indices[unit]]->mount_info
+                & BATTLE_MOUNT_INFO_FLAG_RIDER) {
                 bunit_gfx_draw_unit_sprite_and_name_plate(
                     bunit_unit_find_index_by_battle_id(
-                        g_bunit_unit_data[g_bunit_unit_reorderable_indices[unit]]->mount_info
+                        g_bunit_unit_pointers[g_bunit_unit_reorderable_indices[unit]]->mount_info
                         - BATTLE_MOUNT_INFO_FLAG_RIDER),
                     cell.x, cell.y);
             }

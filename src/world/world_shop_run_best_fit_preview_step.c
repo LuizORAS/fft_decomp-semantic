@@ -42,7 +42,7 @@
  * quantities is allocated first.
  *
  * In the loop-1 preheader the target computes
- * `&g_world_formation_unit_pointers[idx]` first (into a1) and the
+ * `&g_world_unit_pointers[idx]` first (into a1) and the
  * fitting-room row base second (into a0). Giving the unit slot its own local
  * (`unit_slot`), assigned just before `reserved`, and reading the loop body
  * through `(*unit_slot)->equipment[i]`, puts the two preheader address
@@ -79,9 +79,8 @@ void world_shop_run_best_fit_preview_step(void) {
         s16* reserved;
 
         g_world_shop_best_fit_menu.selected_index = 0;
-        bcopy(
-            g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, staged, sizeof(staged));
-        unit_slot = &g_world_formation_unit_pointers[g_world_formation_selected_unit_index];
+        bcopy(g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment, staged, sizeof(staged));
+        unit_slot = &g_world_unit_pointers[g_world_formation_selected_unit_index];
         room_base = &g_world_shop_fitting_room_items[0][0];
         reserved = room_base + g_world_formation_selected_unit_index * WORLD_EQUIPMENT_SLOT_COUNT;
         for (i = 0; i < WORLD_EQUIPMENT_SLOT_ACCESSORY; i++, reserved++) {
@@ -92,13 +91,11 @@ void world_shop_run_best_fit_preview_step(void) {
         world_shop_build_fitting_room_best_fit_equipment(g_world_formation_selected_unit_index, g_world_menu_context_id,
             g_world_item_preview_stat_detail.state.equipment);
         g_world_item_preview_stat_detail.state.equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY]
-            = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
-                  ->equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY];
-        bcopy(
-            staged, g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, sizeof(staged));
+            = g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY];
+        bcopy(staged, g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment, sizeof(staged));
         world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,
             &g_world_selected_unit_stat_summary,
-            g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
+            g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment,
             (u16*)g_world_item_preview_stat_detail.state.equipment);
         g_world_item_preview_stat_detail.state.two_hands
             = unit_is_two_handing_weapon(g_world_item_preview_stat_detail.state.equipment,
@@ -139,7 +136,7 @@ void world_shop_run_best_fit_preview_step(void) {
                 suggested = g_world_item_preview_stat_detail.state.equipment[i];
                 shifted = suggested << 16;
                 item = shifted >> 16;
-                current = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i];
+                current = g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment[i];
                 if (item == 0 || shifted < 0) {
                     world_shop_return_unit_equip_to_fitting_room(g_world_formation_selected_unit_index, i);
                     world_shop_add_fitting_room_cost(world_item_get_price(item));
@@ -147,7 +144,7 @@ void world_shop_run_best_fit_preview_step(void) {
                     world_shop_add_fitting_room_cost(-world_item_get_price(current));
                     g_world_shop_fitting_room_items[g_world_formation_selected_unit_index][i] = ITEM_ID_NOTHING;
                 }
-                g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i] = item;
+                g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment[i] = item;
             }
             world_formation_recalculate_selected_unit_stats();
         }

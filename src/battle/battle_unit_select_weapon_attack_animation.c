@@ -35,7 +35,7 @@ void battle_unit_select_weapon_attack_animation(battle_unit_t* attacker, battle_
                 attacker);
             return;
         }
-        miss_type = target->battle_data->action.miss_type;
+        miss_type = target->stats->action.miss_type;
         if (miss_type != ACTION_MISS_TYPE_HIT) {
             if (miss_type >= ACTION_MISS_TYPE_REFLECTED) {
                 if (miss_type < ACTION_MISS_TYPE_BUGGED_REFLECTION) {

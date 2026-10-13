@@ -57,7 +57,7 @@ functions:
   - {addr: 0x800e1f58, size: 36, name: camera_normalize_yaw_angle, hash: 4b9b57139167c4c5, source: src/shared/camera/camera_normalize_yaw_angle.c}
   - {addr: 0x800e1f7c, size: 292, name: camera_init_tilt_and_zoom, hash: b488293686882dcf, source: src/shared/camera/camera_init_tilt_and_zoom.c}
   - {addr: 0x800e20a0, size: 52, name: camera_wrap_yaw_angle, hash: 2f0e82c3ed1fb39e, source: src/shared/camera/camera_wrap_yaw_angle.c}
-  - {addr: 0x800e20d4, size: 40, name: world_unit_get_battle_stats_for_stored, hash: d8b03fa45f1ad5c5}
+  - {addr: 0x800e20d4, size: 40, name: world_unit_get_active_stats, hash: d8b03fa45f1ad5c5}
   - {addr: 0x800e20fc, size: 48, name: script_clamp_s32_to_range, hash: a979e7abbcee5781, source: src/shared/script/script_clamp_s32_to_range.c}
   - {addr: 0x800e212c, size: 612, name: world_input_update_menu_repeat, hash: ec1118bb42efe382, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800e2390, size: 8, name: world_menu_init_stub, hash: 6d64edf91449c1b1}
@@ -720,7 +720,7 @@ functions:
   - {addr: 0x80120b90, size: 32, name: job_is_special_monster, hash: f4362856b8ecd185, source: src/shared/job/job_is_special_monster.c}
   - {addr: 0x80120bb0, size: 1336, name: world_formation_build_unit_record, hash: e6808d20c381f45c}
   - {addr: 0x801210e8, size: 464, name: world_formation_build_record_list, hash: 93fb6fa91f4fa5c9}
-  - {addr: 0x801212b8, size: 688, name: world_formation_save_records_to_party_data, hash: c0932d02a682df31}
+  - {addr: 0x801212b8, size: 688, name: world_formation_save_records_to_party, hash: c0932d02a682df31}
   - {addr: 0x80121568, size: 236, name: world_item_get_ranking_value, hash: c162face50932c06}
   - {addr: 0x80121654, size: 1548, name: world_item_sort_id_list, hash: cadb2570fbcc2eab}
   - {addr: 0x80121c60, size: 872, name: world_formation_sort_roster, hash: 81bb011ed79bb2fb}
@@ -2064,7 +2064,7 @@ data:
   - {addr: 0x801c8604, name: g_world_formation_dismiss_menu_data}
   - {addr: 0x801c8608, name: g_world_formation_record_order}
   - {addr: 0x801c8634, name: g_world_formation_record_count}
-  - {addr: 0x801c8638, name: g_world_formation_unit_records}
+  - {addr: 0x801c8638, name: g_world_unit_records}
   - {addr: 0x801c9e80, name: g_world_menu_scroll_repeat_timer}
   - {addr: 0x801c9e84, name: g_world_menu_sprite_color}
   - {addr: 0x801c9e88, name: g_world_menu_draw_priority}
@@ -2255,7 +2255,7 @@ data:
   - {addr: 0x801cd5e0, name: g_world_gfx_tile_1_count}
   - {addr: 0x801cd5e4, name: g_world_menu_active_clut_front}
   - {addr: 0x801cd5e8, name: g_world_gfx_tile_8_count}
-  - {addr: 0x801cd5ec, name: g_world_formation_unit_pointers}
+  - {addr: 0x801cd5ec, name: g_world_unit_pointers}
   - {addr: 0x801cd63c, name: g_world_formation_temp_unit}
   - {addr: 0x801cd644, name: GsLIGHTWSMATRIX}
   - {addr: 0x801cd664, name: g_world_gfx_packet_buffers}

@@ -47,7 +47,7 @@ void wldcore_proposition_determine_success(void) {
 
     g_wldcore_proposition_report.recalled = 0;
     for (i = 0; i < participant_count; i++) {
-        unit = wldcore_get_party_data_pointer(
+        unit = wldcore_get_party_unit(
             g_main_active_propositions[g_wldcore_proposition_report.proposition_index].participant_indices[i]);
 
         g_wldcore_proposition_report.participant_scores[i]
@@ -101,7 +101,7 @@ void wldcore_proposition_determine_success(void) {
         return;
     }
 
-    unit = wldcore_get_party_data_pointer(
+    unit = wldcore_get_party_unit(
         g_main_active_propositions[g_wldcore_proposition_report.proposition_index].participant_indices[i]);
     for (i = 0; i < participant_count; i++) {
         if (g_wldcore_selected_proposition_row[0].preferred_job - 1

@@ -20,7 +20,7 @@ void world_menu_check_action_restrictions(void) {
     s32 result;
     s32 mode;
 
-    unit = world_unit_get_battle_stats_for_stored();
+    unit = world_unit_get_active_stats();
     menu = g_world_menu_current_id;
     if (menu == BATTLE_MENU_ID_TURN_ACTED || menu == BATTLE_MENU_ID_TURN_MOVED_ACTED
         || menu == BATTLE_MENU_ID_RIDER_TURN_ACTED || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED) {

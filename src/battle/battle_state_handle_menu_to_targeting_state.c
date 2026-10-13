@@ -19,9 +19,9 @@ void battle_state_handle_menu_to_targeting_state(void) {
     unit = battle_unit_get_source();
     if (unit->state_frame_counter >= 31 && !unit->command_ready) {
         g_main_system_animation_speed = 2;
-        if (!ai_build_command(unit->battle_data->battle_id, &unit->command_state.ai)) {
+        if (!ai_build_command(unit->stats->battle_id, &unit->command_state.ai)) {
             if (unit->command_state.ai.kind == AI_COMMAND_ACT) {
-                unit->command_state.ai.data.action.actor_id = unit->battle_data->battle_id;
+                unit->command_state.ai.data.action.actor_id = unit->stats->battle_id;
                 action_call_attack_preparation(&unit->command_state.ai.data.action);
             }
             unit->command_ready = 1;
@@ -47,23 +47,23 @@ void battle_state_handle_menu_to_targeting_state(void) {
     case AI_COMMAND_ACT:
         switch (unit->command_state.ai.data.action.skillset_id) {
         case SKILLSET_ID_DEFEND:
-            status_inflict_defending_to_battle_id(unit->battle_data->battle_id);
+            status_inflict_defending_to_battle_id(unit->stats->battle_id);
             unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
             battle_unit_update_display_by_runtime_id(unit->runtime_id);
-            action_set_only_action_taken(unit->battle_data->battle_id);
+            action_set_only_action_taken(unit->stats->battle_id);
             battle_state_enter_after_command();
             return;
         case SKILLSET_ID_EQUIP_CHANGE:
             unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
-            status_enable_disable_acting(unit->battle_data);
-            ai_init_unit_abilities(unit->battle_data->battle_id);
+            status_enable_disable_acting(unit->stats);
+            ai_init_unit_abilities(unit->stats->battle_id);
             battle_unit_update_display_by_runtime_id(unit->runtime_id);
-            action_set_only_action_taken(unit->battle_data->battle_id);
+            action_set_only_action_taken(unit->stats->battle_id);
             battle_state_enter_after_command();
             return;
         case SKILLSET_ID_BLANK_04:
         case SKILLSET_ID_MIMIC:
-            action_set_only_action_taken(unit->battle_data->battle_id);
+            action_set_only_action_taken(unit->stats->battle_id);
             battle_state_enter_after_command();
             return;
         /* Explicit ordinary skillsets retain the native 24-entry dispatch table. */
@@ -109,6 +109,6 @@ void battle_state_handle_menu_to_targeting_state(void) {
         return;
     }
     unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_MOVED | BATTLE_UNIT_TURN_ACTION_ACTED;
-    action_end_turn(unit->battle_data->battle_id);
+    action_end_turn(unit->stats->battle_id);
     battle_state_enter_after_command();
 }

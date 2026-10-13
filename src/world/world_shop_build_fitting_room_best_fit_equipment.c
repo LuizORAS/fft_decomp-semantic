@@ -24,15 +24,13 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
     if (reserved != ITEM_ID_NOTHING) {
         right = reserved;
     } else {
-        right = g_world_formation_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND]
-            & WORLD_ITEM_ID_MASK;
+        right = g_world_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND] & WORLD_ITEM_ID_MASK;
     }
     reserved = g_world_shop_fitting_room_items[unit_index][WORLD_EQUIPMENT_SLOT_LEFT_HAND];
     if (reserved != ITEM_ID_NOTHING) {
         left = reserved;
     } else {
-        left = g_world_formation_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND]
-            & WORLD_ITEM_ID_MASK;
+        left = g_world_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND] & WORLD_ITEM_ID_MASK;
     }
 
     second = ITEM_ID_NOTHING;
@@ -123,7 +121,7 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
                 world_item_sort_id_list(7, list);
             }
         } else {
-            list[length++] = g_world_formation_unit_pointers[unit_index]->equipment[slot] & WORLD_ITEM_ID_MASK;
+            list[length++] = g_world_unit_pointers[unit_index]->equipment[slot] & WORLD_ITEM_ID_MASK;
             list[length] = -1;
             world_item_sort_id_list(7, list);
         }
@@ -134,7 +132,7 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
     }
 
     i = 0; /* reused as the swap flag, as in the sibling */
-    if (g_world_formation_unit_pointers[unit_index]->support_abilities[2] & BATTLE_SUPPORT_SET_3_MARTIAL_ARTS) {
+    if (g_world_unit_pointers[unit_index]->support_abilities[2] & BATTLE_SUPPORT_SET_3_MARTIAL_ARTS) {
         out[WORLD_EQUIPMENT_SLOT_RIGHT_HAND] = ITEM_ID_NOTHING;
         out[WORLD_EQUIPMENT_SLOT_LEFT_HAND] = ITEM_ID_NOTHING;
     }
@@ -153,7 +151,7 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
 
     for (slot = 0; slot < WORLD_EQUIPMENT_SLOT_ACCESSORY; slot++) {
         s16 item = out[slot];
-        if (item != g_world_formation_unit_pointers[unit_index]->equipment[slot]
+        if (item != g_world_unit_pointers[unit_index]->equipment[slot]
             && item != g_world_shop_fitting_room_items[unit_index][slot]) {
             out[slot] = item | WORLD_EQUIPMENT_SHOP_ITEM;
         }

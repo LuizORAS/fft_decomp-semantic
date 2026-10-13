@@ -21,7 +21,7 @@ void world_menu_build_skillset_entries(void) {
     g_world_menu_monster_skillset_flag = battle_menu_build_unit_action_menus(g_world_active_unit_data.battle_id,
         g_world_action_menu_skillsets, g_battle_menu_skillset_disabled_flags, g_action_menu_row_types);
     rows = (menu_text_row_t*)text_find_entry(0x5010);
-    if (battle_unit_get_action_restriction(world_unit_get_battle_stats_for_stored())
+    if (battle_unit_get_action_restriction(world_unit_get_active_stats())
         == BATTLE_UNIT_ACTION_RESTRICTION_DEEP_WATER) {
         for (i = 0; i < 6; i++) {
             g_battle_menu_skillset_disabled_flags[i] = 1;

@@ -18,25 +18,22 @@ void battle_state_enter_target_select_denied(void) {
     g_battle_game_state = BATTLE_GAME_STATE_TARGET_SELECT_DENIED;
     runtime = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (runtime != 0) {
-        stats = runtime->battle_data;
+        stats = runtime->stats;
         if (stats != 0) {
             battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, stats->battle_id, 0);
         }
     }
     unit = battle_unit_get_casting();
     if (runtime == 0) {
-        battle_menu_init_system_function(
-            BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 3, unit->battle_data->battle_id, 0, 1);
+        battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 3, unit->stats->battle_id, 0, 1);
         return;
     }
     kind = unit->target_select_command;
     if (kind == AI_COMMAND_AUTOBATTLE_TARGETED_SELECT) {
-        battle_menu_init_system_function(
-            BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 1, unit->battle_data->battle_id, 0, 1);
+        battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 1, unit->stats->battle_id, 0, 1);
         return;
     }
     if (kind == AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT) {
-        battle_menu_init_system_function(
-            BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 2, unit->battle_data->battle_id, 0, 1);
+        battle_menu_init_system_function(BATTLE_MENU_SYSTEM_COMMAND_TARGET_CONFIRM, 2, unit->stats->battle_id, 0, 1);
     }
 }

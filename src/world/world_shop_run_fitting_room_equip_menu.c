@@ -44,10 +44,9 @@ void world_shop_run_fitting_room_equip_menu(void) {
         if (prev != g_world_shop_fitting_equip_slot) {
             g_world_menu_cursor_position = 0;
         }
-        if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
-                ->equipment[g_world_shop_fitting_equip_slot]
+        if (g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment[g_world_shop_fitting_equip_slot]
             != ITEM_ID_NOTHING) {
-            value = (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
+            value = (g_world_unit_pointers[g_world_formation_selected_unit_index]
                             ->equipment[g_world_shop_fitting_equip_slot]
                         & WORLD_ITEM_ID_MASK)
                 + 0x6800;
@@ -92,7 +91,7 @@ void world_shop_run_fitting_room_equip_menu(void) {
                 } else {
                     world_shop_return_unit_equip_to_fitting_room(
                         g_world_formation_selected_unit_index, g_world_shop_fitting_equip_slot);
-                    g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
+                    g_world_unit_pointers[g_world_formation_selected_unit_index]
                         ->equipment[g_world_shop_fitting_equip_slot] = item | WORLD_EQUIPMENT_SHOP_ITEM;
                     world_shop_add_fitting_room_cost(world_item_get_price(equip));
                     if (result != 1) {
@@ -115,9 +114,9 @@ void world_shop_run_fitting_room_equip_menu(void) {
                 g_world_preview_stats_thread_params.redraw_request = result;
                 world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,
                     &g_world_selected_unit_stat_summary,
-                    g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
+                    g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment,
                     g_world_formation_temp_unit->equipment);
-                bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
+                bcopy(g_world_unit_pointers[g_world_formation_selected_unit_index]->equipment,
                     g_world_formation_temp_unit->equipment, 10);
             } else {
                 world_menu_toggle_preview_stats_window(0);

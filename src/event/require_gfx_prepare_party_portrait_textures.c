@@ -43,7 +43,7 @@ void require_gfx_prepare_party_portrait_textures(void) {
         if (i == 20) {
             break;
         }
-        unit = main_party_get_data_pointer(i);
+        unit = main_party_get_unit(i);
         if (unit->sprite_set < CHARACTER_IDENTITY_SELECTOR_FIRST) {
             value = unit->sprite_set;
         } else {
