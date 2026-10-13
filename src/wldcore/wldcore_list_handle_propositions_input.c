@@ -1,4 +1,5 @@
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -32,7 +33,7 @@ void wldcore_list_handle_propositions_input(wldcore_menu_panel_level_t* level) {
     } else if ((g_wldcore_input_new_button_presses & PSX_PAD_CROSS) && g_main_file_still_loading == 0) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         level->result = 0;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     } else if ((g_wldcore_input_new_button_presses & PSX_PAD_SELECT) && level->entry_count != 0) {
         wldcore_list_propositions_block_all_buttons(level);
@@ -41,11 +42,11 @@ void wldcore_list_handle_propositions_input(wldcore_menu_panel_level_t* level) {
         && g_main_file_still_loading == 0) {
         if (g_main_save_proposition_count >= 8) {
             wldcore_sound_play_effect(MAIN_SFX_INVALID);
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_NO_MORE_JOBS, 0);
+            thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_NO_MORE_JOBS, 0);
             return;
         }
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         if (script_get_variable(
                 (g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & TEXT_ID_ENTRY_MASK)
                 + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
@@ -58,7 +59,7 @@ void wldcore_list_handle_propositions_input(wldcore_menu_panel_level_t* level) {
             g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2]
                                                 .window_pair_render.render_index]
                 .flags |= WORLD_RENDER_RECORD_HIDDEN;
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_TOLD_BEFORE, 0);
+            thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_TOLD_BEFORE, 0);
             level->result = 2;
             return;
         }

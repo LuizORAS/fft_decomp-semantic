@@ -1,4 +1,5 @@
 #include "fft/open.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 
 /* Runs the hidden Music Test menu.
@@ -92,7 +93,7 @@ void open_menu_update_music_test(open_controller_record_t* record) {
                 state->delay = 0x20;
             } else {
                 state->step = OPEN_MUSIC_TEST_STEP_CLOSE;
-                world_thread_set_parameters(OPEN_THREAD_SLOT_MUSIC_TEST_LIST, 0, 0, 1);
+                thread_set_parameters(OPEN_THREAD_SLOT_MUSIC_TEST_LIST, 0, 0, 1);
                 g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_INPUT_DISABLED;
             }
         } else if (buttons & PSX_PAD_SELECT) {

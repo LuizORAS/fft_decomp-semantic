@@ -11,12 +11,10 @@
  * both index slots with thread_id << 10 and start SP/FP at slot + 0x3f0.
  * The parameter stores at BATTLE 0x8014ca38 and WORLD's corresponding
  * three/four-parameter helpers establish full 32-bit payload values.
- * The seven 32-bit task values at 0x50 are zeroed by battle_thread_start /
- * world_thread_start; each task gives them its own meaning: menu blink/icon
- * cursor threads use [0] timer and [1] state, event unit/sprite-move threads
- * keep the unit id in [0], and DisplayMessage text threads use [2] x offset,
- * [3] y offset, [4] arrow offset, [5] opening type and [6] width override. The
- * scheduler saves s0-s7 and k0/k1 before the GP, SP, FP and return address. */
+ * The seven 32-bit task values at 0x50 are zeroed by thread_start; each task gives them its own meaning: menu
+ * blink/icon cursor threads use [0] timer and [1] state, event unit/sprite-move threads keep the unit id in [0], and
+ * DisplayMessage text threads use [2] x offset, [3] y offset, [4] arrow offset, [5] opening type and [6] width
+ * override. The scheduler saves s0-s7 and k0/k1 before the GP, SP, FP and return address. */
 typedef struct native_thread {
     s32 function_parameter_1;   /* 0x00 */
     s32 function_parameter_2;   /* 0x04 */
@@ -175,10 +173,18 @@ typedef enum native_thread_task {
     NATIVE_THREAD_TASK_UNIT_MESSAGE = 70,
 } native_thread_task_e;
 
+/* task parameters */
+void thread_set_parameters(s32 thread_id, s32 first, s32 second, s32 third);
+void thread_set_four_parameters(s32 thread_id, s32 first, s32 second, s32 third, s32 fourth);
+
 /* task state */
+s32 thread_get_current_task_id(void);
 void thread_set_current_task_id(s32 task_id);
 
 /* lifecycle */
+void thread_start(s32 thread_id, void (*function)(void));
+void thread_resume(s32 thread_id);
+void thread_suspend(s32 thread_id);
 void thread_exit_current(void);
 
 /* scheduling */
@@ -186,6 +192,7 @@ void thread_exit_current(void);
  * BATTLE scans 16 slots; WORLD scans 17. Each keeps its own frame hook. */
 void thread_yield(void);
 void thread_wait_frames(s32 count);
+void thread_wait_until_inactive(s32 thread_id);
 
 /* context capture */
 /* Read the running CPU's $gp when seeding a native thread context. */

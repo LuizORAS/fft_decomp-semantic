@@ -17,7 +17,7 @@
 #define NEXT() text = text_advance_cursor_with_separate_backreference_state(&repeat, text, &saved)
 
 #define CHECK_ABORT()                                                                                                  \
-    if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {                                      \
+    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {                                             \
         goto end;                                                                                                      \
     }
 
@@ -512,8 +512,8 @@ void battle_text_run_dialog_thread(void) {
                     }
                     thread_set_current_task_id(NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT);
                     resume_task = NATIVE_THREAD_TASK_RESUME;
-                    while (battle_thread_get_current_task_id() != resume_task) {
-                        if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+                    while (thread_get_current_task_id() != resume_task) {
+                        if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                             goto end;
                         }
                         thread_yield();
@@ -606,10 +606,10 @@ void battle_text_run_dialog_thread(void) {
                     select_window->sprites[1].x0 = select_window->sprites[0].x0 + 2;
                     select_window->sprites[1].y0 = select_window->sprites[0].y0 + 2;
                     thread_yield();
-                    if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+                    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                         goto end;
                     }
-                    if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_WAIT_FOR_RESUME) {
+                    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_WAIT_FOR_RESUME) {
                         continue;
                     }
                     if ((g_script_event_input & PSX_PAD_UP) && selection != rec.mark) {
@@ -639,8 +639,8 @@ void battle_text_run_dialog_thread(void) {
         } else if (character == TEXT_WAIT_FOR_RESUME) {
             thread_set_current_task_id(NATIVE_THREAD_TASK_WAIT_FOR_RESUME);
             resume_task = NATIVE_THREAD_TASK_RESUME;
-            while (battle_thread_get_current_task_id() != resume_task) {
-                if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+            while (thread_get_current_task_id() != resume_task) {
+                if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                     goto end;
                 }
                 thread_yield();

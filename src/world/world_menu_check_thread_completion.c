@@ -17,8 +17,8 @@ s32 world_menu_check_thread_completion(u32* input) {
         parameter = world_thread_get_current_parameter_1();
         if (parameter->select_text_table != 0) {
             if (g_world_thread_change_cooldown == 0) {
-                world_thread_start(NATIVE_SCREEN_THREAD_SLOT_TEXT, world_menu_announce_entry_value_thread);
-                world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_TEXT, (s32)parameter, 0, 0);
+                thread_start(NATIVE_SCREEN_THREAD_SLOT_TEXT, world_menu_announce_entry_value_thread);
+                thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_TEXT, (s32)parameter, 0, 0);
                 g_world_thread_task_active = 1;
             }
             *input = 0;

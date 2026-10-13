@@ -40,8 +40,8 @@ void require_reward_run_war_trophies(void) {
     prims = g_require_reward_war_trophy_primitives;
     thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     last = 0;
-    battle_thread_start(thread, require_condition_run_special_thread);
-    battle_thread_set_parameters(thread, 4, 0, 0);
+    thread_start(thread, require_condition_run_special_thread);
+    thread_set_parameters(thread, 4, 0, 0);
     for (start = 0; start < g_require_reward_war_trophy_entry_count; start += 8) {
         row = 0;
         ClearImage(&g_require_reward_war_trophy_clear_rect, 0, 0, 0);
@@ -171,7 +171,7 @@ void require_reward_run_war_trophies(void) {
             battle_menu_free_memory(image);
         }
     }
-    battle_thread_set_parameters(thread, 0, 0, 1);
-    battle_thread_wait_until_inactive(thread);
+    thread_set_parameters(thread, 0, 0, 1);
+    thread_wait_until_inactive(thread);
     thread_exit_current();
 }

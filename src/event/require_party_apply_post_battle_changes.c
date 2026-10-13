@@ -42,7 +42,7 @@ void require_party_apply_post_battle_changes(void) {
         thread_exit_current();
     }
     g_battle_post_battle_unit_changes_active = 1;
-    battle_thread_suspend(NATIVE_THREAD_SLOT_EVENT);
+    thread_suspend(NATIVE_THREAD_SLOT_EVENT);
     battle_copy_bytes(g_require_saved_thread_block, &g_native_threads[NATIVE_THREAD_SLOT_EVENT], 0x400);
 
     text_data = g_require_text_data;
@@ -93,15 +93,14 @@ void require_party_apply_post_battle_changes(void) {
              * call slot on reorg's second pass. */
             transition = 0;
             if (affected_index == 0) {
-                battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, require_panel_run_unit_status_thread);
-                battle_thread_set_parameters(
+                thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, require_panel_run_unit_status_thread);
+                thread_set_parameters(
                     NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (s32)&g_require_status_display_thread_params, 0, 0);
-                battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, require_editor_run_numeric_thread);
-                battle_thread_set_parameters(
+                thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, require_editor_run_numeric_thread);
+                thread_set_parameters(
                     NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (s32)&g_require_numeric_editor_thread_params, 0, 0);
-                battle_thread_start(
-                    NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, require_panel_run_character_status_thread);
-                battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)transition_c_ptr, 0, 0);
+                thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, require_panel_run_character_status_thread);
+                thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)transition_c_ptr, 0, 0);
             } else {
                 u16 index_value;
 
@@ -160,8 +159,8 @@ void require_party_apply_post_battle_changes(void) {
                         }
                         if (input & PSX_PAD_SELECT) {
                             thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-                            battle_thread_start(thread_id, require_overlay_run_helpmenu);
-                            battle_thread_wait_until_inactive(thread_id);
+                            thread_start(thread_id, require_overlay_run_helpmenu);
+                            thread_wait_until_inactive(thread_id);
                         }
                     } while (1);
 
@@ -188,18 +187,18 @@ void require_party_apply_post_battle_changes(void) {
                         g_require_message_menu_result = 0;
                     } else {
                         g_require_menu_selection_result = 0xff;
-                        battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, menu_icon_strip_thread);
-                        battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE,
+                        thread_start(REQUIRE_THREAD_SLOT_MESSAGE, menu_icon_strip_thread);
+                        thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE,
                             (s32)(menu_fields - (unsigned long)&((menu_entry_t*)0)->inner_width), 0, 0);
                         if (g_require_editor_unit_fields.state.generic_monster != 0) {
-                            battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
-                            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU,
+                            thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
+                            thread_set_parameters(REQUIRE_THREAD_SLOT_MENU,
                                 (s32)(menu_fields + 8 * sizeof(*menu_base)
                                     - (unsigned long)&((menu_entry_t*)0)->inner_width),
                                 0, 0);
                         } else {
-                            battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
-                            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU,
+                            thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
+                            thread_set_parameters(REQUIRE_THREAD_SLOT_MENU,
                                 (s32)(menu_fields + sizeof(*menu_base)
                                     - (unsigned long)&((menu_entry_t*)0)->inner_width),
                                 0, 0);
@@ -268,16 +267,16 @@ void require_party_apply_post_battle_changes(void) {
                 }
             } while (g_require_party_removal_result != 0);
             if (require_party_sell_equipment_over_limit(*selected_unit_index_ptr) != 0) {
-                battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_icon_linked_entry_thread);
-                battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)&g_require_party_removal_menus[5], 0, 0);
-                battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
+                thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_icon_linked_entry_thread);
+                thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)&g_require_party_removal_menus[5], 0, 0);
+                thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
             }
             thread_wait_frames(20);
-            battle_thread_start(REQUIRE_THREAD_SLOT_MENU, require_condition_run_special_thread);
-            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, 10, 0, 0);
+            thread_start(REQUIRE_THREAD_SLOT_MENU, require_condition_run_special_thread);
+            thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, 10, 0, 0);
             require_input_wait_frames_or_skip(60);
-            battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, 0, 0, 2);
-            battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
+            thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, 0, 0, 2);
+            thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
             require_panel_set_transition_value(0);
 
             unit = battle_unit_get_stats_from_battle_id(*selected_unit_index_ptr);
@@ -308,16 +307,16 @@ void require_party_apply_post_battle_changes(void) {
         transition += 0x20;
         thread_yield();
     } while (transition < 0x101);
-    battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
-    battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
-    battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
-    battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS);
-    battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
-    battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
+    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
+    thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS);
+    thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+    thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
     g_battle_post_battle_unit_changes_active = 0;
     battle_copy_bytes(&g_native_threads[NATIVE_THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
     g_battle_menu_thread_menu_data = saved_menu_descriptor;
-    battle_thread_resume(NATIVE_THREAD_SLOT_EVENT);
+    thread_resume(NATIVE_THREAD_SLOT_EVENT);
     thread_yield();
     thread_exit_current();
 }

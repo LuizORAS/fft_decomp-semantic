@@ -15,7 +15,7 @@ void require_gfx_run_suspended_thread_transition(void) {
     s32 frame = 0;
     u8* saved;
 
-    battle_thread_suspend(g_require_thread_suspended_id);
+    thread_suspend(g_require_thread_suspended_id);
     saved = battle_menu_alloc_memory(NATIVE_THREAD_STRIDE);
     battle_copy_bytes(saved, &g_native_threads[g_require_thread_suspended_id], NATIVE_THREAD_STRIDE);
     g_menu_panel_status_group_count = 2;
@@ -31,7 +31,7 @@ void require_gfx_run_suspended_thread_transition(void) {
     }
     battle_copy_bytes(&g_native_threads[g_require_thread_suspended_id], saved, NATIVE_THREAD_STRIDE);
     battle_menu_free_memory(saved);
-    battle_thread_resume(g_require_thread_suspended_id);
+    thread_resume(g_require_thread_suspended_id);
     thread_yield();
     thread_exit_current();
 }

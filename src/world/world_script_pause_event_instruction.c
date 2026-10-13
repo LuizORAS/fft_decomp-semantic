@@ -7,6 +7,6 @@
 void world_script_pause_event_instruction(void) {
     do {
         thread_yield();
-    } while (world_thread_get_current_task_id() != NATIVE_THREAD_TASK_STOP_REQUEST
+    } while (thread_get_current_task_id() != NATIVE_THREAD_TASK_STOP_REQUEST
         && (g_world_menu_new_button_input & (PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT)) == 0);
 }

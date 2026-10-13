@@ -31,8 +31,8 @@ void world_menu_run_unit_editor_panel_thread(void) {
     battle_menu_enter_status_screen_selection();
     g_world_menu_overlay_state = 1;
     g_world_menu_panel_fade_mode = MENU_PANEL_FADE_OUT;
-    world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
-    world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
+    thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
+    thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
     world_menu_record_selection_for_selected_unit();
     world_menu_set_transition_active_flag();
     do {
@@ -168,8 +168,8 @@ void world_menu_run_unit_editor_panel_thread(void) {
     records[1].palette = &g_world_unit_editor_palette;
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_editor_panel_rect, records[0].palette);
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_editor_panel_rect, records[1].palette);
-    world_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, world_menu_run_numeric_display_panel_thread);
-    world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
+    thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, world_menu_run_numeric_display_panel_thread);
+    thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
     thread_yield();
 
     frame = 0;
@@ -204,7 +204,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
         }
         if (world_menu_is_input_allowed() != 0) {
             if (g_world_menu_new_button_input & PSX_PAD_CROSS) {
-                world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
+                thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
                 break;
             }
             if ((g_world_menu_new_button_input & PSX_PAD_CIRCLE)
@@ -212,8 +212,8 @@ void world_menu_run_unit_editor_panel_thread(void) {
                 && (world_unit_has_any_current_status(g_world_active_unit_data.battle_id) != 0
                     || (g_world_unit_editor_fields.state.generic_monster == 0
                         && g_world_unit_selected_status_billboard.team_kind != 1))) {
-                world_thread_start(g_native_current_thread_id - 1, world_menu_build_unit_status_list);
-                world_thread_set_parameters(g_native_current_thread_id - 1,
+                thread_start(g_native_current_thread_id - 1, world_menu_build_unit_status_list);
+                thread_set_parameters(g_native_current_thread_id - 1,
                     (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
             }
         }
@@ -251,8 +251,8 @@ void world_menu_run_unit_editor_panel_thread(void) {
     do {
         thread_yield();
     } while (g_world_unit_status_bounce_step != 0);
-    world_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, world_menu_selected_tile_info_display_thread);
-    world_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
+    thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, world_menu_selected_tile_info_display_thread);
+    thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
     g_native_thread_contexts[NATIVE_THREAD_SLOT_TILE_INFO_PANEL].task_id = NATIVE_THREAD_TASK_TILE_INFO_PANEL;
     g_world_menu_overlay_state = 0;
     battle_menu_leave_status_screen_selection();

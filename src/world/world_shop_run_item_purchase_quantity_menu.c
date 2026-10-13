@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Runs the shop purchase-quantity menu for the highlighted item.
@@ -17,7 +18,7 @@ s32 world_shop_run_item_purchase_quantity_menu(void) {
         g_world_shop_purchase_item = g_world_menu_entry_ids[g_world_menu_cursor_position];
         owned = world_item_count_owned_and_equipped(g_world_shop_purchase_item);
         if (owned >= 99) {
-            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF807, 0);
+            thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF807, 0);
             return WORLD_SHOP_QUANTITY_HOLDING_MAX;
         }
         count = world_shop_adjust_gil(0);
@@ -28,10 +29,10 @@ s32 world_shop_run_item_purchase_quantity_menu(void) {
             count = limit;
         }
         if (count == 0) {
-            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF806, 0);
+            thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF806, 0);
             return WORLD_SHOP_QUANTITY_CANNOT_AFFORD;
         }
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF808, 0);
+        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF808, 0);
         g_world_shop_quantity_limit = count;
         g_world_shop_purchase_total_shown = 0;
         g_world_menu_sound_muted = 1;
@@ -41,13 +42,13 @@ s32 world_shop_run_item_purchase_quantity_menu(void) {
     if (world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU_CHILD) != 0 && g_world_shop_purchase_total_shown == 0) {
         g_text_substitution_values[0]
             = g_world_menu_selection_results[WORLD_MENU_SELECTION_SHOP_QUANTITY] * g_world_shop_purchase_unit_price;
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF809, 0);
+        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF809, 0);
         g_world_shop_purchase_total_shown = 1;
         g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
     }
     if (world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU_CHILD) == 0 && g_world_shop_purchase_total_shown != 0) {
         g_world_shop_purchase_total_shown = 0;
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF808, 0);
+        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF808, 0);
     }
     if (g_world_shop_quantity_menu_running == 0) {
         if (g_world_menu_selection_results[WORLD_MENU_SELECTION_PROMPT_RESULT] == 0) {

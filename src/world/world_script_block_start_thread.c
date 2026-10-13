@@ -84,9 +84,9 @@ void world_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_SPRITE_MOVE || script[0] == EVENT_OPCODE_SPRITE_MOVE_BETA) {
             thread_id = world_thread_resolve_id_after_current(NATIVE_THREAD_SLOT_FIRST_IDLE);
             if (script[0] == EVENT_OPCODE_SPRITE_MOVE) {
-                world_thread_start(thread_id, world_script_sprite_move);
+                thread_start(thread_id, world_script_sprite_move);
             } else {
-                world_thread_start(thread_id, world_script_sprite_move_beta);
+                thread_start(thread_id, world_script_sprite_move_beta);
             }
             g_native_thread_contexts[thread_id].function_parameter_1 = (s32)(script + 1);
             g_native_thread_contexts[thread_id].task_id = NATIVE_THREAD_TASK_SPRITE_MOVE;

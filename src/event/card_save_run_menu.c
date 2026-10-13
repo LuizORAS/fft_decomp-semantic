@@ -3,6 +3,7 @@
 #include "fft/event_card.h"
 #include "fft/main.h"
 #include "fft/sound.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -47,8 +48,8 @@ void card_save_run_menu(s32 unused) {
     card_io_consume_all_events();
     g_card_save_menu_work_buffer = save_buffer;
     card_save_init_menu_state();
-    battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, card_save_run_menu_graphic_thread);
-    battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, 0, 0);
+    thread_start(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, card_save_run_menu_graphic_thread);
+    thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, 0, 0);
     g_card_save_initial_prompt_timer = 0;
 
     while (card_gfx_update_increasing_fade() != 0) {
@@ -110,6 +111,6 @@ void card_save_run_menu(s32 unused) {
         g_sound_pending_sfx_id = MAIN_SFX_NONE;
     }
 
-    battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, -1, 0);
+    thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, -1, 0);
     main_sound_unload_scenario_mus(music_slot);
 }

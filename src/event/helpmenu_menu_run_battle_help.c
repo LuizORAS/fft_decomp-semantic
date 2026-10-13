@@ -112,8 +112,8 @@ void helpmenu_menu_run_battle_help(void) {
                     help_id &= 0x7FF;
                     help_id |= 0x7800;
                     g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                    battle_thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
-                    battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
+                    thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
+                    thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                     *g_helpmenu_controller_state_ptr = 0;
                     thread_wait_frames(1);
                     helpmenu_menu_close();
@@ -126,8 +126,8 @@ void helpmenu_menu_run_battle_help(void) {
                     }
                     help_id |= 0x9800;
                     g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                    battle_thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
-                    battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
+                    thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
+                    thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0) {
                     *g_helpmenu_controller_state_ptr = 0;
                     thread_wait_frames(1);
@@ -138,8 +138,8 @@ void helpmenu_menu_run_battle_help(void) {
                     help_id &= 0x7FF;
                     help_id |= 0x7800;
                     g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                    battle_thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
-                    battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
+                    thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
+                    thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x11) {
                     menu_text_layout_t* layout = request->context;
                     help_id = layout->text_ids[0][request->selected_index];
@@ -151,8 +151,8 @@ void helpmenu_menu_run_battle_help(void) {
                     }
                     help_id |= 0x6800;
                     g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                    battle_thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
-                    battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
+                    thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
+                    thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x17) {
                     menu_text_layout_t* layout = request->context;
                     help_id = layout->text_ids[0][request->selected_index];
@@ -165,8 +165,8 @@ void helpmenu_menu_run_battle_help(void) {
                     help_id += ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE;
                     help_id |= 0x7800;
                     g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                    battle_thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
-                    battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
+                    thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
+                    thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x12) {
                     menu_text_layout_t* layout = request->context;
                     /* The list stores its column toggle in the third text pointer. */
@@ -184,8 +184,8 @@ void helpmenu_menu_run_battle_help(void) {
                     }
                     help_id |= 0xA000;
                     g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                    battle_thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
-                    battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
+                    thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
+                    thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else if (request_kind == 0x13) {
                     menu_text_layout_t* layout = request->context;
                     help_id = layout->text_ids[1][request->selected_index];
@@ -208,13 +208,13 @@ void helpmenu_menu_run_battle_help(void) {
                         help_id = 0x807;
                     }
                     g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                    battle_thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
-                    battle_thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
+                    thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
+                    thread_set_parameters(text_thread_id - 1, 0x3B, help_id, 0);
                 } else {
                     g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
                     g_helpmenu_current_text_ids = g_battle_help_active_text_id_tables[request_kind];
-                    battle_thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
-                    battle_thread_set_parameters(
+                    thread_start(text_thread_id - 1, battle_text_run_dialog_thread);
+                    thread_set_parameters(
                         text_thread_id - 1, 0x3B, g_helpmenu_current_text_ids[request->selected_index], 0);
                 }
                 waiting_slot = text_thread_id;
@@ -238,11 +238,11 @@ void helpmenu_menu_run_battle_help(void) {
         help_mode = g_battle_unit_view_mode;
         if (help_mode == UNIT_VIEW_MODE_TILE_INFO || help_mode == UNIT_VIEW_MODE_HOVERED_UNIT) {
             g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-            battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, battle_text_run_dialog_thread);
-            battle_thread_set_parameters(
+            thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, battle_text_run_dialog_thread);
+            thread_set_parameters(
                 NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x3B, g_helpmenu_menu_cursor_tile.surface_type + 0x5800, 0);
             g_native_threads[NATIVE_SCREEN_THREAD_SLOT_MESSAGE].task_words[3] = -0x20;
-            battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_MESSAGE);
+            thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_MESSAGE);
             *g_helpmenu_controller_state_ptr = 0;
             thread_wait_frames(1);
             helpmenu_menu_close();
@@ -292,8 +292,8 @@ void helpmenu_menu_run_battle_help(void) {
                             *g_helpmenu_controller_state_ptr = 0;
                         } else {
                             g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                            battle_thread_start(text_thread_id, battle_text_run_dialog_thread);
-                            battle_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
+                            thread_start(text_thread_id, battle_text_run_dialog_thread);
+                            thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                         }
                     } else if (node->help_base == 0x7800 && (u16)*node->value - 1 >= 0x301U) {
                         *g_helpmenu_controller_state_ptr = 0;
@@ -303,14 +303,14 @@ void helpmenu_menu_run_battle_help(void) {
                         *g_helpmenu_controller_state_ptr = 0;
                     } else {
                         g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                        battle_thread_start(text_thread_id, battle_text_run_dialog_thread);
-                        battle_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
+                        thread_start(text_thread_id, battle_text_run_dialog_thread);
+                        thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                     }
                 } else {
                     help_id = node->help_base;
                     g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                    battle_thread_start(text_thread_id, battle_text_run_dialog_thread);
-                    battle_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
+                    thread_start(text_thread_id, battle_text_run_dialog_thread);
+                    thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                 }
             } else if (input & PSX_PAD_DPAD_MASK) {
                 help_id = 0;

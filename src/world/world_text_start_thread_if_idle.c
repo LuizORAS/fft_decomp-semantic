@@ -17,8 +17,8 @@ s32 world_text_start_thread_if_idle(s32 thread_id, s32 param1, s32 text, s32 par
         }
     }
     if (g_world_text_thread_active_text == 0) {
-        world_thread_start(thread_id, world_text_character_handling_thread);
-        world_thread_set_parameters(thread_id, param1, text, param3);
+        thread_start(thread_id, world_text_character_handling_thread);
+        thread_set_parameters(thread_id, param1, text, param3);
         g_world_text_thread_active_text = text;
         g_native_threads[thread_id].task_words[3] = value;
         return 1;

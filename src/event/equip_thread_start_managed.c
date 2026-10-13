@@ -1,5 +1,6 @@
 #include "fft/battle_thread.h"
 #include "fft/event_equip.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Start-or-poll helper for a menu thread: the first call starts `thread_id`
@@ -12,8 +13,8 @@ s32 equip_thread_start_managed(s32 thread_id, menu_entry_t* desc) {
             return 1;
         }
         g_battle_menu_thread_menu_data = desc;
-        battle_thread_start(thread_id, desc->thread_entry);
-        battle_thread_set_parameters(thread_id, (s32)g_battle_menu_thread_menu_data, 0, 0);
+        thread_start(thread_id, desc->thread_entry);
+        thread_set_parameters(thread_id, (s32)g_battle_menu_thread_menu_data, 0, 0);
         g_equip_thread_state = 1;
         return 1;
     }

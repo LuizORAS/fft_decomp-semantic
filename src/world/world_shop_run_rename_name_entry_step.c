@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Soldier office: the name entry keyboard of the Rename service; sibling of
@@ -15,8 +16,8 @@ void world_shop_run_rename_name_entry_step(void) {
     if (g_world_shop_entered_unit_name != 0) {
         g_world_shop_menu_step = WORLD_SHOP_STEP_SOLDIER_OFFICE_REOPEN;
         world_formation_set_unit_name(g_world_formation_selected_unit_index, g_world_shop_entered_unit_name);
-        world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF821, 0);
+        thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF821, 0);
         g_world_shop_background_visible = 1;
         g_world_shop_rename_name_entry_initialized = 0;
     }

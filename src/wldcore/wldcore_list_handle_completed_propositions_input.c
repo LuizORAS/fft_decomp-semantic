@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -23,7 +24,7 @@ void wldcore_list_handle_completed_propositions_input(wldcore_menu_stack_record_
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         return;
     }
     if (buttons & PSX_PAD_SELECT) {
@@ -38,7 +39,7 @@ void wldcore_list_handle_completed_propositions_input(wldcore_menu_stack_record_
             level->proposition_list.entries[g_wldcore_window_panel_render_state.selected_index]);
         wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS);
         g_text_substitution_values[0] = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index];
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_HEAR_ABOUT_JOB, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_HEAR_ABOUT_JOB, 0);
         origin.x = 0x48;
         origin.y = 0x20;
         wldcore_window_build_yes_no_panel(origin);

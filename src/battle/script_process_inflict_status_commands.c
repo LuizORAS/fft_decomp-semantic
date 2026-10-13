@@ -35,10 +35,10 @@ void script_process_inflict_status_commands(void) {
                         || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_JUMP)]
                             & STATUS_BYTE_MASK(STATUS_ID_JUMP))) {
                         thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-                        battle_thread_start(thread_id, script_inflict_status_thread);
-                        battle_thread_set_parameters(
+                        thread_start(thread_id, script_inflict_status_thread);
+                        thread_set_parameters(
                             thread_id, (s32)((const u8*)g_battle_event_block + instruction_offset + 1), 0, 0);
-                        battle_thread_wait_until_inactive(thread_id);
+                        thread_wait_until_inactive(thread_id);
                     }
                 }
             }

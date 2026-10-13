@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libc.h"
 #include "psx/pad.h"
@@ -60,7 +61,7 @@ s32 world_formation_run_equip_item_menu(void) {
             g_world_formation_unit_cycle_mode = 1;
             g_world_equip_item_list_open = 1;
             g_world_change_banner_panel_thread_params.style = 1;
-            world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
+            thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
             slot = 0;
             if (g_world_equip_item_slot != 0) {
                 slot = g_world_equip_item_slot - 1;
@@ -136,7 +137,7 @@ s32 world_formation_run_equip_item_menu(void) {
         world_script_set_vsync_mode_and_event_speed(0);
         g_world_equip_item_preview_active = 0;
         g_world_status_display_thread_params.redraw_request = 1;
-        world_thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
+        thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
         slot = 0;
         if (g_world_equip_item_slot != 0) {
             slot = g_world_equip_item_slot - 1;

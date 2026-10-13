@@ -1,5 +1,6 @@
 #include "fft/battle_unit.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Run staged status commands for units whose Float or Jump state needs a
@@ -28,10 +29,9 @@ void world_script_process_inflict_status_commands(void) {
                         || (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_JUMP)]
                             & STATUS_BYTE_MASK(STATUS_ID_JUMP))) {
                         thread_id = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-                        world_thread_start(thread_id, world_script_inflict_status_thread);
-                        world_thread_set_parameters(
-                            thread_id, (s32)(g_world_event_script + instruction_offset + 1), 0, 0);
-                        world_thread_wait_until_inactive(thread_id);
+                        thread_start(thread_id, world_script_inflict_status_thread);
+                        thread_set_parameters(thread_id, (s32)(g_world_event_script + instruction_offset + 1), 0, 0);
+                        thread_wait_until_inactive(thread_id);
                     }
                 }
             }

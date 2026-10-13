@@ -151,10 +151,10 @@ void option_menu_run_game_options(void) {
     value_rect.w = base->title.w;
     value_rect.h = base->title.h;
     battle_copy_bytes(&g_option_menu_entry_panel_rect, &entry->window.x, 8);
-    battle_thread_start(g_native_current_thread_id + 1, option_menu_window_frame_thread);
+    thread_start(g_native_current_thread_id + 1, option_menu_window_frame_thread);
     g_option_menu_entry_panel_rect.h += 0xC;
     g_option_menu_entry_panel_rect.y -= 2;
-    battle_thread_set_parameters(g_native_current_thread_id + 1, (s32)&g_option_menu_entry_panel_rect, 0, 0);
+    thread_set_parameters(g_native_current_thread_id + 1, (s32)&g_option_menu_entry_panel_rect, 0, 0);
     thread_yield();
     battle_menu_init_semitransparent_sprt(&base->value);
     battle_text_configure_sprite_vram(&g_option_menu_value_image_rect, 0x3C, 0x10, &base->value, 0);
@@ -227,8 +227,8 @@ void option_menu_run_game_options(void) {
                 if (battle_menu_can_accept_input() != 0) {
                     *input0 = 0;
                     index = cursor + row_offset + delta;
-                    battle_thread_start(g_native_current_thread_id - 1, option_menu_run_choice);
-                    battle_thread_set_parameters(g_native_current_thread_id - 1, index, 0, 0);
+                    thread_start(g_native_current_thread_id - 1, option_menu_run_choice);
+                    thread_set_parameters(g_native_current_thread_id - 1, index, 0, 0);
                 }
             }
             if (*input0 & PSX_PAD_CROSS) {
@@ -303,9 +303,9 @@ void option_menu_run_game_options(void) {
             battle_gfx_draw_or_append_gpu_primitive(&page->thumb);
         }
         if ((thread - 1)->is_running == 0) {
-            battle_thread_set_parameters(g_native_current_thread_id + 1, (s32)&entry->window.x, 0, 0);
+            thread_set_parameters(g_native_current_thread_id + 1, (s32)&entry->window.x, 0, 0);
         } else {
-            battle_thread_set_parameters(g_native_current_thread_id + 1, (s32)&entry->window.x, 1, 0);
+            thread_set_parameters(g_native_current_thread_id + 1, (s32)&entry->window.x, 1, 0);
         }
         battle_gfx_build_scaled_draw_area_pair_swapped(
             &page->title_area, &entry->window, i, g_main_gfx_screen_polarity);
@@ -352,6 +352,6 @@ void option_menu_run_game_options(void) {
     battle_gfx_free_tpage7_vram(&g_option_menu_title_image_rect);
     battle_gfx_free_tpage7_vram(&g_option_menu_value_image_rect);
     thread_wait_frames(1);
-    battle_thread_set_parameters(g_native_current_thread_id + 1, 0, 0, 1);
+    thread_set_parameters(g_native_current_thread_id + 1, 0, 0, 1);
     thread_exit_current();
 }

@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Pushes the save-slot selection level (menu type 0x17).
@@ -35,7 +36,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     s32 depth;
     s32 top;
 
-    world_thread_suspend(WLDCORE_THREAD_SLOT_MESSAGE);
+    thread_suspend(WLDCORE_THREAD_SLOT_MESSAGE);
 
     windows = g_wldcore_window_records;
     positions = (wldcore_window_xy_t*)&windows->position.x;

@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Build the proposition-result panel, total its gil reward, start the reporting
@@ -90,7 +91,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     base->x = -0x7A;
     base->y = -0x2A;
     if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
-        world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     }
     party = &g_wldcore_proposition_report.excluded_party_index;
     g_text_substitution_values[0] = *party + TEXT_ID_UNIT_NAME_BASE;
@@ -100,9 +101,9 @@ void wldcore_proposition_push_result_level(s32 proposition) {
         message = 0xA2;
     }
     if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
-        world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     }
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,
         wldcore_proposition_adjust_message_index(message, *party) + TEXT_ID_WORLD_MESSAGE_BASE, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.proposition = proposition;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_result.delay = 0;

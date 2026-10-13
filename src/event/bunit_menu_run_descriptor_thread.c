@@ -1,5 +1,6 @@
 #include "fft/battle_thread.h"
 #include "fft/event_bunit.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Returns s32: the value is the 0/1 flag g_bunit_menu_thread_running, and
@@ -10,8 +11,8 @@ s32 bunit_menu_run_descriptor_thread(s32 id, menu_entry_t* desc) {
             return 1;
         }
         g_battle_menu_thread_menu_data = desc;
-        battle_thread_start(id, desc->thread_entry);
-        battle_thread_set_parameters(id, (s32)g_battle_menu_thread_menu_data, 0, 0);
+        thread_start(id, desc->thread_entry);
+        thread_set_parameters(id, (s32)g_battle_menu_thread_menu_data, 0, 0);
         g_bunit_menu_thread_running = 1;
     }
     g_bunit_menu_thread_running = battle_thread_is_running(id);

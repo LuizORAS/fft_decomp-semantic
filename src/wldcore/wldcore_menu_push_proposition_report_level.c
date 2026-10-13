@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Hides the parent level's two windows and render record, then pushes a
@@ -24,7 +25,7 @@ void wldcore_menu_push_proposition_report_level(s32 argument) {
     } else {
         wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_PROPOSITION_REPORT));
     }
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_REPORT;
     g_wldcore_menu_stack_depth++;
 }

@@ -115,8 +115,8 @@ void world_menu_run_require_help(void) {
                             *g_world_help_controller_state_ptr = 0;
                         } else {
                             g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                            world_thread_start(text_thread_id, world_text_character_handling_thread);
-                            world_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
+                            thread_start(text_thread_id, world_text_character_handling_thread);
+                            thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                         }
                     } else if (entry->help_base == 0x7800 && (*(u16*)entry->value - 1) >= 0x301U) {
                         *g_world_help_controller_state_ptr = 0;
@@ -126,14 +126,14 @@ void world_menu_run_require_help(void) {
                         *g_world_help_controller_state_ptr = 0;
                     } else {
                         g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                        world_thread_start(text_thread_id, world_text_character_handling_thread);
-                        world_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
+                        thread_start(text_thread_id, world_text_character_handling_thread);
+                        thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                     }
                 } else {
                     help_id = entry->help_base;
                     g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                    world_thread_start(text_thread_id, world_text_character_handling_thread);
-                    world_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
+                    thread_start(text_thread_id, world_text_character_handling_thread);
+                    thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                 }
             } else if (input & PSX_PAD_DPAD_MASK) {
                 if (input & PSX_PAD_UP) {

@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -9,8 +10,8 @@ void world_menu_toggle_ability_panel_thread(s32 enable) {
         enable = 1;
         if (world_thread_is_running(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL) == 0
             && world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0) {
-            world_thread_start(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL, world_menu_ability_panel_thread);
-            world_thread_set_parameters(
+            thread_start(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL, world_menu_ability_panel_thread);
+            thread_set_parameters(
                 WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL, (s32)&g_world_ability_panel_thread_params, 0, 0);
         }
         g_world_formation_unit_banner_enabled = 1;

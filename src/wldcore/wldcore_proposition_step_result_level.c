@@ -1,4 +1,5 @@
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -126,6 +127,6 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     if (wldcore_get_completion_milestone_rank() == 0 && g_wldcore_proposition_report.recalled == 0) {
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
     }
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
     level->phase = WLDCORE_PROPOSITION_RESULT_PHASE_CLOSING;
 }

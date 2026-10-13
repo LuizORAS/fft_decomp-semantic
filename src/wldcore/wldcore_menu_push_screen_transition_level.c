@@ -1,4 +1,5 @@
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -109,8 +110,8 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         clear--;
     }
     world_menu_set_brightness(0, 0, 0);
-    world_thread_start(WLDCORE_THREAD_SLOT_TRANSITION, world_formation_view_zoom_thread);
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_TRANSITION, 0, 0, 0);
+    thread_start(WLDCORE_THREAD_SLOT_TRANSITION, world_formation_view_zoom_thread);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_TRANSITION, 0, 0, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].screen_transition.delay = 0x14;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].screen_transition.phase = 0;
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_SCREEN_TRANSITION;

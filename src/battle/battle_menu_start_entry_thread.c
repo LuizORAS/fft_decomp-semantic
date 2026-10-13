@@ -17,7 +17,7 @@ void battle_menu_start_entry_thread(void) {
     s32 menu_id = battle_thread_get_current_parameter_1();
     s32 count;
 
-    battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
+    thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
     if (g_battle_menu_suspend_state != 0) {
         thread_exit_current();
     }
@@ -45,22 +45,22 @@ void battle_menu_start_entry_thread(void) {
             menu_id = BATTLE_MENU_ID_EGG;
         }
     }
-    battle_thread_start(NATIVE_THREAD_SLOT_MENU, g_battle_menu_thread_menu_data[menu_id].thread_entry);
-    battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, (s32)&g_battle_menu_thread_menu_data[menu_id], 0, 0);
+    thread_start(NATIVE_THREAD_SLOT_MENU, g_battle_menu_thread_menu_data[menu_id].thread_entry);
+    thread_set_parameters(NATIVE_THREAD_SLOT_MENU, (s32)&g_battle_menu_thread_menu_data[menu_id], 0, 0);
     count = g_battle_menu_restore_depth;
     g_script_event_input = 0;
     if (g_menu_restore_pending != 0 && g_battle_menu_restore_unit_id == g_battle_active_turn_unit.battle_id) {
         g_battle_menu_help_open = 1;
         thread_wait_frames(2);
         if (count > 0) {
-            battle_thread_start(NATIVE_THREAD_SLOT_MENU_CHILD, battle_menu_run_skillset_thread);
-            battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_CHILD,
+            thread_start(NATIVE_THREAD_SLOT_MENU_CHILD, battle_menu_run_skillset_thread);
+            thread_set_parameters(NATIVE_THREAD_SLOT_MENU_CHILD,
                 (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST], 0, 0);
         }
         thread_wait_frames(2);
         if (count >= 2) {
-            battle_thread_start(NATIVE_THREAD_SLOT_MENU_GRANDCHILD, battle_menu_select_unit_action_slots_thread);
-            battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_GRANDCHILD,
+            thread_start(NATIVE_THREAD_SLOT_MENU_GRANDCHILD, battle_menu_select_unit_action_slots_thread);
+            thread_set_parameters(NATIVE_THREAD_SLOT_MENU_GRANDCHILD,
                 (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST], 0, 0);
         }
         thread_wait_frames(2);

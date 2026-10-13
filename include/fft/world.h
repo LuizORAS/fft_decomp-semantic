@@ -525,20 +525,13 @@ s32 world_thread_find_running_by_task(s32 task_id);
 void* world_thread_get_current_parameter_1(void);
 s32 world_thread_get_current_parameter_2(void);
 s32 world_thread_get_current_parameter_3(void);
-s32 world_thread_get_current_task_id(void);
 s32 world_thread_is_previous_running(void);
 s32 world_thread_is_running(s32 thread_id);
 s32 world_thread_is_running_asm(s32 thread_id);
 void world_thread_reset_scheduler(void);
 s32 world_thread_resolve_id(s32 requested_thread_id);
 s32 world_thread_resolve_id_after_current(s32 requested_thread_id);
-void world_thread_resume(s32 thread_id);
-void world_thread_set_parameters(s32 thread_id, s32 first, s32 second, s32 third);
-void world_thread_set_four_parameters(s32 thread_id, s32 first, s32 second, s32 third, s32 fourth);
 void world_thread_set_task_id_to_three(s32 thread_id);
-void world_thread_start(s32 thread_id, void (*function)(void));
-void world_thread_suspend(s32 thread_id);
-void world_thread_wait_until_inactive(s32 thread_id);
 
 /* turn */
 

@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -35,8 +36,8 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
         DrawSync(0);
         g_text_substitution_values[0]
             = g_main_active_propositions[level->proposition].proposition_id | TEXT_ID_PROPOSITION_NAME_BASE;
-        world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
+        thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
         wldcore_menu_push_participant_list_level(level->proposition);
         return;
     }
@@ -46,9 +47,9 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_window_record_count -= 2;
         g_wldcore_window_render_object_count -= 2;
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
+        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
+        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
         return;
     }
     if (buttons & PSX_PAD_SELECT) {

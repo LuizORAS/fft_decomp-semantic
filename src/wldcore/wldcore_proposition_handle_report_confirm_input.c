@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -55,7 +56,7 @@ void wldcore_proposition_handle_report_confirm_input(wldcore_proposition_report_
              * this arm instead of the cancel arm the target keeps. */
             goto block_tail;
         } else {
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+            thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count -= 1;
             g_wldcore_window_render_object_count -= 3;

@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /*
@@ -11,7 +12,7 @@ void world_shop_run_sell_menu_subflow_step(void) {
         if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
-        world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
         g_world_formation_unit_browse_enabled = 0;
         g_world_formation_unit_banner_enabled = 0;
         world_formation_stop_menu_threads();
@@ -39,7 +40,7 @@ void world_shop_run_sell_menu_subflow_step(void) {
         g_world_shop_sell_subflow_initialized = 0;
         g_world_formation_unit_browse_enabled = 1;
         world_script_set_vsync_mode_and_event_speed(2);
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
         return;
     }
     g_world_shop_sell_subflow_step = g_world_shop_menu_step;

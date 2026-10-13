@@ -38,9 +38,9 @@ void equip_menu_text_entry_wait_thread(void) {
     *input = PSX_PAD_CIRCLE;
     battle_menu_handle_action(thread, 0);
 
-    battle_thread_start(child_id, battle_text_run_dialog_thread);
-    battle_thread_set_four_parameters(child_id, header_id, text_id, task_arg, task_arg);
-    battle_thread_wait_until_inactive(g_native_current_thread_id - 1);
-    battle_thread_wait_until_inactive(child_id);
+    thread_start(child_id, battle_text_run_dialog_thread);
+    thread_set_four_parameters(child_id, header_id, text_id, task_arg, task_arg);
+    thread_wait_until_inactive(g_native_current_thread_id - 1);
+    thread_wait_until_inactive(child_id);
     thread_exit_current();
 }

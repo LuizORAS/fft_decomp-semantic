@@ -45,10 +45,10 @@ void world_unit_view_supervisor_thread(void) {
                     continue;
                 }
                 states[set->thread_ids[i]] = WORLD_UNIT_VIEW_SLOT_RESTART;
-                world_thread_set_parameters(set->thread_ids[i], 0, 0, 1);
+                thread_set_parameters(set->thread_ids[i], 0, 0, 1);
             } else if (set->entries[i] != (void*)-1) {
-                world_thread_start(set->thread_ids[i], set->entries[i]);
-                world_thread_set_parameters(set->thread_ids[i], 0, 0, 0);
+                thread_start(set->thread_ids[i], set->entries[i]);
+                thread_set_parameters(set->thread_ids[i], 0, 0, 0);
                 thread->task_id = set->task_ids[i];
                 states[set->thread_ids[i]] = WORLD_UNIT_VIEW_SLOT_STARTED;
             }
@@ -69,8 +69,8 @@ void world_unit_view_supervisor_thread(void) {
         }
         for (i = 0; i < 4; i++) {
             if (states[set->thread_ids[i]] == WORLD_UNIT_VIEW_SLOT_RESTART && set->entries[i] != (void*)-1) {
-                world_thread_start(set->thread_ids[i], set->entries[i]);
-                world_thread_set_parameters(set->thread_ids[i], 0, 0, 0);
+                thread_start(set->thread_ids[i], set->entries[i]);
+                thread_set_parameters(set->thread_ids[i], 0, 0, 0);
                 g_native_thread_contexts[set->thread_ids[i]].task_id = set->task_ids[i];
             }
         }

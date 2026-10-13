@@ -73,7 +73,7 @@ void battle_menu_auto_battle_setting_thread(void) {
                     colour[4] = 4;
                     after = battle_menu_get_id_based_on_mount_moveable_actable(g_battle_active_turn_unit.battle_id);
                     if (before != after) {
-                        battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
+                        thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
                         battle_menu_build_idle_action_menu(after);
                     }
                 } else {

@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -16,5 +17,5 @@ void wldcore_window_reload_data_set_and_resume_thread14(wldcore_menu_stack_recor
         g_wldcore_window_records[level->sound_novel.left_window].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_records[level->sound_novel.right_window].flags &= ~WORLD_RENDER_RECORD_HIDDEN;
     }
-    world_thread_resume(WLDCORE_THREAD_SLOT_MESSAGE);
+    thread_resume(WLDCORE_THREAD_SLOT_MESSAGE);
 }

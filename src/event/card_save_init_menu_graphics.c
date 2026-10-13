@@ -1,5 +1,6 @@
 #include "fft/event_card.h"
 #include "fft/gfx.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -72,5 +73,5 @@ void card_save_init_menu_graphics(void) {
 
     card_gfx_start_decreasing_fade();
     g_card_save_menu_state = CARD_SAVE_MENU_INITIAL_PROMPT;
-    battle_thread_suspend(15);
+    thread_suspend(15);
 }

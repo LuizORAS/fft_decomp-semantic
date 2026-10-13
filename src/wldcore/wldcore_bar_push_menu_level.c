@@ -1,4 +1,5 @@
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Opens a full-screen menu level (type 5): hides the map, loads data set
@@ -21,8 +22,8 @@ void wldcore_bar_push_menu_level(void) {
     wldcore_gfx_load_background_set(set);
     wldcore_wait_for_file_load();
     g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE | MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
-    world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BAR_WELCOME, 0);
+    thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BAR_WELCOME, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_pair_render.first_window
         = wldcore_window_append_record_and_reset_color(
             g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);

@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Initialize and start a numeric panel renderer.
@@ -64,6 +65,6 @@ void wldcore_window_init_number_panel_render_thread(s32 thread_id, u32 packed_va
     g_wldcore_window_panel_render_state.value = &g_wldcore_active_menu_value;
     g_wldcore_window_panel_render_state.selected_index = 0;
     g_wldcore_window_panel_render_state.select_text_table = 0;
-    world_thread_start(thread_id, world_menu_labeled_number_entry_thread);
-    world_thread_set_parameters(thread_id, (s32)&g_wldcore_window_panel_render_state, 0, 0);
+    thread_start(thread_id, world_menu_labeled_number_entry_thread);
+    thread_set_parameters(thread_id, (s32)&g_wldcore_window_panel_render_state, 0, 0);
 }

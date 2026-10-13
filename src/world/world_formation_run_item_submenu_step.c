@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -36,7 +37,7 @@ s32 world_formation_run_item_submenu_step(void) {
     if (g_world_item_submenu_initialized == 0) {
         g_world_item_submenu_initialized = 1;
         g_world_item_menu_category = world_menu_init_cursor_position(WORLD_MENU_CURSOR_ITEM_TAB, 0);
-        world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
+        thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
         world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS);
         world_menu_stop_unit_status_banner_thread(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
         world_menu_stop_unit_status_banner_thread(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL);
@@ -51,7 +52,7 @@ s32 world_formation_run_item_submenu_step(void) {
         world_script_set_vsync_mode_and_event_speed(0);
         g_world_item_submenu_initialized = 0;
         g_world_formation_unit_banner_enabled = 1;
-        world_thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
+        thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
         g_world_preview_stats_thread_params.x = 2;
         g_world_preview_stats_thread_params.y = 2;
         g_world_formation_unit_cycle_mode = 2;

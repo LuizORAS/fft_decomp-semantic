@@ -2,7 +2,6 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_map.h"
 #include "fft/battle_script.h"
-#include "fft/battle_thread.h"
 #include "fft/battle_unit.h"
 #include "fft/script.h"
 #include "fft/thread.h"
@@ -27,6 +26,6 @@ void script_start_current_event_thread(void) {
         g_camera_position_locked = 0;
         g_camera_speed_curve = 0;
         battle_gfx_start_screen_color_modulation_fade(2, 0, 0, 0, 2);
-        battle_thread_start(NATIVE_THREAD_SLOT_EVENT, script_run_next_event);
+        thread_start(NATIVE_THREAD_SLOT_EVENT, script_run_next_event);
     }
 }

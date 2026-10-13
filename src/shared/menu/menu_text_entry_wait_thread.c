@@ -1,7 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_text.h"
-#include "fft/battle_thread.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/pad.h"
@@ -37,9 +36,9 @@ void menu_text_entry_wait_thread(void) {
     arg = task->speaker_id;
     *ctl = PSX_PAD_CIRCLE;
     battle_menu_handle_action(obj, 0);
-    battle_thread_start(id, battle_text_run_dialog_thread);
-    battle_thread_set_four_parameters(id, header_id, text_id, arg, arg);
-    battle_thread_wait_until_inactive(g_native_current_thread_id - 1);
-    battle_thread_wait_until_inactive(id);
+    thread_start(id, battle_text_run_dialog_thread);
+    thread_set_four_parameters(id, header_id, text_id, arg, arg);
+    thread_wait_until_inactive(g_native_current_thread_id - 1);
+    thread_wait_until_inactive(id);
     thread_exit_current();
 }

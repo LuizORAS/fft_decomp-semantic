@@ -737,7 +737,7 @@ functions:
   - {addr: 0x8012f454, size: 140, name: battle_menu_init_primitive_colors_dimmed, hash: a34bc154bfcc9d66}
   - {addr: 0x8012f4e0, size: 380, name: battle_text_build_display_message, hash: eedb1f6dcfecd6a0}
   - {addr: 0x8012f65c, size: 84, name: battle_menu_release_current_thread_slot, hash: 948b079789ed5c43}
-  - {addr: 0x8012f6b0, size: 36, name: battle_thread_get_current_task_id, hash: f10dac85694e4558}
+  - {addr: 0x8012f6b0, size: 36, name: thread_get_current_task_id, hash: f10dac85694e4558, source: src/shared/thread/thread_get_current_task_id.c}
   - {addr: 0x8012f6d4, size: 1612, name: battle_text_draw_glyph_with_typewriter_delay, hash: f53ad13089249377}
   - {addr: 0x8012fd20, size: 108, name: text_resolve_format_string_id, hash: 8dd43b50cdcd6fb8, source: src/shared/text/text_resolve_format_string_id.c}
   - {addr: 0x8012fd8c, size: 1024, name: text_measure, hash: db194586ee0af6b5, source: src/shared/text/text_measure.c}
@@ -1071,15 +1071,15 @@ functions:
   - {addr: 0x8014c4a8, size: 688, name: battle_menu_build_and_upload_window_frame_image, hash: 99515c0e0a1f017c}
   - {addr: 0x8014c758, size: 256, name: menu_build_window_image_row, hash: 03b43cffa473c30c, source: src/shared/menu/menu_build_window_image_row.c}
   - {addr: 0x8014c858, size: 72, name: thread_wait_frames, hash: e33123533d666f71, source: src/shared/thread/thread_wait_frames.c}
-  - {addr: 0x8014c8a0, size: 132, name: battle_thread_start, hash: 72fa1891ea2b8656}
-  - {addr: 0x8014c924, size: 28, name: battle_thread_resume, hash: 484df3941212a0b6}
-  - {addr: 0x8014c940, size: 24, name: battle_thread_suspend, hash: 6647a9e0cd2b86e9}
+  - {addr: 0x8014c8a0, size: 132, name: thread_start, hash: 72fa1891ea2b8656, source: src/shared/thread/thread_start.c}
+  - {addr: 0x8014c924, size: 28, name: thread_resume, hash: 484df3941212a0b6, source: src/shared/thread/thread_resume.c}
+  - {addr: 0x8014c940, size: 24, name: thread_suspend, hash: 6647a9e0cd2b86e9, source: src/shared/thread/thread_suspend.c}
   - {addr: 0x8014c958, size: 60, name: thread_exit_current, hash: 23aa4a3549fe6cb7, source: src/shared/thread/thread_exit_current.c}
   - {addr: 0x8014c994, size: 60, name: battle_thread_reset_scheduler, hash: fa59753fb674e92c}
-  - {addr: 0x8014c9d0, size: 76, name: battle_thread_wait_until_inactive, hash: 29370957c26343c7}
+  - {addr: 0x8014c9d0, size: 76, name: thread_wait_until_inactive, hash: 29370957c26343c7, source: src/shared/thread/thread_wait_until_inactive.c}
   - {addr: 0x8014ca1c, size: 28, name: battle_thread_is_running, hash: d10e3403d7fec970}
-  - {addr: 0x8014ca38, size: 32, name: battle_thread_set_parameters, hash: 40bfd9d6b347f675}
-  - {addr: 0x8014ca58, size: 40, name: battle_thread_set_four_parameters, hash: f24ec1f8ce5a962b}
+  - {addr: 0x8014ca38, size: 32, name: thread_set_parameters, hash: 40bfd9d6b347f675, source: src/shared/thread/thread_set_parameters.c}
+  - {addr: 0x8014ca58, size: 40, name: thread_set_four_parameters, hash: f24ec1f8ce5a962b, source: src/shared/thread/thread_set_four_parameters.c}
   - {addr: 0x8014cbb4, size: 12, name: thread_get_current_global_pointer, hash: 153190eb0d500e3a, source: src/shared/thread/thread_get_current_global_pointer.c}
   - {addr: 0x8014cbc0, size: 52, name: battle_thread_get_current_parameter_1, hash: 4427bc41b35c9c1f}
   - {addr: 0x8014cbf4, size: 52, name: battle_thread_get_current_parameter_2, hash: 7ffeb5877d79f219}

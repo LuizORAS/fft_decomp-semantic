@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/libgpu.h"
 #include "psx/libgs.h"
@@ -292,7 +293,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
             g_wldcore_window_render_record_count -= 2;
             g_wldcore_window_render_object_count -= 2;
         }
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         return;
     case -1:
     case 18:

@@ -29,7 +29,7 @@ void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y) {
         } else if (y < -0x78) {
             entry->window.y = -0x70;
         }
-        world_thread_start(NATIVE_THREAD_SLOT_MENU, g_world_menu_thread_menu_data[index].thread_entry);
-        world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, (s32)&g_world_menu_thread_menu_data[index], 0, 0);
+        thread_start(NATIVE_THREAD_SLOT_MENU, g_world_menu_thread_menu_data[index].thread_entry);
+        thread_set_parameters(NATIVE_THREAD_SLOT_MENU, (s32)&g_world_menu_thread_menu_data[index], 0, 0);
     }
 }

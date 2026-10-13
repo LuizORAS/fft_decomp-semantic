@@ -11,8 +11,8 @@ void world_menu_open_debugchr(void) {
     world_menu_set_transition_active_flag();
     g_world_menu_overlay_state = 1;
     menu_request_open_companion_executable(COMPANION_OVERLAY_DEBUGCHR);
-    world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
-    world_thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
+    thread_set_parameters(NATIVE_THREAD_SLOT_MENU, 0, 0, 1);
+    thread_wait_until_inactive(NATIVE_THREAD_SLOT_MENU);
     world_thread_wait_for_unit_view_panels();
     thread_yield();
     thread_yield();

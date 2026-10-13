@@ -43,11 +43,11 @@ void world_menu_run_main_mode(s32 mode) {
     last_mode = OPTION_MENU_DEAD_UNIT;
     if (mode == OPTION_MENU_GAME_OPTIONS) {
         world_script_pulse_tutorial_wait_value(0xFD);
-        world_thread_start(g_native_current_thread_id - 1, world_menu_run_game_options);
+        thread_start(g_native_current_thread_id - 1, world_menu_run_game_options);
         entry->select_text_table = 1;
         entry->context = &g_world_option_menu_entry_table;
-        world_thread_set_parameters(g_native_current_thread_id - 1, (s32)entry, 0, 0);
-        world_thread_wait_until_inactive(g_native_current_thread_id - 1);
+        thread_set_parameters(g_native_current_thread_id - 1, (s32)entry, 0, 0);
+        thread_wait_until_inactive(g_native_current_thread_id - 1);
         thread_exit_current();
     }
     if (mode == OPTION_MENU_AT_LIST) {

@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Requests a unit view mode from the unit view supervisor thread, starting the
@@ -26,7 +27,7 @@ void battle_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b) {
         g_battle_menu_status_billboard.unit_index = unit_b;
     }
     if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_UNIT_VIEW) == 0) {
-        battle_thread_start(NATIVE_THREAD_SLOT_UNIT_VIEW, battle_unit_view_supervisor_thread);
+        thread_start(NATIVE_THREAD_SLOT_UNIT_VIEW, battle_unit_view_supervisor_thread);
     }
-    battle_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_VIEW, mode, 0, 0);
+    thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_VIEW, mode, 0, 0);
 }

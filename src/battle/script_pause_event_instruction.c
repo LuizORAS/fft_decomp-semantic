@@ -1,5 +1,4 @@
 #include "fft/battle_script.h"
-#include "fft/battle_thread.h"
 #include "fft/thread.h"
 #include "psx/pad.h"
 
@@ -8,7 +7,7 @@
 void script_pause_event_instruction(void) {
     do {
         thread_yield();
-        if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+        if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
             return;
         }
     } while ((g_script_event_input & (PSX_PAD_SELECT | PSX_PAD_CROSS | PSX_PAD_CIRCLE)) == 0);

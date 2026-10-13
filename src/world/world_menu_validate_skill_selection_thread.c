@@ -65,11 +65,11 @@ void world_menu_validate_skill_selection_thread(void) {
             g_world_menu_transition_active = 1;
             g_world_menu_selected_option = 0;
             g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
-            world_thread_start(g_native_current_thread_id - 1, world_menu_icon_linked_entry_thread);
-            world_thread_set_parameters(g_native_current_thread_id - 1,
+            thread_start(g_native_current_thread_id - 1, world_menu_icon_linked_entry_thread);
+            thread_set_parameters(g_native_current_thread_id - 1,
                 (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
             world_sound_queue_sfx_invalid();
-            world_thread_wait_until_inactive(g_native_current_thread_id - 1);
+            thread_wait_until_inactive(g_native_current_thread_id - 1);
             g_world_menu_transition_active = 0;
         }
         if ((message != 0x800A && message != 0x8013) || g_world_menu_selected_option == -1) {

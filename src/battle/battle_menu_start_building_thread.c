@@ -3,6 +3,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_thread.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 
 /* Start the help menu thread in the menu-building slot.
  *
@@ -34,6 +35,6 @@ void battle_menu_start_building_thread(void) {
         return;
     }
     g_battle_menu_help_open = 1;
-    battle_thread_start(NATIVE_THREAD_SLOT_MENU_BUILDING, battle_menu_run_helpmenu_thread);
-    battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_BUILDING, 0, 0, 0);
+    thread_start(NATIVE_THREAD_SLOT_MENU_BUILDING, battle_menu_run_helpmenu_thread);
+    thread_set_parameters(NATIVE_THREAD_SLOT_MENU_BUILDING, 0, 0, 0);
 }

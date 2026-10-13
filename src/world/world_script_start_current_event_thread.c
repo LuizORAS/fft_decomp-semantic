@@ -1,5 +1,6 @@
 #include "fft/battle_gfx.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Resets unit animation states and, when the current-event script variable is set, clears the screen
@@ -17,6 +18,6 @@ void world_script_start_current_event_thread(void) {
         g_world_camera_position_locked = 0;
         g_world_camera_speed_curve = 0;
         battle_gfx_start_screen_color_modulation_fade(2, 0, 0, 0, 2);
-        world_thread_start(NATIVE_THREAD_SLOT_EVENT, world_script_run_next_event);
+        thread_start(NATIVE_THREAD_SLOT_EVENT, world_script_run_next_event);
     }
 }

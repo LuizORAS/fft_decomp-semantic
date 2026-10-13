@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 
@@ -33,7 +34,7 @@ void world_formation_process_frame(void) {
         }
         if (g_world_script_tutorial_id == 0 && world_gfx_update_fade_out_tile() == 0) {
             g_world_formation_main_menu_initialized = 0;
-            world_thread_suspend(NATIVE_SCREEN_THREAD_SLOT_MENU);
+            thread_suspend(NATIVE_SCREEN_THREAD_SLOT_MENU);
             g_world_formation_screen_running = 0;
             return;
         }

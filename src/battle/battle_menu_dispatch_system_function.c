@@ -8,6 +8,7 @@
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
+#include "fft/thread.h"
 
 /*
  * System-function dispatcher called by battle_menu_init_system_function:
@@ -198,9 +199,8 @@ s32 battle_menu_dispatch_system_function(
         battle_menu_start_system_function_thread(value);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_SPELL_QUOTE) {
         g_battle_spell_quote_last_ability_id = action->ability_id & ABILITY_ID_MASK;
-        battle_thread_start(NATIVE_THREAD_SLOT_SYSTEM_FUNCTION, battle_text_run_spell_quote_thread);
-        battle_thread_set_parameters(
-            NATIVE_THREAD_SLOT_SYSTEM_FUNCTION, unit_id, g_battle_spell_quote_last_ability_id, 0);
+        thread_start(NATIVE_THREAD_SLOT_SYSTEM_FUNCTION, battle_text_run_spell_quote_thread);
+        thread_set_parameters(NATIVE_THREAD_SLOT_SYSTEM_FUNCTION, unit_id, g_battle_spell_quote_last_ability_id, 0);
     } else if (command == BATTLE_MENU_SYSTEM_COMMAND_ABILITY_ANNOUNCEMENT) {
         battle_text_set_message_duration_frames(0x3C);
         if (g_main_action_menu_types_by_skillset[unit->action_command.skillset_id] == ACTION_MENU_TYPE_ARITHMETICKS) {

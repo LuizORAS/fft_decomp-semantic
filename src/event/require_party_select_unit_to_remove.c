@@ -88,8 +88,8 @@ s32 require_party_select_unit_to_remove(void) {
     g_require_numeric_editor_redraw_request = 1;
     g_require_character_status_redraw_request = 1;
     thread_yield();
-    battle_thread_start(REQUIRE_THREAD_SLOT_TRANSITION, require_gfx_run_suspended_thread_transition);
-    battle_thread_set_parameters(REQUIRE_THREAD_SLOT_TRANSITION, 0, 0, 0);
+    thread_start(REQUIRE_THREAD_SLOT_TRANSITION, require_gfx_run_suspended_thread_transition);
+    thread_set_parameters(REQUIRE_THREAD_SLOT_TRANSITION, 0, 0, 0);
     g_battle_screen_fade = 0xff;
     do {
         thread_yield();
@@ -113,13 +113,13 @@ s32 require_party_select_unit_to_remove(void) {
 
     for (;;) {
         g_require_party_removal_result = 0xff;
-        battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_menu_icon_linked_entry_thread);
-        battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE, (s32)&g_require_party_removal_menus[2], 0, 0);
+        thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_menu_icon_linked_entry_thread);
+        thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE, (s32)&g_require_party_removal_menus[2], 0, 0);
         portrait_rect = &g_require_party_portrait_move_rect;
         portrait_destination = &g_require_party_portrait_destination;
         palette_rect = &g_require_party_palette_move_rect;
-        battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MESSAGE);
-        battle_thread_wait_until_inactive(6);
+        thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MESSAGE);
+        thread_wait_until_inactive(6);
         if (g_require_party_removal_result == should_restore || g_require_party_removal_result == -1) {
             require_panel_set_transition_value(0);
             should_restore = 0;
@@ -131,17 +131,17 @@ s32 require_party_select_unit_to_remove(void) {
         goto selection_menu;
 
     show_unit_message:
-        battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_text_run_dialog_thread);
-        battle_thread_set_four_parameters(
+        thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_text_run_dialog_thread);
+        thread_set_four_parameters(
             REQUIRE_THREAD_SLOT_MESSAGE, 0x19, message_id, selected_battle_unit->unit_id, should_restore);
         g_native_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_words[3] = 0x18;
-        battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MESSAGE);
+        thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MESSAGE);
         continue;
 
     selection_menu:
-        battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_icon_linked_entry_thread);
-        battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)&g_require_party_removal_menus[4], 0, 0);
-        battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
+        thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_icon_linked_entry_thread);
+        thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)&g_require_party_removal_menus[4], 0, 0);
+        thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
         require_panel_set_transition_value(0);
         for (;;) {
             s32 helpmenu_thread;
@@ -150,8 +150,8 @@ s32 require_party_select_unit_to_remove(void) {
             g_menu_input_controller = script_get_controller_input_pointer(0);
             if (*g_menu_input_controller & PSX_PAD_SELECT) {
                 helpmenu_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-                battle_thread_start(helpmenu_thread, require_overlay_run_helpmenu);
-                battle_thread_wait_until_inactive(helpmenu_thread);
+                thread_start(helpmenu_thread, require_overlay_run_helpmenu);
+                thread_wait_until_inactive(helpmenu_thread);
                 continue;
             }
             if (*g_menu_input_controller & PSX_PAD_R1) {
@@ -243,12 +243,12 @@ s32 require_party_select_unit_to_remove(void) {
         if (party_unit->sprite_set < CHARACTER_IDENTITY_RAMZA_END)
             goto show_unit_message;
         g_require_menu_selection_result = 0xff;
-        battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_text_run_dialog_thread);
-        battle_thread_set_four_parameters(
+        thread_start(REQUIRE_THREAD_SLOT_MESSAGE, battle_text_run_dialog_thread);
+        thread_set_four_parameters(
             REQUIRE_THREAD_SLOT_MESSAGE, 0x19, message_id, selected_battle_unit->unit_id, should_restore);
         g_native_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_words[3] = 0x18;
-        battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
-        battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)&g_require_party_removal_menus[0], 0, 0);
+        thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_run_icon_selection_loop);
+        thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)&g_require_party_removal_menus[0], 0, 0);
         require_menu_wait_selection_threads();
         if (g_require_menu_selection_result != 0)
             continue;
@@ -278,9 +278,9 @@ s32 require_party_select_unit_to_remove(void) {
         }
     }
     if (should_restore != 0) {
-        battle_thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_icon_linked_entry_thread);
-        battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)&g_require_party_removal_menus[5], 0, 0);
-        battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
+        thread_start(REQUIRE_THREAD_SLOT_MENU, battle_menu_icon_linked_entry_thread);
+        thread_set_parameters(REQUIRE_THREAD_SLOT_MENU, (s32)&g_require_party_removal_menus[5], 0, 0);
+        thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
     }
     require_panel_set_transition_value(0);
     g_battle_screen_fade = 0;
@@ -289,6 +289,6 @@ s32 require_party_select_unit_to_remove(void) {
         g_battle_screen_fade += 0x10;
     } while (g_battle_screen_fade < 0x100);
     g_battle_screen_fade = 0xff;
-    battle_thread_set_parameters(REQUIRE_THREAD_SLOT_TRANSITION, 0, 0, 1);
+    thread_set_parameters(REQUIRE_THREAD_SLOT_TRANSITION, 0, 0, 1);
     return result;
 }

@@ -22,8 +22,8 @@ void world_map_confirm_destination(void) {
         pending[1] = value;
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, value);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_REQUEST_DESTINATION;
-        world_thread_set_parameters(g_native_current_thread_id + 1, 0, 0, 1);
-        world_thread_set_parameters(g_native_current_thread_id + 2, 0, 0, 1);
+        thread_set_parameters(g_native_current_thread_id + 1, 0, 0, 1);
+        thread_set_parameters(g_native_current_thread_id + 2, 0, 0, 1);
     } else {
         g_sound_pending_sfx_id = MAIN_SFX_INVALID;
     }

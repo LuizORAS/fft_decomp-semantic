@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -24,11 +25,11 @@ void wldcore_menu_number_panel_wait_for_thread_step(wldcore_menu_panel_level_t* 
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         g_wldcore_context_value_display_mode = WLDCORE_VALUE_DISPLAY_FUNDS;
         level->result = -1;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
     } else if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         level->result = 1;
         g_wldcore_proposition_dispatch_days = g_wldcore_active_menu_value;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
     }
 }

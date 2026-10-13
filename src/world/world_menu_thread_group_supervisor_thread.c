@@ -30,9 +30,9 @@ void world_menu_thread_group_supervisor_thread(void) {
                 if (g_native_threads[thread_id].is_running != 0) {
                     if (g_native_threads[thread_id].task_id != group->task_id[i]) {
                         state[thread_id] = 1;
-                        world_thread_set_parameters(group->thread_id[i], 0, 0, 1);
+                        thread_set_parameters(group->thread_id[i], 0, 0, 1);
                     } else {
-                        world_thread_set_parameters(thread_id, 0, 1, 0);
+                        thread_set_parameters(thread_id, 0, 1, 0);
                     }
                 } else {
                     state[thread_id] = 2;
@@ -52,8 +52,8 @@ void world_menu_thread_group_supervisor_thread(void) {
         }
         for (i = 0; i < 3; i++) {
             if (state[group->thread_id[i]] != 0 && group->function[i] != (void (*)(void))-1) {
-                world_thread_start(group->thread_id[i], group->function[i]);
-                world_thread_set_parameters(group->thread_id[i], (s32)&g_world_menu_thread_menu_data[i], 0, 0);
+                thread_start(group->thread_id[i], group->function[i]);
+                thread_set_parameters(group->thread_id[i], (s32)&g_world_menu_thread_menu_data[i], 0, 0);
                 g_native_threads[group->thread_id[i]].task_id = group->task_id[i];
             }
         }

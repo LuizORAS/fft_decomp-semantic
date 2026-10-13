@@ -21,7 +21,7 @@ void require_menu_wait_selection_threads(void) {
     }
     thread_yield();
     g_native_threads[REQUIRE_THREAD_SLOT_MESSAGE].task_id = NATIVE_THREAD_TASK_STOP_REQUEST;
-    battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE, 0, 0, 2);
-    battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MESSAGE);
-    battle_thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
+    thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE, 0, 0, 2);
+    thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MESSAGE);
+    thread_wait_until_inactive(REQUIRE_THREAD_SLOT_MENU);
 }

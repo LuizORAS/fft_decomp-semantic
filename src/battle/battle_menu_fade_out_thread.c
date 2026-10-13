@@ -32,7 +32,7 @@ void battle_menu_fade_out_thread(void) {
 
     menu_free_high_overlay();
     for (thread_id = 2; thread_id < 15; thread_id++) {
-        battle_thread_set_parameters(thread_id, 0, 0, 1);
+        thread_set_parameters(thread_id, 0, 0, 1);
     }
 
     for (fade = 0; fade < 256; fade += 8) {

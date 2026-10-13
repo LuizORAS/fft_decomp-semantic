@@ -1,5 +1,6 @@
 #include "fft/gfx.h"
 #include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -101,8 +102,8 @@ void world_shop_run_screen(s32 shop_type) {
     g_world_shop_hire_menu_thread_data.selected_index = 0;
     world_text_bind_section_data(WORLD_TEXT_DATA_SHOP_DIALOGUE);
     g_text_section_pointers[WORLD_TEXT_SECTION_SHOP_MENU_LABELS] = g_world_text_shop_menu_labels_data;
-    world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-    world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, disabled, 0);
+    thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, disabled, 0);
     g_world_menu_music_slot = main_sound_open_music_into_free_slot(ot_index);
     main_sound_switch_music_track(g_world_menu_music_slot, 0x7F, 0);
     g_world_shop_background_visible = 1;

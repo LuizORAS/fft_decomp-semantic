@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -44,7 +45,7 @@ void wldcore_menu_handle_participant_list_input(wldcore_menu_stack_record_t* lev
         g_wldcore_participant_list_saved_cursor = level->participant_list.cursor;
         g_wldcore_window_render_record_count--;
         g_wldcore_window_render_object_count -= 2;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         return;
     }

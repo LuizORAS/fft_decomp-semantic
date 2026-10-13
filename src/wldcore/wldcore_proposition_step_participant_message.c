@@ -1,4 +1,5 @@
 /* The switch jump table lives at .rodata 0x800671dc (0x18 bytes). */
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -35,7 +36,7 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_leve
         } else {
             g_wldcore_proposition_report.speaker_party_index = speaker;
         }
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         state->phase++;
         break;
     case 1:
@@ -44,11 +45,11 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_leve
         state->phase++;
         break;
     case 2:
-        world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
         g_text_substitution_values[0] = g_wldcore_proposition_report.speaker_party_index + TEXT_ID_UNIT_NAME_BASE;
         world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT,
             world_get_party_unit_formation_sprite(g_wldcore_proposition_report.speaker_party_index));
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,
             wldcore_proposition_adjust_message_index(message, g_wldcore_proposition_report.speaker_party_index)
                 + TEXT_ID_WORLD_MESSAGE_BASE,
             0);
@@ -62,7 +63,7 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_leve
         state->phase++;
         break;
     case 4:
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         state->phase++;
         break;
     case 5:

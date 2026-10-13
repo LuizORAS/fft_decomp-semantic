@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -31,7 +32,7 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_FORMATION_TUTORIALS);
             level->result = 2;
             g_main_system_flags |= MAIN_SYSTEM_FLAG_DISPLAY_OFF;
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+            thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
             return;
         }
         g_wldcore_menu_ordering_table_offset = 1;
@@ -45,7 +46,7 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
     if (g_wldcore_input_new_button_presses & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         level->result = 0;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     } else if ((g_wldcore_input_new_button_presses & PSX_PAD_SELECT) && level->entry_count != 0) {
         wldcore_list_formation_tutorials_block_all_buttons(level);
@@ -54,7 +55,7 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         level->result = 1;
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
     }
 }

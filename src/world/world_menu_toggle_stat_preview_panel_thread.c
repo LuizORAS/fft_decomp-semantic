@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -8,8 +9,8 @@ void world_menu_toggle_stat_preview_panel_thread(s32 enable) {
     if (enable != 0) {
         if (!(g_world_status_display_thread_params.flags & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP))
             && world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0) {
-            world_thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, world_menu_equipment_panel_thread);
-            world_thread_set_parameters(
+            thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, world_menu_equipment_panel_thread);
+            thread_set_parameters(
                 NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)&g_world_stat_preview_panel_thread_params, 0, 0);
         }
         enable = 1;

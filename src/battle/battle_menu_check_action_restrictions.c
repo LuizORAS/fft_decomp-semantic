@@ -59,10 +59,10 @@ void battle_menu_check_action_restrictions(void) {
         } else if (g_menu_restore_pending == 0) {
             sound_queue_sfx_invalid();
             g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
-            battle_thread_start(g_native_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
-            battle_thread_set_parameters(g_native_current_thread_id - 1,
+            thread_start(g_native_current_thread_id - 1, battle_menu_icon_linked_entry_thread);
+            thread_set_parameters(g_native_current_thread_id - 1,
                 (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
-            battle_thread_wait_until_inactive(g_native_current_thread_id - 1);
+            thread_wait_until_inactive(g_native_current_thread_id - 1);
         }
         if (message == 0x1002 || message == 0x1003) {
             thread_exit_current();

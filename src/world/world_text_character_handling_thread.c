@@ -16,7 +16,7 @@
 /* Aborts (here and below) leave the nested text loops for the shared
    window close-and-release tail at `end`. */
 #define CHECK_ABORT()                                                                                                  \
-    if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST                                          \
+    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST                                                \
         && g_native_current_thread_id != WORLD_THREAD_SLOT_TUTORIAL_TEXT) {                                            \
         goto end;                                                                                                      \
     }
@@ -557,7 +557,7 @@ void world_text_character_handling_thread(void) {
                         break;
                     }
                     thread_set_current_task_id(NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT);
-                    while (world_thread_get_current_task_id() != NATIVE_THREAD_TASK_RESUME) {
+                    while (thread_get_current_task_id() != NATIVE_THREAD_TASK_RESUME) {
                         CHECK_ABORT();
                         thread_yield();
                     }
@@ -622,10 +622,10 @@ void world_text_character_handling_thread(void) {
                     choice_window->sprites[1].x0 = choice_window->sprites[0].x0 + 2;
                     choice_window->sprites[1].y0 = choice_window->sprites[0].y0 + 2;
                     thread_yield();
-                    if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+                    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                         goto end;
                     }
-                    if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_WAIT_FOR_RESUME) {
+                    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_WAIT_FOR_RESUME) {
                         continue;
                     }
                     if ((g_world_menu_new_button_input & PSX_PAD_UP) && choice != rec.mark) {
@@ -656,8 +656,8 @@ void world_text_character_handling_thread(void) {
             g_world_menu_event_state_flag = 0;
         } else if (code == TEXT_WAIT_FOR_RESUME) {
             thread_set_current_task_id(NATIVE_THREAD_TASK_WAIT_FOR_RESUME);
-            while (world_thread_get_current_task_id() != NATIVE_THREAD_TASK_RESUME) {
-                if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+            while (thread_get_current_task_id() != NATIVE_THREAD_TASK_RESUME) {
+                if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                     goto end;
                 }
                 thread_yield();

@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -19,7 +20,7 @@ void world_shop_run_fitting_room_step(void) {
         world_shop_add_fitting_room_cost(-world_shop_add_fitting_room_cost(0));
         g_world_shop_fitting_room_unit_chosen = 0;
         g_world_shop_cost_window_visible = 0;
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
         g_world_shop_fitting_room_initialized = 1;
         return;
     }

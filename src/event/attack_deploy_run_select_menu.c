@@ -122,8 +122,8 @@ void attack_deploy_run_select_menu(void) {
                             *input = 0;
                         } else {
                             g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                            battle_thread_start(parent_id, battle_text_run_dialog_thread);
-                            battle_thread_set_parameters(parent_id, 0x3b, text_id, 0);
+                            thread_start(parent_id, battle_text_run_dialog_thread);
+                            thread_set_parameters(parent_id, 0x3b, text_id, 0);
                         }
                     } else if (node->help_base == 0x7800 && (u16)*node->value - 1 >= 0x301U) {
                         *input = 0;
@@ -133,16 +133,16 @@ void attack_deploy_run_select_menu(void) {
                         *input = 0;
                     } else {
                         g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                        battle_thread_start(parent_id, battle_text_run_dialog_thread);
-                        battle_thread_set_parameters(parent_id, 0x3b, text_id, 0);
+                        thread_start(parent_id, battle_text_run_dialog_thread);
+                        thread_set_parameters(parent_id, 0x3b, text_id, 0);
                     }
                 } else {
                     text_id = node->help_base;
                     g_thread_call_target = (void (*)(void))text_find_entry;
                     if ((*(u8*)thread_call_on_main_stack(text_id) & 0xfe) != 0xfe) {
                         g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                        battle_thread_start(parent_id, battle_text_run_dialog_thread);
-                        battle_thread_set_parameters(parent_id, 0x3b, text_id, 0);
+                        thread_start(parent_id, battle_text_run_dialog_thread);
+                        thread_set_parameters(parent_id, 0x3b, text_id, 0);
                     }
                 }
             } else if (buttons & PSX_PAD_DPAD_MASK) {

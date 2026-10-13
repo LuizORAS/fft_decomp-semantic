@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Declared with an s32 value here: the target passes the entry value
@@ -27,11 +28,10 @@ void wldcore_proposition_push_detail_level(s32 value) {
         chance = 0xA;
     }
     if ((rand() * 100 >> 15) < chance) {
-        world_thread_set_parameters(
-            WLDCORE_THREAD_SLOT_MESSAGE, 0x19, value + WLDCORE_TEXT_ID_PROPOSITION_HINT_FIRST, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, value + WLDCORE_TEXT_ID_PROPOSITION_HINT_FIRST, 0);
     } else {
         g_text_substitution_values[0] = value + TEXT_ID_PROPOSITION_NAME_BASE;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_PROPOSITION_ABOUT, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_PROPOSITION_ABOUT, 0);
     }
     wldcore_unpack_proposition_row(g_wldcore_selected_proposition_row, value);
     index = wldcore_window_append_render_record_and_reset_color(

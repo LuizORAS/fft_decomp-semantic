@@ -13,7 +13,7 @@
 /* Address-of operand fields preserves the -O0 byte-address steps. */
 void world_script_handle_tutorial_command_change_dialog(void) {
     if (world_text_is_printing(WORLD_THREAD_SLOT_TUTORIAL_TEXT) != 1) {
-        world_thread_set_parameters(WORLD_THREAD_SLOT_TUTORIAL_TEXT, 0x99,
+        thread_set_parameters(WORLD_THREAD_SLOT_TUTORIAL_TEXT, 0x99,
             (s32)((u8*)(*(&((world_tutorial_dialog_instruction_t*)g_world_script_tutorial_command_ptr)->text_id_le[1])
                       * 0x100)
                 + (*(&((world_tutorial_dialog_instruction_t*)g_world_script_tutorial_command_ptr)->text_id_le[0])

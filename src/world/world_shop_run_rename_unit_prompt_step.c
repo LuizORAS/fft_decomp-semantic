@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -21,7 +22,7 @@ void world_shop_run_rename_unit_prompt_step(void) {
             world_menu_run_script_with_callback_suppressed();
             return;
         }
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+        thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
         g_world_shop_rename_error_shown = 0;
         g_world_shop_rename_prompt_initialized = 1;
         world_formation_init_cursor_and_scroll_state(0);
@@ -42,7 +43,7 @@ void world_shop_run_rename_unit_prompt_step(void) {
         g_world_menu_description_text_id = -1;
         if (g_world_input_primary_repeat & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE)) {
             g_world_shop_rename_error_shown = 0;
-            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+            thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
         }
     }
     if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE) == 0
@@ -56,8 +57,8 @@ void world_shop_run_rename_unit_prompt_step(void) {
                 } else {
                     mode = 2;
                 }
-                world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-                world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, mode | 0x18, 0xF848, 0);
+                thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+                thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, mode | 0x18, 0xF848, 0);
                 g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
                 g_world_shop_rename_error_shown = 1;
             } else {
@@ -70,8 +71,8 @@ void world_shop_run_rename_unit_prompt_step(void) {
             g_world_shop_background_visible = 1;
             g_world_shop_rename_prompt_initialized = 0;
             g_world_formation_unit_banner_enabled = 0;
-            world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF821, 0);
+            thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+            thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF821, 0);
             g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
             g_world_shop_menu_step = WORLD_SHOP_STEP_SOLDIER_OFFICE_REOPEN;
         }

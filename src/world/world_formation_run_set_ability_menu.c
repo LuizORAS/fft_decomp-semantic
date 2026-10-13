@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 
@@ -45,7 +46,7 @@ s32 world_formation_run_set_ability_menu(void) {
     if (g_world_input_primary_repeat & PSX_PAD_CROSS) {
         g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
         if (g_world_set_ability_list_open == 0) {
-            world_thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
+            thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
             g_world_set_ability_initialized = 0;
             world_menu_reset_selection_results();
             return 0;
@@ -95,7 +96,7 @@ s32 world_formation_run_set_ability_menu(void) {
             world_script_set_vsync_mode_and_event_speed(2);
             g_world_formation_unit_cycle_mode = 1;
             g_world_set_ability_list_open = 1;
-            world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
+            thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
             g_world_ability_panel_thread_params.style = 1;
             g_world_set_ability_cursor = 0xFF;
             world_menu_get_selection_record(g_world_set_ability_slot + 4, &x, &y, g_world_menu_entry_ids);
@@ -172,7 +173,7 @@ s32 world_formation_run_set_ability_menu(void) {
         g_world_status_display_thread_params.redraw_request = 1;
         world_menu_set_selection_record(g_world_set_ability_slot + 4, g_world_menu_cursor_position,
             g_world_menu_scroll_offset, g_world_menu_entry_ids);
-        world_thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
+        thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
         g_world_set_ability_list_close_pending = 0;
     }
     busy = 0;

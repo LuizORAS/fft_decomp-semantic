@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -49,7 +50,7 @@ void wldcore_proposition_handle_cancel_confirm_input(wldcore_menu_stack_record_t
     if (level->proposition_cancel_confirm.choice == 1) {
         goto close;
     }
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_CALL_BACK_ACCEPTED, 0);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_CALL_BACK_ACCEPTED, 0);
     level->proposition_cancel_confirm.confirmed = 1;
     g_main_active_propositions[level->proposition_cancel_confirm.proposition].flags
         |= WLDCORE_PROPOSITION_PROGRESS_RECALLED;

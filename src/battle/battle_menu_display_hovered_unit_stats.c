@@ -61,7 +61,7 @@ void battle_menu_display_hovered_unit_stats(
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     slide = 0x84;
     g_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
-    if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
+    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
         g_battle_menu_hovered_stats_frame_count++;
     }
     if (mode == UNIT_STATS_PANEL_ATTACK_TARGET) {
@@ -328,13 +328,13 @@ void battle_menu_display_hovered_unit_stats(
         battle_gfx_draw_or_append_gpu_primitive(&offs->a);
         thread_yield();
         g_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
-        if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
+        if (thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
             g_battle_menu_hovered_stats_frame_count++;
         }
     }
 exit:
     thread_yield();
-    if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
+    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_HOVERED_UNIT_STATS) {
         g_battle_menu_hovered_stats_frame_count = 0;
     }
     battle_gfx_free_tpage7_vram(&rects[0]);

@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /*
@@ -91,7 +92,7 @@ void world_menu_run_ability(void) {
                 g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
                 g_world_formation_current_menu = *selection + WORLD_FORMATION_MENU_ABILITY_SET;
                 if (g_world_formation_current_menu != WORLD_FORMATION_MENU_ABILITY_LEARN) {
-                    world_thread_start(WORLD_THREAD_SLOT_UPPER_MENU_CHILD, world_formation_ability_menu_idle_thread);
+                    thread_start(WORLD_THREAD_SLOT_UPPER_MENU_CHILD, world_formation_ability_menu_idle_thread);
                     world_menu_set_cursor_position(WORLD_MENU_CURSOR_SET_ABILITY_SLOT, 0);
                     world_menu_set_cursor_position(WORLD_MENU_CURSOR_REMOVE_ABILITY_SLOT, 0);
                 } else {
@@ -105,7 +106,7 @@ void world_menu_run_ability(void) {
     } else {
         if (g_world_ability_submenu_running == 0) {
             g_world_formation_current_menu = WORLD_FORMATION_MENU_ABILITY;
-            world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU_CHILD);
+            thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU_CHILD);
             value = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->identity.roster_slot;
             world_formation_build_record_list(0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
             g_world_formation_selected_unit_index = world_formation_find_index_by_roster_slot(value);

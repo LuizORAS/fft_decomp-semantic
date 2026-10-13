@@ -22,8 +22,8 @@ void require_overlay_run_helpmenu(void) {
     }
     menu_request_open_companion_executable(COMPANION_OVERLAY_HELPMENU);
     thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-    battle_thread_start(thread_id, helpmenu_menu_run_require_help);
-    battle_thread_wait_until_inactive(thread_id);
+    thread_start(thread_id, helpmenu_menu_run_require_help);
+    thread_wait_until_inactive(thread_id);
     g_menu_panel_status_animation[0] = 0;
     g_menu_panel_status_animation[1] = 0;
     thread_exit_current();

@@ -31,14 +31,14 @@ void option_entrypoint(s32 menu_type) {
     }
 
     if (menu_type != OPTION_MENU_DEAD_UNIT) {
-        battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
-        battle_thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL, 0, 0, 1);
-        battle_thread_set_parameters(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS, 0, 0, 1);
-        battle_thread_set_parameters(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS, 0, 0, 1);
-        battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_TILE_INFO_PANEL);
-        battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL);
-        battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS);
-        battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS);
+        thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
+        thread_set_parameters(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL, 0, 0, 1);
+        thread_set_parameters(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS, 0, 0, 1);
+        thread_set_parameters(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS, 0, 0, 1);
+        thread_wait_until_inactive(NATIVE_THREAD_SLOT_TILE_INFO_PANEL);
+        thread_wait_until_inactive(NATIVE_THREAD_SLOT_UNIT_SUMMARY_PANEL);
+        thread_wait_until_inactive(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS);
+        thread_wait_until_inactive(NATIVE_THREAD_SLOT_HOVERED_UNIT_STATS);
     }
 
     g_battle_menu_modal_open = 0;
@@ -47,12 +47,12 @@ void option_entrypoint(s32 menu_type) {
         s32 child_thread;
 
         script_pulse_tutorial_wait_value(0xfd);
-        battle_thread_start(g_native_current_thread_id - 1, option_menu_run_game_options);
+        thread_start(g_native_current_thread_id - 1, option_menu_run_game_options);
         child_thread = g_native_current_thread_id;
         menu->select_text_table = 1;
         menu->context = g_option_menu_entry_table;
-        battle_thread_set_parameters(child_thread - 1, menu, 0, 0);
-        battle_thread_wait_until_inactive(g_native_current_thread_id - 1);
+        thread_set_parameters(child_thread - 1, menu, 0, 0);
+        thread_wait_until_inactive(g_native_current_thread_id - 1);
         thread_exit_current();
     }
     if (menu_type == OPTION_MENU_AT_LIST) {

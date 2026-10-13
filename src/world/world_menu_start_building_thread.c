@@ -1,4 +1,5 @@
 #include "fft/battle_camera.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Start the help-menu thread in the menu-building slot when nothing prevents
@@ -16,7 +17,7 @@ void world_menu_start_building_thread(void) {
         && g_world_companion_overlay_state == COMPANION_OVERLAY_STATE_IDLE
         && world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0) {
         g_world_text_overlay_active = 1;
-        world_thread_start(NATIVE_THREAD_SLOT_MENU_BUILDING, world_menu_run_helpmenu_thread);
-        world_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_BUILDING, 0, 0, 0);
+        thread_start(NATIVE_THREAD_SLOT_MENU_BUILDING, world_menu_run_helpmenu_thread);
+        thread_set_parameters(NATIVE_THREAD_SLOT_MENU_BUILDING, 0, 0, 0);
     }
 }

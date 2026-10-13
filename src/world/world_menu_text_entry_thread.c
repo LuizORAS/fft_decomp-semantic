@@ -24,9 +24,9 @@ void world_menu_text_entry_thread(void) {
     binding = entry->context;
     text_thread = binding->text_thread_id;
     speaker_id = binding->speaker_id;
-    world_thread_start(text_thread, world_text_character_handling_thread);
-    world_thread_set_parameters(text_thread, second, text_id, speaker_id);
-    world_thread_wait_until_inactive(text_thread);
+    thread_start(text_thread, world_text_character_handling_thread);
+    thread_set_parameters(text_thread, second, text_id, speaker_id);
+    thread_wait_until_inactive(text_thread);
     *g_world_menu_list_controller_input = PSX_PAD_CIRCLE;
     while (1) {
         world_menu_handle_entry_confirm(entry, 0);

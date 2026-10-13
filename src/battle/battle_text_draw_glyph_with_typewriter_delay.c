@@ -152,7 +152,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
             g_battle_menu_slot_states[slot] = 0;
         } else if (delay >= 2) {
             for (i = 0; i < delay * (3 - g_script_event_speed); i++) {
-                if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+                if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                     break;
                 }
                 thread_wait_frames(1);
@@ -170,7 +170,7 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
             }
             if (g_battle_menu_slot_states[slot] >= g_battle_text_glyphs_per_wait) {
                 for (i = 0; i < 3 - g_script_event_speed; i++) {
-                    if (battle_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+                    if (thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
                         break;
                     }
                     thread_wait_frames(1);

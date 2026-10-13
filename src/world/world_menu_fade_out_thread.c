@@ -28,7 +28,7 @@ void world_menu_fade_out_thread(void) {
 
     menu_free_high_overlay();
     for (i = 2; i < 15; i++) {
-        world_thread_set_parameters(i, 0, 0, 1);
+        thread_set_parameters(i, 0, 0, 1);
     }
     for (i = 0; i < 0x100; i += 8) {
         g_world_screen_fade = 0xFF - i;

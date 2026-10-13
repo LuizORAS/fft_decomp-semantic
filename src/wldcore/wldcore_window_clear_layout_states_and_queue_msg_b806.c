@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Restore the bar list's palettes and cursor animation, then show its welcome text. */
@@ -18,5 +19,5 @@ void wldcore_window_clear_layout_states_and_queue_msg_b806(wldcore_menu_stack_re
     slot = level->list_window.main_window;
     g_wldcore_window_records[slot].anim_counter = 0;
     g_wldcore_window_records[slot].frame_index = 0;
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BAR_WELCOME, 0);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BAR_WELCOME, 0);
 }

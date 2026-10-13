@@ -193,8 +193,8 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                 && layout->columns.text_ids[0][entry->selected_index] != 0x7000) {
                 thread_yield();
                 sound_queue_sfx_cursor_move();
-                battle_thread_start(g_native_current_thread_id - 1, battle_menu_preview_ability_turn_at_list);
-                battle_thread_set_parameters(g_native_current_thread_id - 1,
+                thread_start(g_native_current_thread_id - 1, battle_menu_preview_ability_turn_at_list);
+                thread_set_parameters(g_native_current_thread_id - 1,
                     (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST], 0, 0);
                 column = 0;
                 while (1) {

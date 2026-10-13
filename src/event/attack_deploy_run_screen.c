@@ -80,12 +80,11 @@ void attack_deploy_run_screen(void) {
         }
     }
 ramza_placed:
-    battle_thread_start(ATTACK_THREAD_SLOT_DEPLOY_RENDER, attack_deploy_run_render_thread);
-    battle_thread_set_parameters(ATTACK_THREAD_SLOT_DEPLOY_RENDER, 0, 0, 0);
+    thread_start(ATTACK_THREAD_SLOT_DEPLOY_RENDER, attack_deploy_run_render_thread);
+    thread_set_parameters(ATTACK_THREAD_SLOT_DEPLOY_RENDER, 0, 0, 0);
     attack_deploy_select_unit_for_stats_display();
-    battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, attack_panel_run_unit_status_thread);
-    battle_thread_set_parameters(
-        NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (s32)&g_attack_status_display_thread_params, 0, 0);
+    thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, attack_panel_run_unit_status_thread);
+    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (s32)&g_attack_status_display_thread_params, 0, 0);
     transition = 0;
     for (g_attack_deploy_current_squad = 0;
         g_attack_deploy_current_squad < script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT);
@@ -121,7 +120,7 @@ ramza_placed:
         if (row < 5) {
             goto count_row;
         }
-        battle_thread_wait_until_inactive(ATTACK_THREAD_SLOT_ROSTER_STEP);
+        thread_wait_until_inactive(ATTACK_THREAD_SLOT_ROSTER_STEP);
         g_attack_deploy_pending_roster_index = -1;
         g_attack_deploy_cursor_column[0] = 2;
         g_attack_deploy_cursor_row[0] = 2;
@@ -148,10 +147,10 @@ ramza_placed:
             && (g_attack_deploy_roster_unit_deployable[g_attack_deploy_selected_roster_index] != 1
                 || g_attack_deploy_pending_roster_index != -1)
             && g_attack_deploy_pending_roster_index != g_attack_deploy_selected_roster_index) {
-            battle_thread_start(ATTACK_THREAD_SLOT_ROSTER_STEP, attack_deploy_select_next_roster_unit);
+            thread_start(ATTACK_THREAD_SLOT_ROSTER_STEP, attack_deploy_select_next_roster_unit);
         }
         if (transition == 1) {
-            battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
+            thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
             g_attack_deploy_grid_slide_x = 0x100;
             for (i = 0; i < 5; i++) {
                 if (g_attack_panel_status_animation[i] < 2) {
@@ -163,7 +162,7 @@ ramza_placed:
                 thread_yield();
             }
         } else if (transition == 2) {
-            battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
+            thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
             g_attack_deploy_grid_slide_x = -0x100;
             for (i = 0; i < 5; i++) {
                 if (g_attack_panel_status_animation[i] < 2) {
@@ -207,17 +206,17 @@ ramza_placed:
             g_attack_panel_status_animation[1] = 0;
             g_attack_panel_status_animation[3] = 0;
         }
-        battle_thread_start(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, attack_deploy_update_screen_graphics);
-        battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 0);
+        thread_start(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, attack_deploy_update_screen_graphics);
+        thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 0);
         while (1) {
             thread_yield();
             g_attack_deploy_selected_unit_deployed
                 = attack_deploy_is_roster_unit_deployed(g_attack_deploy_selected_roster_index);
             input = script_get_controller_input_pointer(0);
             if (*input & PSX_PAD_SELECT) {
-                battle_thread_start(ATTACK_THREAD_SLOT_SELECT_MENU, attack_deploy_run_select_menu);
-                battle_thread_set_parameters(ATTACK_THREAD_SLOT_SELECT_MENU, 1, 0, 0);
-                battle_thread_wait_until_inactive(ATTACK_THREAD_SLOT_SELECT_MENU);
+                thread_start(ATTACK_THREAD_SLOT_SELECT_MENU, attack_deploy_run_select_menu);
+                thread_set_parameters(ATTACK_THREAD_SLOT_SELECT_MENU, 1, 0, 0);
+                thread_wait_until_inactive(ATTACK_THREAD_SLOT_SELECT_MENU);
             }
             if (g_attack_panel_status_animation[2] < 2) {
                 if (g_attack_deploy_roster_id_by_tile[g_attack_deploy_cursor_row[g_attack_deploy_active_cursor]]
@@ -306,10 +305,9 @@ ramza_placed:
                 if (g_attack_deploy_deployed_unit_count == 0) {
                     g_sound_pending_sfx_id = MAIN_SFX_INVALID;
                     g_attack_deploy_menu_entries[2].text_id = 0x900b;
-                    battle_thread_start(ATTACK_THREAD_SLOT_NOTICE, battle_menu_icon_linked_entry_thread);
-                    battle_thread_set_parameters(
-                        ATTACK_THREAD_SLOT_NOTICE, (s32)&g_attack_deploy_menu_entries[2], 0, 0);
-                    battle_thread_wait_until_inactive(ATTACK_THREAD_SLOT_NOTICE);
+                    thread_start(ATTACK_THREAD_SLOT_NOTICE, battle_menu_icon_linked_entry_thread);
+                    thread_set_parameters(ATTACK_THREAD_SLOT_NOTICE, (s32)&g_attack_deploy_menu_entries[2], 0, 0);
+                    thread_wait_until_inactive(ATTACK_THREAD_SLOT_NOTICE);
                 } else {
                     g_sound_pending_sfx_id = MAIN_SFX_COMPLETE;
                     g_attack_panel_status_animation[4] = 7;
@@ -322,7 +320,7 @@ ramza_placed:
                                 g_attack_panel_status_animation[i] = 1;
                             }
                         }
-                        battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
+                        thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
                         for (i = 0; i < 0x100; i += 8) {
                             g_attack_deploy_grid_slide_x += 8;
                             thread_yield();
@@ -332,12 +330,11 @@ ramza_placed:
 
                         cursor = *deployed;
                         *deployed = 1;
-                        battle_thread_start(
-                            ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU, battle_menu_icon_linked_entry_thread);
-                        battle_thread_set_parameters(
+                        thread_start(ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU, battle_menu_icon_linked_entry_thread);
+                        thread_set_parameters(
                             ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU, (s32)&g_battle_menu_thread_menu_data[3], 0, 0);
-                        battle_thread_wait_until_inactive(ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU);
-                        battle_thread_wait_until_inactive(ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU_CHILD);
+                        thread_wait_until_inactive(ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU);
+                        thread_wait_until_inactive(ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU_CHILD);
                         *deployed = cursor;
                         if (g_attack_deploy_confirm_result != 0) {
                             continue;
@@ -365,7 +362,7 @@ ramza_placed:
                         g_attack_panel_status_animation[i] = 1;
                     }
                 }
-                battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
+                thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
                 for (i = 0; i < 0x100; i += 8) {
                     g_attack_deploy_grid_slide_x -= 8;
                     thread_yield();
@@ -393,10 +390,10 @@ ramza_placed:
                             } else {
                                 g_sound_pending_sfx_id = MAIN_SFX_INVALID;
                                 g_attack_deploy_menu_entries[2].text_id = 0x900c;
-                                battle_thread_start(ATTACK_THREAD_SLOT_NOTICE, battle_menu_icon_linked_entry_thread);
-                                battle_thread_set_parameters(
+                                thread_start(ATTACK_THREAD_SLOT_NOTICE, battle_menu_icon_linked_entry_thread);
+                                thread_set_parameters(
                                     ATTACK_THREAD_SLOT_NOTICE, (s32)&g_attack_deploy_menu_entries[2], 0, 0);
-                                battle_thread_wait_until_inactive(ATTACK_THREAD_SLOT_NOTICE);
+                                thread_wait_until_inactive(ATTACK_THREAD_SLOT_NOTICE);
                             }
                         } else {
                             g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
@@ -422,10 +419,10 @@ ramza_placed:
                                 && script_get_variable(EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD) == 1) {
                                 g_sound_pending_sfx_id = MAIN_SFX_INVALID;
                                 g_attack_deploy_menu_entries[2].text_id = 0x900d;
-                                battle_thread_start(ATTACK_THREAD_SLOT_NOTICE, battle_menu_icon_linked_entry_thread);
-                                battle_thread_set_parameters(
+                                thread_start(ATTACK_THREAD_SLOT_NOTICE, battle_menu_icon_linked_entry_thread);
+                                thread_set_parameters(
                                     ATTACK_THREAD_SLOT_NOTICE, (s32)&g_attack_deploy_menu_entries[2], 0, 0);
-                                battle_thread_wait_until_inactive(ATTACK_THREAD_SLOT_NOTICE);
+                                thread_wait_until_inactive(ATTACK_THREAD_SLOT_NOTICE);
                                 g_attack_deploy_active_cursor = 0;
                                 g_attack_deploy_cursor_column[0] = g_attack_deploy_cursor_column[1];
                                 g_attack_deploy_cursor_row[0] = g_attack_deploy_cursor_row[1];
@@ -486,28 +483,27 @@ ramza_placed:
                 if (g_attack_panel_status_animation[4] < 2) {
                     g_attack_panel_status_animation[4] = 1;
                 }
-                battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, attack_editor_run_numeric_thread);
-                battle_thread_set_parameters(
+                thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, attack_editor_run_numeric_thread);
+                thread_set_parameters(
                     NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (s32)g_attack_numeric_editor_thread_params, 0, 0);
-                battle_thread_start(
-                    NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, attack_panel_run_character_status_thread);
-                battle_thread_set_parameters(
+                thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, attack_panel_run_character_status_thread);
+                thread_set_parameters(
                     NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)g_attack_character_status_frame_config, 0, 0);
-                battle_thread_start(ATTACK_PROMPT_THREAD_SLOT_DETAIL_MARKER, attack_thread_wait_forever);
+                thread_start(ATTACK_PROMPT_THREAD_SLOT_DETAIL_MARKER, attack_thread_wait_forever);
                 do {
                     thread_yield();
                     if (*input & PSX_PAD_SELECT) {
-                        battle_thread_start(ATTACK_THREAD_SLOT_SELECT_MENU, attack_deploy_run_select_menu);
-                        battle_thread_set_parameters(ATTACK_THREAD_SLOT_SELECT_MENU, 0, 0, 0);
-                        battle_thread_wait_until_inactive(ATTACK_THREAD_SLOT_SELECT_MENU);
+                        thread_start(ATTACK_THREAD_SLOT_SELECT_MENU, attack_deploy_run_select_menu);
+                        thread_set_parameters(ATTACK_THREAD_SLOT_SELECT_MENU, 0, 0, 0);
+                        thread_wait_until_inactive(ATTACK_THREAD_SLOT_SELECT_MENU);
                     }
                     attack_deploy_handle_roster_navigation_input();
                 } while (!(*input & PSX_PAD_CROSS));
                 g_sound_pending_sfx_id = MAIN_SFX_CANCEL;
-                battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
-                battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
-                battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
-                battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+                thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+                thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
+                thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+                thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
                 script_set_event_speed(1);
             }
             if (*input & PSX_PAD_TRIANGLE) {
@@ -521,15 +517,15 @@ ramza_placed:
                             [g_attack_deploy_cursor_row[g_attack_deploy_active_cursor]]
                             [g_attack_deploy_cursor_column[g_attack_deploy_active_cursor]];
                         if (g_attack_deploy_selected_roster_index != g_attack_deploy_pending_roster_index) {
-                            battle_thread_start(ATTACK_THREAD_SLOT_ROSTER_STEP, attack_deploy_select_next_roster_unit);
-                            battle_thread_wait_until_inactive(ATTACK_THREAD_SLOT_ROSTER_STEP);
+                            thread_start(ATTACK_THREAD_SLOT_ROSTER_STEP, attack_deploy_select_next_roster_unit);
+                            thread_wait_until_inactive(ATTACK_THREAD_SLOT_ROSTER_STEP);
                         } else {
                             g_attack_deploy_pending_roster_index = -1;
                         }
                     }
                 }
             }
-            battle_thread_suspend(ATTACK_PROMPT_THREAD_SLOT_DETAIL_MARKER);
+            thread_suspend(ATTACK_PROMPT_THREAD_SLOT_DETAIL_MARKER);
         }
         if (g_attack_deploy_deployed_unit_count >= g_attack_deploy_fieldable_unit_count) {
             break;
@@ -537,7 +533,7 @@ ramza_placed:
     }
     thread_wait_frames(0x20);
     g_attack_deploy_menu_state = ATTACK_DEPLOY_MENU_CLOSED;
-    battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
+    thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 1);
     thread_yield();
     for (i = 0; i < 0x100; i += 2) {
         g_attack_status_display_offset_y[0] = -i;
@@ -645,9 +641,9 @@ ramza_placed:
     }
     map_mark_data_load_complete();
     script_set_variable(EVENT_SCRIPT_VAR_DEPLOYED_UNIT_COUNT, count);
-    battle_thread_start(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, attack_map_show_title);
-    battle_thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 0);
-    battle_thread_wait_until_inactive(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS);
+    thread_start(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, attack_map_show_title);
+    thread_set_parameters(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS, 0, 0, 0);
+    thread_wait_until_inactive(ATTACK_THREAD_SLOT_SCREEN_GRAPHICS);
     g_sound_music_volume_transition_request = 0x1e0000;
     thread_wait_frames(0x20);
     g_battle_screen_fade = 0;
@@ -655,9 +651,9 @@ ramza_placed:
         thread_yield();
         g_battle_screen_fade += 4;
     } while (g_battle_screen_fade < 0x100);
-    battle_thread_set_parameters(ATTACK_THREAD_SLOT_DEPLOY_RENDER, 0, 0, 1);
-    battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
-    battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS, 0, 0, 1);
+    thread_set_parameters(ATTACK_THREAD_SLOT_DEPLOY_RENDER, 0, 0, 1);
+    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
+    thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS, 0, 0, 1);
     thread_wait_frames(3);
     g_battle_screen_fade = 0;
     script_set_event_speed(1);

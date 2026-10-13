@@ -14,7 +14,7 @@ void battle_menu_preview_attack_target_stats(void) {
 
     if (g_native_thread_contexts[NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS].task_id
         != NATIVE_THREAD_TASK_ATTACK_CASTER_STATS) {
-        battle_thread_wait_until_inactive(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS);
+        thread_wait_until_inactive(NATIVE_THREAD_SLOT_RIGHT_UNIT_STATS);
     }
     thread_yield();
     thread_yield();

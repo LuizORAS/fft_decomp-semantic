@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /*
@@ -26,7 +27,7 @@ s32 world_menu_run_best_fit_equipment(void) {
         world_menu_toggle_stat_preview_panel_thread(1);
         g_world_preview_stats_thread_params.redraw_request = 1;
         g_world_status_display_thread_params.redraw_request = 1;
-        world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
+        thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
         g_world_formation_unit_cycle_mode = 1;
         g_world_item_best_remove_initialized = 1;
         g_world_menu_sound_muted = 1;
@@ -58,7 +59,7 @@ s32 world_menu_run_best_fit_equipment(void) {
             world_formation_save_records_to_party_data();
             world_formation_stage_selected_unit();
         }
-        world_thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
+        thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
         g_world_menu_sound_muted = 0;
         return 0;
     }

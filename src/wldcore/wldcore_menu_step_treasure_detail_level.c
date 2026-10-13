@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/libgpu.h"
 #include "psx/libgs.h"
@@ -118,7 +119,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_variable_detail_level_
                     wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
                 }
                 g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
-                world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+                thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
                 wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
             }
         }

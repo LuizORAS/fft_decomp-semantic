@@ -44,8 +44,8 @@ void require_reward_run_gil_ticker(void) {
         script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) + g_require_reward_war_trophy_search_result.level_sum_money);
     money = g_require_reward_war_trophy_search_result.level_sum_money;
     thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-    battle_thread_start(thread_id, require_condition_run_special_thread);
-    battle_thread_set_parameters(thread_id, 2, 0, 0);
+    thread_start(thread_id, require_condition_run_special_thread);
+    thread_set_parameters(thread_id, 2, 0, 0);
     g_menu_input_controller = script_get_controller_input_pointer(0);
     /* `i = 0` here (not before the script calls) lets sched1 keep
      * `li a0,0x2c` above the money load. */
@@ -241,7 +241,7 @@ skipped:
         }
         i++;
     }
-    battle_thread_set_parameters(thread_id, 0, 0, 1);
+    thread_set_parameters(thread_id, 0, 0, 1);
     i++;
     pass = 0x80;
     do {
@@ -274,6 +274,6 @@ skipped:
         pass -= 12;
         i++;
     } while (pass >= 0x30);
-    battle_thread_wait_until_inactive(thread_id);
+    thread_wait_until_inactive(thread_id);
     thread_exit_current();
 }

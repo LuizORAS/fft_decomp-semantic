@@ -16,8 +16,7 @@ void world_menu_start_mini_menu_display_thread(void) {
     }
     g_world_menu_current_id = BATTLE_MENU_ID_MINI_MENU;
     g_world_menu_thread_menu_data = g_world_menu_system_entries;
-    world_thread_start(NATIVE_THREAD_SLOT_MENU, world_menu_display_triangle_selection);
-    world_thread_set_parameters(
-        NATIVE_THREAD_SLOT_MENU, (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_MINI_MENU], 0, 0);
+    thread_start(NATIVE_THREAD_SLOT_MENU, world_menu_display_triangle_selection);
+    thread_set_parameters(NATIVE_THREAD_SLOT_MENU, (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_MINI_MENU], 0, 0);
     g_native_thread_contexts[NATIVE_THREAD_SLOT_MENU].task_id = NATIVE_THREAD_TASK_MINI_MENU;
 }

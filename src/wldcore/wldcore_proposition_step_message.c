@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -12,12 +13,12 @@ s32 wldcore_proposition_step_message(wldcore_proposition_report_level_t* state, 
         s32* party_index;
         state->phase = 1;
         if (!world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE))
-            world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+            thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
         party_index = &g_wldcore_proposition_report.excluded_party_index;
         g_text_substitution_values[0] = *party_index + TEXT_ID_UNIT_NAME_BASE;
         world_script_set_variable(
             EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, world_get_party_unit_formation_sprite(*party_index));
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,
             wldcore_proposition_adjust_message_index(message, *party_index) + TEXT_ID_WORLD_MESSAGE_BASE, 0);
     } else if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
         if (world_menu_get_event_state_flag()) {

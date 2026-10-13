@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -111,7 +112,7 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
             g_wldcore_menu_stack_depth = depth - 1;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].window_pair_render.first_window]
                 .palette = 0;
-            world_thread_resume(WLDCORE_THREAD_SLOT_MESSAGE);
+            thread_resume(WLDCORE_THREAD_SLOT_MESSAGE);
             break;
         }
         return;

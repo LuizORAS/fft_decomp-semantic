@@ -1,5 +1,6 @@
 #include "fft/event_equip.h"
 #include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/libc.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -65,7 +66,7 @@ s32 equip_menu_run_equip_mode(void) {
                 unit, slot, g_equip_equip_item_slot, g_equip_item_list_entries, ITEM_LIST_MODE_MARK_UNEQUIPPABLE);
             g_equip_equip_item_list_open = 1;
             g_equip_equipment_panel_style = 1;
-            battle_thread_suspend(EQUIP_THREAD_SLOT_COMMAND_MENU);
+            thread_suspend(EQUIP_THREAD_SLOT_COMMAND_MENU);
             equip_menu_restore_list_selection(g_equip_equip_item_slot != 0 ? g_equip_equip_item_slot - 1 : 0, &selected,
                 &scroll, g_equip_item_list_entries);
             equip_menu_init_scrollable_list(
@@ -131,7 +132,7 @@ s32 equip_menu_run_equip_mode(void) {
         g_equip_equip_item_list_open = 0;
         g_equip_equip_item_preview_active = 0;
         g_equip_unit_status_panel_redraw = 1;
-        battle_thread_resume(EQUIP_THREAD_SLOT_COMMAND_MENU);
+        thread_resume(EQUIP_THREAD_SLOT_COMMAND_MENU);
         equip_menu_set_selection_record(g_equip_equip_item_slot != 0 ? g_equip_equip_item_slot - 1 : 0,
             g_equip_menu_selected_list_index, g_equip_menu_scroll_base_index, g_equip_item_list_entries);
         g_equip_equip_item_list_refresh = 0;

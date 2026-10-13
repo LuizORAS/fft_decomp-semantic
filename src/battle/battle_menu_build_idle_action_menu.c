@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
+#include "fft/thread.h"
 
 enum {
     IDLE_ACTION_MENU_ENTRY_COUNT = 0x34,
@@ -54,8 +55,8 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
             *selected_index = 0;
             g_battle_menu_status_scroll_offset = 0;
             battle_menu_clear_entry_selections();
-            battle_thread_start(NATIVE_THREAD_SLOT_MENU_BUILDING, battle_menu_start_entry_thread);
-            battle_thread_set_parameters(NATIVE_THREAD_SLOT_MENU_BUILDING, menu_id, 0, 0);
+            thread_start(NATIVE_THREAD_SLOT_MENU_BUILDING, battle_menu_start_entry_thread);
+            thread_set_parameters(NATIVE_THREAD_SLOT_MENU_BUILDING, menu_id, 0, 0);
         }
         g_battle_menu_building_thread_started = 0;
     }

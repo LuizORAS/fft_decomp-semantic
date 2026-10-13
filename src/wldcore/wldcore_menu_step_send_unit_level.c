@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -91,7 +92,7 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         level->mode = WLDCORE_SEND_UNIT_MODE_CANCEL;
     suspend:
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         g_wldcore_window_record_count -= 7;
         g_wldcore_window_render_record_count -= 5;
         g_wldcore_window_render_object_count -= 0xC;
@@ -99,8 +100,8 @@ void wldcore_menu_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
         return;
     }
     if (buttons & PSX_PAD_SQUARE) {
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         g_wldcore_window_records[level->list_frame.window_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_render_records[level->list_frame.render_index].flags |= WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_window_records[level->frame_window_a].flags |= WORLD_RENDER_RECORD_HIDDEN;
