@@ -16,9 +16,9 @@ void camera_set_focus_and_cursor_tile(const SVECTOR* coords, const SVECTOR* rota
     main_util_set_vector(&g_camera_current_real_coords, -coords->vx << 12, -coords->vy << 12, -coords->vz << 12);
     main_util_set_svector(&g_camera_render_state, rotation->vx & 0x1fff, rotation->vy & 0x1fff, rotation->vz & 0x1fff);
     g_battle_cursor_z = 0;
-    tile_x = g_camera_current_real_coords.vx / 0x1c000;
+    tile_x = g_camera_current_real_coords.vx / (MAP_TILE_SIZE * ONE);
     g_battle_cursor_x = tile_x;
-    tile_y = g_camera_current_real_coords.vz / 0x1c000;
+    tile_y = g_camera_current_real_coords.vz / (MAP_TILE_SIZE * ONE);
     g_battle_cursor_y = tile_y;
-    g_camera_current_real_coords.vy = -map_get_tile_data_pointer(tile_x, tile_y, 0)->height * 0xc000;
+    g_camera_current_real_coords.vy = -map_get_tile_data_pointer(tile_x, tile_y, 0)->height * (MAP_HEIGHT_STEP * ONE);
 }

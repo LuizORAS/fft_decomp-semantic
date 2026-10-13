@@ -5,10 +5,10 @@
 
 /* Advance a moving unit by one frame of its step: add the per-frame velocity to
  * its real (Q12) position, keep the height consistent with the ground for the
- * stage in step_phase, and refresh the screen coordinates. A mount also places
- * its rider, 10 screen units above it.
+ * stage in step_phase, and refresh the integer world coordinates. A mount also places
+ * its rider, 10 world units above it.
  *
- * The tile under the new position is real / 0x1c000 (28 screen units per tile);
+ * The tile under the new position is real / 0x1c000 (28 world units per tile);
  * on entering the destination tile the unit takes the destination's layer. Height
  * is negative upward. ground_z is the ground under the unit and move_ground_z the
  * ground at the destination tile. Per stage:

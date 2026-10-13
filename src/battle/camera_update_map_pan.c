@@ -19,57 +19,57 @@ void camera_update_map_pan(void) {
         switch (camera_get_input_direction(CAMERA_INPUT_HELD)) {
         case BATTLE_FACING_NORTH:
             coord = &g_camera_current_real_coords.vz;
-            *coord += 0x4000;
+            *coord += 4 * ONE;
             break;
         case BATTLE_FACING_SOUTH:
             coord = &g_camera_current_real_coords.vz;
-            *coord -= 0x4000;
+            *coord -= 4 * ONE;
             break;
         case BATTLE_FACING_WEST:
             coord = &g_camera_current_real_coords.vx;
-            *coord -= 0x4000;
+            *coord -= 4 * ONE;
             break;
         case BATTLE_FACING_EAST:
             coord = &g_camera_current_real_coords.vx;
-            *coord += 0x4000;
+            *coord += 4 * ONE;
             break;
         case BATTLE_FACING_NORTH_EAST: {
             s32* y = &g_camera_current_real_coords.vz;
-            *y += 0x4000;
-            g_camera_current_real_coords.vx += 0x4000;
+            *y += 4 * ONE;
+            g_camera_current_real_coords.vx += 4 * ONE;
             break;
         }
         case BATTLE_FACING_NORTH_WEST: {
             s32* y = &g_camera_current_real_coords.vz;
-            *y += 0x4000;
-            g_camera_current_real_coords.vx -= 0x4000;
+            *y += 4 * ONE;
+            g_camera_current_real_coords.vx -= 4 * ONE;
             break;
         }
         case BATTLE_FACING_SOUTH_EAST: {
             s32* y = &g_camera_current_real_coords.vz;
-            *y -= 0x4000;
-            g_camera_current_real_coords.vx += 0x4000;
+            *y -= 4 * ONE;
+            g_camera_current_real_coords.vx += 4 * ONE;
             break;
         }
         case BATTLE_FACING_SOUTH_WEST: {
             s32* y = &g_camera_current_real_coords.vz;
-            *y -= 0x4000;
-            g_camera_current_real_coords.vx -= 0x4000;
+            *y -= 4 * ONE;
+            g_camera_current_real_coords.vx -= 4 * ONE;
             break;
         }
         }
         {
             s32* x = &g_camera_current_real_coords.vx;
-            limit = (g_map_max_x * 0x1C000) + 0x70000;
+            limit = (g_map_max_x * (MAP_TILE_SIZE * ONE)) + 4 * MAP_TILE_SIZE * ONE;
             if (limit < *x)
                 *x = limit;
-            if (*x < -0x70000)
-                *x = -0x70000;
+            if (*x < -(4 * MAP_TILE_SIZE * ONE))
+                *x = -(4 * MAP_TILE_SIZE * ONE);
         }
-        limit = (g_map_max_y * 0x1C000) + 0x70000;
+        limit = (g_map_max_y * (MAP_TILE_SIZE * ONE)) + 4 * MAP_TILE_SIZE * ONE;
         if (limit < g_camera_current_real_coords.vz)
             g_camera_current_real_coords.vz = limit;
-        if (g_camera_current_real_coords.vz < -0x70000)
-            g_camera_current_real_coords.vz = -0x70000;
+        if (g_camera_current_real_coords.vz < -(4 * MAP_TILE_SIZE * ONE))
+            g_camera_current_real_coords.vz = -(4 * MAP_TILE_SIZE * ONE);
     }
 }

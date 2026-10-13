@@ -20,7 +20,7 @@ s32 camera_calculate_cursor_tile_vector_normal(void) {
     tile = map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z ^ 1);
     depth = tile->depth_half_height;
-    height = -((tile->height + depth.depth) * 12 + depth.half_height * 6);
+    height = -((tile->height + depth.depth) * MAP_HEIGHT_STEP + depth.half_height * (MAP_HEIGHT_STEP / 2));
     main_util_set_svector(&tile_position, g_battle_cursor_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2), height,
         g_battle_cursor_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
     setVector(&delta, tile_position.vx - g_camera_current_real_coords.vx / ONE,
