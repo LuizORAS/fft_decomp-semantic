@@ -253,7 +253,6 @@ extern s32 g_bunit_status_display_redraw_request;
 extern u32 g_bunit_status_display_thread_params;
 
 void bunit_menu_equipment_and_ability_panel_thread(void);
-void bunit_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
 void bunit_panel_toggle_comparison_status_thread(s32 enable);
 void bunit_panel_toggle_equipment_and_numeric_editor_threads(s32 enable);
 void bunit_panel_toggle_unit_status_thread(s32 enable);
@@ -407,8 +406,6 @@ void bunit_menu_run_reorder_list(void);
 s32 bunit_menu_run_unit_list_frame(void);
 menu_instruction_t* bunit_menu_script_draw_formatted_number(menu_instruction_t* instruction);
 void bunit_menu_scroll_list_by_page(bunit_menu_vertical_scroll_direction_e direction, const menu_instruction_t* list);
-void bunit_menu_select_primitive_color_palette(
-    menu_palette_primitives_t* primitives, const menu_status_thread_t* thread);
 void bunit_menu_set_palette_mode(s32 mode);
 void bunit_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_base_index, s16* entries);
 s32 bunit_menu_set_selection_value(u8 index, s16 value);
@@ -575,7 +572,6 @@ extern s8 g_bunit_gfx_transition_frame;
 extern s16 g_bunit_gfx_window_zoom_percent[];
 extern u8 g_bunit_sprite_cell_sizes[][2];
 
-void bunit_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 void bunit_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,

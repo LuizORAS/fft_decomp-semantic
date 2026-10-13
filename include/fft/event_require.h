@@ -244,7 +244,6 @@ extern menu_status_thread_t g_require_status_display_thread_params;
 
 void require_panel_copy_battle_stats_to_gauges(struct battle_stats* unit, menu_unit_status_record_t* output);
 void require_panel_run_character_status_thread(void);
-void require_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
 void require_panel_set_transition_value(s32 value);
 void require_panel_run_unit_status_thread(void);
 
@@ -288,8 +287,6 @@ extern s16 g_require_message_menu_result;
 
 void require_menu_icon_strip_thread(void);
 /* find (BATTLE) */
-void require_menu_select_primitive_color_palette(
-    menu_palette_primitives_t* output, const menu_status_thread_t* context);
 void require_menu_wait_selection_threads(void);
 
 /* portraits */
@@ -334,7 +331,6 @@ void require_gfx_init_poly_gt4_array_8(s32 x, s32 y);
 void require_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet);
 void require_gfx_scale_poly_gt4_vertex_colors(
     const require_display_condition_colors_t* colors, s32 scale, POLY_GT4* poly);
-void require_gfx_set_formation_icon_uv(POLY_FT4* poly, s32 index);
 
 /* text */
 /* Section offsets of the REQUIRE text file, relative to g_require_text_data (0x80 bytes before it). */

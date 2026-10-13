@@ -1,6 +1,7 @@
 #include "fft/battle_script.h"
 #include "fft/event_debugchr.h"
 #include "fft/gfx.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -127,7 +128,7 @@ void debugchr_editor_run_numeric_thread(void) {
             buffer->sprites[15].clut = 0x7FFC;
             buffer->sprites[16].clut = 0x7FFC;
         }
-        debugchr_menu_select_primitive_color_palette(&buffer->numeric_frame, thread);
+        menu_select_status_primitive_color_palette(&buffer->numeric_frame, thread);
         if (frame < 13) {
             battle_gfx_draw_or_append_gpu_primitive(&buffer->portrait.areas[1]);
         }

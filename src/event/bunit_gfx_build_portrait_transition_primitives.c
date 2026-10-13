@@ -1,5 +1,6 @@
 #include "fft/event_bunit.h"
 #include "fft/gfx.h"
+#include "fft/menu.h"
 
 /*
  * Build the primitives of the status banner's portrait cross-fade. BUNIT
@@ -30,19 +31,19 @@ void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
     }
 
     if (*transition == 0) {
-        bunit_gfx_build_portrait_poly_ft4(*first_portrait, poly);
+        menu_build_unflagged_portrait_poly(*first_portrait, poly);
         return;
     }
     if (*transition == 1) {
-        bunit_gfx_build_portrait_poly_ft4(*second_portrait, poly);
+        menu_build_unflagged_portrait_poly(*second_portrait, poly);
         *transition += 1;
         return;
     }
     if (*transition < 4) {
-        bunit_gfx_build_portrait_poly_ft4(*second_portrait, poly);
+        menu_build_unflagged_portrait_poly(*second_portrait, poly);
         gfx_set_clut_rect_from_id(&second_rect, poly->clut);
         poly++;
-        bunit_gfx_build_portrait_poly_ft4(*first_portrait, poly);
+        menu_build_unflagged_portrait_poly(*first_portrait, poly);
         gfx_set_clut_rect_from_id(&first_rect, poly->clut);
         StoreImage(&first_rect, (u32*)palettes[0]);
         StoreImage(&second_rect, (u32*)palettes[1]);
@@ -60,7 +61,7 @@ void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
         }
 
         i = *transition - 4;
-        bunit_gfx_build_portrait_poly_ft4(*second_portrait, poly);
+        menu_build_unflagged_portrait_poly(*second_portrait, poly);
         if (direction == 1) {
             gfx_clip_portrait_poly_from_right(poly, g_bunit_gfx_portrait_transition_offsets[i]);
         } else {
@@ -68,7 +69,7 @@ void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
         }
         poly++;
 
-        bunit_gfx_build_portrait_poly_ft4(*first_portrait, poly);
+        menu_build_unflagged_portrait_poly(*first_portrait, poly);
         if (direction == 1) {
             gfx_clip_portrait_poly_from_left(poly, 0x1f - g_bunit_gfx_portrait_transition_offsets[i]);
         } else {
@@ -76,7 +77,7 @@ void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
         }
         poly++;
 
-        bunit_gfx_build_portrait_poly_ft4(*second_portrait, poly);
+        menu_build_unflagged_portrait_poly(*second_portrait, poly);
         poly->tpage = (poly->tpage & 0xff9f) | 0x20;
         poly->clut = GetClut(second_rect.x, second_rect.y);
         SetShadeTex(poly, 0);
@@ -88,7 +89,7 @@ void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s3
         }
         poly++;
 
-        bunit_gfx_build_portrait_poly_ft4(*first_portrait, poly);
+        menu_build_unflagged_portrait_poly(*first_portrait, poly);
         poly->tpage = (poly->tpage & 0xff9f) | 0x20;
         poly->clut = GetClut(first_rect.x, first_rect.y);
         SetShadeTex(poly, 0);

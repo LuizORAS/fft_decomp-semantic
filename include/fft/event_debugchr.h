@@ -103,7 +103,6 @@ extern RECT g_debugchr_panel_text_upload_rect_b;
 extern menu_status_thread_t g_debugchr_status_display_thread_params;
 
 void debugchr_panel_run_character_status_thread(void);
-void debugchr_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
 void debugchr_panel_run_unit_status_thread(void);
 
 /* numeric editor */
@@ -134,9 +133,6 @@ extern s32 g_debugchr_menu_indicator_fade_work[2];
 extern s32 g_debugchr_menu_indicator_packet_index[2];
 extern s32 g_debugchr_menu_indicator_state[2];
 
-void debugchr_menu_select_primitive_color_palette(
-    menu_palette_primitives_t* output, const menu_status_thread_t* context);
-
 /* graphics */
 extern const u16 g_debugchr_gfx_draw_area_scale_percent[12];
 extern RECT g_debugchr_gfx_draw_area_template;
@@ -149,7 +145,6 @@ extern point16_t g_debugchr_gfx_scaled_sprite_scale[];
 extern point16_t g_debugchr_gfx_scaled_sprite_texture_page;
 extern sprite_sheet_frame_t g_debugchr_gfx_scaled_sprite_uv_rects[];
 
-void debugchr_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 void debugchr_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 void debugchr_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,

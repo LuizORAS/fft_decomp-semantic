@@ -1,10 +1,10 @@
-#include "fft/event_require.h"
-#include "psx/types.h"
+#include "fft/battle_event.h"
+#include "fft/menu.h"
 
 /* The full panel's SPRTs begin at +0x24. The CLUT walks use pointer
  * arithmetic to keep the target's base-biased pointers; SetShadeTex uses a
  * subscript to retain its separate integer offset. */
-void require_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state) {
+void menu_set_status_panel_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state) {
     s32 i;
     s32 clut;
 

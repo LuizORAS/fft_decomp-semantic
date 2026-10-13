@@ -250,7 +250,6 @@ extern u8 g_equip_unit_status_panel_params[];
 extern s32 g_equip_unit_status_panel_redraw;
 
 void equip_panel_run_equipment_list_thread(void);
-void equip_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
 void equip_panel_toggle_equipment_threads(s32 enable);
 void equip_panel_toggle_item_numeric_thread(s32 enable);
 void equip_panel_toggle_numeric_editor_thread(s32 enable);
@@ -399,8 +398,6 @@ s32 equip_menu_run_equip_mode(void);
 s32 equip_menu_run_remove_mode(void);
 s32 equip_menu_run_slot_item_browser(void);
 void equip_menu_scroll_list_by_page(s32 direction, const menu_instruction_t* menu);
-void equip_menu_select_primitive_color_palette(
-    menu_palette_primitives_t* primitives, const menu_status_thread_t* thread);
 void equip_menu_set_palette_mode(s32 mode);
 void equip_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_index, s16* items);
 s32 equip_menu_set_selection_value(u8 index, s16 value);
@@ -545,7 +542,6 @@ extern s8 g_equip_gfx_transition_frame;
 extern s16 g_equip_gfx_window_zoom_percent[];
 extern s8 g_equip_gfx_zoom_draw_area_active;
 
-void equip_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 void equip_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 void equip_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,

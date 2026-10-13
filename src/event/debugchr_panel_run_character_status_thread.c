@@ -143,8 +143,8 @@ void debugchr_panel_run_character_status_thread(void) {
         screen->draw_offsets[1].position.x = -0x80;
         screen->draw_offsets[1].position.y = g_debugchr_gfx_draw_offset_y;
         SetDrawOffset(&screen->draw_offsets[1].packet, (u16*)&screen->draw_offsets[1].position);
-        debugchr_panel_set_primitive_colors(screen, thread);
-        debugchr_menu_select_primitive_color_palette(&screen->numeric_frame, thread);
+        menu_set_status_panel_primitive_colors(screen, thread);
+        menu_select_status_primitive_color_palette(&screen->numeric_frame, thread);
         if (frame < 13) {
             battle_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
         }

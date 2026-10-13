@@ -195,7 +195,6 @@ extern u8 g_attack_monster_formation_sprite_table[20]; /* indexed by sprite code
 
 void attack_gfx_build_formation_sprites(void);
 void attack_gfx_prepare_formation_sprites(void);
-void attack_gfx_set_formation_icon_uv(POLY_FT4* primitive, s32 icon_id);
 
 /* map */
 extern s32 g_attack_map_title_closing_past_midpoint;
@@ -282,7 +281,6 @@ extern s32 g_attack_status_display_thread_params;
 
 void attack_gfx_build_shaded_panel_strips(POLY_GT4* polys, s32 width, s32 shade, s32 reverse);
 void attack_panel_run_character_status_thread(void);
-void attack_panel_set_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
 void attack_panel_run_unit_status_thread(void);
 
 /* numeric editor */
@@ -321,9 +319,6 @@ extern s32 g_attack_menu_indicator_brightness[2];
 extern s32 g_attack_menu_indicator_fade_work[2];
 extern s32 g_attack_menu_indicator_packet_index[2];
 extern s32 g_attack_menu_indicator_state[2];
-
-void attack_menu_select_primitive_color_palette(
-    menu_palette_primitives_t* primitives, const menu_status_thread_t* thread);
 
 /* graphics */
 extern const u16 g_attack_gfx_draw_area_scale_percent[12];

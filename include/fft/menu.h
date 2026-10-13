@@ -118,6 +118,8 @@ enum {
 };
 typedef char menu_portrait_sheet_size_must_be_32768[(sizeof(menu_portrait_sheet_t) == 32768) ? 1 : -1];
 
+void menu_build_unflagged_portrait_poly(s32 portrait_id, POLY_FT4* poly);
+
 /* status panels */
 /* Battle menu status and character-editor panel records. The EVENT overlays
  * (ATTACK, BUNIT, DEBUGCHR, EQUIP, REQUIRE) each link their own copy of the
@@ -404,6 +406,11 @@ void menu_clear_stat_preview(menu_unit_status_record_t* summary, menu_status_pan
 void menu_init_status_panel_primitives(menu_status_panel_buffer_t* menu);
 void menu_subtract_scaled_stat_preview(menu_status_panel_slot_storage_t* out,
     const menu_status_panel_slot_storage_t* scaled, const menu_status_panel_slot_storage_t* base, s32 scale);
+
+void menu_select_status_primitive_color_palette(
+    menu_palette_primitives_t* primitives, const menu_status_thread_t* thread);
+
+void menu_set_status_panel_primitive_colors(menu_status_panel_buffer_t* primitives, const menu_status_thread_t* state);
 
 /* menu commands */
 /* Per-skillset menu behavior stored at 0x80065cb4. Values select specialized
