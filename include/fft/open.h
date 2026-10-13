@@ -81,7 +81,7 @@ extern s32 g_open_movie_video_end_frame; /* -1: none */
 extern u32 g_open_movie_mdec_output_buffer_0[];
 extern u32 g_open_movie_mdec_output_buffer_1[];
 extern open_movie_mdec_stream_state_t g_open_movie_mdec_stream_state;
-extern s32 g_open_movie_stream_status; /* open_movie_stream_status_e */
+extern open_movie_stream_status_e g_open_movie_stream_status;
 extern s32 g_open_movie_width;
 
 /* OPEN.BIN interfaces shared across its reconstructed translation units. */
