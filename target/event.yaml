@@ -367,7 +367,7 @@ functions:
   - {addr: 0x801c7278, size: 72, name: bunit_job_calculate_and_store_unlocks, hash: 79ecd32bffad7458}
   - {addr: 0x801c72c0, size: 352, name: bunit_job_build_unit_job_list, hash: 0372cf84313e0cb9}
   - {addr: 0x801c7420, size: 36, name: bunit_job_get_skillset, hash: 72f6f53360f055dc}
-  - {addr: 0x801c7444, size: 648, name: bunit_create_ability_list, hash: 373b01e6f8a27498}
+  - {addr: 0x801c7444, size: 648, name: bunit_ability_build_list, hash: 373b01e6f8a27498}
   - {addr: 0x801c76cc, size: 444, name: bunit_gfx_submit_frame_and_swap_buffers, hash: 03562779b98bb33c}
   - {addr: 0x801c7888, size: 1560, name: bunit_gfx_init_packet_pools, hash: 534a0c774b97dee2}
   - {addr: 0x801c7ea0, size: 1384, name: bunit_gfx_init_double_packet_buffers, hash: a4cfeb32963dd7b9}
@@ -454,7 +454,7 @@ functions:
   - {addr: 0x801cce74, size: 24, name: bunit_ability_is_movement_tab, hash: 6d7998639c827ca2}
   - {addr: 0x801cce8c, size: 36, name: bunit_ability_is_learned, hash: 42eb607a71b8516a}
   - {addr: 0x801cceb0, size: 196, name: bunit_menu_update_job, hash: 3a1484828be00e47}
-  - {addr: 0x801ccf74, size: 976, name: bunit_run_ability_list_menu, hash: 4b1c6e2d1806893f}
+  - {addr: 0x801ccf74, size: 976, name: bunit_ability_run_list_menu, hash: 4b1c6e2d1806893f}
   - {addr: 0x801cd344, size: 256, name: bunit_gfx_enqueue_tile, hash: 50c95427e7c5d200}
   - {addr: 0x801cd444, size: 460, name: bunit_gfx_enqueue_gouraud_quad, hash: 8f11049e7f2e617c}
   - {addr: 0x801cd610, size: 632, name: bunit_gfx_enqueue_textured_quad_list, hash: 89e1989b186692ef}

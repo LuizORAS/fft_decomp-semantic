@@ -1,12 +1,3 @@
-/* Initialize the unit-list gfx capacities and run the BUNIT menu frame loop
- * until the list closes.
- *
- * The capacity stores follow the shared overlay gfx-init order (compare
- * jobstts_entrypoint): 0x1e is first stored just before the 0x3c store, which
- * puts its single-set `li` between the 0x1f4 `li` and its store, in $v1. The
- * globals must not be volatile here: sched2 hoists the 0x40/0x1f4/0x3c stores
- * above the zero stores, as in the target.
- */
 #include "fft/event_bunit.h"
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
@@ -41,6 +32,18 @@ extern u16 g_bunit_gfx_draw_mode_capacity;
 
 typedef struct bunit_gfx_frame_buffer bunit_gfx_frame_buffer_t;
 
+/* Run the Unit List screen (BUNIT.OUT, the battle mini menu's Unit List row, started by
+ * battle_script_run_event_frame for companion overlay state BUNIT): set up the packet pools, load the
+ * screen's VRAM images and fade in, then loop a frame at a time (input, the help cursor Select starts, the
+ * job page or the unit list and its grid, the unit browser, the window frames, the queued sounds) until the
+ * unit list closes. Stop the panel threads and return g_bunit_selected_battle_id: the unit picked with the
+ * list menu's second row, or -1 (the overlay's initial 0xff) when Cross closed the screen. BATTLE moves the
+ * map cursor to that unit.
+ *
+ * The capacity stores follow the shared overlay gfx-init order (compare jobstts_entrypoint): 0x1e is first
+ * stored just before the 0x3c store, which puts its single-set `li` between the 0x1f4 `li` and its store,
+ * in $v1. The globals must not be volatile here: sched2 hoists the 0x40/0x1f4/0x3c stores above the zero
+ * stores, as in the target. */
 s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
     POLY_FT4 textured_quads[1000];
     POLY_G4 gouraud_quads[60];

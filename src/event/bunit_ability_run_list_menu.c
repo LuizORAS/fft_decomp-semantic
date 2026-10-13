@@ -8,7 +8,7 @@
  * tabs. Cancel returns 0 with menu state 2 and confirm returns -1 with menu
  * state 1; otherwise the list and the job-name header are drawn and 1 is
  * returned. */
-s32 bunit_run_ability_list_menu(void) {
+s32 bunit_ability_run_list_menu(void) {
     u8 unused[0x280]; /* never accessed; reserves the target's frame area */
     RECT rect;
     s16 selected;
@@ -46,7 +46,7 @@ s32 bunit_run_ability_list_menu(void) {
         bunit_text_render_id_rows_to_vram(
             g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES], g_bunit_ability_list_job_name_row, &rect, 0);
         g_bunit_ability_category = bunit_menu_update_wrapped_horizontal_selection(4, 0, 0);
-        bunit_create_ability_list(
+        bunit_ability_build_list(
             g_bunit_unit_selected_index, g_bunit_job_selected_id, g_bunit_ability_category, g_bunit_ability_entries, 0);
         bunit_menu_init_scrollable_list_core(
             g_bunit_ability_entries, 0, g_battle_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
@@ -74,7 +74,7 @@ s32 bunit_run_ability_list_menu(void) {
         bunit_menu_set_selection_record(g_bunit_ability_category + 10, g_bunit_menu_list_selected_index,
             g_bunit_menu_scroll_base_index, g_bunit_ability_entries);
         g_bunit_ability_category = category;
-        bunit_create_ability_list(
+        bunit_ability_build_list(
             g_bunit_unit_selected_index, g_bunit_job_selected_id, g_bunit_ability_category, g_bunit_ability_entries, 0);
         bunit_menu_get_selection_record(g_bunit_ability_category + 10, &selected, &scroll, g_bunit_ability_entries);
         bunit_menu_init_scrollable_list(

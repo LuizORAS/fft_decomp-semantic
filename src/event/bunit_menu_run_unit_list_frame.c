@@ -1,8 +1,13 @@
-/* Unit-list menu frame handler (g_bunit_menu_current_menu state -1 / 0). */
 #include "fft/event_bunit.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* One frame of the unit list (g_bunit_menu_current_menu BUNIT_MENU_UNIT_LIST, or the sort-order list
+ * under BUNIT_MENU_REORDER_LIST); returns 0 once the closing fade has ended. On entry it builds the unit
+ * records, the reorderable list and the grid map. Triangle or Start opens the list's menu: its first row
+ * opens the sort-order list, its second picks the unit under the cursor (g_bunit_selected_battle_id) and
+ * fades out. While browsing, Circle opens a player human unit's jobs and abilities (BUNIT_MENU_JOB; a
+ * monster or a unit of another team gets the invalid sound); otherwise Cross closes the screen. */
 s32 bunit_menu_run_unit_list_frame(void) {
     s32 input;
     bunit_unit_data_t* unit;

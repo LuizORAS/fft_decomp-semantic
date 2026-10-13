@@ -1,8 +1,12 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-/* Returns s32: the value is the 0/1 flag g_bunit_menu_thread_running, and
- * both call sites declare and use an s32 result. */
+/* Start menu record `desc`'s thread in slot `id` and make `desc` the current menu
+ * (g_battle_menu_thread_menu_data), unless this screen already started one or a thread runs there; return
+ * 1 while the thread runs and 0 once it has ended (g_bunit_menu_thread_running).
+ *
+ * Returns s32: the value is the 0/1 flag g_bunit_menu_thread_running, and both call sites declare and use
+ * an s32 result. */
 s32 bunit_menu_run_descriptor_thread(s32 id, world_menu_entry_t* desc) {
     if (g_bunit_menu_thread_running == 0) {
         if (battle_thread_is_running(id) != 0) {

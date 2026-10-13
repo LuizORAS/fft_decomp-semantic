@@ -6,15 +6,17 @@
 #include "fft/battle.h"
 
 /* thread */
+/* The screen's menus and panels run as BATTLE threads: the running test, the stop request (third
+ * thread parameter 1), the thread-status snapshot and the indicator packets. */
+
 extern battle_menu_status_panel_indicator_prims_t g_bunit_thread_indicator_packets[2][2];
 extern u8 g_bunit_thread_status_snapshot[16];
 s32 bunit_thread_is_running(s32 thread_id);
 void bunit_thread_request_stop(s32 thread_id);
-void bunit_panel_toggle_comparison_status_thread(s32 enable);
-void bunit_panel_toggle_unit_status_thread(s32 enable);
-void bunit_panel_toggle_equipment_and_numeric_editor_threads(s32 enable);
 
 /* bits */
+/* The bit reader for glyph pixels and the unlocked-job bits. */
+
 extern const u8* g_bunit_bits_cursor;
 extern s32 g_bunit_bits_index;
 extern u8 g_bunit_bits_reader_reset;
@@ -42,6 +44,8 @@ void bunit_menu_run_display_script(u8* data, s32 flags);
 u8* bunit_menu_script_skip_group(u8* command);
 
 /* cursor */
+/* The rhombus cursor of the unit grid: its two sprite halves and its trail. */
+
 /* Oriented-quad descriptors for the two cursor halves. */
 extern world_oriented_quad_t g_bunit_cursor_shadow_sprite;
 extern world_oriented_quad_t g_bunit_cursor_sprite;
@@ -51,6 +55,9 @@ extern point16_t g_bunit_cursor_trail_points[8];
 extern u8 g_bunit_cursor_trail_brightness[];
 
 /* character */
+/* The character status panel (screen thread slot CHARACTER_STATUS,
+ * bunit_menu_equipment_and_ability_panel_thread): the selected unit's equipment and abilities. */
+
 extern u8 g_bunit_character_status_frame_config;
 extern s32 g_bunit_character_status_redraw_request;
 extern s32 g_bunit_character_status_dimmed;
@@ -69,6 +76,9 @@ extern world_gfx_image_load_parameters_t g_bunit_character_status_layout_mode3[1
 extern RECT g_bunit_character_status_sprite_origin;
 
 /* ability */
+/* The job page's ability list: the abilities a job lists (bunit_ability_build_list), its row
+ * conditions and values (tab, learned, CT, MP and JP cost) and its menu. */
+
 extern s16 g_bunit_ability_category; /* menu_ability_category_e */
 extern u8* g_bunit_selected_ability_data;
 extern u8* g_bunit_selected_ability_secondary_data;
@@ -89,8 +99,8 @@ s32 bunit_ability_is_non_action_learned(s32 index);
 s32 bunit_ability_is_non_action_unlearned(s32 index);
 s32 bunit_ability_is_reaction_tab(s32 unused_row);
 s32 bunit_ability_is_support_tab(s32 unused_row);
-s32 bunit_create_ability_list(s16 unit_index, s16 job_id, s32 ability_category, s16* ability_list, s32 mode);
-s32 bunit_run_ability_list_menu(void);
+s32 bunit_ability_build_list(s16 unit_index, s16 job_id, s32 ability_category, s16* ability_list, s32 mode);
+s32 bunit_ability_run_list_menu(void);
 
 /* job */
 /* The job list of BUNIT's unit screen: a unit's selectable jobs and the numbers its rows show (job
@@ -127,6 +137,9 @@ s32 bunit_job_is_current_mastered(s32 unused_row);
 s32 bunit_job_is_special_monster(s32 job_id);
 
 /* status */
+/* The status banner (bunit_render_unit_status_panel_thread in screen thread slot UNIT_STATUS): the selected
+ * unit's portrait and gauges at the top or the bottom of the screen, slid between the two. */
+
 extern u8 g_bunit_status_banner_enabled;
 extern u32 g_bunit_status_display_thread_params;
 extern s32 g_bunit_status_display_offset_y;
@@ -138,12 +151,17 @@ extern u8 g_bunit_status_banner_at_bottom_latch;
 extern s8 g_bunit_status_banner_slide_step;
 
 /* comparison */
+/* The second banner (slot COMPARISON_STATUS) that slides out with the previous unit while the browser changes unit. */
+
 extern u32 g_bunit_comparison_display_thread_params;
 extern s32 g_bunit_comparison_display_redraw_request;
 extern s32 g_bunit_comparison_display_flags;
 extern s32 g_bunit_comparison_display_offset_y;
 
 /* editor */
+/* The numeric panel (bunit_menu_run_numeric_editor_thread, screen thread slot NUMERIC_EDITOR): the
+ * selected unit's numbers, drawn with the numeric editor code that DEBUGCHR shares. */
+
 /* Copy of the selected unit's 0x40 bytes from +0x30; only the leading
  * slot-state fields are read. */
 extern battle_menu_status_panel_slot_state_t g_bunit_editor_unit_fields;
@@ -164,6 +182,9 @@ extern u8 g_bunit_editor_numeric_text_a[];
 extern u8 g_bunit_editor_numeric_text_b[];
 
 /* help */
+/* The help cursor that Select starts: the navigation nodes of the three layouts (unit browser, banner
+ * at the top, banner at the bottom) and the help text table. */
+
 extern u32 g_bunit_help_text_table[];
 extern u8 g_bunit_help_text_state;
 extern u16 g_bunit_help_cursor_anim_state[];
@@ -187,6 +208,9 @@ extern help_navigation_record_t g_bunit_help_nodes_unit_browse[];
 extern s32 g_bunit_help_screen_id; /* menu_grid_help_id_e */
 
 /* gfx */
+/* Drawing: the packet pools and the two frame buffers, the fades, portraits, quads, tiles, draw
+ * areas and VRAM transfers, the distance-shaded rows and the cursor trail. */
+
 typedef enum bunit_vertical_scroll_direction {
     BUNIT_VERTICAL_SCROLL_UP = -1,
     BUNIT_VERTICAL_SCROLL_NONE = 0,
@@ -334,9 +358,6 @@ void bunit_gfx_start_decreasing_fade(void);
 void bunit_gfx_start_increasing_fade(void);
 s32 bunit_gfx_update_increasing_fade(void);
 
-void bunit_menu_select_primitive_color_palette(
-    world_menu_palette_primitives_t* primitives, const world_status_thread_t* thread);
-
 void bunit_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, u16* image, POLY_FT4* poly, s32 direction);
 
@@ -364,6 +385,9 @@ s32 bunit_gfx_update_decreasing_fade(void);
 void bunit_gfx_update_rhombus_cursor_trail(point16_t* target);
 
 /* input */
+/* The pad: newly pressed buttons, the two repeat rates, the input lock timer and the event input
+ * BATTLE's threads read. */
+
 extern u8 g_bunit_input_activation_timer;
 extern u32 g_bunit_input_current;
 extern u32 g_bunit_input_event;
@@ -389,6 +413,9 @@ void bunit_input_update_event_state(void* state, u32 input, s32 frame_arg);
 void bunit_input_update_lock_timer(void);
 
 /* text */
+/* Text: glyphs and number fields rendered into 4bpp images, text-id rows uploaded to VRAM, and the
+ * help text thread. */
+
 /* Slots of the unit list screen's own menus; native_screen_thread_slot_e
  * has the shared ones. */
 typedef enum bunit_thread_slot {
@@ -425,7 +452,6 @@ extern u8 g_bunit_menu_use_alternate_palette;
  * installs both addresses as u8* text-section pointers. */
 extern u8 g_bunit_text_menu_section[];
 extern u8 g_bunit_text_reorder_list_buffer[];
-void bunit_menu_run_numeric_editor_thread(void);
 
 void bunit_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
 
@@ -437,7 +463,6 @@ s32 bunit_text_render_glyph_to_4bpp_image(
 void bunit_text_render_signed_decimal_entries(
     u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
 
-void bunit_menu_set_palette_mode(s32 mode);
 void bunit_text_concatenate_entries(const u8* text_table, u8* out, s16* list, s32 separate);
 void bunit_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32 style);
 
@@ -448,6 +473,9 @@ const u8* bunit_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2
 void bunit_text_start_selection_thread(s32 thread_data);
 
 /* unit */
+/* The units the screen lists (bunit_unit_data_t, built from BATTLE's units), the shown and reorderable
+ * index lists and their sort, and the stat values the grid's row callbacks return. */
+
 /*
  * BUNIT.OUT unit-data record. This is the formation/menu representation,
  * distinct from party_data_t, entd_unit_t, and battle_stats_t. Unnamed fields
@@ -498,7 +526,7 @@ typedef struct bunit_unit_data {
     s16 magical_accessory_evade; /* 0x52 */
     s16 equipment[5];            /* 0x54 */
     s16 abilities[5];            /* 0x5e; primary skillset, secondary, reaction, support, movement (filled by
-                                  * bunit_unit_build_data_from_battle_stats; bunit_create_ability_list reads [0]) */
+                                  * bunit_unit_build_data_from_battle_stats; bunit_ability_build_list reads [0]) */
     u8 _unused_068[8];           /* 0x68; spare tail of the stat-detail block */
     u8 gender_flags;             /* 0x70; Bard/Dancer restrictions */
     u8 misc_unit_id;             /* 0x71 */
@@ -600,11 +628,22 @@ s32 bunit_unit_get_experience(s32 unit_id);
 s32 bunit_unit_get_brave(s32 unit_id);
 s32 bunit_unit_get_faith(s32 unit_id);
 s32 bunit_unit_get_max_stat(s32 unit_index);
-void bunit_render_unit_status_panel_thread(void);
+
 void bunit_unit_copy_reorder_list_to_orders(s32 unused, const s16* entries);
 s32 bunit_unit_is_two_handing_weapon(s16* slots, s32 allow_secondary);
 
+s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode);
+void bunit_unit_build_data_from_battle_stats(struct battle_stats* unit, bunit_unit_data_t* record, s32 unused_slot);
+
 /* panel */
+/* Starting and stopping the panel threads, and the colours of the status panel's sprites. */
+
+void bunit_panel_toggle_comparison_status_thread(s32 enable);
+void bunit_panel_toggle_unit_status_thread(s32 enable);
+void bunit_panel_toggle_equipment_and_numeric_editor_threads(s32 enable);
+
+void bunit_render_unit_status_panel_thread(void);
+
 extern battle_unit_status_record_t g_bunit_panel_selected_billboard;
 extern battle_unit_status_record_t g_bunit_panel_comparison_billboard;
 extern s16 g_bunit_panel_selected_unit_data[];
@@ -642,11 +681,20 @@ extern world_gfx_image_load_parameters_t g_bunit_panel_sprite_cells[];
 void bunit_panel_set_primitive_colors(
     battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state);
 
-void bunit_menu_equipment_and_ability_panel_thread(void);
-s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode);
-void bunit_unit_build_data_from_battle_stats(struct battle_stats* unit, bunit_unit_data_t* record, s32 unused_slot);
-
 /* menu */
+/* The screen's menus: the unit list frame and its grid, the sort-order list, the job page, the
+ * scrollable lists with their saved positions, the selectors, the cursors, the palette mode and the menu
+ * threads. */
+
+void bunit_menu_select_primitive_color_palette(
+    world_menu_palette_primitives_t* primitives, const world_status_thread_t* thread);
+
+void bunit_menu_run_numeric_editor_thread(void);
+
+void bunit_menu_set_palette_mode(s32 mode);
+
+void bunit_menu_equipment_and_ability_panel_thread(void);
+
 /*
  * Row-value getters for the BUNIT menu command stream: a 16-entry table at
  * 0x801ecb70 indexed by a command byte.
@@ -765,7 +813,10 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
 void bunit_menu_update_unit_list_scroll(s8* step, s8* offset);
 s16 bunit_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, s32 input_mask);
 
-/* other */
+/* screen */
+/* The entry point and the state it keeps between frames: the unit picked from the list's menu, the
+ * saved banner and browse settings, the shown-unit indices and the queued sound. */
+
 extern s8 g_bunit_selected_battle_id;
 extern u8 g_bunit_saved_unit_browse_enabled;
 extern u8 g_bunit_saved_status_banner_enabled;

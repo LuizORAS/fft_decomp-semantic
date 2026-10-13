@@ -1,7 +1,7 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-/* BUNIT.OUT 001c3ee0 - Start (arg=1) or stop (arg=0) sub-thread 8, invoking
+/* Start (arg=1) or stop (arg=0) sub-thread 8, invoking
  * bunit_render_unit_status_panel_thread with parameter block g_bunit_status_display_thread_params. */
 void bunit_panel_toggle_unit_status_thread(s32 enable) {
     if (enable != 0) {
