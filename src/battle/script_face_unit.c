@@ -30,7 +30,7 @@ void script_face_unit(const event_face_unit_parameters_t* parameters, s32 second
     order = 1;
     runtime_id = script_read_s16(parameters->first_unit_id_le);
     unit_id = script_read_s16(parameters->second_unit_id_le);
-    if (battle_unit_prepare_event_filter(&unit_id, &filter_mode) != 0) {
+    if (script_prepare_unit_filter(&unit_id, &filter_mode) != 0) {
         runtime_id = script_resolve_runtime_id(runtime_id);
         if (runtime_id != EVENT_RUNTIME_ID_NONE) {
             for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {

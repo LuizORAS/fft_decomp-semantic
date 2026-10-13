@@ -28,7 +28,7 @@ void script_face_tile(const event_face_tile_parameters_t* parameters) {
     tile.vx = parameters->x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     tile.vz = parameters->y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
     unit_id = script_read_s16(parameters->unit_id_le);
-    if (battle_unit_prepare_event_filter(&unit_id, &state) == 0) {
+    if (script_prepare_unit_filter(&unit_id, &state) == 0) {
         return;
     }
     for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {

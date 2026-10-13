@@ -1,3 +1,4 @@
+#include "fft/battle_camera.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
@@ -15,7 +16,7 @@ void world_menu_start_entry_thread(void) {
     if (g_world_menu_overlay_state != 0) {
         thread_exit_current();
     }
-    world_camera_wait_until_idle();
+    camera_wait_until_idle();
     while (world_thread_find_running_by_task(NATIVE_THREAD_TASK_ATTACK_TARGET_STATS) != 0) {
         thread_yield();
     }

@@ -22,7 +22,6 @@ s32 world_camera_step_track(camera_track_t* track, s32 component);
 void world_camera_store_yaw_band(s32 value);
 s16 world_camera_pick_nearest_unblocked_yaw(s32 runtime_id_a, s32 runtime_id_b);
 void world_camera_fusion_thread(void);
-void world_camera_wait_until_idle(void);
 void world_camera_thread(void);
 
 /* dead unit */
@@ -1799,17 +1798,14 @@ vec3u16_t* world_unit_copy_world_coords_to_scratch(u32 runtime_id);
 s32 world_formation_get_unit_palette_index(s32 roster_slot);
 s32 world_unit_get_zodiac_for_date(s32 month, s32 day);
 s32 world_unit_has_any_current_status(s32 unit_id);
-void world_unit_increase_blue_team_brave_by_10(void);
 
 void world_unit_inflict_status_by_event_unit_id(
     s32 event_unit_id, s32 status_index, s32 is_infliction, s32 less_strict_removal);
 
-s32 world_unit_is_moving(s32 id);
 void world_menu_load_selected_unit(void);
 void world_unit_reset_animation_states(void);
 void world_unit_set_animation(s32 runtime_id, u32 animation);
 void world_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b);
-s32 world_unit_prepare_event_filter(u16* unit_id, s32* filter_mode);
 void world_unit_update_staged_status_data(u16 unit_id, u16 restore);
 void world_unit_view_supervisor_thread(void);
 s32 world_unit_save_staged_status_data(s32);

@@ -19,7 +19,7 @@ void world_script_change_stats(const event_change_stats_parameters_t* parameters
 
     delta = script_read_s16(parameters->delta_le);
     unit_id = script_read_s16(parameters->unit_id_le);
-    if (world_unit_prepare_event_filter(&unit_id, &filter_mode) != 0) {
+    if (script_prepare_unit_filter(&unit_id, &filter_mode) != 0) {
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &filter_mode) != 0) {
                 battle_unit_index = battle_unit_get_battle_id_by_runtime_id(unit_id);

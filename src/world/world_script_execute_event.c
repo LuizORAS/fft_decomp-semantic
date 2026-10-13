@@ -1,4 +1,6 @@
+#include "fft/battle_camera.h"
 #include "fft/battle_script.h"
+#include "fft/battle_unit.h"
 #include "fft/event_attack.h"
 #include "fft/menu.h"
 #include "fft/script.h"
@@ -72,7 +74,7 @@ void world_script_execute_event(void) {
         for (work_index = 2; work_index < 0xE; work_index++) {
             thread_wait_until_inactive(work_index);
         }
-        world_camera_wait_until_idle();
+        camera_wait_until_idle();
     } else {
         g_world_menu_hovered_unit_stats_display.y = 0xAA;
         g_world_menu_attack_caster_stats_display.y = 0xAA;
@@ -171,7 +173,7 @@ restart_event:
                 world_script_advance_date_by_one_year();
             }
             if (operand_1 == EVENT_CALL_FUNCTION_INCREASE_BLUE_TEAM_BRAVE) {
-                world_unit_increase_blue_team_brave_by_10();
+                unit_increase_blue_team_brave_by_10();
             }
             if (operand_1 == EVENT_CALL_FUNCTION_REMOVE_ALL_ENEMY_UNITS) {
                 world_script_blue_remove_all_enemy_units();
@@ -537,7 +539,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_WAIT_ALL_UNIT_MOVEMENT) {
             do {
                 thread_yield();
-            } while (world_unit_is_moving(-1) != 0);
+            } while (unit_is_moving(-1) != 0);
         } else if (opcode == EVENT_OPCODE_WAIT_FILE_LOAD) {
             do {
                 thread_yield();
@@ -720,7 +722,7 @@ restart_event:
             s16 normalized_unit_id = script_resolve_runtime_id(first_operand);
             if (normalized_unit_id != EVENT_RUNTIME_ID_NONE) {
                 removed_runtime_id = normalized_unit_id;
-                while (world_unit_is_moving(removed_runtime_id) != 0) {
+                while (unit_is_moving(removed_runtime_id) != 0) {
                     thread_yield();
                 }
                 if (removed_runtime_id != EVENT_RUNTIME_ID_NONE) {

@@ -13,7 +13,7 @@ void world_script_unit_anim(const event_unit_anim_parameters_t* parameters) {
     s32 animation;
 
     unit_id = script_read_s16(parameters->unit_id_le);
-    if (world_unit_prepare_event_filter(&unit_id, &filter_mode) != 0) {
+    if (script_prepare_unit_filter(&unit_id, &filter_mode) != 0) {
         for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             if (world_script_filter_unit_id_by_mode(&unit_id, &unit_index, &filter_mode) != 0) {
                 if (parameters->facing_update_mode == 0) {

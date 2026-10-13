@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 
 /* Event instructions 0x6c (enable 0) and 0x6d (enable 1): clear or set
  * palette-update suppression on the event unit, or on every unit its group
@@ -13,7 +14,7 @@ void script_set_units_palette_update_suppression(s32 event_unit_id, s32 enable) 
     s32 i;
 
     unit_id = event_unit_id;
-    if (battle_unit_prepare_event_filter(&unit_id, &mode) != 0) {
+    if (script_prepare_unit_filter(&unit_id, &mode) != 0) {
         i = 0;
         do {
             if (script_filter_unit_id_by_mode(&unit_id, (u16*)&i, &mode) != 0) {

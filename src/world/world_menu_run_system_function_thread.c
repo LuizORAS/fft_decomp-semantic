@@ -1,3 +1,4 @@
+#include "fft/battle_camera.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 
@@ -26,7 +27,7 @@ void world_menu_run_system_function_thread(void) {
             thread_yield();
         }
     }
-    world_camera_wait_until_idle();
+    camera_wait_until_idle();
     entry = &g_world_system_function_table[id];
     menu_id = entry->menu_id;
     g_world_menu_thread_menu_data[entry->menu_entry_index].text_id = entry->text_id;

@@ -18,7 +18,7 @@ void script_color_unit_event_instruction(const event_color_unit_parameters_t* pa
     s32 i;
 
     unit_id = script_read_s16(parameters->unit_id_le);
-    if (battle_unit_prepare_event_filter(&unit_id, &out) != 0) {
+    if (script_prepare_unit_filter(&unit_id, &out) != 0) {
         color = &parameters->color;
         i = 0;
         do {

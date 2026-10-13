@@ -15,7 +15,7 @@ void script_set_units_movement_effect_suppression(const event_movement_effect_pa
     s32 unit_index;
 
     unit_id = script_read_s16(parameters->unit_id_le);
-    if (battle_unit_prepare_event_filter(&unit_id, &state) != 0) {
+    if (script_prepare_unit_filter(&unit_id, &state) != 0) {
         unit_index = 0;
         do {
             if (script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &state) != 0) {

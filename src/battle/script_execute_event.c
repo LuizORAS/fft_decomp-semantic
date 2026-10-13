@@ -1,6 +1,8 @@
+#include "fft/battle_camera.h"
 #include "fft/battle_event.h"
 #include "fft/battle_script.h"
 #include "fft/battle_sound.h"
+#include "fft/battle_unit.h"
 #include "fft/event_attack.h"
 #include "fft/menu.h"
 #include "fft/script.h"
@@ -199,7 +201,7 @@ restart_script:
                 script_advance_date_by_one_year();
             }
             if (operand_1 == EVENT_CALL_FUNCTION_INCREASE_BLUE_TEAM_BRAVE) {
-                battle_unit_increase_blue_team_brave_by_10();
+                unit_increase_blue_team_brave_by_10();
             }
             if (operand_1 == EVENT_CALL_FUNCTION_REMOVE_ALL_ENEMY_UNITS) {
                 script_blue_remove_all_enemy_units();
@@ -572,7 +574,7 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_WAIT_ALL_UNIT_MOVEMENT) {
             do {
                 thread_yield();
-            } while (battle_unit_is_moving(-1) != 0);
+            } while (unit_is_moving(-1) != 0);
         } else if (opcode == EVENT_OPCODE_WAIT_FILE_LOAD) {
             do {
                 thread_yield();
@@ -753,7 +755,7 @@ restart_script:
             remove_unit_runtime_id = script_resolve_runtime_id(first_operand);
             if (remove_unit_runtime_id != EVENT_RUNTIME_ID_NONE) {
                 work_index = remove_unit_runtime_id;
-                while (battle_unit_is_moving(work_index) != 0) {
+                while (unit_is_moving(work_index) != 0) {
                     thread_yield();
                 }
                 if (work_index != EVENT_RUNTIME_ID_NONE) {

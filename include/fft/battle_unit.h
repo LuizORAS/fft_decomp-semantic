@@ -1170,7 +1170,6 @@ s32 battle_unit_has_runtime_id(u32 runtime_id);
 s32 battle_unit_move_to_head(u32 runtime_id);
 s32 battle_unit_remove_by_runtime_id(u32 runtime_id);
 s32 battle_unit_set_cannot_exist(s32 battle_id);
-s32 battle_unit_prepare_event_filter(u16* unit_id, s32* filter_mode);
 s32 battle_unit_update_fade_out_removal(battle_unit_t* unit);
 battle_unit_t* battle_unit_claim_slot(s16 requested_runtime_id);
 battle_stats_t* battle_unit_find_active_data_pointer(void);
@@ -1182,7 +1181,7 @@ battle_unit_t* battle_unit_init(s32 map_x, s32 map_y, s32 map_level, s16 facing,
     s16 requested_runtime_id, battle_stats_t* stats, u32 flags, const battle_gfx_unit_sprite_file_t* data);
 void battle_unit_remove(battle_unit_t* unit);
 void battle_unit_clear_all(void);
-s32 battle_unit_is_moving(s32 runtime_id);
+s32 unit_is_moving(s32 runtime_id);
 s32 battle_unit_find_slot_by_character_identity(u32 character_identity);
 
 /* encounters and deployment */
@@ -1368,7 +1367,7 @@ u8 battle_unit_calculate_move_exp_jp_up_to_earn(battle_stats_t* unit);
 s32 battle_unit_count_crystals(void);
 void battle_unit_find_war_trophies_and_bonus_money(battle_war_result_t* result);
 battle_unit_t* battle_unit_get_crystal_or_treasure_at_map_coords(s32 map_x, s32 map_y, s32 map_z);
-void battle_unit_increase_blue_team_brave_by_10(void);
+void unit_increase_blue_team_brave_by_10(void);
 void battle_unit_learn_used_ability(battle_stats_t* unit);
 void battle_unit_transform_into_morbol(battle_stats_t* unit);
 void battle_unit_update_attacker_earned_experience(s32 outcome);

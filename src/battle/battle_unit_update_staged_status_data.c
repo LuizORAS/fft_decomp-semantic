@@ -3,6 +3,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -19,8 +20,7 @@ void battle_unit_update_staged_status_data(u16 unit_id, u16 restore) {
     s32 battle_unit_index;
 
     g_battle_unit_status_staging_data = &g_ai_workspace_ptr->status_staging;
-    if (g_battle_menu_input_mode == MENU_INPUT_PLAYER
-        && battle_unit_prepare_event_filter(&unit_id, &filter_mode) != 0) {
+    if (g_battle_menu_input_mode == MENU_INPUT_PLAYER && script_prepare_unit_filter(&unit_id, &filter_mode) != 0) {
         unit_index = 0;
         g_battle_unit_status_staging_data->jump_float_flags = 0;
         do {

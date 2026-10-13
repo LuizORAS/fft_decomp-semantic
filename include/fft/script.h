@@ -984,6 +984,9 @@ void script_unlockdate_event_instruction(u32* bitset, s32 date_index, s32 month,
 /* units */
 /* Event-unit lookup uses the resident scene's interpreter state. */
 s32 script_resolve_runtime_id(s32 unit_id);
+
+/* Resolve single selectors in place; leave group selectors for the filter loop. */
+s32 script_prepare_unit_filter(u16* unit_id, s32* filter_mode);
 void script_report_missing_unit_stub(s32 unused_unit_id);
 
 /* unit instructions */

@@ -17,7 +17,7 @@ void script_unit_anim(const event_unit_anim_parameters_t* parameters) {
     s32 move_flag_mode;
 
     runtime_id = script_read_s16(parameters->unit_id_le);
-    if (battle_unit_prepare_event_filter(&runtime_id, &state) == 0) {
+    if (script_prepare_unit_filter(&runtime_id, &state) == 0) {
         return;
     }
     unit_index = 0;

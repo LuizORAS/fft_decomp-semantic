@@ -20,7 +20,7 @@ void script_change_stats(const event_change_stats_parameters_t* parameters) {
 
     delta = script_read_s16(parameters->delta_le);
     unit_id = script_read_s16(parameters->unit_id_le);
-    if (battle_unit_prepare_event_filter(&unit_id, &filter_mode) != 0) {
+    if (script_prepare_unit_filter(&unit_id, &filter_mode) != 0) {
         unit_index = 0;
         do {
             if (script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &filter_mode) != 0) {
