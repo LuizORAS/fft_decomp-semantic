@@ -9,12 +9,12 @@ u32 action_get_number_of_turns_to_resolve(s32 unit_index, s32 ct, battle_at_entr
         ct += 1;
     }
     ct <<= 8;
-    for (count = 0; count < 40; count++, entries++) {
-        s32 entry_unit = entries->unit;
-        s32 is_action = entry_unit & 0x40;
+    for (count = 0; count < BATTLE_AT_LIST_CAPACITY; count++, entries++) {
+        s32 entry_unit = entries->unit_code;
+        s32 is_action = entry_unit & BATTLE_AT_ACTION_ENTRY;
         s32 entry_ct;
-        entry_unit &= 0x1F;
-        if (entry_unit == 0x1F)
+        entry_unit &= BATTLE_AT_UNIT_ID_MASK;
+        if (entry_unit == BATTLE_AT_END_OF_LIST)
             return 0xFF;
         entry_ct = entries->sort_key;
         if (entry_ct >= ct) {

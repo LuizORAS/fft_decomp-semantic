@@ -2370,7 +2370,7 @@ extern s16 g_world_menu_at_list_secondary_values[];
 extern s16 g_world_menu_at_list_indices[];
 extern s16 g_world_menu_at_list_flags[256];
 extern u8 g_world_menu_at_list_text[];
-extern battle_at_entry_t g_world_action_target_list_slots[40];
+extern battle_at_entry_t g_world_action_target_list_slots[BATTLE_AT_LIST_CAPACITY];
 extern s16 g_world_menu_submenu_page_row_text_ids[];
 extern u32* g_world_menu_list_controller_input;
 extern menu_icon_source_t g_world_menu_entry_item_icon_source;

@@ -36,8 +36,8 @@ s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
 
     placed = 0;
     phase_tick = g_battle_between_turn_resume_state == BATTLE_BETWEEN_TURN_STATE_PICK_UNIT_AFTER_CHARGE;
-    for (slot = 0; slot < 0x28; slot++) {
-        list[slot].unit = 0xff;
+    for (slot = 0; slot < BATTLE_AT_LIST_CAPACITY; slot++) {
+        list[slot].unit_code = 0xff;
         list[slot].action_id_low = 0xff;
         list[slot].sort_key = 0xffff;
     }
@@ -76,7 +76,7 @@ s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
             if (unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_PERFORMING)]
                 & STATUS_BYTE_MASK(STATUS_ID_PERFORMING)) {
                 main_unit_copy_last_ability_ct(unit);
-                for (turns = 0; turns < 0x27; turns++) {
+                for (turns = 0; turns < BATTLE_AT_LIST_CAPACITY - 1; turns++) {
                     tick += unit->ability_ct;
                     key = tick;
                     if (key >= 0x100) {
@@ -123,7 +123,7 @@ s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
         }
         tick = wait;
         ct = unit->ct;
-        for (turns = 0; turns < 0x28; turns++) {
+        for (turns = 0; turns < BATTLE_AT_LIST_CAPACITY; turns++) {
             while (ct < UNIT_TURN_CT_THRESHOLD) {
                 tick++;
                 value = speed;

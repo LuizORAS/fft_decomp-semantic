@@ -67,7 +67,7 @@ void battle_menu_build_ability_preview_at_list(void) {
     g_thread_call_target = (void (*)(void))action_preview_at_list;
     turn = thread_call_on_main_stack(stats, action, work->entries);
     if (staged_item != 0) {
-        work->entries[1].unit |= BATTLE_AT_ACTION_ENTRY;
+        work->entries[1].unit_code |= BATTLE_AT_ACTION_ENTRY;
         work->entries[1].action_id_low = g_battle_menu_selected_action.item_or_equipment;
     }
     count = 0;
@@ -78,7 +78,7 @@ void battle_menu_build_ability_preview_at_list(void) {
         count = 0;
         battle_menu_icon_linked_entry_thread();
     }
-    for (index = 0; index < 40; index++) {
+    for (index = 0; index < BATTLE_AT_LIST_CAPACITY; index++) {
         work->primary_colors[index] = 0;
         work->secondary_colors[index] = 0;
     }
@@ -95,16 +95,16 @@ void battle_menu_build_ability_preview_at_list(void) {
     if (turn != 0) {
         turn--;
     }
-    for (index = 0; index < 39; index++) {
+    for (index = 0; index < BATTLE_AT_LIST_CAPACITY - 1; index++) {
         battle_at_entry_t* slot = &work->entries[index + 1];
         s32 name_index;
 
-        if ((slot->unit & BATTLE_AT_UNIT_ID_MASK) == BATTLE_AT_END_OF_LIST) {
+        if ((slot->unit_code & BATTLE_AT_UNIT_ID_MASK) == BATTLE_AT_END_OF_LIST) {
             break;
         }
         work->entry_numbers[index] = index + 1;
-        stats = battle_unit_get_stats_from_battle_id(slot->unit & BATTLE_AT_UNIT_ID_MASK);
-        if ((slot->unit & BATTLE_AT_ACTION_ENTRY) != 0) {
+        stats = battle_unit_get_stats_from_battle_id(slot->unit_code & BATTLE_AT_UNIT_ID_MASK);
+        if ((slot->unit_code & BATTLE_AT_ACTION_ENTRY) != 0) {
             *text++ = 0xd9;
             *text++ = 0xbe;
         }
@@ -116,31 +116,31 @@ void battle_menu_build_ability_preview_at_list(void) {
             }
             text++;
         }
-        if ((slot->unit & BATTLE_AT_ACTION_ENTRY) != 0) {
+        if ((slot->unit_code & BATTLE_AT_ACTION_ENTRY) != 0) {
             *text++ = 0xd9;
             *text++ = 0xbf;
         }
         *text++ = 0xfe;
-        if ((slot->unit & BATTLE_AT_ACTION_ENTRY) != 0) {
+        if ((slot->unit_code & BATTLE_AT_ACTION_ENTRY) != 0) {
             work->secondary_values[count] = index - 0x800;
         } else {
             work->primary_values[count] = index - 0x800;
         }
-        if ((slot->unit & BATTLE_AT_ACTION_ENTRY) == 0) {
+        if ((slot->unit_code & BATTLE_AT_ACTION_ENTRY) == 0) {
             work->secondary_values[count] = TEXT_ID_ABILITY_NAME_BASE;
         } else {
             s32 turn_text_id;
             s32 turn_bias;
 
             bracketed = 1;
-            if ((slot->unit & BATTLE_AT_JUMP) != 0) {
+            if ((slot->unit_code & BATTLE_AT_JUMP) != 0) {
                 turn_text_id = 0xb012;
             } else {
                 turn_bias = slot->action_id_low;
                 if (index == 0 && staged_item != 0) {
                     turn_text_id = turn_bias + 0x3800;
                 } else {
-                    if ((slot->unit & BATTLE_AT_ABILITY_ID_HIGH_BIT) != 0) {
+                    if ((slot->unit_code & BATTLE_AT_ABILITY_ID_HIGH_BIT) != 0) {
                         turn_bias += 0x100;
                     }
                     turn_text_id = turn_bias + TEXT_ID_ABILITY_NAME_BASE;
@@ -153,8 +153,8 @@ void battle_menu_build_ability_preview_at_list(void) {
         }
         count++;
     }
-    if (count >= 39) {
-        count = 39;
+    if (count >= BATTLE_AT_LIST_CAPACITY - 1) {
+        count = BATTLE_AT_LIST_CAPACITY - 1;
     }
     work->primary_colors[turn] = 4;
     work->secondary_colors[turn] = 4;

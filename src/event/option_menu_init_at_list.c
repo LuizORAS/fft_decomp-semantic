@@ -35,18 +35,18 @@ void option_menu_init_at_list(menu_entry_t* menu) {
     has_special_entry = 0;
     text = g_option_menu_at_list_text;
 
-    for (index = 0; index < 0x28; index++) {
+    for (index = 0; index < BATTLE_AT_LIST_CAPACITY; index++) {
         battle_stats_t* unit;
         s32 name_index;
 
-        if ((g_option_menu_at_list_descriptors[index].unit & BATTLE_AT_UNIT_ID_MASK) == BATTLE_AT_END_OF_LIST) {
+        if ((g_option_menu_at_list_descriptors[index].unit_code & BATTLE_AT_UNIT_ID_MASK) == BATTLE_AT_END_OF_LIST) {
             break;
         }
 
         g_option_menu_at_list_indices[index] = index + 1;
         unit = battle_unit_get_stats_from_battle_id(
-            g_option_menu_at_list_descriptors[index].unit & BATTLE_AT_UNIT_ID_MASK);
-        if ((g_option_menu_at_list_descriptors[index].unit & BATTLE_AT_ACTION_ENTRY) != 0) {
+            g_option_menu_at_list_descriptors[index].unit_code & BATTLE_AT_UNIT_ID_MASK);
+        if ((g_option_menu_at_list_descriptors[index].unit_code & BATTLE_AT_ACTION_ENTRY) != 0) {
             *text++ = 0xd9;
             *text++ = 0xbe;
         }
@@ -60,27 +60,27 @@ void option_menu_init_at_list(menu_entry_t* menu) {
             }
             text++;
         }
-        if ((g_option_menu_at_list_descriptors[index].unit & BATTLE_AT_ACTION_ENTRY) != 0) {
+        if ((g_option_menu_at_list_descriptors[index].unit_code & BATTLE_AT_ACTION_ENTRY) != 0) {
             *text++ = 0xd9;
             *text++ = 0xbf;
         }
         *text++ = 0xfe;
 
-        if ((g_option_menu_at_list_descriptors[index].unit & BATTLE_AT_ACTION_ENTRY) != 0) {
+        if ((g_option_menu_at_list_descriptors[index].unit_code & BATTLE_AT_ACTION_ENTRY) != 0) {
             g_option_menu_at_list_secondary_values[entry_count] = index - 0x800;
         } else {
             g_option_menu_at_list_primary_values[entry_count] = index - 0x800;
         }
 
-        if ((g_option_menu_at_list_descriptors[index].unit & BATTLE_AT_ACTION_ENTRY) == 0) {
+        if ((g_option_menu_at_list_descriptors[index].unit_code & BATTLE_AT_ACTION_ENTRY) == 0) {
             g_option_menu_at_list_secondary_values[entry_count] = TEXT_ID_ABILITY_NAME_BASE;
         } else {
             has_special_entry = 1;
-            if ((g_option_menu_at_list_descriptors[index].unit & BATTLE_AT_JUMP) != 0) {
+            if ((g_option_menu_at_list_descriptors[index].unit_code & BATTLE_AT_JUMP) != 0) {
                 g_option_menu_at_list_primary_values[entry_count] = 0xb012;
             } else {
                 s32 value = g_option_menu_at_list_descriptors[index].action_id_low;
-                if ((g_option_menu_at_list_descriptors[index].unit & BATTLE_AT_ABILITY_ID_HIGH_BIT) != 0) {
+                if ((g_option_menu_at_list_descriptors[index].unit_code & BATTLE_AT_ABILITY_ID_HIGH_BIT) != 0) {
                     value += 0x100;
                 }
                 g_option_menu_at_list_primary_values[entry_count] = value + TEXT_ID_ABILITY_NAME_BASE;
@@ -93,8 +93,8 @@ void option_menu_init_at_list(menu_entry_t* menu) {
         entry_count++;
     }
 
-    if (entry_count >= 0x28) {
-        entry_count = 0x27;
+    if (entry_count >= BATTLE_AT_LIST_CAPACITY) {
+        entry_count = BATTLE_AT_LIST_CAPACITY - 1;
     }
 
     if (has_special_entry != 0) {

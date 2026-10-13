@@ -17,7 +17,7 @@
  * byte in a globally allocated register, which the target does not. */
 s32 battle_menu_get_unit_skillset_ability_data(
     s32 unit_id, u8 skillset, s16* ability_ids, u8* mp_out, u8* ct_out, s32 unused, u8* flags_out, u8* turns_out) {
-    battle_at_entry_t at_list[40];
+    battle_at_entry_t at_list[BATTLE_AT_LIST_CAPACITY];
     battle_stats_t* unit;
     ability_secondary_data_t* secondary;
     s32 known;

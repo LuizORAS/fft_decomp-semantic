@@ -17,11 +17,11 @@ s32 action_sort_at_list(s32 unit_id, s32 mode, s32 sort_key, battle_at_entry_t* 
     u16 key = sort_key;
 
     unit = &g_battle_unit_stats[unit_id];
-    for (i = 0; i < 0x28; i++) {
+    for (i = 0; i < BATTLE_AT_LIST_CAPACITY; i++) {
         cmp = key < list[i].sort_key;
         ability_code = unit_id + 0x40;
         if (cmp) {
-            for (j = 0x27; j > i; j--) {
+            for (j = BATTLE_AT_LIST_CAPACITY - 1; j > i; j--) {
                 list[j] = list[j - 1];
             }
             unit_code = unit_id;
@@ -38,9 +38,9 @@ s32 action_sort_at_list(s32 unit_id, s32 mode, s32 sort_key, battle_at_entry_t* 
                     }
                 }
             }
-            list[i].unit = unit_code;
+            list[i].unit_code = unit_code;
             break;
         }
     }
-    return i != 0x28;
+    return i != BATTLE_AT_LIST_CAPACITY;
 }

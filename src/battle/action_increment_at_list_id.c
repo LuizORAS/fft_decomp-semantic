@@ -6,7 +6,7 @@ void action_increment_at_list_id(void) {
     s32 id = g_action_at_list_id + 1;
 
     g_action_at_list_id = id;
-    if (id >= 0x28) {
+    if (id >= BATTLE_AT_LIST_CAPACITY) {
         g_action_at_list_id = 0;
     }
 }

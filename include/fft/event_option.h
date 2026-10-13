@@ -23,7 +23,7 @@ void option_menu_run_choice(void);
 
 /* at list */
 extern menu_list_page_t g_option_at_list_pages[2];
-extern battle_at_entry_t g_option_menu_at_list_descriptors[40];
+extern battle_at_entry_t g_option_menu_at_list_descriptors[BATTLE_AT_LIST_CAPACITY];
 extern menu_text_layout_t g_option_menu_at_list_entry_table[1];
 extern menu_text_layout_t* g_option_menu_at_list_entry_table_pointer;
 extern s16 g_option_menu_at_list_flags[];
