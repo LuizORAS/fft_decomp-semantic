@@ -2,6 +2,7 @@
 #include "fft/battle_unit.h"
 #include "fft/event_attack.h"
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -21,14 +22,14 @@ s32 world_menu_init_attack_resources_and_threads(void) {
     world_menu_init_subsystems();
     unit_reset_animation_states();
     world_menu_reset_unit_records();
-    if (g_world_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
-        g_world_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_PRELOAD_USED;
+    if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+        g_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_PRELOAD_USED;
     } else {
         g_thread_call_target = main_file_load_checked_to_address;
         thread_call_on_main_stack(DISC_SECTOR_EVENT_ATTACK_OUT, 0x20000, g_main_heap_companion_overlay_load_address);
     }
     result = attack_load_scenario_conditionals();
-    if (g_world_script_attack_entry_mode != SCRIPT_ATTACK_ENTRY_PRELOAD_USED) {
+    if (g_script_attack_entry_mode != SCRIPT_ATTACK_ENTRY_PRELOAD_USED) {
         attack_gfx_build_formation_sprites();
         attack_gfx_load_portraits();
     }

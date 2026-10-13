@@ -902,7 +902,7 @@ functions:
   - {addr: 0x8013e6c4, size: 68, name: script_resetpalette_event_instruction, hash: 79fd4c27f8d0beb6, source: src/shared/script/script_resetpalette_event_instruction.c}
   - {addr: 0x8013e708, size: 200, name: script_jump_event_instruction, hash: 734a1cdf6727e56b, source: src/shared/script/script_jump_event_instruction.c}
   - {addr: 0x8013e7d0, size: 76, name: script_waitwalk_event_instruction, hash: 24021c0deeb954e0, source: src/shared/script/script_waitwalk_event_instruction.c}
-  - {addr: 0x8013e81c, size: 88, name: script_load_attack_graphics_event_instruction, hash: 03c63298566511f4}
+  - {addr: 0x8013e81c, size: 88, name: script_load_attack_graphics_event_instruction, hash: 03c63298566511f4, source: src/shared/script/script_load_attack_graphics_event_instruction.c}
   - {addr: 0x8013e874, size: 96, name: script_play_effect_and_wait, hash: fdc04e1986faf430, source: src/shared/script/script_play_effect_and_wait.c}
   - {addr: 0x8013e8d4, size: 48, name: script_play_effect_thread, hash: 014b4d70b5118cb2, source: src/shared/script/script_play_effect_thread.c}
   - {addr: 0x8013e904, size: 1236, name: script_block_start_thread, hash: 74b4fb7297f0daea}

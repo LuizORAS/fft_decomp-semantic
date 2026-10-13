@@ -256,7 +256,6 @@ extern u16 g_world_script_tutorial_shift_command_bit;
 extern s16 g_world_script_tutorial_wait_time_remaining;
 extern s16 g_world_script_tutorial_wait_timer;
 extern char g_world_script_pause_message[];
-extern u16 g_world_script_attack_entry_mode; /* script_attack_entry_mode_e */
 extern s16 g_world_script_debug_paused;
 extern s16 g_world_event_effect_target_x;
 extern s16 g_world_event_effect_target_y;
@@ -322,7 +321,6 @@ void world_script_handle_tutorial_command_wait_for_button(void);
 void world_script_handle_tutorial_command_wait_for_message(void);
 void world_script_handle_tutorial_command_wait_time(void);
 s32 world_script_interpolate_range_fixed12(s32 start, s32 end, s32 fraction, s32 value);
-void world_script_load_attack_graphics_event_instruction(void);
 void world_script_load_event(s32 id);
 s32 world_script_load_next_event(void);
 void world_script_map_darkness(void);

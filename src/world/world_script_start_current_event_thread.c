@@ -8,7 +8,7 @@
  * colour modulation and starts the next event on thread 1. */
 void world_script_start_current_event_thread(void) {
     unit_reset_animation_states();
-    g_world_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_NORMAL;
+    g_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_NORMAL;
     if (script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
         world_camera_store_state_to_script_variables();
         world_map_reset_script_light_transform();

@@ -687,14 +687,17 @@ typedef struct event_work {
 typedef char event_work_size_must_be_2532[(sizeof(event_work_t) == 2532) ? 1 : -1];
 
 /* interpreter state */
-/* g_script_attack_entry_mode / g_world_script_attack_entry_mode:
- * whether an event instruction loaded the ATTACK overlay and its graphics
+/* Whether an event instruction loaded the ATTACK overlay and its graphics
  * before the deployment screen starts. */
 typedef enum script_attack_entry_mode {
     SCRIPT_ATTACK_ENTRY_NORMAL = 1,       /* set when an event thread starts */
     SCRIPT_ATTACK_ENTRY_PRELOADED = 2,    /* *_script_load_attack_graphics_event_instruction ran */
     SCRIPT_ATTACK_ENTRY_PRELOAD_USED = 3, /* *_menu_init_attack_resources_and_threads skipped its loads */
 } script_attack_entry_mode_e;
+
+extern u16 g_script_attack_entry_mode; /* script_attack_entry_mode_e */
+
+void script_load_attack_graphics_event_instruction(void);
 
 extern s32 g_script_event_speed;
 extern u16 g_script_frame_result_override;

@@ -31,7 +31,7 @@ void world_script_add_unit_start_thread(void) {
             break;
         }
         if (opcode == EVENT_OPCODE_LOAD_ATTACK_GRAPHICS) {
-            world_script_load_attack_graphics_event_instruction();
+            script_load_attack_graphics_event_instruction();
         } else if (opcode == EVENT_OPCODE_ADD_UNIT) {
             unit = battle_unit_find_stats_by_entd_unit_id(unit_id, &index);
             if (index == -2 || index >= 0) {

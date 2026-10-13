@@ -8,7 +8,6 @@
 #include "fft/script.h"
 
 /* interpreter */
-extern u16 g_script_attack_entry_mode; /* script_attack_entry_mode_e */
 /* Operand-byte counts, excluding the opcode; not per-operand width schemas.
  * BATTLE 0x8014d170, WORLD 0x8013a454. The tables end after opcode 0xf3. */
 extern u8 g_script_event_instruction_sizes[0xf4];
@@ -110,7 +109,6 @@ extern const char g_script_pause_message[];
 
 void script_color_screen_thread(void);
 void script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
-void script_load_attack_graphics_event_instruction(void);
 void script_load_portrait_colors_event_instruction(s32 portrait_id);
 void script_print_debug_message(void);
 void script_set_units_palette_update_suppression(s32 unit_id, s32 enable);

@@ -874,7 +874,7 @@ restart_event:
                 battle_gfx_set_evtchr_palette_by_runtime_id(runtime_id_for_7f, operand_3, operand_4);
             }
         } else if (opcode == EVENT_OPCODE_LOAD_ATTACK_GRAPHICS) {
-            world_script_load_attack_graphics_event_instruction();
+            script_load_attack_graphics_event_instruction();
         } else if (opcode == EVENT_OPCODE_CHANGE_STATS) {
             world_script_change_stats((const event_change_stats_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_PLAY_TUNE) {

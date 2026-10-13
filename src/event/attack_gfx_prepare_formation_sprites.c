@@ -1,3 +1,4 @@
+#include "fft/script.h"
 /* Loads file 0x166b (0x10000 bytes) via the entry-mode load paths, uploads its
  * second half, then for the 16 formation slots derives each unit's portrait
  * (inlined world_formation_get_unit_palette_index logic), copies a 0x18x0x30 cell into
