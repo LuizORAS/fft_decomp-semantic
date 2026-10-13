@@ -18,7 +18,7 @@ s32 bunit_menu_run_job_list(void) {
     s32 mask;
 
     if (g_bunit_job_list_initialized == 0) {
-        bunit_menu_set_vsync_mode_and_event_speed(2);
+        menu_set_vsync_mode_and_event_speed(2);
         bunit_job_build_unit_job_list(g_bunit_unit_selected_index & 0xff, g_menu_job_ids, 0);
         g_bunit_menu_row_callbacks[0].value = bunit_job_calculate_current_level;
         g_bunit_menu_row_callbacks[2].value = bunit_job_calculate_current_jp;
@@ -33,7 +33,7 @@ s32 bunit_menu_run_job_list(void) {
     g_bunit_text_selection_id = g_menu_job_ids[g_bunit_menu_list_selected_index] + 0x6000;
     mask = g_bunit_menu_input_active_mask;
     if (mask & PSX_PAD_CROSS) {
-        bunit_menu_set_vsync_mode_and_event_speed(0);
+        menu_set_vsync_mode_and_event_speed(0);
         g_bunit_sound_queued_effect_id = MAIN_SFX_CANCEL;
         g_bunit_job_list_initialized = 0;
         return MENU_JOB_LIST_STEP_CLOSE;

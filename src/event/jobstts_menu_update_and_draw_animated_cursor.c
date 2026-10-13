@@ -48,7 +48,7 @@ void jobstts_menu_update_and_draw_animated_cursor(point16_t* anchor, u16* state,
 
     frame = *state;
     frame = frame & 0x7F;
-    frame = frame * jobstts_menu_get_event_speed();
+    frame = frame * menu_get_event_speed();
     active_test = active;
     if (active_test != 0) {
         if (frame >= 0x25) {
@@ -68,7 +68,7 @@ void jobstts_menu_update_and_draw_animated_cursor(point16_t* anchor, u16* state,
     }
     x_offset = raw_offset;
 
-    frame += jobstts_menu_get_event_speed();
+    frame += menu_get_event_speed();
     active_test = active;
     if (active_test != 0) {
         if (frame < 0x25) {

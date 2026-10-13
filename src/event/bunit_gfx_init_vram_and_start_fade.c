@@ -1,5 +1,6 @@
 #include "fft/event_bunit.h"
 #include "fft/gfx.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /*
@@ -22,7 +23,7 @@ void bunit_gfx_init_vram_and_start_fade(void) {
 
     memcpy(block, g_bunit_menu_clut, sizeof(block));
 
-    bunit_menu_set_vsync_mode_and_event_speed(0);
+    menu_set_vsync_mode_and_event_speed(0);
     g_text_section_pointers[TEXT_SECTION_EVENT_MESSAGES] = g_bunit_text_menu_section;
     g_text_section_pointers[TEXT_SECTION_COMPOSED_TEXT] = g_bunit_text_reorder_list_buffer;
     rect.x = 0x100;

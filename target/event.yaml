@@ -371,8 +371,8 @@ functions:
   - {addr: 0x801c76cc, size: 444, name: bunit_gfx_submit_frame_and_swap_buffers, hash: 03562779b98bb33c}
   - {addr: 0x801c7888, size: 1560, name: bunit_gfx_init_packet_pools, hash: 534a0c774b97dee2}
   - {addr: 0x801c7ea0, size: 1384, name: bunit_gfx_init_double_packet_buffers, hash: a4cfeb32963dd7b9}
-  - {addr: 0x801c8408, size: 52, name: bunit_menu_set_vsync_mode_and_event_speed, hash: 33b6a2c8c1908b56}
-  - {addr: 0x801c843c, size: 32, name: bunit_menu_get_event_speed, hash: d1c5682dc9e305b3}
+  - {addr: 0x801c8408, size: 52, name: menu_set_vsync_mode_and_event_speed, hash: 33b6a2c8c1908b56, source: src/shared/menu/menu_set_vsync_mode_and_event_speed.c}
+  - {addr: 0x801c843c, size: 32, name: menu_get_event_speed, hash: d1c5682dc9e305b3, source: src/shared/menu/menu_get_event_speed.c}
   - {addr: 0x801c845c, size: 212, name: bunit_menu_init_scrollable_list_core, hash: c2663ee9beede6f5}
   - {addr: 0x801c8530, size: 52, name: bunit_menu_init_scrollable_list, hash: 2e929bd3e1d1a802}
   - {addr: 0x801c8564, size: 148, name: bunit_cmd_run_stream, hash: 596b0013f79e045b}
@@ -603,7 +603,7 @@ data:
   - {addr: 0x801cf93c, name: g_bunit_menu_reorder_list_index}
   - {addr: 0x801cf940, name: g_bunit_menu_reorder_list_initialized}
   - {addr: 0x801cf944, name: g_bunit_unit_sort_field_indices}
-  - {addr: 0x801cf950, name: g_bunit_menu_event_speed}
+  - {addr: 0x801cf950, name: g_menu_event_speed}
   - {addr: 0x801cf954, name: g_bunit_menu_scroll_pixel_offset}
   - {addr: 0x801cf958, name: g_bunit_menu_cursor_row}
   - {addr: 0x801cf95c, name: g_bunit_text_digit_texture_page}
@@ -891,8 +891,8 @@ functions:
   - {addr: 0x801c5618, size: 268, name: card_gfx_submit_frame_and_swap_buffers, hash: a0c3f91dfab11c0a}
   - {addr: 0x801c5724, size: 188, name: card_gfx_init_primitive_lists, hash: 5281de40b6d6fde6}
   - {addr: 0x801c57e0, size: 464, name: card_gfx_init_contexts, hash: 17d58bd69695ffbe}
-  - {addr: 0x801c59b0, size: 52, name: card_menu_set_vsync_mode_and_event_speed, hash: 48e5f4bdd9a23db4}
-  - {addr: 0x801c59e4, size: 32, name: card_menu_get_event_speed, hash: 950823f3780118ae}
+  - {addr: 0x801c59b0, size: 52, name: menu_set_vsync_mode_and_event_speed, hash: 48e5f4bdd9a23db4, source: src/shared/menu/menu_set_vsync_mode_and_event_speed.c}
+  - {addr: 0x801c59e4, size: 32, name: menu_get_event_speed, hash: 950823f3780118ae, source: src/shared/menu/menu_get_event_speed.c}
   - {addr: 0x801c5a04, size: 180, name: card_cmd_draw_textured_quad_handler, hash: 80bb4d6a52a62e83}
   - {addr: 0x801c5ab8, size: 1832, name: card_cmd_draw_window_frame_handler, hash: 0f8c1fe24c89ed4f}
   - {addr: 0x801c61e0, size: 816, name: card_cmd_draw_tiled_rectangle_handler, hash: 6bf11123f13510a0}
@@ -999,7 +999,7 @@ data:
   - {addr: 0x801ca888, name: g_card_file_open_descriptor}
   - {addr: 0x801ca88c, name: g_card_io_selected_slot}
   - {addr: 0x801ca88d, name: g_card_io_operation_pending}
-  - {addr: 0x801ca890, name: g_card_menu_event_speed}
+  - {addr: 0x801ca890, name: g_menu_event_speed}
   - {addr: 0x801ca89c, name: g_card_text_digit_texture_page}
   - {addr: 0x801ca89e, name: g_card_menu_cursor_texture_page}
   - {addr: 0x801ca8a0, name: g_menu_text_clut_2_mode0}
@@ -1441,7 +1441,7 @@ functions:
   - {addr: 0x801cd7c4, size: 308, name: equip_gfx_swap_context_and_clear_otag, hash: b80d2604b85f4811}
   - {addr: 0x801cd8f8, size: 392, name: equip_gfx_init_primitive_buffers, hash: 90b842a4cb363e79}
   - {addr: 0x801cda80, size: 1200, name: equip_gfx_init_contexts, hash: bac1f313f8df9614}
-  - {addr: 0x801cdf30, size: 32, name: equip_menu_get_event_speed, hash: a526ea8bfeed34fc}
+  - {addr: 0x801cdf30, size: 32, name: menu_get_event_speed, hash: a526ea8bfeed34fc, source: src/shared/menu/menu_get_event_speed.c}
   - {addr: 0x801cdf50, size: 28, name: equip_bits_init_primary_reader, hash: d22f691fd1460cc9}
   - {addr: 0x801cdf6c, size: 28, name: equip_bits_init_secondary_reader, hash: 6f6ac58cb1eff727}
   - {addr: 0x801cdf88, size: 172, name: equip_bits_read_primary, hash: df689577297f7bb1}
@@ -1600,7 +1600,7 @@ data:
   - {addr: 0x801d87c0, name: g_equip_menu_list_scroll_entry_ids}
   - {addr: 0x801d87c4, name: g_equip_menu_list_cursor_anim_state}
   - {addr: 0x801d87c6, name: g_equip_input_page_scroll_hold_frames}
-  - {addr: 0x801d87c8, name: g_equip_menu_event_speed}
+  - {addr: 0x801d87c8, name: g_menu_event_speed}
   - {addr: 0x801d87cc, name: g_equip_bits_reader_1_reset}
   - {addr: 0x801d87cd, name: g_equip_bits_reader_2_reset}
   - {addr: 0x801d87d0, name: g_equip_bits_reader_1_index}
@@ -1922,7 +1922,7 @@ functions:
   - {addr: 0x801e47c8, size: 300, name: jobstts_gfx_swap_context_and_clear_otag, hash: f9d99e269fd4a17e}
   - {addr: 0x801e48f4, size: 252, name: jobstts_gfx_init_primitive_buffers, hash: 50311096d96fa683}
   - {addr: 0x801e49f0, size: 1160, name: jobstts_gfx_init_contexts, hash: 16d845f28fbb8c54}
-  - {addr: 0x801e4e78, size: 32, name: jobstts_menu_get_event_speed, hash: 2e67f0497311e3fc}
+  - {addr: 0x801e4e78, size: 32, name: menu_get_event_speed, hash: 2e67f0497311e3fc, source: src/shared/menu/menu_get_event_speed.c}
   - {addr: 0x801e4e98, size: 28, name: jobstts_bits_init_primary_reader, hash: 0f08e6a0c31b76ac}
   - {addr: 0x801e4eb4, size: 28, name: jobstts_bits_init_secondary_reader, hash: 1d271e05aa18deee}
   - {addr: 0x801e4ed0, size: 172, name: jobstts_bits_read_primary, hash: ae4e54d1a49f2fd0}
@@ -1972,7 +1972,7 @@ data:
   - {addr: 0x801f0038, name: g_jobstts_menu_list_scroll_entry_ids}
   - {addr: 0x801f003c, name: g_jobstts_menu_list_cursor_anim_state}
   - {addr: 0x801f003e, name: g_jobstts_input_page_scroll_hold_frames}
-  - {addr: 0x801f0040, name: g_jobstts_menu_event_speed}
+  - {addr: 0x801f0040, name: g_menu_event_speed}
   - {addr: 0x801f0044, name: g_jobstts_bits_primary_reset}
   - {addr: 0x801f0045, name: g_jobstts_bits_secondary_reset}
   - {addr: 0x801f0048, name: g_jobstts_bits_reader_1_index}

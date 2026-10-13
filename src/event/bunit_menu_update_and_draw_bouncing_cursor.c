@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Advances the animated cursor at `pos` and draws it, bouncing vertically,
@@ -35,7 +36,7 @@ void bunit_menu_update_and_draw_bouncing_cursor(point16_t* pos, u16* state, s32 
 
     timer = *state;
     timer &= 0x7F;
-    timer = timer * bunit_menu_get_event_speed();
+    timer = timer * menu_get_event_speed();
     active_bit = active;
     if (active_bit != 0) {
         if (timer >= 0x25) {
@@ -57,7 +58,7 @@ void bunit_menu_update_and_draw_bouncing_cursor(point16_t* pos, u16* state, s32 
     }
 
     offset = raw_offset;
-    timer += bunit_menu_get_event_speed();
+    timer += menu_get_event_speed();
     active_bit = active;
     if (active_bit != 0) {
         if (timer < 0x25) {

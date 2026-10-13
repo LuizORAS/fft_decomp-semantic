@@ -70,7 +70,6 @@ extern s32 g_jobstts_job_list_menu_initialized;
 extern s8 g_jobstts_menu_cursor_forward_offset_keyframes[];
 extern s8 g_jobstts_menu_cursor_reverse_offset_keyframes[];
 extern u16 g_jobstts_menu_cursor_texture_page;
-extern s8 g_jobstts_menu_event_speed;
 
 extern u16 g_jobstts_menu_list_cursor_anim_state;
 extern s16* g_jobstts_menu_list_entries;
@@ -101,7 +100,6 @@ void jobstts_menu_clear_selection_record(s32 index);
 void jobstts_menu_clear_selection_records(void);
 void jobstts_menu_clear_selection_values(void);
 void jobstts_menu_draw_scrollable_list(const menu_instruction_t* script);
-s32 jobstts_menu_get_event_speed(void);
 void jobstts_menu_get_selection_record(s32 index, s16* out_selected_index, s16* out_scroll_index, const s16* abilities);
 void jobstts_menu_init_and_draw_scrollable_list(
     s16* entries, s32 selected_index, s32 scroll_base_index, u8* text_table, const menu_instruction_t* script);

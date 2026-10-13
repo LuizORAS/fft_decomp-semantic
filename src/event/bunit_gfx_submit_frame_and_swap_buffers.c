@@ -44,7 +44,7 @@ void bunit_gfx_submit_frame_and_swap_buffers(s32 first_otag, s32 draw_otag) {
     g_menu_gfx_draw_area_count = 0;
     g_menu_gfx_draw_mode_count = 0;
     while (DrawSync(1) != 0) { }
-    VSync(g_bunit_menu_event_speed);
+    VSync(g_menu_event_speed);
     context = g_bunit_gfx_context_base;
     if (g_menu_gfx_context == context) {
         context++;

@@ -54,6 +54,13 @@ s32 menu_job_calculate_next_level_jp_requirement(s32 index);
 s32 menu_job_get_current_level(s32 unused_row);
 s32 menu_job_get_next_level_jp_requirement(s32 unused_row);
 
+/* frame timing */
+/* Raw VSync mode; animation and script steps use 1 when this is zero. */
+extern s8 g_menu_event_speed;
+
+s32 menu_get_event_speed(void);
+void menu_set_vsync_mode_and_event_speed(s32 speed);
+
 /* primitives */
 void menu_init_default_poly_ft4(POLY_FT4* poly);
 s32 menu_lerp_fixed12(s32 start, s32 end, s32 factor);

@@ -309,7 +309,6 @@ extern u16 g_equip_menu_cursor_mode1_foreground_clut;
 extern s8 g_equip_menu_cursor_reverse_offset_keyframes[];
 extern u16 g_equip_menu_cursor_texture_page;
 extern u16 g_equip_menu_disabled_number_clut;
-extern s8 g_equip_menu_event_speed;
 
 extern s32 g_equip_menu_indicator_brightness[2];
 /* Double-buffer index, current level, fade level and state, one pair each for
@@ -373,7 +372,6 @@ void equip_menu_draw_weapon_hand_icons(s16 weapon_id);
 s32 equip_menu_get_entry_item_count(s32 row);
 s32 equip_menu_get_entry_item_equipped_count(s32 row);
 menu_icon_source_t* equip_menu_get_entry_item_icon_source(s32 row);
-s32 equip_menu_get_event_speed(void);
 s32 equip_menu_get_preview_hp_bonus(s32 unused_row);
 s32 equip_menu_get_preview_hp_bonus_display(s32 unused_row);
 s32 equip_menu_get_preview_mp_bonus(s32 unused_row);

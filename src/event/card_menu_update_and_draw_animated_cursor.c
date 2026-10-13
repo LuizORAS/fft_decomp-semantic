@@ -39,7 +39,7 @@ void card_menu_update_and_draw_animated_cursor(const point16_t* position, u16* a
 
     frame = *animation_state;
     frame &= 0x7f;
-    frame *= card_menu_get_event_speed();
+    frame *= menu_get_event_speed();
     state_value = reverse;
     if (state_value != 0) {
         state_value = frame < 0x25;
@@ -62,7 +62,7 @@ void card_menu_update_and_draw_animated_cursor(const point16_t* position, u16* a
     }
     x_offset = raw_offset;
 
-    frame += card_menu_get_event_speed();
+    frame += menu_get_event_speed();
     state_value = reverse;
     if (state_value != 0) {
         state_value = frame < 0x25;

@@ -41,7 +41,7 @@ menu_instruction_t* bunit_cmd_run_scrollable_list_handler(menu_instruction_t* co
         }
         return command;
     }
-    speed = bunit_menu_get_event_speed();
+    speed = menu_get_event_speed();
     g_bunit_menu_scroll_list_active = 1;
     if (g_bunit_menu_list_redraw_pending != 0) {
         bunit_menu_draw_scrollable_list(command);

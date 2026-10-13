@@ -246,7 +246,6 @@ typedef enum card_save_menu_state {
 extern const s8 g_card_menu_cursor_forward_offset_keyframes[];
 extern const s8 g_card_menu_cursor_reverse_offset_keyframes[];
 extern u16 g_card_menu_cursor_texture_page;
-extern s8 g_card_menu_event_speed;
 extern s32 g_card_menu_script_callback;
 extern s16 g_card_menu_selection_index;
 extern menu_window_rect_source_t* g_card_menu_window_rect_source;
@@ -256,7 +255,6 @@ extern u8 g_card_save_menu_state; /* card_save_menu_state_e */
 
 extern DIRENTRY* g_card_save_menu_work_buffer;
 
-s32 card_menu_get_event_speed(void);
 void card_menu_start_or_poll_thread(s32 thread_id, menu_entry_t* descriptor);
 void card_menu_update_and_draw_animated_cursor(const point16_t* position, u16* animation_state, s32 mode);
 void card_save_init_menu_graphics(void);

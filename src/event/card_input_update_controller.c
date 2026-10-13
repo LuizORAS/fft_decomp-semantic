@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -22,7 +23,7 @@ void card_input_update_controller(void) {
     u32 filtered_input;
     s32* counter_base;
     u32 speed, initial_delay, secondary_repeat_period, repeat_period;
-    speed = card_menu_get_event_speed();
+    speed = menu_get_event_speed();
     initial_delay = g_main_input_repeat_initial_delay / speed;
     repeat_period = g_main_input_repeat_period / speed;
     secondary_repeat_period = g_main_input_secondary_repeat_period / speed;

@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Idle (0x801d87a0, 6 steps) and active (0x801d87ac, 10 steps) animation
@@ -40,7 +41,7 @@ void equip_menu_update_and_draw_animated_cursor(const point16_t* anchor, u16* st
 
     frame = *state;
     frame = frame & 0x7F;
-    frame = frame * equip_menu_get_event_speed();
+    frame = frame * menu_get_event_speed();
     active_test = active;
     if (active_test != 0) {
         if (frame >= 0x25) {
@@ -60,7 +61,7 @@ void equip_menu_update_and_draw_animated_cursor(const point16_t* anchor, u16* st
     }
     x_offset = raw_offset;
 
-    frame += equip_menu_get_event_speed();
+    frame += menu_get_event_speed();
     active_test = active;
     if (active_test != 0) {
         if (frame < 0x25) {

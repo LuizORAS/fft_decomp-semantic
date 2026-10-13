@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Draw one slot's span of g_bunit_slot_sprite_entries sprite entries at (x, y).
@@ -25,7 +26,7 @@ void bunit_menu_draw_pressable_button(s16 slot, s16 x, s16 y, s16 pressed, s16 b
     s32 scale_y;
     u32 orientation;
 
-    speed = bunit_menu_get_event_speed();
+    speed = menu_get_event_speed();
     if (busy != 0) {
         g_bunit_menu_button_press_timers[slot] = 0;
         clut = g_bunit_menu_cursor_mode1_foreground_clut;

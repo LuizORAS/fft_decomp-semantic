@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Step the fade to full intensity by 8 per event-speed step and draw the fade
@@ -7,7 +8,7 @@
 s32 bunit_gfx_update_increasing_fade(void) {
     u8 unused[16];
     s32 ret = 1;
-    s32 speed = bunit_menu_get_event_speed();
+    s32 speed = menu_get_event_speed();
 
     if (g_bunit_gfx_increasing_fade_active != 0) {
         g_bunit_gfx_fade_intensity += speed * 8;

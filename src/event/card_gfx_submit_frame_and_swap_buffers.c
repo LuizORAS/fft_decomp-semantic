@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /*
@@ -17,7 +18,7 @@ void card_gfx_submit_frame_and_swap_buffers(s32 first_otag, s32 draw_otag) {
     g_card_gfx_poly_ft4_count = 0;
     g_card_gfx_tile_count = 0;
     while (DrawSync(1) != 0) { }
-    VSync(g_card_menu_event_speed);
+    VSync(g_menu_event_speed);
     context = g_card_gfx_context_base;
     if (g_card_gfx_context == context) {
         context = context + 1;

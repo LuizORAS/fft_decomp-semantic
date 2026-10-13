@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Step the fade toward zero intensity by 8 per event-speed step and draw the
@@ -6,7 +7,7 @@
  * ends the fade, 1 otherwise (also when no fade is active). */
 s32 card_gfx_update_decreasing_fade(void) {
     s32 result = 1;
-    s32 speed = card_menu_get_event_speed();
+    s32 speed = menu_get_event_speed();
 
     if (g_card_gfx_decreasing_fade_active != 0) {
         g_card_gfx_fade_intensity -= speed * 8;

@@ -300,7 +300,6 @@ extern u16 g_bunit_menu_cursor_mode1_foreground_clut;
 extern s8 g_bunit_menu_cursor_reverse_offset_keyframes[];
 extern s32 g_bunit_menu_cursor_row;
 extern u16 g_bunit_menu_disabled_number_clut;
-extern s8 g_bunit_menu_event_speed;
 extern u16 g_bunit_menu_icon_texture_page;
 extern u16 g_bunit_menu_list_cursor_anim_state;
 extern s16* g_bunit_menu_list_entries;
@@ -347,7 +346,6 @@ void bunit_menu_clear_selection_records(void);
 void bunit_menu_dispatch_with_override(menu_instruction_t* script, s32 state, s32 override);
 void bunit_menu_draw_pressable_button(s16 slot, s16 x, s16 y, s16 pressed, s16 busy, u16 sound_id);
 void bunit_menu_draw_scrollable_list(const menu_instruction_t* script);
-s32 bunit_menu_get_event_speed(void);
 void bunit_menu_get_selection_record(s32 index, s16* selected_index, s16* scroll_base_index, s16* entries);
 void bunit_menu_init_and_draw_scrollable_list(
     s16* entries, s32 selected_index, s32 scroll_base_index, u8* text_table, const menu_instruction_t* script);
@@ -369,7 +367,6 @@ void bunit_menu_scroll_list_by_page(bunit_menu_vertical_scroll_direction_e direc
 void bunit_menu_set_palette_mode(s32 mode);
 void bunit_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_base_index, s16* entries);
 s32 bunit_menu_set_selection_value(u8 index, s16 value);
-void bunit_menu_set_vsync_mode_and_event_speed(s32 speed);
 void bunit_menu_update_and_draw_animated_cursor(point16_t* pos, u16* state, s32 mode);
 void bunit_menu_update_and_draw_bouncing_cursor(point16_t* pos, u16* state, s32 mode);
 s32 bunit_menu_update_horizontal_selection_and_mark_change(

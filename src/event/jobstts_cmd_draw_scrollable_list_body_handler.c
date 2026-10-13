@@ -35,8 +35,8 @@ menu_instruction_t* jobstts_cmd_draw_scrollable_list_body_handler(menu_instructi
 
     ot_index = g_jobstts_gfx_otag_index;
     speed = 1;
-    if (g_jobstts_menu_event_speed != 0) {
-        speed = g_jobstts_menu_event_speed;
+    if (g_menu_event_speed != 0) {
+        speed = g_menu_event_speed;
     }
     if (g_jobstts_menu_list_entry_count <= 0) {
         count = command->list.skip_count + 1;
