@@ -1028,7 +1028,6 @@ s32 script_scale_music_volume(s32 volume);
 
 /* operand arithmetic */
 void script_copy_matrix(MATRIX* destination, const MATRIX* source);
-void world_script_copy_matrix(MATRIX* destination, const MATRIX* source);
 s32 script_interpolate_range_fixed12(s32 start, s32 end, s32 fraction, s32 value);
 s32 world_script_interpolate_range_fixed12(s32 start, s32 end, s32 fraction, s32 value);
 
