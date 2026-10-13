@@ -160,7 +160,8 @@ void debugchr_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* packet)
 /* text */
 extern glyph_blit_t g_debugchr_text_decimal_glyph;
 
-void debugchr_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
+void debugchr_text_render_decimal_entry_list(
+    u8* pixels, const menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 void debugchr_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
 void debugchr_text_render_signed_decimal_entries(
     u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);

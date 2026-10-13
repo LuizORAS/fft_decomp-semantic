@@ -380,7 +380,8 @@ extern s32 g_attack_text_job_names_offset;
 extern s32 g_attack_text_roster_unit_names_offset;
 
 void attack_text_init_battle_pointers(attack_text_file_t* file);
-void attack_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* out, s32 count);
+void attack_text_render_decimal_entry_list(
+    u8* pixels, const menu_number_entry_t* entries, glyph_blit_t* out, s32 count);
 void attack_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
 void attack_text_render_signed_decimal_entries(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* out, s32 count);
 

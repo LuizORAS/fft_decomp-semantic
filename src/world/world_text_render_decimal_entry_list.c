@@ -3,7 +3,8 @@
 
 /* Render gauge values with an explicit sign, coloured by sign (0x7 fill for
  * negative, 0xb for positive), drawing a zero value as a placeholder. */
-void world_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* out, s32 count) {
+void world_text_render_decimal_entry_list(
+    u8* pixels, const menu_number_entry_t* entries, glyph_blit_t* out, s32 count) {
     s32 i;
 
     for (i = 0; i < count; entries++, i++, out->color = 0) {

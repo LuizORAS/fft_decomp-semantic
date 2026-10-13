@@ -2000,7 +2000,8 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
 void world_menu_draw_stacked_glyph_pair(u8* buffer, glyph_blit_t* dest);
 u8* world_text_find_entry_by_index(u8* p, s16 count, s32 unused);
 
-void world_text_render_decimal_entry_list(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
+void world_text_render_decimal_entry_list(
+    u8* pixels, const menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 
 void world_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
 void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
