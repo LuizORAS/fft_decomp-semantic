@@ -1,4 +1,5 @@
 #include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "fft/gfx.h"
 #include "fft/thread.h"
 /* BATTLE twin: battle_menu_run_unit_editor_panel_thread. */
@@ -209,7 +210,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
             }
             if ((g_world_menu_new_button_input & PSX_PAD_CIRCLE)
                 && world_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0
-                && (world_unit_has_any_current_status(g_world_active_unit_data.battle_id) != 0
+                && (unit_has_any_current_status(g_world_active_unit_data.battle_id) != 0
                     || (g_world_unit_editor_fields.state.generic_monster == 0
                         && g_world_unit_selected_status_billboard.team_kind != 1))) {
                 thread_start(g_native_current_thread_id - 1, world_menu_build_unit_status_list);

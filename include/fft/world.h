@@ -1346,7 +1346,7 @@ typedef struct world_formation_unit {
     s16 right_weapon_evade;               /* 0x03a */
     s16 left_weapon_evade;                /* 0x03c */
     s16 uses_monster_skillset;            /* 0x03e; primary skillset is in the monster range 0xb0..0xdf */
-    s16 two_handed;                       /* 0x040; world_unit_is_two_handing_weapon result (WORLD 0x80115198) */
+    s16 two_handed;                       /* 0x040; unit_is_two_handing_weapon result */
     s16 physical_attack;                  /* 0x042 */
     s16 physical_class_evade;             /* 0x044 */
     s16 physical_shield_evade;            /* 0x046 */
@@ -1789,7 +1789,6 @@ s32 world_unit_get_map_coords_by_runtime_id(s32 runtime_id, SVECTOR* out);
 vec3u16_t* world_unit_copy_world_coords_to_scratch(u32 runtime_id);
 s32 world_formation_get_unit_palette_index(s32 roster_slot);
 s32 world_unit_get_zodiac_for_date(s32 month, s32 day);
-s32 world_unit_has_any_current_status(s32 unit_id);
 
 void world_unit_inflict_status_by_event_unit_id(
     s32 event_unit_id, s32 status_index, s32 is_infliction, s32 less_strict_removal);
@@ -2812,7 +2811,6 @@ void world_item_calculate_swap_stat_delta(menu_status_panel_slot_storage_t* outp
 void world_item_cash_out_excess_inventory(void);
 s32 world_item_adjust_inventory_count(s16 item_id, s32 delta);
 
-s32 world_unit_is_two_handing_weapon(s16* equipment, s32 two_hands_support);
 s32 world_item_count_owned_and_equipped(s16 item_id);
 s32 world_item_count_selected_equipped_by_party(s32 unused_row);
 s32 world_item_count_selected_owned_and_equipped(s32 unused_row);

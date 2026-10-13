@@ -1,3 +1,4 @@
+#include "fft/battle_unit.h"
 #include "fft/gfx.h"
 #include "fft/thread.h"
 /*
@@ -215,7 +216,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
             }
             if ((g_script_event_input & PSX_PAD_CIRCLE)
                 && battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0
-                && (battle_unit_has_any_current_status(g_battle_active_turn_unit.battle_id) != 0
+                && (unit_has_any_current_status(g_battle_active_turn_unit.battle_id) != 0
                     || (g_battle_menu_billboard_data.state.generic_monster == 0
                         && g_battle_menu_active_turn_banner.team_kind != 1))) {
                 thread_start(g_native_current_thread_id - 1, battle_menu_build_unit_status_list);

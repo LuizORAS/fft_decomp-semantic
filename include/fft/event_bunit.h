@@ -133,7 +133,6 @@ s32 bunit_unit_get_experience(s32 unit_id);
 s32 bunit_unit_get_faith(s32 unit_id);
 s32 bunit_unit_get_level(s32 unit_id);
 s32 bunit_unit_get_max_stat(s32 unit_index);
-s32 bunit_unit_is_two_handing_weapon(const s16* slots, s32 allow_secondary);
 void bunit_unit_sort_index_list_by_order_keys(s32 sort_mode);
 
 /* ability */

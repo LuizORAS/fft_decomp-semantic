@@ -1232,7 +1232,7 @@ battle_chocobo_mount_state_e battle_unit_get_chocobo_mount_state(battle_stats_t*
 void battle_unit_mount_onto_pending_mount(battle_unit_t* unit);
 s32 battle_unit_prepare_rider_dismount(u32 runtime_id, s32 direction, s32 jump_length);
 struct battle_unit* battle_unit_get_mount(struct battle_unit* unit);
-s32 battle_unit_has_any_current_status(s32 battle_id);
+s32 unit_has_any_current_status(s32 battle_id);
 battle_unit_action_restriction_e battle_unit_get_action_restriction(battle_stats_t* unit);
 
 /* battle_unit_animation_e of each item type's attack at a higher, a level and a lower target. */

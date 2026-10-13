@@ -115,7 +115,7 @@ functions:
   - {addr: 0x800e7c20, size: 32, name: text_fill_field_with_terminators, hash: 5eaa92c4790153fd, source: src/shared/text/text_fill_field_with_terminators.c}
   - {addr: 0x800e7c40, size: 396, name: world_menu_copy_unit_data_to_status_billboard, hash: 9b61737b18a8d657}
   - {addr: 0x800e7dcc, size: 1348, name: world_menu_load_selected_unit, hash: f635c99de88e0baf}
-  - {addr: 0x800e8310, size: 84, name: world_unit_has_any_current_status, hash: f4242604b8850c34}
+  - {addr: 0x800e8310, size: 84, name: unit_has_any_current_status, hash: f4242604b8850c34, source: src/shared/unit/unit_has_any_current_status.c}
   - {addr: 0x800e8364, size: 516, name: world_menu_build_unit_status_list, hash: 97f6760c5281c86d}
   - {addr: 0x800e8568, size: 136, name: world_menu_copy_billboard_data_out, hash: d14feb4432c303f8}
   - {addr: 0x800e85f0, size: 112, name: world_menu_copy_billboard_data_in, hash: ca83ceb83456cefa}
@@ -716,7 +716,7 @@ functions:
   - {addr: 0x80120930, size: 148, name: world_formation_dismiss_unit, hash: d1fab85220522094}
   - {addr: 0x801209c4, size: 160, name: world_formation_generate_unit, hash: 3dca939e286b3f97}
   - {addr: 0x80120a64, size: 152, name: world_formation_set_unit_name, hash: 7171309b3c28f0a5}
-  - {addr: 0x80120afc, size: 148, name: world_unit_is_two_handing_weapon, hash: 3c38bd0637eadb53}
+  - {addr: 0x80120afc, size: 148, name: unit_is_two_handing_weapon, hash: 3c38bd0637eadb53, source: src/shared/unit/unit_is_two_handing_weapon.c}
   - {addr: 0x80120b90, size: 32, name: job_is_special_monster, hash: f4362856b8ecd185, source: src/shared/job/job_is_special_monster.c}
   - {addr: 0x80120bb0, size: 1336, name: world_formation_build_unit_record, hash: e6808d20c381f45c}
   - {addr: 0x801210e8, size: 464, name: world_formation_build_record_list, hash: 93fb6fa91f4fa5c9}

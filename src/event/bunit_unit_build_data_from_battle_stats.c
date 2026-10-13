@@ -1,5 +1,6 @@
 #include "fft/event_bunit.h"
 #include "fft/main.h"
+#include "fft/unit.h"
 #include "psx/libc.h"
 #include "psx/types.h"
 
@@ -130,7 +131,7 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
     record->runtime_id = battle_unit_get_runtime_id_by_battle_id(unit->entd_slot);
     record->initial_team_flags = unit->initial_team_flags;
     record->mount_info = unit->mount_info;
-    record->two_handed = bunit_unit_is_two_handing_weapon(
+    record->two_handed = unit_is_two_handing_weapon(
         record->equipment, unit->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS);
     record->gender_flags = unit->unit_flags;
     record->character_identity = unit->character_identity;

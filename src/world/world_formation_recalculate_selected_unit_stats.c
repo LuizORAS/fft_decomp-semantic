@@ -1,3 +1,4 @@
+#include "fft/unit.h"
 #include "fft/world.h"
 #include "psx/libc.h"
 
@@ -61,7 +62,7 @@ void world_formation_recalculate_selected_unit_stats(void) {
     world_formation_build_unit_record(&unit, &record, main_party_get_data_pointer(roster_slot));
     bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, record.equipment,
         sizeof(record.equipment));
-    record.two_handed = world_unit_is_two_handing_weapon(
+    record.two_handed = unit_is_two_handing_weapon(
         (s16*)record.equipment, record.support_abilities[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS);
     bcopy(&record.status, &g_world_selected_unit_stat_summary, sizeof(menu_unit_status_record_t));
     bcopy(&record.identity, &g_world_selected_unit_identity, sizeof(menu_unit_status_identity_t));

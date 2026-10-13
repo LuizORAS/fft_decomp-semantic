@@ -416,6 +416,8 @@ typedef enum unit_equipment_slot {
     UNIT_EQUIPMENT_SLOT_COUNT = 7,
 } unit_equipment_slot_e;
 
+s32 unit_is_two_handing_weapon(const s16* slots, s32 two_hands_support);
+
 /* job */
 /* Career slots follow the generic jobs' order. Slot zero holds the unit's base
  * job, including a special character's job; generic Squire has job ID 74. */

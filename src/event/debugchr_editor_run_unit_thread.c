@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
+#include "fft/battle_unit.h"
 #include "fft/event_debugchr.h"
 #include "fft/menu.h"
 #include "fft/sound.h"
@@ -157,7 +158,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
                 break;
             }
             if ((input & PSX_PAD_CIRCLE) != 0 && battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0
-                && (battle_unit_has_any_current_status(g_debugchr_panel_selected_unit_data.battle_id) != 0
+                && (unit_has_any_current_status(g_debugchr_panel_selected_unit_data.battle_id) != 0
                     || g_debugchr_editor_unit_fields.state.generic_monster == 0)) {
                 g_debugchr_status_display_thread_params.style = one;
                 g_debugchr_numeric_editor_thread_params.style = one;

@@ -1,4 +1,5 @@
 #include "fft/thread.h"
+#include "fft/unit.h"
 #include "fft/world.h"
 #include "psx/libc.h"
 #include "psx/types.h"
@@ -100,7 +101,7 @@ void world_shop_run_best_fit_preview_step(void) {
             g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
             (u16*)g_world_item_preview_stat_detail.state.equipment);
         g_world_item_preview_stat_detail.state.two_hands
-            = world_unit_is_two_handing_weapon(g_world_item_preview_stat_detail.state.equipment,
+            = unit_is_two_handing_weapon(g_world_item_preview_stat_detail.state.equipment,
                 world_ability_has_two_hands(g_world_formation_selected_unit_index));
         world_menu_toggle_stat_preview_panel_thread(1);
         world_menu_toggle_preview_stats_window(1);
