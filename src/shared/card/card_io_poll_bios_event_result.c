@@ -1,12 +1,10 @@
 #include "fft/main.h"
-#include "fft/open.h"
-#include "psx/types.h"
 
-/* Poll the four BIOS card events and report which one fired, or pending when none
- * fired. A fired event is consumed along with the rest of the set. */
-s32 open_card_poll_bios_event(void) {
+/* Test the four BIOS card events (done, error, timeout, new card) and return
+ * the matching CARD_IO_RESULT_*, or CARD_IO_RESULT_PENDING when none has
+ * fired. A result clears all four events. */
+s32 card_io_poll_bios_event_result(void) {
     s32 result = CARD_IO_RESULT_PENDING;
-
     if (TestEvent(g_main_card_bios_events[MAIN_CARD_EVENT_BIOS_DONE]) == 1)
         result = CARD_IO_RESULT_COMPLETE;
     else if (TestEvent(g_main_card_bios_events[MAIN_CARD_EVENT_BIOS_ERROR]) == 1)

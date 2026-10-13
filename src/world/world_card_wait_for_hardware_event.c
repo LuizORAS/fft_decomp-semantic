@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -10,7 +11,7 @@ s32 world_card_wait_for_hardware_event(void) {
 
     while (1) {
         busy = _card_status(g_world_card_selected_slot) & 1;
-        result = world_card_poll_hardware_event();
+        result = card_io_poll_hardware_event_result();
         if (result >= CARD_IO_RESULT_COMPLETE) {
             break;
         }

@@ -235,6 +235,8 @@ extern card_save_play_time_t g_main_card_save_slot_playtimes[CARD_SAVE_SLOT_COUN
 void card_io_consume_all_events(void);
 void card_io_consume_bios_events(void);
 void card_io_consume_hardware_events(void);
+s32 card_io_poll_bios_event_result(void);
+s32 card_io_poll_hardware_event_result(void);
 void main_card_init_events(void);
 
 /* file */

@@ -2798,8 +2798,6 @@ void world_card_init_menu_state(void);
 s32 world_card_load_globals_from_save_image(s32 partial_load);
 s32 world_card_load_with_retries(s32 channel, s32 attempts);
 s32 world_card_open_file_with_retries(const char* filename, s32 mode);
-s32 world_card_poll_bios_event(void);
-s32 world_card_poll_hardware_event(void);
 s32 world_card_poll_info_with_retries(s32 channel, s32 count);
 s32 world_card_probe_selected(void);
 s32 world_card_read_file_with_retries(s32 descriptor, void* destination, s32 size);

@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* Poll the BIOS card event until it reports a result. A poll that finds

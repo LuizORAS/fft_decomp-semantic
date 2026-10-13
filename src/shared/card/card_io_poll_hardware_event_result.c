@@ -1,6 +1,4 @@
-#include "fft/event_card.h"
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* Test the four hardware card events (done, error, timeout, new card) and return
  * the matching CARD_IO_RESULT_*, or CARD_IO_RESULT_PENDING when none has
