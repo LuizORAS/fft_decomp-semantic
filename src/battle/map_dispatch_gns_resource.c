@@ -230,8 +230,8 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
     case MAP_RESOURCE_MESH_OVERRIDE:
     case MAP_RESOURCE_MESH_ALTERNATE:
         for (i = MAP_RESOURCE_GEOMETRY_PRIMARY; i < GNS_RESOURCE_TABLE_COUNT; i++) {
-            if (data->mesh_file.offsets[i] != 0) {
-                map_dispatch_gns_resource(i, (map_resource_t*)(data->bytes + data->mesh_file.offsets[i]));
+            if (data->mesh_file[i] != 0) {
+                map_dispatch_gns_resource(i, (map_resource_t*)(data->bytes + data->mesh_file[i]));
             }
         }
         break;

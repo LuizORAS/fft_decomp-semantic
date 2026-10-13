@@ -504,9 +504,7 @@ typedef char map_mesh_geometry_prefix_must_be_8[sizeof(map_mesh_geometry_t) == 8
  * The dispatcher visits IDs 0x10..0x30; zero means the chunk is absent.
  * Reserved offsets are zero on the USA disc. MAP000.5 alone has an embedded
  * texture quarter at resource ID 0x13. */
-typedef struct map_mesh_file_header {
-    u32 offsets[GNS_RESOURCE_TABLE_COUNT];
-} map_mesh_file_header_t;
+typedef u32 map_mesh_file_header_t[GNS_RESOURCE_TABLE_COUNT];
 typedef char map_mesh_file_header_size_must_be_196[(sizeof(map_mesh_file_header_t) == 196) ? 1 : -1];
 
 /* Polygon position and normal records copied from the mesh geometry block.
