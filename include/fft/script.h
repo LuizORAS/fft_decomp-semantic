@@ -969,13 +969,15 @@ void script_report_missing_unit_stub(s32 unused_unit_id);
 
 /* Event-unit lookup uses the resident scene's interpreter state. */
 s32 script_resolve_runtime_id(s32 unit_id);
+
+/* unit instructions */
 /* TeleportIn forwards the unit ID; the interpreter's second argument is unused. */
 void script_teleportin_event_instruction(s32 unit_id, s32 unused);
+void script_jump_event_instruction(const event_jump_parameters_t* parameters);
+void script_resetpalette_event_instruction(const event_unit_parameters_t* parameters);
 
 /* party operations */
 void script_dismiss_unit_event_instruction(s32 sprite_set);
-void script_jump_event_instruction(const event_jump_parameters_t* parameters);
-void script_resetpalette_event_instruction(const event_unit_parameters_t* parameters);
 void script_join_units_silently(void);
 
 /* operand access */

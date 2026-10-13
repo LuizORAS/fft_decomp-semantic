@@ -10,17 +10,17 @@
 #include "psx/types.h"
 
 /* ability */
-/* Provisional ability-list work buffer at *g_ai_workspace_ptr (0x52 rows each).
+/* Provisional ability-list work buffer at *g_ai_workspace_ptr (82 rows each).
  * WORLD twin of the BATTLE ability list. */
 typedef struct menu_ability_list {
-    u16 ids[0x52];     /* 0x000; 0xffff terminated; the text id base of the names is ORed in */
-    u16 values[0x52];  /* 0x0a4 */
-    u16 extras[0x52];  /* 0x148 */
-    u8 mp_costs[0x52]; /* 0x1ec; 0xff terminated */
-    u8 ct[0x52];       /* 0x23e; CT */
-    u8 flags[0x52];    /* 0x290; bit 1 = blocked by unit flag 0x59 & 8 */
-    u8 turns[0x52];    /* 0x2e2 */
-    u8 skill_ct[0x52]; /* 0x334 */
+    u16 ids[82];     /* 0x000; 0xffff terminated; the text id base of the names is ORed in */
+    u16 values[82];  /* 0x0a4 */
+    u16 extras[82];  /* 0x148 */
+    u8 mp_costs[82]; /* 0x1ec; 0xff terminated */
+    u8 ct[82];       /* 0x23e; CT */
+    u8 flags[82];    /* 0x290; bit 1 = blocked by unit flag 0x59 & 8 */
+    u8 turns[82];    /* 0x2e2 */
+    u8 skill_ct[82]; /* 0x334 */
 } menu_ability_list_t;
 
 void menu_copy_u8_to_u16(u16* destination, const u8* source, s32 count);
@@ -850,7 +850,7 @@ typedef struct menu_text_row {
 
 /* Provisional: the 0x7c-byte icon record world_menu_build_icon_record fills.
  * Its head is exactly menu_icon_sprites_t; the three borrowed icon
- * sprites at +0x68 and the two counters at +0x74/+0x78 are what that builder
+ * sprites at +0x68 and the two state words at +0x74/+0x78 are what that builder
  * adds. */
 typedef struct menu_icon_record {
     menu_icon_sprites_t base; /* 0x00 */
@@ -1231,6 +1231,8 @@ typedef enum companion_overlay_state {
     COMPANION_OVERLAY_STATE_CARD_SAVE = 5, /* card_save_run_menu */
 } companion_overlay_state_e;
 
+void menu_free_high_overlay(void);
+
 /* g_*_menu_indicator_state[]: state of each of the two translucent panels
  * *_menu_draw_thread_status_indicators draws behind the unit status banners. */
 typedef enum menu_indicator_state {
@@ -1330,7 +1332,7 @@ typedef struct battle_menu_id_record {
 } battle_menu_id_record_t;
 typedef char battle_menu_id_record_size_must_be_8[(sizeof(battle_menu_id_record_t) == 8) ? 1 : -1];
 
-void menu_free_high_overlay(void);
+/* memory */
 /* Both menu arenas track sixteen allocations in 256-byte pages. */
 enum {
     MENU_BUFFER_ALLOCATION_COUNT = 16,
@@ -1344,6 +1346,7 @@ typedef struct menu_allocation {
 } menu_allocation_t;
 typedef char menu_allocation_size_must_be_8[(sizeof(menu_allocation_t) == 8) ? 1 : -1];
 
+/* input */
 /* Pressed, held and previous buttons, followed by the menu repeat counters. */
 typedef struct menu_input_state {
     u32 new_buttons;              /* 0x00 */

@@ -1132,8 +1132,8 @@ typedef enum unit_flags {
     UNIT_FLAG_MALE = 0x80,
 } unit_flags_e;
 
-/* unit_animation_state_t.rotate_mode: how the facing nibble steps toward target_facing. */
 /* animation */
+/* unit_animation_state_t.rotate_mode: how the facing nibble steps toward target_facing. */
 typedef enum unit_rotate_mode {
     UNIT_ROTATE_MODE_SHORTEST = 0,  /* the direction with fewer steps */
     UNIT_ROTATE_MODE_INCREMENT = 1, /* facing + 1 each step */
@@ -1149,7 +1149,7 @@ typedef struct unit_animation_state {
     u8 frames_per_step; /* facing steps once step_counter reaches this */
     u8 step_counter;
     u8 rotating;       /* nonzero while stepping toward target_facing */
-    u8 initial_facing; /* facing captured by world_unit_reset_animation_states (0xff when
+    u8 initial_facing; /* facing captured when animation states reset (0xff when
                           absent); RotateUnit direction 0x14 rotates back to it */
     u8 delay;          /* frames to wait before the first step */
 } unit_animation_state_t;
