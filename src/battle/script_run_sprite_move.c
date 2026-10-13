@@ -41,17 +41,16 @@ void script_run_sprite_move(const event_sprite_move_parameters_t* instruction, s
     s32 elapsed;
     s32 half;
 
-    parameters = (const u8*)instruction;
+    parameters = instruction->unit_id_le;
     mode = use_speed;
-    runtime_id
-        = script_resolve_runtime_id(script_read_s16(((const event_sprite_move_parameters_t*)parameters)->unit_id_le));
+    runtime_id = script_resolve_runtime_id(script_read_s16(parameters));
     if (runtime_id == EVENT_RUNTIME_ID_NONE) {
         return;
     }
     g_battle_thread_contexts[g_battle_current_thread_id].task_words[0] = runtime_id;
     coords = battle_unit_get_event_offset_by_runtime_id(runtime_id);
     /* One advancing operand cursor preserves the retail register allocation. */
-    parameters = ((const event_sprite_move_parameters_t*)parameters)->destination_le[0];
+    parameters = instruction->destination_le[0];
     pos[0][0] = coords->vx;
     pos[0][1] = coords->vy;
     pos[0][2] = coords->vz;
