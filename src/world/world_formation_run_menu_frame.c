@@ -18,7 +18,7 @@ extern u32 g_world_formation_menu_current_input, g_world_formation_menu_previous
  * (masked by the formation entry mask and cleared while any of the six
  * g_world_formation_open_request_state.. flags is set), runs the formation/memory-card request
  * updates, publishes the input, yields once while tracking thread status
- * changes and returns the menu result slot g_world_menu_pending_selection[0] (-2 while pending).
+ * changes and returns the menu result slot g_menu_pending_selection[0] (-2 while pending).
  * Formation-menu sibling of world_input_update_event_state. */
 s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     s32 profile;

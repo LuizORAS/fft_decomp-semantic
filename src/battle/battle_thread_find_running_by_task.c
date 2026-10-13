@@ -4,7 +4,7 @@
 
 /* Return the id of any OTHER live event thread whose current 32-bit task value
    equals task_id, or 0 when none matches. Skips the caller's own thread
-   (g_battle_current_thread_id) and slot 0. */
+   (g_native_current_thread_id) and slot 0. */
 s32 battle_thread_find_running_by_task(s32 task_id) {
     s32 thread_id;
 

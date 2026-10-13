@@ -16,7 +16,7 @@
  * mode 2, the reaction-ability name), the BATTLE twin of world_menu_display_hovered_unit_stats.
  * Builds two alternating 0x2ec-byte pages, slides the panel in by
  * `slide`/`speed` each event tick and out when the thread's third parameter
- * is set (mode 0 also leaves immediately while g_battle_thread_contexts[12].task_id is
+ * is set (mode 0 also leaves immediately while g_native_thread_contexts[12].task_id is
  NATIVE_THREAD_TASK_ATTACK_CASTER_STATS). A running
  * task-0x15 thread dims the portrait, gauges and CLUTs.
  *

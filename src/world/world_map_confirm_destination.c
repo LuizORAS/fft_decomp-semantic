@@ -6,7 +6,7 @@
 
 /* Slot 0 is stored through a plain pointer on purpose: `pending[0]` is a
  * scalar reference there, so the scheduler may sink it below the text-id
- * load as in the target. Writing g_world_menu_pending_selection[0] marks the
+ * load as in the target. Writing g_menu_pending_selection[0] marks the
  * store as an array element and keeps it above that load. */
 void world_map_confirm_destination(void) {
     s32 selection;

@@ -10,7 +10,7 @@
  * typewriter delay.
  *
  * One of three slots is reserved for the calling thread, keyed on
- * g_world_thread_current_id; a thread that finds none yields and retries. The
+ * g_native_current_thread_id; a thread that finds none yields and retries. The
  * slot owns a ring of eight 0x54-byte images and the previous image, so a
  * glyph whose pen position lands mid-byte can re-emit the tail its
  * predecessor already drew. `delay` selects the pacing: 0 returns after a

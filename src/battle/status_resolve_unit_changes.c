@@ -7,7 +7,7 @@
  *
  * The current target's ten status bytes are saved around the resolution and
  * restored afterwards, since this runs from the event thread
- * (status_inflict_by_entd_unit_id) in the middle of an action.
+ * (status_inflict_by_event_unit_id) in the middle of an action.
  */
 s32 status_resolve_unit_changes(s32 unit_id, s32 removal_only) {
     unit_action_status_changes_t saved;

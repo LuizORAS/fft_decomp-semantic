@@ -5,7 +5,7 @@
 #include "psx/types.h"
 
 /* Per-frame menu/world step: snapshots g_ai_workspace, substitutes the unfiltered
- * controller input while menu input is disabled, clears the four g_world_menu_pending_selection
+ * controller input while menu input is disabled, clears the four g_menu_pending_selection
  * slots to -2, runs the input/update steps and, while threads 6/7 or thread 8
  * (outside state 0x42) are running, forces event speed 2 (restoring the saved
  * animation speed afterwards). Returns world_menu_resolve_selection's result. */

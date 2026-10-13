@@ -501,7 +501,7 @@ written that way.
   `battle_unit_advance_altima_teleport_distortion` fall through without an
   `s32` result; the animation dispatcher ignores their results.
 - `battle_thread_resolve_id` and `battle_thread_resolve_id_after_current` fall
-  off their end after `battle_thread_exit_current()`, like the WORLD twins.
+  off their end after `thread_exit_current()`, like the WORLD twins.
 - `ai_calculate_clockticks_until_death_counter_expires` is defined
   with three parameters and both callers pass one; the other two are scratch
   it assigns before reading.

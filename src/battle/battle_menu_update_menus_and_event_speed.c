@@ -9,7 +9,7 @@
 
 /*
  * Run one frame of the battle menu/event layer and return battle_menu_resolve_selection's
- * result. While event threads 6-8 run (thread 8 only when g_battle_thread_contexts[8].task_id is not
+ * result. While event threads 6-8 run (thread 8 only when g_native_thread_contexts[8].task_id is not
  * 0x42) the event speed is forced to 2, restoring the saved speed afterwards.
  *
  * The `fill` staging variable places the -2 load ahead of the loop counter
