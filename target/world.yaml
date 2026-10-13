@@ -519,7 +519,7 @@ functions:
   - {addr: 0x801090c8, size: 384, name: world_formation_get_unit_palette_index, hash: 340716a4d002e911}
   - {addr: 0x80109248, size: 272, name: world_get_party_unit_formation_sprite, hash: d3e3b468e663ce32}
   - {addr: 0x80109358, size: 28, name: world_thread_request_redraw, hash: 3d1c564d078f3477}
-  - {addr: 0x80109374, size: 480, name: world_screen_menu_draw_text_columns, hash: 6aa494fcc042d443}
+  - {addr: 0x80109374, size: 480, name: world_screen_menu_draw_text_columns, hash: 6aa494fcc042d443, source: src/world/world_menu_draw_text_columns.c, source_symbol: world_menu_draw_text_columns}
   - {addr: 0x80109554, size: 648, name: world_screen_menu_redraw_text_page_on_scroll, hash: c3e620bbb56ea16d}
   - {addr: 0x801097dc, size: 3236, name: world_screen_build_at_list, hash: fbd15105f39ab67f, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x8010a480, size: 40, name: world_gfx_set_blit_source_rect, hash: 9b7f8b6f740c2815}
