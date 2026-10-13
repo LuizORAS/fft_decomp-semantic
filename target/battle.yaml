@@ -969,8 +969,8 @@ functions:
   - {addr: 0x801439c0, size: 220, name: camera_load_state_from_script_variables, hash: 36400181c54e0d33}
   - {addr: 0x80143a9c, size: 204, name: camera_store_state_to_script_variables, hash: ccad4d511e07c5fe}
   - {addr: 0x80143b68, size: 24, name: map_get_weather, hash: d20bef566195fa38}
-  - {addr: 0x80143b80, size: 40, name: script_run_next_event, hash: 5f28a3f8beb0666a}
-  - {addr: 0x80143ba8, size: 40, name: script_run_next_event_unused, hash: 5f28a3f8beb0666a}
+  - {addr: 0x80143b80, size: 40, name: script_run_next_event, hash: 5f28a3f8beb0666a, source: src/shared/script/script_run_next_event.c}
+  - {addr: 0x80143ba8, size: 40, name: script_run_next_event_unused, hash: 5f28a3f8beb0666a, source: src/shared/script/script_run_next_event.c, source_symbol: script_run_next_event}
   - {addr: 0x80143bd0, size: 8, name: script_add_unit_stub, hash: 6d64edf91449c1b1}
   - {addr: 0x80143bd8, size: 9120, name: script_execute_event, hash: f5e240270b084a49}
   - {addr: 0x80145f78, size: 140, name: script_load_next_event, hash: 86e825112a99969c}

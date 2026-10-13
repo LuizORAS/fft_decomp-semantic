@@ -317,8 +317,8 @@ functions:
   - {addr: 0x800f6ea0, size: 8, name: world_camera_load_state_from_script_variables, hash: 6d64edf91449c1b1}
   - {addr: 0x800f6ea8, size: 8, name: world_camera_store_state_to_script_variables, hash: 6d64edf91449c1b1}
   - {addr: 0x800f6eb0, size: 24, name: world_map_get_weather, hash: 81566a90318e897e}
-  - {addr: 0x800f6ec8, size: 40, name: world_script_run_next_event, hash: 7bcd75fff235e2a0}
-  - {addr: 0x800f6ef0, size: 40, name: world_script_run_next_event_unused, hash: 7bcd75fff235e2a0}
+  - {addr: 0x800f6ec8, size: 40, name: script_run_next_event, hash: 7bcd75fff235e2a0, source: src/shared/script/script_run_next_event.c}
+  - {addr: 0x800f6ef0, size: 40, name: script_run_next_event_unused, hash: 7bcd75fff235e2a0, source: src/shared/script/script_run_next_event.c, source_symbol: script_run_next_event}
   - {addr: 0x800f6f18, size: 8, name: world_script_add_unit_stub, hash: 6d64edf91449c1b1}
   - {addr: 0x800f6f20, size: 9088, name: world_script_execute_event, hash: 21ced132f429744a, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800f92a0, size: 140, name: world_script_load_next_event, hash: d45e2f3e6f0fd4c5}
@@ -2347,6 +2347,12 @@ imports:
   - {addr: 0x801cafd4, name: require_condition_dispatch}
   - {addr: 0x801d7000, name: small_text_init_battle_pointers}
   - {addr: 0x801df198, name: jobstts_entrypoint}
+
+overrides:
+  - {function: script_run_next_event, name: script_execute_event, addr: 0x800f6f20}
+  - {function: script_run_next_event, name: script_load_next_event, addr: 0x800f92a0}
+  - {function: script_run_next_event_unused, name: script_execute_event, addr: 0x800f6f20}
+  - {function: script_run_next_event_unused, name: script_load_next_event, addr: 0x800f92a0}
 
 regions:
   - {addr: 0x800feff0, end: 0x800ff284, kind: handwritten, why: "handwritten scratchpad-frame blitter helper"}

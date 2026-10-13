@@ -719,7 +719,6 @@ s32 script_load_next_event(void);
 s32 world_script_load_next_event(void);
 void script_run_next_event(void);
 void script_run_next_event_unused(void);
-void world_script_run_next_event(void);
 
 /* instruction cursors */
 s32 script_find_instruction_byte_offset(s32 offset, s32 opcode);
