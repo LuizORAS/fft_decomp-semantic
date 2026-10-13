@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/world.h"
 
 /* Declared s32 here: the target uses the returned register without the
@@ -27,7 +28,7 @@ s32 world_job_build_unit_list(u8 unit_index, s16* jobs, s32 mode) {
         job |= WORLD_JOB_LIST_ENTRY_UNAVAILABLE;
     }
     jobs[count++] = job;
-    if (world_job_is_special_monster(g_world_formation_unit_pointers[unit_index]->identity.job_id) == 0
+    if (job_is_special_monster(g_world_formation_unit_pointers[unit_index]->identity.job_id) == 0
         && g_world_formation_unit_pointers[unit_index]->uses_monster_skillset == 0) {
         world_bits_read_primary(1);
         for (i = 1; i < JOB_ID_GENERIC_COUNT; i++) {

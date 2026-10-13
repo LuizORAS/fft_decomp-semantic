@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/world.h"
 
 /* Why a formation unit cannot use a menu, as a WORLD_FORMATION_UNIT_LOCK_*
@@ -11,7 +12,7 @@ s32 world_formation_get_unit_lock(s32 unit_id) {
         return WORLD_FORMATION_UNIT_LOCK_PROPOSITION;
     if (unit->uses_monster_skillset != 0)
         return WORLD_FORMATION_UNIT_LOCK_MONSTER;
-    if (world_job_is_special_monster(unit->identity.job_id) != 0)
+    if (job_is_special_monster(unit->identity.job_id) != 0)
         return WORLD_FORMATION_UNIT_LOCK_MONSTER;
     if (g_world_formation_unit_pointers[unit_id]->gender_flags & UNIT_FLAG_EGG)
         return WORLD_FORMATION_UNIT_LOCK_EGG;

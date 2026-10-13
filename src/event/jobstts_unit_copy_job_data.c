@@ -1,4 +1,5 @@
 #include "fft/event_jobstts.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* Copy the battle unit's job data into the compact JOBSTTS working record.
@@ -23,7 +24,7 @@ void jobstts_unit_copy_job_data(battle_stats_t* unit, jobstts_unit_job_data_t* o
         kind = 2;
     }
 
-    if ((kind == 1) || jobstts_job_is_special_monster(unit->job_id)) {
+    if ((kind == 1) || job_is_special_monster(unit->job_id)) {
         bcopy(unit->career.unlocked_jobs, out->career.unlocked_jobs, 3);
     } else {
         i = main_job_calculate_unlocked(unit->career.job_levels, unit->unit_flags & UNIT_FLAG_MALE);

@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /*
@@ -28,7 +29,7 @@ s32 bunit_job_build_unit_job_list(s32 unit_id, s16* job_ids, s32 unused_2) {
     bunit_bits_init_reader(unit_data->unlocked_jobs);
     job_ids_output[0] = bunit_job_get_base(saved_unit_id & 0xff);
     job_count = 1;
-    if (bunit_job_is_special_monster((*slot)->job_id) || (*slot)->uses_monster_skillset != 0) {
+    if (job_is_special_monster((*slot)->job_id) || (*slot)->uses_monster_skillset != 0) {
         job_ids_output[1] = -1;
         return 1;
     }

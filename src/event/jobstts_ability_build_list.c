@@ -58,7 +58,7 @@ s32 jobstts_ability_build_list(
     byte_offset = generic_index * UNIT_LEARNED_ABILITY_BYTES_PER_JOB + 0xb;
     jobstts_bits_init_primary_reader((u8*)(byte_offset + (s32)unit_data));
     for (i = 0; i < SKILLSET_ABILITY_LIST_COUNT; i++) {
-        if (jobstts_job_is_special_monster(g_jobstts_unit_data[unit_index]->job_id) != 0) {
+        if (job_is_special_monster(g_jobstts_unit_data[unit_index]->job_id) != 0) {
             kind = 1;
         } else {
             kind = jobstts_bits_read_primary(1);

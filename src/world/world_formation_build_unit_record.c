@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -104,7 +105,7 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
         }
     }
 
-    if (world_job_is_special_monster(unit->job_id) != 0 || record->uses_monster_skillset != 0) {
+    if (job_is_special_monster(unit->job_id) != 0 || record->uses_monster_skillset != 0) {
         bcopy(unit->career.unlocked_jobs, record->unlocked_jobs, sizeof(record->unlocked_jobs));
     } else {
         i = main_job_calculate_unlocked(

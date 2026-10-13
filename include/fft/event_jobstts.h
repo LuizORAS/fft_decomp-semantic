@@ -83,7 +83,6 @@ s32 jobstts_job_get_current_level(s32 unused_row);
 s32 jobstts_job_get_current_total_jp(s32 unused_row);
 s32 jobstts_job_get_next_level_jp_requirement(s32 unused_row);
 s32 jobstts_job_is_current_mastered(s32 unused_row);
-s32 jobstts_job_is_special_monster(s32 job_id);
 
 /* menus */
 typedef enum jobstts_page_scroll_direction {

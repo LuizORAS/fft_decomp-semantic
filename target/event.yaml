@@ -354,7 +354,7 @@ functions:
   - {addr: 0x801c6630, size: 176, name: bunit_menu_get_selection_record, hash: 7536cd22e376eeb6}
   - {addr: 0x801c66e0, size: 192, name: bunit_menu_is_unit_list_scroll_needed, hash: 28f8eae91bb947ee}
   - {addr: 0x801c67a0, size: 148, name: bunit_unit_is_two_handing_weapon, hash: 90d336abe9d84508}
-  - {addr: 0x801c6834, size: 32, name: bunit_job_is_special_monster, hash: f4362856b8ecd185}
+  - {addr: 0x801c6834, size: 32, name: job_is_special_monster, hash: f4362856b8ecd185, source: src/shared/job/job_is_special_monster.c}
   - {addr: 0x801c6854, size: 1460, name: bunit_unit_build_data_from_battle_stats, hash: e893beb59f02bf6f}
   - {addr: 0x801c6e08, size: 320, name: bunit_unit_build_data_list, hash: 72f9d3d86b9a4098}
   - {addr: 0x801c6f48, size: 380, name: bunit_unit_sort_index_list_by_order_keys, hash: d11b39851ebec6b1}
@@ -1862,7 +1862,7 @@ functions:
   - {addr: 0x801dfbb8, size: 24, name: jobstts_ability_is_support_tab, hash: 90d8dec8477e7386}
   - {addr: 0x801dfbd0, size: 24, name: jobstts_ability_is_movement_tab, hash: fea6a458f383390e}
   - {addr: 0x801dfbe8, size: 952, name: jobstts_ability_update_list_menu, hash: f11f323916cdc7a9}
-  - {addr: 0x801dffa0, size: 32, name: jobstts_job_is_special_monster, hash: f4362856b8ecd185}
+  - {addr: 0x801dffa0, size: 32, name: job_is_special_monster, hash: f4362856b8ecd185, source: src/shared/job/job_is_special_monster.c}
   - {addr: 0x801dffc0, size: 360, name: jobstts_unit_copy_job_data, hash: 8549998d0529a4c8}
   - {addr: 0x801e0128, size: 64, name: jobstts_unit_init_job_data, hash: 2f5b68b9627401dd}
   - {addr: 0x801e0168, size: 76, name: jobstts_job_get_base, hash: 56e2d800265d4c96}

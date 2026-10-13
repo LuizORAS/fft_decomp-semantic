@@ -1172,7 +1172,6 @@ s32 world_job_build_unit_list(u8 unit_index, s16* jobs, s32 mode);
 
 /* Job id -> generic job index 0..0x13, else 0. */
 s32 world_job_get_text_index(s16 job_id);
-s32 world_job_is_special_monster(s32 job_id);
 
 /* Menu script callbacks: only ever address-taken and cast to
  * menu_script_callback_t by world_ability_run_view_list. */

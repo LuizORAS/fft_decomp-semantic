@@ -717,7 +717,7 @@ functions:
   - {addr: 0x801209c4, size: 160, name: world_formation_generate_unit, hash: 3dca939e286b3f97}
   - {addr: 0x80120a64, size: 152, name: world_formation_set_unit_name, hash: 7171309b3c28f0a5}
   - {addr: 0x80120afc, size: 148, name: world_unit_is_two_handing_weapon, hash: 3c38bd0637eadb53}
-  - {addr: 0x80120b90, size: 32, name: world_job_is_special_monster, hash: f4362856b8ecd185}
+  - {addr: 0x80120b90, size: 32, name: job_is_special_monster, hash: f4362856b8ecd185, source: src/shared/job/job_is_special_monster.c}
   - {addr: 0x80120bb0, size: 1336, name: world_formation_build_unit_record, hash: e6808d20c381f45c}
   - {addr: 0x801210e8, size: 464, name: world_formation_build_record_list, hash: 93fb6fa91f4fa5c9}
   - {addr: 0x801212b8, size: 688, name: world_formation_save_records_to_party_data, hash: c0932d02a682df31}

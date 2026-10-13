@@ -60,7 +60,7 @@ s32 bunit_ability_build_list(s16 unit_index, s16 job_id, s32 ability_category, s
         = generic_index * UNIT_LEARNED_ABILITY_BYTES_PER_JOB + (s32) & ((bunit_unit_data_t*)0)->learned_abilities;
     bunit_bits_init_reader((const u8*)(byte_offset + (s32)unit_data));
     for (i = 0; i < SKILLSET_ABILITY_LIST_COUNT; i++) {
-        if (bunit_job_is_special_monster(g_bunit_unit_data[unit_index]->job_id)) {
+        if (job_is_special_monster(g_bunit_unit_data[unit_index]->job_id)) {
             kind = 1;
         } else if (g_bunit_unit_data[unit_index]->uses_monster_skillset != 0) {
             if (i >= 3) {
