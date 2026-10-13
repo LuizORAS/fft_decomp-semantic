@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 /* WORLD copy of the EVENT HELPMENU battle help menu
@@ -385,8 +386,8 @@ void world_menu_run_battle_help(void) {
             cursor_quads[buffer].clut = 0x7D7C;
             shadow_quads[buffer].clut = 0x7DBC;
         }
-        world_gfx_draw_or_append_gpu_primitive(&cursor_quads[buffer]);
-        world_gfx_draw_or_append_gpu_primitive(&shadow_quads[buffer]);
+        gfx_draw_or_append_gpu_primitive(&cursor_quads[buffer]);
+        gfx_draw_or_append_gpu_primitive(&shadow_quads[buffer]);
         thread_wait_frames(1);
         frame++;
     }

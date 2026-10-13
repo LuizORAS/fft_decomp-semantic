@@ -1,4 +1,5 @@
 #include "fft/battle_gfx.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
@@ -121,11 +122,11 @@ draw_panels:
                 (k + prims->top)->b0 = g_menu_indicator_fade_work[i];
                 setRGB0(&prims->bottom[j], g_menu_indicator_fade_work[i], g_menu_indicator_fade_work[i],
                     g_menu_indicator_fade_work[i]);
-                battle_gfx_draw_or_append_gpu_primitive((k + prims->top));
-                battle_gfx_draw_or_append_gpu_primitive(&prims->bottom[j]);
+                gfx_draw_or_append_gpu_primitive((k + prims->top));
+                gfx_draw_or_append_gpu_primitive(&prims->bottom[j]);
             }
-            battle_gfx_draw_or_append_gpu_primitive(&prims->center);
-            battle_gfx_draw_or_append_gpu_primitive(&prims->draw_mode);
+            gfx_draw_or_append_gpu_primitive(&prims->center);
+            gfx_draw_or_append_gpu_primitive(&prims->draw_mode);
         }
     }
 }

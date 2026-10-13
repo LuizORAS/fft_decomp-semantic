@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
@@ -252,8 +253,8 @@ void attack_deploy_run_select_menu(void) {
             left[buffer].clut = 0x7d7c;
             right[buffer].clut = 0x7dbc;
         }
-        battle_gfx_draw_or_append_gpu_primitive(&left[buffer]);
-        battle_gfx_draw_or_append_gpu_primitive(&right[buffer]);
+        gfx_draw_or_append_gpu_primitive(&left[buffer]);
+        gfx_draw_or_append_gpu_primitive(&right[buffer]);
         thread_wait_frames(1);
         i++;
     }

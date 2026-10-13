@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 /* Animate the reward bonus image as a burst of tiles.
@@ -179,20 +180,20 @@ void require_reward_animate_bonus_image_burst(void) {
                         poly->r0 = g_require_gfx_fade_rgb[0];
                         poly->g0 = g_require_gfx_fade_rgb[1];
                         poly->b0 = g_require_gfx_fade_rgb[2];
-                        battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)poly);
+                        gfx_append_gpu_primitive_to_secondary_otag((u32*)poly);
                     } else {
                         poly->r0 = g_require_gfx_fade_rgb[0];
                         poly->g0 = g_require_gfx_fade_rgb[1];
                         poly->b0 = g_require_gfx_fade_rgb[2];
                         if (phase == 1) {
-                            battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)poly);
+                            gfx_append_gpu_primitive_to_secondary_otag((u32*)poly);
                         }
                         any = 1;
                         tile->delay--;
                     }
                 }
             }
-            battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)&g_require_reward_burst_draw_modes[frame & 1]);
+            gfx_append_gpu_primitive_to_secondary_otag((u32*)&g_require_reward_burst_draw_modes[frame & 1]);
             if (done == 1) {
                 break;
             }
@@ -219,8 +220,8 @@ void require_reward_animate_bonus_image_burst(void) {
             g_require_reward_burst_flash_polys[frame & 1].r0 = g_require_gfx_fade_rgb[0];
             g_require_reward_burst_flash_polys[frame & 1].g0 = g_require_gfx_fade_rgb[1];
             g_require_reward_burst_flash_polys[frame & 1].b0 = g_require_gfx_fade_rgb[2];
-            battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)&g_require_reward_burst_flash_polys[frame & 1]);
-            battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)&g_require_reward_burst_draw_modes[frame & 1]);
+            gfx_append_gpu_primitive_to_secondary_otag((u32*)&g_require_reward_burst_flash_polys[frame & 1]);
+            gfx_append_gpu_primitive_to_secondary_otag((u32*)&g_require_reward_burst_draw_modes[frame & 1]);
             if (g_threads[g_thread_current_id].task_id == THREAD_TASK_DARK_SCREEN) {
                 break;
             }

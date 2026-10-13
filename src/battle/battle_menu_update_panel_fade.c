@@ -1,5 +1,6 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_menu.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 
 /*
@@ -38,10 +39,10 @@ void battle_menu_update_panel_fade(void) {
             (frame->top + (8 - i))->g0 = intensity;
             (frame->top + (8 - i))->b0 = intensity;
             setRGB0(&frame->bottom[i], intensity, intensity, intensity);
-            battle_gfx_draw_or_append_gpu_primitive(&frame->top[8 - i]);
-            battle_gfx_draw_or_append_gpu_primitive(&frame->bottom[i]);
+            gfx_draw_or_append_gpu_primitive(&frame->top[8 - i]);
+            gfx_draw_or_append_gpu_primitive(&frame->bottom[i]);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&g_battle_menu_panel_fade_frames[g_menu_packet_buffer_index].center);
-        battle_gfx_draw_or_append_gpu_primitive(&g_battle_menu_panel_fade_frames[g_menu_packet_buffer_index].draw_mode);
+        gfx_draw_or_append_gpu_primitive(&g_battle_menu_panel_fade_frames[g_menu_packet_buffer_index].center);
+        gfx_draw_or_append_gpu_primitive(&g_battle_menu_panel_fade_frames[g_menu_packet_buffer_index].draw_mode);
     }
 }

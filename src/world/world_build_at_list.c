@@ -261,31 +261,31 @@ void world_build_at_list(void) {
         }
         if (layout->hidden_rows != 0 && world_menu_is_input_allowed() != 0) {
             if (row_offset != 0) {
-                world_gfx_draw_or_append_gpu_primitive(&page->arrows[0]);
-                world_gfx_draw_or_append_gpu_primitive(&page->arrow_marks[0]);
+                gfx_draw_or_append_gpu_primitive(&page->arrows[0]);
+                gfx_draw_or_append_gpu_primitive(&page->arrow_marks[0]);
             }
             if (row_offset != layout->hidden_rows) {
-                world_gfx_draw_or_append_gpu_primitive(&page->arrows[1]);
-                world_gfx_draw_or_append_gpu_primitive(&page->arrow_marks[1]);
+                gfx_draw_or_append_gpu_primitive(&page->arrows[1]);
+                gfx_draw_or_append_gpu_primitive(&page->arrow_marks[1]);
             }
             span = page->arrows[1].y0;
             top = page->arrows[0].y0 + page->arrows[0].h;
             span -= top;
             page->thumb.x0 = page->arrows[0].x0;
             page->thumb.y0 = top + span * entry->selected_index / (layout->row_count + layout->hidden_rows) - 2;
-            world_gfx_draw_or_append_gpu_primitive(&page->thumb);
+            gfx_draw_or_append_gpu_primitive(&page->thumb);
         }
         world_gfx_build_scaled_draw_area_pair_swapped(
             &page->draw_areas, &entry->window, i, g_active_graphics_buffer_index);
         world_menu_select_icon_sprite_clut(page->icons.icons[0]);
         if (entry->header_id >= 5) {
-            world_gfx_draw_or_append_gpu_primitive(page->icons.icons[0]);
+            gfx_draw_or_append_gpu_primitive(page->icons.icons[0]);
         }
-        world_gfx_draw_or_append_gpu_primitive(&page->draw_areas.areas[1]);
-        world_gfx_draw_or_append_gpu_primitive(&page->icon_mode);
-        world_gfx_draw_or_append_gpu_primitive(frame);
-        world_gfx_draw_or_append_gpu_primitive(&page->text_mode);
-        world_gfx_draw_or_append_gpu_primitive(&page->draw_areas);
+        gfx_draw_or_append_gpu_primitive(&page->draw_areas.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&page->icon_mode);
+        gfx_draw_or_append_gpu_primitive(frame);
+        gfx_draw_or_append_gpu_primitive(&page->text_mode);
+        gfx_draw_or_append_gpu_primitive(&page->draw_areas);
         world_menu_select_icon_cluts(&page->icons.base);
         world_menu_update_icon_cursor_sprites(entry, &page->icons.base, i, cursor);
         i++;

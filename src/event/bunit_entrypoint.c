@@ -1,4 +1,5 @@
 #include "fft/battle_gfx.h"
+#include "fft/gfx.h"
 #include "fft/sound.h"
 /* Initialize the unit-list gfx capacities and run the BUNIT menu frame loop
  * until the list closes.
@@ -92,7 +93,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
                 bunit_menu_is_active_or_transitioning());
         }
         bunit_menu_update_unit_browser();
-        g_battle_gfx_current_otag_entry = g_menu_gfx_context->otag + 0x3d;
+        g_gfx_current_otag_entry = g_menu_gfx_context->otag + 0x3d;
         battle_menu_draw_active_window_frames();
         bunit_input_update_event_state(
             g_menu_gfx_context->otag + 9, bunit_input_read_pad1_unless_locked(), g_menu_gfx_drawenv_y);

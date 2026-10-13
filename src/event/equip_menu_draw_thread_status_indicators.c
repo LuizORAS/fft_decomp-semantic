@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
@@ -123,11 +124,11 @@ draw_panels:
                 (k + prims->top)->b0 = g_equip_menu_indicator_edge_brightness[i];
                 setRGB0(&prims->bottom[j], g_equip_menu_indicator_edge_brightness[i],
                     g_equip_menu_indicator_edge_brightness[i], g_equip_menu_indicator_edge_brightness[i]);
-                battle_gfx_draw_or_append_gpu_primitive(k + prims->top);
-                battle_gfx_draw_or_append_gpu_primitive(&prims->bottom[j]);
+                gfx_draw_or_append_gpu_primitive(k + prims->top);
+                gfx_draw_or_append_gpu_primitive(&prims->bottom[j]);
             }
-            battle_gfx_draw_or_append_gpu_primitive(&prims->center);
-            battle_gfx_draw_or_append_gpu_primitive(&prims->draw_mode);
+            gfx_draw_or_append_gpu_primitive(&prims->center);
+            gfx_draw_or_append_gpu_primitive(&prims->draw_mode);
         }
     }
 }

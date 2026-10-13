@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 /*
  * WORLD twin: world_menu_run_numeric_display_panel_thread
@@ -81,18 +82,18 @@ void battle_menu_run_numeric_display_panel_thread(void) {
             record->sprites[16].clut = 0x7FFC;
             battle_menu_init_primitive_colors_normal(record->palette);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&record->draw_areas.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&record->draw_areas.areas[1]);
         for (i = 0; i < 14; i++) {
-            battle_gfx_draw_or_append_gpu_primitive(&record->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&record->sprites[i]);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&record->sprites[17]);
-        battle_gfx_draw_or_append_gpu_primitive(&record->mode0);
+        gfx_draw_or_append_gpu_primitive(&record->sprites[17]);
+        gfx_draw_or_append_gpu_primitive(&record->mode0);
         for (; i < 17; i++) {
-            battle_gfx_draw_or_append_gpu_primitive(&record->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&record->sprites[i]);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&record->mode1);
-        battle_menu_submit_numeric_display_frame_primitives(record->palette);
-        battle_gfx_draw_or_append_gpu_primitive(&record->draw_areas.areas[0]);
+        gfx_draw_or_append_gpu_primitive(&record->mode1);
+        menu_submit_numeric_display_frame_primitives(record->palette);
+        gfx_draw_or_append_gpu_primitive(&record->draw_areas.areas[0]);
     }
     thread_yield();
     thread_exit_current();

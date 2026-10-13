@@ -282,25 +282,25 @@ void option_menu_run_game_options(void) {
         battle_menu_select_sprite_clut(&page->title);
         battle_menu_select_sprite_clut(&page->value);
         battle_menu_select_sprite_clut(frame);
-        battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[3]);
-        battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[2]);
-        battle_gfx_draw_or_append_gpu_primitive(&page->icons.base.draw_mode);
+        gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[3]);
+        gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[1]);
+        gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[2]);
+        gfx_draw_or_append_gpu_primitive(&page->icons.base.draw_mode);
         if (layout->hidden_rows != 0 && battle_menu_can_accept_input() != 0) {
             if (row_offset != 0) {
-                battle_gfx_draw_or_append_gpu_primitive(&page->arrows[0]);
-                battle_gfx_draw_or_append_gpu_primitive(&page->arrow_marks[0]);
+                gfx_draw_or_append_gpu_primitive(&page->arrows[0]);
+                gfx_draw_or_append_gpu_primitive(&page->arrow_marks[0]);
             }
             if (row_offset != layout->hidden_rows) {
-                battle_gfx_draw_or_append_gpu_primitive(&page->arrows[1]);
-                battle_gfx_draw_or_append_gpu_primitive(&page->arrow_marks[1]);
+                gfx_draw_or_append_gpu_primitive(&page->arrows[1]);
+                gfx_draw_or_append_gpu_primitive(&page->arrow_marks[1]);
             }
             span = page->arrows[1].y0;
             top = page->arrows[0].y0 + page->arrows[0].h;
             span -= top;
             page->thumb.x0 = page->arrows[0].x0;
             page->thumb.y0 = top + span * entry->selected_index / (layout->row_count + layout->hidden_rows) - 2;
-            battle_gfx_draw_or_append_gpu_primitive(&page->thumb);
+            gfx_draw_or_append_gpu_primitive(&page->thumb);
         }
         if ((thread - 1)->is_running == 0) {
             thread_set_parameters(g_thread_current_id + 1, (s32)&entry->window.x, 0, 0);
@@ -310,16 +310,16 @@ void option_menu_run_game_options(void) {
         battle_gfx_build_scaled_draw_area_pair_swapped(
             &page->title_area, &entry->window, i, g_main_gfx_screen_polarity);
         battle_gfx_build_scaled_draw_area_pair_swapped(&page->value_area, &value_rect, i, g_main_gfx_screen_polarity);
-        battle_gfx_draw_or_append_gpu_primitive(&page->title_area.areas[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&page->icon_mode);
-        battle_gfx_draw_or_append_gpu_primitive(frame);
-        battle_gfx_draw_or_append_gpu_primitive(&page->window_mode);
-        battle_gfx_draw_or_append_gpu_primitive(&page->title_area.areas[0]);
-        battle_gfx_draw_or_append_gpu_primitive(&page->value_area.areas[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&page->value);
-        battle_gfx_draw_or_append_gpu_primitive(&page->title);
-        battle_gfx_draw_or_append_gpu_primitive(&page->text_mode);
-        battle_gfx_draw_or_append_gpu_primitive(&page->value_area.areas[0]);
+        gfx_draw_or_append_gpu_primitive(&page->title_area.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&page->icon_mode);
+        gfx_draw_or_append_gpu_primitive(frame);
+        gfx_draw_or_append_gpu_primitive(&page->window_mode);
+        gfx_draw_or_append_gpu_primitive(&page->title_area.areas[0]);
+        gfx_draw_or_append_gpu_primitive(&page->value_area.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&page->value);
+        gfx_draw_or_append_gpu_primitive(&page->title);
+        gfx_draw_or_append_gpu_primitive(&page->text_mode);
+        gfx_draw_or_append_gpu_primitive(&page->value_area.areas[0]);
         g_thread_call_target = (void (*)(void))suzuki_sound_set_type;
         g_main_game_options.fields.cursor_movement = g_option_current_values[GAME_OPTION_CURSOR_MOVEMENT];
         g_main_game_options.fields.cursor_repeat_speed = g_option_current_values[GAME_OPTION_CURSOR_REPEAT_SPEED];

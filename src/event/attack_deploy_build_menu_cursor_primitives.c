@@ -33,22 +33,22 @@ void attack_deploy_build_menu_cursor_primitives(s32 frame, u32 mode, attack_depl
         }
     }
 
-    battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_draw_mode);
+    gfx_draw_or_append_gpu_primitive(&render_buffer->menu_draw_mode);
     if (mode < 2) {
-        battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[0]);
+        gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[0]);
     } else if (mode == ATTACK_DEPLOY_MENU_SELECTED_UNIT) {
-        battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[1]);
+        gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[1]);
     } else if (mode == ATTACK_DEPLOY_MENU_OTHER_UNIT) {
-        battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[0]);
+        gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[1]);
+        gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[0]);
         if ((frame & 0x3F) < 0x20) {
             render_buffer->menu_cursor[0].clut = 0x7DFC;
         } else {
             render_buffer->menu_cursor[1].clut = 0x7DFC;
         }
     } else if (mode == ATTACK_DEPLOY_MENU_SWAP_UNIT) {
-        battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[3]);
-        battle_gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[2]);
+        gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[3]);
+        gfx_draw_or_append_gpu_primitive(&render_buffer->menu_cursor[2]);
         if ((frame & 0x3F) < 0x20) {
             render_buffer->menu_cursor[2].clut = 0x7DFC;
         } else {

@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/sound.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
@@ -23,7 +24,7 @@ void wldcore_menu_run_world_frame(GsOT* context) {
     world_formation_set_menu_allowed_buttons(~g_wldcore_menu_blocked_buttons);
     if (g_main_system_flags & MAIN_SYSTEM_FLAG_UNIT_PANEL_THREADS) {
         otag_entries = (u32*)context->org;
-        g_world_gfx_active_otag_entries = otag_entries + g_wldcore_menu_ordering_table_offset;
+        g_gfx_current_otag_entry = otag_entries + g_wldcore_menu_ordering_table_offset;
         world_menu_draw_active_window_frames();
         sprite_entries = (u32*)context->org;
         world_input_update_event_state(sprite_entries + g_wldcore_menu_ordering_table_offset + 2,

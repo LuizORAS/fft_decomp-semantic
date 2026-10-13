@@ -245,7 +245,6 @@ void battle_menu_draw_numeric_display_entries(
 void battle_menu_enable_height_display(void);
 void battle_menu_init_numeric_display_frame_primitives(RECT* bounds, menu_palette_primitives_t* menu);
 void battle_menu_run_numeric_display_panel_thread(void);
-void battle_menu_submit_numeric_display_frame_primitives(menu_palette_primitives_t* display);
 void battle_menu_suppress_height_display(void);
 
 /* windows and sprites */

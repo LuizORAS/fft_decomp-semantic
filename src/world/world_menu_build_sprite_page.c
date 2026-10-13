@@ -17,7 +17,7 @@ void world_menu_build_sprite_page(s32 page_index, const RECT* base_screen) {
             &page->sprites[i], &g_world_gfx_menu_image_source, base_screen, &g_world_menu_sprite_page_image_params[i]);
     }
     for (i = 4; i >= 0; i--) {
-        world_gfx_draw_or_append_gpu_primitive(&page->sprites[i]);
-        world_gfx_draw_or_append_gpu_primitive(&page->modes[i]);
+        gfx_draw_or_append_gpu_primitive(&page->sprites[i]);
+        gfx_draw_or_append_gpu_primitive(&page->modes[i]);
     }
 }

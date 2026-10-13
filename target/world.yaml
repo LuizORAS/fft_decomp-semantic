@@ -78,7 +78,7 @@ functions:
   - {addr: 0x800e3278, size: 32, name: world_menu_alloc_buffer, hash: c0b0162a45670bc4}
   - {addr: 0x800e3298, size: 192, name: world_menu_free_memory, hash: 38f2c6070f4c7dc3}
   - {addr: 0x800e3358, size: 596, name: world_menu_init_numeric_display_frame_primitives, hash: 6931206a75791ec9}
-  - {addr: 0x800e35ac, size: 108, name: world_menu_submit_numeric_display_frame_primitives, hash: 052f8a7955660a7e}
+  - {addr: 0x800e35ac, size: 108, name: menu_submit_numeric_display_frame_primitives, hash: 052f8a7955660a7e, source: src/shared/menu/menu_submit_numeric_display_frame_primitives.c}
   - {addr: 0x800e3618, size: 136, name: world_menu_init_primitive_colors_normal, hash: 0eafa6c1e9a53c86}
   - {addr: 0x800e36a0, size: 140, name: world_menu_init_primitive_colors_dimmed, hash: ed7ffbf13272f8dc}
   - {addr: 0x800e372c, size: 380, name: world_text_build_display_message, hash: 340aa3e43d90fd1d}
@@ -390,8 +390,8 @@ functions:
   - {addr: 0x800fd9f4, size: 64, name: world_text_init_section_pointers, hash: 27bf3bcb9a9d726b}
   - {addr: 0x800fda34, size: 32, name: world_input_get_menu_controller, hash: d9e49e9436e88942}
   - {addr: 0x800fda54, size: 80, name: world_script_load_event_input_state, hash: 83c70cd7e27a4998}
-  - {addr: 0x800fdaa4, size: 120, name: world_gfx_draw_or_append_gpu_primitive, hash: dca627eb5cafa52b}
-  - {addr: 0x800fdb1c, size: 68, name: world_gfx_append_gpu_primitive_to_secondary_otag, hash: 02bbf18f6b22cc78}
+  - {addr: 0x800fdaa4, size: 120, name: gfx_draw_or_append_gpu_primitive, hash: dca627eb5cafa52b, source: src/shared/gfx/gfx_draw_or_append_gpu_primitive.c}
+  - {addr: 0x800fdb1c, size: 68, name: gfx_append_gpu_primitive_to_secondary_otag, hash: 02bbf18f6b22cc78, source: src/shared/gfx/gfx_append_gpu_primitive_to_secondary_otag.c}
   - {addr: 0x800fdb60, size: 40, name: world_text_set_substitution_values_7e_7f, hash: a16257863fe24cf9}
   - {addr: 0x800fdb88, size: 24, name: world_menu_set_text_origin, hash: a51a712749aadf4e}
   - {addr: 0x800fdba0, size: 196, name: world_gfx_set_draw_mode_for_texture_page, hash: 56f7c2353711f7fb}
@@ -1110,7 +1110,7 @@ data:
   - {addr: 0x801532c8, name: g_world_field_object_use_request}
   - {addr: 0x801532cc, name: g_script_unit_slots}
   - {addr: 0x801532d4, name: g_world_camera_shake_z_offset}
-  - {addr: 0x801532d6, name: g_world_gfx_draw_primitives_immediately}
+  - {addr: 0x801532d6, name: g_gfx_draw_primitives_immediately}
   - {addr: 0x801532d8, name: g_world_script_debug_paused}
   - {addr: 0x801532da, name: g_world_menu_input_mode}
   - {addr: 0x801532dc, name: g_world_event_effect_target_runtime_id}
@@ -2295,7 +2295,7 @@ data:
   - {addr: 0x801cd804, name: CLIP2}
   - {addr: 0x801cd80c, name: g_world_formation_unit_banner_at_bottom}
   - {addr: 0x801cd810, name: g_world_script_tutorial_shift_command_bit}
-  - {addr: 0x801cd814, name: g_world_gfx_active_otag_entries}
+  - {addr: 0x801cd814, name: g_gfx_current_otag_entry}
   - {addr: 0x801cd818, name: g_world_event_pending_reserved_vram_release_slot}
   - {addr: 0x801cd81c, name: g_world_event_pending_evtchr_save_slot}
   - {addr: 0x801cd820, name: g_world_event_pending_saved_evtchr_clear_slot}

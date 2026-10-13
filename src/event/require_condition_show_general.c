@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 /* 0x801c8f80-0x801c9fa4, 4132 bytes.
@@ -153,7 +154,7 @@ void require_condition_show_general(s32 hold_frames) {
                     reveal_offset_top = QUAD(index).source.h;
                 STORE_QUAD_REVEAL(poly, index, reveal_offset_top);
                 require_gfx_scale_poly_gt4_vertex_colors(VERTEX_COLORS(index), 0x80, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             }
         }
         for (index = 2; index >= 0; index--) {
@@ -163,7 +164,7 @@ void require_condition_show_general(s32 hold_frames) {
                 reveal_offset_bottom = QUAD(index).source.h;
             STORE_QUAD_REVEAL(poly, index, reveal_offset_bottom);
             require_gfx_scale_poly_gt4_vertex_colors(VERTEX_COLORS(index), 0x80, poly);
-            battle_gfx_draw_or_append_gpu_primitive(poly);
+            gfx_draw_or_append_gpu_primitive(poly);
         }
         reveal_offset_bottom += 8;
         /* The one-trip loop emits nothing; its loop note weights these two
@@ -192,7 +193,7 @@ void require_condition_show_general(s32 hold_frames) {
                 POLY_GT4* poly = &g_require_gfx_poly_gt4_buffers[buffer][index];
                 u8* parameters = &range[condition];
                 require_gfx_scale_poly_gt4_vertex_colors(VERTEX_COLORS(index), 0x80, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             }
             frame++;
         } while (frame < hold_frames);
@@ -212,7 +213,7 @@ void require_condition_show_general(s32 hold_frames) {
                 hide_offset = QUAD(index).source.h;
             STORE_QUAD_HIDE(poly, index, hide_offset);
             require_gfx_scale_poly_gt4_vertex_colors(VERTEX_COLORS(index), 0x80, poly);
-            battle_gfx_draw_or_append_gpu_primitive(poly);
+            gfx_draw_or_append_gpu_primitive(poly);
         }
         hide_offset += 8;
         frame++;

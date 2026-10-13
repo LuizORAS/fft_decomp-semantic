@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -159,10 +160,10 @@ void world_menu_labeled_number_entry_thread(void) {
         }
         world_menu_update_icon_cursor_sprites(param, &record.base, i, -1);
         world_menu_select_icon_cluts(&record.base);
-        world_gfx_draw_or_append_gpu_primitive(&cursor_quads[i & 1]);
-        world_gfx_draw_or_append_gpu_primitive(&shadow_quads[i & 1]);
-        world_gfx_draw_or_append_gpu_primitive(&record.base.sprites[0]);
-        world_gfx_draw_or_append_gpu_primitive(&record);
+        gfx_draw_or_append_gpu_primitive(&cursor_quads[i & 1]);
+        gfx_draw_or_append_gpu_primitive(&shadow_quads[i & 1]);
+        gfx_draw_or_append_gpu_primitive(&record.base.sprites[0]);
+        gfx_draw_or_append_gpu_primitive(&record);
     }
     thread_yield();
     thread_exit_current();

@@ -62,7 +62,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
             break;
         }
         for (j = i; j >= 0; j--) {
-            battle_gfx_draw_or_append_gpu_primitive(&page->quads[j]);
+            gfx_draw_or_append_gpu_primitive(&page->quads[j]);
         }
         if (g_map_selected_tile_data.depth != 0) {
             battle_clear_menu_render_buffer(buffer, 0x100);
@@ -72,10 +72,10 @@ void battle_menu_selected_tile_info_display_thread(void) {
             if (g_battle_menu_height_display_suppressed == 0) {
                 LoadImage(&rect, buffer);
                 page->sprites[0].clut = 0x7CBC;
-                battle_gfx_draw_or_append_gpu_primitive(&page->sprites[0]);
-                battle_gfx_draw_or_append_gpu_primitive(&page->modes[0]);
-                battle_gfx_draw_or_append_gpu_primitive(&page->sprites[1]);
-                battle_gfx_draw_or_append_gpu_primitive(&page->modes[1]);
+                gfx_draw_or_append_gpu_primitive(&page->sprites[0]);
+                gfx_draw_or_append_gpu_primitive(&page->modes[0]);
+                gfx_draw_or_append_gpu_primitive(&page->sprites[1]);
+                gfx_draw_or_append_gpu_primitive(&page->modes[1]);
             }
         }
     }

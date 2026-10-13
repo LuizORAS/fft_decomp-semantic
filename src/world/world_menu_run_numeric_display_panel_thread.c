@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -74,18 +75,18 @@ void world_menu_run_numeric_display_panel_thread(void) {
             record->sprites[16].clut = 0x7FFC;
             world_menu_init_primitive_colors_normal(record->palette);
         }
-        world_gfx_draw_or_append_gpu_primitive(&record->draw_areas.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&record->draw_areas.areas[1]);
         for (i = 0; i < 14; i++) {
-            world_gfx_draw_or_append_gpu_primitive(&record->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&record->sprites[i]);
         }
-        world_gfx_draw_or_append_gpu_primitive(&record->sprites[17]);
-        world_gfx_draw_or_append_gpu_primitive(&record->mode0);
+        gfx_draw_or_append_gpu_primitive(&record->sprites[17]);
+        gfx_draw_or_append_gpu_primitive(&record->mode0);
         for (; i < 17; i++) {
-            world_gfx_draw_or_append_gpu_primitive(&record->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&record->sprites[i]);
         }
-        world_gfx_draw_or_append_gpu_primitive(&record->mode1);
-        world_menu_submit_numeric_display_frame_primitives(record->palette);
-        world_gfx_draw_or_append_gpu_primitive(&record->draw_areas.areas[0]);
+        gfx_draw_or_append_gpu_primitive(&record->mode1);
+        menu_submit_numeric_display_frame_primitives(record->palette);
+        gfx_draw_or_append_gpu_primitive(&record->draw_areas.areas[0]);
     }
     thread_yield();
     thread_exit_current();

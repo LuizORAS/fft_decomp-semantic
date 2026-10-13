@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
 #include "fft/gfx.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 /* BATTLE twin: battle_menu_run_unit_editor_panel_thread. */
 #include "fft/world.h"
@@ -218,31 +219,31 @@ void world_menu_run_unit_editor_panel_thread(void) {
                     g_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
             }
         }
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_areas.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&frame_record->draw_areas.areas[1]);
         for (i = 0; i < 12; i++) {
-            world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&frame_record->sprites[i]);
         }
         for (i = 14; i < 19; i++) {
-            world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&frame_record->sprites[i]);
         }
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_modes[0]);
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[12]);
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[13]);
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_modes[1]);
+        gfx_draw_or_append_gpu_primitive(&frame_record->draw_modes[0]);
+        gfx_draw_or_append_gpu_primitive(&frame_record->sprites[12]);
+        gfx_draw_or_append_gpu_primitive(&frame_record->sprites[13]);
+        gfx_draw_or_append_gpu_primitive(&frame_record->draw_modes[1]);
         for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
             if ((u16)g_world_unit_editor_fields.state.equipment[i] != 0xFFFF) {
-                world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[19 + i]);
+                gfx_draw_or_append_gpu_primitive(&frame_record->sprites[19 + i]);
             }
         }
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_modes[2]);
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->tiles[0]);
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->tiles[1]);
+        gfx_draw_or_append_gpu_primitive(&frame_record->draw_modes[2]);
+        gfx_draw_or_append_gpu_primitive(&frame_record->tiles[0]);
+        gfx_draw_or_append_gpu_primitive(&frame_record->tiles[1]);
         for (i = 0; i < 8; i++) {
-            world_gfx_draw_or_append_gpu_primitive(&frame_record->lines[i]);
+            gfx_draw_or_append_gpu_primitive(&frame_record->lines[i]);
         }
         frame++;
-        world_menu_submit_numeric_display_frame_primitives(frame_record->palette);
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_areas.areas[0]);
+        menu_submit_numeric_display_frame_primitives(frame_record->palette);
+        gfx_draw_or_append_gpu_primitive(&frame_record->draw_areas.areas[0]);
     }
     g_world_menu_hovered_unit_stats_display.y = 0xAA;
     g_world_unit_summary_panel_rect.y = 0xAA;

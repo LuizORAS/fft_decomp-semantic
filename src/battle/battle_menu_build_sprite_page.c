@@ -24,7 +24,7 @@ void battle_menu_build_sprite_page(s32 page_index, RECT* base_screen) {
             sprite, &g_battle_menu_texture_location, base_screen, &g_battle_menu_sprite_page_image_params[i]);
     }
     for (i = 4; i >= 0; i--) {
-        battle_gfx_draw_or_append_gpu_primitive(&page->sprites[i]);
-        battle_gfx_draw_or_append_gpu_primitive(&page->modes[i]);
+        gfx_draw_or_append_gpu_primitive(&page->sprites[i]);
+        gfx_draw_or_append_gpu_primitive(&page->modes[i]);
     }
 }

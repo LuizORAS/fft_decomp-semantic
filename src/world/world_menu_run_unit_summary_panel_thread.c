@@ -154,7 +154,7 @@ void world_menu_run_unit_summary_panel_thread(void) {
         frame_record->offset_b.x = -0x80;
         frame_record->offset_b.y = value;
         SetDrawOffset(&frame_record->draw_offset_b, (u16*)&frame_record->offset_b);
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_offset_b);
+        gfx_draw_or_append_gpu_primitive(&frame_record->draw_offset_b);
         value = world_thread_find_running_by_task(THREAD_TASK_UNIT_EDITOR_PANEL);
         if (value != 0 && world_thread_is_running_asm(value - 1) == 0) {
             value = 0;
@@ -165,32 +165,32 @@ void world_menu_run_unit_summary_panel_thread(void) {
             setRGB0(&frame_record->portrait, 0x80, 0x80, 0x80);
         }
         SetSemiTrans(&frame_record->portrait, 1);
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->portrait);
+        gfx_draw_or_append_gpu_primitive(&frame_record->portrait);
         for (i = 3; i >= 0; i--) {
             if (value != 0) {
                 frame_record->sprites[i].clut = 0x7D3C;
             } else {
                 frame_record->sprites[i].clut = 0x7C3C;
             }
-            world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&frame_record->sprites[i]);
         }
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_mode_1);
+        gfx_draw_or_append_gpu_primitive(&frame_record->draw_mode_1);
         for (i = 4; i < 7; i++) {
             if (value != 0) {
                 frame_record->sprites[i].clut = 0x7D3C;
             } else {
                 frame_record->sprites[i].clut = 0x7C3C;
             }
-            world_gfx_draw_or_append_gpu_primitive(&frame_record->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&frame_record->sprites[i]);
         }
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_mode_0);
+        gfx_draw_or_append_gpu_primitive(&frame_record->draw_mode_0);
         if (value != 0) {
             world_menu_init_primitive_colors_dimmed(frame_record->palette);
         } else {
             world_menu_init_primitive_colors_normal(frame_record->palette);
         }
-        world_menu_submit_numeric_display_frame_primitives(frame_record->palette);
-        world_gfx_draw_or_append_gpu_primitive(&frame_record->draw_offset_a);
+        menu_submit_numeric_display_frame_primitives(frame_record->palette);
+        gfx_draw_or_append_gpu_primitive(&frame_record->draw_offset_a);
     }
 exit:
     thread_yield();

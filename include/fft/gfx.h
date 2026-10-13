@@ -263,6 +263,13 @@ static inline void texture_rect_pixels_to_cells(const s32 pixels[4], s32 cells[4
 }
 
 /* primitives */
+/* Scene-local primitive submission state. */
+extern u16 g_gfx_draw_primitives_immediately;
+extern u32* g_gfx_current_otag_entry;
+
+void gfx_draw_or_append_gpu_primitive(void* primitive);
+void gfx_append_gpu_primitive_to_secondary_otag(u32* primitive);
+
 /* Two DR_AREA packets and their corresponding rectangles.
  * Builders choose scaling percentages and rectangle placement. */
 typedef struct scaled_draw_area_pair {

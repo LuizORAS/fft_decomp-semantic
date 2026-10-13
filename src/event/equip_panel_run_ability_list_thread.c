@@ -128,22 +128,22 @@ void equip_panel_run_ability_list_thread(void) {
             g_main_gfx_screen_polarity * 0xf0, &offset);
         menu_set_status_panel_primitive_colors(screen, thread);
         menu_select_status_primitive_color_palette(&screen->numeric_frame, thread);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->sprites[1]);
+        gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[1]);
+        gfx_draw_or_append_gpu_primitive(&screen->sprites[1]);
         for (i = 7; i < 12; i++) {
-            battle_gfx_draw_or_append_gpu_primitive(&screen->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&screen->sprites[i]);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&screen->draw_modes[0]);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->sprites[13]);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->draw_modes[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->tiles[1]);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_modes[0]);
+        gfx_draw_or_append_gpu_primitive(&screen->sprites[13]);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_modes[1]);
+        gfx_draw_or_append_gpu_primitive(&screen->tiles[1]);
         for (i = 4; i < 8; i++) {
-            battle_gfx_draw_or_append_gpu_primitive(&screen->lines[i]);
+            gfx_draw_or_append_gpu_primitive(&screen->lines[i]);
         }
-        battle_menu_submit_numeric_display_frame_primitives(&screen->numeric_frame);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->portrait);
+        menu_submit_numeric_display_frame_primitives(&screen->numeric_frame);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
+        gfx_draw_or_append_gpu_primitive(&screen->portrait);
         thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {
             break;

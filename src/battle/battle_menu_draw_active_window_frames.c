@@ -68,19 +68,19 @@ void battle_menu_draw_active_window_frames(void) {
         window->icon_sprites[2].y0 = top + span;
         flags = g_battle_menu_buffer_slots[i + g_menu_packet_buffer_index]->icon_flags;
         if (flags & MENU_WINDOW_ICON_SCROLL_UP) {
-            battle_gfx_draw_or_append_gpu_primitive(&window->icon_sprites[0]);
+            gfx_draw_or_append_gpu_primitive(&window->icon_sprites[0]);
         }
         if (flags & MENU_WINDOW_ICON_SCROLL_DOWN) {
-            battle_gfx_draw_or_append_gpu_primitive(&window->icon_sprites[1]);
+            gfx_draw_or_append_gpu_primitive(&window->icon_sprites[1]);
         }
         if (flags & MENU_WINDOW_ICON_SCROLL_MARKER) {
-            battle_gfx_draw_or_append_gpu_primitive(&window->icon_sprites[2]);
+            gfx_draw_or_append_gpu_primitive(&window->icon_sprites[2]);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&window->sprites[0]);
-        battle_gfx_draw_or_append_gpu_primitive(&window->sprites[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&window->sprites[2]);
-        battle_gfx_draw_or_append_gpu_primitive(&window->sprites[3]);
-        battle_gfx_draw_or_append_gpu_primitive(&window->draw_mode);
+        gfx_draw_or_append_gpu_primitive(&window->sprites[0]);
+        gfx_draw_or_append_gpu_primitive(&window->sprites[1]);
+        gfx_draw_or_append_gpu_primitive(&window->sprites[2]);
+        gfx_draw_or_append_gpu_primitive(&window->sprites[3]);
+        gfx_draw_or_append_gpu_primitive(&window->draw_mode);
         if (window->portrait_code != -1) {
             u = window->portrait_code << 5;
             setUV4(&window->quads[1], u, 0xCE, u + 0x1F, 0xCE, u, 0xFE, u + 0x1F, 0xFE);
@@ -90,7 +90,7 @@ void battle_menu_draw_active_window_frames(void) {
             battle_menu_build_unit_portrait_poly(&window->quads[1], window->portrait_battle_id);
         }
         gfx_flip_poly_ft4_uv_if_negative(&window->quads[1], -window->portrait_flipped);
-        battle_gfx_draw_or_append_gpu_primitive(&window->quads[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&window->quads[0]);
+        gfx_draw_or_append_gpu_primitive(&window->quads[1]);
+        gfx_draw_or_append_gpu_primitive(&window->quads[0]);
     }
 }

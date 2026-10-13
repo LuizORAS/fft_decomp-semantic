@@ -4,6 +4,7 @@
 #include "fft/battle_script.h"
 #include "fft/battle_text.h"
 #include "fft/battle_unit.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
@@ -347,7 +348,7 @@ void battle_text_run_dialog_thread(void) {
     if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
         event_id = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
         if ((event_id == EVENT_ID_WIEGRAF_PACT_WITH_VELIUS || event_id == EVENT_ID_MALAK_REVIVED)
-            && g_battle_etc_graphics_enabled == 0) {
+            && g_gfx_draw_primitives_immediately == 0) {
             cursor_x = rec.x;
         } else {
             u32 line_width = g_text_line_widths[0] + 0x18;
@@ -570,7 +571,7 @@ void battle_text_run_dialog_thread(void) {
             if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
                 event_id = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
                 if ((event_id == EVENT_ID_WIEGRAF_PACT_WITH_VELIUS || event_id == EVENT_ID_MALAK_REVIVED)
-                    && g_battle_etc_graphics_enabled == 0) {
+                    && g_gfx_draw_primitives_immediately == 0) {
                     cursor_x = rec.x;
                 } else {
                     u32 line_width;

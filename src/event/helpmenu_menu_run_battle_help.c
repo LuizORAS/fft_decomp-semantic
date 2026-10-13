@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/event_helpmenu.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
@@ -385,8 +386,8 @@ void helpmenu_menu_run_battle_help(void) {
             cursor_polys[buffer].clut = 0x7D7C;
             shadow_polys[buffer].clut = 0x7DBC;
         }
-        battle_gfx_draw_or_append_gpu_primitive(&cursor_polys[buffer]);
-        battle_gfx_draw_or_append_gpu_primitive(&shadow_polys[buffer]);
+        gfx_draw_or_append_gpu_primitive(&cursor_polys[buffer]);
+        gfx_draw_or_append_gpu_primitive(&shadow_polys[buffer]);
         thread_wait_frames(1);
         frame++;
     }

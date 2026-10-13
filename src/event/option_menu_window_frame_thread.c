@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 /*
  * OPTION menu window frame thread, variant A: started by the options menu and AT list builders.
  *
@@ -146,17 +147,17 @@ void option_menu_window_frame_thread(void) {
         for (index = 8; index >= 0; index--) {
             prim->sprites[index].clut = texture_u;
         }
-        battle_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&prim->modes[6]);
+        gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&prim->modes[6]);
         for (index = 0; index < 5; index++) {
-            battle_gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
-            battle_gfx_draw_or_append_gpu_primitive(&prim->modes[index]);
+            gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
+            gfx_draw_or_append_gpu_primitive(&prim->modes[index]);
         }
         for (index = 8; index >= 5; index--) {
-            battle_gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
+            gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&prim->modes[5]);
-        battle_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[0]);
+        gfx_draw_or_append_gpu_primitive(&prim->modes[5]);
+        gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[0]);
         frame++;
         thread_yield();
     }

@@ -1,5 +1,6 @@
 #include "fft/battle_gfx.h"
 #include "fft/event_attack.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
@@ -62,7 +63,7 @@ void attack_deploy_run_render_thread(void) {
             attack_deploy_build_menu_cursor_primitives(
                 frame, g_attack_deploy_menu_state, &g_attack_deploy_render_buffers[frame & 1]);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].draw_mode_9c4);
+        gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].draw_mode_9c4);
         if (g_attack_deploy_tiles_only_mode != 0) {
             if (g_attack_deploy_arrow_position_mode == 0) {
                 g_attack_deploy_render_buffers[frame & 1].screen_arrow.tri[0].x0 = 0xb9;
@@ -113,10 +114,10 @@ void attack_deploy_run_render_thread(void) {
         if (g_attack_deploy_tiles_only_mode == 0) {
             attack_gfx_build_status_group_primitives(g_attack_deploy_render_buffers[frame & 1].status);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].screen_offset);
+        gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].screen_offset);
         attack_deploy_update_cursor_primitives(frame, &g_attack_deploy_render_buffers[frame & 1]);
         if (g_attack_deploy_tiles_only_mode == 0) {
-            battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].screen_arrow.poly);
+            gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].screen_arrow.poly);
         }
         count = 0;
         tile = g_attack_deploy_render_buffers[frame & 1].tiles[0];
@@ -125,37 +126,35 @@ void attack_deploy_run_render_thread(void) {
         if (g_attack_deploy_active_cursor == 1) {
             g_attack_deploy_cursor_1_poly = &g_attack_deploy_render_buffers[frame & 1].cursor[1][0];
             g_attack_deploy_cursor_1_submitted = 1;
-            battle_gfx_draw_or_append_gpu_primitive(g_attack_deploy_cursor_1_poly);
+            gfx_draw_or_append_gpu_primitive(g_attack_deploy_cursor_1_poly);
         }
         g_attack_deploy_cursor_0_poly = &g_attack_deploy_render_buffers[frame & 1].cursor[0][0];
         g_attack_deploy_cursor_0_submitted = 1;
-        battle_gfx_draw_or_append_gpu_primitive(g_attack_deploy_cursor_0_poly);
+        gfx_draw_or_append_gpu_primitive(g_attack_deploy_cursor_0_poly);
         for (y = 0; y < 5; y++) {
             for (x = 0; x < 5; x++) {
                 if (g_attack_deploy_tiles_only_mode == 0
                     && g_attack_deploy_roster_id_by_tile[y][x] != ATTACK_DEPLOY_ROSTER_ID_NONE) {
                     attack_deploy_build_portrait_quads(x, y, g_attack_deploy_roster_id_by_tile[y][x],
                         &g_attack_deploy_render_buffers[frame & 1].portraits[count]);
-                    battle_gfx_draw_or_append_gpu_primitive(
-                        &g_attack_deploy_render_buffers[frame & 1].portraits[count]);
+                    gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].portraits[count]);
                     count++;
-                    battle_gfx_draw_or_append_gpu_primitive(
-                        &g_attack_deploy_render_buffers[frame & 1].portraits[count]);
+                    gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].portraits[count]);
                     count++;
                 }
             }
         }
-        battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].draw_mode_9f4);
+        gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].draw_mode_9f4);
         for (y = 0; y < 5; y++) {
             for (x = 0; x < 5; x++) {
                 if (g_attack_deploy_cursor_column[1] == x && g_attack_deploy_cursor_row[1] == y
                     && g_attack_deploy_active_cursor == 1) {
-                    battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].draw_mode_9d0);
-                    battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].cursor[1][1]);
+                    gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].draw_mode_9d0);
+                    gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].cursor[1][1]);
                 }
                 if (g_attack_deploy_cursor_column[0] == x && g_attack_deploy_cursor_row[0] == y) {
-                    battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].draw_mode_9dc);
-                    battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].cursor[0][1]);
+                    gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].draw_mode_9dc);
+                    gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].cursor[0][1]);
                 }
                 if (g_attack_deploy_tiles_only_mode == 0) {
                     if (g_attack_deploy_valid_tiles[y][x] != 0) {
@@ -181,13 +180,13 @@ void attack_deploy_run_render_thread(void) {
                 }
                 SetSemiTrans(tile, 1);
                 SetShadeTex(tile, 0);
-                battle_gfx_draw_or_append_gpu_primitive(tile);
+                gfx_draw_or_append_gpu_primitive(tile);
                 tile++;
             }
         }
-        battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].draw_mode_9e8);
-        battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].world_offset);
-        g_attack_deploy_zodiac_draw_context.ot = g_battle_gfx_current_otag_entry;
+        gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].draw_mode_9e8);
+        gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].world_offset);
+        g_attack_deploy_zodiac_draw_context.ot = g_gfx_current_otag_entry;
         if (g_attack_deploy_zodiac_draw_context.scale_x > ONE) {
             g_attack_deploy_zodiac_draw_context.scale_x -= 0x100;
             g_attack_deploy_zodiac_draw_context.scale_y -= 0x100;

@@ -2,6 +2,7 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
+#include "fft/gfx.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -31,12 +32,12 @@ void battle_gfx_submit_screen_fade_overlay(fade_overlay_t* overlay, s32 level) {
         }
         SetDrawMode(&overlay->mode, 0, 0, GetTPage(0, blend, 0x3c0, 0x100), &g_battle_menu_disabled_texture_window);
         setRGB0(&overlay->tile, level, level, level);
-        if (g_battle_etc_graphics_enabled != 0) {
-            battle_gfx_draw_or_append_gpu_primitive(&overlay->mode);
-            battle_gfx_draw_or_append_gpu_primitive(&overlay->tile);
+        if (g_gfx_draw_primitives_immediately != 0) {
+            gfx_draw_or_append_gpu_primitive(&overlay->mode);
+            gfx_draw_or_append_gpu_primitive(&overlay->tile);
         } else {
-            battle_gfx_draw_or_append_gpu_primitive(&overlay->tile);
-            battle_gfx_draw_or_append_gpu_primitive(&overlay->mode);
+            gfx_draw_or_append_gpu_primitive(&overlay->tile);
+            gfx_draw_or_append_gpu_primitive(&overlay->mode);
         }
         g_script_event_input = 0;
     }

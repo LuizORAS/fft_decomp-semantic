@@ -1,6 +1,7 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_script.h"
 #include "fft/event_bunit.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
@@ -25,7 +26,7 @@ void bunit_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
     s32 thread_id;
     s32 status;
 
-    g_battle_gfx_current_otag_entry = otag;
+    g_gfx_current_otag_entry = otag;
     g_bunit_frame_arg = frame_arg;
     g_menu_input_controller = script_get_controller_input_pointer(0);
     g_menu_hide_numeric_values = 0;

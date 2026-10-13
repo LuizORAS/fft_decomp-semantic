@@ -2435,9 +2435,9 @@ imports:
   - {addr: 0x801dfe10, name: helpmenu_menu_run_require_help}
 
 overrides:
-  - {function: menu_build_status_group_primitives, name: battle_gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
-  - {function: menu_draw_thread_status_indicators, name: battle_gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
-  - {function: require_editor_run_numeric_thread, name: battle_gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
+  - {function: menu_build_status_group_primitives, name: gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
+  - {function: menu_draw_thread_status_indicators, name: gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
+  - {function: require_editor_run_numeric_thread, name: gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
 ---
 module: event-small
 file: EVENT/SMALL.OUT

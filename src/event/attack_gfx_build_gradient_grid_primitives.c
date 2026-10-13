@@ -1,4 +1,5 @@
 #include "fft/event_attack.h"
+#include "fft/gfx.h"
 
 /* Build the 4x8 grid of shaded, textured quads behind the panel: each row is
  * one step brighter than the one above, and every cell shows the same 64x32
@@ -28,7 +29,7 @@ void attack_gfx_build_gradient_grid_primitives(POLY_GT4* poly) {
             setUV4(poly, 0x58, 0xd8, 0x98, 0xd8, 0x58, 0xf8, 0x98, 0xf8);
             SetSemiTrans(poly, 1);
             SetShadeTex(poly, 0);
-            battle_gfx_draw_or_append_gpu_primitive(poly);
+            gfx_draw_or_append_gpu_primitive(poly);
             poly++;
         }
     }

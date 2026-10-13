@@ -1,4 +1,5 @@
 #include "fft/event_etc.h"
+#include "fft/gfx.h"
 #include "psx/types.h"
 
 /* The record for one half of the title: `dimension_set` picks the pair,
@@ -82,14 +83,14 @@ void etc_graphic_build_chapter_polygons(
         }
     }
     if (layer != 0) {
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[0]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[3]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[2]);
+        gfx_draw_or_append_gpu_primitive(&primitives[1]);
+        gfx_draw_or_append_gpu_primitive(&primitives[0]);
+        gfx_draw_or_append_gpu_primitive(&primitives[3]);
+        gfx_draw_or_append_gpu_primitive(&primitives[2]);
     } else {
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[3]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[2]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[0]);
+        gfx_draw_or_append_gpu_primitive(&primitives[3]);
+        gfx_draw_or_append_gpu_primitive(&primitives[2]);
+        gfx_draw_or_append_gpu_primitive(&primitives[1]);
+        gfx_draw_or_append_gpu_primitive(&primitives[0]);
     }
 }

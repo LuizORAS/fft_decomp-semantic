@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -56,10 +57,10 @@ void world_menu_icon_clamped_list_thread(void) {
         sprites = &record->base;
         world_menu_select_icon_cluts(sprites);
         world_menu_update_icon_cursor_sprites(param, &record->base, i, cursor);
-        world_gfx_draw_or_append_gpu_primitive(&sprites->sprites[3].tag);
-        world_gfx_draw_or_append_gpu_primitive(&sprites->sprites[2].tag);
-        world_gfx_draw_or_append_gpu_primitive(&sprites->sprites[1].tag);
-        world_gfx_draw_or_append_gpu_primitive(&sprites->draw_mode);
+        gfx_draw_or_append_gpu_primitive(&sprites->sprites[3].tag);
+        gfx_draw_or_append_gpu_primitive(&sprites->sprites[2].tag);
+        gfx_draw_or_append_gpu_primitive(&sprites->sprites[1].tag);
+        gfx_draw_or_append_gpu_primitive(&sprites->draw_mode);
     }
     thread_yield();
     thread_exit_current();

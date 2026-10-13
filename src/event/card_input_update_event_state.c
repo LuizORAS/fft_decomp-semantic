@@ -1,6 +1,7 @@
 #include "fft/battle_gfx.h"
 #include "fft/battle_script.h"
 #include "fft/event_card.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
@@ -34,7 +35,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
     if (count_frame != 0) {
         g_main_gfx_screen_polarity = 1;
     }
-    g_battle_gfx_current_otag_entry = otag;
+    g_gfx_current_otag_entry = otag;
     g_card_input_controller = script_get_controller_input_pointer(0);
     if (input == 0) {
         g_card_input_initial_repeat_counter = 0;

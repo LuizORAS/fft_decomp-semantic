@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -144,32 +145,32 @@ void world_menu_equipment_and_ability_panel_thread(void) {
         world_menu_configure_status_panel_primitive_colors(screen, thread);
         world_menu_select_primitive_color_palette(&screen->numeric_frame, thread);
         if (frame < 13) {
-            world_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
+            gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
         }
-        world_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[1]);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[1]);
         for (i = 0; i < 12; i++) {
-            world_gfx_draw_or_append_gpu_primitive(&screen->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&screen->sprites[i]);
         }
         for (i = 14; i < 19; i++) {
-            world_gfx_draw_or_append_gpu_primitive(&screen->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&screen->sprites[i]);
         }
-        world_gfx_draw_or_append_gpu_primitive(&screen->draw_modes[0]);
-        world_gfx_draw_or_append_gpu_primitive(&screen->sprites[12]);
-        world_gfx_draw_or_append_gpu_primitive(&screen->sprites[13]);
-        world_gfx_draw_or_append_gpu_primitive(&screen->draw_modes[1]);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_modes[0]);
+        gfx_draw_or_append_gpu_primitive(&screen->sprites[12]);
+        gfx_draw_or_append_gpu_primitive(&screen->sprites[13]);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_modes[1]);
         for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
-            world_gfx_draw_or_append_gpu_primitive(&screen->sprites[19 + i]);
+            gfx_draw_or_append_gpu_primitive(&screen->sprites[19 + i]);
         }
-        world_gfx_draw_or_append_gpu_primitive(&screen->draw_modes[2]);
-        world_gfx_draw_or_append_gpu_primitive(&screen->tiles[0]);
-        world_gfx_draw_or_append_gpu_primitive(&screen->tiles[1]);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_modes[2]);
+        gfx_draw_or_append_gpu_primitive(&screen->tiles[0]);
+        gfx_draw_or_append_gpu_primitive(&screen->tiles[1]);
         for (i = 0; i < 8; i++) {
-            world_gfx_draw_or_append_gpu_primitive(&screen->lines[i]);
+            gfx_draw_or_append_gpu_primitive(&screen->lines[i]);
         }
-        world_menu_submit_numeric_display_frame_primitives(&screen->numeric_frame);
-        world_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
+        menu_submit_numeric_display_frame_primitives(&screen->numeric_frame);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
         if (frame < 13) {
-            world_gfx_draw_or_append_gpu_primitive(&screen->portrait);
+            gfx_draw_or_append_gpu_primitive(&screen->portrait);
         }
         thread_yield();
         if (world_thread_get_current_parameter_3() != 0) {

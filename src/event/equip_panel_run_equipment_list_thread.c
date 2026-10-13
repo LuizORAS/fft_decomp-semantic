@@ -135,29 +135,29 @@ void equip_panel_run_equipment_list_thread(void) {
             g_main_gfx_screen_polarity * 0xf0, thread);
         menu_set_status_panel_primitive_colors(screen, thread);
         menu_select_status_primitive_color_palette(&screen->numeric_frame, thread);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->sprites[0]);
+        gfx_draw_or_append_gpu_primitive(&screen->portrait.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[1]);
+        gfx_draw_or_append_gpu_primitive(&screen->sprites[0]);
         for (i = 2; i < 7; i++) {
-            battle_gfx_draw_or_append_gpu_primitive(&screen->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&screen->sprites[i]);
         }
         for (i = 14; i < 19; i++) {
-            battle_gfx_draw_or_append_gpu_primitive(&screen->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&screen->sprites[i]);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&screen->draw_modes[0]);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->sprites[12]);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->draw_modes[1]);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_modes[0]);
+        gfx_draw_or_append_gpu_primitive(&screen->sprites[12]);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_modes[1]);
         for (i = 0; i < 5; i++) {
-            battle_gfx_draw_or_append_gpu_primitive(&screen->sprites[19 + i]);
+            gfx_draw_or_append_gpu_primitive(&screen->sprites[19 + i]);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&screen->draw_modes[2]);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->tiles[0]);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_modes[2]);
+        gfx_draw_or_append_gpu_primitive(&screen->tiles[0]);
         for (i = 0; i < 4; i++) {
-            battle_gfx_draw_or_append_gpu_primitive(&screen->lines[i]);
+            gfx_draw_or_append_gpu_primitive(&screen->lines[i]);
         }
-        battle_menu_submit_numeric_display_frame_primitives(&screen->numeric_frame);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
-        battle_gfx_draw_or_append_gpu_primitive(&screen->portrait);
+        menu_submit_numeric_display_frame_primitives(&screen->numeric_frame);
+        gfx_draw_or_append_gpu_primitive(&screen->draw_offsets[0]);
+        gfx_draw_or_append_gpu_primitive(&screen->portrait);
         thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {
             break;

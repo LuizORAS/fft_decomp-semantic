@@ -1,4 +1,5 @@
 #include "fft/battle_gfx.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 
 /* Render the animated status groups of a menu panel.
@@ -62,7 +63,7 @@ void menu_build_status_group_primitives(POLY_FT4* poly) {
 
             SetSemiTrans(poly, 1);
             SetShadeTex(poly, 0);
-            battle_gfx_draw_or_append_gpu_primitive(poly);
+            gfx_draw_or_append_gpu_primitive(poly);
             poly++;
         }
     }

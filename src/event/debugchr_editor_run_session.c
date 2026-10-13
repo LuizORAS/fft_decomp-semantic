@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 /* Select a unit and edit its fields with the controller. */
 #include "fft/battle_script.h"
 #include "fft/event_debugchr.h"
@@ -431,8 +432,8 @@ editor:
             setXY4(shadow_h_edit, x + 2, y + 2, x + 0x12, y + 2, x + 2, y + 0x12, x + 0x12, y + 0x12);
             g_debugchr_editor_cursor_polys[buffer].clut = 0x7E7C;
         }
-        battle_gfx_draw_or_append_gpu_primitive(PRIM_AT(cursor_prims, buffer));
-        battle_gfx_draw_or_append_gpu_primitive(&g_debugchr_editor_cursor_shade_polys[buffer]);
+        gfx_draw_or_append_gpu_primitive(PRIM_AT(cursor_prims, buffer));
+        gfx_draw_or_append_gpu_primitive(&g_debugchr_editor_cursor_shade_polys[buffer]);
         thread_wait_frames(1);
         i++;
     }

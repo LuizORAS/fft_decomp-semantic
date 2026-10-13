@@ -288,38 +288,38 @@ void world_menu_display_hovered_unit_stats(
         offs->b.position.x = -0x80;
         offs->b.position.y = y;
         SetDrawOffset(&offs->b.packet, (u16*)&offs->b.position);
-        world_gfx_draw_or_append_gpu_primitive(&offs->b);
-        world_gfx_draw_or_append_gpu_primitive(&page->quads[0]);
-        world_gfx_draw_or_append_gpu_primitive(&page->quads[1]);
-        world_gfx_draw_or_append_gpu_primitive(&page->draw_mode_1);
+        gfx_draw_or_append_gpu_primitive(&offs->b);
+        gfx_draw_or_append_gpu_primitive(&page->quads[0]);
+        gfx_draw_or_append_gpu_primitive(&page->quads[1]);
+        gfx_draw_or_append_gpu_primitive(&page->draw_mode_1);
         poly--;
         for (i = 0; i < 3; i++) {
-            world_gfx_draw_or_append_gpu_primitive(poly);
+            gfx_draw_or_append_gpu_primitive(poly);
             poly--;
         }
-        world_gfx_draw_or_append_gpu_primitive(&page->quads[2]);
+        gfx_draw_or_append_gpu_primitive(&page->quads[2]);
         if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
             page->quads[4].clut = 0x7D7C;
-            world_gfx_draw_or_append_gpu_primitive(&page->quads[4]);
+            gfx_draw_or_append_gpu_primitive(&page->quads[4]);
         }
         if (mode != UNIT_STATS_PANEL_ATTACK_TARGET) {
-            world_gfx_draw_or_append_gpu_primitive(&page->quads[3]);
+            gfx_draw_or_append_gpu_primitive(&page->quads[3]);
         } else if (text_id != 0) {
             world_menu_build_sprite_page(frame, frame_rect);
         }
         for (i = 0; i < 7; i++) {
             page->sprites[i].clut = g_world_unit_status_sprite_clut_pairs[i][running & 1];
-            world_gfx_draw_or_append_gpu_primitive(&page->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&page->sprites[i]);
         }
-        world_gfx_draw_or_append_gpu_primitive(&page->draw_mode_0);
-        world_gfx_draw_or_append_gpu_primitive(&page->portrait);
+        gfx_draw_or_append_gpu_primitive(&page->draw_mode_0);
+        gfx_draw_or_append_gpu_primitive(&page->portrait);
         if (running != 0) {
             world_menu_init_primitive_colors_dimmed(&page->palette);
         } else {
             world_menu_init_primitive_colors_normal(&page->palette);
         }
-        world_menu_submit_numeric_display_frame_primitives(&page->palette);
-        world_gfx_draw_or_append_gpu_primitive(&offs->a);
+        menu_submit_numeric_display_frame_primitives(&page->palette);
+        gfx_draw_or_append_gpu_primitive(&offs->a);
         thread_yield();
         g_menu_hide_numeric_values = unit->unit_flags & UNIT_FLAG_EGG;
         if (thread_get_current_task_id() == THREAD_TASK_HOVERED_UNIT_STATS) {

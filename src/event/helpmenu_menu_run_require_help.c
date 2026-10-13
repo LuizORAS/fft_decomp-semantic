@@ -1,4 +1,5 @@
 #include "fft/battle_menu.h"
+#include "fft/gfx.h"
 #include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
@@ -211,8 +212,8 @@ void helpmenu_menu_run_require_help(void) {
             cursor[buffer].clut = 0x7D7C;
             shadow[buffer].clut = 0x7DBC;
         }
-        battle_gfx_draw_or_append_gpu_primitive(&cursor[buffer]);
-        battle_gfx_draw_or_append_gpu_primitive(&shadow[buffer]);
+        gfx_draw_or_append_gpu_primitive(&cursor[buffer]);
+        gfx_draw_or_append_gpu_primitive(&shadow[buffer]);
         thread_wait_frames(1);
     }
     *g_helpmenu_controller_state_ptr = 0;

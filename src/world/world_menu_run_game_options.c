@@ -288,25 +288,25 @@ void world_menu_run_game_options(void) {
         world_menu_select_sprite_clut(&page->title);
         world_menu_select_sprite_clut(&page->value);
         world_menu_select_sprite_clut(frame);
-        world_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[3]);
-        world_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[1]);
-        world_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[2]);
-        world_gfx_draw_or_append_gpu_primitive(&page->icons.base.draw_mode);
+        gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[3]);
+        gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[1]);
+        gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[2]);
+        gfx_draw_or_append_gpu_primitive(&page->icons.base.draw_mode);
         if (layout->hidden_rows != 0 && world_menu_is_input_allowed() != 0) {
             if (row_offset != 0) {
-                world_gfx_draw_or_append_gpu_primitive(&page->arrows[0]);
-                world_gfx_draw_or_append_gpu_primitive(&page->arrow_marks[0]);
+                gfx_draw_or_append_gpu_primitive(&page->arrows[0]);
+                gfx_draw_or_append_gpu_primitive(&page->arrow_marks[0]);
             }
             if (row_offset != layout->hidden_rows) {
-                world_gfx_draw_or_append_gpu_primitive(&page->arrows[1]);
-                world_gfx_draw_or_append_gpu_primitive(&page->arrow_marks[1]);
+                gfx_draw_or_append_gpu_primitive(&page->arrows[1]);
+                gfx_draw_or_append_gpu_primitive(&page->arrow_marks[1]);
             }
             span = page->arrows[1].y0;
             top = page->arrows[0].y0 + page->arrows[0].h;
             span -= top;
             page->thumb.x0 = page->arrows[0].x0;
             page->thumb.y0 = top + span * entry->selected_index / (layout->row_count + layout->hidden_rows) - 2;
-            world_gfx_draw_or_append_gpu_primitive(&page->thumb);
+            gfx_draw_or_append_gpu_primitive(&page->thumb);
         }
         if ((thread - 1)->is_running == 0) {
             thread_set_parameters(g_thread_current_id + 1, (s32)&entry->window.x, 0, 0);
@@ -317,16 +317,16 @@ void world_menu_run_game_options(void) {
             &page->title_area, &entry->window, i, g_active_graphics_buffer_index);
         world_gfx_build_scaled_draw_area_pair_swapped(
             &page->value_area, &value_rect, i, g_active_graphics_buffer_index);
-        world_gfx_draw_or_append_gpu_primitive(&page->title_area.areas[1]);
-        world_gfx_draw_or_append_gpu_primitive(&page->icon_mode);
-        world_gfx_draw_or_append_gpu_primitive(frame);
-        world_gfx_draw_or_append_gpu_primitive(&page->window_mode);
-        world_gfx_draw_or_append_gpu_primitive(&page->title_area.areas[0]);
-        world_gfx_draw_or_append_gpu_primitive(&page->value_area.areas[1]);
-        world_gfx_draw_or_append_gpu_primitive(&page->value);
-        world_gfx_draw_or_append_gpu_primitive(&page->title);
-        world_gfx_draw_or_append_gpu_primitive(&page->text_mode);
-        world_gfx_draw_or_append_gpu_primitive(&page->value_area.areas[0]);
+        gfx_draw_or_append_gpu_primitive(&page->title_area.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&page->icon_mode);
+        gfx_draw_or_append_gpu_primitive(frame);
+        gfx_draw_or_append_gpu_primitive(&page->window_mode);
+        gfx_draw_or_append_gpu_primitive(&page->title_area.areas[0]);
+        gfx_draw_or_append_gpu_primitive(&page->value_area.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&page->value);
+        gfx_draw_or_append_gpu_primitive(&page->title);
+        gfx_draw_or_append_gpu_primitive(&page->text_mode);
+        gfx_draw_or_append_gpu_primitive(&page->value_area.areas[0]);
         g_thread_call_target = (void (*)(void))suzuki_sound_set_type;
         g_main_game_options.fields.cursor_movement = g_world_game_option_values[GAME_OPTION_CURSOR_MOVEMENT];
         g_main_game_options.fields.cursor_repeat_speed = g_world_game_option_values[GAME_OPTION_CURSOR_REPEAT_SPEED];

@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -137,11 +138,11 @@ void world_main_menu_text_window_thread(void) {
             record->text_sprite.x0 = entry->window.x;
         }
         setRGB0(&record->frame_sprites[0], g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
-        world_gfx_draw_or_append_gpu_primitive(&record->frame_sprites[0]);
-        world_gfx_draw_or_append_gpu_primitive(&record->frame_draw_mode);
+        gfx_draw_or_append_gpu_primitive(&record->frame_sprites[0]);
+        gfx_draw_or_append_gpu_primitive(&record->frame_draw_mode);
         setRGB0(&record->text_sprite, g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
-        world_gfx_draw_or_append_gpu_primitive(&record->text_sprite);
-        world_gfx_draw_or_append_gpu_primitive(&record->text_draw_mode);
+        gfx_draw_or_append_gpu_primitive(&record->text_sprite);
+        gfx_draw_or_append_gpu_primitive(&record->text_draw_mode);
     }
     thread_yield();
     thread_exit_current();

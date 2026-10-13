@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
 /* WORLD copy of the EVENT HELPMENU require-help menu
@@ -217,8 +218,8 @@ void world_menu_run_require_help(void) {
             cursor[buffer].clut = 0x7D7C;
             shadow[buffer].clut = 0x7DBC;
         }
-        world_gfx_draw_or_append_gpu_primitive(&cursor[buffer]);
-        world_gfx_draw_or_append_gpu_primitive(&shadow[buffer]);
+        gfx_draw_or_append_gpu_primitive(&cursor[buffer]);
+        gfx_draw_or_append_gpu_primitive(&shadow[buffer]);
         thread_wait_frames(1);
     }
     *g_world_help_controller_state_ptr = 0;

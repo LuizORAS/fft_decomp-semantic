@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 /*
  * WORLD copy of the EVENT OPTION window frame thread (option_menu_thin_window_frame_thread,
  * byte-identical apart from addresses). Layout notes below are the OPTION
@@ -154,17 +155,17 @@ void world_menu_thin_window_frame_thread(void) {
         for (index = 8; index >= 0; index--) {
             prim->sprites[index].clut = texture_u;
         }
-        world_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[1]);
-        world_gfx_draw_or_append_gpu_primitive(&prim->modes[6]);
+        gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&prim->modes[6]);
         for (index = 0; index < 5; index++) {
-            world_gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
-            world_gfx_draw_or_append_gpu_primitive(&prim->modes[index]);
+            gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
+            gfx_draw_or_append_gpu_primitive(&prim->modes[index]);
         }
         for (index = 8; index >= 5; index--) {
-            world_gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
+            gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
         }
-        world_gfx_draw_or_append_gpu_primitive(&prim->modes[5]);
-        world_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[0]);
+        gfx_draw_or_append_gpu_primitive(&prim->modes[5]);
+        gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[0]);
         frame++;
         thread_yield();
     }

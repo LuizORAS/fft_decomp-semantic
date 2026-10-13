@@ -732,7 +732,7 @@ functions:
   - {addr: 0x8012f02c, size: 32, name: battle_menu_alloc_buffer, hash: 8dfe96e6bed1af08}
   - {addr: 0x8012f04c, size: 192, name: battle_menu_free_memory, hash: bf843d0680a0ad61}
   - {addr: 0x8012f10c, size: 596, name: battle_menu_init_numeric_display_frame_primitives, hash: 793d75bdfee884f4}
-  - {addr: 0x8012f360, size: 108, name: battle_menu_submit_numeric_display_frame_primitives, hash: f20c4498d66b3270}
+  - {addr: 0x8012f360, size: 108, name: menu_submit_numeric_display_frame_primitives, hash: f20c4498d66b3270, source: src/shared/menu/menu_submit_numeric_display_frame_primitives.c}
   - {addr: 0x8012f3cc, size: 136, name: battle_menu_init_primitive_colors_normal, hash: 5a93f338b69dc23b}
   - {addr: 0x8012f454, size: 140, name: battle_menu_init_primitive_colors_dimmed, hash: a34bc154bfcc9d66}
   - {addr: 0x8012f4e0, size: 380, name: battle_text_build_display_message, hash: eedb1f6dcfecd6a0}
@@ -1042,8 +1042,8 @@ functions:
   - {addr: 0x8014a51c, size: 92, name: battle_text_init_menu_section_pointers, hash: 86ab1a65b19324c1}
   - {addr: 0x8014a578, size: 32, name: script_get_controller_input_pointer, hash: 1827206fea7090f9}
   - {addr: 0x8014a598, size: 80, name: script_load_event_input_state, hash: aab488fb701967d4}
-  - {addr: 0x8014a5e8, size: 120, name: battle_gfx_draw_or_append_gpu_primitive, hash: f436ef6d49b0750a}
-  - {addr: 0x8014a660, size: 68, name: battle_gfx_append_gpu_primitive_to_secondary_otag, hash: 29775e21c5c1e7bd}
+  - {addr: 0x8014a5e8, size: 120, name: gfx_draw_or_append_gpu_primitive, hash: f436ef6d49b0750a, source: src/shared/gfx/gfx_draw_or_append_gpu_primitive.c}
+  - {addr: 0x8014a660, size: 68, name: gfx_append_gpu_primitive_to_secondary_otag, hash: 29775e21c5c1e7bd, source: src/shared/gfx/gfx_append_gpu_primitive_to_secondary_otag.c}
   - {addr: 0x8014a6a4, size: 40, name: battle_text_set_substitution_values_7e_7f, hash: a9c219bc5dcf7ca0}
   - {addr: 0x8014a6cc, size: 24, name: battle_menu_set_text_origin, hash: 8ba7a2a7b2adc30b}
   - {addr: 0x8014a6e4, size: 196, name: battle_gfx_set_draw_mode_for_texture_page, hash: 6872715b35eb6ca3}
@@ -2350,7 +2350,7 @@ data:
   - {addr: 0x80165fe4, name: g_battle_field_object_use_request}
   - {addr: 0x80165fe8, name: g_script_unit_slots}
   - {addr: 0x80165ff0, name: g_camera_shake_z_offset}
-  - {addr: 0x80165ff2, name: g_battle_etc_graphics_enabled}
+  - {addr: 0x80165ff2, name: g_gfx_draw_primitives_immediately}
   - {addr: 0x80165ff4, name: g_script_debug_paused}
   - {addr: 0x80165ff6, name: g_battle_menu_input_mode}
   - {addr: 0x80165ff8, name: g_battle_event_effect_target_runtime_id}
@@ -2600,7 +2600,7 @@ data:
   - {addr: 0x80173cb4, name: g_battle_event_pending_effect_id}
   - {addr: 0x80173cb8, name: g_battle_menu_thread_menu_data}
   - {addr: 0x80173cbc, name: g_battle_menu_height_display_pages}
-  - {addr: 0x80173f44, name: g_battle_gfx_current_otag_entry}
+  - {addr: 0x80173f44, name: g_gfx_current_otag_entry}
   - {addr: 0x80173f48, name: g_battle_event_pending_reserved_vram_release_slot}
   - {addr: 0x80173f4c, name: g_battle_event_pending_evtchr_save_slot}
   - {addr: 0x80173f50, name: g_battle_event_pending_saved_evtchr_clear_slot}

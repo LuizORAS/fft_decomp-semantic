@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -119,11 +120,11 @@ draw_panels:
                     g_world_menu_indicator_fade_work[i]);
                 setRGB0(&prims->bottom[j], g_world_menu_indicator_fade_work[i], g_world_menu_indicator_fade_work[i],
                     g_world_menu_indicator_fade_work[i]);
-                world_gfx_draw_or_append_gpu_primitive((k + prims->top));
-                world_gfx_draw_or_append_gpu_primitive(&prims->bottom[j]);
+                gfx_draw_or_append_gpu_primitive((k + prims->top));
+                gfx_draw_or_append_gpu_primitive(&prims->bottom[j]);
             }
-            world_gfx_draw_or_append_gpu_primitive(&prims->center);
-            world_gfx_draw_or_append_gpu_primitive(&prims->draw_mode);
+            gfx_draw_or_append_gpu_primitive(&prims->center);
+            gfx_draw_or_append_gpu_primitive(&prims->draw_mode);
         }
     }
 }

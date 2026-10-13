@@ -395,43 +395,43 @@ void bunit_panel_run_unit_status_thread(void) {
             LoadImage(&rects[5], (u32*)(render_b + 0xA0));
         }
         if (!(thread->flags & MENU_STATUS_PANEL_HIDDEN)) {
-            battle_gfx_draw_or_append_gpu_primitive(&editor->draw_offset_b);
-            battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[0]);
-            battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[1]);
-            battle_gfx_draw_or_append_gpu_primitive(&editor->draw_mode_a);
+            gfx_draw_or_append_gpu_primitive(&editor->draw_offset_b);
+            gfx_draw_or_append_gpu_primitive(&editor->value_sprites[0]);
+            gfx_draw_or_append_gpu_primitive(&editor->value_sprites[1]);
+            gfx_draw_or_append_gpu_primitive(&editor->draw_mode_a);
             for (i = 0; i < 3; i++) {
-                battle_gfx_draw_or_append_gpu_primitive(&editor->bars[i]);
+                gfx_draw_or_append_gpu_primitive(&editor->bars[i]);
             }
-            battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[2]);
-            battle_gfx_draw_or_append_gpu_primitive(&editor->value_sprites[3]);
+            gfx_draw_or_append_gpu_primitive(&editor->value_sprites[2]);
+            gfx_draw_or_append_gpu_primitive(&editor->value_sprites[3]);
             for (i = 0; i < 7; i++) {
-                battle_gfx_draw_or_append_gpu_primitive(&editor->label_sprites[i]);
+                gfx_draw_or_append_gpu_primitive(&editor->label_sprites[i]);
             }
-            battle_gfx_draw_or_append_gpu_primitive(&editor->draw_mode_b);
+            gfx_draw_or_append_gpu_primitive(&editor->draw_mode_b);
             if (suppress == 0) {
                 if (anim_state >= 5) {
-                    battle_gfx_draw_or_append_gpu_primitive(&editor->portrait[2]);
-                    battle_gfx_draw_or_append_gpu_primitive(&editor->portrait[3]);
-                    battle_gfx_draw_or_append_gpu_primitive(&editor->portrait[1]);
+                    gfx_draw_or_append_gpu_primitive(&editor->portrait[2]);
+                    gfx_draw_or_append_gpu_primitive(&editor->portrait[3]);
+                    gfx_draw_or_append_gpu_primitive(&editor->portrait[1]);
                 }
-                battle_gfx_draw_or_append_gpu_primitive(&editor->portrait[0]);
+                gfx_draw_or_append_gpu_primitive(&editor->portrait[0]);
             }
-            battle_menu_submit_numeric_display_frame_primitives(&editor->numeric_frame);
-            battle_gfx_draw_or_append_gpu_primitive(&editor->draw_offset_a);
-            battle_gfx_draw_or_append_gpu_primitive(&panel->draw_offset_b);
+            menu_submit_numeric_display_frame_primitives(&editor->numeric_frame);
+            gfx_draw_or_append_gpu_primitive(&editor->draw_offset_a);
+            gfx_draw_or_append_gpu_primitive(&panel->draw_offset_b);
             cur5 = &panel->portrait;
             SetSemiTrans(cur5, 1);
-            battle_gfx_draw_or_append_gpu_primitive(cur5);
+            gfx_draw_or_append_gpu_primitive(cur5);
             for (i = 3; i >= 0; i--) {
-                battle_gfx_draw_or_append_gpu_primitive(&panel->sprites[i]);
+                gfx_draw_or_append_gpu_primitive(&panel->sprites[i]);
             }
-            battle_gfx_draw_or_append_gpu_primitive(&panel->draw_mode_b);
+            gfx_draw_or_append_gpu_primitive(&panel->draw_mode_b);
             for (i = 4; i < 7; i++) {
-                battle_gfx_draw_or_append_gpu_primitive(&panel->sprites[i]);
+                gfx_draw_or_append_gpu_primitive(&panel->sprites[i]);
             }
-            battle_gfx_draw_or_append_gpu_primitive(&panel->draw_mode_a);
-            battle_menu_submit_numeric_display_frame_primitives(&panel->numeric_frame);
-            battle_gfx_draw_or_append_gpu_primitive(&panel->draw_offset_a);
+            gfx_draw_or_append_gpu_primitive(&panel->draw_mode_a);
+            menu_submit_numeric_display_frame_primitives(&panel->numeric_frame);
+            gfx_draw_or_append_gpu_primitive(&panel->draw_offset_a);
         }
         thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {

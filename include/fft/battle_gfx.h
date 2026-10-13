@@ -513,11 +513,6 @@ void battle_gfx_run_unit_seq_script(battle_unit_t* unit, battle_unit_anim_state_
 void battle_gfx_run_wep_eff_seq_script(battle_unit_t* unit, battle_unit_sprite_block_t* sprite, s32 index, s32 advance);
 void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_t* unit);
 
-/* BATTLE flag at 0x80165ff2, set by etc_graphic_open while a full-screen ETC
- * graphic is shown; BATTLE then draws primitives immediately instead of
- * linking them into the ordering table. */
-extern u16 g_battle_etc_graphics_enabled;
-
 /* sprite rendering */
 /* One of the two 60968-byte battle render buffers. The primitive pools are
  * pre-initialised once; main_gfx_swap_and_clear_otag reads the ordering table
@@ -538,7 +533,6 @@ typedef char battle_render_buffer_size_must_be_60968[(sizeof(battle_render_buffe
 /* The 24 orders in which battle_gfx_draw_unit_sprite_layers queues a unit's
  * four layers: 0 is the unit's own sprite, n its sprite block n - 1. */
 extern s32 g_battle_gfx_animation_layer_priorities[][4];
-extern u32* g_battle_gfx_current_otag_entry;
 /* The buffer being built this frame; main_gfx_swap_and_clear_otag alternates
  * it between the two g_battle_render_buffers entries. */
 extern battle_render_buffer_t* g_battle_gfx_current_render_buffer;
@@ -547,13 +541,11 @@ extern POLY_FT4* g_battle_gfx_sprite_prim_pool;
 extern u16 g_battle_gfx_sprite_y_rotations[];
 extern battle_render_buffer_t g_battle_render_buffers[2];
 
-void battle_gfx_append_gpu_primitive_to_secondary_otag(u32* primitive);
 void battle_gfx_apply_status_spritesheet_change(battle_unit_t* unit, s32 tile_effect_level);
 void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_t* unit);
 s32 battle_gfx_clear_shadow_graphic_trigger_by_runtime_id(u32 runtime_id);
 void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_t* display, s32 end, s32 start,
     SVECTOR* position, s16 angle, s16 mode, SVECTOR* scale, u32* ot);
-void battle_gfx_draw_or_append_gpu_primitive(void* primitive);
 void battle_gfx_draw_unit_shadow(battle_unit_t* unit, u32* ot);
 void battle_gfx_draw_unit_sprite_layers(battle_unit_t* unit);
 void battle_gfx_draw_unit_sprite_position_copies(battle_unit_t* unit);

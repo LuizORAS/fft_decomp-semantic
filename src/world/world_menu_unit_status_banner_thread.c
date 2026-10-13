@@ -397,43 +397,43 @@ void world_menu_unit_status_banner_thread(void) {
             }
         }
         if (!(display->flags & MENU_STATUS_PANEL_HIDDEN)) {
-            world_gfx_draw_or_append_gpu_primitive(&summary->draw_offset_b);
-            world_gfx_draw_or_append_gpu_primitive(&summary->value_sprites[0]);
-            world_gfx_draw_or_append_gpu_primitive(&summary->value_sprites[1]);
-            world_gfx_draw_or_append_gpu_primitive(&summary->draw_mode_a);
+            gfx_draw_or_append_gpu_primitive(&summary->draw_offset_b);
+            gfx_draw_or_append_gpu_primitive(&summary->value_sprites[0]);
+            gfx_draw_or_append_gpu_primitive(&summary->value_sprites[1]);
+            gfx_draw_or_append_gpu_primitive(&summary->draw_mode_a);
             for (i = 0; i < 3; i++) {
-                world_gfx_draw_or_append_gpu_primitive(&summary->bars[i]);
+                gfx_draw_or_append_gpu_primitive(&summary->bars[i]);
             }
-            world_gfx_draw_or_append_gpu_primitive(&summary->value_sprites[2]);
-            world_gfx_draw_or_append_gpu_primitive(&summary->value_sprites[3]);
+            gfx_draw_or_append_gpu_primitive(&summary->value_sprites[2]);
+            gfx_draw_or_append_gpu_primitive(&summary->value_sprites[3]);
             for (i = 0; i < 7; i++) {
-                world_gfx_draw_or_append_gpu_primitive(&summary->label_sprites[i]);
+                gfx_draw_or_append_gpu_primitive(&summary->label_sprites[i]);
             }
-            world_gfx_draw_or_append_gpu_primitive(&summary->draw_mode_b);
+            gfx_draw_or_append_gpu_primitive(&summary->draw_mode_b);
             if (suppress == 0) {
                 if (anim_state >= 5) {
-                    world_gfx_draw_or_append_gpu_primitive(&summary->portrait[2]);
-                    world_gfx_draw_or_append_gpu_primitive(&summary->portrait[3]);
-                    world_gfx_draw_or_append_gpu_primitive(&summary->portrait[1]);
+                    gfx_draw_or_append_gpu_primitive(&summary->portrait[2]);
+                    gfx_draw_or_append_gpu_primitive(&summary->portrait[3]);
+                    gfx_draw_or_append_gpu_primitive(&summary->portrait[1]);
                 }
-                world_gfx_draw_or_append_gpu_primitive(&summary->portrait[0]);
+                gfx_draw_or_append_gpu_primitive(&summary->portrait[0]);
             }
-            world_menu_submit_numeric_display_frame_primitives(&summary->numeric_frame);
-            world_gfx_draw_or_append_gpu_primitive(&summary->draw_offset_a);
-            world_gfx_draw_or_append_gpu_primitive(&status->draw_offset_b);
+            menu_submit_numeric_display_frame_primitives(&summary->numeric_frame);
+            gfx_draw_or_append_gpu_primitive(&summary->draw_offset_a);
+            gfx_draw_or_append_gpu_primitive(&status->draw_offset_b);
             portrait_prim = &status->portrait;
             SetSemiTrans(portrait_prim, 1);
-            world_gfx_draw_or_append_gpu_primitive(portrait_prim);
+            gfx_draw_or_append_gpu_primitive(portrait_prim);
             for (i = 3; i >= 0; i--) {
-                world_gfx_draw_or_append_gpu_primitive(&status->sprites[i]);
+                gfx_draw_or_append_gpu_primitive(&status->sprites[i]);
             }
-            world_gfx_draw_or_append_gpu_primitive(&status->draw_mode_b);
+            gfx_draw_or_append_gpu_primitive(&status->draw_mode_b);
             for (i = 4; i < 7; i++) {
-                world_gfx_draw_or_append_gpu_primitive(&status->sprites[i]);
+                gfx_draw_or_append_gpu_primitive(&status->sprites[i]);
             }
-            world_gfx_draw_or_append_gpu_primitive(&status->draw_mode_a);
-            world_menu_submit_numeric_display_frame_primitives(&status->numeric_frame);
-            world_gfx_draw_or_append_gpu_primitive(&status->draw_offset_a);
+            gfx_draw_or_append_gpu_primitive(&status->draw_mode_a);
+            menu_submit_numeric_display_frame_primitives(&status->numeric_frame);
+            gfx_draw_or_append_gpu_primitive(&status->draw_offset_a);
         }
         thread_yield();
         if (world_thread_get_current_parameter_3() != 0) {

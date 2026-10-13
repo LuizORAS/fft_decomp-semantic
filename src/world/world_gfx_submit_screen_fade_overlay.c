@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -23,12 +24,12 @@ void world_gfx_submit_screen_fade_overlay(fade_overlay_t* prims, s32 intensity) 
         }
         SetDrawMode(&prims->mode, 0, 0, GetTPage(0, abr, 0x3C0, 0x100), &g_world_gfx_texture_window);
         setRGB0(&prims->tile, level, level, level);
-        if (g_world_gfx_draw_primitives_immediately != 0) {
-            world_gfx_draw_or_append_gpu_primitive(&prims->mode);
-            world_gfx_draw_or_append_gpu_primitive(&prims->tile);
+        if (g_gfx_draw_primitives_immediately != 0) {
+            gfx_draw_or_append_gpu_primitive(&prims->mode);
+            gfx_draw_or_append_gpu_primitive(&prims->tile);
         } else {
-            world_gfx_draw_or_append_gpu_primitive(&prims->tile);
-            world_gfx_draw_or_append_gpu_primitive(&prims->mode);
+            gfx_draw_or_append_gpu_primitive(&prims->tile);
+            gfx_draw_or_append_gpu_primitive(&prims->mode);
         }
         g_world_menu_new_button_input = 0;
     }

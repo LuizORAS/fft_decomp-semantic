@@ -163,7 +163,7 @@ void world_shop_run_screen(s32 shop_type) {
             && g_world_shop_menu_step != WORLD_SHOP_STEP_FITTING_ROOM_REMOVE) {
             world_shop_update_unit_selection();
         }
-        g_world_gfx_active_otag_entries = g_world_gfx_active_packet_buffer->otag + 63;
+        g_gfx_current_otag_entry = g_world_gfx_active_packet_buffer->otag + 63;
         world_menu_draw_active_window_frames();
         if (g_world_shop_menu_step == WORLD_SHOP_STEP_FUR_BUY_CONFIRM
             || g_world_shop_menu_step == WORLD_SHOP_STEP_FUR_SELL_CONFIRM

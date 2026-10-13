@@ -79,23 +79,23 @@ void world_menu_draw_active_window_frames(void) {
         window->icon_sprites[2].y0 = top + span;
         flags = g_world_menu_window_buffer_pointers[i + g_menu_packet_buffer_index]->icon_flags;
         if (flags & MENU_WINDOW_ICON_SCROLL_UP) {
-            world_gfx_draw_or_append_gpu_primitive(&window->icon_sprites[0]);
+            gfx_draw_or_append_gpu_primitive(&window->icon_sprites[0]);
         }
         if (flags & MENU_WINDOW_ICON_SCROLL_DOWN) {
-            world_gfx_draw_or_append_gpu_primitive(&window->icon_sprites[1]);
+            gfx_draw_or_append_gpu_primitive(&window->icon_sprites[1]);
         }
         if (flags & MENU_WINDOW_ICON_SCROLL_MARKER) {
-            world_gfx_draw_or_append_gpu_primitive(&window->icon_sprites[2]);
+            gfx_draw_or_append_gpu_primitive(&window->icon_sprites[2]);
         }
-        world_gfx_draw_or_append_gpu_primitive(&window->sprites[0]);
-        world_gfx_draw_or_append_gpu_primitive(&window->sprites[1]);
-        world_gfx_draw_or_append_gpu_primitive(&window->sprites[2]);
-        world_gfx_draw_or_append_gpu_primitive(&window->sprites[3]);
-        world_gfx_draw_or_append_gpu_primitive(&window->draw_mode);
+        gfx_draw_or_append_gpu_primitive(&window->sprites[0]);
+        gfx_draw_or_append_gpu_primitive(&window->sprites[1]);
+        gfx_draw_or_append_gpu_primitive(&window->sprites[2]);
+        gfx_draw_or_append_gpu_primitive(&window->sprites[3]);
+        gfx_draw_or_append_gpu_primitive(&window->draw_mode);
         if (window->portrait_code != -1) {
             world_gfx_set_portrait_poly_texture(&window->quads[1], window->portrait_code);
         }
-        world_gfx_draw_or_append_gpu_primitive(&window->quads[1]);
-        world_gfx_draw_or_append_gpu_primitive(&window->quads[0]);
+        gfx_draw_or_append_gpu_primitive(&window->quads[1]);
+        gfx_draw_or_append_gpu_primitive(&window->quads[0]);
     }
 }

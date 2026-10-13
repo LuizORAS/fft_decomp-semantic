@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/gfx.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -78,12 +79,12 @@ void require_condition_run_special_thread(void) {
                 POLY_GT4* poly = &(g_require_gfx_poly_gt4_array_32 + buffer * 40)[quad_index];
 
                 require_gfx_scale_poly_gt4_vertex_colors(vertex_colors, scale, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             } else {
                 POLY_GT4* poly = &polys[quad_index];
 
                 require_gfx_scale_poly_gt4_vertex_colors(vertex_colors, scale, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             }
         }
         thread_yield();
@@ -106,12 +107,12 @@ void require_condition_run_special_thread(void) {
                 POLY_GT4* poly = &(g_require_gfx_poly_gt4_array_32 + buffer * 40)[quad_index];
 
                 require_gfx_scale_poly_gt4_vertex_colors(vertex_colors, 0x80, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             } else {
                 POLY_GT4* poly = &polys[quad_index];
 
                 require_gfx_scale_poly_gt4_vertex_colors(vertex_colors, 0x80, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             }
         }
         thread_yield();
@@ -132,12 +133,12 @@ fade_out:
                 POLY_GT4* poly = &(g_require_gfx_poly_gt4_array_32 + buffer * 40)[quad_index];
 
                 require_gfx_scale_poly_gt4_vertex_colors(vertex_colors, scale, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             } else {
                 POLY_GT4* poly = &polys[quad_index];
 
                 require_gfx_scale_poly_gt4_vertex_colors(vertex_colors, scale, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             }
         }
         thread_yield();

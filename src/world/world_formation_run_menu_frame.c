@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
@@ -114,7 +115,7 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
     world_formation_update_debug_variable_list_request();
     world_formation_update_fixed_number_panel_request();
     g_menu_pending_selection[0] = -2;
-    g_world_gfx_active_otag_entries = otag;
+    g_gfx_current_otag_entry = otag;
     g_sound_pending_sfx_id = -1;
     world_menu_draw_active_window_frames();
     world_script_load_event_input_state(&g_world_formation_menu_input_state);

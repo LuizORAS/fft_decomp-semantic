@@ -3,6 +3,7 @@
 #include "fft/event_card.h"
 #include "fft/event_equip.h"
 #include "fft/event_jobstts.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
@@ -30,7 +31,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     s32 polarity;
 
     g_ai_workspace_ptr = (event_work_t*)g_ai_workspace;
-    if (g_world_gfx_draw_primitives_immediately != 0) {
+    if (g_gfx_draw_primitives_immediately != 0) {
         DrawSync(0);
         rect.w = 0x100;
         rect.x = 0;
@@ -38,7 +39,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         rect.y = (g_main_gfx_screen_polarity & 1) * 0xF0;
         LoadImage(&rect, (u32*)g_main_heap_high_overlay_load_address);
     }
-    g_world_gfx_active_otag_entries = ot;
+    g_gfx_current_otag_entry = ot;
     world_gfx_submit_screen_fade_overlay(&g_world_screen_tint_tiles[g_menu_packet_buffer_index], g_world_screen_fade);
     world_camera_store_state_to_script_variables();
     world_menu_draw_active_window_frames();
@@ -119,16 +120,16 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         ordering_table = jobstts_entrypoint(g_world_active_unit_data.battle_id, 0);
         g_world_companion_overlay_prims = (s32)ordering_table;
         if (ordering_table != 0) {
-            AddPrims(g_world_gfx_active_otag_entries, ordering_table, &ordering_table[0x3f]);
+            AddPrims(g_gfx_current_otag_entry, ordering_table, &ordering_table[0x3f]);
         } else {
             g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_IDLE;
         }
     }
     if (g_world_companion_overlay_state == COMPANION_OVERLAY_STATE_EQUIP) {
-        prims = equip_entrypoint(g_world_active_unit_data.battle_id, g_world_gfx_active_otag_entries + 1);
+        prims = equip_entrypoint(g_world_active_unit_data.battle_id, g_gfx_current_otag_entry + 1);
         g_world_companion_overlay_prims = prims;
         if (prims >= 2) {
-            AddPrims(g_world_gfx_active_otag_entries, (void*)prims, (void*)(prims + 0xFC));
+            AddPrims(g_gfx_current_otag_entry, (void*)prims, (void*)(prims + 0xFC));
         } else {
             g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_IDLE;
         }

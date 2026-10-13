@@ -69,7 +69,7 @@ void attack_gfx_build_status_group_primitives(POLY_FT4* poly) {
                     level = 0xc0 - g_attack_panel_status_animation[entry];
                     setRGB0(poly, level, level, level);
                 }
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             }
             poly++;
         }

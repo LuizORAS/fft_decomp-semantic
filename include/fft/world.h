@@ -809,9 +809,7 @@ extern menu_status_panel_buffer_t g_world_change_banner_panel_frames[2];
  * unverified names stay provisional. */
 extern s16 g_world_3d_object_use_request;
 extern u16 g_world_3d_object_wait_status;
-extern u32* g_world_gfx_active_otag_entries;
 extern world_gfx_packet_buffer_t* g_world_gfx_active_packet_buffer;
-extern u16 g_world_gfx_draw_primitives_immediately;
 extern u16 g_world_gfx_draw_suppress_flag;
 extern u8 g_world_gfx_fade_decreasing;
 extern u8 g_world_gfx_fade_disabled;
@@ -949,7 +947,6 @@ void world_menu_copy_billboard_data_in(const menu_unit_status_record_t* status,
     const menu_unit_status_identity_t* identity, const menu_status_panel_slot_storage_t* detail);
 void world_menu_copy_billboard_data_out(menu_unit_status_record_t* status, menu_active_unit_t* identity,
     menu_status_panel_slot_storage_t* detail, map_selected_tile_t* selected_tile);
-void world_gfx_draw_or_append_gpu_primitive(void* primitive);
 void world_gfx_submit_screen_fade_overlay(fade_overlay_t* prims, s32 intensity);
 void world_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
     const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
@@ -977,7 +974,6 @@ void world_gfx_set_fade_disabled(u8 disabled);
 void world_gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 image_type);
 void world_gfx_set_portrait_poly_texture(POLY_FT4* poly, s32 code);
 void world_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_base_index, s16* entries);
-void world_menu_submit_numeric_display_frame_primitives(menu_palette_primitives_t* frame);
 
 void world_gfx_enqueue_textured_quad(
     RECT* rect, s32 u, s32 v, rgb24_t* color, s32 semi_trans, u16 texture_page, u16 clut, s32 priority);

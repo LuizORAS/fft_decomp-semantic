@@ -1,5 +1,6 @@
 #include "fft/battle_gfx.h"
 #include "fft/event_etc.h"
+#include "fft/gfx.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -37,7 +38,7 @@ void etc_graphic_open(s32 graphic_id) {
                 &g_etc_graphic_game_over_palette_rect, (u32*)(image_buffer + g_etc_graphics[graphic_id].size - 0x200));
         }
     } else {
-        g_battle_etc_graphics_enabled = 1;
+        g_gfx_draw_primitives_immediately = 1;
         if (graphic_id == ETC_GRAPHIC_END1) {
             g_battle_screen_fade = -0xff;
             do {
@@ -98,7 +99,7 @@ void etc_graphic_open(s32 graphic_id) {
             g_battle_screen_fade += 8;
         } while (g_battle_screen_fade < 0x100);
         g_battle_screen_fade = 0xff;
-        g_battle_etc_graphics_enabled = 0;
+        g_gfx_draw_primitives_immediately = 0;
         if (graphic_id == ETC_GRAPHIC_END3) {
             g_battle_screen_fade = 0;
         }
