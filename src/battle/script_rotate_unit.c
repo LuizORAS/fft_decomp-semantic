@@ -37,7 +37,7 @@ void script_rotate_unit(const event_rotate_unit_parameters_t* parameters) {
                 } else if (facing == EVENT_ROTATE_UNIT_FACING_CAMERA) {
                     facing = g_battle_rotation_speed_frames[4 + ((camera_wrap_yaw_angle() & 0xC00) >> 10)] * 4;
                 } else if (facing == EVENT_ROTATE_UNIT_FACING_RESTORE) {
-                    state = &g_battle_unit_animation_states[unit_id];
+                    state = &g_unit_animation_states[unit_id];
                     if (state->initial_facing != 0xFF) {
                         state->rotate_mode = UNIT_ROTATE_MODE_SHORTEST;
                         state->target_facing = state->initial_facing;
@@ -54,7 +54,7 @@ void script_rotate_unit(const event_rotate_unit_parameters_t* parameters) {
                     }
                     continue;
                 }
-                state = &g_battle_unit_animation_states[unit_id];
+                state = &g_unit_animation_states[unit_id];
                 state->target_facing = facing;
                 state->rotate_mode = parameters->mode;
                 state->frames_per_step = g_battle_rotation_speed_frames[parameters->speed];

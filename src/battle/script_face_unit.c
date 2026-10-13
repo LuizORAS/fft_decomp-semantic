@@ -48,7 +48,7 @@ void script_face_unit(const event_face_unit_parameters_t* parameters, s32 second
                     facing >>= 8;
                     reverse >>= 8;
                     if (second_only == 0) {
-                        state = &g_battle_unit_animation_states[runtime_id];
+                        state = &g_unit_animation_states[runtime_id];
                         state->target_facing = facing;
                         state->rotate_mode = parameters->mode;
                         state->frames_per_step = g_battle_rotation_speed_frames[parameters->speed];
@@ -56,7 +56,7 @@ void script_face_unit(const event_face_unit_parameters_t* parameters, s32 second
                         state->rotating = 1;
                         state->delay = parameters->delay >> 2;
                     }
-                    state = &g_battle_unit_animation_states[unit_id];
+                    state = &g_unit_animation_states[unit_id];
                     state->target_facing = reverse;
                     state->rotate_mode = parameters->mode;
                     state->frames_per_step = g_battle_rotation_speed_frames[parameters->speed];

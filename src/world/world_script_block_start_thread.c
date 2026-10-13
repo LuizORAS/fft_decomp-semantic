@@ -42,9 +42,9 @@ void world_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_WALK_TO_ANIM) {
             runtime_id = script_resolve_runtime_id(first_halfword);
             if (runtime_id != EVENT_RUNTIME_ID_NONE) {
-                g_world_unit_pending_animations[runtime_id] = script_read_s16(script + 3);
+                g_unit_pending_animation_ids[runtime_id] = script_read_s16(script + 3);
             }
-            g_world_unit_was_moving_latch[runtime_id] = 0;
+            g_unit_was_moving_latch[runtime_id] = 0;
         } else if (script[0] == EVENT_OPCODE_JUMP) {
             script_jump_event_instruction((const event_jump_parameters_t*)parameters);
         } else if (script[0] == EVENT_OPCODE_WAIT_WALK) {
@@ -94,12 +94,11 @@ void world_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_WAIT_SPRITE_MOVE) {
             world_script_waitspritemove_event_instruction(first_halfword);
         } else if (script[0] == EVENT_OPCODE_WAIT_ROTATE_UNIT) {
-            world_script_waitrotateunit_and_waitrotateall_event_instruction(script[1]);
+            script_waitrotateunit_and_waitrotateall_event_instruction(script[1]);
         } else if (script[0] == EVENT_OPCODE_WAIT_ROTATE_ALL) {
-            world_script_waitrotateunit_and_waitrotateall_event_instruction(-1);
+            script_waitrotateunit_and_waitrotateall_event_instruction(-1);
         } else if (script[0] == EVENT_OPCODE_UNIT_ANIM_ROTATE) {
-            world_script_unit_animation_rotate_event_instruction(
-                (const event_unit_anim_rotate_parameters_t*)(script + 1));
+            script_unit_animation_rotate_event_instruction((const event_unit_anim_rotate_parameters_t*)(script + 1));
         } else if (script[0] == EVENT_OPCODE_COLOR_UNIT) {
             runtime_id = script_resolve_runtime_id(first_halfword);
             if (runtime_id != EVENT_RUNTIME_ID_NONE) {

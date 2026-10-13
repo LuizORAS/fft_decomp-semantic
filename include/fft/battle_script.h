@@ -109,8 +109,6 @@ void script_face_tile(const event_face_tile_parameters_t* parameters);
 void script_face_unit(const event_face_unit_parameters_t* parameters, s32 second_only);
 void script_rotate_unit(const event_rotate_unit_parameters_t* parameters);
 void script_unit_anim(const event_unit_anim_parameters_t* parameters);
-void script_unit_animation_rotate_event_instruction(const event_unit_anim_rotate_parameters_t* parameters);
-void script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id);
 
 /* unit statuses */
 void script_change_stats(const event_change_stats_parameters_t* parameters);

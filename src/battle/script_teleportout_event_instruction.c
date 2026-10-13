@@ -27,7 +27,7 @@ void script_teleportout_event_instruction(s32 unit_id, s32 remove) {
     g_thread_call_target = (void (*)(void))effect_set_secondary_teleport_by_runtime_id;
     thread_call_on_main_stack(unit);
     idx = battle_unit_get_battle_id_by_runtime_id(unit);
-    battle_unit_set_animation(unit, BATTLE_UNIT_ANIMATION_RAISE_HANDS);
+    unit_set_animation(unit, BATTLE_UNIT_ANIMATION_RAISE_HANDS);
     battle_gfx_start_event_unit_fade_out(unit, 2, 0x1F, 0x1F, 0x1F);
     thread_wait_frames(0x3C);
     battle_gfx_start_event_unit_fade_out(unit, 2, -0x1F, -0x1F, -0x1F);

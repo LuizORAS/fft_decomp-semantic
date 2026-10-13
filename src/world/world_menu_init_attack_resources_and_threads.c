@@ -1,4 +1,5 @@
 #include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 #include "fft/event_attack.h"
 #include "fft/menu.h"
 #include "fft/sound.h"
@@ -18,7 +19,7 @@ s32 world_menu_init_attack_resources_and_threads(void) {
     game_options_fields_t* options;
     g_menu_hide_numeric_values = 0;
     world_menu_init_subsystems();
-    world_unit_reset_animation_states();
+    unit_reset_animation_states();
     world_menu_reset_unit_records();
     if (g_world_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
         g_world_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_PRELOAD_USED;

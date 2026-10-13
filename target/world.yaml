@@ -39,7 +39,7 @@ functions:
   - {addr: 0x800e19a4, size: 228, name: GsGetTimInfo, hash: 6811aaed0e50ac12, source: src/lib/psyq/libgs/GsGetTimInfo.c}
   - {addr: 0x800e1a88, size: 16, name: GsSetWorkBase, hash: 979dfbb7ec52402e, source: src/lib/psyq/libgs/GsSetWorkBase.c}
   - {addr: 0x800e1a98, size: 296, name: world_script_process_inflict_status_commands, hash: 35cae57e15573235}
-  - {addr: 0x800e1bc0, size: 244, name: world_unit_set_animation, hash: 98ede871ccc9462e}
+  - {addr: 0x800e1bc0, size: 244, name: unit_set_animation, hash: 98ede871ccc9462e}
   - {addr: 0x800e1cb4, size: 144, name: battle_unit_set_facing, hash: ac3faadc8be008fd, source: src/shared/unit/battle_unit_set_facing.c}
   - {addr: 0x800e1d44, size: 76, name: script_scale_music_volume, hash: 5d48df7d66aa367f, source: src/shared/script/script_scale_music_volume.c}
   - {addr: 0x800e1d90, size: 84, name: world_gfx_ramp_screen_overlay_intensity_to_zero, hash: d0ba1ed84f50d428}
@@ -259,7 +259,7 @@ functions:
   - {addr: 0x800f290c, size: 140, name: world_menu_init_subsystem_pointers, hash: 1f417d9f35d58b41}
   - {addr: 0x800f2998, size: 64, name: world_menu_reset_subsystems, hash: 91ad0d0c590bd912}
   - {addr: 0x800f29d8, size: 8, name: world_map_reset_script_light_transform, hash: 6d64edf91449c1b1}
-  - {addr: 0x800f29e0, size: 164, name: world_unit_reset_animation_states, hash: 4fa6d705c4f4f1df}
+  - {addr: 0x800f29e0, size: 164, name: unit_reset_animation_states, hash: 4fa6d705c4f4f1df, source: src/shared/unit/unit_reset_animation_states.c}
   - {addr: 0x800f2a84, size: 496, name: world_unit_update_facing_and_pending_animations, hash: 357e6499f0f75dd9}
   - {addr: 0x800f2c74, size: 164, name: world_script_start_current_event_thread, hash: 764f02292c9b38c2}
   - {addr: 0x800f2d18, size: 8, name: world_noop_800f2d18, hash: 6d64edf91449c1b1}
@@ -350,7 +350,7 @@ functions:
   - {addr: 0x800fb15c, size: 168, name: world_script_blue_remove_all_enemy_units, hash: 2274921be941b9ac}
   - {addr: 0x800fb204, size: 200, name: world_script_blue_remove_unit, hash: acf2f50c451c3612}
   - {addr: 0x800fb2cc, size: 332, name: world_script_warp_unit, hash: 6399d2888030776e}
-  - {addr: 0x800fb418, size: 216, name: world_script_unit_animation_rotate_event_instruction, hash: 14cce9870ae4f8c8}
+  - {addr: 0x800fb418, size: 216, name: script_unit_animation_rotate_event_instruction, hash: 14cce9870ae4f8c8, source: src/shared/script/script_unit_animation_rotate_event_instruction.c}
   - {addr: 0x800fb4f0, size: 512, name: world_script_face_unit, hash: 1dda3ec86c0c41a3}
   - {addr: 0x800fb6f0, size: 516, name: world_script_rotate_unit, hash: be57a905343502c5}
   - {addr: 0x800fb8f4, size: 180, name: world_unit_queue_current_status_graphics, hash: 61b90cb85376108b}
@@ -368,7 +368,7 @@ functions:
   - {addr: 0x800fcaf8, size: 168, name: world_script_set_units_palette_update_suppression, hash: 0c1bb9735a0248cc}
   - {addr: 0x800fcba0, size: 88, name: world_unit_check_facing_relative_to_camera, hash: ef44f6dacbae10fb}
   - {addr: 0x800fcbf8, size: 368, name: world_script_face_tile, hash: 96b76ce946c03c2e}
-  - {addr: 0x800fcd68, size: 176, name: world_script_waitrotateunit_and_waitrotateall_event_instruction, hash: d8fa9c97f6edfaa2}
+  - {addr: 0x800fcd68, size: 176, name: script_waitrotateunit_and_waitrotateall_event_instruction, hash: d8fa9c97f6edfaa2, source: src/shared/script/script_waitrotateunit_and_waitrotateall_event_instruction.c}
   - {addr: 0x800fce18, size: 168, name: world_sound_bg_thread, hash: b51c4e253d5dea85}
   - {addr: 0x800fcec0, size: 264, name: world_sound_edit_bg_thread, hash: 0180ab71574b16f7, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800fcfc8, size: 172, name: world_script_toggle_message_portrait_flip, hash: ceb3971e4cedddbd}
@@ -1871,9 +1871,9 @@ data:
   - {addr: 0x8019a224, name: g_world_event_finish_check_pending}
   - {addr: 0x8019a228, name: g_world_companion_overlay_prims}
   - {addr: 0x8019a22c, name: g_world_text_draw_origin}
-  - {addr: 0x8019a23c, name: g_world_unit_animation_states}
-  - {addr: 0x8019a2d0, name: g_world_unit_pending_animations}
-  - {addr: 0x8019a2fc, name: g_world_unit_was_moving_latch}
+  - {addr: 0x8019a23c, name: g_unit_animation_states}
+  - {addr: 0x8019a2d0, name: g_unit_pending_animation_ids}
+  - {addr: 0x8019a2fc, name: g_unit_was_moving_latch}
   - {addr: 0x8019a328, name: g_world_event_thread_status_snapshot}
   - {addr: 0x8019a338, name: g_world_text_typewriter_glyph}
   - {addr: 0x8019a348, name: g_world_text_typewriter_state}

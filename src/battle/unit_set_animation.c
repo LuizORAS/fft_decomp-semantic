@@ -2,11 +2,10 @@
 #include "fft/battle_unit.h"
 #include "fft/script.h"
 #include "fft/thread.h"
-#include "fft/world.h"
 #include "psx/types.h"
 
-/* WORLD twin of battle_unit_set_animation, which has the rule. */
-void world_unit_set_animation(s32 runtime_id, u32 animation) {
+/* Request a runtime animation, selecting mount/status animations when battle rules require them. */
+void unit_set_animation(s32 runtime_id, u32 animation) {
     s32 battle_id;
     battle_stats_t* stats;
     s32 depth;
@@ -20,14 +19,14 @@ void world_unit_set_animation(s32 runtime_id, u32 animation) {
                 MAP_TILE_DATA_DEPTH, stats->x, stats->position.y, stats->position.higher_elevation);
             if ((stats->mount_info & BATTLE_MOUNT_INFO_ROLE_MASK) != 0) {
                 g_thread_call_target = (void (*)(void))battle_unit_set_status_animation_by_runtime_id;
-                thread_call_on_main_stack(runtime_id);
-                return;
-            }
-            if ((depth & 0xFF) >= 2) {
+            } else if ((depth & 0xFF) >= 2) {
                 g_thread_call_target = (void (*)(void))battle_unit_set_mounted_animation_by_runtime_id;
-                thread_call_on_main_stack(runtime_id);
+            } else {
+                battle_unit_set_specific_animation_by_runtime_id(runtime_id, animation);
                 return;
             }
+            thread_call_on_main_stack(runtime_id);
+            return;
         }
     }
     battle_unit_set_specific_animation_by_runtime_id(runtime_id, animation);

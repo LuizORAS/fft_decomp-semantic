@@ -32,7 +32,7 @@ void world_script_face_tile(const event_face_tile_parameters_t* parameters) {
                 dx = target.vx - position.vx;
                 dy = target.vz - position.vz;
                 facing = ((-ratan2(dy, dx) + 0xC00) & 0xF00) >> 8;
-                state = &g_world_unit_animation_states[unit_id];
+                state = &g_unit_animation_states[unit_id];
                 state->target_facing = facing;
                 state->rotate_mode = parameters->mode;
                 state->frames_per_step = g_world_rotation_speed_frames[parameters->speed];

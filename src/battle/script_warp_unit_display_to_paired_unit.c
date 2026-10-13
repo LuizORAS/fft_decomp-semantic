@@ -28,7 +28,7 @@ void script_warp_unit_display_to_paired_unit(s32 runtime_id) {
         g_script_warp_coords.layer = unit->position.higher_elevation;
         g_script_warp_coords.y = unit->position.y;
         facing = unit->position.facing << 2;
-        state = &g_battle_unit_animation_states[runtime_id];
+        state = &g_unit_animation_states[runtime_id];
         state->delay = 0;
         state->rotating = 0;
         state->target_facing = facing;

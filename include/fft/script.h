@@ -52,7 +52,7 @@ enum {
  * signed byte, (u16) or (s16) a 16-bit value, and "unread" a byte no handler
  * reads. A "unit id" names one unit (script_resolve_runtime_id); a "unit group"
  * is a unit id, 0 for every unit, or a team selector from
- * EVENT_UNIT_GROUP_FIRST (*_unit_prepare_event_filter).
+ * EVENT_UNIT_GROUP_FIRST (script_prepare_unit_filter).
  *
  * UNKNOWN values are explicit dispatch cases, not guesses for otherwise
  * unrecognized byte values. UNHANDLED values have a length in the table but
@@ -997,9 +997,12 @@ void script_resetpalette_event_instruction(const event_unit_parameters_t* parame
 void script_mirrorsprite_event_instruction(const event_mirror_sprite_parameters_t* parameters);
 void script_walkto_event_instruction(const event_walk_to_parameters_t* parameters);
 
+void script_unit_animation_rotate_event_instruction(const event_unit_anim_rotate_parameters_t* parameters);
+
 /* waits */
 void script_wait_for_unit_ready(s32 runtime_id);
 void script_waitwalk_event_instruction(s32 unit_id);
+void script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id);
 void script_wait_value_event_instruction(const event_wait_value_parameters_t* parameters);
 
 /* camera operands */

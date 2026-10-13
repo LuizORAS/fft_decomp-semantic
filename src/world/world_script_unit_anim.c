@@ -22,7 +22,7 @@ void world_script_unit_anim(const event_unit_anim_parameters_t* parameters) {
                     battle_unit_set_facing_update_suppression(unit_id);
                 }
                 animation = script_read_s16(parameters->animation_le);
-                world_unit_set_animation(unit_id, animation);
+                unit_set_animation(unit_id, animation);
                 if (animation >= BATTLE_UNIT_ANIMATION_BOW_HIGH && animation <= BATTLE_UNIT_ANIMATION_BOW_LOW) {
                     world_script_play_effect_and_wait();
                 }

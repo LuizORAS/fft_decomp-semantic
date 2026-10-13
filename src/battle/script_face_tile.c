@@ -37,7 +37,7 @@ void script_face_tile(const event_face_tile_parameters_t* parameters) {
             dx = tile.vx - screen.vx;
             dy = tile.vz - screen.vz;
             facing = ((-ratan2(dy, dx) + 0xC00) & 0xF00) >> 8;
-            rotation_state = &g_battle_unit_animation_states[unit_id];
+            rotation_state = &g_unit_animation_states[unit_id];
             rotation_state->target_facing = facing;
             rotation_state->rotate_mode = parameters->mode;
             rotation_state->frames_per_step = g_battle_rotation_speed_frames[parameters->speed];

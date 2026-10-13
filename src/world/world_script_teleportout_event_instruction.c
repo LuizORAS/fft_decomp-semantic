@@ -21,7 +21,7 @@ void world_script_teleportout_event_instruction(s32 unit_id, s32 remove_unit) {
         g_thread_call_target = effect_set_secondary_teleport_by_runtime_id;
         thread_call_on_main_stack(runtime_id);
         unit_index = wldcore_unit_get_battle_id_by_runtime_id(runtime_id);
-        world_unit_set_animation(runtime_id, BATTLE_UNIT_ANIMATION_RAISE_HANDS);
+        unit_set_animation(runtime_id, BATTLE_UNIT_ANIMATION_RAISE_HANDS);
         battle_gfx_start_event_unit_fade_out(runtime_id, 2, 0x1f, 0x1f, 0x1f);
         thread_wait_frames(0x3c);
         battle_gfx_start_event_unit_fade_out(runtime_id, 2, -0x1f, -0x1f, -0x1f);

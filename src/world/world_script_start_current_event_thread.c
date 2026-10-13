@@ -1,4 +1,5 @@
 #include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 #include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -6,7 +7,7 @@
 /* Resets unit animation states and, when the current-event script variable is set, clears the screen
  * colour modulation and starts the next event on thread 1. */
 void world_script_start_current_event_thread(void) {
-    world_unit_reset_animation_states();
+    unit_reset_animation_states();
     g_world_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_NORMAL;
     if (script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
         world_camera_store_state_to_script_variables();

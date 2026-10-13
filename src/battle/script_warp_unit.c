@@ -47,7 +47,7 @@ void script_warp_unit(const event_warp_unit_parameters_t* instruction) {
     tile.x = unit->x;
     tile.layer = unit->position.higher_elevation;
     tile.y = unit->position.y;
-    rotation_state = &g_battle_unit_animation_states[runtime_id];
+    rotation_state = &g_unit_animation_states[runtime_id];
     rotation_state->target_facing = cursor.placement->facing * 4;
     rotation_state->delay = 0;
     rotation_state->rotating = 0;

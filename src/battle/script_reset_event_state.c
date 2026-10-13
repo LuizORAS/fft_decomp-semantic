@@ -9,7 +9,7 @@
  * snapshots the camera into script variables and resets the script camera
  * transform while no thread occupies slot 1. */
 void script_reset_event_state(void) {
-    battle_unit_reset_animation_states();
+    unit_reset_animation_states();
     if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_EVENT) == 0) {
         camera_store_state_to_script_variables();
         map_reset_script_light_transform();

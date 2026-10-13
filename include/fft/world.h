@@ -347,7 +347,6 @@ void world_script_march_units(const event_march_parameters_t* parameters);
 void world_script_play_effect_and_wait(void);
 void world_script_print_debug_message(void);
 void world_script_pulse_tutorial_wait_value(s32 value);
-void world_script_unit_animation_rotate_event_instruction(const event_unit_anim_rotate_parameters_t* parameters);
 s32 world_script_run_frame(u32* ot, u32 buttons);
 void world_script_run_next_event(void);
 void world_script_seed_event_rng_from_vsync(void);
@@ -382,7 +381,6 @@ void world_script_pause_event_instruction(void);
 void world_script_play_effect_thread(void);
 void world_script_run_condition(event_opcode_e opcode);
 void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 source, s32 unused);
-void world_script_waitrotateunit_and_waitrotateall_event_instruction(s32);
 void world_script_waitspritemove_event_instruction(s32);
 
 /* sound */
@@ -1700,7 +1698,6 @@ extern menu_status_panel_buffer_t g_world_stat_preview_panel_frames[2];
 extern menu_status_panel_slot_storage_t g_world_unit_comparison_editor_fields;
 extern u32 g_world_companion_overlay_state;
 extern struct menu_status_panel_slot_storage g_world_selected_unit_stat_detail;
-extern unit_animation_state_t g_world_unit_animation_states[];
 extern s16 g_world_unit_comparison_battle_id;
 extern u16 g_world_unit_graphics_load_pending;
 extern const world_unit_monster_breed_entry_t g_world_unit_monster_breed_table[WORLD_MONSTER_BREED_ENTRY_COUNT];
@@ -1768,11 +1765,6 @@ extern world_unit_status_number_images_t g_world_unit_summary_digit_images;
 extern menu_palette_primitives_t g_world_unit_editor_palette;
 extern menu_palette_slot_t g_world_unit_summary_palettes[];
 extern s32 g_world_companion_overlay_prims;
-/* WalkToAnim: the animation each unit takes once it has moved and stopped, and
- * whether it has been seen moving since. Twins of g_battle_unit_pending_animation_ids
- * and g_battle_unit_was_moving_latch. */
-extern u16 g_world_unit_pending_animations[];
-extern u16 g_world_unit_was_moving_latch[];
 extern vec3u16_t g_world_unit_runtime_coords;
 extern menu_unit_status_page_t g_world_unit_status_panel_pages[];
 extern menu_unit_editor_frame_t g_world_unit_editor_frames[2];
@@ -1803,8 +1795,6 @@ void world_unit_inflict_status_by_event_unit_id(
     s32 event_unit_id, s32 status_index, s32 is_infliction, s32 less_strict_removal);
 
 void world_menu_load_selected_unit(void);
-void world_unit_reset_animation_states(void);
-void world_unit_set_animation(s32 runtime_id, u32 animation);
 void world_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b);
 void world_unit_update_staged_status_data(u16 unit_id, u16 restore);
 void world_unit_view_supervisor_thread(void);

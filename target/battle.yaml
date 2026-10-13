@@ -693,7 +693,7 @@ functions:
   - {addr: 0x800f5a2c, size: 56, name: map_set_command_0x96_duration, hash: 0c87accc94879977}
   - {addr: 0x800f5a64, size: 136, name: sound_stop_weather_sfx, hash: 29ca15674c0eac0b}
   - {addr: 0x8012d8e4, size: 296, name: script_process_inflict_status_commands, hash: 49c7b4a5d64845fc}
-  - {addr: 0x8012da0c, size: 244, name: battle_unit_set_animation, hash: 0f6580006d1a308f}
+  - {addr: 0x8012da0c, size: 244, name: unit_set_animation, hash: 0f6580006d1a308f}
   - {addr: 0x8012db00, size: 144, name: battle_unit_set_facing, hash: 5c3eb103bc11e1c9, source: src/shared/unit/battle_unit_set_facing.c}
   - {addr: 0x8012db90, size: 76, name: script_scale_music_volume, hash: b3e323c0af557cbc, source: src/shared/script/script_scale_music_volume.c}
   - {addr: 0x8012dbdc, size: 84, name: battle_gfx_ramp_screen_overlay_intensity_to_zero, hash: dbd203faf8f613fe}
@@ -911,7 +911,7 @@ functions:
   - {addr: 0x8013eff4, size: 140, name: battle_menu_init_subsystem_pointers, hash: 7ca7d0d90e11c897}
   - {addr: 0x8013f080, size: 64, name: battle_menu_reset_subsystems, hash: b7eb4cd5ef76a5f9}
   - {addr: 0x8013f0c0, size: 168, name: map_reset_script_light_transform, hash: da3f44e4a4a58abd}
-  - {addr: 0x8013f168, size: 164, name: battle_unit_reset_animation_states, hash: cdeb9e30a6664d49}
+  - {addr: 0x8013f168, size: 164, name: unit_reset_animation_states, hash: cdeb9e30a6664d49, source: src/shared/unit/unit_reset_animation_states.c}
   - {addr: 0x8013f20c, size: 496, name: battle_unit_update_facing_and_pending_animations, hash: eec2ddc83dc662d7}
   - {addr: 0x8013f3fc, size: 164, name: script_start_current_event_thread, hash: 4d813122369868cd}
   - {addr: 0x8013f4a0, size: 8, name: battle_noop_8013f4a0, hash: 6d64edf91449c1b1}
@@ -1002,7 +1002,7 @@ functions:
   - {addr: 0x80147cf0, size: 168, name: script_blue_remove_all_enemy_units, hash: 2274921be941b9ac}
   - {addr: 0x80147d98, size: 200, name: script_blue_remove_unit, hash: acf2f50c451c3612}
   - {addr: 0x80147e60, size: 332, name: script_warp_unit, hash: a4238fc24406e01c}
-  - {addr: 0x80147fac, size: 216, name: script_unit_animation_rotate_event_instruction, hash: 92e26c055631d0fb}
+  - {addr: 0x80147fac, size: 216, name: script_unit_animation_rotate_event_instruction, hash: 92e26c055631d0fb, source: src/shared/script/script_unit_animation_rotate_event_instruction.c}
   - {addr: 0x80148084, size: 512, name: script_face_unit, hash: 390040f4c2819846}
   - {addr: 0x80148284, size: 516, name: script_rotate_unit, hash: 68d1d9ca7a73e6b2}
   - {addr: 0x80148488, size: 180, name: status_queue_current_status_graphics, hash: 1f24e21ebfd693db}
@@ -1020,7 +1020,7 @@ functions:
   - {addr: 0x8014968c, size: 168, name: script_set_units_palette_update_suppression, hash: 406b68bd9d969db0}
   - {addr: 0x80149734, size: 88, name: battle_unit_check_facing_relative_to_camera, hash: f7c874232339e58e}
   - {addr: 0x8014978c, size: 368, name: script_face_tile, hash: 349c3977cc8bc891}
-  - {addr: 0x801498fc, size: 176, name: script_waitrotateunit_and_waitrotateall_event_instruction, hash: 3ddb2ca1554cefe8}
+  - {addr: 0x801498fc, size: 176, name: script_waitrotateunit_and_waitrotateall_event_instruction, hash: 3ddb2ca1554cefe8, source: src/shared/script/script_waitrotateunit_and_waitrotateall_event_instruction.c}
   - {addr: 0x801499ac, size: 168, name: sound_run_background_sfx_thread, hash: 5840248306ebcf8a}
   - {addr: 0x80149a54, size: 228, name: sound_run_background_fade_thread, hash: d2b85b17ab3025e0}
   - {addr: 0x80149b38, size: 172, name: script_toggle_message_portrait_flip, hash: 6ddcfa9027a7d71d}
@@ -2544,9 +2544,9 @@ data:
   - {addr: 0x8016d9c0, name: g_script_threads_idle}
   - {addr: 0x8016d9c4, name: g_battle_companion_overlay_primitives}
   - {addr: 0x8016d9c8, name: g_battle_menu_text_pen}
-  - {addr: 0x8016d9d8, name: g_battle_unit_animation_states}
-  - {addr: 0x8016da6c, name: g_battle_unit_pending_animation_ids}
-  - {addr: 0x8016da98, name: g_battle_unit_was_moving_latch}
+  - {addr: 0x8016d9d8, name: g_unit_animation_states}
+  - {addr: 0x8016da6c, name: g_unit_pending_animation_ids}
+  - {addr: 0x8016da98, name: g_unit_was_moving_latch}
   - {addr: 0x8016dac4, name: g_battle_event_thread_status_snapshot}
   - {addr: 0x8016dad4, name: g_battle_text_typewriter_glyph}
   - {addr: 0x8016dae4, name: g_battle_text_typewriter_state}

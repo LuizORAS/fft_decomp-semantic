@@ -1,12 +1,8 @@
-#include "fft/battle_script.h"
 #include "fft/battle_unit.h"
 #include "fft/script.h"
 #include "psx/types.h"
 
-/*
- * Parameters: 0x00 unit id (16-bit value), 0x02 rotation, 0x03 animation id
- * (16-bit value), 0x04 move-flag mode (0 unset, else flip).
- */
+/* Set facing and animation immediately; the animation high byte also controls facing-update suppression. */
 void script_unit_animation_rotate_event_instruction(const event_unit_anim_rotate_parameters_t* parameters) {
     u8 rotation;
     s16 animation;
@@ -26,10 +22,10 @@ void script_unit_animation_rotate_event_instruction(const event_unit_anim_rotate
         battle_unit_set_facing_update_suppression(call_runtime_id);
     }
     index = runtime_id;
-    rotation_state = &g_battle_unit_animation_states[index];
+    rotation_state = &g_unit_animation_states[index];
     rotation_state->target_facing = rotation;
     rotation_state->delay = 0;
     rotation_state->rotating = 0;
     battle_unit_set_facing(index, rotation);
-    battle_unit_set_animation(index, animation);
+    unit_set_animation(index, animation);
 }

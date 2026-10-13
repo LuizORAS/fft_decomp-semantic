@@ -1,13 +1,9 @@
-#include "fft/battle_script.h"
-#include "fft/battle_thread.h"
 #include "fft/battle_unit.h"
 #include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
-/* WaitRotateUnit and WaitRotateAll: yield until the named unit, or every unit
- * unit when the id is -1, has finished rotating. Both forms yield at least once;
- * a unit id that does not resolve returns at once. */
+/* WaitRotateUnit/All: resolved units yield at least once; -1 waits for all 21 slots. */
 void script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id) {
     s32 i;
     s32 index;
@@ -16,7 +12,7 @@ void script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id) {
         do {
             thread_yield();
             for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
-                if (g_battle_unit_animation_states[i].rotating != 0) {
+                if (g_unit_animation_states[i].rotating != 0) {
                     break;
                 }
             }
@@ -26,7 +22,7 @@ void script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id) {
         if (index != EVENT_RUNTIME_ID_NONE) {
             do {
                 thread_yield();
-            } while (g_battle_unit_animation_states[index].rotating != 0);
+            } while (g_unit_animation_states[index].rotating != 0);
         }
     }
 }

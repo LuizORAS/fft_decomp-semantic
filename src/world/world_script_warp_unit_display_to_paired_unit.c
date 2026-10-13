@@ -28,7 +28,7 @@ s32 world_script_warp_unit_display_to_paired_unit(s32 runtime_id) {
         g_world_script_warp_unit_coords.layer = stats->position.higher_elevation;
         g_world_script_warp_unit_coords.y = stats->position.y;
         facing = stats->position.facing << 2;
-        state = &g_world_unit_animation_states[runtime_id];
+        state = &g_unit_animation_states[runtime_id];
         state->delay = 0;
         state->rotating = 0;
         state->target_facing = facing;

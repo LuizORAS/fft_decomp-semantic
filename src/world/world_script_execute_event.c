@@ -532,9 +532,9 @@ restart_event:
             operand_1 = script_resolve_runtime_id(first_operand);
             if (operand_1 != EVENT_RUNTIME_ID_NONE) {
 
-                g_world_unit_pending_animations[operand_1]
+                g_unit_pending_animation_ids[operand_1]
                     = script_read_s16(instruction_offset + (g_world_event_script) + 3);
-                g_world_unit_was_moving_latch[operand_1] = 0;
+                g_unit_was_moving_latch[operand_1] = 0;
             }
         } else if (opcode == EVENT_OPCODE_WAIT_ALL_UNIT_MOVEMENT) {
             do {
@@ -553,9 +553,9 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_FACE_TILE) {
             world_script_face_tile((const event_face_tile_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_ROTATE_UNIT) {
-            world_script_waitrotateunit_and_waitrotateall_event_instruction(first_operand);
+            script_waitrotateunit_and_waitrotateall_event_instruction(first_operand);
         } else if (opcode == EVENT_OPCODE_WAIT_ROTATE_ALL) {
-            world_script_waitrotateunit_and_waitrotateall_event_instruction(-1);
+            script_waitrotateunit_and_waitrotateall_event_instruction(-1);
         }
         /* ---- Blocks, earthquakes, darkness, and screen color ---- */
         else if (opcode == EVENT_OPCODE_BLOCK_START) {
@@ -905,8 +905,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_MAP_UNFREEZE) {
             map_unfreeze();
         } else if (opcode == EVENT_OPCODE_UNIT_ANIM_ROTATE) {
-            world_script_unit_animation_rotate_event_instruction(
-                (const event_unit_anim_rotate_parameters_t*)parameters);
+            script_unit_animation_rotate_event_instruction((const event_unit_anim_rotate_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_GRAPHIC_PRINT) {
             thread_yield();
             do {

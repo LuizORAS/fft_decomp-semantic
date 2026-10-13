@@ -45,9 +45,9 @@ void script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_WALK_TO_ANIM) {
             runtime_id = script_resolve_runtime_id(first_halfword);
             if (runtime_id != EVENT_RUNTIME_ID_NONE) {
-                g_battle_unit_pending_animation_ids[runtime_id] = script_read_s16(script + 3);
+                g_unit_pending_animation_ids[runtime_id] = script_read_s16(script + 3);
             }
-            g_battle_unit_was_moving_latch[runtime_id] = 0;
+            g_unit_was_moving_latch[runtime_id] = 0;
         } else if (script[0] == EVENT_OPCODE_JUMP) {
             script_jump_event_instruction((const event_jump_parameters_t*)parameters);
         } else if (script[0] == EVENT_OPCODE_WAIT_WALK) {

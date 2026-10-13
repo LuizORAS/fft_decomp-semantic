@@ -14,7 +14,7 @@
  * variables and resets the script camera transform. Where WORLD's copy calls two
  * empty functions, BATTLE does that camera work. */
 void script_start_current_event_thread(void) {
-    battle_unit_reset_animation_states();
+    unit_reset_animation_states();
     g_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_NORMAL;
     if (script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
         camera_store_state_to_script_variables();

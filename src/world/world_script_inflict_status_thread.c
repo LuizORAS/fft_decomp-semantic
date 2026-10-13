@@ -48,7 +48,7 @@ void world_script_inflict_status_thread(void) {
         g_world_unit_status_staging_data->inflict_status_mode[battle_unit_index] = UNIT_INFLICT_STATUS_MODE_POISON;
         g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_runtime_id;
         thread_call_on_main_stack(runtime_id);
-        world_unit_set_animation(runtime_id, BATTLE_UNIT_ANIMATION_KNEEL);
+        unit_set_animation(runtime_id, BATTLE_UNIT_ANIMATION_KNEEL);
     } else if (mode == EVENT_INFLICT_STATUS_CRYSTAL) {
         world_unit_inflict_status_by_event_unit_id(unit_id, STATUS_LSB_INDEX(STATUS_ID_DEAD), 0, 1);
         world_unit_inflict_status_by_event_unit_id(unit_id, STATUS_LSB_INDEX(STATUS_ID_CRITICAL), 0, 1);

@@ -567,9 +567,9 @@ restart_script:
         } else if (opcode == EVENT_OPCODE_WALK_TO_ANIM) {
             operand_1 = script_resolve_runtime_id(first_operand);
             if (operand_1 != EVENT_RUNTIME_ID_NONE) {
-                g_battle_unit_pending_animation_ids[operand_1]
+                g_unit_pending_animation_ids[operand_1]
                     = script_read_s16(instruction_offset + ((u8*)g_battle_event_block) + 3);
-                g_battle_unit_was_moving_latch[operand_1] = 0;
+                g_unit_was_moving_latch[operand_1] = 0;
             }
         } else if (opcode == EVENT_OPCODE_WAIT_ALL_UNIT_MOVEMENT) {
             do {

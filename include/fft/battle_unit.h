@@ -1256,14 +1256,13 @@ extern battle_distortion_animation_handler_t
 extern s32 g_battle_unit_palette_animation_offset;
 extern s32 g_battle_unit_palette_animation_timer;
 
-/* WalkToAnim: the animation each unit takes once it has moved and stopped
- * (battle_unit_update_facing_and_pending_animations); 0 none. */
-extern u16 g_battle_unit_pending_animation_ids[];
-extern u16 g_battle_unit_was_moving_latch[]; /* a unit with a pending animation was moving on the last update */
+/* WalkToAnim: requested animation applied after movement stops; 0 means none. */
+extern u16 g_unit_pending_animation_ids[];
+extern u16 g_unit_was_moving_latch[]; /* a unit with a pending animation was moving on the last update */
 extern s8 g_battle_unit_float_bob_offsets[24];
 
-/* BATTLE and WORLD use the same seven-byte per-unit rotation state. */
-extern unit_animation_state_t g_battle_unit_animation_states[];
+/* Event-script rotation state for each runtime unit slot. */
+extern unit_animation_state_t g_unit_animation_states[];
 
 void battle_unit_restore_all_facings_after_attack(void);
 void battle_unit_clear_distortion_animation_id_10(battle_unit_t* unit);
@@ -1276,7 +1275,7 @@ void battle_unit_face_toward_cursor(battle_unit_t* unit);
 s32 battle_unit_set_target_animation_by_runtime_id(s32 runtime_id);
 void battle_unit_set_facing_update_suppression(u32 runtime_id);
 s16 battle_unit_get_facing_quadrant_by_runtime_id(u32 runtime_id);
-void battle_unit_reset_animation_states(void);
+void unit_reset_animation_states(void);
 void battle_unit_set_animation_based_on_mounted_state(battle_unit_t* unit);
 void battle_unit_set_bow_hardcoding(battle_unit_t* attacker, battle_unit_t* target);
 void battle_unit_set_animation_based_on_status(battle_unit_t* unit);
@@ -1284,7 +1283,7 @@ void battle_unit_set_idle_animation_for_movement(battle_unit_t* unit);
 void battle_unit_set_level_up_animation(battle_unit_t* unit);
 void battle_unit_restore_facing_after_attack(battle_unit_t* unit);
 void battle_unit_set_facing(s32 runtime_id, s32 facing);
-void battle_unit_set_animation(s32 runtime_id, u32 animation);
+void unit_set_animation(s32 runtime_id, u32 animation);
 void battle_unit_snap_all_facings_to_quadrants(void);
 void battle_unit_start_ability_charge_animation(battle_unit_t* unit);
 void battle_unit_start_ability_charge_hold_animation(battle_unit_t* unit);
