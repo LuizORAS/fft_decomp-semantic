@@ -11,7 +11,7 @@
  * returns 0, at most 1000 times, and raises battle load exception 0x80 when it
  * never does. The callee always returns 0, so neither the retry nor the exception
  * can run. */
-s32 map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value) {
+s32 map_set_tile_data_value(map_tile_data_selector_e field, s32 x, s32 y, s32 layer, s32 value) {
     map_tile_t* tile;
     s32 attempts;
     s32 result;

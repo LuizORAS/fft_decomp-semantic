@@ -11,7 +11,7 @@
  * snow bit of the map weather flags. The weather local is an s8: compares on
  * the promoted value copy it into a scratch register for the 3 and 4 tests,
  * as the target does. */
-void map_run_weather_command(s32 command) {
+void map_run_weather_command(map_weather_command_e command) {
     s8 weather;
 
     switch (command & 0xff) {

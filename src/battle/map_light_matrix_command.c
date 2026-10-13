@@ -15,7 +15,7 @@
  * Commands 0x5e-0x60 and 0x66-0x69 return the uninitialized result, like
  * map_light_state_command.
  */
-MATRIX* map_light_matrix_command(s32 command, MATRIX* color, MATRIX* light, s32 duration) {
+MATRIX* map_light_matrix_command(map_light_matrix_command_e command, MATRIX* color, MATRIX* light, s32 duration) {
     MATRIX* result;
     s32 i;
     s32 j;

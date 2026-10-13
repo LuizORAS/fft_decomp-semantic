@@ -869,9 +869,9 @@ extern u8 g_map_tile_depth;
 extern u8 g_map_tile_width;
 
 s32 map_calculate_location(const unit_stats_t* unit);
-s32 map_get_tile_data_value(s32 field, s32 x, s32 y, s32 layer);
+s32 map_get_tile_data_value(map_tile_data_selector_e field, s32 x, s32 y, s32 layer);
 map_tile_t* map_get_tile_data_pointer(s32 x, s32 y, u32 layer);
-s32 map_set_tile_data_value(s32 field, s32 x, s32 y, s32 layer, s32 value);
+s32 map_set_tile_data_value(map_tile_data_selector_e field, s32 x, s32 y, s32 layer, s32 value);
 map_tile_t* map_get_unit_tile_by_runtime_id(u32 runtime_id);
 void map_store_selected_tile_coordinates(SVECTOR* destination);
 void map_store_selected_tile_data(void);
@@ -981,7 +981,7 @@ void map_restore_background_color(void);
 rgb24_t* map_get_background_color(void);
 void map_set_background_color(s32 red, s32 green, s32 blue);
 void map_adjust_background_color(s16 red_delta, s16 green_delta, s16 blue_delta);
-MATRIX* map_light_matrix_command(s32 command, MATRIX* color, MATRIX* light, s32 duration);
+MATRIX* map_light_matrix_command(map_light_matrix_command_e command, MATRIX* color, MATRIX* light, s32 duration);
 void map_modify_background_gradient(s32 mode, s32 frame_duration, s16 red, s16 green, s16 blue);
 void map_set_background_gradient(s32 frame_duration, const map_background_gradient_colors_t* colors);
 void map_start_ambient_light_blend(s32 mode, s32 frame_duration, s16 red, s16 green, s16 blue);
@@ -996,7 +996,7 @@ void map_transition_darkness_color(s32 frame_duration, const CVECTOR* color);
 
 /* Map data, palette and mesh interfaces implemented in the battle overlay. */
 void map_init_darkness(void);
-void* map_light_state_command(s32 command, void* data);
+void* map_light_state_command(map_light_command_e command, void* data);
 void map_set_light_matrices(MATRIX* first, MATRIX* second);
 void map_reset_script_light_transform(void);
 
@@ -1120,9 +1120,9 @@ s32 map_get_effective_weather(void);
 void map_set_command_0x96_duration(s32 id, s32 value);
 void map_draw_mesh_and_weather(MATRIX* camera_matrix);
 s32 map_stop_clut_cycles_and_weather_sfx(void);
-void map_run_weather_command(s32 command);
+void map_run_weather_command(map_weather_command_e command);
 void battle_weather_randomize_from_calendar(void);
-void map_init_weather_particles(s32 command);
+void map_init_weather_particles(map_weather_command_e command);
 
 s32 map_tile_data_15_stub(void);
 

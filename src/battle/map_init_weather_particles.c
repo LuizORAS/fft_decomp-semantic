@@ -11,7 +11,7 @@
  * pointer is formed from one combined byte offset: the target adds the
  * buffer/primitive offset it already keeps for the field stores to the pool
  * base instead of reusing the SetSemiTrans argument. */
-void map_init_weather_particles(s32 command) {
+void map_init_weather_particles(map_weather_command_e command) {
     RECT rects[3];
     s16 sprite;
     s16 tile;

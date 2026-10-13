@@ -3,7 +3,7 @@
 
 /* Returns one packed field of the tile at (x, y, layer), or 0xff for an
  * unknown selector. The tile address is not bounds-checked. */
-s32 map_get_tile_data_value(s32 field, s32 x, s32 y, s32 layer) {
+s32 map_get_tile_data_value(map_tile_data_selector_e field, s32 x, s32 y, s32 layer) {
     map_tile_t* tile;
 
     tile = &g_map_tile_data[(layer << 8) + y * g_map_max_x + x];

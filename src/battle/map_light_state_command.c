@@ -7,7 +7,7 @@
  *
  * Only the GET arms assign `result`; the others return it uninitialized, as
  * the target does. */
-void* map_light_state_command(s32 command, void* data) {
+void* map_light_state_command(map_light_command_e command, void* data) {
     void* result;
 
     switch (command) {
