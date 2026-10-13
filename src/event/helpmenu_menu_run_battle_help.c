@@ -3,8 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-void battle_thread_start(s32 thread_id, void (*function)(void));
-
 /* Run the battle help menu thread: open the help text for the running menu's
  * pending request, or move the bouncing help cursor over the navigation table
  * of that menu or of the unit view.

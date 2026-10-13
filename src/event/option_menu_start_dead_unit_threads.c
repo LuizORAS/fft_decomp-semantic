@@ -2,9 +2,14 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Installs the dead-unit result panel as the active menu descriptor, rebuilds
- * its selectable list from the context bitmap, then runs the panel's worker
- * threads until the player commits an action (0x801c0e80-0x801c14ec).
+/* Run the panel of the crystal or chest a dead unit left (OPTION_MENU_DEAD_UNIT) for the pickup in
+ * g_battle_dead_unit_context (main_crystal_pickup_result_t). The abilities the crystal offers
+ * (learned_abilities) become the rows of its ability list. Then, by the pickup's result: 4, a chest, shows
+ * the item found, or message 0x101b with a quarter of its price when 99 are already held (the item goes to
+ * g_battle_dead_unit_result); 1 runs the ability list (option_menu_run_list_thread, Select opens the help);
+ * 2 asks to restore HP and MP (the confirm menu); 3 first offers the choice between the two (the move menu);
+ * 0 shows message 0x183c. The choice goes to g_battle_dead_unit_action (0 none, 1 abilities, 2 restore,
+ * 4 chest), then the previous menu record comes back and the thread exits.
  *
  * Source-order constraints proven by the byte-exact build:
  *   - `g_battle_menu_thread_menu_data` must be assigned from `&g_option_dead_unit_menu` *before*
@@ -129,7 +134,7 @@ void option_menu_start_dead_unit_threads(void) {
 
         g_option_dead_unit_primary_result = 0xff;
         if ((context->result == 3 && g_option_dead_unit_secondary_result == 0) || context->result == 1) {
-            battle_thread_start(g_battle_thread_current_id - 2, option_build_at_list);
+            battle_thread_start(g_battle_thread_current_id - 2, option_menu_run_list_thread);
             battle_thread_set_parameters(g_battle_thread_current_id - 2, (s32)g_battle_menu_thread_menu_data, 0, 0);
             battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU, battle_menu_icon_linked_entry_thread);
             battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU,

@@ -6,7 +6,7 @@
  * g_world_menu_at_list_state.selected_index), then resets the state, waits for threads 13..10, points
  * g_world_text_section_pointers[TEXT_SECTION_AT_LIST] at g_world_menu_at_list_text, resumes the worker threads and
  * stops itself. */
-void world_menu_at_list_select_unit_thread(void) {
+void world_option_menu_at_list_select_unit_thread(void) {
     g_world_menu_help_blocked = 1;
     g_world_menu_suspend_state = 2;
     world_thread_suspend(g_world_thread_current_id + 1);

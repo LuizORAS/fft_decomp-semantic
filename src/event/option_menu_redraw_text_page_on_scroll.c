@@ -2,7 +2,12 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Apply scroll input, rebuild the menu image, and upload the changed region. */
+/* Page a list while Square is held: Up or Down moves the first row (`*first_row`) by the rows the
+ * window shows, clamped to 0 and the hidden row count, with the cursor sound; a redraw request (task word 4
+ * of the running thread) redraws the page as it is. The page is then redrawn into
+ * g_option_menu_render_buffer, uploaded over the window's text image and the two lines above it cleared.
+ * Returns the buffer when it redrew, 0 otherwise (also without player input). Twin of
+ * world_option_menu_redraw_text_page_on_scroll. */
 void* option_menu_redraw_text_page_on_scroll(
     world_menu_entry_t* menu, s32* first_row, s32* render_pending, s32* unused_cursor) {
     RECT source;

@@ -7,7 +7,7 @@
  * running thread's redraw request), redraws the page into a freshly
  * allocated image buffer and uploads it. Returns that buffer when the page
  * was redrawn; the caller frees it. The menu-screen library's variant of
- * world_menu_redraw_text_page_on_scroll, which draws into a static image and only for player input. */
+ * world_option_menu_redraw_text_page_on_scroll, which draws into a static image and only for player input. */
 u8* world_screen_menu_redraw_text_page_on_scroll(
     world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor) {
     world_menu_text_layout_t* layout = (world_menu_text_layout_t*)entry->text_binding;

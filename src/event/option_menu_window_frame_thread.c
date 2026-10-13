@@ -1,13 +1,15 @@
-/*
- * OPTION menu window frame thread, variant A: started by the options menu and AT list builders.
- *
- * Twin of option_menu_thin_window_frame_thread at 0x801c0894; that panel allocates its
- * 4bpp scratch image instead of using the fixed one, uses the second texture-window table,
- * and lays the border out with 8-pixel instead of 16-pixel corners.
- */
 #include "fft/event_option.h"
 #include "psx/types.h"
 
+/* The frame thread of OPTION's list windows, started one slot above option_menu_run_list_thread and
+ * option_menu_run_options_thread with the window rectangle: build the frame image from pieces of the menu
+ * glyph image (option_text_set_blit_source_rect, option_text_set_blit_destination) in a VRAM cell, then each
+ * frame draw the nine border sprites around the window, dimmed unless thread parameter 2 is 0 and menu
+ * input is free, until thread parameter 3 asks it to stop; then free the VRAM cell and exit.
+ *
+ * Twin of option_menu_thin_window_frame_thread; that panel allocates its 4bpp scratch image instead of
+ * using the fixed one, uses the second texture-window table, and lays the border out with 8-pixel instead of
+ * 16-pixel corners. */
 void option_menu_window_frame_thread(void) {
     RECT texture;
     /* The target holds the frame record base in one callee-saved register across

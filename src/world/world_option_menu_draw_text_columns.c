@@ -4,7 +4,7 @@
 /* Draws a list page's three text columns into an image. The copy beside the event program (the
  * OPTION.OUT twin): the AT list and the options menu call it. world_screen_menu_draw_text_columns
  * is the same routine in the menu-screen library. */
-void world_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer) {
+void world_option_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer) {
     world_menu_text_layout_t* layout = (world_menu_text_layout_t*)entry->text_binding;
     s32 row;
     s32 column;

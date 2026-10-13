@@ -23,7 +23,7 @@ typedef enum world_thread_slot {
     WORLD_THREAD_SLOT_TUTORIAL_TEXT = 16,       /* tutorial script text: the slot past the sixteen reset ones */
 } world_thread_slot_e;
 
-/* world_option_build_at_list runs its window frame thread in the upper menu's slot. */
+/* world_option_menu_run_list_thread runs its window frame thread in the upper menu's slot. */
 enum {
     WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME = 15,
 };
@@ -117,7 +117,6 @@ void world_script_dark_screen_thread(void);
 void world_input_update_with_message_state(void);
 void world_card_input_update_with_message_state(void);
 void world_thread_wait_for_unit_view_panels(void);
-void world_thread_yield_forever(void);
 void world_thread_request_redraw(s32 thread_id);
 s32 world_thread_call_on_main_stack();
 void world_thread_exit_current(void);
@@ -679,8 +678,6 @@ void world_gfx_set_blit_source_rect(s16 x, s16 y, s16 width, s16 height);
 void world_gfx_set_clut_rect_from_id(RECT* rect, u16 clut_id);
 
 void world_gfx_set_draw_mode_from_rect(DR_MODE* mode, const u16* rect);
-void world_gfx_set_image_blit_destination_origin(s16 x, s16 y);
-void world_gfx_set_image_blit_source_rect(s16 x, s16 y, s16 width, s16 height);
 void world_gfx_start_decreasing_fade(void);
 void world_gfx_start_increasing_fade(void);
 
@@ -1695,6 +1692,10 @@ extern u16* g_world_help_topic_text_ids;
 extern s32 g_world_help_text_id_tables_ptr;
 
 /* options */
+/* WORLD's resident copy of OPTION.OUT (world_option_*): the game options that the world menu's Options
+ * row opens, and copies of the AT list and the crystal panel that only WORLD's dead copy of the battle
+ * menus would open (QUIRKS.md). */
+
 extern world_input_timing_profile_t g_world_option_input_timing_profiles[];
 extern world_menu_text_binding_t g_world_option_menu_entry_table;
 extern s32 g_world_option_menu_text_widths[];    /* option menu text-image width, per option */
@@ -1705,8 +1706,23 @@ extern RECT g_world_options_menu_window_rect;
 extern RECT g_world_options_menu_title_rect;
 extern RECT g_world_options_menu_value_rect;
 extern world_menu_icon_record_t g_world_option_picker_icon_records[2];
-void world_option_build_options_menu(void);
-void world_option_run_option_choice_menu(void);
+void world_option_menu_run_options_thread(void);
+void world_option_menu_run_option_choice_thread(void);
+extern world_menu_list_page_t g_world_at_list_pages[2];
+void world_option_menu_run_list_thread(void);
+void world_option_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);
+u8* world_option_menu_redraw_text_page_on_scroll(
+    world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor);
+void world_option_menu_init_at_list(world_menu_entry_t* entry);
+void world_option_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* pair);
+void world_option_run_menu(s32 mode);
+void world_option_game_options_thread(void);
+void world_option_menu_start_at_list_thread(void);
+void world_option_menu_start_dead_unit_threads(void);
+void world_option_menu_window_frame_thread(void);
+void world_option_thread_wait_forever(void);
+void world_option_text_set_blit_destination(s16 x, s16 y);
+void world_option_text_set_blit_source_rect(s16 x, s16 y, s16 width, s16 height);
 
 /* panel */
 extern s16 g_world_panel_slide_up_y[];
@@ -1882,8 +1898,6 @@ void world_text_character_handling_thread(void);
 void world_text_release_current_message_box_slot(void);
 
 /* turn */
-extern world_menu_list_page_t g_world_at_list_pages[2];
-void world_option_build_at_list(void);
 void world_screen_build_at_list(void);
 
 /* dead unit */
@@ -2392,7 +2406,6 @@ void world_text_configure_sprite_vram(RECT* rect, s32 width, s32 height, void* p
 s32 world_menu_is_busy(s32 unused);
 s32 world_menu_is_screen_busy(void);
 void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y);
-u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor);
 u8* world_screen_menu_redraw_text_page_on_scroll(
     world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor);
 
@@ -2444,7 +2457,6 @@ void world_menu_display_triangle_selection(void);
 void world_menu_draw_animated_cursor(point16_t* position, u16* state, s32 mode);
 void world_menu_draw_animated_vertical_cursor(point16_t* position, u16* state, s32 mode);
 void world_menu_draw_item_category_tabs(s32 wide, s32 row, s32 mode);
-void world_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);
 void world_menu_draw_thread_status_indicators(void);
 void world_menu_request_unit_panel_redraw(void);
 void world_menu_fade_out_thread(void);
@@ -2470,12 +2482,10 @@ s32 world_menu_has_items(s32 mode);
 void world_menu_icon_linked_entry_thread(void);
 void world_menu_icon_list_thread(void);
 void world_menu_init_and_load_scrollable_list(const s16* values, s32 selected_index, u8* text_table, void* menu);
-void world_menu_init_at_list(world_menu_entry_t* entry);
 void world_menu_init_palette_and_text(s32 unused);
 void world_menu_init_primitive_colors_normal(world_menu_palette_primitives_t*);
 void world_menu_init_primitive_colors_dimmed(world_menu_palette_primitives_t*);
 void world_gfx_init_default_poly_ft4(POLY_FT4* poly);
-void world_option_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* pair);
 void world_menu_init_scrollable_list(const s16* values, s32 value, s32 selected, u8* text_table);
 void world_menu_init_scrollable_list_core(const s16* values, s32 selected_index, u8* text_table);
 void world_menu_init_sprite_array(SPRT* sprites, s32 count, s32 clut);
@@ -2500,8 +2510,6 @@ void world_menu_reset_unit_records(void);
 void world_menu_run_bunit_transition_thread(void);
 void world_menu_run_jobstts_thread(void);
 void world_menu_run_icon_selection_loop(void);
-void world_option_run_menu(s32 mode);
-void world_option_game_options_thread(void);
 void world_menu_run_numeric_display_panel_thread(void);
 void world_menu_run_numeric_editor_thread(void);
 void world_menu_run_script_with_palette_mode(void* output, s32 input, s32 mode);
@@ -2527,8 +2535,6 @@ void world_menu_set_sprite_color(u8* src);
 void world_menu_block_help(void);
 void world_menu_set_window_scale_step(s8 step);
 void world_menu_size_entry_to_text(world_menu_entry_t* entry, s16* width, s16* height, s32* out_pad, s32 pad_short);
-void world_menu_start_at_list_thread(void);
-void world_menu_start_dead_unit_threads(void);
 void world_menu_start_description_text_thread(world_menu_description_record_t* record);
 void world_menu_open_option_dead_unit_panel(void);
 void world_menu_start_or_poll_thread(s32 thread_id, world_menu_thread_data_t* data);
@@ -2565,7 +2571,6 @@ void world_menu_update_icon_cursor_sprites(
 void world_menu_update_panel_fade(void);
 void world_menu_load_sort_key_list(s32 index, s16* out);
 s32 world_menu_copy_ff_terminated_bytes_to_halfwords(u16* destination, const u8* source);
-void world_menu_window_frame_thread(void);
 void world_menu_set_slot_4_cursor_index(s32 index);
 s32 world_menu_get_thread_activity(void);
 void world_menu_display_text_entry_past_choice_marks(s32 text_id, void* image, world_glyph_blit_t* origin);

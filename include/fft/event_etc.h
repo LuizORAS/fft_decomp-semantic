@@ -1,11 +1,16 @@
 #ifndef EVENT_ETC_H
 #define EVENT_ETC_H
 
-/* EVENT/ETC.OUT: menu screen overlay that runs with BATTLE. */
+/* EVENT/ETC.OUT: the full-screen graphics of event opcode ShowGraphic (battle_script_show_graphic_thread,
+ * world_script_show_graphic_thread): the chapter titles, the game-over screen and the five ending
+ * images. */
 
 #include "fft/battle.h"
 
 /* graphic */
+/* The graphics table (file, sector, size, VRAM area, dimensions, texture mode), the polygons of
+ * the chapter-title and game-over reveals, and the show routines. */
+
 /* ETC uses byte loads for texture coordinates and halfword loads for screen
  * geometry. Preserve both views of each little-endian dimension component. */
 typedef union etc_graphic_dimension_component {
@@ -69,7 +74,6 @@ void etc_graphic_show_async(void);
 void etc_graphic_show_chapter_title(s32 graphic_id);
 void etc_graphic_show_game_over(s32 graphic_id);
 
-/* other */
 extern const char g_etc_allocation_wait_message[];
 
 #endif

@@ -1,16 +1,17 @@
-/* Run the help menu over the REQUIRE screen.
- *
- * The cursor and its shadow are two POLY_FT4 pairs, one primitive per display
- * buffer. Retail reaches the shadow pair through the cursor pair in places
- * (`quad[2]`, `quads[buffer + 2]`): the two arrays are adjacent on the stack.
- */
 #include "fft/event_helpmenu.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
-void battle_thread_start(s32 thread_id, void (*function)(void));
-
+/* Run the help cursor over the unit status panels of REQUIRE's post-battle screens (started by
+ * require_overlay_run_helpmenu): bind HELPMENU's help texts over the battle text sections (saving them), copy
+ * BATTLE's active-turn panels, then move a bouncing cursor over g_helpmenu_require_navigation with the
+ * directional buttons. Circle shows the field's help text (its help base plus the field's value) in a text
+ * thread, Cross closes the help.
+ *
+ * The cursor and its shadow are two POLY_FT4 pairs, one primitive per display buffer. Retail reaches the
+ * shadow pair through the cursor pair in places (`quad[2]`, `quads[buffer + 2]`): the two arrays are adjacent
+ * on the stack. */
 void helpmenu_menu_run_require_help(void) {
     POLY_FT4 cursor[2];
     POLY_FT4 shadow[2];

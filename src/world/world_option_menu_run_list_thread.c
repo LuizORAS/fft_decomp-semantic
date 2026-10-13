@@ -7,8 +7,8 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* WORLD's copy of option_build_at_list, the AT list's list thread. */
-void world_option_build_at_list(void) {
+/* WORLD's copy of option_menu_run_list_thread, the scrolling list of the AT list and the crystal panel. */
+void world_option_menu_run_list_thread(void) {
     world_menu_text_window_t window;
     RECT image_rect;
     RECT clear;
@@ -108,11 +108,11 @@ void world_option_build_at_list(void) {
     buffer = g_world_menu_text_page_image;
     world_clear_menu_render_buffer(buffer, entry->inner_width * entry->inner_height / 2);
     redraw_pending = 1;
-    world_thread_start(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, world_menu_window_frame_thread);
+    world_thread_start(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, world_option_menu_window_frame_thread);
     world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 0, 0);
     row_offset = entry->select_text_table;
     cursor = entry->selected_index - row_offset;
-    world_menu_draw_text_columns(entry, &row_offset, buffer);
+    world_option_menu_draw_text_columns(entry, &row_offset, buffer);
     ring = 0;
     image_rect.w = g_world_menu_text_state.pen.stride >> 2;
     LoadImage(&image_rect, (u32*)buffer);
@@ -220,7 +220,7 @@ void world_option_build_at_list(void) {
             redraw_pending = 0;
         }
         if (delta == 0 && world_menu_is_input_allowed() != 0) {
-            redraw_pending = (s32)world_menu_redraw_text_page_on_scroll(entry, &row_offset, &ring, &cursor);
+            redraw_pending = (s32)world_option_menu_redraw_text_page_on_scroll(entry, &row_offset, &ring, &cursor);
             ClearImage(&clear, 0, 0, 0);
         }
         entry->selected_index = cursor + row_offset;

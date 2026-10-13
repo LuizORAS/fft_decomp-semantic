@@ -1,8 +1,8 @@
 /*
  * WORLD copy of the EVENT OPTION window frame thread (option_menu_thin_window_frame_thread; second WORLD copy with its
  * own blit descriptors, blit setters and texture-window table (the frame block at 0x801cc074 is shared with
- * world_menu_thin_window_frame_thread), byte-identical apart from addresses). Layout notes below are the OPTION twin's;
- * the WORLD helpers are the same routines.
+ * world_option_menu_thin_window_frame_thread), byte-identical apart from addresses). Layout notes below are the OPTION
+ * twin's; the WORLD helpers are the same routines.
  */
 #include "fft/world.h"
 #include "psx/types.h"

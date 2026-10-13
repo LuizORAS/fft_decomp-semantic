@@ -1,11 +1,15 @@
 #include "fft/event_option.h"
 #include "psx/types.h"
 
-/* g_battle_menu_text_state is used as one aggregate (menu_text_state_t): that is
- * what reproduces the target's single s5 base register and the
- * MEM_IN_STRUCT_P reordering of the g_battle_menu_text_color load across the color
- * store. */
-
+/* Draw a list page's three text columns into `buffer`, an image as wide as the window's inside: for each
+ * visible row from `*row_offset` on, every column that is not MENU_TEXT_COLUMN_HIDDEN draws its text id,
+ * number or number glyphs at its x in its colour (colour 4 also sets the pen colour 0x44444444); an id
+ * whose low 11 bits are 0x7ff stays blank. The list threads and the page scroll call it;
+ * world_option_menu_draw_text_columns is WORLD's copy.
+ *
+ * g_battle_menu_text_state is used as one aggregate (menu_text_state_t): that is what reproduces the
+ * target's single s5 base register and the MEM_IN_STRUCT_P reordering of the g_battle_menu_text_color load
+ * across the color store. */
 void option_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer) {
     world_menu_text_layout_t* layout = (world_menu_text_layout_t*)entry->text_binding;
     s32 row;

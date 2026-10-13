@@ -5,15 +5,16 @@
 
 extern world_options_menu_page_t g_option_menu_pages[2];
 
-/*
- * Options-menu thread, the OPTION twin of world_option_build_options_menu (same code,
- * globals and callees rebound) without its g_world_menu_thread_result stores.
+/* The game options thread (thread parameter 1 = the menu record, bound to g_option_menu_entry_table):
+ * scroll the two-column option list, show each option's value, open the value picker
+ * (option_menu_run_option_choice_thread) on Circle, and each frame pack the values back into
+ * g_main_game_options, apply the sound mode on the main stack and reload the input repeat timings for the
+ * finger-cursor speed. The OPTION twin of world_option_menu_run_options_thread (same code, globals and
+ * callees rebound) without its g_world_menu_thread_result stores.
  *
- * The do/while (0) around the thread lookup is a scheduling barrier: its
- * loop notes keep the input-1 spill and the entry load ahead of the
- * row-count loads, as in the target.
- */
-void option_build_options_menu(void) {
+ * The do/while (0) around the thread lookup is a scheduling barrier: its loop notes keep the input-1 spill
+ * and the entry load ahead of the row-count loads, as in the target. */
+void option_menu_run_options_thread(void) {
     world_menu_text_window_t window;
     RECT image_rect;
     RECT clear;
@@ -225,7 +226,7 @@ void option_build_options_menu(void) {
                 if (battle_menu_is_input_allowed() != 0) {
                     *input0 = 0;
                     index = cursor + row_offset + delta;
-                    battle_thread_start(g_battle_thread_current_id - 1, option_run_option_choice_menu);
+                    battle_thread_start(g_battle_thread_current_id - 1, option_menu_run_option_choice_thread);
                     battle_thread_set_parameters(g_battle_thread_current_id - 1, index, 0, 0);
                 }
             }

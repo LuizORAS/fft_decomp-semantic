@@ -1,7 +1,12 @@
 #include "fft/event_option.h"
 #include "psx/types.h"
 
-/* Close the AT list's worker set and restore the parent option threads. */
+/* Thread of the AT list's second menu record, which each unit row opens (row action 1): suspend the
+ * four threads in the slots above it and hold the windows' transition timer at its duration + 100 while the
+ * player views the picked unit, until BATTLE raises g_battle_menu_at_list_unit_view_ended
+ * (battle_menu_end_at_list_unit_view, from battle_state_return_to_mini_menu). Then close the unit view,
+ * wait for the four unit panels to stop, point the AT list text section back at the list's names, resume
+ * the four threads and exit. */
 void option_menu_at_list_select_unit_thread(void) {
     g_battle_menu_help_blocked = 1;
     g_battle_menu_suspend_state = 2;

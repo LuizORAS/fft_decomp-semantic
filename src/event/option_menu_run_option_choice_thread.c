@@ -1,21 +1,24 @@
-/* Run the option choice menu.
- *
- * Port of world_option_run_option_choice_menu (identical apart from the four window constants).
- * Two dead-store conditionals are zero-instruction allocation devices: flow deletes each body,
- * post-reload jump deletes each branch, but both stay visible to register allocation.
- * - `if (height <= 0)`: the sixth height reference (6 refs/54 insns) ties the render
- *   parameter block's priority (17/306); declaring height before param breaks the tie,
- *   giving the target's height s4 / param s5.
- * - `i = 0; if (i < width)`: combine folds `0 < width` into a zero-test branch while keeping
- *   `i = 0`, so the slt result pseudo keeps its flow refs, gets no register, and reload gives
- *   it the target's second unreferenced 8-byte slot (frame 0x60; the text loop's entry test
- *   supplies the first). */
 #include "fft/event_option.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
-void option_run_option_choice_menu(void) {
+/* The value picker of one game option. The option index arrives in the thread's first parameter, which
+ * is then replaced by the icon parameter block. The values are drawn with the stored one highlighted; Up and
+ * Down wrap the cursor, Circle stores the value and Cross cancels. The last row (GAME_OPTION_UNCHANGED)
+ * accepts only its second value, which restores every option to g_option_reference_values; storing any
+ * other option clears it. Twin of world_option_menu_run_option_choice_thread (identical apart from the
+ * four window constants).
+ *
+ * Two dead-store conditionals are zero-instruction allocation devices: flow deletes each body, post-reload
+ * jump deletes each branch, but both stay visible to register allocation.
+ * - `if (height <= 0)`: the sixth height reference (6 refs/54 insns) ties the render parameter block's
+ *   priority (17/306); declaring height before param breaks the tie, giving the target's height s4 /
+ *   param s5.
+ * - `i = 0; if (i < width)`: combine folds `0 < width` into a zero-test branch while keeping `i = 0`, so
+ *   the slt result pseudo keeps its flow refs, gets no register, and reload gives it the target's second
+ *   unreferenced 8-byte slot (frame 0x60; the text loop's entry test supplies the first). */
+void option_menu_run_option_choice_thread(void) {
     RECT rect;
     u32* input;
     native_thread_t* thread;

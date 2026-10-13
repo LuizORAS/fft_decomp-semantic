@@ -1,14 +1,32 @@
 #ifndef EVENT_HELPMENU_H
 #define EVENT_HELPMENU_H
 
-/* EVENT/HELPMENU.OUT: menu screen overlay that runs with BATTLE. */
+/* EVENT/HELPMENU.OUT: the help cursor that Select opens over the battle's menus and unit panels
+ * (battle_menu_run_helpmenu_thread) and over REQUIRE's screens (require_overlay_run_helpmenu). It loads at
+ * 0x801df000, above the reservation the opener makes. */
 
 #include "fft/battle.h"
 
 /* thread */
+/* Finding the menu thread the help opened over (the lowest running slot from 4 to 8). */
+
 s32 helpmenu_thread_find_first_running_menu_thread(void);
 
-/* help */
+/* text */
+/* The help texts: HELPMENU's text file, bound over BATTLE's text sections while the help is open,
+ * and the pointers it saves. */
+
+/* 0x80 bytes of saved g_battle_text_section_pointers, i.e. 32 pointers. */
+extern u8* g_helpmenu_text_saved_pointers[32];
+
+/* Section offsets of the help text file, relative to g_helpmenu_text_data (0x80 bytes before it). */
+extern s32 g_helpmenu_text_section_offsets[32];
+extern u8 g_helpmenu_text_data[];
+
+/* menu */
+/* The help cursor: each screen's navigation records (the unit view modes, REQUIRE's panels), the
+ * BATTLE records it copies (banner, unit, billboard, cursor tile), the help runners and the close. */
+
 extern battle_unit_status_record_t g_helpmenu_active_banner;
 extern battle_active_unit_t g_helpmenu_active_unit_data;
 
@@ -24,15 +42,6 @@ extern help_navigation_record_t g_helpmenu_view_mode_2_navigation[];
 extern help_navigation_record_t g_helpmenu_view_mode_3_navigation[];
 extern help_navigation_record_t g_helpmenu_view_mode_4_navigation[];
 
-/* text */
-/* 0x80 bytes of saved g_battle_text_section_pointers, i.e. 32 pointers. */
-extern u8* g_helpmenu_text_saved_pointers[32];
-
-/* Section offsets of the help text file, relative to g_helpmenu_text_data (0x80 bytes before it). */
-extern s32 g_helpmenu_text_section_offsets[32];
-extern u8 g_helpmenu_text_data[];
-
-/* menu */
 /* Saved copies of four BATTLE records (battle_menu_get_active_turn_panels);
  * a second, unused slot follows the banner and the unit record. */
 extern map_selected_tile_t g_helpmenu_menu_cursor_tile;

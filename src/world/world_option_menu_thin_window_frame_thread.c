@@ -8,7 +8,7 @@
  * (0x10x0x10, 8x0x10, 0x10x8 and two full 0x100x0x100 windows); this function only fills in the
  * runtime x/y. Indexing the array is also what reproduces the target's symbol-plus-byte-offset
  * addressing. */
-void world_menu_thin_window_frame_thread(void) {
+void world_option_menu_thin_window_frame_thread(void) {
     RECT texture;
     /* The target holds the frame record base in one callee-saved register across
        the whole setup section. The address is a constant, so it picks up a
@@ -43,20 +43,20 @@ void world_menu_thin_window_frame_thread(void) {
     *source_stride = 0x100;
     *dest_stride = 0x80;
 
-    world_gfx_set_image_blit_source_rect(8, 8, 0x20, 0x10);
-    world_gfx_set_image_blit_destination_origin(0, 0);
+    world_option_text_set_blit_source_rect(8, 8, 0x20, 0x10);
+    world_option_text_set_blit_destination(0, 0);
     world_text_blit_glyph(
         g_world_menu_glyph_image, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
-    world_gfx_set_image_blit_source_rect(0, 8, 8, 0x10);
-    world_gfx_set_image_blit_destination_origin(0x20, 0);
+    world_option_text_set_blit_source_rect(0, 8, 8, 0x10);
+    world_option_text_set_blit_destination(0x20, 0);
     world_text_blit_glyph(
         g_world_menu_glyph_image, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
-    world_gfx_set_image_blit_source_rect(0, 0, 0x28, 8);
-    world_gfx_set_image_blit_destination_origin(0x28, 0);
+    world_option_text_set_blit_source_rect(0, 0, 0x28, 8);
+    world_option_text_set_blit_destination(0x28, 0);
     world_text_blit_glyph(
         g_world_menu_glyph_image, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
-    world_gfx_set_image_blit_source_rect(0, 0x18, 0x28, 8);
-    world_gfx_set_image_blit_destination_origin(0x28, 8);
+    world_option_text_set_blit_source_rect(0, 0x18, 0x28, 8);
+    world_option_text_set_blit_destination(0x28, 8);
     world_text_blit_glyph(
         g_world_menu_glyph_image, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
 

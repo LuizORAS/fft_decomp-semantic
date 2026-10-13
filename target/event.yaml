@@ -2102,7 +2102,7 @@ links: [battle]
 functions:
   - {addr: 0x801bf000, size: 480, name: option_menu_draw_text_columns, hash: dff47199f4742289}
   - {addr: 0x801bf1e0, size: 636, name: option_menu_redraw_text_page_on_scroll, hash: 61145072288429ea}
-  - {addr: 0x801bf45c, size: 3172, name: option_build_at_list, hash: f7232e2ba35ab622, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x801bf45c, size: 3172, name: option_menu_run_list_thread, hash: f7232e2ba35ab622, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x801c00c0, size: 40, name: option_text_set_blit_source_rect, hash: f4a7a9d08a0373d4}
   - {addr: 0x801c00e8, size: 24, name: option_text_set_blit_destination, hash: 957437a4742bb43c}
   - {addr: 0x801c0100, size: 464, name: option_gfx_build_scaled_draw_area_packets, hash: 868f2e1fad3c6996}
@@ -2116,8 +2116,8 @@ functions:
   - {addr: 0x801c1814, size: 328, name: option_menu_at_list_select_unit_thread, hash: 2d768b550d19a17f}
   - {addr: 0x801c195c, size: 224, name: option_menu_start_at_list_thread, hash: 5bf5050f008c2b98}
   - {addr: 0x801c1a3c, size: 640, name: option_entrypoint, hash: 8f7b254e0391baa2}
-  - {addr: 0x801c1cbc, size: 4384, name: option_build_options_menu, hash: 3180807fdb0707d1, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
-  - {addr: 0x801c2ddc, size: 1652, name: option_run_option_choice_menu, hash: d496c0741c324433}
+  - {addr: 0x801c1cbc, size: 4384, name: option_menu_run_options_thread, hash: 3180807fdb0707d1, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x801c2ddc, size: 1652, name: option_menu_run_option_choice_thread, hash: d496c0741c324433}
 
 data:
   - {addr: 0x801c3450, name: g_option_input_repeat_timings}

@@ -26,7 +26,7 @@ extern world_menu_unit_list_slot_t g_world_action_target_list_slots[];
  * written per branch: the store through the layout pointer may alias the
  * entry, so the repeated window_y store is kept.
  */
-void world_menu_init_at_list(world_menu_entry_t* entry) {
+void world_option_menu_init_at_list(world_menu_entry_t* entry) {
     s32 count;
     s32 bracketed;
     s32 i;

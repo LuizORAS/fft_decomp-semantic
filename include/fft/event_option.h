@@ -1,11 +1,21 @@
 #ifndef EVENT_OPTION_H
 #define EVENT_OPTION_H
 
-/* EVENT/OPTION.OUT: menu screen overlay that runs with BATTLE. */
+/* EVENT/OPTION.OUT: the battle's option screens. BATTLE's menus load it for the mini menu's Option row
+ * (the game options) and AT row (the turn order list), and for the crystal or chest a dead unit leaves
+ * (system function 0x1f). WORLD.BIN carries a copy of it (world_option_*). */
 
 #include "fft/battle.h"
 
+/* thread */
+/* The stand-in thread that yields forever. */
+
+void option_thread_wait_forever(void);
+
 /* gfx */
+/* The draw-area pair of a window's open and close zoom: option_gfx_build_scaled_draw_area_packets and
+ * option_gfx_init_scaled_draw_area_packets, which nothing references (QUIRKS.md). */
+
 extern const u16 g_option_gfx_draw_area_scale_percent[12];
 extern RECT g_option_gfx_draw_area_template;
 
@@ -15,14 +25,17 @@ void option_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t
 void option_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
 
 /* text */
+/* The frame-piece blit: the source and destination rectangles of the copies the window frame threads
+ * make from the menu glyph image. */
+
 extern world_glyph_blit_t g_option_text_glyph_dest;
 extern world_glyph_blit_t g_option_text_glyph_source;
 void option_text_set_blit_destination(s16 destination_x, s16 destination_y);
 void option_text_set_blit_source_rect(s16 source_x, s16 source_y, s16 width, s16 height);
 
 /* menu */
-/* Record types hoisted out of the defining .c files so that callers and
- * definitions agree on one spelling. */
+/* The list windows: the scrolling list thread, its text columns and page scroll, the window frame
+ * threads and their frame images, and the AT list's menu records, rows and unit view. */
 
 /* OPTION's view of the 0x3c-byte menu record (g_battle_menu_thread_menu_data);
  * field names follow world_menu_entry_t. */
@@ -49,7 +62,7 @@ extern s16 g_option_menu_at_list_primary_values[];
 extern s16 g_option_menu_at_list_secondary_values[];
 extern option_at_menu_t g_option_menu_at_list_state[];
 extern u8 g_option_menu_at_list_text[];
-extern world_menu_text_layout_t g_option_menu_entry_table[1];
+
 extern world_panel_frame_t g_option_menu_panel_frames[2];
 extern u8 g_option_menu_panel_pixels[];
 
@@ -65,18 +78,46 @@ extern s32 g_option_menu_state;
 extern u16 g_option_menu_transition_duration;
 extern s16 g_option_menu_transition_timer;
 extern RECT g_option_menu_entry_panel_rect;
-extern world_menu_entry_t g_option_menu_icon_thread_param;
-extern RECT g_option_menu_title_image_rect;
-extern RECT g_option_menu_value_image_rect;
+
 void option_menu_init_at_list(option_at_menu_t* menu);
 void option_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);
 void option_menu_start_at_list_thread(void);
-void option_menu_start_dead_unit_threads(void);
+
 void option_menu_window_frame_thread(void);
 void* option_menu_redraw_text_page_on_scroll(
     world_menu_entry_t* menu, s32* first_row, s32* render_pending, s32* unused_cursor);
 
+void option_menu_run_list_thread(void);
+
+/* options */
+/* The game options: each option's current and default value, its value count, picker window and
+ * text ids, the options list and the value picker. */
+
+extern world_menu_text_layout_t g_option_menu_entry_table[1];
+
+extern world_menu_entry_t g_option_menu_icon_thread_param;
+extern RECT g_option_menu_title_image_rect;
+extern RECT g_option_menu_value_image_rect;
+
+extern s32 g_option_current_values[GAME_OPTION_UNCHANGED + 1];
+extern s32 g_option_reference_values[];
+
+extern s32 g_option_choice_counts[];
+extern s32 g_option_choice_window_widths[];
+extern world_menu_icon_record_t g_option_picker_icon_records[2];
+extern s32 g_option_value_text_id_bases[];
+extern world_input_timing_profile_t g_option_input_repeat_timings[];
+
+void option_menu_run_options_thread(void);
+
+void option_menu_run_option_choice_thread(void);
+
 /* dead unit */
+/* The panel of the crystal or chest a dead unit leaves: its menu record, its ability list and
+ * the choices it returns to BATTLE (g_battle_dead_unit_action). */
+
+void option_menu_start_dead_unit_threads(void);
+
 extern u32* g_option_dead_unit_controller_input;
 
 extern dead_unit_menu_t g_option_dead_unit_menu;
@@ -87,19 +128,9 @@ extern s16 g_option_dead_unit_primary_result;
 
 extern s16 g_option_dead_unit_secondary_result;
 
-/* other */
-extern s32 g_option_current_values[GAME_OPTION_UNCHANGED + 1];
-extern s32 g_option_reference_values[];
+/* screen */
+/* The entry point that BATTLE's menu threads call with the menu to run (option_menu_type_e). */
 
-extern s32 g_option_choice_counts[];
-extern s32 g_option_choice_window_widths[];
-extern world_menu_icon_record_t g_option_picker_icon_records[2];
-extern s32 g_option_value_text_id_bases[];
-extern world_input_timing_profile_t g_option_input_repeat_timings[];
-void option_build_at_list(void);
-void option_build_options_menu(void);
-void option_thread_wait_forever(void);
-void option_run_option_choice_menu(void);
 void option_entrypoint(s32 menu_type);
 
 #endif

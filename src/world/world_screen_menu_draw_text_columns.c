@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* The menu-screen library's copy of world_menu_draw_text_columns (the same routine compiled twice):
+/* The menu-screen library's copy of world_option_menu_draw_text_columns (the same routine compiled twice):
  * the formation, world map and title lists call this one. */
 void world_screen_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer) {
     world_menu_text_layout_t* layout = (world_menu_text_layout_t*)entry->text_binding;

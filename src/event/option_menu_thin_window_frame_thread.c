@@ -1,13 +1,10 @@
-/*
- * OPTION menu window frame thread, variant B.
- *
- * Twin of option_menu_window_frame_thread at 0x801c0304; this one allocates and
- * frees its own 4bpp scratch image, uses the second texture-window table, and lays the
- * border out with 8-pixel instead of 16-pixel corners.
- */
 #include "fft/event_option.h"
 #include "psx/types.h"
 
+/* A second frame thread for OPTION's windows, which nothing starts (QUIRKS.md).
+ *
+ * Twin of option_menu_window_frame_thread; this one allocates and frees its own 4bpp scratch image, uses the
+ * second texture-window table, and lays the border out with 8-pixel instead of 16-pixel corners. */
 void option_menu_thin_window_frame_thread(void) {
     RECT texture;
     /* The target holds the frame record base in one callee-saved register across

@@ -643,7 +643,7 @@ typedef struct world_menu_text_binding {
  * g_world_menu_thread_menu_data; the same menu record as BATTLE
  * g_battle_menu_thread_menu_data and the OPTION/EQUIP menus. 0x0c/0x0e are the
  * window size (frame rect 0x0c - 0x12 by 0x0e - 0x1a in WORLD 0x8010088c and
- * option_build_at_list). The parent table at 0x24 (indexed by selected_index)
+ * option_menu_run_list_thread). The parent table at 0x24 (indexed by selected_index)
  * and the thread entry at 0x28 are known from
  * world_menu_start_entry_chain_threads. The record is also the first parameter
  * of the menu threads it starts: the icon threads read 0x00..0x07 as the text
@@ -651,7 +651,7 @@ typedef struct world_menu_text_binding {
  * thread clears bit 0 of 0x0a), and world_menu_step_wrapping_row_cursor
  * wraps the cursor at max_row_index. */
 typedef struct world_menu_entry {
-    s16 vram_x;        /* 0x00: text-image VRAM x (world_menu_redraw_text_page_on_scroll) */
+    s16 vram_x;        /* 0x00: text-image VRAM x (world_option_menu_redraw_text_page_on_scroll) */
     s16 vram_y;        /* 0x02: text-image VRAM y */
     s16 inner_width;   /* 0x04: text-image width; RECT.w = inner_width >> 2 (4bpp) */
     s16 inner_height;  /* 0x06: text-image height (world_menu_size_entry_to_text) */
@@ -716,7 +716,7 @@ typedef enum menu_text_column_mode {
 } menu_text_column_mode_e;
 
 /* Provisional: three-column menu text layout walked by world_screen_menu_draw_text_columns (0x80109374) /
- * world_menu_draw_text_columns (reached through world_menu_entry_t::text_binding when
+ * world_option_menu_draw_text_columns (reached through world_menu_entry_t::text_binding when
  * that record is a layout rather than a binding). Column i uses x[i],
  * mode[i] (menu_text_column_mode_e), text_ids[i] and
  * text_colors[i], each indexed by row + row offset. */
@@ -827,7 +827,7 @@ typedef struct world_menu_icon_record {
 
 /* Provisional: one of the two 0x134-byte packet pages a scrolling text list
  * alternates between frames (world_menu_run_scrolling_ability_list_thread at 0x801a3d58,
- * world_option_build_at_list at 0x801ac6b4, world_screen_build_at_list at 0x801bfda4). */
+ * world_option_menu_run_list_thread at 0x801ac6b4, world_screen_build_at_list at 0x801bfda4). */
 typedef struct world_menu_list_page {
     SPRT frame;                                   /* 0x00: text image / cursor frame */
     SPRT arrows[2];                               /* 0x14: scroll arrows */
@@ -948,7 +948,7 @@ typedef struct world_menu_button_piece {
 
 /* Provisional layouts for the dead-unit ("treasure/crystal") result panel
  * started by option_menu_start_dead_unit_threads and
- * world_menu_start_dead_unit_threads. Only the fields those routines touch are
+ * world_option_menu_start_dead_unit_threads. Only the fields those routines touch are
  * named; the surrounding bytes stay anonymous. dead_unit_menu_t opens with the
  * 0x3c menu record and uses the world_menu_entry_t names. */
 typedef struct dead_unit_entry_counts {

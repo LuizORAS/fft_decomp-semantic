@@ -1,7 +1,13 @@
 #include "fft/event_option.h"
 #include "psx/types.h"
 
-/* Decode saved option fields and dispatch the requested option-menu mode. */
+/* Run one of OPTION.OUT's three menus (option_menu_type_e) in this menu thread, whose parameter 1 is its
+ * menu record. Unpack g_main_game_options into g_option_current_values; the last value
+ * (GAME_OPTION_UNCHANGED) is 1 while every option equals g_option_reference_values. Except for the crystal
+ * panel, stop the four unit panels. Then run the game options (option_menu_run_options_thread in the slot
+ * below, waiting for it), the AT list (option_menu_start_at_list_thread) or the crystal or chest panel
+ * (option_menu_start_dead_unit_threads). BATTLE's battle_menu_open_option_* threads start it after loading
+ * the overlay; world_option_run_menu is WORLD's copy. */
 void option_entrypoint(s32 menu_type) {
     world_menu_entry_t* menu = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
     s32 index;
@@ -57,7 +63,7 @@ void option_entrypoint(s32 menu_type) {
         s32 child_thread;
 
         battle_script_pulse_tutorial_wait_value(0xfd);
-        battle_thread_start(g_battle_thread_current_id - 1, option_build_options_menu);
+        battle_thread_start(g_battle_thread_current_id - 1, option_menu_run_options_thread);
         child_thread = g_battle_thread_current_id;
         menu->select_text_table = 1;
         menu->text_binding = (struct world_menu_text_binding*)g_option_menu_entry_table;

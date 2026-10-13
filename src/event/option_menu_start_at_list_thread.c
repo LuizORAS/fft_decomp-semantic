@@ -1,7 +1,10 @@
 #include "fft/event_option.h"
 #include "psx/types.h"
 
-/* Install the AT-list menu context until both builder threads finish. */
+/* Run the AT list: make g_option_menu_at_list_state the menu record (menu type 0x13), build its rows
+ * from the turn order (option_menu_init_at_list), start option_menu_run_list_thread two slots below, and
+ * yield until it and the thread below it (the unit view a row opens) have finished; then restore the
+ * previous menu record and exit. */
 void option_menu_start_at_list_thread(void) {
     world_menu_entry_t* previous_menu_descriptor = g_battle_menu_thread_menu_data;
 
@@ -10,7 +13,7 @@ void option_menu_start_at_list_thread(void) {
     g_option_menu_at_list_entry_table_pointer = g_option_menu_at_list_entry_table;
     option_menu_init_at_list(g_option_menu_at_list_state);
 
-    battle_thread_start(g_battle_thread_current_id - 2, option_build_at_list);
+    battle_thread_start(g_battle_thread_current_id - 2, option_menu_run_list_thread);
     battle_thread_set_parameters(g_battle_thread_current_id - 2, g_option_menu_at_list_state, 0, 0);
 
     do {

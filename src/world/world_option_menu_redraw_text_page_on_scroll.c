@@ -3,10 +3,12 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Scrolls a three-column text page by a row window on L1/R1 (or on the
- * running thread's redraw request), redraws the page into g_world_menu_text_page_image and
- * uploads it. Returns the image buffer when the page was redrawn. */
-u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor) {
+/* WORLD's copy of option_menu_redraw_text_page_on_scroll: while Square is held, Up or Down pages the
+ * three-column list by the rows the window shows (a redraw request, task word 4 of the running thread,
+ * redraws it as it is); the page is redrawn into g_world_menu_text_page_image and uploaded. Returns the
+ * image when it redrew, 0 otherwise. */
+u8* world_option_menu_redraw_text_page_on_scroll(
+    world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor) {
     world_menu_text_layout_t* layout = (world_menu_text_layout_t*)entry->text_binding;
     u32* input;
     u32* input2;
@@ -52,7 +54,7 @@ u8* world_menu_redraw_text_page_on_scroll(world_menu_entry_t* entry, s32* row_of
         return 0;
     }
     world_clear_menu_render_buffer(g_world_menu_text_page_image, entry->inner_width * entry->inner_height / 2);
-    world_menu_draw_text_columns(entry, row_offset, g_world_menu_text_page_image);
+    world_option_menu_draw_text_columns(entry, row_offset, g_world_menu_text_page_image);
     *redraw = 0;
     LoadImage(&rect, g_world_menu_text_page_image);
     world_copy_bytes(&clear, &rect, 8);

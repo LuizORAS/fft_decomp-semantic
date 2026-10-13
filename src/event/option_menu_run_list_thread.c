@@ -1,8 +1,3 @@
-/* Build the AT list.
- *
- * Port of world_option_build_at_list. The do/while (0) around the scroll redraw puts its render-buffer
- * references one loop level deeper, which raises the buffer's global-alloc priority above the
- * page pointer's (target: buffer s3, page s4; without it the two swap). */
 #include "fft/event_option.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -11,7 +6,20 @@
 /* OPTION's pair of list pages, alternated per frame. */
 extern world_menu_list_page_t g_option_at_list_pages[2];
 
-void option_build_at_list(void) {
+/* Run a scrolling text list in the menu record of thread parameter 1: the AT list, or the abilities a
+ * crystal offers. Size the window to the layout's rows, start the window frame thread
+ * (option_menu_window_frame_thread) one slot up, draw the three text columns
+ * (option_menu_draw_text_columns) and upload them. Each frame Up and Down move the cursor and scroll the
+ * hidden rows smoothly (with Square held they page instead, option_menu_redraw_text_page_on_scroll); the
+ * scroll arrows, the thumb, the frame and the cursor are drawn from the two pages of g_option_at_list_pages
+ * in turn, and Circle and Cross run the row actions (battle_menu_handle_entry_confirm,
+ * battle_menu_handle_entry_cancel). When the menu closes, stop the frame thread and exit.
+ * world_option_menu_run_list_thread is WORLD's copy.
+ *
+ * The do/while (0) around the scroll redraw puts its render-buffer references one loop level deeper, which
+ * raises the buffer's global-alloc priority above the page pointer's (target: buffer s3, page s4; without it
+ * the two swap). */
+void option_menu_run_list_thread(void) {
     world_menu_text_window_t window;
     RECT image_rect;
     RECT clear;

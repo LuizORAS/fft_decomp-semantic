@@ -17,7 +17,7 @@
  *     on that: no `return` follows the early exits, so their epilogues fall
  *     through into the next case instead of being cross-jumped to the shared
  *     tail. */
-void world_menu_start_dead_unit_threads(void) {
+void world_option_menu_start_dead_unit_threads(void) {
     main_crystal_pickup_result_t* context = g_world_dead_unit_context;
     world_menu_entry_t* previous_menu_descriptor = g_world_menu_thread_menu_data;
     dead_unit_menu_t* menu;
@@ -129,7 +129,7 @@ void world_menu_start_dead_unit_threads(void) {
 
         g_world_dead_unit_menu_result = 0xff;
         if ((context->result == 3 && g_world_dead_unit_move_result == 0) || context->result == 1) {
-            world_thread_start(g_world_thread_current_id - 2, world_option_build_at_list);
+            world_thread_start(g_world_thread_current_id - 2, world_option_menu_run_list_thread);
             world_thread_set_parameters(g_world_thread_current_id - 2, (s32)g_world_menu_thread_menu_data, 0, 0);
             world_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU, world_menu_icon_linked_entry_thread);
             world_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU,
@@ -137,7 +137,8 @@ void world_menu_start_dead_unit_threads(void) {
             for (;;) {
                 world_thread_yield();
                 if (world_thread_is_running_asm(g_world_thread_current_id - 3) != 0) {
-                    world_thread_start(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD, world_thread_yield_forever);
+                    world_thread_start(
+                        NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD, world_option_thread_wait_forever);
                 } else {
                     world_thread_suspend(NATIVE_BORROWED_THREAD_SLOT_AT_LIST_MENU_CHILD);
                 }

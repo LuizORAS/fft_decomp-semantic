@@ -10,7 +10,7 @@
  * g_option_gfx_draw_area_scale_percent[scale_index] percent of its size;
  * scale_index is doubled at event speed 2 and capped at 11. The second
  * rectangle is the frame buffer's own area. With `lower_half` zero both are
- * placed in the buffer at y 0xF0.
+ * placed in the buffer at y 0xF0. Nothing references it (QUIRKS.md).
  */
 void option_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const void* source,
     s32 scale_index, s32 lower_half, const world_status_thread_t* thread) {
