@@ -1306,13 +1306,6 @@ typedef struct main_item_attribute_flat {
     u8 elemental_affinity[5];
 } main_item_attribute_flat_t;
 
-/* The right/left weapon slot pair tested by equip_unit_is_two_handing_weapon;
- * equip_unit_data_t.equipment[0..1] in the caller. */
-typedef struct weapon_pair {
-    s16 slot_a;
-    s16 slot_b;
-} weapon_pair_t;
-
 /* 0x80057b20..0x80057b5b: seven independent signed-byte order lists.
  * main_item_init_order_tables establishes capacities 12/8/8/8/8/8/8 with -1
  * terminators; member categories remain unproven. */

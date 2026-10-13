@@ -96,7 +96,7 @@ void equip_unit_commit_loadout_to_battle_stats(void);
 void equip_unit_copy_data_to_compare_slot(s32 unused_selected_index, s32 unused_1);
 s32 equip_unit_has_two_hands(s16 unit_index);
 s32 equip_unit_has_two_swords(s16 unit_index);
-s32 equip_unit_is_two_handing_weapon(weapon_pair_t* slots, s32 two_hands_support);
+s32 equip_unit_is_two_handing_weapon(const s16* slots, s32 two_hands_support);
 void equip_unit_load_data_from_battle_stats(s32 battle_id);
 void equip_unit_load_selected_data(void);
 s32 equip_unit_set_slot_item(s16 unit_index, s16 slot, s32 item_id);
