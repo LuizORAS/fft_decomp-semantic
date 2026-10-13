@@ -12,11 +12,11 @@ s32 main_job_get_random_unlocked(const battle_stats_t* unit) {
     u8 candidates[RANDOM_JOB_COUNT];
     s32 job_mask = UNIT_UNLOCKED_JOB_SQUIRE;
     s32 candidate_count = 0;
-    s32 job_index = 0;
+    s32 job_index;
     s32 unlocked_jobs
         = (unit->career.unlocked_jobs[0] << 16) + (unit->career.unlocked_jobs[1] << 8) + unit->career.unlocked_jobs[2];
 
-    do {
+    for (job_index = 0; job_index < RANDOM_JOB_COUNT; job_index++, job_mask /= 2) {
         if (unlocked_jobs & job_mask) {
             u8 job_id = job_index + JOB_ID_SQUIRE;
 
@@ -29,9 +29,7 @@ s32 main_job_get_random_unlocked(const battle_stats_t* unit) {
             candidates[candidate_count] = job_id;
             candidate_count++;
         }
-        job_index++;
-        job_mask /= 2;
-    } while (job_index < RANDOM_JOB_COUNT);
+    }
 
     if (candidate_count != 0) {
         s32 scaled_random = rand() * candidate_count;

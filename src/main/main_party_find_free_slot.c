@@ -24,13 +24,10 @@ s32 main_party_find_free_slot(s32 save_formation, u8* palette) {
         limit = PARTY_MEMBER_SLOT_COUNT;
     }
 
-    party_index = start_index;
-
-    while (party_index < limit) {
+    for (party_index = start_index; party_index < limit; party_index++) {
         if (party_data[party_index]->party_id == PARTY_ID_NONE) {
             return party_index;
         }
-        party_index++;
     }
 
     return -1;

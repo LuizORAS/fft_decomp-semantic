@@ -13,8 +13,7 @@ u16* main_ability_store_skillset_abilities(s32 skillset_id, s32 filters) {
         skillset_id = 0;
     }
     output_count = 0;
-    ability_index = 0;
-    do {
+    for (ability_index = 0; ability_index < SKILLSET_ABILITY_LIST_COUNT; ability_index++) {
         ability_id = main_ability_get_id_from_skillset(skillset_id, ability_index);
         if (ability_id < ABILITY_ID_REACTION_FIRST) {
             keep = filters & SKILLSET_ABILITY_FILTER_ACTION;
@@ -30,8 +29,7 @@ u16* main_ability_store_skillset_abilities(s32 skillset_id, s32 filters) {
             ability_id = 0;
         }
         g_main_ability_temp_list[output_count++] = ability_id;
-        ability_index += 1;
-    } while (ability_index < SKILLSET_ABILITY_LIST_COUNT);
+    }
 
     while (output_count < SKILLSET_ABILITY_LIST_COUNT) {
         g_main_ability_temp_list[output_count] = 0;

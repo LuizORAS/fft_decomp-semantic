@@ -31,11 +31,9 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
     if (unit->unit_flags & UNIT_FLAG_MONSTER) {
         return 0;
     }
-    i = 0;
-    do {
+    for (i = 0; i < 4; i++) {
         innate[i] = unit->innate_abilities[i];
-        i++;
-    } while (i < 4);
+    }
     count = 0;
     secondary_unchecked = 1;
     secondary = unit->secondary_skillset;

@@ -10,16 +10,10 @@ s32 main_job_find_by_skillset(u8 skillset_id) {
 
     job_id = 0;
     job_data = g_main_job_data_pointer;
-
-    do {
-        u8 checked_job_id = job_id;
-
-        if (job_data[checked_job_id].skillset == skillset_id) {
-            result = checked_job_id;
-            break;
+    for (; (result = job_id < JOB_ID_COUNT - 1) != 0; job_id++) {
+        if (job_data[job_id].skillset == skillset_id) {
+            return job_id;
         }
-        job_id++;
-        result = job_id < (JOB_ID_COUNT - 1);
-    } while (result != 0);
+    }
     return result;
 }

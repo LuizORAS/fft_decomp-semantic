@@ -63,9 +63,7 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
     }
     main_status_store_current(unit);
 
-    i = 0;
-    status_id = STATUS_HANDLER_INDEX(STATUS_ID_UNNAMED_00);
-    do {
+    for (i = 0, status_id = STATUS_HANDLER_INDEX(STATUS_ID_UNNAMED_00); i < STATUS_COUNT; i++, status_id++) {
         byte_index = i / 8;
         mask = 0x80 >> (i & 7);
         saved_bit = saved_current[byte_index] & mask;
@@ -80,7 +78,5 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
                 status_enable_special_flags(status_id, 0, misc_unit_id);
             }
         }
-        i++;
-        status_id++;
-    } while (i < STATUS_COUNT);
+    }
 }

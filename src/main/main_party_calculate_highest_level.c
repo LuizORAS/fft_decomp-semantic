@@ -8,16 +8,14 @@ u8 main_party_calculate_highest_level(void) {
     party_data_t* unit;
 
     highest = 0;
-    i = 0;
-    do {
+    for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
         unit = main_party_get_data_pointer(i);
-        i += 1;
         if (unit->party_id != PARTY_ID_NONE) {
             if (highest < unit->level) {
                 highest = unit->level;
             }
         }
-    } while (i < PARTY_ROSTER_SLOT_COUNT);
+    }
     if (highest > UNIT_LEVEL_MAX) {
         highest = UNIT_LEVEL_MAX;
     }

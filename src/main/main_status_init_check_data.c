@@ -16,8 +16,7 @@ void main_status_init_check_data(void) {
 
     main_util_clear_byte_data(g_main_item_location_flags, sizeof(g_main_item_location_flags));
     main_util_clear_byte_data(g_main_status_check_sets, sizeof(g_main_status_check_sets));
-    status = 0;
-    do {
+    for (status = 0; status < STATUS_COUNT; status++) {
         flags4 = g_main_status_effect_data[status].flags_1;
         flags5 = g_main_status_effect_data[status].flags_2;
         byte = status / 8;
@@ -42,8 +41,7 @@ void main_status_init_check_data(void) {
             g_main_status_check_sets[MAIN_STATUS_CHECK_SET_SCRIPT_FILTER_EXCLUDED][byte] |= mask;
         if (flags5 & STATUS_EFFECT_FLAG_2_MOUNT_REMOVAL)
             g_main_status_check_sets[MAIN_STATUS_CHECK_SET_MOUNT_REMOVAL][byte] |= mask;
-        status++;
-    } while (status < STATUS_COUNT);
+    }
     g_main_status_check_sets[MAIN_STATUS_CHECK_SET_UNMOUNTABLE][STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)]
         = STATUS_BYTE_MASK(STATUS_ID_CRYSTAL) | STATUS_BYTE_MASK(STATUS_ID_DEAD);
     g_main_status_check_sets[MAIN_STATUS_CHECK_SET_UNMOUNTABLE][STATUS_BYTE_INDEX(STATUS_ID_PETRIFY)]
