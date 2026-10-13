@@ -19,7 +19,7 @@
 /* Nibble accessors for a 4bpp image whose rows are `stride` pixels wide.
  * The target evaluates the argument expressions before choosing the mask
  * and multiplies afterwards, which is the shape of an inlined helper. */
-static inline s32 world_get_4bpp_pixel(u8* pixels, s32 x, s32 y, s32 stride) {
+static inline s32 world_get_4bpp_pixel(const u8* pixels, s32 x, s32 y, s32 stride) {
     s32 mask;
     s32 value;
 
@@ -55,7 +55,7 @@ static inline void world_set_4bpp_pixel(u8* pixels, s32 x, s32 y, s32 stride, s3
 
 /* Mirrors a rectangle of a 4bpp image horizontally, swapping pixels from
  * both ends of each row toward the middle. */
-void world_gfx_mirror_4bpp_rect(u8* pixels, glyph_blit_t* rect) {
+void world_gfx_mirror_4bpp_rect(u8* pixels, const glyph_blit_t* rect) {
     s32 row;
     s32 col;
     s32 right;

@@ -29,8 +29,8 @@ extern const u8* g_text_glyph_bitmap_data;
 
 void battle_text_configure_sprite_vram(RECT* rect, s16 width, s16 height, void* packet, s32 clut_offset);
 /* The caller leaves 0x16f in $a1, but the body never reads $a1. */
-void battle_text_mirror_packed_nibble_region_horizontal(u8* data, glyph_blit_t* region);
-s32 battle_text_read_packed_nibble(u8* data, s32 index, s32 row, s32 stride);
+void battle_text_mirror_packed_nibble_region_horizontal(u8* data, const glyph_blit_t* region);
+s32 battle_text_read_packed_nibble(const u8* data, s32 index, s32 row, s32 stride);
 void battle_text_render_glyph_to_4bpp_image(
     const u8* glyph_bitmap, u8* image, glyph_blit_t* origin, s32 palette_offset);
 void battle_write_packed_nibble(u8* data, s32 index, s32 row, s32 stride, s32 value);

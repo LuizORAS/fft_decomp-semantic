@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Mirrors a packed nibble rectangle horizontally, swapping each nibble with its opposite. */
-void battle_text_mirror_packed_nibble_region_horizontal(u8* data, glyph_blit_t* region) {
+void battle_text_mirror_packed_nibble_region_horizontal(u8* data, const glyph_blit_t* region) {
     s32 row;
     s32 col;
     s32 value;

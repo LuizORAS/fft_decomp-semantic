@@ -1048,7 +1048,7 @@ void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u3
 
 void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
 void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
-void world_gfx_mirror_4bpp_rect(u8* pixels, glyph_blit_t* rect);
+void world_gfx_mirror_4bpp_rect(u8* pixels, const glyph_blit_t* rect);
 void world_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu);
 void world_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair);
 void world_panel_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair);
