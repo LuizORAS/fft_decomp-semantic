@@ -1994,7 +1994,7 @@ void world_text_message_box_thread(void);
 void world_text_blit_font_glyph_to_4bpp(const u8* glyph, u8* image, glyph_blit_t* origin, s32 palette);
 s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, RECT* target, s32 palette);
 void world_text_build_display_message(s32 offset, s32 flags, s32* out_width);
-void world_text_blit_glyph(const u8* source, u8* image, glyph_blit_t* source_rect, glyph_blit_t* position);
+void world_text_blit_glyph(const u8* source, u8* image, const glyph_blit_t* source_rect, const glyph_blit_t* position);
 void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
 void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 wait);
 void world_menu_draw_stacked_glyph_pair(u8* buffer, glyph_blit_t* dest);

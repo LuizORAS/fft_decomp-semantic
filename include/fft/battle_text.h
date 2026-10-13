@@ -34,7 +34,7 @@ s32 battle_text_read_packed_nibble(u8* data, s32 index, s32 row, s32 stride);
 void battle_text_render_glyph_to_4bpp_image(
     const u8* glyph_bitmap, u8* image, glyph_blit_t* origin, s32 palette_offset);
 void battle_write_packed_nibble(u8* data, s32 index, s32 row, s32 stride, s32 value);
-void blit_text_glyph(const u8* source, u8* pixels, const glyph_blit_t* glyph, glyph_blit_t* position);
+void blit_text_glyph(const u8* source, u8* pixels, const glyph_blit_t* glyph, const glyph_blit_t* position);
 
 /* numbers */
 extern u32 g_battle_text_decimal_divisors[];
