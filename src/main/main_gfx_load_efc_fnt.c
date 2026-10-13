@@ -1,14 +1,14 @@
 #include "fft/main.h"
 
 /* Low immediate byte of FntLoad's CLUT-Y addiu instruction. */
-extern u8 g_fntload_clut_y_offset_immediate;
+extern u8 g_psyq_gpu_font_clut_y_offset_immediate;
 
 void main_gfx_load_efc_fnt(void) {
     TIM_IMAGE image;
     u32* data;
     int loaded = 0;
 
-    g_fntload_clut_y_offset_immediate = 0x7f;
+    g_psyq_gpu_font_clut_y_offset_immediate = 0x7f;
     FntLoad(0x280, 0);
 
     while (!loaded) {

@@ -227,8 +227,8 @@ typedef char card_save_play_time_size_must_be_3[(sizeof(card_save_play_time_t) =
 extern s32 g_main_card_bios_events[MAIN_CARD_EVENT_COUNT];
 extern u8 g_main_card_bios_events_opened;
 extern u8 g_main_card_save_last_used_slot; /* the save slot last loaded or written */
-extern u8 g_card_save_selected_slot;
-extern s8 g_card_save_slot_file_states[];
+extern u8 g_main_card_save_selected_slot;
+extern s8 g_main_card_save_slot_file_states[];
 extern card_save_summary_t g_main_card_save_slot_metadata[CARD_SAVE_SLOT_COUNT];
 extern card_save_play_time_t g_main_card_save_slot_playtimes[CARD_SAVE_SLOT_COUNT];
 

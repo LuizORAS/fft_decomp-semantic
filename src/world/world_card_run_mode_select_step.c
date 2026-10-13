@@ -62,7 +62,7 @@ void world_card_run_mode_select_step(void) {
     }
     if (slot == 0) {
         for (i = 0, all = 1; i < 15; i++) {
-            if (g_card_save_slot_file_states[i] != CARD_SAVE_SLOT_UNAVAILABLE) {
+            if (g_main_card_save_slot_file_states[i] != CARD_SAVE_SLOT_UNAVAILABLE) {
                 all = 0;
             }
         }
@@ -71,7 +71,7 @@ void world_card_run_mode_select_step(void) {
         }
     } else {
         for (i = 0, all = 1; i < 15; i++) {
-            if (g_card_save_slot_file_states[i] == CARD_SAVE_SLOT_OCCUPIED) {
+            if (g_main_card_save_slot_file_states[i] == CARD_SAVE_SLOT_OCCUPIED) {
                 all = 0;
             }
         }

@@ -56,7 +56,7 @@ void world_card_update_and_draw_slot_list(s32 input) {
             remaining = g_world_card_slot_cursor_row;
             if (g_world_card_save_mode == 0) {
                 for (i = 0; i < 15; i++) {
-                    if (g_card_save_slot_file_states[i] != CARD_SAVE_SLOT_UNAVAILABLE) {
+                    if (g_main_card_save_slot_file_states[i] != CARD_SAVE_SLOT_UNAVAILABLE) {
                         remaining--;
                     }
                     if (remaining < 0) {
@@ -65,7 +65,7 @@ void world_card_update_and_draw_slot_list(s32 input) {
                 }
             } else {
                 for (i = 0; i < 15; i++) {
-                    if (g_card_save_slot_file_states[i] == CARD_SAVE_SLOT_OCCUPIED) {
+                    if (g_main_card_save_slot_file_states[i] == CARD_SAVE_SLOT_OCCUPIED) {
                         remaining--;
                     }
                     if (remaining < 0) {
@@ -98,7 +98,7 @@ void world_card_update_and_draw_slot_list(s32 input) {
             }
             g_world_card_confirm_prompt->window.y = i;
             if (g_world_card_save_mode == 0) {
-                if (g_card_save_slot_file_states[g_world_card_active_slot] == CARD_SAVE_SLOT_OCCUPIED) {
+                if (g_main_card_save_slot_file_states[g_world_card_active_slot] == CARD_SAVE_SLOT_OCCUPIED) {
                     g_world_card_overwrite_prompt_running = 1;
                 } else {
                     g_world_card_menu_step = WORLD_CARD_MENU_STEP_SAVING;
@@ -136,14 +136,14 @@ void world_card_update_and_draw_slot_list(s32 input) {
     busy = g_world_card_menu_step != WORLD_CARD_MENU_STEP_SELECT_SAVE;
     for (i = 0, row = 0; i < 15; i++, row++) {
         if (g_world_card_save_mode != 0) {
-            while (g_card_save_slot_file_states[i] != CARD_SAVE_SLOT_OCCUPIED) {
+            while (g_main_card_save_slot_file_states[i] != CARD_SAVE_SLOT_OCCUPIED) {
                 i++;
                 if (i >= 15) {
                     break;
                 }
             }
         } else {
-            while (g_card_save_slot_file_states[i] == CARD_SAVE_SLOT_UNAVAILABLE) {
+            while (g_main_card_save_slot_file_states[i] == CARD_SAVE_SLOT_UNAVAILABLE) {
                 i++;
                 if (i >= 15) {
                     break;
@@ -197,7 +197,7 @@ void world_card_update_and_draw_slot_list(s32 input) {
             world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_card_playtime_minutes_command);
             world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_card_playtime_seconds_command);
         }
-        if (g_card_save_slot_file_states[i] == CARD_SAVE_SLOT_AVAILABLE) {
+        if (g_main_card_save_slot_file_states[i] == CARD_SAVE_SLOT_AVAILABLE) {
             rect.x = 0x74;
             rect.y = g_world_card_slot_window.rect.y + 5;
             rect.w = 0x28;

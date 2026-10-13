@@ -53,7 +53,7 @@ void card_save_update_slot_write(s32 slot) {
     }
 
     write_result = card_file_write_buffer(
-        g_card_save_file_names[slot], g_card_save_buffer_pointer, 0x1e00, g_card_save_slot_file_states[slot]);
+        g_card_save_file_names[slot], g_card_save_buffer_pointer, 0x1e00, g_main_card_save_slot_file_states[slot]);
     card_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
     header_result = 0;
     if (write_result == 0x1e00) {
@@ -72,7 +72,7 @@ void card_save_update_slot_write(s32 slot) {
 
     if (write_result == 0x1e00 && header_result == 0x80) {
         g_card_save_menu_state = CARD_SAVE_MENU_SELECT_SAVE;
-        g_card_save_slot_file_states[slot] = CARD_SAVE_SLOT_OCCUPIED;
+        g_main_card_save_slot_file_states[slot] = CARD_SAVE_SLOT_OCCUPIED;
         card_save_build_slot_description(0, g_card_save_slot_descriptions[slot]);
         card_save_render_slot_text(slot);
         bcopy(&g_card_save_buffer_pointer->summary, &g_main_card_save_slot_metadata[slot], sizeof(card_save_summary_t));

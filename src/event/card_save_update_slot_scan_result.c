@@ -33,7 +33,7 @@ void card_save_update_slot_scan_result(void) {
         index = 0;
         all_empty = 1;
         while (index < 15) {
-            if (g_card_save_slot_file_states[index] != CARD_SAVE_SLOT_UNAVAILABLE) {
+            if (g_main_card_save_slot_file_states[index] != CARD_SAVE_SLOT_UNAVAILABLE) {
                 all_empty = 0;
             }
             index++;

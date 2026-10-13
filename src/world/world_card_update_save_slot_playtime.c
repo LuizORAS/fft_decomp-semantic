@@ -7,7 +7,7 @@ void world_card_update_save_slot_playtime(s32 slot) {
     s32 component;
     s32 elapsed_seconds;
 
-    if (g_card_save_slot_file_states[slot] != CARD_SAVE_SLOT_OCCUPIED) {
+    if (g_main_card_save_slot_file_states[slot] != CARD_SAVE_SLOT_OCCUPIED) {
         g_main_card_save_slot_playtimes[slot].hours = 0;
         g_main_card_save_slot_playtimes[slot].minutes = 0;
         g_main_card_save_slot_playtimes[slot].seconds = 0;

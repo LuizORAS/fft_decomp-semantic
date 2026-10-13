@@ -45,7 +45,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
                 remaining = g_card_save_list_cursor_index;
                 index = 0;
                 for (index = 0; index < CARD_SAVE_SLOT_COUNT; index++) {
-                    if (g_card_save_slot_file_states[index] != CARD_SAVE_SLOT_UNAVAILABLE) {
+                    if (g_main_card_save_slot_file_states[index] != CARD_SAVE_SLOT_UNAVAILABLE) {
                         remaining--;
                     }
                     if (remaining < 0) {
@@ -53,7 +53,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
                     }
                 }
                 g_card_save_list_selected_slot = index;
-                if (g_card_save_slot_file_states[g_card_save_list_selected_slot] == CARD_SAVE_SLOT_OCCUPIED) {
+                if (g_main_card_save_slot_file_states[g_card_save_list_selected_slot] == CARD_SAVE_SLOT_OCCUPIED) {
                     index = g_card_save_list_cursor_index - g_card_save_list_top_row;
                     switch (index) {
                     case 0:
@@ -105,7 +105,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
     g_card_menu_window_rect_source = g_card_save_slot_window_rect_source;
     scrolling = g_card_save_menu_state != CARD_SAVE_MENU_SELECT_SAVE;
     for (index = 0, row = 0; index < CARD_SAVE_SLOT_COUNT; index++, row++) {
-        while (g_card_save_slot_file_states[index] == CARD_SAVE_SLOT_UNAVAILABLE) {
+        while (g_main_card_save_slot_file_states[index] == CARD_SAVE_SLOT_UNAVAILABLE) {
             index++;
             if (index >= CARD_SAVE_SLOT_COUNT) {
                 break;
@@ -157,7 +157,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
             card_cmd_draw_decimal_number_handler(&g_card_save_slot_number_commands[2].number);
             card_cmd_draw_decimal_number_handler(&g_card_save_slot_number_commands[3].number);
         }
-        if (g_card_save_slot_file_states[index] == CARD_SAVE_SLOT_AVAILABLE) {
+        if (g_main_card_save_slot_file_states[index] == CARD_SAVE_SLOT_AVAILABLE) {
             rect.x = 0x74;
             rect.y = g_card_save_slot_row_y + 4;
             rect.w = 0x28;

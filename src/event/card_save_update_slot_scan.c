@@ -44,10 +44,10 @@ void card_save_update_slot_scan(void) {
             if (result == CARD_IO_RESULT_COMPLETE) {
                 g_card_save_slot_scan_index = 0;
                 while (g_card_save_slot_scan_index < CARD_SAVE_SLOT_COUNT) {
-                    if (g_card_save_slot_file_states[g_card_save_slot_scan_index] >= 0) {
+                    if (g_main_card_save_slot_file_states[g_card_save_slot_scan_index] >= 0) {
                         bcopy(&g_main_card_save_slot_metadata[g_card_save_slot_scan_index],
                             &g_card_save_buffer_pointer->summary, sizeof(card_save_summary_t));
-                        card_save_build_slot_description(g_card_save_slot_file_states[g_card_save_slot_scan_index],
+                        card_save_build_slot_description(g_main_card_save_slot_file_states[g_card_save_slot_scan_index],
                             g_card_save_slot_descriptions[g_card_save_slot_scan_index]);
                         card_save_render_slot_text(g_card_save_slot_scan_index);
                     }
@@ -97,7 +97,7 @@ void card_save_update_slot_scan(void) {
 
         result = 0;
         while (result < 15) {
-            g_card_save_slot_file_states[result] = CARD_SAVE_SLOT_UNSCANNED;
+            g_main_card_save_slot_file_states[result] = CARD_SAVE_SLOT_UNSCANNED;
             result++;
         }
         g_card_save_slot_index = -1;
@@ -197,18 +197,18 @@ void card_save_update_slot_scan(void) {
             }
 
             if (status == 0x80) {
-                g_card_save_slot_file_states[g_card_save_slot_scan_index] = CARD_SAVE_SLOT_OCCUPIED;
+                g_main_card_save_slot_file_states[g_card_save_slot_scan_index] = CARD_SAVE_SLOT_OCCUPIED;
             }
             if (status <= 0) {
                 if (g_card_free_block_count > 0) {
-                    g_card_save_slot_file_states[g_card_save_slot_scan_index] = CARD_SAVE_SLOT_AVAILABLE;
+                    g_main_card_save_slot_file_states[g_card_save_slot_scan_index] = CARD_SAVE_SLOT_AVAILABLE;
                     g_card_free_block_count--;
                 } else {
-                    g_card_save_slot_file_states[g_card_save_slot_scan_index] = CARD_SAVE_SLOT_UNAVAILABLE;
+                    g_main_card_save_slot_file_states[g_card_save_slot_scan_index] = CARD_SAVE_SLOT_UNAVAILABLE;
                 }
             }
-            if (g_card_save_slot_file_states[g_card_save_slot_scan_index] >= 0) {
-                card_save_build_slot_description(g_card_save_slot_file_states[g_card_save_slot_scan_index],
+            if (g_main_card_save_slot_file_states[g_card_save_slot_scan_index] >= 0) {
+                card_save_build_slot_description(g_main_card_save_slot_file_states[g_card_save_slot_scan_index],
                     g_card_save_slot_descriptions[g_card_save_slot_scan_index]);
                 bcopy(&g_card_save_buffer_pointer->summary,
                     &g_main_card_save_slot_metadata[g_card_save_slot_scan_index], sizeof(card_save_summary_t));

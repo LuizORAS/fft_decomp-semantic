@@ -45,11 +45,11 @@ void world_card_update_slot_scan(void) {
             if (world_card_wait_for_selected_status(5) == CARD_IO_RESULT_COMPLETE) {
                 g_world_card_slot_scan_index = 0;
                 while (g_world_card_slot_scan_index < CARD_SAVE_SLOT_COUNT) {
-                    if (g_card_save_slot_file_states[g_world_card_slot_scan_index] >= 0) {
+                    if (g_main_card_save_slot_file_states[g_world_card_slot_scan_index] >= 0) {
                         bcopy(&g_main_card_save_slot_metadata[g_world_card_slot_scan_index],
                             &g_world_load_work_buffer->summary, sizeof(card_save_summary_t));
                         world_card_build_save_slot_description(
-                            g_card_save_slot_file_states[g_world_card_slot_scan_index],
+                            g_main_card_save_slot_file_states[g_world_card_slot_scan_index],
                             g_world_card_save_slot_descriptions[g_world_card_slot_scan_index]);
                         world_card_draw_slot_text(g_world_card_slot_scan_index);
                     }
@@ -102,7 +102,7 @@ void world_card_update_slot_scan(void) {
         }
 
         for (result = 0; result < 15; result++) {
-            g_card_save_slot_file_states[result] = CARD_SAVE_SLOT_UNSCANNED;
+            g_main_card_save_slot_file_states[result] = CARD_SAVE_SLOT_UNSCANNED;
         }
         g_world_menu_selection_results[5] = -1;
         g_world_card_format_prompt[1].selected_index = 1;
@@ -200,18 +200,18 @@ void world_card_update_slot_scan(void) {
             }
 
             if (status == 0x80) {
-                g_card_save_slot_file_states[g_world_card_slot_scan_index] = CARD_SAVE_SLOT_OCCUPIED;
+                g_main_card_save_slot_file_states[g_world_card_slot_scan_index] = CARD_SAVE_SLOT_OCCUPIED;
             }
             if (status <= 0) {
                 if (g_world_card_free_block_count > 0) {
-                    g_card_save_slot_file_states[g_world_card_slot_scan_index] = CARD_SAVE_SLOT_AVAILABLE;
+                    g_main_card_save_slot_file_states[g_world_card_slot_scan_index] = CARD_SAVE_SLOT_AVAILABLE;
                     g_world_card_free_block_count--;
                 } else {
-                    g_card_save_slot_file_states[g_world_card_slot_scan_index] = CARD_SAVE_SLOT_UNAVAILABLE;
+                    g_main_card_save_slot_file_states[g_world_card_slot_scan_index] = CARD_SAVE_SLOT_UNAVAILABLE;
                 }
             }
-            if (g_card_save_slot_file_states[g_world_card_slot_scan_index] >= 0) {
-                world_card_build_save_slot_description(g_card_save_slot_file_states[g_world_card_slot_scan_index],
+            if (g_main_card_save_slot_file_states[g_world_card_slot_scan_index] >= 0) {
+                world_card_build_save_slot_description(g_main_card_save_slot_file_states[g_world_card_slot_scan_index],
                     g_world_card_save_slot_descriptions[g_world_card_slot_scan_index]);
                 bcopy(&g_world_load_work_buffer->summary, &g_main_card_save_slot_metadata[g_world_card_slot_scan_index],
                     sizeof(card_save_summary_t));

@@ -946,7 +946,7 @@ data:
   - {addr: 0x80010ba8, name: battle_bin_entrypoint}
   - {addr: 0x8001dad0, name: g_psyq_gte_exception_patch_template}
   - {addr: 0x8001db08, name: g_psyq_gte_exception_patch_template_end}
-  - {addr: 0x80022f5c, name: g_fntload_clut_y_offset_immediate}
+  - {addr: 0x80022f5c, name: g_psyq_gpu_font_clut_y_offset_immediate}
   - {addr: 0x80026f94, name: psyq_api_memcpy}
   - {addr: 0x800288c4, name: g_psyq_card_interrupt_jump_template}
   - {addr: 0x800288d8, name: g_psyq_card_interrupt_jump_template_end}
@@ -1304,9 +1304,9 @@ data:
   - {addr: 0x80057c30, name: g_main_accessory_page_order}
   - {addr: 0x80057c54, name: g_main_item_page_order}
   - {addr: 0x80057c69, name: g_main_card_save_last_used_slot}
-  - {addr: 0x80057c6a, name: g_card_save_selected_slot}
+  - {addr: 0x80057c6a, name: g_main_card_save_selected_slot}
   - {addr: 0x80057c6b, name: g_main_card_bios_events_opened}
-  - {addr: 0x80057c6c, name: g_card_save_slot_file_states}
+  - {addr: 0x80057c6c, name: g_main_card_save_slot_file_states}
   - {addr: 0x80057c7c, name: g_main_proposition_last_attempt_date_bits}
   - {addr: 0x80057ce8, name: g_main_save_proposition_count}
   - {addr: 0x80057cec, name: g_main_treasure_acquisition_date_bits}
