@@ -697,7 +697,7 @@ functions:
   - {addr: 0x8011f438, size: 16, name: world_ability_is_selected_action_type, hash: 7ad08c62bb877dba}
   - {addr: 0x8011f448, size: 76, name: world_ability_get_mp_cost_display_value, hash: 0da51cd871c5fcfe}
   - {addr: 0x8011f494, size: 100, name: world_ability_get_ct_display_value, hash: a154fcbcad092bfa}
-  - {addr: 0x8011f4f8, size: 80, name: world_ability_get_jp_cost_display_value, hash: 67a950385c8da3cc}
+  - {addr: 0x8011f4f8, size: 80, name: menu_ability_get_jp_cost_display_value, hash: 67a950385c8da3cc, source: src/shared/ability/menu_ability_get_jp_cost_display_value.c}
   - {addr: 0x8011f548, size: 16, name: world_ability_is_category_action, hash: 38ce7018e1e0b6a9}
   - {addr: 0x8011f558, size: 24, name: world_ability_is_category_reaction, hash: b8c69b9ce7ecfcab}
   - {addr: 0x8011f570, size: 24, name: world_ability_is_category_support, hash: 2c96560258594e38}
@@ -2051,7 +2051,7 @@ data:
   - {addr: 0x801c8560, name: g_world_learn_selected_job}
   - {addr: 0x801c8564, name: g_world_learn_selected_job_index}
   - {addr: 0x801c8568, name: g_world_menu_learn_unlocked_jobs}
-  - {addr: 0x801c8594, name: g_world_ability_entries}
+  - {addr: 0x801c8594, name: g_menu_ability_entries}
   - {addr: 0x801c85c8, name: g_world_job_cached_level}
   - {addr: 0x801c85cc, name: g_world_job_cached_total_jp}
   - {addr: 0x801c85d0, name: g_world_job_cached_level_jp_requirement}

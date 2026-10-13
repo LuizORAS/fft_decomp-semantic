@@ -428,13 +428,13 @@ functions:
   - {addr: 0x801cc50c, size: 396, name: bunit_menu_update_wrapped_grid_selection, hash: e06854ecee2acf50}
   - {addr: 0x801cc698, size: 36, name: bunit_menu_clear_selection_values, hash: 5cf1ef72ac0cca0a}
   - {addr: 0x801cc6bc, size: 32, name: bunit_menu_set_selection_value, hash: 46924fdb1fa68384}
-  - {addr: 0x801cc6dc, size: 164, name: bunit_menu_update_wrapped_horizontal_selection, hash: cb38c38746c32f7f}
+  - {addr: 0x801cc6dc, size: 164, name: menu_update_wrapped_horizontal_selection, hash: cb38c38746c32f7f, source: src/shared/menu/menu_update_wrapped_horizontal_selection.c}
   - {addr: 0x801cc780, size: 104, name: bunit_menu_update_horizontal_selection_and_mark_change, hash: 54c85e2ccf804088}
   - {addr: 0x801cc7e8, size: 32, name: bunit_input_clear_state, hash: c3b917b4bb4be9ca}
   - {addr: 0x801cc808, size: 128, name: bunit_job_calculate_current_level, hash: 6792aa8905ba14f8}
   - {addr: 0x801cc888, size: 96, name: bunit_job_calculate_current_jp, hash: 9be830d1dea82b7c}
   - {addr: 0x801cc8e8, size: 96, name: bunit_job_calculate_current_total_jp, hash: 7788884e757641be}
-  - {addr: 0x801cc948, size: 128, name: bunit_job_calculate_next_level_jp_requirement, hash: 6953427c216412ff}
+  - {addr: 0x801cc948, size: 128, name: menu_job_calculate_next_level_jp_requirement, hash: 6953427c216412ff, source: src/shared/job/menu_job_calculate_next_level_jp_requirement.c}
   - {addr: 0x801cc9c8, size: 80, name: bunit_job_calculate_current_mastered, hash: 9e34c8881455e7b9}
   - {addr: 0x801cca18, size: 532, name: bunit_menu_run_job_list, hash: 9f6d31e244a4b13e}
   - {addr: 0x801ccc2c, size: 16, name: bunit_job_get_current_jp, hash: 37bd825c7c410897}
@@ -442,17 +442,17 @@ functions:
   - {addr: 0x801ccc4c, size: 16, name: bunit_job_get_next_level_jp_requirement, hash: 4b002aa7d2cccbc4}
   - {addr: 0x801ccc5c, size: 16, name: bunit_job_get_current_total_jp, hash: 5a5079be6a69dc2b}
   - {addr: 0x801ccc6c, size: 16, name: bunit_job_is_current_mastered, hash: f3957e2ed0b4ceeb}
-  - {addr: 0x801ccc7c, size: 112, name: bunit_ability_is_non_action_learned, hash: 70b6921fb12affba}
+  - {addr: 0x801ccc7c, size: 112, name: menu_ability_is_non_action_learned, hash: 70b6921fb12affba, source: src/shared/ability/menu_ability_is_non_action_learned.c}
   - {addr: 0x801cccec, size: 56, name: bunit_ability_is_non_action_unlearned, hash: 3c68eaf342aa2992}
   - {addr: 0x801ccd24, size: 16, name: bunit_ability_is_action, hash: 360dd06bad7dc1c4}
-  - {addr: 0x801ccd34, size: 76, name: bunit_ability_get_mp_cost_display_value, hash: 296933d7c300aa12}
-  - {addr: 0x801ccd80, size: 100, name: bunit_ability_get_ct_display_value, hash: dce1900d85fce54f}
-  - {addr: 0x801ccde4, size: 80, name: bunit_ability_get_jp_cost_display_value, hash: 9d0d45965a20a0a5}
+  - {addr: 0x801ccd34, size: 76, name: menu_ability_get_mp_cost_display_value, hash: 296933d7c300aa12, source: src/shared/ability/menu_ability_get_mp_cost_display_value.c}
+  - {addr: 0x801ccd80, size: 100, name: menu_ability_get_ct_display_value, hash: dce1900d85fce54f, source: src/shared/ability/menu_ability_get_ct_display_value.c}
+  - {addr: 0x801ccde4, size: 80, name: menu_ability_get_jp_cost_display_value, hash: 9d0d45965a20a0a5, source: src/shared/ability/menu_ability_get_jp_cost_display_value.c}
   - {addr: 0x801cce34, size: 16, name: bunit_ability_is_action_tab, hash: 89dcb9502d0dc4b3}
   - {addr: 0x801cce44, size: 24, name: bunit_ability_is_reaction_tab, hash: 3fd8b0a0c7bfb10e}
   - {addr: 0x801cce5c, size: 24, name: bunit_ability_is_support_tab, hash: e1efb12822a39bf3}
   - {addr: 0x801cce74, size: 24, name: bunit_ability_is_movement_tab, hash: 6d7998639c827ca2}
-  - {addr: 0x801cce8c, size: 36, name: bunit_ability_is_learned, hash: 42eb607a71b8516a}
+  - {addr: 0x801cce8c, size: 36, name: menu_ability_is_learned, hash: 42eb607a71b8516a, source: src/shared/ability/menu_ability_is_learned.c}
   - {addr: 0x801cceb0, size: 196, name: bunit_menu_update_job, hash: 3a1484828be00e47}
   - {addr: 0x801ccf74, size: 976, name: bunit_ability_update_list_menu, hash: 4b1c6e2d1806893f}
   - {addr: 0x801cd344, size: 256, name: bunit_gfx_enqueue_tile, hash: 50c95427e7c5d200}
@@ -738,21 +738,21 @@ data:
   - {addr: 0x801ec908, name: g_bunit_bits_cursor}
   - {addr: 0x801ec90c, name: g_bunit_input_repeat_counters}
   - {addr: 0x801ec94c, name: g_bunit_input_previous}
-  - {addr: 0x801ec950, name: g_bunit_menu_selection_values}
+  - {addr: 0x801ec950, name: g_menu_selection_values}
   - {addr: 0x801ec974, name: g_bunit_job_menu_phase}
   - {addr: 0x801ec978, name: g_bunit_ability_list_confirm_prompt_state}
   - {addr: 0x801ec97c, name: g_bunit_job_selected_id}
   - {addr: 0x801ec980, name: g_bunit_job_selected_generic_index}
-  - {addr: 0x801ec984, name: g_bunit_job_ids}
-  - {addr: 0x801ec9b0, name: g_bunit_ability_entries}
-  - {addr: 0x801ec9e4, name: g_bunit_job_current_level}
+  - {addr: 0x801ec984, name: g_menu_job_ids}
+  - {addr: 0x801ec9b0, name: g_menu_ability_entries}
+  - {addr: 0x801ec9e4, name: g_menu_job_current_level}
   - {addr: 0x801ec9e8, name: g_bunit_job_current_jp}
   - {addr: 0x801ec9ec, name: g_bunit_job_current_total_jp}
-  - {addr: 0x801ec9f0, name: g_bunit_job_next_level_jp_requirement}
+  - {addr: 0x801ec9f0, name: g_menu_job_next_level_jp_requirement}
   - {addr: 0x801ec9f4, name: g_bunit_job_current_mastered}
-  - {addr: 0x801ec9f8, name: g_bunit_ability_type}
-  - {addr: 0x801ec9fc, name: g_bunit_selected_ability_secondary_data}
-  - {addr: 0x801eca00, name: g_bunit_selected_ability_data}
+  - {addr: 0x801ec9f8, name: g_menu_ability_type}
+  - {addr: 0x801ec9fc, name: g_menu_selected_ability_secondary_data}
+  - {addr: 0x801eca00, name: g_menu_selected_ability_data}
   - {addr: 0x801eca04, name: g_bunit_gfx_fade_color}
   - {addr: 0x801eca08, name: g_bunit_gfx_fade_intensity}
   - {addr: 0x801eca0c, name: g_bunit_menu_input_mask}
@@ -1383,7 +1383,7 @@ functions:
   - {addr: 0x801c9648, size: 32, name: equip_menu_init_selection_value, hash: b6f0c63d5e77263b}
   - {addr: 0x801c9668, size: 164, name: equip_menu_update_wrapped_vertical_selection, hash: 61020c2f22b0321c}
   - {addr: 0x801c970c, size: 104, name: equip_menu_update_vertical_selection_and_mark_change, hash: 1f1b001e88f556f0}
-  - {addr: 0x801c9774, size: 164, name: equip_menu_update_wrapped_horizontal_selection, hash: 46f4d2bb5ca95d72}
+  - {addr: 0x801c9774, size: 164, name: menu_update_wrapped_horizontal_selection, hash: 46f4d2bb5ca95d72, source: src/shared/menu/menu_update_wrapped_horizontal_selection.c}
   - {addr: 0x801c9818, size: 104, name: equip_menu_update_horizontal_selection_and_mark_change, hash: 308db0791e6f9542}
   - {addr: 0x801c9880, size: 32, name: equip_input_clear_state, hash: b52e8464d8df1dd7}
   - {addr: 0x801c98a0, size: 256, name: equip_gfx_enqueue_tile, hash: 9d6c6dff6c1087ff}
@@ -1663,7 +1663,7 @@ data:
   - {addr: 0x801e8ea8, name: g_equip_item_inventory_totals}
   - {addr: 0x801e8fa8, name: g_menu_input_repeat_counters}
   - {addr: 0x801e8fe8, name: g_menu_input_previous}
-  - {addr: 0x801e8fec, name: g_equip_menu_selection_values}
+  - {addr: 0x801e8fec, name: g_menu_selection_values}
   - {addr: 0x801e8ff4, name: g_equip_menu_list_scroll_progress}
   - {addr: 0x801e8ff8, name: g_equip_gfx_sprite_color}
   - {addr: 0x801e8ffc, name: g_equip_gfx_sprite_ot_index}
@@ -1842,7 +1842,7 @@ functions:
   - {addr: 0x801df5dc, size: 108, name: jobstts_job_calculate_current_level, hash: b5f033f5213a365d}
   - {addr: 0x801df648, size: 76, name: jobstts_job_calculate_current_jp, hash: 7a7626e0618d8ab0}
   - {addr: 0x801df694, size: 76, name: jobstts_job_calculate_current_total_jp, hash: 0df03e32871d265e}
-  - {addr: 0x801df6e0, size: 128, name: jobstts_job_calculate_next_level_jp_requirement, hash: a4c0646e2fecc0cc}
+  - {addr: 0x801df6e0, size: 128, name: menu_job_calculate_next_level_jp_requirement, hash: a4c0646e2fecc0cc, source: src/shared/job/menu_job_calculate_next_level_jp_requirement.c}
   - {addr: 0x801df760, size: 76, name: jobstts_job_calculate_current_mastered, hash: 21d6ba91698660e1}
   - {addr: 0x801df7ac, size: 440, name: jobstts_menu_update_job_list, hash: 46b52dabd5fe68f5}
   - {addr: 0x801df964, size: 16, name: jobstts_job_get_current_jp, hash: 51fde6eb69508838}
@@ -1850,13 +1850,13 @@ functions:
   - {addr: 0x801df984, size: 16, name: jobstts_job_get_next_level_jp_requirement, hash: 1db351534299a8c6}
   - {addr: 0x801df994, size: 16, name: jobstts_job_get_current_total_jp, hash: a9fc77f08f31ef8f}
   - {addr: 0x801df9a4, size: 16, name: jobstts_job_is_current_mastered, hash: d962cac7878808e2}
-  - {addr: 0x801df9b4, size: 112, name: jobstts_ability_is_non_action_learned, hash: 76a1cae15d554342}
+  - {addr: 0x801df9b4, size: 112, name: menu_ability_is_non_action_learned, hash: 76a1cae15d554342, source: src/shared/ability/menu_ability_is_non_action_learned.c}
   - {addr: 0x801dfa24, size: 56, name: jobstts_ability_is_non_action_unlearned, hash: 47d28a7fb27637c9}
   - {addr: 0x801dfa5c, size: 16, name: jobstts_ability_is_action, hash: 84baaf655025c0a7}
-  - {addr: 0x801dfa6c, size: 76, name: jobstts_ability_get_mp_cost_display_value, hash: 0efb5ccdbdb9aada}
-  - {addr: 0x801dfab8, size: 100, name: jobstts_ability_get_ct_display_value, hash: 893cc39d23f6ec05}
-  - {addr: 0x801dfb1c, size: 80, name: jobstts_ability_get_jp_cost_display_value, hash: c9f46c4abc533d3f}
-  - {addr: 0x801dfb6c, size: 36, name: jobstts_ability_is_learned, hash: 4e5603563e3371e6}
+  - {addr: 0x801dfa6c, size: 76, name: menu_ability_get_mp_cost_display_value, hash: 0efb5ccdbdb9aada, source: src/shared/ability/menu_ability_get_mp_cost_display_value.c}
+  - {addr: 0x801dfab8, size: 100, name: menu_ability_get_ct_display_value, hash: 893cc39d23f6ec05, source: src/shared/ability/menu_ability_get_ct_display_value.c}
+  - {addr: 0x801dfb1c, size: 80, name: menu_ability_get_jp_cost_display_value, hash: c9f46c4abc533d3f, source: src/shared/ability/menu_ability_get_jp_cost_display_value.c}
+  - {addr: 0x801dfb6c, size: 36, name: menu_ability_is_learned, hash: 4e5603563e3371e6, source: src/shared/ability/menu_ability_is_learned.c}
   - {addr: 0x801dfb90, size: 16, name: jobstts_ability_is_action_tab, hash: 3c478037dee6619c}
   - {addr: 0x801dfba0, size: 24, name: jobstts_ability_is_reaction_tab, hash: 9193e1ed081fc9db}
   - {addr: 0x801dfbb8, size: 24, name: jobstts_ability_is_support_tab, hash: 90d8dec8477e7386}
@@ -1977,8 +1977,8 @@ data:
   - {addr: 0x801f0045, name: g_jobstts_bits_secondary_reset}
   - {addr: 0x801f0048, name: g_jobstts_bits_reader_1_index}
   - {addr: 0x801f004c, name: g_jobstts_bits_reader_2_index}
-  - {addr: 0x801f0050, name: g_jobstts_selected_ability_data}
-  - {addr: 0x801f0050, name: g_jobstts_selected_ability_secondary_data}
+  - {addr: 0x801f0050, name: g_menu_selected_ability_data}
+  - {addr: 0x801f0050, name: g_menu_selected_ability_secondary_data}
   - {addr: 0x801f0054, name: g_jobstts_previous_event_mode}
   - {addr: 0x801f0058, name: g_jobstts_gfx_poly_ft4_buffer}
   - {addr: 0x801f9c98, name: g_jobstts_gfx_draw_move_buffer}
@@ -1986,14 +1986,14 @@ data:
   - {addr: 0x801fa148, name: g_jobstts_gfx_otag_buffer}
   - {addr: 0x801fa348, name: g_jobstts_gfx_contexts}
   - {addr: 0x801fa530, name: g_jobstts_menu_selection_records}
-  - {addr: 0x801fa550, name: g_jobstts_job_ids}
-  - {addr: 0x801fa57c, name: g_jobstts_ability_entries}
-  - {addr: 0x801fa5b0, name: g_jobstts_job_current_level}
+  - {addr: 0x801fa550, name: g_menu_job_ids}
+  - {addr: 0x801fa57c, name: g_menu_ability_entries}
+  - {addr: 0x801fa5b0, name: g_menu_job_current_level}
   - {addr: 0x801fa5b4, name: g_jobstts_job_current_jp}
   - {addr: 0x801fa5b8, name: g_jobstts_job_current_total_jp}
-  - {addr: 0x801fa5bc, name: g_jobstts_job_next_level_jp_requirement}
+  - {addr: 0x801fa5bc, name: g_menu_job_next_level_jp_requirement}
   - {addr: 0x801fa5c0, name: g_jobstts_job_current_mastered}
-  - {addr: 0x801fa5c4, name: g_jobstts_ability_type}
+  - {addr: 0x801fa5c4, name: g_menu_ability_type}
   - {addr: 0x801fa5c8, name: g_jobstts_unit_job_data}
   - {addr: 0x801fa668, name: g_menu_input_repeat_counters}
   - {addr: 0x801fa6a8, name: g_menu_input_previous}

@@ -137,25 +137,15 @@ s32 bunit_unit_is_two_handing_weapon(s16* slots, s32 allow_secondary);
 void bunit_unit_sort_index_list_by_order_keys(s32 sort_mode);
 
 /* ability */
-extern s16 g_bunit_ability_category;  /* menu_ability_category_e */
-extern s16 g_bunit_ability_entries[]; /* Packed ability IDs/flags; -1 terminates the list. */
+extern s16 g_bunit_ability_category; /* menu_ability_category_e */
 extern s8 g_bunit_ability_list_confirm_prompt_state;
 
 extern s16 g_bunit_ability_list_job_name_row[];
 extern u8 g_bunit_ability_list_ready;
-extern s32 g_bunit_ability_type;
 
-extern ability_data_t* g_bunit_selected_ability_data;
-extern main_ability_secondary_pointer_t g_bunit_selected_ability_secondary_data;
-
-s32 bunit_ability_get_ct_display_value(s32 index);
-s32 bunit_ability_get_jp_cost_display_value(s32 index);
-s32 bunit_ability_get_mp_cost_display_value(s32 index);
 s32 bunit_ability_is_action(s32 unused_row);
 s32 bunit_ability_is_action_tab(s32 unused_row);
-s32 bunit_ability_is_learned(s32 index);
 s32 bunit_ability_is_movement_tab(s32 unused_row);
-s32 bunit_ability_is_non_action_learned(s32 index);
 s32 bunit_ability_is_non_action_unlearned(s32 index);
 s32 bunit_ability_is_reaction_tab(s32 unused_row);
 s32 bunit_ability_is_support_tab(s32 unused_row);
@@ -164,13 +154,10 @@ s32 bunit_ability_update_list_menu(void);
 
 /* job */
 extern u32 g_bunit_job_current_jp;
-extern s32 g_bunit_job_current_level;
 extern s32 g_bunit_job_current_mastered;
 extern u32 g_bunit_job_current_total_jp;
-extern s16 g_bunit_job_ids[];
 extern u8 g_bunit_job_list_initialized;
 
-extern u32 g_bunit_job_next_level_jp_requirement;
 extern s16 g_bunit_job_selected_generic_index;
 extern s16 g_bunit_job_selected_id;
 
@@ -179,7 +166,6 @@ s32 bunit_job_calculate_current_jp(s32 index);
 s32 bunit_job_calculate_current_level(s32 index);
 s32 bunit_job_calculate_current_mastered(s32 index);
 s32 bunit_job_calculate_current_total_jp(s32 index);
-s32 bunit_job_calculate_next_level_jp_requirement(s32 index);
 s32 bunit_job_get_base(s16 unit_id);
 s32 bunit_job_get_current_jp(s32 unused_row);
 s32 bunit_job_get_current_level(s32 unused_row);
@@ -363,7 +349,6 @@ extern s16 g_bunit_menu_scroll_base_index;
 extern s16 g_bunit_menu_scroll_list_active;
 extern s16 g_bunit_menu_scroll_pixel_offset;
 extern menu_selection_record_t g_bunit_menu_selection_records[BUNIT_MENU_SELECTION_RECORD_COUNT];
-extern s16 g_bunit_menu_selection_values[];
 extern u16 g_bunit_menu_window_clut;
 extern s16 g_bunit_menu_window_right_x;
 extern menu_button_piece_t g_bunit_slot_sprite_entries[];
@@ -413,7 +398,6 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
     s16 stat_mode, s16 buttons, s16 locked);
 void bunit_menu_update_unit_list_scroll(s8* step, s8* offset);
 s32 bunit_menu_update_wrapped_grid_selection(s32 step, s32 count, s32 max, s32 current, s32 input);
-s16 bunit_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, s32 input_mask);
 
 /* help */
 extern u16 g_bunit_help_cursor_anim_state;

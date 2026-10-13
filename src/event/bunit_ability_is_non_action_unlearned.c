@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Returns 1 for an ability of any type other than ABILITY_TYPE_DEFAULT (by
@@ -8,8 +9,8 @@ s32 bunit_ability_is_non_action_unlearned(s32 index) {
     s32 result;
 
     result = 0;
-    if (g_bunit_ability_type != ABILITY_TYPE_DEFAULT) {
-        result = (g_bunit_ability_entries[index] >> ABILITY_LIST_ENTRY_DISABLED_SHIFT) != 0;
+    if (g_menu_ability_type != ABILITY_TYPE_DEFAULT) {
+        result = (g_menu_ability_entries[index] >> ABILITY_LIST_ENTRY_DISABLED_SHIFT) != 0;
     }
     return result;
 }

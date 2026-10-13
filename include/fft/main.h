@@ -19,31 +19,6 @@
 #include "psx/suzuki.h"
 
 /* ability */
-/* Jump ability record, 12 of them at g_main_jump_ability_data: horizontal
- * range and vertical reach. */
-typedef struct main_ability_jump_record {
-    u8 range;    /* 0x00 */
-    u8 vertical; /* 0x01 */
-} main_ability_jump_record_t;
-
-/* Charge ability record, 8 of them at g_main_charge_ability_data. */
-typedef struct main_ability_charge_record {
-    u8 ct;    /* 0x00 */
-    u8 power; /* 0x01 */
-} main_ability_charge_record_t;
-
-/* Pointer returned for ability_type_e: the record extent depends on the type. */
-typedef union main_ability_secondary_pointer {
-    ability_secondary_data_t* range;
-    u8* item_id;
-    u8* throw_item_type;
-    main_ability_jump_record_t* jump;
-    main_ability_charge_record_t* charge;
-    u8* math_rsm;
-} main_ability_secondary_pointer_t;
-typedef char main_ability_secondary_pointer_size_must_be_4[(sizeof(main_ability_secondary_pointer_t) == 4) ? 1 : -1];
-typedef char main_ability_jump_record_size_must_be_2[(sizeof(main_ability_jump_record_t) == 2) ? 1 : -1];
-
 typedef struct main_ability_human_skillset {
     u8 high_id_bits[3];
     u8 ability_ids[HUMAN_SKILLSET_ABILITY_COUNT];

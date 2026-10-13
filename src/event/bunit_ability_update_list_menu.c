@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -21,12 +22,12 @@ s32 bunit_ability_update_list_menu(void) {
         g_bunit_menu_row_callbacks[1].value = bunit_job_get_current_total_jp;
         g_bunit_menu_row_callbacks[2].value = bunit_job_get_next_level_jp_requirement;
         g_bunit_menu_row_callbacks[3].value = bunit_job_get_current_jp;
-        g_bunit_menu_row_callbacks[4].value = bunit_ability_is_non_action_learned;
+        g_bunit_menu_row_callbacks[4].value = menu_ability_is_non_action_learned;
         g_bunit_menu_row_callbacks[5].value = bunit_job_is_current_mastered;
-        g_bunit_menu_row_callbacks[6].value = bunit_ability_is_learned;
-        g_bunit_menu_row_callbacks[7].value = bunit_ability_get_mp_cost_display_value;
-        g_bunit_menu_row_callbacks[8].value = bunit_ability_get_ct_display_value;
-        g_bunit_menu_row_callbacks[9].value = bunit_ability_get_jp_cost_display_value;
+        g_bunit_menu_row_callbacks[6].value = menu_ability_is_learned;
+        g_bunit_menu_row_callbacks[7].value = menu_ability_get_mp_cost_display_value;
+        g_bunit_menu_row_callbacks[8].value = menu_ability_get_ct_display_value;
+        g_bunit_menu_row_callbacks[9].value = menu_ability_get_jp_cost_display_value;
         g_bunit_menu_row_callbacks[10].value = bunit_ability_is_movement_tab;
         g_bunit_menu_row_callbacks[11].value = bunit_ability_is_support_tab;
         g_bunit_menu_row_callbacks[12].value = bunit_ability_is_reaction_tab;
@@ -45,15 +46,15 @@ s32 bunit_ability_update_list_menu(void) {
         g_bunit_ability_list_job_name_row[0] = g_bunit_job_selected_id;
         bunit_text_render_id_rows_to_vram(
             g_text_section_pointers[TEXT_SECTION_JOB_NAMES], g_bunit_ability_list_job_name_row, &rect, 0);
-        g_bunit_ability_category = bunit_menu_update_wrapped_horizontal_selection(4, 0, 0);
+        g_bunit_ability_category = menu_update_wrapped_horizontal_selection(4, 0, 0);
         bunit_ability_build_list(
-            g_bunit_unit_selected_index, g_bunit_job_selected_id, g_bunit_ability_category, g_bunit_ability_entries, 0);
+            g_bunit_unit_selected_index, g_bunit_job_selected_id, g_bunit_ability_category, g_menu_ability_entries, 0);
         bunit_menu_init_scrollable_list_core(
-            g_bunit_ability_entries, 0, g_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
+            g_menu_ability_entries, 0, g_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
         g_bunit_ability_list_ready = 1;
     }
     if (g_bunit_menu_list_entry_count == 0
-        || ((entry = g_bunit_ability_entries[g_bunit_menu_list_selected_index]) & ABILITY_LIST_ENTRY_HIDE_DETAILS)) {
+        || ((entry = g_menu_ability_entries[g_bunit_menu_list_selected_index]) & ABILITY_LIST_ENTRY_HIDE_DETAILS)) {
         g_bunit_text_selection_id = -1;
     } else {
         g_bunit_text_selection_id = (entry & ABILITY_LIST_ENTRY_ID_MASK) + 0x7800;
@@ -72,13 +73,13 @@ s32 bunit_ability_update_list_menu(void) {
         4, 0, g_bunit_menu_input_repeat_mask, MAIN_SFX_PAGE_SWITCH);
     if (category != g_bunit_ability_category) {
         bunit_menu_set_selection_record(g_bunit_ability_category + 10, g_bunit_menu_list_selected_index,
-            g_bunit_menu_scroll_base_index, g_bunit_ability_entries);
+            g_bunit_menu_scroll_base_index, g_menu_ability_entries);
         g_bunit_ability_category = category;
         bunit_ability_build_list(
-            g_bunit_unit_selected_index, g_bunit_job_selected_id, g_bunit_ability_category, g_bunit_ability_entries, 0);
-        bunit_menu_get_selection_record(g_bunit_ability_category + 10, &selected, &scroll, g_bunit_ability_entries);
+            g_bunit_unit_selected_index, g_bunit_job_selected_id, g_bunit_ability_category, g_menu_ability_entries, 0);
+        bunit_menu_get_selection_record(g_bunit_ability_category + 10, &selected, &scroll, g_menu_ability_entries);
         bunit_menu_init_scrollable_list(
-            g_bunit_ability_entries, selected, scroll, g_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
+            g_menu_ability_entries, selected, scroll, g_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
         bunit_gfx_set_transition_frame(10);
     }
     bunit_menu_dispatch_with_override(

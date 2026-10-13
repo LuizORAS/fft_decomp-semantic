@@ -20,12 +20,12 @@ s32 jobstts_ability_update_list_menu(void) {
         g_jobstts_cmd_conditions[1] = jobstts_job_get_current_total_jp;
         g_jobstts_cmd_conditions[2] = jobstts_job_get_next_level_jp_requirement;
         g_jobstts_cmd_conditions[3] = jobstts_job_get_current_jp;
-        g_jobstts_cmd_conditions[4] = jobstts_ability_is_non_action_learned;
+        g_jobstts_cmd_conditions[4] = menu_ability_is_non_action_learned;
         g_jobstts_cmd_conditions[5] = jobstts_job_is_current_mastered;
-        g_jobstts_cmd_conditions[6] = jobstts_ability_is_learned;
-        g_jobstts_cmd_conditions[7] = jobstts_ability_get_mp_cost_display_value;
-        g_jobstts_cmd_conditions[8] = jobstts_ability_get_ct_display_value;
-        g_jobstts_cmd_conditions[9] = jobstts_ability_get_jp_cost_display_value;
+        g_jobstts_cmd_conditions[6] = menu_ability_is_learned;
+        g_jobstts_cmd_conditions[7] = menu_ability_get_mp_cost_display_value;
+        g_jobstts_cmd_conditions[8] = menu_ability_get_ct_display_value;
+        g_jobstts_cmd_conditions[9] = menu_ability_get_jp_cost_display_value;
         g_jobstts_cmd_conditions[10] = jobstts_ability_is_movement_tab;
         g_jobstts_cmd_conditions[11] = jobstts_ability_is_support_tab;
         g_jobstts_cmd_conditions[12] = jobstts_ability_is_reaction_tab;
@@ -45,13 +45,13 @@ s32 jobstts_ability_update_list_menu(void) {
             g_text_section_pointers[TEXT_SECTION_JOB_NAMES], g_jobstts_ability_list_job_name_ids, &rect, 0);
         g_jobstts_ability_category = jobstts_menu_update_wrapped_horizontal_selection(4, 5, 0);
         jobstts_ability_build_list(
-            0, g_jobstts_job_selected_id & 0x3ff, g_jobstts_ability_category, g_jobstts_ability_entries, 0);
+            0, g_jobstts_job_selected_id & 0x3ff, g_jobstts_ability_category, g_menu_ability_entries, 0);
         jobstts_menu_init_scrollable_list_core(
-            g_jobstts_ability_entries, 0, g_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
+            g_menu_ability_entries, 0, g_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
         g_jobstts_ability_list_initialized = 1;
     }
 
-    entry = g_jobstts_ability_entries[g_jobstts_menu_list_selected_index];
+    entry = g_menu_ability_entries[g_jobstts_menu_list_selected_index];
     if (g_jobstts_menu_list_entry_count == 0) {
         g_jobstts_text_selection_id = -1;
     } else if (entry & ABILITY_LIST_ENTRY_HIDE_DETAILS) {
@@ -75,14 +75,13 @@ s32 jobstts_ability_update_list_menu(void) {
     category = jobstts_menu_update_wrapped_horizontal_selection(4, 5, g_menu_input_secondary_repeat);
     if (category != g_jobstts_ability_category) {
         jobstts_menu_set_selection_record(g_jobstts_ability_category, g_jobstts_menu_list_selected_index,
-            g_jobstts_menu_scroll_base_index, g_jobstts_ability_entries);
+            g_jobstts_menu_scroll_base_index, g_menu_ability_entries);
         g_jobstts_ability_category = category;
-        jobstts_ability_build_list(
-            0, g_jobstts_job_selected_id, g_jobstts_ability_category, g_jobstts_ability_entries, 0);
+        jobstts_ability_build_list(0, g_jobstts_job_selected_id, g_jobstts_ability_category, g_menu_ability_entries, 0);
         jobstts_menu_get_selection_record(
-            g_jobstts_ability_category, &selected_index, &scroll_index, g_jobstts_ability_entries);
-        jobstts_menu_init_scrollable_list(g_jobstts_ability_entries, selected_index, scroll_index,
-            g_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
+            g_jobstts_ability_category, &selected_index, &scroll_index, g_menu_ability_entries);
+        jobstts_menu_init_scrollable_list(
+            g_menu_ability_entries, selected_index, scroll_index, g_text_section_pointers[TEXT_SECTION_ABILITY_NAMES]);
         jobstts_gfx_set_transition_frame(0xa);
         g_jobstts_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
     }

@@ -1,5 +1,6 @@
 #include "fft/event_bunit.h"
 #include "fft/main.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -18,18 +19,18 @@ s32 bunit_menu_run_job_list(void) {
 
     if (g_bunit_job_list_initialized == 0) {
         bunit_menu_set_vsync_mode_and_event_speed(2);
-        bunit_job_build_unit_job_list(g_bunit_unit_selected_index & 0xff, g_bunit_job_ids, 0);
+        bunit_job_build_unit_job_list(g_bunit_unit_selected_index & 0xff, g_menu_job_ids, 0);
         g_bunit_menu_row_callbacks[0].value = bunit_job_calculate_current_level;
         g_bunit_menu_row_callbacks[2].value = bunit_job_calculate_current_jp;
-        g_bunit_menu_row_callbacks[5].value = bunit_job_calculate_next_level_jp_requirement;
+        g_bunit_menu_row_callbacks[5].value = menu_job_calculate_next_level_jp_requirement;
         g_bunit_menu_row_callbacks[6].value = bunit_job_calculate_current_total_jp;
         g_bunit_menu_row_callbacks[13].value = bunit_job_calculate_current_mastered;
-        bunit_menu_get_selection_record(9, &out_a, &out_b, g_bunit_job_ids);
-        bunit_menu_init_scrollable_list(g_bunit_job_ids, out_a, out_b, g_text_section_pointers[TEXT_SECTION_JOB_NAMES]);
+        bunit_menu_get_selection_record(9, &out_a, &out_b, g_menu_job_ids);
+        bunit_menu_init_scrollable_list(g_menu_job_ids, out_a, out_b, g_text_section_pointers[TEXT_SECTION_JOB_NAMES]);
         g_bunit_job_list_initialized = 1;
     }
 
-    g_bunit_text_selection_id = g_bunit_job_ids[g_bunit_menu_list_selected_index] + 0x6000;
+    g_bunit_text_selection_id = g_menu_job_ids[g_bunit_menu_list_selected_index] + 0x6000;
     mask = g_bunit_menu_input_active_mask;
     if (mask & PSX_PAD_CROSS) {
         bunit_menu_set_vsync_mode_and_event_speed(0);
@@ -38,14 +39,14 @@ s32 bunit_menu_run_job_list(void) {
         return MENU_JOB_LIST_STEP_CLOSE;
     }
     if ((mask & PSX_PAD_CIRCLE) && g_bunit_menu_current_menu == BUNIT_MENU_JOB) {
-        g_bunit_job_selected_id = g_bunit_job_ids[g_bunit_menu_list_selected_index];
+        g_bunit_job_selected_id = g_menu_job_ids[g_bunit_menu_list_selected_index];
         g_bunit_job_selected_generic_index = job_get_generic_index(g_bunit_job_selected_id);
         bunit_job_calculate_current_level(g_bunit_menu_list_selected_index);
         bunit_job_calculate_current_jp(g_bunit_menu_list_selected_index);
         bunit_job_calculate_current_total_jp(g_bunit_menu_list_selected_index);
-        bunit_job_calculate_next_level_jp_requirement(g_bunit_menu_list_selected_index);
+        menu_job_calculate_next_level_jp_requirement(g_bunit_menu_list_selected_index);
         bunit_menu_set_selection_record(
-            9, g_bunit_menu_list_selected_index, g_bunit_menu_scroll_base_index, g_bunit_job_ids);
+            9, g_bunit_menu_list_selected_index, g_bunit_menu_scroll_base_index, g_menu_job_ids);
         g_bunit_job_list_initialized = 0;
         g_bunit_sound_queued_effect_id = MAIN_SFX_CONFIRM;
         return MENU_JOB_LIST_STEP_ABILITIES;

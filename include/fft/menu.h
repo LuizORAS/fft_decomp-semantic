@@ -3,6 +3,7 @@
 
 /* Menu, window and text records shared across modules. */
 
+#include "fft/data.h"
 #include "fft/gfx.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
@@ -23,6 +24,25 @@ typedef struct menu_ability_list {
 } menu_ability_list_t;
 
 void menu_copy_u8_to_u16(u16* destination, const u8* source, s32 count);
+
+/* ability callbacks */
+extern s16 g_menu_ability_entries[]; /* Packed ability IDs/flags; -1 terminates the list. */
+extern s32 g_menu_ability_type;
+extern ability_data_t* g_menu_selected_ability_data;
+extern main_ability_secondary_pointer_t g_menu_selected_ability_secondary_data;
+
+s32 menu_ability_is_non_action_learned(s32 index);
+s32 menu_ability_get_mp_cost_display_value(s32 index);
+s32 menu_ability_get_ct_display_value(s32 index);
+s32 menu_ability_get_jp_cost_display_value(s32 index);
+s32 menu_ability_is_learned(s32 index);
+
+/* job level callbacks */
+extern s16 g_menu_job_ids[];
+extern s32 g_menu_job_current_level;
+extern u32 g_menu_job_next_level_jp_requirement;
+
+s32 menu_job_calculate_next_level_jp_requirement(s32 index);
 
 /* primitives */
 void menu_init_default_poly_ft4(POLY_FT4* poly);
@@ -1245,6 +1265,10 @@ typedef struct menu_selection_remap {
     u8 matches[3];
 } menu_selection_remap_t;
 typedef char menu_selection_remap_size_must_be_5[sizeof(menu_selection_remap_t) == 5 ? 1 : -1];
+
+/* horizontal selection */
+extern s16 g_menu_selection_values[];
+s16 menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, s32 input_mask);
 
 /* One row of the 31-entry menu table at g_battle_menu_id_records; its first 12 rows are the
  * menus whose selection is remembered per unit.

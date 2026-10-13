@@ -109,8 +109,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   byte past the pointer and the sprite is unchanged.
 - Unchecked divisions whose divisor can be zero; the R3000 `div` does not trap
   and leaves quotient -1 (1 for a negative dividend) and the dividend as the
-  remainder: `100 / ct` in `bunit_ability_get_ct_display_value`,
-  `jobstts_ability_get_ct_display_value` and
+  remainder: `100 / ct` in `menu_ability_get_ct_display_value`,
+  `menu_ability_get_ct_display_value` and
   `world_ability_get_ct_display_value` (CT 0 displays -1 + 1 = 0);
   `0x20000 / battle_lerp_fixed8(...)` for the wave steps in the eight
   `effect_eNNN_update_wave_mesh_state` copies (E033, E035, E073, E079, E080,
@@ -526,9 +526,9 @@ written that way.
   set no result, although `effect_update_secondary_effects`
   ends an effect on a handler result of 0. No record of
   `g_effect_secondary_animations` names them.
-- `jobstts_ability_is_non_action_learned` passes one 32-bit pointer slot (0x801f0050, named
-  both `g_jobstts_selected_ability_data` and
-  `g_jobstts_selected_ability_secondary_data`) for both outputs of
+- `menu_ability_is_non_action_learned` passes one 32-bit pointer slot (0x801f0050, named
+  both `g_menu_selected_ability_data` and
+  `g_menu_selected_ability_secondary_data`) for both outputs of
   `main_ability_calculate_pointers_and_type`, so the ability data pointer is
   overwritten by the secondary data pointer.
 

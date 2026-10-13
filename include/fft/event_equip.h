@@ -350,7 +350,6 @@ extern oriented_quad_t g_equip_menu_secondary_slot_marker;
  * 0x801c45bc, and 0x801c4614. */
 extern s16 g_equip_menu_selected_list_index;
 extern menu_selection_record_t g_equip_menu_selection_entries[5];
-extern s16 g_equip_menu_selection_values[4];
 extern oriented_quad_t g_equip_menu_slot_marker_rects[];
 extern menu_instruction_t g_equip_menu_slot_marker_window;
 extern u8 g_equip_menu_slot_marker_x[];
@@ -408,7 +407,6 @@ s32 equip_menu_update_horizontal_selection_and_mark_change(
 s32 equip_menu_update_item_action_state(void);
 s32 equip_menu_update_vertical_selection_and_mark_change(
     s32 entry_count, s32 selection_index, s32 input_mask, s8 sound_id);
-s16 equip_menu_update_wrapped_horizontal_selection(u16 entry_count, u8 selection_index, s32 input_mask);
 s16 equip_menu_update_wrapped_vertical_selection(u16 entry_count, u8 selection_index, s32 input_mask);
 
 /* help */

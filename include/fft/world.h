@@ -641,7 +641,6 @@ extern u8 g_world_set_ability_unit_index;
 extern u8 g_world_set_ability_cursor;
 
 /* [0]: 0x0c = Learn Abilities, 0x0d = view only. */
-extern s16 g_world_ability_entries[];
 extern main_ability_secondary_pointer_t g_world_selected_ability_secondary_data;
 extern ability_data_t* g_world_selected_ability_data;
 s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32 mode);
@@ -651,7 +650,6 @@ void world_ability_find_stat_changes_due_to_equipped(
     menu_status_panel_slot_storage_t* stat_diff, s32 old_ability, s32 new_ability);
 
 s32 world_ability_get_ct_display_value(s32 index);
-s32 world_ability_get_jp_cost_display_value(s32 index);
 void world_ability_get_move_and_jump_increase_values(s16 ability, menu_status_panel_slot_storage_t* out);
 s32 world_ability_get_mp_cost_display_value(s32 index);
 s32 world_ability_has_secret_hunt(s32 unit_id);
