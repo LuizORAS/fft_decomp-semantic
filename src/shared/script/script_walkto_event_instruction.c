@@ -1,9 +1,7 @@
 #include "fft/battle_move.h"
-#include "fft/battle_script.h"
 #include "fft/script.h"
 
-/* Start event opcode 0x28 movement. The final operand enables terrain costs;
- * the separate destination-layer byte selects elevation. */
+/* Start movement to the encoded tile with the signed speed and terrain-cost flag. */
 void script_walkto_event_instruction(const event_walk_to_parameters_t* parameters) {
     s32 id;
     map_tile_coordinates_t coordinates;

@@ -26,7 +26,7 @@ void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 sourc
             operand = world_script_get_rand16();
         } else {
             source_word = world_script_get_variable_word_pointer_from_id(source);
-            source_bit = world_script_get_variable_bit_position(source);
+            source_bit = script_get_variable_bit_position(source);
             if (source_bit >= 0) {
                 mask = 1;
                 if (source >= EVENT_SCRIPT_VAR_PACKED_NIBBLE_FIRST) {
@@ -40,7 +40,7 @@ void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 sourc
     }
     preserve_mask = -1;
     destination_word = world_script_get_variable_word_pointer_from_id(destination_id);
-    destination_bit = world_script_get_variable_bit_position(destination_id);
+    destination_bit = script_get_variable_bit_position(destination_id);
     if (destination_bit >= 0) {
         mask = 1;
         if (destination_id >= EVENT_SCRIPT_VAR_PACKED_NIBBLE_FIRST) {

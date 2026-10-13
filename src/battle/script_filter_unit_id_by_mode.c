@@ -13,8 +13,7 @@
  *   4  the unit is on a non-blue team
  *   5  non-blue team and free of the check-set 8 statuses, ignoring Undead
  *
- * The switch has no default: an unknown mode falls off the end and returns the
- * 5 left in $v0 by the last comparison, which is what the target does.
+ * Unsupported modes fall off the end without a defined return value.
  */
 s32 script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode) {
     battle_stats_t* unit;

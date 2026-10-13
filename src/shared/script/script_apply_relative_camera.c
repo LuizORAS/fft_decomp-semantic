@@ -1,15 +1,7 @@
 #include "fft/script.h"
-#include "fft/world.h"
-#include "psx/types.h"
 
-/*
- * Writes the parameters of the camera instruction that follows a relative
- * camera instruction: each of the seven 16-bit values at `source` plus its
- * delta, stored 15 bytes on (18 when a focus-speed instruction comes
- * first). The first three deltas (the position) are divided by 1024; a
- * 16-bit value holding the "hold" sentinel is passed through unchanged.
- */
-void world_script_apply_relative_camera(event_camera_values_t* parameters, const s32* camera_values) {
+/* Rewrite the following Camera operands, skipping an intervening FocusSpeed instruction. */
+void script_apply_relative_camera(event_camera_values_t* parameters, const s32* camera_values) {
     u8* source;
     const s32* deltas;
     u8* destination;

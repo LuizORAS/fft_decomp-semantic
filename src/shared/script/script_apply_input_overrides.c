@@ -1,11 +1,8 @@
+#include "fft/main.h"
 #include "fft/script.h"
-#include "fft/world.h"
-#include "psx/types.h"
 
-/* Refresh the low 16 bits of a 32-bit menu state from the disabled and forced
- * controller-input variables, preserving its high 16 bits. The reset
- * button combination requests a full game reset before the refresh. */
-void world_script_apply_input_overrides(u32* state) {
+/* Apply disabled and forced input variables while retaining the high input bits. */
+void script_apply_input_overrides(u32* state) {
     u32 high;
 
     if (*state == MAIN_INPUT_RESET_BUTTONS) {

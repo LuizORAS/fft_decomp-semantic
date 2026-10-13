@@ -38,7 +38,6 @@ void script_run_next_event(void);
 void script_run_next_event_unused(void);
 void script_set_event_speed(s32 speed);
 void script_start_current_event_thread(void);
-void script_wait_value_event_instruction(const event_wait_value_parameters_t* parameters);
 
 /* variables */
 /* 0x801660a3: suppress recursive write filtering while getters use operand 0. */
@@ -47,8 +46,6 @@ extern u8 g_script_variable_write_guard;
  * (event_script_variable_id_e) is its index into the 32-bit array. */
 extern s32* g_script_variables;
 
-void script_assign_bitset_flag(u32* bitset, s32 bit_index, s32 value);
-s32 script_get_variable_bit_position(s32 variable_id);
 /* Encoded variable IDs select 32-bit values, bits, or nibbles. The command runner's
  * fourth argument is supplied by existing callers but is not read. */
 s32* script_get_variable_word_pointer_from_id(s32 variable_id);
@@ -65,7 +62,6 @@ extern u32 g_script_event_secondary_repeat_counter;
 extern u32 g_script_saved_event_input;
 extern u32 g_script_unfiltered_controller_input;
 
-void script_apply_input_overrides(u32* input);
 void script_filter_controller_input(u32* input);
 u32* script_get_controller_input_pointer(s32 use_current);
 u32 script_get_event_initial_repeat_counter(void);
@@ -102,10 +98,7 @@ void script_run_sprite_move(const event_sprite_move_parameters_t* parameters, s3
 void script_set_units_movement_effect_suppression(const event_movement_effect_parameters_t* parameters);
 void script_sprite_move(void);
 void script_sprite_move_beta(void);
-void script_wait_for_unit_ready(s32 runtime_id);
 void script_waitspritemove_event_instruction(s32 unit_id);
-void script_waitwalk_event_instruction(s32 unit_id);
-void script_walkto_event_instruction(const event_walk_to_parameters_t* parameters);
 void script_warp_unit(const event_warp_unit_parameters_t* parameters);
 void script_warp_unit_display_to_paired_unit(s32 runtime_id);
 
@@ -125,7 +118,6 @@ void script_inflict_status_thread(void);
 void script_process_inflict_status_commands(void);
 
 /* camera */
-void script_apply_relative_camera(event_camera_values_t* parameters, s32* src);
 void script_earthquake_start(void);
 void script_focus(event_focus_parameters_t* parameters);
 /* A typed operand plus a local Camera cursor reorders the original argument saves. */
@@ -149,7 +141,6 @@ void script_color_screen_thread(void);
 void script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
 void script_load_attack_graphics_event_instruction(void);
 void script_load_portrait_colors_event_instruction(s32 portrait_id);
-void script_mirrorsprite_event_instruction(const event_mirror_sprite_parameters_t* parameters);
 void script_play_effect_and_wait(void);
 void script_play_effect_thread(void);
 void script_print_debug_message(void);
@@ -162,13 +153,10 @@ extern s32 g_script_rand16_state;
 void script_advance_date_by_one_year(void);
 s32 script_get_rand16(void);
 void script_seed_random_from_vsync(void);
-void script_unlockdate_event_instruction(u32* bitset, s32 date_index, s32 month, s32 day);
 
 /* operand arithmetic */
-void script_clamp_s32_to_range(s32* value, s32 minimum, s32 maximum);
 void script_copy_matrix(MATRIX* destination, const MATRIX* source);
 s32 script_interpolate_range_fixed12(s32 start, s32 end, s32 fraction, s32 value);
-s32 script_scale_music_volume(s32 x);
 
 /* debug */
 extern s16 g_script_debug_paused;

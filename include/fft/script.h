@@ -968,16 +968,39 @@ extern s16 g_script_unit_slots[EVENT_UNIT_SELECTOR_SLOT_COUNT];
 /* Read through the resident scene's variable commands, preserving the comparison
  * result. Reading weather/time first rebuilds it from the separate variables. */
 s32 script_get_variable(s32 variable_id);
-void script_report_missing_unit_stub(s32 unused_unit_id);
+s32 script_get_variable_bit_position(s32 variable_id);
 
+/* values */
+void script_clamp_s32_to_range(s32* value, s32 minimum, s32 maximum);
+s32 script_scale_music_volume(s32 volume);
+
+/* input */
+void script_apply_input_overrides(u32* input);
+
+/* packed dates */
+void script_assign_bitset_flag(u32* bitset, s32 bit_index, s32 value);
+void script_unlockdate_event_instruction(u32* bitset, s32 date_index, s32 month, s32 day);
+
+/* units */
 /* Event-unit lookup uses the resident scene's interpreter state. */
 s32 script_resolve_runtime_id(s32 unit_id);
+void script_report_missing_unit_stub(s32 unused_unit_id);
 
 /* unit instructions */
 /* TeleportIn forwards the unit ID; the interpreter's second argument is unused. */
 void script_teleportin_event_instruction(s32 unit_id, s32 unused);
 void script_jump_event_instruction(const event_jump_parameters_t* parameters);
 void script_resetpalette_event_instruction(const event_unit_parameters_t* parameters);
+void script_mirrorsprite_event_instruction(const event_mirror_sprite_parameters_t* parameters);
+void script_walkto_event_instruction(const event_walk_to_parameters_t* parameters);
+
+/* waits */
+void script_wait_for_unit_ready(s32 runtime_id);
+void script_waitwalk_event_instruction(s32 unit_id);
+void script_wait_value_event_instruction(const event_wait_value_parameters_t* parameters);
+
+/* camera operands */
+void script_apply_relative_camera(event_camera_values_t* parameters, const s32* camera_values);
 
 /* graphic display */
 void script_show_graphic(void);

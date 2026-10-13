@@ -412,7 +412,7 @@ restart_event:
         }
         /* ---- unit sprites and animation ---- */
         else if (opcode == EVENT_OPCODE_MIRROR_SPRITE) {
-            world_script_mirrorsprite_event_instruction((const event_mirror_sprite_parameters_t*)parameters);
+            script_mirrorsprite_event_instruction((const event_mirror_sprite_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_RESET_PALETTE) {
             script_resetpalette_event_instruction((const event_unit_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_SET_FIRST_UNIT) {
@@ -429,7 +429,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_WAIT_UNIT_READY) {
             operand_1 = script_resolve_runtime_id(first_operand);
             if (operand_1 != EVENT_RUNTIME_ID_NONE) {
-                world_script_wait_for_unit_ready(operand_1);
+                script_wait_for_unit_ready(operand_1);
             }
         }
         /* ---- Map state, weather, and time of day ---- */
@@ -502,7 +502,7 @@ restart_event:
             world_script_focus_speed(
                 parameters, event_words + EVENT_SCRIPT_VAR_CAMERA_X, event_words + EVENT_SCRIPT_VAR_CAMERA_TILT);
         } else if (opcode == EVENT_OPCODE_RELATIVE_CAMERA) {
-            world_script_apply_relative_camera(
+            script_apply_relative_camera(
                 (event_camera_values_t*)parameters, g_world_script_variables + EVENT_SCRIPT_VAR_CAMERA_X);
         } else if (opcode == EVENT_OPCODE_CAMERA) {
             operand_1 = world_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
@@ -525,7 +525,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_JUMP) {
             script_jump_event_instruction((const event_jump_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_WAIT_WALK) {
-            world_script_waitwalk_event_instruction(first_operand);
+            script_waitwalk_event_instruction(first_operand);
         } else if (opcode == EVENT_OPCODE_WALK_TO_ANIM) {
             operand_1 = script_resolve_runtime_id(first_operand);
             if (operand_1 != EVENT_RUNTIME_ID_NONE) {
@@ -865,7 +865,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_DEBUG_PAUSE) {
             world_script_print_debug_message();
         } else if (opcode == EVENT_OPCODE_WAIT_VALUE) {
-            world_script_wait_value_event_instruction((const event_wait_value_parameters_t*)parameters);
+            script_wait_value_event_instruction((const event_wait_value_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_EVTCHR_PALETTE) {
             runtime_id_for_7f = script_resolve_runtime_id(first_operand);
             if (runtime_id_for_7f != EVENT_RUNTIME_ID_NONE) {
@@ -880,7 +880,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_UNLOCK_DATE) {
             if ((script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) && (operand_1 != 0)) {
                 month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-                world_script_unlockdate_event_instruction(g_main_treasure_acquisition_date_bits, operand_1 - 1, month,
+                script_unlockdate_event_instruction(g_main_treasure_acquisition_date_bits, operand_1 - 1, month,
                     script_get_variable(EVENT_SCRIPT_VAR_DAY));
             }
         } else if (opcode == EVENT_OPCODE_TEMP_WEAPON) {

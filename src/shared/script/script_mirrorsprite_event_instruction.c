@@ -1,13 +1,8 @@
 #include "fft/battle_unit.h"
 #include "fft/script.h"
-#include "fft/world.h"
-#include "psx/types.h"
 
-/* Event instruction 0x2f MirrorSprite: flip one unit's sprite horizontally.
- *
- * Ported from the byte-identical BATTLE twin at 0x8013e65c. */
-
-void world_script_mirrorsprite_event_instruction(const event_mirror_sprite_parameters_t* parameters) {
+/* Mirror the unit sprite for mode 1 and restore it for every other mode. */
+void script_mirrorsprite_event_instruction(const event_mirror_sprite_parameters_t* parameters) {
     s16 unit_id;
     s32 mode;
     s32 runtime_id;

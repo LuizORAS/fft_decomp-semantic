@@ -1,11 +1,7 @@
-#include "fft/battle_script.h"
-#include "fft/battle_thread.h"
 #include "fft/script.h"
 #include "fft/thread.h"
-#include "psx/types.h"
 
-/* WaitValue event instruction: yield until the script variable named by the
- * first 16-bit parameter reaches the value in the second. */
+/* Wait until the variable reaches the signed 16-bit test value. */
 void script_wait_value_event_instruction(const event_wait_value_parameters_t* parameters) {
     s32 variable_id;
     s32 test_value;

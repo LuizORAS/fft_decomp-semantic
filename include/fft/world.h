@@ -323,7 +323,6 @@ void world_script_copy_matrix(MATRIX* destination, const MATRIX* source);
 void world_script_copy_bytes(void* destination, const void* source, s32 count);
 void world_script_earthquake_start(void);
 void world_script_toggle_message_portrait_flip(const u8* parameters);
-void world_script_apply_relative_camera(event_camera_values_t* source, const s32* deltas);
 void world_script_face_tile(const event_face_tile_parameters_t* parameters);
 void world_script_face_unit(const event_face_unit_parameters_t* parameters, s32 second_only);
 void world_script_focus(event_focus_parameters_t* parameters);
@@ -366,14 +365,10 @@ void world_gfx_ramp_screen_overlay_intensity_to_zero(void);
 void world_script_teleportout_event_instruction(s32 unit_id, s32 remove_unit);
 void world_script_unit_anim(const event_unit_anim_parameters_t* parameters);
 void world_script_update_tutorial_controller_input(void);
-void world_script_wait_for_unit_ready(s32 runtime_id);
-void world_script_wait_value_event_instruction(const event_wait_value_parameters_t* parameters);
-void world_script_walkto_event_instruction(const struct event_walk_to_parameters* parameters);
 s32 world_script_warp_unit(const event_warp_unit_parameters_t* instruction);
 s32 world_script_warp_unit_display_to_paired_unit(s32);
 void world_script_set_units_movement_effect_suppression(const event_movement_effect_parameters_t* parameters);
 void world_script_set_units_palette_update_suppression(u16 id, s32 enable);
-s32 world_script_get_variable_bit_position(s32 variable_id);
 void world_script_add_unit_start_thread(void);
 s32 world_script_check_tutorial_event_slot(void);
 void world_script_color_screen_thread(void);
@@ -384,15 +379,12 @@ u32 world_script_get_rand16(void);
 s32* world_script_get_variable_word_pointer_from_id(s32 variable_id);
 void world_script_inflict_status_thread(void);
 void world_script_load_portrait_colors_event_instruction(s32);
-void world_script_mirrorsprite_event_instruction(const event_mirror_sprite_parameters_t* parameters);
 void world_script_pause_event_instruction(void);
 void world_script_play_effect_thread(void);
 void world_script_run_condition(event_opcode_e opcode);
 void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 source, s32 unused);
-void world_script_unlockdate_event_instruction(u32* date_bits, s32 index, s32 month, s32 day);
 void world_script_waitrotateunit_and_waitrotateall_event_instruction(s32);
 void world_script_waitspritemove_event_instruction(s32);
-void world_script_waitwalk_event_instruction(s32 unit_id);
 
 /* sound */
 extern s16 g_world_sound_current_music_track_index;
@@ -455,7 +447,6 @@ s32 world_bits_read_secondary(s32 bit_count);
 void world_bit_cursor_set_primary(u8* ptr);
 void world_bit_cursor_set_secondary(u8* ptr);
 void world_bits_write_primary(u8 bit);
-void world_script_clamp_s32_to_range(s32* value, s32 min, s32 max);
 s32 world_mul_div_64(s32 a, s32 b, s32 c);
 void world_game_reset(void);
 void world_menu_init_stub(void);
@@ -1043,7 +1034,6 @@ void world_gfx_start_decreasing_fade(void);
 void world_gfx_start_increasing_fade(void);
 s32 world_gfx_update_fade_in_tile(void);
 s32 world_gfx_update_fade_out_tile(void);
-void world_script_assign_bitset_flag(u32* bits, s32 index, s32 set);
 void world_gfx_load_evtchr_thread(void);
 
 /* job */
@@ -2446,7 +2436,6 @@ u8* world_menu_redraw_text_page_on_scroll_in_rect(
     menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused, RECT* area);
 
 s32 world_job_calculate_current_mastered(s32 index);
-void world_script_apply_input_overrides(u32* state);
 void world_menu_render_text_image_at_fixed_origin(text_dialog_record_t* record);
 void world_menu_render_text_image_at_record_origin(text_dialog_record_t* record);
 void world_menu_run_equip_thread(void);

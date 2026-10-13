@@ -33,11 +33,11 @@ void world_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_WARP_UNIT) {
             world_script_warp_unit((const event_warp_unit_parameters_t*)parameters);
         } else if (script[0] == EVENT_OPCODE_WAIT_VALUE) {
-            world_script_wait_value_event_instruction((const event_wait_value_parameters_t*)parameters);
+            script_wait_value_event_instruction((const event_wait_value_parameters_t*)parameters);
         } else if (script[0] == EVENT_OPCODE_DEBUG_PAUSE) {
             world_script_print_debug_message();
         } else if (script[0] == EVENT_OPCODE_WALK_TO) {
-            g_thread_call_target = (void (*)(void))world_script_walkto_event_instruction;
+            g_thread_call_target = (void (*)(void))script_walkto_event_instruction;
             thread_call_on_main_stack(parameters);
         } else if (script[0] == EVENT_OPCODE_WALK_TO_ANIM) {
             runtime_id = script_resolve_runtime_id(first_halfword);
@@ -48,11 +48,11 @@ void world_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_JUMP) {
             script_jump_event_instruction((const event_jump_parameters_t*)parameters);
         } else if (script[0] == EVENT_OPCODE_WAIT_WALK) {
-            world_script_waitwalk_event_instruction(first_halfword);
+            script_waitwalk_event_instruction(first_halfword);
         } else if (script[0] == EVENT_OPCODE_UNIT_ANIM) {
             world_script_unit_anim((const event_unit_anim_parameters_t*)parameters);
         } else if (script[0] == EVENT_OPCODE_MIRROR_SPRITE) {
-            world_script_mirrorsprite_event_instruction((const event_mirror_sprite_parameters_t*)(script + 1));
+            script_mirrorsprite_event_instruction((const event_mirror_sprite_parameters_t*)(script + 1));
         } else if (script[0] == EVENT_OPCODE_RESET_PALETTE) {
             script_resetpalette_event_instruction((const event_unit_parameters_t*)(script + 1));
         } else if (script[0] == EVENT_OPCODE_SET_FIRST_UNIT) {
@@ -73,7 +73,7 @@ void world_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_WAIT_UNIT_READY) {
             runtime_id = script_resolve_runtime_id(first_halfword);
             if (runtime_id != EVENT_RUNTIME_ID_NONE) {
-                world_script_wait_for_unit_ready(runtime_id);
+                script_wait_for_unit_ready(runtime_id);
             }
         } else if (script[0] == EVENT_OPCODE_WAIT) {
             thread_wait_frames(script_read_s16(script + 1));
