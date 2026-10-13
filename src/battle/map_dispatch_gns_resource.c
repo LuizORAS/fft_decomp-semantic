@@ -31,7 +31,7 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
     unit_scale = g_map_unit_scale_vector;
     while (DrawSync(1) != 0) { }
     switch (resource_type) {
-    case MAP_MESH_CHUNK_PRIMARY_GEOMETRY:
+    case MAP_RESOURCE_GEOMETRY_PRIMARY:
         g_map_textured_triangle_count = 0;
         g_map_textured_quad_count = 0;
         g_map_untextured_triangle_count = 0;
@@ -50,39 +50,39 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
         g_map_primary_untextured_triangle_count = g_map_untextured_triangle_count;
         g_map_primary_untextured_quad_count = g_map_untextured_quad_count;
         break;
-    case MAP_MESH_CHUNK_PART_GEOMETRY_1:
+    case MAP_RESOURCE_GEOMETRY_PART_1:
         g_map_mesh_part_geometry[1] = &data->geometry;
         map_append_mesh_geometry(&data->geometry, &g_map_mesh_parts[1]);
         break;
-    case MAP_MESH_CHUNK_PART_GEOMETRY_2:
+    case MAP_RESOURCE_GEOMETRY_PART_2:
         g_map_mesh_part_geometry[2] = &data->geometry;
         map_append_mesh_geometry(&data->geometry, &g_map_mesh_parts[2]);
         break;
-    case MAP_MESH_CHUNK_PART_GEOMETRY_3:
+    case MAP_RESOURCE_GEOMETRY_PART_3:
         g_map_mesh_part_geometry[3] = &data->geometry;
         map_append_mesh_geometry(&data->geometry, &g_map_mesh_parts[3]);
         break;
-    case MAP_MESH_CHUNK_PART_GEOMETRY_4:
+    case MAP_RESOURCE_GEOMETRY_PART_4:
         g_map_mesh_part_geometry[4] = &data->geometry;
         map_append_mesh_geometry(&data->geometry, &g_map_mesh_parts[4]);
         break;
-    case MAP_MESH_CHUNK_PART_GEOMETRY_5:
+    case MAP_RESOURCE_GEOMETRY_PART_5:
         g_map_mesh_part_geometry[5] = &data->geometry;
         map_append_mesh_geometry(&data->geometry, &g_map_mesh_parts[5]);
         break;
-    case MAP_MESH_CHUNK_PART_GEOMETRY_6:
+    case MAP_RESOURCE_GEOMETRY_PART_6:
         g_map_mesh_part_geometry[6] = &data->geometry;
         map_append_mesh_geometry(&data->geometry, &g_map_mesh_parts[6]);
         break;
-    case MAP_MESH_CHUNK_PART_GEOMETRY_7:
+    case MAP_RESOURCE_GEOMETRY_PART_7:
         g_map_mesh_part_geometry[7] = &data->geometry;
         map_append_mesh_geometry(&data->geometry, &g_map_mesh_parts[7]);
         break;
-    case MAP_MESH_CHUNK_PART_GEOMETRY_8:
+    case MAP_RESOURCE_GEOMETRY_PART_8:
         g_map_mesh_part_geometry[8] = &data->geometry;
         map_append_mesh_geometry(&data->geometry, &g_map_mesh_parts[8]);
         break;
-    case MAP_MESH_CHUNK_POLYGON_FLAGS:
+    case MAP_RESOURCE_POLYGON_FLAGS:
         polygon_flags = data->polygon_flags.textured_triangles;
         for (i = 0; i < 360; i++) {
             flags = *polygon_flags++;
@@ -152,7 +152,7 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
         }
         map_polygon_flag_command(MAP_POLYGON_FLAG_COMMAND_RESET_ACTIVE);
         break;
-    case MAP_MESH_CHUNK_PALETTES:
+    case MAP_RESOURCE_PALETTES:
         g_map_palette_pending = 1;
         for (i = 0; i < 0x200; i++) {
             g_map_pending_palette_data[i] = data->bytes[i];
@@ -166,17 +166,17 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
         g_map_vram_load_rect.h = 1;
         map_load_palette_data(data->clut, MAP_CLUT_ROW_MAP, 0, 1);
         break;
-    case MAP_MESH_CHUNK_MARKED_TILE_PALETTES:
+    case MAP_RESOURCE_MARKED_TILE_PALETTES:
         g_map_vram_load_rect.y = MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_MARKED_TILES;
         g_map_vram_load_rect.w = 0x100;
         g_map_vram_load_rect.x = 0;
         g_map_vram_load_rect.h = 1;
         map_load_palette_data(data->clut, MAP_CLUT_ROW_MARKED_TILES, 0, 1);
         break;
-    case MAP_MESH_CHUNK_UNSUPPORTED_12:
+    case MAP_RESOURCE_UNSUPPORTED_12:
         main_system_handle_malloc_exception(2, 0x3ca);
         break;
-    case MAP_MESH_CHUNK_TEXTURE_QUARTER_0:
+    case MAP_RESOURCE_TEXTURE_QUARTER_0:
         g_map_vram_load_rect.x = 0x300;
         g_map_vram_load_rect.w = 0x40;
         g_map_vram_load_rect.y = 0;
@@ -184,7 +184,7 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
         LoadImage(&g_map_vram_load_rect, data->texture_words);
         while (DrawSync(1) != 0) { }
         break;
-    case MAP_MESH_CHUNK_TEXTURE_QUARTER_1:
+    case MAP_RESOURCE_TEXTURE_QUARTER_1:
         g_map_vram_load_rect.x = 0x340;
         g_map_vram_load_rect.w = 0x40;
         g_map_vram_load_rect.y = 0;
@@ -192,7 +192,7 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
         LoadImage(&g_map_vram_load_rect, data->texture_words);
         while (DrawSync(1) != 0) { }
         break;
-    case MAP_MESH_CHUNK_TEXTURE_QUARTER_2:
+    case MAP_RESOURCE_TEXTURE_QUARTER_2:
         g_map_vram_load_rect.x = 0x380;
         g_map_vram_load_rect.w = 0x40;
         g_map_vram_load_rect.y = 0;
@@ -200,7 +200,7 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
         LoadImage(&g_map_vram_load_rect, data->texture_words);
         while (DrawSync(1) != 0) { }
         break;
-    case MAP_MESH_CHUNK_TEXTURE_QUARTER_3:
+    case MAP_RESOURCE_TEXTURE_QUARTER_3:
         g_map_vram_load_rect.x = 0x3c0;
         g_map_vram_load_rect.w = 0x40;
         g_map_vram_load_rect.y = 0;
@@ -208,18 +208,18 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
         LoadImage(&g_map_vram_load_rect, data->texture_words);
         while (DrawSync(1) != 0) { }
         break;
-    case GNS_FILE_TEXTURE:
+    case MAP_RESOURCE_TEXTURE:
         if (g_map_texture_quarter_0_pending != 0) {
-            map_dispatch_gns_resource(MAP_MESH_CHUNK_TEXTURE_QUARTER_0, data);
+            map_dispatch_gns_resource(MAP_RESOURCE_TEXTURE_QUARTER_0, data);
         }
         if (g_map_texture_quarter_1_pending != 0) {
-            map_dispatch_gns_resource(MAP_MESH_CHUNK_TEXTURE_QUARTER_1, (map_resource_t*)(data->bytes + 0x8000));
+            map_dispatch_gns_resource(MAP_RESOURCE_TEXTURE_QUARTER_1, (map_resource_t*)(data->bytes + 0x8000));
         }
         if (g_map_texture_quarter_2_pending != 0) {
-            map_dispatch_gns_resource(MAP_MESH_CHUNK_TEXTURE_QUARTER_2, (map_resource_t*)(data->bytes + 0x10000));
+            map_dispatch_gns_resource(MAP_RESOURCE_TEXTURE_QUARTER_2, (map_resource_t*)(data->bytes + 0x10000));
         }
         if (g_map_texture_quarter_3_pending != 0) {
-            map_dispatch_gns_resource(MAP_MESH_CHUNK_TEXTURE_QUARTER_3, (map_resource_t*)(data->bytes + 0x18000));
+            map_dispatch_gns_resource(MAP_RESOURCE_TEXTURE_QUARTER_3, (map_resource_t*)(data->bytes + 0x18000));
         }
         g_map_texture_quarter_0_pending = 0;
         g_map_texture_quarter_1_pending = 0;
@@ -227,10 +227,10 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
         g_map_texture_quarter_3_pending = 0;
         g_map_texture_pending = 0;
         break;
-    case GNS_FILE_MESH_PRIMARY:
-    case GNS_FILE_MESH_OVERRIDE:
-    case GNS_FILE_MESH_ALTERNATE:
-        i = MAP_MESH_CHUNK_PRIMARY_GEOMETRY;
+    case MAP_RESOURCE_MESH_PRIMARY:
+    case MAP_RESOURCE_MESH_OVERRIDE:
+    case MAP_RESOURCE_MESH_ALTERNATE:
+        i = MAP_RESOURCE_GEOMETRY_PRIMARY;
         resource_offset = &data->mesh_file.primary_geometry_offset;
         for (; i < GNS_RESOURCE_TABLE_COUNT; i++) {
             if (*resource_offset != 0) {
@@ -239,7 +239,7 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
             resource_offset++;
         }
         break;
-    case MAP_MESH_CHUNK_LIGHTING:
+    case MAP_RESOURCE_LIGHTING:
         g_map_lighting_pending = 1;
         for (i = 0; i < 0x2d; i++) {
             g_map_pending_lighting_data[i] = data->bytes[i];
@@ -280,7 +280,7 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
         g_map_lightning_state.base_colors[1] = g_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM];
         map_light_state_command(MAP_LIGHT_COMMAND_SAVE_BACKGROUND_GRADIENT, 0);
         break;
-    case MAP_MESH_CHUNK_TEXTURE_ANIMATIONS:
+    case MAP_RESOURCE_TEXTURE_ANIMATIONS:
         source = data->texture_animations;
         for (i = 0; i < MAP_TEXTURE_ANIMATION_COUNT; i++) {
             g_map_texture_animation_cycle_handles[i] = 0;
@@ -300,20 +300,20 @@ s32 map_dispatch_gns_resource(u8 resource_type, map_resource_t* data) {
             }
         }
         break;
-    case MAP_MESH_CHUNK_PALETTE_ANIMATION_FRAMES:
+    case MAP_RESOURCE_PALETTE_ANIMATION_FRAMES:
         for (i = 0; i < 0x100; i++) {
             /* Palette-bank indexing changes the native 16-bit copy loop. */
             ((u16*)g_map_palette_animation_frames)[i] = ((u16*)data->clut)[i];
         }
         break;
-    case MAP_MESH_CHUNK_TERRAIN: {
+    case MAP_RESOURCE_TERRAIN: {
         map_terrain_resource_t* terrain = &data->terrain;
         g_map_tile_width = terrain->width;
         g_map_tile_depth = terrain->depth;
         map_copy_xy_coords_and_tile_data(data->bytes);
         break;
     }
-    case MAP_MESH_CHUNK_STATE_RECORDS:
+    case MAP_RESOURCE_STATE_RECORDS:
         cursor = &data->state_record;
         if (cursor->type != MAP_MESH_ANIMATION_RECORD_END) {
             do {

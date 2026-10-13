@@ -20,12 +20,12 @@ s32 map_load_mesh_variant(s32 palette_mode) {
     switch (g_map_mesh_load_state) {
     case MAP_MESH_LOAD_IDLE:
         for (i = 0; g_map_gns_records[i].resource_type < GNS_RECORD_COMMAND_SEPARATOR; i++) {
-            if (g_map_gns_records[i].resource_type == GNS_FILE_MESH_PRIMARY) {
+            if (g_map_gns_records[i].resource_type == MAP_RESOURCE_MESH_PRIMARY) {
                 g_map_selected_mesh_record = g_map_gns_records[i];
             }
         }
         for (i = 0; g_map_gns_records[i].resource_type < GNS_RECORD_COMMAND_SEPARATOR; i++) {
-            if (g_map_gns_records[i].resource_type == GNS_FILE_MESH_ALTERNATE) {
+            if (g_map_gns_records[i].resource_type == MAP_RESOURCE_MESH_ALTERNATE) {
                 state = script_get_variable(g_map_gns_records[i].script_variable_id) & 0xfff;
                 state |= (script_get_variable(EVENT_SCRIPT_VAR_WEATHER) & 7) << 12;
                 state |= (script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY) & 1) << 15;
@@ -40,7 +40,7 @@ s32 map_load_mesh_variant(s32 palette_mode) {
             main_system_handle_malloc_exception(2, 0x3c9);
         }
         map_start_file_load(g_map_directory_path, &g_map_selected_mesh_record.load_info, g_map_mesh_load_buffer,
-            GNS_FILE_MESH_ALTERNATE);
+            MAP_RESOURCE_MESH_ALTERNATE);
         g_map_mesh_load_state = MAP_MESH_LOAD_WAITING;
         break;
 

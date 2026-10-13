@@ -109,42 +109,46 @@ typedef enum gns_map_state_comparison {
     GNS_MAP_STATE_REQUESTED_GREATER_THAN_RECORD = 3,
 } gns_map_state_comparison_e;
 
-/* GNS external-file tags in the map-resource ID space. Intervening values
- * identify mesh chunks, declared below; these tags select whole files. */
-typedef enum gns_file_type {
-    GNS_FILE_TEXTURE = 0x17,
-    GNS_FILE_MESH_PRIMARY = 0x2e,
-    GNS_FILE_MESH_OVERRIDE = 0x2f,
-    GNS_FILE_MESH_ALTERNATE = 0x30,
-    GNS_FILE_FILLER = 0x31, /* repeated file-section rows; the loader still visits them */
-} gns_file_type_e;
+/* Map resource IDs used by both GNS file rows and mesh chunk dispatch.
+ * Chunk IDs also index the mesh file's 49-entry byte-offset table. */
+typedef enum map_resource_type {
+    /* Primary mesh data. */
+    MAP_RESOURCE_GEOMETRY_PRIMARY = 0x10,
+    MAP_RESOURCE_PALETTES = 0x11,       /* kept pending until MAP_RESOURCE_APPLY_PALETTES */
+    MAP_RESOURCE_UNSUPPORTED_12 = 0x12, /* raises exception 0x3ca */
 
-/* Numeric slots in a mesh file's 49-entry offset table. The dispatcher also
- * accepts these values when it applies a chunk after loading a mesh file. */
-typedef enum map_mesh_chunk_type {
-    MAP_MESH_CHUNK_PRIMARY_GEOMETRY = 0x10,
-    MAP_MESH_CHUNK_PALETTES = 0x11,          /* kept pending until MAP_RESOURCE_APPLY_PALETTES */
-    MAP_MESH_CHUNK_UNSUPPORTED_12 = 0x12,    /* raises exception 0x3ca */
-    MAP_MESH_CHUNK_TEXTURE_QUARTER_0 = 0x13, /* 64x256 texture strip at VRAM x 0x300 */
-    MAP_MESH_CHUNK_TEXTURE_QUARTER_1 = 0x14,
-    MAP_MESH_CHUNK_TEXTURE_QUARTER_2 = 0x15,
-    MAP_MESH_CHUNK_TEXTURE_QUARTER_3 = 0x16,
-    MAP_MESH_CHUNK_LIGHTING = 0x19, /* kept pending until MAP_RESOURCE_APPLY_LIGHTING */
-    MAP_MESH_CHUNK_TERRAIN = 0x1a,
-    MAP_MESH_CHUNK_TEXTURE_ANIMATIONS = 0x1b,
-    MAP_MESH_CHUNK_PALETTE_ANIMATION_FRAMES = 0x1c,
-    MAP_MESH_CHUNK_MARKED_TILE_PALETTES = 0x1f, /* the sixteen CLUTs of MAP_CLUT_ROW_MARKED_TILES */
-    MAP_MESH_CHUNK_STATE_RECORDS = 0x23,        /* map_state_record_t list */
-    MAP_MESH_CHUNK_PART_GEOMETRY_1 = 0x24,      /* geometry of mesh parts 1-8 */
-    MAP_MESH_CHUNK_PART_GEOMETRY_2 = 0x25,
-    MAP_MESH_CHUNK_PART_GEOMETRY_3 = 0x26,
-    MAP_MESH_CHUNK_PART_GEOMETRY_4 = 0x27,
-    MAP_MESH_CHUNK_PART_GEOMETRY_5 = 0x28,
-    MAP_MESH_CHUNK_PART_GEOMETRY_6 = 0x29,
-    MAP_MESH_CHUNK_PART_GEOMETRY_7 = 0x2a,
-    MAP_MESH_CHUNK_PART_GEOMETRY_8 = 0x2b,
-    MAP_MESH_CHUNK_POLYGON_FLAGS = 0x2c,
-} map_mesh_chunk_type_e;
+    /* Texture chunks and the complete external texture file. */
+    MAP_RESOURCE_TEXTURE_QUARTER_0 = 0x13, /* 64x256 texture strip at VRAM x 0x300 */
+    MAP_RESOURCE_TEXTURE_QUARTER_1 = 0x14,
+    MAP_RESOURCE_TEXTURE_QUARTER_2 = 0x15,
+    MAP_RESOURCE_TEXTURE_QUARTER_3 = 0x16,
+    MAP_RESOURCE_TEXTURE = 0x17,
+
+    /* Lighting, terrain, animations and map state. */
+    MAP_RESOURCE_LIGHTING = 0x19, /* kept pending until MAP_RESOURCE_APPLY_LIGHTING */
+    MAP_RESOURCE_TERRAIN = 0x1a,
+    MAP_RESOURCE_TEXTURE_ANIMATIONS = 0x1b,
+    MAP_RESOURCE_PALETTE_ANIMATION_FRAMES = 0x1c,
+    MAP_RESOURCE_MARKED_TILE_PALETTES = 0x1f, /* the sixteen CLUTs of MAP_CLUT_ROW_MARKED_TILES */
+    MAP_RESOURCE_STATE_RECORDS = 0x23,        /* map_state_record_t list */
+
+    /* Additional mesh parts and polygon flags. */
+    MAP_RESOURCE_GEOMETRY_PART_1 = 0x24, /* geometry of mesh parts 1-8 */
+    MAP_RESOURCE_GEOMETRY_PART_2 = 0x25,
+    MAP_RESOURCE_GEOMETRY_PART_3 = 0x26,
+    MAP_RESOURCE_GEOMETRY_PART_4 = 0x27,
+    MAP_RESOURCE_GEOMETRY_PART_5 = 0x28,
+    MAP_RESOURCE_GEOMETRY_PART_6 = 0x29,
+    MAP_RESOURCE_GEOMETRY_PART_7 = 0x2a,
+    MAP_RESOURCE_GEOMETRY_PART_8 = 0x2b,
+    MAP_RESOURCE_POLYGON_FLAGS = 0x2c,
+
+    /* External mesh files and repeated file-section rows. */
+    MAP_RESOURCE_MESH_PRIMARY = 0x2e,
+    MAP_RESOURCE_MESH_OVERRIDE = 0x2f,
+    MAP_RESOURCE_MESH_ALTERNATE = 0x30,
+    MAP_RESOURCE_FILLER = 0x31, /* repeated file-section rows; the loader still visits them */
+} map_resource_type_e;
 
 /* GNS command rows follow the file-resource rows and use the same tag byte. */
 typedef enum gns_map_command_type {
@@ -279,7 +283,7 @@ typedef enum map_polygon_flag_command {
     MAP_POLYGON_FLAG_COMMAND_RESTORE_AMBIENT = 0x94, /* repaint the polygons without LIT in the ambient colour */
 } map_polygon_flag_command_e;
 
-/* polygon_flags of the textured map polygons (MAP_MESH_CHUNK_POLYGON_FLAGS).
+/* polygon_flags of the textured map polygons (MAP_RESOURCE_POLYGON_FLAGS).
  * The four map_queue_ routines skip a polygon whose hide bit for the
  * camera yaw is set. No mesh file sets bits 0, 1 or 14. */
 enum {
@@ -454,7 +458,7 @@ typedef struct gns_file_record {
     u16 script_variable_id;  /* 0x00 */
     s16 map_state;           /* 0x02 */
     u8 map_state_comparison; /* 0x04; gns_map_state_comparison_e */
-    u8 resource_type;        /* 0x05; gns_file_type_e */
+    u8 resource_type;        /* 0x05; map_resource_type_e; external file tag */
     u16 _padding_06;         /* 0x06; aligns disc_lba */
     u32 disc_lba;            /* 0x08; absolute, including the high 16 bits at +0x0a */
     u32 byte_length;         /* 0x0c; sector-rounded */
@@ -497,7 +501,7 @@ typedef char map_mesh_geometry_prefix_must_be_8[sizeof(map_mesh_geometry_t) == 8
  * The dispatcher visits IDs 0x10..0x30; slots 0..0x0f and the other reserved
  * 32-bit offsets are zero in the USA disc's mesh files. A zero offset means the chunk
  * is absent. MAP000.5 alone has an embedded texture quarter at 0x4c. Each
- * member is named after its map_mesh_chunk_type_e id. */
+ * member is named after its map_resource_type_e id. */
 typedef struct map_mesh_file_header {
     u32 _unused_00[16];                  /* 0x00 */
     u32 primary_geometry_offset;         /* 0x40 */
@@ -780,7 +784,7 @@ typedef struct battle_lightning_state {
 typedef char battle_lightning_state_size_must_be_148[(sizeof(battle_lightning_state_t) == 148) ? 1 : -1];
 
 /* resource blocks */
-/* Nested records in MAP_MESH_CHUNK_STATE_RECORDS, a mesh-file chunk at slot 0x23. */
+/* Nested records in MAP_RESOURCE_STATE_RECORDS, a mesh-file chunk at slot 0x23. */
 typedef enum map_mesh_animation_record_type {
     MAP_MESH_ANIMATION_RECORD_END = 0,
     MAP_MESH_ANIMATION_RECORD_KEYFRAMES = 1,
