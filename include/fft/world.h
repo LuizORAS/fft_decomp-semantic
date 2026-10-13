@@ -485,7 +485,7 @@ void world_input_update_with_message_state(void);
 void world_card_input_update_with_message_state(void);
 void world_thread_yield_forever(void);
 void world_thread_request_redraw(s32 thread_id);
-void world_thread_set_task_id_to_three(s32 thread_id);
+void world_thread_request_stop(s32 thread_id);
 
 /* turn */
 

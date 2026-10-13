@@ -470,7 +470,7 @@ functions:
   - {addr: 0x80106660, size: 400, name: world_formation_restore_menu_after_core_exit, hash: b1f839992ab561c6}
   - {addr: 0x801067f0, size: 24, name: world_menu_take_and_clear_thread_result, hash: f911e25bccbe7ecc}
   - {addr: 0x80106808, size: 16, name: world_menu_get_event_state_flag, hash: 5aa3f020305cf4e4}
-  - {addr: 0x80106818, size: 28, name: world_thread_set_task_id_to_three, hash: c5d1a355242deb8b}
+  - {addr: 0x80106818, size: 28, name: world_thread_request_stop, hash: c5d1a355242deb8b}
   - {addr: 0x80106834, size: 52, name: world_text_resume_printing, hash: 48d03c8b58af46be}
   - {addr: 0x80106868, size: 36, name: world_text_is_printing, hash: 9e115a06329f757e}
   - {addr: 0x8010688c, size: 40, name: world_thread_idle_yield_forever, hash: cefbd84258a6fac2}
