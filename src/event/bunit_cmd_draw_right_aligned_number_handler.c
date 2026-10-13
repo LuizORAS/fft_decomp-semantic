@@ -12,7 +12,7 @@ menu_instruction_t* bunit_cmd_draw_right_aligned_number_handler(menu_instruction
     s32 x;
     s32 y;
 
-    count = g_bunit_menu_row_callbacks[cmd->number.getter](cmd->number.value);
+    count = g_bunit_menu_row_callbacks[cmd->number.getter].value(cmd->number.value);
     count = sprintf(digits, g_bunit_text_decimal_format, count);
     x = cmd->number.x;
     y = cmd->number.y;

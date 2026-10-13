@@ -11,7 +11,7 @@ menu_instruction_t* bunit_cmd_run_if_else_group_handler(menu_instruction_t* cmd)
 
     then_count = cmd->if_else.count_true;
     else_count = cmd->if_else.count_false;
-    callback = g_bunit_menu_row_callbacks[cmd->if_else.predicate];
+    callback = g_bunit_menu_row_callbacks[cmd->if_else.predicate].value;
     if (g_bunit_menu_scroll_list_active == 0) {
         row = cmd->if_else.value;
     } else {

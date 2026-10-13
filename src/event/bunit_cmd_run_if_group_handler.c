@@ -8,7 +8,7 @@ menu_instruction_t* bunit_cmd_run_if_group_handler(menu_instruction_t* cmd) {
     s32 count;
     s32 row;
 
-    callback = g_bunit_menu_row_callbacks[cmd->conditional.predicate];
+    callback = g_bunit_menu_row_callbacks[cmd->conditional.predicate].value;
     count = cmd->conditional.count;
     if (g_bunit_menu_scroll_list_active == 0) {
         row = cmd->conditional.value;

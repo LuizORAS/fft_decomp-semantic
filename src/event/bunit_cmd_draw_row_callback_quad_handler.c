@@ -9,7 +9,7 @@ menu_instruction_t* bunit_cmd_draw_row_callback_quad_handler(menu_instruction_t*
     s32 row;
     menu_icon_source_t* (*callback)(s32);
 
-    callback = (menu_icon_source_t * (*)(s32)) g_bunit_menu_row_callbacks[cmd->callback_sprite.callback_index];
+    callback = g_bunit_menu_row_callbacks[cmd->callback_sprite.callback_index].icon;
     if (g_bunit_menu_scroll_list_active == 0) {
         row = cmd->callback_sprite.row;
     } else {

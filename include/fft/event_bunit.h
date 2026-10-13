@@ -293,14 +293,7 @@ typedef enum bunit_vertical_scroll_direction {
     BUNIT_VERTICAL_SCROLL_WAIT = 2,
 } bunit_menu_vertical_scroll_direction_e;
 
-/*
- * Row-value getters for the BUNIT menu command stream: a 16-entry table at
- * 0x801ecb70 indexed by a command byte.
- *
- * Every getter takes the row. The row-sprite handler expects a pointer
- * return, so it casts the slot it invokes.
- */
-typedef s32 (*bunit_menu_row_callback_t)(s32 row);
+/* Display opcodes use .value for predicates and numbers, .icon for sprite sources. */
 enum { BUNIT_MENU_SELECTION_RECORD_COUNT = 14 };
 /* g_bunit_menu_current_menu: what bunit_entrypoint runs. */
 typedef enum bunit_menu {
@@ -365,7 +358,7 @@ extern u8 g_bunit_menu_reorder_list_initialized;
 
 extern s16 g_bunit_menu_reorder_list_redraw_request;
 extern s16 g_bunit_menu_reorder_result;
-extern bunit_menu_row_callback_t g_bunit_menu_row_callbacks[];
+extern menu_callback_t g_bunit_menu_row_callbacks[];
 extern s16 g_bunit_menu_scroll_base_index;
 extern s16 g_bunit_menu_scroll_list_active;
 extern s16 g_bunit_menu_scroll_pixel_offset;

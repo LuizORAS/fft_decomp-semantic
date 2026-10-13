@@ -33,7 +33,7 @@ menu_instruction_t* bunit_menu_script_draw_formatted_number(menu_instruction_t* 
     s32 next_remaining;
     u8 opcode;
 
-    getter = g_bunit_menu_row_callbacks[command->number.getter];
+    getter = g_bunit_menu_row_callbacks[command->number.getter].value;
     negative = 0;
     if (g_bunit_menu_scroll_list_active == 0) {
         row = command->number.value;
