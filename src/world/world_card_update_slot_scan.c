@@ -82,10 +82,10 @@ void world_card_update_slot_scan(void) {
             g_world_card_probe_result = world_card_probe_selected();
         }
         if (g_world_card_probe_result == CARD_IO_RESULT_COMPLETE) {
-            g_world_card_save_file_count = world_card_count_save_files((DIRENTRY*)g_world_card_directory_buffer, 1);
+            g_world_card_save_file_count = world_card_count_save_files(g_world_card_directory_buffer, 1);
             result = 0;
             while (result < 15) {
-                status = world_card_count_save_files((DIRENTRY*)g_world_card_directory_buffer, 1);
+                status = world_card_count_save_files(g_world_card_directory_buffer, 1);
                 if (status == g_world_card_save_file_count) {
                     break;
                 } else {
@@ -95,7 +95,7 @@ void world_card_update_slot_scan(void) {
                 result++;
             }
             g_world_card_free_block_count
-                = world_card_count_free_blocks((DIRENTRY*)g_world_card_directory_buffer, g_world_card_save_file_count);
+                = world_card_count_free_blocks(g_world_card_directory_buffer, g_world_card_save_file_count);
         } else {
             world_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
             g_world_menu_sound_effect_id = MAIN_SFX_ERROR_MESSAGE;
@@ -158,7 +158,7 @@ void world_card_update_slot_scan(void) {
             entry = 0;
             while (entry < g_world_card_save_file_count) {
                 status = strcmp(g_world_card_save_file_names[g_world_card_slot_scan_index],
-                    ((DIRENTRY*)g_world_card_directory_buffer)[entry].name);
+                    g_world_card_directory_buffer[entry].name);
                 if (status == 0) {
                     break;
                 }

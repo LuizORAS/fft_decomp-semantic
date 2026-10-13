@@ -25,7 +25,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
     u32 otags[2 * 64];
     world_gfx_packet_buffer_t buffers[2];
     u8 unused_packet_gap[0x10]; /* Retains the original unused stack space. */
-    u8 directory_buffer[0x258];
+    DIRENTRY directory_buffer[CARD_SAVE_SLOT_COUNT];
     s16 music_handle;
     u16 input;
     s32 buttons;

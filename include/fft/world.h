@@ -2708,7 +2708,7 @@ extern s16 g_world_card_list_scroll_y;
 extern s16 g_world_card_mode_select_enabled;
 extern s16 g_world_card_active_slot;
 extern s16 g_world_card_list_first_visible_row;
-extern u8* g_world_card_directory_buffer;
+extern struct DIRENTRY* g_world_card_directory_buffer;
 extern s8 g_world_card_selectable_slot_count;
 extern u8 g_world_card_save_slot_descriptions[][0x8C];
 s32 world_card_build_save_slot_description(s32 mode, u8* slot_graphic);
