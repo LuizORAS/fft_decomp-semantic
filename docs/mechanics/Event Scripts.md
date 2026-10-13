@@ -146,7 +146,7 @@ fades, the OPNTEX pictures and slideshows, and the `ENDING.XA` music.
 | Record | What it holds |
 |---|---|
 | `EVENT/TEST.EVT` ([[event_file_block_t]], `g_main_script_event_block`) | One 8 KB block per event: the instructions, then the event's text, which the load turns into the event message section |
-| `g_main_scenario_condition_offsets`, `g_main_scenario_condition_data` | The scenario's condition chains, loaded by ATTACK (`attack_load_scenario_conditionals`) |
+| `g_main_scenario_condition_offsets`, `g_main_scenario_condition_data` | The scenario's condition chains, loaded by ATTACK (`attack_scenario_load_conditionals`) |
 | `g_main_scenario_event_finish_operations` | Per event: the next event (bits 0-7 and 10-11) and what follows it |
 | `g_main_script_variables` | The script variables: 256 words, the flags and nibbles packed from word 0x80 |
 | `g_battle_script_event_instruction_sizes` | Each opcode's operand length; the scanners step with it |

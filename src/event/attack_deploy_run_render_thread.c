@@ -19,7 +19,7 @@ void attack_deploy_run_render_thread(void) {
     SPRT* tile;
     s32 offset_y;
 
-    attack_init_deployment_cursor_primitives();
+    attack_deploy_init_cursor_primitives();
     attack_deploy_build_screen_arrow();
     attack_gfx_init_frame_ft4_array();
     battle_menu_init_sprite_array(g_attack_deploy_render_buffers[0].tiles[0], 0x19, 0x7ebc);
@@ -109,7 +109,7 @@ void attack_deploy_run_render_thread(void) {
             attack_gfx_build_status_group_primitives(g_attack_deploy_render_buffers[frame & 1].status);
         }
         battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].screen_offset);
-        attack_update_deployment_cursor_primitives(frame, &g_attack_deploy_render_buffers[frame & 1]);
+        attack_deploy_update_cursor_primitives(frame, &g_attack_deploy_render_buffers[frame & 1]);
         if (g_attack_deploy_tiles_only_mode == 0) {
             battle_gfx_draw_or_append_gpu_primitive(&g_attack_deploy_render_buffers[frame & 1].banner);
         }

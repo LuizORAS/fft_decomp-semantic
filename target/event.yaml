@@ -41,10 +41,10 @@ functions:
   - {addr: 0x801c2dbc, size: 692, name: attack_gfx_build_zodiac_primitives, hash: 919ae95c336b4817}
   - {addr: 0x801c3070, size: 8, name: attack_noop_801c3070, hash: 6d64edf91449c1b1}
   - {addr: 0x801c3078, size: 816, name: attack_deploy_find_fieldable_units, hash: 498671a5a9fc34c9}
-  - {addr: 0x801c33a8, size: 28, name: attack_load_unaligned_s16, hash: 7f613d531c790362}
+  - {addr: 0x801c33a8, size: 28, name: attack_scenario_load_unaligned_s16, hash: 7f613d531c790362}
   - {addr: 0x801c33c4, size: 72, name: attack_sound_wait_for_music_stub, hash: 5cf0df43ec1c1bac}
   - {addr: 0x801c340c, size: 168, name: attack_sound_play_music_tracks, hash: 27dd3fb89e7b80d9}
-  - {addr: 0x801c34b4, size: 1612, name: attack_load_scenario_conditionals, hash: bba39fd5570c99b6}
+  - {addr: 0x801c34b4, size: 1612, name: attack_scenario_load_conditionals, hash: bba39fd5570c99b6}
   - {addr: 0x801c3b00, size: 424, name: attack_sound_resync_scenario_music_and_apply_map_darkness, hash: 7e9cd3acb0241ad1}
   - {addr: 0x801c3ca8, size: 148, name: attack_deploy_mark_other_squad_units_undeployable, hash: 5cd7505bb7bab58e}
   - {addr: 0x801c3d3c, size: 80, name: attack_deploy_is_roster_unit_deployed, hash: 5d2d6845961ff568}
@@ -71,8 +71,8 @@ functions:
   - {addr: 0x801c6748, size: 132, name: attack_deploy_init_valid_tiles, hash: 1c91dfd7420efd7b}
   - {addr: 0x801c67cc, size: 2748, name: attack_deploy_run_render_thread, hash: 4c06ab67a62141f0}
   - {addr: 0x801c7288, size: 724, name: attack_deploy_prepare_valid_tiles, hash: 3a3158a171e2a4d4}
-  - {addr: 0x801c755c, size: 452, name: attack_init_deployment_cursor_primitives, hash: af62587e4847a1d1}
-  - {addr: 0x801c7720, size: 548, name: attack_update_deployment_cursor_primitives, hash: a6767c2bfaa72829}
+  - {addr: 0x801c755c, size: 452, name: attack_deploy_init_cursor_primitives, hash: af62587e4847a1d1}
+  - {addr: 0x801c7720, size: 548, name: attack_deploy_update_cursor_primitives, hash: a6767c2bfaa72829}
   - {addr: 0x801c7944, size: 196, name: attack_gfx_init_frame_ft4_array, hash: 6daf1a8edc856725}
   - {addr: 0x801c7a08, size: 484, name: attack_deploy_build_portrait_quads, hash: 708d00bef4ce213d}
   - {addr: 0x801c7bec, size: 1016, name: attack_deploy_update_screen_graphics, hash: 9c795189d3d0df1f}

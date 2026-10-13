@@ -1,6 +1,8 @@
 #include "fft/event_attack.h"
 #include "psx/types.h"
 
+/* Clear the deployment tile that holds roster unit `roster_id` (to ATTACK_DEPLOY_ROSTER_ID_NONE), if
+ * one does. */
 void attack_deploy_remove_roster_unit_from_tiles(s32 roster_id) {
     s32 row;
     s32 column;

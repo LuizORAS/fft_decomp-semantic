@@ -11,7 +11,7 @@ void battle_script_load_attack_graphics_event_instruction(void) {
         g_battle_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_PRELOADED;
         battle_menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_ATTACK);
         battle_thread_yield();
-        attack_load_scenario_conditionals();
+        attack_scenario_load_conditionals();
         attack_gfx_build_formation_sprites();
         attack_gfx_load_portraits();
     }

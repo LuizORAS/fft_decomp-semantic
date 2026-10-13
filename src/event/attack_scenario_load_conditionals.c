@@ -39,7 +39,7 @@ typedef struct attack_scenario {
  * Those Who Squirm in Darkness unless OLAN_SAW_RAMZA_FUNERAL selects Things
  * Obtained.
  */
-s32 attack_load_scenario_conditionals(void) {
+s32 attack_scenario_load_conditionals(void) {
     /* sp+0x10 squad 1, sp+0x14 squad 2, sp+0x1c story ENTD; [2] is unused.
      * The story ENTD lives in the array: as a scalar it would take a
      * callee-saved register instead of the target's stack slot. */
@@ -152,22 +152,22 @@ s32 attack_load_scenario_conditionals(void) {
         return 0;
     }
     g_battle_scenario_event_active++;
-    attack_load_unaligned_s16(scenario->id);
+    attack_scenario_load_unaligned_s16(scenario->id);
     map_id = scenario->map_id;
     weather = scenario->weather;
     daytime = scenario->daytime;
     g_battle_scenario_music_1_id = scenario->music_1;
     g_battle_scenario_music_2_id = scenario->music_2;
-    entd = attack_load_unaligned_s16(scenario->entd_id);
-    squads[0] = attack_load_unaligned_s16(scenario->squad_1);
-    squads[1] = attack_load_unaligned_s16(scenario->squad_2);
+    entd = attack_scenario_load_unaligned_s16(scenario->entd_id);
+    squads[0] = attack_scenario_load_unaligned_s16(scenario->squad_1);
+    squads[1] = attack_scenario_load_unaligned_s16(scenario->squad_2);
     g_main_special_portrait_wldface_id = scenario->portrait_id;
     g_main_special_portrait_unit_id = scenario->portrait_unit_id;
-    squads[3] = attack_load_unaligned_s16(scenario->story_entd_id);
+    squads[3] = attack_scenario_load_unaligned_s16(scenario->story_entd_id);
     ramza = scenario->ramza_mandatory;
-    attack_load_unaligned_s16(scenario->next_scenario);
-    attack_load_unaligned_s16(scenario->after_event);
-    script = attack_load_unaligned_s16(scenario->event_script);
+    attack_scenario_load_unaligned_s16(scenario->next_scenario);
+    attack_scenario_load_unaligned_s16(scenario->after_event);
+    script = attack_scenario_load_unaligned_s16(scenario->event_script);
     base = (s16*)g_attack_event_condition_blocks;
     conditions = base + base[script] / 2;
     first = *conditions;

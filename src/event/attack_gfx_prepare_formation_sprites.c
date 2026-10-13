@@ -1,21 +1,3 @@
-/* Loads file 0x166b (0x10000 bytes) via the entry-mode load paths, uploads its
- * second half, then for the 16 formation slots derives each unit's portrait
- * (inlined world_formation_get_unit_palette_index logic), copies a 0x18x0x30 cell into
- * the g_attack_formation_sprite_staging staging buffer, uploads it to g_attack_portrait_upload_rect and uploads the
- * 16x1 CLUT to g_attack_portrait_palette_upload_rect; g_attack_formation_sprite_tall_cell[slot] records the cell
- * layout.
- *
- * Load-bearing shapes: the nested else routes the remainder<8 and (code-8)/5
- * arms through `product` and a trailing `row = product` copy, so jump2 sees
- * two different join labels and keeps the two identical `code / 10` arms instead
- * of cross-jumping them. `palette_base` (a multi-block variable) holds the
- * source offset sum so it is not tied to the dying `>> 1` temporary, and
- * `y` is initialised between that sum and `source`. `code` is one variable
- * reused for sheet, code, remainder and the final portrait code; the clear
- * loop counter reuses `x`; `source` is an integer so `x + source` keeps its
- * order. The palette offset's `/ 2` of an even sum compiles to the target's
- * plain `sra` and its allocation order; it also adds an 8-byte compiler
- * stack slot, so `unused` covers only the remaining 16 bytes. */
 #include "fft/event_attack.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -23,6 +5,20 @@
 /* This overlay reads BATTLE's attack entry mode unsigned (lhu). */
 #define ENTRY_MODE (*(u16*)&g_battle_script_attack_entry_mode)
 
+/* Load file 0x166b (0x10000 bytes) through the entry-mode load paths and upload its second half; then,
+ * for the 16 formation slots, derive each unit's portrait (world_formation_get_unit_palette_index's logic,
+ * inlined), copy its 0x18x0x30 cell into the g_attack_formation_sprite_staging buffer, upload it to
+ * g_attack_portrait_upload_rect with its 16x1 CLUT at g_attack_portrait_palette_upload_rect, and record
+ * the cell layout in g_attack_formation_sprite_tall_cell[slot].
+ *
+ * Load-bearing shapes: the nested else routes the remainder<8 and (code-8)/5 arms through `product` and a
+ * trailing `row = product` copy, so jump2 sees two different join labels and keeps the two identical
+ * `code / 10` arms instead of cross-jumping them. `palette_base` (a multi-block variable) holds the source
+ * offset sum so it is not tied to the dying `>> 1` temporary, and `y` is initialised between that sum and
+ * `source`. `code` is one variable reused for sheet, code, remainder and the final portrait code; the
+ * clear loop counter reuses `x`; `source` is an integer so `x + source` keeps its order. The palette
+ * offset's `/ 2` of an even sum compiles to the target's plain `sra` and its allocation order; it also adds
+ * an 8-byte compiler stack slot, so `unused` covers only the remaining 16 bytes. */
 void attack_gfx_prepare_formation_sprites(void) {
     u8 unused[0x10];
     u8* buffer;
