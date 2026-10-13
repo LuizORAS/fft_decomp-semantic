@@ -18,7 +18,7 @@ functions:
   - {addr: 0x801bf28c, size: 100, name: attack_gfx_clip_portrait_poly_from_right, hash: 8b8f88a21b561ac0}
   - {addr: 0x801bf2f0, size: 100, name: attack_gfx_clip_portrait_poly_from_left, hash: 0e59600fae531215}
   - {addr: 0x801bf354, size: 1064, name: attack_gfx_build_portrait_transition_primitives, hash: 9632d1e8775d742c}
-  - {addr: 0x801bf77c, size: 4352, name: attack_render_unit_status_panel_thread, hash: 9e9b6b997e6a356e}
+  - {addr: 0x801bf77c, size: 4352, name: attack_panel_unit_status_banner_thread, hash: 9e9b6b997e6a356e}
   - {addr: 0x801c087c, size: 8, name: attack_noop_801c087c, hash: 6d64edf91449c1b1}
   - {addr: 0x801c0884, size: 544, name: attack_gfx_init_menu_tile_and_line_primitives, hash: c0c46a118253c8ae}
   - {addr: 0x801c0aa4, size: 40, name: attack_panel_run_equipment_list_thread, hash: fbcd24ded43d67df}
@@ -297,7 +297,7 @@ functions:
   - {addr: 0x801bf464, size: 100, name: bunit_gfx_clip_portrait_poly_from_right, hash: 4632c34e611fc393}
   - {addr: 0x801bf4c8, size: 100, name: bunit_gfx_clip_portrait_poly_from_left, hash: e0267807ec7b0b13}
   - {addr: 0x801bf52c, size: 1064, name: bunit_gfx_build_portrait_transition_primitives, hash: cdb73372750d229e}
-  - {addr: 0x801bf954, size: 4488, name: bunit_render_unit_status_panel_thread, hash: 4713ce1b910c04cd, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x801bf954, size: 4488, name: bunit_panel_unit_status_banner_thread, hash: 4713ce1b910c04cd, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x801c0adc, size: 8, name: bunit_noop_801c0adc, hash: 6d64edf91449c1b1}
   - {addr: 0x801c0ae4, size: 544, name: bunit_gfx_init_menu_tile_and_line_primitives, hash: c0c46a118253c8ae}
   - {addr: 0x801c0d04, size: 40, name: bunit_panel_run_equipment_list_thread, hash: fbcd24ded43d67df}
@@ -1108,7 +1108,7 @@ functions:
   - {addr: 0x801bf260, size: 100, name: debugchr_gfx_clip_portrait_poly_from_right, hash: b486060e906e736a}
   - {addr: 0x801bf2c4, size: 100, name: debugchr_gfx_clip_portrait_poly_from_left, hash: acc71cf2f3953a3f}
   - {addr: 0x801bf328, size: 1064, name: debugchr_gfx_build_portrait_transition_primitives, hash: 28dadc40ac60e2ca}
-  - {addr: 0x801bf750, size: 4540, name: debugchr_render_unit_status_panel_thread, hash: 54bc0c002cea8319, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x801bf750, size: 4540, name: debugchr_panel_unit_status_banner_thread, hash: 54bc0c002cea8319, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x801c090c, size: 8, name: debugchr_noop_801c090c, hash: 6d64edf91449c1b1}
   - {addr: 0x801c0914, size: 544, name: debugchr_gfx_init_menu_tile_and_line_primitives, hash: c0c46a118253c8ae}
   - {addr: 0x801c0b34, size: 40, name: debugchr_panel_run_equipment_list_thread, hash: fbcd24ded43d67df}
@@ -1289,7 +1289,7 @@ functions:
   - {addr: 0x801bfe28, size: 100, name: equip_gfx_clip_portrait_poly_from_right, hash: 3e2eceefe192cbe3}
   - {addr: 0x801bfe8c, size: 100, name: equip_gfx_clip_portrait_poly_from_left, hash: 3d34b3a8acab0923}
   - {addr: 0x801bfef0, size: 1064, name: equip_gfx_build_portrait_transition_primitives, hash: 6379fd02254cc356}
-  - {addr: 0x801c0318, size: 4612, name: equip_render_unit_status_panel_thread, hash: 0a90a88495dfd5ba, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x801c0318, size: 4612, name: equip_panel_unit_status_banner_thread, hash: 0a90a88495dfd5ba, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x801c151c, size: 8, name: equip_noop_801c151c, hash: 6d64edf91449c1b1}
   - {addr: 0x801c1524, size: 544, name: equip_gfx_init_menu_tile_and_line_primitives, hash: c0c46a118253c8ae}
   - {addr: 0x801c1744, size: 1612, name: equip_panel_run_equipment_list_thread, hash: 7da830216ec8b83b}
@@ -2179,7 +2179,7 @@ functions:
   - {addr: 0x801bf2ac, size: 100, name: require_gfx_clip_portrait_poly_from_right, hash: f06c2f5b8900d3fa}
   - {addr: 0x801bf310, size: 100, name: require_gfx_clip_portrait_poly_from_left, hash: ca2ed33a312f5e93}
   - {addr: 0x801bf374, size: 1064, name: require_gfx_build_portrait_transition_primitives, hash: 5d4cdd324a80f71e}
-  - {addr: 0x801bf79c, size: 4112, name: require_render_unit_status_panel_thread, hash: 84522d3712046bee}
+  - {addr: 0x801bf79c, size: 4112, name: require_panel_unit_status_banner_thread, hash: 84522d3712046bee}
   - {addr: 0x801c07ac, size: 8, name: require_noop_801c07ac, hash: 6d64edf91449c1b1}
   - {addr: 0x801c07b4, size: 544, name: require_gfx_init_menu_tile_and_line_primitives, hash: c0c46a118253c8ae}
   - {addr: 0x801c09d4, size: 40, name: require_panel_run_equipment_list_thread, hash: fbcd24ded43d67df}

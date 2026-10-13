@@ -3,11 +3,12 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Thread task 0x39: the character editor and status panels. ATTACK twin of
- * DEBUGCHR debugchr_render_unit_status_panel_thread and BUNIT
- * bunit_render_unit_status_panel_thread; this copy draws fixed-width gauge bars and a
- * formation-slot number instead of the zodiac/unit-id field. */
-void attack_render_unit_status_panel_thread(void) {
+/* Thread task 0x39 (NATIVE_THREAD_TASK_UNIT_STATUS_BANNER): the unit status banner (portrait, name and
+ * job, level, experience, HP, MP and CT bars, Brave, Faith and zodiac sign) of the selected unit or, in a
+ * second thread, of the comparison unit; ATTACK's copy of
+ * debugchr_panel_unit_status_banner_thread, drawing fixed-width gauge bars and a formation-slot number
+ * instead of the zodiac/unit-id field. */
+void attack_panel_unit_status_banner_thread(void) {
     RECT rects[6];
     s32 anim_state;
     s32 cur_unit;

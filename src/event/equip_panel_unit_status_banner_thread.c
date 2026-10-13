@@ -1,90 +1,101 @@
-#include "fft/event_bunit.h"
+#include "fft/event_equip.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* The packet, state and thread layouts are the shared fft/menu.h
- * records of the DEBUGCHR twin debugchr_render_unit_status_panel_thread. */
-
-/* Thread task 0x39: the character editor and status panels. BUNIT twin of
- * DEBUGCHR debugchr_render_unit_status_panel_thread. */
-void bunit_render_unit_status_panel_thread(void) {
+/* Thread task 0x39 (NATIVE_THREAD_TASK_UNIT_STATUS_BANNER): the unit status banner (portrait, name and
+ * job, level, experience, HP, MP and CT bars, Brave, Faith and zodiac sign) of the selected unit or, in a
+ * second thread, of the comparison unit; EQUIP's copy of
+ * debugchr_panel_unit_status_banner_thread, with thread slot 0xD selecting the first packet set. When
+ * g_equip_item_numeric_thread_enabled is set, the first numeric block is drawn as five separate entries (two
+ * through equip_text_render_decimal_entry_list), as in world_menu_unit_status_banner_thread; the
+ * zodiac/g_debugchr_editor_active branch of the DEBUGCHR version is absent.
+ *
+ * The packet, state and thread layouts are the shared fft/menu.h records: the editor packets at
+ * g_equip_panel_selected_editor_packets / g_equip_panel_comparison_editor_packets, the status-panel packets at
+ * g_equip_panel_selected_packets / g_equip_panel_comparison_packets, the editor states
+ * g_equip_selected_unit_stat_summary / g_equip_panel_comparison_billboard, and the per-thread display record.
+ * g_equip_panel_gauge_bar_colors holds the four Gouraud vertex colours of each bar. */
+void equip_panel_unit_status_banner_thread(void) {
     RECT rects[6];
     s32 anim_state;
     s32 cur_unit;
     s32 prev_unit;
 
-    u8* render_a;
-    battle_menu_status_panel_editor_packet_t* editor_base;
-    menu_number_entry_t* env_a;
-    battle_unit_status_record_t* state;
-    s32 portrait_arg;
-    const RECT* transition;
-    u16* image;
-    u8* render_b;
-    u8* render_c;
-    battle_menu_status_panel_packet_t* panel_base;
-    s16* scroll;
-    battle_menu_status_panel_display_thread_t* thread;
-    s32 shake;
-    s32 dimmed;
-    s32 suppress;
+    u8* number_image;                                      /* sp60 */
+    battle_menu_status_panel_editor_packet_t* editor_base; /* sp68 */
+    menu_number_entry_t* numeric_entries;                  /* sp70 */
+    battle_unit_status_record_t* state;                    /* sp78 */
+    s32 portrait_arg;                                      /* sp80 */
+    const RECT* portrait_rect;                             /* sp88 */
+    u16* portrait_image;                                   /* sp90 */
+    u8* small_text_image;                                  /* sp98 */
+    u8* name_image;                                        /* spA0 */
+    battle_menu_status_panel_packet_t* panel_base;         /* spA8 */
+    s16* unit_data;                                        /* spB0 */
+    battle_menu_status_panel_display_thread_t* thread;     /* spB8 */
+    s32 shake;                                             /* spC0 */
+    s32 dimmed;                                            /* spC8 */
+    s32 suppress;                                          /* spD0 */
 
     s32 thread_id;
     s32 frame;
     s32 i;
-    s32* win;
-    s32 px1;
-    s32 pya;
-    s32 px2;
-    s32 pyb;
-    s32 dx1;
-    s32 dx2;
-    s32 dx3;
-    s32 dx4;
-    s16 srow;
-    world_glyph_blit_t* origin;
+    s32 panel_x;
+    s32 panel_shake_y;
+    s32 editor_x;
+    s32 editor_shake_y;
+    s32* window_width;
+    s32 panel_offset_y;
+    s32 panel_base_offset_y;
+    s32 editor_offset_y;
+    s32 editor_base_offset_y;
+    s16 icon_index;
+    world_glyph_blit_t* text_position;
     battle_menu_status_panel_packet_t* panel;
     battle_menu_status_panel_editor_packet_t* editor;
-    SPRT* cur1;
-    u8* cur2;
-    u8* cur3;
-    POLY_FT4* cur5;
+    SPRT* name_sprite;
+    u8* number_image_lower;
+    u8* small_text_image_2;
+    u8* small_text_image_3;
+    POLY_FT4* portrait_poly;
 
     suppress = 0;
     battle_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_STATUS_BANNER);
-    g_bunit_input_controller = battle_script_get_controller_input_pointer(0) + 1;
+    g_equip_input_controller = battle_script_get_controller_input_pointer(0) + 1;
     thread_id = g_battle_thread_current_id;
     thread = (battle_menu_status_panel_display_thread_t*)g_battle_threads[thread_id].function_parameter_1;
-    if (thread_id == NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) {
-        panel = g_bunit_panel_selected_packets;
-        editor = g_bunit_panel_selected_editor_packets;
-        render_a = g_bunit_panel_selected_number_image;
-        render_b = g_bunit_panel_selected_large_number_image;
-        render_c = g_bunit_panel_selected_name_image;
-        env_a = g_bunit_panel_selected_numeric_entries;
-        state = &g_bunit_panel_selected_billboard;
-        scroll = g_bunit_panel_selected_unit_data;
-        transition = &g_bunit_panel_selected_portrait_rect;
+    if (thread_id == EQUIP_THREAD_SLOT_UNIT_STATUS) {
+        panel = g_equip_panel_selected_packets;
+        editor = g_equip_panel_selected_editor_packets;
+        number_image = g_equip_panel_selected_number_image;
+        small_text_image = g_equip_panel_selected_large_number_image;
+        name_image = g_equip_panel_selected_name_image;
+        numeric_entries = g_equip_panel_selected_numeric_entries;
+        /* Declared elsewhere in EQUIP as the 0x28-byte world_item_stat_summary_t;
+         * this function reads it as the first of two 0x24-spaced editor states. */
+        state = (battle_unit_status_record_t*)&g_equip_selected_unit_stat_summary;
+        unit_data = g_equip_panel_selected_unit_data;
+        portrait_rect = &g_equip_panel_selected_portrait_rect;
         panel_base = panel;
         editor_base = editor;
-        image = g_bunit_panel_selected_portrait_image;
+        portrait_image = g_equip_panel_selected_portrait_image;
     } else {
-        panel = g_bunit_panel_comparison_packets;
-        editor = g_bunit_panel_comparison_editor_packets;
-        render_a = g_bunit_panel_comparison_number_image;
-        render_b = g_bunit_panel_comparison_large_number_image;
-        render_c = g_bunit_panel_comparison_name_image;
-        env_a = g_bunit_panel_comparison_numeric_entries;
-        state = &g_bunit_panel_comparison_billboard;
-        scroll = g_bunit_panel_comparison_unit_data;
-        transition = &g_bunit_panel_comparison_portrait_rect;
+        panel = g_equip_panel_comparison_packets;
+        editor = g_equip_panel_comparison_editor_packets;
+        number_image = g_equip_panel_comparison_number_image;
+        small_text_image = g_equip_panel_comparison_large_number_image;
+        name_image = g_equip_panel_comparison_name_image;
+        numeric_entries = g_equip_panel_comparison_numeric_entries;
+        state = &g_equip_panel_comparison_billboard;
+        unit_data = g_equip_panel_comparison_unit_data;
+        portrait_rect = &g_equip_panel_comparison_portrait_rect;
         panel_base = panel;
         editor_base = editor;
-        image = g_bunit_panel_comparison_portrait_image;
+        portrait_image = g_equip_panel_comparison_portrait_image;
     }
     shake = 0;
 
-    battle_menu_init_numeric_display_frame_primitives(&g_bunit_gfx_portrait_origin, &editor->numeric_frame);
+    battle_menu_init_numeric_display_frame_primitives(&g_equip_gfx_portrait_origin, &editor->numeric_frame);
     battle_gfx_set_draw_mode_for_texture_page(&editor->draw_mode_a, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_gfx_set_draw_mode_for_texture_page(&editor->draw_mode_b, MENU_TEXTURE_PAGE_FRAME);
     battle_menu_init_sprite_array(&editor->label_sprites[0], 7, 0x7CBC);
@@ -95,38 +106,38 @@ void bunit_render_unit_status_panel_thread(void) {
     battle_text_configure_sprite_vram(&rects[0], 0x38, 0x28, &editor->value_sprites[0], 2);
     battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, &editor->value_sprites[1], 2);
     for (frame = 0; frame < 4; frame++) {
-        battle_gfx_init_image_loading(&editor->value_sprites[frame], g_bunit_editor_numeric_geometry,
-            &g_bunit_gfx_portrait_origin, &g_bunit_panel_editor_value_cells[frame]);
+        battle_gfx_init_image_loading(&editor->value_sprites[frame], g_equip_editor_numeric_geometry,
+            &g_equip_gfx_portrait_origin, &g_equip_panel_editor_value_cells[frame]);
     }
     if (state->team_kind >= 4) {
         state->team_kind = 0;
     }
     if (g_battle_post_battle_unit_changes_active == 0) {
-        battle_copy_bytes(g_bunit_panel_editor_mode_cell, &g_bunit_panel_editor_mode_cells[state->team_kind], 0xC);
+        battle_copy_bytes(g_equip_panel_editor_mode_cell, &g_equip_panel_editor_mode_cells[state->team_kind], 0xC);
     } else {
-        battle_copy_bytes(g_bunit_panel_editor_mode_cell, g_bunit_panel_editor_mode_cells, 0xC);
+        battle_copy_bytes(g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells, 0xC);
     }
     for (frame = 0; frame < 7; frame++) {
-        battle_gfx_init_image_loading(&editor->label_sprites[frame], g_bunit_editor_numeric_geometry,
-            &g_bunit_gfx_portrait_origin, &g_bunit_panel_editor_label_cells[frame]);
+        battle_gfx_init_image_loading(&editor->label_sprites[frame], g_equip_editor_numeric_geometry,
+            &g_equip_gfx_portrait_origin, &g_equip_panel_editor_label_cells[frame]);
     }
     battle_copy_bytes(editor + 1, editor, sizeof(battle_menu_status_panel_editor_packet_t));
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_b, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
-    battle_menu_init_numeric_display_frame_primitives(&g_bunit_panel_frame_rect, &panel->numeric_frame);
-    cur1 = &panel->sprites[0];
-    battle_menu_init_sprite_array(cur1, 7, 0x7C3C);
+    battle_menu_init_numeric_display_frame_primitives(&g_equip_panel_frame_rect, &panel->numeric_frame);
+    name_sprite = &panel->sprites[0];
+    battle_menu_init_sprite_array(name_sprite, 7, 0x7C3C);
     battle_gfx_init_default_poly_ft4(&panel->portrait);
-    battle_text_configure_sprite_vram(&rects[2], 0x58, 0x20, cur1, 0);
+    battle_text_configure_sprite_vram(&rects[2], 0x58, 0x20, name_sprite, 0);
     battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, &panel->sprites[1], 0);
     battle_text_configure_sprite_vram(&rects[4], 0x10, 0xA, &panel->sprites[2], 0);
     battle_text_configure_sprite_vram(&rects[5], 0x10, 0xA, &panel->sprites[3], 0);
     for (frame = 0; frame < 7; frame++) {
-        battle_gfx_init_image_loading(&panel->sprites[frame], g_bunit_editor_numeric_geometry,
-            &g_bunit_panel_frame_rect, &g_bunit_panel_sprite_cells[frame]);
+        battle_gfx_init_image_loading(&panel->sprites[frame], g_equip_editor_numeric_geometry,
+            &g_equip_panel_frame_rect, &g_equip_panel_sprite_cells[frame]);
     }
     battle_gfx_init_image_loading(
-        &panel->portrait, g_bunit_editor_numeric_geometry, &g_bunit_panel_frame_rect, g_bunit_panel_portrait_cell);
+        &panel->portrait, g_equip_editor_numeric_geometry, &g_equip_panel_frame_rect, g_equip_panel_portrait_cell);
     if (state->team_kind == 1) {
         panel->portrait.clut = 0x7FFD;
     } else {
@@ -146,12 +157,12 @@ void bunit_render_unit_status_panel_thread(void) {
             state->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 0x64;
         }
         if (g_battle_post_battle_unit_changes_active == 0) {
-            battle_copy_bytes(g_bunit_panel_editor_mode_cell, &g_bunit_panel_editor_mode_cells[state->team_kind], 0xC);
+            battle_copy_bytes(g_equip_panel_editor_mode_cell, &g_equip_panel_editor_mode_cells[state->team_kind], 0xC);
         } else {
-            battle_copy_bytes(g_bunit_panel_editor_mode_cell, g_bunit_panel_editor_mode_cells, 0xC);
+            battle_copy_bytes(g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells, 0xC);
         }
-        battle_gfx_init_image_loading(&editor->label_sprites[6], g_bunit_editor_numeric_geometry,
-            &g_bunit_gfx_portrait_origin, g_bunit_panel_editor_mode_cell);
+        battle_gfx_init_image_loading(&editor->label_sprites[6], g_equip_editor_numeric_geometry,
+            &g_equip_gfx_portrait_origin, g_equip_panel_editor_mode_cell);
         if (state->team_kind == 1) {
             panel->portrait.clut = 0x7FFD;
         } else {
@@ -165,10 +176,10 @@ void bunit_render_unit_status_panel_thread(void) {
             dimmed = 1;
         }
         for (i = 0; i < 4; i++) {
-            editor->value_sprites[i].clut = g_bunit_panel_editor_value_cluts[i][dimmed];
+            editor->value_sprites[i].clut = g_equip_panel_editor_value_cluts[i][dimmed];
         }
         for (i = 0; i < 7; i++) {
-            editor->label_sprites[i].clut = g_bunit_panel_editor_label_cluts[i][dimmed];
+            editor->label_sprites[i].clut = g_equip_panel_editor_label_cluts[i][dimmed];
         }
         i = 0;
         do {
@@ -233,7 +244,7 @@ void bunit_render_unit_status_panel_thread(void) {
             panel->portrait.g0 = 0x80;
             panel->portrait.b0 = 0x80;
         }
-        g_bunit_gfx_draw_offset_y = g_bunit_frame_arg != 0xF0 ? 0xF0 : 0;
+        g_equip_gfx_draw_offset_y = ((g_main_gfx_screen_polarity * 0xF0) != 0xF0) ? 0xF0 : 0;
         if ((thread->flags & MENU_STATUS_PANEL_SLIDE_DOWN) && (shake == 0)) {
             shake = 1;
         }
@@ -244,7 +255,7 @@ void bunit_render_unit_status_panel_thread(void) {
         }
         if (shake != 0) {
             if (shake < 0xA) {
-                thread->shake_y.word = g_bunit_panel_slide_down_y[shake];
+                thread->shake_y.word = g_equip_panel_slide_down_y[shake];
                 if (frame & 1) {
                     shake += 1;
                 }
@@ -253,7 +264,7 @@ void bunit_render_unit_status_panel_thread(void) {
                     thread->flags = thread->flags & MENU_STATUS_PANEL_HIDDEN;
                 }
             } else if (shake >= 0xB) {
-                thread->shake_y.word = g_bunit_panel_slide_up_y[shake];
+                thread->shake_y.word = g_equip_panel_slide_up_y[shake];
                 if (frame & 1) {
                     shake += 1;
                 }
@@ -263,25 +274,25 @@ void bunit_render_unit_status_panel_thread(void) {
                 }
             }
         }
-        px1 = thread->x;
-        dx1 = g_bunit_gfx_draw_offset_y;
-        panel->draw_offset_a.x = px1 - 0x80;
-        pya = thread->shake_y.low;
-        panel->draw_offset_a.y = pya + dx1;
+        panel_x = thread->x;
+        panel_offset_y = g_equip_gfx_draw_offset_y;
+        panel->draw_offset_a.x = panel_x - 0x80;
+        panel_shake_y = thread->shake_y.low;
+        panel->draw_offset_a.y = panel_shake_y + panel_offset_y;
         SetDrawOffset(&panel->draw_offset_a, &panel->draw_offset_a.x);
-        dx2 = g_bunit_gfx_draw_offset_y;
+        panel_base_offset_y = g_equip_gfx_draw_offset_y;
         panel->draw_offset_b.x = -0x80;
-        panel->draw_offset_b.y = dx2;
+        panel->draw_offset_b.y = panel_base_offset_y;
         SetDrawOffset(&panel->draw_offset_b, &panel->draw_offset_b.x);
-        px2 = thread->x;
-        dx3 = g_bunit_gfx_draw_offset_y;
-        editor->draw_offset_a.x = px2 - 0x80;
-        pyb = thread->shake_y.low;
-        editor->draw_offset_a.y = pyb + dx3;
+        editor_x = thread->x;
+        editor_offset_y = g_equip_gfx_draw_offset_y;
+        editor->draw_offset_a.x = editor_x - 0x80;
+        editor_shake_y = thread->shake_y.low;
+        editor->draw_offset_a.y = editor_shake_y + editor_offset_y;
         SetDrawOffset(&editor->draw_offset_a, &editor->draw_offset_a.x);
-        dx4 = g_bunit_gfx_draw_offset_y;
+        editor_base_offset_y = g_equip_gfx_draw_offset_y;
         editor->draw_offset_b.x = -0x80;
-        editor->draw_offset_b.y = dx4;
+        editor->draw_offset_b.y = editor_base_offset_y;
         SetDrawOffset(&editor->draw_offset_b, &editor->draw_offset_b.x);
         if (anim_state >= 0xA) {
             anim_state = 0;
@@ -305,13 +316,13 @@ void bunit_render_unit_status_panel_thread(void) {
                 anim_state = 2;
             }
         }
-        bunit_gfx_build_portrait_transition_primitives(
-            transition, &anim_state, &cur_unit, &prev_unit, image, &editor->portrait[0], portrait_arg);
+        equip_gfx_build_portrait_transition_primitives(
+            portrait_rect, &anim_state, &cur_unit, &prev_unit, portrait_image, &editor->portrait[0], portrait_arg);
         {
             CVECTOR* color;
             battle_unit_status_gauge_t* bar;
 
-            color = g_bunit_panel_gauge_bar_colors;
+            color = g_equip_panel_gauge_bar_colors;
             bar = state->gauges;
             for (i = 0; i < 3; i++) {
                 s32 x0;
@@ -319,7 +330,7 @@ void bunit_render_unit_status_panel_thread(void) {
                 s32 y;
 
                 SetPolyG4(&editor->bars[i]);
-                x0 = g_bunit_gfx_portrait_origin.x + 0x2F;
+                x0 = g_equip_gfx_portrait_origin.x + 0x2F;
                 if (bar->max == 0) {
                     w = 4;
                 } else {
@@ -330,13 +341,13 @@ void bunit_render_unit_status_panel_thread(void) {
                 }
                 editor->bars[i].x0 = x0;
                 y = i * 0xB + 0x18;
-                editor->bars[i].y0 = g_bunit_gfx_portrait_origin.y + y;
+                editor->bars[i].y0 = g_equip_gfx_portrait_origin.y + y;
                 editor->bars[i].x1 = x0 + w;
-                editor->bars[i].y1 = g_bunit_gfx_portrait_origin.y + y;
+                editor->bars[i].y1 = g_equip_gfx_portrait_origin.y + y;
                 editor->bars[i].x2 = x0;
-                editor->bars[i].y2 = g_bunit_gfx_portrait_origin.y + y + 3;
+                editor->bars[i].y2 = g_equip_gfx_portrait_origin.y + y + 3;
                 editor->bars[i].x3 = x0 + w;
-                editor->bars[i].y3 = g_bunit_gfx_portrait_origin.y + y + 3;
+                editor->bars[i].y3 = g_equip_gfx_portrait_origin.y + y + 3;
                 editor->bars[i].x2 -= 3;
                 editor->bars[i].x3 -= 3;
                 if (dimmed != 0) {
@@ -377,57 +388,67 @@ void bunit_render_unit_status_panel_thread(void) {
                 bar++;
             }
         }
-        panel->sprites[6].u0 = (scroll[4] % 7) * 0x18;
-        srow = scroll[4];
+        panel->sprites[6].u0 = (unit_data[4] % 7) * 0x18;
+        icon_index = unit_data[4];
         panel->sprites[6].w = 0x18;
         panel->sprites[6].h = 0x14;
-        panel->sprites[6].v0 = (srow / 7) * 0x14 + 0x2A;
+        panel->sprites[6].v0 = (icon_index / 7) * 0x14 + 0x2A;
         if ((frame == 0) || (thread->work != 0)) {
             if (state->list_index < 0) {
-                env_a[6].format = 0xC00;
+                numeric_entries[6].format = 0xC00;
             } else {
-                env_a[6].format = 2;
+                numeric_entries[6].format = 2;
             }
-            battle_clear_menu_render_buffer(render_a, 0x700);
-            win = &g_battle_menu_text_state.pen.stride;
-            origin = (world_glyph_blit_t*)(win - 2);
-            *win = 0x38;
-            battle_menu_draw_numeric_display_entries(render_a, env_a, origin, 6);
-            LoadImage(&rects[0], (u32*)render_a);
-            cur2 = render_a + 0x400;
-            *win = 0x60;
-            battle_menu_draw_numeric_display_entries(cur2, &env_a[6], origin, 4);
-            LoadImage(&rects[1], (u32*)cur2);
-            thread->work = 0;
-            battle_clear_menu_render_buffer(render_c, 0x580);
-            *win = 0x58;
-            battle_menu_set_text_origin(0, 0);
-            battle_menu_display_text_entry(scroll[0] + TEXT_ID_UNIT_NAME_BASE, render_c, origin);
-            battle_menu_set_text_origin(0, 0x10);
-            battle_menu_display_text_entry(scroll[1] + TEXT_ID_JOB_NAME_BASE, render_c, origin);
-            LoadImage(&rects[2], (u32*)render_c);
-            battle_clear_menu_render_buffer(render_b, 0xF0);
-            *win = 0x10;
-            battle_menu_set_text_origin(0, 0);
-            battle_text_draw_large_number_glyphs(scroll[2], 0x202, render_b, origin);
-            LoadImage(&rects[3], (u32*)render_b);
-            battle_menu_set_text_origin(0, 0);
-            cur3 = render_b + 0x50;
-            battle_text_draw_large_number_glyphs(scroll[3], 0x202, cur3, origin);
-            LoadImage(&rects[4], (u32*)cur3);
-            if (g_battle_post_battle_unit_changes_active == 0) {
-                battle_stats_t* stats;
-                battle_menu_set_text_origin(0, 0);
-                stats = battle_unit_get_stats_from_battle_id(scroll[5]);
-                if (scroll[5] >= 0x10) {
-                    s32 id = stats->formation_index;
-                    if (id == BATTLE_FORMATION_INDEX_NONE) {
-                        id = 0;
-                    }
-                    battle_text_draw_large_number_glyphs(id + 1, 0x4002, render_b + 0xA0, origin);
+            battle_clear_menu_render_buffer(number_image, 0x700);
+            {
+                s32* stride;
+                world_glyph_blit_t* position;
+                stride = &g_battle_menu_text_state.pen.stride;
+                *stride = 0x38;
+                if (g_equip_item_numeric_thread_enabled == 0) {
+                    battle_menu_draw_numeric_display_entries(
+                        number_image, numeric_entries, (world_glyph_blit_t*)(stride - 2), 6);
+                } else {
+                    position = (world_glyph_blit_t*)(stride - 2);
+                    equip_text_render_decimal_entry_list(number_image, &numeric_entries[10], position, 1);
+                    equip_text_render_decimal_entry_list(number_image, &numeric_entries[12], position, 1);
+                    battle_menu_draw_numeric_display_entries(number_image, &numeric_entries[11], position, 1);
+                    battle_menu_draw_numeric_display_entries(number_image, &numeric_entries[13], position, 1);
+                    battle_menu_draw_numeric_display_entries(number_image, &numeric_entries[4], position, 2);
                 }
             }
-            LoadImage(&rects[5], (u32*)(render_b + 0xA0));
+            LoadImage(&rects[0], number_image);
+            window_width = &g_battle_menu_text_state.pen.stride;
+            text_position = (world_glyph_blit_t*)(window_width - 2);
+            number_image_lower = number_image + 0x400;
+            *window_width = 0x60;
+            battle_menu_draw_numeric_display_entries(number_image_lower, &numeric_entries[6], text_position, 4);
+            LoadImage(&rects[1], number_image_lower);
+            thread->work = 0;
+            battle_clear_menu_render_buffer(name_image, 0x580);
+            *window_width = 0x58;
+            battle_menu_set_text_origin(0, 0);
+            battle_menu_display_text_entry(unit_data[0] + TEXT_ID_UNIT_NAME_SPECIAL_BASE, name_image, text_position);
+            battle_menu_set_text_origin(0, 0x10);
+            battle_menu_display_text_entry(unit_data[1] + TEXT_ID_JOB_NAME_BASE, name_image, text_position);
+            LoadImage(&rects[2], name_image);
+            battle_clear_menu_render_buffer(small_text_image, 0xF0);
+            *window_width = 0x10;
+            battle_menu_set_text_origin(0, 0);
+            battle_text_draw_large_number_glyphs(unit_data[2], 0x202, small_text_image, text_position);
+            LoadImage(&rects[3], small_text_image);
+            battle_menu_set_text_origin(0, 0);
+            small_text_image_2 = small_text_image + 0x50;
+            battle_text_draw_large_number_glyphs(unit_data[3], 0x202, small_text_image_2, text_position);
+            LoadImage(&rects[4], small_text_image_2);
+            if (g_battle_post_battle_unit_changes_active == 0) {
+                battle_menu_set_text_origin(0, 0);
+                small_text_image_3 = small_text_image + 0xA0;
+                battle_text_draw_large_number_glyphs(unit_data[5] + 1, 0x4002, small_text_image_3, text_position);
+                LoadImage(&rects[5], small_text_image_3);
+            } else {
+                LoadImage(&rects[5], small_text_image + 0xA0);
+            }
         }
         if (!(thread->flags & MENU_STATUS_PANEL_HIDDEN)) {
             battle_gfx_draw_or_append_gpu_primitive(&editor->draw_offset_b);
@@ -454,9 +475,9 @@ void bunit_render_unit_status_panel_thread(void) {
             battle_menu_submit_numeric_display_frame_primitives(&editor->numeric_frame);
             battle_gfx_draw_or_append_gpu_primitive(&editor->draw_offset_a);
             battle_gfx_draw_or_append_gpu_primitive(&panel->draw_offset_b);
-            cur5 = &panel->portrait;
-            SetSemiTrans(cur5, 1);
-            battle_gfx_draw_or_append_gpu_primitive(cur5);
+            portrait_poly = &panel->portrait;
+            SetSemiTrans(portrait_poly, 1);
+            battle_gfx_draw_or_append_gpu_primitive(portrait_poly);
             for (i = 3; i >= 0; i--) {
                 battle_gfx_draw_or_append_gpu_primitive(&panel->sprites[i]);
             }

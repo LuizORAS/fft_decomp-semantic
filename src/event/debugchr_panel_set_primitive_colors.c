@@ -1,9 +1,14 @@
 #include "fft/event_debugchr.h"
 #include "psx/types.h"
 
-/* The full panel's SPRTs begin at +0x24. The CLUT walks use pointer
- * arithmetic to keep the target's base-biased pointers; SetShadeTex uses a
- * subscript to retain its separate integer offset. */
+/* Give the status panel's sprites their palettes: while the panel style is 1 or menu input is locked
+ * (g_battle_menu_input_lock_mode 1), the dimmed CLUTs (0x7c7c on sprites 0-1, 0x7dfc on 2-11, 0x7d3c on
+ * 12-18) and a blue tint (0x40, 0x40, 0x80) on sprites 19-23; otherwise the normal CLUTs (0x7cbc, 0x7d7c,
+ * 0x7c3c) and neutral shading (0x80). The five overlays with the status panels (ATTACK, BUNIT, DEBUGCHR,
+ * EQUIP, REQUIRE) carry this same code.
+ *
+ * The full panel's SPRTs begin at +0x24. The CLUT walks use pointer arithmetic to keep the target's
+ * base-biased pointers; SetShadeTex uses a subscript to retain its separate integer offset. */
 void debugchr_panel_set_primitive_colors(
     battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state) {
     s32 i;

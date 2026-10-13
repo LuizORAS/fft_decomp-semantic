@@ -332,7 +332,7 @@ extern u8 g_attack_character_status_frame_config[];
 
 extern battle_active_unit_t g_attack_panel_selected_unit_data;
 
-void attack_render_unit_status_panel_thread(void);
+void attack_panel_unit_status_banner_thread(void);
 
 extern battle_unit_status_record_t g_attack_panel_selected_billboard;
 

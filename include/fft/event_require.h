@@ -235,7 +235,7 @@ extern RECT g_require_character_status_draw_area_rect;
 extern s32 g_require_character_status_frame_config;
 extern s32 g_require_character_status_redraw_request;
 
-void require_render_unit_status_panel_thread(void);
+void require_panel_unit_status_banner_thread(void);
 
 extern battle_unit_status_record_t g_require_panel_comparison_billboard;
 

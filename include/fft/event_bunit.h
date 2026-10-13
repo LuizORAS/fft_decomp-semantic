@@ -137,7 +137,7 @@ s32 bunit_job_is_current_mastered(s32 unused_row);
 s32 bunit_job_is_special_monster(s32 job_id);
 
 /* status */
-/* The status banner (bunit_render_unit_status_panel_thread in screen thread slot UNIT_STATUS): the selected
+/* The status banner (bunit_panel_unit_status_banner_thread in screen thread slot UNIT_STATUS): the selected
  * unit's portrait and gauges at the top or the bottom of the screen, slid between the two. */
 
 extern u8 g_bunit_status_banner_enabled;
@@ -642,7 +642,7 @@ void bunit_panel_toggle_comparison_status_thread(s32 enable);
 void bunit_panel_toggle_unit_status_thread(s32 enable);
 void bunit_panel_toggle_equipment_and_numeric_editor_threads(s32 enable);
 
-void bunit_render_unit_status_panel_thread(void);
+void bunit_panel_unit_status_banner_thread(void);
 
 extern battle_unit_status_record_t g_bunit_panel_selected_billboard;
 extern battle_unit_status_record_t g_bunit_panel_comparison_billboard;

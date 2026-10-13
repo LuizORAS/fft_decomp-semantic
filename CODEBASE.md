@@ -27,7 +27,7 @@ as original bytes.
 | `wldcore` | `WORLD/WLDCORE.BIN` | `0x80067000` | The world map (its loop, drawing, travel, random battles and calendar), the menu stack, propositions and the location scripts' opcodes |
 | `world` | `WORLD/WORLD.BIN` | `0x800e0000` | The menus over the world map (formation, shops, the location list, the memory card) and the world event-script interpreter |
 | `battle` | `BATTLE.BIN` | `0x80067000` | Battles and the story scenes played on battle maps |
-| `event-*` | `EVENT/*.OUT` | `0x801bf000` | Screens and loaders that BATTLE runs on demand: unit, equipment and job menus (`BUNIT`, `EQUIP`, `JOBSTTS`), the scenario loader (`ATTACK`) and others |
+| `event-*` | `EVENT/*.OUT` | `0x801bf000` | Screens and loaders that BATTLE runs on demand: unit, equipment and job menus (`BUNIT`, `EQUIP`, `JOBSTTS`), the scenario loader (`ATTACK`) and others ([Battle Screens](docs/mechanics/Battle%20Screens.md)) |
 | `effect-*` | `EFFECT/E*.BIN` | `0x801c2500` | 110 ability effects, run with BATTLE |
 
 Memory follows from these addresses:
@@ -221,7 +221,8 @@ All of these libraries are reconstructed C, matched like the game code.
   [Propositions and the Bar](docs/mechanics/Propositions%20and%20the%20Bar.md),
   [Event Scripts](docs/mechanics/Event%20Scripts.md),
   [Menus](docs/mechanics/Menus.md),
-  [World Map Menus](docs/mechanics/World%20Map%20Menus.md) and
+  [World Map Menus](docs/mechanics/World%20Map%20Menus.md),
+  [Battle Screens](docs/mechanics/Battle%20Screens.md) and
   [Engine core](docs/mechanics/Engine%20core.md) so far. The guides walk
   through common changes, such as the
   [Movement rules](docs/guides/Movement%20rules.md),

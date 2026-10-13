@@ -347,7 +347,7 @@ void equip_editor_run_numeric_thread(void);
 /* The panels around the lists: starting and stopping their threads, the unit status banner, the
  * character status frame and its images, and the colours of the status panel's sprites. */
 
-void equip_render_unit_status_panel_thread(void);
+void equip_panel_unit_status_banner_thread(void);
 
 extern s16 g_equip_panel_selected_unit_data[];
 extern world_image_location_t g_equip_panel_item_icon_texture[];
@@ -609,7 +609,7 @@ typedef enum equip_thread_slot {
     EQUIP_THREAD_SLOT_COMMAND_MENU = 5,       /* equip_menu_icon_list_thread */
     EQUIP_THREAD_SLOT_EQUIPMENT_LIST = 10,    /* equip_panel_run_equipment_list_thread */
     EQUIP_THREAD_SLOT_ITEM_NUMERIC = 11,      /* the numeric editor thread of the item panel */
-    EQUIP_THREAD_SLOT_UNIT_STATUS = 13,       /* equip_render_unit_status_panel_thread */
+    EQUIP_THREAD_SLOT_UNIT_STATUS = 13,       /* equip_panel_unit_status_banner_thread */
     EQUIP_THREAD_SLOT_COMPARISON_STATUS = 14, /* the second banner slot the indicator draw watches */
 } equip_thread_slot_e;
 

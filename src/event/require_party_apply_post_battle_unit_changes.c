@@ -89,7 +89,7 @@ void require_party_apply_post_battle_unit_changes(void) {
              * call slot on reorg's second pass. */
             transition = 0;
             if (affected_index == 0) {
-                battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, require_render_unit_status_panel_thread);
+                battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, require_panel_unit_status_banner_thread);
                 battle_thread_set_parameters(
                     NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (s32)&g_require_status_display_thread_params, 0, 0);
                 battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, require_editor_run_numeric_thread);

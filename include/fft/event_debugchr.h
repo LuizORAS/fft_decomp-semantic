@@ -157,7 +157,7 @@ void debugchr_panel_run_character_status_thread(void);
 
 extern RECT g_debugchr_character_status_frame_rect[];
 extern RECT g_debugchr_character_status_draw_area_rect;
-void debugchr_render_unit_status_panel_thread(void);
+void debugchr_panel_unit_status_banner_thread(void);
 
 /* gfx */
 /* Drawing: portraits and their cross-fade, the scaled status sprites, the frame tiles and lines, the

@@ -18,7 +18,7 @@ and the help. WORLD carries a copy of the same engine for its own menus and
 screens (the world menu, the Formation screen, the shops), plus a resident copy
 of OPTION.OUT's code for the world menu's Options row. Full screens come from
 companion overlays loaded on demand: OPTION, BUNIT, JOBSTTS, EQUIP, HELPMENU and
-DEBUGCHR. The world map's own menus are a separate engine of menu levels in
+DEBUGCHR ([[Battle Screens]]). The world map's own menus are a separate engine of menu levels in
 WLDCORE ([[World Map and Travel]], [[Propositions and the Bar]]).
 
 ### Entries and threads
@@ -94,7 +94,8 @@ WLDCORE ([[World Map and Travel]], [[Propositions and the Bar]]).
 - **Display scripts.** WORLD's menus draw through a small bytecode
   ([[world_menu_run_display_script]]): a command is an opcode, its length and
   its operands ([[menu_script_opcode_e]]), and 0x1c ends a stream. BUNIT, EQUIP,
-  JOBSTTS and CARD use the same opcode numbers with their own handler tables.
+  JOBSTTS and CARD use the same opcode numbers with their own handlers, named
+  `<overlay>_menu_script_<verb>` like WORLD's ([[Battle Screens]]).
 - **Scrollable lists and saved positions:**
   [[world_menu_script_draw_scrollable_list]], [[world_menu_set_selection_record]].
 - **Options:** the world menu's Options row
@@ -112,7 +113,7 @@ WLDCORE ([[World Map and Travel]], [[Propositions and the Bar]]).
 | `g_battle_menu_unit_selection_records` ([[battle_menu_record_t]]) | Each unit's remembered rows |
 | `g_battle_system_function_table` ([[battle_system_function_t]]) | The prompts and messages: menu id, text, entry, row action, cancel count, thread, alternate |
 | [[battle_companion_overlay_e]] | The companion overlays the menus load |
-| [[menu_script_opcode_e]] | WORLD's display script commands |
+| [[menu_script_opcode_e]] | The display script commands of WORLD's menus and the battle screens |
 
 ## Main flow
 
