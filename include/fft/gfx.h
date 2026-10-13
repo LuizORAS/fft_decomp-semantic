@@ -263,13 +263,8 @@ static inline void texture_rect_pixels_to_cells(const s32 pixels[4], s32 cells[4
 }
 
 /* primitives */
-/* Draw-area pair built by the menu graphics helpers: two DR_AREA packets whose
- * rectangles are scaled around their centre by a percentage from
- * g_world_menu_zoom_percentages (indexed by g_script_event_speed-adjusted step).
- * The BATTLE menus and the overlay status panels build the same pair: the
- * *_gfx_build_scaled_draw_area_packets helpers call SetDrawArea(areas[i],
- * rects[i]), the *_gfx_init_scaled_draw_area_packets helpers clear rects[0].w
- * and rects[1].h and copy the menu template into rects[1]. */
+/* Two DR_AREA packets and their corresponding rectangles.
+ * Builders choose scaling percentages and rectangle placement. */
 typedef struct scaled_draw_area_pair {
     DR_AREA areas[2]; /* 0x00 */
     RECT rects[2];    /* 0x18 */

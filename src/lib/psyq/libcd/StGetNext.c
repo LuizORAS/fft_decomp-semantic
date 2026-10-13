@@ -8,6 +8,7 @@ u32 StGetNext(u32** frame_data, u32** header) {
             record->id = StFREE;
         record = &g_psyq_cd_stream_ring[g_psyq_cd_stream_read_index];
     }
+    /* CD callbacks can change the frame status between these two reads. */
     if (*(volatile u16*)&record->id != StCOMPLETE)
         return 1;
     /* The addressed 16-bit field keeps the lock store before the payload address calculation. */

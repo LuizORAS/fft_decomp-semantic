@@ -10,7 +10,7 @@ register void* psyq_crt_return_address __asm__("$31");
 
 /* main 0x80010ad0–0x80010b40: guarded constructor dispatch with a private frame. */
 void __main(void) {
-    /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
+    /* Pins preserve the original scratch registers and call ABI. */
     register s32 initialized __asm__("$8");
     psyq_crt_handler_t handler;
     initialized = g_psyq_crt_constructors_ran;

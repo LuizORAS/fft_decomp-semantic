@@ -168,7 +168,7 @@ extern s16 GsORGOFSY;
 extern s16 PSDGPU; /* GsOFSGPU: offsets go through the draw environment */
 
 /* Internal matrix reset to zero by graphics initialization; no other linked
- * function accesses it. The original SDK object names it _LC. */
+ * function accesses it. */
 extern MATRIX _LC;
 
 /* GsInit3D clipping limits; no other linked function reads them. */

@@ -123,10 +123,10 @@ typedef enum {
 #define PSYQ_GPU_DISPLAY_WIDTH_368  0x40U
 #define PSYQ_GPU_DISPLAY_REVERSE    0x80U
 
-/* GPU packet header: low 24 bits link to the next primitive; high 8 bits
- * contain the packet length. The SDK view continues with the first command
- * 32-bit value (colour and GPU code), so it is 8 bytes; game code only uses it
- * through casts of primitive pointers. */
+/* GPU packet prefix: low 24 bits link to the next primitive; high 8 bits
+ * contain the packet length. The next word stores colour and command bytes,
+ * making P_TAG 8 bytes. Primitive header macros access it through casts of
+ * primitive pointers. */
 typedef struct {
     u32 addr : 24;
     u32 len : 8;
@@ -460,7 +460,7 @@ typedef struct {
 
 typedef DR_MODE DR_TWIN;
 
-/* SDK upload primitive storage; SetDrawLoad fills its header only. */
+/* VRAM upload packet; SetDrawLoad sets the tag and commands, leaving p untouched. */
 typedef struct {
     u32 tag;
     u32 code[4];

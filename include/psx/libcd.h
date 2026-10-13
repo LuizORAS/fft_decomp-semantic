@@ -62,7 +62,7 @@ typedef struct {
     u8 track;
 } CdlLOC;
 
-/* Subheader filter for CdlSetfilter; pad is reserved by the SDK. */
+/* File/channel subheader filter for CdlSetfilter; pad is reserved. */
 typedef struct {
     u8 file;
     u8 chan;
@@ -184,7 +184,7 @@ s32 CD_init(void);
 s32 CD_initvol(void);
 void CD_set_test_parmnum(s32 parameter_count);
 
-/* Current SDK caller ABI corrections, established by original v0 use. */
+/* command and ring helpers */
 s32 CD_cw(u8 command, const u8* parameter, u8* result, s32 asynchronous);
 void callback(void);
 s32 init_ring_status(u32 first_sector, u32 sector_count);

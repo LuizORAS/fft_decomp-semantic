@@ -4,7 +4,7 @@
 void SpuGetVoiceEnvelopeAttr(s32 v_num, s32* key_stat, s16* envx) {
     s16 envelope = _spu_RXX->raw[v_num << 3 | 6];
     *envx = envelope;
-    /* Retail writes only 16 bits despite the SDK's long-pointer ABI. */
+    /* Only the low 16 bits of the s32 key_stat output are written. */
     if (_spu_keystat & SPU_KEYCH(v_num)) {
         *(s16*)key_stat = envelope > 0 ? 1 : 3;
     } else {

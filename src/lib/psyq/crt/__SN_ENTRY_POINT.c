@@ -24,7 +24,7 @@ register void* psyq_crt_return_address __asm__("$31");
 
 /* main 0x80010a30–0x80010ad0: zero BSS, establish stack/heap/GP and enter main. */
 void __SN_ENTRY_POINT(void) {
-    /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
+    /* Pins preserve the original scratch registers and call ABI. */
     u32* cursor;
     u32* end;
     register u32 ram_top __asm__("$2");

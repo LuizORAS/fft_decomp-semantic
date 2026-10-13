@@ -46,7 +46,6 @@ s32 StopRCnt(u32 spec);
 s32 ResetRCnt(u32 spec);
 
 /* card */
-/* SDK-family names; the exact export spelling of this linked version is unverified. */
 void InitCARD(s32 val);
 s32 StartCARD(void);
 s32 StopCARD(void);

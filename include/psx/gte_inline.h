@@ -8,14 +8,9 @@
 #define PSYQ_GTE_STRINGIFY_VALUE(value) #value
 #define PSYQ_GTE_STRINGIFY(value)       PSYQ_GTE_STRINGIFY_VALUE(value)
 
-/* Clean-room GTE (COP2) operation macros.
- *
- * The retail game code issues GTE operations through the SDK's inline macros
- * in their DMPSX form, which C cannot express: every memory operand is first
- * copied to $12, and each GTE command is preceded by two nops. These macros
- * reproduce the instruction sequences observed in the target (for example the
- * EFFECT mesh renderers' ldv0/rtv0tr/stlvnl/stflg sequence) and keep the SDK's
- * names. Add an operation only with target evidence of its exact form. */
+/* GTE (COP2) operations in the game code's DMPSX form.
+ * The gte_* macros use $12 for memory addresses; gte_rtv0tr, gte_rtps and
+ * gte_rtpt each issue two nops before the command. */
 
 /* Load V0 from an SVECTOR. */
 #define gte_ldv0(r0)                                                                                                   \

@@ -27,7 +27,7 @@ int sprintf(char* destination, const char* format, ...) {
     int space;
     char* terminator;
     const char* current;
-    /* SDK va_end adds a cursor-slot store absent from the native return. */
+    /* va_end would clear the cursor slot; the original return leaves it untouched. */
     va_start(arguments, format);
     count = 0;
     character = *format;

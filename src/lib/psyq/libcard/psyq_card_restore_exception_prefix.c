@@ -3,7 +3,7 @@
 
 /* main 0x80028a64–0x80028acc: restore three exception-handler 32-bit instructions. */
 void psyq_card_restore_exception_prefix(void) {
-    /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
+    /* Pins preserve the original scratch registers and call ABI. */
     psyq_bios_c0_table_t* table;
     u32* destination;
     register u32 word __asm__("$3");

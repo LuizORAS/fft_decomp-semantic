@@ -18,6 +18,7 @@ void battle_state_run_game_loop(void) {
     battle_gfx_init_render_state();
     effect_init_system();
 
+    /* A reverse slot-index loop changes the reset's original bytes. */
     init_offset = 0x196b0;
     do {
         g_battle_gfx_spritesheet_ids_by_vram_slot[init_offset] = 0;

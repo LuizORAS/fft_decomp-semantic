@@ -3,7 +3,7 @@
 
 /* main 0x800289d4–0x80028a40: swap five PAD-clear handler 32-bit instructions. */
 void _patch_card2(void) {
-    /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
+    /* Pins preserve the original scratch registers and call ABI. */
     psyq_card_bios_b0_table_t* table;
     u32* destination;
     register u32 old_word __asm__("$3");

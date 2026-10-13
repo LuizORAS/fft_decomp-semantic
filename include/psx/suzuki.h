@@ -188,8 +188,8 @@ typedef struct suzuki_repeat {
 
 /* Suzuki sequencer channel record (0x160 bytes), the third argument of every
  * SMD opcode handler (note data, music, channel). Field names follow the
- * opcode that writes them. voice_attr at 0x34 is the SDK SpuVoiceAttr; the driver passes its
- * members to LIBSPU one by one.
+ * opcode that writes them. voice_attr at 0x34 is a SpuVoiceAttr; the driver
+ * passes its members to LIBSPU one by one.
  *
  * flags holds the 16-bit channel flags (suzuki_channel_flag_e); a channel is
  * allocated while it is non-zero, and suzuki_smd_set_flags_all_channels ORs a
