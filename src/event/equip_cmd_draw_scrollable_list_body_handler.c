@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -163,7 +164,7 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
                 g_equip_text_digit_texture_page, g_equip_menu_window_clut, g_equip_gfx_sprite_ot_index);
         }
     }
-    if (g_equip_menu_use_alternate_palette == 0) {
+    if (g_menu_use_alternate_palette == 0) {
         if (g_equip_menu_scroll_base_index != 0) {
             rect.x = g_equip_menu_window_right_x;
             rect.y = command->list.arrow_up_y;
@@ -203,7 +204,7 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
         marker.y = command->list.y
             + (g_equip_menu_selected_list_index - g_equip_menu_scroll_base_index) * g_equip_menu_list_row_height;
         equip_menu_update_and_draw_animated_cursor(
-            &marker, g_equip_menu_list_cursor_anim_state, g_equip_menu_use_alternate_palette);
+            &marker, g_equip_menu_list_cursor_anim_state, g_menu_use_alternate_palette);
     }
     command = menu_next_instruction(command);
     g_equip_menu_list_row_index = 0;

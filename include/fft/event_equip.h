@@ -356,7 +356,6 @@ extern menu_instruction_t g_equip_menu_slot_marker_window;
 extern u8 g_equip_menu_slot_marker_x[];
 extern s8 g_equip_menu_substate; /* menu_item_list_state_e */
 extern s16 g_equip_menu_text_redraw_flag;
-extern u8 g_equip_menu_use_alternate_palette;
 extern u16 g_equip_menu_window_clut;
 
 extern s16 g_equip_menu_window_right_x;
@@ -460,7 +459,6 @@ typedef char equip_gfx_buffer_size_must_be_236[(sizeof(equip_gfx_buffer_t) == 23
  * descriptor equip_menu_draw_equipment_slot_marker feeds to the oriented quad
  * enqueue. */
 extern oriented_quad_t g_equip_gfx_blank_cell_rect;
-extern u16 g_equip_gfx_clut_id;
 extern equip_gfx_context_t* g_equip_gfx_context;
 extern equip_gfx_buffer_t* g_equip_gfx_context_base;
 extern equip_gfx_buffer_t g_equip_gfx_contexts[];
@@ -522,7 +520,6 @@ extern u16 g_equip_gfx_sprite_capacity;
 extern rgb24_t g_equip_gfx_sprite_color;
 extern u16 g_equip_gfx_sprite_count;
 extern s16 g_equip_gfx_sprite_ot_index;
-extern u16 g_equip_gfx_texture_page;
 extern u16 g_equip_gfx_tile_16_capacity;
 extern u16 g_equip_gfx_tile_16_count;
 extern u16 g_equip_gfx_tile_1_capacity;
@@ -613,13 +610,10 @@ menu_instruction_t* equip_cmd_release_otag_lock_handler(menu_instruction_t* inst
 menu_instruction_t* equip_cmd_run_if_else_group_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_run_if_group_handler(menu_instruction_t* instruction);
 void equip_cmd_run_stream(menu_instruction_t* instruction, s32 input);
-menu_instruction_t* equip_cmd_set_clut_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_set_draw_color_handler(menu_instruction_t* instruction);
-menu_instruction_t* equip_cmd_set_layout_clut_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_set_otag_index_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_set_semitrans_handler(menu_instruction_t* instruction);
-menu_instruction_t* equip_cmd_set_tpage_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_set_zoomed_draw_area_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_skip_group(menu_instruction_t* instruction);
 

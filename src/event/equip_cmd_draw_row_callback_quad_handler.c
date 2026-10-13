@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Draw the selected callback's icon for the literal or current list row,
@@ -30,8 +31,8 @@ menu_instruction_t* equip_cmd_draw_row_callback_quad_handler(menu_instruction_t*
         g_equip_cmd_row_sprite_command.sprite.v = entry->v;
         clut = entry->clut;
         tpage = entry->tpage;
-        g_equip_gfx_clut_id = clut;
-        g_equip_gfx_texture_page = tpage;
+        g_menu_gfx_clut_id = clut;
+        g_menu_gfx_texture_page = tpage;
         equip_cmd_draw_textured_quad_handler((menu_instruction_t*)&g_equip_cmd_row_sprite_command);
     }
 

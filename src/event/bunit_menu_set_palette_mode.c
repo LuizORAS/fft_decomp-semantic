@@ -1,10 +1,11 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Select the normal (0) or alternate menu palette: the sprite colour and the six CLUT selections
  * the menu commands draw with. Twin of world_menu_set_palette_mode. */
 void bunit_menu_set_palette_mode(s32 mode) {
-    g_bunit_menu_use_alternate_palette = mode;
+    g_menu_use_alternate_palette = mode;
     if (mode != 0) {
         g_bunit_menu_window_clut = g_bunit_text_clut_0_mode1;
         g_bunit_menu_alternate_number_clut = g_bunit_text_clut_1_mode1;

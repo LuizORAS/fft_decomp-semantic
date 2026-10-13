@@ -1,10 +1,11 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Select the normal (0) or alternate menu palette: the sprite colour and the six CLUT selections
  * the menu commands draw with. Twin of world_menu_set_palette_mode. */
 void equip_menu_set_palette_mode(s32 mode) {
-    g_equip_menu_use_alternate_palette = mode;
+    g_menu_use_alternate_palette = mode;
     if (mode != 0) {
         g_equip_gfx_sprite_color.r = 0x60;
         g_equip_gfx_sprite_color.g = 0x60;

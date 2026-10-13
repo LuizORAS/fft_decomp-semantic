@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Stream command: draw a textured quad of size (cmd->sprite.sprite.w, cmd->sprite.sprite.h) at
@@ -32,6 +33,6 @@ menu_instruction_t* equip_cmd_draw_textured_quad_handler(menu_instruction_t* cmd
     }
 
     equip_gfx_enqueue_textured_quad(&rect, cmd->sprite.sprite.u, cmd->sprite.sprite.v, color,
-        g_equip_gfx_semitransparency, g_equip_gfx_texture_page, g_equip_gfx_clut_id, g_equip_gfx_sprite_ot_index);
+        g_equip_gfx_semitransparency, g_menu_gfx_texture_page, g_menu_gfx_clut_id, g_equip_gfx_sprite_ot_index);
     return menu_next_instruction(cmd);
 }

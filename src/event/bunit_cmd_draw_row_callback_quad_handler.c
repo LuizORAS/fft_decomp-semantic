@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Draw the selected callback's icon for the literal or current list row,
@@ -26,8 +27,8 @@ menu_instruction_t* bunit_cmd_draw_row_callback_quad_handler(menu_instruction_t*
         g_bunit_cmd_row_quad.sprite.h = entry->h;
         g_bunit_cmd_row_quad.sprite.u = entry->u;
         g_bunit_cmd_row_quad.sprite.v = entry->v;
-        g_bunit_gfx_clut_id = entry->clut;
-        g_bunit_gfx_texture_page = entry->tpage;
+        g_menu_gfx_clut_id = entry->clut;
+        g_menu_gfx_texture_page = entry->tpage;
         bunit_cmd_draw_textured_quad_handler((menu_instruction_t*)&g_bunit_cmd_row_quad);
     }
     return menu_next_instruction(cmd);

@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -163,7 +164,7 @@ menu_instruction_t* bunit_cmd_run_scrollable_list_handler(menu_instruction_t* co
                 g_bunit_text_digit_texture_page, g_bunit_menu_window_clut, g_bunit_gfx_otag_index);
         }
     }
-    if (g_bunit_menu_use_alternate_palette == 0) {
+    if (g_menu_use_alternate_palette == 0) {
         if (g_bunit_menu_scroll_base_index != 0) {
             rect.x = g_bunit_menu_window_right_x;
             rect.y = command->list.arrow_up_y;
@@ -200,7 +201,7 @@ menu_instruction_t* bunit_cmd_run_scrollable_list_handler(menu_instruction_t* co
         marker.y = command->list.y
             + (g_bunit_menu_list_selected_index - g_bunit_menu_scroll_base_index) * g_bunit_menu_list_row_height;
         bunit_menu_update_and_draw_animated_cursor(
-            &marker, &g_bunit_menu_list_cursor_anim_state, g_bunit_menu_use_alternate_palette);
+            &marker, &g_bunit_menu_list_cursor_anim_state, g_menu_use_alternate_palette);
     }
     command = menu_next_instruction(command);
     g_bunit_menu_cursor_row = 0;

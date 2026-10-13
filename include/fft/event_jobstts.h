@@ -176,7 +176,6 @@ typedef struct jobstts_gfx_context {
 typedef char jobstts_gfx_context_size_must_be_244[(sizeof(jobstts_gfx_context_t) == 244) ? 1 : -1];
 
 extern u16 g_jobstts_gfx_background_texture_page;
-extern u16 g_jobstts_gfx_clut_id;
 extern jobstts_gfx_context_t* g_jobstts_gfx_context;
 extern jobstts_gfx_context_t* g_jobstts_gfx_context_base;
 extern jobstts_gfx_context_t g_jobstts_gfx_contexts[];
@@ -230,7 +229,6 @@ extern u16 g_jobstts_gfx_sprite_8_capacity;
 extern s16 g_jobstts_gfx_sprite_8_count;
 extern u16 g_jobstts_gfx_sprite_capacity;
 extern s16 g_jobstts_gfx_sprite_count;
-extern u16 g_jobstts_gfx_texture_page;
 extern u16 g_jobstts_gfx_tile_16_capacity;
 extern s16 g_jobstts_gfx_tile_16_count;
 extern u16 g_jobstts_gfx_tile_1_capacity;
@@ -301,12 +299,9 @@ menu_instruction_t* jobstts_cmd_run_if_else_group_handler(menu_instruction_t* in
 menu_instruction_t* jobstts_cmd_run_if_group_handler(menu_instruction_t* instruction);
 void jobstts_cmd_run_stream(menu_instruction_t* instruction, s32 flags);
 void jobstts_cmd_run_stream_with_mode(menu_instruction_t* script, s32 flags, s32 event_mode);
-menu_instruction_t* jobstts_cmd_set_clut_handler(menu_instruction_t* instruction);
 menu_instruction_t* jobstts_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* instruction);
-menu_instruction_t* jobstts_cmd_set_layout_clut_handler(menu_instruction_t* instruction);
 menu_instruction_t* jobstts_cmd_set_otag_index_if_unlocked_handler(menu_instruction_t* instruction);
 menu_instruction_t* jobstts_cmd_set_semitrans_handler(menu_instruction_t* instruction);
-menu_instruction_t* jobstts_cmd_set_tpage_handler(menu_instruction_t* instruction);
 menu_instruction_t* jobstts_cmd_skip_group(menu_instruction_t* instruction);
 
 /* text */

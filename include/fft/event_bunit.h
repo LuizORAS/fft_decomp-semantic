@@ -371,7 +371,6 @@ extern s16 g_bunit_menu_scroll_list_active;
 extern s16 g_bunit_menu_scroll_pixel_offset;
 extern menu_selection_record_t g_bunit_menu_selection_records[BUNIT_MENU_SELECTION_RECORD_COUNT];
 extern s16 g_bunit_menu_selection_values[];
-extern u8 g_bunit_menu_use_alternate_palette;
 extern u16 g_bunit_menu_window_clut;
 extern s16 g_bunit_menu_window_right_x;
 extern menu_button_piece_t g_bunit_slot_sprite_entries[];
@@ -498,7 +497,6 @@ extern u16 g_bunit_gfx_background_tile_layout[2][8]; /* per row parity: four (x,
  * comes from its static initializer. */
 extern oriented_quad_t g_bunit_gfx_blank_cell_rect;
 
-extern u16 g_bunit_gfx_clut_id;
 extern bunit_gfx_context_t* g_bunit_gfx_context;
 /* Base of the two frame buffers; g_bunit_gfx_context alternates between them. */
 extern bunit_gfx_context_t* g_bunit_gfx_context_base;
@@ -557,7 +555,6 @@ extern s16 g_bunit_gfx_sprite_8_count;
 extern u16 g_bunit_gfx_sprite_capacity;
 extern rgb24_t g_bunit_gfx_sprite_color;
 extern s16 g_bunit_gfx_sprite_count;
-extern u16 g_bunit_gfx_texture_page;
 extern u16 g_bunit_gfx_tile_16_capacity;
 extern s16 g_bunit_gfx_tile_16_count;
 extern u16 g_bunit_gfx_tile_1_capacity;
@@ -664,13 +661,10 @@ menu_instruction_t* bunit_cmd_run_if_else_group_handler(menu_instruction_t* inst
 menu_instruction_t* bunit_cmd_run_if_group_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_run_scrollable_list_handler(menu_instruction_t* instruction);
 void bunit_cmd_run_stream(menu_instruction_t* instruction, s32 flags);
-menu_instruction_t* bunit_cmd_set_clut_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_set_draw_color_handler(menu_instruction_t* instruction);
-menu_instruction_t* bunit_cmd_set_layout_clut_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_set_otag_index_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_set_semitrans_handler(menu_instruction_t* instruction);
-menu_instruction_t* bunit_cmd_set_tpage_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_set_zoomed_draw_area_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_skip_group(menu_instruction_t* instruction);
 

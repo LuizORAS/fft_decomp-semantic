@@ -1489,10 +1489,14 @@ extern u16 g_menu_text_clut_2_mode1;
 extern u16 g_menu_text_clut_3_mode0;
 extern u16 g_menu_text_clut_3_mode1;
 extern rgb24_t g_menu_text_color;
-extern u8 g_menu_use_alternate_palette;
 extern u16 g_menu_window_clut;
 void menu_input_update_controller(void);
 void menu_set_palette_mode(s32 mode);
+
+/* command palette state */
+extern u16 g_menu_gfx_clut_id;
+extern u16 g_menu_gfx_texture_page;
+extern u8 g_menu_use_alternate_palette;
 
 /* text */
 /* The font, EVENT/FONT.BIN: 2200 glyphs of 14 rows of 10 two-bit pixels. A
