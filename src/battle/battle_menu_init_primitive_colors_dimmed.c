@@ -8,15 +8,11 @@ void battle_menu_init_primitive_colors_dimmed(menu_palette_primitives_t* menu) {
     s32 palette_index;
     LINE_F2* line;
 
-    index = 0;
-    line = menu->lines;
-    do {
+    for (index = 0, line = menu->lines; index < 12; index++, line++) {
         palette_index = (g_battle_menu_numeric_display_palette_indices[index] + PALETTE_COLOR_COUNT);
         line->r0 = g_battle_menu_palette_colors.colors[palette_index].red << 3;
         line->g0 = g_battle_menu_palette_colors.colors[palette_index].green << 3;
-        index++;
         line->b0 = g_battle_menu_palette_colors.colors[palette_index].blue << 3;
-        line++;
-    } while (index < 12);
+    }
     menu->sprite.clut = 0x7d3c;
 }
