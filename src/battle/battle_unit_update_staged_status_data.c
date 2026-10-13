@@ -23,7 +23,7 @@ void battle_unit_update_staged_status_data(u16 unit_id, u16 restore) {
     if (g_battle_menu_input_mode == MENU_INPUT_PLAYER && script_prepare_unit_filter(&unit_id, &filter_mode) != 0) {
         unit_index = 0;
         g_battle_unit_status_staging_data->jump_float_flags = 0;
-        do {
+        for (; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             if (script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &filter_mode) != 0) {
                 battle_unit_index = battle_unit_get_battle_id_by_runtime_id(unit_id);
                 if (battle_unit_index != -1) {
@@ -44,8 +44,7 @@ void battle_unit_update_staged_status_data(u16 unit_id, u16 restore) {
                     break;
                 }
             }
-            unit_index++;
-        } while (unit_index < BATTLE_UNIT_SLOT_COUNT);
+        }
         if (g_battle_unit_status_staging_data->jump_float_flags != 0) {
             thread_wait_frames(40);
         }

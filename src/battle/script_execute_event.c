@@ -336,7 +336,7 @@ restart_script:
             work_index = 0;
             battle_unit_snap_all_facings_to_quadrants();
             battle_unit_update_staged_status_data(0, 1);
-            do {
+            for (; work_index < EVENT_UNIT_SLOT_COUNT; work_index++) {
                 if (battle_unit_has_runtime_id(work_index) != 0) {
                     operand_1 = battle_unit_get_battle_id_by_runtime_id(work_index);
                     if (operand_1 >= 0) {
@@ -344,8 +344,7 @@ restart_script:
                         unit->position.facing = battle_unit_get_facing_quadrant_by_runtime_id(work_index);
                     }
                 }
-                work_index += 1;
-            } while (work_index < EVENT_UNIT_SLOT_COUNT);
+            }
             camera_normalize_yaw_angle();
             camera_init_tilt_and_zoom();
             thread_exit_current();

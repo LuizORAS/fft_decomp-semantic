@@ -15,8 +15,7 @@ void script_set_units_palette_update_suppression(s32 event_unit_id, s32 enable) 
 
     unit_id = event_unit_id;
     if (script_prepare_unit_filter(&unit_id, &mode) != 0) {
-        i = 0;
-        do {
+        for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
             if (script_filter_unit_id_by_mode(&unit_id, (u16*)&i, &mode) != 0) {
                 if (enable == 0) {
                     battle_unit_clear_palette_update_suppression(unit_id);
@@ -27,7 +26,6 @@ void script_set_units_palette_update_suppression(s32 event_unit_id, s32 enable) 
                     return;
                 }
             }
-            i += 1;
-        } while (i < EVENT_UNIT_SLOT_COUNT);
+        }
     }
 }

@@ -17,7 +17,7 @@ void battle_text_build_unit_name_list(void) {
     battle_text_init_menu_section_pointers();
     unit_id = 0;
     output = g_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES];
-    do {
+    for (; unit_id < BATTLE_UNIT_SLOT_COUNT; unit_id++) {
         unit = battle_unit_get_stats_from_battle_id(unit_id);
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
             *output++ = 0xfe;
@@ -38,6 +38,5 @@ void battle_text_build_unit_name_list(void) {
                 length++;
             } while (length < 16);
         }
-        unit_id++;
-    } while (unit_id < BATTLE_UNIT_SLOT_COUNT);
+    }
 }

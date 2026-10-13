@@ -16,8 +16,7 @@ void script_set_units_movement_effect_suppression(const event_movement_effect_pa
 
     unit_id = script_read_s16(parameters->unit_id_le);
     if (script_prepare_unit_filter(&unit_id, &state) != 0) {
-        unit_index = 0;
-        do {
+        for (unit_index = 0; unit_index < EVENT_UNIT_SLOT_COUNT; unit_index++) {
             if (script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &state) != 0) {
                 if (parameters->suppressed != 0) {
                     battle_unit_set_movement_effect_suppression(unit_id);
@@ -28,7 +27,6 @@ void script_set_units_movement_effect_suppression(const event_movement_effect_pa
                     break;
                 }
             }
-            unit_index++;
-        } while (unit_index < EVENT_UNIT_SLOT_COUNT);
+        }
     }
 }

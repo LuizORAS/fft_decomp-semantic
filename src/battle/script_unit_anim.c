@@ -20,8 +20,7 @@ void script_unit_anim(const event_unit_anim_parameters_t* parameters) {
     if (script_prepare_unit_filter(&runtime_id, &state) == 0) {
         return;
     }
-    unit_index = 0;
-    do {
+    for (unit_index = 0; unit_index < EVENT_UNIT_SLOT_COUNT; unit_index++) {
         if (script_filter_unit_id_by_mode(&runtime_id, (u16*)&unit_index, &state) != 0) {
             move_flag_mode = parameters->facing_update_mode;
             if (move_flag_mode == 0) {
@@ -38,6 +37,5 @@ void script_unit_anim(const event_unit_anim_parameters_t* parameters) {
                 return;
             }
         }
-        unit_index = unit_index + 1;
-    } while (unit_index < EVENT_UNIT_SLOT_COUNT);
+    }
 }

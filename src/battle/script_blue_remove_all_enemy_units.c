@@ -12,8 +12,7 @@ void script_blue_remove_all_enemy_units(void) {
     unit_stats_t* stats;
     unit_stats_t* found;
 
-    i = 0;
-    do {
+    for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
         if (battle_unit_has_runtime_id(i) != 0) {
             idx = battle_unit_get_battle_id_by_runtime_id(i);
             if (idx != -1) {
@@ -24,6 +23,5 @@ void script_blue_remove_all_enemy_units(void) {
                 }
             }
         }
-        i++;
-    } while (i < EVENT_UNIT_SLOT_COUNT);
+    }
 }

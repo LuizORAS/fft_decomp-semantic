@@ -19,8 +19,7 @@ void script_march_units(const event_march_parameters_t* parameters) {
     if (script_prepare_unit_filter(&runtime_id, &state) == 0) {
         return;
     }
-    unit_index = 0;
-    do {
+    for (unit_index = 0; unit_index < EVENT_UNIT_SLOT_COUNT; unit_index++) {
         if (script_filter_unit_id_by_mode(&runtime_id, (u16*)&unit_index, &state) != 0) {
             battle_unit_set_status_animation_by_runtime_id(runtime_id);
             thread_wait_frames(parameters->wait_frames);
@@ -28,6 +27,5 @@ void script_march_units(const event_march_parameters_t* parameters) {
                 return;
             }
         }
-        unit_index = unit_index + 1;
-    } while (unit_index < EVENT_UNIT_SLOT_COUNT);
+    }
 }
