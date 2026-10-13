@@ -139,7 +139,6 @@ void debugchr_text_render_signed_decimal_entries(
     u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 
 /* input */
-extern u32* g_debugchr_input_controller;
 
 /* threads */
 extern menu_gradient_panel_prims_t g_debugchr_thread_indicator_packets[2][2];

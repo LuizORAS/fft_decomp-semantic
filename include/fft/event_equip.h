@@ -380,7 +380,6 @@ s32 equip_menu_get_preview_hp_bonus(s32 unused_row);
 s32 equip_menu_get_preview_hp_bonus_display(s32 unused_row);
 s32 equip_menu_get_preview_mp_bonus(s32 unused_row);
 s32 equip_menu_get_preview_mp_bonus_display(s32 unused_row);
-void equip_menu_icon_list_thread(void);
 void equip_menu_init_and_draw_scrollable_list(
     s16* entries, s32 selected_index, s32 scroll_base_index, u8* text_table, const menu_instruction_t* script);
 void equip_menu_init_and_draw_scrollable_list_simple(
@@ -572,7 +571,6 @@ void equip_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused);
 
 /* input */
 extern u8 g_equip_input_activation_timer;
-extern u32* g_equip_input_controller;
 extern u16 g_equip_input_latched_button;
 extern u8 g_equip_input_lock_timer;
 extern u16 g_equip_input_newly_pressed;
@@ -680,7 +678,7 @@ s32 equip_bits_read_secondary(s32 count);
 typedef enum equip_thread_slot {
     EQUIP_THREAD_SLOT_POPUP_MENU = 3,         /* the item action and type order menus */
     EQUIP_THREAD_SLOT_COMMAND_MENU_CHILD = 4, /* a wait-forever thread while a command's mode runs */
-    EQUIP_THREAD_SLOT_COMMAND_MENU = 5,       /* equip_menu_icon_list_thread */
+    EQUIP_THREAD_SLOT_COMMAND_MENU = 5,       /* menu_icon_list_thread */
     EQUIP_THREAD_SLOT_EQUIPMENT_LIST = 10,    /* equip_panel_run_equipment_list_thread */
     EQUIP_THREAD_SLOT_ITEM_NUMERIC = 11,      /* the numeric editor thread of the item panel */
     EQUIP_THREAD_SLOT_UNIT_STATUS = 13,       /* equip_panel_run_unit_status_thread */

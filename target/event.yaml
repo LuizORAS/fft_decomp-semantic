@@ -309,9 +309,9 @@ functions:
   - {addr: 0x801c17b0, size: 244, name: menu_text_render_decimal_entry_list, hash: 6c345ed8200efa05, source: src/shared/menu/menu_text_render_decimal_entry_list.c}
   - {addr: 0x801c18a4, size: 772, name: menu_text_render_decimal_value, hash: ca9036a63905ea24, source: src/shared/menu/menu_text_render_decimal_value.c}
   - {addr: 0x801c1ba8, size: 1368, name: bunit_menu_run_numeric_editor_thread, hash: 132f79aff303d8c8}
-  - {addr: 0x801c2100, size: 496, name: bunit_menu_icon_list_thread, hash: eb81d8765a930f5c}
-  - {addr: 0x801c22f0, size: 248, name: bunit_menu_text_entry_wait_thread, hash: c2d07656176c41ef}
-  - {addr: 0x801c23e8, size: 372, name: bunit_menu_icon_strip_thread, hash: 88cede358ce214e7}
+  - {addr: 0x801c2100, size: 496, name: menu_icon_list_thread, hash: eb81d8765a930f5c, source: src/shared/menu/menu_icon_list_thread.c}
+  - {addr: 0x801c22f0, size: 248, name: menu_text_entry_wait_thread, hash: c2d07656176c41ef, source: src/shared/menu/menu_text_entry_wait_thread.c}
+  - {addr: 0x801c23e8, size: 372, name: menu_icon_strip_thread, hash: 88cede358ce214e7, source: src/shared/menu/menu_icon_strip_thread.c}
   - {addr: 0x801c255c, size: 104, name: menu_build_item_icon_source, hash: 7085296bf6f5bbac, source: src/shared/menu/menu_build_item_icon_source.c}
   - {addr: 0x801c25c4, size: 900, name: bunit_input_update_event_state, hash: acd007f8639f10f5, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x801c2948, size: 28, name: bunit_thread_is_running, hash: d10e3403d7fec970}
@@ -665,7 +665,7 @@ data:
   - {addr: 0x801e3744, name: g_bunit_gfx_fade_rect}
   - {addr: 0x801e374c, name: g_bunit_thread_indicator_packets}
   - {addr: 0x801e3c3c, name: g_bunit_frame_arg}
-  - {addr: 0x801e3c40, name: g_bunit_input_controller}
+  - {addr: 0x801e3c40, name: g_menu_input_controller}
   - {addr: 0x801e3c44, name: g_bunit_input_event}
   - {addr: 0x801e3c44, name: g_bunit_input_event_state}
   - {addr: 0x801e3c48, name: g_bunit_input_current}
@@ -1121,8 +1121,8 @@ functions:
   - {addr: 0x801c15ec, size: 244, name: menu_text_render_decimal_entry_list, hash: e69a669a8f390ae0, source: src/shared/menu/menu_text_render_decimal_entry_list.c}
   - {addr: 0x801c16e0, size: 772, name: menu_text_render_decimal_value, hash: 03dd737c13c51831, source: src/shared/menu/menu_text_render_decimal_value.c}
   - {addr: 0x801c19e4, size: 1380, name: debugchr_editor_run_numeric_thread, hash: 2d037c5ffcc03bfd}
-  - {addr: 0x801c1f48, size: 496, name: debugchr_menu_icon_list_thread, hash: 8b017b936086850d}
-  - {addr: 0x801c2138, size: 248, name: debugchr_menu_text_entry_wait_thread, hash: f178e37cccaef173}
+  - {addr: 0x801c1f48, size: 496, name: menu_icon_list_thread, hash: 8b017b936086850d, source: src/shared/menu/menu_icon_list_thread.c}
+  - {addr: 0x801c2138, size: 248, name: menu_text_entry_wait_thread, hash: f178e37cccaef173, source: src/shared/menu/menu_text_entry_wait_thread.c}
   - {addr: 0x801c2230, size: 372, name: debugchr_menu_icon_strip_thread, hash: 1ab523580e5686a2}
   - {addr: 0x801c23a4, size: 104, name: menu_build_item_icon_source, hash: 7085296bf6f5bbac, source: src/shared/menu/menu_build_item_icon_source.c}
   - {addr: 0x801c240c, size: 8, name: debugchr_input_update_event_state, hash: 6d64edf91449c1b1}
@@ -1226,7 +1226,7 @@ data:
   - {addr: 0x801c68d0, name: g_debugchr_character_status_frame_config}
   - {addr: 0x801c68e4, name: g_debugchr_editor_unit_ids}
   - {addr: 0x801c68fc, name: g_debugchr_thread_indicator_packets}
-  - {addr: 0x801c6dec, name: g_debugchr_input_controller}
+  - {addr: 0x801c6dec, name: g_menu_input_controller}
   - {addr: 0x801c6e08, name: g_debugchr_gfx_draw_offset_y}
   - {addr: 0x801c6e4c, name: g_debugchr_panel_selected_editor_packets}
   - {addr: 0x801c7464, name: g_debugchr_panel_selected_packets}
@@ -1302,9 +1302,9 @@ functions:
   - {addr: 0x801c2dcc, size: 244, name: menu_text_render_decimal_entry_list, hash: 4b20c489d4050f7c, source: src/shared/menu/menu_text_render_decimal_entry_list.c}
   - {addr: 0x801c2ec0, size: 772, name: menu_text_render_decimal_value, hash: cd6df0a76ca7176a, source: src/shared/menu/menu_text_render_decimal_value.c}
   - {addr: 0x801c31c4, size: 1400, name: equip_editor_run_numeric_thread, hash: 00a6e354d423dea5}
-  - {addr: 0x801c373c, size: 496, name: equip_menu_icon_list_thread, hash: e42339a4a800a8f8}
+  - {addr: 0x801c373c, size: 496, name: menu_icon_list_thread, hash: e42339a4a800a8f8, source: src/shared/menu/menu_icon_list_thread.c}
   - {addr: 0x801c392c, size: 248, name: equip_menu_text_entry_wait_thread, hash: 9382892b169008e4}
-  - {addr: 0x801c3a24, size: 372, name: equip_menu_icon_strip_thread, hash: f8b4eae323227396}
+  - {addr: 0x801c3a24, size: 372, name: menu_icon_strip_thread, hash: f8b4eae323227396, source: src/shared/menu/menu_icon_strip_thread.c}
   - {addr: 0x801c3b98, size: 104, name: menu_build_item_icon_source, hash: 7085296bf6f5bbac, source: src/shared/menu/menu_build_item_icon_source.c}
   - {addr: 0x801c3c00, size: 8, name: equip_input_update_event_state, hash: 6d64edf91449c1b1}
   - {addr: 0x801c3c08, size: 28, name: equip_thread_is_running, hash: d10e3403d7fec970}
@@ -1617,7 +1617,7 @@ data:
   - {addr: 0x801e1184, name: g_equip_gfx_tile_buffer}
   - {addr: 0x801e12c4, name: g_equip_menu_selection_entries}
   - {addr: 0x801e12e4, name: g_equip_thread_indicator_packets}
-  - {addr: 0x801e17d4, name: g_equip_input_controller}
+  - {addr: 0x801e17d4, name: g_menu_input_controller}
   - {addr: 0x801e17f0, name: g_equip_gfx_draw_offset_y}
   - {addr: 0x801e1834, name: g_equip_panel_selected_editor_packets}
   - {addr: 0x801e1e4c, name: g_equip_panel_selected_packets}
@@ -2192,9 +2192,9 @@ functions:
   - {addr: 0x801c148c, size: 244, name: require_text_render_decimal_entry_list, hash: 09452bc55dfd8a51}
   - {addr: 0x801c1580, size: 772, name: menu_text_render_decimal_value, hash: 412cf185b4779164, source: src/shared/menu/menu_text_render_decimal_value.c}
   - {addr: 0x801c1884, size: 1380, name: require_editor_run_numeric_thread, hash: b79678f9d57614fd}
-  - {addr: 0x801c1de8, size: 496, name: require_menu_icon_list_thread, hash: 8956351ca1cec311}
-  - {addr: 0x801c1fd8, size: 248, name: require_menu_text_entry_wait_thread, hash: 8a150a34cd0d353a}
-  - {addr: 0x801c20d0, size: 372, name: require_menu_icon_strip_thread, hash: 9c2efc75e9d065c4}
+  - {addr: 0x801c1de8, size: 496, name: menu_icon_list_thread, hash: 8956351ca1cec311, source: src/shared/menu/menu_icon_list_thread.c}
+  - {addr: 0x801c1fd8, size: 248, name: menu_text_entry_wait_thread, hash: 8a150a34cd0d353a, source: src/shared/menu/menu_text_entry_wait_thread.c}
+  - {addr: 0x801c20d0, size: 372, name: menu_icon_strip_thread, hash: 9c2efc75e9d065c4, source: src/shared/menu/menu_icon_strip_thread.c}
   - {addr: 0x801c2244, size: 104, name: menu_build_item_icon_source, hash: 7085296bf6f5bbac, source: src/shared/menu/menu_build_item_icon_source.c}
   - {addr: 0x801c22ac, size: 8, name: require_input_update_event_state, hash: 6d64edf91449c1b1}
   - {addr: 0x801c22b4, size: 28, name: require_thread_is_running, hash: d10e3403d7fec970}
@@ -2380,7 +2380,7 @@ data:
   - {addr: 0x801d153c, name: g_require_condition_special_quad_ranges}
   - {addr: 0x801d1548, name: g_require_condition_special_vertex_colors}
   - {addr: 0x801d1b9c, name: g_require_thread_indicator_packets}
-  - {addr: 0x801d208c, name: g_require_input_controller}
+  - {addr: 0x801d208c, name: g_menu_input_controller}
   - {addr: 0x801d20a8, name: g_require_gfx_draw_offset_y}
   - {addr: 0x801d20ec, name: g_require_panel_selected_editor_packets}
   - {addr: 0x801d2704, name: g_require_panel_selected_packets}

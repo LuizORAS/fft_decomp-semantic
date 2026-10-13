@@ -1345,6 +1345,12 @@ typedef struct menu_text_state {
     glyph_blit_t pen;
 } menu_text_state_t;
 
+/* list threads */
+extern u32* g_menu_input_controller;
+void menu_icon_list_thread(void);
+void menu_icon_strip_thread(void);
+void menu_text_entry_wait_thread(void);
+
 /* options */
 /*
  * Live 32-bit game-options value at 0x800473ac. The OPTION overlay unpacks these

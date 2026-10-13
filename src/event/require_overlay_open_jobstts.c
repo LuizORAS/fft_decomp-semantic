@@ -1,6 +1,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/menu.h"
 
 /*
  * Thread body that runs the JOBSTTS overlay from the REQUIRE screen.
@@ -30,11 +31,11 @@ void require_overlay_open_jobstts(void) {
     battle_thread_wait_frames(2);
     g_battle_companion_overlay_state = COMPANION_OVERLAY_STATE_JOBSTTS;
     do {
-        g_require_input_controller = script_get_controller_input_pointer(0);
-        *g_require_input_controller = 0;
+        g_menu_input_controller = script_get_controller_input_pointer(0);
+        *g_menu_input_controller = 0;
         battle_thread_yield();
     } while (g_battle_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
-    *g_require_input_controller = 0;
+    *g_menu_input_controller = 0;
     main_heap_free(allocation);
     battle_thread_wait_frames(2);
     g_battle_menu_modal_open = 0;

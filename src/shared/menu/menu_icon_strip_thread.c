@@ -1,10 +1,11 @@
-#include "fft/event_bunit.h"
-#include "psx/types.h"
+#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_thread.h"
+#include "fft/menu.h"
 
 /* Menu window thread without a cursor: rebuilds the text image every seventh
- * frame and alternates between two sprite records until the menu closes. The
- * BUNIT twin of world_menu_icon_strip_thread. */
-void bunit_menu_icon_strip_thread(void) {
+ * frame and alternates between two sprite records until the menu closes. */
+void menu_icon_strip_thread(void) {
     RECT rect;
     menu_icon_record_t records[2];
     u32 input;

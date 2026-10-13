@@ -1,7 +1,9 @@
+#include "fft/battle_menu.h"
 #include "fft/battle_script.h"
-#include "fft/event_require.h"
+#include "fft/battle_text.h"
+#include "fft/battle_thread.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /*
  * Menu thread body for an entry that shows a message: runs the text
@@ -10,7 +12,7 @@
  * header and text ids and the binding's speaker, then waits for the previous
  * thread slot and the text thread to end.
  */
-void require_menu_text_entry_wait_thread(void) {
+void menu_text_entry_wait_thread(void) {
     menu_entry_t* obj;
     menu_text_binding_t* task;
     u32* ctl;
@@ -29,7 +31,7 @@ void require_menu_text_entry_wait_thread(void) {
     text_id = obj->text_id;
     task = obj->context;
     header_id = obj->header_id;
-    g_require_input_controller = ctl;
+    g_menu_input_controller = ctl;
     id = task->text_thread_id;
     arg = task->speaker_id;
     *ctl = PSX_PAD_CIRCLE;

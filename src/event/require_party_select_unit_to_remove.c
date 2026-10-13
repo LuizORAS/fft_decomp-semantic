@@ -145,14 +145,14 @@ s32 require_party_select_unit_to_remove(void) {
             s32 helpmenu_thread;
 
             battle_thread_yield();
-            g_require_input_controller = script_get_controller_input_pointer(0);
-            if (*g_require_input_controller & PSX_PAD_SELECT) {
+            g_menu_input_controller = script_get_controller_input_pointer(0);
+            if (*g_menu_input_controller & PSX_PAD_SELECT) {
                 helpmenu_thread = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
                 battle_thread_start(helpmenu_thread, require_overlay_run_helpmenu);
                 battle_thread_wait_until_inactive(helpmenu_thread);
                 continue;
             }
-            if (*g_require_input_controller & PSX_PAD_R1) {
+            if (*g_menu_input_controller & PSX_PAD_R1) {
                 g_menu_panel_status_animation[1] = 7;
                 for (;;) {
                     selected_party_index++;
@@ -171,7 +171,7 @@ s32 require_party_select_unit_to_remove(void) {
                         break;
                     }
                 }
-            } else if (*g_require_input_controller & PSX_PAD_L1) {
+            } else if (*g_menu_input_controller & PSX_PAD_L1) {
                 g_menu_panel_status_animation[0] = 7;
                 do {
                     selected_party_index--;
@@ -187,7 +187,7 @@ s32 require_party_select_unit_to_remove(void) {
                 battle_menu_copy_billboard_data_in(
                     &g_require_panel_selected_billboard, &g_require_active_unit_data, &g_require_editor_unit_fields);
             }
-            if (*g_require_input_controller & PSX_PAD_CIRCLE)
+            if (*g_menu_input_controller & PSX_PAD_CIRCLE)
                 break;
         }
 

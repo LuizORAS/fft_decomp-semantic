@@ -44,7 +44,7 @@ void require_reward_run_gil_ticker(void) {
     thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
     battle_thread_start(thread_id, require_condition_run_special_thread);
     battle_thread_set_parameters(thread_id, 2, 0, 0);
-    g_require_input_controller = script_get_controller_input_pointer(0);
+    g_menu_input_controller = script_get_controller_input_pointer(0);
     /* `i = 0` here (not before the script calls) lets sched1 keep
      * `li a0,0x2c` above the money load. */
     for (i = 0; i < 6; i++) {
@@ -193,7 +193,7 @@ void require_reward_run_gil_ticker(void) {
             battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_comma_polys[buffer]);
         }
         battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_sign_polys[buffer]);
-        if (*g_require_input_controller & PSX_PAD_CIRCLE) {
+        if (*g_menu_input_controller & PSX_PAD_CIRCLE) {
             /* Confirm skips the settled-digit frame drawn at `finished`. */
             goto skipped;
         }
@@ -234,7 +234,7 @@ skipped:
             battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_comma_polys[buffer]);
         }
         battle_gfx_draw_or_append_gpu_primitive(&g_require_reward_money_sign_polys[buffer]);
-        if (tick == 60 || (*g_require_input_controller & PSX_PAD_CIRCLE)) {
+        if (tick == 60 || (*g_menu_input_controller & PSX_PAD_CIRCLE)) {
             break;
         }
         i++;

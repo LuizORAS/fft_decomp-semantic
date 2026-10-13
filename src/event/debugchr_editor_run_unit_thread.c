@@ -111,7 +111,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
 
     for (;; frame++) {
         battle_thread_yield();
-        g_debugchr_input_controller = script_get_controller_input_pointer(0);
+        g_menu_input_controller = script_get_controller_input_pointer(0);
         {
             s32 render_offset;
             render_offset = (frame & 1) * sizeof(g_debugchr_gfx_render_buffers[0]);
@@ -146,7 +146,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         animation[2] = 0;
 
         if (event_mode == 0 && g_battle_menu_help_open == 0 && battle_thread_is_previous_running() == 0) {
-            input = *g_debugchr_input_controller;
+            input = *g_menu_input_controller;
             if ((input & PSX_PAD_CROSS) != 0) {
                 battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
                 battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
@@ -188,7 +188,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             }
         }
 
-        if ((*g_debugchr_input_controller & PSX_PAD_R1) != 0) {
+        if ((*g_menu_input_controller & PSX_PAD_R1) != 0) {
             s32 slot;
             u8* chosen_unit;
 
@@ -211,7 +211,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             g_debugchr_numeric_editor_thread_params.redraw_request = one;
             g_debugchr_character_status_frame_config.redraw_request = one;
         }
-        if ((*g_debugchr_input_controller & PSX_PAD_L1) != 0) {
+        if ((*g_menu_input_controller & PSX_PAD_L1) != 0) {
             s32 slot;
             u8* chosen_unit;
 

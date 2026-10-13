@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 /* 0x801c8f80-0x801c9fa4, 4132 bytes.
  *
  * General-case display-condition banner: builds one POLY_GT4 per quad into
@@ -138,7 +139,7 @@ void require_condition_show_general(s32 hold_frames) {
 
         battle_thread_yield();
         input = script_get_controller_input_pointer(0);
-        g_require_input_controller = input;
+        g_menu_input_controller = input;
         /* Circle skips the remaining phases to the shared exit. */
         if (*input & PSX_PAD_CIRCLE)
             goto done;
@@ -182,7 +183,7 @@ void require_condition_show_general(s32 hold_frames) {
         do {
             battle_thread_yield();
             input = script_get_controller_input_pointer(0);
-            g_require_input_controller = input;
+            g_menu_input_controller = input;
             if (*input & PSX_PAD_CIRCLE)
                 goto done;
             buffer = (buffer + 1) & 1;

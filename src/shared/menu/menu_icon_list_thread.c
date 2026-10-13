@@ -1,11 +1,13 @@
+#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "fft/battle_script.h"
-#include "fft/event_equip.h"
-#include "psx/types.h"
+#include "fft/battle_thread.h"
+#include "fft/menu.h"
 
 /* Menu window thread: rebuilds the text image whenever the entry's refresh
  * flag is raised and alternates between two sprite records until the menu
- * closes. The EQUIP twin of world_menu_icon_list_thread. */
-void equip_menu_icon_list_thread(void) {
+ * closes. */
+void menu_icon_list_thread(void) {
     RECT rect;
     menu_icon_record_t records[2];
     s32 cursor;
@@ -16,7 +18,7 @@ void equip_menu_icon_list_thread(void) {
     menu_icon_record_t* record;
     s16* redraw;
 
-    g_equip_input_controller = script_get_controller_input_pointer(0);
+    g_menu_input_controller = script_get_controller_input_pointer(0);
     state = (menu_entry_t*)battle_thread_get_current_parameter_1();
     state->window.y &= ~1;
     cursor = state->selected_index;
@@ -48,7 +50,7 @@ void equip_menu_icon_list_thread(void) {
             fresh = 0;
         }
         state->selected_index = cursor;
-        if (battle_menu_should_close_thread(g_equip_input_controller) != 0) {
+        if (battle_menu_should_close_thread(g_menu_input_controller) != 0) {
             break;
         }
         battle_menu_step_wrapping_cursor_on_scroll_buttons(state, &cursor);

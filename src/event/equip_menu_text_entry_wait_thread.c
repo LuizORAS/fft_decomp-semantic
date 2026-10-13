@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -30,7 +31,7 @@ void equip_menu_text_entry_wait_thread(void) {
     text_id = thread->text_id;
     task = thread->context;
     header_id = thread->header_id;
-    g_equip_input_controller = input;
+    g_menu_input_controller = input;
     child_id = task->text_thread_id;
     task_arg = task->speaker_id;
     *input = PSX_PAD_CIRCLE;

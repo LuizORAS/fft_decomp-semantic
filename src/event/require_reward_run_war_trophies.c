@@ -66,7 +66,7 @@ void require_reward_run_war_trophies(void) {
             buffer
                 = (require_reward_war_trophy_primitives_t*)((frame & 1) * sizeof(require_reward_war_trophy_primitives_t)
                     + (s32)prims);
-            if ((*g_require_input_controller & PSX_PAD_CIRCLE) || frame == 0
+            if ((*g_menu_input_controller & PSX_PAD_CIRCLE) || frame == 0
                 || ((row != 7 && g_require_reward_war_trophy_entry_count - 1 != last) && timer >= 0x1f)
                 || ((row == 7 || g_require_reward_war_trophy_entry_count - 1 == last) && timer >= 0x79)) {
                 if (frame != 0) {

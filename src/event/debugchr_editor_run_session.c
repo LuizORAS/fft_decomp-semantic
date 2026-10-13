@@ -117,7 +117,7 @@ loop_outer:
         battle_thread_yield();
         menu_build_status_group_primitives(g_debugchr_gfx_render_buffers[i & 1]);
         input = script_get_controller_input_pointer(0);
-        g_debugchr_input_controller = input;
+        g_menu_input_controller = input;
         buttons = *input;
         if (buttons & PSX_PAD_CIRCLE) {
             goto editor;
@@ -154,7 +154,7 @@ loop_outer:
             g_debugchr_numeric_editor_thread_params.redraw_request = 1;
             g_debugchr_character_status_frame_config.redraw_request = 1;
         }
-        if (*g_debugchr_input_controller & PSX_PAD_L1) {
+        if (*g_menu_input_controller & PSX_PAD_L1) {
             g_menu_panel_status_animation[0] = 7;
         prev_unit:
             g_debugchr_editor_selected_unit_slot -= 1;
@@ -203,7 +203,7 @@ editor:
         x = field->x;
         y = field->y + 8;
         g_debugchr_editor_current_field = field;
-        keys = *g_debugchr_input_controller;
+        keys = *g_menu_input_controller;
         if (keys & PSX_PAD_CROSS) {
             if (g_debugchr_editor_field_edit_active != 1) {
                 goto loop_outer;
@@ -221,7 +221,7 @@ editor:
             }
         }
         if ((g_debugchr_editor_field_edit_active != 0) && ((row - 9) < 5U)
-            && (*g_debugchr_input_controller & PSX_PAD_TRIANGLE)) {
+            && (*g_menu_input_controller & PSX_PAD_TRIANGLE)) {
             *g_debugchr_editor_current_field->value = 0;
             debugchr_editor_apply_values_to_battle_unit(g_debugchr_editor_selected_unit_slot);
             debugchr_editor_load_selected_unit();
@@ -229,7 +229,7 @@ editor:
             g_debugchr_numeric_editor_thread_params.redraw_request = 1;
             g_debugchr_character_status_frame_config.redraw_request = 1;
         }
-        navkeys = *g_debugchr_input_controller;
+        navkeys = *g_menu_input_controller;
         if (navkeys & PSX_PAD_DPAD_MASK) {
             if (g_debugchr_editor_field_edit_active == 0) {
                 /* Removing the wrapper changes direction and input-mask allocation. */

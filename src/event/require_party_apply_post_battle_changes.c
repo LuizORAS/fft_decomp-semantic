@@ -152,8 +152,8 @@ void require_party_apply_post_battle_changes(void) {
                     require_panel_set_transition_value(0);
                     do {
                         battle_thread_yield();
-                        g_require_input_controller = script_get_controller_input_pointer(0);
-                        input = *g_require_input_controller;
+                        g_menu_input_controller = script_get_controller_input_pointer(0);
+                        input = *g_menu_input_controller;
                         if (input & PSX_PAD_CIRCLE) {
                             break;
                         }
@@ -187,7 +187,7 @@ void require_party_apply_post_battle_changes(void) {
                         g_require_message_menu_result = 0;
                     } else {
                         g_require_menu_selection_result = 0xff;
-                        battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, require_menu_icon_strip_thread);
+                        battle_thread_start(REQUIRE_THREAD_SLOT_MESSAGE, menu_icon_strip_thread);
                         battle_thread_set_parameters(REQUIRE_THREAD_SLOT_MESSAGE,
                             (s32)(menu_fields - (unsigned long)&((menu_entry_t*)0)->inner_width), 0, 0);
                         if (g_require_editor_unit_fields.state.generic_monster != 0) {

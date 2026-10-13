@@ -276,7 +276,6 @@ extern s32 g_require_menu_indicator_state[2];
 extern s16 g_require_menu_selection_result;
 extern s16 g_require_message_menu_result;
 
-void require_menu_icon_strip_thread(void);
 /* find (BATTLE) */
 void require_menu_wait_selection_threads(void);
 
@@ -337,7 +336,6 @@ void require_text_render_signed_decimal_entries(
 void require_text_show_battle_congratulations(void);
 
 /* input */
-extern u32* g_require_input_controller;
 
 void require_input_wait_frames_or_skip(s32 frames);
 

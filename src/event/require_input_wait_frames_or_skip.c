@@ -1,5 +1,6 @@
 #include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -13,7 +14,7 @@ void require_input_wait_frames_or_skip(s32 frames) {
         do {
             battle_thread_yield();
             input = script_get_controller_input_pointer(0);
-            g_require_input_controller = input;
+            g_menu_input_controller = input;
             if ((*input & PSX_PAD_CIRCLE) == 0) {
                 i++;
                 if (i < frames) {
