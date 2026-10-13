@@ -1,8 +1,9 @@
 #include "fft/battle.h"
 #include "fft/battle_action.h"
 #include "fft/battle_camera.h"
+#include "psx/libgte.h"
 
-/* Move one 12.4 fixed-point camera component toward its bound by its per-frame
+/* Move one 20.12 fixed-point camera component toward its bound by its per-frame
  * step, without overshooting. The bound is compared against the component's
  * whole-unit part, so the clamp lands exactly on bound << 12. The test is
  * written once per sign of the step because the overshoot comparison reverses
@@ -12,21 +13,21 @@
 #define CAMERA_STEP_TOWARD(component, step, limit)                                                                     \
     if (step < 0) {                                                                                                    \
         s32* position = component;                                                                                     \
-        s32 whole = *position / 4096;                                                                                  \
+        s32 whole = *position / ONE;                                                                                   \
         s32 bound = limit;                                                                                             \
         if (whole > bound) {                                                                                           \
             *position += step;                                                                                         \
-            if (*position / 4096 < bound) {                                                                            \
+            if (*position / ONE < bound) {                                                                             \
                 *position = bound << 12;                                                                               \
             }                                                                                                          \
         }                                                                                                              \
     } else {                                                                                                           \
         s32* position = component;                                                                                     \
-        s32 whole = *position / 4096;                                                                                  \
+        s32 whole = *position / ONE;                                                                                   \
         s32 bound = limit;                                                                                             \
         if (whole < bound) {                                                                                           \
             *position += step;                                                                                         \
-            if (bound < *position / 4096) {                                                                            \
+            if (bound < *position / ONE) {                                                                             \
                 *position = bound << 12;                                                                               \
             }                                                                                                          \
         }                                                                                                              \

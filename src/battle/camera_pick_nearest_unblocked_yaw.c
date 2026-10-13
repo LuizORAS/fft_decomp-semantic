@@ -3,6 +3,7 @@
 #include "fft/battle_map.h"
 #include "fft/battle_script.h"
 #include "fft/script.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Returns the yaw a Focus instruction gives the camera for a pair of units.
@@ -50,9 +51,9 @@ s16 camera_pick_nearest_unblocked_yaw(s32 runtime_id_a, s32 runtime_id_b) {
             delta = g_camera_diagonal_yaws[i] - yaw;
             raw = delta;
             if (delta > 0) {
-                wrapped = delta - 0x1000;
+                wrapped = delta - ONE;
             } else {
-                wrapped = delta + 0x1000;
+                wrapped = delta + ONE;
             }
             delta = abs(delta);
             wrapped = abs(wrapped);

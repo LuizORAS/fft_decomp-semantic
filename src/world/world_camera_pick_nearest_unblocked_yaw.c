@@ -2,6 +2,7 @@
 #include "fft/battle_map.h"
 #include "fft/script.h"
 #include "fft/world.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /*
@@ -49,9 +50,9 @@ s16 world_camera_pick_nearest_unblocked_yaw(s32 runtime_id_a, s32 runtime_id_b) 
             delta = g_world_camera_candidate_yaws[i] - yaw;
             raw = delta;
             if (delta > 0) {
-                wrapped = delta - 0x1000;
+                wrapped = delta - ONE;
             } else {
-                wrapped = delta + 0x1000;
+                wrapped = delta + ONE;
             }
             delta = abs(delta);
             wrapped = abs(wrapped);
