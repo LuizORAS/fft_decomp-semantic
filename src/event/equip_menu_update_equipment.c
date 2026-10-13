@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/gfx.h"
 
 /* Runs one frame of the equipment menu state machine.
  *
@@ -25,7 +26,7 @@ s32 equip_menu_update_equipment(void) {
         g_equip_unit_banner_enabled = 0;
         g_equip_item_numeric_panel_params = 0;
         g_equip_item_numeric_panel_y = -0x49;
-        equip_gfx_load_image_and_wait(&g_equip_status_label_image_rect, g_equip_status_label_image);
+        gfx_load_image_and_wait(&g_equip_status_label_image_rect, g_equip_status_label_image);
     }
     if (g_equip_menu_substate == MENU_ITEM_LIST_STATE_CLOSE) {
         equip_panel_toggle_item_numeric_thread(0);

@@ -238,6 +238,9 @@ typedef struct image_load_parameters {
 
 void gfx_init_image_loading(texture_primitive_t* primitive, const point16_t* base_load, const RECT* base_screen,
     const image_load_parameters_t* parameters);
+void gfx_load_image_and_wait(RECT* rect, void* data);
+void gfx_move_image_and_wait(RECT* rect, s16 x, s16 y);
+void gfx_store_image_and_wait(RECT* rect, void* data);
 
 /* Round x, y, width and height from texture pixels to 16-pixel cells. */
 static inline void texture_rect_pixels_to_cells(const s32 pixels[4], s32 cells[4]) {

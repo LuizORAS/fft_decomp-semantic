@@ -578,12 +578,10 @@ void equip_gfx_init_contexts(equip_gfx_buffer_t* base, u32* otag, POLY_F3* poly_
     SPRT_8* sprites_8, SPRT_16* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
 void equip_gfx_init_primitive_buffers(equip_gfx_context_t* context);
 void equip_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* data);
-void equip_gfx_load_image_and_wait(RECT* rect, void* data);
 void equip_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id);
 void equip_gfx_set_draw_color(const rgb24_t* color);
 void equip_gfx_set_otag_index(s32 ot_index);
 void equip_gfx_set_transition_frame(s32 value);
-void equip_gfx_store_image_and_wait(RECT* rect, void* data);
 void equip_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused);
 
 /* input */

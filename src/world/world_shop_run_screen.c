@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -86,10 +87,10 @@ void world_shop_run_screen(s32 shop_type) {
     }
     SetDispMask(0);
     while (DrawSync(1) != 0) { }
-    world_gfx_move_image_and_wait(&g_world_shop_background_vram_rect, 0, 0);
+    gfx_move_image_and_wait(&g_world_shop_background_vram_rect, 0, 0);
     tim = world_shop_load_background_tim(tim_index + buttons);
-    world_gfx_load_image_and_wait(&g_world_shop_background_vram_rect, tim + 5);
-    world_gfx_store_image_and_wait(&g_world_shop_vram_backup_rect, tim);
+    gfx_load_image_and_wait(&g_world_shop_background_vram_rect, tim + 5);
+    gfx_store_image_and_wait(&g_world_shop_vram_backup_rect, tim);
     world_gfx_init_double_packet_buffers(buffers, otags, 0, 0, 0, textured_quads, 0, 0, gradient_quads,
         textured_gradient_quads, flat_lines, 0, 0, 0, 0, 0, tiles, 0, 0, 0, 0, 0, 0, draw_moves, draw_areas,
         draw_modes);
@@ -188,6 +189,6 @@ void world_shop_run_screen(s32 shop_type) {
     world_formation_save_records_to_party_data();
     world_script_set_vsync_mode_and_event_speed(0);
     world_formation_reset_menu_context();
-    world_gfx_load_image_and_wait(&g_world_shop_background_vram_rect, tim);
+    gfx_load_image_and_wait(&g_world_shop_background_vram_rect, tim);
     main_heap_free(tim);
 }

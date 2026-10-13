@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
@@ -25,17 +26,17 @@ void world_formation_init_menu_display(void) {
     rect.y = 0x100;
     rect.w = 0x40;
     rect.h = 0x30;
-    world_gfx_load_image_and_wait(&rect, g_world_menu_glyph_sheet->pixels);
+    gfx_load_image_and_wait(&rect, g_world_menu_glyph_sheet->pixels);
     rect.x = 0x240;
     rect.y = 0x1FA;
     rect.w = 0x40;
     rect.h = 4;
-    world_gfx_load_image_and_wait(&rect, g_world_formation_menu_palettes);
+    gfx_load_image_and_wait(&rect, g_world_formation_menu_palettes);
     rect.x = 0x3C0;
     rect.y = 0x1F0;
     rect.w = 0x10;
     rect.h = 1;
-    world_gfx_store_image_and_wait(&rect, palette);
+    gfx_store_image_and_wait(&rect, palette);
     palette[4].red = palette[4].green = palette[4].blue = palette[4].semi_transparent = 0;
     palette[8].red = palette[8].green = palette[8].blue = palette[8].semi_transparent = 0;
     palette[12].red = palette[12].green = palette[12].blue = palette[12].semi_transparent = 0;
@@ -43,17 +44,17 @@ void world_formation_init_menu_display(void) {
     rect.y = 0x1FE;
     rect.w = 0x10;
     rect.h = 1;
-    world_gfx_load_image_and_wait(&rect, palette);
+    gfx_load_image_and_wait(&rect, palette);
     rect.x = 0x240;
     rect.y = 0x1FE;
     rect.w = 0xC;
     rect.h = 1;
-    world_gfx_load_image_and_wait(&rect, &palette[4]);
+    gfx_load_image_and_wait(&rect, &palette[4]);
     rect.x = 0x3C0;
     rect.y = 0x1F4;
     rect.w = 0x10;
     rect.h = 1;
-    world_gfx_store_image_and_wait(&rect, palette);
+    gfx_store_image_and_wait(&rect, palette);
     palette[4].red = palette[4].green = palette[4].blue = palette[4].semi_transparent = 0;
     palette[8].red = palette[8].green = palette[8].blue = palette[8].semi_transparent = 0;
     palette[12].red = palette[12].green = palette[12].blue = palette[12].semi_transparent = 0;
@@ -61,13 +62,13 @@ void world_formation_init_menu_display(void) {
     rect.y = 0x1FE;
     rect.w = 0x10;
     rect.h = 1;
-    world_gfx_load_image_and_wait(&rect, palette);
+    gfx_load_image_and_wait(&rect, palette);
     rect.x = 0x250;
     rect.y = 0x1FE;
     rect.w = 0xC;
     rect.h = 1;
-    world_gfx_load_image_and_wait(&rect, &palette[4]);
-    world_gfx_load_image_and_wait(&g_world_formation_status_label_image_rect, g_world_formation_status_label_image);
+    gfx_load_image_and_wait(&rect, &palette[4]);
+    gfx_load_image_and_wait(&g_world_formation_status_label_image_rect, g_world_formation_status_label_image);
     g_world_menu_description_text_id = 0;
     world_menu_init_scrollable_list_core(0, 0, 0);
     world_gfx_start_decreasing_fade();

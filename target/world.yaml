@@ -886,9 +886,9 @@ functions:
   - {addr: 0x8012d4c0, size: 252, name: world_gfx_update_fade_in_tile, hash: 7d8455e9bcfd1afd}
   - {addr: 0x8012d5bc, size: 272, name: world_gfx_update_fade_out_tile, hash: 753f272aebcc4ac0}
   - {addr: 0x8012d6cc, size: 16, name: world_gfx_set_fade_disabled, hash: 2813bcbe9b7eee93}
-  - {addr: 0x8012d6dc, size: 48, name: world_gfx_load_image_and_wait, hash: be3db739ba4a6ec6}
-  - {addr: 0x8012d70c, size: 48, name: world_gfx_store_image_and_wait, hash: 42b445a1713fca16}
-  - {addr: 0x8012d73c, size: 60, name: world_gfx_move_image_and_wait, hash: 2dee44c691484772}
+  - {addr: 0x8012d6dc, size: 48, name: gfx_load_image_and_wait, hash: be3db739ba4a6ec6, source: src/shared/gfx/gfx_load_image_and_wait.c}
+  - {addr: 0x8012d70c, size: 48, name: gfx_store_image_and_wait, hash: 42b445a1713fca16, source: src/shared/gfx/gfx_store_image_and_wait.c}
+  - {addr: 0x8012d73c, size: 60, name: gfx_move_image_and_wait, hash: 2dee44c691484772, source: src/shared/gfx/gfx_move_image_and_wait.c}
   - {addr: 0x8012d778, size: 60, name: world_shop_load_background_tim, hash: 2c98e2ae629f4d9d}
   - {addr: 0x8012d7b4, size: 228, name: world_text_bind_section_data, hash: bac08e2afcfd4691, rodata: [{addr: 0x800e0098, size: 36, hash: a977859d014238a6}]}
   - {addr: 0x8012d898, size: 24, name: world_text_get_resident_data, hash: b8566ba587064bee}

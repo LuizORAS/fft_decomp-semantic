@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/gfx.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -25,7 +26,7 @@ void equip_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s3
         memset(buf, 0, 0x800);
         equip_text_render_encoded_ids_to_image(
             buf, &clear_rect, 0xa, 0x64, text_table, text, 0x64, TEXT_FORMAT_EXPLICIT_ID, style);
-        equip_gfx_load_image_and_wait(&dest_rect, buf);
+        gfx_load_image_and_wait(&dest_rect, buf);
         dest_rect.y += 0x10;
         list++;
     }

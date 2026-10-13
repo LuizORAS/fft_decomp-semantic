@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/gfx.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -24,7 +25,7 @@ void bunit_text_render_id_rows_to_vram(u8* text_table, s16* text_ids, RECT* dest
         row_text_ids[1] = -1;
         memset(image, 0, 0x800);
         bunit_text_render_encoded_ids_to_image(image, &bounds, 0xA, 0x64, text_table, row_text_ids, 0x64, 0xE7, flags);
-        bunit_gfx_load_image_and_wait(&upload_rect, image);
+        gfx_load_image_and_wait(&upload_rect, image);
         upload_rect.y += 0x10;
         text_ids++;
     }

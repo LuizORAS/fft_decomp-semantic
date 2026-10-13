@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/gfx.h"
 #include "psx/types.h"
 
 /*
@@ -22,38 +23,38 @@ void card_save_init_menu_graphics(void) {
     rect.y = 0;
     rect.w = 0x40;
     rect.h = 0x30;
-    card_gfx_load_image_and_wait(&rect, g_battle_menu_glyph_image->pixels);
+    gfx_load_image_and_wait(&rect, g_battle_menu_glyph_image->pixels);
 
     rect.x = 0x100;
     rect.y = 0xfa;
     rect.w = 0x40;
     rect.h = 4;
-    card_gfx_load_image_and_wait(&rect, g_card_save_menu_clut);
+    gfx_load_image_and_wait(&rect, g_card_save_menu_clut);
 
     rect.x = 0x3c0;
     rect.y = 0x1f0;
     rect.w = 0x10;
     rect.h = 1;
-    card_gfx_store_image_and_wait(&rect, image_data);
+    gfx_store_image_and_wait(&rect, image_data);
     *(u16*)&image_data[4] = 0;
 
     rect.x = 0x120;
     rect.y = 0xfe;
     rect.w = 0x10;
     rect.h = 1;
-    card_gfx_load_image_and_wait(&rect, image_data);
+    gfx_load_image_and_wait(&rect, image_data);
 
     rect.x = 0x100;
     rect.y = 0xfe;
     rect.w = 0xc;
     rect.h = 1;
-    card_gfx_load_image_and_wait(&rect, &image_data[4]);
+    gfx_load_image_and_wait(&rect, &image_data[4]);
 
     rect.x = 0x3c0;
     rect.y = 0x1f4;
     rect.w = 0x10;
     rect.h = 1;
-    card_gfx_store_image_and_wait(&rect, image_data);
+    gfx_store_image_and_wait(&rect, image_data);
     /* Fieldwise or aggregate clearing adds instructions under this routine's -O0 profile. */
     *(u16*)&image_data[4] = 0;
 
@@ -61,13 +62,13 @@ void card_save_init_menu_graphics(void) {
     rect.y = 0xfe;
     rect.w = 0x10;
     rect.h = 1;
-    card_gfx_load_image_and_wait(&rect, image_data);
+    gfx_load_image_and_wait(&rect, image_data);
 
     rect.x = 0x110;
     rect.y = 0xfe;
     rect.w = 0xc;
     rect.h = 1;
-    card_gfx_load_image_and_wait(&rect, &image_data[4]);
+    gfx_load_image_and_wait(&rect, &image_data[4]);
 
     card_gfx_start_decreasing_fade();
     g_card_save_menu_state = CARD_SAVE_MENU_INITIAL_PROMPT;

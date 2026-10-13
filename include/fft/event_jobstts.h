@@ -277,9 +277,7 @@ void jobstts_gfx_init_contexts(jobstts_gfx_context_t* base, u32* otag, POLY_F3* 
     LINE_G4* line_g4, TILE* tiles, TILE_1* tiles_1, TILE_8* tiles_8, TILE_16* tiles_16, SPRT* sprites,
     SPRT_8* sprites_8, SPRT_16* sprites_16, DR_MOVE* draw_moves, DR_AREA* draw_areas);
 void jobstts_gfx_init_primitive_buffers(jobstts_gfx_context_t* context);
-void jobstts_gfx_load_image_and_wait(RECT* rect, void* data);
 void jobstts_gfx_set_transition_frame(s32 frame);
-void jobstts_gfx_store_image_and_wait(RECT* rect, void* data);
 void jobstts_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused);
 
 /* input */

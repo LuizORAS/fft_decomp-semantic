@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/gfx.h"
 #include "psx/types.h"
 
 /*
@@ -28,44 +29,44 @@ void bunit_gfx_init_vram_and_start_fade(void) {
     rect.y = 0;
     rect.w = 0x40;
     rect.h = 0x30;
-    bunit_gfx_load_image_and_wait(&rect, g_battle_menu_glyph_image->pixels);
+    gfx_load_image_and_wait(&rect, g_battle_menu_glyph_image->pixels);
     rect.x = 0x3C0;
     rect.y = 0x1F0;
     rect.w = 0x10;
     rect.h = 1;
-    bunit_gfx_store_image_and_wait(&rect, buf1);
+    gfx_store_image_and_wait(&rect, buf1);
     buf2[0] = 0;
     rect.x = 0x120;
     rect.y = 0xFE;
     rect.w = 0x10;
     rect.h = 1;
-    bunit_gfx_load_image_and_wait(&rect, buf1);
+    gfx_load_image_and_wait(&rect, buf1);
     rect.x = 0x100;
     rect.y = 0xFE;
     rect.w = 0xC;
     rect.h = 1;
-    bunit_gfx_load_image_and_wait(&rect, buf2);
+    gfx_load_image_and_wait(&rect, buf2);
     rect.x = 0x3C0;
     rect.y = 0x1F4;
     rect.w = 0x10;
     rect.h = 1;
-    bunit_gfx_store_image_and_wait(&rect, buf1);
+    gfx_store_image_and_wait(&rect, buf1);
     buf2[0] = 0;
     rect.x = 0x130;
     rect.y = 0xFE;
     rect.w = 0x10;
     rect.h = 1;
-    bunit_gfx_load_image_and_wait(&rect, buf1);
+    gfx_load_image_and_wait(&rect, buf1);
     rect.x = 0x110;
     rect.y = 0xFE;
     rect.w = 0xC;
     rect.h = 1;
-    bunit_gfx_load_image_and_wait(&rect, buf2);
+    gfx_load_image_and_wait(&rect, buf2);
     rect.x = 0x100;
     rect.y = 0xFA;
     rect.w = 0x40;
     rect.h = 4;
-    bunit_gfx_load_image_and_wait(&rect, block);
+    gfx_load_image_and_wait(&rect, block);
     g_bunit_text_selection_id = 0;
     g_bunit_help_screen_id = MENU_GRID_HELP_NONE;
     bunit_gfx_start_decreasing_fade();

@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/gfx.h"
 #include "psx/types.h"
 
 /*
@@ -23,44 +24,44 @@ void equip_menu_load_images_and_reset_lists(void) {
     rect.y = 0;
     rect.w = 0x40;
     rect.h = 0x30;
-    equip_gfx_load_image_and_wait(&rect, g_battle_menu_glyph_image->pixels);
+    gfx_load_image_and_wait(&rect, g_battle_menu_glyph_image->pixels);
     rect.x = 0x100;
     rect.y = 0xFA;
     rect.w = 0x40;
     rect.h = 4;
-    equip_gfx_load_image_and_wait(&rect, g_equip_menu_palette_image);
+    gfx_load_image_and_wait(&rect, g_equip_menu_palette_image);
     rect.x = 0x3C0;
     rect.y = 0x1F0;
     rect.w = 0x10;
     rect.h = 1;
-    equip_gfx_store_image_and_wait(&rect, buf1);
+    gfx_store_image_and_wait(&rect, buf1);
     buf2[0] = 0;
     rect.x = 0x120;
     rect.y = 0xFE;
     rect.w = 0x10;
     rect.h = 1;
-    equip_gfx_load_image_and_wait(&rect, buf1);
+    gfx_load_image_and_wait(&rect, buf1);
     rect.x = 0x100;
     rect.y = 0xFE;
     rect.w = 0xC;
     rect.h = 1;
-    equip_gfx_load_image_and_wait(&rect, buf2);
+    gfx_load_image_and_wait(&rect, buf2);
     rect.x = 0x3C0;
     rect.y = 0x1F4;
     rect.w = 0x10;
     rect.h = 1;
-    equip_gfx_store_image_and_wait(&rect, buf1);
+    gfx_store_image_and_wait(&rect, buf1);
     buf2[0] = 0;
     rect.x = 0x130;
     rect.y = 0xFE;
     rect.w = 0x10;
     rect.h = 1;
-    equip_gfx_load_image_and_wait(&rect, buf1);
+    gfx_load_image_and_wait(&rect, buf1);
     rect.x = 0x110;
     rect.y = 0xFE;
     rect.w = 0xC;
     rect.h = 1;
-    equip_gfx_load_image_and_wait(&rect, buf2);
+    gfx_load_image_and_wait(&rect, buf2);
     equip_menu_clear_selection_values();
     g_equip_text_help_message_id = 0;
     equip_menu_reset_selection_indices();

@@ -470,9 +470,9 @@ functions:
   - {addr: 0x801ce634, size: 28, name: bunit_gfx_start_increasing_fade, hash: 43d7509c21f01101}
   - {addr: 0x801ce650, size: 228, name: bunit_gfx_update_decreasing_fade, hash: 2ef5eed4a0a2eb48}
   - {addr: 0x801ce734, size: 248, name: bunit_gfx_update_increasing_fade, hash: 0efe05036ac50b46}
-  - {addr: 0x801ce82c, size: 48, name: bunit_gfx_load_image_and_wait, hash: be3db739ba4a6ec6}
-  - {addr: 0x801ce85c, size: 48, name: bunit_gfx_store_image_and_wait, hash: 42b445a1713fca16}
-  - {addr: 0x801ce88c, size: 60, name: bunit_gfx_move_image_and_wait, hash: 2dee44c691484772}
+  - {addr: 0x801ce82c, size: 48, name: gfx_load_image_and_wait, hash: be3db739ba4a6ec6, source: src/shared/gfx/gfx_load_image_and_wait.c}
+  - {addr: 0x801ce85c, size: 48, name: gfx_store_image_and_wait, hash: 42b445a1713fca16, source: src/shared/gfx/gfx_store_image_and_wait.c}
+  - {addr: 0x801ce88c, size: 60, name: gfx_move_image_and_wait, hash: 2dee44c691484772, source: src/shared/gfx/gfx_move_image_and_wait.c}
 
 data:
   - {addr: 0x801bf000, name: g_bunit_menu_clut}
@@ -934,8 +934,8 @@ functions:
   - {addr: 0x801c8424, size: 28, name: card_gfx_start_increasing_fade, hash: 446845d4250e5cb9}
   - {addr: 0x801c8440, size: 228, name: card_gfx_update_decreasing_fade, hash: aa46b43783d989f6}
   - {addr: 0x801c8524, size: 248, name: card_gfx_update_increasing_fade, hash: fa31b82b72f366f9}
-  - {addr: 0x801c861c, size: 48, name: card_gfx_load_image_and_wait, hash: be3db739ba4a6ec6}
-  - {addr: 0x801c864c, size: 48, name: card_gfx_store_image_and_wait, hash: 42b445a1713fca16}
+  - {addr: 0x801c861c, size: 48, name: gfx_load_image_and_wait, hash: be3db739ba4a6ec6, source: src/shared/gfx/gfx_load_image_and_wait.c}
+  - {addr: 0x801c864c, size: 48, name: gfx_store_image_and_wait, hash: 42b445a1713fca16, source: src/shared/gfx/gfx_store_image_and_wait.c}
 
 data:
   - {addr: 0x801bf12c, name: g_card_save_title_template}
@@ -1395,9 +1395,9 @@ functions:
   - {addr: 0x801ca540, size: 264, name: equip_gfx_enqueue_draw_move, hash: c74d384fcfbeac4a}
   - {addr: 0x801ca648, size: 228, name: equip_gfx_enqueue_draw_area, hash: 0b025d4219863d75}
   - {addr: 0x801ca72c, size: 216, name: equip_gfx_enqueue_draw_mode, hash: 39d3f71dc37474b8}
-  - {addr: 0x801ca804, size: 48, name: equip_gfx_load_image_and_wait, hash: be3db739ba4a6ec6}
-  - {addr: 0x801ca834, size: 48, name: equip_gfx_store_image_and_wait, hash: 42b445a1713fca16}
-  - {addr: 0x801ca864, size: 60, name: equip_gfx_move_image_and_wait, hash: 2dee44c691484772}
+  - {addr: 0x801ca804, size: 48, name: gfx_load_image_and_wait, hash: be3db739ba4a6ec6, source: src/shared/gfx/gfx_load_image_and_wait.c}
+  - {addr: 0x801ca834, size: 48, name: gfx_store_image_and_wait, hash: 42b445a1713fca16, source: src/shared/gfx/gfx_store_image_and_wait.c}
+  - {addr: 0x801ca864, size: 60, name: gfx_move_image_and_wait, hash: 2dee44c691484772, source: src/shared/gfx/gfx_move_image_and_wait.c}
   - {addr: 0x801ca8a0, size: 204, name: equip_menu_init_scrollable_list_core, hash: 4741aa86b1c1513e}
   - {addr: 0x801ca96c, size: 52, name: equip_menu_init_scrollable_list, hash: 6a3f45c6b9c7fd8c}
   - {addr: 0x801ca9a0, size: 52, name: equip_menu_init_and_draw_scrollable_list, hash: 503e07ba5c988426}
@@ -1887,8 +1887,8 @@ functions:
   - {addr: 0x801e1c08, size: 508, name: jobstts_gfx_enqueue_textured_quad_corners, hash: b9b6efafdcf485d3}
   - {addr: 0x801e1e04, size: 264, name: jobstts_gfx_enqueue_draw_move, hash: 2338851ec6a79775}
   - {addr: 0x801e1f0c, size: 228, name: jobstts_gfx_enqueue_draw_area, hash: 5384ef4ee1f792f8}
-  - {addr: 0x801e1ff0, size: 48, name: jobstts_gfx_load_image_and_wait, hash: be3db739ba4a6ec6}
-  - {addr: 0x801e2020, size: 48, name: jobstts_gfx_store_image_and_wait, hash: 42b445a1713fca16}
+  - {addr: 0x801e1ff0, size: 48, name: gfx_load_image_and_wait, hash: be3db739ba4a6ec6, source: src/shared/gfx/gfx_load_image_and_wait.c}
+  - {addr: 0x801e2020, size: 48, name: gfx_store_image_and_wait, hash: 42b445a1713fca16, source: src/shared/gfx/gfx_store_image_and_wait.c}
   - {addr: 0x801e2050, size: 196, name: jobstts_menu_init_scrollable_list_core, hash: cbed765f1b648634}
   - {addr: 0x801e2114, size: 52, name: jobstts_menu_init_scrollable_list, hash: 486b8503d50e4e8e}
   - {addr: 0x801e2148, size: 52, name: jobstts_menu_init_and_draw_scrollable_list, hash: 5f113e345c0f0da5}

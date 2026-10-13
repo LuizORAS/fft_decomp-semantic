@@ -1055,7 +1055,6 @@ void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u3
 void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
 void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
 void world_gfx_mirror_4bpp_rect(u8* pixels, glyph_blit_t* rect);
-void world_gfx_move_image_and_wait(RECT* rect, s16 x, s16 y);
 void world_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu);
 void world_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair);
 void world_panel_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair);
@@ -1074,9 +1073,7 @@ s32 world_gfx_get_fade_state(void);
 void world_menu_get_selection_record(s32 index, s16* selected_index, s16* scroll_base_index, s16* entries);
 s32 world_gfx_get_vsync_mode_or_one(void);
 void world_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
-void world_gfx_load_image_and_wait(RECT* rect, void* data);
 void world_gfx_load_wldface_to_frame_buffer(void);
-void world_gfx_store_image_and_wait(RECT* rect, void* dest);
 void world_gfx_present_frame_and_swap_packet_buffer(s32 first_otag, s32 draw_otag);
 void world_gfx_ramp_screen_overlay_intensity_to_max(void);
 void world_gfx_set_blit_source_rect(s16 x, s16 y, s16 width, s16 height);

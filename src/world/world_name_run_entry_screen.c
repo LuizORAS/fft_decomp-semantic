@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/world.h"
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
@@ -107,7 +108,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         }
         PutDrawEnv(&g_world_gfx_active_packet_buffer->draw_env);
         g_world_name_entry_screen_image_rect.y = g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0;
-        world_gfx_load_image_and_wait(&g_world_name_entry_screen_image_rect, image);
+        gfx_load_image_and_wait(&g_world_name_entry_screen_image_rect, image);
         DrawOTag(otag);
         ClearOTag(g_world_gfx_active_packet_buffer->otag, g_world_ot_length);
         world_input_update_with_message_state();

@@ -206,7 +206,6 @@ void card_gfx_init_contexts(card_graphics_context_t* contexts, u32* otags, s32 u
     s32 unused_12, s32 unused_13, s32 unused_14, s32 unused_15, TILE* tiles, s32 unused_17, s32 unused_18,
     s32 unused_19, s32 unused_20, s32 unused_21, s32 unused_22, s32 unused_23, s32 unused_24);
 void card_gfx_init_primitive_lists(card_graphics_context_t* lists);
-void card_gfx_load_image_and_wait(RECT* rect, void* data);
 void card_gfx_set_draw_color(const rgb24_t* color);
 void card_gfx_set_draw_mode_and_link_ot(s32 dfe, s32 dtd, s32 tpage, RECT* texture_window, s32 otag_index);
 void card_gfx_set_otag_index(s32 value);
@@ -215,7 +214,6 @@ void card_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, const point16_
     const sprite_sheet_frame_t* uv_rect, const point16_t* scale, const sprite_draw_offset_t* offset);
 void card_gfx_start_decreasing_fade(void);
 void card_gfx_start_increasing_fade(void);
-void card_gfx_store_image_and_wait(RECT* rect, void* data);
 void card_gfx_submit_frame_and_swap_buffers(s32 first_otag, s32 draw_otag);
 s32 card_gfx_update_decreasing_fade(void);
 s32 card_gfx_update_increasing_fade(void);
