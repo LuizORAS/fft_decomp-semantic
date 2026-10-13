@@ -1,9 +1,8 @@
 #include "fft/event_debugchr.h"
 #include "fft/world.h"
 
-/* Target 0x800f001c. Loads the DEBUGCHR overlay (file 0xB) and runs the unit
- * debug editor thread for the stored unit when it has mount info set. */
-void world_menu_open_debugchr_unit_editor(void) {
+/* WORLD twin of battle_menu_open_rider_status_screen. */
+void world_menu_open_rider_status_screen(void) {
     s16* unit_index = &g_world_active_turn_unit.battle_id;
 
     if (battle_unit_get_stats_from_battle_id(*unit_index)->mount_info != 0) {

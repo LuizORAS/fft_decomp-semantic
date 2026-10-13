@@ -1,22 +1,21 @@
-/*
- * WORLD twin: world_menu_run_unit_editor_panel_thread (same code, globals and callees rebound).
- */
 #include "fft/battle.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Unit debug editor panel thread (task 0x15). Builds two copies of the panel
- * frame (19 sprites, 5 item icons, two tiles, eight lines and the text images
- * for the unit's items and labels), then redraws the current copy each frame
- * until cancelled or told to stop; square opens the status list thread. The
- * WORLD twin is world_menu_run_unit_editor_panel_thread. */
-void battle_menu_run_unit_editor_panel_thread(void) {
+/* The battle Status screen: the thread of the turn menu's Status row (BATTLE_MENU_ID_STATUS), task
+ * STATUS_SCREEN. A rider or a mount is shown by DEBUGCHR.OUT instead
+ * (battle_menu_open_rider_status_screen).
+ *
+ * It closes the tile panel and the menu, then builds two copies of the screen's frame (19 sprites, 5
+ * item icons, two tiles, eight lines and the text images for the unit's items and labels) and redraws
+ * the current copy each frame until cancelled or told to stop; Square opens the status list. */
+void battle_menu_run_status_screen_thread(void) {
     /* The frame reserves 0x100 bytes for the first copy's line-box
        primitives, the stride of the palette records (WORLD 0x80195ed0). */
     world_menu_palette_slot_t palette;
-    world_unit_editor_frame_t* records;
-    world_unit_editor_frame_t* frame_record;
+    menu_status_screen_frame_t* records;
+    menu_status_screen_frame_t* frame_record;
     LINE_F2* line;
     u8* buffer;
     /* One variable for the label text id and, in the frame loop, whether the
@@ -25,8 +24,8 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     s32 frame;
     s32 i;
 
-    battle_menu_open_debugchr_unit_editor();
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
+    battle_menu_open_rider_status_screen();
+    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_SCREEN);
     battle_menu_enter_status_screen_selection();
     g_battle_menu_suspend_state = 1;
     g_battle_menu_panel_fade_mode = MENU_PANEL_FADE_OUT;
@@ -39,7 +38,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     } while (g_battle_menu_hovered_stats_frame_count < 2);
     battle_menu_unblock_help();
 
-    frame_record = g_battle_menu_unit_editor_frames;
+    frame_record = g_battle_menu_status_screen_frames;
     records = frame_record;
     battle_gfx_init_scaled_draw_area_packets(&frame_record->draw_areas);
     g_battle_menu_hovered_unit_stats_display.y = 0x1A;
@@ -54,22 +53,26 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     frame_record->tiles[0].b0 = 0x30;
     frame_record->tiles[0].w = 0x10;
     frame_record->tiles[0].h = 0x5A;
-    frame_record->tiles[0].x0 = g_battle_unit_editor_panel_rect.x;
-    frame_record->tiles[0].y0 = g_battle_unit_editor_panel_rect.y + 1;
+    frame_record->tiles[0].x0 = g_battle_menu_status_screen_rect.x;
+    frame_record->tiles[0].y0 = g_battle_menu_status_screen_rect.y + 1;
     battle_copy_bytes(&frame_record->tiles[1], &frame_record->tiles[0], sizeof(TILE));
     frame_record->tiles[0].x0 += 0x12;
     frame_record->tiles[1].x0 += 0x7C;
     line = frame_record->lines;
-    for (i = 0; i < 8 * WORLD_UNIT_EDITOR_LINE_SIZE; i += WORLD_UNIT_EDITOR_LINE_SIZE) {
+    for (i = 0; i < 8 * MENU_STATUS_SCREEN_LINE_SIZE; i += MENU_STATUS_SCREEN_LINE_SIZE) {
         SetLineF2(line);
         SetSemiTrans(line, 1);
-        line->r0 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_R];
-        line->g0 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_G];
-        line->b0 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_B];
-        line->x0 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_X0] + g_battle_unit_editor_panel_rect.x;
-        line->y0 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_Y0] + g_battle_unit_editor_panel_rect.y;
-        line->x1 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_X1] + g_battle_unit_editor_panel_rect.x;
-        line->y1 = g_battle_unit_editor_line_colors[i + WORLD_UNIT_EDITOR_LINE_Y1] + g_battle_unit_editor_panel_rect.y;
+        line->r0 = g_battle_menu_status_screen_line_colors[i + MENU_STATUS_SCREEN_LINE_R];
+        line->g0 = g_battle_menu_status_screen_line_colors[i + MENU_STATUS_SCREEN_LINE_G];
+        line->b0 = g_battle_menu_status_screen_line_colors[i + MENU_STATUS_SCREEN_LINE_B];
+        line->x0 = g_battle_menu_status_screen_line_colors[i + MENU_STATUS_SCREEN_LINE_X0]
+            + g_battle_menu_status_screen_rect.x;
+        line->y0 = g_battle_menu_status_screen_line_colors[i + MENU_STATUS_SCREEN_LINE_Y0]
+            + g_battle_menu_status_screen_rect.y;
+        line->x1 = g_battle_menu_status_screen_line_colors[i + MENU_STATUS_SCREEN_LINE_X1]
+            + g_battle_menu_status_screen_rect.x;
+        line->y1 = g_battle_menu_status_screen_line_colors[i + MENU_STATUS_SCREEN_LINE_Y1]
+            + g_battle_menu_status_screen_rect.y;
         line++;
     }
     battle_menu_init_sprite_array(&frame_record->sprites[0], 0xC, 0x7D7C);
@@ -78,40 +81,40 @@ void battle_menu_run_unit_editor_panel_thread(void) {
     /* Each arm copies all four rows itself; the compiler cross-jumps the
        common tails, leaving only the first call's table loads in the arms. */
     if (g_battle_menu_billboard_data.state.two_hands != 0) {
-        battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_a[2], g_battle_unit_editor_row_image_params_b,
-            2 * sizeof(world_gfx_image_load_parameters_t));
-        battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_a[14], &g_battle_unit_editor_row_image_params_b[2],
-            2 * sizeof(world_gfx_image_load_parameters_t));
-        battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_b[2], g_battle_unit_editor_row_image_params_b,
-            2 * sizeof(world_gfx_image_load_parameters_t));
-        battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_b[14], &g_battle_unit_editor_row_image_params_b[2],
-            2 * sizeof(world_gfx_image_load_parameters_t));
+        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_a[2],
+            g_battle_menu_status_screen_row_image_params_b, 2 * sizeof(world_gfx_image_load_parameters_t));
+        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_a[14],
+            &g_battle_menu_status_screen_row_image_params_b[2], 2 * sizeof(world_gfx_image_load_parameters_t));
+        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_b[2],
+            g_battle_menu_status_screen_row_image_params_b, 2 * sizeof(world_gfx_image_load_parameters_t));
+        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_b[14],
+            &g_battle_menu_status_screen_row_image_params_b[2], 2 * sizeof(world_gfx_image_load_parameters_t));
     } else {
-        battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_a[2], g_battle_unit_editor_row_image_params_a,
-            2 * sizeof(world_gfx_image_load_parameters_t));
-        battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_a[14], &g_battle_unit_editor_row_image_params_a[2],
-            2 * sizeof(world_gfx_image_load_parameters_t));
-        battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_b[2], g_battle_unit_editor_row_image_params_a,
-            2 * sizeof(world_gfx_image_load_parameters_t));
-        battle_copy_bytes(&g_battle_unit_editor_sprite_image_params_b[14], &g_battle_unit_editor_row_image_params_a[2],
-            2 * sizeof(world_gfx_image_load_parameters_t));
+        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_a[2],
+            g_battle_menu_status_screen_row_image_params_a, 2 * sizeof(world_gfx_image_load_parameters_t));
+        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_a[14],
+            &g_battle_menu_status_screen_row_image_params_a[2], 2 * sizeof(world_gfx_image_load_parameters_t));
+        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_b[2],
+            g_battle_menu_status_screen_row_image_params_a, 2 * sizeof(world_gfx_image_load_parameters_t));
+        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_b[14],
+            &g_battle_menu_status_screen_row_image_params_a[2], 2 * sizeof(world_gfx_image_load_parameters_t));
     }
     /* These sprite and rectangle records share the fields read by the image loader. */
     if (g_battle_menu_billboard_data.state.generic_monster == 0) {
         for (i = 0; i < 19; i++) {
             battle_gfx_init_image_loading(&frame_record->sprites[i], &g_battle_menu_texture_location,
-                &g_battle_unit_editor_panel_rect, &g_battle_unit_editor_sprite_image_params_a[i]);
+                &g_battle_menu_status_screen_rect, &g_battle_menu_status_screen_sprite_image_params_a[i]);
         }
     } else {
         for (i = 0; i < 19; i++) {
             battle_gfx_init_image_loading(&frame_record->sprites[i], &g_battle_menu_texture_location,
-                &g_battle_unit_editor_panel_rect, &g_battle_unit_editor_sprite_image_params_b[i]);
+                &g_battle_menu_status_screen_rect, &g_battle_menu_status_screen_sprite_image_params_b[i]);
         }
     }
     battle_menu_init_sprite_array(&frame_record->sprites[19], 5, 0x7CFC);
     for (i = 0; i < 5; i++) {
         battle_gfx_init_image_loading(&frame_record->sprites[19 + i], &g_battle_item_icon_image_location,
-            &g_battle_unit_editor_panel_rect, &g_battle_unit_editor_item_icon_image_params[i]);
+            &g_battle_menu_status_screen_rect, &g_battle_menu_status_screen_item_icon_image_params[i]);
         battle_gfx_set_item_icon_sprite(
             &frame_record->sprites[19 + i], g_battle_menu_billboard_data.state.equipment[i]);
     }
@@ -129,7 +132,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
             g_battle_menu_text_state.pen.rect.y += 0x10;
         }
     }
-    LoadImage(&g_battle_unit_editor_text_rect_a, (u32*)buffer);
+    LoadImage(&g_battle_menu_status_screen_text_rect_a, (u32*)buffer);
     battle_thread_yield();
     battle_clear_menu_render_buffer(buffer, 0xC80);
     g_battle_menu_text_state.pen.stride = 0x50;
@@ -162,15 +165,15 @@ void battle_menu_run_unit_editor_panel_thread(void) {
             }
         }
     }
-    LoadImage(&g_battle_unit_editor_text_rect_b, (u32*)buffer);
+    LoadImage(&g_battle_menu_status_screen_text_rect_b, (u32*)buffer);
     battle_thread_yield();
     battle_menu_free_memory(buffer);
 
-    battle_copy_bytes(&records[1], frame_record, sizeof(world_unit_editor_frame_t));
+    battle_copy_bytes(&records[1], frame_record, sizeof(menu_status_screen_frame_t));
     records[0].palette = &palette.primitives;
-    records[1].palette = &g_battle_unit_editor_palette;
-    battle_menu_init_numeric_display_frame_primitives(&g_battle_unit_editor_panel_rect, records[0].palette);
-    battle_menu_init_numeric_display_frame_primitives(&g_battle_unit_editor_panel_rect, records[1].palette);
+    records[1].palette = &g_battle_menu_status_screen_palette;
+    battle_menu_init_numeric_display_frame_primitives(&g_battle_menu_status_screen_rect, records[0].palette);
+    battle_menu_init_numeric_display_frame_primitives(&g_battle_menu_status_screen_rect, records[1].palette);
     battle_thread_start(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, battle_menu_run_numeric_display_panel_thread);
     battle_thread_set_parameters(NATIVE_THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
     battle_thread_yield();
@@ -180,14 +183,14 @@ void battle_menu_run_unit_editor_panel_thread(void) {
         battle_thread_yield();
         frame_record = &records[frame & 1];
         battle_gfx_build_scaled_draw_area_pair_swapped(
-            &frame_record->draw_areas, &g_battle_unit_editor_cursor_rect, frame, g_main_gfx_screen_polarity);
+            &frame_record->draw_areas, &g_battle_menu_status_screen_cursor_rect, frame, g_main_gfx_screen_polarity);
         if (g_battle_menu_input_lock_mode == 0 && g_battle_menu_help_open == 0
             && battle_thread_get_current_parameter_3() != 0) {
             break;
         }
         value = battle_thread_is_running_asm(g_battle_thread_current_id - 1);
         for (i = 0; i < 19; i++) {
-            frame_record->sprites[i].clut = g_battle_unit_editor_sprite_clut_pairs[i][value];
+            frame_record->sprites[i].clut = g_battle_menu_status_screen_sprite_clut_pairs[i][value];
         }
         for (i = 0; i < 5; i++) {
             if (value != 0) {

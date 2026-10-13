@@ -1513,17 +1513,17 @@ extern world_gfx_image_load_parameters_t* g_world_unit_status_sprite_image_param
 extern u8 g_world_unit_status_first_page_by_mode[];
 extern RECT g_world_unit_summary_panel_rect;
 extern world_gfx_image_load_parameters_t g_world_unit_summary_sprite_image_params[];
-extern RECT g_world_unit_editor_panel_rect;  /* panel box */
-extern RECT g_world_unit_editor_cursor_rect; /* cursor source */
-extern RECT g_world_unit_editor_text_rect_a; /* first text image */
-extern RECT g_world_unit_editor_text_rect_b; /* second text image */
-extern world_gfx_image_load_parameters_t g_world_unit_editor_sprite_image_params_a[19];
-extern world_gfx_image_load_parameters_t g_world_unit_editor_sprite_image_params_b[19];
-extern world_gfx_image_load_parameters_t g_world_unit_editor_row_image_params_a[4];
-extern world_gfx_image_load_parameters_t g_world_unit_editor_row_image_params_b[4];
-extern world_gfx_image_load_parameters_t g_world_unit_editor_item_icon_image_params[5];
-extern u8 g_world_unit_editor_line_colors[8 * WORLD_UNIT_EDITOR_LINE_SIZE];
-extern u16 g_world_unit_editor_sprite_clut_pairs[19][2];
+extern RECT g_world_menu_status_screen_rect;        /* panel box */
+extern RECT g_world_menu_status_screen_cursor_rect; /* cursor source */
+extern RECT g_world_menu_status_screen_text_rect_a; /* first text image */
+extern RECT g_world_menu_status_screen_text_rect_b; /* second text image */
+extern world_gfx_image_load_parameters_t g_world_menu_status_screen_sprite_image_params_a[19];
+extern world_gfx_image_load_parameters_t g_world_menu_status_screen_sprite_image_params_b[19];
+extern world_gfx_image_load_parameters_t g_world_menu_status_screen_row_image_params_a[4];
+extern world_gfx_image_load_parameters_t g_world_menu_status_screen_row_image_params_b[4];
+extern world_gfx_image_load_parameters_t g_world_menu_status_screen_item_icon_image_params[5];
+extern u8 g_world_menu_status_screen_line_colors[8 * MENU_STATUS_SCREEN_LINE_SIZE];
+extern u16 g_world_menu_status_screen_sprite_clut_pairs[19][2];
 extern world_unit_view_thread_set_t g_world_unit_view_thread_sets[];
 extern u8 g_world_menu_panel_fade_modes[];
 extern s16 g_world_script_unit_filter_modes[];
@@ -1550,7 +1550,7 @@ extern s8 g_world_unit_status_banner_state; /* banner state: 0 idle, 1 finishing
  * bytes unnamed, so a member spelling would be raw offset arithmetic; they
  * stay separate symbols. The palette areas hold one slot per page. */
 extern u8 g_world_unit_summary_digit_images[];
-extern world_menu_palette_primitives_t g_world_unit_editor_palette;
+extern world_menu_palette_primitives_t g_world_menu_status_screen_palette;
 extern world_menu_palette_slot_t g_world_unit_summary_palettes[];
 extern s32 g_world_companion_overlay_primitives;
 /* WalkToAnim: the animation each unit takes once it has moved and stopped, and
@@ -1560,7 +1560,7 @@ extern u16 g_world_unit_pending_animation_ids[];
 extern u16 g_world_unit_was_moving_latch[];
 extern vec3u16_t g_world_current_misc_screen_coords;
 extern world_unit_status_page_t g_world_unit_status_panel_pages[];
-extern world_unit_editor_frame_t g_world_menu_unit_editor_frames[2];
+extern menu_status_screen_frame_t g_world_menu_status_screen_frames[2];
 extern u8 g_world_selected_unit_summary_packets[];
 extern u8 g_world_selected_unit_status_packets[];
 extern u8 g_world_selected_unit_stat_text_image[];
@@ -2503,7 +2503,7 @@ void world_menu_run_script_with_palette_mode(void* output, s32 input, s32 mode);
 void world_menu_run_skillset_thread(void);
 void world_menu_run_system_function_thread(void);
 s32 world_menu_run_thread(s32 thread_id, void* menu);
-void world_menu_open_debugchr_unit_editor(void);
+void world_menu_open_rider_status_screen(void);
 u8* world_menu_script_add_blend_draw_mode(u8* script);
 u8* world_menu_script_clear_temporary_draw_area(u8* script);
 u8* world_menu_script_set_draw_area(u8* script);

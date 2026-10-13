@@ -2690,15 +2690,15 @@ extern u16 g_battle_unit_view_started_battle_id;
 extern u16 g_battle_unit_view_started_comparison_id;
 extern s32 g_battle_unit_view_mode;
 extern u16 g_battle_unit_status_bounce_step;
-extern world_gfx_image_load_parameters_t g_battle_unit_editor_sprite_image_params_a[19];
-extern world_gfx_image_load_parameters_t g_battle_unit_editor_sprite_image_params_b[19];
-extern world_gfx_image_load_parameters_t g_battle_unit_editor_row_image_params_a[4];
-extern world_gfx_image_load_parameters_t g_battle_unit_editor_row_image_params_b[4];
-extern world_gfx_image_load_parameters_t g_battle_unit_editor_item_icon_image_params[5];
-extern u16 g_battle_unit_editor_sprite_clut_pairs[19][2];
+extern world_gfx_image_load_parameters_t g_battle_menu_status_screen_sprite_image_params_a[19];
+extern world_gfx_image_load_parameters_t g_battle_menu_status_screen_sprite_image_params_b[19];
+extern world_gfx_image_load_parameters_t g_battle_menu_status_screen_row_image_params_a[4];
+extern world_gfx_image_load_parameters_t g_battle_menu_status_screen_row_image_params_b[4];
+extern world_gfx_image_load_parameters_t g_battle_menu_status_screen_item_icon_image_params[5];
+extern u16 g_battle_menu_status_screen_sprite_clut_pairs[19][2];
 extern world_menu_palette_slot_t g_battle_unit_summary_palettes[];
 extern u8 g_battle_unit_summary_digit_images[];
-extern world_menu_palette_primitives_t g_battle_unit_editor_palette;
+extern world_menu_palette_primitives_t g_battle_menu_status_screen_palette;
 extern s32 g_battle_companion_overlay_primitives;
 /* The statuses a rider can be inflicted with, one mask per status byte. */
 extern u8 g_battle_rider_status_infliction_mask[BATTLE_STATUS_BYTE_COUNT];
@@ -2708,10 +2708,10 @@ extern s32 g_battle_entd_selection_mode; /* battle_entd_selection_e */
  * destinations this action. */
 extern s32 g_battle_relocated_unit_count;
 extern u8 g_battle_relocated_unit_coords[][3];
-extern RECT g_battle_unit_editor_cursor_rect; /* cursor source */
-extern RECT g_battle_unit_editor_panel_rect;  /* panel box */
-extern RECT g_battle_unit_editor_text_rect_a; /* first text image */
-extern RECT g_battle_unit_editor_text_rect_b; /* second text image */
+extern RECT g_battle_menu_status_screen_cursor_rect; /* cursor source */
+extern RECT g_battle_menu_status_screen_rect;        /* panel box */
+extern RECT g_battle_menu_status_screen_text_rect_a; /* first text image */
+extern RECT g_battle_menu_status_screen_text_rect_b; /* second text image */
 extern s32 g_battle_unit_graphics_load_complete;
 
 /* WalkToAnim: the animation each unit takes once it has moved and stopped
@@ -2742,7 +2742,7 @@ extern u16 g_battle_unit_graphics_load_pending;
  * battle_menu_load_selected_unit. */
 extern battle_menu_status_panel_slot_storage_t g_battle_menu_billboard_data;
 extern battle_menu_status_panel_slot_storage_t g_battle_menu_comparison_billboard_data;
-extern u8 g_battle_unit_editor_line_colors[8 * WORLD_UNIT_EDITOR_LINE_SIZE];
+extern u8 g_battle_menu_status_screen_line_colors[8 * MENU_STATUS_SCREEN_LINE_SIZE];
 extern battle_unit_graphics_load_queue_t g_main_gfx_unit_graphics_load_queue;
 /* The distinct spritesheets of the encounter's ENTD units (battle_unit_add_unique_entd_spritesheet). */
 extern s16 g_battle_unit_entd_spritesheet_ids[];
@@ -8259,7 +8259,7 @@ extern world_menu_quad_piece_t g_battle_menu_quad_pieces[]; /* quad piece table 
 extern world_menu_quad_colors_t g_battle_menu_quad_colors;  /* vertex colours */
 extern point16_t g_battle_menu_quad_origin;                 /* screen origin */
 extern world_glyph_blit_t g_battle_menu_text_pen;
-extern world_unit_editor_frame_t g_battle_menu_unit_editor_frames[2];
+extern menu_status_screen_frame_t g_battle_menu_status_screen_frames[2];
 
 /* Full record bases, not the legacy aliases biased to thread_id. */
 extern menu_window_buffer_t g_battle_menu_window_buffers[6]; /* 0x8016e43c */
@@ -8316,7 +8316,7 @@ void battle_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32
 void battle_menu_open_active_unit_idle_action_menu(void);
 void battle_menu_open_companion_executable(void);
 void battle_script_dark_screen_thread(void);
-void battle_menu_open_debugchr_unit_editor(void);
+void battle_menu_open_rider_status_screen(void);
 void battle_menu_open_non_active_unit_idle_action_menu(void);
 void battle_menu_open_option_dead_unit_panel(void);
 void battle_menu_run_jobstts_thread(void);

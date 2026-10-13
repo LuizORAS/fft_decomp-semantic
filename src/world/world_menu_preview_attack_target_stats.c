@@ -1,14 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Attack-preview target panel: waits for the caster panel thread unless it
- * is already the attack-caster task, then shows the target panel.
- *
- * world_menu_load_selected_unit runs twice: once with the target as the
- * active unit, to copy its monster flag and third ability row into the
- * comparison fields, and again with the active unit restored.
- */
+/* WORLD twin of battle_menu_preview_attack_target_stats. */
 void world_menu_preview_attack_target_stats(void) {
     s32 saved;
 

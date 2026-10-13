@@ -152,7 +152,7 @@ void world_menu_display_hovered_unit_stats(
                 }
             }
         }
-        running = world_thread_find_running_by_task(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL);
+        running = world_thread_find_running_by_task(NATIVE_THREAD_TASK_STATUS_SCREEN);
         if (running != 0 && world_thread_is_running_asm(running - 1) == 0) {
             running = 0;
         }

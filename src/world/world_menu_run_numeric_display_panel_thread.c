@@ -2,10 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Thread task 0x23: renders three text images into VRAM, builds two
- * alternating 18-sprite panel records with line boxes, then redraws the panel
- * every frame (dimmed palette while thread 6 runs) until the thread's
- * third parameter becomes non-zero. */
+/* WORLD twin of battle_menu_run_numeric_display_panel_thread. */
 void world_menu_run_numeric_display_panel_thread(void) {
     world_panel_record_t* records;
     world_panel_record_t* record;

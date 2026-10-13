@@ -1739,30 +1739,30 @@ typedef char battle_text_glyph_state_size_must_be_0x10[(sizeof(battle_text_glyph
  * (WORLD 0x801a3494, BATTLE 0x801730f8). The first 0x2a4 bytes are laid out
  * as battle_menu_status_panel_buffer_t (draw modes, sprites, tiles and lines),
  * and the trailing draw-area pair follows world_panel_frame_t. */
-typedef struct world_unit_editor_frame {
+typedef struct menu_status_screen_frame {
     DR_MODE draw_modes[3];                        /* 0x000: image pages 0, 2 and 4 */
     SPRT sprites[24];                             /* 0x024: 19 panel sprites, then 5 item icons */
     TILE tiles[2];                                /* 0x204 */
     LINE_F2 lines[8];                             /* 0x224 */
     world_menu_palette_primitives_t* palette;     /* 0x2a4 */
     world_gfx_scaled_draw_area_pair_t draw_areas; /* 0x2a8 */
-} world_unit_editor_frame_t;
-typedef char world_unit_editor_frame_size_must_be_0x2d0[sizeof(world_unit_editor_frame_t) == 0x2d0 ? 1 : -1];
+} menu_status_screen_frame_t;
+typedef char menu_status_screen_frame_size_must_be_0x2d0[sizeof(menu_status_screen_frame_t) == 0x2d0 ? 1 : -1];
 
 /* Colour and endpoint offsets of the unit editor panel's eight frame lines,
  * relative to the panel box, seven bytes per line (WORLD 0x80156198, BATTLE
  * 0x80168d0c). The loop walks the table with a byte offset stepping by 7 (the
  * target's induction variable and exit test), so the fields are addressed by
  * offset, as for world_menu_line_layout_t. */
-enum world_unit_editor_line_layout_offset {
-    WORLD_UNIT_EDITOR_LINE_R = 0,
-    WORLD_UNIT_EDITOR_LINE_G = 1,
-    WORLD_UNIT_EDITOR_LINE_B = 2,
-    WORLD_UNIT_EDITOR_LINE_X0 = 3,
-    WORLD_UNIT_EDITOR_LINE_Y0 = 4,
-    WORLD_UNIT_EDITOR_LINE_X1 = 5,
-    WORLD_UNIT_EDITOR_LINE_Y1 = 6,
-    WORLD_UNIT_EDITOR_LINE_SIZE = 7
+enum menu_status_screen_line_layout_offset {
+    MENU_STATUS_SCREEN_LINE_R = 0,
+    MENU_STATUS_SCREEN_LINE_G = 1,
+    MENU_STATUS_SCREEN_LINE_B = 2,
+    MENU_STATUS_SCREEN_LINE_X0 = 3,
+    MENU_STATUS_SCREEN_LINE_Y0 = 4,
+    MENU_STATUS_SCREEN_LINE_X1 = 5,
+    MENU_STATUS_SCREEN_LINE_Y1 = 6,
+    MENU_STATUS_SCREEN_LINE_SIZE = 7
 };
 
 /* Provisional 0x2ec-byte double-buffered page of the unit status panel

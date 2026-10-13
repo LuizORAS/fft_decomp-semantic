@@ -1,12 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Thread entry of the attack-target stats panel (unit view thread sets).
+/* Attack-preview target panel (the unit view's hovered-unit slot).
  *
- * It waits for the right-side panel thread to end unless that thread shows the
- * attack caster, loads the preview target's billboard by swapping it in as the
- * active-turn unit for one call, carries two fields of that billboard into the
- * comparison copy, reloads the real unit and runs the stats panel. */
+ * It waits for the right-side panel thread to end unless that thread shows the attack caster, loads the
+ * preview target's billboard by swapping it in as the active-turn unit for one call, carries two fields
+ * of that billboard into the comparison copy, reloads the real unit and runs the stats panel. */
 void battle_menu_preview_attack_target_stats(void) {
     s32 saved;
 

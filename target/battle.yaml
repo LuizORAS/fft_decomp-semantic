@@ -797,7 +797,7 @@ functions:
   - {addr: 0x80136b10, size: 192, name: battle_gfx_set_item_icon_sprite, hash: 2b719c85439aba92}
   - {addr: 0x80136bd0, size: 356, name: battle_menu_build_unit_portrait_poly, hash: b32d9453940114d7}
   - {addr: 0x80136d34, size: 880, name: battle_menu_run_numeric_display_panel_thread, hash: 899223ce6bfba704}
-  - {addr: 0x801370a4, size: 2796, name: battle_menu_run_unit_editor_panel_thread, hash: 5a162d67ff0fb26d}
+  - {addr: 0x801370a4, size: 2796, name: battle_menu_run_status_screen_thread, hash: 5a162d67ff0fb26d}
   - {addr: 0x80137b90, size: 8, name: battle_noop_80137b90, hash: 6d64edf91449c1b1}
   - {addr: 0x80137b98, size: 120, name: battle_menu_is_input_allowed, hash: f875053f5144ba32}
   - {addr: 0x80137c10, size: 708, name: battle_menu_handle_entry_confirm, hash: 46aaa86ad0be68d8}
@@ -852,7 +852,7 @@ functions:
   - {addr: 0x8013c284, size: 88, name: battle_menu_run_helpmenu_thread, hash: 273124b9b75f5519}
   - {addr: 0x8013c2dc, size: 200, name: battle_menu_run_jobstts_thread, hash: 4873b28b228ba17e}
   - {addr: 0x8013c3a4, size: 456, name: battle_menu_run_equip_thread, hash: b4cfa9beb874f1bc}
-  - {addr: 0x8013c56c, size: 252, name: battle_menu_open_debugchr_unit_editor, hash: d3d1ed8f97defebc}
+  - {addr: 0x8013c56c, size: 252, name: battle_menu_open_rider_status_screen, hash: d3d1ed8f97defebc}
   - {addr: 0x8013c668, size: 168, name: battle_menu_open_debugchr, hash: 6468879416a486b3}
   - {addr: 0x8013c710, size: 48, name: battle_script_show_graphic_thread, hash: f9a76818dec541a0}
   - {addr: 0x8013c740, size: 8, name: battle_noop_8013c740, hash: 6d64edf91449c1b1}
@@ -2470,17 +2470,17 @@ data:
   - {addr: 0x801688f4, name: g_battle_numeric_display_text_rect_c}
   - {addr: 0x801688fc, name: g_battle_numeric_display_image_params}
   - {addr: 0x801689d4, name: g_battle_numeric_display_entries}
-  - {addr: 0x80168a88, name: g_battle_unit_editor_panel_rect}
-  - {addr: 0x80168a90, name: g_battle_unit_editor_cursor_rect}
-  - {addr: 0x80168a98, name: g_battle_unit_editor_text_rect_a}
-  - {addr: 0x80168aa0, name: g_battle_unit_editor_text_rect_b}
-  - {addr: 0x80168aa8, name: g_battle_unit_editor_sprite_image_params_a}
-  - {addr: 0x80168b8c, name: g_battle_unit_editor_sprite_image_params_b}
-  - {addr: 0x80168c70, name: g_battle_unit_editor_row_image_params_a}
-  - {addr: 0x80168ca0, name: g_battle_unit_editor_row_image_params_b}
-  - {addr: 0x80168cd0, name: g_battle_unit_editor_item_icon_image_params}
-  - {addr: 0x80168d0c, name: g_battle_unit_editor_line_colors}
-  - {addr: 0x80168d44, name: g_battle_unit_editor_sprite_clut_pairs}
+  - {addr: 0x80168a88, name: g_battle_menu_status_screen_rect}
+  - {addr: 0x80168a90, name: g_battle_menu_status_screen_cursor_rect}
+  - {addr: 0x80168a98, name: g_battle_menu_status_screen_text_rect_a}
+  - {addr: 0x80168aa0, name: g_battle_menu_status_screen_text_rect_b}
+  - {addr: 0x80168aa8, name: g_battle_menu_status_screen_sprite_image_params_a}
+  - {addr: 0x80168b8c, name: g_battle_menu_status_screen_sprite_image_params_b}
+  - {addr: 0x80168c70, name: g_battle_menu_status_screen_row_image_params_a}
+  - {addr: 0x80168ca0, name: g_battle_menu_status_screen_row_image_params_b}
+  - {addr: 0x80168cd0, name: g_battle_menu_status_screen_item_icon_image_params}
+  - {addr: 0x80168d0c, name: g_battle_menu_status_screen_line_colors}
+  - {addr: 0x80168d44, name: g_battle_menu_status_screen_sprite_clut_pairs}
   - {addr: 0x80168d94, name: g_battle_menu_icon_strip_image_params}
   - {addr: 0x80168e84, name: g_battle_menu_single_icon_image_params}
   - {addr: 0x80168ec0, name: g_battle_cursor_bob_thresholds}
@@ -2531,7 +2531,7 @@ data:
   - {addr: 0x801698b8, name: g_battle_thread_task_ids}
   - {addr: 0x8016996c, name: g_battle_unit_summary_digit_images}
   - {addr: 0x80169a6c, name: g_battle_numeric_display_palettes}
-  - {addr: 0x8016d16c, name: g_battle_unit_editor_palette}
+  - {addr: 0x8016d16c, name: g_battle_menu_status_screen_palette}
   - {addr: 0x8016d26c, name: g_battle_unit_summary_palettes}
   - {addr: 0x8016d86c, name: g_battle_gfx_tpage7_vram_allocation_grid}
   - {addr: 0x8016d95c, name: g_battle_menu_palette_colors}
@@ -2581,7 +2581,7 @@ data:
   - {addr: 0x80172258, name: g_battle_menu_preview_target_action}
   - {addr: 0x8017225c, name: g_battle_unit_status_panel_pages}
   - {addr: 0x80172834, name: g_battle_menu_numeric_display_panel_records}
-  - {addr: 0x801730f8, name: g_battle_menu_unit_editor_frames}
+  - {addr: 0x801730f8, name: g_battle_menu_status_screen_frames}
   - {addr: 0x801739bc, name: g_battle_menu_panel_fade_frames}
   - {addr: 0x80173c34, name: g_battle_gfx_screen_fade_overlays}
   - {addr: 0x80173c6c, name: g_battle_active_menu}

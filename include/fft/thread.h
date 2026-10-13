@@ -128,7 +128,7 @@ typedef enum native_thread_task {
     NATIVE_THREAD_TASK_ATTACK_TARGET_STATS = 0x12,
     NATIVE_THREAD_TASK_ATTACK_CASTER_STATS = 0x13,
     NATIVE_THREAD_TASK_UNIT_SUMMARY_PANEL = 0x14,
-    NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL = 0x15,
+    NATIVE_THREAD_TASK_STATUS_SCREEN = 0x15,
     /* g_world_menu_thread_groups gives its three text windows the ids 0x20,
      * 0x21 and 0x22 (threads 9, 10 and 11); the window thread slides only the
      * second one with the main scroll. */

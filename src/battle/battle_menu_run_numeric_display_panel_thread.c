@@ -1,7 +1,3 @@
-/*
- * WORLD twin: world_menu_run_numeric_display_panel_thread
- * (same code, globals and callees rebound).
- */
 #include "fft/battle.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -11,7 +7,7 @@ extern world_panel_record_t g_battle_menu_numeric_display_panel_records[2];
  * alternating 18-sprite panel records with line boxes, then redraws the panel
  * every frame (dimmed palette while thread 6 runs) until the thread's
  * third parameter becomes non-zero. Started by
- * battle_menu_run_unit_editor_panel_thread on thread 0xA. */
+ * battle_menu_run_status_screen_thread on thread 0xA. */
 void battle_menu_run_numeric_display_panel_thread(void) {
     world_panel_record_t* records;
     world_panel_record_t* record;

@@ -1,9 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Reload the selected unit and redraw the right-hand (comparison) unit stats
- * panel. Number entry 6 (the list position) is drawn as dashes when the
- * billboard's list index is negative. */
+/* WORLD twin of battle_menu_refresh_right_unit_stats_display. */
 void world_menu_refresh_right_unit_stats_display(void) {
     world_menu_load_selected_unit();
     g_world_menu_right_unit_stats_setup[6].format = 2;

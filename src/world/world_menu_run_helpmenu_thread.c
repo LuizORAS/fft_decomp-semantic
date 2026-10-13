@@ -5,7 +5,7 @@
  * The confirm sound is queued when a unit editor panel is up and no menu
  * window is being built. */
 void world_menu_run_helpmenu_thread(void) {
-    if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL) != 0
+    if (world_thread_find_running_by_task(NATIVE_THREAD_TASK_STATUS_SCREEN) != 0
         && world_thread_find_running_by_task(NATIVE_THREAD_TASK_MENU_WINDOW_BUILD) == 0) {
         world_sound_set_effect_to_confirm();
     }

@@ -2,14 +2,13 @@
 #include "fft/event_debugchr.h"
 #include "psx/types.h"
 
-/* Show the active-turn unit in DEBUGCHR.OUT's unit editor when the unit has mount
- * info (it is a rider or a mount); for any other unit it returns at once and the
- * caller's own panel is used.
+/* Show the active unit's Status screen with DEBUGCHR.OUT (debugchr_editor_run_unit_thread, which
+ * uses DEBUGCHR's panels read-only) when the unit has mount info, a rider or a mount; for any other unit
+ * it returns at once and battle_menu_run_status_screen_thread draws its own.
  *
- * The editor replaces the unit panels and the menu thread; afterwards the idle
- * action menu is rebuilt, the unit summary view restarts and the calling thread
- * exits. */
-void battle_menu_open_debugchr_unit_editor(void) {
+ * The screen replaces the unit panels and the menu thread; afterwards the idle action menu is rebuilt,
+ * the unit summary view restarts and the calling thread exits. */
+void battle_menu_open_rider_status_screen(void) {
     s16* selected = &g_battle_active_turn_unit.battle_id;
 
     if (battle_unit_get_stats_from_battle_id(*selected)->mount_info == 0) {
