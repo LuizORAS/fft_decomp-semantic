@@ -27,6 +27,12 @@ typedef char battle_text_image_position_size_must_be_6[(sizeof(battle_text_image
 extern u8 g_battle_text_glyph_bitmaps[];
 extern const u8* g_text_glyph_bitmap_data;
 
+void menu_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused, s32 max_chars,
+    u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags);
+s32 menu_text_render_glyph_to_4bpp_image(
+    s32 glyph_id, u8* image, const battle_text_image_position_t* position, s32 style);
+void menu_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32 style);
+
 void battle_text_configure_sprite_vram(RECT* rect, s16 width, s16 height, void* packet, s32 clut_offset);
 /* The caller leaves 0x16f in $a1, but the body never reads $a1. */
 void battle_text_mirror_packed_nibble_region_horizontal(u8* data, const glyph_blit_t* region);

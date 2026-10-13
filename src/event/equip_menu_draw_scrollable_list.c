@@ -1,3 +1,4 @@
+#include "fft/battle_text.h"
 #include "fft/event_equip.h"
 #include "fft/menu_script.h"
 
@@ -66,7 +67,7 @@ void equip_menu_draw_scrollable_list(const menu_instruction_t* script) {
         rect.y = 0x30;
         rect.w = g_equip_menu_list_vram_width;
         rect.h = g_equip_menu_list_row_height;
-        equip_text_render_id_rows_to_vram(g_equip_menu_list_text_table, row_ids, &rect, 0);
+        menu_text_render_id_rows_to_vram(g_equip_menu_list_text_table, row_ids, &rect, 0);
     }
 
     g_equip_menu_list_scroll_direction = 0;

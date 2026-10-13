@@ -1,3 +1,4 @@
+#include "fft/battle_text.h"
 #include "fft/event_equip.h"
 #include "fft/menu.h"
 #include "fft/menu_script.h"
@@ -69,7 +70,7 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
                             rect.w = g_equip_menu_list_vram_width;
                             rect.h = g_equip_menu_list_row_height;
                             *row_ids = text_id;
-                            equip_text_render_id_rows_to_vram(g_equip_menu_list_text_table, row_ids, &rect, 0);
+                            menu_text_render_id_rows_to_vram(g_equip_menu_list_text_table, row_ids, &rect, 0);
                         }
                     }
                 } else if (input & PSX_PAD_UP) {
@@ -90,7 +91,7 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
                             rect.y = g_equip_menu_list_visible_rows * g_equip_menu_list_row_height + 0x30;
                             rect.w = g_equip_menu_list_vram_width;
                             rect.h = g_equip_menu_list_row_height;
-                            equip_text_render_id_rows_to_vram(g_equip_menu_list_text_table, entry_ids, &rect, 0);
+                            menu_text_render_id_rows_to_vram(g_equip_menu_list_text_table, entry_ids, &rect, 0);
                         }
                     }
                 } else if (g_equip_menu_selected_list_index < g_equip_menu_list_entry_count - 1

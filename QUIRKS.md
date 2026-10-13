@@ -83,9 +83,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `src/main/main_unit_calculate_random_equipment.c`: throwing and bomb item
   types index past the four equipment-category bytes into the first innate
   status byte; that adjacent byte controls their eligibility.
-- `src/event/jobstts_text_render_encoded_ids_to_image.c`,
-  `bunit_text_render_encoded_ids_to_image.c`, `equip_text_render_encoded_ids_to_image.c`
-  and `card_text_render_encoded_ids_to_image.c`: the encoded-text branch tests
+- `src/event/jobstts_text_render_encoded_ids_to_image.c` and
+  `src/shared/menu/menu_text_render_encoded_ids_to_image.c`: the encoded-text branch tests
   its glyph counter (`col`) against the line width but never assigns it; the
   stale register stays below the width, so text never wraps.
 - `src/battle/battle_unit_init.c`: tints the new unit's palette

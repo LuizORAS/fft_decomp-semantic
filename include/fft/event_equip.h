@@ -537,11 +537,6 @@ extern s32 g_equip_text_help_message_id;
 extern u8 g_equip_text_restore_pending;
 
 void equip_text_concatenate_entries(const u8* text_table, u8* dst, s16* list, s32 separate);
-void equip_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused, s32 max_chars,
-    u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags);
-s32 equip_text_render_glyph_to_4bpp_image(
-    s32 glyph_id, u8* image, const battle_text_image_position_t* position, s32 style);
-void equip_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32 style);
 void equip_text_render_signed_decimal_entries(u8* pixels, menu_number_entry_t* entry, glyph_blit_t* out, s32 count);
 void equip_text_show_message_with_sound(s32 message_id, s32 sound_id);
 void equip_text_start_help_thread(s32 text_id);

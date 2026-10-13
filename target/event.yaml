@@ -414,7 +414,7 @@ functions:
   - {addr: 0x801cb410, size: 284, name: bunit_input_read_page_scroll_direction, hash: c9c3ae74b59d1149}
   - {addr: 0x801cb52c, size: 308, name: bunit_text_render_glyph_to_4bpp_image, hash: 19147e4fe2464c4d}
   - {addr: 0x801cb660, size: 92, name: menu_text_find_entry_by_index, hash: 01a8767dd4ceba70, source: src/shared/menu/menu_text_find_entry_by_index.c}
-  - {addr: 0x801cb6bc, size: 648, name: bunit_text_render_encoded_ids_to_image, hash: 52056952222908be}
+  - {addr: 0x801cb6bc, size: 648, name: menu_text_render_encoded_ids_to_image, hash: 52056952222908be, source: src/shared/menu/menu_text_render_encoded_ids_to_image.c}
   - {addr: 0x801cb944, size: 208, name: bunit_text_concatenate_entries, hash: e9d08ebd80233029}
   - {addr: 0x801cba14, size: 40, name: bunit_thread_request_stop, hash: ea52b0a734b83ec7}
   - {addr: 0x801cba3c, size: 264, name: bunit_text_render_id_rows_to_vram, hash: dcadefa443b8cc4f}
@@ -829,6 +829,9 @@ data:
 
 imports:
   - {addr: 0x800222fc, name: memset}
+
+overrides:
+  - {function: menu_text_render_encoded_ids_to_image, name: menu_text_render_glyph_to_4bpp_image, addr: 0x801cb52c}
 ---
 module: event-card
 file: EVENT/CARD.OUT
@@ -904,14 +907,14 @@ functions:
   - {addr: 0x801c69c4, size: 16, name: card_gfx_set_otag_index, hash: e32615753d53f066}
   - {addr: 0x801c69d4, size: 220, name: menu_set_palette_mode, hash: 54dc2b565735014d, source: src/shared/menu/menu_set_palette_mode.c}
   - {addr: 0x801c6ab0, size: 16, name: card_gfx_get_draw_color, hash: d7432486c75c5701}
-  - {addr: 0x801c6ac0, size: 308, name: card_text_render_glyph_to_4bpp_image, hash: 57bd6d2052065015}
+  - {addr: 0x801c6ac0, size: 308, name: menu_text_render_glyph_to_4bpp_image, hash: 57bd6d2052065015, source: src/shared/menu/menu_text_render_glyph_to_4bpp_image.c}
   - {addr: 0x801c6bf4, size: 92, name: menu_text_find_entry_by_index, hash: f63f536b1105c27b, source: src/shared/menu/menu_text_find_entry_by_index.c}
-  - {addr: 0x801c6c50, size: 648, name: card_text_render_encoded_ids_to_image, hash: 2c7fd05e27cafa08}
+  - {addr: 0x801c6c50, size: 648, name: menu_text_render_encoded_ids_to_image, hash: 2c7fd05e27cafa08, source: src/shared/menu/menu_text_render_encoded_ids_to_image.c}
   - {addr: 0x801c6ed8, size: 120, name: card_text_start_character_thread_if_idle, hash: 87c0e98d46e6c909}
   - {addr: 0x801c6f50, size: 224, name: card_text_start_thread_if_idle, hash: 77aa21d89789557e}
   - {addr: 0x801c7030, size: 40, name: card_thread_request_stop, hash: ea52b0a734b83ec7}
   - {addr: 0x801c7058, size: 84, name: card_text_count_encoded_glyphs, hash: 913de49b8f13d563}
-  - {addr: 0x801c70ac, size: 264, name: card_text_render_id_rows_to_vram, hash: b0397e2667e01217}
+  - {addr: 0x801c70ac, size: 264, name: menu_text_render_id_rows_to_vram, hash: b0397e2667e01217, source: src/shared/menu/menu_text_render_id_rows_to_vram.c}
   - {addr: 0x801c71b4, size: 40, name: card_thread_stop_and_clear_state, hash: 966ee997927b0d37}
   - {addr: 0x801c71dc, size: 92, name: card_menu_stop_thread_and_wait, hash: e30c6fb66d27c973}
   - {addr: 0x801c7238, size: 156, name: card_thread_start_managed, hash: c61eda6b69ac7d32}
@@ -1365,13 +1368,13 @@ functions:
   - {addr: 0x801c891c, size: 48, name: equip_unit_copy_data_to_compare_slot, hash: 7721b3f4a2b21f57}
   - {addr: 0x801c894c, size: 36, name: equip_unit_has_two_swords, hash: 1dd41e4a0efc124e}
   - {addr: 0x801c8970, size: 36, name: equip_unit_has_two_hands, hash: c15e201267b4bcbf}
-  - {addr: 0x801c8994, size: 308, name: equip_text_render_glyph_to_4bpp_image, hash: b67461b2eb78e979}
+  - {addr: 0x801c8994, size: 308, name: menu_text_render_glyph_to_4bpp_image, hash: b67461b2eb78e979, source: src/shared/menu/menu_text_render_glyph_to_4bpp_image.c}
   - {addr: 0x801c8ac8, size: 92, name: menu_text_find_entry_by_index, hash: b89f5b2fce3c6266, source: src/shared/menu/menu_text_find_entry_by_index.c}
-  - {addr: 0x801c8b24, size: 648, name: equip_text_render_encoded_ids_to_image, hash: 7182fd970e4c014a}
+  - {addr: 0x801c8b24, size: 648, name: menu_text_render_encoded_ids_to_image, hash: 7182fd970e4c014a, source: src/shared/menu/menu_text_render_encoded_ids_to_image.c}
   - {addr: 0x801c8dac, size: 120, name: equip_text_start_character_thread_if_idle, hash: 87c0e98d46e6c909}
   - {addr: 0x801c8e24, size: 208, name: equip_text_concatenate_entries, hash: 3d0d184be7c8034b}
   - {addr: 0x801c8ef4, size: 40, name: equip_thread_request_stop, hash: ea52b0a734b83ec7}
-  - {addr: 0x801c8f1c, size: 264, name: equip_text_render_id_rows_to_vram, hash: c878461238dbc9ef}
+  - {addr: 0x801c8f1c, size: 264, name: menu_text_render_id_rows_to_vram, hash: c878461238dbc9ef, source: src/shared/menu/menu_text_render_id_rows_to_vram.c}
   - {addr: 0x801c9024, size: 40, name: equip_thread_stop_and_clear_state, hash: be4dbfe6e8168a66}
   - {addr: 0x801c904c, size: 156, name: equip_thread_start_managed, hash: 8a302f302bc0aafe}
   - {addr: 0x801c90e8, size: 124, name: equip_text_start_help_thread, hash: 214e1e5f54bfe73c}
@@ -1762,6 +1765,10 @@ data:
 
 imports:
   - {addr: 0x800222fc, name: memset}
+
+overrides:
+  - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_init_primary_reader, addr: 0x801cdf50}
+  - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_read_primary, addr: 0x801cdf88}
 ---
 module: event-etc
 file: EVENT/ETC.OUT
@@ -1871,7 +1878,7 @@ functions:
   - {addr: 0x801e036c, size: 36, name: job_get_skillset, hash: 72f6f53360f055dc, source: src/shared/job/job_get_skillset.c}
   - {addr: 0x801e0390, size: 44, name: job_get_generic_index, hash: 41e9cddd909306f7, source: src/shared/job/job_get_generic_index.c}
   - {addr: 0x801e03bc, size: 592, name: jobstts_ability_build_list, hash: 765ef4759d963053}
-  - {addr: 0x801e060c, size: 308, name: jobstts_text_render_glyph_to_4bpp_image, hash: 1cfc444d6d3209dc}
+  - {addr: 0x801e060c, size: 308, name: menu_text_render_glyph_to_4bpp_image, hash: 1cfc444d6d3209dc, source: src/shared/menu/menu_text_render_glyph_to_4bpp_image.c}
   - {addr: 0x801e0740, size: 92, name: jobstts_text_find_entry_by_index, hash: f16b98f4a6075cd8}
   - {addr: 0x801e079c, size: 648, name: jobstts_text_render_encoded_ids_to_image, hash: 8d74937185196c66}
   - {addr: 0x801e0a24, size: 264, name: jobstts_text_render_id_rows_to_vram, hash: 5241f714170cf25b}
@@ -2089,6 +2096,10 @@ data:
 
 imports:
   - {addr: 0x800222fc, name: memset}
+
+overrides:
+  - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_init_primary_reader, addr: 0x801e4e98}
+  - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_read_primary, addr: 0x801e4ed0}
 ---
 module: event-option
 file: EVENT/OPTION.OUT
