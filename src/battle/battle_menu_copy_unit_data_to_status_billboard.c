@@ -1,17 +1,10 @@
-#include "fft/battle.h"
 #include "fft/battle_action.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
-/* Fills a status billboard (level, team kind, AT position, HP/MP/CT and the
- * live-unit count) from a battle unit.
- *
- * BATTLE twin of debugchr_menu_copy_unit_data_to_status_billboard. Reusing `unit`
- * for the loop's stats and lookup pointers ranks it ahead of `i` for $s0, and
- * reading MP directly rather than through `value` gives CT $v1 and the
- * callback address $v0 in the call block. */
+/* Fill the level, team, AT-list position, HP/MP/CT and live-unit count. */
 void battle_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu_unit_status_record_t* output) {
     s32 resolved_id;
     s32 count;

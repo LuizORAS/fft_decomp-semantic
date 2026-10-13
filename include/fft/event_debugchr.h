@@ -134,7 +134,6 @@ extern s32 g_debugchr_menu_indicator_fade_work[2];
 extern s32 g_debugchr_menu_indicator_packet_index[2];
 extern s32 g_debugchr_menu_indicator_state[2];
 
-void debugchr_menu_copy_unit_data_to_status_billboard(battle_stats_t* unit, menu_unit_status_record_t* output);
 void debugchr_menu_select_primitive_color_palette(
     menu_palette_primitives_t* output, const menu_status_thread_t* context);
 
