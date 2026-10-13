@@ -6,20 +6,15 @@
  * animations hold a handle for. Always returns 0. */
 s32 map_stop_clut_cycles_and_weather_sfx(void) {
     s32 index;
-    s32* handle;
 
     sound_stop_weather_sfx();
 
-    index = 0;
-    handle = g_map_texture_animation_cycle_handles;
-    do {
-        if (*handle != 0) {
-            map_stop_clut_cycle(*handle);
-            *handle = 0;
+    for (index = 0; index < MAP_TEXTURE_ANIMATION_COUNT; index++) {
+        if (g_map_texture_animation_cycle_handles[index] != 0) {
+            map_stop_clut_cycle(g_map_texture_animation_cycle_handles[index]);
+            g_map_texture_animation_cycle_handles[index] = 0;
         }
-        index++;
-        handle++;
-    } while (index < MAP_TEXTURE_ANIMATION_COUNT);
+    }
 
     g_sound_weather_sfx_enabled = 0;
     return 0;

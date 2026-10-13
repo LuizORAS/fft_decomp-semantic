@@ -9,14 +9,12 @@ void battle_gfx_invalidate_sp2_vram_slot(battle_unit_misc_data_t* unit) {
     count = 0;
     invalid = BATTLE_GFX_VRAM_SLOT_OWNER_NONE;
     slot = g_battle_gfx_vram_slots;
-    do {
+    for (; count < 2; count++, slot++) {
         u32 descriptor = slot->owner;
 
-        count++;
         if (((descriptor & BATTLE_GFX_VRAM_SLOT_OWNER_ID_MASK) == unit->unit_id)
             && ((descriptor & BATTLE_GFX_VRAM_SLOT_OWNER_SP2) != 0)) {
             slot->owner = invalid;
         }
-        slot++;
-    } while (count < 2);
+    }
 }

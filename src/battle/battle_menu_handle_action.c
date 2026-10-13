@@ -13,7 +13,6 @@
  * by setting the third parameter of the next n threads (thread 8 also saves
  * the open menus' selections). */
 void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option) {
-    menu_entry_t* entry;
     s16* actions;
     s32 action;
     s32 silent;
@@ -21,7 +20,6 @@ void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option) {
     s32 j;
     s32 thread_id;
 
-    entry = menu;
     if (g_battle_menu_input_mode == MENU_INPUT_TUTORIAL
         && ((script_get_variable(EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS) >> selected_option) & 1)) {
         return;
@@ -34,7 +32,7 @@ void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option) {
         g_battle_thread_contexts[g_battle_current_thread_id].task_words[1] = 2;
         g_battle_thread_contexts[g_battle_current_thread_id].task_words[0] = 0;
     }
-    actions = entry->row_actions;
+    actions = menu->row_actions;
     if ((s32)actions >= -15 && (s32)actions <= -1) {
         action = (s32)actions;
     } else {
@@ -59,7 +57,7 @@ void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option) {
         }
     } else {
         action = -action;
-        for (i = 0; i < 16; i++) {
+        for (i = 0; i < NATIVE_THREAD_SLOT_COUNT; i++) {
             if (g_battle_thread_contexts[i].task_id == NATIVE_THREAD_TASK_RESUME) {
                 g_battle_thread_contexts[i].task_id = NATIVE_THREAD_TASK_STOP_REQUEST;
             }
@@ -78,7 +76,7 @@ void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option) {
         }
     }
     g_script_event_input = 0;
-    *menu_entry_result(entry) = selected_option;
+    *menu_entry_result(menu) = selected_option;
     if (g_sound_suppressed == 0 && silent == 0) {
         sound_queue_sfx_confirm();
     }

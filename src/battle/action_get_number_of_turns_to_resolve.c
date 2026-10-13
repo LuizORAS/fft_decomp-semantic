@@ -4,12 +4,12 @@
 /* Count the AT-list entries that resolve before an action by unit_index
  * charging for ct; returns 0xff when no such position exists within 40. */
 u32 action_get_number_of_turns_to_resolve(s32 unit_index, s32 ct, battle_at_entry_t* entries) {
-    s32 count = 0;
+    s32 count;
     if (g_battle_between_turn_resume_state == BATTLE_BETWEEN_TURN_STATE_PICK_UNIT_AFTER_CHARGE && ct != 0) {
         ct += 1;
     }
     ct <<= 8;
-    do {
+    for (count = 0; count < 40; count++, entries++) {
         s32 entry_unit = entries->unit;
         s32 is_action = entry_unit & 0x40;
         s32 entry_ct;
@@ -27,8 +27,6 @@ u32 action_get_number_of_turns_to_resolve(s32 unit_index, s32 ct, battle_at_entr
             if (is_action == 0)
                 return count & 0xFF;
         }
-        count++;
-        entries++;
-    } while (count < 0x28);
+    }
     return 0xFF;
 }

@@ -10,7 +10,7 @@ void battle_unit_reset_animation_states(void) {
 
     i = 0;
     state = g_battle_unit_misc_rotation_data;
-    do {
+    for (; i < BATTLE_UNIT_SLOT_COUNT; i++, state++) {
         state->rotating = 0;
         state->delay = 0;
         if (battle_unit_has_misc_id(i) != 0) {
@@ -20,7 +20,5 @@ void battle_unit_reset_animation_states(void) {
         }
         g_battle_unit_pending_animation_ids[i] = 0;
         g_battle_unit_was_moving_latch[i] = 0;
-        i++;
-        state++;
-    } while (i < BATTLE_UNIT_SLOT_COUNT);
+    }
 }

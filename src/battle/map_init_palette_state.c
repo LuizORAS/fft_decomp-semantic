@@ -12,27 +12,21 @@
  * the stored deltas only the first colour's red delta of each row is cleared. */
 void map_init_palette_state(void) {
     s32 clut_row;
-    s32 enabled;
     s32 animation_index;
 
     g_map_palette_state.upload_pending = 0;
     g_map_palette_state.move_pending = 0;
 
-    enabled = 1;
-    clut_row = 0;
-    do {
+    for (clut_row = 0; clut_row < MAP_CLUT_ROW_COUNT; clut_row++) {
         g_map_palette_state.clut_rows[clut_row].updates_disabled = 0;
-        g_map_palette_state.clut_rows[clut_row].enabled = enabled;
+        g_map_palette_state.clut_rows[clut_row].enabled = 1;
 
-        animation_index = MAP_CLUTS_PER_ROW - 1;
-        do {
+        for (animation_index = MAP_CLUTS_PER_ROW - 1; animation_index >= 0; animation_index--) {
             g_map_palette_state.clut_rows[clut_row].animations[animation_index].active = 0;
-            animation_index--;
-        } while (animation_index >= 0);
+        }
 
         g_map_palette_state.clut_rows[clut_row].components[0].delta_biased.r = 0;
-        clut_row++;
-    } while (clut_row < MAP_CLUT_ROW_COUNT);
+    }
 
     g_map_background_gradient_transition.active = 0;
     g_map_background_gradient_transition.repeat = MAP_COLOR_REPEAT_OFF;

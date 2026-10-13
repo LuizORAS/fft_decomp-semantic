@@ -13,8 +13,7 @@ s32 action_check_battle_outcome(void) {
 
     player_unit_count = 0;
     enemy_unit_count = 0;
-    unit_index = 0;
-    do {
+    for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
         unit = &g_battle_unit_stats[unit_index];
         if ((unit->initial_team_flags & BATTLE_TEAM_IMPORTANCE_MASK) == BATTLE_TEAM_IMPORTANCE_MASK) {
             if (unit->existence != BATTLE_UNIT_EXISTENCE_NONE) {
@@ -29,8 +28,7 @@ s32 action_check_battle_outcome(void) {
                 }
             }
         }
-        unit_index++;
-    } while (unit_index < BATTLE_UNIT_SLOT_COUNT);
+    }
 
     if (player_unit_count != 0) {
         return -1;
@@ -39,8 +37,7 @@ s32 action_check_battle_outcome(void) {
         return 0;
     }
 
-    unit_index = 0;
-    do {
+    for (unit_index = 0; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
         unit = &g_battle_unit_stats[unit_index];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
             selected = unit->initial_team_flags & BATTLE_TEAM_MASK;
@@ -52,8 +49,7 @@ s32 action_check_battle_outcome(void) {
                 }
             }
         }
-        unit_index++;
-    } while (unit_index < BATTLE_UNIT_SLOT_COUNT);
+    }
 
     if (player_unit_count == 0) {
         return -1;

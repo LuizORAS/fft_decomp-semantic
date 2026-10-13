@@ -18,7 +18,7 @@ void battle_menu_release_window_buffer_pair(menu_window_buffer_t* buffer) {
 
     slot = 0;
     empty = (menu_window_buffer_t*)-1;
-    do {
+    for (; slot < 6; slot += 2) {
         if (g_battle_menu_buffer_slots[slot] == buffer) {
             g_battle_menu_buffer_slots[slot] = empty;
             g_battle_menu_buffer_slots[slot + 1] = empty;
@@ -28,8 +28,7 @@ void battle_menu_release_window_buffer_pair(menu_window_buffer_t* buffer) {
             g_battle_menu_window_buffers[slot + 1].thread_id = 0;
             return;
         }
-        slot += 2;
-    } while (slot < 6);
+    }
 
     battle_thread_exit_current();
 }

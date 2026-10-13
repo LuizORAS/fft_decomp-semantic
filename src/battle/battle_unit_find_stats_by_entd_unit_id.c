@@ -13,7 +13,7 @@ battle_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_bat
     battle_stats_t* unit;
     s32 i;
 
-    for (i = 0; i < 0x15; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && unit->unit_id == (unit_id & 0xff)) {
             if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_CRYSTAL)] & STATUS_BYTE_MASK(STATUS_ID_CRYSTAL))
@@ -27,7 +27,7 @@ battle_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_bat
         }
     }
 
-    for (i = 0; i < 0x15; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE && unit->unit_id == (unit_id & 0xff)
             && unit->existence != unit->entd_slot) {

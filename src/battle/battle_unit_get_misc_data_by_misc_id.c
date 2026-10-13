@@ -6,7 +6,7 @@ battle_unit_misc_data_t* battle_unit_get_misc_data_by_misc_id(u16 misc_id) {
 
     unit = g_battle_unit_misc_list_head;
     while (unit != 0) {
-        if (unit->unit_id == (misc_id & 0xFFFF)) {
+        if (unit->unit_id == misc_id) {
             return unit;
         }
         unit = unit->previous;

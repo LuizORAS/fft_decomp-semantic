@@ -7,14 +7,12 @@ void move_update_unit_by_misc_id(void) {
     s32 i;
     battle_unit_misc_data_t* unit;
 
-    i = 0;
-    do {
+    for (i = 0; i < BATTLE_UNIT_MISC_SLOT_COUNT; i++) {
         unit = battle_unit_get_misc_data_by_misc_id(i);
         if (unit != 0) {
             if (unit->path.count != 0) {
                 move_update_path_step(unit);
             }
         }
-        i++;
-    } while (i < BATTLE_UNIT_MISC_SLOT_COUNT);
+    }
 }

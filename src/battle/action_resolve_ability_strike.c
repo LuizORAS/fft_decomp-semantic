@@ -11,7 +11,7 @@
  * the Math skillset id in the control-value test. The (u16*)/(s16*) views
  * reproduce the target's load forms and memory-access ordering. */
 s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) {
-    u8 targets[21];
+    u8 targets[BATTLE_UNIT_SLOT_COUNT];
     s32 count;
     u8 flags_3;
     battle_stats_t* attacker;
@@ -24,10 +24,10 @@ s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) 
     g_battle_sort_targets_nearest_first = 0;
     g_battle_relocated_unit_count = 0;
     g_action_current_ability.random_fire_flag = 0;
-    for (i = 0; i < 21; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         targets[i] = 0xff;
     }
-    if (misc_unit_id >= 21) {
+    if (misc_unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
     attacker = &g_battle_unit_stats[misc_unit_id];
@@ -60,13 +60,13 @@ s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) 
             work->continue_attack = 0;
             return -1;
         }
-        if (g_action_current_ability.post_action_target_id < 21
+        if (g_action_current_ability.post_action_target_id < BATTLE_UNIT_SLOT_COUNT
             && (g_action_current_ability.weapon_proc_pending != 0
                 || (g_action_current_ability.knockback_flags & BATTLE_KNOCKBACK_PENDING))) {
             target_disable_green_panel_flags();
             count = 1;
             targets[0] = g_action_current_ability.post_action_target_id;
-            for (i = 1; i < 16; i++) {
+            for (i = 1; i < BATTLE_UNIT_MISC_SLOT_COUNT; i++) {
                 targets[i] = 0xff;
             }
             tile = &g_map_tile_data[map_calculate_location(
@@ -78,7 +78,7 @@ s32 action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) 
     g_action_current_ability.target_count = count;
     action_store_target_ids(targets);
     action_store_used_weapon(&attacker->action_command);
-    for (i = 0; i < 21; i++) {
+    for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         target_id = targets[i];
         if (target_id != 0xff) {
             g_action_current_ability.defaulted_to_attack = 0;

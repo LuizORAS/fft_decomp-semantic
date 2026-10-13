@@ -2,9 +2,9 @@
 #include "psx/types.h"
 
 void battle_gfx_tint_all_units_by_team(void) {
-    s32 i = 0;
-    do {
+    s32 i;
+
+    for (i = 0; i < BATTLE_UNIT_MISC_SLOT_COUNT; i++) {
         battle_gfx_modify_palette_based_on_team(battle_unit_get_misc_data_by_misc_id(i), 4);
-        i++;
-    } while (i < 0x10);
+    }
 }

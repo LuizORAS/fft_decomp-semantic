@@ -17,14 +17,11 @@ s32 action_check_at_list_for_unit_battle_id(battle_stats_t* unit) {
         return -3;
     misc_unit_id = unit->misc_unit_id;
     action_calculate_at_list(at_list, BATTLE_AT_LIST_MODE_TURNS_ONLY);
-    i = 0;
-    entry = at_list;
-    do {
+    for (i = 0; i < 40; i++) {
+        entry = &at_list[i];
         if ((entry->unit & 0x1F) == (misc_unit_id & 0xFF)) {
             return i;
         }
-        i += 1;
-        entry++;
-    } while (i < 0x28);
+    }
     return -2;
 }

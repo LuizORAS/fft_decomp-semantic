@@ -12,13 +12,10 @@ void target_clear_panels_on_untargetable_tiles(void) {
     i = 0;
     dst = g_target_panel_data;
     src = g_map_tile_data;
-    do {
+    for (; i < 256; src++, i++, dst++) {
         if (src->flags.untargetable) {
             dst->remaining_range = 0;
             dst->mark = 0;
         }
-        src++;
-        i += 1;
-        dst++;
-    } while (i < 0x100);
+    }
 }

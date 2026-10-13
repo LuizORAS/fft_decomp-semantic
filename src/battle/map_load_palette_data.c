@@ -8,26 +8,19 @@
 void map_load_palette_data(const palette_t* palettes, s32 clut_row, s32 clut_index, s32 load_all) {
     s32 clear_index;
     s32 i;
-    const palette_t* clut;
 
     if (g_map_palette_state.clut_rows[clut_row].updates_disabled != 0) {
         return;
     }
 
     if (load_all == 1) {
-        clear_index = MAP_CLUTS_PER_ROW - 1;
-        do {
+        for (clear_index = MAP_CLUTS_PER_ROW - 1; clear_index >= 0; clear_index--) {
             g_map_palette_state.clut_rows[clut_row].animations[clear_index].active = 0;
-            clear_index--;
-        } while (clear_index >= 0);
+        }
 
-        i = 0;
-        clut = palettes;
-        do {
-            map_extract_palette_colors(*clut, clut_row, i);
-            i++;
-            clut++;
-        } while (i < MAP_CLUTS_PER_ROW);
+        for (i = 0; i < MAP_CLUTS_PER_ROW; i++) {
+            map_extract_palette_colors(palettes[i], clut_row, i);
+        }
     } else {
         g_map_palette_state.clut_rows[clut_row].animations[clut_index].active = 0;
         map_extract_palette_colors(*palettes, clut_row, clut_index);

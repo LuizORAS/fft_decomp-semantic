@@ -16,14 +16,12 @@ s32 map_update_deep_dungeon_and_animation(void) {
     if (map_poll_data_load() != 0) {
         return 0;
     }
-    misc_id = 0;
-    do {
+    for (misc_id = 0; misc_id < BATTLE_UNIT_MISC_SLOT_COUNT; misc_id++) {
         battle_unit_misc_data_t* misc = battle_unit_get_misc_data_by_misc_id(misc_id & 0xFFFF);
-        misc_id++;
         if (misc != 0) {
             battle_unit_update_display_by_misc_id(misc->unit_id);
         }
-    } while (misc_id < 0x10);
+    }
     g_map_deep_dungeon_load_in_progress = 0;
     return 1;
 }
