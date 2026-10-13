@@ -1,6 +1,7 @@
 #include "fft/battle_map.h"
-#include "fft/battle_sound.h"
+#include "fft/battle_unit.h"
 #include "fft/main.h"
+#include "fft/sound.h"
 #include "psx/types.h"
 
 /* Play the landing sound for the surface of the tile a unit's step ends on:

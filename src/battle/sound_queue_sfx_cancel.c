@@ -1,4 +1,4 @@
-#include "fft/battle_sound.h"
+#include "fft/main.h"
 #include "fft/sound.h"
 
 void sound_queue_sfx_cancel(void) {

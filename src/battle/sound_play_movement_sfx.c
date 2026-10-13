@@ -1,4 +1,6 @@
-#include "fft/battle_sound.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "fft/sound.h"
 
 /* Play a sound on a free SFX channel pair unless the unit's motion flags suppress
  * its sounds. The unit sequence scripts, the jump and landing steps and the death

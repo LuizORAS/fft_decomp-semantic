@@ -1,5 +1,6 @@
-#include "fft/battle_sound.h"
 #include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "fft/sound.h"
 
 /*
  * Mount the unit onto its pending mount.  Bit 0x80 of pending_mount selects an

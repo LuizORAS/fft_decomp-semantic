@@ -1,7 +1,7 @@
 #include "fft/battle_effect.h"
 #include "fft/battle_gfx.h"
-#include "fft/battle_sound.h"
 #include "fft/battle_unit.h"
+#include "fft/sound.h"
 
 /* Lands a projectile strike on its target: the weapon hit sound, the target's
  * reaction animation, its post-action display and the evade and weapon-element

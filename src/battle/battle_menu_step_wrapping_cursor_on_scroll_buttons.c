@@ -1,6 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
-#include "fft/battle_sound.h"
+#include "fft/sound.h"
 #include "psx/pad.h"
 
 /* While the menu may accept input, move a row cursor with Up and Down, wrapping

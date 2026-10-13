@@ -14,12 +14,12 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_move.h"
 #include "fft/battle_script.h"
-#include "fft/battle_sound.h"
 #include "fft/battle_status.h"
 #include "fft/battle_target.h"
 #include "fft/battle_text.h"
 #include "fft/battle_unit.h"
 #include "fft/main.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "psx/libc.h"
 

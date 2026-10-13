@@ -1,6 +1,8 @@
 #include "fft/battle_effect.h"
 #include "fft/battle_move.h"
-#include "fft/battle_sound.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "fft/sound.h"
 #include "psx/types.h"
 
 /*
