@@ -29,11 +29,14 @@ u32 card_bits_read_secondary(s32 count);
 void card_bits_write_primary(s32 value);
 void card_bits_init_secondary_reader(const u8* data);
 
-/* command */
-extern world_menu_window_command_t g_card_cmd_window_interior_command;
-u8* card_cmd_draw_decimal_number_handler(u8* command);
-world_menu_window_command_t* card_cmd_draw_window_frame_handler(world_menu_window_command_t* command);
-u8* card_cmd_draw_tiled_rectangle_handler(u8* command);
+/* script */
+/* CARD's handlers of the menu display scripts (menu_script_opcode_e), named after the opcode like
+ * WORLD's. CARD calls them directly; its handler table is never read. */
+
+extern world_menu_window_command_t g_card_menu_window_interior_command;
+u8* card_menu_script_draw_formatted_number(u8* command);
+world_menu_window_command_t* card_menu_script_draw_window_frame(world_menu_window_command_t* command);
+u8* card_menu_script_draw_tiled_rectangle(u8* command);
 
 /* input */
 extern void* g_card_input_controller;

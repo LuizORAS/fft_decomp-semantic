@@ -9,5 +9,5 @@ void bunit_menu_dispatch_with_override(u8* menu, s32 state, s32 override) {
         effective_state = 0;
     }
     bunit_menu_set_palette_mode(override);
-    bunit_cmd_run_stream(menu, effective_state);
+    bunit_menu_run_display_script(menu, effective_state);
 }

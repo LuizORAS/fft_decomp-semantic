@@ -19,8 +19,8 @@ void equip_menu_update_screen_state(void) {
 
     if (g_equip_menu_thread_running == 0) {
         if (battle_thread_is_running(EQUIP_THREAD_SLOT_COMMAND_MENU) == 0) {
-            g_equip_command_menu.selected_index = 0;
-            g_battle_menu_thread_menu_data = &g_equip_command_menu;
+            g_equip_menu_command_entry.selected_index = 0;
+            g_battle_menu_thread_menu_data = &g_equip_menu_command_entry;
             battle_thread_start(EQUIP_THREAD_SLOT_COMMAND_MENU, equip_menu_icon_list_thread);
             battle_thread_set_parameters(EQUIP_THREAD_SLOT_COMMAND_MENU, (s32)g_battle_menu_thread_menu_data, 0, 0);
             g_equip_thread_idle_stop_pending = 0;
@@ -35,7 +35,7 @@ void equip_menu_update_screen_state(void) {
     if (state == EQUIP_SCREEN_STATE_COMMAND_MENU) {
         value_ptr = &g_equip_menu_result_rows[0];
         mode = *value_ptr;
-        g_equip_text_help_message_id = g_equip_command_menu.selected_index + 0x1029;
+        g_equip_text_help_message_id = g_equip_menu_command_entry.selected_index + 0x1029;
         if (mode == 1) {
             g_equip_sound_queued_effect_id = MAIN_SFX_INVALID;
             equip_menu_reset_selection_indices();

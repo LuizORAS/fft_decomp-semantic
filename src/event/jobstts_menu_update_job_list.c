@@ -7,11 +7,11 @@ s32 jobstts_menu_update_job_list(void) {
     s32 input;
 
     if (g_jobstts_job_list_menu_initialized == 0) {
-        g_jobstts_cmd_conditions[0] = jobstts_job_calculate_current_level;
-        g_jobstts_cmd_conditions[2] = jobstts_job_calculate_current_jp;
-        g_jobstts_cmd_conditions[5] = jobstts_job_calculate_next_level_jp_requirement;
-        g_jobstts_cmd_conditions[6] = jobstts_job_calculate_current_total_jp;
-        g_jobstts_cmd_conditions[13] = jobstts_job_calculate_current_mastered;
+        g_jobstts_menu_script_conditions[0] = jobstts_job_calculate_current_level;
+        g_jobstts_menu_script_conditions[2] = jobstts_job_calculate_current_jp;
+        g_jobstts_menu_script_conditions[5] = jobstts_job_calculate_next_level_jp_requirement;
+        g_jobstts_menu_script_conditions[6] = jobstts_job_calculate_current_total_jp;
+        g_jobstts_menu_script_conditions[13] = jobstts_job_calculate_current_mastered;
         jobstts_job_build_unit_job_list(0, g_jobstts_job_ids, 0);
         jobstts_menu_get_selection_record(4, &state[8], &state[9], g_jobstts_job_ids);
         jobstts_menu_init_scrollable_list(
@@ -35,6 +35,6 @@ s32 jobstts_menu_update_job_list(void) {
         g_jobstts_sound_queued_effect_id = MAIN_SFX_CONFIRM;
         return MENU_JOB_LIST_STEP_ABILITIES;
     }
-    jobstts_cmd_run_stream_with_mode(g_jobstts_job_list_render_commands, input, g_battle_menu_input_lock_mode);
+    jobstts_menu_run_display_script_with_mode(g_jobstts_job_list_render_commands, input, g_battle_menu_input_lock_mode);
     return MENU_JOB_LIST_STEP_JOBS;
 }

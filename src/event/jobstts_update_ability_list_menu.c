@@ -15,22 +15,22 @@ s32 jobstts_update_ability_list_menu(void) {
     s32 input;
 
     if (g_jobstts_ability_list_initialized == 0) {
-        g_jobstts_cmd_conditions[0] = jobstts_job_get_current_level;
-        g_jobstts_cmd_conditions[1] = jobstts_job_get_current_total_jp;
-        g_jobstts_cmd_conditions[2] = jobstts_job_get_next_level_jp_requirement;
-        g_jobstts_cmd_conditions[3] = jobstts_job_get_current_jp;
-        g_jobstts_cmd_conditions[4] = jobstts_ability_is_non_action_learned;
-        g_jobstts_cmd_conditions[5] = jobstts_job_is_current_mastered;
-        g_jobstts_cmd_conditions[6] = jobstts_ability_is_learned;
-        g_jobstts_cmd_conditions[7] = jobstts_ability_get_mp_cost_display_value;
-        g_jobstts_cmd_conditions[8] = jobstts_ability_get_ct_display_value;
-        g_jobstts_cmd_conditions[9] = jobstts_ability_get_jp_cost_display_value;
-        g_jobstts_cmd_conditions[10] = jobstts_ability_is_movement_tab;
-        g_jobstts_cmd_conditions[11] = jobstts_ability_is_support_tab;
-        g_jobstts_cmd_conditions[12] = jobstts_ability_is_reaction_tab;
-        g_jobstts_cmd_conditions[13] = jobstts_ability_is_action_tab;
-        g_jobstts_cmd_conditions[14] = jobstts_ability_is_non_action_unlearned;
-        g_jobstts_cmd_conditions[15] = jobstts_ability_is_action;
+        g_jobstts_menu_script_conditions[0] = jobstts_job_get_current_level;
+        g_jobstts_menu_script_conditions[1] = jobstts_job_get_current_total_jp;
+        g_jobstts_menu_script_conditions[2] = jobstts_job_get_next_level_jp_requirement;
+        g_jobstts_menu_script_conditions[3] = jobstts_job_get_current_jp;
+        g_jobstts_menu_script_conditions[4] = jobstts_ability_is_non_action_learned;
+        g_jobstts_menu_script_conditions[5] = jobstts_job_is_current_mastered;
+        g_jobstts_menu_script_conditions[6] = jobstts_ability_is_learned;
+        g_jobstts_menu_script_conditions[7] = jobstts_ability_get_mp_cost_display_value;
+        g_jobstts_menu_script_conditions[8] = jobstts_ability_get_ct_display_value;
+        g_jobstts_menu_script_conditions[9] = jobstts_ability_get_jp_cost_display_value;
+        g_jobstts_menu_script_conditions[10] = jobstts_ability_is_movement_tab;
+        g_jobstts_menu_script_conditions[11] = jobstts_ability_is_support_tab;
+        g_jobstts_menu_script_conditions[12] = jobstts_ability_is_reaction_tab;
+        g_jobstts_menu_script_conditions[13] = jobstts_ability_is_action_tab;
+        g_jobstts_menu_script_conditions[14] = jobstts_ability_is_non_action_unlearned;
+        g_jobstts_menu_script_conditions[15] = jobstts_ability_is_action;
         jobstts_menu_clear_selection_record(MENU_ABILITY_CATEGORY_ACTION);
         jobstts_menu_clear_selection_record(MENU_ABILITY_CATEGORY_REACTION);
         jobstts_menu_clear_selection_record(MENU_ABILITY_CATEGORY_SUPPORT);
@@ -85,7 +85,7 @@ s32 jobstts_update_ability_list_menu(void) {
         jobstts_gfx_set_transition_frame(0xa);
         g_jobstts_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
     }
-    jobstts_cmd_run_stream_with_mode(
+    jobstts_menu_run_display_script_with_mode(
         g_jobstts_ability_list_render_commands, g_jobstts_input_primary_repeat, g_battle_menu_input_lock_mode);
     rect.x = 0x26;
     rect.y = 0x27;

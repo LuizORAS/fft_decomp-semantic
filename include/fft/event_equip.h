@@ -27,31 +27,28 @@ s32 equip_bits_read_primary(s32 count);
 void equip_bits_init_secondary_reader(const u8* data);
 s32 equip_bits_read_secondary(s32 count);
 
-/* command */
-/* Render-command stream callbacks: every handler consumes and returns a
- * command pointer; every row callback is indexed by a list row. */
-typedef u8* (*equip_command_handler_t)(u8*);
+/* script */
+/* EQUIP's handlers of the menu display scripts (menu_script_opcode_e), named after the opcode like
+ * WORLD's: equip_menu_run_display_script runs a script through g_equip_menu_script_handlers. */
+
+/* A display-script handler takes a command and returns the next one. */
+typedef u8* (*equip_menu_script_handler_t)(u8*);
 
 /* The opcode that ends an EQUIP menu script stream (menu_script_opcode_e
  * names the others). */
 enum {
-    EQUIP_CMD_END = 0x19,
+    EQUIP_MENU_SCRIPT_END = 0x19,
 };
 
-extern equip_command_handler_t g_equip_cmd_handlers[];
-extern u8 g_equip_cmd_row_sprite_body[];
+extern equip_menu_script_handler_t g_equip_menu_script_handlers[];
+extern u8 g_equip_menu_script_quad_command[];
 
-/* EQUIP's 0x3c-byte menu records: the main commands, the item actions and
- * (in equip_run_item_type_order_mode) the item-type order menus. Each is
- * started through equip_thread_start_managed, which makes it the current
- * g_battle_menu_thread_menu_data. */
-extern world_menu_entry_t g_equip_command_menu;
-extern s32 g_equip_cmd_stream_input;
-extern world_menu_window_command_t g_equip_cmd_window_interior_command;
-u8* equip_cmd_draw_textured_quad_handler(u8* command);
-void equip_cmd_run_stream(u8* stream, s32 input);
-world_menu_window_command_t* equip_cmd_draw_window_frame_handler(world_menu_window_command_t* command);
-u8* equip_cmd_draw_tiled_rectangle_handler(u8* command);
+extern s32 g_equip_menu_display_script_input;
+extern world_menu_window_command_t g_equip_menu_window_interior_command;
+u8* equip_menu_script_draw_textured_quad(u8* command);
+void equip_menu_run_display_script(u8* stream, s32 input);
+world_menu_window_command_t* equip_menu_script_draw_window_frame(world_menu_window_command_t* command);
+u8* equip_menu_script_draw_tiled_rectangle(u8* command);
 
 /* input */
 enum {
@@ -619,6 +616,11 @@ const u8* equip_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2
 /* menu */
 typedef s32 (*equip_row_callback_t)(s32 row);
 
+/* EQUIP's 0x3c-byte menu records: the main commands, the item actions and
+ * (in equip_run_item_type_order_mode) the item-type order menus. Each is
+ * started through equip_thread_start_managed, which makes it the current
+ * g_battle_menu_thread_menu_data. */
+extern world_menu_entry_t g_equip_menu_command_entry;
 extern point16_t g_equip_menu_clear_all_prompt_draw_params;
 extern volatile u16 g_equip_menu_clear_all_prompt_frame;
 extern s8 g_equip_menu_event_speed;
@@ -656,7 +658,7 @@ extern u16 g_equip_menu_cursor_mode1_background_clut;
 extern s8 g_equip_menu_cursor_forward_offset_keyframes[];
 extern s8 g_equip_menu_cursor_reverse_offset_keyframes[];
 extern s16 g_equip_menu_list_row_group_count;
-extern s8 g_equip_menu_list_redraw_pending; /* read with lb (equip_cmd_draw_scrollable_list_body_handler) */
+extern s8 g_equip_menu_list_redraw_pending; /* read with lb (equip_menu_script_draw_scrollable_list) */
 extern u8 g_equip_menu_list_glyph_width;
 extern u8 g_equip_menu_list_text_columns;
 extern s8 g_equip_menu_list_scroll_direction; /* -1/0/1; read with lb */

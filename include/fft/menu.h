@@ -582,25 +582,30 @@ typedef struct world_menu_window_command {
 } world_menu_window_command_t;
 
 /* Opcode byte of a menu display script command: the index of its handler in
- * g_world_menu_script_handlers and in the *_cmd_handlers tables of BUNIT, EQUIP
- * and JOBSTTS (CARD calls the same handlers directly). A command is the opcode,
- * its length and its operands. The comments name WORLD's handler; an overlay's
- * table leaves the commands it does not use empty. Opcode 8 has no handler.
- * WORLD ends a stream with MENU_SCRIPT_OP_WORLD_END, each overlay with its own
- * opcode, the first one past its table (BUNIT_CMD_END, EQUIP_CMD_END,
- * JOBSTTS_CMD_END). */
+ * g_world_menu_script_handlers and in g_bunit_menu_script_handlers,
+ * g_equip_menu_script_handlers and g_jobstts_menu_script_handlers. A command is
+ * the opcode, its length and its operands. Every module names an opcode's
+ * handler <module>_menu_script_<verb>; the comments give WORLD's. An overlay's
+ * table leaves the opcodes it does not use empty: BUNIT 3 and 7, JOBSTTS 3, 6,
+ * 7 and 0x0b. JOBSTTS's 0x0f keeps the draw priority while a
+ * temporary draw area is active, and its 0x12 opens the window vertically only.
+ * CARD keeps a table at 0x801ca8c8 that no code reads and calls its handlers
+ * directly. Opcode 8 has no handler. WORLD ends a stream with
+ * MENU_SCRIPT_OP_WORLD_END, each overlay with its own opcode, the first one past
+ * its table (BUNIT_MENU_SCRIPT_END, EQUIP_MENU_SCRIPT_END,
+ * JOBSTTS_MENU_SCRIPT_END). */
 typedef enum menu_script_opcode {
     MENU_SCRIPT_OP_WINDOW_FRAME = 0,            /* world_menu_script_draw_window_frame */
-    MENU_SCRIPT_OP_IF_GROUP = 1,                /* world_menu_script_conditional */
-    MENU_SCRIPT_OP_IF_ELSE_GROUP = 2,           /* world_menu_script_if_else */
+    MENU_SCRIPT_OP_IF_GROUP = 1,                /* world_menu_script_if_group */
+    MENU_SCRIPT_OP_IF_ELSE_GROUP = 2,           /* world_menu_script_if_else_group */
     MENU_SCRIPT_OP_TILE = 3,                    /* world_menu_script_draw_tile */
-    MENU_SCRIPT_OP_UNCOLOURED_QUAD = 4,         /* world_menu_script_draw_sprite, without the draw colour */
-    MENU_SCRIPT_OP_COLOURED_QUAD = 5,           /* world_menu_script_draw_sprite, with the draw colour */
-    MENU_SCRIPT_OP_CALLBACK_QUAD = 6,           /* world_menu_script_draw_callback_sprite */
-    MENU_SCRIPT_OP_LINE = 7,                    /* world_menu_script_draw_menu_line */
+    MENU_SCRIPT_OP_UNCOLOURED_QUAD = 4,         /* world_menu_script_draw_textured_quad, without the draw colour */
+    MENU_SCRIPT_OP_COLOURED_QUAD = 5,           /* world_menu_script_draw_textured_quad, with the draw colour */
+    MENU_SCRIPT_OP_CALLBACK_QUAD = 6,           /* world_menu_script_draw_callback_quad */
+    MENU_SCRIPT_OP_LINE = 7,                    /* world_menu_script_draw_line */
     MENU_SCRIPT_OP_FIXED_CLUT = 9,              /* world_menu_script_set_fixed_clut */
     MENU_SCRIPT_OP_CLUT = 0x0a,                 /* world_menu_script_set_clut */
-    MENU_SCRIPT_OP_DRAW_COLOUR = 0x0b,          /* world_menu_script_set_sprite_color */
+    MENU_SCRIPT_OP_DRAW_COLOUR = 0x0b,          /* world_menu_script_set_draw_color */
     MENU_SCRIPT_OP_TEXTURE_PAGE = 0x0c,         /* world_menu_script_set_texture_page */
     MENU_SCRIPT_OP_NUMBER = 0x0d,               /* world_menu_script_draw_formatted_number */
     MENU_SCRIPT_OP_SEMI_TRANS = 0x0e,           /* world_menu_script_set_semi_trans */
@@ -1311,8 +1316,7 @@ typedef struct world_menu_window_rect_source {
 } world_menu_window_rect_source_t;
 
 /* Flags a menu-script number getter (a row callback) returns above its
- * value, read by *_menu_script_draw_formatted_number and the overlays'
- * *_cmd_draw_formatted_number_handler. */
+ * value, read by every *_menu_script_draw_formatted_number. */
 typedef enum menu_number_value_flags {
     MENU_NUMBER_VALUE_DASHES = 0x20000000,   /* a row of dashes instead of the digits */
     MENU_NUMBER_VALUE_DISABLED = 0x40000000, /* drawn with the disabled number clut */

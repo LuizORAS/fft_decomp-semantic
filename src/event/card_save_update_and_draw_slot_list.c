@@ -121,7 +121,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
         card_gfx_set_otag_index(10);
         value = row != g_card_save_list_cursor_index || scrolling != 0;
         card_menu_set_palette_mode(value);
-        card_cmd_draw_window_frame_handler(&g_card_save_slot_window_command);
+        card_menu_script_draw_window_frame(&g_card_save_slot_window_command);
         g_card_save_slot_quads[3].y = g_card_save_slot_quads[4].y = g_card_save_slot_quads[0].y
             = g_card_save_slot_quads[1].y = g_card_save_slot_row_y - 14;
         g_card_save_slot_quads[3].y = g_card_save_slot_quads[3].y + 1;
@@ -139,7 +139,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
             card_gfx_set_otag_index(11);
             g_card_save_slot_number_commands[0][8] = g_card_save_slot_quads[0].y;
             g_card_save_slot_number_commands[0][9] = index + 1;
-            card_cmd_draw_decimal_number_handler(g_card_save_slot_number_commands[0]);
+            card_menu_script_draw_formatted_number(g_card_save_slot_number_commands[0]);
         }
         g_card_save_slot_quads[2].y = g_card_save_slot_quads[0].y;
         if (g_card_save_slot_quads[2].y >= 0 && g_card_save_slot_quads[2].y < 241) {
@@ -153,9 +153,9 @@ void card_save_update_and_draw_slot_list(u16 input) {
             if (g_card_save_slot_number_commands[1][9] >= 100) {
                 g_card_save_slot_number_commands[1][9] = 99;
             }
-            card_cmd_draw_decimal_number_handler(g_card_save_slot_number_commands[1]);
-            card_cmd_draw_decimal_number_handler(g_card_save_slot_number_commands[2]);
-            card_cmd_draw_decimal_number_handler(g_card_save_slot_number_commands[3]);
+            card_menu_script_draw_formatted_number(g_card_save_slot_number_commands[1]);
+            card_menu_script_draw_formatted_number(g_card_save_slot_number_commands[2]);
+            card_menu_script_draw_formatted_number(g_card_save_slot_number_commands[3]);
         }
         if (g_card_save_slot_file_states[index] == CARD_SAVE_SLOT_AVAILABLE) {
             rect.x = 0x74;

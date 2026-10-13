@@ -14,7 +14,7 @@ void equip_menu_draw_scrollable_list(const u8* script) {
     s16 selected;
 
     while (script[0] != MENU_SCRIPT_OP_SCROLLABLE_LIST) {
-        if (script[0] == EQUIP_CMD_END) {
+        if (script[0] == EQUIP_MENU_SCRIPT_END) {
             return;
         }
         script += script[1];

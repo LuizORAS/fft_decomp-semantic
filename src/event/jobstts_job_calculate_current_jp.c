@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* The unit's JP in the job list's index-th job, cached in g_jobstts_job_current_jp: a condition
- * callback of the job list's render commands (g_jobstts_cmd_conditions), read back by
+ * callback of the job list's render commands (g_jobstts_menu_script_conditions), read back by
  * jobstts_job_get_current_jp. */
 s32 jobstts_job_calculate_current_jp(s32 index) {
     s32 generic_job = jobstts_job_get_generic_index(g_jobstts_job_ids[index]);

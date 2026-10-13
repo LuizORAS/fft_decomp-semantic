@@ -530,7 +530,7 @@ written that way.
   for the acting unit reads `acting_unit`, which is NULL during the AI
   workspace setup at battle start (`acting_unit_id` is 0), so slot 0's Jump
   divides kernel-RAM bytes.
-- `jobstts_cmd_run_stream_with_mode` takes the input word through its `void*`
+- `jobstts_menu_run_display_script_with_mode` takes the input word through its `void*`
   second parameter.
 - `src/event/bunit_entrypoint.c` passes a second argument, 0, to the
   one-parameter `bunit_gfx_draw_falloff_shaded_rows`; its other caller passes
@@ -724,8 +724,8 @@ translation unit. Share their types and constants through headers.
 - `psyq_gte_apply_rotation_ir`: writes saturated IR1–IR3 output words and returns its unchanged third argument.
 - `sprintf`: unsupported conversions terminate output, `%#p` prefixes `0p`, hexadecimal alternate form prefixes zero, and `%#.0o` with zero emits no digit.
 - JOBSTTS.OUT offset `0x0` and BUNIT.OUT offset `0x200` hold the literal `"%d"`
-  (`g_jobstts_text_decimal_format`, `g_bunit_text_decimal_format`) used by `src/event/jobstts_cmd_draw_formatted_number_handler.c` and
-  `src/event/bunit_cmd_draw_right_aligned_number_handler.c`.
+  (`g_jobstts_text_decimal_format`, `g_bunit_text_decimal_format`) used by `src/event/jobstts_menu_script_draw_formatted_number.c` and
+  `src/event/bunit_menu_script_draw_plain_number.c`.
 - The game-options word packs its last five fields out of array order
   (`include/fft/menu.h`).
 - CallFunction (`battle_script_execute_event.c`, `world_script_execute_event.c`)

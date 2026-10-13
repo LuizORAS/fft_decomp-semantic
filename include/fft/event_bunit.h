@@ -21,22 +21,25 @@ extern u8 g_bunit_bits_reader_reset;
 void bunit_bits_init_reader(const u8* data);
 s32 bunit_bits_read(s32 bit_count);
 
-/* command */
+/* script */
+/* BUNIT's handlers of the menu display scripts (menu_script_opcode_e), named after the opcode like
+ * WORLD's: bunit_menu_run_display_script runs a script through g_bunit_menu_script_handlers. */
+
 /* The opcode that ends a BUNIT menu script stream (menu_script_opcode_e
  * names the others). */
 enum {
-    BUNIT_CMD_END = 0x1c,
+    BUNIT_MENU_SCRIPT_END = 0x1c,
 };
 
-extern u8 g_bunit_cmd_row_quad[];
-extern u8* (*g_bunit_cmd_handlers[])(u8*);
-extern u32 g_bunit_cmd_stream_input;
-extern world_menu_window_command_t g_bunit_cmd_window_interior_command;
-world_menu_window_command_t* bunit_cmd_draw_window_frame_handler(world_menu_window_command_t* command);
-u8* bunit_cmd_draw_background_tiles_handler(u8* desc);
-u8* bunit_cmd_draw_textured_quad_handler(u8* cmd);
-void bunit_cmd_run_stream(u8* data, s32 flags);
-u8* bunit_cmd_skip_group(u8* command);
+extern u8 g_bunit_menu_script_quad_command[];
+extern u8* (*g_bunit_menu_script_handlers[])(u8*);
+extern u32 g_bunit_menu_display_script_input;
+extern world_menu_window_command_t g_bunit_menu_window_interior_command;
+world_menu_window_command_t* bunit_menu_script_draw_window_frame(world_menu_window_command_t* command);
+u8* bunit_menu_script_draw_tiled_rectangle(u8* desc);
+u8* bunit_menu_script_draw_textured_quad(u8* cmd);
+void bunit_menu_run_display_script(u8* data, s32 flags);
+u8* bunit_menu_script_skip_group(u8* command);
 
 /* cursor */
 /* Oriented-quad descriptors for the two cursor halves. */
@@ -239,7 +242,7 @@ typedef char
 extern world_gfx_textured_quad_source_t g_bunit_bouncing_cursor_quad;
 
 /* Scratch descriptor for the blank cells of
- * bunit_cmd_draw_right_aligned_number_handler; only x/y are written, the rest
+ * bunit_menu_script_draw_plain_number; only x/y are written, the rest
  * comes from its static initializer. */
 extern world_oriented_quad_t g_bunit_gfx_blank_cell_rect;
 extern bunit_gfx_context_t* g_bunit_gfx_context;
@@ -696,7 +699,7 @@ extern u16 g_bunit_menu_cursor_mode1_foreground_clut;
 extern u16 g_bunit_menu_cursor_mode1_background_clut;
 
 extern s16 g_bunit_menu_list_row_group_count;
-extern s8 g_bunit_menu_list_redraw_pending; /* read with lb (bunit_cmd_run_scrollable_list_handler) */
+extern s8 g_bunit_menu_list_redraw_pending; /* read with lb (bunit_menu_script_draw_scrollable_list) */
 extern u8 g_bunit_menu_list_glyph_width;
 extern u8 g_bunit_menu_list_text_columns;
 extern s8 g_bunit_menu_list_scroll_direction; /* read with lb */

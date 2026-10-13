@@ -5,7 +5,7 @@
 
 typedef struct world_chained_record world_chained_record_t;
 
-extern world_chained_record_t* world_skip_chained_records(world_chained_record_t* record);
+extern world_chained_record_t* world_menu_script_skip_group(world_chained_record_t* record);
 
 /*
  * Menu-script handler for a scrollable list: the WORLD original of the
@@ -42,7 +42,7 @@ u8* world_menu_script_draw_scrollable_list(world_menu_list_record_t* record) {
     priority = g_world_menu_draw_priority;
     if (g_world_menu_option_count <= 0) {
         for (j = record->skip_count; j != -1; j--) {
-            record = (world_menu_list_record_t*)world_skip_chained_records((world_chained_record_t*)record);
+            record = (world_menu_list_record_t*)world_menu_script_skip_group((world_chained_record_t*)record);
         }
         return (u8*)record;
     }

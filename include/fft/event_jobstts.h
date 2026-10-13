@@ -15,28 +15,31 @@ extern const u8* g_jobstts_bits_secondary_source;
 void jobstts_bits_init_primary_reader(const u8* data);
 u32 jobstts_bits_read_primary(s32 count);
 
-/* command */
+/* script */
+/* JOBSTTS's handlers of the menu display scripts (menu_script_opcode_e), named after the opcode like
+ * WORLD's: jobstts_menu_run_display_script runs a script through g_jobstts_menu_script_handlers. */
+
 /* Render-command stream callbacks: every handler consumes and returns a
  * command pointer; every condition is indexed by a row or literal operand. */
-typedef u8* (*jobstts_command_handler_t)(u8*);
+typedef u8* (*jobstts_menu_script_handler_t)(u8*);
 
-typedef s32 (*jobstts_condition_t)(s32);
+typedef s32 (*jobstts_menu_script_condition_t)(s32);
 
 /* The opcode that ends a JOBSTTS menu script stream (menu_script_opcode_e
  * names the others). */
 enum {
-    JOBSTTS_CMD_END = 0x16,
+    JOBSTTS_MENU_SCRIPT_END = 0x16,
 };
 
-extern world_menu_window_command_t g_jobstts_cmd_window_interior_command;
-extern jobstts_condition_t g_jobstts_cmd_conditions[];
-extern jobstts_command_handler_t g_jobstts_cmd_handlers[];
-extern s32 g_jobstts_cmd_stream_input;
-u8* jobstts_cmd_draw_background_tiles_handler(u8* stream);
-u8* jobstts_cmd_draw_border_tiles_with_transition_clip(u8* command);
-void jobstts_cmd_run_stream(u8* data, s32 flags);
-void jobstts_cmd_run_stream_with_mode(u8* data, s32 flags, s32 event_mode);
-u8* jobstts_cmd_skip_group(u8* data);
+extern world_menu_window_command_t g_jobstts_menu_window_interior_command;
+extern jobstts_menu_script_condition_t g_jobstts_menu_script_conditions[];
+extern jobstts_menu_script_handler_t g_jobstts_menu_script_handlers[];
+extern s32 g_jobstts_menu_display_script_input;
+u8* jobstts_menu_script_draw_tiled_rectangle(u8* stream);
+u8* jobstts_menu_script_draw_opening_window_frame(u8* command);
+void jobstts_menu_run_display_script(u8* data, s32 flags);
+void jobstts_menu_run_display_script_with_mode(u8* data, s32 flags, s32 event_mode);
+u8* jobstts_menu_script_skip_group(u8* data);
 
 /* input */
 typedef enum jobstts_page_scroll_direction {
@@ -314,7 +317,7 @@ extern s16 g_jobstts_menu_list_row_group_count;
 extern s8 g_jobstts_menu_list_redraw_pending;
 extern u8 g_jobstts_menu_list_glyph_width;
 extern u8 g_jobstts_menu_list_text_columns;
-extern s8 g_jobstts_menu_list_scroll_direction; /* read with lb (jobstts_cmd_draw_scrollable_list_body_handler) */
+extern s8 g_jobstts_menu_list_scroll_direction; /* read with lb (jobstts_menu_script_draw_scrollable_list) */
 extern u16 g_jobstts_menu_list_cursor_anim_state;
 extern s16 g_jobstts_menu_list_scroll_entry_ids;
 extern u16 g_jobstts_menu_list_scroll_progress;
@@ -347,7 +350,7 @@ extern s8 g_jobstts_active_page;            /* menu_job_list_step_e; each page's
 extern u8 g_jobstts_initialized;
 extern u32 g_jobstts_help_text_table[];
 extern u8 g_jobstts_previous_event_mode;
-u8* jobstts_cmd_draw_window_frame_handler(u8* command);
+u8* jobstts_menu_script_draw_window_frame(u8* command);
 s32 jobstts_entrypoint(s32 unit, void* unused_otag);
 
 #endif
