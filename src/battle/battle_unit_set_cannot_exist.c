@@ -3,9 +3,9 @@
 
 /* Empties a unit slot and marks it off the field (defined but not placed). Always
  * returns 0. */
-s32 battle_unit_set_cannot_exist(s32 unit_index) {
+s32 battle_unit_set_cannot_exist(s32 battle_id) {
     battle_stats_t* unit;
-    unit = &g_battle_unit_stats[unit_index];
+    unit = &g_battle_unit_stats[battle_id];
     unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
     unit->existence = BATTLE_UNIT_EXISTENCE_OFF_FIELD;
     return 0;

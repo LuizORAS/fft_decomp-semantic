@@ -524,7 +524,7 @@ extern s16 g_battle_reaction_unit_last_ability_id;
 
 s32 action_build_reaction_targets(s32 actor_id, battle_strike_work_t* work, s32* target_count, u8* target_ids);
 s32 action_calculate_chance_to_react(const battle_stats_t* unit);
-s32 action_can_unit_react(const battle_stats_t* unit);
+s32 action_is_reaction_prevented(const battle_stats_t* unit);
 void action_check_arrow_guard_usability(void);
 void action_check_blade_grasp_usability(void);
 void action_check_counter_reaction_usability(u16 reaction_id, u32 mask);

@@ -29,7 +29,7 @@ s32 action_set_mimic_ability(battle_stats_t* unit) {
     s32 facing;
 
     current = &g_action_current_attacker.action;
-    if (action_can_unit_react(unit) != 0) {
+    if (action_is_reaction_prevented(unit) != 0) {
         return 0;
     }
     if ((unit->team_flags & BATTLE_TEAM_MASK) != g_action_current_attacker.team) {

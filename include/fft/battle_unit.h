@@ -1165,11 +1165,11 @@ battle_unit_t* battle_unit_get_by_battle_id(u16 battle_id);
 battle_unit_t* battle_unit_get_by_runtime_id(u16 runtime_id);
 s32 battle_unit_get_runtime_id_by_battle_id(u32 battle_id);
 battle_unit_t* battle_unit_get_source(void);
-battle_stats_t* battle_unit_get_stats_from_battle_id(u32 id);
+battle_stats_t* battle_unit_get_stats_from_battle_id(u32 battle_id);
 s32 battle_unit_has_runtime_id(u32 runtime_id);
 s32 battle_unit_move_to_head(u32 runtime_id);
 s32 battle_unit_remove_by_runtime_id(u32 runtime_id);
-s32 battle_unit_set_cannot_exist(s32 unit_index);
+s32 battle_unit_set_cannot_exist(s32 battle_id);
 s32 battle_unit_prepare_event_filter(u16* unit_id, s32* filter_mode);
 s32 battle_unit_update_fade_out_removal(battle_unit_t* unit);
 battle_unit_t* battle_unit_claim_slot(s16 requested_runtime_id);
@@ -1199,7 +1199,7 @@ battle_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_bat
 s32 battle_unit_add_unique_entd_spritesheet(s32 mode, s16 value, s32 limit);
 void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode);
 s32 battle_unit_set_enemy_level_data_by_battle_id(u32 battle_id);
-s32 battle_unit_get_battle_index_by_entd_unit_id(s32 unit_id);
+s32 battle_unit_get_battle_id_by_event_unit_id(s32 event_unit_id);
 s32 battle_unit_init_party_member_battle_data(s32 unused0, s32 unused1, s32 unit_index);
 s32 battle_unit_place_in_new_location(u32 runtime_id, map_tile_coordinates_t* tile, s32 facing);
 s32 battle_unit_poll_and_load_entd_units(void);
@@ -1220,7 +1220,7 @@ extern unit_status_staging_t* g_battle_unit_status_staging_data;
 /* The statuses a rider can be inflicted with, one mask per status byte. */
 extern u8 g_battle_rider_status_infliction_mask[STATUS_BYTE_COUNT];
 
-void battle_unit_apply_staged_status_data(s32 unit_id, s32 runtime_id);
+void battle_unit_apply_staged_status_data(s32 battle_id, s32 runtime_id);
 void battle_unit_clear_status_staging_data(void);
 void battle_unit_copy_rider_data_to_mount(battle_unit_t* unit, battle_unit_t* rider);
 void battle_unit_dismount_rider(battle_unit_t* unit);
@@ -1228,13 +1228,13 @@ void battle_unit_mount_rider_onto_unit(battle_unit_t* rider, battle_unit_t* moun
 void battle_unit_set_map_coords_after_death_dismount(battle_unit_t* unit);
 void battle_unit_set_tile_position_with_mount_partner(battle_unit_t* unit);
 void battle_unit_update_staged_status_data(u16 unit_id, u16 restore);
-s32 battle_unit_save_staged_status_data(s32 unit_id);
-s32 battle_unit_get_chocobo_mount_state(battle_stats_t* unit);
+s32 battle_unit_save_staged_status_data(s32 battle_id);
+battle_chocobo_mount_state_e battle_unit_get_chocobo_mount_state(battle_stats_t* unit);
 void battle_unit_mount_onto_pending_mount(battle_unit_t* unit);
 s32 battle_unit_prepare_rider_dismount(u32 runtime_id, s32 direction, s32 jump_length);
 struct battle_unit* battle_unit_get_mount(struct battle_unit* unit);
-s32 battle_unit_has_any_current_status(s32 unit_id);
-s32 battle_unit_get_action_restriction(battle_stats_t* unit);
+s32 battle_unit_has_any_current_status(s32 battle_id);
+battle_unit_action_restriction_e battle_unit_get_action_restriction(battle_stats_t* unit);
 
 /* battle_unit_animation_e of each item type's attack at a higher, a level and a lower target. */
 extern u8 g_battle_weapon_attack_animations[][3];
@@ -1300,7 +1300,7 @@ void battle_unit_set_target_animation_from_attack_type(battle_unit_t* attacker, 
 s16 battle_unit_get_camera_facing_quadrant_by_battle_id(u32 battle_id);
 void battle_unit_call_bow_hardcoding_by_runtime_id(u16 attacker_id, u16 target_id);
 void battle_unit_call_set_animation_based_on_status(struct battle_unit* unit);
-s32 battle_unit_check_facing_relative_to_camera(s32 unit_id);
+s32 battle_unit_check_facing_relative_to_camera(s32 event_unit_id);
 void battle_unit_clear_horizontal_flip_flag(u32 runtime_id);
 void battle_unit_clear_movement_effect_suppression(u32 runtime_id);
 void battle_unit_clear_palette_update_suppression(u32 runtime_id);

@@ -45,7 +45,7 @@ functions:
   - {addr: 0x800e1d90, size: 84, name: world_gfx_ramp_screen_overlay_intensity_to_zero, hash: d0ba1ed84f50d428}
   - {addr: 0x800e1de4, size: 84, name: world_gfx_ramp_screen_overlay_intensity_to_max, hash: 12f588f0776e2346}
   - {addr: 0x800e1e38, size: 8, name: world_script_check_tutorial_event_slot, hash: 207819bf4ebe3078}
-  - {addr: 0x800e1e40, size: 76, name: world_unit_get_battle_index_by_entd_unit_id, hash: 6bd874927737de2e}
+  - {addr: 0x800e1e40, size: 76, name: world_unit_get_battle_id_by_event_unit_id, hash: 6bd874927737de2e}
   - {addr: 0x800e1e8c, size: 20, name: world_menu_set_transition_active_flag, hash: edfede6075ee1f04}
   - {addr: 0x800e1ea0, size: 16, name: world_menu_clear_transition_active_flag, hash: d7f503c035758c32}
   - {addr: 0x800e1eb0, size: 20, name: world_sound_queue_sfx_confirm, hash: dcec320743e88359}
@@ -359,7 +359,7 @@ functions:
   - {addr: 0x800fbd14, size: 1072, name: world_unit_apply_staged_status_data, hash: 3be2d406abbb256c}
   - {addr: 0x800fc144, size: 432, name: world_unit_update_staged_status_data, hash: 269b013af6ab131a}
   - {addr: 0x800fc2f4, size: 632, name: world_script_inflict_status_thread, hash: 2d2fdf0577757d84}
-  - {addr: 0x800fc56c, size: 216, name: world_unit_inflict_status_by_entd_unit_id, hash: 3f69fc963f96b44e}
+  - {addr: 0x800fc56c, size: 216, name: world_unit_inflict_status_by_event_unit_id, hash: 3f69fc963f96b44e}
   - {addr: 0x800fc644, size: 448, name: world_script_change_stats, hash: c63a08b76749f8fe}
   - {addr: 0x800fc804, size: 248, name: world_script_unit_anim, hash: 2c433dd6a81d7c56}
   - {addr: 0x800fc8fc, size: 156, name: world_script_march_units, hash: 90487a1ab3416a6e}

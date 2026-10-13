@@ -6,7 +6,7 @@
 s32 action_is_reaction_blocked(battle_stats_t* unit) {
     s32 result;
 
-    if ((result = action_can_unit_react(unit)) == 0 && (result = action_check_reaction(unit)) == 0) {
+    if ((result = action_is_reaction_prevented(unit)) == 0 && (result = action_check_reaction(unit)) == 0) {
         result = battle_unit_get_action_restriction(unit);
     }
     return result;

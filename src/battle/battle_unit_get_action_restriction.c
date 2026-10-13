@@ -7,7 +7,7 @@
  * CANNOT_ACT for Don't Act or a ridden mount. DEEP_WATER on a tile of depth 2 or
  * more, unless the unit has Float, Chicken or Frog, one of the Move in Water,
  * Walk on Water or Float movement abilities, or is a rider. */
-s32 battle_unit_get_action_restriction(battle_stats_t* unit) {
+battle_unit_action_restriction_e battle_unit_get_action_restriction(battle_stats_t* unit) {
     s32 depth;
 
     if ((unit->status_sets.current[STATUS_BYTE_INDEX(STATUS_ID_DONT_ACT)] & STATUS_BYTE_MASK(STATUS_ID_DONT_ACT))

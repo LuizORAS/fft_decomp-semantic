@@ -23,7 +23,7 @@ void action_check_reflect_blade_grasp_and_arrow_guard(void) {
     if (g_action_target_data->reaction_id != 0) {
         return;
     }
-    if (action_can_unit_react(g_action_target) != 0) {
+    if (action_is_reaction_prevented(g_action_target) != 0) {
         return;
     }
     if (battle_unit_get_action_restriction(g_action_target) != BATTLE_UNIT_ACTION_RESTRICTION_NONE) {

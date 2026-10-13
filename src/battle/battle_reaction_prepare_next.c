@@ -28,7 +28,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
     s32 i;
     s32 outcome;
     s32 result;
-    s32 can_react;
+    s32 reaction_prevented;
     u16 ability;
     u16 last_attack;
     s16 reaction_id;
@@ -44,9 +44,9 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
             action = &unit->action_command;
             if (battle_unit_get_action_restriction(unit) == BATTLE_UNIT_ACTION_RESTRICTION_NONE
                 && unit->entd_slot != BATTLE_ENTD_SLOT_NONE) {
-                can_react = action_can_unit_react(unit);
+                reaction_prevented = action_is_reaction_prevented(unit);
                 ability = unit->action.reaction_id;
-                if (((can_react == 0 && g_action_state != ACTION_STATE_AI_SIMULATION)
+                if (((reaction_prevented == 0 && g_action_state != ACTION_STATE_AI_SIMULATION)
                         || ability == ABILITY_ID_REACTION_REFLECT)
                     && ability != 0) {
                     g_action_context = ACTION_CONTEXT_REACTION_OR_SIMULATION;

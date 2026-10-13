@@ -4,14 +4,14 @@
 
 /*
  * Event-script helper: add or remove one status on the battle unit with the
- * given ENTD unit id, through the normal status resolution.
+ * given event unit id, through the normal status resolution.
  *
  * Clears the unit's pending infliction and removal masks, sets the single
  * bit for `status_index` in one of them and runs resolve_unit_status_changes
  * on the main stack. Does nothing when no battle unit has that id.
  */
-void world_unit_inflict_status_by_entd_unit_id(
-    s32 entd_unit_id, s32 status_index, s32 is_infliction, s32 less_strict_removal) {
+void world_unit_inflict_status_by_event_unit_id(
+    s32 event_unit_id, s32 status_index, s32 is_infliction, s32 less_strict_removal) {
     s32 battle_unit_index;
     battle_stats_t* unit;
     s32 clear_index;
@@ -19,7 +19,7 @@ void world_unit_inflict_status_by_entd_unit_id(
     s32 status_bit_index;
     u8 status_mask;
 
-    battle_unit_index = world_unit_get_battle_index_by_entd_unit_id(entd_unit_id);
+    battle_unit_index = world_unit_get_battle_id_by_event_unit_id(event_unit_id);
     if (battle_unit_index != 2000) {
         unit = battle_unit_get_stats_from_battle_id(battle_unit_index);
         for (clear_index = 0; clear_index < STATUS_BYTE_COUNT; clear_index++) {

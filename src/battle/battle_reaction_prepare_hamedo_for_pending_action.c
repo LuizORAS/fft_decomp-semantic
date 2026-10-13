@@ -83,7 +83,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
         return -1;
     }
     action = &target->action_command;
-    if (action_can_unit_react(target) != 0) {
+    if (action_is_reaction_prevented(target) != 0) {
         return -1;
     }
 

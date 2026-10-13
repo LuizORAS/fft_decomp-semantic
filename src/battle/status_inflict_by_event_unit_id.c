@@ -8,14 +8,14 @@
  * The unit's pending infliction and removal bytes are cleared, the one status bit
  * is set and status_resolve_unit_changes runs on the main stack with
  * removal_only. Nothing happens when the id resolves to no unit on the field. */
-void status_inflict_by_entd_unit_id(s32 entd_id, s32 status, s32 which, s32 removal_only) {
+void status_inflict_by_event_unit_id(s32 event_unit_id, s32 status, s32 which, s32 removal_only) {
     s32 idx;
     battle_stats_t* unit;
     s32 i;
     s32 byte;
     s32 bit;
 
-    idx = battle_unit_get_battle_index_by_entd_unit_id(entd_id);
+    idx = battle_unit_get_battle_id_by_event_unit_id(event_unit_id);
     if (idx == 0x7D0) {
         return;
     }

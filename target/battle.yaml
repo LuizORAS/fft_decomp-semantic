@@ -699,7 +699,7 @@ functions:
   - {addr: 0x8012dbdc, size: 84, name: battle_gfx_ramp_screen_overlay_intensity_to_zero, hash: dbd203faf8f613fe}
   - {addr: 0x8012dc30, size: 84, name: battle_gfx_ramp_screen_overlay_intensity_to_max, hash: 6d0834a9f0186591}
   - {addr: 0x8012dc84, size: 40, name: script_is_tutorial_event_slot, hash: 6776ea3a44ebbd82}
-  - {addr: 0x8012dcac, size: 76, name: battle_unit_get_battle_index_by_entd_unit_id, hash: 521545fd32444875}
+  - {addr: 0x8012dcac, size: 76, name: battle_unit_get_battle_id_by_event_unit_id, hash: 521545fd32444875}
   - {addr: 0x8012dcf8, size: 20, name: battle_menu_set_modal_open, hash: 8dbb087dee3cfcef}
   - {addr: 0x8012dd0c, size: 16, name: battle_menu_clear_modal_open, hash: 998fd7a33c6ac225}
   - {addr: 0x8012dd1c, size: 20, name: sound_queue_sfx_confirm, hash: 79d48c635cbe6203}
@@ -1011,7 +1011,7 @@ functions:
   - {addr: 0x801488a8, size: 1072, name: battle_unit_apply_staged_status_data, hash: 793904be68d4a23b}
   - {addr: 0x80148cd8, size: 432, name: battle_unit_update_staged_status_data, hash: 18a4ccc12e7e8be1}
   - {addr: 0x80148e88, size: 632, name: script_inflict_status_thread, hash: 61d3e9fb6f1a31dc}
-  - {addr: 0x80149100, size: 216, name: status_inflict_by_entd_unit_id, hash: 5219ad791988f213}
+  - {addr: 0x80149100, size: 216, name: status_inflict_by_event_unit_id, hash: 5219ad791988f213}
   - {addr: 0x801491d8, size: 448, name: script_change_stats, hash: 0f552e12e60b18e2}
   - {addr: 0x80149398, size: 248, name: script_unit_anim, hash: 8c66feb3346fed6e}
   - {addr: 0x80149490, size: 156, name: script_march_units, hash: ab19a34ada7cae3e}
@@ -1497,7 +1497,7 @@ functions:
   - {addr: 0x8018c758, size: 260, name: battle_unit_transform_into_morbol, hash: 76e82657d702035b}
   - {addr: 0x8018c85c, size: 196, name: battle_unit_apply_level_up_down_ability, hash: 8a382a349b37ab95}
   - {addr: 0x8018c920, size: 72, name: action_is_reaction_blocked, hash: 3a0a9aae99ebf4c4}
-  - {addr: 0x8018c968, size: 56, name: action_can_unit_react, hash: ce6b4744b8afaf88}
+  - {addr: 0x8018c968, size: 56, name: action_is_reaction_prevented, hash: ce6b4744b8afaf88}
   - {addr: 0x8018c9a0, size: 68, name: action_check_reaction, hash: 3295dc9e786a8c8d}
   - {addr: 0x8018c9e4, size: 284, name: action_check_reflect_blade_grasp_and_arrow_guard, hash: 4ba6d979790df352}
   - {addr: 0x8018cb00, size: 308, name: action_dispatch_target_reaction_ability, hash: 22b584c1310567f5}
