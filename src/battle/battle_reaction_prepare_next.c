@@ -54,7 +54,7 @@ s32 battle_reaction_prepare_next(s16* out_ability) {
                     g_battle_current_reaction_ability_id = ability;
                     action->actor_id = i;
                     action->skillset_id = 0;
-                    reaction_id = *(u16*)&g_battle_current_reaction_ability_id;
+                    reaction_id = g_battle_current_reaction_ability_id;
                     outcome = 1;
                     action->ability_id = reaction_id;
                     last_attack = unit->action.last_received_attack;
