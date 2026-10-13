@@ -2,9 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Builds the twelve-line menu box primitives for `box` (x, y, w, h) into
- * `menu`: line endpoints from the layout table, the normal menu colours,
- * two draw modes and a sprite covering the box. */
+/* WORLD twin of battle_menu_init_numeric_display_frame_primitives. */
 void world_menu_init_numeric_display_frame_primitives(RECT* box, world_menu_palette_primitives_t* menu) {
     LINE_F2* line;
     s32 i;

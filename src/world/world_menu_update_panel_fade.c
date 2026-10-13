@@ -1,11 +1,6 @@
 #include "fft/world.h"
 
-/*
- * Update the menu panel's fade and submit its center and edge tiles.
- *
- * Mode 1 raises intensity toward 80; mode 2 lowers it toward 0. The nine
- * tile pairs taper away from the center in increments of 8.
- */
+/* WORLD twin of battle_menu_update_panel_fade. */
 void world_menu_update_panel_fade(void) {
     world_fade_tile_frame_t* frame;
     s32 i;

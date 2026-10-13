@@ -1,9 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Reset the menu buffer allocator: mark the 16 allocation records free (-1),
- * clear the 0x70-byte allocation map and zero the three window slots' owner
- * thread ids and states. */
+/* WORLD twin of battle_menu_init_buffer_allocator. */
 void world_menu_init_buffer_allocator(void) {
     s32 fill;
     s32 slot;

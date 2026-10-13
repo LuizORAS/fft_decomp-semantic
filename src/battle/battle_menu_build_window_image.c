@@ -5,19 +5,17 @@
 extern world_glyph_blit_t g_battle_menu_window_sprite_glyph;
 extern world_glyph_blit_t g_battle_menu_window_sprite_position;
 
-/* Battle twin of world_menu_build_window_image: build a 4bpp menu window image from the shared menu graphics,
- * optionally with its pointer tail, and upload it to `rect` unless `keep` is set.
+/* Build a 4bpp menu window image from the shared menu graphics, optionally with its pointer tail,
+ * and upload it to `rect` unless `keep` is set.
  *
- * `mode` bits 2-3 select the frame style (8 = plain frame, no tail); bits 0-1
- * place the tail (1 and 2 flip it vertically). The tail is drawn through
- * blit_text_glyph from the fixed source/destination records at
- * 0x801697b0/0x801697c0, and nudged 16 pixels when the current thread's
- * task_words[5] has any of bits 4-7 set.
+ * `mode` bits 2-3 select the frame style (8 = plain frame, no tail); bits 0-1 place the tail (1 and 2
+ * flip it vertically). The tail is drawn through blit_text_glyph from g_battle_menu_window_sprite_glyph
+ * to g_battle_menu_window_sprite_position, and nudged 16 pixels when the current thread's task_words[5]
+ * has any of bits 4-7 set.
  *
- * With `keep` set the caller owns the returned buffer. Otherwise the buffer
- * is freed and the result is whatever battle_menu_free_memory left in $v0;
- * the target has no return value on that path. `i` is reused for the thread
- * flag because a separate local swaps the $s0/$s1 allocation. */
+ * With `keep` set the caller owns the returned buffer. Otherwise the buffer is freed and the result is
+ * whatever battle_menu_free_memory left in $v0; the target has no return value on that path. `i` is
+ * reused for the thread flag because a separate local swaps the $s0/$s1 allocation. */
 void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset, s32 keep) {
     u16 kind = mode & DIALOG_TYPE_OPTIONS_MASK;
     s32 words;

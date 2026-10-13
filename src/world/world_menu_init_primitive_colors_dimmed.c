@@ -1,7 +1,6 @@
 #include "fft/world.h"
 
-/* Give the twelve frame lines the colours of the dimmed menu palette (the second
- * sixteen of the menu palette colours) and the sprite the dimmed menu CLUT, GetClut(0x3c0, 0x1f4). */
+/* WORLD twin of battle_menu_init_primitive_colors_dimmed. */
 void world_menu_init_primitive_colors_dimmed(world_menu_palette_primitives_t* menu) {
     s32 index;
     s32 palette_offset;

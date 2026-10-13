@@ -2,14 +2,12 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/*
- * Shares battle_gfx_copy_sprite_position_uv_and_size's (source, frame, step) shape:
- * scales a cursor SPRT to g_battle_menu_cursor_zoom_percentages[step] percent about its centre, keeping
- * position and texture coordinates even. Writing the half extent first in
- * each sum (`w / 2 + x0`) is required; the reverse order reschedules the
- * reloads and adds a copy of `step`.
- */
-
+/* Scale a cursor sprite to g_battle_menu_cursor_zoom_percentages[step] percent about its centre,
+ * keeping its position and texture coordinates even; steps from 12 leave it alone. `source` is not
+ * read: the routine shares the (source, frame, step) shape of battle_gfx_copy_sprite_position_uv_and_size.
+ *
+ * Writing the half extent first in each sum (`w / 2 + x0`) is required; the reverse order reschedules
+ * the reloads and adds a copy of `step`. */
 void battle_menu_zoom_cursor_frame(const void* source, SPRT* sprite, s32 step) {
     s32 scale;
     s32 offset;

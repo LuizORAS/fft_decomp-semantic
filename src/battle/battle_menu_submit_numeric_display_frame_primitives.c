@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Submit the twelve glyph packets and three framing packets. */
+/* Submit a menu line box: the twelve lines, then the sprite between its two draw modes. */
 void battle_menu_submit_numeric_display_frame_primitives(world_menu_palette_primitives_t* display) {
     s32 index;
 

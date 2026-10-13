@@ -2,8 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Select the CLUT of a menu icon sprite: 0x7C7C while the previous thread
- * slot is running or a text task is active, otherwise 0x7CBC. */
+/* WORLD twin of battle_menu_select_icon_sprite_clut. */
 void world_menu_select_icon_sprite_clut(SPRT* slot) {
     s32 icon;
 

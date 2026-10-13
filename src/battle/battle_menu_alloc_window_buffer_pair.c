@@ -1,13 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Claims the first free menu window buffer pair for the current thread,
- * initialises the first record's primitives and returns it; when no pair
- * is free the current thread is stopped. The record loop
- * runs once: the target's `blez` exit test only reproduces with a bound
- * of 1, so the second record of the pair is left uninitialised.
- *
- * BATTLE twin of world_menu_alloc_window_buffer_pair. */
+/* Claims the first free menu window buffer pair for the current thread, initialises the first
+ * record's primitives and returns it; when no pair is free the current thread is stopped. The record
+ * loop runs once: the target's `blez` exit test only reproduces with a bound of 1, so the second record
+ * of the pair is left uninitialised. */
 void* battle_menu_alloc_window_buffer_pair(void) {
     menu_window_buffer_t* buffer;
     s32 index;

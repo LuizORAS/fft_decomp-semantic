@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Interpolate the four corners of a textured quad between two RECTs. */
+/* WORLD twin of battle_menu_lerp_rect_to_poly_ft4. */
 void world_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t) {
     poly->x0 = world_menu_lerp_fixed12(from->x, to->x, t);
     poly->y0 = world_menu_lerp_fixed12(from->y, to->y, t);

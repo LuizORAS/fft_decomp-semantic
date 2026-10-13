@@ -1,10 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Map the current thread's first parameter through a threshold table:
- * mode 0 reduces it modulo the table's first byte first, mode 1 uses the
- * second table as-is. Returns the value paired with the first threshold
- * above the parameter, or 0. */
+/* WORLD's version of battle_menu_get_cursor_bob_offset: the same lookup of the thread's frame
+ * counter (task word 0) in the idle or active threshold table. */
 s32 world_menu_get_cursor_bob_offset(s32 mode) {
     s32 value = g_world_thread_contexts[g_world_thread_current_id].task_words[0];
     s8* table;

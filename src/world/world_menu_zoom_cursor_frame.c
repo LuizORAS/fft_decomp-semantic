@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Scale a cursor sprite about its center and round its geometry down to even values. */
+/* WORLD twin of battle_menu_zoom_cursor_frame. */
 void world_menu_zoom_cursor_frame(const void* source, SPRT* sprite, s32 step) {
     s32 scale;
     s32 offset;

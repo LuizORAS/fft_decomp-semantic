@@ -2,10 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Claims enough 256-byte arena pages for size bytes and records them in a free slot.
- *
- * Scans the page occupancy map first-fit. When no run of free pages or no free slot
- * remains, it optionally prints a diagnostic, yields the thread, and rescans. */
+/* WORLD twin of battle_menu_alloc_memory. */
 void* world_menu_alloc_memory(s32 size) {
     s32 page;
     s32 pages;

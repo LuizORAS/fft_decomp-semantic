@@ -12,12 +12,8 @@ enum battle_menu_line_layout_offset {
     BATTLE_MENU_LINE_LAYOUT_SIZE = 8,
 };
 
-/* Build the numeric-display frame primitives for `bounds`.
- *
- * The WORLD twin establishes the packet layout: 2 draw modes, 12
- * line primitives, and a trailing sprite. The signed layout bytes select each
- * endpoint and whether it receives the rectangle width or height.
- */
+/* Build the twelve-line menu box primitives for `bounds` (x, y, w, h) into `menu`: line endpoints
+ * from the layout table, the normal menu colours, two draw modes and a sprite covering the box. */
 void battle_menu_init_numeric_display_frame_primitives(RECT* bounds, world_menu_palette_primitives_t* menu) {
     LINE_F2* line;
     s32 index;

@@ -1,8 +1,7 @@
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
-/* Render a menu text record into a temporary image buffer at the record's
- * own origin, upload it to VRAM and release the buffer. */
+/* WORLD twin of battle_menu_render_text_image_at_record_origin. */
 void world_menu_render_text_image_at_record_origin(world_text_dialog_record_t* record) {
     if (record->box_type != DIALOG_BOX_TYPE_CENTERED) {
         if (record->box_type == DIALOG_BOX_TYPE_PORTRAIT) {

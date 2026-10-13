@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Initialize the center tile and two nine-tile scanline strips. */
+/* WORLD twin of battle_menu_init_panel_fade_tiles. */
 void world_menu_init_panel_fade_tiles(void) {
     world_fade_tile_frame_t* frame;
     s32 i;

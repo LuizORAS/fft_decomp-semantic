@@ -2,11 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/*
- * Animate the current window's first quad growing out from the rectangle
- * centre: each frame crops a sprite of the rectangle by the level's
- * percentage and copies the cropped bounds into the quad's corners.
- */
+/* WORLD twin of battle_menu_animate_window_quad_crop. */
 void world_menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to) {
     SPRT sprite;
     void* source; /* never assigned; the target passes an uninitialised $s5 */

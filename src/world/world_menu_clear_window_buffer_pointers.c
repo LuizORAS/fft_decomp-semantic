@@ -1,7 +1,6 @@
 #include "fft/world.h"
 
-/* Mark all six window buffer pointers (three slots, two frame buffers each)
- * unused with -1. */
+/* WORLD twin of battle_menu_clear_window_buffer_pointers. */
 void world_menu_clear_window_buffer_pointers(void) {
     menu_window_buffer_t* empty = (menu_window_buffer_t*)-1;
     s32 index;

@@ -1,8 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Submit a menu line box: the twelve lines, then the two draw modes around
- * the sprite. */
+/* WORLD twin of battle_menu_submit_numeric_display_frame_primitives. */
 void world_menu_submit_numeric_display_frame_primitives(world_menu_palette_primitives_t* frame) {
     s32 i;
 

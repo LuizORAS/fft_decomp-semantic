@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Draw positioned menu-number entries using the renderer selected by type. */
+/* WORLD twin of battle_menu_draw_numeric_display_entries. */
 void world_menu_draw_numeric_display_entries(
     void* pixels, menu_number_entry_t* entries, world_glyph_blit_t* position, s32 count) {
     s32 i;

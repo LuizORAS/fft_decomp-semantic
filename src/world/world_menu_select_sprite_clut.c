@@ -1,9 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Select the CLUT of a menu sprite: the dimmed one (0x7D3C) while the
- * previous thread slot is running or a text task is active, otherwise the
- * normal one (0x7C3C). */
+/* WORLD twin of battle_menu_select_sprite_clut. */
 void world_menu_select_sprite_clut(void* prim) {
     world_texture_prim_t* slot = prim;
     s32 icon;

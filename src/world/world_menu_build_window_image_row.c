@@ -1,8 +1,6 @@
 #include "psx/types.h"
 
-/* Target 0x800ffc28. Copies a 16-bit pattern row: the two leading and two
- * trailing entries verbatim, then the four interior entries repeated every
- * fourth slot across the row. */
+/* WORLD twin of battle_menu_build_window_image_row. */
 void world_menu_build_window_image_row(u16* source, u16* dest, s32 count, s32 offset) {
     s32 i;
     u16* slot;

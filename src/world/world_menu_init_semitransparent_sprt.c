@@ -1,6 +1,6 @@
 #include "psx/libgpu.h"
 
-/* Initialize the fixed sprite used by WORLD menu graphics. */
+/* WORLD twin of battle_menu_init_semitransparent_sprt. */
 void world_menu_init_semitransparent_sprt(SPRT* sprite) {
     SetSprt(sprite);
     SetShadeTex(sprite, 0);

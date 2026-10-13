@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Free the window slot (of three) owned by the current thread, if any. */
+/* WORLD twin of battle_menu_release_current_thread_slot. */
 void world_menu_release_current_thread_slot(void) {
     s32 i;
 
