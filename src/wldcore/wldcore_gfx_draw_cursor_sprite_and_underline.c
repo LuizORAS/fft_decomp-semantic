@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Draws one cursor sprite plus its underline into the ordering table, then
- * hands the sprite to 0x8006bd84 for the trailing decoration.
+ * hands the sprite to wldcore_gfx_draw_number_digits_with_fill for the trailing decoration.
  *
  * The line is derived from the sprite's current position; the sprite origin is
  * then advanced by (4, 8) so the follow-up draws at the shifted position. */

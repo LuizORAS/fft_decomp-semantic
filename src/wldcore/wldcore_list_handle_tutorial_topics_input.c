@@ -3,7 +3,7 @@
 
 /* Input step of the tutorial's Tips list (cursor slot 12); twin of
  * wldcore_list_handle_treasures_input with help message 0x108d. A confirmed topic's value is
- * passed to 0x80084578, which opens the tutorial text window. */
+ * passed to wldcore_menu_push_tutorial_topic_text_level, which opens the tutorial text window. */
 void wldcore_list_handle_tutorial_topics_input(wldcore_menu_panel_level_t* level) {
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
         && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {

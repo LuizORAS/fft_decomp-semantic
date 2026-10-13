@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 
 /* Pushes the proposition-attempt detail text window as menu level 0x2a, the
- * partner of the 0x80088180 pop. Records the entry on the new level, decodes
+ * partner of the wldcore_menu_close_proposition_attempt_detail_level pop. Records the entry on the new level, decodes
  * that entry's last-attempt date out of the packed nine-bit array at
  * g_main_proposition_last_attempt_date_bits (dest[0] month 1-12, dest[1] day
  * 1-31), and sets up the shared scrollable text window at g_wldcore_scrollable_text_window for text

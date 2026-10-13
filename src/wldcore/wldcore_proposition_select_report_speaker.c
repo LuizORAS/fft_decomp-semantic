@@ -1,9 +1,8 @@
 /* Proposition speaker pick
- * (0x8007920c-0x800793f0). Returns the only participant, else the one with
- * the highest/lowest bravery (mode 1/2) or faith (3/4) by the u16 mode at
- * 0x8009f312 (unpacked proposition row 0x8009f2ec + 0x26). The goto form
- * for the shared bravery/faith tails matches the target, which reloads the
- * stat after the compare. */
+ * (wldcore_proposition_select_report_speaker-wldcore_proposition_adjust_message_index). Returns the only participant,
+ * else the one with the highest/lowest bravery (mode 1/2) or faith (3/4) by the u16 mode at 0x8009f312 (unpacked
+ * proposition row 0x8009f2ec + 0x26). The goto form for the shared bravery/faith tails matches the target, which
+ * reloads the stat after the compare. */
 #include "fft/wldcore.h"
 
 /* Pick the unit who reports a returned proposition: the only one sent, or, by the row's speaker

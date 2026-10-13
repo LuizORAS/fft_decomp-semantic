@@ -241,15 +241,15 @@ typedef struct wldcore_point32 {
 } wldcore_point32_t;
 
 /* 36-byte window records at 0x800bb504: animated display objects. The pool
- * init 0x8006ad28 sets flags = 1, so the display-object dispatcher 0x8006ae20
- * hands them to wldcore_gfx_draw_animated_display_object (0x8006aed0), which
- * reads the priority as a halfword. 0x8009036c initialises a record
- * (flags |= 0x810, sequence/priority from arguments, frame_index and
- * anim_counter cleared); 0x80090a28 toggles flag 0x10 by record index. */
+ * init wldcore_window_init_record_pools sets flags = 1, so the display-object dispatcher
+ * wldcore_dispatch_display_object_list hands them to wldcore_gfx_draw_animated_display_object, which reads the priority
+ * as a halfword. wldcore_window_init_record initialises a record (flags |= 0x810, sequence/priority from arguments,
+ * frame_index and anim_counter cleared); wldcore_window_update_flag_from_owner_progress toggles flag 0x10 by record
+ * index. */
 typedef struct wldcore_window_record {
     s32 flags;        /* 0x00; wldcore_display_object_flag_e */
-    s32 sequence;     /* 0x04; wldcore_anim_sequence_id_e; second argument of 0x8009036c */
-    s32 priority;     /* 0x08; OT priority passed to the sprite sort; first argument of 0x8009036c */
+    s32 sequence;     /* 0x04; wldcore_anim_sequence_id_e; second argument of wldcore_window_init_record */
+    s32 priority;     /* 0x08; OT priority passed to the sprite sort; first argument of wldcore_window_init_record */
     s32 frame_index;  /* 0x0c; frame within the sequence, cleared with anim_counter on every sequence change */
     s32 anim_counter; /* 0x10; frames spent on the current frame */
     /* 0x14; CLUT selector: 0 keeps the part's CLUT, otherwise cx = cx_base + (palette - 1) << 4. The
@@ -563,8 +563,8 @@ typedef struct wldcore_text_scrollable_window {
     s32 measured_columns;
     s32 measured_rows;
     /* 0x20..0x2e: copy of the optional extra render record's base and bounds, taken as two block
-     * copies; 0x800906c0 scrolls base.y by row * 16 into the record's base_y and clips the record's
-     * y and height from the bounds. */
+     * copies; wldcore_text_render_scrollable_window_page scrolls base.y by row * 16 into the record's base_y and clips
+     * the record's y and height from the bounds. */
     wldcore_point32_t extra_base;                  /* 0x20 */
     wldcore_window_render_bounds16_t extra_bounds; /* 0x28 */
     s32 scroll_state;                              /* 0x30; wldcore_text_scroll_state_e */
@@ -577,7 +577,7 @@ typedef struct wldcore_text_scrollable_window {
     s32 priority; /* 0x4c; OT priority of the text window's records (wldcore_window_init_record) */
     s32 last_page_row;
     s32 page_start_row;
-    s32 scroll_row;            /* 0x58; row shown while 0x800903e4 scrolls (scroll_state 1/2) */
+    s32 scroll_row;            /* 0x58; row shown while wldcore_text_is_window_finished scrolls (scroll_state 1/2) */
     s32 image_coordinate_mode; /* 0x5c; coordinate mode of the text render record image */
     s32 scroll_timer;          /* 0x60; frame counter of the auto-scroll state */
     s32 extra_render_index;    /* 0x64; optional render record scrolled with the text, -1 if none */
@@ -937,7 +937,7 @@ extern u32 g_wldcore_saved_system_flags;
  * outcome being reported. */
 
 /* Provisional: the type-0x10 proposition report level pushed by
- * wldcore_proposition_push_report_level (0x800779d0), which stores its argument at
+ * wldcore_proposition_push_report_level, which stores its argument at
  * +0x2c and starts WORLD thread 14, and stepped by
  * wldcore_proposition_step_report_level. */
 typedef struct wldcore_proposition_report_level {
@@ -1031,7 +1031,7 @@ typedef enum wldcore_send_unit_mode {
 } wldcore_send_unit_mode_e;
 
 /* Provisional: proposition-result menu level (type 0x11) pushed by
- * wldcore_proposition_push_result_level and stepped by 0x80078bb8. */
+ * wldcore_proposition_push_result_level and stepped by wldcore_proposition_step_result_level. */
 typedef struct wldcore_proposition_result_level {
     s32 render_index; /* 0x00 */
     u8 _unused_04[0xc];
@@ -1078,7 +1078,7 @@ enum {
 };
 typedef char wldcore_proposition_fields_size_must_be_0x2e[sizeof(wldcore_proposition_fields_t) == 0x2e ? 1 : -1];
 
-/* Provisional: proposition send-unit menu level. The handler at 0x80075bd8
+/* Provisional: proposition send-unit menu level. The handler wldcore_proposition_step_send_unit_slot_input
  * selects one of three party slots and owns its portrait render records. */
 typedef struct wldcore_menu_send_unit_level {
     s32 list_window;    /* 0x00 */
@@ -1295,8 +1295,8 @@ typedef struct wldcore_proposition_active_list_level {
     s32 values[1]; /* 0x34 */
 } wldcore_proposition_active_list_level_t;
 
-/* Panel menu levels: number panels (0x8006f294, 0x80073ef8) and list panels
- * (0x8007dfcc, 0x80084230, 0x80071aa0). */
+/* Panel menu levels: number panels (wldcore_menu_push_variable_value_panel_level, wldcore_proposition_push_days_level)
+ * and list panels (wldcore_list_open_unexplored_lands, wldcore_list_open_tutorial_topics, wldcore_bar_close). */
 typedef struct wldcore_menu_panel_level {
     /* 0x00; number panel: 0 running, 1 confirmed, 2 cancelled; list panels
      * also use -1 for cancellation. Read after WORLD thread 12 ends. */
@@ -1304,7 +1304,7 @@ typedef struct wldcore_menu_panel_level {
     s32 variable_id; /* 0x04; script variable edited by number panels */
     u8 _unused_08[0x28];
     s32 entry_count; /* 0x30; rows in the panel list */
-    /* 0x34; entry text ids, filled by wldcore_map_build_location_menu_entries (0x8008d2c8), whose result is
+    /* 0x34; entry text ids, filled by wldcore_map_build_location_menu_entries, whose result is
      * the entry count; the same offset as the list_window and proposition_list entries */
     s32 entries[10];
 } wldcore_menu_panel_level_t;
@@ -1355,9 +1355,9 @@ typedef enum wldcore_proposition_category_row {
     WLDCORE_PROPOSITION_CATEGORY_ROW_BRAVE_STORY = 1,
 } wldcore_proposition_category_row_e;
 
-/* Provisional: list-window level beneath the flag-list panels; 0x80087b94
- * and 0x8008343c hide its content render record (flag 0x10) when they push.
- * 0x800928ac clears flag 0x10 on the upper and lower windows when it pops
+/* Provisional: list-window level beneath the flag-list panels; wldcore_list_open_proposition_history
+ * and wldcore_list_open_persons hide its content render record (flag 0x10) when they push.
+ * wldcore_menu_close_fact_detail_level clears flag 0x10 on the upper and lower windows when it pops
  * back to it. */
 typedef struct wldcore_menu_list_window_level {
     s32 main_window;
@@ -1370,7 +1370,7 @@ typedef struct wldcore_menu_list_window_level {
     s32 upper_window;   /* 0x20 */
     s32 lower_window;   /* 0x24 */
     u8 _unused_28[8];
-    s32 entry_count; /* 0x30; rows drawn by 0x80080e54 */
+    s32 entry_count; /* 0x30; rows drawn by wldcore_menu_push_brave_story_level */
     s32 entries[10]; /* 0x34; row kinds of the owning list (wldcore_*_row_e); brave story: text id 0xb83f + kind */
 } wldcore_menu_list_window_level_t;
 
@@ -1386,14 +1386,17 @@ void wldcore_bar_open_rumors(void);
 void wldcore_bar_close(wldcore_menu_list_window_level_t* unused_level);
 
 /* list */
-/* Menu level owning two window records and a render record: 0x800712b0
- * pushes it (type 5); the tutorial text window 0x80084578 hides all three
- * with flag 0x10 and 0x80084748 restores them. */
+/* WLDCORE's lists (wldcore_list_*): the Brave Story's sections and Professor Daravon's tutorial
+ * lists, each a menu level whose rows WORLD's panel thread draws, and their remembered cursors. */
+
+/* Menu level owning two window records and a render record: wldcore_bar_push_menu_level
+ * pushes it (type 5); the tutorial text window wldcore_menu_push_tutorial_topic_text_level hides all three
+ * with flag 0x10 and wldcore_menu_wait_tutorial_topic_text_then_pop_level restores them. */
 typedef struct wldcore_menu_window_pair_render_level {
     s32 first_window;
     s32 second_window; /* 0x04 */
     s32 render_index;  /* 0x08 */
-    s32 panel_rows;    /* 0x0c; cleared by 0x800712b0 */
+    s32 panel_rows;    /* 0x0c; cleared by wldcore_bar_push_menu_level */
 } wldcore_menu_window_pair_render_level_t;
 
 /* Per-row flag column of the world list panels; the list steps compare it
@@ -1435,11 +1438,16 @@ void wldcore_proposition_build_detail_panel_image(
 void wldcore_list_open_tutorial_categories(s32 selected_entry, s32 reset);
 
 /* menu */
-/* Descriptor prefix read by 0x8007df84. The word-indexed text table is at
+/* WLDCORE's menu stack (wldcore_menu_*): the level types and their idle, suspend and resume
+ * handlers, the levels' records, the window and render records they show (wldcore_window_*), the
+ * message and text windows, the screen transition, the Brave Story, sound novel and status help
+ * levels, and the debug tools. */
+
+/* Descriptor prefix read by wldcore_window_draw_indexed_text. The word-indexed text table is at
  * a record-relative offset; no fixed whole-record size is established. */
 typedef struct wldcore_window_text_table {
     u8 _unused_00[8];
-    s32 window_index; /* 0x08; renderer 0x8008aea0 indexes 52-byte windows */
+    s32 window_index; /* 0x08; renderer wldcore_window_draw_centered_text indexes 52-byte windows */
     u8 _unused_0c[16];
     s32 table_word_offset; /* 0x1c */
 } wldcore_window_text_table_t;
@@ -1544,7 +1552,7 @@ typedef struct wldcore_status_help_field {
 } wldcore_status_help_field_t;
 typedef char wldcore_status_help_field_size_must_be_0x10[sizeof(wldcore_status_help_field_t) == 0x10 ? 1 : -1];
 
-/* Message menu level pushed by 0x8006e860. */
+/* Message menu level pushed by wldcore_menu_push_message_level. */
 typedef struct wldcore_menu_message_level {
     s32 reload_text;
     s32 saved_blocked_buttons; /* 0x04; g_wldcore_menu_blocked_buttons at push time */
@@ -1561,14 +1569,15 @@ typedef struct wldcore_menu_world_menu_level {
     s32 pending; /* 0x04 */
 } wldcore_menu_world_menu_level_t;
 
-/* Menu level owning a window record and a render record; 0x80088180 clears
+/* Menu level owning a window record and a render record; wldcore_menu_close_proposition_attempt_detail_level clears
  * both records' flag 0x10 and sets render flag 0x100 when it pops back to it. */
 typedef struct wldcore_menu_window_render_level {
     s32 window_index;
     s32 render_index; /* 0x04 */
 } wldcore_menu_window_render_level_t;
 
-/* Menu level owning two window records; 0x8008b8dc toggles both records' flag 0x10. */
+/* Menu level owning two window records; wldcore_sound_novel_set_parent_windows_visible toggles both records' flag 0x10.
+ */
 typedef struct wldcore_menu_window_pair_level {
     s32 first_window;
     s32 second_window; /* 0x04 */
@@ -1593,8 +1602,8 @@ typedef struct wldcore_menu_milestone_level {
     s32 timer; /* 0x0c; frames spent in phase 2 */
 } wldcore_menu_milestone_level_t;
 
-/* Rumor detail level pushed at 0x80072618. The close handler at 0x80072888
- * reads the saved parent window/render indices at +0x08/+0x0c/+0x10. */
+/* Rumor detail level pushed by wldcore_bar_push_rumor_detail_level. The close handler
+ * wldcore_bar_wait_rumor_text_then_pop_level reads the saved parent window/render indices at +0x08/+0x0c/+0x10. */
 typedef struct wldcore_menu_rumor_detail_level {
     s32 rumor_index;
     s32 _unused_04;
@@ -1603,7 +1612,7 @@ typedef struct wldcore_menu_rumor_detail_level {
     s32 render_index;
 } wldcore_menu_rumor_detail_level_t;
 
-/* Provisional: proposition list level (type 0x26) pushed by 0x80085760: a
+/* Provisional: proposition list level (type 0x26) pushed by wldcore_list_open_active_propositions: a
  * cursor window and three column-header windows over one render record
  * listing each active proposition's name, participant count and remaining
  * days. */
@@ -1621,8 +1630,8 @@ typedef struct wldcore_menu_proposition_list_level {
 } wldcore_menu_proposition_list_level_t;
 
 /* Provisional: debug script-variable list level (type 0xb) pushed by
- * 0x8006ea90; 0x8006ed30 draws row_count variables from first_variable
- * into the render record. */
+ * wldcore_menu_push_variable_list_level; wldcore_menu_render_debug_variable_list draws row_count variables from
+ * first_variable into the render record. */
 typedef struct wldcore_menu_variable_list_level {
     s32 window_index;   /* 0x00; cursor window */
     s32 render_index;   /* 0x04 */
@@ -1633,8 +1642,8 @@ typedef struct wldcore_menu_variable_list_level {
 } wldcore_menu_variable_list_level_t;
 
 /* Provisional: proposition participant detail level (type 0x28) pushed by
- * 0x80086f1c with two frame windows; wldcore_unit_build_status_panel_data draws the participant
- * g_main_active_propositions[proposition].participant_indices[participant]. */
+ * wldcore_menu_push_participant_detail_level with two frame windows; wldcore_unit_build_status_panel_data draws the
+ * participant g_main_active_propositions[proposition].participant_indices[participant]. */
 typedef struct wldcore_menu_participant_level {
     s32 left_window;  /* 0x00 */
     s32 right_window; /* 0x04 */
@@ -1654,7 +1663,7 @@ typedef enum wldcore_detail_phase {
 } wldcore_detail_phase_e;
 
 /* Provisional: script-variable detail level (type 0x20) pushed by
- * 0x8008389c over the list-window level; it keeps the selected entry value
+ * wldcore_menu_push_person_detail_level over the list-window level; it keeps the selected entry value
  * (variable index * 16 + value) and the render record it appends. */
 typedef struct wldcore_menu_detail_level {
     s32 value;        /* 0x00 */
@@ -1714,7 +1723,7 @@ typedef struct wldcore_menu_event_transition_level {
     s32 fade_phase;      /* 0x10; wldcore_event_transition_fade_e */
     s32 anim_step;       /* 0x14; +2/+4 per update; drives scale, shade, sounds 0x6c/0x6d and phase changes */
     u8 _unused_18[8];
-    s32 mode; /* 0x20; wldcore_event_transition_mode_e; argument of 0x8008047c */
+    s32 mode; /* 0x20; wldcore_event_transition_mode_e; argument of wldcore_menu_push_event_transition_level */
 } wldcore_menu_event_transition_level_t;
 
 /* Type-0x14 sound-novel resume level pushed by
@@ -1743,7 +1752,7 @@ typedef struct wldcore_menu_scrollable_text_level {
 } wldcore_menu_scrollable_text_level_t;
 
 /* Provisional: type-0x31 screen-transition level pushed by
- * wldcore_menu_push_screen_transition_level (0x80088308) and stepped by
+ * wldcore_menu_push_screen_transition_level and stepped by
  * wldcore_menu_step_screen_transition_level. */
 typedef struct wldcore_menu_screen_transition_level {
     s32 screen;     /* 0x00; wldcore_menu_level_type_e of the level to open */
@@ -1791,7 +1800,7 @@ typedef struct wldcore_menu_sound_novel_history_level {
     s32 step;           /* 0x24; 0..4 fade step */
 } wldcore_menu_sound_novel_history_level_t;
 
-/* Provisional: location-transition menu level. The handler at 0x8008e540
+/* Provisional: location-transition menu level. The handler wldcore_map_step_route_travel
  * uses the leading window index, location id, pending result, and the
  * transition-data address. */
 typedef struct wldcore_menu_location_transition_level {
@@ -1947,13 +1956,11 @@ typedef enum wldcore_menu_level_type {
 /* Provisional: 0x5c-byte menu-stack records at 0x800bb930, one per menu
  * level; the level's handler type in g_wldcore_menu_stack_types selects the
  * view. The leading word is the level's window index wherever a generic
- * reader (0x8006c844, 0x8006d928, 0x8006c350) consumes it. g_wldcore_menu_stack_records_next is
- * the record array offset by one level, which the push routines index by the
- * current depth; spelling that as g_wldcore_menu_stack_records[depth + 1]
- * changes their address arithmetic. g_wldcore_menu_stack_types_next is the
- * same view of the type array, kept only where types[depth + 1] reschedules
- * the push routine (proposition detail, tutorial topic text, the Brave Story
- * and Persons lists). */
+ * reader (wldcore_menu_suspend_root_level, wldcore_menu_step_focus_location_level, wldcore_menu_reset_to_root_level)
+ * consumes it. g_wldcore_menu_stack_records_next is the record array offset by one level, which the push routines index
+ * by the current depth; spelling that as g_wldcore_menu_stack_records[depth + 1] changes their address arithmetic.
+ * g_wldcore_menu_stack_types_next is the same view of the type array, kept only where types[depth + 1] reschedules the
+ * push routine (proposition detail, tutorial topic text, the Brave Story and Persons lists). */
 typedef union wldcore_menu_stack_record {
     s32 window_index;
     wldcore_menu_status_help_level_t status_help;
@@ -1994,7 +2001,7 @@ typedef union wldcore_menu_stack_record {
 } wldcore_menu_stack_record_t;
 typedef char wldcore_menu_stack_record_size_must_be_0x5c[sizeof(wldcore_menu_stack_record_t) == 0x5c ? 1 : -1];
 
-/* Provisional: owner object passed to 0x80090a28; only the window record
+/* Provisional: owner object passed to wldcore_window_update_flag_from_owner_progress; only the window record
  * index at +0x38 and the compared words at +0x50/+0x54 are established. Its
  * only caller passes a cast wldcore_text_scrollable_window_t, whose fields at
  * those offsets are left_window_index, last_page_row and page_start_row. */
@@ -2007,7 +2014,7 @@ typedef struct wldcore_window_owner {
 } wldcore_window_owner_t;
 
 /* Verified fields of the 52-byte render records at 0x800bbc70. The pool init
- * 0x8006ad28 sets flags = 2, so the display-object dispatcher draws them as
+ * wldcore_window_init_record_pools sets flags = 2, so the display-object dispatcher draws them as
  * sprites through wldcore_gfx_draw_display_object_sprite. */
 typedef struct wldcore_window_render_record {
     s32 flags; /* 0x00; wldcore_display_object_flag_e */
@@ -2045,8 +2052,8 @@ typedef struct wldcore_window_entry_52_rgb {
 } wldcore_window_entry_52_rgb_t;
 typedef char wldcore_entry_52_rgb_size_must_be_0x34[sizeof(wldcore_window_entry_52_rgb_t) == 0x34 ? 1 : -1];
 
-/* Index descriptor passed to the paired window-state routines 0x80076744
- * and 0x8007688c; each word selects a window or render record. */
+/* Index descriptor passed to the paired window-state routines wldcore_menu_resume_proposition_send_unit_level
+ * and wldcore_menu_suspend_proposition_send_unit_level; each word selects a window or render record. */
 typedef struct wldcore_window_tint_request {
     s32 window_a;
     s32 render_a;
@@ -2055,7 +2062,7 @@ typedef struct wldcore_window_tint_request {
     s32 render_b;
     s32 window_b;
     u8 _unused_1c[0x24];
-    s32 window_c; /* 0x40; cleared only by 0x80076744 */
+    s32 window_c; /* 0x40; cleared only by wldcore_menu_resume_proposition_send_unit_level */
     s32 window_d;
 } wldcore_window_tint_request_t;
 
@@ -2088,7 +2095,7 @@ extern wldcore_window_record_t g_wldcore_window_records[];
 extern wldcore_status_help_field_t g_wldcore_status_help_fields[];
 extern s32 g_wldcore_window_render_object_count;
 
-/* Display-object queues drawn by 0x8006ae20 each frame: every entry points at
+/* Display-object queues drawn by wldcore_dispatch_display_object_list each frame: every entry points at
  * the leading flags word of a window record, render record or map dot, and
  * wldcore_window_set_render_objects_visible toggles bit 0x08 through it. */
 extern s32* g_wldcore_window_render_object_queue[];

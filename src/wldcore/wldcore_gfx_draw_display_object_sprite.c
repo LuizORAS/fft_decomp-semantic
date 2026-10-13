@@ -6,8 +6,8 @@
  * ordering table handed down by wldcore_dispatch_display_object_list.
  *
  * Flag 0x004 selects the 8-bit colour mode (attribute 0x01000000); flag 0x400 copies
- * the object's colour verbatim, otherwise 0x80069718 applies the global fade
- * tint to it; flag 0x100 selects the animated path, where 0x8006b678 looks up
+ * the object's colour verbatim, otherwise wldcore_gfx_copy_color_with_tint applies the global fade
+ * tint to it; flag 0x100 selects the animated path, where wldcore_gfx_calculate_scaled_rectangle looks up
  * the frame rectangle for anim_counter/2 and the counter is then stepped, the
  * flag clearing itself once the halved counter reaches 4.
  *
