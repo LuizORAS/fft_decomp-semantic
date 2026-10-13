@@ -2,18 +2,15 @@
 #include "psx/libgpu.h"
 #include "psx/libgs.h"
 
-/* Pushes menu level type 0x14 (driven by wldcore_menu_step_sound_novel_resume_level) with the given mode:
- * appends the cursor window, a VRAM render record for the TIM at g_wldcore_picture_buffer
- * (uploaded progressively through wldcore_gfx_step_dissolve_image_upload, starting at step 0), and
- * two text render records (0xb84c with substitution value 0xe000 + mode, and
- * 0xb84b). The picture record is centred against the first text record from
- * the TIM's width and half height, and the cursor window is placed at the
- * second text record's origin + (0x18, 0x3c).
+/* Open the prompt for a book whose reading was stopped (level SOUND_NOVEL_RESUME; text 0xb84b, "This
+ * book was canceled earlier", rows Restart and Read from start) over the book's picture. The picture (the
+ * TIM at g_wldcore_picture_buffer) dissolves in through wldcore_gfx_step_dissolve_image_upload, a render
+ * record shows the book's name (text 0xb84c with the treasure's name 0xe000 + `mode`), and the cursor
+ * window sits on the first row. `mode` is the treasure, kept in the level.
  *
- * The target reserves 0x10 frame bytes the function never uses. The
- * two offset temporaries keep GCC from folding base_x - (width - 0x3e) into
- * (base_x + 0x3e) - width, and each render-record base pointer is its own
- * local so the pointer shares the register of the constant it dies into. */
+ * The target reserves 0x10 frame bytes the function never uses. The two offset temporaries keep GCC
+ * from folding base_x - (width - 0x3e) into (base_x + 0x3e) - width, and each render-record base pointer
+ * is its own local so the pointer shares the register of the constant it dies into. */
 void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     GsIMAGE image;
     wldcore_window_render_bounds16_t bounds;

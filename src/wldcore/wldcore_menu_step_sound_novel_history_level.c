@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Handler of the history-text level (type 0x17).
+/* Per-frame step of the sound novel's history (level SOUND_NOVEL_HISTORY).
  *
  * Phase 1 steps the picture render record (g_wldcore_sound_novel_record.picture_render_index) and g_wldcore_hud_color
  * from 0x80 down to 0x60 while the screen fade box brightens, in five steps. Phase 2 runs the reverse ramp and then, if

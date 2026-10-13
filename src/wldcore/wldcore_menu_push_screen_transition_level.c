@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Pushes the type-0x31 screen-transition level for screen `screen`.
+/* Pushes the screen transition (level SCREEN_TRANSITION) to the full-screen level `screen`.
  *
  * Clears the screen, sets system flags 0x3800 and starts a 16-step fade,
  * then runs the per-screen teardown for screens 0x1b..0x2d (jump table at

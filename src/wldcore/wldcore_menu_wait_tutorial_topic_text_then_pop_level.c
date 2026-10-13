@@ -1,10 +1,8 @@
 #include "fft/wldcore.h"
 
-/* Tutorial topic text window set up by 0x80084578. */
-
-/* Menu level 0x22 pushed by 0x80084578: steps the tutorial text window
- * until 0x800903e4 reports it finished, then pops the level, restores the
- * parent level's windows and render record, and reopens the topic list. */
+/* Per-frame step of a Tips entry's text (level TUTORIAL_TOPIC_TEXT): once the text window has popped in
+ * and finished (wldcore_text_is_window_finished), pop the level with the cancel sound, bring the Tips
+ * list's windows back and reopen it (wldcore_list_open_tutorial_topics). */
 void wldcore_menu_wait_tutorial_topic_text_then_pop_level(void) {
     s32 depth;
 

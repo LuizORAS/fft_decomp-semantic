@@ -1,10 +1,10 @@
 #include "fft/wldcore.h"
 
-/* Pushes the wide scrollable text window (0x8009eef8) as menu level type
- * 0x33: it appends one window record for the frame, measures the text, sizes
- * the window around it (at most four rows), initialises the scrollable text
- * state, hides the text render record and the parent level's window, and sets
- * system flags 0x08002000. */
+/* Show a location's arrival text (a world help message; wldcore_menu_restore_level_on_world_entry) as
+ * level SCROLLABLE_TEXT_WINDOW: the text is measured and the shared scrollable text window
+ * (g_wldcore_scrollable_text_window) is sized around it (at most four rows) with a frame window, both
+ * hidden until the step shows them; the parent level's window hides, and the location label and the
+ * map's animation stop (MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL, MAIN_SYSTEM_FLAG_FREEZE_ANIMATION). */
 void wldcore_menu_push_scrollable_text_window_level(s32 text) {
     s16 width;
     s16 rows;

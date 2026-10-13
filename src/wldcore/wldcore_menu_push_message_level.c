@@ -2,10 +2,10 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Appends a window-list record for a text window: optionally reloads the
- * text-section pointers, starts the text-character thread on `text` (mode
- * 0x3b when system flag 0x20000 is set, else 0x33), saves the blocked
- * buttons in the record and blocks them all, and plays sound 0x12. */
+/* Show `text` in the message box as menu level MESSAGE: WORLD's text thread runs it in the message slot
+ * (mode 0x3b while the unit panel threads are in use, else 0x33), reading the text sections at
+ * g_open_text_section_offsets when `reload_text` is set. Every button is withheld from WORLD's menus
+ * until wldcore_menu_finish_close_request pops the level, and the window-open sound plays. */
 void wldcore_menu_push_message_level(s32 text, s32 reload_text) {
     s32 index;
 

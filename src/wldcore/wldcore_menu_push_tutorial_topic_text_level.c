@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
 
-/* Pushes the tutorial topic text window as menu level 0x22: records the topic
+/* Opens a Tips entry's text (level TUTORIAL_TOPIC_TEXT): records the topic
  * id on the new level, sets up the shared scrollable text window at g_wldcore_scrollable_text_window
  * for that topic's text (0x8800 + topic), and hides the parent pair-render
  * level's two windows and its render record with flag 0x10. wldcore_menu_wait_tutorial_topic_text_then_pop_level

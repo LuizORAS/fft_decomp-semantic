@@ -2,16 +2,14 @@
 #include "psx/libgs.h"
 #include "psx/pad.h"
 
-/* Input step for the type-0x14 sound-novel resume level.
+/* Input step of the resume prompt. While the picture's dissolve runs it advances one step per frame.
+ * Up and Down move between Restart and Read from start; Circle fades out and then opens the novel
+ * (wldcore_menu_push_sound_novel_level), first forgetting the saved place for Read from start
+ * (wldcore_sound_novel_reset_selected_record); Cross goes back to the treasure's detail
+ * (wldcore_menu_push_treasure_detail_level).
  *
- * While dissolve_step is set the level is feeding the progressive texture upload at
- * 0x8007f998, one step per frame. Cross tears the level down through thread
- * 14; Circle fades the screen out and defers the teardown to the
- * system-flag-4 path; up and down toggle cursor_row, which moves the owned
- * window record down by 16.
- *
- * wldcore_sound_novel_reset_selected_record ignores its argument; retail still
- * passes g_wldcore_sound_novel_index. */
+ * wldcore_sound_novel_reset_selected_record ignores its argument; retail still passes
+ * g_wldcore_sound_novel_index. */
 void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_level_t* level) {
     GsIMAGE image;
     s32 toggle;

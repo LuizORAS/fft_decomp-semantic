@@ -1,16 +1,13 @@
 #include "fft/wldcore.h"
 
-/* Menu-level step for the scrollable text window at 0x8009eef8. While its
- * render record is hidden (flag 0x10), an unblocked frame plays sound 0x12
- * and shows the level window and the render record again. Otherwise, once
- * 0x800903e4 reports the window finished, it drops one window and one render
- * object, pops the level, clears system flags 0x08002000, shows the parent
- * level's window and resumes the bar menu.
+/* Per-frame step of a location's arrival text: once no fade runs, show the frame and the text with the
+ * window-open sound; when the text window has finished (wldcore_text_is_window_finished), release the
+ * frame, pop the level, let the label and the animation run again, show the parent level's window and
+ * resume it.
  *
- * The target keeps &g_wldcore_scrollable_text_window.render_record_index (the window's render_record_index) in a
- * register and passes it biased by -0x44; addressing the window through
- * wldcore_text_scrollable_window_t materialises a second base and does not
- * match. */
+ * The target keeps &g_wldcore_scrollable_text_window.render_record_index in a register and passes it
+ * biased by -0x44; addressing the window through wldcore_text_scrollable_window_t materialises a second
+ * base and does not match. */
 void wldcore_menu_step_scrollable_text_window_level(wldcore_menu_stack_record_t* level) {
     s32* index = &g_wldcore_scrollable_text_window.render_record_index;
     s32 depth;
