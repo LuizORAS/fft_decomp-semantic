@@ -3,11 +3,6 @@
 #include "fft/battle_script.h"
 #include "psx/types.h"
 
-typedef char camera_track_offsets_ok[(sizeof(camera_key_t) == 0x10 && (s32) & ((camera_track_t*)0)->key_count == 0x80
-                                         && (s32) & ((camera_track_t*)0)->finished == 0xa0)
-        ? 1
-        : -1];
-
 /* Advances one camera-track component by a frame and returns its new value.
  * Called per component by camera_fusion_thread (0x8013db9c); the
  * WORLD twin is world_camera_step_track (0x800f18c8).

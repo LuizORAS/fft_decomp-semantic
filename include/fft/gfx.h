@@ -363,6 +363,7 @@ typedef struct camera_key {
     s32 value; /* 0x04 */
     u8 _unused_08[8];
 } camera_key_t;
+typedef char camera_key_size_must_be_16[sizeof(camera_key_t) == 16 ? 1 : -1];
 
 /* Provisional per-component camera fusion track (0xa4 bytes), seeded by the
  * *_camera_fusion_thread and advanced by *_camera_step_track. */
