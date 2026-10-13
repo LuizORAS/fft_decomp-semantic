@@ -53,7 +53,7 @@ void world_camera_fusion_thread(void) {
         if (key_index == 0) {
             for (i = 0; i < EVENT_CAMERA_COMPONENT_COUNT; i++) {
                 track = &tracks[i];
-                track->keys[key_index].value = g_script_variables[g_world_camera_script_variable_indices[i]];
+                track->keys[key_index].value = g_script_variables[g_camera_script_variable_indices[i]];
                 values[i] = track->keys[key_index].value;
                 if (i < EVENT_CAMERA_POSITION_COMPONENT_COUNT) {
                     track->keys[key_index].value = track->keys[key_index].value / 1024;
@@ -105,20 +105,18 @@ void world_camera_fusion_thread(void) {
     for (;;) {
         track = tracks;
         for (key_index = 0; key_index < EVENT_CAMERA_POSITION_COMPONENT_COUNT; key_index++, track++) {
-            /* The target tests this flag with lhu; the s16 declaration gives lh. */
             if (g_world_camera_position_locked == 0) {
-                g_script_variables[g_world_camera_script_variable_indices[key_index]]
+                g_script_variables[g_camera_script_variable_indices[key_index]]
                     = world_camera_step_track(track, key_index);
             }
         }
         for (key_index = EVENT_CAMERA_COMPONENT_TILT; key_index < EVENT_CAMERA_COMPONENT_COUNT; key_index++, track++) {
-            g_script_variables[g_world_camera_script_variable_indices[key_index]]
-                = world_camera_step_track(track, key_index);
+            g_script_variables[g_camera_script_variable_indices[key_index]] = world_camera_step_track(track, key_index);
         }
         if (tracks[EVENT_CAMERA_COMPONENT_TILT].finished == 1) {
             break;
         }
-        world_camera_clear_zoom_variable_low_bit();
+        camera_clear_zoom_variable_low_bit();
         thread_yield();
     }
 

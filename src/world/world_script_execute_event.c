@@ -93,7 +93,7 @@ void world_script_execute_event(void) {
 restart_event:
     world_script_set_event_speed(1U);
     instruction_offset = 0;
-    world_camera_init_yaw_angle();
+    camera_normalize_yaw_angle();
     {
         s32 empty_unit_id = EVENT_UNIT_SLOT_EMPTY;
         /* Keep the shared fill value available before the countdown initializer. */
@@ -316,7 +316,7 @@ restart_event:
                 }
                 work_index += 1;
             } while (work_index < EVENT_UNIT_SLOT_COUNT);
-            world_camera_init_yaw_angle();
+            camera_normalize_yaw_angle();
             camera_init_tilt_and_zoom();
             thread_exit_current();
         }

@@ -9,12 +9,10 @@
 /* camera */
 
 extern s32 g_world_camera_speed_curve;
-extern u16 g_world_camera_script_variable_indices[EVENT_CAMERA_COMPONENT_COUNT];
 extern u16 g_world_camera_position_locked;
 extern u16 g_world_camera_shake_z_offset;
 extern s32 g_world_camera_yaw_unwrap_request;
 extern s16 g_world_camera_candidate_yaws[4];
-void world_camera_init_yaw_angle(void);
 s32 world_camera_step_track(camera_track_t* track, s32 component);
 s16 world_camera_pick_nearest_unblocked_yaw(s32 runtime_id_a, s32 runtime_id_b);
 void world_camera_fusion_thread(void);
@@ -307,7 +305,6 @@ void world_script_advance_tutorial_highlight_brightness(void);
 void world_script_blue_remove_all_enemy_units(void);
 void world_script_blue_remove_unit(s32 unit_id);
 void world_script_change_stats(const event_change_stats_parameters_t* parameters);
-void world_camera_clear_zoom_variable_low_bit(void);
 void world_script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
 void world_script_copy_matrix(MATRIX* destination, const MATRIX* source);
 void world_script_copy_bytes(void* destination, const void* source, s32 count);

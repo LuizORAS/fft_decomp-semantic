@@ -54,7 +54,7 @@ functions:
   - {addr: 0x800e1eec, size: 20, name: world_sound_queue_sfx_invalid, hash: 2cded14f2af8d448}
   - {addr: 0x800e1f00, size: 40, name: world_menu_stop_thread_with_invalid_sound, hash: 673200a96478bd69}
   - {addr: 0x800e1f28, size: 48, name: camera_wait_until_idle, hash: fecdc06e231e4865, source: src/shared/camera/camera_wait_until_idle.c}
-  - {addr: 0x800e1f58, size: 36, name: world_camera_init_yaw_angle, hash: 4b9b57139167c4c5}
+  - {addr: 0x800e1f58, size: 36, name: camera_normalize_yaw_angle, hash: 4b9b57139167c4c5, source: src/shared/camera/camera_normalize_yaw_angle.c}
   - {addr: 0x800e1f7c, size: 292, name: camera_init_tilt_and_zoom, hash: b488293686882dcf, source: src/shared/camera/camera_init_tilt_and_zoom.c}
   - {addr: 0x800e20a0, size: 52, name: camera_wrap_yaw_angle, hash: 2f0e82c3ed1fb39e, source: src/shared/camera/camera_wrap_yaw_angle.c}
   - {addr: 0x800e20d4, size: 40, name: world_unit_get_battle_stats_for_stored, hash: d8b03fa45f1ad5c5}
@@ -326,7 +326,7 @@ functions:
   - {addr: 0x800f93a0, size: 28, name: script_read_s16, hash: 7f613d531c790362, source: src/shared/script/script_read_s16.c}
   - {addr: 0x800f93bc, size: 16, name: script_write_s16, hash: 71c4790146d56d2c, source: src/shared/script/script_write_s16.c}
   - {addr: 0x800f93cc, size: 64, name: world_map_wait_for_refresh, hash: 6eec356e5c6b9a22}
-  - {addr: 0x800f940c, size: 44, name: world_camera_clear_zoom_variable_low_bit, hash: ce3ca9e1032c0236}
+  - {addr: 0x800f940c, size: 44, name: camera_clear_zoom_variable_low_bit, hash: ce3ca9e1032c0236, source: src/shared/camera/camera_clear_zoom_variable_low_bit.c}
   - {addr: 0x800f9438, size: 1444, name: world_camera_thread, hash: ba7be01d018fa8b3}
   - {addr: 0x800f99dc, size: 120, name: world_script_map_darkness, hash: 0d797a52a22d5438}
   - {addr: 0x800f9a54, size: 176, name: world_script_earthquake_start, hash: 88082e85496cfa40}
@@ -1077,7 +1077,7 @@ data:
   - {addr: 0x801531a0, name: g_world_menu_portrait_pixel_rect}
   - {addr: 0x801531a8, name: g_world_menu_portrait_palette_rect}
   - {addr: 0x801531b0, name: g_world_gfx_texture_window}
-  - {addr: 0x801531b8, name: g_world_camera_script_variable_indices}
+  - {addr: 0x801531b8, name: g_camera_script_variable_indices}
   - {addr: 0x801531c8, name: g_menu_pending_selection}
   - {addr: 0x801531d8, name: g_text_substitution_values}
   - {addr: 0x80153258, name: g_world_menu_transition_active}
