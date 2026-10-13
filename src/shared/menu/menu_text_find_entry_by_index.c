@@ -7,8 +7,7 @@
 const u8* menu_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2) {
     if (count != 0) {
         do {
-            u32 raw = *data++;
-            u32 value = raw & 0xff;
+            u8 value = *data++;
 
             if (value >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                 if (value <= TEXT_EXTENDED_GLYPH_PREFIX_LAST) {
