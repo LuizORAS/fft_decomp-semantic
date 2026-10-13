@@ -11,7 +11,8 @@ void map_reset_script_light_transform(void) {
     setVector(&g_script_light_angles, 0, 0, 0);
     setVector(&g_script_light_scale, ONE, ONE, ONE);
     buffer = map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_GET_LIGHT, buffer, buffer, 0);
-    battle_copy_bytes(&g_script_light_base_direction_matrix, buffer, 0x20);
+    battle_copy_bytes(&g_script_light_base_direction_matrix, buffer, sizeof(g_script_light_base_direction_matrix));
     battle_copy_bytes(&g_script_light_base_color_matrix,
-        map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_GET_COLOR, buffer, buffer, 0), 0x20);
+        map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_GET_COLOR, buffer, buffer, 0),
+        sizeof(g_script_light_base_color_matrix));
 }

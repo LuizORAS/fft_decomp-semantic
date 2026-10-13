@@ -39,24 +39,22 @@ void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index) {
 
     row = 0;
     source_row = 0;
-    do {
+    for (; row < OPEN_IMAGE_COPY_HEIGHT; row++) {
         column = 0;
         source_offset = row << 8;
-        do {
+        while (column < OPEN_IMAGE_COPY_WIDTH) {
             destination_index = source_row + column;
-            source_index = source_offset + column;
-            column++;
+            source_index = source_offset + column++;
             destination_index <<= 1;
             pixels = g_open_gfx_image_copy_file_pixels;
             source_index <<= 1;
             /* index + (u32)pointer: the retail addu sums index first. */
             value = *(u16*)(source_index + (u32)pixels);
             *(u16*)(destination_index + (u32)g_open_gfx_image_copy_destination_buffer) = value;
-        } while (column < OPEN_IMAGE_COPY_WIDTH);
+        }
         g_open_gfx_image_copy_row_flags[row + 2] = 0;
-        row++;
         source_row += OPEN_IMAGE_COPY_WIDTH;
-    } while (row < OPEN_IMAGE_COPY_HEIGHT);
+    }
 
     g_open_gfx_image_copy_row_flags[0] = 0;
     g_open_gfx_image_copy_row_flags[1] = 0;

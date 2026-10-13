@@ -14,7 +14,7 @@ void camera_update_matrices(MATRIX* camera_matrix, SVECTOR* rotation, VECTOR* sc
     long result;
 
     g_map_camera_zoom = *camera_zoom;
-    memcpy(&g_map_camera_rotation, rotation, 8);
+    memcpy(&g_map_camera_rotation, rotation, sizeof(g_map_camera_rotation));
 
     RotMatrix(rotation, camera_matrix);
     TransMatrix(camera_matrix, screen_offset);
