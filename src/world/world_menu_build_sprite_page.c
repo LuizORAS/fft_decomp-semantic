@@ -6,7 +6,7 @@
 /* Build one of the two double-buffered menu sprite pages: five draw-mode
  * packets (texture window per sprite) followed by five sprites placed from
  * the parameter table, then submit them all in reverse order. */
-void world_menu_build_sprite_page(s32 page_index, RECT* base_screen) {
+void world_menu_build_sprite_page(s32 page_index, const RECT* base_screen) {
     s32 i;
     menu_sprite_page_t* page = &g_world_menu_panel_buffer.sprite_pages[page_index & 1];
 

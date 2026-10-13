@@ -937,7 +937,7 @@ void world_panel_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* pac
 
 void world_gfx_add_draw_area_primitive(RECT* rect, s32 otag_index);
 void world_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* texture_window, s32 ot_index);
-void world_gfx_enqueue_draw_move(RECT* src, s32 x, s32 y, s32 ot_index);
+void world_gfx_enqueue_draw_move(const RECT* src, s32 x, s32 y, s32 ot_index);
 
 void world_gfx_enqueue_textured_quad_list(
     menu_sprite_cell_t* cell, rgb24_t* rgb, s32 semi_trans, u16 tpage, u16 clut, s32 ot_index, s32 count);
@@ -2369,7 +2369,7 @@ void world_menu_animate_window_quads_to_rects(menu_window_buffer_t* buffers, REC
 void world_menu_build_ability_list(s32 mode);
 void world_menu_build_and_upload_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset);
 void world_menu_build_idle_action_stub(s32 unused_menu_id);
-void world_menu_build_sprite_page(s32 page_index, RECT* base_screen);
+void world_menu_build_sprite_page(s32 page_index, const RECT* base_screen);
 void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_unit);
 void world_menu_release_current_thread_slot(void);
 
@@ -2523,7 +2523,7 @@ void world_menu_set_default_entry_1_text_values(s32 value);
 void world_menu_set_draw_priority(s32 priority);
 void world_menu_set_palette_colors(const menu_palette_pair_t* source);
 void world_menu_set_palette_mode(s32 mode);
-void world_menu_set_sprite_color(rgb24_t* src);
+void world_menu_set_sprite_color(const rgb24_t* src);
 void world_menu_set_transition_active_flag(void);
 void world_menu_set_window_scale_step(s8 step);
 void world_menu_start_at_list_thread(void);
