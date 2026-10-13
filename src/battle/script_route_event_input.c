@@ -16,7 +16,7 @@ void script_route_event_input(void) {
     if (g_script_event_input == 0) {
         g_script_saved_event_input = 0;
     }
-    if (g_battle_thread_task_ids[thread][0] == NATIVE_THREAD_TASK_RESUME) {
+    if (g_battle_thread_contexts[thread].task_id == NATIVE_THREAD_TASK_RESUME) {
         g_script_event_input = g_script_unfiltered_controller_input;
     } else {
         g_script_event_input = g_script_saved_event_input;

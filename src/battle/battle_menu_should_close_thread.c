@@ -21,7 +21,7 @@ s32 battle_menu_should_close_thread(u32* input) {
     task_state = 3;
     for (; i < 16; i++) {
         if (i != g_battle_current_thread_id && battle_thread_is_running_asm(i) != 0
-            && g_battle_thread_task_ids[i][0] == task_state) {
+            && g_battle_thread_contexts[i].task_id == task_state) {
             *input = 0;
             break;
         }

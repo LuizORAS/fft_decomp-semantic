@@ -10,11 +10,6 @@ extern s32 g_battle_current_thread_id;
 /* Full BATTLE backing array at 0x8016986c. The pointer slot 0x80165f98 is
  * separate. */
 extern native_thread_t g_battle_thread_contexts[];
-/* View of g_battle_thread_contexts biased to task_id (0x801698b8): [i][0] is
- * thread i's task_id and [i][1] its task_words[0]. Target code addresses the
- * biased symbol directly, so it must not be rebound to the context base. The
- * WORLD twin is g_world_thread_task_ids. */
-extern s32 g_battle_thread_task_ids[][256];
 /* Pointer slot at 0x80165f98, set to g_battle_thread_contexts by
  * battle_menu_init_subsystem_pointers. Records have a 1024-byte stride;
  * scheduler helpers read is_running at 0x48 and task_id at 0x4c. */

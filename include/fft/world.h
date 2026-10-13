@@ -514,7 +514,6 @@ extern u8 g_world_thread_status_snapshot[16];
  * world_input_update_with_message_state clears it once thread 1 stops. Menus drop
  * input and dim their palette while it is set. */
 extern s32 g_world_thread_task_active;
-extern s32 g_world_thread_task_ids[][256];
 extern menu_gradient_panel_prims_t g_world_thread_indicator_packets[2][2];
 extern crystal_pickup_result_t* g_world_thread_inner_subroutine_result;
 

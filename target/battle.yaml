@@ -2526,7 +2526,6 @@ data:
   - {addr: 0x8016982c, name: g_battle_menu_selected_action}
   - {addr: 0x80169840, name: g_battle_menu_action_menu_build_result}
   - {addr: 0x8016986c, name: g_battle_thread_contexts}
-  - {addr: 0x801698b8, name: g_battle_thread_task_ids}
   - {addr: 0x8016996c, name: g_battle_unit_summary_digit_images}
   - {addr: 0x80169a6c, name: g_battle_numeric_display_palettes}
   - {addr: 0x8016d16c, name: g_battle_unit_editor_palette}

@@ -690,9 +690,9 @@ void world_text_character_handling_thread(void) {
         } else if (code == TEXT_RELEASE_WAITING_THREADS) {
             for (i = 0; i < 0x11; i++) {
                 if (g_world_thread_current_id != i
-                    && g_world_thread_task_ids[i][0] == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
+                    && g_world_thread_contexts[i].task_id == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
                     && world_thread_is_running_asm(i)) {
-                    g_world_thread_task_ids[i][0] = NATIVE_THREAD_TASK_RESUME;
+                    g_world_thread_contexts[i].task_id = NATIVE_THREAD_TASK_RESUME;
                 }
             }
             world_thread_yield();

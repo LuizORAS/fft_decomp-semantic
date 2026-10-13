@@ -9,7 +9,7 @@ s32 battle_thread_find_running_by_task(s32 task_id) {
 
     for (thread_id = 1; thread_id < NATIVE_THREAD_SLOT_COUNT; thread_id++) {
         if (thread_id != g_battle_current_thread_id && battle_thread_is_running_asm(thread_id) != 0
-            && g_battle_thread_task_ids[thread_id][0] == task_id) {
+            && g_battle_thread_contexts[thread_id].task_id == task_id) {
             return thread_id;
         }
     }
