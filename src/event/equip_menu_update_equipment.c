@@ -1,5 +1,6 @@
 #include "fft/event_equip.h"
 #include "fft/gfx.h"
+#include "fft/menu.h"
 
 /* Runs one frame of the equipment menu state machine.
  *
@@ -53,7 +54,7 @@ s32 equip_menu_update_equipment(void) {
 
     input = 0;
     if (g_equip_menu_substate < 2) {
-        input = g_equip_input_primary_repeat;
+        input = g_menu_input_primary_repeat;
         g_equip_input_page_scroll_disabled = 0;
     } else {
         g_equip_input_page_scroll_disabled = 1;

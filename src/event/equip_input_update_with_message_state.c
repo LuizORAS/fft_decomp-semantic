@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -18,7 +19,7 @@ void equip_input_update_with_message_state(void) {
     s32 delay;
 
     running = 0;
-    equip_input_update_controller();
+    menu_input_update_controller();
     frame = equip_gfx_get_transition_frame();
     if (frame >= 1 && frame <= 3) {
         equip_input_clear_state();
@@ -40,11 +41,11 @@ void equip_input_update_with_message_state(void) {
     delay = g_equip_input_lock_timer;
     if (delay != 0) {
         g_equip_input_lock_timer = delay - 1;
-        g_equip_input_primary_repeat &= ~PSX_PAD_L2;
-        g_equip_input_secondary_repeat &= ~PSX_PAD_L2;
-        g_equip_input_newly_pressed &= ~PSX_PAD_L2;
+        g_menu_input_primary_repeat &= ~PSX_PAD_L2;
+        g_menu_input_secondary_repeat &= ~PSX_PAD_L2;
+        g_menu_input_newly_pressed &= ~PSX_PAD_L2;
     }
-    if (g_equip_input_primary_repeat != 0) {
+    if (g_menu_input_primary_repeat != 0) {
         g_equip_input_lock_timer = 5;
     }
     if (running == 0) {

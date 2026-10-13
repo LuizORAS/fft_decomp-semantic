@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Stream command: draw a textured quad of size (command[5], command[6]) at
@@ -16,7 +17,7 @@ u8* card_cmd_draw_textured_quad_handler(u8* command) {
     rect.y = y;
     rect.w = command[5];
     rect.h = command[6];
-    color = &g_card_text_color;
+    color = &g_menu_text_color;
     if (command[0] == MENU_SCRIPT_OP_UNCOLOURED_QUAD) {
         color = 0;
     }

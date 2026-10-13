@@ -243,23 +243,12 @@ typedef enum card_save_menu_state {
     CARD_SAVE_MENU_CLOSING = 0xff /* fading out; no state handler runs */
 } card_save_menu_state_e;
 
-extern u16 g_card_menu_active_clut_back;
-extern u16 g_card_menu_active_clut_front;
-extern u16 g_card_menu_alternate_number_clut;
 extern const s8 g_card_menu_cursor_forward_offset_keyframes[];
-extern u16 g_card_menu_cursor_mode0_background_clut;
-extern u16 g_card_menu_cursor_mode0_foreground_clut;
-extern u16 g_card_menu_cursor_mode1_background_clut;
-extern u16 g_card_menu_cursor_mode1_foreground_clut;
 extern const s8 g_card_menu_cursor_reverse_offset_keyframes[];
 extern u16 g_card_menu_cursor_texture_page;
-extern u16 g_card_menu_disabled_number_clut;
 extern s8 g_card_menu_event_speed;
-extern u16 g_card_menu_palette_clut;
 extern s32 g_card_menu_script_callback;
 extern s16 g_card_menu_selection_index;
-extern s8 g_card_menu_use_alternate_palette;
-extern u16 g_card_menu_window_clut;
 extern menu_window_rect_source_t* g_card_menu_window_rect_source;
 extern s16 g_card_menu_window_right_x;
 extern clut_t g_card_save_menu_clut;
@@ -268,7 +257,6 @@ extern u8 g_card_save_menu_state; /* card_save_menu_state_e */
 extern DIRENTRY* g_card_save_menu_work_buffer;
 
 s32 card_menu_get_event_speed(void);
-void card_menu_set_palette_mode(s32 mode);
 void card_menu_start_or_poll_thread(s32 thread_id, menu_entry_t* descriptor);
 void card_menu_update_and_draw_animated_cursor(const point16_t* position, u16* animation_state, s32 mode);
 void card_save_init_menu_graphics(void);
@@ -284,15 +272,6 @@ menu_window_command_t* card_cmd_draw_window_frame_handler(menu_window_command_t*
 
 /* text */
 extern s16 g_card_save_slot_text_row_ids[];
-extern u16 g_card_text_clut_0_mode0;
-extern u16 g_card_text_clut_0_mode1;
-extern u16 g_card_text_clut_1_mode0;
-extern u16 g_card_text_clut_1_mode1;
-extern u16 g_card_text_clut_2_mode0;
-extern u16 g_card_text_clut_2_mode1;
-extern u16 g_card_text_clut_3_mode0;
-extern u16 g_card_text_clut_3_mode1;
-extern rgb24_t g_card_text_color;
 extern const u8 g_card_text_command_help[];
 extern u8 g_card_text_data[];
 extern const char g_card_text_decimal_format[];

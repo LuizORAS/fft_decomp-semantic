@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Advances the animated cursor at `position` and draws it, sliding
@@ -78,11 +79,11 @@ void card_menu_update_and_draw_animated_cursor(const point16_t* position, u16* a
     }
 
     if (mode != 0) {
-        foreground_clut = g_card_menu_cursor_mode1_foreground_clut;
-        background_clut = g_card_menu_cursor_mode1_background_clut;
+        foreground_clut = g_menu_cursor_mode1_foreground_clut;
+        background_clut = g_menu_cursor_mode1_background_clut;
     } else {
-        foreground_clut = g_card_menu_cursor_mode0_foreground_clut;
-        background_clut = g_card_menu_cursor_mode0_background_clut;
+        foreground_clut = g_menu_cursor_mode0_foreground_clut;
+        background_clut = g_menu_cursor_mode0_background_clut;
     }
 
     rect.x = x_offset + position->x - 2;

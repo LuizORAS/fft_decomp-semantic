@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -27,12 +28,12 @@ s32 equip_item_run_rearrange_mode(void) {
         g_equip_rearrange_picked_scroll = g_equip_menu_scroll_base_index;
     }
     g_equip_text_help_message_id = -1;
-    if (g_equip_input_primary_repeat & PSX_PAD_CROSS) {
+    if (g_menu_input_primary_repeat & PSX_PAD_CROSS) {
         g_equip_rearrange_active = 0;
         g_equip_sound_queued_effect_id = MAIN_SFX_CANCEL;
         return MENU_ITEM_LIST_STATE_BROWSE;
     }
-    value = g_equip_input_primary_repeat;
+    value = g_menu_input_primary_repeat;
     if (value & PSX_PAD_CIRCLE) {
         cursor = g_equip_menu_selected_list_index;
         picked = g_equip_rearrange_picked_cursor;

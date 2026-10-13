@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -120,7 +121,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
         }
         card_gfx_set_otag_index(10);
         value = row != g_card_save_list_cursor_index || scrolling != 0;
-        card_menu_set_palette_mode(value);
+        menu_set_palette_mode(value);
         card_cmd_draw_window_frame_handler(&g_card_save_slot_window_command);
         g_card_save_slot_quads[3].position.y = g_card_save_slot_quads[4].position.y
             = g_card_save_slot_quads[0].position.y = g_card_save_slot_quads[1].position.y = g_card_save_slot_row_y - 14;
@@ -178,7 +179,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
             texture_page = GetTPage(0, 0, 0x180, 0);
             source_v = (index - 11) * 0x20 + 0x60;
         }
-        card_gfx_enqueue_textured_quad(&rect, 0, source_v, 0, 0, texture_page, g_card_menu_window_clut, 11);
+        card_gfx_enqueue_textured_quad(&rect, 0, source_v, 0, 0, texture_page, g_menu_window_clut, 11);
     }
 
     card_gfx_set_otag_index(15);
@@ -193,9 +194,9 @@ void card_save_update_and_draw_slot_list(u16 input) {
     card_menu_update_and_draw_animated_cursor(
         &g_card_save_slot_cursor_position, &g_card_save_slot_cursor_animation, scrolling);
     if (g_battle_menu_input_lock_mode != 0) {
-        cursor_clut = g_card_menu_cursor_mode1_foreground_clut;
+        cursor_clut = g_menu_cursor_mode1_foreground_clut;
     } else {
-        cursor_clut = g_card_menu_cursor_mode0_foreground_clut;
+        cursor_clut = g_menu_cursor_mode0_foreground_clut;
     }
     if (g_card_save_list_top_row != 0) {
         rect.x = 0xe3;
@@ -203,7 +204,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
         rect.w = 8;
         rect.h = 0x10;
         card_gfx_enqueue_textured_quad(
-            &rect, 0xd8, 0, 0, 0, g_card_menu_cursor_texture_page, g_card_menu_cursor_mode0_foreground_clut, 15);
+            &rect, 0xd8, 0, 0, 0, g_card_menu_cursor_texture_page, g_menu_cursor_mode0_foreground_clut, 15);
     }
     if (g_card_save_occupied_slot_count - g_card_save_list_top_row >= 5) {
         rect.x = 0xe3;
@@ -211,6 +212,6 @@ void card_save_update_and_draw_slot_list(u16 input) {
         rect.w = 8;
         rect.h = 0x10;
         card_gfx_enqueue_textured_quad(
-            &rect, 0xe0, 0, 0, 0, g_card_menu_cursor_texture_page, g_card_menu_cursor_mode0_foreground_clut, 15);
+            &rect, 0xe0, 0, 0, 0, g_card_menu_cursor_texture_page, g_menu_cursor_mode0_foreground_clut, 15);
     }
 }

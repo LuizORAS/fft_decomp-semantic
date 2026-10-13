@@ -570,21 +570,13 @@ void equip_gfx_set_transition_frame(s32 value);
 void equip_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused);
 
 /* input */
-extern u8 g_equip_input_activation_timer;
-extern u16 g_equip_input_latched_button;
 extern u8 g_equip_input_lock_timer;
-extern u16 g_equip_input_newly_pressed;
 extern u8 g_equip_input_page_scroll_disabled;
 extern u16 g_equip_input_page_scroll_hold_frames;
-extern u16 g_equip_input_previous;
-extern u32 g_equip_input_primary_repeat;
-extern s32 g_equip_input_repeat_counters[16];
-extern u32 g_equip_input_secondary_repeat;
 
 void equip_input_clear_state(void);
 s32 equip_input_read_page_scroll_direction(void);
 void equip_input_update_with_message_state(void);
-void equip_input_update_controller(void);
 
 /* menu commands */
 /* Render-command stream callbacks: every handler consumes and returns a

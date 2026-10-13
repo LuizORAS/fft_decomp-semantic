@@ -1,4 +1,5 @@
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
 
 /* Draw a textured quad, unshaded for opcode 4. During list rendering,
  * offset its y coordinate by the current row and scroll position. */
@@ -20,7 +21,7 @@ menu_instruction_t* jobstts_cmd_draw_textured_quad_handler(menu_instruction_t* d
     rect.y = y;
     rect.w = data->sprite.sprite.w;
     rect.h = data->sprite.sprite.h;
-    color = &g_jobstts_text_color;
+    color = &g_menu_text_color;
     if (data->header.opcode == MENU_SCRIPT_OP_UNCOLOURED_QUAD) {
         color = 0;
     }

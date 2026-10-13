@@ -92,17 +92,9 @@ typedef enum jobstts_page_scroll_direction {
 } jobstts_menu_page_scroll_direction_e;
 
 extern s32 g_jobstts_job_list_menu_initialized;
-extern u16 g_jobstts_menu_active_clut_back;
-extern u16 g_jobstts_menu_active_clut_front;
-extern u16 g_jobstts_menu_alternate_number_clut;
 extern s8 g_jobstts_menu_cursor_forward_offset_keyframes[];
-extern u16 g_jobstts_menu_cursor_mode0_background_clut;
-extern u16 g_jobstts_menu_cursor_mode0_foreground_clut;
-extern u16 g_jobstts_menu_cursor_mode1_background_clut;
-extern u16 g_jobstts_menu_cursor_mode1_foreground_clut;
 extern s8 g_jobstts_menu_cursor_reverse_offset_keyframes[];
 extern u16 g_jobstts_menu_cursor_texture_page;
-extern u16 g_jobstts_menu_disabled_number_clut;
 extern s8 g_jobstts_menu_event_speed;
 
 extern u16 g_jobstts_menu_list_cursor_anim_state;
@@ -123,13 +115,10 @@ extern u8 g_jobstts_menu_list_text_columns;
 extern u8* g_jobstts_menu_list_text_table;
 extern s16 g_jobstts_menu_list_visible_rows;
 extern u16 g_jobstts_menu_list_vram_width;
-extern u16 g_jobstts_menu_palette_clut;
 extern u8 g_jobstts_menu_palette_image[];
 extern s16 g_jobstts_menu_scroll_base_index;
 extern menu_selection_record_t g_jobstts_menu_selection_records[5];
 extern u16 g_jobstts_menu_selection_values[];
-extern u8 g_jobstts_menu_use_alternate_palette;
-extern u16 g_jobstts_menu_window_clut;
 /* Window right edge; WORLD's twin stores it to g_world_menu_window_right_x. */
 extern s16 g_jobstts_menu_window_right_x;
 
@@ -147,7 +136,6 @@ void jobstts_menu_init_scrollable_list(s16* entries, s32 selected_index, s32 scr
 void jobstts_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* text_table);
 void jobstts_menu_load_images_and_clear_selection(void);
 void jobstts_menu_scroll_list_by_page(jobstts_menu_page_scroll_direction_e direction, const menu_instruction_t* list);
-void jobstts_menu_set_palette_mode(s32 mode);
 void jobstts_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_index, s16* abilities);
 void jobstts_menu_update_and_draw_animated_cursor(point16_t* anchor, u16* state, s32 mode);
 s32 jobstts_menu_update_job_list(void);
@@ -277,19 +265,11 @@ void jobstts_gfx_set_transition_frame(s32 frame);
 void jobstts_gfx_swap_context_and_clear_otag(s32 first_otag, s32 unused);
 
 /* input */
-extern u8 g_jobstts_input_activation_timer;
-extern u16 g_jobstts_input_latched_button;
 extern u8 g_jobstts_input_lock_timer;
-extern u16 g_jobstts_input_newly_pressed;
 extern u16 g_jobstts_input_page_scroll_hold_frames;
-extern u16 g_jobstts_input_previous;
-extern s32 g_jobstts_input_primary_repeat;
-extern s32 g_jobstts_input_repeat_counters[16];
-extern s32 g_jobstts_input_secondary_repeat;
 
 jobstts_menu_page_scroll_direction_e jobstts_input_read_page_scroll_direction(void);
 void jobstts_input_update_with_message_state(void);
-void jobstts_input_update_controller(void);
 
 /* menu commands */
 /* Render-command stream callbacks: every handler consumes and returns a
@@ -330,15 +310,6 @@ menu_instruction_t* jobstts_cmd_set_tpage_handler(menu_instruction_t* instructio
 menu_instruction_t* jobstts_cmd_skip_group(menu_instruction_t* instruction);
 
 /* text */
-extern u16 g_jobstts_text_clut_0_mode0;
-extern u16 g_jobstts_text_clut_0_mode1;
-extern u16 g_jobstts_text_clut_1_mode0;
-extern u16 g_jobstts_text_clut_1_mode1;
-extern u16 g_jobstts_text_clut_2_mode0;
-extern u16 g_jobstts_text_clut_2_mode1;
-extern u16 g_jobstts_text_clut_3_mode0;
-extern u16 g_jobstts_text_clut_3_mode1;
-extern rgb24_t g_jobstts_text_color;
 /* The "%d" literal that JOBSTTS.OUT keeps at overlay file offset 0, i.e. the
  * three data bytes ahead of the first function. */
 extern const char g_jobstts_text_decimal_format[];

@@ -902,7 +902,7 @@ functions:
   - {addr: 0x801c670c, size: 652, name: card_menu_update_and_draw_animated_cursor, hash: d2bf3388d465f9d3}
   - {addr: 0x801c6998, size: 44, name: card_gfx_set_draw_color, hash: 56f9f1312189e13e}
   - {addr: 0x801c69c4, size: 16, name: card_gfx_set_otag_index, hash: e32615753d53f066}
-  - {addr: 0x801c69d4, size: 220, name: card_menu_set_palette_mode, hash: 54dc2b565735014d}
+  - {addr: 0x801c69d4, size: 220, name: menu_set_palette_mode, hash: 54dc2b565735014d, source: src/shared/menu/menu_set_palette_mode.c}
   - {addr: 0x801c6ab0, size: 16, name: card_gfx_get_draw_color, hash: d7432486c75c5701}
   - {addr: 0x801c6ac0, size: 308, name: card_text_render_glyph_to_4bpp_image, hash: 57bd6d2052065015}
   - {addr: 0x801c6bf4, size: 92, name: card_text_find_entry_by_index, hash: f63f536b1105c27b}
@@ -1002,18 +1002,18 @@ data:
   - {addr: 0x801ca890, name: g_card_menu_event_speed}
   - {addr: 0x801ca89c, name: g_card_text_digit_texture_page}
   - {addr: 0x801ca89e, name: g_card_menu_cursor_texture_page}
-  - {addr: 0x801ca8a0, name: g_card_text_clut_2_mode0}
-  - {addr: 0x801ca8a2, name: g_card_text_clut_2_mode1}
-  - {addr: 0x801ca8a4, name: g_card_text_clut_1_mode1}
-  - {addr: 0x801ca8a6, name: g_card_text_clut_1_mode0}
-  - {addr: 0x801ca8a8, name: g_card_text_clut_3_mode0}
-  - {addr: 0x801ca8aa, name: g_card_text_clut_3_mode1}
-  - {addr: 0x801ca8ae, name: g_card_menu_cursor_mode0_foreground_clut}
-  - {addr: 0x801ca8b0, name: g_card_menu_cursor_mode0_background_clut}
-  - {addr: 0x801ca8b2, name: g_card_menu_cursor_mode1_foreground_clut}
-  - {addr: 0x801ca8b4, name: g_card_menu_cursor_mode1_background_clut}
-  - {addr: 0x801ca8c4, name: g_card_text_clut_0_mode1}
-  - {addr: 0x801ca8c6, name: g_card_text_clut_0_mode0}
+  - {addr: 0x801ca8a0, name: g_menu_text_clut_2_mode0}
+  - {addr: 0x801ca8a2, name: g_menu_text_clut_2_mode1}
+  - {addr: 0x801ca8a4, name: g_menu_text_clut_1_mode1}
+  - {addr: 0x801ca8a6, name: g_menu_text_clut_1_mode0}
+  - {addr: 0x801ca8a8, name: g_menu_text_clut_3_mode0}
+  - {addr: 0x801ca8aa, name: g_menu_text_clut_3_mode1}
+  - {addr: 0x801ca8ae, name: g_menu_cursor_mode0_foreground_clut}
+  - {addr: 0x801ca8b0, name: g_menu_cursor_mode0_background_clut}
+  - {addr: 0x801ca8b2, name: g_menu_cursor_mode1_foreground_clut}
+  - {addr: 0x801ca8b4, name: g_menu_cursor_mode1_background_clut}
+  - {addr: 0x801ca8c4, name: g_menu_text_clut_0_mode1}
+  - {addr: 0x801ca8c6, name: g_menu_text_clut_0_mode0}
   - {addr: 0x801ca910, name: g_card_cmd_window_interior_command}
   - {addr: 0x801ca918, name: g_card_menu_cursor_forward_offset_keyframes}
   - {addr: 0x801ca924, name: g_card_menu_cursor_reverse_offset_keyframes}
@@ -1052,13 +1052,13 @@ data:
   - {addr: 0x801d8864, name: g_card_thread_status_snapshot}
   - {addr: 0x801d8874, name: g_card_gfx_scaled_sprite_primitive_buffers}
   - {addr: 0x801d91d4, name: g_card_gfx_render_otag}
-  - {addr: 0x801d91d8, name: g_card_text_color}
+  - {addr: 0x801d91d8, name: g_menu_text_color}
   - {addr: 0x801d91dc, name: g_card_text_otag_index}
   - {addr: 0x801d91e0, name: g_card_gfx_draw_semitrans}
   - {addr: 0x801d91e4, name: g_card_menu_window_right_x}
   - {addr: 0x801d91f0, name: g_card_gfx_texture_page}
   - {addr: 0x801d91f4, name: g_card_gfx_draw_clut}
-  - {addr: 0x801d91f8, name: g_card_menu_use_alternate_palette}
+  - {addr: 0x801d91f8, name: g_menu_use_alternate_palette}
   - {addr: 0x801d9202, name: g_card_gfx_tiled_rect}
   - {addr: 0x801d920c, name: g_card_thread_active_key}
   - {addr: 0x801d9210, name: g_card_bits_primary_cursor}
@@ -1069,22 +1069,22 @@ data:
   - {addr: 0x801d9260, name: g_card_gfx_fade_color}
   - {addr: 0x801d9264, name: g_card_gfx_fade_intensity}
   - {addr: 0x801d9268, name: g_card_input_newly_pressed}
-  - {addr: 0x801d926c, name: g_card_menu_disabled_number_clut}
+  - {addr: 0x801d926c, name: g_menu_disabled_number_clut}
   - {addr: 0x801d9270, name: g_card_gfx_poly_ft4_capacity}
-  - {addr: 0x801d9274, name: g_card_menu_palette_clut}
+  - {addr: 0x801d9274, name: g_menu_palette_clut}
   - {addr: 0x801d9278, name: g_card_gfx_poly_ft4_count}
   - {addr: 0x801d927c, name: g_card_gfx_drawenv_y}
-  - {addr: 0x801d9280, name: g_card_menu_alternate_number_clut}
+  - {addr: 0x801d9280, name: g_menu_alternate_number_clut}
   - {addr: 0x801d9288, name: g_card_gfx_otag_length}
   - {addr: 0x801d928c, name: g_card_gfx_tile_capacity}
   - {addr: 0x801d9290, name: g_card_gfx_tile_count}
   - {addr: 0x801d9294, name: g_card_gfx_context}
   - {addr: 0x801d9298, name: g_card_input_primary_repeat}
-  - {addr: 0x801d92a0, name: g_card_menu_window_clut}
-  - {addr: 0x801d92a4, name: g_card_menu_active_clut_front}
+  - {addr: 0x801d92a0, name: g_menu_window_clut}
+  - {addr: 0x801d92a4, name: g_menu_active_clut_front}
   - {addr: 0x801d92a8, name: g_card_gfx_context_base}
   - {addr: 0x801d92ac, name: g_card_input_secondary_repeat}
-  - {addr: 0x801d92b0, name: g_card_menu_active_clut_back}
+  - {addr: 0x801d92b0, name: g_menu_active_clut_back}
   - {addr: 0x801d92b4, name: g_card_menu_window_rect_source}
   - {addr: 0x801d92b8, name: g_card_menu_script_callback}
 
@@ -1375,7 +1375,7 @@ functions:
   - {addr: 0x801c9024, size: 40, name: equip_thread_stop_and_clear_state, hash: be4dbfe6e8168a66}
   - {addr: 0x801c904c, size: 156, name: equip_thread_start_managed, hash: 8a302f302bc0aafe}
   - {addr: 0x801c90e8, size: 124, name: equip_text_start_help_thread, hash: 214e1e5f54bfe73c}
-  - {addr: 0x801c9164, size: 832, name: equip_input_update_controller, hash: 65ff61bb1c34603f}
+  - {addr: 0x801c9164, size: 832, name: menu_input_update_controller, hash: 65ff61bb1c34603f, source: src/shared/menu/menu_input_update_controller.c}
   - {addr: 0x801c94a4, size: 16, name: equip_set_s16_801d86ac, hash: aadf313708db9276}
   - {addr: 0x801c94b4, size: 336, name: equip_input_update_with_message_state, hash: 63f30df9b75d076f}
   - {addr: 0x801c9604, size: 36, name: equip_menu_clear_selection_values, hash: 8592e44c9c9b0dea}
@@ -1566,8 +1566,8 @@ data:
   - {addr: 0x801cfbb8, name: g_equip_text_message_thread_active}
   - {addr: 0x801cfbd4, name: g_equip_thread_state}
   - {addr: 0x801cfbd8, name: g_equip_help_text_table}
-  - {addr: 0x801d86a8, name: g_equip_input_latched_button}
-  - {addr: 0x801d86aa, name: g_equip_input_activation_timer}
+  - {addr: 0x801d86a8, name: g_menu_input_latched_button}
+  - {addr: 0x801d86aa, name: g_menu_input_activation_timer}
   - {addr: 0x801d86ac, name: D_801d86ac}
   - {addr: 0x801d86ae, name: g_equip_text_thread_running_state}
   - {addr: 0x801d86af, name: g_equip_input_lock_timer}
@@ -1661,8 +1661,8 @@ data:
   - {addr: 0x801e8db0, name: g_equip_unit_saved_mp}
   - {addr: 0x801e8db4, name: g_equip_unit_records}
   - {addr: 0x801e8ea8, name: g_equip_item_inventory_totals}
-  - {addr: 0x801e8fa8, name: g_equip_input_repeat_counters}
-  - {addr: 0x801e8fe8, name: g_equip_input_previous}
+  - {addr: 0x801e8fa8, name: g_menu_input_repeat_counters}
+  - {addr: 0x801e8fe8, name: g_menu_input_previous}
   - {addr: 0x801e8fec, name: g_equip_menu_selection_values}
   - {addr: 0x801e8ff4, name: g_equip_menu_list_scroll_progress}
   - {addr: 0x801e8ff8, name: g_equip_gfx_sprite_color}
@@ -1688,7 +1688,7 @@ data:
   - {addr: 0x801e9052, name: g_equip_gfx_tiled_rect}
   - {addr: 0x801e905c, name: g_equip_bits_reader_1_stream}
   - {addr: 0x801e9060, name: g_equip_bits_reader_2_stream}
-  - {addr: 0x801e9064, name: g_equip_input_newly_pressed}
+  - {addr: 0x801e9064, name: g_menu_input_newly_pressed}
   - {addr: 0x801e9068, name: g_equip_gfx_poly_f3_capacity}
   - {addr: 0x801e906c, name: g_equip_gfx_poly_g3_capacity}
   - {addr: 0x801e9070, name: g_equip_gfx_poly_f4_capacity}
@@ -1737,7 +1737,7 @@ data:
   - {addr: 0x801e9234, name: g_equip_gfx_tile_count}
   - {addr: 0x801e9238, name: g_equip_gfx_draw_move_count}
   - {addr: 0x801e923c, name: g_equip_gfx_context}
-  - {addr: 0x801e9240, name: g_equip_input_primary_repeat}
+  - {addr: 0x801e9240, name: g_menu_input_primary_repeat}
   - {addr: 0x801e9244, name: g_equip_gfx_sprite_count}
   - {addr: 0x801e9248, name: g_equip_menu_scroll_base_index}
   - {addr: 0x801e924c, name: g_equip_gfx_tile_1_capacity}
@@ -1749,7 +1749,7 @@ data:
   - {addr: 0x801e92e0, name: g_equip_gfx_tile_8_count}
   - {addr: 0x801e92e4, name: g_equip_unit_data}
   - {addr: 0x801e92ec, name: g_equip_gfx_context_base}
-  - {addr: 0x801e92f0, name: g_equip_input_secondary_repeat}
+  - {addr: 0x801e92f0, name: g_menu_input_secondary_repeat}
   - {addr: 0x801e92f4, name: g_equip_gfx_sprite_8_count}
   - {addr: 0x801e92f8, name: g_equip_gfx_tile_16_capacity}
   - {addr: 0x801e92fc, name: g_equip_menu_active_clut_back}
@@ -1876,7 +1876,7 @@ functions:
   - {addr: 0x801e079c, size: 648, name: jobstts_text_render_encoded_ids_to_image, hash: 8d74937185196c66}
   - {addr: 0x801e0a24, size: 264, name: jobstts_text_render_id_rows_to_vram, hash: 5241f714170cf25b}
   - {addr: 0x801e0b2c, size: 124, name: jobstts_text_start_help_thread, hash: f382afd4abb92b11}
-  - {addr: 0x801e0ba8, size: 832, name: jobstts_input_update_controller, hash: bbe451779e50aed3}
+  - {addr: 0x801e0ba8, size: 832, name: menu_input_update_controller, hash: bbe451779e50aed3, source: src/shared/menu/menu_input_update_controller.c}
   - {addr: 0x801e0ee8, size: 360, name: jobstts_input_update_with_message_state, hash: 150bea20a0faa1ea}
   - {addr: 0x801e1050, size: 36, name: jobstts_menu_clear_selection_values, hash: f714166590860d01}
   - {addr: 0x801e1074, size: 168, name: jobstts_menu_update_wrapped_horizontal_selection, hash: 5953cfbb7a4e9efe}
@@ -1911,7 +1911,7 @@ functions:
   - {addr: 0x801e3698, size: 672, name: jobstts_menu_draw_scrollable_list, hash: e44d487c3819b679}
   - {addr: 0x801e3938, size: 48, name: jobstts_menu_init_and_draw_scrollable_list_simple, hash: 461e97c53dac7c63}
   - {addr: 0x801e3968, size: 2512, name: jobstts_cmd_draw_scrollable_list_body_handler, hash: 8765fb678224aca4}
-  - {addr: 0x801e4338, size: 220, name: jobstts_menu_set_palette_mode, hash: 48580046bd100f9b}
+  - {addr: 0x801e4338, size: 220, name: menu_set_palette_mode, hash: 48580046bd100f9b, source: src/shared/menu/menu_set_palette_mode.c}
   - {addr: 0x801e4414, size: 136, name: jobstts_cmd_release_otag_lock_handler, hash: 376bac94034d2252}
   - {addr: 0x801e449c, size: 116, name: jobstts_cmd_set_draw_area_if_unlocked_handler, hash: fbe7c3c7c2471b38}
   - {addr: 0x801e4510, size: 92, name: jobstts_cmd_add_next_otag_draw_area_handler, hash: 24311d14e944847c}
@@ -1942,26 +1942,26 @@ data:
   - {addr: 0x801e54fc, name: g_jobstts_ability_list_initialized}
   - {addr: 0x801e5500, name: g_jobstts_ability_list_job_name_ids}
   - {addr: 0x801e5508, name: g_jobstts_help_text_table}
-  - {addr: 0x801eff60, name: g_jobstts_input_latched_button}
-  - {addr: 0x801eff62, name: g_jobstts_input_activation_timer}
+  - {addr: 0x801eff60, name: g_menu_input_latched_button}
+  - {addr: 0x801eff62, name: g_menu_input_activation_timer}
   - {addr: 0x801eff63, name: g_jobstts_text_thread_running_state}
   - {addr: 0x801eff64, name: g_jobstts_input_lock_timer}
   - {addr: 0x801eff68, name: g_jobstts_menu_list_scroll_offset_y}
   - {addr: 0x801eff6c, name: g_jobstts_menu_list_row_index}
   - {addr: 0x801eff70, name: g_jobstts_gfx_background_texture_page}
   - {addr: 0x801eff72, name: g_jobstts_menu_cursor_texture_page}
-  - {addr: 0x801eff74, name: g_jobstts_text_clut_2_mode0}
-  - {addr: 0x801eff76, name: g_jobstts_text_clut_2_mode1}
-  - {addr: 0x801eff78, name: g_jobstts_text_clut_1_mode1}
-  - {addr: 0x801eff7a, name: g_jobstts_text_clut_1_mode0}
-  - {addr: 0x801eff7c, name: g_jobstts_text_clut_3_mode0}
-  - {addr: 0x801eff7e, name: g_jobstts_text_clut_3_mode1}
-  - {addr: 0x801eff82, name: g_jobstts_menu_cursor_mode0_foreground_clut}
-  - {addr: 0x801eff84, name: g_jobstts_menu_cursor_mode0_background_clut}
-  - {addr: 0x801eff86, name: g_jobstts_menu_cursor_mode1_foreground_clut}
-  - {addr: 0x801eff88, name: g_jobstts_menu_cursor_mode1_background_clut}
-  - {addr: 0x801eff98, name: g_jobstts_text_clut_0_mode1}
-  - {addr: 0x801eff9a, name: g_jobstts_text_clut_0_mode0}
+  - {addr: 0x801eff74, name: g_menu_text_clut_2_mode0}
+  - {addr: 0x801eff76, name: g_menu_text_clut_2_mode1}
+  - {addr: 0x801eff78, name: g_menu_text_clut_1_mode1}
+  - {addr: 0x801eff7a, name: g_menu_text_clut_1_mode0}
+  - {addr: 0x801eff7c, name: g_menu_text_clut_3_mode0}
+  - {addr: 0x801eff7e, name: g_menu_text_clut_3_mode1}
+  - {addr: 0x801eff82, name: g_menu_cursor_mode0_foreground_clut}
+  - {addr: 0x801eff84, name: g_menu_cursor_mode0_background_clut}
+  - {addr: 0x801eff86, name: g_menu_cursor_mode1_foreground_clut}
+  - {addr: 0x801eff88, name: g_menu_cursor_mode1_background_clut}
+  - {addr: 0x801eff98, name: g_menu_text_clut_0_mode1}
+  - {addr: 0x801eff9a, name: g_menu_text_clut_0_mode0}
   - {addr: 0x801eff9c, name: g_jobstts_cmd_handlers}
   - {addr: 0x801efff4, name: g_jobstts_gfx_draw_area}
   - {addr: 0x801efffc, name: g_jobstts_gfx_transition_frame}
@@ -1995,11 +1995,11 @@ data:
   - {addr: 0x801fa5c0, name: g_jobstts_job_current_mastered}
   - {addr: 0x801fa5c4, name: g_jobstts_ability_type}
   - {addr: 0x801fa5c8, name: g_jobstts_unit_job_data}
-  - {addr: 0x801fa668, name: g_jobstts_input_repeat_counters}
-  - {addr: 0x801fa6a8, name: g_jobstts_input_previous}
+  - {addr: 0x801fa668, name: g_menu_input_repeat_counters}
+  - {addr: 0x801fa6a8, name: g_menu_input_previous}
   - {addr: 0x801fa6ac, name: g_jobstts_menu_selection_values}
   - {addr: 0x801fa6bc, name: g_jobstts_menu_list_scroll_progress}
-  - {addr: 0x801fa6c0, name: g_jobstts_text_color}
+  - {addr: 0x801fa6c0, name: g_menu_text_color}
   - {addr: 0x801fa6c4, name: g_jobstts_gfx_otag_index}
   - {addr: 0x801fa6c8, name: g_jobstts_cmd_stream_input}
   - {addr: 0x801fa6cc, name: g_jobstts_menu_list_visible_rows}
@@ -2016,13 +2016,13 @@ data:
   - {addr: 0x801fa6fc, name: g_jobstts_menu_list_vram_width}
   - {addr: 0x801fa700, name: g_jobstts_menu_list_glyph_width}
   - {addr: 0x801fa704, name: g_jobstts_menu_list_text_columns}
-  - {addr: 0x801fa708, name: g_jobstts_menu_use_alternate_palette}
+  - {addr: 0x801fa708, name: g_menu_use_alternate_palette}
   - {addr: 0x801fa70c, name: g_jobstts_gfx_otag_index_locked}
   - {addr: 0x801fa710, name: g_jobstts_menu_list_scroll_direction}
   - {addr: 0x801fa714, name: g_jobstts_bits_primary_source}
   - {addr: 0x801fa718, name: g_jobstts_bits_secondary_source}
   - {addr: 0x801fa71c, name: g_jobstts_menu_list_entry_count}
-  - {addr: 0x801fa720, name: g_jobstts_input_newly_pressed}
+  - {addr: 0x801fa720, name: g_menu_input_newly_pressed}
   - {addr: 0x801fa724, name: g_jobstts_gfx_poly_f3_capacity}
   - {addr: 0x801fa728, name: g_jobstts_gfx_poly_g3_capacity}
   - {addr: 0x801fa72c, name: g_jobstts_gfx_poly_f4_capacity}
@@ -2031,7 +2031,7 @@ data:
   - {addr: 0x801fa738, name: g_jobstts_gfx_poly_g3_count}
   - {addr: 0x801fa73c, name: g_jobstts_gfx_poly_f4_count}
   - {addr: 0x801fa740, name: g_jobstts_gfx_poly_g4_count}
-  - {addr: 0x801fa744, name: g_jobstts_menu_disabled_number_clut}
+  - {addr: 0x801fa744, name: g_menu_disabled_number_clut}
   - {addr: 0x801fa748, name: g_jobstts_gfx_sprite_capacity}
   - {addr: 0x801fa74c, name: g_jobstts_gfx_line_f2_capacity}
   - {addr: 0x801fa750, name: g_jobstts_gfx_line_g2_capacity}
@@ -2049,14 +2049,14 @@ data:
   - {addr: 0x801fa780, name: g_jobstts_gfx_line_g3_count}
   - {addr: 0x801fa784, name: g_jobstts_gfx_line_f4_count}
   - {addr: 0x801fa788, name: g_jobstts_gfx_line_g4_count}
-  - {addr: 0x801fa78c, name: g_jobstts_menu_palette_clut}
+  - {addr: 0x801fa78c, name: g_menu_palette_clut}
   - {addr: 0x801fa790, name: g_jobstts_gfx_poly_ft3_count}
   - {addr: 0x801fa794, name: g_jobstts_gfx_poly_gt3_count}
   - {addr: 0x801fa798, name: g_jobstts_gfx_poly_ft4_count}
   - {addr: 0x801fa79c, name: g_jobstts_gfx_poly_gt4_count}
   - {addr: 0x801fa7a0, name: g_jobstts_gfx_sprite_8_capacity}
   - {addr: 0x801fa7a4, name: g_jobstts_gfx_drawenv_y}
-  - {addr: 0x801fa7a8, name: g_jobstts_menu_alternate_number_clut}
+  - {addr: 0x801fa7a8, name: g_menu_alternate_number_clut}
   - {addr: 0x801fa7ac, name: g_jobstts_menu_list_selected_index}
   - {addr: 0x801fa7b0, name: g_jobstts_gfx_sprite_16_capacity}
   - {addr: 0x801fa7b4, name: g_jobstts_gfx_otag_length}
@@ -2067,21 +2067,21 @@ data:
   - {addr: 0x801fa7c8, name: g_jobstts_gfx_tile_count}
   - {addr: 0x801fa7cc, name: g_jobstts_gfx_draw_move_count}
   - {addr: 0x801fa7d0, name: g_jobstts_gfx_context}
-  - {addr: 0x801fa7d4, name: g_jobstts_input_primary_repeat}
+  - {addr: 0x801fa7d4, name: g_menu_input_primary_repeat}
   - {addr: 0x801fa7d8, name: g_jobstts_gfx_sprite_count}
   - {addr: 0x801fa7dc, name: g_jobstts_menu_scroll_base_index}
   - {addr: 0x801fa7e0, name: g_jobstts_gfx_tile_1_capacity}
-  - {addr: 0x801fa7e4, name: g_jobstts_menu_window_clut}
+  - {addr: 0x801fa7e4, name: g_menu_window_clut}
   - {addr: 0x801fa7e8, name: g_jobstts_gfx_tile_8_capacity}
   - {addr: 0x801fa7ec, name: g_jobstts_gfx_tile_1_count}
-  - {addr: 0x801fa7f0, name: g_jobstts_menu_active_clut_front}
+  - {addr: 0x801fa7f0, name: g_menu_active_clut_front}
   - {addr: 0x801fa7f4, name: g_jobstts_gfx_tile_8_count}
   - {addr: 0x801fa7f8, name: g_jobstts_unit_data}
   - {addr: 0x801fa7fc, name: g_jobstts_gfx_context_base}
-  - {addr: 0x801fa800, name: g_jobstts_input_secondary_repeat}
+  - {addr: 0x801fa800, name: g_menu_input_secondary_repeat}
   - {addr: 0x801fa804, name: g_jobstts_gfx_sprite_8_count}
   - {addr: 0x801fa808, name: g_jobstts_gfx_tile_16_capacity}
-  - {addr: 0x801fa80c, name: g_jobstts_menu_active_clut_back}
+  - {addr: 0x801fa80c, name: g_menu_active_clut_back}
   - {addr: 0x801fa810, name: g_jobstts_gfx_tile_16_count}
   - {addr: 0x801fa814, name: g_jobstts_gfx_sprite_16_count}
   - {addr: 0x801fa818, name: g_jobstts_text_selection_id}

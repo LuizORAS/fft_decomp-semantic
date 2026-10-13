@@ -1,4 +1,5 @@
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -59,7 +60,7 @@ s32 jobstts_ability_update_list_menu(void) {
         g_jobstts_text_selection_id = (entry & ABILITY_LIST_ENTRY_ID_MASK) + 0x7800;
     }
 
-    input = g_jobstts_input_primary_repeat;
+    input = g_menu_input_primary_repeat;
     if (input & PSX_PAD_CROSS) {
         g_jobstts_ability_list_initialized = 0;
         g_jobstts_sound_queued_effect_id = MAIN_SFX_CANCEL;
@@ -71,7 +72,7 @@ s32 jobstts_ability_update_list_menu(void) {
         return MENU_JOB_LIST_STEP_CLOSE;
     }
 
-    category = jobstts_menu_update_wrapped_horizontal_selection(4, 5, g_jobstts_input_secondary_repeat);
+    category = jobstts_menu_update_wrapped_horizontal_selection(4, 5, g_menu_input_secondary_repeat);
     if (category != g_jobstts_ability_category) {
         jobstts_menu_set_selection_record(g_jobstts_ability_category, g_jobstts_menu_list_selected_index,
             g_jobstts_menu_scroll_base_index, g_jobstts_ability_entries);
@@ -86,12 +87,12 @@ s32 jobstts_ability_update_list_menu(void) {
         g_jobstts_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
     }
     jobstts_cmd_run_stream_with_mode(
-        &g_jobstts_ability_list_render_commands, g_jobstts_input_primary_repeat, g_battle_menu_input_lock_mode);
+        &g_jobstts_ability_list_render_commands, g_menu_input_primary_repeat, g_battle_menu_input_lock_mode);
     rect.x = 0x26;
     rect.y = 0x27;
     rect.w = 0x50;
     rect.h = 0x10;
     jobstts_gfx_enqueue_textured_quad(
-        &rect, 0, 0xc8, 0, 0, g_jobstts_gfx_background_texture_page, g_jobstts_menu_window_clut, 0xb);
+        &rect, 0, 0xc8, 0, 0, g_jobstts_gfx_background_texture_page, g_menu_window_clut, 0xb);
     return MENU_JOB_LIST_STEP_ABILITIES;
 }

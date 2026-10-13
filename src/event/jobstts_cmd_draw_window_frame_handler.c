@@ -1,4 +1,5 @@
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
 
 /* Draw a window's 5x9/5x7 border pieces around its rectangle and tile the
  * interior through jobstts_cmd_draw_background_tiles_handler.
@@ -24,7 +25,7 @@ menu_instruction_t* jobstts_cmd_draw_window_frame_handler(menu_instruction_t* co
     u8 height;
 
     priority = g_jobstts_gfx_otag_index;
-    clut = g_jobstts_menu_palette_clut;
+    clut = g_menu_palette_clut;
     left = command->window.x - 5;
     top = command->window.y - 9;
     width = command->window.width;

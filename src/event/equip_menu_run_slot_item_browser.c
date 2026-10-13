@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -40,7 +41,7 @@ s32 equip_menu_run_slot_item_browser(void) {
     g_equip_text_help_message_id = g_equip_menu_list_entry_count != 0
         ? g_equip_item_list_entries[g_equip_menu_selected_list_index] + 0x6800
         : -1;
-    input = g_equip_input_primary_repeat;
+    input = g_menu_input_primary_repeat;
     if (input & PSX_PAD_CROSS) {
         equip_menu_set_selection_record(g_equip_selected_slot, g_equip_menu_selected_list_index,
             g_equip_menu_scroll_base_index, g_equip_item_list_entries);
@@ -61,7 +62,7 @@ s32 equip_menu_run_slot_item_browser(void) {
         equip_menu_init_scrollable_list(
             g_equip_item_list_entries, selected, scroll, g_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         equip_gfx_set_transition_frame(10);
-    } else if (g_equip_input_primary_repeat & PSX_PAD_CIRCLE) {
+    } else if (g_menu_input_primary_repeat & PSX_PAD_CIRCLE) {
         if (g_equip_menu_list_entry_count != 0) {
             g_equip_sound_queued_effect_id = MAIN_SFX_CONFIRM;
             equip_menu_set_selection_record(

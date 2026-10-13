@@ -1,4 +1,5 @@
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
 
 /* Draw the getter's decimal value, or dashes, using the current row and palette. */
 menu_instruction_t* jobstts_cmd_draw_formatted_number_handler(menu_instruction_t* data) {
@@ -35,12 +36,12 @@ menu_instruction_t* jobstts_cmd_draw_formatted_number_handler(menu_instruction_t
 
     value = condition(arg);
     if (data->number.alternate_palette != 0) {
-        clut = g_jobstts_menu_alternate_number_clut;
+        clut = g_menu_alternate_number_clut;
     } else {
-        clut = g_jobstts_menu_palette_clut;
+        clut = g_menu_palette_clut;
     }
     if (value & MENU_NUMBER_VALUE_DISABLED) {
-        clut = g_jobstts_menu_disabled_number_clut;
+        clut = g_menu_disabled_number_clut;
         value &= ~MENU_NUMBER_VALUE_DISABLED;
     }
 

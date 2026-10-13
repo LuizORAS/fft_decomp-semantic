@@ -1,4 +1,5 @@
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
 
 /* Two animation curves, each a stride-2 run of (frame threshold, horizontal
  * pixel offset) bytes: 0x801f0018 has 6 steps used while the marker is idle,
@@ -80,11 +81,11 @@ void jobstts_menu_update_and_draw_animated_cursor(point16_t* anchor, u16* state,
     }
 
     if (mode != 0) {
-        clut = g_jobstts_menu_cursor_mode1_foreground_clut;
-        shadow_clut = g_jobstts_menu_cursor_mode1_background_clut;
+        clut = g_menu_cursor_mode1_foreground_clut;
+        shadow_clut = g_menu_cursor_mode1_background_clut;
     } else {
-        clut = g_jobstts_menu_cursor_mode0_foreground_clut;
-        shadow_clut = g_jobstts_menu_cursor_mode0_background_clut;
+        clut = g_menu_cursor_mode0_foreground_clut;
+        shadow_clut = g_menu_cursor_mode0_background_clut;
     }
 
     rect.x = x_offset + anchor->x - 2;

@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 
 /*
@@ -24,7 +25,7 @@ s32 equip_menu_update_clear_all_equipment_prompt(void) {
                 &g_equip_menu_clear_all_prompt_draw_params, &marker_state, g_battle_menu_input_lock_mode);
         }
     }
-    flags = g_equip_input_primary_repeat;
+    flags = g_menu_input_primary_repeat;
     if (flags & PSX_PAD_RIGHT) {
         g_equip_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
         return 0;

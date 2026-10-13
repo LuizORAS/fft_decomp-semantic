@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Draw the literal value as zero-padded digits at the requested position. */
@@ -17,14 +18,14 @@ menu_draw_number_command_t* card_cmd_draw_decimal_number_handler(menu_draw_numbe
 
     value = command->value;
     y = command->y;
-    clut = g_card_menu_alternate_number_clut;
+    clut = g_menu_alternate_number_clut;
     glyph.u = 0x78;
     glyph.v = 0x10;
     glyph.w = 6;
     glyph.h = 0xB;
     pad = command->width - sprintf(text, g_card_text_decimal_format, value);
     pos = 0;
-    color = &g_card_text_color;
+    color = &g_menu_text_color;
     for (i = 0; i < command->width; i++) {
         glyph.rect.x = command->x + (i * command->spacing);
         glyph.rect.y = y;

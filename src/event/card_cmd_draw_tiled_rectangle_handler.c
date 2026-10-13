@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Tile the command rectangle, or the shared rectangle when source is 2. */
@@ -16,7 +17,7 @@ menu_window_command_t* card_cmd_draw_tiled_rectangle_handler(menu_window_command
     s32 column;
 
     otag_index = g_card_text_otag_index;
-    clut = g_card_menu_palette_clut;
+    clut = g_menu_palette_clut;
 
     if (command->rectangle_source == 2) {
         base_x = g_card_gfx_tiled_rect.x;

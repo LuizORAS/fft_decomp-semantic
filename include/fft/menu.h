@@ -1463,6 +1463,37 @@ typedef struct options_menu_page {
 } options_menu_page_t;
 typedef char options_menu_page_size_must_be_400[(sizeof(options_menu_page_t) == 400) ? 1 : -1];
 
+/* input and palette state */
+extern u16 g_menu_active_clut_back;
+extern u16 g_menu_active_clut_front;
+extern u16 g_menu_alternate_number_clut;
+extern u16 g_menu_cursor_mode0_background_clut;
+extern u16 g_menu_cursor_mode0_foreground_clut;
+extern u16 g_menu_cursor_mode1_background_clut;
+extern u16 g_menu_cursor_mode1_foreground_clut;
+extern u16 g_menu_disabled_number_clut;
+extern u8 g_menu_input_activation_timer;
+extern u16 g_menu_input_latched_button;
+extern u16 g_menu_input_newly_pressed;
+extern u16 g_menu_input_previous;
+extern u32 g_menu_input_primary_repeat;
+extern s32 g_menu_input_repeat_counters[16];
+extern u32 g_menu_input_secondary_repeat;
+extern u16 g_menu_palette_clut;
+extern u16 g_menu_text_clut_0_mode0;
+extern u16 g_menu_text_clut_0_mode1;
+extern u16 g_menu_text_clut_1_mode0;
+extern u16 g_menu_text_clut_1_mode1;
+extern u16 g_menu_text_clut_2_mode0;
+extern u16 g_menu_text_clut_2_mode1;
+extern u16 g_menu_text_clut_3_mode0;
+extern u16 g_menu_text_clut_3_mode1;
+extern rgb24_t g_menu_text_color;
+extern u8 g_menu_use_alternate_palette;
+extern u16 g_menu_window_clut;
+void menu_input_update_controller(void);
+void menu_set_palette_mode(s32 mode);
+
 /* text */
 /* The font, EVENT/FONT.BIN: 2200 glyphs of 14 rows of 10 two-bit pixels. A
  * byte from TEXT_EXTENDED_GLYPH_PREFIX_FIRST selects a page of glyphs and

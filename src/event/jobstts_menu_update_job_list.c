@@ -1,4 +1,5 @@
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 
 /* Run the job list menu; on Circle, record the chosen job and return 1 to advance the menu state. */
@@ -20,7 +21,7 @@ s32 jobstts_menu_update_job_list(void) {
     }
 
     g_jobstts_text_selection_id = g_jobstts_job_ids[g_jobstts_menu_list_selected_index] + 0x6000;
-    input = g_jobstts_input_primary_repeat;
+    input = g_menu_input_primary_repeat;
     if (input & PSX_PAD_CIRCLE) {
         g_jobstts_job_selected_id = g_jobstts_job_ids[g_jobstts_menu_list_selected_index];
         jobstts_job_calculate_current_level(g_jobstts_menu_list_selected_index);

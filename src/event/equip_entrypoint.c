@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -27,7 +28,7 @@ s32 equip_entrypoint(s32 unit, u32* otag) {
     }
     g_equip_text_restore_pending = changed;
     equip_input_update_with_message_state();
-    if (g_equip_input_primary_repeat & PSX_PAD_SELECT) {
+    if (g_menu_input_primary_repeat & PSX_PAD_SELECT) {
         equip_text_start_help_thread(3);
     }
     if (g_equip_text_restore_pending != 0) {

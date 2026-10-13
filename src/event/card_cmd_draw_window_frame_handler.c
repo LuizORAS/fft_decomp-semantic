@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /*
@@ -29,7 +30,7 @@ menu_window_command_t* card_cmd_draw_window_frame_handler(menu_window_command_t*
     s32 row;
 
     priority = g_card_text_otag_index;
-    clut = g_card_menu_palette_clut;
+    clut = g_menu_palette_clut;
     if (command->rectangle_source == 2) {
         left = g_card_menu_window_rect_source->rect.x - 5;
         top = g_card_menu_window_rect_source->rect.y - 9;
