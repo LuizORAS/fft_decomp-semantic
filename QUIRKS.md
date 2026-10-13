@@ -509,7 +509,7 @@ written that way.
 - `map_calculate_slope_height` masks its level to a byte; two callers
   pass the 16-bit `action_command.target_elevation` unmasked.
 - WLDCORE passes its 8-byte records by value:
-  `wldcore_window_render_bounds16_t` to the three render-record builders and
+  `RECT` to the three render-record builders and
   `point32_t` to `wldcore_window_build_yes_no_panel`.
 - `script_filter_unit_id_by_mode` and
   `world_script_filter_unit_id_by_mode` read `in_id` as a 16-bit value; most
@@ -543,17 +543,14 @@ written that way.
 
 ## Declaration leads
 
-- `include/fft/menu.h`: `world_menu_entry_t.window_x` is `u16`, but
-  `src/world/world_menu_open_entry_window.c` needs it signed.
-- The unit status record (`battle_unit_status_record_t`, `include/fft/menu.h`)
-  is laid out again by the heads of `equip_unit_data_t`, `bunit_unit_data_t`
-  and `world_formation_unit_t`, and by `world_item_stat_summary_t`.
+- The heads of `equip_unit_data_t` and `bunit_unit_data_t` overlap
+  `menu_unit_status_record_t`, but their fields at 0x1e and 0x20 differ.
 - `equip_gfx_context_t` (`include/fft/event_equip.h`), `jobstts_gfx_context_t`,
   `bunit_gfx_context_t` and `world_gfx_packet_buffer_t` share one 25-pointer
   pool layout (BUNIT and WORLD match through `0xec`); their pool names disagree.
-- `g_wldcore_zodiac_start_dates[12][2]` and OPEN's flat
-  `g_open_birthday_zodiac_start_dates[24]` store the same `{month, day}` pairs
-  through different array views.
+- WLDCORE's `g_wldcore_calendar_zodiac_start_dates` uses `calendar_date_t`
+  records; OPEN's `g_open_birthday_zodiac_start_dates[24]` stores the same
+  `{month, day}` pairs as bytes.
 - `g_world_gfx_full_texture_window` is a `RECT`, but
   `src/world/world_gfx_build_zodiac_primitives.c` reads its first 4 bytes
   as a screen point.
@@ -594,7 +591,8 @@ translation unit. Share their types and constants through headers.
 - `map_blend_ambient_light_color.c` and
   `map_blend_darkness_color.c` are one 1,032-byte function over
   different records.
-- `world_gfx_init_scaled_draw_area_packets{,_2,_3,_4}.c` differ only in the
+- `world_gfx_init_scaled_draw_area_packets` and the `world_panel_gfx_`,
+  `world_option_gfx_` and `world_screen_gfx_` variants differ only in the
   eight bytes they install as the second `RECT`.
 - Routines compiled twice into one module, identical apart from the addresses
   they jump to, call and load: `script_run_next_event` and

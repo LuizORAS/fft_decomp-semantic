@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* EQUIP.OUT 001c684c - Add `delta` to the inventory count for the item id (low
- * 10 bits of `item`); clamped to 0. item_t id 0 is a no-op sentinel. */
+ * 10 bits of `item`); clamped to 0. item id 0 is a no-op sentinel. */
 s32 equip_item_adjust_inventory_count(s32 item_entry, s32 delta) {
     s32 item_id;
     s32 new_count;

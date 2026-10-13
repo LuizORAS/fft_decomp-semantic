@@ -408,7 +408,7 @@ restart_event:
                 world_thread_yield();
             } while (g_world_field_object_wait_status != 0);
         }
-        /* ---- unit_t sprites and animation ---- */
+        /* ---- unit sprites and animation ---- */
         else if (opcode == EVENT_OPCODE_MIRROR_SPRITE) {
             world_script_mirrorsprite_event_instruction((const event_mirror_sprite_parameters_t*)parameters);
         } else if (opcode == EVENT_OPCODE_RESET_PALETTE) {
@@ -519,7 +519,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_UNKNOWN_74) {
             world_script_opcode_74_event_instruction(parameters);
         }
-        /* ---- unit_t movement and facing ---- */
+        /* ---- unit movement and facing ---- */
         else if (opcode == EVENT_OPCODE_WALK_TO) {
         } else if (opcode == EVENT_OPCODE_JUMP) {
             world_script_jump_event_instruction((const event_jump_parameters_t*)parameters);

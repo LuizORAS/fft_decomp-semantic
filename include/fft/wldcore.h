@@ -62,7 +62,7 @@ typedef enum wldcore_opcode_state_flag {
 } wldcore_opcode_state_flag_e;
 
 /* The world-script state from the 32-bit instruction at 0x800d4848 onwards
- * (the tail of wldcore_world_script_record_t). Handlers must reach it as
+ * (the tail of wldcore_saved_record_t). Handlers must reach it as
  * in-struct references: the target keeps each state_flags store ahead of the
  * window/render-record updates and reloads render_index after them, which GCC
  * only does for in-struct accesses. The instruction is an encoded 32-bit value;

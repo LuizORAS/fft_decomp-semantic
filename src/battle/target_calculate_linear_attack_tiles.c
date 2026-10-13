@@ -5,8 +5,8 @@
 /* Mark the panels along a straight line from (x, y) in one compass direction
  * (TARGET_LINE_*), the starting tile included.
  *
- * On both map levels a panel that still has range (a) gets its mark (b) set; the
- * table is g_target_panels seen as targeting_panel_entry_t. The walk stops
+ * On both map levels a target_panel_t with remaining_range gets mark set;
+ * the table is g_target_panels. The walk stops
  * at the map edge or after 32 tiles, and any other direction value marks nothing.
  * `dir` is reused as the panel index. */
 void target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y) {

@@ -747,11 +747,11 @@ typedef char
     battle_strike_continue_must_be_0x18[((unsigned long)&((battle_strike_work_t*)0)->continue_attack == 0x18) ? 1 : -1];
 
 /* unit runtime */
-/* Misc unit_t Data has 16 renderer-side slots, each 0x440 bytes.
+/* Misc unit Data has 16 renderer-side slots, each 0x440 bytes.
  * The record links to its simulation-side battle_stats_t at 0x134. */
 typedef struct battle_unit_misc_data {
-    struct battle_unit_misc_data* previous; /* 0x000; previous Misc unit_t Data */
-    u8 unit_id;                             /* 0x004; Misc unit_t Data ID */
+    struct battle_unit_misc_data* previous; /* 0x000; previous Misc unit Data */
+    u8 unit_id;                             /* 0x004; Misc unit Data ID */
     u8 spritesheet_vram_slot;               /* 0x005 */
     u8 spritesheet_id;                      /* 0x006 */
     u8 stored_palette;                      /* 0x007; the palette of its sheet that the unit wears, 0 to 5 */
@@ -852,7 +852,7 @@ typedef struct battle_unit_misc_data {
     s32 target_select_result;
     s32 attack_phase_state;    /* 0x17c: battle_attack_preparation_e */
     s32 pending_attack_result; /* 0x180: attack result code; -1 signals death */
-    /* Death-by-dismount destination (Miscellaneous unit_t Data 0x184/0x186/
+    /* Death-by-dismount destination (Miscellaneous unit Data 0x184/0x186/
      * 0x188); battle_unit_set_map_coords_after_death_dismount copies them to
      * map_x/map_z/map_y.  attack_result_animation_update passes &dismount. */
     map_tile_coordinates_t dismount; /* 0x184 */
@@ -885,7 +885,7 @@ typedef struct battle_unit_misc_data {
     s8 item_get_x_offset;                    /* 0x2d2; BATTLE_SEQ_OP_SET_ITEM_POSITION, in pixels */
     s8 item_get_y_offset;                    /* 0x2d3 */
     u8 _unused_2d4[4];
-    battle_gfx_sprite_display_data_t* item_display; /* 0x2d8; item_t/Equip display pointer */
+    battle_gfx_sprite_display_data_t* item_display; /* 0x2d8; item/Equip display pointer */
     /* Status bubble (0x2dc..0x2e7);
      * battle_gfx_update_status_bubble_graphic_trigger sets the flag and clears
      * the timer with a 16-bit store, so the timer is declared u16. */

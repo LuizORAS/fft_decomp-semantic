@@ -1258,7 +1258,7 @@ typedef struct initial_status_sets {
 } initial_status_sets_t;
 typedef char initial_status_sets_size_must_be_15[(sizeof(initial_status_sets_t) == 15) ? 1 : -1];
 
-/* 25-byte item_t Attribute record at 0x800642c4. MAIN applies these bonuses
+/* 25-byte item Attribute record at 0x800642c4. MAIN applies these bonuses
  * to battle units; WORLD 0x80122f9c reads the same first five bytes for
  * equipment previews. */
 typedef struct item_attribute {

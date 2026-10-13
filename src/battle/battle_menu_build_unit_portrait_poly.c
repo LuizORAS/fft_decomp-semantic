@@ -9,7 +9,7 @@
  *
  * The unit whose ID equals g_main_special_portrait_unit_id uses the fixed 0x380/0x100 page; others
  * select a 32-line band of the spritesheet VRAM slot's page and the CLUT of
- * MAP_CLUT_ROW_UNITS_SECOND indexed by the low nibble of the Misc unit_t Data ID.
+ * MAP_CLUT_ROW_UNITS_SECOND indexed by the low nibble of the Misc unit Data ID.
  */
 void battle_menu_build_unit_portrait_poly(POLY_FT4* poly, u32 battle_id) {
     s32 vram_slot;

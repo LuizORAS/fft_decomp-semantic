@@ -2,7 +2,7 @@
 #include "fft/battle_unit.h"
 
 /*
- * Unlink a Misc unit_t record from the list and release its per-unit slot.
+ * Unlink a Misc unit record from the list and release its per-unit slot.
  *
  * The spritesheet VRAM slot is released only when no other live unit shares it.
  */

@@ -4,7 +4,7 @@
 
 /* Prepare destination geometry for a movement candidate.
  *
- * Tile candidates use the selected map layer. unit_t-record candidates use
+ * Tile candidates use the selected map layer. unit-record candidates use
  * compact standing/top heights and an auxiliary targeting panel.
  */
 s32 move_init_destination_geometry(s32 candidate) {

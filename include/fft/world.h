@@ -1170,8 +1170,8 @@ s32 world_job_build_unit_list(u8 unit_index, s16* jobs, s32 mode);
 /* Job id -> generic job index 0..0x13, else 0. */
 s32 world_job_get_text_index(s16 job_id);
 
-/* Menu script callbacks: only ever address-taken and cast to
- * menu_script_callback_t by world_ability_run_view_list. */
+/* Job-menu value queries, also used as menu_callback_t.value callbacks
+ * by the ability menus. */
 s32 world_job_get_base(s16 formation_idx);
 s32 world_job_get_cached_level(s32 unused_row);
 s32 world_job_get_cached_level_jp_requirement(s32 unused_row);
@@ -1416,7 +1416,7 @@ typedef struct world_formation_unit {
     u8 job_levels[UNIT_JOB_LEVEL_BYTE_COUNT];                                                 /* 0x0b3 */
     u8 _padding_0bd;                                                                          /* aligns job_points */
     unit_job_points_t job_points; /* 0x0be; current JP followed by total JP */
-    u8 name[0x10];                /* 0x10e; "unit_t Nickname" */
+    u8 name[0x10];                /* 0x10e; "unit Nickname" */
     u8 monster_graphic;           /* 0x11e; added to formation graphic entry 0x3d when sprite_set == 0x82
                                      (world_formation_build_unit_graphic_entry) */
     u8 proposition_status;        /* 0x11f; "Proposition Byte": world_formation_unit_proposition_e, 0 when present */

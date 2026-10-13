@@ -167,7 +167,7 @@ extern menu_number_entry_t g_battle_menu_attack_caster_stats_setup[8];
 extern RECT g_battle_menu_attack_target_stats_display;
 extern menu_number_entry_t g_battle_menu_attack_target_stats_setup[8];
 /* 0x40-byte billboard block at 0x8014d0a0 saved and restored whole with the AT
- * banner: unit stats indexed as halfwords by
+ * banner: unit stats indexed as 16-bit values by
  * battle_menu_load_selected_unit. */
 extern menu_status_panel_slot_storage_t g_battle_menu_billboard_data;
 extern u8 g_battle_menu_billboard_job_name[];

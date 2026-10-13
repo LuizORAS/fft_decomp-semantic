@@ -767,7 +767,7 @@ typedef enum battle_unit_equipment_stat_index {
 /*
  * Battle Stats are the simulation-side unit records.  They occupy 0x1c0
  * bytes, with 21 consecutive slots beginning at 0x801908cc in BATTLE.BIN.
- * Do not confuse this with Misc unit_t Data, the renderer-side record that
+ * Do not confuse this with Misc unit Data, the renderer-side record that
  * points back to battle_stats_t at offset 0x134.
  *
  * Unidentified areas intentionally remain explicit padding until evidence

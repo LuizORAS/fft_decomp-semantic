@@ -8,7 +8,7 @@
  *
  * While script variable EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS is set the
  * event script filters the raw buttons first. The 32-bit pressed and previous button values of
- * the frame before are kept in four copies each, and g_controller_stable_frames
+ * the frame before are kept in four copies each, and g_main_input_stable_frames
  * counts the frames the buttons have not changed. Triangle outside the event
  * state requests the status menu, with its sound, when the menu is enabled, not
  * yet requested and the source unit is not player controlled. Holding Start,

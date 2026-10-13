@@ -6,7 +6,7 @@
  * Per-frame status-bubble and unit-graphics update.
  *
  * In the listed game states, bubbles are held off for 0x3c frames whenever the
- * camera zooms, tilts, rotates or moves, and processed for every Misc unit_t
+ * camera zooms, tilts, rotates or moves, and processed for every Misc unit
  * Data record once the countdown has run out. Every state then reloads the
  * casting unit's graphics and runs battle_gfx_draw_unit_sprite_layers on every record.
  */
