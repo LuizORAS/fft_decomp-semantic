@@ -1,7 +1,5 @@
 #include "fft/script.h"
 #include "fft/thread.h"
-#include "fft/world.h"
-#include "psx/types.h"
 
 /* Currently resident event id; the loader skips a reload when it is unchanged. */
 

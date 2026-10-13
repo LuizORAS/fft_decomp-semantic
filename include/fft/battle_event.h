@@ -3,7 +3,8 @@
 
 /* Battle scenario orchestration and deferred commands produced by scripts. */
 
-#include "fft/battle_script.h"
+#include "fft/map.h"
+#include "fft/script.h"
 
 /* scenario state */
 /* BATTLE pointer slot 0x80173ca4; WORLD pointer slot 0x801cd75c. */

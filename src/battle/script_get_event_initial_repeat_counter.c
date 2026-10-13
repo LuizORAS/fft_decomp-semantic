@@ -1,6 +1,4 @@
-#include "fft/battle_script.h"
 #include "fft/script.h"
-#include "psx/types.h"
 
 u32 script_get_event_initial_repeat_counter(void) {
     return g_script_event_initial_repeat_counter;

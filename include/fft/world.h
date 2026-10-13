@@ -248,15 +248,12 @@ extern u32 g_world_event_initial_repeat_counter;
 extern u32 g_world_event_previous_input;
 extern u32 g_world_event_repeat_counter;
 extern u32 g_world_event_secondary_repeat_counter;
-extern s32 g_world_script_loaded_event_id;
 extern u32 g_world_script_tutorial_button_input;
 extern s32 g_world_script_tutorial_command_active;
 extern u8 g_world_script_tutorial_id;
 extern u16 g_world_script_tutorial_shift_command_bit;
 extern s16 g_world_script_tutorial_wait_time_remaining;
 extern s16 g_world_script_tutorial_wait_timer;
-extern char g_world_script_pause_message[];
-extern s16 g_world_script_debug_paused;
 extern s16 g_world_event_effect_target_x;
 extern s16 g_world_event_effect_target_y;
 extern u16 g_world_script_tutorial_latched_button;
@@ -274,7 +271,6 @@ extern s32 g_world_event_pending_loaded_evtchr_slot;
 extern evtchr_file_record_t* g_world_event_loaded_evtchr_buffer;
 extern s16 g_world_event_effect_target_runtime_id;
 extern s16 g_world_event_effect_target_mode;
-extern u8 g_world_event_instruction_sizes[0xf4];
 extern world_event_command_args_t g_world_event_map_command_80_args;
 extern world_event_command_args_t g_world_event_map_command_83_args;
 extern world_event_music_switch_t g_world_event_music_switch;
@@ -295,13 +291,11 @@ void world_script_run_sprite_move(const event_sprite_move_parameters_t* paramete
 void world_script_set_specialized_map_destroyed(void);
 void world_menu_init_subsystem_pointers(void);
 s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode);
-void world_script_advance_date_by_one_year(void);
 void world_script_advance_tutorial_highlight_brightness(void);
 void world_script_blue_remove_all_enemy_units(void);
 void world_script_blue_remove_unit(s32 unit_id);
 void world_script_change_stats(const event_change_stats_parameters_t* parameters);
 void world_script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
-void world_script_copy_matrix(MATRIX* destination, const MATRIX* source);
 void world_script_earthquake_start(void);
 void world_script_toggle_message_portrait_flip(const u8* parameters);
 void world_script_face_tile(const event_face_tile_parameters_t* parameters);
@@ -320,14 +314,9 @@ void world_script_handle_tutorial_command_wait(void);
 void world_script_handle_tutorial_command_wait_for_button(void);
 void world_script_handle_tutorial_command_wait_for_message(void);
 void world_script_handle_tutorial_command_wait_time(void);
-s32 world_script_interpolate_range_fixed12(s32 start, s32 end, s32 fraction, s32 value);
-void world_script_load_event(s32 id);
-s32 world_script_load_next_event(void);
 void world_script_map_darkness(void);
 void world_script_march_units(const event_march_parameters_t* parameters);
-void world_script_print_debug_message(void);
 s32 world_script_run_frame(u32* ot, u32 buttons);
-void world_script_run_next_event(void);
 void world_script_set_event_speed(s32 speed);
 void world_script_set_current_otag_entry_and_update_input(u32* ot, s32 buttons);
 void world_script_set_vsync_mode_and_event_speed(s32 value);
@@ -347,12 +336,8 @@ void world_script_set_units_palette_update_suppression(u16 id, s32 enable);
 void world_script_add_unit_start_thread(void);
 s32 world_script_check_tutorial_event_slot(void);
 void world_script_color_screen_thread(void);
-void world_script_execute_event(void);
-s32 world_script_find_instruction_byte_offset(s32 offset, s32 instruction);
-s32 world_script_find_jump_target(s32, s32, s32, s32);
 void world_script_inflict_status_thread(void);
 void world_script_load_portrait_colors_event_instruction(s32);
-void world_script_pause_event_instruction(void);
 void world_script_waitspritemove_event_instruction(s32);
 
 /* sound */
@@ -1793,7 +1778,6 @@ extern u8* g_world_text_saved_section_pointers[32];
 extern s32 g_world_text_section_offsets[32];
 extern u8* g_world_text_section_pointer_backup[32];
 extern s32 g_world_text_section_pointers_saved;
-extern s16 g_world_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
 
 /* Text substitutions $7E/$7F (0x801533d0, table index 0x7e from 0x801531d8)
  * as the four 16-bit values world_text_set_substitution_values_7e_7f stores. */

@@ -1,6 +1,5 @@
 #include "fft/script.h"
 #include "fft/thread.h"
-#include "fft/world.h"
 #include "psx/pad.h"
 
 /* Yield until the scheduler leaves task 3 or the player presses one of the

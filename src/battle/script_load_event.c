@@ -1,7 +1,7 @@
 #include "fft/battle_event.h"
-#include "fft/battle_script.h"
 #include "fft/battle_text.h"
 #include "fft/main.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 
 /* Read event block `id` (EVENT_BLOCK_SECTORS sectors from the event archive) into

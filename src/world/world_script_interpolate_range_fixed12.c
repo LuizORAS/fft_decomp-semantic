@@ -1,5 +1,5 @@
+#include "fft/script.h"
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Linear interpolation in 20.12 fixed point:
  * start + (end - start) * fraction / value, as a 20.12 result. */

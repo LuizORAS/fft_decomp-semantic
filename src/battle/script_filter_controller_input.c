@@ -1,6 +1,4 @@
-#include "fft/battle_script.h"
 #include "fft/script.h"
-#include "psx/types.h"
 
 /* Keep the raw 32-bit button value in g_script_unfiltered_controller_input, then
  * apply the script's disabled and forced inputs to it in place. */

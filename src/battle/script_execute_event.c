@@ -10,7 +10,6 @@
 #include "fft/sound.h"
 #include "fft/thread.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /* BATTLE event-script interpreter: the body of the event thread
  * (THREAD_SLOT_EVENT), entered from script_run_next_event once

@@ -1,5 +1,5 @@
+#include "fft/script.h"
 #include "fft/thread.h"
-#include "fft/world.h"
 #include "psx/libgpu.h"
 
 /* Print the script pause message, yield one frame and set the debug-paused

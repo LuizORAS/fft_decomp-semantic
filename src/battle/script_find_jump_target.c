@@ -1,8 +1,6 @@
-#include "fft/battle.h"
 #include "fft/battle_event.h"
-#include "fft/battle_script.h"
+#include "fft/script.h"
 #include "fft/thread.h"
-#include "psx/types.h"
 
 /*
  * Return the offset just past a jump-target marker whose id is target_id.

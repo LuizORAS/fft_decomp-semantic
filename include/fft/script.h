@@ -1,8 +1,7 @@
 #ifndef SCRIPT_H
 #define SCRIPT_H
 
-/* Scenario bytecode, operands, variables and shared helpers for BATTLE and WORLD.
- * Module interpreter APIs are declared in battle_script.h and world.h. */
+/* Scenario bytecode, interpreter APIs and shared helpers for BATTLE and WORLD. */
 
 #include "fft/gfx.h"
 #include "fft/menu.h"
@@ -702,6 +701,34 @@ void script_load_attack_graphics_event_instruction(void);
 extern s32 g_script_event_speed;
 extern u16 g_script_frame_result_override;
 
+/* interpreter */
+/* Operand-byte counts, excluding the opcode; not per-operand width schemas.
+ * BATTLE 0x8014d170, WORLD 0x8013a454. The tables end after opcode 0xf3. */
+extern u8 g_script_event_instruction_sizes[0xf4];
+extern u8 g_world_event_instruction_sizes[0xf4];
+extern s32 g_script_loaded_event_id;
+extern s32 g_world_script_loaded_event_id;
+
+/* Whole matching interpreter ranges:
+ * BATTLE 0x80143bd8..0x80145f78, WORLD 0x800f6f20..0x800f92a0 (exclusive). */
+void script_execute_event(void);
+void world_script_execute_event(void);
+void script_load_event(s32 id);
+void world_script_load_event(s32 id);
+s32 script_load_next_event(void);
+s32 world_script_load_next_event(void);
+void script_run_next_event(void);
+void script_run_next_event_unused(void);
+void world_script_run_next_event(void);
+
+/* instruction cursors */
+s32 script_find_instruction_byte_offset(s32 offset, s32 opcode);
+s32 world_script_find_instruction_byte_offset(s32 offset, s32 instruction);
+/* 0x80149d6c..0x80149ebc: returns offset after the matching target marker;
+ * missing targets stop the current thread. alternate_opcode accepts -1. */
+s32 script_find_jump_target(s32 limit_offset, event_opcode_e target_opcode, s32 alternate_opcode, s32 target_id);
+s32 world_script_find_jump_target(s32, s32, s32, s32);
+
 /* variables */
 /* Event-script variable ids shared by the BATTLE and WORLD interpreters.
  * The calendar and location ids are also serialized into the memory-card
@@ -999,12 +1026,22 @@ s32 script_run_scenario_conditions(void);
 void script_clamp_s32_to_range(s32* value, s32 minimum, s32 maximum);
 s32 script_scale_music_volume(s32 volume);
 
+/* operand arithmetic */
+void script_copy_matrix(MATRIX* destination, const MATRIX* source);
+void world_script_copy_matrix(MATRIX* destination, const MATRIX* source);
+s32 script_interpolate_range_fixed12(s32 start, s32 end, s32 fraction, s32 value);
+s32 world_script_interpolate_range_fixed12(s32 start, s32 end, s32 fraction, s32 value);
+
 /* input */
 void script_apply_input_overrides(u32* input);
 
 /* packed dates */
 void script_assign_bitset_flag(u32* bitset, s32 bit_index, s32 value);
 void script_unlockdate_event_instruction(u32* bitset, s32 date_index, s32 month, s32 day);
+
+/* date */
+void script_advance_date_by_one_year(void);
+void world_script_advance_date_by_one_year(void);
 
 /* units */
 /* Event-unit lookup uses the resident scene's interpreter state. */
@@ -1034,6 +1071,7 @@ void script_wait_value_event_instruction(const event_wait_value_parameters_t* pa
 void script_apply_relative_camera(event_camera_values_t* parameters, const s32* camera_values);
 
 /* controller input */
+extern u32 g_script_unfiltered_controller_input;
 extern u32 g_script_event_input;
 extern u32 g_script_event_current_input;
 extern u32 g_script_event_previous_input;
@@ -1041,7 +1079,9 @@ extern u32 g_script_event_initial_repeat_counter;
 extern u32 g_script_event_repeat_counter;
 extern u32 g_script_event_secondary_repeat_counter;
 
+void script_filter_controller_input(u32* input);
 u32* script_get_controller_input_pointer(s32 use_current);
+u32 script_get_event_initial_repeat_counter(void);
 void script_load_event_input_state(const menu_input_state_t* saved);
 void script_pulse_tutorial_wait_value(s32 value);
 
@@ -1063,5 +1103,18 @@ void script_join_units_silently(void);
 /* Read and write unaligned little-endian signed 16-bit operands. */
 s16 script_read_s16(const void* source);
 void script_write_s16(u8* destination, s16 value);
+
+/* debug */
+extern const char g_script_pause_message[];
+extern char g_world_script_pause_message[];
+extern s16 g_script_debug_paused;
+extern s16 g_world_script_debug_paused;
+extern s16 g_script_opcode_dc_value;       /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
+extern s16 g_world_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
+
+void script_pause_event_instruction(void);
+void world_script_pause_event_instruction(void);
+void script_print_debug_message(void);
+void world_script_print_debug_message(void);
 
 #endif

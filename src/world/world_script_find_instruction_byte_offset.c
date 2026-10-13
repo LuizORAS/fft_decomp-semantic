@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 
 /* Returns the byte offset of the next `instruction` opcode at or after

@@ -1,6 +1,5 @@
 #include "fft/battle.h"
-#include "fft/battle_script.h"
-#include "psx/types.h"
+#include "fft/script.h"
 
 /* Linear interpolation from start to end at fraction / value, returned in 20.12
  * fixed point: start * ONE + (end - start) * fraction * ONE / value. */

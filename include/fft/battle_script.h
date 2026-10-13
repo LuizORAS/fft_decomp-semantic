@@ -1,49 +1,30 @@
 #ifndef BATTLE_SCRIPT_H
 #define BATTLE_SCRIPT_H
 
-/* Battle scenario bytecode execution, variables, input and instruction handlers. */
+/* Battle scene actions and orchestration invoked by scenario bytecode. */
 
 #include "fft/map.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 
 /* interpreter */
-/* Operand-byte counts, excluding the opcode; not per-operand width schemas.
- * BATTLE 0x8014d170, WORLD 0x8013a454. The tables end after opcode 0xf3. */
-extern u8 g_script_event_instruction_sizes[0xf4];
-extern s32 g_script_loaded_event_id;
-extern s16 g_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
 extern s16 g_script_threads_idle;
 
 void script_block_start_thread(void);
-/* Whole matching interpreter ranges:
- * BATTLE 0x80143bd8..0x80145f78, WORLD 0x800f6f20..0x800f92a0 (exclusive). */
-void script_execute_event(void);
 s32 script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode);
-s32 script_find_instruction_byte_offset(s32 offset, s32 opcode);
-/* 0x80149d6c..0x80149ebc: returns offset after the matching target marker;
- * missing targets stop the current thread. alternate_opcode accepts -1. */
-s32 script_find_jump_target(s32 limit_offset, event_opcode_e target_opcode, s32 alternate_opcode, s32 target_id);
 s32 script_get_current_scenario_finish_operation(void);
 u32 script_get_event_finish_operation(void);
-void script_load_event(s32 id);
-s32 script_load_next_event(void);
 void script_process_pending_requests(void);
 void script_reset_event_state(void);
 /* Returns the event result that the battle state handlers switch on;
  * proven by 0x80078fb4 and 0x800785ac, which both consume it. */
 s32 script_run_event_frame(u32* ot, u32 buttons);
-void script_run_next_event(void);
-void script_run_next_event_unused(void);
 void script_set_event_speed(s32 speed);
 void script_start_current_event_thread(void);
 
 /* input */
 extern u32 g_script_saved_event_input;
-extern u32 g_script_unfiltered_controller_input;
 
-void script_filter_controller_input(u32* input);
-u32 script_get_event_initial_repeat_counter(void);
 void script_route_event_input(void);
 void script_set_current_otag_entry_and_update_input(u32* entry, s32 input);
 void script_update_event_input_state(u32 state);
@@ -105,26 +86,12 @@ void script_map_darkness(void);
 void script_set_specialized_map_destroyed(void);
 
 /* graphics and messages */
-extern const char g_script_pause_message[];
 
 void script_color_screen_thread(void);
 void script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
 void script_load_portrait_colors_event_instruction(s32 portrait_id);
-void script_print_debug_message(void);
 void script_set_units_palette_update_suppression(s32 unit_id, s32 enable);
 void script_toggle_message_portrait_flip(const u8* parameters);
-
-/* date */
-void script_advance_date_by_one_year(void);
-
-/* operand arithmetic */
-void script_copy_matrix(MATRIX* destination, const MATRIX* source);
-s32 script_interpolate_range_fixed12(s32 start, s32 end, s32 fraction, s32 value);
-
-/* debug */
-extern s16 g_script_debug_paused;
-
-void script_pause_event_instruction(void);
 
 /* frame hooks */
 void script_frame_after_requests_stub(void);

@@ -1,4 +1,4 @@
-#include "fft/battle_script.h"
+#include "fft/script.h"
 
 /* Body of the event thread: load the event the current-event variable names, then
  * interpret it. script_start_current_event_thread starts it on thread slot

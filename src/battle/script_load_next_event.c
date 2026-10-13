@@ -1,7 +1,5 @@
-#include "fft/battle_script.h"
 #include "fft/script.h"
 #include "fft/thread.h"
-#include "psx/types.h"
 
 /* Pump event-thread execution until no other running thread has a task ID
    in 4..14, then commit script variable 0x27 as the newly loaded event id.
