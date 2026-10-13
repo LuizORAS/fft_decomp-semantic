@@ -1,4 +1,5 @@
 #include "fft/open.h"
+#include "fft/script.h"
 #include "psx/pad.h"
 
 /* Handle confirmation, cancellation, and cursor movement on the final birthday prompt.
@@ -32,8 +33,8 @@ void open_birthday_handle_confirmation_input(open_controller_record_t* record) {
         if (menu->selected_option == 0) {
             month = g_open_controller_records_next[g_open_current_controller_index - 2].birthday_date.month;
             day = g_open_controller_records_next[g_open_current_controller_index - 2].birthday_date.day;
-            world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH, month);
-            world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY, day);
+            script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH, month);
+            script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY, day);
             value = open_birthday_calculate_day_of_year(month, day);
             open_birthday_convert_date_to_zodiac(&month, &day);
             member = main_party_get_data_pointer(0);

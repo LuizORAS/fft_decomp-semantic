@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
@@ -46,7 +47,7 @@ void wldcore_menu_step_number_panel_level(wldcore_menu_panel_level_t* level) {
     } else if (buttons & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         level->result = 1;
-        world_script_set_variable(level->variable_id, g_wldcore_active_menu_value);
+        script_set_variable(level->variable_id, g_wldcore_active_menu_value);
     } else {
         return;
     }

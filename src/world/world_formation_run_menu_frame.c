@@ -145,7 +145,7 @@ s16 world_formation_run_menu_frame(u32* otag, u32 input) {
         main_sound_play_sfx_find_channel(g_sound_pending_sfx_id);
     }
     if (g_menu_pending_selection[0] == 0) {
-        world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, g_menu_pending_selection[1]);
+        script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, g_menu_pending_selection[1]);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_REQUEST_DESTINATION;
     }
     if (g_world_menu_input_block_frames != 0) {

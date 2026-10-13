@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -23,7 +24,7 @@ void wldcore_window_draw_centered_text(s32 window_index, s32 text_id) {
         wldcore_menu_display_text_entry(window_index, text_id, point, g_wldcore_window_image_buffer);
     }
     wldcore_window_load_image_record_to_vram(window_index, g_wldcore_window_image_buffer);
-    world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
-    world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);
-    world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
 }

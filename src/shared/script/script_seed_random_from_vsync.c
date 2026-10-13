@@ -1,4 +1,5 @@
-#include "fft/battle_script.h"
+#include "fft/script.h"
+#include "psx/libetc.h"
 
 /* Seed the event script's 16-bit random generator (script_get_rand16) with
  * the vertical-blank count. */

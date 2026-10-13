@@ -65,7 +65,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
                     cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
                 } else if (state->command == TEXT_SET_PORTRAIT) {
                     cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
-                    world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, *cursor);
+                    script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, *cursor);
                 } else if (state->command == TEXT_SET_VARIABLE_BASE) {
                     cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
                     variable_id = *cursor;
@@ -73,10 +73,10 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
                     cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
                     i = script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
                     if (i != 0) {
-                        world_script_set_variable(variable_id + i * 10, *cursor);
-                        world_script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);
+                        script_set_variable(variable_id + i * 10, *cursor);
+                        script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);
                     } else {
-                        world_script_set_variable(variable_id, *cursor);
+                        script_set_variable(variable_id, *cursor);
                     }
                 } else if (state->command == TEXT_SET_PALETTE) {
                     cursor = menu_text_advance_cursor_with_backreferences(state, cursor);

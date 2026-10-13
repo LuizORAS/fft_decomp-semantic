@@ -1,4 +1,4 @@
-#include "fft/battle_script.h"
+#include "fft/script.h"
 
 /* Step the event script's random generator, state * 0x6255 + 0x3619 kept to 16
  * bits, and return the new state. script_run_variable_command calls it

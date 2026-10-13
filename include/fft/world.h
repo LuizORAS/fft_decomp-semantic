@@ -272,7 +272,6 @@ extern s16 g_world_event_map_jump_in_request;
 extern s16 g_world_event_finish_check_pending;
 extern u8 g_world_event_thread_status_snapshot[]; /* per-thread running flags sampled before the yield, indexed 1..15 */
 extern map_tile_coordinates_t g_world_script_warp_unit_coords;
-extern u32 g_world_event_random_seed;
 extern u32 g_world_script_tutorial_repeat_counters[16];
 extern u16 g_world_script_tutorial_previous_input;
 extern u8* g_world_script_tutorial_command_ptr;
@@ -294,7 +293,6 @@ extern s32 g_world_event_pending_reserved_vram_release_slot;
 extern s32 g_world_event_pending_saved_evtchr_clear_slot;
 extern s32 g_world_event_pending_unit_vram_copy;
 extern u8* g_world_event_script;
-extern u8 g_world_event_variable_write_guard; /* WORLD counterpart: 0x80153387 */
 extern s16 g_world_event_weather_request;
 extern map_background_gradient_colors_t g_world_event_background_colors;
 s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation);
@@ -342,10 +340,8 @@ void world_script_print_debug_message(void);
 void world_script_pulse_tutorial_wait_value(s32 value);
 s32 world_script_run_frame(u32* ot, u32 buttons);
 void world_script_run_next_event(void);
-void world_script_seed_event_rng_from_vsync(void);
 void world_script_set_event_speed(s32 speed);
 void world_script_set_current_otag_entry_and_update_input(u32* ot, s32 buttons);
-void world_script_set_variable(s32 variable_id, s32 value);
 void world_script_set_vsync_mode_and_event_speed(s32 value);
 void world_script_sprite_move(void);
 void world_script_sprite_move_beta(void);
@@ -366,14 +362,10 @@ void world_script_color_screen_thread(void);
 void world_script_execute_event(void);
 s32 world_script_find_instruction_byte_offset(s32 offset, s32 instruction);
 s32 world_script_find_jump_target(s32, s32, s32, s32);
-u32 world_script_get_rand16(void);
-s32* world_script_get_variable_word_pointer_from_id(s32 variable_id);
 void world_script_inflict_status_thread(void);
 void world_script_load_portrait_colors_event_instruction(s32);
 void world_script_pause_event_instruction(void);
 void world_script_play_effect_thread(void);
-void world_script_run_condition(event_opcode_e opcode);
-void world_script_run_variable_command(s32 opcode, s32 destination_id, s32 source, s32 unused);
 void world_script_waitspritemove_event_instruction(s32);
 
 /* sound */

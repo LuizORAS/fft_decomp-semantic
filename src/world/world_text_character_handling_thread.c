@@ -79,7 +79,7 @@ void world_text_character_handling_thread(void) {
 
     party_name_request = 0;
     thread_set_current_task_id(NATIVE_THREAD_TASK_RESUME);
-    world_script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
     value_index = 0;
     variable_id = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
     thread = (native_thread_t*)((g_native_current_thread_id << 10) + (s32)g_native_threads);
@@ -703,7 +703,7 @@ void world_text_character_handling_thread(void) {
             NEXT();
             win[0].portrait_code = *text;
             win[1].portrait_code = *text;
-            world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, *text);
+            script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, *text);
             NEXT();
         } else if (code == TEXT_SET_VARIABLE_BASE) {
             NEXT();
@@ -713,10 +713,10 @@ void world_text_character_handling_thread(void) {
             NEXT();
             i = script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
             if (i != 0) {
-                world_script_set_variable(variable_id + i * 10, *text);
-                world_script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);
+                script_set_variable(variable_id + i * 10, *text);
+                script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);
             } else {
-                world_script_set_variable(variable_id, *text);
+                script_set_variable(variable_id, *text);
             }
             NEXT();
         } else if (code == TEXT_SET_GLYPH_DELAY) {

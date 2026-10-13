@@ -1,5 +1,5 @@
-#include "fft/battle_script.h"
 #include "fft/event_small.h"
+#include "fft/script.h"
 
 /* Bind the roster and job name sections to the overlay's name data, alias
  * the skillset-name copy to the skillset names and zero the deployment unit

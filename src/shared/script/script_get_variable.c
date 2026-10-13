@@ -1,6 +1,4 @@
-#include "fft/battle_script.h"
 #include "fft/script.h"
-#include "psx/types.h"
 
 /* Read a script variable from any of the 32-bit variable, flag and nibble ranges by adding
  * it into 32-bit script variable 0 with the variable commands. Variable 0 (the comparison

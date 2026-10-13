@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
@@ -78,7 +79,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                     wldcore_menu_run_shop_and_rebuild_screen(WORLD_MENU_CONTEXT_FUR_SHOP);
                     return;
                 default:
-                    world_script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_SELECTION,
+                    script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_SELECTION,
                         value - (WLDCORE_TEXT_ID_DEEP_DUNGEON_FLOOR_FIRST & TEXT_ID_ENTRY_MASK));
                     wldcore_menu_close_level_and_release_records(&level->slots, 0);
                     if (wldcore_script_process_conditional_set(
@@ -89,12 +90,12 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                         record = &records[g_wldcore_script_state.args[0]];
                         g_wldcore_next_map_id[0] = record->map_id;
                         /* Direct ENTD indexing folds the table base and removes a retail addition. */
-                        world_script_set_variable(
+                        script_set_variable(
                             EVENT_SCRIPT_VAR_CURRENT_ENTD, (&records->entd_ids[0])[((rand() * 8) >> 15) + offset]);
-                        world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);
-                        world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, record->squad_id);
-                        world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[1]);
-                        world_script_set_variable(
+                        script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);
+                        script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, record->squad_id);
+                        script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[1]);
+                        script_set_variable(
                             EVENT_SCRIPT_VAR_DEEP_DUNGEON_EXIT, (rand() * g_wldcore_script_state.args[2]) >> 15);
                         g_main_system_flags
                             = (g_main_system_flags | MAIN_SYSTEM_FLAG_DEEP_DUNGEON_BATTLE) ^ MAIN_SYSTEM_FLAG_RUNNING;
@@ -105,7 +106,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                     return;
                 }
             }
-            world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[*selected]);
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[*selected]);
             g_main_system_flags ^= MAIN_SYSTEM_FLAG_RUNNING;
             value = values[*selected] & TEXT_ID_ENTRY_MASK;
             g_wldcore_next_map_id[0] = value + 1;

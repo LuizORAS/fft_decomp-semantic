@@ -18,14 +18,14 @@ void wldcore_calendar_advance_day(void) {
         }
         day = 1;
     }
-    world_script_set_variable(EVENT_SCRIPT_VAR_MONTH, month);
-    world_script_set_variable(EVENT_SCRIPT_VAR_DAY, day);
+    script_set_variable(EVENT_SCRIPT_VAR_MONTH, month);
+    script_set_variable(EVENT_SCRIPT_VAR_DAY, day);
     if (month == 3 && day == 21) {
         s32 value = script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + 1;
         if (value >= 100) {
             value = 99;
         }
-        world_script_set_variable(EVENT_SCRIPT_VAR_UNKNOWN_67, value);
+        script_set_variable(EVENT_SCRIPT_VAR_UNKNOWN_67, value);
     }
     wldcore_proposition_advance_daily_counters();
     wldcore_advance_brave_story_birthdays();

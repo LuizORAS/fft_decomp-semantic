@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /*
@@ -36,9 +37,9 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     for (i = 0; i < 1; i++) {
         g_wldcore_sound_novel_local_flags[i] = 0;
     }
-    world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
-    world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);
-    world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
     g_wldcore_window_render_records[g_wldcore_active_saved_record.picture_render_index].priority = 0xC;
     g_wldcore_window_render_records[g_wldcore_active_saved_record.picture_render_index].flags
         |= WORLD_RENDER_RECORD_HIDDEN;

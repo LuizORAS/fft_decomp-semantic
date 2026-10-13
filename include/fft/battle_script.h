@@ -39,16 +39,6 @@ void script_run_next_event_unused(void);
 void script_set_event_speed(s32 speed);
 void script_start_current_event_thread(void);
 
-/* variables */
-/* 0x801660a3: suppress recursive write filtering while getters use operand 0. */
-extern u8 g_script_variable_write_guard;
-
-/* Encoded variable IDs select 32-bit values, bits, or nibbles. The command runner's
- * fourth argument is supplied by existing callers but is not read. */
-s32* script_get_variable_word_pointer_from_id(s32 variable_id);
-void script_run_variable_command(s32 opcode, s32 destination_id, s32 source, s32 unused);
-void script_set_variable(s32 variable_id, s32 value);
-
 /* input */
 extern u32 g_script_event_current_input;
 extern u32 g_script_event_initial_repeat_counter;
@@ -75,7 +65,6 @@ s32 script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32
 s32 script_is_deployment_running(u32* ot, u32 buttons);
 s32 script_is_tutorial_event_slot(void);
 void script_pulse_tutorial_wait_value(s32 value);
-void script_run_condition(event_opcode_e opcode);
 s32 script_run_scenario_conditions(void);
 
 /* unit creation and removal */
@@ -142,12 +131,8 @@ void script_print_debug_message(void);
 void script_set_units_palette_update_suppression(s32 unit_id, s32 enable);
 void script_toggle_message_portrait_flip(const u8* parameters);
 
-/* date and random */
-extern s32 g_script_rand16_state;
-
+/* date */
 void script_advance_date_by_one_year(void);
-s32 script_get_rand16(void);
-void script_seed_random_from_vsync(void);
 
 /* operand arithmetic */
 void script_copy_matrix(MATRIX* destination, const MATRIX* source);

@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Clear system flag 0x10000 and act on the pending world-menu request flags.
@@ -32,11 +33,11 @@ void wldcore_menu_restore_level_on_world_entry(void) {
     }
     if (flags & MAIN_SYSTEM_FLAG_STORY_EVENT_REPLAY) {
         g_main_system_flags = flags ^ MAIN_SYSTEM_FLAG_STORY_EVENT_REPLAY;
-        world_script_set_variable(EVENT_SCRIPT_VAR_WEATHER, g_main_saved_weather_variable);
+        script_set_variable(EVENT_SCRIPT_VAR_WEATHER, g_main_saved_weather_variable);
         wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_STORY_EVENTS, 0, 0);
     } else if (flags & MAIN_SYSTEM_FLAG_TUTORIAL_EVENT) {
         g_main_system_flags = flags ^ MAIN_SYSTEM_FLAG_TUTORIAL_EVENT;
-        world_script_set_variable(EVENT_SCRIPT_VAR_WEATHER, g_main_saved_weather_variable);
+        script_set_variable(EVENT_SCRIPT_VAR_WEATHER, g_main_saved_weather_variable);
         g_wldcore_audio_queue.music.tracks[0] = 0x1B;
         g_wldcore_audio_queue.music.tracks[1] = 0x1A;
         g_wldcore_audio_queue.current_slot = 2;

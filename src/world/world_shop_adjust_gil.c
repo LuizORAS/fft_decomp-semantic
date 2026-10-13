@@ -14,6 +14,6 @@ s32 world_shop_adjust_gil(s32 delta) {
     if (gil > 0x5F5E0FF) {
         gil = 0x5F5E0FF;
     }
-    world_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, gil);
+    script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, gil);
     return gil;
 }

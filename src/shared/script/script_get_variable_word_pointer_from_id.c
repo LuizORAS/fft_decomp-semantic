@@ -1,13 +1,11 @@
 #include "fft/script.h"
 #include "fft/thread.h"
-#include "fft/world.h"
-#include "psx/types.h"
 
 /* Resolves a script variable id to the 32-bit storage value that holds it. Ids below
  * 0x80 own a whole 32-bit value; 0x80..0x35F pack 32 flags per 32-bit value starting at element
  * 0x80, and 0x360..0x3FF pack eight nibbles per 32-bit value starting at element 0x97.
- * Ids at or above 0x400 are invalid and stop the calling thread. */
-s32* world_script_get_variable_word_pointer_from_id(s32 variable_id) {
+ * Ids at or above 0x400 stop the calling thread; the result is unset if it returns. */
+s32* script_get_variable_word_pointer_from_id(s32 variable_id) {
     s32* word;
 
     if (variable_id < EVENT_SCRIPT_VAR_PACKED_BIT_FIRST) {

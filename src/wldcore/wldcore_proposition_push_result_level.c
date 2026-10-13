@@ -1,4 +1,5 @@
 #include "fft/menu.h"
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/wldcore.h"
 
@@ -96,7 +97,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     party = &g_wldcore_proposition_report.excluded_party_index;
     g_text_substitution_values[0] = *party + TEXT_ID_UNIT_NAME_BASE;
     message = 0x9C;
-    world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, world_get_party_unit_formation_sprite(*party));
+    script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, world_get_party_unit_formation_sprite(*party));
     if (g_wldcore_proposition_report.recalled != 0) {
         message = 0xA2;
     }

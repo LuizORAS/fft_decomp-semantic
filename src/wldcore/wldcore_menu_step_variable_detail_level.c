@@ -39,7 +39,7 @@ void wldcore_menu_step_variable_detail_level(wldcore_menu_variable_detail_level_
             level->timer = level->timer + 1;
             return;
         }
-        world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, 0xFF);
+        script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, 0xFF);
         entry = level->value;
         g_wldcore_scrollable_text_window.image_y = 0x70;
         g_wldcore_scrollable_text_window.base.x = -0x7A;

@@ -111,7 +111,7 @@ s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_
         }
     }
     if (type == EVENT_SCENARIO_CONDITION_RUN_EVENT) {
-        world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, id);
+        script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, id);
         return EVENT_SCENARIO_CONDITION_RESULT_RUN_EVENT;
     }
     return EVENT_SCENARIO_CONDITION_RESULT_FAIL;

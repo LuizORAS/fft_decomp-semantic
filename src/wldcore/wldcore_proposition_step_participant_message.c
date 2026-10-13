@@ -1,3 +1,4 @@
+#include "fft/script.h"
 /* The switch jump table lives at .rodata 0x800671dc (0x18 bytes). */
 #include "fft/thread.h"
 #include "fft/wldcore.h"
@@ -47,7 +48,7 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_leve
     case 2:
         thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
         g_text_substitution_values[0] = g_wldcore_proposition_report.speaker_party_index + TEXT_ID_UNIT_NAME_BASE;
-        world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT,
+        script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT,
             world_get_party_unit_formation_sprite(g_wldcore_proposition_report.speaker_party_index));
         thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,
             wldcore_proposition_adjust_message_index(message, g_wldcore_proposition_report.speaker_party_index)

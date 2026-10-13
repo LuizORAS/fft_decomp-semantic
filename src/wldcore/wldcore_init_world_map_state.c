@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -90,40 +91,40 @@ void wldcore_init_world_map_state(void) {
 
     if (g_main_system_flags & MAIN_SYSTEM_FLAG_UNLOCK_ALL) {
         for (i = 0; i < EVENT_SCRIPT_VAR_PERSON_PROFILE_COUNT; i++)
-            world_script_set_variable(EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST + i, 1);
+            script_set_variable(EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST + i, 1);
         for (i = 0; i < EVENT_SCRIPT_VAR_RUMOR_COUNT; i++)
-            world_script_set_variable(EVENT_SCRIPT_VAR_RUMOR_FIRST + i, 1);
+            script_set_variable(EVENT_SCRIPT_VAR_RUMOR_FIRST + i, 1);
         for (i = 0; i < WLDCORE_ROUTE_COUNT; i++)
-            world_script_set_variable(EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST + i, 1);
+            script_set_variable(EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST + i, 1);
         for (i = 0; i < WORLD_LOCATION_COUNT; i++)
-            world_script_set_variable(EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST + i, 1);
+            script_set_variable(EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST + i, 1);
         for (i = 0; i < EVENT_SCRIPT_VAR_STORY_EVENT_COUNT; i++)
-            world_script_set_variable(EVENT_SCRIPT_VAR_STORY_EVENT_FIRST + i, 1);
+            script_set_variable(EVENT_SCRIPT_VAR_STORY_EVENT_FIRST + i, 1);
 
         if (!(PadRead(0) & PSX_PAD_START)) {
             date.month = 1;
             date.day = 1;
             for (i = 0; i < EVENT_SCRIPT_VAR_TREASURE_COUNT; i++) {
-                world_script_set_variable(EVENT_SCRIPT_VAR_TREASURE_FIRST + i, 1);
+                script_set_variable(EVENT_SCRIPT_VAR_TREASURE_FIRST + i, 1);
                 wldcore_write_nine_bit_record(g_main_treasure_acquisition_date_bits, i, &date);
             }
             for (i = 0; i < EVENT_SCRIPT_VAR_UNEXPLORED_LAND_COUNT; i++) {
-                world_script_set_variable(EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST + i, 1);
+                script_set_variable(EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST + i, 1);
                 wldcore_write_nine_bit_record(g_main_land_discovery_date_bits, i, &date);
             }
             for (i = 0; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++)
-                world_script_set_variable(EVENT_SCRIPT_VAR_PROPOSITION_FIRST + i, 4);
+                script_set_variable(EVENT_SCRIPT_VAR_PROPOSITION_FIRST + i, 4);
         }
 
-        world_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, 0x7530);
-        world_script_set_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY, 0x14);
-        world_script_set_variable(EVENT_SCRIPT_VAR_PROPOSITIONS_ENABLED, 1);
-        world_script_set_variable(EVENT_SCRIPT_VAR_FUR_SHOP_ENABLED, 1);
+        script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, 0x7530);
+        script_set_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY, 0x14);
+        script_set_variable(EVENT_SCRIPT_VAR_PROPOSITIONS_ENABLED, 1);
+        script_set_variable(EVENT_SCRIPT_VAR_FUR_SHOP_ENABLED, 1);
 
         month = 1;
         day = 1;
-        world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH, 1);
-        world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY, day);
+        script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH, 1);
+        script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY, day);
         day_of_year = wldcore_calendar_calculate_day_of_year(month, day);
         wldcore_calendar_convert_date_to_zodiac(&month, &day);
         party = main_party_get_data_pointer(0);

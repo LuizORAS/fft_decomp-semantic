@@ -828,8 +828,8 @@ functions:
   - {addr: 0x8013b00c, size: 628, name: battle_menu_icon_timed_thread, hash: 5f240ea74b70ce9e}
   - {addr: 0x8013b280, size: 636, name: battle_menu_icon_linked_entry_thread, hash: 17aa3c9f1ea9e5dd}
   - {addr: 0x8013b4fc, size: 148, name: battle_menu_input_thread, hash: 8feb91a2148b9b37}
-  - {addr: 0x8013b590, size: 180, name: script_get_variable, hash: 92bfa64b3cd0e089}
-  - {addr: 0x8013b644, size: 160, name: script_set_variable, hash: 6bab3d74cae51aa6}
+  - {addr: 0x8013b590, size: 180, name: script_get_variable, hash: 92bfa64b3cd0e089, source: src/shared/script/script_get_variable.c}
+  - {addr: 0x8013b644, size: 160, name: script_set_variable, hash: 6bab3d74cae51aa6, source: src/shared/script/script_set_variable.c}
   - {addr: 0x8013b6e4, size: 436, name: battle_menu_init_panel_fade_tiles, hash: 200e43d514e6d844}
   - {addr: 0x8013b898, size: 464, name: battle_menu_update_panel_fade, hash: d9c44f2307947857}
   - {addr: 0x8013ba68, size: 264, name: battle_gfx_submit_screen_fade_overlay, hash: 7b6fd4b19da8c27e}
@@ -1031,13 +1031,13 @@ functions:
   - {addr: 0x80149d48, size: 36, name: thread_set_current_task_id, hash: 7886a9c202b1848c, source: src/shared/thread/thread_set_current_task_id.c}
   - {addr: 0x80149d6c, size: 336, name: script_find_jump_target, hash: 422ae30d6a9b16a6}
   - {addr: 0x80149ebc, size: 84, name: script_find_instruction_byte_offset, hash: ac44e561bcf62111}
-  - {addr: 0x80149f10, size: 264, name: script_run_condition, hash: 56d22d399c4208fa}
-  - {addr: 0x8014a018, size: 724, name: script_run_variable_command, hash: 71d9b10690838d9e}
-  - {addr: 0x8014a2ec, size: 176, name: script_get_variable_word_pointer_from_id, hash: e0ab275bfc1159e1}
+  - {addr: 0x80149f10, size: 264, name: script_run_condition, hash: 56d22d399c4208fa, source: src/shared/script/script_run_condition.c}
+  - {addr: 0x8014a018, size: 724, name: script_run_variable_command, hash: 71d9b10690838d9e, source: src/shared/script/script_run_variable_command.c}
+  - {addr: 0x8014a2ec, size: 176, name: script_get_variable_word_pointer_from_id, hash: e0ab275bfc1159e1, source: src/shared/script/script_get_variable_word_pointer_from_id.c}
   - {addr: 0x8014a39c, size: 92, name: script_get_variable_bit_position, hash: d1c33bd1b259d228, source: src/shared/script/script_get_variable_bit_position.c}
   - {addr: 0x8014a3f8, size: 108, name: script_wait_value_event_instruction, hash: 17b51c5398ec506b, source: src/shared/script/script_wait_value_event_instruction.c}
-  - {addr: 0x8014a464, size: 40, name: script_seed_random_from_vsync, hash: 692adfd2ff22144d}
-  - {addr: 0x8014a48c, size: 76, name: script_get_rand16, hash: 8b133d34ad0fcf36}
+  - {addr: 0x8014a464, size: 40, name: script_seed_random_from_vsync, hash: 692adfd2ff22144d, source: src/shared/script/script_seed_random_from_vsync.c}
+  - {addr: 0x8014a48c, size: 76, name: script_get_rand16, hash: 8b133d34ad0fcf36, source: src/shared/script/script_get_rand16.c}
   - {addr: 0x8014a4d8, size: 68, name: script_wait_for_unit_ready, hash: 0f9c066307f5d2f0, source: src/shared/script/script_wait_for_unit_ready.c}
   - {addr: 0x8014a51c, size: 92, name: battle_text_init_menu_section_pointers, hash: 86ab1a65b19324c1}
   - {addr: 0x8014a578, size: 32, name: script_get_controller_input_pointer, hash: 1827206fea7090f9}

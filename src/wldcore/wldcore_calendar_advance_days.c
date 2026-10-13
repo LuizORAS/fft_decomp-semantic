@@ -36,7 +36,7 @@ void wldcore_calendar_advance_days(s32 days) {
 
     birthdays = g_wldcore_brave_story_birthdays;
     years = days / 365;
-    world_script_set_variable(EVENT_SCRIPT_VAR_UNKNOWN_67, script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + years);
+    script_set_variable(EVENT_SCRIPT_VAR_UNKNOWN_67, script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + years);
     days %= 365;
     month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
     day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
@@ -60,12 +60,12 @@ void wldcore_calendar_advance_days(s32 days) {
     }
     today += days;
     if (today >= 365) {
-        world_script_set_variable(EVENT_SCRIPT_VAR_UNKNOWN_67, script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + 1);
+        script_set_variable(EVENT_SCRIPT_VAR_UNKNOWN_67, script_get_variable(EVENT_SCRIPT_VAR_UNKNOWN_67) + 1);
         today -= 365;
     }
     wldcore_calendar_calculate_month_and_day(today, &month, &day);
-    world_script_set_variable(EVENT_SCRIPT_VAR_MONTH, month);
-    world_script_set_variable(EVENT_SCRIPT_VAR_DAY, day);
+    script_set_variable(EVENT_SCRIPT_VAR_MONTH, month);
+    script_set_variable(EVENT_SCRIPT_VAR_DAY, day);
     for (i = 0; i < g_main_save_proposition_count; i++) {
         if (!(g_main_active_propositions[i].flags & WLDCORE_PROPOSITION_PROGRESS_RETURNED)) {
             if (g_main_active_propositions[i].elapsed_days + days >= g_main_active_propositions[i].assigned_days) {

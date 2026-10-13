@@ -1,4 +1,5 @@
 #include "fft/main.h"
+#include "fft/script.h"
 #include "fft/world.h"
 
 enum {
@@ -22,5 +23,5 @@ void main_party_init_new_game(int mode) {
     }
 
     main_item_init_new_game_inventory();
-    world_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, STARTING_WAR_FUNDS);
+    script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, STARTING_WAR_FUNDS);
 }

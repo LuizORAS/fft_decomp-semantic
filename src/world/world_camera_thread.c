@@ -57,7 +57,7 @@ void world_camera_thread(void) {
         if (ABS(yaw_delta + ONE) < ABS(yaw_delta)) {
             yaw = angle + ONE;
         }
-        world_script_set_variable(EVENT_SCRIPT_VAR_CAMERA_YAW, yaw);
+        script_set_variable(EVENT_SCRIPT_VAR_CAMERA_YAW, yaw);
     }
 
     for (i = 0; i < EVENT_CAMERA_COMPONENT_COUNT; i++) {

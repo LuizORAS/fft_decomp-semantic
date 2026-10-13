@@ -964,6 +964,8 @@ enum {
 
 /* Each scene points to the resident script-variable bank. */
 extern s32* g_script_variables;
+/* Suppress recursive write filtering while getters use comparison variable 0. */
+extern u8 g_script_variable_write_guard;
 
 /* Four unit bindings used by the scenario's slot selectors. */
 extern s16 g_script_unit_slots[EVENT_UNIT_SELECTOR_SLOT_COUNT];
@@ -972,6 +974,16 @@ extern s16 g_script_unit_slots[EVENT_UNIT_SELECTOR_SLOT_COUNT];
  * result. Reading weather/time first rebuilds it from the separate variables. */
 s32 script_get_variable(s32 variable_id);
 s32 script_get_variable_bit_position(s32 variable_id);
+s32* script_get_variable_word_pointer_from_id(s32 variable_id);
+void script_set_variable(s32 variable_id, s32 value);
+/* The fourth argument is supplied by callers but is not read. */
+void script_run_variable_command(s32 opcode, s32 destination_id, s32 source, s32 unused);
+void script_run_condition(event_opcode_e opcode);
+
+/* random */
+extern s32 g_script_rand16_state;
+s32 script_get_rand16(void);
+void script_seed_random_from_vsync(void);
 
 /* values */
 void script_clamp_s32_to_range(s32* value, s32 minimum, s32 maximum);

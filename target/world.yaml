@@ -176,8 +176,8 @@ functions:
   - {addr: 0x800eec24, size: 628, name: world_menu_icon_timed_thread, hash: f24bfc68728f0995}
   - {addr: 0x800eee98, size: 636, name: world_menu_icon_linked_entry_thread, hash: 1ddd6f5ab1b123da}
   - {addr: 0x800ef114, size: 148, name: world_menu_input_loop_thread, hash: 0d24fc429b9791b4}
-  - {addr: 0x800ef1a8, size: 180, name: script_get_variable, hash: 4871fbfdd3465551}
-  - {addr: 0x800ef25c, size: 160, name: world_script_set_variable, hash: 7777ac9926486c9f}
+  - {addr: 0x800ef1a8, size: 180, name: script_get_variable, hash: 4871fbfdd3465551, source: src/shared/script/script_get_variable.c}
+  - {addr: 0x800ef25c, size: 160, name: script_set_variable, hash: 7777ac9926486c9f, source: src/shared/script/script_set_variable.c}
   - {addr: 0x800ef2fc, size: 436, name: world_menu_init_panel_fade_tiles, hash: 3be1a31046d8fb32}
   - {addr: 0x800ef4b0, size: 464, name: world_menu_update_panel_fade, hash: 9fb1cf73a7d85714}
   - {addr: 0x800ef680, size: 264, name: world_gfx_submit_screen_fade_overlay, hash: 0f3b3682c42fcae8}
@@ -379,13 +379,13 @@ functions:
   - {addr: 0x800fd1d8, size: 36, name: thread_set_current_task_id, hash: dd9e3f86ea659634, source: src/shared/thread/thread_set_current_task_id.c}
   - {addr: 0x800fd1fc, size: 336, name: world_script_find_jump_target, hash: ab737fa84b87a290}
   - {addr: 0x800fd34c, size: 84, name: world_script_find_instruction_byte_offset, hash: b757188c6a6e7586}
-  - {addr: 0x800fd3a0, size: 264, name: world_script_run_condition, hash: e36beb855569d28c}
-  - {addr: 0x800fd4a8, size: 796, name: world_script_run_variable_command, hash: e56f1c1dadc95a3e, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
-  - {addr: 0x800fd7c4, size: 176, name: world_script_get_variable_word_pointer_from_id, hash: 6a6f5aa839d4ad4d}
+  - {addr: 0x800fd3a0, size: 264, name: script_run_condition, hash: e36beb855569d28c, source: src/shared/script/script_run_condition.c}
+  - {addr: 0x800fd4a8, size: 796, name: script_run_variable_command, hash: e56f1c1dadc95a3e, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck, source: src/shared/script/script_run_variable_command.c}
+  - {addr: 0x800fd7c4, size: 176, name: script_get_variable_word_pointer_from_id, hash: 6a6f5aa839d4ad4d, source: src/shared/script/script_get_variable_word_pointer_from_id.c}
   - {addr: 0x800fd874, size: 92, name: script_get_variable_bit_position, hash: 58c6183072a6e980, source: src/shared/script/script_get_variable_bit_position.c}
   - {addr: 0x800fd8d0, size: 108, name: script_wait_value_event_instruction, hash: bf0474d1b7f495e5, source: src/shared/script/script_wait_value_event_instruction.c}
-  - {addr: 0x800fd93c, size: 40, name: world_script_seed_event_rng_from_vsync, hash: 0558cf34e10433b2}
-  - {addr: 0x800fd964, size: 76, name: world_script_get_rand16, hash: 9347ed63e047087b}
+  - {addr: 0x800fd93c, size: 40, name: script_seed_random_from_vsync, hash: 0558cf34e10433b2, source: src/shared/script/script_seed_random_from_vsync.c}
+  - {addr: 0x800fd964, size: 76, name: script_get_rand16, hash: 9347ed63e047087b, source: src/shared/script/script_get_rand16.c}
   - {addr: 0x800fd9b0, size: 68, name: script_wait_for_unit_ready, hash: 27f4fb7c909f3472, source: src/shared/script/script_wait_for_unit_ready.c}
   - {addr: 0x800fd9f4, size: 64, name: world_text_init_section_pointers, hash: 27bf3bcb9a9d726b}
   - {addr: 0x800fda34, size: 32, name: world_input_get_menu_controller, hash: d9e49e9436e88942}
@@ -1155,7 +1155,7 @@ data:
   - {addr: 0x80153374, name: g_world_menu_slot_states}
   - {addr: 0x80153380, name: g_world_text_slot_source_columns}
   - {addr: 0x80153384, name: g_world_text_slot_row_pitches}
-  - {addr: 0x80153387, name: g_world_event_variable_write_guard}
+  - {addr: 0x80153387, name: g_script_variable_write_guard}
   - {addr: 0x8015338c, name: g_world_text_decimal_divisors}
   - {addr: 0x801533b8, name: g_menu_cursor_zoom_percentages}
   - {addr: 0x801533d0, name: g_world_text_substitution_rect}
@@ -1916,7 +1916,7 @@ data:
   - {addr: 0x801a66a0, name: g_world_event_repeat_counter}
   - {addr: 0x801a66a4, name: g_world_event_secondary_repeat_counter}
   - {addr: 0x801a66a8, name: g_world_unit_status_staging_data}
-  - {addr: 0x801a66ac, name: g_world_event_random_seed}
+  - {addr: 0x801a66ac, name: g_script_rand16_state}
   - {addr: 0x801a66b0, name: g_world_dead_unit_controller_input}
   - {addr: 0x801a66b4, name: g_world_menu_text_page_image}
   - {addr: 0x801ac6b4, name: g_world_at_list_pages}

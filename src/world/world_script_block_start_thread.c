@@ -24,9 +24,9 @@ void world_script_block_start_thread(void) {
         first_halfword = script_read_s16(parameters);
         if (script[0] == EVENT_OPCODE_CALL_FUNCTION) {
             if (script[1] == EVENT_CALL_FUNCTION_MUTE_TEXT_AUDIO_CUE) {
-                world_script_set_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE, 1);
+                script_set_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE, 1);
             } else if (script[1] == EVENT_CALL_FUNCTION_UNMUTE_TEXT_AUDIO_CUE) {
-                world_script_set_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE, 0);
+                script_set_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE, 0);
             }
         } else if (script[0] == EVENT_OPCODE_SOUND_EFFECT) {
             g_sound_pending_sfx_id = first_halfword;

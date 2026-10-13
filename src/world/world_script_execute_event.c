@@ -87,9 +87,9 @@ void world_script_execute_event(void) {
     } else {
         world_script_process_inflict_status_commands();
     }
-    world_script_set_variable(EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS, 0);
-    world_script_set_variable(EVENT_SCRIPT_VAR_DISABLED_CONTROLLER_INPUTS, 0);
-    world_script_set_variable(EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_DISABLED_CONTROLLER_INPUTS, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS, 0);
 restart_event:
     world_script_set_event_speed(1U);
     instruction_offset = 0;
@@ -115,10 +115,10 @@ restart_event:
         if (opcode == EVENT_OPCODE_CAMERA_DISABLED) {
         } else if (opcode == EVENT_OPCODE_NOP) {
         } else if ((opcode - EVENT_CONDITION_SECOND_GTE_FIRST) < 6U) {
-            world_script_run_condition(opcode);
+            script_run_condition(opcode);
         } else if ((opcode - EVENT_OPCODE_ADD_IMMEDIATE) < 0xFU) {
             operand_1 = (u16)first_operand;
-            world_script_run_variable_command(
+            script_run_variable_command(
                 opcode, operand_1, script_read_s16(instruction_offset + (g_world_event_script) + 3) & 0xFFFF, 0);
         } else if (opcode == EVENT_OPCODE_REQUEST_MAP_JUMP_IN) {
             g_world_event_map_jump_in_request = operand_1;
@@ -150,15 +150,15 @@ restart_event:
                         operand_1 += 1;
                     } while (operand_1 < 0xF);
                     if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_EPILOGUE) {
-                        world_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
+                        script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
                     }
-                    world_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
+                    script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
                     menu_request_open_companion_executable(COMPANION_OVERLAY_CARD);
                     g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_CARD_SAVE;
                     do {
                         thread_yield();
                     } while (g_world_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
-                    world_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 0);
+                    script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 0);
                     operand_1 = 2;
                     do {
                         thread_set_parameters(operand_1, 0U, 0, 1);
@@ -187,10 +187,10 @@ restart_event:
                 D_800459D8 = 0;
             }
             if (operand_1 == EVENT_CALL_FUNCTION_MUTE_TEXT_AUDIO_CUE) {
-                world_script_set_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE, 1);
+                script_set_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE, 1);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_UNMUTE_TEXT_AUDIO_CUE) {
-                world_script_set_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE, 0);
+                script_set_variable(EVENT_SCRIPT_VAR_MUTE_TEXT_AUDIO_CUE, 0);
             }
             if (operand_1 == EVENT_CALL_FUNCTION_ADVANCE_MAP_DESTRUCTION_AND_WAIT) {
                 world_script_set_specialized_map_destroyed();
@@ -279,7 +279,7 @@ restart_event:
             if (world_script_check_tutorial_event_slot() != 0) {
                 world_gfx_ramp_screen_overlay_intensity_to_max();
                 g_main_game_options = g_world_saved_game_options;
-                world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
+                script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
                 battle_state_start_close_battle(0x20);
             }
             if (g_world_menu_input_mode == MENU_INPUT_PLAYER) {
@@ -293,7 +293,7 @@ restart_event:
                     battle_gfx_init_evtchr_vram_slots();
                 }
             }
-            world_script_set_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED, 0);
+            script_set_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED, 0);
             event_flags = (g_main_scenario_event_finish_operations[operand_1] & ~0x0CFF) >> 8;
             if (g_world_menu_input_mode == MENU_INPUT_PLAYER && event_flags == 0
                 && (operand_1 - EVENT_ID_COMMON_FIRST) >= 0x1AU && operand_1 != 0) {
@@ -485,7 +485,7 @@ restart_event:
             g_world_event_effect_target_x = focus_instruction[4];
             g_world_event_effect_target_y = focus_instruction[5];
             g_world_event_effect_target_mode = focus_instruction[6];
-            world_script_set_variable(EVENT_SCRIPT_VAR_CAMERA_ROLL, 0);
+            script_set_variable(EVENT_SCRIPT_VAR_CAMERA_ROLL, 0);
             thread_wait_frames(2);
         } else if (opcode == EVENT_OPCODE_EFFECT_START) {
             do {
@@ -931,7 +931,7 @@ restart_event:
             thread_wait_until_inactive(operand_4);
         } else if (opcode == EVENT_OPCODE_SET_DATE_ADVANCE) {
             if (script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) {
-                world_script_set_variable(EVENT_SCRIPT_VAR_DATE_ADVANCE, first_operand);
+                script_set_variable(EVENT_SCRIPT_VAR_DATE_ADVANCE, first_operand);
             }
         } else if (opcode == EVENT_OPCODE_TELEPORT_OUT) {
             world_script_teleportout_event_instruction(first_operand, 1);

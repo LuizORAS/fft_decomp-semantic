@@ -1,4 +1,3 @@
-#include "fft/battle_script.h"
 #include "fft/script.h"
 
 /* Store a value in a script variable, whichever of the 32-bit variable, flag and nibble

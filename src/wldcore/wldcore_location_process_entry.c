@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Location-entry step: when the current location's conditional set yields
@@ -21,7 +22,7 @@ s32 wldcore_location_process_entry(s32 from_location, s32 to_location) {
         g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].window_index].flags
             |= WORLD_RENDER_RECORD_HIDDEN;
         g_wldcore_next_map_id[0] = 0;
-        world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[0]);
+        script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[0]);
         wldcore_menu_push_event_transition_level(g_wldcore_script_state.args[1]);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_LOCATION_MARKER;
         return 0;
@@ -29,7 +30,7 @@ s32 wldcore_location_process_entry(s32 from_location, s32 to_location) {
         if (wldcore_script_process_conditional_set(
                 g_wldcore_map_projection_state.marker.kind, WLDCORE_SCRIPT_ACTION_SET_VAR_2)
             != 0) {
-            world_script_set_variable(g_wldcore_script_state.args[0], g_wldcore_script_state.args[1]);
+            script_set_variable(g_wldcore_script_state.args[0], g_wldcore_script_state.args[1]);
         }
         g_wldcore_route_search_cost = 0;
         g_wldcore_route_search_depth = 0;

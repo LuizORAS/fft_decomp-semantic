@@ -72,14 +72,14 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     if (g_wldcore_proposition_report.result == WLDCORE_PROPOSITION_RESULT_SUCCESS) {
         proposition_flags |= WLDCORE_PROPOSITION_VARIABLE_COMPLETED;
     }
-    world_script_set_variable(
+    script_set_variable(
         g_main_active_propositions[level->proposition].proposition_id + EVENT_SCRIPT_VAR_PROPOSITION_FIRST,
         proposition_flags);
     war_funds = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) + g_wldcore_proposition_gil_amount;
     if (war_funds > 0x05F5E0FF) {
         war_funds = 0x05F5E0FF;
     }
-    world_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, war_funds);
+    script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, war_funds);
     g_wldcore_displayed_numeric_value = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
     day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
     month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
@@ -90,15 +90,14 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
             g_main_active_propositions[level->proposition].proposition_id, &date);
     }
     if (g_wldcore_proposition_report.reward_type == WLDCORE_PROPOSITION_REWARD_TREASURE) {
-        world_script_set_variable(g_wldcore_proposition_report.reward_index + EVENT_SCRIPT_VAR_TREASURE_FIRST, 1);
+        script_set_variable(g_wldcore_proposition_report.reward_index + EVENT_SCRIPT_VAR_TREASURE_FIRST, 1);
         date.day = day;
         date.month = month;
         wldcore_write_nine_bit_record(
             g_main_treasure_acquisition_date_bits, g_wldcore_proposition_report.reward_index, &date);
     }
     if (g_wldcore_proposition_report.reward_type == WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND) {
-        world_script_set_variable(
-            g_wldcore_proposition_report.reward_index + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST, 1);
+        script_set_variable(g_wldcore_proposition_report.reward_index + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST, 1);
         date.day = day;
         date.month = month;
         wldcore_write_nine_bit_record(

@@ -108,7 +108,7 @@ void world_text_message_box_thread(void) {
     if (text[0] == TEXT_SET_PORTRAIT) {
         win[0].portrait_code = text[1];
         win[1].portrait_code = text[1];
-        world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, text[1]);
+        script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, text[1]);
     } else {
         win[0].portrait_code = script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
         win[1].portrait_code = script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
@@ -212,7 +212,7 @@ void world_text_message_box_thread(void) {
             if (text[0] == TEXT_SET_PORTRAIT) {
                 win[0].portrait_code = text[1];
                 win[1].portrait_code = text[1];
-                world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, text[1]);
+                script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, text[1]);
             } else {
                 win[0].portrait_code = script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
                 win[1].portrait_code = script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
@@ -335,7 +335,7 @@ void world_text_message_box_thread(void) {
             NEXT();
             win[0].portrait_code = *text;
             win[1].portrait_code = *text;
-            world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, *text);
+            script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, *text);
             NEXT();
         } else if (code == TEXT_SET_VARIABLE_BASE) {
             NEXT();
@@ -345,10 +345,10 @@ void world_text_message_box_thread(void) {
             NEXT();
             i = script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
             if (i != 0) {
-                world_script_set_variable(script_variable_base + i * 10, *text);
-                world_script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);
+                script_set_variable(script_variable_base + i * 10, *text);
+                script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);
             } else {
-                world_script_set_variable(script_variable_base, *text);
+                script_set_variable(script_variable_base, *text);
             }
             NEXT();
         } else if (code == TEXT_SET_GLYPH_DELAY) {

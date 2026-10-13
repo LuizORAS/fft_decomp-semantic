@@ -18,8 +18,8 @@ void wldcore_list_handle_tutorial_mask_1_entries_input(wldcore_menu_panel_level_
         if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
             selected = &g_wldcore_window_panel_render_state.selected_index;
             wldcore_set_bit_value(&g_main_tutorial_progress_masks[1], *selected, 1);
-            world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 1);
-            world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_tutorial_event_ids[*selected]);
+            script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 1);
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_tutorial_event_ids[*selected]);
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_TUTORIAL_MASK_1_ENTRIES);
             g_main_saved_list_cursor_state = g_wldcore_tutorial_entries_cursor_state;
             g_main_system_flags = (g_main_system_flags | MAIN_SYSTEM_FLAG_TUTORIAL_EVENT) ^ MAIN_SYSTEM_FLAG_RUNNING;

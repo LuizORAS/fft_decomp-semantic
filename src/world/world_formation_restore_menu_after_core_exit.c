@@ -33,10 +33,9 @@ void world_formation_restore_menu_after_core_exit(void) {
     world_formation_reset_menu_context();
     ClearImage(&g_world_screen_clear_rect, 0, 0, 0);
     DrawSync(0);
-    world_script_set_variable(
-        EVENT_SCRIPT_VAR_CURRENT_EVENT, script_get_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT));
-    world_script_set_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, script_get_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT));
+    script_set_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT, 0);
     if (script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) != 0) {
-        world_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 0);
+        script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 0);
     }
 }

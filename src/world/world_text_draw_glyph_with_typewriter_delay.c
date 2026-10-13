@@ -137,7 +137,7 @@ void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay
             g_world_text_typewriter_state.pen.rect.x = phase;
             g_world_text_typewriter_state.pen.rect.y = 0;
             g_world_text_typewriter_state.pen.stride = pitch;
-            world_script_set_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT,
+            script_set_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT,
                 script_get_variable(EVENT_SCRIPT_VAR_PRINTED_CHARACTER_COUNT) + 1);
             world_text_blit_font_glyph_to_4bpp(request->glyph * TEXT_GLYPH_BYTES + g_world_text_glyph_bitmap_data,
                 image, &g_world_text_typewriter_state.pen, request->palette);

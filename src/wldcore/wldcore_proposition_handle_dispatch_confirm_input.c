@@ -37,11 +37,10 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
     if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         if (level->row != 1) {
-            world_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS,
+            script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS,
                 script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) - g_wldcore_proposition_gil_amount);
             g_wldcore_displayed_numeric_value = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
-            world_script_set_variable(
-                g_wldcore_selected_proposition_row[0].id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1),
+            script_set_variable(g_wldcore_selected_proposition_row[0].id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1),
                 script_get_variable(g_wldcore_selected_proposition_row[0].id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1))
                     | WLDCORE_PROPOSITION_VARIABLE_ATTEMPTED);
             g_main_active_propositions[g_main_save_proposition_count].flags = WLDCORE_PROPOSITION_PROGRESS_DISPATCHED;
@@ -60,8 +59,7 @@ void wldcore_proposition_handle_dispatch_confirm_input(wldcore_menu_choice_panel
                     = g_wldcore_proposition_send_units[i];
             }
             g_main_save_proposition_count++;
-            world_script_set_variable(
-                g_wldcore_selected_proposition_row[0].id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1),
+            script_set_variable(g_wldcore_selected_proposition_row[0].id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1),
                 script_get_variable(g_wldcore_selected_proposition_row[0].id + (EVENT_SCRIPT_VAR_PROPOSITION_FIRST - 1))
                     | WLDCORE_PROPOSITION_VARIABLE_IN_PROGRESS);
         }

@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Advances the world-map movement along the current location route.
@@ -37,13 +38,13 @@ void wldcore_map_step_route_travel(void) {
             g_wldcore_map_projection_state.flags
                 |= WLDCORE_PROJECTION_FLAG_UPDATE_POSITION | WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION;
             g_wldcore_map_projection_state.marker.kind = g_wldcore_location_entry_state.leg_end_location;
-            world_script_set_variable(EVENT_SCRIPT_VAR_LOCATION, g_wldcore_location_entry_state.leg_end_location);
+            script_set_variable(EVENT_SCRIPT_VAR_LOCATION, g_wldcore_location_entry_state.leg_end_location);
             g_wldcore_location_entry_state.route_index++;
             if (wldcore_script_process_conditional_set(
                     g_wldcore_map_projection_state.marker.kind, WLDCORE_SCRIPT_ACTION_LOAD_EVENT)
                 != 0) {
                 g_wldcore_next_map_id[0] = 0;
-                world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[0]);
+                script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[0]);
                 wldcore_menu_push_event_transition_level(g_wldcore_script_state.args[1]);
                 g_wldcore_map_projection_state.angle = 0;
                 g_wldcore_map_projection_state.flags &= ~WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET;
@@ -55,7 +56,7 @@ void wldcore_map_step_route_travel(void) {
             if (wldcore_script_process_conditional_set(
                     g_wldcore_map_projection_state.marker.kind, WLDCORE_SCRIPT_ACTION_SET_VAR_2)
                 != 0) {
-                world_script_set_variable(g_wldcore_script_state.args[0], g_wldcore_script_state.args[1]);
+                script_set_variable(g_wldcore_script_state.args[0], g_wldcore_script_state.args[1]);
             }
             if (wldcore_map_roll_random_encounter(g_wldcore_location_entry_state.leg_end_location,
                     g_wldcore_location_entry_state.route_path.routes[g_wldcore_location_entry_state.route_index - 1]
@@ -63,11 +64,10 @@ void wldcore_map_step_route_travel(void) {
                 != 0) {
                 g_main_system_flags |= MAIN_SYSTEM_FLAG_RANDOM_BATTLE;
                 g_wldcore_next_map_id[0] = g_wldcore_random_battle_map_id;
-                world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, g_wldcore_random_battle_entd_id);
-                world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);
-                world_script_set_variable(
-                    EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, g_wldcore_random_battle_squad_id);
-                world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0);
+                script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, g_wldcore_random_battle_entd_id);
+                script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);
+                script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, g_wldcore_random_battle_squad_id);
+                script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0);
                 wldcore_menu_push_event_transition_level(WLDCORE_EVENT_TRANSITION_MODE_SPIN);
                 g_wldcore_map_projection_state.angle = 0;
                 g_wldcore_map_projection_state.flags &= ~WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET;

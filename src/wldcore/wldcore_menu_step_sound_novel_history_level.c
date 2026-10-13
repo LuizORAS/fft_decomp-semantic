@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
@@ -97,9 +98,9 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
                 box.stride = g_wldcore_window_render_records[level->render_index].bounds.w;
                 world_menu_display_text_entry_past_choice_marks(text_id, g_wldcore_window_image_buffer, &box);
                 wldcore_window_load_image_record_to_vram(level->render_index, g_wldcore_window_image_buffer);
-                world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
-                world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);
-                world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
+                script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
+                script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);
+                script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
             }
             level->step = 0;
             level->phase = WLDCORE_SOUND_NOVEL_HISTORY_PHASE_BROWSE;

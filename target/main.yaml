@@ -1377,7 +1377,6 @@ data:
   - {addr: 0x800a778c, name: g_main_system_game_flow_state}
   - {addr: 0x800d0bbc, name: g_main_save_slot_buffer}
   - {addr: 0x800e6edc, name: world_text_find_entry}
-  - {addr: 0x800ef25c, name: world_script_set_variable}
   - {addr: 0x800fc55c, name: g_battle_render_buffers}
   - {addr: 0x8010656c, name: world_menu_load_text_1bd8}
   - {addr: 0x8011a2d4, name: g_battle_gfx_current_render_buffer}
@@ -1389,7 +1388,7 @@ data:
   - {addr: 0x801908cc, name: g_battle_unit_stats}
 
 overrides:
-  - {function: main_party_init_new_game, name: world_script_set_variable, addr: 0x800ef25c}
+  - {function: main_party_init_new_game, name: script_set_variable, addr: 0x800ef25c}
 
 regions:
   - {addr: 0x80011ba8, end: 0x80011bb0, kind: handwritten, why: "callable jr-ra/nop tail after deprecated-entry padding"}

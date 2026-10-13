@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -41,7 +42,7 @@ void world_card_run_load_step(s32 slot) {
                 g_world_card_menu_result = 1;
                 g_world_card_load_step_state = 0;
                 g_world_card_menu_step = WORLD_CARD_MENU_STEP_LEAVE;
-                world_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
+                script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
                 g_world_menu_sound_effect_id = MAIN_SFX_COMPLETE;
                 g_main_card_save_last_used_slot = slot;
                 return;

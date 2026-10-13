@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -49,7 +50,7 @@ void world_formation_run_dismiss_unit_menu_step(void) {
         for (i = 0; g_world_formation_dismiss_entries[i].sprite_set != -1; i++) {
             if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->sprite_set
                 == g_world_formation_dismiss_entries[i].sprite_set) {
-                world_script_set_variable(g_world_formation_dismiss_entries[i].variable_id, 0xC);
+                script_set_variable(g_world_formation_dismiss_entries[i].variable_id, 0xC);
             }
         }
         world_formation_dismiss_unit(g_world_formation_selected_unit_index);

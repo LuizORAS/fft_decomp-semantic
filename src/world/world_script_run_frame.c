@@ -54,7 +54,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
             if (op != 0) {
                 if (script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) != 0) {
                     g_world_event_finish_check_pending = 0;
-                    world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
+                    script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
                     return 9;
                 }
             } else {
@@ -65,7 +65,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
             if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_FUNERAL) {
                 return 0x13;
             }
-            world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((op & 0xC00) >> 2) | (op & 0xFF));
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((op & 0xC00) >> 2) | (op & 0xFF));
             op = (op & 0xF300) >> 8;
             g_world_event_finish_check_pending = 0;
             g_world_menu_overlay_state = 0;
@@ -78,8 +78,8 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
             if (op == 0x82) {
                 return 0xB;
             }
-            world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0);
-            world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, 0);
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0);
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, 0);
             g_battle_entd_selection_mode = BATTLE_ENTD_SELECTION_MAP_ID;
             return 9;
         }
@@ -91,7 +91,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
         g_world_input_unfiltered_controller = g_world_menu_new_button_input;
         script_apply_input_overrides(&g_world_menu_new_button_input);
         g_world_script_saved_event_input = g_world_menu_new_button_input;
-        world_script_set_variable(EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS, 0);
+        script_set_variable(EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS, 0);
     }
     if (g_world_map_reload_state >= 3) {
         g_world_map_reload_state = 0;
@@ -174,7 +174,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
     } else if (g_world_companion_overlay_state == COMPANION_OVERLAY_STATE_CARD_SAVE) {
         world_script_set_event_speed(1);
         polarity = g_main_gfx_screen_polarity;
-        world_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
+        script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
         card_save_run_menu(0);
         g_world_companion_overlay_state = COMPANION_OVERLAY_STATE_IDLE;
         g_main_gfx_screen_polarity = polarity;
