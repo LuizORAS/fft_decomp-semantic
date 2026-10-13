@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/main.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -12,7 +13,7 @@
  */
 void require_reward_load_bonus_image(s32 image_id) {
     require_reward_bonus_image_file_t* allocation;
-    s32 (*build_operation)();
+    s32 (*build_operation)(s32 sector, u32 size, void* destination);
 
     do {
         battle_thread_yield();
@@ -27,7 +28,7 @@ void require_reward_load_bonus_image(s32 image_id) {
         thread_call_on_main_stack(image_id * 13 + DISC_SECTOR_EVENT_BONUS_BIN, sizeof(*allocation), allocation) != 0);
 
     {
-        s32 (*poll_operation)() = main_file_is_still_loading;
+        int (*poll_operation)(void) = main_file_is_still_loading;
         do {
             battle_thread_yield();
             g_thread_call_target = (void (*)(void))poll_operation;
