@@ -139,8 +139,7 @@ void world_menu_run_game_options(void) {
     world_gfx_init_scaled_draw_area_packets(&page->title_area);
     world_gfx_init_scaled_draw_area_packets(&page->value_area);
     world_menu_init_sprite(&base->title);
-    world_text_configure_sprite_vram(
-        &g_world_options_menu_title_rect, entry->inner_width, 0x2C, (texture_primitive_t*)&base->title, 0);
+    world_text_configure_sprite_vram(&g_world_options_menu_title_rect, entry->inner_width, 0x2C, &base->title, 0);
     image = world_menu_build_and_upload_window_frame_image(
         entry->inner_width, 0x2C, &g_world_options_menu_title_rect, MENU_WINDOW_FRAME_ALTERNATE_BUILD);
     base->title.x0 = entry->window.x;
@@ -163,8 +162,7 @@ void world_menu_run_game_options(void) {
     world_thread_set_parameters(g_world_thread_current_id + 1, (s32)&g_world_options_menu_window_rect, 0, 0);
     world_thread_yield();
     world_menu_init_sprite(&base->value);
-    world_text_configure_sprite_vram(
-        &g_world_options_menu_value_rect, 0x3C, 0x10, (texture_primitive_t*)&base->value, 0);
+    world_text_configure_sprite_vram(&g_world_options_menu_value_rect, 0x3C, 0x10, &base->value, 0);
     base->value.x0 = entry->window.x + 0x5C;
     base->value.y0 = entry->window.y + entry->window.h + 0xF;
     world_clear_menu_render_buffer(buffer, 0x1E0);
@@ -285,9 +283,9 @@ void world_menu_run_game_options(void) {
             }
         }
         page->frame.v0 = ring * 16 + accum - 2;
-        world_menu_select_sprite_clut((texture_primitive_t*)&page->title);
-        world_menu_select_sprite_clut((texture_primitive_t*)&page->value);
-        world_menu_select_sprite_clut((texture_primitive_t*)frame);
+        world_menu_select_sprite_clut(&page->title);
+        world_menu_select_sprite_clut(&page->value);
+        world_menu_select_sprite_clut(frame);
         world_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[3]);
         world_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[1]);
         world_gfx_draw_or_append_gpu_primitive(&page->icons.base.sprites[2]);

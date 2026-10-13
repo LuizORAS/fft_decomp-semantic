@@ -98,8 +98,8 @@ void world_menu_display_hovered_unit_stats(
         menu_init_default_poly_ft4(&page->quads[frame]);
     }
     menu_init_default_poly_ft4(&page->portrait);
-    world_text_configure_sprite_vram(&rects[0], 0x28, 0x28, (texture_primitive_t*)&page->quads[0], 2);
-    world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (texture_primitive_t*)&page->quads[1], 2);
+    world_text_configure_sprite_vram(&rects[0], 0x28, 0x28, &page->quads[0], 2);
+    world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, &page->quads[1], 2);
     params = g_world_unit_status_quad_image_params_by_mode[mode];
     if (mode == UNIT_STATS_PANEL_ATTACK_CASTER) {
         gfx_init_image_loading(&page->quads[4], &g_world_gfx_menu_image_source, frame_rect, &params[4]);

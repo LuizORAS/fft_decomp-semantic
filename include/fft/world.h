@@ -2486,8 +2486,7 @@ s32 world_menu_get_selected_unit_mp_bonus_or_dashes(s32 unused_row);
 s32 world_menu_get_party_unit_name_id(void);
 s32 world_menu_get_selected_unit_hp_bonus(s32 unused_row);
 s32 world_menu_get_selected_unit_mp_bonus(s32 unused_row);
-void world_text_configure_sprite_vram(
-    RECT* rect, s32 width, s32 height, texture_primitive_t* primitive, s32 clut_offset);
+void world_text_configure_sprite_vram(RECT* rect, s32 width, s32 height, void* packet, s32 clut_offset);
 s32 world_menu_is_busy(s32 unused);
 void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y);
 u8* world_menu_redraw_text_page_on_scroll(menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor);
@@ -2506,7 +2505,7 @@ void world_menu_run_order_unit(void);
 s32 world_menu_run_unit_status_banner_countdown(s32 message_id, s32 frames);
 void world_menu_scroll_list_page(s32 dir, menu_instruction_t* instruction);
 void world_menu_select_icon_cluts(menu_icon_sprites_t* menu);
-void world_menu_select_sprite_clut(texture_primitive_t* primitive);
+void world_menu_select_sprite_clut(void* packet);
 void world_menu_add_gradient_line_primitive(point16_t* endpoints, rgb24_t* colors, s32 semi_trans, s32 ot_index);
 void* world_menu_alloc_buffer(s32 size);
 void* world_menu_alloc_ui_buffer(s32 size);

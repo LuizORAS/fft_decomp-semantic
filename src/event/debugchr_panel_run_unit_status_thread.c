@@ -106,8 +106,8 @@ void debugchr_panel_run_unit_status_thread(void) {
     for (frame = 0; frame < 4; frame++) {
         menu_init_default_poly_ft4(&editor->portrait[frame]);
     }
-    battle_text_configure_sprite_vram(&rects[0], 0x38, 0x28, (texture_primitive_t*)&editor->value_sprites[0], 2);
-    battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, (texture_primitive_t*)&editor->value_sprites[1], 2);
+    battle_text_configure_sprite_vram(&rects[0], 0x38, 0x28, &editor->value_sprites[0], 2);
+    battle_text_configure_sprite_vram(&rects[1], 0x60, 0x10, &editor->value_sprites[1], 2);
     for (frame = 0; frame < 4; frame++) {
         gfx_init_image_loading(&editor->value_sprites[frame], g_debugchr_editor_numeric_geometry,
             &g_debugchr_gfx_portrait_origin, &g_debugchr_panel_editor_value_cells[frame]);
@@ -132,10 +132,10 @@ void debugchr_panel_run_unit_status_thread(void) {
     panel_sprites = &panel->sprites[0];
     battle_menu_init_sprite_array(panel_sprites, 7, 0x7C3C);
     menu_init_default_poly_ft4(&panel->portrait);
-    battle_text_configure_sprite_vram(&rects[2], 0x58, 0x20, (texture_primitive_t*)panel_sprites, 0);
-    battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, (texture_primitive_t*)&panel->sprites[1], 0);
-    battle_text_configure_sprite_vram(&rects[4], 0x10, 0xA, (texture_primitive_t*)&panel->sprites[2], 0);
-    battle_text_configure_sprite_vram(&rects[5], 0x10, 0xA, (texture_primitive_t*)&panel->sprites[3], 0);
+    battle_text_configure_sprite_vram(&rects[2], 0x58, 0x20, panel_sprites, 0);
+    battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, &panel->sprites[1], 0);
+    battle_text_configure_sprite_vram(&rects[4], 0x10, 0xA, &panel->sprites[2], 0);
+    battle_text_configure_sprite_vram(&rects[5], 0x10, 0xA, &panel->sprites[3], 0);
     for (frame = 0; frame < 7; frame++) {
         gfx_init_image_loading(&panel->sprites[frame], g_debugchr_editor_numeric_geometry, &g_debugchr_panel_frame_rect,
             &g_debugchr_panel_sprite_cells[frame]);
