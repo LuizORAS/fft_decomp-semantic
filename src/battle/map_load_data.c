@@ -309,8 +309,8 @@ s32 map_load_data(s32 map_id, s32 command) {
         switch (g_map_resource_load_state) {
         case MAP_LOAD_STATE_GNS_FILE:
             if (main_file_is_still_loading() == 0) {
-                gns_record_view_t* source;
-                gns_record_view_t* destination;
+                gns_record_t* source;
+                gns_record_t* destination;
 
                 i = 0;
                 source = g_map_data_load_buffer->gns_records;

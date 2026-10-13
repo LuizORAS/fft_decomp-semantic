@@ -443,33 +443,6 @@ typedef struct map_palette_state {
 typedef char map_palette_state_size_must_be_34084[(sizeof(map_palette_state_t) == 34084) ? 1 : -1];
 
 /* resource formats */
-/*
- * A 20-byte row from the file section of MAPnnn.GNS, before the 0x80
- * separator. Resource type 0x31 marks repeated filler rows. For mesh records,
- * the loader compares map_state against a request assembled from the low 12
- * bits of the script variable at offset 0, weather in bits 12-14, and
- * time-of-day in bit 15.
- *
- * The two bytes at 4 also form the conventional little-endian GNS record type
- * (for example, 0x2e01 for a primary mesh).  The game reads them separately:
- * the low byte selects the state comparison and the high byte selects the
- * resource type. In all 2,987 pre-separator rows of the USA disc, +0x06 is
- * 0x3333 and +0x10..+0x13 are 55 66 77 88. The loader compares those bytes
- * when checking whether a file changed, and tests +0x13 for a nonzero marker.
- */
-typedef struct gns_file_record {
-    u16 script_variable_id;  /* 0x00 */
-    s16 map_state;           /* 0x02 */
-    u8 map_state_comparison; /* 0x04; gns_map_state_comparison_e */
-    u8 resource_type;        /* 0x05; map_resource_type_e; external file tag */
-    u16 _padding_06;         /* 0x06; aligns disc_lba */
-    u32 disc_lba;            /* 0x08; absolute, including the high 16 bits at +0x0a */
-    u32 byte_length;         /* 0x0c; sector-rounded */
-    u8 _unused_10[3];        /* 0x10 */
-    u8 file_present_marker;  /* 0x13; 0x88 on disc, tested for nonzero */
-} gns_file_record_t;
-typedef char gns_file_record_size_must_be_20[(sizeof(gns_file_record_t) == 20) ? 1 : -1];
-
 /* Command rows after the 0x80 separator reuse the 20-byte prefix, but +0x08
  * is a byte stride (0x14 or 0x1c), not a disc LBA. The 0x1c rows have eight
  * more payload bytes after this prefix. +0x06/+0x09..+0x0b are zero in the
@@ -547,9 +520,9 @@ typedef struct map_mesh_quad_normals {
  * 32-bit fields remain byte arrays so enclosing rows retain 16-bit alignment. */
 typedef union gns_load_info {
     struct {
-        u16 _unknown_00; /* 0x3333 in file rows */
-        u8 disc_lba_le[4];
-        u8 byte_length_le[4];
+        u16 _unknown_00;        /* 0x3333 in file rows */
+        u8 disc_lba_le[4];      /* row +0x08; absolute LBA, including its high 16 bits */
+        u8 byte_length_le[4];   /* row +0x0c; sector-rounded byte count */
         u8 _unknown_0a[3];      /* 55 66 77 in file rows */
         u8 file_present_marker; /* 0x88 in file rows; zero means no file */
     } fields;
@@ -557,16 +530,29 @@ typedef union gns_load_info {
 } gns_load_info_t;
 typedef char gns_load_info_size_must_be_14[sizeof(gns_load_info_t) == 14 ? 1 : -1];
 
-/* 16-bit-aligned view of a 20-byte GNS record: the target copies these
- * records with lwl/lwr pairs, so the loader's type has no 32-bit member. */
-typedef struct gns_record_view {
+/*
+ * A 20-byte row from the file section of MAPnnn.GNS, before the 0x80
+ * separator. Resource type 0x31 marks repeated filler rows. For mesh records,
+ * the loader compares map_state against a request assembled from the low 12
+ * bits of the script variable at offset 0, weather in bits 12-14, and
+ * time-of-day in bit 15.
+ *
+ * The two bytes at 4 also form the conventional little-endian GNS record type
+ * (for example, 0x2e01 for a primary mesh).  The game reads them separately:
+ * the low byte selects the state comparison and the high byte selects the
+ * resource type. In all 2,987 pre-separator rows of the USA disc, +0x06 is
+ * 0x3333 and +0x10..+0x13 are 55 66 77 88. The loader compares those bytes
+ * when checking whether a file changed, and tests +0x13 for a nonzero marker.
+ */
+/* Record copies use lwl/lwr pairs; keep the record aligned to 16 bits. */
+typedef struct gns_record {
     s16 script_variable_id;
     s16 map_state;
     u8 map_state_comparison; /* 0x04; gns_map_state_comparison_e */
     u8 resource_type;        /* 0x05; file resource or command type, or GNS_RECORD_COMMAND_SEPARATOR */
     gns_load_info_t load_info;
-} gns_record_view_t;
-typedef char gns_record_view_size_must_be_20[(sizeof(gns_record_view_t) == 20) ? 1 : -1];
+} gns_record_t;
+typedef char gns_record_size_must_be_20[(sizeof(gns_record_t) == 20) ? 1 : -1];
 
 /* color transitions */
 /* Runtime colour fades stepped by update_map_animations (0x800912a4):
@@ -813,7 +799,7 @@ typedef union map_resource {
     map_terrain_resource_t terrain;
     map_texture_animation_t texture_animations[MAP_TEXTURE_ANIMATION_COUNT];
     map_state_record_t state_record;
-    gns_record_view_t gns_records[150];
+    gns_record_t gns_records[150];
     gns_command_record_prefix_t command;
     s16 command_halfwords[10]; /* 16-bit view of the 20-byte command prefix. */
     clut_t clut;
@@ -828,7 +814,7 @@ extern s32 g_map_deep_dungeon_load_in_progress;
 extern char g_map_directory_path[];
 extern u32 g_map_gns_lba[MAP_ID_COUNT]; /* 0 where the map id has no file */
 extern u32 g_map_gns_record_cursor;
-extern gns_record_view_t g_map_gns_records[150];
+extern gns_record_t g_map_gns_records[150];
 extern s32 g_map_id;
 extern map_resource_t* g_map_mesh_load_buffer;
 extern s32 g_map_mesh_load_state;
@@ -841,8 +827,8 @@ extern u16 g_map_reload_state; /* 0x80165fde */
 
 /* GNS records selected for loading and the ones currently loaded, indexed by
  * resource type. */
-extern gns_record_view_t g_map_pending_gns_records[GNS_RESOURCE_TABLE_COUNT];
-extern gns_record_view_t g_map_loaded_gns_records[GNS_RESOURCE_TABLE_COUNT];
+extern gns_record_t g_map_pending_gns_records[GNS_RESOURCE_TABLE_COUNT];
+extern gns_record_t g_map_loaded_gns_records[GNS_RESOURCE_TABLE_COUNT];
 extern u8 g_map_gns_dispatch_held;
 extern s32 g_map_gns_load_phase; /* map_gns_load_phase_e */
 extern s32 g_map_loaded_id;
@@ -907,7 +893,7 @@ s32 map_calculate_move_find_item_flag(s32 map_id, s32 tile_index, s32 mode);
 void map_load_move_find_item_data(map_move_find_item_data_t* map_data);
 move_found_item_t* map_determine_rare_common_item(battle_stats_t* unit);
 move_find_result_data_t* map_set_item_trap_data(s32 x, u8 y, u8 layer);
-gns_record_view_t* map_load_gns_and_move_find_items(s32 map_id);
+gns_record_t* map_load_gns_and_move_find_items(s32 map_id);
 
 /* palettes */
 extern u16 g_map_palette_modified_colors[][MAP_CLUT_ROW_COLOR_COUNT]; /* [map_clut_row_e][colour] */
@@ -1047,7 +1033,7 @@ s32 map_command_start_texture_animation(s32 value_a, s32 value_b);
 void map_update_texture_animations(void);
 
 /* mesh rendering */
-extern gns_record_view_t g_map_selected_mesh_record;
+extern gns_record_t g_map_selected_mesh_record;
 extern battle_render_buffer_t* g_map_mesh_last_render_buffer;
 extern s32 g_map_textured_quad_count;
 extern s32 g_map_textured_quad_render_record_count;
