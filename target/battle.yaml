@@ -774,8 +774,8 @@ functions:
   - {addr: 0x80133fe8, size: 56, name: battle_text_relocate_pointer_table, hash: 742949c5bc5a8241}
   - {addr: 0x80134020, size: 84, name: battle_text_save_section_pointers, hash: 2d664dcd4b1b36a3}
   - {addr: 0x80134074, size: 56, name: battle_text_restore_section_pointers, hash: e050f5218635bc59}
-  - {addr: 0x801340ac, size: 212, name: script_dismiss_unit_event_instruction, hash: 72ce1abdbe8c11ed}
-  - {addr: 0x80134180, size: 164, name: script_join_units_silently, hash: fee876788da012d2}
+  - {addr: 0x801340ac, size: 212, name: script_dismiss_unit_event_instruction, hash: 72ce1abdbe8c11ed, source: src/shared/script/script_dismiss_unit_event_instruction.c}
+  - {addr: 0x80134180, size: 164, name: script_join_units_silently, hash: fee876788da012d2, source: src/shared/script/script_join_units_silently.c}
   - {addr: 0x80134224, size: 36, name: script_advance_date_by_one_year, hash: 61f613aa13acf6fa}
   - {addr: 0x80134248, size: 132, name: battle_unit_increase_blue_team_brave_by_10, hash: b7469f89289042cf}
   - {addr: 0x801342cc, size: 240, name: script_warp_unit_display_to_paired_unit, hash: 69851764a0a0b019}

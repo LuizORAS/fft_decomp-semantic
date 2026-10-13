@@ -1,9 +1,9 @@
 #include "fft/battle_unit.h"
 #include "fft/main.h"
-#include "fft/world.h"
+#include "fft/script.h"
 
 /* Persist event units marked to join without opening the formation screen. */
-void world_script_join_units_silently(void) {
+void script_join_units_silently(void) {
     s32 out_idx;
     s32 i;
     battle_stats_t* unit;

@@ -123,7 +123,7 @@ restart_event:
         /* ---- Scenario progression: DismissUnit, CallFunction, BlueRemoveUnit, EventEnd ---- */
         else if (opcode == EVENT_OPCODE_DISMISS_UNIT) {
             if (script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) == 0) {
-                world_script_dismiss_unit_event_instruction(first_operand);
+                script_dismiss_unit_event_instruction(first_operand);
             }
         } else if (opcode == EVENT_OPCODE_CALL_FUNCTION) {
             /* Sequential selector tests, not switch alternatives: selectors 6
@@ -135,7 +135,7 @@ restart_event:
                     if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) < EVENT_ID_NEW_GAME_INVENTORY_END) {
                         main_item_init_new_game_inventory();
                     }
-                    world_script_join_units_silently();
+                    script_join_units_silently();
                 }
                 if (operand_1 == EVENT_CALL_FUNCTION_OPEN_SAVE_MENU) {
                     operand_1 = 2;

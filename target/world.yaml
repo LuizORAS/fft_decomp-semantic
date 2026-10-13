@@ -122,8 +122,8 @@ functions:
   - {addr: 0x800e8660, size: 56, name: world_text_relocate_pointer_table, hash: 55d65571292e9b76}
   - {addr: 0x800e8698, size: 84, name: world_text_save_section_pointers, hash: df05598fa569f4c7}
   - {addr: 0x800e86ec, size: 56, name: world_text_restore_section_pointers, hash: ea702dc6e0ed2265}
-  - {addr: 0x800e8724, size: 212, name: world_script_dismiss_unit_event_instruction, hash: 72ce1abdbe8c11ed}
-  - {addr: 0x800e87f8, size: 164, name: world_script_join_units_silently, hash: fee876788da012d2}
+  - {addr: 0x800e8724, size: 212, name: script_dismiss_unit_event_instruction, hash: 72ce1abdbe8c11ed, source: src/shared/script/script_dismiss_unit_event_instruction.c}
+  - {addr: 0x800e87f8, size: 164, name: script_join_units_silently, hash: fee876788da012d2, source: src/shared/script/script_join_units_silently.c}
   - {addr: 0x800e889c, size: 36, name: world_script_advance_date_by_one_year, hash: 83ceda1f250910cb}
   - {addr: 0x800e88c0, size: 132, name: world_unit_increase_blue_team_brave_by_10, hash: b7469f89289042cf}
   - {addr: 0x800e8944, size: 240, name: world_script_warp_unit_display_to_paired_unit, hash: 56f014023957429b}

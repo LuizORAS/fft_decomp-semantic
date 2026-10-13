@@ -380,7 +380,6 @@ s32 world_script_get_variable_bit_position(s32 variable_id);
 void world_script_add_unit_start_thread(void);
 s32 world_script_check_tutorial_event_slot(void);
 void world_script_color_screen_thread(void);
-void world_script_dismiss_unit_event_instruction(s32);
 void world_script_execute_display_conditions_instruction(void);
 void world_script_execute_event(void);
 s32 world_script_find_instruction_byte_offset(s32 offset, s32 instruction);
@@ -1873,7 +1872,6 @@ void world_unit_inflict_status_by_entd_unit_id(
     s32 entd_unit_id, s32 status_index, s32 is_infliction, s32 less_strict_removal);
 
 s32 world_unit_is_moving(s32 id);
-void world_script_join_units_silently(void);
 void world_menu_load_selected_unit(void);
 void world_unit_project_misc_to_screen(s32 misc_id, SVECTOR* screen_coords);
 void world_unit_reset_animation_states(void);
