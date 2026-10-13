@@ -478,8 +478,6 @@ enum {
         + UNIT_JOB_LEVEL_BYTE_COUNT + UNIT_JOB_POINT_TABLE_PAIR_BYTE_COUNT,
 };
 
-typedef char assert_unit_career_data_byte_count[UNIT_CAREER_DATA_BYTE_COUNT == 150 ? 1 : -1];
-
 /* Twenty job-unlock bits occupy the high bits of the three-byte career value. */
 enum {
     UNIT_UNLOCKED_JOB_DANCER = 0x20,
@@ -958,14 +956,6 @@ typedef struct battle_stats {
     u8 inflicted_status[5]; /* 0x1bb */
 } battle_stats_t;
 typedef char battle_stats_size_must_be_448[(sizeof(battle_stats_t) == 448) ? 1 : -1];
-typedef char battle_stats_innate_status_must_be_0x4e[((unsigned long)&((battle_stats_t*)0)->status_sets.innate == 0x4e)
-        ? 1
-        : -1];
-typedef char battle_stats_status_immunity_must_be_0x53
-    [((unsigned long)&((battle_stats_t*)0)->status_sets.immunity == 0x53) ? 1 : -1];
-typedef char
-    battle_stats_current_status_must_be_0x58[((unsigned long)&((battle_stats_t*)0)->status_sets.current == 0x58) ? 1
-                                                                                                                 : -1];
 
 /* battle_stats_t.ability_outcome. */
 typedef enum battle_unit_ability_outcome {

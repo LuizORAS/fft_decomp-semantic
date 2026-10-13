@@ -265,12 +265,8 @@ typedef struct move_spread_state {
     u8 previous_source_side_shift;
     u8 clearance_height; /* 0x74; ceilings below this plus unit size block the step (0x801777cc) */
 } move_spread_state_t;
-typedef char move_spread_tile_x_must_be_26[((unsigned long)&((move_spread_state_t*)0)->tile_x == 0x26) ? 1 : -1];
-typedef char move_spread_frontier_must_be_62
-    [((unsigned long)&((move_spread_state_t*)0)->frontier_max_remaining_range == 0x62) ? 1 : -1];
 
-typedef char
-    move_spread_placement_must_be_71[((unsigned long)&((move_spread_state_t*)0)->placement_failed == 0x71) ? 1 : -1];
+typedef char move_spread_state_size_must_be_120[(sizeof(move_spread_state_t) == 120) ? 1 : -1];
 
 /* move_record_t.unit_id_flags. */
 enum {

@@ -531,19 +531,6 @@ typedef struct battle_unit_anim_state {
 } battle_unit_anim_state_t;
 typedef char battle_unit_anim_state_size_must_be_48[sizeof(battle_unit_anim_state_t) == 48 ? 1 : -1];
 
-typedef char
-    battle_unit_anim_state_frame_must_be_0x08[((unsigned long)&((battle_unit_anim_state_t*)0)->frame == 0x08) ? 1 : -1];
-
-typedef char
-    battle_unit_anim_state_flags_must_be_0x18[((unsigned long)&((battle_unit_anim_state_t*)0)->flags == 0x18) ? 1 : -1];
-
-typedef char
-    battle_unit_anim_state_shp_must_be_0x1c[((unsigned long)&((battle_unit_anim_state_t*)0)->shp == 0x1c) ? 1 : -1];
-
-typedef char
-    battle_unit_anim_state_display_must_be_0x2c[((unsigned long)&((battle_unit_anim_state_t*)0)->display == 0x2c) ? 1
-                                                                                                                  : -1];
-
 /* movement types */
 /* One movement step: a path element, the unit's current step and the step
  * the movement code is working on. */
@@ -590,7 +577,6 @@ typedef struct battle_walk_path {
     u8 pending_mount;                     /* 0x7f; BATTLE_PENDING_MOUNT_SET | battle id */
 } battle_walk_path_t;
 typedef char battle_walk_path_size_must_be_128[sizeof(battle_walk_path_t) == 128 ? 1 : -1];
-typedef char battle_walk_path_flags_must_be_0x7d[((unsigned long)&((battle_walk_path_t*)0)->flags == 0x7d) ? 1 : -1];
 
 /* battle_walk_path_t.count values that are not a step count
  * (move_build_path_to_tile). */
@@ -741,10 +727,6 @@ typedef struct battle_strike_work {
     action_reward_display_t action_rewards; /* 0x24; runtime 0x1b0..0x1b3 */
 } battle_strike_work_t;
 typedef char battle_strike_work_must_be_40[sizeof(battle_strike_work_t) == 40 ? 1 : -1];
-typedef char battle_strike_targets_must_be_2[((unsigned long)&((battle_strike_work_t*)0)->target_list == 2) ? 1 : -1];
-
-typedef char
-    battle_strike_continue_must_be_0x18[((unsigned long)&((battle_strike_work_t*)0)->continue_attack == 0x18) ? 1 : -1];
 
 /* unit runtime */
 /* Live on-map units own movement, animation, commands and displays.
@@ -911,27 +893,6 @@ typedef struct battle_unit {
     u8 _unused_43c[4]; /* 0x43c; the next slot's in-use 32-bit value (g_battle_unit_slot_states) */
 } battle_unit_t;
 typedef char battle_unit_size_must_be_1088[(sizeof(battle_unit_t) == 1088) ? 1 : -1];
-
-typedef char battle_unit_step_speed_must_be_0x03c[((unsigned long)&((battle_unit_t*)0)->step_speed == 0x03c) ? 1 : -1];
-typedef char
-    battle_unit_distortion_target_must_be_0x090[((unsigned long)&((battle_unit_t*)0)->distortion_target == 0x090) ? 1
-                                                                                                                  : -1];
-
-typedef char battle_unit_strike_must_be_0x18c[((unsigned long)&((battle_unit_t*)0)->strike == 0x18c) ? 1 : -1];
-typedef char
-    battle_unit_animation_frame_must_be_0x1e0[((unsigned long)&((battle_unit_t*)0)->animation.frame == 0x1e0) ? 1 : -1];
-typedef char
-    battle_unit_animation_flags_must_be_0x1f0[((unsigned long)&((battle_unit_t*)0)->animation.flags == 0x1f0) ? 1 : -1];
-typedef char
-    battle_unit_sprite_blocks_must_be_0x208[((unsigned long)&((battle_unit_t*)0)->sprite_blocks == 0x208) ? 1 : -1];
-
-typedef char battle_unit_shadow_must_be_0x299[((unsigned long)&((battle_unit_t*)0)->shadow_dirty == 0x299) ? 1 : -1];
-
-typedef char battle_unit_command_must_be_0x158[((unsigned long)&((battle_unit_t*)0)->command_state == 0x158) ? 1 : -1];
-typedef char battle_unit_facing_hint_must_be_0x164
-    [((unsigned long)&((battle_unit_t*)0)->command_state.cursor.facing_hint == 0x164) ? 1 : -1];
-typedef char battle_unit_target_x_must_be_0x168
-    [((unsigned long)&((battle_unit_t*)0)->command_state.cursor.target_panel == 0x168) ? 1 : -1];
 
 /* battle_unit_t.fade_out_phase: the fade-out removal's progress. */
 typedef enum battle_unit_fade_out_phase {

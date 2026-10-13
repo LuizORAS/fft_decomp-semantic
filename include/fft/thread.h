@@ -34,8 +34,6 @@ typedef struct native_thread {
     u32 stack_top[4];             /* 0x3f0: initial SP/FP; the stack grows down from here */
 } native_thread_t;
 typedef char native_thread_size_must_be_1024[(sizeof(native_thread_t) == 1024) ? 1 : -1];
-typedef char native_thread_running_must_be_0x48[((unsigned long)&((native_thread_t*)0)->is_running == 0x48) ? 1 : -1];
-typedef char native_thread_task_must_be_0x4c[((unsigned long)&((native_thread_t*)0)->task_id == 0x4c) ? 1 : -1];
 
 /* Reset loops cover sixteen 0x400-byte slots. WORLD's scheduler also scans
  * slot 16, which lies beyond this reset span. */

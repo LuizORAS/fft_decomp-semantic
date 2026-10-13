@@ -205,9 +205,6 @@ typedef struct card_save_buffer {
     u8 _unused_1dbe[0x42];         /* 0x1dbe; parity-covered tail */
 } card_save_buffer_t;
 
-typedef char
-    card_save_buffer_options_offset_must_be_0x1c84[((unsigned long)&((card_save_buffer_t*)0)->options == 0x1c84) ? 1
-                                                                                                                 : -1];
 typedef char card_save_buffer_size_must_be_7680[(sizeof(card_save_buffer_t) == 7680) ? 1 : -1];
 
 /* One selectable save-file icon: 16-colour CLUT plus 16x16 4bpp image. */

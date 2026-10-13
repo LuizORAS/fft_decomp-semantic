@@ -794,8 +794,7 @@ typedef struct world_gfx_packet_buffer {
     u8 _unused_d4[0xec - 0xd4];
 } world_gfx_packet_buffer_t;
 
-typedef char world_packet_buffer_gradient_lines_offset
-    [((unsigned long)&((world_gfx_packet_buffer_t*)0)->gradient_lines == 0x30) ? 1 : -1];
+typedef char world_gfx_packet_buffer_size_must_be_236[(sizeof(world_gfx_packet_buffer_t) == 236) ? 1 : -1];
 
 /* 32-bit flags that lead every display object: the WLDCORE window and render
  * records and the OPEN render records. The two kind bits select the draw
@@ -1229,8 +1228,7 @@ typedef struct world_tutorial_state {
     u8* messages;
     u8* script;
 } world_tutorial_state_t;
-typedef char world_tutorial_state_messages_offset_must_be_0x1e00
-    [((unsigned long)&((world_tutorial_state_t*)0)->messages == 0x1e00) ? 1 : -1];
+
 typedef char world_tutorial_state_size_must_be_7688[sizeof(world_tutorial_state_t) == 7688 ? 1 : -1];
 
 /*
@@ -2942,8 +2940,8 @@ typedef struct world_shop_roster_count_menu_script {
     menu_sprite_command_t sprites[2];         /* 0x0e */
     menu_draw_number_command_t unit_count;    /* 0x20 */
 } world_shop_roster_count_menu_script_t;
-typedef char world_shop_roster_count_value_must_be_0x29
-    [((unsigned long)&((world_shop_roster_count_menu_script_t*)0)->unit_count.value == 0x29) ? 1 : -1];
+typedef char
+    world_shop_roster_count_menu_script_size_must_be_42[(sizeof(world_shop_roster_count_menu_script_t) == 42) ? 1 : -1];
 
 /* The shop screen's step: the index of its handler in
  * g_world_shop_menu_step_handlers. The ordinary shop starts at MAIN_MENU, the

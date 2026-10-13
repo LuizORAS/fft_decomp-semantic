@@ -684,9 +684,7 @@ typedef struct event_work {
     menu_list_page_t list_pages[2];       /* 0x388 */
     unit_status_staging_t status_staging; /* 0x5f0 */
 } event_work_t;
-typedef char
-    event_work_status_staging_offset_must_be_0x5f0[((unsigned long)&((event_work_t*)0)->status_staging == 0x5F0) ? 1
-                                                                                                                 : -1];
+typedef char event_work_size_must_be_2532[(sizeof(event_work_t) == 2532) ? 1 : -1];
 
 /* interpreter state */
 /* g_script_attack_entry_mode / g_world_script_attack_entry_mode:

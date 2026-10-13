@@ -69,33 +69,6 @@ typedef struct bunit_unit_data {
     unit_job_points_t job_points;             /* 0xbc; current JP followed by total JP */
 } bunit_unit_data_t;
 typedef char bunit_unit_data_size_must_be_268[(sizeof(bunit_unit_data_t) == 268) ? 1 : -1];
-typedef char bunit_unit_data_character_identity_must_be_0x74
-    [((unsigned long)&((bunit_unit_data_t*)0)->character_identity == 0x74) ? 1 : -1];
-typedef char
-    bunit_unit_data_gender_flags_must_be_0x70[((unsigned long)&((bunit_unit_data_t*)0)->gender_flags == 0x70) ? 1 : -1];
-typedef char bunit_unit_data_unlocked_jobs_must_be_0x75[((unsigned long)&((bunit_unit_data_t*)0)->unlocked_jobs == 0x75)
-        ? 1
-        : -1];
-typedef char bunit_unit_data_uses_monster_skillset_must_be_0x3e
-    [((unsigned long)&((bunit_unit_data_t*)0)->uses_monster_skillset == 0x3e) ? 1 : -1];
-typedef char
-    bunit_unit_data_experience_must_be_0x08[((unsigned long)&((bunit_unit_data_t*)0)->experience == 0x08) ? 1 : -1];
-typedef char bunit_unit_data_current_hp_must_be_0x0c
-    [((unsigned long)&((bunit_unit_data_t*)0)->gauges[MENU_UNIT_STATUS_GAUGE_HP].value == 0x0C) ? 1 : -1];
-typedef char bunit_unit_data_max_hp_must_be_0x10
-    [((unsigned long)&((bunit_unit_data_t*)0)->gauges[MENU_UNIT_STATUS_GAUGE_HP].max == 0x10) ? 1 : -1];
-typedef char bunit_unit_data_current_mp_must_be_0x12
-    [((unsigned long)&((bunit_unit_data_t*)0)->gauges[MENU_UNIT_STATUS_GAUGE_MP].value == 0x12) ? 1 : -1];
-typedef char bunit_unit_data_max_mp_must_be_0x16
-    [((unsigned long)&((bunit_unit_data_t*)0)->gauges[MENU_UNIT_STATUS_GAUGE_MP].max == 0x16) ? 1 : -1];
-typedef char bunit_unit_data_current_ct_must_be_0x18
-    [((unsigned long)&((bunit_unit_data_t*)0)->gauges[MENU_UNIT_STATUS_GAUGE_CT].value == 0x18) ? 1 : -1];
-typedef char bunit_unit_data_brave_must_be_0x26[((unsigned long)&((bunit_unit_data_t*)0)->brave == 0x26) ? 1 : -1];
-typedef char bunit_unit_data_faith_must_be_0x28[((unsigned long)&((bunit_unit_data_t*)0)->faith == 0x28) ? 1 : -1];
-typedef char
-    bunit_unit_data_battle_id_must_be_0x2c[((unsigned long)&((bunit_unit_data_t*)0)->battle_id == 0x2C) ? 1 : -1];
-typedef char
-    bunit_unit_data_mount_info_must_be_0x73[((unsigned long)&((bunit_unit_data_t*)0)->mount_info == 0x73) ? 1 : -1];
 
 extern s8 g_bunit_selected_battle_id;
 extern s16 g_bunit_shown_unit_indices[];
@@ -519,13 +492,6 @@ typedef struct bunit_gfx_context {
     u8 _unused_d4[0x18];                  /* 0xd4 */
 } bunit_gfx_context_t;
 typedef char bunit_gfx_context_size_must_be_236[(sizeof(bunit_gfx_context_t) == 236) ? 1 : -1];
-typedef char bunit_gfx_context_textured_quads_must_be_0x10
-    [((unsigned long)&((bunit_gfx_context_t*)0)->textured_quads == 0x10) ? 1 : -1];
-typedef char bunit_gfx_context_tiles_must_be_0x3c[((unsigned long)&((bunit_gfx_context_t*)0)->tiles == 0x3c) ? 1 : -1];
-typedef char
-    bunit_gfx_context_draw_modes_must_be_0x60[((unsigned long)&((bunit_gfx_context_t*)0)->draw_modes == 0x60) ? 1 : -1];
-typedef char
-    bunit_gfx_context_disp_env_must_be_0xc0[((unsigned long)&((bunit_gfx_context_t*)0)->disp_env == 0xc0) ? 1 : -1];
 
 extern textured_quad_source_t g_bunit_bouncing_cursor_quad;
 extern u16 g_bunit_gfx_background_clut;

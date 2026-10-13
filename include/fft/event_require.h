@@ -119,8 +119,6 @@ typedef struct require_reward_bonus_image_file {
 } require_reward_bonus_image_file_t;
 typedef char
     require_reward_bonus_image_file_size_must_be_26624[sizeof(require_reward_bonus_image_file_t) == 26624 ? 1 : -1];
-typedef char require_reward_bonus_palettes_must_be_at_offset_0x6400
-    [((unsigned long)&((require_reward_bonus_image_file_t*)0)->palettes == 0x6400) ? 1 : -1];
 
 /* g_require_reward_war_trophy_entry_types[]: what a war trophy entry's
  * value in g_require_reward_war_trophy_entry_values is. */

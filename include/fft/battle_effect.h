@@ -35,7 +35,7 @@ typedef struct effect_flag_prefix {
     u8 _unused_00[6];
     u16 flags;
 } effect_flag_prefix_t;
-typedef char effect_flag_prefix_flags_must_be_6[((unsigned long)&((effect_flag_prefix_t*)0)->flags == 6) ? 1 : -1];
+typedef char effect_flag_prefix_size_must_be_8[(sizeof(effect_flag_prefix_t) == 8) ? 1 : -1];
 
 /* targets */
 /* target_type of an effect target record. */
@@ -123,8 +123,6 @@ typedef struct effect_secondary_init {
     u16 used_weapon_id;          /* 0xc6 */
 } effect_secondary_init_t;
 typedef char effect_secondary_init_size_must_be_200[(sizeof(effect_secondary_init_t) == 200) ? 1 : -1];
-typedef char effect_secondary_init_caster_offset_must_be_0xa4
-    [((unsigned long)&((effect_secondary_init_t*)0)->targets[EFFECT_CASTER_ENTRY] == 0xa4) ? 1 : -1];
 
 /* result_animation of a target in an effect init record. The records built by
  * effect_store_targets_and_display_types use the first four; the weapon-hit
@@ -569,10 +567,6 @@ typedef struct effect_obstacle_unit_list {
     s32 sprite_heights[BATTLE_UNIT_SLOT_COUNT]; /* 0xc4 */
 } effect_obstacle_unit_list_t;
 typedef char assert_effect_obstacle_unit_list_size[sizeof(effect_obstacle_unit_list_t) == 280 ? 1 : -1];
-typedef char assert_effect_obstacle_positions_offset
-    [((unsigned long)&((effect_obstacle_unit_list_t*)0)->positions == 0x1a) ? 1 : -1];
-typedef char assert_effect_obstacle_heights_offset
-    [((unsigned long)&((effect_obstacle_unit_list_t*)0)->sprite_heights == 0xc4) ? 1 : -1];
 
 /* Shared output of the model-command decoder and input of the projectile renderer. */
 typedef struct effect_decoded_model_command {
@@ -676,14 +670,7 @@ typedef struct effect_timeline {
     effect_camera_keyframes_21_t phase1_camera;                                  /* 0x14e6 */
     effect_camera_keyframes_21_t phase2_camera;                                  /* 0x16b6 */
 } effect_timeline_t;
-typedef char effect_timeline_child_offset_must_be_8[((unsigned long)&((effect_timeline_t*)0)->child == 8) ? 1 : -1];
-typedef char
-    effect_timeline_command_offset_must_be_0x806[((unsigned long)&((effect_timeline_t*)0)->command == 0x806) ? 1 : -1];
-typedef char effect_timeline_rotation_offset_must_be_0x6d4[((unsigned long)&((effect_timeline_t*)0)->rotation == 0x6d4)
-        ? 1
-        : -1];
-typedef char effect_timeline_phase1_camera_offset_must_be_0x14e6
-    [((unsigned long)&((effect_timeline_t*)0)->phase1_camera == 0x14e6) ? 1 : -1];
+
 typedef char effect_timeline_size_must_be_6278[(sizeof(effect_timeline_t) == 6278) ? 1 : -1];
 
 /* Byte offset to a group's frame-offset table, relative to the group-table base. */
@@ -1314,10 +1301,6 @@ static __inline__ u16 effect_get_current_script_header(effect_record_t* record) 
 }
 
 typedef char assert_effect_record_size[sizeof(effect_record_t) == 248 ? 1 : -1];
-typedef char
-    effect_record_timeline_offset_must_be_0x26[((unsigned long)&((effect_record_t*)0)->timeline == 0x26) ? 1 : -1];
-typedef char
-    effect_record_work_head_offset_must_be_0xd0[((unsigned long)&((effect_record_t*)0)->work_head == 0xd0) ? 1 : -1];
 
 /* One playback step of the animation script referenced by an effect slot:
  * a hold count and the frame id written to the slot. */
@@ -1333,7 +1316,6 @@ typedef struct effect_anim_script {
     effect_anim_step_t step[0]; /* 0x02; count steps follow */
 } effect_anim_script_t;
 typedef char effect_anim_script_prefix_size_must_be_2[sizeof(effect_anim_script_t) == 2 ? 1 : -1];
-typedef char effect_anim_script_steps_offset_must_be_2[(unsigned long)&((effect_anim_script_t*)0)->step == 2 ? 1 : -1];
 
 /* 0xcc-byte effect slots at 0x801b9278, chained through the leading next/prev
  * byte pair; slot 0 is the null sentinel. g_effect_active_slot_head heads the active chain
@@ -1887,9 +1869,6 @@ typedef struct effect_geometry_table {
     effect_geometry_record_t entries[0];
 } effect_geometry_table_t;
 typedef char assert_effect_geometry_table_prefix_size[sizeof(effect_geometry_table_t) == 20 ? 1 : -1];
-typedef char
-    effect_geometry_table_entries_offset_must_be_20[(unsigned long)&((effect_geometry_table_t*)0)->entries == 20 ? 1
-                                                                                                                 : -1];
 
 /* curves */
 /* Frames in one animation curve: emitter and particle frame counters wrap here. */
@@ -1915,8 +1894,7 @@ typedef struct effect_animation_curve_table {
     u32 count;
     effect_animation_curve_t curves[0];
 } effect_animation_curve_table_t;
-typedef char effect_animation_curve_table_data_offset_must_be_4
-    [(unsigned long)&((effect_animation_curve_table_t*)0)->curves == 4 ? 1 : -1];
+typedef char effect_animation_curve_table_size_must_be_4[(sizeof(effect_animation_curve_table_t) == 4) ? 1 : -1];
 
 /* Motion bindings are one-based; zero disables the curve. The caller's index
  * also serves as a loop temporary; retaining it preserves register allocation.

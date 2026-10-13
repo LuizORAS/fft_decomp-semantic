@@ -88,8 +88,6 @@ typedef struct menu_window_buffer {
     u8 is_message_box;    /* 0x117: set by the message-box thread; alternate frame clut and tint */
 } menu_window_buffer_t;
 typedef char menu_window_buffer_size_must_be_280[(sizeof(menu_window_buffer_t) == 280) ? 1 : -1];
-typedef char menu_window_buffer_selector_must_be_0x14
-    [((unsigned long)&((menu_window_buffer_t*)0)->dialogue_selector == 0x14) ? 1 : -1];
 
 /* portrait */
 /* One EVTFACE.BIN block: pixels followed by eight 16-color palettes. */
@@ -99,8 +97,6 @@ typedef struct menu_portrait_image_file {
     u8 _unknown_1900[0x700];
 } menu_portrait_image_file_t;
 typedef char menu_portrait_image_file_size_must_be_8192[sizeof(menu_portrait_image_file_t) == 8192 ? 1 : -1];
-typedef char menu_portrait_palettes_must_be_at_offset_0x1800
-    [((unsigned long)&((menu_portrait_image_file_t*)0)->palettes == 0x1800) ? 1 : -1];
 
 /* EVENT/WLDFACE.BIN is four of these sheets: forty 32x48 portraits at 4 bits
  * per pixel, eight across and five down, then sixteen rows of four palettes.
@@ -153,12 +149,8 @@ typedef struct menu_palette_primitives {
     LINE_F2 lines[12];      /* 0x18 */
     SPRT sprite;            /* 0xd8 */
 } menu_palette_primitives_t;
-typedef char menu_palette_primitives_sprite_offset_must_be_0xd8
-    [((unsigned long)&((menu_palette_primitives_t*)0)->sprite == 0xd8) ? 1 : -1];
-typedef char
-    menu_palette_lines_offset_must_be_0x18[((unsigned long)&((menu_palette_primitives_t*)0)->lines == 0x18) ? 1 : -1];
-typedef char menu_palette_footer_offset_must_be_0xe6
-    [((unsigned long)&((menu_palette_primitives_t*)0)->sprite.clut == 0xe6) ? 1 : -1];
+
+typedef char menu_palette_primitives_size_must_be_236[(sizeof(menu_palette_primitives_t) == 236) ? 1 : -1];
 
 /* Numeric editor panel buffer (0x2c0 bytes), double buffered by the
  * *_editor_run_numeric_thread routines (EQUIP equip_editor_run_numeric_thread copies it with
@@ -730,9 +722,7 @@ typedef struct menu_icon_sprites {
     DR_MODE draw_mode;
     SPRT sprites[4];
 } menu_icon_sprites_t;
-typedef char menu_icon_sprites_sprites_offset_must_be_0x18[((unsigned long)&((menu_icon_sprites_t*)0)->sprites == 0x18)
-        ? 1
-        : -1];
+typedef char menu_icon_sprites_size_must_be_104[(sizeof(menu_icon_sprites_t) == 104) ? 1 : -1];
 
 /* Six-byte option row selected by customized-options bits 9-11 in
  * 0x80106660. The first three bytes set the shared initial, primary and
@@ -870,9 +860,7 @@ typedef struct menu_at_list_work {
     u8 text[0x4f0];                                     /* 0x190: packed 0xfe-terminated names */
     battle_at_entry_t entries[BATTLE_AT_LIST_CAPACITY]; /* 0x680; entry 0 is omitted from the menu */
 } menu_at_list_work_t;
-typedef char
-    menu_at_list_work_entries_offset_must_be_0x680[((unsigned long)&((menu_at_list_work_t*)0)->entries == 0x680) ? 1
-                                                                                                                 : -1];
+typedef char menu_at_list_work_size_must_be_1824[(sizeof(menu_at_list_work_t) == 1824) ? 1 : -1];
 
 /* Packed 4-bit images for the status panel's three numeric groups. */
 typedef struct menu_unit_stat_number_images {

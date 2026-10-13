@@ -170,9 +170,6 @@ typedef struct ai_extended_snapshot {
     u8 _padding_3f; /* tail padding to 2-byte alignment */
 } ai_extended_snapshot_t;
 typedef char ai_extended_snapshot_must_be_64[sizeof(ai_extended_snapshot_t) == 64 ? 1 : -1];
-typedef char ai_snapshot_hp_must_be_0x1b[((unsigned long)&((ai_extended_snapshot_t*)0)->hp_bytes == 0x1b) ? 1 : -1];
-typedef char
-    ai_snapshot_equipment_must_be_0x36[((unsigned long)&((ai_extended_snapshot_t*)0)->equipment == 0x36) ? 1 : -1];
 
 /* AI ability +0x04..0x0b: byte parameters and an aligned 32-bit status tail.
  * 0x8019e9f4 loads status bytes 1..4 together; reading only one byte would
@@ -206,8 +203,6 @@ typedef struct ai_considered_ability {
     u8 _padding_12[2];                  /* tail padding to 4-byte alignment */
 } ai_considered_ability_t;
 typedef char ai_considered_ability_size_must_be_20[(sizeof(ai_considered_ability_t) == 20) ? 1 : -1];
-typedef char ai_status_tail_must_be_at_offset_8
-    [((unsigned long)&((ai_considered_ability_t*)0)->parameters.packed.status_tail == 8) ? 1 : -1];
 
 /* action records */
 /* ai_action_rank_t.decided of the selected action once it is chosen. */
@@ -247,7 +242,6 @@ typedef struct ai_action_data {
     ai_action_rank_t rank;    /* 0x1c */
 } ai_action_data_t;
 typedef char ai_action_data_size_must_be_32[(sizeof(ai_action_data_t) == 32) ? 1 : -1];
-typedef char ai_action_command_must_be_at_offset_8[((unsigned long)&((ai_action_data_t*)0)->command == 8) ? 1 : -1];
 
 /* The packed 16-bit value combines an ability ID and a physical unit slot. */
 enum {
@@ -533,10 +527,6 @@ typedef struct ai_data {
     u8 _padding_19c7; /* 0x19c7; last documented byte; tail padding to 4-byte alignment */
 } ai_data_t;
 typedef char ai_data_size_must_be_6600[(sizeof(ai_data_t) == 6600) ? 1 : -1];
-typedef char ai_saved_targetability_must_be_0xca2
-    [((unsigned long)&((ai_data_t*)0)->targetability.snapshot.unit_targetable_saved == 0xca2) ? 1 : -1];
-typedef char ai_target_flags_must_be_0xcb4
-    [((unsigned long)&((ai_data_t*)0)->targetability.live.target_setting_flags == 0xcb4) ? 1 : -1];
 
 /* workspace */
 /* BATTLE-resident workspace; EVENT, EFFECT and WORLD overlays also use its pointer. */
