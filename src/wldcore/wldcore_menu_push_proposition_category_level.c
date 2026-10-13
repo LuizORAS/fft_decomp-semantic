@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
 
-/* Push list-window menu level 0x25.
+/* Push the Brave Story's Job section (level PROPOSITION_CATEGORY): rows Advancing and Work history.
  *
  * Entry 0 is listed when g_main_save_proposition_count is nonzero and entry 1
  * when any script variable 0x360-0x3bf has bit 2 set; entries draw text

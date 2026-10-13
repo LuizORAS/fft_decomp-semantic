@@ -1,13 +1,10 @@
 #include "fft/wldcore.h"
 
-/* Pushes a list menu level (type 0x1C).
- *
- * Appends the main, upper, lower and side windows, draws one text row per
- * list entry (text entries[i] + 0xb83f) into a new render record, draws script
- * variables 0x61 and 0x62 (each clamped to 9999) into a second record with
- * text 0xb846, selects the play-time display, clamps the saved cursor row in
- * g_wldcore_brave_story_saved_cursor to the entry count and positions the windows relative to the list
- * record before committing the level at depth + 1.
+/* Push the Brave Story menu (level BRAVE_STORY): the main, upper, lower and side windows, one text row
+ * per section (text 0xb83f + row: Fact, Record, Person, Job, Unexplored Land, Treasure, Return; the
+ * rows are wldcore_menu_build_brave_story_entries's), the injured and casualty counts (script variables
+ * 0x61 and 0x62, clamped to 9999, text 0xb846) and the play time. The saved cursor row
+ * (g_wldcore_brave_story_saved_cursor) is clamped to the row count.
  *
  * The unused 48-byte local reproduces the target's frame size. */
 void wldcore_menu_push_brave_story_level(void) {

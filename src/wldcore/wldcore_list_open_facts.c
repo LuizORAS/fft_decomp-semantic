@@ -4,7 +4,7 @@
 /* Open the Brave Story's Facts list: one row per fact that is set (the script variables from
  * EVENT_SCRIPT_VAR_FACT_FIRST, text TEXT_ID_FACT_NAME_BASE + index), up to eight rows at (0x58, 0x50)
  * with width 0x8c from the saved cursor. It hides the Brave Story list's content and shows the Brave
- * Story prompt. Twin of wldcore_list_open_brave_story_propositions. */
+ * Story prompt. Twin of wldcore_list_open_proposition_history. */
 void wldcore_list_open_facts(void) {
     wldcore_point32_t dimensions;
     wldcore_point32_t origin;

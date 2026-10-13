@@ -3,7 +3,7 @@
 #include "psx/libgs.h"
 #include "psx/pad.h"
 
-/* Handler of the saved-record preview level: the phases mirror the
+/* Handler of a treasure's detail (level TREASURE_DETAIL), which opens a book's sound novel: the phases mirror the
  * unexplored-land detail handler at 0x8007e6f4.
  *
  * Phase 1 waits for the render record at saved_record_index to leave its 0x100

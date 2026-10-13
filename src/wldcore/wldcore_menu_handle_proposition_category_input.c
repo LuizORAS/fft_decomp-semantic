@@ -1,13 +1,14 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Input step for the brave-story top-level list window.
+/* Input step of the Brave Story's Job section, rows Advancing and Work history (text 0xb864 + row).
  *
  * Refreshes the displayed play-time copies each frame, then, while the side
  * render record is not pending (flag 0x100): button 0x100 opens the help
  * message for the highlighted row (0x105a + entry), button 0x40 pops the
- * level, button 0x20 dispatches on the row value (0 opens the brave-story
- * submenu at wldcore_list_open_active_propositions, 1 the proposition list), and up/down wrap the
+ * level, button 0x20 dispatches on the row value (0 opens the propositions in
+ * progress, wldcore_list_open_active_propositions, 1 the Work history,
+ * wldcore_list_open_proposition_history), and up/down wrap the
  * cursor, moving the cursor window by 16 pixels a row. The wrap-around move
  * is spelled as a subtraction of a negative step to keep the window's y as
  * the first addition operand. */
@@ -61,7 +62,7 @@ void wldcore_menu_handle_proposition_category_input(wldcore_menu_list_window_lev
         case WLDCORE_PROPOSITION_CATEGORY_ROW_BRAVE_STORY:
             wldcore_window_begin_tint_transition((wldcore_window_tint_request_t*)level);
             g_wldcore_window_records[level->main_window].sequence = entry;
-            wldcore_list_open_brave_story_propositions();
+            wldcore_list_open_proposition_history();
             break;
         }
         return;

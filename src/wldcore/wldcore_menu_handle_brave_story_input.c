@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Input/update step of the world-map main menu level.
+/* Input step of the Brave Story menu (level BRAVE_STORY).
  *
  * Latches the play-time counters into the D_800D09Ax mirror, then runs one of
  * three behaviours depending on g_main_system_flags bit 0x4 (a battle/event
@@ -132,7 +132,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
             wldcore_list_open_persons();
             return;
         case WLDCORE_BRAVE_STORY_ROW_PROPOSITIONS:
-            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_BRAVE_STORY_PROPOSITIONS);
+            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_PROPOSITION_HISTORY);
             wldcore_window_set_list_window_states(level);
             wldcore_menu_push_proposition_category_level();
             return;

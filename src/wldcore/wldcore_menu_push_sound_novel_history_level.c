@@ -1,6 +1,6 @@
 #include "fft/wldcore.h"
 
-/* Pushes the save-slot selection level (menu type 0x17).
+/* Pushes the sound novel's history level (SOUND_NOVEL_HISTORY): the sections read last.
  *
  * Suspends WORLD thread 14, appends the two header windows (kinds 0x6c and
  * 0x6d, the second hidden) and the 0xf8 x 0xb0 panel render record built from

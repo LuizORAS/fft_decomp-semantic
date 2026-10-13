@@ -4,7 +4,7 @@
 /* Open the Brave Story's Persons list: one row per person with a profile (the script variables from
  * EVENT_SCRIPT_VAR_PERSON_PROFILE_FIRST; entry value person * 16 + the variable's value less 0x1000),
  * up to eight rows at (0x80, 0x50) with width 0x60 from the saved cursor. It hides the Brave Story
- * list's content and shows the Brave Story prompt. Twin of wldcore_list_open_brave_story_propositions. */
+ * list's content and shows the Brave Story prompt. Twin of wldcore_list_open_proposition_history. */
 void wldcore_list_open_persons(void) {
     wldcore_point32_t dimensions;
     wldcore_point32_t origin;

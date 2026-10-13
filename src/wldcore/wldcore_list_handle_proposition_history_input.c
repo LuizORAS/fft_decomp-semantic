@@ -1,12 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* List level input step for cursor slot 16 (the list opened by 0x80087b94):
- * twin of wldcore_list_handle_unexplored_lands_input with help message 0x105b and no file-loading gate.
- * Closing without a selection re-flags the list window's content render
- * record (0x100) before returning to the bar menu; a confirmed entry goes
- * to 0x80087fa4. */
-void wldcore_list_handle_brave_story_propositions_input(wldcore_menu_panel_level_t* level) {
+/* Input step of the Work history list: Circle opens the proposition's last attempt
+ * (wldcore_menu_push_proposition_attempt_detail_level), Cross closes the list and shows the category
+ * list's content again, and Select shows help message 0x105b. Twin of
+ * wldcore_list_handle_unexplored_lands_input without its file-loading gate. */
+void wldcore_list_handle_proposition_history_input(wldcore_menu_panel_level_t* level) {
     s32 depth;
 
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
@@ -17,14 +16,14 @@ void wldcore_list_handle_brave_story_propositions_input(wldcore_menu_panel_level
         g_main_system_flags ^= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_menu_stack_depth = depth - 1;
         if (level->result != 0) {
-            wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_BRAVE_STORY_PROPOSITIONS);
+            wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_PROPOSITION_HISTORY);
             wldcore_menu_push_proposition_attempt_detail_level(
                 g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & TEXT_ID_ENTRY_MASK);
             return;
         }
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth - 2].list_window.content_render].flags
             |= WLDCORE_DISPLAY_OBJECT_POP_IN;
-        wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_BRAVE_STORY_PROPOSITIONS);
+        wldcore_list_clear_cursor_state(WLDCORE_CURSOR_SLOT_PROPOSITION_HISTORY);
         wldcore_menu_dispatch_resume_handler();
         return;
     }

@@ -1,14 +1,9 @@
 #include "fft/wldcore.h"
 
-/* Builds the entry kinds of the list-window level that 0x80080e54 pushes.
- *
- * Kind 0 is listed when script flag 0x92 is set and any of flags 0x1a4-0x1bb
- * is; kinds 1 and 2 always; kind 3 when a proposition is active or any of
- * variables 0x360-0x3bf has bit 2 set; kind 4 when any of flags 0x350-0x35f is
- * set; kind 5 when any of flags 0x321-0x34f is set; kind 6 always. The upper
- * and lower windows sit on the kind-4 and kind-5 rows and lose flag 8 once all
- * 16 lands or the first 31 treasures are found.
- */
+/* List the Brave Story's sections for its menu: Fact when EVENT_SCRIPT_VAR_FACTS_ENABLED is set and a
+ * fact is; Record and Person always; Job when a proposition is in progress or one has been completed;
+ * Unexplored Land and Treasure once one is found; Return always. The upper and lower windows sit on the
+ * Unexplored Land and Treasure rows and show once all 16 lands or the first 31 treasures are found. */
 void wldcore_menu_build_brave_story_entries(void) {
     s32 count;
     s32 i;

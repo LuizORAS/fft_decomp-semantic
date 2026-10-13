@@ -1,17 +1,14 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Step handler for the save confirmation level.
+/* Step the sound novel's Quit / Continue prompt (text 0xb83a).
  *
- * Drives the screen dim: fade_in raises the overlay colour in steps of 8 and
- * fade_out lowers it again, popping the level when it reaches 0. While no fade
- * runs it takes input: button 0x100 opens the help text for the highlighted
- * row through g_wldcore_sound_novel_quit_help_text_ids, up/down toggle the two rows and move the cursor
- * window, button 0x20 on row 0 starts the save (system flag 4, audio command
- * 2/0x20, main_sound_stop_weather_sfx_music), and button 0x20 on row 1 or
- * button 0x40 begins the fade out. Once the save finishes (WORLD thread 14
- * idle) it shifts the operand history g_wldcore_sound_novel_text_history_0..66, captures the play time
- * and hands off to wldcore_menu_push_screen_transition_level with screen 0x1b.
+ * The screen dims while it opens. Select shows the highlighted row's help
+ * (g_wldcore_sound_novel_quit_help_text_ids), Up and Down move between the rows, and Continue or
+ * Cross fades the prompt out and returns to the novel. Quit fades to black and stops the music;
+ * once WORLD thread 14 is idle it shifts the text history, captures the state and play time so
+ * the book can resume where it stopped, and returns through a screen transition to the treasure
+ * the book was opened from (wldcore_menu_push_screen_transition_level).
  *
  * Every colour store rereads the fade word through a local: a direct
  * `u8 = level->fade_in` assignment narrows the reload to `lbu`, while the
@@ -20,7 +17,7 @@
  * update needs the window pointer, the base_y local and a separate offset
  * local: that keeps base_y as the first `addu` operand and stops fold from
  * reassociating the +0xe. */
-void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_save_confirm_level_t* level) {
+void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_sound_novel_quit_level_t* level) {
     u32 flags;
     u32 buttons;
     s32 value;

@@ -1,11 +1,11 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Opens a panel list of the script variables 0x360-0x3bf with bit 0x04 set
- * (entry values 0x6000 + index), shows up to eight rows at (0x4c, 0x50) with
- * width 0x96, appends its 0x5c-byte record tagged 0x29 and hides the parent
- * list window's content render record. Twin of wldcore_list_open_story_events. */
-void wldcore_list_open_brave_story_propositions(void) {
+/* Open the Job section's Work history: one row per completed proposition (script variables
+ * 0x360-0x3bf with WLDCORE_PROPOSITION_VARIABLE_COMPLETED, entry values 0x6000 + index), up to eight rows
+ * at (0x4c, 0x50) with width 0x96; it hides the category list's content. Twin of
+ * wldcore_list_open_story_events. */
+void wldcore_list_open_proposition_history(void) {
     wldcore_point32_t dimensions;
     wldcore_point32_t origin;
     s16* values;
@@ -39,7 +39,7 @@ void wldcore_list_open_brave_story_propositions(void) {
     origin.x = 0x4C;
     dimensions.y = i;
     origin.y = 0x50;
-    wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_BRAVE_STORY_PROPOSITIONS, count, i);
+    wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_PROPOSITION_HISTORY, count, i);
     wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
@@ -48,6 +48,6 @@ void wldcore_list_open_brave_story_propositions(void) {
     g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index - 1].list_window.content_render]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_wldcore_menu_stack_types_next[record_index] = WLDCORE_MENU_LEVEL_BRAVE_STORY_PROPOSITIONS;
+    g_wldcore_menu_stack_types_next[record_index] = WLDCORE_MENU_LEVEL_PROPOSITION_HISTORY;
     g_wldcore_menu_stack_depth = record_index + 1;
 }

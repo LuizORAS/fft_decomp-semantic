@@ -2,7 +2,10 @@
 #include "psx/pad.h"
 
 /*
- * Per-frame handler for a WLDCORE brightness/fade menu level.
+ * Per-frame step of the sound novel reader (level SOUND_NOVEL): it runs the novel's script
+ * (wldcore_sound_novel_run_until_yield), L1 and R1 raise and lower the background brightness
+ * (shown on a gauge for a second), and at the end it remembers the play time, resets the novel's
+ * record and returns through a screen transition to the treasure the book was opened from.
  *
  * The unused array reproduces the target's 0x40-byte frame. The 0x140 state-flag test is a
  * word load (`lw`) of the u16 g_wldcore_sound_novel_record.state_flags in the target, so it

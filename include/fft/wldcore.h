@@ -548,7 +548,7 @@ typedef enum wldcore_message_block {
     WLDCORE_MESSAGE_BLOCK_TREASURES = 0x03,
     WLDCORE_MESSAGE_BLOCK_STORY_EVENTS = 0x04,
     WLDCORE_MESSAGE_BLOCK_TUTORIAL_TOPICS = 0x05,
-    WLDCORE_MESSAGE_BLOCK_BRAVE_STORY_PROPOSITIONS = 0x0a,
+    WLDCORE_MESSAGE_BLOCK_PROPOSITION_HISTORY = 0x0a,
     WLDCORE_MESSAGE_BLOCK_FACTS = 0x0b,
     WLDCORE_MESSAGE_BLOCK_PROPOSITION_REPORT_FIRST = 0x10, /* one block per proposition id */
 } wldcore_message_block_e;
@@ -1427,7 +1427,7 @@ void wldcore_list_open_unexplored_lands(void);
 void wldcore_list_open_treasures(void);
 void wldcore_list_open_persons(void);
 void wldcore_list_open_active_propositions(void);
-void wldcore_list_open_brave_story_propositions(void);
+void wldcore_list_open_proposition_history(void);
 
 void wldcore_proposition_build_detail_panel_image(
     wldcore_menu_window_pair_render_level_t* level, s32 proposition, s32 coordinate_mode);
@@ -1460,7 +1460,7 @@ typedef enum wldcore_cursor_slot {
     WLDCORE_CURSOR_SLOT_PERSONS = 0x0b,
     WLDCORE_CURSOR_SLOT_TUTORIAL_TOPICS = 0x0c,
     WLDCORE_CURSOR_SLOT_PARTICIPANT_LIST = 0x0f,
-    WLDCORE_CURSOR_SLOT_BRAVE_STORY_PROPOSITIONS = 0x10,
+    WLDCORE_CURSOR_SLOT_PROPOSITION_HISTORY = 0x10,
     WLDCORE_CURSOR_SLOT_FORMATION_TUTORIALS = 0x12,
     WLDCORE_CURSOR_SLOT_BATTLE_TUTORIALS = 0x13,
     WLDCORE_CURSOR_SLOT_FACTS = 0x14,
@@ -1760,7 +1760,7 @@ typedef struct wldcore_menu_screen_transition_level {
 /* Provisional: the type-0x16 sound-novel save-confirmation level pushed by
  * wldcore_menu_push_sound_novel_quit_level and stepped by
  * wldcore_menu_step_sound_novel_quit_level. */
-typedef struct wldcore_menu_save_confirm_level {
+typedef struct wldcore_menu_sound_novel_quit_level {
     s32 cursor_window; /* 0x00 */
     s32 second_window; /* 0x04 */
     s32 render_index;  /* 0x08 */
@@ -1769,7 +1769,7 @@ typedef struct wldcore_menu_save_confirm_level {
     s32 fade_in;     /* 0x14 */
     s32 _unknown_18; /* 0x18; cleared at push; no level handler reads it */
     s32 choice;      /* 0x1c */
-} wldcore_menu_save_confirm_level_t;
+} wldcore_menu_sound_novel_quit_level_t;
 
 /* wldcore_menu_sound_novel_history_level_t.phase. */
 typedef enum wldcore_sound_novel_history_phase {
@@ -1927,7 +1927,7 @@ typedef enum wldcore_menu_level_type {
     WLDCORE_MENU_LEVEL_ACTIVE_PROPOSITIONS = 0x26,
     WLDCORE_MENU_LEVEL_PARTICIPANT_LIST = 0x27,
     WLDCORE_MENU_LEVEL_PARTICIPANT_DETAIL = 0x28,
-    WLDCORE_MENU_LEVEL_BRAVE_STORY_PROPOSITIONS = 0x29,
+    WLDCORE_MENU_LEVEL_PROPOSITION_HISTORY = 0x29,
     WLDCORE_MENU_LEVEL_PROPOSITION_ATTEMPT_DETAIL = 0x2a,
     WLDCORE_MENU_LEVEL_TUTORIAL_CATEGORIES = 0x2b,
     WLDCORE_MENU_LEVEL_FORMATION_TUTORIALS = 0x2c,
@@ -1975,7 +1975,7 @@ typedef union wldcore_menu_stack_record {
     wldcore_menu_sound_novel_resume_level_t sound_novel_resume;
     wldcore_menu_screen_transition_level_t screen_transition;
     wldcore_menu_scrollable_text_level_t scrollable_text;
-    wldcore_menu_save_confirm_level_t save_confirm;
+    wldcore_menu_sound_novel_quit_level_t sound_novel_quit;
     wldcore_menu_sound_novel_history_level_t sound_novel_history;
     wldcore_menu_location_transition_level_t location_transition;
     wldcore_menu_send_unit_level_t send_unit;
