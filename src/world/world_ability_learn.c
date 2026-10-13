@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -15,8 +16,8 @@ void world_ability_learn(s16 unit_id, s16 job_id, s16 ability_id) {
     s32 mask;
     u8* learned_abilities;
 
-    skillset = world_job_get_skillset(job_id);
-    generic_job = world_job_get_generic_index(job_id);
+    skillset = job_get_skillset(job_id);
+    generic_job = job_get_generic_index(job_id);
     list = (s16*)main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ALL);
     i = 0;
     while (list[i] != ability_id) {

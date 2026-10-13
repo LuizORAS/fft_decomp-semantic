@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
@@ -51,7 +52,7 @@ void world_unit_update_monster_breeding(s32 unused) {
                 }
             } else {
                 levels[unit_count++] = unit->level;
-                value = world_job_get_skillset(unit->job_id);
+                value = job_get_skillset(unit->job_id);
                 if (value >= SKILLSET_ID_MONSTER_FIRST && value < SKILLSET_ID_END) {
                     monsters[monster_count++] = i;
                 }

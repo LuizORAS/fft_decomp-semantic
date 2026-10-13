@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /*
@@ -22,9 +23,9 @@ s32 bunit_ability_build_list(s16 unit_index, s16 job_id, s32 ability_category, s
     s32 byte_offset;
     bunit_unit_data_t* unit_data;
 
-    skillset = bunit_job_get_skillset(job_id);
-    generic_index = bunit_job_get_generic_index(job_id);
-    if (bunit_job_find_first_for_skillset(skillset) == -1) {
+    skillset = job_get_skillset(job_id);
+    generic_index = job_get_generic_index(job_id);
+    if (job_find_first_for_skillset(skillset) == -1) {
         skillset = g_bunit_unit_data[unit_index]->abilities[0];
     }
     abilities = (s16*)main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ALL);

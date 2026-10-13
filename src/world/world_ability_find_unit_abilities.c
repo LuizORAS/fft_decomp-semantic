@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -31,9 +32,9 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
     if (mode == WORLD_ABILITY_LIST_MODE_LEARNED_ONLY && kind == MENU_ABILITY_CATEGORY_ACTION) {
         return world_ability_list_secondary_skillsets(unit, out);
     }
-    skillset = world_job_get_skillset(job);
-    generic = world_job_get_generic_index(job);
-    if (world_job_find_first_for_skillset(skillset) == -1) {
+    skillset = job_get_skillset(job);
+    generic = job_get_generic_index(job);
+    if (job_find_first_for_skillset(skillset) == -1) {
         skillset = g_world_formation_unit_pointers[unit]->abilities.fields.primary_skillset;
     }
     abilities = (s16*)main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ALL);

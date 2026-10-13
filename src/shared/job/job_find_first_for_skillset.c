@@ -1,7 +1,7 @@
-#include "fft/world.h"
+#include "fft/main.h"
 
-/* Return the lowest job id whose skillset is the given one, or -1. */
-s32 world_job_find_first_for_skillset(s32 skillset) {
+/* Return the lowest job ID with this skillset, or -1. */
+s32 job_find_first_for_skillset(s32 skillset) {
     s32 i;
 
     for (i = 0; i < JOB_ID_COUNT; i++) {

@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/world.h"
 
 /* Builds the unit's known skillset list.
@@ -16,7 +17,7 @@ s32 world_ability_list_secondary_skillsets(s16 unit_id, s16* skillsets) {
     for (i = 0; jobs[i] != -1; i++) {
         job = jobs[i];
         if (own_job != job && job != JOB_ID_MIME) {
-            skillsets[count++] = world_job_get_skillset(job);
+            skillsets[count++] = job_get_skillset(job);
         }
     }
     skillsets[count] = -1;

@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* Job level of the selected unit in the job list's `index`th job, also left
@@ -10,7 +11,7 @@ s32 bunit_job_calculate_current_level(s32 index) {
     s32 job_level_index;
     u8 packed_levels;
 
-    generic_job = bunit_job_get_generic_index(g_bunit_job_ids[index]);
+    generic_job = job_get_generic_index(g_bunit_job_ids[index]);
     unit = g_bunit_unit_data[g_bunit_unit_selected_index];
     job_level_index = generic_job >> 1;
     packed_levels = unit->job_levels[job_level_index];

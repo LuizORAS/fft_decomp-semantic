@@ -732,13 +732,13 @@ functions:
   - {addr: 0x8012227c, size: 84, name: world_item_is_in_category_list, hash: dff56971e7ed3167}
   - {addr: 0x801222d0, size: 104, name: world_item_prepend_to_category_list, hash: 64a6e8e35edbd02f}
   - {addr: 0x80122338, size: 128, name: world_item_remove_from_category_list, hash: cf7b4cbe138b1209}
-  - {addr: 0x801223b8, size: 44, name: world_job_get_generic_index, hash: d755c5f488ff21d3}
-  - {addr: 0x801223e4, size: 88, name: world_job_find_first_for_skillset, hash: 0e69ad31124150c2}
+  - {addr: 0x801223b8, size: 44, name: job_get_generic_index, hash: d755c5f488ff21d3, source: src/shared/job/job_get_generic_index.c}
+  - {addr: 0x801223e4, size: 88, name: job_find_first_for_skillset, hash: 0e69ad31124150c2, source: src/shared/job/job_find_first_for_skillset.c}
   - {addr: 0x8012243c, size: 76, name: world_job_get_base, hash: bbbf49580c82511f}
   - {addr: 0x80122488, size: 172, name: world_job_is_locked_for_all_units, hash: 8a0681496946a34a}
-  - {addr: 0x80122534, size: 72, name: world_job_calculate_and_store_unlocks, hash: 79ecd32bffad7458}
+  - {addr: 0x80122534, size: 72, name: job_calculate_and_store_unlocks, hash: 79ecd32bffad7458, source: src/shared/job/job_calculate_and_store_unlocks.c}
   - {addr: 0x8012257c, size: 496, name: world_job_build_unit_list, hash: 22283f9c0f9acef1}
-  - {addr: 0x8012276c, size: 36, name: world_job_get_skillset, hash: 72f6f53360f055dc}
+  - {addr: 0x8012276c, size: 36, name: job_get_skillset, hash: 72f6f53360f055dc, source: src/shared/job/job_get_skillset.c}
   - {addr: 0x80122790, size: 244, name: world_ability_list_secondary_skillsets, hash: 3c4a2800ccd29d50}
   - {addr: 0x80122884, size: 36, name: world_ability_has_two_swords, hash: 687480293e517645}
   - {addr: 0x801228a8, size: 36, name: world_ability_has_two_hands, hash: e69e52f39cf991c8}

@@ -207,14 +207,11 @@ s32 bunit_job_calculate_current_level(s32 index);
 s32 bunit_job_calculate_current_mastered(s32 index);
 s32 bunit_job_calculate_current_total_jp(s32 index);
 s32 bunit_job_calculate_next_level_jp_requirement(s32 index);
-s32 bunit_job_find_first_for_skillset(s32 skillset_id);
 s32 bunit_job_get_base(s16 unit_id);
 s32 bunit_job_get_current_jp(s32 unused_row);
 s32 bunit_job_get_current_level(s32 unused_row);
 s32 bunit_job_get_current_total_jp(s32 unused_row);
-s32 bunit_job_get_generic_index(s32 job_id);
 s32 bunit_job_get_next_level_jp_requirement(s32 unused_row);
-s32 bunit_job_get_skillset(s32 job_id);
 s32 bunit_job_is_current_mastered(s32 unused_row);
 s32 bunit_job_is_special_monster(s32 job_id);
 

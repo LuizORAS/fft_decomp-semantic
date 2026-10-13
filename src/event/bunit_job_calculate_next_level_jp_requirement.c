@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* JP needed for the next level of the job whose level
@@ -8,7 +9,7 @@
 s32 bunit_job_calculate_next_level_jp_requirement(s32 index) {
     s32 level;
 
-    bunit_job_get_generic_index(g_bunit_job_ids[index]);
+    job_get_generic_index(g_bunit_job_ids[index]);
     level = g_bunit_job_current_level & 0xf;
     if (level >= UNIT_JOB_LEVEL_MAX) {
         g_bunit_job_next_level_jp_requirement |= MENU_NUMBER_VALUE_DASHES;

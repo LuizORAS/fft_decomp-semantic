@@ -1,4 +1,5 @@
 #include "fft/event_jobstts.h"
+#include "fft/main.h"
 
 /* Build the selected job's ability list for one menu category.
  *
@@ -20,9 +21,9 @@ s32 jobstts_ability_build_list(
     s16 lo;
     s16 hi;
 
-    generic_index = jobstts_job_get_generic_index(job_id);
-    i = jobstts_job_get_skillset(job_id);
-    if (jobstts_job_find_first_for_skillset(i) == -1) {
+    generic_index = job_get_generic_index(job_id);
+    i = job_get_skillset(job_id);
+    if (job_find_first_for_skillset(i) == -1) {
         i = g_jobstts_unit_data[unit_index]->primary_skillset;
     }
     abilities = (s16*)main_ability_store_skillset_abilities(i, SKILLSET_ABILITY_FILTER_ALL);

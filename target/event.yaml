@@ -361,12 +361,12 @@ functions:
   - {addr: 0x801c70c4, size: 64, name: bunit_unit_copy_orders_to_reorder_list, hash: cac2171590658656}
   - {addr: 0x801c7104, size: 68, name: bunit_unit_copy_reorder_list_to_orders, hash: a6104db1a4999b63}
   - {addr: 0x801c7148, size: 96, name: bunit_unit_find_index_by_battle_id, hash: aeb870b2fb0d661f}
-  - {addr: 0x801c71a8, size: 44, name: bunit_job_get_generic_index, hash: 39c0e32433f9234e}
-  - {addr: 0x801c71d4, size: 88, name: bunit_job_find_first_for_skillset, hash: 0e69ad31124150c2}
+  - {addr: 0x801c71a8, size: 44, name: job_get_generic_index, hash: 39c0e32433f9234e, source: src/shared/job/job_get_generic_index.c}
+  - {addr: 0x801c71d4, size: 88, name: job_find_first_for_skillset, hash: 0e69ad31124150c2, source: src/shared/job/job_find_first_for_skillset.c}
   - {addr: 0x801c722c, size: 76, name: bunit_job_get_base, hash: 0fb085973a10550b}
-  - {addr: 0x801c7278, size: 72, name: bunit_job_calculate_and_store_unlocks, hash: 79ecd32bffad7458}
+  - {addr: 0x801c7278, size: 72, name: job_calculate_and_store_unlocks, hash: 79ecd32bffad7458, source: src/shared/job/job_calculate_and_store_unlocks.c}
   - {addr: 0x801c72c0, size: 352, name: bunit_job_build_unit_job_list, hash: 0372cf84313e0cb9}
-  - {addr: 0x801c7420, size: 36, name: bunit_job_get_skillset, hash: 72f6f53360f055dc}
+  - {addr: 0x801c7420, size: 36, name: job_get_skillset, hash: 72f6f53360f055dc, source: src/shared/job/job_get_skillset.c}
   - {addr: 0x801c7444, size: 648, name: bunit_ability_build_list, hash: 373b01e6f8a27498}
   - {addr: 0x801c76cc, size: 444, name: bunit_gfx_submit_frame_and_swap_buffers, hash: 03562779b98bb33c}
   - {addr: 0x801c7888, size: 1560, name: bunit_gfx_init_packet_pools, hash: 534a0c774b97dee2}
@@ -1867,9 +1867,9 @@ functions:
   - {addr: 0x801e0128, size: 64, name: jobstts_unit_init_job_data, hash: 2f5b68b9627401dd}
   - {addr: 0x801e0168, size: 76, name: jobstts_job_get_base, hash: 56e2d800265d4c96}
   - {addr: 0x801e01b4, size: 352, name: jobstts_job_build_unit_job_list, hash: 3883f26eb277dc3a}
-  - {addr: 0x801e0314, size: 88, name: jobstts_job_find_first_for_skillset, hash: 0e69ad31124150c2}
-  - {addr: 0x801e036c, size: 36, name: jobstts_job_get_skillset, hash: 72f6f53360f055dc}
-  - {addr: 0x801e0390, size: 44, name: jobstts_job_get_generic_index, hash: 41e9cddd909306f7}
+  - {addr: 0x801e0314, size: 88, name: job_find_first_for_skillset, hash: 0e69ad31124150c2, source: src/shared/job/job_find_first_for_skillset.c}
+  - {addr: 0x801e036c, size: 36, name: job_get_skillset, hash: 72f6f53360f055dc, source: src/shared/job/job_get_skillset.c}
+  - {addr: 0x801e0390, size: 44, name: job_get_generic_index, hash: 41e9cddd909306f7, source: src/shared/job/job_get_generic_index.c}
   - {addr: 0x801e03bc, size: 592, name: jobstts_ability_build_list, hash: 765ef4759d963053}
   - {addr: 0x801e060c, size: 308, name: jobstts_text_render_glyph_to_4bpp_image, hash: 1cfc444d6d3209dc}
   - {addr: 0x801e0740, size: 92, name: jobstts_text_find_entry_by_index, hash: f16b98f4a6075cd8}

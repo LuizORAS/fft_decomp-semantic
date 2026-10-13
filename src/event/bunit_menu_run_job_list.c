@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/main.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -38,7 +39,7 @@ s32 bunit_menu_run_job_list(void) {
     }
     if ((mask & PSX_PAD_CIRCLE) && g_bunit_menu_current_menu == BUNIT_MENU_JOB) {
         g_bunit_job_selected_id = g_bunit_job_ids[g_bunit_menu_list_selected_index];
-        g_bunit_job_selected_generic_index = bunit_job_get_generic_index(g_bunit_job_selected_id);
+        g_bunit_job_selected_generic_index = job_get_generic_index(g_bunit_job_selected_id);
         bunit_job_calculate_current_level(g_bunit_menu_list_selected_index);
         bunit_job_calculate_current_jp(g_bunit_menu_list_selected_index);
         bunit_job_calculate_current_total_jp(g_bunit_menu_list_selected_index);

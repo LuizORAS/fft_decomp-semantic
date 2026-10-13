@@ -1169,11 +1169,8 @@ extern u8 g_world_view_abilities_confirm_prompt_state;
 extern s16 g_world_learn_selected_job;
 extern s16 g_world_learn_selected_job_index;
 s32 world_job_build_unit_list(u8 unit_index, s16* jobs, s32 mode);
-s32 world_job_find_first_for_skillset(s32 skillset);
 
 /* Job id -> generic job index 0..0x13, else 0. */
-s32 world_job_get_generic_index(s32 job_id);
-s32 world_job_get_skillset(s32 job_id);
 s32 world_job_get_text_index(s16 job_id);
 s32 world_job_is_special_monster(s32 job_id);
 
