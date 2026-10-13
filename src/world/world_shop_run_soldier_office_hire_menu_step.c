@@ -11,7 +11,6 @@ void world_shop_run_soldier_office_hire_menu_step(void) {
     s32 slot;
 
     if (g_world_shop_hire_menu_initialized == 0) {
-        i = 0;
         g_world_shop_hire_confirm_menu.selected_index = 0;
         g_world_shop_hire_fee_confirm_menu.selected_index = 0;
         g_world_shop_hire_result_shown = 0;
@@ -21,13 +20,12 @@ void world_shop_run_soldier_office_hire_menu_step(void) {
         D_801CD0F4 = 0;
         g_world_formation_unit_banner_enabled = 0;
         g_world_shop_party_unit_count = 0;
-        do {
+        for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
             result = main_unit_init_job_data(&unit, i, 1);
-            i++;
             if (result == 0 && unit.formation_index < PARTY_GUEST_SLOT_FIRST) {
                 g_world_shop_party_unit_count++;
             }
-        } while (i < 20);
+        }
     }
     if (g_world_shop_hire_result_shown != 0) {
         if (g_world_input_primary_repeat & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE)) {
@@ -56,10 +54,10 @@ void world_shop_run_soldier_office_hire_menu_step(void) {
                 slot = world_formation_generate_unit(g_world_menu_selection_results[0]);
                 if (slot >= 0) {
                     g_world_shop_service_fee = 1000;
-                    do {
+                    for (; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
                         g_world_shop_service_fee
-                            += world_item_get_price(g_world_formation_unit_pointers[slot]->equipment[i++]);
-                    } while (i < WORLD_EQUIPMENT_SLOT_COUNT);
+                            += world_item_get_price(g_world_formation_unit_pointers[slot]->equipment[i]);
+                    }
                     if (world_shop_adjust_gil(0) < g_world_shop_service_fee) {
                         thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF823, 0);
                         main_party_remove_unit(g_world_formation_unit_pointers[slot]->identity.roster_slot);
