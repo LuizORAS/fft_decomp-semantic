@@ -21,8 +21,8 @@ s32 bunit_menu_run_unit_list_frame(void) {
             g_bunit_unit_grid_selected_cell = g_bunit_unit_list_index_map[g_bunit_unit_selected_index];
             bunit_unit_copy_selected_data();
             g_bunit_status_display_dimmed = 0;
-            g_bunit_numeric_editor_dimmed = 0;
-            g_bunit_character_status_dimmed = 0;
+            g_bunit_numeric_editor_thread_params.style = 0;
+            g_bunit_character_status_frame_config.style = 0;
             bunit_menu_reset_results();
             g_bunit_unit_list_initialized = 1;
         }
@@ -50,8 +50,8 @@ s32 bunit_menu_run_unit_list_frame(void) {
                     bunit_gfx_start_increasing_fade();
                     g_bunit_selected_battle_id = g_bunit_unit_pointers[g_bunit_unit_selected_index]->battle_id;
                 }
-                g_bunit_character_status_dimmed = 0;
-                g_bunit_numeric_editor_dimmed = 0;
+                g_bunit_character_status_frame_config.style = 0;
+                g_bunit_numeric_editor_thread_params.style = 0;
                 return 1;
             }
             return 1;
@@ -69,8 +69,8 @@ s32 bunit_menu_run_unit_list_frame(void) {
         }
         if ((input & PSX_PAD_TRIANGLE) || (input & PSX_PAD_START)) {
             g_bunit_sound_queued_effect_id = MAIN_SFX_CONFIRM;
-            g_bunit_character_status_dimmed = 1;
-            g_bunit_numeric_editor_dimmed = 1;
+            g_bunit_character_status_frame_config.style = 1;
+            g_bunit_numeric_editor_thread_params.style = 1;
             g_bunit_unit_list_triangle_menu_open = 1;
         } else if ((input & PSX_PAD_CIRCLE) && g_bunit_unit_browse_enabled != 0) {
             unit = g_bunit_unit_pointers[g_bunit_unit_selected_index];
@@ -78,8 +78,8 @@ s32 bunit_menu_run_unit_list_frame(void) {
                 g_bunit_sound_queued_effect_id = MAIN_SFX_INVALID;
             } else {
                 g_bunit_status_display_dimmed = 1;
-                g_bunit_numeric_editor_dimmed = 1;
-                g_bunit_character_status_dimmed = 1;
+                g_bunit_numeric_editor_thread_params.style = 1;
+                g_bunit_character_status_frame_config.style = 1;
                 g_bunit_unit_list_initialized = 0;
                 g_bunit_saved_unit_browse_enabled = g_bunit_unit_browse_enabled;
                 g_bunit_menu_current_menu = BUNIT_MENU_JOB;

@@ -11,6 +11,6 @@ void bunit_unit_copy_selected_data(void) {
     bcopy(&g_bunit_unit_pointers[g_bunit_unit_selected_index]->move, &g_bunit_editor_unit_fields, 0x40);
     g_bunit_status_display_redraw_request = 1;
     g_bunit_comparison_display_redraw_request = 1;
-    g_bunit_character_status_redraw_request = 1;
-    g_bunit_numeric_editor_redraw_request = 1;
+    g_bunit_character_status_frame_config.redraw_request = 1;
+    g_bunit_numeric_editor_thread_params.redraw_request = 1;
 }
