@@ -1,13 +1,10 @@
-#include "fft/battle.h"
 #include "fft/battle_menu.h"
+#include "fft/main.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 
-/* Return a buffer of battle_menu_alloc_memory to the menu arena: its slot record
- * is marked free (-1) and its 256-byte pages are cleared in the occupancy map.
- *
- * A pointer at or above the companion overlay load address, or -1, is ignored. A
- * buffer that none of the 16 slot records holds stops the current thread. */
-void battle_menu_free_memory(void* buffer_pointer) {
+/* Free a menu arena allocation; an unknown eligible pointer stops the current thread. */
+void menu_free_memory(void* buffer_pointer) {
     u32 buffer = (u32)buffer_pointer;
     u32 grid_base;
     s32* allocation_size;

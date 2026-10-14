@@ -1443,6 +1443,8 @@ typedef struct menu_allocation {
 } menu_allocation_t;
 typedef char menu_allocation_size_must_be_8[(sizeof(menu_allocation_t) == 8) ? 1 : -1];
 
+void menu_free_memory(void* buffer);
+
 /* input */
 /* Pressed, held and previous buttons, followed by the menu repeat counters. */
 typedef struct menu_input_state {
