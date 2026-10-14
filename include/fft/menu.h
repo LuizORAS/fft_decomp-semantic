@@ -975,6 +975,8 @@ typedef struct menu_quad_page {
 } menu_quad_page_t;
 typedef char menu_quad_page_size_must_be_324[sizeof(menu_quad_page_t) == 324 ? 1 : -1];
 
+void menu_run_selected_tile_info_display_thread(void);
+
 /* primitive queues */
 extern rgb24_t g_menu_gfx_sprite_color;
 extern menu_gfx_context_t* g_menu_gfx_context;

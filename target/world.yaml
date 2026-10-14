@@ -129,7 +129,7 @@ functions:
   - {addr: 0x800e8a48, size: 16, name: world_gfx_clear_draw_suppress_flag, hash: 90d655a8f1918436}
   - {addr: 0x800e8a58, size: 80, name: world_text_configure_sprite_vram, hash: 172593e7561a8a5f}
   - {addr: 0x800e8aa8, size: 8, name: world_noop_800e8aa8, hash: 6d64edf91449c1b1}
-  - {addr: 0x800e8ab0, size: 700, name: world_menu_selected_tile_info_display_thread, hash: 8648619103f31884}
+  - {addr: 0x800e8ab0, size: 700, name: world_menu_selected_tile_info_display_thread, hash: 8648619103f31884, source: src/shared/menu/menu_run_selected_tile_info_display_thread.c, source_symbol: menu_run_selected_tile_info_display_thread}
   - {addr: 0x800e8d6c, size: 588, name: menu_build_quad_pieces, hash: d2e36de075951781, source: src/shared/menu/menu_build_quad_pieces.c}
   - {addr: 0x800e8fb8, size: 300, name: world_menu_build_sprite_page, hash: 0677e90df05e1cdb}
   - {addr: 0x800e90e4, size: 8, name: world_noop_800e90e4, hash: 6d64edf91449c1b1}
@@ -2610,6 +2610,20 @@ overrides:
   - {function: world_menu_run_unit_summary_panel_thread, name: g_battle_unit_summary_portrait_image_params, addr: 0x80155d54}
   - {function: world_menu_run_unit_summary_panel_thread, name: g_battle_unit_summary_sprite_image_params, addr: 0x80155d00}
   - {function: world_menu_run_unit_summary_panel_thread, name: g_menu_text_state, addr: 0x80153280}
+  - {function: world_menu_selected_tile_info_display_thread, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
+  - {function: world_menu_selected_tile_info_display_thread, name: battle_gfx_free_tpage7_vram, addr: 0x800e2edc}
+  - {function: world_menu_selected_tile_info_display_thread, name: battle_gfx_set_draw_mode_for_texture_page, addr: 0x800fdba0}
+  - {function: world_menu_selected_tile_info_display_thread, name: battle_menu_draw_number_glyphs, addr: 0x800fe0ec}
+  - {function: world_menu_selected_tile_info_display_thread, name: battle_menu_set_text_origin, addr: 0x800fdb88}
+  - {function: world_menu_selected_tile_info_display_thread, name: battle_text_configure_sprite_vram, addr: 0x800e8a58}
+  - {function: world_menu_selected_tile_info_display_thread, name: battle_thread_find_running_by_task, addr: 0x800fd14c}
+  - {function: world_menu_selected_tile_info_display_thread, name: battle_thread_get_current_parameter_3, addr: 0x801000f8}
+  - {function: world_menu_selected_tile_info_display_thread, name: g_battle_menu_height_display_pages, addr: 0x80173cbc}
+  - {function: world_menu_selected_tile_info_display_thread, name: g_battle_menu_height_display_suppressed, addr: 0x80154dfc}
+  - {function: world_menu_selected_tile_info_display_thread, name: g_battle_menu_texture_location, addr: 0x80153188}
+  - {function: world_menu_selected_tile_info_display_thread, name: g_battle_tile_info_image_location, addr: 0x80154e00}
+  - {function: world_menu_selected_tile_info_display_thread, name: g_battle_tile_info_image_params, addr: 0x80154e08}
+  - {function: world_menu_selected_tile_info_display_thread, name: g_map_selected_tile_data, addr: 0x8013a310}
   - {function: world_menu_start_dead_unit_threads, name: battle_menu_icon_linked_entry_thread, addr: 0x800eee98}
   - {function: world_menu_start_dead_unit_threads, name: battle_menu_run_icon_selection_loop, addr: 0x800ecf20}
   - {function: world_menu_start_dead_unit_threads, name: battle_menu_start_building_thread, addr: 0x800f0a18}

@@ -1,4 +1,3 @@
-#include "fft/battle.h"
 #include "fft/battle_gfx.h"
 #include "fft/battle_map.h"
 #include "fft/battle_menu.h"
@@ -8,15 +7,9 @@
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
-#include "psx/types.h"
 
-/* Display thread for the selected tile: draws its quad group
- * (the selected tile's display height, built by
- * menu_build_quad_pieces) every frame and, when its depth is
- * non-zero, renders it as a one-digit number into the icon sprite. Runs
- * until the third thread parameter is set. BATTLE twin of
- * world_menu_selected_tile_info_display_thread. */
-void battle_menu_selected_tile_info_display_thread(void) {
+/* Draw the selected tile height and depth while its panel thread is active. */
+void menu_run_selected_tile_info_display_thread(void) {
     RECT rect;
     u8 buffer[0x100];
     s32 i;
