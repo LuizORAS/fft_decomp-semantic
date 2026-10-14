@@ -862,7 +862,7 @@ void world_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* texture_wind
 void world_gfx_enqueue_draw_move(const RECT* src, s32 x, s32 y, s32 ot_index);
 
 void world_gfx_enqueue_textured_quad_list(
-    menu_sprite_cell_t* cell, rgb24_t* rgb, s32 semi_trans, u16 tpage, u16 clut, s32 ot_index, s32 count);
+    const menu_sprite_cell_t* cell, const rgb24_t* rgb, s32 semi_trans, u16 tpage, u16 clut, s32 ot_index, s32 count);
 
 void world_gfx_alloc_tpage7_vram(RECT* rect, void* prim, u32* image);
 void world_gfx_enqueue_textured_quad_corners(
@@ -907,7 +907,7 @@ void world_gfx_set_portrait_poly_texture(POLY_FT4* poly, s32 code);
 void world_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_base_index, s16* entries);
 
 void world_gfx_enqueue_textured_quad(
-    RECT* rect, s32 u, s32 v, rgb24_t* color, s32 semi_trans, u16 texture_page, u16 clut, s32 priority);
+    const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semi_trans, u16 texture_page, u16 clut, s32 priority);
 
 void world_gfx_free_tpage7_vram(RECT* rect);
 s32 world_gfx_get_fade_state(void);

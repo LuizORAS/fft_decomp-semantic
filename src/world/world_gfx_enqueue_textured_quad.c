@@ -6,7 +6,7 @@
  * (rect->x + 0x80, rect->y) with texture origin (u, v), and links it into
  * ordering table entry priority. With color the quad is shaded with it. */
 void world_gfx_enqueue_textured_quad(
-    RECT* rect, s32 u, s32 v, rgb24_t* color, s32 semi_trans, u16 texture_page, u16 clut, s32 priority) {
+    const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semi_trans, u16 texture_page, u16 clut, s32 priority) {
     POLY_FT4* poly;
 
     poly = &g_world_gfx_active_packet_buffer->textured_quads[g_world_gfx_textured_quad_count++];
