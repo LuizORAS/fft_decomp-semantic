@@ -1512,7 +1512,8 @@ s16 world_formation_build_record_list(s32 item_id, world_unit_t** unused_list, s
 
 void world_formation_build_unit_graphic_entry(s16 formation_index, texture_source_t* destination, s32 unused);
 
-void world_formation_build_unit_record(struct unit_stats* unit, struct world_unit* record, struct party_unit* party);
+void world_formation_build_unit_record(
+    const struct unit_stats* unit, struct world_unit* record, const struct party_unit* party);
 
 void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* poly);
 s32 world_formation_can_dismiss_unit(s16 formation_idx);

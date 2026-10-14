@@ -137,7 +137,7 @@ s32 battle_menu_display_item_inventory_ability(s32 unit_id, s32 skillset, u8* ou
 s32 battle_menu_get_unit_skillset_ability_data(
     s32 unit_id, u8 skillset, s16* ability_ids, u8* mp_out, u8* ct_out, s32 unused, u8* flags_out, u8* turns_out);
 s32 battle_menu_has_monster_skill_supporter_at_tile(s32 team_flags, s32 x, s32 y, s32 total_height);
-s32 battle_menu_init_monster_skill_check(unit_stats_t* unit);
+s32 battle_menu_init_monster_skill_check(const unit_stats_t* unit);
 s32 battle_menu_load_charge_skillset(s32 unit_id, s32 skillset, s16* abilities, u8* ability_ct, u8* turns);
 s32 battle_menu_load_draw_out_abilities(s32 unit_id, s32 skillset, u8* out_item_ids);
 u16 battle_menu_load_elemental_abilities(s32 skillset_slot, u8 unit_id);

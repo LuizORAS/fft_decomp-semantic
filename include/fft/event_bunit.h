@@ -230,7 +230,7 @@ void bunit_panel_toggle_comparison_status_thread(s32 enable);
 void bunit_panel_toggle_equipment_and_numeric_editor_threads(s32 enable);
 void bunit_panel_toggle_unit_status_thread(s32 enable);
 void bunit_panel_run_unit_status_thread(void);
-void bunit_unit_build_record_from_stats(struct unit_stats* unit, bunit_unit_t* record, s32 unused_slot);
+void bunit_unit_build_record_from_stats(const struct unit_stats* unit, bunit_unit_t* record, s32 unused_slot);
 s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode);
 
 /* numeric editor */

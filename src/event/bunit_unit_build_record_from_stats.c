@@ -13,7 +13,7 @@
  * slot so loop.c strength-reduces it into the record pointer; with an explicit
  * pointer walk the smaller loop lets loop.c hoist the constant 3 into $s6. The
  * caller also passes its shown-list slot, which is not read. */
-void bunit_unit_build_record_from_stats(unit_stats_t* unit, bunit_unit_t* record, s32 unused_slot) {
+void bunit_unit_build_record_from_stats(const unit_stats_t* unit, bunit_unit_t* record, s32 unused_slot) {
     s16* abilities;
     s32 count;
     s32 i;

@@ -5,7 +5,7 @@
 /* Monster Skill check: the number of the four tiles adjacent to the unit that
  * hold a same-team Monster Skill supporter at the unit's total height. Returns 0
  * for an empty slot. */
-s32 battle_menu_init_monster_skill_check(unit_stats_t* unit) {
+s32 battle_menu_init_monster_skill_check(const unit_stats_t* unit) {
     battle_unit_height_data_t height_data;
     s32 team;
     s32 x;

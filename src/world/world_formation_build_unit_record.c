@@ -12,7 +12,7 @@
  * One scratch variable `i` also carries the monster flag, the second evade
  * operand and the unlocked-job mask; separate locals reallocate a0/v1.
  */
-void world_formation_build_unit_record(unit_stats_t* unit, world_unit_t* record, party_unit_t* party) {
+void world_formation_build_unit_record(const unit_stats_t* unit, world_unit_t* record, const party_unit_t* party) {
     s16* abilities;
     s32 i;
     u32 evade;
