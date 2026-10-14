@@ -200,9 +200,9 @@ void world_screen_build_at_list(void) {
                     index = cursor + row_offset + delta;
                     world_menu_set_text_origin(layout->x[column], 0);
                     if (layout->mode[column] != MENU_TEXT_COLUMN_HIDDEN) {
-                        g_world_menu_text_color = layout->text_colors[column][index];
+                        g_menu_text_palette_offset = layout->text_colors[column][index];
                     }
-                    if (g_world_menu_text_color == 4) {
+                    if (g_menu_text_palette_offset == 4) {
                         g_world_menu_text_state.pen.color = 0x44444444;
                     }
                     if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
@@ -217,7 +217,7 @@ void world_screen_build_at_list(void) {
                     }
                 }
                 g_world_menu_text_state.pen.color = 0;
-                g_world_menu_text_color = 0;
+                g_menu_text_palette_offset = 0;
                 LoadImage(&image_rect, (u32*)buffer);
                 clear.h = 2;
                 clear.x = image_rect.x;

@@ -80,7 +80,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
                     }
                 } else if (state->command == TEXT_SET_PALETTE) {
                     cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
-                    g_world_menu_text_color = *cursor;
+                    g_menu_text_palette_offset = *cursor;
                 } else if (state->command == TEXT_CHOICE_MARK) {
                     if (text != (u8*)1) {
                         break;
@@ -125,7 +125,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
                             if (line >= g_world_menu_text_param_22) {
                                 world_text_blit_font_glyph_to_4bpp(
                                     g_world_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES, pixels,
-                                    &g_world_text_draw_origin, g_world_menu_text_color);
+                                    &g_world_text_draw_origin, g_menu_text_palette_offset);
                             }
                         }
                         g_world_text_draw_origin.rect.x += 6;
@@ -171,7 +171,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
         }
         if (line >= g_world_menu_text_param_22) {
             world_text_blit_font_glyph_to_4bpp(g_world_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES,
-                pixels, &g_world_text_draw_origin, g_world_menu_text_color);
+                pixels, &g_world_text_draw_origin, g_menu_text_palette_offset);
         }
         g_world_text_draw_origin.rect.x += g_text_glyph_widths[state->command];
         if (g_world_text_draw_origin.rect.x >= g_world_text_draw_origin.stride - 8) {
@@ -179,7 +179,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
         }
     }
 end:
-    g_world_menu_text_color = 0;
+    g_menu_text_palette_offset = 0;
     g_world_menu_text_param_22 = 0;
     g_world_menu_text_param_24 = 0xFF;
 }

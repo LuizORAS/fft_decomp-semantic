@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
@@ -12,5 +13,5 @@ void world_formation_reset_menu_context(void) {
     DrawSync(0);
     g_world_menu_thread_menu_data = g_world_menu_default_entries;
     g_text_section_pointers[TEXT_SECTION_LOCATION_NAMES] = g_world_location_names_resident;
-    g_world_menu_text_color = 0;
+    g_menu_text_palette_offset = 0;
 }

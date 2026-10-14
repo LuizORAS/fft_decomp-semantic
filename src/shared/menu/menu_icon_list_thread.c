@@ -39,7 +39,7 @@ void menu_icon_list_thread(void) {
             fresh = 1;
             g_menu_text_state.pen.stride = state->inner_width;
             battle_menu_set_text_origin(8, 9);
-            g_battle_menu_text_palette_offset = 0;
+            g_menu_text_palette_offset = 0;
             battle_menu_display_text_entry(state->text_id, buffer, &g_menu_text_state.pen);
             LoadImage(&rect, (u32*)buffer);
         }

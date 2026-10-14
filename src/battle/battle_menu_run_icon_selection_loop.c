@@ -2,6 +2,7 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/memory.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
@@ -34,7 +35,7 @@ void battle_menu_run_icon_selection_loop(void) {
         param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
     g_menu_text_state.pen.stride = param->inner_width;
     battle_menu_set_text_origin(8, 9);
-    g_battle_menu_text_palette_offset = 0;
+    g_menu_text_palette_offset = 0;
     battle_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
     LoadImage(&rect, (u32*)buffer);
     for (i = 0;; i++) {

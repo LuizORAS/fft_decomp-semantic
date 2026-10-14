@@ -211,7 +211,7 @@ void option_menu_run_game_options(void) {
                     if (layout->text_ids[column] != (s16*)-1) {
                         index = cursor + row_offset + delta;
                         battle_menu_set_text_origin(layout->x[column], 0);
-                        g_battle_menu_text_palette_offset = layout->text_colors[column][index];
+                        g_menu_text_palette_offset = layout->text_colors[column][index];
                         if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
                             battle_menu_display_text_entry(
                                 layout->text_ids[column][index], image, &g_menu_text_state.pen);

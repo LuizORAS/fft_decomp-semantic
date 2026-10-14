@@ -1521,6 +1521,9 @@ typedef struct menu_text_state {
     glyph_blit_t pen;
 } menu_text_state_t;
 
+/* Added to glyph palette indices while menu text is drawn. */
+extern s32 g_menu_text_palette_offset;
+
 /* list threads */
 extern u32* g_menu_input_controller;
 void menu_draw_text_columns(menu_entry_t* entry, s32* row_offset, u8* buffer);

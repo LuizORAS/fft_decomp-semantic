@@ -28,6 +28,6 @@ void world_map_confirm_destination(void) {
     } else {
         g_sound_pending_sfx_id = MAIN_SFX_INVALID;
     }
-    g_world_menu_text_color = 0;
+    g_menu_text_palette_offset = 0;
     thread_exit_current();
 }

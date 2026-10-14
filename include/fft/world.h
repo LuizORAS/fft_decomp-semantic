@@ -2027,7 +2027,6 @@ extern s32 g_world_menu_sound_muted;
 extern rgb24_t g_world_menu_sprite_color;
 extern menu_entry_t g_world_menu_system_entries[];
 extern s8 g_world_menu_temporary_draw_area_active;
-extern s32 g_world_menu_text_color;
 extern s32 g_world_menu_text_file_buffer[];
 /* Provisional: menu text origin/stride fields at 0x80153280 (the WORLD
  * script variable region; world_menu_set_text_origin writes +0x04/+0x06).

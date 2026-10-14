@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -10,10 +11,10 @@
 void world_menu_display_number_entry(s32 value, u8 digit_count, u8* image, glyph_blit_t* origin) {
     origin->rect.x += (digit_count - 1) * 6;
     do {
-        world_text_blit_font_glyph_to_4bpp(
-            g_world_text_glyph_bitmap_data + (value % 10) * TEXT_GLYPH_BYTES, image, origin, g_world_menu_text_color);
+        world_text_blit_font_glyph_to_4bpp(g_world_text_glyph_bitmap_data + (value % 10) * TEXT_GLYPH_BYTES, image,
+            origin, g_menu_text_palette_offset);
         value = value / 10;
         origin->rect.x -= 6;
     } while (value != 0);
-    g_world_menu_text_color = 0;
+    g_menu_text_palette_offset = 0;
 }

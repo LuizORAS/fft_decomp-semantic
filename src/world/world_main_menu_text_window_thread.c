@@ -85,7 +85,7 @@ void world_main_menu_text_window_thread(void) {
                 entry->inner_width, entry->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             g_world_menu_text_state.pen.stride = entry->inner_width;
             world_menu_set_text_origin(10, 8);
-            g_world_menu_text_color = 0;
+            g_menu_text_palette_offset = 0;
             mem_copy_bytes_nonempty(g_world_text_substitution_values_backup, g_text_substitution_values,
                 sizeof(g_world_text_substitution_values_backup));
             text_values = entry->value;

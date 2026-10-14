@@ -255,16 +255,16 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                     index = cursor + row_offset + scroll_delta;
                     battle_menu_set_text_origin(layout->columns.x[column], 0);
                     if (layout->columns.mode[column] != MENU_TEXT_COLUMN_HIDDEN) {
-                        g_battle_menu_text_palette_offset = layout->columns.text_colors[column][index];
+                        g_menu_text_palette_offset = layout->columns.text_colors[column][index];
                     }
                     g_menu_text_state.pen.color = 0;
-                    if (g_battle_menu_text_palette_offset == 4) {
+                    if (g_menu_text_palette_offset == 4) {
                         g_menu_text_state.pen.color = 0x44444444;
                     }
                     if (layout->columns.mode[column] == MENU_TEXT_COLUMN_TEXT) {
                         battle_menu_display_text_entry(
                             layout->columns.text_ids[column][index], buffer, &g_menu_text_state.pen);
-                        g_battle_menu_text_palette_offset = layout->columns.text_colors[column][index];
+                        g_menu_text_palette_offset = layout->columns.text_colors[column][index];
                         if (g_thread_contexts[g_thread_current_id].function_parameter_4 != 0
                             && (g_ai_workspace_ptr->ability_list.flags[index] & 1)) {
                             battle_menu_set_text_origin(layout->columns.x[column] + 0x50, 0);
@@ -285,7 +285,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                             value = layout->columns.text_ids[column][index];
                             if (value & 0x7FF) {
                                 if ((value & 0x7FF) >= 100) {
-                                    g_battle_menu_text_palette_offset = 0;
+                                    g_menu_text_palette_offset = 0;
                                     g_menu_text_state.pen.rect.x += 3;
                                     battle_menu_display_text_entry(0x509D, buffer, &g_menu_text_state.pen);
                                 } else {
@@ -295,7 +295,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                         }
                     }
                 }
-                g_battle_menu_text_palette_offset = 0;
+                g_menu_text_palette_offset = 0;
                 g_menu_text_state.pen.color = 0;
                 LoadImage(&image_rect, (u32*)buffer);
                 clear.h = 2;

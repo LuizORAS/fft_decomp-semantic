@@ -93,7 +93,7 @@ void world_menu_auto_battle_setting_thread(void) {
                 world_menu_handle_entry_confirm(param, previous);
             }
             for (j = 0; j < 5; j++) {
-                g_world_menu_text_color = colour[j];
+                g_menu_text_palette_offset = colour[j];
                 g_world_menu_text_state.pen.stride = param->inner_width;
                 world_menu_set_text_origin(8, j * 16 + 9);
                 world_menu_display_text_entry(j + 0x5009, buffer, &g_world_menu_text_state.pen);

@@ -321,7 +321,6 @@ extern s32 g_battle_menu_panel_fade_intensity;
 extern s32 g_battle_menu_panel_fade_mode; /* menu_panel_fade_mode_e */
 extern u8 g_battle_menu_panel_fade_modes[];
 extern RECT g_battle_menu_portrait_palette_rect;
-extern s32 g_battle_menu_text_palette_offset;
 extern menu_palette_slot_t g_battle_numeric_display_palettes[];
 
 void battle_menu_copy_palette_colors(const menu_palette_pair_t* source);

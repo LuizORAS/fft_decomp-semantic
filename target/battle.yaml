@@ -2324,7 +2324,7 @@ data:
   - {addr: 0x80165f80, name: g_battle_unit_view_mode}
   - {addr: 0x80165f84, name: g_battle_menu_current_id}
   - {addr: 0x80165f88, name: g_script_event_speed}
-  - {addr: 0x80165f8c, name: g_battle_menu_text_palette_offset}
+  - {addr: 0x80165f8c, name: g_menu_text_palette_offset}
   - {addr: 0x80165f90, name: g_battle_text_substitution_value_27}
   - {addr: 0x80165f94, name: g_battle_text_substitution_value_28}
   - {addr: 0x80165f98, name: g_threads}

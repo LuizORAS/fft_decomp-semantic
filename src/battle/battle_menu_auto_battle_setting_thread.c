@@ -99,7 +99,7 @@ void battle_menu_auto_battle_setting_thread(void) {
                 battle_menu_handle_action(param, previous);
             }
             for (j = 0; j < 5; j++) {
-                g_battle_menu_text_palette_offset = colour[j];
+                g_menu_text_palette_offset = colour[j];
                 g_menu_text_state.pen.stride = param->inner_width;
                 battle_menu_set_text_origin(8, j * 16 + 9);
                 battle_menu_display_text_entry(j + 0x5009, buffer, &g_menu_text_state.pen);

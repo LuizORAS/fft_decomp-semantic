@@ -1,4 +1,5 @@
 #include "fft/memory.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
 /* Two dead-store conditionals are zero-instruction allocation devices: flow deletes each body,
@@ -57,11 +58,11 @@ void world_menu_run_option_choice(void) {
     for (i = 0; i < g_world_option_menu_entry_counts[kind]; i++) {
         world_menu_set_text_origin(8, i * 16 + 8);
         if (i == g_world_game_option_values[kind]) {
-            g_world_menu_text_color = 8;
+            g_menu_text_palette_offset = 8;
         }
         world_menu_display_text_entry(
             i + g_world_option_menu_first_text_ids[kind], buffer, &g_world_menu_text_state.pen);
-        g_world_menu_text_color = 0;
+        g_menu_text_palette_offset = 0;
     }
     /* Dead store: allocation device, see the file header. */
     if (height <= 0) {

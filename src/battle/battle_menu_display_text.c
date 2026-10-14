@@ -84,7 +84,7 @@ void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* 
                 } else if (state->command == TEXT_SET_PALETTE) {
                     cursor = menu_text_advance_cursor_with_backreferences(state, cursor);
                     operand = *cursor;
-                    g_battle_menu_text_palette_offset = operand;
+                    g_menu_text_palette_offset = operand;
                 } else if (state->command == TEXT_CHOICE_MARK) {
                 } else if (state->command == TEXT_SPACE) {
                     pen->rect.x += 4;
@@ -130,7 +130,7 @@ void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* 
                                 if (count >= g_battle_menu_text_param_22) {
                                     battle_text_render_glyph_to_4bpp_image(
                                         g_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES, image,
-                                        &g_battle_menu_text_pen, g_battle_menu_text_palette_offset);
+                                        &g_battle_menu_text_pen, g_menu_text_palette_offset);
                                 }
                             }
                             divisor--;
@@ -178,7 +178,7 @@ void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* 
         }
         if (count >= g_battle_menu_text_param_22) {
             battle_text_render_glyph_to_4bpp_image(g_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES, image,
-                &g_battle_menu_text_pen, g_battle_menu_text_palette_offset);
+                &g_battle_menu_text_pen, g_menu_text_palette_offset);
         }
         pen->rect.x += g_text_glyph_widths[state->command];
         if (pen->rect.x >= pen->stride - 8) {
@@ -186,7 +186,7 @@ void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* 
         }
     }
 done:
-    g_battle_menu_text_palette_offset = 0;
+    g_menu_text_palette_offset = 0;
     g_battle_menu_text_param_22 = 0;
     g_battle_menu_text_param_24 = 0xFF;
 }

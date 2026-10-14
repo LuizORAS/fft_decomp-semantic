@@ -5,6 +5,7 @@
 #include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -29,17 +30,17 @@ void battle_menu_draw_text_columns_narrow(menu_entry_t* entry, s32* row_offset, 
             }
             battle_menu_set_text_origin(layout->x[column], row * 0x10);
             if (layout->mode[column] != MENU_TEXT_COLUMN_HIDDEN) {
-                g_battle_menu_text_palette_offset = layout->text_colors[column][index];
+                g_menu_text_palette_offset = layout->text_colors[column][index];
             }
             g_menu_text_state.pen.color = 0;
-            if (g_battle_menu_text_palette_offset == 4) {
+            if (g_menu_text_palette_offset == 4) {
                 g_menu_text_state.pen.color = 0x44444444;
             }
             if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
                 battle_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_menu_text_state.pen);
                 if (g_threads[g_thread_current_id].function_parameter_4 != 0
                     && (g_ai_workspace_ptr->ability_list.flags[index] & 1)) {
-                    g_battle_menu_text_palette_offset = layout->text_colors[column][index];
+                    g_menu_text_palette_offset = layout->text_colors[column][index];
                     /* 32-bit x and y, as above. */
                     battle_menu_set_text_origin(layout->x[column] + 0x50, row * 0x10);
                     battle_menu_display_text_entry(0x5088, buffer, &g_menu_text_state.pen);
@@ -57,7 +58,7 @@ void battle_menu_draw_text_columns_narrow(menu_entry_t* entry, s32* row_offset, 
                     value = layout->text_ids[column][index];
                     if (value & 0x7FF) {
                         if ((value & 0x7FF) >= 100) {
-                            g_battle_menu_text_palette_offset = 0;
+                            g_menu_text_palette_offset = 0;
                             g_menu_text_state.pen.rect.x += 3;
                             battle_menu_display_text_entry(0x509D, buffer, &g_menu_text_state.pen);
                         } else {
@@ -66,7 +67,7 @@ void battle_menu_draw_text_columns_narrow(menu_entry_t* entry, s32* row_offset, 
                     }
                 }
             }
-            g_battle_menu_text_palette_offset = 0;
+            g_menu_text_palette_offset = 0;
             g_menu_text_state.pen.color = 0;
         }
     }
