@@ -2264,7 +2264,7 @@ functions:
   - {addr: 0x801c07b4, size: 544, name: menu_init_status_panel_primitives, hash: c0c46a118253c8ae, source: src/shared/menu/menu_init_status_panel_primitives.c}
   - {addr: 0x801c09d4, size: 40, name: require_panel_run_equipment_list_thread, hash: fbcd24ded43d67df}
   - {addr: 0x801c09fc, size: 40, name: require_panel_run_ability_list_thread, hash: fbcd24ded43d67df}
-  - {addr: 0x801c0a24, size: 1932, name: require_panel_run_character_status_thread, hash: 3488c32cb72cfd35}
+  - {addr: 0x801c0a24, size: 1932, name: require_panel_run_character_status_thread, hash: 3488c32cb72cfd35, source: src/shared/menu/menu_run_status_panel_thread.c, source_symbol: menu_run_status_panel_thread}
   - {addr: 0x801c11b0, size: 380, name: menu_set_status_panel_primitive_colors, hash: 30e96407a0905f33, source: src/shared/menu/menu_set_status_panel_primitive_colors.c}
   - {addr: 0x801c132c, size: 84, name: menu_select_status_primitive_color_palette, hash: b44b9976ec55ce81, source: src/shared/menu/menu_select_status_primitive_color_palette.c}
   - {addr: 0x801c1380, size: 268, name: require_text_render_signed_decimal_entries, hash: 060ec03592da47dc}
@@ -2536,6 +2536,24 @@ overrides:
   - {function: require_editor_run_numeric_thread, name: gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
   - {function: require_editor_run_numeric_thread, name: menu_build_scaled_draw_area_packets, addr: 0x801bf01c}
   - {function: require_editor_run_numeric_thread, name: menu_text_render_signed_decimal_entries, addr: 0x801c1380}
+  - {function: require_panel_run_character_status_thread, name: g_menu_gfx_draw_offset_y, addr: 0x801d20a8}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_draw_area_rect, addr: 0x801cb778}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_fields, addr: 0x801cb384}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_frame_rect, addr: 0x801cb760}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_frames, addr: 0x801d4278}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_item_icon_layouts, addr: 0x801cbb80}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_item_icon_texture, addr: 0x801cb45c}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_label_layouts_mode0, addr: 0x801cb790}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_label_layouts_mode1, addr: 0x801cb874}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_label_layouts_mode2, addr: 0x801cb958}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_label_layouts_mode3, addr: 0x801cba3c}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_numeric_geometry, addr: 0x801cb454}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_origin_offsets, addr: 0x801cb750}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_text_image_a, addr: 0x801d4a28}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_text_image_b, addr: 0x801d56a8}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_text_upload_rect_a, addr: 0x801cb780}
+  - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_text_upload_rect_b, addr: 0x801cb788}
+  - {function: require_panel_run_character_status_thread, name: menu_build_scaled_draw_area_packets, addr: 0x801bf01c}
 ---
 module: event-small
 file: EVENT/SMALL.OUT
