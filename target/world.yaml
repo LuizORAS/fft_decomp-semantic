@@ -118,8 +118,8 @@ functions:
   - {addr: 0x800e8568, size: 136, name: menu_copy_billboard_data_out, hash: d14feb4432c303f8, source: src/shared/menu/menu_copy_billboard_data_out.c}
   - {addr: 0x800e85f0, size: 112, name: world_menu_copy_billboard_data_in, hash: ca83ceb83456cefa}
   - {addr: 0x800e8660, size: 56, name: world_text_relocate_pointer_table, hash: 55d65571292e9b76}
-  - {addr: 0x800e8698, size: 84, name: world_text_save_section_pointers, hash: df05598fa569f4c7}
-  - {addr: 0x800e86ec, size: 56, name: world_text_restore_section_pointers, hash: ea702dc6e0ed2265}
+  - {addr: 0x800e8698, size: 84, name: world_text_save_section_pointers, hash: df05598fa569f4c7, source: src/shared/text/text_save_section_pointers.c, source_symbol: text_save_section_pointers}
+  - {addr: 0x800e86ec, size: 56, name: world_text_restore_section_pointers, hash: ea702dc6e0ed2265, source: src/shared/text/text_restore_section_pointers.c, source_symbol: text_restore_section_pointers}
   - {addr: 0x800e8724, size: 212, name: script_dismiss_unit_event_instruction, hash: 72ce1abdbe8c11ed, source: src/shared/script/script_dismiss_unit_event_instruction.c}
   - {addr: 0x800e87f8, size: 164, name: script_join_units_silently, hash: fee876788da012d2, source: src/shared/script/script_join_units_silently.c}
   - {addr: 0x800e889c, size: 36, name: script_advance_date_by_one_year, hash: 83ceda1f250910cb, source: src/shared/script/script_advance_date_by_one_year.c}
@@ -2776,6 +2776,10 @@ overrides:
   - {function: world_text_determine_spell_quote, name: battle_menu_dispatch_system_function, addr: 0x800f5384}
   - {function: world_text_determine_spell_quote, name: battle_text_is_spell_quote_exception_skillset, addr: 0x800f49d8}
   - {function: world_text_determine_spell_quote, name: g_battle_spell_quote_last_ability_id, addr: 0x8013a5ec}
+  - {function: world_text_restore_section_pointers, name: g_battle_text_pointer_backup, addr: 0x801a2574}
+  - {function: world_text_restore_section_pointers, name: g_battle_text_pointer_backup_active, addr: 0x80154da8}
+  - {function: world_text_save_section_pointers, name: g_battle_text_pointer_backup, addr: 0x801a2574}
+  - {function: world_text_save_section_pointers, name: g_battle_text_pointer_backup_active, addr: 0x80154da8}
   - {function: world_text_start_character_thread_if_idle, name: battle_text_run_dialog_thread, addr: 0x800e4d9c}
   - {function: world_text_start_thread_if_idle, name: battle_text_run_dialog_thread, addr: 0x800e4d9c}
 

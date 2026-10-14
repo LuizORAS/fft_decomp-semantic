@@ -771,8 +771,8 @@ functions:
   - {addr: 0x80133ef0, size: 136, name: menu_copy_billboard_data_out, hash: 0da597fa0f8b8b55, source: src/shared/menu/menu_copy_billboard_data_out.c}
   - {addr: 0x80133f78, size: 112, name: battle_menu_copy_billboard_data_in, hash: 7bea2572983dbc11}
   - {addr: 0x80133fe8, size: 56, name: battle_text_relocate_pointer_table, hash: 742949c5bc5a8241}
-  - {addr: 0x80134020, size: 84, name: battle_text_save_section_pointers, hash: 2d664dcd4b1b36a3}
-  - {addr: 0x80134074, size: 56, name: battle_text_restore_section_pointers, hash: e050f5218635bc59}
+  - {addr: 0x80134020, size: 84, name: battle_text_save_section_pointers, hash: 2d664dcd4b1b36a3, source: src/shared/text/text_save_section_pointers.c, source_symbol: text_save_section_pointers}
+  - {addr: 0x80134074, size: 56, name: battle_text_restore_section_pointers, hash: e050f5218635bc59, source: src/shared/text/text_restore_section_pointers.c, source_symbol: text_restore_section_pointers}
   - {addr: 0x801340ac, size: 212, name: script_dismiss_unit_event_instruction, hash: 72ce1abdbe8c11ed, source: src/shared/script/script_dismiss_unit_event_instruction.c}
   - {addr: 0x80134180, size: 164, name: script_join_units_silently, hash: fee876788da012d2, source: src/shared/script/script_join_units_silently.c}
   - {addr: 0x80134224, size: 36, name: script_advance_date_by_one_year, hash: 61f613aa13acf6fa, source: src/shared/script/script_advance_date_by_one_year.c}

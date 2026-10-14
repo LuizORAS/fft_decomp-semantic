@@ -66,6 +66,8 @@ extern s32 g_battle_text_substitution_value_28;
 u8* battle_text_find_entry(u32 text_id);
 void battle_text_init_menu_section_pointers(void);
 void battle_text_relocate_pointer_table(const u32* offsets);
+void text_restore_section_pointers(void);
+void text_save_section_pointers(void);
 void battle_text_restore_section_pointers(void);
 void battle_text_save_section_pointers(void);
 
