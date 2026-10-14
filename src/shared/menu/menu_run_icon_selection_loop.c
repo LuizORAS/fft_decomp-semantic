@@ -1,20 +1,13 @@
-#include "fft/battle.h"
 #include "fft/battle_menu.h"
-#include "fft/battle_script.h"
+#include "fft/battle_unit.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
-#include "psx/types.h"
 
-/* Menu icon list with a wrapping cursor, run inline by its caller's thread:
- * builds the text image once, alternates two sprite records and clears their
- * 32-bit state values at 0x78 when they hold 0 and 2. Exits the thread afterwards only
- * when the thread's second parameter is zero.
- *
- * BATTLE twin of world_menu_run_icon_selection_loop. */
-void battle_menu_run_icon_selection_loop(void) {
+/* Run a wrapping icon menu; parameter 2 controls whether it exits its thread. */
+void menu_run_icon_selection_loop(void) {
     RECT rect;
     menu_icon_record_t records[2];
     s32 cursor;
