@@ -5,7 +5,7 @@
 /* Takes the next TILE from the pool, colours it, sets semi-transparency and
  * links it into ordering-table entry ot_index (libgpu addPrim). */
 /* Target 0x8012bdbc. */
-void world_gfx_enqueue_tile(RECT* box, rgb24_t* rgb, u8 semi_trans, s32 ot_index) {
+void world_gfx_enqueue_tile(const RECT* box, const rgb24_t* rgb, u8 semi_trans, s32 ot_index) {
     TILE* tile = &g_world_gfx_active_packet_buffer->tiles[g_world_gfx_tile_count++];
 
     setRGB0(tile, rgb->r, rgb->g, rgb->b);

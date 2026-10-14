@@ -870,7 +870,7 @@ void world_gfx_enqueue_textured_quad_corners(
 void world_gfx_enqueue_gouraud_quad(point16_t* xy, rgb24_t* colors, s32 semi_trans, s32 ot_index);
 void world_gfx_enqueue_gouraud_textured_quad(
     const textured_rect_source_t* source, const rgb24_t* colors, s32 semi_trans, s32 ot_index);
-void world_gfx_enqueue_tile(RECT* box, rgb24_t* rgb, u8 semi_trans, s32 ot_index);
+void world_gfx_enqueue_tile(const RECT* box, const rgb24_t* rgb, u8 semi_trans, s32 ot_index);
 void world_gfx_append_poly_f4_to_otag(point16_t* xy, rgb24_t* rgb, s32 semi_trans, s32 ot_index);
 void world_gfx_build_scaled_draw_area_pair_swapped(
     scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag);
