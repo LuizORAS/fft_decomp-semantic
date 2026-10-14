@@ -1,5 +1,6 @@
 #include "fft/event_card.h"
-#include "psx/types.h"
+#include "fft/main.h"
+#include "psx/libapi.h"
 
 /* Close a memory card file, trying up to ten times, and forget the open
  * descriptor. Returns 1 when the close that succeeded followed a completed

@@ -907,7 +907,7 @@ functions:
   - {addr: 0x801c4ab8, size: 252, name: card_io_open_or_create_selected_card, hash: 1ed8b4b736cbd106, profile: gcc-2.6.3_O0_aspsx-2.34}
   - {addr: 0x801c4bb4, size: 232, name: card_io_format_selected_slot, hash: aa0f2ed47297b3c4, profile: gcc-2.6.3_O0_aspsx-2.34}
   - {addr: 0x801c4c9c, size: 384, name: card_file_open_selected_with_retries, hash: 8ad8e65a7cc2f553, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x801c4e1c, size: 208, name: card_file_close_with_retries, hash: 3d4656824a2716d1, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x801c4e1c, size: 208, name: card_file_close_with_retries, hash: 3d4656824a2716d1, profile: gcc-2.6.3_O0_aspsx-2.34, source: src/shared/card/card_file_close_with_retries.c}
   - {addr: 0x801c4eec, size: 204, name: card_file_seek_with_retries, hash: 5513bda3c8478b59, profile: gcc-2.6.3_O0_aspsx-2.34}
   - {addr: 0x801c4fb8, size: 684, name: card_file_write_buffer, hash: 66315f155df10733, profile: gcc-2.6.3_O0_aspsx-2.34}
   - {addr: 0x801c5264, size: 276, name: card_file_delete_selected_with_retries, hash: 98a020db69d65c10, profile: gcc-2.6.3_O0_aspsx-2.34}
