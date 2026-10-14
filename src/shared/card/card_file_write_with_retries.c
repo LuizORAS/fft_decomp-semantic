@@ -1,17 +1,17 @@
-#include "fft/world.h"
-#include "psx/types.h"
+#include "fft/event_card.h"
+#include "psx/libapi.h"
 
 /* Write `size` bytes at the file's current position, seeking back and trying
  * again after a short transfer, up to ten tries in all. Returns `size`, or -1 when
  * the position cannot be read, the descriptor reports an error or every try
  * falls short. */
-s32 world_card_write_file_with_retries(s32 descriptor, const void* source, s32 size) {
+s32 card_file_write_with_retries(s32 descriptor, const void* source, s32 size) {
     s32 error;
     s32 result;
     s32 i;
     s32 initial_position;
 
-    initial_position = world_card_seek_file_with_retries(descriptor, 0, 1);
+    initial_position = card_file_seek_with_retries(descriptor, 0, 1);
     if (initial_position < 0) {
         return -1;
     }
@@ -25,7 +25,7 @@ s32 world_card_write_file_with_retries(s32 descriptor, const void* source, s32 s
         if (result == size) {
             break;
         }
-        if (world_card_seek_file_with_retries(descriptor, initial_position, 0) < 0) {
+        if (card_file_seek_with_retries(descriptor, initial_position, 0) < 0) {
             break;
         }
     }
