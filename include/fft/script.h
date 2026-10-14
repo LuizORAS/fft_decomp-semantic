@@ -1112,7 +1112,6 @@ extern s16 g_script_opcode_dc_value;       /* EVENT_OPCODE_UNKNOWN_DC stores 13;
 extern s16 g_world_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
 
 void script_pause_event_instruction(void);
-void world_script_pause_event_instruction(void);
 void script_print_debug_message(void);
 void world_script_print_debug_message(void);
 

@@ -465,7 +465,7 @@ restart_event:
                 thread_yield();
             } while (g_world_map_append_state != 0);
         } else if (opcode == EVENT_OPCODE_PAUSE) {
-            world_script_pause_event_instruction();
+            script_pause_event_instruction();
         } else if (opcode == EVENT_OPCODE_RESUME_WAITING_DIALOG) {
             for (work_index = 1; work_index < 17; ++work_index) {
                 thread = &g_thread_contexts[work_index];
