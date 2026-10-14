@@ -3,22 +3,17 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Draw the pending glyph of a message into VRAM and hold it for the
- * typewriter delay.
+/* Draw the pending glyph of a message into VRAM and pace the typewriter.
  *
- * One of three slots is reserved for the calling thread, keyed on
- * g_world_thread_current_id; a thread that finds none yields and retries. The
- * slot owns a ring of eight 0x54-byte images and the previous image, so a
- * glyph whose pen position lands mid-byte can re-emit the tail its
- * predecessor already drew. `delay` selects the pacing: 0 returns after a
- * DrawSync, 1 waits once every g_world_text_glyphs_per_wait glyphs (8 while button 0x20 is held,
- * otherwise from the message-speed option), and larger values wait `delay`
- * times the event-speed frame count after every glyph.
+ * One of three slots is reserved for the calling thread, keyed on g_world_thread_current_id; a thread that
+ * finds none yields and retries. The slot owns a ring of eight 0x54-byte images and the previous image, so a
+ * glyph whose pen position lands mid-byte can re-emit the tail its predecessor already drew. `delay` selects
+ * the pacing: 0 returns after a DrawSync; 1 waits 3 - event speed frames every 8, 2 or 1 glyphs (8 while
+ * Circle is held, else by the Message Speed option: Fast, Regular or Slow); larger values wait `delay` times
+ * that after every glyph. Each glyph queues the text sound unless script variable MUTE_TEXT_AUDIO_CUE is set.
  *
- * The ring byte is read before the phase so the pen-x load lands in its own
- * register behind the slot arithmetic, and the inner bound is `pitch / 2`
- * so it is recomputed per row, as in the target.
- */
+ * The ring byte is read before the phase so the pen-x load lands in its own register behind the slot
+ * arithmetic, and the inner bound is `pitch / 2` so it is recomputed per row, as in the target. */
 void world_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay) {
     s32 slot;
     s32 i;

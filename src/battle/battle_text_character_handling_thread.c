@@ -12,8 +12,20 @@
         goto end;                                                                                                      \
     }
 
-/* Dialog text thread: opens a dialog window and draws the text entry named
- * by thread parameter 2 glyph by glyph, handling the control bytes.
+/* The dialog thread: open a window and draw text entry `parameter 2` into it glyph by glyph. Parameter 1 is
+ * a DisplayMessage dialog type (dialog_box_type_e in the 0x70 bits, the position in 0x03, dialog_options_e in
+ * 0x0c, 0x80 for no box), parameter 3 the unit the window's tail points at and parameter 4 the portrait plus
+ * one. The window is the measured width plus 24 (plus 64 with a portrait) by 16 pixels a line plus 16: eight
+ * lines for the eight-line box, six for the centred one, three with a portrait, at most four for Check and Help
+ * and two for the two-line box.
+ *
+ * The text follows back-references and the controls of text_control_e. A full window, a page break or 0xFE
+ * waits for Circle, Cross or Select (a centred box dims and goes on instead, except at a page break), and
+ * holding Square there scrolls back through the earlier lines with Up and Down; 0xFE then ends the text and
+ * 0xFF ends it at once. 0xFD waits until another thread sets this one to RESUME, 0xF9 does that for every
+ * waiting thread, 0xFB and 0xFC run a choice whose row goes to script variable SELECTED_DIALOG_OPTION, 0xF5
+ * and 0xF6 store a value to a script variable, and 0xE0-0xEB insert names and numbers. Event scripts
+ * (DisplayMessage) and the spell quotes start it.
  *
  * The 0xFE/0xFD waits compare against resume_task rather than the constant
  * NATIVE_THREAD_TASK_RESUME (1): with a constant, loop.c pools every constant 1

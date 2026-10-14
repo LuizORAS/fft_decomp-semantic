@@ -3,14 +3,14 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Draw the pending dialogue glyph into VRAM and hold it for the typewriter
- * delay.
+/* Draw the pending dialog glyph (g_battle_text_typewriter_glyph) into VRAM and pace the typewriter, as
+ * world_text_draw_glyph_with_typewriter_delay does: one of three image slots per drawing thread, `delay` 0 for
+ * no wait, 1 for a wait of 3 - event speed frames every 8, 2 or 1 glyphs (8 while Circle is held, else by the
+ * Message Speed option: Fast, Regular or Slow), larger values for `delay` times that after every glyph. Each
+ * glyph queues the text sound unless script variable MUTE_TEXT_AUDIO_CUE is set.
  *
- * Twin of world_text_draw_glyph_with_typewriter_delay. The ring byte is read before the phase so the
- * pen-x load lands in its own register behind the slot arithmetic, and the
- * inner bound is `pitch / 2` so it is recomputed per row, as in the
- * target.
- */
+ * The ring byte is read before the phase so the pen-x load lands in its own register behind the slot
+ * arithmetic, and the inner bound is `pitch / 2` so it is recomputed per row, as in the target. */
 void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay) {
     s32 slot;
     s32 i;

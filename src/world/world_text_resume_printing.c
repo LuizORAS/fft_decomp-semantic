@@ -1,7 +1,7 @@
 #include "fft/world.h"
 
-/* Release a dialog thread that is waiting for text: its task becomes RESUME
- * and its second parameter 0xffff. */
+/* Release a dialog thread that waits for its next text after 0xFE (task DIALOG_AWAIT_TEXT): its task
+ * becomes RESUME and its text id 0xffff, which ends it. */
 void world_text_resume_printing(s32 thread_id) {
     native_thread_t* thread = &g_world_threads[thread_id];
 

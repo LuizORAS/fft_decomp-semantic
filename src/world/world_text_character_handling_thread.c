@@ -22,8 +22,12 @@
         world_thread_yield();                                                                                          \
     }
 
-/* Dialog text thread: opens a dialog window and draws the text entry named
- * by thread parameter 2 glyph by glyph, handling the control bytes. */
+/* Same as battle_text_character_handling_thread in WORLD: the dialog thread that opens a window and draws
+ * text entry `parameter 2` into it glyph by glyph, with the same parameters and text controls. Centred and
+ * eight-line boxes take their text's line count instead of six and eight lines. A Help box with no hosted
+ * frame (or with options 0x0c) binds EVENT/WLDHELP.LZW (g_world_text_wldhelp_section_offsets) while it runs,
+ * and its entry 0x807 becomes entry 0xA000 plus the selected unit's name id (at most 0x2FF), shown in a
+ * portrait box. Event scripts, the tutorials, the help and description windows and OPEN's messages start it. */
 void world_text_character_handling_thread(void) {
     world_text_dialog_record_t rec;
     RECT from;
