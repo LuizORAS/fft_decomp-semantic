@@ -1073,6 +1073,7 @@ typedef struct menu_at_list_work {
 typedef char menu_at_list_work_size_must_be_1824[(sizeof(menu_at_list_work_t) == 1824) ? 1 : -1];
 
 void menu_build_ability_preview_at_list(void);
+void menu_build_skillset_entries(void);
 
 /* Packed 4-bit images for the status panel's three numeric groups. */
 typedef struct menu_unit_stat_number_images {

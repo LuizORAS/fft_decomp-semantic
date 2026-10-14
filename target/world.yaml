@@ -277,7 +277,7 @@ functions:
   - {addr: 0x800f32b0, size: 52, name: menu_copy_u8_to_u16, hash: 13d704f494f4f2e9, source: src/shared/menu/menu_copy_u8_to_u16.c}
   - {addr: 0x800f32e4, size: 1980, name: world_menu_build_ability_list, hash: 3c2abc1fea8e3c9c}
   - {addr: 0x800f3aa0, size: 676, name: world_menu_select_unit_action_slots_thread, hash: f8f5c64ec1b3af4c}
-  - {addr: 0x800f3d44, size: 608, name: world_menu_build_skillset_entries, hash: 94131cbbb78792ba}
+  - {addr: 0x800f3d44, size: 608, name: world_menu_build_skillset_entries, hash: 94131cbbb78792ba, source: src/shared/menu/menu_build_skillset_entries.c, source_symbol: menu_build_skillset_entries}
   - {addr: 0x800f3fa4, size: 352, name: world_menu_run_skillset_thread, hash: 39f4d2e5aa1934c7}
   - {addr: 0x800f4104, size: 124, name: world_menu_record_selection_for_selected_unit, hash: d5e1f7fe303d084c}
   - {addr: 0x800f4180, size: 120, name: world_menu_build_main, hash: 8c0005b9d4465929}
@@ -2385,6 +2385,11 @@ overrides:
   - {function: world_menu_build_ability_preview_at_list, name: g_battle_menu_selected_action, addr: 0x80195c90}
   - {function: world_menu_build_ability_preview_at_list, name: g_menu_selected_unit, addr: 0x8013a364}
   - {function: world_menu_build_ability_preview_at_list, name: g_menu_thread_menu_data, addr: 0x801cd7e0}
+  - {function: world_menu_build_skillset_entries, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
+  - {function: world_menu_build_skillset_entries, name: g_action_menu_skillsets, addr: 0x801cd204}
+  - {function: world_menu_build_skillset_entries, name: g_battle_menu_action_menu_build_result, addr: 0x80195ca4}
+  - {function: world_menu_build_skillset_entries, name: g_battle_menu_row_message_ids, addr: 0x80153d24}
+  - {function: world_menu_build_skillset_entries, name: g_battle_menu_selected_skill_ct, addr: 0x8013a604}
   - {function: world_menu_build_window_image, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_build_window_image, name: battle_menu_alloc_memory, addr: 0x800e30fc}
   - {function: world_menu_build_window_image, name: battle_menu_free_memory, addr: 0x800e3298}

@@ -930,7 +930,7 @@ functions:
   - {addr: 0x8013fa38, size: 52, name: menu_copy_u8_to_u16, hash: 13d704f494f4f2e9, source: src/shared/menu/menu_copy_u8_to_u16.c}
   - {addr: 0x8013fa6c, size: 1980, name: battle_menu_build_ability_list, hash: e5703c8ed198f2b4}
   - {addr: 0x80140228, size: 676, name: battle_menu_select_unit_action_slots_thread, hash: 87d49228f479ab3f}
-  - {addr: 0x801404cc, size: 608, name: battle_menu_build_skillset_entries, hash: 8eb75ddae5f9878f}
+  - {addr: 0x801404cc, size: 608, name: battle_menu_build_skillset_entries, hash: 8eb75ddae5f9878f, source: src/shared/menu/menu_build_skillset_entries.c, source_symbol: menu_build_skillset_entries}
   - {addr: 0x8014072c, size: 352, name: battle_menu_run_skillset_thread, hash: 0118d3a7350bf25a}
   - {addr: 0x8014088c, size: 124, name: battle_menu_record_selection_for_selected_unit, hash: b4c2ab0905447fd9}
   - {addr: 0x80140908, size: 120, name: battle_menu_build_main, hash: e61d23b9e437fa0c}
