@@ -236,6 +236,10 @@ void world_sound_bg_thread(void);
 void world_sound_edit_bg_thread(void);
 
 /* name */
+/* The name entry: a keyboard of six special keys and eight rows of characters over the message box, which
+ * OPEN's New Game runs as a screen (world_name_run_entry_screen) and the Soldier Office's hire and rename
+ * steps run frame by frame (world_name_run_entry_keyboard_frame). */
+
 /* Editing keys of world_name_apply_entry_key; any other key is the character
  * written at the cursor. */
 typedef enum world_name_entry_key {
@@ -282,6 +286,10 @@ void world_name_run_confirmation_menu(void);
 u8* world_name_run_entry_screen(u8* list, u32* image);
 u8* world_name_run_entry_keyboard_frame(u8* list, s32 unused_1);
 void world_name_update_entry_cursor(void);
+
+void world_name_open_key_rows(void);
+
+void world_name_open_entry(u8* list);
 
 /* map */
 /* State of a screen request raised from the world map menu (the
@@ -2410,7 +2418,7 @@ void world_menu_number_entry_thread(void);
 void world_menu_equipment_and_ability_panel_thread(void);
 s16 world_menu_update_wrapped_vertical_selection(u16, u8, s32);
 void world_menu_run_script_with_callback_suppressed(void);
-void world_menu_open_name_entry_key_list(void);
+
 void world_clear_menu_render_buffer(u8* dst, u32 count);
 void world_menu_zoom_cursor_frame(const void* source, SPRT* sprite, s32 step);
 void world_gfx_copy_sprite_position_uv_and_size(const world_menu_entry_t* param, SPRT* sprite, s32 unused_frame);
@@ -2544,7 +2552,7 @@ void world_menu_init_with_world_text(void);
 void world_menu_init_with_world_text_and_faces(void);
 void world_menu_init_with_open_text(void);
 void world_menu_store_sort_key_list(s32 index, s16* source);
-void world_menu_open_scrollable_list(u8* list);
+
 world_menu_window_command_t* world_menu_script_draw_tiled_rectangle(world_menu_window_command_t* command);
 void world_menu_release_window_buffer_pair(menu_window_buffer_t* value);
 void world_menu_reset_subsystems(void);

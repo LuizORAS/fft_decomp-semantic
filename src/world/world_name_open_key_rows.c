@@ -1,7 +1,9 @@
 #include "fft/world.h"
 
-/* Open the name-entry key list: identity entry ids 0..8 plus a -1 terminator. */
-void world_menu_open_name_entry_key_list(void) {
+/* Open the keyboard's nine rows as a scrollable list (g_world_name_entry_key_ids 0-8 and a -1
+ * terminator), drawn with menu script 7 and the keyboard display script: row 0 holds the special keys, the
+ * others eleven characters each. */
+void world_name_open_key_rows(void) {
     s32 count;
     s32 i;
 

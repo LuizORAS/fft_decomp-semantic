@@ -1,11 +1,11 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Copies the 0xFE-terminated byte list (at most 16 entries) into
- * g_world_name_entry_text and starts menu thread 2 for it.
- */
-void world_menu_open_scrollable_list(u8* list) {
+/* Open the name entry on the name `list` (0xFE-terminated, at most 16 bytes; the confirmation falls back
+ * to it when the entry is left empty): start the message box with prompt 0xC015, bind the keyboard text and
+ * its key rows (WORLD_TEXT_SECTION_NAME_ENTRY_KEYS), copy the name into g_world_name_entry_text with the cursor
+ * at its start, open the key rows (world_name_open_key_rows) and set the screen's event speed. */
+void world_name_open_entry(u8* list) {
     s32 i;
 
     g_world_name_entry_original_name = list;
@@ -29,6 +29,6 @@ void world_menu_open_scrollable_list(u8* list) {
     world_name_apply_entry_key(WORLD_NAME_ENTRY_KEY_CURSOR_LEFT);
     g_world_menu_sound_effect_id = MAIN_SFX_NONE;
     g_world_name_entry_state = 0;
-    world_menu_open_name_entry_key_list();
+    world_name_open_key_rows();
     world_script_set_vsync_mode_and_event_speed(2);
 }

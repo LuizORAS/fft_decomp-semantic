@@ -21,17 +21,16 @@ typedef struct world_name_entry_screen_packets {
 
 extern world_name_entry_handler_t g_world_name_entry_state_handlers[];
 
-/*
- * Run the WORLD name-entry screen until its state reaches 0xFF.
+/* Run the name entry as a screen of its own until its state reaches 0xFF and return the encoded name:
+ * OPEN's New Game asks for Ramza's name this way (open_title_step_new_game_start, with WORLD loaded on
+ * EVENT/OPEN.LZW), `image` being the title's last frame, which stays behind it.
  *
- * Binds both packet buffers onto a stack-resident pool block, then each frame
- * presents the previous ordering table, redraws the keyboard image, steps the
- * current name-entry handler, draws the cursor and key prompts, and dispatches
- * the queued sound effect. Returns the encoded name.
+ * Binds both packet buffers onto a stack-resident pool block. Each frame it swaps the buffers, loads `image`
+ * into the new draw buffer, draws the previous ordering table over it, applies L1, R1 and Square as the
+ * frame step does, runs the state handler, draws the cursor and key prompts and dispatches the queued sound.
  *
  * value is one local reused for the cursor x, the drawn-state compare and the
- * sound id; the shared pseudo conflicts with $a0 and keeps all three in $v1.
- */
+ * sound id; the shared pseudo conflicts with $a0 and keeps all three in $v1. */
 u8* world_name_run_entry_screen(u8* list, u32* image) {
     point16_t cursor;
     world_name_entry_screen_packets_t packets;
@@ -72,7 +71,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
     world_formation_init_menu_display();
     world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x21, 0xC015, 0);
-    world_menu_open_scrollable_list(list);
+    world_name_open_entry(list);
     g_world_name_entry_last_state = -1;
     world_gfx_set_fade_disabled(1);
     world_input_update_with_message_state();

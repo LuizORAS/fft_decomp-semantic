@@ -6,10 +6,11 @@ typedef void (*world_name_entry_handler_t)(void);
 
 extern world_name_entry_handler_t g_world_name_entry_state_handlers[];
 
-/* Name-entry step: on the first call (once menu thread 2 is idle) seeds the
- * entry from list, then runs the current state handler, draws the cursor and
- * key prompts each frame, and returns the entered g_world_name_entry_text name once the
- * state reaches 0xFF (NULL until then). */
+/* One frame of the name entry inside another screen: the Soldier Office's hire and rename steps call it
+ * every frame. The first call opens the entry on `list` once the message box slot is free; then L1 and R1 move
+ * the cursor, Square deletes at it, the state handler runs (g_world_name_entry_state_handlers: the keyboard or
+ * the confirmation) and the cursor, buttons and keyboard are drawn. It returns the entered name
+ * (g_world_name_entry_text) when the state reaches 0xFF, NULL until then. */
 u8* world_name_run_entry_keyboard_frame(u8* list, s32 unused_1) {
     point16_t cursor;
     s32 busy;
@@ -17,7 +18,7 @@ u8* world_name_run_entry_keyboard_frame(u8* list, s32 unused_1) {
     if (g_world_name_entry_started == 0) {
         if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE) == 0) {
             g_world_name_keyboard_last_state = -1;
-            world_menu_open_scrollable_list(list);
+            world_name_open_entry(list);
             g_world_name_entry_started = 1;
         }
         return 0;

@@ -1014,12 +1014,12 @@ functions:
   - {addr: 0x80138efc, size: 96, name: world_menu_run_script_with_callback_suppressed, hash: 7ef787e5aeb396d5}
   - {addr: 0x80138f5c, size: 552, name: world_name_run_entry_keyboard_frame, hash: 2a80491df4406613}
   - {addr: 0x80139184, size: 1652, name: world_name_run_entry_screen, hash: 07948f925dd3889e}
-  - {addr: 0x801397f8, size: 112, name: world_menu_open_name_entry_key_list, hash: da934ca0e9861fd7}
+  - {addr: 0x801397f8, size: 112, name: world_name_open_key_rows, hash: da934ca0e9861fd7}
   - {addr: 0x80139868, size: 452, name: world_name_handle_entry_confirmed_keys, hash: f88838035bb1027e}
   - {addr: 0x80139a2c, size: 596, name: world_name_update_entry_cursor, hash: a6457fc5158486d8}
   - {addr: 0x80139c80, size: 900, name: world_name_apply_entry_key, hash: a78c8da4eb0302e3}
   - {addr: 0x8013a004, size: 476, name: world_name_run_confirmation_menu, hash: ffbde5567beb895c}
-  - {addr: 0x8013a1e0, size: 288, name: world_menu_open_scrollable_list, hash: 9cf1fd54efd490d1}
+  - {addr: 0x8013a1e0, size: 288, name: world_name_open_entry, hash: 9cf1fd54efd490d1}
 
 data:
   - {addr: 0x800e0000, name: g_psyq_gs_sort_sprite_overflow_message}

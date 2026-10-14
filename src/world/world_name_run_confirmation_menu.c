@@ -1,12 +1,8 @@
 #include "fft/world.h"
 
-/*
- * Confirm a name, using the original name when the edit buffer is empty.
- *
- * Names use 0xfe termination and contain at most 16 encoded bytes. Cancelling
- * restores the empty-buffer marker if the original name was substituted.
- * Confirmation waits for the prompt thread to finish before reporting 0xff.
- */
+/* Name entry state 1, the confirmation: an empty entry takes the original name, the name is bound as text
+ * section 25 for prompt 0xC01A, and a Yes/No menu runs. Yes ends the entry (state 0xFF) once the message box
+ * has closed; No returns to the keyboard and empties the entry again if the original name was put in. */
 void world_name_run_confirmation_menu(void) {
     s32 count;
     u8 value;
