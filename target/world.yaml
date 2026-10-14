@@ -328,7 +328,7 @@ functions:
   - {addr: 0x800f9438, size: 1444, name: world_camera_thread, hash: ba7be01d018fa8b3, source: src/shared/camera/camera_thread.c, source_symbol: camera_thread}
   - {addr: 0x800f99dc, size: 120, name: world_script_map_darkness, hash: 0d797a52a22d5438}
   - {addr: 0x800f9a54, size: 176, name: world_script_earthquake_start, hash: 88082e85496cfa40}
-  - {addr: 0x800f9b04, size: 392, name: world_script_color_screen_thread, hash: 721b29c5952d0273, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800f9b04, size: 392, name: world_script_color_screen_thread, hash: 721b29c5952d0273, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck, source: src/shared/script/script_color_screen_thread.c, source_symbol: script_color_screen_thread}
   - {addr: 0x800f9c8c, size: 1480, name: world_script_run_sprite_move, hash: 74f215bd48a3cde4, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800fa254, size: 60, name: world_script_sprite_move, hash: 4df4be2d389bc444}
   - {addr: 0x800fa290, size: 60, name: world_script_sprite_move_beta, hash: 757389eff0f977e2}
@@ -2868,6 +2868,7 @@ overrides:
   - {function: world_screen_menu_thin_window_frame_thread, name: world_gfx_set_image_blit_destination_origin, addr: 0x8010a4a8}
   - {function: world_screen_menu_thin_window_frame_thread, name: world_gfx_set_image_blit_source_rect, addr: 0x8010a480}
   - {function: world_script_change_stats, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
+  - {function: world_script_color_screen_thread, name: battle_thread_get_current_parameter_1, addr: 0x80100090}
   - {function: world_script_color_unit_event_instruction, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
   - {function: world_script_face_tile, name: g_battle_rotation_speed_frames, addr: 0x80156be0}
   - {function: world_script_face_tile, name: g_script_unit_face_slot_order, addr: 0x80156bb0}

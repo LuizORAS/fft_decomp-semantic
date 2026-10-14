@@ -1,14 +1,8 @@
 #include "fft/battle_gfx.h"
-#include "fft/battle_script.h"
 #include "fft/script.h"
 #include "fft/thread.h"
-#include "psx/types.h"
 
-/* Fades the screen colour modulation from a start RGB to an end RGB over a duration.
- *
- * Twin of world_script_color_screen_thread. Parameters: mode byte, start RGB, end RGB,
- * then a 16-bit duration in frames. The colour advances by two frames per
- * step and finally snaps to the end colour. */
+/* Advance the event screen-color fade by two frames per step. */
 void script_color_screen_thread(void) {
     struct {
         s32 start_and_end[6];

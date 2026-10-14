@@ -1106,6 +1106,7 @@ void script_play_effect_thread(void);
 
 /* graphic display */
 void script_show_graphic(void);
+void script_color_screen_thread(void);
 
 /* display conditions */
 void script_execute_display_conditions_instruction(void);

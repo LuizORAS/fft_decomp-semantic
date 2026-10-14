@@ -981,7 +981,7 @@ functions:
   - {addr: 0x80146110, size: 1444, name: camera_thread, hash: de81056b9403d9c1, source: src/shared/camera/camera_thread.c}
   - {addr: 0x801466b4, size: 120, name: script_map_darkness, hash: 220b0a8f4c814539}
   - {addr: 0x8014672c, size: 176, name: script_earthquake_start, hash: 19be186d363036b4}
-  - {addr: 0x801467dc, size: 356, name: script_color_screen_thread, hash: 8de8d96c93e6ae8f}
+  - {addr: 0x801467dc, size: 356, name: script_color_screen_thread, hash: 8de8d96c93e6ae8f, source: src/shared/script/script_color_screen_thread.c}
   - {addr: 0x80146940, size: 1444, name: script_run_sprite_move, hash: 558aa0057a55a6d2}
   - {addr: 0x80146ee4, size: 60, name: script_sprite_move, hash: 7decfeacb2be172a}
   - {addr: 0x80146f20, size: 60, name: script_sprite_move_beta, hash: c9868578c779e0f8}
