@@ -1437,7 +1437,7 @@ functions:
   - {addr: 0x801ca96c, size: 52, name: equip_menu_init_scrollable_list, hash: 6a3f45c6b9c7fd8c}
   - {addr: 0x801ca9a0, size: 52, name: equip_menu_init_and_draw_scrollable_list, hash: 503e07ba5c988426}
   - {addr: 0x801ca9d4, size: 148, name: equip_cmd_run_stream, hash: 796e6e240ffcc397}
-  - {addr: 0x801caa68, size: 80, name: equip_menu_dispatch_with_override, hash: d3c4df2e5ae8c513}
+  - {addr: 0x801caa68, size: 80, name: equip_menu_dispatch_with_override, hash: d3c4df2e5ae8c513, source: src/shared/menu/menu_run_script_with_palette_mode.c, source_symbol: menu_run_script_with_palette_mode}
   - {addr: 0x801caab8, size: 280, name: menu_cmd_run_if_group_handler, hash: dc63cdd97deb4ab1, source: src/shared/menu/menu_cmd_run_if_group_handler.c}
   - {addr: 0x801cabd0, size: 396, name: menu_cmd_run_if_else_group_handler, hash: 41490b9b5d7a75e9, source: src/shared/menu/menu_cmd_run_if_else_group_handler.c}
   - {addr: 0x801cad5c, size: 184, name: equip_cmd_draw_translucent_tile_handler, hash: 7daebd5cd090df58}

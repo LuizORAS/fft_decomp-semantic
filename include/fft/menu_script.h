@@ -239,6 +239,8 @@ extern s16 g_menu_scroll_base_index;
 extern s16 g_menu_list_scroll_offset;
 extern s32 g_menu_list_row_index;
 
+void menu_run_script_with_palette_mode(menu_instruction_t* script, s32 input, s32 mode);
+
 menu_instruction_t* menu_cmd_run_if_group_handler(menu_instruction_t* command);
 menu_instruction_t* menu_cmd_run_if_else_group_handler(menu_instruction_t* command);
 

@@ -787,7 +787,7 @@ functions:
   - {addr: 0x801263c8, size: 224, name: world_menu_init_scrollable_list_core, hash: 6a1458a19bfa2633, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x801264a8, size: 52, name: world_menu_init_scrollable_list, hash: d88ea15b5c887ac0, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x801264dc, size: 148, name: world_menu_run_display_script, hash: 1c84c0b1ea5a5f1f, profile: gcc-2.6.3_O1_aspsx-2.34}
-  - {addr: 0x80126570, size: 80, name: world_menu_run_script_with_palette_mode, hash: 0cd86ed57370c2e4, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80126570, size: 80, name: world_menu_run_script_with_palette_mode, hash: 0cd86ed57370c2e4, profile: gcc-2.6.3_O1_aspsx-2.34, source: src/shared/menu/menu_run_script_with_palette_mode.c, source_symbol: menu_run_script_with_palette_mode}
   - {addr: 0x801265c0, size: 296, name: world_menu_script_conditional, hash: 60480ec4c28cde71, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x801266e8, size: 416, name: world_menu_script_if_else, hash: 3fbe8187bcee91a7, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80126888, size: 224, name: world_menu_script_draw_tile, hash: 421cc7a32abed7db, profile: gcc-2.6.3_O1_aspsx-2.34}
@@ -2570,6 +2570,8 @@ overrides:
   - {function: world_menu_run_numeric_display_panel_thread, name: g_battle_numeric_display_text_rect_c, addr: 0x80155d80}
   - {function: world_menu_run_numeric_display_panel_thread, name: g_battle_numeric_display_texture_window, addr: 0x80155d68}
   - {function: world_menu_run_numeric_display_panel_thread, name: g_menu_texture_origin, addr: 0x80153188}
+  - {function: world_menu_run_script_with_palette_mode, name: equip_cmd_run_stream, addr: 0x801264dc}
+  - {function: world_menu_run_script_with_palette_mode, name: equip_menu_set_palette_mode, addr: 0x801298c0}
   - {function: world_menu_run_system_function_thread, name: battle_menu_open_option_dead_unit_panel, addr: 0x800efa3c}
   - {function: world_menu_run_system_function_thread, name: battle_text_init_menu_section_pointers, addr: 0x800fd9f4}
   - {function: world_menu_run_system_function_thread, name: battle_thread_is_running_asm, addr: 0x80100164}
