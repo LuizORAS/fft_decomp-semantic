@@ -324,9 +324,6 @@ typedef char fade_overlay_size_must_be_28[(sizeof(fade_overlay_t) == 28) ? 1 : -
 void gfx_set_formation_icon_uv(POLY_FT4* poly, s32 index);
 void gfx_set_clut_rect_from_id(RECT* rect, u16 clut_id);
 void gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* source, RECT* rectangle);
-void gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
-void gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
-
 void gfx_set_scaled_poly_ft4_4bpp(POLY_FT4* poly, const point16_t* texture_page, const RECT* position,
     const sprite_sheet_frame_t* sprite_rect, const point16_t* scale, const sprite_draw_offset_t* base);
 void gfx_set_scaled_poly_ft4_8bpp(POLY_FT4* poly, const point16_t* texture, const RECT* position,
@@ -334,6 +331,15 @@ void gfx_set_scaled_poly_ft4_8bpp(POLY_FT4* poly, const point16_t* texture, cons
 
 void gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness);
 void gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction);
+
+/* portrait transitions */
+extern RECT g_gfx_portrait_origin;
+extern u8 g_gfx_portrait_transition_offsets[];
+
+void gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition, const s32* first_portrait,
+    const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
+void gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
+void gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
 
 /* Draw state shared by the resident, formation and deployment ZODIAC renderers. */
 typedef struct zodiac_draw_context {

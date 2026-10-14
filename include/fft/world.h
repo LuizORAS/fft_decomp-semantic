@@ -816,9 +816,7 @@ extern RECT g_world_wldface_vram_rect_1;
 extern RECT g_world_wldface_vram_rect_2;
 extern RECT g_world_wldface_vram_rect_3;
 extern u16 g_world_portrait_clut_by_sheet_id[]; /* 16-bit CLUT value per sprite-sheet id */
-extern RECT g_world_gfx_portrait_origin;
 extern const u16 g_world_gfx_panel_draw_area_scale_percent[12];
-extern u8 g_world_gfx_portrait_transition_offsets[];
 extern rgb24_t g_world_gfx_black_tile_color;
 extern menu_status_thread_t g_world_change_banner_panel_thread_params;
 extern textured_quad_source_t g_world_vertical_cursor_quad;
@@ -924,8 +922,6 @@ void world_menu_copy_billboard_data_in(const menu_unit_status_record_t* status,
 void world_menu_copy_billboard_data_out(menu_unit_status_record_t* status, menu_active_unit_t* identity,
     menu_status_panel_slot_storage_t* detail, map_selected_tile_t* selected_tile);
 void world_gfx_submit_screen_fade_overlay(fade_overlay_t* prims, s32 intensity);
-void world_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 void world_gfx_draw_signed_number(s32 value, s32 digits, u8* image, glyph_blit_t* pen);
 
 void world_gfx_enqueue_oriented_textured_quad(

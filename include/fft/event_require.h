@@ -295,13 +295,9 @@ extern POLY_FT4 g_require_gfx_poly_ft4_buffers[2][30];
 extern POLY_GT4 g_require_gfx_poly_gt4_array_32[];
 extern POLY_GT4 g_require_gfx_poly_gt4_array_8[];
 extern POLY_GT4 g_require_gfx_poly_gt4_buffers[2][40];
-extern RECT g_require_gfx_portrait_origin;
-extern u8 g_require_gfx_portrait_transition_offsets[];
 
 void require_gfx_build_gradient_grid_primitives(POLY_GT4* poly);
 void require_gfx_build_portrait_poly_ft4(s32 flags, POLY_FT4* output);
-void require_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 void require_gfx_build_scaled_draw_area_packets(scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
     s32 lower_half, const menu_status_thread_t* thread);
 void require_gfx_fade_rgb_31_frames(s32 target_0, s32 target_1, s32 target_2);

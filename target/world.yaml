@@ -544,7 +544,7 @@ functions:
   - {addr: 0x8010cab0, size: 300, name: world_gfx_set_party_unit_portrait_poly_texture, hash: c8d46ff7c855ad89}
   - {addr: 0x8010cbdc, size: 100, name: gfx_clip_portrait_poly_from_right, hash: 8dbafe04d187ec9c, source: src/shared/gfx/gfx_clip_portrait_poly_from_right.c}
   - {addr: 0x8010cc40, size: 100, name: gfx_clip_portrait_poly_from_left, hash: 5da216204bc6267a, source: src/shared/gfx/gfx_clip_portrait_poly_from_left.c}
-  - {addr: 0x8010cca4, size: 1064, name: world_gfx_build_portrait_transition_primitives, hash: a5f7b7348800076e}
+  - {addr: 0x8010cca4, size: 1064, name: gfx_build_portrait_transition_primitives, hash: a5f7b7348800076e, source: src/shared/gfx/gfx_build_portrait_transition_primitives.c}
   - {addr: 0x8010d0cc, size: 4604, name: world_menu_unit_status_banner_thread, hash: 0b97631dce90efde}
   - {addr: 0x8010e2c8, size: 232, name: world_menu_render_text_image_at_fixed_origin, hash: be71dc6ab1cdcef5}
   - {addr: 0x8010e3b0, size: 84, name: world_text_release_current_message_box_slot, hash: c06df679de8b3eaf}
@@ -1379,7 +1379,7 @@ data:
   - {addr: 0x8018abd6, name: g_world_panel_slide_up_y}
   - {addr: 0x8018abd8, name: g_world_panel_item_icon_texture}
   - {addr: 0x8018abde, name: g_world_panel_slide_down_y}
-  - {addr: 0x8018abf8, name: g_world_gfx_portrait_origin}
+  - {addr: 0x8018abf8, name: g_gfx_portrait_origin}
   - {addr: 0x8018ac00, name: g_world_unit_panel_bar_colors}
   - {addr: 0x8018ac30, name: g_world_selected_unit_number_entries}
   - {addr: 0x8018acd8, name: g_world_comparison_unit_number_entries}
@@ -1395,7 +1395,7 @@ data:
   - {addr: 0x8018aeb8, name: g_world_unit_summary_mode_row_params}
   - {addr: 0x8018aee8, name: g_world_selected_unit_portrait_rect}
   - {addr: 0x8018aef0, name: g_world_comparison_unit_portrait_rect}
-  - {addr: 0x8018aef8, name: g_world_gfx_portrait_transition_offsets}
+  - {addr: 0x8018aef8, name: g_gfx_portrait_transition_offsets}
   - {addr: 0x8018af08, name: g_world_text_message_box_digit_divisors}
   - {addr: 0x8018af2c, name: g_world_text_message_box_slot_threads}
   - {addr: 0x8018af38, name: g_world_text_message_box_slot_glyph_counters}
@@ -2349,6 +2349,7 @@ imports:
   - {addr: 0x801df198, name: jobstts_entrypoint}
 
 overrides:
+  - {function: gfx_build_portrait_transition_primitives, name: attack_gfx_build_portrait_poly_ft4, addr: 0x8010cab0}
   - {function: menu_init_panel_fade_tiles, name: g_battle_menu_disabled_texture_window, addr: 0x801531b0}
   - {function: script_find_instruction_byte_offset, name: g_script_event_instruction_sizes, addr: 0x8013a454}
   - {function: script_find_jump_target, name: g_script_event_instruction_sizes, addr: 0x8013a454}

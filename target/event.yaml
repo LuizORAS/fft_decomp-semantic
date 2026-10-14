@@ -17,7 +17,7 @@ functions:
   - {addr: 0x801bf234, size: 88, name: attack_gfx_build_portrait_poly_ft4, hash: a8a2d7a5b553b63f}
   - {addr: 0x801bf28c, size: 100, name: gfx_clip_portrait_poly_from_right, hash: 8b8f88a21b561ac0, source: src/shared/gfx/gfx_clip_portrait_poly_from_right.c}
   - {addr: 0x801bf2f0, size: 100, name: gfx_clip_portrait_poly_from_left, hash: 0e59600fae531215, source: src/shared/gfx/gfx_clip_portrait_poly_from_left.c}
-  - {addr: 0x801bf354, size: 1064, name: attack_gfx_build_portrait_transition_primitives, hash: 9632d1e8775d742c}
+  - {addr: 0x801bf354, size: 1064, name: gfx_build_portrait_transition_primitives, hash: 9632d1e8775d742c, source: src/shared/gfx/gfx_build_portrait_transition_primitives.c}
   - {addr: 0x801bf77c, size: 4352, name: attack_panel_run_unit_status_thread, hash: 9e9b6b997e6a356e}
   - {addr: 0x801c087c, size: 8, name: attack_noop_801c087c, hash: 6d64edf91449c1b1}
   - {addr: 0x801c0884, size: 544, name: menu_init_status_panel_primitives, hash: c0c46a118253c8ae, source: src/shared/menu/menu_init_status_panel_primitives.c}
@@ -110,7 +110,7 @@ data:
   - {addr: 0x801ca1be, name: g_attack_panel_slide_up_y}
   - {addr: 0x801ca1c0, name: g_attack_panel_item_icon_texture}
   - {addr: 0x801ca1c6, name: g_attack_panel_slide_down_y}
-  - {addr: 0x801ca1e0, name: g_attack_gfx_portrait_origin}
+  - {addr: 0x801ca1e0, name: g_gfx_portrait_origin}
   - {addr: 0x801ca1e8, name: g_attack_panel_gauge_bar_colors}
   - {addr: 0x801ca218, name: g_attack_panel_selected_numeric_entries}
   - {addr: 0x801ca290, name: g_attack_panel_comparison_numeric_entries}
@@ -127,7 +127,7 @@ data:
   - {addr: 0x801ca440, name: g_attack_panel_editor_mode_cells}
   - {addr: 0x801ca470, name: g_attack_panel_selected_portrait_rect}
   - {addr: 0x801ca478, name: g_attack_panel_comparison_portrait_rect}
-  - {addr: 0x801ca480, name: g_attack_gfx_portrait_transition_offsets}
+  - {addr: 0x801ca480, name: g_gfx_portrait_transition_offsets}
   - {addr: 0x801ca4b4, name: g_attack_panel_origin_offsets}
   - {addr: 0x801ca4c4, name: g_attack_character_status_frame_rect}
   - {addr: 0x801ca4dc, name: g_attack_character_status_draw_area_rect}
@@ -2190,7 +2190,7 @@ functions:
   - {addr: 0x801bf254, size: 88, name: require_gfx_build_portrait_poly_ft4, hash: 5531851d002cce17}
   - {addr: 0x801bf2ac, size: 100, name: gfx_clip_portrait_poly_from_right, hash: f06c2f5b8900d3fa, source: src/shared/gfx/gfx_clip_portrait_poly_from_right.c}
   - {addr: 0x801bf310, size: 100, name: gfx_clip_portrait_poly_from_left, hash: ca2ed33a312f5e93, source: src/shared/gfx/gfx_clip_portrait_poly_from_left.c}
-  - {addr: 0x801bf374, size: 1064, name: require_gfx_build_portrait_transition_primitives, hash: 5d4cdd324a80f71e}
+  - {addr: 0x801bf374, size: 1064, name: gfx_build_portrait_transition_primitives, hash: 5d4cdd324a80f71e, source: src/shared/gfx/gfx_build_portrait_transition_primitives.c}
   - {addr: 0x801bf79c, size: 4112, name: require_panel_run_unit_status_thread, hash: 84522d3712046bee}
   - {addr: 0x801c07ac, size: 8, name: require_noop_801c07ac, hash: 6d64edf91449c1b1}
   - {addr: 0x801c07b4, size: 544, name: menu_init_status_panel_primitives, hash: c0c46a118253c8ae, source: src/shared/menu/menu_init_status_panel_primitives.c}
@@ -2284,7 +2284,7 @@ data:
   - {addr: 0x801cb454, name: g_menu_panel_status_texture}
   - {addr: 0x801cb454, name: g_require_editor_numeric_geometry}
   - {addr: 0x801cb45c, name: g_require_panel_item_icon_texture}
-  - {addr: 0x801cb47c, name: g_require_gfx_portrait_origin}
+  - {addr: 0x801cb47c, name: g_gfx_portrait_origin}
   - {addr: 0x801cb484, name: g_require_panel_gauge_bar_colors}
   - {addr: 0x801cb4b4, name: g_require_panel_selected_numeric_entries}
   - {addr: 0x801cb52c, name: g_require_panel_comparison_numeric_entries}
@@ -2301,7 +2301,7 @@ data:
   - {addr: 0x801cb6dc, name: g_require_panel_editor_mode_cells}
   - {addr: 0x801cb70c, name: g_require_panel_selected_portrait_rect}
   - {addr: 0x801cb714, name: g_require_panel_comparison_portrait_rect}
-  - {addr: 0x801cb71c, name: g_require_gfx_portrait_transition_offsets}
+  - {addr: 0x801cb71c, name: g_gfx_portrait_transition_offsets}
   - {addr: 0x801cb750, name: g_require_panel_origin_offsets}
   - {addr: 0x801cb760, name: g_require_character_status_frame_rect}
   - {addr: 0x801cb778, name: g_require_character_status_draw_area_rect}
@@ -2446,6 +2446,7 @@ imports:
   - {addr: 0x801dfe10, name: helpmenu_menu_run_require_help}
 
 overrides:
+  - {function: gfx_build_portrait_transition_primitives, name: attack_gfx_build_portrait_poly_ft4, addr: 0x801bf254}
   - {function: menu_build_status_group_primitives, name: gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
   - {function: menu_draw_thread_status_indicators, name: gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
   - {function: require_editor_run_numeric_thread, name: gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}

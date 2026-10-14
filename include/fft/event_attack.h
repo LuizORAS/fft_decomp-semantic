@@ -319,8 +319,6 @@ void attack_editor_run_numeric_thread(void);
 /* graphics */
 extern u16 g_attack_gfx_draw_offset_y;
 extern POLY_FT4 g_attack_gfx_frame_ft4[];
-extern RECT g_attack_gfx_portrait_origin;
-extern u8 g_attack_gfx_portrait_transition_offsets[];
 extern u8 g_attack_gfx_scaled_sprite_count;
 extern point16_t g_attack_gfx_scaled_sprite_scale[];
 extern point16_t g_attack_gfx_scaled_sprite_texture_page[];
@@ -329,8 +327,6 @@ extern sprite_sheet_frame_t g_attack_gfx_scaled_sprite_uv_rects[];
 extern const CVECTOR g_attack_map_darkness_color;
 
 void attack_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
-void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, palette_t palettes[2], POLY_FT4* poly, s32 direction);
 void attack_gfx_build_status_group_primitives(POLY_FT4* poly);
 void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_page, const RECT* position,
     sprite_sheet_frame_t* sprite_rect, point16_t* scale, const sprite_draw_offset_t* offset);

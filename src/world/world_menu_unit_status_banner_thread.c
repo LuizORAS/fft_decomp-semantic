@@ -23,7 +23,7 @@
  *  - runs the slide-down or slide-up table once when the display flags ask
  *    for it, leaving only MENU_STATUS_PANEL_HIDDEN set at the end;
  *  - cross-fades the portrait when the shown unit changes
- *    (world_gfx_build_portrait_transition_primitives);
+ *    (gfx_build_portrait_transition_primitives);
  *  - redraws the number and name images on the first frame and whenever
  *    display->work is set. While the preview-stats window is open the first
  *    number block is drawn by five separate calls.
@@ -100,7 +100,7 @@ void world_menu_unit_status_banner_thread(void) {
     }
     shake = 0;
 
-    world_menu_init_numeric_display_frame_primitives(&g_world_gfx_portrait_origin, &summary->numeric_frame);
+    world_menu_init_numeric_display_frame_primitives(&g_gfx_portrait_origin, &summary->numeric_frame);
     world_gfx_set_draw_mode_for_texture_page(&summary->draw_mode_a, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     world_gfx_set_draw_mode_for_texture_page(&summary->draw_mode_b, MENU_TEXTURE_PAGE_FRAME);
     world_menu_init_sprite_array(&summary->label_sprites[0], 7, 0x7CBC);
@@ -111,8 +111,8 @@ void world_menu_unit_status_banner_thread(void) {
     world_text_configure_sprite_vram(&rects[0], 0x38, 0x28, &summary->value_sprites[0], 2);
     world_text_configure_sprite_vram(&rects[1], 0x60, 0x10, &summary->value_sprites[1], 2);
     for (frame = 0; frame < 4; frame++) {
-        gfx_init_image_loading(&summary->value_sprites[frame], g_world_editor_numeric_geometry,
-            &g_world_gfx_portrait_origin, &g_world_unit_summary_value_sprite_params[frame]);
+        gfx_init_image_loading(&summary->value_sprites[frame], g_world_editor_numeric_geometry, &g_gfx_portrait_origin,
+            &g_world_unit_summary_value_sprite_params[frame]);
     }
     if (state->team_kind >= 4) {
         state->team_kind = 0;
@@ -125,8 +125,8 @@ void world_menu_unit_status_banner_thread(void) {
             sizeof(image_load_parameters_t));
     }
     for (frame = 0; frame < 7; frame++) {
-        gfx_init_image_loading(&summary->label_sprites[frame], g_world_editor_numeric_geometry,
-            &g_world_gfx_portrait_origin, &g_world_unit_summary_label_sprite_params[frame]);
+        gfx_init_image_loading(&summary->label_sprites[frame], g_world_editor_numeric_geometry, &g_gfx_portrait_origin,
+            &g_world_unit_summary_label_sprite_params[frame]);
     }
     mem_copy_bytes_nonempty(summary + 1, summary, sizeof(menu_status_panel_editor_packet_t));
     world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
@@ -169,8 +169,8 @@ void world_menu_unit_status_banner_thread(void) {
             mem_copy_bytes_nonempty(&g_world_unit_summary_label_sprite_params[6], g_world_unit_summary_mode_row_params,
                 sizeof(image_load_parameters_t));
         }
-        gfx_init_image_loading(&summary->label_sprites[6], g_world_editor_numeric_geometry,
-            &g_world_gfx_portrait_origin, &g_world_unit_summary_label_sprite_params[6]);
+        gfx_init_image_loading(&summary->label_sprites[6], g_world_editor_numeric_geometry, &g_gfx_portrait_origin,
+            &g_world_unit_summary_label_sprite_params[6]);
         if (state->team_kind == 1) {
             status->portrait.clut = 0x7FFD;
         } else {
@@ -294,7 +294,7 @@ void world_menu_unit_status_banner_thread(void) {
                 anim_state = 2;
             }
         }
-        world_gfx_build_portrait_transition_primitives(
+        gfx_build_portrait_transition_primitives(
             transition, &anim_state, &cur_unit, &prev_unit, portrait_palettes, &summary->portrait[0], portrait_arg);
         {
             CVECTOR* color;
@@ -305,16 +305,16 @@ void world_menu_unit_status_banner_thread(void) {
                 s32 y;
 
                 SetPolyG4(&summary->bars[i]);
-                x0 = g_world_gfx_portrait_origin.x + 0x2F;
+                x0 = g_gfx_portrait_origin.x + 0x2F;
                 summary->bars[i].x0 = x0;
                 y = i * 0xB + 0x18;
-                summary->bars[i].y0 = g_world_gfx_portrait_origin.y + y;
+                summary->bars[i].y0 = g_gfx_portrait_origin.y + y;
                 summary->bars[i].x1 = x0 + 0x20;
-                summary->bars[i].y1 = g_world_gfx_portrait_origin.y + y;
+                summary->bars[i].y1 = g_gfx_portrait_origin.y + y;
                 summary->bars[i].x2 = x0;
-                summary->bars[i].y2 = g_world_gfx_portrait_origin.y + y + 3;
+                summary->bars[i].y2 = g_gfx_portrait_origin.y + y + 3;
                 summary->bars[i].x3 = x0 + 0x20;
-                summary->bars[i].y3 = g_world_gfx_portrait_origin.y + y + 3;
+                summary->bars[i].y3 = g_gfx_portrait_origin.y + y + 3;
                 summary->bars[i].x2 -= 3;
                 summary->bars[i].x3 -= 3;
                 if (dimmed != 0) {
