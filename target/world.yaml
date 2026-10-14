@@ -290,7 +290,7 @@ functions:
   - {addr: 0x800f474c, size: 652, name: world_menu_validate_skill_selection_thread, hash: d2b1e0184c6e5068}
   - {addr: 0x800f49d8, size: 84, name: world_is_skillset_in_spell_quote_exception_list, hash: 5f78811b5e703c8b, source: src/shared/text/text_is_spell_quote_exception_skillset.c, source_symbol: text_is_spell_quote_exception_skillset}
   - {addr: 0x800f4a2c, size: 688, name: world_menu_resolve_selection, hash: 68327baefa5118d7}
-  - {addr: 0x800f4cdc, size: 496, name: world_menu_run_system_function_thread, hash: 1e9d426cd5d89e93}
+  - {addr: 0x800f4cdc, size: 496, name: world_menu_run_system_function_thread, hash: 1e9d426cd5d89e93, source: src/shared/menu/menu_run_system_function_thread.c, source_symbol: menu_run_system_function_thread}
   - {addr: 0x800f4ecc, size: 76, name: world_menu_start_system_function_thread, hash: 2be3a252bc4a94b1}
   - {addr: 0x800f4f18, size: 124, name: world_menu_confirm_auto_battle_selection_thread, hash: 3b06a121f16b15f4}
   - {addr: 0x800f4f94, size: 64, name: world_menu_store_auto_battle_main_target_id, hash: eba4aacd9409368b}
@@ -2489,6 +2489,15 @@ overrides:
   - {function: world_menu_reset_subsystems, name: battle_gfx_clear_tpage7_vram_allocation_grid, addr: 0x800e2c0c}
   - {function: world_menu_reset_subsystems, name: battle_menu_init_buffer_allocator, addr: 0x800e3088}
   - {function: world_menu_reset_subsystems, name: battle_menu_reset_buffer_slots, addr: 0x800e2520}
+  - {function: world_menu_run_system_function_thread, name: battle_menu_open_option_dead_unit_panel, addr: 0x800efa3c}
+  - {function: world_menu_run_system_function_thread, name: battle_text_init_menu_section_pointers, addr: 0x800fd9f4}
+  - {function: world_menu_run_system_function_thread, name: battle_thread_is_running_asm, addr: 0x80100164}
+  - {function: world_menu_run_system_function_thread, name: g_battle_menu_current_id, addr: 0x80153268}
+  - {function: world_menu_run_system_function_thread, name: g_battle_menu_dead_unit_panel_parameter, addr: 0x801a668c}
+  - {function: world_menu_run_system_function_thread, name: g_battle_menu_system_function_row_actions, addr: 0x80153da4}
+  - {function: world_menu_run_system_function_thread, name: g_battle_menu_thread_menu_data, addr: 0x801cd7e0}
+  - {function: world_menu_run_system_function_thread, name: g_battle_system_function_table, addr: 0x80156750}
+  - {function: world_menu_run_system_function_thread, name: g_battle_system_function_thread_busy, addr: 0x80153360}
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_gfx_free_tpage7_vram, addr: 0x800e2edc}
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_gfx_set_draw_mode_for_texture_page, addr: 0x800fdba0}

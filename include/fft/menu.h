@@ -1152,6 +1152,8 @@ typedef struct menu_system_function {
 } menu_system_function_t;
 typedef char menu_system_function_size_must_be_20[(sizeof(menu_system_function_t) == 20) ? 1 : -1];
 
+void menu_run_system_function_thread(void);
+
 /* First argument of *_menu_init_system_function and
  * *_menu_dispatch_system_function; `option` selects the variant. */
 typedef enum battle_menu_system_command {

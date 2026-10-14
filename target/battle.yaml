@@ -943,7 +943,7 @@ functions:
   - {addr: 0x80140ed4, size: 652, name: battle_menu_validate_skill_selection_thread, hash: 86c08eb6eb5c692d}
   - {addr: 0x80141160, size: 84, name: battle_text_is_spell_quote_exception_skillset, hash: 2734bfc09a61a60b, source: src/shared/text/text_is_spell_quote_exception_skillset.c, source_symbol: text_is_spell_quote_exception_skillset}
   - {addr: 0x801411b4, size: 688, name: battle_menu_resolve_selection, hash: 490dcbd318aa5826}
-  - {addr: 0x80141464, size: 496, name: battle_menu_run_system_function_thread, hash: fa520dc046636a1f}
+  - {addr: 0x80141464, size: 496, name: battle_menu_run_system_function_thread, hash: fa520dc046636a1f, source: src/shared/menu/menu_run_system_function_thread.c, source_symbol: menu_run_system_function_thread}
   - {addr: 0x80141654, size: 76, name: battle_menu_start_system_function_thread, hash: d0d2ec3857d6477d}
   - {addr: 0x801416a0, size: 124, name: battle_menu_confirm_auto_battle_selection_thread, hash: eda1d68b079e1363}
   - {addr: 0x8014171c, size: 64, name: battle_menu_store_auto_battle_main_target_id, hash: ac6b25a05f8fa4fc}

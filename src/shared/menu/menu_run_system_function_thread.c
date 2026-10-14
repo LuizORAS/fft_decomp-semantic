@@ -1,22 +1,16 @@
 #include "fft/battle.h"
 #include "fft/battle_camera.h"
 #include "fft/battle_menu.h"
-#include "fft/battle_script.h"
 #include "fft/battle_text.h"
+#include "fft/main.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
-#include "psx/types.h"
 
-/*
- * Battle twin of world_menu_run_system_function_thread. Thread started by
- * battle_menu_start_system_function_thread: waits for the menu
- * threads to settle, then configures the menu entry named by the selected
- * system-function record and starts that record's thread as thread 8.
- */
-void battle_menu_run_system_function_thread(void) {
+/* Wait for menu/event threads, then start the selected system-function entry. */
+void menu_run_system_function_thread(void) {
     s32 id;
-    s32 value;
+    s32 menu_id;
     menu_system_function_t* entry;
 
     g_battle_system_function_thread_busy = 1;
@@ -36,10 +30,10 @@ void battle_menu_run_system_function_thread(void) {
     }
     camera_wait_until_idle();
     entry = &g_battle_system_function_table[id];
-    value = entry->menu_id;
+    menu_id = entry->menu_id;
     g_battle_menu_thread_menu_data[entry->menu_entry_index].text_id = entry->text_id;
     g_battle_menu_system_function_row_actions[0] = entry->row_action;
-    g_battle_menu_current_id = value;
+    g_battle_menu_current_id = menu_id;
     g_battle_menu_thread_menu_data[entry->menu_entry_index].thread_count = entry->thread_count;
     if (id == 0x1f) {
         thread_start(THREAD_SLOT_MENU, battle_menu_open_option_dead_unit_panel);
