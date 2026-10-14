@@ -72,7 +72,7 @@ void open_title_update_menu(open_title_controller_t* state) {
         if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) {
             return;
         }
-        g_active_graphics_buffer_index = 1;
+        g_main_gfx_active_buffer_index = 1;
         g_open_system_runtime_flags ^= OPEN_SYSTEM_RUNTIME_FLAG_INPUT_DISABLED;
         g_open_gfx_next_render_record_36 -= 6;
         g_open_gfx_render_record_pointer_count -= 6;

@@ -19,7 +19,7 @@ void wldcore_gfx_draw_screen_fade_overlays(void) {
         if (flags[i] & (WLDCORE_SCREEN_FADE_RUNNING | WLDCORE_SCREEN_FADE_BOX_VISIBLE)) {
             if (g_wldcore_screen_fade_state.boxes[i].r != 0 || g_wldcore_screen_fade_state.boxes[i].g != 0
                 || g_wldcore_screen_fade_state.boxes[i].b != 0) {
-                GsSortBoxFill(&boxes[i], &g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index], priorities[i]);
+                GsSortBoxFill(&boxes[i], &g_wldcore_gfx_ordering_tables[g_main_gfx_active_buffer_index], priorities[i]);
             }
         }
     }

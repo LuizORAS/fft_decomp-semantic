@@ -27,7 +27,7 @@ s32 battle_gfx_claim_spritesheet_slot(s16 spritesheet_id) {
         }
     }
     if (slot >= 9) {
-        animation_exception_handler(0xB);
+        main_system_handle_error(MAIN_SYSTEM_ERROR_NO_SPRITESHEET_SLOT);
         return 0xFFFF;
     }
     return found & 0xFFFF;

@@ -86,8 +86,8 @@ void open_gfx_init_screen_environments(s32 clear_first) {
     }
     put_envs = clear_first;
     if (put_envs != 0) {
-        PutDrawEnv(&g_open_gfx_screen_environments[g_active_graphics_buffer_index].draw);
-        PutDispEnv(&g_open_gfx_screen_environments[g_active_graphics_buffer_index].disp);
+        PutDrawEnv(&g_open_gfx_screen_environments[g_main_gfx_active_buffer_index].draw);
+        PutDispEnv(&g_open_gfx_screen_environments[g_main_gfx_active_buffer_index].disp);
         SetGeomOffset(0, 0);
     }
 }

@@ -142,7 +142,7 @@ void world_option_menu_thin_window_frame_thread(void) {
     frame = 0;
     while (world_thread_get_current_parameter_3() == 0) {
         prim = &g_world_menu_panel_buffer.panel_frames[frame & 1];
-        world_gfx_build_scaled_draw_area_pair_swapped(&prim->draw_areas, menu, frame, g_active_graphics_buffer_index);
+        world_gfx_build_scaled_draw_area_pair_swapped(&prim->draw_areas, menu, frame, g_main_gfx_active_buffer_index);
         /* The CLUT id the nine border sprites are drawn with this frame, which
            the target keeps in this variable's register once the texture column
            is dead. A separate local is allocated a different callee-saved

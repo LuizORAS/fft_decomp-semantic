@@ -19,7 +19,7 @@ void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t*
         && !(g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE)) {
         g_open_system_runtime_flags ^= OPEN_SYSTEM_RUNTIME_FLAG_INPUT_DISABLED;
         main_sound_unload_current_scenario_music();
-        g_active_graphics_buffer_index = 1;
+        g_main_gfx_active_buffer_index = 1;
         g_open_gfx_next_render_record_56 -= 3;
         g_open_gfx_next_render_record_36 -= 3;
         g_open_gfx_render_record_pointer_count -= 6;

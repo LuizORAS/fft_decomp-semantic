@@ -21,7 +21,7 @@ s32 battle_action_add_party_item(battle_stats_t* unit, u8 item) {
     if (item_id == ITEM_ID_NONE) {
         return 0;
     }
-    if (get_total_equipment_quantity(item_id, 1) >= 0x63) {
+    if (main_item_get_total_equipment_quantity_s32(item_id, 1) >= 0x63) {
         return battle_action_add_war_funds(unit, 0, item_id);
     }
     g_main_item_quantities[item_id] += 1;

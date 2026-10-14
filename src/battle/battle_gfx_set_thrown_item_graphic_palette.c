@@ -5,7 +5,7 @@
  * The item's two palettes of g_battle_gfx_item_graphic_data go to the unit's
  * CLUTs of the ITEM_A and ITEM_B rows, and its type selects the frame set of
  * the weapon SHP; a thrown weapon, any Throw ability and Throw Stone use
- * set 0x15. get_item_data_pointer takes the item id still in $a0. */
+ * set 0x15. main_item_get_data_pointer_no_argument takes the item id still in $a0. */
 void battle_gfx_set_thrown_item_graphic_palette(s32 graphic_id, battle_unit_misc_data_t* unit) {
     u8* item;
     u32 weapon_type;
@@ -17,7 +17,7 @@ void battle_gfx_set_thrown_item_graphic_palette(s32 graphic_id, battle_unit_misc
     u16 ability_id;
 
     unit2 = unit;
-    item = get_item_data_pointer();
+    item = main_item_get_data_pointer_no_argument();
     weapon_type = item[5];
     if ((weapon_type >= ITEM_TYPE_SHURIKEN)
         || ((u32)(unit2->used_ability_id - ABILITY_ID_THROW_FIRST) < ABILITY_ID_JUMP_FIRST - ABILITY_ID_THROW_FIRST)

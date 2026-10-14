@@ -33,7 +33,7 @@ void wldcore_system_init_world_map_state(void) {
     g_wldcore_screen_brightness_rgb[1] = 0x80;
     g_wldcore_screen_brightness_rgb[2] = 0x80;
     g_wldcore_previous_system_flags = 0;
-    g_active_graphics_buffer_index = 0;
+    g_main_gfx_active_buffer_index = 0;
     g_wldcore_map_zoom_motion.flags = 0;
     g_wldcore_random_battle_squad_id = 0;
     g_wldcore_random_battle_entd_id = 0;

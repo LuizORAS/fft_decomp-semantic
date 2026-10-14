@@ -312,9 +312,9 @@ void world_option_menu_run_options_thread(void) {
             world_thread_set_parameters(g_world_thread_current_id + 1, (s32)&entry->window_x, 1, 0);
         }
         world_gfx_build_scaled_draw_area_pair_swapped(
-            &page->title_area, &entry->window_x, i, g_active_graphics_buffer_index);
+            &page->title_area, &entry->window_x, i, g_main_gfx_active_buffer_index);
         world_gfx_build_scaled_draw_area_pair_swapped(
-            &page->value_area, &value_rect, i, g_active_graphics_buffer_index);
+            &page->value_area, &value_rect, i, g_main_gfx_active_buffer_index);
         world_gfx_draw_or_append_gpu_primitive(&page->title_area.areas[1]);
         world_gfx_draw_or_append_gpu_primitive(&page->icon_mode);
         world_gfx_draw_or_append_gpu_primitive(frame);

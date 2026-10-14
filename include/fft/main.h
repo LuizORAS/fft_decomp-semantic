@@ -114,6 +114,8 @@ s32 main_util_roll_pass_fail(s32 maximum, s32 threshold);
 
 void main_util_set_svector(SVECTOR* vector, s32 x, s32 y, s32 z);
 void main_util_set_vector(VECTOR* vector, s32 x, s32 y, s32 z);
+/* Second link name of main_util_set_svector with u16 components, as its two BATTLE callers declare it. */
+void main_util_set_svector_u16(SVECTOR* output, u16 x, u16 y, u16 z);
 
 void main_util_clear_byte_data(void* destination, s32 count);
 
@@ -200,15 +202,19 @@ extern s32 g_main_input_pressed_buttons;
 extern s32 g_main_input_previous_buttons;
 extern u32 g_main_input_current_buttons;
 extern u32 g_main_input_released_buttons;
-extern u32 g_controller_pressed_copy_0;
-extern u32 g_controller_pressed_copy_1;
-extern u32 g_controller_pressed_copy_2;
-extern u32 g_controller_pressed_copy_3;
-extern u32 g_controller_previous_copy_0;
-extern u32 g_controller_previous_copy_1;
-extern u32 g_controller_previous_copy_2;
-extern u32 g_controller_previous_copy_3;
-extern u32 g_controller_stable_frames;
+/* The newly pressed and the previous words as battle_state_update_controller_input finds them, before it
+ * updates them, each stored four times: battle_camera_get_input_direction reads pressed copies 0 and 1
+ * and previous copy 0, and nothing reads the other five. g_main_input_stable_frames counts the frames
+ * in which the held buttons have not changed. */
+extern u32 g_main_input_pressed_copy_0;
+extern u32 g_main_input_pressed_copy_1;
+extern u32 g_main_input_pressed_copy_2;
+extern u32 g_main_input_pressed_copy_3;
+extern u32 g_main_input_previous_copy_0;
+extern u32 g_main_input_previous_copy_1;
+extern u32 g_main_input_previous_copy_2;
+extern u32 g_main_input_previous_copy_3;
+extern u32 g_main_input_stable_frames;
 
 /* card */
 /* The memory card: the BIOS card event handles (main_card_init_events), the slot states and I/O results
@@ -428,6 +434,7 @@ typedef enum main_system_error {
     MAIN_SYSTEM_ERROR_SHP_FRAME = 8,               /* frame index above 0x200 or frame pointer -1 */
     MAIN_SYSTEM_ERROR_SEQ_ANIMATION = 9,           /* animation index above 0x100 or sequence pointer -1 */
     MAIN_SYSTEM_ERROR_FRAME_PART_COUNT = 10,       /* more than eight parts in a unit frame */
+    MAIN_SYSTEM_ERROR_NO_SPRITESHEET_SLOT = 0xb,   /* battle_gfx_claim_spritesheet_slot found all nine taken */
     MAIN_SYSTEM_ERROR_SEQ_OPCODE = 0xd,            /* unknown sequence opcode, or a queued animation for slot 0 */
     MAIN_SYSTEM_ERROR_SMD_LOAD = 0x11,             /* no SMD buffer or the SMD load could not start */
     MAIN_SYSTEM_ERROR_DISTORTION_ANIMATION = 0x17, /* distortion animation id without a handler */
@@ -788,7 +795,13 @@ extern shield_data_t g_main_item_shield_data[];
 void main_item_init_new_game_inventory(void);
 void main_item_init_order_tables(void);
 item_data_t* main_item_get_data_pointer(s32 item_id);
+/* Second link name of main_item_get_data_pointer with no parameter: battle_gfx_set_thrown_item_graphic_palette
+ * calls it with the item id still in $a0 (QUIRKS.md). */
+u8* main_item_get_data_pointer_no_argument(void);
 s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle);
+/* Second link name of main_item_get_total_equipment_quantity with an s32 id: battle_action_add_party_item
+ * passes its masked s32 id without the andi the u8 prototype adds. */
+s32 main_item_get_total_equipment_quantity_s32(s32 item_id, s32 include_equipped);
 
 /* status */
 /* Status changes that BATTLE and WORLD share: a unit's current set, the timed status counts and
@@ -1011,6 +1024,9 @@ extern DISPENV g_main_gfx_display_envs[2];
 extern DRAWENV g_main_gfx_draw_envs[2];
 /* The ordering tables of BATTLE's two render buffers (battle_gfx_init_render_buffers). */
 extern u32 g_main_gfx_battle_otags[2][0x180];
+/* The buffer (0 or 1) that OPEN, WLDCORE and WORLD build this frame's primitives and ordering table in;
+ * their frame routines flip it. */
+extern s32 g_main_gfx_active_buffer_index;
 extern s32 g_main_gfx_loading_display_frame_counter;
 extern s32 g_main_gfx_screen_polarity;
 void main_gfx_add_now_loading_to_otag(u32* otag);
@@ -1023,8 +1039,8 @@ void main_gfx_load_zodiac_frame(void);
 void main_gfx_reset_display(int width, int height, int projection, u8 red, u8 green, u8 blue);
 void main_gfx_swap_and_clear_otag(void);
 int main_gfx_swap_display_area(u32* otag);
-void main_set_display_draw(int width, int height, int projection, u8 red, u8 green, u8 blue);
-void main_set_display_draw_new_game(int width, int height, int projection, u8 red, u8 green, u8 blue);
+void main_gfx_set_display_draw(int width, int height, int projection, u8 red, u8 green, u8 blue);
+void main_gfx_set_display_draw_new_game(int width, int height, int projection, u8 red, u8 green, u8 blue);
 void main_gfx_build_now_loading_center(u32 visible);
 void main_gfx_build_zodiac_primitives(zodiac_draw_context_t* context, POLY_FT4* poly);
 void main_gfx_call_build_zodiac_bin(zodiac_draw_context_t* context, POLY_FT4* poly);
@@ -2248,9 +2264,5 @@ extern const u8 g_main_terrain_status_flags[64];
 /* 64 surface types x 2 bytes, all 0x19; copied into the selected-tile record's
  * _unknown_02/_unknown_04, which nothing reads. */
 extern u8 g_main_terrain_tile_info_pairs[];
-
-/* Second link name of main_item_get_total_equipment_quantity with an s32 id: battle_action_add_party_item
- * passes its masked s32 id without the andi the u8 prototype adds. */
-s32 get_total_equipment_quantity(s32 item_id, s32 include_equipped);
 
 #endif

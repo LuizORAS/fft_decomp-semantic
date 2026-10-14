@@ -17,7 +17,7 @@ void main_gfx_fade_in_orbonne_monastery(void) {
     s16 intensity;
 
     intensity = 248;
-    main_set_display_draw_new_game(256, 240, 512, 0, 0, 0);
+    main_gfx_set_display_draw_new_game(256, 240, 512, 0, 0, 0);
 
     SetPolyF4(&fade_polygons[0]);
     fade_polygons[0].r0 = 0;

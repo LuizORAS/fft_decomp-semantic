@@ -27,7 +27,7 @@ s32 wldcore_entrypoint(void) {
             main_file_poll_load(&g_main_file_cd_state);
             wldcore_sound_process_audio_queue();
             buffer_index = GsGetActiveBuff();
-            g_active_graphics_buffer_index = buffer_index;
+            g_main_gfx_active_buffer_index = buffer_index;
             GsSetWorkBase(&g_wldcore_gfx_world_primitive_buffers + buffer_index * 0xE000);
             wldcore_gfx_step_screen_fade();
             wldcore_map_pulse_dot_colors();

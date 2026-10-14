@@ -103,7 +103,6 @@ s32 battle_util_mul_div_s64(s32 a, s32 b, s32 c);
 void battle_menu_init_stub(void);
 void battle_script_add_unit_stub(void);
 
-void* game_realloc(void*, u32);
 void battle_state_deployment_frame_stub(void);
 void battle_gfx_release_unit_sprite_display_stub(void* unused_sprite_display_section);
 void battle_menu_run_companion_overlay_stub(void);
@@ -580,8 +579,7 @@ void battle_status_store_ability_cancellations(void);
 void battle_status_update_expiring(s32 unit_id);
 
 /* item */
-/* BATTLE's item graphics (weapon attack animations, the item icon sprite) and the second link name
- * of main_item_get_data_pointer. */
+/* BATTLE's item graphics: the weapon attack animations and the item icon sprite. */
 
 /* battle_unit_animation_e of each item type's attack at a higher, a level and a lower target. */
 extern u8 g_battle_weapon_attack_animations[][3];
@@ -589,7 +587,6 @@ extern s16 g_battle_item_icon_clut_base_x;
 extern s16 g_battle_item_icon_clut_base_y;
 extern world_image_location_t g_battle_item_icon_image_location;
 void battle_gfx_set_item_icon_sprite(SPRT* sprite, s32 item_id);
-u8* get_item_data_pointer(void);
 
 /* deploy */
 /* Formation row read by battle_unit_init_deployed_units_data: five 4-byte
@@ -1727,7 +1724,6 @@ typedef struct battle_keyframe_effect_state {
 
 extern u8 g_battle_rotation_speed_frames[];
 extern u16 g_battle_animation_speed_forced; /* 1 while the event speed is forced */
-void animation_exception_handler(s32 exception_id);
 
 /* screen */
 /* The unit display record (battle_unit_misc_data_t) and the records inside it: sprite displays and SHP
@@ -2712,6 +2708,7 @@ extern world_unit_animation_state_t g_battle_unit_animation_states[];
 /* 0x8016604e: result of battle_gfx_poll_unit_graphics_load, 0 done / 1 pending. */
 extern u16 g_battle_unit_graphics_load_pending;
 
+/* MAIN-resident, but only BATTLE uses it and its type is BATTLE's, so it is declared here. */
 extern battle_unit_graphics_load_queue_t g_main_gfx_unit_graphics_load_queue;
 /* The distinct spritesheets of the encounter's ENTD units (battle_unit_add_unique_entd_spritesheet). */
 extern s16 g_battle_unit_entd_spritesheet_ids[];
@@ -9127,7 +9124,6 @@ s32 battle_map_tile_data_15_stub(void);
 void battle_script_process_inflict_status_commands(void);
 s32 battle_menu_poll_small_load(void);
 s32 battle_util_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
-void save_3_u16(SVECTOR* output, u16 x, u16 y, u16 z);
 s32 battle_status_prepare_terrain_poison(battle_stats_t* unit);
 s32 battle_return_one(s32 unused_misc_id);
 

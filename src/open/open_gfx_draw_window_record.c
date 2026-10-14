@@ -31,7 +31,7 @@ void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot) {
     if (g_open_gfx_primitive_count >= 0x20) {
         return;
     }
-    SetSprt(&g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt);
+    SetSprt(&g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt);
 
     if (record->palette != 0) {
         clut.x = (cx = record->tail.clut.x) + (record->palette - 1) * 0x10;
@@ -39,16 +39,16 @@ void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot) {
     } else {
         clut = record->tail.clut;
     }
-    g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.clut
+    g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt.clut
         = GetClut(clut.x, clut.y);
-    (&g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt)->r0
+    (&g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt)->r0
         = record->color.r;
-    (&g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt)->g0
+    (&g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt)->g0
         = record->color.g;
-    (&g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt)->b0
+    (&g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt)->b0
         = record->color.b;
 
-    SetDrawMode(&g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].mode, 1,
+    SetDrawMode(&g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].mode, 1,
         0,
         GetTPage(((record->flags & WLDCORE_DISPLAY_OBJECT_8BIT_CLUT) >> 2) != 0,
             (record->flags & WLDCORE_DISPLAY_OBJECT_BLEND_RATE_MASK) >> 6, record->vram_x, record->vram_y),
@@ -56,24 +56,24 @@ void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot) {
 
     if (record->flags & WLDCORE_DISPLAY_OBJECT_SEMI_TRANSPARENT) {
         SetSemiTrans(
-            &g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt, 1);
+            &g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt, 1);
     } else {
         SetSemiTrans(
-            &g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt, 0);
+            &g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt, 0);
     }
 
     if (record->flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         open_gfx_calculate_scaled_rectangle(record->pop_in_step / 2, &record->tail.quad, &scaled);
-        g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.x0
+        g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt.x0
             = scaled.x + (px = record->x);
-        g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.y0
+        g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt.y0
             = scaled.y + (py = record->y);
-        g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.u0
+        g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt.u0
             = record->tail.quad.x + scaled.x;
-        g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.v0
+        g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt.v0
             = record->tail.quad.y + scaled.y;
-        g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.w = scaled.w;
-        g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.h = scaled.h;
+        g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt.w = scaled.w;
+        g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt.h = scaled.h;
         step = record->pop_in_step;
         if (step / 2 >= 4) {
             record->pop_in_step = 0;
@@ -82,23 +82,23 @@ void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot) {
             record->pop_in_step = step + 1;
         }
     } else {
-        g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.x0 = qx
+        g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt.x0 = qx
             = record->x;
-        g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.y0 = qy
+        g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt.y0 = qy
             = record->y;
-        g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.u0 = qu
+        g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt.u0 = qu
             = record->tail.quad.x;
-        g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.v0 = qv
+        g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt.v0 = qv
             = record->tail.quad.y;
-        g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.w
+        g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt.w
             = record->tail.quad.w;
-        g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt.h
+        g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt.h
             = record->tail.quad.h;
     }
 
     AddPrim(&ot[record->ot_layer],
-        &g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].sprt);
+        &g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].sprt);
     AddPrim(&ot[record->ot_layer],
-        &g_open_gfx_sprite_primitive_pool[g_active_graphics_buffer_index][g_open_gfx_primitive_count].mode);
+        &g_open_gfx_sprite_primitive_pool[g_main_gfx_active_buffer_index][g_open_gfx_primitive_count].mode);
     g_open_gfx_primitive_count++;
 }

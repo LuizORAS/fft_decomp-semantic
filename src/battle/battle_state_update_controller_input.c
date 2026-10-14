@@ -20,22 +20,22 @@ s32 battle_state_update_controller_input(void) {
     pressed = g_main_input_pressed_buttons;
     previous = g_main_input_previous_buttons;
     current = g_main_input_current_buttons;
-    g_controller_pressed_copy_0 = pressed;
-    g_controller_pressed_copy_1 = pressed;
-    g_controller_pressed_copy_2 = pressed;
-    g_controller_pressed_copy_3 = pressed;
+    g_main_input_pressed_copy_0 = pressed;
+    g_main_input_pressed_copy_1 = pressed;
+    g_main_input_pressed_copy_2 = pressed;
+    g_main_input_pressed_copy_3 = pressed;
     g_main_input_pressed_buttons = ~previous & current;
     released = ~current & previous;
-    g_controller_previous_copy_0 = previous;
-    g_controller_previous_copy_1 = previous;
-    g_controller_previous_copy_2 = previous;
-    g_controller_previous_copy_3 = previous;
+    g_main_input_previous_copy_0 = previous;
+    g_main_input_previous_copy_1 = previous;
+    g_main_input_previous_copy_2 = previous;
+    g_main_input_previous_copy_3 = previous;
     g_main_input_released_buttons = released;
 
     if (previous == current) {
-        g_controller_stable_frames++;
+        g_main_input_stable_frames++;
     } else {
-        g_controller_stable_frames = 0;
+        g_main_input_stable_frames = 0;
     }
 
     g_main_input_previous_buttons = g_main_input_current_buttons;

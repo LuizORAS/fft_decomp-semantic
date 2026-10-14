@@ -12,13 +12,13 @@ void wldcore_system_init_screen(void) {
         = wldcore_gfx_load_location_picture(g_wldcore_map_projection_state.marker.kind);
     wldcore_file_wait_for_load();
     count = GsGetActiveBuff();
-    g_active_graphics_buffer_index = count;
+    g_main_gfx_active_buffer_index = count;
     GsSetWorkBase(&g_wldcore_gfx_world_primitive_buffers + count * 0xE000);
     wldcore_gfx_capture_map_backdrop();
     VSync(0);
     ResetGraph(1);
-    GsClearOt(0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
-    GsClearOt(0, 0, &g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
+    GsClearOt(0, 0, &g_wldcore_gfx_aux_ordering_tables[g_main_gfx_active_buffer_index]);
+    GsClearOt(0, 0, &g_wldcore_gfx_ordering_tables[g_main_gfx_active_buffer_index]);
     wldcore_gfx_clear_vram_and_scratch(0);
     GsSwapDispBuff();
     SetDispMask(0);

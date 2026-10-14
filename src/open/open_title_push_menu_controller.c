@@ -36,7 +36,7 @@ void open_title_push_menu_controller(s32 cd_end_sector) {
     rect.y = 0;
     rect.w = 0x140;
     rect.h = 0xf0;
-    if (g_active_graphics_buffer_index != 0) {
+    if (g_main_gfx_active_buffer_index != 0) {
         rect.y = 0xf0;
     }
     LoadImage(&rect, g_open_file_destination);

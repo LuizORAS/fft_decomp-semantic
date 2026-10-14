@@ -58,7 +58,7 @@ void open_script_update_screen_fade(void) {
     }
 
     intensity = g_open_script_state.opntex.fade_intensity;
-    ((CVECTOR*)&g_open_gfx_fade_primitives[g_active_graphics_buffer_index].r0)->r = intensity;
-    ((CVECTOR*)&g_open_gfx_fade_primitives[g_active_graphics_buffer_index].r0)->g = intensity;
-    ((CVECTOR*)&g_open_gfx_fade_primitives[g_active_graphics_buffer_index].r0)->b = intensity;
+    ((CVECTOR*)&g_open_gfx_fade_primitives[g_main_gfx_active_buffer_index].r0)->r = intensity;
+    ((CVECTOR*)&g_open_gfx_fade_primitives[g_main_gfx_active_buffer_index].r0)->g = intensity;
+    ((CVECTOR*)&g_open_gfx_fade_primitives[g_main_gfx_active_buffer_index].r0)->b = intensity;
 }

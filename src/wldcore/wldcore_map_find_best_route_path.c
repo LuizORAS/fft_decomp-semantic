@@ -35,7 +35,7 @@ void wldcore_map_find_best_route_path(s32 from, s32 to) {
                 wldcore_map_pulse_dot_colors();
                 wldcore_gfx_draw_world_frame();
                 buffer_index = GsGetActiveBuff();
-                g_active_graphics_buffer_index = buffer_index;
+                g_main_gfx_active_buffer_index = buffer_index;
                 GsSetWorkBase(&g_wldcore_gfx_world_primitive_buffers + buffer_index * 0xE000);
             }
             if (world_script_get_variable(route + EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST) == 0) {

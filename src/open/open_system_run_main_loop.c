@@ -32,13 +32,13 @@ s32 open_system_run_main_loop(s32 skip_movie) {
             open_menu_run_world_menu_frame();
             open_controller_dispatch_current();
 
-            graphics_buffer_index = g_active_graphics_buffer_index;
+            graphics_buffer_index = g_main_gfx_active_buffer_index;
             /* index * 64 + base: the retail addu sums the offset first. */
             current_otag = (u32*)(graphics_buffer_index * OPEN_OTAG_BUFFER_BYTES + (u32)otag_0);
             open_gfx_draw_render_record_pointer_list(
                 current_otag, g_open_gfx_render_record_pointers, g_open_gfx_render_record_pointer_count);
 
-            graphics_buffer_index = g_active_graphics_buffer_index;
+            graphics_buffer_index = g_main_gfx_active_buffer_index;
             current_otag = (u32*)(graphics_buffer_index * OPEN_OTAG_BUFFER_BYTES + (u32)otag_1);
             DrawOTag(current_otag - 1);
             DrawSync(0);

@@ -13,7 +13,7 @@ void main_boot_show_sceap_logo(void) {
     s16 intensity;
     int frame;
 
-    main_set_display_draw(320, 240, 512, 0, 0, 0);
+    main_gfx_set_display_draw(320, 240, 512, 0, 0, 0);
     main_file_load_to_address_checked(DISC_SECTOR_SCEAP_DAT, 0x5000, g_main_heap_high_overlay_load_address);
     frame = 0;
 

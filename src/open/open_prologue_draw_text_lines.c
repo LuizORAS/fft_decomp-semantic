@@ -33,7 +33,7 @@ void open_prologue_draw_text_lines(s32 intensity) {
 
     for (i = 0; i < g_open_prologue.step + 1; i++) {
         prim_index = i * 2;
-        prims = g_open_prologue_line_primitives[g_active_graphics_buffer_index];
+        prims = g_open_prologue_line_primitives[g_main_gfx_active_buffer_index];
         SetPolyGT4(&prims[prim_index]);
         SetPolyGT4(&prims[prim_index + 1]);
 
@@ -150,7 +150,7 @@ void open_prologue_draw_text_lines(s32 intensity) {
 
         SetSemiTrans(&prims[prim_index], 1);
         SetSemiTrans(&prims[prim_index + 1], 1);
-        AddPrim(&g_open_gfx_otags[g_active_graphics_buffer_index][g_open_prologue.mode], &prims[prim_index]);
-        AddPrim(&g_open_gfx_otags[g_active_graphics_buffer_index][g_open_prologue.mode + 1], &prims[prim_index + 1]);
+        AddPrim(&g_open_gfx_otags[g_main_gfx_active_buffer_index][g_open_prologue.mode], &prims[prim_index]);
+        AddPrim(&g_open_gfx_otags[g_main_gfx_active_buffer_index][g_open_prologue.mode + 1], &prims[prim_index + 1]);
     }
 }

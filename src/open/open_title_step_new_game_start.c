@@ -35,7 +35,7 @@ void open_title_step_new_game_start(open_title_new_game_state_t* state) {
         world_menu_init_with_open_text();
 
         /* Copy the displayed buffer into the frame image, then into the draw buffer. */
-        if (g_active_graphics_buffer_index != 0) {
+        if (g_main_gfx_active_buffer_index != 0) {
             rect.x = 0;
             rect.y = 0;
             rect.w = 0x100;
@@ -49,7 +49,7 @@ void open_title_step_new_game_start(open_title_new_game_state_t* state) {
         StoreImage(&rect, g_open_file_destination);
         DrawSync(0);
 
-        if (g_active_graphics_buffer_index == 0) {
+        if (g_main_gfx_active_buffer_index == 0) {
             rect.x = 0;
             rect.y = 0;
             rect.w = 0x100;

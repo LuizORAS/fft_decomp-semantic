@@ -7,7 +7,7 @@
 void open_movie_start_fftst_or_title_menu(s32 skip_movie) {
     g_open_current_controller_index = 0;
     if (skip_movie == 0) {
-        g_active_graphics_buffer_index = 0;
+        g_main_gfx_active_buffer_index = 0;
         open_movie_push_fftst_controller(DISC_SECTOR_OPEN_FFTST_STR, 0x278A, 0x3DF, 0x2DE);
     } else {
         open_title_push_menu_controller(0);

@@ -42,7 +42,7 @@ s32 battle_camera_get_input_direction(s32 mode) {
                 threshold = 60;
                 break;
             }
-            if (threshold < g_controller_stable_frames && g_controller_stable_frames % divisor == 0) {
+            if (threshold < g_main_input_stable_frames && g_main_input_stable_frames % divisor == 0) {
                 input = g_main_input_previous_buttons;
             }
             break;
@@ -54,10 +54,10 @@ s32 battle_camera_get_input_direction(s32 mode) {
     case BATTLE_CURSOR_INPUT_FREE_CURSOR:
         switch (mode) {
         case BATTLE_CAMERA_INPUT_HELD:
-            input = g_main_input_previous_buttons | g_controller_previous_copy_0;
+            input = g_main_input_previous_buttons | g_main_input_previous_copy_0;
             break;
         case BATTLE_CAMERA_INPUT_PRESSED:
-            previous = g_main_input_previous_buttons | g_controller_previous_copy_0;
+            previous = g_main_input_previous_buttons | g_main_input_previous_copy_0;
             pressed = g_main_input_pressed_buttons;
             input = 0;
             if (pressed & PSX_PAD_UP) {
@@ -84,20 +84,20 @@ s32 battle_camera_get_input_direction(s32 mode) {
                 } else if (previous & PSX_PAD_DOWN) {
                     input = PSX_PAD_RIGHT | PSX_PAD_DOWN;
                 }
-            } else if (g_controller_pressed_copy_1 & PSX_PAD_UP) {
-                if (!((pressed | g_controller_pressed_copy_0) & PSX_PAD_UP) && (previous & PSX_PAD_UP)) {
+            } else if (g_main_input_pressed_copy_1 & PSX_PAD_UP) {
+                if (!((pressed | g_main_input_pressed_copy_0) & PSX_PAD_UP) && (previous & PSX_PAD_UP)) {
                     input = PSX_PAD_UP;
                 }
-            } else if (g_controller_pressed_copy_1 & PSX_PAD_DOWN) {
-                if (!((pressed | g_controller_pressed_copy_0) & PSX_PAD_DOWN) && (previous & PSX_PAD_DOWN)) {
+            } else if (g_main_input_pressed_copy_1 & PSX_PAD_DOWN) {
+                if (!((pressed | g_main_input_pressed_copy_0) & PSX_PAD_DOWN) && (previous & PSX_PAD_DOWN)) {
                     input = PSX_PAD_DOWN;
                 }
-            } else if (g_controller_pressed_copy_1 & PSX_PAD_LEFT) {
-                if (!((pressed | g_controller_pressed_copy_0) & PSX_PAD_LEFT) && (previous & PSX_PAD_LEFT)) {
+            } else if (g_main_input_pressed_copy_1 & PSX_PAD_LEFT) {
+                if (!((pressed | g_main_input_pressed_copy_0) & PSX_PAD_LEFT) && (previous & PSX_PAD_LEFT)) {
                     input = PSX_PAD_LEFT;
                 }
-            } else if (g_controller_pressed_copy_1 & PSX_PAD_RIGHT) {
-                if (!((pressed | g_controller_pressed_copy_0) & PSX_PAD_RIGHT) && (previous & PSX_PAD_RIGHT)) {
+            } else if (g_main_input_pressed_copy_1 & PSX_PAD_RIGHT) {
+                if (!((pressed | g_main_input_pressed_copy_0) & PSX_PAD_RIGHT) && (previous & PSX_PAD_RIGHT)) {
                     input = PSX_PAD_RIGHT;
                 }
             }
@@ -116,8 +116,8 @@ s32 battle_camera_get_input_direction(s32 mode) {
                 threshold = 30;
                 break;
             }
-            if (threshold < g_controller_stable_frames && g_controller_stable_frames % divisor == 0) {
-                input = g_main_input_previous_buttons | g_controller_previous_copy_0;
+            if (threshold < g_main_input_stable_frames && g_main_input_stable_frames % divisor == 0) {
+                input = g_main_input_previous_buttons | g_main_input_previous_copy_0;
             }
             break;
         case BATTLE_CAMERA_INPUT_RELEASED:

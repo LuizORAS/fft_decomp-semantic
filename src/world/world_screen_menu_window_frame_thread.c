@@ -125,7 +125,7 @@ void world_screen_menu_window_frame_thread(void) {
     frame = 0;
     while (world_thread_get_current_parameter_3() == 0) {
         prim = &g_world_menu_panel_buffer.panel_frames[frame & 1];
-        world_gfx_build_scaled_draw_area_pair_swapped(&prim->draw_areas, menu, frame, g_active_graphics_buffer_index);
+        world_gfx_build_scaled_draw_area_pair_swapped(&prim->draw_areas, menu, frame, g_main_gfx_active_buffer_index);
         texture_u = 0x7d3c;
         if (world_thread_get_current_parameter_2() == 0 && g_world_menu_input_lock_mode == 0) {
             texture_u = 0x7c3c;

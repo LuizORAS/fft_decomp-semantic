@@ -29,7 +29,7 @@ void open_system_run_ending_cutscene(void) {
             main_file_poll_load(&g_main_file_cd_state);
             open_gfx_clear_and_draw_current_frame();
             open_movie_update_stream_frame();
-            graphics_buffer_index = g_active_graphics_buffer_index;
+            graphics_buffer_index = g_main_gfx_active_buffer_index;
             /* index * 64 + base: the retail addu sums the offset first. */
             current_otag = (u32*)(graphics_buffer_index * OPEN_OTAG_BUFFER_BYTES + (u32)otag_0);
             open_script_draw_text_records(current_otag, graphics_buffer_index);
@@ -38,7 +38,7 @@ void open_system_run_ending_cutscene(void) {
             open_input_update_buttons_and_check_game_reset();
             VSync(g_open_system_vsync_mode);
             open_movie_present_frame();
-            current_otag = (u32*)((g_active_graphics_buffer_index ^ 1) * OPEN_OTAG_BUFFER_BYTES + (u32)otag_1);
+            current_otag = (u32*)((g_main_gfx_active_buffer_index ^ 1) * OPEN_OTAG_BUFFER_BYTES + (u32)otag_1);
             DrawOTag(current_otag - 1);
             main_system_frame_hook();
         } while ((g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_RUNNING) != 0);

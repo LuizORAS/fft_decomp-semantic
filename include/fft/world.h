@@ -609,7 +609,6 @@ extern u16 g_world_gfx_poly_f4_count;
 extern u16 g_world_gfx_gradient_quad_count;
 
 extern u16 g_world_gfx_sprite_capacity;
-extern s32 g_active_graphics_buffer_index;
 void world_gfx_set_party_unit_portrait_poly_texture(s32 portrait_id, POLY_FT4* poly);
 
 void world_panel_gfx_build_scaled_draw_area_packets(

@@ -662,7 +662,7 @@ functions:
   - {addr: 0x80041384, size: 36, name: main_gfx_build_now_loading_center, hash: c119ee540bd1e857}
   - {addr: 0x800413a8, size: 196, name: main_gfx_add_now_loading_to_otag, hash: 5438e0eb0e7a80c7}
   - {addr: 0x8004146c, size: 300, name: main_gfx_load_efc_fnt, hash: 02911c7008f10711}
-  - {addr: 0x80041598, size: 476, name: main_set_display_draw, hash: 8715c0b670c3f523, rodata: [{addr: 0x8004091c, size: 8, hash: b6d79f3197c64574}]}
+  - {addr: 0x80041598, size: 476, name: main_gfx_set_display_draw, hash: 8715c0b670c3f523, rodata: [{addr: 0x8004091c, size: 8, hash: b6d79f3197c64574}]}
   - {addr: 0x80041774, size: 284, name: main_boot_draw_squaresoft_logo_frame, hash: 8a5c9395c78d9abc}
   - {addr: 0x80041890, size: 652, name: main_boot_fade_in_squaresoft_logo, hash: 429977c5de60ed46, rodata: [{addr: 0x80040924, size: 8, hash: af5570f5a1810b7a}]}
   - {addr: 0x80041b1c, size: 612, name: main_boot_fade_out_squaresoft_logo, hash: a75b1f62cd2cc9b5, rodata: [{addr: 0x80040924, size: 8, hash: af5570f5a1810b7a}]}
@@ -680,7 +680,7 @@ functions:
   - {addr: 0x80042ab0, size: 108, name: main_party_init_new_game, hash: f14ad7433eefb74c}
   - {addr: 0x80042b1c, size: 16, name: main_util_set_svector, hash: 694486283a46f5f8}
   - {addr: 0x80042b2c, size: 16, name: main_util_set_vector, hash: 28901a8f332a5d7a}
-  - {addr: 0x80042b3c, size: 476, name: main_set_display_draw_new_game, hash: 8715c0b670c3f523, rodata: [{addr: 0x8004091c, size: 8, hash: b6d79f3197c64574}]}
+  - {addr: 0x80042b3c, size: 476, name: main_gfx_set_display_draw_new_game, hash: 8715c0b670c3f523, rodata: [{addr: 0x8004091c, size: 8, hash: b6d79f3197c64574}]}
   - {addr: 0x80042d18, size: 188, name: main_gfx_swap_display_area, hash: 18f2c8600c046389}
   - {addr: 0x80042dd4, size: 904, name: main_gfx_fade_in_orbonne_monastery, hash: 1ce397677ccb4bb6, rodata: [{addr: 0x80040924, size: 8, hash: af5570f5a1810b7a}]}
   - {addr: 0x8004315c, size: 896, name: main_gfx_fade_out_orbonne_monastery, hash: 588fa5761ae61f7b, rodata: [{addr: 0x80040924, size: 8, hash: af5570f5a1810b7a}]}
@@ -1212,11 +1212,9 @@ data:
   - {addr: 0x80040918, name: g_psyq_cd_stream_ring_sectors}
   - {addr: 0x8004091c, name: g_psyq_crt_bss_end}
   - {addr: 0x80042880, name: get_entd}
-  - {addr: 0x80042b1c, name: save_3_u16}
+  - {addr: 0x80042b1c, name: main_util_set_svector_u16}
   - {addr: 0x80044128, name: main_sound_pause_tracked_sfx}
-  - {addr: 0x800444dc, name: game_realloc}
   - {addr: 0x800449ec, name: main_system_frame_hook}
-  - {addr: 0x80044a08, name: animation_exception_handler}
   - {addr: 0x800454cc, name: g_main_brave_story_ages_source}
   - {addr: 0x8004593c, name: _ramsize}
   - {addr: 0x80045940, name: _stacksize}
@@ -1224,15 +1222,15 @@ data:
   - {addr: 0x80045948, name: g_main_input_previous_buttons}
   - {addr: 0x8004594c, name: g_main_input_pressed_buttons}
   - {addr: 0x80045950, name: g_main_input_released_buttons}
-  - {addr: 0x80045954, name: g_controller_previous_copy_0}
-  - {addr: 0x80045958, name: g_controller_previous_copy_1}
-  - {addr: 0x8004595c, name: g_controller_previous_copy_2}
-  - {addr: 0x80045960, name: g_controller_previous_copy_3}
-  - {addr: 0x80045964, name: g_controller_pressed_copy_0}
-  - {addr: 0x80045968, name: g_controller_pressed_copy_1}
-  - {addr: 0x8004596c, name: g_controller_pressed_copy_2}
-  - {addr: 0x80045970, name: g_controller_pressed_copy_3}
-  - {addr: 0x80045974, name: g_controller_stable_frames}
+  - {addr: 0x80045954, name: g_main_input_previous_copy_0}
+  - {addr: 0x80045958, name: g_main_input_previous_copy_1}
+  - {addr: 0x8004595c, name: g_main_input_previous_copy_2}
+  - {addr: 0x80045960, name: g_main_input_previous_copy_3}
+  - {addr: 0x80045964, name: g_main_input_pressed_copy_0}
+  - {addr: 0x80045968, name: g_main_input_pressed_copy_1}
+  - {addr: 0x8004596c, name: g_main_input_pressed_copy_2}
+  - {addr: 0x80045970, name: g_main_input_pressed_copy_3}
+  - {addr: 0x80045974, name: g_main_input_stable_frames}
   - {addr: 0x80045978, name: g_main_system_frontend_world_result}
   - {addr: 0x8004597c, name: g_main_gfx_screen_polarity}
   - {addr: 0x80045980, name: g_main_system_vsync_interval}
@@ -1302,7 +1300,7 @@ data:
   - {addr: 0x8004d9b4, name: g_main_boot_game_state_initialized}
   - {addr: 0x8004d9b8, name: g_main_sound_env_sed_data}
   - {addr: 0x8004e5b8, name: g_main_gfx_now_loading_frame_counter}
-  - {addr: 0x8004e5bc, name: g_active_graphics_buffer_index}
+  - {addr: 0x8004e5bc, name: g_main_gfx_active_buffer_index}
   - {addr: 0x8004e5c0, name: g_main_heap_smd_allocator_table}
   - {addr: 0x8004e5d0, name: g_main_scenario_event_finish_operations}
   - {addr: 0x8004e9d0, name: g_main_replay_story_event_index}
@@ -1350,8 +1348,8 @@ data:
   - {addr: 0x800596e0, name: g_main_item_quantities}
   - {addr: 0x800597e0, name: g_main_card_save_slot_playtimes}
   - {addr: 0x80059810, name: g_main_sound_novel_saved_flags}
-  - {addr: 0x8005a884, name: get_item_data_pointer}
-  - {addr: 0x8005e288, name: get_total_equipment_quantity}
+  - {addr: 0x8005a884, name: main_item_get_data_pointer_no_argument}
+  - {addr: 0x8005e288, name: main_item_get_total_equipment_quantity_s32}
   - {addr: 0x8005e90c, name: g_main_unit_generation_base_data}
   - {addr: 0x8005e93c, name: g_main_unit_generation_raw_stat_variance}
   - {addr: 0x8005e950, name: g_main_terrain_tile_info_pairs}

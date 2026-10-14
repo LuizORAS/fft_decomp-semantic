@@ -29,7 +29,7 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
     init.target_count = unit->target_count;
     init.caster.fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
     init.caster.fields.caster_id = unit->unit_id;
-    save_3_u16(
+    main_util_set_svector_u16(
         (SVECTOR*)&init.target_tile.id.tile_x, unit->target_new_x, unit->target_new_map_level, unit->target_new_y);
     block = (battle_strike_work_t*)&unit->actor_id;
     if (init.target_count != 0) {

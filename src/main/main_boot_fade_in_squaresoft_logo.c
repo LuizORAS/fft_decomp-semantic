@@ -14,7 +14,7 @@ void main_boot_fade_in_squaresoft_logo(void) {
     int buffer;
 
     intensity = 248;
-    main_set_display_draw(320, 240, 512, 0, 0, 0);
+    main_gfx_set_display_draw(320, 240, 512, 0, 0, 0);
 
     SetPolyF4(&polygons[0]);
     polygons[0].r0 = 0;

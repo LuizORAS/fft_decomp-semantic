@@ -5,7 +5,7 @@
  * the second buffer sits 240 lines below the first (a 480-line mode uses one),
  * both draw environments clear to the given colour, and the display is masked
  * until the caller turns it on. image_rect is not used. */
-void main_set_display_draw(int width, int height, int projection, u8 red, u8 green, u8 blue) {
+void main_gfx_set_display_draw(int width, int height, int projection, u8 red, u8 green, u8 blue) {
     RECT image_rect = { 0, 0, 1024, 512 };
     int second_y = height == 480 ? 0 : 240;
 

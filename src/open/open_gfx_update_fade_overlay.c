@@ -46,18 +46,18 @@ void open_gfx_update_fade_overlay(u32* ot) {
     }
     if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) {
         TILE* tiles = g_open_gfx_overlay_fade.tiles;
-        SetTile(&tiles[g_active_graphics_buffer_index]);
-        SetSemiTrans(&tiles[g_active_graphics_buffer_index], 1);
-        SetDrawMode(&g_open_gfx_overlay_fade.modes[g_active_graphics_buffer_index], 1, 0,
+        SetTile(&tiles[g_main_gfx_active_buffer_index]);
+        SetSemiTrans(&tiles[g_main_gfx_active_buffer_index], 1);
+        SetDrawMode(&g_open_gfx_overlay_fade.modes[g_main_gfx_active_buffer_index], 1, 0,
             GetTPage(0, g_open_gfx_overlay_fade.abr, 0x100, 0), 0);
-        g_open_gfx_overlay_fade.tiles[g_active_graphics_buffer_index].x0 = g_open_gfx_overlay_fade.rect.x;
-        g_open_gfx_overlay_fade.tiles[g_active_graphics_buffer_index].y0 = g_open_gfx_overlay_fade.rect.y;
-        g_open_gfx_overlay_fade.tiles[g_active_graphics_buffer_index].w = g_open_gfx_overlay_fade.rect.w;
-        g_open_gfx_overlay_fade.tiles[g_active_graphics_buffer_index].h = g_open_gfx_overlay_fade.rect.h;
-        tiles[g_active_graphics_buffer_index].r0 = g_open_gfx_overlay_fade.level;
-        tiles[g_active_graphics_buffer_index].g0 = g_open_gfx_overlay_fade.level;
-        tiles[g_active_graphics_buffer_index].b0 = g_open_gfx_overlay_fade.level;
-        AddPrim(&ot[g_open_gfx_overlay_fade.ot_index], &tiles[g_active_graphics_buffer_index]);
-        AddPrim(&ot[g_open_gfx_overlay_fade.ot_index], &g_open_gfx_overlay_fade.modes[g_active_graphics_buffer_index]);
+        g_open_gfx_overlay_fade.tiles[g_main_gfx_active_buffer_index].x0 = g_open_gfx_overlay_fade.rect.x;
+        g_open_gfx_overlay_fade.tiles[g_main_gfx_active_buffer_index].y0 = g_open_gfx_overlay_fade.rect.y;
+        g_open_gfx_overlay_fade.tiles[g_main_gfx_active_buffer_index].w = g_open_gfx_overlay_fade.rect.w;
+        g_open_gfx_overlay_fade.tiles[g_main_gfx_active_buffer_index].h = g_open_gfx_overlay_fade.rect.h;
+        tiles[g_main_gfx_active_buffer_index].r0 = g_open_gfx_overlay_fade.level;
+        tiles[g_main_gfx_active_buffer_index].g0 = g_open_gfx_overlay_fade.level;
+        tiles[g_main_gfx_active_buffer_index].b0 = g_open_gfx_overlay_fade.level;
+        AddPrim(&ot[g_open_gfx_overlay_fade.ot_index], &tiles[g_main_gfx_active_buffer_index]);
+        AddPrim(&ot[g_open_gfx_overlay_fade.ot_index], &g_open_gfx_overlay_fade.modes[g_main_gfx_active_buffer_index]);
     }
 }
