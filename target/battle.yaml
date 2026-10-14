@@ -812,7 +812,7 @@ functions:
   - {addr: 0x8013871c, size: 80, name: menu_copy_sprite_position_uv_and_size, hash: 568fb2d3912cb994, source: src/shared/menu/menu_copy_sprite_position_uv_and_size.c}
   - {addr: 0x8013876c, size: 416, name: menu_zoom_cursor_frame, hash: 509e692236432dd6, source: src/shared/menu/menu_zoom_cursor_frame.c}
   - {addr: 0x8013890c, size: 464, name: battle_gfx_build_scaled_draw_area_pair_swapped, hash: 43ec57d8623a1604, source: src/shared/gfx/gfx_build_scaled_draw_area_pair_swapped.c, source_symbol: gfx_build_scaled_draw_area_pair_swapped}
-  - {addr: 0x80138adc, size: 52, name: battle_gfx_init_scaled_draw_area_packets, hash: fd9d7a1158be224d}
+  - {addr: 0x80138adc, size: 52, name: battle_gfx_init_scaled_draw_area_packets, hash: fd9d7a1158be224d, source: src/shared/menu/menu_init_scaled_draw_area_packets.c, source_symbol: menu_init_scaled_draw_area_packets}
   - {addr: 0x80138b10, size: 84, name: battle_menu_submit_icon_primitives, hash: 3abc0aee8fb45d44}
   - {addr: 0x80138b64, size: 884, name: battle_menu_auto_battle_setting_thread, hash: abb41eaee69c7fdf}
   - {addr: 0x80138ed8, size: 484, name: battle_menu_run_icon_selection_loop, hash: 8cfe22df483b0535}
@@ -831,7 +831,7 @@ functions:
   - {addr: 0x8013b644, size: 160, name: script_set_variable, hash: 6bab3d74cae51aa6, source: src/shared/script/script_set_variable.c}
   - {addr: 0x8013b6e4, size: 436, name: menu_init_panel_fade_tiles, hash: 200e43d514e6d844, source: src/shared/menu/menu_init_panel_fade_tiles.c}
   - {addr: 0x8013b898, size: 464, name: battle_menu_update_panel_fade, hash: d9c44f2307947857}
-  - {addr: 0x8013ba68, size: 264, name: battle_gfx_submit_screen_fade_overlay, hash: 7b6fd4b19da8c27e}
+  - {addr: 0x8013ba68, size: 264, name: battle_gfx_submit_screen_fade_overlay, hash: 7b6fd4b19da8c27e, source: src/shared/gfx/gfx_submit_screen_fade_overlay.c, source_symbol: gfx_submit_screen_fade_overlay}
   - {addr: 0x8013bb70, size: 124, name: menu_reserve_high_overlay, hash: d31169643dab2d00, source: src/shared/menu/menu_reserve_high_overlay.c}
   - {addr: 0x8013bbec, size: 40, name: menu_free_high_overlay, hash: e8db9a4dc85accdd, source: src/shared/menu/menu_free_high_overlay.c}
   - {addr: 0x8013bc14, size: 168, name: menu_request_open_companion_executable, hash: 503e6335682fee08, source: src/shared/menu/menu_request_open_companion_executable.c}
@@ -1045,8 +1045,8 @@ functions:
   - {addr: 0x8014a660, size: 68, name: gfx_append_gpu_primitive_to_secondary_otag, hash: 29775e21c5c1e7bd, source: src/shared/gfx/gfx_append_gpu_primitive_to_secondary_otag.c}
   - {addr: 0x8014a6a4, size: 40, name: battle_text_set_substitution_values_7e_7f, hash: a9c219bc5dcf7ca0}
   - {addr: 0x8014a6cc, size: 24, name: battle_menu_set_text_origin, hash: 8ba7a2a7b2adc30b}
-  - {addr: 0x8014a6e4, size: 196, name: battle_gfx_set_draw_mode_for_texture_page, hash: 6872715b35eb6ca3}
-  - {addr: 0x8014a7a8, size: 116, name: battle_gfx_set_draw_mode_from_origin, hash: bcc1e098276ae84a}
+  - {addr: 0x8014a6e4, size: 196, name: battle_gfx_set_draw_mode_for_texture_page, hash: 6872715b35eb6ca3, source: src/shared/gfx/gfx_set_draw_mode_for_texture_page.c, source_symbol: gfx_set_draw_mode_for_texture_page}
+  - {addr: 0x8014a7a8, size: 116, name: battle_gfx_set_draw_mode_from_origin, hash: bcc1e098276ae84a, source: src/shared/gfx/gfx_set_draw_mode_from_origin.c, source_symbol: gfx_set_draw_mode_from_origin}
   - {addr: 0x8014a81c, size: 8, name: battle_return_zero, hash: 207819bf4ebe3078}
   - {addr: 0x8014a824, size: 8, name: battle_noop_8014a824, hash: 6d64edf91449c1b1}
   - {addr: 0x8014a82c, size: 8, name: script_frame_after_requests_stub, hash: 6d64edf91449c1b1}
@@ -2314,7 +2314,7 @@ data:
   - {addr: 0x80165eb6, name: g_battle_item_icon_clut_base_y}
   - {addr: 0x80165ebc, name: g_battle_menu_portrait_pixel_rect}
   - {addr: 0x80165ec4, name: g_battle_menu_portrait_palette_rect}
-  - {addr: 0x80165ecc, name: g_battle_menu_disabled_texture_window}
+  - {addr: 0x80165ecc, name: g_gfx_texture_window}
   - {addr: 0x80165ed4, name: g_camera_script_variable_indices}
   - {addr: 0x80165ee4, name: g_menu_pending_selection}
   - {addr: 0x80165ef4, name: g_text_substitution_values}
@@ -2921,6 +2921,7 @@ imports:
   - {addr: 0x801df198, name: jobstts_entrypoint}
 
 overrides:
+  - {function: battle_gfx_init_scaled_draw_area_packets, name: g_menu_draw_area_template, addr: 0x80165ecc}
   - {function: camera_set_zoom_delta_from_values, name: g_camera_real_coord_countdown, addr: 0x80096164}
   - {function: camera_set_zoom_delta_from_values, name: g_camera_real_coord_delta, addr: 0x800a1c74}
   - {function: camera_update_zoom_animation, name: g_camera_current_real_coords, addr: 0x800c7ca0}

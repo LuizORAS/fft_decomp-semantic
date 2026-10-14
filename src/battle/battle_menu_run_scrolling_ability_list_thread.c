@@ -108,7 +108,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         base[i].icons.icons[2] = &icons2[i];
         battle_menu_build_window_sprites(&image_rect, entry, &base[i].icons);
     }
-    SetDrawMode(&page->icon_mode, 0, 0, GetTPage(0, 2, 0x3C0, 0x100), &g_battle_menu_disabled_texture_window);
+    SetDrawMode(&page->icon_mode, 0, 0, GetTPage(0, 2, 0x3C0, 0x100), &g_gfx_texture_window);
     SetDrawMode(&page->text_mode, 1, 0, GetTPage(0, 1, entry->vram_origin.x & 0xFFC0, entry->vram_origin.y & 0xFF00),
         &texture_window);
     for (i = 0, arrow_u = 0xD8; i < 2; i++) {

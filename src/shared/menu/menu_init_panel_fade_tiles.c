@@ -11,7 +11,7 @@ void menu_init_panel_fade_tiles(void) {
 
     frame = &g_menu_panel_fade_frames[0];
 
-    SetDrawMode(&frame->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_battle_menu_disabled_texture_window);
+    SetDrawMode(&frame->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_gfx_texture_window);
 
     SetTile(&frame->center);
     setRGB0(&frame->center, 0, 0, 0);

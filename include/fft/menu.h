@@ -212,7 +212,7 @@ void menu_init_panel_fade_tiles(void);
  * packets, twelve LINE_F2 packets and one SPRT whose CLUT (+0xe6)
  * *_menu_init_primitive_colors_normal and _dimmed set. */
 typedef struct menu_palette_primitives {
-    DR_MODE draw_mode;      /* 0x00: texture window g_world_gfx_texture_window */
+    DR_MODE draw_mode;      /* 0x00: texture window g_gfx_texture_window */
     DR_MODE draw_mode_menu; /* 0x0c: texture window g_world_menu_numeric_display_texture_window */
     LINE_F2 lines[12];      /* 0x18 */
     SPRT sprite;            /* 0xd8 */

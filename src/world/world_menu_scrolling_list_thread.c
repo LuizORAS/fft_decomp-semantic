@@ -87,7 +87,7 @@ void world_menu_scrolling_list_thread(void) {
         page[i].icons.icons[2] = &icons2[i];
         world_menu_build_icon_record(&image_rect, entry, &page[i].icons);
     }
-    SetDrawMode(&page->icon_mode, 0, 0, GetTPage(0, 2, 0x3C0, 0x100), &g_world_gfx_texture_window);
+    SetDrawMode(&page->icon_mode, 0, 0, GetTPage(0, 2, 0x3C0, 0x100), &g_gfx_texture_window);
     SetDrawMode(&page->text_mode, 1, 0, GetTPage(0, 1, entry->vram_origin.x & 0xFFC0, entry->vram_origin.y & 0xFF00),
         &texture_window);
     for (i = 0, arrow_u = 0xD8; i < 2; i++) {

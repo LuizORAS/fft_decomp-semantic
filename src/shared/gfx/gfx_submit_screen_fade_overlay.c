@@ -1,21 +1,15 @@
-#include "fft/battle.h"
-#include "fft/battle_gfx.h"
-#include "fft/battle_menu.h"
-#include "fft/battle_script.h"
 #include "fft/gfx.h"
 #include "fft/script.h"
-#include "psx/libgpu.h"
-#include "psx/types.h"
 
 /* Draws a full-screen semi-transparent tile of grey level |level|: positive
  * values subtract (abr 2), negative values add (abr 1), and 0 draws nothing.
  *
- * BATTLE twin of world_gfx_submit_screen_fade_overlay. The draw mode is submitted
+ * The draw mode is submitted
  * before the tile while an ETC full-screen graphic draws primitives immediately,
  * and after it when both are linked into the ordering table. A non-zero level
  * also clears g_script_event_input, so menus see no button while the
  * screen is faded. */
-void battle_gfx_submit_screen_fade_overlay(fade_overlay_t* overlay, s32 level) {
+void gfx_submit_screen_fade_overlay(fade_overlay_t* overlay, s32 level) {
     s32 blend;
 
     if (level != 0) {
@@ -31,7 +25,7 @@ void battle_gfx_submit_screen_fade_overlay(fade_overlay_t* overlay, s32 level) {
             blend = 1;
             level = -level;
         }
-        SetDrawMode(&overlay->mode, 0, 0, GetTPage(0, blend, 0x3c0, 0x100), &g_battle_menu_disabled_texture_window);
+        SetDrawMode(&overlay->mode, 0, 0, GetTPage(0, blend, 0x3c0, 0x100), &g_gfx_texture_window);
         setRGB0(&overlay->tile, level, level, level);
         if (g_gfx_draw_primitives_immediately != 0) {
             gfx_draw_or_append_gpu_primitive(&overlay->mode);

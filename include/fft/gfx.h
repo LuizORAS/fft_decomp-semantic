@@ -231,6 +231,9 @@ typedef struct textured_rect_source {
 typedef char textured_rect_source_size_must_be_16[sizeof(textured_rect_source_t) == 16 ? 1 : -1];
 
 /* image loading */
+/* Scene-local GPU texture window; also the default draw-area rectangle. */
+extern RECT g_gfx_texture_window;
+
 /* Texture and screen placement for gfx_init_image_loading (12 bytes).
  * BATTLE's table at 0x80155838 holds one per menu sprite. */
 typedef struct image_load_parameters {
@@ -333,6 +336,10 @@ typedef struct fade_overlay {
     DR_MODE mode; /* 0x10 */
 } fade_overlay_t;
 typedef char fade_overlay_size_must_be_28[(sizeof(fade_overlay_t) == 28) ? 1 : -1];
+
+void gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 page);
+void gfx_set_draw_mode_from_origin(DR_MODE* mode, const point16_t* origin);
+void gfx_submit_screen_fade_overlay(fade_overlay_t* overlay, s32 level);
 
 void gfx_set_formation_icon_uv(POLY_FT4* poly, s32 index);
 void gfx_set_clut_rect_from_id(RECT* rect, u16 clut_id);

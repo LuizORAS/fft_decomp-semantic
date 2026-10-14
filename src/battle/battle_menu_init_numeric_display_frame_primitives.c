@@ -56,7 +56,7 @@ void battle_menu_init_numeric_display_frame_primitives(RECT* bounds, menu_palett
 
     SetDrawMode(
         &menu->draw_mode_menu, 1, 0, GetTPage(0, 0, 0x3c0, 0x100), &g_battle_menu_numeric_display_texture_window);
-    SetDrawMode(&menu->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_battle_menu_disabled_texture_window);
+    SetDrawMode(&menu->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_gfx_texture_window);
     battle_menu_init_semitransparent_sprt(&menu->sprite);
     menu->sprite.x0 = bounds->x;
     menu->sprite.y0 = bounds->y;

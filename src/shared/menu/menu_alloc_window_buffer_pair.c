@@ -31,8 +31,7 @@ menu_window_buffer_t* menu_alloc_window_buffer_pair(void) {
                 buffer->scroll_position = 1;
                 menu_init_sprite_array(buffer->sprites, 4, 0x7c3c);
                 menu_init_sprite_array(buffer->icon_sprites, 3, 0x7e7c);
-                SetDrawMode(
-                    &buffer->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_battle_menu_disabled_texture_window);
+                SetDrawMode(&buffer->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_gfx_texture_window);
                 SetSemiTrans(&buffer->sprites[0], 0);
                 SetSemiTrans(&buffer->sprites[1], 1);
                 buffer->sprites[0].u0 = 0xa8;

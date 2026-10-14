@@ -798,14 +798,13 @@ extern RECT g_world_gfx_temporary_draw_area;
 extern s8 g_world_gfx_vsync_mode;
 extern u16 g_world_gfx_textured_quad_count;
 extern point16_t g_world_gfx_menu_image_source;
-extern RECT g_world_gfx_texture_window;
 extern u16 g_world_gfx_draw_area_scale_percent[];
 
 /* A full-screen texture window (x=0, y=0, w=0x100, h=0x100 in the WORLD data
  * at 0x8016e44c), copied verbatim into a menu record's DR_MODE by
  * world_screen_gfx_init_scaled_draw_area_packets; the formation view reads the same
  * bytes as a zero screen point. Same 8-byte RECT shape as
- * g_world_gfx_texture_window, whose reset sibling is byte-for-byte identical. */
+ * g_gfx_texture_window, whose reset sibling is byte-for-byte identical. */
 extern const RECT g_world_gfx_full_texture_window;
 
 /* Frame-buffer rectangles for the four WLDFACE pages; four separate objects,

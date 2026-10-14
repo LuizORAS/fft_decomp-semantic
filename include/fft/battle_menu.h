@@ -256,7 +256,6 @@ typedef union battle_menu_scratch_buffer {
 
 /* Live caster-panel image parameters followed by their defaults. */
 extern image_load_parameters_t g_battle_menu_attack_caster_quad_image_params[2][5];
-extern RECT g_battle_menu_disabled_texture_window;
 extern image_load_parameters_t g_battle_menu_icon_strip_image_params[20];
 extern battle_menu_scratch_buffer_t g_battle_menu_scratch_buffer;
 extern image_load_parameters_t g_battle_menu_single_icon_image_params[5];
