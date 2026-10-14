@@ -1,7 +1,9 @@
 #include "fft/open.h"
 
-/* Restore the date-selection records after leaving the confirmation prompt. */
-void open_restore_birthday_date_menu(open_birthday_date_state_t* menu) {
+/* Undo open_birthday_build_confirmation_menu on the way back to the date entry: the date cursor returns to
+ * animation 12, the label to full brightness (0x80), and the title window, the date window and the cursor to
+ * palette 0. */
+void open_birthday_restore_date_menu(open_birthday_date_state_t* menu) {
     open_render_record_56_t* records_56 = g_open_gfx_render_records_56;
     /* The target reserves a 24-byte frame it never touches, as in the twin
      * open_birthday_build_confirmation_menu. */

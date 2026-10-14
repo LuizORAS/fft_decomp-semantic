@@ -1,7 +1,8 @@
 #include "fft/open.h"
 
-/* Recolour the birthday menu's render records for the confirmation prompt:
- * dim the date cursor, grey the label, and mark both windows as step 2.
+/* Dim the date entry behind the confirmation prompt: the date cursor switches to animation 10 in palette 7,
+ * the label drops to half brightness (0x40), and the title and date windows take palette 2.
+ * open_birthday_restore_date_menu undoes it.
  *
  * The target reserves a 24-byte frame it never touches (the stack adjustment
  * is even scheduled into the last load-delay slot), so the original body

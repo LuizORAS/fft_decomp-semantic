@@ -1,7 +1,7 @@
 #include "fft/open.h"
 
 /* New Game on the title menu. With a memory card in either slot (open_card_check_slots) Alazlam's
- * prologue starts at once (open_title_start_new_game_transition). With none, the title picture (0x7800 words of
+ * prologue starts at once (open_prologue_start). With none, the title picture (0x7800 words of
  * the frame image) is saved to g_open_work_buffer_0 and blanked, and the memory card warning (animation 0x12:
  * "You need a Memory card (with at least 1 block free) to save your current game") is shown on the black
  * screen under the card warning controller (handler 12). */
@@ -18,7 +18,7 @@ void open_title_start_new_game(void) {
     _card_status = open_card_check_slots();
     index = 0;
     if (_card_status != 0) {
-        open_title_start_new_game_transition();
+        open_prologue_start();
         return;
     }
 

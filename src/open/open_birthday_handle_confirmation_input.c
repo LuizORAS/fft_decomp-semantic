@@ -1,10 +1,13 @@
 #include "fft/open.h"
 #include "psx/pad.h"
 
-/* Handle confirmation, cancellation, and cursor movement on the final birthday prompt.
+/* Per-frame handler of the birthday confirmation (handler 6). Up or Down toggles Yes and No.
  *
- * Confirming the selected date stores Ramza's birthday and zodiac data before starting the opening transition.
- */
+ * Circle on Yes stores the birthday in the script variables EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH and _DAY and in
+ * party slot 0 (the day of the year, whose ninth bit shares the zodiac byte with the sign), fades the music
+ * and the screen out and blocks input. Once the fade has ended the birthday records and both birthday
+ * controllers are released and FFTOP.STR, the opening movie, starts. Circle on No, or Cross, returns to the
+ * date entry. */
 void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t* menu) {
     s32 month;
     s32 day;
@@ -47,7 +50,7 @@ void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t*
         g_open_gfx_next_render_record_56 -= 1;
         g_open_gfx_next_render_record_36 -= 2;
         g_open_current_controller_index -= 1;
-        open_restore_birthday_date_menu(&g_open_controller_records[g_open_current_controller_index].birthday_date);
+        open_birthday_restore_date_menu(&g_open_controller_records[g_open_current_controller_index].birthday_date);
         return;
     }
     if (buttons & PSX_PAD_CROSS) {
@@ -57,7 +60,7 @@ void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t*
         g_open_gfx_next_render_record_56 -= 1;
         g_open_gfx_next_render_record_36 -= 2;
         g_open_current_controller_index -= 1;
-        open_restore_birthday_date_menu(&g_open_controller_records[g_open_current_controller_index].birthday_date);
+        open_birthday_restore_date_menu(&g_open_controller_records[g_open_current_controller_index].birthday_date);
         return;
     }
 

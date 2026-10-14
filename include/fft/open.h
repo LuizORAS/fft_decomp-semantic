@@ -34,7 +34,7 @@ extern u8 g_open_file_location[];
 void open_file_build_openbk_header(s32 image_id, void* destination);
 void open_file_load_end_movie_graphics(void);
 void open_file_load_main_menu_graphics(void);
-void open_file_load_sound_menu_textures(void);
+void open_file_load_prologue_text_pages(void);
 void open_file_wait_for_pending(void);
 
 void open_file_wait_then_build_header(
@@ -293,7 +293,7 @@ typedef struct open_title_card_warning {
 extern s32 g_open_title_demo_movie_index;
 void open_title_push_menu_controller(s32 cd_end_sector);
 void open_title_init_new_game_party(s32 party_mode, s32 world_load_mode);
-void open_title_start_new_game_transition(void);
+void open_prologue_start(void);
 void open_title_start_new_game(void);
 
 /* menu */
@@ -450,22 +450,22 @@ void open_controller_dispatch_current(void);
 void open_controller_start_text_message(s32 parameter, s32 run_followup);
 
 /* gfx */
-/* Image transition script entry: a header word (bits 0-7 step count, bits
- * 8-12 the texture-page position, bits 16-23 the image operation) followed by
- * four-byte steps holding a value byte and a duration byte. */
-typedef union open_gfx_transition_entry {
+/* One page of the prologue: a header word (bits 0-7 the line count, bits 8-12 the text page's
+ * texture-page position, bits 16-23 the image operation) followed by one four-byte step per line,
+ * whose value byte is the line's 16-pixel row in the text page and duration byte its width. */
+typedef union open_prologue_entry {
     u32 header;
     u8 bytes[32];
-} open_gfx_transition_entry_t;
+} open_prologue_entry_t;
 
-/* open_gfx_transition_t.flags. */
-typedef enum open_gfx_transition_flag {
-    OPEN_GFX_TRANSITION_NEXT_ENTRY = 0x01,  /* starts the next entry of the table, or ends at the target */
-    OPEN_GFX_TRANSITION_NEXT_STEP = 0x02,   /* starts the next step of the entry */
-    OPEN_GFX_TRANSITION_WAIT_CIRCLE = 0x08, /* the entry is complete: waits for circle */
-    OPEN_GFX_TRANSITION_DIM = 0x10,         /* the line strips fade out before the next entry */
-    OPEN_GFX_TRANSITION_SKIP = 0x20,        /* start was pressed: fades out and ends */
-} open_gfx_transition_flag_e;
+/* open_prologue_t.flags. */
+typedef enum open_prologue_flag {
+    OPEN_PROLOGUE_NEXT_ENTRY = 0x01,  /* starts the next page, or ends at the target */
+    OPEN_PROLOGUE_NEXT_STEP = 0x02,   /* starts the next line of the page */
+    OPEN_PROLOGUE_WAIT_CIRCLE = 0x08, /* the page is complete: waits for Circle */
+    OPEN_PROLOGUE_DIM = 0x10,         /* the lines fade out before the next page */
+    OPEN_PROLOGUE_SKIP = 0x20,        /* Start was pressed: fades out and ends */
+} open_prologue_flag_e;
 
 /* open_overlay_fade_t.flags. */
 typedef enum open_overlay_fade_flag {
@@ -474,9 +474,10 @@ typedef enum open_overlay_fade_flag {
     OPEN_OVERLAY_FADE_ACTIVE = 0x04, /* the overlay is drawn; cleared when either fade ends */
 } open_overlay_fade_flag_e;
 
-/* OPEN image transition controller at 0x800855b4. */
-typedef struct open_gfx_transition {
-    /* 0x00 */ u16 flags; /* open_gfx_transition_flag_e */
+/* The prologue's state at 0x800855b4: the pages to show, the page and line in progress and the
+ * brightness of its text. */
+typedef struct open_prologue {
+    /* 0x00 */ u16 flags; /* open_prologue_flag_e */
     /* 0x02 */ s16 mode;
     /* 0x04 */ s16 current_index;
     /* 0x06 */ s16 target_index;
@@ -488,10 +489,10 @@ typedef struct open_gfx_transition {
     /* 0x1e */ s16 step_durations[7];
     /* 0x2c */ s16 timer;
     /* 0x2e */ s16 intensity;
-    /* 0x30 */ open_gfx_transition_entry_t** entry_table;
-    /* 0x34 */ open_gfx_transition_entry_t* entry;
-} open_gfx_transition_t;
-typedef char open_gfx_transition_size_must_be_0x38[(sizeof(open_gfx_transition_t) == 0x38) ? 1 : -1];
+    /* 0x30 */ open_prologue_entry_t** entry_table;
+    /* 0x34 */ open_prologue_entry_t* entry;
+} open_prologue_t;
+typedef char open_prologue_size_must_be_0x38[(sizeof(open_prologue_t) == 0x38) ? 1 : -1];
 
 /* One DR_MODE + SPRT pair of the shared 32-entry per-buffer sprite pool. */
 typedef struct open_sprite_prim {
@@ -546,13 +547,13 @@ typedef enum open_system_runtime_flag {
 } open_system_runtime_flag_e;
 
 extern POLY_FT4 g_open_gfx_fade_primitives[2];
-extern u16* volatile g_open_gfx_image_copy_destination_buffer;
-extern u16* volatile g_open_gfx_image_copy_file_pixels;
+extern u16* volatile g_open_prologue_crossfade_destination;
+extern u16* volatile g_open_prologue_crossfade_file_pixels;
 
-/* Volatile: open_gfx_step_image_crossfade reloads it every column. */
-extern u16* volatile g_open_gfx_image_copy_source_buffer;
-extern u8 g_open_gfx_image_copy_progress;
-extern u8 g_open_gfx_image_copy_row_flags[];
+/* Volatile: open_prologue_step_crossfade reloads it every column. */
+extern u16* volatile g_open_prologue_crossfade_source;
+extern u8 g_open_prologue_crossfade_progress;
+extern u8 g_open_prologue_crossfade_row_flags[];
 extern s32 g_open_gfx_next_render_record_36;
 extern s32 g_open_gfx_next_render_record_56;
 extern u8* g_open_gfx_opntex_data;
@@ -568,33 +569,33 @@ extern open_render_record_56_t g_open_gfx_render_records_56[16];
 extern open_screen_environment_t g_open_gfx_screen_environments[2];
 extern open_overlay_fade_t g_open_gfx_overlay_fade;
 
-extern open_gfx_transition_t g_open_gfx_transition;
+extern open_prologue_t g_open_prologue;
 extern open_sprite_prim_t g_open_gfx_sprite_primitive_pool[2][32];
 extern POLY_FT4 g_open_gfx_credit_band_primitives[2];
 extern u32** g_open_gfx_record_36_sprites;
-extern POLY_GT4 g_open_gfx_transition_line_primitives[2][14];
+extern POLY_GT4 g_open_prologue_line_primitives[2][14];
 void open_gfx_draw_animated_render_record(open_render_record_36_t* actor, u32* ot);
 void open_gfx_draw_window_record(open_render_record_56_t* record, u32* ot);
-s32 open_gfx_update_transition_sequence(void);
-void open_gfx_draw_transition_line_strips(s32 intensity);
+s32 open_prologue_update(void);
+void open_prologue_draw_text_lines(s32 intensity);
 s32 open_gfx_append_animated_render_record(open_render_record_t** list, s32* count);
 s32 open_gfx_append_window_record(open_render_record_t** list, s32* count);
 void open_gfx_restore_frame_vram_page(void);
 void open_gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* quad, RECT* rectangle);
 void open_gfx_clear_and_draw_current_frame(void);
 void open_gfx_clear_current_otag(void);
-void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index);
+void open_prologue_prepare_crossfade(s32 file_index);
 void open_gfx_draw_render_record_pointer_list(u32* otag, open_render_record_t** records, s32 count);
 void open_gfx_show_four_render_records(open_title_entry_records_t* group);
 void open_gfx_init_render_buffers(void);
 void open_gfx_init_screen_environments(s32 clear_first);
-void open_gfx_init_transition_request(s32 target, s32 mode, open_gfx_transition_entry_t** entry_table);
+void open_prologue_request(s32 target, s32 mode, open_prologue_entry_t** entry_table);
 void open_gfx_init_window_frame_record(s32 record_index, RECT quad, s32 depth, u16* image);
 void open_gfx_load_opntex_into_frame_buffer(const void* source_data);
 void open_gfx_hide_four_render_records(open_title_entry_records_t* group);
 void open_gfx_start_overlay_fade_in(u32 duration);
 void open_gfx_start_overlay_fade_out(u32 duration);
-void open_gfx_step_image_crossfade(void);
+void open_prologue_step_crossfade(void);
 void open_gfx_update_fade_overlay(u32* otag);
 void open_gfx_update_opntex_sequence(void);
 
@@ -608,10 +609,10 @@ typedef enum game_sound_mode {
 extern s32 g_open_system_result;
 extern u32 g_open_system_runtime_flags;
 extern s32 g_open_system_vsync_mode;
-extern open_gfx_transition_entry_t** g_open_new_game_transition_entries;
+extern open_prologue_entry_t** g_open_prologue_entries;
 
-void open_restore_birthday_date_menu(open_birthday_date_state_t* menu);
-void open_gfx_transition_finished_stub(void);
+void open_birthday_restore_date_menu(open_birthday_date_state_t* menu);
+void open_prologue_finished_hook(void);
 void open_system_init_runtime_state(void);
 
 /* script */

@@ -8,7 +8,7 @@
 #define OPEN_IMAGE_BLEND_END_ROW     (OPEN_IMAGE_HEIGHT + OPEN_IMAGE_BLEND_BAND_HEIGHT)
 
 /*
- * Advance the bottom-up crossfade between the two 210x180 opening images by one row.
+ * Advance the bottom-up crossfade between two 210x180 prologue pictures by one row.
  *
  * Each call blends the 17-row band ending at the progress row: every row in the
  * band steps its own fade counter and writes the per-component mix of the source
@@ -21,7 +21,7 @@
  * target. The s16 components are copied for the compare and the difference,
  * while the sums use the originals.
  */
-void open_gfx_step_image_crossfade(void) {
+void open_prologue_step_crossfade(void) {
     s32 row;
     s32 last_row;
     s32 reverse_row;
@@ -38,9 +38,9 @@ void open_gfx_step_image_crossfade(void) {
     s32 difference;
     u8 fade;
 
-    if (g_open_gfx_image_copy_row_flags[0] != 0) {
-        row = g_open_gfx_image_copy_progress - OPEN_IMAGE_BLEND_BAND_HEIGHT;
-        if (row < g_open_gfx_image_copy_progress) {
+    if (g_open_prologue_crossfade_row_flags[0] != 0) {
+        row = g_open_prologue_crossfade_progress - OPEN_IMAGE_BLEND_BAND_HEIGHT;
+        if (row < g_open_prologue_crossfade_progress) {
             last_row = OPEN_IMAGE_HEIGHT - 1;
             do {
                 if (row >= 0 && row < OPEN_IMAGE_HEIGHT) {
@@ -48,10 +48,10 @@ void open_gfx_step_image_crossfade(void) {
                     column = 0;
                     source_row_start = reverse_row * OPEN_IMAGE_WIDTH;
                     destination_row_start = reverse_row * OPEN_IMAGE_ROW_STRIDE;
-                    fade = g_open_gfx_image_copy_row_flags[row + 2]++;
+                    fade = g_open_prologue_crossfade_row_flags[row + 2]++;
                     do {
-                        source_pixel = g_open_gfx_image_copy_source_buffer[source_row_start + column];
-                        destination_pixel = g_open_gfx_image_copy_destination_buffer[source_row_start + column];
+                        source_pixel = g_open_prologue_crossfade_source[source_row_start + column];
+                        destination_pixel = g_open_prologue_crossfade_destination[source_row_start + column];
                         pixel = 0;
                         if (source_pixel != destination_pixel) {
                             for (component = 2; component >= 0; component--) {
@@ -72,19 +72,19 @@ void open_gfx_step_image_crossfade(void) {
                         } else {
                             pixel = source_pixel;
                         }
-                        g_open_gfx_image_copy_file_pixels[destination_row_start + column]
+                        g_open_prologue_crossfade_file_pixels[destination_row_start + column]
                             = pixel | (destination_pixel & 0x8000);
                         column++;
                     } while (column < OPEN_IMAGE_WIDTH);
                 }
                 row++;
-            } while (row < g_open_gfx_image_copy_progress);
+            } while (row < g_open_prologue_crossfade_progress);
         }
         {
-            u8* progress = &g_open_gfx_image_copy_progress;
+            u8* progress = &g_open_prologue_crossfade_progress;
 
             if (++*progress >= OPEN_IMAGE_BLEND_END_ROW) {
-                g_open_gfx_image_copy_row_flags[0] = 0;
+                g_open_prologue_crossfade_row_flags[0] = 0;
             }
         }
     }

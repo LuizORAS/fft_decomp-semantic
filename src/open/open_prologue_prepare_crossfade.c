@@ -18,9 +18,9 @@ typedef struct open_gfx_image_file {
  * 210x180 picture on screen out of the frame image into g_open_work_buffer_1,
  * packed 210 pixels per row. It clears the per-row fade steps, the running flag
  * (row_flags[0]) and the progress row (row_flags[1], the same byte as
- * g_open_gfx_image_copy_progress); image operation 0x20 of a later transition
- * entry waits for the read and sets the running flag. */
-void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index) {
+ * g_open_prologue_crossfade_progress); image operation 0x20 of a later prologue
+ * page waits for the read and sets the running flag. */
+void open_prologue_prepare_crossfade(s32 file_index) {
     u16* copy_source;
     u16* copy_destination;
     u16* file_pixels;
@@ -38,9 +38,9 @@ void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index) {
     copy_destination = (u16*)g_open_work_buffer_1;
     file_image = g_open_file_destination;
     file_pixels = file_image->pixels;
-    g_open_gfx_image_copy_source_buffer = copy_source;
-    g_open_gfx_image_copy_destination_buffer = copy_destination;
-    g_open_gfx_image_copy_file_pixels = file_pixels;
+    g_open_prologue_crossfade_source = copy_source;
+    g_open_prologue_crossfade_destination = copy_destination;
+    g_open_prologue_crossfade_file_pixels = file_pixels;
     open_file_build_openbk_header(file_index + 2, g_open_work_buffer_0);
 
     row = 0;
@@ -53,17 +53,17 @@ void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index) {
             source_index = source_offset + column;
             column++;
             destination_index <<= 1;
-            pixels = g_open_gfx_image_copy_file_pixels;
+            pixels = g_open_prologue_crossfade_file_pixels;
             source_index <<= 1;
             /* index + (u32)pointer: the retail addu sums index first. */
             value = *(u16*)(source_index + (u32)pixels);
-            *(u16*)(destination_index + (u32)g_open_gfx_image_copy_destination_buffer) = value;
+            *(u16*)(destination_index + (u32)g_open_prologue_crossfade_destination) = value;
         } while (column < OPEN_IMAGE_COPY_WIDTH);
-        g_open_gfx_image_copy_row_flags[row + 2] = 0;
+        g_open_prologue_crossfade_row_flags[row + 2] = 0;
         row++;
         source_row += OPEN_IMAGE_COPY_WIDTH;
     } while (row < OPEN_IMAGE_COPY_HEIGHT);
 
-    g_open_gfx_image_copy_row_flags[0] = 0;
-    g_open_gfx_image_copy_row_flags[1] = 0;
+    g_open_prologue_crossfade_row_flags[0] = 0;
+    g_open_prologue_crossfade_row_flags[1] = 0;
 }

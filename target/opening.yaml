@@ -57,7 +57,7 @@ functions:
   - {addr: 0x80069a34, size: 92, name: open_file_wait_for_pending, hash: 5e8c5303cf510992}
   - {addr: 0x80069a90, size: 220, name: open_file_load_main_menu_graphics, hash: c9dcd99baa6edbc0}
   - {addr: 0x80069b6c, size: 204, name: open_file_load_end_movie_graphics, hash: 7f816e64bff3ea9a}
-  - {addr: 0x80069c38, size: 144, name: open_file_load_sound_menu_textures, hash: 2e359e04e3a564a1}
+  - {addr: 0x80069c38, size: 144, name: open_file_load_prologue_text_pages, hash: 2e359e04e3a564a1}
   - {addr: 0x80069cc8, size: 112, name: open_file_build_openbk_header, hash: 2fab328389970f4a}
   - {addr: 0x80069d38, size: 68, name: open_file_get_cd_sync_state_delta, hash: 1656986d7649ae48}
   - {addr: 0x80069d7c, size: 228, name: open_gfx_load_opntex_into_frame_buffer, hash: 590cf49a34430f90}
@@ -73,11 +73,11 @@ functions:
   - {addr: 0x8006a768, size: 1936, name: open_title_update_menu, hash: 5c0ec430bc6c2047}
   - {addr: 0x8006aef8, size: 428, name: open_menu_push_sound_type_controller, hash: 4cba2d76c26467a9}
   - {addr: 0x8006b0a4, size: 692, name: open_menu_handle_sound_type_input, hash: 0e5b70f17f26fa47}
-  - {addr: 0x8006b358, size: 200, name: open_title_start_new_game_transition, hash: 7f1ea25f2f2e4ddc}
+  - {addr: 0x8006b358, size: 200, name: open_prologue_start, hash: 7f1ea25f2f2e4ddc}
   - {addr: 0x8006b420, size: 540, name: open_title_step_new_game_start, hash: 88dab4035996c1ea}
   - {addr: 0x8006b63c, size: 852, name: open_birthday_push_date_controller, hash: 0e45678d3fb3cbd5}
   - {addr: 0x8006b990, size: 484, name: open_birthday_build_menu_text, hash: acb5e3a1a8e68d6e}
-  - {addr: 0x8006bb74, size: 296, name: open_restore_birthday_date_menu, hash: 620158889f7f74a3}
+  - {addr: 0x8006bb74, size: 296, name: open_birthday_restore_date_menu, hash: 620158889f7f74a3}
   - {addr: 0x8006bc9c, size: 324, name: open_birthday_build_confirmation_menu, hash: bb0bedfc73251381}
   - {addr: 0x8006bde0, size: 752, name: open_birthday_handle_menu_input, hash: 4fcabd119932ad53}
   - {addr: 0x8006c0d0, size: 916, name: open_birthday_push_confirmation_controller, hash: 16fd129a48959bf2}
@@ -97,12 +97,12 @@ functions:
   - {addr: 0x8006d480, size: 164, name: open_movie_update_demo_controller, hash: 4e72507cef1a9abd}
   - {addr: 0x8006d524, size: 308, name: open_title_start_new_game, hash: efa74633bab45d83}
   - {addr: 0x8006d658, size: 340, name: open_title_update_card_warning, hash: 7c3ab8fe1d7d5d9c}
-  - {addr: 0x8006d7ac, size: 64, name: open_gfx_init_transition_request, hash: d59678a277450164}
-  - {addr: 0x8006d7ec, size: 8, name: open_gfx_transition_finished_stub, hash: 6d64edf91449c1b1}
-  - {addr: 0x8006d7f4, size: 912, name: open_gfx_update_transition_sequence, hash: 7bbe865958bd3a67}
-  - {addr: 0x8006db84, size: 1252, name: open_gfx_draw_transition_line_strips, hash: 44f9ccd8cbccd92c}
-  - {addr: 0x8006e068, size: 212, name: open_gfx_copy_file_image_to_210x180_buffer, hash: 5e7217187c9c4567}
-  - {addr: 0x8006e13c, size: 436, name: open_gfx_step_image_crossfade, hash: 2470d3b4a852e44e}
+  - {addr: 0x8006d7ac, size: 64, name: open_prologue_request, hash: d59678a277450164}
+  - {addr: 0x8006d7ec, size: 8, name: open_prologue_finished_hook, hash: 6d64edf91449c1b1}
+  - {addr: 0x8006d7f4, size: 912, name: open_prologue_update, hash: 7bbe865958bd3a67}
+  - {addr: 0x8006db84, size: 1252, name: open_prologue_draw_text_lines, hash: 44f9ccd8cbccd92c}
+  - {addr: 0x8006e068, size: 212, name: open_prologue_prepare_crossfade, hash: 5e7217187c9c4567}
+  - {addr: 0x8006e13c, size: 436, name: open_prologue_step_crossfade, hash: 2470d3b4a852e44e}
   - {addr: 0x8006e2f0, size: 1264, name: open_script_init_state, hash: c000e380ea2213d8}
   - {addr: 0x8006e7e0, size: 200, name: open_script_run_frame, hash: 06563bf022b02028}
   - {addr: 0x8006e8a8, size: 8, name: open_script_add_pointer_offset, hash: 6e3d0af1356c7afe}
@@ -174,7 +174,7 @@ data:
   - {addr: 0x800670e0, name: g_psyq_press_timeout_format}
   - {addr: 0x800707f8, name: g_open_gfx_record_36_animations}
   - {addr: 0x800707fc, name: g_open_gfx_record_36_sprites}
-  - {addr: 0x80070cb4, name: g_open_new_game_transition_entries}
+  - {addr: 0x80070cb4, name: g_open_prologue_entries}
   - {addr: 0x80070d84, name: g_open_script_font_metrics}
   - {addr: 0x80070d88, name: g_open_script_initial_data_base}
   - {addr: 0x80073b9c, name: g_psyq_press_vlc_limit_halfwords}
@@ -221,21 +221,21 @@ data:
   - {addr: 0x80085328, name: g_open_controller_stream_length}
   - {addr: 0x80085340, name: g_open_controller_selected_options}
   - {addr: 0x80085344, name: g_open_controller_birthdays}
-  - {addr: 0x800854b4, name: g_open_gfx_image_copy_row_flags}
-  - {addr: 0x800854b5, name: g_open_gfx_image_copy_progress}
-  - {addr: 0x8008556c, name: g_open_gfx_image_copy_source_buffer}
-  - {addr: 0x80085570, name: g_open_gfx_image_copy_destination_buffer}
-  - {addr: 0x80085574, name: g_open_gfx_image_copy_file_pixels}
+  - {addr: 0x800854b4, name: g_open_prologue_crossfade_row_flags}
+  - {addr: 0x800854b5, name: g_open_prologue_crossfade_progress}
+  - {addr: 0x8008556c, name: g_open_prologue_crossfade_source}
+  - {addr: 0x80085570, name: g_open_prologue_crossfade_destination}
+  - {addr: 0x80085574, name: g_open_prologue_crossfade_file_pixels}
   - {addr: 0x80085578, name: g_open_music_test_list_state}
   - {addr: 0x800855a4, name: g_open_input_new_button_presses}
   - {addr: 0x800855a8, name: g_open_file_destination}
   - {addr: 0x800855ac, name: g_open_input_polled_buttons}
-  - {addr: 0x800855b4, name: g_open_gfx_transition}
+  - {addr: 0x800855b4, name: g_open_prologue}
   - {addr: 0x800855ec, name: g_open_menu_world_menu_otag_index}
   - {addr: 0x800855f0, name: g_open_title_demo_movie_index}
   - {addr: 0x800855f4, name: g_open_music_test_list_entry_flags}
   - {addr: 0x800856f4, name: g_open_system_result}
-  - {addr: 0x800856f8, name: g_open_gfx_transition_line_primitives}
+  - {addr: 0x800856f8, name: g_open_prologue_line_primitives}
   - {addr: 0x80085ca8, name: g_open_file_current_openbk_image_id}
   - {addr: 0x80085cac, name: g_open_gfx_overlay_fade}
   - {addr: 0x80085d04, name: g_open_gfx_render_records_36}

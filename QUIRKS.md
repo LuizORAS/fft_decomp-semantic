@@ -680,9 +680,9 @@ written that way.
 - `g_open_file_openbk_end_sector_offsets` (`0x80073f5c`) is
   `g_open_file_openbk_start_sector_offsets + 1`: eight sector offsets of
   OPNBK.BIN under two names, each image ending where the next starts.
-- `g_open_gfx_image_copy_progress` (`0x800854b5`) is
-  `g_open_gfx_image_copy_row_flags[1]`;
-  `open_gfx_copy_file_image_to_210x180_buffer` clears it through the array.
+- `g_open_prologue_crossfade_progress` (`0x800854b5`) is
+  `g_open_prologue_crossfade_row_flags[1]`;
+  `open_prologue_prepare_crossfade` clears it through the array.
 
 ## Duplicated code
 

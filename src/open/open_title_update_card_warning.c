@@ -37,7 +37,7 @@ void open_title_update_card_warning(open_title_card_warning_t* warning) {
             } while (index < 0x7800);
             open_title_push_menu_controller(0);
         } else if (state == OPEN_TITLE_CARD_WARNING_CONTINUE) {
-            open_title_start_new_game_transition();
+            open_prologue_start();
         }
         return;
     }

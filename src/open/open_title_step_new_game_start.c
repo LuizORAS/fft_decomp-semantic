@@ -8,7 +8,7 @@ typedef struct open_title_party_name_block {
 
 /* Per-frame handler of the New Game controller (handler 4).
  *
- * Until step 4 it waits for the overlay fade and runs Alazlam's prologue (open_gfx_update_transition_sequence)
+ * Until step 4 it waits for the overlay fade and runs Alazlam's prologue (open_prologue_update)
  * to its end. Step 4 builds Ramza's roster (loading WORLD if needed, on EVENT/OPEN.LZW), copies the displayed
  * frame into the frame image and the other buffer, runs the WORLD name entry screen over it, stores the
  * 16-byte name in party slot 0 and replaces itself with the birthday date controller.
@@ -76,9 +76,9 @@ void open_title_step_new_game_start(open_title_new_game_state_t* state) {
     if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) {
         return;
     }
-    if (open_gfx_update_transition_sequence() != 0) {
+    if (open_prologue_update() != 0) {
         return;
     }
-    open_gfx_transition_finished_stub();
+    open_prologue_finished_hook();
     state->step = 4;
 }

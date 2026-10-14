@@ -2,8 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Draw the text lines of the current new-game prologue entry at the given
- * brightness.
+/* Draw the text lines of the current prologue page at the given brightness.
  *
  * Each step of the entry is one line of text: step_values holds its 16-pixel row
  * in the texture page and step_durations its width in pixels. The lines are
@@ -20,7 +19,7 @@
  * The coordinates are written in setXY4 order (x0, y0, x1, y1, ...) per
  * primitive, and width + 1 goes through its own variable (the target adds left
  * afterwards). */
-void open_gfx_draw_transition_line_strips(s32 intensity) {
+void open_prologue_draw_text_lines(s32 intensity) {
     POLY_GT4* prims;
     s32 i;
     s32 prim_index;
@@ -32,28 +31,28 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
     s32 v;
     u16 clut;
 
-    for (i = 0; i < g_open_gfx_transition.step + 1; i++) {
+    for (i = 0; i < g_open_prologue.step + 1; i++) {
         prim_index = i * 2;
-        prims = g_open_gfx_transition_line_primitives[g_active_graphics_buffer_index];
+        prims = g_open_prologue_line_primitives[g_active_graphics_buffer_index];
         SetPolyGT4(&prims[prim_index]);
         SetPolyGT4(&prims[prim_index + 1]);
 
-        if (i == g_open_gfx_transition.step) {
+        if (i == g_open_prologue.step) {
             /* Leading edge of the line in progress (line i - 1): black on its right. */
-            if (g_open_gfx_transition.step_durations[i - 1] < g_open_gfx_transition.timer) {
+            if (g_open_prologue.step_durations[i - 1] < g_open_prologue.timer) {
                 continue;
             }
-            width = g_open_gfx_transition.step_durations[i - 1] - g_open_gfx_transition.timer;
-            if (g_open_gfx_transition.timer < 0) {
-                width = g_open_gfx_transition.timer + 0x10;
+            width = g_open_prologue.step_durations[i - 1] - g_open_prologue.timer;
+            if (g_open_prologue.timer < 0) {
+                width = g_open_prologue.timer + 0x10;
             } else if (width >= 0x11) {
                 width = 0x10;
             }
-            u = g_open_gfx_transition.timer;
+            u = g_open_prologue.timer;
             if (u < 0) {
                 u = 0;
             }
-            v = g_open_gfx_transition.step_values[i - 1] * 0x10;
+            v = g_open_prologue.step_values[i - 1] * 0x10;
             prims[prim_index].r1 = 0;
             prims[prim_index].g1 = 0;
             prims[prim_index].b1 = 0;
@@ -66,20 +65,20 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
             prims[prim_index + 1].r3 = 0;
             prims[prim_index + 1].g3 = 0;
             prims[prim_index + 1].b3 = 0;
-            left = u - g_open_gfx_transition.step_durations[i - 1] / 2;
-            top_y = (i - 1) * 0x14 - g_open_gfx_transition.step_count * 10;
+            left = u - g_open_prologue.step_durations[i - 1] / 2;
+            top_y = (i - 1) * 0x14 - g_open_prologue.step_count * 10;
         } else {
             /* Line i: the revealed part of the line in progress, or a whole finished line. */
-            if (i == g_open_gfx_transition.step - 1) {
-                width = g_open_gfx_transition.timer;
+            if (i == g_open_prologue.step - 1) {
+                width = g_open_prologue.timer;
             } else {
-                width = g_open_gfx_transition.step_durations[i];
+                width = g_open_prologue.step_durations[i];
             }
             u = 0;
             if (width <= 0) {
                 continue;
             }
-            v = g_open_gfx_transition.step_values[i] * 0x10;
+            v = g_open_prologue.step_values[i] * 0x10;
             prims[prim_index].r1 = intensity;
             prims[prim_index].g1 = intensity;
             prims[prim_index].b1 = intensity;
@@ -92,8 +91,8 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
             prims[prim_index + 1].r3 = intensity / 2;
             prims[prim_index + 1].g3 = intensity / 2;
             prims[prim_index + 1].b3 = intensity / 2;
-            left = -(g_open_gfx_transition.step_durations[i] / 2);
-            top_y = i * 0x14 - g_open_gfx_transition.step_count * 10;
+            left = -(g_open_prologue.step_durations[i] / 2);
+            top_y = i * 0x14 - g_open_prologue.step_count * 10;
         }
 
         prims[prim_index].r0 = intensity;
@@ -112,8 +111,8 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
         clut = GetClut(0, 0x1e3);
         prims[prim_index + 1].clut = clut;
         prims[prim_index].clut = clut;
-        prims[prim_index].tpage = GetTPage(0, 1, g_open_gfx_transition.tpage_x, g_open_gfx_transition.tpage_y);
-        prims[prim_index + 1].tpage = GetTPage(0, 2, g_open_gfx_transition.tpage_x, g_open_gfx_transition.tpage_y);
+        prims[prim_index].tpage = GetTPage(0, 1, g_open_prologue.tpage_x, g_open_prologue.tpage_y);
+        prims[prim_index + 1].tpage = GetTPage(0, 2, g_open_prologue.tpage_x, g_open_prologue.tpage_y);
 
         prims[prim_index].x0 = left;
         prims[prim_index].y0 = top_y;
@@ -151,8 +150,7 @@ void open_gfx_draw_transition_line_strips(s32 intensity) {
 
         SetSemiTrans(&prims[prim_index], 1);
         SetSemiTrans(&prims[prim_index + 1], 1);
-        AddPrim(&g_open_gfx_otags[g_active_graphics_buffer_index][g_open_gfx_transition.mode], &prims[prim_index]);
-        AddPrim(
-            &g_open_gfx_otags[g_active_graphics_buffer_index][g_open_gfx_transition.mode + 1], &prims[prim_index + 1]);
+        AddPrim(&g_open_gfx_otags[g_active_graphics_buffer_index][g_open_prologue.mode], &prims[prim_index]);
+        AddPrim(&g_open_gfx_otags[g_active_graphics_buffer_index][g_open_prologue.mode + 1], &prims[prim_index + 1]);
     }
 }

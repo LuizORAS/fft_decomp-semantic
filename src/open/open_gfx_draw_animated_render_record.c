@@ -2,26 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Advances one OPEN sprite actor's animation and emits its parts into an
- * ordering table.
- *
- * The actor names an animation in the table at g_open_gfx_record_36_animations; each animation is
- * a frame count followed by {sprite_id, duration} pairs, and a duration of
- * 0xffff holds the frame indefinitely. The named sprite in g_open_gfx_record_36_sprites is a
- * part list whose odd words carry the texture page, semi-transparency and
- * palette bits and whose byte fields give the part offset, size and texture
- * coordinates. Each part consumes one DR_MODE + SPRT pair from the shared
- * 32-entry per-buffer primitive pool at g_open_gfx_sprite_primitive_pool.
- *
- * Both high halves are masked before the shift. The code is the same as a
- * plain shift, but it matches the target's frame: CSE shares the 0xffff0000
- * constant between the two statements, so the first mask/shift combine keeps
- * that constant for the second and leaves its dead AND result as a USE-only
- * pseudo. That pseudo and the part loop's folded entry test each get an
- * unreferenced 8-byte reload slot (0x38 and 0x40). Reading x and y into their
- * own locals keeps the target's x + byte operand order and v0/v1 allocation.
- */
-
 /* One sprite part: its first word also carries the texture/palette flag bits
  * read as sprite[t]; the part list is walked two words at a time. */
 typedef struct open_gfx_sprite_part {
@@ -38,6 +18,22 @@ typedef struct open_gfx_sprite_part {
 
 extern wldcore_anim_sequence_t** g_open_gfx_record_36_animations;
 
+/* Advance one 36-byte render record's animation and emit its sprite parts into the ordering table.
+ *
+ * The record names an animation in g_open_gfx_record_36_animations; each animation is a frame count followed
+ * by {sprite_id, duration} pairs, and a duration of 0xffff holds the frame indefinitely. The named sprite in
+ * g_open_gfx_record_36_sprites is a part list whose odd words carry the texture page, semi-transparency and
+ * palette bits and whose byte fields give the part offset, size and texture coordinates. Each part consumes
+ * one DR_MODE + SPRT pair from the shared 32-entry per-buffer primitive pool at
+ * g_open_gfx_sprite_primitive_pool; a non-zero palette replaces the part's own unless the part fixes it.
+ *
+ * Both high halves are masked before the shift. The code is the same as a
+ * plain shift, but it matches the target's frame: CSE shares the 0xffff0000
+ * constant between the two statements, so the first mask/shift combine keeps
+ * that constant for the second and leaves its dead AND result as a USE-only
+ * pseudo. That pseudo and the part loop's folded entry test each get an
+ * unreferenced 8-byte reload slot (0x38 and 0x40). Reading x and y into their
+ * own locals keeps the target's x + byte operand order and v0/v1 allocation. */
 void open_gfx_draw_animated_render_record(open_render_record_36_t* actor, u32* ot) {
     u32** sprites;
     wldcore_anim_sequence_t* anim;
