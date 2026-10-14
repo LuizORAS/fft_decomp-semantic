@@ -422,8 +422,8 @@ functions:
   - {addr: 0x801cb048, size: 16, name: bunit_gfx_set_otag_index, hash: b8570cd4076e6ca3}
   - {addr: 0x801cb058, size: 220, name: bunit_menu_set_palette_mode, hash: 097927c9311af253, source: src/shared/menu/menu_set_palette_mode.c, source_symbol: menu_set_palette_mode}
   - {addr: 0x801cb134, size: 100, name: bunit_cmd_release_otag_lock_handler, hash: 5762755fa4395bb7}
-  - {addr: 0x801cb198, size: 116, name: bunit_cmd_set_draw_area_if_unlocked_handler, hash: 27724050b3193070}
-  - {addr: 0x801cb20c, size: 92, name: bunit_cmd_add_next_otag_draw_area_handler, hash: 7af571cb94447649}
+  - {addr: 0x801cb198, size: 116, name: bunit_cmd_set_draw_area_if_unlocked_handler, hash: 27724050b3193070, source: src/shared/menu/menu_cmd_set_draw_area_if_unlocked_handler.c, source_symbol: menu_cmd_set_draw_area_if_unlocked_handler}
+  - {addr: 0x801cb20c, size: 92, name: bunit_cmd_add_next_otag_draw_area_handler, hash: 7af571cb94447649, source: src/shared/menu/menu_cmd_add_next_otag_draw_area_handler.c, source_symbol: menu_cmd_add_next_otag_draw_area_handler}
   - {addr: 0x801cb268, size: 16, name: bunit_gfx_set_transition_frame, hash: 2975c13d1cb6d612}
   - {addr: 0x801cb278, size: 16, name: bunit_gfx_get_transition_frame, hash: 198bb5d80e6a8297}
   - {addr: 0x801cb288, size: 56, name: bunit_cmd_advance_window_scale_step_handler, hash: 02b5eb90d2b04757}
@@ -1465,8 +1465,8 @@ functions:
   - {addr: 0x801cd2e0, size: 16, name: equip_gfx_set_otag_index, hash: bb1416428e2ecf6d}
   - {addr: 0x801cd2f0, size: 220, name: equip_menu_set_palette_mode, hash: 156ec1881c754753}
   - {addr: 0x801cd3cc, size: 100, name: equip_cmd_release_otag_lock_handler, hash: e77483d981229efc}
-  - {addr: 0x801cd430, size: 116, name: equip_cmd_set_draw_area_if_unlocked_handler, hash: ba55df416db898b4}
-  - {addr: 0x801cd4a4, size: 92, name: equip_cmd_add_next_otag_draw_area_handler, hash: 6bbd6efdd3867c3b}
+  - {addr: 0x801cd430, size: 116, name: equip_cmd_set_draw_area_if_unlocked_handler, hash: ba55df416db898b4, source: src/shared/menu/menu_cmd_set_draw_area_if_unlocked_handler.c, source_symbol: menu_cmd_set_draw_area_if_unlocked_handler}
+  - {addr: 0x801cd4a4, size: 92, name: equip_cmd_add_next_otag_draw_area_handler, hash: 6bbd6efdd3867c3b, source: src/shared/menu/menu_cmd_add_next_otag_draw_area_handler.c, source_symbol: menu_cmd_add_next_otag_draw_area_handler}
   - {addr: 0x801cd500, size: 16, name: equip_gfx_set_transition_frame, hash: c29481e27ac6ffd6}
   - {addr: 0x801cd510, size: 16, name: equip_gfx_get_transition_frame, hash: 9b3bf67680c26976}
   - {addr: 0x801cd520, size: 56, name: equip_cmd_advance_window_scale_step_handler, hash: 7d8e1868250a374c}
@@ -1799,6 +1799,9 @@ imports:
   - {addr: 0x800222fc, name: memset}
 
 overrides:
+  - {function: equip_cmd_add_next_otag_draw_area_handler, name: g_bunit_gfx_draw_area, addr: 0x801d8768}
+  - {function: equip_cmd_add_next_otag_draw_area_handler, name: g_bunit_gfx_otag_index_locked, addr: 0x801e9048}
+  - {function: equip_cmd_set_draw_area_if_unlocked_handler, name: g_bunit_gfx_otag_index_locked, addr: 0x801e9048}
   - {function: menu_build_unit_portrait_transition, name: attack_gfx_build_portrait_poly_ft4, addr: 0x801bfdf8}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_origin, addr: 0x801ce584}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_transition_offsets, addr: 0x801ce884}
@@ -1956,8 +1959,8 @@ functions:
   - {addr: 0x801e3968, size: 2512, name: jobstts_cmd_draw_scrollable_list_body_handler, hash: 8765fb678224aca4}
   - {addr: 0x801e4338, size: 220, name: menu_set_palette_mode, hash: 48580046bd100f9b, source: src/shared/menu/menu_set_palette_mode.c}
   - {addr: 0x801e4414, size: 136, name: jobstts_cmd_release_otag_lock_handler, hash: 376bac94034d2252}
-  - {addr: 0x801e449c, size: 116, name: jobstts_cmd_set_draw_area_if_unlocked_handler, hash: fbe7c3c7c2471b38}
-  - {addr: 0x801e4510, size: 92, name: jobstts_cmd_add_next_otag_draw_area_handler, hash: 24311d14e944847c}
+  - {addr: 0x801e449c, size: 116, name: jobstts_cmd_set_draw_area_if_unlocked_handler, hash: fbe7c3c7c2471b38, source: src/shared/menu/menu_cmd_set_draw_area_if_unlocked_handler.c, source_symbol: menu_cmd_set_draw_area_if_unlocked_handler}
+  - {addr: 0x801e4510, size: 92, name: jobstts_cmd_add_next_otag_draw_area_handler, hash: 24311d14e944847c, source: src/shared/menu/menu_cmd_add_next_otag_draw_area_handler.c, source_symbol: menu_cmd_add_next_otag_draw_area_handler}
   - {addr: 0x801e456c, size: 16, name: jobstts_gfx_set_transition_frame, hash: 379bc481db4f0729}
   - {addr: 0x801e457c, size: 16, name: jobstts_gfx_get_transition_frame, hash: 865935d79ad81c7d}
   - {addr: 0x801e458c, size: 320, name: jobstts_menu_scroll_list_by_page, hash: 0fa518b015eb3a18}
@@ -2137,6 +2140,11 @@ overrides:
   - {function: jobstts_bits_read_primary, name: g_menu_bits_secondary_index, addr: 0x801f0048}
   - {function: jobstts_bits_read_primary, name: g_menu_bits_secondary_reset, addr: 0x801f0044}
   - {function: jobstts_bits_read_primary, name: g_menu_bits_secondary_source, addr: 0x801fa714}
+  - {function: jobstts_cmd_add_next_otag_draw_area_handler, name: g_bunit_gfx_draw_area, addr: 0x801efff4}
+  - {function: jobstts_cmd_add_next_otag_draw_area_handler, name: g_bunit_gfx_otag_index_locked, addr: 0x801fa70c}
+  - {function: jobstts_cmd_add_next_otag_draw_area_handler, name: menu_gfx_enqueue_draw_area, addr: 0x801e1f0c}
+  - {function: jobstts_cmd_set_draw_area_if_unlocked_handler, name: g_bunit_gfx_otag_index_locked, addr: 0x801fa70c}
+  - {function: jobstts_cmd_set_draw_area_if_unlocked_handler, name: menu_gfx_enqueue_draw_area, addr: 0x801e1f0c}
   - {function: jobstts_text_render_encoded_ids_to_image, name: menu_text_find_entry_by_index, addr: 0x801e0740}
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_init_primary_reader, addr: 0x801e4e98}
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_read_primary, addr: 0x801e4ed0}

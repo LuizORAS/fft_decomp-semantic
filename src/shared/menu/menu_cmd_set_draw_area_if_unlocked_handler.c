@@ -1,8 +1,9 @@
 #include "fft/event_bunit.h"
 #include "fft/menu.h"
+#include "fft/menu_script.h"
 
-/* Twin of jobstts_cmd_set_draw_area_if_unlocked_handler. */
-menu_instruction_t* bunit_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* data) {
+/* Queue the instruction draw area unless the zoom transition already queued one. */
+menu_instruction_t* menu_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* data) {
     RECT area;
 
     if (g_bunit_gfx_otag_index_locked == 0) {
