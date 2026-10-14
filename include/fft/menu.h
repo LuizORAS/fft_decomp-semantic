@@ -1451,6 +1451,8 @@ typedef struct menu_selection_record {
 } menu_selection_record_t;
 typedef char menu_selection_record_size_must_be_6[sizeof(menu_selection_record_t) == 6 ? 1 : -1];
 
+void menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_base_index, s16* entries);
+
 /* The selected row and scroll position of an ability list. */
 typedef struct menu_list_selection {
     u8 selected_index;

@@ -628,7 +628,7 @@ functions:
   - {addr: 0x80118244, size: 2296, name: world_formation_draw_graphics_below_sprite, hash: 92fe28a4904b632c, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80118b3c, size: 44, name: world_menu_clear_selection_records, hash: a3845868058abc9f}
   - {addr: 0x80118b68, size: 60, name: world_menu_clear_selection_record, hash: 865d628c2d8e7551}
-  - {addr: 0x80118ba4, size: 76, name: world_menu_set_selection_record, hash: 5c90bb339e17a1fd, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80118ba4, size: 76, name: world_menu_set_selection_record, hash: 5c90bb339e17a1fd, profile: gcc-2.6.3_O1_aspsx-2.34, source: src/shared/menu/menu_set_selection_record.c, source_symbol: menu_set_selection_record}
   - {addr: 0x80118bf0, size: 276, name: world_menu_get_selection_record, hash: a14c583bfbf3490a, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80118d04, size: 280, name: world_formation_cycle_selected_unit, hash: 5680ffb0879b7bc2, profile: gcc-2.6.3_O1_aspsx-2.34}
   - {addr: 0x80118e1c, size: 120, name: world_formation_get_job_wheel_cursor_job_level, hash: 7b0c663e5e7f0ae3}
@@ -2698,6 +2698,7 @@ overrides:
   - {function: world_menu_selected_tile_info_display_thread, name: g_battle_tile_info_image_params, addr: 0x80154e08}
   - {function: world_menu_selected_tile_info_display_thread, name: g_map_selected_tile_data, addr: 0x8013a310}
   - {function: world_menu_selected_tile_info_display_thread, name: g_menu_texture_origin, addr: 0x80153188}
+  - {function: world_menu_set_selection_record, name: g_bunit_menu_selection_records, addr: 0x801c8364}
   - {function: world_menu_start_dead_unit_threads, name: battle_menu_icon_linked_entry_thread, addr: 0x800eee98}
   - {function: world_menu_start_dead_unit_threads, name: battle_menu_run_icon_selection_loop, addr: 0x800ecf20}
   - {function: world_menu_start_dead_unit_threads, name: battle_menu_start_building_thread, addr: 0x800f0a18}

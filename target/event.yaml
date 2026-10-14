@@ -368,7 +368,7 @@ functions:
   - {addr: 0x801c63a8, size: 468, name: bunit_menu_run_reorder_list, hash: 814b235b2017a455}
   - {addr: 0x801c657c, size: 44, name: bunit_menu_clear_selection_records, hash: 98148178dd779b39}
   - {addr: 0x801c65a8, size: 60, name: bunit_menu_clear_selection_record, hash: 971d949bbd11948f}
-  - {addr: 0x801c65e4, size: 76, name: bunit_menu_set_selection_record, hash: 74a1e89561e6aadf}
+  - {addr: 0x801c65e4, size: 76, name: bunit_menu_set_selection_record, hash: 74a1e89561e6aadf, source: src/shared/menu/menu_set_selection_record.c, source_symbol: menu_set_selection_record}
   - {addr: 0x801c6630, size: 176, name: bunit_menu_get_selection_record, hash: 7536cd22e376eeb6}
   - {addr: 0x801c66e0, size: 192, name: bunit_menu_is_unit_list_scroll_needed, hash: 28f8eae91bb947ee}
   - {addr: 0x801c67a0, size: 148, name: unit_is_two_handing_weapon, hash: 90d336abe9d84508, source: src/shared/unit/unit_is_two_handing_weapon.c}
