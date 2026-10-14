@@ -1,10 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Start map texture animation value_a from its first frame (map data command
- * 0x83). value_b goes in the object state argument, which that command does not
- * read. Always returns 1. */
-s32 battle_map_command_start_texture_animation(s32 value_a, s32 value_b) {
-    battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_START_TEXTURE_ANIMATION, value_a, value_b, 1);
+/* Start map texture animation `animation` from its first frame (map data command 0x83). `state` goes
+ * in the object state argument, which that command does not read. Always returns 1. */
+s32 battle_map_command_start_texture_animation(s32 animation, s32 state) {
+    battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_START_TEXTURE_ANIMATION, animation, state, 1);
     return 1;
 }

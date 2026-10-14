@@ -3,11 +3,15 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Map-state command dispatcher.
+/* Run a map data command (map_data_command_e) and return what a GET command reads: start one of the
+ * 32 texture animations from its first frame (0x83) or ask whether it still plays (0x82); pause and resume
+ * one (0x6a, 0x6b) or all of them (0x71, 0x72), saving their modes; set its frame duration (0x9d); start an
+ * animation state of a mesh part (0x80, event Use3DObject) or read the part's animation state (0x81, 0
+ * once the animation has ended); split the primary mesh into eight equal parts (0x98); switch the
+ * dithering of the background gradient off or on (0x7a, 0x7b); or release a held GNS load (0x9a).
  *
- * For event Use3DObject (0x80) `index` is the object id, `object_state` its
- * state row and `flag` is stored beside it; 0x9d reuses `object_state` as a
- * duration. */
+ * For 0x80 `index` is the part, `object_state` its state row and `flag` is stored beside it; 0x9d reuses
+ * `object_state` as the duration. */
 s32 battle_map_dispatch_map_data_command(s32 command, u32 index, s32 object_state, s32 flag) {
     s32 result;
     s16 i;

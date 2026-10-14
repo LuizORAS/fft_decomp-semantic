@@ -2,20 +2,14 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Textured polygon positions (battle_map_append_mesh_geometry). polygon_flags holds
- * the polygon flags loaded by GNS resource 0x2c (battle_map_dispatch_gns_resource). */
-
-/*
- * Map polygon flag commands for the textured triangles and quads.
+/* Run a polygon flag command (map_polygon_flag_command_e) on the textured map polygons.
  *
- * 0x94 restores the ambient colour g_battle_map_ambient_polygon_color on
- * every polygon whose flag bit 15 is clear and records the render buffer it
- * wrote in g_battle_map_ambient_restored_buffer; the map draw loop repeats the restore on the other
- * buffer and clears it. 0x46 copies flag bit 15 into bit 0 (after the flags
- * load and on the tile-colour reset); 0x47 clears bit 0 everywhere and stops
- * the g_battle_map_polygon_flag_clear_countdown countdown whose expiry issues it. The flag field is s16
- * (the bit 15 tests load it with `lh`).
- */
+ * 0x94 restores the ambient colour g_battle_map_ambient_polygon_color on every polygon whose flag bit 15
+ * is clear and records the render buffer it wrote in g_battle_map_ambient_restored_buffer; the map draw
+ * loop repeats the restore on the other buffer and clears it. 0x46 copies flag bit 15 into bit 0 (after
+ * the flags load and on the tile-colour reset); 0x47 clears bit 0 everywhere and stops the
+ * g_battle_map_polygon_flag_clear_countdown countdown whose expiry issues it. The flag field is s16 (the
+ * bit 15 tests load it with `lh`). */
 void battle_map_polygon_flag_command(s32 command) {
     s32 i;
 

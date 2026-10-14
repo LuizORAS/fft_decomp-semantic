@@ -8107,8 +8107,8 @@ void battle_map_queue_textured_triangles(u32* otag, void* prims, s32 yaw, s32* c
 void battle_map_queue_untextured_quads(u32* otag, void* prims, s32 yaw, s32* count);
 void battle_map_queue_untextured_triangles(u32* otag, void* prims, s32 yaw, s32* count);
 s32 battle_map_refresh_deep_dungeon(void);
-s32 battle_map_command_set_3d_object_state(s32 value_a, s32 value_b);
-s32 battle_map_command_start_texture_animation(s32 value_a, s32 value_b);
+s32 battle_map_command_set_3d_object_state(s32 part, s32 state);
+s32 battle_map_command_start_texture_animation(s32 animation, s32 state);
 void battle_map_set_light_matrices(MATRIX* first, MATRIX* second);
 void battle_map_run_weather_command(s32 command);
 s32 battle_map_start_texture_animation(s32 frame_duration, s32 clut_row, s32 first_color, s32 last_color);

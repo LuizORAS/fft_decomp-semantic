@@ -1,13 +1,16 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Run a weather display command.
+/* Run a weather command (map_weather_command_e): start snow (0x53, light 0x7e, heavy 0x7f) or rain
+ * (0x55, light 0x7c, heavy 0x7d) particles, stop them (0x54), start one lightning flash (0x89, which
+ * also plays the rain sound) or random lightning (0x8a), reload the saved background gradient, the colour
+ * matrix and the back colour (0x8c), or set up the weather the event set (0x8b).
  *
- * Command 0x8b reads the weather from script variable 0x23 and re-issues the
- * set-up commands for values 0-1, 2, 3 and 4, choosing each variant by the
- * snow bit of the map weather flags. The weather local is an s8: compares on
- * the promoted value copy it into a scratch register for the 3 and 4 tests,
- * as the target does. */
+ * Command 0x8b reads the weather from script variable 0x23 and issues the commands for its strength: none
+ * for 0-1, light for 2, normal for 3 and heavy for 4, snow on a map with the snow flag and rain elsewhere;
+ * normal and heavy rain also play the rain sound, and heavy rain brings random lightning. The weather local
+ * is an s8: compares on the promoted value copy it into a scratch register for the 3 and 4 tests, as the
+ * target does. */
 void battle_map_run_weather_command(s32 command) {
     s8 weather;
 

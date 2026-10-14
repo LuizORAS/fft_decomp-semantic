@@ -15,8 +15,16 @@ extern battle_map_weather_splash_rects_t g_battle_map_weather_splash_uv_rects;
 #define SAVED_GT3(i) (g_battle_target_tile_color_buffer->gt3[i])
 #define SAVED_GT4(i) g_battle_target_tile_color_buffer->gt4[i]
 
-/* Queue the map mesh parts and weather particles for one frame, then apply or
- * restore the targeting and movement tile colours. */
+/* Queue the map for one frame, from battle_state_run_game_loop: step the texture and mesh part
+ * animations, a lightning flash (the background gradient brightens and fades back, and for a few frames
+ * the map is lit by a dim blue back colour alone) and a light transition; set the background gradient and the light
+ * matrix; queue the primary mesh, then each animated part under its parent's matrix; queue the snow, rain or mode 0x96
+ * particles; finish an ambient colour restore on this buffer; then apply or restore the tile colours of the move range,
+ * the ability range and the targets.
+ *
+ * While an effect sorts the untextured polygons by depth on Entrance to Death City, Graveyard of Airships
+ * or Zirekile Falls, each animated part also writes four points, the translations of keyframes
+ * 0x61 + (part - 1) * 4 onward through the part's matrix, into the effect's work. */
 void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     MATRIX light_rotation;
     MATRIX light_matrix;

@@ -1,20 +1,18 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * The geometry block starts with four polygon counts, then stores positions
- * for all four polygon classes, normals for textured polygons, per-polygon
- * render data, and finally terrain-tile locations for textured polygons.
- * Each position/normal vector occupies eight renderer bytes: XYZ followed by
- * a spare halfword.  The first position vector's spare halfword holds the
- * polygon's packed terrain-tile location.
- * Target 0x800f4dd4 is the geometry pass for primary and animated meshes;
- * battle_map_init_mesh_render_records performs the separate packet
- * pass. Count order is textured triangles/quads, then untextured
- * triangles/quads. The mesh metadata keeps the starting indices and the
- * incoming counts; the persistent totals advance at the end.
- */
-
+/* Append one mesh geometry block (the primary mesh or a part's, GNS resources 0x10 and 0x24-0x2b) to
+ * the map's polygon tables, after the polygons already there: the positions of its textured and untextured
+ * triangles and quads, the normals of the textured ones and the terrain tile each textured polygon stands
+ * for. `metadata`, the mesh part, takes the start index and count of each kind, and the totals advance.
+ * It also sets the loader to MAP_LOAD_STATE_MESH_RECORDS, whose pass
+ * (battle_map_init_mesh_render_records) fills the GPU packets from the same block.
+ *
+ * The block holds four counts (textured triangles, textured quads, untextured triangles, untextured
+ * quads), the positions of all four kinds, the normals of the textured ones, the texture records (10 or 12
+ * bytes) and untextured records (4 bytes), which this pass skips, and the terrain tiles of the textured
+ * polygons. Each position or normal takes eight bytes in the tables, XYZ and a spare halfword; the first
+ * position's spare halfword holds the packed terrain tile. */
 void battle_map_append_mesh_geometry(void* geometry_data, battle_map_mesh_part_t* metadata) {
     u16* source = geometry_data;
     s32 i;
