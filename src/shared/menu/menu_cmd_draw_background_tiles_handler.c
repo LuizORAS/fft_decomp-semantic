@@ -1,15 +1,12 @@
-#include "fft/event_bunit.h"
 #include "fft/menu.h"
-#include "psx/types.h"
+#include "fft/menu_script.h"
 
 /* Fill a background rectangle with 16-pixel textured tiles.
  *
  * Command bytes 5 and 6 encode the full-tile counts in their high nibbles and
  * the remaining width and height in their low nibbles.
- *
- * This is the BUNIT.OUT twin of jobstts_cmd_draw_background_tiles_handler.
  */
-menu_instruction_t* bunit_cmd_draw_background_tiles_handler(menu_instruction_t* desc) {
+menu_instruction_t* menu_cmd_draw_background_tiles_handler(menu_instruction_t* desc) {
     RECT rect;
     s32 full_columns;
     s32 origin_x;

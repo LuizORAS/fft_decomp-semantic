@@ -251,6 +251,7 @@ menu_instruction_t* menu_cmd_set_tpage_handler(menu_instruction_t* command);
 extern menu_window_command_t g_menu_window_interior_command;
 extern s16 g_menu_window_right_x;
 
+menu_instruction_t* menu_cmd_draw_background_tiles_handler(menu_instruction_t* instruction);
 menu_instruction_t* menu_cmd_draw_window_frame_handler(menu_instruction_t* command);
 
 /* draw area commands */
