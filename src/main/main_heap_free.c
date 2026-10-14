@@ -13,8 +13,7 @@ s32 main_heap_free(void* pointer) {
     s32 previous_id = g_main_heap_game_allocator_table[page_index - 1];
 
     if ((page_index < 1) | (allocation_id != previous_id)) {
-        u8* table = g_main_heap_game_allocator_table;
-        u8* entry = &table[page_index];
+        u8* entry = &g_main_heap_game_allocator_table[page_index];
 
         do {
             *entry++ = 0;

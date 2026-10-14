@@ -24,13 +24,12 @@ void open_title_start_new_game_or_clear_file_buffer(void) {
 
     source = g_open_file_destination;
     destination = (s32*)g_open_work_buffer_0;
-    do {
+    for (; index < 30720; index++) {
         *destination = *source;
-        index++;
         *source = 0;
         source++;
         destination++;
-    } while (index < 0x7800);
+    }
 
     open_gfx_start_overlay_fade_out(0x10);
     record = open_gfx_append_animated_render_record(
