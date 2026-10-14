@@ -11,12 +11,11 @@ s32 ai_exclude_enemies_acting_before_ct(void) {
 
     result = 0;
     ai = &g_ai_data_base;
-    i = 0;
     /* The target walks a pointer that starts at the block base and steps by
      * sizeof(ai_unit_decision_t), reaching unit_decisions[i].enemy_flag as a
      * 0x1834 displacement; a pointer started at unit_decisions adds an addiu. */
-    walk = ai;
-    do {
+    for (i = 0, walk = ai; i < BATTLE_UNIT_SLOT_COUNT;
+        i++, walk = (ai_data_t*)((u8*)walk + sizeof(ai_unit_decision_t))) {
         if (ai->targetability.live.unit_targetable[i] != 0) {
             if ((ai->considered_ability.ai_flags.word & AI_ABILITY_FLAG_1_TARGET_ENEMIES)
                 && (walk->unit_decisions[0].enemy_flag != 0) && (ai_can_unit_act_within_charge_time(i) != 0)) {
@@ -25,8 +24,6 @@ s32 ai_exclude_enemies_acting_before_ct(void) {
                 result = 1;
             }
         }
-        i += 1;
-        walk = (ai_data_t*)((u8*)walk + sizeof(ai_unit_decision_t));
-    } while (i < BATTLE_UNIT_SLOT_COUNT);
+    }
     return result;
 }

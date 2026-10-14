@@ -8,11 +8,8 @@
  * mount) finds a relocation tile and moves the unit there. The post-action
  * display and the display update follow. */
 void battle_unit_update_attack_result_animation(battle_unit_t* unit) {
-    s32 result;
-
-    result = action_store_target_stats_pointer_data(unit->stats->battle_id);
-    unit->pending_attack_result = result;
-    if (result == -1) {
+    unit->pending_attack_result = action_store_target_stats_pointer_data(unit->stats->battle_id);
+    if (unit->pending_attack_result == -1) {
         battle_unit_find_relocation_tile(unit->stats->battle_id, &unit->dismount);
         battle_unit_set_map_coords_after_death_dismount(unit);
     }
