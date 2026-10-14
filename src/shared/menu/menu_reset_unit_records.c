@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -9,7 +10,7 @@ enum { WORLD_MENU_UNIT_SELECTION_RECORD_BYTES = (s32)sizeof(menu_unit_selection_
 
 /* Reset the per-unit menu records, clearing each and marking byte 1 as
  * unset (0xFF). */
-void world_menu_reset_unit_records(void) {
+void menu_reset_unit_records(void) {
     s32 index;
     u8* row;
     s32 count;

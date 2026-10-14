@@ -864,7 +864,7 @@ functions:
   - {addr: 0x8013caf4, size: 8, name: battle_noop_8013caf4, hash: 6d64edf91449c1b1}
   - {addr: 0x8013cafc, size: 224, name: battle_menu_open_companion_data_file, hash: 93bbe5220c3b507c}
   - {addr: 0x8013cbdc, size: 240, name: battle_menu_open_companion_executable, hash: 1b8c9a12ae0535a4}
-  - {addr: 0x8013cccc, size: 32, name: battle_menu_reset_unit_records_wrapper, hash: 1ea872deb6618e06}
+  - {addr: 0x8013cccc, size: 32, name: battle_menu_reset_unit_records_wrapper, hash: 1ea872deb6618e06, source: src/shared/menu/menu_reset_unit_records_wrapper.c, source_symbol: menu_reset_unit_records_wrapper}
   - {addr: 0x8013ccec, size: 8, name: battle_menu_run_companion_overlay_stub, hash: 6d64edf91449c1b1}
   - {addr: 0x8013ccf4, size: 612, name: battle_menu_start_entry_thread, hash: 611133d05022177f}
   - {addr: 0x8013cf58, size: 340, name: battle_menu_build_idle_action_menu, hash: bccc6338e9ba2dd5}
@@ -921,7 +921,7 @@ functions:
   - {addr: 0x8013f76c, size: 64, name: battle_menu_clear_entry_selections, hash: 46ac5994ee2ced8c}
   - {addr: 0x8013f7ac, size: 8, name: battle_noop_8013f7ac, hash: 6d64edf91449c1b1}
   - {addr: 0x8013f7b4, size: 256, name: battle_menu_restore_selection_for_selected_unit, hash: a409d984791f85bb, source: src/shared/menu/menu_restore_selection_for_selected_unit.c, source_symbol: menu_restore_selection_for_selected_unit}
-  - {addr: 0x8013f8b4, size: 76, name: battle_menu_reset_unit_records, hash: e2c9146172c12401}
+  - {addr: 0x8013f8b4, size: 76, name: battle_menu_reset_unit_records, hash: e2c9146172c12401, source: src/shared/menu/menu_reset_unit_records.c, source_symbol: menu_reset_unit_records}
   - {addr: 0x8013f900, size: 120, name: battle_menu_reset_unit_record, hash: 01a91c530dee054f}
   - {addr: 0x8013f978, size: 16, name: battle_menu_get_selected_command_address, hash: c365dc2ee8cef471}
   - {addr: 0x8013f988, size: 60, name: menu_mini_menu_cancel_delay_thread, hash: a19b498310498fbb, source: src/shared/menu/menu_mini_menu_cancel_delay_thread.c}
@@ -2926,6 +2926,8 @@ overrides:
   - {function: battle_menu_init_numeric_display_frame_primitives, name: g_world_menu_numeric_display_texture_window, addr: 0x80167830}
   - {function: battle_menu_init_numeric_display_frame_primitives, name: world_menu_init_primitive_colors_normal, addr: 0x8012f3cc}
   - {function: battle_menu_init_numeric_display_frame_primitives, name: world_menu_init_sprite, addr: 0x8012e244}
+  - {function: battle_menu_reset_unit_records, name: g_world_menu_unit_selection_rows, addr: 0x8014d46c}
+  - {function: battle_menu_reset_unit_records_wrapper, name: world_menu_reset_unit_records, addr: 0x8013f8b4}
   - {function: battle_menu_run_skillset_thread, name: g_world_menu_monster_skillset_flag, addr: 0x80169840}
   - {function: battle_menu_run_skillset_thread, name: g_world_menu_restore_depth, addr: 0x8014d325}
   - {function: battle_menu_run_skillset_thread, name: g_world_menu_unit_selection_rows, addr: 0x8014d46c}

@@ -1469,6 +1469,8 @@ extern s16 g_menu_pending_selection[4];
 void menu_mini_menu_cancel_delay_thread(void);
 void menu_confirm_sound_delay_thread(void);
 void menu_check_action_restrictions(void);
+void menu_reset_unit_records(void);
+void menu_reset_unit_records_wrapper(void);
 void menu_restore_selection_for_selected_unit(s32 menu_id);
 void menu_run_skillset_thread(void);
 
