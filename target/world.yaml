@@ -874,10 +874,10 @@ functions:
   - {addr: 0x8012c6a8, size: 532, name: world_gfx_enqueue_textured_quad, hash: 078cc1e65b7f2166, source: src/shared/menu/menu_gfx_enqueue_textured_quad.c, source_symbol: menu_gfx_enqueue_textured_quad}
   - {addr: 0x8012c8bc, size: 1044, name: world_gfx_enqueue_oriented_textured_quad, hash: d8f5a8de17e2f88a, source: src/shared/menu/menu_gfx_enqueue_oriented_textured_quad.c, source_symbol: menu_gfx_enqueue_oriented_textured_quad}
   - {addr: 0x8012ccd0, size: 508, name: world_gfx_enqueue_textured_quad_corners, hash: c4fceb98c52526bd, source: src/shared/gfx/gfx_enqueue_textured_quad_corners.c, source_symbol: gfx_enqueue_textured_quad_corners}
-  - {addr: 0x8012cecc, size: 264, name: world_gfx_enqueue_draw_move, hash: 864c1f15031931d7}
+  - {addr: 0x8012cecc, size: 264, name: world_gfx_enqueue_draw_move, hash: 864c1f15031931d7, source: src/shared/menu/menu_gfx_enqueue_draw_move.c, source_symbol: menu_gfx_enqueue_draw_move}
   - {addr: 0x8012cfd4, size: 648, name: world_gfx_enqueue_gouraud_textured_quad, hash: 8cd3a294e9e6a1ef, source: src/shared/gfx/gfx_enqueue_gouraud_textured_quad.c, source_symbol: gfx_enqueue_gouraud_textured_quad}
   - {addr: 0x8012d25c, size: 228, name: world_gfx_add_draw_area_primitive, hash: e7bfa939d7f5fdf9}
-  - {addr: 0x8012d340, size: 216, name: world_gfx_enqueue_draw_mode, hash: b3527d193a2cd310}
+  - {addr: 0x8012d340, size: 216, name: world_gfx_enqueue_draw_mode, hash: b3527d193a2cd310, source: src/shared/menu/menu_gfx_enqueue_draw_mode.c, source_symbol: menu_gfx_enqueue_draw_mode}
   - {addr: 0x8012d418, size: 60, name: world_gfx_get_fade_state, hash: d7f4e2f99b4809ad}
   - {addr: 0x8012d454, size: 56, name: world_gfx_start_decreasing_fade, hash: 037c6ba8ccc70ed9}
   - {addr: 0x8012d48c, size: 52, name: world_gfx_start_increasing_fade, hash: 61d9a6f4f5d1e06f}
@@ -2389,6 +2389,10 @@ overrides:
   - {function: world_card_read_file_with_retries, name: card_file_seek_with_retries, addr: 0x80132f7c}
   - {function: world_card_seek_file_with_retries, name: card_io_wait_operation_result, addr: 0x80132b50}
   - {function: world_card_write_file_with_retries, name: card_file_seek_with_retries, addr: 0x80132f7c}
+  - {function: world_gfx_enqueue_draw_mode, name: g_menu_gfx_context, addr: 0x801cd528}
+  - {function: world_gfx_enqueue_draw_mode, name: g_menu_gfx_draw_mode_count, addr: 0x801cd504}
+  - {function: world_gfx_enqueue_draw_move, name: g_menu_gfx_context, addr: 0x801cd528}
+  - {function: world_gfx_enqueue_draw_move, name: g_menu_gfx_draw_move_count, addr: 0x801cd520}
   - {function: world_gfx_enqueue_gouraud_textured_quad, name: g_bunit_gfx_poly_gt4_count, addr: 0x801cd1d0}
   - {function: world_gfx_enqueue_gouraud_textured_quad, name: g_menu_gfx_context, addr: 0x801cd528}
   - {function: world_gfx_enqueue_line_f2, name: g_equip_gfx_line_f2_count, addr: 0x801cd198}
