@@ -1851,7 +1851,7 @@ links: [battle]
 
 functions:
   - {addr: 0x801df000, size: 80, name: helpmenu_menu_close, hash: af74553ec4c059ff}
-  - {addr: 0x801df050, size: 3460, name: helpmenu_menu_run_battle_help, hash: e2c1ec858fd1c5b6}
+  - {addr: 0x801df050, size: 3460, name: helpmenu_menu_run_battle_help, hash: e2c1ec858fd1c5b6, source: src/shared/menu/menu_run_battle_help.c, source_symbol: menu_run_battle_help}
   - {addr: 0x801dfdd4, size: 60, name: helpmenu_thread_find_first_running_menu_thread, hash: d0b478b250e3aa50}
   - {addr: 0x801dfe10, size: 1992, name: helpmenu_menu_run_require_help, hash: 271ef372178e62f2}
 
@@ -1871,6 +1871,33 @@ data:
   - {addr: 0x801f74f8, name: g_helpmenu_controller_state_ptr}
   - {addr: 0x801f74fc, name: g_helpmenu_current_text_ids}
   - {addr: 0x801f7504, name: g_helpmenu_text_saved_pointers}
+
+overrides:
+  - {function: helpmenu_menu_run_battle_help, name: g_world_action_menu_skillsets, addr: 0x80174060}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_active_banner, addr: 0x801e05e4}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_active_text_id_tables, addr: 0x80173f60}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_active_unit_data, addr: 0x801e062c}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_attack_preview_navigation, addr: 0x801e078c}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_billboard, addr: 0x801e064c}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_controller_state_ptr, addr: 0x801f74f8}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_data_base, addr: 0x801e0bb0}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_menu_cursor_tile, addr: 0x801e05d8}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_menu_text_id_tables, addr: 0x801e0ad4}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_require_navigation, addr: 0x801e084c}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_terrain_navigation, addr: 0x801e06fc}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_text_section_offsets, addr: 0x801e0b30}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_topic_text_ids, addr: 0x801f74fc}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_help_unit_box_navigation, addr: 0x801e07fc}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_menu_transition_active, addr: 0x80165f74}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_selected_unit_stat_summary, addr: 0x801ce8fc}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_text_section_pointer_backup, addr: 0x801f7504}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_unit_join_screen_active, addr: 0x80165fc4}
+  - {function: helpmenu_menu_run_battle_help, name: g_world_unit_view_mode, addr: 0x80165f80}
+  - {function: helpmenu_menu_run_battle_help, name: world_menu_close_help_menu, addr: 0x801df000}
+  - {function: helpmenu_menu_run_battle_help, name: world_menu_get_cursor_bob_offset, addr: 0x801384e0}
+  - {function: helpmenu_menu_run_battle_help, name: world_text_character_handling_thread, addr: 0x801308c0}
+  - {function: helpmenu_menu_run_battle_help, name: world_thread_find_first_running_menu_thread, addr: 0x801dfdd4}
+  - {function: helpmenu_menu_run_battle_help, name: world_thread_find_running_by_task, addr: 0x80149cbc}
 ---
 module: event-jobstts
 file: EVENT/JOBSTTS.OUT

@@ -1,12 +1,9 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
-#include "fft/sound.h"
-#include "fft/thread.h"
-/* WORLD copy of the EVENT HELPMENU battle help menu
- * (helpmenu_menu_run_battle_help), identical apart from addresses.
- */
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -14,7 +11,7 @@
 
 /* Opens help for the running menu's pending request, or runs the bouncing
  * help cursor over the navigation table for that menu or the unit view. */
-void world_menu_run_battle_help(void) {
+void menu_run_battle_help(void) {
     POLY_FT4 cursor_quads[2];
     POLY_FT4 shadow_quads[2];
     help_navigation_record_t* navigation;
