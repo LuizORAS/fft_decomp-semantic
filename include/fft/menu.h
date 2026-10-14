@@ -1612,6 +1612,8 @@ extern menu_text_state_t g_menu_text_state;
 /* Added to glyph palette indices while menu text is drawn. */
 extern s32 g_menu_text_palette_offset;
 
+void menu_set_text_origin(s32 x, s32 y);
+
 /* list threads */
 extern u32* g_menu_input_controller;
 void menu_draw_text_columns(menu_entry_t* entry, s32* row_offset, u8* buffer);

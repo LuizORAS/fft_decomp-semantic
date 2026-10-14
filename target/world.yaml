@@ -391,7 +391,7 @@ functions:
   - {addr: 0x800fdaa4, size: 120, name: gfx_draw_or_append_gpu_primitive, hash: dca627eb5cafa52b, source: src/shared/gfx/gfx_draw_or_append_gpu_primitive.c}
   - {addr: 0x800fdb1c, size: 68, name: gfx_append_gpu_primitive_to_secondary_otag, hash: 02bbf18f6b22cc78, source: src/shared/gfx/gfx_append_gpu_primitive_to_secondary_otag.c}
   - {addr: 0x800fdb60, size: 40, name: world_text_set_substitution_values_7e_7f, hash: a16257863fe24cf9}
-  - {addr: 0x800fdb88, size: 24, name: world_menu_set_text_origin, hash: a51a712749aadf4e}
+  - {addr: 0x800fdb88, size: 24, name: world_menu_set_text_origin, hash: a51a712749aadf4e, source: src/shared/menu/menu_set_text_origin.c, source_symbol: menu_set_text_origin}
   - {addr: 0x800fdba0, size: 196, name: world_gfx_set_draw_mode_for_texture_page, hash: 56f7c2353711f7fb, source: src/shared/gfx/gfx_set_draw_mode_for_texture_page.c, source_symbol: gfx_set_draw_mode_for_texture_page}
   - {addr: 0x800fdc64, size: 116, name: world_gfx_set_draw_mode_from_origin, hash: 4a235355ddf2066d, source: src/shared/gfx/gfx_set_draw_mode_from_origin.c, source_symbol: gfx_set_draw_mode_from_origin}
   - {addr: 0x800fdcd8, size: 8, name: world_return_zero, hash: 207819bf4ebe3078}
