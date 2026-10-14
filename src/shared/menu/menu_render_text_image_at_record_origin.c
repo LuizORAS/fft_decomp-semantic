@@ -1,4 +1,5 @@
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 
@@ -7,8 +8,8 @@
  *
  * A portrait dialog gets the window with its tail, every other type the plain
  * frame; a centered box is skipped. The thread yields once between the upload and
- * the free. BATTLE twin of world_menu_render_text_image_at_record_origin. */
-void battle_menu_render_text_image_at_record_origin(text_dialog_record_t* record) {
+ * the free. */
+void menu_render_text_image_at_record_origin(text_dialog_record_t* record) {
     if (record->box_type != DIALOG_BOX_TYPE_CENTERED) {
         if (record->box_type == DIALOG_BOX_TYPE_PORTRAIT) {
             record->buffer = battle_menu_build_window_image(

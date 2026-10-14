@@ -1929,6 +1929,8 @@ typedef struct text_dialog_record {
     s32 y_offset;      /* 0x4c: DisplayMessage Y coordinate, added to y */
 } text_dialog_record_t;
 
+void menu_render_text_image_at_record_origin(text_dialog_record_t* record);
+
 /* One pending text glyph: BATTLE's dialogue renderer state at 0x8016dad4
  * (filled by battle_text_run_dialog_thread, drawn by
  * battle_text_draw_glyph_with_typewriter_delay), WORLD's typewriter request at 0x8019a338

@@ -87,7 +87,7 @@ functions:
   - {addr: 0x800e41fc, size: 108, name: text_resolve_format_string_id, hash: ca1c3176797cf8bd, source: src/shared/text/text_resolve_format_string_id.c}
   - {addr: 0x800e4268, size: 1024, name: text_measure, hash: 694a13bd7fb3f97e, source: src/shared/text/text_measure.c}
   - {addr: 0x800e4668, size: 1180, name: text_measure_pixels, hash: 899223b71ed0424b, source: src/shared/text/text_measure_pixels.c}
-  - {addr: 0x800e4b04, size: 240, name: world_menu_render_text_image_at_record_origin, hash: 410b378a04558e03}
+  - {addr: 0x800e4b04, size: 240, name: world_menu_render_text_image_at_record_origin, hash: 410b378a04558e03, source: src/shared/menu/menu_render_text_image_at_record_origin.c, source_symbol: menu_render_text_image_at_record_origin}
   - {addr: 0x800e4bf4, size: 188, name: text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0, source: src/shared/text/text_advance_cursor_with_backreferences.c}
   - {addr: 0x800e4cb0, size: 160, name: text_advance_cursor_with_separate_backreference_state, hash: 267aa40059dcef97, source: src/shared/text/text_advance_cursor_with_separate_backreference_state.c}
   - {addr: 0x800e4d50, size: 76, name: world_text_print_fnt_value_and_next, hash: 9128d74441ddfc53}
@@ -2441,6 +2441,13 @@ overrides:
   - {function: world_menu_refresh_right_unit_stats_display, name: g_battle_menu_right_unit_stats_display, addr: 0x80155aec}
   - {function: world_menu_refresh_right_unit_stats_display, name: g_battle_menu_right_unit_stats_setup, addr: 0x80155b6c}
   - {function: world_menu_refresh_right_unit_stats_display, name: g_battle_menu_status_billboard, addr: 0x8013a340}
+  - {function: world_menu_render_text_image_at_record_origin, name: battle_menu_build_and_upload_window_frame_image, addr: 0x800ff9ac}
+  - {function: world_menu_render_text_image_at_record_origin, name: battle_menu_build_window_image, addr: 0x800ff690}
+  - {function: world_menu_render_text_image_at_record_origin, name: battle_menu_display_text_entry, addr: 0x800fe774}
+  - {function: world_menu_render_text_image_at_record_origin, name: battle_menu_free_memory, addr: 0x800e3298}
+  - {function: world_menu_render_text_image_at_record_origin, name: g_battle_menu_text_param_22, addr: 0x80153304}
+  - {function: world_menu_render_text_image_at_record_origin, name: g_battle_menu_text_param_24, addr: 0x80153308}
+  - {function: world_menu_render_text_image_at_record_origin, name: g_menu_text_state, addr: 0x80153280}
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_gfx_free_tpage7_vram, addr: 0x800e2edc}
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_gfx_set_draw_mode_for_texture_page, addr: 0x800fdba0}
