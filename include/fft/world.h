@@ -866,7 +866,7 @@ void world_gfx_enqueue_textured_quad_list(
 
 void world_gfx_alloc_tpage7_vram(RECT* rect, void* prim, u32* image);
 void world_gfx_enqueue_textured_quad_corners(
-    textured_quad_source_t* source, rgb24_t* rgb, s32 semi_trans, s32 ot_index);
+    const textured_quad_source_t* source, const rgb24_t* rgb, s32 semi_trans, s32 ot_index);
 void world_gfx_enqueue_gouraud_quad(point16_t* xy, rgb24_t* colors, s32 semi_trans, s32 ot_index);
 void world_gfx_enqueue_gouraud_textured_quad(
     const textured_rect_source_t* source, const rgb24_t* colors, s32 semi_trans, s32 ot_index);
