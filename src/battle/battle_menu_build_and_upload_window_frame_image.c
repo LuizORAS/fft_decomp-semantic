@@ -29,7 +29,7 @@ u8* battle_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT*
     words = width & 3;
     has_partial_word = words != 0;
     words = (width >> 2) + has_partial_word;
-    src = (u16*)g_battle_menu_glyph_image->pixels;
+    src = (u16*)g_menu_glyph_sheet->pixels;
     size = (width * height) >> 1;
     first = 0;
     if (size > 0x3000 && mode == MENU_WINDOW_FRAME_UPLOAD) {

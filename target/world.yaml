@@ -563,7 +563,7 @@ functions:
   - {addr: 0x8011196c, size: 84, name: world_menu_select_primitive_color_palette, hash: 98f3a5d0ed4e9088}
   - {addr: 0x801119c0, size: 268, name: world_text_render_signed_decimal_entries, hash: 77d870766dabc4f4}
   - {addr: 0x80111acc, size: 244, name: world_text_render_decimal_entry_list, hash: 94a35abd03a73643}
-  - {addr: 0x80111bc0, size: 772, name: world_text_render_decimal_value, hash: bd99cc3a039a22aa}
+  - {addr: 0x80111bc0, size: 772, name: menu_text_render_decimal_value, hash: bd99cc3a039a22aa, source: src/shared/menu/menu_text_render_decimal_value.c}
   - {addr: 0x80111ec4, size: 1368, name: world_menu_run_numeric_editor_thread, hash: 007a9e8af4e1c2ff}
   - {addr: 0x8011241c, size: 496, name: world_menu_icon_list_thread, hash: 33caada358d27009}
   - {addr: 0x8011260c, size: 248, name: world_menu_text_entry_wait_thread, hash: 9d318a9f2e6d6d43}
@@ -1425,7 +1425,7 @@ data:
   - {addr: 0x8018b3fc, name: g_world_editor_numeric_texture}
   - {addr: 0x8018b4d4, name: g_world_editor_numeric_descriptor_a}
   - {addr: 0x8018b588, name: g_world_editor_numeric_descriptor_b}
-  - {addr: 0x8018b660, name: g_world_decimal_glyph_source}
+  - {addr: 0x8018b660, name: g_menu_decimal_glyph}
   - {addr: 0x8018b670, name: g_world_formation_menu_text_table}
   - {addr: 0x8018b804, name: g_world_formation_menu_palettes}
   - {addr: 0x8018ba04, name: g_world_gfx_black_tile_color}
@@ -2302,7 +2302,7 @@ data:
   - {addr: 0x801cd824, name: g_world_menu_option_count}
   - {addr: 0x801cd828, name: g_world_event_music_switch}
   - {addr: 0x801cd82c, name: g_world_fixed_math_overflow}
-  - {addr: 0x801cd830, name: g_world_menu_glyph_sheet}
+  - {addr: 0x801cd830, name: g_menu_glyph_sheet}
   - {addr: 0x801cd838, name: g_world_input_newly_pressed}
   - {addr: 0x801cd83c, name: GsLIGHT_MODE}
   - {addr: 0x801cd840, name: g_world_gfx_poly_f3_capacity}
@@ -2357,6 +2357,7 @@ overrides:
   - {function: menu_copy_billboard_data_out, name: g_map_selected_tile_data, addr: 0x8013a310}
   - {function: menu_init_panel_fade_tiles, name: g_battle_menu_disabled_texture_window, addr: 0x801531b0}
   - {function: menu_init_sprite_array, name: battle_menu_init_semitransparent_sprt, addr: 0x800e2444}
+  - {function: menu_text_render_decimal_value, name: blit_text_glyph, addr: 0x800feff0}
   - {function: script_find_instruction_byte_offset, name: g_script_event_instruction_sizes, addr: 0x8013a454}
   - {function: script_find_jump_target, name: g_script_event_instruction_sizes, addr: 0x8013a454}
   - {function: script_interpolate_range_fixed12, name: battle_mul_div_s64, addr: 0x80100188}

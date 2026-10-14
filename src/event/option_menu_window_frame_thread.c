@@ -41,20 +41,20 @@ void option_menu_window_frame_thread(void) {
 
     option_text_set_blit_source_rect(8, 8, 0x20, 0x10);
     option_text_set_blit_destination(0, 0);
-    blit_text_glyph(g_battle_menu_glyph_image->pixels, g_option_menu_panel_pixels, &g_option_text_glyph_source,
-        &g_option_text_glyph_dest);
+    blit_text_glyph(
+        g_menu_glyph_sheet->pixels, g_option_menu_panel_pixels, &g_option_text_glyph_source, &g_option_text_glyph_dest);
     option_text_set_blit_source_rect(0, 8, 8, 0x10);
     option_text_set_blit_destination(0x20, 0);
-    blit_text_glyph(g_battle_menu_glyph_image->pixels, g_option_menu_panel_pixels, &g_option_text_glyph_source,
-        &g_option_text_glyph_dest);
+    blit_text_glyph(
+        g_menu_glyph_sheet->pixels, g_option_menu_panel_pixels, &g_option_text_glyph_source, &g_option_text_glyph_dest);
     option_text_set_blit_source_rect(0xd8, 0, 0x28, 0x10);
     option_text_set_blit_destination(0x28, 0);
-    blit_text_glyph(g_battle_menu_glyph_image->pixels, g_option_menu_panel_pixels, &g_option_text_glyph_source,
-        &g_option_text_glyph_dest);
+    blit_text_glyph(
+        g_menu_glyph_sheet->pixels, g_option_menu_panel_pixels, &g_option_text_glyph_source, &g_option_text_glyph_dest);
     option_text_set_blit_source_rect(0xd8, 0x10, 0x28, 0x10);
     option_text_set_blit_destination(0x58, 0);
-    blit_text_glyph(g_battle_menu_glyph_image->pixels, g_option_menu_panel_pixels, &g_option_text_glyph_source,
-        &g_option_text_glyph_dest);
+    blit_text_glyph(
+        g_menu_glyph_sheet->pixels, g_option_menu_panel_pixels, &g_option_text_glyph_source, &g_option_text_glyph_dest);
 
     LoadImage(&texture, (u32*)g_option_menu_panel_pixels);
     menu_init_sprite_array(prim->sprites, 9, 0x7c3c);

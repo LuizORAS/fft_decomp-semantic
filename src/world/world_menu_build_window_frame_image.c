@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 
 /* Build a 4bpp window-frame image from the shared menu graphics.
@@ -8,7 +9,7 @@
  * not positive.
  */
 s32 world_menu_build_window_frame_image(s32 w, s32 h, u16* dst) {
-    u16* src = (u16*)g_world_menu_glyph_sheet->pixels;
+    u16* src = (u16*)g_menu_glyph_sheet->pixels;
     s32 words;
     s32 i;
     s32 first = 0;

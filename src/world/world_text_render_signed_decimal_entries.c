@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -22,7 +23,7 @@ void world_text_render_signed_decimal_entries(u8* pixels, menu_number_entry_t* e
             out->color = 0;
             entries->format |= MENU_DECIMAL_SIGN_MINUS;
         }
-        world_text_render_decimal_value(amount, entries->format, pixels, out);
+        menu_text_render_decimal_value(amount, entries->format, pixels, out);
         out->color = 0;
     }
 }

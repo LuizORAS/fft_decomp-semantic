@@ -1,5 +1,6 @@
 #include "fft/event_equip.h"
 #include "fft/gfx.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /*
@@ -24,7 +25,7 @@ void equip_menu_load_images_and_reset_lists(void) {
     rect.y = 0;
     rect.w = 0x40;
     rect.h = 0x30;
-    gfx_load_image_and_wait(&rect, g_battle_menu_glyph_image->pixels);
+    gfx_load_image_and_wait(&rect, g_menu_glyph_sheet->pixels);
     rect.x = 0x100;
     rect.y = 0xFA;
     rect.w = 0x40;

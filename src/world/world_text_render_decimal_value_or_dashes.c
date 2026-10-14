@@ -22,7 +22,7 @@ void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, u8* pixels,
         g_world_text_large_number_glyph_rect.rect.y = 0x10;
         if (flags & 1) {
             glyph->rect.x = 0xB4;
-            world_text_blit_glyph(g_world_menu_glyph_sheet->pixels, pixels, glyph, position);
+            world_text_blit_glyph(g_menu_glyph_sheet->pixels, pixels, glyph, position);
             position->rect.x += 5;
         }
         glyph->rect.x = 0xBA;
@@ -30,8 +30,7 @@ void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, u8* pixels,
             glyph->rect.x = 0xD0;
         }
         for (i = 0; i < 3; i++) {
-            world_text_blit_glyph(
-                g_world_menu_glyph_sheet->pixels, pixels, &g_world_text_large_number_glyph_rect, position);
+            world_text_blit_glyph(g_menu_glyph_sheet->pixels, pixels, &g_world_text_large_number_glyph_rect, position);
             position->rect.x += 5;
         }
         return;
@@ -47,15 +46,13 @@ void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, u8* pixels,
     }
     if (flags & 0x1000) {
         glyph->rect.x = 0xB4;
-        world_text_blit_glyph(
-            g_world_menu_glyph_sheet->pixels, pixels, &g_world_text_large_number_glyph_rect, position);
+        world_text_blit_glyph(g_menu_glyph_sheet->pixels, pixels, &g_world_text_large_number_glyph_rect, position);
         position->rect.x += 5;
     }
     if (flags & 0x8000) {
         position->rect.x -= 2;
         glyph->rect.x = 0xB4;
-        world_text_blit_glyph(
-            g_world_menu_glyph_sheet->pixels, pixels, &g_world_text_large_number_glyph_rect, position);
+        world_text_blit_glyph(g_menu_glyph_sheet->pixels, pixels, &g_world_text_large_number_glyph_rect, position);
         position->rect.x += 7;
     }
     if (flags & 0x100) {
@@ -63,8 +60,7 @@ void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, u8* pixels,
         glyph->rect.y = 0x1A;
         glyph->rect.h = 4;
         position->rect.y += 3;
-        world_text_blit_glyph(
-            g_world_menu_glyph_sheet->pixels, pixels, &g_world_text_large_number_glyph_rect, position);
+        world_text_blit_glyph(g_menu_glyph_sheet->pixels, pixels, &g_world_text_large_number_glyph_rect, position);
         position->rect.x += 7;
         position->rect.y -= 3;
         glyph->rect.y = 0x10;
@@ -77,16 +73,14 @@ void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, u8* pixels,
         if (flags & 0x800) {
             glyph->rect.x = 0xBA;
         }
-        world_text_blit_glyph(
-            g_world_menu_glyph_sheet->pixels, pixels, &g_world_text_large_number_glyph_rect, position);
+        world_text_blit_glyph(g_menu_glyph_sheet->pixels, pixels, &g_world_text_large_number_glyph_rect, position);
         value /= 10;
         position->rect.x -= 5;
     }
     position->rect.x = work;
     if (flags & 0x2000) {
         glyph->rect.x = 0xC0;
-        world_text_blit_glyph(
-            g_world_menu_glyph_sheet->pixels, pixels, &g_world_text_large_number_glyph_rect, position);
+        world_text_blit_glyph(g_menu_glyph_sheet->pixels, pixels, &g_world_text_large_number_glyph_rect, position);
         position->rect.x += 5;
     }
 }

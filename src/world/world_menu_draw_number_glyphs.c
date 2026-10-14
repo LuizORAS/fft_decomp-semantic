@@ -22,9 +22,9 @@ void world_menu_draw_number_glyphs(s32 value, s32 digits, u8* resource, glyph_bl
         src->rect.x = 0xBA;
         g_world_menu_number_glyph_rect.rect.y = 0xD;
         g_world_menu_number_glyph_rect.rect.w = 6;
-        world_text_blit_glyph(g_world_menu_glyph_sheet->pixels, resource, src, pos);
+        world_text_blit_glyph(g_menu_glyph_sheet->pixels, resource, src, pos);
         pos->rect.x += 7;
-        world_text_blit_glyph(g_world_menu_glyph_sheet->pixels, resource, src, pos);
+        world_text_blit_glyph(g_menu_glyph_sheet->pixels, resource, src, pos);
         pos->rect.x += 7;
         g_world_menu_number_glyph_rect.rect.w = 8;
         return;
@@ -32,7 +32,7 @@ void world_menu_draw_number_glyphs(s32 value, s32 digits, u8* resource, glyph_bl
     if (digits & 0x1000) {
         src->rect.x = 0xC8;
         g_world_menu_number_glyph_rect.rect.y = 0;
-        world_text_blit_glyph(g_world_menu_glyph_sheet->pixels, resource, src, pos);
+        world_text_blit_glyph(g_menu_glyph_sheet->pixels, resource, src, pos);
         pos->rect.x += 7;
     }
     if ((digits & 0x800) || (digits & 0x400)) {
@@ -44,7 +44,7 @@ void world_menu_draw_number_glyphs(s32 value, s32 digits, u8* resource, glyph_bl
         src->rect.y = 0xD;
         src->rect.w = 6;
         pos->rect.x -= 6;
-        world_text_blit_glyph(g_world_menu_glyph_sheet->pixels, resource, &g_world_menu_number_glyph_rect, pos);
+        world_text_blit_glyph(g_menu_glyph_sheet->pixels, resource, &g_world_menu_number_glyph_rect, pos);
         pos->rect.x += 6;
         src->rect.w = 8;
     }
@@ -59,7 +59,7 @@ void world_menu_draw_number_glyphs(s32 value, s32 digits, u8* resource, glyph_bl
             src->rect.x = 0x48;
             src->rect.y = 0x10;
         }
-        world_text_blit_glyph(g_world_menu_glyph_sheet->pixels, resource, &g_world_menu_number_glyph_rect, pos);
+        world_text_blit_glyph(g_menu_glyph_sheet->pixels, resource, &g_world_menu_number_glyph_rect, pos);
         /* After the call: the quotient stays live past the argument setup, so
          * it takes a callee-saved register and the update lands in the delay
          * slot, as the target does at 0x238. */

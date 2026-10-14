@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -27,6 +28,6 @@ void world_text_render_decimal_entry_list(
             flags &= MENU_DECIMAL_FIELD_WIDTH_CLEAR_MASK;
             flags |= MENU_DECIMAL_ZERO_PLACEHOLDER_FLAGS;
         }
-        world_text_render_decimal_value(amount, flags, pixels, out);
+        menu_text_render_decimal_value(amount, flags, pixels, out);
     }
 }

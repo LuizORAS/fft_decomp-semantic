@@ -1,5 +1,6 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Draw the two stacked glyphs of g_battle_menu_stacked_glyph_upper and _lower at
@@ -8,7 +9,7 @@
 void battle_menu_draw_stacked_glyph_pair(u8* pixels, glyph_blit_t* position) {
     position->rect.x -= 2;
     position->rect.y += 2;
-    blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_battle_menu_stacked_glyph_upper, position);
+    blit_text_glyph(g_menu_glyph_sheet->pixels, pixels, &g_battle_menu_stacked_glyph_upper, position);
     position->rect.y += 4;
-    blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_battle_menu_stacked_glyph_lower, position);
+    blit_text_glyph(g_menu_glyph_sheet->pixels, pixels, &g_battle_menu_stacked_glyph_lower, position);
 }

@@ -1810,8 +1810,6 @@ extern s32 g_world_text_message_box_glyph_delay;
 extern u8 g_world_text_message_box_slot_carry_offset[4];
 extern u8 g_world_text_message_box_slot_prev_width[4];
 
-/* Same layout as world_text_render_decimal_entry_list's output record. */
-extern glyph_blit_t g_world_decimal_glyph_source;
 extern menu_status_thread_t g_world_numeric_editor_thread_params;
 extern u8 g_world_text_task_phase;
 extern u8 g_world_text_skillset_names_data[];
@@ -1868,7 +1866,6 @@ u8* world_text_find_entry_by_index(u8* p, s16 count, s32 unused);
 void world_text_render_decimal_entry_list(
     u8* pixels, const menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
 
-void world_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
 void world_text_render_decimal_value_or_dashes(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
 void world_text_render_id_list_to_image_rows(u8* font, s16* text_ids, RECT* destination, s32 palette);
 
@@ -2250,7 +2247,6 @@ extern s16 g_world_menu_scenario_event_started;
 extern menu_entry_t* g_world_menu_thread_menu_data;
 
 extern menu_callback_t g_world_menu_script_callbacks[16];
-extern menu_glyph_sheet_t* g_world_menu_glyph_sheet; /* decoded glyph page, 0x80 bytes per row */
 extern u16 g_world_menu_disabled_number_clut;
 
 /*

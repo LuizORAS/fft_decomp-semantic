@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 
@@ -26,7 +27,7 @@ void world_formation_init_menu_display(void) {
     rect.y = 0x100;
     rect.w = 0x40;
     rect.h = 0x30;
-    gfx_load_image_and_wait(&rect, g_world_menu_glyph_sheet->pixels);
+    gfx_load_image_and_wait(&rect, g_menu_glyph_sheet->pixels);
     rect.x = 0x240;
     rect.y = 0x1FA;
     rect.w = 0x40;

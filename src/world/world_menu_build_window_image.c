@@ -36,7 +36,7 @@ u8* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s
     image = world_menu_alloc_ui_buffer(byte_count);
     world_clear_menu_render_buffer(image, byte_count);
     x_offset = 0;
-    sheet = (u16*)g_world_menu_glyph_sheet->pixels;
+    sheet = (u16*)g_menu_glyph_sheet->pixels;
     if (kind != DIALOG_OPTIONS_NO_TAIL) {
         if ((mode & DIALOG_TYPE_POSITION_MASK) == 2) {
             x_offset = words * 8;
@@ -91,7 +91,7 @@ u8* world_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s
         if (width - 0x10 < g_world_menu_window_sprite_position.rect.x) {
             g_world_menu_window_sprite_position.rect.x = width - 0x10;
         }
-        world_text_blit_glyph(g_world_menu_glyph_sheet->pixels, (u8*)image, &g_world_menu_window_sprite_source,
+        world_text_blit_glyph(g_menu_glyph_sheet->pixels, (u8*)image, &g_world_menu_window_sprite_source,
             &g_world_menu_window_sprite_position);
         if (i != 0) {
             world_gfx_mirror_4bpp_rect((u8*)image, &g_world_menu_window_sprite_position);

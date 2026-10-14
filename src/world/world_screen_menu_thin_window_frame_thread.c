@@ -48,20 +48,16 @@ void world_screen_menu_thin_window_frame_thread(void) {
 
     world_gfx_set_blit_source_rect(8, 8, 0x20, 0x10);
     world_gfx_set_blit_dest_position(0, 0);
-    world_text_blit_glyph(
-        g_world_menu_glyph_sheet->pixels, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
+    world_text_blit_glyph(g_menu_glyph_sheet->pixels, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
     world_gfx_set_blit_source_rect(0, 8, 8, 0x10);
     world_gfx_set_blit_dest_position(0x20, 0);
-    world_text_blit_glyph(
-        g_world_menu_glyph_sheet->pixels, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
+    world_text_blit_glyph(g_menu_glyph_sheet->pixels, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
     world_gfx_set_blit_source_rect(0, 0, 0x28, 8);
     world_gfx_set_blit_dest_position(0x28, 0);
-    world_text_blit_glyph(
-        g_world_menu_glyph_sheet->pixels, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
+    world_text_blit_glyph(g_menu_glyph_sheet->pixels, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
     world_gfx_set_blit_source_rect(0, 0x18, 0x28, 8);
     world_gfx_set_blit_dest_position(0x28, 8);
-    world_text_blit_glyph(
-        g_world_menu_glyph_sheet->pixels, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
+    world_text_blit_glyph(g_menu_glyph_sheet->pixels, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
 
     LoadImage(&texture, (u32*)pixels);
     menu_init_sprite_array(prim->sprites, 9, 0x7c3c);

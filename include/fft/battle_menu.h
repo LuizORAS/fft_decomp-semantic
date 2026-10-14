@@ -288,7 +288,6 @@ void battle_menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprit
 /* text rendering */
 extern u16* const* g_battle_help_active_text_id_tables;
 /* Source image used when battle overlays render menu glyphs. */
-extern menu_glyph_sheet_t* g_battle_menu_glyph_image;
 extern menu_glyph_sheet_t g_battle_menu_glyph_image_data;
 extern glyph_blit_t g_battle_menu_number_glyph_rect; /* glyph source rectangle in the number/sign font */
 extern glyph_blit_t g_battle_menu_stacked_glyph_lower;
