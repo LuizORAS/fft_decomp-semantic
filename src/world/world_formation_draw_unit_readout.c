@@ -49,7 +49,7 @@ void world_formation_draw_unit_readout(
                 g_world_menu_alternate_number_clut, priority);
             num_x = x + 40;
             num_y = y + 45;
-            if (world_coords_fit_in_byte(num_x, num_y)) {
+            if (world_formation_coords_fit_in_byte(num_x, num_y)) {
                 g_world_formation_gauge_max_number.x = num_x;
                 g_world_formation_gauge_max_number.y = num_y;
                 g_world_formation_gauge_max_number.value = unit_index;
@@ -57,7 +57,7 @@ void world_formation_draw_unit_readout(
             }
             num_x = x + 20;
             num_y = top;
-            if (world_coords_fit_in_byte(num_x, num_y)) {
+            if (world_formation_coords_fit_in_byte(num_x, num_y)) {
                 g_world_formation_gauge_value_number.x = num_x;
                 g_world_formation_gauge_value_number.y = num_y;
                 g_world_formation_gauge_value_number.value = unit_index;
@@ -116,7 +116,7 @@ void world_formation_draw_unit_readout(
                 g_world_menu_alternate_number_clut, priority);
             num_x = x + 13;
             num_y = y40;
-            if (world_coords_fit_in_byte(num_x, num_y)) {
+            if (world_formation_coords_fit_in_byte(num_x, num_y)) {
                 g_world_formation_level_number.x = num_x;
                 g_world_formation_level_number.y = num_y;
                 g_world_formation_level_number.value = unit_index;
@@ -124,7 +124,7 @@ void world_formation_draw_unit_readout(
             }
             num_x = x + 45;
             num_y = top;
-            if (world_coords_fit_in_byte(num_x, num_y)) {
+            if (world_formation_coords_fit_in_byte(num_x, num_y)) {
                 g_world_formation_experience_number.x = num_x;
                 g_world_formation_experience_number.y = num_y;
                 g_world_formation_experience_number.value = unit_index;
@@ -163,7 +163,7 @@ void world_formation_draw_unit_readout(
             world_gfx_enqueue_textured_quad(
                 &rect, 0x3B, 0x15, color, 0, g_world_menu_icon_tpage, g_world_menu_alternate_number_clut, priority);
             num_x = x + 13;
-            if (world_coords_fit_in_byte(num_x - 3, (s16)y40)) {
+            if (world_formation_coords_fit_in_byte(num_x - 3, (s16)y40)) {
                 g_world_formation_brave_number.x = num_x;
                 g_world_formation_brave_number_wide.y = g_world_formation_brave_number.y = y40;
                 g_world_formation_brave_number_wide.value = g_world_formation_brave_number.value = unit_index;
@@ -176,7 +176,7 @@ void world_formation_draw_unit_readout(
             }
             num_x = x + 45;
             num_y = top;
-            if (world_coords_fit_in_byte(num_x - 5, num_y)) {
+            if (world_formation_coords_fit_in_byte(num_x - 5, num_y)) {
                 g_world_formation_faith_number.x = num_x;
                 g_world_formation_faith_number_wide.y = g_world_formation_faith_number.y = num_y;
                 g_world_formation_faith_number_wide.value = g_world_formation_faith_number.value = unit_index;

@@ -62,12 +62,12 @@ void require_editor_run_numeric_thread(void) {
         buffer->sprites[16].v0 += 0x4C;
     }
     buffer->sprites[10].clut = 0x7D7C;
-    battle_copy_bytes(&buffer[1], buffer, sizeof(battle_menu_status_panel_numeric_buffer_t));
+    battle_util_copy_bytes(&buffer[1], buffer, sizeof(battle_menu_status_panel_numeric_buffer_t));
 
     for (frame = 0;; frame++) {
         buffer = &buffers[frame & 1];
         if (frame == 0 || thread->redraw_request != 0) {
-            battle_clear_menu_render_buffer(text_pixels, 0x918);
+            battle_menu_clear_render_buffer(text_pixels, 0x918);
             g_battle_menu_text_state.pen.stride = 0x14;
             battle_menu_set_text_origin(0, 0);
             if (g_battle_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {

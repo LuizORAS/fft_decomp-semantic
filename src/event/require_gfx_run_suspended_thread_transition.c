@@ -15,7 +15,7 @@ void require_gfx_run_suspended_thread_transition(void) {
 
     battle_thread_suspend(g_require_thread_suspended_id);
     saved = battle_menu_alloc_memory(NATIVE_THREAD_STRIDE);
-    battle_copy_bytes(saved, &g_battle_threads[g_require_thread_suspended_id], NATIVE_THREAD_STRIDE);
+    battle_util_copy_bytes(saved, &g_battle_threads[g_require_thread_suspended_id], NATIVE_THREAD_STRIDE);
     g_require_panel_status_group_count = 2;
     while (1) {
         s32 buffer = frame & 1;
@@ -27,7 +27,7 @@ void require_gfx_run_suspended_thread_transition(void) {
         }
         frame++;
     }
-    battle_copy_bytes(&g_battle_threads[g_require_thread_suspended_id], saved, NATIVE_THREAD_STRIDE);
+    battle_util_copy_bytes(&g_battle_threads[g_require_thread_suspended_id], saved, NATIVE_THREAD_STRIDE);
     battle_menu_free_memory(saved);
     battle_thread_resume(g_require_thread_suspended_id);
     battle_thread_yield();

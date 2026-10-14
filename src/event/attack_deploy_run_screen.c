@@ -60,7 +60,7 @@ void attack_deploy_run_screen(void) {
     for (i = 0; i < 5; i++) {
         g_attack_panel_status_animation[i] = 0xff;
     }
-    battle_copy_bytes(g_attack_deploy_cursor_palette_cycle, g_attack_deploy_cursor_palette_source, 0x40);
+    battle_util_copy_bytes(g_attack_deploy_cursor_palette_cycle, g_attack_deploy_cursor_palette_source, 0x40);
     attack_deploy_reset_tables();
     attack_deploy_prepare_valid_tiles(g_attack_deploy_render_buffers[0].tiles[0]);
     if (battle_script_get_variable(EVENT_SCRIPT_VAR_RAMZA_MANDATORY_IN_SQUAD) != 0) {
@@ -336,14 +336,14 @@ ramza_placed:
                         if (g_attack_deploy_confirm_result != 0) {
                             continue;
                         }
-                        battle_copy_bytes(g_attack_deploy_units_by_squad[g_attack_deploy_current_squad],
+                        battle_util_copy_bytes(g_attack_deploy_units_by_squad[g_attack_deploy_current_squad],
                             g_attack_deploy_roster_id_by_tile, 25);
                         break;
                     }
-                    battle_copy_bytes(g_attack_deploy_units_by_squad[g_attack_deploy_current_squad],
+                    battle_util_copy_bytes(g_attack_deploy_units_by_squad[g_attack_deploy_current_squad],
                         g_attack_deploy_roster_id_by_tile, 25);
                     if (g_attack_deploy_current_squad < 3) {
-                        battle_copy_bytes(g_attack_deploy_roster_id_by_tile,
+                        battle_util_copy_bytes(g_attack_deploy_roster_id_by_tile,
                             g_attack_deploy_units_by_squad[g_attack_deploy_current_squad + 1], 25);
                     }
                     g_attack_deploy_active_cursor = 0;
@@ -364,10 +364,10 @@ ramza_placed:
                     g_attack_deploy_grid_slide_x -= 8;
                     battle_thread_yield();
                 }
-                battle_copy_bytes(g_attack_deploy_units_by_squad[g_attack_deploy_current_squad],
+                battle_util_copy_bytes(g_attack_deploy_units_by_squad[g_attack_deploy_current_squad],
                     g_attack_deploy_roster_id_by_tile, 25);
                 g_attack_deploy_current_squad--;
-                battle_copy_bytes(g_attack_deploy_roster_id_by_tile,
+                battle_util_copy_bytes(g_attack_deploy_roster_id_by_tile,
                     g_attack_deploy_units_by_squad[g_attack_deploy_current_squad], 25);
                 transition = 1;
                 g_attack_deploy_active_cursor = 0;

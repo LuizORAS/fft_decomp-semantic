@@ -99,7 +99,7 @@ extern s32 g_main_system_battle_frame_hsync_count_max; /* its highest value */
 void battle_action_post_action_facing_stub(battle_stats_t* unused_unit, s32 unused_facing);
 
 void battle_bin_entrypoint(void);
-s32 battle_mul_div_s64(s32 a, s32 b, s32 c);
+s32 battle_util_mul_div_s64(s32 a, s32 b, s32 c);
 void battle_menu_init_stub(void);
 void battle_script_add_unit_stub(void);
 
@@ -112,7 +112,7 @@ void battle_script_frame_after_requests_stub(void);
 
 /* BATTLE 0x8014bf54..0x8014bf7c: destination first. This do-while loop
  * requires a positive count; it is not a general-purpose memcpy. */
-void battle_copy_bytes(void* destination, const void* source, s32 count);
+void battle_util_copy_bytes(void* destination, const void* source, s32 count);
 
 void battle_script_report_missing_unit_stub(s32 unused_unit_id);
 void battle_script_opcode_74_event_instruction(const u8* unused_parameters);
@@ -2893,7 +2893,7 @@ void battle_unit_update_facing_and_pending_animations(void);
 void battle_unit_start_post_attack_animation_display(s32 attacker, u8* target);
 u8 battle_unit_generate_treasure(battle_stats_t* unit);
 main_crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_stats_t* mover);
-SVECTOR* battle_copy_misc_unit_screen_coords(u32 misc_id);
+SVECTOR* battle_unit_get_misc_screen_coords_copy(u32 misc_id);
 struct battle_unit_misc_data* battle_unit_get_mount_misc_data(struct battle_unit_misc_data* unit);
 SVECTOR* battle_unit_get_screen_data_ptr_by_misc_id(u32 misc_id);
 void battle_unit_set_real_coords_from_screen_coords(struct battle_unit_misc_data* unit);
@@ -6161,7 +6161,7 @@ extern VECTOR g_battle_camera_saved_zoom;
 extern u16 g_battle_camera_zoom_countdown;
 extern VECTOR g_battle_camera_zoom_delta;
 extern s32 g_battle_camera_zoom_increment;
-extern s32 g_battle_camera_cross_product_overflow; /* set by battle_fixed_cross_product_q12 on Q12 overflow */
+extern s32 g_battle_camera_cross_product_overflow; /* set by battle_util_cross_product_q12 on Q12 overflow */
 extern s16 g_battle_camera_diagonal_yaws[4];
 
 /* The camera's angles: .vx the pitch, .vy the yaw and .vz the roll (0x1000 is a full turn). */
@@ -8560,7 +8560,7 @@ s32 battle_menu_get_unit_skillset_ability_data(
 
 s32 battle_menu_collect_throwable_items(s32 unit_id, u8 ability, u8* items);
 void battle_menu_select_icon_cluts(struct world_menu_icon_record* frame);
-void battle_clear_menu_render_buffer(void* buffer, s32 bytes);
+void battle_menu_clear_render_buffer(void* buffer, s32 bytes);
 void* battle_menu_alloc_window_buffer_pair(void);
 void battle_menu_build_ability_list(s32 mode);
 void battle_menu_build_and_upload_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset);
@@ -8749,6 +8749,10 @@ s32 battle_text_resolve_format_string_id(s32 format_code, s32 value);
 
 /* The caller leaves 0x16f in $a1, but the body never reads $a1. */
 void battle_text_fill_field_with_terminators(u8* text);
+
+s32 battle_text_is_skillset_in_spell_quote_exception_list(s32 skillset_id);
+
+void battle_text_blit_glyph(void* text, void* pixels, void* glyph, void* position);
 
 /* script */
 /* The event-script interpreter (battle_script_*): loading and running an event, its frame, the
@@ -9119,16 +9123,16 @@ extern u16 g_battle_field_object_wait_status; /* 0x80166070 */
 extern u8 g_main_terrain_geomancy_abilities[];
 s32 battle_unit_find_slot_by_character_identity(u32 character_identity);
 s32 battle_map_tile_data_15_stub(void);
-s32 battle_is_skillset_in_spell_quote_exception_list(s32 skillset_id);
+
 void battle_script_process_inflict_status_commands(void);
 s32 battle_menu_poll_small_load(void);
-s32 battle_fixed_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
+s32 battle_util_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 void save_3_u16(SVECTOR* output, u16 x, u16 y, u16 z);
 s32 battle_status_prepare_terrain_poison(battle_stats_t* unit);
 s32 battle_return_one(s32 unused_misc_id);
 
 s32 battle_return_zero(void);
-void blit_text_glyph(void* text, void* pixels, void* glyph, void* position);
+
 void battle_menu_display_text_string(s32 buffer, s32 position, s32 text);
 
 #endif

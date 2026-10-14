@@ -113,15 +113,15 @@ void equip_panel_unit_status_banner_thread(void) {
         state->team_kind = 0;
     }
     if (g_battle_post_battle_unit_changes_active == 0) {
-        battle_copy_bytes(g_equip_panel_editor_mode_cell, &g_equip_panel_editor_mode_cells[state->team_kind], 0xC);
+        battle_util_copy_bytes(g_equip_panel_editor_mode_cell, &g_equip_panel_editor_mode_cells[state->team_kind], 0xC);
     } else {
-        battle_copy_bytes(g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells, 0xC);
+        battle_util_copy_bytes(g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells, 0xC);
     }
     for (frame = 0; frame < 7; frame++) {
         battle_gfx_init_image_loading(&editor->label_sprites[frame], g_equip_editor_numeric_geometry,
             &g_equip_gfx_portrait_origin, &g_equip_panel_editor_label_cells[frame]);
     }
-    battle_copy_bytes(editor + 1, editor, sizeof(battle_menu_status_panel_editor_packet_t));
+    battle_util_copy_bytes(editor + 1, editor, sizeof(battle_menu_status_panel_editor_packet_t));
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_b, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_menu_init_numeric_display_frame_primitives(&g_equip_panel_frame_rect, &panel->numeric_frame);
@@ -144,7 +144,7 @@ void equip_panel_unit_status_banner_thread(void) {
         panel->portrait.clut = 0x7FBD;
     }
     panel->portrait.tpage = GetTPage(0, 1, 0x3C0, 0x100);
-    battle_copy_bytes(panel + 1, panel, sizeof(battle_menu_status_panel_packet_t));
+    battle_util_copy_bytes(panel + 1, panel, sizeof(battle_menu_status_panel_packet_t));
     frame = 0;
     anim_state = 0;
     prev_unit = state->unit_index;
@@ -157,9 +157,10 @@ void equip_panel_unit_status_banner_thread(void) {
             state->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 0x64;
         }
         if (g_battle_post_battle_unit_changes_active == 0) {
-            battle_copy_bytes(g_equip_panel_editor_mode_cell, &g_equip_panel_editor_mode_cells[state->team_kind], 0xC);
+            battle_util_copy_bytes(
+                g_equip_panel_editor_mode_cell, &g_equip_panel_editor_mode_cells[state->team_kind], 0xC);
         } else {
-            battle_copy_bytes(g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells, 0xC);
+            battle_util_copy_bytes(g_equip_panel_editor_mode_cell, g_equip_panel_editor_mode_cells, 0xC);
         }
         battle_gfx_init_image_loading(&editor->label_sprites[6], g_equip_editor_numeric_geometry,
             &g_equip_gfx_portrait_origin, g_equip_panel_editor_mode_cell);
@@ -399,7 +400,7 @@ void equip_panel_unit_status_banner_thread(void) {
             } else {
                 numeric_entries[6].format = 2;
             }
-            battle_clear_menu_render_buffer(number_image, 0x700);
+            battle_menu_clear_render_buffer(number_image, 0x700);
             {
                 s32* stride;
                 world_glyph_blit_t* position;
@@ -425,14 +426,14 @@ void equip_panel_unit_status_banner_thread(void) {
             battle_menu_draw_numeric_display_entries(number_image_lower, &numeric_entries[6], text_position, 4);
             LoadImage(&rects[1], number_image_lower);
             thread->work = 0;
-            battle_clear_menu_render_buffer(name_image, 0x580);
+            battle_menu_clear_render_buffer(name_image, 0x580);
             *window_width = 0x58;
             battle_menu_set_text_origin(0, 0);
             battle_menu_display_text_entry(unit_data[0] + TEXT_ID_UNIT_NAME_SPECIAL_BASE, name_image, text_position);
             battle_menu_set_text_origin(0, 0x10);
             battle_menu_display_text_entry(unit_data[1] + TEXT_ID_JOB_NAME_BASE, name_image, text_position);
             LoadImage(&rects[2], name_image);
-            battle_clear_menu_render_buffer(small_text_image, 0xF0);
+            battle_menu_clear_render_buffer(small_text_image, 0xF0);
             *window_width = 0x10;
             battle_menu_set_text_origin(0, 0);
             battle_menu_draw_small_number_glyphs(unit_data[2], 0x202, small_text_image, text_position);

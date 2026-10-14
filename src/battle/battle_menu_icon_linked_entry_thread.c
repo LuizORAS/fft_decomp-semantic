@@ -27,7 +27,7 @@ void battle_menu_icon_linked_entry_thread(void) {
     param = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
     battle_menu_size_entry_to_text((struct battle_text_message_window_layout*)param, &width, &height, &pad, 0);
     battle_menu_build_window_sprites(&rect, param, &records[0]);
-    battle_copy_bytes(&records[1], &records[0], 0x7C);
+    battle_util_copy_bytes(&records[1], &records[0], 0x7C);
     parent = param->row_actions[0];
     if (parent >= 0) {
         g_battle_menu_thread_menu_data[parent].window_x

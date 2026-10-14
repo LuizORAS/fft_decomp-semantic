@@ -113,11 +113,12 @@ s32 world_camera_step_track(battle_camera_track_t* track, s32 component) {
         divisor = world_cross_product_q12(value_delta0, time_delta1, time_delta0, value_delta1);
         result = world_cross_product_q12(time_delta1, value2 - value0, value_delta1, time2 - time0);
         if (divisor != 0) {
-            span = world_mul_div_64(time_delta0, result, divisor) + time0;   /* crossing time */
-            lead = world_mul_div_64(value_delta0, result, divisor) + value0; /* crossing value */
+            span = world_util_mul_div_s64(time_delta0, result, divisor) + time0;   /* crossing time */
+            lead = world_util_mul_div_s64(value_delta0, result, divisor) + value0; /* crossing value */
             divisor = span - track->prev_time;
             if (divisor != 0) {
-                result = world_mul_div_64(lead - track->prev_value, (track->frame << 12) - track->prev_time, divisor)
+                result
+                    = world_util_mul_div_s64(lead - track->prev_value, (track->frame << 12) - track->prev_time, divisor)
                     + track->prev_value;
                 track->prev_time = span;
                 track->prev_value = lead;

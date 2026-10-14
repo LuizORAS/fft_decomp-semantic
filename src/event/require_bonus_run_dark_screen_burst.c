@@ -113,7 +113,7 @@ void require_bonus_run_dark_screen_burst(void) {
             }
             SetPolyF4(&tile->poly[0]);
             SetSemiTrans(&tile->poly[0], 1);
-            battle_copy_bytes(&tile->poly[1], &tile->poly[0], sizeof(POLY_F4));
+            battle_util_copy_bytes(&tile->poly[1], &tile->poly[0], sizeof(POLY_F4));
         }
     }
     SetDrawMode(
@@ -227,7 +227,7 @@ void require_bonus_run_dark_screen_burst(void) {
         g_require_bonus_burst_flash_polys[0].g0 = 0x28;
         g_require_bonus_burst_flash_polys[0].b0 = 0x10;
         SetSemiTrans(&g_require_bonus_burst_flash_polys[0], 1);
-        battle_copy_bytes(
+        battle_util_copy_bytes(
             &g_require_bonus_burst_flash_polys[1], &g_require_bonus_burst_flash_polys[0], sizeof(POLY_F4));
         frame++;
         battle_thread_set_current_task_id(NATIVE_THREAD_TASK_DARK_SCREEN_HOLD);

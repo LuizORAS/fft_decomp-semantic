@@ -43,7 +43,7 @@ void battle_menu_auto_battle_setting_thread(void) {
     }
     previous = cursor;
     battle_menu_build_window_sprites(&rect, param, &records[0]);
-    battle_copy_bytes(&records[1], &records[0], 0x7C);
+    battle_util_copy_bytes(&records[1], &records[0], 0x7C);
     fresh = 0;
     i = 0;
     colour = g_battle_auto_battle_option_colors;

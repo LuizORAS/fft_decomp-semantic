@@ -117,7 +117,7 @@ void option_menu_run_list_thread(void) {
     page->arrow_marks[1].x0 = page->arrows[1].x0;
     page->arrow_marks[1].y0 = page->arrows[1].y0 + 0xE;
     buffer = g_option_menu_render_buffer;
-    battle_clear_menu_render_buffer(buffer, entry->inner_width * entry->inner_height / 2);
+    battle_menu_clear_render_buffer(buffer, entry->inner_width * entry->inner_height / 2);
     redraw_pending = 1;
     battle_thread_start(g_battle_thread_current_id + 1, option_menu_window_frame_thread);
     battle_thread_set_parameters(g_battle_thread_current_id + 1, (s32)&entry->window_x, 0, 0);
@@ -130,7 +130,7 @@ void option_menu_run_list_thread(void) {
     clear.y = ((image_rect.y - 2) & 0xFF) + (image_rect.y & 0xFF00);
     clear.w = image_rect.w;
     ClearImage(&clear, 0, 0, 0);
-    battle_copy_bytes(&g_option_at_list_pages[1], g_option_at_list_pages, sizeof(world_menu_list_page_t));
+    battle_util_copy_bytes(&g_option_at_list_pages[1], g_option_at_list_pages, sizeof(world_menu_list_page_t));
     for (i = 0; i < 2; i++) {
         g_option_at_list_pages[i].icons.icons[0] = &icons0[i];
         g_option_at_list_pages[i].icons.icons[1] = &icons1[i];
@@ -191,7 +191,7 @@ void option_menu_run_list_thread(void) {
                     }
                     image_rect.h = 0x10;
                     buffer = g_option_menu_render_buffer;
-                    battle_clear_menu_render_buffer(buffer, 0x800);
+                    battle_menu_clear_render_buffer(buffer, 0x800);
                     g_battle_menu_text_state.pen.stride = entry->inner_width;
                     for (column = 0; column < 3; column++) {
                         index = cursor + row_offset + delta;

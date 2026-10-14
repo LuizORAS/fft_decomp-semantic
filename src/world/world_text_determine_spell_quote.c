@@ -12,7 +12,7 @@ void world_text_determine_spell_quote(battle_ai_command_action_t* action, s32 un
     main_ability_calculate_pointers_and_type(action->ability_id & ABILITY_ID_MASK, (u8**)&ability, (u8**)&secondary);
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     if (action->skillset != 0) {
-        known = world_is_skillset_in_spell_quote_exception_list(action->skillset);
+        known = world_text_is_skillset_in_spell_quote_exception_list(action->skillset);
     } else {
         known = 1;
     }
@@ -36,7 +36,7 @@ void world_text_determine_spell_quote(battle_ai_command_action_t* action, s32 un
         return;
     }
     if (action->skillset != 0) {
-        known = world_is_skillset_in_spell_quote_exception_list(action->skillset);
+        known = world_text_is_skillset_in_spell_quote_exception_list(action->skillset);
     } else {
         known = 0;
     }

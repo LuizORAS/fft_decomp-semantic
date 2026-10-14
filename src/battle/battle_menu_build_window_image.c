@@ -9,7 +9,7 @@ extern world_glyph_blit_t g_battle_menu_window_sprite_position;
  * and upload it to `rect` unless `keep` is set.
  *
  * `mode` bits 2-3 select the frame style (8 = plain frame, no tail); bits 0-1 place the tail (1 and 2
- * flip it vertically). The tail is drawn through blit_text_glyph from g_battle_menu_window_sprite_glyph
+ * flip it vertically). The tail is drawn through battle_text_blit_glyph from g_battle_menu_window_sprite_glyph
  * to g_battle_menu_window_sprite_position, and nudged 16 pixels when the current thread's task_words[5]
  * has any of bits 4-7 set.
  *
@@ -33,7 +33,7 @@ void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode
     words = (width >> 2) + partial;
     byte_count = (width * (kind == DIALOG_OPTIONS_NO_TAIL ? height : height + 0x10)) >> 1;
     buf = battle_menu_alloc_memory(byte_count);
-    battle_clear_menu_render_buffer(buf, byte_count);
+    battle_menu_clear_render_buffer(buf, byte_count);
     x_off = 0;
     src = (u16*)g_battle_menu_glyph_image;
     if (kind != DIALOG_OPTIONS_NO_TAIL) {
@@ -90,7 +90,7 @@ void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode
         if (width - 0x10 < g_battle_menu_window_sprite_position.rect.x) {
             g_battle_menu_window_sprite_position.rect.x = width - 0x10;
         }
-        blit_text_glyph(
+        battle_text_blit_glyph(
             g_battle_menu_glyph_image, buf, &g_battle_menu_window_sprite_glyph, &g_battle_menu_window_sprite_position);
         if (i != 0) {
             battle_menu_mirror_packed_nibble_region((u8*)buf, &g_battle_menu_window_sprite_position);

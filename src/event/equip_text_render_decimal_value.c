@@ -23,7 +23,7 @@ void equip_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_gly
     if (flags & MENU_DECIMAL_SLASH_PREFIX) {
         position->rect.x -= 2;
         g_equip_text_decimal_glyph.source_x = 0xb4;
-        blit_text_glyph(g_battle_menu_glyph_image, pixels, &g_equip_text_decimal_glyph, position);
+        battle_text_blit_glyph(g_battle_menu_glyph_image, pixels, &g_equip_text_decimal_glyph, position);
         position->rect.x += 7;
     }
     if (flags & MENU_DECIMAL_DOTS_PREFIX) {
@@ -31,7 +31,7 @@ void equip_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_gly
         g_equip_text_decimal_glyph.source_y = 0x1a;
         g_equip_text_decimal_glyph.height = 4;
         position->rect.y += 3;
-        blit_text_glyph(g_battle_menu_glyph_image, pixels, &g_equip_text_decimal_glyph, position);
+        battle_text_blit_glyph(g_battle_menu_glyph_image, pixels, &g_equip_text_decimal_glyph, position);
         position->rect.x += 7;
         position->rect.y -= 3;
         g_equip_text_decimal_glyph.source_y = 0x10;
@@ -47,7 +47,7 @@ void equip_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_gly
                 position->rect.x += 5;
             }
         }
-        blit_text_glyph(g_battle_menu_glyph_image, pixels, &g_equip_text_decimal_glyph, position);
+        battle_text_blit_glyph(g_battle_menu_glyph_image, pixels, &g_equip_text_decimal_glyph, position);
         position->rect.x += 5;
         if (value == 0) {
             return;
@@ -56,7 +56,7 @@ void equip_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_gly
     plus = flags & MENU_DECIMAL_SIGN_PLUS;
     if (plus) {
         g_equip_text_decimal_glyph.source_x = 0xc8;
-        blit_text_glyph(g_battle_menu_glyph_image, pixels, &g_equip_text_decimal_glyph, position);
+        battle_text_blit_glyph(g_battle_menu_glyph_image, pixels, &g_equip_text_decimal_glyph, position);
         position->rect.x += 5;
     }
     digits = flags & MENU_DECIMAL_FIELD_WIDTH_MASK;
@@ -82,7 +82,7 @@ void equip_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_gly
     }
     for (i = 0; i < (flags & 0xff); i++) {
         g_equip_text_decimal_glyph.source_x = value % 10 * 6 + 0x78;
-        blit_text_glyph(g_battle_menu_glyph_image, pixels, &g_equip_text_decimal_glyph, position);
+        battle_text_blit_glyph(g_battle_menu_glyph_image, pixels, &g_equip_text_decimal_glyph, position);
         position->rect.x -= 5;
         value /= 10;
         if (!(flags & MENU_DECIMAL_LEADING_ZEROS) && value == 0) {

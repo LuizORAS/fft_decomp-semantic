@@ -99,15 +99,15 @@ void battle_camera_thread(void) {
                 }
             }
             if (mode == 0 || (group == 0 && j >= 3) || (group == 1 && j < 3)) {
-                value = battle_mul_div_s64(delta, i, duration) + base;
+                value = battle_util_mul_div_s64(delta, i, duration) + base;
                 if (j < 3) {
                     value *= 4;
                 }
             } else if (mode == 1) {
                 decel = delta * weight;
                 accel = delta * ease * 2;
-                first = battle_mul_div_s64(accel + decel + decel, i, duration * 32);
-                value = battle_mul_div_s64(accel, ramp, duration * duration * 32) + first + base;
+                first = battle_util_mul_div_s64(accel + decel + decel, i, duration * 32);
+                value = battle_util_mul_div_s64(accel, ramp, duration * duration * 32) + first + base;
                 if (j < 3) {
                     value *= 4;
                 }
@@ -116,8 +116,8 @@ void battle_camera_thread(void) {
                 half = i * 2;
                 if (half < duration) {
                     decel = delta * weight;
-                    value = battle_mul_div_s64(
-                        battle_mul_div_s64(delta * ease * 2, half, duration) + decel + decel, half, duration * 32);
+                    value = battle_util_mul_div_s64(
+                        battle_util_mul_div_s64(delta * ease * 2, half, duration) + decel + decel, half, duration * 32);
                     if (j < 3) {
                         value += base * 4;
                     } else {
@@ -127,8 +127,8 @@ void battle_camera_thread(void) {
                     decel = delta * weight;
                     accel = delta * ease * 2;
                     elapsed = half - duration;
-                    value = battle_mul_div_s64(
-                        accel + battle_mul_div_s64(accel, duration - elapsed, duration) + decel + decel, elapsed,
+                    value = battle_util_mul_div_s64(
+                        accel + battle_util_mul_div_s64(accel, duration - elapsed, duration) + decel + decel, elapsed,
                         duration * 32);
                     if (j < 3) {
                         value += delta;

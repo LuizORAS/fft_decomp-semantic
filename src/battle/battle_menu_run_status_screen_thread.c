@@ -55,7 +55,7 @@ void battle_menu_run_status_screen_thread(void) {
     frame_record->tiles[0].h = 0x5A;
     frame_record->tiles[0].x0 = g_battle_menu_status_screen_rect.x;
     frame_record->tiles[0].y0 = g_battle_menu_status_screen_rect.y + 1;
-    battle_copy_bytes(&frame_record->tiles[1], &frame_record->tiles[0], sizeof(TILE));
+    battle_util_copy_bytes(&frame_record->tiles[1], &frame_record->tiles[0], sizeof(TILE));
     frame_record->tiles[0].x0 += 0x12;
     frame_record->tiles[1].x0 += 0x7C;
     line = frame_record->lines;
@@ -81,22 +81,22 @@ void battle_menu_run_status_screen_thread(void) {
     /* Each arm copies all four rows itself; the compiler cross-jumps the
        common tails, leaving only the first call's table loads in the arms. */
     if (g_battle_menu_billboard_data.state.two_hands != 0) {
-        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_a[2],
+        battle_util_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_a[2],
             g_battle_menu_status_screen_row_image_params_b, 2 * sizeof(world_gfx_image_load_parameters_t));
-        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_a[14],
+        battle_util_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_a[14],
             &g_battle_menu_status_screen_row_image_params_b[2], 2 * sizeof(world_gfx_image_load_parameters_t));
-        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_b[2],
+        battle_util_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_b[2],
             g_battle_menu_status_screen_row_image_params_b, 2 * sizeof(world_gfx_image_load_parameters_t));
-        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_b[14],
+        battle_util_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_b[14],
             &g_battle_menu_status_screen_row_image_params_b[2], 2 * sizeof(world_gfx_image_load_parameters_t));
     } else {
-        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_a[2],
+        battle_util_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_a[2],
             g_battle_menu_status_screen_row_image_params_a, 2 * sizeof(world_gfx_image_load_parameters_t));
-        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_a[14],
+        battle_util_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_a[14],
             &g_battle_menu_status_screen_row_image_params_a[2], 2 * sizeof(world_gfx_image_load_parameters_t));
-        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_b[2],
+        battle_util_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_b[2],
             g_battle_menu_status_screen_row_image_params_a, 2 * sizeof(world_gfx_image_load_parameters_t));
-        battle_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_b[14],
+        battle_util_copy_bytes(&g_battle_menu_status_screen_sprite_image_params_b[14],
             &g_battle_menu_status_screen_row_image_params_a[2], 2 * sizeof(world_gfx_image_load_parameters_t));
     }
     /* These sprite and rectangle records share the fields read by the image loader. */
@@ -120,7 +120,7 @@ void battle_menu_run_status_screen_thread(void) {
     }
 
     buffer = battle_menu_alloc_buffer(0xC80);
-    battle_clear_menu_render_buffer(buffer, 0xC80);
+    battle_menu_clear_render_buffer(buffer, 0xC80);
     g_battle_menu_text_state.pen.stride = 0x50;
     battle_menu_set_text_origin(0, 0);
     for (i = 0; i < 5; i++) {
@@ -134,7 +134,7 @@ void battle_menu_run_status_screen_thread(void) {
     }
     LoadImage(&g_battle_menu_status_screen_text_rect_a, (u32*)buffer);
     battle_thread_yield();
-    battle_clear_menu_render_buffer(buffer, 0xC80);
+    battle_menu_clear_render_buffer(buffer, 0xC80);
     g_battle_menu_text_state.pen.stride = 0x50;
     battle_menu_set_text_origin(0, 0);
     for (i = 0; i < 2; i++) {
@@ -169,7 +169,7 @@ void battle_menu_run_status_screen_thread(void) {
     battle_thread_yield();
     battle_menu_free_memory(buffer);
 
-    battle_copy_bytes(&records[1], frame_record, sizeof(menu_status_screen_frame_t));
+    battle_util_copy_bytes(&records[1], frame_record, sizeof(menu_status_screen_frame_t));
     records[0].palette = &palette.primitives;
     records[1].palette = &g_battle_menu_status_screen_palette;
     battle_menu_init_numeric_display_frame_primitives(&g_battle_menu_status_screen_rect, records[0].palette);

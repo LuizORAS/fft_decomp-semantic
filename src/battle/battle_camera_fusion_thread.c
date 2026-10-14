@@ -32,7 +32,7 @@ void battle_camera_fusion_thread(void) {
     tracks = (battle_camera_track_t*)battle_menu_alloc_memory(
         sizeof(battle_camera_track_t) * BATTLE_CAMERA_FUSION_COMPONENT_COUNT);
     script = (u8*)battle_thread_get_current_parameter_1();
-    battle_clear_menu_render_buffer(tracks, sizeof(battle_camera_track_t) * BATTLE_CAMERA_FUSION_COMPONENT_COUNT);
+    battle_menu_clear_render_buffer(tracks, sizeof(battle_camera_track_t) * BATTLE_CAMERA_FUSION_COMPONENT_COUNT);
 
     /* One key per CAMERA instruction up to the end marker, plus the starting key. */
     cursor = script;

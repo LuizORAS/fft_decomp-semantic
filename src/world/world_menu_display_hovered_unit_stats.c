@@ -118,7 +118,7 @@ void world_menu_display_hovered_unit_stats(
             world_gfx_init_image_loading(&page->quads[frame], &g_world_menu_texture_location, frame_rect, params);
         }
     }
-    world_copy_bytes(&page[1], page, sizeof(world_unit_status_page_t));
+    world_util_copy_bytes(&page[1], page, sizeof(world_unit_status_page_t));
     text_loaded = 0;
     for (frame = 0;; frame++) {
         if (status->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value > 100) {
@@ -187,7 +187,8 @@ void world_menu_display_hovered_unit_stats(
             page->portrait.y2 = frame_rect->y + 0x32;
             page->portrait.x3 = frame_rect->x + 0x21;
             page->portrait.y3 = frame_rect->y + 0x32;
-            world_copy_bytes(&params[6], &g_world_unit_status_icon_image_params[status->team_kind], sizeof(*params));
+            world_util_copy_bytes(
+                &params[6], &g_world_unit_status_icon_image_params[status->team_kind], sizeof(*params));
             for (i = 0; i < 7; i++, params++) {
                 world_gfx_init_image_loading(&page->sprites[i], &g_world_menu_texture_location, frame_rect, params);
             }

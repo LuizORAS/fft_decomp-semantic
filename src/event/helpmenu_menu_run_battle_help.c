@@ -49,7 +49,7 @@ void helpmenu_menu_run_battle_help(void) {
     if (g_battle_menu_help_blocked != 0) {
         battle_thread_exit_current();
     }
-    battle_copy_bytes(g_helpmenu_text_saved_pointers, g_battle_text_section_pointers, 0x80);
+    battle_util_copy_bytes(g_helpmenu_text_saved_pointers, g_battle_text_section_pointers, 0x80);
     banner = &g_helpmenu_active_banner;
     unit_data = &g_helpmenu_active_unit_data;
     billboard = &g_helpmenu_billboard;

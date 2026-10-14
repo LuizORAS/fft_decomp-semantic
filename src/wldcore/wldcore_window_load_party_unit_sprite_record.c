@@ -13,7 +13,7 @@ void wldcore_window_load_party_unit_sprite_record(wldcore_menu_send_unit_level_t
     CVECTOR* color;
     wldcore_window_render_bounds16_t* bounds;
 
-    code = world_get_party_unit_formation_sprite(party_index);
+    code = world_unit_get_formation_sprite(party_index);
     cell = code;
     world_gfx_set_portrait_poly_texture(&poly, code);
     g_wldcore_window_render_records[index].clut.x = (code / 40 << 6) + 0x280 + cell % 4 * 16;

@@ -125,7 +125,7 @@ void option_menu_run_options_thread(void) {
     i = 0;
     accum = 0;
     timer = 0;
-    battle_clear_menu_render_buffer(image, entry->inner_width * entry->inner_height / 2);
+    battle_menu_clear_render_buffer(image, entry->inner_width * entry->inner_height / 2);
     option_menu_draw_text_columns(entry, &row_offset, image);
     ring = 0;
     image_rect.w = g_battle_menu_text_state.pen.stride >> 2;
@@ -149,7 +149,7 @@ void option_menu_run_options_thread(void) {
     value_rect.y = base->title.y0;
     value_rect.w = base->title.w;
     value_rect.h = base->title.h;
-    battle_copy_bytes(&g_option_menu_entry_panel_rect, &entry->window_x, 8);
+    battle_util_copy_bytes(&g_option_menu_entry_panel_rect, &entry->window_x, 8);
     battle_thread_start(g_battle_thread_current_id + 1, option_menu_window_frame_thread);
     g_option_menu_entry_panel_rect.h += 0xC;
     g_option_menu_entry_panel_rect.y -= 2;
@@ -159,12 +159,12 @@ void option_menu_run_options_thread(void) {
     battle_text_configure_sprite_vram(&g_option_menu_value_image_rect, 0x3C, 0x10, &base->value, 0);
     base->value.x0 = entry->window_x + 0x5C;
     base->value.y0 = entry->window_y + entry->window_height + 0xF;
-    battle_clear_menu_render_buffer(buffer, 0x1E0);
+    battle_menu_clear_render_buffer(buffer, 0x1E0);
     g_battle_menu_text_state.pen.stride = 0x3C;
     battle_menu_set_text_origin(0, 0);
     battle_menu_display_text_entry(0x5021, buffer, &g_battle_menu_text_state.pen);
     LoadImage(&g_option_menu_value_image_rect, (u32*)buffer);
-    battle_copy_bytes(&base[1], base, sizeof(world_options_menu_page_t));
+    battle_util_copy_bytes(&base[1], base, sizeof(world_options_menu_page_t));
     for (;;) {
         page = &g_option_menu_pages[i & 1];
         if (delta == 0 && battle_menu_is_input_allowed() != 0) {
@@ -203,7 +203,7 @@ void option_menu_run_options_thread(void) {
                 }
                 image = g_option_menu_render_buffer;
                 image_rect.h = 0x10;
-                battle_clear_menu_render_buffer(image, entry->inner_width * 8);
+                battle_menu_clear_render_buffer(image, entry->inner_width * 8);
                 g_battle_menu_text_state.pen.stride = entry->inner_width;
                 for (column = 0; column < 2; column++) {
                     if (layout->text_ids[column] != (s16*)-1) {
@@ -236,7 +236,7 @@ void option_menu_run_options_thread(void) {
         }
         if (g_battle_menu_input_lock_mode == 0) {
             index = cursor + row_offset + delta;
-            battle_clear_menu_render_buffer(buffer, 0x1E0);
+            battle_menu_clear_render_buffer(buffer, 0x1E0);
             g_battle_menu_text_state.pen.stride = 0x3C;
             battle_menu_set_text_origin(0, 0);
             battle_menu_display_text_entry(g_option_value_text_id_bases[index] + g_option_current_values[index], buffer,

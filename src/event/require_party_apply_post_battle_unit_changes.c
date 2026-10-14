@@ -37,7 +37,7 @@ void require_party_apply_post_battle_unit_changes(void) {
     }
     g_battle_post_battle_unit_changes_active = 1;
     battle_thread_suspend(NATIVE_THREAD_SLOT_EVENT);
-    battle_copy_bytes(g_require_saved_thread_block, &g_battle_threads[NATIVE_THREAD_SLOT_EVENT], 0x400);
+    battle_util_copy_bytes(g_require_saved_thread_block, &g_battle_threads[NATIVE_THREAD_SLOT_EVENT], 0x400);
 
     text_data = g_require_text_data;
     g_battle_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS]
@@ -299,7 +299,7 @@ void require_party_apply_post_battle_unit_changes(void) {
     battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
     battle_thread_wait_until_inactive(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
     g_battle_post_battle_unit_changes_active = 0;
-    battle_copy_bytes(&g_battle_threads[NATIVE_THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
+    battle_util_copy_bytes(&g_battle_threads[NATIVE_THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
     g_battle_menu_thread_menu_data = saved_menu_descriptor;
     battle_thread_resume(NATIVE_THREAD_SLOT_EVENT);
     battle_thread_yield();

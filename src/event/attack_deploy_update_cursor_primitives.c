@@ -16,7 +16,7 @@ void attack_deploy_update_cursor_primitives(s32 frame, attack_deploy_render_buff
     u8(*tiles)[5];
 
     thread->task_words[0] += g_battle_event_speed;
-    battle_copy_bytes(
+    battle_util_copy_bytes(
         &g_attack_deploy_cursor_clut[1], &g_attack_deploy_cursor_palette_cycle[1 + (frame / 4) % 14], 0x1e);
     g_attack_deploy_cursor_clut[0] = 0;
     LoadImage(&g_attack_deploy_cursor_clut_rect, (u32*)g_attack_deploy_cursor_clut);

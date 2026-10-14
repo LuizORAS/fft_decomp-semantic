@@ -98,7 +98,7 @@ void wldcore_proposition_push_result_level(s32 proposition) {
     party = &g_wldcore_proposition_outcome.reporter_party_index;
     g_world_text_substitution_values[0] = *party + TEXT_ID_UNIT_NAME_BASE;
     message = 0x9C;
-    world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, world_get_party_unit_formation_sprite(*party));
+    world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, world_unit_get_formation_sprite(*party));
     if (g_wldcore_proposition_outcome.gate != 0) {
         message = 0xA2;
     }

@@ -72,17 +72,17 @@ void battle_script_run_sprite_move(s32 parameter_address, s32 use_speed) {
         for (j = 0; j < 3; j++) {
             delta = pos[1][j] - pos[0][j];
             if (curve == 0) {
-                pos[2][j] = battle_mul_div_s64(delta, i, total) + pos[0][j];
+                pos[2][j] = battle_util_mul_div_s64(delta, i, total) + pos[0][j];
             } else if (curve == 1) {
                 weighted = delta * (16 - weight);
                 scaled = (delta * weight) * 2;
-                step = battle_mul_div_s64(scaled + weighted + weighted, i, total * 32);
-                step += battle_mul_div_s64(scaled, (total - i) * i, (total * 32) * total);
+                step = battle_util_mul_div_s64(scaled + weighted + weighted, i, total * 32);
+                step += battle_util_mul_div_s64(scaled, (total - i) * i, (total * 32) * total);
                 pos[2][j] = step + pos[0][j];
             } else if (curve == 3) {
                 weighted = delta * (16 - weight);
-                step = battle_mul_div_s64((delta * weight) * 2, i, total);
-                step = battle_mul_div_s64(step + weighted + weighted, i, total * 32);
+                step = battle_util_mul_div_s64((delta * weight) * 2, i, total);
+                step = battle_util_mul_div_s64(step + weighted + weighted, i, total * 32);
                 pos[2][j] = step + pos[0][j];
             } else if (curve == 2) {
                 mid = total / 2;
@@ -92,15 +92,15 @@ void battle_script_run_sprite_move(s32 parameter_address, s32 use_speed) {
                 }
                 if (i * 2 < total) {
                     weighted = delta * (16 - weight);
-                    step = battle_mul_div_s64((delta * weight) * 2, i, mid);
-                    step = battle_mul_div_s64(step + weighted + weighted, i, mid * 64);
+                    step = battle_util_mul_div_s64((delta * weight) * 2, i, mid);
+                    step = battle_util_mul_div_s64(step + weighted + weighted, i, mid * 64);
                     pos[2][j] = step + pos[0][j];
                 } else {
                     weighted = delta * (16 - weight);
                     scaled = (delta * weight) * 2;
                     elapsed = i - mid;
-                    step = battle_mul_div_s64(scaled, mid - elapsed, mid);
-                    step = battle_mul_div_s64(scaled + step + weighted + weighted, elapsed, mid * 64);
+                    step = battle_util_mul_div_s64(scaled, mid - elapsed, mid);
+                    step = battle_util_mul_div_s64(scaled + step + weighted + weighted, elapsed, mid * 64);
                     /* Extra use: lifts half's allocation priority above j and total (s6/s7/fp). */
                     __asm__("" : : "r"(half));
                     pos[2][j] = step + pos[0][j] + (half >> 1);

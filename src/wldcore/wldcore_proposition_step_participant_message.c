@@ -46,7 +46,7 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_leve
         g_world_text_substitution_values[0]
             = g_wldcore_proposition_outcome.speaker_party_index + TEXT_ID_UNIT_NAME_SPECIAL_BASE;
         world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT,
-            world_get_party_unit_formation_sprite(g_wldcore_proposition_outcome.speaker_party_index));
+            world_unit_get_formation_sprite(g_wldcore_proposition_outcome.speaker_party_index));
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,
             wldcore_proposition_adjust_message_index(message, g_wldcore_proposition_outcome.speaker_party_index)
                 + TEXT_ID_WORLD_MESSAGE_BASE,

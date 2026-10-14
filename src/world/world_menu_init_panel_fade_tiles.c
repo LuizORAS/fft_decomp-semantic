@@ -51,6 +51,6 @@ void world_menu_init_panel_fade_tiles(void) {
         frame->bar[i].y0 = i + 0xde;
     }
 
-    world_copy_bytes(
+    world_util_copy_bytes(
         &g_world_menu_panel_fade_frames[1], &g_world_menu_panel_fade_frames[0], sizeof(world_fade_tile_frame_t));
 }

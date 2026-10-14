@@ -17,7 +17,7 @@ s32 world_tutorial_step(void) {
     }
     g_world_tutorial_button_input = PadRead(0);
     if (g_world_tutorial_button_input == MAIN_INPUT_RESET_BUTTONS) {
-        world_game_reset();
+        world_input_reset_game();
     }
     g_world_tutorial_buttons = g_world_tutorial_button_input;
     if (g_world_tutorial_highlight_brightness != 0) {

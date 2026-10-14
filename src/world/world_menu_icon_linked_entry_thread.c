@@ -21,7 +21,7 @@ void world_menu_icon_linked_entry_thread(void) {
     param = world_thread_get_current_parameter_1();
     world_menu_size_entry_to_text(param, &width, &height, &pad, 0);
     world_menu_build_icon_record(&rect, param, &records[0]);
-    world_copy_bytes(&records[1], &records[0], 0x7C);
+    world_util_copy_bytes(&records[1], &records[0], 0x7C);
     parent = param->row_actions[0];
     if (parent >= 0) {
         g_world_menu_thread_menu_data[parent].window_x

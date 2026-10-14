@@ -129,7 +129,7 @@ void world_screen_menu_thin_window_frame_thread(void) {
     prim->sprites[8].h = border_thin;
 
     world_gfx_init_scaled_draw_area_packets(&prim->draw_areas);
-    world_copy_bytes(&g_world_menu_panel_buffer.panel_frames[1], &g_world_menu_panel_buffer.panel_frames[0],
+    world_util_copy_bytes(&g_world_menu_panel_buffer.panel_frames[1], &g_world_menu_panel_buffer.panel_frames[0],
         sizeof(world_panel_frame_t));
 
     frame = 0;

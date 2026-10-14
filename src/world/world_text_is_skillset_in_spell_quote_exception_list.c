@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Scans a 0xFF-terminated byte list for value. */
-s32 world_is_skillset_in_spell_quote_exception_list(s32 value) {
+s32 world_text_is_skillset_in_spell_quote_exception_list(s32 value) {
     s32 i;
     s32 found = 0;
 

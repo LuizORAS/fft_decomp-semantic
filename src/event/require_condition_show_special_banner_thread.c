@@ -67,7 +67,7 @@ void require_condition_show_special_banner_thread(void) {
         poly->x3 = QUAD.x + 0x100 + QUAD.width;
         poly->y3 = QUAD.y + 0x78 + QUAD.height;
     }
-    battle_copy_bytes(g_require_gfx_poly_gt4_buffers[1], g_require_gfx_poly_gt4_buffers, 40 * sizeof(POLY_GT4));
+    battle_util_copy_bytes(g_require_gfx_poly_gt4_buffers[1], g_require_gfx_poly_gt4_buffers, 40 * sizeof(POLY_GT4));
 
     buffer = 0;
     scale = 0x30;

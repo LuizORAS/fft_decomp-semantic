@@ -51,6 +51,6 @@ void battle_menu_init_panel_fade_tiles(void) {
         frame->bar[i].y0 = i + 0xde;
     }
 
-    battle_copy_bytes(
+    battle_util_copy_bytes(
         &g_battle_menu_panel_fade_frames[1], &g_battle_menu_panel_fade_frames[0], sizeof(world_fade_tile_frame_t));
 }

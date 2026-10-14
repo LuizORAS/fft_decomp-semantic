@@ -17,8 +17,8 @@ void require_gfx_build_portrait_transition_primitives(const RECT* texture_rect, 
     RECT first_rect;
     s32 i;
 
-    battle_copy_bytes(&first_rect, texture_rect, sizeof(first_rect));
-    battle_copy_bytes(&second_rect, texture_rect, sizeof(second_rect));
+    battle_util_copy_bytes(&first_rect, texture_rect, sizeof(first_rect));
+    battle_util_copy_bytes(&second_rect, texture_rect, sizeof(second_rect));
     second_rect.x += 0x10;
 
     for (i = 0; i < 4; i++) {

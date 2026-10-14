@@ -44,7 +44,7 @@ s8 world_item_run_action_menu(void) {
             text++;
         }
         if (g_world_menu_option_count != 0
-            && world_count_item_equipped_by_party(g_world_menu_entry_ids[g_world_menu_cursor_position]) != 0) {
+            && world_item_count_equipped_by_party(g_world_menu_entry_ids[g_world_menu_cursor_position]) != 0) {
             text[1] = 0;
             g_world_item_action_option_states[1] = 4;
         } else {

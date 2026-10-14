@@ -37,7 +37,7 @@ scope:
   - battle_unit_start_ability_charging_animation()
   - battle_text_determine_spell_quote()
   - world_text_determine_spell_quote()
-  - battle_is_skillset_in_spell_quote_exception_list()
+  - battle_text_is_skillset_in_spell_quote_exception_list()
 ---
 
 # Abilities

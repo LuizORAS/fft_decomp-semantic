@@ -51,14 +51,14 @@ extern s32 g_world_game_option_values[14];
 void world_menu_request_open_companion_executable(s32 request);
 s32 world_bits_read_primary(s32 bit_count);
 s32 world_bits_read_secondary(s32 bit_count);
-void world_bit_cursor_set_primary(u8* ptr);
-void world_bit_cursor_set_secondary(u8* ptr);
+void world_bits_set_primary_cursor(u8* ptr);
+void world_bits_set_secondary_cursor(u8* ptr);
 void world_bits_write_primary(u8 bit);
 void world_script_clamp_s32_to_range(s32* value, s32 min, s32 max);
 void world_menu_copy_bytes_to_halfwords(u16* destination, const u8* source, s32 count);
-s32 world_mul_div_64(s32 a, s32 b, s32 c);
-void world_copy_bytes(void* destination, const void* source, s32 count);
-void world_game_reset(void);
+s32 world_util_mul_div_s64(s32 a, s32 b, s32 c);
+void world_util_copy_bytes(void* destination, const void* source, s32 count);
+
 void world_menu_init_stub(void);
 void world_menu_display_projected_action_effect(POLY_FT4* unused_primitive,
     const world_image_location_t* unused_base_load, const RECT* unused_base_screen,
@@ -185,6 +185,8 @@ void world_script_load_event_input_state(const world_menu_input_state_t* state);
 void world_input_update_controller(void);
 void world_input_update_menu_repeat(u32 buttons);
 void world_input_update_menu_state(void);
+
+void world_input_reset_game(void);
 
 /* camera */
 /* WORLD's copy of the event camera: the CAMERA instruction's threads, its fusions and the yaw helpers.
@@ -1439,6 +1441,8 @@ s32 world_formation_run_remove_all_abilities_prompt(void);
 s32 world_formation_run_remove_all_equipment_prompt(void);
 s32 world_formation_run_remove_item_menu(void);
 
+s32 world_formation_coords_fit_in_byte(s32 x, s32 y);
+
 /* unit */
 /* WORLD's unit helpers: the event-script unit operations it shares with BATTLE (status snapshots,
  * facing and animations, screen positions), the unit view panels and editor, Best Fit and the
@@ -1565,7 +1569,7 @@ extern u8 g_world_selected_unit_portrait_image[];
 extern u8 g_world_stat_preview_text_image[];
 void set_unit_cannot_exist(s32 unit_index);
 struct battle_stats* find_unit_by_id(s32 unit_id, s32* out_index);
-s32 world_get_party_unit_formation_sprite(s32 party_index);
+s32 world_unit_get_formation_sprite(s32 party_index);
 void resolve_unit_status_changes(void);
 s32 unit_has_adjacent_monster_skill_support(struct battle_stats* unit);
 s32 world_formation_get_unit_palette_index(s32 roster_slot);
@@ -1934,6 +1938,8 @@ void world_text_configure_sprite_vram(RECT* rect, s32 width, s32 height, void* p
 u8* world_text_advance_cursor_with_separate_backreference_state(s32* count, u8* cursor, u8** saved);
 
 void world_text_fill_field_with_terminators(u8* buf);
+
+s32 world_text_is_skillset_in_spell_quote_exception_list(s32 value);
 
 /* turn */
 void world_screen_build_at_list(void);
@@ -2818,7 +2824,7 @@ extern u16 g_world_item_saved_selected_unit_index;
 extern u8 g_world_item_menu_category;
 
 void world_gfx_set_item_icon_sprite(SPRT* sprite, s32 item_id);
-s32 world_count_item_equipped_by_party(s32 item_id);
+s32 world_item_count_equipped_by_party(s32 item_id);
 s32 world_item_build_category_list(s16 unit_id, s16 sort_mode, s8 category, s16* entries, u8 mode);
 void world_gfx_build_item_graphic_descriptor(world_item_icon_source_t* source, s32 item_id);
 void world_item_build_status_list_polygons(s16 item_id);
@@ -3247,6 +3253,8 @@ void world_card_build_save_image(s32 slot);
 s32 world_card_seek_file_with_retries(s32 descriptor, s32 offset, s32 origin);
 s32 world_card_write_buffer_to_file(const char* filename, const u8* source, u32 size, s32 create_file);
 
+void world_card_free_load_work_buffer(void);
+
 /* script */
 /* WORLD's copy of the event-script interpreter (world_script_*, twins of battle_script_*): loading
  * and running an event, its frame, the script variables and the scenario conditions, and the event
@@ -3452,12 +3460,9 @@ extern u16 g_world_script_frame_result_override;
 extern s32 g_world_camera_cross_product_overflow; /* set by world_cross_product_q12 on Q12 overflow */
 s32 world_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 s32 get_current_facing_byte_from_misc_id(s32 misc_id);
-s32 world_coords_fit_in_byte(s32 x, s32 y);
-
-void world_free_work_buffer(void);
 
 s32 world_ability_list_secondary_skillsets(s16 unit_id, s16* skillsets);
-s32 world_is_skillset_in_spell_quote_exception_list(s32 value);
+
 s16 world_menu_update_wrapped_horizontal_selection(u16 count, u8 index, s32 buttons);
 void world_script_process_inflict_status_commands(void);
 void world_script_rotate_unit(const u8*);

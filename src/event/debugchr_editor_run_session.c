@@ -114,10 +114,10 @@ void debugchr_editor_run_session(void) {
     debugchr_editor_load_selected_unit();
     g_debugchr_editor_selected_unit_slot = 0;
     if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
-        battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
+        battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
         g_debugchr_editor_fields[15].destination[0] = 0xE;
     } else {
-        battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
+        battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
         g_debugchr_editor_fields[15].destination[0] = 0xE;
     }
     g_debugchr_status_display_thread_params.style = 0;
@@ -182,9 +182,9 @@ loop_outer:
             g_debugchr_panel_selected_billboard.unit_index = unit_index;
             debugchr_editor_load_selected_unit();
             if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
-                battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
+                battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
             } else {
-                battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
+                battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
             }
             g_debugchr_editor_fields[15].destination[0] = mark;
             g_debugchr_status_display_thread_params.redraw_request = 1;
@@ -207,9 +207,9 @@ loop_outer:
             g_debugchr_panel_selected_billboard.unit_index = unit_index;
             debugchr_editor_load_selected_unit();
             if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
-                battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
+                battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
             } else {
-                battle_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
+                battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
             }
             g_debugchr_editor_fields[15].destination[0] = mark;
             /* Keeps the `li v0,2` for the redraw store below the byte store. */

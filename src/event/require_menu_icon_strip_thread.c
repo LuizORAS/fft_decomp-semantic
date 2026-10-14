@@ -18,7 +18,7 @@ void require_menu_icon_strip_thread(void) {
     state = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
     record = &records[0];
     battle_menu_build_window_sprites(&rect, state, record);
-    battle_copy_bytes(&records[1], record, sizeof(records[1]));
+    battle_util_copy_bytes(&records[1], record, sizeof(records[1]));
     fresh = 1;
     for (i = 0;; i++) {
         if (i % 7 == 0) {

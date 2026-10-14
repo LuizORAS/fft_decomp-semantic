@@ -4,7 +4,7 @@
 /* Copy a Misc Unit's renderer-space coordinates into the world's coordinate
  * triple. A -1 lookup result leaves the destination unchanged.
  */
-vec3u16_t* world_copy_misc_unit_screen_coords(u32 misc_id) {
+vec3u16_t* world_unit_get_misc_screen_coords_copy(u32 misc_id) {
     SVECTOR* source;
     vec3u16_t* dest;
 

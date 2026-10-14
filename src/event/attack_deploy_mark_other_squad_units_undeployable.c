@@ -9,7 +9,7 @@ void attack_deploy_mark_other_squad_units_undeployable(void) {
     s32 i;
     s32 unit_id;
 
-    battle_copy_bytes(g_attack_deploy_roster_unit_deployable, g_attack_deploy_unit_fieldable, 20);
+    battle_util_copy_bytes(g_attack_deploy_roster_unit_deployable, g_attack_deploy_unit_fieldable, 20);
     for (squad_id = 0; squad_id < 4; squad_id++) {
         if (squad_id != g_attack_deploy_current_squad) {
             for (i = 0; i < 25; i++) {

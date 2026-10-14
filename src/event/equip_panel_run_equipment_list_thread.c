@@ -61,7 +61,7 @@ void equip_panel_run_equipment_list_thread(void) {
     battle_menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
     screen->sprites[0].clut = 0x7cbc;
     screen->sprites[1].clut = 0x7cbc;
-    battle_copy_bytes(&screen[1], screen, sizeof(battle_menu_status_panel_buffer_t));
+    battle_util_copy_bytes(&screen[1], screen, sizeof(battle_menu_status_panel_buffer_t));
 
     frame = 0;
     for (;;) {
@@ -89,7 +89,7 @@ void equip_panel_run_equipment_list_thread(void) {
             }
         }
         if (frame == 0 || thread->redraw_request == 1) {
-            battle_clear_menu_render_buffer(text, 0xc80);
+            battle_menu_clear_render_buffer(text, 0xc80);
             g_battle_menu_text_state.pen.stride = 0x50;
             battle_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {

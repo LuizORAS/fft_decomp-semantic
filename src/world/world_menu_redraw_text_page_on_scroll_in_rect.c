@@ -61,7 +61,7 @@ u8* world_menu_redraw_text_page_on_scroll_in_rect(
     world_menu_draw_text_columns_narrow(entry, row_offset, buffer);
     *redraw = 0;
     LoadImage(&rect, buffer);
-    world_copy_bytes(&clear, &rect, 8);
+    world_util_copy_bytes(&clear, &rect, 8);
     clear.h = 2;
     clear.x = rect.x;
     clear.y = ((rect.y - 2) & 0xFF) + (rect.y & 0xFF00);

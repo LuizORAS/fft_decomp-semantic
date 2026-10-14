@@ -4,7 +4,6 @@ tier: 3
 scope:
   - battle_text
   - world_text
-  - world_font
   - world_name
 ---
 

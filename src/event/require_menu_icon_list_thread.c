@@ -24,7 +24,7 @@ void require_menu_icon_list_thread(void) {
         cursor = 0;
     }
     battle_menu_build_window_sprites(&rect, state, record);
-    battle_copy_bytes(&records[1], record, sizeof(records[1]));
+    battle_util_copy_bytes(&records[1], record, sizeof(records[1]));
     fresh = 0;
     redraw = (s16*)state->text_binding;
     *redraw = 1;

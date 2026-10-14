@@ -395,7 +395,7 @@ void world_text_character_handling_thread(void) {
         win->sprites[3].h = 8;
         win->sprites[3].clut = 0x7CBC;
     }
-    world_copy_bytes(&win[1], win, 0x118);
+    world_util_copy_bytes(&win[1], win, 0x118);
     win[0].active = 1;
     win[1].active = 1;
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
@@ -845,7 +845,7 @@ end:
         from.h = 0;
         from.x = right;
         from.y = bottom;
-        world_copy_bytes(&to, &from, 8);
+        world_util_copy_bytes(&to, &from, 8);
         world_menu_tween_window_quads(win, &from, &to, 4);
     }
     g_world_menu_message_waiting_for_confirm = 0;

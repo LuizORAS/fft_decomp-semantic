@@ -5,7 +5,7 @@
  *
  * The comparison uses the stored equipment halfword as-is; only the requested
  * ID is masked. */
-s32 world_count_item_equipped_by_party(s32 item_id) {
+s32 world_item_count_equipped_by_party(s32 item_id) {
     s32 count;
     s32 unit_index;
     s32 slot;

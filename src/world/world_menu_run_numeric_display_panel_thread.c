@@ -39,7 +39,7 @@ void world_menu_run_numeric_display_panel_thread(void) {
         world_gfx_init_image_loading(&record->sprites[i], &g_world_menu_texture_location,
             &g_world_numeric_display_frame_rect, &g_world_numeric_display_image_params[i]);
     }
-    world_copy_bytes(&record[1], record, 0x1AC);
+    world_util_copy_bytes(&record[1], record, 0x1AC);
     record[0].palette = &g_world_numeric_display_palettes[0].primitives;
     record[1].palette = &g_world_numeric_display_palettes[1].primitives;
     world_menu_init_numeric_display_frame_primitives(&g_world_numeric_display_frame_rect, record[0].palette);

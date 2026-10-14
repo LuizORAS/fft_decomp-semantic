@@ -22,7 +22,7 @@ void battle_menu_run_numeric_display_panel_thread(void) {
     battle_gfx_set_draw_mode_for_texture_page(&record->mode1, MENU_TEXTURE_PAGE_TEXT_IMAGES);
     battle_gfx_init_scaled_draw_area_packets(&record->draw_areas);
     buffer = battle_menu_alloc_memory(0x918);
-    battle_clear_menu_render_buffer(buffer, 0x918);
+    battle_menu_clear_render_buffer(buffer, 0x918);
     g_battle_menu_text_state.pen.stride = 0x14;
     battle_menu_set_text_origin(0, 0);
     battle_menu_draw_numeric_display_entries(
@@ -45,7 +45,7 @@ void battle_menu_run_numeric_display_panel_thread(void) {
         battle_gfx_init_image_loading(&record->sprites[i], &g_battle_menu_texture_location,
             &g_battle_numeric_display_frame_rect, &g_battle_numeric_display_image_params[i]);
     }
-    battle_copy_bytes(&record[1], record, sizeof(*record));
+    battle_util_copy_bytes(&record[1], record, sizeof(*record));
     record[0].palette = &g_battle_numeric_display_palettes[0].primitives;
     record[1].palette = &g_battle_numeric_display_palettes[1].primitives;
     battle_menu_init_numeric_display_frame_primitives(&g_battle_numeric_display_frame_rect, record[0].palette);

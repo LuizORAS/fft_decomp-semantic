@@ -67,7 +67,7 @@ void require_reward_render_war_trophies(void) {
         prims->banner.h = 0x78;
         prims->banner.w = 0xf0;
         prims->banner.clut = 0x7cbc;
-        battle_copy_bytes(
+        battle_util_copy_bytes(
             &prims[1], g_require_reward_war_trophy_primitives, sizeof(require_reward_war_trophy_primitives_t));
         frame = 0;
         while (1) {
@@ -86,7 +86,7 @@ void require_reward_render_war_trophies(void) {
                 }
                 image = battle_menu_build_and_upload_window_frame_image(
                     0x50, 0x10, &g_require_reward_war_trophy_image_rect, MENU_WINDOW_FRAME_BUILD);
-                battle_clear_menu_render_buffer(image, 0x280);
+                battle_menu_clear_render_buffer(image, 0x280);
                 g_battle_menu_text_state.pen.stride = 0x50;
                 timer = 0;
                 if (g_require_reward_war_trophy_entry_types[last] == REQUIRE_WAR_TROPHY_ENTRY_ITEM) {

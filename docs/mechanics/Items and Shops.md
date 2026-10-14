@@ -7,7 +7,7 @@ scope:
   - world_shop
   - equip_item
   - equip_unit
-  - world_count_item_equipped_by_party()
+  - world_item_count_equipped_by_party()
   - world_unit_can_equip_item_id()
   - world_unit_build_best_fit_equipment()
   - world_unit_is_two_handing_weapon()

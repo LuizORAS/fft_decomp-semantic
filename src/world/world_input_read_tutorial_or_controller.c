@@ -13,7 +13,7 @@ s32 world_input_read_tutorial_or_controller(s32 unused_0) {
     }
     if (input == MAIN_INPUT_RESET_BUTTONS) {
         world_card_close_stub();
-        world_game_reset();
+        world_input_reset_game();
     }
     return input;
 }

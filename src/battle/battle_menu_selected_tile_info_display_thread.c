@@ -42,7 +42,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
             &g_battle_tile_info_image_location, &g_battle_tile_info_image_params[i]);
     }
     battle_text_configure_sprite_vram(&rect, 0x18, 0x10, &page->sprites[0], 0);
-    battle_copy_bytes(
+    battle_util_copy_bytes(
         &g_battle_menu_height_display_pages[1], &g_battle_menu_height_display_pages[0], sizeof(world_menu_quad_page_t));
 
     for (frame = 0;; frame++) {
@@ -66,7 +66,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
             battle_gfx_draw_or_append_gpu_primitive(&page->quads[j]);
         }
         if (g_battle_map_selected_tile_data.depth != 0) {
-            battle_clear_menu_render_buffer(buffer, 0x100);
+            battle_menu_clear_render_buffer(buffer, 0x100);
             stride = &g_battle_menu_text_state.pen.stride;
             *stride = 0x18;
             battle_menu_set_text_origin(0x10, 0);

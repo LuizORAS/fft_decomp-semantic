@@ -29,7 +29,7 @@ scope:
   - world_menu_text_entry_wait_thread_for_selected_unit()
   - world_menu_load_sort_key_list()
   - world_menu_store_sort_key_list()
-  - world_coords_fit_in_byte()
+  - world_formation_coords_fit_in_byte()
 ---
 
 # Roster and Formation

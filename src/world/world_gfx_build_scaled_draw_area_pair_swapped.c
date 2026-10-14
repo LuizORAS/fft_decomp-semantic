@@ -21,7 +21,7 @@ void world_gfx_build_scaled_draw_area_pair_swapped(
         step = 11;
     }
     percent = g_world_menu_cursor_zoom_percentages[step];
-    world_copy_bytes(&packets->rects[0], geometry, 8);
+    world_util_copy_bytes(&packets->rects[0], geometry, 8);
     if (packets->rects[0].x < 0x80) {
         packets->rects[0].x += 0x80;
         packets->rects[0].y += 0x78;

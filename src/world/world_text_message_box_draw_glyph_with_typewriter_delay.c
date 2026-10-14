@@ -141,7 +141,7 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
         LoadImage(&g_world_text_message_box_vram_rect, (u32*)dst);
     }
     g_world_text_message_box_slot_glyph_counters[slot]++;
-    world_copy_bytes(src, dst, 84);
+    world_util_copy_bytes(src, dst, 84);
     if (wait == 0) {
         DrawSync(0);
         g_world_text_message_box_slot_glyph_counters[slot] = 0;

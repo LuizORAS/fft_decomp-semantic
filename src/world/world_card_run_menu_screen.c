@@ -128,7 +128,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
         world_sound_dispatch_effect();
     }
     world_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, -1, 0);
-    world_free_work_buffer();
+    world_card_free_load_work_buffer();
     world_card_close_stub();
     main_sound_unload_scenario_mus(music_handle);
     world_menu_reset_context();

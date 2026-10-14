@@ -30,7 +30,7 @@ void world_menu_icon_timed_thread(void) {
     param = world_thread_get_current_parameter_1();
     world_menu_size_entry_to_text(param, &width, &height, &pad, 1);
     world_menu_build_icon_record(&rect, param, &records[0]);
-    world_copy_bytes(&records[1], &records[0], 0x7C);
+    world_util_copy_bytes(&records[1], &records[0], 0x7C);
     buffer = world_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
     g_world_menu_text_state.pen.stride = width;
     world_menu_set_text_origin(pad + 8, 9);

@@ -12,7 +12,7 @@ s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_
     u8 byte;
 
     font = g_world_text_glyph_bitmap_data;
-    world_bit_cursor_set_primary(font + glyph * TEXT_GLYPH_BYTES);
+    world_bits_set_primary_cursor(font + glyph * TEXT_GLYPH_BYTES);
     row = 0;
     if ((target->x & 1) == 0) {
         for (; row < 14; row++) {

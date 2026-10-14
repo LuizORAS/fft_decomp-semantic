@@ -58,7 +58,7 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     frames[0].portrait.tpage = GetTPage(0, 1, 0x3C0, 0x100);
     SetSemiTrans(&frames[0].portrait, 1);
     buffer = battle_menu_alloc_buffer(0x580);
-    battle_clear_menu_render_buffer(buffer, 0x580);
+    battle_menu_clear_render_buffer(buffer, 0x580);
     stride = &g_battle_menu_text_state.pen.stride;
     *stride = 0x58;
     battle_menu_set_text_origin(0, 0);
@@ -67,7 +67,7 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     battle_menu_set_text_origin(0, 0x10);
     battle_menu_display_text_string((s32)buffer, (s32)origin, (s32)g_battle_menu_billboard_job_name);
     LoadImage(&rects[0], (u32*)buffer);
-    battle_clear_menu_render_buffer(digits, 0xF0);
+    battle_menu_clear_render_buffer(digits, 0xF0);
     *stride = 0x10;
     battle_menu_set_text_origin(0, 0);
     battle_menu_draw_small_number_glyphs(g_battle_active_turn_unit.brave, 0x202, digits, origin);
@@ -92,7 +92,7 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     zodiac = g_battle_active_turn_unit.zodiac;
     frames[0].sprites[6].u0 = zodiac % 7 * 0x18;
     frames[0].sprites[6].v0 = zodiac / 7 * 0x14 + 0x2A;
-    battle_copy_bytes(&frames[1], &frames[0], sizeof(world_unit_summary_frame_t));
+    battle_util_copy_bytes(&frames[1], &frames[0], sizeof(world_unit_summary_frame_t));
     frames[0].palette = &g_battle_unit_summary_palettes[0].primitives;
     frames[1].palette = &g_battle_unit_summary_palettes[1].primitives;
     battle_menu_init_numeric_display_frame_primitives(&g_battle_unit_summary_panel_rect, frames[0].palette);

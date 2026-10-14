@@ -630,8 +630,8 @@ restart_script:
         }
         /* ---- Background, palettes, and terrain ---- */
         else if (opcode == EVENT_OPCODE_BACKGROUND) {
-            battle_copy_bytes(&g_battle_event_background_colors.first, parameters, 3);
-            battle_copy_bytes(&g_battle_event_background_colors.second, parameters + 3, 3);
+            battle_util_copy_bytes(&g_battle_event_background_colors.first, parameters, 3);
+            battle_util_copy_bytes(&g_battle_event_background_colors.second, parameters + 3, 3);
             if (parameters[7] == 0) {
                 battle_map_transition_and_store_background_gradient(parameters[6], &g_battle_event_background_colors);
             } else {

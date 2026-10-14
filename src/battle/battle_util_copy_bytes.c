@@ -5,7 +5,7 @@
  *
  * The target performs the first byte copy before testing the decremented
  * count, so callers must provide a positive byte count. */
-void battle_copy_bytes(void* destination, const void* source, s32 count) {
+void battle_util_copy_bytes(void* destination, const void* source, s32 count) {
     /* Pin: unpinned, GCC copies the byte through $v0 instead of $a3. */
     register u8 value __asm__("$7");
     u8* destination_bytes = destination;

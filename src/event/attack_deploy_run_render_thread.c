@@ -48,7 +48,7 @@ void attack_deploy_run_render_thread(void) {
     SetDrawMode(&g_attack_deploy_render_buffers[0].draw_mode_9f4, 0, 0, GetTPage(0, 1, 0x3c0, 0x100),
         &g_attack_gfx_draw_area_template);
     attack_deploy_prepare_valid_tiles(g_attack_deploy_render_buffers[0].tiles[0]);
-    battle_copy_bytes(
+    battle_util_copy_bytes(
         &g_attack_deploy_render_buffers[1], &g_attack_deploy_render_buffers[0], sizeof(attack_deploy_render_buffer_t));
     frame = 0;
     while (1) {

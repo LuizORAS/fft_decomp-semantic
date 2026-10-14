@@ -3,7 +3,7 @@
 /* Copy a Misc Unit's renderer-space coordinates into the shared coordinate
  * triple. A -1 lookup result leaves the destination unchanged.
  */
-SVECTOR* battle_copy_misc_unit_screen_coords(u32 misc_id) {
+SVECTOR* battle_unit_get_misc_screen_coords_copy(u32 misc_id) {
     SVECTOR* source;
     SVECTOR* dest;
 

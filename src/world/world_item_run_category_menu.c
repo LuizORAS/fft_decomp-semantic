@@ -71,7 +71,7 @@ s32 world_item_run_category_menu(void) {
         g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
     } else if (g_world_input_primary_repeat & PSX_PAD_TRIANGLE) {
         g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
-        if (world_count_item_equipped_by_party(g_world_menu_entry_ids[g_world_menu_cursor_position]) != 0) {
+        if (world_item_count_equipped_by_party(g_world_menu_entry_ids[g_world_menu_cursor_position]) != 0) {
             g_world_item_category_menu_initialized = 0;
             world_menu_set_selection_record(g_world_item_menu_category, g_world_menu_cursor_position,
                 g_world_menu_scroll_offset, g_world_menu_entry_ids);

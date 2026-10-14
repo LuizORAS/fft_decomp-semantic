@@ -114,16 +114,16 @@ void debugchr_panel_unit_status_banner_thread(void) {
         state->team_kind = 0;
     }
     if (g_battle_post_battle_unit_changes_active == 0) {
-        battle_copy_bytes(
+        battle_util_copy_bytes(
             g_debugchr_panel_editor_mode_cell, &g_debugchr_panel_editor_mode_cells[state->team_kind], 0xC);
     } else {
-        battle_copy_bytes(g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells, 0xC);
+        battle_util_copy_bytes(g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells, 0xC);
     }
     for (frame = 0; frame < 7; frame++) {
         battle_gfx_init_image_loading(&editor->label_sprites[frame], g_debugchr_editor_numeric_geometry,
             &g_debugchr_gfx_portrait_origin, &g_debugchr_panel_editor_label_cells[frame]);
     }
-    battle_copy_bytes(editor + 1, editor, sizeof(battle_menu_status_panel_editor_packet_t));
+    battle_util_copy_bytes(editor + 1, editor, sizeof(battle_menu_status_panel_editor_packet_t));
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
     battle_gfx_set_draw_mode_for_texture_page(&panel->draw_mode_b, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_menu_init_numeric_display_frame_primitives(&g_debugchr_panel_frame_rect, &panel->numeric_frame);
@@ -146,7 +146,7 @@ void debugchr_panel_unit_status_banner_thread(void) {
         panel->portrait.clut = 0x7FBD;
     }
     panel->portrait.tpage = GetTPage(0, 1, 0x3C0, 0x100);
-    battle_copy_bytes(panel + 1, panel, sizeof(battle_menu_status_panel_packet_t));
+    battle_util_copy_bytes(panel + 1, panel, sizeof(battle_menu_status_panel_packet_t));
     frame = 0;
     anim_state = 0;
     prev_unit = state->unit_index;
@@ -159,10 +159,10 @@ void debugchr_panel_unit_status_banner_thread(void) {
             state->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 0x64;
         }
         if (g_battle_post_battle_unit_changes_active == 0) {
-            battle_copy_bytes(
+            battle_util_copy_bytes(
                 g_debugchr_panel_editor_mode_cell, &g_debugchr_panel_editor_mode_cells[state->team_kind], 0xC);
         } else {
-            battle_copy_bytes(g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells, 0xC);
+            battle_util_copy_bytes(g_debugchr_panel_editor_mode_cell, g_debugchr_panel_editor_mode_cells, 0xC);
         }
         battle_gfx_init_image_loading(&editor->label_sprites[6], g_debugchr_editor_numeric_geometry,
             &g_debugchr_gfx_portrait_origin, g_debugchr_panel_editor_mode_cell);
@@ -402,7 +402,7 @@ void debugchr_panel_unit_status_banner_thread(void) {
             } else {
                 number_entries[6].format = 2;
             }
-            battle_clear_menu_render_buffer(number_pixels, 0x700);
+            battle_menu_clear_render_buffer(number_pixels, 0x700);
             window_width = &g_battle_menu_text_state.pen.stride;
             text_position = (world_glyph_blit_t*)(window_width - 2);
             *window_width = 0x38;
@@ -413,14 +413,14 @@ void debugchr_panel_unit_status_banner_thread(void) {
             battle_menu_draw_numeric_display_entries(number_pixels_b, &number_entries[6], text_position, 4);
             LoadImage(&rects[1], number_pixels_b);
             thread->work = 0;
-            battle_clear_menu_render_buffer(name_pixels, 0x580);
+            battle_menu_clear_render_buffer(name_pixels, 0x580);
             *window_width = 0x58;
             battle_menu_set_text_origin(0, 0);
             battle_menu_display_text_entry(unit_info->name_id + TEXT_ID_UNIT_NAME_BASE, name_pixels, text_position);
             battle_menu_set_text_origin(0, 0x10);
             battle_menu_display_text_entry(unit_info->job_id + TEXT_ID_JOB_NAME_BASE, name_pixels, text_position);
             LoadImage(&rects[2], name_pixels);
-            battle_clear_menu_render_buffer(value_pixels, 0xF0);
+            battle_menu_clear_render_buffer(value_pixels, 0xF0);
             *window_width = 0x10;
             battle_menu_set_text_origin(0, 0);
             battle_menu_draw_small_number_glyphs(unit_info->brave, 0x202, value_pixels, text_position);

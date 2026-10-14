@@ -45,7 +45,7 @@ void world_map_light_thread(void) {
         battle_map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_SET, &colour, &light, 0);
         world_thread_wait_frames(1);
     }
-    world_copy_bytes(g_world_map_light_rotation, &rotation, 8);
-    world_copy_bytes(g_world_map_light_scale, &scale, 16);
+    world_util_copy_bytes(g_world_map_light_rotation, &rotation, 8);
+    world_util_copy_bytes(g_world_map_light_scale, &scale, 16);
     world_thread_exit_current();
 }

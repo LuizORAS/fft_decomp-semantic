@@ -5,7 +5,7 @@
 
 /* Renders one encoded glyph (either a direct id or a 0xD?-prefixed
  * two-byte code) into a 0x78-byte 4bpp image and uploads it at (x, y). */
-void world_font_upload_glyph_image(u16 code, s32 x, s32 y, s32 style) {
+void world_text_upload_glyph_image(u16 code, s32 x, s32 y, s32 style) {
     u8 image[0x78];
     RECT rect;
     u32 glyph;

@@ -7,8 +7,8 @@ scope:
   - world_unit
   - world_gfx
   - main_gfx
-  - battle_copy_misc_unit_screen_coords()
-  - world_copy_misc_unit_screen_coords()
+  - battle_unit_get_misc_screen_coords_copy()
+  - world_unit_get_misc_screen_coords_copy()
 ---
 
 # Sprites and Graphics

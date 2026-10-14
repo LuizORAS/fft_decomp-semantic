@@ -18,7 +18,7 @@ void battle_menu_draw_small_number_glyphs(s32 value, s32 digits, void* resource,
         g_battle_menu_small_number_glyph_rect.y = 0x10;
         if (digits & 1) {
             src->x = 0xB4;
-            blit_text_glyph(g_battle_menu_glyph_image, resource, src, pos);
+            battle_text_blit_glyph(g_battle_menu_glyph_image, resource, src, pos);
             pos->rect.x += 5;
         }
         src->x = 0xBA;
@@ -26,14 +26,14 @@ void battle_menu_draw_small_number_glyphs(s32 value, s32 digits, void* resource,
             src->x = 0xD0;
         }
         for (i = 0; i < 3; i++) {
-            blit_text_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_small_number_glyph_rect, pos);
+            battle_text_blit_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_small_number_glyph_rect, pos);
             pos->rect.x += 5;
         }
         return;
     }
     if (digits & 0x800) {
         src->x = 0xBA;
-        blit_text_glyph(g_battle_menu_glyph_image, resource, src, pos);
+        battle_text_blit_glyph(g_battle_menu_glyph_image, resource, src, pos);
         pos->rect.x += 7;
     }
     if (g_battle_menu_hide_numeric_values == 0) {
@@ -47,13 +47,13 @@ void battle_menu_draw_small_number_glyphs(s32 value, s32 digits, void* resource,
     }
     if (digits & 0x1000) {
         src->x = 0xB4;
-        blit_text_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_small_number_glyph_rect, pos);
+        battle_text_blit_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_small_number_glyph_rect, pos);
         pos->rect.x += 5;
     }
     if (digits & 0x8000) {
         pos->rect.x -= 2;
         src->x = 0xB4;
-        blit_text_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_small_number_glyph_rect, pos);
+        battle_text_blit_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_small_number_glyph_rect, pos);
         pos->rect.x += 7;
     }
     if (digits & 0x100) {
@@ -61,7 +61,7 @@ void battle_menu_draw_small_number_glyphs(s32 value, s32 digits, void* resource,
         src->y = 0x1A;
         src->h = 4;
         pos->rect.y += 3;
-        blit_text_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_small_number_glyph_rect, pos);
+        battle_text_blit_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_small_number_glyph_rect, pos);
         pos->rect.x += 7;
         pos->rect.y -= 3;
         src->y = 0x10;
@@ -74,14 +74,14 @@ void battle_menu_draw_small_number_glyphs(s32 value, s32 digits, void* resource,
         if (g_battle_menu_hide_numeric_values != 0) {
             src->x = 0xD0;
         }
-        blit_text_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_small_number_glyph_rect, pos);
+        battle_text_blit_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_small_number_glyph_rect, pos);
         value /= 10;
         pos->rect.x -= 5;
     }
     pos->rect.x = cursor;
     if (digits & 0x2000) {
         src->x = 0xC0;
-        blit_text_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_small_number_glyph_rect, pos);
+        battle_text_blit_glyph(g_battle_menu_glyph_image, resource, &g_battle_menu_small_number_glyph_rect, pos);
         pos->rect.x += 5;
     }
 }
