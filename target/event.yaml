@@ -1,5 +1,3 @@
-# EVENT/*.OUT: event overlays, one document each. Each runs alongside BATTLE;
-# calls into BATTLE-hosted names resolve through `links: [battle]`.
 module: event-attack
 file: EVENT/ATTACK.OUT
 lba: 2448
@@ -23,7 +21,7 @@ functions:
   - {addr: 0x801c0884, size: 544, name: menu_init_status_panel_primitives, hash: c0c46a118253c8ae, source: src/shared/menu/menu_init_status_panel_primitives.c}
   - {addr: 0x801c0aa4, size: 40, name: attack_panel_run_equipment_list_thread, hash: fbcd24ded43d67df}
   - {addr: 0x801c0acc, size: 40, name: attack_panel_run_ability_list_thread, hash: fbcd24ded43d67df}
-  - {addr: 0x801c0af4, size: 1932, name: attack_panel_run_character_status_thread, hash: 032d9823d70a2a5d}
+  - {addr: 0x801c0af4, size: 1932, name: attack_panel_run_character_status_thread, hash: 032d9823d70a2a5d, source: src/shared/menu/menu_run_status_panel_thread.c, source_symbol: menu_run_status_panel_thread}
   - {addr: 0x801c1280, size: 380, name: menu_set_status_panel_primitive_colors, hash: 96535460369c6487, source: src/shared/menu/menu_set_status_panel_primitive_colors.c}
   - {addr: 0x801c13fc, size: 84, name: menu_select_status_primitive_color_palette, hash: edaf22379760b92c, source: src/shared/menu/menu_select_status_primitive_color_palette.c}
   - {addr: 0x801c1450, size: 268, name: attack_text_render_signed_decimal_entries, hash: "6394222889009711"}
@@ -278,6 +276,26 @@ data:
   - {addr: 0x801dd2e4, name: g_attack_portrait_staging}
   - {addr: 0x801dd5e4, name: g_attack_formation_sprite_staging}
   - {addr: 0x801dda64, name: g_attack_map_title_sprites}
+
+overrides:
+  - {function: attack_panel_run_character_status_thread, name: g_menu_gfx_draw_offset_y, addr: 0x801d651c}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_input_controller, addr: 0x801d6500}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_draw_area_rect, addr: 0x801ca4dc}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_fields, addr: 0x801ca0e8}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_frame_rect, addr: 0x801ca4c4}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_frames, addr: 0x801d86ec}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_item_icon_layouts, addr: 0x801ca8e4}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_item_icon_texture, addr: 0x801ca1c0}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_label_layouts_mode0, addr: 0x801ca4f4}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_label_layouts_mode1, addr: 0x801ca5d8}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_label_layouts_mode2, addr: 0x801ca6bc}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_label_layouts_mode3, addr: 0x801ca7a0}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_numeric_geometry, addr: 0x801ca1b8}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_origin_offsets, addr: 0x801ca4b4}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_text_image_a, addr: 0x801d8e9c}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_text_image_b, addr: 0x801d9b1c}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_text_upload_rect_a, addr: 0x801ca4e4}
+  - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_text_upload_rect_b, addr: 0x801ca4ec}
 ---
 module: event-bunit
 file: EVENT/BUNIT.OUT
