@@ -816,7 +816,7 @@ functions:
   - {addr: 0x80138b10, size: 84, name: battle_menu_submit_icon_primitives, hash: 3abc0aee8fb45d44}
   - {addr: 0x80138b64, size: 884, name: battle_menu_auto_battle_setting_thread, hash: abb41eaee69c7fdf}
   - {addr: 0x80138ed8, size: 484, name: battle_menu_run_icon_selection_loop, hash: 8cfe22df483b0535}
-  - {addr: 0x801390bc, size: 1216, name: battle_menu_build_ability_preview_at_list, hash: 6e702f32cf54faba}
+  - {addr: 0x801390bc, size: 1216, name: battle_menu_build_ability_preview_at_list, hash: 6e702f32cf54faba, source: src/shared/menu/menu_build_ability_preview_at_list.c, source_symbol: menu_build_ability_preview_at_list}
   - {addr: 0x8013957c, size: 48, name: battle_menu_preview_ability_turn_at_list, hash: a3d09a882786de18}
   - {addr: 0x801395ac, size: 848, name: battle_menu_draw_text_columns_narrow, hash: d75e80a24787682e}
   - {addr: 0x801398fc, size: 736, name: battle_menu_redraw_text_page_on_scroll_in_rect, hash: 5123e70a9f03a283}

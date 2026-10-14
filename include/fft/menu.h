@@ -1040,6 +1040,8 @@ typedef struct menu_at_list_work {
 } menu_at_list_work_t;
 typedef char menu_at_list_work_size_must_be_1824[(sizeof(menu_at_list_work_t) == 1824) ? 1 : -1];
 
+void menu_build_ability_preview_at_list(void);
+
 /* Packed 4-bit images for the status panel's three numeric groups. */
 typedef struct menu_unit_stat_number_images {
     u8 mobility[20 * 36 / 2]; /* Move, Jump and Speed. */

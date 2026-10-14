@@ -163,7 +163,7 @@ functions:
   - {addr: 0x800ecb58, size: 84, name: world_menu_submit_icon_primitives, hash: a515bb563666589f}
   - {addr: 0x800ecbac, size: 884, name: world_menu_auto_battle_setting_thread, hash: da80ac82429023de}
   - {addr: 0x800ecf20, size: 484, name: world_menu_run_icon_selection_loop, hash: 250b9e0de59e73e5}
-  - {addr: 0x800ed104, size: 1216, name: world_menu_build_ability_preview_at_list, hash: 7287e112f97743bf}
+  - {addr: 0x800ed104, size: 1216, name: world_menu_build_ability_preview_at_list, hash: 7287e112f97743bf, source: src/shared/menu/menu_build_ability_preview_at_list.c, source_symbol: menu_build_ability_preview_at_list}
   - {addr: 0x800ed5c4, size: 48, name: world_menu_preview_ability_turn_at_list, hash: e02dbd58ee62ae8e}
   - {addr: 0x800ed5f4, size: 488, name: world_draw_menu_text_columns_narrow, hash: e8638c05b3faf0ec}
   - {addr: 0x800ed7dc, size: 700, name: world_menu_redraw_text_page_on_scroll_in_rect, hash: 4ebf226b668e0eb2}
@@ -2375,6 +2375,12 @@ overrides:
   - {function: world_gfx_set_blit_source_rect, name: g_world_gfx_image_blit_source, addr: 0x801c000c}
   - {function: world_is_skillset_in_spell_quote_exception_list, name: g_battle_spell_quote_exception_skillsets, addr: 0x80156748}
   - {function: world_item_calculate_swap_stat_delta, name: equip_item_collect_stat_deltas, addr: 0x80122f9c}
+  - {function: world_menu_build_ability_preview_at_list, name: battle_menu_icon_linked_entry_thread, addr: 0x800eee98}
+  - {function: world_menu_build_ability_preview_at_list, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
+  - {function: world_menu_build_ability_preview_at_list, name: g_battle_active_turn_unit, addr: 0x8013a364}
+  - {function: world_menu_build_ability_preview_at_list, name: g_battle_menu_at_list_layout, addr: 0x80153cd0}
+  - {function: world_menu_build_ability_preview_at_list, name: g_battle_menu_selected_action, addr: 0x80195c90}
+  - {function: world_menu_build_ability_preview_at_list, name: g_battle_menu_thread_menu_data, addr: 0x801cd7e0}
   - {function: world_menu_check_action_restrictions, name: battle_menu_icon_linked_entry_thread, addr: 0x800eee98}
   - {function: world_menu_check_action_restrictions, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
   - {function: world_menu_check_action_restrictions, name: g_battle_menu_current_id, addr: 0x80153268}

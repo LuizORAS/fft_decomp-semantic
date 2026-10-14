@@ -1,37 +1,13 @@
-/*
- * WORLD twin: world_menu_build_ability_preview_at_list
- * (same code, globals and callees rebound).
- */
-#include "fft/battle.h"
 #include "fft/battle_action.h"
+#include "fft/battle_ai.h"
 #include "fft/battle_menu.h"
-#include "fft/battle_text.h"
 #include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
-#include "psx/types.h"
 
-/*
- * Build the AT (turn order) list previewing the ability the player is about to
- * confirm: stage the selected ability or item into the shared action record at
- * g_battle_menu_selected_action, run action_preview_at_list for the selected unit on the
- * main stack to obtain the previewed turn position and the descriptor list,
- * then write the name text and the four 16-bit columns and size menu entry
- * 52 around them.
- *
- * BATTLE twin of world_menu_build_ability_preview_at_list (WORLD), itself the twin of
- * option_menu_init_at_list from the loop onwards. The constructs below are
- * the WORLD twin's; see
- * src/world/world_menu_build_ability_preview_at_list.c for the evidence behind each one.
- *
- *   - `action` is a pointer local for the shared action record, so the store
- *     lands in the jal delay slot and the argument is `move a1,s0`.
- *   - The turn-value store is written ONCE after the if/else, and `0xb012`
- *     carries no (s16) cast (`ori v0,zero,0xb012`, not `addiu v1,zero,-20462`).
- *   - `text = published` is a PLAIN assignment written as the last statement
- *     before the `if`, so reorg's backward scan pulls it into the `beqz s7`
- *     delay slot.
- */
-void battle_menu_build_ability_preview_at_list(void) {
+/* Build the selected ability/item AT preview and its three-column menu. */
+void menu_build_ability_preview_at_list(void) {
     menu_at_list_work_t* work;
     menu_entry_t* entry;
     unit_stats_t* stats;
@@ -86,11 +62,7 @@ void battle_menu_build_ability_preview_at_list(void) {
     g_text_section_pointers[TEXT_SECTION_AT_LIST] = published;
     count = 0;
     bracketed = 0;
-    /* The target publishes the buffer from a temporary and copies it into the
-     * callee-saved register the loop advances. The copy is a plain assignment
-     * written as the LAST statement before the `if`: reorg scans back from the
-     * branch and pulls it into the delay slot, which is where the target has
-     * it. */
+    /* Keep the published text cursor separate before the turn adjustment. */
     text = published;
     if (turn != 0) {
         turn--;
