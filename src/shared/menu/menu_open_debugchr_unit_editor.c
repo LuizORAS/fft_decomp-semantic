@@ -1,12 +1,13 @@
+#include "fft/battle_menu.h"
 #include "fft/event_debugchr.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
+#include "fft/unit.h"
 #include "fft/world.h"
 
-/* Target 0x800f001c. Loads the DEBUGCHR overlay (file 0xB) and runs the unit
- * debug editor thread for the stored unit when it has mount info set. */
-void world_menu_open_debugchr_unit_editor(void) {
+/* Open the unit editor for a rider or mount, then restore its menu view. */
+void menu_open_debugchr_unit_editor(void) {
     s16* unit_index = &g_menu_selected_unit.battle_id;
 
     if (battle_unit_get_stats_from_battle_id(*unit_index)->mount_info != 0) {

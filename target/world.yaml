@@ -198,7 +198,7 @@ functions:
   - {addr: 0x800efd34, size: 88, name: world_menu_run_helpmenu_thread, hash: d52763de82195c9d, source: src/shared/menu/menu_run_help_menu_thread.c, source_symbol: menu_run_help_menu_thread}
   - {addr: 0x800efd8c, size: 200, name: world_menu_run_jobstts_thread, hash: f78d073fced43537, source: src/shared/menu/menu_run_jobstts_thread.c, source_symbol: menu_run_jobstts_thread}
   - {addr: 0x800efe54, size: 456, name: world_menu_run_equip_thread, hash: 5d7be1020050c481, source: src/shared/menu/menu_run_equip_thread.c, source_symbol: menu_run_equip_thread}
-  - {addr: 0x800f001c, size: 252, name: world_menu_open_debugchr_unit_editor, hash: f331fb4b57e97974}
+  - {addr: 0x800f001c, size: 252, name: world_menu_open_debugchr_unit_editor, hash: f331fb4b57e97974, source: src/shared/menu/menu_open_debugchr_unit_editor.c, source_symbol: menu_open_debugchr_unit_editor}
   - {addr: 0x800f0118, size: 168, name: world_menu_open_debugchr, hash: 736276bee06d36ae, source: src/shared/menu/menu_open_debugchr.c, source_symbol: menu_open_debugchr}
   - {addr: 0x800f01c0, size: 48, name: script_show_graphic, hash: 594b55ee98b22733, source: src/shared/script/script_show_graphic.c}
   - {addr: 0x800f01f0, size: 8, name: world_noop_800f01f0, hash: 6d64edf91449c1b1}

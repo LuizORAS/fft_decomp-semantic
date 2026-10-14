@@ -2192,6 +2192,7 @@ typedef char menu_unit_view_thread_set_size_must_be_48[(sizeof(menu_unit_view_th
 
 /* menu screen starters */
 void menu_open_debugchr(void);
+void menu_open_debugchr_unit_editor(void);
 void menu_open_bunit(void);
 void menu_start_mini_menu_display_thread(void);
 void menu_run_triangle_selection(void);

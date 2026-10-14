@@ -851,7 +851,7 @@ functions:
   - {addr: 0x8013c284, size: 88, name: battle_menu_run_helpmenu_thread, hash: 273124b9b75f5519, source: src/shared/menu/menu_run_help_menu_thread.c, source_symbol: menu_run_help_menu_thread}
   - {addr: 0x8013c2dc, size: 200, name: battle_menu_run_jobstts_thread, hash: 4873b28b228ba17e, source: src/shared/menu/menu_run_jobstts_thread.c, source_symbol: menu_run_jobstts_thread}
   - {addr: 0x8013c3a4, size: 456, name: battle_menu_run_equip_thread, hash: b4cfa9beb874f1bc, source: src/shared/menu/menu_run_equip_thread.c, source_symbol: menu_run_equip_thread}
-  - {addr: 0x8013c56c, size: 252, name: battle_menu_open_debugchr_unit_editor, hash: d3d1ed8f97defebc}
+  - {addr: 0x8013c56c, size: 252, name: battle_menu_open_debugchr_unit_editor, hash: d3d1ed8f97defebc, source: src/shared/menu/menu_open_debugchr_unit_editor.c, source_symbol: menu_open_debugchr_unit_editor}
   - {addr: 0x8013c668, size: 168, name: battle_menu_open_debugchr, hash: 6468879416a486b3, source: src/shared/menu/menu_open_debugchr.c, source_symbol: menu_open_debugchr}
   - {addr: 0x8013c710, size: 48, name: script_show_graphic, hash: f9a76818dec541a0, source: src/shared/script/script_show_graphic.c}
   - {addr: 0x8013c740, size: 8, name: battle_noop_8013c740, hash: 6d64edf91449c1b1}
@@ -2942,6 +2942,12 @@ overrides:
   - {function: battle_menu_init_numeric_display_frame_primitives, name: g_world_menu_numeric_display_texture_window, addr: 0x80167830}
   - {function: battle_menu_init_numeric_display_frame_primitives, name: world_menu_init_primitive_colors_normal, addr: 0x8012f3cc}
   - {function: battle_menu_init_numeric_display_frame_primitives, name: world_menu_init_sprite, addr: 0x8012e244}
+  - {function: battle_menu_open_debugchr_unit_editor, name: g_world_menu_sound_muted, addr: 0x80165fbc}
+  - {function: battle_menu_open_debugchr_unit_editor, name: world_menu_build_idle_action_stub, addr: 0x8013cf58}
+  - {function: battle_menu_open_debugchr_unit_editor, name: world_menu_clear_transition_active_flag, addr: 0x8012dd0c}
+  - {function: battle_menu_open_debugchr_unit_editor, name: world_menu_record_selection_for_selected_unit, addr: 0x8014088c}
+  - {function: battle_menu_open_debugchr_unit_editor, name: world_menu_set_transition_active_flag, addr: 0x8012dcf8}
+  - {function: battle_menu_open_debugchr_unit_editor, name: world_unit_start_view_thread, addr: 0x8013d634}
   - {function: battle_menu_reset_unit_records, name: g_world_menu_unit_selection_rows, addr: 0x8014d46c}
   - {function: battle_menu_reset_unit_records_wrapper, name: world_menu_reset_unit_records, addr: 0x8013f8b4}
   - {function: battle_menu_run_bunit_transition_thread, name: g_world_screen_fade, addr: 0x8016603c}
