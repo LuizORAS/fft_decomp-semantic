@@ -870,8 +870,8 @@ functions:
   - {addr: 0x8012c014, size: 460, name: world_gfx_enqueue_gouraud_quad, hash: 40fb9a0164d41558}
   - {addr: 0x8012c1e0, size: 260, name: world_gfx_enqueue_line_f2, hash: fccfcca88962f07d, source: src/shared/gfx/gfx_enqueue_line_f2.c, source_symbol: gfx_enqueue_line_f2}
   - {addr: 0x8012c2e4, size: 332, name: world_menu_add_gradient_line_primitive, hash: c5632e60e658e9b0}
-  - {addr: 0x8012c430, size: 632, name: world_gfx_enqueue_textured_quad_list, hash: 42f1804f3ad39011}
-  - {addr: 0x8012c6a8, size: 532, name: world_gfx_enqueue_textured_quad, hash: 078cc1e65b7f2166}
+  - {addr: 0x8012c430, size: 632, name: world_gfx_enqueue_textured_quad_list, hash: 42f1804f3ad39011, source: src/shared/menu/menu_gfx_enqueue_textured_quad_list.c, source_symbol: menu_gfx_enqueue_textured_quad_list}
+  - {addr: 0x8012c6a8, size: 532, name: world_gfx_enqueue_textured_quad, hash: 078cc1e65b7f2166, source: src/shared/menu/menu_gfx_enqueue_textured_quad.c, source_symbol: menu_gfx_enqueue_textured_quad}
   - {addr: 0x8012c8bc, size: 1044, name: world_gfx_enqueue_oriented_textured_quad, hash: d8f5a8de17e2f88a, source: src/shared/menu/menu_gfx_enqueue_oriented_textured_quad.c, source_symbol: menu_gfx_enqueue_oriented_textured_quad}
   - {addr: 0x8012ccd0, size: 508, name: world_gfx_enqueue_textured_quad_corners, hash: c4fceb98c52526bd, source: src/shared/gfx/gfx_enqueue_textured_quad_corners.c, source_symbol: gfx_enqueue_textured_quad_corners}
   - {addr: 0x8012cecc, size: 264, name: world_gfx_enqueue_draw_move, hash: 864c1f15031931d7}
@@ -2395,8 +2395,12 @@ overrides:
   - {function: world_gfx_enqueue_line_f2, name: g_menu_gfx_context, addr: 0x801cd528}
   - {function: world_gfx_enqueue_oriented_textured_quad, name: g_menu_gfx_context, addr: 0x801cd528}
   - {function: world_gfx_enqueue_oriented_textured_quad, name: g_menu_gfx_poly_ft4_count, addr: 0x801cd1cc}
+  - {function: world_gfx_enqueue_textured_quad, name: g_menu_gfx_context, addr: 0x801cd528}
+  - {function: world_gfx_enqueue_textured_quad, name: g_menu_gfx_poly_ft4_count, addr: 0x801cd1cc}
   - {function: world_gfx_enqueue_textured_quad_corners, name: g_menu_gfx_context, addr: 0x801cd528}
   - {function: world_gfx_enqueue_textured_quad_corners, name: g_menu_gfx_poly_ft4_count, addr: 0x801cd1cc}
+  - {function: world_gfx_enqueue_textured_quad_list, name: g_menu_gfx_context, addr: 0x801cd528}
+  - {function: world_gfx_enqueue_textured_quad_list, name: g_menu_gfx_poly_ft4_count, addr: 0x801cd1cc}
   - {function: world_gfx_enqueue_tile, name: g_bunit_gfx_tile_count, addr: 0x801cd514}
   - {function: world_gfx_enqueue_tile, name: g_menu_gfx_context, addr: 0x801cd528}
   - {function: world_gfx_init_scaled_draw_area_packets, name: g_menu_draw_area_template, addr: 0x801531b0}
