@@ -648,7 +648,7 @@ functions:
   - {addr: 0x8011a954, size: 40, name: world_formation_item_menu_idle_thread, hash: 38437c674ba18e54}
   - {addr: 0x8011a97c, size: 92, name: world_menu_get_entry_item_count, hash: af8f5961adbfba37}
   - {addr: 0x8011a9d8, size: 92, name: world_menu_get_entry_item_equipped_count, hash: 49c6e60b38d5b05d}
-  - {addr: 0x8011aa34, size: 112, name: world_item_build_type_icon_source, hash: fc1261165929b61f}
+  - {addr: 0x8011aa34, size: 112, name: world_item_build_type_icon_source, hash: fc1261165929b61f, source: src/shared/menu/menu_build_item_type_icon_source.c, source_symbol: menu_build_item_type_icon_source}
   - {addr: 0x8011aaa4, size: 68, name: world_menu_get_entry_item_icon_source, hash: 61705fb5a73d961f}
   - {addr: 0x8011aae8, size: 1124, name: world_formation_item_menu, hash: 48444ba79d6a947a}
   - {addr: 0x8011af4c, size: 1544, name: world_formation_run_equip_item_menu, hash: c1af2f118c836d72}
@@ -2014,7 +2014,7 @@ data:
   - {addr: 0x801c83f8, name: g_world_job_wheel_jobs}
   - {addr: 0x801c8424, name: g_world_job_wheel_mastered_jobs}
   - {addr: 0x801c8450, name: g_world_job_wheel_name_rect}
-  - {addr: 0x801c8458, name: g_world_item_type_icon_source}
+  - {addr: 0x801c8458, name: g_menu_item_type_icon_source}
   - {addr: 0x801c8464, name: g_world_menu_entry_item_icon_source}
   - {addr: 0x801c8470, name: g_world_item_menu_saved_browse_enabled}
   - {addr: 0x801c8474, name: g_world_equip_item_list_open}
@@ -2378,6 +2378,11 @@ overrides:
   - {function: world_gfx_init_scaled_draw_area_packets, name: g_menu_draw_area_template, addr: 0x801531b0}
   - {function: world_gfx_set_blit_source_rect, name: g_world_gfx_image_blit_source, addr: 0x801c000c}
   - {function: world_is_skillset_in_spell_quote_exception_list, name: g_battle_spell_quote_exception_skillsets, addr: 0x80156748}
+  - {function: world_item_build_type_icon_source, name: equip_item_get_type, addr: 0x80124fd0}
+  - {function: world_item_build_type_icon_source, name: equip_item_get_type_icon_rect, addr: 0x80124ff4}
+  - {function: world_item_build_type_icon_source, name: g_equip_item_list_entries, addr: 0x801cd230}
+  - {function: world_item_build_type_icon_source, name: g_menu_cursor_texture_page, addr: 0x8018df8a}
+  - {function: world_item_build_type_icon_source, name: g_menu_palette_clut, addr: 0x801cd1bc}
   - {function: world_item_calculate_swap_stat_delta, name: equip_item_collect_stat_deltas, addr: 0x80122f9c}
   - {function: world_map_store_selected_tile_data, name: g_map_selected_tile_data, addr: 0x8013a310}
   - {function: world_map_wait_for_refresh, name: g_map_refresh_pending, addr: 0x80153350}

@@ -1347,7 +1347,7 @@ functions:
   - {addr: 0x801c40fc, size: 40, name: equip_thread_wait_forever, hash: 23983331f707d2fa}
   - {addr: 0x801c4124, size: 92, name: equip_menu_get_entry_item_count, hash: 7c0e3a55d7cefb73}
   - {addr: 0x801c4180, size: 92, name: equip_menu_get_entry_item_equipped_count, hash: 3ace587681cacb49}
-  - {addr: 0x801c41dc, size: 112, name: equip_item_build_type_icon_source, hash: 2fa08886d4146b72}
+  - {addr: 0x801c41dc, size: 112, name: equip_item_build_type_icon_source, hash: 2fa08886d4146b72, source: src/shared/menu/menu_build_item_type_icon_source.c, source_symbol: menu_build_item_type_icon_source}
   - {addr: 0x801c424c, size: 68, name: equip_menu_get_entry_item_icon_source, hash: c2411d85548a947e}
   - {addr: 0x801c4290, size: 512, name: equip_menu_update_screen_state, hash: d3a4615d1be2ce87}
   - {addr: 0x801c4490, size: 1408, name: equip_menu_run_equip_mode, hash: 67ec305728a461fa}
@@ -1674,7 +1674,7 @@ data:
   - {addr: 0x801e7504, name: g_equip_editor_numeric_state_b}
   - {addr: 0x801e7a84, name: g_equip_editor_numeric_text_a}
   - {addr: 0x801e839c, name: g_equip_editor_numeric_text_b}
-  - {addr: 0x801e8cc4, name: g_equip_item_row_icon_rect}
+  - {addr: 0x801e8cc4, name: g_menu_item_type_icon_source}
   - {addr: 0x801e8cd0, name: g_equip_item_graphic_descriptor}
   - {addr: 0x801e8ce4, name: g_equip_equip_item_list_open}
   - {addr: 0x801e8cf0, name: g_equip_equip_item_previewed_cursor}

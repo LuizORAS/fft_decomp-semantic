@@ -131,7 +131,6 @@ extern u8 g_equip_item_inventory_totals[];
 extern s16 g_equip_item_list_entries[];
 extern u8 g_equip_item_list_has_multiple_entries;
 extern struct menu_status_panel_slot_storage g_equip_item_preview_stat_detail;
-extern menu_icon_source_t g_equip_item_row_icon_rect;
 extern u8 g_equip_item_type_icon_coords[][2];
 extern s16 g_equip_item_type_order[];
 extern menu_entry_t* g_equip_item_type_order_active_menu;

@@ -2649,7 +2649,6 @@ extern menu_instruction_t g_world_item_category_tabs_wide_script; /* menu displa
 extern oriented_quad_t g_world_item_category_tab_sprites[];       /* 20-byte quads, one per row */
 extern u8 g_world_item_category_tab_x[];                          /* per-row base x */
 extern u8 g_world_item_category_input_lock;
-extern menu_icon_source_t g_world_item_type_icon_source;
 extern u8 g_world_item_menu_saved_browse_enabled;
 extern s8 g_world_remove_item_previewed_slot;
 extern s16 g_world_remove_item_equipment[WORLD_EQUIPMENT_SLOT_COUNT];
