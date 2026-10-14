@@ -283,7 +283,6 @@ extern s16 g_world_event_pending_map_state;
 extern s32 g_world_event_pending_reserved_vram_release_slot;
 extern s32 g_world_event_pending_saved_evtchr_clear_slot;
 extern s32 g_world_event_pending_unit_vram_copy;
-extern u8* g_world_event_script;
 extern s16 g_world_event_weather_request;
 extern map_background_gradient_colors_t g_world_event_background_colors;
 void world_script_handle_tutorial_command_highlight_ring(void);

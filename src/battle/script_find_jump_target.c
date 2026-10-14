@@ -21,7 +21,7 @@ s32 script_find_jump_target(s32 limit_offset, event_opcode_e target_opcode, s32 
     found = -1;
     if (target_opcode == EVENT_OPCODE_BACK_TARGET) {
         for (offset = 0; offset < limit_offset; offset += 1 + g_script_event_instruction_sizes[opcode]) {
-            base = (u8*)g_battle_event_block;
+            base = (u8*)g_script_event_block;
             opcode = base[offset];
             if (opcode == EVENT_OPCODE_BACK_TARGET_BARRIER
                 || (opcode == EVENT_OPCODE_FORWARD_TARGET && (base + offset)[1] == target_id)) {
@@ -34,12 +34,12 @@ s32 script_find_jump_target(s32 limit_offset, event_opcode_e target_opcode, s32 
             return found + 2;
         }
     } else {
-        while ((opcode = ((u8*)g_battle_event_block)[limit_offset]) != EVENT_OPCODE_END) {
-            if (opcode == target_opcode && ((u8*)g_battle_event_block + limit_offset)[1] == target_id) {
+        while ((opcode = ((u8*)g_script_event_block)[limit_offset]) != EVENT_OPCODE_END) {
+            if (opcode == target_opcode && ((u8*)g_script_event_block + limit_offset)[1] == target_id) {
                 return limit_offset + 2;
             }
             if (alternate_opcode != -1 && opcode == alternate_opcode
-                && ((u8*)g_battle_event_block + limit_offset)[1] == target_id) {
+                && ((u8*)g_script_event_block + limit_offset)[1] == target_id) {
                 return limit_offset + 2;
             }
             limit_offset += 1 + g_script_event_instruction_sizes[opcode];

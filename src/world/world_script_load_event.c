@@ -20,7 +20,7 @@ void world_script_load_event(s32 id) {
         g_thread_call_target = main_file_is_still_loading;
     } while (thread_call_on_main_stack() != 0);
 
-    block = (event_file_block_t*)g_world_event_script;
+    block = g_script_event_block;
     off = block->text_offset_or_marker;
     if (off != EVENT_TEXT_OFFSET_PROCESSED) {
         /* Byte-pointer addition reverses the target's addu operands. */

@@ -29,7 +29,7 @@ void script_load_event(s32 id) {
         g_thread_call_target = main_file_is_still_loading;
     } while (thread_call_on_main_stack() != 0);
 
-    block = g_battle_event_block;
+    block = g_script_event_block;
     off = block->text_offset_or_marker;
     if (off != EVENT_TEXT_OFFSET_PROCESSED) {
         g_text_section_pointers[TEXT_SECTION_EVENT_MESSAGES] = (u8*)(off + (u32)block);

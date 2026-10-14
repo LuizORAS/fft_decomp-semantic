@@ -23,13 +23,13 @@ s32 world_script_find_jump_target(s32 offset, s32 instruction, s32 alt_instructi
     found = -1;
     if (instruction == EVENT_OPCODE_BACK_TARGET) {
         for (i = 0; i < offset; i += g_world_event_instruction_sizes[opcode] + 1) {
-            opcode = g_world_event_script[i];
+            opcode = ((u8*)g_script_event_block)[i];
             if (opcode == EVENT_OPCODE_BACK_TARGET_BARRIER) {
                 found = -1;
-            } else if (opcode == EVENT_OPCODE_FORWARD_TARGET && *(g_world_event_script + i + 1) == label) {
+            } else if (opcode == EVENT_OPCODE_FORWARD_TARGET && *((u8*)g_script_event_block + i + 1) == label) {
                 found = -1;
             } else if (opcode == instruction) {
-                if (*(g_world_event_script + i + 1) == label) {
+                if (*((u8*)g_script_event_block + i + 1) == label) {
                     found = i;
                 }
             }
@@ -40,17 +40,18 @@ s32 world_script_find_jump_target(s32 offset, s32 instruction, s32 alt_instructi
     } else {
         const u8* event;
 
-        event = g_world_event_script;
+        event = (u8*)g_script_event_block;
         opcode = event[offset];
         while (opcode != EVENT_OPCODE_END) {
             if (opcode == instruction && *(event + offset + 1) == label) {
                 return offset + 2;
             }
-            if (alt_instruction != -1 && opcode == alt_instruction && *(g_world_event_script + offset + 1) == label) {
+            if (alt_instruction != -1 && opcode == alt_instruction
+                && *((u8*)g_script_event_block + offset + 1) == label) {
                 return offset + 2;
             }
             offset += g_world_event_instruction_sizes[opcode] + 1;
-            event = g_world_event_script;
+            event = (u8*)g_script_event_block;
             opcode = event[offset];
         }
     }

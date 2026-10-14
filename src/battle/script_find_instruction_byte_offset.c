@@ -5,7 +5,7 @@
  * `offset`, or 0 when EventEnd comes first. */
 s32 script_find_instruction_byte_offset(s32 offset, s32 opcode) {
     /* Bytecode offsets are relative to the complete file block. */
-    u8* base = (u8*)g_battle_event_block;
+    u8* base = (u8*)g_script_event_block;
     s32 operands_offset;
     u8 op;
     for (;;) {

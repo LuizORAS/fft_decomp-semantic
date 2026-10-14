@@ -130,7 +130,7 @@ restart_script:
         }
     }
     for (;;) {
-        instruction = (u8*)g_battle_event_block;
+        instruction = (u8*)g_script_event_block;
         instruction += instruction_offset;
         parameters = instruction + 1;
         operand_1 = instruction[1];
@@ -147,7 +147,7 @@ restart_script:
         } else if ((opcode - EVENT_OPCODE_ADD_IMMEDIATE) < 0xFU) {
             operand_1 = (u16)first_operand;
             script_run_variable_command(
-                opcode, operand_1, script_read_s16(instruction_offset + ((u8*)g_battle_event_block) + 3) & 0xFFFF, 0);
+                opcode, operand_1, script_read_s16(instruction_offset + ((u8*)g_script_event_block) + 3) & 0xFFFF, 0);
         } else if (opcode == EVENT_OPCODE_REQUEST_MAP_JUMP_IN) {
             g_battle_event_map_jump_in_request = operand_1;
             thread_wait_frames(2);
@@ -381,7 +381,7 @@ restart_script:
                 instruction_offset, operand_2, &g_thread_contexts[operand_1].task_words[6]);
             g_thread_contexts[operand_1].function_parameter_1 = operand_2;
             g_thread_contexts[operand_1].function_parameter_2 = ((operand_4 << 8) + operand_3) - 1;
-            dialogue_cursor = (u8*)g_battle_event_block;
+            dialogue_cursor = (u8*)g_script_event_block;
             dialogue_cursor += instruction_offset;
             message_instruction = (event_display_message_instruction_t*)dialogue_cursor;
             operand_4 = message_instruction->unit_id_le[1];
@@ -390,11 +390,11 @@ restart_script:
             g_thread_contexts[operand_1].function_parameter_4 = message_instruction->portrait_selector;
             g_thread_contexts[operand_1].task_words[2] = script_read_s16(message_instruction->x_offset_le);
             g_thread_contexts[operand_1].task_words[3] = script_read_s16(
-                ((event_display_message_instruction_t*)(instruction_offset + (u8*)g_battle_event_block))->y_offset_le);
+                ((event_display_message_instruction_t*)(instruction_offset + (u8*)g_script_event_block))->y_offset_le);
             g_thread_contexts[operand_1].task_words[4] = script_read_s16(
-                ((event_display_message_instruction_t*)(instruction_offset + (u8*)g_battle_event_block))
+                ((event_display_message_instruction_t*)(instruction_offset + (u8*)g_script_event_block))
                     ->arrow_offset_le);
-            message_cursor = (u8*)g_battle_event_block;
+            message_cursor = (u8*)g_script_event_block;
             message_cursor += instruction_offset;
             g_thread_contexts[operand_1].task_words[5]
                 = ((event_display_message_instruction_t*)message_cursor)->window_options;
@@ -406,14 +406,14 @@ restart_script:
                     && (battle_thread_is_running_asm(operand_2) == 1)
                     && (g_thread_contexts[operand_2].task_id == THREAD_TASK_DIALOG_AWAIT_TEXT)) {
                     operand_1 = script_read_s16(
-                        ((event_change_dialog_instruction_t*)(instruction_offset + (u8*)g_battle_event_block))
+                        ((event_change_dialog_instruction_t*)(instruction_offset + (u8*)g_script_event_block))
                             ->text_id_le);
                     if ((u16)operand_1 != 0xFFFF) {
                         operand_1 -= 1;
                     }
                     g_thread_contexts[operand_2].function_parameter_2 = operand_1;
                     g_thread_contexts[operand_2].function_parameter_4 = script_read_s16(
-                        ((event_change_dialog_instruction_t*)(instruction_offset + (u8*)g_battle_event_block))
+                        ((event_change_dialog_instruction_t*)(instruction_offset + (u8*)g_script_event_block))
                             ->portrait_selector_le);
                     g_thread_contexts[operand_2].task_id = THREAD_TASK_RESUME;
                     break;
@@ -510,10 +510,10 @@ restart_script:
         /* ---- Effects ---- */
         else if (opcode == EVENT_OPCODE_EFFECT) {
             g_battle_event_pending_effect_id = first_operand;
-            effect_cursor = (u8*)g_battle_event_block;
+            effect_cursor = (u8*)g_script_event_block;
             effect_cursor += instruction_offset;
             g_battle_event_effect_target_runtime_id = script_resolve_runtime_id(effect_cursor[3]);
-            effect_instruction = (u8*)g_battle_event_block;
+            effect_instruction = (u8*)g_script_event_block;
             effect_instruction += instruction_offset;
             g_battle_event_effect_target_x = effect_instruction[4];
             g_battle_event_effect_target_y = effect_instruction[5];
@@ -567,7 +567,7 @@ restart_script:
             operand_1 = script_resolve_runtime_id(first_operand);
             if (operand_1 != EVENT_RUNTIME_ID_NONE) {
                 g_unit_pending_animation_ids[operand_1]
-                    = script_read_s16(instruction_offset + ((u8*)g_battle_event_block) + 3);
+                    = script_read_s16(instruction_offset + ((u8*)g_script_event_block) + 3);
                 g_unit_was_moving_latch[operand_1] = 0;
             }
         } else if (opcode == EVENT_OPCODE_WAIT_ALL_UNIT_MOVEMENT) {
@@ -605,7 +605,7 @@ restart_script:
             thread_suspend(battle_thread_find_running_by_task(THREAD_TASK_EARTHQUAKE));
         } else if (opcode == EVENT_OPCODE_SET_SPEAKER_PAIR) {
             g_battle_text_speaker_swap_unit_a = first_operand;
-            g_battle_text_speaker_swap_unit_b = script_read_s16(instruction_offset + ((u8*)g_battle_event_block) + 3);
+            g_battle_text_speaker_swap_unit_b = script_read_s16(instruction_offset + ((u8*)g_script_event_block) + 3);
         } else if (opcode == EVENT_OPCODE_MAP_DARKNESS) {
             operand_1 = battle_thread_resolve_id(THREAD_SLOT_FIRST_IDLE);
             thread_start(operand_1, &script_map_darkness);
@@ -731,7 +731,7 @@ restart_script:
             operand_2 = battle_thread_resolve_id(THREAD_SLOT_FIRST_IDLE);
             thread_start(operand_2, battle_gfx_load_evtchr_thread);
             thread_set_parameters(
-                operand_2, operand_1, script_read_s16(instruction_offset + ((u8*)g_battle_event_block) + 2), 0);
+                operand_2, operand_1, script_read_s16(instruction_offset + ((u8*)g_script_event_block) + 2), 0);
             thread_yield();
         } else if (opcode == EVENT_OPCODE_LOAD_EVTCHR_CLEAR) {
             g_battle_event_pending_loaded_evtchr_clear_slot = operand_1;
@@ -782,7 +782,7 @@ restart_script:
                 battle_gfx_reset_unit_graphic_trigger(reset_graphic_runtime_id);
             }
         } else if (opcode == EVENT_OPCODE_ADD_GHOST_UNIT) {
-            ghost_parameters = instruction_offset + ((u8*)g_battle_event_block) + 3;
+            ghost_parameters = instruction_offset + ((u8*)g_script_event_block) + 3;
             /* An empty four-pass countdown precedes the search for a free
              * runtime slot. */
             ghost_runtime_id = 3;
@@ -837,7 +837,7 @@ restart_script:
              * nor synchronizes the renderer's position here. */
             unit = battle_unit_get_stats_from_battle_id(operand_1);
             position_instruction
-                = (event_set_battle_unit_position_instruction_t*)(instruction_offset + (u8*)g_battle_event_block);
+                = (event_set_battle_unit_position_instruction_t*)(instruction_offset + (u8*)g_script_event_block);
             unit->x = position_instruction->placement.x;
             unit->position.y = position_instruction->placement.y;
             unit->position.higher_elevation = position_instruction->placement.elevation;
@@ -932,7 +932,7 @@ restart_script:
             if (arrow_target_runtime_id != EVENT_RUNTIME_ID_NONE) {
                 operand_1 = battle_unit_get_battle_id_by_runtime_id(arrow_target_runtime_id);
                 arrow_shooter_runtime_id
-                    = script_resolve_runtime_id(script_read_s16(instruction_offset + ((u8*)g_battle_event_block) + 3));
+                    = script_resolve_runtime_id(script_read_s16(instruction_offset + ((u8*)g_script_event_block) + 3));
                 if (arrow_shooter_runtime_id != EVENT_RUNTIME_ID_NONE) {
                     arrow_shooter_battle_id = battle_unit_get_battle_id_by_runtime_id(arrow_shooter_runtime_id);
                     g_thread_call_target = (void (*)(void))effect_set_arrow_trajectory;

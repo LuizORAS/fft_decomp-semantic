@@ -22,7 +22,7 @@ void script_process_inflict_status_commands(void) {
     instruction_offset = 0;
     while ((instruction_offset = script_find_instruction_byte_offset(instruction_offset, EVENT_OPCODE_INFLICT_STATUS))
         != 0) {
-        instruction = (const u8*)g_battle_event_block;
+        instruction = (const u8*)g_script_event_block;
         if (instruction[instruction_offset] == EVENT_OPCODE_INFLICT_STATUS) {
             runtime_id = script_resolve_runtime_id(script_read_s16(instruction + instruction_offset + 1));
             if (runtime_id != EVENT_RUNTIME_ID_NONE) {
@@ -36,7 +36,7 @@ void script_process_inflict_status_commands(void) {
                         thread_id = battle_thread_resolve_id(THREAD_SLOT_FIRST_IDLE);
                         thread_start(thread_id, script_inflict_status_thread);
                         thread_set_parameters(
-                            thread_id, (s32)((const u8*)g_battle_event_block + instruction_offset + 1), 0, 0);
+                            thread_id, (s32)((const u8*)g_script_event_block + instruction_offset + 1), 0, 0);
                         thread_wait_until_inactive(thread_id);
                     }
                 }

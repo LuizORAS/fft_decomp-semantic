@@ -103,7 +103,7 @@ restart_event:
         }
     }
     for (;;) {
-        instruction = g_world_event_script;
+        instruction = (u8*)g_script_event_block;
         instruction += instruction_offset;
         parameters = instruction + 1;
         operand_1 = instruction[1];
@@ -120,7 +120,7 @@ restart_event:
         } else if ((opcode - EVENT_OPCODE_ADD_IMMEDIATE) < 0xFU) {
             operand_1 = (u16)first_operand;
             script_run_variable_command(
-                opcode, operand_1, script_read_s16(instruction_offset + (g_world_event_script) + 3) & 0xFFFF, 0);
+                opcode, operand_1, script_read_s16(instruction_offset + ((u8*)g_script_event_block) + 3) & 0xFFFF, 0);
         } else if (opcode == EVENT_OPCODE_REQUEST_MAP_JUMP_IN) {
             g_world_event_map_jump_in_request = operand_1;
             thread_wait_frames(2);
@@ -353,7 +353,7 @@ restart_event:
                 instruction_offset, operand_2, &g_thread_contexts[operand_1].task_words[6]);
             g_thread_contexts[operand_1].function_parameter_1 = operand_2;
             g_thread_contexts[operand_1].function_parameter_2 = ((operand_4 << 8) + operand_3) - 1;
-            dialogue_cursor = g_world_event_script;
+            dialogue_cursor = (u8*)g_script_event_block;
             dialogue_cursor += instruction_offset;
             dialogue_instruction = (event_display_message_instruction_t*)dialogue_cursor;
             operand_4 = dialogue_instruction->unit_id_le[1];
@@ -362,11 +362,13 @@ restart_event:
             g_thread_contexts[operand_1].function_parameter_4 = dialogue_instruction->portrait_selector;
             g_thread_contexts[operand_1].task_words[2] = script_read_s16(dialogue_instruction->x_offset_le);
             g_thread_contexts[operand_1].task_words[3] = script_read_s16(
-                ((event_display_message_instruction_t*)(instruction_offset + g_world_event_script))->y_offset_le);
+                ((event_display_message_instruction_t*)(instruction_offset + (u8*)g_script_event_block))->y_offset_le);
             g_thread_contexts[operand_1].task_words[4] = script_read_s16(
-                ((event_display_message_instruction_t*)(instruction_offset + g_world_event_script))->arrow_offset_le);
+                ((event_display_message_instruction_t*)(instruction_offset + (u8*)g_script_event_block))
+                    ->arrow_offset_le);
             g_thread_contexts[operand_1].task_words[5]
-                = ((event_display_message_instruction_t*)(g_world_event_script + instruction_offset))->window_options;
+                = ((event_display_message_instruction_t*)((u8*)g_script_event_block + instruction_offset))
+                      ->window_options;
             thread_yield();
         } else if (opcode == EVENT_OPCODE_CHANGE_DIALOG) {
             for (work_index = 0; work_index < 6; work_index += 2) {
@@ -375,13 +377,14 @@ restart_event:
                     && (world_thread_is_running_asm(operand_2) == 1)
                     && (g_thread_contexts[operand_2].task_id == THREAD_TASK_DIALOG_AWAIT_TEXT)) {
                     operand_1 = script_read_s16(
-                        ((event_change_dialog_instruction_t*)(instruction_offset + g_world_event_script))->text_id_le);
+                        ((event_change_dialog_instruction_t*)(instruction_offset + (u8*)g_script_event_block))
+                            ->text_id_le);
                     if ((u16)operand_1 != 0xFFFF) {
                         operand_1 -= 1;
                     }
                     g_thread_contexts[operand_2].function_parameter_2 = operand_1;
                     g_thread_contexts[operand_2].function_parameter_4 = script_read_s16(
-                        ((event_change_dialog_instruction_t*)(instruction_offset + g_world_event_script))
+                        ((event_change_dialog_instruction_t*)(instruction_offset + (u8*)g_script_event_block))
                             ->portrait_selector_le);
                     g_thread_contexts[operand_2].task_id = THREAD_TASK_RESUME;
                     break;
@@ -479,8 +482,8 @@ restart_event:
         else if (opcode == EVENT_OPCODE_EFFECT) {
             g_world_event_pending_effect_id = first_operand;
             g_world_event_effect_target_runtime_id
-                = script_resolve_runtime_id((((g_world_event_script) + instruction_offset))[3]);
-            focus_instruction = g_world_event_script;
+                = script_resolve_runtime_id(((((u8*)g_script_event_block) + instruction_offset))[3]);
+            focus_instruction = (u8*)g_script_event_block;
             focus_instruction += instruction_offset;
             g_world_event_effect_target_x = focus_instruction[4];
             g_world_event_effect_target_y = focus_instruction[5];
@@ -533,7 +536,7 @@ restart_event:
             if (operand_1 != EVENT_RUNTIME_ID_NONE) {
 
                 g_unit_pending_animation_ids[operand_1]
-                    = script_read_s16(instruction_offset + (g_world_event_script) + 3);
+                    = script_read_s16(instruction_offset + ((u8*)g_script_event_block) + 3);
                 g_unit_was_moving_latch[operand_1] = 0;
             }
         } else if (opcode == EVENT_OPCODE_WAIT_ALL_UNIT_MOVEMENT) {
@@ -571,7 +574,7 @@ restart_event:
             thread_suspend(world_thread_find_running_by_task(THREAD_TASK_EARTHQUAKE));
         } else if (opcode == EVENT_OPCODE_SET_SPEAKER_PAIR) {
             g_world_text_speaker_swap_unit_a = first_operand;
-            g_world_text_speaker_swap_unit_b = script_read_s16(instruction_offset + (g_world_event_script) + 3);
+            g_world_text_speaker_swap_unit_b = script_read_s16(instruction_offset + ((u8*)g_script_event_block) + 3);
         } else if (opcode == EVENT_OPCODE_MAP_DARKNESS) {
             operand_1 = world_thread_resolve_id(THREAD_SLOT_FIRST_IDLE);
             thread_start(operand_1, &world_script_map_darkness);
@@ -698,7 +701,7 @@ restart_event:
             operand_2 = world_thread_resolve_id(THREAD_SLOT_FIRST_IDLE);
             thread_start(operand_2, world_gfx_load_evtchr_thread);
             thread_set_parameters(
-                operand_2, operand_1, script_read_s16(instruction_offset + (g_world_event_script) + 2), 0);
+                operand_2, operand_1, script_read_s16(instruction_offset + ((u8*)g_script_event_block) + 2), 0);
             thread_yield();
         } else if (opcode == EVENT_OPCODE_LOAD_EVTCHR_CLEAR) {
             g_world_event_pending_loaded_evtchr_clear_slot = operand_1;
@@ -750,7 +753,7 @@ restart_event:
                 battle_gfx_reset_unit_graphic_trigger(erased_runtime_id);
             }
         } else if (opcode == EVENT_OPCODE_ADD_GHOST_UNIT) {
-            ghost_operands = g_world_event_script + instruction_offset + 3;
+            ghost_operands = (u8*)g_script_event_block + instruction_offset + 3;
             ghost_runtime_id = 3;
             do {
                 --ghost_runtime_id;
@@ -799,7 +802,7 @@ restart_event:
         } else if (opcode == EVENT_OPCODE_SET_BATTLE_UNIT_POSITION) {
             unit = battle_unit_get_stats_from_battle_id(operand_1);
             position_instruction
-                = (event_set_battle_unit_position_instruction_t*)(g_world_event_script + instruction_offset);
+                = (event_set_battle_unit_position_instruction_t*)((u8*)g_script_event_block + instruction_offset);
             unit->x = position_instruction->placement.x;
             unit->position.y = position_instruction->placement.y;
             unit->position.higher_elevation = position_instruction->placement.elevation;
@@ -895,7 +898,7 @@ restart_event:
             if (first_runtime_id != EVENT_RUNTIME_ID_NONE) {
                 battle_unit_get_battle_id_by_runtime_id(first_runtime_id);
                 second_runtime_id
-                    = script_resolve_runtime_id(script_read_s16(instruction_offset + (g_world_event_script) + 3));
+                    = script_resolve_runtime_id(script_read_s16(instruction_offset + ((u8*)g_script_event_block) + 3));
                 if (second_runtime_id != EVENT_RUNTIME_ID_NONE) {
                     battle_unit_get_battle_id_by_runtime_id(second_runtime_id);
                 }

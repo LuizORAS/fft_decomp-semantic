@@ -2593,7 +2593,7 @@ data:
   - {addr: 0x80173c98, name: g_text_glyph_bitmap_data}
   - {addr: 0x80173c9c, name: g_battle_event_pending_loaded_evtchr_slot}
   - {addr: 0x80173ca0, name: g_battle_event_pending_loaded_evtchr_clear_slot}
-  - {addr: 0x80173ca4, name: g_battle_event_block}
+  - {addr: 0x80173ca4, name: g_script_event_block}
   - {addr: 0x80173ca8, name: g_thread_call_target}
   - {addr: 0x80173cac, name: g_battle_event_pending_unit_vram_copy}
   - {addr: 0x80173cb0, name: g_battle_scenario_event_active}

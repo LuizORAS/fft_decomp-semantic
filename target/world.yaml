@@ -2279,7 +2279,7 @@ data:
   - {addr: 0x801cd750, name: g_world_grid_menu_id}
   - {addr: 0x801cd754, name: g_world_menu_description_text_id}
   - {addr: 0x801cd758, name: g_world_event_pending_loaded_evtchr_clear_slot}
-  - {addr: 0x801cd75c, name: g_world_event_script}
+  - {addr: 0x801cd75c, name: g_script_event_block}
   - {addr: 0x801cd760, name: VWD0}
   - {addr: 0x801cd764, name: GsIDMATRIX}
   - {addr: 0x801cd784, name: g_world_shop_menu_step}
