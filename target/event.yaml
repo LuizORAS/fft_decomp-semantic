@@ -479,7 +479,7 @@ functions:
   - {addr: 0x801cd888, size: 532, name: menu_gfx_enqueue_textured_quad, hash: 9f5ded393ed34318, source: src/shared/menu/menu_gfx_enqueue_textured_quad.c}
   - {addr: 0x801cda9c, size: 648, name: bunit_gfx_enqueue_gouraud_textured_quad, hash: b012086d3eed574e, source: src/shared/gfx/gfx_enqueue_gouraud_textured_quad.c, source_symbol: gfx_enqueue_gouraud_textured_quad}
   - {addr: 0x801cdd24, size: 1044, name: menu_gfx_enqueue_oriented_textured_quad, hash: 487cd03ab6bba3e3, source: src/shared/menu/menu_gfx_enqueue_oriented_textured_quad.c}
-  - {addr: 0x801ce138, size: 508, name: bunit_gfx_enqueue_textured_quad_corners, hash: b88c80b508ead92e}
+  - {addr: 0x801ce138, size: 508, name: bunit_gfx_enqueue_textured_quad_corners, hash: b88c80b508ead92e, source: src/shared/gfx/gfx_enqueue_textured_quad_corners.c, source_symbol: gfx_enqueue_textured_quad_corners}
   - {addr: 0x801ce334, size: 216, name: menu_gfx_enqueue_draw_mode, hash: 0b17bfff3c7058c9, source: src/shared/menu/menu_gfx_enqueue_draw_mode.c}
   - {addr: 0x801ce40c, size: 228, name: menu_gfx_enqueue_draw_area, hash: 612f894d2c6e6ab6, source: src/shared/menu/menu_gfx_enqueue_draw_area.c}
   - {addr: 0x801ce4f0, size: 264, name: menu_gfx_enqueue_draw_move, hash: 895f33d0562e664e, source: src/shared/menu/menu_gfx_enqueue_draw_move.c}
@@ -1428,7 +1428,7 @@ functions:
   - {addr: 0x801c9aa4, size: 632, name: menu_gfx_enqueue_textured_quad_list, hash: 5f606e521d761091, source: src/shared/menu/menu_gfx_enqueue_textured_quad_list.c}
   - {addr: 0x801c9d1c, size: 532, name: menu_gfx_enqueue_textured_quad, hash: e79e4c2c08e12fd9, source: src/shared/menu/menu_gfx_enqueue_textured_quad.c}
   - {addr: 0x801c9f30, size: 1044, name: menu_gfx_enqueue_oriented_textured_quad, hash: 25f4a04133164df8, source: src/shared/menu/menu_gfx_enqueue_oriented_textured_quad.c}
-  - {addr: 0x801ca344, size: 508, name: equip_gfx_enqueue_textured_quad_corners, hash: 282146b88b2b5bc9}
+  - {addr: 0x801ca344, size: 508, name: equip_gfx_enqueue_textured_quad_corners, hash: 282146b88b2b5bc9, source: src/shared/gfx/gfx_enqueue_textured_quad_corners.c, source_symbol: gfx_enqueue_textured_quad_corners}
   - {addr: 0x801ca540, size: 264, name: menu_gfx_enqueue_draw_move, hash: c74d384fcfbeac4a, source: src/shared/menu/menu_gfx_enqueue_draw_move.c}
   - {addr: 0x801ca648, size: 228, name: menu_gfx_enqueue_draw_area, hash: 0b025d4219863d75, source: src/shared/menu/menu_gfx_enqueue_draw_area.c}
   - {addr: 0x801ca72c, size: 216, name: menu_gfx_enqueue_draw_mode, hash: 39d3f71dc37474b8, source: src/shared/menu/menu_gfx_enqueue_draw_mode.c}

@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "psx/types.h"
 
@@ -9,8 +10,7 @@
  * Screen x coordinates use the menu's +0x80 origin. With `color` the quad is
  * shaded with that color; otherwise texture shading is disabled.
  */
-void bunit_gfx_enqueue_textured_quad_corners(
-    const textured_quad_source_t* src, const rgb24_t* color, s32 semi, s32 idx) {
+void gfx_enqueue_textured_quad_corners(const textured_quad_source_t* src, const rgb24_t* color, s32 semi, s32 idx) {
     POLY_FT4* poly;
 
     poly = &g_menu_gfx_context->textured_quads[g_menu_gfx_poly_ft4_count++];

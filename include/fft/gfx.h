@@ -193,6 +193,8 @@ typedef struct textured_quad_source {
     u16 tpage;  /* 0x22 */
 } textured_quad_source_t;
 
+void gfx_enqueue_textured_quad_corners(const textured_quad_source_t* src, const rgb24_t* color, s32 semi, s32 idx);
+
 /* Twelve-byte texture cell copied by the formation portrait producers and
  * embedded in oriented menu quads. */
 typedef struct texture_source {
