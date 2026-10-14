@@ -394,6 +394,11 @@ typedef char menu_unit_status_record_size_must_be_34[(sizeof(menu_unit_status_re
 
 extern menu_unit_status_record_t g_menu_selected_unit_status;
 extern menu_unit_status_record_t g_menu_comparison_unit_status;
+extern RECT g_menu_hovered_unit_stats_rect;
+extern RECT g_menu_attack_caster_stats_rect;
+extern RECT g_menu_attack_target_stats_rect;
+extern RECT g_menu_right_unit_stats_rect;
+extern RECT g_menu_unit_summary_panel_rect;
 
 /* The hovered-unit status panel's two draw offsets (*_menu_display_hovered_unit_stats). */
 typedef struct menu_unit_status_offsets {
@@ -546,6 +551,7 @@ extern RECT g_menu_draw_area_template;
 extern u8 g_menu_gfx_scaled_sprite_count;
 extern point16_t g_menu_gfx_scaled_sprite_scale[];
 extern point16_t g_menu_gfx_scaled_sprite_texture_page;
+extern point16_t g_menu_texture_origin; /* VRAM origin for menu image placement */
 extern sprite_sheet_frame_t g_menu_gfx_scaled_sprite_uv_rects[];
 extern u8 g_menu_panel_status_animation[];
 extern u8 g_menu_panel_status_group_bounds[];
@@ -1541,7 +1547,8 @@ typedef struct menu_number_entry {
 } menu_number_entry_t;
 typedef char menu_number_entry_size_must_be_12[(sizeof(menu_number_entry_t) == 12) ? 1 : -1];
 
-extern s32 g_menu_hide_numeric_values; /* non-zero: draw digits as blanks (0x48, 0x10) */
+extern s32 g_menu_hide_numeric_values;   /* non-zero: draw digits as blanks (0x48, 0x10) */
+extern glyph_blit_t g_menu_number_glyph; /* source rectangle in the number/sign font */
 
 void menu_draw_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* pos);
 void menu_draw_numeric_display_entries(u8* buffer, menu_number_entry_t* entries, glyph_blit_t* position, s32 count);

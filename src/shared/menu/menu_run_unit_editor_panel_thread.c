@@ -46,8 +46,8 @@ void menu_run_unit_editor_panel_thread(void) {
     frame_record = g_battle_menu_unit_editor_frames;
     records = frame_record;
     battle_gfx_init_scaled_draw_area_packets(&frame_record->draw_areas);
-    g_battle_menu_hovered_unit_stats_display.y = 0x1A;
-    g_battle_unit_summary_panel_rect.y = 0x1A;
+    g_menu_hovered_unit_stats_rect.y = 0x1A;
+    g_menu_unit_summary_panel_rect.y = 0x1A;
     battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[0], MENU_TEXTURE_PAGE_FRAME);
     battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[1], MENU_TEXTURE_PAGE_TEXT_IMAGES);
     battle_gfx_set_draw_mode_for_texture_page(&frame_record->draw_modes[2], MENU_TEXTURE_PAGE_ITEM_ICONS);
@@ -101,13 +101,13 @@ void menu_run_unit_editor_panel_thread(void) {
     /* These sprite and rectangle records share the fields read by the image loader. */
     if (g_menu_selected_unit_fields.state.generic_monster == 0) {
         for (i = 0; i < 19; i++) {
-            gfx_init_image_loading(&frame_record->sprites[i], &g_battle_menu_texture_location,
-                &g_battle_unit_editor_panel_rect, &g_battle_unit_editor_sprite_image_params_a[i]);
+            gfx_init_image_loading(&frame_record->sprites[i], &g_menu_texture_origin, &g_battle_unit_editor_panel_rect,
+                &g_battle_unit_editor_sprite_image_params_a[i]);
         }
     } else {
         for (i = 0; i < 19; i++) {
-            gfx_init_image_loading(&frame_record->sprites[i], &g_battle_menu_texture_location,
-                &g_battle_unit_editor_panel_rect, &g_battle_unit_editor_sprite_image_params_b[i]);
+            gfx_init_image_loading(&frame_record->sprites[i], &g_menu_texture_origin, &g_battle_unit_editor_panel_rect,
+                &g_battle_unit_editor_sprite_image_params_b[i]);
         }
     }
     menu_init_sprite_array(&frame_record->sprites[19], 5, 0x7CFC);
@@ -248,8 +248,8 @@ void menu_run_unit_editor_panel_thread(void) {
         menu_submit_numeric_display_frame_primitives(frame_record->palette);
         gfx_draw_or_append_gpu_primitive(&frame_record->draw_areas.areas[0]);
     }
-    g_battle_menu_hovered_unit_stats_display.y = 0xAA;
-    g_battle_unit_summary_panel_rect.y = 0xAA;
+    g_menu_hovered_unit_stats_rect.y = 0xAA;
+    g_menu_unit_summary_panel_rect.y = 0xAA;
     g_battle_menu_panel_fade_mode = MENU_PANEL_FADE_IN;
     g_battle_unit_status_bounce_step = 6;
     sound_queue_sfx_cancel();

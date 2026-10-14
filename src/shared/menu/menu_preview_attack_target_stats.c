@@ -20,6 +20,6 @@ void menu_preview_attack_target_stats(void) {
     g_menu_comparison_unit_fields.state.generic_monster = g_menu_selected_unit_fields.state.generic_monster;
     g_menu_comparison_unit_fields.state.ability_ids[2] = g_menu_selected_unit_fields.state.ability_ids[2];
     battle_menu_load_selected_unit();
-    battle_menu_display_hovered_unit_stats(&g_battle_menu_attack_target_stats_display, UNIT_STATS_PANEL_ATTACK_TARGET,
+    battle_menu_display_hovered_unit_stats(&g_menu_attack_target_stats_rect, UNIT_STATS_PANEL_ATTACK_TARGET,
         g_battle_menu_attack_target_stats_setup, &g_menu_comparison_unit_status);
 }

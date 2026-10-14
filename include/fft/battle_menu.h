@@ -154,9 +154,7 @@ extern crystal_pickup_result_t* g_battle_dead_unit_context;
 extern s32 g_battle_dead_unit_result;
 extern s32 g_battle_formation_display_mode;
 extern s32 g_battle_formation_screen_active;
-extern RECT g_battle_menu_attack_caster_stats_display;
 extern menu_number_entry_t g_battle_menu_attack_caster_stats_setup[8];
-extern RECT g_battle_menu_attack_target_stats_display;
 extern menu_number_entry_t g_battle_menu_attack_target_stats_setup[8];
 extern u8 g_battle_menu_billboard_job_name[];
 extern u8 g_battle_menu_billboard_unit_name[];
@@ -164,13 +162,11 @@ extern u8 g_battle_menu_billboard_unit_name[];
  * does not read the parameter. */
 extern s32 g_battle_menu_dead_unit_panel_parameter;
 extern u16 g_battle_menu_hovered_stats_frame_count;
-extern RECT g_battle_menu_hovered_unit_stats_display;
 extern menu_number_entry_t g_battle_menu_hovered_unit_stats_setup[10];
 extern RECT g_battle_menu_portrait_pixel_rect;
 extern action_data_t* g_battle_menu_preview_target_action;
 /* The final two entries of g_battle_menu_attack_caster_stats_setup. */
 extern menu_number_entry_t g_battle_menu_projected_value_panel[2];
-extern RECT g_battle_menu_right_unit_stats_display;
 extern menu_number_entry_t g_battle_menu_right_unit_stats_setup[10];
 extern s32 g_battle_post_battle_unit_changes_active;
 
@@ -253,7 +249,6 @@ extern image_load_parameters_t g_battle_menu_single_icon_image_params[5];
 extern image_load_parameters_t g_battle_menu_sprite_page_image_param_bases[];
 extern image_load_parameters_t g_battle_menu_sprite_page_image_params[30];
 extern RECT g_battle_menu_sprite_page_texture_windows[5];
-extern point16_t g_battle_menu_texture_location;
 extern menu_unit_editor_frame_t g_battle_menu_unit_editor_frames[2];
 extern glyph_blit_t g_battle_menu_window_sprite_glyph;
 extern glyph_blit_t g_battle_menu_window_sprite_position;
@@ -278,7 +273,6 @@ void battle_menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprit
 extern u16* const* g_battle_help_active_text_id_tables;
 /* Source image used when battle overlays render menu glyphs. */
 extern menu_glyph_sheet_t g_battle_menu_glyph_image_data;
-extern glyph_blit_t g_battle_menu_number_glyph_rect; /* glyph source rectangle in the number/sign font */
 extern glyph_blit_t g_battle_menu_stacked_glyph_lower;
 extern glyph_blit_t g_battle_menu_stacked_glyph_upper;
 extern s16 g_battle_menu_status_left_text_ids[20];

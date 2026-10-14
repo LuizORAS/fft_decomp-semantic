@@ -42,8 +42,8 @@ void menu_run_numeric_display_panel_thread(void) {
     battle_menu_free_memory(number_images);
     for (i = 0; i < 18; i++) {
         battle_menu_init_semitransparent_sprt(&record->sprites[i]);
-        gfx_init_image_loading(&record->sprites[i], &g_battle_menu_texture_location,
-            &g_battle_numeric_display_frame_rect, &g_battle_numeric_display_image_params[i]);
+        gfx_init_image_loading(&record->sprites[i], &g_menu_texture_origin, &g_battle_numeric_display_frame_rect,
+            &g_battle_numeric_display_image_params[i]);
     }
     mem_copy_bytes_nonempty(&record[1], record, sizeof(*record));
     record[0].palette = &g_battle_numeric_display_palettes[0].primitives;

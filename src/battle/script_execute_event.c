@@ -104,10 +104,10 @@ void script_execute_event(void) {
         }
         camera_wait_until_idle();
     } else {
-        g_battle_menu_hovered_unit_stats_display.y = 0xAA;
-        g_battle_menu_attack_caster_stats_display.y = 0xAA;
-        g_battle_menu_attack_target_stats_display.y = 0xAA;
-        g_battle_menu_right_unit_stats_display.y = 0xAA;
+        g_menu_hovered_unit_stats_rect.y = 0xAA;
+        g_menu_attack_caster_stats_rect.y = 0xAA;
+        g_menu_attack_target_stats_rect.y = 0xAA;
+        g_menu_right_unit_stats_rect.y = 0xAA;
     }
     battle_unit_clear_status_staging_data();
     if (script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {

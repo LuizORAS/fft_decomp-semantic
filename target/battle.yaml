@@ -2308,7 +2308,7 @@ data:
   - {addr: 0x8014e5d4, name: g_battle_menu_default_palette_colors}
   - {addr: 0x8014e614, name: g_battle_text_glyph_bitmaps}
   - {addr: 0x801612dc, name: g_battle_menu_text_section_offsets}
-  - {addr: 0x80165ea4, name: g_battle_menu_texture_location}
+  - {addr: 0x80165ea4, name: g_menu_texture_origin}
   - {addr: 0x80165eac, name: g_battle_item_icon_image_location}
   - {addr: 0x80165eb4, name: g_battle_item_icon_clut_base_x}
   - {addr: 0x80165eb6, name: g_battle_item_icon_clut_base_y}
@@ -2444,10 +2444,10 @@ data:
   - {addr: 0x80168544, name: g_battle_unit_status_quad_clut_pairs}
   - {addr: 0x801685fc, name: g_battle_unit_status_sprite_clut_pairs}
   - {addr: 0x80168618, name: g_battle_unit_status_icon_image_params}
-  - {addr: 0x80168648, name: g_battle_menu_hovered_unit_stats_display}
-  - {addr: 0x80168650, name: g_battle_menu_attack_caster_stats_display}
-  - {addr: 0x80168658, name: g_battle_menu_attack_target_stats_display}
-  - {addr: 0x80168660, name: g_battle_menu_right_unit_stats_display}
+  - {addr: 0x80168648, name: g_menu_hovered_unit_stats_rect}
+  - {addr: 0x80168650, name: g_menu_attack_caster_stats_rect}
+  - {addr: 0x80168658, name: g_menu_attack_target_stats_rect}
+  - {addr: 0x80168660, name: g_menu_right_unit_stats_rect}
   - {addr: 0x80168668, name: g_battle_menu_hovered_unit_stats_setup}
   - {addr: 0x801686e0, name: g_battle_menu_right_unit_stats_setup}
   - {addr: 0x80168758, name: g_battle_menu_attack_caster_stats_setup}
@@ -2457,7 +2457,7 @@ data:
   - {addr: 0x80168848, name: g_battle_unit_status_quad_image_params_by_mode}
   - {addr: 0x80168858, name: g_battle_unit_status_sprite_image_params_by_mode}
   - {addr: 0x80168868, name: g_battle_unit_status_first_page_by_mode}
-  - {addr: 0x8016886c, name: g_battle_unit_summary_panel_rect}
+  - {addr: 0x8016886c, name: g_menu_unit_summary_panel_rect}
   - {addr: 0x80168874, name: g_battle_unit_summary_sprite_image_params}
   - {addr: 0x801688c8, name: g_battle_unit_summary_portrait_image_params}
   - {addr: 0x801688d4, name: g_battle_numeric_display_frame_rect}
@@ -2512,7 +2512,7 @@ data:
   - {addr: 0x80169720, name: g_script_unit_face_slot_order}
   - {addr: 0x80169750, name: g_battle_rotation_speed_frames}
   - {addr: 0x80169758, name: g_battle_event_status_masks}
-  - {addr: 0x80169770, name: g_battle_menu_number_glyph_rect}
+  - {addr: 0x80169770, name: g_menu_number_glyph}
   - {addr: 0x80169780, name: g_battle_text_large_number_glyph_rect}
   - {addr: 0x80169790, name: g_battle_menu_stacked_glyph_lower}
   - {addr: 0x801697a0, name: g_battle_menu_stacked_glyph_upper}

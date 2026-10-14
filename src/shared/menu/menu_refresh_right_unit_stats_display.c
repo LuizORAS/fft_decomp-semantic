@@ -8,6 +8,6 @@ void menu_refresh_right_unit_stats_display(void) {
     if (g_menu_comparison_unit_status.list_index < 0) {
         g_battle_menu_right_unit_stats_setup[6].format = 0x0c00;
     }
-    battle_menu_display_hovered_unit_stats(&g_battle_menu_right_unit_stats_display, UNIT_STATS_PANEL_RIGHT_UNIT,
+    battle_menu_display_hovered_unit_stats(&g_menu_right_unit_stats_rect, UNIT_STATS_PANEL_RIGHT_UNIT,
         g_battle_menu_right_unit_stats_setup, &g_menu_comparison_unit_status);
 }

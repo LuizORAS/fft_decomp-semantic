@@ -792,7 +792,6 @@ extern menu_selection_record_t g_world_menu_selection_records[14];
 extern RECT g_world_gfx_temporary_draw_area;
 extern s8 g_world_gfx_vsync_mode;
 extern u16 g_world_gfx_textured_quad_count;
-extern point16_t g_world_gfx_menu_image_source;
 extern u16 g_world_gfx_draw_area_scale_percent[];
 
 /* A full-screen texture window (x=0, y=0, w=0x100, h=0x100 in the WORLD data
@@ -1633,7 +1632,6 @@ extern CVECTOR g_world_unit_status_gauge_colors[];
 extern image_load_parameters_t* g_world_unit_status_quad_image_params_by_mode[];
 extern image_load_parameters_t* g_world_unit_status_sprite_image_params_by_mode[];
 extern u8 g_world_unit_status_first_page_by_mode[];
-extern RECT g_world_unit_summary_panel_rect;
 extern image_load_parameters_t g_world_unit_summary_sprite_image_params[];
 extern RECT g_world_unit_editor_panel_rect;  /* panel box */
 extern RECT g_world_unit_editor_cursor_rect; /* cursor source */
@@ -2064,10 +2062,6 @@ extern s8
 extern u16 g_world_menu_hovered_stats_frame_count;
 extern RECT g_world_menu_sprite_page_texture_windows[5];
 extern image_load_parameters_t g_world_menu_sprite_page_image_params[30];
-extern RECT g_world_menu_hovered_unit_stats_display;
-extern RECT g_world_menu_attack_caster_stats_display;
-extern RECT g_world_menu_attack_target_stats_display;
-extern RECT g_world_menu_right_unit_stats_display;
 extern menu_number_entry_t g_world_menu_hovered_unit_stats_setup[];
 extern menu_number_entry_t g_world_menu_right_unit_stats_setup[];
 extern menu_number_entry_t g_world_menu_attack_caster_stats_setup[];
@@ -2083,7 +2077,6 @@ extern s32 g_world_menu_building_thread_started;
 extern u8 g_world_menu_cleared_entry_indices[11];
 extern s16 g_world_menu_row_type_confirm_actions[][2]; /* per row type: [1] == 1 lists by id */
 extern u8 g_world_menu_action_slot_default_messages[];
-extern glyph_blit_t g_world_menu_number_glyph_rect; /* glyph source rectangle in the number/sign font */
 
 /* Tail glyph source and destination records for world_menu_build_window_image. */
 extern glyph_blit_t g_world_menu_window_sprite_source;

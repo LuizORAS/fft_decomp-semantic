@@ -9,24 +9,24 @@ void menu_draw_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* po
 
     /* One variable holds the sign-glyph selector first and the x to leave the
      * cursor at afterwards; the target keeps both roles in $s6. */
-    src = &g_battle_menu_number_glyph_rect;
-    g_battle_menu_number_glyph_rect.rect.h = 0xF;
+    src = &g_menu_number_glyph;
+    g_menu_number_glyph.rect.h = 0xF;
     cursor = digits & 0xFF00;
     if (cursor == 0xC00) {
         pos->rect.x += 2;
         src->rect.x = 0xBA;
-        g_battle_menu_number_glyph_rect.rect.y = 0xD;
-        g_battle_menu_number_glyph_rect.rect.w = 6;
+        g_menu_number_glyph.rect.y = 0xD;
+        g_menu_number_glyph.rect.w = 6;
         blit_text_glyph(g_menu_glyph_sheet->pixels, pixels, src, pos);
         pos->rect.x += 7;
         blit_text_glyph(g_menu_glyph_sheet->pixels, pixels, src, pos);
         pos->rect.x += 7;
-        g_battle_menu_number_glyph_rect.rect.w = 8;
+        g_menu_number_glyph.rect.w = 8;
         return;
     }
     if (digits & 0x1000) {
         src->rect.x = 0xC8;
-        g_battle_menu_number_glyph_rect.rect.y = 0;
+        g_menu_number_glyph.rect.y = 0;
         blit_text_glyph(g_menu_glyph_sheet->pixels, pixels, src, pos);
         pos->rect.x += 7;
     }
@@ -39,7 +39,7 @@ void menu_draw_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* po
         src->rect.y = 0xD;
         src->rect.w = 6;
         pos->rect.x -= 6;
-        blit_text_glyph(g_menu_glyph_sheet->pixels, pixels, &g_battle_menu_number_glyph_rect, pos);
+        blit_text_glyph(g_menu_glyph_sheet->pixels, pixels, &g_menu_number_glyph, pos);
         pos->rect.x += 6;
         src->rect.w = 8;
     }
@@ -54,7 +54,7 @@ void menu_draw_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* po
             src->rect.x = 0x48;
             src->rect.y = 0x10;
         }
-        blit_text_glyph(g_menu_glyph_sheet->pixels, pixels, &g_battle_menu_number_glyph_rect, pos);
+        blit_text_glyph(g_menu_glyph_sheet->pixels, pixels, &g_menu_number_glyph, pos);
         /* After the call: the quotient stays live past the argument setup, so
          * it takes a callee-saved register and the update lands in the delay
          * slot, as the target does at 0x238. */

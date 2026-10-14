@@ -45,10 +45,10 @@ void menu_run_unit_summary_panel_thread(void) {
     battle_text_configure_sprite_vram(&rects[2], 0x10, 0xA, &frames[0].sprites[2], 0);
     battle_text_configure_sprite_vram(&rects[3], 0x10, 0xA, &frames[0].sprites[3], 0);
     for (frame = 0; frame < 7; frame++) {
-        gfx_init_image_loading(&frames[0].sprites[frame], &g_battle_menu_texture_location,
-            &g_battle_unit_summary_panel_rect, &g_battle_unit_summary_sprite_image_params[frame]);
+        gfx_init_image_loading(&frames[0].sprites[frame], &g_menu_texture_origin, &g_menu_unit_summary_panel_rect,
+            &g_battle_unit_summary_sprite_image_params[frame]);
     }
-    gfx_init_image_loading(&frames[0].portrait, &g_battle_menu_texture_location, &g_battle_unit_summary_panel_rect,
+    gfx_init_image_loading(&frames[0].portrait, &g_menu_texture_origin, &g_menu_unit_summary_panel_rect,
         &g_battle_unit_summary_portrait_image_params);
     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
         frames[0].portrait.clut = 0x7FFD;
@@ -95,8 +95,8 @@ void menu_run_unit_summary_panel_thread(void) {
     mem_copy_bytes_nonempty(&frames[1], &frames[0], sizeof(menu_unit_summary_frame_t));
     frames[0].palette = &g_battle_unit_summary_palettes[0].primitives;
     frames[1].palette = &g_battle_unit_summary_palettes[1].primitives;
-    battle_menu_init_numeric_display_frame_primitives(&g_battle_unit_summary_panel_rect, frames[0].palette);
-    battle_menu_init_numeric_display_frame_primitives(&g_battle_unit_summary_panel_rect, frames[1].palette);
+    battle_menu_init_numeric_display_frame_primitives(&g_menu_unit_summary_panel_rect, frames[0].palette);
+    battle_menu_init_numeric_display_frame_primitives(&g_menu_unit_summary_panel_rect, frames[1].palette);
 
     for (frame = 0;; frame++) {
         thread_yield();
@@ -125,14 +125,14 @@ void menu_run_unit_summary_panel_thread(void) {
                 }
             }
         }
-        if (g_battle_unit_summary_panel_rect.y == 0x1A) {
+        if (g_menu_unit_summary_panel_rect.y == 0x1A) {
             if (g_battle_unit_status_bounce_step == 0) {
                 g_battle_unit_status_bounce_step = 1;
             } else if (g_battle_unit_status_bounce_step < 6) {
                 g_battle_unit_status_bounce_step = g_battle_unit_status_bounce_step + 1;
             }
         }
-        if (g_battle_unit_summary_panel_rect.y == 0xAA) {
+        if (g_menu_unit_summary_panel_rect.y == 0xAA) {
             if (g_battle_unit_status_bounce_step == 6) {
                 g_battle_unit_status_bounce_step = 7;
             } else if (g_battle_unit_status_bounce_step >= 7 && g_battle_unit_status_bounce_step < 0xB) {
