@@ -43,7 +43,7 @@ void attack_sound_resync_scenario_music_and_apply_map_darkness(void) {
             } else {
                 g_battle_thread_call_target = (void (*)(void))main_sound_unload_scenario_mus;
                 battle_thread_call_on_main_stack((g_battle_current_music_track_index ^ 1) + 1);
-                g_battle_thread_call_target = (void (*)(void))main_sound_open_and_play_music;
+                g_battle_thread_call_target = (void (*)(void))main_sound_load_music_into_slot;
                 battle_thread_call_on_main_stack(replacement, (g_battle_current_music_track_index ^ 1) + 1);
                 attack_sound_wait_for_music_stub();
             }

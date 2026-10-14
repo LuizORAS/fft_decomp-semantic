@@ -13,7 +13,7 @@
 /* Starts the asynchronous load of music file `music_id` (main_music_e) into
  * music slot `slot` (1-based) if the slot is free. Returns the slot, or 0 when it was occupied or the load
  * failed (which also raises exception 0x11). */
-s32 main_sound_open_music_into_slot(s32 music_id, s32 slot) {
+s32 main_sound_start_music_load_into_slot(s32 music_id, s32 slot) {
     if (g_main_sound_music.slots.smd[slot] == 0) {
         suzuki_smd_header_t* data = main_heap_alloc_smd(g_main_sound_scenario_smd_files[music_id].size);
 

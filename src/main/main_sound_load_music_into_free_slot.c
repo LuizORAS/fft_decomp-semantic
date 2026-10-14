@@ -1,8 +1,9 @@
 #include "fft/main.h"
 
-/* main_sound_open_and_play_music into the first free scenario slot (1 or
- * 2); returns 0 when both are taken. */
-int main_sound_open_music_into_free_slot(int music_id) {
+/* Same as main_sound_load_music_into_slot for the first free scenario slot (1 or 2); returns 0 when both
+ * are taken. The shop, formation and save screens, the music test and main_sound_set_current_music_track
+ * open their music this way. */
+int main_sound_load_music_into_free_slot(int music_id) {
     int i;
     suzuki_smd_header_t* smd;
 

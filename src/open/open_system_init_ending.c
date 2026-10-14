@@ -7,7 +7,7 @@
 void open_system_init_ending(void) {
     RECT source;
 
-    main_sound_unload_scenario_music_and_tunes();
+    main_sound_unload_scenario_music_and_stop_tune();
     open_system_init_runtime_state();
 
     source.x = 0x3c0;

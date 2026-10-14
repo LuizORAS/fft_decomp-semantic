@@ -11,7 +11,7 @@ void main_boot_reset_game_state(void) {
 
     if (g_main_boot_game_state_initialized != 0) {
         main_heap_clear_game_allocator_table();
-        main_sound_unload_scenario_music_and_tunes();
+        main_sound_unload_scenario_music_and_stop_tune();
         g_main_system_play_time_hours = 0;
         g_main_system_play_time_minutes = 0;
         g_main_system_play_time_seconds = 0;

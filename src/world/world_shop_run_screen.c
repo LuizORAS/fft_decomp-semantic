@@ -103,7 +103,7 @@ void world_shop_run_screen(s32 shop_type) {
     g_world_text_section_pointers[WORLD_TEXT_SECTION_SHOP_MENU_LABELS] = g_world_text_shop_menu_labels_data;
     world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, disabled, 0);
-    g_world_menu_music_slot = main_sound_open_music_into_free_slot(ot_index);
+    g_world_menu_music_slot = main_sound_load_music_into_free_slot(ot_index);
     main_sound_switch_music_track(g_world_menu_music_slot, 0x7F, 0);
     g_world_shop_background_visible = 1;
     g_world_formation_unit_banner_enabled = 0;

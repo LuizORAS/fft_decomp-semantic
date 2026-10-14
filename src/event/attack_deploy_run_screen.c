@@ -655,6 +655,6 @@ ramza_placed:
     battle_thread_wait_frames(3);
     g_battle_screen_fade = 0;
     battle_script_set_event_speed(1);
-    main_sound_unload_scenario_music_and_tunes();
+    main_sound_unload_scenario_music_and_stop_tune();
     battle_thread_exit_current();
 }

@@ -11,7 +11,7 @@ void main_sound_set_current_music_track(int music_id) {
         main_sound_stop_current_music();
         main_sound_unload_scenario_mus(slot);
     }
-    slot = main_sound_open_music_into_free_slot(music_id);
+    slot = main_sound_load_music_into_free_slot(music_id);
     if (slot != 0) {
         main_sound_switch_music_track(slot, 0x7f, 0);
     }

@@ -57,7 +57,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
                 if (state->music_slot != 0) {
                     main_sound_unload_scenario_mus(state->music_slot);
                 }
-                state->music_slot = main_sound_open_music_into_free_slot(state->music_id);
+                state->music_slot = main_sound_load_music_into_free_slot(state->music_id);
                 state->step = OPEN_MUSIC_TEST_STEP_START_TRACK;
             } else {
                 if (state->music_slot != 0) {

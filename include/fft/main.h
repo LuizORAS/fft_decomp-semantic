@@ -1664,7 +1664,7 @@ typedef struct main_sound_music_state {
 } main_sound_music_state_t;
 
 /* Music slot table at 0x8004d96c. Slots are 1-based: slots 1-2 hold the
- * scenario music opened by main_sound_open_music_into_free_slot, and tune t
+ * scenario music opened by main_sound_load_music_into_free_slot, and tune t
  * (1-5, MUSIC_45..49.SMD) lives in slot 2 + t, so smd[3..7] (0x8004d998) hold
  * the five permanent tunes that main_sound_open_generic_sfx loads. Both
  * arrays are indexed by slot, so slot 7's handle is the word smd[0].
@@ -1944,16 +1944,16 @@ suzuki_music_t* main_sound_get_music_handle(s32 slot);
 
 /* Verified SCUS scenario-music and tune wrappers. Include this header in
  * their definitions as well as callers so ABI declarations cannot drift. */
-s32 main_sound_open_and_play_music(s32 music_id, s32 slot);
+s32 main_sound_load_music_into_slot(s32 music_id, s32 slot);
 void main_sound_open_generic_sfx(void);
-s32 main_sound_open_music_into_free_slot(s32 music_id);
-s32 main_sound_open_music_into_slot(s32 music_id, s32 slot);
-s32 main_sound_open_scenario_smd_files(s32 music_id);
+s32 main_sound_load_music_into_free_slot(s32 music_id);
+s32 main_sound_start_music_load_into_slot(s32 music_id, s32 slot);
+s32 main_sound_start_music_load_into_free_slot(s32 music_id);
 void main_sound_play_sfx(s32 sound_id);
 void main_sound_play_bg_sfx(s32 sound_id);
 void main_sound_play_sfx_find_channel(s32 sound_id);
 s32 main_sound_play_tune(s32 tune);
-s32 main_sound_poll_scenario_smd_load(void);
+s32 main_sound_poll_music_load(void);
 s32 main_sound_set_current_music_balance_shift_timed(s32 value, s32 time);
 s32 main_sound_set_current_music_pitch_shift_timed(s32 value, s32 time);
 s32 main_sound_set_current_music_target(s32 volume, s32 time);
@@ -1969,9 +1969,9 @@ void main_sound_stop_sfx(int sound_id);
 s32 main_sound_switch_music_track(s32 slot, s32 volume, s32 fade);
 void main_sound_unload_current_scenario_music(void);
 s32 main_sound_unload_scenario_mus(s32 slot);
-void main_sound_unload_scenario_music_and_tunes(void);
+void main_sound_unload_scenario_music_and_stop_tune(void);
 s32 main_sound_update_tunes(void);
-s32 main_sound_wait_for_scenario_smd_load(s32 music_id);
+s32 main_sound_wait_for_music_load(s32 music_id);
 
 void main_sound_remove_vfx_resource(main_sound_resource_t* resource);
 

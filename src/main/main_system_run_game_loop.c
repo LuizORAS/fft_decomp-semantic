@@ -53,7 +53,7 @@ void main_system_run_game_loop(void) {
 
         if (g_main_system_game_flow_state == MAIN_GAME_FLOW_ENDING) {
             main_sound_stop_weather_sfx_music();
-            main_sound_unload_scenario_music_and_tunes();
+            main_sound_unload_scenario_music_and_stop_tune();
             battle_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
             /* With NEXT_SCENARIO set, the ATTACK scenario loader advances this
              * event to Things Obtained or Those Who Squirm in Darkness. */

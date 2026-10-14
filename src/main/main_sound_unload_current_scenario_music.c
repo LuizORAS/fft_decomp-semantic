@@ -1,5 +1,6 @@
 #include "fft/main.h"
 
+/* Stop the playing scenario music and unload its slot (main_sound_unload_scenario_mus). */
 void main_sound_unload_current_scenario_music(void) {
     int slot = g_main_sound_music.state.current_slot;
 

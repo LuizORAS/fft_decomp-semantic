@@ -2,9 +2,9 @@
 
 /* Starts the asynchronous load of music file `music_id` (main_music_e) into
  * the first free scenario music slot (1 or 2) and returns that slot, or 0
- * when both are taken or the load fails. main_sound_poll_scenario_smd_load
+ * when both are taken or the load fails. main_sound_poll_music_load
  * creates the music record once the file has arrived. */
-int main_sound_open_scenario_smd_files(int music_id) {
+int main_sound_start_music_load_into_free_slot(int music_id) {
     int i;
     suzuki_smd_header_t* buffer;
 

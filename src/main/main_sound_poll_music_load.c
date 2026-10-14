@@ -1,11 +1,9 @@
 #include "fft/main.h"
 
-/*
- * handles.loading_slot holds the slot whose SMD load is in flight;
- * handles.music[1..2] hold the resulting music records and smd[1..2] their
- * source SMD data.
- */
-int main_sound_poll_scenario_smd_load(void) {
+/* Finish the load main_sound_start_music_load_into_free_slot started: return 1 while the read for slot
+ * handles.loading_slot runs; once it is done, create that slot's music record (SuzukiPutPlaySMD), clear
+ * loading_slot and return 0. Returns 0 at once when no load is in flight. */
+int main_sound_poll_music_load(void) {
     if (g_main_sound_music.slots.handles.loading_slot == 0) {
         return 0;
     }

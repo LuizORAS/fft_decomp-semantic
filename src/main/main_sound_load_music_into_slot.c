@@ -1,11 +1,10 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Loads music file music_id (main_music_e) into a free music slot, waiting
- * for the read, and creates its music record without starting it
- * (main_sound_switch_music_track starts a slot). Returns the slot, or 0 when
- * it was occupied. */
-s32 main_sound_open_and_play_music(s32 music_id, s32 slot) {
+/* Load music file `music_id` (main_music_e) into music slot `slot` when the slot is free, waiting for the
+ * read (main_file_alloc_smd_and_load), and create its music record without starting it:
+ * main_sound_switch_music_track starts a slot. Returns the slot, or 0 when it was taken. */
+s32 main_sound_load_music_into_slot(s32 music_id, s32 slot) {
     suzuki_smd_header_t* smd;
 
     if (g_main_sound_music.slots.smd[slot] == 0) {

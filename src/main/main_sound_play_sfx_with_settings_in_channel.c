@@ -1,7 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* main_sound_play_sfx_in_channel with explicit volume and balance bytes. */
+/* Same as main_sound_play_sfx_in_channel with explicit volume and balance bytes. No retail code calls
+ * it. */
 void main_sound_play_sfx_with_settings_in_channel(s32 sound_id, s32 channel, s32 volume, s32 balance) {
     channel &= 0xfffe;
     if ((g_main_sound_driver_flags & MAIN_SOUND_DRIVER_SFX_ENABLED) != 0) {

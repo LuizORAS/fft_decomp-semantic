@@ -84,7 +84,7 @@ void wldcore_init_world_map_state(void) {
     g_wldcore_map_label_location = 0;
 
     if (!(g_main_system_flags & MAIN_SYSTEM_FLAG_TUTORIAL_EVENT)) {
-        main_sound_unload_scenario_music_and_tunes();
+        main_sound_unload_scenario_music_and_stop_tune();
     }
 
     g_wldcore_audio_queue.volume = 0x7f;

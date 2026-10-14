@@ -8,7 +8,7 @@
 void world_formation_run_before_event(void) {
     s32 profile;
 
-    main_sound_unload_scenario_music_and_tunes();
+    main_sound_unload_scenario_music_and_stop_tune();
     ClearImage(&g_world_screen_clear_rect, 0, 0, 0);
     DrawSync(0);
     VSync(0);
