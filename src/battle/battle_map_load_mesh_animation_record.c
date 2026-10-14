@@ -2,15 +2,16 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Loads one record of the saved map state and returns the address just past it.
+/* Load one record of a map's mesh animation data (GNS_RESOURCE_MESH_ANIMATIONS) and return the
+ * address just past it: type 1 the keyframes 1..count (g_battle_map_mesh_animation_keyframes), type 2 the
+ * 16 instructions of each of the 8 animation states of mesh parts 1-8
+ * (g_battle_map_mesh_animation_instructions), type 3 the parent of each of parts 1..count (4 bytes each,
+ * parts past 8 skipped). Type 3 also puts each part at the first keyframe of its running state and marks
+ * it animated when that state goes on past its first instruction.
  *
- * Type 1 fills entries 1..count of the 0x50-byte table, type 2 the 16 cells of
- * each of 8 rows for entries 1..8 of the 0x220-byte table, and type 3 sets up
- * the 0x98-byte entries 1..8 from the other two tables (4 input bytes per
- * entry, extra entries skipped). The caller at 0x800f32e4 stops at type 0
- * before calling, so the result for type 0 or an unknown type is never used;
- * `next` is left unset there, which is why the target returns $a1. */
-u8* battle_map_load_saved_state_record(battle_map_state_record_t* record) {
+ * The caller (battle_map_dispatch_gns_resource) stops at type 0 before calling, so the result for type 0
+ * or an unknown type is never used; `next` is left unset there, which is why the target returns $a1. */
+u8* battle_map_load_mesh_animation_record(battle_map_mesh_animation_record_t* record) {
     u8* next;
     u32 count;
     u32 i;

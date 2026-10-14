@@ -7221,7 +7221,7 @@ typedef enum gns_resource_type {
     GNS_RESOURCE_TEXTURE_ANIMATIONS = 0x1b,
     GNS_RESOURCE_PALETTE_ANIMATION_FRAMES = 0x1c,
     GNS_RESOURCE_MARKED_TILE_PALETTES = 0x1f, /* the sixteen CLUTs of MAP_CLUT_ROW_MARKED_TILES */
-    GNS_RESOURCE_STATE_RECORDS = 0x23,        /* battle_map_state_record_t list */
+    GNS_RESOURCE_MESH_ANIMATIONS = 0x23,      /* battle_map_mesh_animation_record_t list */
     GNS_RESOURCE_PART_GEOMETRY_1 = 0x24,      /* geometry of mesh parts 1-8 */
     GNS_RESOURCE_PART_GEOMETRY_2 = 0x25,
     GNS_RESOURCE_PART_GEOMETRY_3 = 0x26,
@@ -7566,7 +7566,7 @@ typedef struct map_mesh_file_header {
     u32 _unused_74[2];                   /* 0x74 */
     u32 marked_tile_palettes_offset;     /* 0x7c */
     u32 _unused_80[3];                   /* 0x80 */
-    u32 state_records_offset;            /* 0x8c */
+    u32 mesh_animations_offset;          /* 0x8c */
     u32 part_geometry_offsets[8];        /* 0x90 */
     u32 polygon_flags_offset;            /* 0xb0 */
     u32 _unused_b4[4];                   /* 0xb4 */
@@ -7816,18 +7816,21 @@ typedef struct battle_lightning_state {
 } battle_lightning_state_t;
 typedef char battle_lightning_state_size_must_be_0x94[(sizeof(battle_lightning_state_t) == 0x94) ? 1 : -1];
 
-/* Record header parsed by the map-state loader at 0x800f26bc: a type word,
- * an entry count and the packed entries. */
-typedef struct battle_map_state_record {
+/* One record of a map's mesh animation data (GNS_RESOURCE_MESH_ANIMATIONS), read by
+ * battle_map_load_mesh_animation_record: a type word (1 keyframes, 2 instruction rows, 3 part
+ * parents; 0 ends the list), an entry count and the packed entries. */
+typedef struct battle_map_mesh_animation_record {
     u32 type;
     u32 count;
     u8 data[4];
-} battle_map_state_record_t;
+} battle_map_mesh_animation_record_t;
 
 extern u8 g_battle_map_background_color[];
 extern u8 g_battle_map_background_color_backup[];
 extern void* g_battle_map_data_load_buffer;
-extern s32 g_battle_map_data_load_complete;
+/* Set when the deployment ends (battle_deployment_mark_finished); step 8 of
+ * battle_map_step_setup_sequence waits for it. */
+extern s32 g_battle_deployment_finished;
 extern s32 g_battle_map_deep_dungeon_load_in_progress;
 extern u8 g_battle_map_file_table[];
 
@@ -7883,7 +7886,7 @@ extern RECT g_battle_tile_info_image_location;
 extern world_gfx_image_load_parameters_t g_battle_tile_info_image_params[2];
 extern CVECTOR g_battle_map_white_cvector;
 
-/* Default vectors shared with battle_process_map_gns_record, which emits them. */
+/* Default vectors shared with battle_map_run_gns_command_record, which emits them. */
 extern SVECTOR g_battle_map_zero_svector;
 extern VECTOR g_battle_map_unit_scale_vector;
 extern u8 g_battle_map_weather_primary_speed;
@@ -8023,7 +8026,7 @@ void battle_map_color_field(s32 first, s32 second, s16 red, s16 green, s16 blue)
 s32* battle_map_control_gte_background_color(s32 command, s32 red, s32 green, s32 blue);
 void battle_map_polygon_flag_command(s32 command);
 MATRIX* battle_map_light_matrix_command(s32 command, MATRIX* color, MATRIX* light, s32 duration);
-void battle_map_data_load_complete_thread(void);
+void battle_deployment_skip_thread(void);
 s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data);
 void battle_map_extract_palette_colors(const u16* palette, s32 clut_row, s32 clut_index);
 s32 battle_map_get_effective_weather(void);
@@ -8034,7 +8037,7 @@ void battle_map_init_palette_state(void);
 s32 battle_map_start_data_load(void);
 s32 battle_map_poll_data_load(void);
 void battle_map_load_move_find_item_data(map_move_find_item_data_t* map_data);
-void battle_map_mark_data_load_complete(void);
+void battle_deployment_mark_finished(void);
 void battle_map_modify_background_gradient(s32 mode, s32 frame_duration, s16 red, s16 green, s16 blue);
 void battle_map_reset_texture_animations(void);
 void battle_map_set_background_gradient(s32 frame_duration, const map_background_gradient_colors_t* colors);
@@ -8061,7 +8064,7 @@ void battle_map_blend_ambient_light_color(s32 mode, s32 frame_duration, s32 red,
 void battle_map_update_palette_colors_inner(s32 mode, s32 clut_row, s32 clut_index, const u16* colors);
 void* battle_map_determine_rare_common_item(battle_stats_t* unit);
 battle_move_find_result_data_t* battle_map_get_move_find_result(s32 x, u8 y, u8 layer);
-s32 battle_process_map_gns_record(s32 phase, gns_command_record_prefix_t* record);
+s32 battle_map_run_gns_command_record(s32 phase, gns_command_record_prefix_t* record);
 void battle_map_update_animations(void);
 void battle_map_upload_clut_rows(void);
 void battle_map_draw_mesh_and_weather(MATRIX* camera_matrix);
@@ -8087,14 +8090,14 @@ void battle_map_store_max_coordinates(SVECTOR* destination);
 
 void battle_map_update_palette_colors(s32 mode, s32 clut_row, s32 clut_index, s32 update_all, const u16* colors);
 
-u8* battle_map_load_saved_state_record(battle_map_state_record_t* record);
+u8* battle_map_load_mesh_animation_record(battle_map_mesh_animation_record_t* record);
 void* battle_map_light_state_command(s32 command, void* data);
 void battle_map_append_mesh_geometry(void* geometry_data, battle_map_mesh_part_t* metadata);
 void battle_map_copy_size_and_tile_data(u8* p);
 map_tile_t* battle_map_get_tile_data_ptr_from_battle_id(u32 battle_id);
 map_tile_t* battle_map_get_tile_data_ptr_from_misc_screen_coords(u32 misc_id);
 s32 battle_move_get_weather_terrain_cost(void);
-s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 deployment_running);
+s32 battle_map_step_setup_sequence(s32 map_id, s32 step, s32 deployment_running);
 s32 battle_map_load_mesh_variant(s32 palette_mode);
 void battle_map_queue_textured_quads(u32* otag, void* prims, s32 yaw, s32* count);
 void battle_map_queue_textured_triangles(u32* otag, void* prims, s32 yaw, s32* count);

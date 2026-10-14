@@ -46,7 +46,7 @@ s32 battle_menu_init_attack_resources_and_threads(void) {
     }
     attack_deploy_find_fieldable_units();
     if (result != 0) {
-        battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT, battle_map_data_load_complete_thread);
+        battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT, battle_deployment_skip_thread);
         return_value = 1;
     } else {
         g_battle_sound_music_track_1_id = 0;

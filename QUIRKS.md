@@ -178,7 +178,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `world_formation_get_unit_stat_by_mode` return `value` (`$a1`) for a stat
   mode outside 0-2; `battle_move_start_unit_step` leaves `facing` (`$a2`, the
   destination tile its callers pass) unset for a direction outside 0-3;
-  `battle_map_load_saved_state_record` returns `next` (`$a1`) for record type
+  `battle_map_load_mesh_animation_record` returns `next` (`$a1`) for record type
   0; `world_formation_run_set_ability_menu` indexes the entry ids with
   `cursor` when the list is empty; `world_map_destination_list_thread`
   uses `selected` when no entry matches the current item;
@@ -500,7 +500,7 @@ written that way.
   halfword at address `0x10`.
 - `src/world/world_menu_animate_window_quad_crop.c` passes an uninitialized
   source (a stale `$s5`) to `world_menu_zoom_cursor_frame`, which never reads it.
-- `battle_map_init_units_sprites_event_and_music` and
+- `battle_map_step_setup_sequence` and
   `battle_map_step_init_sequence` call `main_sound_stop_sfx` without its sound
   id: step 0 passes `map_id`, still in `$a0`; step 11 passes whatever
   `main_sound_unload_current_scenario_music` left there.
@@ -833,7 +833,7 @@ translation unit. Share their types and constants through headers.
 - `src/battle/battle_ai_load_ability_entry.c`: with Throw Item the AI gives an
   item a range of the unit's Move; `battle_target_set_panels_for_action` uses
   4, and gives a Mime the same.
-- `battle_process_map_gns_record`: command rows 0x85, 0x86, 0x88, 0x89, 0x8a
+- `battle_map_run_gns_command_record`: command rows 0x85, 0x86, 0x88, 0x89, 0x8a
   and 0x8b skip the map-state comparison and are applied in file order, so the
   last of a kind wins: MAP017.GNS has one set-outdoor row followed by six
   set-indoor rows and ends indoors. Row types 0x87 (49 rows in 14 maps) and

@@ -310,7 +310,8 @@ s32 battle_map_load_data(s32 map_id, s32 command) {
                     g_battle_map_gns_record_cursor = (s32)&g_battle_map_gns_records[i];
                     while (((gns_command_record_prefix_t*)g_battle_map_gns_record_cursor)->resource_type
                         != GNS_RESOURCE_NONE) {
-                        battle_process_map_gns_record(2, (gns_command_record_prefix_t*)g_battle_map_gns_record_cursor);
+                        battle_map_run_gns_command_record(
+                            2, (gns_command_record_prefix_t*)g_battle_map_gns_record_cursor);
                     }
                     g_battle_map_gns_load_phase = MAP_GNS_LOAD_PHASE_IDLE;
                     g_battle_map_resource_load_state = MAP_LOAD_STATE_DONE;

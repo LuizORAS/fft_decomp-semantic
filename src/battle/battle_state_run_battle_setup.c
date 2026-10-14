@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Set up the display and one battle: load the ATTACK resources and threads, then step
- * battle_map_init_units_sprites_event_and_music (map, units, sprites, event, music and the
+ * battle_map_step_setup_sequence (map, units, sprites, event, music and the
  * deployment screen) to step 0xd under the Now Loading message or, when the battle starts
  * straight from the title outside a save, under a banner faded in and out.
  *
@@ -28,7 +28,7 @@ void battle_state_run_battle_setup(void) {
     main_gfx_build_now_loading_center(g_battle_deployment_skipped);
     map_id = g_battle_map_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP);
     g_battle_state_map_init_step = 0;
-    g_battle_map_data_load_complete = 0;
+    g_battle_deployment_finished = 0;
 
     SetPolyF4(&g_battle_screen_fade_polygons[0]);
     g_battle_screen_fade_polygons[0].r0 = 0;
@@ -103,9 +103,8 @@ void battle_state_run_battle_setup(void) {
         } else {
             main_gfx_add_now_loading_to_otag(main_gfx_get_otag());
         }
-        g_battle_state_map_init_step
-            = battle_map_init_units_sprites_event_and_music(map_id, g_battle_state_map_init_step,
-                battle_script_is_deployment_running(main_gfx_get_otag(), g_main_input_current_buttons));
+        g_battle_state_map_init_step = battle_map_step_setup_sequence(map_id, g_battle_state_map_init_step,
+            battle_script_is_deployment_running(main_gfx_get_otag(), g_main_input_current_buttons));
         if (g_battle_state_map_init_step == 0xd) {
             battle_gfx_extract_deployed_unit_palettes();
             battle_state_enter_event_at_battle_start();

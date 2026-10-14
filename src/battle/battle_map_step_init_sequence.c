@@ -1,9 +1,13 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Runs one step of the battle map initialization sequence and returns the
- * next step; steps that poll a loader stay on the same step until it
- * finishes. `unused_18` reproduces the target's unreferenced frame slot at sp+0x18.
+/* Run one step of the map load of the MAP_INITIALIZE states (battle_state_handle_map_init_state,
+ * battle_state_handle_change_map_init_state), which load a new map behind a black screen during the
+ * battle, and return the next step, 0xd when it is done. A step that waits returns itself. It follows
+ * battle_map_step_setup_sequence without the deployment: step 0 also requests SMALL.OUT and step 1 waits
+ * for it, the unit sprite shapes and sequences are not reloaded, and step 8 places the units at the
+ * coordinates the deployment left (g_main_deployed_unit_map_coordinates). `unused_18` reproduces the
+ * target's unreferenced frame slot at sp+0x18.
  *
  * Jump table: .rodata 0x80068260, 13 words. */
 s32 battle_map_step_init_sequence(s32 map_id, s32 step) {

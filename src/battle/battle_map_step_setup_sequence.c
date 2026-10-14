@@ -2,11 +2,24 @@
 #include "fft/event_attack.h"
 #include "psx/types.h"
 
-/* Runs one step of the expanded battle-map initialization sequence.
- *
- * Loader steps retain their current state while work is pending. The final
- * steps initialize scenario audio, map lighting, and AI state. */
-s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 deployment_running) {
+/* Run one step of the map load that sets up a battle (battle_state_run_battle_setup, under Now Loading
+ * or the start banner) and return the next step, 0xd when it is done. A step that waits returns itself:
+ * - 0: reset the camera and the map palettes, roll the weather from the calendar for a random battle
+ *   (world result 1) and load the weather particle palette;
+ * - 2-3: start and finish the map load (battle_map_load_data);
+ * - 4-6: open the ENTD and load its units, then the unit sprite shapes and sequences unless they are
+ *   already loaded;
+ * - 7: load the queued unit graphics, unless the battle uses the world map's debug battle style;
+ * - 8: wait for the deployment to end (g_battle_deployment_finished), then set up the deployed units'
+ *   graphics;
+ * - 9: load them;
+ * - 10: wait until the deployment screen stops running, then resync the scenario music and set the map
+ *   darkness ATTACK.OUT carries (attack_sound_resync_scenario_music_and_apply_map_darkness);
+ * - 11: after a random battle, play a random battle track;
+ * - 12: start the weather sounds, seed the three colour fades from the loaded map, upload the CLUT rows,
+ *   reset the turn clock and set up the AI workspace.
+ * battle_map_step_init_sequence is the same load for a map entered later in the battle. */
+s32 battle_map_step_setup_sequence(s32 map_id, s32 step, s32 deployment_running) {
     s32 result;
     u8 unused_18[4];
 
@@ -73,7 +86,7 @@ s32 battle_map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 depl
         }
         break;
     case 8:
-        if (g_battle_map_data_load_complete != 0) {
+        if (g_battle_deployment_finished != 0) {
             step++;
             battle_gfx_init_deployment_and_reset_unit_graphics_state();
             g_battle_deployment_skipped = 0;

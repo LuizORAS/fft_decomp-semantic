@@ -221,7 +221,7 @@ functions:
   - {addr: 0x800f0af4, size: 20, name: world_menu_request_open_small, hash: 0525dd738699e440}
   - {addr: 0x800f0b08, size: 84, name: world_menu_poll_small_load, hash: beff675275d527cf}
   - {addr: 0x800f0b5c, size: 8, name: world_return_zero_800f0b5c, hash: 207819bf4ebe3078}
-  - {addr: 0x800f0b64, size: 56, name: world_map_data_load_complete_thread, hash: 9d186db038b3c37d}
+  - {addr: 0x800f0b64, size: 56, name: world_deployment_skip_thread, hash: 9d186db038b3c37d}
   - {addr: 0x800f0b9c, size: 72, name: world_sound_wait_for_music_stub, hash: ae5d718d414b6204}
   - {addr: 0x800f0be4, size: 168, name: world_sound_play_music_tracks, hash: 99f338e7d1920b8b}
   - {addr: 0x800f0c8c, size: 444, name: world_menu_init_attack_resources_and_threads, hash: 1ae51b2896ef360b}

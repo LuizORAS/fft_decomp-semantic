@@ -42,7 +42,7 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
      * halfwords. */
     s16* vector;
     u32* resource_offset;
-    battle_map_state_record_t* cursor;
+    battle_map_mesh_animation_record_t* cursor;
     s32 result;
     s32 i;
     u16 flags;
@@ -334,11 +334,11 @@ s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data) {
         g_battle_map_tile_depth = data[1];
         battle_map_copy_size_and_tile_data(data);
         break;
-    case GNS_RESOURCE_STATE_RECORDS:
-        cursor = (battle_map_state_record_t*)data;
+    case GNS_RESOURCE_MESH_ANIMATIONS:
+        cursor = (battle_map_mesh_animation_record_t*)data;
         if (cursor->type != 0) {
             do {
-                cursor = (battle_map_state_record_t*)battle_map_load_saved_state_record(cursor);
+                cursor = (battle_map_mesh_animation_record_t*)battle_map_load_mesh_animation_record(cursor);
             } while (cursor->type != 0);
         }
         break;

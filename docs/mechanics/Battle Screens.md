@@ -10,6 +10,8 @@ scope:
   - debugchr
   - require
   - attack
+  - battle_deployment
+  - world_deployment_skip_thread()
   - etc
   - small
 ---
@@ -162,8 +164,11 @@ holds a dark flash until RemoveDarkScreen
   sprites and portraits.
 - [[attack_deploy_run_screen]] runs the deployment screen for each squad: the
   player places roster units on the squad's 5x5 tiles, L1 and R1 stepping
-  through the roster; then the deployed units' map coordinates are written and
-  the map title starts.
+  through the roster; then the deployed units' map coordinates are written,
+  the deployment is marked finished ([[battle_deployment_mark_finished]]) for
+  the battle's map setup, which waits for it, and the map title starts. A
+  scenario without a first squad runs [[battle_deployment_skip_thread]]
+  instead, which marks it a frame later.
 - Event opcode ShowMapTitle shows the map's title graphic
   ([[attack_map_load_title_graphic]], [[attack_map_show_title]]).
 

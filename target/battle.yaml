@@ -597,7 +597,7 @@ functions:
   - {addr: 0x8008e1f8, size: 60, name: battle_target_move_cursor_to_battle_id, hash: 7cce6d6e7e7829b6}
   - {addr: 0x8008e234, size: 148, name: battle_effect_init_single_target_trajectory, hash: 1a211337679f715e}
   - {addr: 0x8008e2c8, size: 60, name: battle_effect_set_secondary_teleport_by_misc_id, hash: c7123af1fb409fd1}
-  - {addr: 0x8008e304, size: 20, name: battle_map_mark_data_load_complete, hash: bc8617c70c276fe9}
+  - {addr: 0x8008e304, size: 20, name: battle_deployment_mark_finished, hash: bc8617c70c276fe9}
   - {addr: 0x8008e318, size: 16, name: battle_state_get_frame_measurement, hash: 6b0292f4774a9c77}
   - {addr: 0x8008e328, size: 32, name: battle_state_set_min_vsync_interval, hash: 8791e46386a76d81}
   - {addr: 0x8008e348, size: 16, name: battle_state_clear_min_vsync_interval, hash: 1a147918033f9163}
@@ -609,7 +609,7 @@ functions:
   - {addr: 0x8008e7b8, size: 84, name: battle_unit_poll_and_load_entd_units, hash: 87bb8cbb8ed888b2}
   - {addr: 0x8008e80c, size: 608, name: battle_weather_randomize_from_calendar, hash: 4616ab864c85446b, rodata: [{addr: 0x80068228, size: 56, hash: 7903bfd450f0089c}]}
   - {addr: 0x8008ea6c, size: 516, name: battle_map_step_init_sequence, hash: 151dbf7d7975bac7, rodata: [{addr: 0x80068260, size: 52, hash: 9c0ebd17a8d33713}]}
-  - {addr: 0x8008ec70, size: 692, name: battle_map_init_units_sprites_event_and_music, hash: 4129a506772c607d, rodata: [{addr: 0x80068298, size: 52, hash: 4de1eba064a6e78b}]}
+  - {addr: 0x8008ec70, size: 692, name: battle_map_step_setup_sequence, hash: 4129a506772c607d, rodata: [{addr: 0x80068298, size: 52, hash: 4de1eba064a6e78b}]}
   - {addr: 0x8008ef24, size: 32, name: battle_gfx_clear_screen_color_modulation, hash: a0ddcd4f150b9f59}
   - {addr: 0x8008ef44, size: 56, name: battle_gfx_copy_screen_color_modulation, hash: 959d1b5984c24a3f}
   - {addr: 0x8008ef7c, size: 56, name: battle_gfx_restore_screen_color_modulation, hash: a1f45eb7a0a238fb}
@@ -678,10 +678,10 @@ functions:
   - {addr: 0x800ef6f0, size: 5360, name: battle_map_update_mesh_part_animations, hash: 15a535470e70eb67}
   - {addr: 0x800f0be0, size: 1572, name: battle_map_dispatch_map_data_command, hash: 6112c29fb4019e23, rodata: [{addr: 0x800e6c98, size: 208, hash: 52d89f7e859e76f3}]}
   - {addr: 0x800f1204, size: 4240, name: battle_map_update_texture_animations, hash: 3f7f6b3b16c740d6, rodata: [{addr: 0x800e6d68, size: 520, hash: 9cb1e1fbf86e9caa}]}
-  - {addr: 0x800f2294, size: 900, name: battle_map_load_saved_state_record, hash: 9821fba0cee8f43a}
+  - {addr: 0x800f2294, size: 900, name: battle_map_load_mesh_animation_record, hash: 9821fba0cee8f43a}
   - {addr: 0x800f2618, size: 164, name: battle_map_is_gns_record_matching_state, hash: 1d4012e33d448757}
   - {addr: 0x800f26bc, size: 3592, name: battle_map_dispatch_gns_resource, hash: 5b5787ad477aaca4, rodata: [{addr: 0x800e6f70, size: 496, hash: d92b411e7f4fe813}]}
-  - {addr: 0x800f34c4, size: 372, name: battle_process_map_gns_record, hash: 888a8328b66b7e1d, rodata: [{addr: 0x800e6b94, size: 24, hash: d40089d17817dc6f}]}
+  - {addr: 0x800f34c4, size: 372, name: battle_map_run_gns_command_record, hash: 888a8328b66b7e1d, rodata: [{addr: 0x800e6b94, size: 24, hash: d40089d17817dc6f}]}
   - {addr: 0x800f3638, size: 140, name: battle_map_load_gns_and_move_find_items, hash: b558d851e0fec1a4}
   - {addr: 0x800f36c4, size: 84, name: battle_map_start_file_load, hash: 49d3e511ae62ee25}
   - {addr: 0x800f3718, size: 5044, name: battle_map_load_data, hash: 80e0c81db01af2f3, rodata: [{addr: 0x800e7178, size: 296, hash: 9789505d5f40b59f}]}
@@ -873,7 +873,7 @@ functions:
   - {addr: 0x8013d188, size: 20, name: battle_menu_request_open_small, hash: 2304312a1a158a04}
   - {addr: 0x8013d19c, size: 84, name: battle_menu_poll_small_load, hash: 4db3a15d03401224}
   - {addr: 0x8013d1f0, size: 8, name: battle_return_zero_8013d1f0, hash: 207819bf4ebe3078}
-  - {addr: 0x8013d1f8, size: 56, name: battle_map_data_load_complete_thread, hash: f5d13c78756c2b83}
+  - {addr: 0x8013d1f8, size: 56, name: battle_deployment_skip_thread, hash: f5d13c78756c2b83}
   - {addr: 0x8013d230, size: 72, name: battle_sound_wait_for_music_stub, hash: 5cf0df43ec1c1bac}
   - {addr: 0x8013d278, size: 168, name: battle_sound_play_music_tracks, hash: 5321f20b1e27a914}
   - {addr: 0x8013d320, size: 444, name: battle_menu_init_attack_resources_and_threads, hash: 289c47ca11bfc49a}
@@ -2122,7 +2122,7 @@ data:
   - {addr: 0x800e4e9c, name: g_battle_map_max_x}
   - {addr: 0x800e4ea0, name: g_battle_map_max_y}
   - {addr: 0x800e4ea4, name: g_battle_map_palette_modified_colors}
-  - {addr: 0x800e6aa4, name: g_battle_map_data_load_complete}
+  - {addr: 0x800e6aa4, name: g_battle_deployment_finished}
   - {addr: 0x800e6aa8, name: g_battle_gfx_screen_modulation_draw_modes}
   - {addr: 0x800e6b30, name: g_battle_map_weather_splash_uv_rects}
   - {addr: 0x800e6b50, name: g_battle_map_weather_drop_uv_rects}
