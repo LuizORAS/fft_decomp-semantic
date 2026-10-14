@@ -1,4 +1,8 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
+#include "fft/battle_unit.h"
 #include "fft/gfx.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
@@ -7,17 +11,8 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Unit summary panel thread, BATTLE twin of world_menu_run_unit_summary_panel_thread: renders the
- * unit's name/job, brave, faith and a third number into text images,
- * builds two alternating frames (seven sprites, the portrait quad and two draw
- * offsets), then slides the panel in and redraws it each frame until the
- * thread's third parameter asks it to slide out. A running task-0x15 thread
- * dims the panel.
- *
- * `frame` doubles as the sprite-setup counter and `value` holds the number
- * shown, then the vertical draw offset, then the task-0x15 thread id; the
- * target keeps each of those roles in one callee-saved register. */
-void battle_menu_run_unit_summary_panel_thread(void) {
+/* Draw the unit summary and slide it out when the third thread parameter is set. */
+void menu_run_unit_summary_panel_thread(void) {
     RECT rects[4];
     menu_unit_summary_frame_t frames[2];
     menu_unit_summary_frame_t* frame_record;

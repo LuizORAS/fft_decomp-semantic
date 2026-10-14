@@ -490,6 +490,7 @@ void menu_run_status_panel_thread(void);
 void menu_load_selected_unit(void);
 void menu_refresh_hovered_unit_stats_display(void);
 void menu_refresh_right_unit_stats_display(void);
+void menu_run_unit_summary_panel_thread(void);
 void menu_preview_attack_caster_stats(void);
 void menu_preview_attack_target_stats(void);
 
