@@ -1,17 +1,8 @@
 #include "fft/menu.h"
-#include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Size a message window to its text entry.
- *
- * Measures the text, optionally widens a single-line text narrower than 8
- * pixels to 8 (reporting (8 - width) * 5, the extra text x offset the caller
- * applies), adds the 0x18 border and
- * the low two bits of that sum to the width, and centres the window on
- * x = 0x102.
- */
-void world_menu_size_entry_to_text(menu_entry_t* entry, s16* width, s16* height, s32* out_pad, s32 pad_short) {
+/* Size a message window to its text and center it on x = 0x102. */
+void menu_size_entry_to_text(menu_entry_t* entry, s16* width, s16* height, s32* out_pad, s32 pad_short) {
     const u8* text;
     u16 padded;
     u16 w;

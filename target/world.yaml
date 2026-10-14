@@ -170,7 +170,7 @@ functions:
   - {addr: 0x800eda98, size: 16, name: world_input_get_menu_repeat_counter, hash: 7fd0b897319e3c44}
   - {addr: 0x800edaa8, size: 4172, name: world_menu_scrolling_list_thread, hash: ea266beac968435e, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800eeaf4, size: 16, name: world_text_set_message_duration_frames, hash: 131a42e0fb284d73}
-  - {addr: 0x800eeb04, size: 288, name: world_menu_size_entry_to_text, hash: d7e0fc315bb97241}
+  - {addr: 0x800eeb04, size: 288, name: world_menu_size_entry_to_text, hash: d7e0fc315bb97241, source: src/shared/menu/menu_size_entry_to_text.c, source_symbol: menu_size_entry_to_text}
   - {addr: 0x800eec24, size: 628, name: world_menu_icon_timed_thread, hash: f24bfc68728f0995}
   - {addr: 0x800eee98, size: 636, name: world_menu_icon_linked_entry_thread, hash: 1ddd6f5ab1b123da}
   - {addr: 0x800ef114, size: 148, name: world_menu_input_loop_thread, hash: 0d24fc429b9791b4}

@@ -852,6 +852,7 @@ static inline s16* menu_entry_result(menu_entry_t* entry) {
 }
 
 void menu_copy_sprite_position_uv_and_size(const menu_entry_t* entry, SPRT* sprite, s32 unused_frame);
+void menu_size_entry_to_text(menu_entry_t* entry, s16* width, s16* height, s32* out_pad, s32 pad_short);
 
 /* menu text */
 /* menu_text_layout_t.mode[]: what a column of the layout draws. */
