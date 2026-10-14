@@ -3015,7 +3015,11 @@ void world_shop_undo_fitting_room(void);
 void world_shop_update_unit_selection(void);
 
 /* card */
-/* Partial card-file header: WORLD 0x8013300c puts byte +3 into the upper
+/* WORLD's memory card screen (world_card_run_menu_screen), which the world menu opens to save or load
+ * and the title's Continue opens to load: its steps, the save image buffer, the slot list and texts, and the
+ * card and file routines with retries, copies of CARD.OUT's. */
+
+/* Partial card-file header: world_card_write_buffer_to_file puts byte +3 into the upper
  * half of open's creation mode. The remaining header is not modeled. */
 typedef struct world_card_file_header {
     u8 _unused_00[3];

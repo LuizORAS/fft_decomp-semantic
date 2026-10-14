@@ -514,7 +514,7 @@ typedef char world_event_work_status_staging_offset_must_be_0x5f0
 
 /* Event-script variable ids shared by the BATTLE and WORLD interpreters.
  * The calendar and location ids are also serialized into the memory-card
- * slot description by CARD 0x801c01ac. */
+ * slot description by card_save_build_buffer. */
 typedef enum event_script_variable_id {
     /* Result word tested by the conditional-jump opcodes. */
     EVENT_SCRIPT_VAR_COMPARISON_RESULT = 0x00,

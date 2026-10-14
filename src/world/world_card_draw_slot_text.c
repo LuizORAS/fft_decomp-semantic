@@ -1,10 +1,11 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Memory-card save-slot records (0x8C bytes each); 15 slots laid out in
- * three columns of five on the memory card menu. */
-
-/* Each column sets the whole rectangle; the compiler merges the three tails. */
+/* Render save slot `save_slot_index`'s two-line description into its 0x32 x 0x20 strip of VRAM:
+ * slots 0..5 at x 0x240, 6..10 at x 0x1c0 and 11..14 at x 0x180, 0x20 rows apart. WORLD's copy of
+ * card_save_render_slot_text, whose first column sits at x 0x100.
+ *
+ * Each column sets the whole rectangle; the compiler merges the three tails. */
 void world_card_draw_slot_text(s32 save_slot_index) {
     RECT destination_rect;
 

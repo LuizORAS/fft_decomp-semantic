@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /*
- * WORLD twin of card_save_build_buffer (CARD.OUT 0x801c01ac): serialize the
+ * WORLD twin of card_save_build_buffer: serialize the
  * whole 0x1e00-byte save image into g_world_load_work_buffer, then append one
  * parity bit per 128-byte block through the primary bitstream writer.
  *

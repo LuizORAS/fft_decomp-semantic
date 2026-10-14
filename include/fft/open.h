@@ -68,6 +68,9 @@ void open_input_init_directional_state(void);
 void open_input_update_buttons_and_check_game_reset(void);
 
 /* card */
+/* The title's memory card check: whether a card answers in either slot, through the card events and
+ * _card_info. */
+
 extern u8 g_open_card_info_pending;
 extern u8 g_open_card_slot;
 s32 open_card_check_slots(void);

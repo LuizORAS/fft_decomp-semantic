@@ -195,6 +195,10 @@ extern u8 g_main_input_repeat_period;
 extern u8 g_main_input_secondary_repeat_period;
 
 /* card */
+/* The memory card: the BIOS card event handles (main_card_init_events), the slot states and I/O results
+ * that the CARD, OPEN and WORLD routines share, and the save image (card_save_buffer_t) with its card
+ * header and summary. */
+
 /* Memory-card BIOS event handles opened by main_card_init_events; the CARD,
  * OPEN and WORLD pollers test them by these indices. */
 enum {
@@ -236,8 +240,8 @@ enum {
 };
 
 /* PlayStation memory-card save-file header block (256 bytes), as built by
- * card_save_build_file_header (0x801c2ea8) and its WORLD twin
- * world_card_build_save_file_header (0x801322e4). */
+ * card_save_build_file_header and its WORLD twin
+ * world_card_build_save_file_header. */
 typedef struct card_save_header {
     u8 magic0;           /* 0x00: 'S' */
     u8 magic1;           /* 0x01: 'C' */
@@ -274,9 +278,9 @@ typedef struct card_save_summary {
 typedef char card_save_summary_size_must_be_0x18[(sizeof(card_save_summary_t) == 0x18) ? 1 : -1];
 
 /* The 0x1e00-byte memory-card save image, parity-covered per 128-byte block.
- * WORLD holds it in g_world_load_work_buffer (0x801cd1ec) and its serializer
+ * WORLD holds it in g_world_load_work_buffer and its serializer
  * and loader establish the fields below; CARD fills the same layout from the
- * SCUS globals in card_save_build_buffer (0x801c01ac) through
+ * SCUS globals in card_save_build_buffer through
  * g_card_save_buffer_pointer. */
 typedef struct card_save_buffer {
     card_save_header_t header;   /* 0x000 */
@@ -419,6 +423,9 @@ extern game_options_t g_main_game_options;
 extern game_options_t g_main_game_options_defaults;
 
 /* save */
+/* The world state a save stores besides the party and the items: proposition progress and dates, treasure
+ * and land dates, the sound novels' reading states; and the new-game initializers. */
+
 /* Byte view of the four-byte world-script instruction word at 0x800d4848:
  * opcode byte followed by up to three operand bytes. */
 typedef struct wldcore_sound_novel_instruction_bytes {

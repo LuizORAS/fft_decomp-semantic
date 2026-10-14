@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Twin of world_card_consume_bios_events (0x8013270c) over the hardware
+/* Twin of world_card_consume_bios_events over the hardware
  * event handles. */
 void world_card_consume_hardware_events(void) {
     TestEvent(g_main_card_bios_events[MAIN_CARD_EVENT_HARDWARE_DONE]);

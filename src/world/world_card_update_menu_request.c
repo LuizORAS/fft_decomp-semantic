@@ -2,7 +2,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Sibling of world_menu_update_tutorial_categories_request driven by g_world_card_menu_request_state. */
+/* Step the world menu's request for the memory card screen (g_world_card_menu_request_state), one
+ * state a frame: fade the map out, run world_card_run_menu_screen with the choice between saving and
+ * loading, then bring the world menu and the map back and fade in. A load (result 1) restarts the game
+ * instead (MAIN_SYSTEM_FLAG_RESTART). The sibling of world_menu_update_tutorial_categories_request. */
 void world_card_update_menu_request(void) {
     s16 state = g_world_card_menu_request_state;
     s32 result;
