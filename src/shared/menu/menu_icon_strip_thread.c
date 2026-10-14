@@ -1,4 +1,3 @@
-#include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
