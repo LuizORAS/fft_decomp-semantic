@@ -565,7 +565,7 @@ functions:
   - {addr: 0x80111ec4, size: 1368, name: world_menu_run_numeric_editor_thread, hash: 007a9e8af4e1c2ff}
   - {addr: 0x8011241c, size: 496, name: world_menu_icon_list_thread, hash: 33caada358d27009}
   - {addr: 0x8011260c, size: 248, name: world_menu_text_entry_wait_thread, hash: 9d318a9f2e6d6d43}
-  - {addr: 0x80112704, size: 372, name: world_menu_icon_strip_thread, hash: 03519690175a4d3a}
+  - {addr: 0x80112704, size: 372, name: world_menu_icon_strip_thread, hash: 03519690175a4d3a, source: src/shared/menu/menu_icon_strip_thread.c, source_symbol: menu_icon_strip_thread}
   - {addr: 0x80112878, size: 104, name: world_gfx_build_item_graphic_descriptor, hash: 17be9f26676bdbf8}
   - {addr: 0x801128e0, size: 908, name: world_input_update_event_state, hash: af5af8099faa9908, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x80112c6c, size: 28, name: world_thread_is_running_by_id, hash: 22d1fa2a224de3cd}
@@ -2517,6 +2517,15 @@ overrides:
   - {function: world_menu_icon_linked_entry_thread, name: battle_thread_get_current_parameter_1, addr: 0x80100090}
   - {function: world_menu_icon_linked_entry_thread, name: battle_thread_get_current_parameter_2, addr: 0x801000c4}
   - {function: world_menu_icon_linked_entry_thread, name: g_sound_suppressed, addr: 0x801532a0}
+  - {function: world_menu_icon_strip_thread, name: battle_menu_build_and_upload_window_frame_image, addr: 0x800ff9ac}
+  - {function: world_menu_icon_strip_thread, name: battle_menu_build_window_sprites, addr: 0x800ec108}
+  - {function: world_menu_icon_strip_thread, name: battle_menu_display_text_entry, addr: 0x800fe774}
+  - {function: world_menu_icon_strip_thread, name: battle_menu_free_memory, addr: 0x800e3298}
+  - {function: world_menu_icon_strip_thread, name: battle_menu_select_icon_cluts, addr: 0x800ec484}
+  - {function: world_menu_icon_strip_thread, name: battle_menu_set_text_origin, addr: 0x800fdb88}
+  - {function: world_menu_icon_strip_thread, name: battle_menu_should_close_thread, addr: 0x800ebf8c}
+  - {function: world_menu_icon_strip_thread, name: battle_menu_submit_icon_primitives, addr: 0x800ecb58}
+  - {function: world_menu_icon_strip_thread, name: battle_thread_get_current_parameter_1, addr: 0x80100090}
   - {function: world_menu_icon_timed_thread, name: battle_handle_menu_cancel_input, addr: 0x800ebe7c}
   - {function: world_menu_icon_timed_thread, name: battle_menu_build_and_upload_window_frame_image, addr: 0x800ff9ac}
   - {function: world_menu_icon_timed_thread, name: battle_menu_build_window_sprites, addr: 0x800ec108}
