@@ -1910,7 +1910,7 @@ functions:
   - {addr: 0x801e03bc, size: 592, name: jobstts_ability_build_list, hash: 765ef4759d963053}
   - {addr: 0x801e060c, size: 308, name: menu_text_render_glyph_to_4bpp_image, hash: 1cfc444d6d3209dc, source: src/shared/menu/menu_text_render_glyph_to_4bpp_image.c}
   - {addr: 0x801e0740, size: 92, name: jobstts_text_find_entry_by_index, hash: f16b98f4a6075cd8}
-  - {addr: 0x801e079c, size: 648, name: jobstts_text_render_encoded_ids_to_image, hash: 8d74937185196c66}
+  - {addr: 0x801e079c, size: 648, name: jobstts_text_render_encoded_ids_to_image, hash: 8d74937185196c66, source: src/shared/menu/menu_text_render_encoded_ids_to_image.c, source_symbol: menu_text_render_encoded_ids_to_image}
   - {addr: 0x801e0a24, size: 264, name: jobstts_text_render_id_rows_to_vram, hash: 5241f714170cf25b}
   - {addr: 0x801e0b2c, size: 124, name: jobstts_text_start_help_thread, hash: f382afd4abb92b11}
   - {addr: 0x801e0ba8, size: 832, name: menu_input_update_controller, hash: bbe451779e50aed3, source: src/shared/menu/menu_input_update_controller.c}
@@ -2128,6 +2128,7 @@ imports:
   - {addr: 0x800222fc, name: memset}
 
 overrides:
+  - {function: jobstts_text_render_encoded_ids_to_image, name: menu_text_find_entry_by_index, addr: 0x801e0740}
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_init_primary_reader, addr: 0x801e4e98}
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_read_primary, addr: 0x801e4ed0}
   - {function: menu_update_and_draw_animated_cursor, name: menu_gfx_enqueue_textured_quad, addr: 0x801e15d4}
