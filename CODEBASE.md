@@ -225,7 +225,8 @@ All of these libraries are reconstructed C, matched like the game code.
   [Battle Screens](docs/mechanics/Battle%20Screens.md),
   [Save and Memory Card](docs/mechanics/Save%20and%20Memory%20Card.md),
   [Text](docs/mechanics/Text.md),
-  [Opening and Title](docs/mechanics/Opening%20and%20Title.md) and
+  [Opening and Title](docs/mechanics/Opening%20and%20Title.md),
+  [Camera](docs/mechanics/Camera.md) and
   [Engine core](docs/mechanics/Engine%20core.md) so far. The guides walk
   through common changes, such as the
   [Movement rules](docs/guides/Movement%20rules.md),
