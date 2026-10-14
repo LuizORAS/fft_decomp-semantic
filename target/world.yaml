@@ -36,7 +36,7 @@ functions:
   - {addr: 0x800e1958, size: 76, name: psyq_gs_init_gte, hash: 2798ccaf5dd44246, source: src/lib/psyq/libgs/psyq_gs_init_gte.c}
   - {addr: 0x800e19a4, size: 228, name: GsGetTimInfo, hash: 6811aaed0e50ac12, source: src/lib/psyq/libgs/GsGetTimInfo.c}
   - {addr: 0x800e1a88, size: 16, name: GsSetWorkBase, hash: 979dfbb7ec52402e, source: src/lib/psyq/libgs/GsSetWorkBase.c}
-  - {addr: 0x800e1a98, size: 296, name: world_script_process_inflict_status_commands, hash: 35cae57e15573235}
+  - {addr: 0x800e1a98, size: 296, name: world_script_process_inflict_status_commands, hash: 35cae57e15573235, source: src/shared/script/script_process_inflict_status_commands.c, source_symbol: script_process_inflict_status_commands}
   - {addr: 0x800e1bc0, size: 244, name: unit_set_animation, hash: 98ede871ccc9462e}
   - {addr: 0x800e1cb4, size: 144, name: battle_unit_set_facing, hash: ac3faadc8be008fd, source: src/shared/unit/battle_unit_set_facing.c}
   - {addr: 0x800e1d44, size: 76, name: script_scale_music_volume, hash: 5d48df7d66aa367f, source: src/shared/script/script_scale_music_volume.c}
@@ -2576,6 +2576,9 @@ overrides:
   - {function: world_script_load_next_event, name: battle_thread_find_running_by_task, addr: 0x800fd14c}
   - {function: world_script_load_next_event, name: g_script_loaded_event_id, addr: 0x80156b8c}
   - {function: world_script_load_next_event, name: script_load_event, addr: 0x800f0470}
+  - {function: world_script_process_inflict_status_commands, name: battle_thread_resolve_id, addr: 0x800fd07c}
+  - {function: world_script_process_inflict_status_commands, name: g_script_event_instruction_sizes, addr: 0x8013a454}
+  - {function: world_script_process_inflict_status_commands, name: script_inflict_status_thread, addr: 0x800fc2f4}
   - {function: world_script_reset_event_state, name: battle_thread_is_running_asm, addr: 0x80100164}
   - {function: world_script_reset_event_state, name: camera_store_state_to_script_variables, addr: 0x800f6ea8}
   - {function: world_script_reset_event_state, name: g_camera_position_locked, addr: 0x801532c0}

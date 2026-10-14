@@ -59,7 +59,6 @@ void script_unit_anim(const event_unit_anim_parameters_t* parameters);
 /* unit statuses */
 void script_change_stats(const event_change_stats_parameters_t* parameters);
 void script_inflict_status_thread(void);
-void script_process_inflict_status_commands(void);
 
 /* camera */
 void script_earthquake_start(void);

@@ -691,7 +691,7 @@ functions:
   - {addr: 0x800f59f0, size: 60, name: sound_start_weather_sfx, hash: 5a9461dd8939799f}
   - {addr: 0x800f5a2c, size: 56, name: map_set_command_0x96_duration, hash: 0c87accc94879977}
   - {addr: 0x800f5a64, size: 136, name: sound_stop_weather_sfx, hash: 29ca15674c0eac0b}
-  - {addr: 0x8012d8e4, size: 296, name: script_process_inflict_status_commands, hash: 49c7b4a5d64845fc}
+  - {addr: 0x8012d8e4, size: 296, name: script_process_inflict_status_commands, hash: 49c7b4a5d64845fc, source: src/shared/script/script_process_inflict_status_commands.c}
   - {addr: 0x8012da0c, size: 244, name: unit_set_animation, hash: 0f6580006d1a308f}
   - {addr: 0x8012db00, size: 144, name: battle_unit_set_facing, hash: 5c3eb103bc11e1c9, source: src/shared/unit/battle_unit_set_facing.c}
   - {addr: 0x8012db90, size: 76, name: script_scale_music_volume, hash: b3e323c0af557cbc, source: src/shared/script/script_scale_music_volume.c}
