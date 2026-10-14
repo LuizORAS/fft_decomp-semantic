@@ -1,5 +1,4 @@
 #include "fft/battle_menu.h"
-#include "fft/battle_script.h"
 #include "fft/battle_text.h"
 #include "fft/battle_unit.h"
 #include "fft/main.h"
@@ -7,13 +6,13 @@
 
 /* Chooses whether an ability announcement shows a spell quote.
  *
- * Battle twin of world_text_determine_spell_quote. Unknown
+ * Each scene binds its own quote history and menu dispatcher. Unknown
  * skillsets (not in the list and not the unit's flagged primary/secondary)
  * get quote command 5 unless the ability repeats the last quote
  * (g_battle_spell_quote_last_ability_id), the unit is a Calculator or Mime, the ability is >= 0x170 or
  * lacks the spell-quote flag, status blocks it, options disable it, or
  * EVENT_SCRIPT_VAR_RANDOM_VALUE is 4 or more. Everything else uses command 7. */
-void battle_text_select_ability_announcement(action_command_t* action, s32 unit_id, s32 enabled) {
+void text_select_ability_announcement(action_command_t* action, s32 unit_id, s32 enabled) {
     ability_data_t* ability;
     main_ability_secondary_pointer_t secondary;
     unit_stats_t* unit;

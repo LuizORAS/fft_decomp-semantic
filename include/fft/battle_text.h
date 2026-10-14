@@ -100,6 +100,9 @@ void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 dela
 extern u8 g_battle_spell_quote_exception_skillsets[];
 extern s32 g_battle_spell_quote_last_ability_id;
 
+s32 text_is_spell_quote_exception_skillset(s32 skillset_id);
+void text_select_ability_announcement(action_command_t* action, s32 unit_id, s32 enabled);
+
 s32 battle_text_is_spell_quote_exception_skillset(s32 skillset_id);
 void battle_text_run_spell_quote_thread(void);
 void battle_text_select_ability_announcement(action_command_t* action, s32 unit_id, s32 enabled);
