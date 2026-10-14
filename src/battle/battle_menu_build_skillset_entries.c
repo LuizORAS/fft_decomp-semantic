@@ -34,11 +34,9 @@ void battle_menu_build_skillset_entries(void) {
     /* The separator byte is materialised before the row counter in the
      * target; a hoisted constant lands after the counter's initialiser. */
     separator = 0xfa;
-    i = 5;
-    do {
+    for (i = 5; i >= 0; i--) {
         rows[i].terminator = separator;
-        i--;
-    } while (i >= 0);
+    }
     for (i = 0; i < 6; i++) {
         rows[i].terminator = 0xfa;
         if (g_action_menu_skillsets[i] == SKILLSET_ID_NONE) {

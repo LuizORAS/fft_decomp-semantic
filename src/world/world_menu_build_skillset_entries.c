@@ -33,11 +33,9 @@ void world_menu_build_skillset_entries(void) {
     /* The separator byte is materialised before the row counter in the
      * target; a hoisted constant lands after the counter's initialiser. */
     separator = TEXT_SPACE;
-    i = 5;
-    do {
+    for (i = 5; i >= 0; i--) {
         rows[i].terminator = separator;
-        i--;
-    } while (i >= 0);
+    }
     for (i = 0; i < 6; i++) {
         rows[i].terminator = TEXT_SPACE;
         if (g_world_action_menu_skillsets[i] == SKILLSET_ID_NONE) {

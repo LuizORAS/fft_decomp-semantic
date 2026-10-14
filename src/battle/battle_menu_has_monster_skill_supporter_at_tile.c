@@ -22,22 +22,20 @@ s32 battle_menu_has_monster_skill_supporter_at_tile(s32 team_flags, s32 x, s32 y
 
         unit_index = 0;
         reference_height = total_height & 0xff;
-        do {
+        for (; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             unit_stats_t* unit = &g_battle_unit_stats[unit_index];
 
             if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE || unit->x != x || unit->position.y != y
                 || action_is_reaction_prevented(unit) != 0
                 || !(unit->ability_flags.support[3] & BATTLE_SUPPORT_SET_4_MONSTER_SKILL)
                 || ((unit->team_flags ^ unit_team_flags) & BATTLE_TEAM_MASK)) {
-                /* Rejected units continue with the shared scan tail below. */
-            } else {
-                battle_unit_calculate_height_data(&height, unit->battle_id);
-                if ((reference_height - height.total_height) >= -5 && (reference_height - height.total_height) <= 5) {
-                    return 1;
-                }
+                continue;
             }
-            unit_index++;
-        } while (unit_index < BATTLE_UNIT_SLOT_COUNT);
+            battle_unit_calculate_height_data(&height, unit->battle_id);
+            if ((reference_height - height.total_height) >= -5 && (reference_height - height.total_height) <= 5) {
+                return 1;
+            }
+        }
     }
 
     return 0;
