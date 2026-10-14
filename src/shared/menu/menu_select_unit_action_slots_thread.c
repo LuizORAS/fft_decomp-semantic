@@ -15,11 +15,11 @@
  * which is where the target's `lui/addiu s8` pair sits. */
 
 /*
- * Battle twin of world_menu_select_unit_action_slots_thread. Thread body: walks the stored unit's
+ * Walk the stored unit's
  * menu record slots from the top value down to zero, presenting each through
  * the inner subroutine and writing the chosen entry back into the record.
  */
-void battle_menu_select_unit_action_slots_thread(void) {
+void menu_select_unit_action_slots_thread(void) {
     s32 i = g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index;
     s32 menu = g_action_menu_row_types[i];
     s32 check_unit = g_battle_menu_skillset_disabled_flags[i];

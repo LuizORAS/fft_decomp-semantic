@@ -276,7 +276,7 @@ functions:
   - {addr: 0x800f3278, size: 56, name: menu_copy_u8_to_u16_terminated, hash: 28e77c325ea414b4, source: src/shared/menu/menu_copy_u8_to_u16_terminated.c}
   - {addr: 0x800f32b0, size: 52, name: menu_copy_u8_to_u16, hash: 13d704f494f4f2e9, source: src/shared/menu/menu_copy_u8_to_u16.c}
   - {addr: 0x800f32e4, size: 1980, name: world_menu_build_ability_list, hash: 3c2abc1fea8e3c9c}
-  - {addr: 0x800f3aa0, size: 676, name: world_menu_select_unit_action_slots_thread, hash: f8f5c64ec1b3af4c}
+  - {addr: 0x800f3aa0, size: 676, name: world_menu_select_unit_action_slots_thread, hash: f8f5c64ec1b3af4c, source: src/shared/menu/menu_select_unit_action_slots_thread.c, source_symbol: menu_select_unit_action_slots_thread}
   - {addr: 0x800f3d44, size: 608, name: world_menu_build_skillset_entries, hash: 94131cbbb78792ba, source: src/shared/menu/menu_build_skillset_entries.c, source_symbol: menu_build_skillset_entries}
   - {addr: 0x800f3fa4, size: 352, name: world_menu_run_skillset_thread, hash: 39f4d2e5aa1934c7, source: src/shared/menu/menu_run_skillset_thread.c, source_symbol: menu_run_skillset_thread}
   - {addr: 0x800f4104, size: 124, name: world_menu_record_selection_for_selected_unit, hash: d5e1f7fe303d084c}
@@ -2654,6 +2654,15 @@ overrides:
   - {function: world_menu_run_unit_summary_panel_thread, name: g_menu_text_state, addr: 0x80153280}
   - {function: world_menu_run_unit_summary_panel_thread, name: g_menu_texture_origin, addr: 0x80153188}
   - {function: world_menu_run_unit_summary_panel_thread, name: g_menu_unit_summary_panel_rect, addr: 0x80155cf8}
+  - {function: world_menu_select_unit_action_slots_thread, name: battle_menu_build_ability_list, addr: 0x800f32e4}
+  - {function: world_menu_select_unit_action_slots_thread, name: battle_menu_check_action_slot_restrictions, addr: 0x800f454c}
+  - {function: world_menu_select_unit_action_slots_thread, name: battle_menu_run_equip_thread, addr: 0x800efe54}
+  - {function: world_menu_select_unit_action_slots_thread, name: battle_menu_run_scrolling_ability_list_thread, addr: 0x800edaa8}
+  - {function: world_menu_select_unit_action_slots_thread, name: g_battle_menu_ability_scroll_offset, addr: 0x80153ca0}
+  - {function: world_menu_select_unit_action_slots_thread, name: g_battle_menu_action_slot_row_actions, addr: 0x80153d18}
+  - {function: world_menu_select_unit_action_slots_thread, name: g_battle_menu_action_slot_selected_option, addr: 0x8019ac94}
+  - {function: world_menu_select_unit_action_slots_thread, name: g_battle_menu_selected_action, addr: 0x80195c90}
+  - {function: world_menu_select_unit_action_slots_thread, name: g_battle_menu_unit_selection_records, addr: 0x8013a750}
   - {function: world_menu_selected_tile_info_display_thread, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_selected_tile_info_display_thread, name: battle_gfx_free_tpage7_vram, addr: 0x800e2edc}
   - {function: world_menu_selected_tile_info_display_thread, name: battle_gfx_set_draw_mode_for_texture_page, addr: 0x800fdba0}
