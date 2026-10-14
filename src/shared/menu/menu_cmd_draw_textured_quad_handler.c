@@ -3,12 +3,8 @@
 #include "fft/menu_script.h"
 #include "psx/types.h"
 
-/* Stream command: draw a textured quad of size (cmd->sprite.sprite.w, cmd->sprite.sprite.h) at
- * (cmd->sprite.sprite.x, cmd->sprite.sprite.y) with texture origin (cmd->sprite.sprite.u, cmd->sprite.sprite.v), in the
- * current sprite colour or, for MENU_SCRIPT_OP_UNCOLOURED_QUAD, unshaded. While
- * a list row is rendered, y is offset by the row's position and the scroll
- * offset. Returns the next command. */
-menu_instruction_t* equip_cmd_draw_textured_quad_handler(menu_instruction_t* cmd) {
+/* Draw a textured quad at its literal position or current list row. */
+menu_instruction_t* menu_cmd_draw_textured_quad_handler(menu_instruction_t* cmd) {
     RECT rect;
     s32 y;
     rgb24_t* color;

@@ -397,7 +397,7 @@ functions:
   - {addr: 0x801c85f8, size: 80, name: bunit_menu_dispatch_with_override, hash: 3eea69c59c091978}
   - {addr: 0x801c8648, size: 280, name: menu_cmd_run_if_group_handler, hash: 8839eaaea9e0dd88, source: src/shared/menu/menu_cmd_run_if_group_handler.c}
   - {addr: 0x801c8760, size: 396, name: menu_cmd_run_if_else_group_handler, hash: 874d29e34d6a2029, source: src/shared/menu/menu_cmd_run_if_else_group_handler.c}
-  - {addr: 0x801c88ec, size: 256, name: bunit_cmd_draw_textured_quad_handler, hash: c024a5e6a5fdac7d}
+  - {addr: 0x801c88ec, size: 256, name: bunit_cmd_draw_textured_quad_handler, hash: c024a5e6a5fdac7d, source: src/shared/menu/menu_cmd_draw_textured_quad_handler.c, source_symbol: menu_cmd_draw_textured_quad_handler}
   - {addr: 0x801c89ec, size: 264, name: bunit_cmd_draw_row_callback_quad_handler, hash: aa0680488625c39f}
   - {addr: 0x801c8af4, size: 1608, name: menu_cmd_draw_window_frame_handler, hash: 0a50bf9bdc4971f4, source: src/shared/menu/menu_cmd_draw_window_frame_handler.c}
   - {addr: 0x801c913c, size: 300, name: bunit_cmd_set_zoomed_draw_area_handler, hash: 2a2f64cf07a7b91f, source: src/shared/menu/menu_cmd_set_zoomed_draw_area_handler.c, source_symbol: menu_cmd_set_zoomed_draw_area_handler}
@@ -849,6 +849,7 @@ imports:
   - {addr: 0x800222fc, name: memset}
 
 overrides:
+  - {function: bunit_cmd_draw_textured_quad_handler, name: g_equip_menu_list_row_height, addr: 0x801ec8c0}
   - {function: bunit_menu_set_palette_mode, name: g_menu_text_color, addr: 0x801ec8b0}
   - {function: bunit_menu_update_wrapped_grid_selection, name: g_world_menu_sound_effect_id, addr: 0x801ecaac}
   - {function: menu_build_unit_portrait_transition, name: attack_gfx_build_portrait_poly_ft4, addr: 0x801bf434}
@@ -1442,7 +1443,7 @@ functions:
   - {addr: 0x801caab8, size: 280, name: menu_cmd_run_if_group_handler, hash: dc63cdd97deb4ab1, source: src/shared/menu/menu_cmd_run_if_group_handler.c}
   - {addr: 0x801cabd0, size: 396, name: menu_cmd_run_if_else_group_handler, hash: 41490b9b5d7a75e9, source: src/shared/menu/menu_cmd_run_if_else_group_handler.c}
   - {addr: 0x801cad5c, size: 184, name: equip_cmd_draw_translucent_tile_handler, hash: 7daebd5cd090df58}
-  - {addr: 0x801cae14, size: 256, name: equip_cmd_draw_textured_quad_handler, hash: 3672300e8e6a0c8d}
+  - {addr: 0x801cae14, size: 256, name: equip_cmd_draw_textured_quad_handler, hash: 3672300e8e6a0c8d, source: src/shared/menu/menu_cmd_draw_textured_quad_handler.c, source_symbol: menu_cmd_draw_textured_quad_handler}
   - {addr: 0x801caf14, size: 112, name: equip_cmd_draw_line_f2_handler, hash: 9a125788afe57a8e}
   - {addr: 0x801caf84, size: 264, name: equip_cmd_draw_row_callback_quad_handler, hash: b66afccb939dd94c}
   - {addr: 0x801cb08c, size: 1608, name: menu_cmd_draw_window_frame_handler, hash: abd265453db88592, source: src/shared/menu/menu_cmd_draw_window_frame_handler.c}
@@ -1976,7 +1977,7 @@ functions:
   - {addr: 0x801e227c, size: 280, name: jobstts_cmd_run_if_group_handler, hash: 805a0f95f73a013b}
   - {addr: 0x801e2394, size: 396, name: jobstts_cmd_run_if_else_group_handler, hash: 173681792d4416de}
   - {addr: 0x801e2520, size: 24, name: jobstts_cmd_set_semitrans_handler, hash: e8f3f4f1b8bcabae}
-  - {addr: 0x801e2538, size: 256, name: jobstts_cmd_draw_textured_quad_handler, hash: 6dc0e28c0937d6cd}
+  - {addr: 0x801e2538, size: 256, name: jobstts_cmd_draw_textured_quad_handler, hash: 6dc0e28c0937d6cd, source: src/shared/menu/menu_cmd_draw_textured_quad_handler.c, source_symbol: menu_cmd_draw_textured_quad_handler}
   - {addr: 0x801e2638, size: 1456, name: jobstts_cmd_draw_window_frame_handler, hash: 6a98e48a107603be}
   - {addr: 0x801e2be8, size: 272, name: jobstts_cmd_draw_border_tiles_with_transition_clip, hash: 3c407feb3809b329}
   - {addr: 0x801e2cf8, size: 664, name: jobstts_cmd_draw_background_tiles_handler, hash: 4e00ec3720d82fa7, source: src/shared/menu/menu_cmd_draw_background_tiles_handler.c, source_symbol: menu_cmd_draw_background_tiles_handler}
@@ -2179,6 +2180,13 @@ overrides:
   - {function: jobstts_cmd_draw_background_tiles_handler, name: g_menu_atlas_texture_page, addr: 0x801eff70}
   - {function: jobstts_cmd_draw_background_tiles_handler, name: g_menu_gfx_semitransparency, addr: 0x801fa6dc}
   - {function: jobstts_cmd_draw_background_tiles_handler, name: menu_gfx_enqueue_textured_quad, addr: 0x801e15d4}
+  - {function: jobstts_cmd_draw_textured_quad_handler, name: g_equip_menu_list_row_height, addr: 0x801fa6d0}
+  - {function: jobstts_cmd_draw_textured_quad_handler, name: g_menu_gfx_semitransparency, addr: 0x801fa6dc}
+  - {function: jobstts_cmd_draw_textured_quad_handler, name: g_menu_gfx_sprite_color, addr: 0x801fa6c0}
+  - {function: jobstts_cmd_draw_textured_quad_handler, name: g_menu_list_row_index, addr: 0x801eff6c}
+  - {function: jobstts_cmd_draw_textured_quad_handler, name: g_menu_list_row_mode, addr: 0x801fa6d8}
+  - {function: jobstts_cmd_draw_textured_quad_handler, name: g_menu_list_scroll_offset, addr: 0x801eff68}
+  - {function: jobstts_cmd_draw_textured_quad_handler, name: menu_gfx_enqueue_textured_quad, addr: 0x801e15d4}
   - {function: jobstts_cmd_set_draw_area_if_unlocked_handler, name: g_bunit_gfx_otag_index_locked, addr: 0x801fa70c}
   - {function: jobstts_cmd_set_draw_area_if_unlocked_handler, name: menu_gfx_enqueue_draw_area, addr: 0x801e1f0c}
   - {function: jobstts_text_render_encoded_ids_to_image, name: menu_text_find_entry_by_index, addr: 0x801e0740}

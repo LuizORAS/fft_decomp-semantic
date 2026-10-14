@@ -255,6 +255,7 @@ extern s16 g_menu_window_right_x;
 
 menu_instruction_t* menu_cmd_draw_background_tiles_handler(menu_instruction_t* instruction);
 menu_instruction_t* menu_cmd_draw_window_frame_handler(menu_instruction_t* command);
+menu_instruction_t* menu_cmd_draw_textured_quad_handler(menu_instruction_t* instruction);
 
 /* draw area commands */
 menu_instruction_t* menu_cmd_add_next_otag_draw_area_handler(menu_instruction_t* instruction);
