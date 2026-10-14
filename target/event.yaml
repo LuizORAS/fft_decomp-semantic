@@ -2144,7 +2144,7 @@ profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
 functions:
-  - {addr: 0x801bf000, size: 480, name: option_menu_draw_text_columns, hash: dff47199f4742289}
+  - {addr: 0x801bf000, size: 480, name: option_menu_draw_text_columns, hash: dff47199f4742289, source: src/shared/menu/menu_draw_text_columns.c, source_symbol: menu_draw_text_columns}
   - {addr: 0x801bf1e0, size: 636, name: option_menu_redraw_text_page_on_scroll, hash: 61145072288429ea}
   - {addr: 0x801bf45c, size: 3172, name: option_menu_run_at_list, hash: f7232e2ba35ab622, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x801c00c0, size: 40, name: option_text_set_blit_source_rect, hash: f4a7a9d08a0373d4}

@@ -1519,6 +1519,7 @@ typedef struct menu_text_state {
 
 /* list threads */
 extern u32* g_menu_input_controller;
+void menu_draw_text_columns(menu_entry_t* entry, s32* row_offset, u8* buffer);
 void menu_icon_list_thread(void);
 void menu_icon_strip_thread(void);
 void menu_text_entry_wait_thread(void);

@@ -1,12 +1,8 @@
-#include "fft/event_option.h"
-#include "psx/types.h"
+#include "fft/battle_menu.h"
+#include "fft/menu.h"
 
-/* g_menu_text_state is used as one aggregate (menu_text_state_t): that is
- * what reproduces the target's single s5 base register and the
- * MEM_IN_STRUCT_P reordering of the g_battle_menu_text_palette_offset load across the color
- * store. */
-
-void option_menu_draw_text_columns(menu_entry_t* entry, s32* row_offset, u8* buffer) {
+/* Draw the visible text or number entries in a page's three columns. */
+void menu_draw_text_columns(menu_entry_t* entry, s32* row_offset, u8* buffer) {
     menu_text_layout_t* layout = entry->context;
     s32 row;
     s32 column;
