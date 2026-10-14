@@ -8,7 +8,7 @@
  * target has no defined return value for other modes; callers must pass 0-5.
  * `in_id` is read as a 16-bit value: callers pass the address of an int slot
  * counter or of an s16 slot-order entry. */
-s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode) {
+s32 world_script_filter_unit_id_by_mode(u16* out_id, const void* in_id, const s32* mode) {
     unit_stats_t* unit;
     s32 index;
     s32 i;
@@ -19,7 +19,7 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode) {
     if (*mode == 0) {
         return 1;
     }
-    *out_id = *(u16*)in_id;
+    *out_id = *(const u16*)in_id;
     if (battle_unit_has_runtime_id(*out_id) != 0) {
         index = battle_unit_get_battle_id_by_runtime_id(*out_id);
         if (index != -1) {

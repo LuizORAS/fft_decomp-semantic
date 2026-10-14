@@ -290,7 +290,7 @@ void world_script_handle_tutorial_command_highlight_ring(void);
 void world_script_run_sprite_move(const event_sprite_move_parameters_t* parameters, s32 use_speed);
 void world_script_set_specialized_map_destroyed(void);
 void world_menu_init_subsystem_pointers(void);
-s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode);
+s32 world_script_filter_unit_id_by_mode(u16* out_id, const void* in_id, const s32* mode);
 void world_script_advance_tutorial_highlight_brightness(void);
 void world_script_blue_remove_all_enemy_units(void);
 void world_script_blue_remove_unit(s32 unit_id);
