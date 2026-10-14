@@ -22,8 +22,9 @@ TOOL_ENV = $(if $(JOBS),--env TOOLS_JOBS=$(JOBS)) \
 
 # Every command runs in a fresh container as the host user, so files written
 # under the bind-mounted checkout keep the caller's ownership. --init forwards
-# Ctrl-C and reaps the permuter's children.
-DOCKER_RUN = $(DOCKER) run --rm --init --pull=never --user "$(HOST_USER)" \
+# Ctrl-C and reaps the permuter's children. --log-driver=none keeps output on
+# the terminal only; podman's journald default copies every line to the host.
+DOCKER_RUN = $(DOCKER) run --rm --init --pull=never --log-driver=none --user "$(HOST_USER)" \
 	--volume "$(CURDIR):/work" $(strip $(TOOL_ENV))
 
 # tools/ is rebuilt from the working tree on every call (incrementally, via
