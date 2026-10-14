@@ -1086,6 +1086,7 @@ typedef struct menu_at_list_work {
 } menu_at_list_work_t;
 typedef char menu_at_list_work_size_must_be_1824[(sizeof(menu_at_list_work_t) == 1824) ? 1 : -1];
 
+void menu_init_at_list(menu_entry_t* entry);
 void menu_build_ability_preview_at_list(void);
 
 /* skillset selection */

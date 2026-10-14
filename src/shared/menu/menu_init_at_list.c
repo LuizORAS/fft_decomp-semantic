@@ -1,5 +1,8 @@
+#include "fft/battle_action.h"
 #include "fft/event_option.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
+#include "fft/unit.h"
 #include "psx/types.h"
 
 /*
@@ -16,7 +19,7 @@
  * temporary: the store through the layout pointer may alias the menu record,
  * so the repeated window.y store is not redundant to the compiler.
  */
-void option_menu_init_at_list(menu_entry_t* menu) {
+void menu_init_at_list(menu_entry_t* menu) {
     s32 entry_count;
     s32 has_special_entry;
     s32 index;
