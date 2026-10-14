@@ -27,7 +27,7 @@ void bunit_menu_equipment_and_ability_panel_thread(void) {
     g_menu_input_controller = script_get_controller_input_pointer(0);
     screen = g_bunit_character_status_frames;
     base = g_bunit_character_status_frames;
-    state = &g_bunit_editor_unit_fields;
+    state = &g_bunit_editor_unit_fields.state;
     battle_menu_init_numeric_display_frame_primitives(&g_bunit_character_status_frame_rect, &screen->numeric_frame);
     menu_init_status_panel_primitives(screen);
     menu_init_scaled_draw_area_packets(&screen->portrait);

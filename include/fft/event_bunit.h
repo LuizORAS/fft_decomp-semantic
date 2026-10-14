@@ -251,7 +251,7 @@ extern menu_unit_stat_number_images_t g_bunit_editor_numeric_text_b;
 extern image_load_parameters_t g_bunit_editor_numeric_texture[];
 /* Copy of the selected unit's 0x40 bytes from +0x30; only the leading
  * slot-state fields are read. */
-extern menu_status_panel_slot_state_t g_bunit_editor_unit_fields;
+extern menu_status_panel_slot_storage_t g_bunit_editor_unit_fields;
 extern s32 g_bunit_numeric_editor_dimmed;
 extern s32 g_bunit_numeric_editor_redraw_request;
 extern u8 g_bunit_numeric_editor_thread_params;
