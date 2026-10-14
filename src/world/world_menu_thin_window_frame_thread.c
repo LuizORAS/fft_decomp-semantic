@@ -151,7 +151,7 @@ void world_menu_thin_window_frame_thread(void) {
            is dead. A separate local is allocated a different callee-saved
            register and does not reproduce the target. */
         texture_u = 0x7d3c;
-        if (world_thread_get_current_parameter_2() == 0 && g_world_thread_task_active == 0) {
+        if (world_thread_get_current_parameter_2() == 0 && g_menu_input_lock_mode == 0) {
             texture_u = 0x7c3c;
         }
         for (index = 8; index >= 0; index--) {

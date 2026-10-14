@@ -120,7 +120,7 @@ void world_text_character_handling_thread(void) {
         }
     }
     if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_formation_screen_active == 1) {
-        g_world_thread_task_active = g_world_formation_screen_active;
+        g_menu_input_lock_mode = g_world_formation_screen_active;
     }
     if (rec.dialog_type & 0x10) {
         if (party_name_request == 0) {
@@ -843,7 +843,7 @@ end:
     world_menu_release_current_thread_slot();
     YIELD_OR_INPUT();
     if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_formation_screen_active == 1) {
-        g_world_thread_task_active = 0;
+        g_menu_input_lock_mode = 0;
     }
     if (((rec.box_type == DIALOG_BOX_TYPE_HELP || party_name_request != 0) && rec.options == 0xC)
         || ((rec.box_type == DIALOG_BOX_TYPE_HELP || party_name_request != 0)

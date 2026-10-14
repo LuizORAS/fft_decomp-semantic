@@ -11,6 +11,9 @@
 #include "psx/types.h"
 
 /* scene lifecycle */
+/* 0: normal, 1: companion/editor transition, 2: AT-list selection. */
+extern u16 g_menu_overlay_state;
+
 void menu_init_subsystems(void);
 void menu_reset_subsystems(void);
 s32 menu_poll_small_load(void);
@@ -598,6 +601,9 @@ typedef enum menu_input_mode {
 } menu_input_mode_e;
 
 extern u16 g_menu_input_mode; /* menu_input_mode_e */
+
+/* Modal/message ownership suppresses menu input and dims palettes. */
+extern s32 g_menu_input_lock_mode;
 
 /* The index argument of *_menu_draw_pressable_button: an on-screen button,
  * named after the pad button its callers test. */

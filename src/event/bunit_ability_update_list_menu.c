@@ -84,7 +84,7 @@ s32 bunit_ability_update_list_menu(void) {
         bunit_gfx_set_transition_frame(10);
     }
     bunit_menu_dispatch_with_override(
-        &g_bunit_ability_list_menu_script, g_bunit_menu_input_active_mask, g_battle_menu_input_lock_mode);
+        &g_bunit_ability_list_menu_script, g_bunit_menu_input_active_mask, g_menu_input_lock_mode);
     rect.x = 0x26;
     rect.y = 0x2D;
     rect.w = 0x50;

@@ -152,6 +152,6 @@ s32 world_formation_run_equip_item_menu(void) {
     /* The mode is an argument expression so &g_world_equip_item_cursor_point is formed before its
        branches and derived from cursor_y (addiu a0,s0,-2), as in the target. */
     world_menu_draw_animated_cursor(&g_world_equip_item_cursor_point, &g_world_equip_item_cursor_anim,
-        g_world_equip_item_list_open != 0 || g_world_thread_task_active != 0);
+        g_world_equip_item_list_open != 0 || g_menu_input_lock_mode != 0);
     return 1;
 }

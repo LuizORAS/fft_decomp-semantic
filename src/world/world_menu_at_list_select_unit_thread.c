@@ -8,7 +8,7 @@
  * stops itself. */
 void world_menu_at_list_select_unit_thread(void) {
     g_world_menu_transition_active = 1;
-    g_world_menu_overlay_state = 2;
+    g_menu_overlay_state = 2;
     thread_suspend(g_thread_current_id + 1);
     thread_suspend(g_thread_current_id + 2);
     thread_suspend(g_thread_current_id + 3);
@@ -30,6 +30,6 @@ void world_menu_at_list_select_unit_thread(void) {
     thread_resume(g_thread_current_id + 3);
     thread_resume(g_thread_current_id + 4);
     g_world_menu_transition_active = 0;
-    g_world_menu_overlay_state = 0;
+    g_menu_overlay_state = 0;
     thread_exit_current();
 }

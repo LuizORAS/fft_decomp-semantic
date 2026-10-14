@@ -32,7 +32,7 @@ void menu_run_unit_editor_panel_thread(void) {
     battle_menu_open_debugchr_unit_editor();
     thread_set_current_task_id(THREAD_TASK_UNIT_EDITOR_PANEL);
     battle_menu_enter_status_screen_selection();
-    g_battle_menu_suspend_state = 1;
+    g_menu_overlay_state = 1;
     g_battle_menu_panel_fade_mode = MENU_PANEL_FADE_OUT;
     thread_set_parameters(THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
     thread_set_parameters(THREAD_SLOT_MENU, 0, 0, 1);
@@ -182,7 +182,7 @@ void menu_run_unit_editor_panel_thread(void) {
         frame_record = &records[frame & 1];
         battle_gfx_build_scaled_draw_area_pair_swapped(
             &frame_record->draw_areas, &g_battle_unit_editor_cursor_rect, frame, g_main_gfx_screen_polarity);
-        if (g_battle_menu_input_lock_mode == 0 && g_battle_menu_help_open == 0
+        if (g_menu_input_lock_mode == 0 && g_battle_menu_help_open == 0
             && battle_thread_get_current_parameter_3() != 0) {
             break;
         }
@@ -259,7 +259,7 @@ void menu_run_unit_editor_panel_thread(void) {
     thread_start(THREAD_SLOT_TILE_INFO_PANEL, battle_menu_selected_tile_info_display_thread);
     thread_set_parameters(THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 0);
     g_thread_contexts[THREAD_SLOT_TILE_INFO_PANEL].task_id = THREAD_TASK_TILE_INFO_PANEL;
-    g_battle_menu_suspend_state = 0;
+    g_menu_overlay_state = 0;
     battle_menu_leave_status_screen_selection();
     battle_menu_build_idle_action_menu(g_menu_current_id);
     thread_exit_current();

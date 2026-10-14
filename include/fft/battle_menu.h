@@ -16,7 +16,6 @@ extern u16 g_battle_menu_modal_open;
 extern u8 g_battle_menu_restore_depth;
 extern u8 g_battle_menu_restore_unit_id;
 extern s32 g_battle_menu_slot_states[3];
-extern u16 g_battle_menu_suspend_state;
 extern u16 g_battle_menu_transition_state;
 extern u16 g_battle_saved_animation_speed; /* animation speed saved while an event thread forces speed 2 */
 

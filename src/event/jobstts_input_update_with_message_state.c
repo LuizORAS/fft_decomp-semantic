@@ -47,7 +47,7 @@ void jobstts_input_update_with_message_state(void) {
         g_jobstts_input_lock_timer = 5;
     }
     if (running == 0) {
-        g_battle_menu_input_lock_mode = 0;
+        g_menu_input_lock_mode = 0;
     }
     if (g_jobstts_text_thread_running_state == 1) {
         g_jobstts_sound_queued_effect_id = MAIN_SFX_WINDOW_OPEN;

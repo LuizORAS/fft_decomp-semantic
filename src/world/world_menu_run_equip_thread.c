@@ -18,7 +18,7 @@ void world_menu_run_equip_thread(void) {
     world_menu_set_transition_active_flag();
     saved = g_world_unit_view_mode;
     world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
-    g_world_menu_overlay_state = 1;
+    g_menu_overlay_state = 1;
     thread_wait_for_unit_view_panels();
     menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP);
     menu_reserve_high_overlay(0x20000);
@@ -49,7 +49,7 @@ void world_menu_run_equip_thread(void) {
         }
     }
     menu_free_high_overlay();
-    g_world_menu_overlay_state = 0;
+    g_menu_overlay_state = 0;
     world_unit_start_view_thread(saved, 0xFF, 0xFF);
     g_world_menu_sound_muted = 0;
     g_script_event_input = 0;

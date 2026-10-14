@@ -22,8 +22,7 @@ s32 world_menu_handle_remove_all_equipment(void) {
         for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
             g_world_remove_all_equipment_cursor_point.y = i * 0x10 + 0x90;
             value = 0;
-            world_menu_draw_animated_cursor(
-                &g_world_remove_all_equipment_cursor_point, &value, g_world_thread_task_active);
+            world_menu_draw_animated_cursor(&g_world_remove_all_equipment_cursor_point, &value, g_menu_input_lock_mode);
         }
     }
     if (g_world_input_primary_repeat & PSX_PAD_RIGHT) {

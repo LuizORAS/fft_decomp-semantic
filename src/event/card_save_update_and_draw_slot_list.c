@@ -193,7 +193,7 @@ void card_save_update_and_draw_slot_list(u16 input) {
     g_card_save_slot_cursor_position.y = value * 48 + 0x28;
     card_menu_update_and_draw_animated_cursor(
         &g_card_save_slot_cursor_position, &g_card_save_slot_cursor_animation, scrolling);
-    if (g_battle_menu_input_lock_mode != 0) {
+    if (g_menu_input_lock_mode != 0) {
         cursor_clut = g_menu_cursor_mode1_foreground_clut;
     } else {
         cursor_clut = g_menu_cursor_mode0_foreground_clut;

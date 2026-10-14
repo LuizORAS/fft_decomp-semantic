@@ -347,7 +347,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
         battle_menu_select_icon_sprite_clut(page->icons.icons[0]);
         battle_menu_select_icon_sprite_clut(page->icons.icons[1]);
         battle_menu_select_icon_sprite_clut(page->icons.icons[2]);
-        if (battle_thread_is_previous_running() != 0 || g_battle_menu_input_lock_mode == 1) {
+        if (battle_thread_is_previous_running() != 0 || g_menu_input_lock_mode == 1) {
             frame->clut = 0x7F7D;
         } else {
             frame->clut = 0x7FFC;

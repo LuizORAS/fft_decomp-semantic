@@ -36,7 +36,7 @@ void wldcore_menu_handle_layout_window_input(wldcore_window_layout_request_t* re
             message = g_wldcore_window_layout_rows[layout].message_base;
         }
         wldcore_menu_push_message_level(message, 1);
-        g_world_thread_task_active = 1;
+        g_menu_input_lock_mode = 1;
         window = request->window_index;
         record = &g_wldcore_window_records[window];
         record->sequence = g_wldcore_window_records[window].sequence - 1;

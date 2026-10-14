@@ -16,7 +16,7 @@ bunit_menu_vertical_scroll_direction_e bunit_input_read_page_scroll_direction(vo
 
     direction = BUNIT_VERTICAL_SCROLL_NONE;
     if (g_bunit_input_page_scroll_disabled == 0) {
-        if (g_battle_menu_input_lock_mode == 0) {
+        if (g_menu_input_lock_mode == 0) {
             input = PadRead(0);
             if ((input & PSX_PAD_UP) && (input & PSX_PAD_SQUARE)) {
                 direction = BUNIT_VERTICAL_SCROLL_UP;

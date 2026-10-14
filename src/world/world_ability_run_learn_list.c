@@ -126,7 +126,7 @@ s32 world_ability_run_learn_list(void) {
         input = g_world_input_primary_repeat;
     }
     mode = 0;
-    if (g_world_thread_task_active != 0 || running != 0) {
+    if (g_menu_input_lock_mode != 0 || running != 0) {
         mode = 1;
     }
     world_menu_run_script_with_palette_mode(&g_world_ability_list_script, input, mode);

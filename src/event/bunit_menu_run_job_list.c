@@ -52,6 +52,6 @@ s32 bunit_menu_run_job_list(void) {
         return MENU_JOB_LIST_STEP_ABILITIES;
     }
     bunit_menu_dispatch_with_override(
-        &g_bunit_job_list_menu_script, g_bunit_menu_input_active_mask, g_battle_menu_input_lock_mode);
+        &g_bunit_job_list_menu_script, g_bunit_menu_input_active_mask, g_menu_input_lock_mode);
     return MENU_JOB_LIST_STEP_JOBS;
 }

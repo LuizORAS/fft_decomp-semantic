@@ -3,9 +3,9 @@
 #include "fft/thread.h"
 
 /* Choose the CLUTs of the four menu-frame sprites: the dimmed set while the
- * previous thread is running or g_battle_menu_input_lock_mode is 1. */
+ * previous thread is running or g_menu_input_lock_mode is 1. */
 void battle_menu_select_icon_cluts(menu_icon_sprites_t* frame) {
-    if (battle_thread_is_previous_running() != 0 || g_battle_menu_input_lock_mode == 1) {
+    if (battle_thread_is_previous_running() != 0 || g_menu_input_lock_mode == 1) {
         frame->sprites[0].clut = 0x7d3c;
         frame->sprites[1].clut = 0x7dfc;
         frame->sprites[2].clut = 0x7e3c;

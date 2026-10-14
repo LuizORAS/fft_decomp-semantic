@@ -952,7 +952,7 @@ restart_script:
                 operand_1 = battle_thread_find_running_by_task(THREAD_TASK_SHOW_GRAPHIC);
             } while (operand_1 != 0 && g_thread_contexts[operand_1].function_parameter_4 == 0);
         } else if (opcode == EVENT_OPCODE_LOCK_MENU_INPUT) {
-            g_battle_menu_input_lock_mode = operand_1;
+            g_menu_input_lock_mode = operand_1;
         } else if (opcode == EVENT_OPCODE_TUTORIAL_COORDINATE_CONFIRM) {
             while (g_battle_cursor_x != operand_1 || g_battle_cursor_y != operand_2
                 || ((confirm_buttons = g_script_unfiltered_controller_input) & PSX_PAD_CIRCLE) == 0

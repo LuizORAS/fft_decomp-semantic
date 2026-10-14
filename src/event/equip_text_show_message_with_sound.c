@@ -9,5 +9,5 @@ void equip_text_show_message_with_sound(s32 message_id, s32 sound_id) {
     g_equip_sound_suppress_queued = 1;
     main_sound_play_sfx(sound_id);
     g_equip_text_message_thread_active = 1;
-    g_battle_menu_input_lock_mode = 1;
+    g_menu_input_lock_mode = 1;
 }

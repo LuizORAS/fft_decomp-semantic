@@ -36,6 +36,6 @@ s32 jobstts_menu_update_job_list(void) {
         g_jobstts_sound_queued_effect_id = MAIN_SFX_CONFIRM;
         return MENU_JOB_LIST_STEP_ABILITIES;
     }
-    jobstts_cmd_run_stream_with_mode(&g_jobstts_job_list_render_commands, input, g_battle_menu_input_lock_mode);
+    jobstts_cmd_run_stream_with_mode(&g_jobstts_job_list_render_commands, input, g_menu_input_lock_mode);
     return MENU_JOB_LIST_STEP_JOBS;
 }

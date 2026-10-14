@@ -17,5 +17,5 @@ void bunit_text_start_selection_thread(s32 thread_data) {
     battle_text_relocate_pointer_table(g_bunit_help_text_table);
     thread_start(THREAD_SCREEN_SLOT_TEXT, battle_text_run_dialog_thread);
     thread_set_parameters(THREAD_SCREEN_SLOT_TEXT, thread_data + 0x38, g_bunit_text_selection_id, 0);
-    g_battle_menu_input_lock_mode = 1;
+    g_menu_input_lock_mode = 1;
 }

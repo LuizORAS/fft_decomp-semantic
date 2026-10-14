@@ -243,7 +243,7 @@ void world_menu_run_game_options(void) {
                 world_menu_cancel_thread_group(entry);
             }
         }
-        if (g_world_thread_task_active == 0) {
+        if (g_menu_input_lock_mode == 0) {
             index = cursor + row_offset + delta;
             world_clear_menu_render_buffer(buffer, 0x1E0);
             g_menu_text_state.pen.stride = 0x3C;

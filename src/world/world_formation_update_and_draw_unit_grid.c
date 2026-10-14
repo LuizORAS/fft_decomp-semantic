@@ -109,7 +109,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
         if (thread_is_running(THREAD_SCREEN_SLOT_MENU) != 0) {
             row = g_world_formation_current_menu == WORLD_FORMATION_MENU_UNIT_GRID;
         }
-        row |= g_world_thread_task_active != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE;
+        row |= g_menu_input_lock_mode != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE;
         world_menu_draw_pressable_button(
             MENU_PRESSABLE_BUTTON_L2, 0x26, value, input & PSX_PAD_L2, row, MAIN_SFX_PAGE_SWITCH);
         world_menu_draw_pressable_button(

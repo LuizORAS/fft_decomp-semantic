@@ -440,11 +440,6 @@ extern u16 g_world_thread_change_cooldown;
 /* Running-state snapshot used while updating event input. */
 extern u8 g_world_thread_status_snapshot[16];
 
-/* Nonzero while a modal task owns the menus (0x8015330c): the announce and
- * message threads and event opcode LOCK_MENU_INPUT set it, and
- * world_input_update_with_message_state clears it once thread 1 stops. Menus drop
- * input and dim their palette while it is set. */
-extern s32 g_world_thread_task_active;
 extern menu_gradient_panel_prims_t g_world_thread_indicator_packets[2][2];
 extern crystal_pickup_result_t* g_world_thread_inner_subroutine_result;
 
@@ -2045,7 +2040,6 @@ extern RECT g_world_menu_portrait_pixel_rect;
 extern RECT g_world_menu_portrait_palette_rect;
 extern s32 g_world_menu_scrolling_list_depth;
 extern menu_quad_page_t g_world_menu_selected_tile_info_pages[2];
-extern u16 g_world_menu_overlay_state;
 extern u16 g_world_menu_transition_finished;
 extern u16 g_world_menu_input_block_frames;
 extern s32 g_world_menu_slot_owner_thread_ids[];

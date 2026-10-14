@@ -19,7 +19,7 @@ void world_menu_run_bunit_transition_thread(void) {
         thread_yield();
     }
     g_world_screen_fade = 0xFF;
-    g_world_menu_overlay_state = 1;
+    g_menu_overlay_state = 1;
     thread_set_parameters(THREAD_SLOT_MENU, 0, 0, 1);
     thread_set_parameters(THREAD_SLOT_TILE_INFO_PANEL, 0, 0, 1);
     thread_set_parameters(THREAD_SLOT_UNIT_SUMMARY_PANEL, 0, 0, 1);

@@ -55,5 +55,5 @@ void world_name_update_entry_cursor(void) {
         g_world_menu_sound_effect_id = MAIN_SFX_CURSOR_MOVE;
     }
     world_menu_set_draw_priority(0x28);
-    world_menu_draw_animated_cursor(&cursor, &g_world_name_entry_key_cursor_anim, g_world_thread_task_active);
+    world_menu_draw_animated_cursor(&cursor, &g_world_name_entry_key_cursor_anim, g_menu_input_lock_mode);
 }

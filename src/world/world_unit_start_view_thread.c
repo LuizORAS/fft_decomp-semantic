@@ -6,7 +6,7 @@
  * selecting `unit_a` as the active unit and `unit_b` as the comparison unit;
  * 0xFF keeps the current one. Does nothing while a menu overlay is open. */
 void world_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b) {
-    if (g_world_menu_overlay_state != 1) {
+    if (g_menu_overlay_state != 1) {
         world_text_build_unit_name_list();
         g_world_menu_panel_fade_mode = g_world_unit_view_panel_fade_modes[mode];
         if (unit_a != 0xFF) {

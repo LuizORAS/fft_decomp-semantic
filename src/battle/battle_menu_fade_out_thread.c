@@ -41,7 +41,7 @@ void battle_menu_fade_out_thread(void) {
     }
 
     battle_menu_clear_modal_open();
-    g_battle_menu_suspend_state = 0;
+    g_menu_overlay_state = 0;
     g_battle_screen_fade = 0;
     g_battle_menu_transition_state = 0;
     battle_unit_start_view_thread(UNIT_VIEW_MODE_HOVERED_UNIT, g_menu_selected_unit.battle_id, 0xff);

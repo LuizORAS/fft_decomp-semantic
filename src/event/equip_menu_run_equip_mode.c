@@ -142,6 +142,6 @@ s32 equip_menu_run_equip_mode(void) {
     g_equip_slot_marker_rect.y = g_equip_equip_item_slot * 16 + 0x90;
     equip_gfx_set_otag_index(0x28);
     menu_update_and_draw_animated_cursor(&g_equip_slot_marker_rect, g_equip_equip_item_cursor_anim,
-        g_equip_equip_item_list_open != 0 || g_battle_menu_input_lock_mode != 0);
+        g_equip_equip_item_list_open != 0 || g_menu_input_lock_mode != 0);
     return 1;
 }

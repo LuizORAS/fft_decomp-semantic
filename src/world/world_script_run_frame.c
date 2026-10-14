@@ -60,7 +60,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
                 }
             } else {
                 g_world_event_finish_check_pending = 0;
-                g_world_menu_overlay_state = 0;
+                g_menu_overlay_state = 0;
                 return 0;
             }
             if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_FUNERAL) {
@@ -69,7 +69,7 @@ s32 world_script_run_frame(u32* ot, u32 buttons) {
             script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((op & 0xC00) >> 2) | (op & 0xFF));
             op = (op & 0xF300) >> 8;
             g_world_event_finish_check_pending = 0;
-            g_world_menu_overlay_state = 0;
+            g_menu_overlay_state = 0;
             if (op == 0x80) {
                 return 9;
             }

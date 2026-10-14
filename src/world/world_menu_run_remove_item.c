@@ -84,7 +84,7 @@ s32 world_menu_run_remove_item(void) {
     *cursor_y = index * 16 + 0x90;
     world_menu_set_draw_priority(0x28);
     world_menu_draw_animated_cursor(
-        &g_world_remove_item_cursor_point, &g_world_remove_item_cursor_anim, g_world_thread_task_active);
+        &g_world_remove_item_cursor_point, &g_world_remove_item_cursor_anim, g_menu_input_lock_mode);
     items = g_world_remove_item_equipment;
     selected_item = &items[index];
     item = *selected_item;

@@ -108,7 +108,7 @@ void menu_run_numeric_editor_thread(void) {
         buffer->draw_offsets[1].position.x = -0x80;
         buffer->draw_offsets[1].position.y = g_attack_gfx_draw_offset_y;
         SetDrawOffset(&buffer->draw_offsets[1].packet, (u16*)&buffer->draw_offsets[1].position);
-        if (thread->style == 1 || g_battle_menu_input_lock_mode == 1) {
+        if (thread->style == 1 || g_menu_input_lock_mode == 1) {
             for (i = 17; i >= 0; i--) {
                 buffer->sprites[i].clut = 0x7D3C;
             }

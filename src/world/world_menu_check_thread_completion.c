@@ -19,12 +19,12 @@ s32 world_menu_check_thread_completion(u32* input) {
             if (g_world_thread_change_cooldown == 0) {
                 thread_start(THREAD_SCREEN_SLOT_TEXT, world_menu_announce_entry_value_thread);
                 thread_set_parameters(THREAD_SCREEN_SLOT_TEXT, (s32)parameter, 0, 0);
-                g_world_thread_task_active = 1;
+                g_menu_input_lock_mode = 1;
             }
             *input = 0;
         }
     }
-    if (g_world_thread_task_active != 0 || g_world_text_overlay_active != 0) {
+    if (g_menu_input_lock_mode != 0 || g_world_text_overlay_active != 0) {
         *input = 0;
         return 0;
     }

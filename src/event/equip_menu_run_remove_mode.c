@@ -57,7 +57,7 @@ s32 equip_menu_run_remove_mode(void) {
     g_equip_remove_item_marker_rect.y = ((selection & 0xFF) << 4) + 0x90;
     equip_gfx_set_otag_index(0x28);
     menu_update_and_draw_animated_cursor(
-        &g_equip_remove_item_marker_rect, g_equip_remove_item_cursor_anim, g_battle_menu_input_lock_mode);
+        &g_equip_remove_item_marker_rect, g_equip_remove_item_cursor_anim, g_menu_input_lock_mode);
 
     g_equip_text_help_message_id = g_equip_remove_item_equipment[selection & 0xFF] != 0
         ? g_equip_remove_item_equipment[selection & 0xFF] + 0x6800

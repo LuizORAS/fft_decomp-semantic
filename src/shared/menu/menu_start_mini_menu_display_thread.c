@@ -10,7 +10,7 @@ void menu_start_mini_menu_display_thread(void) {
     if (battle_thread_is_running_asm(THREAD_SLOT_MENU_CHILD) != 0) {
         return;
     }
-    if (g_battle_menu_suspend_state != 0) {
+    if (g_menu_overlay_state != 0) {
         return;
     }
     g_menu_current_id = BATTLE_MENU_ID_MINI_MENU;

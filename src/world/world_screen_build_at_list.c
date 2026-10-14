@@ -151,7 +151,7 @@ void world_screen_build_at_list(void) {
     for (;;) {
         page = &g_world_text_list_pages[i & 1];
         frame = &page->frame;
-        if (world_thread_is_previous_running() != 0 && g_world_thread_task_active == 0) {
+        if (world_thread_is_previous_running() != 0 && g_menu_input_lock_mode == 0) {
             thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window.x, 1, 0);
         } else {
             thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window.x, 0, 0);
@@ -265,7 +265,7 @@ void world_screen_build_at_list(void) {
             world_menu_free_memory(buffer);
         }
         frame->v0 = ring * 16 + accum - 2;
-        if (world_thread_is_previous_running() != 0 || g_world_thread_task_active == 1) {
+        if (world_thread_is_previous_running() != 0 || g_menu_input_lock_mode == 1) {
             frame->clut = 0x7F7D;
         } else {
             frame->clut = 0x7FFC;

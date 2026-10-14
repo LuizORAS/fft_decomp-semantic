@@ -144,7 +144,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             continue;
         }
 
-        event_mode = g_battle_menu_input_lock_mode;
+        event_mode = g_menu_input_lock_mode;
         sound_latched = 0;
         animation[0] = 0;
         animation[1] = 0;

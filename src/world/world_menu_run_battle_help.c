@@ -265,7 +265,7 @@ void world_menu_run_battle_help(void) {
     while (1) {
         if (help_thread->is_running == 0) {
             if (world_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
-                g_world_thread_task_active = 0;
+                g_menu_input_lock_mode = 0;
             }
             if (self->task_words[1] != 0) {
                 self->task_words[1] = 0;
@@ -333,7 +333,7 @@ void world_menu_run_battle_help(void) {
             }
         } else {
             if (world_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
-                g_world_thread_task_active = 1;
+                g_menu_input_lock_mode = 1;
             }
             if (self->task_words[1] == 0) {
                 self->task_words[1] = 2;

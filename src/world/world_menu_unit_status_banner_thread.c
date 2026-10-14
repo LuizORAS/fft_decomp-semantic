@@ -178,7 +178,7 @@ void world_menu_unit_status_banner_thread(void) {
         }
         dimmed = 0;
         if (world_thread_find_running_by_task(THREAD_TASK_STATUS_PANEL) != 0) {
-            dimmed = g_world_thread_task_active != 0;
+            dimmed = g_menu_input_lock_mode != 0;
         }
         if (display->dimmed != 0) {
             dimmed = 1;

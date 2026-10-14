@@ -276,7 +276,7 @@ void world_menu_scrolling_list_thread(void) {
         world_menu_select_icon_sprite_clut(page->icons.icons[0]);
         world_menu_select_icon_sprite_clut(page->icons.icons[1]);
         world_menu_select_icon_sprite_clut(page->icons.icons[2]);
-        if (world_thread_is_previous_running() != 0 || g_world_thread_task_active == 1) {
+        if (world_thread_is_previous_running() != 0 || g_menu_input_lock_mode == 1) {
             frame->clut = 0x7F7D;
         } else {
             frame->clut = 0x7FFC;

@@ -29,7 +29,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
     s16* selected_index;
 
     if (g_menu_input_mode != MENU_INPUT_BLOCKED) {
-        if ((g_battle_menu_suspend_state == 0) && (g_battle_menu_help_open == 0)
+        if ((g_menu_overlay_state == 0) && (g_battle_menu_help_open == 0)
             && (g_battle_menu_building_thread_started == 0) && (menu_id != BATTLE_MENU_ID_NONE)) {
             g_menu_current_id = menu_id;
             g_menu_thread_menu_data = g_battle_menu_idle_action_entries;

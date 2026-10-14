@@ -25,7 +25,7 @@ void world_input_update_with_message_state(void) {
         running = thread_is_running(THREAD_SCREEN_SLOT_TEXT);
         if (running != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE) {
             world_input_clear_state();
-            if (running != 0 && g_world_thread_task_active != 0) {
+            if (running != 0 && g_menu_input_lock_mode != 0) {
                 value = 1;
                 if (g_world_text_task_phase != 0) {
                     value = 2;
@@ -40,7 +40,7 @@ void world_input_update_with_message_state(void) {
         }
     }
     if (running == 0) {
-        g_world_thread_task_active = 0;
+        g_menu_input_lock_mode = 0;
         g_world_sound_release_held_loop = 0;
     }
     if (g_world_text_task_phase == 1) {

@@ -91,9 +91,9 @@ void attack_deploy_run_select_menu(void) {
     while (1) {
         if (parent->is_running == 0) {
             if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
-                g_battle_menu_input_lock_mode = 0;
+                g_menu_input_lock_mode = 0;
             }
-            g_battle_menu_input_lock_mode = 0;
+            g_menu_input_lock_mode = 0;
             if (thread->task_words[1] != 0) {
                 thread->task_words[1] = 0;
                 thread->task_words[0] = 0;
@@ -165,9 +165,9 @@ void attack_deploy_run_select_menu(void) {
             }
         } else {
             if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
-                g_battle_menu_input_lock_mode = 1;
+                g_menu_input_lock_mode = 1;
             }
-            g_battle_menu_input_lock_mode = 1;
+            g_menu_input_lock_mode = 1;
             if (thread->task_words[1] == 0) {
                 thread->task_words[1] = 2;
                 thread->task_words[0] = 0;

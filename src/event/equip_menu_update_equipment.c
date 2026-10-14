@@ -61,11 +61,11 @@ s32 equip_menu_update_equipment(void) {
         g_equip_input_page_scroll_disabled = 1;
     }
     override = 0;
-    if (g_battle_menu_input_lock_mode != 0 || thread_is_running(2) != 0) {
+    if (g_menu_input_lock_mode != 0 || thread_is_running(2) != 0) {
         override = 1;
     }
     equip_menu_dispatch_with_override(&g_equip_equipment_render_commands, input, override);
-    equip_menu_draw_equipment_slot_marker(0, g_equip_selected_slot, g_battle_menu_input_lock_mode);
+    equip_menu_draw_equipment_slot_marker(0, g_equip_selected_slot, g_menu_input_lock_mode);
     if (g_equip_menu_list_entry_count != 0) {
         item_id = g_equip_item_list_entries[g_equip_menu_selected_list_index];
         if (item_id < ITEM_ID_THROWABLE_FIRST) {

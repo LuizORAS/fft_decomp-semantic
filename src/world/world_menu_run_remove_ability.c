@@ -79,7 +79,7 @@ s32 world_menu_run_remove_ability(void) {
     *cursor_y = slot_index * 16 + 0x90;
     world_menu_set_draw_priority(0x28);
     world_menu_draw_animated_cursor(
-        &g_world_remove_ability_cursor_point, &g_world_remove_ability_cursor_anim, g_world_thread_task_active);
+        &g_world_remove_ability_cursor_point, &g_world_remove_ability_cursor_anim, g_menu_input_lock_mode);
     ability = g_world_unit_pointers[g_world_formation_selected_unit_index]->abilities.slots[slot_index];
     g_world_menu_description_text_id = ability;
     if (ability == 0) {

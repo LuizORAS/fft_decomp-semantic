@@ -914,7 +914,7 @@ restart_event:
                 operand_1 = world_thread_find_running_by_task(THREAD_TASK_SHOW_GRAPHIC);
             } while (operand_1 != 0 && g_thread_contexts[operand_1].function_parameter_4 == 0);
         } else if (opcode == EVENT_OPCODE_LOCK_MENU_INPUT) {
-            g_world_thread_task_active = operand_1;
+            g_menu_input_lock_mode = operand_1;
         } else if (opcode == EVENT_OPCODE_TUTORIAL_COORDINATE_CONFIRM) {
             while (g_battle_cursor_x != operand_1 || g_battle_cursor_y != operand_2
                 || ((initial_buttons = g_script_unfiltered_controller_input) & PSX_PAD_CIRCLE) == 0

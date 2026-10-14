@@ -23,7 +23,7 @@ s32 equip_entrypoint(s32 unit, u32* otag) {
     equip_gfx_swap_context_and_clear_otag(0, -1);
     result = (s32)g_menu_gfx_context->otag;
     changed = 0;
-    if (g_battle_menu_input_lock_mode != 0) {
+    if (g_menu_input_lock_mode != 0) {
         message_idle = g_equip_text_message_thread_active == 0;
         changed = message_idle;
     }
@@ -33,11 +33,11 @@ s32 equip_entrypoint(s32 unit, u32* otag) {
         equip_text_start_help_thread(3);
     }
     if (g_equip_text_restore_pending != 0) {
-        if (g_battle_menu_input_lock_mode == 0) {
+        if (g_menu_input_lock_mode == 0) {
             battle_text_restore_section_pointers();
         }
     }
-    equip_menu_set_palette_mode(g_battle_menu_input_lock_mode);
+    equip_menu_set_palette_mode(g_menu_input_lock_mode);
     g_equip_menu_screen_state_handlers[g_equip_menu_screen_state]();
     if (g_equip_sound_suppress_queued != 0) {
         g_equip_sound_queued_effect_id = MAIN_SFX_NONE;

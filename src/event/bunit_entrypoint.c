@@ -67,7 +67,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
     bunit_menu_init_unit_list(g_bunit_unit_selected_index);
     do {
         bunit_gfx_submit_frame_and_swap_buffers(0, 0);
-        previous_mode = g_battle_menu_input_lock_mode;
+        previous_mode = g_menu_input_lock_mode;
         bunit_menu_update_event_thread_state();
         bunit_input_update_lock_timer();
         bunit_gfx_update_decreasing_fade();
@@ -77,10 +77,10 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
         if (g_bunit_help_screen_id != MENU_GRID_HELP_NONE) {
             bunit_menu_update_node_cursor(g_bunit_unit_pointers[g_bunit_unit_selected_index]->uses_monster_skillset);
         }
-        if (previous_mode != 0 && g_battle_menu_input_lock_mode == 0) {
+        if (previous_mode != 0 && g_menu_input_lock_mode == 0) {
             battle_text_restore_section_pointers();
         }
-        bunit_menu_set_palette_mode(g_battle_menu_input_lock_mode);
+        bunit_menu_set_palette_mode(g_menu_input_lock_mode);
         if (g_bunit_menu_current_menu == BUNIT_MENU_JOB) {
             bunit_menu_update_job();
             /* The target also passes a1 = 0 to this one-argument callee. */

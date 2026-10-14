@@ -2365,7 +2365,7 @@ data:
   - {addr: 0x8016601c, name: g_battle_text_message_buffer}
   - {addr: 0x80166020, name: g_battle_menu_text_param_22}
   - {addr: 0x80166024, name: g_battle_menu_text_param_24}
-  - {addr: 0x80166028, name: g_battle_menu_input_lock_mode}
+  - {addr: 0x80166028, name: g_menu_input_lock_mode}
   - {addr: 0x8016602c, name: g_battle_menu_help_open}
   - {addr: 0x80166030, name: g_battle_formation_screen_active}
   - {addr: 0x80166034, name: g_battle_formation_display_mode}
@@ -2373,7 +2373,7 @@ data:
   - {addr: 0x8016603c, name: g_battle_screen_fade}
   - {addr: 0x80166044, name: g_menu_hide_numeric_values}
   - {addr: 0x80166044, name: g_option_menu_state}
-  - {addr: 0x80166048, name: g_battle_menu_suspend_state}
+  - {addr: 0x80166048, name: g_menu_overlay_state}
   - {addr: 0x8016604a, name: g_battle_menu_transition_state}
   - {addr: 0x8016604a, name: g_option_menu_transition_timer}
   - {addr: 0x8016604c, name: g_battle_menu_at_list_selection_finished}

@@ -23,7 +23,7 @@ void battle_menu_run_equip_thread(void) {
     battle_menu_set_modal_open();
     saved = g_battle_unit_view_mode;
     battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
-    g_battle_menu_suspend_state = 1;
+    g_menu_overlay_state = 1;
     thread_wait_for_unit_view_panels();
     menu_request_open_companion_executable(COMPANION_OVERLAY_EQUIP);
     menu_reserve_high_overlay(0x20000);
@@ -54,7 +54,7 @@ void battle_menu_run_equip_thread(void) {
         }
     }
     menu_free_high_overlay();
-    g_battle_menu_suspend_state = 0;
+    g_menu_overlay_state = 0;
     battle_unit_start_view_thread(saved, 0xFF, 0xFF);
     g_sound_suppressed = 0;
     g_script_event_input = 0;

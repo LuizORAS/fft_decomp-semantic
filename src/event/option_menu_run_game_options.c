@@ -236,7 +236,7 @@ void option_menu_run_game_options(void) {
                 battle_handle_menu_cancel_input(entry);
             }
         }
-        if (g_battle_menu_input_lock_mode == 0) {
+        if (g_menu_input_lock_mode == 0) {
             index = cursor + row_offset + delta;
             battle_clear_menu_render_buffer(buffer, 0x1E0);
             g_menu_text_state.pen.stride = 0x3C;

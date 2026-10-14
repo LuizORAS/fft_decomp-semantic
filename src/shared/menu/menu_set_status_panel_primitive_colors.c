@@ -8,7 +8,7 @@ void menu_set_status_panel_primitive_colors(menu_status_panel_buffer_t* primitiv
     s32 i;
     s32 clut;
 
-    if (state->style == 1 || g_battle_menu_input_lock_mode == 1) {
+    if (state->style == 1 || g_menu_input_lock_mode == 1) {
         clut = 0x7dfc;
         for (i = 11; i >= 0; i--) {
             (primitives->sprites + i)->clut = clut;

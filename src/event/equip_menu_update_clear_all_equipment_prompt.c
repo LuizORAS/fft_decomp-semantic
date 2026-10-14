@@ -22,7 +22,7 @@ s32 equip_menu_update_clear_all_equipment_prompt(void) {
             g_equip_menu_clear_all_prompt_draw_params.y = 0x90 + index * 0x10;
             marker_state = 0;
             menu_update_and_draw_animated_cursor(
-                &g_equip_menu_clear_all_prompt_draw_params, &marker_state, g_battle_menu_input_lock_mode);
+                &g_equip_menu_clear_all_prompt_draw_params, &marker_state, g_menu_input_lock_mode);
         }
     }
     flags = g_menu_input_primary_repeat;

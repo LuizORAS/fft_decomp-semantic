@@ -15,7 +15,6 @@ extern s16 g_battle_scenario_event_active;
 
 /* input */
 extern u16 g_battle_event_input_suppression_frames;
-extern s32 g_battle_menu_input_lock_mode;
 
 /* unit staging */
 /* Per-byte status removal masks applied while an event stages a unit: three

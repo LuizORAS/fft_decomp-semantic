@@ -33,7 +33,7 @@ void world_shop_run_equip_candidate_step(void) {
     }
     g_world_shop_equip_candidate_saved_browse = g_world_formation_unit_browse_enabled;
     world_formation_update_and_draw_unit_grid(0, g_world_formation_unit_browse_enabled == 0, 1, input,
-        g_world_thread_task_active, world_item_get_equip_candidate_marker, world_item_get_equip_candidate_brightness);
+        g_menu_input_lock_mode, world_item_get_equip_candidate_marker, world_item_get_equip_candidate_brightness);
     if (g_world_shop_equip_candidate_saved_browse == 0) {
         if (g_world_formation_unit_browse_enabled != 0) {
             g_world_shop_equip_candidate_last_unit = -1;

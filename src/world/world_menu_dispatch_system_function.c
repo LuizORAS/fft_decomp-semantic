@@ -57,7 +57,7 @@ s32 world_menu_dispatch_system_function(
                     if (option != 2) {
                         script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_GAME_OVER);
                         world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
-                        g_world_menu_overlay_state = 1;
+                        g_menu_overlay_state = 1;
                         g_world_menu_scenario_event_started = 1;
                         world_script_start_current_event_thread();
                     } else {
@@ -69,7 +69,7 @@ s32 world_menu_dispatch_system_function(
                     if (script_run_scenario_conditions() != 0) {
                         if (option != 2) {
                             world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
-                            g_world_menu_overlay_state = 1;
+                            g_menu_overlay_state = 1;
                             world_script_start_current_event_thread();
                         } else {
                             g_world_finish_operation_event_id = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
@@ -84,7 +84,7 @@ s32 world_menu_dispatch_system_function(
                 } else if (script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
                     if (option != 2) {
                         world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
-                        g_world_menu_overlay_state = 1;
+                        g_menu_overlay_state = 1;
                         if (script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
                             script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_DEBUG_BATTLE_START);
                         } else {
@@ -98,7 +98,7 @@ s32 world_menu_dispatch_system_function(
                 } else if (action_check_battle_outcome() == 0) {
                     if (option != 2) {
                         world_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
-                        g_world_menu_overlay_state = 1;
+                        g_menu_overlay_state = 1;
                         script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_BATTLE_WON);
                         g_world_menu_scenario_event_started = 1;
                         world_script_start_current_event_thread();

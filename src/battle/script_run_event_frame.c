@@ -66,7 +66,7 @@ s32 script_run_event_frame(u32* ot, u32 buttons) {
                 }
             } else {
                 g_script_threads_idle = 0;
-                g_battle_menu_suspend_state = 0;
+                g_menu_overlay_state = 0;
                 return 0;
             }
             if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_FUNERAL) {
@@ -75,7 +75,7 @@ s32 script_run_event_frame(u32* ot, u32 buttons) {
             script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((finish_op & 0xC00) >> 2) | (finish_op & 0xFF));
             finish_op = (finish_op & 0xF300) >> 8;
             g_script_threads_idle = 0;
-            g_battle_menu_suspend_state = 0;
+            g_menu_overlay_state = 0;
             if (finish_op == 0x80) {
                 return 9;
             }
