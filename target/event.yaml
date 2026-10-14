@@ -296,7 +296,7 @@ functions:
   - {addr: 0x801bf434, size: 48, name: menu_build_unflagged_portrait_poly, hash: cb86608938578cd2, source: src/shared/menu/menu_build_unflagged_portrait_poly.c}
   - {addr: 0x801bf464, size: 100, name: gfx_clip_portrait_poly_from_right, hash: 4632c34e611fc393, source: src/shared/gfx/gfx_clip_portrait_poly_from_right.c}
   - {addr: 0x801bf4c8, size: 100, name: gfx_clip_portrait_poly_from_left, hash: e0267807ec7b0b13, source: src/shared/gfx/gfx_clip_portrait_poly_from_left.c}
-  - {addr: 0x801bf52c, size: 1064, name: menu_build_unit_portrait_transition, hash: cdb73372750d229e, source: src/shared/menu/menu_build_unit_portrait_transition.c}
+  - {addr: 0x801bf52c, size: 1064, name: menu_build_unit_portrait_transition, hash: cdb73372750d229e, source: src/shared/gfx/gfx_build_portrait_transition_primitives.c, source_symbol: gfx_build_portrait_transition_primitives}
   - {addr: 0x801bf954, size: 4488, name: bunit_panel_run_unit_status_thread, hash: 4713ce1b910c04cd, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x801c0adc, size: 8, name: bunit_noop_801c0adc, hash: 6d64edf91449c1b1}
   - {addr: 0x801c0ae4, size: 544, name: menu_init_status_panel_primitives, hash: c0c46a118253c8ae, source: src/shared/menu/menu_init_status_panel_primitives.c}
@@ -831,6 +831,9 @@ imports:
   - {addr: 0x800222fc, name: memset}
 
 overrides:
+  - {function: menu_build_unit_portrait_transition, name: attack_gfx_build_portrait_poly_ft4, addr: 0x801bf434}
+  - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_origin, addr: 0x801cea5c}
+  - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_transition_offsets, addr: 0x801cecfc}
   - {function: menu_text_render_encoded_ids_to_image, name: menu_text_render_glyph_to_4bpp_image, addr: 0x801cb52c}
 ---
 module: event-card
@@ -1111,7 +1114,7 @@ functions:
   - {addr: 0x801bf230, size: 48, name: menu_build_unflagged_portrait_poly, hash: cb86608938578cd2, source: src/shared/menu/menu_build_unflagged_portrait_poly.c}
   - {addr: 0x801bf260, size: 100, name: gfx_clip_portrait_poly_from_right, hash: b486060e906e736a, source: src/shared/gfx/gfx_clip_portrait_poly_from_right.c}
   - {addr: 0x801bf2c4, size: 100, name: gfx_clip_portrait_poly_from_left, hash: acc71cf2f3953a3f, source: src/shared/gfx/gfx_clip_portrait_poly_from_left.c}
-  - {addr: 0x801bf328, size: 1064, name: menu_build_unit_portrait_transition, hash: 28dadc40ac60e2ca, source: src/shared/menu/menu_build_unit_portrait_transition.c}
+  - {addr: 0x801bf328, size: 1064, name: menu_build_unit_portrait_transition, hash: 28dadc40ac60e2ca, source: src/shared/gfx/gfx_build_portrait_transition_primitives.c, source_symbol: gfx_build_portrait_transition_primitives}
   - {addr: 0x801bf750, size: 4540, name: debugchr_panel_run_unit_status_thread, hash: 54bc0c002cea8319, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x801c090c, size: 8, name: debugchr_noop_801c090c, hash: 6d64edf91449c1b1}
   - {addr: 0x801c0914, size: 544, name: menu_init_status_panel_primitives, hash: c0c46a118253c8ae, source: src/shared/menu/menu_init_status_panel_primitives.c}
@@ -1258,6 +1261,11 @@ data:
   - {addr: 0x801cece8, name: g_debugchr_editor_current_field}
   - {addr: 0x801cecec, name: g_debugchr_editor_selected_unit_slot}
   - {addr: 0x801cecf0, name: g_debugchr_editor_field_edit_active}
+
+overrides:
+  - {function: menu_build_unit_portrait_transition, name: attack_gfx_build_portrait_poly_ft4, addr: 0x801bf230}
+  - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_origin, addr: 0x801c543c}
+  - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_transition_offsets, addr: 0x801c56dc}
 ---
 module: event-equip
 file: EVENT/EQUIP.OUT
@@ -1292,7 +1300,7 @@ functions:
   - {addr: 0x801bfdf8, size: 48, name: menu_build_unflagged_portrait_poly, hash: cb86608938578cd2, source: src/shared/menu/menu_build_unflagged_portrait_poly.c}
   - {addr: 0x801bfe28, size: 100, name: gfx_clip_portrait_poly_from_right, hash: 3e2eceefe192cbe3, source: src/shared/gfx/gfx_clip_portrait_poly_from_right.c}
   - {addr: 0x801bfe8c, size: 100, name: gfx_clip_portrait_poly_from_left, hash: 3d34b3a8acab0923, source: src/shared/gfx/gfx_clip_portrait_poly_from_left.c}
-  - {addr: 0x801bfef0, size: 1064, name: menu_build_unit_portrait_transition, hash: 6379fd02254cc356, source: src/shared/menu/menu_build_unit_portrait_transition.c}
+  - {addr: 0x801bfef0, size: 1064, name: menu_build_unit_portrait_transition, hash: 6379fd02254cc356, source: src/shared/gfx/gfx_build_portrait_transition_primitives.c, source_symbol: gfx_build_portrait_transition_primitives}
   - {addr: 0x801c0318, size: 4612, name: equip_panel_run_unit_status_thread, hash: 0a90a88495dfd5ba, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x801c151c, size: 8, name: equip_noop_801c151c, hash: 6d64edf91449c1b1}
   - {addr: 0x801c1524, size: 544, name: menu_init_status_panel_primitives, hash: c0c46a118253c8ae, source: src/shared/menu/menu_init_status_panel_primitives.c}
@@ -1767,6 +1775,9 @@ imports:
   - {addr: 0x800222fc, name: memset}
 
 overrides:
+  - {function: menu_build_unit_portrait_transition, name: attack_gfx_build_portrait_poly_ft4, addr: 0x801bfdf8}
+  - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_origin, addr: 0x801ce584}
+  - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_transition_offsets, addr: 0x801ce884}
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_init_primary_reader, addr: 0x801cdf50}
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_read_primary, addr: 0x801cdf88}
 ---
