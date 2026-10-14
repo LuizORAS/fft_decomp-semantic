@@ -9,15 +9,15 @@ void effect_step_motion(effect_motion_t* motion) {
     motion->position.y += motion->velocity.y;
     motion->position.z += motion->velocity.z;
     motion->velocity.x
-        = ((motion->inertia - g_effect_inertia_threshold) * motion->velocity.x + (motion->acceleration.x << 12))
+        = ((motion->inertia - g_effect_inertia_threshold) * motion->velocity.x + (motion->acceleration.x * ONE))
             / motion->inertia
         + ((motion->weight * g_effect_gravity.x) >> 12);
     motion->velocity.y
-        = ((motion->inertia - g_effect_inertia_threshold) * motion->velocity.y + (motion->acceleration.y << 12))
+        = ((motion->inertia - g_effect_inertia_threshold) * motion->velocity.y + (motion->acceleration.y * ONE))
             / motion->inertia
         + ((motion->weight * g_effect_gravity.y) >> 12);
     motion->velocity.z
-        = ((motion->inertia - g_effect_inertia_threshold) * motion->velocity.z + (motion->acceleration.z << 12))
+        = ((motion->inertia - g_effect_inertia_threshold) * motion->velocity.z + (motion->acceleration.z * ONE))
             / motion->inertia
         + ((motion->weight * g_effect_gravity.z) >> 12);
     motion->acceleration.x += motion->acceleration_step.x;

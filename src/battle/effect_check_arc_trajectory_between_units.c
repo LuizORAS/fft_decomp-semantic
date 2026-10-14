@@ -28,7 +28,7 @@ s32 effect_check_arc_trajectory_between_units(u8 source_id, u8 target_id) {
     query.delta.x = query.target.position.vx - query.source.position.vx;
     query.delta.z = query.target.position.vz - query.source.position.vz;
     query.delta.y = query.source.position.vy - query.target.position.vy;
-    query.delta.distance = SquareRoot12((query.delta.x * query.delta.x + query.delta.z * query.delta.z) << 12);
+    query.delta.distance = SquareRoot12((query.delta.x * query.delta.x + query.delta.z * query.delta.z) * ONE);
     rotation.vy = ratan2(-query.delta.z, query.delta.x);
     if (effect_calculate_arcing_trajectory(&query, &arc_a, &arc_b) != 0
         && (effect_trace_arc_trajectory_path(

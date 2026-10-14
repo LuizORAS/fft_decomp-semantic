@@ -67,7 +67,7 @@ s32 effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_position
     query.delta.x = g_effect_trajectory_destination.vx - g_effect_trajectory_origin.vx;
     query.delta.z = g_effect_trajectory_destination.vz - g_effect_trajectory_origin.vz;
     query.delta.y = g_effect_trajectory_origin.vy - g_effect_trajectory_destination.vy;
-    query.delta.distance = SquareRoot12((query.delta.x * query.delta.x + query.delta.z * query.delta.z) << 12);
+    query.delta.distance = SquareRoot12((query.delta.x * query.delta.x + query.delta.z * query.delta.z) * ONE);
     arc.vy = ratan2(-query.delta.z, query.delta.x);
     if (effect_calculate_arcing_trajectory(&query, &arc_a, &arc_b) == 0) {
         arc_b = ONE;

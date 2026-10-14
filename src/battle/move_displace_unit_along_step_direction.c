@@ -22,26 +22,26 @@ void move_displace_unit_along_step_direction(battle_unit_t* unit, s32 x, s32 y, 
     case MOVE_DIRECTION_SOUTH:
         axis = y - delta;
         unit->world_coords.vz = axis;
-        unit->real.vz = axis << 12;
+        unit->real.vz = axis * ONE;
         break;
     case MOVE_DIRECTION_NORTH:
         axis = y + delta;
         unit->world_coords.vz = axis;
-        unit->real.vz = axis << 12;
+        unit->real.vz = axis * ONE;
         break;
     case MOVE_DIRECTION_EAST:
         axis = x + delta;
         unit->world_coords.vx = axis;
-        unit->real.vx = axis << 12;
+        unit->real.vx = axis * ONE;
         break;
     case MOVE_DIRECTION_WEST:
         axis = x - delta;
         unit->world_coords.vx = axis;
-        unit->real.vx = axis << 12;
+        unit->real.vx = axis * ONE;
         break;
     }
     screen_z = battle_gfx_calculate_world_height_from_world_coords(unit);
     unit->world_coords.vy = screen_z;
-    unit->real.vy = screen_z << 12;
+    unit->real.vy = screen_z * ONE;
     unit->shadow_dirty |= 1;
 }

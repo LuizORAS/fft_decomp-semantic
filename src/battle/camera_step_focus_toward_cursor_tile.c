@@ -5,7 +5,7 @@
 
 /* Move one 20.12 fixed-point camera component toward its bound by its per-frame
  * step, without overshooting. The bound is compared against the component's
- * whole-unit part, so the clamp lands exactly on bound << 12. The test is
+ * whole-unit part, so the clamp lands exactly on bound * ONE. The test is
  * written once per sign of the step because the overshoot comparison reverses
  * with it. The body is a bare if/else: wrapped in do/while (0) it becomes a
  * loop to the compiler, which doubles its reference counts and changes the
@@ -18,7 +18,7 @@
         if (whole > bound) {                                                                                           \
             *position += step;                                                                                         \
             if (*position / ONE < bound) {                                                                             \
-                *position = bound << 12;                                                                               \
+                *position = bound * ONE;                                                                               \
             }                                                                                                          \
         }                                                                                                              \
     } else {                                                                                                           \
@@ -28,7 +28,7 @@
         if (whole < bound) {                                                                                           \
             *position += step;                                                                                         \
             if (bound < *position / ONE) {                                                                             \
-                *position = bound << 12;                                                                               \
+                *position = bound * ONE;                                                                               \
             }                                                                                                          \
         }                                                                                                              \
     }

@@ -111,9 +111,9 @@ s32 effect_summon_charge_secondary_handler(void) {
                 id = g_effect_current_secondary->slot_ids[i * 10 + j];
                 if (id != 0) {
                     slot = &g_effect_slots[id];
-                    slot->motion.position.x = (state->center.vx + state->points[i][k].vx) << 12;
-                    slot->motion.position.y = (state->center.vy + state->points[i][k].vy) << 12;
-                    slot->motion.position.z = (state->center.vz + state->points[i][k].vz) << 12;
+                    slot->motion.position.x = (state->center.vx + state->points[i][k].vx) * ONE;
+                    slot->motion.position.y = (state->center.vy + state->points[i][k].vy) * ONE;
+                    slot->motion.position.z = (state->center.vz + state->points[i][k].vz) * ONE;
                     effect_update_slot(g_effect_current_secondary->slot_ids[i * 10 + j]);
                 }
                 k++;

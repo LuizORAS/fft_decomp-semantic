@@ -13,7 +13,7 @@ s32 world_formation_cursor_distance_falloff(s32 x, s32 y, s32 base, s32 floor) {
     dy = abs(g_world_formation_cursor_position.y - y);
     dy *= 2;
     dy *= dy;
-    dx = base - (csqrt((dy + dx) << 12) >> 12);
+    dx = base - (csqrt((dy + dx) * ONE) >> 12);
     if (dx < floor) {
         dx = floor;
     }

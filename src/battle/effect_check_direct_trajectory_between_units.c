@@ -33,6 +33,6 @@ s32 effect_check_direct_trajectory_between_units(u8 source_id, u8 target_id) {
     battle_unit_get_tile_center_and_height_by_battle_id(target_id, &destination);
     destination.vy -= target_height;
     setVector(&delta, destination.vx - origin.vx, destination.vy - origin.vy, destination.vz - origin.vz);
-    distance = SquareRoot12((delta.vx * delta.vx + delta.vy * delta.vy + delta.vz * delta.vz) << 12);
+    distance = SquareRoot12((delta.vx * delta.vx + delta.vy * delta.vy + delta.vz * delta.vz) * ONE);
     return effect_trace_projectile_path(&delta, &origin, &distance, obstacles);
 }

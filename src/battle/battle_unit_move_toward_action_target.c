@@ -22,8 +22,8 @@ void battle_unit_move_toward_action_target(battle_unit_t* unit, s32 allow_height
     case 0:
         if (unit->stats != 0) {
             if (g_battle_game_state == BATTLE_GAME_STATE_EVENT) {
-                velocity.vx = ((unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)) << 12) - unit->real.vx;
-                velocity.vz = ((unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)) << 12) - unit->real.vz;
+                velocity.vx = ((unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)) * ONE) - unit->real.vx;
+                velocity.vz = ((unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)) * ONE) - unit->real.vz;
                 velocity.vy = 0;
             } else if (unit->strike.target_count != 0) {
                 target = battle_unit_get_by_battle_id(unit->strike.target_list[0]);
@@ -32,15 +32,15 @@ void battle_unit_move_toward_action_target(battle_unit_t* unit, s32 allow_height
             } else {
                 velocity.vx = (unit->stats->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)
                                   - unit->world_coords.vx)
-                    << 12;
+                    * ONE;
                 velocity.vz = (unit->stats->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)
                                   - unit->world_coords.vz)
-                    << 12;
+                    * ONE;
                 tile_center.vx = unit->stats->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 tile_center.vz = unit->stats->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
                 velocity.vy = (map_calculate_slope_height(&tile_center, unit->stats->action_command.target_position.vy)
                                   - unit->world_coords.vy)
-                    << 12;
+                    * ONE;
             }
             velocity.vx /= timer;
             velocity.vy /= timer;

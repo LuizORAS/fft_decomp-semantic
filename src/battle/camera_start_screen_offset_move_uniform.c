@@ -18,11 +18,11 @@ void camera_start_screen_offset_move_uniform(const s32* destination_value, s32 f
     current_x = g_camera_current_screen_offset.vx;
     current_z = g_camera_current_screen_offset.vy;
     current_y = g_camera_current_screen_offset.vz;
-    setVector(&g_camera_screen_offset_fixed, current_x << 12, current_z << 12, current_y << 12);
+    setVector(&g_camera_screen_offset_fixed, current_x * ONE, current_z * ONE, current_y * ONE);
     delta_x = *destination_value - current_x;
     g_camera_screen_offset_countdown = animation_frames;
     animation_frames = g_camera_screen_offset_countdown;
-    setVector(&g_camera_real_coord_delta, (delta_x << 12) / animation_frames,
-        ((*destination_value - current_z) << 12) / animation_frames,
-        ((*destination_value - current_y) << 12) / animation_frames);
+    setVector(&g_camera_real_coord_delta, (delta_x * ONE) / animation_frames,
+        ((*destination_value - current_z) * ONE) / animation_frames,
+        ((*destination_value - current_y) * ONE) / animation_frames);
 }

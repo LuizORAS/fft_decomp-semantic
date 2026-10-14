@@ -10,10 +10,10 @@ void camera_start_screen_offset_move_relative(const VECTOR* values, s32 frame_co
     s32 animation_frames;
 
     animation_frames = (frame_count & 0xffff) / g_main_system_animation_speed;
-    setVector(&g_camera_screen_offset_fixed, g_camera_current_screen_offset.vx << 12,
-        g_camera_current_screen_offset.vy << 12, g_camera_current_screen_offset.vz << 12);
+    setVector(&g_camera_screen_offset_fixed, g_camera_current_screen_offset.vx * ONE,
+        g_camera_current_screen_offset.vy * ONE, g_camera_current_screen_offset.vz * ONE);
     g_camera_screen_offset_countdown = animation_frames;
     animation_frames = g_camera_screen_offset_countdown;
-    setVector(&g_camera_real_coord_delta, (values->vx << 12) / animation_frames, (values->vy << 12) / animation_frames,
-        (values->vz << 12) / animation_frames);
+    setVector(&g_camera_real_coord_delta, (values->vx * ONE) / animation_frames, (values->vy * ONE) / animation_frames,
+        (values->vz * ONE) / animation_frames);
 }

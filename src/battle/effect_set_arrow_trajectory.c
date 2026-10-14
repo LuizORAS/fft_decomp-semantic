@@ -42,5 +42,5 @@ void effect_set_arrow_trajectory(s32 source_id, SVECTOR* tile_position, s32 targ
         g_effect_trajectory_destination.vy - g_effect_trajectory_origin.vy,
         g_effect_trajectory_destination.vz - g_effect_trajectory_origin.vz);
     g_effect_trajectory_step_count
-        = SquareRoot12((delta.vx * delta.vx + delta.vy * delta.vy + delta.vz * delta.vz) << 12) / 8 >> 12;
+        = SquareRoot12((delta.vx * delta.vx + delta.vy * delta.vy + delta.vz * delta.vz) * ONE) / 8 >> 12;
 }

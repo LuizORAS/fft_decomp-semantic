@@ -13,14 +13,14 @@ void camera_step_real_coords_toward_target(const battle_unit_t* target) {
         if (g_camera_current_real_coords.vx / ONE > target->world_coords.vx) {
             g_camera_current_real_coords.vx += g_camera_step_vector.vx;
             if (g_camera_current_real_coords.vx / ONE < target->world_coords.vx) {
-                g_camera_current_real_coords.vx = target->world_coords.vx << 12;
+                g_camera_current_real_coords.vx = target->world_coords.vx * ONE;
             }
         }
     } else {
         if (g_camera_current_real_coords.vx / ONE < target->world_coords.vx) {
             g_camera_current_real_coords.vx += g_camera_step_vector.vx;
             if (g_camera_current_real_coords.vx / ONE > target->world_coords.vx) {
-                g_camera_current_real_coords.vx = target->world_coords.vx << 12;
+                g_camera_current_real_coords.vx = target->world_coords.vx * ONE;
             }
         }
     }
@@ -28,14 +28,14 @@ void camera_step_real_coords_toward_target(const battle_unit_t* target) {
         if (g_camera_current_real_coords.vy / ONE > target->world_coords.vy) {
             g_camera_current_real_coords.vy += g_camera_step_vector.vy;
             if (g_camera_current_real_coords.vy / ONE < target->world_coords.vy) {
-                g_camera_current_real_coords.vy = target->world_coords.vy << 12;
+                g_camera_current_real_coords.vy = target->world_coords.vy * ONE;
             }
         }
     } else {
         if (g_camera_current_real_coords.vy / ONE < target->world_coords.vy) {
             g_camera_current_real_coords.vy += g_camera_step_vector.vy;
             if (g_camera_current_real_coords.vy / ONE > target->world_coords.vy) {
-                g_camera_current_real_coords.vy = target->world_coords.vy << 12;
+                g_camera_current_real_coords.vy = target->world_coords.vy * ONE;
             }
         }
     }
@@ -43,7 +43,7 @@ void camera_step_real_coords_toward_target(const battle_unit_t* target) {
         if (g_camera_current_real_coords.vz / ONE > target->world_coords.vz) {
             g_camera_current_real_coords.vz += g_camera_step_vector.vz;
             if (g_camera_current_real_coords.vz / ONE < target->world_coords.vz) {
-                g_camera_current_real_coords.vz = target->world_coords.vz << 12;
+                g_camera_current_real_coords.vz = target->world_coords.vz * ONE;
             }
         }
     } else {
@@ -51,7 +51,7 @@ void camera_step_real_coords_toward_target(const battle_unit_t* target) {
             /* Retail quirk: only this positive map-depth step doubles the component. */
             g_camera_current_real_coords.vz += g_camera_step_vector.vz * 2;
             if (g_camera_current_real_coords.vz / ONE > target->world_coords.vz) {
-                g_camera_current_real_coords.vz = target->world_coords.vz << 12;
+                g_camera_current_real_coords.vz = target->world_coords.vz * ONE;
             }
         }
     }

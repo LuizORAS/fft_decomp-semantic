@@ -333,13 +333,13 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
                     gte_rtv0tr();
                     gte_stlvnl(&result);
                     gte_stflg(&result.pad);
-                    slot->position.vx = (result.vx * spread.vx / largest + origin.vx) << 12;
-                    slot->position.vy = (result.vy * spread.vy / largest + origin.vy) << 12;
-                    slot->position.vz = (result.vz * spread.vz / largest + origin.vz) << 12;
+                    slot->position.vx = (result.vx * spread.vx / largest + origin.vx) * ONE;
+                    slot->position.vy = (result.vy * spread.vy / largest + origin.vy) * ONE;
+                    slot->position.vz = (result.vz * spread.vz / largest + origin.vz) * ONE;
                 } else {
-                    slot->position.vx = origin.vx << 12;
-                    slot->position.vy = origin.vy << 12;
-                    slot->position.vz = origin.vz << 12;
+                    slot->position.vx = origin.vx * ONE;
+                    slot->position.vy = origin.vy * ONE;
+                    slot->position.vz = origin.vz * ONE;
                 }
 
                 largest = effect_select_largest_magnitude_s16(target_spread.vx, target_spread.vy, target_spread.vz);
@@ -495,9 +495,9 @@ s32 effect_particle_ribbon_short_update(s32 record_index, s32 callback_slot, s32
                     + ((EFFECT_PARTICLE_RIBBON_SHORT_POINTS - 1) - point)
                         * (width / (EFFECT_PARTICLE_RIBBON_SHORT_POINTS - 1));
             }
-            parent.motion.position.x = slot->trail[index].x << 12;
-            parent.motion.position.y = slot->trail[index].y << 12;
-            parent.motion.position.z = slot->trail[index].z << 12;
+            parent.motion.position.x = slot->trail[index].x * ONE;
+            parent.motion.position.y = slot->trail[index].y * ONE;
+            parent.motion.position.z = slot->trail[index].z * ONE;
             if (flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
                 effect_spawn_emitter_particles(
                     record->record_index, slot->age, entry->particle_ribbon.child_emitter_mid_life, &parent);

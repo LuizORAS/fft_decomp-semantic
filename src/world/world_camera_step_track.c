@@ -64,14 +64,14 @@ s32 world_camera_step_track(camera_track_t* track, s32 component) {
             track->prev_value
                 = (track->keys[track->segment + 1].value - track->keys[track->segment].value) / 2 + key_value;
         }
-        track->prev_value <<= 12;
-        track->prev_time = track->frame << 12;
+        track->prev_value *= ONE;
+        track->prev_time = track->frame * ONE;
         track->start_value = track->prev_value;
     }
 
     if (track->keys[track->segment].value == track->keys[track->segment + 1].value
         && track->keys[track->segment].value == track->keys[track->segment + 2].value) {
-        result = track->keys[track->segment].value << 12;
+        result = track->keys[track->segment].value * ONE;
     } else {
         for (i = 0; i < 2; i++) {
             frame = i + track->segment_frame;
@@ -120,7 +120,7 @@ s32 world_camera_step_track(camera_track_t* track, s32 component) {
             lead = world_mul_div_64(value_delta0, result, divisor) + value0; /* crossing value */
             divisor = span - track->prev_time;
             if (divisor != 0) {
-                result = world_mul_div_64(lead - track->prev_value, (track->frame << 12) - track->prev_time, divisor)
+                result = world_mul_div_64(lead - track->prev_value, (track->frame * ONE) - track->prev_time, divisor)
                     + track->prev_value;
                 track->prev_time = span;
                 track->prev_value = lead;

@@ -29,16 +29,16 @@ s32 effect_calculate_arcing_trajectory(battle_arc_query_t* query, s32* arc_a, s3
     peak = effect_calculate_arc_height_term(query->delta.distance);
     if (query->delta.distance != 0) {
         height = query->target.height / 2;
-        limit = (height + query->delta.y) << 12;
+        limit = (height + query->delta.y) * ONE;
         if (peak >= limit && floor >= limit) {
             query->target.height = height;
         } else {
             height = query->target.height * 3 / 4;
-            limit = (height + query->delta.y) << 12;
+            limit = (height + query->delta.y) * ONE;
             if (peak >= limit && floor >= limit) {
                 query->target.height = height;
             } else {
-                limit = query->delta.y << 12;
+                limit = query->delta.y * ONE;
                 if (peak < limit || floor < limit) {
                     return result;
                 }

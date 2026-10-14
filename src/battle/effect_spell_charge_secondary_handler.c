@@ -118,8 +118,8 @@ s32 effect_spell_charge_secondary_handler(void) {
                     state->count.trails++;
                     k = (rand() & 0x1ff) + state->angle;
                     state->angle += 0x571;
-                    g_effect_slots[j].motion.position.x = rcos(k) * state->radius + (state->x << 12);
-                    g_effect_slots[j].motion.position.y = rsin(k) * state->radius + (state->y << 12);
+                    g_effect_slots[j].motion.position.x = rcos(k) * state->radius + (state->x * ONE);
+                    g_effect_slots[j].motion.position.y = rsin(k) * state->radius + (state->y * ONE);
                     k = k + rand() % state->spread_range - state->spread_offset - 0x800;
                     g_effect_slots[j].motion.velocity.x = rcos(k) * state->speed;
                     g_effect_slots[j].motion.velocity.y = rsin(k) * state->speed;

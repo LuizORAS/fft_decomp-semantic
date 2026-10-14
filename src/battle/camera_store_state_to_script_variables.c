@@ -26,7 +26,7 @@ void camera_store_state_to_script_variables(void) {
 
     coords = camera_get_current_real_coords();
     g_script_variables[EVENT_SCRIPT_VAR_CAMERA_X] = coords->vx;
-    g_script_variables[EVENT_SCRIPT_VAR_CAMERA_Z] = coords->vy - (g_camera_shake_z_offset << 12);
+    g_script_variables[EVENT_SCRIPT_VAR_CAMERA_Z] = coords->vy - (g_camera_shake_z_offset * ONE);
     g_camera_published_coords_ptr = coords;
     g_camera_shake_z_offset = 0;
     g_script_variables[EVENT_SCRIPT_VAR_CAMERA_Y] = coords->vz;

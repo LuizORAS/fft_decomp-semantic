@@ -51,7 +51,7 @@ s32 effect_check_direct_trajectory_to_target(s32 source_id, SVECTOR* tile_positi
         g_effect_trajectory_destination.vy - g_effect_trajectory_origin.vy,
         g_effect_trajectory_destination.vz - g_effect_trajectory_origin.vz);
     g_effect_arctan_angle_mod = ratan2(delta.vy, SquareRoot0(delta.vx * delta.vx + delta.vz * delta.vz)) + 0x400;
-    distance = SquareRoot12((delta.vx * delta.vx + delta.vy * delta.vy + delta.vz * delta.vz) << 12);
+    distance = SquareRoot12((delta.vx * delta.vx + delta.vy * delta.vy + delta.vz * delta.vz) * ONE);
     if (effect_trace_projectile_path(&delta, &g_effect_trajectory_origin, &distance, obstacles) != 0) {
         return target_id;
     }

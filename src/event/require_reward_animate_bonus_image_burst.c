@@ -90,8 +90,8 @@ void require_reward_animate_bonus_image_burst(void) {
                 g_require_reward_burst_rotation.vy = 0;
                 g_require_reward_burst_rotation.vz = 0x200;
                 RotMatrix(&g_require_reward_burst_rotation, &g_require_reward_burst_matrix);
-                g_require_reward_burst_offset.vx = dx << 12;
-                g_require_reward_burst_offset.vy = dy << 12;
+                g_require_reward_burst_offset.vx = dx * ONE;
+                g_require_reward_burst_offset.vy = dy * ONE;
                 g_require_reward_burst_offset.vz = 0;
                 ApplyMatrixLV(&g_require_reward_burst_matrix, &g_require_reward_burst_offset,
                     &g_require_reward_burst_rotated_offset);
@@ -127,7 +127,7 @@ void require_reward_animate_bonus_image_burst(void) {
                         g_require_reward_burst_rotation.vy = 0;
                         g_require_reward_burst_rotation.vz = tile->angle + 0x200;
                         RotMatrix(&g_require_reward_burst_rotation, &g_require_reward_burst_matrix);
-                        g_require_reward_burst_offset.vx = tile->radius << 12;
+                        g_require_reward_burst_offset.vx = tile->radius * ONE;
                         g_require_reward_burst_offset.vy = 0;
                         g_require_reward_burst_offset.vz = 0;
                         ApplyMatrixLV(&g_require_reward_burst_matrix, &g_require_reward_burst_offset,
@@ -142,7 +142,7 @@ void require_reward_animate_bonus_image_burst(void) {
                         g_require_reward_burst_rotation.vy = 0;
                         g_require_reward_burst_rotation.vz = tile->angle + 0x600;
                         RotMatrix(&g_require_reward_burst_rotation, &g_require_reward_burst_matrix);
-                        g_require_reward_burst_offset.vx = tile->radius << 12;
+                        g_require_reward_burst_offset.vx = tile->radius * ONE;
                         g_require_reward_burst_offset.vy = 0;
                         g_require_reward_burst_offset.vz = 0;
                         ApplyMatrixLV(&g_require_reward_burst_matrix, &g_require_reward_burst_offset,

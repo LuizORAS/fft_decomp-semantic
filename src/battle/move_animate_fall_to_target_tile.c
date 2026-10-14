@@ -45,13 +45,13 @@ void move_animate_fall_to_target_tile(battle_unit_t* unit) {
             unit->strike.target_count = 0;
             x = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             unit->world_coords.vx = x;
-            unit->real.vx = x << 12;
+            unit->real.vx = x * ONE;
             y = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
             unit->world_coords.vz = y;
             /* Retail stores the tile-centre depth into real.vy (the height),
              * not real.vz. The first frame adds the fall speed to it and the
              * next one snaps the height to the ground. */
-            unit->real.vy = y << 12;
+            unit->real.vy = y * ONE;
             main_util_set_svector(&coords, unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2), unit->map_z,
                 unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2));
             coords.vy = screen_z_from_unit_screen_coords(unit, &coords);
@@ -73,7 +73,7 @@ void move_animate_fall_to_target_tile(battle_unit_t* unit) {
             unit->real.vy += velocity.vy;
             velocity.vy += g_move_jump_gravity;
         } else {
-            unit->real.vy = coords.vy << 12;
+            unit->real.vy = coords.vy * ONE;
             unit->position_copies_active = 0;
             unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }

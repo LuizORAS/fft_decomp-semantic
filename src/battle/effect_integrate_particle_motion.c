@@ -41,11 +41,11 @@ void effect_integrate_particle_motion(effect_work_record_t* list) {
 
         weight = motion->inertia - threshold;
 
-        motion->velocity.x = (weight * motion->velocity.x + (motion->acceleration.x << 12)) / motion->inertia
+        motion->velocity.x = (weight * motion->velocity.x + (motion->acceleration.x * ONE)) / motion->inertia
             + ((gravity_x * motion->weight) >> 12);
-        motion->velocity.y = (weight * motion->velocity.y + (motion->acceleration.y << 12)) / motion->inertia
+        motion->velocity.y = (weight * motion->velocity.y + (motion->acceleration.y * ONE)) / motion->inertia
             + ((gravity_y * motion->weight) >> 12);
-        motion->velocity.z = (weight * motion->velocity.z + (motion->acceleration.z << 12)) / motion->inertia
+        motion->velocity.z = (weight * motion->velocity.z + (motion->acceleration.z * ONE)) / motion->inertia
             + ((gravity_z * motion->weight) >> 12);
 
         weight = node->homing_strength;

@@ -39,7 +39,7 @@ s32 effect_arrow_arc_secondary_handler(void) {
         delta.vx = g_effect_trajectory_destination.vx - g_effect_trajectory_origin.vx;
         delta.vz = g_effect_trajectory_destination.vz - g_effect_trajectory_origin.vz;
         delta.vy = g_effect_trajectory_origin.vy - g_effect_trajectory_destination.vy;
-        g_effect_arrow_arc_length = SquareRoot12((delta.vx * delta.vx + delta.vz * delta.vz) << 12);
+        g_effect_arrow_arc_length = SquareRoot12((delta.vx * delta.vx + delta.vz * delta.vz) * ONE);
         g_effect_arrow_arc_yaw = ratan2(-delta.vz, delta.vx);
         result = 1;
         g_effect_arrow_arc_caster_relative_yaw = g_effect_arrow_arc_yaw

@@ -5,11 +5,11 @@ void effect_add_random_vector_offsets_and_store_q12(const VECTOR* source, const 
     u16 range;
 
     range = ranges->vx;
-    destination->vx = (source->vx + effect_get_random_between_s16(-range, range)) << 12;
+    destination->vx = (source->vx + effect_get_random_between_s16(-range, range)) * ONE;
 
     range = ranges->vy;
-    destination->vy = (source->vy + effect_get_random_between_s16(-range, range)) << 12;
+    destination->vy = (source->vy + effect_get_random_between_s16(-range, range)) * ONE;
 
     range = ranges->vz;
-    destination->vz = (source->vz + effect_get_random_between_s16(-range, range)) << 12;
+    destination->vz = (source->vz + effect_get_random_between_s16(-range, range)) * ONE;
 }

@@ -14,7 +14,7 @@ void camera_load_state_from_script_variables(void) {
     camera_set_zoom(&g_camera_script_vector);
 
     g_camera_script_vector.vx = g_script_variables[EVENT_SCRIPT_VAR_CAMERA_X];
-    g_camera_script_vector.vy = (g_camera_shake_z_offset << 12) + g_script_variables[EVENT_SCRIPT_VAR_CAMERA_Z];
+    g_camera_script_vector.vy = (g_camera_shake_z_offset * ONE) + g_script_variables[EVENT_SCRIPT_VAR_CAMERA_Z];
     g_camera_script_vector.vz = g_script_variables[EVENT_SCRIPT_VAR_CAMERA_Y];
     camera_set_current_real_coords(&g_camera_script_vector);
 }

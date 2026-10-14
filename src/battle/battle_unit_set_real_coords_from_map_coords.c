@@ -9,8 +9,8 @@ void battle_unit_set_real_coords_from_map_coords(battle_unit_t* unit) {
     SVECTOR tile_center;
 
     tile_center.vx = unit->map_x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-    unit->real.vx = tile_center.vx << 12;
+    unit->real.vx = tile_center.vx * ONE;
     tile_center.vz = unit->map_y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
-    unit->real.vz = tile_center.vz << 12;
-    unit->real.vy = battle_gfx_calculate_world_height_from_unit_tile(unit) << 12;
+    unit->real.vz = tile_center.vz * ONE;
+    unit->real.vy = battle_gfx_calculate_world_height_from_unit_tile(unit) * ONE;
 }

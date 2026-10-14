@@ -7,5 +7,5 @@
  * back at from when current reaches duration. */
 void effect_interpolate_svector_cos_q12(
     const SVECTOR* from, const SVECTOR* to, s32 duration, s32 current, SVECTOR* out) {
-    effect_interpolate_svector(from, to, ONE - rcos((current << 12) / duration), out);
+    effect_interpolate_svector(from, to, ONE - rcos((current * ONE) / duration), out);
 }

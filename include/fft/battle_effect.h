@@ -1221,7 +1221,7 @@ typedef char assert_effect_list_node_size[sizeof(effect_list_node_t) == 36 ? 1 :
  * effect_step_motion and effect_integrate_particle_motion:
  * position gains velocity; velocity keeps (inertia -
  * g_effect_inertia_threshold) / inertia of itself, gains
- * acceleration << 12 / inertia and gains g_effect_gravity scaled by
+ * acceleration * ONE / inertia and gains g_effect_gravity scaled by
  * weight (4.12 fixed point); acceleration gains acceleration_step. */
 typedef struct effect_motion {
     s16 inertia;                 /* 0x00 */

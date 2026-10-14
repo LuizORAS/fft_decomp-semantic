@@ -84,7 +84,7 @@ s32 effect_polar_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_in
 
         selector = entry->polar_mesh.curve_bindings.radius;
         EFFECT_READ_CURVE(j, i, selector, work->frame);
-        scratch->radius = battle_lerp_fixed8(entry->polar_mesh.radius_start, entry->polar_mesh.radius_end, i) << 12;
+        scratch->radius = battle_lerp_fixed8(entry->polar_mesh.radius_start, entry->polar_mesh.radius_end, i) * ONE;
         EFFECT_READ_CURVE(j, i, entry->polar_mesh.curve_bindings.radius_step, work->frame);
         scratch->radius_step
             = battle_lerp_fixed8(entry->polar_mesh.radius_step_start, entry->polar_mesh.radius_step_end, i) << 4;
@@ -145,19 +145,19 @@ s32 effect_polar_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_in
         EFFECT_READ_CURVE(j, i, selector, frame);
         j = battle_lerp_fixed8(entry->polar_mesh.scroll_u_speed_start, entry->polar_mesh.scroll_u_speed_end, i) << 4;
         work->scroll_u += j;
-        while (work->scroll_u >= scratch->half_width << 12) {
-            work->scroll_u -= scratch->half_width << 12;
+        while (work->scroll_u >= scratch->half_width * ONE) {
+            work->scroll_u -= scratch->half_width * ONE;
         }
         while (work->scroll_u < 0) {
-            work->scroll_u += scratch->half_width << 12;
+            work->scroll_u += scratch->half_width * ONE;
         }
         j = battle_lerp_fixed8(entry->polar_mesh.scroll_v_speed_start, entry->polar_mesh.scroll_v_speed_end, i) << 4;
         work->scroll_v += j;
-        while (work->scroll_v >= scratch->half_height << 12) {
-            work->scroll_v -= scratch->half_height << 12;
+        while (work->scroll_v >= scratch->half_height * ONE) {
+            work->scroll_v -= scratch->half_height * ONE;
         }
         while (work->scroll_v < 0) {
-            work->scroll_v += scratch->half_height << 12;
+            work->scroll_v += scratch->half_height * ONE;
         }
 
         if (entry->polar_mesh.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {

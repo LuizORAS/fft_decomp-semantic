@@ -28,7 +28,7 @@ void move_update_float_step_to_destination_tile_center(battle_unit_t* unit) {
             unit->map_x = unit->movement.destination_x;
             unit->map_y = unit->movement.destination_y;
             unit->velocity.vy = 0;
-            unit->real.vy = g_move_target_screen_z << 12;
+            unit->real.vy = g_move_target_screen_z * ONE;
             unit->world_coords.vy = unit->real.vy / ONE;
             unit->step_phase = MOVE_STEP_PHASE_NONE;
             unit->shadow_dirty |= 1;

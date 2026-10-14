@@ -25,7 +25,7 @@ s32 move_calculate_jump_arc_velocity(const SVECTOR* from, const SVECTOR* to, VEC
     height = g_move_jump_gravity * height;
     speed = SquareRoot12(height * 2);
     frames += speed / g_move_jump_gravity;
-    out->vx = ((to->vx - from->vx) << 12) / frames;
-    out->vz = ((to->vz - from->vz) << 12) / frames;
+    out->vx = ((to->vx - from->vx) * ONE) / frames;
+    out->vz = ((to->vz - from->vz) * ONE) / frames;
     return frames;
 }

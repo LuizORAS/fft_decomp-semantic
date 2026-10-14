@@ -102,18 +102,19 @@ s32 effect_textured_quad_grid_4x4_update(s32 record_index, s32 callback_slot, s3
         EFFECT_READ_CURVE(row, column, selector, work->frame);
         angle = battle_lerp_fixed8(geometry->scroll_angle_start, geometry->scroll_angle_end, column);
         work->scroll_u += (rcos(angle) * speed) >> 12;
+        /* Comparison shifts preserve the original loop scheduling. */
         while (work->scroll_u >= texture_width << 12) {
-            work->scroll_u -= texture_width << 12;
+            work->scroll_u -= texture_width * ONE;
         }
         while (work->scroll_u < 0) {
-            work->scroll_u += texture_width << 12;
+            work->scroll_u += texture_width * ONE;
         }
         work->scroll_v += (rsin(angle) * speed) >> 12;
         while (work->scroll_v >= texture_height << 12) {
-            work->scroll_v -= texture_height << 12;
+            work->scroll_v -= texture_height * ONE;
         }
         while (work->scroll_v < 0) {
-            work->scroll_v += texture_height << 12;
+            work->scroll_v += texture_height * ONE;
         }
         blue = EFFECT_COLOR_NEUTRAL;
         if (geometry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {

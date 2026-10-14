@@ -242,6 +242,7 @@ void world_formation_run_job_wheel_menu(void) {
                 }
             }
             if (g_world_job_wheel_job_count >= 2) {
+                /* The shift preserves the order of the spin-state loads. */
                 angle = ((g_world_job_wheel_spin_direction << 12) * g_world_job_wheel_spin_progress
                             / g_world_job_wheel_job_count)
                     / 36 % ONE;

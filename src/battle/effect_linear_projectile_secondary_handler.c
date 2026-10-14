@@ -57,7 +57,7 @@ s32 effect_linear_projectile_secondary_handler(void) {
             g_effect_trajectory_destination.vy - g_effect_trajectory_origin.vy,
             g_effect_trajectory_destination.vz - g_effect_trajectory_origin.vz);
         g_effect_projectile_length
-            = SquareRoot12((delta.vx * delta.vx + delta.vy * delta.vy + delta.vz * delta.vz) << 12);
+            = SquareRoot12((delta.vx * delta.vx + delta.vy * delta.vy + delta.vz * delta.vz) * ONE);
         g_effect_projectile_delta = delta;
         g_effect_projectile_progress = 0;
         g_effect_projectile_speed = 0x8000;

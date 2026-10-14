@@ -109,18 +109,19 @@ s32 effect_wave_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         angle = battle_lerp_fixed8(
             geometry->textured_quad.scroll_angle_start, geometry->textured_quad.scroll_angle_end, column);
         work->scroll_u += (rcos(angle) * speed) >> 12;
+        /* Comparison shifts preserve the original loop scheduling. */
         while (work->scroll_u >= texture_width << 12) {
-            work->scroll_u -= texture_width << 12;
+            work->scroll_u -= texture_width * ONE;
         }
         while (work->scroll_u < 0) {
-            work->scroll_u += texture_width << 12;
+            work->scroll_u += texture_width * ONE;
         }
         work->scroll_v += (rsin(angle) * speed) >> 12;
         while (work->scroll_v >= texture_height << 12) {
-            work->scroll_v -= texture_height << 12;
+            work->scroll_v -= texture_height * ONE;
         }
         while (work->scroll_v < 0) {
-            work->scroll_v += texture_height << 12;
+            work->scroll_v += texture_height * ONE;
         }
         if (geometry->textured_quad.flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             row = (geometry->textured_quad.colour_curves & 0xfff);

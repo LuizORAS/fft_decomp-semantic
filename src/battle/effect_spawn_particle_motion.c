@@ -96,9 +96,9 @@ s32 effect_spawn_particle_motion(effect_emitter_values_t* values, effect_motion_
     vector.vz = 0;
     vector.vy = 0;
     RotTrans(&vector, &direction, &direction.pad);
-    motion->position.x = ((direction.vx * spread.vx) / scale + position.vx) << 12;
-    motion->position.y = ((direction.vy * spread.vy) / scale + position.vy) << 12;
-    motion->position.z = ((direction.vz * spread.vz) / scale + position.vz) << 12;
+    motion->position.x = ((direction.vx * spread.vx) / scale + position.vx) * ONE;
+    motion->position.y = ((direction.vy * spread.vy) / scale + position.vy) * ONE;
+    motion->position.z = ((direction.vz * spread.vz) / scale + position.vz) * ONE;
 
     speed_min = values->speed_min;
     speed_max = values->speed_max;

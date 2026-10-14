@@ -267,13 +267,13 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                     gte_rtv0tr();
                     gte_stlvnl(&out);
                     gte_stflg(&out.pad);
-                    seg->position.vx = ((out.vx * spread.vx) / len + origin.vx) << 12;
-                    seg->position.vy = ((out.vy * spread.vy) / len + origin.vy) << 12;
-                    seg->position.vz = ((out.vz * spread.vz) / len + origin.vz) << 12;
+                    seg->position.vx = ((out.vx * spread.vx) / len + origin.vx) * ONE;
+                    seg->position.vy = ((out.vy * spread.vy) / len + origin.vy) * ONE;
+                    seg->position.vz = ((out.vz * spread.vz) / len + origin.vz) * ONE;
                 } else {
-                    seg->position.vx = origin.vx << 12;
-                    seg->position.vy = origin.vy << 12;
-                    seg->position.vz = origin.vz << 12;
+                    seg->position.vx = origin.vx * ONE;
+                    seg->position.vy = origin.vy * ONE;
+                    seg->position.vz = origin.vz * ONE;
                 }
 
                 len = effect_select_largest_magnitude_s16(tip_spread.vx, tip_spread.vy, tip_spread.vz);
@@ -392,9 +392,9 @@ s32 effect_particle_trails_update(s32 record_index, s32 callback_slot, s32 emitt
                     point += 17;
                 }
             }
-            emitter.motion.position.x = seg->points[point].x << 12;
-            emitter.motion.position.y = seg->points[point].y << 12;
-            emitter.motion.position.z = seg->points[point].z << 12;
+            emitter.motion.position.x = seg->points[point].x * ONE;
+            emitter.motion.position.y = seg->points[point].y * ONE;
+            emitter.motion.position.z = seg->points[point].z * ONE;
             if (flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) {
                 effect_spawn_emitter_particles(
                     record->record_index, seg->head, entry->tentacle_mesh.child_emitter_mid_life, &emitter);

@@ -33,12 +33,12 @@ void battle_unit_advance_slide_to_target_distortion(battle_unit_t* unit) {
                 velocity.vx
                     = (unit->world_coords.vx
                           - (unit->stats->action_command.target_position.vx * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)))
-                    << 12;
+                    * ONE;
                 velocity.vx = (velocity.vx - velocity.vx / 8) % 0xe000;
                 velocity.vz
                     = (unit->world_coords.vz
                           - (unit->stats->action_command.target_position.vz * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2)))
-                    << 12;
+                    * ONE;
                 velocity.vz = (velocity.vz - velocity.vz / 8) % 0xe000;
                 velocity.vy = 0;
             }

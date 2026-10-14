@@ -29,9 +29,9 @@ s32 battle_unit_place_in_new_location(u32 runtime_id, map_tile_coordinates_t* ti
         unit->world_coords.vx = tile->x * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         unit->world_coords.vz = tile->y * MAP_TILE_SIZE + (MAP_TILE_SIZE / 2);
         unit->world_coords.vy = map_calculate_slope_height(&unit->world_coords, unit->map_z);
-        unit->real.vx = unit->world_coords.vx << 12;
-        unit->real.vz = unit->world_coords.vz << 12;
-        unit->real.vy = unit->world_coords.vy << 12;
+        unit->real.vx = unit->world_coords.vx * ONE;
+        unit->real.vz = unit->world_coords.vz * ONE;
+        unit->real.vy = unit->world_coords.vy * ONE;
         if (unit->stats != 0) {
             battle_unit_set_tile_position(unit->stats->battle_id, unit->map_x, unit->map_y, unit->map_z, unit->facing);
         }

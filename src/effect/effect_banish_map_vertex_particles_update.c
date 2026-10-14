@@ -57,9 +57,9 @@ s32 effect_banish_map_vertex_particles_update(
                     byte_offset += g_effect_banish_vertex_locations[i].mesh_part_index
                         * (EFFECT_MAP_VERTEX_COUNT_PER_PART * sizeof(*vertex));
                     vertex = (VECTOR*)(work + byte_offset);
-                    parent.motion.position.x = vertex->vx << 12;
-                    parent.motion.position.y = vertex->vy << 12;
-                    parent.motion.position.z = vertex->vz << 12;
+                    parent.motion.position.x = vertex->vx * ONE;
+                    parent.motion.position.y = vertex->vy * ONE;
+                    parent.motion.position.z = vertex->vz * ONE;
                     effect_spawn_emitter_particles(
                         record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                 }
@@ -70,9 +70,9 @@ s32 effect_banish_map_vertex_particles_update(
                         byte_offset += g_effect_banish_vertex_locations[i].mesh_part_index
                             * (EFFECT_MAP_VERTEX_COUNT_PER_PART * sizeof(*vertex));
                         vertex = (VECTOR*)(work + byte_offset);
-                        parent.motion.position.x = vertex->vx << 12;
-                        parent.motion.position.y = vertex->vy << 12;
-                        parent.motion.position.z = vertex->vz << 12;
+                        parent.motion.position.x = vertex->vx * ONE;
+                        parent.motion.position.y = vertex->vy * ONE;
+                        parent.motion.position.z = vertex->vz * ONE;
                         effect_spawn_emitter_particles(
                             record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                     }
@@ -84,9 +84,9 @@ s32 effect_banish_map_vertex_particles_update(
                         byte_offset += g_effect_banish_vertex_locations[i].mesh_part_index
                             * (EFFECT_MAP_VERTEX_COUNT_PER_PART * sizeof(*vertex));
                         vertex = (VECTOR*)(work + byte_offset);
-                        parent.motion.position.x = vertex->vx << 12;
-                        parent.motion.position.y = vertex->vy << 12;
-                        parent.motion.position.z = vertex->vz << 12;
+                        parent.motion.position.x = vertex->vx * ONE;
+                        parent.motion.position.y = vertex->vy * ONE;
+                        parent.motion.position.z = vertex->vz * ONE;
                         effect_spawn_emitter_particles(
                             record->record_index, record->frame_counter - emitter->start_frame, emitter_index, &parent);
                     }
