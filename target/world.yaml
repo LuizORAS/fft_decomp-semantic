@@ -861,7 +861,7 @@ functions:
   - {addr: 0x8012ba14, size: 104, name: world_menu_update_vertical_selection_and_mark_change, hash: 16ceed0b020207ff}
   - {addr: 0x8012ba7c, size: 164, name: world_menu_update_wrapped_horizontal_selection, hash: 566d1897746aad26}
   - {addr: 0x8012bb20, size: 104, name: world_menu_update_horizontal_selection_and_mark_change, hash: 997d074c79605dbf}
-  - {addr: 0x8012bb88, size: 396, name: world_menu_update_wrapped_grid_selection, hash: 02e8a16cf787cd89}
+  - {addr: 0x8012bb88, size: 396, name: world_menu_update_wrapped_grid_selection, hash: 02e8a16cf787cd89, source: src/shared/menu/menu_update_wrapped_grid_selection.c, source_symbol: menu_update_wrapped_grid_selection}
   - {addr: 0x8012bd14, size: 104, name: world_input_read_tutorial_or_controller, hash: b7ae4cb3cff53d07}
   - {addr: 0x8012bd7c, size: 32, name: world_input_clear_state, hash: 1d40a8afb9ba0b8b}
   - {addr: 0x8012bd9c, size: 32, name: world_game_reset, hash: 0002116356e621bf}

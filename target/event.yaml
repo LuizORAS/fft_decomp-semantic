@@ -443,7 +443,7 @@ functions:
   - {addr: 0x801cbfe0, size: 176, name: bunit_bits_read, hash: 5503b271ce6055f9}
   - {addr: 0x801cc090, size: 904, name: bunit_input_update_controller, hash: bd50c5107ef8fba7}
   - {addr: 0x801cc418, size: 244, name: bunit_menu_update_event_thread_state, hash: 77565cd3819b0ae8}
-  - {addr: 0x801cc50c, size: 396, name: bunit_menu_update_wrapped_grid_selection, hash: e06854ecee2acf50}
+  - {addr: 0x801cc50c, size: 396, name: bunit_menu_update_wrapped_grid_selection, hash: e06854ecee2acf50, source: src/shared/menu/menu_update_wrapped_grid_selection.c, source_symbol: menu_update_wrapped_grid_selection}
   - {addr: 0x801cc698, size: 36, name: bunit_menu_clear_selection_values, hash: 5cf1ef72ac0cca0a}
   - {addr: 0x801cc6bc, size: 32, name: bunit_menu_set_selection_value, hash: 46924fdb1fa68384}
   - {addr: 0x801cc6dc, size: 164, name: menu_update_wrapped_horizontal_selection, hash: cb38c38746c32f7f, source: src/shared/menu/menu_update_wrapped_horizontal_selection.c}
@@ -850,6 +850,7 @@ imports:
 
 overrides:
   - {function: bunit_menu_set_palette_mode, name: g_menu_text_color, addr: 0x801ec8b0}
+  - {function: bunit_menu_update_wrapped_grid_selection, name: g_world_menu_sound_effect_id, addr: 0x801ecaac}
   - {function: menu_build_unit_portrait_transition, name: attack_gfx_build_portrait_poly_ft4, addr: 0x801bf434}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_origin, addr: 0x801cea5c}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_transition_offsets, addr: 0x801cecfc}

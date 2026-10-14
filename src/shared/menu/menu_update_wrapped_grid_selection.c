@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 
@@ -6,7 +7,7 @@
  * Vertical movement precedes horizontal movement. R1 and L1 move sequentially
  * through the list; changing the selection requests sound 3.
  */
-s32 world_menu_update_wrapped_grid_selection(s32 columns, s32 rows, s32 last_index, s32 old_index, s32 input) {
+s32 menu_update_wrapped_grid_selection(s32 columns, s32 rows, s32 last_index, s32 old_index, s32 input) {
     s32 index = old_index;
 
     if (input & PSX_PAD_UP) {
