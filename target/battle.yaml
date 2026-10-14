@@ -1055,7 +1055,7 @@ functions:
   - {addr: 0x8014ab58, size: 216, name: battle_menu_display_number_entry, hash: ee3a5bfa118b7022, source: src/shared/menu/menu_display_number_entry.c, source_symbol: menu_display_number_entry}
   - {addr: 0x8014ac30, size: 656, name: battle_menu_draw_number_glyphs, hash: 97ee6a6ad4dcbfc5, source: src/shared/menu/menu_draw_number_glyphs.c, source_symbol: menu_draw_number_glyphs}
   - {addr: 0x8014aec0, size: 932, name: battle_text_draw_large_number_glyphs, hash: 9b2bbc5f2d00b289}
-  - {addr: 0x8014b264, size: 140, name: battle_menu_draw_stacked_glyph_pair, hash: 85d8816274595d47}
+  - {addr: 0x8014b264, size: 140, name: battle_menu_draw_stacked_glyph_pair, hash: 85d8816274595d47, source: src/shared/menu/menu_draw_stacked_glyph_pair.c, source_symbol: menu_draw_stacked_glyph_pair}
   - {addr: 0x8014b2f0, size: 48, name: battle_menu_display_text_entry, hash: 13c8529cf5d5a487, source: src/shared/menu/menu_display_text_entry.c, source_symbol: menu_display_text_entry}
   - {addr: 0x8014b320, size: 48, name: battle_menu_display_text_entry_past_choice_marks, hash: f66a71771a466060, source: src/shared/menu/menu_display_text_entry_past_choice_marks.c, source_symbol: menu_display_text_entry_past_choice_marks}
   - {addr: 0x8014b350, size: 68, name: battle_menu_display_text_string, hash: ebe5d1168147a19f, source: src/shared/menu/menu_display_text_string.c, source_symbol: menu_display_text_string}
