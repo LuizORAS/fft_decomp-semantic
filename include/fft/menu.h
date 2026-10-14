@@ -11,6 +11,7 @@
 #include "psx/types.h"
 
 struct action_command;
+struct unit_stats;
 
 /* scene lifecycle */
 /* 0: normal, 1: companion/editor transition, 2: AT-list selection. */
@@ -302,6 +303,8 @@ typedef char menu_active_unit_size_must_be_14[(sizeof(menu_active_unit_t) == 14)
 /* The selected panel unit can differ from the unit whose turn is active. */
 extern menu_active_unit_t g_menu_selected_unit;
 extern s16 g_menu_comparison_battle_id;
+
+struct unit_stats* menu_get_selected_unit_stats(void);
 
 /* Name, job and identity values copied into WORLD and EQUIP status panels.
  * The last displayed value is the roster slot, distinct from a battle id. */

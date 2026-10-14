@@ -55,7 +55,7 @@ functions:
   - {addr: 0x800e1f58, size: 36, name: camera_normalize_yaw_angle, hash: 4b9b57139167c4c5, source: src/shared/camera/camera_normalize_yaw_angle.c}
   - {addr: 0x800e1f7c, size: 292, name: camera_init_tilt_and_zoom, hash: b488293686882dcf, source: src/shared/camera/camera_init_tilt_and_zoom.c}
   - {addr: 0x800e20a0, size: 52, name: camera_wrap_yaw_angle, hash: 2f0e82c3ed1fb39e, source: src/shared/camera/camera_wrap_yaw_angle.c}
-  - {addr: 0x800e20d4, size: 40, name: world_unit_get_active_stats, hash: d8b03fa45f1ad5c5}
+  - {addr: 0x800e20d4, size: 40, name: world_unit_get_active_stats, hash: d8b03fa45f1ad5c5, source: src/shared/menu/menu_get_selected_unit_stats.c, source_symbol: menu_get_selected_unit_stats}
   - {addr: 0x800e20fc, size: 48, name: script_clamp_s32_to_range, hash: a979e7abbcee5781, source: src/shared/script/script_clamp_s32_to_range.c}
   - {addr: 0x800e212c, size: 612, name: world_input_update_menu_repeat, hash: ec1118bb42efe382, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800e2390, size: 8, name: world_menu_init_stub, hash: 6d64edf91449c1b1}
