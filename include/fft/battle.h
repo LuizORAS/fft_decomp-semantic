@@ -615,6 +615,14 @@ extern const RECT g_battle_deployment_clear_rect;
 extern u16 g_battle_deployed_unit_palettes[2][16];
 extern s32 g_battle_deployment_skipped;
 
+/* Set when the deployment ends (battle_deployment_mark_finished); step 8 of
+ * battle_map_step_setup_sequence waits for it. */
+extern s32 g_battle_deployment_finished;
+
+void battle_deployment_skip_thread(void);
+
+void battle_deployment_mark_finished(void);
+
 /* crystal pickup */
 /* The crystal or chest a unit stepped on: the pickup that OPTION.OUT's panel shows
  * (g_battle_crystal_pickup_context) and the choice it returns, the action and the chest's item, which
@@ -6088,6 +6096,8 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit);
 void battle_move_update_unit_step_to_destination_tile_center(battle_unit_misc_data_t* unit);
 void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit);
 
+s32 battle_move_get_weather_terrain_cost(void);
+
 /* camera */
 /* BATTLE's camera: the angles, position, zoom and screen offset behind the camera matrix; the map camera the
  * player turns (L1, R1), zooms (L2), tilts (R2) and pans; the following of the cursor and the acting unit;
@@ -6265,14 +6275,6 @@ void battle_camera_thread(void);
 void battle_camera_clear_zoom_variable_low_bit(void);
 
 /* gfx */
-/* Commands of 0x800e77b8, which stores RGB and controls GTE background color. */
-typedef enum battle_background_color_command {
-    BATTLE_BACKGROUND_COLOR_SET = 9,
-    BATTLE_BACKGROUND_COLOR_GET = 10,
-    BATTLE_BACKGROUND_COLOR_DISABLE = 11,
-    BATTLE_BACKGROUND_COLOR_RESTORE = 12
-} battle_map_background_color_command_e;
-
 /* Texture pages stored in a sprite display record's tpage. */
 enum {
     /* The images of g_battle_gfx_vram_slots[0] and [1]. */
@@ -7092,6 +7094,11 @@ s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevati
 s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* source);
 
 /* map */
+/* The battle map: the GNS file of each map and the resources it picks by map state (layout, weather, time
+ * of day): mesh, textures, palettes, lighting, terrain, texture and mesh animations; the loader and the two
+ * map load sequences; the per-frame draw of the mesh, the weather and the tile marks; the colour fades and
+ * CLUT rows; the tiles, the Move-Find tiles and the Deep Dungeon reload. */
+
 typedef enum battle_trap_id {
     BATTLE_TRAP_ID_DEGENERATOR = 0,
     BATTLE_TRAP_ID_DEATHTRAP = 1,
@@ -7825,12 +7832,19 @@ typedef struct battle_map_mesh_animation_record {
     u8 data[4];
 } battle_map_mesh_animation_record_t;
 
+/* Commands of battle_map_control_gte_background_color: set, read, blank or restore the GTE back
+ * colour. */
+typedef enum battle_background_color_command {
+    BATTLE_BACKGROUND_COLOR_SET = 9,
+    BATTLE_BACKGROUND_COLOR_GET = 10,
+    BATTLE_BACKGROUND_COLOR_DISABLE = 11,
+    BATTLE_BACKGROUND_COLOR_RESTORE = 12
+} battle_map_background_color_command_e;
+
 extern u8 g_battle_map_background_color[];
 extern u8 g_battle_map_background_color_backup[];
 extern void* g_battle_map_data_load_buffer;
-/* Set when the deployment ends (battle_deployment_mark_finished); step 8 of
- * battle_map_step_setup_sequence waits for it. */
-extern s32 g_battle_deployment_finished;
+
 extern s32 g_battle_map_deep_dungeon_load_in_progress;
 extern u8 g_battle_map_file_table[];
 
@@ -7882,8 +7896,7 @@ extern s32 g_battle_map_command_0x96_duration;
 extern s16 g_battle_map_destruction_wait_state;
 extern u16 g_battle_map_refresh_pending;
 extern map_selected_tile_t g_battle_map_selected_tile_data;
-extern RECT g_battle_tile_info_image_location;
-extern world_gfx_image_load_parameters_t g_battle_tile_info_image_params[2];
+
 extern CVECTOR g_battle_map_white_cvector;
 
 /* Default vectors shared with battle_map_run_gns_command_record, which emits them. */
@@ -8029,7 +8042,7 @@ void battle_map_color_field(s32 mode, s32 amount, s16 red, s16 green, s16 blue);
 s32* battle_map_control_gte_background_color(s32 command, s32 red, s32 green, s32 blue);
 void battle_map_polygon_flag_command(s32 command);
 MATRIX* battle_map_light_matrix_command(s32 command, MATRIX* color, MATRIX* light, s32 duration);
-void battle_deployment_skip_thread(void);
+
 s32 battle_map_dispatch_gns_resource(u8 resource_type, u8* data);
 void battle_map_extract_palette_colors(const u16* palette, s32 clut_row, s32 clut_index);
 s32 battle_map_get_effective_weather(void);
@@ -8040,7 +8053,7 @@ void battle_map_init_palette_state(void);
 s32 battle_map_start_data_load(void);
 s32 battle_map_poll_data_load(void);
 void battle_map_load_move_find_item_data(map_move_find_item_data_t* map_data);
-void battle_deployment_mark_finished(void);
+
 void battle_map_modify_background_gradient(s32 mode, s32 frame_duration, s16 red, s16 green, s16 blue);
 void battle_map_reset_texture_animations(void);
 void battle_map_set_background_gradient(s32 frame_duration, const map_background_gradient_colors_t* colors);
@@ -8083,7 +8096,6 @@ void battle_map_transition_and_store_background_gradient(
 void battle_map_transition_background_gradient(s32 frame_duration, const map_background_gradient_colors_t* colors);
 void battle_map_transition_darkness_color(s32 frame_duration, const map_color_t* color);
 
-/* Map data, palette and mesh interfaces implemented in the battle overlay. */
 void battle_map_init_darkness(void);
 s16 battle_map_is_gns_record_matching_state(s32 comparison, s16 record_state, s16 requested_state);
 void battle_map_load_palette_data(const u16* palette, s32 clut_row, s32 clut_index, s32 load_all);
@@ -8099,7 +8111,7 @@ void battle_map_append_mesh_geometry(void* geometry_data, battle_map_mesh_part_t
 void battle_map_copy_size_and_tile_data(u8* p);
 map_tile_t* battle_map_get_tile_data_ptr_from_battle_id(u32 battle_id);
 map_tile_t* battle_map_get_tile_data_ptr_from_misc_screen_coords(u32 misc_id);
-s32 battle_move_get_weather_terrain_cost(void);
+
 s32 battle_map_step_setup_sequence(s32 map_id, s32 step, s32 deployment_running);
 s32 battle_map_load_mesh_variant(s32 palette_mode);
 void battle_map_queue_textured_quads(u32* otag, void* prims, s32 yaw, s32* count);
@@ -8371,6 +8383,9 @@ extern u8 g_battle_numeric_display_entries[];
 extern world_menu_palette_slot_t g_battle_numeric_display_palettes[];
 
 extern RECT g_battle_menu_small_number_glyph_rect; /* glyph source rectangle in the large number font */
+
+extern RECT g_battle_tile_info_image_location;
+extern world_gfx_image_load_parameters_t g_battle_tile_info_image_params[2];
 
 void battle_menu_display_hovered_unit_stats(
     RECT* frame_rect, s32 mode, menu_number_entry_t* entries, battle_unit_status_record_t* status);

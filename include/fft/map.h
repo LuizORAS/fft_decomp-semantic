@@ -6,6 +6,9 @@
 #include "psx/types.h"
 
 /* map */
+/* Battle map records BATTLE and WORLD share: the map ids, the tile record (surface, height, slope, depth,
+ * flags and marks) and its field selectors, the selected tile and the colours of the map lighting. */
+
 /* Battle map ids: EVENT_SCRIPT_VAR_CURRENT_MAP and the index of
  * g_battle_map_gns_lba. Each is named as its map name text spells it
  * (TEXT_ID_MAP_NAME_BASE + id - 1); a map whose name repeats an earlier one
