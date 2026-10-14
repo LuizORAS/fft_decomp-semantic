@@ -325,7 +325,7 @@ functions:
   - {addr: 0x800f93bc, size: 16, name: script_write_s16, hash: 71c4790146d56d2c, source: src/shared/script/script_write_s16.c}
   - {addr: 0x800f93cc, size: 64, name: world_map_wait_for_refresh, hash: 6eec356e5c6b9a22, source: src/shared/map/map_wait_for_refresh.c, source_symbol: map_wait_for_refresh}
   - {addr: 0x800f940c, size: 44, name: camera_clear_zoom_variable_low_bit, hash: ce3ca9e1032c0236, source: src/shared/camera/camera_clear_zoom_variable_low_bit.c}
-  - {addr: 0x800f9438, size: 1444, name: world_camera_thread, hash: ba7be01d018fa8b3}
+  - {addr: 0x800f9438, size: 1444, name: world_camera_thread, hash: ba7be01d018fa8b3, source: src/shared/camera/camera_thread.c, source_symbol: camera_thread}
   - {addr: 0x800f99dc, size: 120, name: world_script_map_darkness, hash: 0d797a52a22d5438}
   - {addr: 0x800f9a54, size: 176, name: world_script_earthquake_start, hash: 88082e85496cfa40}
   - {addr: 0x800f9b04, size: 392, name: world_script_color_screen_thread, hash: 721b29c5952d0273, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
@@ -2366,6 +2366,11 @@ overrides:
   - {function: world_camera_step_track, name: battle_fixed_cross_product_q12, addr: 0x801002d8}
   - {function: world_camera_step_track, name: battle_mul_div_s64, addr: 0x80100188}
   - {function: world_camera_step_track, name: g_camera_cross_product_overflow, addr: 0x801cd82c}
+  - {function: world_camera_thread, name: battle_mul_div_s64, addr: 0x80100188}
+  - {function: world_camera_thread, name: battle_thread_get_current_parameter_1, addr: 0x80100090}
+  - {function: world_camera_thread, name: g_camera_position_locked, addr: 0x801532c0}
+  - {function: world_camera_thread, name: g_camera_speed_curve, addr: 0x80153338}
+  - {function: world_camera_thread, name: g_camera_wrap_yaw_pending, addr: 0x80156b88}
   - {function: world_card_close_file_with_retries, name: card_io_wait_operation_result, addr: 0x80132b50}
   - {function: world_card_close_file_with_retries, name: g_card_file_open_descriptor, addr: 0x80194fd8}
   - {function: world_card_create_new_with_retries, name: card_io_wait_hardware_event_result, addr: 0x80132824}
