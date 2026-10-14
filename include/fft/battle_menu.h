@@ -210,7 +210,7 @@ typedef struct battle_menu_status_panel_numeric_geometry {
 
 extern menu_quad_page_t g_battle_menu_height_display_pages[2];
 extern u16 g_battle_menu_height_display_suppressed;
-extern u8 g_battle_menu_numeric_display_frame_offsets[12][8];
+extern s8 g_battle_menu_numeric_display_frame_offsets[96];
 extern menu_panel_record_t g_battle_menu_numeric_display_panel_records[2];
 extern RECT g_battle_menu_numeric_display_texture_window;
 extern menu_number_entry_t g_battle_numeric_display_entries[15];

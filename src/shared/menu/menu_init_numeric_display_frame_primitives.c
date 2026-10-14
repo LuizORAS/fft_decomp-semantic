@@ -1,11 +1,9 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
-#include "psx/types.h"
 
-/* Builds the twelve-line menu box primitives for `box` (x, y, w, h) into
- * `menu`: line endpoints from the layout table, the normal menu colours,
- * two draw modes and a sprite covering the box. */
-void world_menu_init_numeric_display_frame_primitives(RECT* box, menu_palette_primitives_t* menu) {
+/* Build the twelve line packets, draw modes and covering frame sprite. */
+void menu_init_numeric_display_frame_primitives(RECT* box, menu_palette_primitives_t* menu) {
     LINE_F2* line;
     s32 i;
     s32 offset;

@@ -730,7 +730,7 @@ functions:
   - {addr: 0x8012eeb0, size: 380, name: battle_menu_alloc_memory, hash: a333c97bf7b7ceb0}
   - {addr: 0x8012f02c, size: 32, name: battle_menu_alloc_buffer, hash: 8dfe96e6bed1af08}
   - {addr: 0x8012f04c, size: 192, name: battle_menu_free_memory, hash: bf843d0680a0ad61, source: src/shared/menu/menu_free_memory.c, source_symbol: menu_free_memory}
-  - {addr: 0x8012f10c, size: 596, name: battle_menu_init_numeric_display_frame_primitives, hash: 793d75bdfee884f4}
+  - {addr: 0x8012f10c, size: 596, name: battle_menu_init_numeric_display_frame_primitives, hash: 793d75bdfee884f4, source: src/shared/menu/menu_init_numeric_display_frame_primitives.c, source_symbol: menu_init_numeric_display_frame_primitives}
   - {addr: 0x8012f360, size: 108, name: menu_submit_numeric_display_frame_primitives, hash: f20c4498d66b3270, source: src/shared/menu/menu_submit_numeric_display_frame_primitives.c}
   - {addr: 0x8012f3cc, size: 136, name: battle_menu_init_primitive_colors_normal, hash: 5a93f338b69dc23b}
   - {addr: 0x8012f454, size: 140, name: battle_menu_init_primitive_colors_dimmed, hash: a34bc154bfcc9d66}
@@ -2922,6 +2922,10 @@ imports:
 
 overrides:
   - {function: battle_gfx_init_scaled_draw_area_packets, name: g_menu_draw_area_template, addr: 0x80165ecc}
+  - {function: battle_menu_init_numeric_display_frame_primitives, name: g_world_menu_numeric_display_frame_offsets, addr: 0x80167844}
+  - {function: battle_menu_init_numeric_display_frame_primitives, name: g_world_menu_numeric_display_texture_window, addr: 0x80167830}
+  - {function: battle_menu_init_numeric_display_frame_primitives, name: world_menu_init_primitive_colors_normal, addr: 0x8012f3cc}
+  - {function: battle_menu_init_numeric_display_frame_primitives, name: world_menu_init_sprite, addr: 0x8012e244}
   - {function: battle_menu_run_skillset_thread, name: g_world_menu_monster_skillset_flag, addr: 0x80169840}
   - {function: battle_menu_run_skillset_thread, name: g_world_menu_restore_depth, addr: 0x8014d325}
   - {function: battle_menu_run_skillset_thread, name: g_world_menu_unit_selection_rows, addr: 0x8014d46c}

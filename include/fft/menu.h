@@ -227,6 +227,8 @@ typedef struct menu_palette_primitives {
 
 typedef char menu_palette_primitives_size_must_be_236[(sizeof(menu_palette_primitives_t) == 236) ? 1 : -1];
 
+void menu_init_numeric_display_frame_primitives(RECT* bounds, menu_palette_primitives_t* menu);
+
 void menu_submit_numeric_display_frame_primitives(menu_palette_primitives_t* display);
 
 void menu_init_sprite_array(SPRT* sprites, s32 count, s32 clut);

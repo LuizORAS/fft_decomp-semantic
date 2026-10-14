@@ -75,7 +75,7 @@ functions:
   - {addr: 0x800e30fc, size: 380, name: world_menu_alloc_ui_buffer, hash: ab779363522e02a2}
   - {addr: 0x800e3278, size: 32, name: world_menu_alloc_buffer, hash: c0b0162a45670bc4}
   - {addr: 0x800e3298, size: 192, name: world_menu_free_memory, hash: 38f2c6070f4c7dc3, source: src/shared/menu/menu_free_memory.c, source_symbol: menu_free_memory}
-  - {addr: 0x800e3358, size: 596, name: world_menu_init_numeric_display_frame_primitives, hash: 6931206a75791ec9}
+  - {addr: 0x800e3358, size: 596, name: world_menu_init_numeric_display_frame_primitives, hash: 6931206a75791ec9, source: src/shared/menu/menu_init_numeric_display_frame_primitives.c, source_symbol: menu_init_numeric_display_frame_primitives}
   - {addr: 0x800e35ac, size: 108, name: menu_submit_numeric_display_frame_primitives, hash: 052f8a7955660a7e, source: src/shared/menu/menu_submit_numeric_display_frame_primitives.c}
   - {addr: 0x800e3618, size: 136, name: world_menu_init_primitive_colors_normal, hash: 0eafa6c1e9a53c86}
   - {addr: 0x800e36a0, size: 140, name: world_menu_init_primitive_colors_dimmed, hash: ed7ffbf13272f8dc}
