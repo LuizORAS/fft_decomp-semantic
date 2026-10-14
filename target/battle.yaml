@@ -1839,7 +1839,7 @@ functions:
   - {addr: 0x801aa8e8, size: 56, name: effect_reset_subsystems, hash: f3527d103117930d}
   - {addr: 0x801aa920, size: 476, name: effect_copy_camera_angles_and_world_coords, hash: c7215f9b955ff294}
   - {addr: 0x801aaafc, size: 72, name: effect_init_camera_and_screen_data, hash: 8f9921926194b436}
-  - {addr: 0x801aab44, size: 76, name: effect_copy_unit_world_coords_to_vector, hash: 0db0657e68cb43ea}
+  - {addr: 0x801aab44, size: 76, name: effect_copy_unit_world_coords_to_vector, hash: 0db0657e68cb43ea, source: src/shared/unit/battle_unit_copy_world_coords_to_vector.c, source_symbol: battle_unit_copy_world_coords_to_vector}
   - {addr: 0x801aab90, size: 152, name: effect_convert_tile_coords_to_world_coords, hash: ad6c44c18d8a70fa}
   - {addr: 0x801aac28, size: 264, name: camera_choose_unblocked_rotation_for_tile, hash: ddce90512167476e}
   - {addr: 0x801aad30, size: 12, name: battle_noop_801aad30, hash: 4514fa940d280a8d}
