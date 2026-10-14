@@ -403,9 +403,9 @@ functions:
   - {addr: 0x800fe0ec, size: 656, name: world_menu_draw_number_glyphs, hash: 26c59663a62488f1, source: src/shared/menu/menu_draw_number_glyphs.c, source_symbol: menu_draw_number_glyphs}
   - {addr: 0x800fe37c, size: 876, name: world_text_render_decimal_value_or_dashes, hash: 74bc0e5728cbaac8}
   - {addr: 0x800fe6e8, size: 140, name: world_menu_draw_stacked_glyph_pair, hash: 6e915a75c99aeb13}
-  - {addr: 0x800fe774, size: 48, name: world_menu_display_text_entry, hash: 510cb1258e639e13}
-  - {addr: 0x800fe7a4, size: 48, name: world_menu_display_text_entry_past_choice_marks, hash: 99e2ba5c27fe29f3}
-  - {addr: 0x800fe7d4, size: 68, name: world_menu_display_text_string, hash: 546bc309ac1221e3}
+  - {addr: 0x800fe774, size: 48, name: world_menu_display_text_entry, hash: 510cb1258e639e13, source: src/shared/menu/menu_display_text_entry.c, source_symbol: menu_display_text_entry}
+  - {addr: 0x800fe7a4, size: 48, name: world_menu_display_text_entry_past_choice_marks, hash: 99e2ba5c27fe29f3, source: src/shared/menu/menu_display_text_entry_past_choice_marks.c, source_symbol: menu_display_text_entry_past_choice_marks}
+  - {addr: 0x800fe7d4, size: 68, name: world_menu_display_text_string, hash: 546bc309ac1221e3, source: src/shared/menu/menu_display_text_string.c, source_symbol: menu_display_text_string}
   - {addr: 0x800fe818, size: 1820, name: world_menu_display_text, hash: d9988a33ac0cc206, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800fef34, size: 188, name: menu_text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0, source: src/shared/text/text_advance_cursor_with_backreferences.c, source_symbol: text_advance_cursor_with_backreferences}
   - {addr: 0x800ff450, size: 40, name: mem_copy_bytes_nonempty, hash: 73eb033d6e800062, source: src/shared/memory/mem_copy_bytes_nonempty.c}
@@ -2493,6 +2493,9 @@ overrides:
   - {function: world_menu_display_hovered_unit_stats, name: g_menu_text_state, addr: 0x80153280}
   - {function: world_menu_display_hovered_unit_stats, name: g_menu_texture_origin, addr: 0x80153188}
   - {function: world_menu_display_number_entry, name: battle_text_render_glyph_to_4bpp_image, addr: 0x800ff284}
+  - {function: world_menu_display_text_entry, name: battle_menu_display_text, addr: 0x800fe818}
+  - {function: world_menu_display_text_entry_past_choice_marks, name: battle_menu_display_text, addr: 0x800fe818}
+  - {function: world_menu_display_text_string, name: battle_menu_display_text, addr: 0x800fe818}
   - {function: world_menu_display_triangle_selection, name: battle_menu_run_icon_selection_loop, addr: 0x800ecf20}
   - {function: world_menu_display_triangle_selection, name: g_battle_menu_transition_state, addr: 0x8015332e}
   - {function: world_menu_draw_number_glyphs, name: blit_text_glyph, addr: 0x800feff0}

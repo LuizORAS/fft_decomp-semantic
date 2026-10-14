@@ -1613,6 +1613,9 @@ extern glyph_blit_t g_menu_number_glyph; /* source rectangle in the number/sign 
 
 void menu_draw_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* pos);
 void menu_draw_numeric_display_entries(u8* buffer, menu_number_entry_t* entries, glyph_blit_t* position, s32 count);
+void menu_display_text_string(u8* image, glyph_blit_t* origin, u8* text);
+void menu_display_text_entry_past_choice_marks(s32 text_id, u8* image, glyph_blit_t* origin);
+void menu_display_text_entry(s32 text_id, u8* image, glyph_blit_t* origin);
 void menu_display_number_entry(s32 value, u8 digit_count, u8* image, glyph_blit_t* origin);
 
 void menu_display_hovered_unit_stats(
