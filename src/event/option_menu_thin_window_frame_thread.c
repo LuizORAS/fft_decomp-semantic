@@ -1,5 +1,6 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
+#include "fft/menu.h"
 /*
  * OPTION menu window frame thread, variant B.
  *
@@ -54,7 +55,7 @@ void option_menu_thin_window_frame_thread(void) {
     blit_text_glyph(g_battle_menu_glyph_image->pixels, pixels, &g_option_text_glyph_source, &g_option_text_glyph_dest);
 
     LoadImage(&texture, (u32*)pixels);
-    battle_menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
+    menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
     texture_u = (texture.x & 0x3f) * 4;
     /* The target loads the returned rectangle's y once as a byte (lbu) and
        reuses it for every 16-bit and byte store below. */

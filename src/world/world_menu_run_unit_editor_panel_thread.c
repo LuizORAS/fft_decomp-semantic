@@ -76,8 +76,8 @@ void world_menu_run_unit_editor_panel_thread(void) {
         line->y1 = g_world_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_Y1] + g_world_unit_editor_panel_rect.y;
         line++;
     }
-    world_menu_init_sprite_array(&frame_record->sprites[0], 0xC, 0x7D7C);
-    world_menu_init_sprite_array(&frame_record->sprites[12], 7, 0x7C3C);
+    menu_init_sprite_array(&frame_record->sprites[0], 0xC, 0x7D7C);
+    menu_init_sprite_array(&frame_record->sprites[12], 7, 0x7C3C);
 
     /* Each arm copies all four rows itself; the compiler cross-jumps the
        common tails, leaving only the first call's table loads in the arms. */
@@ -111,7 +111,7 @@ void world_menu_run_unit_editor_panel_thread(void) {
                 &g_world_unit_editor_panel_rect, &g_world_unit_editor_sprite_image_params_b[i]);
         }
     }
-    world_menu_init_sprite_array(&frame_record->sprites[19], WORLD_EQUIPMENT_SLOT_COUNT, 0x7CFC);
+    menu_init_sprite_array(&frame_record->sprites[19], WORLD_EQUIPMENT_SLOT_COUNT, 0x7CFC);
     for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
         gfx_init_image_loading(&frame_record->sprites[19 + i], &g_world_item_icon_image_location,
             &g_world_unit_editor_panel_rect, &g_world_unit_editor_item_icon_image_params[i]);

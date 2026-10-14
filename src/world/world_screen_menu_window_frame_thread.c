@@ -1,5 +1,6 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
+#include "fft/menu.h"
 /*
  * WORLD copy of the EVENT OPTION window frame thread (option_menu_window_frame_thread,
  * byte-identical apart from addresses): the variant that allocates its scratch
@@ -58,7 +59,7 @@ void world_screen_menu_window_frame_thread(void) {
         g_world_menu_glyph_sheet->pixels, pixels, &g_world_text_glyph_source, &g_world_text_glyph_dest);
 
     LoadImage(&texture, (u32*)pixels);
-    world_menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
+    menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
     texture_u = (texture.x & 0x3f) * 4;
     texture_v = texture.y & 0xFF;
     for (index = 0; index < 4; index++) {

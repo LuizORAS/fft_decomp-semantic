@@ -77,8 +77,8 @@ void battle_menu_run_unit_editor_panel_thread(void) {
             g_battle_unit_editor_line_colors[i + MENU_UNIT_EDITOR_LINE_Y1] + g_battle_unit_editor_panel_rect.y);
         line++;
     }
-    battle_menu_init_sprite_array(&frame_record->sprites[0], 0xC, 0x7D7C);
-    battle_menu_init_sprite_array(&frame_record->sprites[12], 7, 0x7C3C);
+    menu_init_sprite_array(&frame_record->sprites[0], 0xC, 0x7D7C);
+    menu_init_sprite_array(&frame_record->sprites[12], 7, 0x7C3C);
 
     /* Each arm copies all four rows itself; the compiler cross-jumps the
        common tails, leaving only the first call's table loads in the arms. */
@@ -113,7 +113,7 @@ void battle_menu_run_unit_editor_panel_thread(void) {
                 &g_battle_unit_editor_panel_rect, &g_battle_unit_editor_sprite_image_params_b[i]);
         }
     }
-    battle_menu_init_sprite_array(&frame_record->sprites[19], 5, 0x7CFC);
+    menu_init_sprite_array(&frame_record->sprites[19], 5, 0x7CFC);
     for (i = 0; i < 5; i++) {
         gfx_init_image_loading(&frame_record->sprites[19 + i], &g_battle_item_icon_image_location,
             &g_battle_unit_editor_panel_rect, &g_battle_unit_editor_item_icon_image_params[i]);

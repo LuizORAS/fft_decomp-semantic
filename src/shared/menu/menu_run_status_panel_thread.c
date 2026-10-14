@@ -46,9 +46,9 @@ void menu_run_status_panel_thread(void) {
         screen->lines[i].x1 += offsets->x;
         screen->lines[i].y1 += offsets->y;
     }
-    battle_menu_init_sprite_array(&screen->sprites[19], 5, 0x7cfc);
-    battle_menu_init_sprite_array(&screen->sprites[0], 12, 0x7d7c);
-    battle_menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
+    menu_init_sprite_array(&screen->sprites[19], 5, 0x7cfc);
+    menu_init_sprite_array(&screen->sprites[0], 12, 0x7d7c);
+    menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
     screen->sprites[0].clut = 0x7cbc;
     screen->sprites[1].clut = 0x7cbc;
     mem_copy_bytes_nonempty(&screen[1], screen, sizeof(menu_status_panel_buffer_t));

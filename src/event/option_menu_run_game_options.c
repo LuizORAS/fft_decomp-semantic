@@ -110,7 +110,7 @@ void option_menu_run_game_options(void) {
     base->thumb.clut = 0x7D7C;
     battle_menu_init_semitransparent_sprt(&base->frame);
     gfx_init_image_loading(&base->frame, &entry->vram_origin, &entry->window, &image_parameters);
-    battle_menu_init_sprite_array(base->arrow_marks, 2, 0x7C3C);
+    menu_init_sprite_array(base->arrow_marks, 2, 0x7C3C);
     base->arrow_marks[0].w = 6;
     base->arrow_marks[0].h = 0xC;
     base->arrow_marks[1].w = 4;

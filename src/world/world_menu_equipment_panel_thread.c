@@ -61,8 +61,8 @@ void world_menu_equipment_panel_thread(void) {
         screen->lines[i].x1 += g_world_equipment_panel_origin.x;
         screen->lines[i].y1 += g_world_equipment_panel_origin.y;
     }
-    world_menu_init_sprite_array(&screen->sprites[0], 12, 0x7d7c);
-    world_menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
+    menu_init_sprite_array(&screen->sprites[0], 12, 0x7d7c);
+    menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
     screen->sprites[0].clut = 0x7cbc;
     screen->sprites[1].clut = 0x7cbc;
     mem_copy_bytes_nonempty(&screen[1], screen, sizeof(menu_status_panel_buffer_t));
@@ -110,7 +110,7 @@ void world_menu_equipment_panel_thread(void) {
         }
         screen->sprites[12].u0 = u;
         screen->sprites[13].u0 = u;
-        world_menu_init_sprite_array(&screen->sprites[19], WORLD_EQUIPMENT_SLOT_COUNT, 0x7cfc);
+        menu_init_sprite_array(&screen->sprites[19], WORLD_EQUIPMENT_SLOT_COUNT, 0x7cfc);
         for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
             gfx_init_image_loading(&screen->sprites[19 + i], g_world_panel_item_icon_texture,
                 &g_world_equipment_panel_origin, &g_world_equipment_panel_icon_params[i]);

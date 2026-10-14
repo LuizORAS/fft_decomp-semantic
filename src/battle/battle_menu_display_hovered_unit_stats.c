@@ -99,7 +99,7 @@ void battle_menu_display_hovered_unit_stats(
     battle_menu_init_numeric_display_frame_primitives(frame_rect, &page->palette);
     battle_gfx_set_draw_mode_for_texture_page(&page->draw_mode_1, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_gfx_set_draw_mode_for_texture_page(&page->draw_mode_0, MENU_TEXTURE_PAGE_FRAME);
-    battle_menu_init_sprite_array(page->sprites, 7, 0x7CBC);
+    menu_init_sprite_array(page->sprites, 7, 0x7CBC);
     for (frame = 0; frame < 5; frame++) {
         menu_init_default_poly_ft4(&page->quads[frame]);
     }

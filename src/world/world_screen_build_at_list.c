@@ -1,5 +1,6 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
@@ -106,7 +107,7 @@ void world_screen_build_at_list(void) {
     page->thumb.clut = 0x7D7C;
     world_menu_init_sprite(&page->frame);
     gfx_init_image_loading(&page->frame, &entry->vram_origin, &entry->window, &image_parameters);
-    world_menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
+    menu_init_sprite_array(page->arrow_marks, 2, 0x7C3C);
     page->arrow_marks[0].w = 6;
     page->arrow_marks[0].h = 0xC;
     page->arrow_marks[1].w = 4;

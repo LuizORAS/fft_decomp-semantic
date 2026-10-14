@@ -31,7 +31,7 @@ void world_menu_selected_tile_info_display_thread(void) {
         quad->tpage = GetTPage(0, 0, 0x380, 0x120);
         quad->clut = 0x7CFC;
     }
-    world_menu_init_sprite_array(page->sprites, 2, 0x7CBC);
+    menu_init_sprite_array(page->sprites, 2, 0x7CBC);
     page->sprites[1].clut = 0x7D7C;
     for (i = 0; i < 2; i++) {
         gfx_init_image_loading(&page->sprites[i], &g_world_gfx_menu_image_source, &g_world_tile_info_image_location,

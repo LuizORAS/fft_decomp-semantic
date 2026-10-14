@@ -2418,7 +2418,6 @@ void world_menu_init_primitive_colors_dimmed(menu_palette_primitives_t*);
 void world_option_gfx_init_scaled_draw_area_packets(scaled_draw_area_pair_t* pair);
 void world_menu_init_scrollable_list(const s16* values, s32 value, s32 selected, u8* text_table);
 void world_menu_init_scrollable_list_core(const s16* values, s32 selected_index, u8* text_table);
-void world_menu_init_sprite_array(SPRT* sprites, s32 count, s32 clut);
 void world_menu_init_subsystems(void);
 s32 world_menu_is_input_allowed(void);
 s32 world_menu_is_learn_ability_learned(s32 index);

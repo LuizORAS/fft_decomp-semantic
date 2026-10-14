@@ -18,7 +18,7 @@ void battle_menu_build_window_sprites(RECT* rect, menu_entry_t* param, menu_icon
     rect->h = param->inner_height;
     record->_unknown_74 = 0;
     record->_unknown_78 = 0;
-    battle_menu_init_sprite_array(record->base.sprites, 4, 0x7cfc);
+    menu_init_sprite_array(record->base.sprites, 4, 0x7cfc);
     gfx_init_image_loading(record->base.sprites, &param->vram_origin, &param->window, &param->text_image);
     SetSemiTrans(&record->base.sprites[1], 0);
     SetSemiTrans(&record->base.sprites[2], 1);
@@ -36,9 +36,9 @@ void battle_menu_build_window_sprites(RECT* rect, menu_entry_t* param, menu_icon
             &g_battle_menu_single_icon_image_params[style]);
     } else if (style >= 5 && style <= 15) {
         index = (style - 5) * 4;
-        battle_menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
-        battle_menu_init_sprite_array(record->icons[1], 1, 0x7cfc);
-        battle_menu_init_sprite_array(record->icons[2], 1, 0x7cfc);
+        menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
+        menu_init_sprite_array(record->icons[1], 1, 0x7cfc);
+        menu_init_sprite_array(record->icons[2], 1, 0x7cfc);
         gfx_init_image_loading(&record->base.sprites[3], &g_battle_menu_texture_location, &param->window,
             &g_battle_menu_icon_strip_image_params[index]);
         gfx_init_image_loading(record->icons[0], &g_battle_menu_texture_location, &param->window,

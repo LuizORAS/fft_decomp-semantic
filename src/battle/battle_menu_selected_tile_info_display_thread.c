@@ -37,7 +37,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
         quad->tpage = GetTPage(0, 0, 0x380, 0x120);
         quad->clut = 0x7CFC;
     }
-    battle_menu_init_sprite_array(page->sprites, 2, 0x7CBC);
+    menu_init_sprite_array(page->sprites, 2, 0x7CBC);
     page->sprites[1].clut = 0x7D7C;
     for (i = 0; i < 2; i++) {
         gfx_init_image_loading(&page->sprites[i], &g_battle_menu_texture_location, &g_battle_tile_info_image_location,

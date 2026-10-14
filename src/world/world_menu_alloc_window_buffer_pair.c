@@ -32,8 +32,8 @@ menu_window_buffer_t* world_menu_alloc_window_buffer_pair(void) {
                 buffer->icon_flags = 0;
                 buffer->scroll_range = 1;
                 buffer->scroll_position = 1;
-                world_menu_init_sprite_array(buffer->sprites, 4, 0x7c3c);
-                world_menu_init_sprite_array(buffer->icon_sprites, 3, 0x7e7c);
+                menu_init_sprite_array(buffer->sprites, 4, 0x7c3c);
+                menu_init_sprite_array(buffer->icon_sprites, 3, 0x7e7c);
                 SetDrawMode(&buffer->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_world_gfx_texture_window);
                 SetSemiTrans(&buffer->sprites[0], 0);
                 SetSemiTrans(&buffer->sprites[1], 1);

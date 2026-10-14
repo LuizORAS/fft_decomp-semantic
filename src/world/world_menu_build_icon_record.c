@@ -1,4 +1,5 @@
 #include "fft/gfx.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -30,7 +31,7 @@ void world_menu_build_icon_record(RECT* rect, menu_entry_t* param, menu_icon_rec
     rect->h = param->inner_height;
     record->_unknown_74 = 0;
     record->_unknown_78 = 0;
-    world_menu_init_sprite_array(record->base.sprites, 4, 0x7cfc);
+    menu_init_sprite_array(record->base.sprites, 4, 0x7cfc);
     gfx_init_image_loading(record->base.sprites, &param->vram_origin, &param->window, &param->text_image);
     SetSemiTrans(&record->base.sprites[1], 0);
     SetSemiTrans(&record->base.sprites[2], 1);
@@ -49,7 +50,7 @@ void world_menu_build_icon_record(RECT* rect, menu_entry_t* param, menu_icon_rec
     if (kind == 0x10) {
         const image_load_parameters_t* image_params;
 
-        world_menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
+        menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
         record->icons[0]->u0 = 0x30;
         record->icons[0]->v0 = 0x10;
         record->icons[0]->w = size;
@@ -64,9 +65,9 @@ void world_menu_build_icon_record(RECT* rect, menu_entry_t* param, menu_icon_rec
             &g_world_menu_single_icon_image_params[kind]);
     } else {
         if (index >= 5 && index < 0x10) {
-            world_menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
-            world_menu_init_sprite_array(record->icons[1], 1, 0x7cfc);
-            world_menu_init_sprite_array(record->icons[2], 1, 0x7cfc);
+            menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
+            menu_init_sprite_array(record->icons[1], 1, 0x7cfc);
+            menu_init_sprite_array(record->icons[2], 1, 0x7cfc);
             /* `kind` stays unscaled and the x4 is spelled `<< 2` inline. Written
              * `kind * 4 + n`, fold collapses it to one x48 whose 3-op synth is an
              * instruction short; `(kind << 2) + n` selects the target's 4-op form. */

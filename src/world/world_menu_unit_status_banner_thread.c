@@ -103,8 +103,8 @@ void world_menu_unit_status_banner_thread(void) {
     world_menu_init_numeric_display_frame_primitives(&g_gfx_portrait_origin, &summary->numeric_frame);
     world_gfx_set_draw_mode_for_texture_page(&summary->draw_mode_a, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     world_gfx_set_draw_mode_for_texture_page(&summary->draw_mode_b, MENU_TEXTURE_PAGE_FRAME);
-    world_menu_init_sprite_array(&summary->label_sprites[0], 7, 0x7CBC);
-    world_menu_init_sprite_array(&summary->value_sprites[0], 4, 0x7CBC);
+    menu_init_sprite_array(&summary->label_sprites[0], 7, 0x7CBC);
+    menu_init_sprite_array(&summary->value_sprites[0], 4, 0x7CBC);
     for (frame = 0; frame < 4; frame++) {
         menu_init_default_poly_ft4(&summary->portrait[frame]);
     }
@@ -132,7 +132,7 @@ void world_menu_unit_status_banner_thread(void) {
     world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_a, MENU_TEXTURE_PAGE_FRAME);
     world_gfx_set_draw_mode_for_texture_page(&status->draw_mode_b, MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     world_menu_init_numeric_display_frame_primitives(&g_world_unit_status_panel_origin, &status->numeric_frame);
-    world_menu_init_sprite_array(status->sprites, 7, 0x7C3C);
+    menu_init_sprite_array(status->sprites, 7, 0x7C3C);
     menu_init_default_poly_ft4(&status->portrait);
     world_text_configure_sprite_vram(&rects[2], 0x58, 0x20, status->sprites, 0);
     world_text_configure_sprite_vram(&rects[3], 0x10, 0xA, &status->sprites[1], 0);

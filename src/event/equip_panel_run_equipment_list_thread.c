@@ -63,8 +63,8 @@ void equip_panel_run_equipment_list_thread(void) {
         screen->lines[i].x1 += area->x;
         screen->lines[i].y1 += area->y;
     }
-    battle_menu_init_sprite_array(&screen->sprites[0], 12, 0x7d7c);
-    battle_menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
+    menu_init_sprite_array(&screen->sprites[0], 12, 0x7d7c);
+    menu_init_sprite_array(&screen->sprites[12], 7, 0x7c3c);
     screen->sprites[0].clut = 0x7cbc;
     screen->sprites[1].clut = 0x7cbc;
     mem_copy_bytes_nonempty(&screen[1], screen, sizeof(menu_status_panel_buffer_t));
@@ -112,7 +112,7 @@ void equip_panel_run_equipment_list_thread(void) {
         }
         screen->sprites[12].u0 = u;
         screen->sprites[13].u0 = u;
-        battle_menu_init_sprite_array(&screen->sprites[19], 5, 0x7cfc);
+        menu_init_sprite_array(&screen->sprites[19], 5, 0x7cfc);
         for (i = 0; i < 5; i++) {
             gfx_init_image_loading(&screen->sprites[19 + i], g_menu_status_panel_item_icon_texture,
                 g_menu_status_panel_origin_offsets, g_menu_status_panel_item_icon_layouts + i);

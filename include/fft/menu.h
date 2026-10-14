@@ -211,6 +211,8 @@ typedef char menu_palette_primitives_size_must_be_236[(sizeof(menu_palette_primi
 
 void menu_submit_numeric_display_frame_primitives(menu_palette_primitives_t* display);
 
+void menu_init_sprite_array(SPRT* sprites, s32 count, s32 clut);
+
 /* Numeric editor panel buffer (0x2c0 bytes), double buffered by the
  * *_editor_run_numeric_thread routines (EQUIP equip_editor_run_numeric_thread copies it with
  * sizeof). The draw modes are set up with battle_gfx_set_draw_mode_for_texture_page /

@@ -1,5 +1,6 @@
 #include "fft/gfx.h"
 #include "fft/memory.h"
+#include "fft/menu.h"
 /*
  * WORLD copy of the EVENT OPTION window frame thread (option_menu_window_frame_thread,
  * byte-identical apart from addresses). Layout notes below are the OPTION
@@ -60,7 +61,7 @@ void world_menu_window_frame_thread(void) {
         &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
 
     LoadImage(&texture, (u32*)g_world_menu_window_frame_image);
-    world_menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
+    menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
     texture_u = (texture.x & 0x3f) * 4;
     /* The target loads the returned rectangle's y once as a byte (lbu 0x1a(sp))
        and reuses it for every 16-bit and byte store below. */

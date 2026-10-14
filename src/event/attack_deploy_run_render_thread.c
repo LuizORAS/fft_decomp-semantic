@@ -27,7 +27,7 @@ void attack_deploy_run_render_thread(void) {
     attack_deploy_init_cursor_primitives();
     attack_deploy_build_screen_arrow();
     attack_gfx_init_frame_ft4_array();
-    battle_menu_init_sprite_array(g_attack_deploy_render_buffers[0].tiles[0], 0x19, 0x7ebc);
+    menu_init_sprite_array(g_attack_deploy_render_buffers[0].tiles[0], 0x19, 0x7ebc);
     LoadImage(&g_attack_deploy_tile_clut_rect, (u32*)g_attack_deploy_tile_clut_data);
     StoreImage(&g_attack_deploy_tile_clut_rect, (u32*)g_attack_deploy_tile_clut_buffer);
     StoreImage(&g_attack_deploy_rect_09c, (u32*)g_attack_deploy_semitrans_clut_buffer);
