@@ -25,7 +25,7 @@ as original bytes.
 | `main` | `SCUS_942.21` | `0x80010000`, resident | Boot, the top-level game loop, disc reads, memory, sound, pads, memory card, the shared data tables and the linked Sony libraries |
 | `opening` | `OPEN/OPEN.BIN` | `0x80067000` | Opening movie, title screen and the ending ([Opening and Title](docs/mechanics/Opening%20and%20Title.md)) |
 | `wldcore` | `WORLD/WLDCORE.BIN` | `0x80067000` | The world map (its loop, drawing, travel, random battles and calendar), the menu stack, propositions and the location scripts' opcodes |
-| `world` | `WORLD/WORLD.BIN` | `0x800e0000` | The menus over the world map (formation, shops, the location list, the memory card) and the world event-script interpreter |
+| `world` | `WORLD/WORLD.BIN` | `0x800e0000` | The menus over the world map (formation, shops, the location list, the memory card) and a copy of the event-script interpreter that never runs |
 | `battle` | `BATTLE.BIN` | `0x80067000` | Battles and the story scenes played on battle maps |
 | `event-*` | `EVENT/*.OUT` | `0x801bf000` | Screens and loaders that BATTLE runs on demand: unit, equipment and job menus (`BUNIT`, `EQUIP`, `JOBSTTS`), the scenario loader (`ATTACK`) and others ([Battle Screens](docs/mechanics/Battle%20Screens.md)) |
 | `effect-*` | `EFFECT/E*.BIN` | `0x801c2500` | 110 ability effects, run with BATTLE |
@@ -152,9 +152,9 @@ game data is never committed.
 
 ### Event scripts
 
-Story scenes are bytecode, run by two copies of one interpreter:
-- the BATTLE interpreter (`battle_script_*`);
-- the WORLD interpreter (`world_script_*`).
+Story scenes are bytecode, run by the BATTLE interpreter
+(`battle_script_*`). WORLD carries a copy (`world_script_*`) that nothing
+starts, so it never runs.
 
 WLDCORE runs two smaller script languages of its own: each location's
 scripts on the world map (`wldcore_script_*`) and the sound novels
@@ -226,7 +226,8 @@ All of these libraries are reconstructed C, matched like the game code.
   [Save and Memory Card](docs/mechanics/Save%20and%20Memory%20Card.md),
   [Text](docs/mechanics/Text.md),
   [Opening and Title](docs/mechanics/Opening%20and%20Title.md),
-  [Camera](docs/mechanics/Camera.md) and
+  [Camera](docs/mechanics/Camera.md),
+  [Battle Map](docs/mechanics/Battle%20Map.md) and
   [Engine core](docs/mechanics/Engine%20core.md) so far. The guides walk
   through common changes, such as the
   [Movement rules](docs/guides/Movement%20rules.md),
