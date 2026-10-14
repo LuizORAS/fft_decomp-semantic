@@ -160,7 +160,7 @@ functions:
   - {addr: 0x800ec7b4, size: 416, name: menu_zoom_cursor_frame, hash: 5d13031a2b2e7064, source: src/shared/menu/menu_zoom_cursor_frame.c}
   - {addr: 0x800ec954, size: 464, name: world_gfx_build_scaled_draw_area_pair_swapped, hash: d78c0fbba21ed85f, source: src/shared/gfx/gfx_build_scaled_draw_area_pair_swapped.c, source_symbol: gfx_build_scaled_draw_area_pair_swapped}
   - {addr: 0x800ecb24, size: 52, name: world_gfx_init_scaled_draw_area_packets, hash: 7d7062d484ec19c4, source: src/shared/menu/menu_init_scaled_draw_area_packets.c, source_symbol: menu_init_scaled_draw_area_packets}
-  - {addr: 0x800ecb58, size: 84, name: world_menu_submit_icon_primitives, hash: a515bb563666589f}
+  - {addr: 0x800ecb58, size: 84, name: world_menu_submit_icon_primitives, hash: a515bb563666589f, source: src/shared/menu/menu_submit_icon_primitives.c, source_symbol: menu_submit_icon_primitives}
   - {addr: 0x800ecbac, size: 884, name: world_menu_auto_battle_setting_thread, hash: da80ac82429023de}
   - {addr: 0x800ecf20, size: 484, name: world_menu_run_icon_selection_loop, hash: 250b9e0de59e73e5}
   - {addr: 0x800ed104, size: 1216, name: world_menu_build_ability_preview_at_list, hash: 7287e112f97743bf, source: src/shared/menu/menu_build_ability_preview_at_list.c, source_symbol: menu_build_ability_preview_at_list}

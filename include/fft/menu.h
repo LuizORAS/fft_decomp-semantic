@@ -909,6 +909,7 @@ typedef struct menu_icon_sprites {
 } menu_icon_sprites_t;
 typedef char menu_icon_sprites_size_must_be_104[(sizeof(menu_icon_sprites_t) == 104) ? 1 : -1];
 
+void menu_submit_icon_primitives(menu_icon_sprites_t* frame);
 void menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprites_t* record, s32 frame, s32 cursor);
 
 /* Six-byte option row selected by customized-options bits 9-11 in

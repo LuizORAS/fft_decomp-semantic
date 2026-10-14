@@ -813,7 +813,7 @@ functions:
   - {addr: 0x8013876c, size: 416, name: menu_zoom_cursor_frame, hash: 509e692236432dd6, source: src/shared/menu/menu_zoom_cursor_frame.c}
   - {addr: 0x8013890c, size: 464, name: battle_gfx_build_scaled_draw_area_pair_swapped, hash: 43ec57d8623a1604, source: src/shared/gfx/gfx_build_scaled_draw_area_pair_swapped.c, source_symbol: gfx_build_scaled_draw_area_pair_swapped}
   - {addr: 0x80138adc, size: 52, name: battle_gfx_init_scaled_draw_area_packets, hash: fd9d7a1158be224d, source: src/shared/menu/menu_init_scaled_draw_area_packets.c, source_symbol: menu_init_scaled_draw_area_packets}
-  - {addr: 0x80138b10, size: 84, name: battle_menu_submit_icon_primitives, hash: 3abc0aee8fb45d44}
+  - {addr: 0x80138b10, size: 84, name: battle_menu_submit_icon_primitives, hash: 3abc0aee8fb45d44, source: src/shared/menu/menu_submit_icon_primitives.c, source_symbol: menu_submit_icon_primitives}
   - {addr: 0x80138b64, size: 884, name: battle_menu_auto_battle_setting_thread, hash: abb41eaee69c7fdf}
   - {addr: 0x80138ed8, size: 484, name: battle_menu_run_icon_selection_loop, hash: 8cfe22df483b0535}
   - {addr: 0x801390bc, size: 1216, name: battle_menu_build_ability_preview_at_list, hash: 6e702f32cf54faba, source: src/shared/menu/menu_build_ability_preview_at_list.c, source_symbol: menu_build_ability_preview_at_list}
