@@ -725,7 +725,6 @@ void script_run_next_event_unused(void);
 
 /* instruction cursors */
 s32 script_find_instruction_byte_offset(s32 offset, s32 opcode);
-s32 world_script_find_instruction_byte_offset(s32 offset, s32 instruction);
 /* 0x80149d6c..0x80149ebc: returns offset after the matching target marker;
  * missing targets stop the current thread. alternate_opcode accepts -1. */
 s32 script_find_jump_target(s32 limit_offset, event_opcode_e target_opcode, s32 alternate_opcode, s32 target_id);

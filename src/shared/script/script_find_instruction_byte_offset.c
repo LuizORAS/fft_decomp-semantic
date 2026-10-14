@@ -1,4 +1,3 @@
-#include "fft/battle_event.h"
 #include "fft/script.h"
 
 /* Returns the byte offset of the next `opcode` instruction at or after

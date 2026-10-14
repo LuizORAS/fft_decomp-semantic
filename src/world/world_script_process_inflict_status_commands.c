@@ -14,8 +14,7 @@ void world_script_process_inflict_status_commands(void) {
     unit_stats_t* unit;
 
     instruction_offset = 0;
-    while ((instruction_offset
-               = world_script_find_instruction_byte_offset(instruction_offset, EVENT_OPCODE_INFLICT_STATUS))
+    while ((instruction_offset = script_find_instruction_byte_offset(instruction_offset, EVENT_OPCODE_INFLICT_STATUS))
         != 0) {
         instruction = (u8*)g_script_event_block;
         if (instruction[instruction_offset] == EVENT_OPCODE_INFLICT_STATUS) {

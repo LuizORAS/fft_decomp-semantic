@@ -518,7 +518,7 @@ restart_event:
             thread_start(operand_1, world_camera_fusion_thread);
             g_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
             instruction_offset
-                = world_script_find_instruction_byte_offset(instruction_offset, EVENT_OPCODE_CAMERA_FUSION_END);
+                = script_find_instruction_byte_offset(instruction_offset, EVENT_OPCODE_CAMERA_FUSION_END);
         } else if (opcode == EVENT_OPCODE_CAMERA_FUSION_END) {
         } else if (opcode == EVENT_OPCODE_CAMERA_SPEED_CURVE) {
             g_world_camera_speed_curve = operand_1;
@@ -565,7 +565,7 @@ restart_event:
             operand_1 = world_thread_resolve_id(THREAD_SLOT_FIRST_IDLE);
             thread_start(operand_1, world_script_block_start_thread);
             g_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
-            instruction_offset = world_script_find_instruction_byte_offset(instruction_offset, EVENT_OPCODE_BLOCK_END);
+            instruction_offset = script_find_instruction_byte_offset(instruction_offset, EVENT_OPCODE_BLOCK_END);
         } else if (opcode == EVENT_OPCODE_BLOCK_END) {
         } else if (opcode == EVENT_OPCODE_UNKNOWN_23) {
         } else if (opcode == EVENT_OPCODE_UNKNOWN_24) {
@@ -819,8 +819,7 @@ restart_event:
             operand_1 = world_thread_resolve_id(THREAD_SLOT_FIRST_IDLE);
             thread_start(operand_1, world_script_add_unit_start_thread);
             g_thread_contexts[operand_1].function_parameter_1 = (s32)parameters;
-            instruction_offset
-                = world_script_find_instruction_byte_offset(instruction_offset, EVENT_OPCODE_ADD_UNIT_END);
+            instruction_offset = script_find_instruction_byte_offset(instruction_offset, EVENT_OPCODE_ADD_UNIT_END);
         } else if (opcode == EVENT_OPCODE_ADD_UNIT_END) {
         }
         /* ---- Waits and synchronization ---- */

@@ -1030,7 +1030,7 @@ functions:
   - {addr: 0x80149cbc, size: 140, name: battle_thread_find_running_by_task, hash: 3e4172d2ef22f4ec}
   - {addr: 0x80149d48, size: 36, name: thread_set_current_task_id, hash: 7886a9c202b1848c, source: src/shared/thread/thread_set_current_task_id.c}
   - {addr: 0x80149d6c, size: 336, name: script_find_jump_target, hash: 422ae30d6a9b16a6}
-  - {addr: 0x80149ebc, size: 84, name: script_find_instruction_byte_offset, hash: ac44e561bcf62111}
+  - {addr: 0x80149ebc, size: 84, name: script_find_instruction_byte_offset, hash: ac44e561bcf62111, source: src/shared/script/script_find_instruction_byte_offset.c}
   - {addr: 0x80149f10, size: 264, name: script_run_condition, hash: 56d22d399c4208fa, source: src/shared/script/script_run_condition.c}
   - {addr: 0x8014a018, size: 724, name: script_run_variable_command, hash: 71d9b10690838d9e, source: src/shared/script/script_run_variable_command.c}
   - {addr: 0x8014a2ec, size: 176, name: script_get_variable_word_pointer_from_id, hash: e0ab275bfc1159e1, source: src/shared/script/script_get_variable_word_pointer_from_id.c}

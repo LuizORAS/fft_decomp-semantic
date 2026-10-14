@@ -378,7 +378,7 @@ functions:
   - {addr: 0x800fd14c, size: 140, name: world_thread_find_running_by_task, hash: e98782ca2e2a6940}
   - {addr: 0x800fd1d8, size: 36, name: thread_set_current_task_id, hash: dd9e3f86ea659634, source: src/shared/thread/thread_set_current_task_id.c}
   - {addr: 0x800fd1fc, size: 336, name: world_script_find_jump_target, hash: ab737fa84b87a290}
-  - {addr: 0x800fd34c, size: 84, name: world_script_find_instruction_byte_offset, hash: b757188c6a6e7586}
+  - {addr: 0x800fd34c, size: 84, name: script_find_instruction_byte_offset, hash: b757188c6a6e7586, source: src/shared/script/script_find_instruction_byte_offset.c}
   - {addr: 0x800fd3a0, size: 264, name: script_run_condition, hash: e36beb855569d28c, source: src/shared/script/script_run_condition.c}
   - {addr: 0x800fd4a8, size: 796, name: script_run_variable_command, hash: e56f1c1dadc95a3e, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck, source: src/shared/script/script_run_variable_command.c}
   - {addr: 0x800fd7c4, size: 176, name: script_get_variable_word_pointer_from_id, hash: 6a6f5aa839d4ad4d, source: src/shared/script/script_get_variable_word_pointer_from_id.c}
@@ -2349,6 +2349,7 @@ imports:
   - {addr: 0x801df198, name: jobstts_entrypoint}
 
 overrides:
+  - {function: script_find_instruction_byte_offset, name: g_script_event_instruction_sizes, addr: 0x8013a454}
   - {function: script_interpolate_range_fixed12, name: battle_mul_div_s64, addr: 0x80100188}
   - {function: script_run_next_event, name: script_execute_event, addr: 0x800f6f20}
   - {function: script_run_next_event, name: script_load_next_event, addr: 0x800f92a0}
