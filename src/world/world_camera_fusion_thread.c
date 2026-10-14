@@ -1,12 +1,3 @@
-/* Runs an event camera fusion: seeds one track per camera component from the
- * script's CAMERA instructions up to CAMERA_FUSION_END, then steps every track
- * each frame until track 3 finishes.
- *
- * Instruction-for-instruction twin of battle_camera_fusion_thread
- * (0x8013db9c); only the callee and global bindings differ. The seed loop
- * reads each track through a `track` pointer taken first in the body: that
- * makes loop.c discover the track giv before the script-variable and values
- * givs, which gives the target's induction-increment order. */
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -14,6 +5,13 @@
  * target passes to world_menu_alloc_memory. */
 #define WORLD_CAMERA_FUSION_COMPONENT_COUNT 7
 
+/* Run an event camera fusion: seed one track per camera component from the script's CAMERA instructions
+ * up to CAMERA_FUSION_END, then step every track each frame until track 3 finishes. Instruction-for-instruction
+ * twin of battle_camera_fusion_thread; only the callee and global bindings differ.
+ *
+ * The seed loop reads each track through a `track` pointer taken first in the body: that makes loop.c
+ * discover the track giv before the script-variable and values givs, which gives the target's
+ * induction-increment order. */
 void world_camera_fusion_thread(void) {
     battle_camera_track_t* tracks;
     battle_camera_track_t* track;

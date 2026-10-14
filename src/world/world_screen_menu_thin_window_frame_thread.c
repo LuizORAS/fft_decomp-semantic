@@ -1,17 +1,10 @@
-/*
- * WORLD copy of the EVENT OPTION window frame thread (option_menu_thin_window_frame_thread; second WORLD copy with its
- * own blit descriptors, blit setters and texture-window table (the frame block at 0x801cc074 is shared with
- * world_option_menu_thin_window_frame_thread), byte-identical apart from addresses). Layout notes below are the OPTION
- * twin's; the WORLD helpers are the same routines.
- */
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* One libgpu texture window per DR_MODE packet. The static table already
-   holds each window's w/h (0x10x0x10, 8x0x10, 0x10x8 and two full 0x100x0x100
-   windows); this function only fills in the runtime x/y. Indexing the array
-   is also what reproduces the target's symbol-plus-byte-offset addressing. */
-
+/* WORLD copy of option_menu_thin_window_frame_thread, byte-identical apart from addresses: the second
+ * WORLD copy, with its own blit descriptors, blit setters and texture-window table (the frame block at
+ * 0x801cc074 is shared with world_option_menu_thin_window_frame_thread). Layout notes below are the OPTION
+ * twin's; the WORLD helpers are the same routines. */
 void world_screen_menu_thin_window_frame_thread(void) {
     RECT texture;
     /* The target holds the frame record base in one callee-saved register across

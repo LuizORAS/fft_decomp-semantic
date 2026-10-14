@@ -167,7 +167,7 @@ functions:
   - {addr: 0x800ecf20, size: 484, name: world_menu_run_icon_selection_loop, hash: 250b9e0de59e73e5}
   - {addr: 0x800ed104, size: 1216, name: world_menu_build_ability_preview_at_list, hash: 7287e112f97743bf}
   - {addr: 0x800ed5c4, size: 48, name: world_menu_preview_ability_turn_at_list, hash: e02dbd58ee62ae8e}
-  - {addr: 0x800ed5f4, size: 488, name: world_draw_menu_text_columns_narrow, hash: e8638c05b3faf0ec}
+  - {addr: 0x800ed5f4, size: 488, name: world_menu_draw_text_columns_narrow, hash: e8638c05b3faf0ec}
   - {addr: 0x800ed7dc, size: 700, name: world_menu_redraw_text_page_on_scroll_in_rect, hash: 4ebf226b668e0eb2}
   - {addr: 0x800eda98, size: 16, name: world_input_get_menu_repeat_counter, hash: 7fd0b897319e3c44}
   - {addr: 0x800edaa8, size: 4172, name: world_menu_run_scrolling_ability_list_thread, hash: ea266beac968435e, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}

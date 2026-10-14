@@ -4,7 +4,7 @@
 #include "psx/types.h"
 
 /* Sibling of world_screen_menu_redraw_text_page_on_scroll that draws through
- * world_draw_menu_text_columns_narrow and takes the image rectangle from a caller-supplied
+ * world_menu_draw_text_columns_narrow and takes the image rectangle from a caller-supplied
  * RECT (x and w in framebuffer pixels, divided by four; the image row is
  * fixed at y = 0x80). Scrolls the row window on L1/R1 (or on the running
  * thread's redraw request), redraws the page into a freshly allocated image
@@ -58,7 +58,7 @@ u8* world_menu_redraw_text_page_on_scroll_in_rect(
     }
     buffer = world_menu_alloc_memory(entry->inner_width * entry->inner_height / 2);
     world_clear_menu_render_buffer(buffer, entry->inner_width * entry->inner_height / 2);
-    world_draw_menu_text_columns_narrow(entry, row_offset, buffer);
+    world_menu_draw_text_columns_narrow(entry, row_offset, buffer);
     *redraw = 0;
     LoadImage(&rect, buffer);
     world_copy_bytes(&clear, &rect, 8);

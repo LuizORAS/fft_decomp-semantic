@@ -1,15 +1,13 @@
-/* Advances one camera-track component by a frame and returns its new value.
- * Called per component by world_camera_fusion_thread (0x800f14b4); the
- * BATTLE twin is battle_camera_step_track (0x8013dfb0).
- *
- * Each call samples the two tangent lines of the active key segment at this
- * frame and the next, intersects them (world_cross_product_q12 is a Q12 cross product
- * that sets g_world_camera_cross_product_overflow on overflow) and moves the value along the resulting
- * control point. The locals span, frame and lead are reused across the
- * stages, as the target's register map requires. */
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Advance one camera-track component by a frame and return its new value. world_camera_fusion_thread
+ * calls it per component; the BATTLE twin is battle_camera_step_track.
+ *
+ * Each call samples the two tangent lines of the active key segment at this frame and the next, intersects
+ * them (world_cross_product_q12 is a Q12 cross product that sets g_world_camera_cross_product_overflow on
+ * overflow) and moves the value along the resulting control point. The locals span, frame and lead are
+ * reused across the stages, as the target's register map requires. */
 s32 world_camera_step_track(battle_camera_track_t* track, s32 component) {
     s32 time[4];  /* line 0: time[0]->time[1]; line 1: time[2]->time[3] */
     s32 value[4]; /* matching values for the two sampled lines */

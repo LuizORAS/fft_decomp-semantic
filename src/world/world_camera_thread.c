@@ -1,15 +1,10 @@
-/*
- * The event CAMERA instruction (0x19) thread. Instruction-for-instruction twin of the BATTLE routine at
- * 0x80146110; see that file for the interpolation modes and the
- * allocation-sensitive spellings.
- */
 #include "fft/world.h"
 #include "psx/types.h"
 
 #define ABS(x) (x < 0 ? -(x) : x)
 
-/* Script-variable index for each camera component, 0x801531b8. */
-
+/* The thread of the event CAMERA instruction (0x19). Instruction-for-instruction twin of
+ * battle_camera_thread; see that file for the interpolation modes and the allocation-sensitive spellings. */
 void world_camera_thread(void) {
     s32 target[8];
     s32 start[7];

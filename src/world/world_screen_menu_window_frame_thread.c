@@ -1,13 +1,11 @@
-/*
- * WORLD copy of the EVENT OPTION window frame thread (option_menu_window_frame_thread,
- * byte-identical apart from addresses): the variant that allocates its scratch
- * pixel buffer, using the second WORLD blit descriptors and setters (as
- * world_screen_menu_thin_window_frame_thread) and its own texture-window table. Layout
- * notes below are the OPTION twin's; the WORLD helpers are the same routines.
- */
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* A window frame thread of WORLD's menu-screen library: the frame of option_menu_window_frame_thread
+ * (16-pixel corners), but it allocates and frees its own scratch image as option_menu_thin_window_frame_thread
+ * does, and uses the second WORLD blit descriptors and setters (as world_screen_menu_thin_window_frame_thread)
+ * and its own texture-window table. Layout notes below are the OPTION twin's; the WORLD helpers are the same
+ * routines. */
 void world_screen_menu_window_frame_thread(void) {
     RECT texture;
     /* The stride pointers are locals because the target keeps each one live

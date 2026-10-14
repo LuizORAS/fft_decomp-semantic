@@ -1,6 +1,6 @@
 /*
  * Extended BATTLE counterpart of
- * world_draw_menu_text_columns_narrow (WORLD 0x800ed5f4).
+ * world_menu_draw_text_columns_narrow.
  */
 #include "fft/battle.h"
 #include "psx/types.h"

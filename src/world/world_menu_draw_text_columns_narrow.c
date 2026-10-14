@@ -1,8 +1,11 @@
-/* Twin of world_screen_menu_draw_text_columns with the stride reduced by 8. */
 #include "fft/world.h"
 #include "psx/types.h"
 
-void world_draw_menu_text_columns_narrow(world_menu_entry_t* entry, s32* row_offset, void* buffer) {
+/* Draw the visible rows of a three-column menu text layout with the text 8 pixels narrower than
+ * the entry, as world_screen_menu_draw_text_columns does at full width.
+ * world_menu_run_scrolling_ability_list_thread and world_menu_redraw_text_page_on_scroll_in_rect call it;
+ * BATTLE's battle_menu_draw_text_columns_narrow is an extended version. */
+void world_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_offset, void* buffer) {
     world_menu_text_layout_t* layout = (world_menu_text_layout_t*)entry->text_binding;
     s32 row;
     s32 column;
