@@ -290,7 +290,7 @@ extern u16 g_gfx_draw_primitives_immediately;
 extern u32* g_gfx_current_otag_entry;
 
 void gfx_draw_or_append_gpu_primitive(void* primitive);
-void gfx_append_gpu_primitive_to_secondary_otag(u32* primitive);
+void gfx_append_gpu_primitive_to_secondary_otag(void* primitive);
 
 /* Two DR_AREA packets and their corresponding rectangles.
  * Builders choose scaling percentages and rectangle placement. */
