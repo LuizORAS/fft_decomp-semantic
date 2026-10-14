@@ -87,9 +87,9 @@ extern s16 g_equip_unit_saved_hp;
 extern s16 g_equip_unit_saved_mp;
 extern u8 g_equip_unit_selected_index;
 
-void equip_item_calculate_equipment_swap_stat_delta(
-    menu_status_panel_slot_storage_t* detail_total, menu_unit_status_record_t* acc, u16* froms, u16* tos);
-void equip_item_sum_equipment_stat_details(menu_status_panel_slot_storage_t* total, u16* equipment);
+void equip_item_calculate_equipment_swap_stat_delta(menu_status_panel_slot_storage_t* detail_total,
+    menu_unit_status_record_t* summary_total, const u16* from_items, const u16* to_items);
+void equip_item_sum_equipment_stat_details(menu_status_panel_slot_storage_t* total, const u16* equipment);
 void equip_unit_build_data_from_stats(struct unit_stats* stats, equip_unit_data_t* unit);
 s32 equip_unit_can_equip_item_id(s16 unit_index, s16 item_entry);
 void equip_unit_commit_loadout_to_stats(void);

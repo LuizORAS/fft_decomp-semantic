@@ -4,7 +4,7 @@
 
 /* Accumulates the stat deltas of all equipment slot changes into total. */
 void world_item_calculate_equipment_swap_stat_delta(menu_status_panel_slot_storage_t* detail_total,
-    menu_unit_status_record_t* total, u16* items_before, u16* items_after) {
+    menu_unit_status_record_t* total, const u16* items_before, const u16* items_after) {
     menu_unit_status_record_t delta;
     menu_status_panel_slot_storage_t detail;
     menu_status_panel_slot_storage_t unused;

@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Sum the stat bonuses of the five equipped items listed in `equipment`. */
-void equip_item_sum_equipment_stat_details(menu_status_panel_slot_storage_t* total, u16* equipment) {
+void equip_item_sum_equipment_stat_details(menu_status_panel_slot_storage_t* total, const u16* equipment) {
     menu_unit_status_record_t summary;
     menu_status_panel_slot_storage_t detail;
     menu_status_panel_slot_storage_t unused; /* unreferenced in the target; needed for the frame size */

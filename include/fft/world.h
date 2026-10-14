@@ -2721,7 +2721,7 @@ void world_item_build_status_list_polygons(s16 item_id);
 menu_icon_source_t* world_item_build_type_icon_source(s32 entry_index);
 
 void world_item_calculate_equipment_swap_stat_delta(menu_status_panel_slot_storage_t* detail_total,
-    menu_unit_status_record_t* total, u16* items_before, u16* items_after);
+    menu_unit_status_record_t* total, const u16* items_before, const u16* items_after);
 
 void world_item_calculate_swap_stat_delta(menu_status_panel_slot_storage_t* output, menu_unit_status_record_t* delta,
     s16 item_before, s16 item_after, s32 slot);
@@ -2761,7 +2761,7 @@ s8 world_item_run_sort_order_menu(void);
 world_unit_equipment_slot_e world_item_select_equipment_slot(s16 unit_index, s32 item_id);
 s32 world_item_show_units_equipping_selected(void);
 void world_item_sort_id_list(s32 mode, s16* list);
-void world_item_sum_equipment_stat_details(struct menu_status_panel_slot_storage* total, u16* equipment);
+void world_item_sum_equipment_stat_details(struct menu_status_panel_slot_storage* total, const u16* equipment);
 
 /* shop */
 /* Two-byte shop availability mask, stored most significant byte first: bit
