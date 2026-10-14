@@ -6,8 +6,8 @@
 #include "fft/sound.h"
 #include "fft/thread.h"
 
-/* Thread body that swaps in companion overlay 7 behind the option menu. */
-void battle_menu_run_jobstts_thread(void) {
+/* Run the job-status overlay while its state is nonzero. */
+void menu_run_jobstts_thread(void) {
     if (battle_thread_is_running_asm(THREAD_SLOT_MENU_BUILDING) != 0) {
         thread_exit_current();
     }

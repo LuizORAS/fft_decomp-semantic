@@ -2194,6 +2194,7 @@ void menu_start_mini_menu_display_thread(void);
 void menu_run_triangle_selection(void);
 void menu_run_help_menu_thread(void);
 void menu_run_equip_thread(void);
+void menu_run_jobstts_thread(void);
 void menu_run_battle_help(void);
 
 /* Unit portrait transition primitives. */

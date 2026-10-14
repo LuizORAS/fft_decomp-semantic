@@ -196,7 +196,7 @@ functions:
   - {addr: 0x800efbe0, size: 260, name: world_menu_run_bunit_transition_thread, hash: eb985a136265b699}
   - {addr: 0x800efce4, size: 80, name: world_menu_open_bunit, hash: 4bc30b101fd07457, source: src/shared/menu/menu_open_bunit.c, source_symbol: menu_open_bunit}
   - {addr: 0x800efd34, size: 88, name: world_menu_run_helpmenu_thread, hash: d52763de82195c9d, source: src/shared/menu/menu_run_help_menu_thread.c, source_symbol: menu_run_help_menu_thread}
-  - {addr: 0x800efd8c, size: 200, name: world_menu_run_jobstts_thread, hash: f78d073fced43537}
+  - {addr: 0x800efd8c, size: 200, name: world_menu_run_jobstts_thread, hash: f78d073fced43537, source: src/shared/menu/menu_run_jobstts_thread.c, source_symbol: menu_run_jobstts_thread}
   - {addr: 0x800efe54, size: 456, name: world_menu_run_equip_thread, hash: 5d7be1020050c481, source: src/shared/menu/menu_run_equip_thread.c, source_symbol: menu_run_equip_thread}
   - {addr: 0x800f001c, size: 252, name: world_menu_open_debugchr_unit_editor, hash: f331fb4b57e97974}
   - {addr: 0x800f0118, size: 168, name: world_menu_open_debugchr, hash: 736276bee06d36ae, source: src/shared/menu/menu_open_debugchr.c, source_symbol: menu_open_debugchr}
@@ -2560,6 +2560,10 @@ overrides:
   - {function: world_menu_run_equip_thread, name: g_sound_suppressed, addr: 0x801532a0}
   - {function: world_menu_run_helpmenu_thread, name: battle_thread_find_running_by_task, addr: 0x800fd14c}
   - {function: world_menu_run_helpmenu_thread, name: helpmenu_menu_run_battle_help, addr: 0x8010487c}
+  - {function: world_menu_run_jobstts_thread, name: battle_menu_clear_modal_open, addr: 0x800e1ea0}
+  - {function: world_menu_run_jobstts_thread, name: battle_menu_set_modal_open, addr: 0x800e1e8c}
+  - {function: world_menu_run_jobstts_thread, name: battle_thread_is_running_asm, addr: 0x80100164}
+  - {function: world_menu_run_jobstts_thread, name: g_battle_companion_overlay_state, addr: 0x801532f0}
   - {function: world_menu_run_numeric_display_panel_thread, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_run_numeric_display_panel_thread, name: battle_gfx_build_scaled_draw_area_pair_swapped, addr: 0x800ec954}
   - {function: world_menu_run_numeric_display_panel_thread, name: battle_gfx_init_scaled_draw_area_packets, addr: 0x800ecb24}

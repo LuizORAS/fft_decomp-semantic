@@ -849,7 +849,7 @@ functions:
   - {addr: 0x8013c130, size: 260, name: battle_menu_run_bunit_transition_thread, hash: 4f9e1018eea9bca0}
   - {addr: 0x8013c234, size: 80, name: battle_menu_open_bunit, hash: 0e07c32300c3103f, source: src/shared/menu/menu_open_bunit.c, source_symbol: menu_open_bunit}
   - {addr: 0x8013c284, size: 88, name: battle_menu_run_helpmenu_thread, hash: 273124b9b75f5519, source: src/shared/menu/menu_run_help_menu_thread.c, source_symbol: menu_run_help_menu_thread}
-  - {addr: 0x8013c2dc, size: 200, name: battle_menu_run_jobstts_thread, hash: 4873b28b228ba17e}
+  - {addr: 0x8013c2dc, size: 200, name: battle_menu_run_jobstts_thread, hash: 4873b28b228ba17e, source: src/shared/menu/menu_run_jobstts_thread.c, source_symbol: menu_run_jobstts_thread}
   - {addr: 0x8013c3a4, size: 456, name: battle_menu_run_equip_thread, hash: b4cfa9beb874f1bc, source: src/shared/menu/menu_run_equip_thread.c, source_symbol: menu_run_equip_thread}
   - {addr: 0x8013c56c, size: 252, name: battle_menu_open_debugchr_unit_editor, hash: d3d1ed8f97defebc}
   - {addr: 0x8013c668, size: 168, name: battle_menu_open_debugchr, hash: 6468879416a486b3, source: src/shared/menu/menu_open_debugchr.c, source_symbol: menu_open_debugchr}
