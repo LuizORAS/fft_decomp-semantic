@@ -1,11 +1,8 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
-#include "psx/types.h"
+#include "fft/menu.h"
 
-/* Draw each entry of a menu number table at its own position, dispatching on
- * the entry kind. */
-void battle_menu_draw_numeric_display_entries(
-    u8* buffer, menu_number_entry_t* entries, glyph_blit_t* position, s32 count) {
+void menu_draw_numeric_display_entries(u8* buffer, menu_number_entry_t* entries, glyph_blit_t* position, s32 count) {
     s32 i;
 
     for (i = 0; i < count; i++) {

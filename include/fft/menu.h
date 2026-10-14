@@ -1525,6 +1525,9 @@ typedef char menu_number_entry_size_must_be_12[(sizeof(menu_number_entry_t) == 1
 
 extern s32 g_menu_hide_numeric_values; /* non-zero: draw digits as blanks (0x48, 0x10) */
 
+void menu_draw_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* pos);
+void menu_draw_numeric_display_entries(u8* buffer, menu_number_entry_t* entries, glyph_blit_t* position, s32 count);
+
 void menu_display_hovered_unit_stats(
     RECT* frame_rect, s32 mode, menu_number_entry_t* entries, menu_unit_status_record_t* status);
 
