@@ -109,7 +109,7 @@ functions:
   - {addr: 0x800e77e8, size: 32, name: world_unit_copy_map_coords_from_misc_id, hash: b293d475560aeacb}
   - {addr: 0x800e7808, size: 8, name: world_script_report_missing_unit_stub, hash: 6d64edf91449c1b1}
   - {addr: 0x800e7810, size: 828, name: world_script_get_misc_id, hash: ebe8f110139eeadb}
-  - {addr: 0x800e7b4c, size: 8, name: world_return_parameter_1, hash: cc2f57dc1c5c5ee3}
+  - {addr: 0x800e7b4c, size: 8, name: world_return_argument_800e7b4c, hash: cc2f57dc1c5c5ee3}
   - {addr: 0x800e7b54, size: 8, name: world_return_argument_800e7b54, hash: cc2f57dc1c5c5ee3}
   - {addr: 0x800e7b5c, size: 196, name: world_text_build_unit_name_list, hash: 9a9afb823d5db8ad}
   - {addr: 0x800e7c20, size: 32, name: world_text_fill_field_with_terminators, hash: 5eaa92c4790153fd}
