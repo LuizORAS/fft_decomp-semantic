@@ -1,7 +1,8 @@
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 
 /* Reload the unit and redraw its status panel; a negative list index draws dashes. */
-void battle_menu_refresh_hovered_unit_stats_display(void) {
+void menu_refresh_hovered_unit_stats_display(void) {
     battle_menu_load_selected_unit();
     g_battle_menu_hovered_unit_stats_setup[6].format = 2;
     if (g_battle_menu_active_turn_banner.list_index < 0) {
