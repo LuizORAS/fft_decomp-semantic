@@ -54,7 +54,7 @@ void battle_state_run_game_loop(void) {
             camera_integer->vy = camera_component >> 12;
             camera_integer->vz = -camera_fixed->vz / ONE;
 
-            battle_camera_update_matrices(&g_battle_camera_matrix, &g_battle_camera_render_state,
+            battle_camera_update_matrices(&g_battle_camera_matrix, &g_battle_camera_angles,
                 &g_battle_offset_screen_coords, &g_battle_camera_zoom);
             battle_map_draw_mesh_and_weather(&g_battle_camera_matrix);
             if (battle_effect_update_cycle() != 0) {

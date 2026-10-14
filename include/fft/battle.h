@@ -294,7 +294,7 @@ void battle_heap_init(battle_heap_node_t* buffer, u32 buffer_size);
 void battle_heap_print_stats(void);
 
 /* thread */
-/* BATTLE's cooperative threads: slot 0 is the phase1_camera loop, and one scheduler pass a frame runs slots 1-15. */
+/* BATTLE's cooperative threads: slot 0 is the main loop, and one scheduler pass a frame runs slots 1-15. */
 
 /* 0x8014ceb4..0x8014cf58 forwards a0-a3 to the callback in 0x80173ca8,
  * using thread 0's stack when necessary. It does not copy stacked arguments
@@ -321,7 +321,7 @@ extern s32 g_battle_thread_task_ids[][256];
 extern native_thread_t* g_battle_threads;
 void battle_thread_wait_for_unit_view_panels(void);
 void battle_script_block_start_thread(void);
-/* Hand-written (0x8014ceb4): call g_battle_thread_call_target on the phase1_camera loop's stack (see above),
+/* Hand-written (0x8014ceb4): call g_battle_thread_call_target on the main loop's stack (see above),
  * since a thread's own stack is about 900 bytes. */
 s32 battle_thread_call_on_main_stack();
 void battle_thread_exit_current(void);
@@ -348,7 +348,7 @@ void battle_thread_wait_until_inactive(s32 thread_id);
 
 /* Hand-written (0x8014ca80): save the current thread's registers in its slot and resume the next
  * running slot, calling battle_script_route_event_input first; after slot 15 it resumes slot 0, the
- * phase1_camera loop, without testing it. The phase1_camera loop yields once a frame (battle_script_run_event_frame),
+ * main loop, without testing it. The main loop yields once a frame (battle_script_run_event_frame),
  * so shared state can change before a yield returns. */
 void battle_thread_yield(void);
 
@@ -6136,7 +6136,7 @@ enum {
 };
 
 extern u16 g_battle_camera_shake_z_offset;
-extern s32 g_battle_previous_camera_yaw;
+extern s32 g_battle_camera_previous_yaw; /* the yaw a turn started from; written, never read */
 extern u16 g_battle_camera_script_variable_indices[7];
 extern u16 g_battle_camera_position_locked;
 extern s32 g_battle_camera_yaw_band;
@@ -6172,9 +6172,8 @@ extern s32 g_battle_camera_zoom_increment;
 extern s32 g_battle_camera_cross_product_overflow; /* set by battle_fixed_cross_product_q12 on Q12 overflow */
 extern s16 g_battle_camera_diagonal_yaws[4];
 
-/* Base of the large render-state records; low offsets overlap camera/GPU fields.
- * .vx is the camera pitch and .vy its yaw. */
-extern SVECTOR g_battle_camera_render_state;
+/* The camera's angles: .vx the pitch, .vy the yaw and .vz the roll (0x1000 is a full turn). */
+extern SVECTOR g_battle_camera_angles;
 
 /* 0x80166054: camera consumer unpacks two 2-bit fields and a high nibble. */
 extern s32 g_battle_camera_speed_curve;
@@ -6192,10 +6191,10 @@ void battle_camera_update_effect_rotation_and_zoom(void);
 void battle_camera_update_vector_from_game_state(void);
 void battle_camera_calculate_acting_unit_vector_normal(void);
 s32 battle_camera_calculate_cursor_tile_vector_normal(void);
-void battle_camera_call_rotate_left(s32 target_angle);
-void battle_camera_call_rotate_right(s32 target_angle);
-void battle_camera_call_toggle_tilt(void);
-void battle_camera_call_zoom_map(void);
+void battle_camera_start_rotate_left(s32 target_angle);
+void battle_camera_start_rotate_right(s32 target_angle);
+void battle_camera_handle_tilt_input(void);
+void battle_camera_handle_zoom_input(void);
 void battle_camera_copy_current_real_coords(void);
 void battle_camera_copy_rotation(void);
 void battle_camera_copy_zoom(void);
@@ -6214,8 +6213,8 @@ void battle_map_reset_script_light_transform(void);
 void battle_camera_restore_current_real_coords(void);
 void battle_camera_restore_rotation(void);
 void battle_camera_restore_zoom(void);
-void battle_camera_rotate_left(s32 target_angle);
-void battle_camera_rotate_right(s32 target_angle);
+void battle_camera_set_left_turn_destination(s32 target_angle);
+void battle_camera_set_right_turn_destination(s32 target_angle);
 void battle_camera_rotate_when_unit_tile_not_visible(struct battle_unit_misc_data* unit);
 s32 battle_camera_scale_cursor_tile_vector(void);
 void battle_camera_set_current_real_coords(const VECTOR* coords);
@@ -6228,7 +6227,7 @@ void battle_camera_toggle_zoom(void);
 void battle_camera_update_map_pan(void);
 
 void battle_camera_update_matrices(
-    MATRIX* camera_matrix, void* render_buffers, void* offset_screen_coords, VECTOR* camera_zoom);
+    MATRIX* camera_matrix, void* angles, void* offset_screen_coords, VECTOR* camera_zoom);
 
 void battle_camera_update_offset_screen_coord_animation(void);
 void battle_camera_update_real_coord_animation(void);
@@ -9008,7 +9007,7 @@ typedef enum zodiac_compatibility {
     ZODIAC_COMPATIBILITY_BEST = 5,
 } zodiac_compatibility_e;
 
-extern s32 g_battle_destination_camera_yaw;
+extern s32 g_battle_camera_destination_yaw;
 extern u8 g_battle_job_level_gained_flag;
 extern u8 g_battle_math_source_skillsets[4];
 extern VECTOR g_battle_offset_screen_coords;

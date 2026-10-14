@@ -11,8 +11,8 @@ void battle_state_handle_target_select_state(void) {
     battle_unit_misc_data_t* target;
 
     battle_camera_handle_rotation_input();
-    battle_camera_call_zoom_map();
-    battle_camera_call_toggle_tilt();
+    battle_camera_handle_zoom_input();
+    battle_camera_handle_tilt_input();
     battle_target_move_cursor_by_input();
     battle_state_update_units();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);

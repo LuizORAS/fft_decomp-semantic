@@ -4,7 +4,7 @@
 /* Start a zoom toward ONE (mode 0) or 0xc00 (mode 1) from whichever side the
  * scale is on. No retail code calls it; the L2 input goes through
  * battle_camera_toggle_zoom. */
-void battle_camera_zoom_map(s32 mode) {
+void battle_camera_start_zoom(s32 mode) {
     switch (mode) {
     case 0:
         if (g_battle_camera_zoom.vx > ONE) {

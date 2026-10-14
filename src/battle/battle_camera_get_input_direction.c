@@ -129,7 +129,7 @@ s32 battle_camera_get_input_direction(s32 mode) {
 
     switch (g_battle_cursor_input_mode) {
     case BATTLE_CURSOR_INPUT_OPTION_A:
-        switch (g_battle_camera_render_state.vy & 0xC00) {
+        switch (g_battle_camera_angles.vy & 0xC00) {
         case BATTLE_FACING_SOUTH:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
                 direction = BATTLE_FACING_NORTH_EAST;
@@ -209,7 +209,7 @@ s32 battle_camera_get_input_direction(s32 mode) {
         }
         break;
     case BATTLE_CURSOR_INPUT_OPTION_B:
-        switch (g_battle_camera_render_state.vy & 0xC00) {
+        switch (g_battle_camera_angles.vy & 0xC00) {
         case BATTLE_FACING_SOUTH:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
                 direction = BATTLE_FACING_NORTH_WEST;
@@ -289,7 +289,7 @@ s32 battle_camera_get_input_direction(s32 mode) {
         }
         break;
     case BATTLE_CURSOR_INPUT_FREE_CURSOR:
-        switch (g_battle_camera_render_state.vy & 0xC00) {
+        switch (g_battle_camera_angles.vy & 0xC00) {
         case BATTLE_FACING_SOUTH:
             if ((input & (PSX_PAD_UP | PSX_PAD_RIGHT)) == (PSX_PAD_UP | PSX_PAD_RIGHT)) {
                 direction = BATTLE_FACING_NORTH;

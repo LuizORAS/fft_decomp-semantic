@@ -145,9 +145,9 @@ void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_
         prim->v0 = prim->v1 = part->v;
         prim->v2 = prim->v3 = prim->v0 + part->height;
         if (flags & BATTLE_MISC_DISPLAY_NEARER) {
-            if ((g_battle_camera_render_state.vx & 0xfff) < 0x400) {
-                addPrim(ot - ((g_battle_camera_render_state.vx & 0xfff) - 0x12e) * g_battle_camera_zoom.vz / 368640 - 1,
-                    prim);
+            if ((g_battle_camera_angles.vx & 0xfff) < 0x400) {
+                addPrim(
+                    ot - ((g_battle_camera_angles.vx & 0xfff) - 0x12e) * g_battle_camera_zoom.vz / 368640 - 1, prim);
             } else {
                 addPrim(ot, prim);
             }

@@ -19,8 +19,8 @@ void battle_gfx_draw_unit_sprite_position_copies(battle_unit_misc_data_t* unit) 
     s16 flags;
 
     for (i = 0; i < 6; i++) {
-        battle_camera_update_matrices(&g_battle_camera_matrix, &g_battle_camera_render_state,
-            &g_battle_offset_screen_coords, &g_battle_camera_zoom);
+        battle_camera_update_matrices(
+            &g_battle_camera_matrix, &g_battle_camera_angles, &g_battle_offset_screen_coords, &g_battle_camera_zoom);
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);
         RotTrans(&unit->position_copies[i], &transformed, &flag);

@@ -17,8 +17,8 @@ void battle_state_handle_targeting_range_state(void) {
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
         battle_target_move_cursor_by_input();
         battle_camera_handle_rotation_input();
-        battle_camera_call_zoom_map();
-        battle_camera_call_toggle_tilt();
+        battle_camera_handle_zoom_input();
+        battle_camera_handle_tilt_input();
         if ((g_main_input_pressed_buttons & PSX_PAD_CROSS) != 0) {
             battle_target_tint_marked_tiles(BATTLE_TILE_MARK_NONE, 2);
             battle_menu_open_active_unit_idle_action_menu();

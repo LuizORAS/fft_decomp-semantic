@@ -23,8 +23,8 @@ void battle_state_handle_select_move_tile_state(void) {
     if (source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
         battle_target_move_cursor_by_input();
         battle_camera_handle_rotation_input();
-        battle_camera_call_zoom_map();
-        battle_camera_call_toggle_tilt();
+        battle_camera_handle_zoom_input();
+        battle_camera_handle_tilt_input();
         buttons = g_main_input_pressed_buttons;
         if (buttons & PSX_PAD_CIRCLE) {
             path = battle_move_build_path_to_tile(

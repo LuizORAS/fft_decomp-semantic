@@ -1755,7 +1755,7 @@ typedef enum main_sfx {
     MAIN_SFX_CAMERA_ROTATE_LEFT = 0xb,
     MAIN_SFX_CAMERA_ROTATE_RIGHT = 0xc,
     MAIN_SFX_CAMERA_ROTATE_STOP = 0xd, /* the rotation reached its target */
-    /* Paired zoom sounds: battle_camera_toggle_zoom and battle_camera_zoom_map
+    /* Paired zoom sounds: battle_camera_toggle_zoom and battle_camera_start_zoom
      * play 0x11 with zoom action 4 and 0xe with action 2; the in/out reading
      * follows the zoom-target comment in battle_camera_toggle_zoom. The
      * ATTACK deploy screen also plays 0x11 when a placed unit is moved. */
@@ -1799,7 +1799,7 @@ typedef enum main_sfx {
      * accessory or class evade, a forced failure, a blade grasp or a catch,
      * and as the shield deflect of an instrument or book. */
     MAIN_SFX_ERROR_MESSAGE = 0x30,
-    MAIN_SFX_CAMERA_TILT = 0x31, /* battle_camera_handle_tilt_request */
+    MAIN_SFX_CAMERA_TILT = 0x31, /* battle_camera_start_tilt */
     MAIN_SFX_HIT_ROD = 0x38,     /* rod, staff */
     MAIN_SFX_LAND_WOOD = 0x3a,
     /* Circle on a name-entry character key, or on an occupied tile of the

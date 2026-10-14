@@ -1,8 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* 1 while the camera is moving: a pan vector is left, or it is rotating,
- * tilting or zooming. */
+/* Return 1 while the camera is moving: a pan step is left, or it is turning, tilting or zooming. The
+ * event camera (battle_camera_wait_until_idle), the Triangle selection and the teleport animation wait for it
+ * to stop, and the help menu does not open while it moves. */
 s32 battle_camera_is_active(void) {
     if (g_battle_current_vector.vx == 0 && g_battle_current_vector.vy == 0 && g_battle_current_vector.vz == 0
         && g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE

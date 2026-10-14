@@ -110,20 +110,20 @@ functions:
   - {addr: 0x8006eedc, size: 20, name: battle_state_enable_camera_pan, hash: f2080fa71cd521a5}
   - {addr: 0x8006eef0, size: 16, name: battle_state_disable_camera_pan, hash: da30eb65c0b4f396}
   - {addr: 0x8006ef00, size: 572, name: battle_camera_update_map_pan, hash: fb6a2c043305eaf7}
-  - {addr: 0x8006f13c, size: 56, name: battle_camera_rotate_left, hash: 210c9ea7206b9b50}
-  - {addr: 0x8006f174, size: 52, name: battle_camera_call_rotate_left, hash: 7b81ae5462478c07}
-  - {addr: 0x8006f1a8, size: 56, name: battle_camera_rotate_right, hash: de4cd3808bac6db9}
-  - {addr: 0x8006f1e0, size: 56, name: battle_camera_call_rotate_right, hash: ea5604f2b589d7d7}
+  - {addr: 0x8006f13c, size: 56, name: battle_camera_set_left_turn_destination, hash: 210c9ea7206b9b50}
+  - {addr: 0x8006f174, size: 52, name: battle_camera_start_rotate_left, hash: 7b81ae5462478c07}
+  - {addr: 0x8006f1a8, size: 56, name: battle_camera_set_right_turn_destination, hash: de4cd3808bac6db9}
+  - {addr: 0x8006f1e0, size: 56, name: battle_camera_start_rotate_right, hash: ea5604f2b589d7d7}
   - {addr: 0x8006f218, size: 116, name: battle_camera_request_rotation, hash: 2219508b31547e65}
   - {addr: 0x8006f28c, size: 148, name: battle_camera_handle_rotation_input, hash: 2c9fb71eef5a3673}
   - {addr: 0x8006f320, size: 400, name: battle_camera_update_rotation, hash: 5cf69dad582d8946}
-  - {addr: 0x8006f4b0, size: 268, name: battle_camera_zoom_map, hash: 57d98578a4b1403b}
+  - {addr: 0x8006f4b0, size: 268, name: battle_camera_start_zoom, hash: 57d98578a4b1403b}
   - {addr: 0x8006f5bc, size: 120, name: battle_camera_toggle_zoom, hash: 2880d1abefd62b17}
-  - {addr: 0x8006f634, size: 68, name: battle_camera_call_zoom_map, hash: 5b8929296cce625f}
+  - {addr: 0x8006f634, size: 68, name: battle_camera_handle_zoom_input, hash: 5b8929296cce625f}
   - {addr: 0x8006f678, size: 332, name: battle_camera_update_zoom, hash: a3202139989a63bc}
-  - {addr: 0x8006f7c4, size: 260, name: battle_camera_handle_tilt_request, hash: 34c9c11df35d1dc7}
+  - {addr: 0x8006f7c4, size: 260, name: battle_camera_start_tilt, hash: 34c9c11df35d1dc7}
   - {addr: 0x8006f8c8, size: 160, name: battle_camera_toggle_tilt, hash: 9c2b659a66041f8f}
-  - {addr: 0x8006f968, size: 68, name: battle_camera_call_toggle_tilt, hash: a4e4288874860cf7}
+  - {addr: 0x8006f968, size: 68, name: battle_camera_handle_tilt_input, hash: a4e4288874860cf7}
   - {addr: 0x8006f9ac, size: 420, name: battle_camera_update_tilt, hash: a17e240ae09c3b45}
   - {addr: 0x8006fb50, size: 184, name: battle_camera_calculate_acting_unit_vector_normal, hash: e17d953174a4cf09}
   - {addr: 0x8006fc08, size: 96, name: battle_camera_shift_acting_unit_vector, hash: 23617fbe9386cf22}
@@ -2067,7 +2067,7 @@ data:
   - {addr: 0x800a1c6c, name: g_battle_camera_rotation_delta}
   - {addr: 0x800a1c74, name: g_battle_camera_zoom_delta}
   - {addr: 0x800a1c84, name: g_battle_gfx_unit_animation_data}
-  - {addr: 0x800a7784, name: g_battle_camera_render_state}
+  - {addr: 0x800a7784, name: g_battle_camera_angles}
   - {addr: 0x800a778c, name: g_main_system_game_flow_state}
   - {addr: 0x800a7790, name: g_battle_gte_rtpt_vxy0}
   - {addr: 0x800a7798, name: g_battle_gte_rtpt_vxy1}
@@ -2080,7 +2080,7 @@ data:
   - {addr: 0x800b6290, name: D_800b6290}
   - {addr: 0x800b6294, name: g_battle_gfx_item_palettes}
   - {addr: 0x800b6494, name: g_battle_gfx_eff_palettes}
-  - {addr: 0x800b6694, name: g_battle_previous_camera_yaw}
+  - {addr: 0x800b6694, name: g_battle_camera_previous_yaw}
   - {addr: 0x800b6698, name: g_battle_map_weather_flags}
   - {addr: 0x800b669c, name: g_battle_gfx_effect_shp_data}
   - {addr: 0x800b6edc, name: g_battle_gfx_effect_seq_data}
@@ -2100,7 +2100,7 @@ data:
   - {addr: 0x800bfa30, name: g_battle_gfx_unit_seq_tables}
   - {addr: 0x800c0e58, name: g_battle_gfx_boss_seq_tables}
   - {addr: 0x800c1260, name: g_battle_gfx_shp_frame_data_buffer}
-  - {addr: 0x800c7c60, name: g_battle_destination_camera_yaw}
+  - {addr: 0x800c7c60, name: g_battle_camera_destination_yaw}
   - {addr: 0x800c7c64, name: g_battle_camera_zoom_increment}
   - {addr: 0x800c7c68, name: g_battle_cursor_screen_x}
   - {addr: 0x800c7c6c, name: g_battle_cursor_screen_y}

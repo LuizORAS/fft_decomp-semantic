@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Toggle the camera tilt and play its sound. */
+/* Switch the tilt target for R2 between low (pitch 0x12e) and high (0x1c0), start the move and play its
+ * sound. Targets 3 and 4, which no BATTLE code gives a pitch, lead to each other and back to low. */
 void battle_camera_toggle_tilt(void) {
     s32 target;
 

@@ -8,7 +8,7 @@ void battle_camera_calculate_relative_offset(const u16* input, s16* output, s32 
     s32 z;
 
     output[1] = input[1] - 0xc;
-    switch (g_battle_camera_render_state.vy & 0xc00) {
+    switch (g_battle_camera_angles.vy & 0xc00) {
     case 0:
         x = input[0] + 0xe;
         output[0] = x - offset;

@@ -1,9 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Toggle the battle map zoom between "in" (target=1, action=2) and
-   "out" (target=4, action=4), playing the corresponding zoom SFX. Any
-   other current zoom target is left alone. */
+/* Switch the zoom target for L2 between in (scale ONE) and out (0xc00), start the move and play its
+ * sound. Any other target is left alone, but the zoom increment still restarts at 4. */
 void battle_camera_toggle_zoom(void) {
     if (g_battle_map_zoom_target == BATTLE_MAP_ZOOM_IN) {
         g_battle_camera_zoom_action = BATTLE_CAMERA_STEP_DECREASE;

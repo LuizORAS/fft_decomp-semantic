@@ -17,7 +17,7 @@ void battle_camera_convert_screen_coords_by_rotation(const s16* input, s16* outp
     s32 yaw;
 
     output[1] = input[1] - 0xb;
-    yaw = g_battle_camera_render_state.vy & 0xc00;
+    yaw = g_battle_camera_angles.vy & 0xc00;
 
     switch (yaw) {
     case 0: {
