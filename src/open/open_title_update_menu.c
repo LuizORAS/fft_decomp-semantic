@@ -98,7 +98,7 @@ void open_title_update_menu(open_title_controller_t* state) {
             cd_mix_level = 0x85;
             break;
         }
-        open_movie_stream_title_demo_and_push_controller(start_sector, stream_length, end_frame, cd_mix_level);
+        open_movie_push_demo_controller(start_sector, stream_length, end_frame, cd_mix_level);
         g_open_title_demo_movie_index++;
         if (g_open_title_demo_movie_index >= 3) {
             g_open_title_demo_movie_index = 0;

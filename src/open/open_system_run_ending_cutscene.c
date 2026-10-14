@@ -12,13 +12,13 @@
  * calls VSync with g_open_system_vsync_mode (0 during the movie, 2 while the
  * script runs). The ordering table is drawn after the buffer flip, on top of the
  * background open_movie_present_frame has just put into the new draw buffer. On
- * exit the VRAM page saved by open_movie_init_and_play_end is restored, the
+ * exit the VRAM page saved by open_system_init_ending is restored, the
  * display is blanked and the CD audio returns to mix level 0xc0. */
 void open_system_run_ending_cutscene(void) {
     u32* otag_0;
     u32* otag_1;
 
-    open_movie_init_and_play_end();
+    open_system_init_ending();
     if ((g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_RUNNING) != 0) {
         otag_0 = g_open_gfx_otags[0];
         otag_1 = g_open_gfx_otags[1];

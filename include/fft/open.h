@@ -10,8 +10,8 @@
 /* Rows of g_open_controller_handlers: the value a push stores in
  * g_open_controller_handler_indices. */
 typedef enum open_controller_handler {
-    OPEN_CONTROLLER_FFTST_MOVIE = 0,           /* open_movie_finish_stream_controller_if_ready_or_skipped */
-    OPEN_CONTROLLER_FFTOP_MOVIE = 1,           /* open_movie_finish_fftop_controller_if_ready_or_skipped */
+    OPEN_CONTROLLER_FFTST_MOVIE = 0,           /* open_movie_update_fftst_controller */
+    OPEN_CONTROLLER_FFTOP_MOVIE = 1,           /* open_movie_update_fftop_controller */
     OPEN_CONTROLLER_TITLE_MENU = 2,            /* open_title_update_menu */
     OPEN_CONTROLLER_SOUND_TYPE_MENU = 3,       /* open_menu_handle_sound_type_input */
     OPEN_CONTROLLER_NEW_GAME_START = 4,        /* open_title_step_new_game_start */
@@ -19,9 +19,9 @@ typedef enum open_controller_handler {
     OPEN_CONTROLLER_BIRTHDAY_CONFIRMATION = 6, /* open_birthday_handle_confirmation_input */
     OPEN_CONTROLLER_MUSIC_TEST = 7,            /* open_menu_update_music_test */
     OPEN_CONTROLLER_TEXT_MESSAGE = 8,          /* open_controller_wait_text_message */
-    OPEN_CONTROLLER_FFTEND_MOVIE = 9,          /* open_movie_finish_fftend_controller_if_ready_or_skipped */
+    OPEN_CONTROLLER_FFTEND_MOVIE = 9,          /* open_movie_update_fftend_controller */
     OPEN_CONTROLLER_SCRIPT = 10,               /* open_script_update_controller */
-    OPEN_CONTROLLER_TITLE_DEMO_MOVIE = 11,     /* open_movie_start_fftst_or_skip_controller */
+    OPEN_CONTROLLER_TITLE_DEMO_MOVIE = 11,     /* open_movie_update_demo_controller */
     OPEN_CONTROLLER_CARD_WARNING = 12,         /* open_title_update_card_warning */
 } open_controller_handler_e;
 
@@ -194,27 +194,25 @@ extern s32 g_st_cd_interrupt_pending;
 void* open_movie_acquire_next_frame(open_movie_mdec_stream_state_t* state);
 s32 open_movie_decode_next_frame(open_movie_mdec_stream_state_t* state);
 void open_movie_handle_mdec_output_slice(void);
-void open_movie_init_and_play_end(void);
-void open_movie_init_and_stream_opening(s32 skip_movie);
+void open_system_init_ending(void);
+void open_system_init_title_sequence(s32 skip_movie);
 
 void open_movie_init_mdec_stream_state(open_movie_mdec_stream_state_t* state, s32 x0, s32 y0, s32 x1, s32 y1);
 
 void open_movie_init_stream(s32 sector, void* output_callback);
 void open_movie_pause_cd_audio(void);
-void open_movie_play_end(void);
+void open_movie_start_fftend(void);
 void open_movie_present_frame(void);
 void open_movie_start_cd_stream_read(const CdlLOC* location);
-void open_movie_start_fftst_or_title_menu(s32 use_alternate);
-void open_movie_start_fftst_or_skip_controller(void);
+void open_movie_start_fftst_or_title_menu(s32 skip_movie);
+void open_movie_update_demo_controller(void);
 void open_movie_start_stream(s32 sector, s32 end_frame, s32 video_end_frame, s32 cd_mix_level);
 void open_movie_stop_stream(s32 pause_cd_audio);
-void open_movie_stream_fftop_and_push_controller(s32 start_sector, s32 unused_stream_length, s32 end_frame);
-void open_movie_stream_fftend(s32 start_sector, s32 unused, s32 end_frame);
-void open_movie_stream_fftst_and_push_controller(
-    s32 start_sector, s32 stream_length, s32 end_frame, s32 video_end_frame);
+void open_movie_push_fftop_controller(s32 start_sector, s32 unused_stream_length, s32 end_frame);
+void open_movie_push_fftend_controller(s32 start_sector, s32 unused_stream_length, s32 end_frame);
+void open_movie_push_fftst_controller(s32 start_sector, s32 stream_length, s32 end_frame, s32 video_end_frame);
 
-void open_movie_stream_title_demo_and_push_controller(
-    s32 start_sector, s32 stream_length, s32 end_frame, s32 cd_mix_level);
+void open_movie_push_demo_controller(s32 start_sector, s32 stream_length, s32 end_frame, s32 cd_mix_level);
 
 void open_movie_update_stream_frame(void);
 void open_movie_wait_for_mdec_output(open_movie_mdec_stream_state_t* state, s32 unused);

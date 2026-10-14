@@ -1,9 +1,10 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
-/* Set up the ending: reset the runtime state, save the 64x256 VRAM page at (960,
- * 256) to (960, 0), load the ending's graphics and start FFTEND.STR. */
-void open_movie_init_and_play_end(void) {
+/* Set up the ending for open_system_run_ending_cutscene: unload the scenario music, reset the runtime
+ * state, save the 64x256 VRAM page at (960, 256) to (960, 0) (open_gfx_restore_frame_vram_page puts it back),
+ * load the ending's graphics, build the screen environments and the render records and start FFTEND.STR. */
+void open_system_init_ending(void) {
     RECT source;
 
     main_sound_unload_scenario_music_and_tunes();
@@ -20,5 +21,5 @@ void open_movie_init_and_play_end(void) {
     open_file_load_end_movie_graphics();
     open_gfx_init_screen_environments(1);
     open_gfx_init_render_buffers();
-    open_movie_play_end();
+    open_movie_start_fftend();
 }

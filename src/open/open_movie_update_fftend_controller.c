@@ -2,9 +2,9 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* OPEN_CONTROLLER_FFTOP_MOVIE: Start stops the opening movie; once it has stopped the controller
- * pops, blanks the display and ends OPENING with result 0. */
-void open_movie_finish_fftop_controller_if_ready_or_skipped(void) {
+/* Handler 9, FFTEND.STR, the ending movie: Start stops it. Once it has stopped the display is blanked and
+ * the controller is replaced by the ending's credits script (open_script_push_controller). */
+void open_movie_update_fftend_controller(void) {
     u32 flags;
     s32 controller;
 
@@ -12,13 +12,11 @@ void open_movie_finish_fftop_controller_if_ready_or_skipped(void) {
         SetDispMask(0);
         flags = g_open_system_runtime_flags;
         controller = g_open_current_controller_index;
-        g_open_system_result = 0;
         flags |= OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED;
         controller--;
         g_open_system_runtime_flags = flags;
-        flags ^= OPEN_SYSTEM_RUNTIME_FLAG_RUNNING;
         g_open_current_controller_index = controller;
-        g_open_system_runtime_flags = flags;
+        open_script_push_controller();
         return;
     }
 

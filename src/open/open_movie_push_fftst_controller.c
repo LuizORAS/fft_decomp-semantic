@@ -1,10 +1,8 @@
 #include "fft/open.h"
 
-/* Start the logo movie at CD mix level 0x76 and push handler 0, whose record
- * keeps the stream's first sector and length for the title menu's CD end
- * position. */
-void open_movie_stream_fftst_and_push_controller(
-    s32 start_sector, s32 stream_length, s32 end_frame, s32 video_end_frame) {
+/* Start FFTST.STR at CD mix level 0x76 and push handler 0, whose record keeps the stream's first sector
+ * and length: the title menu stops the CD audio at the sector after them. */
+void open_movie_push_fftst_controller(s32 start_sector, s32 stream_length, s32 end_frame, s32 video_end_frame) {
     s32 controller;
 
     open_movie_start_stream(start_sector, end_frame, video_end_frame, 0x76);

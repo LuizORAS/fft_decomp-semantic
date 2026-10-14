@@ -1,8 +1,9 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
-/* Start the opening movie (the one caller passes the sector of OPEN/FFTOP.STR) and push its controller. */
-void open_movie_stream_fftop_and_push_controller(s32 start_sector, s32 unused_stream_length, s32 end_frame) {
+/* Start the opening movie at CD mix level 0x94 with no separate video end and push handler 1. The one
+ * caller, the birthday confirmation, passes the sector of OPEN/FFTOP.STR; the stream length is not read. */
+void open_movie_push_fftop_controller(s32 start_sector, s32 unused_stream_length, s32 end_frame) {
     s32 controller;
 
     (void)unused_stream_length;

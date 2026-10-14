@@ -2,10 +2,10 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Handler 9, the FFTEND.STR ending movie: Start stops the stream. Once the stream
- * has stopped, by itself or on the update after Start, the display is blanked and
- * the controller is replaced by the ending script. */
-void open_movie_finish_fftend_controller_if_ready_or_skipped(void) {
+/* Handler 1, FFTOP.STR, the opening movie that follows the birthday: Start stops it. Once it has stopped
+ * the controller pops, the display is blanked and OPEN ends with result 0, a new game, which MAIN takes
+ * straight into BATTLE. */
+void open_movie_update_fftop_controller(void) {
     u32 flags;
     s32 controller;
 
@@ -13,11 +13,13 @@ void open_movie_finish_fftend_controller_if_ready_or_skipped(void) {
         SetDispMask(0);
         flags = g_open_system_runtime_flags;
         controller = g_open_current_controller_index;
+        g_open_system_result = 0;
         flags |= OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED;
         controller--;
         g_open_system_runtime_flags = flags;
+        flags ^= OPEN_SYSTEM_RUNTIME_FLAG_RUNNING;
         g_open_current_controller_index = controller;
-        open_script_push_controller();
+        g_open_system_runtime_flags = flags;
         return;
     }
 

@@ -39,8 +39,8 @@ functions:
   - {addr: 0x8006854c, size: 160, name: open_menu_run_world_menu_frame, hash: b27c035b144dee4f}
   - {addr: 0x800685ec, size: 76, name: open_birthday_month_day_to_day_of_year, hash: e796a8582427e794}
   - {addr: 0x80068638, size: 76, name: open_sound_set_cd_mix_and_volume, hash: 3fcd975cc8b2da0c}
-  - {addr: 0x80068684, size: 88, name: open_movie_init_and_stream_opening, hash: 7f2fe3e68306a213}
-  - {addr: 0x800686dc, size: 132, name: open_movie_init_and_play_end, hash: c5005cd2d64378db}
+  - {addr: 0x80068684, size: 88, name: open_system_init_title_sequence, hash: 7f2fe3e68306a213}
+  - {addr: 0x800686dc, size: 132, name: open_system_init_ending, hash: c5005cd2d64378db}
   - {addr: 0x80068760, size: 76, name: open_gfx_restore_frame_vram_page, hash: 74303d09981cd6c2}
   - {addr: 0x800687ac, size: 832, name: open_gfx_init_screen_environments, hash: 00685f629e5f306d}
   - {addr: 0x80068aec, size: 136, name: open_system_init_runtime_state, hash: 1795eb2597584b2e}
@@ -63,10 +63,10 @@ functions:
   - {addr: 0x80069d7c, size: 228, name: open_gfx_load_opntex_into_frame_buffer, hash: 590cf49a34430f90}
   - {addr: 0x80069e60, size: 84, name: open_movie_start_fftst_or_title_menu, hash: e0be4a8551206743}
   - {addr: 0x80069eb4, size: 112, name: open_controller_dispatch_current, hash: 56c28d63abc90fb7}
-  - {addr: 0x80069f24, size: 180, name: open_movie_stream_fftst_and_push_controller, hash: 3466a0da8fc6b302}
-  - {addr: 0x80069fd8, size: 156, name: open_movie_finish_stream_controller_if_ready_or_skipped, hash: e736c342c3869071}
-  - {addr: 0x8006a074, size: 108, name: open_movie_stream_fftop_and_push_controller, hash: 1636df55b15cecbb}
-  - {addr: 0x8006a0e0, size: 148, name: open_movie_finish_fftop_controller_if_ready_or_skipped, hash: 5190c9b35c57fef9}
+  - {addr: 0x80069f24, size: 180, name: open_movie_push_fftst_controller, hash: 3466a0da8fc6b302}
+  - {addr: 0x80069fd8, size: 156, name: open_movie_update_fftst_controller, hash: e736c342c3869071}
+  - {addr: 0x8006a074, size: 108, name: open_movie_push_fftop_controller, hash: 1636df55b15cecbb}
+  - {addr: 0x8006a0e0, size: 148, name: open_movie_update_fftop_controller, hash: 5190c9b35c57fef9}
   - {addr: 0x8006a174, size: 1028, name: open_title_push_menu_controller, hash: 28b9116834e90955}
   - {addr: 0x8006a578, size: 248, name: open_gfx_show_four_render_records, hash: 778fee05b7f00a4b}
   - {addr: 0x8006a670, size: 248, name: open_gfx_hide_four_render_records, hash: d7c265230ad7b5f5}
@@ -93,8 +93,8 @@ functions:
   - {addr: 0x8006cef0, size: 876, name: open_menu_update_music_test, hash: c7076123a75c7032}
   - {addr: 0x8006d25c, size: 260, name: open_controller_start_text_message, hash: ef898de4d115f54e}
   - {addr: 0x8006d360, size: 108, name: open_controller_wait_text_message, hash: e623f7328948a829}
-  - {addr: 0x8006d3cc, size: 180, name: open_movie_stream_title_demo_and_push_controller, hash: 29c7eb100bdbc02b}
-  - {addr: 0x8006d480, size: 164, name: open_movie_start_fftst_or_skip_controller, hash: 4e72507cef1a9abd}
+  - {addr: 0x8006d3cc, size: 180, name: open_movie_push_demo_controller, hash: 29c7eb100bdbc02b}
+  - {addr: 0x8006d480, size: 164, name: open_movie_update_demo_controller, hash: 4e72507cef1a9abd}
   - {addr: 0x8006d524, size: 308, name: open_title_start_new_game, hash: efa74633bab45d83}
   - {addr: 0x8006d658, size: 340, name: open_title_update_card_warning, hash: 7c3ab8fe1d7d5d9c}
   - {addr: 0x8006d7ac, size: 64, name: open_gfx_init_transition_request, hash: d59678a277450164}
@@ -113,9 +113,9 @@ functions:
   - {addr: 0x8006f598, size: 60, name: open_text_decode_hex_digit, hash: f70eb008c32149d3}
   - {addr: 0x8006f5d4, size: 456, name: open_script_update_screen_fade, hash: 727ec04746704c86}
   - {addr: 0x8006f79c, size: 324, name: open_gfx_update_opntex_sequence, hash: 8019a32e358ad507}
-  - {addr: 0x8006f8e0, size: 60, name: open_movie_play_end, hash: 56b496abe3a69a19}
-  - {addr: 0x8006f91c, size: 108, name: open_movie_stream_fftend, hash: 4d67e3d1325ae88c}
-  - {addr: 0x8006f988, size: 136, name: open_movie_finish_fftend_controller_if_ready_or_skipped, hash: df1c60f300df0a2c}
+  - {addr: 0x8006f8e0, size: 60, name: open_movie_start_fftend, hash: 56b496abe3a69a19}
+  - {addr: 0x8006f91c, size: 108, name: open_movie_push_fftend_controller, hash: 4d67e3d1325ae88c}
+  - {addr: 0x8006f988, size: 136, name: open_movie_update_fftend_controller, hash: df1c60f300df0a2c}
   - {addr: 0x8006fa10, size: 144, name: open_script_push_controller, hash: d38b74485501d567}
   - {addr: 0x8006faa0, size: 88, name: open_script_update_controller, hash: c31c968e8b96aab5}
   - {addr: 0x8006faf8, size: 72, name: open_opcode_end_script, hash: 5abc662795697b2e}
