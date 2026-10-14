@@ -1177,7 +1177,7 @@ data:
   - {addr: 0x80154cd0, name: g_world_menu_numeric_display_frame_offsets}
   - {addr: 0x80154d30, name: g_world_text_current_line}
   - {addr: 0x80154d94, name: g_menu_window_tween_easing_tables}
-  - {addr: 0x80154da8, name: g_world_text_section_pointers_saved}
+  - {addr: 0x80154da8, name: g_text_section_backup_active}
   - {addr: 0x80154dd4, name: g_world_auto_battle_option_colors}
   - {addr: 0x80154de0, name: g_world_unit_status_bounce_offsets}
   - {addr: 0x80154dfa, name: g_world_unit_status_bounce_step}
@@ -1897,7 +1897,7 @@ data:
   - {addr: 0x801a2458, name: g_text_player_name_buffer}
   - {addr: 0x801a246c, name: g_text_line_widths}
   - {addr: 0x801a256c, name: g_world_unit_runtime_coords}
-  - {addr: 0x801a2574, name: g_world_text_saved_section_pointers}
+  - {addr: 0x801a2574, name: g_text_saved_section_pointers}
   - {addr: 0x801a25f4, name: g_world_menu_preview_target_action}
   - {addr: 0x801a25f8, name: g_world_unit_status_panel_pages}
   - {addr: 0x801a2bd0, name: g_world_numeric_display_panel_records}
@@ -2791,10 +2791,10 @@ overrides:
   - {function: world_text_determine_spell_quote, name: battle_menu_dispatch_system_function, addr: 0x800f5384}
   - {function: world_text_determine_spell_quote, name: battle_text_is_spell_quote_exception_skillset, addr: 0x800f49d8}
   - {function: world_text_determine_spell_quote, name: g_battle_spell_quote_last_ability_id, addr: 0x8013a5ec}
-  - {function: world_text_restore_section_pointers, name: g_battle_text_pointer_backup, addr: 0x801a2574}
-  - {function: world_text_restore_section_pointers, name: g_battle_text_pointer_backup_active, addr: 0x80154da8}
-  - {function: world_text_save_section_pointers, name: g_battle_text_pointer_backup, addr: 0x801a2574}
-  - {function: world_text_save_section_pointers, name: g_battle_text_pointer_backup_active, addr: 0x80154da8}
+  - {function: world_text_restore_section_pointers, name: g_text_saved_section_pointers, addr: 0x801a2574}
+  - {function: world_text_restore_section_pointers, name: g_text_section_backup_active, addr: 0x80154da8}
+  - {function: world_text_save_section_pointers, name: g_text_saved_section_pointers, addr: 0x801a2574}
+  - {function: world_text_save_section_pointers, name: g_text_section_backup_active, addr: 0x80154da8}
   - {function: world_text_start_character_thread_if_idle, name: battle_text_run_dialog_thread, addr: 0x800e4d9c}
   - {function: world_text_start_thread_if_idle, name: battle_text_run_dialog_thread, addr: 0x800e4d9c}
 

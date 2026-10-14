@@ -51,8 +51,6 @@ void battle_text_draw_large_number_glyphs(s32 value, s32 digits, u8* pixels, gly
 void battle_text_print_fnt_value_and_next(s32 value);
 
 /* text sections */
-extern u8* g_battle_text_pointer_backup[32];
-extern s32 g_battle_text_pointer_backup_active;
 /* Text substitutions $7E/$7F (0x801660ec, table index 0x7e from 0x80165ef4)
  * as the four 16-bit values battle_text_set_substitution_values_7e_7f stores. */
 extern RECT g_battle_text_substitution_rect;
@@ -66,8 +64,6 @@ extern s32 g_battle_text_substitution_value_28;
 u8* battle_text_find_entry(u32 text_id);
 void battle_text_init_menu_section_pointers(void);
 void battle_text_relocate_pointer_table(const u32* offsets);
-void text_restore_section_pointers(void);
-void text_save_section_pointers(void);
 void battle_text_restore_section_pointers(void);
 void battle_text_save_section_pointers(void);
 

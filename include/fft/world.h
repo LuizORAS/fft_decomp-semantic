@@ -1745,10 +1745,8 @@ extern text_glyph_state_t g_world_text_message_box_glyph;
 extern glyph_blit_t g_world_text_message_box_state;
 extern u8 g_world_numeric_display_palette_indices[12];
 extern s32 g_world_text_overlay_active;
-extern u8* g_world_text_saved_section_pointers[32];
 extern s32 g_world_text_section_offsets[32];
 extern u8* g_world_text_section_pointer_backup[32];
-extern s32 g_world_text_section_pointers_saved;
 
 /* Text substitutions $7E/$7F (0x801533d0, table index 0x7e from 0x801531d8)
  * as the four 16-bit values world_text_set_substitution_values_7e_7f stores. */

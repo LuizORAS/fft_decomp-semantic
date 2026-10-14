@@ -2424,7 +2424,7 @@ data:
   - {addr: 0x80167844, name: g_battle_menu_numeric_display_frame_offsets}
   - {addr: 0x801678a4, name: g_battle_text_current_line}
   - {addr: 0x80167908, name: g_menu_window_tween_easing_tables}
-  - {addr: 0x8016791c, name: g_battle_text_pointer_backup_active}
+  - {addr: 0x8016791c, name: g_text_section_backup_active}
   - {addr: 0x80167920, name: g_status_display_image_ids}
   - {addr: 0x80167948, name: g_battle_auto_battle_option_colors}
   - {addr: 0x80167954, name: g_battle_unit_status_bounce_offsets}
@@ -2573,7 +2573,7 @@ data:
   - {addr: 0x801720bc, name: g_text_player_name_buffer}
   - {addr: 0x801720d0, name: g_text_line_widths}
   - {addr: 0x801721d0, name: g_battle_unit_runtime_coords}
-  - {addr: 0x801721d8, name: g_battle_text_pointer_backup}
+  - {addr: 0x801721d8, name: g_text_saved_section_pointers}
   - {addr: 0x80172258, name: g_battle_menu_preview_target_action}
   - {addr: 0x8017225c, name: g_battle_unit_status_panel_pages}
   - {addr: 0x80172834, name: g_battle_menu_numeric_display_panel_records}

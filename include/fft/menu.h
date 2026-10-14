@@ -2062,6 +2062,11 @@ extern s32 g_text_line_widths[];
 extern const u8 g_text_glyph_widths[];
 /* Text IDs select a section in the upper five bits and an entry in the lower eleven. */
 extern u8* g_text_section_pointers[TEXT_SECTION_COUNT];
+extern u8* g_text_saved_section_pointers[TEXT_SECTION_COUNT];
+extern s32 g_text_section_backup_active;
+
+void text_restore_section_pointers(void);
+void text_save_section_pointers(void);
 
 /* text threads */
 extern s32 g_menu_text_active_key;
