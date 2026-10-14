@@ -838,6 +838,8 @@ extern menu_entry_t* g_menu_thread_menu_data;
 extern s32 g_menu_managed_thread_state;
 
 s32 menu_start_managed_thread(s32 thread_id, menu_entry_t* descriptor);
+void menu_request_thread_stop(s32 thread_id);
+void menu_stop_managed_thread(s32 thread_id);
 
 /* Numeric-entry and action-selection threads use value as a 16-bit result cell. */
 static inline s16* menu_entry_result(menu_entry_t* entry) {
