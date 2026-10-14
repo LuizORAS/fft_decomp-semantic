@@ -24,8 +24,13 @@ TOOL_ENV = $(if $(JOBS),--env TOOLS_JOBS=$(JOBS)) \
 # under the bind-mounted checkout keep the caller's ownership. --init forwards
 # Ctrl-C and reaps the permuter's children. --log-driver=none keeps output on
 # the terminal only; podman's journald default copies every line to the host.
-DOCKER_RUN = $(DOCKER) run --rm --init --pull=never --log-driver=none --user "$(HOST_USER)" \
-	--volume "$(CURDIR):/work" $(strip $(TOOL_ENV))
+# Rootless podman (also behind a podman-docker shim) needs the caller's uid
+# kept inside the user namespace and the SELinux label check disabled, or the
+# bind mount is unreadable.
+DOCKER_IS_PODMAN := $(shell $(DOCKER) --version 2>/dev/null | grep -qi podman && echo 1)
+DOCKER_RUN_FLAGS = $(if $(DOCKER_IS_PODMAN),--userns=keep-id --security-opt label=disable)
+DOCKER_RUN = $(DOCKER) run --rm --init --pull=never --log-driver=none $(DOCKER_RUN_FLAGS) \
+	--user "$(HOST_USER)" --volume "$(CURDIR):/work" $(strip $(TOOL_ENV))
 
 # tools/ is rebuilt from the working tree on every call (incrementally, via
 # build/cache/go), so edits apply on the next command. A container-local copy
