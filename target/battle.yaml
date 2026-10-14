@@ -88,7 +88,7 @@ functions:
   - {addr: 0x8006cbb8, size: 220, name: move_has_reached_current_tile_exit_edge, hash: 192a9a9e0f1b362c}
   - {addr: 0x8006cc94, size: 972, name: move_update_walking_step_at_tile_edge, hash: b104d79ea6df4de4}
   - {addr: 0x8006d060, size: 320, name: move_update_float_step_to_current_tile_exit_edge, hash: 64e2f966ac09a2d2}
-  - {addr: 0x8006d1a0, size: 232, name: move_update_float_step_to_destination_tile_center, hash: 40ca7386f33adef6}
+  - {addr: 0x8006d1a0, size: 232, name: move_update_float_step_to_destination_tile_center, hash: 40ca7386f33adef6, source: src/battle/move_update_unit_step_to_destination_tile_center.c, source_symbol: move_update_unit_step_to_destination_tile_center}
   - {addr: 0x8006d288, size: 188, name: move_update_unit_step_to_destination_tile_entry_edge, hash: 5971d7a96b4a4108}
   - {addr: 0x8006d344, size: 240, name: move_update_unit_step_to_current_tile_exit_edge, hash: f936c5cb65acae5f}
   - {addr: 0x8006d434, size: 356, name: move_update_unit_vertical_step_to_destination_tile_center, hash: 82bf1fcb590c101f}
@@ -2926,6 +2926,7 @@ overrides:
   - {function: camera_update_zoom_animation, name: g_camera_current_real_coords, addr: 0x800c7ca0}
   - {function: camera_update_zoom_animation, name: g_camera_real_coord_countdown, addr: 0x80096164}
   - {function: camera_update_zoom_animation, name: g_camera_real_coord_delta, addr: 0x800a1c74}
+  - {function: move_update_float_step_to_destination_tile_center, name: move_displace_unit_at_destination_tile, addr: 0x8006be8c}
 
 regions:
   - {addr: 0x80080bc4, end: 0x80080c40, kind: interior, why: "inside 0x800808b8: case body inside the enclosing display dispatcher; no independent ABI"}
