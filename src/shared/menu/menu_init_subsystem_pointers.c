@@ -1,16 +1,14 @@
-#include "fft/battle_event.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
 #include "fft/battle_text.h"
 #include "fft/battle_unit.h"
+#include "fft/main.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
-#include "psx/types.h"
 
-/* Rebind the BATTLE menu subsystem's working pointers and clear its
- * per-session counters. Called first by battle_menu_init_subsystems. */
-void battle_menu_init_subsystem_pointers(void) {
+/* Bind the scene working pointers and clear its menu-session flags. */
+void menu_init_subsystem_pointers(void) {
     g_threads = g_thread_contexts;
     g_text_glyph_bitmap_data = g_battle_text_glyph_bitmaps;
     g_menu_glyph_sheet = &g_battle_menu_glyph_image_data;

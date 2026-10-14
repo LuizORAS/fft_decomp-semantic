@@ -907,7 +907,7 @@ functions:
   - {addr: 0x8013e904, size: 1236, name: script_block_start_thread, hash: 74b4fb7297f0daea}
   - {addr: 0x8013edd8, size: 468, name: script_add_unit_start_thread, hash: e015fe2ea756d0dd}
   - {addr: 0x8013efac, size: 72, name: battle_menu_init_subsystems, hash: 4a2f2ce670dbb523, source: src/shared/menu/menu_init_subsystems.c, source_symbol: menu_init_subsystems}
-  - {addr: 0x8013eff4, size: 140, name: battle_menu_init_subsystem_pointers, hash: 7ca7d0d90e11c897}
+  - {addr: 0x8013eff4, size: 140, name: battle_menu_init_subsystem_pointers, hash: 7ca7d0d90e11c897, source: src/shared/menu/menu_init_subsystem_pointers.c, source_symbol: menu_init_subsystem_pointers}
   - {addr: 0x8013f080, size: 64, name: battle_menu_reset_subsystems, hash: b7eb4cd5ef76a5f9, source: src/shared/menu/menu_reset_subsystems.c, source_symbol: menu_reset_subsystems}
   - {addr: 0x8013f0c0, size: 168, name: map_reset_script_light_transform, hash: da3f44e4a4a58abd}
   - {addr: 0x8013f168, size: 164, name: unit_reset_animation_states, hash: cdeb9e30a6664d49, source: src/shared/unit/unit_reset_animation_states.c}
