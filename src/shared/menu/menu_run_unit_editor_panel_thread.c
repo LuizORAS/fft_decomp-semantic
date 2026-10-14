@@ -1,24 +1,21 @@
+#include "fft/battle_action.h"
+#include "fft/battle_event.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
 #include "fft/gfx.h"
+#include "fft/main.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
-/*
- * WORLD twin: world_menu_run_unit_editor_panel_thread (same code, globals and callees rebound).
- */
-#include "fft/battle.h"
-#include "fft/battle_script.h"
+#include "fft/unit.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
-/* Unit debug editor panel thread (task 0x15). Builds two copies of the panel
- * frame (19 sprites, 5 item icons, two tiles, eight lines and the text images
- * for the unit's items and labels), then redraws the current copy each frame
- * until cancelled or told to stop; square opens the status list thread. The
- * WORLD twin is world_menu_run_unit_editor_panel_thread. */
-void battle_menu_run_unit_editor_panel_thread(void) {
+/* Build and redraw the unit editor panel while its menu thread is active. */
+void menu_run_unit_editor_panel_thread(void) {
     /* The frame reserves 0x100 bytes for the first copy's line-box
        primitives, the stride of the palette records (WORLD 0x80195ed0). */
     menu_palette_slot_t palette;

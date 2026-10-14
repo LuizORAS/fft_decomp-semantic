@@ -796,7 +796,7 @@ functions:
   - {addr: 0x80136b10, size: 192, name: battle_gfx_set_item_icon_sprite, hash: 2b719c85439aba92}
   - {addr: 0x80136bd0, size: 356, name: battle_menu_build_unit_portrait_poly, hash: b32d9453940114d7}
   - {addr: 0x80136d34, size: 880, name: battle_menu_run_numeric_display_panel_thread, hash: 899223ce6bfba704, source: src/shared/menu/menu_run_numeric_display_panel_thread.c, source_symbol: menu_run_numeric_display_panel_thread}
-  - {addr: 0x801370a4, size: 2796, name: battle_menu_run_unit_editor_panel_thread, hash: 5a162d67ff0fb26d}
+  - {addr: 0x801370a4, size: 2796, name: battle_menu_run_unit_editor_panel_thread, hash: 5a162d67ff0fb26d, source: src/shared/menu/menu_run_unit_editor_panel_thread.c, source_symbol: menu_run_unit_editor_panel_thread}
   - {addr: 0x80137b90, size: 8, name: battle_noop_80137b90, hash: 6d64edf91449c1b1}
   - {addr: 0x80137b98, size: 120, name: battle_menu_can_accept_input, hash: f875053f5144ba32}
   - {addr: 0x80137c10, size: 708, name: battle_menu_handle_action, hash: 46aaa86ad0be68d8}

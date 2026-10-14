@@ -2031,6 +2031,8 @@ typedef struct menu_unit_editor_frame {
 } menu_unit_editor_frame_t;
 typedef char menu_unit_editor_frame_size_must_be_720[sizeof(menu_unit_editor_frame_t) == 720 ? 1 : -1];
 
+void menu_run_unit_editor_panel_thread(void);
+
 /* Colour and endpoint offsets of the unit editor panel's eight frame lines,
  * relative to the panel box, seven bytes per line (WORLD 0x80156198, BATTLE
  * 0x80168d0c). The loop walks the table with a byte offset stepping by 7 (the
