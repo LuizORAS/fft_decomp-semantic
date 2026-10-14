@@ -7,10 +7,8 @@ void wldcore_opcode_stop_pending_music(void) {
     s16* music = &g_wldcore_active_saved_record.music_selection;
     wldcore_audio_music_slots_t* state;
     s32* tracks;
-    s16 track;
 
-    track = *music;
-    if (track != 0) {
+    if (*music != 0) {
         state = &g_wldcore_audio_queue.music;
         state->flags &= ~WLDCORE_AUDIO_MUSIC_PLAYING;
         main_sound_stop_current_music();
