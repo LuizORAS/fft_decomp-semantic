@@ -1,19 +1,14 @@
-#include "fft/battle.h"
-#include "fft/battle_event.h"
-#include "fft/battle_gfx.h"
-#include "fft/battle_menu.h"
+#include "fft/gfx.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
-#include "psx/libgpu.h"
-#include "psx/types.h"
 
 /*
  * Build a double-buffered draw-area pair whose rectangle is cropped to a
  * percentage of `geometry` about its centre. Sources at x < 0x80 are moved
  * to the right-hand page (x + 0x80, y + 0x78); others are moved left.
  */
-void battle_gfx_build_scaled_draw_area_pair_swapped(
+void gfx_build_scaled_draw_area_pair_swapped(
     scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag) {
     s32 percent;
     s16 width;

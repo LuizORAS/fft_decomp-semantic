@@ -288,6 +288,9 @@ typedef struct scaled_draw_area_pair {
 } scaled_draw_area_pair_t;
 typedef char scaled_draw_area_pair_size_must_be_40[sizeof(scaled_draw_area_pair_t) == 40 ? 1 : -1];
 
+void gfx_build_scaled_draw_area_pair_swapped(
+    scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag);
+
 /* Menu frame buffer: primitive pools followed by drawing/display state.
  * BUNIT uses the environments; EQUIP owns the same 236-byte buffers without
  * reading or writing the environment suffix. */
