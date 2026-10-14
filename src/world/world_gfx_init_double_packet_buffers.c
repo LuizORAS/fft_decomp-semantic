@@ -13,7 +13,7 @@ void world_gfx_init_double_packet_buffers(menu_gfx_context_t* buffers, u32* otag
     s32 i;
 
     g_world_gfx_packet_buffers = buffers;
-    g_world_gfx_active_packet_buffer = buffers;
+    g_menu_gfx_context = buffers;
     for (i = 0; i < 2; i++) {
         g_world_gfx_packet_buffers[i].otag = otags + g_world_ot_length * i;
         g_world_gfx_packet_buffers[i].textured_quads = textured_quads + g_world_gfx_textured_quad_capacity * i;

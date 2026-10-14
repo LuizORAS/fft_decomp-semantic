@@ -26,7 +26,7 @@ void bunit_gfx_submit_frame_and_swap_buffers(s32 first_otag, s32 draw_otag) {
     g_bunit_gfx_poly_g3_count = 0;
     g_bunit_gfx_poly_gt3_count = 0;
     g_bunit_gfx_poly_g4_count = 0;
-    g_bunit_gfx_poly_gt4_count = 0;
+    g_menu_gfx_poly_gt4_count = 0;
     g_bunit_gfx_line_f2_count = 0;
     g_bunit_gfx_line_f3_count = 0;
     g_bunit_gfx_line_f4_count = 0;

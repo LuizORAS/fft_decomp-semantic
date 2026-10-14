@@ -1038,6 +1038,7 @@ extern s16 g_menu_gfx_otag_index;
 extern s16 g_menu_gfx_semitransparency;
 extern u16 g_menu_atlas_texture_page;
 extern u16 g_menu_gfx_poly_ft4_count;
+extern u16 g_menu_gfx_poly_gt4_count;
 extern u16 g_menu_gfx_draw_mode_count;
 extern u16 g_menu_gfx_draw_area_count;
 extern u16 g_menu_gfx_draw_move_count;

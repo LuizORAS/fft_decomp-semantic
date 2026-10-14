@@ -2207,8 +2207,8 @@ data:
   - {addr: 0x801cd1c0, name: g_world_event_pending_map_jump_out_id}
   - {addr: 0x801cd1c4, name: g_world_gfx_poly_ft3_count}
   - {addr: 0x801cd1c8, name: g_world_gfx_poly_gt3_count}
-  - {addr: 0x801cd1cc, name: g_world_gfx_textured_quad_count}
-  - {addr: 0x801cd1d0, name: g_world_gfx_textured_gradient_quad_count}
+  - {addr: 0x801cd1cc, name: g_menu_gfx_poly_ft4_count}
+  - {addr: 0x801cd1d0, name: g_menu_gfx_poly_gt4_count}
   - {addr: 0x801cd1d4, name: g_world_gfx_sprite_8_capacity}
   - {addr: 0x801cd1d8, name: g_world_gfx_draw_buffer_clip_y}
   - {addr: 0x801cd1dc, name: PSDOFSX}
@@ -2231,14 +2231,14 @@ data:
   - {addr: 0x801cd434, name: g_world_gfx_draw_mode_capacity}
   - {addr: 0x801cd438, name: g_world_gfx_tile_capacity}
   - {addr: 0x801cd43c, name: g_world_shop_fitting_room_items}
-  - {addr: 0x801cd504, name: g_world_gfx_draw_mode_count}
+  - {addr: 0x801cd504, name: g_menu_gfx_draw_mode_count}
   - {addr: 0x801cd508, name: POSITION}
   - {addr: 0x801cd50c, name: g_script_frame_result_override}
   - {addr: 0x801cd510, name: g_world_gfx_draw_move_capacity}
   - {addr: 0x801cd514, name: g_world_gfx_tile_count}
   - {addr: 0x801cd518, name: GsOUT_PACKET_P}
-  - {addr: 0x801cd520, name: g_world_gfx_draw_move_count}
-  - {addr: 0x801cd528, name: g_world_gfx_active_packet_buffer}
+  - {addr: 0x801cd520, name: g_menu_gfx_draw_move_count}
+  - {addr: 0x801cd528, name: g_menu_gfx_context}
   - {addr: 0x801cd52c, name: g_world_input_primary_repeat}
   - {addr: 0x801cd530, name: g_world_input_secondary_repeat_latched}
   - {addr: 0x801cd534, name: g_world_gfx_sprite_count}
@@ -2393,8 +2393,8 @@ overrides:
   - {function: world_gfx_enqueue_draw_mode, name: g_menu_gfx_draw_mode_count, addr: 0x801cd504}
   - {function: world_gfx_enqueue_draw_move, name: g_menu_gfx_context, addr: 0x801cd528}
   - {function: world_gfx_enqueue_draw_move, name: g_menu_gfx_draw_move_count, addr: 0x801cd520}
-  - {function: world_gfx_enqueue_gouraud_textured_quad, name: g_bunit_gfx_poly_gt4_count, addr: 0x801cd1d0}
   - {function: world_gfx_enqueue_gouraud_textured_quad, name: g_menu_gfx_context, addr: 0x801cd528}
+  - {function: world_gfx_enqueue_gouraud_textured_quad, name: g_menu_gfx_poly_gt4_count, addr: 0x801cd1d0}
   - {function: world_gfx_enqueue_line_f2, name: g_equip_gfx_line_f2_count, addr: 0x801cd198}
   - {function: world_gfx_enqueue_line_f2, name: g_menu_gfx_context, addr: 0x801cd528}
   - {function: world_gfx_enqueue_oriented_textured_quad, name: g_menu_gfx_context, addr: 0x801cd528}

@@ -163,7 +163,7 @@ void world_shop_run_screen(s32 shop_type) {
             && g_world_shop_menu_step != WORLD_SHOP_STEP_FITTING_ROOM_REMOVE) {
             world_shop_update_unit_selection();
         }
-        g_gfx_current_otag_entry = g_world_gfx_active_packet_buffer->otag + 63;
+        g_gfx_current_otag_entry = g_menu_gfx_context->otag + 63;
         world_menu_draw_active_window_frames();
         if (g_world_shop_menu_step == WORLD_SHOP_STEP_FUR_BUY_CONFIRM
             || g_world_shop_menu_step == WORLD_SHOP_STEP_FUR_SELL_CONFIRM
@@ -175,7 +175,7 @@ void world_shop_run_screen(s32 shop_type) {
         } else {
             ot_index = 9;
         }
-        world_input_update_event_state(g_world_gfx_active_packet_buffer->otag + ot_index, world_input_filter_menu(),
+        world_input_update_event_state(g_menu_gfx_context->otag + ot_index, world_input_filter_menu(),
             g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0);
         if (g_world_shop_menu_step != last_step) {
             g_world_formation_unit_cycle_mode = 0;

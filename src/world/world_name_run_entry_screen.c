@@ -74,11 +74,11 @@ u8* world_name_run_entry_screen(const u8* list, u32* image) {
         g_world_gfx_poly_f3_count = 0;
         g_world_gfx_poly_ft3_count = 0;
         g_world_gfx_poly_f4_count = 0;
-        g_world_gfx_textured_quad_count = 0;
+        g_menu_gfx_poly_ft4_count = 0;
         g_world_gfx_poly_g3_count = 0;
         g_world_gfx_poly_gt3_count = 0;
         g_world_gfx_gradient_quad_count = 0;
-        g_world_gfx_textured_gradient_quad_count = 0;
+        g_menu_gfx_poly_gt4_count = 0;
         g_world_gfx_flat_line_count = 0;
         g_world_gfx_line_f3_count = 0;
         g_world_gfx_line_f4_count = 0;
@@ -92,9 +92,9 @@ u8* world_name_run_entry_screen(const u8* list, u32* image) {
         g_world_gfx_sprite_count = 0;
         g_world_gfx_sprite_8_count = 0;
         g_world_gfx_sprite_16_count = 0;
-        g_world_gfx_draw_move_count = 0;
+        g_menu_gfx_draw_move_count = 0;
         g_world_gfx_draw_area_count = 0;
-        otag = g_world_gfx_active_packet_buffer->otag;
+        otag = g_menu_gfx_context->otag;
         GetDrawEnv(&env);
         g_world_gfx_draw_buffer_clip_y = env.clip.y;
         while (DrawSync(1) != 0) { }
@@ -102,17 +102,17 @@ u8* world_name_run_entry_screen(const u8* list, u32* image) {
         {
             menu_gfx_context_t* context = g_world_gfx_packet_buffers;
 
-            if (g_world_gfx_active_packet_buffer == context) {
+            if (g_menu_gfx_context == context) {
                 context++;
             }
-            g_world_gfx_active_packet_buffer = context;
+            g_menu_gfx_context = context;
             PutDispEnv(&context->disp_env);
         }
-        PutDrawEnv(&g_world_gfx_active_packet_buffer->draw_env);
+        PutDrawEnv(&g_menu_gfx_context->draw_env);
         g_world_name_entry_screen_image_rect.y = g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0;
         gfx_load_image_and_wait(&g_world_name_entry_screen_image_rect, image);
         DrawOTag(otag);
-        ClearOTag(g_world_gfx_active_packet_buffer->otag, g_world_ot_length);
+        ClearOTag(g_menu_gfx_context->otag, g_world_ot_length);
         world_input_update_with_message_state();
         busy = world_map_is_busy();
         if (busy == 0) {
@@ -139,10 +139,10 @@ u8* world_name_run_entry_screen(const u8* list, u32* image) {
             g_world_input_primary_repeat & PSX_PAD_R1, busy, MAIN_SFX_PAGE_SWITCH);
         world_menu_run_script_with_palette_mode(
             &g_world_name_entry_keyboard_script, g_world_input_primary_repeat, busy);
-        g_gfx_current_otag_entry = g_world_gfx_active_packet_buffer->otag + 63;
+        g_gfx_current_otag_entry = g_menu_gfx_context->otag + 63;
         world_menu_draw_active_window_frames();
         world_input_update_event_state(
-            g_world_gfx_active_packet_buffer->otag + 63, PadRead(0), g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0);
+            g_menu_gfx_context->otag + 63, PadRead(0), g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0);
         value = g_world_name_entry_state;
         if (value != g_world_name_entry_last_state) {
             g_world_name_entry_last_state = value;

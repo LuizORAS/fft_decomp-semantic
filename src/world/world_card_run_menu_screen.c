@@ -107,8 +107,8 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
             world_gfx_start_increasing_fade();
             g_world_card_menu_step = WORLD_CARD_MENU_STEP_LEFT;
         }
-        world_formation_set_ordering_table_pointer(g_world_gfx_active_packet_buffer->otag + 1);
-        g_gfx_current_otag_entry = g_world_gfx_active_packet_buffer->otag + 60;
+        world_formation_set_ordering_table_pointer(g_menu_gfx_context->otag + 1);
+        g_gfx_current_otag_entry = g_menu_gfx_context->otag + 60;
         world_menu_draw_active_window_frames();
         buttons = PadRead(0) & PSX_PAD_DPAD_MASK;
         buttons |= g_world_input_newly_pressed & 0xfff;
@@ -117,7 +117,7 @@ s32 world_card_run_menu_screen(s32 mode_select_enabled) {
             buttons &= 0xff00;
         }
         world_input_update_event_state(
-            g_world_gfx_active_packet_buffer->otag + 60, buttons, g_world_gfx_draw_buffer_clip_y == 0 ? 0xf0 : 0);
+            g_menu_gfx_context->otag + 60, buttons, g_world_gfx_draw_buffer_clip_y == 0 ? 0xf0 : 0);
         world_sound_dispatch_effect();
     }
     thread_set_parameters(THREAD_BORROWED_SLOT_CARD_BACKDROP, 0, -1, 0);

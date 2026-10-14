@@ -751,7 +751,6 @@ extern menu_status_panel_buffer_t g_world_change_banner_panel_frames[2];
  * unverified names stay provisional. */
 extern s16 g_world_3d_object_use_request;
 extern u16 g_world_3d_object_wait_status;
-extern menu_gfx_context_t* g_world_gfx_active_packet_buffer;
 extern u16 g_world_gfx_draw_suppress_flag;
 extern u8 g_world_gfx_fade_decreasing;
 extern u8 g_world_gfx_fade_disabled;
@@ -762,7 +761,6 @@ extern glyph_blit_t g_world_gfx_image_blit_source;
 extern menu_selection_record_t g_world_menu_selection_records[14];
 extern RECT g_world_gfx_temporary_draw_area;
 extern s8 g_world_gfx_vsync_mode;
-extern u16 g_world_gfx_textured_quad_count;
 extern u16 g_world_gfx_draw_area_scale_percent[];
 
 /* A full-screen texture window (x=0, y=0, w=0x100, h=0x100 in the WORLD data
@@ -811,7 +809,6 @@ extern u16 g_world_gfx_line_f4_count;
 extern u16 g_world_gfx_line_g4_count;
 extern u16 g_world_gfx_poly_ft3_count;
 extern u16 g_world_gfx_poly_gt3_count;
-extern u16 g_world_gfx_textured_gradient_quad_count;
 extern u16 g_world_gfx_sprite_8_capacity;
 extern u16 g_world_gfx_draw_buffer_clip_y;
 
@@ -824,12 +821,10 @@ extern volatile u16 g_world_gfx_draw_area_capacity;
 extern u16 g_world_gfx_draw_area_count;
 extern u16 g_world_gfx_draw_mode_capacity;
 extern u16 g_world_gfx_tile_capacity; /* tile count */
-extern u16 g_world_gfx_draw_mode_count;
 
 /* Draw move count; volatile for the same read order as g_world_gfx_draw_area_capacity. */
 extern volatile u16 g_world_gfx_draw_move_capacity;
 extern u16 g_world_gfx_tile_count;
-extern u16 g_world_gfx_draw_move_count;
 extern u16 g_world_gfx_sprite_count;
 extern u16 g_world_gfx_tile_1_capacity;
 extern u16 g_world_gfx_tile_8_capacity;

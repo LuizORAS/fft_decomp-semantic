@@ -440,7 +440,6 @@ extern u16 g_bunit_gfx_poly_g4_count;
 extern u16 g_bunit_gfx_poly_gt3_capacity;
 extern s16 g_bunit_gfx_poly_gt3_count;
 extern u16 g_bunit_gfx_poly_gt4_capacity;
-extern u16 g_bunit_gfx_poly_gt4_count;
 extern u16 g_bunit_gfx_sprite_16_capacity;
 extern s16 g_bunit_gfx_sprite_16_count;
 extern u16 g_bunit_gfx_sprite_8_capacity;

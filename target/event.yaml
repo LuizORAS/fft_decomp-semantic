@@ -804,7 +804,7 @@ data:
   - {addr: 0x801eca7c, name: g_bunit_gfx_poly_ft3_count}
   - {addr: 0x801eca80, name: g_bunit_gfx_poly_gt3_count}
   - {addr: 0x801eca84, name: g_menu_gfx_poly_ft4_count}
-  - {addr: 0x801eca88, name: g_bunit_gfx_poly_gt4_count}
+  - {addr: 0x801eca88, name: g_menu_gfx_poly_gt4_count}
   - {addr: 0x801eca8c, name: g_bunit_gfx_sprite_8_capacity}
   - {addr: 0x801eca90, name: g_menu_gfx_drawenv_y}
   - {addr: 0x801eca94, name: g_menu_alternate_number_clut}
