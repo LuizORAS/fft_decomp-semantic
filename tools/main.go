@@ -210,7 +210,7 @@ type inventoryRecord struct {
 	StackSize    int    `json:"stack_size,omitempty"`
 }
 
-const usage = "usage: tools build [module|disc]|check [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|declarations ...|symbols <action> ...|extract"
+const usage = "usage: tools build [module|disc]|check [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|declarations ...|share-audit [--module=M] [--min-bytes=N] [--prefix=P]|symbols <action> ...|extract"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -224,6 +224,7 @@ func main() {
 		"permute":                true,
 		"symbols":                true,
 		"declarations":           true,
+		"share-audit":            true,
 		"compile-permuter-input": true,
 	}
 	if !commandsWithArguments[os.Args[1]] && len(os.Args) != 2 {
@@ -255,6 +256,8 @@ func main() {
 		err = p.symbolsCommand(os.Args[2:])
 	case "declarations":
 		err = p.declarationsCommand(os.Args[2:])
+	case "share-audit":
+		err = p.shareAuditCommand(os.Args[2:])
 	case "extract":
 		err = p.extractDisc()
 	case "analyze":
