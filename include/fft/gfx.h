@@ -53,6 +53,10 @@ typedef struct urect16 {
 typedef char assert_urect16_size[sizeof(urect16_t) == 8 ? 1 : -1];
 
 /* gfx */
+/* Drawing records BATTLE, WORLD and the overlays share: texture flips, image load parameters, the fade
+ * tile and its intensity, scaled draw-area pairs, the glyph blit, textured quad and rectangle sources,
+ * oriented quads, item icon sources, the formation background state and BATTLE's fade overlay. */
+
 typedef enum texture_uv_flip {
     TEXTURE_UV_FLIP_NONE = 0,
     TEXTURE_UV_FLIP_X = 1,

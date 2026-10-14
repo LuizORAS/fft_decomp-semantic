@@ -3,7 +3,6 @@ type: mechanic
 tier: 3
 scope:
   - battle_map
-  - battle_weather
 ---
 
 # Battle Map
@@ -56,7 +55,7 @@ items) belong to the same map but are covered by the [[Movement]] page.
    reset the camera and the palettes, run the loader, load the ENTD units and
    their graphics, and end by seeding the colour fades from the loaded map.
    The setup also rolls the weather for a random battle
-   ([[battle_weather_randomize_from_calendar]]) and waits for the deployment.
+   ([[battle_map_randomize_weather_from_calendar]]) and waits for the deployment.
 2. **The loader** ([[battle_map_load_data]]), one step a call: read the GNS,
    pick the rows for the map state (primary mesh, override mesh, texture,
    then every other row whose comparison holds), read each picked file into a
@@ -91,7 +90,7 @@ Before a random battle the weather moves at most one step from its current
 value, with odds by date: up most often from November 23 to February 18 and
 from May 21 to July 22, down most often from February 19 to May 20 and from
 July 23 to November 22, the zodiac's cusps. The time of day is night one
-battle in three ([[battle_weather_randomize_from_calendar]]).
+battle in three ([[battle_map_randomize_weather_from_calendar]]).
 
 ### Colours
 
@@ -115,7 +114,7 @@ units' palettes use the same machinery.
 |---|---|
 | The rain and snow speeds and amounts | [[battle_map_run_weather_command]] (speeds by strength), [[battle_map_init_weather_particles]] (64 flakes, 32 drops) |
 | How often lightning strikes | [[battle_map_draw_mesh_and_weather]]: one chance in 480 a frame |
-| Random battle weather and time of day | [[battle_weather_randomize_from_calendar]]: the date cutoffs and the drift odds |
+| Random battle weather and time of day | [[battle_map_randomize_weather_from_calendar]]: the date cutoffs and the drift odds |
 | The colours of marked tiles | [[battle_map_draw_mesh_and_weather]]: the move, range and target colour triples |
 | Which files a map state loads | The GNS rows (data); the selection passes of [[battle_map_load_data]] and [[battle_map_is_gns_record_matching_state]] |
 | A map part's motion | Its keyframes and instructions (data); the tween curves in [[battle_map_update_mesh_part_animations]] |

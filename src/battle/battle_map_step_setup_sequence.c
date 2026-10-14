@@ -31,7 +31,7 @@ s32 battle_map_step_setup_sequence(s32 map_id, s32 step, s32 deployment_running)
         battle_camera_init_defaults();
         battle_map_init_palette_state();
         if (g_main_system_frontend_world_result == 1) {
-            battle_weather_randomize_from_calendar();
+            battle_map_randomize_weather_from_calendar();
         }
         step++;
         battle_map_load_palette_data(g_battle_map_weather_particle_palette, MAP_CLUT_ROW_SPRITES, 0, 0);

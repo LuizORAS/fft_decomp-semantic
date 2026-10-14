@@ -190,9 +190,26 @@ void main_file_handle_cd_read_callback(u8 event, u8* result);
 void main_file_handle_cd_ready_callback(u8 event, u8* result);
 
 /* input */
+/* The pad as MAIN reads it each frame: the held, previous, newly pressed and released buttons, the
+ * controller copies and stable-frame count, and the auto-repeat timing (the initial delay and two repeat
+ * periods). */
+
 extern u8 g_main_input_repeat_initial_delay;
 extern u8 g_main_input_repeat_period;
 extern u8 g_main_input_secondary_repeat_period;
+extern s32 g_main_input_pressed_buttons;
+extern s32 g_main_input_previous_buttons;
+extern u32 g_main_input_current_buttons;
+extern u32 g_main_input_released_buttons;
+extern u32 g_controller_pressed_copy_0;
+extern u32 g_controller_pressed_copy_1;
+extern u32 g_controller_pressed_copy_2;
+extern u32 g_controller_pressed_copy_3;
+extern u32 g_controller_previous_copy_0;
+extern u32 g_controller_previous_copy_1;
+extern u32 g_controller_previous_copy_2;
+extern u32 g_controller_previous_copy_3;
+extern u32 g_controller_stable_frames;
 
 /* card */
 /* The memory card: the BIOS card event handles (main_card_init_events), the slot states and I/O results
@@ -945,6 +962,10 @@ extern s16 g_main_scenario_condition_data[];
 extern event_file_block_t g_main_script_event_block[];
 
 /* gfx */
+/* MAIN's display: the two display and draw environments and the screen polarity, the Now Loading
+ * message, the FRAME.BIN image, the zodiac backdrop of the deployment screen, the debug font and BATTLE's
+ * ordering tables. */
+
 /* g_main_terrain_status_flags has one byte per map_surface_type_e; only
  * MAP_SURFACE_POISONED_MARSH has a bit. */
 enum {
@@ -988,6 +1009,8 @@ extern world_image_location_t g_main_gfx_zodiac_texture_position;
 
 extern DISPENV g_main_gfx_display_envs[2];
 extern DRAWENV g_main_gfx_draw_envs[2];
+/* The ordering tables of BATTLE's two render buffers (battle_gfx_init_render_buffers). */
+extern u32 g_main_gfx_battle_otags[2][0x180];
 extern s32 g_main_gfx_loading_display_frame_counter;
 extern s32 g_main_gfx_screen_polarity;
 void main_gfx_add_now_loading_to_otag(u32* otag);

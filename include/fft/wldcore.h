@@ -182,6 +182,10 @@ void wldcore_sound_wait_for_queue_drain(void);
 void wldcore_sound_play_pending_script_sounds(s32 low, s32 high, s32 value);
 
 /* gfx */
+/* The world map's drawing: the ordering tables and primitive buffers, a frame with the live map or over
+ * the captured backdrop, the projected map tiles, display objects and HUD digits, the picture and
+ * background sets with their dissolve upload, and the screen brightness. */
+
 /* The three parallel arrays share one object, which is why the target builds
  * all three walk pointers from a single symbol address. */
 typedef struct wldcore_sortbox_state {
@@ -712,6 +716,9 @@ typedef enum wldcore_scroll_limits {
 } wldcore_map_scroll_limits_e;
 
 /* unit */
+/* The roster as the world map's menus read it: party records by index, Ramza's roster index, a unit's
+ * id from its misc id, the status panel data and the participant list's saved cursor. */
+
 extern s32 g_wldcore_participant_list_saved_cursor;
 party_data_t* wldcore_get_party_data_pointer(s32 party_index);
 s32 wldcore_get_ramza_roster_index(void);

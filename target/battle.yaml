@@ -607,7 +607,7 @@ functions:
   - {addr: 0x8008e6d0, size: 8, name: battle_return_zero_8008e6d0, hash: 207819bf4ebe3078}
   - {addr: 0x8008e6d8, size: 224, name: battle_unit_select_and_open_entd, hash: 849dca5ea7e03b82}
   - {addr: 0x8008e7b8, size: 84, name: battle_unit_poll_and_load_entd_units, hash: 87bb8cbb8ed888b2}
-  - {addr: 0x8008e80c, size: 608, name: battle_weather_randomize_from_calendar, hash: 4616ab864c85446b, rodata: [{addr: 0x80068228, size: 56, hash: 7903bfd450f0089c}]}
+  - {addr: 0x8008e80c, size: 608, name: battle_map_randomize_weather_from_calendar, hash: 4616ab864c85446b, rodata: [{addr: 0x80068228, size: 56, hash: 7903bfd450f0089c}]}
   - {addr: 0x8008ea6c, size: 516, name: battle_map_step_init_sequence, hash: 151dbf7d7975bac7, rodata: [{addr: 0x80068260, size: 52, hash: 9c0ebd17a8d33713}]}
   - {addr: 0x8008ec70, size: 692, name: battle_map_step_setup_sequence, hash: 4129a506772c607d, rodata: [{addr: 0x80068298, size: 52, hash: 4de1eba064a6e78b}]}
   - {addr: 0x8008ef24, size: 32, name: battle_gfx_clear_screen_color_modulation, hash: a0ddcd4f150b9f59}

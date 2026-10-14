@@ -13,7 +13,7 @@ enum {
  * signed adjustments is indexed by a uniform `rand()` bucket and applied to
  * the current weather strength before it is clamped to 0..4.
  */
-void battle_weather_randomize_from_calendar(void) {
+void battle_map_randomize_weather_from_calendar(void) {
     u8 period_end_month[BATTLE_WEATHER_CALENDAR_PERIOD_COUNT] = { 2, 5, 7, 11 };
     u8 period_end_day[BATTLE_WEATHER_CALENDAR_PERIOD_COUNT] = { 19, 21, 23, 23 };
     u8 weather_period[BATTLE_WEATHER_CALENDAR_PERIOD_COUNT + 1] = { 3, 0, 2, 1, 3 };

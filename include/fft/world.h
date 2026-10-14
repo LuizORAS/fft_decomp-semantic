@@ -145,6 +145,9 @@ void world_thread_wait_until_inactive(s32 thread_id);
 void world_thread_yield(void);
 
 /* input */
+/* WORLD's pad input: the newly pressed buttons, the repeat rates and their counters, the lockout timer
+ * of the formation and shop screens, the Triangle latch and the tutorial's scripted buttons. */
+
 extern u8 g_world_input_activation_timer;
 extern u32 g_world_input_frame_current;
 extern u32 g_world_input_frame_initial_repeat_counter;
@@ -211,6 +214,9 @@ void world_camera_store_state_to_script_variables(void);
 void world_camera_clear_zoom_variable_low_bit(void);
 
 /* screen */
+/* The screen fade level and clear rectangle, the tint tiles and the panel texture windows of WORLD's
+ * menu-screen library. */
+
 extern s32 g_world_screen_fade;
 extern RECT g_world_screen_clear_rect;
 extern battle_gfx_fade_overlay_t g_world_screen_tint_tiles[]; /* one tint tile per packet buffer */
@@ -348,6 +354,10 @@ extern world_status_thread_t g_world_status_display_thread_params;
 extern world_status_thread_t g_world_preview_stats_thread_params;
 
 /* gfx */
+/* WORLD's drawing: the two packet buffers with their primitive pools and counts, quads, tiles, lines,
+ * draw modes and areas, VRAM transfers, portraits, the zodiac backdrop, the tpage-7 allocator, the
+ * WLDFACE image, the screen fade tile and the EVTCHR load. */
+
 /* Separate decreasing/increasing RGB-intensity flags.
  * The getter packs them into bits 0/1 and returns 0 when disabled. */
 typedef enum world_fade_state {
@@ -473,29 +483,22 @@ typedef char wldcore_entry_36_rgb_size_must_be_0x24[sizeof(wldcore_window_entry_
 
 extern battle_menu_status_panel_buffer_t g_world_change_banner_panel_frames[2];
 
-/* Scenario interpreter interfaces shared by battle_script_execute_event and
- * world_script_execute_event. Signatures are as the interpreters bind them;
- * unverified names stay provisional. */
-extern s16 g_world_3d_object_use_request;
-extern u16 g_world_3d_object_wait_status;
 extern u32* g_world_gfx_current_otag_entry;
 extern world_gfx_packet_buffer_t* g_world_gfx_active_packet_buffer;
 extern u16 g_world_gfx_draw_primitives_immediately;
-extern u16 g_world_menu_height_display_suppressed;
+
 extern u8 g_world_gfx_fade_decreasing;
 extern u8 g_world_gfx_fade_disabled;
 extern u8 g_world_gfx_fade_increasing;
 extern s16 g_world_gfx_fade_intensity;
 extern world_glyph_blit_t g_world_gfx_image_blit_destination;
 extern world_glyph_blit_t g_world_gfx_image_blit_source;
-extern world_menu_selection_record_t g_world_menu_selection_records[];
+
 extern RECT g_world_gfx_temporary_draw_area;
 extern u8 g_world_gfx_tpage7_vram_allocation_grid[15][16];
 extern s8 g_world_gfx_vsync_mode;
 extern u16 g_world_gfx_textured_quad_count;
 
-extern world_image_location_t g_world_menu_texture_location;
-extern RECT g_world_menu_disabled_texture_window;
 extern u16 g_world_gfx_draw_area_scale_percent[];
 
 /* A full-screen texture window (x=0, y=0, w=0x100, h=0x100 in the WORLD data
@@ -602,7 +605,6 @@ extern u16 g_world_gfx_gradient_quad_count;
 extern u16 g_world_gfx_sprite_capacity;
 extern s32 g_active_graphics_buffer_index;
 void world_gfx_set_party_unit_portrait_poly_texture(s32 portrait_id, POLY_FT4* poly);
-void world_menu_display_text_string(u8* image, world_glyph_blit_t* origin, u8* text);
 
 void world_panel_gfx_build_scaled_draw_area_packets(
     world_gfx_scaled_draw_area_pair_t* packets, const void* geometry, s32 scale_index, s32 frame_offset, void* thread);
@@ -624,8 +626,7 @@ void world_gfx_enqueue_tile(RECT* box, u8* rgb, u8 semi_trans, s32 ot_index);
 
 void world_gfx_build_scaled_draw_area_pair_swapped(
     world_gfx_scaled_draw_area_pair_t* packets, void* geometry, s32 step, s32 flag);
-void world_menu_clear_selection_record(s32 index);
-void world_menu_clear_selection_records(void);
+
 void world_gfx_clear_tpage7_vram_allocation_grid(void);
 
 /* Portrait primitive helpers shared with the EVENT debug character editor.
@@ -634,8 +635,7 @@ void world_gfx_clear_tpage7_vram_allocation_grid(void);
  * clip_portrait_poly_from_left), _left is debugchr's clip_..._from_right. */
 void world_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 delta);
 void world_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 delta);
-void world_menu_set_active_turn_panels(const void* source_a, const void* source_b, const void* source_c);
-void world_menu_get_active_turn_panels(void* dest0, void* dest1, void* dest2, void* dest3);
+
 void world_gfx_draw_or_append_gpu_primitive(void* primitive);
 void world_gfx_submit_screen_fade_overlay(battle_gfx_fade_overlay_t* prims, s32 intensity);
 void world_gfx_draw_signed_number(s32 value, s32 digits, void* image, world_glyph_blit_t* pen);
@@ -666,17 +666,15 @@ void world_gfx_set_fade_disabled(u8 disabled);
 void world_gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 image_type);
 void world_gfx_set_portrait_poly_texture(POLY_FT4* poly, s32 code);
 void world_gfx_set_primitive_brightness(void* primitive, s32 brightness);
-void world_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_base_index, s16* entries);
-void world_menu_submit_numeric_display_frame_primitives(world_menu_palette_primitives_t* frame);
 
 void world_gfx_enqueue_textured_quad(
     RECT* rect, s32 u, s32 v, void* color, s32 semi_trans, u16 texture_page, u16 clut, s32 priority);
 
 void world_gfx_free_tpage7_vram(RECT* rect);
 s32 world_gfx_get_fade_state(void);
-void world_menu_get_selection_record(s32 index, s16* selected_index, s16* scroll_base_index, s16* entries);
+
 s32 world_gfx_get_vsync_mode_or_one(void);
-void world_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
+
 void world_gfx_load_image_and_wait(RECT* rect, void* data);
 void world_gfx_load_wldface_to_frame_buffer(void);
 void world_gfx_store_image_and_wait(RECT* rect, void* dest);
@@ -692,9 +690,7 @@ void world_gfx_start_increasing_fade(void);
 s32 world_gfx_update_fade_in_tile(void);
 s32 world_gfx_update_fade_out_tile(void);
 
-void world_script_assign_bitset_flag(u32* bits, s32 index, s32 set);
 void world_gfx_load_evtchr_thread(void);
-void world_script_reset_palette_event_instruction(const u8* parameters);
 
 /* status panel */
 extern s16 g_world_auto_battle_option_colors[5]; /* text colour per option */
@@ -2406,6 +2402,13 @@ extern world_menu_palette_slot_t g_world_numeric_display_palettes[];
 
 extern world_panel_record_t g_world_menu_numeric_display_panel_records[2];
 
+extern u16 g_world_menu_height_display_suppressed;
+
+extern world_menu_selection_record_t g_world_menu_selection_records[];
+
+extern world_image_location_t g_world_menu_texture_location;
+extern RECT g_world_menu_disabled_texture_window;
+
 /*
  * WORLD.BIN routines shared by the world, wldcore, and menu-overlay
  * reconstructions.  Each module's linker table maps these names to its own
@@ -2657,6 +2660,21 @@ u8* world_menu_text_advance_cursor_with_backreferences(world_text_backreference_
 void world_menu_draw_stacked_glyph_pair(void* buffer, world_glyph_blit_t* dest);
 
 void world_menu_draw_small_number_glyphs(s32 value, s32 flags, void* pixels, world_glyph_blit_t* position);
+
+void world_menu_display_text_string(u8* image, world_glyph_blit_t* origin, u8* text);
+
+void world_menu_clear_selection_record(s32 index);
+void world_menu_clear_selection_records(void);
+
+void world_menu_set_active_turn_panels(const void* source_a, const void* source_b, const void* source_c);
+void world_menu_get_active_turn_panels(void* dest0, void* dest1, void* dest2, void* dest3);
+
+void world_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_base_index, s16* entries);
+void world_menu_submit_numeric_display_frame_primitives(world_menu_palette_primitives_t* frame);
+
+void world_menu_get_selection_record(s32 index, s16* selected_index, s16* scroll_base_index, s16* entries);
+
+void world_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
 
 /* item */
 /* WORLD's item screens: the formation item menu (categories, sort orders, rearranging, the
@@ -3250,6 +3268,12 @@ extern s16 g_world_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13;
 
 extern char g_world_script_reading_character_message[]; /* "reading charactor%d \n" */
 
+/* Scenario interpreter interfaces shared by battle_script_execute_event and
+ * world_script_execute_event. Signatures are as the interpreters bind them;
+ * unverified names stay provisional. */
+extern s16 g_world_3d_object_use_request;
+extern u16 g_world_3d_object_wait_status;
+
 s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation);
 s32 world_script_run_scenario_conditions(void);
 void world_script_run_sprite_move(u8*, s32);
@@ -3331,6 +3355,10 @@ void world_script_unlock_date_event_instruction(u32* date_bits, s32 index, s32 m
 void world_script_wait_rotate_event_instruction(s32);
 void world_script_wait_sprite_move_event_instruction(s32);
 void world_script_wait_walk_event_instruction(s32 unit_id);
+
+void world_script_assign_bitset_flag(u32* bits, s32 index, s32 set);
+
+void world_script_reset_palette_event_instruction(const u8* parameters);
 
 /* event */
 /* What WORLD's event instructions share with its main loop: the requests, the event unit slots and
