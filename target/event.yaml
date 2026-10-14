@@ -1167,7 +1167,7 @@ functions:
   - {addr: 0x801c2af0, size: 1348, name: debugchr_editor_load_selected_unit, hash: 944be0b3f140f098}
   - {addr: 0x801c3034, size: 580, name: gfx_set_scaled_poly_ft4_4bpp, hash: f989278e90fdce7c, source: src/shared/gfx/gfx_set_scaled_poly_ft4_4bpp.c}
   - {addr: 0x801c3278, size: 700, name: menu_build_status_group_primitives, hash: ab6f9af67d5cf2a8, source: src/shared/menu/menu_build_status_group_primitives.c}
-  - {addr: 0x801c3534, size: 400, name: debugchr_gfx_build_gradient_grid_primitives, hash: 57acda65df169872}
+  - {addr: 0x801c3534, size: 400, name: debugchr_gfx_build_gradient_grid_primitives, hash: 57acda65df169872, source: src/shared/gfx/gfx_build_gradient_grid_primitives.c, source_symbol: gfx_build_gradient_grid_primitives}
   - {addr: 0x801c36c4, size: 720, name: gfx_set_scaled_poly_ft4_8bpp, hash: ab60dde2e48b7b56, source: src/shared/gfx/gfx_set_scaled_poly_ft4_8bpp.c}
   - {addr: 0x801c3994, size: 692, name: menu_build_zodiac_primitives, hash: 73434c5bdf08700a, source: src/shared/menu/menu_build_zodiac_primitives.c}
   - {addr: 0x801c3c48, size: 316, name: debugchr_editor_apply_values_to_battle_unit, hash: 1ccc2cc747f36f75}
@@ -2286,7 +2286,7 @@ functions:
   - {addr: 0x801c2888, size: 1348, name: require_editor_load_selected_unit, hash: b9c009db7e6c8971}
   - {addr: 0x801c2dcc, size: 580, name: gfx_set_scaled_poly_ft4_4bpp, hash: f989278e90fdce7c, source: src/shared/gfx/gfx_set_scaled_poly_ft4_4bpp.c}
   - {addr: 0x801c3010, size: 700, name: menu_build_status_group_primitives, hash: 61b10189a9c6f7fc, source: src/shared/menu/menu_build_status_group_primitives.c}
-  - {addr: 0x801c32cc, size: 400, name: require_gfx_build_gradient_grid_primitives, hash: 3b20668a6d03a172}
+  - {addr: 0x801c32cc, size: 400, name: require_gfx_build_gradient_grid_primitives, hash: 3b20668a6d03a172, source: src/shared/gfx/gfx_build_gradient_grid_primitives.c, source_symbol: gfx_build_gradient_grid_primitives}
   - {addr: 0x801c345c, size: 720, name: gfx_set_scaled_poly_ft4_8bpp, hash: ab60dde2e48b7b56, source: src/shared/gfx/gfx_set_scaled_poly_ft4_8bpp.c}
   - {addr: 0x801c372c, size: 692, name: menu_build_zodiac_primitives, hash: 0d33bf568d157774, source: src/shared/menu/menu_build_zodiac_primitives.c}
   - {addr: 0x801c39e0, size: 40, name: require_thread_stop_after_16_frames, hash: 83373904c4781138}
@@ -2539,6 +2539,7 @@ overrides:
   - {function: require_editor_run_numeric_thread, name: gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
   - {function: require_editor_run_numeric_thread, name: menu_build_scaled_draw_area_packets, addr: 0x801bf01c}
   - {function: require_editor_run_numeric_thread, name: menu_text_render_signed_decimal_entries, addr: 0x801c1380}
+  - {function: require_gfx_build_gradient_grid_primitives, name: gfx_draw_or_append_gpu_primitive, addr: 0x8014a660}
   - {function: require_panel_run_character_status_thread, name: g_menu_gfx_draw_offset_y, addr: 0x801d20a8}
   - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_draw_area_rect, addr: 0x801cb778}
   - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_fields, addr: 0x801cb384}

@@ -359,6 +359,7 @@ void gfx_set_scaled_poly_ft4_8bpp(POLY_FT4* poly, const point16_t* texture, cons
     const sprite_sheet_frame_t* uv_rect, const point16_t* scale, const sprite_draw_offset_t* offset);
 
 void gfx_set_primitive_brightness(P_TAG* primitive, s32 brightness);
+void gfx_build_gradient_grid_primitives(POLY_GT4* poly);
 void gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction);
 
 /* portrait transitions */

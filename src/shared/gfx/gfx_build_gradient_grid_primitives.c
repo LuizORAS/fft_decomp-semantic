@@ -1,12 +1,7 @@
-#include "fft/event_require.h"
 #include "fft/gfx.h"
-#include "psx/libgpu.h"
-#include "psx/types.h"
 
-/* Build the 4x8 grid of shaded, textured quads behind the panel: each row is
- * one step brighter than the one above, and every cell shows the same 64x32
- * texture rectangle. */
-void require_gfx_build_gradient_grid_primitives(POLY_GT4* poly) {
+/* Build and submit the panel background's 4x8 gradient grid. */
+void gfx_build_gradient_grid_primitives(POLY_GT4* poly) {
     s32 row;
     s32 column;
     s32 intensity;
@@ -27,7 +22,7 @@ void require_gfx_build_gradient_grid_primitives(POLY_GT4* poly) {
             setUV4(poly, 0x58, 0xd8, 0x98, 0xd8, 0x58, 0xf8, 0x98, 0xf8);
             SetSemiTrans(poly, 1);
             SetShadeTex(poly, 0);
-            gfx_append_gpu_primitive_to_secondary_otag(poly);
+            gfx_draw_or_append_gpu_primitive(poly);
             poly++;
         }
     }
