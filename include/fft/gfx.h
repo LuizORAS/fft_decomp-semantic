@@ -123,6 +123,8 @@ typedef char assert_urect16_size[sizeof(urect16_t) == 8 ? 1 : -1];
 
 void gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, u8 semi, s32 idx);
 
+void gfx_enqueue_line_f2(const point16_t endpoints[2], const rgb24_t* color, u8 semitrans, s32 otag_index);
+
 /* texture coordinates */
 /* Eight-bit texture coordinates within a PS1 texture page. */
 typedef struct uv8 {

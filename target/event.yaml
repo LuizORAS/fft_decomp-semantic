@@ -1424,7 +1424,7 @@ functions:
   - {addr: 0x801c9818, size: 104, name: equip_menu_update_horizontal_selection_and_mark_change, hash: 308db0791e6f9542}
   - {addr: 0x801c9880, size: 32, name: equip_input_clear_state, hash: b52e8464d8df1dd7}
   - {addr: 0x801c98a0, size: 256, name: equip_gfx_enqueue_tile, hash: 9d6c6dff6c1087ff, source: src/shared/gfx/gfx_enqueue_tile.c, source_symbol: gfx_enqueue_tile}
-  - {addr: 0x801c99a0, size: 260, name: equip_gfx_enqueue_line_f2, hash: 7409b09d6428807a}
+  - {addr: 0x801c99a0, size: 260, name: equip_gfx_enqueue_line_f2, hash: 7409b09d6428807a, source: src/shared/gfx/gfx_enqueue_line_f2.c, source_symbol: gfx_enqueue_line_f2}
   - {addr: 0x801c9aa4, size: 632, name: menu_gfx_enqueue_textured_quad_list, hash: 5f606e521d761091, source: src/shared/menu/menu_gfx_enqueue_textured_quad_list.c}
   - {addr: 0x801c9d1c, size: 532, name: menu_gfx_enqueue_textured_quad, hash: e79e4c2c08e12fd9, source: src/shared/menu/menu_gfx_enqueue_textured_quad.c}
   - {addr: 0x801c9f30, size: 1044, name: menu_gfx_enqueue_oriented_textured_quad, hash: 25f4a04133164df8, source: src/shared/menu/menu_gfx_enqueue_oriented_textured_quad.c}

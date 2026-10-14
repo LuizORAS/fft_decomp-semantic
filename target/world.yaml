@@ -868,7 +868,7 @@ functions:
   - {addr: 0x8012bdbc, size: 256, name: world_gfx_enqueue_tile, hash: 9f150427cc8f609b, source: src/shared/gfx/gfx_enqueue_tile.c, source_symbol: gfx_enqueue_tile}
   - {addr: 0x8012bebc, size: 344, name: world_gfx_append_poly_f4_to_otag, hash: 7a9732f67b0bc603}
   - {addr: 0x8012c014, size: 460, name: world_gfx_enqueue_gouraud_quad, hash: 40fb9a0164d41558}
-  - {addr: 0x8012c1e0, size: 260, name: world_gfx_enqueue_line_f2, hash: fccfcca88962f07d}
+  - {addr: 0x8012c1e0, size: 260, name: world_gfx_enqueue_line_f2, hash: fccfcca88962f07d, source: src/shared/gfx/gfx_enqueue_line_f2.c, source_symbol: gfx_enqueue_line_f2}
   - {addr: 0x8012c2e4, size: 332, name: world_menu_add_gradient_line_primitive, hash: c5632e60e658e9b0}
   - {addr: 0x8012c430, size: 632, name: world_gfx_enqueue_textured_quad_list, hash: 42f1804f3ad39011}
   - {addr: 0x8012c6a8, size: 532, name: world_gfx_enqueue_textured_quad, hash: 078cc1e65b7f2166}
@@ -2391,6 +2391,8 @@ overrides:
   - {function: world_card_write_file_with_retries, name: card_file_seek_with_retries, addr: 0x80132f7c}
   - {function: world_gfx_enqueue_gouraud_textured_quad, name: g_bunit_gfx_poly_gt4_count, addr: 0x801cd1d0}
   - {function: world_gfx_enqueue_gouraud_textured_quad, name: g_menu_gfx_context, addr: 0x801cd528}
+  - {function: world_gfx_enqueue_line_f2, name: g_equip_gfx_line_f2_count, addr: 0x801cd198}
+  - {function: world_gfx_enqueue_line_f2, name: g_menu_gfx_context, addr: 0x801cd528}
   - {function: world_gfx_enqueue_textured_quad_corners, name: g_menu_gfx_context, addr: 0x801cd528}
   - {function: world_gfx_enqueue_textured_quad_corners, name: g_menu_gfx_poly_ft4_count, addr: 0x801cd1cc}
   - {function: world_gfx_enqueue_tile, name: g_bunit_gfx_tile_count, addr: 0x801cd514}
