@@ -213,6 +213,7 @@ typedef char menu_gradient_panel_prims_size_must_be_316[(sizeof(menu_gradient_pa
 extern menu_gradient_panel_prims_t g_menu_panel_fade_frames[];
 
 void menu_init_panel_fade_tiles(void);
+void menu_update_panel_fade(void);
 
 /* Menu line-box layout, established by the builder at 0x800e3358: two DR_MODE
  * packets, twelve LINE_F2 packets and one SPRT whose CLUT (+0xe6)

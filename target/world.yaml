@@ -177,7 +177,7 @@ functions:
   - {addr: 0x800ef1a8, size: 180, name: script_get_variable, hash: 4871fbfdd3465551, source: src/shared/script/script_get_variable.c}
   - {addr: 0x800ef25c, size: 160, name: script_set_variable, hash: 7777ac9926486c9f, source: src/shared/script/script_set_variable.c}
   - {addr: 0x800ef2fc, size: 436, name: menu_init_panel_fade_tiles, hash: 3be1a31046d8fb32, source: src/shared/menu/menu_init_panel_fade_tiles.c}
-  - {addr: 0x800ef4b0, size: 464, name: world_menu_update_panel_fade, hash: 9fb1cf73a7d85714}
+  - {addr: 0x800ef4b0, size: 464, name: world_menu_update_panel_fade, hash: 9fb1cf73a7d85714, source: src/shared/menu/menu_update_panel_fade.c, source_symbol: menu_update_panel_fade}
   - {addr: 0x800ef680, size: 264, name: world_gfx_submit_screen_fade_overlay, hash: 0f3b3682c42fcae8, source: src/shared/gfx/gfx_submit_screen_fade_overlay.c, source_symbol: gfx_submit_screen_fade_overlay}
   - {addr: 0x800ef788, size: 124, name: menu_reserve_high_overlay, hash: 7a02095f5d205a32, source: src/shared/menu/menu_reserve_high_overlay.c}
   - {addr: 0x800ef804, size: 40, name: menu_free_high_overlay, hash: e8db9a4dc85accdd, source: src/shared/menu/menu_free_high_overlay.c}
@@ -2684,6 +2684,8 @@ overrides:
   - {function: world_menu_update_icon_cursor_sprites, name: battle_thread_is_previous_running, addr: 0x8010012c}
   - {function: world_menu_update_icon_cursor_sprites, name: g_battle_formation_display_mode, addr: 0x80153318}
   - {function: world_menu_update_icon_cursor_sprites, name: g_menu_input_lock_mode, addr: 0x8015330c}
+  - {function: world_menu_update_panel_fade, name: g_battle_menu_panel_fade_intensity, addr: 0x80153348}
+  - {function: world_menu_update_panel_fade, name: g_battle_menu_panel_fade_mode, addr: 0x80153344}
   - {function: world_option_gfx_init_scaled_draw_area_packets, name: g_menu_draw_area_template, addr: 0x80156c8c}
   - {function: world_panel_gfx_build_scaled_draw_area_packets, name: g_menu_draw_area_scale_percent, addr: 0x8018ae74}
   - {function: world_panel_gfx_init_scaled_draw_area_packets, name: g_menu_draw_area_template, addr: 0x8018ae6c}

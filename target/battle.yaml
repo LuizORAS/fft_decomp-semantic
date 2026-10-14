@@ -830,7 +830,7 @@ functions:
   - {addr: 0x8013b590, size: 180, name: script_get_variable, hash: 92bfa64b3cd0e089, source: src/shared/script/script_get_variable.c}
   - {addr: 0x8013b644, size: 160, name: script_set_variable, hash: 6bab3d74cae51aa6, source: src/shared/script/script_set_variable.c}
   - {addr: 0x8013b6e4, size: 436, name: menu_init_panel_fade_tiles, hash: 200e43d514e6d844, source: src/shared/menu/menu_init_panel_fade_tiles.c}
-  - {addr: 0x8013b898, size: 464, name: battle_menu_update_panel_fade, hash: d9c44f2307947857}
+  - {addr: 0x8013b898, size: 464, name: battle_menu_update_panel_fade, hash: d9c44f2307947857, source: src/shared/menu/menu_update_panel_fade.c, source_symbol: menu_update_panel_fade}
   - {addr: 0x8013ba68, size: 264, name: battle_gfx_submit_screen_fade_overlay, hash: 7b6fd4b19da8c27e, source: src/shared/gfx/gfx_submit_screen_fade_overlay.c, source_symbol: gfx_submit_screen_fade_overlay}
   - {addr: 0x8013bb70, size: 124, name: menu_reserve_high_overlay, hash: d31169643dab2d00, source: src/shared/menu/menu_reserve_high_overlay.c}
   - {addr: 0x8013bbec, size: 40, name: menu_free_high_overlay, hash: e8db9a4dc85accdd, source: src/shared/menu/menu_free_high_overlay.c}
