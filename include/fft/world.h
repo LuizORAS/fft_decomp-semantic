@@ -2610,7 +2610,7 @@ extern s16 g_world_card_list_first_visible_row;
 extern struct DIRENTRY* g_world_card_directory_buffer;
 extern s8 g_world_card_selectable_slot_count;
 extern u8 g_world_card_save_slot_descriptions[][0x8C];
-s32 world_card_build_save_slot_description(s32 mode, u8* slot_graphic);
+s32 world_card_build_save_slot_description(s32 mode, u8* destination);
 s32 world_card_read_file_chunked(const char* filename, u8* destination, u32 size);
 void world_card_build_save_file_header(s32 slot, s32 level, struct card_save_header* header);
 s32 world_card_check_selected(void);
