@@ -899,7 +899,7 @@ functions:
   - {addr: 0x801c434c, size: 104, name: card_io_consume_hardware_events, hash: ec79e4bca9f78540, profile: gcc-2.6.3_O0_aspsx-2.34, source: src/shared/card/card_io_consume_hardware_events.c}
   - {addr: 0x801c43b4, size: 200, name: card_io_get_info_with_retries, hash: 49d3c18bd212606b, profile: gcc-2.6.3_O0_aspsx-2.34}
   - {addr: 0x801c447c, size: 212, name: card_io_load_with_retries, hash: 6dfa7ffea75b5fd9, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x801c4550, size: 260, name: card_io_create_new_with_retries, hash: 8609d7bd3b3fc054, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x801c4550, size: 260, name: card_io_create_new_with_retries, hash: 8609d7bd3b3fc054, profile: gcc-2.6.3_O0_aspsx-2.34, source: src/shared/card/card_io_create_new_with_retries.c}
   - {addr: 0x801c4654, size: 296, name: card_io_poll_operation_result, hash: 7dcc7e43e91a981c, profile: gcc-2.6.3_O0_aspsx-2.34}
   - {addr: 0x801c477c, size: 188, name: card_io_wait_operation_result, hash: 3b0dcd32d1f1f06e, profile: gcc-2.6.3_O0_aspsx-2.34}
   - {addr: 0x801c4838, size: 332, name: card_file_enumerate_saves, hash: 778a5a68dcafa7fc, profile: gcc-2.6.3_O0_aspsx-2.34}

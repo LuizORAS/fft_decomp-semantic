@@ -1,5 +1,6 @@
 #include "fft/event_card.h"
-#include "psx/types.h"
+#include "fft/main.h"
+#include "psx/libapi.h"
 
 /* Clear the "new card" state of `port` with _card_clear, trying up to
  * `retry_limit` times. Returns CARD_IO_RESULT_COMPLETE once the hardware
