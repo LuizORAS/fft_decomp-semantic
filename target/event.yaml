@@ -473,7 +473,7 @@ functions:
   - {addr: 0x801cce8c, size: 36, name: menu_ability_is_learned, hash: 42eb607a71b8516a, source: src/shared/menu/menu_ability_is_learned.c}
   - {addr: 0x801cceb0, size: 196, name: bunit_menu_update_job, hash: 3a1484828be00e47}
   - {addr: 0x801ccf74, size: 976, name: bunit_ability_update_list_menu, hash: 4b1c6e2d1806893f}
-  - {addr: 0x801cd344, size: 256, name: bunit_gfx_enqueue_tile, hash: 50c95427e7c5d200}
+  - {addr: 0x801cd344, size: 256, name: bunit_gfx_enqueue_tile, hash: 50c95427e7c5d200, source: src/shared/gfx/gfx_enqueue_tile.c, source_symbol: gfx_enqueue_tile}
   - {addr: 0x801cd444, size: 460, name: bunit_gfx_enqueue_gouraud_quad, hash: 8f11049e7f2e617c}
   - {addr: 0x801cd610, size: 632, name: menu_gfx_enqueue_textured_quad_list, hash: 89e1989b186692ef, source: src/shared/menu/menu_gfx_enqueue_textured_quad_list.c}
   - {addr: 0x801cd888, size: 532, name: menu_gfx_enqueue_textured_quad, hash: 9f5ded393ed34318, source: src/shared/menu/menu_gfx_enqueue_textured_quad.c}
@@ -1423,7 +1423,7 @@ functions:
   - {addr: 0x801c9774, size: 164, name: menu_update_wrapped_horizontal_selection, hash: 46f4d2bb5ca95d72, source: src/shared/menu/menu_update_wrapped_horizontal_selection.c}
   - {addr: 0x801c9818, size: 104, name: equip_menu_update_horizontal_selection_and_mark_change, hash: 308db0791e6f9542}
   - {addr: 0x801c9880, size: 32, name: equip_input_clear_state, hash: b52e8464d8df1dd7}
-  - {addr: 0x801c98a0, size: 256, name: equip_gfx_enqueue_tile, hash: 9d6c6dff6c1087ff}
+  - {addr: 0x801c98a0, size: 256, name: equip_gfx_enqueue_tile, hash: 9d6c6dff6c1087ff, source: src/shared/gfx/gfx_enqueue_tile.c, source_symbol: gfx_enqueue_tile}
   - {addr: 0x801c99a0, size: 260, name: equip_gfx_enqueue_line_f2, hash: 7409b09d6428807a}
   - {addr: 0x801c9aa4, size: 632, name: menu_gfx_enqueue_textured_quad_list, hash: 5f606e521d761091, source: src/shared/menu/menu_gfx_enqueue_textured_quad_list.c}
   - {addr: 0x801c9d1c, size: 532, name: menu_gfx_enqueue_textured_quad, hash: e79e4c2c08e12fd9, source: src/shared/menu/menu_gfx_enqueue_textured_quad.c}
@@ -1808,6 +1808,7 @@ overrides:
   - {function: equip_cmd_set_zoomed_draw_area_handler, name: g_bunit_gfx_otag_index_locked, addr: 0x801e9048}
   - {function: equip_cmd_set_zoomed_draw_area_handler, name: g_bunit_gfx_transition_frame, addr: 0x801d8764}
   - {function: equip_cmd_set_zoomed_draw_area_handler, name: g_bunit_gfx_window_zoom_percent, addr: 0x801d8784}
+  - {function: equip_gfx_enqueue_tile, name: g_bunit_gfx_tile_count, addr: 0x801e9234}
   - {function: equip_thread_stop_and_clear_state, name: card_thread_request_stop, addr: 0x801c8ef4}
   - {function: menu_build_unit_portrait_transition, name: attack_gfx_build_portrait_poly_ft4, addr: 0x801bfdf8}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_origin, addr: 0x801ce584}

@@ -865,7 +865,7 @@ functions:
   - {addr: 0x8012bd14, size: 104, name: world_input_read_tutorial_or_controller, hash: b7ae4cb3cff53d07}
   - {addr: 0x8012bd7c, size: 32, name: world_input_clear_state, hash: 1d40a8afb9ba0b8b}
   - {addr: 0x8012bd9c, size: 32, name: world_game_reset, hash: 0002116356e621bf}
-  - {addr: 0x8012bdbc, size: 256, name: world_gfx_enqueue_tile, hash: 9f150427cc8f609b}
+  - {addr: 0x8012bdbc, size: 256, name: world_gfx_enqueue_tile, hash: 9f150427cc8f609b, source: src/shared/gfx/gfx_enqueue_tile.c, source_symbol: gfx_enqueue_tile}
   - {addr: 0x8012bebc, size: 344, name: world_gfx_append_poly_f4_to_otag, hash: 7a9732f67b0bc603}
   - {addr: 0x8012c014, size: 460, name: world_gfx_enqueue_gouraud_quad, hash: 40fb9a0164d41558}
   - {addr: 0x8012c1e0, size: 260, name: world_gfx_enqueue_line_f2, hash: fccfcca88962f07d}
@@ -2384,6 +2384,8 @@ overrides:
   - {function: world_gfx_enqueue_gouraud_textured_quad, name: g_menu_gfx_context, addr: 0x801cd528}
   - {function: world_gfx_enqueue_textured_quad_corners, name: g_menu_gfx_context, addr: 0x801cd528}
   - {function: world_gfx_enqueue_textured_quad_corners, name: g_menu_gfx_poly_ft4_count, addr: 0x801cd1cc}
+  - {function: world_gfx_enqueue_tile, name: g_bunit_gfx_tile_count, addr: 0x801cd514}
+  - {function: world_gfx_enqueue_tile, name: g_menu_gfx_context, addr: 0x801cd528}
   - {function: world_gfx_init_scaled_draw_area_packets, name: g_menu_draw_area_template, addr: 0x801531b0}
   - {function: world_gfx_set_blit_source_rect, name: g_world_gfx_image_blit_source, addr: 0x801c000c}
   - {function: world_is_skillset_in_spell_quote_exception_list, name: g_battle_spell_quote_exception_skillsets, addr: 0x80156748}

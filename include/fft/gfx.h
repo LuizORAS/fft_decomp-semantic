@@ -121,6 +121,8 @@ typedef struct urect16 {
 } urect16_t;
 typedef char assert_urect16_size[sizeof(urect16_t) == 8 ? 1 : -1];
 
+void gfx_enqueue_tile(const RECT* rect, const rgb24_t* color, u8 semi, s32 idx);
+
 /* texture coordinates */
 /* Eight-bit texture coordinates within a PS1 texture page. */
 typedef struct uv8 {
