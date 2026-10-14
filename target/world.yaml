@@ -356,7 +356,7 @@ functions:
   - {addr: 0x800fb9ec, size: 808, name: world_unit_save_staged_status_data, hash: 2d5ffba79c302f1b}
   - {addr: 0x800fbd14, size: 1072, name: world_unit_apply_staged_status_data, hash: 3be2d406abbb256c}
   - {addr: 0x800fc144, size: 432, name: world_unit_update_staged_status_data, hash: 269b013af6ab131a}
-  - {addr: 0x800fc2f4, size: 632, name: world_script_inflict_status_thread, hash: 2d2fdf0577757d84}
+  - {addr: 0x800fc2f4, size: 632, name: world_script_inflict_status_thread, hash: 2d2fdf0577757d84, source: src/shared/script/script_inflict_status_thread.c, source_symbol: script_inflict_status_thread}
   - {addr: 0x800fc56c, size: 216, name: world_unit_inflict_status_by_event_unit_id, hash: 3f69fc963f96b44e}
   - {addr: 0x800fc644, size: 448, name: world_script_change_stats, hash: c63a08b76749f8fe, source: src/shared/script/script_change_stats.c, source_symbol: script_change_stats}
   - {addr: 0x800fc804, size: 248, name: world_script_unit_anim, hash: 2c433dd6a81d7c56, source: src/shared/script/script_unit_anim.c, source_symbol: script_unit_anim}
@@ -2877,6 +2877,11 @@ overrides:
   - {function: world_script_face_unit, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
   - {function: world_script_focus, name: camera_pick_nearest_unblocked_yaw, addr: 0x800fa760}
   - {function: world_script_focus, name: g_script_event_instruction_sizes, addr: 0x8013a454}
+  - {function: world_script_inflict_status_thread, name: battle_thread_get_current_parameter_1, addr: 0x80100090}
+  - {function: world_script_inflict_status_thread, name: battle_unit_get_battle_id_by_event_unit_id, addr: 0x800e1e40}
+  - {function: world_script_inflict_status_thread, name: battle_unit_update_staged_status_data, addr: 0x800fc144}
+  - {function: world_script_inflict_status_thread, name: g_battle_unit_status_staging_data, addr: 0x801a66a8}
+  - {function: world_script_inflict_status_thread, name: status_inflict_by_event_unit_id, addr: 0x800fc56c}
   - {function: world_script_load_next_event, name: battle_thread_find_running_by_task, addr: 0x800fd14c}
   - {function: world_script_load_next_event, name: g_script_loaded_event_id, addr: 0x80156b8c}
   - {function: world_script_load_next_event, name: script_load_event, addr: 0x800f0470}

@@ -52,7 +52,6 @@ void script_warp_unit(const event_warp_unit_parameters_t* parameters);
 void script_warp_unit_display_to_paired_unit(s32 runtime_id);
 
 /* unit statuses */
-void script_inflict_status_thread(void);
 
 /* camera */
 void script_earthquake_start(void);

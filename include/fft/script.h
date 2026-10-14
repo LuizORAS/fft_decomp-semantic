@@ -1063,6 +1063,7 @@ void script_unit_anim(const event_unit_anim_parameters_t* parameters);
 void script_face_tile(const event_face_tile_parameters_t* parameters);
 void script_face_unit(const event_face_unit_parameters_t* parameters, s32 second_only);
 void script_rotate_unit(const event_rotate_unit_parameters_t* parameters);
+void script_inflict_status_thread(void);
 /* TeleportIn forwards the unit ID; the interpreter's second argument is unused. */
 void script_teleportin_event_instruction(s32 unit_id, s32 unused);
 void script_jump_event_instruction(const event_jump_parameters_t* parameters);

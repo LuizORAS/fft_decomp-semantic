@@ -1,4 +1,3 @@
-#include "fft/battle_script.h"
 #include "fft/battle_status.h"
 #include "fft/battle_unit.h"
 #include "fft/main.h"
@@ -6,15 +5,8 @@
 #include "fft/sound.h"
 #include "fft/thread.h"
 #include "fft/unit.h"
-#include "psx/types.h"
 
-/* Battle twin of world_script_inflict_status_thread: Inflict Status event command thread.
- *
- * Parameters: event unit id 16-bit value, mode byte, then a wait-frame 16-bit value.
- * Mode 0 revives a dead unit at 1 HP with Critical (or refreshes its mounted
- * animation when it is neither dead nor critical). Mode 1 clears Dead/Critical
- * and inflicts Crystal. Mode 2 inflicts Poison with the kneeling animation. Each mode
- * records the matching staged exit mode for the later status-application pass. */
+/* Apply the event status mode and stage its matching exit action. */
 void script_inflict_status_thread(void) {
     event_inflict_status_parameters_t* parameters;
     s32 unit_id;
