@@ -4,10 +4,11 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* The completion value written to the thread's
+/* Build the skillset list, then wait for its submenu or run icon selection.
+ * The completion value written to the thread's
  * second parameter is materialised before the branch, which puts `li v1,1`
  * in the beqz delay slot ahead of the 0xFC argument. */
-void world_menu_run_skillset_thread(void) {
+void menu_run_skillset_thread(void) {
     s32 param_value;
     menu_unit_selection_record_t* row;
     s32* param;

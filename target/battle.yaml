@@ -931,7 +931,7 @@ functions:
   - {addr: 0x8013fa6c, size: 1980, name: battle_menu_build_ability_list, hash: e5703c8ed198f2b4}
   - {addr: 0x80140228, size: 676, name: battle_menu_select_unit_action_slots_thread, hash: 87d49228f479ab3f}
   - {addr: 0x801404cc, size: 608, name: battle_menu_build_skillset_entries, hash: 8eb75ddae5f9878f, source: src/shared/menu/menu_build_skillset_entries.c, source_symbol: menu_build_skillset_entries}
-  - {addr: 0x8014072c, size: 352, name: battle_menu_run_skillset_thread, hash: 0118d3a7350bf25a}
+  - {addr: 0x8014072c, size: 352, name: battle_menu_run_skillset_thread, hash: 0118d3a7350bf25a, source: src/shared/menu/menu_run_skillset_thread.c, source_symbol: menu_run_skillset_thread}
   - {addr: 0x8014088c, size: 124, name: battle_menu_record_selection_for_selected_unit, hash: b4c2ab0905447fd9}
   - {addr: 0x80140908, size: 120, name: battle_menu_build_main, hash: e61d23b9e437fa0c}
   - {addr: 0x80140980, size: 36, name: sound_queue_sfx_confirm_unless_restoring, hash: 2747c4df037dcfba, source: src/shared/sound/sound_queue_sfx_confirm_unless_restoring.c}
@@ -2922,6 +2922,14 @@ imports:
 
 overrides:
   - {function: battle_gfx_init_scaled_draw_area_packets, name: g_menu_draw_area_template, addr: 0x80165ecc}
+  - {function: battle_menu_run_skillset_thread, name: g_world_menu_monster_skillset_flag, addr: 0x80169840}
+  - {function: battle_menu_run_skillset_thread, name: g_world_menu_restore_depth, addr: 0x8014d325}
+  - {function: battle_menu_run_skillset_thread, name: g_world_menu_unit_selection_rows, addr: 0x8014d46c}
+  - {function: battle_menu_run_skillset_thread, name: world_menu_build_skillset_entries, addr: 0x801404cc}
+  - {function: battle_menu_run_skillset_thread, name: world_menu_check_action_restrictions, addr: 0x80140b04}
+  - {function: battle_menu_run_skillset_thread, name: world_menu_run_icon_selection_loop, addr: 0x80138ed8}
+  - {function: battle_menu_run_skillset_thread, name: world_menu_select_unit_action_slots_thread, addr: 0x80140228}
+  - {function: battle_menu_run_skillset_thread, name: world_thread_is_running_asm, addr: 0x8014cc94}
   - {function: camera_set_zoom_delta_from_values, name: g_camera_real_coord_countdown, addr: 0x80096164}
   - {function: camera_set_zoom_delta_from_values, name: g_camera_real_coord_delta, addr: 0x800a1c74}
   - {function: camera_update_zoom_animation, name: g_camera_current_real_coords, addr: 0x800c7ca0}

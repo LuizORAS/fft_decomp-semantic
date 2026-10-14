@@ -278,7 +278,7 @@ functions:
   - {addr: 0x800f32e4, size: 1980, name: world_menu_build_ability_list, hash: 3c2abc1fea8e3c9c}
   - {addr: 0x800f3aa0, size: 676, name: world_menu_select_unit_action_slots_thread, hash: f8f5c64ec1b3af4c}
   - {addr: 0x800f3d44, size: 608, name: world_menu_build_skillset_entries, hash: 94131cbbb78792ba, source: src/shared/menu/menu_build_skillset_entries.c, source_symbol: menu_build_skillset_entries}
-  - {addr: 0x800f3fa4, size: 352, name: world_menu_run_skillset_thread, hash: 39f4d2e5aa1934c7}
+  - {addr: 0x800f3fa4, size: 352, name: world_menu_run_skillset_thread, hash: 39f4d2e5aa1934c7, source: src/shared/menu/menu_run_skillset_thread.c, source_symbol: menu_run_skillset_thread}
   - {addr: 0x800f4104, size: 124, name: world_menu_record_selection_for_selected_unit, hash: d5e1f7fe303d084c}
   - {addr: 0x800f4180, size: 120, name: world_menu_build_main, hash: 8c0005b9d4465929}
   - {addr: 0x800f41f8, size: 36, name: sound_queue_sfx_confirm_unless_restoring, hash: e5915fc070be8986, source: src/shared/sound/sound_queue_sfx_confirm_unless_restoring.c}

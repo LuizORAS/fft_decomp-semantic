@@ -1459,6 +1459,7 @@ extern s16 g_menu_pending_selection[4];
 void menu_mini_menu_cancel_delay_thread(void);
 void menu_confirm_sound_delay_thread(void);
 void menu_check_action_restrictions(void);
+void menu_run_skillset_thread(void);
 
 /* horizontal selection */
 extern s16 g_menu_selection_values[];
