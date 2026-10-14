@@ -288,7 +288,7 @@ extern RECT g_require_special_portrait_palette_rect;
 extern RECT g_require_special_portrait_rect;
 
 /* graphics */
-extern s16 g_require_gfx_draw_offset_y;
+extern u16 g_require_gfx_draw_offset_y;
 extern u8 g_require_gfx_fade_rgb[3];
 extern u8 g_require_gfx_formation_sprite_groups[][3];
 extern POLY_FT4 g_require_gfx_poly_ft4_buffers[2][30];
