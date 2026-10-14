@@ -430,7 +430,7 @@ functions:
   - {addr: 0x801cb2c0, size: 16, name: menu_gfx_get_draw_color, hash: cd5c665fda37b57c, source: src/shared/menu/menu_gfx_get_draw_color.c}
   - {addr: 0x801cb2d0, size: 320, name: bunit_menu_scroll_list_by_page, hash: 267e3c7bf3437203}
   - {addr: 0x801cb410, size: 284, name: bunit_input_read_page_scroll_direction, hash: c9c3ae74b59d1149}
-  - {addr: 0x801cb52c, size: 308, name: bunit_text_render_glyph_to_4bpp_image, hash: 19147e4fe2464c4d}
+  - {addr: 0x801cb52c, size: 308, name: bunit_text_render_glyph_to_4bpp_image, hash: 19147e4fe2464c4d, source: src/shared/menu/menu_text_render_glyph_to_4bpp_image.c, source_symbol: menu_text_render_glyph_to_4bpp_image}
   - {addr: 0x801cb660, size: 92, name: menu_text_find_entry_by_index, hash: 01a8767dd4ceba70, source: src/shared/menu/menu_text_find_entry_by_index.c}
   - {addr: 0x801cb6bc, size: 648, name: menu_text_render_encoded_ids_to_image, hash: 52056952222908be, source: src/shared/menu/menu_text_render_encoded_ids_to_image.c}
   - {addr: 0x801cb944, size: 208, name: bunit_text_concatenate_entries, hash: e9d08ebd80233029}
@@ -852,6 +852,8 @@ overrides:
   - {function: bunit_cmd_draw_textured_quad_handler, name: g_equip_menu_list_row_height, addr: 0x801ec8c0}
   - {function: bunit_menu_set_palette_mode, name: g_menu_text_color, addr: 0x801ec8b0}
   - {function: bunit_menu_update_wrapped_grid_selection, name: g_world_menu_sound_effect_id, addr: 0x801ecaac}
+  - {function: bunit_text_render_glyph_to_4bpp_image, name: card_bits_init_primary_reader, addr: 0x801cbfc4}
+  - {function: bunit_text_render_glyph_to_4bpp_image, name: card_bits_read_primary, addr: 0x801cbfe0}
   - {function: menu_build_unit_portrait_transition, name: attack_gfx_build_portrait_poly_ft4, addr: 0x801bf434}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_origin, addr: 0x801cea5c}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_transition_offsets, addr: 0x801cecfc}
