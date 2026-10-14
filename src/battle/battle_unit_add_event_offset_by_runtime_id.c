@@ -1,4 +1,5 @@
 #include "fft/battle_unit.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* Add `amount` to a unit's event offset. The copy every caller uses;
