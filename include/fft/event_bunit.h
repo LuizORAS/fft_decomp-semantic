@@ -173,7 +173,7 @@ extern s32 g_bunit_character_status_dimmed;
 extern RECT g_bunit_character_status_draw_area_rect;
 extern u8 g_bunit_character_status_equipment_text_image[];
 extern RECT g_bunit_character_status_equipment_text_rect;
-extern u8 g_bunit_character_status_frame_config;
+extern menu_status_thread_t g_bunit_character_status_frame_config;
 extern RECT g_bunit_character_status_frame_rect;
 extern menu_status_panel_buffer_t g_bunit_character_status_frames[2];
 extern image_load_parameters_t g_bunit_character_status_item_icon_layout[5];
@@ -254,7 +254,7 @@ extern image_load_parameters_t g_bunit_editor_numeric_texture[];
 extern menu_status_panel_slot_storage_t g_bunit_editor_unit_fields;
 extern s32 g_bunit_numeric_editor_dimmed;
 extern s32 g_bunit_numeric_editor_redraw_request;
-extern u8 g_bunit_numeric_editor_thread_params;
+extern menu_status_thread_t g_bunit_numeric_editor_thread_params;
 
 void bunit_menu_run_numeric_editor_thread(void);
 
