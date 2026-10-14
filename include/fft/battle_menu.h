@@ -9,7 +9,6 @@
 /* menu state */
 extern s32 g_battle_active_menu; /* active menu */
 extern u16 g_battle_menu_at_list_selection_finished;
-extern s32 g_battle_menu_current_id; /* battle_menu_id_e */
 extern s32 g_battle_menu_help_open;
 extern s32 g_battle_menu_help_opening;
 extern battle_menu_id_record_t g_battle_menu_id_records[31];
@@ -362,12 +361,6 @@ void battle_menu_run_companion_overlay_stub(void);
 /* threads */
 extern s32 g_battle_menu_building_thread_started;
 extern s32 g_battle_menu_slot_owner_thread_ids[3];
-/* BATTLE's current menu-entry table pointer at 0x80173cb8 (menu threads are
- * started on &table[i]): battle_menu_init_subsystem_pointers points it at
- * g_battle_menu_idle_action_entries, and the event overlays that run over
- * BATTLE swap in their own tables and restore it. WORLD's twin is
- * g_world_menu_thread_menu_data. */
-extern menu_entry_t* g_battle_menu_thread_menu_data;
 
 s32 battle_menu_init_attack_resources_and_threads(void);
 s32 battle_menu_is_still_building(void);

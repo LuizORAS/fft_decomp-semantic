@@ -16,7 +16,7 @@ void world_menu_resize_parent_entry_to_digits(void) {
     entry = (menu_entry_t*)g_threads[g_thread_current_id].function_parameter_1;
     index = entry->row_actions[0];
     if (index < 1000) {
-        entry = &g_world_menu_thread_menu_data[index];
+        entry = &g_menu_thread_menu_data[index];
         /* Preserve the original caller's unset argument. */
         digits = text_count_decimal_digits(value);
         width = digits * 6;

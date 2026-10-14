@@ -11,9 +11,9 @@ void world_menu_start_or_poll_thread(s32 thread_id, menu_entry_t* data) {
 
     if (g_world_menu_thread_running_status == 0) {
         world_menu_stop_thread_and_wait(thread_id);
-        g_world_menu_thread_menu_data = data;
+        g_menu_thread_menu_data = data;
         thread_start(thread_id, data->thread_entry);
-        thread_set_parameters(thread_id, (s32)g_world_menu_thread_menu_data, 0, 0);
+        thread_set_parameters(thread_id, (s32)g_menu_thread_menu_data, 0, 0);
         for (i = 0; i < 20; i++) {
             world_input_update_event_state(unused, 0, 0);
         }

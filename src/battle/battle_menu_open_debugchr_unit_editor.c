@@ -32,7 +32,7 @@ void battle_menu_open_debugchr_unit_editor(void) {
     g_battle_menu_suspend_state = 0;
     g_sound_suppressed = 0;
     g_script_event_input = 0;
-    battle_menu_build_idle_action_menu(g_battle_menu_current_id);
+    battle_menu_build_idle_action_menu(g_menu_current_id);
     battle_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, *selected, *selected);
     battle_menu_clear_modal_open();
     battle_menu_leave_status_screen_selection();

@@ -35,7 +35,7 @@ void battle_menu_run_equip_thread(void) {
         g_script_event_input = 0;
         thread_yield();
     } while (g_battle_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
-    g_battle_menu_thread_menu_data = g_battle_menu_idle_action_entries;
+    g_menu_thread_menu_data = g_battle_menu_idle_action_entries;
     g_battle_menu_action_slot_row_actions[0] = -3;
     g_sound_suppressed = 1;
     g_script_event_input |= PSX_PAD_CIRCLE;

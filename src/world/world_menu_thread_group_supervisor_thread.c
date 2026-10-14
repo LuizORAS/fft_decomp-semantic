@@ -53,7 +53,7 @@ void world_menu_thread_group_supervisor_thread(void) {
         for (i = 0; i < 3; i++) {
             if (state[group->thread_id[i]] != 0 && group->function[i] != (void (*)(void))-1) {
                 thread_start(group->thread_id[i], group->function[i]);
-                thread_set_parameters(group->thread_id[i], (s32)&g_world_menu_thread_menu_data[i], 0, 0);
+                thread_set_parameters(group->thread_id[i], (s32)&g_menu_thread_menu_data[i], 0, 0);
                 g_threads[group->thread_id[i]].task_id = group->task_id[i];
             }
         }

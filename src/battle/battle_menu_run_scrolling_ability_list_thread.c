@@ -22,7 +22,7 @@
  * g_battle_menu_ability_list_clut_rect as the first of five CLUTs in a buffer, derives the other four from it
  * and blinks CLUTs 3/4 while it runs. Square/Circle on a row whose text is not
  * 0x7000 starts battle_menu_preview_ability_turn_at_list in the previous
- * thread slot (with entry 52 of g_battle_menu_thread_menu_data) and blinks CLUTs 1/2 until
+ * thread slot (with entry 52 of g_menu_thread_menu_data) and blinks CLUTs 1/2 until
  * it finishes.
  *
  * Layout notes: the blink loop's exit block sits inside the loop as
@@ -196,7 +196,7 @@ void battle_menu_run_scrolling_ability_list_thread(void) {
                 sound_queue_sfx_cursor_move();
                 thread_start(g_thread_current_id - 1, battle_menu_preview_ability_turn_at_list);
                 thread_set_parameters(g_thread_current_id - 1,
-                    (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST], 0, 0);
+                    (s32)&g_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST], 0, 0);
                 column = 0;
                 while (1) {
                     if (battle_thread_is_running_asm(g_thread_current_id - 1) == 0) {

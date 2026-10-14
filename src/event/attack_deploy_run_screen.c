@@ -47,7 +47,7 @@ void attack_deploy_run_screen(void) {
     u8* tiles;
 
     first_pass = 1;
-    g_battle_menu_thread_menu_data = g_attack_deploy_menu_entries;
+    g_menu_thread_menu_data = g_attack_deploy_menu_entries;
     MoveImage(&g_attack_deploy_vram_copy_rect, g_attack_deploy_vram_copy_x, g_attack_deploy_vram_copy_y);
     LoadImage(&g_attack_deploy_arrow_clut_rect, g_attack_deploy_arrow_clut_data);
     thread_yield();
@@ -332,7 +332,7 @@ ramza_placed:
                         *deployed = 1;
                         thread_start(ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU, battle_menu_icon_linked_entry_thread);
                         thread_set_parameters(
-                            ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU, (s32)&g_battle_menu_thread_menu_data[3], 0, 0);
+                            ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU, (s32)&g_menu_thread_menu_data[3], 0, 0);
                         thread_wait_until_inactive(ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU);
                         thread_wait_until_inactive(ATTACK_PROMPT_THREAD_SLOT_CONFIRM_MENU_CHILD);
                         *deployed = cursor;

@@ -34,5 +34,5 @@ void battle_menu_restore_selection_for_selected_unit(s32 menu_id) {
             }
         }
     }
-    g_battle_menu_thread_menu_data[menu_id].selected_index = record->command_index;
+    g_menu_thread_menu_data[menu_id].selected_index = record->command_index;
 }

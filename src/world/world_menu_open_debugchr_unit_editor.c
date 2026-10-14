@@ -23,7 +23,7 @@ void world_menu_open_debugchr_unit_editor(void) {
         g_world_menu_overlay_state = 0;
         g_world_menu_sound_muted = 0;
         g_script_event_input = 0;
-        world_menu_build_idle_action_stub(g_world_menu_current_id);
+        world_menu_build_idle_action_stub(g_menu_current_id);
         world_unit_start_view_thread(UNIT_VIEW_MODE_UNIT_SUMMARY, *unit_index, *unit_index);
         world_menu_clear_transition_active_flag();
         battle_menu_leave_status_screen_selection();

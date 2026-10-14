@@ -16,7 +16,7 @@ void battle_menu_init_subsystem_pointers(void) {
     g_menu_glyph_sheet = &g_battle_menu_glyph_image_data;
     g_script_event_block = g_main_script_event_block;
     g_script_variables = g_main_script_variables;
-    g_battle_menu_thread_menu_data = g_battle_menu_idle_action_entries;
+    g_menu_thread_menu_data = g_battle_menu_idle_action_entries;
     g_battle_help_active_text_id_tables = (u16* const*)-1;
     g_battle_unit_graphics_load_pending = 0;
     g_script_threads_idle = 0;

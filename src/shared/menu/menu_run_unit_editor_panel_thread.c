@@ -220,7 +220,7 @@ void menu_run_unit_editor_panel_thread(void) {
                         && g_battle_menu_active_turn_banner.team_kind != 1))) {
                 thread_start(g_thread_current_id - 1, battle_menu_build_unit_status_list);
                 thread_set_parameters(
-                    g_thread_current_id - 1, (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
+                    g_thread_current_id - 1, (s32)&g_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
             }
         }
         gfx_draw_or_append_gpu_primitive(&frame_record->draw_areas.areas[1]);
@@ -262,6 +262,6 @@ void menu_run_unit_editor_panel_thread(void) {
     g_thread_contexts[THREAD_SLOT_TILE_INFO_PANEL].task_id = THREAD_TASK_TILE_INFO_PANEL;
     g_battle_menu_suspend_state = 0;
     battle_menu_leave_status_screen_selection();
-    battle_menu_build_idle_action_menu(g_battle_menu_current_id);
+    battle_menu_build_idle_action_menu(g_menu_current_id);
     thread_exit_current();
 }

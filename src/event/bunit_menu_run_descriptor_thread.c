@@ -9,9 +9,9 @@ s32 bunit_menu_run_descriptor_thread(s32 id, menu_entry_t* desc) {
         if (thread_is_running(id) != 0) {
             return 1;
         }
-        g_battle_menu_thread_menu_data = desc;
+        g_menu_thread_menu_data = desc;
         thread_start(id, desc->thread_entry);
-        thread_set_parameters(id, (s32)g_battle_menu_thread_menu_data, 0, 0);
+        thread_set_parameters(id, (s32)g_menu_thread_menu_data, 0, 0);
         g_bunit_menu_thread_running = 1;
     }
     g_bunit_menu_thread_running = thread_is_running(id);

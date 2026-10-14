@@ -35,8 +35,8 @@ s32 battle_menu_dispatch_system_function(
     s32 flags;
     u8 item_id;
 
-    g_battle_menu_thread_menu_data = g_battle_menu_idle_action_entries;
-    g_battle_menu_current_id = BATTLE_MENU_ID_NONE;
+    g_menu_thread_menu_data = g_battle_menu_idle_action_entries;
+    g_menu_current_id = BATTLE_MENU_ID_NONE;
     g_menu_restore_pending = 0;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     if (command == BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK) {

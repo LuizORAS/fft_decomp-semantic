@@ -14,7 +14,7 @@ void world_menu_load_text_1c18(void) {
     thread_call_on_main_stack(DISC_SECTOR_EVENT_OPEN_LZW, 0x5800, g_world_menu_text_file_buffer);
     world_menu_reset_subsystems();
     script_set_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE, 0);
-    g_world_menu_thread_menu_data = g_world_menu_default_entries;
+    g_menu_thread_menu_data = g_world_menu_default_entries;
     for (i = 0; i < TEXT_SECTION_COUNT; i++) {
         g_text_section_pointers[i]
             = g_world_menu_text_file_buffer[i] + (u8*)&g_world_menu_text_file_buffer[TEXT_SECTION_COUNT];

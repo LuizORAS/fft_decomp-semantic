@@ -13,7 +13,7 @@ void world_map_confirm_destination(void) {
     s32 selection;
     s16 value;
 
-    selection = g_world_menu_thread_menu_data[6].selected_index;
+    selection = g_menu_thread_menu_data[6].selected_index;
     if (g_world_menu_location_list_row_colors[selection] != 4) {
         s16* pending = g_menu_pending_selection;
 

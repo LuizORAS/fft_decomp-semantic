@@ -12,7 +12,7 @@ void world_menu_build_submenu_text_id_page(void) {
     s32 i;
     u8* src;
 
-    selection = g_world_menu_thread_menu_data[9].selected_index;
+    selection = g_menu_thread_menu_data[9].selected_index;
     count = g_world_menu_submenu_page_counts[selection];
     src = g_world_menu_submenu_page_text_ids[selection];
     for (i = 0; i < count; i++) {

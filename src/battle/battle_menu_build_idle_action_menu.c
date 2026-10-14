@@ -31,12 +31,12 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
     if (g_menu_input_mode != MENU_INPUT_BLOCKED) {
         if ((g_battle_menu_suspend_state == 0) && (g_battle_menu_help_open == 0)
             && (g_battle_menu_building_thread_started == 0) && (menu_id != BATTLE_MENU_ID_NONE)) {
-            g_battle_menu_current_id = menu_id;
-            g_battle_menu_thread_menu_data = g_battle_menu_idle_action_entries;
+            g_menu_current_id = menu_id;
+            g_menu_thread_menu_data = g_battle_menu_idle_action_entries;
             battle_unit_project_to_screen(
                 battle_unit_get_runtime_id_by_battle_id(g_battle_active_turn_unit.battle_id), &screen_position);
             i = 0;
-            entry = g_battle_menu_thread_menu_data;
+            entry = g_menu_thread_menu_data;
             label_table = g_battle_menu_idle_action_entry_labels;
             /* Two window x bytes per entry; a projected x of 0x101 or more uses the second. */
             column = screen_position.vx >= 0x101;
@@ -52,7 +52,7 @@ void battle_menu_build_idle_action_menu(s32 menu_id) {
                 entry += 1;
             } while (i < IDLE_ACTION_MENU_ENTRY_COUNT);
             battle_menu_restore_selection_for_selected_unit(menu_id);
-            selected_index = &g_battle_menu_thread_menu_data[8].selected_index;
+            selected_index = &g_menu_thread_menu_data[8].selected_index;
             *selected_index = 0;
             g_battle_menu_status_scroll_offset = 0;
             battle_menu_clear_entry_selections();

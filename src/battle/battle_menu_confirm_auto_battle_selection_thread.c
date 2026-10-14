@@ -9,7 +9,7 @@ void battle_menu_confirm_auto_battle_selection_thread(void) {
 
     parameter = (menu_entry_t*)battle_thread_get_current_parameter_1();
     attacker = battle_unit_get_attacker_data_pointer();
-    menu = g_battle_menu_thread_menu_data[BATTLE_MENU_ID_AUTO_BATTLE].selected_index;
+    menu = g_menu_thread_menu_data[BATTLE_MENU_ID_AUTO_BATTLE].selected_index;
     if (menu == 3) {
         attacker->auto_battle_setting = AI_AUTOBATTLE_FADING_LIFE;
     } else if (menu == 4) {

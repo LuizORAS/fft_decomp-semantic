@@ -29,7 +29,7 @@ void world_card_update_menu_request(void) {
         result = world_card_run_menu_screen(1);
         world_formation_reset_menu_context();
         g_world_menu_screen_open_request = 0;
-        g_world_menu_thread_menu_data = g_world_menu_default_entries;
+        g_menu_thread_menu_data = g_world_menu_default_entries;
         world_formation_save_and_set_system_flags();
         if (result == 1) {
             g_world_card_menu_request_state = WORLD_SCREEN_REQUEST_IDLE;

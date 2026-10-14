@@ -41,8 +41,8 @@ void world_menu_handle_entry_confirm(menu_entry_t* entry, s32 row_index) {
         }
         if (target >= 0) {
             if (target < 0x100) {
-                thread_start(g_thread_current_id - 1, g_world_menu_thread_menu_data[target].thread_entry);
-                thread_set_parameters(g_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[target], 0, 0);
+                thread_start(g_thread_current_id - 1, g_menu_thread_menu_data[target].thread_entry);
+                thread_set_parameters(g_thread_current_id - 1, (s32)&g_menu_thread_menu_data[target], 0, 0);
             } else if (target == MENU_ROW_ACTION_CLEAR_SELECTION) {
                 row_index = -1;
             }

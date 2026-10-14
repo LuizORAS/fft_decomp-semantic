@@ -10,9 +10,9 @@ void card_menu_start_or_poll_thread(s32 thread_id, menu_entry_t* descriptor) {
 
     if (g_card_thread_state == 0) {
         card_menu_stop_thread_and_wait(thread_id);
-        g_battle_menu_thread_menu_data = descriptor;
+        g_menu_thread_menu_data = descriptor;
         thread_start(thread_id, descriptor->thread_entry);
-        thread_set_parameters(thread_id, (s32)g_battle_menu_thread_menu_data, 0, 0);
+        thread_set_parameters(thread_id, (s32)g_menu_thread_menu_data, 0, 0);
         for (i = 0; i < 20; i++) {
             card_input_update_event_state(state, 0, 0);
         }

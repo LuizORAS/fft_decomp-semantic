@@ -1992,7 +1992,6 @@ extern u16 g_world_menu_clut_front_alt;
 extern s32 g_world_menu_color_blue;
 extern s32 g_world_menu_color_green;
 extern s32 g_world_menu_color_red;
-extern s32 g_world_menu_current_id; /* battle_menu_id_e */
 extern s16 g_world_menu_cursor_position;
 extern s16 g_world_menu_cursor_positions[16];
 extern s32 g_world_menu_description_text_id;
@@ -2231,7 +2230,6 @@ extern menu_window_rect_source_t* g_world_menu_window_rect_source;
 extern s16 g_world_menu_selection_results[16];
 extern s32 g_world_grid_menu_id; /* menu_grid_help_id_e */
 extern s16 g_world_menu_scenario_event_started;
-extern menu_entry_t* g_world_menu_thread_menu_data;
 
 extern menu_callback_t g_world_menu_script_callbacks[16];
 extern u16 g_world_menu_disabled_number_clut;

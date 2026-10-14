@@ -14,9 +14,9 @@ void world_menu_record_selection_for_selected_unit(void) {
     s16* stored_unit = &g_world_active_unit_data.battle_id;
 
     for (i = 0; i < 12; i++) {
-        if (g_world_menu_current_id == g_world_menu_command_maps[i].menu_id) {
+        if (g_menu_current_id == g_world_menu_command_maps[i].menu_id) {
             ((u8*)g_world_menu_unit_selection_rows)[*stored_unit * WORLD_MENU_UNIT_SELECTION_RECORD_BYTES]
-                = g_world_menu_thread_menu_data[g_world_menu_current_id].selected_index;
+                = g_menu_thread_menu_data[g_menu_current_id].selected_index;
         }
     }
 }

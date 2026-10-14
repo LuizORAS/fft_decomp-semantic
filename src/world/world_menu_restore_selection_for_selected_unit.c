@@ -31,5 +31,5 @@ void world_menu_restore_selection_for_selected_unit(s32 menu_index) {
             }
         }
     }
-    g_world_menu_thread_menu_data[menu_index].selected_index = row->command_index;
+    g_menu_thread_menu_data[menu_index].selected_index = row->command_index;
 }

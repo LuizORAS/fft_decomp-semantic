@@ -52,8 +52,8 @@ void battle_menu_handle_action(menu_entry_t* menu, s32 selected_option) {
     }
     if (action >= 0) {
         if (action < 0x100) {
-            thread_start(g_thread_current_id - 1, g_battle_menu_thread_menu_data[action].thread_entry);
-            thread_set_parameters(g_thread_current_id - 1, (s32)&g_battle_menu_thread_menu_data[action], 0, 0);
+            thread_start(g_thread_current_id - 1, g_menu_thread_menu_data[action].thread_entry);
+            thread_set_parameters(g_thread_current_id - 1, (s32)&g_menu_thread_menu_data[action], 0, 0);
         } else if (action == MENU_ROW_ACTION_CLEAR_SELECTION) {
             selected_option = -1;
         }

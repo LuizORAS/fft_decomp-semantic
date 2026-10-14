@@ -36,8 +36,8 @@ void battle_menu_build_ability_list(s32 mode) {
     g_battle_ability_menu_layout.text_ids[2] = (s16*)g_ai_workspace_ptr->ability_list.extras;
     unit_index = g_battle_active_turn_unit.battle_id;
     unit = battle_unit_get_attacker_data_pointer();
-    type = g_action_menu_row_types[g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
-    skillset = g_action_menu_skillsets[g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
+    type = g_action_menu_row_types[g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
+    skillset = g_action_menu_skillsets[g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
     g_battle_menu_selected_action.skillset_id = skillset;
     for (i = 0; i < 0x50; i++) {
         g_ai_workspace_ptr->ability_list.ids[i] = 0xFFFF;
@@ -176,11 +176,11 @@ void battle_menu_build_ability_list(s32 mode) {
         columns = 5;
     }
 
-    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].inner_width = window_x;
-    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window.w = window_x;
-    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].text_image.width = window_x;
-    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].header_id = row_mode;
-    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].select_text_table = columns;
+    g_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].inner_width = window_x;
+    g_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window.w = window_x;
+    g_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].text_image.width = window_x;
+    g_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].header_id = row_mode;
+    g_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].select_text_table = columns;
     for (i = 0; i < count; i++) {
         g_ai_workspace_ptr->ability_list.ids[i] |= row_flags;
         if (type == ACTION_MENU_TYPE_DEFAULT) {
@@ -199,20 +199,20 @@ void battle_menu_build_ability_list(s32 mode) {
     }
     if (count == 0) {
         count = 1;
-        g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].header_id = 0;
+        g_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].header_id = 0;
         g_ai_workspace_ptr->ability_list.ids[0] = TEXT_ID_ABILITY_NAME_BASE;
         g_ai_workspace_ptr->ability_list.values[0] = 0;
         g_ai_workspace_ptr->ability_list.extras[0] = 0;
         g_battle_menu_ability_display_flags[0] = 4;
     }
-    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window.y = 0x30;
+    g_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window.y = 0x30;
     if (count >= 7) {
         g_battle_ability_menu_layout.hidden_rows = count - 6;
         g_battle_ability_menu_layout.row_count = 6;
     } else {
         g_battle_ability_menu_layout.hidden_rows = 0;
         g_battle_ability_menu_layout.row_count = count;
-        g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window.y += (6 - count) * 8;
+        g_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].window.y += (6 - count) * 8;
     }
     /* The menu thread's redraw, cursor and refresh parameters. */
     g_thread_contexts[g_thread_current_id].function_parameter_2 = 1;

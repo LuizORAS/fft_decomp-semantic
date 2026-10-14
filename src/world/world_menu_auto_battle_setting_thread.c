@@ -89,7 +89,7 @@ void world_menu_auto_battle_setting_thread(void) {
                     g_world_menu_auto_battle_row_actions[2] = BATTLE_MENU_ID_AUTO_BATTLE_TARGET;
                 }
                 previous = cursor;
-                g_world_menu_thread_menu_data[BATTLE_MENU_ID_AUTO_BATTLE_TARGET].selected_index = 0;
+                g_menu_thread_menu_data[BATTLE_MENU_ID_AUTO_BATTLE_TARGET].selected_index = 0;
                 world_menu_handle_entry_confirm(param, previous);
             }
             for (j = 0; j < 5; j++) {

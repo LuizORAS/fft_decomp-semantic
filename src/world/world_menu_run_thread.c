@@ -14,9 +14,9 @@ s32 world_menu_run_thread(s32 thread_id, menu_entry_t* arg) {
             return 1;
         }
         fn = arg->thread_entry;
-        g_world_menu_thread_menu_data = arg;
+        g_menu_thread_menu_data = arg;
         thread_start(thread_id, fn);
-        thread_set_parameters(thread_id, (s32)g_world_menu_thread_menu_data, 0, 0);
+        thread_set_parameters(thread_id, (s32)g_menu_thread_menu_data, 0, 0);
         g_world_menu_thread_running_status = 1;
         return 1;
     }

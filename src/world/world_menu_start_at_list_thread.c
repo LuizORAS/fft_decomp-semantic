@@ -6,10 +6,10 @@
  * waits until that thread and the one below it have finished. */
 void world_menu_start_at_list_thread(void) {
     menu_entry_t* list = &g_world_menu_at_list_state;
-    menu_entry_t* saved = g_world_menu_thread_menu_data;
+    menu_entry_t* saved = g_menu_thread_menu_data;
 
     g_world_menu_at_list_state.select_text_table = 0x13;
-    g_world_menu_thread_menu_data = list;
+    g_menu_thread_menu_data = list;
     g_world_menu_at_list_state.context = &g_world_menu_at_list_entry_table;
     world_menu_init_at_list(list);
     thread_start(g_thread_current_id - 2, world_build_at_list);
@@ -18,6 +18,6 @@ void world_menu_start_at_list_thread(void) {
         thread_yield();
     } while (world_thread_is_running_asm(g_thread_current_id - 2) != 0
         || world_thread_is_running_asm(g_thread_current_id - 3) != 0);
-    g_world_menu_thread_menu_data = saved;
+    g_menu_thread_menu_data = saved;
     thread_exit_current();
 }

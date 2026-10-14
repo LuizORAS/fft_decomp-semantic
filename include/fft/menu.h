@@ -759,9 +759,8 @@ enum { MENU_ROW_ACTION_SILENT = 0x1000 };
 /* Special row action: records no selection without opening another entry. */
 enum { MENU_ROW_ACTION_CLEAR_SELECTION = 0x4d2 };
 
-/* Provisional: 0x3c-byte menu entry reached through
- * g_world_menu_thread_menu_data; the same menu record as BATTLE
- * g_battle_menu_thread_menu_data and the OPTION/EQUIP menus. 0x0c/0x0e are the
+/* Provisional: 60-byte menu entry used by BATTLE, WORLD and OPTION/EQUIP.
+ * g_menu_thread_menu_data points to the scene's current table. 0x0c/0x0e are the
  * window size (frame rect 0x0c - 0x12 by 0x0e - 0x1a in WORLD 0x8010088c and
  * option_menu_run_at_list). The parent table at 0x24 (indexed by selected_index)
  * and the thread entry at 0x28 are known from
@@ -804,6 +803,9 @@ typedef struct menu_entry {
                               scroll row offset here instead. */
 } menu_entry_t;
 typedef char menu_entry_size_must_be_60[(sizeof(menu_entry_t) == 60) ? 1 : -1];
+
+/* Each scene keeps its own current table; event screens save and restore it. */
+extern menu_entry_t* g_menu_thread_menu_data;
 
 /* Numeric-entry and action-selection threads use value as a 16-bit result cell. */
 static inline s16* menu_entry_result(menu_entry_t* entry) {
@@ -1144,9 +1146,9 @@ typedef char help_navigation_record_size_must_be_16[(sizeof(help_navigation_reco
  * battle_menu_dispatch_system_function). The member comments name the BATTLE
  * globals; WORLD binds its own copies. */
 typedef struct menu_system_function {
-    s16 menu_id;                /* 0x00; copied to g_battle_menu_current_id */
+    s16 menu_id;                /* 0x00; copied to g_menu_current_id */
     u16 text_id;                /* 0x02; menu entry text id */
-    s16 menu_entry_index;       /* 0x04; g_battle_menu_thread_menu_data index */
+    s16 menu_entry_index;       /* 0x04; g_menu_thread_menu_data index */
     u16 row_action;             /* 0x06; copied to g_battle_menu_system_function_row_actions */
     u16 thread_count;           /* 0x08; menu entry thread_count */
     u8 _padding_0a[2];          /* aligns thread_entry */
@@ -1188,7 +1190,7 @@ typedef enum menu_system_dispatch_result {
     MENU_SYSTEM_DISPATCH_EVENT = 2,           /* SCENARIO_CHECK started an event, or queued it for option 2 */
 } menu_system_dispatch_result_e;
 
-/* g_battle_menu_current_id / g_world_menu_current_id: the open battle menu,
+/* g_menu_current_id: the open battle menu,
  * and the index of its entry in g_battle_menu_idle_action_entries (WORLD:
  * g_world_menu_system_entries), which is also what a row action from 0 to
  * 0xff opens. The unit menus are picked by
@@ -1267,6 +1269,8 @@ typedef enum battle_menu_id {
     BATTLE_MENU_ID_EGG_STATUS = 55,              /* EGG's Status row: only the invalid sound */
     BATTLE_MENU_ID_DEAD_UNIT = 105,              /* crystal or treasure options */
 } battle_menu_id_e;
+
+extern s32 g_menu_current_id; /* battle_menu_id_e */
 
 /* Indices of the system function table (g_battle_system_function_table and
  * its WORLD twin) that the dispatcher names; the rest are message variants. */

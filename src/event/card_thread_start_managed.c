@@ -11,9 +11,9 @@ s32 card_thread_start_managed(s32 thread_id, menu_entry_t* descriptor) {
         if (thread_is_running(thread_id) != 0) {
             return 1;
         }
-        g_battle_menu_thread_menu_data = descriptor;
+        g_menu_thread_menu_data = descriptor;
         thread_start(thread_id, descriptor->thread_entry);
-        thread_set_parameters(thread_id, (s32)g_battle_menu_thread_menu_data, 0, 0);
+        thread_set_parameters(thread_id, (s32)g_menu_thread_menu_data, 0, 0);
         g_card_thread_state = 1;
         return 1;
     }

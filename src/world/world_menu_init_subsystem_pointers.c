@@ -12,7 +12,7 @@ void world_menu_init_subsystem_pointers(void) {
     g_menu_glyph_sheet = &g_world_menu_glyph_image;
     g_script_event_block = g_main_script_event_block;
     g_script_variables = g_main_script_variables;
-    g_world_menu_thread_menu_data = g_world_menu_system_entries;
+    g_menu_thread_menu_data = g_world_menu_system_entries;
     g_world_help_active_text_id_tables = (u16* const*)-1;
     g_world_unit_graphics_load_pending = 0;
     g_world_event_finish_check_pending = 0;

@@ -23,7 +23,7 @@ s32 world_menu_resolve_selection(void) {
     g_world_menu_selected_command = command;
     index = option;
     if (command != 0x12 && (command & 0xFE) != 0xFE) {
-        menu = g_world_menu_current_id;
+        menu = g_menu_current_id;
         for (i = 0; i < 31; i++) {
             if (menu == g_world_menu_command_maps[i].menu_id) {
                 if (command != 0xFF) {

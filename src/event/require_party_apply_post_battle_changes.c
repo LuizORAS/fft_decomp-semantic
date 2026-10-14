@@ -51,9 +51,9 @@ void require_party_apply_post_battle_changes(void) {
     g_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_WARNINGS] = text_data + g_require_text_section_offsets[1];
     g_text_section_pointers[REQUIRE_TEXT_SECTION_BRAVE_FAITH_DEPARTURES]
         = text_data + g_require_text_section_offsets[2];
-    saved_menu_descriptor = g_battle_menu_thread_menu_data;
+    saved_menu_descriptor = g_menu_thread_menu_data;
     menu_base = g_require_join_menu_descriptor;
-    g_battle_menu_thread_menu_data = menu_base;
+    g_menu_thread_menu_data = menu_base;
     g_text_section_pointers[REQUIRE_TEXT_SECTION_DISMISS_UNIT_REPLIES] = text_data + g_require_text_section_offsets[3];
     g_text_section_pointers[TEXT_SECTION_JOB_NAMES] = text_data + g_require_text_section_offsets[4];
 
@@ -317,7 +317,7 @@ void require_party_apply_post_battle_changes(void) {
     thread_wait_until_inactive(THREAD_SCREEN_SLOT_CHARACTER_STATUS);
     g_battle_post_battle_unit_changes_active = 0;
     mem_copy_bytes_nonempty(&g_threads[THREAD_SLOT_EVENT], g_require_saved_thread_block, 0x400);
-    g_battle_menu_thread_menu_data = saved_menu_descriptor;
+    g_menu_thread_menu_data = saved_menu_descriptor;
     thread_resume(THREAD_SLOT_EVENT);
     thread_yield();
     thread_exit_current();

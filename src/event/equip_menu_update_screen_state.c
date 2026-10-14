@@ -22,9 +22,9 @@ void equip_menu_update_screen_state(void) {
     if (g_equip_menu_thread_running == 0) {
         if (thread_is_running(EQUIP_THREAD_SLOT_COMMAND_MENU) == 0) {
             g_equip_command_menu.selected_index = 0;
-            g_battle_menu_thread_menu_data = &g_equip_command_menu;
+            g_menu_thread_menu_data = &g_equip_command_menu;
             thread_start(EQUIP_THREAD_SLOT_COMMAND_MENU, menu_icon_list_thread);
-            thread_set_parameters(EQUIP_THREAD_SLOT_COMMAND_MENU, (s32)g_battle_menu_thread_menu_data, 0, 0);
+            thread_set_parameters(EQUIP_THREAD_SLOT_COMMAND_MENU, (s32)g_menu_thread_menu_data, 0, 0);
             g_equip_thread_idle_stop_pending = 0;
             g_equip_menu_thread_running = 1;
         }

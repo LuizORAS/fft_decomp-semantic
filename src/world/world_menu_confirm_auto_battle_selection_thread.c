@@ -6,7 +6,7 @@
 void world_menu_confirm_auto_battle_selection_thread(void) {
     menu_entry_t* entry = world_thread_get_current_parameter_1();
     unit_stats_t* unit = world_unit_get_active_stats();
-    menu_entry_t* menu = g_world_menu_thread_menu_data;
+    menu_entry_t* menu = g_menu_thread_menu_data;
 
     if (menu[1].selected_index == 3) {
         unit->auto_battle_setting = AI_AUTOBATTLE_FADING_LIFE;

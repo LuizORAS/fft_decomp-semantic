@@ -21,8 +21,8 @@ s32 world_menu_dispatch_system_function(
     menu_system_function_t* entry;
     s32 flags;
 
-    g_world_menu_thread_menu_data = g_world_menu_system_entries;
-    g_world_menu_current_id = BATTLE_MENU_ID_NONE;
+    g_menu_thread_menu_data = g_world_menu_system_entries;
+    g_menu_current_id = BATTLE_MENU_ID_NONE;
     g_menu_restore_pending = 0;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     if (command == BATTLE_MENU_SYSTEM_COMMAND_SCENARIO_CHECK) {

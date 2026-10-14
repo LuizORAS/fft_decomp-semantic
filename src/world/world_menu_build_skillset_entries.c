@@ -64,8 +64,8 @@ void world_menu_build_skillset_entries(void) {
     }
     height = count * 16 + 16;
     rows[count - 1].terminator = TEXT_END_AUTO_CLOSE;
-    g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].max_row_index = count - 1;
-    g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].text_image.height = height;
-    g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].window.h = height;
-    g_world_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].inner_height = height;
+    g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].max_row_index = count - 1;
+    g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].text_image.height = height;
+    g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].window.h = height;
+    g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].inner_height = height;
 }

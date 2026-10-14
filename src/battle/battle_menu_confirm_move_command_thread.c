@@ -24,7 +24,7 @@ void battle_menu_confirm_move_command_thread(void) {
         battle_menu_icon_linked_entry_thread();
         thread_exit_current();
     }
-    menu = g_battle_menu_current_id;
+    menu = g_menu_current_id;
     if (menu == BATTLE_MENU_ID_TURN_MOVED || menu == BATTLE_MENU_ID_TURN_MOVED_ACTED
         || menu == BATTLE_MENU_ID_TURN_NO_ACT_MOVED || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED
         || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED || menu == BATTLE_MENU_ID_RIDER_TURN_NO_ACT_MOVED) {

@@ -24,7 +24,7 @@ s32 battle_menu_resolve_selection(void) {
     g_battle_menu_selected_command.kind = command;
     index = option;
     if (command != 0x12 && (command & 0xFE) != 0xFE) {
-        menu = g_battle_menu_current_id;
+        menu = g_menu_current_id;
         for (i = 0; i < 31; i++) {
             if (menu == g_battle_menu_id_records[i].menu_id) {
                 if (command != 0xFF) {

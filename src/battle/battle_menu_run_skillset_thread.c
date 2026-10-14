@@ -24,11 +24,11 @@ void battle_menu_run_skillset_thread(void) {
     thread_call_on_main_stack();
     param_value = 1;
     if (g_battle_menu_action_menu_build_result != 0) {
-        g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = 0;
+        g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = 0;
         if (g_menu_restore_pending == 0) {
             thread_start(g_thread_current_id - 1, battle_menu_select_unit_action_slots_thread);
             thread_set_parameters(
-                g_thread_current_id - 1, (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST], 0, 0);
+                g_thread_current_id - 1, (s32)&g_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST], 0, 0);
         } else {
             thread_wait_frames(2);
         }
@@ -42,10 +42,10 @@ void battle_menu_run_skillset_thread(void) {
     param = &g_thread_contexts[g_thread_current_id].function_parameter_2;
     *param = param_value;
     record = &g_battle_menu_unit_selection_records[g_battle_active_turn_unit.battle_id];
-    g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = record->skillset_index;
+    g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = record->skillset_index;
     g_battle_menu_restore_depth = 1;
     script_pulse_tutorial_wait_value(0xFC);
     battle_menu_run_icon_selection_loop();
-    record->skillset_index = g_battle_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index;
+    record->skillset_index = g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index;
     thread_exit_current();
 }

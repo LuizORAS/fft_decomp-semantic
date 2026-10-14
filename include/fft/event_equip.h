@@ -485,7 +485,7 @@ extern s32 g_equip_cmd_stream_input;
 /* EQUIP's 0x3c-byte menu records: the main commands, the item actions and
  * (in equip_item_run_type_order_mode) the item-type order menus. Each is
  * started through equip_thread_start_managed, which makes it the current
- * g_battle_menu_thread_menu_data. */
+ * g_menu_thread_menu_data. */
 extern menu_entry_t g_equip_command_menu;
 
 menu_instruction_t* equip_cmd_add_next_otag_draw_area_handler(menu_instruction_t* instruction);

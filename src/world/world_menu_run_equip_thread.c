@@ -30,7 +30,7 @@ void world_menu_run_equip_thread(void) {
         g_script_event_input = 0;
         thread_yield();
     } while (g_world_companion_overlay_state != COMPANION_OVERLAY_STATE_IDLE);
-    g_world_menu_thread_menu_data = g_world_menu_system_entries;
+    g_menu_thread_menu_data = g_world_menu_system_entries;
     g_world_menu_action_slot_row_actions[0] = -3;
     g_world_menu_sound_muted = 1;
     g_script_event_input |= PSX_PAD_CIRCLE;
