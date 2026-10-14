@@ -1065,6 +1065,7 @@ void script_waitrotateunit_and_waitrotateall_event_instruction(s32 unit_id);
 void script_wait_value_event_instruction(const event_wait_value_parameters_t* parameters);
 
 /* camera operands */
+void script_focus(event_focus_parameters_t* parameters);
 void script_apply_relative_camera(event_camera_values_t* parameters, const s32* camera_values);
 
 /* controller input */

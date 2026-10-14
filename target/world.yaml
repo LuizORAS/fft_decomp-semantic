@@ -340,7 +340,7 @@ functions:
   - {addr: 0x800fa724, size: 60, name: camera_store_yaw_band, hash: ab7e1df661cddb5e, source: src/shared/camera/camera_store_yaw_band.c}
   - {addr: 0x800fa760, size: 396, name: world_camera_pick_nearest_unblocked_yaw, hash: 3f1d46a5c3271ec2}
   - {addr: 0x800fa8ec, size: 224, name: script_apply_relative_camera, hash: 29e183114c9c011b, source: src/shared/script/script_apply_relative_camera.c}
-  - {addr: 0x800fa9cc, size: 508, name: world_script_focus, hash: ccd62b29dabd8f4a}
+  - {addr: 0x800fa9cc, size: 508, name: world_script_focus, hash: ccd62b29dabd8f4a, source: src/shared/script/script_focus.c, source_symbol: script_focus}
   - {addr: 0x800fabc8, size: 444, name: world_script_focus_speed, hash: 852c4a06585aac3d, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800fad84, size: 16, name: world_noop_800fad84, hash: 70cab538e87be7b6}
   - {addr: 0x800fad94, size: 132, name: script_prepare_unit_filter, hash: 11ec43c5377ab1bf, source: src/shared/script/script_prepare_unit_filter.c}
@@ -2421,6 +2421,8 @@ overrides:
   - {function: world_menu_start_dead_unit_threads, name: g_option_menu_at_list_primary_values, addr: 0x801acd44}
   - {function: world_menu_start_dead_unit_threads, name: option_menu_run_at_list, addr: 0x8010088c}
   - {function: world_menu_start_dead_unit_threads, name: option_thread_wait_forever, addr: 0x8010226c}
+  - {function: world_script_focus, name: camera_pick_nearest_unblocked_yaw, addr: 0x800fa760}
+  - {function: world_script_focus, name: g_script_event_instruction_sizes, addr: 0x8013a454}
 
 regions:
   - {addr: 0x800feff0, end: 0x800ff284, kind: handwritten, why: "handwritten scratchpad-frame blitter helper"}

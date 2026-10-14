@@ -70,7 +70,6 @@ void script_process_inflict_status_commands(void);
 
 /* camera */
 void script_earthquake_start(void);
-void script_focus(event_focus_parameters_t* parameters);
 /* A typed operand plus a local Camera cursor reorders the original argument saves. */
 void script_focus_speed(u8* parameters, s32* position, s32* rotation);
 

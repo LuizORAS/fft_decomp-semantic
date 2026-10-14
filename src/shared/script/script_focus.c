@@ -1,21 +1,10 @@
 #include "fft/battle_camera.h"
-#include "fft/battle_script.h"
 #include "fft/battle_unit.h"
 #include "fft/main.h"
 #include "fft/script.h"
-#include "psx/types.h"
 
-/*
- * Focus event instruction: patches the parameters of the next camera
- * instruction with twice the midpoint of the two units' positions,
- * raised by 0x20 (lowered for Altima's second and first forms), and, unless
- * the flag byte is set, the camera angle
- * camera_pick_nearest_unblocked_yaw picks for the pair.
- * An absent unit turns that camera instruction into CAMERA_DISABLED instead.
- *
- * first/second hold each unit id and are then reused for its unit id; the
- * target keeps both in the same callee-saved registers.
- */
+/* Patch the next camera instruction to frame two units.
+ * A missing unit disables that instruction. */
 void script_focus(event_focus_parameters_t* parameters) {
     s32 coords[2][4];
     s32 unit_a;
