@@ -1590,6 +1590,7 @@ extern menu_icon_source_t g_menu_item_type_icon_source;
 
 void menu_build_item_icon_source(menu_icon_source_t* output, u32 item_id);
 menu_icon_source_t* menu_build_item_type_icon_source(s32 index);
+void menu_draw_weapon_hand_icons(s16 weapon_id);
 
 /* One 12-byte positioned number: a text position, a pointer to the live
  * value and the decimal format. *_menu_draw_numeric_display_entries draws

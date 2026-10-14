@@ -1367,7 +1367,7 @@ functions:
   - {addr: 0x801c5920, size: 328, name: equip_menu_update_item_action_state, hash: 6b38592770b7b8bc}
   - {addr: 0x801c5a68, size: 872, name: equip_item_run_type_order_mode, hash: 609e5be9bdf31b35}
   - {addr: 0x801c5dd0, size: 220, name: equip_menu_draw_equipment_slot_marker, hash: 67526a8c92d2999e}
-  - {addr: 0x801c5eac, size: 808, name: equip_menu_draw_weapon_hand_icons, hash: 0e13bfdaa6abb47a}
+  - {addr: 0x801c5eac, size: 808, name: equip_menu_draw_weapon_hand_icons, hash: 0e13bfdaa6abb47a, source: src/shared/menu/menu_draw_weapon_hand_icons.c, source_symbol: menu_draw_weapon_hand_icons}
   - {addr: 0x801c61d4, size: 964, name: equip_menu_draw_item_status_list, hash: 540adc3d6181c1fd}
   - {addr: 0x801c6598, size: 496, name: equip_gfx_enqueue_textured_quad_current_ot, hash: a9997ba47403568d}
   - {addr: 0x801c6788, size: 196, name: equip_item_build_inventory_totals, hash: 14d058972e7d099b}

@@ -668,7 +668,7 @@ functions:
   - {addr: 0x8011cfa8, size: 848, name: world_item_run_sort_order_menu, hash: c326cc985165527c}
   - {addr: 0x8011d2f8, size: 380, name: world_item_show_units_equipping_selected, hash: 470964449b528d46}
   - {addr: 0x8011d474, size: 272, name: world_menu_draw_row_window_and_cursor, hash: c05f7673385e70c0}
-  - {addr: 0x8011d584, size: 808, name: world_item_draw_weapon_hand_icons, hash: b1695814fb8f8b0c}
+  - {addr: 0x8011d584, size: 808, name: world_item_draw_weapon_hand_icons, hash: b1695814fb8f8b0c, source: src/shared/menu/menu_draw_weapon_hand_icons.c, source_symbol: menu_draw_weapon_hand_icons}
   - {addr: 0x8011d8ac, size: 964, name: world_item_build_status_list_polygons, hash: e8bbf3d284edf928}
   - {addr: 0x8011dc70, size: 40, name: world_formation_ability_menu_idle_thread, hash: 2e6b9f18bb464322}
   - {addr: 0x8011dc98, size: 1052, name: world_menu_run_ability, hash: b8ee4cb9c8bd92e9}
@@ -2416,6 +2416,7 @@ overrides:
   - {function: world_item_build_type_icon_source, name: g_menu_cursor_texture_page, addr: 0x8018df8a}
   - {function: world_item_build_type_icon_source, name: g_menu_palette_clut, addr: 0x801cd1bc}
   - {function: world_item_calculate_swap_stat_delta, name: equip_item_collect_stat_deltas, addr: 0x80122f9c}
+  - {function: world_item_draw_weapon_hand_icons, name: menu_gfx_enqueue_textured_quad, addr: 0x8012c6a8}
   - {function: world_map_store_selected_tile_data, name: g_map_selected_tile_data, addr: 0x8013a310}
   - {function: world_map_wait_for_refresh, name: g_map_refresh_pending, addr: 0x80153350}
   - {function: world_menu_auto_battle_setting_thread, name: battle_handle_menu_cancel_input, addr: 0x800ebe7c}
