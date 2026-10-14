@@ -84,7 +84,7 @@ void world_text_character_handling_thread(void) {
     value_index = 0;
     variable_id = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
     thread = (thread_t*)((g_thread_current_id << 10) + (s32)g_threads);
-    param = (s32)world_thread_get_current_parameter_1();
+    param = world_thread_get_current_parameter_1();
     rec.dialog_type = param;
     if ((param & 0x70) == 0x70) {
         rec.dialog_type = (param & 0x1C) | 0x10;

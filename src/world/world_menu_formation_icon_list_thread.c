@@ -18,7 +18,7 @@ void world_menu_formation_icon_list_thread(void) {
     s32 i;
     menu_icon_sprites_t* record;
 
-    param = world_thread_get_current_parameter_1();
+    param = (menu_entry_t*)world_thread_get_current_parameter_1();
     record = &records[0].base;
     cursor = param->selected_index;
     if (cursor == -1) {

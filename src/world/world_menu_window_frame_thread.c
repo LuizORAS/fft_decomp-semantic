@@ -34,7 +34,7 @@ void world_menu_window_frame_thread(void) {
     s32 index;
     s32 frame;
 
-    menu = world_thread_get_current_parameter_1();
+    menu = (urect16_t*)world_thread_get_current_parameter_1();
 
     world_clear_menu_render_buffer(g_world_menu_window_frame_image, 0x400);
     texture.w = 0x80;

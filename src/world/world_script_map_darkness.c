@@ -9,7 +9,7 @@ void world_script_map_darkness(void) {
     event_unit_color_t* parameter;
 
     thread_set_current_task_id(THREAD_TASK_MAP_DARKNESS);
-    parameter = world_thread_get_current_parameter_1();
+    parameter = (event_unit_color_t*)world_thread_get_current_parameter_1();
     map_start_ambient_light_blend(
         parameter->mode, parameter->duration, parameter->rgb.r, parameter->rgb.g, parameter->rgb.b);
     thread_wait_frames(g_world_map_darkness_wait_frames[parameter->duration]);

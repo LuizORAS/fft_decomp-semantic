@@ -29,7 +29,7 @@ void world_camera_fusion_thread(void) {
 
     thread_set_current_task_id(THREAD_TASK_CAMERA);
     tracks = world_menu_alloc_ui_buffer(sizeof(camera_track_t) * EVENT_CAMERA_COMPONENT_COUNT);
-    script = world_thread_get_current_parameter_1();
+    script = (u8*)world_thread_get_current_parameter_1();
     world_clear_menu_render_buffer(tracks, sizeof(camera_track_t) * EVENT_CAMERA_COMPONENT_COUNT);
 
     cursor = script;

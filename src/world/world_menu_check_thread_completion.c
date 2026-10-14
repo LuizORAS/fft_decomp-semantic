@@ -14,7 +14,7 @@ s32 world_menu_check_thread_completion(u32* input) {
 
     if (g_thread_contexts[THREAD_SCREEN_SLOT_TEXT].is_running == 0 && world_menu_is_input_allowed() != 0
         && (*input & PSX_PAD_SELECT)) {
-        parameter = world_thread_get_current_parameter_1();
+        parameter = (menu_entry_t*)world_thread_get_current_parameter_1();
         if (parameter->select_text_table != 0) {
             if (g_world_thread_change_cooldown == 0) {
                 thread_start(THREAD_SCREEN_SLOT_TEXT, world_menu_announce_entry_value_thread);

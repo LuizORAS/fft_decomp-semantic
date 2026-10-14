@@ -24,7 +24,7 @@ void world_unit_view_supervisor_thread(void) {
     thread_t* thread;
 
     for (;;) {
-        mode = (s32)world_thread_get_current_parameter_1();
+        mode = world_thread_get_current_parameter_1();
         set = &g_world_unit_view_thread_sets[mode];
         g_world_unit_view_mode = mode;
         g_thread_contexts[g_thread_current_id].function_parameter_1 = 0xff;
@@ -74,7 +74,7 @@ void world_unit_view_supervisor_thread(void) {
                 g_thread_contexts[set->thread_ids[i]].task_id = set->task_ids[i];
             }
         }
-        if ((s32)world_thread_get_current_parameter_1() == 0xff) {
+        if (world_thread_get_current_parameter_1() == 0xff) {
             thread_exit_current();
         }
     }

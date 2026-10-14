@@ -19,7 +19,7 @@ void world_sound_edit_bg_thread(void) {
 
     thread_set_current_task_id(THREAD_TASK_BG_SOUND);
     step = 0;
-    parameter = world_thread_get_current_parameter_1();
+    parameter = (event_background_sound_parameters_t*)world_thread_get_current_parameter_1();
     sound_id = parameter->sound_id;
     volume_from = parameter->volume_from;
     steps = parameter->frames;

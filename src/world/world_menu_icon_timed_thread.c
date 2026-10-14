@@ -31,7 +31,7 @@ void world_menu_icon_timed_thread(void) {
         g_world_text_message_duration_frames &= 0xFF;
     }
     i = 0;
-    param = world_thread_get_current_parameter_1();
+    param = (menu_entry_t*)world_thread_get_current_parameter_1();
     world_menu_size_entry_to_text(param, &width, &height, &pad, 1);
     world_menu_build_icon_record(&rect, param, &records[0]);
     mem_copy_bytes_nonempty(&records[1], &records[0], sizeof(records[1]));

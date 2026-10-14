@@ -12,7 +12,7 @@ void world_sound_bg_thread(void) {
     s32 resource;
 
     thread_set_current_task_id(THREAD_TASK_BG_SOUND);
-    parameter = world_thread_get_current_parameter_1();
+    parameter = (event_background_sound_parameters_t*)world_thread_get_current_parameter_1();
     sound_id = parameter->sound_id;
     resource = SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, 0);
     if (parameter->find_channel != 0) {

@@ -19,7 +19,7 @@ void world_menu_run_icon_selection_loop(void) {
     s32 i;
     menu_icon_record_t* record;
 
-    param = world_thread_get_current_parameter_1();
+    param = (menu_entry_t*)world_thread_get_current_parameter_1();
     record = &records[0];
     cursor = param->selected_index;
     if (cursor == -1) {

@@ -18,7 +18,7 @@ void world_menu_validate_skill_selection_thread(void) {
     menu_ability_list_t* skill_tables;
 
     skill = g_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index;
-    parameter = world_thread_get_current_parameter_1();
+    parameter = (menu_entry_t*)world_thread_get_current_parameter_1();
     skill_tables = &g_ai_workspace_ptr->ability_list;
     ct = skill_tables->skill_ct[skill];
     entry = g_world_ability_menu_layout.row_actions[skill];

@@ -70,7 +70,7 @@ void world_text_message_box_thread(void) {
     value_index = 0;
     script_variable_base = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
     g_world_menu_event_state_flag = 0;
-    param = (s32)world_thread_get_current_parameter_1();
+    param = world_thread_get_current_parameter_1();
     rec.box_type = param & 0x70;
     rec.dialog_type = param;
     rec.position = param & 3;

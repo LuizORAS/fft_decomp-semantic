@@ -58,7 +58,7 @@ void world_menu_scrolling_list_thread(void) {
 
     toggle = 0;
     page = g_world_ability_list_pages[g_thread_current_id];
-    entry = world_thread_get_current_parameter_1();
+    entry = (menu_entry_t*)world_thread_get_current_parameter_1();
     layout = entry->context;
     entry->window.h = layout->columns.row_count * 16 + 0x1C;
     entry->inner_height = layout->columns.row_count * 16 + 0x1C;

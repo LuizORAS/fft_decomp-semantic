@@ -187,7 +187,7 @@ void thread_set_four_parameters(s32 thread_id, s32 first, s32 second, s32 third,
 s32 battle_thread_get_current_parameter_1(void);
 s32 battle_thread_get_current_parameter_2(void);
 s32 battle_thread_get_current_parameter_3(void);
-void* world_thread_get_current_parameter_1(void);
+s32 world_thread_get_current_parameter_1(void);
 s32 world_thread_get_current_parameter_2(void);
 s32 world_thread_get_current_parameter_3(void);
 

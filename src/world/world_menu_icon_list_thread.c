@@ -21,7 +21,7 @@ void world_menu_icon_list_thread(void) {
     s16* redraw;
 
     g_world_input_frame_controller_input = script_get_controller_input_pointer(0);
-    param = world_thread_get_current_parameter_1();
+    param = (menu_entry_t*)world_thread_get_current_parameter_1();
     param->window.y &= ~1;
     cursor = param->selected_index;
     record = &records[0];

@@ -31,7 +31,7 @@ void world_menu_check_action_slot_restrictions(s32 menu, s32 value, s32 check_un
     unit_stats_t* unit;
 
     g_world_active_menu = menu;
-    parameter = world_thread_get_current_parameter_1();
+    parameter = (menu_entry_t*)world_thread_get_current_parameter_1();
     mode = 0;
     message = 0;
     unit = world_unit_get_active_stats();

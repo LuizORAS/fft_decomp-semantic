@@ -4,7 +4,7 @@
 __asm__(".set noat");
 
 /* Return parameter 1 of the current thread's record. */
-void* world_thread_get_current_parameter_1(void) {
+s32 world_thread_get_current_parameter_1(void) {
     register s32 thread_offset __asm__("$8");
     register thread_t* threads __asm__("$9");
     register thread_t* thread __asm__("$8");
@@ -13,5 +13,5 @@ void* world_thread_get_current_parameter_1(void) {
     __asm__("nop\nsll $8,$8,10" : "=r"(thread_offset) : "0"(thread_offset));
     THREAD_LOAD_GLOBAL(threads, g_threads);
     __asm__("nop\nadd %0,%1,%2" : "=r"(thread) : "0"(thread_offset), "r"(threads));
-    return (void*)thread->function_parameter_1;
+    return thread->function_parameter_1;
 }

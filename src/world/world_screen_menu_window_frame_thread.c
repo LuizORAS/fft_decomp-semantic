@@ -31,7 +31,7 @@ void world_screen_menu_window_frame_thread(void) {
     s32 index;
     s32 frame;
 
-    menu = world_thread_get_current_parameter_1();
+    menu = (urect16_t*)world_thread_get_current_parameter_1();
     pixels = world_menu_alloc_ui_buffer(0x400);
 
     world_clear_menu_render_buffer(pixels, 0x400);

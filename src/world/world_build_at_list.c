@@ -51,7 +51,7 @@ void world_build_at_list(void) {
     input1 = script_get_controller_input_pointer(1);
     row_offset = 0;
     cursor = 0;
-    entry = world_thread_get_current_parameter_1();
+    entry = (menu_entry_t*)world_thread_get_current_parameter_1();
     layout = entry->context;
     entry->window.h = layout->row_count * 16 + 0x1C;
     entry->inner_height = layout->row_count * 16 + 0x1C;

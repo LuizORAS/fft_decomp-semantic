@@ -34,7 +34,7 @@ void world_main_menu_text_window_thread(void) {
     s16 target;
     s32 x;
 
-    entry = world_thread_get_current_parameter_1();
+    entry = (menu_entry_t*)world_thread_get_current_parameter_1();
     record = records;
     world_gfx_set_draw_mode_from_origin(&record->text_draw_mode, &entry->vram_origin);
     world_gfx_set_draw_mode_for_texture_page(&record->frame_draw_mode, MENU_TEXTURE_PAGE_FRAME);

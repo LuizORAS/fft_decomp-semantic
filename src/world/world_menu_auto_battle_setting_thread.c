@@ -31,7 +31,7 @@ void world_menu_auto_battle_setting_thread(void) {
     s16* colour;
     menu_icon_record_t* record;
 
-    param = world_thread_get_current_parameter_1();
+    param = (menu_entry_t*)world_thread_get_current_parameter_1();
     cursor = param->selected_index;
     stats = world_unit_get_active_stats();
     if (stats->auto_battle_setting == AI_AUTOBATTLE_MANUAL) {

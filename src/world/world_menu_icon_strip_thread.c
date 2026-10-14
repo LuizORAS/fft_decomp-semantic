@@ -18,7 +18,7 @@ void world_menu_icon_strip_thread(void) {
     menu_icon_record_t* record;
 
     input = 0;
-    param = world_thread_get_current_parameter_1();
+    param = (menu_entry_t*)world_thread_get_current_parameter_1();
     record = &records[0];
     world_menu_build_icon_record(&rect, param, record);
     mem_copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
