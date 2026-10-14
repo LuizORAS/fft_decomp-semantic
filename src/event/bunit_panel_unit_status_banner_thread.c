@@ -411,11 +411,11 @@ void bunit_panel_unit_status_banner_thread(void) {
             battle_clear_menu_render_buffer(render_b, 0xF0);
             *win = 0x10;
             battle_menu_set_text_origin(0, 0);
-            battle_text_draw_large_number_glyphs(scroll[2], 0x202, render_b, origin);
+            battle_menu_draw_small_number_glyphs(scroll[2], 0x202, render_b, origin);
             LoadImage(&rects[3], (u32*)render_b);
             battle_menu_set_text_origin(0, 0);
             cur3 = render_b + 0x50;
-            battle_text_draw_large_number_glyphs(scroll[3], 0x202, cur3, origin);
+            battle_menu_draw_small_number_glyphs(scroll[3], 0x202, cur3, origin);
             LoadImage(&rects[4], (u32*)cur3);
             if (g_battle_post_battle_unit_changes_active == 0) {
                 battle_stats_t* stats;
@@ -426,7 +426,7 @@ void bunit_panel_unit_status_banner_thread(void) {
                     if (id == BATTLE_FORMATION_INDEX_NONE) {
                         id = 0;
                     }
-                    battle_text_draw_large_number_glyphs(id + 1, 0x4002, render_b + 0xA0, origin);
+                    battle_menu_draw_small_number_glyphs(id + 1, 0x4002, render_b + 0xA0, origin);
                 }
             }
             LoadImage(&rects[5], (u32*)(render_b + 0xA0));

@@ -70,7 +70,7 @@ void battle_menu_selected_tile_info_display_thread(void) {
             stride = &g_battle_menu_text_state.pen.stride;
             *stride = 0x18;
             battle_menu_set_text_origin(0x10, 0);
-            battle_draw_menu_number_glyphs(
+            battle_menu_draw_large_number_glyphs(
                 g_battle_map_selected_tile_data.depth, 1, buffer, (world_glyph_blit_t*)((s16*)stride - 4));
             if (g_battle_menu_height_display_suppressed == 0) {
                 LoadImage(&rect, buffer);

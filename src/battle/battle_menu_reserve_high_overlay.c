@@ -10,7 +10,7 @@ void battle_menu_reserve_high_overlay(u32 size) {
         }
         battle_thread_yield();
         if (g_main_font_print_enabled != 0) {
-            FntPrint(g_battle_text_wait_for_file_allocation_message);
+            FntPrint(g_battle_menu_wait_for_file_allocation_message);
         }
     }
 }

@@ -31,10 +31,10 @@ void world_option_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_off
             if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
                 world_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_world_menu_text_state.pen);
             } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
-                world_display_menu_number_entry(
-                    layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
+                world_menu_draw_font_digits(layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
             } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
-                world_draw_menu_number_glyphs(layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
+                world_menu_draw_large_number_glyphs(
+                    layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
             }
             g_world_menu_text_color = 0;
             g_world_menu_text_state.pen.color = 0;

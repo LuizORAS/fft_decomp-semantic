@@ -70,20 +70,20 @@ void battle_menu_run_unit_summary_panel_thread(void) {
     battle_clear_menu_render_buffer(digits, 0xF0);
     *stride = 0x10;
     battle_menu_set_text_origin(0, 0);
-    battle_text_draw_large_number_glyphs(g_battle_active_turn_unit.brave, 0x202, digits, origin);
+    battle_menu_draw_small_number_glyphs(g_battle_active_turn_unit.brave, 0x202, digits, origin);
     LoadImage(&rects[1], (u32*)digits);
     battle_menu_set_text_origin(0, 0);
-    battle_text_draw_large_number_glyphs(g_battle_active_turn_unit.faith, 0x202, digits + 0x50, origin);
+    battle_menu_draw_small_number_glyphs(g_battle_active_turn_unit.faith, 0x202, digits + 0x50, origin);
     LoadImage(&rects[2], (u32*)(digits + 0x50));
     battle_menu_set_text_origin(0, 0);
     if (g_main_debug_display_enabled != 0) {
-        battle_text_draw_large_number_glyphs(g_battle_active_turn_unit.battle_id, 0x4002, digits + 0xA0, origin);
+        battle_menu_draw_small_number_glyphs(g_battle_active_turn_unit.battle_id, 0x4002, digits + 0xA0, origin);
     } else if (g_battle_active_turn_unit.battle_id >= 0x10) {
         value = unit->formation_index;
         if (value == 0xFF) {
             value = 0;
         }
-        battle_text_draw_large_number_glyphs(value + 1, 0x4002, digits + 0xA0, origin);
+        battle_menu_draw_small_number_glyphs(value + 1, 0x4002, digits + 0xA0, origin);
     }
     LoadImage(&rects[3], (u32*)(digits + 0xA0));
     frames[0].sprites[6].clut = 0x7C3C;

@@ -1515,6 +1515,9 @@ enum {
 };
 
 /* text */
+/* The text format both engines read: the control bytes, the dialog box types, the text ids and sections,
+ * the substitution codes, and the records of the measuring cursor, the dialog window and the pending glyph. */
+
 /* Encoded menu-string controls. The 0xe2-0xfd meanings come from the dialog
  * interpreter branches (battle_text_character_handling_thread and its WORLD
  * twin) and, for 0xe7, the menu text-image renderers; codes with an operand

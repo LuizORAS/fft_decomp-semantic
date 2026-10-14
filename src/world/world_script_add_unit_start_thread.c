@@ -60,7 +60,7 @@ void world_script_add_unit_start_thread(void) {
                     break;
                 }
                 if (g_main_debug_display_enabled != 0) {
-                    FntPrint(g_world_text_reading_character_message, slot);
+                    FntPrint(g_world_script_reading_character_message, slot);
                 }
             }
         }

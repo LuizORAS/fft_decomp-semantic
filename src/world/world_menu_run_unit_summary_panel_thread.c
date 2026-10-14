@@ -65,23 +65,22 @@ void world_menu_run_unit_summary_panel_thread(void) {
     world_clear_menu_render_buffer(digits, 0xF0);
     g_world_menu_text_state.pen.stride = 0x10;
     world_menu_set_text_origin(0, 0);
-    world_text_render_decimal_value_or_dashes(
-        g_world_active_turn_unit.brave, 0x202, digits, &g_world_menu_text_state.pen);
+    world_menu_draw_small_number_glyphs(g_world_active_turn_unit.brave, 0x202, digits, &g_world_menu_text_state.pen);
     LoadImage(&rects[1], (u32*)digits);
     world_menu_set_text_origin(0, 0);
-    world_text_render_decimal_value_or_dashes(
+    world_menu_draw_small_number_glyphs(
         g_world_active_turn_unit.faith, 0x202, digits + 0x50, &g_world_menu_text_state.pen);
     LoadImage(&rects[2], (u32*)(digits + 0x50));
     world_menu_set_text_origin(0, 0);
     if (g_main_debug_display_enabled != 0) {
-        world_text_render_decimal_value_or_dashes(
+        world_menu_draw_small_number_glyphs(
             g_world_active_turn_unit.battle_id, 0x4002, digits + 0xA0, &g_world_menu_text_state.pen);
     } else if (g_world_active_turn_unit.battle_id >= 0x10) {
         value = unit->formation_index;
         if (value == 0xFF) {
             value = 0;
         }
-        world_text_render_decimal_value_or_dashes(value + 1, 0x4002, digits + 0xA0, &g_world_menu_text_state.pen);
+        world_menu_draw_small_number_glyphs(value + 1, 0x4002, digits + 0xA0, &g_world_menu_text_state.pen);
     }
     LoadImage(&rects[3], (u32*)(digits + 0xA0));
     frames[0].sprites[6].clut = 0x7C3C;

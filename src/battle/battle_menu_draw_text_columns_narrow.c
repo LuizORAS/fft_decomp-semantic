@@ -44,7 +44,7 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
                     battle_menu_display_text_entry(0x5088, buffer, &g_battle_menu_text_state.pen);
                 }
             } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
-                battle_display_menu_number_entry(
+                battle_menu_draw_font_digits(
                     layout->text_ids[column][index], 2, (s32)buffer, &g_battle_menu_text_state.pen);
             } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
                 if ((column == 2 || (column == 1 && layout->mode[2] == MENU_TEXT_COLUMN_HIDDEN))
@@ -61,7 +61,7 @@ void battle_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_of
                             g_battle_menu_text_state.pen.rect.x += 3;
                             battle_menu_display_text_entry(0x509D, buffer, &g_battle_menu_text_state.pen);
                         } else {
-                            battle_draw_menu_number_glyphs(value, 2, buffer, &g_battle_menu_text_state.pen);
+                            battle_menu_draw_large_number_glyphs(value, 2, buffer, &g_battle_menu_text_state.pen);
                         }
                     }
                 }

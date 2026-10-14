@@ -204,10 +204,10 @@ void world_screen_build_at_list(void) {
                         world_menu_display_text_entry(
                             layout->text_ids[column][index], buffer, &g_world_menu_text_state.pen);
                     } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
-                        world_display_menu_number_entry(
+                        world_menu_draw_font_digits(
                             layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
                     } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
-                        world_draw_menu_number_glyphs(
+                        world_menu_draw_large_number_glyphs(
                             layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
                     }
                 }

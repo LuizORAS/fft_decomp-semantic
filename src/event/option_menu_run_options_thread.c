@@ -214,7 +214,7 @@ void option_menu_run_options_thread(void) {
                             battle_menu_display_text_entry(
                                 layout->text_ids[column][index], image, &g_battle_menu_text_state.pen);
                         } else {
-                            battle_display_menu_number_entry(
+                            battle_menu_draw_font_digits(
                                 layout->text_ids[column][index], 2, (s32)image, &g_battle_menu_text_state.pen);
                         }
                     }

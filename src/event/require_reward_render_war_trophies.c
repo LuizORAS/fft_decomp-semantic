@@ -96,7 +96,7 @@ void require_reward_render_war_trophies(void) {
                         &g_battle_menu_text_state.pen);
                 } else {
                     battle_menu_set_text_origin(0, 0);
-                    battle_draw_menu_number_glyphs(g_require_reward_war_trophy_entry_values[last],
+                    battle_menu_draw_large_number_glyphs(g_require_reward_war_trophy_entry_values[last],
                         battle_text_count_decimal_digits(g_require_reward_war_trophy_entry_values[last]), image,
                         &g_battle_menu_text_state.pen);
                 }

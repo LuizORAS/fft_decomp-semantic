@@ -282,6 +282,12 @@ extern battle_heap_node_t* g_battle_heap_rover;
 extern u32 g_battle_heap_end_address;      /* MAIN word 0x8001000c: 0x801df000, where MAIN's game heap starts */
 extern s32 g_battle_heap_min_largest_free; /* Lowest largest-free-block size seen, in 8-byte units. */
 
+extern const char g_battle_heap_dp_format[];     /* "DP %x\n" */
+extern const char g_battle_heap_remain_format[]; /* "HEAP REMAIN %x MAX %x\n" */
+extern const char g_battle_heap_task_format[];   /* "TASK %d %x\n" */
+
+extern const char g_battle_heap_min_format[]; /* "MIN HEAP %x " */
+
 void* battle_heap_alloc_block(u32 size, s32 owner);
 void battle_heap_free_block(void* ptr);
 void battle_heap_init(battle_heap_node_t* buffer, u32 buffer_size);
@@ -2751,6 +2757,9 @@ extern battle_unit_graphics_load_queue_t g_main_gfx_unit_graphics_load_queue;
 /* The distinct spritesheets of the encounter's ENTD units (battle_unit_add_unique_entd_spritesheet). */
 extern s16 g_battle_unit_entd_spritesheet_ids[];
 extern s32 g_battle_unit_entd_spritesheet_count;
+
+extern u8 g_battle_player_unit_fallen;
+
 battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_data_t* out, s32 unit_id);
 battle_stats_t* battle_unit_find_stats_by_entd_unit_id(s32 unit_id, s32* out_battle_id);
 battle_stats_t* battle_unit_get_existing_pointer(u32 unit_id);
@@ -6610,6 +6619,46 @@ struct battle_gfx_shp_frame_table;
 
 struct battle_gfx_packed_offset_table;
 
+/* The low 9 bits select a result graphic; bit 9 alters its motion for a
+ * critical hit.  Values below 0x10 are also indices into the numeric-value
+ * table at 0x800962d4. */
+typedef enum battle_numeric_display_selector {
+    BATTLE_NUMERIC_DISPLAY_HP_DAMAGE = 0x000,
+    BATTLE_NUMERIC_DISPLAY_HP_HEALING = 0x001,
+    BATTLE_NUMERIC_DISPLAY_MP_DAMAGE = 0x002,
+    BATTLE_NUMERIC_DISPLAY_MP_HEALING = 0x003,
+    BATTLE_NUMERIC_DISPLAY_SPEED_DAMAGE = 0x004,
+    BATTLE_NUMERIC_DISPLAY_SPEED_GAIN = 0x005,
+    BATTLE_NUMERIC_DISPLAY_CT_DAMAGE = 0x006,
+    BATTLE_NUMERIC_DISPLAY_CT_GAIN = 0x007,
+    BATTLE_NUMERIC_DISPLAY_BRAVE_DAMAGE = 0x008,
+    BATTLE_NUMERIC_DISPLAY_BRAVE_GAIN = 0x009,
+    BATTLE_NUMERIC_DISPLAY_FAITH_DAMAGE = 0x00a,
+    BATTLE_NUMERIC_DISPLAY_FAITH_GAIN = 0x00b,
+    BATTLE_NUMERIC_DISPLAY_PA_DAMAGE = 0x00c,
+    BATTLE_NUMERIC_DISPLAY_PA_GAIN = 0x00d,
+    BATTLE_NUMERIC_DISPLAY_MA_DAMAGE = 0x00e,
+    BATTLE_NUMERIC_DISPLAY_MA_GAIN = 0x00f,
+    BATTLE_NUMERIC_DISPLAY_MISSED = 0x010,
+    BATTLE_NUMERIC_DISPLAY_GUARDED = 0x020,
+    BATTLE_NUMERIC_DISPLAY_CAUGHT = 0x030,
+    BATTLE_NUMERIC_DISPLAY_GAINED_EXP = 0x040,
+    BATTLE_NUMERIC_DISPLAY_GAINED_JP = 0x050,
+    BATTLE_NUMERIC_DISPLAY_STATUS_INFLICTED = 0x060,
+    BATTLE_NUMERIC_DISPLAY_STATUS_REMOVED = 0x070,
+    BATTLE_NUMERIC_DISPLAY_LEVEL_DOWN = 0x080,
+    BATTLE_NUMERIC_DISPLAY_LEVEL_UP = 0x090,
+    BATTLE_NUMERIC_DISPLAY_STOLEN = 0x0a0,
+    BATTLE_NUMERIC_DISPLAY_BROKEN = 0x0b0,
+    BATTLE_NUMERIC_DISPLAY_QUICK = 0x0c0,
+    BATTLE_NUMERIC_DISPLAY_CT_ZERO = 0x0d0,
+    BATTLE_NUMERIC_DISPLAY_NO_TARGET = 0x0e0,
+    BATTLE_NUMERIC_DISPLAY_SILENCED = 0x0f0,
+    BATTLE_NUMERIC_DISPLAY_NO_MP = 0x100,
+    BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK = 0x1ff,
+    BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL = 0x200,
+} battle_numeric_display_selector_e;
+
 extern u16 g_battle_gfx_screen_color_modulation_fade_frames;
 extern u16 g_battle_gfx_wait_direction_arrow_palette[16];
 extern u16 g_battle_gfx_map_selection_cursor_palette[16];
@@ -6733,7 +6782,7 @@ extern u16 g_battle_3d_object_wait_status; /* 0x8016606e */
 extern battle_render_buffer_t g_battle_buffer_a[2];
 void battle_gfx_copy_shp_data_to_ram(struct battle_gfx_shp_frame_table* dst, u8* src);
 void battle_gfx_resolve_packed_offset_table(u8** entries, struct battle_gfx_packed_offset_table* record);
-void battle_display_menu_number_entry(s32 value, u8 digit_count, s32 image, world_glyph_blit_t* origin);
+
 void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* screen_coords);
 void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, s32 advance);
 
@@ -8228,9 +8277,9 @@ extern u16 g_battle_menu_height_display_suppressed;
 extern s32 g_battle_menu_hide_numeric_values; /* non-zero: draw digits as blanks (0x48, 0x10) */
 extern world_gfx_image_load_parameters_t g_battle_menu_icon_strip_image_params[20];
 extern u16 g_battle_menu_input_block_frames;
-extern RECT g_battle_menu_number_glyph_rect;   /* glyph source rectangle in the number/sign font */
-extern s16 g_battle_menu_pending_selection[4]; /* 4 shorts */
-extern u8 g_battle_menu_quad_group_starts[];   /* first piece index per group; [n + 1] ends group n */
+extern RECT g_battle_menu_large_number_glyph_rect; /* glyph source rectangle in the number/sign font */
+extern s16 g_battle_menu_pending_selection[4];     /* 4 shorts */
+extern u8 g_battle_menu_quad_group_starts[];       /* first piece index per group; [n + 1] ends group n */
 extern s32 g_battle_menu_resolved_command;
 extern u8 g_battle_menu_restriction_message_ids[];
 extern s16 g_battle_menu_result;                 /* menu result: -4 pending, -1 cancelled */
@@ -8283,6 +8332,20 @@ extern s32 g_battle_menu_text_color;
  * BATTLE swap in their own tables and restore it. WORLD's twin is
  * g_world_menu_thread_menu_data. */
 extern world_menu_entry_t* g_battle_menu_thread_menu_data;
+
+extern char g_battle_menu_wait_for_allocation_message[];
+extern char g_battle_menu_wait_for_file_allocation_message[];
+
+extern RECT g_battle_numeric_display_frame_rect;
+extern RECT g_battle_numeric_display_texture_window;
+extern RECT g_battle_numeric_display_text_rect_a;
+extern RECT g_battle_numeric_display_text_rect_b;
+extern RECT g_battle_numeric_display_text_rect_c;
+extern world_gfx_image_load_parameters_t g_battle_numeric_display_image_params[18];
+extern u8 g_battle_numeric_display_entries[];
+extern world_menu_palette_slot_t g_battle_numeric_display_palettes[];
+
+extern RECT g_battle_menu_small_number_glyph_rect; /* glyph source rectangle in the large number font */
 
 void battle_menu_display_hovered_unit_stats(
     RECT* frame_rect, s32 mode, menu_number_entry_t* entries, battle_unit_status_record_t* status);
@@ -8445,7 +8508,7 @@ void battle_menu_unblock_help(void);
 void battle_menu_open_bunit(void);
 void battle_menu_run_bunit_transition_thread(void);
 void battle_menu_block_help(void);
-void battle_draw_menu_number_glyphs(s32 value, s32 digits, void* resource, world_glyph_blit_t* pos);
+void battle_menu_draw_large_number_glyphs(s32 value, s32 digits, void* resource, world_glyph_blit_t* pos);
 void battle_menu_display_text(u32 text_id, s32 image, world_glyph_blit_t* origin, u8* text);
 
 u8* battle_menu_redraw_text_page_on_scroll_in_rect(
@@ -8460,71 +8523,35 @@ void battle_menu_set_text_origin(s32 x, s32 y);
 s32 battle_menu_should_close_thread(s32* out_flag);
 void battle_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b);
 
+void battle_menu_draw_font_digits(s32 value, u8 digit_count, s32 image, world_glyph_blit_t* origin);
+
+void battle_menu_draw_small_number_glyphs(s32 value, s32 digits, void* resource, world_glyph_blit_t* pos);
+
+s32 battle_menu_read_packed_nibble(u8* data, s32 index, s32 row, s32 stride);
+
+void battle_menu_mirror_packed_nibble_region(u8* data, world_glyph_blit_t* region);
+u8* battle_menu_text_advance_cursor_with_backreferences(world_text_backreference_state_t* reader, u8* p);
+
+void battle_menu_write_packed_nibble(u8* data, s32 index, s32 row, s32 stride, s32 value);
+
 /* text */
-/* The low 9 bits select a result graphic; bit 9 alters its motion for a
- * critical hit.  Values below 0x10 are also indices into the numeric-value
- * table at 0x800962d4. */
-typedef enum battle_numeric_display_selector {
-    BATTLE_NUMERIC_DISPLAY_HP_DAMAGE = 0x000,
-    BATTLE_NUMERIC_DISPLAY_HP_HEALING = 0x001,
-    BATTLE_NUMERIC_DISPLAY_MP_DAMAGE = 0x002,
-    BATTLE_NUMERIC_DISPLAY_MP_HEALING = 0x003,
-    BATTLE_NUMERIC_DISPLAY_SPEED_DAMAGE = 0x004,
-    BATTLE_NUMERIC_DISPLAY_SPEED_GAIN = 0x005,
-    BATTLE_NUMERIC_DISPLAY_CT_DAMAGE = 0x006,
-    BATTLE_NUMERIC_DISPLAY_CT_GAIN = 0x007,
-    BATTLE_NUMERIC_DISPLAY_BRAVE_DAMAGE = 0x008,
-    BATTLE_NUMERIC_DISPLAY_BRAVE_GAIN = 0x009,
-    BATTLE_NUMERIC_DISPLAY_FAITH_DAMAGE = 0x00a,
-    BATTLE_NUMERIC_DISPLAY_FAITH_GAIN = 0x00b,
-    BATTLE_NUMERIC_DISPLAY_PA_DAMAGE = 0x00c,
-    BATTLE_NUMERIC_DISPLAY_PA_GAIN = 0x00d,
-    BATTLE_NUMERIC_DISPLAY_MA_DAMAGE = 0x00e,
-    BATTLE_NUMERIC_DISPLAY_MA_GAIN = 0x00f,
-    BATTLE_NUMERIC_DISPLAY_MISSED = 0x010,
-    BATTLE_NUMERIC_DISPLAY_GUARDED = 0x020,
-    BATTLE_NUMERIC_DISPLAY_CAUGHT = 0x030,
-    BATTLE_NUMERIC_DISPLAY_GAINED_EXP = 0x040,
-    BATTLE_NUMERIC_DISPLAY_GAINED_JP = 0x050,
-    BATTLE_NUMERIC_DISPLAY_STATUS_INFLICTED = 0x060,
-    BATTLE_NUMERIC_DISPLAY_STATUS_REMOVED = 0x070,
-    BATTLE_NUMERIC_DISPLAY_LEVEL_DOWN = 0x080,
-    BATTLE_NUMERIC_DISPLAY_LEVEL_UP = 0x090,
-    BATTLE_NUMERIC_DISPLAY_STOLEN = 0x0a0,
-    BATTLE_NUMERIC_DISPLAY_BROKEN = 0x0b0,
-    BATTLE_NUMERIC_DISPLAY_QUICK = 0x0c0,
-    BATTLE_NUMERIC_DISPLAY_CT_ZERO = 0x0d0,
-    BATTLE_NUMERIC_DISPLAY_NO_TARGET = 0x0e0,
-    BATTLE_NUMERIC_DISPLAY_SILENCED = 0x0f0,
-    BATTLE_NUMERIC_DISPLAY_NO_MP = 0x100,
-    BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK = 0x1ff,
-    BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL = 0x200,
-} battle_numeric_display_selector_e;
+/* BATTLE's text engine (battle_text_*): the 32 text sections and the menu text BATTLE.BIN carries
+ * (EVENT/SAMPLE.LZW), entry lookup and measuring, the substitution values, the dialog thread and its
+ * typewriter, and the spell quotes. The text format itself is in menu.h. */
 
 /* Text variables $27 and $28 (rows of glyph pixels drawn, 0x10 by default),
  * bound separately: battle_menu_display_text also takes the table base, and
  * element spellings let GCC address them from it. */
 extern s32 g_battle_text_substitution_value_27;
 extern s32 g_battle_text_substitution_value_28;
-extern char g_battle_text_wait_for_allocation_message[];
-extern char g_battle_text_wait_for_file_allocation_message[];
+
 extern u8 g_battle_text_glyph_bitmaps[];
 extern u16 g_battle_text_speaker_swap_unit_a;
 extern u16 g_battle_text_speaker_swap_unit_b;
-extern RECT g_battle_numeric_display_frame_rect;
-extern RECT g_battle_numeric_display_texture_window;
-extern RECT g_battle_numeric_display_text_rect_a;
-extern RECT g_battle_numeric_display_text_rect_b;
-extern RECT g_battle_numeric_display_text_rect_c;
-extern world_gfx_image_load_parameters_t g_battle_numeric_display_image_params[18];
-extern u8 g_battle_numeric_display_entries[];
-extern world_menu_palette_slot_t g_battle_numeric_display_palettes[];
-extern u8 g_battle_player_unit_fallen;
 
 /* Player name buffer substituted for text command 0xE0, 0xFE-terminated;
  * 0x801720cf is its last byte. */
 extern u8 g_battle_text_player_name[20];
-extern RECT g_battle_text_large_number_glyph_rect; /* glyph source rectangle in the large number font */
 
 extern menu_text_state_t
     g_battle_text_typewriter_state; /* origin/stride passed to battle_text_render_glyph_to_4bpp_image */
@@ -8548,22 +8575,17 @@ extern const u8 g_battle_text_glyph_widths[];
 extern s32 g_battle_text_awaiting_input;
 extern s32 g_battle_text_current_line;
 extern u32 g_battle_text_decimal_divisors[];
-extern s32 g_battle_text_glyphs_per_wait;             /* glyphs drawn before the typewriter waits */
-extern const char g_battle_text_heap_dp_format[];     /* "DP %x\n" */
-extern const char g_battle_text_heap_remain_format[]; /* "HEAP REMAIN %x MAX %x\n" */
-extern const char g_battle_text_heap_task_format[];   /* "TASK %d %x\n" */
+extern s32 g_battle_text_glyphs_per_wait; /* glyphs drawn before the typewriter waits */
 
 /* Pixel width of each line measured by the last call. */
 extern s32 g_battle_text_line_widths[];
 extern void* g_battle_text_message_buffer;
-extern const char g_battle_text_min_heap_format[];     /* "MIN HEAP %x " */
-extern char g_battle_text_reading_character_message[]; /* "reading charactor%d \n" */
-extern u8 g_battle_text_slot_row_pitches[];            /* per-slot source row pitch in bytes */
-extern u8 g_battle_text_slot_source_columns[];         /* per-slot source column */
+
+extern u8 g_battle_text_slot_row_pitches[];    /* per-slot source row pitch in bytes */
+extern u8 g_battle_text_slot_source_columns[]; /* per-slot source column */
 /* Text variables $00-$1F. TEXT_PRINT_INDEXED_VALUE indexes them with a raw
  * text byte, so a larger index reads the globals that follow. */
 extern s32 g_battle_text_substitution_values[32];
-extern s16 g_battle_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
 
 /* Text substitutions $7E/$7F (0x801660ec, table index 0x7e from 0x80165ef4)
  * as the four halfwords battle_text_set_substitution_values_7e_7f stores. */
@@ -8585,20 +8607,18 @@ void battle_text_set_message_duration_frames(u16 frames);
 void battle_text_relocate_pointer_table(const u32* offsets);
 void battle_text_restore_section_pointers(void);
 void battle_text_save_section_pointers(void);
-void battle_text_draw_large_number_glyphs(s32 value, s32 digits, void* resource, world_glyph_blit_t* pos);
+
 void battle_text_character_handling_thread(void);
 void battle_text_configure_sprite_vram(RECT* rect, s16 width, s16 height, SPRT* sprite, s32 clut_offset);
 u8* battle_text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor);
 s32 battle_text_count_decimal_digits(s32 value);
 void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
 void battle_text_print_fnt_value_and_next(s32 value);
-s32 battle_text_read_packed_nibble(u8* data, s32 index, s32 row, s32 stride);
+
 s32 battle_text_resolve_format_string_id(s32 format_code, s32 value);
 
 /* The caller leaves 0x16f in $a1, but the body never reads $a1. */
 void battle_text_fill_field_with_terminators(u8* text);
-void battle_text_mirror_packed_nibble_region_horizontal(u8* data, world_glyph_blit_t* region);
-u8* battle_menu_text_advance_cursor_with_backreferences(world_text_backreference_state_t* reader, u8* p);
 
 /* script */
 /* The event-script interpreter (battle_script_*): loading and running an event, its frame, the
@@ -8658,6 +8678,10 @@ extern u8 g_battle_script_event_instruction_sizes[0xf4];
 
 /* 0x801660a3: suppress recursive write filtering while getters use operand 0. */
 extern u8 g_battle_script_variable_write_guard;
+
+extern char g_battle_script_reading_character_message[]; /* "reading charactor%d \n" */
+
+extern s16 g_battle_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
 
 /* Scenario interpreter interfaces shared by battle_script_execute_event and
  * world_script_execute_event. Signatures are as the interpreters bind them;
@@ -9027,7 +9051,7 @@ s32 battle_fixed_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 void save_3_u16(SVECTOR* output, u16 x, u16 y, u16 z);
 s32 battle_status_prepare_terrain_poison(battle_stats_t* unit);
 s32 battle_return_one(s32 unused_misc_id);
-void battle_write_packed_nibble(u8* data, s32 index, s32 row, s32 stride, s32 value);
+
 s32 battle_return_zero(void);
 void blit_text_glyph(void* text, void* pixels, void* glyph, void* position);
 void battle_menu_display_text_string(s32 buffer, s32 position, s32 text);

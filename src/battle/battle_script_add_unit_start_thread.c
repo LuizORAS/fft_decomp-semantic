@@ -55,7 +55,7 @@ void battle_script_add_unit_start_thread(void) {
                     break;
                 }
                 if (g_main_debug_display_enabled != 0) {
-                    FntPrint(g_battle_text_reading_character_message, slot);
+                    FntPrint(g_battle_script_reading_character_message, slot);
                 }
             }
         }

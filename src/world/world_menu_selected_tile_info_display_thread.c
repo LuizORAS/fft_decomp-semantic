@@ -57,7 +57,7 @@ void world_menu_selected_tile_info_display_thread(void) {
             world_clear_menu_render_buffer(buffer, 0x100);
             g_world_menu_text_state.pen.stride = 0x18;
             world_menu_set_text_origin(0x10, 0);
-            world_draw_menu_number_glyphs(*value, 1, buffer, &g_world_menu_text_state.pen);
+            world_menu_draw_large_number_glyphs(*value, 1, buffer, &g_world_menu_text_state.pen);
             if (g_world_menu_height_display_suppressed == 0) {
                 LoadImage(&rect, buffer);
                 page->sprites[0].clut = 0x7CBC;

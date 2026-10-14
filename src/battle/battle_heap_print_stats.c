@@ -29,19 +29,19 @@ void battle_heap_print_stats(void) {
         }
         free_node = free_node->next;
     }
-    FntPrint(g_battle_text_heap_remain_format, total * 8, largest * 8);
+    FntPrint(g_battle_heap_remain_format, total * 8, largest * 8);
     if (largest < g_battle_heap_min_largest_free) {
         g_battle_heap_min_largest_free = largest;
     }
-    FntPrint(g_battle_text_min_heap_format, g_battle_heap_min_largest_free * 8);
-    FntPrint(g_battle_text_heap_dp_format, D_801BACC4 * 4 + D_801BC0D8);
+    FntPrint(g_battle_heap_min_format, g_battle_heap_min_largest_free * 8);
+    FntPrint(g_battle_heap_dp_format, D_801BACC4 * 4 + D_801BC0D8);
     for (owner = 0; owner < 16; owner++) {
         used = 0;
         for (node = g_battle_heap_owner_lists[owner].head; node != 0; node = node->next) {
             used += node->size;
         }
         if (used != 0) {
-            FntPrint(g_battle_text_heap_task_format, owner, used * 8);
+            FntPrint(g_battle_heap_task_format, owner, used * 8);
         }
     }
 }

@@ -93,7 +93,7 @@ void* battle_menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode
         blit_text_glyph(
             g_battle_menu_glyph_image, buf, &g_battle_menu_window_sprite_glyph, &g_battle_menu_window_sprite_position);
         if (i != 0) {
-            battle_text_mirror_packed_nibble_region_horizontal((u8*)buf, &g_battle_menu_window_sprite_position);
+            battle_menu_mirror_packed_nibble_region((u8*)buf, &g_battle_menu_window_sprite_position);
         }
     }
     if (keep != 0) {

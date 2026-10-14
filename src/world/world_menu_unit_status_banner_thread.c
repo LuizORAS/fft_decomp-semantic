@@ -420,17 +420,16 @@ void world_menu_unit_status_banner_thread(void) {
             world_clear_menu_render_buffer(render_b, 0xF0);
             g_world_menu_text_state.pen.stride = 0x10;
             world_menu_set_text_origin(0, 0);
-            world_text_render_decimal_value_or_dashes(identity->brave, 0x202, render_b, &g_world_menu_text_state.pen);
+            world_menu_draw_small_number_glyphs(identity->brave, 0x202, render_b, &g_world_menu_text_state.pen);
             LoadImage(&rects[3], (u32*)render_b);
             world_menu_set_text_origin(0, 0);
             render_b_second = render_b + 0x50;
-            world_text_render_decimal_value_or_dashes(
-                identity->faith, 0x202, render_b_second, &g_world_menu_text_state.pen);
+            world_menu_draw_small_number_glyphs(identity->faith, 0x202, render_b_second, &g_world_menu_text_state.pen);
             LoadImage(&rects[4], (u32*)render_b_second);
             if (g_world_unit_join_screen_active == 0) {
                 world_menu_set_text_origin(0, 0);
                 render_b_third = render_b + 0xA0;
-                world_text_render_decimal_value_or_dashes(
+                world_menu_draw_small_number_glyphs(
                     identity->roster_slot + 1, 0x4002, render_b_third, &g_world_menu_text_state.pen);
                 LoadImage(&rects[5], (u32*)render_b_third);
             } else {

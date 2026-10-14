@@ -206,10 +206,10 @@ void option_menu_run_list_thread(void) {
                             battle_menu_display_text_entry(
                                 layout->text_ids[column][index], buffer, &g_battle_menu_text_state.pen);
                         } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
-                            battle_display_menu_number_entry(
+                            battle_menu_draw_font_digits(
                                 layout->text_ids[column][index], 2, (s32)buffer, &g_battle_menu_text_state.pen);
                         } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
-                            battle_draw_menu_number_glyphs(
+                            battle_menu_draw_large_number_glyphs(
                                 layout->text_ids[column][index], 2, buffer, &g_battle_menu_text_state.pen);
                         }
                     }

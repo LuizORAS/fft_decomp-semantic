@@ -401,9 +401,9 @@ functions:
   - {addr: 0x800fdce8, size: 8, name: world_script_frame_after_requests_stub, hash: 6d64edf91449c1b1}
   - {addr: 0x800fdcf0, size: 584, name: world_gfx_init_image_loading, hash: 56e863033028a2cf}
   - {addr: 0x800fdf38, size: 220, name: world_menu_draw_numeric_display_entries, hash: 461d47a099c3c386}
-  - {addr: 0x800fe014, size: 216, name: world_display_menu_number_entry, hash: e179fd188c407888}
-  - {addr: 0x800fe0ec, size: 656, name: world_draw_menu_number_glyphs, hash: 26c59663a62488f1}
-  - {addr: 0x800fe37c, size: 876, name: world_text_render_decimal_value_or_dashes, hash: 74bc0e5728cbaac8}
+  - {addr: 0x800fe014, size: 216, name: world_menu_draw_font_digits, hash: e179fd188c407888}
+  - {addr: 0x800fe0ec, size: 656, name: world_menu_draw_large_number_glyphs, hash: 26c59663a62488f1}
+  - {addr: 0x800fe37c, size: 876, name: world_menu_draw_small_number_glyphs, hash: 74bc0e5728cbaac8}
   - {addr: 0x800fe6e8, size: 140, name: world_menu_draw_stacked_glyph_pair, hash: 6e915a75c99aeb13}
   - {addr: 0x800fe774, size: 48, name: world_menu_display_text_entry, hash: 510cb1258e639e13}
   - {addr: 0x800fe7a4, size: 48, name: world_menu_display_text_entry_past_choice_marks, hash: 99e2ba5c27fe29f3}
@@ -1023,11 +1023,11 @@ functions:
 
 data:
   - {addr: 0x800e0000, name: g_psyq_gs_sort_sprite_overflow_message}
-  - {addr: 0x800e002c, name: g_world_text_wait_for_allocation_message}
+  - {addr: 0x800e002c, name: g_world_menu_wait_for_allocation_message}
   - {addr: 0x800e0050, name: g_world_text_decimal_format}
-  - {addr: 0x800e0054, name: g_world_text_wait_for_file_allocation_message}
+  - {addr: 0x800e0054, name: g_world_menu_wait_for_file_allocation_message}
   - {addr: 0x800e0070, name: g_world_script_pause_message}
-  - {addr: 0x800e007c, name: g_world_text_reading_character_message}
+  - {addr: 0x800e007c, name: g_world_script_reading_character_message}
   - {addr: 0x800e01e8, name: g_world_card_save_title_template}
   - {addr: 0x800eda00, name: g_open_work_buffer_1}
   - {addr: 0x800feff0, name: world_text_blit_glyph}
@@ -1262,8 +1262,8 @@ data:
   - {addr: 0x80156be8, name: g_world_status_removal_mask_unstaged}
   - {addr: 0x80156bf0, name: g_world_status_removal_mask_staged}
   - {addr: 0x80156bf8, name: g_world_status_removal_mask_staged_monster}
-  - {addr: 0x80156c00, name: g_world_menu_number_glyph_rect}
-  - {addr: 0x80156c10, name: g_world_text_large_number_glyph_rect}
+  - {addr: 0x80156c00, name: g_world_menu_large_number_glyph_rect}
+  - {addr: 0x80156c10, name: g_world_menu_small_number_glyph_rect}
   - {addr: 0x80156c20, name: g_world_menu_stacked_glyph_lower}
   - {addr: 0x80156c30, name: g_world_menu_stacked_glyph_upper}
   - {addr: 0x80156c40, name: g_world_menu_window_sprite_glyph}

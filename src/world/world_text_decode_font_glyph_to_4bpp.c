@@ -1,9 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Decodes glyph `glyph` from the packed 2bpp font into a 4bpp image at
- * `image`, placed by `target`, adding `palette * 4` to every non-zero
- * pixel.  Returns the glyph's advance width. */
+/* Decode glyph `glyph` of the dialog font (10 x 14 pixels at 2 bits, 35 bytes) into the 4-bit image
+ * `image` at `target`, adding `palette * 4` to every non-zero pixel, and return the glyph's advance width. */
 s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_target_t* target, s32 palette) {
     s32 row;
     s32 col;
