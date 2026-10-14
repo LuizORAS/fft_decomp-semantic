@@ -230,6 +230,10 @@ extern RECT g_world_screen_menu_thin_panel_texture_windows[7];
 extern RECT g_world_screen_menu_panel_texture_windows[7];
 
 /* sound */
+/* WORLD's sounds: the menu sound queue that the shop, formation and save screens play once a frame
+ * (world_sound_dispatch_effect). The music requests, the two tracks and the background sound threads
+ * belong to WORLD's copy of the event interpreter, which never runs. */
+
 extern s16 g_world_sound_current_music_track_index;
 extern s32 g_world_sound_pending_sfx_id; /* main_sfx_e; -1 while the event frame has no request */
 extern s16 g_world_sound_music_switch_request;

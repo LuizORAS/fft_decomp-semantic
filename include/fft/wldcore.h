@@ -95,6 +95,10 @@ void wldcore_input_read_pad(void);
 u32 wldcore_input_check_repeating_directional(u32 buttons);
 
 /* sound */
+/* The world map's audio queue, which runs music loads, fades and unloads in order while the frames go
+ * on; the sound effect entry and the location scripts' sound requests; and the sound novels: their
+ * script and text files, flags, timers, text history and sound bank. */
+
 /* The music words at +0x8c: the first is both the music flags and slot 0 of
  * the per-slot loaded-track table, since the target indexes the table from
  * that address. */
@@ -137,12 +141,6 @@ typedef struct wldcore_audio_queue {
     s32 volume;                        /* 0x9c */
 } wldcore_audio_queue_t;
 typedef char wldcore_audio_queue_size_must_be_0xa0[sizeof(wldcore_audio_queue_t) == 0xa0 ? 1 : -1];
-
-/* wldcore_slideshow_t.flags. */
-typedef enum wldcore_slideshow_flag {
-    WLDCORE_SLIDESHOW_RUNNING = 0x01,  /* the page timer runs */
-    WLDCORE_SLIDESHOW_REVERSED = 0x02, /* the route is shown end to start */
-} wldcore_slideshow_flag_e;
 
 /* Rows of four sound numbers in the WLDCORE sound bank (id 0xE1), indexed by
  * a sound id from 1. Row 0 is not a sound row: 0x8009ec18 holds the eighth
@@ -795,6 +793,12 @@ typedef struct wldcore_slideshow {
     s16 point_count;     /* 0x2a */
     s16 coords[1];       /* 0x2c; packed (x, y) pairs */
 } wldcore_slideshow_t;
+
+/* wldcore_slideshow_t.flags. */
+typedef enum wldcore_slideshow_flag {
+    WLDCORE_SLIDESHOW_RUNNING = 0x01,  /* the page timer runs */
+    WLDCORE_SLIDESHOW_REVERSED = 0x02, /* the route is shown end to start */
+} wldcore_slideshow_flag_e;
 
 extern s32* g_wldcore_rumor_location_masks;
 extern wldcore_word_pair_t g_wldcore_story_events_cursor_state;

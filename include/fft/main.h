@@ -55,7 +55,6 @@ void main_system_store_stack_pointer(u32* destination);
 void main_system_handle_draw_sync_callback(void);
 void main_system_handle_vsync_callback(void);
 
-void main_sound_init_stub(void);
 void main_system_enable_root_counter_2_evcb(void);
 void main_system_disable_root_counter_2_evcb(void);
 
@@ -1638,6 +1637,12 @@ typedef struct suzuki_play_time {
 } suzuki_play_time_t;
 
 /* sound */
+/* MAIN's sound control over the Suzuki driver: sound resources and sound ids, the music slots (two for
+ * the scenario's music, five for the tunes) and their loads, the tune that interrupts the music, the
+ * music and sound effect ids, the eight SFX channels and their priorities, the background sound, the
+ * sound type, volumes and reverb, the wavesets in SPU RAM and the root-counter tick that drives the
+ * driver. */
+
 /* Loaded sound resource (a "feds" block: SYSTEM.SED, ENV.SED, or the block
  * inside an effect file or WLDCORE.BIN), kept by the Suzuki driver in a
  * singly linked list through next (SuzukiAppendVFXSMD). main_sound_start_sfx
@@ -2108,6 +2113,10 @@ static inline void main_sound_flush_key_off_inline(void) {
         SpuSetKey(0, voices);
 }
 
+void main_sound_init_stub(void);
+
+s32 main_sound_is_music_loading_stub(void);
+
 /* smd */
 /* Driver tables (read-only data 0x80028b0c-0x8002a8d8). */
 extern suzuki_smd_handler_t g_main_smd_opcode_handlers[0x80]; /* 0x80028b0c; opcodes 0x80-0xff */
@@ -2242,6 +2251,5 @@ extern u8 g_main_terrain_tile_info_pairs[];
 /* Second link name of main_item_get_total_equipment_quantity with an s32 id: battle_action_add_party_item
  * passes its masked s32 id without the andi the u8 prototype adds. */
 s32 get_total_equipment_quantity(s32 item_id, s32 include_equipped);
-s32 main_sound_is_music_loading_stub(void);
 
 #endif
