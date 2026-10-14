@@ -230,6 +230,9 @@ typedef struct textured_rect_source {
 } textured_rect_source_t;
 typedef char textured_rect_source_size_must_be_16[sizeof(textured_rect_source_t) == 16 ? 1 : -1];
 
+void gfx_enqueue_gouraud_textured_quad(
+    const textured_rect_source_t* rect, const rgb24_t* color, s32 semitrans, s32 otag_index);
+
 /* image loading */
 /* Scene-local GPU texture window; also the default draw-area rectangle. */
 extern RECT g_gfx_texture_window;

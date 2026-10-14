@@ -875,7 +875,7 @@ functions:
   - {addr: 0x8012c8bc, size: 1044, name: world_gfx_enqueue_oriented_textured_quad, hash: d8f5a8de17e2f88a}
   - {addr: 0x8012ccd0, size: 508, name: world_gfx_enqueue_textured_quad_corners, hash: c4fceb98c52526bd}
   - {addr: 0x8012cecc, size: 264, name: world_gfx_enqueue_draw_move, hash: 864c1f15031931d7}
-  - {addr: 0x8012cfd4, size: 648, name: world_gfx_enqueue_gouraud_textured_quad, hash: 8cd3a294e9e6a1ef}
+  - {addr: 0x8012cfd4, size: 648, name: world_gfx_enqueue_gouraud_textured_quad, hash: 8cd3a294e9e6a1ef, source: src/shared/gfx/gfx_enqueue_gouraud_textured_quad.c, source_symbol: gfx_enqueue_gouraud_textured_quad}
   - {addr: 0x8012d25c, size: 228, name: world_gfx_add_draw_area_primitive, hash: e7bfa939d7f5fdf9}
   - {addr: 0x8012d340, size: 216, name: world_gfx_enqueue_draw_mode, hash: b3527d193a2cd310}
   - {addr: 0x8012d418, size: 60, name: world_gfx_get_fade_state, hash: d7f4e2f99b4809ad}
@@ -2380,6 +2380,8 @@ overrides:
   - {function: world_card_read_file_with_retries, name: card_file_seek_with_retries, addr: 0x80132f7c}
   - {function: world_card_seek_file_with_retries, name: card_io_wait_operation_result, addr: 0x80132b50}
   - {function: world_card_write_file_with_retries, name: card_file_seek_with_retries, addr: 0x80132f7c}
+  - {function: world_gfx_enqueue_gouraud_textured_quad, name: g_bunit_gfx_poly_gt4_count, addr: 0x801cd1d0}
+  - {function: world_gfx_enqueue_gouraud_textured_quad, name: g_menu_gfx_context, addr: 0x801cd528}
   - {function: world_gfx_init_scaled_draw_area_packets, name: g_menu_draw_area_template, addr: 0x801531b0}
   - {function: world_gfx_set_blit_source_rect, name: g_world_gfx_image_blit_source, addr: 0x801c000c}
   - {function: world_is_skillset_in_spell_quote_exception_list, name: g_battle_spell_quote_exception_skillsets, addr: 0x80156748}

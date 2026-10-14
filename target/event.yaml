@@ -477,7 +477,7 @@ functions:
   - {addr: 0x801cd444, size: 460, name: bunit_gfx_enqueue_gouraud_quad, hash: 8f11049e7f2e617c}
   - {addr: 0x801cd610, size: 632, name: menu_gfx_enqueue_textured_quad_list, hash: 89e1989b186692ef, source: src/shared/menu/menu_gfx_enqueue_textured_quad_list.c}
   - {addr: 0x801cd888, size: 532, name: menu_gfx_enqueue_textured_quad, hash: 9f5ded393ed34318, source: src/shared/menu/menu_gfx_enqueue_textured_quad.c}
-  - {addr: 0x801cda9c, size: 648, name: bunit_gfx_enqueue_gouraud_textured_quad, hash: b012086d3eed574e}
+  - {addr: 0x801cda9c, size: 648, name: bunit_gfx_enqueue_gouraud_textured_quad, hash: b012086d3eed574e, source: src/shared/gfx/gfx_enqueue_gouraud_textured_quad.c, source_symbol: gfx_enqueue_gouraud_textured_quad}
   - {addr: 0x801cdd24, size: 1044, name: menu_gfx_enqueue_oriented_textured_quad, hash: 487cd03ab6bba3e3, source: src/shared/menu/menu_gfx_enqueue_oriented_textured_quad.c}
   - {addr: 0x801ce138, size: 508, name: bunit_gfx_enqueue_textured_quad_corners, hash: b88c80b508ead92e}
   - {addr: 0x801ce334, size: 216, name: menu_gfx_enqueue_draw_mode, hash: 0b17bfff3c7058c9, source: src/shared/menu/menu_gfx_enqueue_draw_mode.c}
