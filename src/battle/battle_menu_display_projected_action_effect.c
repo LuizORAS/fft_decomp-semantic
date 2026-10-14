@@ -54,8 +54,8 @@ s32 battle_menu_display_projected_action_effect(
     /* A skipped preview leaves the action null, and its accuracy is read
      * (from kernel RAM) before the null test. */
     action = g_battle_menu_preview_target_action;
-    g_battle_menu_active_turn_banner.projected_hit_percent = action->attack_accuracy;
-    target_id = g_battle_preview_target_unit_id;
+    g_menu_selected_unit_status.projected_hit_percent = action->attack_accuracy;
+    target_id = g_menu_comparison_battle_id;
     if (target_id == 0xff || action == 0) {
         g_battle_menu_projected_value_panel[0].kind = 2;
         g_battle_menu_projected_value_panel[1].kind = 2;
@@ -223,7 +223,7 @@ s32 battle_menu_display_projected_action_effect(
         }
     }
 
-    g_battle_menu_active_turn_banner.projected_display_value = value;
+    g_menu_selected_unit_status.projected_display_value = value;
     if (image != ACTION_DISPLAY_IMAGE_NONE && (image != 0 || show_empty != 0)) {
         rect = &g_action_display_image_rects[image];
         params->x_load = rect->u;

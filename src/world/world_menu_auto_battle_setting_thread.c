@@ -59,7 +59,7 @@ void world_menu_auto_battle_setting_thread(void) {
             if (((g_script_event_input & PSX_PAD_CIRCLE) && world_thread_is_previous_running() == 0) || i == 0) {
                 selected = cursor;
                 if (selected == 0) {
-                    before = battle_menu_get_id_based_on_mount_moveable_actable(g_world_active_unit_data.battle_id);
+                    before = battle_menu_get_id_based_on_mount_moveable_actable(g_menu_selected_unit.battle_id);
                     stats->auto_battle_setting = AI_AUTOBATTLE_MANUAL;
                     g_menu_pending_selection[0] = 0x12;
                     colour[0] = 8;
@@ -67,7 +67,7 @@ void world_menu_auto_battle_setting_thread(void) {
                     colour[2] = 4;
                     colour[3] = 4;
                     colour[4] = 4;
-                    after = battle_menu_get_id_based_on_mount_moveable_actable(g_world_active_unit_data.battle_id);
+                    after = battle_menu_get_id_based_on_mount_moveable_actable(g_menu_selected_unit.battle_id);
                     if (before != after) {
                         thread_set_parameters(THREAD_SLOT_MENU, 0, 0, 1);
                         world_menu_build_idle_action_stub(after);

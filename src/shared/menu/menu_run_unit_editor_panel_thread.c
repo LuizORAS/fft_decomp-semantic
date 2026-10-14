@@ -79,7 +79,7 @@ void menu_run_unit_editor_panel_thread(void) {
 
     /* Each arm copies all four rows itself; the compiler cross-jumps the
        common tails, leaving only the first call's table loads in the arms. */
-    if (g_battle_menu_billboard_data.state.two_hands != 0) {
+    if (g_menu_selected_unit_fields.state.two_hands != 0) {
         mem_copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_a[2], g_battle_unit_editor_row_image_params_b,
             2 * sizeof(image_load_parameters_t));
         mem_copy_bytes_nonempty(&g_battle_unit_editor_sprite_image_params_a[14],
@@ -99,7 +99,7 @@ void menu_run_unit_editor_panel_thread(void) {
             &g_battle_unit_editor_row_image_params_a[2], 2 * sizeof(image_load_parameters_t));
     }
     /* These sprite and rectangle records share the fields read by the image loader. */
-    if (g_battle_menu_billboard_data.state.generic_monster == 0) {
+    if (g_menu_selected_unit_fields.state.generic_monster == 0) {
         for (i = 0; i < 19; i++) {
             gfx_init_image_loading(&frame_record->sprites[i], &g_battle_menu_texture_location,
                 &g_battle_unit_editor_panel_rect, &g_battle_unit_editor_sprite_image_params_a[i]);
@@ -114,8 +114,7 @@ void menu_run_unit_editor_panel_thread(void) {
     for (i = 0; i < 5; i++) {
         gfx_init_image_loading(&frame_record->sprites[19 + i], &g_battle_item_icon_image_location,
             &g_battle_unit_editor_panel_rect, &g_battle_unit_editor_item_icon_image_params[i]);
-        battle_gfx_set_item_icon_sprite(
-            &frame_record->sprites[19 + i], g_battle_menu_billboard_data.state.equipment[i]);
+        battle_gfx_set_item_icon_sprite(&frame_record->sprites[19 + i], g_menu_selected_unit_fields.state.equipment[i]);
     }
 
     buffer = battle_menu_alloc_buffer(0xC80);
@@ -123,8 +122,8 @@ void menu_run_unit_editor_panel_thread(void) {
     g_menu_text_state.pen.stride = 0x50;
     battle_menu_set_text_origin(0, 0);
     for (i = 0; i < 5; i++) {
-        value = g_battle_menu_billboard_data.state.equipment[i] + TEXT_ID_ITEM_NAME_BASE;
-        if ((u16)g_battle_menu_billboard_data.state.equipment[i] == 0xFFFF) {
+        value = g_menu_selected_unit_fields.state.equipment[i] + TEXT_ID_ITEM_NAME_BASE;
+        if ((u16)g_menu_selected_unit_fields.state.equipment[i] == 0xFFFF) {
             g_menu_text_state.pen.rect.y += 0x10;
         } else {
             battle_menu_display_text_entry(value, buffer, &g_menu_text_state.pen);
@@ -137,11 +136,11 @@ void menu_run_unit_editor_panel_thread(void) {
     g_menu_text_state.pen.stride = 0x50;
     battle_menu_set_text_origin(0, 0);
     for (i = 0; i < 2; i++) {
-        value = g_battle_menu_billboard_data.state.ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
-        if (g_battle_menu_billboard_data.state.generic_monster != 0) {
-            value = g_battle_menu_billboard_data.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
+        value = g_menu_selected_unit_fields.state.ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
+        if (g_menu_selected_unit_fields.state.generic_monster != 0) {
+            value = g_menu_selected_unit_fields.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
         }
-        if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
+        if ((u16)g_menu_selected_unit_fields.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
             g_menu_text_state.pen.rect.y += 0x10;
         } else {
             battle_menu_display_text_entry(value, buffer, &g_menu_text_state.pen);
@@ -149,17 +148,17 @@ void menu_run_unit_editor_panel_thread(void) {
         }
     }
     for (i = 2; i < 5; i++) {
-        value = g_battle_menu_billboard_data.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
-        if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
+        value = g_menu_selected_unit_fields.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
+        if ((u16)g_menu_selected_unit_fields.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
             g_menu_text_state.pen.rect.y += 0x10;
         } else {
             battle_menu_display_text_entry(value, buffer, &g_menu_text_state.pen);
             g_menu_text_state.pen.rect.y += 0x10;
         }
     }
-    if (g_battle_menu_billboard_data.state.generic_monster != 0) {
+    if (g_menu_selected_unit_fields.state.generic_monster != 0) {
         for (i = 0; i < 5; i++) {
-            if ((u16)g_battle_menu_billboard_data.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
+            if ((u16)g_menu_selected_unit_fields.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
                 frame_record->sprites[7 + i].x0 -= 0x200;
             }
         }
@@ -215,9 +214,9 @@ void menu_run_unit_editor_panel_thread(void) {
                 break;
             }
             if ((g_script_event_input & PSX_PAD_CIRCLE) && battle_thread_is_running_asm(THREAD_SLOT_MENU_BUILDING) == 0
-                && (unit_has_any_current_status(g_battle_active_turn_unit.battle_id) != 0
-                    || (g_battle_menu_billboard_data.state.generic_monster == 0
-                        && g_battle_menu_active_turn_banner.team_kind != 1))) {
+                && (unit_has_any_current_status(g_menu_selected_unit.battle_id) != 0
+                    || (g_menu_selected_unit_fields.state.generic_monster == 0
+                        && g_menu_selected_unit_status.team_kind != 1))) {
                 thread_start(g_thread_current_id - 1, battle_menu_build_unit_status_list);
                 thread_set_parameters(
                     g_thread_current_id - 1, (s32)&g_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
@@ -235,7 +234,7 @@ void menu_run_unit_editor_panel_thread(void) {
         gfx_draw_or_append_gpu_primitive(&frame_record->sprites[13]);
         gfx_draw_or_append_gpu_primitive(&frame_record->draw_modes[1]);
         for (i = 0; i < 5; i++) {
-            if ((u16)g_battle_menu_billboard_data.state.equipment[i] != 0xFFFF) {
+            if ((u16)g_menu_selected_unit_fields.state.equipment[i] != 0xFFFF) {
                 gfx_draw_or_append_gpu_primitive(&frame_record->sprites[19 + i]);
             }
         }

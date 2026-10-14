@@ -155,18 +155,12 @@ extern crystal_pickup_result_t* g_battle_dead_unit_context;
 extern s32 g_battle_dead_unit_result;
 extern s32 g_battle_formation_display_mode;
 extern s32 g_battle_formation_screen_active;
-extern menu_unit_status_record_t g_battle_menu_active_turn_banner;
 extern RECT g_battle_menu_attack_caster_stats_display;
 extern menu_number_entry_t g_battle_menu_attack_caster_stats_setup[8];
 extern RECT g_battle_menu_attack_target_stats_display;
 extern menu_number_entry_t g_battle_menu_attack_target_stats_setup[8];
-/* 0x40-byte billboard block at 0x8014d0a0 saved and restored whole with the AT
- * banner: unit stats indexed as 16-bit values by
- * battle_menu_load_selected_unit. */
-extern menu_status_panel_slot_storage_t g_battle_menu_billboard_data;
 extern u8 g_battle_menu_billboard_job_name[];
 extern u8 g_battle_menu_billboard_unit_name[];
-extern menu_status_panel_slot_storage_t g_battle_menu_comparison_billboard_data;
 /* Handed to the dead-unit panel thread as its second parameter. Nothing stores to it and the thread
  * does not read the parameter. */
 extern s32 g_battle_menu_dead_unit_panel_parameter;
@@ -179,9 +173,7 @@ extern action_data_t* g_battle_menu_preview_target_action;
 extern menu_number_entry_t g_battle_menu_projected_value_panel[2];
 extern RECT g_battle_menu_right_unit_stats_display;
 extern menu_number_entry_t g_battle_menu_right_unit_stats_setup[10];
-extern menu_unit_status_record_t g_battle_menu_status_billboard;
 extern s32 g_battle_post_battle_unit_changes_active;
-extern s16 g_battle_preview_target_unit_id;
 
 void battle_menu_build_unit_portrait_poly(POLY_FT4* poly, u32 battle_id);
 void battle_menu_copy_billboard_data_in(const menu_unit_status_record_t* banner, const menu_active_unit_t* unit,

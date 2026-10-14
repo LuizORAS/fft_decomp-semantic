@@ -41,11 +41,11 @@ void battle_unit_view_supervisor_thread(void) {
                 task = thread->task_id;
                 if (task == set->task_ids[i]
                     && (task != THREAD_TASK_HOVERED_UNIT_STATS
-                        || g_battle_unit_view_started_battle_id == g_battle_active_turn_unit.battle_id)
+                        || g_battle_unit_view_started_battle_id == g_menu_selected_unit.battle_id)
                     && (task != THREAD_TASK_RIGHT_UNIT_STATS
-                        || g_battle_unit_view_started_comparison_id == g_battle_preview_target_unit_id)
+                        || g_battle_unit_view_started_comparison_id == g_menu_comparison_battle_id)
                     && (task != THREAD_TASK_UNIT_SUMMARY_PANEL
-                        || g_battle_unit_view_started_battle_id == g_battle_active_turn_unit.battle_id)) {
+                        || g_battle_unit_view_started_battle_id == g_menu_selected_unit.battle_id)) {
                     continue;
                 }
                 states[set->thread_ids[i]] = BATTLE_UNIT_VIEW_SLOT_RESTART;
@@ -57,8 +57,8 @@ void battle_unit_view_supervisor_thread(void) {
                 states[set->thread_ids[i]] = BATTLE_UNIT_VIEW_SLOT_STARTED;
             }
         }
-        g_battle_unit_view_started_battle_id = g_battle_active_turn_unit.battle_id;
-        g_battle_unit_view_started_comparison_id = g_battle_preview_target_unit_id;
+        g_battle_unit_view_started_battle_id = g_menu_selected_unit.battle_id;
+        g_battle_unit_view_started_comparison_id = g_menu_comparison_battle_id;
         for (;;) {
             for (i = 0; i < 4; i++) {
                 if (states[set->thread_ids[i]] == BATTLE_UNIT_VIEW_SLOT_RESTART

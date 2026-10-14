@@ -38,6 +38,6 @@ void world_menu_fade_out_thread(void) {
     g_world_menu_overlay_state = 0;
     g_world_screen_fade = 0;
     g_world_menu_transition_timeout = 0;
-    world_unit_start_view_thread(UNIT_VIEW_MODE_HOVERED_UNIT, g_world_active_unit_data.battle_id, 0xFF);
+    world_unit_start_view_thread(UNIT_VIEW_MODE_HOVERED_UNIT, g_menu_selected_unit.battle_id, 0xFF);
     thread_exit_current();
 }

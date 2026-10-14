@@ -70,15 +70,15 @@ void menu_run_unit_summary_panel_thread(void) {
     battle_clear_menu_render_buffer(digits, 0xF0);
     *stride = 0x10;
     battle_menu_set_text_origin(0, 0);
-    battle_text_draw_large_number_glyphs(g_battle_active_turn_unit.brave, 0x202, digits, origin);
+    battle_text_draw_large_number_glyphs(g_menu_selected_unit.brave, 0x202, digits, origin);
     LoadImage(&rects[1], (u32*)digits);
     battle_menu_set_text_origin(0, 0);
-    battle_text_draw_large_number_glyphs(g_battle_active_turn_unit.faith, 0x202, digits + 0x50, origin);
+    battle_text_draw_large_number_glyphs(g_menu_selected_unit.faith, 0x202, digits + 0x50, origin);
     LoadImage(&rects[2], (u32*)(digits + 0x50));
     battle_menu_set_text_origin(0, 0);
     if (g_main_debug_display_enabled != 0) {
-        battle_text_draw_large_number_glyphs(g_battle_active_turn_unit.battle_id, 0x4002, digits + 0xA0, origin);
-    } else if (g_battle_active_turn_unit.battle_id >= 0x10) {
+        battle_text_draw_large_number_glyphs(g_menu_selected_unit.battle_id, 0x4002, digits + 0xA0, origin);
+    } else if (g_menu_selected_unit.battle_id >= 0x10) {
         value = unit->formation_index;
         if (value == 0xFF) {
             value = 0;
@@ -89,7 +89,7 @@ void menu_run_unit_summary_panel_thread(void) {
     frames[0].sprites[6].clut = 0x7C3C;
     frames[0].sprites[6].w = 0x18;
     frames[0].sprites[6].h = 0x14;
-    zodiac = g_battle_active_turn_unit.zodiac;
+    zodiac = g_menu_selected_unit.zodiac;
     frames[0].sprites[6].u0 = zodiac % 7 * 0x18;
     frames[0].sprites[6].v0 = zodiac / 7 * 0x14 + 0x2A;
     mem_copy_bytes_nonempty(&frames[1], &frames[0], sizeof(menu_unit_summary_frame_t));

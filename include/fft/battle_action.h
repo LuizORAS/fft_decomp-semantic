@@ -428,7 +428,6 @@ extern u8 g_battle_acting_unit_elevation;
 extern s32 g_battle_acting_unit_id;
 extern u8 g_battle_acting_unit_x;
 extern u8 g_battle_acting_unit_y;
-extern menu_active_unit_t g_battle_active_turn_unit;
 extern s32 g_battle_between_turn_resume_state;
 extern s32 g_battle_between_turn_state;
 extern s32 g_battle_state_wait_direction_facing;

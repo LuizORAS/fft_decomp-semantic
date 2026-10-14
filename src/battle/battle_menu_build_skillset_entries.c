@@ -19,7 +19,7 @@ void battle_menu_build_skillset_entries(void) {
     count = 0;
     g_battle_menu_selected_skill_ct = 0;
     g_action_menu_skillsets[0] = 0;
-    g_battle_menu_action_menu_build_result = battle_menu_build_unit_action_menus(g_battle_active_turn_unit.battle_id,
+    g_battle_menu_action_menu_build_result = battle_menu_build_unit_action_menus(g_menu_selected_unit.battle_id,
         g_action_menu_skillsets, g_battle_menu_skillset_disabled_flags, g_action_menu_row_types);
     rows = (menu_text_row_t*)text_find_entry(0x5010);
     if (battle_unit_get_action_restriction(battle_unit_get_attacker_data_pointer())

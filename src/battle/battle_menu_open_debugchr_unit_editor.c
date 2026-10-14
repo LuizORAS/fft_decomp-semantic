@@ -14,7 +14,7 @@
  * action menu is rebuilt, the unit summary view restarts and the calling thread
  * exits. */
 void battle_menu_open_debugchr_unit_editor(void) {
-    s16* selected = &g_battle_active_turn_unit.battle_id;
+    s16* selected = &g_menu_selected_unit.battle_id;
 
     if (battle_unit_get_stats_from_battle_id(*selected)->mount_info == 0) {
         return;

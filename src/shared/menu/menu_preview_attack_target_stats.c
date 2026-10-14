@@ -12,14 +12,14 @@ void menu_preview_attack_target_stats(void) {
     }
     thread_yield();
     thread_yield();
-    saved = g_battle_active_turn_unit.battle_id;
+    saved = g_menu_selected_unit.battle_id;
     /* The target loads the preview unit id unsigned (lhu). */
-    g_battle_active_turn_unit.battle_id = g_battle_preview_target_unit_id;
+    g_menu_selected_unit.battle_id = g_menu_comparison_battle_id;
     battle_menu_load_selected_unit();
-    g_battle_active_turn_unit.battle_id = saved;
-    g_battle_menu_comparison_billboard_data.state.generic_monster = g_battle_menu_billboard_data.state.generic_monster;
-    g_battle_menu_comparison_billboard_data.state.ability_ids[2] = g_battle_menu_billboard_data.state.ability_ids[2];
+    g_menu_selected_unit.battle_id = saved;
+    g_menu_comparison_unit_fields.state.generic_monster = g_menu_selected_unit_fields.state.generic_monster;
+    g_menu_comparison_unit_fields.state.ability_ids[2] = g_menu_selected_unit_fields.state.ability_ids[2];
     battle_menu_load_selected_unit();
     battle_menu_display_hovered_unit_stats(&g_battle_menu_attack_target_stats_display, UNIT_STATS_PANEL_ATTACK_TARGET,
-        g_battle_menu_attack_target_stats_setup, &g_battle_menu_status_billboard);
+        g_battle_menu_attack_target_stats_setup, &g_menu_comparison_unit_status);
 }

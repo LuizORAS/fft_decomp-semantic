@@ -34,7 +34,7 @@ void battle_menu_build_ability_list(s32 mode) {
     g_battle_ability_menu_layout.text_ids[0] = (s16*)g_ai_workspace_ptr->ability_list.ids;
     g_battle_ability_menu_layout.text_ids[1] = (s16*)g_ai_workspace_ptr->ability_list.values;
     g_battle_ability_menu_layout.text_ids[2] = (s16*)g_ai_workspace_ptr->ability_list.extras;
-    unit_index = g_battle_active_turn_unit.battle_id;
+    unit_index = g_menu_selected_unit.battle_id;
     unit = battle_unit_get_attacker_data_pointer();
     type = g_action_menu_row_types[g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
     skillset = g_action_menu_skillsets[g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];

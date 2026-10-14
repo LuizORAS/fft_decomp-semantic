@@ -15,9 +15,9 @@ void menu_preview_attack_caster_stats(void) {
     s16* selected;
 
     attacker = battle_unit_get_attacker_data_pointer();
-    target = battle_unit_get_stats_from_battle_id(g_battle_preview_target_unit_id);
+    target = battle_unit_get_stats_from_battle_id(g_menu_comparison_battle_id);
     /* One address register serves both reads, as in the target. */
-    selected = &g_battle_active_turn_unit.battle_id;
+    selected = &g_menu_selected_unit.battle_id;
     action = battle_unit_get_runtime_action_command_by_battle_id(*selected);
     action->actor_id = *selected;
     if (action->ability_id < ABILITY_ID_ITEM_FIRST) {
@@ -36,5 +36,5 @@ void menu_preview_attack_caster_stats(void) {
     thread_yield();
     battle_menu_load_selected_unit();
     battle_menu_display_hovered_unit_stats(&g_battle_menu_attack_caster_stats_display, UNIT_STATS_PANEL_ATTACK_CASTER,
-        g_battle_menu_attack_caster_stats_setup, &g_battle_menu_active_turn_banner);
+        g_battle_menu_attack_caster_stats_setup, &g_menu_selected_unit_status);
 }

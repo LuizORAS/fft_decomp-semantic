@@ -1037,12 +1037,12 @@ data:
   - {addr: 0x80100384, name: thread_call_on_main_stack}
   - {addr: 0x80115a00, name: g_open_movie_cd_stream_ring_buffer}
   - {addr: 0x8013a310, name: g_world_map_selected_tile_data}
-  - {addr: 0x8013a31c, name: g_world_unit_selected_status_billboard}
-  - {addr: 0x8013a340, name: g_world_unit_comparison_status_billboard}
-  - {addr: 0x8013a364, name: g_world_active_unit_data}
-  - {addr: 0x8013a37e, name: g_world_unit_comparison_battle_id}
-  - {addr: 0x8013a384, name: g_world_unit_editor_fields}
-  - {addr: 0x8013a3c4, name: g_world_unit_comparison_editor_fields}
+  - {addr: 0x8013a31c, name: g_menu_selected_unit_status}
+  - {addr: 0x8013a340, name: g_menu_comparison_unit_status}
+  - {addr: 0x8013a364, name: g_menu_selected_unit}
+  - {addr: 0x8013a37e, name: g_menu_comparison_battle_id}
+  - {addr: 0x8013a384, name: g_menu_selected_unit_fields}
+  - {addr: 0x8013a3c4, name: g_menu_comparison_unit_fields}
   - {addr: 0x8013a404, name: g_world_unit_editor_primary_skillset_name}
   - {addr: 0x8013a418, name: g_world_unit_editor_secondary_skillset_name}
   - {addr: 0x8013a42c, name: g_world_unit_editor_unit_name}
@@ -2349,10 +2349,10 @@ imports:
 overrides:
   - {function: gfx_build_portrait_transition_primitives, name: attack_gfx_build_portrait_poly_ft4, addr: 0x8010cab0}
   - {function: menu_alloc_window_buffer_pair, name: g_gfx_texture_window, addr: 0x801531b0}
-  - {function: menu_copy_billboard_data_out, name: g_battle_active_turn_unit, addr: 0x8013a364}
-  - {function: menu_copy_billboard_data_out, name: g_battle_menu_active_turn_banner, addr: 0x8013a31c}
-  - {function: menu_copy_billboard_data_out, name: g_battle_menu_billboard_data, addr: 0x8013a384}
   - {function: menu_copy_billboard_data_out, name: g_map_selected_tile_data, addr: 0x8013a310}
+  - {function: menu_copy_billboard_data_out, name: g_menu_selected_unit, addr: 0x8013a364}
+  - {function: menu_copy_billboard_data_out, name: g_menu_selected_unit_fields, addr: 0x8013a384}
+  - {function: menu_copy_billboard_data_out, name: g_menu_selected_unit_status, addr: 0x8013a31c}
   - {function: menu_init_panel_fade_tiles, name: g_gfx_texture_window, addr: 0x801531b0}
   - {function: menu_init_sprite_array, name: battle_menu_init_semitransparent_sprt, addr: 0x800e2444}
   - {function: menu_text_render_decimal_value, name: blit_text_glyph, addr: 0x800feff0}
@@ -2378,9 +2378,9 @@ overrides:
   - {function: world_item_calculate_swap_stat_delta, name: equip_item_collect_stat_deltas, addr: 0x80122f9c}
   - {function: world_menu_build_ability_preview_at_list, name: battle_menu_icon_linked_entry_thread, addr: 0x800eee98}
   - {function: world_menu_build_ability_preview_at_list, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
-  - {function: world_menu_build_ability_preview_at_list, name: g_battle_active_turn_unit, addr: 0x8013a364}
   - {function: world_menu_build_ability_preview_at_list, name: g_battle_menu_at_list_layout, addr: 0x80153cd0}
   - {function: world_menu_build_ability_preview_at_list, name: g_battle_menu_selected_action, addr: 0x80195c90}
+  - {function: world_menu_build_ability_preview_at_list, name: g_menu_selected_unit, addr: 0x8013a364}
   - {function: world_menu_build_ability_preview_at_list, name: g_menu_thread_menu_data, addr: 0x801cd7e0}
   - {function: world_menu_build_window_image, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_build_window_image, name: battle_menu_alloc_memory, addr: 0x800e30fc}
@@ -2448,15 +2448,15 @@ overrides:
   - {function: world_menu_init_subsystems, name: map_reset_script_light_transform, addr: 0x800f29d8}
   - {function: world_menu_load_selected_unit, name: battle_menu_copy_unit_data_to_status_billboard, addr: 0x800e7c40}
   - {function: world_menu_load_selected_unit, name: battle_menu_init_monster_skill_check, addr: 0x80182430}
-  - {function: world_menu_load_selected_unit, name: g_battle_active_turn_unit, addr: 0x8013a364}
-  - {function: world_menu_load_selected_unit, name: g_battle_menu_active_turn_banner, addr: 0x8013a31c}
-  - {function: world_menu_load_selected_unit, name: g_battle_menu_billboard_data, addr: 0x8013a384}
   - {function: world_menu_load_selected_unit, name: g_battle_menu_billboard_job_name, addr: 0x8013a440}
   - {function: world_menu_load_selected_unit, name: g_battle_menu_billboard_secondary_skillset_name, addr: 0x8013a418}
   - {function: world_menu_load_selected_unit, name: g_battle_menu_billboard_skillset_name, addr: 0x8013a404}
   - {function: world_menu_load_selected_unit, name: g_battle_menu_billboard_unit_name, addr: 0x8013a42c}
-  - {function: world_menu_load_selected_unit, name: g_battle_menu_status_billboard, addr: 0x8013a340}
-  - {function: world_menu_load_selected_unit, name: g_battle_preview_target_unit_id, addr: 0x8013a37e}
+  - {function: world_menu_load_selected_unit, name: g_menu_comparison_battle_id, addr: 0x8013a37e}
+  - {function: world_menu_load_selected_unit, name: g_menu_comparison_unit_status, addr: 0x8013a340}
+  - {function: world_menu_load_selected_unit, name: g_menu_selected_unit, addr: 0x8013a364}
+  - {function: world_menu_load_selected_unit, name: g_menu_selected_unit_fields, addr: 0x8013a384}
+  - {function: world_menu_load_selected_unit, name: g_menu_selected_unit_status, addr: 0x8013a31c}
   - {function: world_menu_open_bunit, name: battle_menu_run_bunit_transition_thread, addr: 0x800efbe0}
   - {function: world_menu_open_bunit, name: battle_menu_set_modal_open, addr: 0x800e1e8c}
   - {function: world_menu_open_debugchr, name: battle_menu_clear_modal_open, addr: 0x800e1ea0}
@@ -2468,31 +2468,31 @@ overrides:
   - {function: world_menu_preview_attack_caster_stats, name: battle_menu_display_hovered_unit_stats, addr: 0x800e90f4}
   - {function: world_menu_preview_attack_caster_stats, name: battle_menu_load_selected_unit, addr: 0x800e7dcc}
   - {function: world_menu_preview_attack_caster_stats, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
-  - {function: world_menu_preview_attack_caster_stats, name: g_battle_active_turn_unit, addr: 0x8013a364}
-  - {function: world_menu_preview_attack_caster_stats, name: g_battle_menu_active_turn_banner, addr: 0x8013a31c}
   - {function: world_menu_preview_attack_caster_stats, name: g_battle_menu_attack_caster_stats_display, addr: 0x80155adc}
   - {function: world_menu_preview_attack_caster_stats, name: g_battle_menu_attack_caster_stats_setup, addr: 0x80155be4}
   - {function: world_menu_preview_attack_caster_stats, name: g_battle_menu_preview_target_action, addr: 0x801a25f4}
-  - {function: world_menu_preview_attack_caster_stats, name: g_battle_preview_target_unit_id, addr: 0x8013a37e}
+  - {function: world_menu_preview_attack_caster_stats, name: g_menu_comparison_battle_id, addr: 0x8013a37e}
+  - {function: world_menu_preview_attack_caster_stats, name: g_menu_selected_unit, addr: 0x8013a364}
+  - {function: world_menu_preview_attack_caster_stats, name: g_menu_selected_unit_status, addr: 0x8013a31c}
   - {function: world_menu_preview_attack_target_stats, name: battle_menu_display_hovered_unit_stats, addr: 0x800e90f4}
   - {function: world_menu_preview_attack_target_stats, name: battle_menu_load_selected_unit, addr: 0x800e7dcc}
-  - {function: world_menu_preview_attack_target_stats, name: g_battle_active_turn_unit, addr: 0x8013a364}
   - {function: world_menu_preview_attack_target_stats, name: g_battle_menu_attack_target_stats_display, addr: 0x80155ae4}
   - {function: world_menu_preview_attack_target_stats, name: g_battle_menu_attack_target_stats_setup, addr: 0x80155c44}
-  - {function: world_menu_preview_attack_target_stats, name: g_battle_menu_billboard_data, addr: 0x8013a384}
-  - {function: world_menu_preview_attack_target_stats, name: g_battle_menu_comparison_billboard_data, addr: 0x8013a3c4}
-  - {function: world_menu_preview_attack_target_stats, name: g_battle_menu_status_billboard, addr: 0x8013a340}
-  - {function: world_menu_preview_attack_target_stats, name: g_battle_preview_target_unit_id, addr: 0x8013a37e}
+  - {function: world_menu_preview_attack_target_stats, name: g_menu_comparison_battle_id, addr: 0x8013a37e}
+  - {function: world_menu_preview_attack_target_stats, name: g_menu_comparison_unit_fields, addr: 0x8013a3c4}
+  - {function: world_menu_preview_attack_target_stats, name: g_menu_comparison_unit_status, addr: 0x8013a340}
+  - {function: world_menu_preview_attack_target_stats, name: g_menu_selected_unit, addr: 0x8013a364}
+  - {function: world_menu_preview_attack_target_stats, name: g_menu_selected_unit_fields, addr: 0x8013a384}
   - {function: world_menu_refresh_hovered_unit_stats_display, name: battle_menu_display_hovered_unit_stats, addr: 0x800e90f4}
   - {function: world_menu_refresh_hovered_unit_stats_display, name: battle_menu_load_selected_unit, addr: 0x800e7dcc}
-  - {function: world_menu_refresh_hovered_unit_stats_display, name: g_battle_menu_active_turn_banner, addr: 0x8013a31c}
   - {function: world_menu_refresh_hovered_unit_stats_display, name: g_battle_menu_hovered_unit_stats_display, addr: 0x80155ad4}
   - {function: world_menu_refresh_hovered_unit_stats_display, name: g_battle_menu_hovered_unit_stats_setup, addr: 0x80155af4}
+  - {function: world_menu_refresh_hovered_unit_stats_display, name: g_menu_selected_unit_status, addr: 0x8013a31c}
   - {function: world_menu_refresh_right_unit_stats_display, name: battle_menu_display_hovered_unit_stats, addr: 0x800e90f4}
   - {function: world_menu_refresh_right_unit_stats_display, name: battle_menu_load_selected_unit, addr: 0x800e7dcc}
   - {function: world_menu_refresh_right_unit_stats_display, name: g_battle_menu_right_unit_stats_display, addr: 0x80155aec}
   - {function: world_menu_refresh_right_unit_stats_display, name: g_battle_menu_right_unit_stats_setup, addr: 0x80155b6c}
-  - {function: world_menu_refresh_right_unit_stats_display, name: g_battle_menu_status_billboard, addr: 0x8013a340}
+  - {function: world_menu_refresh_right_unit_stats_display, name: g_menu_comparison_unit_status, addr: 0x8013a340}
   - {function: world_menu_render_text_image_at_record_origin, name: battle_menu_build_and_upload_window_frame_image, addr: 0x800ff9ac}
   - {function: world_menu_render_text_image_at_record_origin, name: battle_menu_build_window_image, addr: 0x800ff690}
   - {function: world_menu_render_text_image_at_record_origin, name: battle_menu_display_text_entry, addr: 0x800fe774}
@@ -2561,10 +2561,7 @@ overrides:
   - {function: world_menu_run_unit_editor_panel_thread, name: battle_menu_set_text_origin, addr: 0x800fdb88}
   - {function: world_menu_run_unit_editor_panel_thread, name: battle_thread_get_current_parameter_3, addr: 0x801000f8}
   - {function: world_menu_run_unit_editor_panel_thread, name: battle_thread_is_running_asm, addr: 0x80100164}
-  - {function: world_menu_run_unit_editor_panel_thread, name: g_battle_active_turn_unit, addr: 0x8013a364}
   - {function: world_menu_run_unit_editor_panel_thread, name: g_battle_item_icon_image_location, addr: 0x80153190}
-  - {function: world_menu_run_unit_editor_panel_thread, name: g_battle_menu_active_turn_banner, addr: 0x8013a31c}
-  - {function: world_menu_run_unit_editor_panel_thread, name: g_battle_menu_billboard_data, addr: 0x8013a384}
   - {function: world_menu_run_unit_editor_panel_thread, name: g_battle_menu_help_open, addr: 0x80153310}
   - {function: world_menu_run_unit_editor_panel_thread, name: g_battle_menu_hovered_stats_frame_count, addr: 0x80154dfe}
   - {function: world_menu_run_unit_editor_panel_thread, name: g_battle_menu_hovered_unit_stats_display, addr: 0x80155ad4}
@@ -2588,6 +2585,9 @@ overrides:
   - {function: world_menu_run_unit_editor_panel_thread, name: g_battle_unit_status_bounce_step, addr: 0x80154dfa}
   - {function: world_menu_run_unit_editor_panel_thread, name: g_battle_unit_summary_panel_rect, addr: 0x80155cf8}
   - {function: world_menu_run_unit_editor_panel_thread, name: g_menu_current_id, addr: 0x80153268}
+  - {function: world_menu_run_unit_editor_panel_thread, name: g_menu_selected_unit, addr: 0x8013a364}
+  - {function: world_menu_run_unit_editor_panel_thread, name: g_menu_selected_unit_fields, addr: 0x8013a384}
+  - {function: world_menu_run_unit_editor_panel_thread, name: g_menu_selected_unit_status, addr: 0x8013a31c}
   - {function: world_menu_run_unit_editor_panel_thread, name: g_menu_thread_menu_data, addr: 0x801cd7e0}
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_gfx_free_tpage7_vram, addr: 0x800e2edc}
@@ -2606,7 +2606,6 @@ overrides:
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_thread_get_current_parameter_3, addr: 0x801000f8}
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_thread_is_running_asm, addr: 0x80100164}
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
-  - {function: world_menu_run_unit_summary_panel_thread, name: g_battle_active_turn_unit, addr: 0x8013a364}
   - {function: world_menu_run_unit_summary_panel_thread, name: g_battle_menu_billboard_job_name, addr: 0x8013a440}
   - {function: world_menu_run_unit_summary_panel_thread, name: g_battle_menu_billboard_unit_name, addr: 0x8013a42c}
   - {function: world_menu_run_unit_summary_panel_thread, name: g_battle_menu_texture_location, addr: 0x80153188}
@@ -2617,6 +2616,7 @@ overrides:
   - {function: world_menu_run_unit_summary_panel_thread, name: g_battle_unit_summary_panel_rect, addr: 0x80155cf8}
   - {function: world_menu_run_unit_summary_panel_thread, name: g_battle_unit_summary_portrait_image_params, addr: 0x80155d54}
   - {function: world_menu_run_unit_summary_panel_thread, name: g_battle_unit_summary_sprite_image_params, addr: 0x80155d00}
+  - {function: world_menu_run_unit_summary_panel_thread, name: g_menu_selected_unit, addr: 0x8013a364}
   - {function: world_menu_run_unit_summary_panel_thread, name: g_menu_text_state, addr: 0x80153280}
   - {function: world_menu_selected_tile_info_display_thread, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_selected_tile_info_display_thread, name: battle_gfx_free_tpage7_vram, addr: 0x800e2edc}

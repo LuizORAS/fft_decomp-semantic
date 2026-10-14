@@ -1613,24 +1613,14 @@ typedef struct vec3u16 {
 typedef char assert_vec3u16_size[sizeof(vec3u16_t) == 6 ? 1 : -1];
 
 extern menu_unit_status_record_t g_world_selected_unit_stat_summary;
-extern menu_unit_status_record_t g_world_unit_selected_status_billboard;
-extern menu_unit_status_record_t g_world_unit_comparison_status_billboard;
 extern menu_status_panel_buffer_t g_world_stat_preview_panel_frames[2];
 
-/* The second 0x40-byte editor record (0x8013a3c4): world_menu_preview_attack_target_stats
- * copies the comparison unit's generic_monster flag and ability_ids[2] into it. */
-extern menu_status_panel_slot_storage_t g_world_unit_comparison_editor_fields;
 extern u32 g_world_companion_overlay_state;
 extern struct menu_status_panel_slot_storage g_world_selected_unit_stat_detail;
-extern s16 g_world_unit_comparison_battle_id;
 extern u16 g_world_unit_graphics_load_pending;
 extern const world_unit_monster_breed_entry_t g_world_unit_monster_breed_table[WORLD_MONSTER_BREED_ENTRY_COUNT];
 extern unit_status_staging_t* g_world_unit_status_staging_data;
-extern menu_active_unit_t g_world_active_unit_data;
 
-/* Unit editor state; same layout as the EVENT debug character editor's
- * (debugchr_editor_load_selected_unit). */
-extern menu_status_panel_slot_storage_t g_world_unit_editor_fields;
 extern u8 g_world_unit_editor_primary_skillset_name[];   /* primary skillset name text window */
 extern u8 g_world_unit_editor_secondary_skillset_name[]; /* secondary skillset name text window */
 extern u8 g_world_unit_editor_unit_name[];               /* name text window */

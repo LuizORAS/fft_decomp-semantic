@@ -2277,12 +2277,12 @@ data:
   - {addr: 0x8014ceb4, name: thread_call_on_main_stack}
   - {addr: 0x8014cf68, name: g_action_display_image_rects}
   - {addr: 0x8014d02c, name: g_map_selected_tile_data}
-  - {addr: 0x8014d038, name: g_battle_menu_active_turn_banner}
-  - {addr: 0x8014d05c, name: g_battle_menu_status_billboard}
-  - {addr: 0x8014d080, name: g_battle_active_turn_unit}
-  - {addr: 0x8014d09a, name: g_battle_preview_target_unit_id}
-  - {addr: 0x8014d0a0, name: g_battle_menu_billboard_data}
-  - {addr: 0x8014d0e0, name: g_battle_menu_comparison_billboard_data}
+  - {addr: 0x8014d038, name: g_menu_selected_unit_status}
+  - {addr: 0x8014d05c, name: g_menu_comparison_unit_status}
+  - {addr: 0x8014d080, name: g_menu_selected_unit}
+  - {addr: 0x8014d09a, name: g_menu_comparison_battle_id}
+  - {addr: 0x8014d0a0, name: g_menu_selected_unit_fields}
+  - {addr: 0x8014d0e0, name: g_menu_comparison_unit_fields}
   - {addr: 0x8014d120, name: g_battle_menu_billboard_skillset_name}
   - {addr: 0x8014d134, name: g_battle_menu_billboard_secondary_skillset_name}
   - {addr: 0x8014d148, name: g_battle_menu_billboard_unit_name}

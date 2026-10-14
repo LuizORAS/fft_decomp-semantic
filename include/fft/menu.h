@@ -291,6 +291,10 @@ typedef struct menu_active_unit {
 } menu_active_unit_t;
 typedef char menu_active_unit_size_must_be_14[(sizeof(menu_active_unit_t) == 14) ? 1 : -1];
 
+/* The selected panel unit can differ from the unit whose turn is active. */
+extern menu_active_unit_t g_menu_selected_unit;
+extern s16 g_menu_comparison_battle_id;
+
 /* Name, job and identity values copied into WORLD and EQUIP status panels.
  * The last displayed value is the roster slot, distinct from a battle id. */
 typedef struct menu_unit_status_identity {
@@ -345,6 +349,10 @@ typedef struct menu_status_panel_slot_storage {
 } menu_status_panel_slot_storage_t;
 typedef char menu_status_panel_slot_storage_size_must_be_64[(sizeof(menu_status_panel_slot_storage_t) == 64) ? 1 : -1];
 
+extern menu_status_panel_slot_storage_t g_menu_selected_unit_fields;
+/* Target preview copies only generic_monster and the reaction ability here. */
+extern menu_status_panel_slot_storage_t g_menu_comparison_unit_fields;
+
 /* HP, MP or CT gauge, drawn 32 * value / max pixels wide. Overlay panels
  * use a four-pixel stub when max is zero; battle billboard builders instead
  * store 1 for zero HP/MP maxima. Those builders clear HP/MP bonuses but leave
@@ -357,8 +365,9 @@ typedef struct menu_unit_status_gauge {
 typedef char menu_unit_status_gauge_size_must_be_6[(sizeof(menu_unit_status_gauge_t) == 6) ? 1 : -1];
 
 /* Provisional 0x22-byte unit status record: BATTLE's AT banner at 0x8014d038
- * and status billboard at 0x8014d05c, WORLD's selected and comparison records
- * at 0x8018aa98 / 0x8018aabc and each overlay's pair of panel billboards (all
+ * and status billboard at 0x8014d05c, WORLD's scene records at
+ * 0x8013a31c / 0x8013a340 and formation records at 0x8018aa98 / 0x8018aabc,
+ * and each overlay's pair of panel billboards (all
  * 0x24 apart). The *_copy_unit_data_to_status_billboard builders (and
  * require_panel_copy_stats_to_gauges, wldcore_unit_build_status_panel_data)
  * fill the first 0x1e bytes, *_menu_display_hovered_unit_stats and the
@@ -379,6 +388,9 @@ typedef struct menu_unit_status_record {
     u16 projected_hit_percent;          /* 0x20 */
 } menu_unit_status_record_t;
 typedef char menu_unit_status_record_size_must_be_34[(sizeof(menu_unit_status_record_t) == 34) ? 1 : -1];
+
+extern menu_unit_status_record_t g_menu_selected_unit_status;
+extern menu_unit_status_record_t g_menu_comparison_unit_status;
 
 /* The hovered-unit status panel's two draw offsets (*_menu_display_hovered_unit_stats). */
 typedef struct menu_unit_status_offsets {

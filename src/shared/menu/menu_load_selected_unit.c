@@ -19,22 +19,22 @@ void menu_load_selected_unit(void) {
     u8 field_value;
     s16 list_value;
 
-    unit = battle_unit_get_stats_from_battle_id(g_battle_preview_target_unit_id);
-    editor = &g_battle_menu_billboard_data.state;
+    unit = battle_unit_get_stats_from_battle_id(g_menu_comparison_battle_id);
+    editor = &g_menu_selected_unit_fields.state;
     if (unit != 0) {
-        battle_menu_copy_unit_data_to_status_billboard(unit, &g_battle_menu_status_billboard);
+        battle_menu_copy_unit_data_to_status_billboard(unit, &g_menu_comparison_unit_status);
     }
 
-    unit = battle_unit_get_stats_from_battle_id(g_battle_active_turn_unit.battle_id);
+    unit = battle_unit_get_stats_from_battle_id(g_menu_selected_unit.battle_id);
     if (unit == 0)
         return;
-    battle_menu_copy_unit_data_to_status_billboard(unit, &g_battle_menu_active_turn_banner);
+    battle_menu_copy_unit_data_to_status_billboard(unit, &g_menu_selected_unit_status);
 
-    g_battle_active_turn_unit.job_id = unit->job_id;
-    g_battle_active_turn_unit.brave = unit->brave;
-    g_battle_active_turn_unit.faith = unit->faith;
+    g_menu_selected_unit.job_id = unit->job_id;
+    g_menu_selected_unit.brave = unit->brave;
+    g_menu_selected_unit.faith = unit->faith;
     /* The zodiac sign lives in the top nibble of the 16-bit value at 0x008. */
-    g_battle_active_turn_unit.zodiac = unit->birthday.zodiac;
+    g_menu_selected_unit.zodiac = unit->birthday.zodiac;
 
     editor->move = unit->move;
     editor->speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];

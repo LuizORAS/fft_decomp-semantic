@@ -38,7 +38,7 @@ void menu_build_ability_preview_at_list(void) {
         *(u8*)&g_battle_menu_selected_action.item_or_equipment = text_id;
     }
     action = &g_battle_menu_selected_action;
-    action->actor_id = g_battle_active_turn_unit.battle_id;
+    action->actor_id = g_menu_selected_unit.battle_id;
     stats = battle_unit_get_attacker_data_pointer();
     g_thread_call_target = (void (*)(void))action_preview_at_list;
     turn = thread_call_on_main_stack(stats, action, work->entries);
