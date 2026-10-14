@@ -2,10 +2,9 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Target 0x8012d5bc; sibling of world_gfx_update_fade_in_tile. Steps the
- * subtractive fade level up (the screen darkens) and draws the full-screen
- * fade tile; returns 1 while the fade is still running, 0 once done or when
- * fading is suppressed. */
+/* Step the subtractive fade level up (the screen darkens) and draw the full-screen fade tile, as
+ * world_gfx_update_fade_in_tile does the other way; return 1 while the fade is still running, 0 once done
+ * or while fading is disabled. */
 s32 world_gfx_update_fade_out_tile(void) {
     s32 running = 1;
     u8 level;

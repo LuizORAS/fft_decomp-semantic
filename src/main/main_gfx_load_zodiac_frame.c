@@ -1,9 +1,11 @@
 #include "fft/main.h"
 #include "psx/libgpu.h"
 
-/* BATTLE/ZODIAC.BIN is a headerless image, not an executable overlay.
- * Sector 0xec61 supplies 0x10000 bytes: 128 * 256 16-bit VRAM transfer
- * words at (640, 0), subsequently rendered as 8-bit indexed texture data. */
+/* Load BATTLE/ZODIAC.BIN into VRAM at (640, 0), then EVENT/FRAME.BIN
+ * (main_gfx_load_frame_bin_into_vram).
+ *
+ * ZODIAC.BIN is a headerless image, not an executable overlay: sector 0xec61 supplies 0x10000 bytes, 128 x
+ * 256 16-bit VRAM transfer words, later drawn as 8-bit indexed texture data. */
 void main_gfx_load_zodiac_frame(void) {
     RECT destination = { 640, 0, 128, 256 };
     u32* image;

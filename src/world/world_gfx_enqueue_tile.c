@@ -2,9 +2,8 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Takes the next TILE from the pool, colours it, sets semi-transparency and
- * links it into ordering-table entry ot_index (libgpu addPrim). */
-/* Target 0x8012bdbc. */
+/* Take the next TILE from the pool, colour it, set its semi-transparency and link it into
+ * ordering-table entry ot_index (libgpu addPrim). */
 void world_gfx_enqueue_tile(RECT* box, u8* rgb, u8 semi_trans, s32 ot_index) {
     TILE* tile = &g_world_gfx_active_packet_buffer->tiles[g_world_gfx_tile_count++];
 

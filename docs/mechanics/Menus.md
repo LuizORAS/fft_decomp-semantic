@@ -5,6 +5,8 @@ scope:
   - battle_menu
   - world_menu
   - world_option
+  - world_input
+  - world_screen
 ---
 
 # Menus

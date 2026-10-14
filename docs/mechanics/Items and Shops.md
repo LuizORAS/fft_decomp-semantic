@@ -9,6 +9,8 @@ scope:
   - equip_unit
   - world_count_item_equipped_by_party()
   - world_unit_can_equip_item_id()
+  - world_unit_build_best_fit_equipment()
+  - world_unit_is_two_handing_weapon()
   - battle_unit_find_war_trophies_and_bonus_money()
   - require_reward_collect_war_trophies_and_bonus_money()
   - require_party_store_equipment_or_sell_overflow()
