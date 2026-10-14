@@ -79,7 +79,7 @@ functions:
   - {addr: 0x800e35ac, size: 108, name: menu_submit_numeric_display_frame_primitives, hash: 052f8a7955660a7e, source: src/shared/menu/menu_submit_numeric_display_frame_primitives.c}
   - {addr: 0x800e3618, size: 136, name: world_menu_init_primitive_colors_normal, hash: 0eafa6c1e9a53c86}
   - {addr: 0x800e36a0, size: 140, name: world_menu_init_primitive_colors_dimmed, hash: ed7ffbf13272f8dc}
-  - {addr: 0x800e372c, size: 380, name: world_text_build_display_message, hash: 340aa3e43d90fd1d}
+  - {addr: 0x800e372c, size: 380, name: world_text_build_display_message, hash: 340aa3e43d90fd1d, source: src/shared/text/text_build_display_message.c, source_symbol: text_build_display_message}
   - {addr: 0x800e38a8, size: 656, name: world_input_update_menu_state, hash: 13af0965fdb71ad6, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800e3b38, size: 84, name: world_menu_release_current_thread_slot, hash: 83ddde4c1bebdfdd}
   - {addr: 0x800e3b8c, size: 36, name: thread_get_current_task_id, hash: 3cea094e5efaa530, source: src/shared/thread/thread_get_current_task_id.c}
@@ -2732,6 +2732,7 @@ overrides:
   - {function: world_script_start_current_event_thread, name: g_camera_speed_curve, addr: 0x80153338}
   - {function: world_script_start_current_event_thread, name: map_reset_script_light_transform, addr: 0x800f29d8}
   - {function: world_script_unit_anim, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
+  - {function: world_text_build_display_message, name: g_script_event_instruction_sizes, addr: 0x8013a454}
   - {function: world_text_determine_spell_quote, name: battle_menu_dispatch_system_function, addr: 0x800f5384}
   - {function: world_text_determine_spell_quote, name: battle_text_is_spell_quote_exception_skillset, addr: 0x800f49d8}
   - {function: world_text_determine_spell_quote, name: g_battle_spell_quote_last_ability_id, addr: 0x8013a5ec}
