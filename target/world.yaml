@@ -205,7 +205,7 @@ functions:
   - {addr: 0x800f01f8, size: 124, name: world_menu_load_portrait_image, hash: 497cde13cf361473}
   - {addr: 0x800f0274, size: 228, name: world_gfx_load_evtchr_thread, hash: 8962aec23b32ebaf}
   - {addr: 0x800f0358, size: 280, name: world_script_load_portrait_colors_event_instruction, hash: f2bff445b230c13b}
-  - {addr: 0x800f0470, size: 176, name: world_script_load_event, hash: a023de0e6c5d3603}
+  - {addr: 0x800f0470, size: 176, name: world_script_load_event, hash: a023de0e6c5d3603, source: src/shared/script/script_load_event.c, source_symbol: script_load_event}
   - {addr: 0x800f0520, size: 84, name: world_menu_set_palette_colors, hash: bc139dff59caa293}
   - {addr: 0x800f0574, size: 48, name: world_menu_init_palette_and_text, hash: 90cc27f44568663e}
   - {addr: 0x800f05a4, size: 8, name: world_noop_800f05a4, hash: 6d64edf91449c1b1}
