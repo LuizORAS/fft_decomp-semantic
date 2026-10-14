@@ -1,14 +1,13 @@
-#include "fft/battle.h"
-#include "fft/battle_script.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "fft/event_debugchr.h"
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 
-/* Thread entry of menu entry 0x2c: close the unit panels and the menu thread,
- * load DEBUGCHR.OUT, run its character debug session and restore the menu state
- * afterwards. */
-void battle_menu_open_debugchr(void) {
+/* Close the panels, run the requested debug session, then restore menu state. */
+void menu_open_debugchr(void) {
     battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
     battle_menu_set_modal_open();
     g_battle_menu_suspend_state = 1;
