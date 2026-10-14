@@ -36,9 +36,9 @@ functions:
   - {addr: 0x80068b54, size: 64, name: battle_unit_set_target_anim_by_misc_id, hash: d57400106fb298dc}
   - {addr: 0x80068b94, size: 64, name: battle_unit_set_target_anim_by_battle_id, hash: 7456285a594f529e}
   - {addr: 0x80068bd4, size: 68, name: battle_gfx_prepare_post_action_display_by_misc_id, hash: 944b9e17c35f9d22}
-  - {addr: 0x80068c18, size: 104, name: battle_unit_set_bow_hardcoding, hash: 92bd03af55baa64b}
-  - {addr: 0x80068c80, size: 68, name: battle_unit_call_bow_hardcoding_by_battle_id, hash: 5f1d3599787dc2a7}
-  - {addr: 0x80068cc4, size: 68, name: battle_unit_call_bow_hardcoding_by_misc_id, hash: e6acd5d437044187}
+  - {addr: 0x80068c18, size: 104, name: battle_unit_resolve_projectile_hit, hash: 92bd03af55baa64b}
+  - {addr: 0x80068c80, size: 68, name: battle_unit_resolve_projectile_hit_by_battle_ids, hash: 5f1d3599787dc2a7}
+  - {addr: 0x80068cc4, size: 68, name: battle_unit_resolve_projectile_hit_by_misc_ids, hash: e6acd5d437044187}
   - {addr: 0x80068d08, size: 296, name: battle_unit_update_display, hash: beaccbe5a7888b15}
   - {addr: 0x80068e30, size: 40, name: battle_unit_update_display_by_misc_id, hash: 889316bfe80a6f27}
   - {addr: 0x80068e58, size: 40, name: battle_unit_update_display_by_battle_id, hash: 2601d16fe0df3edc}

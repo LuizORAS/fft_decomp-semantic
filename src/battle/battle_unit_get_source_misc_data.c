@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* The misc record of the unit the battle states act for (g_battle_unit_source_misc_id), or 0. */
 battle_unit_misc_data_t* battle_unit_get_source_misc_data(void) {
     battle_unit_misc_data_t* unit;
     s32 source_id;

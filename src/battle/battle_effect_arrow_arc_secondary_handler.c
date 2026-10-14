@@ -104,7 +104,7 @@ s32 battle_effect_arrow_arc_secondary_handler(void) {
         battle_effect_draw_projectile_model(&spin, &position, &angles, &scale, parameter);
         if (g_battle_effect_projectile_step_count == 2 && g_battle_effect_trajectory_hit_unit_id != -1
             && g_battle_effect_current_secondary->target_count != 0) {
-            battle_unit_call_bow_hardcoding_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id,
+            battle_unit_resolve_projectile_hit_by_misc_ids(g_battle_effect_current_secondary->caster.fields.caster_id,
                 g_battle_effect_current_secondary->target.fields.target_id);
         }
         if (--g_battle_effect_projectile_step_count == 0 || position.vy >= 0) {

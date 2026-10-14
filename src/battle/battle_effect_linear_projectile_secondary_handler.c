@@ -33,7 +33,7 @@ typedef struct battle_effect_item_slot_view {
  *
  * With two frames left and a unit hit by the trajectory
  * (g_battle_effect_trajectory_hit_unit_id), the target's hit reaction
- * (battle_unit_call_bow_hardcoding_by_misc_id) starts, unless the item is one of
+ * (battle_unit_resolve_projectile_hit_by_misc_ids) starts, unless the item is one of
  * the balls or a consumable (ITEM_ID_POTION to ITEM_ID_PHOENIX_DOWN). When the
  * count runs out the icon slot is freed; a unit target whose result is neither
  * MISSED nor NO_EFFECT releases the requested ability effect at animation speed
@@ -183,7 +183,8 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
             if ((kind < ITEM_ID_FIRE_BALL || kind > ITEM_ID_LIGHTNING_BALL)
                 && (kind < ITEM_ID_POTION || kind > ITEM_ID_PHOENIX_DOWN)
                 && g_battle_effect_current_secondary->target_count != 0) {
-                battle_unit_call_bow_hardcoding_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id,
+                battle_unit_resolve_projectile_hit_by_misc_ids(
+                    g_battle_effect_current_secondary->caster.fields.caster_id,
                     g_battle_effect_current_secondary->target.fields.target_id);
             }
         }
@@ -202,7 +203,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                 battle_state_set_vsync_interval(2);
             } else if (battle_effect_get_phase() == BATTLE_EFFECT_PHASE_REQUESTED) {
                 if (g_battle_effect_current_secondary->target_count != 0) {
-                    battle_unit_call_bow_hardcoding_by_misc_id(
+                    battle_unit_resolve_projectile_hit_by_misc_ids(
                         g_battle_effect_current_secondary->caster.fields.caster_id,
                         g_battle_effect_current_secondary->target.fields.target_id);
                 }

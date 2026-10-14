@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* battle_unit_restore_facing_after_attack for every misc id 0..15. */
+/* Same as battle_unit_restore_facing_after_attack for every misc id 0..15. */
 void battle_unit_restore_all_facings_after_attack(void) {
     s32 i = 0;
     do {

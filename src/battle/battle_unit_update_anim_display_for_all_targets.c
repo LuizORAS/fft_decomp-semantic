@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Update the display of every unit in the unit's target list (battle_unit_update_display_by_misc_id)
+ * when the attack phase resumes (battle_state_handle_resume_attack_phase_state). */
 void battle_unit_update_anim_display_for_all_targets(battle_unit_misc_data_t* unit) {
     s32 counter;
     battle_unit_misc_data_t* target;
