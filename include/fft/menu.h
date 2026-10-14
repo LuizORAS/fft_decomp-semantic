@@ -1499,6 +1499,9 @@ typedef char menu_number_entry_size_must_be_12[(sizeof(menu_number_entry_t) == 1
 
 extern s32 g_menu_hide_numeric_values; /* non-zero: draw digits as blanks (0x48, 0x10) */
 
+void menu_display_hovered_unit_stats(
+    RECT* frame_rect, s32 mode, menu_number_entry_t* entries, menu_unit_status_record_t* status);
+
 /* The menu text state block at BATTLE 0x80165f9c (g_menu_text_state) and
  * WORLD 0x80153280 (g_world_menu_text_state): the script-variable pointer,
  * then the pen the glyph renderers receive. */

@@ -134,7 +134,7 @@ functions:
   - {addr: 0x800e8fb8, size: 300, name: world_menu_build_sprite_page, hash: 0677e90df05e1cdb}
   - {addr: 0x800e90e4, size: 8, name: world_noop_800e90e4, hash: 6d64edf91449c1b1}
   - {addr: 0x800e90ec, size: 8, name: world_menu_display_projected_action_effect, hash: 6d64edf91449c1b1}
-  - {addr: 0x800e90f4, size: 3764, name: world_menu_display_hovered_unit_stats, hash: 23548cb242115e60, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800e90f4, size: 3764, name: world_menu_display_hovered_unit_stats, hash: 23548cb242115e60, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck, source: src/shared/menu/menu_display_hovered_unit_stats.c, source_symbol: menu_display_hovered_unit_stats}
   - {addr: 0x800e9fa8, size: 96, name: world_menu_refresh_hovered_unit_stats_display, hash: 17518b9c3f92beb7, source: src/shared/menu/menu_refresh_hovered_unit_stats_display.c, source_symbol: menu_refresh_hovered_unit_stats_display}
   - {addr: 0x800ea008, size: 96, name: world_menu_refresh_right_unit_stats_display, hash: ec258bdb8944e993, source: src/shared/menu/menu_refresh_right_unit_stats_display.c, source_symbol: menu_refresh_right_unit_stats_display}
   - {addr: 0x800ea068, size: 316, name: world_menu_preview_attack_caster_stats, hash: 64cc01be28054271, source: src/shared/menu/menu_preview_attack_caster_stats.c, source_symbol: menu_preview_attack_caster_stats}
@@ -2365,6 +2365,39 @@ overrides:
   - {function: script_run_next_event_unused, name: script_load_next_event, addr: 0x800f92a0}
   - {function: world_gfx_set_blit_source_rect, name: g_world_gfx_image_blit_source, addr: 0x801c000c}
   - {function: world_is_skillset_in_spell_quote_exception_list, name: g_battle_spell_quote_exception_skillsets, addr: 0x80156748}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_gfx_free_tpage7_vram, addr: 0x800e2edc}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_gfx_set_draw_mode_for_texture_page, addr: 0x800fdba0}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_menu_alloc_buffer, addr: 0x800e3278}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_menu_build_sprite_page, addr: 0x800e8fb8}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_menu_build_unit_portrait_poly, addr: 0x800eaa50}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_menu_display_projected_action_effect, addr: 0x800e90ec}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_menu_display_text_string, addr: 0x800fe7d4}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_menu_draw_numeric_display_entries, addr: 0x800fdf38}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_menu_free_memory, addr: 0x800e3298}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_menu_init_numeric_display_frame_primitives, addr: 0x800e3358}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_menu_init_primitive_colors_dimmed, addr: 0x800e36a0}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_menu_init_primitive_colors_normal, addr: 0x800e3618}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_menu_set_text_origin, addr: 0x800fdb88}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_text_configure_sprite_vram, addr: 0x800e8a58}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_thread_find_running_by_task, addr: 0x800fd14c}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_thread_get_current_parameter_3, addr: 0x801000f8}
+  - {function: world_menu_display_hovered_unit_stats, name: battle_thread_is_running_asm, addr: 0x80100164}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_menu_hovered_stats_frame_count, addr: 0x80154dfe}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_menu_sprite_page_image_param_bases, addr: 0x80155874}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_menu_sprite_page_image_params, addr: 0x80155838}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_menu_texture_location, addr: 0x80153188}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_unit_status_bounce_offsets, addr: 0x80154de0}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_unit_status_bounce_step, addr: 0x80154dfa}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_unit_status_first_page_by_mode, addr: 0x80155cf4}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_unit_status_gauge_colors, addr: 0x80155ca4}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_unit_status_icon_image_params, addr: 0x80155aa4}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_unit_status_panel_pages, addr: 0x801a25f8}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_unit_status_quad_clut_pairs, addr: 0x801559d0}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_unit_status_quad_image_params_by_mode, addr: 0x80155cd4}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_unit_status_sprite_clut_pairs, addr: 0x80155a88}
+  - {function: world_menu_display_hovered_unit_stats, name: g_battle_unit_status_sprite_image_params_by_mode, addr: 0x80155ce4}
+  - {function: world_menu_display_hovered_unit_stats, name: g_menu_text_state, addr: 0x80153280}
   - {function: world_menu_load_selected_unit, name: battle_menu_copy_unit_data_to_status_billboard, addr: 0x800e7c40}
   - {function: world_menu_load_selected_unit, name: battle_menu_init_monster_skill_check, addr: 0x80182430}
   - {function: world_menu_load_selected_unit, name: g_battle_active_turn_unit, addr: 0x8013a364}
