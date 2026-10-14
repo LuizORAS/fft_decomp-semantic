@@ -7,7 +7,7 @@
 /* Returns whether a same-team Monster Skill supporter occupies the supplied tile. */
 s32 battle_menu_has_monster_skill_supporter_at_tile(s32 team_flags, s32 x, s32 y, s32 total_height) {
     battle_unit_height_data_t height;
-    s32 reference_height;
+    u8 reference_height;
     s32 unit_index;
     s32 unit_team_flags;
 
@@ -21,7 +21,7 @@ s32 battle_menu_has_monster_skill_supporter_at_tile(s32 team_flags, s32 x, s32 y
         }
 
         unit_index = 0;
-        reference_height = total_height & 0xff;
+        reference_height = total_height;
         for (; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
             unit_stats_t* unit = &g_battle_unit_stats[unit_index];
 

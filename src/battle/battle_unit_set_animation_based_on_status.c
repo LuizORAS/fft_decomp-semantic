@@ -21,10 +21,10 @@
  */
 void battle_unit_set_animation_based_on_status(battle_unit_t* unit) {
     s32 animation;
-    s32 water_depth;
+    u8 water_depth;
     u8 spritesheet_id;
 
-    water_depth = move_get_water_depth(unit) & 0xff;
+    water_depth = move_get_water_depth(unit);
     animation = 0;
     switch (water_depth) {
     case 0:
