@@ -847,7 +847,7 @@ s32 map_apply_gns_command(s32 phase, map_resource_t* record);
 s32 map_dispatch_map_data_command(map_data_command_e command, u32 index, s32 object_state, s32 flag);
 s16 map_is_gns_record_matching_state(s32 comparison, s16 record_state, s16 requested_state);
 void* map_start_file_load(
-    const char* unused_directory_path, gns_load_info_t* load_info, void* destination, s32 unused_resource_type);
+    const char* unused_directory_path, const gns_load_info_t* load_info, void* destination, s32 unused_resource_type);
 map_state_record_t* map_load_saved_state_record(map_state_record_t* record);
 s32 map_init_units_sprites_event_and_music(s32 map_id, s32 step, s32 deployment_running);
 s32 map_load_mesh_variant(s32 palette_mode);
