@@ -920,7 +920,7 @@ functions:
   - {addr: 0x8013f668, size: 260, name: map_store_selected_tile_data, hash: 407beefdbfb22c50, source: src/shared/map/map_store_selected_tile_data.c}
   - {addr: 0x8013f76c, size: 64, name: battle_menu_clear_entry_selections, hash: 46ac5994ee2ced8c}
   - {addr: 0x8013f7ac, size: 8, name: battle_noop_8013f7ac, hash: 6d64edf91449c1b1}
-  - {addr: 0x8013f7b4, size: 256, name: battle_menu_restore_selection_for_selected_unit, hash: a409d984791f85bb}
+  - {addr: 0x8013f7b4, size: 256, name: battle_menu_restore_selection_for_selected_unit, hash: a409d984791f85bb, source: src/shared/menu/menu_restore_selection_for_selected_unit.c, source_symbol: menu_restore_selection_for_selected_unit}
   - {addr: 0x8013f8b4, size: 76, name: battle_menu_reset_unit_records, hash: e2c9146172c12401}
   - {addr: 0x8013f900, size: 120, name: battle_menu_reset_unit_record, hash: 01a91c530dee054f}
   - {addr: 0x8013f978, size: 16, name: battle_menu_get_selected_command_address, hash: c365dc2ee8cef471}

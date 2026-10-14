@@ -267,7 +267,7 @@ functions:
   - {addr: 0x800f2ee0, size: 260, name: world_map_store_selected_tile_data, hash: adad582c51dee948, source: src/shared/map/map_store_selected_tile_data.c, source_symbol: map_store_selected_tile_data}
   - {addr: 0x800f2fe4, size: 64, name: world_menu_clear_entry_selections, hash: 25e5397d31b98e28}
   - {addr: 0x800f3024, size: 8, name: world_noop_800f3024, hash: 6d64edf91449c1b1}
-  - {addr: 0x800f302c, size: 256, name: world_menu_restore_selection_for_selected_unit, hash: e03923895aa02ebd}
+  - {addr: 0x800f302c, size: 256, name: world_menu_restore_selection_for_selected_unit, hash: e03923895aa02ebd, source: src/shared/menu/menu_restore_selection_for_selected_unit.c, source_symbol: menu_restore_selection_for_selected_unit}
   - {addr: 0x800f312c, size: 76, name: world_menu_reset_unit_records, hash: 91497616f5362267}
   - {addr: 0x800f3178, size: 120, name: world_menu_reset_unit_record, hash: 320fd7dcc963f1c3}
   - {addr: 0x800f31f0, size: 16, name: world_menu_get_selected_command_address, hash: f87818707628ad97}
@@ -2530,6 +2530,9 @@ overrides:
   - {function: world_menu_reset_subsystems, name: battle_gfx_clear_tpage7_vram_allocation_grid, addr: 0x800e2c0c}
   - {function: world_menu_reset_subsystems, name: battle_menu_init_buffer_allocator, addr: 0x800e3088}
   - {function: world_menu_reset_subsystems, name: battle_menu_reset_buffer_slots, addr: 0x800e2520}
+  - {function: world_menu_restore_selection_for_selected_unit, name: g_battle_menu_id_records, addr: 0x8013a658}
+  - {function: world_menu_restore_selection_for_selected_unit, name: g_battle_menu_selection_remaps, addr: 0x801566cc}
+  - {function: world_menu_restore_selection_for_selected_unit, name: g_battle_menu_unit_selection_records, addr: 0x8013a750}
   - {function: world_menu_run_helpmenu_thread, name: battle_thread_find_running_by_task, addr: 0x800fd14c}
   - {function: world_menu_run_helpmenu_thread, name: helpmenu_menu_run_battle_help, addr: 0x8010487c}
   - {function: world_menu_run_numeric_display_panel_thread, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
