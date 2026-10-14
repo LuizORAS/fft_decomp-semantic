@@ -1194,6 +1194,7 @@ typedef struct menu_system_function {
 typedef char menu_system_function_size_must_be_20[(sizeof(menu_system_function_t) == 20) ? 1 : -1];
 
 void menu_run_system_function_thread(void);
+void menu_start_system_function_thread(s32 system_function);
 
 s32 menu_dispatch_system_function(
     s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, struct action_command* action);

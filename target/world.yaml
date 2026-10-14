@@ -291,7 +291,7 @@ functions:
   - {addr: 0x800f49d8, size: 84, name: world_is_skillset_in_spell_quote_exception_list, hash: 5f78811b5e703c8b, source: src/shared/text/text_is_spell_quote_exception_skillset.c, source_symbol: text_is_spell_quote_exception_skillset}
   - {addr: 0x800f4a2c, size: 688, name: world_menu_resolve_selection, hash: 68327baefa5118d7}
   - {addr: 0x800f4cdc, size: 496, name: world_menu_run_system_function_thread, hash: 1e9d426cd5d89e93, source: src/shared/menu/menu_run_system_function_thread.c, source_symbol: menu_run_system_function_thread}
-  - {addr: 0x800f4ecc, size: 76, name: world_menu_start_system_function_thread, hash: 2be3a252bc4a94b1}
+  - {addr: 0x800f4ecc, size: 76, name: world_menu_start_system_function_thread, hash: 2be3a252bc4a94b1, source: src/shared/menu/menu_start_system_function_thread.c, source_symbol: menu_start_system_function_thread}
   - {addr: 0x800f4f18, size: 124, name: world_menu_confirm_auto_battle_selection_thread, hash: 3b06a121f16b15f4}
   - {addr: 0x800f4f94, size: 64, name: world_menu_store_auto_battle_main_target_id, hash: eba4aacd9409368b}
   - {addr: 0x800f4fd4, size: 604, name: world_text_determine_spell_quote, hash: 6c48e87881d46ff1, source: src/shared/text/text_select_ability_announcement.c, source_symbol: text_select_ability_announcement}
@@ -2685,6 +2685,8 @@ overrides:
   - {function: world_menu_start_mini_menu_display_thread, name: g_menu_current_id, addr: 0x80153268}
   - {function: world_menu_start_mini_menu_display_thread, name: g_menu_overlay_state, addr: 0x8015332c}
   - {function: world_menu_start_mini_menu_display_thread, name: g_menu_thread_menu_data, addr: 0x801cd7e0}
+  - {function: world_menu_start_system_function_thread, name: battle_menu_clear_entry_selections, addr: 0x800f2fe4}
+  - {function: world_menu_start_system_function_thread, name: battle_menu_run_system_function_thread, addr: 0x800f4cdc}
   - {function: world_menu_update_icon_cursor_sprites, name: battle_menu_get_cursor_bob_offset, addr: 0x800ec504}
   - {function: world_menu_update_icon_cursor_sprites, name: battle_thread_is_previous_running, addr: 0x8010012c}
   - {function: world_menu_update_icon_cursor_sprites, name: g_battle_formation_display_mode, addr: 0x80153318}
