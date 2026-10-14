@@ -318,12 +318,12 @@ functions:
   - {addr: 0x8007b4ec, size: 68, name: battle_gfx_store_sprite_display_data, hash: 1410ef2b68b17887}
   - {addr: 0x8007b530, size: 36, name: battle_gfx_set_sprite_part_flip, hash: 292f3ddc521978ee}
   - {addr: 0x8007b554, size: 56, name: battle_gfx_set_sprite_part_semi_transparent, hash: 5df297d7f893d4c1}
-  - {addr: 0x8007b58c, size: 252, name: battle_camera_calculate_relative_offset, hash: 6c843adfb31e095b}
-  - {addr: 0x8007b688, size: 32, name: battle_camera_calculate_relative_offset_by_1, hash: 1483e20a4a5cdab2}
-  - {addr: 0x8007b6a8, size: 32, name: battle_camera_calculate_relative_offset_by_5, hash: 227c8f2b8ec9a15c}
-  - {addr: 0x8007b6c8, size: 612, name: battle_camera_convert_screen_coords_by_rotation, hash: abf1716f66203819}
-  - {addr: 0x8007b92c, size: 32, name: battle_camera_convert_screen_coords_modify_by_1, hash: b6326d0fd9490c00}
-  - {addr: 0x8007b94c, size: 32, name: battle_camera_convert_screen_coords_modify_by_5, hash: ae52a4c0b67848fb}
+  - {addr: 0x8007b58c, size: 252, name: battle_camera_get_step_sort_point, hash: 6c843adfb31e095b}
+  - {addr: 0x8007b688, size: 32, name: battle_camera_get_step_sort_point_unbiased, hash: 1483e20a4a5cdab2}
+  - {addr: 0x8007b6a8, size: 32, name: battle_camera_get_step_sort_point_biased, hash: 227c8f2b8ec9a15c}
+  - {addr: 0x8007b6c8, size: 612, name: battle_camera_get_tile_sort_point, hash: abf1716f66203819}
+  - {addr: 0x8007b92c, size: 32, name: battle_camera_get_tile_sort_point_unbiased, hash: b6326d0fd9490c00}
+  - {addr: 0x8007b94c, size: 32, name: battle_camera_get_tile_sort_point_biased, hash: ae52a4c0b67848fb}
   - {addr: 0x8007b96c, size: 100, name: battle_unit_copy_misc_data_xyz_values, hash: f430112bc691272a}
   - {addr: 0x8007b9d0, size: 2676, name: battle_gfx_calculate_sprite_shadow_from_tile_slope, hash: 3475e2d67a51ce4a}
   - {addr: 0x8007c444, size: 968, name: battle_target_calculate_cursor_tile_polygon, hash: bc44eec17053cffa}
@@ -523,7 +523,7 @@ functions:
   - {addr: 0x8008c410, size: 44, name: battle_unit_get_screen_data_ptr_by_misc_id, hash: bb4c76a4ec3aedb2}
   - {addr: 0x8008c43c, size: 44, name: battle_unit_get_screen_data_ptr_by_battle_id, hash: 94e6ad1341257277}
   - {addr: 0x8008c468, size: 176, name: battle_unit_get_tile_center_and_height_by_battle_id, hash: 6e74199453f8bbbc}
-  - {addr: 0x8008c518, size: 56, name: battle_camera_convert_screen_coords_by_1_from_misc_id, hash: b7219c540b48bcd2}
+  - {addr: 0x8008c518, size: 56, name: battle_camera_get_unit_sort_point_unbiased, hash: b7219c540b48bcd2}
   - {addr: 0x8008c550, size: 152, name: battle_camera_project_world_coords_to_screen, hash: f485eb40b2cdb8cf}
   - {addr: 0x8008c5e8, size: 124, name: battle_unit_get_map_coords_from_misc_id, hash: 181fd797759b9fbf}
   - {addr: 0x8008c664, size: 360, name: battle_move_start_unit_walk_to, hash: ba93e4c07cc705a5}
@@ -1847,11 +1847,11 @@ functions:
   - {addr: 0x801aad98, size: 1084, name: battle_camera_execute_angle_command, hash: f1c78e9a737a3544}
   - {addr: 0x801ab1d4, size: 956, name: battle_camera_execute_position_command, hash: a1c17cab2928efde}
   - {addr: 0x801ab590, size: 404, name: battle_camera_execute_zoom_command, hash: f104ab5dea4cdedf}
-  - {addr: 0x801ab724, size: 4916, name: battle_camera_update_effect_rotation_and_zoom, hash: 1d6aa50dce4d4673}
+  - {addr: 0x801ab724, size: 4916, name: battle_camera_update_effect_tracks, hash: 1d6aa50dce4d4673}
   - {addr: 0x801aca58, size: 176, name: battle_effect_find_next_keyframe, hash: d113dd42bd0ab345}
   - {addr: 0x801acb08, size: 1160, name: battle_camera_find_active_keyframe, hash: 82c130a9804bf41d}
-  - {addr: 0x801acf90, size: 520, name: battle_camera_start_effect_keyframe_moves, hash: c9c942a3435cd14b}
-  - {addr: 0x801ad198, size: 1172, name: battle_camera_advance_effect_tracks, hash: 11d5529e54fbaefe}
+  - {addr: 0x801acf90, size: 520, name: battle_camera_start_child_keyframe_moves, hash: c9c942a3435cd14b}
+  - {addr: 0x801ad198, size: 1172, name: battle_camera_start_parent_keyframe_moves, hash: 11d5529e54fbaefe}
   - {addr: 0x801ad62c, size: 508, name: battle_effect_init_system, hash: a6c8471ee71be765}
   - {addr: 0x801ad828, size: 284, name: battle_effect_allocate_secondary_slot, hash: dad3d88dc513a4c6}
   - {addr: 0x801ad944, size: 412, name: battle_effect_remove_secondary, hash: 99f64dbdd1fbef82}

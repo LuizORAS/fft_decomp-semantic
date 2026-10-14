@@ -6,7 +6,7 @@
  * Each track's mode word (g_battle_effect_camera_rotation_mode, _position_mode and _zoom_mode: bits 0x1e00 of the
  * timeline command) selects an interpolation between the start and target values over the track duration; the mode
  * clears once the counter reaches the duration. */
-void battle_camera_update_effect_rotation_and_zoom(void) {
+void battle_camera_update_effect_tracks(void) {
     VECTOR position;
     VECTOR delta;
     SVECTOR rotation;

@@ -6177,15 +6177,15 @@ extern SVECTOR g_battle_camera_angles;
 
 /* 0x80166054: camera consumer unpacks two 2-bit fields and a high nibble. */
 extern s32 g_battle_camera_speed_curve;
-void battle_camera_convert_screen_coords_by_rotation(const s16* input, s16* output, s32 offset);
-void battle_camera_convert_screen_coords_modify_by_1(const s16* screen, s16* destination);
+void battle_camera_get_tile_sort_point(const s16* input, s16* output, s32 offset);
+void battle_camera_get_tile_sort_point_unbiased(const s16* screen, s16* destination);
 void battle_camera_toggle_tilt(void);
 s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b);
 void battle_camera_step_focus_toward_cursor_tile(s16 height);
 void battle_camera_execute_angle_command(s32 command, s32 target, s32 duration, SVECTOR* angles);
 void battle_camera_execute_position_command(s32 command, s32 target, s32 duration, VECTOR* offset);
 s32 battle_camera_get_input_direction(s32 mode);
-void battle_camera_update_effect_rotation_and_zoom(void);
+void battle_camera_update_effect_tracks(void);
 
 /* Some routines address these components as separate linker symbols. */
 void battle_camera_update_vector_from_game_state(void);
@@ -6237,20 +6237,20 @@ void battle_camera_update_tilt(void);
 void battle_camera_update_zoom(void);
 void battle_camera_update_zoom_animation(void);
 s32 battle_camera_wrap_yaw_angle(void);
-void battle_camera_advance_effect_tracks(s16 frame);
-void battle_camera_calculate_relative_offset(const u16* input, s16* output, s32 offset);
-void battle_camera_calculate_relative_offset_by_1(const u16* input, s16* output);
-void battle_camera_calculate_relative_offset_by_5(const u16* input, s16* output);
+void battle_camera_start_parent_keyframe_moves(s16 frame);
+void battle_camera_get_step_sort_point(const u16* input, s16* output, s32 offset);
+void battle_camera_get_step_sort_point_unbiased(const u16* input, s16* output);
+void battle_camera_get_step_sort_point_biased(const u16* input, s16* output);
 
 void battle_camera_choose_unblocked_rotation_for_tile(const SVECTOR* tile_coords, SVECTOR* rotation_out);
 
-void battle_camera_convert_screen_coords_modify_by_5(const s16* screen, s16* destination);
+void battle_camera_get_tile_sort_point_biased(const s16* screen, s16* destination);
 s32 battle_camera_find_active_keyframe(s16 frame, s16 mask, s32* out_index, s32* out_frame);
 void battle_camera_load_state_from_script_variables(void);
 
 void battle_camera_set_focus_and_cursor_tile(const SVECTOR* coords, const SVECTOR* rotation);
 
-void battle_camera_start_effect_keyframe_moves(s16 frame);
+void battle_camera_start_child_keyframe_moves(s16 frame);
 void battle_camera_update_cursor_tile_vector(void);
 void battle_camera_shift_acting_unit_vector(void);
 void battle_camera_fusion_thread(void);

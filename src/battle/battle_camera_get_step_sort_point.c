@@ -1,9 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Offset a position for the current camera yaw: subtract 0xc from y, and move
- * x and z by half a tile (0xe) and by offset, with signs set by the quadrant. */
-void battle_camera_calculate_relative_offset(const u16* input, s16* output, s32 offset) {
+/* Return in `output` the depth-sort point of a unit stepping between tiles, for the current camera yaw:
+ * the point moved half a tile (0xe) toward the corner the yaw quadrant picks and back by `offset` on x and z,
+ * with y raised by 0xc. Callers pass 1, or 5 on a tile with MAP_TILE_SURFACE_FLAG_DEPTH_BIAS
+ * (battle_camera_get_step_sort_point_unbiased and _biased). */
+void battle_camera_get_step_sort_point(const u16* input, s16* output, s32 offset) {
     s32 x;
     s32 z;
 

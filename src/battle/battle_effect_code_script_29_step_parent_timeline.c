@@ -100,7 +100,7 @@ s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
         battle_effect_update_on_hit_sound_timer(g_battle_effect_timeline->sound_tracks[1][2],
             &state->track_keyframe[6][1], &state->track_remaining[6][1], &state->sound_state[2][1][1]);
     }
-    battle_camera_advance_effect_tracks(state->frame);
+    battle_camera_start_parent_keyframe_moves(state->frame);
     state->frame++;
     record->pc += 4;
     return EFFECT_SCRIPT_RESULT_CONTINUE;

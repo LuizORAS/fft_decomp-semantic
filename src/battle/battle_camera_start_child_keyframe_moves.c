@@ -4,7 +4,7 @@
 /* Starts the child timeline's camera moves for this frame: each of the
  * rotation, position and zoom tracks that is idle takes its next keyframe
  * from the child camera table. */
-void battle_camera_start_effect_keyframe_moves(s16 frame) {
+void battle_camera_start_child_keyframe_moves(s16 frame) {
     SVECTOR rotation;
     VECTOR vector;
     s32 index;

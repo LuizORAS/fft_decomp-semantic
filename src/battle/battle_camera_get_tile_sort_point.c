@@ -1,19 +1,22 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Snap a screen-space point to the 28-unit tile grid for the current camera
- * yaw, writing the result to output.
+/* Return in `output` the point a sprite standing on a tile is depth-sorted by, for the current camera yaw:
+ * the point's tile, snapped to the 28-unit grid, at the corner the yaw quadrant picks, moved `offset` units
+ * into the tile on x and z, with y raised by 0xb. The callers transform it (RotTrans): its depth picks the
+ * ordering-table entry of a unit, shadow, cursor or bubble, and the targeting cursor takes its screen position
+ * (battle_target_project_cursor_tile_to_screen). Callers pass 1, or 5 on a tile with
+ * MAP_TILE_SURFACE_FLAG_DEPTH_BIAS
+ * (battle_camera_get_tile_sort_point_unbiased and _biased).
  *
- * Same shape as battle_camera_calculate_relative_offset: each of the x and z
+ * Same shape as battle_camera_get_step_sort_point: each of the x and z
  * components picks up the caller's offset with a sign that depends on the yaw
  * quadrant, and the y component is a plain bias. Here each component is first
  * snapped down to a whole tile, and on the side the camera faces away from it
- * is moved on by one further tile. Callers pass an offset of 1 or 5. The
- * far_edge temporaries keep the target's add-then-subtract order; written
- * inline, GCC re-associates them into a longer sequence.
- */
-void battle_camera_convert_screen_coords_by_rotation(const s16* input, s16* output, s32 offset) {
+ * is moved on by one further tile. The far_edge temporaries keep the target's
+ * add-then-subtract order; written inline, GCC re-associates them into a
+ * longer sequence. */
+void battle_camera_get_tile_sort_point(const s16* input, s16* output, s32 offset) {
     s32 yaw;
 
     output[1] = input[1] - 0xb;

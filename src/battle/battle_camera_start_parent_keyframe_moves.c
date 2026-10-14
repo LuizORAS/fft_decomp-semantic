@@ -5,8 +5,8 @@
  * rotation, position and zoom tracks that is idle takes its next keyframe
  * from the table battle_camera_find_active_keyframe reports (phase 1, child
  * or phase 2). The three-table form of
- * battle_camera_start_effect_keyframe_moves. */
-void battle_camera_advance_effect_tracks(s16 frame) {
+ * battle_camera_start_child_keyframe_moves. */
+void battle_camera_start_parent_keyframe_moves(s16 frame) {
     SVECTOR rotation;
     VECTOR vector;
     s32 index;
