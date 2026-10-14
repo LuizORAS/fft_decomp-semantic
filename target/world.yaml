@@ -240,7 +240,7 @@ functions:
   - {addr: 0x800f13a0, size: 92, name: script_assign_bitset_flag, hash: 96cfecafc19e267a, source: src/shared/script/script_assign_bitset_flag.c}
   - {addr: 0x800f13fc, size: 184, name: script_unlockdate_event_instruction, hash: 756a57b269501269, source: src/shared/script/script_unlockdate_event_instruction.c}
   - {addr: 0x800f14b4, size: 1044, name: world_camera_fusion_thread, hash: 29fbdab9fc995bcc}
-  - {addr: 0x800f18c8, size: 1432, name: world_camera_step_track, hash: 64ee507b9faf9750}
+  - {addr: 0x800f18c8, size: 1432, name: world_camera_step_track, hash: 64ee507b9faf9750, source: src/shared/camera/camera_step_track.c, source_symbol: camera_step_track}
   - {addr: 0x800f1e60, size: 60, name: script_interpolate_range_fixed12, hash: 959b0c6e3237b93a, source: src/shared/script/script_interpolate_range_fixed12.c}
   - {addr: 0x800f1e9c, size: 60, name: script_print_debug_message, hash: 452ccd9750915554, source: src/shared/script/script_print_debug_message.c}
   - {addr: 0x800f1ed8, size: 156, name: script_walkto_event_instruction, hash: df0e7f67144df7b9, source: src/shared/script/script_walkto_event_instruction.c}
@@ -2363,6 +2363,9 @@ overrides:
   - {function: script_run_next_event, name: script_load_next_event, addr: 0x800f92a0}
   - {function: script_run_next_event_unused, name: script_execute_event, addr: 0x800f6f20}
   - {function: script_run_next_event_unused, name: script_load_next_event, addr: 0x800f92a0}
+  - {function: world_camera_step_track, name: battle_fixed_cross_product_q12, addr: 0x801002d8}
+  - {function: world_camera_step_track, name: battle_mul_div_s64, addr: 0x80100188}
+  - {function: world_camera_step_track, name: g_camera_cross_product_overflow, addr: 0x801cd82c}
   - {function: world_card_close_file_with_retries, name: card_io_wait_operation_result, addr: 0x80132b50}
   - {function: world_card_close_file_with_retries, name: g_card_file_open_descriptor, addr: 0x80194fd8}
   - {function: world_card_create_new_with_retries, name: card_io_wait_hardware_event_result, addr: 0x80132824}

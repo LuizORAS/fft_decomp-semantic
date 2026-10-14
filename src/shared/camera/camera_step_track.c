@@ -4,8 +4,7 @@
 #include "psx/types.h"
 
 /* Advances one camera-track component by a frame and returns its new value.
- * Called per component by camera_fusion_thread (0x8013db9c); the
- * WORLD twin is world_camera_step_track (0x800f18c8).
+ * Called once for each component by the scene's camera-fusion thread.
  *
  * Each call samples the two tangent lines of the active key segment at this
  * frame and the next, intersects them (battle_fixed_cross_product_q12 is a Q12 cross product
