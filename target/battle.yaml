@@ -53,8 +53,8 @@ functions:
   - {addr: 0x80069744, size: 688, name: move_set_velocity_for_contiguous_steps_with_final_tile_height, hash: 180964c6f471830f}
   - {addr: 0x800699f4, size: 260, name: move_set_unit_step_delta_center_to_edge, hash: efd634e09f73e538}
   - {addr: 0x80069af8, size: 256, name: move_set_unit_step_delta_edge_to_center, hash: d2e3b0bb7fdd6467}
-  - {addr: 0x80069bf8, size: 260, name: move_set_float_step_delta_center_to_edge, hash: 215bf7cfeba86604}
-  - {addr: 0x80069cfc, size: 256, name: move_set_float_step_delta_edge_to_center, hash: 9e2a99f513003ceb}
+  - {addr: 0x80069bf8, size: 260, name: move_set_float_step_delta_center_to_edge, hash: 215bf7cfeba86604, source: src/battle/move_set_unit_step_delta_center_to_edge.c, source_symbol: move_set_unit_step_delta_center_to_edge}
+  - {addr: 0x80069cfc, size: 256, name: move_set_float_step_delta_edge_to_center, hash: 9e2a99f513003ceb, source: src/battle/move_set_unit_step_delta_edge_to_center.c, source_symbol: move_set_unit_step_delta_edge_to_center}
   - {addr: 0x80069dfc, size: 108, name: move_interpolate_partial, hash: 15b777dd1242c89f}
   - {addr: 0x80069e68, size: 120, name: move_start_teleport_animation, hash: e8dbbc0af7285fb7}
   - {addr: 0x80069ee0, size: 52, name: move_start_teleport_step, hash: b3a3efb325276779}
