@@ -22,7 +22,7 @@ effect_script_result_e effect_code_script_29_step_parent_timeline(effect_record_
     if (timeline->frame >= g_effect_timeline->phase1_duration) {
         while (timeline->state.parent.spawn_countdown == 0
             && timeline->state.parent.spawned_count < g_effect_context.target_count) {
-            effect_script_instruction_t* instruction = effect_get_current_script_instruction(record);
+            const effect_script_instruction_t* instruction = effect_get_current_script_instruction(record);
 
             child = effect_start_script_record(record->script, instruction->immediate.value, record->record_index);
             g_effect_state_records[child].timeline.target_index = timeline->state.parent.spawned_count;

@@ -10,7 +10,7 @@ effect_script_result_e effect_code_script_1e_jump_after_total_duration(effect_re
     timing = g_effect_timeline;
     if (record->timeline.frame >= timing->phase1_duration + timing->phase2_duration
             + (g_effect_context.target_count - 1) * timing->spawn_delay + timing->child.duration) {
-        effect_script_instruction_t* instruction = effect_get_current_script_instruction(record);
+        const effect_script_instruction_t* instruction = effect_get_current_script_instruction(record);
 
         record->pc = instruction->immediate.value;
     } else {

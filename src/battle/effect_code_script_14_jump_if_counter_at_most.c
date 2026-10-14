@@ -4,7 +4,7 @@
  * selected by the top two bits of the second byte is at most the second
  * 16-bit value; otherwise step over the 6-byte instruction. */
 effect_script_result_e effect_code_script_14_jump_if_counter_at_most(effect_record_t* record) {
-    effect_script_instruction_t* instruction = effect_get_current_script_instruction(record);
+    const effect_script_instruction_t* instruction = effect_get_current_script_instruction(record);
     effect_script_parameters_t parameters = instruction->header.parameters;
     if (record->counters[parameters.counter.slot] <= instruction->branch.comparison) {
         record->pc = instruction->branch.target_offset;

@@ -5,7 +5,7 @@
  * the 4-byte instruction. */
 effect_script_result_e effect_code_script_1d_jump_after_child_timeline_duration(effect_record_t* record) {
     if (record->timeline.frame >= g_effect_child_timeline->duration) {
-        effect_script_instruction_t* instruction = effect_get_current_script_instruction(record);
+        const effect_script_instruction_t* instruction = effect_get_current_script_instruction(record);
 
         record->pc = instruction->immediate.value;
     } else {

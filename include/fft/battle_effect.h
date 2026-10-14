@@ -1276,7 +1276,7 @@ typedef struct effect_record {
     s16 record_index; /* 0x02: this record's array index */
     s16 parent_index; /* 0x04: the record that started this one; 0 for the root */
     s16 pc;           /* 0x06: byte offset of the current instruction in script */
-    u8* script;       /* 0x08: borrowed script byte stream, shared with child records */
+    const u8* script; /* 0x08: borrowed script byte stream, shared with child records */
     s16 child_indices[EFFECT_SCRIPT_CHILD_SLOT_COUNT]; /* 0x0c: child records started by opcode 02 */
     s16 counters[EFFECT_SCRIPT_COUNTER_COUNT];         /* 0x14: selected by the instruction's top two parameter bits */
     s16 work_count;                                    /* 0x1c: particles on work_head */
@@ -1291,13 +1291,13 @@ typedef struct effect_record {
 } effect_record_t;
 
 /* pc is a signed byte offset into the shared, 16-bit-aligned script stream. */
-static __inline__ effect_script_instruction_t* effect_get_current_script_instruction(effect_record_t* record) {
-    return (effect_script_instruction_t*)(record->script + record->pc);
+static __inline__ const effect_script_instruction_t* effect_get_current_script_instruction(effect_record_t* record) {
+    return (const effect_script_instruction_t*)(record->script + record->pc);
 }
 
 static __inline__ u16 effect_get_current_script_header(effect_record_t* record) {
     /* Loading the 16-bit value here preserves the retail base/offset register order. */
-    return *(u16*)(record->script + record->pc);
+    return *(const u16*)(record->script + record->pc);
 }
 
 typedef char assert_effect_record_size[sizeof(effect_record_t) == 248 ? 1 : -1];
@@ -2136,14 +2136,14 @@ extern effect_callback_t g_effect_callback_slots[];
 
 extern effect_script_result_e (*g_effect_instructions[120])(effect_record_t*);
 extern effect_callback_t g_effect_native_callbacks[EFFECT_NATIVE_CALLBACK_COUNT];
-extern u8* g_effect_script;
+extern const u8* g_effect_script;
 
 effect_script_result_e effect_code_script_04_end(effect_record_t* unused_record);
 effect_script_result_e effect_code_script_2e_invalid(effect_record_t* unused_record);
 effect_callback_t effect_get_native_callback(s16 callback_id);
 s32 effect_run_block(s16 index);
 void effect_set_script_pointer(s16 effect_id);
-s16 effect_start_script_record(u8* script, s16 start_pc, s16 parent_index);
+s16 effect_start_script_record(const u8* script, s16 start_pc, s16 parent_index);
 
 /* particle motion */
 extern const effect_animation_curve_table_t* g_effect_animation_curve_data;
