@@ -497,6 +497,8 @@ void menu_preview_attack_target_stats(void);
 void menu_copy_billboard_data_out(menu_unit_status_record_t* banner, menu_active_unit_t* unit,
     menu_status_panel_slot_storage_t* billboard, map_selected_tile_t* cursor_tile);
 void menu_clear_stat_preview(menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail);
+void menu_calculate_swap_stat_delta(menu_status_panel_slot_storage_t* output, menu_unit_status_record_t* delta,
+    s16 item_before, s16 item_after, s32 slot);
 void menu_init_status_panel_primitives(menu_status_panel_buffer_t* menu);
 void menu_subtract_scaled_stat_preview(menu_status_panel_slot_storage_t* out,
     const menu_status_panel_slot_storage_t* scaled, const menu_status_panel_slot_storage_t* base, s32 scale);

@@ -747,7 +747,7 @@ functions:
   - {addr: 0x80122e88, size: 132, name: world_ability_get_move_and_jump_increase_values, hash: 15a592818d5c12ca}
   - {addr: 0x80122f0c, size: 144, name: world_ability_find_stat_changes_due_to_equipped, hash: 1f6bb186e388a569}
   - {addr: 0x80122f9c, size: 560, name: world_item_populate_stat_preview, hash: 610e237773cc8653}
-  - {addr: 0x801231cc, size: 188, name: world_item_calculate_swap_stat_delta, hash: 9c961874f326897c}
+  - {addr: 0x801231cc, size: 188, name: world_item_calculate_swap_stat_delta, hash: 9c961874f326897c, source: src/shared/menu/menu_calculate_swap_stat_delta.c, source_symbol: menu_calculate_swap_stat_delta}
   - {addr: 0x80123288, size: 424, name: menu_subtract_scaled_stat_preview, hash: 7621477fabb93d49, source: src/shared/menu/menu_subtract_scaled_stat_preview.c}
   - {addr: 0x80123430, size: 216, name: world_item_calculate_equipment_swap_stat_delta, hash: 8ea97edaf0f06225}
   - {addr: 0x80123508, size: 288, name: world_item_sum_equipment_stat_details, hash: d8d37dd10e923a90}
@@ -2365,6 +2365,7 @@ overrides:
   - {function: script_run_next_event_unused, name: script_load_next_event, addr: 0x800f92a0}
   - {function: world_gfx_set_blit_source_rect, name: g_world_gfx_image_blit_source, addr: 0x801c000c}
   - {function: world_is_skillset_in_spell_quote_exception_list, name: g_battle_spell_quote_exception_skillsets, addr: 0x80156748}
+  - {function: world_item_calculate_swap_stat_delta, name: equip_item_collect_stat_deltas, addr: 0x80122f9c}
   - {function: world_menu_check_action_restrictions, name: battle_menu_icon_linked_entry_thread, addr: 0x800eee98}
   - {function: world_menu_check_action_restrictions, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
   - {function: world_menu_check_action_restrictions, name: g_battle_menu_current_id, addr: 0x80153268}

@@ -1379,7 +1379,7 @@ functions:
   - {addr: 0x801c7a3c, size: 128, name: equip_item_remove_from_category_list, hash: 71937d05d6e62d46}
   - {addr: 0x801c7abc, size: 72, name: menu_clear_stat_preview, hash: 740a9e32a9c766bb, source: src/shared/menu/menu_clear_stat_preview.c}
   - {addr: 0x801c7b04, size: 552, name: equip_item_collect_stat_deltas, hash: 0ac56f16113047c1}
-  - {addr: 0x801c7d2c, size: 188, name: equip_item_calculate_swap_stat_delta, hash: b8cc1a11e7a4d8e7}
+  - {addr: 0x801c7d2c, size: 188, name: equip_item_calculate_swap_stat_delta, hash: b8cc1a11e7a4d8e7, source: src/shared/menu/menu_calculate_swap_stat_delta.c, source_symbol: menu_calculate_swap_stat_delta}
   - {addr: 0x801c7de8, size: 424, name: menu_subtract_scaled_stat_preview, hash: 7621477fabb93d49, source: src/shared/menu/menu_subtract_scaled_stat_preview.c}
   - {addr: 0x801c7f90, size: 216, name: equip_item_calculate_equipment_swap_stat_delta, hash: f6342e487bb56d15}
   - {addr: 0x801c8068, size: 288, name: equip_item_sum_equipment_stat_details, hash: 1537c392f550f2cf}
