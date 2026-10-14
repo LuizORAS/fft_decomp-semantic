@@ -303,18 +303,18 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         }
 
         k = g_effect_dome_mesh_brightness_table[n][0];
-        shade_r = (k * red) >> 12;
-        shade_g = (k * green) >> 12;
-        shade_b = (k * blue) >> 12;
+        shade_r = (k * red) / ONE;
+        shade_g = (k * green) / ONE;
+        shade_b = (k * blue) / ONE;
         for (j = 0; j < DOME_MESH_SEGMENTS; j++) {
             quad = &work->quads[work->buffer][j];
             setRGB2(quad, quad->r3 = shade_r, quad->g3 = shade_g, quad->b3 = shade_b);
         }
         for (i = 0; i < DOME_MESH_ROWS - 1; i++) {
             k = g_effect_dome_mesh_brightness_table[n][i + 1];
-            shade_r = (k * red) >> 12;
-            shade_g = (k * green) >> 12;
-            shade_b = (k * blue) >> 12;
+            shade_r = (k * red) / ONE;
+            shade_g = (k * green) / ONE;
+            shade_b = (k * blue) / ONE;
             for (j = 0; j < DOME_MESH_SEGMENTS; j++) {
                 quad = &work->quads[work->buffer][i * DOME_MESH_SEGMENTS + j];
                 other = &work->quads[work->buffer][(i + 1) * DOME_MESH_SEGMENTS + j];
@@ -323,9 +323,9 @@ s32 effect_dome_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             }
         }
         k = g_effect_dome_mesh_brightness_table[n][DOME_MESH_ROWS];
-        shade_r = (k * red) >> 12;
-        shade_g = (k * green) >> 12;
-        shade_b = (k * blue) >> 12;
+        shade_r = (k * red) / ONE;
+        shade_g = (k * green) / ONE;
+        shade_b = (k * blue) / ONE;
         for (j = 0; j < DOME_MESH_SEGMENTS; j++) {
             quad = &work->quads[work->buffer][(DOME_MESH_ROWS - 1) * DOME_MESH_SEGMENTS + j];
             setRGB0(quad, quad->r1 = shade_r, quad->g1 = shade_g, quad->b1 = shade_b);

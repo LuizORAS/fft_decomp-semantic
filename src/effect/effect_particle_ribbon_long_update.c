@@ -528,7 +528,7 @@ s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 
             quad->v2 = v + height;
             factor = g_effect_particle_ribbon_long_brightness_table[row][point];
             setRGB0(
-                quad, quad->r2 = factor * red >> 12, quad->g2 = factor * green >> 12, quad->b2 = factor * blue >> 12);
+                quad, quad->r2 = factor * red / ONE, quad->g2 = factor * green / ONE, quad->b2 = factor * blue / ONE);
             point--;
             for (j = 1; j < segments; j++) {
                 index--;
@@ -558,9 +558,9 @@ s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 
                 prev->v1 = quad->v0 = v;
                 prev->v3 = quad->v2 = v + height;
                 factor = g_effect_particle_ribbon_long_brightness_table[row][point];
-                setRGB1(prev, prev->r3 = quad->r0 = quad->r2 = factor * red >> 12,
-                    prev->g3 = quad->g0 = quad->g2 = factor * green >> 12,
-                    prev->b3 = quad->b0 = quad->b2 = factor * blue >> 12);
+                setRGB1(prev, prev->r3 = quad->r0 = quad->r2 = factor * red / ONE,
+                    prev->g3 = quad->g0 = quad->g2 = factor * green / ONE,
+                    prev->b3 = quad->b0 = quad->b2 = factor * blue / ONE);
                 point--;
                 if (depth < EFFECT_OT_DEPTH_MIN) {
                     depth = EFFECT_OT_DEPTH_MIN;
@@ -583,7 +583,7 @@ s32 effect_particle_ribbon_long_update(s32 record_index, s32 callback_slot, s32 
             quad->v3 = v + height;
             factor = g_effect_particle_ribbon_long_brightness_table[row][point];
             setRGB1(
-                quad, quad->r3 = factor * red >> 12, quad->g3 = factor * green >> 12, quad->b3 = factor * blue >> 12);
+                quad, quad->r3 = factor * red / ONE, quad->g3 = factor * green / ONE, quad->b3 = factor * blue / ONE);
             if (depth < EFFECT_OT_DEPTH_MIN) {
                 depth = EFFECT_OT_DEPTH_MIN;
             }

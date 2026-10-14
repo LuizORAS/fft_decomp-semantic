@@ -408,12 +408,12 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         k = g_effect_ring_mesh_brightness_table[n][0];
         for (i = 0; i < RING_MESH_SEGMENTS; i++) {
             quad = &work->quads[buffer][i];
-            quad->r3 = (k * red) >> 12;
-            quad->r2 = (k * red) >> 12;
-            quad->g3 = (k * green) >> 12;
-            quad->g2 = (k * green) >> 12;
-            quad->b3 = (k * blue) >> 12;
-            quad->b2 = (k * blue) >> 12;
+            quad->r3 = (k * red) / ONE;
+            quad->r2 = (k * red) / ONE;
+            quad->g3 = (k * green) / ONE;
+            quad->g2 = (k * green) / ONE;
+            quad->b3 = (k * blue) / ONE;
+            quad->b2 = (k * blue) / ONE;
         }
         k = g_effect_ring_mesh_brightness_table[n][1];
         /* The redundant quad++ keeps quad from being strength-reduced into a
@@ -421,28 +421,28 @@ s32 effect_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         for (i = 0; i < RING_MESH_SEGMENTS; i++, quad++) {
             quad = &work->quads[buffer][i];
             other = &work->quads[buffer][i + RING_MESH_SEGMENTS];
-            other->r3 = (k * red) >> 12;
-            other->r2 = (k * red) >> 12;
-            quad->r1 = (k * red) >> 12;
-            quad->r0 = (k * red) >> 12;
-            other->g3 = (k * green) >> 12;
-            other->g2 = (k * green) >> 12;
-            quad->g1 = (k * green) >> 12;
-            quad->g0 = (k * green) >> 12;
-            other->b3 = (k * blue) >> 12;
-            other->b2 = (k * blue) >> 12;
-            quad->b1 = (k * blue) >> 12;
-            quad->b0 = (k * blue) >> 12;
+            other->r3 = (k * red) / ONE;
+            other->r2 = (k * red) / ONE;
+            quad->r1 = (k * red) / ONE;
+            quad->r0 = (k * red) / ONE;
+            other->g3 = (k * green) / ONE;
+            other->g2 = (k * green) / ONE;
+            quad->g1 = (k * green) / ONE;
+            quad->g0 = (k * green) / ONE;
+            other->b3 = (k * blue) / ONE;
+            other->b2 = (k * blue) / ONE;
+            quad->b1 = (k * blue) / ONE;
+            quad->b0 = (k * blue) / ONE;
         }
         k = g_effect_ring_mesh_brightness_table[n][2];
         for (i = 0; i < RING_MESH_SEGMENTS; i++) {
             quad = &work->quads[buffer][i + RING_MESH_SEGMENTS];
-            quad->r1 = (k * red) >> 12;
-            quad->r0 = (k * red) >> 12;
-            quad->g1 = (k * green) >> 12;
-            quad->g0 = (k * green) >> 12;
-            quad->b1 = (k * blue) >> 12;
-            quad->b0 = (k * blue) >> 12;
+            quad->r1 = (k * red) / ONE;
+            quad->r0 = (k * red) / ONE;
+            quad->g1 = (k * green) / ONE;
+            quad->g0 = (k * green) / ONE;
+            quad->b1 = (k * blue) / ONE;
+            quad->b0 = (k * blue) / ONE;
         }
 
         for (j = 0; j < 2; j++) {

@@ -515,9 +515,9 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
             offset_quad->v2 = quad->v2 = v + height;
             scratch = g_effect_tentacle_mesh_brightness_table[brightness_row][shade_index];
             shade_index--;
-            setRGB0(offset_quad, offset_quad->r2 = quad->r0 = quad->r2 = (scratch * red) >> 12,
-                offset_quad->g2 = quad->g0 = quad->g2 = (scratch * green) >> 12,
-                offset_quad->b2 = quad->b0 = quad->b2 = (scratch * blue) >> 12);
+            setRGB0(offset_quad, offset_quad->r2 = quad->r0 = quad->r2 = (scratch * red) / ONE,
+                offset_quad->g2 = quad->g0 = quad->g2 = (scratch * green) / ONE,
+                offset_quad->b2 = quad->b0 = quad->b2 = (scratch * blue) / ONE);
 
             for (index = 1; index < link_count; index++) {
                 point_index--;
@@ -552,11 +552,11 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
                 scratch = g_effect_tentacle_mesh_brightness_table[brightness_row][shade_index];
                 shade_index--;
                 prev_offset_quad->r1 = prev_offset_quad->r3 = offset_quad->r0 = offset_quad->r2 = prev->r1 = prev->r3
-                    = quad->r0 = quad->r2 = (scratch * red) >> 12;
+                    = quad->r0 = quad->r2 = (scratch * red) / ONE;
                 prev_offset_quad->g1 = prev_offset_quad->g3 = offset_quad->g0 = offset_quad->g2 = prev->g1 = prev->g3
-                    = quad->g0 = quad->g2 = (scratch * green) >> 12;
+                    = quad->g0 = quad->g2 = (scratch * green) / ONE;
                 prev_offset_quad->b1 = prev_offset_quad->b3 = offset_quad->b0 = offset_quad->b2 = prev->b1 = prev->b3
-                    = quad->b0 = quad->b2 = (scratch * blue) >> 12;
+                    = quad->b0 = quad->b2 = (scratch * blue) / ONE;
                 if (depth < EFFECT_OT_DEPTH_MIN) {
                     depth = EFFECT_OT_DEPTH_MIN;
                 }
@@ -583,9 +583,9 @@ s32 effect_tentacle_mesh_update(s32 record_index, s32 callback_slot, s32 emitter
             offset_quad->v1 = quad->v1 = v;
             offset_quad->v3 = quad->v3 = v + height;
             scratch = g_effect_tentacle_mesh_brightness_table[brightness_row][shade_index];
-            setRGB1(offset_quad, offset_quad->r3 = quad->r1 = quad->r3 = (scratch * red) >> 12,
-                offset_quad->g3 = quad->g1 = quad->g3 = (scratch * green) >> 12,
-                offset_quad->b3 = quad->b1 = quad->b3 = (scratch * blue) >> 12);
+            setRGB1(offset_quad, offset_quad->r3 = quad->r1 = quad->r3 = (scratch * red) / ONE,
+                offset_quad->g3 = quad->g1 = quad->g3 = (scratch * green) / ONE,
+                offset_quad->b3 = quad->b1 = quad->b3 = (scratch * blue) / ONE);
             if (depth < EFFECT_OT_DEPTH_MIN) {
                 depth = EFFECT_OT_DEPTH_MIN;
             }

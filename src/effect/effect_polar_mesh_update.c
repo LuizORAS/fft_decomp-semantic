@@ -9,9 +9,9 @@
 
 /* Pack one primitive colour and code word after applying 4.12 brightness. */
 #define PACK_RGB(scratch, brightness)                                                                                  \
-    ((((brightness) * (scratch)->red_factor) >> 12) | (scratch)->code                                                  \
-        | ((((brightness) * (scratch)->green_factor) >> 12) << 8)                                                      \
-        | ((((brightness) * (scratch)->blue_factor) >> 12) << 16))
+    ((((brightness) * (scratch)->red_factor) / ONE) | (scratch)->code                                                  \
+        | ((((brightness) * (scratch)->green_factor) / ONE) << 8)                                                      \
+        | ((((brightness) * (scratch)->blue_factor) / ONE) << 16))
 
 #define POLY_RGB(poly, n) (*(u32*)&(poly)->r##n)
 

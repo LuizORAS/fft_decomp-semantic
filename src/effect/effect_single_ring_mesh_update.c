@@ -342,22 +342,22 @@ s32 effect_single_ring_mesh_update(s32 record_index, s32 callback_slot, s32 emit
         k = g_effect_single_ring_mesh_brightness_table[n][0];
         for (i = 0; i < RING_MESH_SEGMENTS; i++) {
             quad = &work->quads[buffer][i];
-            quad->r3 = (k * red) >> 12;
-            quad->r2 = (k * red) >> 12;
-            quad->g3 = (k * green) >> 12;
-            quad->g2 = (k * green) >> 12;
-            quad->b3 = (k * blue) >> 12;
-            quad->b2 = (k * blue) >> 12;
+            quad->r3 = (k * red) / ONE;
+            quad->r2 = (k * red) / ONE;
+            quad->g3 = (k * green) / ONE;
+            quad->g2 = (k * green) / ONE;
+            quad->b3 = (k * blue) / ONE;
+            quad->b2 = (k * blue) / ONE;
         }
         k = g_effect_single_ring_mesh_brightness_table[n][1];
         for (i = 0; i < RING_MESH_SEGMENTS; i++) {
             quad = &work->quads[buffer][i];
-            quad->r1 = (k * red) >> 12;
-            quad->r0 = (k * red) >> 12;
-            quad->g1 = (k * green) >> 12;
-            quad->g0 = (k * green) >> 12;
-            quad->b1 = (k * blue) >> 12;
-            quad->b0 = (k * blue) >> 12;
+            quad->r1 = (k * red) / ONE;
+            quad->r0 = (k * red) / ONE;
+            quad->g1 = (k * green) / ONE;
+            quad->g0 = (k * green) / ONE;
+            quad->b1 = (k * blue) / ONE;
+            quad->b0 = (k * blue) / ONE;
         }
 
         for (i = 0; i < RING_MESH_SEGMENTS; i++) {

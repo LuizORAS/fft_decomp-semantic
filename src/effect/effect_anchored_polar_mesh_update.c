@@ -200,9 +200,9 @@ s32 effect_anchored_polar_mesh_update(s32 record_index, s32 callback_slot, s32 e
             scratch->v0 = quad->v0 = quad->v1 = (work->scroll_v >> 12) + work->base_v;
             scratch->v1 = quad->v2 = quad->v3 = scratch->v0 + scratch->half_height;
             brightness = g_effect_anchored_polar_mesh_brightness_table[scratch->brightness_row][0];
-            scratch->r = quad->r0 = quad->r1 = brightness * scratch->red_factor >> 12;
-            scratch->g = quad->g0 = quad->g1 = brightness * scratch->green_factor >> 12;
-            scratch->b = quad->b0 = quad->b1 = brightness * scratch->blue_factor >> 12;
+            scratch->r = quad->r0 = quad->r1 = brightness * scratch->red_factor / ONE;
+            scratch->g = quad->g0 = quad->g1 = brightness * scratch->green_factor / ONE;
+            scratch->b = quad->b0 = quad->b1 = brightness * scratch->blue_factor / ONE;
 
             quad = &work->quads[work->buffer][i + POLAR_MESH_QUADS_PER_QUADRANT];
             setXY2(quad, scratch->center.vx - scratch->points[0][i].y, scratch->center.vy + scratch->points[0][i].x,
@@ -245,9 +245,9 @@ s32 effect_anchored_polar_mesh_update(s32 record_index, s32 callback_slot, s32 e
                     inner->x3 = scratch->center.vx + scratch->points[j + 1][i + 1].x,
                     inner->y3 = scratch->center.vy + scratch->points[j + 1][i + 1].y);
                 brightness = g_effect_anchored_polar_mesh_brightness_table[scratch->brightness_row][j + 1];
-                scratch->r = quad->r0 = quad->r1 = inner->r2 = inner->r3 = brightness * scratch->red_factor >> 12;
-                scratch->g = quad->g0 = quad->g1 = inner->g2 = inner->g3 = brightness * scratch->green_factor >> 12;
-                scratch->b = quad->b0 = quad->b1 = inner->b2 = inner->b3 = brightness * scratch->blue_factor >> 12;
+                scratch->r = quad->r0 = quad->r1 = inner->r2 = inner->r3 = brightness * scratch->red_factor / ONE;
+                scratch->g = quad->g0 = quad->g1 = inner->g2 = inner->g3 = brightness * scratch->green_factor / ONE;
+                scratch->b = quad->b0 = quad->b1 = inner->b2 = inner->b3 = brightness * scratch->blue_factor / ONE;
                 AddPrim(ot + scratch->ot_depth, inner);
                 scratch->u0 = quad->u0 = quad->u2 = (work->scroll_u >> 12) + work->base_u;
                 scratch->u1 = quad->u1 = quad->u3 = scratch->u0 + scratch->half_width;
@@ -315,9 +315,9 @@ s32 effect_anchored_polar_mesh_update(s32 record_index, s32 callback_slot, s32 e
             quad->x3 = scratch->center.vx + scratch->points[POLAR_MESH_RING_COUNT][i + 1].x;
             quad->y3 = scratch->center.vy + scratch->points[POLAR_MESH_RING_COUNT][i + 1].y;
             brightness = g_effect_anchored_polar_mesh_brightness_table[scratch->brightness_row][POLAR_MESH_RING_COUNT];
-            scratch->r = quad->r2 = quad->r3 = brightness * scratch->red_factor >> 12;
-            scratch->g = quad->g2 = quad->g3 = brightness * scratch->green_factor >> 12;
-            scratch->b = quad->b2 = quad->b3 = brightness * scratch->blue_factor >> 12;
+            scratch->r = quad->r2 = quad->r3 = brightness * scratch->red_factor / ONE;
+            scratch->g = quad->g2 = quad->g3 = brightness * scratch->green_factor / ONE;
+            scratch->b = quad->b2 = quad->b3 = brightness * scratch->blue_factor / ONE;
             AddPrim(ot + scratch->ot_depth, quad);
 
             quad = &work->quads[work->buffer][i + POLAR_MESH_OUTER_RING_OFFSET + POLAR_MESH_QUADS_PER_QUADRANT];

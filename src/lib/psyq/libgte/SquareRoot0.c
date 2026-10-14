@@ -49,7 +49,7 @@ normalized_ready:
     __asm__("" : "=r"(table_base) : "0"(table_base)); /* Keep the low-half table load as the relocation target. */
     factor = *(s16*)table_base;                       /* Retail splits this symbol relocation across LUI and LH. */
     factor = factor << exponent;
-    psyq_cpu_return_value = (u32)factor >> 12;
+    psyq_cpu_return_value = (u32)factor / ONE;
     __asm__ volatile("" : : "r"(psyq_cpu_return_value));
     goto* psyq_cpu_return_address;
 zero_result:

@@ -387,18 +387,18 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
         }
 
         k = g_effect_tube_mesh_brightness_table[n][0];
-        shade_r = (k * red) >> 12;
-        shade_g = (k * green) >> 12;
-        shade_b = (k * blue) >> 12;
+        shade_r = (k * red) / ONE;
+        shade_g = (k * green) / ONE;
+        shade_b = (k * blue) / ONE;
         for (i = 0; i < TUBE_MESH_SEGMENT_COUNT; i++) {
             quad = &work->quads[work->buffer][i];
             setRGB2(quad, quad->r3 = shade_r, quad->g3 = shade_g, quad->b3 = shade_b);
         }
         for (j = 0; j < TUBE_MESH_RING_COUNT - 1; j++) {
             k = g_effect_tube_mesh_brightness_table[n][j + 1];
-            shade_r = (k * red) >> 12;
-            shade_g = (k * green) >> 12;
-            shade_b = (k * blue) >> 12;
+            shade_r = (k * red) / ONE;
+            shade_g = (k * green) / ONE;
+            shade_b = (k * blue) / ONE;
             for (i = 0; i < TUBE_MESH_SEGMENT_COUNT; i++) {
                 quad = &work->quads[work->buffer][j * TUBE_MESH_SEGMENT_COUNT + i];
                 other = &work->quads[work->buffer][(j + 1) * TUBE_MESH_SEGMENT_COUNT + i];
@@ -407,9 +407,9 @@ s32 effect_tube_mesh_update(s32 record_index, s32 callback_slot, s32 emitter_ind
             }
         }
         k = g_effect_tube_mesh_brightness_table[n][TUBE_MESH_RING_COUNT];
-        shade_r = (k * red) >> 12;
-        shade_g = (k * green) >> 12;
-        shade_b = (k * blue) >> 12;
+        shade_r = (k * red) / ONE;
+        shade_g = (k * green) / ONE;
+        shade_b = (k * blue) / ONE;
         for (i = 0; i < TUBE_MESH_SEGMENT_COUNT; i++) {
             quad = &work->quads[work->buffer][TUBE_MESH_LAST_RING_OFFSET + i];
             setRGB0(quad, quad->r1 = shade_r, quad->g1 = shade_g, quad->b1 = shade_b);

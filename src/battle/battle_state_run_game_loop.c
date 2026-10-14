@@ -46,10 +46,7 @@ void battle_state_run_game_loop(void) {
             }
             camera_integer->vx = camera_component >> 12;
             camera_component = -camera_fixed->vy;
-            if (camera_component < 0) {
-                camera_component += 0xfff;
-            }
-            camera_integer->vy = camera_component >> 12;
+            camera_integer->vy = camera_component / ONE;
             camera_integer->vz = -camera_fixed->vz / ONE;
 
             camera_update_matrices(
