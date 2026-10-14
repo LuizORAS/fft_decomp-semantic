@@ -23,7 +23,7 @@ as original bytes.
 | Module | Disc file | Loaded at | What it runs |
 |---|---|---|---|
 | `main` | `SCUS_942.21` | `0x80010000`, resident | Boot, the top-level game loop, disc reads, memory, sound, pads, memory card, the shared data tables and the linked Sony libraries |
-| `opening` | `OPEN/OPEN.BIN` | `0x80067000` | Opening movie, title screen and the ending |
+| `opening` | `OPEN/OPEN.BIN` | `0x80067000` | Opening movie, title screen and the ending ([Opening and Title](docs/mechanics/Opening%20and%20Title.md)) |
 | `wldcore` | `WORLD/WLDCORE.BIN` | `0x80067000` | The world map (its loop, drawing, travel, random battles and calendar), the menu stack, propositions and the location scripts' opcodes |
 | `world` | `WORLD/WORLD.BIN` | `0x800e0000` | The menus over the world map (formation, shops, the location list, the memory card) and the world event-script interpreter |
 | `battle` | `BATTLE.BIN` | `0x80067000` | Battles and the story scenes played on battle maps |
@@ -224,7 +224,8 @@ All of these libraries are reconstructed C, matched like the game code.
   [World Map Menus](docs/mechanics/World%20Map%20Menus.md),
   [Battle Screens](docs/mechanics/Battle%20Screens.md),
   [Save and Memory Card](docs/mechanics/Save%20and%20Memory%20Card.md),
-  [Text](docs/mechanics/Text.md) and
+  [Text](docs/mechanics/Text.md),
+  [Opening and Title](docs/mechanics/Opening%20and%20Title.md) and
   [Engine core](docs/mechanics/Engine%20core.md) so far. The guides walk
   through common changes, such as the
   [Movement rules](docs/guides/Movement%20rules.md),
