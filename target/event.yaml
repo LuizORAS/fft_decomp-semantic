@@ -420,7 +420,7 @@ functions:
   - {addr: 0x801ca650, size: 2500, name: bunit_cmd_run_scrollable_list_handler, hash: 358544f0b74bb783}
   - {addr: 0x801cb014, size: 52, name: bunit_gfx_set_draw_color, hash: febb234714c08dd5}
   - {addr: 0x801cb048, size: 16, name: bunit_gfx_set_otag_index, hash: b8570cd4076e6ca3}
-  - {addr: 0x801cb058, size: 220, name: bunit_menu_set_palette_mode, hash: 097927c9311af253}
+  - {addr: 0x801cb058, size: 220, name: bunit_menu_set_palette_mode, hash: 097927c9311af253, source: src/shared/menu/menu_set_palette_mode.c, source_symbol: menu_set_palette_mode}
   - {addr: 0x801cb134, size: 100, name: bunit_cmd_release_otag_lock_handler, hash: 5762755fa4395bb7}
   - {addr: 0x801cb198, size: 116, name: bunit_cmd_set_draw_area_if_unlocked_handler, hash: 27724050b3193070}
   - {addr: 0x801cb20c, size: 92, name: bunit_cmd_add_next_otag_draw_area_handler, hash: 7af571cb94447649}
@@ -626,23 +626,23 @@ data:
   - {addr: 0x801cf958, name: g_menu_list_row_index}
   - {addr: 0x801cf95c, name: g_menu_atlas_texture_page}
   - {addr: 0x801cf95e, name: g_bunit_menu_icon_texture_page}
-  - {addr: 0x801cf960, name: g_bunit_text_clut_2_mode0}
-  - {addr: 0x801cf962, name: g_bunit_text_clut_2_mode1}
-  - {addr: 0x801cf964, name: g_bunit_text_clut_1_mode1}
-  - {addr: 0x801cf966, name: g_bunit_text_clut_1_mode0}
-  - {addr: 0x801cf968, name: g_bunit_text_clut_3_mode0}
-  - {addr: 0x801cf96a, name: g_bunit_text_clut_3_mode1}
-  - {addr: 0x801cf96e, name: g_bunit_menu_cursor_mode0_foreground_clut}
-  - {addr: 0x801cf970, name: g_bunit_menu_cursor_mode0_background_clut}
-  - {addr: 0x801cf972, name: g_bunit_menu_cursor_mode1_foreground_clut}
-  - {addr: 0x801cf974, name: g_bunit_menu_cursor_mode1_background_clut}
+  - {addr: 0x801cf960, name: g_menu_text_clut_2_mode0}
+  - {addr: 0x801cf962, name: g_menu_text_clut_2_mode1}
+  - {addr: 0x801cf964, name: g_menu_text_clut_1_mode1}
+  - {addr: 0x801cf966, name: g_menu_text_clut_1_mode0}
+  - {addr: 0x801cf968, name: g_menu_text_clut_3_mode0}
+  - {addr: 0x801cf96a, name: g_menu_text_clut_3_mode1}
+  - {addr: 0x801cf96e, name: g_menu_cursor_mode0_foreground_clut}
+  - {addr: 0x801cf970, name: g_menu_cursor_mode0_background_clut}
+  - {addr: 0x801cf972, name: g_menu_cursor_mode1_foreground_clut}
+  - {addr: 0x801cf974, name: g_menu_cursor_mode1_background_clut}
   - {addr: 0x801cf976, name: g_bunit_menu_button_clut}
   - {addr: 0x801cf97a, name: g_bunit_unit_grid_hp_gauge_clut}
   - {addr: 0x801cf97c, name: g_bunit_unit_grid_mp_gauge_clut}
   - {addr: 0x801cf97e, name: g_bunit_unit_grid_ct_gauge_clut}
   - {addr: 0x801cf980, name: g_bunit_gfx_background_clut}
-  - {addr: 0x801cf984, name: g_bunit_text_clut_0_mode1}
-  - {addr: 0x801cf986, name: g_bunit_text_clut_0_mode0}
+  - {addr: 0x801cf984, name: g_menu_text_clut_0_mode1}
+  - {addr: 0x801cf986, name: g_menu_text_clut_0_mode0}
   - {addr: 0x801cf988, name: g_bunit_input_page_scroll_disabled}
   - {addr: 0x801cf98c, name: g_menu_cmd_handlers}
   - {addr: 0x801cf9fc, name: g_bunit_gfx_transition_frame}
@@ -782,7 +782,7 @@ data:
   - {addr: 0x801eca24, name: g_bunit_gfx_poly_g3_count}
   - {addr: 0x801eca28, name: g_bunit_gfx_poly_f4_count}
   - {addr: 0x801eca2c, name: g_bunit_gfx_poly_g4_count}
-  - {addr: 0x801eca30, name: g_bunit_menu_disabled_number_clut}
+  - {addr: 0x801eca30, name: g_menu_disabled_number_clut}
   - {addr: 0x801eca34, name: g_bunit_gfx_sprite_capacity}
   - {addr: 0x801eca38, name: g_bunit_gfx_line_f2_capacity}
   - {addr: 0x801eca3c, name: g_bunit_gfx_line_g2_capacity}
@@ -807,7 +807,7 @@ data:
   - {addr: 0x801eca88, name: g_bunit_gfx_poly_gt4_count}
   - {addr: 0x801eca8c, name: g_bunit_gfx_sprite_8_capacity}
   - {addr: 0x801eca90, name: g_menu_gfx_drawenv_y}
-  - {addr: 0x801eca94, name: g_bunit_menu_alternate_number_clut}
+  - {addr: 0x801eca94, name: g_menu_alternate_number_clut}
   - {addr: 0x801eca98, name: g_bunit_menu_list_selected_index}
   - {addr: 0x801eca9c, name: g_bunit_gfx_sprite_16_capacity}
   - {addr: 0x801ecaa0, name: g_bunit_gfx_otag_count}
@@ -827,17 +827,17 @@ data:
   - {addr: 0x801ecad8, name: g_bunit_gfx_sprite_count}
   - {addr: 0x801ecadc, name: g_menu_scroll_base_index}
   - {addr: 0x801ecae0, name: g_bunit_gfx_tile_1_capacity}
-  - {addr: 0x801ecae4, name: g_bunit_menu_window_clut}
+  - {addr: 0x801ecae4, name: g_menu_window_clut}
   - {addr: 0x801ecae8, name: g_bunit_gfx_tile_8_capacity}
   - {addr: 0x801ecaec, name: g_bunit_gfx_tile_1_count}
-  - {addr: 0x801ecaf0, name: g_bunit_menu_active_clut_front}
+  - {addr: 0x801ecaf0, name: g_menu_active_clut_front}
   - {addr: 0x801ecaf4, name: g_bunit_gfx_tile_8_count}
   - {addr: 0x801ecaf8, name: g_bunit_unit_pointers}
   - {addr: 0x801ecb4c, name: g_bunit_gfx_context_base}
   - {addr: 0x801ecb50, name: g_bunit_menu_input_repeat_mask}
   - {addr: 0x801ecb54, name: g_bunit_gfx_sprite_8_count}
   - {addr: 0x801ecb58, name: g_bunit_gfx_tile_16_capacity}
-  - {addr: 0x801ecb5c, name: g_bunit_menu_active_clut_back}
+  - {addr: 0x801ecb5c, name: g_menu_active_clut_back}
   - {addr: 0x801ecb60, name: g_bunit_gfx_tile_16_count}
   - {addr: 0x801ecb64, name: g_bunit_gfx_sprite_16_count}
   - {addr: 0x801ecb68, name: g_bunit_help_screen_id}
@@ -849,6 +849,7 @@ imports:
   - {addr: 0x800222fc, name: memset}
 
 overrides:
+  - {function: bunit_menu_set_palette_mode, name: g_menu_text_color, addr: 0x801ec8b0}
   - {function: menu_build_unit_portrait_transition, name: attack_gfx_build_portrait_poly_ft4, addr: 0x801bf434}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_origin, addr: 0x801cea5c}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_transition_offsets, addr: 0x801cecfc}

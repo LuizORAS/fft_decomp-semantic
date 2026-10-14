@@ -279,9 +279,6 @@ extern menu_instruction_t g_bunit_ability_list_menu_script;
 extern menu_instruction_t g_bunit_job_list_menu_script;
 extern s8 g_bunit_job_menu_active;
 extern s8 g_bunit_job_menu_phase; /* menu_job_list_step_e */
-extern u16 g_bunit_menu_active_clut_back;
-extern u16 g_bunit_menu_active_clut_front;
-extern u16 g_bunit_menu_alternate_number_clut;
 extern u16 g_bunit_menu_button_clut;
 /* Signed 4.12 x/y scale pair per sprite entry; a negative scale flips the quad. */
 extern s16 g_bunit_menu_button_piece_scales[][2];
@@ -293,12 +290,7 @@ extern s32 g_bunit_menu_current_menu; /* bunit_menu_e */
 /* Idle and active vertical bounce curves of (frame threshold, pixel offset)
  * byte pairs, shared by the animated and bouncing cursor renderers. */
 extern s8 g_bunit_menu_cursor_forward_offset_keyframes[];
-extern u16 g_bunit_menu_cursor_mode0_background_clut;
-extern u16 g_bunit_menu_cursor_mode0_foreground_clut;
-extern u16 g_bunit_menu_cursor_mode1_background_clut;
-extern u16 g_bunit_menu_cursor_mode1_foreground_clut;
 extern s8 g_bunit_menu_cursor_reverse_offset_keyframes[];
-extern u16 g_bunit_menu_disabled_number_clut;
 extern u16 g_bunit_menu_icon_texture_page;
 extern u16 g_bunit_menu_list_cursor_anim_state;
 extern s16* g_bunit_menu_list_entries;
@@ -325,7 +317,6 @@ extern u8 g_bunit_menu_reorder_list_initialized;
 extern s16 g_bunit_menu_reorder_list_redraw_request;
 extern s16 g_bunit_menu_reorder_result;
 extern menu_selection_record_t g_bunit_menu_selection_records[BUNIT_MENU_SELECTION_RECORD_COUNT];
-extern u16 g_bunit_menu_window_clut;
 extern menu_button_piece_t g_bunit_slot_sprite_entries[];
 /* Text-section buffers: bunit_menu_run_reorder_list passes g_bunit_text_reorder_list_buffer
  * straight to bunit_text_concatenate_entries as its u8* output string and
@@ -554,14 +545,6 @@ menu_instruction_t* bunit_cmd_set_zoomed_draw_area_handler(menu_instruction_t* i
 /* text */
 extern u8 g_bunit_help_text_state;
 extern u32 g_bunit_help_text_table[];
-extern u16 g_bunit_text_clut_0_mode0;
-extern u16 g_bunit_text_clut_0_mode1;
-extern u16 g_bunit_text_clut_1_mode0;
-extern u16 g_bunit_text_clut_1_mode1;
-extern u16 g_bunit_text_clut_2_mode0;
-extern u16 g_bunit_text_clut_2_mode1;
-extern u16 g_bunit_text_clut_3_mode0;
-extern u16 g_bunit_text_clut_3_mode1;
 extern const char g_bunit_text_decimal_format[];
 extern u8 g_bunit_text_reorder_list_buffer[];
 extern s32 g_bunit_text_selection_id;

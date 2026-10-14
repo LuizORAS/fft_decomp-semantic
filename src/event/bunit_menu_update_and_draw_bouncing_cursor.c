@@ -73,11 +73,11 @@ void bunit_menu_update_and_draw_bouncing_cursor(point16_t* pos, u16* state, s32 
     }
 
     if (mode != 0) {
-        cursor_clut = g_bunit_menu_cursor_mode1_foreground_clut;
-        shadow_clut = g_bunit_menu_cursor_mode1_background_clut;
+        cursor_clut = g_menu_cursor_mode1_foreground_clut;
+        shadow_clut = g_menu_cursor_mode1_background_clut;
     } else {
-        cursor_clut = g_bunit_menu_cursor_mode0_foreground_clut;
-        shadow_clut = g_bunit_menu_cursor_mode0_background_clut;
+        cursor_clut = g_menu_cursor_mode0_foreground_clut;
+        shadow_clut = g_menu_cursor_mode0_background_clut;
     }
 
     bottom = offset + 0x10;

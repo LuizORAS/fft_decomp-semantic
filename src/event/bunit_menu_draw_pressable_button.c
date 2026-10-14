@@ -5,10 +5,10 @@
 /* Draw one slot's span of g_bunit_slot_sprite_entries sprite entries at (x, y).
  *
  * A nonzero `busy` clears the slot's g_bunit_menu_button_press_timers phase (CLUT
- * g_bunit_menu_cursor_mode1_foreground_clut); a nonzero `pressed` starts it and
+ * g_menu_cursor_mode1_foreground_clut); a nonzero `pressed` starts it and
  * stores `sound_id` to g_bunit_sound_queued_effect_id; otherwise an active
  * phase advances until 6 / event speed frames have passed (CLUT
- * g_bunit_menu_cursor_mode0_foreground_clut once idle). While a phase is
+ * g_menu_cursor_mode0_foreground_clut once idle). While a phase is
  * active the sprite is drawn one pixel lower with CLUT g_bunit_menu_button_clut. abs()
  * matters: GCC expands it to the single-insn abssi2, which keeps the entry
  * loop body one basic block as in the target. */
@@ -29,7 +29,7 @@ void bunit_menu_draw_pressable_button(s16 slot, s16 x, s16 y, s16 pressed, s16 b
     speed = menu_get_event_speed();
     if (busy != 0) {
         g_bunit_menu_button_press_timers[slot] = 0;
-        clut = g_bunit_menu_cursor_mode1_foreground_clut;
+        clut = g_menu_cursor_mode1_foreground_clut;
     } else if (pressed != 0) {
         g_bunit_menu_button_press_timers[slot] = 1;
         g_bunit_sound_queued_effect_id = sound_id;
@@ -38,7 +38,7 @@ void bunit_menu_draw_pressable_button(s16 slot, s16 x, s16 y, s16 pressed, s16 b
         if ((phase != 0) && (phase < 6 / speed)) {
             g_bunit_menu_button_press_timers[slot] = g_bunit_menu_button_press_timers[slot] + 1;
         } else {
-            clut = g_bunit_menu_cursor_mode0_foreground_clut;
+            clut = g_menu_cursor_mode0_foreground_clut;
             g_bunit_menu_button_press_timers[slot] = 0;
         }
     }

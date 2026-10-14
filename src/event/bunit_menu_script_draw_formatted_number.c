@@ -64,12 +64,12 @@ menu_instruction_t* bunit_menu_script_draw_formatted_number(menu_instruction_t* 
         color = 0;
     }
     if (command->number.alternate_palette != 0) {
-        clut = g_bunit_menu_alternate_number_clut;
+        clut = g_menu_alternate_number_clut;
     } else {
         clut = g_menu_palette_clut;
     }
     if (value & MENU_NUMBER_VALUE_DISABLED) {
-        clut = g_bunit_menu_disabled_number_clut;
+        clut = g_menu_disabled_number_clut;
         value &= ~MENU_NUMBER_VALUE_DISABLED;
     }
     if (command->number.style == 1) {
@@ -129,7 +129,7 @@ menu_instruction_t* bunit_menu_script_draw_formatted_number(menu_instruction_t* 
                     }
                     if (command->number.opcode == MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS
                         && i < command->number.width - 1) {
-                        clut = g_bunit_menu_disabled_number_clut;
+                        clut = g_menu_disabled_number_clut;
                     }
                 } else {
                     digit = text[text_index] - '0';
