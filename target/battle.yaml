@@ -1803,7 +1803,7 @@ functions:
   - {addr: 0x801a9370, size: 36, name: effect_load_vector, hash: 2416e989ca774a48}
   - {addr: 0x801a9394, size: 36, name: effect_load_svector, hash: ee22450393aed3d1}
   - {addr: 0x801a93b8, size: 52, name: effect_shift_vector_right_12, hash: 7b7525bebbd2b3f0}
-  - {addr: 0x801a93ec, size: 52, name: effect_shift_vector_left_12, hash: ad8e4cedc8f9a32d}
+  - {addr: 0x801a93ec, size: 52, name: effect_scale_vector_fixed12, hash: ad8e4cedc8f9a32d}
   - {addr: 0x801a9420, size: 52, name: effect_mask_vector_low_12_bits, hash: 7351866c85f1a40f}
   - {addr: 0x801a9454, size: 64, name: effect_add_vectors, hash: 5b34eb38d492cb73}
   - {addr: 0x801a9494, size: 64, name: effect_add_svectors, hash: 8878e701a43e759a}

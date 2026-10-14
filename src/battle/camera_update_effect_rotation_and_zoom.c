@@ -151,7 +151,7 @@ void camera_update_effect_rotation_and_zoom(void) {
     case EFFECT_CAMERA_MODE_IDLE:
         break;
     case EFFECT_CAMERA_MODE_SNAP:
-        effect_shift_vector_left_12(&g_effect_camera_position_target, &position);
+        effect_scale_vector_fixed12(&g_effect_camera_position_target, &position);
         camera_set_current_real_coords(&position);
         g_effect_camera_position_current = g_effect_camera_position_target;
         g_effect_camera_position_start = g_effect_camera_position_current;
@@ -163,7 +163,7 @@ void camera_update_effect_rotation_and_zoom(void) {
             g_effect_camera_position_frame++;
             effect_interpolate_vector_q13_cos(&g_effect_camera_position_start, &g_effect_camera_position_target,
                 g_effect_camera_position_duration, g_effect_camera_position_frame, &g_effect_camera_position_current);
-            effect_shift_vector_left_12(&g_effect_camera_position_current, &position);
+            effect_scale_vector_fixed12(&g_effect_camera_position_current, &position);
             camera_set_current_real_coords(&position);
         }
         if (g_effect_camera_position_duration == g_effect_camera_position_frame) {
@@ -176,7 +176,7 @@ void camera_update_effect_rotation_and_zoom(void) {
             g_effect_camera_position_frame++;
             effect_interpolate_vector_q13_cos_q12(&g_effect_camera_position_start, &g_effect_camera_position_target,
                 g_effect_camera_position_duration, g_effect_camera_position_frame, &g_effect_camera_position_current);
-            effect_shift_vector_left_12(&g_effect_camera_position_current, &position);
+            effect_scale_vector_fixed12(&g_effect_camera_position_current, &position);
             camera_set_current_real_coords(&position);
         }
         if (g_effect_camera_position_duration == g_effect_camera_position_frame) {
@@ -188,7 +188,7 @@ void camera_update_effect_rotation_and_zoom(void) {
             g_effect_camera_position_frame++;
             effect_interpolate_vector_q13_linear(&g_effect_camera_position_start, &g_effect_camera_position_target,
                 g_effect_camera_position_duration, g_effect_camera_position_frame, &g_effect_camera_position_current);
-            effect_shift_vector_left_12(&g_effect_camera_position_current, &position);
+            effect_scale_vector_fixed12(&g_effect_camera_position_current, &position);
             camera_set_current_real_coords(&position);
         }
         if (g_effect_camera_position_duration == g_effect_camera_position_frame) {
