@@ -875,7 +875,7 @@ functions:
   - {addr: 0x8013d1f8, size: 56, name: map_data_load_complete_thread, hash: f5d13c78756c2b83, source: src/shared/map/map_data_load_complete_thread.c}
   - {addr: 0x8013d230, size: 72, name: sound_wait_for_music_stub, hash: 5cf0df43ec1c1bac, source: src/shared/sound/sound_wait_for_music_stub.c}
   - {addr: 0x8013d278, size: 168, name: sound_play_music_tracks, hash: 5321f20b1e27a914, source: src/shared/sound/sound_play_music_tracks.c}
-  - {addr: 0x8013d320, size: 444, name: battle_menu_init_attack_resources_and_threads, hash: 289c47ca11bfc49a}
+  - {addr: 0x8013d320, size: 444, name: battle_menu_init_attack_resources_and_threads, hash: 289c47ca11bfc49a, source: src/shared/menu/menu_init_attack_resources_and_threads.c, source_symbol: menu_init_attack_resources_and_threads}
   - {addr: 0x8013d4dc, size: 156, name: battle_menu_start_mini_menu_display_thread, hash: 4ab206190a2c9ff0, source: src/shared/menu/menu_start_mini_menu_display_thread.c, source_symbol: menu_start_mini_menu_display_thread}
   - {addr: 0x8013d578, size: 152, name: battle_menu_is_still_building, hash: f35ea38564647bad}
   - {addr: 0x8013d610, size: 20, name: battle_menu_finish_at_list_selection, hash: 2e4fd4431aba23fd}
@@ -2922,6 +2922,15 @@ imports:
 
 overrides:
   - {function: battle_gfx_init_scaled_draw_area_packets, name: g_menu_draw_area_template, addr: 0x80165ecc}
+  - {function: battle_menu_init_attack_resources_and_threads, name: g_world_menu_panel_fade_intensity, addr: 0x80166064}
+  - {function: battle_menu_init_attack_resources_and_threads, name: g_world_menu_panel_fade_mode, addr: 0x80166060}
+  - {function: battle_menu_init_attack_resources_and_threads, name: g_world_saved_game_options, addr: 0x8016d99c}
+  - {function: battle_menu_init_attack_resources_and_threads, name: g_world_screen_fade, addr: 0x8016603c}
+  - {function: battle_menu_init_attack_resources_and_threads, name: g_world_sound_music_track_1_id, addr: 0x80165fd4}
+  - {function: battle_menu_init_attack_resources_and_threads, name: g_world_sound_music_track_2_id, addr: 0x80165fd6}
+  - {function: battle_menu_init_attack_resources_and_threads, name: world_menu_init_subsystems, addr: 0x8013efac}
+  - {function: battle_menu_init_attack_resources_and_threads, name: world_menu_reset_unit_records, addr: 0x8013f8b4}
+  - {function: battle_menu_init_attack_resources_and_threads, name: world_script_check_tutorial_event_slot, addr: 0x8012dc84}
   - {function: battle_menu_init_numeric_display_frame_primitives, name: g_world_menu_numeric_display_frame_offsets, addr: 0x80167844}
   - {function: battle_menu_init_numeric_display_frame_primitives, name: g_world_menu_numeric_display_texture_window, addr: 0x80167830}
   - {function: battle_menu_init_numeric_display_frame_primitives, name: world_menu_init_primitive_colors_normal, addr: 0x8012f3cc}

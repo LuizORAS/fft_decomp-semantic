@@ -19,6 +19,7 @@ extern u16 g_menu_overlay_state;
 
 void menu_init_palette_and_text(s32 unused_0);
 void menu_init_subsystems(void);
+s32 menu_init_attack_resources_and_threads(void);
 void menu_reset_subsystems(void);
 s32 menu_poll_small_load(void);
 

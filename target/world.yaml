@@ -222,7 +222,7 @@ functions:
   - {addr: 0x800f0b64, size: 56, name: map_data_load_complete_thread, hash: 9d186db038b3c37d, source: src/shared/map/map_data_load_complete_thread.c}
   - {addr: 0x800f0b9c, size: 72, name: sound_wait_for_music_stub, hash: ae5d718d414b6204, source: src/shared/sound/sound_wait_for_music_stub.c}
   - {addr: 0x800f0be4, size: 168, name: sound_play_music_tracks, hash: 99f338e7d1920b8b, source: src/shared/sound/sound_play_music_tracks.c}
-  - {addr: 0x800f0c8c, size: 444, name: world_menu_init_attack_resources_and_threads, hash: 1ae51b2896ef360b}
+  - {addr: 0x800f0c8c, size: 444, name: world_menu_init_attack_resources_and_threads, hash: 1ae51b2896ef360b, source: src/shared/menu/menu_init_attack_resources_and_threads.c, source_symbol: menu_init_attack_resources_and_threads}
   - {addr: 0x800f0e48, size: 156, name: world_menu_start_mini_menu_display_thread, hash: fbc523628be16282, source: src/shared/menu/menu_start_mini_menu_display_thread.c, source_symbol: menu_start_mini_menu_display_thread}
   - {addr: 0x800f0ee4, size: 92, name: world_menu_get_thread_activity, hash: fb4093ac614ce6a0}
   - {addr: 0x800f0f40, size: 20, name: world_menu_request_transition, hash: 2f7b7cb2197c6cfb}
