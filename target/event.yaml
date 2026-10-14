@@ -932,7 +932,7 @@ functions:
   - {addr: 0x801c6ac0, size: 308, name: menu_text_render_glyph_to_4bpp_image, hash: 57bd6d2052065015, source: src/shared/menu/menu_text_render_glyph_to_4bpp_image.c}
   - {addr: 0x801c6bf4, size: 92, name: menu_text_find_entry_by_index, hash: f63f536b1105c27b, source: src/shared/menu/menu_text_find_entry_by_index.c}
   - {addr: 0x801c6c50, size: 648, name: menu_text_render_encoded_ids_to_image, hash: 2c7fd05e27cafa08, source: src/shared/menu/menu_text_render_encoded_ids_to_image.c}
-  - {addr: 0x801c6ed8, size: 120, name: card_text_start_character_thread_if_idle, hash: 87c0e98d46e6c909}
+  - {addr: 0x801c6ed8, size: 120, name: card_text_start_character_thread_if_idle, hash: 87c0e98d46e6c909, source: src/shared/menu/menu_text_start_thread_if_idle.c, source_symbol: menu_text_start_thread_if_idle}
   - {addr: 0x801c6f50, size: 224, name: card_text_start_thread_if_idle, hash: 77aa21d89789557e}
   - {addr: 0x801c7030, size: 40, name: card_thread_request_stop, hash: ea52b0a734b83ec7}
   - {addr: 0x801c7058, size: 84, name: card_text_count_encoded_glyphs, hash: 913de49b8f13d563}
@@ -1403,7 +1403,7 @@ functions:
   - {addr: 0x801c8994, size: 308, name: menu_text_render_glyph_to_4bpp_image, hash: b67461b2eb78e979, source: src/shared/menu/menu_text_render_glyph_to_4bpp_image.c}
   - {addr: 0x801c8ac8, size: 92, name: menu_text_find_entry_by_index, hash: b89f5b2fce3c6266, source: src/shared/menu/menu_text_find_entry_by_index.c}
   - {addr: 0x801c8b24, size: 648, name: menu_text_render_encoded_ids_to_image, hash: 7182fd970e4c014a, source: src/shared/menu/menu_text_render_encoded_ids_to_image.c}
-  - {addr: 0x801c8dac, size: 120, name: equip_text_start_character_thread_if_idle, hash: 87c0e98d46e6c909}
+  - {addr: 0x801c8dac, size: 120, name: equip_text_start_character_thread_if_idle, hash: 87c0e98d46e6c909, source: src/shared/menu/menu_text_start_thread_if_idle.c, source_symbol: menu_text_start_thread_if_idle}
   - {addr: 0x801c8e24, size: 208, name: equip_text_concatenate_entries, hash: 3d0d184be7c8034b}
   - {addr: 0x801c8ef4, size: 40, name: equip_thread_request_stop, hash: ea52b0a734b83ec7}
   - {addr: 0x801c8f1c, size: 264, name: menu_text_render_id_rows_to_vram, hash: c878461238dbc9ef, source: src/shared/menu/menu_text_render_id_rows_to_vram.c}

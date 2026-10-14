@@ -2030,6 +2030,7 @@ extern u8* g_text_section_pointers[TEXT_SECTION_COUNT];
 
 /* help text */
 void menu_text_start_help_thread(s32 thread_data);
+void menu_text_start_thread_if_idle(s32 thread_id, s32 first, s32 second, s32 third);
 
 /* menu bitstreams */
 /* Read-only secondary stream; CARD uses it to count save-buffer parity bits. */
