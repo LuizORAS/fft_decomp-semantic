@@ -297,7 +297,7 @@ functions:
   - {addr: 0x800f4fd4, size: 604, name: world_text_determine_spell_quote, hash: 6c48e87881d46ff1, source: src/shared/text/text_select_ability_announcement.c, source_symbol: text_select_ability_announcement}
   - {addr: 0x800f5230, size: 212, name: world_menu_init_system_function, hash: c537ae196a1827bb}
   - {addr: 0x800f5304, size: 128, name: world_menu_get_dead_unit_selection, hash: 2cbfb3b781403e89}
-  - {addr: 0x800f5384, size: 2556, name: world_menu_dispatch_system_function, hash: d8c0ee3dbff2b5b4}
+  - {addr: 0x800f5384, size: 2556, name: world_menu_dispatch_system_function, hash: d8c0ee3dbff2b5b4, source: src/shared/menu/menu_dispatch_system_function.c, source_symbol: menu_dispatch_system_function}
   - {addr: 0x800f5d80, size: 168, name: battle_unit_get_stats_by_unit_id, hash: 7009f26291692b1c, source: src/shared/unit/battle_unit_get_stats_by_unit_id.c}
   - {addr: 0x800f5e28, size: 220, name: script_run_scenario_conditions, hash: 60f3fa3f123be7c6, source: src/shared/script/script_run_scenario_conditions.c}
   - {addr: 0x800f5f04, size: 8, name: world_noop_800f5f04, hash: 6d64edf91449c1b1}
@@ -2396,6 +2396,23 @@ overrides:
   - {function: world_menu_check_action_restrictions, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
   - {function: world_menu_check_action_restrictions, name: g_menu_current_id, addr: 0x80153268}
   - {function: world_menu_check_action_restrictions, name: g_menu_thread_menu_data, addr: 0x801cd7e0}
+  - {function: world_menu_dispatch_system_function, name: battle_menu_start_system_function_thread, addr: 0x800f4ecc}
+  - {function: world_menu_dispatch_system_function, name: battle_text_run_spell_quote_thread, addr: 0x800ef9d4}
+  - {function: world_menu_dispatch_system_function, name: battle_text_set_message_duration_frames, addr: 0x800eeaf4}
+  - {function: world_menu_dispatch_system_function, name: battle_thread_is_running_asm, addr: 0x80100164}
+  - {function: world_menu_dispatch_system_function, name: battle_unit_start_view_thread, addr: 0x800f0f64}
+  - {function: world_menu_dispatch_system_function, name: g_battle_menu_idle_action_entries, addr: 0x80153df4}
+  - {function: world_menu_dispatch_system_function, name: g_battle_menu_resolved_command, addr: 0x8013a5f8}
+  - {function: world_menu_dispatch_system_function, name: g_battle_menu_selected_skill_ct, addr: 0x8013a604}
+  - {function: world_menu_dispatch_system_function, name: g_battle_menu_system_function_command, addr: 0x8013a5fc}
+  - {function: world_menu_dispatch_system_function, name: g_battle_menu_system_function_option, addr: 0x8013a600}
+  - {function: world_menu_dispatch_system_function, name: g_battle_menu_used_item_id, addr: 0x8013a5f4}
+  - {function: world_menu_dispatch_system_function, name: g_battle_menu_used_skillset_id, addr: 0x8013a5f0}
+  - {function: world_menu_dispatch_system_function, name: g_battle_next_event_id, addr: 0x801a6690}
+  - {function: world_menu_dispatch_system_function, name: g_battle_scenario_event_active, addr: 0x801cd7d4}
+  - {function: world_menu_dispatch_system_function, name: g_battle_spell_quote_last_ability_id, addr: 0x8013a5ec}
+  - {function: world_menu_dispatch_system_function, name: g_battle_system_function_table, addr: 0x80156750}
+  - {function: world_menu_dispatch_system_function, name: script_start_current_event_thread, addr: 0x800f2c74}
   - {function: world_menu_display_hovered_unit_stats, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_display_hovered_unit_stats, name: battle_gfx_free_tpage7_vram, addr: 0x800e2edc}
   - {function: world_menu_display_hovered_unit_stats, name: battle_gfx_set_draw_mode_for_texture_page, addr: 0x800fdba0}

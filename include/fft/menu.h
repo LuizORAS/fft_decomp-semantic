@@ -10,6 +10,8 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
+struct action_command;
+
 /* scene lifecycle */
 /* 0: normal, 1: companion/editor transition, 2: AT-list selection. */
 extern u16 g_menu_overlay_state;
@@ -1185,6 +1187,9 @@ typedef struct menu_system_function {
 typedef char menu_system_function_size_must_be_20[(sizeof(menu_system_function_t) == 20) ? 1 : -1];
 
 void menu_run_system_function_thread(void);
+
+s32 menu_dispatch_system_function(
+    s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, struct action_command* action);
 
 /* First argument of *_menu_init_system_function and
  * *_menu_dispatch_system_function; `option` selects the variant. */

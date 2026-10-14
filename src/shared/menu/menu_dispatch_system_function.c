@@ -2,7 +2,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_event.h"
 #include "fft/battle_menu.h"
-#include "fft/battle_script.h"
+#include "fft/battle_text.h"
 #include "fft/battle_unit.h"
 #include "fft/main.h"
 #include "fft/menu.h"
@@ -10,21 +10,8 @@
 #include "fft/sound.h"
 #include "fft/thread.h"
 
-/*
- * System-function dispatcher called by battle_menu_init_system_function:
- * resets the idle action menu, then maps a command (and its option,
- * parameter and command action) to the system-function thread started by
- * battle_menu_start_system_function_thread, preparing 32-bit text substitution values
- * and the text id of system function 0x32 where the message needs them.
- * Command 8 may instead select event 0x190-0x193 in script variable 0x27
- * and start the current event thread (return 2); it and any command with
- * enabled == 0 otherwise fall back to system function 8.
- * Returns 1 when a function was started, 0 for an unknown command; handled
- * commands record themselves in g_battle_menu_system_function_command/g_battle_menu_system_function_option.
- *
- * Twin of world_menu_dispatch_system_function.
- */
-s32 battle_menu_dispatch_system_function(
+/* Dispatch an action-menu command to its scene system function or event. */
+s32 menu_dispatch_system_function(
     s32 command, s32 option, s32 unit_id, s32 parameter, s32 enabled, action_command_t* action) {
     unit_stats_t* unit;
     s32 value;
