@@ -293,7 +293,6 @@ extern menu_entry_t g_card_save_failure_thread_descriptor[];
 extern menu_entry_t g_card_save_in_progress_thread_descriptor[];
 extern u8 g_card_save_initial_prompt_thread_state;
 extern u8 g_card_save_slot_selection_thread_state;
-extern s32 g_card_thread_active_key;
 extern u8 g_card_thread_status_snapshot[16];
 
 void card_menu_stop_thread_and_wait(s32 thread_id);

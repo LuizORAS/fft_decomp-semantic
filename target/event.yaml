@@ -933,7 +933,7 @@ functions:
   - {addr: 0x801c6bf4, size: 92, name: menu_text_find_entry_by_index, hash: f63f536b1105c27b, source: src/shared/menu/menu_text_find_entry_by_index.c}
   - {addr: 0x801c6c50, size: 648, name: menu_text_render_encoded_ids_to_image, hash: 2c7fd05e27cafa08, source: src/shared/menu/menu_text_render_encoded_ids_to_image.c}
   - {addr: 0x801c6ed8, size: 120, name: card_text_start_character_thread_if_idle, hash: 87c0e98d46e6c909, source: src/shared/menu/menu_text_start_thread_if_idle.c, source_symbol: menu_text_start_thread_if_idle}
-  - {addr: 0x801c6f50, size: 224, name: card_text_start_thread_if_idle, hash: 77aa21d89789557e}
+  - {addr: 0x801c6f50, size: 224, name: card_text_start_thread_if_idle, hash: 77aa21d89789557e, source: src/shared/menu/menu_text_start_or_poll_thread.c, source_symbol: menu_text_start_or_poll_thread}
   - {addr: 0x801c7030, size: 40, name: card_thread_request_stop, hash: ea52b0a734b83ec7}
   - {addr: 0x801c7058, size: 84, name: card_text_count_encoded_glyphs, hash: 913de49b8f13d563}
   - {addr: 0x801c70ac, size: 264, name: menu_text_render_id_rows_to_vram, hash: b0397e2667e01217, source: src/shared/menu/menu_text_render_id_rows_to_vram.c}
@@ -1085,7 +1085,7 @@ data:
   - {addr: 0x801d91f4, name: g_card_gfx_draw_clut}
   - {addr: 0x801d91f8, name: g_menu_use_alternate_palette}
   - {addr: 0x801d9202, name: g_card_gfx_tiled_rect}
-  - {addr: 0x801d920c, name: g_card_thread_active_key}
+  - {addr: 0x801d920c, name: g_menu_text_active_key}
   - {addr: 0x801d9210, name: g_card_bits_primary_cursor}
   - {addr: 0x801d9214, name: g_menu_bits_secondary_source}
   - {addr: 0x801d9218, name: g_card_input_repeat_counters}

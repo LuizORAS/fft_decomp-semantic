@@ -1824,7 +1824,6 @@ extern RECT g_world_text_message_box_vram_rect;
 extern u8 g_world_text_message_box_glyph_images[3][8][84];
 extern u8 g_world_text_message_box_previous_images[3][84];
 extern u8 g_world_text_message_box_column_scratch[14];
-extern s32 g_world_text_thread_active_text;
 extern u8 g_world_text_row_image_buffer[];
 extern u8* g_world_text_glyph_bitmap_data;
 
