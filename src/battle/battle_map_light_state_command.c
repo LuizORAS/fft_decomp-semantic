@@ -1,12 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Map colour state commands, selected on command - 0x56: 0x56 applies the
- * background gradient pair, 0x5a the ambient colour and 0x63 the darkness
- * colour; the neighbouring commands save, restore or return those records.
+/* Set, read, save or restore the map's three colour records, selected on command - 0x56: the
+ * background gradient pair (0x56-0x59), the ambient colour, which is the GTE back colour (0x5a-0x5d), and
+ * the darkness colour, the colour of the untextured map polygons (0x63 sets it, 0x64 resets it to 0/0/1,
+ * 0x65 returns it).
  *
- * Only the GET arms assign `result`; the others return it uninitialized, as
- * the target does. */
+ * Only the GET arms assign `result`; the others return it uninitialized, as the target does. */
 void* battle_map_light_state_command(s32 command, void* data) {
     void* result;
 
@@ -52,17 +52,17 @@ void* battle_map_light_state_command(s32 command, void* data) {
         break;
     }
     case MAP_LIGHT_COMMAND_SET_DARKNESS_COLOR:
-        g_battle_map_light_direction[0] = ((map_color_t*)data)->red;
-        g_battle_map_light_direction[1] = ((map_color_t*)data)->green;
-        g_battle_map_light_direction[2] = ((map_color_t*)data)->blue;
+        g_battle_map_untextured_polygon_color[0] = ((map_color_t*)data)->red;
+        g_battle_map_untextured_polygon_color[1] = ((map_color_t*)data)->green;
+        g_battle_map_untextured_polygon_color[2] = ((map_color_t*)data)->blue;
         break;
     case MAP_LIGHT_COMMAND_RESET_DARKNESS_COLOR:
-        g_battle_map_light_direction[0] = 0;
-        g_battle_map_light_direction[1] = 0;
-        g_battle_map_light_direction[2] = 1;
+        g_battle_map_untextured_polygon_color[0] = 0;
+        g_battle_map_untextured_polygon_color[1] = 0;
+        g_battle_map_untextured_polygon_color[2] = 1;
         break;
     case MAP_LIGHT_COMMAND_GET_DARKNESS_COLOR:
-        result = g_battle_map_light_direction;
+        result = g_battle_map_untextured_polygon_color;
         break;
     }
     return result;

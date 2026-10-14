@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Reload the map background colour from the backup battle_map_copy_background_color saved and load
+ * it as the GTE back colour. No retail code calls it. */
 void battle_map_restore_background_color(void) {
     g_battle_map_background_color[0] = g_battle_map_background_color_backup[0];
     g_battle_map_background_color[1] = g_battle_map_background_color_backup[1];

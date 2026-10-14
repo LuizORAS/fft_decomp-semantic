@@ -1,7 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Load the two map background gradient colours for the current map. */
+/* Seed the background gradient fade from the gradient the map loaded: the base pair and the 16.16
+ * transition channels.
+ *
+ * The unset `colors` is passed as the command's data argument, which the GET command does not read, and
+ * then receives the result. */
 void battle_map_init_background_gradient(void) {
     map_background_gradient_colors_t* colors;
 

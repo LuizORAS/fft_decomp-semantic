@@ -7358,9 +7358,9 @@ enum {
     MAP_POLYGON_FLAG_LIT = 0x8000,
 };
 
-/* Commands of battle_map_light_state_command. The 0x63-0x65 bodies access
- * g_battle_map_light_direction, but every caller passes or reads the map
- * darkness colour there, so the commands are named for the callers. */
+/* Commands of battle_map_light_state_command: the background gradient pair, the ambient colour (the
+ * GTE back colour) and the darkness colour, the colour of the untextured map polygons
+ * (g_battle_map_untextured_polygon_color). */
 typedef enum map_light_command {
     MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT = 0x56,
     MAP_LIGHT_COMMAND_GET_BACKGROUND_GRADIENT = 0x57,
@@ -7937,7 +7937,10 @@ extern s32 g_battle_map_gns_load_phase;
 extern u8 D_800F70B4[150][14];
 extern u8 D_800F78E8[150];
 
-extern u8 g_battle_map_light_direction[4];
+/* The darkness colour and the POLY_F3 code: battle_map_queue_untextured_triangles and _quads copy this
+ * word into every untextured map polygon. 0/0/1 (near black) by default; the record at the head of
+ * ATTACK.OUT and the darkness fades change it. */
+extern u8 g_battle_map_untextured_polygon_color[4];
 extern u16 g_battle_map_light_transition_command;               /* pending per-frame light command, 0 when idle */
 extern u16 g_battle_map_light_transition_duration;              /* transition duration in frames */
 extern u16 g_battle_map_light_transition_frame;                 /* transition frame counter */
@@ -8017,9 +8020,9 @@ s32 battle_map_calculate_move_find_item_flag(s32 map_id, s32 tile_index, s32 mod
 s32 battle_map_get_tile_data_value(s32 field, s32 x, s32 y, s32 layer);
 void battle_map_init_ambient_light(void);
 void battle_map_init_background_gradient(void);
-void battle_map_start_darkness_blend(s32 first, s32 second, s16 third, s16 fourth, s16 fifth);
+void battle_map_start_darkness_blend(s32 mode, s32 frame_duration, s16 red, s16 green, s16 blue);
 s32 battle_map_check_deep_dungeon_crystal_and_init_state(void);
-void battle_map_color_field(s32 first, s32 second, s16 red, s16 green, s16 blue);
+void battle_map_color_field(s32 mode, s32 amount, s16 red, s16 green, s16 blue);
 
 /* Only SET/GET define a result (stored RGB pointer, or null for SET while
  * disabled). Other command paths leave the target return register unspecified. */

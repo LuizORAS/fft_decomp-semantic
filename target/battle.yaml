@@ -2139,7 +2139,7 @@ data:
   - {addr: 0x800f5b4c, name: g_battle_map_saved_back_color_red}
   - {addr: 0x800f5b50, name: g_battle_map_saved_back_color_green}
   - {addr: 0x800f5b54, name: g_battle_map_saved_back_color_blue}
-  - {addr: 0x800f5b58, name: g_battle_map_light_direction}
+  - {addr: 0x800f5b58, name: g_battle_map_untextured_polygon_color}
   - {addr: 0x800f5b5c, name: g_battle_map_ambient_restored_buffer}
   - {addr: 0x800f5b60, name: g_battle_map_weather_effect_mode}
   - {addr: 0x800f5b64, name: g_battle_map_textured_triangle_count}
