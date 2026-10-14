@@ -1,15 +1,10 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
-#include "psx/types.h"
 
-/* Thread entry of the attack-target stats panel (unit view thread sets).
- *
- * It waits for the right-side panel thread to end unless that thread shows the
- * attack caster, loads the preview target's billboard by swapping it in as the
- * active-turn unit for one call, carries two fields of that billboard into the
- * comparison copy, reloads the real unit and runs the stats panel. */
-void battle_menu_preview_attack_target_stats(void) {
+/* Load the preview target, restore the active unit, then display its panel. */
+void menu_preview_attack_target_stats(void) {
     s32 saved;
 
     if (g_thread_contexts[THREAD_SLOT_RIGHT_UNIT_STATS].task_id != THREAD_TASK_ATTACK_CASTER_STATS) {

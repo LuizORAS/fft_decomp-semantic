@@ -488,6 +488,8 @@ void menu_run_status_panel_thread(void);
 void menu_load_selected_unit(void);
 void menu_refresh_hovered_unit_stats_display(void);
 void menu_refresh_right_unit_stats_display(void);
+void menu_preview_attack_caster_stats(void);
+void menu_preview_attack_target_stats(void);
 
 void menu_copy_billboard_data_out(menu_unit_status_record_t* banner, menu_active_unit_t* unit,
     menu_status_panel_slot_storage_t* billboard, map_selected_tile_t* cursor_tile);

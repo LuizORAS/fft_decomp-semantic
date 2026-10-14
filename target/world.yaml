@@ -139,8 +139,8 @@ functions:
   - {addr: 0x800e90f4, size: 3764, name: world_menu_display_hovered_unit_stats, hash: 23548cb242115e60, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800e9fa8, size: 96, name: world_menu_refresh_hovered_unit_stats_display, hash: 17518b9c3f92beb7, source: src/shared/menu/menu_refresh_hovered_unit_stats_display.c, source_symbol: menu_refresh_hovered_unit_stats_display}
   - {addr: 0x800ea008, size: 96, name: world_menu_refresh_right_unit_stats_display, hash: ec258bdb8944e993, source: src/shared/menu/menu_refresh_right_unit_stats_display.c, source_symbol: menu_refresh_right_unit_stats_display}
-  - {addr: 0x800ea068, size: 316, name: world_menu_preview_attack_caster_stats, hash: 64cc01be28054271}
-  - {addr: 0x800ea1a4, size: 184, name: world_menu_preview_attack_target_stats, hash: da40410ec79137a7}
+  - {addr: 0x800ea068, size: 316, name: world_menu_preview_attack_caster_stats, hash: 64cc01be28054271, source: src/shared/menu/menu_preview_attack_caster_stats.c, source_symbol: menu_preview_attack_caster_stats}
+  - {addr: 0x800ea1a4, size: 184, name: world_menu_preview_attack_target_stats, hash: da40410ec79137a7, source: src/shared/menu/menu_preview_attack_target_stats.c, source_symbol: menu_preview_attack_target_stats}
   - {addr: 0x800ea25c, size: 1844, name: world_menu_run_unit_summary_panel_thread, hash: d5f5a0ffa8af680f}
   - {addr: 0x800ea990, size: 192, name: world_gfx_set_item_icon_sprite, hash: a86b16621ce2b2a6}
   - {addr: 0x800eaa50, size: 380, name: world_gfx_set_portrait_poly_texture, hash: 4d55644e1fbf1fa9}
@@ -2376,6 +2376,24 @@ overrides:
   - {function: world_menu_load_selected_unit, name: g_battle_menu_billboard_unit_name, addr: 0x8013a42c}
   - {function: world_menu_load_selected_unit, name: g_battle_menu_status_billboard, addr: 0x8013a340}
   - {function: world_menu_load_selected_unit, name: g_battle_preview_target_unit_id, addr: 0x8013a37e}
+  - {function: world_menu_preview_attack_caster_stats, name: battle_menu_display_hovered_unit_stats, addr: 0x800e90f4}
+  - {function: world_menu_preview_attack_caster_stats, name: battle_menu_load_selected_unit, addr: 0x800e7dcc}
+  - {function: world_menu_preview_attack_caster_stats, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
+  - {function: world_menu_preview_attack_caster_stats, name: g_battle_active_turn_unit, addr: 0x8013a364}
+  - {function: world_menu_preview_attack_caster_stats, name: g_battle_menu_active_turn_banner, addr: 0x8013a31c}
+  - {function: world_menu_preview_attack_caster_stats, name: g_battle_menu_attack_caster_stats_display, addr: 0x80155adc}
+  - {function: world_menu_preview_attack_caster_stats, name: g_battle_menu_attack_caster_stats_setup, addr: 0x80155be4}
+  - {function: world_menu_preview_attack_caster_stats, name: g_battle_menu_preview_target_action, addr: 0x801a25f4}
+  - {function: world_menu_preview_attack_caster_stats, name: g_battle_preview_target_unit_id, addr: 0x8013a37e}
+  - {function: world_menu_preview_attack_target_stats, name: battle_menu_display_hovered_unit_stats, addr: 0x800e90f4}
+  - {function: world_menu_preview_attack_target_stats, name: battle_menu_load_selected_unit, addr: 0x800e7dcc}
+  - {function: world_menu_preview_attack_target_stats, name: g_battle_active_turn_unit, addr: 0x8013a364}
+  - {function: world_menu_preview_attack_target_stats, name: g_battle_menu_attack_target_stats_display, addr: 0x80155ae4}
+  - {function: world_menu_preview_attack_target_stats, name: g_battle_menu_attack_target_stats_setup, addr: 0x80155c44}
+  - {function: world_menu_preview_attack_target_stats, name: g_battle_menu_billboard_data, addr: 0x8013a384}
+  - {function: world_menu_preview_attack_target_stats, name: g_battle_menu_comparison_billboard_data, addr: 0x8013a3c4}
+  - {function: world_menu_preview_attack_target_stats, name: g_battle_menu_status_billboard, addr: 0x8013a340}
+  - {function: world_menu_preview_attack_target_stats, name: g_battle_preview_target_unit_id, addr: 0x8013a37e}
   - {function: world_menu_refresh_hovered_unit_stats_display, name: battle_menu_display_hovered_unit_stats, addr: 0x800e90f4}
   - {function: world_menu_refresh_hovered_unit_stats_display, name: battle_menu_load_selected_unit, addr: 0x800e7dcc}
   - {function: world_menu_refresh_hovered_unit_stats_display, name: g_battle_menu_active_turn_banner, addr: 0x8013a31c}

@@ -1,15 +1,12 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
-#include "psx/types.h"
 
-/*
- * Attack-preview caster panel: bind the selected unit's pending action to the
- * previewed target, run the preview calculation on the main stack unless the
- * ability's secondary flag 0x04 is set or the skillset changes equipment, and publish the
- * target's action results through g_battle_menu_preview_target_action (0 when skipped).
- */
-void battle_menu_preview_attack_caster_stats(void) {
+/* Preview the pending action, then display its caster panel. */
+void menu_preview_attack_caster_stats(void) {
     unit_stats_t* attacker;
     unit_stats_t* target;
     action_command_t* action;
@@ -26,6 +23,7 @@ void battle_menu_preview_attack_caster_stats(void) {
     if (action->ability_id < ABILITY_ID_ITEM_FIRST) {
         main_ability_calculate_pointers_and_type(action->ability_id & ABILITY_ID_MASK, &ability_data, &secondary);
     }
+    /* Item IDs leave secondary unset before this range-flags read. */
     if (((secondary.range->flags_3 & ABILITY_SECONDARY_FLAG_3_PERSEVERE) && action->ability_id < ABILITY_ID_ITEM_FIRST)
         || action->skillset_id == SKILLSET_ID_EQUIP_CHANGE) {
         g_battle_menu_preview_target_action = 0;
