@@ -29,7 +29,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
     DR_MODE draw_modes[2 * 30];
     DR_AREA draw_areas[2 * 30];
     u32 otags[2 * 64];
-    world_gfx_packet_buffer_t buffers[2];
+    menu_gfx_context_t buffers[2];
     u8 unused_packet_gap[0x18]; /* Retains the original unused stack space. */
     s32 buttons;
     s32 i;

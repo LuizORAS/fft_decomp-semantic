@@ -7,9 +7,9 @@
  * RGB triples, one per corner.
  */
 void world_gfx_enqueue_gouraud_textured_quad(
-    textured_rect_source_t* source, rgb24_t* colors, s32 semi_trans, s32 ot_index) {
+    const textured_rect_source_t* source, const rgb24_t* colors, s32 semi_trans, s32 ot_index) {
     POLY_GT4* poly
-        = &g_world_gfx_active_packet_buffer->textured_gradient_quads[g_world_gfx_textured_gradient_quad_count++];
+        = &g_world_gfx_active_packet_buffer->gouraud_textured_quads[g_world_gfx_textured_gradient_quad_count++];
 
     SetSemiTrans(poly, semi_trans);
     setXY4(poly, source->x + 0x80, source->y, (source->x + 0x80) + source->w, source->y, source->x + 0x80,

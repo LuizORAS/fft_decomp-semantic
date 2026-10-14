@@ -27,7 +27,7 @@ u8* world_name_run_entry_screen(const u8* list, u32* image) {
     DR_MODE draw_modes[2 * 30];
     DR_AREA draw_areas[2 * 10];
     u32 otags[2 * 64];
-    world_gfx_packet_buffer_t buffers[2];
+    menu_gfx_context_t buffers[2];
     DRAWENV env;
     u32* otag;
     s32 busy;
@@ -100,7 +100,7 @@ u8* world_name_run_entry_screen(const u8* list, u32* image) {
         while (DrawSync(1) != 0) { }
         VSync(g_world_gfx_vsync_mode);
         {
-            world_gfx_packet_buffer_t* context = g_world_gfx_packet_buffers;
+            menu_gfx_context_t* context = g_world_gfx_packet_buffers;
 
             if (g_world_gfx_active_packet_buffer == context) {
                 context++;

@@ -8,7 +8,7 @@
  * opcode are initialized by the pool owner and retained when linking.
  */
 void world_gfx_enqueue_gouraud_quad(point16_t* xy, rgb24_t* colors, s32 semi_trans, s32 ot_index) {
-    POLY_G4* poly = &g_world_gfx_active_packet_buffer->gradient_quads[g_world_gfx_gradient_quad_count++];
+    POLY_G4* poly = &g_world_gfx_active_packet_buffer->gouraud_quads[g_world_gfx_gradient_quad_count++];
     SetSemiTrans(poly, semi_trans);
     setXY4(poly, xy[0].x + 0x80, xy[0].y, xy[1].x + 0x80, xy[1].y, xy[2].x + 0x80, xy[2].y, xy[3].x + 0x80, xy[3].y);
     setRGB0(poly, colors[0].r, colors[0].g, colors[0].b);

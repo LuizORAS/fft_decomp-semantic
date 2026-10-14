@@ -660,34 +660,6 @@ typedef enum world_fade_state {
     WORLD_FADE_STATE_INCREASING = 2
 } world_fade_state_e;
 
-/* Provisional: the WORLD GPU packet buffer pointed to by 0x801cd528.  Only the
- * ordering table base and the DR_MODE pool used by 0x8012d340 are named; the
- * 12-byte pool at 0x5c is consumed by the sibling 0x8012d25c; the TILE pool
- * at 0x3c by 0x8012bdbc. */
-typedef struct world_gfx_packet_buffer {
-    u32* otag; /* 0x00 */
-    u8 _unused_04[0x0c - 0x04];
-    POLY_F4* poly_f4s;        /* 0x0c; pool consumed by world_gfx_append_poly_f4_to_otag */
-    POLY_FT4* textured_quads; /* 0x10; pool consumed by world_gfx_enqueue_textured_quad_corners */
-    u8 _unused_14[0x1c - 0x14];
-    POLY_G4* gradient_quads;           /* 0x1c; world_gfx_enqueue_gouraud_quad */
-    POLY_GT4* textured_gradient_quads; /* 0x20; initialised by world_gfx_init_packet_pools */
-    LINE_F2* flat_lines;               /* 0x24; world_gfx_enqueue_line_f2 */
-    u8 _unused_28[0x30 - 0x28];
-    LINE_G2* gradient_lines; /* 0x30; world_menu_add_gradient_line_primitive */
-    u8 _unused_34[0x3c - 0x34];
-    TILE* tiles; /* 0x3c; pool consumed by 0x8012bdbc */
-    u8 _unused_40[0x58 - 0x40];
-    DR_MOVE* draw_moves; /* 0x58; pool consumed by world_gfx_enqueue_draw_move */
-    DR_AREA* draw_areas; /* 0x5c; pool consumed by world_gfx_add_draw_area_primitive */
-    DR_MODE* draw_modes; /* 0x60 */
-    DRAWENV draw_env;    /* 0x64; installed by world_gfx_present_frame_and_swap_packet_buffer */
-    DISPENV disp_env;    /* 0xc0; installed by world_gfx_present_frame_and_swap_packet_buffer */
-    u8 _unused_d4[0xec - 0xd4];
-} world_gfx_packet_buffer_t;
-
-typedef char world_gfx_packet_buffer_size_must_be_236[(sizeof(world_gfx_packet_buffer_t) == 236) ? 1 : -1];
-
 /* 32-bit flags that lead every display object: the WLDCORE window and render
  * records and the OPEN render records. The two kind bits select the draw
  * routine; an object with either BLANK or HIDDEN set is skipped. */
@@ -779,7 +751,7 @@ extern menu_status_panel_buffer_t g_world_change_banner_panel_frames[2];
  * unverified names stay provisional. */
 extern s16 g_world_3d_object_use_request;
 extern u16 g_world_3d_object_wait_status;
-extern world_gfx_packet_buffer_t* g_world_gfx_active_packet_buffer;
+extern menu_gfx_context_t* g_world_gfx_active_packet_buffer;
 extern u16 g_world_gfx_draw_suppress_flag;
 extern u8 g_world_gfx_fade_decreasing;
 extern u8 g_world_gfx_fade_disabled;
@@ -863,7 +835,7 @@ extern u16 g_world_gfx_tile_1_capacity;
 extern u16 g_world_gfx_tile_8_capacity;
 extern u16 g_world_gfx_tile_1_count;
 extern u16 g_world_gfx_tile_8_count;
-extern world_gfx_packet_buffer_t* g_world_gfx_packet_buffers;
+extern menu_gfx_context_t* g_world_gfx_packet_buffers;
 extern u16 g_world_gfx_sprite_8_count;
 
 extern u16 g_world_gfx_tile_16_capacity;
@@ -897,7 +869,7 @@ void world_gfx_enqueue_textured_quad_corners(
     textured_quad_source_t* source, rgb24_t* rgb, s32 semi_trans, s32 ot_index);
 void world_gfx_enqueue_gouraud_quad(point16_t* xy, rgb24_t* colors, s32 semi_trans, s32 ot_index);
 void world_gfx_enqueue_gouraud_textured_quad(
-    textured_rect_source_t* source, rgb24_t* colors, s32 semi_trans, s32 ot_index);
+    const textured_rect_source_t* source, const rgb24_t* colors, s32 semi_trans, s32 ot_index);
 void world_gfx_enqueue_tile(RECT* box, rgb24_t* rgb, u8 semi_trans, s32 ot_index);
 void world_gfx_append_poly_f4_to_otag(point16_t* xy, rgb24_t* rgb, s32 semi_trans, s32 ot_index);
 void world_gfx_build_scaled_draw_area_pair_swapped(
@@ -916,13 +888,13 @@ void world_gfx_enqueue_oriented_textured_quad(
 
 void world_gfx_flip_poly_ft4_u_if_negative(POLY_FT4* poly, s32 direction);
 
-void world_gfx_init_double_packet_buffers(world_gfx_packet_buffer_t* buffers, u32* otags, void* unused_2,
-    void* unused_3, void* unused_4, POLY_FT4* textured_quads, void* unused_6, void* unused_7, POLY_G4* gradient_quads,
+void world_gfx_init_double_packet_buffers(menu_gfx_context_t* buffers, u32* otags, void* unused_2, void* unused_3,
+    void* unused_4, POLY_FT4* textured_quads, void* unused_6, void* unused_7, POLY_G4* gradient_quads,
     POLY_GT4* textured_gradient_quads, LINE_F2* flat_lines, void* unused_11, void* unused_12, LINE_G2* gradient_lines,
     void* unused_14, void* unused_15, TILE* tiles, void* unused_17, void* unused_18, void* unused_19, void* unused_20,
     void* unused_21, void* unused_22, DR_MOVE* draw_moves, DR_AREA* draw_areas, DR_MODE* draw_modes);
 
-void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
+void world_gfx_init_packet_pools(menu_gfx_context_t* buffer);
 void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, const RECT* from, const RECT* to, s32 t);
 void world_gfx_mirror_4bpp_rect(u8* pixels, const glyph_blit_t* rect);
 void world_gfx_init_menu_tile_and_line_primitives(menu_status_panel_buffer_t* menu);

@@ -11,7 +11,7 @@
 void world_gfx_present_frame_and_swap_packet_buffer(s32 first_otag, s32 draw_otag) {
     DRAWENV env;
     DRAWENV* envp;
-    world_gfx_packet_buffer_t* context;
+    menu_gfx_context_t* context;
     u32* otag = g_world_gfx_active_packet_buffer->otag;
 
     main_system_frame_stub();

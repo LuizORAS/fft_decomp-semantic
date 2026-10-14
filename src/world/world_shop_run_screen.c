@@ -33,7 +33,7 @@ void world_shop_run_screen(s32 shop_type) {
     DR_MODE draw_modes[2 * 30];
     DR_AREA draw_areas[2 * 10];
     u32 otags[2 * 64];
-    world_gfx_packet_buffer_t buffers[2];
+    menu_gfx_context_t buffers[2];
     u32* tim;
     RECT* tile_box = &g_world_shop_edge_tile_rect;
     s32 buttons;

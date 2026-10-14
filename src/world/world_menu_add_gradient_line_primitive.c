@@ -3,7 +3,7 @@
 
 /* Append a two-color line to the menu ordering table. */
 void world_menu_add_gradient_line_primitive(point16_t* endpoints, rgb24_t* colors, s32 semi_trans, s32 ot_index) {
-    LINE_G2* line = &g_world_gfx_active_packet_buffer->gradient_lines[g_world_gfx_gradient_line_count++];
+    LINE_G2* line = &g_world_gfx_active_packet_buffer->gouraud_lines[g_world_gfx_gradient_line_count++];
     SetSemiTrans(line, semi_trans);
     line->x0 = endpoints[0].x + 0x80;
     line->y0 = endpoints[0].y;
