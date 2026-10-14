@@ -917,7 +917,7 @@ functions:
   - {addr: 0x8013f4a8, size: 80, name: script_reset_event_state, hash: cc154e81b79d8046, source: src/shared/script/script_reset_event_state.c}
   - {addr: 0x8013f4f8, size: 40, name: script_is_deployment_running, hash: a5c397fe33bff892}
   - {addr: 0x8013f520, size: 328, name: battle_menu_update_menus_and_event_speed, hash: ec52451103685bc8}
-  - {addr: 0x8013f668, size: 260, name: map_store_selected_tile_data, hash: 407beefdbfb22c50}
+  - {addr: 0x8013f668, size: 260, name: map_store_selected_tile_data, hash: 407beefdbfb22c50, source: src/shared/map/map_store_selected_tile_data.c}
   - {addr: 0x8013f76c, size: 64, name: battle_menu_clear_entry_selections, hash: 46ac5994ee2ced8c}
   - {addr: 0x8013f7ac, size: 8, name: battle_noop_8013f7ac, hash: 6d64edf91449c1b1}
   - {addr: 0x8013f7b4, size: 256, name: battle_menu_restore_selection_for_selected_unit, hash: a409d984791f85bb}

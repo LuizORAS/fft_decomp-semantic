@@ -264,7 +264,7 @@ functions:
   - {addr: 0x800f2d20, size: 80, name: world_script_reset_event_state, hash: de6bf31314f15ef6, source: src/shared/script/script_reset_event_state.c, source_symbol: script_reset_event_state}
   - {addr: 0x800f2d70, size: 40, name: world_script_is_deployment_running, hash: 0c31ced998da1feb}
   - {addr: 0x800f2d98, size: 328, name: world_menu_update_menus_and_event_speed, hash: 2a50df3b6a1b8d8e}
-  - {addr: 0x800f2ee0, size: 260, name: world_map_store_selected_tile_data, hash: adad582c51dee948}
+  - {addr: 0x800f2ee0, size: 260, name: world_map_store_selected_tile_data, hash: adad582c51dee948, source: src/shared/map/map_store_selected_tile_data.c, source_symbol: map_store_selected_tile_data}
   - {addr: 0x800f2fe4, size: 64, name: world_menu_clear_entry_selections, hash: 25e5397d31b98e28}
   - {addr: 0x800f3024, size: 8, name: world_noop_800f3024, hash: 6d64edf91449c1b1}
   - {addr: 0x800f302c, size: 256, name: world_menu_restore_selection_for_selected_unit, hash: e03923895aa02ebd}
@@ -2379,6 +2379,7 @@ overrides:
   - {function: world_gfx_set_blit_source_rect, name: g_world_gfx_image_blit_source, addr: 0x801c000c}
   - {function: world_is_skillset_in_spell_quote_exception_list, name: g_battle_spell_quote_exception_skillsets, addr: 0x80156748}
   - {function: world_item_calculate_swap_stat_delta, name: equip_item_collect_stat_deltas, addr: 0x80122f9c}
+  - {function: world_map_store_selected_tile_data, name: g_map_selected_tile_data, addr: 0x8013a310}
   - {function: world_menu_build_ability_preview_at_list, name: battle_menu_icon_linked_entry_thread, addr: 0x800eee98}
   - {function: world_menu_build_ability_preview_at_list, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
   - {function: world_menu_build_ability_preview_at_list, name: g_battle_menu_at_list_layout, addr: 0x80153cd0}
