@@ -367,8 +367,8 @@ functions:
   - {addr: 0x800fcba0, size: 88, name: world_unit_check_facing_relative_to_camera, hash: ef44f6dacbae10fb}
   - {addr: 0x800fcbf8, size: 368, name: world_script_face_tile, hash: 96b76ce946c03c2e, source: src/shared/script/script_face_tile.c, source_symbol: script_face_tile}
   - {addr: 0x800fcd68, size: 176, name: script_waitrotateunit_and_waitrotateall_event_instruction, hash: d8fa9c97f6edfaa2, source: src/shared/script/script_waitrotateunit_and_waitrotateall_event_instruction.c}
-  - {addr: 0x800fce18, size: 168, name: world_sound_bg_thread, hash: b51c4e253d5dea85}
-  - {addr: 0x800fcec0, size: 264, name: world_sound_edit_bg_thread, hash: 0180ab71574b16f7, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800fce18, size: 168, name: world_sound_bg_thread, hash: b51c4e253d5dea85, source: src/shared/sound/sound_run_background_sfx_thread.c, source_symbol: sound_run_background_sfx_thread}
+  - {addr: 0x800fcec0, size: 264, name: world_sound_edit_bg_thread, hash: 0180ab71574b16f7, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck, source: src/shared/sound/sound_run_background_fade_thread.c, source_symbol: sound_run_background_fade_thread}
   - {addr: 0x800fcfc8, size: 172, name: world_script_toggle_message_portrait_flip, hash: ceb3971e4cedddbd}
   - {addr: 0x800fd074, size: 8, name: world_script_opcode_74_event_instruction, hash: 6d64edf91449c1b1}
   - {addr: 0x800fd07c, size: 92, name: world_thread_resolve_id, hash: 674eacc3bba8a117}
@@ -3004,6 +3004,9 @@ overrides:
   - {function: world_script_start_current_event_thread, name: g_camera_speed_curve, addr: 0x80153338}
   - {function: world_script_start_current_event_thread, name: map_reset_script_light_transform, addr: 0x800f29d8}
   - {function: world_script_unit_anim, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
+  - {function: world_sound_bg_thread, name: battle_thread_get_current_parameter_1, addr: 0x80100090}
+  - {function: world_sound_bg_thread, name: sound_run_background_fade_thread, addr: 0x800fcec0}
+  - {function: world_sound_edit_bg_thread, name: battle_thread_get_current_parameter_1, addr: 0x80100090}
   - {function: world_text_build_display_message, name: g_script_event_instruction_sizes, addr: 0x8013a454}
   - {function: world_text_determine_spell_quote, name: battle_menu_dispatch_system_function, addr: 0x800f5384}
   - {function: world_text_determine_spell_quote, name: battle_text_is_spell_quote_exception_skillset, addr: 0x800f49d8}

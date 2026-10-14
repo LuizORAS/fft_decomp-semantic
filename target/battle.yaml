@@ -1020,8 +1020,8 @@ functions:
   - {addr: 0x80149734, size: 88, name: battle_unit_check_facing_relative_to_camera, hash: f7c874232339e58e}
   - {addr: 0x8014978c, size: 368, name: script_face_tile, hash: 349c3977cc8bc891, source: src/shared/script/script_face_tile.c}
   - {addr: 0x801498fc, size: 176, name: script_waitrotateunit_and_waitrotateall_event_instruction, hash: 3ddb2ca1554cefe8, source: src/shared/script/script_waitrotateunit_and_waitrotateall_event_instruction.c}
-  - {addr: 0x801499ac, size: 168, name: sound_run_background_sfx_thread, hash: 5840248306ebcf8a}
-  - {addr: 0x80149a54, size: 228, name: sound_run_background_fade_thread, hash: d2b85b17ab3025e0}
+  - {addr: 0x801499ac, size: 168, name: sound_run_background_sfx_thread, hash: 5840248306ebcf8a, source: src/shared/sound/sound_run_background_sfx_thread.c}
+  - {addr: 0x80149a54, size: 228, name: sound_run_background_fade_thread, hash: d2b85b17ab3025e0, source: src/shared/sound/sound_run_background_fade_thread.c}
   - {addr: 0x80149b38, size: 172, name: script_toggle_message_portrait_flip, hash: 6ddcfa9027a7d71d}
   - {addr: 0x80149be4, size: 8, name: script_opcode_74_event_instruction, hash: 6d64edf91449c1b1}
   - {addr: 0x80149bec, size: 92, name: battle_thread_resolve_id, hash: 17686d1630cf7426}
