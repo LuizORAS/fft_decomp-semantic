@@ -2209,7 +2209,6 @@ extern s16 g_world_menu_action_slot_selected_option;
 extern menu_allocation_t g_world_menu_buffer_allocations[MENU_BUFFER_ALLOCATION_COUNT];
 extern u8 g_world_menu_buffer_arena[WORLD_MENU_BUFFER_PAGE_COUNT][MENU_BUFFER_PAGE_SIZE];
 extern action_data_t* g_world_menu_preview_target_action;
-extern menu_gradient_panel_prims_t g_world_menu_panel_fade_frames[];
 extern s32 g_world_active_menu; /* active menu */
 /* Handed to the dead-unit panel thread as its second parameter. Nothing stores to it and the thread
  * does not read the parameter. */
@@ -2308,7 +2307,6 @@ void world_menu_run_script_with_callback_suppressed(void);
 void world_menu_open_name_entry_key_list(void);
 void world_clear_menu_render_buffer(void* dst, u32 count);
 void world_draw_menu_text_columns_narrow(menu_entry_t* entry, s32* row_offset, u8* buffer);
-void world_menu_init_panel_fade_tiles(void);
 void world_menu_draw_number_glyphs(s32 value, s32 digits, u8* resource, glyph_blit_t* pos);
 void world_menu_labeled_number_entry_thread(void);
 menu_window_buffer_t* world_menu_alloc_window_buffer_pair(void);

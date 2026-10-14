@@ -324,7 +324,6 @@ void battle_menu_size_entry_to_text(menu_entry_t* entry, s16* width, s16* height
 extern menu_palette_pair_t g_battle_menu_default_palette_colors;
 extern u8 g_battle_menu_numeric_display_palette_indices[12];
 extern menu_palette_pair_t g_battle_menu_palette_colors;
-extern menu_gradient_panel_prims_t g_battle_menu_panel_fade_frames[];
 extern s32 g_battle_menu_panel_fade_intensity;
 extern s32 g_battle_menu_panel_fade_mode; /* menu_panel_fade_mode_e */
 extern u8 g_battle_menu_panel_fade_modes[];
@@ -335,7 +334,6 @@ extern menu_palette_slot_t g_battle_numeric_display_palettes[];
 void battle_menu_copy_palette_colors(const menu_palette_pair_t* source);
 void battle_menu_fade_out_thread(void);
 void battle_menu_init_palette_and_text(s32 unused_0);
-void battle_menu_init_panel_fade_tiles(void);
 void battle_menu_init_primitive_colors_dimmed(menu_palette_primitives_t* menu);
 void battle_menu_init_primitive_colors_normal(menu_palette_primitives_t* menu);
 void battle_menu_update_panel_fade(void);

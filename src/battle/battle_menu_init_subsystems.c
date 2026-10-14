@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/battle_map.h"
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 
 void battle_menu_init_subsystems(void) {
     battle_menu_init_subsystem_pointers();
@@ -8,5 +9,5 @@ void battle_menu_init_subsystems(void) {
     battle_menu_init_stub();
     battle_menu_reset_subsystems();
     map_reset_script_light_transform();
-    battle_menu_init_panel_fade_tiles();
+    menu_init_panel_fade_tiles();
 }

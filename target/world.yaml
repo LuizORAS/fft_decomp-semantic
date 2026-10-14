@@ -178,7 +178,7 @@ functions:
   - {addr: 0x800ef114, size: 148, name: world_menu_input_loop_thread, hash: 0d24fc429b9791b4}
   - {addr: 0x800ef1a8, size: 180, name: script_get_variable, hash: 4871fbfdd3465551, source: src/shared/script/script_get_variable.c}
   - {addr: 0x800ef25c, size: 160, name: script_set_variable, hash: 7777ac9926486c9f, source: src/shared/script/script_set_variable.c}
-  - {addr: 0x800ef2fc, size: 436, name: world_menu_init_panel_fade_tiles, hash: 3be1a31046d8fb32}
+  - {addr: 0x800ef2fc, size: 436, name: menu_init_panel_fade_tiles, hash: 3be1a31046d8fb32, source: src/shared/menu/menu_init_panel_fade_tiles.c}
   - {addr: 0x800ef4b0, size: 464, name: world_menu_update_panel_fade, hash: 9fb1cf73a7d85714}
   - {addr: 0x800ef680, size: 264, name: world_gfx_submit_screen_fade_overlay, hash: 0f3b3682c42fcae8}
   - {addr: 0x800ef788, size: 124, name: menu_reserve_high_overlay, hash: 7a02095f5d205a32, source: src/shared/menu/menu_reserve_high_overlay.c}
@@ -1905,7 +1905,7 @@ data:
   - {addr: 0x801a2bd0, name: g_world_numeric_display_panel_records}
   - {addr: 0x801a3494, name: g_world_unit_editor_frames}
   - {addr: 0x801a3d58, name: g_world_ability_list_pages}
-  - {addr: 0x801a63d8, name: g_world_menu_panel_fade_frames}
+  - {addr: 0x801a63d8, name: g_menu_panel_fade_frames}
   - {addr: 0x801a6650, name: g_world_screen_tint_tiles}
   - {addr: 0x801a6688, name: g_world_active_menu}
   - {addr: 0x801a668c, name: g_world_menu_dead_unit_panel_parameter}
@@ -2349,6 +2349,7 @@ imports:
   - {addr: 0x801df198, name: jobstts_entrypoint}
 
 overrides:
+  - {function: menu_init_panel_fade_tiles, name: g_battle_menu_disabled_texture_window, addr: 0x801531b0}
   - {function: script_find_instruction_byte_offset, name: g_script_event_instruction_sizes, addr: 0x8013a454}
   - {function: script_find_jump_target, name: g_script_event_instruction_sizes, addr: 0x8013a454}
   - {function: script_interpolate_range_fixed12, name: battle_mul_div_s64, addr: 0x80100188}

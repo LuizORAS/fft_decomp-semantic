@@ -16,7 +16,7 @@ void battle_menu_update_panel_fade(void) {
     s32 intensity;
 
     if (g_battle_menu_panel_fade_mode != MENU_PANEL_FADE_NONE) {
-        frame = &g_battle_menu_panel_fade_frames[g_menu_packet_buffer_index];
+        frame = &g_menu_panel_fade_frames[g_menu_packet_buffer_index];
         if (g_battle_menu_panel_fade_mode == MENU_PANEL_FADE_IN && g_battle_menu_panel_fade_intensity < 80) {
             g_battle_menu_panel_fade_intensity += 8;
         }
@@ -42,7 +42,7 @@ void battle_menu_update_panel_fade(void) {
             gfx_draw_or_append_gpu_primitive(&frame->top[8 - i]);
             gfx_draw_or_append_gpu_primitive(&frame->bottom[i]);
         }
-        gfx_draw_or_append_gpu_primitive(&g_battle_menu_panel_fade_frames[g_menu_packet_buffer_index].center);
-        gfx_draw_or_append_gpu_primitive(&g_battle_menu_panel_fade_frames[g_menu_packet_buffer_index].draw_mode);
+        gfx_draw_or_append_gpu_primitive(&g_menu_panel_fade_frames[g_menu_packet_buffer_index].center);
+        gfx_draw_or_append_gpu_primitive(&g_menu_panel_fade_frames[g_menu_packet_buffer_index].draw_mode);
     }
 }

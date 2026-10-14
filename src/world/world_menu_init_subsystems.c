@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 
 void world_menu_init_subsystems(void) {
@@ -6,5 +7,5 @@ void world_menu_init_subsystems(void) {
     world_menu_init_stub();
     world_menu_reset_subsystems();
     world_map_reset_script_light_transform();
-    world_menu_init_panel_fade_tiles();
+    menu_init_panel_fade_tiles();
 }

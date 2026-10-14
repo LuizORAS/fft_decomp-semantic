@@ -1,15 +1,15 @@
-#include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/memory.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Initialize the center tile and two nine-tile scanline strips. */
-void battle_menu_init_panel_fade_tiles(void) {
+void menu_init_panel_fade_tiles(void) {
     menu_gradient_panel_prims_t* frame;
     s32 i;
 
-    frame = &g_battle_menu_panel_fade_frames[0];
+    frame = &g_menu_panel_fade_frames[0];
 
     SetDrawMode(&frame->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_battle_menu_disabled_texture_window);
 
@@ -40,5 +40,5 @@ void battle_menu_init_panel_fade_tiles(void) {
     }
 
     mem_copy_bytes_nonempty(
-        &g_battle_menu_panel_fade_frames[1], &g_battle_menu_panel_fade_frames[0], sizeof(menu_gradient_panel_prims_t));
+        &g_menu_panel_fade_frames[1], &g_menu_panel_fade_frames[0], sizeof(menu_gradient_panel_prims_t));
 }
