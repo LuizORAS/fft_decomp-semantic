@@ -6,7 +6,7 @@
  * world_menu_build_window_frame_image calls this one. Copies a 16-bit pattern row: the two
  * leading and two trailing entries verbatim, then the four interior entries repeated every fourth slot across the row.
  */
-void world_screen_menu_build_window_image_row(u16* source, u16* dest, s32 count, s32 offset) {
+void world_screen_menu_build_window_image_row(const u16* source, u16* dest, s32 count, s32 offset) {
     s32 i;
     u16* slot;
     u16 value;

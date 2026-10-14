@@ -5,7 +5,7 @@
  *
  * A zero nibble introduces a run of transparent pixels whose length follows as
  * one nibble, or as two or three nibbles after the markers 7 and 8. */
-void battle_gfx_decompress_attack_spritesheet(u8* source, u8* destination) {
+void battle_gfx_decompress_attack_spritesheet(const u8* source, u8* destination) {
     s32 high;
     s32 count;
     s32 value;

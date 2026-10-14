@@ -451,7 +451,7 @@ typedef struct battle_gfx_unit_graphics_load_state {
 typedef char
     battle_gfx_unit_graphics_load_state_size_must_be_16[sizeof(battle_gfx_unit_graphics_load_state_t) == 16 ? 1 : -1];
 
-extern u8* g_battle_gfx_compressed_data;
+extern const u8* g_battle_gfx_compressed_data;
 extern s32 g_battle_gfx_compressed_nibble_phase;
 extern s32 g_battle_gfx_compressed_offset;
 extern file_extent_t g_battle_gfx_effect_seq_files[];
@@ -479,7 +479,7 @@ void battle_gfx_append_unit_graphics_load_descriptor(s32 map_x, s32 map_y, s32 m
     s16 spritesheet_id, s16 palette_id, s16 runtime_id, unit_stats_t* unit, u32 flags);
 void battle_gfx_clear_unit_graphics_load_state(s32 unused_map_id);
 void battle_gfx_copy_shp_data_to_ram(battle_gfx_weapon_shp_t* dst, const battle_gfx_packed_weapon_shp_record_t* src);
-void battle_gfx_decompress_attack_spritesheet(u8* source, u8* destination);
+void battle_gfx_decompress_attack_spritesheet(const u8* source, u8* destination);
 void battle_gfx_load_casting_unit_graphics(void);
 void battle_gfx_load_evtchr_thread(void);
 s32 battle_gfx_load_unit_attack_image_into_evtchr_slot(s32 runtime_id, s32 slot);
