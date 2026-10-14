@@ -2073,6 +2073,22 @@ extern s32 g_text_section_backup_active;
 void text_restore_section_pointers(void);
 void text_save_section_pointers(void);
 
+/* typewriter glyphs */
+extern u8* g_text_glyph_bitmap_data;
+extern s32 g_text_glyphs_per_wait;
+extern s32 g_text_slot_owner_thread_ids[3];
+extern s32 g_text_slot_glyph_counts[3];
+extern u8 g_text_slot_source_columns[];
+extern u8 g_text_slot_row_pitches[];
+extern text_glyph_state_t g_text_typewriter_glyph;
+extern menu_text_state_t g_text_typewriter_state;
+extern RECT g_text_typewriter_vram_rect;
+extern u8 g_text_typewriter_glyph_images[3][8][0x54];
+extern u8 g_text_typewriter_previous_images[3][0x54];
+extern u8 g_text_typewriter_column_scratch[14];
+
+void text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
+
 /* text threads */
 extern s32 g_menu_text_active_key;
 

@@ -751,7 +751,7 @@ void battle_text_run_dialog_thread(void) {
                         value -= character * g_battle_text_decimal_divisors[i];
                     }
                     {
-                        text_glyph_state_t* glyph = &g_battle_text_typewriter_glyph;
+                        text_glyph_state_t* glyph = &g_text_typewriter_glyph;
 
                         glyph->x = cursor_x;
                         glyph->y = cursor_y;
@@ -793,7 +793,7 @@ void battle_text_run_dialog_thread(void) {
                     character += *text;
                 }
                 {
-                    text_glyph_state_t* glyph = &g_battle_text_typewriter_glyph;
+                    text_glyph_state_t* glyph = &g_text_typewriter_glyph;
 
                     glyph->x = cursor_x;
                     glyph->y = cursor_y;

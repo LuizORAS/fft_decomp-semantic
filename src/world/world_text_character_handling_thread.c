@@ -767,7 +767,7 @@ void world_text_character_handling_thread(void) {
                         value -= code * g_world_text_decimal_divisors[i];
                     }
                     {
-                        text_glyph_state_t* glyph = &g_world_text_typewriter_glyph;
+                        text_glyph_state_t* glyph = &g_text_typewriter_glyph;
 
                         glyph->x = cursor_x;
                         glyph->y = cursor_y;
@@ -809,7 +809,7 @@ void world_text_character_handling_thread(void) {
                     code += *text;
                 }
                 {
-                    text_glyph_state_t* glyph = &g_world_text_typewriter_glyph;
+                    text_glyph_state_t* glyph = &g_text_typewriter_glyph;
 
                     glyph->x = cursor_x;
                     glyph->y = cursor_y;

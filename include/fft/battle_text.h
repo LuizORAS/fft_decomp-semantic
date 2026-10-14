@@ -25,7 +25,6 @@ typedef struct battle_text_image_position {
 typedef char battle_text_image_position_size_must_be_6[(sizeof(battle_text_image_position_t) == 6) ? 1 : -1];
 
 extern u8 g_battle_text_glyph_bitmaps[];
-extern u8* g_text_glyph_bitmap_data;
 
 void menu_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused, s32 max_chars,
     u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags);
@@ -70,7 +69,6 @@ void battle_text_save_section_pointers(void);
 /* messages */
 extern s32 g_battle_text_awaiting_input;
 extern s32 g_battle_text_current_line;
-extern s32 g_battle_text_glyphs_per_wait; /* glyphs drawn before the typewriter waits */
 extern u8* g_battle_text_message_buffer;
 extern u16 g_battle_text_message_duration_frames;
 extern u16 g_battle_text_speaker_swap_unit_a;
@@ -82,18 +80,8 @@ void battle_text_build_unit_name_list(void);
 void battle_text_run_dialog_thread(void);
 void battle_text_set_message_duration_frames(u16 frames);
 
-/* typewriter */
-extern u8 g_battle_text_slot_row_pitches[];            /* per-slot source row pitch in bytes */
-extern u8 g_battle_text_slot_source_columns[];         /* per-slot source column */
-extern u8 g_battle_text_typewriter_column_scratch[14]; /* one-column scratch used by the phase shift */
-extern text_glyph_state_t g_battle_text_typewriter_glyph;
-extern u8 g_battle_text_typewriter_glyph_images[3][8][0x54]; /* eight glyph images per slot */
-extern u8 g_battle_text_typewriter_previous_images[3][0x54]; /* previous image per slot */
-extern menu_text_state_t
-    g_battle_text_typewriter_state;             /* origin/stride passed to battle_text_render_glyph_to_4bpp_image */
-extern RECT g_battle_text_typewriter_vram_rect; /* VRAM destination of the finished glyph */
+/* typewriter entrypoint */
 
-void text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
 void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
 
 /* spell quotes */

@@ -1759,9 +1759,6 @@ extern s32 g_world_text_glyph_first_row;
 extern s32 g_world_text_glyph_row_limit;
 extern u16 g_world_text_speaker_swap_unit_a;
 extern u16 g_world_text_speaker_swap_unit_b;
-extern s32 g_world_text_glyphs_per_wait;      /* frames a glyph stays up before the typewriter advances */
-extern u8 g_world_text_slot_source_columns[]; /* per-slot source column, stride 1 */
-extern u8 g_world_text_slot_row_pitches[];    /* per-slot source row pitch in bytes, stride 1 */
 extern u32 g_world_text_decimal_divisors[];
 extern s32 g_world_text_current_line;
 extern RECT g_world_numeric_display_frame_rect;
@@ -1799,12 +1796,6 @@ extern u8 g_world_text_shop_menu_labels_data[];
 extern u8 g_world_text_name_entry_keys_data[];
 extern menu_palette_slot_t g_world_numeric_display_palettes[];
 extern glyph_blit_t g_world_text_draw_origin;
-extern text_glyph_state_t g_world_text_typewriter_glyph;
-extern menu_text_state_t g_world_text_typewriter_state;     /* origin/stride passed to 0x800ff284 */
-extern RECT g_world_text_typewriter_vram_rect;              /* VRAM destination of the finished glyph */
-extern u8 g_world_text_typewriter_glyph_images[3][8][0x54]; /* eight glyph images per slot */
-extern u8 g_world_text_typewriter_previous_images[3][0x54]; /* previous image per slot */
-extern u8 g_world_text_typewriter_column_scratch[14];       /* one-column scratch used by the phase shift */
 extern SVECTOR g_world_text_partner_screen_coords;
 extern SVECTOR g_world_text_speaker_screen_coords;
 extern menu_panel_record_t g_world_numeric_display_panel_records[2];
@@ -1822,7 +1813,6 @@ extern u8 g_world_text_message_box_glyph_images[3][8][84];
 extern u8 g_world_text_message_box_previous_images[3][84];
 extern u8 g_world_text_message_box_column_scratch[14];
 extern u8 g_world_text_row_image_buffer[];
-extern u8* g_world_text_glyph_bitmap_data;
 
 u8* world_text_get_resident_data(world_text_data_e index);
 u8* world_text_bind_section_data(u32 index);
@@ -2036,8 +2026,6 @@ extern s32 g_world_menu_scrolling_list_depth;
 extern menu_quad_page_t g_world_menu_selected_tile_info_pages[2];
 extern u16 g_world_menu_transition_finished;
 extern u16 g_world_menu_input_block_frames;
-extern s32 g_world_menu_slot_owner_thread_ids[];
-extern s32 g_world_menu_slot_states[];
 
 extern menu_scroll_text_layout_t g_world_menu_status_list_layout;
 extern menu_scroll_text_layout_t g_world_menu_at_list_layout;

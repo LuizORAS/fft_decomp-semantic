@@ -124,7 +124,7 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
                             }
                             if (line >= g_world_menu_text_param_22) {
                                 world_text_blit_font_glyph_to_4bpp(
-                                    g_world_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES, pixels,
+                                    g_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES, pixels,
                                     &g_world_text_draw_origin, g_menu_text_palette_offset);
                             }
                         }
@@ -170,8 +170,8 @@ void world_menu_display_text(s32 text_id, u8* pixels, glyph_blit_t* origin, u8* 
             break;
         }
         if (line >= g_world_menu_text_param_22) {
-            world_text_blit_font_glyph_to_4bpp(g_world_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES,
-                pixels, &g_world_text_draw_origin, g_menu_text_palette_offset);
+            world_text_blit_font_glyph_to_4bpp(g_text_glyph_bitmap_data + state->command * TEXT_GLYPH_BYTES, pixels,
+                &g_world_text_draw_origin, g_menu_text_palette_offset);
         }
         g_world_text_draw_origin.rect.x += g_text_glyph_widths[state->command];
         if (g_world_text_draw_origin.rect.x >= g_world_text_draw_origin.stride - 8) {

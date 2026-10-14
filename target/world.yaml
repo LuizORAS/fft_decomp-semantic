@@ -1148,11 +1148,11 @@ data:
   - {addr: 0x80153356, name: g_world_text_speaker_swap_unit_a}
   - {addr: 0x80153358, name: g_world_text_speaker_swap_unit_b}
   - {addr: 0x80153360, name: g_world_system_function_thread_busy}
-  - {addr: 0x80153364, name: g_world_text_glyphs_per_wait}
-  - {addr: 0x80153368, name: g_world_menu_slot_owner_thread_ids}
-  - {addr: 0x80153374, name: g_world_menu_slot_states}
-  - {addr: 0x80153380, name: g_world_text_slot_source_columns}
-  - {addr: 0x80153384, name: g_world_text_slot_row_pitches}
+  - {addr: 0x80153364, name: g_text_glyphs_per_wait}
+  - {addr: 0x80153368, name: g_text_slot_owner_thread_ids}
+  - {addr: 0x80153374, name: g_text_slot_glyph_counts}
+  - {addr: 0x80153380, name: g_text_slot_source_columns}
+  - {addr: 0x80153384, name: g_text_slot_row_pitches}
   - {addr: 0x80153387, name: g_script_variable_write_guard}
   - {addr: 0x8015338c, name: g_world_text_decimal_divisors}
   - {addr: 0x801533b8, name: g_menu_cursor_zoom_percentages}
@@ -1873,12 +1873,12 @@ data:
   - {addr: 0x8019a2d0, name: g_unit_pending_animation_ids}
   - {addr: 0x8019a2fc, name: g_unit_was_moving_latch}
   - {addr: 0x8019a328, name: g_world_event_thread_status_snapshot}
-  - {addr: 0x8019a338, name: g_world_text_typewriter_glyph}
-  - {addr: 0x8019a348, name: g_world_text_typewriter_state}
-  - {addr: 0x8019a35c, name: g_world_text_typewriter_vram_rect}
-  - {addr: 0x8019a364, name: g_world_text_typewriter_glyph_images}
-  - {addr: 0x8019ab44, name: g_world_text_typewriter_previous_images}
-  - {addr: 0x8019ac40, name: g_world_text_typewriter_column_scratch}
+  - {addr: 0x8019a338, name: g_text_typewriter_glyph}
+  - {addr: 0x8019a348, name: g_text_typewriter_state}
+  - {addr: 0x8019a35c, name: g_text_typewriter_vram_rect}
+  - {addr: 0x8019a364, name: g_text_typewriter_glyph_images}
+  - {addr: 0x8019ab44, name: g_text_typewriter_previous_images}
+  - {addr: 0x8019ac40, name: g_text_typewriter_column_scratch}
   - {addr: 0x8019ac68, name: g_world_text_partner_screen_coords}
   - {addr: 0x8019ac70, name: g_world_text_speaker_screen_coords}
   - {addr: 0x8019ac7c, name: g_world_event_background_colors}
@@ -2258,7 +2258,7 @@ data:
   - {addr: 0x801cd644, name: GsLIGHTWSMATRIX}
   - {addr: 0x801cd664, name: g_world_gfx_packet_buffers}
   - {addr: 0x801cd668, name: g_world_input_secondary_repeat}
-  - {addr: 0x801cd66c, name: g_world_text_glyph_bitmap_data}
+  - {addr: 0x801cd66c, name: g_text_glyph_bitmap_data}
   - {addr: 0x801cd674, name: g_world_gfx_sprite_8_count}
   - {addr: 0x801cd678, name: GsDRAWENV}
   - {addr: 0x801cd6d4, name: GsDISPENV}
@@ -2843,18 +2843,18 @@ overrides:
   - {function: world_text_determine_spell_quote, name: battle_text_is_spell_quote_exception_skillset, addr: 0x800f49d8}
   - {function: world_text_determine_spell_quote, name: g_battle_spell_quote_last_ability_id, addr: 0x8013a5ec}
   - {function: world_text_draw_glyph_with_typewriter_delay, name: battle_text_render_glyph_to_4bpp_image, addr: 0x800ff284}
-  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_menu_slot_owner_thread_ids, addr: 0x80153368}
-  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_menu_slot_states, addr: 0x80153374}
-  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_glyphs_per_wait, addr: 0x80153364}
-  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_slot_row_pitches, addr: 0x80153384}
-  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_slot_source_columns, addr: 0x80153380}
-  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_typewriter_column_scratch, addr: 0x8019ac40}
-  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_typewriter_glyph, addr: 0x8019a338}
-  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_typewriter_glyph_images, addr: 0x8019a364}
-  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_typewriter_previous_images, addr: 0x8019ab44}
-  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_typewriter_state, addr: 0x8019a348}
-  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_typewriter_vram_rect, addr: 0x8019a35c}
   - {function: world_text_draw_glyph_with_typewriter_delay, name: g_text_glyph_bitmap_data, addr: 0x801cd66c}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_text_glyphs_per_wait, addr: 0x80153364}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_text_slot_glyph_counts, addr: 0x80153374}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_text_slot_owner_thread_ids, addr: 0x80153368}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_text_slot_row_pitches, addr: 0x80153384}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_text_slot_source_columns, addr: 0x80153380}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_text_typewriter_column_scratch, addr: 0x8019ac40}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_text_typewriter_glyph, addr: 0x8019a338}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_text_typewriter_glyph_images, addr: 0x8019a364}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_text_typewriter_previous_images, addr: 0x8019ab44}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_text_typewriter_state, addr: 0x8019a348}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_text_typewriter_vram_rect, addr: 0x8019a35c}
   - {function: world_text_restore_section_pointers, name: g_text_saved_section_pointers, addr: 0x801a2574}
   - {function: world_text_restore_section_pointers, name: g_text_section_backup_active, addr: 0x80154da8}
   - {function: world_text_save_section_pointers, name: g_text_saved_section_pointers, addr: 0x801a2574}

@@ -26,8 +26,8 @@ void world_menu_init_buffer_allocator(void) {
         byte--;
     }
     count = 0;
-    second = g_world_menu_slot_states;
-    first = g_world_menu_slot_owner_thread_ids;
+    second = g_text_slot_glyph_counts;
+    first = g_text_slot_owner_thread_ids;
     for (; count < 3; count++) {
         *first = 0;
         *second = 0;

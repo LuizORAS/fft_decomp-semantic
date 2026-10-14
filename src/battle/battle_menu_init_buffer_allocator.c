@@ -18,7 +18,7 @@ void battle_menu_init_buffer_allocator(void) {
     }
 
     for (index = 0; index < 3; index++) {
-        g_battle_menu_slot_owner_thread_ids[index] = 0;
-        g_battle_menu_slot_states[index] = 0;
+        g_text_slot_owner_thread_ids[index] = 0;
+        g_text_slot_glyph_counts[index] = 0;
     }
 }

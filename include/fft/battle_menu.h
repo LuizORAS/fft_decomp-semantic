@@ -15,7 +15,6 @@ extern battle_menu_id_record_t g_battle_menu_id_records[31];
 extern u16 g_battle_menu_modal_open;
 extern u8 g_battle_menu_restore_depth;
 extern u8 g_battle_menu_restore_unit_id;
-extern s32 g_battle_menu_slot_states[3];
 extern u16 g_battle_menu_transition_state;
 extern u16 g_battle_saved_animation_speed; /* animation speed saved while an event thread forces speed 2 */
 
@@ -342,7 +341,6 @@ void battle_menu_run_companion_overlay_stub(void);
 
 /* threads */
 extern s32 g_battle_menu_building_thread_started;
-extern s32 g_battle_menu_slot_owner_thread_ids[3];
 
 s32 battle_menu_init_attack_resources_and_threads(void);
 s32 battle_menu_is_still_building(void);
