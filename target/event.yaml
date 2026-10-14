@@ -943,7 +943,7 @@ functions:
   - {addr: 0x801c72d4, size: 176, name: card_menu_start_or_poll_thread, hash: 52993ac90ae34196}
   - {addr: 0x801c7384, size: 28, name: card_bits_init_primary_reader, hash: 54e0a4bece7b2596}
   - {addr: 0x801c73a0, size: 28, name: menu_bits_init_secondary_reader, hash: fe997547c3c389ab, source: src/shared/menu/menu_bits_init_secondary_reader.c}
-  - {addr: 0x801c73bc, size: 172, name: card_bits_read_primary, hash: f39395a59ee56a46}
+  - {addr: 0x801c73bc, size: 172, name: card_bits_read_primary, hash: f39395a59ee56a46, source: src/shared/menu/menu_bits_read_secondary.c, source_symbol: menu_bits_read_secondary}
   - {addr: 0x801c7468, size: 188, name: card_bits_write_primary, hash: b5df968a63ba61b1}
   - {addr: 0x801c7524, size: 172, name: menu_bits_read_secondary, hash: b76504149dc8bdb7, source: src/shared/menu/menu_bits_read_secondary.c}
   - {addr: 0x801c75d0, size: 852, name: card_input_update_controller, hash: 7396270625cbf48d}
@@ -1115,6 +1115,11 @@ data:
 
 imports:
   - {addr: 0x800222fc, name: memset}
+
+overrides:
+  - {function: card_bits_read_primary, name: g_menu_bits_secondary_index, addr: 0x801ca944}
+  - {function: card_bits_read_primary, name: g_menu_bits_secondary_reset, addr: 0x801ca940}
+  - {function: card_bits_read_primary, name: g_menu_bits_secondary_source, addr: 0x801d9210}
 ---
 module: event-debugchr
 file: EVENT/DEBUGCHR.OUT
@@ -1963,7 +1968,7 @@ functions:
   - {addr: 0x801e4e78, size: 32, name: menu_get_event_speed, hash: 2e67f0497311e3fc, source: src/shared/menu/menu_get_event_speed.c}
   - {addr: 0x801e4e98, size: 28, name: jobstts_bits_init_primary_reader, hash: 0f08e6a0c31b76ac}
   - {addr: 0x801e4eb4, size: 28, name: menu_bits_init_secondary_reader, hash: 1d271e05aa18deee, source: src/shared/menu/menu_bits_init_secondary_reader.c}
-  - {addr: 0x801e4ed0, size: 172, name: jobstts_bits_read_primary, hash: ae4e54d1a49f2fd0}
+  - {addr: 0x801e4ed0, size: 172, name: jobstts_bits_read_primary, hash: ae4e54d1a49f2fd0, source: src/shared/menu/menu_bits_read_secondary.c, source_symbol: menu_bits_read_secondary}
   - {addr: 0x801e4f7c, size: 172, name: menu_bits_read_secondary, hash: 7101073a60f65554, source: src/shared/menu/menu_bits_read_secondary.c}
 
 data:
@@ -2129,6 +2134,9 @@ imports:
   - {addr: 0x800222fc, name: memset}
 
 overrides:
+  - {function: jobstts_bits_read_primary, name: g_menu_bits_secondary_index, addr: 0x801f0048}
+  - {function: jobstts_bits_read_primary, name: g_menu_bits_secondary_reset, addr: 0x801f0044}
+  - {function: jobstts_bits_read_primary, name: g_menu_bits_secondary_source, addr: 0x801fa714}
   - {function: jobstts_text_render_encoded_ids_to_image, name: menu_text_find_entry_by_index, addr: 0x801e0740}
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_init_primary_reader, addr: 0x801e4e98}
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_read_primary, addr: 0x801e4ed0}
