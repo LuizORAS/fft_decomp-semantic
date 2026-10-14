@@ -892,7 +892,7 @@ functions:
   - {addr: 0x8013da80, size: 8, name: battle_noop_8013da80, hash: 6d64edf91449c1b1}
   - {addr: 0x8013da88, size: 92, name: script_assign_bitset_flag, hash: c0268b34d6b54219, source: src/shared/script/script_assign_bitset_flag.c}
   - {addr: 0x8013dae4, size: 184, name: script_unlockdate_event_instruction, hash: c9969a2b94237e09, source: src/shared/script/script_unlockdate_event_instruction.c}
-  - {addr: 0x8013db9c, size: 1044, name: camera_fusion_thread, hash: b5d064cf95daeba7}
+  - {addr: 0x8013db9c, size: 1044, name: camera_fusion_thread, hash: b5d064cf95daeba7, source: src/shared/camera/camera_fusion_thread.c}
   - {addr: 0x8013dfb0, size: 1432, name: camera_step_track, hash: 7f8a4482ec4d7bae, source: src/shared/camera/camera_step_track.c}
   - {addr: 0x8013e548, size: 60, name: script_interpolate_range_fixed12, hash: 61b036d90720a723, source: src/shared/script/script_interpolate_range_fixed12.c}
   - {addr: 0x8013e584, size: 60, name: script_print_debug_message, hash: e022a9f8bc32fb50, source: src/shared/script/script_print_debug_message.c}

@@ -239,7 +239,7 @@ functions:
   - {addr: 0x800f1398, size: 8, name: world_noop_800f1398, hash: 6d64edf91449c1b1}
   - {addr: 0x800f13a0, size: 92, name: script_assign_bitset_flag, hash: 96cfecafc19e267a, source: src/shared/script/script_assign_bitset_flag.c}
   - {addr: 0x800f13fc, size: 184, name: script_unlockdate_event_instruction, hash: 756a57b269501269, source: src/shared/script/script_unlockdate_event_instruction.c}
-  - {addr: 0x800f14b4, size: 1044, name: world_camera_fusion_thread, hash: 29fbdab9fc995bcc}
+  - {addr: 0x800f14b4, size: 1044, name: world_camera_fusion_thread, hash: 29fbdab9fc995bcc, source: src/shared/camera/camera_fusion_thread.c, source_symbol: camera_fusion_thread}
   - {addr: 0x800f18c8, size: 1432, name: world_camera_step_track, hash: 64ee507b9faf9750, source: src/shared/camera/camera_step_track.c, source_symbol: camera_step_track}
   - {addr: 0x800f1e60, size: 60, name: script_interpolate_range_fixed12, hash: 959b0c6e3237b93a, source: src/shared/script/script_interpolate_range_fixed12.c}
   - {addr: 0x800f1e9c, size: 60, name: script_print_debug_message, hash: 452ccd9750915554, source: src/shared/script/script_print_debug_message.c}
@@ -2363,6 +2363,15 @@ overrides:
   - {function: script_run_next_event, name: script_load_next_event, addr: 0x800f92a0}
   - {function: script_run_next_event_unused, name: script_execute_event, addr: 0x800f6f20}
   - {function: script_run_next_event_unused, name: script_load_next_event, addr: 0x800f92a0}
+  - {function: world_camera_fusion_thread, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
+  - {function: world_camera_fusion_thread, name: battle_menu_alloc_memory, addr: 0x800e30fc}
+  - {function: world_camera_fusion_thread, name: battle_menu_free_memory, addr: 0x800e3298}
+  - {function: world_camera_fusion_thread, name: battle_thread_get_current_parameter_1, addr: 0x80100090}
+  - {function: world_camera_fusion_thread, name: camera_step_track, addr: 0x800f18c8}
+  - {function: world_camera_fusion_thread, name: g_camera_position_locked, addr: 0x801532c0}
+  - {function: world_camera_fusion_thread, name: g_script_event_instruction_sizes, addr: 0x8013a454}
+  - {function: world_camera_fusion_thread, name: script_focus, addr: 0x800fa9cc}
+  - {function: world_camera_fusion_thread, name: script_focus_speed, addr: 0x800fabc8}
   - {function: world_camera_step_track, name: battle_fixed_cross_product_q12, addr: 0x801002d8}
   - {function: world_camera_step_track, name: battle_mul_div_s64, addr: 0x80100188}
   - {function: world_camera_step_track, name: g_camera_cross_product_overflow, addr: 0x801cd82c}
