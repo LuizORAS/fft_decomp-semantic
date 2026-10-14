@@ -1003,7 +1003,7 @@ functions:
   - {addr: 0x80147e60, size: 332, name: script_warp_unit, hash: a4238fc24406e01c}
   - {addr: 0x80147fac, size: 216, name: script_unit_animation_rotate_event_instruction, hash: 92e26c055631d0fb, source: src/shared/script/script_unit_animation_rotate_event_instruction.c}
   - {addr: 0x80148084, size: 512, name: script_face_unit, hash: 390040f4c2819846, source: src/shared/script/script_face_unit.c}
-  - {addr: 0x80148284, size: 516, name: script_rotate_unit, hash: 68d1d9ca7a73e6b2}
+  - {addr: 0x80148284, size: 516, name: script_rotate_unit, hash: 68d1d9ca7a73e6b2, source: src/shared/script/script_rotate_unit.c}
   - {addr: 0x80148488, size: 180, name: status_queue_current_status_graphics, hash: 1f24e21ebfd693db}
   - {addr: 0x8014853c, size: 68, name: battle_unit_clear_status_staging_data, hash: 46b30317dc3acbf3}
   - {addr: 0x80148580, size: 808, name: battle_unit_save_staged_status_data, hash: 78be53693ecbd23f}
@@ -1018,7 +1018,7 @@ functions:
   - {addr: 0x801495e0, size: 172, name: script_color_unit_event_instruction, hash: e5653129316a4e33}
   - {addr: 0x8014968c, size: 168, name: script_set_units_palette_update_suppression, hash: 406b68bd9d969db0}
   - {addr: 0x80149734, size: 88, name: battle_unit_check_facing_relative_to_camera, hash: f7c874232339e58e}
-  - {addr: 0x8014978c, size: 368, name: script_face_tile, hash: 349c3977cc8bc891}
+  - {addr: 0x8014978c, size: 368, name: script_face_tile, hash: 349c3977cc8bc891, source: src/shared/script/script_face_tile.c}
   - {addr: 0x801498fc, size: 176, name: script_waitrotateunit_and_waitrotateall_event_instruction, hash: 3ddb2ca1554cefe8, source: src/shared/script/script_waitrotateunit_and_waitrotateall_event_instruction.c}
   - {addr: 0x801499ac, size: 168, name: sound_run_background_sfx_thread, hash: 5840248306ebcf8a}
   - {addr: 0x80149a54, size: 228, name: sound_run_background_fade_thread, hash: d2b85b17ab3025e0}

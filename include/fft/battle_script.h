@@ -54,8 +54,6 @@ void script_warp_unit(const event_warp_unit_parameters_t* parameters);
 void script_warp_unit_display_to_paired_unit(s32 runtime_id);
 
 /* unit animation */
-void script_face_tile(const event_face_tile_parameters_t* parameters);
-void script_rotate_unit(const event_rotate_unit_parameters_t* parameters);
 void script_unit_anim(const event_unit_anim_parameters_t* parameters);
 
 /* unit statuses */

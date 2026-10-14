@@ -350,7 +350,7 @@ functions:
   - {addr: 0x800fb2cc, size: 332, name: world_script_warp_unit, hash: 6399d2888030776e}
   - {addr: 0x800fb418, size: 216, name: script_unit_animation_rotate_event_instruction, hash: 14cce9870ae4f8c8, source: src/shared/script/script_unit_animation_rotate_event_instruction.c}
   - {addr: 0x800fb4f0, size: 512, name: world_script_face_unit, hash: 1dda3ec86c0c41a3, source: src/shared/script/script_face_unit.c, source_symbol: script_face_unit}
-  - {addr: 0x800fb6f0, size: 516, name: world_script_rotate_unit, hash: be57a905343502c5}
+  - {addr: 0x800fb6f0, size: 516, name: world_script_rotate_unit, hash: be57a905343502c5, source: src/shared/script/script_rotate_unit.c, source_symbol: script_rotate_unit}
   - {addr: 0x800fb8f4, size: 180, name: world_unit_queue_current_status_graphics, hash: 61b90cb85376108b}
   - {addr: 0x800fb9a8, size: 68, name: world_unit_clear_status_staging_data, hash: 646a8fb825513b5d}
   - {addr: 0x800fb9ec, size: 808, name: world_unit_save_staged_status_data, hash: 2d5ffba79c302f1b}
@@ -365,7 +365,7 @@ functions:
   - {addr: 0x800fca4c, size: 172, name: world_script_color_unit_event_instruction, hash: 991b6e8c7dc5117f}
   - {addr: 0x800fcaf8, size: 168, name: world_script_set_units_palette_update_suppression, hash: 0c1bb9735a0248cc}
   - {addr: 0x800fcba0, size: 88, name: world_unit_check_facing_relative_to_camera, hash: ef44f6dacbae10fb}
-  - {addr: 0x800fcbf8, size: 368, name: world_script_face_tile, hash: 96b76ce946c03c2e}
+  - {addr: 0x800fcbf8, size: 368, name: world_script_face_tile, hash: 96b76ce946c03c2e, source: src/shared/script/script_face_tile.c, source_symbol: script_face_tile}
   - {addr: 0x800fcd68, size: 176, name: script_waitrotateunit_and_waitrotateall_event_instruction, hash: d8fa9c97f6edfaa2, source: src/shared/script/script_waitrotateunit_and_waitrotateall_event_instruction.c}
   - {addr: 0x800fce18, size: 168, name: world_sound_bg_thread, hash: b51c4e253d5dea85}
   - {addr: 0x800fcec0, size: 264, name: world_sound_edit_bg_thread, hash: 0180ab71574b16f7, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
@@ -2565,6 +2565,9 @@ overrides:
   - {function: world_screen_menu_draw_text_columns, name: battle_menu_set_text_origin, addr: 0x800fdb88}
   - {function: world_screen_menu_draw_text_columns, name: g_menu_text_palette_offset, addr: 0x80153270}
   - {function: world_screen_menu_draw_text_columns, name: g_menu_text_state, addr: 0x80153280}
+  - {function: world_script_face_tile, name: g_battle_rotation_speed_frames, addr: 0x80156be0}
+  - {function: world_script_face_tile, name: g_script_unit_face_slot_order, addr: 0x80156bb0}
+  - {function: world_script_face_tile, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
   - {function: world_script_face_unit, name: g_battle_rotation_speed_frames, addr: 0x80156be0}
   - {function: world_script_face_unit, name: g_script_unit_face_slot_order, addr: 0x80156bb0}
   - {function: world_script_face_unit, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
@@ -2578,6 +2581,9 @@ overrides:
   - {function: world_script_reset_event_state, name: g_camera_position_locked, addr: 0x801532c0}
   - {function: world_script_reset_event_state, name: g_camera_speed_curve, addr: 0x80153338}
   - {function: world_script_reset_event_state, name: map_reset_script_light_transform, addr: 0x800f29d8}
+  - {function: world_script_rotate_unit, name: g_battle_rotation_speed_frames, addr: 0x80156be0}
+  - {function: world_script_rotate_unit, name: g_script_unit_face_slot_order, addr: 0x80156bb0}
+  - {function: world_script_rotate_unit, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
   - {function: world_script_start_current_event_thread, name: camera_store_state_to_script_variables, addr: 0x800f6ea8}
   - {function: world_script_start_current_event_thread, name: g_camera_position_locked, addr: 0x801532c0}
   - {function: world_script_start_current_event_thread, name: g_camera_speed_curve, addr: 0x80153338}
