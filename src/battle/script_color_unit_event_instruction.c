@@ -20,8 +20,7 @@ void script_color_unit_event_instruction(const event_color_unit_parameters_t* pa
     unit_id = script_read_s16(parameters->unit_id_le);
     if (script_prepare_unit_filter(&unit_id, &out) != 0) {
         color = &parameters->color;
-        i = 0;
-        do {
+        for (i = 0; i < EVENT_UNIT_SLOT_COUNT; i++) {
             if (script_filter_unit_id_by_mode(&unit_id, (u16*)&i, &out) != 0) {
                 battle_gfx_apply_unit_palette_modulation_to_units(
                     color->mode, color->duration, unit_id, color->rgb.r, color->rgb.g, color->rgb.b);
@@ -29,7 +28,6 @@ void script_color_unit_event_instruction(const event_color_unit_parameters_t* pa
                     return;
                 }
             }
-            i += 1;
-        } while (i < EVENT_UNIT_SLOT_COUNT);
+        }
     }
 }

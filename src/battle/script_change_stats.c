@@ -21,8 +21,7 @@ void script_change_stats(const event_change_stats_parameters_t* parameters) {
     delta = script_read_s16(parameters->delta_le);
     unit_id = script_read_s16(parameters->unit_id_le);
     if (script_prepare_unit_filter(&unit_id, &filter_mode) != 0) {
-        unit_index = 0;
-        do {
+        for (unit_index = 0; unit_index < EVENT_UNIT_SLOT_COUNT; unit_index++) {
             if (script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &filter_mode) != 0) {
                 battle_unit_index = battle_unit_get_battle_id_by_runtime_id(unit_id);
                 if (battle_unit_index != -1) {
@@ -55,7 +54,6 @@ void script_change_stats(const event_change_stats_parameters_t* parameters) {
                     break;
                 }
             }
-            unit_index++;
-        } while (unit_index < EVENT_UNIT_SLOT_COUNT);
+        }
     }
 }
