@@ -400,7 +400,7 @@ functions:
   - {addr: 0x801c88ec, size: 256, name: bunit_cmd_draw_textured_quad_handler, hash: c024a5e6a5fdac7d}
   - {addr: 0x801c89ec, size: 264, name: bunit_cmd_draw_row_callback_quad_handler, hash: aa0680488625c39f}
   - {addr: 0x801c8af4, size: 1608, name: menu_cmd_draw_window_frame_handler, hash: 0a50bf9bdc4971f4, source: src/shared/menu/menu_cmd_draw_window_frame_handler.c}
-  - {addr: 0x801c913c, size: 300, name: bunit_cmd_set_zoomed_draw_area_handler, hash: 2a2f64cf07a7b91f}
+  - {addr: 0x801c913c, size: 300, name: bunit_cmd_set_zoomed_draw_area_handler, hash: 2a2f64cf07a7b91f, source: src/shared/menu/menu_cmd_set_zoomed_draw_area_handler.c, source_symbol: menu_cmd_set_zoomed_draw_area_handler}
   - {addr: 0x801c9268, size: 664, name: bunit_cmd_draw_background_tiles_handler, hash: 09b81548f04977d8}
   - {addr: 0x801c9500, size: 84, name: menu_cmd_set_clut_handler, hash: a7a0ade9fdaa50b5, source: src/shared/menu/menu_cmd_set_clut_handler.c}
   - {addr: 0x801c9554, size: 116, name: menu_cmd_set_layout_clut_handler, hash: 9c9abdd96fb4e07c, source: src/shared/menu/menu_cmd_set_layout_clut_handler.c}
@@ -1445,7 +1445,7 @@ functions:
   - {addr: 0x801caf14, size: 112, name: equip_cmd_draw_line_f2_handler, hash: 9a125788afe57a8e}
   - {addr: 0x801caf84, size: 264, name: equip_cmd_draw_row_callback_quad_handler, hash: b66afccb939dd94c}
   - {addr: 0x801cb08c, size: 1608, name: menu_cmd_draw_window_frame_handler, hash: abd265453db88592, source: src/shared/menu/menu_cmd_draw_window_frame_handler.c}
-  - {addr: 0x801cb6d4, size: 300, name: equip_cmd_set_zoomed_draw_area_handler, hash: 7d6314f93f4b800c}
+  - {addr: 0x801cb6d4, size: 300, name: equip_cmd_set_zoomed_draw_area_handler, hash: 7d6314f93f4b800c, source: src/shared/menu/menu_cmd_set_zoomed_draw_area_handler.c, source_symbol: menu_cmd_set_zoomed_draw_area_handler}
   - {addr: 0x801cb800, size: 816, name: equip_cmd_draw_tiled_rectangle_handler, hash: 53f3a353be4987fb}
   - {addr: 0x801cbb30, size: 84, name: menu_cmd_set_clut_handler, hash: ec0ac942b9f202d0, source: src/shared/menu/menu_cmd_set_clut_handler.c}
   - {addr: 0x801cbb84, size: 116, name: menu_cmd_set_layout_clut_handler, hash: c1be2e1cdf9eecba, source: src/shared/menu/menu_cmd_set_layout_clut_handler.c}
@@ -1802,6 +1802,10 @@ overrides:
   - {function: equip_cmd_add_next_otag_draw_area_handler, name: g_bunit_gfx_draw_area, addr: 0x801d8768}
   - {function: equip_cmd_add_next_otag_draw_area_handler, name: g_bunit_gfx_otag_index_locked, addr: 0x801e9048}
   - {function: equip_cmd_set_draw_area_if_unlocked_handler, name: g_bunit_gfx_otag_index_locked, addr: 0x801e9048}
+  - {function: equip_cmd_set_zoomed_draw_area_handler, name: g_bunit_cmd_stream_input, addr: 0x801e9000}
+  - {function: equip_cmd_set_zoomed_draw_area_handler, name: g_bunit_gfx_otag_index_locked, addr: 0x801e9048}
+  - {function: equip_cmd_set_zoomed_draw_area_handler, name: g_bunit_gfx_transition_frame, addr: 0x801d8764}
+  - {function: equip_cmd_set_zoomed_draw_area_handler, name: g_bunit_gfx_window_zoom_percent, addr: 0x801d8784}
   - {function: menu_build_unit_portrait_transition, name: attack_gfx_build_portrait_poly_ft4, addr: 0x801bfdf8}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_origin, addr: 0x801ce584}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_transition_offsets, addr: 0x801ce884}

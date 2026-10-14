@@ -256,6 +256,7 @@ menu_instruction_t* menu_cmd_draw_window_frame_handler(menu_instruction_t* comma
 /* draw area commands */
 menu_instruction_t* menu_cmd_add_next_otag_draw_area_handler(menu_instruction_t* instruction);
 menu_instruction_t* menu_cmd_set_draw_area_if_unlocked_handler(menu_instruction_t* instruction);
+menu_instruction_t* menu_cmd_set_zoomed_draw_area_handler(menu_instruction_t* instruction);
 
 /* instruction cursors */
 menu_instruction_t* menu_cmd_skip_group(menu_instruction_t* command);
