@@ -1,5 +1,6 @@
 #include "fft/event_card.h"
-#include "psx/types.h"
+#include "fft/main.h"
+#include "psx/libapi.h"
 
 /* lseek with up to ten tries, waiting for the card before each. Returns the
  * new position, or -1 when the card is not ready or every try fails. */

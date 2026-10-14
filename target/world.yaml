@@ -946,7 +946,7 @@ functions:
   - {addr: 0x80132d78, size: 140, name: world_card_format_selected_slot, hash: fc8bd6f16ed20c2f, rodata: [{addr: 0x800e0200, size: 14, hash: 1b58a377a03f3eaf}]}
   - {addr: 0x80132e04, size: 260, name: world_card_open_file_with_retries, hash: 9d895ae8c601b333, rodata: [{addr: 0x800e0200, size: 14, hash: 1b58a377a03f3eaf}]}
   - {addr: 0x80132f08, size: 116, name: world_card_close_file_with_retries, hash: bfe541496e43698c, source: src/shared/card/card_file_close_with_retries.c, source_symbol: card_file_close_with_retries}
-  - {addr: 0x80132f7c, size: 144, name: world_card_seek_file_with_retries, hash: 6444b4e18e6e6f0e}
+  - {addr: 0x80132f7c, size: 144, name: world_card_seek_file_with_retries, hash: 6444b4e18e6e6f0e, source: src/shared/card/card_file_seek_with_retries.c, source_symbol: card_file_seek_with_retries}
   - {addr: 0x8013300c, size: 332, name: world_card_write_buffer_to_file, hash: 75ec899066d27cbf}
   - {addr: 0x80133158, size: 164, name: world_card_delete_file, hash: 480eee05ca386e82, rodata: [{addr: 0x800e0200, size: 14, hash: 1b58a377a03f3eaf}]}
   - {addr: 0x801331fc, size: 268, name: world_card_read_file_chunked, hash: a65131d6e19dba38}
@@ -2370,6 +2370,7 @@ overrides:
   - {function: world_card_input_update_with_message_state, name: g_world_text_task_phase, addr: 0x80193dec}
   - {function: world_card_input_update_with_message_state, name: world_script_update_tutorial_controller_input, addr: 0x8012ebf0}
   - {function: world_card_read_file_with_retries, name: card_file_seek_with_retries, addr: 0x80132f7c}
+  - {function: world_card_seek_file_with_retries, name: card_io_wait_operation_result, addr: 0x80132b50}
   - {function: world_card_write_file_with_retries, name: card_file_seek_with_retries, addr: 0x80132f7c}
   - {function: world_gfx_set_blit_source_rect, name: g_world_gfx_image_blit_source, addr: 0x801c000c}
   - {function: world_is_skillset_in_spell_quote_exception_list, name: g_battle_spell_quote_exception_skillsets, addr: 0x80156748}
