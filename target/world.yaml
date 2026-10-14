@@ -217,7 +217,7 @@ functions:
   - {addr: 0x800f0a08, size: 16, name: world_menu_build_idle_action_stub, hash: a14f4e9a30b1cc4c}
   - {addr: 0x800f0a18, size: 220, name: world_menu_start_building_thread, hash: b42f54800a4a9cc9}
   - {addr: 0x800f0af4, size: 20, name: menu_request_open_small, hash: 0525dd738699e440, source: src/shared/menu/menu_request_open_small.c}
-  - {addr: 0x800f0b08, size: 84, name: world_menu_poll_small_load, hash: beff675275d527cf}
+  - {addr: 0x800f0b08, size: 84, name: world_menu_poll_small_load, hash: beff675275d527cf, source: src/shared/menu/menu_poll_small_load.c, source_symbol: menu_poll_small_load}
   - {addr: 0x800f0b5c, size: 8, name: world_return_zero_800f0b5c, hash: 207819bf4ebe3078}
   - {addr: 0x800f0b64, size: 56, name: map_data_load_complete_thread, hash: 9d186db038b3c37d, source: src/shared/map/map_data_load_complete_thread.c}
   - {addr: 0x800f0b9c, size: 72, name: sound_wait_for_music_stub, hash: ae5d718d414b6204, source: src/shared/sound/sound_wait_for_music_stub.c}
@@ -253,9 +253,9 @@ functions:
   - {addr: 0x800f21ec, size: 48, name: script_play_effect_thread, hash: 23d695acccad5513, source: src/shared/script/script_play_effect_thread.c}
   - {addr: 0x800f221c, size: 1236, name: world_script_block_start_thread, hash: 5ed900a4fe6df008}
   - {addr: 0x800f26f0, size: 468, name: world_script_add_unit_start_thread, hash: 16616b5eb112a78a}
-  - {addr: 0x800f28c4, size: 72, name: world_menu_init_subsystems, hash: 5c83298d75f82198}
+  - {addr: 0x800f28c4, size: 72, name: world_menu_init_subsystems, hash: 5c83298d75f82198, source: src/shared/menu/menu_init_subsystems.c, source_symbol: menu_init_subsystems}
   - {addr: 0x800f290c, size: 140, name: world_menu_init_subsystem_pointers, hash: 1f417d9f35d58b41}
-  - {addr: 0x800f2998, size: 64, name: world_menu_reset_subsystems, hash: 91ad0d0c590bd912}
+  - {addr: 0x800f2998, size: 64, name: world_menu_reset_subsystems, hash: 91ad0d0c590bd912, source: src/shared/menu/menu_reset_subsystems.c, source_symbol: menu_reset_subsystems}
   - {addr: 0x800f29d8, size: 8, name: world_map_reset_script_light_transform, hash: 6d64edf91449c1b1}
   - {addr: 0x800f29e0, size: 164, name: unit_reset_animation_states, hash: 4fa6d705c4f4f1df, source: src/shared/unit/unit_reset_animation_states.c}
   - {addr: 0x800f2a84, size: 496, name: world_unit_update_facing_and_pending_animations, hash: 357e6499f0f75dd9}
@@ -2421,6 +2421,11 @@ overrides:
   - {function: world_menu_free_memory, name: g_battle_menu_allocator_slot_records, addr: 0x8019b368}
   - {function: world_menu_free_memory, name: g_battle_menu_buffer_allocation_map, addr: 0x801a23e8}
   - {function: world_menu_free_memory, name: g_battle_menu_buffer_arena, addr: 0x8019b3e8}
+  - {function: world_menu_init_subsystems, name: battle_menu_init_palette_and_text, addr: 0x800f0574}
+  - {function: world_menu_init_subsystems, name: battle_menu_init_stub, addr: 0x800e2390}
+  - {function: world_menu_init_subsystems, name: battle_menu_init_subsystem_pointers, addr: 0x800f290c}
+  - {function: world_menu_init_subsystems, name: battle_menu_reset_subsystems, addr: 0x800f2998}
+  - {function: world_menu_init_subsystems, name: map_reset_script_light_transform, addr: 0x800f29d8}
   - {function: world_menu_load_selected_unit, name: battle_menu_copy_unit_data_to_status_billboard, addr: 0x800e7c40}
   - {function: world_menu_load_selected_unit, name: battle_menu_init_monster_skill_check, addr: 0x80182430}
   - {function: world_menu_load_selected_unit, name: g_battle_active_turn_unit, addr: 0x8013a364}
@@ -2439,6 +2444,7 @@ overrides:
   - {function: world_menu_open_debugchr, name: battle_unit_start_view_thread, addr: 0x800f0f64}
   - {function: world_menu_open_debugchr, name: g_battle_menu_suspend_state, addr: 0x8015332c}
   - {function: world_menu_open_debugchr, name: g_sound_suppressed, addr: 0x801532a0}
+  - {function: world_menu_poll_small_load, name: battle_menu_open_companion_executable, addr: 0x800f068c}
   - {function: world_menu_preview_attack_caster_stats, name: battle_menu_display_hovered_unit_stats, addr: 0x800e90f4}
   - {function: world_menu_preview_attack_caster_stats, name: battle_menu_load_selected_unit, addr: 0x800e7dcc}
   - {function: world_menu_preview_attack_caster_stats, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
@@ -2474,6 +2480,9 @@ overrides:
   - {function: world_menu_render_text_image_at_record_origin, name: g_battle_menu_text_param_22, addr: 0x80153304}
   - {function: world_menu_render_text_image_at_record_origin, name: g_battle_menu_text_param_24, addr: 0x80153308}
   - {function: world_menu_render_text_image_at_record_origin, name: g_menu_text_state, addr: 0x80153280}
+  - {function: world_menu_reset_subsystems, name: battle_gfx_clear_tpage7_vram_allocation_grid, addr: 0x800e2c0c}
+  - {function: world_menu_reset_subsystems, name: battle_menu_init_buffer_allocator, addr: 0x800e3088}
+  - {function: world_menu_reset_subsystems, name: battle_menu_reset_buffer_slots, addr: 0x800e2520}
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_gfx_free_tpage7_vram, addr: 0x800e2edc}
   - {function: world_menu_run_unit_summary_panel_thread, name: battle_gfx_set_draw_mode_for_texture_page, addr: 0x800fdba0}

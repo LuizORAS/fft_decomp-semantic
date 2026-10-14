@@ -10,6 +10,11 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
+/* scene lifecycle */
+void menu_init_subsystems(void);
+void menu_reset_subsystems(void);
+s32 menu_poll_small_load(void);
+
 /* ability */
 /* Provisional ability-list work buffer at *g_ai_workspace_ptr (82 rows each).
  * WORLD twin of the BATTLE ability list. */

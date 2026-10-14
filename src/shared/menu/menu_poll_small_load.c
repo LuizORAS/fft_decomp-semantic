@@ -1,12 +1,11 @@
 #include "fft/battle_menu.h"
 #include "fft/event_small.h"
 #include "fft/menu.h"
-#include "psx/types.h"
 
 /* Drive a pending companion overlay load during map initialisation. Returns 1
  * while the request is still pending; once it completes the SMALL.OUT text
  * pointers are bound and it returns 0. With no request it returns 0 at once. */
-s32 battle_menu_poll_small_load(void) {
+s32 menu_poll_small_load(void) {
     if (g_menu_companion_executable_request_index == 0) {
         return 0;
     }
