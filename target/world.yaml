@@ -244,7 +244,7 @@ functions:
   - {addr: 0x800f14b4, size: 1044, name: world_camera_fusion_thread, hash: 29fbdab9fc995bcc}
   - {addr: 0x800f18c8, size: 1432, name: world_camera_step_track, hash: 64ee507b9faf9750}
   - {addr: 0x800f1e60, size: 60, name: script_interpolate_range_fixed12, hash: 959b0c6e3237b93a, source: src/shared/script/script_interpolate_range_fixed12.c}
-  - {addr: 0x800f1e9c, size: 60, name: world_script_print_debug_message, hash: 452ccd9750915554}
+  - {addr: 0x800f1e9c, size: 60, name: script_print_debug_message, hash: 452ccd9750915554, source: src/shared/script/script_print_debug_message.c}
   - {addr: 0x800f1ed8, size: 156, name: script_walkto_event_instruction, hash: df0e7f67144df7b9, source: src/shared/script/script_walkto_event_instruction.c}
   - {addr: 0x800f1f74, size: 104, name: script_mirrorsprite_event_instruction, hash: 2f6891a168cbc54d, source: src/shared/script/script_mirrorsprite_event_instruction.c}
   - {addr: 0x800f1fdc, size: 68, name: script_resetpalette_event_instruction, hash: 30a67a55bd675e0b, source: src/shared/script/script_resetpalette_event_instruction.c}
@@ -1026,7 +1026,7 @@ data:
   - {addr: 0x800e002c, name: g_world_text_wait_for_allocation_message}
   - {addr: 0x800e0050, name: g_world_text_decimal_format}
   - {addr: 0x800e0054, name: g_menu_wait_for_file_allocation_message}
-  - {addr: 0x800e0070, name: g_world_script_pause_message}
+  - {addr: 0x800e0070, name: g_script_pause_message}
   - {addr: 0x800e007c, name: g_world_text_reading_character_message}
   - {addr: 0x800e01e8, name: g_world_card_save_title_template}
   - {addr: 0x800eda00, name: g_open_work_buffer_1}
@@ -1111,7 +1111,7 @@ data:
   - {addr: 0x801532cc, name: g_script_unit_slots}
   - {addr: 0x801532d4, name: g_world_camera_shake_z_offset}
   - {addr: 0x801532d6, name: g_gfx_draw_primitives_immediately}
-  - {addr: 0x801532d8, name: g_world_script_debug_paused}
+  - {addr: 0x801532d8, name: g_script_debug_paused}
   - {addr: 0x801532da, name: g_menu_input_mode}
   - {addr: 0x801532dc, name: g_world_event_effect_target_runtime_id}
   - {addr: 0x801532e0, name: g_world_event_effect_target_x}

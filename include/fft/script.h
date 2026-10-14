@@ -1105,14 +1105,11 @@ void script_write_s16(u8* destination, s16 value);
 
 /* debug */
 extern const char g_script_pause_message[];
-extern char g_world_script_pause_message[];
 extern s16 g_script_debug_paused;
-extern s16 g_world_script_debug_paused;
 extern s16 g_script_opcode_dc_value;       /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
 extern s16 g_world_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
 
 void script_pause_event_instruction(void);
 void script_print_debug_message(void);
-void world_script_print_debug_message(void);
 
 #endif

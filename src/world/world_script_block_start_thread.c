@@ -35,7 +35,7 @@ void world_script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_WAIT_VALUE) {
             script_wait_value_event_instruction((const event_wait_value_parameters_t*)parameters);
         } else if (script[0] == EVENT_OPCODE_DEBUG_PAUSE) {
-            world_script_print_debug_message();
+            script_print_debug_message();
         } else if (script[0] == EVENT_OPCODE_WALK_TO) {
             g_thread_call_target = (void (*)(void))script_walkto_event_instruction;
             thread_call_on_main_stack(parameters);

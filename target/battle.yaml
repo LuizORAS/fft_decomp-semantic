@@ -896,7 +896,7 @@ functions:
   - {addr: 0x8013db9c, size: 1044, name: camera_fusion_thread, hash: b5d064cf95daeba7}
   - {addr: 0x8013dfb0, size: 1432, name: camera_step_track, hash: 7f8a4482ec4d7bae}
   - {addr: 0x8013e548, size: 60, name: script_interpolate_range_fixed12, hash: 61b036d90720a723, source: src/shared/script/script_interpolate_range_fixed12.c}
-  - {addr: 0x8013e584, size: 60, name: script_print_debug_message, hash: e022a9f8bc32fb50}
+  - {addr: 0x8013e584, size: 60, name: script_print_debug_message, hash: e022a9f8bc32fb50, source: src/shared/script/script_print_debug_message.c}
   - {addr: 0x8013e5c0, size: 156, name: script_walkto_event_instruction, hash: e8a19e31d556b80a, source: src/shared/script/script_walkto_event_instruction.c}
   - {addr: 0x8013e65c, size: 104, name: script_mirrorsprite_event_instruction, hash: f6beec0bbeb1fc93, source: src/shared/script/script_mirrorsprite_event_instruction.c}
   - {addr: 0x8013e6c4, size: 68, name: script_resetpalette_event_instruction, hash: 79fd4c27f8d0beb6, source: src/shared/script/script_resetpalette_event_instruction.c}
