@@ -1064,6 +1064,8 @@ typedef struct menu_panel_record {
     menu_palette_primitives_t* palette; /* 0x1a8 */
 } menu_panel_record_t;
 
+void menu_run_numeric_display_panel_thread(void);
+
 /* Provisional layout of the window frame primitive block at 0x801cc074
  * (WORLD) and OPTION's copy, which hold two identical frame records. The 0x158
  * record size is fixed by the second frame starting there and by the byte copy

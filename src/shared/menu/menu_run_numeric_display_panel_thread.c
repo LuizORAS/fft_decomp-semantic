@@ -1,23 +1,14 @@
+#include "fft/battle_gfx.h"
+#include "fft/battle_menu.h"
 #include "fft/gfx.h"
+#include "fft/main.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
-/*
- * WORLD twin: world_menu_run_numeric_display_panel_thread
- * (same code, globals and callees rebound).
- */
-#include "fft/battle.h"
-#include "fft/battle_gfx.h"
-#include "fft/battle_menu.h"
 #include "psx/libgpu.h"
-#include "psx/types.h"
 
-/* Thread task 0x23: renders three text images into VRAM, builds two
- * alternating 18-sprite panel records with line boxes, then redraws the panel
- * every frame (dimmed palette while thread 6 runs) until the thread's
- * third parameter becomes non-zero. Started by
- * battle_menu_run_unit_editor_panel_thread on thread 0xA. */
-void battle_menu_run_numeric_display_panel_thread(void) {
+/* Render three numeric images and redraw the double-buffered panel until stopped. */
+void menu_run_numeric_display_panel_thread(void) {
     menu_panel_record_t* records;
     menu_panel_record_t* record;
     menu_unit_stat_number_images_t* number_images;
