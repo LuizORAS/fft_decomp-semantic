@@ -16,18 +16,20 @@ import (
 )
 
 type shareAuditOptions struct {
-	minBytes int
-	modules  map[string]bool
-	prefix   string
+	minBytes        int
+	modules         map[string]bool
+	prefix          string
+	normalizeLocals bool
 }
 
 type shareAuditReport struct {
-	SchemaVersion  int               `json:"schema_version"`
-	CandidateOnly  bool              `json:"candidate_only"`
-	ReviewLimits   []string          `json:"review_limits"`
-	ScannedEntries int               `json:"scanned_entries"`
-	Excluded       map[string]int    `json:"excluded"`
-	Groups         []shareAuditGroup `json:"groups"`
+	SchemaVersion            int               `json:"schema_version"`
+	CandidateOnly            bool              `json:"candidate_only"`
+	ReviewLimits             []string          `json:"review_limits"`
+	ScannedEntries           int               `json:"scanned_entries"`
+	Excluded                 map[string]int    `json:"excluded"`
+	Groups                   []shareAuditGroup `json:"groups"`
+	LocalNormalizationCounts map[string]int    `json:"local_name_normalization_counts,omitempty"`
 }
 
 type shareAuditGroup struct {
@@ -37,17 +39,18 @@ type shareAuditGroup struct {
 }
 
 type shareAuditEntry struct {
-	Module             string             `json:"module"`
-	Name               string             `json:"name"`
-	Address            string             `json:"address"`
-	Size               int                `json:"size"`
-	Hash               string             `json:"hash"`
-	Profile            string             `json:"profile"`
-	Source             string             `json:"source"`
-	SourceSymbol       string             `json:"source_symbol"`
-	DefinitionSymbol   string             `json:"definition_symbol"`
-	DefinitionContract shareAuditContract `json:"definition_contract"`
-	Roles              []shareAuditRole   `json:"ordered_roles"`
+	Module             string                        `json:"module"`
+	Name               string                        `json:"name"`
+	Address            string                        `json:"address"`
+	Size               int                           `json:"size"`
+	Hash               string                        `json:"hash"`
+	Profile            string                        `json:"profile"`
+	Source             string                        `json:"source"`
+	SourceSymbol       string                        `json:"source_symbol"`
+	DefinitionSymbol   string                        `json:"definition_symbol"`
+	DefinitionContract shareAuditContract            `json:"definition_contract"`
+	Roles              []shareAuditRole              `json:"ordered_roles"`
+	LocalNormalization *shareAuditLocalNormalization `json:"local_name_normalization,omitempty"`
 }
 
 type shareAuditRole struct {
@@ -72,12 +75,14 @@ type shareAuditDeclaration struct {
 }
 
 type shareAuditScanner struct {
-	p         project
-	config    *projectConfig
-	resolver  symbolResolver
-	contracts map[string]shareAuditContract
-	sources   map[string]string
-	types     map[string]bool
+	p               project
+	config          *projectConfig
+	resolver        symbolResolver
+	contracts       map[string]shareAuditContract
+	sources         map[string]string
+	types           map[string]bool
+	nonTagTypes     map[string]bool
+	normalizeLocals bool
 }
 
 func (p project) shareAuditCommand(args []string) error {
@@ -85,17 +90,18 @@ func (p project) shareAuditCommand(args []string) error {
 	minBytes := flags.Int("min-bytes", 64, "minimum original function size")
 	module := flags.String("module", "", "modules (ids, aliases, event or effect)")
 	prefix := flags.String("prefix", "", "original public-name prefix")
+	normalizeLocals := flags.Bool("normalize-locals", false, "normalize uniquely declared simple parameters and outer-block locals")
 	if err := flags.Parse(args); err != nil {
 		return err
 	}
 	if flags.NArg() != 0 || *minBytes < 0 {
-		return errors.New("usage: tools share-audit [--min-bytes=N] [--module=MODULES] [--prefix=PREFIX]")
+		return errors.New("usage: tools share-audit [--min-bytes=N] [--module=MODULES] [--prefix=PREFIX] [--normalize-locals]")
 	}
 	config, err := p.loadProjectConfig()
 	if err != nil {
 		return err
 	}
-	options := shareAuditOptions{minBytes: *minBytes, prefix: *prefix}
+	options := shareAuditOptions{minBytes: *minBytes, prefix: *prefix, normalizeLocals: *normalizeLocals}
 	if *module != "" {
 		selected, err := resolveModuleSelection(config, *module)
 		if err != nil {
@@ -121,9 +127,10 @@ func newShareAuditScanner(p project, config *projectConfig) (*shareAuditScanner,
 		return nil, err
 	}
 	scanner := &shareAuditScanner{p: p, config: config, resolver: newSymbolResolver(config),
-		contracts: map[string]shareAuditContract{}, sources: map[string]string{}, types: map[string]bool{}}
+		contracts: map[string]shareAuditContract{}, sources: map[string]string{}, types: map[string]bool{}, nonTagTypes: map[string]bool{}}
 	for word := range declarationBaseWords {
 		scanner.types[word] = true
+		scanner.nonTagTypes[word] = true
 	}
 	for _, group := range groups {
 		contract := shareAuditContract{Status: "unknown"}
@@ -148,9 +155,12 @@ func newShareAuditScanner(p project, config *projectConfig) (*shareAuditScanner,
 				if err != nil {
 					continue
 				}
-				for _, token := range tokens {
+				for index, token := range tokens {
 					if token.kind == cIdent {
 						scanner.types[token.text] = true
+						if index == 0 || !isTagKeyword(tokens[index-1].text) {
+							scanner.nonTagTypes[token.text] = true
+						}
 					}
 				}
 			}
@@ -311,15 +321,23 @@ func (scanner *shareAuditScanner) entry(m *moduleSpec, f *functionSpec) (shareAu
 	bindings := scanner.resolver.linkerBindings(m, f, used)
 	contract := scanner.contract(f.sourceSymbol())
 	entry := shareAuditEntry{m.ID, f.Name, fmt.Sprintf("0x%08x", f.Addr), f.Size, f.Hash, m.profileOf(f),
-		path, f.SourceSymbol, f.sourceSymbol(), contract, []shareAuditRole{}}
+		path, f.SourceSymbol, f.sourceSymbol(), contract, []shareAuditRole{}, nil}
 	locals := scanner.localNames(parameters, body)
 	roles := map[string]string{}
 	selfSeen := false
 	shape := []string{shareAuditContractKey(contract, f.sourceSymbol())}
+	localRoles := map[string]string{}
+	if scanner.normalizeLocals {
+		var header []string
+		localRoles, header, entry.LocalNormalization = scanner.normalizeLocalRoles(source, tokens, parameters, body, bindings, f.sourceSymbol())
+		shape = append(shape, header...)
+	}
 	for index, token := range body {
 		text := token.text
 		member := index > 0 && (body[index-1].text == "." || body[index-1].text == "->")
-		if token.kind == cIdent && !member && !locals[text] {
+		if role, ok := localRoles[text]; ok && token.kind == cIdent && !member {
+			text = role
+		} else if token.kind == cIdent && !member && !locals[text] {
 			if text == f.sourceSymbol() {
 				if !selfSeen {
 					entry.Roles = append(entry.Roles, shareAuditRole{"$self", text, fmt.Sprintf("0x%08x", bindings[text]), contract})
@@ -359,6 +377,11 @@ func (p project) shareAudit(config *projectConfig, options shareAuditOptions) (s
 	if err != nil {
 		return report, err
 	}
+	scanner.normalizeLocals = options.normalizeLocals
+	if options.normalizeLocals {
+		report.LocalNormalizationCounts = map[string]int{}
+		report.ReviewLimits = append(report.ReviewLimits, "Opt-in local normalization retains full definition-header/type/qualifier/extent/member tokens; nested, complex or macro-ambiguous cases fall back to exact comparison. Ordered local correspondence is candidate evidence only.")
+	}
 	groups := map[string]*shareAuditGroup{}
 	for _, m := range config.Modules {
 		if options.modules != nil && !options.modules[m.ID] {
@@ -394,6 +417,13 @@ func (p project) shareAudit(config *projectConfig, options shareAuditOptions) (s
 			if reason != "" {
 				report.Excluded[reason]++
 				continue
+			}
+			if entry.LocalNormalization != nil {
+				status := entry.LocalNormalization.Status
+				if entry.LocalNormalization.Reason != "" {
+					status += ":" + entry.LocalNormalization.Reason
+				}
+				report.LocalNormalizationCounts[status]++
 			}
 			if groups[key] == nil {
 				groups[key] = &shareAuditGroup{ShapeHash: key, TokenCount: count}
