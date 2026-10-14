@@ -83,7 +83,7 @@ void world_text_character_handling_thread(void) {
     script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
     value_index = 0;
     variable_id = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
-    thread = (thread_t*)((g_thread_current_id << 10) + (s32)g_threads);
+    thread = &g_threads[g_thread_current_id];
     param = world_thread_get_current_parameter_1();
     rec.dialog_type = param;
     if ((param & 0x70) == 0x70) {
