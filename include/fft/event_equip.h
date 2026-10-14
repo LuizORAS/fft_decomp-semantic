@@ -446,7 +446,7 @@ extern s8 g_equip_gfx_transition_frame;
 extern s16 g_equip_gfx_window_zoom_percent[];
 extern s8 g_equip_gfx_zoom_draw_area_active;
 
-void equip_gfx_enqueue_line_f2(const RECT* rect, const rgb24_t* color, u8 semitrans, s32 otag_index);
+void equip_gfx_enqueue_line_f2(const point16_t endpoints[2], const rgb24_t* color, u8 semitrans, s32 otag_index);
 void equip_gfx_enqueue_textured_quad_corners(
     const textured_quad_source_t* descriptor, const rgb24_t* color, s32 semitrans, s32 otag_index);
 void equip_gfx_enqueue_textured_quad_current_ot(const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans,

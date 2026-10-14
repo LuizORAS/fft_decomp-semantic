@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Draw the two endpoints with an x bias of 0x80 and append the flat line. */
-void world_gfx_enqueue_line_f2(point16_t endpoints[2], rgb24_t* rgb, u8 semi_trans, s32 ot_index) {
+void world_gfx_enqueue_line_f2(const point16_t endpoints[2], const rgb24_t* rgb, u8 semi_trans, s32 ot_index) {
     LINE_F2* line = &g_world_gfx_active_packet_buffer->flat_lines[g_world_gfx_flat_line_count++];
 
     setRGB0(line, rgb->r, rgb->g, rgb->b);

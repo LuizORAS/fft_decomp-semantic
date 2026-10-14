@@ -2257,7 +2257,7 @@ void* world_menu_alloc_buffer(s32 size);
 void* world_menu_alloc_ui_buffer(s32 size);
 void world_menu_announce_entry_value_thread(void);
 u8* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode);
-void world_gfx_enqueue_line_f2(point16_t endpoints[2], rgb24_t* rgb, u8 semi_trans, s32 priority);
+void world_gfx_enqueue_line_f2(const point16_t endpoints[2], const rgb24_t* rgb, u8 semi_trans, s32 priority);
 void world_menu_resize_parent_entry_to_digits(void);
 void world_menu_size_entry_to_text(menu_entry_t* entry, s16* width, s16* height, s32* out_pad, s32 pad_short);
 void world_menu_build_icon_record(RECT* rect, menu_entry_t* param, menu_icon_record_t* buffer);
