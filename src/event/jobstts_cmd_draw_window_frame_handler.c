@@ -24,7 +24,7 @@ menu_instruction_t* jobstts_cmd_draw_window_frame_handler(menu_instruction_t* co
     u8 width;
     u8 height;
 
-    priority = g_jobstts_gfx_otag_index;
+    priority = g_menu_gfx_otag_index;
     clut = g_menu_palette_clut;
     left = command->window.x - 5;
     top = command->window.y - 9;

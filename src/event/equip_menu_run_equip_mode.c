@@ -141,7 +141,7 @@ s32 equip_menu_run_equip_mode(void) {
     equip_panel_toggle_item_numeric_thread(g_equip_equip_item_preview_active);
     g_equip_slot_marker_rect.y = g_equip_equip_item_slot * 16 + 0x90;
     equip_gfx_set_otag_index(0x28);
-    equip_menu_update_and_draw_animated_cursor(&g_equip_slot_marker_rect, g_equip_equip_item_cursor_anim,
+    menu_update_and_draw_animated_cursor(&g_equip_slot_marker_rect, g_equip_equip_item_cursor_anim,
         g_equip_equip_item_list_open != 0 || g_battle_menu_input_lock_mode != 0);
     return 1;
 }

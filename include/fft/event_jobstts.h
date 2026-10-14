@@ -67,9 +67,6 @@ typedef enum jobstts_page_scroll_direction {
 } jobstts_menu_page_scroll_direction_e;
 
 extern s32 g_jobstts_job_list_menu_initialized;
-extern s8 g_jobstts_menu_cursor_forward_offset_keyframes[];
-extern s8 g_jobstts_menu_cursor_reverse_offset_keyframes[];
-extern u16 g_jobstts_menu_cursor_texture_page;
 
 extern u16 g_jobstts_menu_list_cursor_anim_state;
 extern s16* g_jobstts_menu_list_entries;
@@ -110,7 +107,6 @@ void jobstts_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8
 void jobstts_menu_load_images_and_clear_selection(void);
 void jobstts_menu_scroll_list_by_page(jobstts_menu_page_scroll_direction_e direction, const menu_instruction_t* list);
 void jobstts_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_index, s16* abilities);
-void jobstts_menu_update_and_draw_animated_cursor(point16_t* anchor, u16* state, s32 mode);
 s32 jobstts_menu_update_job_list(void);
 s32 jobstts_menu_update_wrapped_horizontal_selection(u16 count, u8 index, s32 buttons);
 
@@ -175,7 +171,6 @@ extern s16 g_jobstts_gfx_line_g3_count;
 extern u16 g_jobstts_gfx_line_g4_capacity;
 extern s16 g_jobstts_gfx_line_g4_count;
 extern u32 g_jobstts_gfx_otag_buffer[];
-extern s16 g_jobstts_gfx_otag_index;
 extern s8 g_jobstts_gfx_otag_index_locked;
 extern u16 g_jobstts_gfx_otag_length;
 extern u16 g_jobstts_gfx_poly_f3_capacity;
@@ -218,7 +213,7 @@ void jobstts_gfx_enqueue_draw_move(const RECT* rect, s32 u, s32 v, s32 otag_inde
 void jobstts_gfx_enqueue_oriented_textured_quad(
     RECT* rect, texture_source_t* uv, rgb24_t* color, s32 orientation, s32 semitrans, s32 ot_index);
 void jobstts_gfx_enqueue_textured_quad(
-    RECT* rect, s32 u, s32 v, rgb24_t* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index);
+    const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index);
 void jobstts_gfx_enqueue_textured_quad_corners(
     textured_quad_source_t* quad, rgb24_t* color, s32 semitrans, s32 ot_index);
 void jobstts_gfx_enqueue_textured_quad_list(

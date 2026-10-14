@@ -1626,6 +1626,13 @@ typedef struct options_menu_page {
 } options_menu_page_t;
 typedef char options_menu_page_size_must_be_400[(sizeof(options_menu_page_t) == 400) ? 1 : -1];
 
+/* cursor animation */
+extern s8 g_menu_cursor_forward_offset_keyframes[];
+extern s8 g_menu_cursor_reverse_offset_keyframes[];
+extern u16 g_menu_cursor_texture_page;
+
+void menu_update_and_draw_animated_cursor(const point16_t* anchor, u16* state, s32 mode);
+
 /* input and palette state */
 extern u16 g_menu_active_clut_back;
 extern u16 g_menu_active_clut_front;

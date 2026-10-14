@@ -170,16 +170,16 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
             rect.y = command->list.arrow_up_y;
             rect.w = 8;
             rect.h = 0x10;
-            menu_gfx_enqueue_textured_quad(&rect, 0xd8, 0, 0, g_menu_gfx_semitransparency,
-                g_equip_menu_cursor_texture_page, g_equip_menu_cursor_mode0_foreground_clut, g_menu_gfx_otag_index);
+            menu_gfx_enqueue_textured_quad(&rect, 0xd8, 0, 0, g_menu_gfx_semitransparency, g_menu_cursor_texture_page,
+                g_menu_cursor_mode0_foreground_clut, g_menu_gfx_otag_index);
         }
         if (g_menu_scroll_base_index < g_equip_menu_list_entry_count - g_equip_menu_list_visible_rows) {
             rect.x = g_menu_window_right_x;
             rect.y = command->list.arrow_down_y;
             rect.w = 8;
             rect.h = 0x10;
-            menu_gfx_enqueue_textured_quad(&rect, 0xe0, 0, 0, g_menu_gfx_semitransparency,
-                g_equip_menu_cursor_texture_page, g_equip_menu_cursor_mode0_foreground_clut, g_menu_gfx_otag_index);
+            menu_gfx_enqueue_textured_quad(&rect, 0xe0, 0, 0, g_menu_gfx_semitransparency, g_menu_cursor_texture_page,
+                g_menu_cursor_mode0_foreground_clut, g_menu_gfx_otag_index);
         }
         if (g_equip_menu_list_entry_count > g_equip_menu_list_visible_rows) {
             top = command->list.arrow_up_y;
@@ -193,14 +193,14 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
             rect.x = g_menu_window_right_x;
             rect.y = j;
             menu_gfx_enqueue_textured_quad(&rect, 0x10, 0x10, 0, g_menu_gfx_semitransparency,
-                g_equip_menu_cursor_texture_page, g_equip_menu_cursor_mode0_foreground_clut, g_menu_gfx_otag_index);
+                g_menu_cursor_texture_page, g_menu_cursor_mode0_foreground_clut, g_menu_gfx_otag_index);
         }
     }
     if (command->list.show_cursor != 0) {
         marker.x = command->list.x - command->list.cursor_x_offset;
         marker.y = command->list.y
             + (g_equip_menu_selected_list_index - g_menu_scroll_base_index) * g_equip_menu_list_row_height;
-        equip_menu_update_and_draw_animated_cursor(
+        menu_update_and_draw_animated_cursor(
             &marker, g_equip_menu_list_cursor_anim_state, g_menu_use_alternate_palette);
     }
     command = menu_next_instruction(command);

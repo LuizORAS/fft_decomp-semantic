@@ -63,11 +63,11 @@ s32 equip_item_run_rearrange_mode(void) {
     if (row >= 0 && row < 8) {
         frame = g_equip_rearrange_anim_frame++;
         if (frame & 1) {
-            tile = g_equip_menu_cursor_mode0_foreground_clut;
-            tile2 = g_equip_menu_cursor_mode0_background_clut;
+            tile = g_menu_cursor_mode0_foreground_clut;
+            tile2 = g_menu_cursor_mode0_background_clut;
         } else {
-            tile = g_equip_menu_cursor_mode1_foreground_clut;
-            tile2 = g_equip_menu_cursor_mode1_background_clut;
+            tile = g_menu_cursor_mode1_foreground_clut;
+            tile2 = g_menu_cursor_mode1_background_clut;
         }
         rect.w = 0x10;
         rect.h = 0x10;

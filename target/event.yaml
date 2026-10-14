@@ -1432,7 +1432,7 @@ functions:
   - {addr: 0x801cbd30, size: 24, name: equip_cmd_set_otag_index_handler, hash: 0d38c979b93736fb}
   - {addr: 0x801cbd48, size: 1076, name: equip_cmd_draw_formatted_number_handler, hash: 66875582960ce0d8}
   - {addr: 0x801cc17c, size: 428, name: equip_cmd_draw_right_aligned_number_handler, hash: 325db0fd2794a02d}
-  - {addr: 0x801cc328, size: 660, name: equip_menu_update_and_draw_animated_cursor, hash: 3938e60d49f17206}
+  - {addr: 0x801cc328, size: 660, name: menu_update_and_draw_animated_cursor, hash: 3938e60d49f17206, source: src/shared/menu/menu_update_and_draw_animated_cursor.c}
   - {addr: 0x801cc5bc, size: 108, name: menu_cmd_skip_group, hash: e3dba406e3887731, source: src/shared/menu/menu_cmd_skip_group.c}
   - {addr: 0x801cc628, size: 672, name: equip_menu_draw_scrollable_list, hash: b2d0e76db3f4d7ef}
   - {addr: 0x801cc8c8, size: 48, name: equip_menu_init_and_draw_scrollable_list_simple, hash: 822692f126a2bbf9}
@@ -1585,17 +1585,17 @@ data:
   - {addr: 0x801d86b0, name: g_menu_list_scroll_offset}
   - {addr: 0x801d86b4, name: g_menu_list_row_index}
   - {addr: 0x801d86b8, name: g_menu_atlas_texture_page}
-  - {addr: 0x801d86ba, name: g_equip_menu_cursor_texture_page}
+  - {addr: 0x801d86ba, name: g_menu_cursor_texture_page}
   - {addr: 0x801d86bc, name: g_equip_text_clut_2_mode0}
   - {addr: 0x801d86be, name: g_equip_text_clut_2_mode1}
   - {addr: 0x801d86c0, name: g_equip_text_clut_1_mode1}
   - {addr: 0x801d86c2, name: g_equip_text_clut_1_mode0}
   - {addr: 0x801d86c4, name: g_equip_text_clut_3_mode0}
   - {addr: 0x801d86c6, name: g_equip_text_clut_3_mode1}
-  - {addr: 0x801d86ca, name: g_equip_menu_cursor_mode0_foreground_clut}
-  - {addr: 0x801d86cc, name: g_equip_menu_cursor_mode0_background_clut}
-  - {addr: 0x801d86ce, name: g_equip_menu_cursor_mode1_foreground_clut}
-  - {addr: 0x801d86d0, name: g_equip_menu_cursor_mode1_background_clut}
+  - {addr: 0x801d86ca, name: g_menu_cursor_mode0_foreground_clut}
+  - {addr: 0x801d86cc, name: g_menu_cursor_mode0_background_clut}
+  - {addr: 0x801d86ce, name: g_menu_cursor_mode1_foreground_clut}
+  - {addr: 0x801d86d0, name: g_menu_cursor_mode1_background_clut}
   - {addr: 0x801d86e0, name: g_equip_text_clut_0_mode0}
   - {addr: 0x801d86e2, name: g_equip_text_clut_0_mode1}
   - {addr: 0x801d86e4, name: g_equip_input_page_scroll_disabled}
@@ -1606,8 +1606,8 @@ data:
   - {addr: 0x801d877c, name: g_menu_window_interior_command}
   - {addr: 0x801d8784, name: g_equip_gfx_window_zoom_percent}
   - {addr: 0x801d878c, name: g_equip_gfx_blank_cell_rect}
-  - {addr: 0x801d87a0, name: g_equip_menu_cursor_forward_offset_keyframes}
-  - {addr: 0x801d87ac, name: g_equip_menu_cursor_reverse_offset_keyframes}
+  - {addr: 0x801d87a0, name: g_menu_cursor_forward_offset_keyframes}
+  - {addr: 0x801d87ac, name: g_menu_cursor_reverse_offset_keyframes}
   - {addr: 0x801d87c0, name: g_equip_menu_list_scroll_entry_ids}
   - {addr: 0x801d87c4, name: g_equip_menu_list_cursor_anim_state}
   - {addr: 0x801d87c6, name: g_equip_input_page_scroll_hold_frames}
@@ -1925,7 +1925,7 @@ functions:
   - {addr: 0x801e3058, size: 84, name: menu_cmd_set_tpage_handler, hash: 6bd8f86e471c2d2f, source: src/shared/menu/menu_cmd_set_tpage_handler.c}
   - {addr: 0x801e30ac, size: 44, name: jobstts_cmd_set_otag_index_if_unlocked_handler, hash: 2bdd2ff580aa0d01}
   - {addr: 0x801e30d8, size: 704, name: jobstts_cmd_draw_formatted_number_handler, hash: a7c4288fdb526bef}
-  - {addr: 0x801e3398, size: 660, name: jobstts_menu_update_and_draw_animated_cursor, hash: 1820d09644d45f32}
+  - {addr: 0x801e3398, size: 660, name: menu_update_and_draw_animated_cursor, hash: 1820d09644d45f32, source: src/shared/menu/menu_update_and_draw_animated_cursor.c}
   - {addr: 0x801e362c, size: 108, name: menu_cmd_skip_group, hash: 68ca8c4bcbe84a81, source: src/shared/menu/menu_cmd_skip_group.c}
   - {addr: 0x801e3698, size: 672, name: jobstts_menu_draw_scrollable_list, hash: e44d487c3819b679}
   - {addr: 0x801e3938, size: 48, name: jobstts_menu_init_and_draw_scrollable_list_simple, hash: 461e97c53dac7c63}
@@ -1968,7 +1968,7 @@ data:
   - {addr: 0x801eff68, name: g_jobstts_menu_list_scroll_offset_y}
   - {addr: 0x801eff6c, name: g_jobstts_menu_list_row_index}
   - {addr: 0x801eff70, name: g_jobstts_gfx_background_texture_page}
-  - {addr: 0x801eff72, name: g_jobstts_menu_cursor_texture_page}
+  - {addr: 0x801eff72, name: g_menu_cursor_texture_page}
   - {addr: 0x801eff74, name: g_menu_text_clut_2_mode0}
   - {addr: 0x801eff76, name: g_menu_text_clut_2_mode1}
   - {addr: 0x801eff78, name: g_menu_text_clut_1_mode1}
@@ -1986,8 +1986,8 @@ data:
   - {addr: 0x801efffc, name: g_jobstts_gfx_transition_frame}
   - {addr: 0x801f0000, name: g_jobstts_cmd_window_interior_command}
   - {addr: 0x801f0008, name: g_jobstts_gfx_transition_height_percent}
-  - {addr: 0x801f0018, name: g_jobstts_menu_cursor_forward_offset_keyframes}
-  - {addr: 0x801f0024, name: g_jobstts_menu_cursor_reverse_offset_keyframes}
+  - {addr: 0x801f0018, name: g_menu_cursor_forward_offset_keyframes}
+  - {addr: 0x801f0024, name: g_menu_cursor_reverse_offset_keyframes}
   - {addr: 0x801f0038, name: g_jobstts_menu_list_scroll_entry_ids}
   - {addr: 0x801f003c, name: g_jobstts_menu_list_cursor_anim_state}
   - {addr: 0x801f003e, name: g_jobstts_input_page_scroll_hold_frames}
@@ -2019,7 +2019,7 @@ data:
   - {addr: 0x801fa6ac, name: g_jobstts_menu_selection_values}
   - {addr: 0x801fa6bc, name: g_jobstts_menu_list_scroll_progress}
   - {addr: 0x801fa6c0, name: g_menu_text_color}
-  - {addr: 0x801fa6c4, name: g_jobstts_gfx_otag_index}
+  - {addr: 0x801fa6c4, name: g_menu_gfx_otag_index}
   - {addr: 0x801fa6c8, name: g_jobstts_cmd_stream_input}
   - {addr: 0x801fa6cc, name: g_jobstts_menu_list_visible_rows}
   - {addr: 0x801fa6d0, name: g_jobstts_menu_list_row_height}
@@ -2112,6 +2112,7 @@ imports:
 overrides:
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_init_primary_reader, addr: 0x801e4e98}
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_read_primary, addr: 0x801e4ed0}
+  - {function: menu_update_and_draw_animated_cursor, name: menu_gfx_enqueue_textured_quad, addr: 0x801e15d4}
 ---
 module: event-option
 file: EVENT/OPTION.OUT

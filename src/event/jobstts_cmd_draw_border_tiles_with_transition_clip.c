@@ -1,4 +1,5 @@
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
 
 /* Draw the border tiles through a vertically expanding transition clip. */
 menu_instruction_t* jobstts_cmd_draw_border_tiles_with_transition_clip(menu_instruction_t* command) {
@@ -16,13 +17,13 @@ menu_instruction_t* jobstts_cmd_draw_border_tiles_with_transition_clip(menu_inst
         rect.h = (command->window.height * scale) / 100;
         rect.x = 0;
         rect.y = (command->window.y + (command->window.height >> 1)) - (rect.h >> 1);
-        jobstts_gfx_enqueue_draw_area(&rect, g_jobstts_gfx_otag_index);
+        jobstts_gfx_enqueue_draw_area(&rect, g_menu_gfx_otag_index);
         g_jobstts_gfx_otag_index_locked = 1;
-        g_jobstts_gfx_otag_index = g_jobstts_gfx_otag_index + 1;
+        g_menu_gfx_otag_index = g_menu_gfx_otag_index + 1;
     } else {
         g_jobstts_gfx_otag_index_locked = 0;
     }
     next = jobstts_cmd_draw_window_frame_handler(command);
-    g_jobstts_gfx_otag_index++;
+    g_menu_gfx_otag_index++;
     return next;
 }

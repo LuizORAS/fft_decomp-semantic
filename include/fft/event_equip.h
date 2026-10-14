@@ -283,13 +283,6 @@ extern u16 g_equip_menu_active_clut_front;
 extern u16 g_equip_menu_alternate_number_clut;
 extern point16_t g_equip_menu_clear_all_prompt_draw_params;
 extern volatile u16 g_equip_menu_clear_all_prompt_frame;
-extern s8 g_equip_menu_cursor_forward_offset_keyframes[];
-extern u16 g_equip_menu_cursor_mode0_background_clut;
-extern u16 g_equip_menu_cursor_mode0_foreground_clut;
-extern u16 g_equip_menu_cursor_mode1_background_clut;
-extern u16 g_equip_menu_cursor_mode1_foreground_clut;
-extern s8 g_equip_menu_cursor_reverse_offset_keyframes[];
-extern u16 g_equip_menu_cursor_texture_page;
 extern u16 g_equip_menu_disabled_number_clut;
 
 extern s32 g_equip_menu_indicator_brightness[2];
@@ -372,7 +365,6 @@ void equip_menu_set_palette_mode(s32 mode);
 void equip_menu_set_selection_record(s32 index, s32 selected_index, s32 scroll_index, s16* items);
 s32 equip_menu_set_selection_value(u8 index, s16 value);
 void equip_menu_store_sort_key_list(s32 list_index, const s16* source);
-void equip_menu_update_and_draw_animated_cursor(const point16_t* anchor, u16* state, s32 mode);
 s32 equip_menu_update_clear_all_equipment_prompt(void);
 s32 equip_menu_update_equipment(void);
 s32 equip_menu_update_horizontal_selection_and_mark_change(

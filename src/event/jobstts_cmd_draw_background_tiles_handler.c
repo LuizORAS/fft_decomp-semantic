@@ -23,7 +23,7 @@ menu_instruction_t* jobstts_cmd_draw_background_tiles_handler(menu_instruction_t
 
     packed_height = stream->window.height;
     packed_width = stream->window.width;
-    otag_index = g_jobstts_gfx_otag_index;
+    otag_index = g_menu_gfx_otag_index;
     clut_id = g_menu_palette_clut;
     full_columns = packed_width >> 4;
     partial_width = packed_width & 0xF;

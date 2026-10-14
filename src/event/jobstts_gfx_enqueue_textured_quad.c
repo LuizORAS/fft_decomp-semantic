@@ -4,7 +4,7 @@
  * (rect->x + 0x80, rect->y) with texture origin (u, v), and links it into
  * ordering table entry ot_index. With `color` the quad is shaded with it. */
 void jobstts_gfx_enqueue_textured_quad(
-    RECT* rect, s32 u, s32 v, rgb24_t* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index) {
+    const RECT* rect, s32 u, s32 v, const rgb24_t* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index) {
     POLY_FT4* poly;
 
     poly = &g_jobstts_gfx_context->textured_quads[g_jobstts_gfx_poly_ft4_count++];

@@ -26,6 +26,6 @@ menu_instruction_t* jobstts_cmd_draw_textured_quad_handler(menu_instruction_t* d
         color = 0;
     }
     jobstts_gfx_enqueue_textured_quad(&rect, data->sprite.sprite.u, data->sprite.sprite.v, color,
-        g_jobstts_gfx_semitransparency, g_menu_gfx_texture_page, g_menu_gfx_clut_id, g_jobstts_gfx_otag_index);
+        g_jobstts_gfx_semitransparency, g_menu_gfx_texture_page, g_menu_gfx_clut_id, g_menu_gfx_otag_index);
     return menu_next_instruction(data);
 }

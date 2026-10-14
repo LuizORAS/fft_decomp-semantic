@@ -1,4 +1,5 @@
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Dispatch every command of a command stream through the handler table until
@@ -7,7 +8,7 @@
  * advances the transition frame, up to 10. */
 void jobstts_cmd_run_stream(menu_instruction_t* instruction, s32 flags) {
     g_jobstts_gfx_otag_index_locked = 0;
-    g_jobstts_gfx_otag_index = 0;
+    g_menu_gfx_otag_index = 0;
     g_jobstts_gfx_semitransparency = 0;
     g_jobstts_cmd_stream_input = flags;
     while (instruction->header.opcode != JOBSTTS_CMD_END) {

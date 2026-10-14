@@ -34,7 +34,7 @@ menu_instruction_t* equip_cmd_draw_right_aligned_number_handler(menu_instruction
     rect.w = 8;
     rect.h = 0x10;
     for (j = 0; j < count; j++) {
-        menu_gfx_enqueue_textured_quad(&rect, (buf[j] * 8) - 0xD8, 0x30, 0, 0, g_equip_menu_cursor_texture_page,
+        menu_gfx_enqueue_textured_quad(&rect, (buf[j] * 8) - 0xD8, 0x30, 0, 0, g_menu_cursor_texture_page,
             g_equip_text_clut_1_mode0, g_menu_gfx_otag_index);
         rect.x += 8;
     }
