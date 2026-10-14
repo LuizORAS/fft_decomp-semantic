@@ -49,7 +49,7 @@ functions:
   - {addr: 0x801c3ca8, size: 148, name: attack_deploy_mark_other_squad_units_undeployable, hash: 5cd7505bb7bab58e}
   - {addr: 0x801c3d3c, size: 80, name: attack_deploy_is_roster_unit_deployed, hash: 5d2d6845961ff568}
   - {addr: 0x801c3d8c, size: 40, name: attack_thread_wait_forever, hash: 1784b8534b53f3ba}
-  - {addr: 0x801c3db4, size: 80, name: attack_deploy_has_roster_id_on_tiles, hash: 5d2d6845961ff568}
+  - {addr: 0x801c3db4, size: 80, name: attack_deploy_has_roster_id_on_tiles, hash: 5d2d6845961ff568, source: src/event/attack_deploy_is_roster_unit_deployed.c, source_symbol: attack_deploy_is_roster_unit_deployed}
   - {addr: 0x801c3e04, size: 88, name: attack_deploy_remove_roster_unit_from_tiles, hash: 784067ef9c2286de}
   - {addr: 0x801c3e5c, size: 112, name: attack_deploy_swap_roster_unit_tile, hash: c3797b6bdb461354}
   - {addr: 0x801c3ecc, size: 120, name: attack_deploy_reset_tables, hash: 695c7064518fcce4}
