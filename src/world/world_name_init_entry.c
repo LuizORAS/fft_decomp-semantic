@@ -2,14 +2,11 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Copies the 0xFE-terminated byte list (at most 16 entries) into
- * g_world_name_entry_text and starts menu thread 2 for it.
- */
-void world_menu_open_scrollable_list(const u8* list) {
+/* Seed the editable name and open its keyboard and message window. */
+void world_name_init_entry(const u8* name) {
     s32 i;
 
-    g_world_name_entry_original_name = list;
+    g_world_name_entry_original_name = name;
     g_world_name_entry_cursor_index = 0;
     g_world_name_entry_list_cursor = 1;
     thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_message_box_thread);
@@ -20,7 +17,7 @@ void world_menu_open_scrollable_list(const u8* list) {
     g_text_section_pointers[WORLD_TEXT_SECTION_NAME_ENTRY_KEYS] = g_world_text_name_entry_keys_data;
     g_world_name_entry_cursor = 0;
     i = 0;
-    while ((g_world_name_entry_text[i] = list[i]) != TEXT_END_WAIT_FOR_CONFIRM) {
+    while ((g_world_name_entry_text[i] = name[i]) != TEXT_END_WAIT_FOR_CONFIRM) {
         if (i >= 16) {
             g_world_name_entry_text[16] = TEXT_END_WAIT_FOR_CONFIRM;
             break;

@@ -14,7 +14,7 @@ u8* world_name_run_entry_keyboard_frame(const u8* list, s32 unused_1) {
     if (g_world_name_entry_started == 0) {
         if (thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
             g_world_name_keyboard_last_state = -1;
-            world_menu_open_scrollable_list(list);
+            world_name_init_entry(list);
             g_world_name_entry_started = 1;
         }
         return 0;

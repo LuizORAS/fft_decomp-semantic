@@ -1019,7 +1019,7 @@ functions:
   - {addr: 0x80139a2c, size: 596, name: world_name_update_entry_cursor, hash: a6457fc5158486d8}
   - {addr: 0x80139c80, size: 900, name: world_name_apply_entry_key, hash: a78c8da4eb0302e3}
   - {addr: 0x8013a004, size: 476, name: world_name_run_confirmation_menu, hash: ffbde5567beb895c}
-  - {addr: 0x8013a1e0, size: 288, name: world_menu_open_scrollable_list, hash: 9cf1fd54efd490d1}
+  - {addr: 0x8013a1e0, size: 288, name: world_name_init_entry, hash: 9cf1fd54efd490d1}
 
 data:
   - {addr: 0x800e0000, name: g_psyq_gs_sort_sprite_overflow_message}
