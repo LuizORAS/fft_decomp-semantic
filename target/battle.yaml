@@ -766,7 +766,7 @@ functions:
   - {addr: 0x801334a4, size: 196, name: battle_text_build_unit_name_list, hash: 9e89b0033e7a7acd}
   - {addr: 0x80133568, size: 32, name: text_fill_field_with_terminators, hash: 5eaa92c4790153fd, source: src/shared/text/text_fill_field_with_terminators.c}
   - {addr: 0x80133588, size: 460, name: battle_menu_copy_unit_data_to_status_billboard, hash: dc13403e0a243847, source: src/shared/menu/battle_menu_copy_unit_data_to_status_billboard.c}
-  - {addr: 0x80133754, size: 1348, name: battle_menu_load_selected_unit, hash: 30054c92a903e0bd}
+  - {addr: 0x80133754, size: 1348, name: battle_menu_load_selected_unit, hash: 30054c92a903e0bd, source: src/shared/menu/menu_load_selected_unit.c, source_symbol: menu_load_selected_unit}
   - {addr: 0x80133c98, size: 84, name: unit_has_any_current_status, hash: 9d1f779a473099b3, source: src/shared/unit/unit_has_any_current_status.c}
   - {addr: 0x80133cec, size: 516, name: battle_menu_build_unit_status_list, hash: 640d7ce85b1f418f}
   - {addr: 0x80133ef0, size: 136, name: menu_copy_billboard_data_out, hash: 0da597fa0f8b8b55, source: src/shared/menu/menu_copy_billboard_data_out.c}

@@ -1,29 +1,13 @@
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
+#include "fft/main.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/unit.h"
-#include "fft/world.h"
-#include "psx/types.h"
 
-/*
- * Fills the comparison and selected-unit billboards and the status panel's
- * fields for the selected battle unit. WORLD copy of
- * battle_menu_load_selected_unit.
- *
- * The 16-bit fields are: 0 move, 1 speed, 2 jump, 3/4 right and left weapon
- * power, 5/6 right and left weapon evade, 7 set for a monster skillset, 8 set
- * when a lone weapon is held in two hands, 9 physical attack, 10 class evade,
- * 11/12 shield (the larger hand) and accessory physical evade, 14 magic
- * attack, 16/17 shield and accessory magic evade, 18..22 the equipped items
- * (-1 for none) and 23..27 the ability rows (-1 for none): both skillsets,
- * reaction, support and movement, or a monster's skillset abilities packed to
- * the front, the fourth kept only while unit_has_adjacent_monster_skill_support
- * allows it.
- *
- * An empty secondary skillset marks byte 1 of its name buffer, not byte 0,
- * before the names are cleared and copied.
- */
-void world_menu_load_selected_unit(void) {
+/* Fill selected and comparison billboards, stats, equipment and ability names. */
+void menu_load_selected_unit(void) {
     unit_stats_t* unit;
     menu_status_panel_slot_state_t* editor;
     u16* innate_items;
@@ -35,22 +19,22 @@ void world_menu_load_selected_unit(void) {
     u8 field_value;
     s16 list_value;
 
-    unit = battle_unit_get_stats_from_battle_id(g_world_unit_comparison_battle_id);
-    editor = &g_world_unit_editor_fields.state;
+    unit = battle_unit_get_stats_from_battle_id(g_battle_preview_target_unit_id);
+    editor = &g_battle_menu_billboard_data.state;
     if (unit != 0) {
-        world_menu_copy_unit_data_to_status_billboard(unit, &g_world_unit_comparison_status_billboard);
+        battle_menu_copy_unit_data_to_status_billboard(unit, &g_battle_menu_status_billboard);
     }
 
-    unit = battle_unit_get_stats_from_battle_id(g_world_active_unit_data.battle_id);
+    unit = battle_unit_get_stats_from_battle_id(g_battle_active_turn_unit.battle_id);
     if (unit == 0)
         return;
-    world_menu_copy_unit_data_to_status_billboard(unit, &g_world_unit_selected_status_billboard);
+    battle_menu_copy_unit_data_to_status_billboard(unit, &g_battle_menu_active_turn_banner);
 
-    g_world_active_unit_data.job_id = unit->job_id;
-    g_world_active_unit_data.brave = unit->brave;
-    g_world_active_unit_data.faith = unit->faith;
+    g_battle_active_turn_unit.job_id = unit->job_id;
+    g_battle_active_turn_unit.brave = unit->brave;
+    g_battle_active_turn_unit.faith = unit->faith;
     /* The zodiac sign lives in the top nibble of the 16-bit value at 0x008. */
-    g_world_active_unit_data.zodiac = unit->birthday.zodiac;
+    g_battle_active_turn_unit.zodiac = unit->birthday.zodiac;
 
     editor->move = unit->move;
     editor->speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];
@@ -74,24 +58,22 @@ void world_menu_load_selected_unit(void) {
         editor->magical_shield_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_SHIELD_MAGIC_EVADE];
     editor->magical_accessory_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_MAGIC_EVADE];
 
-    for (i = WORLD_EQUIPMENT_SLOT_COUNT - 1; i >= 0; i--)
+    for (i = 4; i >= 0; i--)
         editor->equipment[i] = 0;
 
     if (!(unit->unit_flags & UNIT_FLAG_MONSTER)) {
-        editor->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND]
-            = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] != ITEM_ID_NONE
+        editor->equipment[0] = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] != ITEM_ID_NONE
             ? unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON]
             : unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD];
-        editor->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND]
-            = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] != ITEM_ID_NONE
+        editor->equipment[1] = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] != ITEM_ID_NONE
             ? unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON]
             : unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD];
-        editor->equipment[WORLD_EQUIPMENT_SLOT_HEAD] = unit->equipment[UNIT_EQUIPMENT_SLOT_HEAD];
-        editor->equipment[WORLD_EQUIPMENT_SLOT_BODY] = unit->equipment[UNIT_EQUIPMENT_SLOT_BODY];
-        editor->equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY] = unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
+        editor->equipment[2] = unit->equipment[UNIT_EQUIPMENT_SLOT_HEAD];
+        editor->equipment[3] = unit->equipment[UNIT_EQUIPMENT_SLOT_BODY];
+        editor->equipment[4] = unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
     }
 
-    for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
+    for (i = 0; i < 5; i++) {
         if (editor->equipment[i] == ITEM_ID_NOTHING || editor->equipment[i] == ITEM_ID_NONE)
             editor->equipment[i] = -1;
     }
@@ -102,11 +84,13 @@ void world_menu_load_selected_unit(void) {
 
     if (editor->generic_monster != 0) {
         innate_items = main_ability_store_skillset_abilities(unit->primary_skillset, SKILLSET_ABILITY_FILTER_ACTION);
-        for (i = 0; i < 5; i++) {
+        i = 0;
+        do {
             editor->ability_ids[i] = *innate_items++;
-        }
+            i++;
+        } while (i < 5);
 
-        g_thread_call_target = unit_has_adjacent_monster_skill_support;
+        g_thread_call_target = battle_menu_init_monster_skill_check;
         if (thread_call_on_main_stack(unit) == 0)
             editor->ability_ids[3] = 0;
 
@@ -121,11 +105,11 @@ void world_menu_load_selected_unit(void) {
         field_value = unit->primary_skillset;
         editor->ability_ids[0] = field_value;
         if (field_value == 0)
-            g_world_unit_editor_primary_skillset_name[0] = 0xfe;
+            g_battle_menu_billboard_skillset_name[0] = 0xfe;
         field_value = unit->secondary_skillset;
         editor->ability_ids[1] = field_value;
         if (field_value == 0)
-            g_world_unit_editor_secondary_skillset_name[1] = 0xfe;
+            g_battle_menu_billboard_secondary_skillset_name[1] = 0xfe;
         editor->ability_ids[2] = unit->abilities.reaction;
         editor->ability_ids[3] = unit->abilities.support;
         editor->ability_ids[4] = unit->abilities.movement;
@@ -139,11 +123,11 @@ void world_menu_load_selected_unit(void) {
 
     item_id = ITEM_ID_NOTHING;
     editor->two_hands = 0;
-    if (editor->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND] != -1) {
-        if (editor->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND] == -1)
-            item_id = editor->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND];
-    } else if (editor->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND] != -1) {
-        item_id = editor->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND];
+    if (editor->equipment[0] != -1) {
+        if (editor->equipment[1] == -1)
+            item_id = editor->equipment[0];
+    } else if (editor->equipment[1] != -1) {
+        item_id = editor->equipment[1];
     }
 
     if (item_id != ITEM_ID_NOTHING) {
@@ -157,14 +141,14 @@ void world_menu_load_selected_unit(void) {
         }
     }
 
-    text_fill_field_with_terminators(g_world_unit_editor_unit_name);
-    text_fill_field_with_terminators(g_world_unit_editor_job_name);
-    text_fill_field_with_terminators(g_world_unit_editor_primary_skillset_name);
-    text_fill_field_with_terminators(g_world_unit_editor_secondary_skillset_name);
+    text_fill_field_with_terminators(g_battle_menu_billboard_unit_name);
+    text_fill_field_with_terminators(g_battle_menu_billboard_job_name);
+    text_fill_field_with_terminators(g_battle_menu_billboard_skillset_name);
+    text_fill_field_with_terminators(g_battle_menu_billboard_secondary_skillset_name);
     /* The editor uses 16-byte windows at each text destination, including
      * the two eight-byte skillset names; preserve those target copy lengths. */
-    mem_copy_bytes_nonempty(g_world_unit_editor_unit_name, unit->name, sizeof(unit->name));
-    mem_copy_bytes_nonempty(g_world_unit_editor_job_name, unit->job_name, sizeof(unit->job_name));
-    mem_copy_bytes_nonempty(g_world_unit_editor_primary_skillset_name, unit->primary_skillset_name, 0x10);
-    mem_copy_bytes_nonempty(g_world_unit_editor_secondary_skillset_name, unit->secondary_skillset_name, 0x10);
+    mem_copy_bytes_nonempty(g_battle_menu_billboard_unit_name, unit->name, 0x10);
+    mem_copy_bytes_nonempty(g_battle_menu_billboard_job_name, unit->job_name, 0x10);
+    mem_copy_bytes_nonempty(g_battle_menu_billboard_skillset_name, unit->primary_skillset_name, 0x10);
+    mem_copy_bytes_nonempty(g_battle_menu_billboard_secondary_skillset_name, unit->secondary_skillset_name, 0x10);
 }
