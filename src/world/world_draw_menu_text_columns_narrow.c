@@ -8,7 +8,7 @@ void world_draw_menu_text_columns_narrow(menu_entry_t* entry, s32* row_offset, u
     s32 row;
     s32 column;
     s32 index;
-    s32* stride_cell = &g_world_menu_text_state.pen.stride;
+    s32* stride_cell = &g_menu_text_state.pen.stride;
 
     for (row = 0; row < layout->row_count; row++) {
         *stride_cell = entry->inner_width - 8;
@@ -24,20 +24,19 @@ void world_draw_menu_text_columns_narrow(menu_entry_t* entry, s32* row_offset, u
             if (layout->mode[column] != MENU_TEXT_COLUMN_HIDDEN) {
                 g_menu_text_palette_offset = layout->text_colors[column][index];
             }
-            g_world_menu_text_state.pen.color = 0;
+            g_menu_text_state.pen.color = 0;
             if (g_menu_text_palette_offset == 4) {
-                g_world_menu_text_state.pen.color = 0x44444444;
+                g_menu_text_state.pen.color = 0x44444444;
             }
             if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
-                world_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_world_menu_text_state.pen);
+                world_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_menu_text_state.pen);
             } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
-                world_menu_display_number_entry(
-                    layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
+                world_menu_display_number_entry(layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
             } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
-                world_menu_draw_number_glyphs(layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
+                world_menu_draw_number_glyphs(layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
             }
             g_menu_text_palette_offset = 0;
-            g_world_menu_text_state.pen.color = 0;
+            g_menu_text_state.pen.color = 0;
         }
     }
 }

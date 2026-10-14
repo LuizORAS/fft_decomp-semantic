@@ -39,10 +39,10 @@ void world_menu_icon_list_thread(void) {
             buffer = world_menu_build_and_upload_window_frame_image(
                 param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             fresh = 1;
-            g_world_menu_text_state.pen.stride = param->inner_width;
+            g_menu_text_state.pen.stride = param->inner_width;
             world_menu_set_text_origin(8, 9);
             g_menu_text_palette_offset = 0;
-            world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.pen);
+            world_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
             LoadImage(&rect, buffer);
         }
         record = &records[i & 1];

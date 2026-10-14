@@ -353,46 +353,45 @@ void world_menu_unit_status_banner_thread(void) {
             }
             world_clear_menu_render_buffer(stat_image, 0x700);
             {
-                g_world_menu_text_state.pen.stride = 0x38;
+                g_menu_text_state.pen.stride = 0x38;
                 if (g_world_preview_stats_window_active == 0) {
-                    world_menu_draw_numeric_display_entries(stat_image, entries, &g_world_menu_text_state.pen, 6);
+                    world_menu_draw_numeric_display_entries(stat_image, entries, &g_menu_text_state.pen, 6);
                 } else {
-                    menu_text_render_decimal_entry_list(stat_image, &entries[10], &g_world_menu_text_state.pen, 1);
-                    menu_text_render_decimal_entry_list(stat_image, &entries[12], &g_world_menu_text_state.pen, 1);
-                    world_menu_draw_numeric_display_entries(stat_image, &entries[11], &g_world_menu_text_state.pen, 1);
-                    world_menu_draw_numeric_display_entries(stat_image, &entries[13], &g_world_menu_text_state.pen, 1);
-                    world_menu_draw_numeric_display_entries(stat_image, &entries[4], &g_world_menu_text_state.pen, 2);
+                    menu_text_render_decimal_entry_list(stat_image, &entries[10], &g_menu_text_state.pen, 1);
+                    menu_text_render_decimal_entry_list(stat_image, &entries[12], &g_menu_text_state.pen, 1);
+                    world_menu_draw_numeric_display_entries(stat_image, &entries[11], &g_menu_text_state.pen, 1);
+                    world_menu_draw_numeric_display_entries(stat_image, &entries[13], &g_menu_text_state.pen, 1);
+                    world_menu_draw_numeric_display_entries(stat_image, &entries[4], &g_menu_text_state.pen, 2);
                 }
             }
             LoadImage(&rects[0], (u32*)stat_image);
             stat_image_upper = stat_image + 0x400;
-            g_world_menu_text_state.pen.stride = 0x60;
-            world_menu_draw_numeric_display_entries(stat_image_upper, &entries[8], &g_world_menu_text_state.pen, 2);
+            g_menu_text_state.pen.stride = 0x60;
+            world_menu_draw_numeric_display_entries(stat_image_upper, &entries[8], &g_menu_text_state.pen, 2);
             LoadImage(&rects[1], (u32*)stat_image_upper);
             display->work = 0;
             world_clear_menu_render_buffer(name_image, 0x580);
-            g_world_menu_text_state.pen.stride = 0x58;
+            g_menu_text_state.pen.stride = 0x58;
             world_menu_set_text_origin(0, 0);
             world_menu_display_text_entry(
-                identity->unit_index + TEXT_ID_UNIT_NAME_BASE, name_image, &g_world_menu_text_state.pen);
+                identity->unit_index + TEXT_ID_UNIT_NAME_BASE, name_image, &g_menu_text_state.pen);
             world_menu_set_text_origin(0, 0x10);
-            world_menu_display_text_entry(
-                identity->job_id + TEXT_ID_JOB_NAME_BASE, name_image, &g_world_menu_text_state.pen);
+            world_menu_display_text_entry(identity->job_id + TEXT_ID_JOB_NAME_BASE, name_image, &g_menu_text_state.pen);
             LoadImage(&rects[2], (u32*)name_image);
             world_clear_menu_render_buffer(number_images, sizeof(*number_images));
-            g_world_menu_text_state.pen.stride = 0x10;
+            g_menu_text_state.pen.stride = 0x10;
             world_menu_set_text_origin(0, 0);
             world_text_render_decimal_value_or_dashes(
-                identity->brave, 0x202, number_images->brave, &g_world_menu_text_state.pen);
+                identity->brave, 0x202, number_images->brave, &g_menu_text_state.pen);
             LoadImage(&rects[3], (u32*)number_images->brave);
             world_menu_set_text_origin(0, 0);
             world_text_render_decimal_value_or_dashes(
-                identity->faith, 0x202, number_images->faith, &g_world_menu_text_state.pen);
+                identity->faith, 0x202, number_images->faith, &g_menu_text_state.pen);
             LoadImage(&rects[4], (u32*)number_images->faith);
             if (g_world_unit_join_screen_active == 0) {
                 world_menu_set_text_origin(0, 0);
                 world_text_render_decimal_value_or_dashes(
-                    identity->roster_slot + 1, 0x4002, number_images->roster_slot, &g_world_menu_text_state.pen);
+                    identity->roster_slot + 1, 0x4002, number_images->roster_slot, &g_menu_text_state.pen);
                 LoadImage(&rects[5], (u32*)number_images->roster_slot);
             } else {
                 LoadImage(&rects[5], (u32*)number_images->roster_slot);

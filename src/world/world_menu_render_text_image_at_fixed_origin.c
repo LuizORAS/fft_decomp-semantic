@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
@@ -14,12 +15,12 @@ void world_menu_render_text_image_at_fixed_origin(text_dialog_record_t* record) 
             record->buffer = world_menu_build_and_upload_window_frame_image(
                 record->width, record->height, &record->rect, MENU_WINDOW_FRAME_BUILD);
         }
-        g_world_menu_text_state.pen.stride = record->rect.w * 4;
-        g_world_menu_text_state.pen.rect.x = 8;
-        g_world_menu_text_state.pen.rect.y = 8;
+        g_menu_text_state.pen.stride = record->rect.w * 4;
+        g_menu_text_state.pen.rect.x = 8;
+        g_menu_text_state.pen.rect.y = 8;
         g_world_menu_text_param_22 = record->first_line;
         g_world_menu_text_param_24 = record->last_line;
-        world_menu_display_text_entry(record->text, record->buffer, &g_world_menu_text_state.pen);
+        world_menu_display_text_entry(record->text, record->buffer, &g_menu_text_state.pen);
         LoadImage(&record->rect, record->buffer);
         thread_yield();
         world_menu_free_memory(record->buffer);

@@ -2033,9 +2033,8 @@ extern s32 g_world_menu_text_file_buffer[];
  * The text-image builders address these through one base register, so they
  * are modelled as one aggregate; the two 32-bit parameters at 0x80153304 and
  * 0x80153308 schedule as plain scalars and stay separate globals. */
-extern s32 g_world_menu_text_param_22;            /* 0x80153304: record +0x22 */
-extern s32 g_world_menu_text_param_24;            /* 0x80153308: record +0x24 */
-extern menu_text_state_t g_world_menu_text_state; /* 0x80153280 */
+extern s32 g_world_menu_text_param_22; /* 0x80153304: record +0x22 */
+extern s32 g_world_menu_text_param_24; /* 0x80153308: record +0x24 */
 extern u16 g_world_menu_texture_page;
 extern s32 g_world_menu_thread_result;
 extern s32 g_world_menu_thread_running_status;

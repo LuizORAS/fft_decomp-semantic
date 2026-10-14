@@ -1088,8 +1088,8 @@ data:
   - {addr: 0x80153274, name: g_world_text_glyph_first_row}
   - {addr: 0x80153278, name: g_world_text_glyph_row_limit}
   - {addr: 0x8015327c, name: g_threads}
+  - {addr: 0x80153280, name: g_menu_text_state}
   - {addr: 0x80153280, name: g_script_variables}
-  - {addr: 0x80153280, name: g_world_menu_text_state}
   - {addr: 0x80153294, name: g_world_script_opcode_dc_value}
   - {addr: 0x80153298, name: g_sound_pending_sfx_id}
   - {addr: 0x801532a0, name: g_world_menu_sound_muted}

@@ -76,13 +76,13 @@ void world_menu_labeled_number_entry_thread(void) {
     digit = 0;
     buffer = world_menu_build_and_upload_window_frame_image(
         param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
-    g_world_menu_text_state.pen.stride = param->inner_width;
+    g_menu_text_state.pen.stride = param->inner_width;
     text_measure_pixels(&label_size[0], &label_size[1], text_find_entry(param->text_id));
     world_menu_set_text_origin(8, 9);
-    world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.pen);
+    world_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
     world_menu_set_text_origin((u16)label_size[0] + 8, 9);
     world_menu_set_text_origin(param->inner_width - digits * 6 - 0x10, 9);
-    world_gfx_draw_signed_number(value, digits, buffer, &g_world_menu_text_state.pen);
+    world_gfx_draw_signed_number(value, digits, buffer, &g_menu_text_state.pen);
     LoadImage(&rect, buffer);
     redraw = 1;
     for (i = 0;; i++) {
@@ -138,13 +138,13 @@ void world_menu_labeled_number_entry_thread(void) {
         if (redraw == 1) {
             buffer = world_menu_build_and_upload_window_frame_image(
                 param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
-            g_world_menu_text_state.pen.stride = param->inner_width;
+            g_menu_text_state.pen.stride = param->inner_width;
             text_measure(&label_size[0], &label_size[1], text_find_entry(param->text_id));
             world_menu_set_text_origin(8, 9);
-            world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.pen);
+            world_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
             world_menu_set_text_origin((u16)label_size[0] * 6 + 8, 9);
             world_menu_set_text_origin(param->inner_width - digits * 6 - 0x10, 9);
-            world_gfx_draw_signed_number(value, digits, buffer, &g_world_menu_text_state.pen);
+            world_gfx_draw_signed_number(value, digits, buffer, &g_menu_text_state.pen);
             LoadImage(&rect, buffer);
         }
         cursor_quad = &cursor_quads[i & 1];

@@ -118,7 +118,7 @@ void world_build_at_list(void) {
     cursor = entry->selected_index - row_offset;
     world_menu_draw_text_columns(entry, &row_offset, buffer);
     ring = 0;
-    image_rect.w = g_world_menu_text_state.pen.stride >> 2;
+    image_rect.w = g_menu_text_state.pen.stride >> 2;
     LoadImage(&image_rect, (u32*)buffer);
     clear.h = 2;
     clear.x = image_rect.x;
@@ -188,7 +188,7 @@ void world_build_at_list(void) {
                 image_rect.h = 0x10;
                 buffer = g_world_menu_text_page_image;
                 world_clear_menu_render_buffer(buffer, 0x800);
-                g_world_menu_text_state.pen.stride = entry->inner_width;
+                g_menu_text_state.pen.stride = entry->inner_width;
                 for (column = 0; column < 3; column++) {
                     index = cursor + row_offset + delta;
                     world_menu_set_text_origin(layout->x[column], 0);
@@ -196,20 +196,19 @@ void world_build_at_list(void) {
                         g_menu_text_palette_offset = layout->text_colors[column][index];
                     }
                     if (g_menu_text_palette_offset == 4) {
-                        g_world_menu_text_state.pen.color = 0x44444444;
+                        g_menu_text_state.pen.color = 0x44444444;
                     }
                     if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
-                        world_menu_display_text_entry(
-                            layout->text_ids[column][index], buffer, &g_world_menu_text_state.pen);
+                        world_menu_display_text_entry(layout->text_ids[column][index], buffer, &g_menu_text_state.pen);
                     } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER) {
                         world_menu_display_number_entry(
-                            layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
+                            layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
                     } else if (layout->mode[column] == MENU_TEXT_COLUMN_NUMBER_GLYPHS) {
                         world_menu_draw_number_glyphs(
-                            layout->text_ids[column][index], 2, buffer, &g_world_menu_text_state.pen);
+                            layout->text_ids[column][index], 2, buffer, &g_menu_text_state.pen);
                     }
                 }
-                g_world_menu_text_state.pen.color = 0;
+                g_menu_text_state.pen.color = 0;
                 g_menu_text_palette_offset = 0;
                 LoadImage(&image_rect, (u32*)buffer);
                 clear.h = 2;

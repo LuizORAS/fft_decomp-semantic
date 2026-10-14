@@ -137,7 +137,7 @@ void world_menu_run_game_options(void) {
     world_clear_menu_render_buffer(image, entry->inner_width * entry->inner_height / 2);
     world_menu_draw_text_columns(entry, &row_offset, image);
     ring = 0;
-    image_rect.w = g_world_menu_text_state.pen.stride >> 2;
+    image_rect.w = g_menu_text_state.pen.stride >> 2;
     LoadImage(&image_rect, (u32*)image);
     thread_wait_frames(1);
     world_gfx_init_scaled_draw_area_packets(&page->title_area);
@@ -148,9 +148,9 @@ void world_menu_run_game_options(void) {
         entry->inner_width, 0x2C, &g_world_options_menu_title_rect, MENU_WINDOW_FRAME_ALTERNATE_BUILD);
     base->title.x0 = entry->window.x;
     base->title.y0 = entry->window.y + entry->window.h + 1;
-    g_world_menu_text_state.pen.stride = entry->inner_width;
+    g_menu_text_state.pen.stride = entry->inner_width;
     world_menu_set_text_origin(0x18, 0xE);
-    world_menu_display_text_entry(0x502B, image, &g_world_menu_text_state.pen);
+    world_menu_display_text_entry(0x502B, image, &g_menu_text_state.pen);
     LoadImage(&g_world_options_menu_title_rect, (u32*)image);
     thread_wait_frames(1);
     world_menu_free_memory(image);
@@ -170,9 +170,9 @@ void world_menu_run_game_options(void) {
     base->value.x0 = entry->window.x + 0x5C;
     base->value.y0 = entry->window.y + entry->window.h + 0xF;
     world_clear_menu_render_buffer(buffer, 0x1E0);
-    g_world_menu_text_state.pen.stride = 0x3C;
+    g_menu_text_state.pen.stride = 0x3C;
     world_menu_set_text_origin(0, 0);
-    world_menu_display_text_entry(0x5021, buffer, &g_world_menu_text_state.pen);
+    world_menu_display_text_entry(0x5021, buffer, &g_menu_text_state.pen);
     LoadImage(&g_world_options_menu_value_rect, (u32*)buffer);
     mem_copy_bytes_nonempty(&base[1], base, sizeof(options_menu_page_t));
     for (;;) {
@@ -213,7 +213,7 @@ void world_menu_run_game_options(void) {
                 image = g_world_menu_text_page_image;
                 image_rect.h = 0x10;
                 world_clear_menu_render_buffer(image, entry->inner_width * 8);
-                g_world_menu_text_state.pen.stride = entry->inner_width;
+                g_menu_text_state.pen.stride = entry->inner_width;
                 for (column = 0; column < 2; column++) {
                     if (layout->text_ids[column] != (s16*)-1) {
                         index = cursor + row_offset + delta;
@@ -221,10 +221,10 @@ void world_menu_run_game_options(void) {
                         g_menu_text_palette_offset = layout->text_colors[column][index];
                         if (layout->mode[column] == MENU_TEXT_COLUMN_TEXT) {
                             world_menu_display_text_entry(
-                                layout->text_ids[column][index], image, &g_world_menu_text_state.pen);
+                                layout->text_ids[column][index], image, &g_menu_text_state.pen);
                         } else {
                             world_menu_display_number_entry(
-                                layout->text_ids[column][index], 2, image, &g_world_menu_text_state.pen);
+                                layout->text_ids[column][index], 2, image, &g_menu_text_state.pen);
                         }
                     }
                 }
@@ -246,10 +246,10 @@ void world_menu_run_game_options(void) {
         if (g_world_thread_task_active == 0) {
             index = cursor + row_offset + delta;
             world_clear_menu_render_buffer(buffer, 0x1E0);
-            g_world_menu_text_state.pen.stride = 0x3C;
+            g_menu_text_state.pen.stride = 0x3C;
             world_menu_set_text_origin(0, 0);
             world_menu_display_text_entry(g_world_option_menu_first_text_ids[index] + g_world_game_option_values[index],
-                buffer, &g_world_menu_text_state.pen);
+                buffer, &g_menu_text_state.pen);
             LoadImage(&g_world_options_menu_value_rect, (u32*)buffer);
         }
         thread_yield();

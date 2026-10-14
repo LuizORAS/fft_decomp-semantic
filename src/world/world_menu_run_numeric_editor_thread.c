@@ -74,32 +74,26 @@ void world_menu_run_numeric_editor_thread(void) {
         buffer = &buffers[frame & 1];
         if (frame == 0 || thread->redraw_request != 0) {
             world_clear_menu_render_buffer(number_images, sizeof(*number_images));
-            g_world_menu_text_state.pen.stride = 0x14;
+            g_menu_text_state.pen.stride = 0x14;
             world_menu_set_text_origin(0, 0);
             if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
-                menu_text_render_signed_decimal_entries(
-                    number_images->mobility, entries, &g_world_menu_text_state.pen, 3);
+                menu_text_render_signed_decimal_entries(number_images->mobility, entries, &g_menu_text_state.pen, 3);
             } else {
-                world_menu_draw_numeric_display_entries(
-                    number_images->mobility, entries, &g_world_menu_text_state.pen, 3);
+                world_menu_draw_numeric_display_entries(number_images->mobility, entries, &g_menu_text_state.pen, 3);
             }
-            g_world_menu_text_state.pen.stride = 0x40;
+            g_menu_text_state.pen.stride = 0x40;
             world_menu_set_text_origin(0, 0);
             if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
-                menu_text_render_signed_decimal_entries(
-                    number_images->weapons, entries + 3, &g_world_menu_text_state.pen, 4);
+                menu_text_render_signed_decimal_entries(number_images->weapons, entries + 3, &g_menu_text_state.pen, 4);
             } else {
-                world_menu_draw_numeric_display_entries(
-                    number_images->weapons, entries + 3, &g_world_menu_text_state.pen, 4);
+                world_menu_draw_numeric_display_entries(number_images->weapons, entries + 3, &g_menu_text_state.pen, 4);
             }
-            g_world_menu_text_state.pen.stride = 0x64;
+            g_menu_text_state.pen.stride = 0x64;
             world_menu_set_text_origin(0, 0);
             if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
-                menu_text_render_signed_decimal_entries(
-                    number_images->combat, entries + 7, &g_world_menu_text_state.pen, 8);
+                menu_text_render_signed_decimal_entries(number_images->combat, entries + 7, &g_menu_text_state.pen, 8);
             } else {
-                world_menu_draw_numeric_display_entries(
-                    number_images->combat, entries + 7, &g_world_menu_text_state.pen, 8);
+                world_menu_draw_numeric_display_entries(number_images->combat, entries + 7, &g_menu_text_state.pen, 8);
             }
             LoadImage(upload_a, (u32*)number_images->mobility);
             LoadImage(upload_b, (u32*)number_images->weapons);

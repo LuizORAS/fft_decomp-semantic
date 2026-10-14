@@ -1,4 +1,5 @@
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Store the top-left text origin used by the BATTLE menu renderer. */

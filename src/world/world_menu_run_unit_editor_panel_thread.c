@@ -120,21 +120,21 @@ void world_menu_run_unit_editor_panel_thread(void) {
 
     buffer = world_menu_alloc_buffer(0xC80);
     world_clear_menu_render_buffer(buffer, 0xC80);
-    g_world_menu_text_state.pen.stride = 0x50;
+    g_menu_text_state.pen.stride = 0x50;
     world_menu_set_text_origin(0, 0);
     for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
         value = g_world_unit_editor_fields.state.equipment[i] + TEXT_ID_ITEM_NAME_BASE;
         if ((u16)g_world_unit_editor_fields.state.equipment[i] == 0xFFFF) {
-            g_world_menu_text_state.pen.rect.y += 0x10;
+            g_menu_text_state.pen.rect.y += 0x10;
         } else {
-            world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
-            g_world_menu_text_state.pen.rect.y += 0x10;
+            world_menu_display_text_entry(value, buffer, &g_menu_text_state.pen);
+            g_menu_text_state.pen.rect.y += 0x10;
         }
     }
     LoadImage(&g_world_unit_editor_text_rect_a, (u32*)buffer);
     thread_yield();
     world_clear_menu_render_buffer(buffer, 0xC80);
-    g_world_menu_text_state.pen.stride = 0x50;
+    g_menu_text_state.pen.stride = 0x50;
     world_menu_set_text_origin(0, 0);
     for (i = 0; i < 2; i++) {
         value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
@@ -142,19 +142,19 @@ void world_menu_run_unit_editor_panel_thread(void) {
             value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
         }
         if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
-            g_world_menu_text_state.pen.rect.y += 0x10;
+            g_menu_text_state.pen.rect.y += 0x10;
         } else {
-            world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
-            g_world_menu_text_state.pen.rect.y += 0x10;
+            world_menu_display_text_entry(value, buffer, &g_menu_text_state.pen);
+            g_menu_text_state.pen.rect.y += 0x10;
         }
     }
     for (i = 2; i < 5; i++) {
         value = g_world_unit_editor_fields.state.ability_ids[i] + TEXT_ID_ABILITY_NAME_BASE;
         if ((u16)g_world_unit_editor_fields.state.ability_ids[i] == MENU_STATUS_PANEL_LABEL_NONE) {
-            g_world_menu_text_state.pen.rect.y += 0x10;
+            g_menu_text_state.pen.rect.y += 0x10;
         } else {
-            world_menu_display_text_entry(value, buffer, &g_world_menu_text_state.pen);
-            g_world_menu_text_state.pen.rect.y += 0x10;
+            world_menu_display_text_entry(value, buffer, &g_menu_text_state.pen);
+            g_menu_text_state.pen.rect.y += 0x10;
         }
     }
     if (g_world_unit_editor_fields.state.generic_monster != 0) {

@@ -25,18 +25,18 @@ void world_menu_run_numeric_display_panel_thread(void) {
     world_gfx_init_scaled_draw_area_packets(&record->draw_areas);
     number_images = world_menu_alloc_ui_buffer(sizeof(*number_images));
     world_clear_menu_render_buffer(number_images, sizeof(*number_images));
-    g_world_menu_text_state.pen.stride = 0x14;
+    g_menu_text_state.pen.stride = 0x14;
     world_menu_set_text_origin(0, 0);
     world_menu_draw_numeric_display_entries(
-        number_images->mobility, g_world_numeric_display_entries, &g_world_menu_text_state.pen, 3);
-    g_world_menu_text_state.pen.stride = 0x40;
+        number_images->mobility, g_world_numeric_display_entries, &g_menu_text_state.pen, 3);
+    g_menu_text_state.pen.stride = 0x40;
     world_menu_set_text_origin(0, 0);
     world_menu_draw_numeric_display_entries(
-        number_images->weapons, &g_world_numeric_display_entries[3], &g_world_menu_text_state.pen, 4);
-    g_world_menu_text_state.pen.stride = 0x64;
+        number_images->weapons, &g_world_numeric_display_entries[3], &g_menu_text_state.pen, 4);
+    g_menu_text_state.pen.stride = 0x64;
     world_menu_set_text_origin(0, 0);
     world_menu_draw_numeric_display_entries(
-        number_images->combat, &g_world_numeric_display_entries[7], &g_world_menu_text_state.pen, 8);
+        number_images->combat, &g_world_numeric_display_entries[7], &g_menu_text_state.pen, 8);
     LoadImage(&g_world_numeric_display_text_rect_a, (u32*)number_images->mobility);
     LoadImage(&g_world_numeric_display_text_rect_b, (u32*)number_images->weapons);
     LoadImage(&g_world_numeric_display_text_rect_c, (u32*)number_images->combat);

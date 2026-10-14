@@ -1,4 +1,5 @@
 #include "fft/memory.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
 #include "fft/world.h"
@@ -35,9 +36,9 @@ void world_menu_icon_linked_entry_thread(void) {
         thread_set_parameters(g_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[parent], 0, 0);
     }
     buffer = world_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
-    g_world_menu_text_state.pen.stride = width;
+    g_menu_text_state.pen.stride = width;
     world_menu_set_text_origin(8, 9);
-    world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.pen);
+    world_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
     LoadImage(&rect, buffer);
     for (i = 0;; i++) {
         thread_yield();

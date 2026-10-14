@@ -1509,8 +1509,8 @@ extern s32 g_menu_hide_numeric_values; /* non-zero: draw digits as blanks (0x48,
 void menu_display_hovered_unit_stats(
     RECT* frame_rect, s32 mode, menu_number_entry_t* entries, menu_unit_status_record_t* status);
 
-/* The menu text state block at BATTLE 0x80165f9c (g_menu_text_state) and
- * WORLD 0x80153280 (g_world_menu_text_state): the script-variable pointer,
+/* The scene-local menu text state at BATTLE 0x80165f9c and
+ * WORLD 0x80153280: the script-variable pointer,
  * then the pen the glyph renderers receive. */
 typedef struct menu_text_state {
     s32* script_variables; /* 0x00; also bound as g_script_variables in each scene */
@@ -1520,6 +1520,8 @@ typedef struct menu_text_state {
      * 0x44444444 while text colour 4 is drawn (*_menu_draw_text_columns). */
     glyph_blit_t pen;
 } menu_text_state_t;
+
+extern menu_text_state_t g_menu_text_state;
 
 /* Added to glyph palette indices while menu text is drawn. */
 extern s32 g_menu_text_palette_offset;
