@@ -13,7 +13,7 @@
 
 /* Thread task 0x3b: the combined status panel for the selected unit. BUNIT
  * twin of WORLD world_menu_equipment_and_ability_panel_thread. */
-void bunit_menu_equipment_and_ability_panel_thread(void) {
+void menu_run_equipment_ability_panel_thread(void) {
     menu_status_thread_t* thread;
     menu_status_panel_buffer_t* screen;
     menu_status_panel_buffer_t* base;

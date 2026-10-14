@@ -556,7 +556,7 @@ functions:
   - {addr: 0x80110260, size: 544, name: world_gfx_init_menu_tile_and_line_primitives, hash: 2bdc8929b9ed31ea}
   - {addr: 0x80110480, size: 1588, name: world_menu_equipment_panel_thread, hash: a00168623e174937}
   - {addr: 0x80110ab4, size: 1468, name: world_menu_ability_panel_thread, hash: 8a0b24b1c44d851a}
-  - {addr: 0x80111070, size: 1920, name: world_menu_equipment_and_ability_panel_thread, hash: 13121306aa5d00d2}
+  - {addr: 0x80111070, size: 1920, name: world_menu_equipment_and_ability_panel_thread, hash: 13121306aa5d00d2, source: src/shared/menu/menu_run_equipment_ability_panel_thread.c, source_symbol: menu_run_equipment_ability_panel_thread}
   - {addr: 0x801117f0, size: 380, name: world_menu_configure_status_panel_primitive_colors, hash: 388b0fac742b4997}
   - {addr: 0x8011196c, size: 84, name: world_menu_select_primitive_color_palette, hash: 98f3a5d0ed4e9088}
   - {addr: 0x801119c0, size: 268, name: menu_text_render_signed_decimal_entries, hash: 77d870766dabc4f4, source: src/shared/menu/menu_text_render_signed_decimal_entries.c}
@@ -2504,6 +2504,36 @@ overrides:
   - {function: world_menu_draw_text_columns, name: battle_menu_set_text_origin, addr: 0x800fdb88}
   - {function: world_menu_draw_text_columns, name: g_menu_text_palette_offset, addr: 0x80153270}
   - {function: world_menu_draw_text_columns, name: g_menu_text_state, addr: 0x80153280}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: battle_gfx_set_item_icon_sprite, addr: 0x800ea990}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: battle_menu_display_text_entry, addr: 0x800fe774}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: battle_menu_init_numeric_display_frame_primitives, addr: 0x800e3358}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: battle_menu_set_text_origin, addr: 0x800fdb88}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: battle_thread_get_current_parameter_3, addr: 0x801000f8}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_character_status_ability_text_image, addr: 0x801c596c}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_character_status_ability_text_rect, addr: 0x8018af88}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_character_status_draw_area_rect, addr: 0x8018af78}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_character_status_equipment_text_image, addr: 0x801c4cec}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_character_status_equipment_text_rect, addr: 0x8018af80}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_character_status_frame_rect, addr: 0x8018af60}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_character_status_frames, addr: 0x801c3d8c}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_character_status_item_icon_layout, addr: 0x8018b380}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_character_status_layout_mode0, addr: 0x8018af90}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_character_status_layout_mode1, addr: 0x8018b074}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_character_status_layout_mode2, addr: 0x8018b158}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_character_status_layout_mode3, addr: 0x8018b23c}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_character_status_sprite_origin, addr: 0x8018af50}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_editor_numeric_geometry, addr: 0x8018abd0}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_editor_unit_fields, addr: 0x8018ab00}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_frame_arg, addr: 0x801c0520}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_gfx_draw_offset_y, addr: 0x801c0540}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_bunit_panel_item_icon_texture, addr: 0x8018abd8}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: g_menu_input_controller, addr: 0x801c0524}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: menu_build_scaled_draw_area_packets, addr: 0x8010c848}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: menu_init_scaled_draw_area_packets, addr: 0x8010ca18}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: menu_init_status_panel_primitives, addr: 0x80110260}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: menu_select_status_primitive_color_palette, addr: 0x8011196c}
+  - {function: world_menu_equipment_and_ability_panel_thread, name: menu_set_status_panel_primitive_colors, addr: 0x801117f0}
   - {function: world_menu_free_memory, name: g_battle_menu_allocator_slot_records, addr: 0x8019b368}
   - {function: world_menu_free_memory, name: g_battle_menu_buffer_allocation_map, addr: 0x801a23e8}
   - {function: world_menu_free_memory, name: g_battle_menu_buffer_arena, addr: 0x8019b3e8}

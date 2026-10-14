@@ -532,6 +532,7 @@ extern RECT g_menu_status_panel_text_upload_rect_a;
 extern RECT g_menu_status_panel_text_upload_rect_b;
 
 void menu_run_status_panel_thread(void);
+void menu_run_equipment_ability_panel_thread(void);
 void menu_run_numeric_editor_thread(void);
 void menu_run_numeric_editor_frame_thread(void);
 void menu_load_selected_unit(void);
