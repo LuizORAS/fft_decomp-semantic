@@ -294,7 +294,7 @@ void option_menu_run_at_list(void) {
         page->icons.base.sprites[0].x0 = 1000;
         page->icons.base.sprites[1].y0 += 4;
         page->icons.base.sprites[2].y0 += 4;
-        battle_menu_submit_icon_primitives(&page->icons);
+        battle_menu_submit_icon_primitives(&page->icons.base);
     }
     thread_set_parameters(g_thread_current_id + 1, 0, 0, 1);
     thread_yield();

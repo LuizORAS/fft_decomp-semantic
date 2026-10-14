@@ -263,7 +263,7 @@ void battle_menu_run_icon_selection_loop(void);
 void battle_menu_select_icon_cluts(menu_icon_sprites_t* frame);
 void battle_menu_select_icon_sprite_clut(SPRT* sprite);
 void battle_menu_select_sprite_clut(SPRT* sprite);
-void battle_menu_submit_icon_primitives(struct menu_icon_record* frame);
+void battle_menu_submit_icon_primitives(menu_icon_sprites_t* frame);
 void battle_menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprites_t* record, s32 frame, s32 cursor);
 
 /* text rendering */

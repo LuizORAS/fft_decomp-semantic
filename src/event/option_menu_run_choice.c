@@ -126,7 +126,7 @@ void option_menu_run_choice(void) {
         }
         battle_menu_select_icon_cluts(&record->base);
         battle_menu_update_icon_cursor_sprites(param, &record->base, width, cursor);
-        battle_menu_submit_icon_primitives(record);
+        battle_menu_submit_icon_primitives(&record->base);
         thread_wait_frames(1);
     }
     g_main_game_options.fields.cursor_movement = g_option_current_values[GAME_OPTION_CURSOR_MOVEMENT];

@@ -3,11 +3,11 @@
 #include "fft/gfx.h"
 
 /* Submit the six primitives that compose one menu-frame buffer. */
-void battle_menu_submit_icon_primitives(menu_icon_record_t* frame) {
-    gfx_draw_or_append_gpu_primitive(&frame->base.sprites[3]);
-    gfx_draw_or_append_gpu_primitive(&frame->base.sprites[1]);
-    gfx_draw_or_append_gpu_primitive(&frame->base.sprites[2]);
-    gfx_draw_or_append_gpu_primitive(&frame->base.draw_mode);
-    gfx_draw_or_append_gpu_primitive(&frame->base.sprites[0]);
-    gfx_draw_or_append_gpu_primitive(&frame->base.first_draw_mode);
+void battle_menu_submit_icon_primitives(menu_icon_sprites_t* frame) {
+    gfx_draw_or_append_gpu_primitive(&frame->sprites[3]);
+    gfx_draw_or_append_gpu_primitive(&frame->sprites[1]);
+    gfx_draw_or_append_gpu_primitive(&frame->sprites[2]);
+    gfx_draw_or_append_gpu_primitive(&frame->draw_mode);
+    gfx_draw_or_append_gpu_primitive(&frame->sprites[0]);
+    gfx_draw_or_append_gpu_primitive(&frame->first_draw_mode);
 }

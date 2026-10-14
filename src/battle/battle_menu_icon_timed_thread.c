@@ -69,7 +69,7 @@ void battle_menu_icon_timed_thread(void) {
             battle_menu_handle_action(param, 0);
             battle_handle_menu_cancel_input(param);
         }
-        battle_menu_submit_icon_primitives(record);
+        battle_menu_submit_icon_primitives(&record->base);
     }
     g_battle_menu_panel_fade_intensity = 0;
     g_sound_suppressed = 0;

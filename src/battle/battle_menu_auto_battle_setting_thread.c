@@ -120,7 +120,7 @@ void battle_menu_auto_battle_setting_thread(void) {
         battle_handle_menu_cancel_input(param);
         battle_menu_select_icon_cluts(&record->base);
         battle_menu_update_icon_cursor_sprites(param, &record->base, i, cursor);
-        battle_menu_submit_icon_primitives(record);
+        battle_menu_submit_icon_primitives(&record->base);
     }
     thread_yield();
     thread_exit_current();

@@ -63,7 +63,7 @@ void battle_menu_icon_linked_entry_thread(void) {
         battle_menu_update_icon_cursor_sprites(param, &record->base, i, -1);
         battle_menu_handle_action(param, 0);
         battle_handle_menu_cancel_input(param);
-        battle_menu_submit_icon_primitives(record);
+        battle_menu_submit_icon_primitives(&record->base);
     }
     g_sound_suppressed = 0;
     thread_yield();
