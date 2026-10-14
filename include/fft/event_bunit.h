@@ -562,7 +562,7 @@ extern s32 g_bunit_bits_index;
 extern u8 g_bunit_bits_reader_reset;
 
 void bunit_bits_init_reader(const u8* data);
-s32 bunit_bits_read(s32 bit_count);
+u32 bunit_bits_read(s32 bit_count);
 
 /* threads */
 /* Slots of the unit list screen's own menus; thread_screen_slot_e
