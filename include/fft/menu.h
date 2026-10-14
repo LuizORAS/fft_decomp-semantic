@@ -2219,6 +2219,7 @@ typedef struct menu_unit_view_thread_set {
 typedef char menu_unit_view_thread_set_size_must_be_48[(sizeof(menu_unit_view_thread_set_t) == 48) ? 1 : -1];
 
 void menu_run_unit_view_supervisor_thread(void);
+void menu_start_unit_view_thread(s32 mode, s32 unit_a, s32 unit_b);
 
 /* menu screen starters */
 void menu_open_debugchr(void);

@@ -228,7 +228,7 @@ functions:
   - {addr: 0x800f0f40, size: 20, name: world_menu_request_transition, hash: 2f7b7cb2197c6cfb}
   - {addr: 0x800f0f54, size: 8, name: world_noop_800f0f54, hash: 6d64edf91449c1b1}
   - {addr: 0x800f0f5c, size: 8, name: world_noop_800f0f5c, hash: 6d64edf91449c1b1}
-  - {addr: 0x800f0f64, size: 208, name: world_unit_start_view_thread, hash: 6f0d3ab168703f5f}
+  - {addr: 0x800f0f64, size: 208, name: world_unit_start_view_thread, hash: 6f0d3ab168703f5f, source: src/shared/menu/menu_start_unit_view_thread.c, source_symbol: menu_start_unit_view_thread}
   - {addr: 0x800f1034, size: 764, name: world_unit_view_supervisor_thread, hash: 1635c86375bb55b0, source: src/shared/menu/menu_run_unit_view_supervisor_thread.c, source_symbol: menu_run_unit_view_supervisor_thread}
   - {addr: 0x800f1330, size: 16, name: world_script_set_event_speed, hash: 78a0268c8e691a6d}
   - {addr: 0x800f1340, size: 56, name: thread_wait_for_unit_view_panels, hash: da96c880c05276fb, source: src/shared/thread/thread_wait_for_unit_view_panels.c}
@@ -2927,6 +2927,11 @@ overrides:
   - {function: world_text_save_section_pointers, name: g_text_section_backup_active, addr: 0x80154da8}
   - {function: world_text_start_character_thread_if_idle, name: battle_text_run_dialog_thread, addr: 0x800e4d9c}
   - {function: world_text_start_thread_if_idle, name: battle_text_run_dialog_thread, addr: 0x800e4d9c}
+  - {function: world_unit_start_view_thread, name: battle_text_build_unit_name_list, addr: 0x800e7b5c}
+  - {function: world_unit_start_view_thread, name: battle_thread_is_running_asm, addr: 0x80100164}
+  - {function: world_unit_start_view_thread, name: battle_unit_view_supervisor_thread, addr: 0x800f1034}
+  - {function: world_unit_start_view_thread, name: g_battle_menu_panel_fade_mode, addr: 0x80153344}
+  - {function: world_unit_start_view_thread, name: g_battle_menu_panel_fade_modes, addr: 0x801566b0}
   - {function: world_unit_view_supervisor_thread, name: battle_thread_get_current_parameter_1, addr: 0x80100090}
   - {function: world_unit_view_supervisor_thread, name: g_battle_unit_view_mode, addr: 0x80153264}
   - {function: world_unit_view_supervisor_thread, name: g_battle_unit_view_started_battle_id, addr: 0x8013a60c}

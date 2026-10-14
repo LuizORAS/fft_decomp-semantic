@@ -1,7 +1,7 @@
-#include "fft/battle.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
 #include "fft/battle_unit.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -12,7 +12,7 @@
  * g_battle_menu_panel_fade_modes[mode]. unit_a becomes the active-turn unit of
  * the banner and unit_b the previewed target of the status billboard; 0xff leaves
  * either unchanged. Ignored while g_menu_overlay_state is 1. */
-void battle_unit_start_view_thread(s32 mode, s32 unit_a, s32 unit_b) {
+void menu_start_unit_view_thread(s32 mode, s32 unit_a, s32 unit_b) {
     if (g_menu_overlay_state == 1) {
         return;
     }
