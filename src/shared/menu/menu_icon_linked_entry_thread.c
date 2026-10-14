@@ -1,8 +1,9 @@
+#include "fft/battle_menu.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
-#include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -10,7 +11,7 @@
  * names a menu entry, that entry is centred on this text width, placed below
  * this entry, and started in the previous thread slot. The icon records then
  * alternate until input completes, selecting CLUTs in the linked slot. */
-void world_menu_icon_linked_entry_thread(void) {
+void menu_icon_linked_entry_thread(void) {
     RECT rect;
     menu_icon_record_t records[2];
     menu_entry_t* param;
@@ -22,10 +23,10 @@ void world_menu_icon_linked_entry_thread(void) {
     s16 height;
     s32 pad;
 
-    param = (menu_entry_t*)world_thread_get_current_parameter_1();
-    world_menu_size_entry_to_text(param, &width, &height, &pad, 0);
-    world_menu_build_icon_record(&rect, param, &records[0]);
-    mem_copy_bytes_nonempty(&records[1], &records[0], sizeof(records[1]));
+    param = (menu_entry_t*)battle_thread_get_current_parameter_1();
+    battle_menu_size_entry_to_text(param, &width, &height, &pad, 0);
+    battle_menu_build_window_sprites(&rect, param, &records[0]);
+    mem_copy_bytes_nonempty(&records[1], &records[0], 0x7C);
     parent = param->row_actions[0];
     if (parent >= 0) {
         /* Unsigned narrowing keeps the retail 16-bit centering expression. */
@@ -35,35 +36,35 @@ void world_menu_icon_linked_entry_thread(void) {
         thread_start(g_thread_current_id - 1, g_menu_thread_menu_data[parent].thread_entry);
         thread_set_parameters(g_thread_current_id - 1, (s32)&g_menu_thread_menu_data[parent], 0, 0);
     }
-    buffer = world_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
+    buffer = battle_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
     g_menu_text_state.pen.stride = width;
-    world_menu_set_text_origin(8, 9);
-    world_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
-    LoadImage(&rect, buffer);
+    battle_menu_set_text_origin(8, 9);
+    battle_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
+    LoadImage(&rect, (u32*)buffer);
     for (i = 0;; i++) {
         thread_yield();
         if (i == 0) {
-            world_menu_free_memory(buffer);
+            battle_menu_free_memory(buffer);
         }
-        if (world_menu_check_thread_completion(&g_script_event_input) != 0) {
+        if (battle_menu_should_close_thread(&g_script_event_input) != 0) {
             break;
         }
         if (parent >= 0) {
             g_thread_current_id--;
-            world_menu_select_icon_cluts(&records[i & 1].base);
+            battle_menu_select_icon_cluts(&records[i & 1].base);
             g_thread_current_id++;
         } else {
-            world_menu_select_icon_cluts(&records[i & 1].base);
+            battle_menu_select_icon_cluts(&records[i & 1].base);
         }
         record = &records[i & 1];
-        world_menu_update_icon_cursor_sprites(param, &record->base, i, -1);
-        world_menu_handle_entry_confirm(param, 0);
-        world_menu_cancel_thread_group(param);
-        world_menu_submit_icon_primitives(&record->base);
+        battle_menu_update_icon_cursor_sprites(param, &record->base, i, -1);
+        battle_menu_handle_action(param, 0);
+        battle_handle_menu_cancel_input(param);
+        battle_menu_submit_icon_primitives(&record->base);
     }
-    g_world_menu_sound_muted = 0;
+    g_sound_suppressed = 0;
     thread_yield();
-    if (world_thread_get_current_parameter_2() == 0) {
+    if (battle_thread_get_current_parameter_2() == 0) {
         thread_exit_current();
     }
 }

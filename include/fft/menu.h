@@ -1625,6 +1625,7 @@ void menu_set_text_origin(s32 x, s32 y);
 /* list threads */
 extern u32* g_menu_input_controller;
 void menu_draw_text_columns(menu_entry_t* entry, s32* row_offset, u8* buffer);
+void menu_icon_linked_entry_thread(void);
 void menu_icon_list_thread(void);
 void menu_icon_strip_thread(void);
 void menu_icon_timed_thread(void);
