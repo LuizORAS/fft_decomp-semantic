@@ -8,7 +8,8 @@ void battle_camera_update_zoom(void) {
     s32 increment;
     s32* zoom_ptr;
 
-    if (g_battle_camera_zoom_action == BATTLE_CAMERA_STEP_INCREASE && g_battle_map_zoom_target == BATTLE_MAP_ZOOM_IN) {
+    if (g_battle_camera_zoom_action == BATTLE_CAMERA_STEP_INCREASE
+        && g_battle_camera_zoom_target == BATTLE_CAMERA_ZOOM_IN) {
         s32 zoom;
         s32 below;
         s32 pan_x;
@@ -33,7 +34,7 @@ void battle_camera_update_zoom(void) {
             *zoom_ptr = ONE;
         }
     } else if (g_battle_camera_zoom_action == BATTLE_CAMERA_STEP_DECREASE
-        && g_battle_map_zoom_target == g_battle_camera_zoom_action) {
+        && g_battle_camera_zoom_target == g_battle_camera_zoom_action) {
         s32 zoom;
         s32 below;
 

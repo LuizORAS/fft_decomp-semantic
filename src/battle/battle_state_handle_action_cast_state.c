@@ -16,7 +16,7 @@ void battle_state_handle_action_cast_state(void) {
         g_battle_action_post_action = 1;
     }
     /* Wait for the camera to settle before handing the action data over. */
-    if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) == 0
+    if ((g_battle_camera_step_vector.vx | g_battle_camera_step_vector.vy | g_battle_camera_step_vector.vz) == 0
         && g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE && g_battle_action_post_action != 0) {
         battle_state_enter_commence_attack_phase();
     }

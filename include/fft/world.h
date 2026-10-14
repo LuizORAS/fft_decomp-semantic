@@ -68,8 +68,7 @@ void world_menu_run_companion_overlay_stub(void);
 void world_script_frame_after_threads_stub(void);
 void world_map_reset_script_light_transform(void);
 void world_script_process_pending_requests(void);
-void world_camera_load_state_from_script_variables(void);
-void world_camera_store_state_to_script_variables(void);
+
 void world_script_add_unit_stub(void);
 void world_script_frame_after_requests_stub(void);
 void world_card_close_stub(void);
@@ -185,6 +184,10 @@ void world_input_update_menu_repeat(u32 buttons);
 void world_input_update_menu_state(void);
 
 /* camera */
+/* WORLD's copy of the event camera: the CAMERA instruction's threads, its fusions and the yaw helpers.
+ * WORLD's event interpreter never runs, so neither does this copy; its wait, world_camera_wait_until_idle,
+ * would call BATTLE's camera at an address that holds WLDCORE code (QUIRKS.md). */
+
 extern s32 g_world_camera_speed_curve;
 extern u16 g_world_camera_script_variable_indices[7];
 extern u16 g_world_camera_position_locked;
@@ -201,6 +204,11 @@ s16 world_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b);
 void world_camera_fusion_thread(void);
 void world_camera_wait_until_idle(void);
 void world_camera_thread(void);
+
+void world_camera_load_state_from_script_variables(void);
+void world_camera_store_state_to_script_variables(void);
+
+void world_camera_clear_zoom_variable_low_bit(void);
 
 /* screen */
 extern s32 g_world_screen_fade;
@@ -3253,7 +3261,7 @@ void world_script_advance_date_by_one_year(void);
 void world_script_blue_remove_all_enemy_units(void);
 void world_script_blue_remove_unit(s32 unit_id);
 void world_script_change_stats(const u8* parameters);
-void world_camera_clear_zoom_variable_low_bit(void);
+
 void world_script_color_unit_event_instruction(const u8* parameters);
 void world_script_copy_32_bytes(void* destination, const void* source);
 void world_script_earthquake_thread(void);

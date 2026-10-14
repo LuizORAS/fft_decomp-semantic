@@ -2324,41 +2324,6 @@ typedef enum battle_misc_turn_action_flags {
     BATTLE_MISC_TURN_ACTION_ACTED = 0x02,
 } battle_misc_turn_action_flags_e;
 
-/* g_battle_camera_rotation_action. */
-typedef enum battle_camera_rotation_action {
-    BATTLE_CAMERA_ROTATION_NONE = 0,
-    BATTLE_CAMERA_ROTATION_LEFT = 1,  /* the yaw falls to its destination */
-    BATTLE_CAMERA_ROTATION_RIGHT = 2, /* the yaw rises to its destination */
-} battle_camera_rotation_action_e;
-
-/* g_battle_camera_tilt_action and g_battle_camera_zoom_action: the move in progress towards
- * g_battle_map_tilt_target or g_battle_map_zoom_target. */
-typedef enum battle_camera_step_action {
-    BATTLE_CAMERA_STEP_NONE = 0,
-    BATTLE_CAMERA_STEP_INCREASE = 2, /* tilt up; zoom in */
-    BATTLE_CAMERA_STEP_DECREASE = 4, /* tilt down; zoom out */
-} battle_camera_step_action_e;
-
-/* g_battle_map_tilt_target values the tilt code tests; the target is a tilt band plus one, and
- * bands 3 and 4 have no pitch here. */
-enum {
-    BATTLE_MAP_TILT_LOW = 1,  /* pitch 0x12e */
-    BATTLE_MAP_TILT_HIGH = 2, /* pitch 0x1c0 */
-};
-
-/* g_battle_map_zoom_target. */
-enum {
-    BATTLE_MAP_ZOOM_IN = 1,  /* scale ONE */
-    BATTLE_MAP_ZOOM_OUT = 4, /* scale 0xc00 */
-};
-
-/* battle_camera_get_input_direction modes: which button state it reads. */
-typedef enum battle_camera_input_source {
-    BATTLE_CAMERA_INPUT_HELD = 0,
-    BATTLE_CAMERA_INPUT_PRESSED = 1, /* newly pressed, repeating at the cursor repeat speed while held */
-    BATTLE_CAMERA_INPUT_RELEASED = 2,
-} battle_camera_input_source_e;
-
 /* g_battle_cursor_input_mode: how the directional buttons map to map directions. The first two are
  * the Cursor Movement option's settings; FREE_CURSOR sends the four buttons along the screen's axes. */
 typedef enum battle_cursor_input_mode {
@@ -5554,7 +5519,7 @@ extern s32 g_battle_action_learn_on_hit_unit_id;
 extern u8 g_battle_action_canceled_statuses[];
 
 extern SVECTOR g_battle_current_misc_screen_coords;
-extern VECTOR g_battle_current_vector;
+
 extern u32* g_battle_gfx_current_otag_entry;
 
 extern void* g_battle_effect_current_work;
@@ -6124,16 +6089,45 @@ void battle_move_update_unit_step_to_destination_tile_center(battle_unit_misc_da
 void battle_move_update_walking_step_at_tile_edge(battle_unit_misc_data_t* unit);
 
 /* camera */
-/* SEQ sequence bytes, as battle_gfx_run_unit_seq_script (unit sheets) and
- * battle_gfx_run_wep_eff_seq_script (weapon and effect sheets) read them.
- * A sequence is a run of two-byte frame instructions (an SHP frame, then the
- * frames to wait; a wait of 0 holds the frame for good) and of commands:
- * BATTLE_SEQ_OP_PREFIX, an opcode and its operand bytes. A jump offset is a
- * signed byte counted from the command's own prefix byte, so -2 repeats the
- * frame instruction before it. UNKNOWN_XX commands only skip their operands. */
-enum {
-    BATTLE_SEQ_OP_PREFIX = 0xff,
+/* BATTLE's camera: the angles, position, zoom and screen offset behind the camera matrix; the map camera the
+ * player turns (L1, R1), zooms (L2), tilts (R2) and pans; the following of the cursor and the acting unit;
+ * the event camera (the CAMERA instruction and its fusions); the effect camera's timed tracks; and the sort
+ * points units, shadows, cursors and bubbles are depth-ordered by. */
+
+/* g_battle_camera_rotation_action. */
+typedef enum battle_camera_rotation_action {
+    BATTLE_CAMERA_ROTATION_NONE = 0,
+    BATTLE_CAMERA_ROTATION_LEFT = 1,  /* the yaw falls to its destination */
+    BATTLE_CAMERA_ROTATION_RIGHT = 2, /* the yaw rises to its destination */
+} battle_camera_rotation_action_e;
+
+/* g_battle_camera_tilt_action and g_battle_camera_zoom_action: the move in progress towards
+ * g_battle_camera_tilt_target or g_battle_camera_zoom_target. */
+typedef enum battle_camera_step_action {
+    BATTLE_CAMERA_STEP_NONE = 0,
+    BATTLE_CAMERA_STEP_INCREASE = 2, /* tilt up; zoom in */
+    BATTLE_CAMERA_STEP_DECREASE = 4, /* tilt down; zoom out */
+} battle_camera_step_action_e;
+
+/* g_battle_camera_tilt_target values the tilt code tests; the target is a tilt band plus one, and
+ * bands 3 and 4 have no pitch here. */
+enum battle_camera_tilt_target {
+    BATTLE_CAMERA_TILT_LOW = 1,  /* pitch 0x12e */
+    BATTLE_CAMERA_TILT_HIGH = 2, /* pitch 0x1c0 */
 };
+
+/* g_battle_camera_zoom_target. */
+enum battle_camera_zoom_target {
+    BATTLE_CAMERA_ZOOM_IN = 1,  /* scale ONE */
+    BATTLE_CAMERA_ZOOM_OUT = 4, /* scale 0xc00 */
+};
+
+/* battle_camera_get_input_direction modes: which button state it reads. */
+typedef enum battle_camera_input_source {
+    BATTLE_CAMERA_INPUT_HELD = 0,
+    BATTLE_CAMERA_INPUT_PRESSED = 1, /* newly pressed, repeating at the cursor repeat speed while held */
+    BATTLE_CAMERA_INPUT_RELEASED = 2,
+} battle_camera_input_source_e;
 
 extern u16 g_battle_camera_shake_z_offset;
 extern s32 g_battle_camera_previous_yaw; /* the yaw a turn started from; written, never read */
@@ -6175,8 +6169,20 @@ extern s16 g_battle_camera_diagonal_yaws[4];
 /* The camera's angles: .vx the pitch, .vy the yaw and .vz the roll (0x1000 is a full turn). */
 extern SVECTOR g_battle_camera_angles;
 
-/* 0x80166054: camera consumer unpacks two 2-bit fields and a high nibble. */
+/* The event CAMERA instruction's packed speed curve (battle_camera_thread): bits 0-1 the interpolation
+ * mode, bits 2-3 the component group left linear, bits 4-7 the easing weight. */
 extern s32 g_battle_camera_speed_curve;
+
+extern VECTOR g_battle_camera_step_vector;
+
+extern s32 g_battle_camera_tilt_target;
+
+extern s32 g_battle_camera_zoom_target;
+
+extern s32 g_battle_camera_destination_yaw;
+
+extern VECTOR g_battle_offset_screen_coords;
+
 void battle_camera_get_tile_sort_point(const s16* input, s16* output, s32 offset);
 void battle_camera_get_tile_sort_point_unbiased(const s16* screen, s16* destination);
 void battle_camera_toggle_tilt(void);
@@ -6187,7 +6193,6 @@ void battle_camera_execute_position_command(s32 command, s32 target, s32 duratio
 s32 battle_camera_get_input_direction(s32 mode);
 void battle_camera_update_effect_tracks(void);
 
-/* Some routines address these components as separate linker symbols. */
 void battle_camera_update_vector_from_game_state(void);
 void battle_camera_calculate_acting_unit_vector_normal(void);
 s32 battle_camera_calculate_cursor_tile_vector_normal(void);
@@ -6209,7 +6214,7 @@ void battle_camera_normalize_yaw_angle(void);
 s32 battle_camera_is_active(void);
 void battle_camera_project_world_coords_to_screen(SVECTOR* world_coords, s16* screen_coords);
 void battle_camera_request_rotation(s32 angle);
-void battle_map_reset_script_light_transform(void);
+
 void battle_camera_restore_current_real_coords(void);
 void battle_camera_restore_rotation(void);
 void battle_camera_restore_zoom(void);
@@ -6256,6 +6261,8 @@ void battle_camera_shift_acting_unit_vector(void);
 void battle_camera_fusion_thread(void);
 void battle_camera_wait_until_idle(void);
 void battle_camera_thread(void);
+
+void battle_camera_clear_zoom_variable_low_bit(void);
 
 /* gfx */
 /* Commands of 0x800e77b8, which stores RGB and controls GTE background color. */
@@ -6657,6 +6664,17 @@ typedef enum battle_numeric_display_selector {
     BATTLE_NUMERIC_DISPLAY_SELECTOR_MASK = 0x1ff,
     BATTLE_NUMERIC_DISPLAY_MODIFIER_CRITICAL = 0x200,
 } battle_numeric_display_selector_e;
+
+/* SEQ sequence bytes, as battle_gfx_run_unit_seq_script (unit sheets) and
+ * battle_gfx_run_wep_eff_seq_script (weapon and effect sheets) read them.
+ * A sequence is a run of two-byte frame instructions (an SHP frame, then the
+ * frames to wait; a wait of 0 holds the frame for good) and of commands:
+ * BATTLE_SEQ_OP_PREFIX, an opcode and its operand bytes. A jump offset is a
+ * signed byte counted from the command's own prefix byte, so -2 repeats the
+ * frame instruction before it. UNKNOWN_XX commands only skip their operands. */
+enum battle_seq_byte {
+    BATTLE_SEQ_OP_PREFIX = 0xff,
+};
 
 extern u16 g_battle_gfx_screen_color_modulation_fade_frames;
 extern u16 g_battle_gfx_wait_direction_arrow_palette[16];
@@ -7832,12 +7850,12 @@ extern s32 g_battle_map_textured_quad_count;
 extern s32 g_battle_map_textured_quad_render_record_count;
 extern s32 g_battle_map_textured_triangle_count;
 extern s32 g_battle_map_textured_triangle_render_record_count;
-extern s32 g_battle_map_tilt_target;
+
 extern s32 g_battle_map_untextured_quad_count;
 extern s32 g_battle_map_untextured_quad_render_record_count;
 extern s32 g_battle_map_untextured_triangle_count;
 extern s32 g_battle_map_untextured_triangle_render_record_count;
-extern s32 g_battle_map_zoom_target;
+
 extern u16 g_battle_map_weather_particle_palette[];
 extern MATRIX g_battle_map_light_color_matrix;
 extern MATRIX g_battle_map_light_matrix;
@@ -8098,6 +8116,8 @@ void battle_map_init_mesh_render_records(void* geometry_data);
 void battle_map_init_weather_particles(s32 command);
 gns_record_view_t* battle_map_load_gns_and_move_find_items(s32 map_id);
 void battle_map_reset_mesh_render_state(void);
+
+void battle_map_reset_script_light_transform(void);
 
 /* menu */
 /* The battle menus (battle_menu_*): menu entries run as threads in slots 3 to 8, the turn menus and
@@ -8738,7 +8758,7 @@ void battle_script_run_sprite_move(s32 arg, s32 use_speed);
  * proven by 0x80078fb4 and 0x800785ac, which both consume it. */
 s32 battle_script_run_event_frame(u32* ot, u32 buttons);
 void battle_script_load_event_input_state(const world_menu_input_state_t* saved);
-void battle_camera_clear_zoom_variable_low_bit(void);
+
 void battle_script_copy_32_bytes(void* destination, const void* source);
 s32 battle_script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode);
 u32 battle_script_get_event_initial_repeat_counter(void);
@@ -9007,10 +9027,9 @@ typedef enum zodiac_compatibility {
     ZODIAC_COMPATIBILITY_BEST = 5,
 } zodiac_compatibility_e;
 
-extern s32 g_battle_camera_destination_yaw;
 extern u8 g_battle_job_level_gained_flag;
 extern u8 g_battle_math_source_skillsets[4];
-extern VECTOR g_battle_offset_screen_coords;
+
 extern u16 g_battle_enemy_level_sum;
 extern u8 g_battle_highest_enemy_level;
 extern s32 g_battle_previous_game_state;

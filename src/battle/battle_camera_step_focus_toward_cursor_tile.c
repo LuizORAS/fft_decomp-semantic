@@ -38,8 +38,8 @@
  */
 void battle_camera_step_focus_toward_cursor_tile(s16 height) {
     BATTLE_CAMERA_STEP_TOWARD(
-        &g_battle_camera_current_real_coords.vx, g_battle_current_vector.vx, g_battle_cursor_x * 28 + 14);
-    BATTLE_CAMERA_STEP_TOWARD(&g_battle_camera_current_real_coords.vy, g_battle_current_vector.vy, height);
+        &g_battle_camera_current_real_coords.vx, g_battle_camera_step_vector.vx, g_battle_cursor_x * 28 + 14);
+    BATTLE_CAMERA_STEP_TOWARD(&g_battle_camera_current_real_coords.vy, g_battle_camera_step_vector.vy, height);
     BATTLE_CAMERA_STEP_TOWARD(
-        &g_battle_camera_current_real_coords.vz, g_battle_current_vector.vz, g_battle_cursor_y * 28 + 14);
+        &g_battle_camera_current_real_coords.vz, g_battle_camera_step_vector.vz, g_battle_cursor_y * 28 + 14);
 }

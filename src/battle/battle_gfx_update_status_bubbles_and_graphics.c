@@ -25,7 +25,7 @@ void battle_gfx_update_status_bubbles_and_graphics(void) {
         if (g_battle_camera_zoom_action == BATTLE_CAMERA_STEP_NONE
             && g_battle_camera_tilt_action == BATTLE_CAMERA_STEP_NONE
             && g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE
-            && !(g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz)) {
+            && !(g_battle_camera_step_vector.vx | g_battle_camera_step_vector.vy | g_battle_camera_step_vector.vz)) {
             if (g_battle_gfx_status_bubble_delay != 0) {
                 g_battle_gfx_status_bubble_delay -= g_main_system_vsync_interval;
                 if (g_battle_gfx_status_bubble_delay <= 0) {

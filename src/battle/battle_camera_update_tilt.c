@@ -7,7 +7,7 @@ void battle_camera_update_tilt(void) {
     s16 tilt;
 
     if (g_battle_camera_tilt_action == BATTLE_CAMERA_STEP_INCREASE
-        && g_battle_map_tilt_target == g_battle_camera_tilt_action) {
+        && g_battle_camera_tilt_target == g_battle_camera_tilt_action) {
         s16* state = &g_battle_camera_angles.vx;
         tilt = *state + g_battle_camera_tilt_increment;
         *state = tilt;
@@ -16,7 +16,7 @@ void battle_camera_update_tilt(void) {
             *state = 0x1C0;
         }
     } else if (g_battle_camera_tilt_action == BATTLE_CAMERA_STEP_DECREASE
-        && g_battle_map_tilt_target == BATTLE_MAP_TILT_LOW) {
+        && g_battle_camera_tilt_target == BATTLE_CAMERA_TILT_LOW) {
         s16* state = &g_battle_camera_angles.vx;
         tilt = *state - g_battle_camera_tilt_increment;
         *state = tilt;
@@ -25,7 +25,7 @@ void battle_camera_update_tilt(void) {
             *state = 0x12E;
         }
     } else if (g_battle_camera_tilt_action == BATTLE_CAMERA_STEP_DECREASE
-        && g_battle_map_tilt_target == BATTLE_MAP_TILT_HIGH) {
+        && g_battle_camera_tilt_target == BATTLE_CAMERA_TILT_HIGH) {
         s16* state = &g_battle_camera_angles.vx;
         tilt = *state - g_battle_camera_tilt_increment;
         *state = tilt;
@@ -34,7 +34,7 @@ void battle_camera_update_tilt(void) {
             *state = 0x1C0;
         }
     } else if (g_battle_camera_tilt_action == BATTLE_CAMERA_STEP_INCREASE
-        && g_battle_map_tilt_target == BATTLE_MAP_TILT_LOW) {
+        && g_battle_camera_tilt_target == BATTLE_CAMERA_TILT_LOW) {
         s16* state = &g_battle_camera_angles.vx;
         tilt = *state + g_battle_camera_tilt_increment;
         *state = tilt;

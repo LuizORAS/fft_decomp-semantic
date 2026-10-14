@@ -39,7 +39,7 @@ void battle_camera_update_vector_from_game_state(void) {
         }
         if (g_battle_cursor_screen_x >= 0xF9 && g_battle_cursor_screen_x < 0x108
             && g_battle_cursor_screen_y - height >= 0xA1 && g_battle_cursor_screen_y < 0xB0) {
-            main_util_set_vector(&g_battle_current_vector, 0, 0, 0);
+            main_util_set_vector(&g_battle_camera_step_vector, 0, 0, 0);
             return;
         }
         /* The scaling routine passes through the normal routine's height bound. */
@@ -53,7 +53,7 @@ void battle_camera_update_vector_from_game_state(void) {
             = (g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height >> 1) * g_battle_camera_zoom.vy / ONE;
         if (unit->camera_relative_x >= 0xB1 && unit->camera_relative_x < 0x150
             && unit->camera_relative_y - height >= 0x51 && unit->camera_relative_y < 0xA0) {
-            main_util_set_vector(&g_battle_current_vector, 0, 0, 0);
+            main_util_set_vector(&g_battle_camera_step_vector, 0, 0, 0);
             return;
         }
         if (unit->camera_relative_x >= 0xA1 && unit->camera_relative_x < 0x160
@@ -66,7 +66,7 @@ void battle_camera_update_vector_from_game_state(void) {
         return;
     }
     if (g_battle_game_state >= BATTLE_GAME_STATE_ANNOUNCE_ABILITY) {
-        main_util_set_vector(&g_battle_current_vector, 0, 0, 0);
+        main_util_set_vector(&g_battle_camera_step_vector, 0, 0, 0);
         return;
     }
     if (g_battle_camera_zoom_action == BATTLE_CAMERA_STEP_NONE && g_battle_camera_tilt_action == BATTLE_CAMERA_STEP_NONE
@@ -89,6 +89,6 @@ void battle_camera_update_vector_from_game_state(void) {
             }
             return;
         }
-        main_util_set_vector(&g_battle_current_vector, 0, 0, 0);
+        main_util_set_vector(&g_battle_camera_step_vector, 0, 0, 0);
     }
 }

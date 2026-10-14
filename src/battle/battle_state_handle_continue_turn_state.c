@@ -11,7 +11,7 @@ void battle_state_handle_continue_turn_state(void) {
     battle_state_update_units();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     unit = battle_unit_get_source_misc_data();
-    if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) != 0) {
+    if ((g_battle_camera_step_vector.vx | g_battle_camera_step_vector.vy | g_battle_camera_step_vector.vz) != 0) {
         return;
     }
     if (g_battle_camera_rotation_action != BATTLE_CAMERA_ROTATION_NONE) {

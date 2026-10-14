@@ -1974,9 +1974,9 @@ data:
   - {addr: 0x800960c4, name: g_battle_cursor_input_mode_saved}
   - {addr: 0x800960c8, name: g_battle_camera_rotation_action}
   - {addr: 0x800960cc, name: g_battle_camera_zoom_action}
-  - {addr: 0x800960d0, name: g_battle_map_zoom_target}
+  - {addr: 0x800960d0, name: g_battle_camera_zoom_target}
   - {addr: 0x800960d4, name: g_battle_camera_tilt_action}
-  - {addr: 0x800960d8, name: g_battle_map_tilt_target}
+  - {addr: 0x800960d8, name: g_battle_camera_tilt_target}
   - {addr: 0x800960dc, name: g_battle_state_camera_pan_enabled}
   - {addr: 0x800960e4, name: g_battle_game_state}
   - {addr: 0x800960e8, name: g_battle_previous_game_state}
@@ -2061,7 +2061,7 @@ data:
   - {addr: 0x800a1b94, name: g_battle_map_darkness_color}
   - {addr: 0x800a1b98, name: g_battle_map_texture_animation_states}
   - {addr: 0x800a1be8, name: g_battle_gfx_cycled_deployed_palettes}
-  - {addr: 0x800a1c48, name: g_battle_current_vector}
+  - {addr: 0x800a1c48, name: g_battle_camera_step_vector}
   - {addr: 0x800a1c58, name: g_battle_gfx_seq_data_cursor}
   - {addr: 0x800a1c5c, name: g_battle_camera_saved_real_coords}
   - {addr: 0x800a1c6c, name: g_battle_camera_rotation_delta}

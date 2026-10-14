@@ -18,8 +18,8 @@ void battle_camera_init_defaults(void) {
     g_battle_cursor_x = 0;
     g_battle_camera_rotation_action = BATTLE_CAMERA_ROTATION_NONE;
     g_battle_camera_zoom_action = BATTLE_CAMERA_STEP_NONE;
-    g_battle_map_zoom_target = BATTLE_MAP_ZOOM_IN;
+    g_battle_camera_zoom_target = BATTLE_CAMERA_ZOOM_IN;
     g_battle_camera_tilt_action = BATTLE_CAMERA_STEP_NONE;
-    g_battle_map_tilt_target = BATTLE_MAP_TILT_LOW;
+    g_battle_camera_tilt_target = BATTLE_CAMERA_TILT_LOW;
     g_battle_state_camera_pan_enabled = 0;
 }
