@@ -483,8 +483,8 @@ functions:
   - {addr: 0x8008b824, size: 16, name: camera_get_zoom, hash: f818d7eb175daeb0}
   - {addr: 0x8008b834, size: 44, name: camera_set_zoom, hash: 997b6c1f8a81dbd7}
   - {addr: 0x8008b860, size: 148, name: camera_set_zoom_delta_from_value, hash: dcce3478f5e41fb8}
-  - {addr: 0x8008b8f4, size: 116, name: camera_set_zoom_delta_from_values, hash: f6b7b2baf0083ff9}
-  - {addr: 0x8008b968, size: 120, name: camera_update_zoom_animation, hash: 8340a44fd2a65f16}
+  - {addr: 0x8008b8f4, size: 116, name: camera_set_zoom_delta_from_values, hash: f6b7b2baf0083ff9, source: src/battle/camera_set_real_coord_delta_from_values.c, source_symbol: camera_set_real_coord_delta_from_values}
+  - {addr: 0x8008b968, size: 120, name: camera_update_zoom_animation, hash: 8340a44fd2a65f16, source: src/battle/camera_update_real_coord_animation.c, source_symbol: camera_update_real_coord_animation}
   - {addr: 0x8008b9e0, size: 56, name: camera_save_rotation, hash: 56a116cb1234da2b}
   - {addr: 0x8008ba18, size: 56, name: camera_restore_rotation, hash: 3ee9b66c5c061eea}
   - {addr: 0x8008ba50, size: 16, name: camera_get_rotation, hash: c0df002b98af4d4f}
@@ -2919,6 +2919,13 @@ imports:
   - {addr: 0x801d7000, name: small_text_init_battle_pointers}
   - {addr: 0x801df050, name: helpmenu_menu_run_battle_help}
   - {addr: 0x801df198, name: jobstts_entrypoint}
+
+overrides:
+  - {function: camera_set_zoom_delta_from_values, name: g_camera_real_coord_countdown, addr: 0x80096164}
+  - {function: camera_set_zoom_delta_from_values, name: g_camera_real_coord_delta, addr: 0x800a1c74}
+  - {function: camera_update_zoom_animation, name: g_camera_current_real_coords, addr: 0x800c7ca0}
+  - {function: camera_update_zoom_animation, name: g_camera_real_coord_countdown, addr: 0x80096164}
+  - {function: camera_update_zoom_animation, name: g_camera_real_coord_delta, addr: 0x800a1c74}
 
 regions:
   - {addr: 0x80080bc4, end: 0x80080c40, kind: interior, why: "inside 0x800808b8: case body inside the enclosing display dispatcher; no independent ABI"}
