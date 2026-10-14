@@ -258,7 +258,6 @@ typedef union battle_menu_scratch_buffer {
 
 /* Live caster-panel image parameters followed by their defaults. */
 extern image_load_parameters_t g_battle_menu_attack_caster_quad_image_params[2][5];
-extern menu_window_buffer_t* g_battle_menu_buffer_slots[6];
 extern RECT g_battle_menu_disabled_texture_window;
 extern image_load_parameters_t g_battle_menu_icon_strip_image_params[20];
 extern battle_menu_scratch_buffer_t g_battle_menu_scratch_buffer;
@@ -269,8 +268,6 @@ extern image_load_parameters_t g_battle_menu_sprite_page_image_params[30];
 extern RECT g_battle_menu_sprite_page_texture_windows[5];
 extern point16_t g_battle_menu_texture_location;
 extern menu_unit_editor_frame_t g_battle_menu_unit_editor_frames[2];
-/* Full record bases, not the legacy aliases biased to thread_id. */
-extern menu_window_buffer_t g_battle_menu_window_buffers[6]; /* 0x8016e43c */
 extern glyph_blit_t g_battle_menu_window_sprite_glyph;
 extern glyph_blit_t g_battle_menu_window_sprite_position;
 
@@ -346,7 +343,6 @@ extern u8 g_battle_menu_buffer_arena[BATTLE_MENU_BUFFER_PAGE_COUNT][MENU_BUFFER_
 
 void* battle_menu_alloc_buffer(s32 bytes);
 void* battle_menu_alloc_memory(s32 size);
-menu_window_buffer_t* battle_menu_alloc_window_buffer_pair(void);
 void battle_menu_free_memory(void* buffer);
 void battle_menu_init_buffer_allocator(void);
 void battle_menu_release_current_thread_slot(void);

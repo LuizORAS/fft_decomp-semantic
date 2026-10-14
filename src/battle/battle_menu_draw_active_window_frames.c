@@ -25,10 +25,10 @@ void battle_menu_draw_active_window_frames(void) {
     s32 u;
 
     for (i = 4; i >= 0; i -= 2) {
-        if (g_battle_menu_buffer_slots[i] == (menu_window_buffer_t*)-1) {
+        if (g_menu_window_buffer_slots[i] == (menu_window_buffer_t*)-1) {
             continue;
         }
-        buffer = g_battle_menu_buffer_slots[i + g_menu_packet_buffer_index];
+        buffer = g_menu_window_buffer_slots[i + g_menu_packet_buffer_index];
         if (buffer->active != 1 || g_thread_contexts[buffer->thread_id].is_running == 0) {
             continue;
         }
@@ -62,11 +62,11 @@ void battle_menu_draw_active_window_frames(void) {
         span = window->icon_sprites[1].y0;
         top = window->icon_sprites[0].y0 + window->icon_sprites[0].h;
         span -= top;
-        span = (span - 4) * g_battle_menu_buffer_slots[i + g_menu_packet_buffer_index]->scroll_position
-            / g_battle_menu_buffer_slots[i + g_menu_packet_buffer_index]->scroll_range;
+        span = (span - 4) * g_menu_window_buffer_slots[i + g_menu_packet_buffer_index]->scroll_position
+            / g_menu_window_buffer_slots[i + g_menu_packet_buffer_index]->scroll_range;
         window->icon_sprites[2].x0 = window->quads[0].x0 + offset;
         window->icon_sprites[2].y0 = top + span;
-        flags = g_battle_menu_buffer_slots[i + g_menu_packet_buffer_index]->icon_flags;
+        flags = g_menu_window_buffer_slots[i + g_menu_packet_buffer_index]->icon_flags;
         if (flags & MENU_WINDOW_ICON_SCROLL_UP) {
             gfx_draw_or_append_gpu_primitive(&window->icon_sprites[0]);
         }

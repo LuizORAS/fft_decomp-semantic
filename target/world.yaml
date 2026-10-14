@@ -65,7 +65,7 @@ functions:
   - {addr: 0x800e2444, size: 116, name: world_menu_init_sprite, hash: c767e8c38c70470e}
   - {addr: 0x800e24b8, size: 104, name: menu_init_sprite_array, hash: 0a887d3090fe4209, source: src/shared/menu/menu_init_sprite_array.c}
   - {addr: 0x800e2520, size: 40, name: world_menu_clear_window_buffer_pointers, hash: d92c790b951fcfcc}
-  - {addr: 0x800e2548, size: 596, name: world_menu_alloc_window_buffer_pair, hash: 7530b6635c1378bc}
+  - {addr: 0x800e2548, size: 596, name: menu_alloc_window_buffer_pair, hash: 7530b6635c1378bc, source: src/shared/menu/menu_alloc_window_buffer_pair.c}
   - {addr: 0x800e279c, size: 88, name: world_menu_clear_window_buffer_pair_by_thread, hash: 6f631be1f0bacf0f}
   - {addr: 0x800e27f4, size: 168, name: world_menu_release_window_buffer_pair, hash: 7adceff6ea01ee47}
   - {addr: 0x800e289c, size: 16, name: gfx_set_primitive_brightness, hash: d98b50e73c8678b4, source: src/shared/gfx/gfx_set_primitive_brightness.c}
@@ -1888,8 +1888,8 @@ data:
   - {addr: 0x8019ac8c, name: g_world_menu_anything_ability_id}
   - {addr: 0x8019ac90, name: g_world_menu_selected_option}
   - {addr: 0x8019ac94, name: g_world_menu_action_slot_selected_option}
-  - {addr: 0x8019aca0, name: g_world_menu_window_buffers}
-  - {addr: 0x8019b330, name: g_world_menu_window_buffer_pointers}
+  - {addr: 0x8019aca0, name: g_menu_window_buffers}
+  - {addr: 0x8019b330, name: g_menu_window_buffer_slots}
   - {addr: 0x8019b348, name: g_world_gfx_free_rect_texels}
   - {addr: 0x8019b358, name: g_world_gfx_free_rect_grid_cells}
   - {addr: 0x8019b368, name: g_world_menu_buffer_allocations}
@@ -2350,6 +2350,7 @@ imports:
 
 overrides:
   - {function: gfx_build_portrait_transition_primitives, name: attack_gfx_build_portrait_poly_ft4, addr: 0x8010cab0}
+  - {function: menu_alloc_window_buffer_pair, name: g_battle_menu_disabled_texture_window, addr: 0x801531b0}
   - {function: menu_init_panel_fade_tiles, name: g_battle_menu_disabled_texture_window, addr: 0x801531b0}
   - {function: menu_init_sprite_array, name: battle_menu_init_semitransparent_sprt, addr: 0x800e2444}
   - {function: script_find_instruction_byte_offset, name: g_script_event_instruction_sizes, addr: 0x8013a454}

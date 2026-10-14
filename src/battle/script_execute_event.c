@@ -401,8 +401,8 @@ restart_script:
             thread_yield();
         } else if (opcode == EVENT_OPCODE_CHANGE_DIALOG) {
             for (work_index = 0; work_index < 6; work_index += 2) {
-                operand_2 = g_battle_menu_window_buffers[work_index].thread_id;
-                if ((g_battle_menu_window_buffers[work_index].dialogue_selector == operand_1)
+                operand_2 = g_menu_window_buffers[work_index].thread_id;
+                if ((g_menu_window_buffers[work_index].dialogue_selector == operand_1)
                     && (battle_thread_is_running_asm(operand_2) == 1)
                     && (g_thread_contexts[operand_2].task_id == THREAD_TASK_DIALOG_AWAIT_TEXT)) {
                     operand_1 = script_read_s16(

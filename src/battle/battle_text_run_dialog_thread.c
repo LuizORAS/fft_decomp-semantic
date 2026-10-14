@@ -224,7 +224,7 @@ void battle_text_run_dialog_thread(void) {
         right = half_w + rec.x - 6;
         bottom = half_h + rec.y - 2;
     }
-    win = battle_menu_alloc_window_buffer_pair();
+    win = menu_alloc_window_buffer_pair();
     win->message_id = battle_thread_get_current_parameter_2();
     win->dialogue_selector = rec.position;
     win->box_type = rec.box_type;

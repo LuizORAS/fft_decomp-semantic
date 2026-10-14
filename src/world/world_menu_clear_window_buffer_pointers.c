@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 
 /* Mark all six window buffer pointers (three slots, two frame buffers each)
@@ -7,6 +8,6 @@ void world_menu_clear_window_buffer_pointers(void) {
     s32 index;
 
     for (index = 5; index >= 0; index--) {
-        g_world_menu_window_buffer_pointers[index] = empty;
+        g_menu_window_buffer_slots[index] = empty;
     }
 }

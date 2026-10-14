@@ -127,10 +127,13 @@ typedef struct menu_window_buffer {
 typedef char menu_window_buffer_size_must_be_280[(sizeof(menu_window_buffer_t) == 280) ? 1 : -1];
 
 extern s32 g_menu_packet_buffer_index;
+extern menu_window_buffer_t* g_menu_window_buffer_slots[6];
+extern menu_window_buffer_t g_menu_window_buffers[6];
 extern u16* g_menu_window_tween_easing_tables[];
 /* Twelve crop percentages, indexed by step. */
 extern u16 g_menu_cursor_zoom_percentages[];
 
+menu_window_buffer_t* menu_alloc_window_buffer_pair(void);
 void menu_animate_window_quad_crop(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
 void menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, RECT* to2, s32 table);
 void menu_zoom_cursor_frame(const void* unused_source, SPRT* sprite, s32 step);

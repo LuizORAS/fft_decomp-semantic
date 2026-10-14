@@ -1,4 +1,5 @@
 #include "fft/battle_menu.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -19,13 +20,13 @@ void battle_menu_release_window_buffer_pair(menu_window_buffer_t* buffer) {
     slot = 0;
     empty = (menu_window_buffer_t*)-1;
     for (; slot < 6; slot += 2) {
-        if (g_battle_menu_buffer_slots[slot] == buffer) {
-            g_battle_menu_buffer_slots[slot] = empty;
-            g_battle_menu_buffer_slots[slot + 1] = empty;
-            g_battle_menu_window_buffers[slot].active = 0;
-            g_battle_menu_window_buffers[slot + 1].active = 0;
-            g_battle_menu_window_buffers[slot].thread_id = 0;
-            g_battle_menu_window_buffers[slot + 1].thread_id = 0;
+        if (g_menu_window_buffer_slots[slot] == buffer) {
+            g_menu_window_buffer_slots[slot] = empty;
+            g_menu_window_buffer_slots[slot + 1] = empty;
+            g_menu_window_buffers[slot].active = 0;
+            g_menu_window_buffers[slot + 1].active = 0;
+            g_menu_window_buffers[slot].thread_id = 0;
+            g_menu_window_buffers[slot + 1].thread_id = 0;
             return;
         }
     }

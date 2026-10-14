@@ -2056,7 +2056,6 @@ extern menu_unit_selection_record_t g_world_menu_unit_selection_rows[];
 extern s32 g_world_menu_use_alternate_main_palette;
 extern u8 g_world_menu_use_alternate_palette;
 extern s16 g_world_menu_use_scroll_position;
-extern menu_window_buffer_t* g_world_menu_window_buffer_pointers[6];
 extern s8 g_world_menu_window_scale_step;
 extern u16 g_world_menu_ability_display_flags[80];
 extern s32 g_world_menu_resolved_skillset;
@@ -2253,7 +2252,6 @@ extern menu_entry_t* g_world_menu_thread_menu_data;
 extern menu_callback_t g_world_menu_script_callbacks[16];
 extern menu_glyph_sheet_t* g_world_menu_glyph_sheet; /* decoded glyph page, 0x80 bytes per row */
 extern u16 g_world_menu_disabled_number_clut;
-extern menu_window_buffer_t g_world_menu_window_buffers[6]; /* 0x8019aca0 */
 
 /*
  * WORLD.BIN routines shared by the world, wldcore, and menu-overlay
@@ -2305,7 +2303,6 @@ void world_clear_menu_render_buffer(void* dst, u32 count);
 void world_draw_menu_text_columns_narrow(menu_entry_t* entry, s32* row_offset, u8* buffer);
 void world_menu_draw_number_glyphs(s32 value, s32 digits, u8* resource, glyph_blit_t* pos);
 void world_menu_labeled_number_entry_thread(void);
-menu_window_buffer_t* world_menu_alloc_window_buffer_pair(void);
 void world_menu_animate_window_quad_crop_full(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to);
 void world_menu_animate_window_quads_to_rects(menu_window_buffer_t* buffers, RECT* to_main, RECT* to_icon);
 void world_menu_build_ability_list(s32 mode);

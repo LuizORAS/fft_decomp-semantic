@@ -719,7 +719,7 @@ functions:
   - {addr: 0x8012e244, size: 116, name: battle_menu_init_semitransparent_sprt, hash: 647a4b56f616f141}
   - {addr: 0x8012e2b8, size: 104, name: menu_init_sprite_array, hash: 0c0f8fb96d766419, source: src/shared/menu/menu_init_sprite_array.c}
   - {addr: 0x8012e320, size: 40, name: battle_menu_reset_buffer_slots, hash: f08426b140824902}
-  - {addr: 0x8012e348, size: 596, name: battle_menu_alloc_window_buffer_pair, hash: 6d0ebed3a5141a9c}
+  - {addr: 0x8012e348, size: 596, name: menu_alloc_window_buffer_pair, hash: 6d0ebed3a5141a9c, source: src/shared/menu/menu_alloc_window_buffer_pair.c}
   - {addr: 0x8012e59c, size: 8, name: battle_menu_clear_window_buffer_pair_by_thread, hash: 6d64edf91449c1b1}
   - {addr: 0x8012e5a4, size: 168, name: battle_menu_release_window_buffer_pair, hash: 1de9742bbda0b16a}
   - {addr: 0x8012e64c, size: 16, name: gfx_set_primitive_brightness, hash: d98b50e73c8678b4, source: src/shared/gfx/gfx_set_primitive_brightness.c}
@@ -2564,8 +2564,8 @@ data:
   - {addr: 0x8016e428, name: g_battle_menu_anything_ability_id}
   - {addr: 0x8016e42c, name: g_battle_menu_selected_option}
   - {addr: 0x8016e430, name: g_battle_menu_action_slot_selected_option}
-  - {addr: 0x8016e43c, name: g_battle_menu_window_buffers}
-  - {addr: 0x8016eacc, name: g_battle_menu_buffer_slots}
+  - {addr: 0x8016e43c, name: g_menu_window_buffers}
+  - {addr: 0x8016eacc, name: g_menu_window_buffer_slots}
   - {addr: 0x8016eae4, name: g_battle_gfx_tpage7_free_rect_pixels}
   - {addr: 0x8016eaf4, name: g_battle_gfx_tpage7_free_rect_cells}
   - {addr: 0x8016eb04, name: g_battle_menu_allocator_slot_records}

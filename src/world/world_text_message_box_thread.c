@@ -104,7 +104,7 @@ void world_text_message_box_thread(void) {
     }
     right = x + half_w - 6;
     bottom = y + half_h - 2;
-    win = world_menu_alloc_window_buffer_pair();
+    win = menu_alloc_window_buffer_pair();
     win->message_id = world_thread_get_current_parameter_2();
     if (text[0] == TEXT_SET_PORTRAIT) {
         win[0].portrait_code = text[1];

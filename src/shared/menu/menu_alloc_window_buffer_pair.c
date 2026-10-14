@@ -4,23 +4,18 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Claims the first free menu window buffer pair for the current thread,
- * initialises the first record's primitives and returns it; when no pair
- * is free the current thread is stopped. The record loop
- * runs once: the target's `blez` exit test only reproduces with a bound
- * of 1, so the second record of the pair is left uninitialised.
- *
- * BATTLE twin of world_menu_alloc_window_buffer_pair. */
-menu_window_buffer_t* battle_menu_alloc_window_buffer_pair(void) {
+/* Allocate a free window pair for the current thread.
+ * The original loop initializes only the first record; stop the thread when no pair is free. */
+menu_window_buffer_t* menu_alloc_window_buffer_pair(void) {
     menu_window_buffer_t* buffer;
     s32 index;
     s32 i;
 
     for (index = 0; index < 6; index += 2) {
-        if (g_battle_menu_buffer_slots[index] == (menu_window_buffer_t*)-1) {
-            g_battle_menu_buffer_slots[index] = &g_battle_menu_window_buffers[index];
-            g_battle_menu_buffer_slots[index + 1] = &g_battle_menu_window_buffers[index + 1];
-            buffer = g_battle_menu_buffer_slots[index];
+        if (g_menu_window_buffer_slots[index] == (menu_window_buffer_t*)-1) {
+            g_menu_window_buffer_slots[index] = &g_menu_window_buffers[index];
+            g_menu_window_buffer_slots[index + 1] = &g_menu_window_buffers[index + 1];
+            buffer = g_menu_window_buffer_slots[index];
             for (i = 0; i < 1; i++) {
                 buffer->active = 0;
                 buffer->thread_id = g_thread_current_id;
@@ -71,7 +66,7 @@ menu_window_buffer_t* battle_menu_alloc_window_buffer_pair(void) {
                 buffer->quads[1].tpage = GetTPage(0, 0, 0x340, 0x100);
                 buffer++;
             }
-            return g_battle_menu_buffer_slots[index];
+            return g_menu_window_buffer_slots[index];
         }
     }
     thread_exit_current();
