@@ -522,7 +522,7 @@ functions:
   - {addr: 0x80109374, size: 480, name: world_screen_menu_draw_text_columns, hash: 6aa494fcc042d443, source: src/world/world_menu_draw_text_columns.c, source_symbol: world_menu_draw_text_columns}
   - {addr: 0x80109554, size: 648, name: world_screen_menu_redraw_text_page_on_scroll, hash: c3e620bbb56ea16d}
   - {addr: 0x801097dc, size: 3236, name: world_screen_build_at_list, hash: fbd15105f39ab67f, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
-  - {addr: 0x8010a480, size: 40, name: world_gfx_set_blit_source_rect, hash: 9b7f8b6f740c2815}
+  - {addr: 0x8010a480, size: 40, name: world_gfx_set_blit_source_rect, hash: 9b7f8b6f740c2815, source: src/world/world_gfx_set_image_blit_source_rect.c, source_symbol: world_gfx_set_image_blit_source_rect}
   - {addr: 0x8010a4a8, size: 24, name: world_gfx_set_blit_dest_position, hash: 573a5fe65290d88d}
   - {addr: 0x8010a4c0, size: 464, name: world_screen_gfx_build_scaled_draw_area_packets, hash: a51f79f9dce9dafc}
   - {addr: 0x8010a690, size: 52, name: world_screen_gfx_init_scaled_draw_area_packets, hash: 5daaf3af4a8fceaa}
@@ -2360,6 +2360,7 @@ overrides:
   - {function: script_run_next_event, name: script_load_next_event, addr: 0x800f92a0}
   - {function: script_run_next_event_unused, name: script_execute_event, addr: 0x800f6f20}
   - {function: script_run_next_event_unused, name: script_load_next_event, addr: 0x800f92a0}
+  - {function: world_gfx_set_blit_source_rect, name: g_world_gfx_image_blit_source, addr: 0x801c000c}
 
 regions:
   - {addr: 0x800feff0, end: 0x800ff284, kind: handwritten, why: "handwritten scratchpad-frame blitter helper"}
