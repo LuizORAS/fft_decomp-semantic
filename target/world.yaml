@@ -525,7 +525,7 @@ functions:
   - {addr: 0x8010a4c0, size: 464, name: world_screen_gfx_build_scaled_draw_area_packets, hash: a51f79f9dce9dafc}
   - {addr: 0x8010a690, size: 52, name: world_screen_gfx_init_scaled_draw_area_packets, hash: 5daaf3af4a8fceaa, source: src/shared/menu/menu_init_scaled_draw_area_packets.c, source_symbol: menu_init_scaled_draw_area_packets}
   - {addr: 0x8010a6c4, size: 1444, name: world_screen_menu_window_frame_thread, hash: ed4c0f0ead7f4d22}
-  - {addr: 0x8010ac68, size: 1436, name: world_screen_menu_thin_window_frame_thread, hash: 82f4d7b2eeb33719}
+  - {addr: 0x8010ac68, size: 1436, name: world_screen_menu_thin_window_frame_thread, hash: 82f4d7b2eeb33719, source: src/world/world_menu_thin_window_frame_thread.c, source_symbol: world_menu_thin_window_frame_thread}
   - {addr: 0x8010b204, size: 316, name: world_menu_announce_entry_value_thread, hash: e5790e55f67d3488}
   - {addr: 0x8010b340, size: 524, name: world_menu_icon_clamped_list_thread, hash: fa08b37eaa55bd09}
   - {addr: 0x8010b54c, size: 668, name: world_menu_update_entry_cursor_quads, hash: 1d2cb7868df1af49}
@@ -2689,6 +2689,11 @@ overrides:
   - {function: world_screen_menu_draw_text_columns, name: battle_menu_set_text_origin, addr: 0x800fdb88}
   - {function: world_screen_menu_draw_text_columns, name: g_menu_text_palette_offset, addr: 0x80153270}
   - {function: world_screen_menu_draw_text_columns, name: g_menu_text_state, addr: 0x80153280}
+  - {function: world_screen_menu_thin_window_frame_thread, name: g_world_gfx_image_blit_destination, addr: 0x801c001c}
+  - {function: world_screen_menu_thin_window_frame_thread, name: g_world_gfx_image_blit_source, addr: 0x801c000c}
+  - {function: world_screen_menu_thin_window_frame_thread, name: g_world_menu_thin_panel_texture_windows, addr: 0x8018a330}
+  - {function: world_screen_menu_thin_window_frame_thread, name: world_gfx_set_image_blit_destination_origin, addr: 0x8010a4a8}
+  - {function: world_screen_menu_thin_window_frame_thread, name: world_gfx_set_image_blit_source_rect, addr: 0x8010a480}
   - {function: world_script_change_stats, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
   - {function: world_script_color_unit_event_instruction, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
   - {function: world_script_face_tile, name: g_battle_rotation_speed_frames, addr: 0x80156be0}
