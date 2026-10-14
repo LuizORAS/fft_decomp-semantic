@@ -27,7 +27,7 @@ functions:
   - {addr: 0x801c1450, size: 268, name: menu_text_render_signed_decimal_entries, hash: "6394222889009711", source: src/shared/menu/menu_text_render_signed_decimal_entries.c}
   - {addr: 0x801c155c, size: 244, name: menu_text_render_decimal_entry_list, hash: aa34be9623796274, source: src/shared/menu/menu_text_render_decimal_entry_list.c}
   - {addr: 0x801c1650, size: 772, name: menu_text_render_decimal_value, hash: 63cbe1ae8be917f1, source: src/shared/menu/menu_text_render_decimal_value.c}
-  - {addr: 0x801c1954, size: 1380, name: attack_editor_run_numeric_thread, hash: e9ff018f5a716555}
+  - {addr: 0x801c1954, size: 1380, name: attack_editor_run_numeric_thread, hash: e9ff018f5a716555, source: src/shared/menu/menu_run_numeric_editor_thread.c, source_symbol: menu_run_numeric_editor_thread}
   - {addr: 0x801c1eb8, size: 104, name: menu_build_item_icon_source, hash: 7085296bf6f5bbac, source: src/shared/menu/menu_build_item_icon_source.c}
   - {addr: 0x801c1f20, size: 8, name: attack_input_update_event_state, hash: 6d64edf91449c1b1}
   - {addr: 0x801c1f28, size: 28, name: menu_thread_is_running, hash: d10e3403d7fec970, source: src/shared/menu/menu_thread_is_running.c}
@@ -2260,7 +2260,7 @@ functions:
   - {addr: 0x801c1380, size: 268, name: require_text_render_signed_decimal_entries, hash: 060ec03592da47dc}
   - {addr: 0x801c148c, size: 244, name: require_text_render_decimal_entry_list, hash: 09452bc55dfd8a51}
   - {addr: 0x801c1580, size: 772, name: menu_text_render_decimal_value, hash: 412cf185b4779164, source: src/shared/menu/menu_text_render_decimal_value.c}
-  - {addr: 0x801c1884, size: 1380, name: require_editor_run_numeric_thread, hash: b79678f9d57614fd}
+  - {addr: 0x801c1884, size: 1380, name: require_editor_run_numeric_thread, hash: b79678f9d57614fd, source: src/shared/menu/menu_run_numeric_editor_thread.c, source_symbol: menu_run_numeric_editor_thread}
   - {addr: 0x801c1de8, size: 496, name: menu_icon_list_thread, hash: 8956351ca1cec311, source: src/shared/menu/menu_icon_list_thread.c}
   - {addr: 0x801c1fd8, size: 248, name: menu_text_entry_wait_thread, hash: 8a150a34cd0d353a, source: src/shared/menu/menu_text_entry_wait_thread.c}
   - {addr: 0x801c20d0, size: 372, name: menu_icon_strip_thread, hash: 9c2efc75e9d065c4, source: src/shared/menu/menu_icon_strip_thread.c}
@@ -2507,7 +2507,25 @@ overrides:
   - {function: gfx_build_portrait_transition_primitives, name: attack_gfx_build_portrait_poly_ft4, addr: 0x801bf254}
   - {function: menu_build_status_group_primitives, name: gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
   - {function: menu_draw_thread_status_indicators, name: gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_descriptor_a, addr: 0x801cbcd4}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_descriptor_b, addr: 0x801cbd88}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_entries_a, addr: 0x801cbbcc}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_entries_b, addr: 0x801cbbd4}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_entries_c, addr: 0x801cbbdc}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_entries_d, addr: 0x801cbbe4}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_entries_e, addr: 0x801cbbec}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_entries_f, addr: 0x801cbbf4}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_geometry, addr: 0x801cb454}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_state, addr: 0x801d6328}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_table, addr: 0x801cbbbc}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_text_a, addr: 0x801d68a8}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_text_b, addr: 0x801d71c0}
+  - {function: require_editor_run_numeric_thread, name: g_attack_editor_numeric_texture, addr: 0x801cbbfc}
+  - {function: require_editor_run_numeric_thread, name: g_attack_gfx_draw_offset_y, addr: 0x801d20a8}
+  - {function: require_editor_run_numeric_thread, name: g_attack_input_controller, addr: 0x801d208c}
   - {function: require_editor_run_numeric_thread, name: gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}
+  - {function: require_editor_run_numeric_thread, name: menu_build_scaled_draw_area_packets, addr: 0x801bf01c}
+  - {function: require_editor_run_numeric_thread, name: menu_text_render_signed_decimal_entries, addr: 0x801c1380}
 ---
 module: event-small
 file: EVENT/SMALL.OUT

@@ -8,12 +8,9 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Thread task 0x3b: numeric editor panel; twin of equip_editor_run_numeric_thread.
- * The primitive block is menu_status_panel_numeric_buffer_t, double buffered at
- * g_attack_editor_numeric_state; the thread parameter block is
- * menu_status_thread_t. */
+/* Render the numeric editor until the current task requests a stop. */
 
-void attack_editor_run_numeric_thread(void) {
+void menu_run_numeric_editor_thread(void) {
     menu_status_thread_t* thread;
     menu_status_panel_numeric_buffer_t* buffer;
     menu_status_panel_numeric_buffer_t* buffers;
