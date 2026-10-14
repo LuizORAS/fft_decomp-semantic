@@ -7,7 +7,7 @@
  * Event instruction: set or clear movement-effect suppression on the addressed unit(s).
  * Parameters: 0x00 unit id (16-bit value), 0x02 nonzero to set, zero to clear.
  * A unit id above 0xff selects a group, so the unit-state loop runs over all
- * 21 unit indices. WORLD twin: world_script_set_units_movement_effect_suppression.
+ * 21 unit indices.
  */
 void script_set_units_movement_effect_suppression(const event_movement_effect_parameters_t* parameters) {
     u16 unit_id;

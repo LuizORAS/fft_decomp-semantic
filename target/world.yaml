@@ -358,11 +358,11 @@ functions:
   - {addr: 0x800fc144, size: 432, name: world_unit_update_staged_status_data, hash: 269b013af6ab131a}
   - {addr: 0x800fc2f4, size: 632, name: world_script_inflict_status_thread, hash: 2d2fdf0577757d84}
   - {addr: 0x800fc56c, size: 216, name: world_unit_inflict_status_by_event_unit_id, hash: 3f69fc963f96b44e}
-  - {addr: 0x800fc644, size: 448, name: world_script_change_stats, hash: c63a08b76749f8fe}
-  - {addr: 0x800fc804, size: 248, name: world_script_unit_anim, hash: 2c433dd6a81d7c56}
-  - {addr: 0x800fc8fc, size: 156, name: world_script_march_units, hash: 90487a1ab3416a6e}
-  - {addr: 0x800fc998, size: 180, name: world_script_set_units_movement_effect_suppression, hash: c2d8e271e578e487}
-  - {addr: 0x800fca4c, size: 172, name: world_script_color_unit_event_instruction, hash: 991b6e8c7dc5117f}
+  - {addr: 0x800fc644, size: 448, name: world_script_change_stats, hash: c63a08b76749f8fe, source: src/shared/script/script_change_stats.c, source_symbol: script_change_stats}
+  - {addr: 0x800fc804, size: 248, name: world_script_unit_anim, hash: 2c433dd6a81d7c56, source: src/shared/script/script_unit_anim.c, source_symbol: script_unit_anim}
+  - {addr: 0x800fc8fc, size: 156, name: world_script_march_units, hash: 90487a1ab3416a6e, source: src/shared/script/script_march_units.c, source_symbol: script_march_units}
+  - {addr: 0x800fc998, size: 180, name: world_script_set_units_movement_effect_suppression, hash: c2d8e271e578e487, source: src/shared/script/script_set_units_movement_effect_suppression.c, source_symbol: script_set_units_movement_effect_suppression}
+  - {addr: 0x800fca4c, size: 172, name: world_script_color_unit_event_instruction, hash: 991b6e8c7dc5117f, source: src/shared/script/script_color_unit_event_instruction.c, source_symbol: script_color_unit_event_instruction}
   - {addr: 0x800fcaf8, size: 168, name: world_script_set_units_palette_update_suppression, hash: 0c1bb9735a0248cc}
   - {addr: 0x800fcba0, size: 88, name: world_unit_check_facing_relative_to_camera, hash: ef44f6dacbae10fb}
   - {addr: 0x800fcbf8, size: 368, name: world_script_face_tile, hash: 96b76ce946c03c2e, source: src/shared/script/script_face_tile.c, source_symbol: script_face_tile}
@@ -2565,6 +2565,8 @@ overrides:
   - {function: world_screen_menu_draw_text_columns, name: battle_menu_set_text_origin, addr: 0x800fdb88}
   - {function: world_screen_menu_draw_text_columns, name: g_menu_text_palette_offset, addr: 0x80153270}
   - {function: world_screen_menu_draw_text_columns, name: g_menu_text_state, addr: 0x80153280}
+  - {function: world_script_change_stats, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
+  - {function: world_script_color_unit_event_instruction, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
   - {function: world_script_face_tile, name: g_battle_rotation_speed_frames, addr: 0x80156be0}
   - {function: world_script_face_tile, name: g_script_unit_face_slot_order, addr: 0x80156bb0}
   - {function: world_script_face_tile, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
@@ -2576,6 +2578,7 @@ overrides:
   - {function: world_script_load_next_event, name: battle_thread_find_running_by_task, addr: 0x800fd14c}
   - {function: world_script_load_next_event, name: g_script_loaded_event_id, addr: 0x80156b8c}
   - {function: world_script_load_next_event, name: script_load_event, addr: 0x800f0470}
+  - {function: world_script_march_units, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
   - {function: world_script_process_inflict_status_commands, name: battle_thread_resolve_id, addr: 0x800fd07c}
   - {function: world_script_process_inflict_status_commands, name: g_script_event_instruction_sizes, addr: 0x8013a454}
   - {function: world_script_process_inflict_status_commands, name: script_inflict_status_thread, addr: 0x800fc2f4}
@@ -2587,10 +2590,12 @@ overrides:
   - {function: world_script_rotate_unit, name: g_battle_rotation_speed_frames, addr: 0x80156be0}
   - {function: world_script_rotate_unit, name: g_script_unit_face_slot_order, addr: 0x80156bb0}
   - {function: world_script_rotate_unit, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
+  - {function: world_script_set_units_movement_effect_suppression, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
   - {function: world_script_start_current_event_thread, name: camera_store_state_to_script_variables, addr: 0x800f6ea8}
   - {function: world_script_start_current_event_thread, name: g_camera_position_locked, addr: 0x801532c0}
   - {function: world_script_start_current_event_thread, name: g_camera_speed_curve, addr: 0x80153338}
   - {function: world_script_start_current_event_thread, name: map_reset_script_light_transform, addr: 0x800f29d8}
+  - {function: world_script_unit_anim, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
   - {function: world_text_determine_spell_quote, name: battle_menu_dispatch_system_function, addr: 0x800f5384}
   - {function: world_text_determine_spell_quote, name: battle_text_is_spell_quote_exception_skillset, addr: 0x800f49d8}
   - {function: world_text_determine_spell_quote, name: g_battle_spell_quote_last_ability_id, addr: 0x8013a5ec}

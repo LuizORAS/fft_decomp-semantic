@@ -1011,11 +1011,11 @@ functions:
   - {addr: 0x80148cd8, size: 432, name: battle_unit_update_staged_status_data, hash: 18a4ccc12e7e8be1}
   - {addr: 0x80148e88, size: 632, name: script_inflict_status_thread, hash: 61d3e9fb6f1a31dc}
   - {addr: 0x80149100, size: 216, name: status_inflict_by_event_unit_id, hash: 5219ad791988f213}
-  - {addr: 0x801491d8, size: 448, name: script_change_stats, hash: 0f552e12e60b18e2}
-  - {addr: 0x80149398, size: 248, name: script_unit_anim, hash: 8c66feb3346fed6e}
-  - {addr: 0x80149490, size: 156, name: script_march_units, hash: ab19a34ada7cae3e}
-  - {addr: 0x8014952c, size: 180, name: script_set_units_movement_effect_suppression, hash: ad56c0ea33915d4c}
-  - {addr: 0x801495e0, size: 172, name: script_color_unit_event_instruction, hash: e5653129316a4e33}
+  - {addr: 0x801491d8, size: 448, name: script_change_stats, hash: 0f552e12e60b18e2, source: src/shared/script/script_change_stats.c}
+  - {addr: 0x80149398, size: 248, name: script_unit_anim, hash: 8c66feb3346fed6e, source: src/shared/script/script_unit_anim.c}
+  - {addr: 0x80149490, size: 156, name: script_march_units, hash: ab19a34ada7cae3e, source: src/shared/script/script_march_units.c}
+  - {addr: 0x8014952c, size: 180, name: script_set_units_movement_effect_suppression, hash: ad56c0ea33915d4c, source: src/shared/script/script_set_units_movement_effect_suppression.c}
+  - {addr: 0x801495e0, size: 172, name: script_color_unit_event_instruction, hash: e5653129316a4e33, source: src/shared/script/script_color_unit_event_instruction.c}
   - {addr: 0x8014968c, size: 168, name: script_set_units_palette_update_suppression, hash: 406b68bd9d969db0}
   - {addr: 0x80149734, size: 88, name: battle_unit_check_facing_relative_to_camera, hash: f7c874232339e58e}
   - {addr: 0x8014978c, size: 368, name: script_face_tile, hash: 349c3977cc8bc891, source: src/shared/script/script_face_tile.c}

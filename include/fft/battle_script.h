@@ -44,20 +44,14 @@ void script_teleportout_event_instruction(s32 arg, s32 remove);
 /* unit movement */
 extern map_tile_coordinates_t g_script_warp_coords;
 
-void script_march_units(const event_march_parameters_t* parameters);
 void script_run_sprite_move(const event_sprite_move_parameters_t* parameters, s32 use_speed);
-void script_set_units_movement_effect_suppression(const event_movement_effect_parameters_t* parameters);
 void script_sprite_move(void);
 void script_sprite_move_beta(void);
 void script_waitspritemove_event_instruction(s32 unit_id);
 void script_warp_unit(const event_warp_unit_parameters_t* parameters);
 void script_warp_unit_display_to_paired_unit(s32 runtime_id);
 
-/* unit animation */
-void script_unit_anim(const event_unit_anim_parameters_t* parameters);
-
 /* unit statuses */
-void script_change_stats(const event_change_stats_parameters_t* parameters);
 void script_inflict_status_thread(void);
 
 /* camera */
@@ -77,7 +71,6 @@ void script_set_specialized_map_destroyed(void);
 /* graphics and messages */
 
 void script_color_screen_thread(void);
-void script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
 void script_load_portrait_colors_event_instruction(s32 portrait_id);
 void script_set_units_palette_update_suppression(s32 unit_id, s32 enable);
 void script_toggle_message_portrait_flip(const u8* parameters);

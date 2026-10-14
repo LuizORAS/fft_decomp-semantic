@@ -3,7 +3,7 @@
 #include "fft/script.h"
 #include "psx/types.h"
 
-/* Battle twin of world_script_change_stats. ChangeStats event instruction: add a signed delta to one stat of each
+/* ChangeStats event instruction: add a signed delta to one stat of each
  * resolved unit.
  *
  * Parameters: 16-bit unit id, stat selector (event_change_stats_e), then a
