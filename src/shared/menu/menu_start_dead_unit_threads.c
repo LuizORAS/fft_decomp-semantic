@@ -1,6 +1,6 @@
 #include "fft/battle_menu.h"
-#include "fft/battle_script.h"
 #include "fft/event_option.h"
+#include "fft/main.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
@@ -8,7 +8,7 @@
 #include "psx/types.h"
 
 /* Runs the crystal/treasure result panel and its list and choice threads. */
-void option_menu_start_dead_unit_threads(void) {
+void menu_start_dead_unit_threads(void) {
     crystal_pickup_result_t* context = g_battle_dead_unit_context;
     menu_entry_t* previous_menu_descriptor = g_battle_menu_thread_menu_data;
     menu_entry_t* menu;

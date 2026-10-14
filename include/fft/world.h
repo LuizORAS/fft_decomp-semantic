@@ -32,7 +32,7 @@ extern RECT g_world_screen_menu_thin_panel_texture_windows[7];
  * Indexing the array reproduces the target's symbol-plus-byte-offset addressing. */
 extern RECT g_world_screen_menu_panel_texture_windows[7];
 extern u32* g_world_dead_unit_controller_input;
-extern s16 g_world_dead_unit_menu_flags[256];
+extern s16 g_world_dead_unit_menu_flags[512];
 extern s16 g_world_dead_unit_menu_result; /* primary menu result */
 extern s16 g_world_dead_unit_move_result; /* secondary (move) menu result */
 

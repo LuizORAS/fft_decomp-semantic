@@ -444,7 +444,7 @@ functions:
   - {addr: 0x80101cd0, size: 1436, name: world_menu_thin_window_frame_thread, hash: 96f16acf0efe9d12}
   - {addr: 0x8010226c, size: 40, name: world_thread_yield_forever, hash: ea714444aa8272b8}
   - {addr: 0x80102294, size: 40, name: world_thread_yield_then_stop_current, hash: f772d01efefb807c}
-  - {addr: 0x801022bc, size: 1644, name: world_menu_start_dead_unit_threads, hash: 349e8c6a75055eaf}
+  - {addr: 0x801022bc, size: 1644, name: world_menu_start_dead_unit_threads, hash: 349e8c6a75055eaf, source: src/shared/menu/menu_start_dead_unit_threads.c, source_symbol: menu_start_dead_unit_threads}
   - {addr: 0x80102928, size: 808, name: world_menu_init_at_list, hash: fa3c7133afaf86b2}
   - {addr: 0x80102c50, size: 328, name: world_menu_at_list_select_unit_thread, hash: 9767ee804f9e3394}
   - {addr: 0x80102d98, size: 224, name: world_menu_start_at_list_thread, hash: c8919ff036b5a45b}
@@ -2386,6 +2386,23 @@ overrides:
   - {function: world_menu_refresh_right_unit_stats_display, name: g_battle_menu_right_unit_stats_display, addr: 0x80155aec}
   - {function: world_menu_refresh_right_unit_stats_display, name: g_battle_menu_right_unit_stats_setup, addr: 0x80155b6c}
   - {function: world_menu_refresh_right_unit_stats_display, name: g_battle_menu_status_billboard, addr: 0x8013a340}
+  - {function: world_menu_start_dead_unit_threads, name: battle_menu_icon_linked_entry_thread, addr: 0x800eee98}
+  - {function: world_menu_start_dead_unit_threads, name: battle_menu_run_icon_selection_loop, addr: 0x800ecf20}
+  - {function: world_menu_start_dead_unit_threads, name: battle_menu_start_building_thread, addr: 0x800f0a18}
+  - {function: world_menu_start_dead_unit_threads, name: battle_thread_is_running_asm, addr: 0x80100164}
+  - {function: world_menu_start_dead_unit_threads, name: g_battle_dead_unit_action, addr: 0x8015325c}
+  - {function: world_menu_start_dead_unit_threads, name: g_battle_dead_unit_context, addr: 0x801cd174}
+  - {function: world_menu_start_dead_unit_threads, name: g_battle_dead_unit_result, addr: 0x80153260}
+  - {function: world_menu_start_dead_unit_threads, name: g_battle_menu_thread_menu_data, addr: 0x801cd7e0}
+  - {function: world_menu_start_dead_unit_threads, name: g_option_dead_unit_controller_input, addr: 0x801a66b0}
+  - {function: world_menu_start_dead_unit_threads, name: g_option_dead_unit_menu, addr: 0x80156e38}
+  - {function: world_menu_start_dead_unit_threads, name: g_option_dead_unit_menu_entries, addr: 0x80156de8}
+  - {function: world_menu_start_dead_unit_threads, name: g_option_dead_unit_menu_flags, addr: 0x801ad544}
+  - {function: world_menu_start_dead_unit_threads, name: g_option_dead_unit_primary_result, addr: 0x801adb4c}
+  - {function: world_menu_start_dead_unit_threads, name: g_option_dead_unit_secondary_result, addr: 0x801adb50}
+  - {function: world_menu_start_dead_unit_threads, name: g_option_menu_at_list_primary_values, addr: 0x801acd44}
+  - {function: world_menu_start_dead_unit_threads, name: option_menu_run_at_list, addr: 0x8010088c}
+  - {function: world_menu_start_dead_unit_threads, name: option_thread_wait_forever, addr: 0x8010226c}
 
 regions:
   - {addr: 0x800feff0, end: 0x800ff284, kind: handwritten, why: "handwritten scratchpad-frame blitter helper"}

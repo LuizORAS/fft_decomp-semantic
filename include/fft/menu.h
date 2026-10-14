@@ -1098,6 +1098,8 @@ typedef struct crystal_pickup_result {
     u8 learned_abilities[0x40]; /* 0x53 */
 } crystal_pickup_result_t;
 
+void menu_start_dead_unit_threads(void);
+
 /* One cursor-navigation node of the HELPMENU, BUNIT, ATTACK deployment and
  * DEBUGCHR editor screens (WORLD's help_navigation_record_t has the same
  * layout): the value or text id it refers to, its help-text base, the node
