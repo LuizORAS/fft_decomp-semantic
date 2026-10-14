@@ -7,9 +7,9 @@
 effect_script_result_e effect_code_script_08_set_camera_position(effect_record_t* record) {
     VECTOR coords;
 
-    setVector(&coords, effect_get_current_script_instruction(record)->vector.x << 12,
-        effect_get_current_script_instruction(record)->vector.y << 12,
-        effect_get_current_script_instruction(record)->vector.z << 12);
+    setVector(&coords, effect_get_current_script_instruction(record)->vector.x * ONE,
+        effect_get_current_script_instruction(record)->vector.y * ONE,
+        effect_get_current_script_instruction(record)->vector.z * ONE);
     camera_set_current_real_coords(&coords);
     record->pc += 8;
     return EFFECT_SCRIPT_RESULT_CONTINUE;
