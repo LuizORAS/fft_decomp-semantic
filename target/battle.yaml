@@ -845,8 +845,8 @@ functions:
   - {addr: 0x8013bf5c, size: 48, name: battle_menu_open_option_at_list, hash: 73bf5a8575c0b501, source: src/shared/menu/menu_open_option_at_list.c, source_symbol: menu_open_option_at_list}
   - {addr: 0x8013bf8c, size: 48, name: battle_menu_open_option_dead_unit_panel, hash: 6cd18434d58c6033, source: src/shared/menu/menu_open_option_dead_unit_panel.c, source_symbol: menu_open_option_dead_unit_panel}
   - {addr: 0x8013bfbc, size: 108, name: battle_menu_display_triangle_selection, hash: 87600a54e5e807ad, source: src/shared/menu/menu_run_triangle_selection.c, source_symbol: menu_run_triangle_selection}
-  - {addr: 0x8013c028, size: 264, name: battle_menu_fade_out_thread, hash: 4befbfe76fc57571}
-  - {addr: 0x8013c130, size: 260, name: battle_menu_run_bunit_transition_thread, hash: 4f9e1018eea9bca0}
+  - {addr: 0x8013c028, size: 264, name: battle_menu_fade_out_thread, hash: 4befbfe76fc57571, source: src/shared/menu/menu_run_bunit_return_thread.c, source_symbol: menu_run_bunit_return_thread}
+  - {addr: 0x8013c130, size: 260, name: battle_menu_run_bunit_transition_thread, hash: 4f9e1018eea9bca0, source: src/shared/menu/menu_run_bunit_transition_thread.c, source_symbol: menu_run_bunit_transition_thread}
   - {addr: 0x8013c234, size: 80, name: battle_menu_open_bunit, hash: 0e07c32300c3103f, source: src/shared/menu/menu_open_bunit.c, source_symbol: menu_open_bunit}
   - {addr: 0x8013c284, size: 88, name: battle_menu_run_helpmenu_thread, hash: 273124b9b75f5519, source: src/shared/menu/menu_run_help_menu_thread.c, source_symbol: menu_run_help_menu_thread}
   - {addr: 0x8013c2dc, size: 200, name: battle_menu_run_jobstts_thread, hash: 4873b28b228ba17e, source: src/shared/menu/menu_run_jobstts_thread.c, source_symbol: menu_run_jobstts_thread}
@@ -2922,6 +2922,13 @@ imports:
 
 overrides:
   - {function: battle_gfx_init_scaled_draw_area_packets, name: g_menu_draw_area_template, addr: 0x80165ecc}
+  - {function: battle_menu_fade_out_thread, name: g_world_companion_overlay_state, addr: 0x8016600c}
+  - {function: battle_menu_fade_out_thread, name: g_world_menu_transition_timeout, addr: 0x8016604a}
+  - {function: battle_menu_fade_out_thread, name: g_world_screen_fade, addr: 0x8016603c}
+  - {function: battle_menu_fade_out_thread, name: g_world_text_overlay_active, addr: 0x8016602c}
+  - {function: battle_menu_fade_out_thread, name: world_menu_clear_transition_active_flag, addr: 0x8012dd0c}
+  - {function: battle_menu_fade_out_thread, name: world_thread_is_running_asm, addr: 0x8014cc94}
+  - {function: battle_menu_fade_out_thread, name: world_unit_start_view_thread, addr: 0x8013d634}
   - {function: battle_menu_init_attack_resources_and_threads, name: g_world_menu_panel_fade_intensity, addr: 0x80166064}
   - {function: battle_menu_init_attack_resources_and_threads, name: g_world_menu_panel_fade_mode, addr: 0x80166060}
   - {function: battle_menu_init_attack_resources_and_threads, name: g_world_saved_game_options, addr: 0x8016d99c}
@@ -2937,6 +2944,9 @@ overrides:
   - {function: battle_menu_init_numeric_display_frame_primitives, name: world_menu_init_sprite, addr: 0x8012e244}
   - {function: battle_menu_reset_unit_records, name: g_world_menu_unit_selection_rows, addr: 0x8014d46c}
   - {function: battle_menu_reset_unit_records_wrapper, name: world_menu_reset_unit_records, addr: 0x8013f8b4}
+  - {function: battle_menu_run_bunit_transition_thread, name: g_world_screen_fade, addr: 0x8016603c}
+  - {function: battle_menu_run_bunit_transition_thread, name: g_world_text_overlay_active, addr: 0x8016602c}
+  - {function: battle_menu_run_bunit_transition_thread, name: world_menu_fade_out_thread, addr: 0x8013c028}
   - {function: battle_menu_run_skillset_thread, name: g_menu_skillset_build_result, addr: 0x80169840}
   - {function: battle_menu_run_skillset_thread, name: g_world_menu_restore_depth, addr: 0x8014d325}
   - {function: battle_menu_run_skillset_thread, name: g_world_menu_unit_selection_rows, addr: 0x8014d46c}

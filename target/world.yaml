@@ -192,8 +192,8 @@ functions:
   - {addr: 0x800efa0c, size: 48, name: world_menu_open_option_at_list, hash: 43fc42c9790bdf43, source: src/shared/menu/menu_open_option_at_list.c, source_symbol: menu_open_option_at_list}
   - {addr: 0x800efa3c, size: 48, name: world_menu_open_option_dead_unit_panel, hash: e76892b74fd58b3a, source: src/shared/menu/menu_open_option_dead_unit_panel.c, source_symbol: menu_open_option_dead_unit_panel}
   - {addr: 0x800efa6c, size: 108, name: world_menu_display_triangle_selection, hash: 11df91715534e82a, source: src/shared/menu/menu_run_triangle_selection.c, source_symbol: menu_run_triangle_selection}
-  - {addr: 0x800efad8, size: 264, name: world_menu_fade_out_thread, hash: 9a5b4e6efe2ee31f}
-  - {addr: 0x800efbe0, size: 260, name: world_menu_run_bunit_transition_thread, hash: eb985a136265b699}
+  - {addr: 0x800efad8, size: 264, name: world_menu_fade_out_thread, hash: 9a5b4e6efe2ee31f, source: src/shared/menu/menu_run_bunit_return_thread.c, source_symbol: menu_run_bunit_return_thread}
+  - {addr: 0x800efbe0, size: 260, name: world_menu_run_bunit_transition_thread, hash: eb985a136265b699, source: src/shared/menu/menu_run_bunit_transition_thread.c, source_symbol: menu_run_bunit_transition_thread}
   - {addr: 0x800efce4, size: 80, name: world_menu_open_bunit, hash: 4bc30b101fd07457, source: src/shared/menu/menu_open_bunit.c, source_symbol: menu_open_bunit}
   - {addr: 0x800efd34, size: 88, name: world_menu_run_helpmenu_thread, hash: d52763de82195c9d, source: src/shared/menu/menu_run_help_menu_thread.c, source_symbol: menu_run_help_menu_thread}
   - {addr: 0x800efd8c, size: 200, name: world_menu_run_jobstts_thread, hash: f78d073fced43537, source: src/shared/menu/menu_run_jobstts_thread.c, source_symbol: menu_run_jobstts_thread}

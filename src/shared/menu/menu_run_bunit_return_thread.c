@@ -3,15 +3,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Thread body that closes the unit list (BUNIT) opened from a WORLD menu.
- *
- * Waits for the menu's grandchild thread to end, hands the frame loop the
- * BUNIT overlay state and waits until it is idle again, frees the overlay,
- * asks threads 2..14 to stop, fades the screen in over 32 frames and restarts
- * the hovered-unit view.
- */
-void world_menu_fade_out_thread(void) {
+/* Run BUNIT, release its high-overlay memory, then restore the unit view. */
+void menu_run_bunit_return_thread(void) {
     s32 i;
     s32 unused[2]; /* keeps the original 0x28 frame */
 

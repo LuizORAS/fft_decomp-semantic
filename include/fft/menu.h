@@ -2198,6 +2198,8 @@ void menu_run_triangle_selection(void);
 void menu_run_help_menu_thread(void);
 void menu_run_equip_thread(void);
 void menu_run_jobstts_thread(void);
+void menu_run_bunit_return_thread(void);
+void menu_run_bunit_transition_thread(void);
 void menu_run_battle_help(void);
 
 /* Unit portrait transition primitives. */

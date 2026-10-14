@@ -3,15 +3,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Thread body that opens the unit list (BUNIT) from a WORLD menu.
- *
- * Fades the screen out over 16 frames, asks the menu and panel threads to
- * stop and waits for slots 10..13, loads both halves of the overlay around a
- * 0x20000-byte reservation at the high overlay address, and hands over to
- * world_menu_fade_out_thread, which runs the overlay and fades back in.
- */
-void world_menu_run_bunit_transition_thread(void) {
+/* Fade out and load BUNIT, then start its return thread. */
+void menu_run_bunit_transition_thread(void) {
     s32 level;
 
     for (level = 0; level < 0x100; level += 0x10) {
