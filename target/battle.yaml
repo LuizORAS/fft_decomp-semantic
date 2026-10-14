@@ -737,7 +737,7 @@ functions:
   - {addr: 0x8012f4e0, size: 380, name: battle_text_build_display_message, hash: eedb1f6dcfecd6a0, source: src/shared/text/text_build_display_message.c, source_symbol: text_build_display_message}
   - {addr: 0x8012f65c, size: 84, name: battle_menu_release_current_thread_slot, hash: 948b079789ed5c43}
   - {addr: 0x8012f6b0, size: 36, name: thread_get_current_task_id, hash: f10dac85694e4558, source: src/shared/thread/thread_get_current_task_id.c}
-  - {addr: 0x8012f6d4, size: 1612, name: battle_text_draw_glyph_with_typewriter_delay, hash: f53ad13089249377}
+  - {addr: 0x8012f6d4, size: 1612, name: battle_text_draw_glyph_with_typewriter_delay, hash: f53ad13089249377, source: src/shared/text/text_draw_glyph_with_typewriter_delay.c, source_symbol: text_draw_glyph_with_typewriter_delay}
   - {addr: 0x8012fd20, size: 108, name: text_resolve_format_string_id, hash: 8dd43b50cdcd6fb8, source: src/shared/text/text_resolve_format_string_id.c}
   - {addr: 0x8012fd8c, size: 1024, name: text_measure, hash: db194586ee0af6b5, source: src/shared/text/text_measure.c}
   - {addr: 0x8013018c, size: 1180, name: text_measure_pixels, hash: 92c6053117958c19, source: src/shared/text/text_measure_pixels.c}

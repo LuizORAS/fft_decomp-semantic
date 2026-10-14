@@ -83,7 +83,7 @@ functions:
   - {addr: 0x800e38a8, size: 656, name: world_input_update_menu_state, hash: 13af0965fdb71ad6, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800e3b38, size: 84, name: world_menu_release_current_thread_slot, hash: 83ddde4c1bebdfdd}
   - {addr: 0x800e3b8c, size: 36, name: thread_get_current_task_id, hash: 3cea094e5efaa530, source: src/shared/thread/thread_get_current_task_id.c}
-  - {addr: 0x800e3bb0, size: 1612, name: world_text_draw_glyph_with_typewriter_delay, hash: 998b0c534e9802dc}
+  - {addr: 0x800e3bb0, size: 1612, name: world_text_draw_glyph_with_typewriter_delay, hash: 998b0c534e9802dc, source: src/shared/text/text_draw_glyph_with_typewriter_delay.c, source_symbol: text_draw_glyph_with_typewriter_delay}
   - {addr: 0x800e41fc, size: 108, name: text_resolve_format_string_id, hash: ca1c3176797cf8bd, source: src/shared/text/text_resolve_format_string_id.c}
   - {addr: 0x800e4268, size: 1024, name: text_measure, hash: 694a13bd7fb3f97e, source: src/shared/text/text_measure.c}
   - {addr: 0x800e4668, size: 1180, name: text_measure_pixels, hash: 899223b71ed0424b, source: src/shared/text/text_measure_pixels.c}
@@ -2842,6 +2842,19 @@ overrides:
   - {function: world_text_determine_spell_quote, name: battle_menu_dispatch_system_function, addr: 0x800f5384}
   - {function: world_text_determine_spell_quote, name: battle_text_is_spell_quote_exception_skillset, addr: 0x800f49d8}
   - {function: world_text_determine_spell_quote, name: g_battle_spell_quote_last_ability_id, addr: 0x8013a5ec}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: battle_text_render_glyph_to_4bpp_image, addr: 0x800ff284}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_menu_slot_owner_thread_ids, addr: 0x80153368}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_menu_slot_states, addr: 0x80153374}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_glyphs_per_wait, addr: 0x80153364}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_slot_row_pitches, addr: 0x80153384}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_slot_source_columns, addr: 0x80153380}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_typewriter_column_scratch, addr: 0x8019ac40}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_typewriter_glyph, addr: 0x8019a338}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_typewriter_glyph_images, addr: 0x8019a364}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_typewriter_previous_images, addr: 0x8019ab44}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_typewriter_state, addr: 0x8019a348}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_battle_text_typewriter_vram_rect, addr: 0x8019a35c}
+  - {function: world_text_draw_glyph_with_typewriter_delay, name: g_text_glyph_bitmap_data, addr: 0x801cd66c}
   - {function: world_text_restore_section_pointers, name: g_text_saved_section_pointers, addr: 0x801a2574}
   - {function: world_text_restore_section_pointers, name: g_text_section_backup_active, addr: 0x80154da8}
   - {function: world_text_save_section_pointers, name: g_text_saved_section_pointers, addr: 0x801a2574}

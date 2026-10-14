@@ -1,7 +1,6 @@
-#include "fft/battle.h"
-#include "fft/battle_event.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_text.h"
+#include "fft/main.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
@@ -9,17 +8,8 @@
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
-/* Draw the pending dialogue glyph into VRAM and hold it for the typewriter
- * delay.
- *
- * Twin of world_text_draw_glyph_with_typewriter_delay. The ring byte is read before the phase so the
- * pen-x load lands in its own register behind the slot arithmetic, and the
- * inner bound is `pitch / 2` so it is recomputed per row, as in the
- * target.
- */
-void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay) {
+void text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay) {
     s32 slot;
     s32 i;
     s32 j;

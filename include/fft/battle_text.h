@@ -93,6 +93,7 @@ extern menu_text_state_t
     g_battle_text_typewriter_state;             /* origin/stride passed to battle_text_render_glyph_to_4bpp_image */
 extern RECT g_battle_text_typewriter_vram_rect; /* VRAM destination of the finished glyph */
 
+void text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
 void battle_text_draw_glyph_with_typewriter_delay(s32 pen_x, s32 pen_y, s32 delay);
 
 /* spell quotes */
