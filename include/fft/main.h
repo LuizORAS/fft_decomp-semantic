@@ -1075,7 +1075,7 @@ void main_unit_init_battle_data(unit_stats_t* unit, const party_unit_t* party_un
 s32 main_unit_init_for_battle(unit_stats_t* unit, entd_unit_t* entd, u32 use_world_text, s32 kind);
 s32 main_unit_init_job_data(unit_stats_t* unit, s32 slot, s32 use_world_text);
 s32 main_unit_init_job_data_from_entd(unit_stats_t* unit, entd_unit_t* entd);
-void main_unit_init_job_levels(u16* unit_job_jp, u8* unit_job_levels);
+void main_unit_init_job_levels(const u16* unit_job_jp, u8* unit_job_levels);
 void main_unit_init_status_and_rewards(unit_stats_t* unit, s32 clear_rewards);
 void main_unit_learn_job_abilities(unit_stats_t* unit, s32 job_id, const entd_unit_t* entd);
 void main_unit_refresh_stats_and_statuses(unit_stats_t* unit);
