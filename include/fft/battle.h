@@ -6753,7 +6753,7 @@ extern s32 g_battle_gfx_animation_layer_priorities[][4];
 /* Fixed chicken palettes; the other three blocks are g_battle_gfx_frog_palettes,
  * g_battle_gfx_crystal_palettes and g_battle_gfx_treasure_palettes. */
 extern u16 g_battle_gfx_chicken_palettes[][16];
-extern s16 g_battle_gfx_counter;
+extern s16 g_battle_gfx_sprite_prim_index;
 extern u8 g_battle_gfx_fallback_seq_data[];
 extern u8 g_battle_gfx_fallback_shp_frame_data[];
 extern battle_gfx_item_graphic_t g_battle_gfx_item_graphic_data[0x92];
@@ -6764,9 +6764,9 @@ extern s32 g_battle_gfx_last_loaded_shp_id;
  * arithmetic on these, so the element type must stay u8. */
 extern u8* g_battle_gfx_seq_data_cursor;
 extern u8* g_battle_gfx_shp_frame_data_cursor;
-extern s16 g_battle_gfx_previous_counter;
-extern s16 D_800b628c; /* zeroed with g_battle_gfx_counter by battle_gfx_init_render_state; never read */
-extern s16 D_800b6290; /* zeroed with g_battle_gfx_counter by battle_gfx_init_render_state; never read */
+extern s16 g_battle_gfx_frame_start_sprite_prim_index; /* written each frame, never read */
+extern s16 D_800b628c; /* zeroed with g_battle_gfx_sprite_prim_index by battle_gfx_init_render_state; never read */
+extern s16 D_800b6290; /* zeroed with g_battle_gfx_sprite_prim_index by battle_gfx_init_render_state; never read */
 extern battle_gfx_fade_overlay_t g_battle_gfx_screen_fade_overlays[]; /* one fade overlay per packet buffer */
 
 /* Overlay draw-mode primitives, one per screen polarity. */
@@ -6882,7 +6882,7 @@ s32 battle_gfx_calculate_screen_z_from_misc_map_data(struct battle_unit_misc_dat
 void battle_gfx_check_tile_status_palette_mod(
     struct battle_unit_misc_data* unit, s32 tile_effect_level, s32 final_value);
 
-void battle_gfx_clear_four_state_words(s32 unused_map_id);
+void battle_gfx_rewind_unit_graphics_loader(s32 unused_map_id);
 s32 battle_gfx_clear_shadow_graphic_trigger_by_misc_id(u32 misc_id);
 void battle_gfx_clear_tpage7_vram_allocation_grid(void);
 void battle_gfx_configure_misc_unit_palette_modulation_1f(s32 unit_id);
@@ -6939,9 +6939,9 @@ u8* battle_gfx_get_effect_shp_data(u32 unused_spritesheet_id);
 u8* battle_gfx_get_weapon_seq_by_spritesheet_id(u32 spritesheet_id);
 u8* battle_gfx_get_weapon_shp_by_spritesheet_id(u32 spritesheet_id);
 s32 battle_gfx_get_unit_spritesheet_height_by_misc_id(u32 misc_id);
-s32 battle_gfx_get_unit_spritesheet_height_by_unit_id(u32 unit_id);
+s32 battle_gfx_get_unit_spritesheet_height_by_battle_id(u32 battle_id);
 void battle_gfx_highlight_all_units_blue_or_red(s32 mode);
-s16 battle_gfx_increment_counter(void);
+s16 battle_gfx_take_sprite_prim(void);
 void battle_gfx_init_deployment_and_reset_unit_graphics_state(void);
 u8* battle_gfx_init_unit_sprite_display(s32 unit_index);
 s32 battle_gfx_is_spritesheet_id_loaded(s16 spritesheet_id);
@@ -6979,11 +6979,11 @@ void battle_gfx_start_misc_unit_palette_modulation(
 
 void battle_gfx_load_evtchr_thread(void);
 
-/* 0x8008d104..0x8008d138: drains immediate loader steps (2), returns
- * 0 when finished or 1 while work remains pending (including allocation retry). */
+/* Drains immediate loader steps (2); returns 0 when finished or 1 while work remains pending
+ * (including an allocation retry). */
 s32 battle_gfx_poll_unit_graphics_load(void);
 
-/* 0x80088904: 0 finished, 1 pending/deferred, 2 immediate progress. */
+/* 0 finished, 1 pending or deferred, 2 immediate progress. */
 s32 battle_gfx_step_queued_unit_graphics_load(void);
 
 /* target */

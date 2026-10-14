@@ -22,9 +22,9 @@ s32 battle_effect_check_direct_trajectory_to_target(s32 source_id, SVECTOR* tile
     s32 target_height;
 
     g_battle_effect_trajectory_source_id = source_id;
-    source_height = battle_gfx_get_unit_spritesheet_height_by_unit_id(source_id) * 2 / 3;
+    source_height = battle_gfx_get_unit_spritesheet_height_by_battle_id(source_id) * 2 / 3;
     if (target_id != -1) {
-        target_height = battle_gfx_get_unit_spritesheet_height_by_unit_id(target_id) * 2 / 3;
+        target_height = battle_gfx_get_unit_spritesheet_height_by_battle_id(target_id) * 2 / 3;
         if (target_height == 0) {
             target_height = 12;
         }

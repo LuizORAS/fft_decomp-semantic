@@ -51,7 +51,7 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         }
         break;
     case 6:
-        battle_gfx_clear_four_state_words(map_id);
+        battle_gfx_rewind_unit_graphics_loader(map_id);
         step++;
         break;
     case 7:

@@ -17,9 +17,9 @@ void battle_effect_set_arrow_trajectory(s32 source_id, SVECTOR* tile_position, s
     s32 source_height;
     s32 target_height;
 
-    source_height = battle_gfx_get_unit_spritesheet_height_by_unit_id(source_id) * 2 / 3;
+    source_height = battle_gfx_get_unit_spritesheet_height_by_battle_id(source_id) * 2 / 3;
     if (target_id != -1) {
-        target_height = battle_gfx_get_unit_spritesheet_height_by_unit_id(target_id) * 3 / 4;
+        target_height = battle_gfx_get_unit_spritesheet_height_by_battle_id(target_id) * 3 / 4;
     }
     battle_unit_get_tile_center_and_height_by_battle_id(source_id, &g_battle_effect_trajectory_origin);
     g_battle_effect_trajectory_origin.vy -= source_height;

@@ -313,7 +313,7 @@ functions:
   - {addr: 0x8007ae48, size: 132, name: battle_gfx_init_item_sprite_display, hash: f4852713b9b2075d}
   - {addr: 0x8007aecc, size: 8, name: battle_gfx_release_unit_sprite_display_stub, hash: 6d64edf91449c1b1}
   - {addr: 0x8007aed4, size: 52, name: battle_gfx_init_render_frame, hash: d24a94ce7e694637}
-  - {addr: 0x8007af08, size: 60, name: battle_gfx_increment_counter, hash: 81bb107d92b9ac66}
+  - {addr: 0x8007af08, size: 60, name: battle_gfx_take_sprite_prim, hash: 81bb107d92b9ac66}
   - {addr: 0x8007af44, size: 1448, name: battle_gfx_construct_polygon_data_for_units, hash: c38f2b2b6a57de76}
   - {addr: 0x8007b4ec, size: 68, name: battle_gfx_store_sprite_display_data, hash: 1410ef2b68b17887}
   - {addr: 0x8007b530, size: 36, name: battle_gfx_set_sprite_part_flip, hash: 292f3ddc521978ee}
@@ -426,7 +426,7 @@ functions:
   - {addr: 0x80088018, size: 280, name: battle_gfx_reset_unit_graphics_load_state, hash: 08f053272412b87e}
   - {addr: 0x80088130, size: 1752, name: battle_gfx_step_load_unit_shp_seq_data, hash: c911b689397fcd77, rodata: [{addr: 0x800681a8, size: 96, hash: a02cd99f70e5ffe1}]}
   - {addr: 0x80088808, size: 56, name: battle_unit_update_and_animate_units_three_times, hash: 671753be2f1d332d}
-  - {addr: 0x80088840, size: 40, name: battle_gfx_clear_four_state_words, hash: 39115dfd29d2ba72}
+  - {addr: 0x80088840, size: 40, name: battle_gfx_rewind_unit_graphics_loader, hash: 39115dfd29d2ba72}
   - {addr: 0x80088868, size: 156, name: battle_gfx_init_deployment_and_reset_unit_graphics_state, hash: 7639c5daabf799ab}
   - {addr: 0x80088904, size: 1512, name: battle_gfx_step_queued_unit_graphics_load, hash: a6dc10f03754655b}
   - {addr: 0x80088eec, size: 460, name: battle_gfx_update_unit_palette_animation, hash: 3096c0877e2a9f57}
@@ -569,7 +569,7 @@ functions:
   - {addr: 0x8008db54, size: 208, name: battle_gfx_get_unit_sprite_frame_and_vram_ids, hash: 47355bc8d730b52c}
   - {addr: 0x8008dc24, size: 80, name: battle_gfx_get_unit_spritesheet_height, hash: 93b93a07c94e7e78}
   - {addr: 0x8008dc74, size: 40, name: battle_gfx_get_unit_spritesheet_height_by_misc_id, hash: af3e5b22d47c9959}
-  - {addr: 0x8008dc9c, size: 40, name: battle_gfx_get_unit_spritesheet_height_by_unit_id, hash: 0b234eaa13427f6c}
+  - {addr: 0x8008dc9c, size: 40, name: battle_gfx_get_unit_spritesheet_height_by_battle_id, hash: 0b234eaa13427f6c}
   - {addr: 0x8008dcc4, size: 76, name: battle_effect_start_basic_ability_animation, hash: 2f530f58fa9b93d6}
   - {addr: 0x8008dd10, size: 152, name: battle_effect_start_new, hash: dea6ad03a4c34797}
   - {addr: 0x8008dda8, size: 36, name: battle_effect_try_init_data, hash: 7f99d69cde649d7b}
@@ -2088,8 +2088,8 @@ data:
   - {addr: 0x800b72f4, name: g_battle_camera_real_coord_delta}
   - {addr: 0x800b7304, name: g_battle_unit_misc_slot_flags}
   - {addr: 0x800b7308, name: g_battle_unit_misc_data}
-  - {addr: 0x800bdf04, name: g_battle_gfx_previous_counter}
-  - {addr: 0x800bdf08, name: g_battle_gfx_counter}
+  - {addr: 0x800bdf04, name: g_battle_gfx_frame_start_sprite_prim_index}
+  - {addr: 0x800bdf08, name: g_battle_gfx_sprite_prim_index}
   - {addr: 0x800bdf0c, name: g_battle_gfx_weapon_shp_data}
   - {addr: 0x800be74c, name: g_battle_gfx_weapon_seq_data}
   - {addr: 0x800bf78c, name: g_battle_gfx_shp_frame_data_cursor}

@@ -29,8 +29,8 @@ void battle_gfx_build_cursor_tile_glow(
     SetTransMatrix(&g_battle_camera_matrix);
     switch (shape) {
     case 0:
-        quad = g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter();
-        quad_glow = g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter();
+        quad = g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim();
+        quad_glow = g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim();
         ((P_TAG*)quad)->len = 9;
         quad->code = 0x2c;
         RotTrans(v0, &screen, &flag);
@@ -74,10 +74,10 @@ void battle_gfx_build_cursor_tile_glow(
         }
         return;
     case 1:
-        tri_a = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter());
-        tri_b = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter());
-        tri_a_glow = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter());
-        tri_b_glow = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter());
+        tri_a = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
+        tri_b = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
+        tri_a_glow = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
+        tri_b_glow = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
         ((P_TAG*)tri_a)->len = 7;
         tri_a->code = 0x24;
         ((P_TAG*)tri_b)->len = 7;
@@ -140,10 +140,10 @@ void battle_gfx_build_cursor_tile_glow(
         }
         break;
     case 2:
-        tri_a = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter());
-        tri_b = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter());
-        tri_a_glow = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter());
-        tri_b_glow = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_increment_counter());
+        tri_a = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
+        tri_b = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
+        tri_a_glow = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
+        tri_b_glow = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
         ((P_TAG*)tri_a)->len = 7;
         tri_a->code = 0x24;
         ((P_TAG*)tri_b)->len = 7;

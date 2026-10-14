@@ -58,7 +58,7 @@ s32 battle_map_step_setup_sequence(s32 map_id, s32 step, s32 deployment_running)
     case 5:
         if (battle_unit_poll_and_load_entd_units() == 0) {
             if (g_battle_unit_graphics_load_complete != 0) {
-                battle_gfx_clear_four_state_words(map_id);
+                battle_gfx_rewind_unit_graphics_loader(map_id);
                 step = 7;
             } else {
                 step++;
@@ -69,7 +69,7 @@ s32 battle_map_step_setup_sequence(s32 map_id, s32 step, s32 deployment_running)
     case 6:
         if (battle_gfx_step_load_unit_shp_seq_data() == 8) {
             g_battle_unit_graphics_load_complete = 1;
-            battle_gfx_clear_four_state_words(map_id);
+            battle_gfx_rewind_unit_graphics_loader(map_id);
             step++;
         }
         break;

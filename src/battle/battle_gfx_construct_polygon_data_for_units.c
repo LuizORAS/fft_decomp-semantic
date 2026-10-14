@@ -96,7 +96,7 @@ void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_
     for (i = start; i < end; i++) {
         part = &display->parts[i];
         flags = part->flags;
-        index = battle_gfx_increment_counter();
+        index = battle_gfx_take_sprite_prim();
         flags ^= mode;
         prim = (battle_gfx_part_prim_t*)(g_battle_gfx_sprite_prim_pool + index);
         prim->length = 9;

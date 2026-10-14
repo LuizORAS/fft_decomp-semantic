@@ -1,9 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* battle_gfx_calculate_screen_z_from_input_coords at the centre of the map tile
- * of the unit, or of its mount for a rider. A rider's result is moved by -10 plus
- * the mount's float bob offset. */
+/* Same as battle_gfx_calculate_screen_z_from_input_coords at the centre of the map tile of the unit, or
+ * of its mount for a rider. A rider's result is moved by -10 plus the mount's float bob offset. */
 s32 battle_gfx_calculate_screen_z_from_misc_map_data(battle_unit_misc_data_t* unit) {
     SVECTOR coord;
     battle_unit_misc_data_t* mount;

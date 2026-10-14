@@ -1,9 +1,14 @@
 #include "fft/battle.h"
 
-/* The two clearing loops walk their arrays by byte offset. A struct-subscript
- * walk leaves GCC with both the index and the scaled address as induction
- * variables, adding an `addiu`/`li` pair to each loop; the byte offset is what
- * reproduces the target's single `bgez` on the address offset. */
+/* Clear the unit display records and graphics slots before a battle loads its unit graphics (step 5 of
+ * battle_map_step_setup_sequence, when the sprite shapes and sequences are not loaded yet): empty the misc
+ * unit list and its sixteen slots, free
+ * the nine spritesheet slots and both EVTCHR slots (their 256x200 pages at VRAM x 0x100 and 0x140), and
+ * rewind the SEQ and SHP data cursors and the loader.
+ *
+ * The two clearing loops walk their arrays by byte offset. A struct-subscript walk leaves GCC with both the
+ * index and the scaled address as induction variables, adding an `addiu`/`li` pair to each loop; the byte
+ * offset is what reproduces the target's single `bgez` on the address offset. */
 void battle_gfx_reset_unit_graphics_load_state(void) {
     s32 i;
     s32 offset;

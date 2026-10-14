@@ -22,8 +22,8 @@ s32 battle_effect_check_direct_trajectory_between_units(u8 source_id, u8 target_
     s32 source_height;
     s32 target_height;
 
-    source_height = battle_gfx_get_unit_spritesheet_height_by_unit_id(source_id) * 2 / 3;
-    target_height = battle_gfx_get_unit_spritesheet_height_by_unit_id(target_id) * 2 / 3;
+    source_height = battle_gfx_get_unit_spritesheet_height_by_battle_id(source_id) * 2 / 3;
+    target_height = battle_gfx_get_unit_spritesheet_height_by_battle_id(target_id) * 2 / 3;
     if (target_height == 0) {
         target_height = 12;
     }

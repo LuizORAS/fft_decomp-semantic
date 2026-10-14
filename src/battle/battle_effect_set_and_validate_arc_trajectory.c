@@ -42,9 +42,9 @@ s32 battle_effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_p
     g_battle_effect_trajectory_source_id = source_id;
     query.source.unit_id = source_id;
     query.target.unit_id = target_id;
-    query.source.height = battle_gfx_get_unit_spritesheet_height_by_unit_id(source_id) * 2 / 3;
+    query.source.height = battle_gfx_get_unit_spritesheet_height_by_battle_id(source_id) * 2 / 3;
     if (target_id != -1) {
-        query.target.height = battle_gfx_get_unit_spritesheet_height_by_unit_id(target_id);
+        query.target.height = battle_gfx_get_unit_spritesheet_height_by_battle_id(target_id);
     } else {
         query.target.height = 0;
     }

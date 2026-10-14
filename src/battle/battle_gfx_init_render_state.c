@@ -15,8 +15,8 @@ void battle_gfx_init_render_state(void) {
     g_battle_gfx_numeric_display_matrix.m[1][2] = 0;
     g_battle_gfx_numeric_display_matrix.m[0][2] = 0;
     g_battle_gfx_numeric_display_matrix.t[2] = 0;
-    g_battle_gfx_counter = 0;
-    g_battle_gfx_previous_counter = 0;
+    g_battle_gfx_sprite_prim_index = 0;
+    g_battle_gfx_frame_start_sprite_prim_index = 0;
     D_800b6290 = 0;
     D_800b628c = 0;
     /* The in-use word just past the last g_battle_unit_misc_data record. */

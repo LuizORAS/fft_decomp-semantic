@@ -24,7 +24,7 @@ void battle_effect_list_valid_unit_targeting_data(s32 first, s32 second, battle_
             (*out)->battle_ids[slot] = unit->entd_slot;
             battle_unit_get_tile_center_and_height_by_battle_id(unit->entd_slot, &position);
             (*out)->positions[slot] = position;
-            (*out)->sprite_heights[slot] = battle_gfx_get_unit_spritesheet_height_by_unit_id(unit->entd_slot);
+            (*out)->sprite_heights[slot] = battle_gfx_get_unit_spritesheet_height_by_battle_id(unit->entd_slot);
         }
     }
 }

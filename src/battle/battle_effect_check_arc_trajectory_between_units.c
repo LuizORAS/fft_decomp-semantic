@@ -17,8 +17,8 @@ s32 battle_effect_check_arc_trajectory_between_units(u8 source_id, u8 target_id)
 
     query.source.unit_id = source_id;
     query.target.unit_id = target_id;
-    query.source.height = battle_gfx_get_unit_spritesheet_height_by_unit_id(source_id) * 2 / 3;
-    query.target.height = battle_gfx_get_unit_spritesheet_height_by_unit_id(target_id);
+    query.source.height = battle_gfx_get_unit_spritesheet_height_by_battle_id(source_id) * 2 / 3;
+    query.target.height = battle_gfx_get_unit_spritesheet_height_by_battle_id(target_id);
     battle_effect_list_valid_unit_targeting_data(source_id, target_id, &obstacles);
     battle_unit_get_tile_center_and_height_by_battle_id(source_id, &query.source.position);
     query.source.position.vy -= query.source.height;
