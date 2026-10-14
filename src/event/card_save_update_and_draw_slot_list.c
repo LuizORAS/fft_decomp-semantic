@@ -2,8 +2,13 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Input is accepted in selection state; rendering also runs
- * during the adjacent confirmation/write states. */
+/* Save-menu state CARD_SAVE_MENU_SELECT_SAVE and the slot list it shows. In that state (once the
+ * buttons are released), Up and Down move the cursor over the listed slots, Circle picks the slot under it
+ * (an occupied one first asks whether to overwrite, the prompt placed by the cursor's row) and moves on to
+ * CARD_SAVE_MENU_WRITING, Cross goes back to the card choice, and a card that stops answering sends the menu
+ * back to scanning. In this state and the confirmation and write states around it, scroll the list
+ * (card_save_update_slot_scroll) and draw a 48-pixel row for each slot that is not unavailable, with the
+ * cursor. */
 void card_save_update_and_draw_slot_list(u16 input) {
     s32 index;
     s32 value;

@@ -3,7 +3,17 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Dispatched in scanning state by card_save_run_menu. */
+/* Save-menu state CARD_SAVE_MENU_SCANNING, one step a frame. When a scan earlier in the session left a
+ * slot in g_main_card_save_last_used_slot and the card still answers, the slot texts are rebuilt from the
+ * kept metadata (g_main_card_save_slot_metadata) and the menu goes on to CARD_SAVE_MENU_SCAN_RESULT.
+ * Otherwise the first frames clear the list's VRAM and show the checking message, then the selected card is
+ * opened (card_io_open_or_create_selected_card), its save files are listed until two listings agree, its
+ * free blocks are counted and every slot is marked unscanned. Each following frame reads one of the 15 save
+ * files: an existing one gives its 0x80-byte summary (occupied), a missing one is available while free
+ * blocks last (unavailable after), and a file whose summary slot is 0x10 or more (0xff marks a write that
+ * never finished) is deleted and its blocks counted free; each listed slot gets its text and play time. A new card asks
+ * whether to format it (the first row formats it three frames later); an error or a timeout shows the card error prompt
+ * until Circle or Cross, or until the card answers. */
 void card_save_update_slot_scan(void) {
     s32 result;
     s32 status;

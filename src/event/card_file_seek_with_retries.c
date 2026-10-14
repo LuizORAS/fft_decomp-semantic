@@ -1,8 +1,8 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
-/* lseek with up to ten tries, waiting for the card before each. Returns the
- * new position, or -1 when the card is not ready or every try fails. */
+/* Seek a memory card file with lseek, up to ten tries, waiting for the card before each. Returns
+ * the new position, or -1 when the card is not ready or every try fails. */
 s32 card_file_seek_with_retries(s32 descriptor, s32 offset, s32 origin) {
     s32 i;
     /* The target's unoptimized local layout retains one unreferenced word. */

@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* WORLD twin of card_build_save_file_header (built at -O2 here): fills the
+/* WORLD twin of card_save_build_file_header (built at -O2 here): fills the
  * memory-card header with the title template, the one-based save-file number
  * and the play time as full-width Shift-JIS digits, then the slot's icon.
  *

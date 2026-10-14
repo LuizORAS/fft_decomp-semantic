@@ -1,13 +1,10 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
-/*
- * CARD.OUT save-image serializer, runtime 0x801c01ac-0x801c09b4.
- *
- * The 0x1e00-byte memory-card image is filled from the SCUS globals, then a
- * per-128-byte-block parity bit is appended through the primary bitstream
- * writer.
- */
+/* Build save slot `slot`'s 0x1e00-byte save image in the save buffer: the memory card header
+ * (card_save_build_file_header), then the save data filled from the SCUS globals, then one parity bit per
+ * 128-byte block appended through the primary bitstream writer. world_card_build_save_image is WORLD's copy,
+ * whose summary lays out the image. */
 void card_save_build_buffer(s32 slot) {
     s32 i;
     s32 j;
@@ -44,7 +41,7 @@ void card_save_build_buffer(s32 slot) {
         = g_main_system_play_time_minutes * 60 + g_main_system_play_time_seconds + g_main_system_play_time_hours * 3600;
     g_card_save_buffer_pointer->summary.format_version = 4;
 
-    card_build_save_file_header(slot, unit->level, &g_card_save_buffer_pointer->header);
+    card_save_build_file_header(slot, unit->level, &g_card_save_buffer_pointer->header);
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
         bcopy(&g_main_party_data[i], g_card_save_buffer_pointer->party_records[i],

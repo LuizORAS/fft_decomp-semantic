@@ -236,7 +236,7 @@ enum {
 };
 
 /* PlayStation memory-card save-file header block (256 bytes), as built by
- * card_build_save_file_header (0x801c2ea8) and its WORLD twin
+ * card_save_build_file_header (0x801c2ea8) and its WORLD twin
  * world_card_build_save_file_header (0x801322e4). */
 typedef struct card_save_header {
     u8 magic0;           /* 0x00: 'S' */

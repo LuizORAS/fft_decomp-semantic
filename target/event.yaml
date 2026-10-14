@@ -856,7 +856,7 @@ functions:
   - {addr: 0x801c1e70, size: 344, name: card_save_init_occupied_slot_selection, hash: f7e390f9e0843bbf, profile: gcc-2.6.3_O0_aspsx-2.34}
   - {addr: 0x801c1fc8, size: 3392, name: card_save_update_and_draw_slot_list, hash: e26df89b1acc9c61, profile: gcc-2.6.3_O0_aspsx-2.34}
   - {addr: 0x801c2d08, size: 416, name: card_save_update_slot_scroll, hash: 07553e7d79ca258a, profile: gcc-2.6.3_O0_aspsx-2.34}
-  - {addr: 0x801c2ea8, size: 1568, name: card_build_save_file_header, hash: 1f7a34d4f23fd2e5, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x801c2ea8, size: 1568, name: card_save_build_file_header, hash: 1f7a34d4f23fd2e5, profile: gcc-2.6.3_O0_aspsx-2.34}
   - {addr: 0x801c34c8, size: 720, name: card_gfx_set_scaled_poly_ft4_geometry_and_uv, hash: ab60dde2e48b7b56}
   - {addr: 0x801c3798, size: 692, name: card_gfx_build_zodiac_primitives, hash: 34043b3fe18fd9cf}
   - {addr: 0x801c3a4c, size: 896, name: card_input_update_event_state, hash: cf38d088504d874f, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
