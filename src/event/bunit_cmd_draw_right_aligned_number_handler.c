@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "fft/menu_script.h"
 #include "psx/types.h"
 
@@ -23,7 +24,7 @@ menu_instruction_t* bunit_cmd_draw_right_aligned_number_handler(menu_instruction
     for (i = blanks - 1; i != -1; i--) {
         g_bunit_gfx_blank_cell_rect.position.x = x;
         menu_gfx_enqueue_oriented_textured_quad(
-            &g_bunit_gfx_blank_cell_rect, 0, TEXTURE_UV_FLIP_NONE, 0, g_bunit_gfx_otag_index);
+            &g_bunit_gfx_blank_cell_rect, 0, TEXTURE_UV_FLIP_NONE, 0, g_menu_gfx_otag_index);
         x += 8;
     }
     glyph_rect.x = x;
@@ -32,7 +33,7 @@ menu_instruction_t* bunit_cmd_draw_right_aligned_number_handler(menu_instruction
     glyph_rect.h = 0x10;
     for (j = 0; j < count; j++) {
         menu_gfx_enqueue_textured_quad(&glyph_rect, (digits[j] - '0') * 8 + 0xA8, 0x30, 0, 0,
-            g_bunit_menu_icon_texture_page, 0x3ED3, g_bunit_gfx_otag_index);
+            g_bunit_menu_icon_texture_page, 0x3ED3, g_menu_gfx_otag_index);
         glyph_rect.x += 8;
     }
     return menu_next_instruction(cmd);

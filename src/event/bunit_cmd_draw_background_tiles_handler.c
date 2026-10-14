@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Fill a background rectangle with 16-pixel textured tiles.
@@ -25,8 +26,8 @@ menu_instruction_t* bunit_cmd_draw_background_tiles_handler(menu_instruction_t* 
 
     packed_height = desc->window.height;
     packed_width = desc->window.width;
-    otag_index = g_bunit_gfx_otag_index;
-    clut_id = g_bunit_menu_palette_clut;
+    otag_index = g_menu_gfx_otag_index;
+    clut_id = g_menu_palette_clut;
     full_columns = packed_width >> 4;
     partial_width = packed_width & 0xF;
     full_rows = packed_height >> 4;
@@ -40,14 +41,14 @@ menu_instruction_t* bunit_cmd_draw_background_tiles_handler(menu_instruction_t* 
         rect.w = partial_width;
         rect.h = 16;
         menu_gfx_enqueue_textured_quad(
-            &rect, 8, 8, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut_id, otag_index);
+            &rect, 8, 8, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut_id, otag_index);
         for (column = 0; column < full_columns; column++) {
             rect.x = origin_x + partial_width + (column * 16);
             rect.y = origin_y + (row * 16);
             rect.w = 16;
             rect.h = 16;
             menu_gfx_enqueue_textured_quad(
-                &rect, 8, 8, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut_id, otag_index);
+                &rect, 8, 8, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut_id, otag_index);
         }
     }
 
@@ -57,14 +58,14 @@ menu_instruction_t* bunit_cmd_draw_background_tiles_handler(menu_instruction_t* 
         rect.w = partial_width;
         rect.h = partial_height;
         menu_gfx_enqueue_textured_quad(
-            &rect, 8, 8, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut_id, otag_index);
+            &rect, 8, 8, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut_id, otag_index);
         for (column = 0; column < full_columns; column++) {
             rect.x = origin_x + partial_width + (column * 16);
             rect.y = origin_y + (row * 16);
             rect.w = 16;
             rect.h = partial_height;
             menu_gfx_enqueue_textured_quad(
-                &rect, 8, 8, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut_id, otag_index);
+                &rect, 8, 8, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut_id, otag_index);
         }
     }
 

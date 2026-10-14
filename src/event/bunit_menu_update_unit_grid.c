@@ -233,8 +233,8 @@ s32 bunit_menu_update_unit_grid(s16 allow_banner_toggle, s16 allow_browse, s16 s
                     rect.y = top + 5;
                     rect.w = 6;
                     rect.h = 11;
-                    menu_gfx_enqueue_textured_quad(&rect, 0xB4, 0x10, color, 0, g_bunit_text_digit_texture_page,
-                        g_bunit_menu_alternate_number_clut, 8);
+                    menu_gfx_enqueue_textured_quad(
+                        &rect, 0xB4, 0x10, color, 0, g_menu_atlas_texture_page, g_bunit_menu_alternate_number_clut, 8);
                     if (g_bunit_unit_stat_mode == MENU_UNIT_READOUT_HP) {
                         clut = g_bunit_unit_grid_hp_gauge_clut;
                         gradient = g_bunit_unit_grid_hp_gauge_colors;

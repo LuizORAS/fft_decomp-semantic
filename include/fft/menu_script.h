@@ -247,6 +247,12 @@ menu_instruction_t* menu_cmd_set_clut_handler(menu_instruction_t* command);
 menu_instruction_t* menu_cmd_set_layout_clut_handler(menu_instruction_t* command);
 menu_instruction_t* menu_cmd_set_tpage_handler(menu_instruction_t* command);
 
+/* window drawing */
+extern menu_window_command_t g_menu_window_interior_command;
+extern s16 g_menu_window_right_x;
+
+menu_instruction_t* menu_cmd_draw_window_frame_handler(menu_instruction_t* command);
+
 /* instruction cursors */
 menu_instruction_t* menu_cmd_skip_group(menu_instruction_t* command);
 

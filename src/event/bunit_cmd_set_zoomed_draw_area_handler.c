@@ -1,4 +1,6 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
+#include "fft/menu_script.h"
 #include "psx/types.h"
 
 /* Stream command for a window frame that zooms open: during the first four
@@ -21,10 +23,10 @@ menu_instruction_t* bunit_cmd_set_zoomed_draw_area_handler(menu_instruction_t* c
         area.h = command->window.height * scale / 100;
         area.x = command->window.x + (command->window.width >> 1) - (area.w >> 1);
         area.y = command->window.y + (command->window.height >> 1) - (area.h >> 1);
-        menu_gfx_enqueue_draw_area(&area, g_bunit_gfx_otag_index - 1);
+        menu_gfx_enqueue_draw_area(&area, g_menu_gfx_otag_index - 1);
         g_bunit_gfx_otag_index_locked = 1;
     } else {
         g_bunit_gfx_otag_index_locked = 0;
     }
-    return bunit_cmd_draw_window_frame_handler(command);
+    return menu_cmd_draw_window_frame_handler(command);
 }

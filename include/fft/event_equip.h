@@ -313,7 +313,6 @@ extern u8 g_equip_menu_list_text_columns;
 extern u8* g_equip_menu_list_text_table;
 extern s16 g_equip_menu_list_visible_rows;
 extern u16 g_equip_menu_list_vram_width;
-extern u16 g_equip_menu_palette_clut;
 extern clut_t g_equip_menu_palette_image;
 extern s8 g_equip_menu_ready;
 
@@ -333,7 +332,6 @@ extern s8 g_equip_menu_substate; /* menu_item_list_state_e */
 extern s16 g_equip_menu_text_redraw_flag;
 extern u16 g_equip_menu_window_clut;
 
-extern s16 g_equip_menu_window_right_x;
 extern menu_entry_t g_equip_type_order_menu_hand_body;
 extern menu_entry_t g_equip_type_order_menu_other_slots;
 
@@ -435,14 +433,12 @@ extern u16 g_equip_gfx_poly_gt3_capacity;
 extern u16 g_equip_gfx_poly_gt3_count;
 extern u16 g_equip_gfx_poly_gt4_capacity;
 extern u16 g_equip_gfx_poly_gt4_count;
-extern s16 g_equip_gfx_semitransparency;
 extern u16 g_equip_gfx_sprite_16_capacity;
 extern u16 g_equip_gfx_sprite_16_count;
 extern u16 g_equip_gfx_sprite_8_capacity;
 extern u16 g_equip_gfx_sprite_8_count;
 extern u16 g_equip_gfx_sprite_capacity;
 extern u16 g_equip_gfx_sprite_count;
-extern s16 g_equip_gfx_sprite_ot_index;
 extern u16 g_equip_gfx_tile_16_capacity;
 extern u16 g_equip_gfx_tile_16_count;
 extern u16 g_equip_gfx_tile_1_capacity;
@@ -494,7 +490,6 @@ enum {
 
 extern menu_sprite_command_t g_equip_cmd_row_sprite_command;
 extern s32 g_equip_cmd_stream_input;
-extern menu_window_command_t g_equip_cmd_window_interior_command;
 /* EQUIP's 0x3c-byte menu records: the main commands, the item actions and
  * (in equip_item_run_type_order_mode) the item-type order menus. Each is
  * started through equip_thread_start_managed, which makes it the current
@@ -511,7 +506,6 @@ menu_instruction_t* equip_cmd_draw_scrollable_list_body_handler(menu_instruction
 menu_instruction_t* equip_cmd_draw_textured_quad_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_draw_tiled_rectangle_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_draw_translucent_tile_handler(menu_instruction_t* instruction);
-menu_instruction_t* equip_cmd_draw_window_frame_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_enqueue_draw_mode_handler(menu_instruction_t* instruction);
 menu_instruction_t* equip_cmd_release_otag_lock_handler(menu_instruction_t* instruction);
 void equip_cmd_run_stream(menu_instruction_t* instruction, s32 input);
@@ -532,7 +526,6 @@ extern u16 g_equip_text_clut_3_mode1;
 extern u8 g_equip_text_data[];
 /* The "%d" format string at the head of the overlay. */
 extern const char g_equip_text_decimal_format[];
-extern u16 g_equip_text_digit_texture_page;
 extern s32 g_equip_text_help_message_id;
 extern u8 g_equip_text_restore_pending;
 

@@ -1,14 +1,12 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
+#include "fft/menu_script.h"
 #include "psx/types.h"
 
-/* Draw a menu window's 5x9/5x7 border pieces around the command's rectangle
- * and tile its interior through bunit_cmd_draw_background_tiles_handler.
- *
- * BUNIT twin of EQUIP equip_cmd_draw_window_frame_handler (and of WORLD
- * world_menu_parse_draw_window_frame without its shared-rectangle source);
- * source 1 selects the alternate border texture coordinates. The reassigned command pointer before the return keeps its
- * reference count high enough for global allocation to place it in s5. */
-menu_instruction_t* bunit_cmd_draw_window_frame_handler(menu_instruction_t* command) {
+/* Draw a menu window's border and tile its interior through the overlay's handler.
+ * Source 1 selects alternate border UVs. The final command reassignment
+ * preserves the original pointer allocation. */
+menu_instruction_t* menu_cmd_draw_window_frame_handler(menu_instruction_t* command) {
     RECT rect;
     s32 left;
     s32 top;
@@ -28,7 +26,7 @@ menu_instruction_t* bunit_cmd_draw_window_frame_handler(menu_instruction_t* comm
     u8 width;
     u8 height;
 
-    priority = g_bunit_gfx_otag_index;
+    priority = g_menu_gfx_otag_index;
     left = command->window.x - 5;
     top = command->window.y - 9;
     width = command->window.width;
@@ -37,9 +35,9 @@ menu_instruction_t* bunit_cmd_draw_window_frame_handler(menu_instruction_t* comm
     height = command->window.height;
     full_rows = height >> 4;
     partial_height = height & 15;
-    clut = g_bunit_menu_palette_clut;
-    g_bunit_cmd_window_interior_command.rectangle_source = command->window.rectangle_source;
-    g_bunit_menu_window_right_x = command->window.width + left + 5;
+    clut = g_menu_palette_clut;
+    g_menu_window_interior_command.rectangle_source = command->window.rectangle_source;
+    g_menu_window_right_x = command->window.width + left + 5;
     if (command->window.rectangle_source == 1) {
         u_left = 0xDA;
         v_top = 3;
@@ -59,60 +57,60 @@ menu_instruction_t* bunit_cmd_draw_window_frame_handler(menu_instruction_t* comm
     rect.w = 5;
     rect.h = 9;
     menu_gfx_enqueue_textured_quad(
-        &rect, u_left, v_top, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut, priority);
+        &rect, u_left, v_top, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut, priority);
     rect.x = left + 5;
     rect.y = top;
     rect.w = partial_width;
     rect.h = 9;
     menu_gfx_enqueue_textured_quad(
-        &rect, u_middle, v_top, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut, priority);
+        &rect, u_middle, v_top, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut, priority);
     for (column = 0; column < full_columns; column++) {
         rect.x = left + (5 + partial_width) + column * 16;
         rect.y = top;
         rect.w = 16;
         rect.h = 9;
         menu_gfx_enqueue_textured_quad(
-            &rect, u_middle, v_top, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut, priority);
+            &rect, u_middle, v_top, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut, priority);
     }
     rect.x = left + (5 + partial_width) + column * 16;
     rect.y = top;
     rect.w = 5;
     rect.h = 9;
     menu_gfx_enqueue_textured_quad(
-        &rect, u_right - 5, v_top, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut, priority);
+        &rect, u_right - 5, v_top, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut, priority);
 
     rect.x = left;
     rect.y = top + 9;
     rect.w = 5;
     rect.h = partial_height;
     menu_gfx_enqueue_textured_quad(
-        &rect, 2, 8, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut, priority);
+        &rect, 2, 8, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut, priority);
     rect.x = left + (5 + partial_width) + full_columns * 16;
     rect.y = top + 9;
     rect.w = 5;
     rect.h = partial_height;
     menu_gfx_enqueue_textured_quad(
-        &rect, 0x1A, 8, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut, priority);
+        &rect, 0x1A, 8, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut, priority);
     for (row = 0; row < full_rows; row++) {
         rect.x = left;
         rect.y = top + (9 + partial_height) + row * 16;
         rect.w = 5;
         rect.h = 16;
         menu_gfx_enqueue_textured_quad(
-            &rect, 2, 8, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut, priority);
+            &rect, 2, 8, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut, priority);
         rect.x = left + (5 + partial_width) + full_columns * 16;
         rect.y = top + (9 + partial_height) + row * 16;
         rect.w = 5;
         rect.h = 16;
         menu_gfx_enqueue_textured_quad(
-            &rect, 0x1A, 8, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut, priority);
+            &rect, 0x1A, 8, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut, priority);
     }
 
-    g_bunit_cmd_window_interior_command.x = command->window.x;
-    g_bunit_cmd_window_interior_command.y = command->window.y;
-    g_bunit_cmd_window_interior_command.width = command->window.width;
-    g_bunit_cmd_window_interior_command.height = command->window.height;
-    bunit_cmd_draw_background_tiles_handler((menu_instruction_t*)&g_bunit_cmd_window_interior_command);
+    g_menu_window_interior_command.x = command->window.x;
+    g_menu_window_interior_command.y = command->window.y;
+    g_menu_window_interior_command.width = command->window.width;
+    g_menu_window_interior_command.height = command->window.height;
+    bunit_cmd_draw_background_tiles_handler((menu_instruction_t*)&g_menu_window_interior_command);
 
     top = top + 9 + partial_height + full_rows * 16;
     rect.x = left;
@@ -120,27 +118,27 @@ menu_instruction_t* bunit_cmd_draw_window_frame_handler(menu_instruction_t* comm
     rect.w = 5;
     rect.h = 7;
     menu_gfx_enqueue_textured_quad(
-        &rect, u_left, v_bottom - 7, 0, g_bunit_gfx_semitrans_enabled, g_bunit_text_digit_texture_page, clut, priority);
+        &rect, u_left, v_bottom - 7, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut, priority);
     rect.x = left + 5;
     rect.y = top;
     rect.w = partial_width;
     rect.h = 7;
-    menu_gfx_enqueue_textured_quad(&rect, u_middle, v_bottom - 7, 0, g_bunit_gfx_semitrans_enabled,
-        g_bunit_text_digit_texture_page, clut, priority);
+    menu_gfx_enqueue_textured_quad(
+        &rect, u_middle, v_bottom - 7, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut, priority);
     for (column = 0; column < full_columns; column++) {
         rect.x = left + (5 + partial_width) + column * 16;
         rect.y = top;
         rect.w = 16;
         rect.h = 7;
-        menu_gfx_enqueue_textured_quad(&rect, u_middle, v_bottom - 7, 0, g_bunit_gfx_semitrans_enabled,
-            g_bunit_text_digit_texture_page, clut, priority);
+        menu_gfx_enqueue_textured_quad(
+            &rect, u_middle, v_bottom - 7, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut, priority);
     }
     rect.x = left + (5 + partial_width) + column * 16;
     rect.y = top;
     rect.w = 5;
     rect.h = 7;
-    menu_gfx_enqueue_textured_quad(&rect, u_right - 5, v_bottom - 7, 0, g_bunit_gfx_semitrans_enabled,
-        g_bunit_text_digit_texture_page, clut, priority);
+    menu_gfx_enqueue_textured_quad(
+        &rect, u_right - 5, v_bottom - 7, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut, priority);
     command = menu_next_instruction(command);
     return command;
 }

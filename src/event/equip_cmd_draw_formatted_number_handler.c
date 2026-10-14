@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "fft/menu_script.h"
 #include "psx/types.h"
 
@@ -43,7 +44,7 @@ menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* 
     if (data->number.alternate_palette != 0) {
         clut = g_equip_menu_alternate_number_clut;
     } else {
-        clut = g_equip_menu_palette_clut;
+        clut = g_menu_palette_clut;
     }
     if (value & MENU_NUMBER_VALUE_DISABLED) {
         clut = g_equip_menu_disabled_number_clut;
@@ -74,8 +75,8 @@ menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* 
             glyph.rect.w = 6;
             glyph.rect.h = 3;
             glyph.rect.x = dash_x - 1;
-            menu_gfx_enqueue_textured_quad(&glyph.rect, 0xBA, 0x13, 0, g_equip_gfx_semitransparency,
-                g_equip_text_digit_texture_page, clut, g_equip_gfx_sprite_ot_index);
+            menu_gfx_enqueue_textured_quad(&glyph.rect, 0xBA, 0x13, 0, g_menu_gfx_semitransparency,
+                g_menu_atlas_texture_page, clut, g_menu_gfx_otag_index);
             value = cell;
         }
         return menu_next_instruction(data);
@@ -93,8 +94,8 @@ menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* 
             minus_rect.y = y + 2;
             minus_rect.w = 6;
             minus_rect.h = 0xB;
-            menu_gfx_enqueue_textured_quad(&minus_rect, 0xBA, 0x10, 0, g_equip_gfx_semitransparency,
-                g_equip_text_digit_texture_page, clut, g_equip_gfx_sprite_ot_index);
+            menu_gfx_enqueue_textured_quad(&minus_rect, 0xBA, 0x10, 0, g_menu_gfx_semitransparency,
+                g_menu_atlas_texture_page, clut, g_menu_gfx_otag_index);
             negative = 0;
         } else {
             digit = 0;
@@ -106,7 +107,7 @@ menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* 
             }
             if (data->number.style < 2) {
                 menu_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + (glyph.w * digit), glyph.v, 0,
-                    g_equip_gfx_semitransparency, g_equip_text_digit_texture_page, clut, g_equip_gfx_sprite_ot_index);
+                    g_menu_gfx_semitransparency, g_menu_atlas_texture_page, clut, g_menu_gfx_otag_index);
             } else {
                 if (digit < 8) {
                     glyph.v = 0;
@@ -115,8 +116,8 @@ menu_instruction_t* equip_cmd_draw_formatted_number_handler(menu_instruction_t* 
                     glyph.v = 0x10;
                     glyph.u = glyph.w * (digit - 8) + 0x20;
                 }
-                menu_gfx_enqueue_textured_quad(&glyph.rect, glyph.u, glyph.v, 0, g_equip_gfx_semitransparency,
-                    g_equip_text_digit_texture_page, g_equip_menu_window_clut, g_equip_gfx_sprite_ot_index);
+                menu_gfx_enqueue_textured_quad(&glyph.rect, glyph.u, glyph.v, 0, g_menu_gfx_semitransparency,
+                    g_menu_atlas_texture_page, g_equip_menu_window_clut, g_menu_gfx_otag_index);
             }
         }
     }

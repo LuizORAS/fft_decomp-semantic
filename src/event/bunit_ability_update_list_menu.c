@@ -89,7 +89,6 @@ s32 bunit_ability_update_list_menu(void) {
     rect.y = 0x2D;
     rect.w = 0x50;
     rect.h = 0x10;
-    menu_gfx_enqueue_textured_quad(
-        &rect, 0, 0xC8, 0, 0, g_bunit_text_digit_texture_page, g_bunit_menu_window_clut, 0xB);
+    menu_gfx_enqueue_textured_quad(&rect, 0, 0xC8, 0, 0, g_menu_atlas_texture_page, g_bunit_menu_window_clut, 0xB);
     return MENU_JOB_LIST_STEP_ABILITIES;
 }

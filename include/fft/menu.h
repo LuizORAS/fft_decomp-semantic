@@ -962,6 +962,9 @@ typedef char menu_quad_page_size_must_be_324[sizeof(menu_quad_page_t) == 324 ? 1
 /* primitive queues */
 extern rgb24_t g_menu_gfx_sprite_color;
 extern menu_gfx_context_t* g_menu_gfx_context;
+extern s16 g_menu_gfx_otag_index;
+extern s16 g_menu_gfx_semitransparency;
+extern u16 g_menu_atlas_texture_page;
 extern u16 g_menu_gfx_poly_ft4_count;
 extern u16 g_menu_gfx_draw_mode_count;
 extern u16 g_menu_gfx_draw_area_count;

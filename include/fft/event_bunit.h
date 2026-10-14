@@ -316,7 +316,6 @@ extern u8 g_bunit_menu_list_text_columns;
 extern u8* g_bunit_menu_list_text_table;
 extern s16 g_bunit_menu_list_visible_rows;
 extern u16 g_bunit_menu_list_vram_width;
-extern u16 g_bunit_menu_palette_clut;
 extern s16 g_bunit_menu_primary_result;
 extern menu_entry_t g_bunit_menu_reorder_list_desc[];
 extern s16 g_bunit_menu_reorder_list_entries[];
@@ -327,7 +326,6 @@ extern s16 g_bunit_menu_reorder_list_redraw_request;
 extern s16 g_bunit_menu_reorder_result;
 extern menu_selection_record_t g_bunit_menu_selection_records[BUNIT_MENU_SELECTION_RECORD_COUNT];
 extern u16 g_bunit_menu_window_clut;
-extern s16 g_bunit_menu_window_right_x;
 extern menu_button_piece_t g_bunit_slot_sprite_entries[];
 /* Text-section buffers: bunit_menu_run_reorder_list passes g_bunit_text_reorder_list_buffer
  * straight to bunit_text_concatenate_entries as its u8* output string and
@@ -436,7 +434,6 @@ extern s16 g_bunit_gfx_line_g3_count;
 extern u16 g_bunit_gfx_line_g4_capacity;
 extern s16 g_bunit_gfx_line_g4_count;
 extern u16 g_bunit_gfx_otag_count;
-extern s16 g_bunit_gfx_otag_index;
 extern s8 g_bunit_gfx_otag_index_locked;
 extern u16 g_bunit_gfx_poly_f3_capacity;
 extern s16 g_bunit_gfx_poly_f3_count;
@@ -453,7 +450,6 @@ extern u16 g_bunit_gfx_poly_gt3_capacity;
 extern s16 g_bunit_gfx_poly_gt3_count;
 extern u16 g_bunit_gfx_poly_gt4_capacity;
 extern u16 g_bunit_gfx_poly_gt4_count;
-extern s16 g_bunit_gfx_semitrans_enabled;
 extern u16 g_bunit_gfx_sprite_16_capacity;
 extern s16 g_bunit_gfx_sprite_16_count;
 extern u16 g_bunit_gfx_sprite_8_capacity;
@@ -539,7 +535,6 @@ enum {
 
 extern menu_sprite_command_t g_bunit_cmd_row_quad;
 extern u32 g_bunit_cmd_stream_input;
-extern menu_window_command_t g_bunit_cmd_window_interior_command;
 
 menu_instruction_t* bunit_cmd_add_next_otag_draw_area_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_advance_window_scale_step_handler(menu_instruction_t* instruction);
@@ -547,7 +542,6 @@ menu_instruction_t* bunit_cmd_draw_background_tiles_handler(menu_instruction_t* 
 menu_instruction_t* bunit_cmd_draw_right_aligned_number_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_draw_row_callback_quad_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_draw_textured_quad_handler(menu_instruction_t* instruction);
-menu_instruction_t* bunit_cmd_draw_window_frame_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_enqueue_draw_mode_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_release_otag_lock_handler(menu_instruction_t* instruction);
 menu_instruction_t* bunit_cmd_run_scrollable_list_handler(menu_instruction_t* instruction);
@@ -569,7 +563,6 @@ extern u16 g_bunit_text_clut_2_mode1;
 extern u16 g_bunit_text_clut_3_mode0;
 extern u16 g_bunit_text_clut_3_mode1;
 extern const char g_bunit_text_decimal_format[];
-extern u16 g_bunit_text_digit_texture_page;
 extern u8 g_bunit_text_reorder_list_buffer[];
 extern s32 g_bunit_text_selection_id;
 
