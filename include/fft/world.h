@@ -1691,8 +1691,8 @@ extern help_navigation_record_t g_world_help_unit_box_navigation[];
 extern help_navigation_record_t g_world_help_require_navigation[];
 extern u8 g_world_help_menu_text_id_tables[];
 
-/* Help-file offsets of the text sections the help menus rebind, added to
- * g_world_help_data_base (HELPMENU twin at 0x801e0b30). */
+/* EVENT/HELP.LZW, which WORLD.BIN carries: the offsets of the text sections WORLD's copy of HELPMENU
+ * rebinds, added to g_world_help_data_base (HELPMENU's own copy: g_helpmenu_text_section_offsets). */
 extern s32 g_world_help_text_section_offsets[32];
 extern u8 g_world_help_data_base[];
 extern u32* g_world_help_controller_state_ptr;
@@ -1761,7 +1761,16 @@ extern s32 g_world_text_line_widths[];
 extern s32 g_world_menu_help_open;
 extern u8 g_world_text_player_name[20];
 extern u8* g_world_text_saved_section_pointers[32];
+
+/* EVENT/SAMPLE.LZW, which WORLD.BIN carries: its 32 section offsets, counted from the end of the table
+ * (world_text_init_section_pointers). */
 extern s32 g_world_text_section_offsets[32];
+
+/* EVENT/WLDHELP.LZW, which WORLD.BIN carries: the help boxes' text (the party, commands, jobs, items,
+ * abilities, places and tips), bound by WORLD's help dialog boxes, WLDCORE's message windows and OPEN's
+ * messages. */
+extern s32 g_world_text_wldhelp_section_offsets[32];
+
 extern u8* g_world_text_section_pointer_backup[32];
 extern s32 g_world_text_section_pointers_saved;
 extern s32 g_world_text_substitution_values[32];

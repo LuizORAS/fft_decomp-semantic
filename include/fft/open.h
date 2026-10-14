@@ -232,7 +232,6 @@ typedef struct open_font_metrics {
     u8 advance;
 } open_font_metrics_t;
 
-extern s32 g_open_text_section_offsets[];
 s32 open_text_decode_hex_digit(s32 character);
 void open_text_init_menu_render_record(s32 record_index, RECT quad, s32 depth, s32 combined_text_index, void* image);
 

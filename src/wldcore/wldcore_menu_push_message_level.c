@@ -1,10 +1,9 @@
-#include "fft/open.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
 /* Show `text` in the message box as menu level MESSAGE: WORLD's text thread runs it in the message slot
  * (mode 0x3b while the unit panel threads are in use, else 0x33), reading the text sections at
- * g_open_text_section_offsets when `reload_text` is set. Every button is withheld from WORLD's menus
+ * g_world_text_wldhelp_section_offsets when `reload_text` is set. Every button is withheld from WORLD's menus
  * until wldcore_menu_finish_close_request pops the level, and the window-open sound plays. */
 void wldcore_menu_push_message_level(s32 text, s32 reload_text) {
     s32 index;
@@ -12,7 +11,7 @@ void wldcore_menu_push_message_level(s32 text, s32 reload_text) {
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].message.reload_text = reload_text;
     if (reload_text != 0) {
         world_text_save_section_pointers();
-        world_text_relocate_pointer_table(g_open_text_section_offsets);
+        world_text_relocate_pointer_table(g_world_text_wldhelp_section_offsets);
     }
     world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_character_handling_thread);
     if (g_main_system_flags & MAIN_SYSTEM_FLAG_UNIT_PANEL_THREADS) {

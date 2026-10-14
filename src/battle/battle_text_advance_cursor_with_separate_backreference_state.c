@@ -1,12 +1,8 @@
 #include "psx/types.h"
 
-/*
- * Three-pointer variant of battle_text_advance_cursor_with_backreferences
- * (0x80130718): the same text-stream walk, but the caller supplies the
- * remaining-byte counter and the resume cursor separately instead of a state
- * record. `scratch` plays the role of that record's scratch word: first the
- * high bits of the byte count, then the back-offset.
- */
+/* Advance a text cursor by one byte as battle_text_advance_cursor_with_backreferences does, keeping the
+ * run's remaining byte count in *remaining_bytes and its return point in *return_cursor instead of a state
+ * record: the form the dialog thread (battle_text_character_handling_thread) uses. */
 u8* battle_text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor) {
     s32 remaining;
     s32 scratch;

@@ -1,7 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* WORLD twin of battle_text_advance_cursor_with_backreferences (0x80130718). */
+/* Same as battle_text_advance_cursor_with_backreferences: advance a text cursor by one byte, returning
+ * from a finished back-reference run and entering a new one (0xF0-0xF3: replay 4 to 35 earlier bytes). */
 u8* world_text_advance_cursor_with_backreferences(world_text_backreference_state_t* state, u8* cursor) {
     s32 remaining;
     u8 command;

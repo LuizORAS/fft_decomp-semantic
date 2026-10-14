@@ -1,9 +1,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Turn the text file's table of section offsets into
- * g_world_text_section_pointers. The offsets are relative to the end of the
- * table. */
+/* Point all 32 text sections at the menu text WORLD.BIN carries, a copy of EVENT/SAMPLE.LZW
+ * (g_world_text_section_offsets, counted from the end of the table), as battle_text_init_menu_section_pointers
+ * does for BATTLE but keeping no section. Its callers are WORLD's copies of the battle menu routines
+ * (world_menu_init_palette_and_text, world_menu_run_system_function_thread, world_text_build_unit_name_list). */
 void world_text_init_section_pointers(void) {
     s32* offset;
     u8** section;

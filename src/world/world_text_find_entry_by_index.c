@@ -1,7 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Advance past `count` line terminators in a shift-JIS style byte stream. */
+/* Skip `count` entries of a text section and return the next one: each entry ends at 0xFE or 0xFF, and
+ * a 0xD0-0xDF byte takes the following byte with it. It does not follow back-references; the third argument
+ * is not read. */
 u8* world_text_find_entry_by_index(u8* text, s16 count, s32 unused) {
     u8 code;
 

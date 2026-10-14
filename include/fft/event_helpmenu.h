@@ -19,7 +19,8 @@ s32 helpmenu_thread_find_first_running_menu_thread(void);
 /* 0x80 bytes of saved g_battle_text_section_pointers, i.e. 32 pointers. */
 extern u8* g_helpmenu_text_saved_pointers[32];
 
-/* Section offsets of the help text file, relative to g_helpmenu_text_data (0x80 bytes before it). */
+/* Section offsets of EVENT/HELP.LZW, which HELPMENU.OUT carries, relative to g_helpmenu_text_data
+ * (0x80 bytes before it). */
 extern s32 g_helpmenu_text_section_offsets[32];
 extern u8 g_helpmenu_text_data[];
 

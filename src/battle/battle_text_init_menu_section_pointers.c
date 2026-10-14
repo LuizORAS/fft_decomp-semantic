@@ -1,10 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Relocate the 31 embedded menu-text offsets into the active section table.
- *
- * The text begins after a 32-word offset header. When menu input is disabled,
- * section 0 remains bound to the event/tutorial text already in use. */
+/* Point text sections 0-30 at the menu text BATTLE.BIN carries, a copy of EVENT/SAMPLE.LZW
+ * (g_battle_menu_text_section_offsets: 32 offsets counted from the end of the table). Section 31, the AT
+ * list, is left alone, and section 0 keeps the running event's text unless the player drives the menus
+ * (MENU_INPUT_PLAYER), so a tutorial's messages stay bound. */
 void battle_text_init_menu_section_pointers(void) {
     s32* source;
     u8** destination;

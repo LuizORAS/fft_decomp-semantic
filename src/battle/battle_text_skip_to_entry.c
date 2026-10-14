@@ -1,10 +1,11 @@
 #include "psx/types.h"
 
-/* Advance to the requested entry in a packed text section.
+/* Return entry `entry_index` of a text section: the byte after the `entry_index`th 0xFE or 0xFF. The
+ * scan decodes nothing, because in the retail files no byte inside an entry takes those values: glyph indexes
+ * stay below 0xD0, and a back-reference's operand bytes below 0xEF and 0xFE.
  *
- * The retail helper uses trapping arithmetic and fixed $t0-$t2 scratch
- * registers. The inline sequence preserves those instruction choices and the
- * deliberately empty branch delay slots. */
+ * The retail helper is hand-written: trapping addi/add, $t0-$t2 scratch registers and empty branch delay
+ * slots, which the asm statement keeps. */
 const u8* battle_text_skip_to_entry(const u8* text, s32 entry_index) {
     const u8* result;
     const u8* cursor = text;

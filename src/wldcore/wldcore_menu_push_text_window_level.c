@@ -1,10 +1,9 @@
-#include "fft/open.h"
 #include "fft/wldcore.h"
 
 /* Pushes the self-sizing message window as menu level TEXT_WINDOW, the windowed
  * sibling of wldcore_menu_push_message_level (level MESSAGE). It stores
  * the reload flag and, when set, re-points the text formatter at
- * g_open_text_section_offsets; appends a window record (sequence 0xe,
+ * g_world_text_wldhelp_section_offsets; appends a window record (sequence 0xe,
  * priority 1); measures the entry, clamped to three rows; fills the shared
  * scrollable window and centres it and the window record on the measured box;
  * then saves g_wldcore_menu_blocked_buttons in the level, sets it to -1, plays sound
@@ -34,7 +33,7 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].message.reload_text = reload_text;
     if (reload_text != 0) {
         world_text_save_section_pointers();
-        world_text_relocate_pointer_table(g_open_text_section_offsets);
+        world_text_relocate_pointer_table(g_world_text_wldhelp_section_offsets);
     }
 
     index = wldcore_window_append_record_and_reset_color(

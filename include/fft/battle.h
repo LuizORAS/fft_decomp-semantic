@@ -8261,6 +8261,9 @@ extern s32 g_battle_menu_status_enabled;
 
 /* Source image used when battle overlays render menu glyphs. */
 extern u8* g_battle_menu_glyph_image;
+
+/* EVENT/SAMPLE.LZW, which BATTLE.BIN carries: its 32 section offsets, counted from the end of the table
+ * (battle_text_init_menu_section_pointers). */
 extern s32 g_battle_menu_text_section_offsets[];
 extern world_menu_scroll_text_layout_t g_battle_menu_at_list_layout;
 extern world_menu_quad_piece_t g_battle_menu_quad_pieces[]; /* quad piece table */

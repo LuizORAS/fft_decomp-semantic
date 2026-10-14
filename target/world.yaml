@@ -1332,7 +1332,7 @@ data:
   - {addr: 0x8016ed8c, name: g_world_menu_item_palette_rect}
   - {addr: 0x8016ed94, name: g_world_menu_unit_image_rect_a}
   - {addr: 0x8016ed9c, name: g_world_menu_unit_image_rect_b}
-  - {addr: 0x8016ee68, name: g_open_text_section_offsets}
+  - {addr: 0x8016ee68, name: g_world_text_wldhelp_section_offsets}
   - {addr: 0x80173cbc, name: world_D_80173CBC}
   - {addr: 0x8017403c, name: g_battle_menu_skillset_disabled_flags}
   - {addr: 0x80174048, name: g_battle_ai_workspace_ptr}

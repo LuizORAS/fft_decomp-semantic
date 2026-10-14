@@ -5,7 +5,7 @@
  * cannot tie the masked value to the dying byte load.  `value` likewise holds the
  * product, which keeps the final addu's result in the displacement register. */
 
-/* Three-byte repeat opcode (0xF0..0xF3) in a byte-coded script stream. */
+/* A back-reference: the command 0xF0-0xF3 and two operand bytes (bit 4 of the first is unused). */
 typedef struct {
     u8 count_hi : 2;
     u8 : 2;
@@ -14,16 +14,15 @@ typedef struct {
     u8 : 1;
     u8 count_lo : 3;
     u8 disp_lo;
-} world_script_repeat_t;
+} world_text_backreference_t;
 
-/* Advance a byte-coded script cursor by one byte, honouring a pending
- * repeat counter (*count) whose resume address is *saved.  A repeat opcode
- * at the new position starts a new repeat: it stores the resume address,
- * derives the repeat count and rewinds by the packed displacement. */
+/* Same as battle_text_advance_cursor_with_separate_backreference_state: advance a text cursor by one
+ * byte, with the back-reference run's remaining byte count in *count and its return point in *saved, the
+ * form the dialog thread (world_text_character_handling_thread) uses. */
 u8* world_text_advance_cursor_with_separate_backreference_state(s32* count, u8* cursor, u8** saved) {
     s32 value = *count;
     s32 nibble;
-    world_script_repeat_t* op;
+    world_text_backreference_t* op;
 
     cursor += 1;
     if (value > 0) {
@@ -34,7 +33,7 @@ u8* world_text_advance_cursor_with_separate_backreference_state(s32* count, u8* 
             *saved = (u8*)-1;
         }
     }
-    op = (world_script_repeat_t*)cursor;
+    op = (world_text_backreference_t*)cursor;
     nibble = cursor[0] & 0xF0;
     if (nibble == 0xF0 && (cursor[0] & 0xF) < 4) {
         *saved = cursor + 3;

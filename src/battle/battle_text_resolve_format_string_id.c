@@ -1,7 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Convert a text-format substitution opcode into its string-table ID. */
+/* Return the text id a substitution code stands for: 0xE0 (TEXT_FORMAT_RAMZA_NAME) the first unit name,
+ * 0x4000; 0xE1, 0xE5, 0xE9 and 0xEA `value` plus the unit, location, item or ability name base; 0xEB `value`
+ * itself; -1 for any other code. */
 s32 battle_text_resolve_format_string_id(s32 format_code, s32 value) {
     if (format_code == TEXT_FORMAT_RAMZA_NAME) {
         return TEXT_ID_UNIT_NAME_SPECIAL_BASE;

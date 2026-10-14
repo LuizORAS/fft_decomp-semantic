@@ -1,11 +1,12 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Points one of the graphics-data pointers at its resident copy.
+/* Bind one of WORLD's resident text blocks (world_text_data_e) to its text section: the skillset, job
+ * or ability names, the formation messages, a dismissed unit's replies or the job descriptions (both in
+ * WORLD_TEXT_SECTION_FORMATION_TEXT), the name-entry keyboard or the shop dialogue.
  *
- * Each case leaves the bound address in $v0, and
- * world_card_build_save_slot_description reads it for case 1 through a
- * function-pointer cast. A native build must return the pointer (QUIRKS.md). */
+ * Each case leaves the bound address in $v0, and world_card_build_save_slot_description reads it for the
+ * job names through a function-pointer cast. A native build must return the pointer (QUIRKS.md). */
 u8* world_text_bind_section_data(u32 index) {
     switch (index) {
     case WORLD_TEXT_DATA_SKILLSET_NAMES:
