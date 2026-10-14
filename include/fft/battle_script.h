@@ -54,10 +54,7 @@ void script_warp_unit(const event_warp_unit_parameters_t* parameters);
 void script_warp_unit_display_to_paired_unit(s32 runtime_id);
 
 /* unit animation */
-extern u16 g_script_unit_face_slot_order[];
-
 void script_face_tile(const event_face_tile_parameters_t* parameters);
-void script_face_unit(const event_face_unit_parameters_t* parameters, s32 second_only);
 void script_rotate_unit(const event_rotate_unit_parameters_t* parameters);
 void script_unit_anim(const event_unit_anim_parameters_t* parameters);
 
