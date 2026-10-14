@@ -286,7 +286,7 @@ functions:
   - {addr: 0x800f4264, size: 68, name: world_menu_wait_thread, hash: 8cabc12cfd63cfb0}
   - {addr: 0x800f42a8, size: 212, name: world_menu_confirm_move_command_thread, hash: f34f9bf82eb55401}
   - {addr: 0x800f437c, size: 464, name: world_menu_check_action_restrictions, hash: 32be226f2599986c, source: src/shared/menu/menu_check_action_restrictions.c, source_symbol: menu_check_action_restrictions}
-  - {addr: 0x800f454c, size: 512, name: world_menu_check_action_slot_restrictions, hash: ec05d469b2c0f76d}
+  - {addr: 0x800f454c, size: 512, name: world_menu_check_action_slot_restrictions, hash: ec05d469b2c0f76d, source: src/shared/menu/menu_check_action_slot_restrictions.c, source_symbol: menu_check_action_slot_restrictions}
   - {addr: 0x800f474c, size: 652, name: world_menu_validate_skill_selection_thread, hash: d2b1e0184c6e5068}
   - {addr: 0x800f49d8, size: 84, name: world_is_skillset_in_spell_quote_exception_list, hash: 5f78811b5e703c8b, source: src/shared/text/text_is_spell_quote_exception_skillset.c, source_symbol: text_is_spell_quote_exception_skillset}
   - {addr: 0x800f4a2c, size: 688, name: world_menu_resolve_selection, hash: 68327baefa5118d7}
@@ -2408,6 +2408,15 @@ overrides:
   - {function: world_menu_check_action_restrictions, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
   - {function: world_menu_check_action_restrictions, name: g_menu_current_id, addr: 0x80153268}
   - {function: world_menu_check_action_restrictions, name: g_menu_thread_menu_data, addr: 0x801cd7e0}
+  - {function: world_menu_check_action_slot_restrictions, name: battle_menu_confirm_action_silently, addr: 0x800f421c}
+  - {function: world_menu_check_action_slot_restrictions, name: battle_menu_icon_linked_entry_thread, addr: 0x800eee98}
+  - {function: world_menu_check_action_slot_restrictions, name: battle_thread_get_current_parameter_1, addr: 0x80100090}
+  - {function: world_menu_check_action_slot_restrictions, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
+  - {function: world_menu_check_action_slot_restrictions, name: g_battle_active_menu, addr: 0x801a6688}
+  - {function: world_menu_check_action_slot_restrictions, name: g_battle_menu_action_slot_row_actions, addr: 0x80153d18}
+  - {function: world_menu_check_action_slot_restrictions, name: g_battle_menu_action_type_modes, addr: 0x801566f4}
+  - {function: world_menu_check_action_slot_restrictions, name: g_battle_menu_restore_depth, addr: 0x8013a609}
+  - {function: world_menu_check_action_slot_restrictions, name: g_battle_menu_restriction_message_ids, addr: 0x80156734}
   - {function: world_menu_confirm_action_silently, name: battle_menu_handle_action, addr: 0x800ebb08}
   - {function: world_menu_confirm_action_silently, name: g_sound_suppressed, addr: 0x801532a0}
   - {function: world_menu_dispatch_system_function, name: battle_menu_start_system_function_thread, addr: 0x800f4ecc}
