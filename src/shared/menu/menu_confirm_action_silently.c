@@ -1,12 +1,13 @@
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
+#include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/sound.h"
 #include "psx/pad.h"
 
 /* Runs the menu's action handler on a simulated, silent Circle press with
  * option 0 selected, then clears the injected input. */
-void battle_menu_confirm_action_silently(menu_entry_t* menu) {
+void menu_confirm_action_silently(menu_entry_t* menu) {
     g_sound_suppressed = 1;
     g_script_event_input = PSX_PAD_CIRCLE;
     battle_menu_handle_action(menu, 0);

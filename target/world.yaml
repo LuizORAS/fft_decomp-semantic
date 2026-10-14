@@ -197,7 +197,7 @@ functions:
   - {addr: 0x800efce4, size: 80, name: world_menu_open_bunit, hash: 4bc30b101fd07457, source: src/shared/menu/menu_open_bunit.c, source_symbol: menu_open_bunit}
   - {addr: 0x800efd34, size: 88, name: world_menu_run_helpmenu_thread, hash: d52763de82195c9d, source: src/shared/menu/menu_run_help_menu_thread.c, source_symbol: menu_run_help_menu_thread}
   - {addr: 0x800efd8c, size: 200, name: world_menu_run_jobstts_thread, hash: f78d073fced43537}
-  - {addr: 0x800efe54, size: 456, name: world_menu_run_equip_thread, hash: 5d7be1020050c481}
+  - {addr: 0x800efe54, size: 456, name: world_menu_run_equip_thread, hash: 5d7be1020050c481, source: src/shared/menu/menu_run_equip_thread.c, source_symbol: menu_run_equip_thread}
   - {addr: 0x800f001c, size: 252, name: world_menu_open_debugchr_unit_editor, hash: f331fb4b57e97974}
   - {addr: 0x800f0118, size: 168, name: world_menu_open_debugchr, hash: 736276bee06d36ae, source: src/shared/menu/menu_open_debugchr.c, source_symbol: menu_open_debugchr}
   - {addr: 0x800f01c0, size: 48, name: script_show_graphic, hash: 594b55ee98b22733, source: src/shared/script/script_show_graphic.c}
@@ -282,7 +282,7 @@ functions:
   - {addr: 0x800f4104, size: 124, name: world_menu_record_selection_for_selected_unit, hash: d5e1f7fe303d084c}
   - {addr: 0x800f4180, size: 120, name: world_menu_build_main, hash: 8c0005b9d4465929}
   - {addr: 0x800f41f8, size: 36, name: sound_queue_sfx_confirm_unless_restoring, hash: e5915fc070be8986, source: src/shared/sound/sound_queue_sfx_confirm_unless_restoring.c}
-  - {addr: 0x800f421c, size: 72, name: world_menu_confirm_action_silently, hash: 26759444d4dbb39f}
+  - {addr: 0x800f421c, size: 72, name: world_menu_confirm_action_silently, hash: 26759444d4dbb39f, source: src/shared/menu/menu_confirm_action_silently.c, source_symbol: menu_confirm_action_silently}
   - {addr: 0x800f4264, size: 68, name: world_menu_wait_thread, hash: 8cabc12cfd63cfb0}
   - {addr: 0x800f42a8, size: 212, name: world_menu_confirm_move_command_thread, hash: f34f9bf82eb55401}
   - {addr: 0x800f437c, size: 464, name: world_menu_check_action_restrictions, hash: 32be226f2599986c, source: src/shared/menu/menu_check_action_restrictions.c, source_symbol: menu_check_action_restrictions}
@@ -2408,6 +2408,8 @@ overrides:
   - {function: world_menu_check_action_restrictions, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
   - {function: world_menu_check_action_restrictions, name: g_menu_current_id, addr: 0x80153268}
   - {function: world_menu_check_action_restrictions, name: g_menu_thread_menu_data, addr: 0x801cd7e0}
+  - {function: world_menu_confirm_action_silently, name: battle_menu_handle_action, addr: 0x800ebb08}
+  - {function: world_menu_confirm_action_silently, name: g_sound_suppressed, addr: 0x801532a0}
   - {function: world_menu_dispatch_system_function, name: battle_menu_start_system_function_thread, addr: 0x800f4ecc}
   - {function: world_menu_dispatch_system_function, name: battle_text_run_spell_quote_thread, addr: 0x800ef9d4}
   - {function: world_menu_dispatch_system_function, name: battle_text_set_message_duration_frames, addr: 0x800eeaf4}
@@ -2544,6 +2546,15 @@ overrides:
   - {function: world_menu_restore_selection_for_selected_unit, name: g_battle_menu_id_records, addr: 0x8013a658}
   - {function: world_menu_restore_selection_for_selected_unit, name: g_battle_menu_selection_remaps, addr: 0x801566cc}
   - {function: world_menu_restore_selection_for_selected_unit, name: g_battle_menu_unit_selection_records, addr: 0x8013a750}
+  - {function: world_menu_run_equip_thread, name: battle_menu_clear_modal_open, addr: 0x800e1ea0}
+  - {function: world_menu_run_equip_thread, name: battle_menu_set_modal_open, addr: 0x800e1e8c}
+  - {function: world_menu_run_equip_thread, name: battle_unit_start_view_thread, addr: 0x800f0f64}
+  - {function: world_menu_run_equip_thread, name: g_battle_companion_overlay_primitives, addr: 0x8019a228}
+  - {function: world_menu_run_equip_thread, name: g_battle_companion_overlay_state, addr: 0x801532f0}
+  - {function: world_menu_run_equip_thread, name: g_battle_menu_action_slot_row_actions, addr: 0x80153d18}
+  - {function: world_menu_run_equip_thread, name: g_battle_menu_idle_action_entries, addr: 0x80153df4}
+  - {function: world_menu_run_equip_thread, name: g_battle_unit_view_mode, addr: 0x80153264}
+  - {function: world_menu_run_equip_thread, name: g_sound_suppressed, addr: 0x801532a0}
   - {function: world_menu_run_helpmenu_thread, name: battle_thread_find_running_by_task, addr: 0x800fd14c}
   - {function: world_menu_run_helpmenu_thread, name: helpmenu_menu_run_battle_help, addr: 0x8010487c}
   - {function: world_menu_run_numeric_display_panel_thread, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
