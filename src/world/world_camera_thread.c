@@ -4,7 +4,8 @@
 #define ABS(x) (x < 0 ? -(x) : x)
 
 /* The thread of the event CAMERA instruction (0x19). Instruction-for-instruction twin of
- * battle_camera_thread; see that file for the interpolation modes and the allocation-sensitive spellings. */
+ * battle_camera_thread; see that file for the interpolation modes and the allocation-sensitive spellings.
+ * Nothing starts WORLD's event interpreter, so it never runs (QUIRKS.md). */
 void world_camera_thread(void) {
     s32 target[8];
     s32 start[7];

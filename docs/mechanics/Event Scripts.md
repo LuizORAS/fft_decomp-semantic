@@ -88,9 +88,10 @@ languages run other parts of the game:
   the script forces and disables buttons
   (`EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS`, `_DISABLED_`) and the threads
   see that input ([[battle_script_route_event_input]]).
-- **WORLD's copy.** [[world_script_execute_event]] runs the same instructions,
+- **WORLD's copy.** [[world_script_execute_event]] holds the same instructions,
   except that WalkTo works only inside a block, Arrow does nothing, DarkScreen
-  shows nothing and ChangeMap leaves the light alone.
+  shows nothing and ChangeMap leaves the light alone. Nothing starts it: its
+  only entries are in WORLD's dead copy of the battle menus.
 
 ### Location scripts
 
@@ -191,6 +192,9 @@ fades, the OPNTEX pictures and slideshows, and the `ENDING.XA` music.
   [[battle_script_toggle_message_portrait_flip]] never sets its record index.
 - [[battle_script_get_misc_id]]: the active-turn selector with no unit
   holding the turn reads through NULL.
+- WORLD's copy of the interpreter never runs, and it calls BATTLE's
+  addresses, which hold WLDCORE code while WORLD runs
+  ([[world_camera_wait_until_idle]]).
 - Scenario conditions 18 and 19 compare the casualties with the record's id;
   location script opcodes 16 and 17 test the date the other way round from
   scenario conditions 16 and 17.

@@ -7,7 +7,8 @@
 
 /* Run an event camera fusion: seed one track per camera component from the script's CAMERA instructions
  * up to CAMERA_FUSION_END, then step every track each frame until track 3 finishes. Instruction-for-instruction
- * twin of battle_camera_fusion_thread; only the callee and global bindings differ.
+ * twin of battle_camera_fusion_thread; only the callee and global bindings differ. Nothing starts WORLD's
+ * event interpreter, so it never runs (QUIRKS.md).
  *
  * The seed loop reads each track through a `track` pointer taken first in the body: that makes loop.c
  * discover the track giv before the script-variable and values givs, which gives the target's
