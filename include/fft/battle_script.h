@@ -63,8 +63,6 @@ void script_process_inflict_status_commands(void);
 
 /* camera */
 void script_earthquake_start(void);
-/* A typed operand plus a local Camera cursor reorders the original argument saves. */
-void script_focus_speed(u8* parameters, s32* position, s32* rotation);
 
 /* map and lighting */
 extern SVECTOR g_script_light_angles;

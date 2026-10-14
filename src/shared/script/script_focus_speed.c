@@ -1,4 +1,3 @@
-#include "fft/battle_script.h"
 #include "fft/script.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
@@ -6,8 +5,7 @@
 /* FocusSpeed event instruction: derives the camera move duration from the
  * distance between the current and requested position/rotation and the speed.
  *
- * Twin of world_script_focus_speed without the division check. rotation_sum
- * is genuinely uninitialised in the target (s6 is never set). */
+ * The original leaves rotation_sum uninitialized (s6 is never set). */
 void script_focus_speed(u8* parameters, s32* position, s32* rotation) {
     s32 position_delta[4]; /* four slots: the target spaces the arrays 0x10 apart */
     s32 rotation_delta[4];

@@ -992,7 +992,7 @@ functions:
   - {addr: 0x80147318, size: 396, name: camera_pick_nearest_unblocked_yaw, hash: 57b2b9572ab8317c}
   - {addr: 0x801474a4, size: 224, name: script_apply_relative_camera, hash: e7c8b47bcb236e25, source: src/shared/script/script_apply_relative_camera.c}
   - {addr: 0x80147584, size: 508, name: script_focus, hash: 3724d62c11a28f48, source: src/shared/script/script_focus.c}
-  - {addr: 0x80147780, size: 408, name: script_focus_speed, hash: e8d9be5291edecad}
+  - {addr: 0x80147780, size: 408, name: script_focus_speed, hash: e8d9be5291edecad, source: src/shared/script/script_focus_speed.c}
   - {addr: 0x80147918, size: 16, name: battle_noop_80147918, hash: 70cab538e87be7b6}
   - {addr: 0x80147928, size: 132, name: script_prepare_unit_filter, hash: 95c00a3b4735d757, source: src/shared/script/script_prepare_unit_filter.c}
   - {addr: 0x801479ac, size: 548, name: script_filter_unit_id_by_mode, hash: af495e872ad53a94}
