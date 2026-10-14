@@ -824,7 +824,7 @@ functions:
   - {addr: 0x80139bec, size: 4848, name: battle_menu_run_scrolling_ability_list_thread, hash: a4bba4000533dd46}
   - {addr: 0x8013aedc, size: 16, name: battle_text_set_message_duration_frames, hash: e02feb0de282649e}
   - {addr: 0x8013aeec, size: 288, name: battle_menu_size_entry_to_text, hash: c07f6322a91d987d, source: src/shared/menu/menu_size_entry_to_text.c, source_symbol: menu_size_entry_to_text}
-  - {addr: 0x8013b00c, size: 628, name: battle_menu_icon_timed_thread, hash: 5f240ea74b70ce9e}
+  - {addr: 0x8013b00c, size: 628, name: battle_menu_icon_timed_thread, hash: 5f240ea74b70ce9e, source: src/shared/menu/menu_icon_timed_thread.c, source_symbol: menu_icon_timed_thread}
   - {addr: 0x8013b280, size: 636, name: battle_menu_icon_linked_entry_thread, hash: 17aa3c9f1ea9e5dd}
   - {addr: 0x8013b4fc, size: 148, name: battle_menu_input_thread, hash: 8feb91a2148b9b37}
   - {addr: 0x8013b590, size: 180, name: script_get_variable, hash: 92bfa64b3cd0e089, source: src/shared/script/script_get_variable.c}

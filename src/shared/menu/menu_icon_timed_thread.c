@@ -1,8 +1,9 @@
-#include "fft/battle.h"
-#include "fft/battle_script.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
+#include "fft/sound.h"
 #include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -12,10 +13,8 @@
  * records until input arrives or the g_battle_text_message_duration_frames frame budget (scaled by the
  * event speed) runs out. Bit 8 of the budget suppresses cancel handling
  * until the budget expires. The thread-id check reads an unset local in the
- * original.
- *
- * BATTLE twin of world_menu_icon_timed_thread. */
-void battle_menu_icon_timed_thread(void) {
+ * original. */
+void menu_icon_timed_thread(void) {
     RECT rect;
     menu_icon_record_t records[2];
     menu_entry_t* param;
