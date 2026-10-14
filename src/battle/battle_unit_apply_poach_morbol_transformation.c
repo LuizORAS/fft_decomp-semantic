@@ -3,8 +3,8 @@
 /* Carries out a pending Poached or Morbol display flag (status_flags_5_6) and
  * clears it; Poached is tested first and only one is handled per call.
  *
- * Poached configures the unit's palette modulation
- * (battle_gfx_configure_misc_unit_palette_modulation_1f). Morbol swaps the sprite
+ * Poached starts the unit's red fade-out
+ * (battle_gfx_start_unit_red_fade_out). Morbol swaps the sprite
  * for the Morbol spritesheet (VRAM slot, SHP, SEQ, texture page), refreshes the
  * tile palette and the idle animation, then rewrites the battle stats as a Morbol
  * and reinitialises the unit's AI ability data. */
@@ -18,7 +18,7 @@ void battle_unit_apply_poach_morbol_transformation(battle_unit_misc_data_t* unit
     }
     if (flags & BATTLE_MISC_STATUS_POACHED) {
         unit->status_flags_5_6 = flags & ~BATTLE_MISC_STATUS_POACHED;
-        battle_gfx_configure_misc_unit_palette_modulation_1f(unit->unit_id);
+        battle_gfx_start_unit_red_fade_out(unit->unit_id);
         return;
     }
     if ((flags & BATTLE_MISC_STATUS_MORBOL) == 0) {

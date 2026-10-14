@@ -29,6 +29,6 @@ void battle_script_blue_remove_unit(s32 unit_id) {
         if (unit->unit_id != unit_id) {
             continue;
         }
-        battle_gfx_init_misc_unit_palette_modulation(misc_id, 2, -0x1F, -0x1F, 0);
+        battle_gfx_start_event_unit_fade_out(misc_id, 2, -0x1F, -0x1F, 0);
     }
 }

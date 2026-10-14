@@ -1,10 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Load a battle texture archive: two 0x200-byte tables and three 4bpp texture
- * pages into VRAM, with the palette block at +0x10400 sent to map mesh 0xb.
- */
+/* Load WEP.SPR: the item palettes (its first 0x200 bytes), the weapon page at VRAM x 0x240
+ * (BATTLE_GFX_TPAGE_WEAPON), the effect palettes and the effect page at x 0x200 (BATTLE_GFX_TPAGE_EFFECT),
+ * the palettes at +0x10400 into CLUT row MAP_CLUT_ROW_WEAPONS and a 256x144 block at (0x200, 0x70). */
 void battle_gfx_load_wep_spr_data(u8* data) {
     s32 i;
     u8* cursor;

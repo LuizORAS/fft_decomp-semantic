@@ -17,9 +17,9 @@ void world_script_teleport_out_event_instruction(s32 unit_id, s32 remove_unit) {
         world_thread_call_on_main_stack(misc_id);
         unit_index = wldcore_unit_get_id_from_misc_id(misc_id);
         world_unit_set_animation(misc_id, BATTLE_UNIT_ANIMATION_RAISE_HANDS);
-        battle_gfx_init_misc_unit_palette_modulation(misc_id, 2, 0x1f, 0x1f, 0x1f);
+        battle_gfx_start_event_unit_fade_out(misc_id, 2, 0x1f, 0x1f, 0x1f);
         world_thread_wait_frames(0x3c);
-        battle_gfx_init_misc_unit_palette_modulation(misc_id, 2, -0x1f, -0x1f, -0x1f);
+        battle_gfx_start_event_unit_fade_out(misc_id, 2, -0x1f, -0x1f, -0x1f);
         world_thread_wait_frames(0x3c);
         if (remove_unit != 0) {
             set_unit_cannot_exist(unit_index);

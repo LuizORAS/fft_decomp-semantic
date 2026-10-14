@@ -53,7 +53,7 @@ s32 battle_state_announce_next_ability(void) {
             } else {
                 if (result >= 0) {
                     if (result < 4) {
-                        battle_gfx_activate_numerical_sprite_data(unit, result);
+                        battle_gfx_queue_charge_failure_message(unit, result);
                     }
                 }
                 battle_unit_set_animation_based_on_status(unit);

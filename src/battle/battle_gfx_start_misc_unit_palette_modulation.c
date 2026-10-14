@@ -4,8 +4,8 @@ enum {
     MISC_UNIT_SLOT_COUNT = 16,
 };
 
-/* battle_gfx_apply_misc_unit_palette_modulation for one unit, or for all sixteen
- * when misc_id is 16 or more. */
+/* Same as battle_gfx_apply_misc_unit_palette_modulation for one unit, or for all sixteen when misc_id is
+ * 16 or more. */
 void battle_gfx_start_misc_unit_palette_modulation(
     s32 preset_color, s32 time, s32 misc_id, s16 red, s16 green, s16 blue) {
     s32 index;

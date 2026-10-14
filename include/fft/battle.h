@@ -2257,7 +2257,7 @@ typedef struct battle_unit_misc_data {
     SVECTOR shadow_quad[4]; /* 0x29c; shadow corners written by battle_gfx_calculate_sprite_shadow_from_tile_slope */
     /*
      * Numerical display / status text (0x2bc..0x2d8).
-     * prep_for_displaying_earned_exp_jp and activate_numerical_sprite_data test
+     * battle_gfx_init_earned_exp_jp_display and battle_gfx_queue_charge_failure_message test
      * the activation flag, zero the animation progress and select FRAME.BIN in
      * the three numeric battle_gfx_sprite_display_data_t slots.
      */
@@ -6826,6 +6826,7 @@ void battle_gfx_tint_unit_palette_for_weather_and_tile(battle_unit_misc_data_t* 
 void battle_gfx_animate_post_action_text(battle_unit_misc_data_t* unit, const u16* screen_coords);
 void battle_gfx_apply_status_spritesheet_change(battle_unit_misc_data_t* unit, s32 tile_effect_level);
 s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t* unit);
+void battle_gfx_queue_charge_failure_message(battle_unit_misc_data_t* unit, s32 mode);
 void battle_gfx_calculate_sprite_shadow_from_tile_slope(battle_unit_misc_data_t* unit);
 void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot);
 void battle_gfx_draw_unit_sprite_position_copies(battle_unit_misc_data_t* unit);
@@ -6885,7 +6886,7 @@ void battle_gfx_check_tile_status_palette_mod(
 void battle_gfx_rewind_unit_graphics_loader(s32 unused_map_id);
 s32 battle_gfx_clear_shadow_graphic_trigger_by_misc_id(u32 misc_id);
 void battle_gfx_clear_tpage7_vram_allocation_grid(void);
-void battle_gfx_configure_misc_unit_palette_modulation_1f(s32 unit_id);
+void battle_gfx_start_unit_red_fade_out(s32 misc_id);
 
 void battle_gfx_construct_polygon_data_for_units(battle_gfx_sprite_display_data_t* display, s32 end, s32 start,
     SVECTOR* position, s16 angle, s16 mode, SVECTOR* scale, u32* ot);
@@ -6903,7 +6904,7 @@ void battle_gfx_tint_all_units_by_team(void);
 void battle_gfx_init_default_poly_ft4(POLY_FT4* primitive);
 void battle_gfx_init_earned_exp_jp_display(struct battle_unit_misc_data* unit);
 s32 battle_gfx_init_evtchr_vram_slots(void);
-void battle_gfx_init_misc_unit_palette_modulation(s32 misc_id, s32 mode, s16 red, s16 green, s16 blue);
+void battle_gfx_start_event_unit_fade_out(s32 misc_id, s32 amount, s16 red, s16 green, s16 blue);
 void battle_gfx_init_position_vector_copies(struct battle_unit_misc_data* unit);
 void battle_gfx_init_render_frame(void);
 void battle_gfx_init_render_state(void);
@@ -6931,7 +6932,7 @@ u8* battle_gfx_get_unit_sprite_frame_and_vram_ids(u32 misc_id, battle_unit_sprit
 void battle_gfx_apply_weather_time_tile_palette_mod_by_misc_id(u32 misc_id);
 s32 battle_gfx_clear_loaded_evtchr_slot(s32 slot_index);
 s32 battle_gfx_clear_saved_evtchr_slot(s32 slot_index);
-void battle_gfx_configure_misc_unit_palette_modulation(s32 misc_id, s32 mode, s16 red, s16 green, s16 blue);
+void battle_gfx_start_unit_fade_out(s32 misc_id, s32 amount, s16 red, s16 green, s16 blue);
 void battle_gfx_extract_deployed_unit_palettes(void);
 void battle_gfx_flip_poly_ft4_uv_if_negative(POLY_FT4* primitive, s32 direction);
 u8* battle_gfx_get_effect_seq_data(u32 unused_spritesheet_id);

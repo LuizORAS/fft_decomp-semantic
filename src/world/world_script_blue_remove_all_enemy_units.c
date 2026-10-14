@@ -19,7 +19,7 @@ void world_script_blue_remove_all_enemy_units(void) {
                        & BATTLE_TEAM_MASK)
                     != BATTLE_TEAM_BLUE
                 && resolved_id != -2) {
-                battle_gfx_init_misc_unit_palette_modulation(misc_id, 2, -0x1f, -0x1f, 0);
+                battle_gfx_start_event_unit_fade_out(misc_id, 2, -0x1f, -0x1f, 0);
             }
         }
         misc_id++;

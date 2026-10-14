@@ -17,7 +17,7 @@ void battle_script_blue_remove_all_enemy_units(void) {
                 stats = battle_unit_get_stats_from_battle_id(idx);
                 found = battle_unit_find_stats_by_entd_unit_id(stats->unit_id, &out_index);
                 if ((found->initial_team_flags & BATTLE_TEAM_MASK) && out_index != -2) {
-                    battle_gfx_init_misc_unit_palette_modulation(i, 2, -0x1F, -0x1F, 0);
+                    battle_gfx_start_event_unit_fade_out(i, 2, -0x1F, -0x1F, 0);
                 }
             }
         }

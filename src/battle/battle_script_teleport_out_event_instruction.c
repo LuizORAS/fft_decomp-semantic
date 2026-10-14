@@ -19,9 +19,9 @@ void battle_script_teleport_out_event_instruction(s32 unit_id, s32 remove) {
     battle_thread_call_on_main_stack(misc);
     idx = battle_unit_get_battle_index_by_misc_id(misc);
     battle_unit_set_animation(misc, BATTLE_UNIT_ANIMATION_RAISE_HANDS);
-    battle_gfx_init_misc_unit_palette_modulation(misc, 2, 0x1F, 0x1F, 0x1F);
+    battle_gfx_start_event_unit_fade_out(misc, 2, 0x1F, 0x1F, 0x1F);
     battle_thread_wait_frames(0x3C);
-    battle_gfx_init_misc_unit_palette_modulation(misc, 2, -0x1F, -0x1F, -0x1F);
+    battle_gfx_start_event_unit_fade_out(misc, 2, -0x1F, -0x1F, -0x1F);
     battle_thread_wait_frames(0x3C);
     if (remove != 0) {
         battle_unit_set_cannot_exist(idx);

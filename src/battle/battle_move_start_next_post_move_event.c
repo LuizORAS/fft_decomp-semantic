@@ -68,7 +68,7 @@ s32 battle_move_start_next_post_move_event(void) {
                 battle_unit_learn_from_crystal(source->battle_data, BATTLE_CRYSTAL_TAKE_TREASURE);
             }
         }
-        battle_gfx_configure_misc_unit_palette_modulation_1f(target->unit_id);
+        battle_gfx_start_unit_red_fade_out(target->unit_id);
         target->depth_height_offset
             = 0x24 - (battle_gfx_calculate_screen_z_from_misc_screen_data(source) - target->screen.vy);
         main_sound_play_sfx_find_channel(MAIN_SFX_COMPLETE);

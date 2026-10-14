@@ -353,7 +353,7 @@ functions:
   - {addr: 0x800803e4, size: 1236, name: battle_gfx_prepare_post_action_display, hash: 71e3a74e2047ec31}
   - {addr: 0x800808b8, size: 1676, name: battle_gfx_build_next_special_action_result_display, hash: f84b03f33a1ae7db}
   - {addr: 0x80080f44, size: 168, name: battle_gfx_init_earned_exp_jp_display, hash: 2256e8aaac92d311}
-  - {addr: 0x80080fec, size: 184, name: battle_gfx_activate_numerical_sprite_data, hash: 0fc2063c1e230384}
+  - {addr: 0x80080fec, size: 184, name: battle_gfx_queue_charge_failure_message, hash: 0fc2063c1e230384}
   - {addr: 0x800810a4, size: 2260, name: battle_gfx_animate_post_action_text, hash: 3cb19c84f990dd00, rodata: [{addr: 0x80067cb8, size: 324, hash: 0b8eb1c97eef6547}]}
   - {addr: 0x80081978, size: 16, name: battle_unit_store_animation_facing, hash: a57d7d5a8db7da37}
   - {addr: 0x80081988, size: 32, name: battle_unit_store_animation_facing_movement_data, hash: 10a5bebe446c30ea}
@@ -433,8 +433,8 @@ functions:
   - {addr: 0x800890b8, size: 404, name: battle_target_project_cursor_tile_to_screen, hash: efd32868dc5dc1d2}
   - {addr: 0x8008924c, size: 312, name: battle_target_draw_cursor_and_tile_glow, hash: 9295a5a6cb93e468}
   - {addr: 0x80089384, size: 216, name: battle_gfx_draw_wait_direction_unit, hash: f50e5cccbee03f9a}
-  - {addr: 0x8008945c, size: 204, name: battle_gfx_configure_misc_unit_palette_modulation, hash: a3126fe92f84ac7e}
-  - {addr: 0x80089528, size: 44, name: battle_gfx_configure_misc_unit_palette_modulation_1f, hash: 8e2742a704326a02}
+  - {addr: 0x8008945c, size: 204, name: battle_gfx_start_unit_fade_out, hash: a3126fe92f84ac7e}
+  - {addr: 0x80089528, size: 44, name: battle_gfx_start_unit_red_fade_out, hash: 8e2742a704326a02}
   - {addr: 0x80089554, size: 40, name: battle_unit_set_real_coords_from_screen_coords, hash: 35c0d40971b6b85c}
   - {addr: 0x8008957c, size: 72, name: battle_unit_set_screen_coords_from_real_coords, hash: 538380e271146aba}
   - {addr: 0x800895c4, size: 116, name: battle_unit_set_real_coords_from_map_coords, hash: 11a5c251452f82d5}
@@ -556,7 +556,7 @@ functions:
   - {addr: 0x8008d18c, size: 60, name: battle_gfx_reset_unit_graphic_trigger, hash: c1b03e1ff66baa5b}
   - {addr: 0x8008d1c8, size: 96, name: battle_gfx_reset_jumping_unit_graphic_triggers, hash: 72ad25e205257574}
   - {addr: 0x8008d228, size: 68, name: battle_unit_remove_misc_by_id, hash: c2a2e698f1a10f3c}
-  - {addr: 0x8008d26c, size: 52, name: battle_gfx_init_misc_unit_palette_modulation, hash: 34400fe02c18d2c8}
+  - {addr: 0x8008d26c, size: 52, name: battle_gfx_start_event_unit_fade_out, hash: 34400fe02c18d2c8}
   - {addr: 0x8008d2a0, size: 808, name: battle_gfx_unpack_evtchr_file_to_vram_slot, hash: c2c967fe497e97b3}
   - {addr: 0x8008d5c8, size: 136, name: battle_gfx_save_evtchr_slot, hash: d8c8dce24de50b2a}
   - {addr: 0x8008d650, size: 88, name: battle_gfx_clear_saved_evtchr_slot, hash: b4daddf2cfcfd5d7}

@@ -1,9 +1,9 @@
 #include "fft/battle.h"
 
-/* Builds the next ordinary damage, healing, stat, status, or result display.
+/* Build the next ordinary damage, healing, stat, status or result display.
  *
- * EXP/JP and the three failure messages above bit 0x01000000 are handled by
- * the following dispatcher at 0x800808b8. */
+ * EXP/JP and the three failure messages above bit 0x01000000 are built by
+ * battle_gfx_build_next_special_action_result_display. */
 s32 battle_gfx_build_next_action_result_display(battle_unit_misc_data_t* unit) {
     union {
         battle_stats_t* stats;
