@@ -20,7 +20,6 @@ void script_reset_event_state(void);
  * proven by 0x80078fb4 and 0x800785ac, which both consume it. */
 s32 script_run_event_frame(u32* ot, u32 buttons);
 void script_set_event_speed(s32 speed);
-void script_start_current_event_thread(void);
 
 /* input */
 extern u32 g_script_saved_event_input;

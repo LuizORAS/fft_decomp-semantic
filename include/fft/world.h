@@ -322,7 +322,6 @@ void world_script_set_current_otag_entry_and_update_input(u32* ot, s32 buttons);
 void world_script_set_vsync_mode_and_event_speed(s32 value);
 void world_script_sprite_move(void);
 void world_script_sprite_move_beta(void);
-void world_script_start_current_event_thread(void);
 void world_script_start_tutorial(s32 index);
 void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg);
 void world_gfx_ramp_screen_overlay_intensity_to_zero(void);

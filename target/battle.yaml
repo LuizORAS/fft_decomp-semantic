@@ -912,7 +912,7 @@ functions:
   - {addr: 0x8013f0c0, size: 168, name: map_reset_script_light_transform, hash: da3f44e4a4a58abd}
   - {addr: 0x8013f168, size: 164, name: unit_reset_animation_states, hash: cdeb9e30a6664d49, source: src/shared/unit/unit_reset_animation_states.c}
   - {addr: 0x8013f20c, size: 496, name: battle_unit_update_facing_and_pending_animations, hash: eec2ddc83dc662d7}
-  - {addr: 0x8013f3fc, size: 164, name: script_start_current_event_thread, hash: 4d813122369868cd}
+  - {addr: 0x8013f3fc, size: 164, name: script_start_current_event_thread, hash: 4d813122369868cd, source: src/shared/script/script_start_current_event_thread.c}
   - {addr: 0x8013f4a0, size: 8, name: battle_noop_8013f4a0, hash: 6d64edf91449c1b1}
   - {addr: 0x8013f4a8, size: 80, name: script_reset_event_state, hash: cc154e81b79d8046}
   - {addr: 0x8013f4f8, size: 40, name: script_is_deployment_running, hash: a5c397fe33bff892}
