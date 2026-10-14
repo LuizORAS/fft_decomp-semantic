@@ -1,4 +1,3 @@
-#include "fft/battle.h"
 #include "fft/battle_camera.h"
 #include "fft/battle_menu.h"
 #include "fft/battle_script.h"
@@ -6,14 +5,8 @@
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
-#include "psx/types.h"
 
-/* Menu thread: waits for thread 8, runs the tutorial event if pending, then
- * starts the menu-entry thread for the requested menu (0x10/0x12 redirect to
- * 0x36 for monster units) and optionally the two follow-up text threads.
- *
- * BATTLE twin of world_menu_start_entry_thread. */
-void battle_menu_start_entry_thread(void) {
+void menu_start_entry_thread(void) {
     s32 menu_id = battle_thread_get_current_parameter_1();
     s32 count;
 
