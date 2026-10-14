@@ -207,7 +207,7 @@ functions:
   - {addr: 0x800f0358, size: 280, name: world_script_load_portrait_colors_event_instruction, hash: f2bff445b230c13b}
   - {addr: 0x800f0470, size: 176, name: world_script_load_event, hash: a023de0e6c5d3603, source: src/shared/script/script_load_event.c, source_symbol: script_load_event}
   - {addr: 0x800f0520, size: 84, name: world_menu_set_palette_colors, hash: bc139dff59caa293}
-  - {addr: 0x800f0574, size: 48, name: world_menu_init_palette_and_text, hash: 90cc27f44568663e}
+  - {addr: 0x800f0574, size: 48, name: world_menu_init_palette_and_text, hash: 90cc27f44568663e, source: src/shared/menu/menu_init_palette_and_text.c, source_symbol: menu_init_palette_and_text}
   - {addr: 0x800f05a4, size: 8, name: world_noop_800f05a4, hash: 6d64edf91449c1b1}
   - {addr: 0x800f05ac, size: 224, name: world_menu_open_companion_data_file, hash: 7d0c16e13f0eb42a}
   - {addr: 0x800f068c, size: 240, name: world_menu_open_companion_executable, hash: a5c77c82b9674b2d}
@@ -2475,6 +2475,9 @@ overrides:
   - {function: world_menu_free_memory, name: g_battle_menu_allocator_slot_records, addr: 0x8019b368}
   - {function: world_menu_free_memory, name: g_battle_menu_buffer_allocation_map, addr: 0x801a23e8}
   - {function: world_menu_free_memory, name: g_battle_menu_buffer_arena, addr: 0x8019b3e8}
+  - {function: world_menu_init_palette_and_text, name: battle_menu_copy_palette_colors, addr: 0x800f0520}
+  - {function: world_menu_init_palette_and_text, name: battle_text_init_menu_section_pointers, addr: 0x800fd9f4}
+  - {function: world_menu_init_palette_and_text, name: g_battle_menu_default_palette_colors, addr: 0x8013b8b8}
   - {function: world_menu_init_subsystems, name: battle_menu_init_palette_and_text, addr: 0x800f0574}
   - {function: world_menu_init_subsystems, name: battle_menu_init_stub, addr: 0x800e2390}
   - {function: world_menu_init_subsystems, name: battle_menu_init_subsystem_pointers, addr: 0x800f290c}
