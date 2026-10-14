@@ -465,28 +465,28 @@ functions:
   - {addr: 0x8008adf8, size: 720, name: battle_move_animate_jump_arc_to_own_tile_with_fade, hash: 68cb8b1bcb33f553}
   - {addr: 0x8008b0c8, size: 364, name: battle_move_animate_jump_rise_with_sfx, hash: 84618fc8cafcdcfb}
   - {addr: 0x8008b234, size: 88, name: battle_unit_dispatch_distortion_animation, hash: 7a7ca22b7fbfef5b}
-  - {addr: 0x8008b28c, size: 56, name: battle_camera_copy_current_real_coords, hash: 699c791ffa8fb096}
+  - {addr: 0x8008b28c, size: 56, name: battle_camera_save_current_real_coords, hash: 699c791ffa8fb096}
   - {addr: 0x8008b2c4, size: 56, name: battle_camera_restore_current_real_coords, hash: ca36ca841cbadb7e}
   - {addr: 0x8008b2fc, size: 16, name: battle_camera_get_current_real_coords, hash: ecfdf2b076fb4d0d}
   - {addr: 0x8008b30c, size: 44, name: battle_camera_set_current_real_coords, hash: 1d830242a07abb29}
   - {addr: 0x8008b338, size: 148, name: battle_camera_set_real_coord_delta_from_destination, hash: abe756829f2d9f31}
   - {addr: 0x8008b3cc, size: 116, name: battle_camera_set_real_coord_delta_from_values, hash: 65001faab3c7464b}
   - {addr: 0x8008b440, size: 120, name: battle_camera_update_real_coord_animation, hash: 84697252f7c9cdc4}
-  - {addr: 0x8008b4b8, size: 56, name: battle_camera_copy_offset_screen_coords, hash: cf7553f0e127d510}
+  - {addr: 0x8008b4b8, size: 56, name: battle_camera_save_offset_screen_coords, hash: cf7553f0e127d510}
   - {addr: 0x8008b4f0, size: 56, name: battle_camera_restore_offset_screen_coords, hash: 6cb6fb28912c6cdc}
   - {addr: 0x8008b528, size: 16, name: battle_camera_get_offset_screen_coords, hash: b81de340ddcadb3e}
   - {addr: 0x8008b538, size: 44, name: battle_camera_set_offset_screen_coords, hash: 041960da2d84ac91}
   - {addr: 0x8008b564, size: 200, name: battle_camera_set_offset_screen_coord_delta_from_value, hash: 32b4fa375bad9b89}
   - {addr: 0x8008b62c, size: 184, name: battle_camera_set_offset_screen_coord_delta_from_values, hash: ba9ca55599dc87a1}
   - {addr: 0x8008b6e4, size: 208, name: battle_camera_update_offset_screen_coord_animation, hash: 9c780252eb0861a7}
-  - {addr: 0x8008b7b4, size: 56, name: battle_camera_copy_zoom, hash: 9e1808980161cca4}
+  - {addr: 0x8008b7b4, size: 56, name: battle_camera_save_zoom, hash: 9e1808980161cca4}
   - {addr: 0x8008b7ec, size: 56, name: battle_camera_restore_zoom, hash: 38080472a9e656a3}
   - {addr: 0x8008b824, size: 16, name: battle_camera_get_zoom, hash: f818d7eb175daeb0}
   - {addr: 0x8008b834, size: 44, name: battle_camera_set_zoom, hash: 997b6c1f8a81dbd7}
   - {addr: 0x8008b860, size: 148, name: battle_camera_set_zoom_delta_from_value, hash: dcce3478f5e41fb8}
   - {addr: 0x8008b8f4, size: 116, name: battle_camera_set_zoom_delta_from_values, hash: f6b7b2baf0083ff9}
   - {addr: 0x8008b968, size: 120, name: battle_camera_update_zoom_animation, hash: 8340a44fd2a65f16}
-  - {addr: 0x8008b9e0, size: 56, name: battle_camera_copy_rotation, hash: 56a116cb1234da2b}
+  - {addr: 0x8008b9e0, size: 56, name: battle_camera_save_rotation, hash: 56a116cb1234da2b}
   - {addr: 0x8008ba18, size: 56, name: battle_camera_restore_rotation, hash: 3ee9b66c5c061eea}
   - {addr: 0x8008ba50, size: 16, name: battle_camera_get_rotation, hash: c0df002b98af4d4f}
   - {addr: 0x8008ba60, size: 44, name: battle_camera_set_rotation, hash: 8c60027c5af39454}
@@ -2050,7 +2050,7 @@ data:
   - {addr: 0x80098d84, name: g_battle_turn_event}
   - {addr: 0x80098d88, name: g_battle_screen_fade_polygons}
   - {addr: 0x80098db8, name: g_battle_action_post_action}
-  - {addr: 0x80098dbc, name: g_battle_camera_zoom_backup}
+  - {addr: 0x80098dbc, name: g_battle_camera_saved_zoom}
   - {addr: 0x80098dcc, name: g_battle_gfx_numeric_display_matrix}
   - {addr: 0x80098dec, name: g_battle_gfx_fallback_shp_frame_data}
   - {addr: 0x800995ec, name: g_battle_map_palette_state}
@@ -2106,8 +2106,8 @@ data:
   - {addr: 0x800c7c6c, name: g_battle_cursor_screen_y}
   - {addr: 0x800c7c70, name: g_battle_gfx_screen_modulation_polygons}
   - {addr: 0x800c7ca0, name: g_battle_camera_zoom}
-  - {addr: 0x800c7cb0, name: g_battle_camera_rotation_backup}
-  - {addr: 0x800c7cb8, name: g_battle_camera_offset_screen_coords}
+  - {addr: 0x800c7cb0, name: g_battle_camera_saved_rotation}
+  - {addr: 0x800c7cb8, name: g_battle_camera_saved_offset_screen_coords}
   - {addr: 0x800c7ce8, name: g_battle_gfx_spritesheet_slots}
   - {addr: 0x800c7ce9, name: g_battle_gfx_spritesheet_ids_by_vram_slot}
   - {addr: 0x800e4670, name: g_battle_gfx_fallback_seq_data}
