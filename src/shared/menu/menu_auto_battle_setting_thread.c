@@ -1,26 +1,14 @@
 #include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "fft/memory.h"
 #include "fft/menu.h"
 #include "fft/script.h"
 #include "fft/thread.h"
-/*
- * WORLD twin:
- * world_menu_auto_battle_setting_thread (same code, globals and callees
- * rebound).
- */
-#include "fft/battle.h"
-#include "fft/battle_script.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
-/* Auto-battle setting menu thread.
- *
- * Initialize the cursor from the unit's current policy. Circle redraws the
- * five choices; choosing manual control clears the mode and rebuilds the idle
- * action menu if its menu id changes.
- */
-void battle_menu_auto_battle_setting_thread(void) {
+/* Run the five-policy auto-battle menu and update its action rows. */
+void menu_auto_battle_setting_thread(void) {
     RECT rect;
     menu_icon_record_t records[2];
     s32 cursor;

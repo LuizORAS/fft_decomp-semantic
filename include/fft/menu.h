@@ -911,6 +911,7 @@ typedef char menu_icon_sprites_size_must_be_104[(sizeof(menu_icon_sprites_t) == 
 
 void menu_submit_icon_primitives(menu_icon_sprites_t* frame);
 void menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprites_t* record, s32 frame, s32 cursor);
+void menu_auto_battle_setting_thread(void);
 
 /* Six-byte option row selected by customized-options bits 9-11 in
  * 0x80106660. The first three bytes set the shared initial, primary and
