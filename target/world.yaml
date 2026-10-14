@@ -559,7 +559,7 @@ functions:
   - {addr: 0x80111070, size: 1920, name: world_menu_equipment_and_ability_panel_thread, hash: 13121306aa5d00d2}
   - {addr: 0x801117f0, size: 380, name: world_menu_configure_status_panel_primitive_colors, hash: 388b0fac742b4997}
   - {addr: 0x8011196c, size: 84, name: world_menu_select_primitive_color_palette, hash: 98f3a5d0ed4e9088}
-  - {addr: 0x801119c0, size: 268, name: world_text_render_signed_decimal_entries, hash: 77d870766dabc4f4}
+  - {addr: 0x801119c0, size: 268, name: menu_text_render_signed_decimal_entries, hash: 77d870766dabc4f4, source: src/shared/menu/menu_text_render_signed_decimal_entries.c}
   - {addr: 0x80111acc, size: 244, name: menu_text_render_decimal_entry_list, hash: 94a35abd03a73643, source: src/shared/menu/menu_text_render_decimal_entry_list.c}
   - {addr: 0x80111bc0, size: 772, name: menu_text_render_decimal_value, hash: bd99cc3a039a22aa, source: src/shared/menu/menu_text_render_decimal_value.c}
   - {addr: 0x80111ec4, size: 1368, name: world_menu_run_numeric_editor_thread, hash: 007a9e8af4e1c2ff}

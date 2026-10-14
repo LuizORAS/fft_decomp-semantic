@@ -1974,6 +1974,7 @@ const u8* menu_text_find_entry_by_index(const u8* data, s16 count, s32 unused_2)
 /* decimal text */
 extern glyph_blit_t g_menu_decimal_glyph;
 void menu_text_render_decimal_entry_list(u8* pixels, const menu_number_entry_t* entries, glyph_blit_t* out, s32 count);
+void menu_text_render_signed_decimal_entries(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* out, s32 count);
 void menu_text_render_decimal_value(s32 value, s32 flags, u8* pixels, glyph_blit_t* position);
 
 void text_measure(s16* columns, s16* rows, const u8* text);

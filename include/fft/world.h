@@ -1869,9 +1869,6 @@ void world_text_render_id_list_to_image_rows(u8* font, s16* text_ids, RECT* dest
 void world_text_render_encoded_ids_to_image(
     u8* image, RECT* rect, s32 unused, s32 max_glyphs, u8* font, s16* ids, s32 count, s16 glyph, s32 unused_palette);
 
-void world_text_render_signed_decimal_entries(
-    u8* pixels, menu_number_entry_t* entries, glyph_blit_t* output, s32 count);
-
 u8* world_text_advance_entry_by_char_count(u8* text, s32 count);
 void world_text_concatenate_entries(u8* text_table, u8* destination, const s16* text_ids, s32 separate_entries);
 /* MAIN selects the WORLD address of text_find_entry through this existing alias. */

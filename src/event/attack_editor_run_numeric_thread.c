@@ -77,15 +77,14 @@ void attack_editor_run_numeric_thread(void) {
             g_menu_text_state.pen.stride = 0x14;
             battle_menu_set_text_origin(0, 0);
             if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
-                attack_text_render_signed_decimal_entries(number_images->mobility, entries, &g_menu_text_state.pen, 3);
+                menu_text_render_signed_decimal_entries(number_images->mobility, entries, &g_menu_text_state.pen, 3);
             } else {
                 battle_menu_draw_numeric_display_entries(number_images->mobility, entries, &g_menu_text_state.pen, 3);
             }
             g_menu_text_state.pen.stride = 0x40;
             battle_menu_set_text_origin(0, 0);
             if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
-                attack_text_render_signed_decimal_entries(
-                    number_images->weapons, entries + 3, &g_menu_text_state.pen, 4);
+                menu_text_render_signed_decimal_entries(number_images->weapons, entries + 3, &g_menu_text_state.pen, 4);
             } else {
                 battle_menu_draw_numeric_display_entries(
                     number_images->weapons, entries + 3, &g_menu_text_state.pen, 4);
@@ -93,8 +92,7 @@ void attack_editor_run_numeric_thread(void) {
             g_menu_text_state.pen.stride = 0x64;
             battle_menu_set_text_origin(0, 0);
             if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
-                attack_text_render_signed_decimal_entries(
-                    number_images->combat, entries + 7, &g_menu_text_state.pen, 8);
+                menu_text_render_signed_decimal_entries(number_images->combat, entries + 7, &g_menu_text_state.pen, 8);
             } else {
                 battle_menu_draw_numeric_display_entries(number_images->combat, entries + 7, &g_menu_text_state.pen, 8);
             }

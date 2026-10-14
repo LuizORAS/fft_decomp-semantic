@@ -1,9 +1,7 @@
 #include "fft/menu.h"
-#include "fft/world.h"
-#include "psx/types.h"
 
-/* Render signed gauge values with their positive, negative, or zero color. */
-void world_text_render_signed_decimal_entries(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* out, s32 count) {
+/* Set each entry's sign flags and draw its value with the corresponding color. */
+void menu_text_render_signed_decimal_entries(u8* pixels, menu_number_entry_t* entries, glyph_blit_t* out, s32 count) {
     s32 i;
     s32 amount;
 

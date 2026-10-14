@@ -24,7 +24,7 @@ functions:
   - {addr: 0x801c0af4, size: 1932, name: attack_panel_run_character_status_thread, hash: 032d9823d70a2a5d, source: src/shared/menu/menu_run_status_panel_thread.c, source_symbol: menu_run_status_panel_thread}
   - {addr: 0x801c1280, size: 380, name: menu_set_status_panel_primitive_colors, hash: 96535460369c6487, source: src/shared/menu/menu_set_status_panel_primitive_colors.c}
   - {addr: 0x801c13fc, size: 84, name: menu_select_status_primitive_color_palette, hash: edaf22379760b92c, source: src/shared/menu/menu_select_status_primitive_color_palette.c}
-  - {addr: 0x801c1450, size: 268, name: attack_text_render_signed_decimal_entries, hash: "6394222889009711"}
+  - {addr: 0x801c1450, size: 268, name: menu_text_render_signed_decimal_entries, hash: "6394222889009711", source: src/shared/menu/menu_text_render_signed_decimal_entries.c}
   - {addr: 0x801c155c, size: 244, name: menu_text_render_decimal_entry_list, hash: aa34be9623796274, source: src/shared/menu/menu_text_render_decimal_entry_list.c}
   - {addr: 0x801c1650, size: 772, name: menu_text_render_decimal_value, hash: 63cbe1ae8be917f1, source: src/shared/menu/menu_text_render_decimal_value.c}
   - {addr: 0x801c1954, size: 1380, name: attack_editor_run_numeric_thread, hash: e9ff018f5a716555}
