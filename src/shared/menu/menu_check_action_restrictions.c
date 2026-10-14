@@ -1,9 +1,11 @@
 #include "fft/battle_action.h"
+#include "fft/battle_menu.h"
 #include "fft/battle_unit.h"
+#include "fft/main.h"
 #include "fft/menu.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
-#include "fft/world.h"
+#include "psx/types.h"
 
 /*
  * Check action-menu restrictions and show the applicable warning.
@@ -13,15 +15,15 @@
  * options can suppress status warnings, but messages 0x1002/0x1003 always
  * stop the current thread after any warning thread finishes.
  */
-void world_menu_check_action_restrictions(void) {
+void menu_check_action_restrictions(void) {
     s32 message = 0;
     unit_stats_t* unit;
     s32 menu;
     s32 result;
     s32 mode;
 
-    unit = world_unit_get_active_stats();
-    menu = g_world_menu_current_id;
+    unit = battle_unit_get_attacker_data_pointer();
+    menu = g_battle_menu_current_id;
     if (menu == BATTLE_MENU_ID_TURN_ACTED || menu == BATTLE_MENU_ID_TURN_MOVED_ACTED
         || menu == BATTLE_MENU_ID_RIDER_TURN_ACTED || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED) {
         result = battle_unit_get_action_restriction(unit);
@@ -54,10 +56,10 @@ void world_menu_check_action_restrictions(void) {
             sound_queue_sfx_confirm_unless_restoring();
         } else if (g_menu_restore_pending == 0) {
             sound_queue_sfx_invalid();
-            g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
-            thread_start(g_thread_current_id - 1, world_menu_icon_linked_entry_thread);
+            g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
+            thread_start(g_thread_current_id - 1, battle_menu_icon_linked_entry_thread);
             thread_set_parameters(g_thread_current_id - 1,
-                (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
+                (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
             thread_wait_until_inactive(g_thread_current_id - 1);
         }
         if (message == 0x1002 || message == 0x1003) {

@@ -285,7 +285,7 @@ functions:
   - {addr: 0x800f421c, size: 72, name: world_menu_confirm_action_silently, hash: 26759444d4dbb39f}
   - {addr: 0x800f4264, size: 68, name: world_menu_wait_thread, hash: 8cabc12cfd63cfb0}
   - {addr: 0x800f42a8, size: 212, name: world_menu_confirm_move_command_thread, hash: f34f9bf82eb55401}
-  - {addr: 0x800f437c, size: 464, name: world_menu_check_action_restrictions, hash: 32be226f2599986c}
+  - {addr: 0x800f437c, size: 464, name: world_menu_check_action_restrictions, hash: 32be226f2599986c, source: src/shared/menu/menu_check_action_restrictions.c, source_symbol: menu_check_action_restrictions}
   - {addr: 0x800f454c, size: 512, name: world_menu_check_action_slot_restrictions, hash: ec05d469b2c0f76d}
   - {addr: 0x800f474c, size: 652, name: world_menu_validate_skill_selection_thread, hash: d2b1e0184c6e5068}
   - {addr: 0x800f49d8, size: 84, name: world_is_skillset_in_spell_quote_exception_list, hash: 5f78811b5e703c8b, source: src/shared/text/text_is_spell_quote_exception_skillset.c, source_symbol: text_is_spell_quote_exception_skillset}
@@ -2365,6 +2365,10 @@ overrides:
   - {function: script_run_next_event_unused, name: script_load_next_event, addr: 0x800f92a0}
   - {function: world_gfx_set_blit_source_rect, name: g_world_gfx_image_blit_source, addr: 0x801c000c}
   - {function: world_is_skillset_in_spell_quote_exception_list, name: g_battle_spell_quote_exception_skillsets, addr: 0x80156748}
+  - {function: world_menu_check_action_restrictions, name: battle_menu_icon_linked_entry_thread, addr: 0x800eee98}
+  - {function: world_menu_check_action_restrictions, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
+  - {function: world_menu_check_action_restrictions, name: g_battle_menu_current_id, addr: 0x80153268}
+  - {function: world_menu_check_action_restrictions, name: g_battle_menu_thread_menu_data, addr: 0x801cd7e0}
   - {function: world_menu_display_hovered_unit_stats, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_display_hovered_unit_stats, name: battle_gfx_free_tpage7_vram, addr: 0x800e2edc}
   - {function: world_menu_display_hovered_unit_stats, name: battle_gfx_set_draw_mode_for_texture_page, addr: 0x800fdba0}
