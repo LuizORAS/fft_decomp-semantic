@@ -25,7 +25,7 @@ typedef struct battle_text_image_position {
 typedef char battle_text_image_position_size_must_be_6[(sizeof(battle_text_image_position_t) == 6) ? 1 : -1];
 
 extern u8 g_battle_text_glyph_bitmaps[];
-extern const u8* g_text_glyph_bitmap_data;
+extern u8* g_text_glyph_bitmap_data;
 
 void menu_text_render_encoded_ids_to_image(u8* image, battle_menu_text_image_bounds_t* rect, s32 unused, s32 max_chars,
     u8* font, s16* ids, s32 count, s16 glyph, s32 unused_flags);
