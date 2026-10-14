@@ -7,7 +7,7 @@
  * entry from list, then runs the current state handler, draws the cursor and
  * key prompts each frame, and returns the entered g_world_name_entry_text name once the
  * state reaches 0xFF (NULL until then). */
-u8* world_name_run_entry_keyboard_frame(u8* list, s32 unused_1) {
+u8* world_name_run_entry_keyboard_frame(const u8* list, s32 unused_1) {
     point16_t cursor;
     s32 busy;
 

@@ -6,7 +6,7 @@
  * Copies the 0xFE-terminated byte list (at most 16 entries) into
  * g_world_name_entry_text and starts menu thread 2 for it.
  */
-void world_menu_open_scrollable_list(u8* list) {
+void world_menu_open_scrollable_list(const u8* list) {
     s32 i;
 
     g_world_name_entry_original_name = list;

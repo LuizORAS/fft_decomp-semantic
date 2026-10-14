@@ -18,7 +18,7 @@
  * value is one local reused for the cursor x, the drawn-state compare and the
  * sound id; the shared pseudo conflicts with $a0 and keeps all three in $v1.
  */
-u8* world_name_run_entry_screen(u8* list, u32* image) {
+u8* world_name_run_entry_screen(const u8* list, u32* image) {
     point16_t cursor;
     POLY_FT4 textured_quads[2 * 220];
     TILE tiles[2 * 4];

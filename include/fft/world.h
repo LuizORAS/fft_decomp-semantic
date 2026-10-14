@@ -200,12 +200,12 @@ extern u8 g_world_name_entry_cursor_index;
 extern u8 g_world_name_entry_list_cursor;
 extern u8 g_world_name_entry_cursor;
 extern u8 g_world_name_entry_text[17];
-extern u8* g_world_name_entry_original_name;
+extern const u8* g_world_name_entry_original_name;
 extern s16 g_world_name_confirm_result;
 void world_name_apply_entry_key(s16 key);
 void world_name_run_confirmation_menu(void);
-u8* world_name_run_entry_screen(u8* list, u32* image);
-u8* world_name_run_entry_keyboard_frame(u8* list, s32 unused_1);
+u8* world_name_run_entry_screen(const u8* list, u32* image);
+u8* world_name_run_entry_keyboard_frame(const u8* list, s32 unused_1);
 void world_name_update_entry_cursor(void);
 
 /* options */
@@ -2425,7 +2425,7 @@ void world_menu_load_text_1bd8(void);
 void world_menu_load_text_1bd8_with_face(void);
 void world_menu_load_text_1c18(void);
 void world_menu_store_sort_key_list(s32 index, s16* source);
-void world_menu_open_scrollable_list(u8* list);
+void world_menu_open_scrollable_list(const u8* list);
 s32 world_job_calculate_current_total_jp(s32 index);
 void world_menu_release_window_buffer_pair(menu_window_buffer_t* value);
 void world_menu_reset_subsystems(void);
