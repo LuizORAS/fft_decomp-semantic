@@ -1372,6 +1372,10 @@ extern char g_menu_wait_for_file_allocation_message[];
 extern s32 g_menu_companion_executable_request_index;
 extern s32 g_menu_companion_data_file_request_index;
 
+void menu_open_option_at_list(void);
+void menu_open_option_dead_unit_panel(void);
+void menu_open_option_game_options(void);
+
 void menu_free_high_overlay(void);
 void menu_reserve_high_overlay(u32 size);
 void menu_request_open_companion_executable(s32 request_index);

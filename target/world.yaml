@@ -188,9 +188,9 @@ functions:
   - {addr: 0x800ef9ac, size: 32, name: world_script_dark_screen_thread, hash: 564fe6361f9e4ceb}
   - {addr: 0x800ef9cc, size: 8, name: world_noop_800ef9cc, hash: 6d64edf91449c1b1}
   - {addr: 0x800ef9d4, size: 8, name: world_text_run_spell_quote_thread, hash: 6d64edf91449c1b1}
-  - {addr: 0x800ef9dc, size: 48, name: world_menu_open_option_game_options, hash: e3dd995d2b018a16}
-  - {addr: 0x800efa0c, size: 48, name: world_menu_open_option_at_list, hash: 43fc42c9790bdf43}
-  - {addr: 0x800efa3c, size: 48, name: world_menu_open_option_dead_unit_panel, hash: e76892b74fd58b3a}
+  - {addr: 0x800ef9dc, size: 48, name: world_menu_open_option_game_options, hash: e3dd995d2b018a16, source: src/shared/menu/menu_open_option_game_options.c, source_symbol: menu_open_option_game_options}
+  - {addr: 0x800efa0c, size: 48, name: world_menu_open_option_at_list, hash: 43fc42c9790bdf43, source: src/shared/menu/menu_open_option_at_list.c, source_symbol: menu_open_option_at_list}
+  - {addr: 0x800efa3c, size: 48, name: world_menu_open_option_dead_unit_panel, hash: e76892b74fd58b3a, source: src/shared/menu/menu_open_option_dead_unit_panel.c, source_symbol: menu_open_option_dead_unit_panel}
   - {addr: 0x800efa6c, size: 108, name: world_menu_display_triangle_selection, hash: 11df91715534e82a, source: src/shared/menu/menu_run_triangle_selection.c, source_symbol: menu_run_triangle_selection}
   - {addr: 0x800efad8, size: 264, name: world_menu_fade_out_thread, hash: 9a5b4e6efe2ee31f}
   - {addr: 0x800efbe0, size: 260, name: world_menu_run_bunit_transition_thread, hash: eb985a136265b699}
@@ -2491,6 +2491,12 @@ overrides:
   - {function: world_menu_open_debugchr, name: battle_unit_start_view_thread, addr: 0x800f0f64}
   - {function: world_menu_open_debugchr, name: g_menu_overlay_state, addr: 0x8015332c}
   - {function: world_menu_open_debugchr, name: g_sound_suppressed, addr: 0x801532a0}
+  - {function: world_menu_open_option_at_list, name: battle_menu_set_modal_open, addr: 0x800e1e8c}
+  - {function: world_menu_open_option_at_list, name: option_entrypoint, addr: 0x80102e78}
+  - {function: world_menu_open_option_dead_unit_panel, name: battle_menu_set_modal_open, addr: 0x800e1e8c}
+  - {function: world_menu_open_option_dead_unit_panel, name: option_entrypoint, addr: 0x80102e78}
+  - {function: world_menu_open_option_game_options, name: battle_menu_set_modal_open, addr: 0x800e1e8c}
+  - {function: world_menu_open_option_game_options, name: option_entrypoint, addr: 0x80102e78}
   - {function: world_menu_poll_small_load, name: battle_menu_open_companion_executable, addr: 0x800f068c}
   - {function: world_menu_preview_attack_caster_stats, name: battle_menu_display_hovered_unit_stats, addr: 0x800e90f4}
   - {function: world_menu_preview_attack_caster_stats, name: battle_menu_load_selected_unit, addr: 0x800e7dcc}
