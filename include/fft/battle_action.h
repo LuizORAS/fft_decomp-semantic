@@ -463,7 +463,6 @@ s32 action_sort_at_list(s32 battle_id, s32 mode, s32 sort_key, battle_at_entry_t
 
 /* preparation */
 extern u8 g_action_menu_row_types[]; /* per-row skillset kind; 13 keeps the row active */
-extern u8 g_action_menu_skillsets[];
 
 void action_call_attack_preparation(action_command_t* action);
 s32 action_call_attack_preparation_at_preview(action_command_t* command);

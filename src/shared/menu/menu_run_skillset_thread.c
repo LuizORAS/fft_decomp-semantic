@@ -17,7 +17,7 @@ void menu_run_skillset_thread(void) {
     g_thread_call_target = world_menu_build_skillset_entries;
     thread_call_on_main_stack();
     param_value = 1;
-    if (g_world_menu_monster_skillset_flag != 0) {
+    if (g_menu_skillset_build_result != 0) {
         g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index = 0;
         if (g_menu_restore_pending == 0) {
             thread_start(g_thread_current_id - 1, world_menu_select_unit_action_slots_thread);

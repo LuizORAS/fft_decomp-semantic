@@ -495,7 +495,6 @@ typedef struct world_ability_menu_layout {
 typedef char world_ability_menu_layout_size_must_be_44[sizeof(world_ability_menu_layout_t) == 44 ? 1 : -1];
 
 extern s16 g_world_ability_category; /* menu_ability_category_e */
-extern s32 g_world_ability_selected_skill_ct;
 extern s32 g_world_ability_selected_type;
 extern s32 g_world_secondary_bit_read_index;
 extern u8 g_world_secondary_bit_cursor_reset;
@@ -2046,7 +2045,6 @@ extern menu_scroll_text_layout_t g_world_menu_status_list_layout;
 extern menu_scroll_text_layout_t g_world_menu_at_list_layout;
 extern s16 g_world_menu_auto_battle_row_actions[8];
 extern s16 g_world_menu_action_slot_row_actions[6];
-extern s16 g_world_menu_skillset_row_actions[]; /* row actions of BATTLE_MENU_ID_SKILLSET_LIST */
 extern s16 g_world_menu_wait_row_actions[4];
 extern u16 g_world_menu_status_list_row_actions[8];
 extern u16 g_world_menu_system_function_row_actions[];
@@ -2156,7 +2154,6 @@ extern u8 g_world_grid_menu_initialized;  /* grid menu initialised */
 extern s16 g_world_menu_status_left_text_ids[20];
 extern s16 g_world_menu_status_right_text_ids[20];
 extern action_command_t g_world_menu_preview_action;
-extern s32 g_world_menu_monster_skillset_flag;
 extern u16 g_world_menu_anything_ability_id;
 extern s16 g_world_menu_selected_option;
 extern s16 g_world_menu_action_slot_selected_option;
@@ -2959,7 +2956,6 @@ extern u8 g_world_fitting_room_best_fit_slot_categories[WORLD_EQUIPMENT_SLOT_COU
 extern game_options_t g_world_saved_game_options;
 extern s32 g_world_finish_operation_event_id;
 extern u8 g_world_order_unit_saved_browse_enabled;
-extern u8 g_world_action_menu_skillsets[];
 extern s32 g_world_fixed_math_overflow; /* set by world_cross_product_q12 on Q12 overflow */
 s32 world_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 s32 world_unit_get_facing_sixteenth_by_runtime_id(s32 runtime_id);

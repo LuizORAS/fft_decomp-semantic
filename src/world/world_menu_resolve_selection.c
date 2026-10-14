@@ -70,12 +70,12 @@ s32 world_menu_resolve_selection(void) {
         }
         g_world_menu_selected_command = command;
         if ((option & 0xFE) != 0xFE) {
-            option = g_world_action_menu_skillsets[index];
+            option = g_menu_skillsets[index];
             if (option == SKILLSET_ID_ATTACK || option == SKILLSET_ID_DEFEND || option == SKILLSET_ID_EQUIP_CHANGE
                 || option == SKILLSET_ID_BLANK_04 || option == SKILLSET_ID_ELEMENTAL || option == SKILLSET_ID_JUMP) {
                 g_world_menu_preview_action.ability_id = 0;
                 item = 0xFFFE;
-            } else if (option == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING && g_world_menu_monster_skillset_flag == 0) {
+            } else if (option == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING && g_menu_skillset_build_result == 0) {
                 item = g_world_menu_anything_ability_id;
             } else {
                 item = g_ai_workspace_ptr->ability_list.ids[item] & 0x1FF;

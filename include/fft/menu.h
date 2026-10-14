@@ -1084,6 +1084,14 @@ typedef struct menu_at_list_work {
 typedef char menu_at_list_work_size_must_be_1824[(sizeof(menu_at_list_work_t) == 1824) ? 1 : -1];
 
 void menu_build_ability_preview_at_list(void);
+
+/* skillset selection */
+extern s32 g_menu_selected_skill_ct;
+/* -1: missing unit, 1: monster skillset, otherwise 0. */
+extern s32 g_menu_skillset_build_result;
+extern s16 g_menu_skillset_row_actions[];
+extern u8 g_menu_skillsets[]; /* SKILLSET_ID_NONE terminates the rows. */
+
 void menu_build_skillset_entries(void);
 
 /* Packed 4-bit images for the status panel's three numeric groups. */

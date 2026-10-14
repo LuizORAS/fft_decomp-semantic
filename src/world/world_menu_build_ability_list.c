@@ -38,7 +38,7 @@ void world_menu_build_ability_list(s32 mode) {
     unit_index = g_menu_selected_unit.battle_id;
     unit = world_unit_get_active_stats();
     type = g_action_menu_row_types[g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
-    skillset = g_world_action_menu_skillsets[g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
+    skillset = g_menu_skillsets[g_menu_thread_menu_data[BATTLE_MENU_ID_SKILLSET_LIST].selected_index];
     g_world_menu_preview_action.skillset_id = skillset;
     for (i = 0; i < 0x50; i++) {
         g_ai_workspace_ptr->ability_list.ids[i] = 0xFFFF;

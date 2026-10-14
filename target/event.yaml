@@ -1874,7 +1874,7 @@ data:
   - {addr: 0x801f7504, name: g_helpmenu_text_saved_pointers}
 
 overrides:
-  - {function: helpmenu_menu_run_battle_help, name: g_world_action_menu_skillsets, addr: 0x80174060}
+  - {function: helpmenu_menu_run_battle_help, name: g_menu_skillsets, addr: 0x80174060}
   - {function: helpmenu_menu_run_battle_help, name: g_world_help_active_banner, addr: 0x801e05e4}
   - {function: helpmenu_menu_run_battle_help, name: g_world_help_active_text_id_tables, addr: 0x80173f60}
   - {function: helpmenu_menu_run_battle_help, name: g_world_help_active_unit_data, addr: 0x801e062c}

@@ -1056,7 +1056,7 @@ data:
   - {addr: 0x8013a5f8, name: g_world_menu_resolved_command}
   - {addr: 0x8013a5fc, name: g_world_menu_last_dispatched_command}
   - {addr: 0x8013a600, name: g_world_menu_last_dispatched_option}
-  - {addr: 0x8013a604, name: g_world_ability_selected_skill_ct}
+  - {addr: 0x8013a604, name: g_menu_selected_skill_ct}
   - {addr: 0x8013a608, name: g_menu_restore_pending}
   - {addr: 0x8013a609, name: g_world_menu_restore_depth}
   - {addr: 0x8013a60a, name: g_world_menu_restore_unit_id}
@@ -1163,7 +1163,7 @@ data:
   - {addr: 0x80153cd0, name: g_world_menu_at_list_layout}
   - {addr: 0x80153d08, name: g_world_menu_auto_battle_row_actions}
   - {addr: 0x80153d18, name: g_world_menu_action_slot_row_actions}
-  - {addr: 0x80153d24, name: g_world_menu_skillset_row_actions}
+  - {addr: 0x80153d24, name: g_menu_skillset_row_actions}
   - {addr: 0x80153d3c, name: g_world_menu_wait_row_actions}
   - {addr: 0x80153d44, name: g_world_menu_status_list_row_actions}
   - {addr: 0x80153da4, name: g_world_menu_system_function_row_actions}
@@ -1849,7 +1849,7 @@ data:
   - {addr: 0x80195c64, name: g_world_menu_status_right_text_ids}
   - {addr: 0x80195c8c, name: g_world_menu_selected_command}
   - {addr: 0x80195c90, name: g_world_menu_preview_action}
-  - {addr: 0x80195ca4, name: g_world_menu_monster_skillset_flag}
+  - {addr: 0x80195ca4, name: g_menu_skillset_build_result}
   - {addr: 0x80195cd0, name: g_thread_contexts}
   - {addr: 0x80195dd0, name: g_world_unit_summary_digit_images}
   - {addr: 0x80195ed0, name: g_world_numeric_display_palettes}
@@ -2217,7 +2217,7 @@ data:
   - {addr: 0x801cd1f8, name: g_world_menu_alternate_number_clut}
   - {addr: 0x801cd1fc, name: g_world_event_map_command_83_args}
   - {addr: 0x801cd200, name: g_world_event_pending_map_jump_out_2_id}
-  - {addr: 0x801cd204, name: g_world_action_menu_skillsets}
+  - {addr: 0x801cd204, name: g_menu_skillsets}
   - {addr: 0x801cd20c, name: g_world_menu_cursor_position}
   - {addr: 0x801cd210, name: g_world_gfx_sprite_16_capacity}
   - {addr: 0x801cd218, name: g_world_menu_context_id}
@@ -2388,10 +2388,10 @@ overrides:
   - {function: world_menu_build_ability_preview_at_list, name: g_menu_selected_unit, addr: 0x8013a364}
   - {function: world_menu_build_ability_preview_at_list, name: g_menu_thread_menu_data, addr: 0x801cd7e0}
   - {function: world_menu_build_skillset_entries, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
-  - {function: world_menu_build_skillset_entries, name: g_action_menu_skillsets, addr: 0x801cd204}
-  - {function: world_menu_build_skillset_entries, name: g_battle_menu_action_menu_build_result, addr: 0x80195ca4}
-  - {function: world_menu_build_skillset_entries, name: g_battle_menu_row_message_ids, addr: 0x80153d24}
-  - {function: world_menu_build_skillset_entries, name: g_battle_menu_selected_skill_ct, addr: 0x8013a604}
+  - {function: world_menu_build_skillset_entries, name: g_menu_selected_skill_ct, addr: 0x8013a604}
+  - {function: world_menu_build_skillset_entries, name: g_menu_skillset_build_result, addr: 0x80195ca4}
+  - {function: world_menu_build_skillset_entries, name: g_menu_skillset_row_actions, addr: 0x80153d24}
+  - {function: world_menu_build_skillset_entries, name: g_menu_skillsets, addr: 0x801cd204}
   - {function: world_menu_build_window_image, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_build_window_image, name: battle_menu_alloc_memory, addr: 0x800e30fc}
   - {function: world_menu_build_window_image, name: battle_menu_free_memory, addr: 0x800e3298}
@@ -2410,7 +2410,6 @@ overrides:
   - {function: world_menu_dispatch_system_function, name: battle_unit_start_view_thread, addr: 0x800f0f64}
   - {function: world_menu_dispatch_system_function, name: g_battle_menu_idle_action_entries, addr: 0x80153df4}
   - {function: world_menu_dispatch_system_function, name: g_battle_menu_resolved_command, addr: 0x8013a5f8}
-  - {function: world_menu_dispatch_system_function, name: g_battle_menu_selected_skill_ct, addr: 0x8013a604}
   - {function: world_menu_dispatch_system_function, name: g_battle_menu_system_function_command, addr: 0x8013a5fc}
   - {function: world_menu_dispatch_system_function, name: g_battle_menu_system_function_option, addr: 0x8013a600}
   - {function: world_menu_dispatch_system_function, name: g_battle_menu_used_item_id, addr: 0x8013a5f4}
@@ -2419,6 +2418,7 @@ overrides:
   - {function: world_menu_dispatch_system_function, name: g_battle_scenario_event_active, addr: 0x801cd7d4}
   - {function: world_menu_dispatch_system_function, name: g_battle_spell_quote_last_ability_id, addr: 0x8013a5ec}
   - {function: world_menu_dispatch_system_function, name: g_battle_system_function_table, addr: 0x80156750}
+  - {function: world_menu_dispatch_system_function, name: g_menu_selected_skill_ct, addr: 0x8013a604}
   - {function: world_menu_dispatch_system_function, name: script_start_current_event_thread, addr: 0x800f2c74}
   - {function: world_menu_display_hovered_unit_stats, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_display_hovered_unit_stats, name: battle_gfx_free_tpage7_vram, addr: 0x800e2edc}

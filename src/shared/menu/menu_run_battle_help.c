@@ -116,7 +116,7 @@ void menu_run_battle_help(void) {
                     thread_wait_frames(1);
                     world_menu_close_help_menu();
                 } else if (request_kind == 4) {
-                    help_id = g_world_action_menu_skillsets[request->selected_index];
+                    help_id = g_menu_skillsets[request->selected_index];
                     if (help_id == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING) {
                         *g_world_help_controller_state_ptr = 0;
                         thread_wait_frames(1);

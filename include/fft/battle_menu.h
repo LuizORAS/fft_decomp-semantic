@@ -34,11 +34,9 @@ s32 battle_menu_update_menus_and_event_speed(u32* otag, s32 controller_input);
 /* input and selection */
 extern menu_cursor_bob_entry_t g_battle_cursor_bob_active_thresholds[];
 extern menu_cursor_bob_entry_t g_battle_cursor_bob_thresholds[];
-extern s32 g_battle_menu_action_menu_build_result;
 extern s16 g_battle_menu_action_slot_selected_option;
 extern u16 g_battle_menu_input_block_frames;
-extern s16 g_battle_menu_result;            /* menu result: -4 pending, -1 cancelled */
-extern s16 g_battle_menu_row_message_ids[]; /* per-row message id */
+extern s16 g_battle_menu_result; /* menu result: -4 pending, -1 cancelled */
 extern s16 g_battle_menu_selected_option;
 extern menu_selection_remap_t g_battle_menu_selection_remaps[8];
 extern menu_unit_selection_record_t g_battle_menu_unit_selection_records[BATTLE_UNIT_SLOT_COUNT];
@@ -117,7 +115,6 @@ extern u8 g_battle_menu_billboard_secondary_skillset_name[];
 extern u8 g_battle_menu_billboard_skillset_name[];
 extern u8 g_battle_menu_calculator_skillsets[4];
 extern s32 g_battle_menu_scroll_list_depth;
-extern s32 g_battle_menu_selected_skill_ct;
 extern u8 g_battle_menu_skillset_disabled_flags[]; /* per-row greyed flag */
 extern s32 g_battle_menu_used_item_id;
 extern s32 g_battle_menu_used_skillset_id;
