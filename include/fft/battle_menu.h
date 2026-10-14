@@ -196,13 +196,6 @@ void battle_menu_enter_status_screen_selection(void);
 void battle_menu_leave_status_screen_selection(void);
 
 /* numeric displays */
-/* The numeric editor's two adjacent rectangles: the first is the panel frame
- * and the screen origin handed to image loading, the second places the
- * portrait. */
-typedef struct battle_menu_status_panel_numeric_geometry {
-    RECT texture_rect;   /* 0x00 */
-    RECT draw_area_rect; /* 0x08 */
-} battle_menu_status_panel_numeric_geometry_t;
 
 extern menu_quad_page_t g_battle_menu_height_display_pages[2];
 extern u16 g_battle_menu_height_display_suppressed;
@@ -278,7 +271,7 @@ extern s32 g_battle_menu_text_param_24; /* 0x80166024: record +0x24 */
 extern glyph_blit_t g_battle_menu_text_pen;
 extern s32 g_battle_menu_text_section_offsets[];
 
-void battle_clear_menu_render_buffer(void* buffer, s32 bytes);
+void battle_clear_menu_render_buffer(void* buffer, u32 bytes);
 void battle_menu_display_text(u32 text_id, u8* image, glyph_blit_t* origin, u8* text);
 void battle_menu_display_text_entry(s32 text_id, u8* image, glyph_blit_t* origin);
 void battle_menu_display_text_entry_past_choice_marks(s32 text_id, u8* image, glyph_blit_t* origin);

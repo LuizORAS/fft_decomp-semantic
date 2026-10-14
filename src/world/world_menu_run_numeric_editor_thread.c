@@ -23,7 +23,7 @@ void world_menu_run_numeric_editor_thread(void) {
     RECT* upload_a;
     RECT* upload_b;
     RECT* upload_c;
-    image_load_parameters_t* descriptor;
+    const image_load_parameters_t* descriptor;
     s32 i;
     s32 frame;
     s32 field_y;
@@ -36,30 +36,31 @@ void world_menu_run_numeric_editor_thread(void) {
         buffer = g_world_editor_numeric_state_a;
         buffers = buffer;
         number_images = &g_world_editor_numeric_text_a;
-        upload_a = g_world_editor_numeric_entries_a;
-        upload_b = g_world_editor_numeric_entries_b;
-        upload_c = g_world_editor_numeric_entries_c;
+        upload_a = &g_world_editor_numeric_entries_a;
+        upload_b = &g_world_editor_numeric_entries_b;
+        upload_c = &g_world_editor_numeric_entries_c;
         entries = g_world_editor_numeric_descriptor_a;
     } else {
         buffer = g_world_editor_numeric_state_b;
         buffers = buffer;
         number_images = &g_world_editor_numeric_text_b;
-        upload_a = g_world_editor_numeric_entries_d;
-        upload_b = g_world_editor_numeric_entries_e;
-        upload_c = g_world_editor_numeric_entries_f;
+        upload_a = &g_world_editor_numeric_entries_d;
+        upload_b = &g_world_editor_numeric_entries_e;
+        upload_c = &g_world_editor_numeric_entries_f;
         entries = g_world_editor_numeric_descriptor_b;
     }
     world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[0], MENU_TEXTURE_PAGE_FRAME);
     world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], MENU_TEXTURE_PAGE_TEXT_IMAGES);
     world_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[2], MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
-    world_menu_init_numeric_display_frame_primitives(&g_world_editor_numeric_table[0], &buffer->numeric_frame);
+    world_menu_init_numeric_display_frame_primitives(
+        &g_world_editor_numeric_table.texture_rect, &buffer->numeric_frame);
     world_panel_gfx_init_scaled_draw_area_packets(&buffer->portrait);
     i = 0;
     descriptor = g_world_editor_numeric_texture;
     for (; i < 18; i++) {
         world_menu_init_sprite(&buffer->sprites[i]);
-        gfx_init_image_loading(
-            &buffer->sprites[i], g_world_editor_numeric_geometry, &g_world_editor_numeric_table[0], descriptor);
+        gfx_init_image_loading(&buffer->sprites[i], g_world_editor_numeric_geometry,
+            &g_world_editor_numeric_table.texture_rect, descriptor);
         descriptor++;
     }
     if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
@@ -103,7 +104,7 @@ void world_menu_run_numeric_editor_thread(void) {
         use_offset = field_y != 0xF0;
         g_world_gfx_draw_area_y = -use_offset & 0xF0;
         world_panel_gfx_build_scaled_draw_area_packets(
-            &buffer->portrait, &g_world_editor_numeric_table[1], frame, field_y, thread);
+            &buffer->portrait, &g_world_editor_numeric_table.draw_area_rect, frame, field_y, thread);
         buffer->draw_offsets[0].position.x = thread->x - 0x80;
         buffer->draw_offsets[0].position.y = thread->y + g_world_gfx_draw_area_y;
         SetDrawOffset(&buffer->draw_offsets[0].packet, (u16*)&buffer->draw_offsets[0].position);
