@@ -450,7 +450,7 @@ functions:
   - {addr: 0x80103080, size: 4408, name: world_menu_run_game_options, hash: cc716f3bf7078b8c, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x801041b8, size: 1652, name: world_menu_run_option_choice, hash: c92a8d3ef7a62251}
   - {addr: 0x8010482c, size: 80, name: world_menu_close_help_menu, hash: 6d0bc77451aa653a}
-  - {addr: 0x8010487c, size: 3460, name: world_menu_run_battle_help, hash: 19f312de2ac42e56, source: src/shared/menu/menu_run_battle_help.c, source_symbol: menu_run_battle_help}
+  - {addr: 0x8010487c, size: 3460, name: world_menu_run_battle_help, hash: 19f312de2ac42e56}
   - {addr: 0x80105600, size: 60, name: world_thread_find_first_running_menu_thread, hash: 93208e88bcfad087}
   - {addr: 0x8010563c, size: 1992, name: world_menu_run_require_help, hash: c7cbab664bb5a1d5}
   - {addr: 0x80105e04, size: 376, name: world_menu_build_location_list, hash: 349237fd5e967325}
