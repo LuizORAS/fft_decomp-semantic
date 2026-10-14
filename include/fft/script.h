@@ -718,6 +718,7 @@ void script_execute_event(void);
 void world_script_execute_event(void);
 void script_load_event(s32 id);
 void world_script_load_event(s32 id);
+void script_reset_event_state(void);
 s32 script_load_next_event(void);
 s32 world_script_load_next_event(void);
 void script_run_next_event(void);

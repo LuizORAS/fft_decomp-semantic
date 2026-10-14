@@ -914,7 +914,7 @@ functions:
   - {addr: 0x8013f20c, size: 496, name: battle_unit_update_facing_and_pending_animations, hash: eec2ddc83dc662d7}
   - {addr: 0x8013f3fc, size: 164, name: script_start_current_event_thread, hash: 4d813122369868cd, source: src/shared/script/script_start_current_event_thread.c}
   - {addr: 0x8013f4a0, size: 8, name: battle_noop_8013f4a0, hash: 6d64edf91449c1b1}
-  - {addr: 0x8013f4a8, size: 80, name: script_reset_event_state, hash: cc154e81b79d8046}
+  - {addr: 0x8013f4a8, size: 80, name: script_reset_event_state, hash: cc154e81b79d8046, source: src/shared/script/script_reset_event_state.c}
   - {addr: 0x8013f4f8, size: 40, name: script_is_deployment_running, hash: a5c397fe33bff892}
   - {addr: 0x8013f520, size: 328, name: battle_menu_update_menus_and_event_speed, hash: ec52451103685bc8}
   - {addr: 0x8013f668, size: 260, name: map_store_selected_tile_data, hash: 407beefdbfb22c50}
@@ -972,7 +972,7 @@ functions:
   - {addr: 0x80143ba8, size: 40, name: script_run_next_event_unused, hash: 5f28a3f8beb0666a, source: src/shared/script/script_run_next_event.c, source_symbol: script_run_next_event}
   - {addr: 0x80143bd0, size: 8, name: script_add_unit_stub, hash: 6d64edf91449c1b1}
   - {addr: 0x80143bd8, size: 9120, name: script_execute_event, hash: f5e240270b084a49}
-  - {addr: 0x80145f78, size: 140, name: script_load_next_event, hash: 86e825112a99969c}
+  - {addr: 0x80145f78, size: 140, name: script_load_next_event, hash: 86e825112a99969c, source: src/shared/script/script_load_next_event.c}
   - {addr: 0x80146004, size: 116, name: unit_is_moving, hash: eddabf1eb74277bd, source: src/shared/unit/unit_is_moving.c}
   - {addr: 0x80146078, size: 28, name: script_read_s16, hash: 7f613d531c790362, source: src/shared/script/script_read_s16.c}
   - {addr: 0x80146094, size: 16, name: script_write_s16, hash: 71c4790146d56d2c, source: src/shared/script/script_write_s16.c}

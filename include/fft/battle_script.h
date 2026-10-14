@@ -15,7 +15,6 @@ s32 script_filter_unit_id_by_mode(u16* out_id, u16* in_id, s32* mode);
 s32 script_get_current_scenario_finish_operation(void);
 u32 script_get_event_finish_operation(void);
 void script_process_pending_requests(void);
-void script_reset_event_state(void);
 /* Returns the event result that the battle state handlers switch on;
  * proven by 0x80078fb4 and 0x800785ac, which both consume it. */
 s32 script_run_event_frame(u32* ot, u32 buttons);
