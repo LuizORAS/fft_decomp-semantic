@@ -324,20 +324,19 @@ restart_event:
         else if (opcode == EVENT_OPCODE_UNKNOWN_DA) {
         } else if (opcode == EVENT_OPCODE_JUMP_FORWARD_IF_ZERO) {
             if (g_script_variables[EVENT_SCRIPT_VAR_COMPARISON_RESULT] == 0) {
-                instruction_offset = world_script_find_jump_target(
+                instruction_offset = script_find_jump_target(
                     instruction_offset + 2, EVENT_OPCODE_FORWARD_TARGET, EVENT_OPCODE_FORWARD_TARGET_EXIT, operand_1);
                 continue;
             }
         } else if (opcode == EVENT_OPCODE_JUMP_FORWARD) {
             instruction_offset
-                = world_script_find_jump_target(instruction_offset + 2, EVENT_OPCODE_FORWARD_TARGET, -1, operand_1);
+                = script_find_jump_target(instruction_offset + 2, EVENT_OPCODE_FORWARD_TARGET, -1, operand_1);
             continue;
         } else if (opcode == EVENT_OPCODE_FORWARD_TARGET) {
         } else if (opcode == EVENT_OPCODE_FORWARD_TARGET_EXIT) {
             break;
         } else if (opcode == EVENT_OPCODE_JUMP_BACK) {
-            instruction_offset
-                = world_script_find_jump_target(instruction_offset, EVENT_OPCODE_BACK_TARGET, -1, operand_1);
+            instruction_offset = script_find_jump_target(instruction_offset, EVENT_OPCODE_BACK_TARGET, -1, operand_1);
             continue;
         } else if (opcode == EVENT_OPCODE_BACK_TARGET) {
         } else if (opcode == EVENT_OPCODE_UNKNOWN_D8) {

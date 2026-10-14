@@ -728,7 +728,6 @@ s32 script_find_instruction_byte_offset(s32 offset, s32 opcode);
 /* 0x80149d6c..0x80149ebc: returns offset after the matching target marker;
  * missing targets stop the current thread. alternate_opcode accepts -1. */
 s32 script_find_jump_target(s32 limit_offset, event_opcode_e target_opcode, s32 alternate_opcode, s32 target_id);
-s32 world_script_find_jump_target(s32, s32, s32, s32);
 
 /* variables */
 /* Event-script variable ids shared by the BATTLE and WORLD interpreters.
