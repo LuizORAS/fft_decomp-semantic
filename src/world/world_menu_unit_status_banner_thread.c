@@ -357,8 +357,8 @@ void world_menu_unit_status_banner_thread(void) {
                 if (g_world_preview_stats_window_active == 0) {
                     world_menu_draw_numeric_display_entries(stat_image, entries, &g_world_menu_text_state.pen, 6);
                 } else {
-                    world_text_render_decimal_entry_list(stat_image, &entries[10], &g_world_menu_text_state.pen, 1);
-                    world_text_render_decimal_entry_list(stat_image, &entries[12], &g_world_menu_text_state.pen, 1);
+                    menu_text_render_decimal_entry_list(stat_image, &entries[10], &g_world_menu_text_state.pen, 1);
+                    menu_text_render_decimal_entry_list(stat_image, &entries[12], &g_world_menu_text_state.pen, 1);
                     world_menu_draw_numeric_display_entries(stat_image, &entries[11], &g_world_menu_text_state.pen, 1);
                     world_menu_draw_numeric_display_entries(stat_image, &entries[13], &g_world_menu_text_state.pen, 1);
                     world_menu_draw_numeric_display_entries(stat_image, &entries[4], &g_world_menu_text_state.pen, 2);

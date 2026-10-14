@@ -1,7 +1,4 @@
-#include "fft/battle_menu.h"
-#include "fft/battle_text.h"
 #include "fft/menu.h"
-#include "psx/types.h"
 
 /* Render gauge values with sign colors, drawing a zero value as a placeholder. */
 void menu_text_render_decimal_entry_list(u8* pixels, const menu_number_entry_t* entries, glyph_blit_t* out, s32 count) {
