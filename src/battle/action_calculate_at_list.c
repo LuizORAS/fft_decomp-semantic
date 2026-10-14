@@ -14,7 +14,7 @@
  * be a multi-set u32: a single-set shift temporary gets sched1's birth boost
  * and lands after the a1 load. The 0x50-byte array is the unreferenced frame
  * area the target reserves. */
-s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode) {
+s32 action_calculate_at_list(battle_at_entry_t* list, battle_at_list_mode_e mode) {
     unit_stats_t* unit;
     u8 unused[0x50];
     s32 placed;

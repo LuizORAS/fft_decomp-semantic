@@ -448,7 +448,7 @@ s32 action_should_end_unit_turn(const unit_stats_t* unit);
 extern s32 g_action_at_list_active;
 extern s32 g_action_at_list_id;
 
-s32 action_calculate_at_list(battle_at_entry_t* list, s32 mode);
+s32 action_calculate_at_list(battle_at_entry_t* list, battle_at_list_mode_e mode);
 s32 action_calculate_at_list_and_get_specific_unit_id(s32 at_index);
 s32 action_find_unit_turn_index(const unit_stats_t* unit);
 void action_clear_at_list_active(void);
