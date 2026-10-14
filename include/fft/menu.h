@@ -1974,6 +1974,9 @@ extern const u8 g_text_glyph_widths[];
 /* Text IDs select a section in the upper five bits and an entry in the lower eleven. */
 extern u8* g_text_section_pointers[TEXT_SECTION_COUNT];
 
+/* help text */
+void menu_text_start_help_thread(s32 thread_data);
+
 /* menu bitstreams */
 /* Read-only secondary stream; CARD uses it to count save-buffer parity bits. */
 extern s32 g_menu_bits_secondary_index;
