@@ -117,7 +117,7 @@ functions:
   - {addr: 0x800e7dcc, size: 1348, name: world_menu_load_selected_unit, hash: f635c99de88e0baf}
   - {addr: 0x800e8310, size: 84, name: unit_has_any_current_status, hash: f4242604b8850c34, source: src/shared/unit/unit_has_any_current_status.c}
   - {addr: 0x800e8364, size: 516, name: world_menu_build_unit_status_list, hash: 97f6760c5281c86d}
-  - {addr: 0x800e8568, size: 136, name: world_menu_copy_billboard_data_out, hash: d14feb4432c303f8}
+  - {addr: 0x800e8568, size: 136, name: menu_copy_billboard_data_out, hash: d14feb4432c303f8, source: src/shared/menu/menu_copy_billboard_data_out.c}
   - {addr: 0x800e85f0, size: 112, name: world_menu_copy_billboard_data_in, hash: ca83ceb83456cefa}
   - {addr: 0x800e8660, size: 56, name: world_text_relocate_pointer_table, hash: 55d65571292e9b76}
   - {addr: 0x800e8698, size: 84, name: world_text_save_section_pointers, hash: df05598fa569f4c7}
@@ -2351,6 +2351,10 @@ imports:
 overrides:
   - {function: gfx_build_portrait_transition_primitives, name: attack_gfx_build_portrait_poly_ft4, addr: 0x8010cab0}
   - {function: menu_alloc_window_buffer_pair, name: g_battle_menu_disabled_texture_window, addr: 0x801531b0}
+  - {function: menu_copy_billboard_data_out, name: g_battle_active_turn_unit, addr: 0x8013a364}
+  - {function: menu_copy_billboard_data_out, name: g_battle_menu_active_turn_banner, addr: 0x8013a31c}
+  - {function: menu_copy_billboard_data_out, name: g_battle_menu_billboard_data, addr: 0x8013a384}
+  - {function: menu_copy_billboard_data_out, name: g_map_selected_tile_data, addr: 0x8013a310}
   - {function: menu_init_panel_fade_tiles, name: g_battle_menu_disabled_texture_window, addr: 0x801531b0}
   - {function: menu_init_sprite_array, name: battle_menu_init_semitransparent_sprt, addr: 0x800e2444}
   - {function: script_find_instruction_byte_offset, name: g_script_event_instruction_sizes, addr: 0x8013a454}

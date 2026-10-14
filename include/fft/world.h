@@ -39,7 +39,7 @@ extern s16 g_world_dead_unit_move_result; /* secondary (move) menu result */
 /* help */
 
 extern u16 g_world_help_portrait_clut_by_sheet_id[];
-/* Saved copies of the WORLD records world_menu_copy_billboard_data_out reads. */
+/* Saved copies of the WORLD records menu_copy_billboard_data_out reads. */
 extern map_selected_tile_t g_world_help_menu_cursor_tile;
 extern menu_unit_status_record_t g_world_help_active_banner;
 extern menu_active_unit_t g_world_help_active_unit_data;
@@ -920,8 +920,6 @@ void world_gfx_clear_tpage7_vram_allocation_grid(void);
 
 void world_menu_copy_billboard_data_in(const menu_unit_status_record_t* status,
     const menu_unit_status_identity_t* identity, const menu_status_panel_slot_storage_t* detail);
-void world_menu_copy_billboard_data_out(menu_unit_status_record_t* status, menu_active_unit_t* identity,
-    menu_status_panel_slot_storage_t* detail, map_selected_tile_t* selected_tile);
 void world_gfx_submit_screen_fade_overlay(fade_overlay_t* prims, s32 intensity);
 void world_gfx_draw_signed_number(s32 value, s32 digits, u8* image, glyph_blit_t* pen);
 

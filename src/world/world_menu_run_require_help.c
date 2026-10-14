@@ -70,8 +70,8 @@ void world_menu_run_require_help(void) {
     g_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
         = g_world_help_data_base + g_world_help_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
     self = &g_threads[g_thread_current_id];
-    world_menu_copy_billboard_data_out(&g_world_help_active_banner, &g_world_help_active_unit_data,
-        &g_world_help_billboard, &g_world_help_menu_cursor_tile);
+    menu_copy_billboard_data_out(&g_world_help_active_banner, &g_world_help_active_unit_data, &g_world_help_billboard,
+        &g_world_help_menu_cursor_tile);
     if (g_world_selected_unit_stat_summary.team_kind != 0 || g_world_unit_join_screen_active != 0) {
         g_world_help_require_navigation[2].destination[2] = 7;
         g_world_help_require_navigation[7].destination[3] = 2;

@@ -13,11 +13,11 @@ void helpmenu_menu_run_battle_help(void);
 void helpmenu_menu_run_require_help(void);
 
 /* saved panels */
-/* Saved copies of four BATTLE records (battle_menu_copy_billboard_data_out);
+/* Saved copies of four BATTLE records (menu_copy_billboard_data_out);
  * a second, unused slot follows the banner and the unit record. */
 extern menu_unit_status_record_t g_helpmenu_active_banner;
 extern menu_active_unit_t g_helpmenu_active_unit_data;
-/* 0x40-byte billboard filled by battle_menu_copy_billboard_data_out; +0x0e is the monster-skillset flag. */
+/* 0x40-byte billboard filled by menu_copy_billboard_data_out; +0x0e is the monster-skillset flag. */
 extern menu_status_panel_slot_storage_t g_helpmenu_billboard;
 extern map_selected_tile_t g_helpmenu_menu_cursor_tile;
 

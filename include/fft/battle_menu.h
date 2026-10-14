@@ -187,8 +187,6 @@ extern s16 g_battle_preview_target_unit_id;
 void battle_menu_build_unit_portrait_poly(POLY_FT4* poly, u32 battle_id);
 void battle_menu_copy_billboard_data_in(const menu_unit_status_record_t* banner, const menu_active_unit_t* unit,
     const menu_status_panel_slot_storage_t* billboard);
-void battle_menu_copy_billboard_data_out(menu_unit_status_record_t* banner, menu_active_unit_t* unit,
-    menu_status_panel_slot_storage_t* billboard, map_selected_tile_t* cursor_tile);
 void battle_menu_copy_unit_data_to_status_billboard(unit_stats_t* unit, menu_unit_status_record_t* output);
 void battle_menu_display_hovered_unit_stats(
     RECT* frame_rect, s32 mode, menu_number_entry_t* entries, menu_unit_status_record_t* status);

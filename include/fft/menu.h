@@ -5,6 +5,7 @@
 
 #include "fft/data.h"
 #include "fft/gfx.h"
+#include "fft/map.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
@@ -265,7 +266,7 @@ enum {
 
 /* Provisional 0xe-byte active-unit record (BATTLE 0x8014d080, WORLD
  * 0x8013a364, DEBUGCHR 0x801c5324, REQUIRE 0x801cb364, ATTACK 0x801ca0c8), saved and restored
- * whole by battle_menu_copy_billboard_data_out and
+ * whole by menu_copy_billboard_data_out and
  * battle_menu_copy_billboard_data_in. The load-selected-unit routines fill
  * job_id..zodiac for the unit named by battle_id; the overlays' status panels
  * keep a second record for the comparison unit 0x10 later. */
@@ -354,7 +355,7 @@ typedef char menu_unit_status_gauge_size_must_be_6[(sizeof(menu_unit_status_gaug
  * require_panel_copy_stats_to_gauges, wldcore_unit_build_status_panel_data)
  * fill the first 0x1e bytes, *_menu_display_hovered_unit_stats and the
  * *_render_unit_status_panel_thread editors draw it, and
- * battle_menu_copy_billboard_data_out saves the banner whole as 0x22 bytes.
+ * menu_copy_billboard_data_out saves the banner whole as 0x22 bytes.
  * Equipment previews use the HP and MP gauges' bonus fields. */
 typedef struct menu_unit_status_record {
     s16 level;      /* 0x00; debugchr_editor_apply_values_to_battle_unit writes it back */
@@ -485,6 +486,8 @@ extern RECT g_menu_status_panel_text_upload_rect_b;
 
 void menu_run_status_panel_thread(void);
 
+void menu_copy_billboard_data_out(menu_unit_status_record_t* banner, menu_active_unit_t* unit,
+    menu_status_panel_slot_storage_t* billboard, map_selected_tile_t* cursor_tile);
 void menu_clear_stat_preview(menu_unit_status_record_t* summary, menu_status_panel_slot_storage_t* detail);
 void menu_init_status_panel_primitives(menu_status_panel_buffer_t* menu);
 void menu_subtract_scaled_stat_preview(menu_status_panel_slot_storage_t* out,
