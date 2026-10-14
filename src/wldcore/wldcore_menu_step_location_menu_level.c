@@ -114,7 +114,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                         g_main_system_flags
                             = (g_main_system_flags | MAIN_SYSTEM_FLAG_DEEP_DUNGEON_BATTLE) ^ MAIN_SYSTEM_FLAG_RUNNING;
                     } else {
-                        wldcore_fade_start_screen(0, 0x10);
+                        wldcore_gfx_start_screen_fade(0, 0x10);
                         wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(1, MAIN_MUSIC_WORLD_MAP));
                     }
                     return;
@@ -157,7 +157,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
         }
     } else if ((g_wldcore_new_button_presses & PSX_PAD_CIRCLE) && level->entry_count != 0
         && g_main_file_still_loading == 0) {
-        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
+        wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_OUT, 0x10);
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 2);
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);

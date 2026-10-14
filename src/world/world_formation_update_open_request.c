@@ -15,7 +15,7 @@ void world_formation_update_open_request(void) {
     }
     if (state == WORLD_SCREEN_REQUEST_START_FADE_OUT) {
         g_world_menu_screen_open_request = 1;
-        wldcore_fade_start_screen(0x12, 0x10);
+        wldcore_gfx_start_screen_fade(0x12, 0x10);
         g_world_formation_open_request_state++;
         return;
     }
@@ -36,7 +36,7 @@ void world_formation_update_open_request(void) {
         world_menu_open_entry_window(g_world_menu_open_entry_index, -0x30, -0x38);
         g_world_menu_thread_menu_data = g_world_menu_default_entries;
         world_menu_hide_world_map();
-        wldcore_clear_screen_and_set_map_clip_rect(0);
+        wldcore_gfx_clear_screen_and_set_map_clip_rect(0);
         for (i = 0x77FF; i >= 0; i--) {
             g_wldcore_scratch_buffer[i] = 0;
         }
@@ -50,7 +50,7 @@ void world_formation_update_open_request(void) {
     }
     if (state == WORLD_SCREEN_REQUEST_START_FADE_IN) {
         world_menu_restore_world_map();
-        wldcore_fade_start_screen(0x24, 0x10);
+        wldcore_gfx_start_screen_fade(0x24, 0x10);
         g_world_formation_open_request_state++;
         return;
     }

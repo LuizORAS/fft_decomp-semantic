@@ -3,7 +3,7 @@
 
 /* Scan the selected save slot's word list for an entry whose low byte matches
  * `tag`; a low byte of 1 terminates the list. Returns the whole word or 0. */
-u32 wldcore_find_save_slot_entry_by_tag(s32 slot, s32 tag) {
+u32 wldcore_save_find_slot_entry_by_tag(s32 slot, s32 tag) {
     u32* word;
     s32 i;
 

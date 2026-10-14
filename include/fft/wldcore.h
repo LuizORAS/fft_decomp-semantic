@@ -34,16 +34,15 @@ extern s32 g_wldcore_random_battle_entd_id;
 extern s32 g_wldcore_random_battle_map_id;
 extern s32 g_wldcore_random_battle_squad_id;
 s32 wldcore_entrypoint(void);
-void wldcore_finalize_loop(void);
-s32 wldcore_handle_exit_request(void);
-void wldcore_init_screen(void);
-void wldcore_init_stub(void);
-void wldcore_init_subsystems(void);
-void wldcore_init_world_map_state(void);
-void wldcore_init_world_menus_and_date(void);
-void wldcore_restore_previous_stack(void);
-void wldcore_switch_to_stack(void*);
-void wldcore_window_number_panel_noop_callback(void);
+void wldcore_system_finalize_loop(void);
+s32 wldcore_system_run_requested_formation(void);
+void wldcore_system_init_screen(void);
+void wldcore_system_init_stub(void);
+void wldcore_system_init_subsystems(void);
+void wldcore_system_init_world_map_state(void);
+void wldcore_system_init_world_menus_and_date(void);
+void wldcore_system_restore_previous_stack(void);
+void wldcore_system_switch_to_stack(void*);
 
 /* thread */
 /* Provisional: 0x14-byte parameter blocks at 0x8009ebc0 for WORLD threads 8,
@@ -71,7 +70,7 @@ void wldcore_file_seek_to_battle_bin(void);
 
 void wldcore_file_request_read(main_file_load_descriptor_t* header, s32 sector, s32 sectors, void* destination);
 
-void wldcore_wait_for_file_load(void);
+void wldcore_file_wait_for_load(void);
 
 /* input */
 /* The pad as WLDCORE reads it once a frame (held, newly pressed, the reset combination) and the
@@ -90,7 +89,7 @@ extern s32 g_wldcore_input_repeat_counter_l1;
 extern s32 g_wldcore_input_repeat_initial_delay;
 extern s32 g_wldcore_input_repeat_period;
 extern s32 g_wldcore_input_secondary_repeat_period;
-void wldcore_init_input_repeat_state(void);
+void wldcore_input_init_repeat_state(void);
 void wldcore_input_read_pad(void);
 u32 wldcore_input_check_repeating_directional(u32 buttons);
 
@@ -189,9 +188,9 @@ void wldcore_sound_play_pending_script_sounds(s32 low, s32 high, s32 value);
 typedef struct wldcore_sortbox_state {
     u32 flags[2];      /* 0x00; wldcore_screen_fade_flag_e */
     s32 priorities[2]; /* 0x08; GsSortBoxFill OT priority of each box, read as a halfword */
-    s32 elapsed;       /* 0x10; fade frames run, stepped by wldcore_fade_step_screen */
+    s32 elapsed;       /* 0x10; fade frames run, stepped by wldcore_gfx_step_screen_fade */
     s32 duration;      /* 0x14 */
-    GsBOXF boxes[2];   /* 0x18; full-screen fill boxes drawn by wldcore_fade_draw_screen_overlays */
+    GsBOXF boxes[2];   /* 0x18; full-screen fill boxes drawn by wldcore_gfx_draw_screen_fade_overlays */
 } wldcore_sortbox_state_t;
 typedef char wldcore_sortbox_state_size_must_be_0x38[sizeof(wldcore_sortbox_state_t) == 0x38 ? 1 : -1];
 
@@ -200,7 +199,7 @@ typedef char wldcore_sortbox_state_size_must_be_0x38[sizeof(wldcore_sortbox_stat
  * is what wldcore_gfx_capture_map_backdrop indexes these globals with. */
 /* The ordering-table handle is libgs GsOT; see include/psx/libgs.h. */
 /* The display-object queues hold a pointer to each object's leading flags
- * word, which selects the handler in wldcore_dispatch_display_object_list:
+ * word, which selects the handler in wldcore_gfx_dispatch_display_object_list:
  * bit 0 an animated object (wldcore_window_record_t), bit 1 a sprite
  * (wldcore_window_render_record_t). */
 struct wldcore_window_record;
@@ -226,7 +225,7 @@ typedef enum wldcore_value_display_mode {
 } wldcore_value_display_mode_e;
 
 /* g_wldcore_screen_fade_state.flags[]: word 0 is the screen fade and its fill
- * box, word 1 a second fill box. wldcore_fade_start_screen takes OUT,
+ * box, word 1 a second fill box. wldcore_gfx_start_screen_fade takes OUT,
  * REDRAW_MAP, STOP_MUSIC and START_MUSIC and adds RUNNING. */
 typedef enum wldcore_screen_fade_flag {
     WLDCORE_SCREEN_FADE_RUNNING = 0x01,
@@ -244,10 +243,10 @@ typedef struct wldcore_point32 {
 
 /* 36-byte window records at 0x800bb504: animated display objects. The pool
  * init wldcore_window_init_record_pools sets flags = 1, so the display-object dispatcher
- * wldcore_dispatch_display_object_list hands them to wldcore_gfx_draw_animated_display_object, which reads the priority
- * as a halfword. wldcore_window_init_record initialises a record (flags |= 0x810, sequence/priority from arguments,
- * frame_index and anim_counter cleared); wldcore_window_update_flag_from_owner_progress toggles flag 0x10 by record
- * index. */
+ * wldcore_gfx_dispatch_display_object_list hands them to wldcore_gfx_draw_animated_display_object, which reads the
+ * priority as a halfword. wldcore_window_init_record initialises a record (flags |= 0x810, sequence/priority from
+ * arguments, frame_index and anim_counter cleared); wldcore_window_update_flag_from_owner_progress toggles flag 0x10 by
+ * record index. */
 typedef struct wldcore_window_record {
     s32 flags;        /* 0x00; wldcore_display_object_flag_e */
     s32 sequence;     /* 0x04; wldcore_anim_sequence_id_e; second argument of wldcore_window_init_record */
@@ -277,7 +276,7 @@ extern CVECTOR g_wldcore_hud_color;
 extern s32 g_wldcore_hud_ot_priority;
 extern s32 g_wldcore_loaded_background_set;
 
-/* Currently resident picture set, reset to -1 by wldcore_init_world_map_state. */
+/* Currently resident picture set, reset to -1 by wldcore_system_init_world_map_state. */
 extern s32 g_wldcore_loaded_picture_set;
 extern u16* g_wldcore_dissolve_band_order;
 extern u8 g_wldcore_dissolve_band_progress[16];
@@ -296,23 +295,23 @@ extern wldcore_sortbox_state_t g_wldcore_screen_fade_state;
  * &g_wldcore_screen_fade_state base, which the member spelling does not
  * reproduce. */
 void wldcore_gfx_draw_world_frame_with_map(void);
-s32 wldcore_fade_step_screen(void);
+s32 wldcore_gfx_step_screen_fade(void);
 void wldcore_gfx_toggle_captured_world_frame(s32 capture);
 void wldcore_gfx_draw_projected_map_tiles(GsOT* ot);
 void wldcore_gfx_draw_animated_display_object(struct wldcore_window_record* object, GsOT* ot);
 void wldcore_gfx_draw_context_value_display(GsOT* ot);
 void wldcore_gfx_draw_display_object_sprite(struct wldcore_window_render_record* object, GsOT* ot);
 void wldcore_gfx_draw_calendar_date(GsOT* ot);
-void wldcore_clear_screen_and_set_map_clip_rect(s32 mode);
-void wldcore_dispatch_display_object_list(GsOT* ot, s32** list, s32 count);
-void wldcore_fade_draw_screen_overlays(void);
-void wldcore_fade_start_screen(s32 flags, s32 duration);
+void wldcore_gfx_clear_screen_and_set_map_clip_rect(s32 mode);
+void wldcore_gfx_dispatch_display_object_list(GsOT* ot, s32** list, s32 count);
+void wldcore_gfx_draw_screen_fade_overlays(void);
+void wldcore_gfx_start_screen_fade(s32 flags, s32 duration);
 void wldcore_gfx_clear_vram_and_scratch(s32 clear_scratch);
 void wldcore_gfx_copy_color_with_tint(CVECTOR* source, CVECTOR* out);
 void wldcore_gfx_draw_world_frame(void);
 void wldcore_gfx_init_subsystem(void);
 void wldcore_gfx_set_display_rect(s32 buffer_index, s16* rect);
-void wldcore_start_core_background_threads(s32 party_index);
+
 void wldcore_gfx_draw_number_digits(s32 value, s32 digits, GsSPRITE* sprite, GsOT* ot);
 void wldcore_gfx_draw_number_digits_with_fill(s32 value, s32 digits, GsSPRITE* sprite, GsOT* ot, s32 zero_pad);
 void wldcore_gfx_draw_cursor_sprite_and_underline(GsOT* ot, GsSPRITE* sprite, GsLINE* line);
@@ -326,6 +325,8 @@ void wldcore_gfx_load_background_set(s32 set);
 s32 wldcore_gfx_load_location_picture(s32 index);
 void wldcore_gfx_load_picture_set(s32 value);
 void wldcore_gfx_update_map_backdrop(void);
+
+void wldcore_gfx_reset_context_value_display(void);
 
 /* calendar */
 /* The world map's date: a day passes per location reached, an event can skip days, and each
@@ -454,7 +455,7 @@ extern wldcore_state_record_t* g_wldcore_location_records;
 extern wldcore_location_view_t g_wldcore_location_view;
 extern u32* g_wldcore_location_frame_tim;
 s32 wldcore_map_begin_route_segment(wldcore_map_travel_t* state, u32 value, s32 step);
-s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out);
+s32 wldcore_map_collect_location_choice_text_ids(s32 location_id, s32* out);
 s32 wldcore_map_start_travel(s32 from_location, s32 to_location);
 
 /* text */
@@ -542,7 +543,7 @@ typedef enum wldcore_text_id {
     WLDCORE_TEXT_ID_LAND_FOUND_FIRST = 0xb904, /* the same for an unexplored land, to "Master Adventurer" */
 } wldcore_text_id_e;
 
-/* Blocks of the message file (wldcore_load_message_block_if_changed). */
+/* Blocks of the message file (wldcore_text_load_message_block_if_changed). */
 typedef enum wldcore_message_block {
     WLDCORE_MESSAGE_BLOCK_RUMORS = 0x00,
     WLDCORE_MESSAGE_BLOCK_PROPOSITIONS = 0x01,
@@ -598,7 +599,7 @@ extern s32 g_wldcore_loaded_message_block;
 /* Row value column of the world list panels, read signed as `value & 0x7ff`. */
 extern s16 g_wldcore_list_entry_values[];
 void wldcore_text_render_scrollable_window_page(wldcore_text_scrollable_window_t* state, s32 row);
-void wldcore_load_message_block_if_changed(s32 block);
+void wldcore_text_load_message_block_if_changed(s32 block);
 void wldcore_text_get_padded_dimensions(s32 text_id, wldcore_text_dimensions_t* output);
 void wldcore_text_init_scrollable_window(wldcore_text_scrollable_window_t* state);
 s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* window);
@@ -718,10 +719,12 @@ typedef enum wldcore_scroll_limits {
  * id from its misc id, the status panel data and the participant list's saved cursor. */
 
 extern s32 g_wldcore_participant_list_saved_cursor;
-party_data_t* wldcore_get_party_data_pointer(s32 party_index);
-s32 wldcore_get_ramza_roster_index(void);
+party_data_t* wldcore_unit_get_party_data_pointer(s32 party_index);
+s32 wldcore_unit_get_ramza_roster_index(void);
 s32 wldcore_unit_get_id_from_misc_id(s32 misc_id);
 void wldcore_unit_build_status_panel_data(s32 party_index);
+
+void wldcore_unit_start_status_panel_threads(s32 party_index);
 
 /* job */
 /* Provisional: the job-report confirmation level. The cursor window at +0x00
@@ -1152,6 +1155,8 @@ void wldcore_proposition_push_days_level(void);
 s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_level_t* state, s32 message, s32 speaker);
 void wldcore_proposition_push_result_level(s32 proposition);
 s32 wldcore_proposition_find_preferred_job_unit(void);
+
+s32 wldcore_proposition_get_milestone_rank(void);
 
 /* sound novel */
 /* The sound novels' reader (wldcore_sound_novel_*): the script interpreter and its 54 opcodes (text,
@@ -2106,7 +2111,7 @@ extern wldcore_window_record_t g_wldcore_window_records[];
 extern wldcore_status_help_field_t g_wldcore_status_help_fields[];
 extern s32 g_wldcore_window_render_object_count;
 
-/* Display-object queues drawn by wldcore_dispatch_display_object_list each frame: every entry points at
+/* Display-object queues drawn by wldcore_gfx_dispatch_display_object_list each frame: every entry points at
  * the leading flags word of a window record, render record or map dot, and
  * wldcore_window_set_render_objects_visible toggles bit 0x08 through it. */
 extern s32* g_wldcore_window_render_object_queue[];
@@ -2219,6 +2224,8 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode);
 void wldcore_proposition_push_milestone_level(void);
 void wldcore_window_update_flag_from_owner_progress(wldcore_window_owner_t* owner);
 
+void wldcore_window_number_panel_noop_callback(void);
+
 /* other */
 extern s16 g_wldcore_panel_row_actions[16];
 extern wldcore_word_pair_t g_wldcore_tutorial_entries_cursor_state;
@@ -2233,10 +2240,7 @@ extern u8 g_wldcore_choice_hidden_variable_offsets[];
 extern battle_stats_t g_wldcore_status_unit;
 extern s32 g_wldcore_tutorial_category_saved_cursor;
 extern s32 g_wldcore_tutorial_event_ids[];
-void wldcore_set_bit_value(u32* bits, s32 index, s32 set);
-s32 wldcore_test_bit(u32* bits, s32 index);
-
-s32 wldcore_proposition_get_milestone_rank(void);
-void wldcore_capture_state_and_play_time(void);
+void wldcore_bits_assign(u32* bits, s32 index, s32 set);
+s32 wldcore_bits_test(u32* bits, s32 index);
 
 #endif

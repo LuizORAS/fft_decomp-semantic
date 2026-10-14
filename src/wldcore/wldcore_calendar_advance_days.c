@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 
 /* Advance the calendar by the days an event asked for (EVENT_SCRIPT_VAR_DATE_ADVANCE, applied as a
- * visit starts by wldcore_init_world_menus_and_date). Whole years add to EVENT_SCRIPT_VAR_YEAR_COUNT
+ * visit starts by wldcore_system_init_world_menus_and_date). Whole years add to EVENT_SCRIPT_VAR_YEAR_COUNT
  * and to every Brave Story age; the remaining days move the date forward and add one more year when
  * they cross December 31. A character whose birthday falls within the remaining days, later in the
  * same calendar year, gains a year; ages are capped at 99. Entry 0 is Ramza, whose birthday lives in

@@ -10,7 +10,7 @@ void wldcore_menu_resume_sound_novel_level(s32* param) {
 
     if (set != -1) {
         wldcore_gfx_load_background_set(set);
-        wldcore_wait_for_file_load();
+        wldcore_file_wait_for_load();
     }
     g_wldcore_window_render_records[g_wldcore_sound_novel_record.picture_render_index].flags
         &= ~WLDCORE_DISPLAY_OBJECT_BLANK;

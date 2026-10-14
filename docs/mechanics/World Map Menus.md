@@ -6,7 +6,7 @@ scope:
   - wldcore_list
   - wldcore_window
   - wldcore_text
-  - wldcore_dispatch_display_object_list()
+  - wldcore_gfx_dispatch_display_object_list()
   - wldcore_gfx_draw_animated_display_object()
   - wldcore_gfx_draw_display_object_sprite()
   - wldcore_gfx_calculate_scaled_rectangle()
@@ -18,9 +18,9 @@ scope:
   - wldcore_gfx_draw_cursor_sprite_and_underline()
   - wldcore_gfx_draw_number_digits()
   - wldcore_gfx_draw_number_digits_with_fill()
-  - wldcore_load_message_block_if_changed()
-  - wldcore_capture_state_and_play_time()
-  - wldcore_start_core_background_threads()
+  - wldcore_text_load_message_block_if_changed()
+  - wldcore_gfx_reset_context_value_display()
+  - wldcore_unit_start_status_panel_threads()
   - wldcore_unit_build_status_panel_data()
 ---
 
@@ -81,7 +81,7 @@ this page covers the stack itself and the screens built on it.
 - A level appends its records to the display-object queue
   ([[wldcore_window_append_record_and_reset_color]],
   [[wldcore_window_append_render_record_and_reset_color]]) and releases them
-  when it closes. [[wldcore_dispatch_display_object_list]] draws the queue each
+  when it closes. [[wldcore_gfx_dispatch_display_object_list]] draws the queue each
   frame, skipping objects flagged hidden or blank.
 - `palette` picks a record's CLUT: the suspend handlers give a covered level
   CLUT 10 on its cursor window, 6 on its side windows, 5 on the Brave Story's

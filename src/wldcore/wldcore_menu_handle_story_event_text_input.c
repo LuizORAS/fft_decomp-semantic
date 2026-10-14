@@ -34,7 +34,7 @@ void wldcore_menu_handle_story_event_text_input(s32* selection) {
         world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 1);
         world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_story_event_ids[*selection]);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
-        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
+        wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_OUT, 0x10);
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);

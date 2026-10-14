@@ -10,7 +10,7 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
         if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
             s16* selected = &g_wldcore_window_panel_render_state.selected_index;
 
-            wldcore_set_bit_value(g_main_tutorial_progress_masks, *selected, 1);
+            wldcore_bits_assign(g_main_tutorial_progress_masks, *selected, 1);
             world_menu_set_brightness(0x80, 0x80, 0x80);
             world_formation_run_tutorial_screen(*selected);
             g_wldcore_menu_ordering_table_offset = 1;
@@ -54,6 +54,6 @@ void wldcore_list_handle_formation_tutorials_input(wldcore_menu_panel_level_t* l
         level->result = 1;
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
-        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
+        wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_OUT, 0x10);
     }
 }

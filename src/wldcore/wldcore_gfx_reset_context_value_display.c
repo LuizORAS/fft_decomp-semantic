@@ -1,14 +1,14 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/*
- * Copies a two-word state snapshot, sets its control flags, and captures the
- * current play time.
+/* Put the context value display back as the world map keeps it: at its saved position, showing the play
+ * time (loaded now), at HUD priority 1 and hidden (MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE). The two sound novel
+ * menu levels call it; a sound novel shows the display in its own mode and place
+ * (wldcore_sound_novel_show_value_display).
  *
- * Cache the flag and time source values before publishing their destinations;
- * this preserves the target's load/store schedule.
- */
-void wldcore_capture_state_and_play_time(void) {
+ * Cache the flag and time source values before publishing their destinations; this preserves the target's
+ * load/store schedule. */
+void wldcore_gfx_reset_context_value_display(void) {
     u32 flags;
     s32 hours;
     s32 minutes;

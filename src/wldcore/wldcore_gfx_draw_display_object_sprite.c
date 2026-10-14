@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Convert one display object into a libgs sprite primitive and sort it into the
- * ordering table handed down by wldcore_dispatch_display_object_list.
+ * ordering table handed down by wldcore_gfx_dispatch_display_object_list.
  *
  * Flag 0x004 selects the 8-bit colour mode (attribute 0x01000000); flag 0x400 copies
  * the object's colour verbatim, otherwise wldcore_gfx_copy_color_with_tint applies the global fade

@@ -5,7 +5,7 @@
 /* Clear the whole 256x480 frame buffer, then install the draw-clip rectangle
  * for the requested world-map layout: mode 0 leaves an 8-pixel top margin and
  * a 252x228 area, any other mode uses the full 256x238 screen. */
-void wldcore_clear_screen_and_set_map_clip_rect(s32 mode) {
+void wldcore_gfx_clear_screen_and_set_map_clip_rect(s32 mode) {
     RECT rect;
 
     rect.x = 0;

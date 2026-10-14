@@ -7,7 +7,7 @@
  * WLDCORE_SCREEN_FADE_REDRAW_MAP fade sets MAIN_SYSTEM_FLAG_DRAW_MAP each step. One step before the
  * end it clears MAIN_SYSTEM_FLAG_FADING and waits for the audio queue; the end clears RUNNING,
  * REDRAW_MAP and BOX_VISIBLE. Returns 1 while a step ran. */
-s32 wldcore_fade_step_screen(void) {
+s32 wldcore_gfx_step_screen_fade(void) {
     u32 flags;
     s32 elapsed;
     s32 brightness;

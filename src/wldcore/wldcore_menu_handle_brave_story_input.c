@@ -64,7 +64,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
                 | MAIN_SYSTEM_FLAG_RETURN_TO_TITLE;
             return;
         }
-        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_REDRAW_MAP, 0x10);
+        wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_REDRAW_MAP, 0x10);
         wldcore_menu_push_world_menu_level();
         return;
     }
@@ -76,7 +76,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
         level->mode = WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP;
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
-        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
+        wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_OUT, 0x10);
         if (g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY) {
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 0);
@@ -115,13 +115,13 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
         g_wldcore_brave_story_saved_cursor[0] = level->selected_entry;
         switch (level->entries[level->selected_entry]) {
         case WLDCORE_BRAVE_STORY_ROW_FACTS:
-            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_FACTS);
+            wldcore_text_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_FACTS);
             wldcore_menu_suspend_brave_story_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_facts();
             return;
         case WLDCORE_BRAVE_STORY_ROW_STORY_EVENTS:
-            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_STORY_EVENTS);
+            wldcore_text_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_STORY_EVENTS);
             wldcore_menu_suspend_brave_story_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_story_events();
@@ -132,18 +132,18 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
             wldcore_list_open_persons();
             return;
         case WLDCORE_BRAVE_STORY_ROW_PROPOSITIONS:
-            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_PROPOSITION_HISTORY);
+            wldcore_text_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_PROPOSITION_HISTORY);
             wldcore_menu_suspend_brave_story_level(level);
             wldcore_menu_push_proposition_category_level();
             return;
         case WLDCORE_BRAVE_STORY_ROW_UNEXPLORED_LANDS:
-            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_UNEXPLORED_LANDS);
+            wldcore_text_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_UNEXPLORED_LANDS);
             wldcore_menu_suspend_brave_story_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_unexplored_lands();
             return;
         case WLDCORE_BRAVE_STORY_ROW_TREASURES:
-            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_TREASURES);
+            wldcore_text_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_TREASURES);
             wldcore_menu_suspend_brave_story_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_treasures();

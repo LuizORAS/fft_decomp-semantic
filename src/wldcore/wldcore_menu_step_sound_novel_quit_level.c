@@ -95,7 +95,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_sound_novel_quit_leve
         g_wldcore_sound_novel_text_history_3 = g_wldcore_sound_novel_text_history_2;
         g_wldcore_sound_novel_text_history_2 = g_wldcore_sound_novel_text_history_1;
         g_wldcore_sound_novel_text_history_1 = first;
-        wldcore_capture_state_and_play_time();
+        wldcore_gfx_reset_context_value_display();
         g_wldcore_screen_fade_state.priorities[0] = 0xF;
         g_wldcore_screen_fade_state.flags[1] = 0;
         g_wldcore_window_record_count -= 3;

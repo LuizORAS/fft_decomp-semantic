@@ -4,16 +4,17 @@ tier: 3
 scope:
   - wldcore_map
   - wldcore_calendar
-  - wldcore_location
-  - wldcore_init
+  - wldcore_system
   - wldcore_file
   - wldcore_input
-  - wldcore_fade
+  - wldcore_gfx_start_screen_fade()
+  - wldcore_gfx_step_screen_fade()
+  - wldcore_gfx_draw_screen_fade_overlays()
   - wldcore_entrypoint()
-  - wldcore_handle_exit_request()
-  - wldcore_finalize_loop()
-  - wldcore_wait_for_file_load()
-  - wldcore_clear_screen_and_set_map_clip_rect()
+  - wldcore_system_run_requested_formation()
+  - wldcore_system_finalize_loop()
+  - wldcore_file_wait_for_load()
+  - wldcore_gfx_clear_screen_and_set_map_clip_rect()
   - wldcore_gfx_init_subsystem()
   - wldcore_gfx_capture_map_backdrop()
   - wldcore_gfx_update_map_backdrop()
@@ -158,8 +159,8 @@ The menu levels are records of the WLDCORE menu stack ([[wldcore_menu_level_type
 
 1. **Entry.** MAIN loads WLDCORE (and WORLD) and calls
    [[wldcore_entrypoint]].
-2. **A visit.** First, [[wldcore_handle_exit_request]] runs a formation that
-   an event asked for. Then [[wldcore_init_subsystems]] sets the visit up:
+2. **A visit.** First, [[wldcore_system_run_requested_formation]] runs a formation that
+   an event asked for. Then [[wldcore_system_init_subsystems]] sets the visit up:
    - the state and the map texture;
    - the GPU and the tile grid;
    - WORLD's menus and a pending date advance;
@@ -187,7 +188,7 @@ The menu levels are records of the WLDCORE menu stack ([[wldcore_menu_level_type
    - [[wldcore_map_roll_random_encounter]].
 5. **Leaving.** A story event, a random battle or a Deep Dungeon floor pushes
    the event transition. Its last step clears `MAIN_SYSTEM_FLAG_RUNNING`.
-   [[wldcore_finalize_loop]] publishes the next map, and the entry point
+   [[wldcore_system_finalize_loop]] publishes the next map, and the entry point
    returns 0 (story event), 1 (random battle), 2 (tutorial or replay),
    4 (Deep Dungeon) or 5 (title). A loaded game
    (`MAIN_SYSTEM_FLAG_RESTART`) starts a new visit instead.

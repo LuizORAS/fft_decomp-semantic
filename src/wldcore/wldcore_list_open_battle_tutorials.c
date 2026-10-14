@@ -13,7 +13,7 @@ void wldcore_list_open_battle_tutorials(void) {
 
     for (i = 0; i < 8; i++) {
         g_wldcore_list_entry_values[i] = i - 0x3FF0;
-        if (wldcore_test_bit(&g_main_tutorial_progress_masks[1], i) != 0) {
+        if (wldcore_bits_test(&g_main_tutorial_progress_masks[1], i) != 0) {
             g_wldcore_list_row_flags[i] = 8;
         } else {
             g_wldcore_list_row_flags[i] = 0;

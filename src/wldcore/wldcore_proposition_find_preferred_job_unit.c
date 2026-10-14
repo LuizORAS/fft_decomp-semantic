@@ -46,7 +46,7 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
         for (i = 0; i < participant_count; i++) {
             party_index
                 = g_main_active_propositions[g_wldcore_proposition_outcome.proposition_index].participant_indices[i];
-            unit = wldcore_get_party_data_pointer(party_index);
+            unit = wldcore_unit_get_party_data_pointer(party_index);
             if (g_wldcore_selected_proposition_row[0].fields.preferred_job - 1
                 == wldcore_proposition_get_job_category(unit->job_id)) {
                 candidates[count] = party_index;
@@ -69,7 +69,7 @@ s32 wldcore_proposition_find_preferred_job_unit(void) {
         party_index
             = g_main_active_propositions[g_wldcore_proposition_outcome.proposition_index].participant_indices[i];
         if (party_index != g_wldcore_proposition_outcome.reporter_party_index) {
-            unit = wldcore_get_party_data_pointer(party_index);
+            unit = wldcore_unit_get_party_data_pointer(party_index);
             for (k = 0; k < 9; k++) {
                 if (messages->message_adjustments[base + k] == unit->job_id) {
                     candidates[count] = party_index;

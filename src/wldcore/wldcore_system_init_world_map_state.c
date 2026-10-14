@@ -14,7 +14,7 @@
  *
  * The target derives each fade box's attribute word through the record base
  * while it walks the rectangle fields separately. */
-void wldcore_init_world_map_state(void) {
+void wldcore_system_init_world_map_state(void) {
     wldcore_menu_cursor_state_t* cursor;
     party_data_t* party;
     u8 record[2];

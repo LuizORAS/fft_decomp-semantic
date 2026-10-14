@@ -4,7 +4,7 @@
 /* Start a screen fade of `duration` frames in the direction of `flags`,
  * unless the screen is already faded that way. The flags can also start the
  * world-map music with a fade-in or fade the music out and unload it. */
-void wldcore_fade_start_screen(s32 flags, s32 duration) {
+void wldcore_gfx_start_screen_fade(s32 flags, s32 duration) {
     if ((g_wldcore_screen_fade_state.flags[0] & WLDCORE_SCREEN_FADE_OUT) != (flags & WLDCORE_SCREEN_FADE_OUT)) {
         g_wldcore_screen_fade_state.flags[0] = flags | WLDCORE_SCREEN_FADE_RUNNING;
         g_wldcore_screen_fade_state.elapsed = 0;

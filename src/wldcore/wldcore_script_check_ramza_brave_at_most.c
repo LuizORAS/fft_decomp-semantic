@@ -8,7 +8,7 @@ void wldcore_script_check_ramza_brave_at_most(void) {
     u16 ip;
     s32 val;
 
-    party = wldcore_get_party_data_pointer(wldcore_get_ramza_roster_index());
+    party = wldcore_unit_get_party_data_pointer(wldcore_unit_get_ramza_roster_index());
     ipp = &g_wldcore_script_state.ip;
     ip = *ipp;
     val = g_wldcore_script_state.data[ip];

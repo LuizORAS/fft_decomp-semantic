@@ -11,7 +11,7 @@ void wldcore_calendar_write_date(u32* bits, s32 record, u8* source) {
 
     mask = 1;
     for (i = 0; i < 5; i++) {
-        wldcore_set_bit_value(bits, base + i, source[1] & mask);
+        wldcore_bits_assign(bits, base + i, source[1] & mask);
         mask <<= 1;
     }
     mask = 1;
@@ -20,7 +20,7 @@ void wldcore_calendar_write_date(u32* bits, s32 record, u8* source) {
          * base + (i + 5) in one expression hoists base + 5 out of the loop. */
         s32 index = i + 5;
 
-        wldcore_set_bit_value(bits, base + index, source[0] & mask);
+        wldcore_bits_assign(bits, base + index, source[0] & mask);
         mask <<= 1;
     }
 }

@@ -109,5 +109,5 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel.phase = WLDCORE_SOUND_NOVEL_PHASE_RUN;
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_SOUND_NOVEL;
     g_wldcore_menu_stack_depth++;
-    wldcore_fade_start_screen(0, 0x10);
+    wldcore_gfx_start_screen_fade(0, 0x10);
 }

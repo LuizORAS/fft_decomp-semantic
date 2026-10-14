@@ -4,7 +4,7 @@
 /* Dispatch a list of display objects to one of two handlers by object kind.
  * Objects with flags 0x18 are skipped, and the whole pass is suppressed while
  * system flag 0x400 is set. */
-void wldcore_dispatch_display_object_list(GsOT* ot, s32** list, s32 count) {
+void wldcore_gfx_dispatch_display_object_list(GsOT* ot, s32** list, s32 count) {
     s32* object;
     s32 i;
 

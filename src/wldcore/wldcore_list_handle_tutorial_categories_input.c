@@ -38,7 +38,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
                         | MAIN_SYSTEM_FLAG_RETURN_TO_TITLE;
                     return;
                 }
-                wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_REDRAW_MAP, 0x10);
+                wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_REDRAW_MAP, 0x10);
                 wldcore_menu_push_world_menu_level();
             }
         }
@@ -49,7 +49,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
             level->mode = WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP;
             world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
             g_main_system_flags = g_main_system_flags | MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
-            wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
+            wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_OUT, 0x10);
             if (g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_TUTORIAL) {
                 wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
                 wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 0);
@@ -94,7 +94,7 @@ void wldcore_list_handle_tutorial_categories_input(wldcore_menu_list_window_leve
             wldcore_list_open_battle_tutorials();
             return;
         case WLDCORE_TUTORIAL_CATEGORY_ROW_TOPICS:
-            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_TUTORIAL_TOPICS);
+            wldcore_text_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_TUTORIAL_TOPICS);
             wldcore_menu_suspend_tutorial_categories_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_tutorial_topics();

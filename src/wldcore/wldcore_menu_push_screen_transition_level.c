@@ -32,10 +32,10 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
     s32 i;
     s32 depth;
 
-    wldcore_clear_screen_and_set_map_clip_rect(1);
+    wldcore_gfx_clear_screen_and_set_map_clip_rect(1);
     g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE
         | MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL;
-    wldcore_fade_start_screen(0, 0x10);
+    wldcore_gfx_start_screen_fade(0, 0x10);
     switch (screen) {
     case WLDCORE_MENU_LEVEL_BRAVE_STORY:
         wldcore_window_set_render_objects_visible(0);
@@ -64,8 +64,8 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         wldcore_menu_push_brave_story_level();
         g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
         wldcore_window_close_parent_list_all_windows();
-        wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_STORY_EVENTS);
-        wldcore_wait_for_file_load();
+        wldcore_text_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_STORY_EVENTS);
+        wldcore_file_wait_for_load();
         g_wldcore_story_events_cursor_state = g_main_saved_list_cursor_state;
         break;
     case WLDCORE_MENU_LEVEL_TUTORIAL_CATEGORIES:
@@ -88,8 +88,8 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         break;
     case WLDCORE_MENU_LEVEL_TREASURE_DETAIL:
         wldcore_window_close_parent_list_all_windows();
-        wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_TREASURES);
-        wldcore_wait_for_file_load();
+        wldcore_text_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_TREASURES);
+        wldcore_file_wait_for_load();
         wldcore_sound_wait_for_queue_drain();
         main_sound_set_master_volume(0x3FFF, 1);
         wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_BRAVE_STORY));

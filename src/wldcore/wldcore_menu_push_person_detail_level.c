@@ -13,7 +13,7 @@ void wldcore_menu_push_person_detail_level(s32 value) {
     s32 depth;
 
     variable = value >> 4;
-    wldcore_load_message_block_if_changed(variable / 16 + 6);
+    wldcore_text_load_message_block_if_changed(variable / 16 + 6);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].detail.value = value;
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);

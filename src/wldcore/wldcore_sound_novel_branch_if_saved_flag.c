@@ -10,7 +10,7 @@ void wldcore_sound_novel_branch_if_saved_flag(s32 expected) {
     /* Keep the instruction address live across the call for both operand loads. */
     __asm__("" : "=r"(instruction) : "0"(instruction));
 
-    if (wldcore_test_bit(g_main_sound_novel_saved_flags, instruction->operand_0) == expected) {
+    if (wldcore_bits_test(g_main_sound_novel_saved_flags, instruction->operand_0) == expected) {
         flags = g_wldcore_sound_novel_record.state_flags | WLDCORE_SOUND_NOVEL_STATE_BRANCH;
         g_wldcore_sound_novel_record.section = instruction->operand_1;
     } else {

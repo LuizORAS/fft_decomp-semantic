@@ -5,7 +5,7 @@
 /* End a world map visit: wait for the GPU, VSync and the audio queue with the display off, unload
  * the scenario music (kept for a tutorial event), and publish the next map (g_wldcore_next_map_id)
  * as EVENT_SCRIPT_VAR_CURRENT_MAP. */
-void wldcore_finalize_loop(void) {
+void wldcore_system_finalize_loop(void) {
     DrawSync(0);
     VSync(0);
     SetDispMask(0);

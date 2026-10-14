@@ -102,13 +102,13 @@ void wldcore_map_step_route_travel(void) {
                 .position.y = g_wldcore_location_view.point.y - 4;
             g_main_system_flags &= ~MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL;
             g_wldcore_map_travel.arrival_location = g_wldcore_location_view.location_id + 1;
-            wldcore_wait_for_file_load();
+            wldcore_file_wait_for_load();
             g_wldcore_location_view.angle = 0;
             g_wldcore_location_view.projection_state &= ~WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET;
             g_wldcore_map_travel.flags &= ~(WLDCORE_ROUTE_TRAVEL_ACTIVE | WLDCORE_ROUTE_TRAVEL_REVERSED);
             g_wldcore_menu_stack_records_next[g_wldcore_map_travel.menu_level].location_transition.location_id
                 = g_wldcore_location_view.location_id;
-            result = wldcore_location_collect_choice_text_ids(g_wldcore_location_view.location_id,
+            result = wldcore_map_collect_location_choice_text_ids(g_wldcore_location_view.location_id,
                 (s32*)g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth]
                     .location_transition.transition_data);
             if (result != -1 && result > 0) {

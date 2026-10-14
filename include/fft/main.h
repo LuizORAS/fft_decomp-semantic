@@ -806,13 +806,14 @@ typedef enum main_status_change {
  * loop: frame state, what the frame leaves out, requests left by WORLD and
  * OPENING, and the reason the loop ends. */
 typedef enum main_system_flags {
-    /* wldcore_entrypoint runs frames while set; wldcore_init_world_map_state sets it, a level clears it to leave. */
+    /* wldcore_entrypoint runs frames while set; wldcore_system_init_world_map_state sets it, a level clears it to
+       leave. */
     MAIN_SYSTEM_FLAG_RUNNING = 0x00000001,
     /* Draw this frame with the 3D map; wldcore_gfx_draw_world_frame_with_map clears it after drawing. */
     MAIN_SYSTEM_FLAG_DRAW_MAP = 0x00000002,
     /* A level waits for a thread or a fade: wldcore_input_read_pad publishes no pad input. */
     MAIN_SYSTEM_FLAG_INPUT_BLOCKED = 0x00000004,
-    /* Set by wldcore_fade_start_screen, cleared by wldcore_fade_step_screen one step before the fade ends. */
+    /* Set by wldcore_gfx_start_screen_fade, cleared by wldcore_gfx_step_screen_fade one step before the fade ends. */
     MAIN_SYSTEM_FLAG_FADING = 0x00000008,
     /* wldcore_map_project_and_cull_dots hides every map dot. */
     MAIN_SYSTEM_FLAG_HIDE_MAP_DOTS = 0x00000010,
@@ -826,7 +827,7 @@ typedef enum main_system_flags {
     MAIN_SYSTEM_FLAG_REQUEST_BRAVE_STORY = 0x00000100,
     /* wldcore_gfx_draw_world_frame does not load the scratch image into the display buffer. */
     MAIN_SYSTEM_FLAG_NO_BACKGROUND_IMAGE = 0x00000200,
-    /* wldcore_dispatch_display_object_list draws nothing and wldcore_map_pulse_dot_colors returns. */
+    /* wldcore_gfx_dispatch_display_object_list draws nothing and wldcore_map_pulse_dot_colors returns. */
     MAIN_SYSTEM_FLAG_HIDE_DISPLAY_OBJECTS = 0x00000400,
     /* wldcore_gfx_draw_context_value_display draws nothing. */
     MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE = 0x00000800,
@@ -850,7 +851,7 @@ typedef enum main_system_flags {
     MAIN_SYSTEM_FLAG_REQUEST_TUTORIAL = 0x00100000,
     /* A tutorial event plays: wldcore_entrypoint returns 2 with the music kept; the next entry reopens its list. */
     MAIN_SYSTEM_FLAG_TUTORIAL_EVENT = 0x00200000,
-    /* wldcore_init_world_map_state sets the rumor, path, location and story-event variables; no code sets it. */
+    /* wldcore_system_init_world_map_state sets the rumor, path, location and story-event variables; no code sets it. */
     MAIN_SYSTEM_FLAG_UNLOCK_ALL = 0x00400000,
     /* Set by world_menu_update_debug_variable_list_request: the return level opens the variable list. */
     MAIN_SYSTEM_FLAG_REQUEST_VARIABLE_LIST = 0x00800000,
@@ -858,7 +859,7 @@ typedef enum main_system_flags {
     MAIN_SYSTEM_FLAG_REQUEST_PARTY_NUMBER_PANEL = 0x01000000,
     /* The location menu chose a deep-dungeon battle: wldcore_entrypoint returns 4. */
     MAIN_SYSTEM_FLAG_DEEP_DUNGEON_BATTLE = 0x02000000,
-    /* Set by wldcore_clear_screen_and_set_map_clip_rect; the return level then recaptures the world frame. */
+    /* Set by wldcore_gfx_clear_screen_and_set_map_clip_rect; the return level then recaptures the world frame. */
     MAIN_SYSTEM_FLAG_SCREEN_CLEARED = 0x04000000,
     /* Map dots stop pulsing and wldcore_gfx_draw_animated_display_object stops advancing frames. */
     MAIN_SYSTEM_FLAG_FREEZE_ANIMATION = 0x08000000,

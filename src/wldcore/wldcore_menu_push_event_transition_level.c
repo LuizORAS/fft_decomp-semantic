@@ -14,7 +14,7 @@ void wldcore_menu_push_event_transition_level(s32 mode) {
     wldcore_file_seek_to_battle_bin();
     if (mode == WLDCORE_EVENT_TRANSITION_MODE_FADE) {
         g_main_system_flags |= MAIN_SYSTEM_FLAG_FREEZE_ANIMATION;
-        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x20);
+        wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_OUT, 0x20);
     } else {
         rect.x = 0x100;
         rect.y = 0;

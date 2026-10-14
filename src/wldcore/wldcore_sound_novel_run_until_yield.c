@@ -28,7 +28,7 @@ s32 wldcore_sound_novel_run_until_yield(void) {
         wldcore_sound_novel_update_countdown_timer();
 
         if (g_wldcore_sound_novel_record.state_flags & WLDCORE_SOUND_NOVEL_STATE_BRANCH) {
-            wldcore_set_bit_value(g_main_sound_novel_section_bits,
+            wldcore_bits_assign(g_main_sound_novel_section_bits,
                 (g_wldcore_sound_novel_index << 8) + g_wldcore_sound_novel_record.section, 1);
             g_wldcore_sound_novel_record.state_flags &= ~WLDCORE_SOUND_NOVEL_STATE_BRANCH;
             offset = ((wldcore_save_slot_table_t*)g_wldcore_sound_novel_record.buffer)

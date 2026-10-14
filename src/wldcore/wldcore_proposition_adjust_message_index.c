@@ -9,7 +9,7 @@ s32 wldcore_proposition_adjust_message_index(s32 base, s32 party_index) {
     u32 is_not_male;
     party_data_t* party;
 
-    party = wldcore_get_party_data_pointer(party_index);
+    party = wldcore_unit_get_party_data_pointer(party_index);
     if (party->bravery < 0x65) {
         bravery_band = 2;
     }

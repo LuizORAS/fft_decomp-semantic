@@ -10,7 +10,7 @@
  * is already resident. */
 void wldcore_gfx_load_background_set(s32 set) {
     if (set != g_wldcore_loaded_background_set) {
-        wldcore_wait_for_file_load();
+        wldcore_file_wait_for_load();
         g_wldcore_loaded_background_set = set;
         wldcore_file_request_read(&g_main_file_cd_state,
             g_wldcore_background_sector_offsets[set] + DISC_SECTOR_WORLD_WLDBK_BIN,

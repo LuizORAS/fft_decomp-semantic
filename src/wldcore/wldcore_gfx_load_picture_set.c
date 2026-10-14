@@ -5,7 +5,7 @@
  * pictures. */
 void wldcore_gfx_load_picture_set(s32 set) {
     if (set != g_wldcore_loaded_picture_set) {
-        wldcore_wait_for_file_load();
+        wldcore_file_wait_for_load();
         g_wldcore_loaded_picture_set = set;
         wldcore_file_request_read(&g_main_file_cd_state,
             g_wldcore_picture_sector_offsets[set] + DISC_SECTOR_WORLD_WLDPIC_BIN,

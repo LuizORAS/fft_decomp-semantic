@@ -12,7 +12,7 @@ void wldcore_calendar_read_date(u32* bits, s32 record, u8* dest) {
     mask = 1;
     dest[1] = 0;
     for (i = 0; i < 5; i++) {
-        if (wldcore_test_bit(bits, base + i)) {
+        if (wldcore_bits_test(bits, base + i)) {
             dest[1] |= mask;
         }
         mask <<= 1;
@@ -22,7 +22,7 @@ void wldcore_calendar_read_date(u32* bits, s32 record, u8* dest) {
     for (i = 0; i < 4; i++) {
         s32 index = i + 5;
 
-        if (wldcore_test_bit(bits, base + index)) {
+        if (wldcore_bits_test(bits, base + index)) {
             dest[0] |= mask;
         }
         mask <<= 1;

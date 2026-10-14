@@ -5,7 +5,7 @@
  * The explicit address expression preserves the target's addu operand order
  * in both branches; typed indexing reverses both operand fields.
  */
-void wldcore_set_bit_value(u32* bits, s32 index, s32 set) {
+void wldcore_bits_assign(u32* bits, s32 index, s32 set) {
     u32* base;
     u32* clear_word;
     u32* set_word;

@@ -1,7 +1,7 @@
 #include "fft/world.h"
 
 /* Run the formation screen an event asked for. When EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT
- * is set, WLDCORE's exit (wldcore_handle_exit_request) calls this instead of leaving: it unloads the
+ * is set, WLDCORE's exit (wldcore_system_run_requested_formation) calls this instead of leaving: it unloads the
  * scenario music, clears the screen, reloads the menu text with the face images and the input timing
  * of the game options, runs world_formation_run_screen, then makes the stored event current
  * (EVENT_SCRIPT_VAR_CURRENT_EVENT) and clears that variable and EVENT_SCRIPT_VAR_NEXT_SCENARIO. */

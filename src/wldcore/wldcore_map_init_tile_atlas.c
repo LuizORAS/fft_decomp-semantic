@@ -4,7 +4,7 @@
 #include "psx/types.h"
 
 /* Lay out the world map's tile grid and reset its camera, once per visit from
- * wldcore_init_subsystems. Each of the 13 x 17 grid corners takes the next six-word tile descriptor
+ * wldcore_system_init_subsystems. Each of the 13 x 17 grid corners takes the next six-word tile descriptor
  * (texture page x and y, texture u and v, width, height): the corners run from (-256, -192) by the
  * tile sizes, and a tile with no width or height is empty. A restart keeps the grid. The camera gets
  * scale ONE and no rotation or offset; then the map frame and root menu frame windows are appended

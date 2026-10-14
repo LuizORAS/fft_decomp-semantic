@@ -27,7 +27,7 @@ s32 wldcore_proposition_select_report_speaker(s32 index) {
         ? -1
         : 99999;
     for (i = 0; i < g_main_active_propositions[index].participant_count; i++) {
-        unit = wldcore_get_party_data_pointer(g_main_active_propositions[index].participant_indices[i]);
+        unit = wldcore_unit_get_party_data_pointer(g_main_active_propositions[index].participant_indices[i]);
         switch (g_wldcore_selected_proposition_row[0].fields.speaker_mode) {
         case WLDCORE_PROPOSITION_SPEAKER_HIGHEST_BRAVERY:
             if (best < unit->bravery) {

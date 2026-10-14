@@ -7,7 +7,7 @@ s32 wldcore_sound_novel_calculate_completion_percent(void) {
     s32 i = 0;
 
     do {
-        if (wldcore_test_bit(g_main_sound_novel_section_bits, i) != 0) {
+        if (wldcore_bits_test(g_main_sound_novel_section_bits, i) != 0) {
             count++;
         }
         i++;

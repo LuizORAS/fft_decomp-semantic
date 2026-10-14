@@ -14,7 +14,7 @@ void wldcore_list_handle_battle_tutorials_input(wldcore_menu_panel_level_t* leve
     if (state == 2) {
         if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
             selected = &g_wldcore_window_panel_render_state.selected_index;
-            wldcore_set_bit_value(&g_main_tutorial_progress_masks[1], *selected, 1);
+            wldcore_bits_assign(&g_main_tutorial_progress_masks[1], *selected, 1);
             world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 1);
             world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_tutorial_event_ids[*selected]);
             wldcore_list_store_cursor_state(WLDCORE_CURSOR_SLOT_BATTLE_TUTORIALS);
@@ -52,6 +52,6 @@ void wldcore_list_handle_battle_tutorials_input(wldcore_menu_panel_level_t* leve
         level->result = 1;
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
-        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
+        wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_OUT, 0x10);
     }
 }

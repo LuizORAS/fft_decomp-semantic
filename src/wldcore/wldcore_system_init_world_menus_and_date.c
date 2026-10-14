@@ -5,7 +5,7 @@
  * graphics and the WLDFACE portraits) and the roster's name strings, then advance the calendar by
  * the days an event left in EVENT_SCRIPT_VAR_DATE_ADVANCE (wldcore_calendar_advance_days) and clear
  * it. */
-void wldcore_init_world_menus_and_date(void) {
+void wldcore_system_init_world_menus_and_date(void) {
     s32 value;
 
     world_menu_init_with_world_text_and_faces();

@@ -44,7 +44,7 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
         level->mode = WLDCORE_LIST_WINDOW_MODE_BROWSE;
         world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
-        wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
+        wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_OUT, 0x10);
         wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(1, MAIN_MUSIC_WORLD_MAP));
         return;
     }
@@ -76,12 +76,12 @@ void wldcore_bar_handle_menu_input(wldcore_menu_list_window_level_t* level) {
         }
         switch (level->entries[level->selected_entry]) {
         case WLDCORE_BAR_MENU_ROW_RUMORS:
-            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_RUMORS);
+            wldcore_text_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_RUMORS);
             wldcore_menu_suspend_bar_menu_level(level);
             wldcore_bar_open_rumors();
             return;
         case WLDCORE_BAR_MENU_ROW_AVAILABLE_PROPOSITIONS:
-            wldcore_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_PROPOSITIONS);
+            wldcore_text_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_PROPOSITIONS);
             wldcore_menu_suspend_bar_menu_level(level);
             wldcore_proposition_open_available_list();
             return;

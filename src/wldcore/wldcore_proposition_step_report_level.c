@@ -43,7 +43,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
             return;
         }
         level->load_phase = WLDCORE_PROPOSITION_REPORT_LOAD_PICTURE;
-        wldcore_load_message_block_if_changed(g_main_active_propositions[level->proposition].proposition_id
+        wldcore_text_load_message_block_if_changed(g_main_active_propositions[level->proposition].proposition_id
             + WLDCORE_MESSAGE_BLOCK_PROPOSITION_REPORT_FIRST);
         return;
     case WLDCORE_PROPOSITION_REPORT_LOAD_PICTURE:
@@ -94,7 +94,7 @@ void wldcore_proposition_step_report_level(wldcore_proposition_report_level_t* l
         if (count != 0) {
             g_wldcore_proposition_outcome.preferred_unit = count - 1;
             g_world_text_substitution_values[1]
-                = wldcore_get_party_data_pointer(count - 1)->job_id + TEXT_ID_JOB_NAME_BASE;
+                = wldcore_unit_get_party_data_pointer(count - 1)->job_id + TEXT_ID_JOB_NAME_BASE;
             level->state = 4;
             return;
         }

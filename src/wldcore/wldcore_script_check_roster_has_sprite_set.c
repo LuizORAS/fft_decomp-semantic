@@ -15,7 +15,7 @@ void wldcore_script_check_roster_has_sprite_set(void) {
     sprite_set = g_wldcore_script_state.data[ip];
     *ipp = ip + 1;
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        unit = wldcore_get_party_data_pointer(i);
+        unit = wldcore_unit_get_party_data_pointer(i);
         if (unit->party_id != PARTY_ID_NONE) {
             if (unit->sprite_set == sprite_set) {
                 break;

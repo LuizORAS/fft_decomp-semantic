@@ -16,7 +16,7 @@ void world_card_update_menu_request(void) {
     }
     if (state == WORLD_SCREEN_REQUEST_START_FADE_OUT) {
         g_world_menu_screen_open_request = 1;
-        wldcore_fade_start_screen(0x12, 0x10);
+        wldcore_gfx_start_screen_fade(0x12, 0x10);
         g_world_card_menu_request_state++;
         return;
     }
@@ -42,7 +42,7 @@ void world_card_update_menu_request(void) {
         world_menu_start_thread_group(g_world_menu_thread_group_parameter, g_world_menu_location_id,
             g_world_menu_location_window_x, g_world_menu_location_window_y);
         world_menu_open_entry_window(g_world_menu_open_entry_index, -0x30, -0x38);
-        wldcore_clear_screen_and_set_map_clip_rect(0);
+        wldcore_gfx_clear_screen_and_set_map_clip_rect(0);
         for (i = 0x77FF; i >= 0; i--) {
             g_wldcore_scratch_buffer[i] = 0;
         }
@@ -56,7 +56,7 @@ void world_card_update_menu_request(void) {
     }
     if (state == WORLD_SCREEN_REQUEST_START_FADE_IN) {
         world_menu_restore_world_map();
-        wldcore_fade_start_screen(0x24, 0x10);
+        wldcore_gfx_start_screen_fade(0x24, 0x10);
         g_world_card_menu_request_state++;
         return;
     }

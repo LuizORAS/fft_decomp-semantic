@@ -9,7 +9,7 @@
  * cleared, state bits 0/1/3 cleared, the flag cleared, menus back to neutral 0x80 brightness). The
  * operand byte selects: zero arms it, non-zero clears it. boxes[0].r/green/blue are the catalogued
  * fields at g_wldcore_screen_fade_state+0x24..0x26, gating the draw in
- * wldcore_fade_draw_screen_overlays.
+ * wldcore_gfx_draw_screen_fade_overlays.
  *
  * The world_menu_set_brightness call and the 0xc store are written once per arm; jump.c cross-jumps
  * the common tail from the g_wldcore_sound_novel_record.state_flags store onward, leaving only the

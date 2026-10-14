@@ -115,7 +115,7 @@ void wldcore_menu_step_treasure_detail_level(wldcore_menu_detail_level_t* level)
             if (entry != 0) {
                 level->saved_record_index = entry - 1;
                 if (entry - 1 >= 5 || g_main_sound_novel_records[entry - 1].section == 0) {
-                    wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_OUT, 0x10);
+                    wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_OUT, 0x10);
                 }
                 g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
                 world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);

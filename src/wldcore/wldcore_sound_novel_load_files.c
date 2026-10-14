@@ -7,12 +7,12 @@
  * start sector of one chapter's data relative to the disc LBA added to it,
  * so entry i+1 minus entry i is that chapter's sector count. */
 void wldcore_sound_novel_load_files(s32 chapter) {
-    wldcore_wait_for_file_load();
+    wldcore_file_wait_for_load();
     wldcore_file_request_read(&g_main_file_cd_state,
         g_wldcore_sound_novel_script_sector_offsets[chapter] + DISC_SECTOR_WORLD_SNPLBIN_BIN,
         g_wldcore_sound_novel_script_sector_offsets[chapter + 1] - g_wldcore_sound_novel_script_sector_offsets[chapter],
         g_main_save_slot_buffer);
-    wldcore_wait_for_file_load();
+    wldcore_file_wait_for_load();
     wldcore_file_request_read(&g_main_file_cd_state,
         g_wldcore_sound_novel_text_sector_offsets[chapter] + DISC_SECTOR_WORLD_SNPLMES_BIN,
         g_wldcore_sound_novel_text_sector_offsets[chapter + 1] - g_wldcore_sound_novel_text_sector_offsets[chapter],

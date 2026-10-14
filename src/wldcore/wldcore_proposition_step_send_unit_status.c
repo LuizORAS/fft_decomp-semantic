@@ -3,7 +3,7 @@
 
 /* The unit status view of the send-unit level (Square on the list): WLDCORE_SEND_UNIT_MODE_STATUS_OPEN
  * waits for the list and message threads, then opens the status panels
- * (wldcore_start_core_background_threads) of the highlighted unit; in WLDCORE_SEND_UNIT_MODE_STATUS
+ * (wldcore_unit_start_status_panel_threads) of the highlighted unit; in WLDCORE_SEND_UNIT_MODE_STATUS
  * L1 and R1 step through the listed units, Select opens the status help, and Circle or Cross
  * closes the panels; WLDCORE_SEND_UNIT_MODE_STATUS_CLOSE waits for them and shows the list again.
  *
@@ -26,7 +26,7 @@ void wldcore_proposition_step_send_unit_status(wldcore_menu_send_unit_level_t* l
         g_wldcore_window_records[level->right_arrow].flags ^= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         level->mode = WLDCORE_SEND_UNIT_MODE_STATUS;
         menu_selected_index = &g_wldcore_window_panel_render_state.selected_index;
-        wldcore_start_core_background_threads(g_wldcore_list_entry_values[*menu_selected_index] & TEXT_ID_ENTRY_MASK);
+        wldcore_unit_start_status_panel_threads(g_wldcore_list_entry_values[*menu_selected_index] & TEXT_ID_ENTRY_MASK);
         level->slot = *menu_selected_index;
     } else if (level->mode == WLDCORE_SEND_UNIT_MODE_STATUS) {
         buttons = g_wldcore_new_button_presses;

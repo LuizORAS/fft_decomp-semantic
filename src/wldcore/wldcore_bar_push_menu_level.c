@@ -9,16 +9,16 @@ void wldcore_bar_push_menu_level(void) {
     s32 set;
     s32 record_index;
 
-    wldcore_clear_screen_and_set_map_clip_rect(1);
+    wldcore_gfx_clear_screen_and_set_map_clip_rect(1);
     wldcore_window_set_render_objects_visible(0);
-    wldcore_fade_start_screen(0, 0x10);
+    wldcore_gfx_start_screen_fade(0, 0x10);
     value = world_script_get_variable(EVENT_SCRIPT_VAR_TOWN_BACKGROUND);
     set = value == 1 ? 0x16 : 0;
     if (value == 2) {
         set = 0x17;
     }
     wldcore_gfx_load_background_set(set);
-    wldcore_wait_for_file_load();
+    wldcore_file_wait_for_load();
     g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE | MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL;
     world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BAR_WELCOME, 0);

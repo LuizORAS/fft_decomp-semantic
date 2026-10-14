@@ -6,7 +6,7 @@
  * flag (EVENT_SCRIPT_VAR_LOCATION_CHOICE_HIDDEN_FIRST + the choice's offset) is set; a single choice
  * is never skipped. Returns how many, 0 for a blue or green location or no choice, and -1 for Murond
  * Death City. */
-s32 wldcore_location_collect_choice_text_ids(s32 location_id, s32* out) {
+s32 wldcore_map_collect_location_choice_text_ids(s32 location_id, s32* out) {
     s32 available;
     s32 i;
     s32 written;

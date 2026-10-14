@@ -101,7 +101,7 @@ void wldcore_proposition_step_result_level(wldcore_proposition_result_level_t* l
     }
     for (i = 0; i < g_main_active_propositions[g_wldcore_proposition_outcome.proposition_index].participant_count;
         i++) {
-        wldcore_get_party_data_pointer(
+        wldcore_unit_get_party_data_pointer(
             g_main_active_propositions[g_wldcore_proposition_outcome.proposition_index].participant_indices[i])
             ->proposition_status = 0;
         main_job_add_proposition_jp(

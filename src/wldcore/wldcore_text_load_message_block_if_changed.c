@@ -5,10 +5,10 @@
  * wldcore_sound_novel_load_files: entry i is the start sector of block i relative to the disc
  * LBA below, so entry i+1 minus entry i is that block's length. */
 
-void wldcore_load_message_block_if_changed(s32 block) {
+void wldcore_text_load_message_block_if_changed(s32 block) {
     g_world_text_section_pointers[TEXT_SECTION_MESSAGES] = g_wldcore_message_buffer;
     if (block != g_wldcore_loaded_message_block) {
-        wldcore_wait_for_file_load();
+        wldcore_file_wait_for_load();
         g_wldcore_loaded_message_block = block;
         wldcore_file_request_read(&g_main_file_cd_state,
             g_wldcore_message_block_sector_offsets[block] + DISC_SECTOR_WORLD_WLDMES_BIN,

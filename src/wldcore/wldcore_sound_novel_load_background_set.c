@@ -10,7 +10,7 @@ void wldcore_sound_novel_load_background_set(void) {
         DrawSync(0);
         g_wldcore_sound_novel_record.background_set = value;
         wldcore_gfx_load_background_set(value);
-        wldcore_wait_for_file_load();
+        wldcore_file_wait_for_load();
     }
     g_wldcore_sound_novel_record.state_flags |= WLDCORE_SOUND_NOVEL_STATE_FETCH;
 }

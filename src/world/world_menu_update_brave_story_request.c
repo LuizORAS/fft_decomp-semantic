@@ -13,7 +13,7 @@ void world_menu_update_brave_story_request(void) {
     }
     if (state == WORLD_SCREEN_REQUEST_START_FADE_OUT) {
         g_world_menu_screen_open_request = 1;
-        wldcore_fade_start_screen(0x12, 0x10);
+        wldcore_gfx_start_screen_fade(0x12, 0x10);
         g_world_brave_story_request_state++;
         return;
     }

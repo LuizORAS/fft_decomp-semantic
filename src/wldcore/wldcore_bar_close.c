@@ -21,8 +21,8 @@ void wldcore_bar_close(wldcore_menu_list_window_level_t* unused_level) {
         = wldcore_map_build_location_menu_entries(
             *selected, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entries);
     wldcore_menu_push_location_menu_level(*selected);
-    wldcore_fade_start_screen(WLDCORE_SCREEN_FADE_REDRAW_MAP, 0x10);
-    wldcore_clear_screen_and_set_map_clip_rect(0);
+    wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_REDRAW_MAP, 0x10);
+    wldcore_gfx_clear_screen_and_set_map_clip_rect(0);
     for (i = 0x77ff; i >= 0; i--) {
         g_wldcore_scratch_buffer[i] = 0;
     }

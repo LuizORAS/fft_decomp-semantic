@@ -4,7 +4,7 @@
 /* Sort the two screen-fade boxes into the active ordering table at their
  * priorities. A box is drawn while its fade runs or it is flagged visible,
  * and only when its colour is not black. */
-void wldcore_fade_draw_screen_overlays(void) {
+void wldcore_gfx_draw_screen_fade_overlays(void) {
     u32* flags;
     GsBOXF* boxes;
     s32* priorities;

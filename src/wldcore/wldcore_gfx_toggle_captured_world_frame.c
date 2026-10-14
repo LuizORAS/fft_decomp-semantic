@@ -31,7 +31,7 @@ void wldcore_gfx_toggle_captured_world_frame(s32 capture) {
     GsSetWorkBase(&g_wldcore_gfx_world_primitive_buffers + buffer_index * 0xE000);
     GsClearOt(0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     GsClearOt(0, 0, &g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
-    wldcore_switch_to_stack((void*)0x1F8003FC);
+    wldcore_system_switch_to_stack((void*)0x1F8003FC);
     wldcore_map_project_and_cull_tiles();
     wldcore_gfx_draw_projected_map_tiles(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_map_draw_visible_routes(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
@@ -40,11 +40,11 @@ void wldcore_gfx_toggle_captured_world_frame(s32 capture) {
     wldcore_gfx_draw_context_value_display(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_gfx_draw_calendar_date(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
     wldcore_map_draw_location_label(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
-    wldcore_dispatch_display_object_list(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index],
+    wldcore_gfx_dispatch_display_object_list(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index],
         g_wldcore_window_aux_render_object_queue, g_wldcore_window_aux_render_object_count);
-    wldcore_dispatch_display_object_list(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index],
+    wldcore_gfx_dispatch_display_object_list(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index],
         g_wldcore_window_render_object_queue, g_wldcore_window_render_object_count);
-    wldcore_restore_previous_stack();
+    wldcore_system_restore_previous_stack();
     GsSortClear(0, 0, 0, &g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     GsDrawOt(&g_wldcore_gfx_aux_ordering_tables[g_active_graphics_buffer_index]);
     GsDrawOt(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);
@@ -69,7 +69,7 @@ void wldcore_gfx_toggle_captured_world_frame(s32 capture) {
             | MAIN_SYSTEM_FLAG_HIDE_DISPLAY_OBJECTS | MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE
             | MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE | MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL;
         g_wldcore_window_records[menu_window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        wldcore_dispatch_display_object_list(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index],
+        wldcore_gfx_dispatch_display_object_list(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index],
             g_wldcore_window_render_object_queue, g_wldcore_window_render_object_count);
     }
     GsDrawOt(&g_wldcore_gfx_ordering_tables[g_active_graphics_buffer_index]);

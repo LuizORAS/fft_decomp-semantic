@@ -4,7 +4,7 @@
 /* Build the status panel data of party member `party_index` and start the
  * three unit panel threads on it (status banner, numeric editor, equipment
  * and ability panel), raising MAIN_SYSTEM_FLAG_UNIT_PANEL_THREADS. */
-void wldcore_start_core_background_threads(s32 party_index) {
+void wldcore_unit_start_status_panel_threads(s32 party_index) {
     wldcore_thread_block_t* thread8;
 
     wldcore_unit_build_status_panel_data(party_index);

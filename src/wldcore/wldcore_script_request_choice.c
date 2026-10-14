@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Location script opcode 26 (Choice): end the script with four variable and value pairs, the
- * choices the location's menu offers (wldcore_location_collect_choice_text_ids). */
+ * choices the location's menu offers (wldcore_map_collect_location_choice_text_ids). */
 void wldcore_script_request_choice(void) {
     s32 i;
 

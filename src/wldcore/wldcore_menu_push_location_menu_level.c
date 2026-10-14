@@ -41,7 +41,7 @@ void wldcore_menu_push_location_menu_level(s32 location) {
     } else {
         location += WLDCORE_ANIM_SEQUENCE_LOCATION_NAME_FIRST;
     }
-    wldcore_wait_for_file_load();
+    wldcore_file_wait_for_load();
     flags = g_main_system_flags | MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL;
     level = &g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list;
     level->extra_render = -1;

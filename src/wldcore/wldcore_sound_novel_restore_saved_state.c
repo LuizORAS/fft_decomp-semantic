@@ -103,7 +103,7 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     g_wldcore_screen_fade_state.priorities[1] = 0xB;
     wldcore_sound_wait_for_queue_drain();
     wldcore_sound_novel_load_files(g_wldcore_sound_novel_index);
-    wldcore_wait_for_file_load();
+    wldcore_file_wait_for_load();
     section = g_wldcore_sound_novel_record.section;
     if (section != 0) {
         g_wldcore_sound_novel_record.script_words
