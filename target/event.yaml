@@ -326,7 +326,7 @@ functions:
   - {addr: 0x801c16a4, size: 268, name: bunit_text_render_signed_decimal_entries, hash: f367bd9660fc24c5}
   - {addr: 0x801c17b0, size: 244, name: menu_text_render_decimal_entry_list, hash: 6c345ed8200efa05, source: src/shared/menu/menu_text_render_decimal_entry_list.c}
   - {addr: 0x801c18a4, size: 772, name: menu_text_render_decimal_value, hash: ca9036a63905ea24, source: src/shared/menu/menu_text_render_decimal_value.c}
-  - {addr: 0x801c1ba8, size: 1368, name: bunit_menu_run_numeric_editor_thread, hash: 132f79aff303d8c8}
+  - {addr: 0x801c1ba8, size: 1368, name: bunit_menu_run_numeric_editor_thread, hash: 132f79aff303d8c8, source: src/shared/menu/menu_run_numeric_editor_frame_thread.c, source_symbol: menu_run_numeric_editor_frame_thread}
   - {addr: 0x801c2100, size: 496, name: menu_icon_list_thread, hash: eb81d8765a930f5c, source: src/shared/menu/menu_icon_list_thread.c}
   - {addr: 0x801c22f0, size: 248, name: menu_text_entry_wait_thread, hash: c2d07656176c41ef, source: src/shared/menu/menu_text_entry_wait_thread.c}
   - {addr: 0x801c23e8, size: 372, name: menu_icon_strip_thread, hash: 88cede358ce214e7, source: src/shared/menu/menu_icon_strip_thread.c}
