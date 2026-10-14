@@ -1740,8 +1740,6 @@ extern u16 g_world_text_message_duration_frames;
 
 /* Same layout as g_world_decimal_glyph_source. */
 extern glyph_blit_t g_world_text_large_number_glyph_rect;
-extern glyph_blit_t g_world_text_shadow_bottom_glyph_source;
-extern glyph_blit_t g_world_text_shadow_top_glyph_source;
 extern s16 g_world_fixed_number_panel_request_state;
 extern s32 g_world_text_message_box_digit_divisors[];
 extern s32 g_world_text_message_box_slot_threads[3];

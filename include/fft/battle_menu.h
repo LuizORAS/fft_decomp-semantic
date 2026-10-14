@@ -262,8 +262,6 @@ void battle_menu_update_icon_cursor_sprites(menu_entry_t* param, menu_icon_sprit
 extern u16* const* g_battle_help_active_text_id_tables;
 /* Source image used when battle overlays render menu glyphs. */
 extern menu_glyph_sheet_t g_battle_menu_glyph_image_data;
-extern glyph_blit_t g_battle_menu_stacked_glyph_lower;
-extern glyph_blit_t g_battle_menu_stacked_glyph_upper;
 extern s16 g_battle_menu_status_left_text_ids[20];
 extern s16 g_battle_menu_status_right_text_ids[20];
 extern s32 g_battle_menu_text_param_22; /* 0x80166020: record +0x22 */

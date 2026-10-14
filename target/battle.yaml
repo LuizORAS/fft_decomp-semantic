@@ -2514,8 +2514,8 @@ data:
   - {addr: 0x80169758, name: g_battle_event_status_masks}
   - {addr: 0x80169770, name: g_menu_number_glyph}
   - {addr: 0x80169780, name: g_battle_text_large_number_glyph_rect}
-  - {addr: 0x80169790, name: g_battle_menu_stacked_glyph_lower}
-  - {addr: 0x801697a0, name: g_battle_menu_stacked_glyph_upper}
+  - {addr: 0x80169790, name: g_menu_stacked_glyph_lower}
+  - {addr: 0x801697a0, name: g_menu_stacked_glyph_upper}
   - {addr: 0x801697b0, name: g_battle_menu_window_sprite_glyph}
   - {addr: 0x801697c0, name: g_battle_menu_window_sprite_position}
   - {addr: 0x801697d0, name: g_script_event_input}

@@ -1610,6 +1610,8 @@ typedef char menu_number_entry_size_must_be_12[(sizeof(menu_number_entry_t) == 1
 
 extern s32 g_menu_hide_numeric_values;   /* non-zero: draw digits as blanks (0x48, 0x10) */
 extern glyph_blit_t g_menu_number_glyph; /* source rectangle in the number/sign font */
+extern glyph_blit_t g_menu_stacked_glyph_lower;
+extern glyph_blit_t g_menu_stacked_glyph_upper;
 
 void menu_draw_number_glyphs(s32 value, s32 digits, u8* pixels, glyph_blit_t* pos);
 void menu_draw_stacked_glyph_pair(u8* pixels, glyph_blit_t* position);

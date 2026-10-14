@@ -1262,8 +1262,8 @@ data:
   - {addr: 0x80156bf8, name: g_world_status_removal_mask_staged_monster}
   - {addr: 0x80156c00, name: g_menu_number_glyph}
   - {addr: 0x80156c10, name: g_world_text_large_number_glyph_rect}
-  - {addr: 0x80156c20, name: g_world_text_shadow_bottom_glyph_source}
-  - {addr: 0x80156c30, name: g_world_text_shadow_top_glyph_source}
+  - {addr: 0x80156c20, name: g_menu_stacked_glyph_lower}
+  - {addr: 0x80156c30, name: g_menu_stacked_glyph_upper}
   - {addr: 0x80156c40, name: g_world_menu_window_sprite_source}
   - {addr: 0x80156c50, name: g_world_menu_window_sprite_position}
   - {addr: 0x80156c60, name: g_world_option_input_timing_profiles}
@@ -2507,8 +2507,8 @@ overrides:
   - {function: world_menu_draw_numeric_display_entries, name: battle_menu_draw_number_glyphs, addr: 0x800fe0ec}
   - {function: world_menu_draw_numeric_display_entries, name: battle_text_draw_large_number_glyphs, addr: 0x800fe37c}
   - {function: world_menu_draw_stacked_glyph_pair, name: blit_text_glyph, addr: 0x800feff0}
-  - {function: world_menu_draw_stacked_glyph_pair, name: g_battle_menu_stacked_glyph_lower, addr: 0x80156c20}
-  - {function: world_menu_draw_stacked_glyph_pair, name: g_battle_menu_stacked_glyph_upper, addr: 0x80156c30}
+  - {function: world_menu_draw_stacked_glyph_pair, name: g_menu_stacked_glyph_lower, addr: 0x80156c20}
+  - {function: world_menu_draw_stacked_glyph_pair, name: g_menu_stacked_glyph_upper, addr: 0x80156c30}
   - {function: world_menu_draw_text_columns, name: battle_menu_display_number_entry, addr: 0x800fe014}
   - {function: world_menu_draw_text_columns, name: battle_menu_display_text_entry, addr: 0x800fe774}
   - {function: world_menu_draw_text_columns, name: battle_menu_draw_number_glyphs, addr: 0x800fe0ec}
