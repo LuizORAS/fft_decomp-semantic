@@ -1,14 +1,12 @@
 #include "fft/open.h"
 #include "psx/pad.h"
 
-/* Per-frame handler of the title-exit controller (handler 12), pushed when New
- * Game is chosen with no memory card inserted.
+/* Per-frame handler of the memory card warning (handler 12), which New Game pushes when no card answers.
  *
- * Cross, or Circle or Start, records the choice and fades the screen to black.
- * When the fade has ended the notice record and the controller are released: on
- * Cross the frame image saved in g_open_work_buffer_0 is copied back and the
- * title menu is pushed again; on Circle or Start the new-game prologue starts. */
-void open_title_update_exit_transition(open_title_exit_state_t* transition) {
+ * Cross, or Circle or Start, records the choice and fades the screen to black. Once the fade has ended the
+ * warning and the controller are released: Cross copies the title picture back from g_open_work_buffer_0 and
+ * rebuilds the title menu, Circle or Start starts the prologue without a card. */
+void open_title_update_card_warning(open_title_card_warning_t* warning) {
     s32 state;
     u32 buttons;
 
@@ -16,12 +14,12 @@ void open_title_update_exit_transition(open_title_exit_state_t* transition) {
         return;
     }
 
-    if (transition->state != OPEN_TITLE_EXIT_INPUT) {
+    if (warning->state != OPEN_TITLE_CARD_WARNING_INPUT) {
         g_open_gfx_next_render_record_36 -= 1;
         g_open_gfx_render_record_pointer_count -= 1;
         g_open_current_controller_index -= 1;
-        state = transition->state;
-        if (state == OPEN_TITLE_EXIT_CANCEL) {
+        state = warning->state;
+        if (state == OPEN_TITLE_CARD_WARNING_BACK) {
             s32* source;
             s32* destination;
             s32 index;
@@ -38,7 +36,7 @@ void open_title_update_exit_transition(open_title_exit_state_t* transition) {
                 destination++;
             } while (index < 0x7800);
             open_title_push_menu_controller(0);
-        } else if (state == OPEN_TITLE_EXIT_CONFIRM) {
+        } else if (state == OPEN_TITLE_CARD_WARNING_CONTINUE) {
             open_title_start_new_game_transition();
         }
         return;
@@ -48,10 +46,10 @@ void open_title_update_exit_transition(open_title_exit_state_t* transition) {
     if ((buttons & PSX_PAD_CROSS) != 0) {
         main_sound_play_sfx(MAIN_SFX_CANCEL);
         open_gfx_start_overlay_fade_in(0x20);
-        transition->state = OPEN_TITLE_EXIT_CANCEL;
+        warning->state = OPEN_TITLE_CARD_WARNING_BACK;
     } else if ((buttons & (PSX_PAD_CIRCLE | PSX_PAD_START)) != 0) {
         main_sound_play_sfx(MAIN_SFX_CONFIRM);
         open_gfx_start_overlay_fade_in(0x20);
-        transition->state = OPEN_TITLE_EXIT_CONFIRM;
+        warning->state = OPEN_TITLE_CARD_WARNING_CONTINUE;
     }
 }

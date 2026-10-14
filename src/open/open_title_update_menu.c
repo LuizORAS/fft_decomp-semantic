@@ -4,14 +4,19 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Per-frame handler for the OPEN title menu controller.
+/* Per-frame handler of the title menu (handler 2): New Game, Continue, Tutorial and Sound.
  *
- * While the attract CD track plays it watches the current sector and stops
- * the drive at the record's end position. Once the menu is idle for 601
- * frames it fades out and starts the next demo movie; a confirm press fades
- * out and dispatches on the cursor (new game, continue, options), and the
- * directional helpers move the highlight between the four entries.
- */
+ * While the title music plays (FFTST.STR's CD audio, which runs on under the menu) it watches the drive and
+ * fades the music out once the head passes cd_end_position, the sector after the stream. When the music has
+ * stopped and the menu has been idle for 601 frames, the screen fades and the next demo movie starts
+ * (FFTPRE.STR, FFTPR.STR and FFTUNIT.STR in turn). Up, and Down or Select, move the highlight and wrap around.
+ * Circle or Start fades the music out; Sound then opens the sound type menu, and the other entries fade the
+ * screen first:
+ * - New Game runs open_title_start_new_game;
+ * - Continue loads WORLD and runs its memory card screen (world_card_run_menu_screen); a cancelled load reads
+ *   the title picture again and rebuilds the menu, and a loaded game ends OPEN with result 0 when it has a next
+ *   scenario and no formation return event (MAIN takes it straight into BATTLE), or 1 (the world map);
+ * - Tutorial builds Ramza's roster and ends OPEN with result 2 and MAIN_SYSTEM_FLAG_TITLE_TUTORIAL set. */
 void open_title_update_menu(open_title_controller_t* state) {
     u8 loc[8];
     s32 status;
@@ -103,7 +108,7 @@ void open_title_update_menu(open_title_controller_t* state) {
 
     if (state->state == OPEN_TITLE_STATE_SOUND_MENU) {
         state->state = OPEN_TITLE_STATE_MENU;
-        open_gfx_hide_four_render_records((open_birthday_render_record_indices_t*)state);
+        open_gfx_hide_four_render_records((open_title_entry_records_t*)state);
         open_menu_push_sound_type_controller();
         return;
     }
@@ -128,7 +133,7 @@ void open_title_update_menu(open_title_controller_t* state) {
             g_open_gfx_next_render_record_36 -= 6;
             g_open_gfx_render_record_pointer_count -= 6;
             g_open_current_controller_index--;
-            open_title_start_new_game_or_clear_file_buffer();
+            open_title_start_new_game();
             return;
         case OPEN_TITLE_MENU_CONTINUE:
             g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED;

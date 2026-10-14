@@ -29,7 +29,7 @@ s32 open_system_run_main_loop(s32 skip_movie) {
             main_file_poll_load(&g_main_file_cd_state);
             open_gfx_clear_and_draw_current_frame();
             open_movie_update_stream_frame();
-            open_menu_update_world_formation();
+            open_menu_run_world_menu_frame();
             open_controller_dispatch_current();
 
             graphics_buffer_index = g_active_graphics_buffer_index;

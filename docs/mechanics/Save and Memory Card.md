@@ -19,7 +19,7 @@ Three places reach the card:
 | Where | What the player sees | Code |
 |---|---|---|
 | The world map | The world menu's save row opens the memory card screen: choose the card, then save or load | [[world_card_open_menu]], [[world_card_update_menu_request]], [[world_card_run_menu_screen]] (WORLD.BIN) |
-| The title | Continue opens the same screen to load; New Game first checks that a card answers, and warns when none does | [[open_title_update_menu]], [[open_card_check_slots]], [[open_title_start_new_game_or_clear_file_buffer]] |
+| The title | Continue opens the same screen to load; New Game first checks that a card answers, and warns when none does | [[open_title_update_menu]], [[open_card_check_slots]], [[open_title_start_new_game]] |
 | After some events | The event script offers to save (CallFunction OPEN_SAVE_MENU): CARD.OUT's save screen, run through companion overlay state CARD_SAVE | [[card_save_run_menu]] ([[Battle Screens]]) |
 
 ### The screens

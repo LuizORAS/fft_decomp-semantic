@@ -36,7 +36,7 @@ functions:
   - {addr: 0x80068268, size: 284, name: open_input_check_repeating_directional, hash: a82e23c2bd0cb926}
   - {addr: 0x80068384, size: 156, name: open_title_init_new_game_party, hash: 3b01ce90b00a6557}
   - {addr: 0x80068420, size: 300, name: open_birthday_convert_to_zodiac_position, hash: 9aaa68be5ea32880}
-  - {addr: 0x8006854c, size: 160, name: open_menu_update_world_formation, hash: b27c035b144dee4f}
+  - {addr: 0x8006854c, size: 160, name: open_menu_run_world_menu_frame, hash: b27c035b144dee4f}
   - {addr: 0x800685ec, size: 76, name: open_birthday_month_day_to_day_of_year, hash: e796a8582427e794}
   - {addr: 0x80068638, size: 76, name: open_sound_set_cd_mix_and_volume, hash: 3fcd975cc8b2da0c}
   - {addr: 0x80068684, size: 88, name: open_movie_init_and_stream_opening, hash: 7f2fe3e68306a213}
@@ -95,8 +95,8 @@ functions:
   - {addr: 0x8006d360, size: 108, name: open_controller_wait_text_message, hash: e623f7328948a829}
   - {addr: 0x8006d3cc, size: 180, name: open_movie_stream_title_demo_and_push_controller, hash: 29c7eb100bdbc02b}
   - {addr: 0x8006d480, size: 164, name: open_movie_start_fftst_or_skip_controller, hash: 4e72507cef1a9abd}
-  - {addr: 0x8006d524, size: 308, name: open_title_start_new_game_or_clear_file_buffer, hash: efa74633bab45d83}
-  - {addr: 0x8006d658, size: 340, name: open_title_update_exit_transition, hash: 7c3ab8fe1d7d5d9c}
+  - {addr: 0x8006d524, size: 308, name: open_title_start_new_game, hash: efa74633bab45d83}
+  - {addr: 0x8006d658, size: 340, name: open_title_update_card_warning, hash: 7c3ab8fe1d7d5d9c}
   - {addr: 0x8006d7ac, size: 64, name: open_gfx_init_transition_request, hash: d59678a277450164}
   - {addr: 0x8006d7ec, size: 8, name: open_gfx_transition_finished_stub, hash: 6d64edf91449c1b1}
   - {addr: 0x8006d7f4, size: 912, name: open_gfx_update_transition_sequence, hash: 7bbe865958bd3a67}
@@ -231,7 +231,7 @@ data:
   - {addr: 0x800855a8, name: g_open_file_destination}
   - {addr: 0x800855ac, name: g_open_input_polled_buttons}
   - {addr: 0x800855b4, name: g_open_gfx_transition}
-  - {addr: 0x800855ec, name: g_open_menu_formation_otag_index}
+  - {addr: 0x800855ec, name: g_open_menu_world_menu_otag_index}
   - {addr: 0x800855f0, name: g_open_title_demo_movie_index}
   - {addr: 0x800855f4, name: g_open_music_test_list_entry_flags}
   - {addr: 0x800856f4, name: g_open_system_result}

@@ -250,7 +250,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   location variable. The fur shop and soldier office pass their own ids.
 - `wldcore_proposition_step_result_level` clears the in-progress bit with
   `& 0xFFFD` on an `s32`, which also drops the variable's high half.
-- OPENING's runtime flags 8, 0x20000 and 0x80000 are tested and never set.
+- OPENING's runtime flags 8, 0x20000 and 0x80000 (`open_system_runtime_flag_e`: RENDER_RECORDS_HIDDEN,
+  CLEAR_FRAME and SOFT_RESET_DISABLED) are tested and never set.
 - Suzuki driver: music status bits 0x20 and 0x2000, channel flag 0x10 and
   driver flag 0x2000 are tested and never set; channel flags 0x80 and 0x4000
   and voice-attribute bits 0x7000 are set and never tested;
@@ -784,7 +785,7 @@ translation unit. Share their types and constants through headers.
 - `src/wldcore/wldcore_gfx_step_dissolve_image_upload.c`: the step-0 call (start the dissolve) has no return value of its own; `$v0` keeps its clearing cursor, the address one byte below the band-progress table. Its three callers ignore that result.
 - `src/world/world_menu_build_icon_record.c`: for the Bar's send-unit list (header 0x10) the arrow x reads the "height" of the record at the panel's value pointer, `&g_wldcore_active_menu_value` + 6, which is the upper half of `g_wldcore_proposition_dispatch_days` (0).
 - `src/battle/battle_unit_generate_treasure.c`: outside action execution (AI simulation, preview) it returns with no value, so `$v0` still holds `g_battle_action_state` and the crystal pickup result names item 1 or 2 as the treasure.
-- `src/open/open_title_step_new_game_start.c`: no retail code sets step 5, which pops New Game and opens the Music Test (`open_menu_start_music_test_controller`, controller slots 7 and 8); only a poke of the step word reaches it.
+- `src/open/open_title_step_new_game_start.c`: no retail code sets step 5, which pops New Game and opens the Music Test (`open_menu_start_music_test_controller`, controller slots 7 and 8); only a poke of the step word reaches it. Community sources say the Japanese release opened it for the name "BGM kikitai" (in kana), a check this release does not have.
 - WORLD's copy of the battle menus is dead code: nothing in any module calls or names `world_menu_init_system_function` (0x800f5230) or `world_menu_start_mini_menu_display_thread` (0x800f0e48), so modes 1 (AT list) and 2 (crystal pickup panel) of `world_option_run_menu` never run; the world map's Options row runs mode 0.
 - `src/battle/battle_script_get_misc_id.c`, `src/world/world_script_get_misc_id.c`: during
   Game Over event `0x194` every unit lookup resolves to Ramza, but no retail
@@ -863,7 +864,7 @@ translation unit. Share their types and constants through headers.
 - The Music Test names and comments (OPEN.LZW text sections 24 and 25, text
   ids 0xC000 and 0xC800 + entry) are not translated: each string is the
   Japanese release's glyph codes around Latin fragments such as the composer
-  tags.
+  tags (`open_menu_update_music_test` shows them).
 - SCUS_942.21 0x80028f94-0x80028fe7, between `g_main_smd_modulator_waveforms`
   and `g_main_smd_key_octaves`, is referenced by no instruction or pointer in
   any executable: a five-byte SMD sequence (`B0 91 7F 99 90`), ten words whose

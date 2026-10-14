@@ -7,7 +7,8 @@
  *
  * The list is drawn by the WORLD menu frame, which this turns on with Circle,
  * Cross and Select withheld from it and ordering-table entry 4 as its base. The
- * only caller is step 5 of open_title_step_new_game_start. */
+ * only caller is step 5 of open_title_step_new_game_start, which nothing sets
+ * (QUIRKS.md). */
 void open_menu_start_music_test_controller(void) {
     s32 i;
     s32 four;
@@ -26,7 +27,7 @@ void open_menu_start_music_test_controller(void) {
     /* The same 4 is stored twice, as the formation OT index and as OPEN_MUSIC_TEST_STEP_OPEN; the local
      * keeps it in a saved register across the fade-out call instead of being rematerialized. */
     four = 4;
-    g_open_menu_formation_otag_index = four;
+    g_open_menu_world_menu_otag_index = four;
     g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_WORLD_MENU_FRAME;
     open_gfx_start_overlay_fade_out(0x20);
 

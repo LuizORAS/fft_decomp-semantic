@@ -1,11 +1,11 @@
 #include "fft/open.h"
 
-/* New Game on the title menu. With a memory card in either slot the new-game
- * prologue starts at once. With none the frame image (0x7800 words) is saved to
- * g_open_work_buffer_0 and blanked, animation 0x12 is shown on the black screen
- * and the title-exit controller (handler 12) is pushed: Cross returns to the
- * title menu, Circle or Start starts the prologue anyway. */
-void open_title_start_new_game_or_clear_file_buffer(void) {
+/* New Game on the title menu. With a memory card in either slot (open_card_check_slots) Alazlam's
+ * prologue starts at once (open_title_start_new_game_transition). With none, the title picture (0x7800 words of
+ * the frame image) is saved to g_open_work_buffer_0 and blanked, and the memory card warning (animation 0x12:
+ * "You need a Memory card (with at least 1 block free) to save your current game") is shown on the black
+ * screen under the card warning controller (handler 12). */
+void open_title_start_new_game(void) {
     s32* source;
     s32* destination;
     s32 index;
@@ -42,7 +42,7 @@ void open_title_start_new_game_or_clear_file_buffer(void) {
     controller = g_open_current_controller_index;
     position[0] = -4;
     position[1] = -16;
-    g_open_controller_records_next[controller].title_exit.state = 0;
-    g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_TITLE_EXIT;
+    g_open_controller_records_next[controller].card_warning.state = 0;
+    g_open_controller_handler_indices[controller] = OPEN_CONTROLLER_CARD_WARNING;
     g_open_current_controller_index = controller + 1;
 }

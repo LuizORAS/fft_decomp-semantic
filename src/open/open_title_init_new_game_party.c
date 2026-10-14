@@ -1,6 +1,9 @@
 #include "fft/open.h"
 
-/* Load WORLD if needed, then initialize the selected new-game party. */
+/* Load WORLD.BIN once (world_load_mode 1 shows the Now Loading message), then start the roster for
+ * `party_mode` unless that mode built the current one: 0 generates Ramza alone (New Game and Tutorial), 1
+ * empties it for Continue's load (main_party_init_new_game). The roster's name text section is rebuilt with
+ * it. */
 void open_title_init_new_game_party(s32 party_mode, s32 world_load_mode) {
     u32 flags;
     u32 party_mode_flag;

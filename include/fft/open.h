@@ -22,7 +22,7 @@ typedef enum open_controller_handler {
     OPEN_CONTROLLER_FFTEND_MOVIE = 9,          /* open_movie_finish_fftend_controller_if_ready_or_skipped */
     OPEN_CONTROLLER_SCRIPT = 10,               /* open_script_update_controller */
     OPEN_CONTROLLER_TITLE_DEMO_MOVIE = 11,     /* open_movie_start_fftst_or_skip_controller */
-    OPEN_CONTROLLER_TITLE_EXIT = 12,           /* open_title_update_exit_transition */
+    OPEN_CONTROLLER_CARD_WARNING = 12,         /* open_title_update_card_warning */
 } open_controller_handler_e;
 
 extern s32 g_open_file_current_openbk_image_id;
@@ -288,15 +288,15 @@ typedef struct open_title_new_game_state {
 } open_title_new_game_state_t;
 
 /* Title exit controller (handler 12). */
-typedef struct open_title_exit_state {
+typedef struct open_title_card_warning {
     s32 state;
-} open_title_exit_state_t;
+} open_title_card_warning_t;
 
 extern s32 g_open_title_demo_movie_index;
-void open_title_push_menu_controller(s32 argument);
+void open_title_push_menu_controller(s32 cd_end_sector);
 void open_title_init_new_game_party(s32 party_mode, s32 world_load_mode);
 void open_title_start_new_game_transition(void);
-void open_title_start_new_game_or_clear_file_buffer(void);
+void open_title_start_new_game(void);
 
 /* menu */
 /* The slot of the music test's list thread. */
@@ -304,22 +304,24 @@ enum {
     OPEN_THREAD_SLOT_MUSIC_TEST_LIST = 12,
 };
 
-/* Pad buttons withheld from the WORLD menu frame (open_menu_update_world_formation); -1 blocks all. */
+/* Pad buttons withheld from the WORLD menu frame (open_menu_run_world_menu_frame); -1 blocks all. */
 extern s32 g_open_menu_blocked_buttons;
-extern s32 g_open_menu_formation_otag_index;
+extern s32 g_open_menu_world_menu_otag_index;
 
 void open_menu_start_music_test_list_thread(s32 thread_id, s32 limit, open_point32_t* extent, open_point32_t* origin);
 
 void open_menu_start_music_test_controller(void);
-void open_menu_update_world_formation(void);
+void open_menu_run_world_menu_frame(void);
 void open_menu_push_sound_type_controller(void);
 
 /* birthday */
-/* Birthday-menu controller record containing four render-record indices. */
-typedef struct open_birthday_render_record_indices {
+/* The title menu controller's record seen as the logo's render record and the four entries' records,
+ * which the sound type menu hides and shows again (open_gfx_hide_four_render_records,
+ * open_gfx_show_four_render_records). */
+typedef struct open_title_entry_records {
     s32 _unused_00;
     s32 indices[4];
-} open_birthday_render_record_indices_t;
+} open_title_entry_records_t;
 
 /* open_title_controller_t.cursor: the four title menu entries. */
 typedef enum open_title_menu_entry {
@@ -336,12 +338,12 @@ typedef enum open_title_state {
     OPEN_TITLE_STATE_DEMO_MOVIE = 3, /* idle timeout: starts the next demo movie once the screen has faded */
 } open_title_state_e;
 
-/* State word of the title-exit controller (open_title_update_exit_transition). */
-typedef enum open_title_exit_state_id {
-    OPEN_TITLE_EXIT_INPUT = 0,
-    OPEN_TITLE_EXIT_CANCEL = 1,  /* cross: back to the title menu */
-    OPEN_TITLE_EXIT_CONFIRM = 2, /* circle or start: the new-game transition */
-} open_title_exit_state_id_e;
+/* State word of the title-exit controller (open_title_update_card_warning). */
+typedef enum open_title_card_warning_step {
+    OPEN_TITLE_CARD_WARNING_INPUT = 0,
+    OPEN_TITLE_CARD_WARNING_BACK = 1,     /* cross: back to the title menu */
+    OPEN_TITLE_CARD_WARNING_CONTINUE = 2, /* circle or start: the new-game transition */
+} open_title_card_warning_step_e;
 
 /* Step of the music test controller (open_menu_update_music_test). */
 typedef enum open_music_test_step {
@@ -426,7 +428,7 @@ typedef union open_controller_record {
     open_birthday_confirmation_state_t birthday_confirmation; /* 6 */
     open_menu_sound_test_state_t music_test;                  /* 7 */
     open_controller_thread_completion_t text_message;         /* 8 */
-    open_title_exit_state_t title_exit;                       /* 12 */
+    open_title_card_warning_t card_warning;                   /* 12 */
     u8 bytes[0x64];
 } open_controller_record_t;
 typedef char open_controller_record_size_must_be_0x64[(sizeof(open_controller_record_t) == 0x64) ? 1 : -1];
@@ -585,13 +587,13 @@ void open_gfx_clear_and_draw_current_frame(void);
 void open_gfx_clear_current_otag(void);
 void open_gfx_copy_file_image_to_210x180_buffer(s32 file_index);
 void open_gfx_draw_render_record_pointer_list(u32* otag, open_render_record_t** records, s32 count);
-void open_gfx_show_four_render_records(open_birthday_render_record_indices_t* group);
+void open_gfx_show_four_render_records(open_title_entry_records_t* group);
 void open_gfx_init_render_buffers(void);
 void open_gfx_init_screen_environments(s32 clear_first);
 void open_gfx_init_transition_request(s32 target, s32 mode, open_gfx_transition_entry_t** entry_table);
 void open_gfx_init_window_frame_record(s32 record_index, RECT quad, s32 depth, u16* image);
 void open_gfx_load_opntex_into_frame_buffer(const void* source_data);
-void open_gfx_hide_four_render_records(open_birthday_render_record_indices_t* group);
+void open_gfx_hide_four_render_records(open_title_entry_records_t* group);
 void open_gfx_start_overlay_fade_in(u32 duration);
 void open_gfx_start_overlay_fade_out(u32 duration);
 void open_gfx_step_image_crossfade(void);

@@ -4,8 +4,8 @@
 /* Runs the hidden Music Test menu.
  *
  * Circle fades out any current track and queues the selected entry's music.
- * Cross stops playback or, when idle, closes the menu, reloads OPENBK and
- * returns to the previous controller. Select opens the thread-2 text window
+ * Cross stops playback or, when idle, closes the menu, reads the title picture
+ * (OPNBK image 0) again and rebuilds the title menu. Select opens the thread-2 text window
  * on text id 0xC800 + entry: the list shows text 0xC000 + entry, section 24
  * of OPEN.LZW (the 96 track titles), and Select the same entry of section 25
  * (the composers' comments); both are still the Japanese text in this

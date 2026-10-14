@@ -6,17 +6,15 @@ typedef struct open_title_party_name_block {
     /* 0x00 */ char name[16];
 } open_title_party_name_block_t;
 
-/* Per-frame handler of the new-game controller (handler 4).
+/* Per-frame handler of the New Game controller (handler 4).
  *
- * Until step 4 it waits for the overlay fade and runs the prologue
- * (open_gfx_update_transition_sequence) to its end. Step 4 builds the new-game
- * party (loading WORLD if needed), copies the displayed frame into the frame
- * image and the other buffer, runs the WORLD name-entry screen, stores the
- * 16-byte name in party slot 0 and replaces itself with the birthday date
- * controller.
+ * Until step 4 it waits for the overlay fade and runs Alazlam's prologue (open_gfx_update_transition_sequence)
+ * to its end. Step 4 builds Ramza's roster (loading WORLD if needed, on EVENT/OPEN.LZW), copies the displayed
+ * frame into the frame image and the other buffer, runs the WORLD name entry screen over it, stores the
+ * 16-byte name in party slot 0 and replaces itself with the birthday date controller.
  *
- * Step 5 unloads the music and starts the music test controller. Nothing in
- * OPEN.BIN stores 5 in step. */
+ * Step 5 unloads the music and opens the Music Test, but nothing sets step 5 (QUIRKS.md). Community sources
+ * say the Japanese release reached it by naming Ramza "BGM kikitai" ("I want to hear the BGM") in kana. */
 void open_title_step_new_game_start(open_title_new_game_state_t* state) {
     RECT rect;
     open_title_party_name_block_t* name;

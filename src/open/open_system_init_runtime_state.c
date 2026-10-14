@@ -17,7 +17,7 @@ void open_system_init_runtime_state(void) {
     g_open_input_new_button_presses = 0;
     g_open_input_current_buttons = 0;
     g_open_menu_blocked_buttons = 0;
-    g_open_menu_formation_otag_index = 4;
+    g_open_menu_world_menu_otag_index = 4;
     g_open_script_state.dispatch.flags = 0;
     g_open_title_demo_movie_index = 0;
 }

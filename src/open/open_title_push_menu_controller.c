@@ -7,14 +7,16 @@
  * the target's constant-folded field addresses. */
 extern open_title_controller_t g_open_title_menu_states[];
 
-/* Build the title menu (logo, four items and cursor) and push its controller.
+/* Build the title menu (logo, the four entries and a hidden cursor) over the title picture and push its
+ * controller (handler 2). cd_end_sector is the sector after FFTST.STR, where the title music it
+ * leaves playing stops; the other callers pass 0, with no CD audio playing.
  *
  * The target builds the records base and the x/y view in v0 and copies them
  * into their saved registers. That needs the two short-lived temporaries
  * entry and field: each is referenced again later in the function, so CSE
  * keeps them as the canonical copies, and local allocation then rewrites
  * their remaining setup uses to records and positions. */
-void open_title_push_menu_controller(s32 argument) {
+void open_title_push_menu_controller(s32 cd_end_sector) {
     RECT rect;
     s32 unused[4];
     s32 i;
@@ -87,7 +89,7 @@ void open_title_push_menu_controller(s32 argument) {
     controller = g_open_current_controller_index;
     g_open_title_menu_states[controller].cursor = OPEN_TITLE_MENU_NEW_GAME;
     g_open_title_menu_states[controller].idle_timer = 0;
-    g_open_title_menu_states[controller].cd_end_position = argument;
+    g_open_title_menu_states[controller].cd_end_position = cd_end_sector;
     g_open_title_menu_states[controller].state = OPEN_TITLE_STATE_MENU;
     g_open_title_menu_states[controller].exiting = 0;
     record = g_open_title_menu_states[controller].records_36[g_open_title_menu_states[controller].cursor + 1];

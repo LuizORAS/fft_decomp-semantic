@@ -17,7 +17,7 @@ void open_menu_handle_sound_type_input(open_sound_menu_state_t* menu) {
         g_open_gfx_render_record_pointer_count -= 3;
         g_open_current_controller_index -= 1;
         open_gfx_show_four_render_records(
-            (open_birthday_render_record_indices_t*)&g_open_controller_records[g_open_current_controller_index]);
+            (open_title_entry_records_t*)&g_open_controller_records[g_open_current_controller_index]);
         /* The title menu underneath, addressed from the pushed-record base, regains control: restart
          * its idle (attract) timer. */
         g_open_controller_records_next[g_open_current_controller_index - 1].title.idle_timer = 0;
