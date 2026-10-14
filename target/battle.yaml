@@ -844,11 +844,11 @@ functions:
   - {addr: 0x8013bf2c, size: 48, name: battle_menu_open_option_game_options, hash: df54ee34a9c0ec3d}
   - {addr: 0x8013bf5c, size: 48, name: battle_menu_open_option_at_list, hash: 73bf5a8575c0b501}
   - {addr: 0x8013bf8c, size: 48, name: battle_menu_open_option_dead_unit_panel, hash: 6cd18434d58c6033}
-  - {addr: 0x8013bfbc, size: 108, name: battle_menu_display_triangle_selection, hash: 87600a54e5e807ad}
+  - {addr: 0x8013bfbc, size: 108, name: battle_menu_display_triangle_selection, hash: 87600a54e5e807ad, source: src/shared/menu/menu_run_triangle_selection.c, source_symbol: menu_run_triangle_selection}
   - {addr: 0x8013c028, size: 264, name: battle_menu_fade_out_thread, hash: 4befbfe76fc57571}
   - {addr: 0x8013c130, size: 260, name: battle_menu_run_bunit_transition_thread, hash: 4f9e1018eea9bca0}
   - {addr: 0x8013c234, size: 80, name: battle_menu_open_bunit, hash: 0e07c32300c3103f, source: src/shared/menu/menu_open_bunit.c, source_symbol: menu_open_bunit}
-  - {addr: 0x8013c284, size: 88, name: battle_menu_run_helpmenu_thread, hash: 273124b9b75f5519}
+  - {addr: 0x8013c284, size: 88, name: battle_menu_run_helpmenu_thread, hash: 273124b9b75f5519, source: src/shared/menu/menu_run_help_menu_thread.c, source_symbol: menu_run_help_menu_thread}
   - {addr: 0x8013c2dc, size: 200, name: battle_menu_run_jobstts_thread, hash: 4873b28b228ba17e}
   - {addr: 0x8013c3a4, size: 456, name: battle_menu_run_equip_thread, hash: b4cfa9beb874f1bc}
   - {addr: 0x8013c56c, size: 252, name: battle_menu_open_debugchr_unit_editor, hash: d3d1ed8f97defebc}

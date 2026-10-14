@@ -191,11 +191,11 @@ functions:
   - {addr: 0x800ef9dc, size: 48, name: world_menu_open_option_game_options, hash: e3dd995d2b018a16}
   - {addr: 0x800efa0c, size: 48, name: world_menu_open_option_at_list, hash: 43fc42c9790bdf43}
   - {addr: 0x800efa3c, size: 48, name: world_menu_open_option_dead_unit_panel, hash: e76892b74fd58b3a}
-  - {addr: 0x800efa6c, size: 108, name: world_menu_display_triangle_selection, hash: 11df91715534e82a}
+  - {addr: 0x800efa6c, size: 108, name: world_menu_display_triangle_selection, hash: 11df91715534e82a, source: src/shared/menu/menu_run_triangle_selection.c, source_symbol: menu_run_triangle_selection}
   - {addr: 0x800efad8, size: 264, name: world_menu_fade_out_thread, hash: 9a5b4e6efe2ee31f}
   - {addr: 0x800efbe0, size: 260, name: world_menu_run_bunit_transition_thread, hash: eb985a136265b699}
   - {addr: 0x800efce4, size: 80, name: world_menu_open_bunit, hash: 4bc30b101fd07457, source: src/shared/menu/menu_open_bunit.c, source_symbol: menu_open_bunit}
-  - {addr: 0x800efd34, size: 88, name: world_menu_run_helpmenu_thread, hash: d52763de82195c9d}
+  - {addr: 0x800efd34, size: 88, name: world_menu_run_helpmenu_thread, hash: d52763de82195c9d, source: src/shared/menu/menu_run_help_menu_thread.c, source_symbol: menu_run_help_menu_thread}
   - {addr: 0x800efd8c, size: 200, name: world_menu_run_jobstts_thread, hash: f78d073fced43537}
   - {addr: 0x800efe54, size: 456, name: world_menu_run_equip_thread, hash: 5d7be1020050c481}
   - {addr: 0x800f001c, size: 252, name: world_menu_open_debugchr_unit_editor, hash: f331fb4b57e97974}
@@ -2426,6 +2426,8 @@ overrides:
   - {function: world_menu_display_hovered_unit_stats, name: g_battle_unit_status_sprite_clut_pairs, addr: 0x80155a88}
   - {function: world_menu_display_hovered_unit_stats, name: g_battle_unit_status_sprite_image_params_by_mode, addr: 0x80155ce4}
   - {function: world_menu_display_hovered_unit_stats, name: g_menu_text_state, addr: 0x80153280}
+  - {function: world_menu_display_triangle_selection, name: battle_menu_run_icon_selection_loop, addr: 0x800ecf20}
+  - {function: world_menu_display_triangle_selection, name: g_battle_menu_transition_state, addr: 0x8015332e}
   - {function: world_menu_draw_text_columns, name: battle_menu_display_number_entry, addr: 0x800fe014}
   - {function: world_menu_draw_text_columns, name: battle_menu_display_text_entry, addr: 0x800fe774}
   - {function: world_menu_draw_text_columns, name: battle_menu_draw_number_glyphs, addr: 0x800fe0ec}
@@ -2497,6 +2499,8 @@ overrides:
   - {function: world_menu_reset_subsystems, name: battle_gfx_clear_tpage7_vram_allocation_grid, addr: 0x800e2c0c}
   - {function: world_menu_reset_subsystems, name: battle_menu_init_buffer_allocator, addr: 0x800e3088}
   - {function: world_menu_reset_subsystems, name: battle_menu_reset_buffer_slots, addr: 0x800e2520}
+  - {function: world_menu_run_helpmenu_thread, name: battle_thread_find_running_by_task, addr: 0x800fd14c}
+  - {function: world_menu_run_helpmenu_thread, name: helpmenu_menu_run_battle_help, addr: 0x8010487c}
   - {function: world_menu_run_numeric_display_panel_thread, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
   - {function: world_menu_run_numeric_display_panel_thread, name: battle_gfx_build_scaled_draw_area_pair_swapped, addr: 0x800ec954}
   - {function: world_menu_run_numeric_display_panel_thread, name: battle_gfx_init_scaled_draw_area_packets, addr: 0x800ecb24}
