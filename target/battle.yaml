@@ -976,7 +976,7 @@ functions:
   - {addr: 0x80146004, size: 116, name: unit_is_moving, hash: eddabf1eb74277bd, source: src/shared/unit/unit_is_moving.c}
   - {addr: 0x80146078, size: 28, name: script_read_s16, hash: 7f613d531c790362, source: src/shared/script/script_read_s16.c}
   - {addr: 0x80146094, size: 16, name: script_write_s16, hash: 71c4790146d56d2c, source: src/shared/script/script_write_s16.c}
-  - {addr: 0x801460a4, size: 64, name: map_wait_for_refresh, hash: e988058d047260fa}
+  - {addr: 0x801460a4, size: 64, name: map_wait_for_refresh, hash: e988058d047260fa, source: src/shared/map/map_wait_for_refresh.c}
   - {addr: 0x801460e4, size: 44, name: camera_clear_zoom_variable_low_bit, hash: 1c850d2a2326188a, source: src/shared/camera/camera_clear_zoom_variable_low_bit.c}
   - {addr: 0x80146110, size: 1444, name: camera_thread, hash: de81056b9403d9c1}
   - {addr: 0x801466b4, size: 120, name: script_map_darkness, hash: 220b0a8f4c814539}
