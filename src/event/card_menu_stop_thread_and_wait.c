@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "fft/thread.h"
 #include "psx/types.h"
 
@@ -11,5 +12,5 @@ void card_menu_stop_thread_and_wait(s32 id) {
         card_thread_request_stop(id);
         card_input_update_event_state(&output, 0, 0);
     }
-    g_card_thread_state = 0;
+    g_menu_managed_thread_state = 0;
 }

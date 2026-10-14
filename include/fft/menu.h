@@ -833,6 +833,9 @@ typedef char menu_entry_size_must_be_60[(sizeof(menu_entry_t) == 60) ? 1 : -1];
 
 /* Each scene keeps its own current table; event screens save and restore it. */
 extern menu_entry_t* g_menu_thread_menu_data;
+extern s32 g_menu_managed_thread_state;
+
+s32 menu_start_managed_thread(s32 thread_id, menu_entry_t* descriptor);
 
 /* Numeric-entry and action-selection threads use value as a 16-bit result cell. */
 static inline s16* menu_entry_result(menu_entry_t* entry) {

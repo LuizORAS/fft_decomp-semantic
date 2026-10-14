@@ -939,7 +939,7 @@ functions:
   - {addr: 0x801c70ac, size: 264, name: menu_text_render_id_rows_to_vram, hash: b0397e2667e01217, source: src/shared/menu/menu_text_render_id_rows_to_vram.c}
   - {addr: 0x801c71b4, size: 40, name: card_thread_stop_and_clear_state, hash: 966ee997927b0d37}
   - {addr: 0x801c71dc, size: 92, name: card_menu_stop_thread_and_wait, hash: e30c6fb66d27c973}
-  - {addr: 0x801c7238, size: 156, name: card_thread_start_managed, hash: c61eda6b69ac7d32}
+  - {addr: 0x801c7238, size: 156, name: card_thread_start_managed, hash: c61eda6b69ac7d32, source: src/shared/menu/menu_start_managed_thread.c, source_symbol: menu_start_managed_thread}
   - {addr: 0x801c72d4, size: 176, name: card_menu_start_or_poll_thread, hash: 52993ac90ae34196}
   - {addr: 0x801c7384, size: 28, name: card_bits_init_primary_reader, hash: 54e0a4bece7b2596}
   - {addr: 0x801c73a0, size: 28, name: menu_bits_init_secondary_reader, hash: fe997547c3c389ab, source: src/shared/menu/menu_bits_init_secondary_reader.c}
@@ -1042,7 +1042,7 @@ data:
   - {addr: 0x801ca910, name: g_card_cmd_window_interior_command}
   - {addr: 0x801ca918, name: g_card_menu_cursor_forward_offset_keyframes}
   - {addr: 0x801ca924, name: g_card_menu_cursor_reverse_offset_keyframes}
-  - {addr: 0x801ca93c, name: g_card_thread_state}
+  - {addr: 0x801ca93c, name: g_menu_managed_thread_state}
   - {addr: 0x801ca940, name: g_card_bits_primary_reset}
   - {addr: 0x801ca941, name: g_menu_bits_secondary_reset}
   - {addr: 0x801ca944, name: g_card_bits_reader_1_index}
@@ -1408,7 +1408,7 @@ functions:
   - {addr: 0x801c8ef4, size: 40, name: equip_thread_request_stop, hash: ea52b0a734b83ec7}
   - {addr: 0x801c8f1c, size: 264, name: menu_text_render_id_rows_to_vram, hash: c878461238dbc9ef, source: src/shared/menu/menu_text_render_id_rows_to_vram.c}
   - {addr: 0x801c9024, size: 40, name: equip_thread_stop_and_clear_state, hash: be4dbfe6e8168a66}
-  - {addr: 0x801c904c, size: 156, name: equip_thread_start_managed, hash: 8a302f302bc0aafe}
+  - {addr: 0x801c904c, size: 156, name: equip_thread_start_managed, hash: 8a302f302bc0aafe, source: src/shared/menu/menu_start_managed_thread.c, source_symbol: menu_start_managed_thread}
   - {addr: 0x801c90e8, size: 124, name: equip_text_start_help_thread, hash: 214e1e5f54bfe73c, source: src/shared/menu/menu_text_start_help_thread.c, source_symbol: menu_text_start_help_thread}
   - {addr: 0x801c9164, size: 832, name: menu_input_update_controller, hash: 65ff61bb1c34603f, source: src/shared/menu/menu_input_update_controller.c}
   - {addr: 0x801c94a4, size: 16, name: equip_set_s16_801d86ac, hash: aadf313708db9276}
@@ -1599,7 +1599,7 @@ data:
   - {addr: 0x801cfb5c, name: g_equip_item_category_lists}
   - {addr: 0x801cfb70, name: g_equip_item_type_icon_coords}
   - {addr: 0x801cfbb8, name: g_equip_text_message_thread_active}
-  - {addr: 0x801cfbd4, name: g_equip_thread_state}
+  - {addr: 0x801cfbd4, name: g_menu_managed_thread_state}
   - {addr: 0x801cfbd8, name: g_equip_help_text_table}
   - {addr: 0x801d86a8, name: g_menu_input_latched_button}
   - {addr: 0x801d86aa, name: g_menu_input_activation_timer}

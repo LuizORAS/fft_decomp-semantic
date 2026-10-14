@@ -559,7 +559,6 @@ extern s16 g_equip_text_message_thread_active;
 extern u8 g_equip_text_thread_running_state;
 extern u8 g_equip_thread_idle_stop_pending;
 extern menu_gradient_panel_prims_t g_equip_thread_indicator_packets[2][2];
-extern s32 g_equip_thread_state;
 
 void equip_text_start_character_thread_if_idle(s32 thread_id, s32 parameter_0, s32 parameter_1, s32 parameter_2);
 void equip_thread_request_stop(s32 id);
