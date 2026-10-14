@@ -251,7 +251,7 @@ functions:
   - {addr: 0x800f2134, size: 88, name: script_load_attack_graphics_event_instruction, hash: 6996873356d74343, source: src/shared/script/script_load_attack_graphics_event_instruction.c}
   - {addr: 0x800f218c, size: 96, name: script_play_effect_and_wait, hash: 071ebe20d78399d5, source: src/shared/script/script_play_effect_and_wait.c}
   - {addr: 0x800f21ec, size: 48, name: script_play_effect_thread, hash: 23d695acccad5513, source: src/shared/script/script_play_effect_thread.c}
-  - {addr: 0x800f221c, size: 1236, name: world_script_block_start_thread, hash: 5ed900a4fe6df008}
+  - {addr: 0x800f221c, size: 1236, name: world_script_block_start_thread, hash: 5ed900a4fe6df008, source: src/shared/script/script_block_start_thread.c, source_symbol: script_block_start_thread}
   - {addr: 0x800f26f0, size: 468, name: world_script_add_unit_start_thread, hash: 16616b5eb112a78a}
   - {addr: 0x800f28c4, size: 72, name: world_menu_init_subsystems, hash: 5c83298d75f82198, source: src/shared/menu/menu_init_subsystems.c, source_symbol: menu_init_subsystems}
   - {addr: 0x800f290c, size: 140, name: world_menu_init_subsystem_pointers, hash: 1f417d9f35d58b41, source: src/shared/menu/menu_init_subsystem_pointers.c, source_symbol: menu_init_subsystem_pointers}
@@ -2967,6 +2967,16 @@ overrides:
   - {function: world_screen_menu_thin_window_frame_thread, name: g_world_menu_thin_panel_texture_windows, addr: 0x8018a330}
   - {function: world_screen_menu_thin_window_frame_thread, name: world_gfx_set_image_blit_destination_origin, addr: 0x8010a4a8}
   - {function: world_screen_menu_thin_window_frame_thread, name: world_gfx_set_image_blit_source_rect, addr: 0x8010a480}
+  - {function: world_script_block_start_thread, name: battle_thread_get_current_parameter_1, addr: 0x80100090}
+  - {function: world_script_block_start_thread, name: battle_thread_resolve_id_after_current, addr: 0x800fd0d8}
+  - {function: world_script_block_start_thread, name: g_script_event_instruction_sizes, addr: 0x8013a454}
+  - {function: world_script_block_start_thread, name: script_face_unit, addr: 0x800fb4f0}
+  - {function: world_script_block_start_thread, name: script_rotate_unit, addr: 0x800fb6f0}
+  - {function: world_script_block_start_thread, name: script_sprite_move, addr: 0x800fa254}
+  - {function: world_script_block_start_thread, name: script_sprite_move_beta, addr: 0x800fa290}
+  - {function: world_script_block_start_thread, name: script_unit_anim, addr: 0x800fc804}
+  - {function: world_script_block_start_thread, name: script_waitspritemove_event_instruction, addr: 0x800fa2cc}
+  - {function: world_script_block_start_thread, name: script_warp_unit, addr: 0x800fb2cc}
   - {function: world_script_change_stats, name: script_filter_unit_id_by_mode, addr: 0x800fae18}
   - {function: world_script_color_screen_thread, name: battle_thread_get_current_parameter_1, addr: 0x80100090}
   - {function: world_script_color_unit_event_instruction, name: script_filter_unit_id_by_mode, addr: 0x800fae18}

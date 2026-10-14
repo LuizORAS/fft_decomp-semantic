@@ -4,11 +4,8 @@
 #include "fft/script.h"
 #include "fft/sound.h"
 #include "fft/thread.h"
-#include "psx/types.h"
 
-/* BATTLE twin of world_script_block_start_thread. Thread body for an event BLOCK_START: runs the enclosed instructions
- * up to BLOCK_END on its own thread, dispatching the unit-movement, animation and wait opcodes that may appear inside a
- * block, then exits. */
+/* Run the unit instructions inside an event block, then exit its thread. */
 void script_block_start_thread(void) {
     /* Preserve the target's unused 40-byte stack area. */
     s32 unused[10];
@@ -19,7 +16,7 @@ void script_block_start_thread(void) {
     s32 thread_id;
 
     g_thread_contexts[g_thread_current_id].task_id = THREAD_TASK_EVENT_BLOCK;
-    script = battle_thread_get_current_parameter_1();
+    script = (u8*)battle_thread_get_current_parameter_1();
     parameters = script + 1;
     while (script[0] != EVENT_OPCODE_BLOCK_END) {
         first_halfword = script_read_s16(parameters);
@@ -38,7 +35,7 @@ void script_block_start_thread(void) {
         } else if (script[0] == EVENT_OPCODE_DEBUG_PAUSE) {
             script_print_debug_message();
         } else if (script[0] == EVENT_OPCODE_WALK_TO) {
-            g_thread_call_target = script_walkto_event_instruction;
+            g_thread_call_target = (void (*)(void))script_walkto_event_instruction;
             thread_call_on_main_stack(parameters);
         } else if (script[0] == EVENT_OPCODE_WALK_TO_ANIM) {
             runtime_id = script_resolve_runtime_id(first_halfword);

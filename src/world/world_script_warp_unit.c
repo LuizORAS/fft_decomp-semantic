@@ -6,7 +6,7 @@
 /* WarpUnit event instruction: moves the addressed unit to the tile encoded in
  * the four parameter bytes (x, y, elevation, facing) and, when the unit is on
  * the map, teleports its renderer record and resets its rotation state. */
-s32 world_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
+void world_script_warp_unit(const event_warp_unit_parameters_t* instruction) {
     /* Reusing the operand cursor for placement preserves the target allocation. */
     const event_unit_placement_t* parameters = (const event_unit_placement_t*)instruction;
     map_tile_coordinates_t coordinates;

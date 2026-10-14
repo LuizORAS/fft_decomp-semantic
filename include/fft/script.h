@@ -723,6 +723,7 @@ void script_reset_event_state(void);
 s32 script_load_next_event(void);
 s32 world_script_load_next_event(void);
 void script_run_next_event(void);
+void script_block_start_thread(void);
 void script_run_next_event_unused(void);
 void script_start_current_event_thread(void);
 void world_script_start_current_event_thread(void);

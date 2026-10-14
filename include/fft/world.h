@@ -328,7 +328,7 @@ void world_gfx_ramp_screen_overlay_intensity_to_zero(void);
 void world_script_teleportout_event_instruction(s32 unit_id, s32 remove_unit);
 void world_script_unit_anim(const event_unit_anim_parameters_t* parameters);
 void world_script_update_tutorial_controller_input(void);
-s32 world_script_warp_unit(const event_warp_unit_parameters_t* instruction);
+void world_script_warp_unit(const event_warp_unit_parameters_t* instruction);
 s32 world_script_warp_unit_display_to_paired_unit(s32);
 void world_script_set_units_movement_effect_suppression(const event_movement_effect_parameters_t* parameters);
 void world_script_set_units_palette_update_suppression(u16 id, s32 enable);
