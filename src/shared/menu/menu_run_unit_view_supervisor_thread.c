@@ -21,8 +21,8 @@ void menu_run_unit_view_supervisor_thread(void) {
 
     for (;;) {
         mode = battle_thread_get_current_parameter_1();
-        set = &g_battle_unit_view_thread_sets[mode];
-        g_battle_unit_view_mode = mode;
+        set = &g_menu_unit_view_thread_sets[mode];
+        g_menu_unit_view_mode = mode;
         g_thread_contexts[g_thread_current_id].function_parameter_1 = 0xff;
         for (i = 15; i >= 0; i--) {
             states[i] = MENU_UNIT_VIEW_SLOT_IDLE;
@@ -33,11 +33,11 @@ void menu_run_unit_view_supervisor_thread(void) {
                 task = thread->task_id;
                 if (task == set->task_ids[i]
                     && (task != THREAD_TASK_HOVERED_UNIT_STATS
-                        || g_battle_unit_view_started_battle_id == g_menu_selected_unit.battle_id)
+                        || g_menu_unit_view_cached_battle_id == g_menu_selected_unit.battle_id)
                     && (task != THREAD_TASK_RIGHT_UNIT_STATS
-                        || g_battle_unit_view_started_comparison_id == g_menu_comparison_battle_id)
+                        || g_menu_unit_view_cached_comparison_id == g_menu_comparison_battle_id)
                     && (task != THREAD_TASK_UNIT_SUMMARY_PANEL
-                        || g_battle_unit_view_started_battle_id == g_menu_selected_unit.battle_id)) {
+                        || g_menu_unit_view_cached_battle_id == g_menu_selected_unit.battle_id)) {
                     continue;
                 }
                 states[set->thread_ids[i]] = MENU_UNIT_VIEW_SLOT_RESTART;
@@ -49,8 +49,8 @@ void menu_run_unit_view_supervisor_thread(void) {
                 states[set->thread_ids[i]] = MENU_UNIT_VIEW_SLOT_STARTED;
             }
         }
-        g_battle_unit_view_started_battle_id = g_menu_selected_unit.battle_id;
-        g_battle_unit_view_started_comparison_id = g_menu_comparison_battle_id;
+        g_menu_unit_view_cached_battle_id = g_menu_selected_unit.battle_id;
+        g_menu_unit_view_cached_comparison_id = g_menu_comparison_battle_id;
         for (;;) {
             for (i = 0; i < 4; i++) {
                 if (states[set->thread_ids[i]] == MENU_UNIT_VIEW_SLOT_RESTART

@@ -234,7 +234,7 @@ void world_menu_run_battle_help(void) {
         navigation = g_world_help_require_navigation;
         help_thread_id -= 1;
     } else {
-        view_mode = g_world_unit_view_mode;
+        view_mode = g_menu_unit_view_mode;
         if (view_mode == UNIT_VIEW_MODE_TILE_INFO || view_mode == UNIT_VIEW_MODE_HOVERED_UNIT) {
             g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
             thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_character_handling_thread);

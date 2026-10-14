@@ -16,7 +16,7 @@ void menu_run_equip_thread(void) {
     s32 j;
 
     battle_menu_set_modal_open();
-    saved = g_battle_unit_view_mode;
+    saved = g_menu_unit_view_mode;
     battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0xFF, 0xFF);
     g_menu_overlay_state = 1;
     thread_wait_for_unit_view_panels();

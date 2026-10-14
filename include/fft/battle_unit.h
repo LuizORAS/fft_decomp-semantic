@@ -1349,10 +1349,6 @@ u8 battle_unit_generate_treasure(unit_stats_t* unit);
 crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(unit_stats_t* mover);
 
 /* unit views */
-extern u16 g_battle_unit_view_started_battle_id;
-extern u16 g_battle_unit_view_started_comparison_id;
-extern menu_unit_view_thread_set_t g_battle_unit_view_thread_sets[];
-extern s32 g_battle_unit_view_mode;
 extern u16 g_battle_unit_status_bounce_step;
 extern image_load_parameters_t g_battle_unit_editor_sprite_image_params_a[19];
 extern image_load_parameters_t g_battle_unit_editor_sprite_image_params_b[19];

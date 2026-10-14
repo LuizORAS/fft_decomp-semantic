@@ -238,7 +238,7 @@ void helpmenu_menu_run_battle_help(void) {
         navigation = g_helpmenu_require_navigation;
         help_thread_id -= 1;
     } else {
-        view_mode = g_battle_unit_view_mode;
+        view_mode = g_menu_unit_view_mode;
         if (view_mode == UNIT_VIEW_MODE_TILE_INFO || view_mode == UNIT_VIEW_MODE_HOVERED_UNIT) {
             g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
             thread_start(THREAD_SCREEN_SLOT_MESSAGE, battle_text_run_dialog_thread);

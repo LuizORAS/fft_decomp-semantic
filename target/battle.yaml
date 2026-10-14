@@ -2300,8 +2300,8 @@ data:
   - {addr: 0x8014d324, name: g_menu_restore_pending}
   - {addr: 0x8014d325, name: g_battle_menu_restore_depth}
   - {addr: 0x8014d326, name: g_battle_menu_restore_unit_id}
-  - {addr: 0x8014d328, name: g_battle_unit_view_started_battle_id}
-  - {addr: 0x8014d32a, name: g_battle_unit_view_started_comparison_id}
+  - {addr: 0x8014d328, name: g_menu_unit_view_cached_battle_id}
+  - {addr: 0x8014d32a, name: g_menu_unit_view_cached_comparison_id}
   - {addr: 0x8014d374, name: g_battle_menu_id_records}
   - {addr: 0x8014d46c, name: g_battle_menu_unit_selection_records}
   - {addr: 0x8014d5d4, name: g_battle_menu_glyph_image_data}
@@ -2321,7 +2321,7 @@ data:
   - {addr: 0x80165f74, name: g_battle_menu_modal_open}
   - {addr: 0x80165f78, name: g_battle_dead_unit_action}
   - {addr: 0x80165f7c, name: g_battle_dead_unit_result}
-  - {addr: 0x80165f80, name: g_battle_unit_view_mode}
+  - {addr: 0x80165f80, name: g_menu_unit_view_mode}
   - {addr: 0x80165f84, name: g_menu_current_id}
   - {addr: 0x80165f88, name: g_script_event_speed}
   - {addr: 0x80165f8c, name: g_menu_text_palette_offset}
@@ -2491,7 +2491,7 @@ data:
   - {addr: 0x80168ff8, name: g_battle_menu_companion_data_file_sizes}
   - {addr: 0x80169038, name: g_battle_menu_companion_data_file_loading}
   - {addr: 0x8016903c, name: g_battle_menu_companion_executable_loading}
-  - {addr: 0x80169040, name: g_battle_unit_view_thread_sets}
+  - {addr: 0x80169040, name: g_menu_unit_view_thread_sets}
   - {addr: 0x80169190, name: g_battle_menu_idle_action_entry_labels}
   - {addr: 0x80169200, name: g_battle_menu_building_thread_started}
   - {addr: 0x80169220, name: g_battle_menu_panel_fade_modes}

@@ -1618,9 +1618,6 @@ extern u8 g_world_unit_editor_primary_skillset_name[];   /* primary skillset nam
 extern u8 g_world_unit_editor_secondary_skillset_name[]; /* secondary skillset name text window */
 extern u8 g_world_unit_editor_unit_name[];               /* name text window */
 extern u8 g_world_unit_editor_job_name[];                /* job name text window */
-extern u16 g_world_unit_view_started_battle_id;
-extern u16 g_world_unit_view_started_comparison_id;
-extern s32 g_world_unit_view_mode;
 extern s32 g_world_unit_join_screen_active;
 extern u16 g_world_unit_status_bounce_offsets[];
 extern u16 g_world_unit_status_bounce_step;
@@ -1643,7 +1640,6 @@ extern image_load_parameters_t g_world_unit_editor_row_image_params_b[4];
 extern image_load_parameters_t g_world_unit_editor_item_icon_image_params[WORLD_EQUIPMENT_SLOT_COUNT];
 extern u8 g_world_unit_editor_line_colors[8 * MENU_UNIT_EDITOR_LINE_SIZE];
 extern u16 g_world_unit_editor_sprite_clut_pairs[19][2];
-extern menu_unit_view_thread_set_t g_world_unit_view_thread_sets[];
 extern u8 g_world_unit_view_panel_fade_modes[];
 extern s16 g_world_unit_face_slot_order[];
 extern menu_unit_status_identity_t g_world_selected_unit_identity;

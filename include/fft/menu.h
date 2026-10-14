@@ -2229,6 +2229,11 @@ typedef struct menu_unit_view_thread_set {
 } menu_unit_view_thread_set_t;
 typedef char menu_unit_view_thread_set_size_must_be_48[(sizeof(menu_unit_view_thread_set_t) == 48) ? 1 : -1];
 
+extern menu_unit_view_thread_set_t g_menu_unit_view_thread_sets[];
+extern s32 g_menu_unit_view_mode;
+extern u16 g_menu_unit_view_cached_battle_id;
+extern u16 g_menu_unit_view_cached_comparison_id;
+
 void menu_run_unit_view_supervisor_thread(void);
 void menu_start_unit_view_thread(s32 mode, s32 unit_a, s32 unit_b);
 
