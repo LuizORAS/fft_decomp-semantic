@@ -90,6 +90,7 @@ typedef char menu_glyph_sheet_size_must_be_4160[(sizeof(menu_glyph_sheet_t) == 4
 extern menu_glyph_sheet_t* g_menu_glyph_sheet;
 
 void menu_build_window_image_row(const u16* tiles, u16* row, s32 count, s32 index);
+u8* menu_build_window_image(s32 width, s32 height, RECT* rect, s32 mode, s32 tail_offset, s32 keep);
 
 /* menu_window_buffer_t::icon_flags: which of the window's three icon sprites
  * are drawn. */

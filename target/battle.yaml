@@ -1066,7 +1066,7 @@ functions:
   - {addr: 0x8014bfc4, size: 80, name: battle_write_packed_nibble, hash: b50d2f23553363d9}
   - {addr: 0x8014c014, size: 336, name: battle_text_mirror_packed_nibble_region_horizontal, hash: d8749608f8fcb5ed}
   - {addr: 0x8014c164, size: 40, name: battle_menu_build_and_upload_window_image, hash: e90647c567bcb102}
-  - {addr: 0x8014c18c, size: 796, name: battle_menu_build_window_image, hash: c553dd4a8afbd218}
+  - {addr: 0x8014c18c, size: 796, name: battle_menu_build_window_image, hash: c553dd4a8afbd218, source: src/shared/menu/menu_build_window_image.c, source_symbol: menu_build_window_image}
   - {addr: 0x8014c4a8, size: 688, name: battle_menu_build_and_upload_window_frame_image, hash: 99515c0e0a1f017c}
   - {addr: 0x8014c758, size: 256, name: menu_build_window_image_row, hash: 03b43cffa473c30c, source: src/shared/menu/menu_build_window_image_row.c}
   - {addr: 0x8014c858, size: 72, name: thread_wait_frames, hash: e33123533d666f71, source: src/shared/thread/thread_wait_frames.c}

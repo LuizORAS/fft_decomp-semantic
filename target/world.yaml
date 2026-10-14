@@ -411,7 +411,7 @@ functions:
   - {addr: 0x800ff450, size: 40, name: mem_copy_bytes_nonempty, hash: 73eb033d6e800062, source: src/shared/memory/mem_copy_bytes_nonempty.c}
   - {addr: 0x800ff478, size: 496, name: world_gfx_mirror_4bpp_rect, hash: 29198ac37701ca7e}
   - {addr: 0x800ff668, size: 40, name: world_menu_build_and_upload_window_image, hash: c452a59dd99e0cda}
-  - {addr: 0x800ff690, size: 796, name: world_menu_build_window_image, hash: af5f5261b59f0b0d}
+  - {addr: 0x800ff690, size: 796, name: world_menu_build_window_image, hash: af5f5261b59f0b0d, source: src/shared/menu/menu_build_window_image.c, source_symbol: menu_build_window_image}
   - {addr: 0x800ff9ac, size: 636, name: world_menu_build_and_upload_window_frame_image, hash: 36ce56e38867d038}
   - {addr: 0x800ffc28, size: 256, name: menu_build_window_image_row, hash: 03b43cffa473c30c, source: src/shared/menu/menu_build_window_image_row.c}
   - {addr: 0x800ffd28, size: 72, name: thread_wait_frames, hash: 2658b0e5a2a82790, source: src/shared/thread/thread_wait_frames.c}
@@ -2382,6 +2382,13 @@ overrides:
   - {function: world_menu_build_ability_preview_at_list, name: g_battle_menu_at_list_layout, addr: 0x80153cd0}
   - {function: world_menu_build_ability_preview_at_list, name: g_battle_menu_selected_action, addr: 0x80195c90}
   - {function: world_menu_build_ability_preview_at_list, name: g_battle_menu_thread_menu_data, addr: 0x801cd7e0}
+  - {function: world_menu_build_window_image, name: battle_clear_menu_render_buffer, addr: 0x800ff3d4}
+  - {function: world_menu_build_window_image, name: battle_menu_alloc_memory, addr: 0x800e30fc}
+  - {function: world_menu_build_window_image, name: battle_menu_free_memory, addr: 0x800e3298}
+  - {function: world_menu_build_window_image, name: battle_text_mirror_packed_nibble_region_horizontal, addr: 0x800ff478}
+  - {function: world_menu_build_window_image, name: blit_text_glyph, addr: 0x800feff0}
+  - {function: world_menu_build_window_image, name: g_battle_menu_window_sprite_glyph, addr: 0x80156c40}
+  - {function: world_menu_build_window_image, name: g_battle_menu_window_sprite_position, addr: 0x80156c50}
   - {function: world_menu_check_action_restrictions, name: battle_menu_icon_linked_entry_thread, addr: 0x800eee98}
   - {function: world_menu_check_action_restrictions, name: battle_unit_get_attacker_data_pointer, addr: 0x800e20d4}
   - {function: world_menu_check_action_restrictions, name: g_battle_menu_current_id, addr: 0x80153268}
