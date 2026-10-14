@@ -1,7 +1,5 @@
-#include "fft/battle.h"
-#include "fft/battle_gfx.h"
+#include "fft/gfx.h"
 #include "fft/thread.h"
-#include "psx/types.h"
 
 /* Allocate a texture rectangle in the 16-column VRAM allocation grid.
  *
@@ -9,8 +7,8 @@
  * cells are all unclaimed is marked 0xff, the primitive UVs/CLUT (and TPage
  * for POLY_FT4) are pointed at it, and rect is rewritten to the 4bpp VRAM
  * area at x 0x1c0 before image (unless -1) is uploaded. A full grid stops
- * this thread. Counterpart of battle_gfx_free_tpage7_vram; WORLD twin world_gfx_alloc_tpage7_vram. */
-void battle_gfx_alloc_tpage7_vram(RECT* rect, void* prim, u32* image) {
+ * this thread. The allocation grid is local to the active scene. */
+void gfx_alloc_texture_rect(RECT* rect, void* prim, u32* image) {
     s16 width;
     s16 height;
     s32 width_cells;
@@ -32,19 +30,19 @@ void battle_gfx_alloc_tpage7_vram(RECT* rect, void* prim, u32* image) {
     }
     for (row = 0; row < 16 - height_cells; row++) {
         for (column = 0; column <= 16 - width_cells; column++) {
-            if (g_battle_gfx_tpage7_vram_allocation_grid[row][column] != 0) {
+            if (g_gfx_texture_allocation_grid[row][column] != 0) {
                 continue;
             }
             for (y = row; y < row + height_cells; y++) {
                 for (x = column; x < column + width_cells; x++) {
-                    if (g_battle_gfx_tpage7_vram_allocation_grid[y][x] == 0xFF) {
+                    if (g_gfx_texture_allocation_grid[y][x] == 0xFF) {
                         goto next;
                     }
                 }
             }
             for (y = row; y < row + height_cells; y++) {
                 for (x = column; x < column + width_cells; x++) {
-                    g_battle_gfx_tpage7_vram_allocation_grid[y][x] = 0xFF;
+                    g_gfx_texture_allocation_grid[y][x] = 0xFF;
                 }
             }
             x = column * 16;

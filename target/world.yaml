@@ -68,9 +68,9 @@ functions:
   - {addr: 0x800e27f4, size: 168, name: world_menu_release_window_buffer_pair, hash: 7adceff6ea01ee47}
   - {addr: 0x800e289c, size: 16, name: gfx_set_primitive_brightness, hash: d98b50e73c8678b4, source: src/shared/gfx/gfx_set_primitive_brightness.c}
   - {addr: 0x800e28ac, size: 864, name: world_menu_draw_active_window_frames, hash: c22a91f219963b1c, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
-  - {addr: 0x800e2c0c, size: 60, name: world_gfx_clear_tpage7_vram_allocation_grid, hash: 8f9387f600727c55}
-  - {addr: 0x800e2c48, size: 660, name: world_gfx_alloc_tpage7_vram, hash: 8059a333c7ee7aff}
-  - {addr: 0x800e2edc, size: 428, name: world_gfx_free_tpage7_vram, hash: 645df343f174f8f0}
+  - {addr: 0x800e2c0c, size: 60, name: world_gfx_clear_tpage7_vram_allocation_grid, hash: 8f9387f600727c55, source: src/shared/gfx/gfx_clear_texture_allocation_grid.c, source_symbol: gfx_clear_texture_allocation_grid}
+  - {addr: 0x800e2c48, size: 660, name: world_gfx_alloc_tpage7_vram, hash: 8059a333c7ee7aff, source: src/shared/gfx/gfx_alloc_texture_rect.c, source_symbol: gfx_alloc_texture_rect}
+  - {addr: 0x800e2edc, size: 428, name: world_gfx_free_tpage7_vram, hash: 645df343f174f8f0, source: src/shared/gfx/gfx_free_texture_rect.c, source_symbol: gfx_free_texture_rect}
   - {addr: 0x800e3088, size: 116, name: world_menu_init_buffer_allocator, hash: 5f10e7e37ee4c4d8}
   - {addr: 0x800e30fc, size: 380, name: world_menu_alloc_ui_buffer, hash: ab779363522e02a2}
   - {addr: 0x800e3278, size: 32, name: world_menu_alloc_buffer, hash: c0b0162a45670bc4}
@@ -1855,7 +1855,7 @@ data:
   - {addr: 0x80195ed0, name: g_world_numeric_display_palettes}
   - {addr: 0x801995d0, name: g_world_unit_editor_palette}
   - {addr: 0x801996d0, name: g_world_unit_summary_palettes}
-  - {addr: 0x8019a0d0, name: g_world_gfx_texture_allocation_grid}
+  - {addr: 0x8019a0d0, name: g_gfx_texture_allocation_grid}
   - {addr: 0x8019a1c0, name: g_world_menu_palette_colors}
   - {addr: 0x8019a200, name: g_world_saved_game_options}
   - {addr: 0x8019a204, name: g_script_event_current_input}
@@ -1888,8 +1888,8 @@ data:
   - {addr: 0x8019ac94, name: g_world_menu_action_slot_selected_option}
   - {addr: 0x8019aca0, name: g_menu_window_buffers}
   - {addr: 0x8019b330, name: g_menu_window_buffer_slots}
-  - {addr: 0x8019b348, name: g_world_gfx_free_rect_texels}
-  - {addr: 0x8019b358, name: g_world_gfx_free_rect_grid_cells}
+  - {addr: 0x8019b348, name: g_gfx_free_rect_pixels}
+  - {addr: 0x8019b358, name: g_gfx_free_rect_cells}
   - {addr: 0x8019b368, name: g_world_menu_buffer_allocations}
   - {addr: 0x8019b3e8, name: g_world_menu_buffer_arena}
   - {addr: 0x8019f3ac, name: g_ai_workspace}

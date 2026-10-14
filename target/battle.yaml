@@ -723,9 +723,9 @@ functions:
   - {addr: 0x8012e5a4, size: 168, name: battle_menu_release_window_buffer_pair, hash: 1de9742bbda0b16a}
   - {addr: 0x8012e64c, size: 16, name: gfx_set_primitive_brightness, hash: d98b50e73c8678b4, source: src/shared/gfx/gfx_set_primitive_brightness.c}
   - {addr: 0x8012e65c, size: 868, name: battle_menu_draw_active_window_frames, hash: 5d8d85cafd1b353c}
-  - {addr: 0x8012e9c0, size: 60, name: battle_gfx_clear_tpage7_vram_allocation_grid, hash: 87e3ef6c7408d4d1}
-  - {addr: 0x8012e9fc, size: 660, name: battle_gfx_alloc_tpage7_vram, hash: 172942b718e358b1}
-  - {addr: 0x8012ec90, size: 428, name: battle_gfx_free_tpage7_vram, hash: 83a3ad5b7c6ecddd}
+  - {addr: 0x8012e9c0, size: 60, name: battle_gfx_clear_tpage7_vram_allocation_grid, hash: 87e3ef6c7408d4d1, source: src/shared/gfx/gfx_clear_texture_allocation_grid.c, source_symbol: gfx_clear_texture_allocation_grid}
+  - {addr: 0x8012e9fc, size: 660, name: battle_gfx_alloc_tpage7_vram, hash: 172942b718e358b1, source: src/shared/gfx/gfx_alloc_texture_rect.c, source_symbol: gfx_alloc_texture_rect}
+  - {addr: 0x8012ec90, size: 428, name: battle_gfx_free_tpage7_vram, hash: 83a3ad5b7c6ecddd, source: src/shared/gfx/gfx_free_texture_rect.c, source_symbol: gfx_free_texture_rect}
   - {addr: 0x8012ee3c, size: 116, name: battle_menu_init_buffer_allocator, hash: f80a02de661184d5}
   - {addr: 0x8012eeb0, size: 380, name: battle_menu_alloc_memory, hash: a333c97bf7b7ceb0}
   - {addr: 0x8012f02c, size: 32, name: battle_menu_alloc_buffer, hash: 8dfe96e6bed1af08}
@@ -2529,7 +2529,7 @@ data:
   - {addr: 0x80169a6c, name: g_battle_numeric_display_palettes}
   - {addr: 0x8016d16c, name: g_battle_unit_editor_palette}
   - {addr: 0x8016d26c, name: g_battle_unit_summary_palettes}
-  - {addr: 0x8016d86c, name: g_battle_gfx_tpage7_vram_allocation_grid}
+  - {addr: 0x8016d86c, name: g_gfx_texture_allocation_grid}
   - {addr: 0x8016d95c, name: g_battle_menu_palette_colors}
   - {addr: 0x8016d99c, name: g_battle_saved_game_options}
   - {addr: 0x8016d9a0, name: g_script_event_current_input}
@@ -2565,8 +2565,8 @@ data:
   - {addr: 0x8016e430, name: g_battle_menu_action_slot_selected_option}
   - {addr: 0x8016e43c, name: g_menu_window_buffers}
   - {addr: 0x8016eacc, name: g_menu_window_buffer_slots}
-  - {addr: 0x8016eae4, name: g_battle_gfx_tpage7_free_rect_pixels}
-  - {addr: 0x8016eaf4, name: g_battle_gfx_tpage7_free_rect_cells}
+  - {addr: 0x8016eae4, name: g_gfx_free_rect_pixels}
+  - {addr: 0x8016eaf4, name: g_gfx_free_rect_cells}
   - {addr: 0x8016eb04, name: g_battle_menu_allocator_slot_records}
   - {addr: 0x8016eb84, name: g_battle_menu_buffer_arena}
   - {addr: 0x80172084, name: g_battle_menu_buffer_allocation_map}

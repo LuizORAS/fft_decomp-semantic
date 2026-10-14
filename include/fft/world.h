@@ -795,7 +795,6 @@ extern glyph_blit_t g_world_gfx_image_blit_destination;
 extern glyph_blit_t g_world_gfx_image_blit_source;
 extern menu_selection_record_t g_world_menu_selection_records[14];
 extern RECT g_world_gfx_temporary_draw_area;
-extern u8 g_world_gfx_texture_allocation_grid[WORLD_TPAGE7_GRID_ROWS][WORLD_TPAGE7_GRID_COLUMNS];
 extern s8 g_world_gfx_vsync_mode;
 extern u16 g_world_gfx_textured_quad_count;
 extern point16_t g_world_gfx_menu_image_source;
@@ -824,8 +823,6 @@ extern RECT g_world_gfx_fade_tile_rect;
 /* Sector and size pairs, read as flat 32-bit values ([i * 2], [i * 2 + 1]): a record
  * member access changes how the target addresses them. */
 extern s32 g_world_shop_background_tim_files[9 * 2];
-extern s32 g_world_gfx_free_rect_texels[4];
-extern s32 g_world_gfx_free_rect_grid_cells[4];
 extern RECT g_world_gfx_draw_area_template;
 extern u16 g_world_gfx_draw_area_y;
 extern u8 g_world_change_banner_text_image[];
