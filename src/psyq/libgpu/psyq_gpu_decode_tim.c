@@ -2,6 +2,8 @@
 #include "psx/libc.h"
 #include "psx/libgpu.h"
 
+/* Fill `image` from the TIM at `tim`: its mode, the CLUT rectangle and data when it has one, and the image
+ * rectangle and pixels. Returns the TIM's size in words, or -1 when its id is not 0x10. */
 int psyq_gpu_decode_tim(u32* tim, TIM_IMAGE* image) {
     int palette_words;
     if (*tim++ != 0x10) {

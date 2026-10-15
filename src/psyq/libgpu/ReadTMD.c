@@ -1,6 +1,8 @@
 #include "psx/libgpu.h"
 
-/* LIBGPU, retail 0x8002705c-0x80027308. Resolves all four indices without a count test. */
+/* Decode the next primitive of the open TMD object into `primitive` (psyq_gpu_decode_tmd_primitive), with its
+ * four vertices and normals looked up whatever its vertex count, and move past it; returns `primitive`, or 0
+ * for a packet of unknown kind. No code refers to it. */
 psyq_tmd_primitive_t* ReadTMD(psyq_tmd_primitive_t* primitive) {
     int size = psyq_gpu_decode_tmd_primitive(g_psyq_gpu_tmd_cursor, primitive);
     SVECTOR* vertices;

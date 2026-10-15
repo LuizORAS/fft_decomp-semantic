@@ -6,7 +6,10 @@ typedef char* va_list;
 #define va_start(ap, last) (ap = (char*)&(last) + sizeof(last))
 #define va_arg(ap, type)   (*(char**)&(ap) += sizeof(type), *(type*)((ap) - sizeof(type)))
 
-/* first is either a window handle or, when it is not a valid handle, the format string itself. */
+/* Format text into a font window's buffer, like a small printf (%d, %x, %X, %c, %s, %%, widths and zero
+ * padding): `first` is the window id, or, when it is not a valid id, the format itself for the default
+ * window. Returns the window's character count, or -1 once it is full (QUIRKS.md). The battle debug and heap
+ * reports print with it. */
 int FntPrint(char* first, ...) {
     char buffer[512];
     va_list ap;

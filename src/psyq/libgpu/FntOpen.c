@@ -1,6 +1,10 @@
 /* LIBGPU 80022fd0-80023288. */
 #include "psx/libgpu.h"
 
+/* Open a font window at (`x`, `y`), `width` by `height`, holding up to `characters` characters from the
+ * shared pool of 1024: a width of 0 turns wrapping off, and `background` 1 or 2 adds a black backing tile,
+ * semi-transparent for 2. Prepares one 8x8 sprite per character. Returns the window id, or -1 when eight are
+ * open. */
 int FntOpen(int x, int y, int width, int height, int background, int characters) {
     RECT window;
     SPRT_8* sprite;
