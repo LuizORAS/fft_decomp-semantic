@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Same as battle_effect_interpolate_emitter_spawn_position for the spread of the velocity's direction.
+ * Only the effect overlays' renderers call it: battle_effect_spawn_emitter_particles works the same three
+ * values out with battle_effect_lerp_linear. */
 void battle_effect_interpolate_emitter_velocity_direction_spread(const void* source, s32 factor, s32* out) {
     const effect_geometry_entry_t* entry = source;
 

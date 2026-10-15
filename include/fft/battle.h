@@ -4879,9 +4879,9 @@ s32 battle_effect_init_secondary(s32 animation_id, s32 parameter, struct battle_
 void battle_effect_init_system(void);
 void battle_effect_interpolate_s16(s16 from, s16 to, s32 t, s16* out);
 void battle_effect_interpolate_svector(const s16* from, const s16* to, s32 t, s16* out);
-void battle_effect_interpolate_vector_q13(const s32* from, const s32* to, s32 t, s32* out);
+void battle_effect_interpolate_vector(const s32* from, const s32* to, s32 t, s32* out);
 s32 battle_effect_lerp_and_store(s32 start, s32 end, s32 factor, s32* out);
-void battle_effect_lerp_component_q13(s32 from, s32 to, s32 t, s32* out);
+void battle_effect_interpolate_s32(s32 from, s32 to, s32 t, s32* out);
 void battle_effect_list_valid_unit_targeting_data(s32 first, s32 second, battle_effect_obstacle_unit_list_t** out);
 void battle_effect_mask_vector_low_12_bits(const s16* src, s16* dst);
 void battle_effect_get_file_extent(s32 effect_id, s32* lba, s32* byte_length);
@@ -4970,11 +4970,12 @@ void battle_effect_update_on_hit_sound_timer(u8* schedule, s16* entry_index, s16
 void battle_effect_add_vector_and_store_q12(const s32* delta, s32* value, s32* out);
 s32 battle_effect_get_random_between(s32 value_a, s32 value_b);
 void battle_effect_interpolate_svector_cos(const s16* from, const s16* to, s32 duration, s32 current, s16* out);
-void battle_effect_interpolate_svector_cos_q12(const s16* from, const s16* to, s32 duration, s32 current, s16* out);
+void battle_effect_interpolate_svector_out_and_back(
+    const s16* from, const s16* to, s32 duration, s32 current, s16* out);
 void battle_effect_interpolate_svector_linear(const s16* from, const s16* to, s32 duration, s32 current, s16* out);
-void battle_effect_interpolate_vector_q13_cos(const s32* from, const s32* to, s32 duration, s32 current, s32* out);
-void battle_effect_interpolate_vector_q13_cos_q12(const s32* from, const s32* to, s32 duration, s32 current, s32* out);
-void battle_effect_interpolate_vector_q13_linear(const s32* from, const s32* to, s32 duration, s32 current, s32* out);
+void battle_effect_interpolate_vector_cos(const s32* from, const s32* to, s32 duration, s32 current, s32* out);
+void battle_effect_interpolate_vector_out_and_back(const s32* from, const s32* to, s32 duration, s32 current, s32* out);
+void battle_effect_interpolate_vector_linear(const s32* from, const s32* to, s32 duration, s32 current, s32* out);
 
 void battle_effect_add_random_rotation_offsets(const SVECTOR* source, const SVECTOR* ranges, SVECTOR* destination);
 

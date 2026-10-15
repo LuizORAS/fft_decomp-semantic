@@ -1781,13 +1781,13 @@ functions:
   - {addr: 0x801a8898, size: 56, name: battle_effect_interpolate_s16, hash: 7a8493afc412f712}
   - {addr: 0x801a88d0, size: 124, name: battle_effect_interpolate_svector, hash: ac217fa72ab9e7d5}
   - {addr: 0x801a894c, size: 100, name: battle_effect_interpolate_svector_cos, hash: 44d8a226f58ce729}
-  - {addr: 0x801a89b0, size: 100, name: battle_effect_interpolate_svector_cos_q12, hash: 7326ca44e577a177}
+  - {addr: 0x801a89b0, size: 100, name: battle_effect_interpolate_svector_out_and_back, hash: 7326ca44e577a177}
   - {addr: 0x801a8a14, size: 48, name: battle_effect_interpolate_svector_linear, hash: 61f31fe0250c2e5f}
-  - {addr: 0x801a8a44, size: 40, name: battle_effect_lerp_component_q13, hash: b32921019ae5b9db}
-  - {addr: 0x801a8a6c, size: 124, name: battle_effect_interpolate_vector_q13, hash: 75e63510983395fe}
-  - {addr: 0x801a8ae8, size: 100, name: battle_effect_interpolate_vector_q13_cos, hash: 780406bfc0e02002}
-  - {addr: 0x801a8b4c, size: 100, name: battle_effect_interpolate_vector_q13_cos_q12, hash: 9dc613bd73dd4809}
-  - {addr: 0x801a8bb0, size: 48, name: battle_effect_interpolate_vector_q13_linear, hash: 3adaecb89ae8bfc6}
+  - {addr: 0x801a8a44, size: 40, name: battle_effect_interpolate_s32, hash: b32921019ae5b9db}
+  - {addr: 0x801a8a6c, size: 124, name: battle_effect_interpolate_vector, hash: 75e63510983395fe}
+  - {addr: 0x801a8ae8, size: 100, name: battle_effect_interpolate_vector_cos, hash: 780406bfc0e02002}
+  - {addr: 0x801a8b4c, size: 100, name: battle_effect_interpolate_vector_out_and_back, hash: 9dc613bd73dd4809}
+  - {addr: 0x801a8bb0, size: 48, name: battle_effect_interpolate_vector_linear, hash: 3adaecb89ae8bfc6}
   - {addr: 0x801a8be0, size: 24, name: battle_effect_lerp_linear, hash: 32beccbbfe152ab8}
   - {addr: 0x801a8bf8, size: 28, name: battle_effect_lerp_and_store, hash: 7dfbd222cfab214f}
   - {addr: 0x801a8c14, size: 120, name: battle_effect_interpolate_emitter_spawn_position, hash: cad2d3bf5cf6328e}

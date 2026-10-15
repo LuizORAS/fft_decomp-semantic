@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Interpolate three halfwords by t, a fraction of 0x2000, with battle_effect_interpolate_s16. */
 void battle_effect_interpolate_svector(const s16* from, const s16* to, s32 t, s16* out) {
     battle_effect_interpolate_s16(from[0], to[0], t, &out[0]);
     battle_effect_interpolate_s16(from[1], to[1], t, &out[1]);

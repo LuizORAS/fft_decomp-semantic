@@ -44,7 +44,7 @@ void battle_camera_update_effect_tracks(void) {
     case BATTLE_EFFECT_CAMERA_MODE_COSINE_Q12:
         if (g_battle_effect_camera_rotation_duration > g_battle_effect_camera_rotation_frame) {
             g_battle_effect_camera_rotation_frame++;
-            battle_effect_interpolate_svector_cos_q12(&g_battle_effect_camera_rotation_start.vx,
+            battle_effect_interpolate_svector_out_and_back(&g_battle_effect_camera_rotation_start.vx,
                 &g_battle_effect_camera_rotation_target.vx, g_battle_effect_camera_rotation_duration,
                 g_battle_effect_camera_rotation_frame, &g_battle_effect_camera_rotation_current.vx);
             battle_camera_set_rotation(&g_battle_effect_camera_rotation_current);
@@ -168,7 +168,7 @@ void battle_camera_update_effect_tracks(void) {
     case BATTLE_EFFECT_CAMERA_MODE_COSINE:
         if (g_battle_effect_camera_position_duration > g_battle_effect_camera_position_frame) {
             g_battle_effect_camera_position_frame++;
-            battle_effect_interpolate_vector_q13_cos(&g_battle_effect_camera_position_start.vx,
+            battle_effect_interpolate_vector_cos(&g_battle_effect_camera_position_start.vx,
                 &g_battle_effect_camera_position_target.vx, g_battle_effect_camera_position_duration,
                 g_battle_effect_camera_position_frame, &g_battle_effect_camera_position_current.vx);
             battle_effect_shift_vector_left_12(&g_battle_effect_camera_position_current, &position);
@@ -182,7 +182,7 @@ void battle_camera_update_effect_tracks(void) {
     case BATTLE_EFFECT_CAMERA_MODE_COSINE_Q12:
         if (g_battle_effect_camera_position_duration > g_battle_effect_camera_position_frame) {
             g_battle_effect_camera_position_frame++;
-            battle_effect_interpolate_vector_q13_cos_q12(&g_battle_effect_camera_position_start.vx,
+            battle_effect_interpolate_vector_out_and_back(&g_battle_effect_camera_position_start.vx,
                 &g_battle_effect_camera_position_target.vx, g_battle_effect_camera_position_duration,
                 g_battle_effect_camera_position_frame, &g_battle_effect_camera_position_current.vx);
             battle_effect_shift_vector_left_12(&g_battle_effect_camera_position_current, &position);
@@ -195,7 +195,7 @@ void battle_camera_update_effect_tracks(void) {
     case BATTLE_EFFECT_CAMERA_MODE_LINEAR:
         if (g_battle_effect_camera_position_duration > g_battle_effect_camera_position_frame) {
             g_battle_effect_camera_position_frame++;
-            battle_effect_interpolate_vector_q13_linear(&g_battle_effect_camera_position_start.vx,
+            battle_effect_interpolate_vector_linear(&g_battle_effect_camera_position_start.vx,
                 &g_battle_effect_camera_position_target.vx, g_battle_effect_camera_position_duration,
                 g_battle_effect_camera_position_frame, &g_battle_effect_camera_position_current.vx);
             battle_effect_shift_vector_left_12(&g_battle_effect_camera_position_current, &position);
@@ -210,7 +210,7 @@ void battle_camera_update_effect_tracks(void) {
         if (g_battle_effect_camera_position_duration > g_battle_effect_camera_position_frame) {
             g_battle_effect_camera_position_frame++;
             position.vx = position.vy = position.vz = 0;
-            battle_effect_interpolate_vector_q13_linear(&position.vx, &g_battle_effect_camera_position_target.vx,
+            battle_effect_interpolate_vector_linear(&position.vx, &g_battle_effect_camera_position_target.vx,
                 g_battle_effect_camera_position_duration, g_battle_effect_camera_position_frame, &delta.vx);
             battle_effect_add_vector_and_store_q12(
                 &delta.vx, &g_battle_effect_camera_position_current.vx, &position.vx);
@@ -239,7 +239,7 @@ void battle_camera_update_effect_tracks(void) {
         if (g_battle_effect_camera_position_duration > g_battle_effect_camera_position_frame) {
             g_battle_effect_camera_position_frame++;
             position.vx = position.vy = position.vz = 0;
-            battle_effect_interpolate_vector_q13_linear(&g_battle_effect_camera_position_target.vx, &position.vx,
+            battle_effect_interpolate_vector_linear(&g_battle_effect_camera_position_target.vx, &position.vx,
                 g_battle_effect_camera_position_duration, g_battle_effect_camera_position_frame, &delta.vx);
             battle_effect_add_vector_and_store_q12(
                 &delta.vx, &g_battle_effect_camera_position_current.vx, &position.vx);
@@ -255,7 +255,7 @@ void battle_camera_update_effect_tracks(void) {
         if (g_battle_effect_camera_position_duration > g_battle_effect_camera_position_frame) {
             g_battle_effect_camera_position_frame++;
             position.vx = position.vy = position.vz = 0;
-            battle_effect_interpolate_vector_q13_linear(&position.vx, &g_battle_effect_camera_position_target.vx,
+            battle_effect_interpolate_vector_linear(&position.vx, &g_battle_effect_camera_position_target.vx,
                 g_battle_effect_camera_position_duration, g_battle_effect_camera_position_frame, &delta.vx);
             battle_effect_add_random_vector_offsets_and_store_q12(
                 &g_battle_effect_camera_position_start, &delta, &position);
@@ -280,7 +280,7 @@ void battle_camera_update_effect_tracks(void) {
         if (g_battle_effect_camera_position_duration > g_battle_effect_camera_position_frame) {
             g_battle_effect_camera_position_frame++;
             position.vx = position.vy = position.vz = 0;
-            battle_effect_interpolate_vector_q13_linear(&g_battle_effect_camera_position_target.vx, &position.vx,
+            battle_effect_interpolate_vector_linear(&g_battle_effect_camera_position_target.vx, &position.vx,
                 g_battle_effect_camera_position_duration, g_battle_effect_camera_position_frame, &delta.vx);
             battle_effect_add_random_vector_offsets_and_store_q12(
                 &g_battle_effect_camera_position_start, &delta, &position);
@@ -305,7 +305,7 @@ void battle_camera_update_effect_tracks(void) {
     case BATTLE_EFFECT_CAMERA_MODE_COSINE:
         if (g_battle_effect_camera_zoom_duration > g_battle_effect_camera_zoom_frame) {
             g_battle_effect_camera_zoom_frame++;
-            battle_effect_interpolate_vector_q13_cos(&g_battle_effect_camera_zoom_start.vx,
+            battle_effect_interpolate_vector_cos(&g_battle_effect_camera_zoom_start.vx,
                 &g_battle_effect_camera_zoom_target.vx, g_battle_effect_camera_zoom_duration,
                 g_battle_effect_camera_zoom_frame, &g_battle_effect_camera_zoom_current.vx);
             battle_camera_set_zoom(&g_battle_effect_camera_zoom_current);
@@ -318,7 +318,7 @@ void battle_camera_update_effect_tracks(void) {
     case BATTLE_EFFECT_CAMERA_MODE_COSINE_Q12:
         if (g_battle_effect_camera_zoom_duration > g_battle_effect_camera_zoom_frame) {
             g_battle_effect_camera_zoom_frame++;
-            battle_effect_interpolate_vector_q13_cos_q12(&g_battle_effect_camera_zoom_start.vx,
+            battle_effect_interpolate_vector_out_and_back(&g_battle_effect_camera_zoom_start.vx,
                 &g_battle_effect_camera_zoom_target.vx, g_battle_effect_camera_zoom_duration,
                 g_battle_effect_camera_zoom_frame, &g_battle_effect_camera_zoom_current.vx);
             battle_camera_set_zoom(&g_battle_effect_camera_zoom_current);
@@ -330,7 +330,7 @@ void battle_camera_update_effect_tracks(void) {
     case BATTLE_EFFECT_CAMERA_MODE_LINEAR:
         if (g_battle_effect_camera_zoom_duration > g_battle_effect_camera_zoom_frame) {
             g_battle_effect_camera_zoom_frame++;
-            battle_effect_interpolate_vector_q13_linear(&g_battle_effect_camera_zoom_start.vx,
+            battle_effect_interpolate_vector_linear(&g_battle_effect_camera_zoom_start.vx,
                 &g_battle_effect_camera_zoom_target.vx, g_battle_effect_camera_zoom_duration,
                 g_battle_effect_camera_zoom_frame, &g_battle_effect_camera_zoom_current.vx);
             battle_camera_set_zoom(&g_battle_effect_camera_zoom_current);
@@ -344,7 +344,7 @@ void battle_camera_update_effect_tracks(void) {
         if (g_battle_effect_camera_zoom_duration > g_battle_effect_camera_zoom_frame) {
             g_battle_effect_camera_zoom_frame++;
             position.vx = position.vy = position.vz = 0;
-            battle_effect_interpolate_vector_q13_linear(&position.vx, &g_battle_effect_camera_zoom_target.vx,
+            battle_effect_interpolate_vector_linear(&position.vx, &g_battle_effect_camera_zoom_target.vx,
                 g_battle_effect_camera_zoom_duration, g_battle_effect_camera_zoom_frame, &delta.vx);
             battle_effect_add_vectors(
                 &delta.vx, &g_battle_effect_camera_zoom_current.vx, &g_battle_effect_camera_zoom_current.vx);
@@ -373,7 +373,7 @@ void battle_camera_update_effect_tracks(void) {
         if (g_battle_effect_camera_zoom_duration > g_battle_effect_camera_zoom_frame) {
             g_battle_effect_camera_zoom_frame++;
             position.vx = position.vy = position.vz = 0;
-            battle_effect_interpolate_vector_q13_linear(&g_battle_effect_camera_zoom_target.vx, &position.vx,
+            battle_effect_interpolate_vector_linear(&g_battle_effect_camera_zoom_target.vx, &position.vx,
                 g_battle_effect_camera_zoom_duration, g_battle_effect_camera_zoom_frame, &delta.vx);
             battle_effect_add_vectors(
                 &delta.vx, &g_battle_effect_camera_zoom_current.vx, &g_battle_effect_camera_zoom_current.vx);
@@ -389,7 +389,7 @@ void battle_camera_update_effect_tracks(void) {
         if (g_battle_effect_camera_zoom_duration > g_battle_effect_camera_zoom_frame) {
             g_battle_effect_camera_zoom_frame++;
             position.vx = position.vy = position.vz = 0;
-            battle_effect_interpolate_vector_q13_linear(&position.vx, &g_battle_effect_camera_zoom_target.vx,
+            battle_effect_interpolate_vector_linear(&position.vx, &g_battle_effect_camera_zoom_target.vx,
                 g_battle_effect_camera_zoom_duration, g_battle_effect_camera_zoom_frame, &delta.vx);
             battle_effect_add_random_vector_offsets(&g_battle_effect_camera_zoom_start, &delta, &position);
             battle_camera_set_zoom(&position);
@@ -413,7 +413,7 @@ void battle_camera_update_effect_tracks(void) {
         if (g_battle_effect_camera_zoom_duration > g_battle_effect_camera_zoom_frame) {
             g_battle_effect_camera_zoom_frame++;
             position.vx = position.vy = position.vz = 0;
-            battle_effect_interpolate_vector_q13_linear(&g_battle_effect_camera_zoom_target.vx, &position.vx,
+            battle_effect_interpolate_vector_linear(&g_battle_effect_camera_zoom_target.vx, &position.vx,
                 g_battle_effect_camera_zoom_duration, g_battle_effect_camera_zoom_frame, &delta.vx);
             battle_effect_add_random_vector_offsets(&g_battle_effect_camera_zoom_start, &delta, &position);
             battle_camera_set_zoom(&position);

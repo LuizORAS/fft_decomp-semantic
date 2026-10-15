@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* Same as battle_effect_interpolate_emitter_spawn_position for the emitter's spawn spread. */
 void battle_effect_interpolate_emitter_spawn_spread(const void* source, s32 factor, s32* out) {
     const effect_geometry_entry_t* entry = source;
 

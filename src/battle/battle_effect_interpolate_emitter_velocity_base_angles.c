@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Same as battle_effect_interpolate_emitter_spawn_position for the base angles of the emitter's
+ * velocity. */
 void battle_effect_interpolate_emitter_velocity_base_angles(const void* source, s32 factor, s32* out) {
     const effect_geometry_entry_t* entry = source;
 
