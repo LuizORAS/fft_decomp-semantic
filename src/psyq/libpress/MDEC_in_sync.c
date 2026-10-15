@@ -1,8 +1,8 @@
 #include "psx/libpress.h"
 #include "psx/types.h"
 
-/* Spin until the MDEC input FIFO drains, reporting a timeout through the
- * library's diagnostic dump when the counter expires. */
+/* Wait until the MDEC is no longer busy with a command (status bit 29, psx-spx); after 0x100000 polls,
+ * report the timeout (timeout) and return -1. Returns 0 otherwise. */
 s32 MDEC_in_sync(void) {
     volatile s32 count = 0x100000;
 

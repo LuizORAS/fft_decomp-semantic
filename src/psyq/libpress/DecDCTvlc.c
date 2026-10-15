@@ -11,7 +11,12 @@
 #define PSYQ_CPU_STATUS_CACHE_SWAP      0x00020000
 #define PSYQ_PRESS_PADDING_LAST_INDEX   64
 
-/* opening 0x80073bd0–0x80073f10: software VLC expansion and resumable budget. */
+/* Expand one BS movie frame's variable-length codes in `frame_data` into the MDEC's run-length codes in
+ * `decode_buffer`, after the frame's MDEC command word: version 3 frames code each component's DC value as a
+ * difference from the last (Cr, Cb, Y), version 2 frames store it directly, and 65 end-of-block codes close
+ * the frame. It stops when the output reaches the DecDCTvlcSize limit, saving its state to go on when called
+ * with `frame_data` 0 (QUIRKS.md). Returns 0 when the frame is complete, after setting bit 17 (0x20000) of the
+ * CPU status register, or 1 when paused. open_movie_decode_next_frame expands each frame with it. */
 void DecDCTvlc(void* frame_data, void* decode_buffer) {
     /* The handwritten decoder uses only caller-saved GPRs and no C ABI frame. */
     u16* input = frame_data;

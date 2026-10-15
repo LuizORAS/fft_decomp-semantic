@@ -16,6 +16,9 @@ typedef struct {
     u16 h;          /* 0x12 */
 } psyq_gs_boxf_packet_t;
 
+/* Sort a flat rectangle: build a draw-mode word and a TILE from the GsBOXF `bp` (its colour, position offset
+ * by the sorter offsets, size and semi-transparency) in the packet area and link it into `otp` at `pri`. A
+ * negative attribute hides it. wldcore_gfx_draw_screen_fade_overlays draws its fades this way. */
 void GsSortBoxFill(GsBOXF* bp, GsOT* otp, u16 pri) {
     psyq_gs_boxf_packet_t* packet;
     s32 attr;

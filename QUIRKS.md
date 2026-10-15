@@ -10,7 +10,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `sprintf`: unchecked precision and zero padding can overrun its 512-byte temporary segment buffer.
 - `src/psyq/libgpu/FntPrint.c`: unsupported conversions leave the field length undefined; the count limit is checked after writing, and oversized hexadecimal widths can overrun the 512-byte temporary buffer.
 - `battle_menu_build_idle_action_menu`: passes one `s16` to `battle_unit_project_misc_to_screen`, which stores x and y; the y store lands in stack padding, and `column` tests the projected x.
-- `DecDCTvlc`: the pause path saves its Y predictor at `0x80073f34`, overwriting the first four bytes of the overlapping birthday month-length table.
+- `DecDCTvlc`: the pause path saves its Y predictor at `0x80073f34`, overwriting the first four bytes of the overlapping birthday month-length table. Nothing calls `DecDCTvlcSize`, so the output limit keeps its initial 0xffffff halfwords and no frame pauses.
 - EFFECT `effect_eNNN_update_*` renderers: `battle_effect_step_emitter_timeline` sets phase 3 when a callback's keyframe window has two frames left, even if init never ran; the destroy path then reads its latch through the null work slot (kernel RAM).
 - `src/battle/battle_camera_store_state_to_script_variables.c`: all three zoom
   components are stored to script word `0x20`, so the first two are lost.

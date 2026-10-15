@@ -1,6 +1,9 @@
 #include "psx/libgs.h"
 #include "psx/types.h"
 
+/* Read the header of the TIM image at `tim` into `im`: the pixel mode, the CLUT position, size and data when
+ * the TIM has one, and the image position, size and pixels. WLDCORE's pictures (locations, sound novels,
+ * treasures, reports) are placed this way. */
 void GsGetTimInfo(u32* tim, GsIMAGE* im) {
     u32* image;
 
