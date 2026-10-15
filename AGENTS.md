@@ -224,7 +224,8 @@ none), and prefer the profile of its neighbours.
   (MAIN and WORLD code calling BATTLE functions, for example). `main.h`
   includes every shared header. Each header groups its declarations under
   short lowercase subsystem labels (`/* ai */`), types first, then globals,
-  then functions.
+  then functions. A comment and a blank line after each label say what its
+  block holds.
 - Comments: a short summary above every function (what it does, in a line or
   two), then only the rationale needed to read the code. State facts, not
   history. Record retail bugs and caller/callee disagreements with one line in

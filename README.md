@@ -13,11 +13,11 @@ upstream.
 - **Build 1** (tag `build-1`, branch `semantic-cleanup`): names for what was
   unnamed, real types for data, and ordinary C in place of leftover `goto`s
   and register pins.
-- **Build 2** (branch `build-2`, in progress): a map of the codebase.
+- **Build 2** (branch `build-2`): a map of the codebase.
   [`CODEBASE.md`](CODEBASE.md) explains the architecture,
   [`docs/`](docs/README.md) explains each game mechanic and where to change
   it, and `make map` generates an Obsidian vault with a page for every
-  function, type and global. Every function also gets a summary.
+  function, type and global. Every function has a summary.
 
 A matching decompilation of the North American PlayStation release of *Final
 Fantasy Tactics* (`SCUS-94221` [redump](http://redump.org/disc/55/)). Every game

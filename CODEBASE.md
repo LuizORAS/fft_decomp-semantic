@@ -189,7 +189,8 @@ does for the game.
   libraries live under `src/psyq/<library>/`.
 - **Headers:** one per module in [`include/fft/`](include/fft/), plus shared
   type headers. Each header groups its declarations under short subsystem
-  labels such as `/* ai */`.
+  labels such as `/* ai */`, each opened by a comment that says what its
+  block holds.
 - **Names:** a module prefix, a subsystem word, then the action:
   `battle_move_...`, `world_shop_...`. The prefix and subsystem word form
   the *code subsystem* that the map groups functions by. Unknowns stay
@@ -241,7 +242,7 @@ does for the game.
   [Effect Files](docs/mechanics/Effect%20Files.md),
   [Sound Driver](docs/mechanics/Sound%20Driver.md),
   [Sony Libraries](docs/mechanics/Sony%20Libraries.md) and
-  [Engine core](docs/mechanics/Engine%20core.md) so far. The guides walk
+  [Engine core](docs/mechanics/Engine%20core.md). The guides walk
   through common changes, such as the
   [Movement rules](docs/guides/Movement%20rules.md),
   [Changing a formula](docs/guides/Changing%20a%20formula.md),
