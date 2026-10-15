@@ -45,6 +45,8 @@ void wldcore_system_restore_previous_stack(void);
 void wldcore_system_switch_to_stack(void*);
 
 /* thread */
+/* The parameter blocks WLDCORE hands to WORLD's panel threads 8, 9 and 12. */
+
 /* Provisional: 0x14-byte parameter blocks at 0x8009ebc0 for WORLD threads 8,
  * 12 and 9; each thread receives its block's address as its first
  * parameter. */
@@ -289,6 +291,14 @@ extern u32* g_wldcore_scratch_buffer;
 extern u8 g_wldcore_screen_brightness_rgb[3];
 extern wldcore_sortbox_state_t g_wldcore_screen_fade_state;
 
+/* Saved copy of g_wldcore_context_value_display_position. */
+extern wldcore_point32_t g_wldcore_saved_context_value_display_position;
+
+/* g_main_system_flags as saved by wldcore_gfx_toggle_captured_world_frame (main_system_flags_e). */
+extern u32 g_wldcore_saved_system_flags;
+
+extern u32** g_wldcore_anim_cel_table;
+
 /* Word views of g_wldcore_screen_fade_state.flags[1] and priorities[0..1]:
  * the sound-novel setters store whole words where the sort reads a halfword,
  * and the sound-novel menu stores flags[1] by absolute address beside a live
@@ -327,6 +337,8 @@ void wldcore_gfx_load_picture_set(s32 value);
 void wldcore_gfx_update_map_backdrop(void);
 
 void wldcore_gfx_reset_context_value_display(void);
+
+void wldcore_gfx_draw_transition_screen(GsOT* ot);
 
 /* calendar */
 /* The world map's date: a day passes per location reached, an event can skip days, and each
@@ -459,6 +471,9 @@ s32 wldcore_map_collect_location_choice_text_ids(s32 location_id, s32* out);
 s32 wldcore_map_start_travel(s32 from_location, s32 to_location);
 
 /* text */
+/* WLDCORE's text: the message blocks read from disc by sector offset, the scrollable text window and its
+ * scroll indicators, the numbers shown in messages and the list entries' values. */
+
 /* Provisional: owner of a text-list render record, as
  * wldcore_list_build_tutorial_category_panel_image reads it; only the record
  * index, row count and text-id rows are established. */
@@ -719,6 +734,9 @@ typedef enum wldcore_scroll_limits {
  * id from its misc id, the status panel data and the participant list's saved cursor. */
 
 extern s32 g_wldcore_participant_list_saved_cursor;
+
+extern battle_stats_t g_wldcore_status_unit;
+
 party_data_t* wldcore_unit_get_party_data_pointer(s32 party_index);
 s32 wldcore_unit_get_ramza_roster_index(void);
 s32 wldcore_unit_get_id_from_misc_id(s32 misc_id);
@@ -726,61 +744,11 @@ void wldcore_unit_build_status_panel_data(s32 party_index);
 
 void wldcore_unit_start_status_panel_threads(s32 party_index);
 
-/* job */
-/* Provisional: the job-report confirmation level. The cursor window at +0x00
- * is moved between the two rows of the render record at +0x04, and +0x08
- * records which of the two rows is selected.
- * wldcore_proposition_handle_report_list_input pushes this level (type
- * 0x0f) over the yes/no panel and stores the argument at +0x10. */
-typedef struct wldcore_job_report_confirm_level {
-    s32 cursor_window; /* 0x00; window record moved between the two rows */
-    s32 render_index;  /* 0x04; render record holding the confirmation text */
-    s32 selection;     /* 0x08; 0 = upper row, 1 = lower row */
-    s32 _unused_0c;
-    s32 argument; /* 0x10; argument of the level wldcore_proposition_push_report_level pushes */
-} wldcore_job_report_confirm_level_t;
-
-/* Outcome of a proposition (wldcore_proposition_outcome_t.result), from the
- * participants' total score. Only SUCCESS completes the proposition and earns
- * its reward. */
-typedef enum wldcore_proposition_result {
-    WLDCORE_PROPOSITION_RESULT_SUCCESS = 0,     /* score of 99 or more, or the preferred-job roll */
-    WLDCORE_PROPOSITION_RESULT_FAILURE = 1,     /* score of 59 to 98: a tenth of the JP, a fifth of the gil */
-    WLDCORE_PROPOSITION_RESULT_BAD_FAILURE = 2, /* lower score, or recalled: a twentieth of both */
-} wldcore_proposition_result_e;
-
-/* What a successful proposition brought back (wldcore_proposition_outcome_t.reward_type);
- * TREASURE and UNEXPLORED_LAND are also the proposition row's discovery_kind. */
-typedef enum wldcore_proposition_reward {
-    WLDCORE_PROPOSITION_REWARD_NONE = 0,
-    WLDCORE_PROPOSITION_REWARD_TREASURE = 1,
-    WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND = 2,
-    WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS = 3, /* the three-tier random reward */
-} wldcore_proposition_reward_e;
-
-/* Provisional: proposition-resolution work record at 0x8009f1ec. One object:
- * wldcore_proposition_find_preferred_job_unit reads reporter_party_index at
- * -0xc from its &proposition_index base, and calculate_base_jp_and_gil and
- * step_result_level reach -0x10..+0x24 from single bases. */
-typedef struct wldcore_proposition_outcome {
-    s32 reporter_party_index; /* 0x00; the unit who reports (wldcore_proposition_select_report_speaker) */
-    s32 speaker_party_index;  /* 0x04; chosen and read back by wldcore_proposition_step_participant_message */
-    s32 preferred_unit;       /* 0x08; fixed speaker passed to wldcore_proposition_step_participant_message */
-    s32 proposition_index;    /* 0x0c; index into g_main_active_propositions */
-    s32 result;               /* 0x10; wldcore_proposition_result_e */
-    s32 reward_type;          /* 0x14; wldcore_proposition_reward_e */
-    s32 reward_index;         /* 0x18 */
-    s32 reward_value;         /* 0x1c */
-    s32 gate;                 /* 0x20; set for a called-back proposition: no rewards, the report skipped */
-    u8 _unused_24[0x10];
-    s32 rows[3][3]; /* 0x34; per-participant score/report rows */
-} wldcore_proposition_outcome_t;
-typedef char wldcore_job_selection_size_must_be_0x58[sizeof(wldcore_proposition_outcome_t) == 0x58 ? 1 : -1];
-
-extern wldcore_proposition_outcome_t g_wldcore_proposition_outcome;
-void wldcore_proposition_prepare_report(s32 job_id);
-
 /* story */
+/* The Brave Story and its records: the slideshow pages (a route's travel reuses them), the rumor and
+ * story event lists and cursors, the help text ids, and the treasure and unexplored-land milestones,
+ * pictures and sound novels. */
+
 /* Provisional: the slideshow page list at 0x800d3bbc. A route travel reuses
  * the record: the route id is the script variable (offset by 0x22c, the
  * route-visible variables), each page is one two-point segment of the route
@@ -900,6 +868,9 @@ extern wldcore_projection_motion_t g_wldcore_map_zoom_motion;
 /* Indexed so the store in wldcore_map_start_travel stays behind the
  * window-flag store (MEM_IN_STRUCT_P). */
 extern s32 g_wldcore_next_map_id[];
+
+extern u8 g_wldcore_choice_hidden_variable_offsets[];
+
 void wldcore_map_init_tile_atlas(void);
 void wldcore_map_load_texture(void);
 void wldcore_map_color_and_draw_dots(void);
@@ -924,26 +895,10 @@ void wldcore_map_update_camera_direction_and_projection(void);
 void wldcore_map_update_scroll_axis_speed(wldcore_axis_state_t* axis, s32 direction);
 s32 wldcore_map_roll_random_encounter(s32 location, s32 route);
 void wldcore_map_scroll_projection_if_focus_near_edge(wldcore_point32_t* delta);
-void wldcore_menu_push_map_location_visibility_level(s32 dot_index, s32 erase);
+
 void wldcore_map_prepare_path_animation(s32 from, s32 to);
 s32 wldcore_map_get_dot_snap_step(wldcore_point32_t point, s32* step_x, s32* step_y);
 void wldcore_map_draw_location_label(GsOT* ot);
-
-/* save */
-/* Provisional: the save-slot word list at g_wldcore_script_slot_table: section offsets into
- * the save-slot buffer, indexed from +0x04. */
-typedef struct wldcore_save_slot_table {
-    s32 _unused_00;
-    u32 offsets[1]; /* 0x04 */
-} wldcore_save_slot_table_t;
-
-extern s16 g_wldcore_sound_novel_index;
-
-/* Saved copy of g_wldcore_context_value_display_position. */
-extern wldcore_point32_t g_wldcore_saved_context_value_display_position;
-extern wldcore_sound_novel_record_t g_wldcore_sound_novel_record;
-/* g_main_system_flags as saved by wldcore_gfx_toggle_captured_world_frame (main_system_flags_e). */
-extern u32 g_wldcore_saved_system_flags;
 
 /* proposition */
 /* The Bar's propositions: the jobs on offer, sending units, the days out, the report, the
@@ -1118,6 +1073,56 @@ typedef struct wldcore_menu_send_unit_level {
 } wldcore_menu_send_unit_level_t;
 typedef char wldcore_menu_send_unit_level_size_must_be_0x5c[sizeof(wldcore_menu_send_unit_level_t) == 0x5c ? 1 : -1];
 
+/* Provisional: the job-report confirmation level. The cursor window at +0x00
+ * is moved between the two rows of the render record at +0x04, and +0x08
+ * records which of the two rows is selected.
+ * wldcore_proposition_handle_report_list_input pushes this level (type
+ * 0x0f) over the yes/no panel and stores the argument at +0x10. */
+typedef struct wldcore_job_report_confirm_level {
+    s32 cursor_window; /* 0x00; window record moved between the two rows */
+    s32 render_index;  /* 0x04; render record holding the confirmation text */
+    s32 selection;     /* 0x08; 0 = upper row, 1 = lower row */
+    s32 _unused_0c;
+    s32 argument; /* 0x10; argument of the level wldcore_proposition_push_report_level pushes */
+} wldcore_job_report_confirm_level_t;
+
+/* Outcome of a proposition (wldcore_proposition_outcome_t.result), from the
+ * participants' total score. Only SUCCESS completes the proposition and earns
+ * its reward. */
+typedef enum wldcore_proposition_result {
+    WLDCORE_PROPOSITION_RESULT_SUCCESS = 0,     /* score of 99 or more, or the preferred-job roll */
+    WLDCORE_PROPOSITION_RESULT_FAILURE = 1,     /* score of 59 to 98: a tenth of the JP, a fifth of the gil */
+    WLDCORE_PROPOSITION_RESULT_BAD_FAILURE = 2, /* lower score, or recalled: a twentieth of both */
+} wldcore_proposition_result_e;
+
+/* What a successful proposition brought back (wldcore_proposition_outcome_t.reward_type);
+ * TREASURE and UNEXPLORED_LAND are also the proposition row's discovery_kind. */
+typedef enum wldcore_proposition_reward {
+    WLDCORE_PROPOSITION_REWARD_NONE = 0,
+    WLDCORE_PROPOSITION_REWARD_TREASURE = 1,
+    WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND = 2,
+    WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS = 3, /* the three-tier random reward */
+} wldcore_proposition_reward_e;
+
+/* Provisional: proposition-resolution work record at 0x8009f1ec. One object:
+ * wldcore_proposition_find_preferred_job_unit reads reporter_party_index at
+ * -0xc from its &proposition_index base, and calculate_base_jp_and_gil and
+ * step_result_level reach -0x10..+0x24 from single bases. */
+typedef struct wldcore_proposition_outcome {
+    s32 reporter_party_index; /* 0x00; the unit who reports (wldcore_proposition_select_report_speaker) */
+    s32 speaker_party_index;  /* 0x04; chosen and read back by wldcore_proposition_step_participant_message */
+    s32 preferred_unit;       /* 0x08; fixed speaker passed to wldcore_proposition_step_participant_message */
+    s32 proposition_index;    /* 0x0c; index into g_main_active_propositions */
+    s32 result;               /* 0x10; wldcore_proposition_result_e */
+    s32 reward_type;          /* 0x14; wldcore_proposition_reward_e */
+    s32 reward_index;         /* 0x18 */
+    s32 reward_value;         /* 0x1c */
+    s32 gate;                 /* 0x20; set for a called-back proposition: no rewards, the report skipped */
+    u8 _unused_24[0x10];
+    s32 rows[3][3]; /* 0x34; per-participant score/report rows */
+} wldcore_proposition_outcome_t;
+typedef char wldcore_job_selection_size_must_be_0x58[sizeof(wldcore_proposition_outcome_t) == 0x58 ? 1 : -1];
+
 extern s32* g_wldcore_proposition_data_base;
 extern s32 g_wldcore_proposition_send_unit_count;
 extern wldcore_proposition_fields_t g_wldcore_selected_proposition_row[];
@@ -1130,6 +1135,9 @@ extern s32 g_wldcore_proposition_dispatch_days;
  * g_wldcore_active_propositions_saved_cursor. */
 extern s32 g_wldcore_proposition_category_saved_cursor[];
 extern u32 g_wldcore_proposition_detail_image_buffer[];
+
+extern wldcore_proposition_outcome_t g_wldcore_proposition_outcome;
+
 s32 wldcore_proposition_select_report_speaker(s32 job_id);
 void wldcore_proposition_determine_success(void);
 void wldcore_proposition_calculate_base_jp_and_gil(void);
@@ -1157,6 +1165,8 @@ void wldcore_proposition_push_result_level(s32 proposition);
 s32 wldcore_proposition_find_preferred_job_unit(void);
 
 s32 wldcore_proposition_get_milestone_rank(void);
+
+void wldcore_proposition_prepare_report(s32 job_id);
 
 /* sound novel */
 /* The sound novels' reader (wldcore_sound_novel_*): the script interpreter and its 54 opcodes (text,
@@ -1198,8 +1208,20 @@ typedef struct wldcore_sound_novel_state {
     s16 y; /* 0x28 */
 } wldcore_sound_novel_state_t;
 
+/* Provisional: the save-slot word list at g_wldcore_script_slot_table: section offsets into
+ * the save-slot buffer, indexed from +0x04. */
+typedef struct wldcore_save_slot_table {
+    s32 _unused_00;
+    u32 offsets[1]; /* 0x04 */
+} wldcore_save_slot_table_t;
+
 extern wldcore_sound_novel_state_t g_wldcore_sound_novel_state;
 extern void (*g_wldcore_sound_novel_handlers[])(void);
+
+extern s16 g_wldcore_sound_novel_index;
+
+extern wldcore_sound_novel_record_t g_wldcore_sound_novel_record;
+
 void wldcore_sound_novel_apply_counter_delta(void);
 void wldcore_sound_novel_branch_if_saved_flag(s32 expected);
 void wldcore_sound_novel_branch_if_local_flag(s32 expected);
@@ -1392,7 +1414,7 @@ typedef struct wldcore_menu_list_window_level {
 
 extern s32 g_wldcore_bar_menu_saved_cursor;
 extern u8 g_wldcore_bar_row_help_text_ids[];
-void wldcore_proposition_active_list_block_all_buttons(wldcore_menu_panel_level_t* level);
+
 void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level);
 void wldcore_bar_push_rumor_detail_level(s32 value);
 void wldcore_bar_push_menu_level(void);
@@ -1419,7 +1441,16 @@ typedef struct wldcore_menu_window_pair_render_level {
  * signed, and the two writers that only store into it agree on the width. */
 extern s16 g_wldcore_list_row_flags[];
 
-void wldcore_proposition_report_list_block_all_buttons(s32* unused);
+extern wldcore_word_pair_t g_wldcore_tutorial_entries_cursor_state;
+
+/* Saved proposition-list cursor row. Declared as an array: GCC's alias
+ * heuristic needs an in-struct object to keep the target's load order in
+ * wldcore_list_handle_active_propositions_input; a scalar does not. */
+extern s32 g_wldcore_active_propositions_saved_cursor[];
+
+extern s32 g_wldcore_tutorial_category_saved_cursor;
+extern s32 g_wldcore_tutorial_event_ids[];
+
 void wldcore_list_open_facts(void);
 void wldcore_list_build_tutorial_category_panel_image(wldcore_text_list_panel_t* panel);
 void wldcore_list_clamp_cursor_state(s32 index, s32 count, s32 visible);
@@ -1427,17 +1458,13 @@ void wldcore_list_clear_cursor_state(s32 index);
 void wldcore_list_open_tutorial_topics(void);
 void wldcore_list_store_cursor_state(s32 index);
 
-/* The list-level steps hand their menu level to these stubs, which read no
- * argument; the parameter is the argument the target passes in $a0. */
-void wldcore_proposition_available_list_block_all_buttons(wldcore_menu_panel_level_t* level);
-void wldcore_proposition_available_list_close_level(wldcore_menu_panel_level_t* level);
 void wldcore_list_unexplored_lands_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_story_events_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_persons_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_tutorial_topics_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_formation_tutorials_block_all_buttons(wldcore_menu_panel_level_t* level);
 void wldcore_list_facts_block_all_buttons(wldcore_menu_panel_level_t* level);
-void wldcore_proposition_open_report_list(void);
+
 void wldcore_list_open_battle_tutorials(void);
 void wldcore_list_open_formation_tutorials(void);
 void wldcore_list_battle_tutorials_block_all_buttons(wldcore_menu_panel_level_t* unused_level);
@@ -1447,9 +1474,6 @@ void wldcore_list_open_treasures(void);
 void wldcore_list_open_persons(void);
 void wldcore_list_open_active_propositions(void);
 void wldcore_list_open_proposition_history(void);
-
-void wldcore_proposition_build_detail_panel_image(
-    wldcore_menu_window_pair_render_level_t* level, s32 proposition, s32 coordinate_mode);
 
 void wldcore_list_open_tutorial_categories(s32 selected_entry, s32 reset);
 
@@ -2128,11 +2152,12 @@ extern void (*g_wldcore_menu_resume_handlers[])(wldcore_menu_stack_record_t*);
 extern struct world_menu_number_range g_wldcore_window_panel_number_state;
 extern wldcore_window_entry_36_rgb_t g_wldcore_window_record_colors[];
 extern s32 g_wldcore_menu_root_window_index;
-void wldcore_window_init_record_pools(void);
-void wldcore_window_build_yes_no_panel(wldcore_point32_t origin);
+
+extern s32 g_wldcore_context_value_display_mode;
+
 void wldcore_menu_push_location_menu_level(s32 menu);
 void wldcore_menu_push_event_transition_level(s32 mode);
-void wldcore_gfx_draw_transition_screen(GsOT* ot);
+
 void wldcore_menu_close_level_and_release_records(wldcore_menu_slot_set_t* slots, s32 restore);
 void wldcore_menu_dispatch_idle_handler(void);
 void wldcore_menu_dispatch_pending_script_requests(void);
@@ -2146,7 +2171,83 @@ void wldcore_menu_reset_to_root_level(void);
 void wldcore_menu_push_root_level(void);
 void wldcore_menu_restore_level_on_world_entry(void);
 void wldcore_menu_run_world_frame(GsOT* context);
+
+void wldcore_menu_suspend_bar_menu_level(wldcore_menu_list_window_level_t* level);
+void wldcore_menu_suspend_tutorial_categories_level(wldcore_menu_list_window_level_t* level);
+void wldcore_menu_suspend_root_level(wldcore_menu_stack_record_t* level);
+
+void wldcore_menu_suspend_proposition_detail_level(s32* param);
+
+void wldcore_menu_suspend_active_propositions_level(s32* param);
+void wldcore_menu_push_participant_list_level(s32 proposition);
+void wldcore_menu_push_proposition_attempt_detail_level(s32 value);
+void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 param_b);
+void wldcore_menu_push_fact_detail_level(s32 value);
+void wldcore_menu_push_person_detail_level(s32 value);
+void wldcore_menu_push_story_event_text_level(s32 value);
+void wldcore_menu_push_treasure_detail_level(s32 value);
+void wldcore_menu_push_world_menu_level(void);
+void wldcore_menu_push_tutorial_topic_text_level(s32 value);
+void wldcore_menu_push_unexplored_land_detail_level(s32 value);
+void wldcore_menu_push_focus_location_level(s32 id);
+void wldcore_menu_push_map_path_level(s32 value, s32 value_hi, s32 flag);
+void wldcore_menu_suspend_brave_story_level(wldcore_menu_list_window_level_t* state);
+void wldcore_menu_push_proposition_category_level(void);
+void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t* level);
+void wldcore_menu_push_status_help_level(void);
+void wldcore_menu_push_participant_detail_level(s32 proposition, s32 participant);
+void wldcore_menu_suspend_proposition_category_level(wldcore_window_tint_request_t* request);
+
+void wldcore_menu_build_brave_story_entries(void);
+void wldcore_menu_push_brave_story_level(void);
+
+void wldcore_menu_push_scrollable_text_window_level(s32 text_id);
+void wldcore_menu_run_shop_and_rebuild_screen(s32 shop_id);
+void wldcore_menu_suspend_location_menu_level(s32* level);
+void wldcore_menu_push_variable_list_level(void);
+
+void wldcore_menu_suspend_proposition_send_unit_level(wldcore_window_tint_request_t* param);
+void wldcore_menu_push_sound_novel_quit_level(void);
+void wldcore_menu_push_sound_novel_history_level(void);
+void wldcore_menu_suspend_sound_novel_quit_level(s32* param);
+void wldcore_menu_push_text_window_level(s32 text, s32 reload_text);
+void wldcore_menu_push_sound_novel_level(s32 mode);
+void wldcore_menu_push_sound_novel_resume_level(s32 mode);
+
+void wldcore_menu_push_map_location_visibility_level(s32 dot_index, s32 erase);
+
+/* proposition menu */
+/* The proposition screens' menu levels: the active, available and report lists, the detail panel, and
+ * the report and milestone messages. */
+
+void wldcore_proposition_active_list_block_all_buttons(wldcore_menu_panel_level_t* level);
+
+void wldcore_proposition_report_list_block_all_buttons(s32* unused);
+
+/* The list-level steps hand their menu level to these stubs, which read no
+ * argument; the parameter is the argument the target passes in $a0. */
+void wldcore_proposition_available_list_block_all_buttons(wldcore_menu_panel_level_t* level);
+void wldcore_proposition_available_list_close_level(wldcore_menu_panel_level_t* level);
+
+void wldcore_proposition_open_report_list(void);
+
+void wldcore_proposition_build_detail_panel_image(
+    wldcore_menu_window_pair_render_level_t* level, s32 proposition, s32 coordinate_mode);
+
 void wldcore_proposition_show_next_milestone_message(wldcore_menu_milestone_level_t* countdown);
+
+void wldcore_proposition_push_report_level(s32 argument);
+
+void wldcore_proposition_push_milestone_level(void);
+
+/* window */
+/* The windows and render records the menu levels draw with: the record pools, text rows, number and
+ * yes/no panels, VRAM images and the panel render threads. */
+
+extern s16 g_wldcore_panel_row_actions[16];
+
+void wldcore_window_init_record_pools(void);
+void wldcore_window_build_yes_no_panel(wldcore_point32_t origin);
 
 /* Both return the appended record's index. */
 s32 wldcore_window_append_record_and_reset_color(s32** queue, s32* count);
@@ -2175,71 +2276,26 @@ void wldcore_window_init_vram_render_record(
     s32 index, wldcore_window_render_bounds16_t bounds, wldcore_point32_t clut, s32 flags);
 
 void wldcore_window_load_image_record_to_vram(s32 index, u32* image);
-void wldcore_menu_suspend_bar_menu_level(wldcore_menu_list_window_level_t* level);
-void wldcore_menu_suspend_tutorial_categories_level(wldcore_menu_list_window_level_t* level);
-void wldcore_menu_suspend_root_level(wldcore_menu_stack_record_t* level);
+
 void wldcore_window_set_render_objects_visible(s32 clear);
-void wldcore_menu_suspend_proposition_detail_level(s32* param);
 
 void wldcore_window_start_panel_render_thread(
     s32 thread_id, s32 extent, wldcore_point32_t* dimensions, wldcore_point32_t* origin);
 
 void wldcore_window_transform_point_for_mode(s32 mode, wldcore_window_render_bounds16_t bounds, s32* output);
-void wldcore_menu_suspend_active_propositions_level(s32* param);
-void wldcore_menu_push_participant_list_level(s32 proposition);
-void wldcore_menu_push_proposition_attempt_detail_level(s32 value);
-void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 param_b);
-void wldcore_menu_push_fact_detail_level(s32 value);
-void wldcore_menu_push_person_detail_level(s32 value);
-void wldcore_menu_push_story_event_text_level(s32 value);
-void wldcore_menu_push_treasure_detail_level(s32 value);
-void wldcore_menu_push_world_menu_level(void);
-void wldcore_menu_push_tutorial_topic_text_level(s32 value);
-void wldcore_menu_push_unexplored_land_detail_level(s32 value);
-void wldcore_menu_push_focus_location_level(s32 id);
-void wldcore_menu_push_map_path_level(s32 value, s32 value_hi, s32 flag);
-void wldcore_menu_suspend_brave_story_level(wldcore_menu_list_window_level_t* state);
-void wldcore_menu_push_proposition_category_level(void);
-void wldcore_menu_render_debug_variable_list(wldcore_menu_variable_list_level_t* level);
-void wldcore_menu_push_status_help_level(void);
-void wldcore_menu_push_participant_detail_level(s32 proposition, s32 participant);
-void wldcore_menu_suspend_proposition_category_level(wldcore_window_tint_request_t* request);
-void wldcore_proposition_push_report_level(s32 argument);
-void wldcore_menu_build_brave_story_entries(void);
-void wldcore_menu_push_brave_story_level(void);
+
 void wldcore_window_close_parent_list_all_windows(void);
 void wldcore_window_close_parent_list_frame_windows(void);
-void wldcore_menu_push_scrollable_text_window_level(s32 text_id);
-void wldcore_menu_run_shop_and_rebuild_screen(s32 shop_id);
-void wldcore_menu_suspend_location_menu_level(s32* level);
-void wldcore_menu_push_variable_list_level(void);
+
 void wldcore_window_load_party_unit_sprite_record(wldcore_menu_send_unit_level_t* level, s32 unit, s32 render_index);
-void wldcore_menu_suspend_proposition_send_unit_level(wldcore_window_tint_request_t* param);
-void wldcore_menu_push_sound_novel_quit_level(void);
-void wldcore_menu_push_sound_novel_history_level(void);
-void wldcore_menu_suspend_sound_novel_quit_level(s32* param);
-void wldcore_menu_push_text_window_level(s32 text, s32 reload_text);
-void wldcore_menu_push_sound_novel_level(s32 mode);
-void wldcore_menu_push_sound_novel_resume_level(s32 mode);
-void wldcore_proposition_push_milestone_level(void);
+
 void wldcore_window_update_flag_from_owner_progress(wldcore_window_owner_t* owner);
 
 void wldcore_window_number_panel_noop_callback(void);
 
-/* other */
-extern s16 g_wldcore_panel_row_actions[16];
-extern wldcore_word_pair_t g_wldcore_tutorial_entries_cursor_state;
-extern s32 g_wldcore_context_value_display_mode;
+/* bits */
+/* Assign and test one bit of a word array. */
 
-/* Saved proposition-list cursor row. Declared as an array: GCC's alias
- * heuristic needs an in-struct object to keep the target's load order in
- * wldcore_list_handle_active_propositions_input; a scalar does not. */
-extern s32 g_wldcore_active_propositions_saved_cursor[];
-extern u32** g_wldcore_anim_cel_table;
-extern u8 g_wldcore_choice_hidden_variable_offsets[];
-extern battle_stats_t g_wldcore_status_unit;
-extern s32 g_wldcore_tutorial_category_saved_cursor;
-extern s32 g_wldcore_tutorial_event_ids[];
 void wldcore_bits_assign(u32* bits, s32 index, s32 set);
 s32 wldcore_bits_test(u32* bits, s32 index);
 

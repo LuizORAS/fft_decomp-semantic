@@ -20,7 +20,33 @@
 struct battle_deployed_coords;
 
 /* system */
-/* The top-level game loop and its soft reset, the VSync play-time counter and the empty error hooks. */
+/* The top-level game loop and its soft reset (main_restore_game_loop_stack_pointer, the one assembly
+ * routine, puts the loop's stack back), the game flow states and error codes, the VSync play-time counter
+ * and hsync counts, the empty error hooks and the debug output switches. */
+
+/* g_main_system_game_flow_state: what follows when the BATTLE.BIN loop
+ * closes a battle or event. */
+typedef enum main_game_flow_state {
+    MAIN_GAME_FLOW_BATTLE = 0, /* stay in battle_state_run_game_loop for the next event */
+    MAIN_GAME_FLOW_WORLD = 1,  /* back to the world map */
+    MAIN_GAME_FLOW_RESET = 2,  /* stop display and audio and restart from the opening */
+    MAIN_GAME_FLOW_ENDING = 3, /* run the ending, then restart */
+} main_game_flow_state_e;
+
+/* Error codes passed to main_system_handle_error, whose report
+ * hook is empty in retail. */
+typedef enum main_system_error {
+    MAIN_SYSTEM_ERROR_HEAP_ALLOC = 1,              /* main_file_alloc_and_load got no block */
+    MAIN_SYSTEM_ERROR_FILE_LOAD = 2,               /* a checked file load returned 0 */
+    MAIN_SYSTEM_ERROR_NO_MISC_UNIT_SLOT = 6,       /* battle_unit_claim_misc_slot found none free */
+    MAIN_SYSTEM_ERROR_SHP_FRAME = 8,               /* frame index above 0x200 or frame pointer -1 */
+    MAIN_SYSTEM_ERROR_SEQ_ANIMATION = 9,           /* animation index above 0x100 or sequence pointer -1 */
+    MAIN_SYSTEM_ERROR_FRAME_PART_COUNT = 10,       /* more than eight parts in a unit frame */
+    MAIN_SYSTEM_ERROR_NO_SPRITESHEET_SLOT = 0xb,   /* battle_gfx_claim_spritesheet_slot found all nine taken */
+    MAIN_SYSTEM_ERROR_SEQ_OPCODE = 0xd,            /* unknown sequence opcode, or a queued animation for slot 0 */
+    MAIN_SYSTEM_ERROR_SMD_LOAD = 0x11,             /* no SMD buffer or the SMD load could not start */
+    MAIN_SYSTEM_ERROR_DISTORTION_ANIMATION = 0x17, /* distortion animation id without a handler */
+} main_system_error_e;
 
 extern s32 g_main_system_frontend_world_result;
 extern u32 g_main_system_game_flow_state; /* main_game_flow_state_e */
@@ -36,6 +62,10 @@ extern u32 g_main_system_flags;
 extern s32 g_main_system_frame_timer;
 extern s32 g_main_system_battle_frame_hsync_count;     /* VSync's timer-1 count for the last frame */
 extern s32 g_main_system_battle_frame_hsync_count_max; /* its highest value */
+
+extern s32 g_main_font_print_enabled;
+
+extern s32 g_main_debug_display_enabled;
 
 /* Empty hook (nop, jr ra, nop) that every frame loop calls once per frame: the OPEN, WLDCORE and
  * BATTLE game loops, the WORLD, BUNIT and CARD frame presenters and MAIN's waiting disc reads. It
@@ -78,6 +108,8 @@ void main_boot_fade_out_squaresoft_logo(void);
 /* overlay */
 /* Load OPEN, WLDCORE and WORLD, and BATTLE from fixed disc sectors and run them. */
 
+extern s32 g_main_battle_bin_sector;
+
 /* MAIN's 4 KB of zero words at 0x80010ba8, between the C start-up and the game code: called as BATTLE.BIN's
  * entry point, they run as nops up to the jr ra at 0x80011ba8 and return. */
 void main_overlay_battle_entry_stub(void);
@@ -105,6 +137,8 @@ extern u8 g_main_heap_smd_allocator_table[16];
 /* The SMD heap itself: 16 cells of 2 KB in MAIN. */
 extern u8 g_main_heap_smd_base[];
 
+extern u8* g_main_heap_companion_overlay_load_address;
+
 void* main_heap_alloc(u32 size);
 u8* main_heap_reserve_at(u8* allocation, u32 size);
 s32 main_heap_free(void* allocation);
@@ -115,6 +149,9 @@ s32 main_heap_free_smd(void* allocation);
 void main_heap_clear_smd_allocator_table(void);
 
 /* util */
+/* MAIN's small helpers: the pass/fail roll, the vector setters, and byte and action-record copies and
+ * clears. */
+
 s32 main_util_roll_pass_fail(s32 maximum, s32 threshold);
 
 void main_util_set_svector(SVECTOR* vector, s32 x, s32 y, s32 z);
@@ -220,6 +257,10 @@ extern u32 g_main_input_previous_copy_1;
 extern u32 g_main_input_previous_copy_2;
 extern u32 g_main_input_previous_copy_3;
 extern u32 g_main_input_stable_frames;
+
+extern u8 g_main_menu_scroll_accel_delay;
+extern u8 g_main_menu_scroll_slow_step;
+extern u8 g_main_menu_scroll_fast_step;
 
 /* card */
 /* The memory card: the BIOS card event handles (main_card_init_events), the slot states and I/O results
@@ -421,30 +462,6 @@ extern u8 g_main_card_save_slot_playtimes[][3];
 void main_card_init_events(void);
 
 /* options */
-/* g_main_system_game_flow_state: what follows when the BATTLE.BIN loop
- * closes a battle or event. */
-typedef enum main_game_flow_state {
-    MAIN_GAME_FLOW_BATTLE = 0, /* stay in battle_state_run_game_loop for the next event */
-    MAIN_GAME_FLOW_WORLD = 1,  /* back to the world map */
-    MAIN_GAME_FLOW_RESET = 2,  /* stop display and audio and restart from the opening */
-    MAIN_GAME_FLOW_ENDING = 3, /* run the ending, then restart */
-} main_game_flow_state_e;
-
-/* Error codes passed to main_system_handle_error, whose report
- * hook is empty in retail. */
-typedef enum main_system_error {
-    MAIN_SYSTEM_ERROR_HEAP_ALLOC = 1,              /* main_file_alloc_and_load got no block */
-    MAIN_SYSTEM_ERROR_FILE_LOAD = 2,               /* a checked file load returned 0 */
-    MAIN_SYSTEM_ERROR_NO_MISC_UNIT_SLOT = 6,       /* battle_unit_claim_misc_slot found none free */
-    MAIN_SYSTEM_ERROR_SHP_FRAME = 8,               /* frame index above 0x200 or frame pointer -1 */
-    MAIN_SYSTEM_ERROR_SEQ_ANIMATION = 9,           /* animation index above 0x100 or sequence pointer -1 */
-    MAIN_SYSTEM_ERROR_FRAME_PART_COUNT = 10,       /* more than eight parts in a unit frame */
-    MAIN_SYSTEM_ERROR_NO_SPRITESHEET_SLOT = 0xb,   /* battle_gfx_claim_spritesheet_slot found all nine taken */
-    MAIN_SYSTEM_ERROR_SEQ_OPCODE = 0xd,            /* unknown sequence opcode, or a queued animation for slot 0 */
-    MAIN_SYSTEM_ERROR_SMD_LOAD = 0x11,             /* no SMD buffer or the SMD load could not start */
-    MAIN_SYSTEM_ERROR_DISTORTION_ANIMATION = 0x17, /* distortion animation id without a handler */
-} main_system_error_e;
-
 /* The player's Options menu settings, packed in one word (game_options_t in menu.h), and their defaults. */
 
 extern game_options_t g_main_game_options;
@@ -541,6 +558,13 @@ extern wldcore_word_pair_t g_main_saved_list_cursor_state;
 extern wldcore_proposition_progress_t g_main_active_propositions[8];
 extern wldcore_sound_novel_record_t g_main_sound_novel_records[];
 extern u8 D_80057b1c; /* 0xc5 at boot; saved at image offset 0x1c88 and restored on load, nothing else uses it */
+
+extern u8* g_main_brave_story_ages_source;
+
+extern u8 D_800473A7; /* set to 1 with the input and scroll timings by main_save_init_state_and_options; never read */
+
+extern u8 g_main_brave_story_character_ages[0x40];
+
 void main_save_init_data_tables(void);
 void main_save_init_state_and_options(void);
 
@@ -587,6 +611,10 @@ typedef enum main_unit_action_state {
 extern main_unit_generation_base_data_t g_main_unit_generation_base_data[MAIN_UNIT_TYPE_COUNT];
 extern main_unit_generation_raw_stat_variance_t g_main_unit_generation_raw_stat_variance[MAIN_UNIT_TYPE_COUNT];
 extern u32 g_main_unit_name_uses_world_text;
+
+extern struct battle_deployed_coords* g_main_unit_deployed_coords;
+
+extern s32 g_main_deployed_unit_map_coordinates[];
 
 void main_unit_apply_equipment_move_jump_and_name(battle_stats_t* unit);
 void main_unit_apply_level_growth(battle_stats_t* unit, s32 level_down);
@@ -751,6 +779,11 @@ extern main_ability_monster_skillset_t g_main_ability_monster_skillset_abilities
 extern u16 g_main_ability_temp_list[SKILLSET_ABILITY_LIST_COUNT];
 extern main_crystal_pickup_result_t g_main_crystal_pickup_result;
 extern u32 g_main_sound_novel_saved_flags[2];
+
+extern u8 g_main_action_menu_types_by_skillset[0xe0];
+
+extern u8 g_main_calculator_primes[CALCULATOR_PRIME_COUNT];
+
 s32 main_ability_calculate_pointers_and_type(s32 id, u8** out_ability_data, u8** out_secondary_data);
 s32 main_ability_get_id_from_skillset(s32 skillset_id, s32 ability_index);
 u32 main_ability_get_known(battle_stats_t* unit, u32 job_row);
@@ -797,6 +830,11 @@ extern accessory_data_t g_main_item_accessory_data[];
 extern armor_data_t g_main_item_helm_armor_secondary_data[];
 extern item_data_t g_main_item_primary_data[];
 extern shield_data_t g_main_item_shield_data[];
+
+extern u8 g_main_accessory_page_order[0x21];
+extern u8 g_main_armor_page_order[0x25];
+extern u8 g_main_helmet_page_order[0x1d];
+
 void main_item_init_new_game_inventory(void);
 void main_item_init_order_tables(void);
 item_data_t* main_item_get_data_pointer(s32 item_id);
@@ -904,6 +942,9 @@ void main_status_update_unit_flags_and_ct(battle_stats_t* unit);
 s32 main_status_find_action_highest_order_effect(const battle_action_data_t* action);
 
 /* zodiac */
+/* The resident menu art's records: ZODIAC.BIN's sprite frames, its draw context and primitives, the sign
+ * day limits and month offsets; EVENT/FRAME.BIN and the four WLDFACE.BIN portrait sheets. */
+
 /* ZODIAC.BIN sprite-table records shared by the builder and polygon helper. */
 typedef struct main_zodiac_sprite_frame {
     u8 u;
@@ -970,14 +1011,26 @@ typedef char main_gfx_wldface_sheet_size_must_be_0x8000[(sizeof(main_gfx_wldface
 extern const u16 g_main_zodiac_day_limits[ZODIAC_SIGN_ORDINARY_COUNT];
 extern POLY_FT4 g_main_zodiac_primitives[2][30];
 
+extern u16 g_main_month_start_day_offsets[13];
+
 /* script */
+/* The scenario and script data MAIN keeps for every overlay: the script variables and the event block,
+ * the scenario conditions and event finish operations, the tutorial progress masks and the replay index. */
+
 extern u16 g_main_scenario_event_finish_operations[];
 /* The script variable words: whole-word variables first (event_script_variable_id_e), then the packed flags. */
 extern s32 g_main_script_variables[0x100];
-extern u8* g_main_heap_companion_overlay_load_address;
+
 extern u16 g_main_scenario_condition_offsets[];
 extern s16 g_main_scenario_condition_data[];
 extern event_file_block_t g_main_script_event_block[];
+
+extern u32 g_main_tutorial_progress_masks[];
+
+/* Debug flag: zeroed with g_main_debug_display_enabled by event call function
+ * 0x08; never read. */
+extern s32 D_800459D8;
+extern s32 g_main_replay_story_event_index;
 
 /* gfx */
 /* MAIN's display: the two display and draw environments and the screen polarity, the Now Loading
@@ -1034,6 +1087,15 @@ extern u32 g_main_gfx_battle_otags[2][0x180];
 extern s32 g_main_gfx_active_buffer_index;
 extern s32 g_main_gfx_loading_display_frame_counter;
 extern s32 g_main_gfx_screen_polarity;
+
+extern volatile u8 g_fntload_clut_y_offset_immediate;
+
+extern u8 g_main_common_menu_graphics_loaded;
+
+extern u8 g_main_special_portrait_unit_id;
+
+extern u8 g_main_special_portrait_wldface_id;
+
 void main_gfx_add_now_loading_to_otag(u32* otag);
 void main_gfx_build_now_loading(u32 visible, s32 x, s32 y);
 void main_gfx_draw_now_loading_message(void);
@@ -2241,34 +2303,10 @@ void main_smd_set_voice_attr_flags_all_channels(suzuki_music_t* music, u16 mask)
 
 void main_smd_spu_transfer_callback(void);
 
-/* other */
-extern volatile u8 g_fntload_clut_y_offset_immediate;
-extern s32 g_main_font_print_enabled;
-extern u8* g_main_brave_story_ages_source;
-extern u8 g_main_menu_scroll_accel_delay;
-extern u8 g_main_menu_scroll_slow_step;
-extern u8 g_main_menu_scroll_fast_step;
-extern u8 D_800473A7; /* set to 1 with the input and scroll timings by main_save_init_state_and_options; never read */
-extern u8 g_main_accessory_page_order[0x21];
-extern u8 g_main_armor_page_order[0x25];
-extern u8 g_main_helmet_page_order[0x1d];
-extern u8 g_main_action_menu_types_by_skillset[0xe0];
+/* terrain */
+/* Data per map surface type (map_surface_type_e): the movement cost rows, the status flags, the tile-info
+ * pairs and the Geomancy abilities. */
 
-extern s32 g_main_battle_bin_sector;
-extern u8 g_main_common_menu_graphics_loaded;
-extern u32 g_main_tutorial_progress_masks[];
-extern u8 g_main_special_portrait_unit_id;
-extern u8 g_main_calculator_primes[CALCULATOR_PRIME_COUNT];
-extern u16 g_main_month_start_day_offsets[13];
-extern struct battle_deployed_coords* g_main_unit_deployed_coords;
-extern u8 g_main_brave_story_character_ages[0x40];
-extern s32 g_main_debug_display_enabled;
-/* Debug flag: zeroed with g_main_debug_display_enabled by event call function
- * 0x08; never read. */
-extern s32 D_800459D8;
-extern s32 g_main_replay_story_event_index;
-extern u8 g_main_special_portrait_wldface_id;
-extern s32 g_main_deployed_unit_map_coordinates[];
 extern u8 g_main_terrain_movement_cost_tables[][64];
 extern const u8 g_main_terrain_status_flags[64];
 
