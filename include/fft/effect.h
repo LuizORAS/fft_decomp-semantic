@@ -25,6 +25,9 @@ extern u8 g_effect_e464_particle_work_offset_scale_16;
 extern u8 g_effect_e464_particle_work_offset_scale_64;
 
 /* helpers */
+/* Macros the native renderers share: READ_CURVE reads an animation curve, PACK_RGB and POLY_RGB build and
+ * address a primitive's colour word, RAND_SPREAD and RAND_BETWEEN draw random values. */
+
 /* Reads animation curve `nibble` (0 = none, otherwise the curve index + 1) at `frame`. The
  * separate decrement keeps the target's compare against -1. */
 #define READ_CURVE(result, index, nibble, frame)                                                                       \
@@ -60,6 +63,7 @@ extern u8 g_effect_e464_particle_work_offset_scale_64;
  * in two sizes: the short variant keeps 8 ribbons with 9-point trails (E000,
  * E242, E317, E336, E355, E371, E402, E409) and the long variant 4 ribbons
  * with 17-point trails (E070, E403, E412, E461, E462, E463, E465, E466). */
+
 enum {
     EFFECT_PARTICLE_RIBBON_SHORT_SLOTS = 8,
     EFFECT_PARTICLE_RIBBON_SHORT_POINTS = 9,
@@ -149,6 +153,7 @@ extern u32 g_effect_particle_ribbon_short_brightness_table[][EFFECT_PARTICLE_RIB
 /* polar mesh */
 /* Shared records of the 6,012-byte polar quad mesh renderer that 23 EFFECT
  * overlays compile from one source (for example E461 at 0x801c44a0). */
+
 /* Scratchpad (0x1f800000) layout used while one polar mesh is rebuilt.
  * points[ring][0..3] sweep one quadrant in 0x100 steps; points[ring][4] is
  * points[ring][0] rotated by 0x400, closing the quadrant. The renderer never
@@ -273,6 +278,9 @@ extern u32 g_effect_e461_polar_mesh_brightness_table[][6];
 extern u32 g_effect_polar_mesh_brightness_table[][6];
 
 /* quad grid */
+/* The scrolling textured quad grid renderer, compiled in 2x2, 4x4 and 8x8 builds: 27 overlays carry the
+ * 4x4 build, seven the 8x8 and three the 2x2. */
+
 /* Work blocks of the scrolling textured quad grid renderer that EFFECT
  * overlays compile from one source in 2x2, 4x4 and 8x8 builds (for example
  * effect_e047_update_textured_quad_grid_4x4 in E047). Each block is allocated in
@@ -333,6 +341,7 @@ extern u32 g_effect_textured_grid_brightness_table[][9];
 /* ring mesh */
 /* Shared records of the 5,584-byte ring mesh renderer that 32 EFFECT overlays
  * compile from one source (for example E450 at 0x801c2d08). */
+
 enum {
     RING_MESH_SEGMENTS = 32,  /* quads around one ring */
     RING_MESH_ARC_POINTS = 9, /* lattice points of one 90-degree arc */
@@ -435,6 +444,7 @@ extern s32 g_effect_tube_mesh_ring_scales[5];
 /* summon mesh */
 /* Shared records of the 4,744-byte summon dome mesh renderer that 12 EFFECT
  * overlays compile from one source (for example E474 at 0x801c42c4). */
+
 /* One scratchpad lattice point; the 9x17 lattice starts at 0x1f800000 and is
  * read back by effect_add_scratchpad_xyz_components. */
 typedef struct effect_summon_mesh_point {
@@ -480,6 +490,7 @@ extern u32 g_effect_summon_mesh_brightness_table[][9];
  * trail (E077, E161, E451 and E485) that tracks up to four point trails. Both
  * read their effect_geometry_entry_t through
  * effect_tentacle_mesh_geometry_view_t. */
+
 /* One point of a segment's ring of trailing positions. */
 typedef struct effect_tentacle_mesh_point {
     s16 x;
@@ -545,6 +556,7 @@ extern u32 g_effect_tentacle_mesh_brightness_table[][9];
 /* Shared records of the 2,924-byte 8x8 wave-distorted quad mesh renderer that
  * eight EFFECT overlays compile from one source (for example E033 at
  * 0x801c3c7c). */
+
 /* Work block of the 8x8 wave mesh, allocated in phase 1. The four wave phases
  * are 4096-per-turn angles; the emitter record's spawn spread (x, y) and
  * wave_phase_speed curves advance them once per update. */
@@ -584,6 +596,9 @@ extern u32 g_effect_e453_wave_mesh_brightness_table[][9];
 extern u32 g_effect_wave_mesh_brightness_table[][9];
 
 /* other */
+/* What several families share: the wide-vector view and effect_add_scratchpad_xyz_components, which 12
+ * overlays carry under one name, and the 4x4 grid family's brightness rows. */
+
 /* Low halfwords of a VECTOR's components, as effect_add_scratchpad_xyz_components
  * reads them (lhu at +0, +4 and +8). */
 typedef struct effect_wide_vector {
