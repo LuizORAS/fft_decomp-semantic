@@ -1,6 +1,8 @@
 /* LIBGPU 80025824-800258f0. */
 #include "psx/libgpu.h"
 
+/* The draw-area top-left command word for (`x`, `y`), clamped to VRAM, in the standard or extended GPU's bit
+ * layout. */
 u32 get_cs(s16 x, s16 y) {
     extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
     limitRange(x, 0, g_psyq_gpu_environment.vram_width - 1);

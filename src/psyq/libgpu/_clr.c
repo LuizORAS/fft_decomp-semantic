@@ -1,6 +1,8 @@
 #include "psx/libgpu.h"
 
-/* LIBGPU, retail 0x80025c44-0x80025e5c. Selects fill or tile clearing and restores drawing state. */
+/* Fill `rect` of VRAM with `color`, the size clamped to VRAM: an x and width that are multiples of 64 use the
+ * fill command; otherwise a TILE drawn under a full draw area and zero offset, followed by a packet that
+ * restores the draw area and offset read back from the GPU. ClearImage queues it. */
 int _clr(RECT* rect, u32 color) {
     extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
     limitRange(rect->w, 0, g_psyq_gpu_environment.vram_width - 1);

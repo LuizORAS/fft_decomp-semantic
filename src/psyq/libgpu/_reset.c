@@ -1,5 +1,9 @@
 /* LIBGPU 80026a58-80026b94. */
 #include "psx/libgpu.h"
+
+/* The dispatch table's reset: empty the queue and, for mode 0, reset the GPU (GP1 reset), clear the GP1
+ * command cache and the queue, and return the detected GPU type (psyq_gpu_detect_type); mode 1 only
+ * acknowledges the GPU interrupt and resets its command buffer. ResetGraph calls it. */
 int _reset(int mode) {
     int mask = SetIntrMask(0);
     int tail;

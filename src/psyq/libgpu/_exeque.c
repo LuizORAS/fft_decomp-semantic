@@ -1,7 +1,10 @@
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 
-/* LIBGPU, retail 0x8002675c-0x80026a58. DMA callback processes queued operations and completion. */
+/* Run queued GPU operations while the GPU DMA is idle (it is also the GPU DMA completion callback): each
+ * waits for the GPU to take commands; the callback is removed before the last entry when no DrawSync callback
+ * is set. When the queue empties and the DMA is idle, call the DrawSync callback once. Returns the entries left,
+ * or 1 at once when the DMA is busy. */
 int _exeque(void) {
     extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
     if (*g_psyq_gpu_dma_chcr & PSYQ_GPU_DMA_BUSY)

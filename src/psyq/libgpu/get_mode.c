@@ -1,6 +1,9 @@
 /* LIBGPU 800257c8-80025824. */
 #include "psx/libgpu.h"
 
+/* The draw-mode command word: texture page `tpage`, dithering `dtd` and drawing to the displayed area `dfe`,
+ * in the standard or extended GPU's bit layout. SetDrawMode, SetDrawEnv and world_formation_update_and_draw_unit_grid
+ * use it. */
 u32 get_mode(int dfe, int dtd, int tpage) {
     extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
     if (g_psyq_gpu_environment.graph_type == 1 || g_psyq_gpu_environment.graph_type == 2)

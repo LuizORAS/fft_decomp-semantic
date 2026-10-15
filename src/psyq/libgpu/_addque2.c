@@ -1,7 +1,11 @@
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 
-/* LIBGPU, retail 0x80026478-0x8002675c. Immediate or copied/deferred GPU queue operation. */
+/* Run a GPU operation now or queue it. While the 64-entry queue is full it runs queued work (_exeque),
+ * giving up with -1 on a timeout. With interrupts masked: when queueing is off, or the queue is empty with no
+ * DMA busy and no DrawSync callback, it waits for the GPU and runs `operation` at once; otherwise it stores the
+ * operation (copying `copy_size` bytes of `source` into the entry), sets _exeque as the GPU DMA callback and
+ * starts the queue. Returns 0, or the number of entries waiting. */
 int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 argument) {
     extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
     int i;

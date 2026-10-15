@@ -1,6 +1,7 @@
 /* LIBGPU 80025a04-80025a88. */
 #include "psx/libgpu.h"
 
+/* The texture window command word for `rect` (offset and mask in 8-pixel steps), or 0 for no rectangle. */
 u32 get_tw(RECT* rect) {
     u32 pad[4];
     if (rect) {

@@ -2,7 +2,8 @@
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 
-/* LIBGPU, retail 0x80026d10-0x80026e7c. Restores DMA/GPU state after a timeout. */
+/* Return 0 until the GPU timeout passes (240 VBlanks, or more than 0xf0000 polls); then print the queue and
+ * DMA state and the last operation, empty the queue, reset the GPU DMA and command buffer, and return -1. */
 int get_alarm(void) {
     if (VSync(-1) > g_psyq_gpu_sync_deadline || g_psyq_gpu_sync_poll_count++ > 0x000f0000) {
         *g_psyq_gpu_gp1_port; /* Retail reads the status once and discards it. */

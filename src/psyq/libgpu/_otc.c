@@ -1,5 +1,8 @@
 /* LIBGPU 80025b5c-80025c44. */
 #include "psx/libgpu.h"
+
+/* Clear the ordering table `ot` of `count` entries in reverse with the ordering-table DMA (channel 6), each
+ * entry linking to the one below it, and wait. Returns `count`, or -1 on a timeout. ClearOTagR uses it. */
 int _otc(u32* ot, int count) {
     u32* position = ot;
     int final_offset;

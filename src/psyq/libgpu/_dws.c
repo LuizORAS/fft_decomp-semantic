@@ -1,6 +1,7 @@
 #include "psx/libgpu.h"
 
-/* LIBGPU, retail 0x80025e5c-0x800260b0. Halfword-pixel transfer with CPU remainder and 16-word DMA blocks. */
+/* Send `data` to the VRAM rectangle `rect` (two pixels a word): the remainder of 16 words by the CPU, the
+ * 16-word blocks by DMA. Returns 0, or -1 for an empty rectangle or a timeout. LoadImage queues it. */
 int _dws(RECT* rect, u32* data) {
     extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
     int size;
