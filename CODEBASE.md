@@ -28,7 +28,7 @@ as original bytes.
 | `world` | `WORLD/WORLD.BIN` | `0x800e0000` | The menus over the world map (formation, shops, the location list, the memory card) and a copy of the event-script interpreter that never runs |
 | `battle` | `BATTLE.BIN` | `0x80067000` | Battles and the story scenes played on battle maps |
 | `event-*` | `EVENT/*.OUT` | `0x801bf000` | Screens and loaders that BATTLE runs on demand: unit, equipment and job menus (`BUNIT`, `EQUIP`, `JOBSTTS`), the scenario loader (`ATTACK`) and others ([Battle Screens](docs/mechanics/Battle%20Screens.md)) |
-| `effect-*` | `EFFECT/E*.BIN` | `0x801c2500` | 110 ability effects, run with BATTLE ([Ability Effects](docs/mechanics/Ability%20Effects.md)) |
+| `effect-*` | `EFFECT/E*.BIN` | `0x801c2500` | 110 ability effects, run with BATTLE ([Ability Effects](docs/mechanics/Ability%20Effects.md), [Effect Files](docs/mechanics/Effect%20Files.md)) |
 
 Memory follows from these addresses:
 - BATTLE, WLDCORE and OPEN share `0x80067000`, so only one of them is loaded
@@ -234,7 +234,8 @@ All of these libraries are reconstructed C, matched like the game code.
   [Battle Map](docs/mechanics/Battle%20Map.md),
   [Sprites and Graphics](docs/mechanics/Sprites%20and%20Graphics.md),
   [Sound](docs/mechanics/Sound.md),
-  [Ability Effects](docs/mechanics/Ability%20Effects.md) and
+  [Ability Effects](docs/mechanics/Ability%20Effects.md),
+  [Effect Files](docs/mechanics/Effect%20Files.md) and
   [Engine core](docs/mechanics/Engine%20core.md) so far. The guides walk
   through common changes, such as the
   [Movement rules](docs/guides/Movement%20rules.md),
