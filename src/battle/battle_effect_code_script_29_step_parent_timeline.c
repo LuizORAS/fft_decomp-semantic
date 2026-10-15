@@ -61,12 +61,12 @@ s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
             &state->track_keyframe[2][0], &state->track_remaining[2][0]);
         battle_effect_advance_map_background_track(&g_battle_effect_timeline->color_tracks[0].screen,
             &state->track_keyframe[3][0], &state->track_remaining[3][0]);
-        battle_effect_update_on_hit_sound_timer(g_battle_effect_timeline->sound_tracks[0][0],
-            &state->track_keyframe[4][0], &state->track_remaining[4][0], &state->sound_state[0][0][1]);
-        battle_effect_update_on_hit_sound_timer(g_battle_effect_timeline->sound_tracks[0][1],
-            &state->track_keyframe[5][0], &state->track_remaining[5][0], &state->sound_state[1][0][1]);
-        battle_effect_update_on_hit_sound_timer(g_battle_effect_timeline->sound_tracks[0][2],
-            &state->track_keyframe[6][0], &state->track_remaining[6][0], &state->sound_state[2][0][1]);
+        battle_effect_advance_sound_track(g_battle_effect_timeline->sound_tracks[0][0], &state->track_keyframe[4][0],
+            &state->track_remaining[4][0], &state->sound_state[0][0][1]);
+        battle_effect_advance_sound_track(g_battle_effect_timeline->sound_tracks[0][1], &state->track_keyframe[5][0],
+            &state->track_remaining[5][0], &state->sound_state[1][0][1]);
+        battle_effect_advance_sound_track(g_battle_effect_timeline->sound_tracks[0][2], &state->track_keyframe[6][0],
+            &state->track_remaining[6][0], &state->sound_state[2][0][1]);
         if (g_battle_effect_flags_section->flags & EFFECT_FLAG_TIMING_CURVE_PHASE1) {
             battle_state_set_min_vsync_interval(
                 battle_effect_get_timing_curve_value((battle_effect_timing_entry_t*)record));
@@ -93,12 +93,12 @@ s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
             &state->track_keyframe[2][1], &state->track_remaining[2][1]);
         battle_effect_advance_map_background_track(&g_battle_effect_timeline->color_tracks[1].screen,
             &state->track_keyframe[3][1], &state->track_remaining[3][1]);
-        battle_effect_update_on_hit_sound_timer(g_battle_effect_timeline->sound_tracks[1][0],
-            &state->track_keyframe[4][1], &state->track_remaining[4][1], &state->sound_state[0][1][1]);
-        battle_effect_update_on_hit_sound_timer(g_battle_effect_timeline->sound_tracks[1][1],
-            &state->track_keyframe[5][1], &state->track_remaining[5][1], &state->sound_state[1][1][1]);
-        battle_effect_update_on_hit_sound_timer(g_battle_effect_timeline->sound_tracks[1][2],
-            &state->track_keyframe[6][1], &state->track_remaining[6][1], &state->sound_state[2][1][1]);
+        battle_effect_advance_sound_track(g_battle_effect_timeline->sound_tracks[1][0], &state->track_keyframe[4][1],
+            &state->track_remaining[4][1], &state->sound_state[0][1][1]);
+        battle_effect_advance_sound_track(g_battle_effect_timeline->sound_tracks[1][1], &state->track_keyframe[5][1],
+            &state->track_remaining[5][1], &state->sound_state[1][1][1]);
+        battle_effect_advance_sound_track(g_battle_effect_timeline->sound_tracks[1][2], &state->track_keyframe[6][1],
+            &state->track_remaining[6][1], &state->sound_state[2][1][1]);
     }
     battle_camera_start_parent_keyframe_moves(state->frame);
     state->frame++;

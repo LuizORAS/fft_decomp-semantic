@@ -1,20 +1,17 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Build the secondary-effect init record for an ability and hand it to the
- * effect selector.
+/* Request the effect of the unit's action: build its effect init record and pass it to
+ * battle_effect_request_ability_effect. battle_action_start_strike calls it.
  *
- * Each of the acting unit's targets contributes a target block carrying its
- * unit id and a result animation; with no targets the first block instead
- * holds the post-action destination tile. Every other living unit that is not
- * already a target is appended to spectator_ids. The packed
- * argument combines the ability's charge animation set with the element used
- * as the effect's sprite palette, and stays 0 while the action has no attack
- * to animate. The failed-condition path is written as its own `packed = 0`
- * block: the target keeps that block, and a pre-initialized `packed` lets GCC
- * thread the failing tests straight to the call. Items 0x4a..0x4c (the
- * elemental guns) and ability 0x189 (Ninja Ball) are hard-coded exceptions. */
-void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc_data_t* unit) {
+ * Each of the acting unit's targets contributes a target block carrying its unit id and a result animation;
+ * with no targets the first block instead holds the post-action destination tile. Every other living unit
+ * that is not already a target is appended to spectator_ids. The packed argument combines the ability's
+ * charge animation set with the element used as the effect's sprite palette, and stays 0 while the action has
+ * no attack to animate. The failed-condition path is written as its own `packed = 0` block: the target keeps
+ * that block, and a pre-initialized `packed` lets GCC thread the failing tests straight to the call. Items
+ * 0x4a..0x4c (the elemental guns) and Throw Ball (0x189) are hard-coded exceptions. */
+void battle_effect_request_action_effect(s32 ability, battle_unit_misc_data_t* unit) {
     battle_effect_secondary_init_t init;
     battle_unit_misc_data_t* target;
     battle_unit_misc_data_t* spectator;
@@ -99,5 +96,5 @@ void battle_effect_store_targets_and_display_types(s32 ability, battle_unit_misc
             packed |= g_main_ability_range_data[ability].element << 16;
         }
     }
-    battle_effect_set_ability_animation(packed, ability, &init);
+    battle_effect_request_ability_effect(packed, ability, &init);
 }

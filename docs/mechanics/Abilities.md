@@ -170,7 +170,7 @@ innate ones of its job.
    then waits its CT ([[battle_action_prepare_attack]]) in the charging pose
    ([[battle_unit_start_ability_charging_animation]]). When the action runs,
    the announcement plays ([[battle_state_announce_next_ability]]), the
-   effect file plays ([[battle_effect_set_ability_animation]]) and the unit
+   effect file plays ([[battle_effect_request_ability_effect]]) and the unit
    strikes ([[battle_unit_select_attack_animation_for_ability]]: the weapon's
    swing, the item's use or the ability's own animation; the Lucavi and
    Altima always 0x2c).

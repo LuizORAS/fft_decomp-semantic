@@ -194,7 +194,9 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `battle_map_control_gte_background_color` returns `result` unset for DISABLE
   and RESTORE (every caller issues SET); `open_card_get_info_with_retries`
   returns `result` unset for a retry limit below 1 (its caller passes 2);
-  `battle_sound_stop_weather_sfx` returns an unset `result` no caller reads.
+  `battle_sound_stop_weather_sfx` returns an unset `result` no caller reads;
+  `battle_effect_next_channel_sound` returns `sound` unset for a channel mode
+  above 4.
 - `world_card_read_file_chunked` sets `result` to -1 when the last read was
   short and then returns `total`; the test has no effect.
 - `helpmenu_menu_run_require_help` and `world_menu_run_require_help` reach

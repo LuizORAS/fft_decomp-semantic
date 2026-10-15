@@ -139,7 +139,7 @@ void battle_effect_draw_projectile_model(
         gte_stlvnl(&scratch[i]);
         gte_stflg(&scratch[i].pad);
     }
-    command_count = battle_effect_init_resource_sections(model, 0);
+    command_count = battle_effect_init_model_sections(model, 0);
     gt3_index = 0;
     g4_index = 0;
     g3_index = 0;

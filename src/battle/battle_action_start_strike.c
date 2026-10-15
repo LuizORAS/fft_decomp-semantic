@@ -22,10 +22,10 @@ void battle_action_start_strike(void) {
     misc->used_ability_id = raw;
     battle_gfx_set_thrown_item_graphic_palette(misc->used_weapon_id, misc);
     if (((target != 0) && (ability != target)) || (ability == ABILITY_ID_KNOCKBACK) || (ability == 0)
-        || (battle_effect_load_ability(ability) != 0)) {
+        || (battle_effect_ability_has_no_effect(ability) != 0)) {
         battle_action_apply_strike_results();
         return;
     }
     g_battle_game_state = BATTLE_GAME_STATE_START_EFFECT_FILE_OPEN;
-    battle_effect_store_targets_and_display_types(ability, misc);
+    battle_effect_request_action_effect(ability, misc);
 }

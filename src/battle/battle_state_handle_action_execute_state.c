@@ -44,7 +44,7 @@ void battle_state_handle_action_execute_state(void) {
 
     if (unit->used_ability_id != 0 && unit->used_ability_id != ABILITY_ID_KNOCKBACK
         && unit->used_ability_id != ABILITY_ID_BASIC_SKILL_THROW_STONE) {
-        if (battle_effect_load_ability(unit->used_ability_id) != 0
+        if (battle_effect_ability_has_no_effect(unit->used_ability_id) != 0
             || (unit->used_ability_id >= ABILITY_ID_CHARGE_FIRST && unit->used_ability_id < ABILITY_ID_MATH_FIRST)) {
             battle_camera_update_cursor_tile_vector();
         }
@@ -57,7 +57,7 @@ void battle_state_handle_action_execute_state(void) {
                     if (target != 0) {
                         if (unit->used_ability_id >= ABILITY_ID_REACTION_FIRST
                             && unit->used_ability_id < ABILITY_ID_SUPPORT_FIRST) {
-                            if (battle_effect_load_ability(unit->used_ability_id) != 0
+                            if (battle_effect_ability_has_no_effect(unit->used_ability_id) != 0
                                 && g_battle_ability_animation_data[unit->used_ability_id].attack_animation
                                     != BATTLE_ATTACK_ANIMATION_USE_WEAPON) {
                                 /* Both arguments are misc records overlaying the declared parameters. */

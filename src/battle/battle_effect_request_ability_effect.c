@@ -1,16 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Select the effect file for an ability and start its charge secondary effect.
+/* Request the effect of an ability: select its effect file, set the effect phase to REQUESTED, start the
+ * charge secondary effect of its charge animation set, clear the sound channel counts and keep the init
+ * record. Throw Ball takes the Fire, Ice or Bolt file for a fire, water or lightning element (another
+ * element keeps the previous effect id), and ids from 0x200 continue the table after the action abilities.
+ * An ability without an effect file requests nothing: the Break abilities
+ * start the equip break secondary effect, and the Charge abilities and Accumulate the red orbs.
  *
- * `packed` carries the ability instance in its low halfword and the sprite
- * palette in its high halfword. Ninja balls (0x189) pick their effect from the
- * thrown ball type. A negative table entry means the ability has no effect
- * file: only the two fixed secondary animations for the Break (0x8a) and Charge (0x196) ability
- * ranges are started, and nothing is retained.
- */
-void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_secondary_init_t* source) {
+ * `packed` carries the charge animation set in its low halfword and the element mask in its high halfword. */
+void battle_effect_request_ability_effect(u32 packed, s32 ability, battle_effect_secondary_init_t* source) {
     g_battle_effect_load_state = BATTLE_EFFECT_LOAD_START;
     if (ability < ABILITY_ID_COUNT) {
         if (ability == ABILITY_ID_THROW_BALL) {

@@ -1,10 +1,11 @@
 #include "fft/battle.h"
 
-/* Returns the next sound of an effect sound channel, chosen from the channel's
- * three ids by its mode and the number of sounds it has played; 0 is no sound.
+/* Return the next sound of effect sound channel `channel` and count it: the channel's mode picks one of
+ * its three ids from the number of sounds it has played (the first, alternating, the first then the second,
+ * the first then alternating, or cycling); 0 is no sound. Both timelines' sound tracks call it.
  *
  * Modes above 4 fall through with an unassigned result, as in the target. */
-s32 battle_effect_get_on_hit_sound_index(s32 channel) {
+s32 battle_effect_next_channel_sound(s32 channel) {
     s32 count;
     s32 sound;
 

@@ -21,7 +21,7 @@ void battle_action_play_ability_effect(void) {
         battle_target_hide_cursor();
         return;
     }
-    if (battle_effect_load_ability(ability) != 0) {
+    if (battle_effect_ability_has_no_effect(ability) != 0) {
         g_main_system_vsync_interval = 1;
         battle_target_hide_cursor();
         return;

@@ -28,5 +28,5 @@ void battle_effect_start_new(s32 ability_id, s32 target_mode, u8* target_data) {
     }
 
     effect_data.spectator_count = 0;
-    battle_effect_set_ability_animation(0, ability_id, &effect_data);
+    battle_effect_request_ability_effect(0, ability_id, &effect_data);
 }

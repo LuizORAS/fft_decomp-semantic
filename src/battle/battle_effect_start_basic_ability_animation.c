@@ -13,5 +13,5 @@ void battle_effect_start_basic_ability_animation(s32 ability_id) {
     effect_data.target[0].fields.target_id = 1;
     effect_data.target[0].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
     effect_data.spectator_count = 0;
-    battle_effect_set_ability_animation(0, ability_id, &effect_data);
+    battle_effect_request_ability_effect(0, ability_id, &effect_data);
 }

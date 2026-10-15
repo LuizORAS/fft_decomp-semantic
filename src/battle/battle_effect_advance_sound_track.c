@@ -9,7 +9,7 @@
  * Sound ids are relative to g_battle_effect_sound_data_base, the effect sound
  * section's id set by battle_effect_load_sound_section.
  */
-void battle_effect_update_on_hit_sound_timer(u8* schedule, s16* entry_index, s16* countdown, u8* unused_sound_state) {
+void battle_effect_advance_sound_track(u8* schedule, s16* entry_index, s16* countdown, u8* unused_sound_state) {
     s16 index = *entry_index;
     s32 effect_kind;
     s32 sound_index;
@@ -21,7 +21,7 @@ void battle_effect_update_on_hit_sound_timer(u8* schedule, s16* entry_index, s16
             effect_kind = *(schedule + index + 0x12);
 
             if (effect_kind >= 2) {
-                sound_index = battle_effect_get_on_hit_sound_index(effect_kind - 2);
+                sound_index = battle_effect_next_channel_sound(effect_kind - 2);
 
                 if (sound_index != 0) {
                     SuzukiPlaySoundFindChannel(g_battle_effect_sound_data_base + sound_index);

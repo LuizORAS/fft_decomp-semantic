@@ -32,7 +32,7 @@ support and movement ability is implemented.
 | Learning with JP, and which reaction, support and movement abilities a unit may equip | [[world_ability_run_learn_list]], [[world_ability_find_unit_abilities]], [[world_ability_build_equippable_rsm_list]] |
 | What a reaction, support or movement ability does | the functions in the [[Abilities]] page's "Where" column; for a reaction also its moment in the [[Action]] page |
 | Its charge gesture and strike animation | [[g_battle_ability_animation_data]] and [[g_battle_ability_charge_animation_sets]] (BATTLE, disc data), [[battle_unit_select_attack_animation_for_ability]] |
-| Its effect file | [[g_battle_effect_ability_ids]] (BATTLE, disc data) and [[battle_effect_set_ability_animation]] |
+| Its effect file | [[g_battle_effect_ability_ids]] (BATTLE, disc data) and [[battle_effect_request_ability_effect]] |
 | Whether the unit speaks a spell quote | flag `ABILITY_SECONDARY_FLAG_3_SPELL_QUOTE`, the exception list [[g_battle_spell_quote_exception_skillsets]] and [[battle_text_determine_spell_quote]] |
 
 A reaction, support or movement ability's effect is code, not data: the
