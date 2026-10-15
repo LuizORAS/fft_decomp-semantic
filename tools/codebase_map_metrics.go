@@ -158,10 +158,30 @@ func mapNumericSuffix(name string) (string, bool) {
 	return match[1], true
 }
 
+// numberedFamily returns the base of a numbered name that another function
+// shares: the base itself or the base with another number. A number that no
+// other function shares is part of the name's meaning (a count or an amount,
+// as in _by_10), not the number of a copy.
+func (index *codebaseIndex) numberedFamily(name string) (string, bool) {
+	base, numbered := mapNumericSuffix(name)
+	if !numbered {
+		return "", false
+	}
+	if _, ok := index.functions[base]; ok {
+		return base, true
+	}
+	for other := range index.functions {
+		if otherBase, ok := mapNumericSuffix(other); ok && other != name && otherBase == base {
+			return base, true
+		}
+	}
+	return "", false
+}
+
 // suffixJustified reports whether a numbered name's summary names its
 // sibling family, which is the accepted reason to keep the number.
-func suffixJustified(f *mapFunction) bool {
-	base, numbered := mapNumericSuffix(f.name)
+func (index *codebaseIndex) suffixJustified(f *mapFunction) bool {
+	base, numbered := index.numberedFamily(f.name)
 	return numbered && strings.Contains(f.summary, base)
 }
 
@@ -263,9 +283,9 @@ func (vault *mapVault) metricsPage() string {
 		if mapAddressName(name) {
 			addressNamed = append(addressNamed, f)
 		}
-		if _, ok := mapNumericSuffix(name); ok {
+		if _, ok := index.numberedFamily(name); ok {
 			numbered++
-			if !suffixJustified(f) {
+			if !index.suffixJustified(f) {
 				unjustified = append(unjustified, f)
 			}
 		}
@@ -409,7 +429,7 @@ func (vault *mapVault) metricsPage() string {
 	b.WriteString("\n## How the numbers are measured\n\n")
 	b.WriteString("- A **prose summary** is the block comment directly above the definition, starting with a capital letter (not an address note).\n")
 	b.WriteString("- **Weak names** are parameters and block-level locals named like MIPS registers (`a0`, `t1`, `s2`), placeholders (`unk*`, `var`, `arg1`, `local2`, `field0`, `val`, `tmp`, `temp2`) or single letters other than `i j k n x y z w h u v r g b`. **Generic names** (`value`, `data`, `ptr`, `temp`, `buf`, `buffer`, optionally numbered) are counted apart: fine in a short function, often hiding a better name.\n")
-	b.WriteString("- A **numbered name** ends in `_N`; its summary justifies the number when it names the base (the sibling family).\n")
+	b.WriteString("- A **numbered name** ends in `_N` and shares its base with another function (the base itself or another number); its summary justifies the number when it names the base (the sibling family). A number no other function shares is part of the name (`_by_10`, `_times_4`).\n")
 	b.WriteString("- A header block has a **purpose comment** when a standalone block comment (followed by a blank line) comes right after its `/* label */` line; it **mixes subsystems** when its prototypes carry more than one module-plus-word prefix.\n")
 	return b.String()
 }

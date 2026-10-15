@@ -409,6 +409,14 @@ func TestDeclaredNamesAndWeakNames(t *testing.T) {
 	if base, ok := mapNumericSuffix("world_build_at_list_2"); !ok || base != "world_build_at_list" {
 		t.Fatalf("suffix base %q %v", base, ok)
 	}
+	family := &codebaseIndex{functions: map[string]*mapFunction{
+		"x_get_1": {}, "x_get_2": {}, "x_run": {}, "x_run_2": {}, "x_add_by_10": {},
+	}}
+	for name, want := range map[string]string{"x_get_1": "x_get", "x_run_2": "x_run", "x_add_by_10": ""} {
+		if base, ok := family.numberedFamily(name); base != want || ok != (want != "") {
+			t.Fatalf("numbered family of %s = %q %v", name, base, ok)
+		}
+	}
 	if !mapAddressName("battle_return_zero_8008e6d0") || mapAddressName("battle_formula_calculate_hit") {
 		t.Fatal("address-name detection")
 	}

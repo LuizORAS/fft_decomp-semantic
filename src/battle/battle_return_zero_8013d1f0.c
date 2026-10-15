@@ -1,6 +1,6 @@
 #include "psx/types.h"
 
-/* Always 0. No code calls it. */
+/* Return 0. Nothing on the disc calls it or holds its address. */
 s32 battle_return_zero_8013d1f0(void) {
     return 0;
 }

@@ -1885,7 +1885,7 @@ functions:
   - {addr: 0x801b0c88, size: 104, name: battle_effect_init_slot_animation, hash: 1c82ddeba81b4537}
   - {addr: 0x801b0cf0, size: 536, name: battle_effect_start_group, hash: 72df2180b076033d}
   - {addr: 0x801b0f08, size: 228, name: battle_effect_update_active_slots, hash: 8189eac9894daa3c}
-  - {addr: 0x801b0fec, size: 8, name: battle_return_zero_801b0fec, hash: 207819bf4ebe3078}
+  - {addr: 0x801b0fec, size: 8, name: battle_effect_none_secondary_handler, hash: 207819bf4ebe3078}
   - {addr: 0x801b0ff4, size: 8, name: battle_noop_801b0ff4, hash: 6d64edf91449c1b1}
   - {addr: 0x801b0ffc, size: 1344, name: battle_effect_arrow_arc_secondary_handler, hash: 45bbf0b431cb9df7}
   - {addr: 0x801b153c, size: 1456, name: battle_effect_weapon_hit_secondary_handler, hash: f199190ed91402bf}
@@ -1893,16 +1893,16 @@ functions:
   - {addr: 0x801b1c04, size: 3032, name: battle_effect_spell_charge_secondary_handler, hash: 47d357b63f241e05}
   - {addr: 0x801b27dc, size: 112, name: battle_effect_null_secondary_handler, hash: 45b8351a7e3e1e63}
   - {addr: 0x801b284c, size: 284, name: battle_effect_red_orbs_secondary_handler, hash: ddd0756a40e35649}
-  - {addr: 0x801b2968, size: 8, name: battle_noop_801b2968, hash: 6d64edf91449c1b1}
+  - {addr: 0x801b2968, size: 8, name: battle_effect_unused_07_secondary_handler, hash: 6d64edf91449c1b1}
   - {addr: 0x801b2970, size: 280, name: battle_effect_fall_dust_secondary_handler, hash: c81e622a2213d095}
   - {addr: 0x801b2a88, size: 372, name: battle_effect_splash_secondary_handler, hash: 04cb8d2ab066b35c}
-  - {addr: 0x801b2bfc, size: 8, name: battle_noop_801b2bfc, hash: 6d64edf91449c1b1}
-  - {addr: 0x801b2c04, size: 8, name: battle_noop_801b2c04, hash: 6d64edf91449c1b1}
+  - {addr: 0x801b2bfc, size: 8, name: battle_effect_unused_0a_secondary_handler, hash: 6d64edf91449c1b1}
+  - {addr: 0x801b2c04, size: 8, name: battle_effect_unused_0b_secondary_handler, hash: 6d64edf91449c1b1}
   - {addr: 0x801b2c0c, size: 284, name: battle_effect_trap_secondary_handler, hash: e590accae4f3bb0a}
   - {addr: 0x801b2d28, size: 312, name: battle_effect_level_up_secondary_handler, hash: 9c23b956c57776bd}
-  - {addr: 0x801b2e60, size: 8, name: battle_noop_801b2e60, hash: 6d64edf91449c1b1}
+  - {addr: 0x801b2e60, size: 8, name: battle_effect_unused_0e_secondary_handler, hash: 6d64edf91449c1b1}
   - {addr: 0x801b2e68, size: 688, name: battle_effect_death_smoke_secondary_handler, hash: 4dbfac13fe5b16c4}
-  - {addr: 0x801b3118, size: 8, name: battle_noop_801b3118, hash: 6d64edf91449c1b1}
+  - {addr: 0x801b3118, size: 8, name: battle_effect_unused_10_secondary_handler, hash: 6d64edf91449c1b1}
   - {addr: 0x801b3120, size: 692, name: battle_effect_zodiac_poof_secondary_handler, hash: fb8845c9776a79e3}
   - {addr: 0x801b33d4, size: 1100, name: battle_effect_reflect_secondary_handler, hash: fc5eed87339c5c99}
   - {addr: 0x801b3820, size: 280, name: battle_effect_teleport_secondary_handler, hash: 68abf9eaf6202e01}

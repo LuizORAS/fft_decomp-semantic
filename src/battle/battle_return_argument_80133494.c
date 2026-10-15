@@ -1,7 +1,7 @@
 #include "psx/types.h"
 
-/* Two identity functions back to back, at 0x80133494 and 0x8013349c. No code
- * calls either. */
+/* Return `value` unchanged; battle_return_argument_8013349c right after it is the same. Nothing on the
+ * disc calls either or holds its address. */
 s32 battle_return_argument_80133494(s32 value) {
     return value;
 }

@@ -378,7 +378,7 @@ func (vault *mapVault) functionPage(f *mapFunction) string {
 	for _, debt := range f.debts {
 		debtKinds = appendUnique(debtKinds, debt.kind)
 	}
-	_, numbered := mapNumericSuffix(f.name)
+	_, numbered := vault.index.numberedFamily(f.name)
 	weak := f.weakNames()
 	b.WriteString(frontmatter(
 		mapProperty{"type", "function"},
@@ -401,7 +401,7 @@ func (vault *mapVault) functionPage(f *mapFunction) string {
 		mapProperty{"debt", debtKinds},
 		mapProperty{"address_name", mapAddressName(f.name)},
 		mapProperty{"numeric_suffix", numbered},
-		mapProperty{"suffix_justified", suffixJustified(f)},
+		mapProperty{"suffix_justified", vault.index.suffixJustified(f)},
 		mapProperty{"weak_locals", len(weak)},
 	))
 	fmt.Fprintf(&b, "# %s\n\n", f.name)

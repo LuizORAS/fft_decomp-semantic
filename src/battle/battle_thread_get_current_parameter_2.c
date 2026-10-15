@@ -9,7 +9,8 @@
  * noat" warning. */
 __asm__(".set noat");
 
-/* Return the current thread's parameter 2. */
+/* Return the current thread's parameter 2; battle_thread_get_current_parameter_1 and _3
+ * return the others. */
 s32 battle_thread_get_current_parameter_2(void) {
     register void* global_pointer __asm__("$1");
     register s32 thread_offset __asm__("$8");
