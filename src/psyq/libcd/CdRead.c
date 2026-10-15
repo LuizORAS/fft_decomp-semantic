@@ -1,6 +1,12 @@
 /* SCUS_942.21 0x80020c3c..0x80020d43. */
 #include "psx/libcd.h"
 #include "psx/libetc.h"
+
+/* Start reading `sectors` sectors from the last Setloc position into buffer, in the background. The mode
+ * gives the size taken from each sector (2048, 2340 or 2328 bytes), but the drive always reads in its
+ * 2340-byte mode, so a 2048-byte read can check each sector's header. Saves the caller's callbacks, pauses
+ * a playing or seeking drive and starts the read (cd_read_retry). Returns 1 when it started.
+ * main_file_poll_load reads every file this way. */
 s32 CdRead(s32 sectors, u32* buffer, s32 mode) {
     g_psyq_cd_read_state.mode = mode;
     switch (g_psyq_cd_read_state.mode & (CdlModeSize0 | CdlModeSize1)) {

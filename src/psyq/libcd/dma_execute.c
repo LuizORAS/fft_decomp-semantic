@@ -12,6 +12,10 @@ enum {
 };
 
 #define CD_DMA_CHANNELS ((volatile psyq_cd_dma_channel_t*)0x1f801080)
+
+/* Start a transfer on DMA channel `channel`: wait for the channel (a poll limit prints a timeout), enable or
+ * disable its interrupt, enable the channel, set the address and block size, wait for the drive's data and
+ * start it with `control`. StCdInterrupt calls it. */
 void dma_execute(s32 channel, u32* destination, u32 blocks, u32 words, u32 control, u8 enable_irq, s32 unused) {
     s32 polls = 0;
     /* Retail stores both register readbacks in a volatile local. */

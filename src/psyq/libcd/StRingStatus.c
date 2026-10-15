@@ -1,6 +1,7 @@
 /* SCUS_942.21 0x80021e4c..0x80021f13. */
 #include "psx/libcd.h"
 
+/* Count the ring's free sector records and the sectors read but not taken yet. */
 void StRingStatus(s16* free_sectors, s16* read_sectors) {
     s32 index = g_psyq_cd_stream_ring_sectors;
     psyq_cd_ring_record_t* record;

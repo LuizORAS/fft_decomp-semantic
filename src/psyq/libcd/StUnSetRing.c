@@ -1,6 +1,8 @@
 /* SCUS_942.21 0x80020f3c..0x80020f93. */
 #include "psx/libcd.h"
 
+/* Stop a stream: remove its DMA and ready callbacks and clear the drive's interrupt request, in a critical
+ * section. */
 void StUnSetRing(void) {
     EnterCriticalSection();
     CdDataCallback(0);

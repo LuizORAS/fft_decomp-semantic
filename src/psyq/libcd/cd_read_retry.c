@@ -2,6 +2,10 @@
 #include "psx/libc.h"
 #include "psx/libcd.h"
 #include "psx/libetc.h"
+
+/* Start or restart the current CdRead. With the lid open it sends a Nop every 64 VBlanks and fails; on a
+ * retry it pauses and seeks back to the start; it sets the read mode when it changed, installs cb_read and
+ * sends ReadN. Returns the sectors to read, or -1. */
 s32 cd_read_retry(s32 retry) {
     u8 mode;
     s32 saved_mode;

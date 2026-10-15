@@ -1,6 +1,7 @@
 /* SCUS_942.21 0x800212cc..0x800212eb. */
 #include "psx/libcd.h"
 
+/* Set the stream's start mask and frame range. */
 void StSetMask(s32 mask, s32 start_frame, s32 end_frame) {
     g_psyq_cd_stream_start_mask = mask;
     g_psyq_cd_stream_start_frame = start_frame;

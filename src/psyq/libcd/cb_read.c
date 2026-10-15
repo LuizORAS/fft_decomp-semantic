@@ -2,6 +2,11 @@
 #include "psx/libc.h"
 #include "psx/libcd.h"
 #include "psx/libetc.h"
+
+/* Ready callback of a CdRead: on each data interrupt check the sector's header against the expected sector
+ * (2048-byte reads), copy the sector to the buffer and count it; any other interrupt fails the read. A failure
+ * restarts the read. When the read ends, fails for good or passes 1200 VBlanks, put back the caller's
+ * callbacks, pause the drive and call the read callback. */
 void cb_read(u8 event, u8* result) {
     u32 sector_header[3];
     if (event == CdlDataReady) {

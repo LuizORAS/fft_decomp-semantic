@@ -1,6 +1,8 @@
 /* SCUS_942.21 0x80020e28..0x80020ebb. */
 #include "psx/libcd.h"
 
+/* Start a streaming read (ReadS) in mode `mode`, installing the stream's DMA and ready callbacks first
+ * when the mode streams. OPEN's movie player and WLDCORE's image stream use it. */
 s32 CdRead2(s32 mode) {
     u8 device_mode = mode;
     CdControl(CdlSetmode, &device_mode, 0);

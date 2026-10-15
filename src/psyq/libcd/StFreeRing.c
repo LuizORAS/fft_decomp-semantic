@@ -1,5 +1,8 @@
 /* SCUS_942.21 0x8002110c..0x800211c7. */
 #include "psx/libcd.h"
+
+/* Release the frame whose data is frame_data: mark its sector records free and move the read index past
+ * them. Returns 0, or 1 when the frame was not locked. */
 s32 StFreeRing(void* frame_data) {
     s32 ring_sectors = g_psyq_cd_stream_ring_sectors;
     psyq_cd_ring_record_t* ring = g_psyq_cd_stream_ring;
