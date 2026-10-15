@@ -26,11 +26,13 @@ page under `mechanics/` it reads two frontmatter properties:
   units, items and jobs, 3 menus, the world map and the rest of the game, 4
   effects and libraries.
 - `scope`: name prefixes (`battle_move` matches `battle_move` and every
-  `battle_move_*` function) or exact function names written with `()`
-  (`main()` matches `main` only). Every matched function gets the `mechanic`
-  and `tier` properties, and the vault gains a `<page> scope` page that lists
-  them. A function that several entries match belongs to an exact entry, or
-  else to the longest prefix.
+  `battle_move_*` function), exact function names written with `()`
+  (`main()` matches `main` only) or source folders ending in `/`
+  (`src/psyq/` matches every function whose file is under it). Every matched
+  function gets the `mechanic` and `tier` properties, and the vault gains a
+  `<page> scope` page that lists them. A function that several entries match
+  belongs to an exact entry, or else to the longest prefix; a folder takes
+  only what no name entry matches.
 
 The vault's Metrics page counts mechanic pages, guides and the functions in
 a scope. Its Stale mentions page lists scope entries that match no function

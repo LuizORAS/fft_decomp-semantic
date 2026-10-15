@@ -159,12 +159,18 @@ func (doc *mapDoc) readFrontmatter() error {
 }
 
 // mapScopeRank orders the scope entries that match one function: an exact
-// entry (name()) wins, then the longest prefix.
+// entry (name()) wins, then the longest prefix, and a source folder (src/x/)
+// takes only what no name entry matches.
 func mapScopeRank(entry string) int {
-	if strings.HasSuffix(entry, "()") {
+	switch {
+	case entry == "":
+		return 0
+	case strings.HasSuffix(entry, "()"):
 		return 1 << 16
+	case strings.HasSuffix(entry, "/"):
+		return 1
 	}
-	return len(entry)
+	return len(entry) + 1
 }
 
 func (doc *mapDoc) addScope(item string, line int) {
@@ -301,10 +307,15 @@ func (vault *mapVault) addDocs(docs []*mapDoc) error {
 		vault.assign("scope:"+doc.path, doc.title+" scope", "scope", "scopes")
 		for _, entry := range doc.scope {
 			exact := strings.HasSuffix(entry.name, "()")
+			folder := strings.HasSuffix(entry.name, "/")
 			key := strings.TrimSuffix(entry.name, "()")
 			matched := false
 			for _, name := range names {
-				if name != key && (exact || !strings.HasPrefix(name, key+"_")) {
+				if folder {
+					if !strings.HasPrefix(vault.index.functions[name].source, key) {
+						continue
+					}
+				} else if name != key && (exact || !strings.HasPrefix(name, key+"_")) {
 					continue
 				}
 				matched = true
@@ -417,7 +428,7 @@ func (vault *mapVault) scopePage(doc *mapDoc) string {
 		mapProperty{"prose_summaries", summarized},
 	))
 	fmt.Fprintf(&b, "# %s scope\n\n", doc.title)
-	fmt.Fprintf(&b, "The functions that the `scope` of [[%s]] matches: %d, %d with a prose summary. A function that several entries match belongs to an exact entry (`name()`), or else to the longest prefix.\n\n", doc.title, len(functions), summarized)
+	fmt.Fprintf(&b, "The functions that the `scope` of [[%s]] matches: %d, %d with a prose summary. A function that several entries match belongs to an exact entry (`name()`), or else to the longest prefix; a source folder (`src/x/`) takes only what no name entry matches.\n\n", doc.title, len(functions), summarized)
 	b.WriteString("| Scope entry | Functions |\n|---|---|\n")
 	for _, entry := range doc.scope {
 		b.WriteString(tableRow("`"+entry.name+"`", fmt.Sprint(perEntry[entry.name])))

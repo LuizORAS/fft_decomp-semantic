@@ -452,7 +452,7 @@ func TestMapDocsScopesAndEditProtection(t *testing.T) {
 		}
 	}
 	vaultDir := filepath.Join(p.root, "build", "map")
-	turns := "---\ntype: mechanic\ntier: 1\nscope:\n  - main\n  - main_first\n  - main_second()\n  - main_gone\n---\n\n# Turns\n\n[[main_first]], `[[in_code]]`, [[Turns scope]] and [[Missing page]].\n\n| [[main_first\\|first]] |\n"
+	turns := "---\ntype: mechanic\ntier: 1\nscope:\n  - main\n  - main_first\n  - main_second()\n  - main_gone\n  - src/event/\n  - src/main/\n---\n\n# Turns\n\n[[main_first]], `[[in_code]]`, [[Turns scope]] and [[Missing page]].\n\n| [[main_first\\|first]] |\n"
 	write(p.root, "CODEBASE.md", "# Codebase\n")
 	write(p.root, "docs/mechanics/Turns.md", turns)
 	write(p.root, "docs/guides/Retarget.md", "---\ntype: guide\nscope: [battle]\n---\n\n[[Turns]] and ![[{{title}} scope]]\n")
@@ -478,8 +478,11 @@ func TestMapDocsScopesAndEditProtection(t *testing.T) {
 	if strings.Contains(functionPage("battle_helper"), "[[Turns]]") {
 		t.Fatal("a guide's scope assigned a mechanic")
 	}
+	if page := functionPage("card_entry"); !strings.Contains(page, `mechanic: "[[Turns]]"`) {
+		t.Fatalf("a source folder entry did not match card_entry:\n%s", page)
+	}
 	for page, want := range map[string]string{
-		"scopes/Turns scope.md":     "| `main_first` | 1 |\n| `main_second()` | 1 |\n| `main_gone` | 0 |\n",
+		"scopes/Turns scope.md":     "| `main_first` | 1 |\n| `main_second()` | 1 |\n| `main_gone` | 0 |\n| `src/event/` | 2 |\n| `src/main/` | 0 |\n",
 		"reports/Stale mentions.md": "| [[Turns\\|docs/mechanics/Turns.md]] | 8 | `main_gone` |",
 		"Home.md":                   "| [[Turns]] | 1 | [[Turns scope]]: ",
 	} {
