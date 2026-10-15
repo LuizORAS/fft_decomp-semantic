@@ -1,8 +1,10 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001c180–0x8001c264: build normalized basis from the first two rows.
- * Input row2 is ignored. Only the rotation diagonal is restored. */
+/* Make `output` an orthonormal basis from `input`'s first two rows: row 1 kept, row 2 the cross product of
+ * rows 0 and 1, and row 0 the cross product of rows 1 and 2 (row 0 turned square to row 1), each normalized.
+ * `input`'s row 2 is ignored, and only the GTE's rotation diagonal is restored afterwards. No code refers to
+ * it. */
 void MatrixNormal(MATRIX* input, MATRIX* output) {
     MATRIX* source = input;
     MATRIX* destination = output;

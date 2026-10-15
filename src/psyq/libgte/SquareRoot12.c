@@ -4,7 +4,8 @@
 #include "psx/cpu_return_abi.h"
 #include "psx/cpu_return_zero_inline.h"
 
-/* main 0x8001c268–0x8001c2fc: table approximation with signed normalization. */
+/* The square root of the 20.12 value `value`, as a 20.12 value, from the same table as SquareRoot0; 0 for 0.
+ * The effect trajectories and launch speeds use it. */
 s32 SquareRoot12(s32 value) {
     register s32 odd __asm__("$8");
     register s32 exponent __asm__("$9");

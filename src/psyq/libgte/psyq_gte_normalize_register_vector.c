@@ -1,8 +1,9 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001c0c4–0x8001c180: normalization worker with scratch-register ABI.
- * Inputs/results are t0–t2; v0 retains the sum of squares. No zero guard exists. */
+/* The normalization worker, with a private register interface: the vector arrives and leaves in t0-t2 and
+ * v0 keeps the sum of squares. It squares and sums the components on the GTE, looks up 1 / sqrt in LIBGTE's
+ * inverse-root table and scales. There is no zero test; a zero vector stays zero. */
 void psyq_gte_normalize_register_vector(void) {
     register s32 x __asm__("$8");
     register s32 y __asm__("$9");

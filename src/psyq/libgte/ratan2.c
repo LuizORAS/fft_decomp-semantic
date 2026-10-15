@@ -1,6 +1,9 @@
 #include "psx/libgte.h"
 
-/* main 0x8001d8e8–0x8001da68. */
+/* The angle of the vector (`x`, `y`) from -2048 to 2048 (4096 a turn; 0 along +x, 1024 along +y), from
+ * LIBGTE's arctangent table indexed by 1024 times the ratio of the smaller component to the larger; large
+ * components are scaled down before the division. 0 for (0, 0). Effects, the camera and units turn towards
+ * their targets with it. */
 long ratan2(long y, long x) {
     long negative_x = 0;
     long negative_y = 0;

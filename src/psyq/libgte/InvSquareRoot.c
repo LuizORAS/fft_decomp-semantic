@@ -3,7 +3,8 @@
 
 #include "psx/cpu_return_abi.h"
 
-/* main 0x8001bfc8–0x8001c054: inverse-root mantissa/exponent table lookup. */
+/* The inverse square root of `value` as a mantissa from LIBGTE's inverse-root table and an exponent, stored
+ * through `mantissa_out` and `exponent_out`; returns 1, or -1 for 0. No code refers to it. */
 void InvSquareRoot(long value, long* mantissa_out, long* exponent_out) {
     register s32 odd __asm__("$8");
     register s32 exponent __asm__("$9");

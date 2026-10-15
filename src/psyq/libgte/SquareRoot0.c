@@ -4,7 +4,8 @@
 #include "psx/cpu_return_abi.h"
 #include "psx/cpu_return_zero_inline.h"
 
-/* main 0x8001bf38–0x8001bfbc: table approximation with signed normalization. */
+/* The integer square root of `value`, from LIBGTE's square-root table after shifting `value` by an even
+ * count; 0 for 0. Effects and the event scripts' FocusSpeed and sprite moves measure distances with it. */
 long SquareRoot0(long value) {
     register s32 odd __asm__("$8");
     register s32 exponent __asm__("$9");

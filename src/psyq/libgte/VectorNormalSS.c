@@ -1,7 +1,7 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001c094–0x8001c0c4: normalize short input into short output. */
+/* Same as VectorNormal for a 16-bit `input` and `output`; returns the input's sum of squares. */
 long VectorNormalSS(SVECTOR* input, SVECTOR* output) {
     SVECTOR* source = input;
     SVECTOR* destination = output;

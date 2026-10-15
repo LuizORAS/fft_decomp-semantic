@@ -1,6 +1,6 @@
 #include "psx/libgte.h"
 
-/* main 0x8001bb98–0x8001bc28: quadrant lookup. */
+/* The sine of `angle` (0-4095) from LIBGTE's quarter-wave table, read by quadrant. rsin calls it. */
 s32 sin_1(s32 angle) {
     s32 result;
     if (angle <= 2048) {

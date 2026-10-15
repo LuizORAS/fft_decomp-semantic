@@ -1,6 +1,7 @@
 #include "psx/libgte.h"
 
-/* main 0x8001bcc8–0x8001be1c; repeated hyperbolic shift4 is intentional. */
+/* The core of csqrt: a hyperbolic CORDIC iteration over the normalized `value`, with the shift-4 step
+ * repeated, as that iteration needs to converge. */
 s32 psyq_gte_csqrt_kernel(s32 value) {
     s32 x[8];
     s32 y[8];

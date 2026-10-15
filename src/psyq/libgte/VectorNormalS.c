@@ -1,7 +1,9 @@
 #include "psx/cpu_return_address_abi.h"
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
-/* main 0x8001c054–0x8001c068: wide-input entry to the shared short-output tail. */
+
+/* Same as VectorNormal for a 32-bit `input` into a 16-bit `output`, through VectorNormalSS's tail; returns
+ * the input's sum of squares. No code refers to it. */
 long VectorNormalS(VECTOR* input, SVECTOR* output) {
     /* The continuation receives wide components in the private t0-t2 ABI. */
     register s32 x __asm__("$8");
