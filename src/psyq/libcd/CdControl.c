@@ -18,6 +18,9 @@ static __inline__ s32 cd_issue_with_retry(u8 command, const u8* parameter, u8* r
     return -1;
 }
 
+/* Send CD command `command` and wait for its acknowledgement, up to four tries. A command that takes a
+ * position seeks there first (CdlSetloc), and an open lid's status is refreshed with a Nop before any other
+ * command. Returns 1, or 0 when every try failed. */
 s32 CdControl(u8 command, u8* parameter, u8* result) {
     return cd_issue_with_retry(command, parameter, result, 0) == 0;
 }

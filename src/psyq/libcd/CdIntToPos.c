@@ -1,5 +1,7 @@
 #include "psx/libcd.h"
 
+/* Convert sector number `sector` to the drive's BCD minute, second and sector, counting the 150-sector
+ * lead-in at 75 sectors a second. */
 CdlLOC* CdIntToPos(s32 sector, CdlLOC* position) {
     s32 seconds;
     s32 minutes;

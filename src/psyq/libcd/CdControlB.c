@@ -17,6 +17,8 @@ static __inline__ s32 cd_issue_with_retry(u8 command, const u8* parameter, u8* r
     g_psyq_cd_sync_callback = callback;
     return -1;
 }
+
+/* Same as CdControl, then wait until the command completes (CD_sync); returns 1 when it completed. */
 s32 CdControlB(u8 command, const u8* parameter, u8* result) {
     if (cd_issue_with_retry(command, parameter, result, 0) != 0) {
         return 0;

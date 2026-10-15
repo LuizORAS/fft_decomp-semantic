@@ -1,4 +1,6 @@
 #include "psx/libcd.h"
+
+/* The inverse of CdIntToPos: the sector number of a BCD drive position. */
 s32 CdPosToInt(CdlLOC* position) {
     CdlLOC* location = position;
     u32 minute_bcd = location->minute;
