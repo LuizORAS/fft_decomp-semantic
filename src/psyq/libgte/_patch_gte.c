@@ -3,8 +3,11 @@
 #include "psx/libapi.h"
 #include "psx/libgte.h"
 
-/* main 0x8001da68–0x8001dad0: replace the BIOS exception-handler prefix.
- * Critical-section/cache calls and BIOS dispatch remain actual interfaces. */
+/* Copy LIBGTE's 14-word template over the start of the BIOS exception handler (entry 6 of the BIOS's C0
+ * table), in a critical section, then flush the instruction cache. The template is psx-spx's
+ * "patch_missing_cop0r13_in_exception_handler": it adds the read of the cause register that the oldest BIOS
+ * (CEX-1000 KT-3) misses, so an interrupt that arrives with a GTE command does not run the command twice.
+ * InitGeom calls it. */
 void _patch_gte(void) {
     /* The copy loop retains the handwritten word and template-bound registers. */
     psyq_bios_c0_table_t* table;

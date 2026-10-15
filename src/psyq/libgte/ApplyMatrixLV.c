@@ -1,8 +1,8 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001c850–0x8001c9b0: two-pass signed wide-vector rotation.
- * Negative high parts are negated before shifting and restored afterward. */
+/* Rotate the 32-bit vector `input` by `matrix`'s rotation into `output` (4.12), in two GTE passes over its
+ * high and low 15 bits so that no part saturates. require_bonus_run_dark_screen_burst uses it. */
 VECTOR* ApplyMatrixLV(MATRIX* matrix, VECTOR* input, VECTOR* output) {
     MATRIX* rotation = matrix;
     VECTOR* vector = input;

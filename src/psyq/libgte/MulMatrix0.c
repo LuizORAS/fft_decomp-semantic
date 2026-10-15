@@ -1,7 +1,8 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001c468–0x8001c574: rotation-only multiply; translation untouched. */
+/* Multiply `left`'s rotation by `right`'s into `output`, whose translation is untouched; the GTE's rotation
+ * matrix is used for the product. battle_map_draw_mesh_and_weather uses it. */
 void MulMatrix0(MATRIX* left, void* right, MATRIX* output) {
     MATRIX* left_operand = left;
     void* right_operand = right;

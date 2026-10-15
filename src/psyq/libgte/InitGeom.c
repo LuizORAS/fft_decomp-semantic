@@ -1,8 +1,10 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001beb8–0x8001bf38: patch exception entry, enable COP2 and seed
- * geometry control registers. Return address uses original global storage. */
+/* Start the GTE: patch the BIOS exception handler (_patch_gte), enable coprocessor 2 in the status register
+ * and load its defaults: the depth-averaging factors 341 and 256 (AverageZ3 and AverageZ4 then give a quarter
+ * of the average), a projection distance of 1000, the depth-cue factors -4194 and 0x1400000 and a zero screen
+ * offset. main_gfx_reset_display calls it. */
 void InitGeom(void) {
     s32 status;
     register s32 value __asm__(

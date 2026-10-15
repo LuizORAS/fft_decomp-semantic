@@ -1,7 +1,9 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001cd28–0x8001ce34: overwrite the left rotation, preserve translation. */
+/* Multiply `left`'s rotation by `right`'s into `left` (left = left x right), keeping `left`'s translation;
+ * the GTE's rotation matrix is used for the product and left holding `left`'s old rotation. The battle and
+ * world map light threads use it. */
 void MulMatrix(MATRIX* left, MATRIX* right) {
     register MATRIX* left_operand __asm__("$4") = left; /* Retail directly uses argument registers. */
     MATRIX* right_operand = right;

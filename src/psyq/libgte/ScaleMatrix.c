@@ -1,8 +1,8 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001cf78–0x8001d09c: column scaling, low-word products and word stores.
- * The packed view preserves writes to the matrix alignment word. */
+/* Scale `camera_matrix`'s rotation by the 4.12 vector at `scale_pointer`, column by column (column j times
+ * component j). The battle camera, the battle map draw, GsSortSprite and WLDCORE's map projection use it. */
 void ScaleMatrix(void* camera_matrix, void* scale_pointer) {
     MATRIX* matrix = camera_matrix;
     VECTOR* scale = scale_pointer;

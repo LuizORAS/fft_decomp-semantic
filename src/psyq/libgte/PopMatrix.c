@@ -3,7 +3,8 @@
 #include "psx/libc.h"
 #include "psx/libgte.h"
 
-/* main 0x8001cba4–0x8001cc44: restore the eight rotation/translation controls. */
+/* Restore the GTE's rotation matrix and translation from the matrix stack; when it is empty, print a
+ * message. */
 void PopMatrix(void) {
     /* Fixed scratch registers reproduce the handwritten COP2/ABI allocation. */
     register s32 offset __asm__("$14");

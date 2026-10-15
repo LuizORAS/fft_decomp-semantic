@@ -1,8 +1,9 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001d658–0x8001d8e4: construct rotation from the packed sin/cos table.
- * Low-word unsigned products and negation before rescaling retain rounding. */
+/* Build into `output` the rotation matrix for the angles in `rotation` (about x, y and z, 4096 a turn), from
+ * LIBGTE's table of packed sine and cosine pairs. About 40 functions (the camera, effects, the map and units)
+ * build their rotations this way. */
 void RotMatrix(SVECTOR* rotation, MATRIX* output) {
     SVECTOR* angles = rotation;
     MATRIX* destination = output;

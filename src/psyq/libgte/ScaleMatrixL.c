@@ -1,8 +1,8 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001c9e0–0x8001cb04: row scaling, low-word products and word stores.
- * The packed view preserves writes to the matrix alignment word. */
+/* Scale `matrix`'s rotation by the 4.12 vector `scale`, row by row (row i times component i). The map light
+ * threads and battle_effect_draw_projectile_model use it. */
 void ScaleMatrixL(MATRIX* matrix, VECTOR* scale) {
     /* Bindings preserve the packed-halfword multiply and store registers. */
     register psyq_packed_matrix_t* packed_matrix __asm__("$4") = (psyq_packed_matrix_t*)matrix;

@@ -1,7 +1,8 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001c574–0x8001c658: current GTE rotation times matrix. */
+/* Multiply the GTE's rotation matrix by `matrix`'s rotation into `output`, and return `output`. No code
+ * refers to it. */
 MATRIX* MulRotMatrix0(MATRIX* matrix, MATRIX* output) {
     MATRIX* input = matrix;
     /* The destination and returned pointer retain the handwritten a1/v0 transport. */

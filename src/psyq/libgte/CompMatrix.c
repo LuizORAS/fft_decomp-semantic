@@ -1,8 +1,9 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001c308–0x8001c468: affine composition with short translation input.
- * The translation sums retain retail's overflow traps. */
+/* Compose two transforms into `output`: the rotation `left` x `right`, and the translation `left`'s rotation
+ * times `right`'s translation (taken as 16-bit values) plus `left`'s translation; the additions trap on
+ * overflow. No code refers to it. */
 MATRIX* CompMatrix(MATRIX* left, MATRIX* right, MATRIX* output) {
     MATRIX* left_operand = left;
     MATRIX* right_operand = right;
