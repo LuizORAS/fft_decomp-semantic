@@ -5,7 +5,7 @@
 
 #define PSYQ_CARD_LONG_DELAY_COUNT 0x00320000
 
-/* main 0x80028a40–0x80028a58: fixed long BIOS timing delay. */
+/* A busy delay of 0x320000 steps. No code or data refers to it. */
 void psyq_card_long_delay(void) {
     register s32 psyq_card_delay_count __asm__("$14"); /* Preserve the handwritten branch/count register. */
     psyq_card_delay_count = PSYQ_CARD_LONG_DELAY_COUNT;

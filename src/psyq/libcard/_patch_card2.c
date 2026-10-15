@@ -1,7 +1,9 @@
 #include "psx/card_abi_inline.h"
 #include "psx/libcard.h"
 
-/* main 0x800289d4–0x80028a40: swap five PAD-clear handler instruction words. */
+/* Swap five words of the BIOS's pad-clear routine with the delay template: the routine then calls the
+ * template's place, where its own words run before psyq_card_short_delay. A second call swaps them back. Then
+ * flush the cache. InitCARD and StopCARD call it. */
 void _patch_card2(void) {
     /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
     psyq_card_bios_b0_table_t* table;

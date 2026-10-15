@@ -22,7 +22,9 @@ register void* psyq_crt_return_address __asm__("$31");
 
 #define PSYQ_CRT_CACHED_SEGMENT 0x80000000
 
-/* main 0x80010a30–0x80010ad0: zero BSS, establish stack/heap/GP and enter main. */
+/* The program's entry point: clear the BSS, put the stack at the top of RAM (_ramsize less 8), give the heap
+ * the space between the BSS and the stack (_stacksize), set the global pointer and call main. A return from
+ * main reaches a break. */
 void __SN_ENTRY_POINT(void) {
     /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
     u32* cursor;

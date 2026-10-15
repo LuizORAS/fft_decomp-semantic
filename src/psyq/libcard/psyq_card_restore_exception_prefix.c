@@ -1,7 +1,8 @@
 #include "psx/card_abi_inline.h"
 #include "psx/libcard.h"
 
-/* main 0x80028a64–0x80028acc: restore three exception-handler instruction words. */
+/* Put back three words of the BIOS exception handler from a template, undoing _patch_card. StopCARD calls
+ * it. */
 void psyq_card_restore_exception_prefix(void) {
     /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
     psyq_bios_c0_table_t* table;

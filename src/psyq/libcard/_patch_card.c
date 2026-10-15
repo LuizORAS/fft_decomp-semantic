@@ -1,7 +1,8 @@
 #include "psx/card_abi_inline.h"
 #include "psx/libcard.h"
 
-/* main 0x8002891c–0x800289a4: install the interrupt-tail jump and continuation. */
+/* Patch the BIOS exception handler: copy the jump template to psyq_card_interrupt_tail into it at a fixed
+ * word, flush the cache and save where the handler goes on. InitCARD calls it. */
 void _patch_card(void) {
     /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
     psyq_bios_c0_table_t* table;

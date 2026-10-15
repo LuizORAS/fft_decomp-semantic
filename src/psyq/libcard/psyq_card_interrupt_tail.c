@@ -1,7 +1,8 @@
 #include "psx/card_interrupt_abi.h"
 #include "psx/cpu_abi_inline.h"
 
-/* main 0x800288d8–0x8002891c: BIOS-private interrupt continuation, live v1 base. */
+/* The interrupt path _patch_card hooks into the BIOS: when the controller port's interrupt is pending, wait
+ * until the port's status clears and jump to the saved continuation; otherwise return. */
 void psyq_card_interrupt_tail(void) {
     /* BIOS enters with its live base in v1 and returns through the saved continuation. */
     psyq_card_interrupt_result = psyq_card_interrupt_base->interrupt_mask;

@@ -1,6 +1,9 @@
 /* LIBC 8002233c-80022b98; switch table 800104a4-80010558. */
 #include "psx/libc.h"
 
+/* Format `format` and its arguments into destination and return the length: flags, width, precision, the
+ * h, l and L sizes and the d, i, u, o, x, X, p, c, s and n conversions, each built in a 512-byte temporary
+ * buffer (QUIRKS.md). The number drawers of the menu scripts (WORLD, BUNIT, CARD, EQUIP, JOBSTTS) use it. */
 int sprintf(char* destination, const char* format, ...) {
     char buffer[512];
     psyq_printf_format_t state;
