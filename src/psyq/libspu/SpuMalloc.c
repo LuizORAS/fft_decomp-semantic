@@ -1,6 +1,9 @@
 /* SCUS_942.21 0x80019518..0x800197df. */
 #include "psx/libspu.h"
 
+/* Allocate `size` bytes of SPU RAM, rounded up to 8: the first free block that fits, or a piece of the tail,
+ * which keeps the reverb work area free when it is reserved. Splits the rest off as a free record and returns
+ * the SPU RAM address, or -1. main_sound_alloc_spu_ram calls it. */
 s32 SpuMalloc(s32 size) {
     s32 i = 0;
     s32 found = -1;

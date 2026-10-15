@@ -1,6 +1,8 @@
 /* SCUS_942.21 0x8001b9d4..0x8001bab7. */
 #include "psx/libspu.h"
 
+/* Set voice `v_num`'s sustain rate and direction: `sr_mode` 1 linear increase, 5 exponential increase, 7
+ * exponential decrease, anything else linear decrease. */
 void SpuSetVoiceSRAttr(s32 v_num, u16 sr, s32 sr_mode) {
     s32 index = v_num << 3;
     u32 mode = 0x100;

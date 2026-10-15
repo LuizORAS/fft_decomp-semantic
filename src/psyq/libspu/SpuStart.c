@@ -4,6 +4,8 @@
 #include "psx/libapi.h"
 #include "psx/libetc.h"
 
+/* Install LIBSPU's DMA completion handler (_spu_FiDMA on DMA channel 4) and open and enable the SPU's DMA
+ * event, once. _SpuInit calls it. */
 void SpuStart(void) {
     if (!_spu_isCalled) {
         _spu_isCalled = 1;

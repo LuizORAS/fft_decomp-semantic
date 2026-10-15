@@ -3,6 +3,10 @@
 
 #include "psx/libapi.h"
 
+/* Zero the reverb work area of `mode` (from its start to the end of SPU RAM; for mode 0 the last 0x80 bytes)
+ * by DMA in 1 KB transfers of a zero block, waiting for the DMA event after each, with the transfer callback
+ * held back. Returns 0, or -1 for a mode past 9 or one whose work area overlaps allocated SPU RAM.
+ * SpuSetReverbModeParam calls it for a mode with 0x100 added. */
 s32 SpuClearReverbWorkArea(s32 mode) {
     /* Retail keeps the saved callback in a volatile stack slot and reloads it for each use. */
     volatile SpuTransferCallbackProc callback = 0;

@@ -1,6 +1,10 @@
 /* SCUS_942.21 0x8001b094..0x8001b427; tables 0x8001008c..0x800100cb. */
 #include "psx/libspu.h"
 
+/* Set the SPU's common attributes that `attr`'s mask selects (all for mask 0): the main volume, fixed or a
+ * sweep (modes 1-7, the sweep value clamped to 0-127), the CD and external input volumes, and whether each
+ * input is mixed in and reverberated. main_sound_root_counter_2_handler and main_sound_set_cd_reverb call
+ * it. */
 void SpuSetCommonAttr(SpuCommonAttr* attr) {
     s16 left = 0;
     s16 right = 0;

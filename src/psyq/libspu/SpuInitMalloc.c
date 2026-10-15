@@ -1,6 +1,8 @@
 /* SCUS_942.21 0x800194c4..0x80019517. */
 #include "psx/libspu.h"
 
+/* Set up the SPU RAM heap in the `num` records at `top`: one free tail block from 0x1010 to the end of SPU
+ * RAM (512 KB). Returns `num`, or 0 when it is not positive. SuzukiSPUInitialiser gives it six records. */
 s32 SpuInitMalloc(s32 num, u8* top) {
     psyq_spu_heap_record_t* table = (psyq_spu_heap_record_t*)top;
     if (num > 0) {

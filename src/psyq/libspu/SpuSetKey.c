@@ -1,6 +1,8 @@
 /* SCUS_942.21 0x8001acf0..0x8001aef3. */
 #include "psx/libspu.h"
 
+/* Key the voices in `voice_bit` (24 bits) on (1) or off (0) and track them in _spu_keystat. Its queued
+ * branch for _spu_env bit 0 never runs: nothing sets that bit. main_sound_quit keys every voice off. */
 void SpuSetKey(s32 on_off, u32 voice_bit) {
     u16 low;
     u16 high;

@@ -1,6 +1,8 @@
 /* SCUS_942.21 0x8001b018..0x8001b04b. */
 #include "psx/libspu.h"
 
+/* Set how SpuWrite sends data: 1 by programmed I/O through the SPU's FIFO, anything else by DMA (0).
+ * Returns that choice. main_sound_transfer_spu_data sets DMA. */
 s32 SpuSetTransferMode(s32 mode) {
     s32 normalized;
     switch (mode) {

@@ -1,6 +1,7 @@
 /* SCUS_942.21 0x8001bab8..0x8001bb5b. */
 #include "psx/libspu.h"
 
+/* Set voice `v_num`'s release rate, exponential for `rr_mode` 7 and linear otherwise. */
 void SpuSetVoiceRRAttr(s32 v_num, u16 rr, s32 rr_mode) {
     u32 mode = 0;
     u16 value;

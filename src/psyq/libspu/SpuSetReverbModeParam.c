@@ -8,6 +8,12 @@ static inline void psyq_spu_copy_bytes(u8* destination, u8* source, s32 size) {
     }
 }
 
+/* Set the reverb fields `attr`'s mask selects (all for mask 0). A mode (0-9; 0x100 added also clears its
+ * work area) loads that mode's 32 parameters, moves the work area start and zeroes the depth, with the reverb
+ * switched off while it changes; modes 7 and 8 also take a delay and a feedback; with no mode change the
+ * depth is set.
+ * Returns 0, or -1 for a mode past 9 or one whose work area overlaps allocated SPU RAM.
+ * main_sound_set_reverb_mode and main_sound_set_type call it. */
 s32 SpuSetReverbModeParam(SpuReverbAttr* attr) {
     psyq_spu_reverb_parameters_t parameters;
     s32 clear_work = 0;

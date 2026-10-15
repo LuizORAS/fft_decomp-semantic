@@ -1,6 +1,8 @@
 /* SCUS_942.21 0x8001aa44..0x8001aabb. */
 #include "psx/libspu.h"
 
+/* Set the reverb's left and right depth that `attr`'s mask selects (both for mask 0); returns 0.
+ * main_sound_set_reverb_mode calls it. */
 s32 SpuSetReverbDepth(SpuReverbAttr* attr) {
     u32 mask = attr->mask;
     s32 all = mask == 0;
