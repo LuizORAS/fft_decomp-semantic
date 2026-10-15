@@ -691,6 +691,23 @@ typedef struct status_infliction_data {
 } status_infliction_data_t;
 typedef char battle_status_infliction_record_size_must_be_6[(sizeof(status_infliction_data_t) == 6) ? 1 : -1];
 
+/* Flags stored by the eight Math Skill abilities at 0x80061054. The first
+ * four select a unit attribute; the last four select its divisor test. */
+enum {
+    CALCULATOR_ATTRIBUTE_CT = 0x80,
+    CALCULATOR_ATTRIBUTE_LEVEL = 0x40,
+    CALCULATOR_ATTRIBUTE_EXP = 0x20,
+    CALCULATOR_ATTRIBUTE_HEIGHT = 0x10,
+    CALCULATOR_ATTRIBUTE_MASK = 0xf0,
+    CALCULATOR_MULTIPLE_PRIME = 0x08,
+    CALCULATOR_MULTIPLE_FIVE = 0x04,
+    CALCULATOR_MULTIPLE_FOUR = 0x02,
+    CALCULATOR_MULTIPLE_THREE = 0x01,
+    CALCULATOR_MULTIPLE_MASK = 0x0f,
+    CALCULATOR_ABILITY_COUNT = 8,
+    CALCULATOR_PRIME_COUNT = 54,
+};
+
 /* item */
 /* Item ids and records: the id ranges, types and attributes, the primary record and the weapon,
  * shield, armor, accessory and consumable records, and the flags item lists and equipment carry. */
@@ -1607,6 +1624,16 @@ typedef enum skillset_ability_filter {
     SKILLSET_ABILITY_FILTER_ALL = 0xf,
 } skillset_ability_filter_e;
 
+/* Human skillset records contain 22 ids, monster records contain 4, and the
+ * shared scratch list reserves 24 entries for either representation. */
+enum {
+    HUMAN_SKILLSET_ABILITY_COUNT = 22,
+    /* The first 16 slots hold action abilities, the last 6 reaction, support and movement ones. */
+    HUMAN_SKILLSET_ACTION_ABILITY_COUNT = 16,
+    MONSTER_SKILLSET_ABILITY_COUNT = 4,
+    SKILLSET_ABILITY_LIST_COUNT = 24,
+};
+
 /* status */
 /* The status data (g_main_status_effect_data): each status's preview order, count, check-set
  * flags, cancels and blockers. */
@@ -1650,33 +1677,5 @@ typedef enum status_effect_flags_2 {
     STATUS_EFFECT_FLAG_2_IGNORE_ATTACKS = 0x20,
     STATUS_EFFECT_FLAG_2_PREVENT_REACTION = 0x80,
 } status_effect_flags_2_e;
-
-/* other */
-/* Human skillset records contain 22 ids, monster records contain 4, and the
- * shared scratch list reserves 24 entries for either representation. */
-enum {
-    HUMAN_SKILLSET_ABILITY_COUNT = 22,
-    /* The first 16 slots hold action abilities, the last 6 reaction, support and movement ones. */
-    HUMAN_SKILLSET_ACTION_ABILITY_COUNT = 16,
-    MONSTER_SKILLSET_ABILITY_COUNT = 4,
-    SKILLSET_ABILITY_LIST_COUNT = 24,
-};
-
-/* Flags stored by the eight Math Skill abilities at 0x80061054. The first
- * four select a unit attribute; the last four select its divisor test. */
-enum {
-    CALCULATOR_ATTRIBUTE_CT = 0x80,
-    CALCULATOR_ATTRIBUTE_LEVEL = 0x40,
-    CALCULATOR_ATTRIBUTE_EXP = 0x20,
-    CALCULATOR_ATTRIBUTE_HEIGHT = 0x10,
-    CALCULATOR_ATTRIBUTE_MASK = 0xf0,
-    CALCULATOR_MULTIPLE_PRIME = 0x08,
-    CALCULATOR_MULTIPLE_FIVE = 0x04,
-    CALCULATOR_MULTIPLE_FOUR = 0x02,
-    CALCULATOR_MULTIPLE_THREE = 0x01,
-    CALCULATOR_MULTIPLE_MASK = 0x0f,
-    CALCULATOR_ABILITY_COUNT = 8,
-    CALCULATOR_PRIME_COUNT = 54,
-};
 
 #endif

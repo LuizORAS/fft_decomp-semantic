@@ -20,6 +20,7 @@
  * Battle real positions are VECTORs (vx = x, vy = height, vz = map depth) and
  * screen positions and rotations are SVECTORs in the same order; keep those
  * in the SDK types rather than vec3s16_t/vec3u16_t. */
+
 /* Signed 16-bit x/y pair: screen offsets, sprite positions and per-axis
  * factors that are not GTE output. */
 typedef struct point16 {
@@ -219,12 +220,6 @@ typedef struct battle_gfx_fade_overlay {
 
 typedef char battle_gfx_fade_overlay_size_must_be_0x1c[(sizeof(battle_gfx_fade_overlay_t) == 0x1c) ? 1 : -1];
 
-/* other */
-enum {
-    BATTLE_CAMERA_PITCH_STEEP_MASK_THRESHOLD = 0x178,
-    BATTLE_CAMERA_FUSION_HOLD_SENTINEL = 0x2710,
-};
-
 /* Base texture/screen location paired with the parameters above by
  * world_gfx_init_image_loading: the x is sign-tested (an s16) while the y is
  * only ever added as an unsigned VRAM row. Hoisted here from the three
@@ -233,6 +228,15 @@ typedef struct world_image_location {
     s16 x; /* 0x00 */
     u16 y; /* 0x02 */
 } world_image_location_t;
+
+/* camera */
+/* The camera fusion tracks that BATTLE's and WORLD's camera threads step through (keys and tracks), with
+ * the pitch threshold and the fusion hold sentinel. */
+
+enum {
+    BATTLE_CAMERA_PITCH_STEEP_MASK_THRESHOLD = 0x178,
+    BATTLE_CAMERA_FUSION_HOLD_SENTINEL = 0x2710,
+};
 
 /* Provisional camera interpolation key: frame time and target value. */
 typedef struct battle_camera_key {

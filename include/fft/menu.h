@@ -9,6 +9,9 @@
 #include "psx/types.h"
 
 /* status */
+/* The unit status record and its gauges, and the packets, buffers and threads of the status panels that
+ * BATTLE, WORLD and the event overlays draw it with. */
+
 /* One gauge of the unit status record: the Gouraud bar is drawn value/max
  * wide, and a zero max draws the fixed 4-pixel stub. */
 typedef struct battle_unit_status_gauge {
@@ -161,6 +164,8 @@ typedef char
     battle_menu_status_panel_buffer_size_must_be_0x3d8[(sizeof(battle_menu_status_panel_buffer_t) == 0x3d8) ? 1 : -1];
 
 /* ability */
+/* WORLD's ability-list work buffer, the twin of BATTLE's. */
+
 /* Provisional ability-list work buffer at *g_battle_ai_workspace_ptr (0x52 rows each).
  * WORLD twin of the BATTLE ability list. */
 typedef struct world_ability_list {
@@ -227,6 +232,11 @@ typedef enum menu_window_icon_flags {
 } menu_window_icon_flags_e;
 
 /* menu */
+/* The menu records BATTLE, WORLD and the event overlays share: window buffers, menu entries with their
+ * text bindings and layouts, sprite, list and quad pages, icons, panels and frames, the AT list, the
+ * crystal pickup menu, help requests and navigation, the system functions and menu ids, the companion
+ * overlays, number entries, and the menu enums. */
+
 /* Six menu buffers, allocated/released as three adjacent pairs. The BATTLE
  * allocator at 0x8012e348 and WORLD counterpart establish the 0x118 stride.
  * Event ChangeDialog scans records 0, 2 and 4, compares +0x14 with operand 0,
@@ -1370,6 +1380,9 @@ typedef struct menu_text_state {
 } menu_text_state_t;
 
 /* options */
+/* The game options word: its fields (cursor, repeat and message speeds, the toggles) and the Options
+ * menu page. */
+
 /*
  * Live game-options word at 0x800473ac. The OPTION overlay unpacks these
  * fields in menu order. Toggle settings encode On as 0 and Off as 1; the
@@ -1766,6 +1779,9 @@ typedef struct battle_text_glyph_state {
 typedef char battle_text_glyph_state_size_must_be_0x10[(sizeof(battle_text_glyph_state_t) == 0x10) ? 1 : -1];
 
 /* unit */
+/* The unit screens: the unit editor panel's frame, the status pages and summary frame, the unit view
+ * modes and the view thread set. */
+
 /* Provisional 0x2d0-byte double-buffered frame of the unit editor panel
  * (WORLD 0x801a3494, BATTLE 0x801730f8). The first 0x2a4 bytes are laid out
  * as battle_menu_status_panel_buffer_t (draw modes, sprites, tiles and lines),
@@ -1852,7 +1868,9 @@ typedef struct world_unit_view_thread_set {
 } world_unit_view_thread_set_t;
 typedef char world_unit_view_thread_set_size_must_be_0x30[(sizeof(world_unit_view_thread_set_t) == 0x30) ? 1 : -1];
 
-/* other */
+/* card */
+/* One save-file icon of the CARD screens. */
+
 /* One selectable save-file icon: 16-colour CLUT plus 16x16 4bpp image. */
 typedef struct card_save_icon {
     u8 clut[0x20];  /* 0x00 */

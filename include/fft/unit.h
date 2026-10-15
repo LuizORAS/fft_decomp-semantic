@@ -6,7 +6,7 @@
 #include "fft/data.h"
 #include "psx/types.h"
 
-/* ability jump_float_flags */
+/* ability */
 /* A unit's active reaction, support and movement abilities; docs/mechanics/Abilities.md lists
  * where each one is implemented. */
 
@@ -143,6 +143,9 @@ typedef enum battle_movement_set_3 {
 } battle_unit_movement_set_3_e;
 
 /* action */
+/* The action results a unit holds (battle_action_data_t at battle_stats_t +0x18c) and the miss display
+ * flags. */
+
 /*
  * Temporary action results, 0x2c bytes at battle_stats_t+0x18c (0x18c..0x1b7).
  * The g_target_current_action / g_attacker_current_action pointers address this
@@ -392,6 +395,13 @@ typedef enum unit_equipment_slot {
     UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD = 6,
     UNIT_EQUIPMENT_SLOT_COUNT = 7,
 } unit_equipment_slot_e;
+
+enum {
+    ITEM_ID_MASK = 0xff,
+    ITEM_ID_COUNT = 0x100,
+    ENTD_VALUE_RANDOM = 0xfe, /* in an ENTD equipment, level or secondary skillset byte: pick one at random */
+    ITEM_TYPE_FILTER_ANY = 0xff,
+};
 
 /* job */
 /* The career data every unit record keeps: the 20 generic jobs' packed levels, the unlocked-job
@@ -1015,7 +1025,6 @@ typedef struct world_unit_coordinates {
     s16 y;         /* 0x04 */
 } world_unit_coordinates_t;
 
-/* other */
 /* Battle Stats 0x05 and Miscellaneous Unit Data 0x13d share this byte. */
 typedef enum battle_team_flags {
     BATTLE_TEAM_MASK = 0x30,
@@ -1039,12 +1048,5 @@ typedef enum battle_formation_index {
     BATTLE_FORMATION_INDEX_GENERATED_UNIT = 0xfe,
     BATTLE_FORMATION_INDEX_NONE = 0xff,
 } battle_formation_index_e;
-
-enum {
-    ITEM_ID_MASK = 0xff,
-    ITEM_ID_COUNT = 0x100,
-    ENTD_VALUE_RANDOM = 0xfe, /* in an ENTD equipment, level or secondary skillset byte: pick one at random */
-    ITEM_TYPE_FILTER_ANY = 0xff,
-};
 
 #endif
