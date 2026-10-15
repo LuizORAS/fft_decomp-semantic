@@ -169,7 +169,8 @@ two of them before the ending.
 
 - **Sound:** MAIN's `main_sound_*` controls it, and the Suzuki driver
   (`main_smd_*`, `Suzuki*`) plays it. The [Sound](docs/mechanics/Sound.md)
-  page covers the music, the tunes and the sound effects.
+  page covers the music, the tunes and the sound effects, and the
+  [Sound Driver](docs/mechanics/Sound%20Driver.md) page the driver.
 - **Graphics:** they go through the Psy-Q GPU and GTE libraries
   ([`src/psyq/`](src/psyq/)), in fixed point where `ONE` (4096) is 1.0. The
   [Battle Map](docs/mechanics/Battle%20Map.md) and
@@ -235,7 +236,8 @@ All of these libraries are reconstructed C, matched like the game code.
   [Sprites and Graphics](docs/mechanics/Sprites%20and%20Graphics.md),
   [Sound](docs/mechanics/Sound.md),
   [Ability Effects](docs/mechanics/Ability%20Effects.md),
-  [Effect Files](docs/mechanics/Effect%20Files.md) and
+  [Effect Files](docs/mechanics/Effect%20Files.md),
+  [Sound Driver](docs/mechanics/Sound%20Driver.md) and
   [Engine core](docs/mechanics/Engine%20core.md) so far. The guides walk
   through common changes, such as the
   [Movement rules](docs/guides/Movement%20rules.md),

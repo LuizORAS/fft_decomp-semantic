@@ -13,7 +13,7 @@ scope:
 ## What it does in the game
 
 MAIN controls every sound the game makes through the Suzuki sound driver
-(`main_smd_*`, `Suzuki*`), which plays sequences on the SPU's 24 voices from
+(`main_smd_*`, `Suzuki*`; see [[Sound Driver]]), which plays sequences on the SPU's 24 voices from
 an interrupt (root counter 2, [[main_sound_root_counter_2_handler]]). Three
 kinds of sound reach it:
 
@@ -104,9 +104,9 @@ OPEN's movies and the ending's XA tracks play CD audio, which
 - [[battle_sound_stop_weather_sfx]] returns a result it never sets.
 - WORLD's music requests and background sound threads belong to its copy of
   the event interpreter, which never runs.
-- The driver's own quirks (unused opcodes, the waveset read past its copy,
-  the reverb mode) are listed in `QUIRKS.md` under `main_smd_*` and
-  `main_sound_set_reverb_mode`.
+- The driver's own quirks (unused opcodes, the waveset read past its copy)
+  are on the [[Sound Driver]] page; the reverb mode's is in `QUIRKS.md`
+  under `main_sound_set_reverb_mode`.
 
 ## Functions in scope
 
