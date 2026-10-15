@@ -1,6 +1,11 @@
 /* LIBETC 8001e1e8-8001e33c; callback replacement and BIOS clear policy. */
 #include "psx/libetc.h"
 
+/* Set the callback of interrupt `slot` and return the previous one. With the interrupt mask cleared, it
+ * stores the callback, enables or disables the interrupt in the mask, and for the VBlank and root counters
+ * 0-2 tells the BIOS's handlers to leave the interrupt to the callback, or to acknowledge it again when the
+ * callback is removed (ChangeClearPAD, ChangeClearRCnt). It changes nothing before startIntr has run.
+ * InterruptCallback reaches it through the dispatch table. */
 psyq_interrupt_callback_t setIntr(s32 slot, psyq_interrupt_callback_t callback) {
     psyq_interrupt_callback_t old;
     s32 saved_mask;

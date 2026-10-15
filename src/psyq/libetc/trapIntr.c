@@ -1,6 +1,11 @@
 /* LIBETC 8001e000-8001e1e8; IRQ acknowledgement and callback dispatch. */
 #include "psx/libetc.h"
 
+/* LIBETC's interrupt dispatcher, entered after each BIOS exception through the hook startIntr installs:
+ * until no enabled interrupt with a callback is pending, acknowledge each one and call its callback, with
+ * CheckCallback reporting 1. Pending interrupts that nothing handles are counted; after more than 2048 calls in
+ * a row it prints them and clears the status. It ends with ReturnFromException; before startIntr it only
+ * prints the status. */
 void trapIntr(void) {
     s32 slot;
     u16 pending;

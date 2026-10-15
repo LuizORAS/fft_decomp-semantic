@@ -1,4 +1,8 @@
 #include "psx/libetc.h"
+
+/* Resume after stopIntr: hook the dispatcher into the BIOS's exception exit again, restore the saved
+ * interrupt mask and DMA priorities and enable interrupts. Returns its state, or 0 when it is already running.
+ * RestartCallback reaches it through the dispatch table. */
 psyq_interrupt_state_t* restartIntr(void) {
     if (g_psyq_etc_interrupt_state.initialized)
         return 0;

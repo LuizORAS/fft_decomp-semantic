@@ -1,6 +1,9 @@
 /* LIBETC 8001e614-8001e798; DMA completion dispatch and error diagnosis. */
 #include "psx/libetc.h"
 
+/* The DMA interrupt's callback: until no channel is flagged in the DMA interrupt register, acknowledge each
+ * flagged channel (0-6) and call its callback. Then an interrupt with no channel flagged, or a bus error,
+ * prints the register and every channel's address. */
 void trapIntrDMA(void) {
     s32 channel;
     u32 pending;

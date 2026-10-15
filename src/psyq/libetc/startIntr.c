@@ -1,4 +1,11 @@
 #include "psx/libetc.h"
+
+/* Start LIBETC's interrupt handling, once: clear the interrupt status and mask, set the default DMA
+ * priorities, clear its state, record a setjmp state on its own 4 KB stack and hook it into the BIOS's
+ * exception exit (HookEntryInt), so trapIntr runs after each exception. Then install the VBlank and DMA
+ * dispatchers (startIntrVSync, startIntrDMA) and their setters in the dispatch table, remove the BIOS's
+ * CD-ROM handlers (_96_remove) and enable interrupts. Returns its state, or 0 when it already ran.
+ * ResetCallback reaches it through the dispatch table. */
 psyq_interrupt_state_t* startIntr(void) {
     if (g_psyq_etc_interrupt_state.initialized)
         return 0;
