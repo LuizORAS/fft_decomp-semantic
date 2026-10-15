@@ -289,7 +289,7 @@ void world_menu_display_hovered_unit_stats(
         }
         if (frame == 0) {
             buffer = world_menu_alloc_buffer(0x700);
-            world_clear_menu_render_buffer(buffer, 0x700);
+            world_menu_clear_render_buffer(buffer, 0x700);
             g_world_menu_text_state.pen.stride = 0x28;
             world_menu_draw_numeric_display_entries(buffer, entries, &g_world_menu_text_state.pen, 6);
             LoadImage(&rects[0], (u32*)buffer);

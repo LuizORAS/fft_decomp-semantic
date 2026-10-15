@@ -26,7 +26,7 @@ void world_unit_update_facing_and_pending_animations(void) {
                 }
                 g_world_unit_was_moving_latch[i] = moving;
             }
-            current = get_current_facing_byte_from_misc_id(i);
+            current = battle_unit_get_facing_nibble_by_misc_id(i);
             if (state->rotating == 0) {
                 continue;
             }

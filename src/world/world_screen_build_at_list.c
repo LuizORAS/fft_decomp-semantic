@@ -116,7 +116,7 @@ void world_screen_build_at_list(void) {
     page->arrow_marks[1].x0 = page->arrows[1].x0;
     page->arrow_marks[1].y0 = page->arrows[1].y0 + 0xE;
     buffer = world_menu_alloc_memory(entry->inner_width * entry->inner_height / 2);
-    world_clear_menu_render_buffer(buffer, entry->inner_width * entry->inner_height / 2);
+    world_menu_clear_render_buffer(buffer, entry->inner_width * entry->inner_height / 2);
     redraw_pending = 1;
     world_thread_start(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, world_screen_menu_window_frame_thread);
     world_thread_set_parameters(WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME, (s32)&entry->window_x, 0, 0);
@@ -189,7 +189,7 @@ void world_screen_build_at_list(void) {
                 }
                 image_rect.h = 0x10;
                 buffer = world_menu_alloc_memory(0x800);
-                world_clear_menu_render_buffer(buffer, 0x800);
+                world_menu_clear_render_buffer(buffer, 0x800);
                 g_world_menu_text_state.pen.stride = entry->inner_width;
                 for (column = 0; column < 3; column++) {
                     index = cursor + row_offset + delta;

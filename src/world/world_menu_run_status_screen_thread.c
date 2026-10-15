@@ -114,7 +114,7 @@ void world_menu_run_status_screen_thread(void) {
     }
 
     buffer = world_menu_alloc_buffer(0xC80);
-    world_clear_menu_render_buffer(buffer, 0xC80);
+    world_menu_clear_render_buffer(buffer, 0xC80);
     g_world_menu_text_state.pen.stride = 0x50;
     world_menu_set_text_origin(0, 0);
     for (i = 0; i < 5; i++) {
@@ -128,7 +128,7 @@ void world_menu_run_status_screen_thread(void) {
     }
     LoadImage(&g_world_menu_status_screen_text_rect_a, (u32*)buffer);
     world_thread_yield();
-    world_clear_menu_render_buffer(buffer, 0xC80);
+    world_menu_clear_render_buffer(buffer, 0xC80);
     g_world_menu_text_state.pen.stride = 0x50;
     world_menu_set_text_origin(0, 0);
     for (i = 0; i < 2; i++) {

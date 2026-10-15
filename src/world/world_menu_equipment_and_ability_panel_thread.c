@@ -81,7 +81,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
             }
         }
         if (frame == 0 || thread->redraw_request == 1) {
-            world_clear_menu_render_buffer(g_world_change_banner_text_image, 0xc80);
+            world_menu_clear_render_buffer(g_world_change_banner_text_image, 0xc80);
             g_world_menu_text_state.pen.stride = 0x50;
             world_menu_set_text_origin(0, 0);
             for (i = 0; i < 5; i++) {
@@ -92,7 +92,7 @@ void world_menu_equipment_and_ability_panel_thread(void) {
                 g_world_menu_text_state.pen.rect.y += 0x10;
             }
             LoadImage(&g_world_equipment_panel_item_text_rect, (u32*)g_world_change_banner_text_image);
-            world_clear_menu_render_buffer(g_world_stat_preview_text_image, 0xc80);
+            world_menu_clear_render_buffer(g_world_stat_preview_text_image, 0xc80);
             g_world_menu_text_state.pen.stride = 0x50;
             world_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {

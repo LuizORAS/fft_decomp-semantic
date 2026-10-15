@@ -73,7 +73,7 @@ void world_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
                 unit->action.status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD);
             }
-            g_world_thread_call_target = resolve_unit_status_changes;
+            g_world_thread_call_target = (void (*)(void))battle_status_resolve_unit_changes;
             world_thread_call_on_main_stack(unit_id, 1);
         }
         if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]

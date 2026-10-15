@@ -17,7 +17,7 @@ s32 world_script_warp_unit(void* instruction) {
 
     unit_id = world_script_load_halfword(parameters);
     parameters += 2;
-    unit = find_unit_by_id(unit_id, &resolved_id);
+    unit = battle_unit_find_stats_by_entd_unit_id(unit_id, &resolved_id);
     index = 0;
     if (resolved_id == -2 || resolved_id >= 0) {
         for (; index < BATTLE_UNIT_SLOT_COUNT; index++) {

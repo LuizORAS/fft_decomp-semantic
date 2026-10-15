@@ -11,7 +11,7 @@ void world_script_join_units_silently(void) {
 
     i = 0;
     do {
-        unit = find_unit_by_id(battle_unit_get_stats_from_battle_id(i)->unit_id, &out_idx);
+        unit = battle_unit_find_stats_by_entd_unit_id(battle_unit_get_stats_from_battle_id(i)->unit_id, &out_idx);
         if (out_idx >= 0 && i == out_idx) {
             if (unit->formation_index == BATTLE_FORMATION_INDEX_NONE
                 || ((first = unit->character_identity) != CHARACTER_IDENTITY_ENTD_NONE

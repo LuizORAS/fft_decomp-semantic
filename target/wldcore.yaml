@@ -445,7 +445,6 @@ functions:
   - {addr: 0x8009de1c, size: 720, name: wldcore_calendar_advance_days, hash: 3ddb67c3d1ca1de9}
 
 data:
-  - {addr: 0x8008c0ac, name: get_current_facing_byte_from_misc_id}
   - {addr: 0x8008cdd0, name: wldcore_unit_get_id_from_misc_id}
   - {addr: 0x80092b04, name: wldcore_system_switch_to_stack}
   - {addr: 0x80092b1c, name: wldcore_system_restore_previous_stack}

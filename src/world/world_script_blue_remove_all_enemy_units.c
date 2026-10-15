@@ -14,7 +14,8 @@ void world_script_blue_remove_all_enemy_units(void) {
         if (battle_unit_has_misc_id(misc_id) != 0) {
             unit_index = wldcore_unit_get_id_from_misc_id(misc_id);
             if (unit_index != -1
-                && (find_unit_by_id(battle_unit_get_stats_from_battle_id(unit_index)->unit_id, &resolved_id)
+                && (battle_unit_find_stats_by_entd_unit_id(
+                        battle_unit_get_stats_from_battle_id(unit_index)->unit_id, &resolved_id)
                            ->initial_team_flags
                        & BATTLE_TEAM_MASK)
                     != BATTLE_TEAM_BLUE

@@ -481,8 +481,9 @@ Where callers pass arguments a callee never reads, the callee declares them as
 written that way.
 
 - `StCdInterrupt`: emulated header/payload copies pass a fourth completion argument to the three-argument `mem2mem` helper, which ignores it.
-- `g_battle_thread_call_target` is the main-stack dispatch slot for callees
-  with different signatures; assignments erase their function types.
+- `g_battle_thread_call_target` and `g_world_thread_call_target` are the
+  main-stack dispatch slots for callees with different signatures;
+  assignments erase their function types.
 - `world_card_build_save_slot_description` uses the job-name pointer that the
   void `world_text_bind_section_data` leaves in `$v0`; a native build must
   return it.

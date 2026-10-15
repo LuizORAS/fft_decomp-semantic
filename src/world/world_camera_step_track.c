@@ -5,7 +5,7 @@
  * calls it per component; the BATTLE twin is battle_camera_step_track.
  *
  * Each call samples the two tangent lines of the active key segment at this frame and the next, intersects
- * them (world_cross_product_q12 is a Q12 cross product that sets g_world_camera_cross_product_overflow on
+ * them (world_util_cross_product_q12 is a Q12 cross product that sets g_world_camera_cross_product_overflow on
  * overflow) and moves the value along the resulting control point. The locals span, frame and lead are
  * reused across the stages, as the target's register map requires. */
 s32 world_camera_step_track(battle_camera_track_t* track, s32 component) {
@@ -110,8 +110,8 @@ s32 world_camera_step_track(battle_camera_track_t* track, s32 component) {
         time_delta1 = time3 - time2;
         value_delta1 = value3 - value2;
         time_delta0 = time1 - time0;
-        divisor = world_cross_product_q12(value_delta0, time_delta1, time_delta0, value_delta1);
-        result = world_cross_product_q12(time_delta1, value2 - value0, value_delta1, time2 - time0);
+        divisor = world_util_cross_product_q12(value_delta0, time_delta1, time_delta0, value_delta1);
+        result = world_util_cross_product_q12(time_delta1, value2 - value0, value_delta1, time2 - time0);
         if (divisor != 0) {
             span = world_util_mul_div_s64(time_delta0, result, divisor) + time0;   /* crossing time */
             lead = world_util_mul_div_s64(value_delta0, result, divisor) + value0; /* crossing value */

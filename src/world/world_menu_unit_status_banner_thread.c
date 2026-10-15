@@ -390,7 +390,7 @@ void world_menu_unit_status_banner_thread(void) {
             } else {
                 entries[6].format = 2;
             }
-            world_clear_menu_render_buffer(render_a, 0x700);
+            world_menu_clear_render_buffer(render_a, 0x700);
             {
                 g_world_menu_text_state.pen.stride = 0x38;
                 if (g_world_preview_stats_window_active == 0) {
@@ -409,7 +409,7 @@ void world_menu_unit_status_banner_thread(void) {
             world_menu_draw_numeric_display_entries(render_a_upper, &entries[8], &g_world_menu_text_state.pen, 2);
             LoadImage(&rects[1], (u32*)render_a_upper);
             display->work = 0;
-            world_clear_menu_render_buffer(render_c, 0x580);
+            world_menu_clear_render_buffer(render_c, 0x580);
             g_world_menu_text_state.pen.stride = 0x58;
             world_menu_set_text_origin(0, 0);
             world_menu_display_text_entry(
@@ -418,7 +418,7 @@ void world_menu_unit_status_banner_thread(void) {
             world_menu_display_text_entry(
                 identity->job_id + TEXT_ID_JOB_NAME_BASE, render_c, &g_world_menu_text_state.pen);
             LoadImage(&rects[2], (u32*)render_c);
-            world_clear_menu_render_buffer(render_b, 0xF0);
+            world_menu_clear_render_buffer(render_b, 0xF0);
             g_world_menu_text_state.pen.stride = 0x10;
             world_menu_set_text_origin(0, 0);
             world_menu_draw_small_number_glyphs(identity->brave, 0x202, render_b, &g_world_menu_text_state.pen);

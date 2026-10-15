@@ -31,7 +31,7 @@ void world_camera_fusion_thread(void) {
     tracks = (battle_camera_track_t*)world_menu_alloc_memory(
         sizeof(battle_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
     script = world_thread_get_current_parameter_1();
-    world_clear_menu_render_buffer((u8*)tracks, sizeof(battle_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
+    world_menu_clear_render_buffer((u8*)tracks, sizeof(battle_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
 
     cursor = script;
     key_count = 0;

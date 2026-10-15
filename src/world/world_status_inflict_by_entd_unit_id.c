@@ -6,7 +6,7 @@
  * given ENTD unit id, through the normal status resolution.
  *
  * Clears the unit's pending infliction and removal masks, sets the single
- * bit for `status_index` in one of them and runs resolve_unit_status_changes
+ * bit for `status_index` in one of them and runs battle_status_resolve_unit_changes
  * on the main stack. Does nothing when no battle unit has that id.
  */
 void world_status_inflict_by_entd_unit_id(
@@ -38,7 +38,7 @@ void world_status_inflict_by_entd_unit_id(
         } else {
             unit->action.status_removal[status_byte_index] = status_mask;
         }
-        g_world_thread_call_target = resolve_unit_status_changes;
+        g_world_thread_call_target = (void (*)(void))battle_status_resolve_unit_changes;
         world_thread_call_on_main_stack(battle_unit_index, less_strict_removal);
     }
 }

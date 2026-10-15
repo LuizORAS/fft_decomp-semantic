@@ -55,14 +55,14 @@ void world_menu_run_unit_summary_panel_thread(void) {
     frames[0].portrait.tpage = GetTPage(0, 1, 0x3C0, 0x100);
     SetSemiTrans(&frames[0].portrait, 1);
     buffer = world_menu_alloc_buffer(0x580);
-    world_clear_menu_render_buffer(buffer, 0x580);
+    world_menu_clear_render_buffer(buffer, 0x580);
     g_world_menu_text_state.pen.stride = 0x58;
     world_menu_set_text_origin(0, 0);
     world_menu_display_text_string(buffer, &g_world_menu_text_state.pen, g_world_menu_billboard_unit_name);
     world_menu_set_text_origin(0, 0x10);
     world_menu_display_text_string(buffer, &g_world_menu_text_state.pen, g_world_menu_billboard_job_name);
     LoadImage(&rects[0], (u32*)buffer);
-    world_clear_menu_render_buffer(digits, 0xF0);
+    world_menu_clear_render_buffer(digits, 0xF0);
     g_world_menu_text_state.pen.stride = 0x10;
     world_menu_set_text_origin(0, 0);
     world_menu_draw_small_number_glyphs(g_world_active_turn_unit.brave, 0x202, digits, &g_world_menu_text_state.pen);

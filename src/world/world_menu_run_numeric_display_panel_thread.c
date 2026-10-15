@@ -17,7 +17,7 @@ void world_menu_run_numeric_display_panel_thread(void) {
     world_gfx_set_draw_mode_for_texture_page(&record->mode1, MENU_TEXTURE_PAGE_TEXT_IMAGES);
     world_gfx_init_scaled_draw_area_packets(&record->draw_areas);
     buffer = world_menu_alloc_memory(0x918);
-    world_clear_menu_render_buffer(buffer, 0x918);
+    world_menu_clear_render_buffer(buffer, 0x918);
     g_world_menu_text_state.pen.stride = 0x14;
     world_menu_set_text_origin(0, 0);
     world_menu_draw_numeric_display_entries(buffer, g_world_numeric_display_entries, &g_world_menu_text_state.pen, 3);

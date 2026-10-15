@@ -1032,10 +1032,10 @@ data:
   - {addr: 0x800eda00, name: g_open_work_buffer_1}
   - {addr: 0x800feff0, name: world_text_blit_glyph}
   - {addr: 0x800ff284, name: world_text_blit_font_glyph_to_4bpp}
-  - {addr: 0x800ff3d4, name: world_clear_menu_render_buffer}
+  - {addr: 0x800ff3d4, name: world_menu_clear_render_buffer}
   - {addr: 0x800fff50, name: world_thread_yield}
   - {addr: 0x80100188, name: world_util_mul_div_s64}
-  - {addr: 0x801002d8, name: world_cross_product_q12}
+  - {addr: 0x801002d8, name: world_util_cross_product_q12}
   - {addr: 0x80100384, name: world_thread_call_on_main_stack}
   - {addr: 0x80115a00, name: g_open_movie_cd_stream_ring_buffer}
   - {addr: 0x8013a310, name: g_world_map_selected_tile_data}
@@ -1337,9 +1337,6 @@ data:
   - {addr: 0x8017403c, name: g_battle_menu_skillset_disabled_flags}
   - {addr: 0x80174048, name: g_battle_ai_workspace_ptr}
   - {addr: 0x8017404c, name: g_battle_action_menu_row_types}
-  - {addr: 0x8017fd80, name: set_unit_cannot_exist}
-  - {addr: 0x80180c90, name: find_unit_by_id}
-  - {addr: 0x80182430, name: unit_has_adjacent_monster_skill_support}
   - {addr: 0x80189c4c, name: g_world_wldface_vram_rects}
   - {addr: 0x80189c54, name: g_world_wldface_vram_rect_1}
   - {addr: 0x80189c5c, name: g_world_wldface_vram_rect_2}
@@ -1659,7 +1656,6 @@ data:
   - {addr: 0x8018e050, name: g_world_menu_number_blank_sprite}
   - {addr: 0x8018e064, name: g_world_menu_cursor_bob_thresholds}
   - {addr: 0x8018e070, name: g_world_menu_cursor_bob_active_thresholds}
-  - {addr: 0x8018e07c, name: resolve_unit_status_changes}
   - {addr: 0x8018e084, name: g_world_vertical_cursor_quad}
   - {addr: 0x8018e0a8, name: g_world_menu_list_row_text_ids}
   - {addr: 0x8018e0ac, name: g_world_menu_list_cursor_anim}

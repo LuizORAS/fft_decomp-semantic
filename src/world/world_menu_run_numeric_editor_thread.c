@@ -68,7 +68,7 @@ void world_menu_run_numeric_editor_thread(void) {
     for (frame = 0;; frame++) {
         buffer = &buffers[frame & 1];
         if (frame == 0 || thread->redraw_request != 0) {
-            world_clear_menu_render_buffer(text_pixels, 0x918);
+            world_menu_clear_render_buffer(text_pixels, 0x918);
             g_world_menu_text_state.pen.stride = 0x14;
             world_menu_set_text_origin(0, 0);
             if (g_world_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR) {

@@ -83,7 +83,7 @@ void world_menu_ability_panel_thread(void) {
            hoisting the loop's own initialisation into a delay slot, and an
            explicit one lengthens i's live range enough to lose it $s1. */
         if (frame == 0 || thread->redraw_request == 1) {
-            world_clear_menu_render_buffer(text, 0xc80);
+            world_menu_clear_render_buffer(text, 0xc80);
             g_world_menu_text_state.pen.stride = 0x50;
             world_menu_set_text_origin(0, 0);
             for (i = 0; i < 2; i++) {

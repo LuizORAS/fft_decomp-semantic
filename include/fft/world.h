@@ -1566,11 +1566,7 @@ extern u8 g_world_selected_unit_name_text_image[];
 extern u8 g_world_selected_unit_number_text_image[];
 extern u8 g_world_selected_unit_portrait_image[];
 extern u8 g_world_stat_preview_text_image[];
-void set_unit_cannot_exist(s32 unit_index);
-struct battle_stats* find_unit_by_id(s32 unit_id, s32* out_index);
 s32 world_unit_get_formation_sprite(s32 party_index);
-void resolve_unit_status_changes(void);
-s32 unit_has_adjacent_monster_skill_support(struct battle_stats* unit);
 s32 world_formation_get_unit_palette_index(s32 roster_slot);
 void world_script_join_units_silently(void);
 void world_menu_load_selected_unit(void);
@@ -2439,7 +2435,7 @@ void world_menu_equipment_and_ability_panel_thread(void);
 s16 world_menu_update_wrapped_vertical_selection(u16, u8, s32);
 void world_menu_run_script_with_callback_suppressed(void);
 
-void world_clear_menu_render_buffer(u8* dst, u32 count);
+void world_menu_clear_render_buffer(u8* dst, u32 count);
 void world_menu_zoom_cursor_frame(const void* source, SPRT* sprite, s32 step);
 void world_gfx_copy_sprite_position_uv_and_size(const world_menu_entry_t* param, SPRT* sprite, s32 unused_frame);
 void world_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_offset, void* buffer);
@@ -3456,9 +3452,8 @@ extern s32 g_world_next_event_id;
 extern u8 g_world_order_unit_saved_browse_enabled;
 extern u8 g_world_action_menu_skillsets[];
 extern u16 g_world_script_frame_result_override;
-extern s32 g_world_camera_cross_product_overflow; /* set by world_cross_product_q12 on Q12 overflow */
-s32 world_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
-s32 get_current_facing_byte_from_misc_id(s32 misc_id);
+extern s32 g_world_camera_cross_product_overflow; /* set by world_util_cross_product_q12 on Q12 overflow */
+s32 world_util_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 
 s32 world_ability_list_secondary_skillsets(s16 unit_id, s16* skillsets);
 

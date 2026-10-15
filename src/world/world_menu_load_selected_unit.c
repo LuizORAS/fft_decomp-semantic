@@ -14,7 +14,7 @@
  * attack, 16/17 shield and accessory magic evade, 18..22 the equipped items
  * (-1 for none) and 23..27 the ability rows (-1 for none): both skillsets,
  * reaction, support and movement, or a monster's skillset abilities packed to
- * the front, the fourth kept only while unit_has_adjacent_monster_skill_support
+ * the front, the fourth kept only while battle_menu_init_monster_skill_check
  * allows it.
  *
  * An empty secondary skillset marks byte 1 of its name buffer, not byte 0,
@@ -108,7 +108,7 @@ void world_menu_load_selected_unit(void) {
             ability_slot++;
         } while (i < 5);
 
-        g_world_thread_call_target = unit_has_adjacent_monster_skill_support;
+        g_world_thread_call_target = battle_menu_init_monster_skill_check;
         if (world_thread_call_on_main_stack(unit) == 0)
             editor[26] = 0;
 
