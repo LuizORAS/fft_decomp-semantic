@@ -27,5 +27,5 @@ gns_record_view_t* battle_map_load_gns_and_move_find_items(s32 map_id) {
         }
         return gns_records;
     }
-    /* The target falls through with the BIOS bzero result still in v0. */
+    /* The target falls through with the BIOS bzero result (its destination, gns_records) still in v0. */
 }

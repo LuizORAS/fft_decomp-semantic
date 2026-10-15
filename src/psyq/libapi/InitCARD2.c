@@ -2,6 +2,8 @@
 #include "psx/abi_inline.h"
 #include "psx/libapi.h"
 
+/* The BIOS's InitCARD2 (table B, 0x4a): start the BIOS's memory card support, with the pads handled
+ * alongside when `pad_enable` is set (psx-spx). InitCARD calls it. */
 void InitCARD2(s32 pad_enable) {
     PSYQ_BIOS_TAIL_CALL(PSYQ_BIOS_TABLE_B, PSYQ_BIOS_B_INIT_CARD2);
 }

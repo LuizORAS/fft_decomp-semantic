@@ -577,8 +577,10 @@ written that way.
 - `battle_map_load_gns_and_move_find_items` has no return statement for a map
   whose GNS sector is 0 (map ids 120-124, 126 and 127 in the retail table);
   `battle_map_load_data` compares the leftover `$v0` of the BIOS `bzero` with
-  `g_battle_map_gns_records`. A native build must return a value there. When
-  the result is not the table (also when the read could not start),
+  `g_battle_map_gns_records`. A native build must return a value there: the
+  BIOS `bzero` returns its destination, that table (psx-spx), so the test
+  passes and the load goes on as if the read had started. When the result is
+  not the table (also when the read could not start),
   `battle_map_load_data` returns 0 with its 0x20000-byte load buffer still
   allocated.
 - `src/battle/battle_reaction_try_distribute.c` passes the unit twice to the one-parameter
