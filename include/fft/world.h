@@ -10,7 +10,9 @@
 
 struct battle_ai_command_action;
 
-/* system */
+/* thread */
+/* WORLD's cooperative threads, as in BATTLE but with equipment 1-16, and state some of its threads share. */
+
 /* Slots that the WORLD screens use for threads of their own; thread.h has the
  * maps shared with BATTLE, wldcore.h and open.h the WLDCORE and OPENING ones. */
 typedef enum world_thread_slot {
@@ -27,58 +29,6 @@ typedef enum world_thread_slot {
 enum {
     WORLD_AT_LIST_THREAD_SLOT_WINDOW_FRAME = 15,
 };
-
-/* System-function table. Declared as an array: as a scalar, GCC hoists
- * world_menu_run_system_function_thread's menu-index reload above its store. */
-extern battle_system_function_t g_world_system_function_table[];
-extern s32 g_world_menu_companion_executable_request_index;
-extern s32 g_world_primary_bit_read_index;
-extern s32 g_world_primary_bit_write_index;
-extern u8 g_world_primary_bit_cursor_reset;
-extern u8* g_world_primary_bit_cursor;
-extern s32 g_world_menu_companion_data_file_request_index;
-extern s32 g_world_pending_bin_load_destination;
-extern s32 g_world_system_function_thread_busy;
-extern s32 g_world_menu_companion_executable_lbas[];    /* 0x80156388, indexed by request */
-extern s32 g_world_menu_companion_executable_sizes[];   /* 0x801563c8 */
-extern s32 g_world_menu_companion_executable_offsets[]; /* 0x80156408, relative to the overlay load address */
-extern s32 g_world_menu_companion_data_file_lbas[];
-extern s32 g_world_menu_companion_data_file_sizes[];
-extern s32 g_world_menu_companion_data_file_loading;
-extern s32 g_world_menu_companion_executable_loading; /* 0x801564cc */
-extern s32 g_world_game_option_original_values[14];
-extern s32 g_world_game_option_values[14];
-void world_menu_request_open_companion_executable(s32 request);
-s32 world_bits_read_primary(s32 bit_count);
-s32 world_bits_read_secondary(s32 bit_count);
-void world_bits_set_primary_cursor(u8* ptr);
-void world_bits_set_secondary_cursor(u8* ptr);
-void world_bits_write_primary(u8 bit);
-void world_script_clamp_s32_to_range(s32* value, s32 min, s32 max);
-void world_menu_copy_bytes_to_halfwords(u16* destination, const u8* source, s32 count);
-s32 world_util_mul_div_s64(s32 a, s32 b, s32 c);
-void world_util_copy_bytes(void* destination, const void* source, s32 count);
-
-void world_menu_init_stub(void);
-void world_menu_display_projected_action_effect(POLY_FT4* unused_primitive,
-    const world_image_location_t* unused_base_load, const RECT* unused_base_screen,
-    const world_gfx_image_load_parameters_t* unused_parameters);
-
-void world_menu_run_companion_overlay_stub(void);
-void world_script_frame_after_threads_stub(void);
-void world_map_reset_script_light_transform(void);
-void world_script_process_pending_requests(void);
-
-void world_script_add_unit_stub(void);
-void world_script_frame_after_requests_stub(void);
-void world_card_close_stub(void);
-void world_menu_open_companion_executable(void);
-void world_menu_open_companion_data_file(void);
-void world_script_report_missing_unit_stub(s32 unused_unit_id);
-void world_script_opcode_74_event_instruction(const u8* unused_parameters);
-
-/* thread */
-/* WORLD's cooperative threads, as in BATTLE but with equipment 1-16, and state some of its threads share. */
 
 extern u16 g_world_event_input_suppression_frames;
 
@@ -105,16 +55,13 @@ extern s32 g_world_thread_current_id;
 /* WORLD's pointer slot and fixed-array binding refer to the same scheduler
  * storage through different symbols. */
 extern native_thread_t* g_world_threads;
-s32 world_menu_get_cursor_bob_offset(s32 mode);
+
 s32 world_thread_find_running_4_to_8(void);
-void world_formation_item_menu_idle_thread(void);
-void world_formation_ability_menu_idle_thread(void);
+
 void world_thread_idle_yield_forever(void);
 s32 world_thread_is_running_by_id(s32 thread_id);
 s32 world_thread_is_task_active(s32 unused_0);
-void world_script_dark_screen_thread(void);
-void world_input_update_with_message_state(void);
-void world_card_input_update_with_message_state(void);
+
 void world_thread_wait_for_unit_view_panels(void);
 void world_thread_request_redraw(s32 thread_id);
 s32 world_thread_call_on_main_stack();
@@ -181,12 +128,16 @@ s32 world_input_get_tutorial_buttons(void);
 s32 world_input_read_controller(s32 unused);
 s32 world_input_read_menu_scroll_repeat(void);
 s32 world_input_read_tutorial_or_controller(s32 unused_0);
-void world_script_load_event_input_state(const world_menu_input_state_t* state);
+
 void world_input_update_controller(void);
 void world_input_update_menu_repeat(u32 buttons);
 void world_input_update_menu_state(void);
 
 void world_input_reset_game(void);
+
+void world_input_update_with_message_state(void);
+
+void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg);
 
 /* camera */
 /* WORLD's copy of the event camera: the CAMERA instruction's threads, its fusions and the yaw helpers.
@@ -200,6 +151,9 @@ extern u16 g_world_camera_shake_z_offset;
 extern s32 g_world_camera_yaw_band;
 extern s32 g_world_camera_wrap_yaw_pending;
 extern s16 g_world_camera_diagonal_yaws[4];
+
+extern s32 g_world_camera_cross_product_overflow; /* set by world_util_cross_product_q12 on Q12 overflow */
+
 s32 world_camera_wrap_yaw_angle(void);
 void world_camera_init_tilt_and_zoom(void);
 void world_camera_normalize_yaw_angle(void);
@@ -216,8 +170,21 @@ void world_camera_store_state_to_script_variables(void);
 void world_camera_clear_zoom_variable_low_bit(void);
 
 /* screen */
-/* The screen fade level and clear rectangle, the tint tiles and the panel texture windows of WORLD's
- * menu-screen library. */
+/* WORLD's menu-screen library (world_screen_*): the screen fade level and clear rectangle, the tint tiles,
+ * the panel texture windows and window frames, text columns and pages, the AT list, the interpolation
+ * helpers, and the states of the screens the world map menu opens (fade out, run, fade in). */
+
+/* State of a screen request raised from the world map menu (the
+ * g_world_*_request_state globals stepped by world_menu_run_frame):
+ * fade out, run the screen, fade back in. States 4 to 7 only count frames. */
+typedef enum world_screen_request_state {
+    WORLD_SCREEN_REQUEST_IDLE = 0,
+    WORLD_SCREEN_REQUEST_START_FADE_OUT = 1,
+    WORLD_SCREEN_REQUEST_WAIT_FADE_OUT = 2,
+    WORLD_SCREEN_REQUEST_RUN = 3,
+    WORLD_SCREEN_REQUEST_START_FADE_IN = 8,
+    WORLD_SCREEN_REQUEST_WAIT_FADE_IN = 9,
+} world_screen_request_state_e;
 
 extern s32 g_world_screen_fade;
 extern RECT g_world_screen_clear_rect;
@@ -230,6 +197,21 @@ extern RECT g_world_screen_menu_thin_panel_texture_windows[7];
  * window's w/h; world_screen_menu_window_frame_thread fills in the runtime x/y.
  * Indexing the array reproduces the target's symbol-plus-byte-offset addressing. */
 extern RECT g_world_screen_menu_panel_texture_windows[7];
+
+void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
+
+void world_screen_build_at_list(void);
+
+void world_screen_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);
+
+u8* world_screen_menu_redraw_text_page_on_scroll(
+    world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor);
+
+void world_screen_menu_window_frame_thread(void);
+
+void world_screen_menu_build_window_image_row(u16* source, u16* dest, s32 count, s32 offset);
+
+s32 world_screen_menu_lerp_fixed12(s32 from, s32 to, s32 t);
 
 /* sound */
 /* WORLD's sounds: the menu sound queue that the shop, formation and save screens play once a frame
@@ -312,38 +294,33 @@ void world_name_open_key_rows(void);
 void world_name_open_entry(u8* list);
 
 /* map */
-/* State of a screen request raised from the world map menu (the
- * g_world_*_request_state globals stepped by world_menu_run_frame):
- * fade out, run the screen, fade back in. States 4 to 7 only count frames. */
-typedef enum world_screen_request_state {
-    WORLD_SCREEN_REQUEST_IDLE = 0,
-    WORLD_SCREEN_REQUEST_START_FADE_OUT = 1,
-    WORLD_SCREEN_REQUEST_WAIT_FADE_OUT = 2,
-    WORLD_SCREEN_REQUEST_RUN = 3,
-    WORLD_SCREEN_REQUEST_START_FADE_IN = 8,
-    WORLD_SCREEN_REQUEST_WAIT_FADE_IN = 9,
-} world_screen_request_state_e;
+/* The battle map state that WORLD's copies of the event code keep: map append and reload requests, the
+ * selected tile, the refresh and destruction waits, the darkness durations, and the light thread with its
+ * matrices (world_map_reset_script_light_transform is empty here). */
 
 extern u16 g_world_map_append_state;
 extern u16 g_world_map_reload_state;
 extern map_selected_tile_t g_world_map_selected_tile_data;
 extern s16 g_world_map_destruction_wait_state;
 extern u16 g_world_map_refresh_pending;
-extern RECT g_world_tile_info_image_location;
-extern world_gfx_image_load_parameters_t g_world_tile_info_image_params[2];
+
 extern u16 g_world_script_map_darkness_durations[];
-extern s16 g_world_brave_story_request_state; /* world_screen_request_state_e */
-extern s32 g_world_map_light_scale[4];        /* current light scale (VECTOR) */
+
+extern s32 g_world_map_light_scale[4]; /* current light scale (VECTOR) */
 extern MATRIX g_world_map_light_base_matrix;
 extern s16 g_world_map_light_rotation[4]; /* current light rotation (SVECTOR) */
 extern MATRIX g_world_map_light_color_matrix;
-void world_deployment_skip_thread(void);
-void world_menu_selected_tile_info_display_thread(void);
+
 void world_map_store_selected_tile_data(void);
 void world_map_wait_for_refresh(void);
 void world_map_light_thread(void);
 
+void world_map_reset_script_light_transform(void);
+
 /* status */
+/* Statuses in WORLD's menus: the status icons' image rectangles, the removal masks applied while an event
+ * stages a unit, the formation status panels' thread parameters, and the event's status changes. */
+
 /* Status-ID-indexed image source rectangles at 0x8018cf68. Not const: a const
  * qualifier lets GCC hoist world_item_build_status_list_polygons' loads above
  * its rect stores, which the target does not do. */
@@ -358,6 +335,11 @@ extern u8 g_world_status_removal_mask_staged_monster[BATTLE_STATUS_BYTE_COUNT];
  * 0x14-byte world_status_thread_t records). */
 extern world_status_thread_t g_world_status_display_thread_params;
 extern world_status_thread_t g_world_preview_stats_thread_params;
+
+void world_status_inflict_by_entd_unit_id(
+    s32 entd_unit_id, s32 status_index, s32 is_infliction, s32 less_strict_removal);
+
+void world_status_queue_current_status_graphics(s32 battle_unit_index, s32 enabled);
 
 /* gfx */
 /* WORLD's drawing: the two packet buffers with their primitive pools and counts, quads, tiles, lines,
@@ -611,9 +593,6 @@ extern u16 g_world_gfx_gradient_quad_count;
 extern u16 g_world_gfx_sprite_capacity;
 void world_gfx_set_party_unit_portrait_poly_texture(s32 portrait_id, POLY_FT4* poly);
 
-void world_panel_gfx_build_scaled_draw_area_packets(
-    world_gfx_scaled_draw_area_pair_t* packets, const void* geometry, s32 scale_index, s32 frame_offset, void* thread);
-
 void world_gfx_add_draw_area_primitive(RECT* rect, s32 otag_index);
 void world_gfx_enqueue_draw_mode(s32 dfe, s32 dtd, s32 tpage, RECT* texture_window, s32 ot_index);
 void world_gfx_enqueue_draw_move(RECT* src, s32 x, s32 y, s32 ot_index);
@@ -661,11 +640,11 @@ void world_gfx_init_image_loading(void* prim, const void* load_origin, const voi
 
 void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer);
 void world_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
-void world_screen_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
+
 void world_gfx_mirror_4bpp_rect(u8* pixels, world_glyph_blit_t* rect);
 void world_gfx_move_image_and_wait(RECT* rect, s16 x, s16 y);
 void world_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* pair);
-void world_panel_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* pair);
+
 void world_gfx_set_blit_dest_position(s32 x, s32 y);
 void world_gfx_set_fade_disabled(u8 disabled);
 void world_gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 image_type);
@@ -697,11 +676,28 @@ s32 world_gfx_update_fade_out_tile(void);
 
 void world_gfx_load_evtchr_thread(void);
 
-/* status panel */
-extern s16 g_world_auto_battle_option_colors[5]; /* text colour per option */
-void world_menu_run_battle_help(void);
+void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_image_location_t* page, upoint16_t* position,
+    main_zodiac_sprite_frame_t* rect, point16_t* scale, main_zodiac_draw_offset_t* origin);
+
+void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* poly);
+
+void world_gfx_copy_sprite_position_uv_and_size(const world_menu_entry_t* param, SPRT* sprite, s32 unused_frame);
+
+void world_gfx_enqueue_line_f2(RECT* rect, u8* data, u8 semi_trans, s32 priority);
+
+void world_gfx_init_default_poly_ft4(POLY_FT4* poly);
+
+void world_gfx_set_item_icon_sprite(SPRT* sprite, s32 item_id);
+
+void world_gfx_build_item_graphic_descriptor(world_item_icon_source_t* source, s32 item_id);
+
+void world_gfx_ramp_screen_overlay_intensity_to_zero(void);
 
 /* ability */
+/* The formation's ability screens (set, remove and learn abilities, the view list): their layout, cursors
+ * and pages, the spell quote state, and the ability helpers they share (categories, the JP, MP and CT shown,
+ * learning, the secondary skillsets). */
+
 /* Final selector for the WORLD ability-list builder at 0x801228f0. */
 typedef enum world_ability_list_mode {
     WORLD_ABILITY_LIST_MODE_VIEW_ALL = 0,
@@ -734,9 +730,7 @@ typedef char world_ability_menu_layout_size_must_be_0x2c[sizeof(world_ability_me
 extern s16 g_world_ability_category; /* menu_ability_category_e */
 extern s32 g_world_menu_selected_skill_ct;
 extern s32 g_world_ability_selected_type;
-extern s32 g_world_secondary_bit_read_index;
-extern u8 g_world_secondary_bit_cursor_reset;
-extern u8* g_world_secondary_bit_cursor;
+
 extern s32 g_world_spell_quote_last_ability_id;
 extern world_ability_menu_layout_t g_world_ability_menu_layout;
 extern u8 g_world_spell_quote_exception_skillsets[];
@@ -803,6 +797,8 @@ void world_ability_learn(s16 unit_id, s16 job_id, s16 ability_id);
 s32 world_ability_run_view_list(void);
 s32 world_ability_build_equippable_rsm_list(s16 unit_index, s32 slot, s16* out);
 s32 world_ability_run_learn_list(void);
+
+s32 world_ability_list_secondary_skillsets(s16 unit_id, s16* skillsets);
 
 /* job */
 /* The formation's job screens: the job wheel and the job change, the Learn Abilities job list and its
@@ -916,6 +912,9 @@ s32 world_job_get_cached_total_jp(s32 unused_row);
 s32 world_job_get_selected_unit_job_points_entry(s32 unused_row);
 
 /* equipment */
+/* The formation's equipment screens: the equip and remove-all menus' state and cursors, the slot filters
+ * of Best Fit, and the equipment and ability panels' rectangles, sprites and thread parameters. */
+
 typedef enum world_equipment_slot {
     WORLD_EQUIPMENT_SLOT_RIGHT_HAND = 0,
     WORLD_EQUIPMENT_SLOT_LEFT_HAND = 1,
@@ -951,7 +950,14 @@ extern s16 g_world_equip_item_previewed_cursor;
 extern s8 g_world_remove_all_equipment_prompt_active;
 extern volatile u16 g_world_remove_all_equipment_blink_counter;
 
+/* Item-list filter per equipment slot (right hand, left hand, head, body, accessory); Best Fit sets
+ * slot 1 to ITEM_LIST_FILTER_WEAPON for a Two Swords user, else ITEM_LIST_FILTER_SHIELD. */
+extern u8 g_world_best_fit_slot_categories[5];
+
 /* editor */
+/* The number fields of world_menu_run_numeric_editor_thread, the WORLD twin of the event overlays'
+ * numeric editor: their geometry, rectangles, texture, descriptors, state and text images. */
+
 extern world_image_location_t g_world_editor_numeric_geometry[];
 extern RECT g_world_editor_numeric_table[2];
 extern RECT g_world_editor_numeric_entries_a[];
@@ -969,6 +975,9 @@ extern u8 g_world_editor_numeric_text_a[];
 extern u8 g_world_editor_numeric_text_b[];
 
 /* comparison */
+/* The status panel of the unit a formation or shop screen compares with: its identity record, stat
+ * summary, number entries, portrait, packets and text images, and its display thread's parameters. */
+
 /* Display identity of a status-panel unit (0xe bytes; g_world_selected_unit_identity
  * and g_world_comparison_unit_identity). Formation code copies it from
  * world_formation_unit_t +0x22; wldcore_unit_build_status_panel_data fills it
@@ -1335,6 +1344,13 @@ extern s16 g_world_formation_record_count; /* 0x801c8634 */
  * does not itself refresh this byte. */
 extern u8 g_world_formation_unit_count;
 extern world_formation_unit_t* g_world_formation_unit_pointers[];
+
+extern s8 g_world_dismiss_unit_prompt_running;
+extern world_menu_entry_t g_world_best_fit_confirm_menu;
+extern u8 g_world_order_unit_menu[];
+
+extern u8 g_world_order_unit_saved_browse_enabled;
+
 void world_formation_run_screen(s32 tutorial, s32 unused);
 s32 world_formation_is_unit_list_scroll_needed(void);
 void world_formation_draw_unit_slots(point16_t* positions, s32 shade);
@@ -1347,8 +1363,7 @@ s32 world_formation_run_item_list_menu(void);
 s32 world_formation_run_set_ability_menu(void);
 void world_formation_build_job_wheel_availability(void);
 void world_formation_build_job_wheel_job_name(void);
-void world_gfx_set_scaled_poly_ft4_geometry_and_uv(POLY_FT4* poly, world_image_location_t* page, upoint16_t* position,
-    main_zodiac_sprite_frame_t* rect, point16_t* scale, main_zodiac_draw_offset_t* origin);
+
 s16 world_formation_build_record_list(s32 item_id, world_formation_unit_t** unused_list, s32 mode);
 
 void world_formation_build_unit_graphic_entry(
@@ -1357,7 +1372,6 @@ void world_formation_build_unit_graphic_entry(
 void world_formation_build_unit_record(
     struct battle_stats* unit, struct world_formation_unit* record, struct party_data* party);
 
-void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* poly);
 s32 world_formation_can_dismiss_unit(s16 formation_idx);
 s32 world_formation_can_equip_item_in_slot(s16 unit_index, s16 slot, s16 item_id);
 s32 world_formation_is_selected_unit_in_upper_rows(s32 scroll_position);
@@ -1441,6 +1455,11 @@ s32 world_formation_run_remove_all_equipment_prompt(void);
 s32 world_formation_run_remove_item_menu(void);
 
 s32 world_formation_coords_fit_in_byte(s32 x, s32 y);
+
+void world_formation_item_menu_idle_thread(void);
+void world_formation_ability_menu_idle_thread(void);
+
+s32 world_formation_get_unit_palette_index(s32 roster_slot);
 
 /* unit */
 /* WORLD's unit helpers: the event-script unit operations it shares with BATTLE (status snapshots,
@@ -1567,10 +1586,6 @@ extern u8 g_world_selected_unit_number_text_image[];
 extern u8 g_world_selected_unit_portrait_image[];
 extern u8 g_world_stat_preview_text_image[];
 s32 world_unit_get_formation_sprite(s32 party_index);
-s32 world_formation_get_unit_palette_index(s32 roster_slot);
-void world_script_join_units_silently(void);
-void world_menu_load_selected_unit(void);
-s32 world_script_get_misc_id(s32 unit_id);
 
 void world_unit_apply_staged_status_data(s32 unit_id, s32 misc_id);
 void world_unit_build_best_fit_equipment(s16 unit_index, s16* equipment);
@@ -1586,12 +1601,11 @@ s32 world_unit_copy_map_coords_from_misc_id(s32 misc_id, s16* out);
 s32 world_unit_get_zodiac_for_date(s32 month, s32 day);
 s32 world_unit_has_any_current_status(s32 unit_id);
 void world_unit_increase_blue_team_brave_by_10(void);
-void world_status_inflict_by_entd_unit_id(
-    s32 entd_unit_id, s32 status_index, s32 is_infliction, s32 less_strict_removal);
+
 s32 world_unit_is_moving(s32 id);
 s32 world_unit_is_two_handing_weapon(s16* equipment, s32 two_hands_support);
 void world_unit_project_misc_to_screen(s32 misc_id, s16* screen_coords);
-void world_status_queue_current_status_graphics(s32 battle_unit_index, s32 enabled);
+
 void world_unit_reset_animation_states(void);
 s32 world_unit_save_staged_status_data(s32 unit_id);
 void world_unit_set_animation(s32 misc_id, u32 animation);
@@ -1664,6 +1678,9 @@ s32 world_tutorial_step(void);
 void world_tutorial_update_controller_input(void);
 
 /* help */
+/* WORLD's copy of HELPMENU, the battle help: the saved panel records it reads, its navigation tables, the
+ * HELP.LZW text WORLD carries, and the threads that open, run and close it. */
+
 extern u16 g_world_help_portrait_clut_by_sheet_id[];
 /* Saved copies of the WORLD records world_menu_get_active_turn_panels reads. */
 extern map_selected_tile_t g_world_help_menu_cursor_tile;
@@ -1695,6 +1712,8 @@ void world_menu_run_helpmenu_thread(void);
 
 void world_menu_start_help_menu_thread(void);
 
+void world_menu_run_battle_help(void);
+
 /* options */
 /* WORLD's resident copy of OPTION.OUT (world_option_*): the game options that the world menu's Options
  * row opens, and copies of the AT list and the crystal panel that only WORLD's dead copy of the battle
@@ -1713,6 +1732,12 @@ extern world_menu_icon_record_t g_world_option_picker_icon_records[2];
 void world_option_menu_run_options_thread(void);
 void world_option_menu_run_option_choice_thread(void);
 extern world_menu_list_page_t g_world_at_list_pages[2];
+
+extern s32 g_world_game_option_original_values[14];
+extern s32 g_world_game_option_values[14];
+
+extern game_options_t g_world_saved_game_options;
+
 void world_option_menu_run_list_thread(void);
 void world_option_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);
 u8* world_option_menu_redraw_text_page_on_scroll(
@@ -1729,9 +1754,17 @@ void world_option_text_set_blit_destination(s16 x, s16 y);
 void world_option_text_set_blit_source_rect(s16 x, s16 y, s16 width, s16 height);
 
 /* panel */
+/* The unit panels' drawing: the unit status banner's slide offsets, the item icon texture of the equipment
+ * panels, and the panels' scaled draw-area packets (the BUNIT and EQUIP twin). */
+
 extern s16 g_world_panel_slide_up_y[];
 extern world_image_location_t g_world_panel_item_icon_texture[];
 extern s16 g_world_panel_slide_down_y[];
+
+void world_panel_gfx_build_scaled_draw_area_packets(
+    world_gfx_scaled_draw_area_pair_t* packets, const void* geometry, s32 scale_index, s32 frame_offset, void* thread);
+
+void world_panel_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* pair);
 
 /* text */
 /* WORLD's text engine (world_text_*), BATTLE's with WORLD's additions: the text files WORLD.BIN carries
@@ -1935,9 +1968,6 @@ u8* world_text_advance_cursor_with_separate_backreference_state(s32* count, u8* 
 void world_text_fill_field_with_terminators(u8* buf);
 
 s32 world_text_is_skillset_in_spell_quote_exception_list(s32 value);
-
-/* turn */
-void world_screen_build_at_list(void);
 
 /* crystal pickup */
 /* The globals of WORLD's copy of the crystal pickup panel (world_option_menu_start_crystal_pickup_threads),
@@ -2414,6 +2444,43 @@ extern world_menu_selection_record_t g_world_menu_selection_records[];
 extern world_image_location_t g_world_menu_texture_location;
 extern RECT g_world_menu_disabled_texture_window;
 
+/* System-function table. Declared as an array: as a scalar, GCC hoists
+ * world_menu_run_system_function_thread's menu-index reload above its store. */
+extern battle_system_function_t g_world_system_function_table[];
+extern s32 g_world_menu_companion_executable_request_index;
+
+extern s32 g_world_menu_companion_data_file_request_index;
+extern s32 g_world_pending_bin_load_destination;
+extern s32 g_world_system_function_thread_busy;
+extern s32 g_world_menu_companion_executable_lbas[];    /* 0x80156388, indexed by request */
+extern s32 g_world_menu_companion_executable_sizes[];   /* 0x801563c8 */
+extern s32 g_world_menu_companion_executable_offsets[]; /* 0x80156408, relative to the overlay load address */
+extern s32 g_world_menu_companion_data_file_lbas[];
+extern s32 g_world_menu_companion_data_file_sizes[];
+extern s32 g_world_menu_companion_data_file_loading;
+extern s32 g_world_menu_companion_executable_loading; /* 0x801564cc */
+
+extern RECT g_world_tile_info_image_location;
+extern world_gfx_image_load_parameters_t g_world_tile_info_image_params[2];
+
+extern s16 g_world_brave_story_request_state; /* world_screen_request_state_e */
+
+extern s16 g_world_auto_battle_option_colors[5]; /* text colour per option */
+
+extern u16 g_world_frame_arg;
+extern s32 g_world_frame_counter;
+extern s8 g_world_cursor_bob_thresholds[];        /* (threshold, value) pairs, 0-terminated; entry 0 is the modulus */
+extern s8 g_world_cursor_bob_active_thresholds[]; /* (threshold, value) pairs, 0-terminated */
+extern u16 g_world_saved_animation_speed;         /* saved animation speed */
+extern u16 g_world_animation_speed_forced;        /* animation speed override active */
+
+extern u8 g_world_location_names_resident[];
+extern s16 g_world_debug_variable_list_request_state;
+extern world_menu_quad_page_t world_D_80173CBC[2];
+extern s32 g_world_preview_stats_window_active;
+
+extern u8 g_world_action_menu_skillsets[];
+
 /*
  * WORLD.BIN routines shared by the world, wldcore, and menu-overlay
  * reconstructions.  Each module's linker table maps these names to its own
@@ -2437,7 +2504,7 @@ void world_menu_run_script_with_callback_suppressed(void);
 
 void world_menu_clear_render_buffer(u8* dst, u32 count);
 void world_menu_zoom_cursor_frame(const void* source, SPRT* sprite, s32 step);
-void world_gfx_copy_sprite_position_uv_and_size(const world_menu_entry_t* param, SPRT* sprite, s32 unused_frame);
+
 void world_menu_draw_text_columns_narrow(world_menu_entry_t* entry, s32* row_offset, void* buffer);
 void world_menu_init_panel_fade_tiles(void);
 void world_menu_draw_large_number_glyphs(s32 value, s32 digits, void* resource, world_glyph_blit_t* pos);
@@ -2463,7 +2530,7 @@ void world_menu_draw_numeric_display_entries(
     void* pixels, menu_number_entry_t* entries, world_glyph_blit_t* position, s32 count);
 
 void world_menu_draw_pressable_button(s16 index, s32 x, s16 y, s16 pressed, s16 disabled, u16 sound_effect_id);
-void world_screen_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);
+
 s32 world_menu_get_selected_unit_hp_bonus_or_dashes(s32 unused_row);
 s32 world_menu_get_selected_unit_mp_bonus_or_dashes(s32 unused_row);
 s32 world_menu_get_party_unit_name_id(void);
@@ -2474,17 +2541,14 @@ s32 world_menu_get_selected_unit_mp_bonus(s32 unused_row);
 s32 world_menu_is_busy(s32 unused);
 s32 world_menu_is_screen_busy(void);
 void world_menu_open_entry_window(s32 index, s32 unused_x, s32 unused_y);
-u8* world_screen_menu_redraw_text_page_on_scroll(
-    world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor);
 
 u8* world_menu_redraw_text_page_on_scroll_in_rect(
     world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused, RECT* area);
 
-void world_script_apply_input_overrides(u32* state);
 void world_menu_render_text_image_at_fixed_origin(world_text_dialog_record_t* record);
 void world_menu_render_text_image_at_record_origin(world_text_dialog_record_t* record);
 void world_menu_run_equip_thread(void);
-void world_screen_menu_window_frame_thread(void);
+
 s32 world_menu_run_unit_status_banner_countdown(s32 message_id, s32 frames);
 u8* world_menu_script_draw_textured_quad(u8* cmd);
 world_draw_number_command_t* world_menu_script_draw_formatted_number(world_draw_number_command_t* command);
@@ -2496,7 +2560,7 @@ void* world_menu_alloc_buffer(s32 size);
 void* world_menu_alloc_memory(s32 size);
 void world_menu_announce_entry_value_thread(void);
 void* world_menu_build_and_upload_window_frame_image(s32 width, s32 height, RECT* rect, s32 mode);
-void world_gfx_enqueue_line_f2(RECT* rect, u8* data, u8 semi_trans, s32 priority);
+
 void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_menu_icon_record_t* buffer);
 void world_menu_submit_icon_primitives(world_menu_icon_sprites_t* prims);
 void world_menu_build_layout_sprites(world_menu_sprite_layout_t* layout, SPRT* sprite, s32 unused_2);
@@ -2529,7 +2593,7 @@ void world_menu_draw_thread_status_indicators(void);
 void world_menu_request_unit_panel_redraw(void);
 void world_menu_fade_out_thread(void);
 void world_menu_build_window_image_row(u16* source, u16* dest, s32 count, s32 offset);
-void world_screen_menu_build_window_image_row(u16* source, u16* dest, s32 count, s32 offset);
+
 void world_menu_free_high_overlay(void);
 void world_menu_free_memory(void* buffer);
 s32 world_menu_get_entry_item_count(s32 entry_index);
@@ -2553,7 +2617,7 @@ void world_menu_init_and_load_scrollable_list(const s16* values, s32 selected_in
 void world_menu_init_palette_and_text(s32 unused);
 void world_menu_init_primitive_colors_normal(world_menu_palette_primitives_t*);
 void world_menu_init_primitive_colors_dimmed(world_menu_palette_primitives_t*);
-void world_gfx_init_default_poly_ft4(POLY_FT4* poly);
+
 void world_menu_init_scrollable_list(const s16* values, s32 value, s32 selected, u8* text_table);
 void world_menu_init_scrollable_list_core(const s16* values, s32 selected_index, u8* text_table);
 void world_menu_init_sprite_array(SPRT* sprites, s32 count, s32 clut);
@@ -2561,7 +2625,7 @@ void world_menu_init_subsystems(void);
 s32 world_menu_is_input_allowed(void);
 s32 world_menu_is_learn_ability_learned(s32 index);
 s32 world_menu_lerp_fixed12(s32 from, s32 to, s32 t);
-s32 world_screen_menu_lerp_fixed12(s32 from, s32 to, s32 t);
+
 void world_menu_load_common_graphics(s32 load_extra_pages);
 void world_menu_load_scrollable_list_layout(world_menu_list_record_t* record);
 void world_menu_init_with_world_text(void);
@@ -2680,6 +2744,30 @@ void world_menu_submit_numeric_display_frame_primitives(world_menu_palette_primi
 void world_menu_get_selection_record(s32 index, s16* selected_index, s16* scroll_base_index, s16* entries);
 
 void world_menu_lerp_rect_to_poly_ft4(POLY_FT4* poly, RECT* from, RECT* to, s32 t);
+
+void world_menu_request_open_companion_executable(s32 request);
+
+void world_menu_copy_bytes_to_halfwords(u16* destination, const u8* source, s32 count);
+
+void world_menu_init_stub(void);
+void world_menu_display_projected_action_effect(POLY_FT4* unused_primitive,
+    const world_image_location_t* unused_base_load, const RECT* unused_base_screen,
+    const world_gfx_image_load_parameters_t* unused_parameters);
+
+void world_menu_run_companion_overlay_stub(void);
+
+void world_menu_open_companion_executable(void);
+void world_menu_open_companion_data_file(void);
+
+s32 world_menu_get_cursor_bob_offset(s32 mode);
+
+void world_menu_selected_tile_info_display_thread(void);
+
+void world_menu_load_selected_unit(void);
+
+void world_menu_init_subsystem_pointers(void);
+
+s16 world_menu_update_wrapped_horizontal_selection(u16 count, u8 index, s32 buttons);
 
 /* item */
 /* WORLD's item screens: the formation item menu (categories, sort orders, rearranging, the
@@ -2818,10 +2906,14 @@ extern world_menu_entry_t* g_world_item_category_icon_strip;
 extern u16 g_world_item_saved_selected_unit_index;
 extern u8 g_world_item_menu_category;
 
-void world_gfx_set_item_icon_sprite(SPRT* sprite, s32 item_id);
+/* -1-terminated sort key lists; entries 0-5 point at MAIN's g_main_item_type_order_1..6: 0 is the
+ * roster's Order Unit keys (world_formation_run_order_unit_menu), 1-5 the item categories' sort
+ * orders (world_item_run_sort_order_menu). */
+extern s8* g_world_sort_key_lists[];
+
 s32 world_item_count_equipped_by_party(s32 item_id);
 s32 world_item_build_category_list(s16 unit_id, s16 sort_mode, s8 category, s16* entries, u8 mode);
-void world_gfx_build_item_graphic_descriptor(world_item_icon_source_t* source, s32 item_id);
+
 void world_item_build_status_list_polygons(s16 item_id);
 world_item_icon_source_t* world_item_build_type_icon_source(s32 entry_index);
 
@@ -3250,6 +3342,10 @@ s32 world_card_write_buffer_to_file(const char* filename, const u8* source, u32 
 
 void world_card_free_load_work_buffer(void);
 
+void world_card_close_stub(void);
+
+void world_card_input_update_with_message_state(void);
+
 /* script */
 /* WORLD's copy of the event-script interpreter (world_script_*, twins of battle_script_*): loading
  * and running an event, its frame, the script variables and the scenario conditions, and the event
@@ -3281,11 +3377,20 @@ extern char g_world_script_reading_character_message[]; /* "reading charactor%d 
 extern s16 g_world_3d_object_use_request;
 extern u16 g_world_3d_object_wait_status;
 
+extern s16 g_world_field_object_use_request;
+extern u16 g_world_field_object_wait_status;
+
+extern u8 g_world_rotation_speed_frames[];
+
+extern s32 g_world_next_event_id;
+
+extern u16 g_world_script_frame_result_override;
+
 s32 world_script_check_scenario_condition(s32 type, s32 id, s32 value, s32 tile_y, s32 elevation);
 s32 world_script_run_scenario_conditions(void);
 void world_script_run_sprite_move(u8*, s32);
 void world_script_set_specialized_map_destroyed(void);
-void world_menu_init_subsystem_pointers(void);
+
 s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode);
 
 void world_script_advance_date_by_one_year(void);
@@ -3327,8 +3432,7 @@ void world_script_sprite_move_thread(void);
 void world_script_sprite_move_beta_thread(void);
 void world_script_start_current_event_thread(void);
 void world_script_store_halfword(u8* destination, s16 value);
-void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg);
-void world_gfx_ramp_screen_overlay_intensity_to_zero(void);
+
 void world_script_teleport_out_event_instruction(s32 unit_id, s32 remove_unit);
 void world_script_unit_anim(const u8* parameters);
 void world_script_wait_for_unit_ready(s32 misc_id);
@@ -3366,6 +3470,32 @@ void world_script_wait_walk_event_instruction(s32 unit_id);
 void world_script_assign_bitset_flag(u32* bits, s32 index, s32 set);
 
 void world_script_reset_palette_event_instruction(const u8* parameters);
+
+void world_script_clamp_s32_to_range(s32* value, s32 min, s32 max);
+
+void world_script_frame_after_threads_stub(void);
+
+void world_script_process_pending_requests(void);
+
+void world_script_add_unit_stub(void);
+void world_script_frame_after_requests_stub(void);
+
+void world_script_report_missing_unit_stub(s32 unused_unit_id);
+void world_script_opcode_74_event_instruction(const u8* unused_parameters);
+
+void world_script_dark_screen_thread(void);
+
+void world_script_load_event_input_state(const world_menu_input_state_t* state);
+
+void world_script_join_units_silently(void);
+
+s32 world_script_get_misc_id(s32 unit_id);
+
+void world_script_apply_input_overrides(u32* state);
+
+void world_script_process_inflict_status_commands(void);
+void world_script_rotate_unit(const u8*);
+void world_script_block_start_thread(void);
 
 /* event */
 /* What WORLD's event instructions share with its main loop: the requests, the event unit slots and
@@ -3423,43 +3553,38 @@ extern u8 g_world_event_variable_write_guard; /* WORLD counterpart: 0x80153387 *
 extern s16 g_world_event_weather_request;
 extern map_background_gradient_colors_t g_world_event_background_colors;
 
-/* other */
-extern s16 g_world_field_object_use_request;
-extern u16 g_world_field_object_wait_status;
-extern u16 g_world_frame_arg;
-extern s32 g_world_frame_counter;
-extern s8 g_world_cursor_bob_thresholds[];        /* (threshold, value) pairs, 0-terminated; entry 0 is the modulus */
-extern s8 g_world_cursor_bob_active_thresholds[]; /* (threshold, value) pairs, 0-terminated */
-extern u16 g_world_saved_animation_speed;         /* saved animation speed */
-extern u16 g_world_animation_speed_forced;        /* animation speed override active */
-extern u8 g_world_rotation_speed_frames[];
-extern u8 g_world_location_names_resident[];
-extern s16 g_world_debug_variable_list_request_state;
-extern world_menu_quad_page_t world_D_80173CBC[2];
-extern s32 g_world_preview_stats_window_active;
-extern s8 g_world_dismiss_unit_prompt_running;
-extern world_menu_entry_t g_world_best_fit_confirm_menu;
-extern u8 g_world_order_unit_menu[];
-/* -1-terminated sort key lists; entries 0-5 point at MAIN's g_main_item_type_order_1..6: 0 is the
- * roster's Order Unit keys (world_formation_run_order_unit_menu), 1-5 the item categories' sort
- * orders (world_item_run_sort_order_menu). */
-extern s8* g_world_sort_key_lists[];
-/* Item-list filter per equipment slot (right hand, left hand, head, body, accessory); Best Fit sets
- * slot 1 to ITEM_LIST_FILTER_WEAPON for a Two Swords user, else ITEM_LIST_FILTER_SHIELD. */
-extern u8 g_world_best_fit_slot_categories[5];
-extern game_options_t g_world_saved_game_options;
-extern s32 g_world_next_event_id;
-extern u8 g_world_order_unit_saved_browse_enabled;
-extern u8 g_world_action_menu_skillsets[];
-extern u16 g_world_script_frame_result_override;
-extern s32 g_world_camera_cross_product_overflow; /* set by world_util_cross_product_q12 on Q12 overflow */
+/* bits */
+/* Two MSB-first bitstreams: a primary one that WORLD reads and writes and a secondary one it reads; each
+ * set_*_cursor call points one at its bytes and restarts it at bit 7. */
+
+extern s32 g_world_primary_bit_read_index;
+extern s32 g_world_primary_bit_write_index;
+extern u8 g_world_primary_bit_cursor_reset;
+extern u8* g_world_primary_bit_cursor;
+
+extern s32 g_world_secondary_bit_read_index;
+extern u8 g_world_secondary_bit_cursor_reset;
+extern u8* g_world_secondary_bit_cursor;
+
+s32 world_bits_read_primary(s32 bit_count);
+s32 world_bits_read_secondary(s32 bit_count);
+void world_bits_set_primary_cursor(u8* ptr);
+void world_bits_set_secondary_cursor(u8* ptr);
+void world_bits_write_primary(u8 bit);
+
+/* util */
+/* WORLD's hand-written helpers, twins of BATTLE's: a forward byte copy, a signed multiply-divide through a
+ * 64-bit product and a Q12 cross product that flags overflow (the camera tracks' crossing points). */
+
+s32 world_util_mul_div_s64(s32 a, s32 b, s32 c);
+void world_util_copy_bytes(void* destination, const void* source, s32 count);
+
 s32 world_util_cross_product_q12(s32 a, s32 b, s32 c, s32 d);
 
-s32 world_ability_list_secondary_skillsets(s16 unit_id, s16* skillsets);
+/* deploy */
+/* WORLD's copy of battle_deployment_skip_thread; its only starter,
+ * world_menu_init_attack_resources_and_threads, has no caller. */
 
-s16 world_menu_update_wrapped_horizontal_selection(u16 count, u8 index, s32 buttons);
-void world_script_process_inflict_status_commands(void);
-void world_script_rotate_unit(const u8*);
-void world_script_block_start_thread(void);
+void world_deployment_skip_thread(void);
 
 #endif
