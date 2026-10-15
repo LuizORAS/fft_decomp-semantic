@@ -1,6 +1,8 @@
 /* LIBGPU 80022c24-80022d10. */
 #include "psx/libgpu.h"
 
+/* Load a texture page image to VRAM (`x`, `y`), its VRAM width taken from `w` and the colour depth `tp`, and
+ * return its texture page word. The fonts and the battle spritesheets load this way. */
 u16 LoadTPage(u32* pixels, int tp, int abr, int x, int y, int w, int h) {
     RECT rect;
     rect.x = x;

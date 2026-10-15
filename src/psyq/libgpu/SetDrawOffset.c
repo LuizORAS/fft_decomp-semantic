@@ -1,6 +1,7 @@
 /* LIBGPU 80025460-800254a4. */
 #include "psx/libgpu.h"
 
+/* Build a drawing-offset packet for the x and y halfwords at `position`. About 27 functions use it. */
 void SetDrawOffset(void* destination, void* position) {
     DR_OFFSET* packet = destination;
     s16* offset = position;

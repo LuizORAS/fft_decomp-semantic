@@ -1,6 +1,9 @@
 /* LIBGPU 80023f70-80023fd4. */
 #include "psx/libgpu.h"
 
+/* Prepare a packet that loads a small image into the VRAM rectangle `rect`: a cache clear, the CPU-to-VRAM
+ * command and the rectangle, with a length counting the pixel words the caller adds (QUIRKS.md); length 0 for
+ * an image of more than 11 words. No code refers to it. */
 void SetDrawLoad(void* primitive, RECT* rect) {
     psyq_draw_load_t* packet = primitive;
     int size = (rect->w * rect->h + 1) / 2;

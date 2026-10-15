@@ -1,6 +1,8 @@
 #include "psx/libgpu.h"
 
-/* LIBGPU, retail 0x80025524-0x800257c8. Builds environment and optional background commands. */
+/* Build the draw-environment packet `dr_env` for `env`: draw area, offset, draw mode, texture window and mask
+ * commands, then, when `env` asks for a background clear, a fill (64-pixel aligned) or a TILE over its clip
+ * area in its colour. PutDrawEnv and DrawOTagEnv use it. */
 void SetDrawEnv(DR_ENV* dr_env, DRAWENV* env) {
     extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
     psyq_gpu_rect_words_t rectangle;
