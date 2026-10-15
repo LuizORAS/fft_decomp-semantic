@@ -14,7 +14,7 @@ void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_
     g_battle_effect_load_state = BATTLE_EFFECT_LOAD_START;
     if (ability < ABILITY_ID_COUNT) {
         if (ability == ABILITY_ID_THROW_BALL) {
-            s32 ball = battle_effect_get_ninja_ball(packed >> 16);
+            s32 ball = battle_effect_get_element_index(packed >> 16);
             if (ball == BATTLE_EFFECT_ELEMENT_INDEX_FIRE)
                 g_battle_ability_effect_id = BATTLE_EFFECT_FILE_FIRE;
             else if (ball == BATTLE_EFFECT_ELEMENT_INDEX_WATER)

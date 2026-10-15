@@ -46,5 +46,5 @@ void battle_effect_init_system(void) {
         }
     }
     battle_effect_reset_render_state();
-    battle_effect_init_camera_and_screen_data();
+    battle_effect_init_camera();
 }

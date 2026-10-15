@@ -1,11 +1,9 @@
 #include "fft/battle.h"
 
-/* Start the departure effect of a teleport. Altima's two forms request their own
- * ability effect and the result is 1; any other unit gets the teleport secondary
- * effect and the teleport-out sound, and the result is 0. */
-/* Start the teleport departure effect: for Altima's two forms her ability animation 0xdb or 0xdc,
- * returning 1; for any other unit the generic teleport effect (battle_effect_set_secondary_teleport)
- * and sound 0x6a, returning 0. */
+/* Start the departure effect of a teleport: Altima's two forms request their own ability effect
+ * (ABILITY_ID_ALTIMA_HOLY_ANGEL_TELEPORT_DEPARTURE, ABILITY_ID_ALTIMA_ARCH_ANGEL_TELEPORT_DEPARTURE) and the
+ * result is 1; any other unit gets the teleport secondary effect and MAIN_SFX_TELEPORT_OUT, and the result is
+ * 0. battle_unit_animate_teleport_to_destination calls it. */
 s32 battle_effect_start_teleport_departure(battle_unit_misc_data_t* unit) {
     battle_effect_secondary_init_t teleport_data;
 

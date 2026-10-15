@@ -3284,8 +3284,8 @@ enum {
     BATTLE_EFFECT_FILE_ICE = 0x18,
 };
 
-/* What battle_effect_get_ninja_ball makes of an element mask: the position of its first element in
- * g_battle_effect_ninja_ball_masks, 0 for no element. It picks the CLUT of the weapon hit and
+/* What battle_effect_get_element_index makes of an element mask: the position of its first element in
+ * g_battle_effect_element_masks, 0 for no element. It picks the CLUT of the weapon hit and
  * spell charge particles and the effect of a thrown ball. */
 typedef enum battle_effect_element_index {
     BATTLE_EFFECT_ELEMENT_INDEX_NONE = 0,
@@ -3335,7 +3335,7 @@ typedef enum battle_effect_particle_group {
     BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_A = 0,
     BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_B = 1, /* its second slot set */
     BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF = 3,
-    BATTLE_EFFECT_PARTICLE_GROUP_DEATH_POOF = 4,
+    BATTLE_EFFECT_PARTICLE_GROUP_DEATH_SMOKE = 4,
     BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP = 5,
     BATTLE_EFFECT_PARTICLE_GROUP_FALL_DUST = 6,
     BATTLE_EFFECT_PARTICLE_GROUP_SPLASH = 7,
@@ -4615,7 +4615,7 @@ extern u32 g_battle_effect_camera_rotation_mode;
 extern u32 g_battle_effect_camera_position_mode;
 extern u32 g_battle_effect_camera_zoom_mode;
 extern u8 g_battle_effect_trap_frame_data[];
-extern u8 g_battle_effect_ninja_ball_masks[];
+extern u8 g_battle_effect_element_masks[];
 extern s32 g_battle_effect_gravity_scale;
 extern MATRIX g_battle_effect_particle_heading_matrix;
 extern MATRIX g_battle_effect_emitter_matrix;
@@ -4823,10 +4823,11 @@ void battle_move_start_teleport_step(battle_unit_misc_data_t* unit);
 void battle_effect_init_teleport_data(battle_unit_misc_data_t* unit, battle_effect_secondary_init_t* teleport_data);
 
 s32 battle_effect_init_weapon_hit_secondary(s32 elements, battle_effect_secondary_init_t* source, s32 unused_is_bow);
-void battle_effect_set_evade_type_data_item_and_throw_stone_hardcoding(battle_unit_misc_data_t* unit);
+void battle_effect_start_action_projectile_secondary(battle_unit_misc_data_t* unit);
 void battle_effect_set_secondary_death_smoke(battle_unit_misc_data_t* unit);
 void battle_effect_set_secondary_venom_trap(battle_unit_misc_data_t* unit);
 void battle_effect_set_secondary_zodiac_poof(battle_unit_misc_data_t* unit);
+void battle_effect_set_landing_secondary_by_surface_type(battle_unit_misc_data_t* unit);
 s32 battle_effect_start_teleport_arrival(battle_unit_misc_data_t* unit);
 s32 battle_effect_start_teleport_departure(battle_unit_misc_data_t* unit);
 void battle_effect_start_teleport_fade_out(battle_unit_misc_data_t* unit);
@@ -4856,7 +4857,7 @@ void battle_effect_finalize_secondary(u8 secondary_id);
 s32 battle_effect_find_next_keyframe(s16 frame, s16 mask, s32* out_index, s32* out_frame);
 s32 battle_effect_get_bow_shot_angle(void);
 u8 battle_effect_allocate_secondary_slot(void);
-s32 battle_effect_get_ninja_ball(s32 elements);
+s32 battle_effect_get_element_index(s32 elements);
 s32 battle_effect_get_on_hit_sound_index(s32 channel);
 s16 battle_effect_get_random_between_s16(s16 minimum, s16 maximum);
 s32 battle_effect_get_secondary_phase(u8 secondary_id);
@@ -4873,7 +4874,7 @@ void battle_effect_reset_animation_sequences_pointer(void);
 void battle_effect_reset_subsystems(void);
 void battle_effect_load_sound_section(s16 index);
 void battle_effect_init_palette(s16 index);
-void battle_effect_init_camera_and_screen_data(void);
+void battle_effect_init_camera(void);
 s32 battle_effect_init_projectile_secondary(s32 animation, struct battle_effect_secondary_init* source);
 s32 battle_effect_init_secondary(s32 animation_id, s32 parameter, struct battle_effect_secondary_init* source);
 void battle_effect_init_system(void);
@@ -4891,7 +4892,7 @@ void battle_effect_replace_flags_0006(struct battle_effect_flag_prefix* object, 
 void battle_effect_reset_render_state(void);
 void battle_effect_restore_inertia_threshold(void);
 void battle_effect_save_inertia_threshold(void);
-void battle_effect_set_evade_type_data_and_weapon_element(struct battle_unit_misc_data* unit, s32 is_bow);
+void battle_effect_start_action_weapon_hit_secondary(struct battle_unit_misc_data* unit, s32 is_bow);
 void battle_effect_set_inertia_threshold(s32 threshold);
 void battle_effect_set_secondary(struct battle_unit_misc_data* unit, s32 effect);
 void battle_effect_set_secondary_fall_dust(struct battle_unit_misc_data* unit);

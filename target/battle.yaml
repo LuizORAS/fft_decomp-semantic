@@ -23,8 +23,8 @@ functions:
   - {addr: 0x800687a4, size: 24, name: battle_menu_clear_status_menu_state, hash: f577ef872a276f9a}
   - {addr: 0x800687bc, size: 36, name: battle_effect_build_secondary_init, hash: 6364c33b2ad8bd53}
   - {addr: 0x800687e0, size: 364, name: battle_effect_build_secondary_init_from_action, hash: 59740552f17fbc57, rodata: [{addr: 0x80067000, size: 52, hash: f13dce8328c30c78}]}
-  - {addr: 0x8006894c, size: 88, name: battle_effect_set_evade_type_data_and_weapon_element, hash: 7a88116319eb1ca0}
-  - {addr: 0x800689a4, size: 124, name: battle_effect_set_evade_type_data_item_and_throw_stone_hardcoding, hash: 779337cdc09b71c1}
+  - {addr: 0x8006894c, size: 88, name: battle_effect_start_action_weapon_hit_secondary, hash: 7a88116319eb1ca0}
+  - {addr: 0x800689a4, size: 124, name: battle_effect_start_action_projectile_secondary, hash: 779337cdc09b71c1}
   - {addr: 0x80068a20, size: 84, name: battle_effect_set_secondary, hash: 5fd4e05ba5d2c87b}
   - {addr: 0x80068a74, size: 32, name: battle_effect_set_secondary_zodiac_poof, hash: 4bbadd82baf56346}
   - {addr: 0x80068a94, size: 32, name: battle_effect_set_secondary_death_smoke, hash: 74870a14edf727e3}
@@ -1838,7 +1838,7 @@ functions:
   - {addr: 0x801aa7dc, size: 268, name: battle_effect_update_slot, hash: 45c6110a0d0de422}
   - {addr: 0x801aa8e8, size: 56, name: battle_effect_reset_subsystems, hash: f3527d103117930d}
   - {addr: 0x801aa920, size: 476, name: battle_effect_copy_camera_angles_and_screen_coords, hash: c7215f9b955ff294}
-  - {addr: 0x801aaafc, size: 72, name: battle_effect_init_camera_and_screen_data, hash: 8f9921926194b436}
+  - {addr: 0x801aaafc, size: 72, name: battle_effect_init_camera, hash: 8f9921926194b436}
   - {addr: 0x801aab44, size: 76, name: battle_effect_copy_misc_unit_screen_location, hash: 0db0657e68cb43ea}
   - {addr: 0x801aab90, size: 152, name: battle_effect_convert_tile_coords_to_world_coords, hash: ad6c44c18d8a70fa}
   - {addr: 0x801aac28, size: 264, name: battle_camera_choose_unblocked_rotation_for_tile, hash: ddce90512167476e}
@@ -1861,7 +1861,7 @@ functions:
   - {addr: 0x801adc24, size: 304, name: battle_effect_free_slot, hash: b709356745211b36}
   - {addr: 0x801add54, size: 296, name: battle_effect_init_secondary, hash: 99aceb6b5ad1acf3}
   - {addr: 0x801ade7c, size: 304, name: battle_effect_init_projectile_secondary, hash: c08f81f2d5cae35d}
-  - {addr: 0x801adfac, size: 64, name: battle_effect_get_ninja_ball, hash: 155aa8fa483b6b96}
+  - {addr: 0x801adfac, size: 64, name: battle_effect_get_element_index, hash: 155aa8fa483b6b96}
   - {addr: 0x801adfec, size: 444, name: battle_effect_init_weapon_hit_secondary, hash: cc6580faec91e3af, rodata: [{addr: 0x801a0e60, size: 32, hash: 9c3b3543911ab26c}]}
   - {addr: 0x801ae1a8, size: 288, name: battle_effect_init_fall_dust_secondary, hash: 114a15e567004ef5}
   - {addr: 0x801ae2c8, size: 120, name: battle_effect_end_secondary_on_current_unit, hash: 0dedbedd0bc4e8f6}
@@ -1901,7 +1901,7 @@ functions:
   - {addr: 0x801b2c0c, size: 284, name: battle_effect_venom_trap_secondary_handler, hash: e590accae4f3bb0a}
   - {addr: 0x801b2d28, size: 312, name: battle_effect_level_up_secondary_handler, hash: 9c23b956c57776bd}
   - {addr: 0x801b2e60, size: 8, name: battle_noop_801b2e60, hash: 6d64edf91449c1b1}
-  - {addr: 0x801b2e68, size: 688, name: battle_effect_update_death_poof_secondary, hash: 4dbfac13fe5b16c4}
+  - {addr: 0x801b2e68, size: 688, name: battle_effect_death_smoke_secondary_handler, hash: 4dbfac13fe5b16c4}
   - {addr: 0x801b3118, size: 8, name: battle_noop_801b3118, hash: 6d64edf91449c1b1}
   - {addr: 0x801b3120, size: 692, name: battle_effect_zodiac_poof_secondary_handler, hash: fb8845c9776a79e3}
   - {addr: 0x801b33d4, size: 1100, name: battle_effect_reflect_secondary_handler, hash: fc5eed87339c5c99}
@@ -2760,7 +2760,7 @@ data:
   - {addr: 0x801b84dc, name: g_battle_effect_secondary_animations}
   - {addr: 0x801b8530, name: g_battle_effect_ending_secondary_function_id}
   - {addr: 0x801b8534, name: g_battle_effect_model_data_ptrs}
-  - {addr: 0x801b8544, name: g_battle_effect_ninja_ball_masks}
+  - {addr: 0x801b8544, name: g_battle_effect_element_masks}
   - {addr: 0x801b8550, name: g_battle_effect_reflect_palette_colors}
   - {addr: 0x801b8564, name: g_battle_effect_trap_particle_configs}
   - {addr: 0x801b8874, name: g_battle_effect_gravity_scale}
@@ -2886,7 +2886,7 @@ data:
   - {addr: 0x801bc0d4, name: D_801BC0D4}
   - {addr: 0x801bc0d8, name: D_801BC0D8}
   - {addr: 0x801bc0dc, name: g_battle_effect_sound_data_base}
-  - {addr: 0x801bc0e0, name: g_battle_effect_death_poof_states}
+  - {addr: 0x801bc0e0, name: g_battle_effect_death_smoke_states}
   - {addr: 0x801bf000, name: D_801BF000}
   - {addr: 0x801bf004, name: g_battle_effect_current_record_index}
   - {addr: 0x801bf00a, name: g_battle_effect_free_list_node_head}

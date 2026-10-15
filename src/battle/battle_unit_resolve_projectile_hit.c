@@ -8,6 +8,6 @@ void battle_unit_resolve_projectile_hit(battle_unit_misc_data_t* attacker, battl
         battle_sound_select_weapon_hit(attacker, 1);
         battle_unit_set_target_animation_from_attack_type(attacker, target);
         battle_gfx_prepare_post_action_display_by_misc_id(target->unit_id);
-        battle_effect_set_evade_type_data_and_weapon_element(attacker, 1);
+        battle_effect_start_action_weapon_hit_secondary(attacker, 1);
     }
 }

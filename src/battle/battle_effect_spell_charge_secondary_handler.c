@@ -63,7 +63,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
     switch (effect->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         index = g_battle_effect_secondary_animations[effect->animation_id].parameter;
-        g_battle_effect_current_secondary->parameter = battle_effect_get_ninja_ball(effect->parameter);
+        g_battle_effect_current_secondary->parameter = battle_effect_get_element_index(effect->parameter);
         g_battle_effect_secondary_state.charge.speed = g_battle_effect_charge_line_params[index].speed;
         g_battle_effect_secondary_state.charge.spread_range = g_battle_effect_charge_line_params[index].spread_range;
         g_battle_effect_secondary_state.charge.spread_offset = g_battle_effect_charge_line_params[index].spread_offset;
