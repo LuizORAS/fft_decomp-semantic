@@ -43,7 +43,7 @@ void SuzukiSPUInitialiser(s32 flags) {
     SetRCnt(0xf2000002, 0x44e8, 0x1000);
     StartRCnt(0xf2000002);
     EnableEvent(g_main_root_counter_2_event);
-    SpuSetTransferCallback(main_suzuki_spu_callback_func);
+    SpuSetTransferCallback(main_smd_spu_transfer_callback);
     g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_ROOT_COUNTER_EVENT;
     ExitCriticalSection();
     main_sound_set_type(MAIN_SOUND_TYPE_STEREO);

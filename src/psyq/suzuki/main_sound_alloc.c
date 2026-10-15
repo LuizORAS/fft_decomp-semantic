@@ -1,6 +1,10 @@
 /* SCUS_942.21 0x80014278..0x80014357. */
 #include "psx/suzuki.h"
 
+/* Take `size` bytes from the driver's CPU heap and clear them: the first gap after a block (between it and
+ * the next, or the heap's end) that holds the size rounded up to 16 plus a block header. Returns the payload,
+ * or 0 when no gap is large enough. Blocks stay in address order, so freeing one only widens a gap.
+ * SuzukiPutPlaySMD, the snapshots, the SFX record and the waveset use it. */
 void* main_sound_alloc(u32 size) {
     suzuki_heap_block_t* block = g_main_sound_heap_blocks;
     suzuki_heap_block_t* allocated;

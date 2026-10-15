@@ -1049,9 +1049,11 @@ void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, world_image_location_t
     main_zodiac_sprite_frame_t* frame, point16_t* scale, main_zodiac_draw_offset_t* offset);
 
 /* suzuki */
-/* Suzuki sound driver (SCUS_942.21 0x800120f4-0x800186c4) records, tables and
- * globals. Offsets and widths are taken from the driver code named beside
- * each field; the driver writes its _unknown_XX members and never reads them. */
+/* The Suzuki sound driver (SCUS_942.21 0x800120f4-0x800186c4): its records, tables and globals, the
+ * sound resource list it keeps, and its entry points (Suzuki*), which MAIN's main_sound_* routines call.
+ * Offsets and widths come from the driver code named beside each field; the driver writes its _unknown_XX
+ * members and never reads them. */
+
 /* Linear ramp stepped once per tick by main_smd_step_ramp (0x80014f18):
  * value moves by step until count reaches zero, then snaps to target << 16.
  * The root-counter handler tests count with `lh` before stepping MUS
@@ -1653,13 +1655,6 @@ typedef struct suzuki_play_time {
     u16 minutes;        /* 0x08 */
 } suzuki_play_time_t;
 
-/* sound */
-/* MAIN's sound control over the Suzuki driver: sound resources and sound ids, the music slots (two for
- * the scenario's music, five for the tunes) and their loads, the tune that interrupts the music, the
- * music and sound effect ids, the eight SFX channels and their priorities, the background sound, the
- * sound type, volumes and reverb, the wavesets in SPU RAM and the root-counter tick that drives the
- * driver. */
-
 /* Loaded sound resource (a "feds" block: SYSTEM.SED, ENV.SED, or the block
  * inside an effect file or WLDCORE.BIN), kept by the Suzuki driver in a
  * singly linked list through next (SuzukiAppendVFXSMD). main_sound_start_sfx
@@ -1673,6 +1668,30 @@ typedef struct main_sound_resource {
     struct main_sound_resource* next; /* 0x10 */
     u16 channel_offsets[1];           /* 0x14; two stream offsets per sound, 0 for no stream */
 } main_sound_resource_t;
+
+/* Suzuki driver entry points. The music handle passed by the game wrappers
+ * is the suzuki_music_t* that SuzukiPutPlaySMD returns. */
+void SuzukiAppendVFXSMD(main_sound_resource_t* resource);
+
+void SuzukiCalcMusVolChange(suzuki_music_t* music, s16 volume, s16 time);
+void SuzukiDeallocateMUSChannels(suzuki_music_t* music);
+u32 SuzukiGetActiveChannels(suzuki_music_t* music);
+u32 SuzukiGetMusicPlaying(suzuki_music_t* music);
+suzuki_music_t* SuzukiPutPlaySMD(suzuki_smd_header_t* smd);
+void SuzukiPlaySound1(int sound_id);
+void SuzukiPlaySound2(int sound_id);
+void SuzukiPlaySoundFindChannel(s32 sound_id);
+void SuzukiSetSfxEcho(int sound_id, s16 volume);
+void SuzukiSPUInitialiser(s32 flags);
+void SuzukiTurnOffAllMusic(void);
+void SuzukiUnloadMUS(suzuki_music_t* music);
+
+/* sound */
+/* MAIN's sound control over the Suzuki driver: sound resources and sound ids, the music slots (two for
+ * the scenario's music, five for the tunes) and their loads, the tune that interrupts the music, the
+ * music and sound effect ids, the eight SFX channels and their priorities, the background sound, the
+ * sound type, volumes and reverb, the wavesets in SPU RAM and the root-counter tick that drives the
+ * driver. */
 
 /* Scenario-music playback state at 0x8004d95c (SCUS_942.21). current_music
  * is the Suzuki music record of the playing scenario music:
@@ -2135,6 +2154,10 @@ void main_sound_init_stub(void);
 s32 main_sound_is_music_loading_stub(void);
 
 /* smd */
+/* The driver's internals: the tables of the SMD sequence format (opcode handlers and lengths, note
+ * durations and semitones, modulator waveforms, pitch), the per-tick channel, ramp, modulator and voice
+ * passes, the opcode handlers, the music snapshots, the SPU transfer callback and the random generator. */
+
 /* Driver tables (read-only data 0x80028b0c-0x8002a8d8). */
 extern suzuki_smd_handler_t g_main_smd_opcode_handlers[0x80]; /* 0x80028b0c; opcodes 0x80-0xff */
 extern u8 g_main_smd_opcode_lengths[0x80];                    /* 0x80028d0c; opcode plus parameters */
@@ -2152,23 +2175,6 @@ extern u8 g_main_smd_key_semitones[120];                           /* 0x80029060
 extern u16 g_main_smd_pitch_table[12 * 256];
 
 extern s32 g_main_smd_random_state; /* 0x80032a18 */
-
-/* Suzuki driver entry points. The music handle passed by the game wrappers
- * is the suzuki_music_t* that SuzukiPutPlaySMD returns. */
-void SuzukiAppendVFXSMD(main_sound_resource_t* resource);
-
-void SuzukiCalcMusVolChange(suzuki_music_t* music, s16 volume, s16 time);
-void SuzukiDeallocateMUSChannels(suzuki_music_t* music);
-u32 SuzukiGetActiveChannels(suzuki_music_t* music);
-u32 SuzukiGetMusicPlaying(suzuki_music_t* music);
-suzuki_music_t* SuzukiPutPlaySMD(suzuki_smd_header_t* smd);
-void SuzukiPlaySound1(int sound_id);
-void SuzukiPlaySound2(int sound_id);
-void SuzukiPlaySoundFindChannel(s32 sound_id);
-void SuzukiSetSfxEcho(int sound_id, s16 volume);
-void SuzukiSPUInitialiser(s32 flags);
-void SuzukiTurnOffAllMusic(void);
-void SuzukiUnloadMUS(suzuki_music_t* music);
 
 /* MUS lifecycle, playback control and queue (0x800120f4-0x80014200). */
 void main_smd_reset_music(suzuki_music_t* music, s16 volume, s16 fade);
@@ -2228,7 +2234,7 @@ void main_smd_set_instrument(s16 instrument, suzuki_music_channel_t* channel);
 void main_smd_set_voice_update_flags_all_channels(u16 mask, suzuki_music_t* music);
 void main_smd_set_voice_attr_flags_all_channels(suzuki_music_t* music, u16 mask);
 
-void main_suzuki_spu_callback_func(void);
+void main_smd_spu_transfer_callback(void);
 
 /* other */
 extern volatile u8 g_fntload_clut_y_offset_immediate;

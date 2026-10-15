@@ -1,6 +1,8 @@
 /* SCUS_942.21 0x8001423c..0x80014277. */
 #include "psx/suzuki.h"
 
+/* Start the driver's CPU heap on `size` bytes at `arena`, rounded down to 16: a head record and no
+ * blocks. SuzukiSPUInitialiser calls it. */
 void main_sound_init_heap(void* arena, u32 size) {
     suzuki_heap_block_t* head = arena;
     size &= ~15;

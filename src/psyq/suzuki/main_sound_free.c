@@ -1,6 +1,9 @@
 /* SCUS_942.21 0x80014358..0x800143ab. */
 #include "psx/suzuki.h"
 
+/* Unlink the block whose payload is `payload` from the driver's CPU heap. It walks the chain until it
+ * meets the block, so a pointer the heap never handed out would walk past the chain's end through a null
+ * link. */
 void main_sound_free(void* payload) {
     suzuki_heap_block_t* block = (suzuki_heap_block_t*)payload - 1;
     suzuki_heap_block_t* current = g_main_sound_heap_blocks;
