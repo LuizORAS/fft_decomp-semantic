@@ -943,7 +943,7 @@ data:
   - {addr: 0x80010a04, name: g_psyq_gpu_tmd_ft4_name}
   - {addr: 0x80010a0c, name: g_psyq_gpu_tmd_gt4_name}
   - {addr: 0x80010a14, name: g_psyq_gpu_unsupported_tmd_format}
-  - {addr: 0x80010ba8, name: battle_bin_entrypoint}
+  - {addr: 0x80010ba8, name: main_overlay_battle_entry_stub}
   - {addr: 0x80011bd0, name: load}
   - {addr: 0x80011bf4, name: build}
   - {addr: 0x8001dad0, name: g_psyq_gte_exception_patch_template}

@@ -65,7 +65,10 @@ words at the start of MAIN's data (`0x80010000`) hold the load addresses.
    starts a session. Then [[main_overlay_exec_open_bin_main_loop]] runs the
    title, and [[main_overlay_exec_wldcore_and_world_bin]] and
    [[main_overlay_exec_battle_bin]] alternate until a reset or the ending.
-   Each loads its overlay from a fixed sector and calls its entry point.
+   Each loads its overlay from a fixed sector and calls its entry point;
+   BATTLE's entry call lands on MAIN's 4 KB of nops
+   (`main_overlay_battle_entry_stub`), and the game loop runs
+   [[battle_state_run_game_loop]] itself.
 3. **A frame inside an overlay.** The overlay's main loop is thread slot 0.
    Once a frame its event or menu frame function
    ([[battle_script_run_event_frame]], [[world_script_run_event_frame]]) yields:

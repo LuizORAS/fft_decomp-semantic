@@ -34,6 +34,8 @@ extern s32 g_main_system_play_time_seconds;
 /* main_system_flags_e bits; cleared by main_save_init_data_tables. */
 extern u32 g_main_system_flags;
 extern s32 g_main_system_frame_timer;
+extern s32 g_main_system_battle_frame_hsync_count;     /* VSync's timer-1 count for the last frame */
+extern s32 g_main_system_battle_frame_hsync_count_max; /* its highest value */
 
 /* Empty hook (nop, jr ra, nop) that every frame loop calls once per frame: the OPEN, WLDCORE and
  * BATTLE game loops, the WORLD, BUNIT and CARD frame presenters and MAIN's waiting disc reads. It
@@ -76,6 +78,9 @@ void main_boot_fade_out_squaresoft_logo(void);
 /* overlay */
 /* Load OPEN, WLDCORE and WORLD, and BATTLE from fixed disc sectors and run them. */
 
+/* MAIN's 4 KB of zero words at 0x80010ba8, between the C start-up and the game code: called as BATTLE.BIN's
+ * entry point, they run as nops up to the jr ra at 0x80011ba8 and return. */
+void main_overlay_battle_entry_stub(void);
 void main_overlay_call_battle_entrypoint(void);
 void main_overlay_exec_battle_bin(void);
 int main_overlay_exec_open_bin_main_loop(int mode);
@@ -2270,5 +2275,6 @@ extern const u8 g_main_terrain_status_flags[64];
 /* 64 surface types x 2 bytes, all 0x19; copied into the selected-tile record's
  * _unknown_02/_unknown_04, which nothing reads. */
 extern u8 g_main_terrain_tile_info_pairs[];
+extern u8 g_main_terrain_geomancy_abilities[];
 
 #endif
