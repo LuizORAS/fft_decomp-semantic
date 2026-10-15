@@ -1,5 +1,8 @@
 /* LIBGPU 80024638-800246d4. */
 #include "psx/libgpu.h"
+
+/* Turn the display on (`mask` 1) or off (0); turning it off also forgets the display environment. The
+ * screens blank the display while they change it (about 30 calls). */
 void SetDispMask(int mask) {
     u8* debug = &g_psyq_gpu_environment.debug_level;
     u32 command;

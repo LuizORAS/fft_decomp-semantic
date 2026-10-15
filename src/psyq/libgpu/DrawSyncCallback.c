@@ -2,6 +2,8 @@
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 
+/* Set the routine called when the queue and the GPU become idle, and return the previous one.
+ * main_boot_run_startup installs main_system_handle_draw_sync_callback. */
 void* DrawSyncCallback(void* callback) {
     void* old;
     if (g_psyq_gpu_debug_level >= 2) {

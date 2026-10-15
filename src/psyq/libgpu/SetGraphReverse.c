@@ -1,6 +1,8 @@
 /* LIBGPU 80024390-800244a4. */
 #include "psx/libgpu.h"
 
+/* Mirror the display horizontally (`mode` set) or not, through the display mode command and, on GPU type 2,
+ * its VRAM setting; returns the old setting. No code refers to it. */
 int SetGraphReverse(int mode) {
     int old = g_psyq_gpu_environment.reversed;
     if (g_psyq_gpu_environment.debug_level >= 2)

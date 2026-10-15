@@ -3,6 +3,11 @@
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 
+/* Reset the GPU side. Modes 0 and 3 print the driver's addresses, clear its state, start LIBETC's interrupts
+ * (ResetCallback), send one word to GP0 whose command byte is 0, reset the GPU and its queue (_reset), size
+ * VRAM from the GPU type, turn queueing on and forget the last environments; they return the GPU type. Any
+ * other mode (1 in the game) only empties the queue and resets the command buffer. MAIN's boot and reset,
+ * BATTLE's display set-up and WLDCORE call it with 0 or 1, LIBGS with 0 or 3. */
 int ResetGraph(int mode) {
     switch (mode & 7) {
     case 3:

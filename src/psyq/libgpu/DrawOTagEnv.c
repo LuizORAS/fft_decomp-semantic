@@ -1,5 +1,8 @@
 /* LIBGPU 80024d70-80024e4c. */
 #include "psx/libgpu.h"
+
+/* Draw the packet chain at `ot` after setting the draw environment `env`, whose packet heads the chain, and
+ * remember `env` as the current one. No code refers to it. */
 void DrawOTagEnv(u32* ot, DRAWENV* env) {
     u8* debug = &g_psyq_gpu_environment.debug_level;
     DR_ENV* packet;

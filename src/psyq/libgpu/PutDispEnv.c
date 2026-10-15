@@ -1,6 +1,9 @@
 /* LIBGPU 80024e84-80025334. */
 #include "psx/libgpu.h"
 
+/* Make `env` the display environment: set the display's VRAM start, the screen range when the screen
+ * rectangle changed (clamped, with PAL limits for video mode 1), and the display mode (width, height, 24-bit
+ * colour, interlace, PAL, reversal) when those changed; remember it. Returns `env`. */
 DISPENV* PutDispEnv(DISPENV* env) {
     extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
     int h_start;

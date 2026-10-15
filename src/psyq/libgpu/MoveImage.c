@@ -1,6 +1,8 @@
 /* LIBGPU 800249c4-80024a88. */
 #include "psx/libgpu.h"
 
+/* Copy the VRAM rectangle `rect` to (`x`, `y`) with a GPU copy command, through the queue; returns -1 for an
+ * empty rectangle. */
 s32 MoveImage(RECT* rect, s32 x, s32 y) {
     checkRECT(g_psyq_gpu_move_image_name, rect);
     if (rect->w == 0 || rect->h == 0)
