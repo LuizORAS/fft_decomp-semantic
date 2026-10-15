@@ -36,7 +36,6 @@ s32 battle_effect_trace_arc_trajectory_path(
     arc->vz = angle;
     g_battle_effect_arctan_angle_mod = angle;
     progress = 0;
-    /* The definition returns void; this site consumes the returned impulse. */
     velocity = battle_effect_calculate_launch_velocity() >> 8;
     advance = (rcos(arc->vz) * velocity) >> 4;
     if (advance != 0) {

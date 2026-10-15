@@ -1,8 +1,8 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Only the low halfword of each input component is read. */
-/* result = left + right rotated 180 degrees about Y, i.e. (x - rx, y + ry, z - rz). */
+/* Same as battle_effect_add_vectors_to_svector with right turned 180 degrees about Y first: (x - right x,
+ * y + right y, z - right z). */
 void battle_effect_add_vectors_to_svector_rot_y_180(const VECTOR* left, const VECTOR* right, SVECTOR* result) {
     result->vx = left->vx - right->vx;
     result->vy = left->vy + right->vy;

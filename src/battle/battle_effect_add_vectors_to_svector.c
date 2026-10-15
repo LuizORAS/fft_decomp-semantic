@@ -1,8 +1,8 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Only the low halfword of each input component is read. */
-/* result = left + right */
+/* Add two VECTORs into an SVECTOR: only the low halfword of each component reaches the result. The 32
+ * ring mesh renderers of the effect overlays place their points with it and its three rotated forms. */
 void battle_effect_add_vectors_to_svector(const VECTOR* left, const VECTOR* right, SVECTOR* result) {
     result->vx = left->vx + right->vx;
     result->vy = left->vy + right->vy;
