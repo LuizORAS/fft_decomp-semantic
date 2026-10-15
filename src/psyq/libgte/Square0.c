@@ -1,7 +1,7 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001d2b0–0x8001d2d8: square IR vector, sf=0. */
+/* Square each component of the 32-bit vector `input` (SQR, no shift) into `output`. No code refers to it. */
 VECTOR* Square0(VECTOR* input, VECTOR* output) {
     register VECTOR* destination __asm__("$5") = output; /* Retail uses a1 until the return delay slot. */
     PSYQ_GTE_IR_VECTOR(
