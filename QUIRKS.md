@@ -90,19 +90,23 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `src/battle/battle_formula_apply_ability_element.c`: Oil doubles XA against fire, but every
   caller has already stored XA * YA as the HP damage, so Oil never raises fire damage (it is still
   marked for removal). Players know this as Oil having no effect in the PlayStation version.
+  The weapon-element path (`battle_formula_apply_weapon_element`) does not test Oil at all.
 - `src/battle/battle_action_init_current_ability_strike_data.c`: the range-data
   guard `ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST` is always true
   (`&&` was presumably meant), so item ids read past the table; only the
   default-menu Item skillset `0xa1`, which no job or ENTD unit uses, holds them.
 - `src/battle/battle_action_run_pre_formula_setup.c`: both range-data bounds are
-  `ABILITY_ID_ITEM_FIRST + 1`, so Potion (`0x170`) copies the item-ability item
-  ids past the table as its range data; the Item menu clears it for consumables.
+  `ABILITY_ID_ITEM_FIRST + 1`, so Potion (`0x170`) reads its range data one record
+  past the end of `g_main_ability_range_data`, from the bytes of
+  `g_main_item_ability_item_ids`; the Item menu clears it for consumables. The
+  other callers bound it at `ABILITY_ID_ITEM_FIRST`.
 - `src/world/world_item_sort_id_list.c`,
   `src/event/equip_item_sort_list_by_criteria.c`: the evade sort keys treat
-  `0x7a`..`0x8f` as shields and `0x90`..`0xef` as accessories, so throwables
-  index the 16-entry shield table with weapon ids (122..127) and headgear and
-  body armor index the accessory table with helm/armor ids; those items sort
-  by unrelated bytes. A fix splits weapons at `ITEM_ID_SHIELD_FIRST` and keys
+  `0x7a`..`0x8f` as shields and `0x90`..`0xef` as accessories and read
+  `g_main_item_shield_data` and `g_main_item_accessory_data` by
+  `secondary_data_id`, so throwables (122..127) read far past the 16 shield
+  records and headgear and body armor (0..63) read the 32 accessory records and
+  on past them; those items sort by unrelated bytes. A fix splits weapons at `ITEM_ID_SHIELD_FIRST` and keys
   headgear and body armor, which carry HP/MP bonuses instead of evade, as 0.
 - `src/battle/battle_camera_step_real_coords_toward_target.c`: in the positive
   direction the Y (`vz`) step adds the vector component twice; X and Z add it
@@ -206,18 +210,19 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `entry`, `x` and `y` are assigned only on frames where text
   thread 0x10 is idle and are unset if it is already running on the first
   frame.
-- The six `*_text_render_decimal_value` copies assign 1 on every rung of the
-  minimum-width ladder, so the value is always placed as one digit.
+- The six `*_text_render_decimal_value` copies (`world_text_render_decimal_value`
+  and the ATTACK, BUNIT, DEBUGCHR, EQUIP and REQUIRE ones) assign 1 on every rung
+  of the minimum-width ladder, so the value is always placed as one digit, and
+  read the digit count as the low nibble for alignment and as the low byte for
+  the digit loop.
 - `etc_graphic_build_game_over_polygons`: `texture_mode` is the constant 1,
   so the 4-bit CLUT arm never runs.
 - `open_movie_init_mdec_stream_state` stores the slice width (24) into the
   global `g_open_movie_mdec_stream_state.output_rect.w`, not through its
   `state` parameter; the one caller passes that global.
-- `battle_action_init_current_ability_strike_data` tests
-  `ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST`, which is always
-  true.
-- The ENTD 7-byte AI copy reads three bytes past `ai_target_xy` (0x25-0x27),
-  into the two AI targeting flags and `ai_initial_enemy_flag`.
+- `main_unit_calculate_entd_data`: the ENTD 7-byte AI copy reads three bytes past
+  `ai_target_xy` (0x25-0x27), into the two AI targeting flags and
+  `ai_initial_enemy_flag`.
 - EQUIP never fills the physical accessory evade slot of `equip_unit_data_t`
   (0x48); it stores the accessory's magic evade to 0x52.
 - `battle_status_modify_inflictions` masks five status bytes with the 4-byte
@@ -272,17 +277,18 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `wldcore_menu_step_map_path_level` plays sound id 0 when the path
   animation ends; that entry has no streams, so it only stops the channel
   pair.
-- The `*_text_render_decimal_value` copies read the digit count as the low
-  nibble for alignment and as the low byte for the digit loop.
 - Scenario conditions 18 and 19 (casualties) compare with the record's `id`
-  halfword, not `value` as the war-funds pair does.
-- ATTACK fills deployment squad ids 0x35/0x36 and clears 0x37/0x38, although
-  the deployment screen handles four squads.
+  halfword, not `value` as the war-funds pair does
+  (`battle_script_check_scenario_condition` and its WORLD twin).
+- `attack_scenario_load_conditionals` fills the deployment squad ids (script
+  variables 0x35/0x36) and clears 0x37/0x38, although the deployment screen
+  handles four squads.
 - Words 0xab-0xff of the script variable block are reachable by no variable
   id, yet word 0xff gates the BATTLE call in
   `main_overlay_call_battle_return_zero`, which itself has no caller.
-- Formation menu states 22 and 23 have handler table entries and code paths
-  and no code stores them. Menu input mode 1 is tested in four places and
+- Formation menu states 22 and 23 have entries in
+  `g_world_formation_menu_handlers` and code paths, and no code stores them, so
+  `world_formation_step_unit_portrait_slide` never runs. Menu input mode 1 is tested in four places and
   never stored.
 - `battle_menu_wait_thread` and `world_menu_wait_thread` store -2 over the
   Wait entry's row action (7, `BATTLE_MENU_ID_WAIT_YES_NO`) before confirming,
@@ -292,8 +298,9 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   threads reject Move for 0x21 and 0x33.
 - `world_item_build_category_list` and `world_shop_build_item_list` treat
   filters 0 and 1 (the two hand slots) identically.
-- The fur shop's "sell" list sells ordinary inventory at half price; its
-  "buy" list is the poached stock.
+- The fur shop's "sell" list (`world_shop_run_fur_sell_list_step`) sells
+  ordinary inventory at half price; its "buy" list
+  (`world_shop_run_fur_buy_list_step`) is the poached stock.
 - `main_unit_learn_job_abilities` sets the learned bit twice when the JP
   purchase succeeds: once in the purchase branch and again under
   `if (learned)`.
@@ -326,17 +333,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   0x20000-byte buffer.
 - `battle_camera_toggle_tilt`: from tilt target 3 it starts a decrease toward
   target 4, which `battle_camera_update_tilt` has no branch to finish.
-- `battle_action_run_pre_formula_setup`: both tests bound the default
-  ability class at `ABILITY_ID_ITEM_FIRST + 1`, so the Potion ability indexes
-  `g_main_ability_range_data` one record past its end, which is the bytes of
-  `g_main_item_ability_item_ids`. The other callers bound it at
-  `ABILITY_ID_ITEM_FIRST`.
 - `battle_reaction_prepare_next`: Counter Tackle performs Dash under the
   Black Magic skillset, the skillset Counter Magic passes.
-- `battle_formula_apply_ability_element`: Oil on a fire-element action doubles XA
-  after every caller has stored the HP damage, and nothing reads XA again: Oil
-  is removed and the damage is unchanged. The weapon-element path
-  (`battle_formula_apply_weapon_element`) does not test Oil at all.
 - `src/wldcore/wldcore_proposition_determine_success.c`: the level score is
   read from the bravery scores (proposition data record 5, three rows of
   five) with a ten-entry stride, so it runs on into the faith scores (record
@@ -365,11 +363,6 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   0xb30-byte header of WAVESET.WD (176 instruments), and most music channels
   end with Instrument 0xFF before End Bar, so entry 255 is read 0x4f0 bytes
   past the copy.
-- `equip_item_sort_list_by_criteria` and `world_item_sort_id_list`: the evade
-  keys read `g_main_item_shield_data` for ids 0x7a-0x8f and
-  `g_main_item_accessory_data` for 0x90-0xef by `secondary_data_id`, so thrown
-  weapons (122-127) read far past the 16 shield records, and headgear and body
-  armour (0-63) read the 32 accessory records and on past them.
 - `world_item_cash_out_excess_inventory` walks ids below `ITEM_ID_END - 1`, so
   Phoenix Downs (0xfd, the last item) over 99 are never cashed out; every
   other item walk runs to `ITEM_ID_END`.
@@ -669,8 +662,9 @@ written that way.
   `u8[]`, `s16[]` or `world_menu_window_command_t`).
 - `battle_unit_misc_data_t` (`include/fft/battle.h`) repeats `battle_strike_work_t` field by field
   at `0x18c`..`0x1b3` (the strike work's last four bytes are the misc record's `action_rewards`);
-  `battle_action_start_strike` and `battle_action_resolve_ability_strike` reach it through a cast
-  of `&misc->action_18c`, and `battle_action_apply_strike_results` through another.
+  `battle_action_start_strike` passes it to `battle_action_resolve_ability_strike` through a cast
+  of `&misc->actor_id` (its first field, at 0x18c), and `battle_action_apply_strike_results` and
+  `battle_effect_request_action_effect` read it the same way.
 - `g_wldcore_sound_quad_command_bytes` (`0x8009ec18`) starts one row before
   the sound rows, which begin at `0x8009ec1c` for sound id 1: its row 0 is the
   eighth word of `g_wldcore_tutorial_event_ids`, whose eight entries

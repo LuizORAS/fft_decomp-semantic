@@ -2046,6 +2046,7 @@ extern main_sound_smd_file_t g_main_sound_permanent_smd_files[5];
 extern s32 g_main_sound_weather_sfx_id; /* the background sound main_sound_play_bg_sfx started, 0 for none */
 void main_sound_set_sfx_echo(int sound_id, int volume);
 void main_sound_stop_weather_sfx_music(void);
+/* Second name of 0x80044128, main_sound_stop_current_weather_sfx, which BATTLE calls (QUIRKS.md). */
 void main_sound_pause_tracked_sfx(void);
 s32 main_sound_get_current_scenario_music(void);
 suzuki_music_t* main_sound_get_music_handle(s32 slot);

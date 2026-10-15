@@ -421,7 +421,9 @@ extern RECT g_equip_status_display_image_rects[];
  * areas and VRAM transfers. */
 
 /* Per-buffer primitive-pool pointers used by EQUIP.OUT's renderer. The 25
- * stores at 0x801cda80 establish the offsets in this 0x64-byte table. */
+ * stores at 0x801cda80 establish the offsets in this 0x64-byte table.
+ * Type debt (QUIRKS.md): jobstts_gfx_context_t, bunit_gfx_context_t and
+ * world_gfx_packet_buffer_t share this pool layout under other pool names. */
 typedef struct equip_gfx_context {
     u32* otag;                /* 0x00 */
     POLY_F3* poly_f3;         /* 0x04 */

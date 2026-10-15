@@ -352,7 +352,8 @@ extern s32 g_wldcore_date_display_x;
 extern s32 g_wldcore_date_display_y;
 
 /* Twelve {month, day} pairs: the calendar date each zodiac sign starts on,
- * Aries (3/21) first. */
+ * Aries (3/21) first. OPEN's g_open_birthday_zodiac_start_dates is the same
+ * table, kept flat (QUIRKS.md). */
 extern u8 g_wldcore_zodiac_start_dates[12][2];
 extern u8 (*g_wldcore_brave_story_birthdays)[2];
 void wldcore_calendar_advance_birthdays(void);

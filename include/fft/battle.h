@@ -1978,7 +1978,8 @@ typedef struct battle_unit_misc_data {
      * map_x/map_z/map_y.  battle_unit_update_attack_result_animation passes &dismount. */
     battle_dismount_coords_t dismount; /* 0x184 */
     u8 _unused_18a[2];                 /* no code reaches it through this struct; FFHacktics leaves it blank */
-    /* Current action data, 0x18c..0x1d7. */
+    /* Current action data, 0x18c..0x1d7. Type debt (QUIRKS.md): 0x18c..0x1b3 repeat
+     * battle_strike_work_t field by field; its readers cast &actor_id. */
     u8 actor_id;               /* 0x18c; first byte of the strike work record: the acting unit's battle id */
     u8 target_count;           /* 0x18d; attacker_face_targets, update_anim_display_for_all_targets */
     u8 target_list[0x10];      /* 0x18e; misc ids, 0xff terminated */

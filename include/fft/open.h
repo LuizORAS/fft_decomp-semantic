@@ -72,6 +72,8 @@ void open_input_update_buttons_and_check_game_reset(void);
 
 extern s32 g_open_file_current_openbk_image_id;
 extern void* g_open_file_destination;
+/* g_open_file_openbk_start_sector_offsets + 1 under a second name: each image ends where the next
+ * starts (QUIRKS.md). */
 extern const s32 g_open_file_openbk_end_sector_offsets[];
 extern const s32 g_open_file_openbk_start_sector_offsets[];
 
@@ -511,7 +513,7 @@ extern u16* volatile g_open_prologue_crossfade_file_pixels;
 
 /* Volatile: open_prologue_step_crossfade reloads it every column. */
 extern u16* volatile g_open_prologue_crossfade_source;
-extern u8 g_open_prologue_crossfade_progress;
+extern u8 g_open_prologue_crossfade_progress; /* g_open_prologue_crossfade_row_flags[1] (QUIRKS.md) */
 extern u8 g_open_prologue_crossfade_row_flags[];
 
 extern open_prologue_t g_open_prologue;

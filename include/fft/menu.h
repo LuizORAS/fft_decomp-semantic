@@ -20,11 +20,12 @@ typedef struct battle_unit_status_gauge {
     s16 max;   /* 0x04 */
 } battle_unit_status_gauge_t;
 
-/* Provisional: unit status billboard (0x1e bytes) filled from battle_stats_t:
- * WORLD's world_menu_copy_unit_data_to_status_billboard (0x800e7c40, twin of
- * debugchr_menu_copy_unit_data_to_status_billboard) and the ATTACK/REQUIRE status
- * panels. BATTLE's battle_unit_status_record_t has the same layout with signed
- * gauge fields. */
+/* Provisional: the unit status record (0x22 bytes) of the status panels, filled from battle_stats_t by
+ * battle_menu_copy_unit_data_to_status_billboard, its WORLD twin
+ * world_menu_copy_unit_data_to_status_billboard (0x800e7c40, also in DEBUGCHR) and the ATTACK and REQUIRE
+ * status panels. Type debt (QUIRKS.md): the heads of equip_unit_data_t, bunit_unit_data_t and
+ * world_formation_unit_t, world_item_stat_summary_t and HELPMENU's g_helpmenu_active_banner lay it out
+ * again. */
 typedef struct battle_unit_status_record {
     s16 level;                            /* 0x00 */
     s16 team_kind;                        /* 0x02; 0 ally, 1 enemy, 2 neutral, 3 auto-battle */
@@ -661,10 +662,11 @@ typedef struct world_menu_text_binding {
  * thread clears bit 0 of 0x0a), and world_menu_step_wrapping_row_cursor
  * wraps the cursor at max_row_index. */
 typedef struct world_menu_entry {
-    s16 vram_x;        /* 0x00: text-image VRAM x (world_option_menu_redraw_text_page_on_scroll) */
-    s16 vram_y;        /* 0x02: text-image VRAM y */
-    s16 inner_width;   /* 0x04: text-image width; RECT.w = inner_width >> 2 (4bpp) */
-    s16 inner_height;  /* 0x06: text-image height (world_menu_size_entry_to_text) */
+    s16 vram_x;       /* 0x00: text-image VRAM x (world_option_menu_redraw_text_page_on_scroll) */
+    s16 vram_y;       /* 0x02: text-image VRAM y */
+    s16 inner_width;  /* 0x04: text-image width; RECT.w = inner_width >> 2 (4bpp) */
+    s16 inner_height; /* 0x06: text-image height (world_menu_size_entry_to_text) */
+    /* Type debt (QUIRKS.md): u16, but world_menu_open_entry_window needs it signed. */
     u16 window_x;      /* 0x08: screen x; shifted left as the width grows */
     s16 window_y;      /* 0x0a: screen y; (7 - visible rows) * 8 - 0x48 in world_map_destination_list_thread */
     s16 window_width;  /* 0x0c: window width; scroll arrows at window_x + window_width - 0xf */

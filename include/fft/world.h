@@ -493,7 +493,8 @@ extern u16 g_world_gfx_draw_area_scale_percent[];
  * at 0x8016e44c), copied verbatim into a menu record's DR_MODE by
  * world_screen_gfx_init_scaled_draw_area_packets; the formation view reads the same
  * bytes as a zero screen point. Same 8-byte RECT shape as
- * g_world_menu_disabled_texture_window, whose reset sibling is byte-for-byte identical. */
+ * g_world_menu_disabled_texture_window, whose reset sibling is byte-for-byte identical.
+ * Type debt (QUIRKS.md): world_gfx_build_zodiac_primitives reads its first 4 bytes as a point. */
 extern const RECT g_world_gfx_full_texture_window;
 
 /* Frame-buffer rectangles for the four WLDFACE pages; four separate objects,
