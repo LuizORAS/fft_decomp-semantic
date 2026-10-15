@@ -3299,7 +3299,7 @@ typedef enum battle_effect_element_index {
     BATTLE_EFFECT_ELEMENT_INDEX_LIGHTNING = 8,
 } battle_effect_element_index_e;
 
-/* g_effect_load_state: the steps of battle_effect_init_data, which loads the ability's effect file
+/* g_battle_effect_load_state: the steps of battle_effect_update_file_load, which loads the ability's effect file
  * while its charge secondary effect plays. */
 typedef enum battle_effect_load_state {
     BATTLE_EFFECT_LOAD_START = 0,            /* start reading the file */
@@ -3315,7 +3315,7 @@ typedef enum battle_effect_phase {
     BATTLE_EFFECT_PHASE_INIT_PALETTE = 2,
     BATTLE_EFFECT_PHASE_START_SCRIPT = 3, /* bind the effect file's sections and start its script */
     BATTLE_EFFECT_PHASE_RUNNING = 4,
-    BATTLE_EFFECT_PHASE_RESTART_SCRIPT = 6, /* start the script again without rebinding the file */
+    BATTLE_EFFECT_PHASE_RESTART_SCRIPT = 6, /* start the script again without rebinding the file; never entered */
 } battle_effect_phase_e;
 
 /* Opcodes (top header byte) of the effect model commands that battle_effect_decode_next_model_command
@@ -3623,9 +3623,9 @@ typedef char
     battle_effect_quad_prim_size_must_match_ft4[sizeof(battle_effect_quad_prim_t) == sizeof(POLY_FT4) ? 1 : -1];
 
 /* Section table at the start of an effect file's header section: byte offsets
- * from the table itself, one per battle_effect_*_address/_pointer getter. */
+ * from the table itself. The battle_effect_set_*_pointer routines bind most of them to a global. */
 typedef struct effect_file_header {
-    s32 frame_data;          /* 0x00: the getter skips the section's leading word */
+    s32 frame_data;          /* 0x00: its setter skips the section's leading word */
     s32 animation_sequences; /* 0x04: likewise */
     s32 script;              /* 0x08: effect script section */
     s32 particle_system;     /* 0x0c: emitter motion and control */
@@ -4014,7 +4014,7 @@ typedef char assert_effect_particle_physics_view_size[sizeof(effect_particle_phy
 
 enum { EFFECT_RECORD_FLAG_ALLOCATED = 0x1 };
 
-/* One running effect script: a 0xf8-byte record of g_effect_state_records.
+/* One running effect script: a 0xf8-byte record of g_battle_effect_state_records.
  * The root record runs the effect file's script from its start; the parent
  * timeline (opcode 29) starts one child record per effect target, and opcode
  * 02 starts a child the script keeps track of. Record 0 is the list sentinel,
@@ -4040,7 +4040,7 @@ typedef struct effect_record {
     effect_work_record_t* work_head; /* 0xd0: its particles */
     s32 callbacks[4];                /* 0xd4: the native handler bound to each callback slot */
     void* work_slots[4];             /* 0xe4: the work block each callback slot's handler allocated */
-    void* file_function;             /* 0xf4: the native function script opcode 07 last called */
+    void* last_native_callback;      /* 0xf4: the native callback script opcode 07 last called */
 } effect_record_t;
 typedef char assert_effect_record_size[sizeof(effect_record_t) == 0xf8 ? 1 : -1];
 
@@ -4361,7 +4361,7 @@ typedef char assert_effect_ring_mesh_geometry_view_size[sizeof(effect_ring_mesh_
 
 /* This renderer's view of one effect_geometry_entry_t. The shared entry type
  * names several of these offsets for other effect kinds; the curve nibbles
- * select rows of g_effect_palette_table. */
+ * select rows of g_battle_effect_animation_curves. */
 typedef struct effect_summon_mesh_geometry_view {
     u8 _unused_00[0x02];
     u16 placement_flags; /* 0x02: bits 9-11 select how the origin is placed */
@@ -4607,7 +4607,7 @@ typedef struct battle_effect_timing_curves {
 
 extern battle_effect_secondary_animation_t g_battle_effect_secondary_animations[];
 extern battle_effect_secondary_data_t g_battle_effect_secondary_data[];
-extern u8 g_effect_load_state; /* battle_effect_load_state_e */
+extern u8 g_battle_effect_load_state; /* battle_effect_load_state_e */
 /* Projectile secondary animation of each weapon item type: BOW_ARROW for bows, CROSSBOW_BOLT for
  * crossbows, NONE for the rest. */
 extern u8 g_battle_effect_weapon_type_extra_flags[];
@@ -4665,17 +4665,16 @@ extern battle_effect_secondary_state_t g_battle_effect_secondary_state;
 extern battle_effect_target_t g_battle_effect_target_tile;
 extern battle_effect_tile_ref_t g_battle_effect_trajectory_tile;
 extern s16 g_battle_effect_ability_ids[];
-extern u8* g_battle_effect_animation_curve_data;
 extern s16 g_battle_effect_arctan_angle_mod;
 extern s32 g_battle_effect_buffer_index;
 extern battle_effect_coord_data_t g_battle_effect_coord_data;
 extern u16 g_battle_effect_free_slot_head;
 extern struct battle_effect_secondary_data* g_battle_effect_current_secondary;
 extern u32 g_battle_effect_current_slot_id;
-extern effect_file_header_t* g_battle_effect_data_ptrs[];
-extern void* g_battle_effect_file_ptrs[];
+extern effect_file_header_t* g_battle_effect_file_headers[];
+extern void* g_battle_effect_native_callbacks[];
 extern u8* g_battle_effect_frame_data;
-extern u8* g_battle_effect_frame_data_start;
+extern u8* g_battle_effect_frame_data_start; /* never written: 0 */
 extern s32 g_battle_effect_gravity_modifier;
 
 extern s32 g_battle_effect_inertia_threshold;
@@ -4685,7 +4684,7 @@ extern u8* g_battle_effect_script;
 extern battle_effect_timing_curves_t* g_battle_effect_timing_curves;
 extern battle_effect_tick_channels_t* g_battle_effect_timing_channels;
 extern u8* g_battle_effect_animation_sequences;
-extern u8* g_battle_effect_animation_sequences_start;
+extern u8* g_battle_effect_animation_sequences_start; /* never written: 0 */
 extern u32* g_battle_effect_polygon_depth_data;
 extern u16 g_battle_effect_active_slot_tail;
 extern s32 g_battle_effect_primitive_sizes[];
@@ -4778,11 +4777,10 @@ extern s32 g_battle_effect_sprite_count;
 extern s32 D_801BC0C4; /* zeroed when battle_effect_init_record_chain builds the work records; never read */
 extern s32 D_801BC0D4; /* zeroed on a battle_effect_set_ability_animation path; never read */
 extern s32 g_battle_effect_sprite_count_peak;
-extern effect_geometry_table_t* g_effect_geometry_table;
-extern effect_animation_curve_t*
-    g_effect_palette_table; /* the animation curves; also g_battle_effect_animation_curve_data */
+extern effect_geometry_table_t* g_battle_effect_geometry_table;
+extern effect_animation_curve_t* g_battle_effect_animation_curves; /* the effect file's animation curve section */
 
-extern effect_record_t g_effect_state_records[];
+extern effect_record_t g_battle_effect_state_records[];
 
 /* Zeroed by battle_effect_update_stage and set to operand >> 4 by effect code
  * script 05; never read. */
@@ -4862,7 +4860,19 @@ s32 battle_effect_get_ninja_ball(s32 elements);
 s32 battle_effect_get_on_hit_sound_index(s32 channel);
 s16 battle_effect_get_random_between_s16(s16 minimum, s16 maximum);
 s32 battle_effect_get_secondary_phase(u8 secondary_id);
-void battle_effect_init_flags_section_pointer(s16 effect_id);
+void battle_effect_set_flags_section_pointer(s16 effect_id);
+void battle_effect_set_frame_data_pointer(s16 effect_id);
+void battle_effect_set_animation_sequences_pointer(s16 effect_id);
+void battle_effect_set_script_pointer(s16 effect_id);
+void battle_effect_set_animation_curves_pointer(s16 effect_id);
+void battle_effect_set_particle_system_data_pointer(s16 effect_id);
+void battle_effect_set_timeline_pointers(s16 effect_id);
+void battle_effect_set_timing_curves_pointer(s16 effect_id);
+void battle_effect_reset_frame_data_pointer(void);
+void battle_effect_reset_animation_sequences_pointer(void);
+void battle_effect_reset_subsystems(void);
+void battle_effect_load_sound_section(s16 index);
+void battle_effect_init_palette(s16 index);
 void battle_effect_init_camera_and_screen_data(void);
 s32 battle_effect_init_projectile_secondary(s32 animation, struct battle_effect_secondary_init* source);
 s32 battle_effect_init_secondary(s32 animation_id, s32 parameter, struct battle_effect_secondary_init* source);
@@ -4874,7 +4884,7 @@ s32 battle_effect_lerp_and_store(s32 start, s32 end, s32 factor, s32* out);
 void battle_effect_lerp_component_q13(s32 from, s32 to, s32 t, s32* out);
 void battle_effect_list_valid_unit_targeting_data(s32 first, s32 second, battle_effect_obstacle_unit_list_t** out);
 void battle_effect_mask_vector_low_12_bits(const s16* src, s16* dst);
-void battle_effect_load_lba_and_size(s32 effect_id, s32* lba, s32* byte_length);
+void battle_effect_get_file_extent(s32 effect_id, s32* lba, s32* byte_length);
 void battle_script_play_effect_and_wait(void);
 void battle_effect_remove_secondary(u8 id);
 void battle_effect_replace_flags_0006(struct battle_effect_flag_prefix* object, s32 value);
@@ -4904,7 +4914,7 @@ s32 battle_effect_trace_arc_trajectory_path(
 s32 battle_effect_test_position_for_obstacle(
     battle_effect_obstacle_unit_list_t* list, VECTOR* position, s32* out_unit, battle_effect_tile_ref_t* tile_ref);
 
-s32 battle_effect_try_init_data(void);
+s32 battle_effect_poll_file_load(void);
 void battle_effect_update_active_slots(s32 group);
 s32 battle_effect_update_secondary_effects(void);
 void battle_effect_add_svector_to_vector(const s16* first, const s32* second, s32* out);
@@ -4933,7 +4943,7 @@ s32 battle_effect_end_secondary_on_current_unit(void);
 void battle_effect_find_projectile_xyz_along_trajectory(const VECTOR* src, s32 total, s32 current, VECTOR* dst);
 s32 battle_effect_get_animation_timing_curve_value(battle_effect_timing_entry_t* entry);
 s32 battle_effect_get_timing_curve_value(battle_effect_timing_entry_t* entry);
-s32 battle_effect_init_data(void);
+s32 battle_effect_update_file_load(void);
 void battle_effect_init_animation_sequence(effect_list_node_t* state, s32 frame_group, s32 animation_index);
 void battle_effect_init_trap_animation(s32 group, u16 clut, battle_effect_slot_t* slot);
 s32 battle_effect_interpolate_s32_cos(s32 start, s32 end, s32 duration, s32 current);
@@ -4984,7 +4994,7 @@ void battle_effect_free_list_node(effect_list_node_t* node);
 void battle_effect_free_work_record(s16 record_index, effect_work_record_t* work);
 void battle_effect_free_slot(u8 id);
 void battle_effect_free_sprite_block(battle_effect_sprite_block_t* block);
-void* battle_effect_get_file_pointer(s16 effect_id);
+void* battle_effect_get_native_callback(s16 callback_id);
 effect_work_record_t* battle_effect_get_list_node(s16 record_index, s16 requested_index);
 s32 battle_effect_get_phase(void);
 s32 battle_effect_get_prim_buffer_offset(void);
@@ -4999,7 +5009,7 @@ void battle_effect_play(void);
 s32 battle_effect_run_block(s16 index);
 s16 battle_effect_select_larger_magnitude_s16(s16 first, s16 second);
 s16 battle_effect_select_largest_magnitude_s16(s16 first, s16 second, s16 third);
-void battle_effect_set_phase_none(void);
+void battle_effect_cancel_request(void);
 void battle_effect_start_render_frame(void);
 s32 battle_effect_update_cycle(void);
 s32 battle_effect_update_slot(s32 id);

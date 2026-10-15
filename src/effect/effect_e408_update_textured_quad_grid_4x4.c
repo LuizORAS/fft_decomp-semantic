@@ -41,8 +41,8 @@ s32 effect_e408_update_textured_quad_grid_4x4(s16 record_index, s32 callback_slo
     u8 u;
     u8 v;
 
-    record = &g_effect_state_records[record_index];
-    geometry = &g_effect_geometry_table->entries[emitter_index].textured_quad;
+    record = &g_battle_effect_state_records[record_index];
+    geometry = &g_battle_effect_geometry_table->entries[emitter_index].textured_quad;
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
@@ -95,7 +95,7 @@ s32 effect_e408_update_textured_quad_grid_4x4(s16 record_index, s32 callback_slo
         row = geometry->curve_indices[0] >> 28;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[work->frame];
+            column = g_battle_effect_animation_curves[row].factor[work->frame];
         } else {
             column = 0;
         }
@@ -103,7 +103,7 @@ s32 effect_e408_update_textured_quad_grid_4x4(s16 record_index, s32 callback_slo
         row = (geometry->curve_indices[0] >> 8) & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[work->frame];
+            column = g_battle_effect_animation_curves[row].factor[work->frame];
         } else {
             column = 0;
         }
@@ -125,9 +125,9 @@ s32 effect_e408_update_textured_quad_grid_4x4(s16 record_index, s32 callback_slo
         blue = 0x80;
         if (geometry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             row = geometry->colour_curves & 0xfff;
-            red = g_effect_palette_table[row & 0xf].factor[work->frame];
-            green = g_effect_palette_table[(row >> 4) & 0xf].factor[work->frame];
-            blue = g_effect_palette_table[(row >> 8) & 0xf].factor[work->frame];
+            red = g_battle_effect_animation_curves[row & 0xf].factor[work->frame];
+            green = g_battle_effect_animation_curves[(row >> 4) & 0xf].factor[work->frame];
+            blue = g_battle_effect_animation_curves[(row >> 8) & 0xf].factor[work->frame];
         } else {
             green = 0x80;
             red = 0x80;

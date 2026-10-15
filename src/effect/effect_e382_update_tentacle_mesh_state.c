@@ -87,8 +87,8 @@ s32 effect_e382_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
     s32 pz;
     s32 wrap;
 
-    record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index].tentacle_mesh;
+    record = &g_battle_effect_state_records[record_index];
+    entry = &g_battle_effect_geometry_table->entries[emitter_index].tentacle_mesh;
     placement = entry->placement_flags;
     flags = entry->flags;
     ot = main_gfx_get_otag();
@@ -204,7 +204,7 @@ s32 effect_e382_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
             index = (curves0 >> 28) & 0xF;
             index--;
             if (index != -1) {
-                factor = g_effect_palette_table[index].factor[frame];
+                factor = g_battle_effect_animation_curves[index].factor[frame];
                 speed_min
                     = battle_effect_lerp_linear(entry->radial_speed_min_start, entry->radial_speed_min_end, factor);
                 speed_max
@@ -397,10 +397,10 @@ s32 effect_e382_update_tentacle_mesh_state(s16 record_index, s32 callback_slot, 
                 seg->frame_timer = entry->frame_delay;
             }
             if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-                red = g_effect_palette_table[entry->colour_curves & 0xF].factor[seg->head];
+                red = g_battle_effect_animation_curves[entry->colour_curves & 0xF].factor[seg->head];
                 factor = entry->colour_curves & 0xFFF;
-                green = g_effect_palette_table[(factor >> 4) & 0xF].factor[seg->head];
-                blue = g_effect_palette_table[(factor >> 8) & 0xF].factor[seg->head];
+                green = g_battle_effect_animation_curves[(factor >> 4) & 0xF].factor[seg->head];
+                blue = g_battle_effect_animation_curves[(factor >> 8) & 0xF].factor[seg->head];
             } else {
                 red = green = blue = 0x80;
             }

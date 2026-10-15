@@ -12,6 +12,9 @@ typedef struct battle_effect_parent_timeline_state {
     s16 step[26];        /* 0x96: frames it has run */
 } battle_effect_parent_timeline_state_t;
 
+/* Clear a record's parent-timeline state: the frame, the spawn countdown and count, and the keyframe,
+ * frames left and step of each of the 26 tracks. battle_effect_start_script_record and script opcode 2b call
+ * it. */
 void battle_effect_reset_parent_timeline(battle_effect_parent_timeline_state_t* data) {
     s32 index;
 

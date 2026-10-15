@@ -69,9 +69,7 @@ void battle_effect_integrate_particle_motion(battle_effect_particle_t* list) {
             track = node->homing_curve_index;
             track--;
             if (track != -1) {
-                strength = (g_battle_effect_animation_curve_data + track * EFFECT_ANIMATION_CURVE_FRAMES
-                               + node->curve_frame)[4]
-                    - 0x80;
+                strength = g_battle_effect_animation_curves[track].factor[node->curve_frame] - 0x80;
             } else {
                 strength = -0x80;
             }

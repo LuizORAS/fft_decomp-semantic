@@ -91,8 +91,8 @@ s32 effect_e466_update_particle_ribbons_long_state(s16 record_index, s32 callbac
     map_tile_t* tile;
     battle_effect_target_t* caster_target;
 
-    record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index].particle_ribbon;
+    record = &g_battle_effect_state_records[record_index];
+    entry = &g_battle_effect_geometry_table->entries[emitter_index].particle_ribbon;
     placement = entry->placement_flags;
     flags = entry->flags;
     ot = main_gfx_get_otag();
@@ -217,7 +217,7 @@ s32 effect_e466_update_particle_ribbons_long_state(s16 record_index, s32 callbac
             j = (scroll >> 28) & 0xf;
             j--;
             if (j != -1) {
-                factor = g_effect_palette_table[j].factor[frame];
+                factor = g_battle_effect_animation_curves[j].factor[frame];
                 speed_min
                     = battle_effect_lerp_linear(entry->radial_speed_min_start, entry->radial_speed_min_end, factor);
                 speed_max
@@ -422,9 +422,9 @@ s32 effect_e466_update_particle_ribbons_long_state(s16 record_index, s32 callbac
             }
             if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
                 factor = entry->colour_curves & 0xfff;
-                red = g_effect_palette_table[entry->colour_curves & 0xf].factor[slot->age];
-                green = g_effect_palette_table[(factor >> 4) & 0xf].factor[slot->age];
-                blue = g_effect_palette_table[(factor >> 8) & 0xf].factor[slot->age];
+                red = g_battle_effect_animation_curves[entry->colour_curves & 0xf].factor[slot->age];
+                green = g_battle_effect_animation_curves[(factor >> 4) & 0xf].factor[slot->age];
+                blue = g_battle_effect_animation_curves[(factor >> 8) & 0xf].factor[slot->age];
             } else {
                 blue = 0x80;
                 green = 0x80;

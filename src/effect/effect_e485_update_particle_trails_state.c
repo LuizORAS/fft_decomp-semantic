@@ -61,8 +61,8 @@ s32 effect_e485_update_particle_trails_state(s16 record_index, s32 callback_slot
     s32 pz;
     s32 wrap;
 
-    record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index].tentacle_mesh;
+    record = &g_battle_effect_state_records[record_index];
+    entry = &g_battle_effect_geometry_table->entries[emitter_index].tentacle_mesh;
     placement = entry->placement_flags;
     flags = entry->flags;
 
@@ -158,7 +158,7 @@ s32 effect_e485_update_particle_trails_state(s16 record_index, s32 callback_slot
             index = (curves0 >> 28) & 0xF;
             index--;
             if (index != -1) {
-                factor = g_effect_palette_table[index].factor[frame];
+                factor = g_battle_effect_animation_curves[index].factor[frame];
                 speed_min
                     = battle_effect_lerp_linear(entry->radial_speed_min_start, entry->radial_speed_min_end, factor);
                 speed_max

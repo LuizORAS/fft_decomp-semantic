@@ -28,8 +28,8 @@ s32 effect_e471_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
     u32 brightness;
 
     scratch = (effect_anchored_polar_mesh_scratch_t*)0x1F800000;
-    record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index].polar_mesh;
+    record = &g_battle_effect_state_records[record_index];
+    entry = &g_battle_effect_geometry_table->entries[emitter_index].polar_mesh;
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
@@ -75,7 +75,7 @@ s32 effect_e471_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
         scratch->half_width = entry->texture_width / 2;
         scratch->half_height = entry->texture_height / 2;
 
-        scratch->target_index = g_effect_state_records[record_index].target_index;
+        scratch->target_index = g_battle_effect_state_records[record_index].target_index;
         battle_effect_resolve_target_render_coords(
             g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, scratch->target_index,
             &g_battle_effect_coord_data, &scratch->position);
@@ -155,9 +155,9 @@ s32 effect_e471_update_anchored_polar_mesh_state(s16 record_index, s32 callback_
 
         if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             j = entry->colour_curves & 0xFFF;
-            scratch->colour[0] = g_effect_palette_table[entry->colour_curves & 0xF].factor[work->frame];
-            scratch->colour[1] = g_effect_palette_table[(j >> 4) & 0xF].factor[work->frame];
-            scratch->colour[2] = g_effect_palette_table[(j >> 8) & 0xF].factor[work->frame];
+            scratch->colour[0] = g_battle_effect_animation_curves[entry->colour_curves & 0xF].factor[work->frame];
+            scratch->colour[1] = g_battle_effect_animation_curves[(j >> 4) & 0xF].factor[work->frame];
+            scratch->colour[2] = g_battle_effect_animation_curves[(j >> 8) & 0xF].factor[work->frame];
         } else {
             scratch->colour[2] = 0x80;
             scratch->colour[1] = 0x80;

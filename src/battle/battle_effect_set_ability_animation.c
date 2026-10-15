@@ -11,7 +11,7 @@
  * ranges are started, and nothing is retained.
  */
 void battle_effect_set_ability_animation(u32 packed, s32 ability, battle_effect_secondary_init_t* source) {
-    g_effect_load_state = BATTLE_EFFECT_LOAD_START;
+    g_battle_effect_load_state = BATTLE_EFFECT_LOAD_START;
     if (ability < ABILITY_ID_COUNT) {
         if (ability == ABILITY_ID_THROW_BALL) {
             s32 ball = battle_effect_get_ninja_ball(packed >> 16);

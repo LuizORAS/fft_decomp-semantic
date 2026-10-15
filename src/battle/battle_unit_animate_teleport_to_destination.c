@@ -25,7 +25,7 @@ s32 battle_unit_animate_teleport_to_destination(battle_unit_misc_data_t* unit) {
         break;
     case 1:
         /* The target passes no argument here. */
-        if (battle_effect_init_data() == 0 && battle_camera_is_active() == 0) {
+        if (battle_effect_update_file_load() == 0 && battle_camera_is_active() == 0) {
             battle_effect_start_teleport_white_flash(unit);
         }
         break;
@@ -50,7 +50,7 @@ s32 battle_unit_animate_teleport_to_destination(battle_unit_misc_data_t* unit) {
         }
         break;
     case 4:
-        if (battle_effect_init_data() == 0 && battle_camera_is_active() == 0) {
+        if (battle_effect_update_file_load() == 0 && battle_camera_is_active() == 0) {
             battle_effect_start_teleport_fade_out(unit);
         }
         break;

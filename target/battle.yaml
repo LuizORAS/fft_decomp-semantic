@@ -572,7 +572,7 @@ functions:
   - {addr: 0x8008dc9c, size: 40, name: battle_gfx_get_unit_spritesheet_height_by_battle_id, hash: 0b234eaa13427f6c}
   - {addr: 0x8008dcc4, size: 76, name: battle_effect_start_basic_ability_animation, hash: 2f530f58fa9b93d6}
   - {addr: 0x8008dd10, size: 152, name: battle_effect_start_new, hash: dea6ad03a4c34797}
-  - {addr: 0x8008dda8, size: 36, name: battle_effect_try_init_data, hash: 7f99d69cde649d7b}
+  - {addr: 0x8008dda8, size: 36, name: battle_effect_poll_file_load, hash: 7f99d69cde649d7b}
   - {addr: 0x8008ddcc, size: 32, name: battle_effect_call_play, hash: fe5643d8a8070d51}
   - {addr: 0x8008ddec, size: 16, name: battle_state_get_animation_continue_check, hash: 36951eef275aa9f6}
   - {addr: 0x8008ddfc, size: 140, name: battle_state_enter_effect_playback, hash: d018a735474178b2}
@@ -1665,26 +1665,26 @@ functions:
   - {addr: 0x801a0fa0, size: 56, name: battle_effect_set_frame_data_pointer, hash: f1593d52e83883b0}
   - {addr: 0x801a0fd8, size: 56, name: battle_effect_set_animation_sequences_pointer, hash: 48e729288781ed5a}
   - {addr: 0x801a1010, size: 52, name: battle_effect_set_script_pointer, hash: f6dad6e6bcb583b3}
-  - {addr: 0x801a1044, size: 52, name: battle_effect_set_animation_curve_data_pointer, hash: 014ccf35d272debf}
+  - {addr: 0x801a1044, size: 52, name: battle_effect_set_animation_curves_pointer, hash: 014ccf35d272debf}
   - {addr: 0x801a1078, size: 52, name: battle_effect_set_particle_system_data_pointer, hash: eda68de41875f2c8}
   - {addr: 0x801a10ac, size: 64, name: battle_effect_set_timeline_pointers, hash: 7d105561d675678e}
   - {addr: 0x801a10ec, size: 172, name: battle_effect_load_sound_section, hash: 49f99b0b0995b894}
-  - {addr: 0x801a1198, size: 52, name: battle_effect_init_flags_section_pointer, hash: 1ee6dedcd927e26c}
+  - {addr: 0x801a1198, size: 52, name: battle_effect_set_flags_section_pointer, hash: 1ee6dedcd927e26c}
   - {addr: 0x801a11cc, size: 52, name: battle_effect_set_timing_curves_pointer, hash: 6eb5ff276045c96e}
   - {addr: 0x801a1200, size: 68, name: battle_effect_get_timing_curve_value, hash: 593c1814534b2238}
   - {addr: 0x801a1244, size: 68, name: battle_effect_get_animation_timing_curve_value, hash: eb504d572534c851}
-  - {addr: 0x801a1288, size: 28, name: battle_effect_get_file_pointer, hash: 8dc94b536cc6f119}
-  - {addr: 0x801a12a4, size: 56, name: battle_effect_load_lba_and_size, hash: 5d4f02505ab0b9a7}
+  - {addr: 0x801a1288, size: 28, name: battle_effect_get_native_callback, hash: 8dc94b536cc6f119}
+  - {addr: 0x801a12a4, size: 56, name: battle_effect_get_file_extent, hash: 5d4f02505ab0b9a7}
   - {addr: 0x801a12dc, size: 40, name: battle_effect_noop_return_zero, hash: 155dc8be5b11cf02}
   - {addr: 0x801a1304, size: 36, name: battle_effect_noop, hash: 64066c40b8e49544}
   - {addr: 0x801a1328, size: 36, name: battle_noop_801a1328, hash: ce21b17e4c70afea}
-  - {addr: 0x801a134c, size: 112, name: battle_effect_load_data, hash: 23752bb8f5907c16}
-  - {addr: 0x801a13bc, size: 504, name: battle_effect_init_data, hash: 516c2b8423f5a618}
+  - {addr: 0x801a134c, size: 112, name: battle_effect_start_file_load, hash: 23752bb8f5907c16}
+  - {addr: 0x801a13bc, size: 504, name: battle_effect_update_file_load, hash: 516c2b8423f5a618}
   - {addr: 0x801a15b4, size: 608, name: battle_effect_set_ability_animation, hash: cca6d1ac2c1bd30d}
   - {addr: 0x801a1814, size: 64, name: battle_effect_load_ability, hash: 2bdaff51f5a994c3}
   - {addr: 0x801a1854, size: 44, name: battle_effect_is_item_ability, hash: 2a81a9ea4b02932f}
   - {addr: 0x801a1880, size: 36, name: battle_effect_play, hash: 3df6c329f5a06bd1}
-  - {addr: 0x801a18a4, size: 36, name: battle_effect_set_phase_none, hash: de41dd98979d7742}
+  - {addr: 0x801a18a4, size: 36, name: battle_effect_cancel_request, hash: de41dd98979d7742}
   - {addr: 0x801a18c8, size: 16, name: battle_effect_get_phase, hash: c836a45912dff7a5}
   - {addr: 0x801a18d8, size: 872, name: battle_effect_update_stage, hash: 934d9569effc7e18, rodata: [{addr: 0x801a0dc4, size: 28, hash: a0d27eb5fd714357}]}
   - {addr: 0x801a1c40, size: 80, name: battle_effect_update_cycle, hash: b560438b479930c0}
@@ -1702,7 +1702,7 @@ functions:
   - {addr: 0x801a236c, size: 8, name: battle_effect_code_script_04_end, hash: f18765a01ea52b11}
   - {addr: 0x801a2374, size: 52, name: battle_effect_code_script_05, hash: c6a1f85feec7346c}
   - {addr: 0x801a23a8, size: 108, name: battle_effect_code_script_06_load_callback_pointer, hash: d4da56f3747f1563}
-  - {addr: 0x801a2414, size: 116, name: battle_effect_code_script_07_call_file_function, hash: dd81440b7deba0ff}
+  - {addr: 0x801a2414, size: 116, name: battle_effect_code_script_07_call_native_callback, hash: dd81440b7deba0ff}
   - {addr: 0x801a2488, size: 156, name: battle_effect_code_script_08_set_camera_position, hash: 139322917cda0310}
   - {addr: 0x801a2524, size: 60, name: battle_effect_code_script_09_save_camera_position, hash: 5744d530fed1329b}
   - {addr: 0x801a2560, size: 60, name: battle_effect_code_script_0a_restore_camera_position, hash: 5f41f020954b0f96}
@@ -2739,8 +2739,8 @@ data:
   - {addr: 0x801a0e20, name: g_battle_heap_dp_format}
   - {addr: 0x801a0e28, name: g_battle_heap_task_format}
   - {addr: 0x801b3500, name: g_battle_effect_file_buffer}
-  - {addr: 0x801b48d0, name: g_battle_effect_data_ptrs}
-  - {addr: 0x801b50d0, name: g_battle_effect_file_ptrs}
+  - {addr: 0x801b48d0, name: g_battle_effect_file_headers}
+  - {addr: 0x801b50d0, name: g_battle_effect_native_callbacks}
   - {addr: 0x801b53e8, name: g_battle_effect_disc_entries}
   - {addr: 0x801b63e8, name: g_battle_effect_phase}
   - {addr: 0x801b63f0, name: g_battle_effect_ability_ids}
@@ -2866,12 +2866,10 @@ data:
   - {addr: 0x801bbf70, name: g_battle_effect_work_records}
   - {addr: 0x801bbf74, name: g_battle_effect_sound_section_ptr}
   - {addr: 0x801bbf78, name: g_battle_effect_frame_data}
-  - {addr: 0x801bbf7c, name: g_battle_effect_animation_curve_data}
-  - {addr: 0x801bbf7c, name: g_effect_palette_table}
+  - {addr: 0x801bbf7c, name: g_battle_effect_animation_curves}
   - {addr: 0x801bbf80, name: g_battle_effect_palette_ptr}
   - {addr: 0x801bbf84, name: g_battle_effect_timing_channels}
-  - {addr: 0x801bbf84, name: g_effect_timeline_channel_base}
-  - {addr: 0x801bbf88, name: g_effect_geometry_table}
+  - {addr: 0x801bbf88, name: g_battle_effect_geometry_table}
   - {addr: 0x801bbf8c, name: g_battle_effect_animation_sequences}
   - {addr: 0x801bbf90, name: g_battle_effect_allocated_record_head}
   - {addr: 0x801bc088, name: g_battle_effect_otag}
@@ -2892,9 +2890,9 @@ data:
   - {addr: 0x801bf000, name: D_801BF000}
   - {addr: 0x801bf004, name: g_battle_effect_current_record_index}
   - {addr: 0x801bf00a, name: g_battle_effect_free_list_node_head}
-  - {addr: 0x801bf02c, name: g_effect_state_records}
+  - {addr: 0x801bf02c, name: g_battle_effect_state_records}
   - {addr: 0x801c00a4, name: g_battle_effect_list_nodes}
-  - {addr: 0x801c24c8, name: g_effect_load_state}
+  - {addr: 0x801c24c8, name: g_battle_effect_load_state}
   - {addr: 0x801c24d0, name: g_battle_ability_effect_id}
   - {addr: 0x801c24d4, name: g_battle_effect_root_record_index}
   - {addr: 0x801c24da, name: g_battle_effect_active_list_node_head}

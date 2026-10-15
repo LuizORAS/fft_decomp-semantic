@@ -27,8 +27,8 @@ s32 effect_e242_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
     u32 brightness;
 
     scratch = (effect_polar_mesh_scratch_t*)0x1F800000;
-    record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index].polar_mesh;
+    record = &g_battle_effect_state_records[record_index];
+    entry = &g_battle_effect_geometry_table->entries[emitter_index].polar_mesh;
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
@@ -140,9 +140,9 @@ s32 effect_e242_update_polar_mesh_state(s16 record_index, s32 callback_slot, s32
 
         if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             j = entry->colour_curves & 0xFFF;
-            scratch->colour[0] = g_effect_palette_table[entry->colour_curves & 0xF].factor[work->frame];
-            scratch->colour[1] = g_effect_palette_table[(j >> 4) & 0xF].factor[work->frame];
-            scratch->colour[2] = g_effect_palette_table[(j >> 8) & 0xF].factor[work->frame];
+            scratch->colour[0] = g_battle_effect_animation_curves[entry->colour_curves & 0xF].factor[work->frame];
+            scratch->colour[1] = g_battle_effect_animation_curves[(j >> 4) & 0xF].factor[work->frame];
+            scratch->colour[2] = g_battle_effect_animation_curves[(j >> 8) & 0xF].factor[work->frame];
         } else {
             scratch->colour[2] = 0x80;
             scratch->colour[1] = 0x80;

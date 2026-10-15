@@ -9,7 +9,7 @@
     curve = nibble;                                                                                                    \
     curve--;                                                                                                           \
     if (curve != -1) {                                                                                                 \
-        factor = g_effect_palette_table[curve].factor[frame];                                                          \
+        factor = g_battle_effect_animation_curves[curve].factor[frame];                                                \
     } else {                                                                                                           \
         factor = 0;                                                                                                    \
     }
@@ -80,7 +80,7 @@ s32 battle_effect_spawn_emitter_particles(
     u8 colour_b;
     map_tile_t* tile;
 
-    entry = &g_effect_geometry_table->entries[emitter_index].emitter;
+    entry = &g_battle_effect_geometry_table->entries[emitter_index].emitter;
     time = frame;
     frame = frame % EFFECT_ANIMATION_CURVE_FRAMES;
     kind = entry->placement_flags;
@@ -91,7 +91,7 @@ s32 battle_effect_spawn_emitter_particles(
     }
 
     SetTransMatrix(&g_battle_effect_emitter_matrix);
-    target_index = g_effect_state_records[record_index].target_index;
+    target_index = g_battle_effect_state_records[record_index].target_index;
     rotate = (flags & EFFECT_EMITTER_VELOCITY_MASK) == EFFECT_EMITTER_VELOCITY_CASTER_FACING;
     battle_effect_resolve_target_render_coords(g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
         BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_coord_data, &caster);
@@ -215,7 +215,7 @@ s32 battle_effect_spawn_emitter_particles(
     curve = entry->curve_indices[0] >> 28;
     curve--;
     if (curve != -1) {
-        factor = g_effect_palette_table[curve].factor[frame];
+        factor = g_battle_effect_animation_curves[curve].factor[frame];
         speed_min = battle_effect_lerp_linear(entry->radial_speed_start[0], entry->radial_speed_end[0], factor);
         speed_max = battle_effect_lerp_linear(entry->radial_speed_start[1], entry->radial_speed_end[1], factor);
     } else {
@@ -225,7 +225,7 @@ s32 battle_effect_spawn_emitter_particles(
     curve = entry->curve_indices[0] >> 12 & 0xf;
     curve--;
     if (curve != -1) {
-        factor = g_effect_palette_table[curve].factor[frame];
+        factor = g_battle_effect_animation_curves[curve].factor[frame];
         angle_spread.vx
             = battle_effect_lerp_linear(entry->velocity_spread_start[0], entry->velocity_spread_end[0], factor);
         angle_spread.vy

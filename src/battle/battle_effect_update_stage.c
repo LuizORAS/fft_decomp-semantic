@@ -39,11 +39,11 @@ s32 battle_effect_update_stage(void) {
         battle_effect_set_frame_data_pointer(g_battle_ability_effect_id);
         battle_effect_set_animation_sequences_pointer(g_battle_ability_effect_id);
         battle_effect_set_script_pointer(g_battle_ability_effect_id);
-        battle_effect_set_animation_curve_data_pointer(g_battle_ability_effect_id);
+        battle_effect_set_animation_curves_pointer(g_battle_ability_effect_id);
         battle_effect_set_particle_system_data_pointer(g_battle_ability_effect_id);
         battle_effect_set_timeline_pointers(g_battle_ability_effect_id);
         battle_effect_load_sound_section(g_battle_ability_effect_id);
-        battle_effect_init_flags_section_pointer(g_battle_ability_effect_id);
+        battle_effect_set_flags_section_pointer(g_battle_ability_effect_id);
         battle_effect_set_timing_curves_pointer(g_battle_ability_effect_id);
         if (g_battle_effect_coord_data.math_skill_flag != 0) {
             if (g_battle_effect_flags_section->spawn_delay_override != 0) {
@@ -61,9 +61,9 @@ s32 battle_effect_update_stage(void) {
         g_battle_effect_otag = main_gfx_get_otag();
         battle_effect_start_render_frame();
         while (id != 0) {
-            next = g_effect_state_records[id].next_index;
+            next = g_battle_effect_state_records[id].next_index;
             g_battle_effect_current_record_index = id;
-            g_effect_state_records[id].frame_counter++;
+            g_battle_effect_state_records[id].frame_counter++;
             if (battle_effect_run_block(id) == 0) {
                 battle_effect_free_state_record(id);
             }

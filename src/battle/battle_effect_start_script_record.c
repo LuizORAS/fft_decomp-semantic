@@ -14,7 +14,7 @@ s16 battle_effect_start_script_record(u8* script, s16 start_pc, s16 parent_index
     if (index == 0) {
         return 0;
     }
-    record = &g_effect_state_records[index];
+    record = &g_battle_effect_state_records[index];
     record->parent_index = parent_index;
     record->script = script;
     record->pc = start_pc;

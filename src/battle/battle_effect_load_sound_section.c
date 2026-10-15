@@ -12,7 +12,7 @@ void battle_effect_load_sound_section(s16 index) {
         main_sound_remove_vfx_resource(g_battle_effect_sound_section_ptr);
     }
 
-    base = g_battle_effect_data_ptrs[index];
+    base = g_battle_effect_file_headers[index];
     offset = base->sound_section;
     if (offset != 0) {
         g_battle_effect_sound_section_ptr = (main_sound_resource_t*)((u8*)base + offset);

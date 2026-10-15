@@ -27,9 +27,9 @@ void battle_effect_update_node_from_work(s16 record_index, effect_work_record_t*
     }
     if (work->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
         battle_effect_render_particle_sprite(work->data,
-            g_effect_palette_table[work->colour_curves[0]].factor[work->curve_frame],
-            g_effect_palette_table[work->colour_curves[1]].factor[work->curve_frame],
-            g_effect_palette_table[work->colour_curves[2]].factor[work->curve_frame]);
+            g_battle_effect_animation_curves[work->colour_curves[0]].factor[work->curve_frame],
+            g_battle_effect_animation_curves[work->colour_curves[1]].factor[work->curve_frame],
+            g_battle_effect_animation_curves[work->colour_curves[2]].factor[work->curve_frame]);
     } else {
         battle_effect_render_particle_sprite(work->data, 0x80, 0x80, 0x80);
     }

@@ -58,8 +58,8 @@ s32 effect_e474_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
     u32 shade_b;
     s32 n;
 
-    record = &g_effect_state_records[record_index];
-    entry = &g_effect_geometry_table->entries[emitter_index].summon_mesh;
+    record = &g_battle_effect_state_records[record_index];
+    entry = &g_battle_effect_geometry_table->entries[emitter_index].summon_mesh;
     placement = entry->placement_flags;
     ot = main_gfx_get_otag();
 
@@ -100,7 +100,7 @@ s32 effect_e474_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
         break;
 
     case EFFECT_PHASE_UPDATE:
-        target_index = g_effect_state_records[record_index].target_index;
+        target_index = g_battle_effect_state_records[record_index].target_index;
         work = record->work_slots[callback_slot];
         READ_CURVE(i, j, entry->scroll_curves & 0xF, frame);
         origin.vx = battle_effect_lerp_linear(entry->origin_start[0], entry->origin_end[0], i);
@@ -287,10 +287,10 @@ s32 effect_e474_update_summon_mesh_state(s16 record_index, s32 callback_slot, s3
 
         n = entry->brightness_row;
         if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
-            red = g_effect_palette_table[entry->colour_curves & 0xF].factor[frame];
+            red = g_battle_effect_animation_curves[entry->colour_curves & 0xF].factor[frame];
             k = entry->colour_curves & 0xFFF;
-            green = g_effect_palette_table[(k >> 4) & 0xF].factor[frame];
-            blue = g_effect_palette_table[(k >> 8) & 0xF].factor[frame];
+            green = g_battle_effect_animation_curves[(k >> 4) & 0xF].factor[frame];
+            blue = g_battle_effect_animation_curves[(k >> 8) & 0xF].factor[frame];
         } else {
             red = green = blue = 0x80;
         }

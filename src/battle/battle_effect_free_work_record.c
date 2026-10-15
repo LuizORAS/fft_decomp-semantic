@@ -5,7 +5,7 @@
 void battle_effect_free_work_record(s16 record_index, effect_work_record_t* work) {
     effect_record_t* owner;
 
-    owner = &g_effect_state_records[record_index];
+    owner = &g_battle_effect_state_records[record_index];
     if (work->next != 0) {
         work->next->prev = work->prev;
     }

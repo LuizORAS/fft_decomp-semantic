@@ -207,7 +207,7 @@ s32 battle_effect_linear_projectile_secondary_handler(void) {
                         g_battle_effect_current_secondary->caster.fields.caster_id,
                         g_battle_effect_current_secondary->target.fields.target_id);
                 }
-                battle_effect_set_phase_none();
+                battle_effect_cancel_request();
             }
             g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_FINALIZING;
         }

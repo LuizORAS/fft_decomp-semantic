@@ -21,7 +21,7 @@ s32 effect_e464_particle_update_altima_transformation_state(
     VECTOR* vertex;
     VECTOR* vertex_work;
 
-    record = &g_effect_state_records[record_index];
+    record = &g_battle_effect_state_records[record_index];
 
     switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
@@ -45,7 +45,7 @@ s32 effect_e464_particle_update_altima_transformation_state(
         work = record->work_slots[callback_slot];
         emitter_index = 0;
         do {
-            emitter = &g_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
+            emitter = &g_battle_effect_geometry_table->entries[emitter_index].particle_vertex_emitter;
             i = emitter->vertex_group - 1;
             if (i >= 0 && i < 12 && frame >= emitter->start_frame && frame < emitter->end_frame) {
                 offset = (&g_effect_e464_particle_work_offset_scale_16)[i * 2] << 4;

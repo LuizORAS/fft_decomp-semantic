@@ -54,8 +54,8 @@ s32 effect_e073_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
     u8 v;
 
     scratch = (effect_wave_mesh_scratch_t*)0x1F800000;
-    record = &g_effect_state_records[record_index];
-    geometry = &g_effect_geometry_table->entries[emitter_index].textured_quad;
+    record = &g_battle_effect_state_records[record_index];
+    geometry = &g_battle_effect_geometry_table->entries[emitter_index].textured_quad;
     ot = main_gfx_get_otag();
 
     switch (record->callback_phase[callback_slot]) {
@@ -107,7 +107,7 @@ s32 effect_e073_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         row = geometry->curve_indices[0] >> 28;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[work->frame];
+            column = g_battle_effect_animation_curves[row].factor[work->frame];
         } else {
             column = 0;
         }
@@ -115,7 +115,7 @@ s32 effect_e073_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         row = (geometry->curve_indices[0] >> 8) & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[work->frame];
+            column = g_battle_effect_animation_curves[row].factor[work->frame];
         } else {
             column = 0;
         }
@@ -136,9 +136,9 @@ s32 effect_e073_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         }
         if (geometry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             row = geometry->colour_curves & 0xfff;
-            red = g_effect_palette_table[row & 0xf].factor[work->frame];
-            green = g_effect_palette_table[(row >> 4) & 0xf].factor[work->frame];
-            blue = g_effect_palette_table[(row >> 8) & 0xf].factor[work->frame];
+            red = g_battle_effect_animation_curves[row & 0xf].factor[work->frame];
+            green = g_battle_effect_animation_curves[(row >> 4) & 0xf].factor[work->frame];
+            blue = g_battle_effect_animation_curves[(row >> 8) & 0xf].factor[work->frame];
         } else {
             blue = 0x80;
             green = 0x80;
@@ -150,7 +150,7 @@ s32 effect_e073_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         row = geometry->curve_indices[1] & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[frame];
+            column = g_battle_effect_animation_curves[row].factor[frame];
         } else {
             column = 0;
         }
@@ -191,7 +191,7 @@ s32 effect_e073_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         row = (geometry->curve_indices[0] >> 4) & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[frame];
+            column = g_battle_effect_animation_curves[row].factor[frame];
         } else {
             column = 0;
         }
@@ -201,7 +201,7 @@ s32 effect_e073_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 
         row = (geometry->curve_indices[0] >> 12) & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[frame];
+            column = g_battle_effect_animation_curves[row].factor[frame];
         } else {
             column = 0;
         }

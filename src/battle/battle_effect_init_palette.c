@@ -16,7 +16,7 @@ void battle_effect_init_palette(s16 index) {
     s32 raw_size;
     s32 height;
 
-    base = g_battle_effect_data_ptrs[index];
+    base = g_battle_effect_file_headers[index];
     data = (u8*)base + base->palette;
     g_battle_effect_palette_ptr = data;
     battle_map_load_palette_data((const u16*)data, MAP_CLUT_ROW_EFFECT, 0, 1);
