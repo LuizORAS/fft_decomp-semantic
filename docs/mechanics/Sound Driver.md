@@ -32,7 +32,9 @@ SPU voice commands: which sample, which pitch, how loud, where in the
 stereo field, with which envelope, vibrato and reverb. MAIN's game-side
 sound code ([[Sound]]) decides what plays and when; the driver plays it.
 
-It runs from an interrupt: every tick of root counter 2,
+It runs from an interrupt: every tick of root counter 2, about 240 a second
+([[SuzukiSPUInitialiser]] has [[SetRCnt]] count to 0x44e8 at the system clock
+/ 8),
 [[main_sound_root_counter_2_handler]] advances each playing sequence by its
 tempo and commits the voice changes, so the music keeps time whatever the
 frame rate.
