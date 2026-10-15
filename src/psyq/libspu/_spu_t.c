@@ -1,6 +1,10 @@
 /* SCUS_942.21 0x80018e44..0x800190d3. */
 #include "psx/libspu.h"
 
+/* One step of a DMA transfer, chosen by `operation`: 2 sets the transfer address (a byte address), 1
+ * prepares a write and 0 a read (waiting for the SPU to take the address, then setting its transfer mode),
+ * and 3 starts DMA channel 4 for the buffer and byte count that follow, in 64-byte blocks. Returns 0, or -2
+ * when the SPU does not respond within 3840 polls. */
 s32 _spu_t(s32 operation, ...) {
     u32* arguments;
     u32 wait;

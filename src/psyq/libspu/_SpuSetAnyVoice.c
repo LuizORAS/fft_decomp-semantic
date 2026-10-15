@@ -1,6 +1,9 @@
 /* SCUS_942.21 0x80019b80..0x80019d87. */
 #include "psx/libspu.h"
 
+/* Turn the voices in `voice_bit` on (1) or off (0) in the 24-bit voice mask split over registers
+ * `reg_index_low` and `reg_index_high`, and return the resulting mask. Its queued branch for _spu_env bit 0
+ * never runs: nothing sets that bit. SpuSetNoiseVoice, SpuSetPitchLFOVoice and SpuSetReverbVoice use it. */
 u32 _SpuSetAnyVoice(s32 on_off, u32 voice_bit, s32 reg_index_low, s32 reg_index_high) {
     u32 current;
     if (_spu_env & 1) {

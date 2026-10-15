@@ -1,6 +1,9 @@
 /* SCUS_942.21 0x80018d88..0x80018e43. */
 #include "psx/libspu.h"
 
+/* Start a DMA read of `blocks` 64-byte blocks from SPU address `address` (in eight-byte units) into
+ * `destination`: set the address and the read mode, set the bus delay and start DMA channel 4.
+ * SpuReadDecodedData reads the capture buffers with it. */
 void _spu_Fr_(void* destination, u16 address, u32 blocks) {
     _spu_RXX->rxx.transfer_address = address;
     _spu_Fw1ts();

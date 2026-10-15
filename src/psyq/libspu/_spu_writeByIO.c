@@ -3,6 +3,10 @@
 
 #include "psx/libc.h"
 
+/* Write `size` bytes from `source` to SPU RAM at the transfer address through the SPU's data FIFO, 64 bytes
+ * at a time in programmed I/O mode, waiting after each chunk for the SPU to finish; then leave the transfer
+ * mode and wait for the status to settle. Each wait prints a message on a timeout. _spu_Fw uses it in I/O
+ * mode and _spu_init for its start-up block. */
 void _spu_writeByIO(const u16* source, u32 size) {
     u16 status;
     u16 control;

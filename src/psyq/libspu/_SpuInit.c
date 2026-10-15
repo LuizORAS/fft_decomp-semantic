@@ -3,6 +3,10 @@
 
 #include "psx/libetc.h"
 
+/* Start or restart LIBSPU: start LIBETC's interrupts (ResetCallback), initialize the SPU (_spu_init), on a
+ * cold start set every voice's centre note to 0xc000, install the DMA handler (SpuStart), turn the reverb off
+ * with its settings zeroed and its work area at mode 0's start, and clear the heap, the transfer mode, the key
+ * state and the queued requests. SpuInit (`hot` 0) and SpuInitHot (1) call it. */
 void _SpuInit(s32 hot) {
     s32 i;
     u16 sample_note;

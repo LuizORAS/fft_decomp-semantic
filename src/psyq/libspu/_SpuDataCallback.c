@@ -3,6 +3,8 @@
 
 #include "psx/libetc.h"
 
+/* Set the SPU's DMA channel 4 completion callback (DMACallback). SpuStart installs _spu_FiDMA and SpuQuit
+ * removes it. */
 void _SpuDataCallback(void (*callback)(void)) {
     DMACallback(4, callback);
 }

@@ -1,6 +1,8 @@
 /* SCUS_942.21 0x8001a524..0x8001a9f3. */
 #include "psx/libspu.h"
 
+/* Write the reverb parameter registers that the mask of `parameters` selects (all 32 for mask 0).
+ * SpuSetReverbModeParam calls it. */
 void _spu_setReverbAttr(psyq_spu_reverb_parameters_t* parameters) {
     u32 mask = parameters->mask;
     s32 all = mask == 0;

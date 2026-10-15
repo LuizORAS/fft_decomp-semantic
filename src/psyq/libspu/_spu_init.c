@@ -3,6 +3,11 @@
 
 #include "psx/libc.h"
 
+/* Initialize the SPU: enable DMA channel 4, mute and stop the SPU and wait for its status to clear
+ * (printing on a timeout), use eight-byte address units, zero the reverb depth and voices and key every voice
+ * off. A cold start (`hot` 0) also clears pitch modulation, noise and the CD and external volumes, writes the
+ * 16-byte g_psyq_spu_init_fifo_data at SPU address 0x1000 through the FIFO, points the 24 voices there,
+ * silent, and keys them on and off. Then it turns the SPU on, unmuted, and clears the callbacks. Returns 0. */
 s32 _spu_init(s32 hot) {
     u32 wait;
     s32 i;

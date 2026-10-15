@@ -1,6 +1,9 @@
 /* SCUS_942.21 0x80019f88..0x8001a013. */
 #include "psx/libspu.h"
 
+/* Same as _SpuIsInAllocateArea for an address in eight-byte units. The reverb setters (SpuSetReverb,
+ * SpuSetReverbModeParam, SpuClearReverbWorkArea) use it to check that a work area, which runs to the end of
+ * SPU RAM, is free. */
 s32 _SpuIsInAllocateArea_(u32 address) {
     s32 index;
     u32 start;

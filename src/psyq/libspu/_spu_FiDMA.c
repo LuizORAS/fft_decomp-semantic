@@ -4,6 +4,9 @@
 #include "psx/libapi.h"
 #include "psx/libetc.h"
 
+/* LIBSPU's DMA completion handler: after a write wait a moment (three _spu_Fw1ts), leave the SPU's
+ * transfer mode and wait for it to clear (at most 3840 polls), then call the transfer callback or, with none,
+ * deliver the SPU's DMA event (which SpuClearReverbWorkArea waits on). */
 void _spu_FiDMA(void) {
     u32 wait;
     if (g_psyq_spu_dma_direction == 0) {
