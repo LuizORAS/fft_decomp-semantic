@@ -1,6 +1,7 @@
 #include "psx/libgte.h"
 
-/* main 0x8001cf48–0x8001cf6c: copy the translation vector, return matrix in v0. */
+/* Set the translation of the matrix at `matrix_address` to the vector at `vector_address`. The battle camera,
+ * the battle map draw, GsSortSprite and WLDCORE's map projection use it. */
 void TransMatrix(void* matrix_address, void* vector_address) {
     MATRIX* matrix = matrix_address;
     VECTOR* vector = vector_address;
@@ -9,7 +10,6 @@ void TransMatrix(void* matrix_address, void* vector_address) {
     register s32 y __asm__("$9") = vector->vy;
     register s32 z __asm__("$10") = vector->vz;
     MATRIX* result;
-    __asm__ volatile("" : : "r"(x), "r"(y), "r"(z));
     matrix->t[0] = x;
     matrix->t[1] = y;
     matrix->t[2] = z;

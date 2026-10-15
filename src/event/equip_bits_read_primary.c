@@ -1,5 +1,8 @@
 #include "fft/event_equip.h"
 
+/* Reads a `count`-bit value, most significant bit first, from the primary
+ * bitstream. The first read after a reset starts at bit 7 of the current
+ * byte. */
 s32 equip_bits_read_primary(s32 count) {
     s32 result;
     u8* cursor;

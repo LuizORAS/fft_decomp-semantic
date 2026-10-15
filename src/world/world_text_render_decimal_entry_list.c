@@ -1,8 +1,10 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Render gauge values with an explicit sign, coloured by sign (0x7 fill for
+ * negative, 0xb for positive), drawing a zero value as a placeholder. */
 void world_text_render_decimal_entry_list(
-    s32 pixels, world_menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count) {
+    void* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count) {
     s32 i;
 
     for (i = 0; i < count; entries++, i++, out->color = 0) {
@@ -11,7 +13,7 @@ void world_text_render_decimal_entry_list(
 
         out->rect.x = entries->x;
         out->rect.y = entries->y;
-        flags = entries->param;
+        flags = entries->format;
         flags &= MENU_DECIMAL_SIGN_CLEAR_MASK;
         if (amount < 0) {
             amount = -amount;
@@ -25,6 +27,6 @@ void world_text_render_decimal_entry_list(
             flags &= MENU_DECIMAL_FIELD_WIDTH_CLEAR_MASK;
             flags |= MENU_DECIMAL_ZERO_PLACEHOLDER_FLAGS;
         }
-        world_text_render_decimal_value(amount, flags, (void*)pixels, out);
+        world_text_render_decimal_value(amount, flags, pixels, out);
     }
 }

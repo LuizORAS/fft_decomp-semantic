@@ -137,9 +137,68 @@ typedef struct {
     u8 code;
 } P_TAG;
 
-#define setaddr(p, a)  (((P_TAG*)(p))->addr = (u32)(a))
-#define getaddr(p)     ((u32)((P_TAG*)(p))->addr)
-#define addPrim(ot, p) setaddr(p, getaddr(ot)), setaddr(ot, p)
+#define setaddr(p, a)   (((P_TAG*)(p))->addr = (u32)(a))
+#define getaddr(p)      ((u32)((P_TAG*)(p))->addr)
+#define addPrim(ot, p)  setaddr(p, getaddr(ot)), setaddr(ot, p)
+#define catPrim(p0, p1) setaddr(p0, p1)
+#define termPrim(p)     setaddr(p, 0xffffffff)
+
+#define setlen(p, l)  (((P_TAG*)(p))->len = (u8)(l))
+#define setcode(p, c) (((P_TAG*)(p))->code = (u8)(c))
+#define getlen(p)     (((P_TAG*)(p))->len)
+#define getcode(p)    (((P_TAG*)(p))->code)
+
+#define setPolyF3(p)  (setlen(p, 4), setcode(p, 0x20))
+#define setPolyFT3(p) (setlen(p, 7), setcode(p, 0x24))
+#define setPolyG3(p)  (setlen(p, 6), setcode(p, 0x30))
+#define setPolyGT3(p) (setlen(p, 9), setcode(p, 0x34))
+#define setPolyF4(p)  (setlen(p, 5), setcode(p, 0x28))
+#define setPolyFT4(p) (setlen(p, 9), setcode(p, 0x2c))
+#define setPolyG4(p)  (setlen(p, 8), setcode(p, 0x38))
+#define setPolyGT4(p) (setlen(p, 12), setcode(p, 0x3c))
+
+#define setSemiTrans(p, abe) ((abe) ? setcode(p, getcode(p) | 0x02) : setcode(p, getcode(p) & ~0x02))
+#define setShadeTex(p, tge)  ((tge) ? setcode(p, getcode(p) | 0x01) : setcode(p, getcode(p) & ~0x01))
+
+#define limitRange(x, l, h) ((x) = ((x) < (l) ? (l) : (x) > (h) ? (h) : (x)))
+
+#define getTPage(tp, abr, x, y)                                                                                        \
+    ((GetGraphType() == 1 || GetGraphType() == 2)                                                                      \
+            ? ((((tp) & 0x3) << 9) | (((abr) & 0x3) << 7) | (((y) & 0x300) >> 3) | (((x) & 0x3ff) >> 6))               \
+            : ((((tp) & 0x3) << 7) | (((abr) & 0x3) << 5) | (((y) & 0x100) >> 4) | (((x) & 0x3ff) >> 6)                \
+                  | (((y) & 0x200) << 2)))
+
+#define _get_mode(dfe, dtd, tpage)                                                                                     \
+    ((GetGraphType() == 1 || GetGraphType() == 2)                                                                      \
+            ? (0xe1000000 | ((dtd) ? 0x0800 : 0) | ((dfe) ? 0x1000 : 0) | ((tpage) & 0x27ff))                          \
+            : (0xe1000000 | ((dtd) ? 0x0200 : 0) | ((dfe) ? 0x0400 : 0) | ((tpage) & 0x9ff)))
+
+#define setRGB0(p, r, g, b) (p)->r0 = (r), (p)->g0 = (g), (p)->b0 = (b)
+#define setRGB1(p, r, g, b) (p)->r1 = (r), (p)->g1 = (g), (p)->b1 = (b)
+#define setRGB2(p, r, g, b) (p)->r2 = (r), (p)->g2 = (g), (p)->b2 = (b)
+#define setRGB3(p, r, g, b) (p)->r3 = (r), (p)->g3 = (g), (p)->b3 = (b)
+
+#define setRECT(r, _x, _y, _w, _h) (r)->x = (_x), (r)->y = (_y), (r)->w = (_w), (r)->h = (_h)
+
+#define setXY0(p, _x0, _y0) (p)->x0 = (_x0), (p)->y0 = (_y0)
+#define setUV0(p, _u0, _v0) (p)->u0 = (_u0), (p)->v0 = (_v0)
+#define setWH(p, _w, _h)    (p)->w = _w, (p)->h = _h
+
+#define setXY4(p, _x0, _y0, _x1, _y1, _x2, _y2, _x3, _y3)                                                              \
+    (p)->x0 = (_x0), (p)->y0 = (_y0), (p)->x1 = (_x1), (p)->y1 = (_y1), (p)->x2 = (_x2), (p)->y2 = (_y2),              \
+    (p)->x3 = (_x3), (p)->y3 = (_y3)
+
+#define setXYWH(p, _x0, _y0, _w, _h)                                                                                   \
+    (p)->x0 = (_x0), (p)->y0 = (_y0), (p)->x1 = (_x0) + (_w), (p)->y1 = (_y0), (p)->x2 = (_x0),                        \
+    (p)->y2 = (_y0) + (_h), (p)->x3 = (_x0) + (_w), (p)->y3 = (_y0) + (_h)
+
+#define setUV4(p, _u0, _v0, _u1, _v1, _u2, _v2, _u3, _v3)                                                              \
+    (p)->u0 = (_u0), (p)->v0 = (_v0), (p)->u1 = (_u1), (p)->v1 = (_v1), (p)->u2 = (_u2), (p)->v2 = (_v2),              \
+    (p)->u3 = (_u3), (p)->v3 = (_v3)
+
+#define setUVWH(p, _u0, _v0, _w, _h)                                                                                   \
+    (p)->u0 = (_u0), (p)->v0 = (_v0), (p)->u1 = (_u0) + (_w), (p)->v1 = (_v0), (p)->u2 = (_u0),                        \
+    (p)->v2 = (_v0) + (_h), (p)->u3 = (_u0) + (_w), (p)->v3 = (_v0) + (_h)
 
 typedef struct {
     s16 x;
@@ -519,7 +578,7 @@ extern int FntPrint(char*, ...);
 extern u32* FntFlush(int);
 extern void SetDumpFnt(int);
 extern int OpenTIM(void*);
-extern int ReadTIM(TIM_IMAGE*);
+extern TIM_IMAGE* ReadTIM(TIM_IMAGE*);
 extern u16 LoadTPage(u32*, int, int, int, int, int, int);
 extern u16 LoadClut2(u32*, int, int);
 extern void AddPrim(void*, void*);
@@ -594,14 +653,13 @@ void* NextPrim(void* primitive);
 int IsEndPrim(void* primitive);
 void CatPrim(void* primitive, void* next);
 void TermPrim(void* primitive);
-void SetDrawTPage(void* primitive, int dfe, int dtd, int tpage);
+void SetDrawTPage(DR_TPAGE* p, int dfe, int dtd, int tpage);
 void SetDrawLoad(void* primitive, RECT* rect);
 int MargePrim(void* first, void* second);
 int OpenTMD(u32* tmd, int object_index);
 psyq_tmd_primitive_t* ReadTMD(psyq_tmd_primitive_t* primitive);
 
 /* driver internals */
-
 typedef union {
     RECT rect;
     u32 words[2];
@@ -639,10 +697,10 @@ typedef struct {
     u8 queue_enabled;
     u8 debug_level;
     u8 reversed;
-    u16 vram_width;
-    u16 vram_height;
+    s16 vram_width;
+    s16 vram_height;
     s32 completion_pending;
-    void* draw_sync_callback;
+    void (*draw_sync_callback)(void);
     DRAWENV draw;
     DISPENV display;
 } psyq_gpu_environment_t;
@@ -658,7 +716,7 @@ extern u8 g_psyq_gpu_debug_level;
 extern u8 g_psyq_gpu_graph_reverse;
 extern u16 g_psyq_gpu_vram_width;
 extern u16 g_psyq_gpu_vram_height;
-extern s32 g_psyq_gpu_completion_pending;
+
 extern void* g_psyq_gpu_draw_sync_callback;
 extern DRAWENV g_psyq_gpu_draw_environment;
 extern DISPENV g_psyq_gpu_display_environment;
@@ -696,23 +754,17 @@ extern u16 g_psyq_gpu_font_tpage;
 extern u16 g_psyq_gpu_font_clut;
 extern int g_psyq_gpu_sync_deadline;
 extern int g_psyq_gpu_sync_poll_count;
-extern const u16 g_psyq_gpu_vram_width_lookup[10];
-extern const u16 g_psyq_gpu_vram_height_lookup[10];
-extern int g_psyq_gpu_queue_head;
+extern const int g_psyq_gpu_vram_width_lookup[5];
+extern const int g_psyq_gpu_vram_height_lookup[5];
+extern volatile int g_psyq_gpu_queue_head;
 extern volatile int g_psyq_gpu_queue_tail;
 extern int g_psyq_gpu_reset_interrupt_mask;
 typedef struct {
-    psyq_gpu_operation_t volatile operation;
-    void* volatile source;
-    volatile u32 argument;
+    psyq_gpu_operation_t operation;
+    void* source;
+    u32 argument;
     u32 packet_words[21];
 } psyq_gpu_queue_entry_t;
-
-/* A packet member repeats every 96 bytes; its tail overlaps the next entry's metadata. */
-typedef struct {
-    u32 packet_words[21];
-    u32 _unknown_54[3];
-} psyq_gpu_queue_packet_view_t;
 
 typedef struct {
     psyq_gpu_operation_t operation;
@@ -720,7 +772,8 @@ typedef struct {
     u32 argument;
 } psyq_gpu_operation_snapshot_t;
 
-extern psyq_gpu_queue_entry_t g_psyq_gpu_operation_queue[64];
+/* The DMA interrupt callback (_exeque) and the foreground share the queue. */
+extern volatile psyq_gpu_queue_entry_t g_psyq_gpu_operation_queue[64];
 extern int g_psyq_gpu_enqueue_interrupt_mask;
 extern int g_psyq_gpu_queue_interrupt_mask;
 
@@ -773,11 +826,7 @@ extern const char g_psyq_gpu_reset_graph_format[];
 extern const char g_psyq_gpu_put_draw_env_format[];
 extern const char g_psyq_gpu_draw_otag_env_format[];
 extern const char g_psyq_gpu_put_disp_env_format[];
-extern u16 g_psyq_gpu_cached_display_x, g_psyq_gpu_cached_display_y, g_psyq_gpu_cached_display_width,
-    g_psyq_gpu_cached_display_height;
-extern u16 g_psyq_gpu_cached_screen_x, g_psyq_gpu_cached_screen_y, g_psyq_gpu_cached_screen_width,
-    g_psyq_gpu_cached_screen_height;
-extern u32 g_psyq_gpu_cached_display_flags;
+
 extern u32 g_psyq_gpu_ot_terminator;
 
 typedef struct {
@@ -789,13 +838,10 @@ typedef struct {
 } psyq_gpu_move_packet_t;
 
 extern psyq_gpu_move_packet_t g_psyq_gpu_move_packet;
-extern u32 g_psyq_gpu_move_copy_words[3];
-extern u32 g_psyq_gpu_move_destination;
-extern u32 g_psyq_gpu_move_dimensions;
 
 u32 get_mode(int dfe, int dtd, int tpage);
-u32 get_cs(int x, int y);
-u32 get_ce(int x, int y);
+u32 get_cs(s16 x, s16 y);
+u32 get_ce(s16 x, s16 y);
 u32 get_ofs(int x, int y);
 u32 get_tw(RECT* rect);
 int get_dx(RECT* rect);
@@ -827,30 +873,20 @@ int psyq_gpu_open_tmd_object(
     psyq_tmd_header_t* header, int object_index, u8** primitive, SVECTOR** vertices, SVECTOR** normals);
 int psyq_gpu_decode_tmd_primitive(const u8* source, psyq_tmd_primitive_t* primitive);
 
-extern psyq_gpu_operation_t g_psyq_gpu_last_operation;
-extern void* g_psyq_gpu_last_source;
-extern u32 g_psyq_gpu_last_argument;
+extern volatile psyq_gpu_operation_snapshot_t g_psyq_gpu_last_operation;
+
 extern const char g_psyq_gpu_timeout_state_format[];
 extern const char g_psyq_gpu_timeout_operation_format[];
+
+/* The clear packet (tile or block fill) and the packet that restores the draw area and offset. */
+extern u32 g_psyq_gpu_clear_packet[8];
+extern u32 g_psyq_gpu_clear_restore[4];
 int _exeque(void);
 int _sync(int mode);
 
-/* Tile and block-fill paths reuse these words; separate aliases preserve the original address loads. */
-extern u32 g_psyq_gpu_clear_packet_tag;
-extern u32 g_psyq_gpu_clear_packet_word_1;
-extern u32 g_psyq_gpu_clear_packet_word_2;
-extern u32 g_psyq_gpu_clear_packet_word_3;
-extern u32 g_psyq_gpu_clear_packet_word_4;
-extern u32 g_psyq_gpu_clear_packet_word_5;
-extern u32 g_psyq_gpu_clear_packet_word_6;
-extern u32 g_psyq_gpu_clear_packet_word_7;
-extern u32 g_psyq_gpu_clear_restore_tag;
-extern u32 g_psyq_gpu_clear_restore_area_start;
-extern u32 g_psyq_gpu_clear_restore_area_end;
-extern u32 g_psyq_gpu_clear_restore_offset;
-int _clr(void* rectangle, u32 color);
-int _dws(void* rectangle, u32 pixels);
-int _drs(void* rectangle, u32 pixels);
+int _clr(RECT* rect, u32 color);
+int _dws(RECT* rect, u32* data);
+int _drs(RECT* rect, u32* data);
 
 /* Input layouts used by the retail TMD converter; lengths include its header. */
 typedef enum {
@@ -873,6 +909,8 @@ typedef enum {
     PSYQ_TMD_PACKET_MODE_MASK = 0xfdffffffU,
 } psyq_tmd_packet_id_e;
 
+/* Raw TMD primitive packets. Each _padding_ halfword is a pad slot of the TMD
+ * format (after u2/v2, after u3/v3, or up to a word boundary) and carries no data. */
 typedef struct {
     u32 id;
     CVECTOR color0;
@@ -903,7 +941,7 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     u16 normal0;
     u16 vertex0;
     u16 vertex1;
@@ -920,7 +958,7 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     u16 normal0;
     u16 vertex0;
     u16 normal1;
@@ -935,7 +973,7 @@ typedef struct {
     u16 vertex0;
     u16 vertex1;
     u16 vertex2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad to a word boundary */
 } psyq_tmd_f3_packet_t;
 
 typedef struct {
@@ -946,7 +984,7 @@ typedef struct {
     u16 vertex0;
     u16 vertex1;
     u16 vertex2;
-    u8 _unknown_16[2];
+    u8 _padding_16[2]; /* TMD pad to a word boundary */
 } psyq_tmd_g3_packet_t;
 
 typedef struct {
@@ -959,12 +997,12 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     CVECTOR color0;
     u16 vertex0;
     u16 vertex1;
     u16 vertex2;
-    u8 _unknown_1a[2];
+    u8 _padding_1a[2]; /* TMD pad to a word boundary */
 } psyq_tmd_ft3_packet_t;
 
 typedef struct {
@@ -977,14 +1015,14 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     CVECTOR color0;
     CVECTOR color1;
     CVECTOR color2;
     u16 vertex0;
     u16 vertex1;
     u16 vertex2;
-    u8 _unknown_22[2];
+    u8 _padding_22[2]; /* TMD pad to a word boundary */
 } psyq_tmd_gt3_packet_t;
 
 typedef struct {
@@ -995,7 +1033,7 @@ typedef struct {
     u16 vertex1;
     u16 vertex2;
     u16 vertex3;
-    u8 _unknown_12[2];
+    u8 _padding_12[2]; /* TMD pad to a word boundary */
 } psyq_tmd_f4_lit_packet_t;
 
 typedef struct {
@@ -1021,16 +1059,16 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     u8 u3;
     u8 v3;
-    u8 _unknown_12[2];
+    u8 _padding_12[2]; /* TMD pad after u3/v3 */
     u16 normal0;
     u16 vertex0;
     u16 vertex1;
     u16 vertex2;
     u16 vertex3;
-    u8 _unknown_1e[2];
+    u8 _padding_1e[2]; /* TMD pad to a word boundary */
 } psyq_tmd_ft4_lit_packet_t;
 
 typedef struct {
@@ -1043,10 +1081,10 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     u8 u3;
     u8 v3;
-    u8 _unknown_12[2];
+    u8 _padding_12[2]; /* TMD pad after u3/v3 */
     u16 normal0;
     u16 vertex0;
     u16 normal1;
@@ -1088,10 +1126,10 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     u8 u3;
     u8 v3;
-    u8 _unknown_12[2];
+    u8 _padding_12[2]; /* TMD pad after u3/v3 */
     CVECTOR color0;
     u16 vertex0;
     u16 vertex1;
@@ -1109,10 +1147,10 @@ typedef struct {
     u16 tpage;
     u8 u2;
     u8 v2;
-    u8 _unknown_0e[2];
+    u8 _padding_0e[2]; /* TMD pad after u2/v2 */
     u8 u3;
     u8 v3;
-    u8 _unknown_12[2];
+    u8 _padding_12[2]; /* TMD pad after u3/v3 */
     CVECTOR color0;
     CVECTOR color1;
     CVECTOR color2;

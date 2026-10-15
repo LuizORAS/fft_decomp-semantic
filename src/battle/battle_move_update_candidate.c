@@ -41,7 +41,7 @@ s32 battle_move_update_candidate(s32 extra_span) {
         state->destination_panel->remaining_range = state->candidate_remaining_range.bytes.low;
         state->destination_panel->max_height_delta = state->height_delta;
         if (state->candidate_remaining_range.value >= 2) {
-            g_battle_move_frontier_flags_ptr[state->destination_index] |= 1;
+            g_battle_move_frontier_flags_ptr[state->destination_index] |= FRONTIER_FLAG_QUEUED;
             if (state->candidate_remaining_range.bytes.low > state->frontier_max_remaining_range)
                 state->frontier_max_remaining_range = state->candidate_remaining_range.bytes.low;
         }

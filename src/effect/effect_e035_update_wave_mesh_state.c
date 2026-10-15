@@ -1,3 +1,4 @@
+/* E035.BIN is the effect of ABILITY_ID_TIME_MAGIC_SLOW_2. */
 #include "fft/effect.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
@@ -18,7 +19,7 @@
  * reassociated by fold into a per-point `addiu -0x40`. `column` doubles as the
  * curve factor, as `row` does as the curve index and brightness. The s32
  * return with no value keeps $v0 live at the exit. */
-s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 geometry_index, s32 frame) {
+s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s32 spread[3];
     effect_record_t* record;
     s32 translucent;
@@ -35,7 +36,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
     s32 amplitude_step;
     s32 amplitude;
     s32 phase_step;
-    effect_geometry_entry_t* geometry;
+    effect_textured_quad_geometry_view_t* geometry;
     effect_wave_mesh_scratch_t* scratch;
     effect_wave_mesh_work_t* work;
     POLY_GT4* quad;
@@ -53,24 +54,25 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
     u8 v;
 
     scratch = (effect_wave_mesh_scratch_t*)0x1F800000;
-    record = &g_effect_state_records[record_index];
-    geometry = &g_effect_geometry_table->entries[geometry_index];
+    record = &g_battle_effect_state_records[record_index];
+    geometry = &g_battle_effect_geometry_table->entries[emitter_index].textured_quad;
     ot = main_gfx_get_otag();
 
-    switch (record->phase[byte_offset]) {
+    switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
         break;
     case EFFECT_PHASE_INIT:
-        if (record->work_slots[byte_offset] != 0) {
-            battle_heap_free_block(record->work_slots[byte_offset]);
+        if (record->work_slots[callback_slot] != 0) {
+            battle_heap_free_block(record->work_slots[callback_slot]);
         }
-        work = record->work_slots[byte_offset] = battle_heap_alloc_block(sizeof(effect_wave_mesh_work_t), record_index);
-        if (geometry->texture_page_flags & 4) {
+        work = record->work_slots[callback_slot]
+            = battle_heap_alloc_block(sizeof(effect_wave_mesh_work_t), record_index);
+        if (geometry->texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE) {
             translucent = 0;
         } else {
             translucent = 1;
         }
-        texture_page = ((geometry->texture_page_flags & 3) << 5) | 0x86;
+        texture_page = ((geometry->texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
         for (row = 0; row < 8; row++) {
             for (column = 0; column < 8; column++) {
                 quad = &work->quads[0][row * 8 + column];
@@ -81,7 +83,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
                     quad->code &= 0xfd;
                 }
                 quad->tpage = texture_page;
-                quad->clut = 0x7b00;
+                quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
                 work->quads[1][row * 8 + column] = *quad;
             }
         }
@@ -90,22 +92,22 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
         work->frame = 0;
         work->buffer = 0;
         work->destroy_latched = 0;
-        work->texture_u = geometry->motion.textured_quad.texture_u;
-        work->texture_v = geometry->motion.textured_quad.texture_v;
+        work->texture_u = geometry->texture_u;
+        work->texture_v = geometry->texture_v;
         work->wave_x_amplitude_phase = 0;
         work->wave_x_phase = 0;
         work->wave_y_amplitude_phase = 0;
         work->wave_y_phase = 0;
-        record->phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
     case EFFECT_PHASE_UPDATE:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         texture_width = geometry->texture_width / 2;
         texture_height = geometry->texture_height / 2;
         row = geometry->curve_indices[0] >> 28;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[work->frame];
+            column = g_battle_effect_animation_curves[row].factor[work->frame];
         } else {
             column = 0;
         }
@@ -113,12 +115,11 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
         row = (geometry->curve_indices[0] >> 8) & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[work->frame];
+            column = g_battle_effect_animation_curves[row].factor[work->frame];
         } else {
             column = 0;
         }
-        angle = battle_effect_lerp_linear(
-            geometry->motion.textured_quad.scroll_angle_start, geometry->motion.textured_quad.scroll_angle_end, column);
+        angle = battle_effect_lerp_linear(geometry->scroll_angle_start, geometry->scroll_angle_end, column);
         work->scroll_u += (rcos(angle) * speed) >> 12;
         while (work->scroll_u >= texture_width << 12) {
             work->scroll_u -= texture_width << 12;
@@ -133,11 +134,11 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
         while (work->scroll_v < 0) {
             work->scroll_v += texture_height << 12;
         }
-        if (geometry->flags & 0x40) {
+        if (geometry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
             row = geometry->colour_curves & 0xfff;
-            red = g_effect_palette_table[row & 0xf].factor[work->frame];
-            green = g_effect_palette_table[(row >> 4) & 0xf].factor[work->frame];
-            blue = g_effect_palette_table[(row >> 8) & 0xf].factor[work->frame];
+            red = g_battle_effect_animation_curves[row & 0xf].factor[work->frame];
+            green = g_battle_effect_animation_curves[(row >> 4) & 0xf].factor[work->frame];
+            blue = g_battle_effect_animation_curves[(row >> 8) & 0xf].factor[work->frame];
         } else {
             blue = 0x80;
             green = 0x80;
@@ -149,7 +150,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
         row = geometry->curve_indices[1] & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[frame];
+            column = g_battle_effect_animation_curves[row].factor[frame];
         } else {
             column = 0;
         }
@@ -190,7 +191,7 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
         row = (geometry->curve_indices[0] >> 4) & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[frame];
+            column = g_battle_effect_animation_curves[row].factor[frame];
         } else {
             column = 0;
         }
@@ -200,15 +201,14 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
         row = (geometry->curve_indices[0] >> 12) & 0xf;
         row -= 1;
         if (row != -1) {
-            column = g_effect_palette_table[row].factor[frame];
+            column = g_battle_effect_animation_curves[row].factor[frame];
         } else {
             column = 0;
         }
-        work->wave_x_phase += battle_effect_lerp_linear(geometry->motion.textured_quad.wave_phase_speed_start[0],
-            geometry->motion.textured_quad.wave_phase_speed_end[0], column);
-        work->wave_x_amplitude_phase
-            += battle_effect_lerp_linear(geometry->motion.textured_quad.wave_phase_speed_start[1],
-                geometry->motion.textured_quad.wave_phase_speed_end[1], column);
+        work->wave_x_phase += battle_effect_lerp_linear(
+            geometry->wave_phase_speed_start[0], geometry->wave_phase_speed_end[0], column);
+        work->wave_x_amplitude_phase += battle_effect_lerp_linear(
+            geometry->wave_phase_speed_start[1], geometry->wave_phase_speed_end[1], column);
 
         depth = geometry->ot_depth;
         brightness_row = geometry->brightness_row;
@@ -250,15 +250,15 @@ s32 effect_e035_update_wave_mesh_state(s16 record_index, s32 byte_offset, s32 ge
         work->buffer = 1 - work->buffer;
         break;
     case EFFECT_PHASE_DESTROY:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         if (work->destroy_latched == 0) {
             work->destroy_latched = 1;
         } else {
             if (work != 0) {
                 battle_heap_free_block(work);
-                record->work_slots[byte_offset] = 0;
+                record->work_slots[callback_slot] = 0;
             }
-            record->phase[byte_offset] = EFFECT_PHASE_IDLE;
+            record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
         }
         break;
     }

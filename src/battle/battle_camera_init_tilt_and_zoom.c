@@ -1,17 +1,21 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* volatile view: the target reloads this global at every use. */
-extern s32* volatile g_battle_script_variables;
-
+/* Steps the camera tilt script variable by 0x10 per frame to the nearer of the
+ * two resting pitches (0x12e below the midpoint 0x177, 0x1c0 from it up),
+ * yielding the thread each frame, then stores the matching tilt target
+ * (BATTLE_CAMERA_TILT_LOW or BATTLE_CAMERA_TILT_HIGH) and restores the zoomed-in scale
+ * (BATTLE_CAMERA_ZOOM_IN, zoom variable ONE).
+ *
+ * BATTLE twin of world_camera_init_tilt_and_zoom. The event interpreter runs it
+ * on the End instructions, as the last step before the event thread exits. */
 void battle_camera_init_tilt_and_zoom(void) {
     s32 current_tilt;
     s32 target_tilt;
     s32 tilt_step;
     s32 tilt_target_mode;
-    s32* tilt;
 
-    current_tilt = g_battle_script_variables[BATTLE_CAMERA_TILT_WORD_INDEX];
+    current_tilt = g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT];
     tilt_target_mode = 0;
     if (current_tilt < 0x12e) {
         tilt_step = 0x10;
@@ -31,21 +35,21 @@ void battle_camera_init_tilt_and_zoom(void) {
 
     if (tilt_step < 0) {
         while (target_tilt < current_tilt) {
-            g_battle_script_variables[BATTLE_CAMERA_TILT_WORD_INDEX] = current_tilt;
+            g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = current_tilt;
             battle_thread_yield();
             current_tilt += tilt_step;
         }
+        g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = target_tilt;
     } else {
         while (current_tilt < target_tilt) {
-            g_battle_script_variables[BATTLE_CAMERA_TILT_WORD_INDEX] = current_tilt;
+            g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = current_tilt;
             battle_thread_yield();
             current_tilt += tilt_step;
         }
+        g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_TILT] = target_tilt;
     }
 
-    tilt = &g_battle_script_variables[BATTLE_CAMERA_TILT_WORD_INDEX];
-    *tilt = target_tilt;
-    g_battle_map_tilt_target = tilt_target_mode + 1;
-    g_battle_map_zoom_target = 1;
-    g_battle_script_variables[BATTLE_CAMERA_ZOOM_WORD_INDEX] = ONE;
+    g_battle_camera_tilt_target = tilt_target_mode + 1;
+    g_battle_camera_zoom_target = BATTLE_CAMERA_ZOOM_IN;
+    g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_ZOOM] = ONE;
 }

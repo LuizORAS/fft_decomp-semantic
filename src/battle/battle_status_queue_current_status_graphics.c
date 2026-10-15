@@ -11,7 +11,7 @@ void battle_status_queue_current_status_graphics(s32 battle_id, s32 enabled) {
 
     stats = battle_unit_get_stats_from_battle_id(battle_id);
     g_battle_thread_call_target = (void (*)(void))battle_status_queue_misc_graphics_flag_change;
-    for (i = 0; i < 0x28; i++) {
+    for (i = 0; i < BATTLE_STATUS_COUNT; i++) {
         mask = 0x80 >> (i % 8);
         if ((stats->status_sets.current[i / 8] & mask) != 0) {
             battle_thread_call_on_main_stack(BATTLE_STATUS_HANDLER_INDEX(i), enabled, battle_id);

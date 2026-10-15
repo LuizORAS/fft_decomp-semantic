@@ -39,6 +39,11 @@ static __inline__ void cd_dispatch_callbacks(void) {
     }
     *g_psyq_cd_index_status_register = bank;
 }
+
+/* Wait until the sync state reports the command complete or a disk error, then reset it and copy the 8
+ * result bytes; mode 1 returns 0 at once when neither has come. While it waits it runs the CD callbacks when
+ * interrupts are masked (CheckCallback), and after 960 VBlanks or 0x3c0000 polls it prints the drive state,
+ * flushes the drive and returns -1. */
 s32 CD_sync(s32 mode, u8* result) {
     s32 event;
     cd_set_timeout(g_psyq_cd_sync_timeout_name);

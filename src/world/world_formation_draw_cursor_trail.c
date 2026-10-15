@@ -22,7 +22,7 @@ void world_formation_draw_cursor_trail(s16* cursor) {
     s32 previous_sum;
     u8* color;
     s16* trail_y;
-    world_cursor_trail_point_t* newest;
+    point16_t* newest;
 
     for (i = 0; i < 7; i++) {
         g_world_formation_cursor_trail[i].x = g_world_formation_cursor_trail[i + 1].x;
@@ -70,36 +70,36 @@ void world_formation_draw_cursor_trail(s16* cursor) {
             if (g_world_formation_cursor_trail[i].x != -1) {
                 g_world_formation_cursor_sprite.x = g_world_formation_cursor_shadow_sprite.x
                     = g_world_formation_cursor_trail[i].x;
-                g_world_formation_cursor_sprite.h = g_world_formation_cursor_sprite.v_h
-                    = g_world_formation_cursor_shadow_sprite.h = g_world_formation_cursor_shadow_sprite.v_h = 16;
+                g_world_formation_cursor_sprite.h = g_world_formation_cursor_sprite.vh
+                    = g_world_formation_cursor_shadow_sprite.h = g_world_formation_cursor_shadow_sprite.vh = 16;
                 g_world_formation_cursor_shadow_sprite.y = g_world_formation_cursor_trail[i].y;
                 g_world_formation_cursor_sprite.y = g_world_formation_cursor_trail[i].y - 1;
                 world_gfx_enqueue_oriented_textured_quad(
-                    (const world_oriented_quad_t*)&g_world_formation_cursor_shadow_sprite, (const u8*)color, 0, 1, 3);
+                    &g_world_formation_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_NONE, 1, 3);
                 world_gfx_enqueue_oriented_textured_quad(
-                    (const world_oriented_quad_t*)&g_world_formation_cursor_sprite, (const u8*)color, 0, 1, 4);
+                    &g_world_formation_cursor_sprite, color, TEXTURE_UV_FLIP_NONE, 1, 4);
                 g_world_formation_cursor_shadow_sprite.x += 31;
                 g_world_formation_cursor_sprite.x += 31;
                 world_gfx_enqueue_oriented_textured_quad(
-                    (const world_oriented_quad_t*)&g_world_formation_cursor_shadow_sprite, (const u8*)color, 1, 1, 3);
+                    &g_world_formation_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_X, 1, 3);
                 world_gfx_enqueue_oriented_textured_quad(
-                    (const world_oriented_quad_t*)&g_world_formation_cursor_sprite, (const u8*)color, 1, 1, 4);
+                    &g_world_formation_cursor_sprite, color, TEXTURE_UV_FLIP_X, 1, 4);
                 g_world_formation_cursor_sprite.x = g_world_formation_cursor_shadow_sprite.x
                     = g_world_formation_cursor_trail[i].x;
-                g_world_formation_cursor_sprite.h = g_world_formation_cursor_sprite.v_h
-                    = g_world_formation_cursor_shadow_sprite.h = g_world_formation_cursor_shadow_sprite.v_h = 15;
+                g_world_formation_cursor_sprite.h = g_world_formation_cursor_sprite.vh
+                    = g_world_formation_cursor_shadow_sprite.h = g_world_formation_cursor_shadow_sprite.vh = 15;
                 g_world_formation_cursor_shadow_sprite.y = g_world_formation_cursor_trail[i].y + 16;
                 g_world_formation_cursor_sprite.y = g_world_formation_cursor_trail[i].y + 15;
                 world_gfx_enqueue_oriented_textured_quad(
-                    (const world_oriented_quad_t*)&g_world_formation_cursor_shadow_sprite, (const u8*)color, 2, 1, 3);
+                    &g_world_formation_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_Y, 1, 3);
                 world_gfx_enqueue_oriented_textured_quad(
-                    (const world_oriented_quad_t*)&g_world_formation_cursor_sprite, (const u8*)color, 2, 1, 4);
+                    &g_world_formation_cursor_sprite, color, TEXTURE_UV_FLIP_Y, 1, 4);
                 g_world_formation_cursor_shadow_sprite.x += 31;
                 g_world_formation_cursor_sprite.x += 31;
                 world_gfx_enqueue_oriented_textured_quad(
-                    (const world_oriented_quad_t*)&g_world_formation_cursor_shadow_sprite, (const u8*)color, 3, 1, 3);
+                    &g_world_formation_cursor_shadow_sprite, color, TEXTURE_UV_FLIP_XY, 1, 3);
                 world_gfx_enqueue_oriented_textured_quad(
-                    (const world_oriented_quad_t*)&g_world_formation_cursor_sprite, (const u8*)color, 3, 1, 4);
+                    &g_world_formation_cursor_sprite, color, TEXTURE_UV_FLIP_XY, 1, 4);
             }
         }
     }

@@ -1,29 +1,13 @@
 /* LIBGPU 800257c8-80025824. */
 #include "psx/libgpu.h"
 
+/* The draw-mode command word: texture page `tpage`, dithering `dtd` and drawing to the displayed area `dfe`,
+ * in the standard or extended GPU's bit layout. SetDrawMode, SetDrawEnv and world_formation_update_and_draw_unit_grid
+ * use it. */
 u32 get_mode(int dfe, int dtd, int tpage) {
-    u8* type = &g_psyq_gpu_graph_type;
-    u32 command;
-    register u32 flags __asm__("$2");     /* Reusing the argument register changes the original mask operations. */
-    __asm__("" : "=r"(type) : "0"(type)); /* The original materializes the environment address. */
-    if ((u32)(*type - 1) < 2) {
-        command = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MODE);
-        if (dtd) {
-            command |= 0x800;
-        }
-        flags = tpage & 0x27ff;
-        if (dfe) {
-            flags |= 0x1000;
-        }
-    } else {
-        command = PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MODE);
-        if (dtd) {
-            command |= 0x200;
-        }
-        flags = tpage & 0x9ff;
-        if (dfe) {
-            flags |= 0x400;
-        }
-    }
-    return command | flags;
+    extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* The driver reads the environment as volatile. */
+    if (g_psyq_gpu_environment.graph_type == 1 || g_psyq_gpu_environment.graph_type == 2)
+        return PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MODE) | (dtd ? 0x800 : 0) | (dfe ? 0x1000 : 0)
+            | (tpage & 0x27ff);
+    return PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MODE) | (dtd ? 0x200 : 0) | (dfe ? 0x400 : 0) | (tpage & 0x9ff);
 }

@@ -2,22 +2,13 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Twelve-byte base-geometry record per visible entry (only its address is
- * passed on). */
-typedef struct attack_editor_sprite_base {
-    u8 _unused_00[0xc];
-} attack_editor_sprite_base_t;
-
-extern attack_editor_sprite_base_t g_attack_panel_status_offsets[];
-
 /* Rebuild and submit the scaled sprite quads of every visible editor entry,
  * advancing each entry's fade/blink state by one frame.
  *
  * The y bias is read as `*g_attack_panel_status_y_offsets[entry]`: forming the row address first
  * makes the outer loop keep it as a spilled pointer induction variable
  * (0x30(sp), reloaded into $s4 per entry) as the target does; a plain
- * `g_attack_panel_status_y_offsets[entry][0]` folds the table into each load instead. The draw
- * point pointer is loop-invariant and is hoisted into $s6. */
+ * `g_attack_panel_status_y_offsets[entry][0]` folds the table into each load instead. */
 void attack_gfx_build_status_group_primitives(POLY_FT4* poly) {
     s32 entry;
     s32 cell;
@@ -26,10 +17,8 @@ void attack_gfx_build_status_group_primitives(POLY_FT4* poly) {
     s32 index;
     s32 sprite;
     s32 level;
-    s16* position_y;
 
     for (entry = 0; entry < g_attack_panel_status_group_count; entry++) {
-        position_y = &g_attack_gfx_draw_area_template.y;
         sprite = g_attack_panel_status_group_ids[entry];
         count = g_attack_panel_status_group_bounds[sprite + 1] - g_attack_panel_status_group_bounds[sprite];
         first = g_attack_panel_status_group_bounds[sprite];
@@ -51,12 +40,11 @@ void attack_gfx_build_status_group_primitives(POLY_FT4* poly) {
         for (cell = 0; cell < count; cell++) {
             battle_gfx_init_default_poly_ft4(poly);
             index = first + count - cell;
-            *position_y += *g_attack_panel_status_y_offsets[entry];
-            attack_gfx_set_scaled_poly_ft4_geometry(poly,
-                (attack_gfx_texture_page_position_t*)g_attack_editor_numeric_geometry,
-                (attack_gfx_point_t*)(position_y - 1), &g_attack_panel_status_uv_rects[index],
-                &g_attack_panel_status_scales[index], (POLY_FT4*)&g_attack_panel_status_offsets[entry]);
-            *position_y -= *g_attack_panel_status_y_offsets[entry];
+            g_attack_gfx_draw_area_template.y += *g_attack_panel_status_y_offsets[entry];
+            attack_gfx_set_scaled_poly_ft4_geometry(poly, g_attack_editor_numeric_geometry,
+                &g_attack_gfx_draw_area_template, &g_attack_panel_status_uv_rects[index],
+                &g_attack_panel_status_scales[index], &g_attack_panel_status_offsets[entry]);
+            g_attack_gfx_draw_area_template.y -= *g_attack_panel_status_y_offsets[entry];
             if (g_attack_panel_status_animation[entry] == 0x40) {
                 poly->r0 = 0x80;
                 poly->g0 = 0x80;

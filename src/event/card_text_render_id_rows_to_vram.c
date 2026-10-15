@@ -2,44 +2,31 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-void card_text_render_id_rows_to_vram(glyph_data, text_ids, destination, flags) void* glyph_data;
-const u16* text_ids;
-const RECT* destination;
-s32 flags;
-{
-    u8 image[0x800];
-    battle_menu_text_image_bounds_t bounds;
-    RECT upload_rect;
-    u16 row_text_ids[2];
-    u16 text_id;
-    s32 terminator;
-    void* saved_glyph_data;
+/* Render each text id of the -1 terminated `list` as one 16-pixel row in VRAM at `rect`. */
+void card_text_render_id_rows_to_vram(u8* text_table, s16* list, RECT* rect, s32 style) {
+    u8 buf[0x800];
+    battle_menu_text_image_bounds_t clear_rect;
+    RECT dest_rect;
+    s16 text[2];
 
-    bounds.x = 0;
-    bounds.y = 0;
-    bounds.row_stride = destination->w;
-    bounds.line_height = 0x10;
+    clear_rect.x = 0;
+    clear_rect.y = 0;
+    clear_rect.row_stride = rect->w;
+    clear_rect.line_height = 0x10;
 
-    upload_rect.x = destination->x;
-    upload_rect.y = destination->y;
-    upload_rect.w = destination->w;
-    upload_rect.h = 0x10;
+    dest_rect.x = rect->x;
+    dest_rect.y = rect->y;
+    dest_rect.w = rect->w;
+    dest_rect.h = 0x10;
 
-    text_id = *text_ids;
-    if ((s16)*text_ids == -1) {
-        return;
-    }
-    saved_glyph_data = glyph_data;
-    terminator = -1;
-    do {
-        row_text_ids[0] = text_id;
-        row_text_ids[1] = terminator;
-        memset(image, 0, sizeof(image));
+    while (*list != -1) {
+        text[0] = *list;
+        text[1] = -1;
+        memset(buf, 0, 0x800);
         card_text_render_encoded_ids_to_image(
-            image, &bounds, 0x0a, 0x64, saved_glyph_data, row_text_ids, 0x64, TEXT_FORMAT_EXPLICIT_ID, flags);
-        card_gfx_load_image_and_wait(&upload_rect, (u32*)image);
-        text_ids++;
-        upload_rect.y += 0x10;
-        text_id = *text_ids;
-    } while ((s16)*text_ids != terminator);
+            buf, &clear_rect, 0xa, 0x64, text_table, text, 0x64, TEXT_FORMAT_EXPLICIT_ID, style);
+        card_gfx_load_image_and_wait(&dest_rect, buf);
+        dest_rect.y += 0x10;
+        list++;
+    }
 }

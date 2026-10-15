@@ -1,0 +1,28 @@
+#include "fft/battle.h"
+#include "fft/wldcore.h"
+#include "fft/world.h"
+#include "psx/types.h"
+
+/* TeleportOut event instruction: play the teleport effect and sound on the
+ * unit, flash its palette to white and then to black over 60 frames each,
+ * and with `remove_unit` remove the unit from existence. */
+void world_script_teleport_out_event_instruction(s32 unit_id, s32 remove_unit) {
+    s32 misc_id;
+    s32 unit_index;
+
+    misc_id = world_script_get_misc_id(unit_id);
+    if (misc_id != EVENT_MISC_ID_NONE) {
+        g_world_sound_pending_sfx_id = MAIN_SFX_TELEPORT_OUT;
+        g_world_thread_call_target = battle_effect_set_secondary_teleport_by_misc_id;
+        world_thread_call_on_main_stack(misc_id);
+        unit_index = wldcore_unit_get_id_from_misc_id(misc_id);
+        world_unit_set_animation(misc_id, BATTLE_UNIT_ANIMATION_RAISE_HANDS);
+        battle_gfx_start_event_unit_fade_out(misc_id, 2, 0x1f, 0x1f, 0x1f);
+        world_thread_wait_frames(0x3c);
+        battle_gfx_start_event_unit_fade_out(misc_id, 2, -0x1f, -0x1f, -0x1f);
+        world_thread_wait_frames(0x3c);
+        if (remove_unit != 0) {
+            battle_unit_set_cannot_exist(unit_index);
+        }
+    }
+}

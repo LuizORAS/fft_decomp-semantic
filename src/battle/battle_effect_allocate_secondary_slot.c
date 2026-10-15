@@ -1,15 +1,15 @@
-/* Pop a slot from the free list and append it to the active list.
- *
- * The id is kept as an s32 byte load and a separate `slot = id & 0xff`
- * indexes the table: the target tests and indexes through the masked copy
- * ($v0) while storing and returning the raw id ($s0), which keeps the error
- * path's `move v0,s0` instead of a folded 0. Writing previous_slot_id before
- * the next_slot_id clear reproduces the target's early
- * g_battle_effect_active_slot_tail load.
- */
 #include "fft/battle.h"
 
-s32 battle_effect_allocate_secondary_slot(void) {
+/* Take a secondary effect record from the free chain and append it to the active
+ * chain, with its timer and slot ids cleared, and return its id. When no record
+ * is free it passes code 0x66 to the empty report hook and returns 0.
+ *
+ * The id is kept as an s32 byte load and a separate `slot = id & 0xff` indexes
+ * the table: the target tests and indexes through the masked copy ($v0) while
+ * storing and returning the raw id ($s0), which keeps the error path's `move
+ * v0,s0` instead of a folded 0. Writing previous_slot_id before the next_slot_id
+ * clear reproduces the target's early g_battle_effect_active_slot_tail load. */
+u8 battle_effect_allocate_secondary_slot(void) {
     s32 id;
     s32 slot;
     s32 i;
@@ -29,6 +29,6 @@ s32 battle_effect_allocate_secondary_slot(void) {
         }
         return id;
     }
-    main_noop_800449f8(1, 0x66);
+    main_system_report_error_2(1, 0x66);
     return id;
 }

@@ -1,6 +1,9 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Job level of the selected unit in the job list's `index`th job, also left
+ * in g_bunit_job_current_level; levels are packed two per byte (odd jobs in
+ * the low nibble). */
 s32 bunit_job_calculate_current_level(s32 index) {
     s32 generic_job;
     bunit_unit_data_t* unit;

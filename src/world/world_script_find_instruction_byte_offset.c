@@ -1,7 +1,9 @@
 #include "fft/world.h"
 
+/* Returns the byte offset of the next `instruction` opcode at or after
+ * `offset`, or 0 when EventEnd comes first. */
 s32 world_script_find_instruction_byte_offset(s32 offset, s32 instruction) {
-    const u8* event = g_world_event_script;
+    const u8* event = g_world_event_block;
 
     do {
         u8 opcode = event[offset];
@@ -12,6 +14,6 @@ s32 world_script_find_instruction_byte_offset(s32 offset, s32 instruction) {
         if (opcode == instruction) {
             return offset;
         }
-        offset += g_world_event_instruction_sizes[opcode] + 1;
+        offset += g_world_script_event_instruction_sizes[opcode] + 1;
     } while (1);
 }

@@ -3,17 +3,16 @@
 
 #include "psx/libapi.h"
 
+/* Undo SpuStart, once: clear the transfer and SPU interrupt callbacks, remove the DMA handler, then close
+ * and disable the DMA event, in a critical section. main_system_stop_display_and_audio_for_game_reset calls
+ * it. */
 void SpuQuit(void) {
-    void (*callback)(void);
     if (_spu_isCalled == 1) {
         _spu_isCalled = 0;
         EnterCriticalSection();
-        /* The barrier retains retail's zero argument setup before clearing state. */
-        callback = 0;
-        __asm__("" : "=r"(callback) : "0"(callback));
         _spu_transferCallback = 0;
         _spu_IRQCallback = 0;
-        _SpuDataCallback(callback);
+        _SpuDataCallback(0);
         CloseEvent(_spu_EVdma);
         DisableEvent(_spu_EVdma);
         ExitCriticalSection();

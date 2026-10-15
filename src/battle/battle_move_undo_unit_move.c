@@ -1,5 +1,9 @@
 #include "fft/battle.h"
 
+/* Undo a move cancelled at the move confirmation (battle_state_handle_move_confirm_menu_state; a
+ * teleport cannot be undone): release a mount the move climbed onto, return the unit to the square,
+ * facing and mount pairing it had before the move (battle_move_return_to_previous_map_square), bring
+ * back the rider of a mount, and pair a former rider with its mount again. */
 void battle_move_undo_unit_move(battle_unit_misc_data_t* unit) {
     battle_unit_misc_data_t* other;
 

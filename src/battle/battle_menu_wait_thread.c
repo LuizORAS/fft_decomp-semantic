@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Menu-opening thread 6: the Wait menu. */
+/* Thread of the Wait row: replace the entry's row actions (WAIT_YES_NO in the table) with -2 and
+ * confirm it at once, without a sound. */
 void battle_menu_wait_thread(void) {
     void* menu;
 

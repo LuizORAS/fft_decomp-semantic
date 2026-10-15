@@ -1,0 +1,95 @@
+#include "fft/battle.h"
+#include "psx/pad.h"
+#include "psx/types.h"
+
+/* View of the menu entry passed to the action handler: the
+ * action word at 0x24 is either a small negative code (-15..-1) or a pointer
+ * to one s16 action per option; 0x34 points at the halfword that receives
+ * the chosen option. Same stride as world_menu_entry_t. */
+typedef struct battle_menu_action_entry {
+    u8 _unused_00[0x24];
+    s16* actions; /* 0x24 */
+    u8 _unused_28[0xC];
+    s16* selection; /* 0x34 */
+    u8 _unused_38[4];
+} battle_menu_action_entry_t;
+
+/* On Circle, take the action of the menu row `selected_option` and store the row as the entry's
+ * result.
+ *
+ * An action in 0..0xff starts that menu entry's thread in the slot below the current one (bit 0x1000
+ * suppresses the confirm sound); 0x4d2 records the row as -1; a negative action -n closes n menu levels
+ * by setting the third parameter of the next n threads (thread 8 also saves the open menus'
+ * selections). Rows the tutorial disables (EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS) do nothing. */
+void battle_menu_handle_entry_confirm(void* menu, s32 selected_option) {
+    battle_menu_action_entry_t* entry;
+    s16* actions;
+    s32 action;
+    s32 silent;
+    s32 i;
+    s32 j;
+    s32 thread_id;
+
+    entry = menu;
+    if (g_battle_menu_input_mode == MENU_INPUT_TUTORIAL
+        && ((battle_script_get_variable(EVENT_SCRIPT_VAR_DISABLED_MENU_ACTIONS) >> selected_option) & 1)) {
+        return;
+    }
+    silent = 0;
+    if (!(g_battle_script_event_input & PSX_PAD_CIRCLE) || battle_menu_is_input_allowed() == 0) {
+        return;
+    }
+    if (g_battle_thread_contexts[g_battle_thread_current_id].task_words[1] == 0) {
+        g_battle_thread_contexts[g_battle_thread_current_id].task_words[1] = 2;
+        g_battle_thread_contexts[g_battle_thread_current_id].task_words[0] = 0;
+    }
+    actions = entry->actions;
+    if ((s32)actions >= -15 && (s32)actions <= -1) {
+        action = (s32)actions;
+    } else {
+        action = actions[selected_option];
+    }
+    if (action >= 0) {
+        if (action & BATTLE_MENU_ROW_ACTION_SILENT) {
+            silent = 1;
+            /* Zero-instruction use: raises silent's allocation priority so it
+               takes $s6 and selected_option keeps $s7, as in the target. */
+            __asm__("" : : "r"(silent), "r"(silent));
+            action -= BATTLE_MENU_ROW_ACTION_SILENT;
+        }
+    }
+    if (action >= 0) {
+        if (action < 0x100) {
+            battle_thread_start(g_battle_thread_current_id - 1, g_battle_menu_thread_menu_data[action].thread_entry);
+            battle_thread_set_parameters(
+                g_battle_thread_current_id - 1, (s32)&g_battle_menu_thread_menu_data[action], 0, 0);
+        } else if (action == 0x4D2) {
+            selected_option = -1;
+        }
+    } else {
+        action = -action;
+        for (i = 0; i < 16; i++) {
+            if (g_battle_thread_contexts[i].task_id == NATIVE_THREAD_TASK_RESUME) {
+                g_battle_thread_contexts[i].task_id = NATIVE_THREAD_TASK_STOP_REQUEST;
+            }
+        }
+        for (i = 0; i < action; i++) {
+            thread_id = i + g_battle_thread_current_id;
+            g_battle_thread_contexts[thread_id].function_parameter_3 = 1;
+            if (thread_id == 8) {
+                for (j = 0; j < action; j++) {
+                    if (battle_thread_is_running_asm(8 - j) != 0) {
+                        g_battle_menu_pending_selection[j]
+                            = ((world_menu_entry_t*)g_battle_thread_contexts[8 - j].function_parameter_1)
+                                  ->selected_index;
+                    }
+                }
+            }
+        }
+    }
+    g_battle_script_event_input = 0;
+    *entry->selection = selected_option;
+    if (g_battle_sound_suppressed == 0 && silent == 0) {
+        battle_sound_set_effect_to_confirm();
+    }
+}

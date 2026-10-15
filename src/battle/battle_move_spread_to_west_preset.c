@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Set the spread direction to -x, with the slope shifts of the exit and entry sides. */
 void battle_move_spread_to_west_preset(void) {
     battle_move_spread_state_t* spread = g_battle_move_scratch_pad_ptr;
     spread->x_step = -1;

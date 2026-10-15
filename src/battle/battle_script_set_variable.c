@@ -1,5 +1,9 @@
 #include "fft/battle.h"
 
+/* Store a value in a script variable, whichever of the word, flag and nibble
+ * ranges it belongs to, by running the ZeroVariable and AddImmediate commands on
+ * it. Script word 0 (the comparison result) is preserved around them, and war
+ * funds are capped at 99,999,999. */
 void battle_script_set_variable(s32 variable_id, s32 value) {
     s32 saved_current_variable = *g_battle_script_variables;
 

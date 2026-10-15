@@ -29,8 +29,8 @@ void battle_gfx_build_cursor_tile_glow(
     SetTransMatrix(&g_battle_camera_matrix);
     switch (shape) {
     case 0:
-        quad = (POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter();
-        quad_glow = (POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter();
+        quad = g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim();
+        quad_glow = g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim();
         ((P_TAG*)quad)->len = 9;
         quad->code = 0x2c;
         RotTrans(v0, &screen, &flag);
@@ -47,7 +47,7 @@ void battle_gfx_build_cursor_tile_glow(
         quad->y3 = screen.vy;
         quad->code |= 2;
         quad->tpage = 0x3f;
-        quad->clut = GetClut(palette * 16 + 16, 0x1e2);
+        quad->clut = GetClut(palette * 16 + 16, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
         quad->r0 = quad->g0 = quad->b0 = 0x80;
         quad->u2 = 0;
         quad->u0 = 0;
@@ -59,7 +59,7 @@ void battle_gfx_build_cursor_tile_glow(
         quad->v2 = 0xad;
         *quad_glow = *quad;
         quad_glow->tpage = 0x1f;
-        quad_glow->clut = GetClut(0x50, 0x1e2);
+        quad_glow->clut = GetClut(0x50, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
         quad_glow->u2 = 0xc;
         quad_glow->u0 = 0xc;
         quad_glow->u3 = 0xc;
@@ -74,10 +74,10 @@ void battle_gfx_build_cursor_tile_glow(
         }
         return;
     case 1:
-        tri_a = (POLY_FT3*)((POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter());
-        tri_b = (POLY_FT3*)((POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter());
-        tri_a_glow = (POLY_FT3*)((POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter());
-        tri_b_glow = (POLY_FT3*)((POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter());
+        tri_a = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
+        tri_b = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
+        tri_a_glow = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
+        tri_b_glow = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
         ((P_TAG*)tri_a)->len = 7;
         tri_a->code = 0x24;
         ((P_TAG*)tri_b)->len = 7;
@@ -97,7 +97,7 @@ void battle_gfx_build_cursor_tile_glow(
         tri_a->code |= 2;
         tri_b->code |= 2;
         tri_a->tpage = tri_b->tpage = 0x3f;
-        tri_a->clut = tri_b->clut = GetClut(palette * 16 + 16, 0x1e2);
+        tri_a->clut = tri_b->clut = GetClut(palette * 16 + 16, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
         tri_b->r0 = tri_b->g0 = tri_b->b0 = 0x80;
         tri_a->r0 = tri_a->g0 = tri_a->b0 = 0x80;
         tri_b->u2 = 0;
@@ -115,7 +115,7 @@ void battle_gfx_build_cursor_tile_glow(
         *tri_a_glow = *tri_a;
         *tri_b_glow = *tri_b;
         tri_a_glow->tpage = tri_b_glow->tpage = 0x1f;
-        tri_a_glow->clut = tri_b_glow->clut = GetClut(0x50, 0x1e2);
+        tri_a_glow->clut = tri_b_glow->clut = GetClut(0x50, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
         tri_b_glow->u2 = 0xc;
         tri_a_glow->u2 = 0xc;
         tri_a_glow->u0 = 0xc;
@@ -140,10 +140,10 @@ void battle_gfx_build_cursor_tile_glow(
         }
         break;
     case 2:
-        tri_a = (POLY_FT3*)((POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter());
-        tri_b = (POLY_FT3*)((POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter());
-        tri_a_glow = (POLY_FT3*)((POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter());
-        tri_b_glow = (POLY_FT3*)((POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter());
+        tri_a = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
+        tri_b = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
+        tri_a_glow = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
+        tri_b_glow = (POLY_FT3*)(g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim());
         ((P_TAG*)tri_a)->len = 7;
         tri_a->code = 0x24;
         ((P_TAG*)tri_b)->len = 7;
@@ -163,7 +163,7 @@ void battle_gfx_build_cursor_tile_glow(
         tri_a->code |= 2;
         tri_b->code |= 2;
         tri_a->tpage = tri_b->tpage = 0x3f;
-        tri_a->clut = tri_b->clut = GetClut(palette * 16 + 16, 0x1e2);
+        tri_a->clut = tri_b->clut = GetClut(palette * 16 + 16, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
         tri_b->r0 = tri_b->g0 = tri_b->b0 = 0x80;
         tri_a->r0 = tri_a->g0 = tri_a->b0 = 0x80;
         tri_b->u2 = 0;
@@ -181,7 +181,7 @@ void battle_gfx_build_cursor_tile_glow(
         *tri_a_glow = *tri_a;
         *tri_b_glow = *tri_b;
         tri_a_glow->tpage = tri_b_glow->tpage = 0x1f;
-        tri_a_glow->clut = tri_b_glow->clut = GetClut(0x50, 0x1e2);
+        tri_a_glow->clut = tri_b_glow->clut = GetClut(0x50, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
         tri_b_glow->u2 = 0xc;
         tri_a_glow->u2 = 0xc;
         tri_a_glow->u0 = 0xc;

@@ -1,10 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Apply a color modulation to a CLUT and store it into a map palette bank.
+/* Apply a color modulation to the colors at `source` and store them into a map CLUT row.
  *
- * Preset 1 rewrites all 256 colors of the section; otherwise only the 16
- * colors of row unit_misc_id are rewritten. Mode 5 halves each component
+ * Preset 1 rewrites all 256 colors of the row; otherwise only the 16
+ * colors of CLUT `clut_index` are rewritten. Mode 5 halves each component
  * before adding the bias, modes 6 and 7 add the bias to a weighted gray
  * ((2R + 3G + B) / 6 or / 12), and every other mode adds the bias directly.
  * Transparent (zero) colors are copied unchanged. Components are clamped to
@@ -12,7 +12,7 @@
  *
  * `case 4` shares the default body: the extra case node makes GCC's switch
  * tree test mode 5 first, as the target does. */
-void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id, s32 unit_misc_id, s32 preset, s16 red,
+void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 clut_row, s32 clut_index, s32 preset, s16 red,
     s16 green, s16 blue, s32 final_value) {
     s32 i;
     s32 index;
@@ -34,13 +34,13 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
             color = *source;
             if (*(const s16*)source != 0) {
                 switch (mode) {
-                case 5:
+                case MAP_COLOR_MODE_BASE_HALF:
                     red_part = color & 0x1f;
                     out_red = red + (red_part >> 1);
                     out_green = green + ((color & 0x3e0) >> 6);
                     out_blue = blue + ((color & 0x7c00) >> 11);
                     break;
-                case 6:
+                case MAP_COLOR_MODE_BASE_GREY:
                     gray_red = color & 0x1f;
                     gray_green = (color & 0x3e0) >> 5;
                     gray_blue = (color & 0x7c00) >> 10;
@@ -49,7 +49,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
                     out_green = green + gray;
                     out_blue = blue + gray;
                     break;
-                case 7:
+                case MAP_COLOR_MODE_BASE_GREY_HALF:
                     gray_red = color & 0x1f;
                     gray_green = (color & 0x3e0) >> 5;
                     gray_blue = (color & 0x7c00) >> 10;
@@ -58,7 +58,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
                     out_green = green + gray;
                     out_blue = blue + gray;
                     break;
-                case 4:
+                case MAP_COLOR_MODE_BASE:
                 default:
                     red_part = color & 0x1f;
                     out_red = red + red_part;
@@ -90,21 +90,21 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
             if (out_blue <= 0) {
                 out_blue = 0;
             }
-            if ((s16)(out_red | out_green | out_blue) == 0 && (color & 0x7fff)) {
+            if ((out_red | out_green | out_blue) == 0 && (color & 0x7fff)) {
                 out_blue = 1;
             }
             if (final_value != 0) {
-                g_battle_map_palette_modified_colors[section_id][i]
+                g_battle_map_palette_modified_colors[clut_row][i]
                     = out_red + (out_green << 5) + (out_blue << 10) + (alpha << 15);
-                if (g_battle_map_palette_state.banks[section_id].animations[i / 16].active == 0) {
-                    component = &g_battle_map_palette_state.banks[section_id].components[i];
+                if (g_battle_map_palette_state.clut_rows[clut_row].animations[i / 16].active == 0) {
+                    component = &g_battle_map_palette_state.clut_rows[clut_row].components[i];
                     component->red_5bit = out_red;
                     component->green_5bit = out_green;
                     component->blue_5bit = out_blue;
                     component->alpha_bit = alpha;
                 }
             }
-            g_battle_map_palette_state.banks[section_id].packed_colors[i]
+            g_battle_map_palette_state.clut_rows[clut_row].packed_colors[i]
                 = out_red + (out_green << 5) + (out_blue << 10) + (alpha << 15);
             i++;
             source++;
@@ -115,13 +115,13 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
             color = *source;
             if (*(const s16*)source != 0) {
                 switch (mode) {
-                case 5:
+                case MAP_COLOR_MODE_BASE_HALF:
                     red_part = color & 0x1f;
                     out_red = red + (red_part >> 1);
                     out_green = green + ((color & 0x3e0) >> 6);
                     out_blue = blue + ((color & 0x7c00) >> 11);
                     break;
-                case 6:
+                case MAP_COLOR_MODE_BASE_GREY:
                     gray_red = color & 0x1f;
                     gray_green = (color & 0x3e0) >> 5;
                     gray_blue = (color & 0x7c00) >> 10;
@@ -130,7 +130,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
                     out_green = green + gray;
                     out_blue = blue + gray;
                     break;
-                case 7:
+                case MAP_COLOR_MODE_BASE_GREY_HALF:
                     gray_red = color & 0x1f;
                     gray_green = (color & 0x3e0) >> 5;
                     gray_blue = (color & 0x7c00) >> 10;
@@ -139,7 +139,7 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
                     out_green = green + gray;
                     out_blue = blue + gray;
                     break;
-                case 4:
+                case MAP_COLOR_MODE_BASE:
                 default:
                     red_part = color & 0x1f;
                     out_red = red + red_part;
@@ -171,22 +171,22 @@ void battle_gfx_modify_vram_palette(s32 mode, const u16* source, s32 section_id,
             if (out_blue <= 0) {
                 out_blue = 0;
             }
-            if ((s16)(out_red | out_green | out_blue) == 0 && (color & 0x7fff)) {
+            if ((out_red | out_green | out_blue) == 0 && (color & 0x7fff)) {
                 out_blue = 1;
             }
             if (final_value != 0) {
-                index = unit_misc_id * 16 + i;
-                g_battle_map_palette_modified_colors[section_id][index]
+                index = clut_index * 16 + i;
+                g_battle_map_palette_modified_colors[clut_row][index]
                     = out_red + (out_green << 5) + (out_blue << 10) + (alpha << 15);
-                if (g_battle_map_palette_state.banks[section_id].animations[unit_misc_id].active == 0) {
-                    component = &g_battle_map_palette_state.banks[section_id].components[index];
+                if (g_battle_map_palette_state.clut_rows[clut_row].animations[clut_index].active == 0) {
+                    component = &g_battle_map_palette_state.clut_rows[clut_row].components[index];
                     component->red_5bit = out_red;
                     component->green_5bit = out_green;
                     component->blue_5bit = out_blue;
                     component->alpha_bit = alpha;
                 }
             }
-            g_battle_map_palette_state.banks[section_id].packed_colors[unit_misc_id * 16 + i]
+            g_battle_map_palette_state.clut_rows[clut_row].packed_colors[clut_index * 16 + i]
                 = out_red + (out_green << 5) + (out_blue << 10) + (alpha << 15);
             i++;
             source++;

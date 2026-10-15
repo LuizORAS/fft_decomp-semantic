@@ -1,10 +1,11 @@
 #include "psx/card_abi_inline.h"
 #include "psx/libcard.h"
 
-/* main 0x80028a64–0x80028acc: restore three exception-handler instruction words. */
+/* Put back three words of the BIOS exception handler from a template, undoing _patch_card. StopCARD calls
+ * it. */
 void psyq_card_restore_exception_prefix(void) {
     /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
-    psyq_card_bios_c0_table_t* table;
+    psyq_bios_c0_table_t* table;
     u32* destination;
     register u32 word __asm__("$3");
     register u32* source __asm__("$10");
@@ -15,14 +16,12 @@ void psyq_card_restore_exception_prefix(void) {
     PSYQ_CPU_ADDRESS_HIGH(source, g_psyq_card_restore_template);
     PSYQ_CPU_ADDRESS_HIGH(end, g_psyq_card_restore_template_end);
     destination = table->exception_handler;
-    __asm__ volatile("" : : "r"(destination));
     PSYQ_CPU_ADDRESS_LOW(source, g_psyq_card_restore_template);
     PSYQ_CPU_ADDRESS_LOW(end, g_psyq_card_restore_template_end);
     do {
         word = *source++;
         destination++;
-        __asm__("" : "=r"(destination) : "0"(destination)); /* Preserve increment before the prior-word store. */
-        destination[PSYQ_CARD_EXCEPTION_RESTORE_WORD - 1] = word;
+        destination[PSYQ_CARD_EXCEPTION_ADDRESS_HIGH_WORD - 1] = word;
     } while (source != end);
     PSYQ_CPU_GLOBAL_CALL(FlushCache);
     PSYQ_CPU_GLOBAL_CALL(ExitCriticalSection);

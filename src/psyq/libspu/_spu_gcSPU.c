@@ -1,6 +1,9 @@
 /* SCUS_942.21 0x800197e0..0x80019adf. */
 #include "psx/libspu.h"
 
+/* Tidy the SPU RAM heap's records: merge each free block with a free block right after it, delete empty
+ * records, sort the records by address, move the tail record into the first deleted slot and fold trailing
+ * free blocks into the tail. SpuMalloc and SpuFree call it. */
 void _spu_gcSPU(void) {
     s32 index;
     s32 successor;

@@ -1,5 +1,6 @@
 #include "psx/types.h"
 
+/* Fill the 16-byte string buffer at the argument with 0xfe, the text terminator. */
 void require_text_clear_string_buffer(u8* data) {
     u8 value = 0xfe;
     s32 index;

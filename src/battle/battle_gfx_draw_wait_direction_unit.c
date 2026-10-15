@@ -19,7 +19,7 @@ void battle_gfx_draw_wait_direction_unit(void) {
     unit = battle_unit_get_source_misc_data();
     main_util_set_svector(&base, unit->screen.vx, unit->screen.vy, unit->screen.vz);
     RotTrans(&base, &transformed, &flag);
-    battle_camera_convert_screen_coords_modify_by_1(&unit->screen.vx, (s16*)&raised);
+    battle_camera_get_tile_sort_point_unbiased(&unit->screen.vx, (s16*)&raised);
     raised.vy -= 48;
     RotTrans(&raised, &transformed, &flag);
     depth = transformed.vz / 4;

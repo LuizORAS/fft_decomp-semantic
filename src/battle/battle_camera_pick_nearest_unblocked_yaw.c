@@ -1,6 +1,17 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Returns the yaw a Focus instruction gives the camera for a pair of units.
+ *
+ * The flat-pitch camera-block masks of the two units' tiles are combined; each of
+ * the four low bits rules out one entry of g_battle_camera_diagonal_yaws. Of the
+ * remaining yaws the one with the smallest angular distance from the current yaw
+ * (taken modulo a full turn of 0x1000) wins, and the result is the yaw script
+ * variable moved by that distance in the shorter direction, so the variable is
+ * not wrapped.
+ *
+ * With all four directions blocked no candidate replaces the initial distance
+ * 0x8000, and the result is the yaw variable plus 0x8000 truncated to s16. */
 s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
     s32 yaw;
     s32 mask;
@@ -16,21 +27,22 @@ s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
 
     yaw = battle_camera_wrap_yaw_angle() & 0xFFF;
     battle_unit_copy_map_coords_from_misc_id(misc_id_a, g_battle_scratch_coords);
-    mask = battle_map_get_tile_data_value(
-               0xB, g_battle_scratch_coords[0], g_battle_scratch_coords[2], g_battle_scratch_coords[1])
-        & 0xFF;
+    /* The raw result is assigned before it is masked: combine then knows
+     * nothing about the mask's high bits and the loop test keeps its sll 16. */
+    mask = battle_map_get_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, g_battle_scratch_coords[0],
+        g_battle_scratch_coords[2], g_battle_scratch_coords[1]);
+    mask &= 0xFF;
     battle_unit_copy_map_coords_from_misc_id(misc_id_b, g_battle_scratch_coords);
     mask = (mask
-               | battle_map_get_tile_data_value(
-                   0xB, g_battle_scratch_coords[0], g_battle_scratch_coords[2], g_battle_scratch_coords[1]))
+               | battle_map_get_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, g_battle_scratch_coords[0],
+                   g_battle_scratch_coords[2], g_battle_scratch_coords[1]))
         & 0xF;
-    /* Launder: hides mask's known-zero bits so the (s16) test keeps its sll 16. */
-    __asm__("" : "=r"(mask) : "0"(mask));
     bit = 1;
     best = 0x8000;
     sign = 1;
     for (i = 0; i < 4; i++) {
         if ((s16)(bit & mask) == 0) {
+            /* Distance to this diagonal directly (delta) and the other way round (wrapped). */
             delta = g_battle_camera_diagonal_yaws[i] - yaw;
             raw = delta;
             if (delta > 0) {
@@ -69,5 +81,5 @@ s16 battle_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
         }
         bit <<= 1;
     }
-    return (u16)g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW] + sign * best;
+    return g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW] + sign * best;
 }

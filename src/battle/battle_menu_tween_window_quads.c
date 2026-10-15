@@ -12,7 +12,7 @@ void battle_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, REC
     RECT from2;
     u16* easing;
     s32 i;
-    s32 step;
+    u32 step;
     s32 fade;
     u16 x;
     u16 y;
@@ -36,7 +36,7 @@ void battle_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, REC
     do {
         step = *easing;
         for (i = 0; i < 3 - g_battle_event_speed; i++) {
-            fade = (ONE - (u32)step) >> 5;
+            fade = (ONE - step) >> 5;
             battle_thread_yield();
             if (table == 4) {
                 if (*easing != ONE) {

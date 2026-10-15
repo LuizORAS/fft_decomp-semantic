@@ -1,3 +1,4 @@
+/* E475.BIN is the effect of effect id 0x20b, one of the ids past the abilities. */
 #include "fft/effect.h"
 #include "psx/libgpu.h"
 
@@ -17,7 +18,7 @@
  * and quad depth): the target keeps each group in one register. The handler
  * returns no value, but the s32 return keeps $v0 live at the exit, which
  * leaves the phase dispatch's delay slots empty as in the target. */
-s32 effect_e475_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 geometry_index, s32 frame) {
+s32 effect_e475_update_summon_mesh_state(s16 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     SVECTOR vertex;
     SVECTOR unused_18[2]; /* frame padding the target reserves but never touches */
     VECTOR origin;
@@ -57,24 +58,24 @@ s32 effect_e475_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
     u32 shade_b;
     s32 n;
 
-    record = &g_effect_state_records[record_index];
-    entry = (effect_summon_mesh_geometry_view_t*)&g_effect_geometry_table->entries[geometry_index];
+    record = &g_battle_effect_state_records[record_index];
+    entry = &g_battle_effect_geometry_table->entries[emitter_index].summon_mesh;
     placement = entry->placement_flags;
     ot = main_gfx_get_otag();
 
-    switch (record->phase[byte_offset]) {
+    switch (record->callback_phase[callback_slot]) {
     case EFFECT_PHASE_IDLE:
         break;
 
     case EFFECT_PHASE_INIT:
-        if (record->work_slots[byte_offset] != 0) {
-            battle_heap_free_block(record->work_slots[byte_offset]);
+        if (record->work_slots[callback_slot] != 0) {
+            battle_heap_free_block(record->work_slots[callback_slot]);
         }
         work = battle_heap_alloc_block(sizeof(effect_summon_mesh_work_t), record_index);
-        record->work_slots[byte_offset] = work;
+        record->work_slots[callback_slot] = work;
         texture_page_flags = entry->texture_page_flags;
-        tpage = ((texture_page_flags & 3) << 5) | 0x86;
-        abe = texture_page_flags & 4;
+        tpage = ((texture_page_flags & EFFECT_TEXTURE_PAGE_ABR_MASK) << 5) | 0x86;
+        abe = texture_page_flags & EFFECT_TEXTURE_PAGE_FLAG_CLEAR_ABE;
         translucent = abe == 0;
         for (i = 0; i < 2; i++) {
             for (j = 0; j < 128; j++) {
@@ -86,7 +87,7 @@ s32 effect_e475_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
                     quad->code &= ~2;
                 }
                 quad->tpage = tpage;
-                quad->clut = 0x7B00;
+                quad->clut = MAP_CLUT(MAP_CLUT_ROW_EFFECT, 0);
             }
         }
         work->spin = 0;
@@ -95,12 +96,12 @@ s32 effect_e475_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
         work->radius_offset = 0;
         work->radius_speed = 0;
         work->destroy_delay = 0;
-        record->phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_UPDATE;
         break;
 
     case EFFECT_PHASE_UPDATE:
-        target_index = g_effect_state_records[record_index].target_index;
-        work = record->work_slots[byte_offset];
+        target_index = g_battle_effect_state_records[record_index].target_index;
+        work = record->work_slots[callback_slot];
         READ_CURVE(i, j, entry->scroll_curves & 0xF, frame);
         origin.vx = battle_effect_lerp_linear(entry->origin_start[0], entry->origin_end[0], i);
         origin.vy = battle_effect_lerp_linear(entry->origin_start[1], entry->origin_end[1], i);
@@ -118,8 +119,8 @@ s32 effect_e475_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
             break;
         case EFFECT_EMITTER_ORIGIN_CASTER:
             battle_effect_resolve_target_render_coords(
-                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST, -1,
-                &g_battle_effect_coord_data, &vertex);
+                g_battle_effect_flags_section->flags & EFFECT_FLAG_TERRAIN_HEIGHT_ADJUST,
+                BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_coord_data, &vertex);
             origin.vx += vertex.vx;
             origin.vy += vertex.vy;
             origin.vz += vertex.vz;
@@ -148,10 +149,10 @@ s32 effect_e475_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
         u_span = entry->u_span;
         v_span = entry->v_span;
         work->v_scroll += entry->v_scroll_speed;
-        if ((s16)work->v_scroll > (v_span << 8)) {
+        if (work->v_scroll > (v_span << 8)) {
             work->v_scroll -= v_span << 8;
         }
-        if ((s16)work->v_scroll < 0) {
+        if (work->v_scroll < 0) {
             work->v_scroll += v_span << 8;
         }
 
@@ -275,7 +276,7 @@ s32 effect_e475_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
             quad->y1 = other->y0;
         }
 
-        i = (s16)work->v_scroll >> 8;
+        i = work->v_scroll >> 8;
         for (j = 0; j < 128; j++) {
             quad = &work->quads[work->buffer][j];
             quad->u0 = quad->u2 = u;
@@ -285,11 +286,11 @@ s32 effect_e475_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
         }
 
         n = entry->brightness_row;
-        if (entry->flags & EFFECT_GEOMETRY_FLAG_COLOUR_CURVES) {
-            red = g_effect_palette_table[entry->colour_curves & 0xF].factor[frame];
+        if (entry->flags & EFFECT_EMITTER_FLAG_COLOUR_CURVES) {
+            red = g_battle_effect_animation_curves[entry->colour_curves & 0xF].factor[frame];
             k = entry->colour_curves & 0xFFF;
-            green = g_effect_palette_table[(k >> 4) & 0xF].factor[frame];
-            blue = g_effect_palette_table[(u32)k >> 8].factor[frame];
+            green = g_battle_effect_animation_curves[(k >> 4) & 0xF].factor[frame];
+            blue = g_battle_effect_animation_curves[(k >> 8) & 0xF].factor[frame];
         } else {
             red = green = blue = 0x80;
         }
@@ -331,12 +332,12 @@ s32 effect_e475_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
         for (i = 0; i < 8; i++) {
             for (j = 0; j < 15; j++) {
                 n = (depth[i][j] + depth[i][j + 1] + depth[i + 1][j] + depth[i + 1][j + 1]) / 16;
-                if ((u32)n < EFFECT_OT_DEPTH_LIMIT) {
+                if (n >= 0 && n < EFFECT_OT_DEPTH_LIMIT) {
                     addPrim(&ot[n], &work->quads[work->buffer][i * 16 + j]);
                 }
             }
             n = (depth[i][0] + depth[i][15] + depth[i + 1][0] + depth[i + 1][15]) / 16;
-            if ((u32)n < EFFECT_OT_DEPTH_LIMIT) {
+            if (n >= 0 && n < EFFECT_OT_DEPTH_LIMIT) {
                 addPrim(&ot[n], &work->quads[work->buffer][i * 16 + 15]);
             }
         }
@@ -344,16 +345,16 @@ s32 effect_e475_update_summon_mesh_state(s16 record_index, s32 byte_offset, s32 
         break;
 
     case EFFECT_PHASE_DESTROY:
-        work = record->work_slots[byte_offset];
+        work = record->work_slots[callback_slot];
         if (work->destroy_delay == 0) {
             work->destroy_delay = 1;
             break;
         }
         if (work != 0) {
             battle_heap_free_block(work);
-            record->work_slots[byte_offset] = 0;
+            record->work_slots[callback_slot] = 0;
         }
-        record->phase[byte_offset] = EFFECT_PHASE_IDLE;
+        record->callback_phase[callback_slot] = EFFECT_PHASE_IDLE;
         break;
     }
 }

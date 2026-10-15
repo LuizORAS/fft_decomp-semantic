@@ -3,15 +3,13 @@
 #include "psx/types.h"
 
 enum {
-    BATTLE_EFFECT_RING_GROUP = 14,
-    BATTLE_EFFECT_RING_ANIMATION = 0x7acc,
+    BATTLE_EFFECT_RING_CLUT = MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 12),
     BATTLE_EFFECT_RING_SLOT_COUNT = 30,
 };
 
 /* Secondary effect 0x16 (summon charge): three rings of ten effect slots
  * spinning around the target.
  *
- * Listed as "Smn chrg" in the secondary handler table at 0x801b8900.
  * Initialisation allocates the 30
  * slots and plays sound 0x21; the executing phase grows the radius, spin and
  * brightness with the timer, the finalizing phase widens the rings and fades
@@ -34,13 +32,14 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
     effect = g_battle_effect_current_secondary;
     state = &g_battle_effect_secondary_state.summon_ring;
     /* Preserve the target's unsigned phase-dispatch comparison. */
-    switch ((u32)effect->phase) {
+    switch (effect->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING:
         state->index = 0;
         state->radius = 0;
         state->angle_step = 0;
         state->angle = 0;
-        battle_effect_resolve_target_render_coords(0, -1, &g_battle_effect_coord_data, &state->center);
+        battle_effect_resolve_target_render_coords(
+            0, BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_coord_data, &state->center);
         state->brightness = 0;
         state->center.vy -= 0x18;
         for (i = 0; i < 3; i++) {
@@ -53,15 +52,15 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
             if (j != 0) {
                 slot = &g_battle_effect_slots[j];
                 slot->life = battle_effect_spawn_particle_motion(
-                    (battle_effect_emitter_values_t*)((u8*)&g_battle_effect_groups[BATTLE_EFFECT_RING_GROUP] - 2),
-                    &slot->motion);
-                battle_effect_init_trap_animation(BATTLE_EFFECT_RING_GROUP, BATTLE_EFFECT_RING_ANIMATION, slot);
+                    &g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_SUMMON_CHARGE], &slot->motion);
+                battle_effect_init_slot_animation(
+                    BATTLE_EFFECT_PARTICLE_GROUP_SUMMON_CHARGE, BATTLE_EFFECT_RING_CLUT, slot);
             }
         }
         g_battle_effect_current_secondary->timer = 0;
         g_battle_effect_current_secondary->finish_timer = 0;
         g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
-        SuzukiPlaySoundFindChannel(0x21);
+        SuzukiPlaySoundFindChannel(MAIN_SFX_SUMMON_CHARGE);
         result = 1;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
@@ -137,7 +136,7 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
                     g_battle_effect_current_secondary->slot_ids[i] = 0;
                 }
             }
-            main_sound_stop_sfx_channels(0x21);
+            main_sound_stop_sfx_channels(MAIN_SFX_SUMMON_CHARGE);
             result = 0;
         } else {
             result = 1;

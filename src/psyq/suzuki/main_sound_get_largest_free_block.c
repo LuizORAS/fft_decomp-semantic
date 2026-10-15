@@ -7,13 +7,13 @@ s32 main_sound_get_largest_free_block(void) {
     s32 largest = 0;
     s32 gap;
     while (block->next != 0) {
-        gap = (s32)((u8*)block->next - block->end) & ~15;
+        gap = ((u8*)block->next - block->end) & ~15;
         if (gap > largest) {
             largest = gap;
         }
         block = block->next;
     }
-    gap = (s32)(g_main_sound_heap_end - block->end) & ~15;
+    gap = (g_main_sound_heap_end - block->end) & ~15;
     if (gap > largest) {
         largest = gap;
     }

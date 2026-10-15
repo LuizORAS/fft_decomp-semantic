@@ -1,13 +1,10 @@
 #include "fft/wldcore.h"
 
-/* Pushes a list menu level (type 0x1C).
- *
- * Appends the main, upper, lower and side windows, draws one text row per
- * list entry (text entries[i] + 0xb83f) into a new render record, draws script
- * variables 0x61 and 0x62 (each clamped to 9999) into a second record with
- * text 0xb846, selects the play-time display, clamps the saved cursor row in
- * g_wldcore_brave_story_saved_cursor to the entry count and positions the windows relative to the list
- * record before committing the level at depth + 1.
+/* Push the Brave Story menu (level BRAVE_STORY): the main, upper, lower and side windows, one text row
+ * per section (text 0xb83f + row: Fact, Record, Person, Job, Unexplored Land, Treasure, Return; the
+ * rows are wldcore_menu_build_brave_story_entries's), the injured and casualty counts (script variables
+ * 0x61 and 0x62, clamped to 9999, text 0xb846) and the play time. The saved cursor row
+ * (g_wldcore_brave_story_saved_cursor) is clamped to the row count.
  *
  * The unused 48-byte local reproduces the target's frame size. */
 void wldcore_menu_push_brave_story_level(void) {
@@ -20,12 +17,12 @@ void wldcore_menu_push_brave_story_level(void) {
     s32 temp;
     u8 unused[0x30];
 
-    g_main_system_flags = g_main_system_flags & ~0x800;
+    g_main_system_flags = g_main_system_flags & ~MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE;
 
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.main_window = index;
-    g_wldcore_window_records[index].sequence = 2;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
     g_wldcore_window_records[index].priority = 0xA;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -33,7 +30,7 @@ void wldcore_menu_push_brave_story_level(void) {
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.upper_window = index;
-    g_wldcore_window_records[index].sequence = 0x79;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_BRAVE_STORY_MARKER;
     g_wldcore_window_records[index].priority = 0xA;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -41,7 +38,7 @@ void wldcore_menu_push_brave_story_level(void) {
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.lower_window = index;
-    g_wldcore_window_records[index].sequence = 0x79;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_BRAVE_STORY_MARKER;
     g_wldcore_window_records[index].priority = 0xA;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -49,7 +46,7 @@ void wldcore_menu_push_brave_story_level(void) {
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.side_window = index;
-    g_wldcore_window_records[index].sequence = 4;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_LIST_SIDE_LABEL;
     g_wldcore_window_records[index].priority = 0xA;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -65,12 +62,11 @@ void wldcore_menu_push_brave_story_level(void) {
     bounds.dimensions.x = 0x5C;
     bounds.dimensions.y
         = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count * 0x10 + 0x10;
-    wldcore_window_build_render_record_image(
-        index, bounds.position, bounds.dimensions, 0, g_wldcore_window_image_buffer);
+    wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
-    g_wldcore_window_render_records[index].flags |= 0x100;
+    g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
     {
-        wldcore_point32_t* base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+        wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = -0x78;
         base->y = -0x28;
     }
@@ -79,8 +75,9 @@ void wldcore_menu_push_brave_story_level(void) {
     point.y = 8;
     for (; i < g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count; i++) {
         wldcore_menu_display_text_entry(index,
-            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[i] + 0xB83F, point,
-            g_wldcore_window_image_buffer);
+            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[i]
+                + WLDCORE_TEXT_ID_BRAVE_STORY_ROW_FIRST,
+            point, g_wldcore_window_image_buffer);
         point.y += 0x10;
     }
     wldcore_window_load_image_record_to_vram(index, g_wldcore_window_image_buffer);
@@ -103,15 +100,15 @@ void wldcore_menu_push_brave_story_level(void) {
     bounds.dimensions.x = 0x5C;
     bounds.dimensions.y = 0x30;
     wldcore_window_init_render_record_image(
-        index, bounds.position, bounds.dimensions, 0, 0xB846, g_wldcore_window_image_buffer);
+        index, bounds, 0, WLDCORE_TEXT_ID_INJURED_CASUALTIES, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
     {
-        wldcore_point32_t* base = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
+        wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = 0x1C;
         base->y = -0x28;
     }
 
-    g_wldcore_context_value_display_mode = 2;
+    g_wldcore_context_value_display_mode = WLDCORE_VALUE_DISPLAY_PLAY_TIME;
     g_wldcore_displayed_numeric_value = g_main_system_play_time_hours;
     g_wldcore_displayed_numeric_value_secondary = g_main_system_play_time_minutes;
     g_wldcore_displayed_numeric_value_tertiary = g_main_system_play_time_seconds;
@@ -124,28 +121,29 @@ void wldcore_menu_push_brave_story_level(void) {
         g_wldcore_brave_story_saved_cursor[0] = 0;
     }
     g_wldcore_menu_stack_records_next[depth].list_window.selected_entry = g_wldcore_brave_story_saved_cursor[0];
-    g_wldcore_menu_stack_records_next[depth].list_window.mode = 0;
+    g_wldcore_menu_stack_records_next[depth].list_window.mode = WLDCORE_LIST_WINDOW_MODE_BROWSE;
     index = g_wldcore_menu_stack_records_next[depth].list_window.frame_render;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.main_window].x
-        = g_wldcore_window_render_records[index].base_x + 6;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.main_window].y
-        = g_wldcore_window_render_records[index].base_y - g_wldcore_brave_story_saved_cursor[0] * -0x10 + 0xE;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.side_window].x
-        = g_wldcore_window_render_records[index].base_x + 3;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.side_window].y
-        = g_wldcore_window_render_records[index].base_y - 2;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.upper_window].x
-        = g_wldcore_window_render_records[index].base_x + 0x4C;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.main_window].position.x
+        = g_wldcore_window_render_records[index].base.x + 6;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.main_window].position.y
+        = g_wldcore_window_render_records[index].base.y - g_wldcore_brave_story_saved_cursor[0] * -0x10 + 0xE;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.side_window].position.x
+        = g_wldcore_window_render_records[index].base.x + 3;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.side_window].position.y
+        = g_wldcore_window_render_records[index].base.y - 2;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.upper_window].position.x
+        = g_wldcore_window_render_records[index].base.x + 0x4C;
     {
-        s32 base_y = g_wldcore_window_render_records[index].base_y;
+        s32 base_y = g_wldcore_window_render_records[index].base.y;
 
-        temp = g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.upper_window].y + base_y;
-        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.upper_window].y = temp;
+        temp = g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.upper_window].position.y
+            + base_y;
+        g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.upper_window].position.y = temp;
     }
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.lower_window].x
-        = g_wldcore_window_render_records[index].base_x + 0x30;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.lower_window].position.x
+        = g_wldcore_window_render_records[index].base.x + 0x30;
     g_wldcore_menu_stack_depth = depth + 1;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.lower_window].y
-        += g_wldcore_window_render_records[index].base_y;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].list_window.lower_window].position.y
+        += g_wldcore_window_render_records[index].base.y;
     g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_BRAVE_STORY;
 }

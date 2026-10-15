@@ -1,13 +1,15 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Takes one POLY_FT4 from the pool, fills it as the rect->w x rect->h quad at
+ * (rect->x + 0x80, rect->y) with texture origin (u, v), and links it at the
+ * ordering-table entry g_equip_gfx_current_ot points to; the last argument
+ * is not read. With `color` the quad is shaded with it. */
 void equip_gfx_enqueue_textured_quad_current_ot(
-    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut) {
+    const RECT* rect, s32 u, s32 v, const u8* color, s32 semitrans, u16 texture_page, u16 clut, s32 unused_priority) {
     POLY_FT4* poly;
-    u16 index = g_equip_gfx_poly_ft4_count;
 
-    g_equip_gfx_poly_ft4_count = index + 1;
-    poly = &g_equip_gfx_context->textured_quads[index];
+    poly = &g_equip_gfx_context->textured_quads[g_equip_gfx_poly_ft4_count++];
 
     if (color != 0) {
         SetShadeTex(poly, 0);
@@ -19,39 +21,13 @@ void equip_gfx_enqueue_textured_quad_current_ot(
     }
     SetSemiTrans(poly, semitrans);
 
-    poly->x0 = rect->x + 0x80;
-    poly->y0 = rect->y;
-    {
-        s32 right_offset = (u16)rect->w + 0x80;
-        s32 right_x = (u16)rect->x;
-        right_x += right_offset;
-        poly->x1 = right_x;
-    }
-    poly->y1 = rect->y;
-    poly->x2 = rect->x + 0x80;
-    poly->y2 = rect->y + rect->h;
-    {
-        s32 right_offset = (u16)rect->w + 0x80;
-        s32 right_x = (u16)rect->x;
-        right_x += right_offset;
-        poly->x3 = right_x;
-    }
-    poly->y3 = rect->y + rect->h;
-
-    poly->u0 = u;
-    poly->v0 = v;
-    poly->u1 = u + rect->w;
-    poly->v1 = v;
-    poly->u2 = u;
-    poly->v2 = v + rect->h;
-    poly->u3 = u + rect->w;
-    poly->v3 = v + rect->h;
+    setXYWH(poly, rect->x + 0x80, rect->y, rect->w, rect->h);
+    setUVWH(poly, u, v, rect->w, rect->h);
     poly->clut = clut;
     poly->tpage = texture_page;
 
     {
         u32* ot = g_equip_gfx_current_ot;
-        setaddr(poly, getaddr(ot));
-        setaddr(ot, poly);
+        addPrim(ot, poly);
     }
 }

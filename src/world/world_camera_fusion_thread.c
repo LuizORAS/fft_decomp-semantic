@@ -1,26 +1,22 @@
-/* Runs an event camera fusion: seeds one track per camera component from the
- * script's CAMERA instructions up to CAMERA_FUSION_END, then steps every track
- * each frame until track 3 finishes.
- *
- * Instruction-for-instruction twin of battle_camera_fusion_thread
- * (0x8013db9c); only the callee and global bindings differ. The seed loop
- * reads each track through a `track` pointer taken first in the body: that
- * makes loop.c discover the track giv before the script-variable and values
- * givs, which gives the target's induction-increment order. */
 #include "fft/world.h"
 #include "psx/types.h"
 
 /* One track per camera component; 7 * 0xa4 == 0x47c, the allocation size the
- * target passes to world_menu_alloc_ui_buffer. */
+ * target passes to world_menu_alloc_memory. */
 #define WORLD_CAMERA_FUSION_COMPONENT_COUNT 7
 
-/* Sentinel operand meaning "keep the component's current value". */
-#define WORLD_CAMERA_FUSION_HOLD 10000
-
+/* Run an event camera fusion: seed one track per camera component from the script's CAMERA instructions
+ * up to CAMERA_FUSION_END, then step every track each frame until track 3 finishes. Instruction-for-instruction
+ * twin of battle_camera_fusion_thread; only the callee and global bindings differ. Nothing starts WORLD's
+ * event interpreter, so it never runs (QUIRKS.md).
+ *
+ * The seed loop reads each track through a `track` pointer taken first in the body: that makes loop.c
+ * discover the track giv before the script-variable and values givs, which gives the target's
+ * induction-increment order. */
 void world_camera_fusion_thread(void) {
-    world_camera_track_t* tracks;
-    world_camera_track_t* track;
-    world_camera_key_t* key;
+    battle_camera_track_t* tracks;
+    battle_camera_track_t* track;
+    battle_camera_key_t* key;
     u8* script;
     u8* cursor;
     s32 values[WORLD_CAMERA_FUSION_COMPONENT_COUNT];
@@ -32,10 +28,10 @@ void world_camera_fusion_thread(void) {
     s32 opcode;
 
     world_thread_set_current_task_id(NATIVE_THREAD_TASK_CAMERA);
-    tracks = (world_camera_track_t*)world_menu_alloc_ui_buffer(
-        sizeof(world_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
-    script = (u8*)world_thread_get_current_parameter_1();
-    world_clear_menu_render_buffer((u8*)tracks, sizeof(world_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
+    tracks = (battle_camera_track_t*)world_menu_alloc_memory(
+        sizeof(battle_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
+    script = world_thread_get_current_parameter_1();
+    world_menu_clear_render_buffer((u8*)tracks, sizeof(battle_camera_track_t) * WORLD_CAMERA_FUSION_COMPONENT_COUNT);
 
     cursor = script;
     key_count = 0;
@@ -47,7 +43,7 @@ void world_camera_fusion_thread(void) {
         if (opcode == EVENT_OPCODE_CAMERA_FUSION_END) {
             break;
         }
-        cursor += g_world_event_instruction_sizes[opcode] + 1;
+        cursor += g_world_script_event_instruction_sizes[opcode] + 1;
     }
     key_count++;
 
@@ -70,14 +66,14 @@ void world_camera_fusion_thread(void) {
             for (;;) {
                 if (*cursor == EVENT_OPCODE_FOCUS) {
                     world_script_focus(cursor + 1);
-                } else if (*cursor == EVENT_OPCODE_UNKNOWN_73) {
+                } else if (*cursor == EVENT_OPCODE_RELATIVE_CAMERA) {
                     world_script_apply_relative_camera(cursor + 1, values);
                 } else if (*cursor == EVENT_OPCODE_FOCUS_SPEED) {
                     world_script_focus_speed(cursor + 1, values, values + 3);
                 } else if (*cursor == EVENT_OPCODE_CAMERA) {
                     for (i = 0; i < WORLD_CAMERA_FUSION_COMPONENT_COUNT; i++) {
                         value = world_script_load_halfword(cursor + i + i + 1);
-                        if (value == WORLD_CAMERA_FUSION_HOLD) {
+                        if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                             if (i < 3) {
                                 value = values[i] / 1024;
                             } else {
@@ -99,9 +95,9 @@ void world_camera_fusion_thread(void) {
                     }
                     break;
                 }
-                cursor += g_world_event_instruction_sizes[*cursor] + 1;
+                cursor += g_world_script_event_instruction_sizes[*cursor] + 1;
             }
-            cursor += g_world_event_instruction_sizes[*cursor] + 1;
+            cursor += g_world_script_event_instruction_sizes[*cursor] + 1;
         }
     }
 
@@ -109,7 +105,7 @@ void world_camera_fusion_thread(void) {
         track = tracks;
         for (key_index = 0; key_index < 3; key_index++, track++) {
             /* The target tests this flag with lhu; the s16 declaration gives lh. */
-            if (*(u16*)&g_world_camera_position_locked == 0) {
+            if (g_world_camera_position_locked == 0) {
                 g_world_script_variables[g_world_camera_script_variable_indices[key_index]]
                     = world_camera_step_track(track, key_index);
             }
@@ -121,7 +117,7 @@ void world_camera_fusion_thread(void) {
         if (tracks[3].finished == 1) {
             break;
         }
-        world_script_clear_current_event_word_bit_0();
+        world_camera_clear_zoom_variable_low_bit();
         world_thread_yield();
     }
 

@@ -1,6 +1,8 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Reset the save list's scroll and cursor state and fill the 0x1e80-byte
+ * save buffer with 0xff. */
 void card_save_init_menu_state(void) {
     g_card_save_list_scroll_base_y = 0x18;
     g_card_save_list_scroll_anim_offset = 0;

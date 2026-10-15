@@ -1,9 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/libgte.h"
 
-/* Places the player's map marker on EVENT_SCRIPT_VAR_LOCATION, queues it for
- * drawing, picks its animation from EVENT_SCRIPT_VAR_TOWN_BACKGROUND, then
- * centres the projection on it and refreshes the camera.
+/* Place the player's marker on the current location (EVENT_SCRIPT_VAR_LOCATION), queue it for
+ * drawing with its palette from EVENT_SCRIPT_VAR_TOWN_BACKGROUND (0, 2 or 3), then centre the camera
+ * on it and project the tiles and the marker.
  *
  * The map-dot position is copied as one SVECTOR, which reproduces the
  * target's unaligned lwl/lwr word copy. */
@@ -23,10 +23,11 @@ void wldcore_map_init_location_marker_and_camera(void) {
     position = &g_wldcore_map_dots[index].position;
     marker->position = *position;
     g_wldcore_map_projection_state.angle = 0;
-    g_wldcore_map_projection_state.flags = 3;
+    g_wldcore_map_projection_state.flags
+        = WLDCORE_PROJECTION_FLAG_UPDATE_POSITION | WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION;
     count = g_wldcore_window_render_object_count;
-    g_wldcore_window_render_object_queue[count++] = (u32*)&marker->flags;
-    marker->flags = 1;
+    g_wldcore_window_render_object_queue[count++] = &marker->flags;
+    marker->flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
     g_wldcore_map_projection_state.marker.priority = 0xE;
     g_wldcore_window_render_object_count = count;
     g_wldcore_map_projection_state.marker.anim_counter = 0;

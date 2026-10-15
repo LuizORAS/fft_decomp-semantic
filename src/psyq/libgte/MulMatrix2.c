@@ -1,7 +1,8 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001ce38–0x8001cf44: overwrite the right rotation, preserve translation. */
+/* Multiply `left`'s rotation by `right`'s into `right` (right = left x right), keeping `right`'s
+ * translation; the GTE's rotation matrix is used for the product. battle_map_draw_mesh_and_weather uses it. */
 void MulMatrix2(MATRIX* left, MATRIX* right) {
     MATRIX* left_operand = left;
     register MATRIX* right_operand __asm__("$5") = right;

@@ -1,7 +1,10 @@
 #include "fft/event_jobstts.h"
 
+/* Takes one POLY_FT4 from the pool, fills it as the rect->w x rect->h quad at
+ * (rect->x + 0x80, rect->y) with texture origin (u, v), and links it into
+ * ordering table entry ot_index. With `color` the quad is shaded with it. */
 void jobstts_gfx_enqueue_textured_quad(
-    urect16_t* rect, s32 u, s32 v, u8* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index) {
+    RECT* rect, s32 u, s32 v, u8* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index) {
     POLY_FT4* poly;
 
     poly = &g_jobstts_gfx_context->textured_quads[g_jobstts_gfx_poly_ft4_count++];
@@ -16,25 +19,11 @@ void jobstts_gfx_enqueue_textured_quad(
     }
     SetSemiTrans(poly, semitrans);
 
-    poly->x0 = rect->x + 0x80;
-    poly->y0 = rect->y;
-    poly->x1 = rect->x + (rect->w + 0x80);
-    poly->y1 = rect->y;
-    poly->x2 = rect->x + 0x80;
-    poly->y2 = rect->y + rect->h;
-    poly->x3 = rect->x + (rect->w + 0x80);
-    poly->y3 = rect->y + rect->h;
-    poly->u0 = u;
-    poly->v0 = v;
-    poly->u1 = u + rect->w;
-    poly->v1 = v;
-    poly->u2 = u;
-    poly->v2 = v + rect->h;
-    poly->u3 = u + rect->w;
-    poly->v3 = v + rect->h;
+    setXYWH(poly, rect->x + 0x80, rect->y, rect->w, rect->h);
+    setUVWH(poly, u, v, rect->w, rect->h);
     poly->clut = clut;
     poly->tpage = tpage;
 
-    ((P_TAG*)poly)->addr = g_jobstts_gfx_context->otag[ot_index];
-    ((P_TAG*)&g_jobstts_gfx_context->otag[ot_index])->addr = (u32)poly;
+    setaddr(poly, g_jobstts_gfx_context->otag[ot_index]);
+    catPrim(&g_jobstts_gfx_context->otag[ot_index], poly);
 }

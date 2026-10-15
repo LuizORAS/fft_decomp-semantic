@@ -3,18 +3,17 @@
 #include "psx/types.h"
 
 /*
- * Provisional: the layout record at 0x80153cd0 bound into menu entry 52. Its
+ * The layout record at 0x80153cd0 bound into menu entry 52. Its
  * head is exactly world_menu_text_layout_t; the halfword at +0x28 is the
- * scroll row this function sets and world_menu_draw_text_columns receives as
- * its `row_offset` argument. Proposed as a `s16 scroll_row;` field appended to
- * world_menu_text_layout_t in include/fft/menu.h (size assert 0x28 -> 0x2c).
+ * scroll row this function sets and world_screen_menu_draw_text_columns receives as
+ * its `row_offset` argument.
  */
 #define LAYOUT(entry) ((world_menu_scroll_text_layout_t*)(entry)->text_binding)
 
 /*
  * Build the AT (turn order) list previewing the ability the player is about to
  * confirm: stage the selected ability or item into the shared action record at
- * g_world_menu_preview_action, run battle_action_preview_at_list for the stored unit on the
+ * g_world_menu_selected_action, run battle_turn_preview_at_list for the stored unit on the
  * main stack to obtain the previewed turn position and the descriptor list,
  * then write the name text and the four halfword columns and size menu entry
  * 52 around them.
@@ -29,12 +28,13 @@
  *
  * Load-bearing constructs:
  *
- *   - The 0x80 flag test reads `slot->flags` through a volatile lvalue: the
- *     target reloads that byte after the turn value instead of reusing the
- *     earlier load.
+ *   - The staged-item test is written as `index == 0 && staged_item != 0`
+ *     with the biased turn value in the else arm: two jumps then reach that
+ *     arm, cse starts a new block there and the 0x80 flag test reloads
+ *     `slot->flags` as the target does.
  *   - `action` is a pointer local for the shared action record. The target
  *     keeps that address in s0, stores through it in the jal delay slot and
- *     passes `move a1,s0`; storing to g_world_menu_preview_action absolutely wastes the delay
+ *     passes `move a1,s0`; storing to g_world_menu_selected_action absolutely wastes the delay
  *     slot on a nop and rematerialises lui a1/addiu a1.
  *   - The turn-value store is written once after the if/else. The target's
  *     0xb012 arm is `j 0xed3f8` with `li v0,0xb012` in the delay slot, landing
@@ -64,33 +64,35 @@ void world_menu_build_ability_preview_at_list(void) {
     u16 text_id;
     const u16* at_table;
 
-    at_table = (const u16*)g_battle_ai_workspace_ptr;
-    work = (world_menu_at_list_work_t*)g_event_overlay_load_address;
-    g_world_menu_thread_menu_data[52].select_text_table = 0x13;
-    g_world_menu_thread_menu_data[52].text_binding = (struct world_menu_text_binding*)&g_world_menu_at_list_layout;
-    text_id = at_table[g_world_menu_thread_menu_data[3].selected_index];
-    g_world_menu_preview_action.targeting_type = 5;
-    entry = &g_world_menu_thread_menu_data[52];
+    at_table = g_battle_ai_workspace_ptr->ability_list.ids;
+    work = (world_menu_at_list_work_t*)g_main_heap_companion_overlay_load_address;
+    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST].select_text_table = 0x13;
+    g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST].text_binding
+        = (struct world_menu_text_binding*)&g_world_menu_at_list_layout;
+    text_id = at_table[g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_LIST].selected_index];
+    g_world_menu_selected_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
+    entry = &g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_AT_LIST];
     if ((text_id & 0xf800) == TEXT_ID_ABILITY_NAME_BASE) {
         staged_item = 0;
-        g_world_menu_preview_action.ability_id = text_id - TEXT_ID_ABILITY_NAME_BASE;
+        g_world_menu_selected_action.ability_id = text_id - TEXT_ID_ABILITY_NAME_BASE;
     } else {
         staged_item = 1;
-        g_world_menu_preview_action.item_id = (u8)text_id;
+        g_world_menu_selected_action.item_id = text_id;
     }
-    action = &g_world_menu_preview_action;
-    action->unit_id = (u8)g_world_unit_view_battle_id;
-    stats = world_unit_get_battle_stats_for_stored();
-    g_world_thread_call_target = (void (*)(void))battle_action_preview_at_list;
+    action = &g_world_menu_selected_action;
+    action->unit_id = g_world_active_turn_unit.battle_id;
+    stats = world_unit_get_active_turn_unit_stats();
+    g_world_thread_call_target = (void (*)(void))battle_turn_preview_at_list;
     turn = world_thread_call_on_main_stack(stats, action, &work->request);
     if (staged_item != 0) {
-        work->descriptors[0].flags |= 0x40;
-        work->descriptors[0].turn_value = g_world_menu_preview_action.item_id;
+        work->descriptors[0].flags |= WORLD_AT_ACTING_UNIT;
+        work->descriptors[0].turn_value = g_world_menu_selected_action.item_id;
     }
     count = 0;
     if (turn < 0 || turn == 0xff) {
-        g_world_menu_thread_menu_data[53].text_id = 0x1023;
-        world_thread_set_parameters(g_world_thread_current_id, (s32)&g_world_menu_thread_menu_data[53], 0, 0);
+        g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_MESSAGE].text_id = 0x1023;
+        world_thread_set_parameters(g_world_thread_current_id,
+            (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ABILITY_PREVIEW_MESSAGE], 0, 0);
         count = 0;
         world_menu_icon_linked_entry_thread();
     }
@@ -99,7 +101,7 @@ void world_menu_build_ability_preview_at_list(void) {
         work->secondary_colors[index] = 0;
     }
     published = work->text;
-    g_world_text_section_pointers[31] = published;
+    g_world_text_section_pointers[TEXT_SECTION_AT_LIST] = published;
     count = 0;
     bracketed = 0;
     /* The target publishes the buffer from a temporary and copies it into the
@@ -117,12 +119,12 @@ void world_menu_build_ability_preview_at_list(void) {
         world_at_descriptor_t* slot = &work->descriptors[index];
         s32 name_index;
 
-        if ((slot->flags & 0x1f) == 0x1f) {
+        if ((slot->flags & WORLD_AT_UNIT_ID_MASK) == WORLD_AT_END_OF_LIST) {
             break;
         }
         work->entry_numbers[index] = index + 1;
-        stats = battle_unit_get_stats_from_battle_id(slot->flags & 0x1f);
-        if ((slot->flags & 0x40) != 0) {
+        stats = battle_unit_get_stats_from_battle_id(slot->flags & WORLD_AT_UNIT_ID_MASK);
+        if ((slot->flags & WORLD_AT_ACTING_UNIT) != 0) {
             *text++ = 0xd9;
             *text++ = 0xbe;
         }
@@ -134,39 +136,39 @@ void world_menu_build_ability_preview_at_list(void) {
             }
             text++;
         }
-        if ((slot->flags & 0x40) != 0) {
+        if ((slot->flags & WORLD_AT_ACTING_UNIT) != 0) {
             *text++ = 0xd9;
             *text++ = 0xbf;
         }
         *text++ = 0xfe;
-        if ((slot->flags & 0x40) != 0) {
+        if ((slot->flags & WORLD_AT_ACTING_UNIT) != 0) {
             work->secondary_values[count] = index - 0x800;
         } else {
             work->primary_values[count] = index - 0x800;
         }
-        if ((slot->flags & 0x40) == 0) {
+        if ((slot->flags & WORLD_AT_ACTING_UNIT) == 0) {
             work->secondary_values[count] = TEXT_ID_ABILITY_NAME_BASE;
         } else {
             s32 value;
             s32 turn_bias;
 
             bracketed = 1;
-            if ((slot->flags & 0x20) != 0) {
+            if ((slot->flags & WORLD_AT_SHOW_WAIT_LABEL) != 0) {
                 value = 0xb012;
             } else {
                 turn_bias = slot->turn_value;
-                if (index != 0 || staged_item == 0) {
-                    if ((*(volatile u8*)&slot->flags & 0x80) != 0) {
+                if (index == 0 && staged_item != 0) {
+                    value = turn_bias + 0x3800;
+                } else {
+                    if ((slot->flags & WORLD_AT_TURN_VALUE_HIGH_BIT) != 0) {
                         turn_bias += 0x100;
                     }
                     value = turn_bias + TEXT_ID_ABILITY_NAME_BASE;
-                } else {
-                    value = turn_bias + 0x3800;
                 }
             }
             work->primary_values[count] = value;
         }
-        if ((stats->initial_team_flags & BATTLE_TEAM_MASK) != 0) {
+        if ((stats->initial_team_flags & BATTLE_TEAM_MASK) != BATTLE_TEAM_BLUE) {
             work->secondary_colors[count] = 8;
         }
         count++;
@@ -176,24 +178,24 @@ void world_menu_build_ability_preview_at_list(void) {
     }
     work->primary_colors[turn] = 4;
     work->secondary_colors[turn] = 4;
-    g_world_menu_at_list_layout.columns.mode[0] = 3;
-    g_world_menu_at_list_layout.columns.mode[1] = 0;
-    g_world_menu_at_list_layout.columns.mode[2] = 0;
+    g_world_menu_at_list_layout.columns.mode[0] = MENU_TEXT_COLUMN_NUMBER_GLYPHS;
+    g_world_menu_at_list_layout.columns.mode[1] = MENU_TEXT_COLUMN_TEXT;
+    g_world_menu_at_list_layout.columns.mode[2] = MENU_TEXT_COLUMN_TEXT;
     if (bracketed != 0) {
         LAYOUT(entry)->columns.row_count = 6;
         entry->window_x = 0x8c;
         entry->window_y = 0x30;
         entry->window_width = 0xe8;
-        entry->overall_width = 0xe8;
+        entry->text_image.width = 0xe8;
         entry->inner_width = 0xe8;
     } else {
         LAYOUT(entry)->columns.row_count = 6;
         entry->window_x = 0xbe;
         entry->window_y = 0x30;
         entry->window_width = 0x84;
-        entry->overall_width = 0x84;
+        entry->text_image.width = 0x84;
         entry->inner_width = 0x84;
-        g_world_menu_at_list_layout.columns.mode[2] = 2;
+        g_world_menu_at_list_layout.columns.mode[2] = MENU_TEXT_COLUMN_HIDDEN;
     }
     if (count < 6) {
         entry->window_y = (6 - count) * 8 + 0x20;

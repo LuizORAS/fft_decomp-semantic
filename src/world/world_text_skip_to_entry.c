@@ -1,6 +1,7 @@
 #include "psx/types.h"
 
-/* Advance to the requested entry in a packed text section. */
+/* Same as battle_text_skip_to_entry: return entry `entry_index` of a text section, the byte after the
+ * `entry_index`th 0xFE or 0xFF, without decoding the bytes in between. */
 const u8* world_text_skip_to_entry(const u8* text, s32 entry_index) {
     const u8* result;
     const u8* cursor = text;

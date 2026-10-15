@@ -1,13 +1,10 @@
 #include "fft/battle.h"
 
-/*
- * Make only the candidate and acting tiles reachable in the selected scenario.
+/* Make the current scenario's reachable tiles only its destination (candidate_coords) and the
+ * unit's own tile.
  *
- * Clear both 18-row levels before setting the candidate bit and adding the
- * acting bit. Integer address stages preserve the target's addition order;
- * direct typed indexing introduces extra instructions. Field offsets come
- * from the shared workspace declaration.
- */
+ * Integer address stages preserve the target's addition order; direct typed indexing introduces extra
+ * instructions. Field offsets come from the shared workspace declaration. */
 void battle_ai_set_candidate_and_actor_reachable_tiles(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 row;

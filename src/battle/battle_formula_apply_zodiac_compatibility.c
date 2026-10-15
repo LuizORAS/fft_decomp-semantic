@@ -1,16 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Scale the pending formula XA by the attacker/target zodiac compatibility.
+/* Scale XA by the attacker's and target's zodiac compatibility: good +25%, best +50%, bad -25%,
+ * worst -50%, at least 1. Serpentarius on either side changes nothing. Opposite signs depend on the
+ * pair: opposite sexes best, the same sex worst, and bad when either is a monster.
  *
- * Serpentarius on either side leaves XA untouched.  The opposition entry
- * resolves by sex: monsters on either side fall back to the ordinary bad
- * result, otherwise same-sex pairs get the worst result and opposite-sex pairs
- * the best.
+ * Good and bad change XA by a quarter, best and worst by a half (XA * 25 / 100
+ * or / 50, truncated); the result is at least 1.
  *
  * Casting the attacker sign to its stored 4-bit domain preserves the target's
- * distinct comparison copy without a compiler constraint.
- */
+ * distinct comparison copy without a compiler constraint. */
 void battle_formula_apply_zodiac_compatibility(void) {
     battle_stats_t* attacker;
     battle_stats_t* target;
@@ -63,32 +62,24 @@ void battle_formula_apply_zodiac_compatibility(void) {
         }
     }
 
-    {
-        s16* slot = (s16*)&g_current_ability.xa;
-
-        xa = *slot;
-        product = xa * 25;
-        switch (compatibility) {
-        case ZODIAC_COMPATIBILITY_GOOD:
-            *slot = xa + product / 100;
-            break;
-        case ZODIAC_COMPATIBILITY_BEST:
-            *slot = xa + product / 50;
-            break;
-        case ZODIAC_COMPATIBILITY_BAD:
-            *slot = xa - product / 100;
-            break;
-        case ZODIAC_COMPATIBILITY_WORST:
-            *slot = xa - product / 50;
-            break;
-        }
+    xa = g_battle_action_current_ability.xa;
+    product = xa * 25;
+    switch (compatibility) {
+    case ZODIAC_COMPATIBILITY_GOOD:
+        g_battle_action_current_ability.xa = xa + product / 100;
+        break;
+    case ZODIAC_COMPATIBILITY_BEST:
+        g_battle_action_current_ability.xa = xa + product / 50;
+        break;
+    case ZODIAC_COMPATIBILITY_BAD:
+        g_battle_action_current_ability.xa = xa - product / 100;
+        break;
+    case ZODIAC_COMPATIBILITY_WORST:
+        g_battle_action_current_ability.xa = xa - product / 50;
+        break;
     }
 
-    {
-        s16* slot = (s16*)&g_current_ability.xa;
-
-        if (*slot <= 0) {
-            *slot = 1;
-        }
+    if (g_battle_action_current_ability.xa <= 0) {
+        g_battle_action_current_ability.xa = 1;
     }
 }

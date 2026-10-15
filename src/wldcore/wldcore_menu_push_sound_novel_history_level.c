@@ -1,11 +1,11 @@
 #include "fft/wldcore.h"
 
-/* Pushes the save-slot selection level (menu type 0x17).
+/* Pushes the sound novel's history level (SOUND_NOVEL_HISTORY): the sections read last.
  *
  * Suspends WORLD thread 14, appends the two header windows (kinds 0x6c and
  * 0x6d, the second hidden) and the 0xf8 x 0xb0 panel render record built from
  * g_wldcore_window_image_buffer, centres the newest history entry's name text
- * (0x8800 + g_wldcore_active_saved_record.text_history_3) in it, and copies the four operand-history entries
+ * (0x8800 + g_wldcore_sound_novel_record.text_history_3) in it, and copies the four operand-history entries
  * (newest first) into the level at +0x0c..+0x18. It also tints the picture
  * render record to half brightness, clears the screen dim and sets the menu
  * result to -1. The first header window is hidden when the second history
@@ -27,7 +27,7 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     wldcore_window_render_bounds16_t bounds;
     u8 unused[8];
     wldcore_window_record_t* windows;
-    wldcore_window_record_position_view_t* positions;
+    wldcore_window_xy_t* positions;
     wldcore_point32_t* position;
     wldcore_window_entry_52_rgb_t* colors;
     s16* newest;
@@ -35,14 +35,14 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     s32 depth;
     s32 top;
 
-    world_thread_suspend(0xE);
+    world_thread_suspend(WLDCORE_THREAD_SLOT_MESSAGE);
 
     windows = g_wldcore_window_records;
-    positions = (wldcore_window_record_position_view_t*)&windows->x;
+    positions = (wldcore_window_xy_t*)&windows->position.x;
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_history.upper_window = index;
-    g_wldcore_window_records[index].sequence = 0x6C;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_HISTORY_UPPER;
     g_wldcore_window_records[index].priority = 9;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
@@ -52,11 +52,11 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_history.lower_window = index;
-    g_wldcore_window_records[index].sequence = 0x6D;
+    g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_SOUND_NOVEL_HISTORY_LOWER;
     g_wldcore_window_records[index].priority = 9;
     windows[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
-    g_wldcore_window_records[index].flags |= 0x10;
+    g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     positions[index].x = 0;
     positions[index].y = 0x5E;
 
@@ -67,42 +67,42 @@ void wldcore_menu_push_sound_novel_history_level(void) {
     bounds.dimensions.y = 0xB0;
     bounds.position.x = 0;
     bounds.position.y = 0;
-    wldcore_window_build_render_record_image(
-        index, bounds.position, bounds.dimensions, 1, g_wldcore_window_image_buffer);
-    position = (wldcore_point32_t*)&g_wldcore_window_render_records[index].base_x;
-    newest = &g_wldcore_active_saved_record.text_history_3;
+    wldcore_window_build_render_record_image(index, bounds, 1, g_wldcore_window_image_buffer);
+    position = &g_wldcore_window_render_records[index].base;
+    newest = &g_wldcore_sound_novel_record.text_history_3;
     g_wldcore_window_render_records[index].priority = g_wldcore_menu_ordering_table_offset;
     position->x = -0x80;
     position->y = -0x64;
-    g_wldcore_window_render_records[index].clut_x = 0x3C0;
-    g_wldcore_window_render_records[index].clut_y = 0x1F2;
-    wldcore_window_draw_centered_text(index, *newest + 0x8800);
+    g_wldcore_window_render_records[index].clut.x = 0x3C0;
+    g_wldcore_window_render_records[index].clut.y = 0x1F2;
+    wldcore_window_draw_centered_text(index, *newest + TEXT_ID_WORLD_MESSAGE_BASE);
 
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                  .window_pair_render.first_window]
         .palette = 0xA;
-    colors = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records->red;
-    colors[g_wldcore_active_saved_record.picture_render_index].red = 0x80;
-    colors[g_wldcore_active_saved_record.picture_render_index].green = 0x80;
-    colors[g_wldcore_active_saved_record.picture_render_index].blue = 0x80;
+    colors = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records->color;
+    colors[g_wldcore_sound_novel_record.picture_render_index].red = 0x80;
+    colors[g_wldcore_sound_novel_record.picture_render_index].green = 0x80;
+    colors[g_wldcore_sound_novel_record.picture_render_index].blue = 0x80;
     g_wldcore_screen_fade_state.boxes[0].r = 0;
     g_wldcore_screen_fade_state.boxes[0].g = 0;
     g_wldcore_screen_fade_state.boxes[0].b = 0;
-    g_wldcore_screen_fade_state.flags[0] |= 8;
+    g_wldcore_screen_fade_state.flags[0] |= WLDCORE_SCREEN_FADE_BOX_VISIBLE;
 
     top = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[top].sound_novel_history.scroll = 0;
     g_wldcore_menu_stack_records_next[top].sound_novel_history.newest_text_id = *newest;
     g_wldcore_menu_stack_records_next[top].sound_novel_history.text_ids[0] = newest[-1];
     g_wldcore_menu_stack_records_next[top].sound_novel_history.text_ids[1] = newest[-2];
-    g_wldcore_menu_result = -1;
+    g_wldcore_menu_blocked_buttons = -1;
     g_wldcore_menu_stack_records_next[top].sound_novel_history.text_ids[2] = newest[-3];
     if (g_wldcore_menu_stack_records_next[top].sound_novel_history.text_ids[0] == -1) {
-        g_wldcore_window_records[g_wldcore_menu_stack_records_next[top].sound_novel_history.upper_window].flags |= 0x10;
+        g_wldcore_window_records[g_wldcore_menu_stack_records_next[top].sound_novel_history.upper_window].flags
+            |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
 
     depth = g_wldcore_menu_stack_depth;
-    g_wldcore_menu_stack_records_next[depth].sound_novel_history.phase = 1;
+    g_wldcore_menu_stack_records_next[depth].sound_novel_history.phase = WLDCORE_SOUND_NOVEL_HISTORY_PHASE_DIM;
     g_wldcore_menu_stack_records_next[depth].sound_novel_history.step = 0;
     g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_SOUND_NOVEL_HISTORY;
     g_wldcore_menu_stack_depth = depth + 1;

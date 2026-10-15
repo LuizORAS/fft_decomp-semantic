@@ -55,25 +55,27 @@ static inline void world_set_4bpp_pixel(u8* pixels, s32 x, s32 y, s32 stride, s3
 
 /* Mirrors a rectangle of a 4bpp image horizontally, swapping pixels from
  * both ends of each row toward the middle. */
-void world_gfx_mirror_4bpp_rect(u8* pixels, world_gfx_4bpp_rect_t* rect) {
+void world_gfx_mirror_4bpp_rect(u8* pixels, world_glyph_blit_t* rect) {
     s32 row;
     s32 col;
     s32 right;
     s32 left_value;
     s32 right_value;
 
-    for (row = 0; row < rect->h; row++) {
+    for (row = 0; row < rect->rect.h; row++) {
         col = 0;
-        if (col < rect->w / 2) {
+        if (col < rect->rect.w / 2) {
             right = 1;
             do {
-                left_value = world_get_4bpp_pixel(pixels, rect->x + col, rect->y + row, rect->stride);
-                right_value = world_get_4bpp_pixel(pixels, rect->x + rect->w - right, rect->y + row, rect->stride);
-                world_set_4bpp_pixel(pixels, rect->x + col, rect->y + row, rect->stride, right_value);
-                world_set_4bpp_pixel(pixels, rect->x + rect->w - right, rect->y + row, rect->stride, left_value);
+                left_value = world_get_4bpp_pixel(pixels, rect->rect.x + col, rect->rect.y + row, rect->stride);
+                right_value = world_get_4bpp_pixel(
+                    pixels, rect->rect.x + rect->rect.w - right, rect->rect.y + row, rect->stride);
+                world_set_4bpp_pixel(pixels, rect->rect.x + col, rect->rect.y + row, rect->stride, right_value);
+                world_set_4bpp_pixel(
+                    pixels, rect->rect.x + rect->rect.w - right, rect->rect.y + row, rect->stride, left_value);
                 right++;
                 col++;
-            } while (col < rect->w / 2);
+            } while (col < rect->rect.w / 2);
         }
     }
 }

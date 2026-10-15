@@ -1,6 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Zero the sixteen saved menu cursor positions. */
 void world_menu_clear_cursor_positions(void) {
     s32 i;
 

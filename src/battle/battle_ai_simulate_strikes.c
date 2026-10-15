@@ -1,12 +1,14 @@
 #include "fft/battle.h"
 
-/*
- * Simulate strikes and eligible reactions, updating AI hit accounting.
- *
- * A nonzero reaction mode skips initial preparation and recursive reaction dispatch.
- * Hit accounting is disabled by counter 0xff; included target/strike pairs
- * can adjust priority and mark whether a valuable target was hit.
- */
+/* Resolve every strike of action with the real strike code (battle_action_resolve_ability_strike)
+ * and apply each landed result, then simulate the reactions it triggers (reaction_mode 1 for those).
+ * Untargetable units are skipped (unless the ability targets map tiles), and so are units marked as
+ * acting before the AI's unit, unless the ability is for allies; for a unit-aimed action whose target
+ * acts first, only that target counts. While hits are counted, each one adds its hit chance to the
+ * total, a hit on the intended side adds 3 to the score for a stat ability, a hit on the other side
+ * subtracts 1 (4 for a stat ability), and a hit on a unit in the targetable list marks a valuable
+ * hit. In the ranked origin search the target tile is settled when the caster's own part came out as
+ * wanted: hit by a useful effect or missed by an adverse one. */
 void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction_mode) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_strike_work_t work;
@@ -18,10 +20,10 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
     s32 positive;
     s32 negative;
 
-    if (reaction_mode == 0 && battle_action_init_current_data(action->unit_id) != 0) {
+    if (reaction_mode == 0 && battle_action_begin(action->unit_id) != 0) {
         return;
     }
-    behavior = g_main_ability_data[(s16)action->ability_id].ai_flags.bytes;
+    behavior = g_main_ability_data[action->ability_id].ai_flags.bytes;
     if (g_battle_ai_data_base.hit_counter != 0xff) {
         self_hit = 0;
         positive = 0;
@@ -37,14 +39,15 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
             for (target_index = 0; work.target_list[target_index] != 0xff; target_index++) {
                 target_id = work.target_list[target_index];
                 result = &g_battle_unit_stats[target_id].action;
-                if ((s16)result->attack_accuracy <= 0) {
+                if (result->attack_accuracy <= 0) {
                     continue;
                 }
                 if (!(behavior[1] & BATTLE_AI_ABILITY_FLAG_2_TARGET_MAP_TILES)) {
-                    if (battle_ai_can_unit_be_targeted_cryst_trea_mount_trans(target_id) != 0) {
+                    if (battle_ai_is_unit_untargetable(target_id) != 0) {
                         continue;
                     }
-                    if (action->targeting_type == 6 && ai->unit_acts_before_me[action->target_id] != 0) {
+                    if (action->targeting_type == BATTLE_TARGETING_TYPE_UNIT
+                        && ai->unit_acts_before_me[action->target_id] != 0) {
                         if (action->target_id != target_id) {
                             continue;
                         }
@@ -53,19 +56,19 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
                         continue;
                     }
                 }
-                battle_action_finalize_attack_and_flag_reactions(target_id);
+                battle_action_apply_target_result(target_id);
                 if (ai->hit_counter == 0xff) {
                     continue;
                 }
                 if (((behavior[0] & BATTLE_AI_ABILITY_TARGET_ENEMIES) && ai->unit_decisions[target_id].enemy_flag != 0)
                     || ((behavior[0] & BATTLE_AI_ABILITY_TARGET_ALLIES)
                         && ai->unit_decisions[target_id].enemy_flag == 0)) {
-                    ai->current_action.priority += positive;
+                    ai->current_action.rank.priority += positive;
                 } else if (((behavior[0] & BATTLE_AI_ABILITY_TARGET_ENEMIES)
                                && ai->unit_decisions[target_id].enemy_flag == 0)
                     || ((behavior[0] & BATTLE_AI_ABILITY_TARGET_ALLIES)
                         && ai->unit_decisions[target_id].enemy_flag != 0)) {
-                    ai->current_action.priority -= negative;
+                    ai->current_action.rank.priority -= negative;
                 }
                 ai->hit_counter++;
                 ai->total_hit_percent += result->attack_accuracy;
@@ -77,19 +80,19 @@ void battle_ai_simulate_strikes(battle_ai_command_action_t* action, s32 reaction
                 }
             }
         }
-        battle_action_store_target_stats_pointer_data(action->unit_id);
+        battle_action_apply_actor_result(action->unit_id);
     } while (work.continue_attack != 0);
-    if (ai->hit_counter != 0xff && ai->weapon_range_flag != 0) {
-        if (ai->ability_effect_on_self == 1 && self_hit != 0) {
-            ai->useful_on_caster_flag = 1;
-        } else if (ai->ability_effect_on_self == 2 && self_hit == 0) {
-            ai->useful_on_caster_flag = 1;
+    if (ai->hit_counter != 0xff && ai->ranked_origin_search != 0) {
+        if (ai->ability_effect_on_self == BATTLE_AI_ABILITY_EFFECT_USEFUL && self_hit != 0) {
+            ai->target_tile_settled = 1;
+        } else if (ai->ability_effect_on_self == BATTLE_AI_ABILITY_EFFECT_ADVERSE && self_hit == 0) {
+            ai->target_tile_settled = 1;
         }
     }
     battle_action_store_acting_unit_data(&g_battle_unit_stats[action->unit_id]);
     if (reaction_mode == 0) {
         /* Reuse the finished loop counter's low halfword for the reaction ID. */
-        while ((target_id = battle_reaction_prepare_next((u16*)&target_index)) != -1) {
+        while ((target_id = battle_reaction_prepare_next((s16*)&target_index)) != -1) {
             if (ai->unit_acts_before_me[target_id] == 0) {
                 battle_ai_simulate_strikes(
                     (battle_ai_command_action_t*)&g_battle_unit_stats[target_id].action_actor_id, 1);

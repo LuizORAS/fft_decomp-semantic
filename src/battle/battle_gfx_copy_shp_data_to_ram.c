@@ -1,15 +1,18 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* battle_gfx_weapon_shp_t with all of its 0x200 frame pointers. */
 typedef struct battle_gfx_shp_frame_table {
-    s16 header[32];
-    u8* entries[0x200];
+    s16 first_frame[32];
+    u8* frames[0x200];
 } battle_gfx_shp_frame_table_t;
 
 /*
- * Unpack a little-endian resource into dst: 32 halfword header entries, 0x200
- * word offsets rebased onto the g_battle_gfx_shp_frame_data_cursor bump buffer (-1 maps to offset 0),
- * then a halfword-counted byte blob appended to that buffer.
+ * Unpack a weapon or effect SHP file into dst: after four unread bytes, the
+ * first frame of each of 32 weapon types, 0x200 frame offsets that become
+ * pointers into the frame data (-1 maps to its start), and the frame data
+ * itself, a halfword count and that many bytes, which is appended at
+ * g_battle_gfx_shp_frame_data_cursor.
  *
  * The header loops read through `data` while the blob copy indexes `src`;
  * using one name for both loses the target's separate copy of the argument.
@@ -27,7 +30,7 @@ void battle_gfx_copy_shp_data_to_ram(battle_gfx_shp_frame_table_t* dst, u8* src)
     offset = 4;
     for (i = 0; i < 32; i++) {
         word = data + offset;
-        dst->header[i] = word[0] | (word[1] << 8);
+        dst->first_frame[i] = word[0] | (word[1] << 8);
         offset += 2;
     }
     for (i = 0; i < 0x200; i++) {
@@ -36,7 +39,7 @@ void battle_gfx_copy_shp_data_to_ram(battle_gfx_shp_frame_table_t* dst, u8* src)
         if (value == -1) {
             value = 0;
         }
-        dst->entries[i] = g_battle_gfx_shp_frame_data_cursor + value;
+        dst->frames[i] = g_battle_gfx_shp_frame_data_cursor + value;
         offset += 4;
     }
     word = data + offset;

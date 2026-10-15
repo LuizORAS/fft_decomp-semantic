@@ -1,12 +1,3 @@
-/* Advances one camera-track component by a frame and returns its new value.
- * Called per component by battle_camera_fusion_thread (0x8013db9c); the
- * WORLD twin is world_camera_step_track (0x800f18c8).
- *
- * Each call samples the two tangent lines of the active key segment at this
- * frame and the next, intersects them (battle_fixed_cross_product_q12 is a Q12 cross product
- * that sets g_battle_camera_cross_product_overflow on overflow) and moves the value along the resulting
- * control point. The locals span, frame and lead are reused across the
- * stages, as the target's register map requires. */
 #include "fft/battle.h"
 #include "psx/types.h"
 
@@ -16,6 +7,15 @@ typedef char battle_camera_track_offsets_ok[(sizeof(battle_camera_key_t) == 0x10
         ? 1
         : -1];
 
+/* Advances one camera-track component by a frame and returns its new value.
+ * Called per component by battle_camera_fusion_thread (0x8013db9c); the
+ * WORLD twin is world_camera_step_track (0x800f18c8).
+ *
+ * Each call samples the two tangent lines of the active key segment at this
+ * frame and the next, intersects them (battle_util_cross_product_q12 is a Q12 cross product
+ * that sets g_battle_camera_cross_product_overflow on overflow) and moves the value along the resulting
+ * control point. The locals span, frame and lead are reused across the
+ * stages, as the target's register map requires. */
 s32 battle_camera_step_track(battle_camera_track_t* track, s32 component) {
     s32 time[4];  /* line 0: time[0]->time[1]; line 1: time[2]->time[3] */
     s32 value[4]; /* matching values for the two sampled lines */
@@ -27,9 +27,9 @@ s32 battle_camera_step_track(battle_camera_track_t* track, s32 component) {
     s32 result;
     s32 segment;
     s32 start_value;
-    s32 t0;
-    s32 t1;
-    s32 t2;
+    s32 key0_time;
+    s32 key1_time;
+    s32 key2_time;
     s32 lead;
     s32 time_delta0;
     s32 time_delta1;
@@ -44,14 +44,15 @@ s32 battle_camera_step_track(battle_camera_track_t* track, s32 component) {
     s32 value2;
     s32 value3;
 
+    /* Entering a segment: its length in frames and the value it starts from. */
     if (track->segment_frame == 0) {
         segment = track->segment;
-        t2 = track->keys[segment + 2].time;
-        t1 = track->keys[segment + 1].time;
-        t0 = track->keys[segment].time;
-        span = t2 - t1;
-        lead = t1 - t0;
-        frame = t2 - t0; /* whole two-key span */
+        key2_time = track->keys[segment + 2].time;
+        key1_time = track->keys[segment + 1].time;
+        key0_time = track->keys[segment].time;
+        span = key2_time - key1_time;
+        lead = key1_time - key0_time;
+        frame = key2_time - key0_time; /* whole two-key span */
         if (track->key_count >= 4) {
             if (segment == 0) {
                 track->segment_duration = span / 2 + lead;
@@ -74,6 +75,7 @@ s32 battle_camera_step_track(battle_camera_track_t* track, s32 component) {
         track->start_value = track->prev_value;
     }
 
+    /* Three equal keys hold their value. */
     if (track->keys[track->segment].value == track->keys[track->segment + 1].value
         && track->keys[track->segment].value == track->keys[track->segment + 2].value) {
         result = track->keys[track->segment].value << 12;
@@ -118,14 +120,15 @@ s32 battle_camera_step_track(battle_camera_track_t* track, s32 component) {
         time_delta1 = time3 - time2;
         value_delta1 = value3 - value2;
         time_delta0 = time1 - time0;
-        divisor = battle_fixed_cross_product_q12(value_delta0, time_delta1, time_delta0, value_delta1);
-        result = battle_fixed_cross_product_q12(time_delta1, value2 - value0, value_delta1, time2 - time0);
+        divisor = battle_util_cross_product_q12(value_delta0, time_delta1, time_delta0, value_delta1);
+        result = battle_util_cross_product_q12(time_delta1, value2 - value0, value_delta1, time2 - time0);
         if (divisor != 0) {
-            span = battle_mul_div_s64(time_delta0, result, divisor) + time0;   /* crossing time */
-            lead = battle_mul_div_s64(value_delta0, result, divisor) + value0; /* crossing value */
+            span = battle_util_mul_div_s64(time_delta0, result, divisor) + time0;   /* crossing time */
+            lead = battle_util_mul_div_s64(value_delta0, result, divisor) + value0; /* crossing value */
             divisor = span - track->prev_time;
             if (divisor != 0) {
-                result = battle_mul_div_s64(lead - track->prev_value, (track->frame << 12) - track->prev_time, divisor)
+                result = battle_util_mul_div_s64(
+                             lead - track->prev_value, (track->frame << 12) - track->prev_time, divisor)
                     + track->prev_value;
                 track->prev_time = span;
                 track->prev_value = lead;
@@ -147,6 +150,8 @@ s32 battle_camera_step_track(battle_camera_track_t* track, s32 component) {
             track->finished = 1;
         }
     }
+    /* Angles and zoom round Q12 to the nearest integer; positions return in
+     * the 1/1024 units of their script variables. */
     if (component >= 3) {
         if (result > 0) {
             if ((result & 0xFFF) > 0x800) {

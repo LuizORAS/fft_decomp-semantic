@@ -1,13 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Advance the effect-target palette track one frame over the coord-data
- * target list.
+/* Advance the target colour track of the parent timeline one frame: an APPLY
+ * keyframe recolours every unit target of the effect.
  *
- * The counterpart of battle_effect_advance_target_palette_track that walks the
- * ten-byte records at 0x801bad10 and recolours every unit target. The frame
- * timer and the loop counter are separate locals here: the target keeps the
- * timer in $v0 and the counter in $s1. */
+ * The frame timer and the loop counter are separate locals here: the target
+ * keeps the timer in $v0 and the counter in $s1. */
 void battle_effect_advance_coord_target_palette_track(
     battle_effect_palette_track_t* track, s16* keyframe, s16* remaining_frames) {
     s16 current;
@@ -32,14 +30,14 @@ void battle_effect_advance_coord_target_palette_track(
             }
             *remaining_frames = timer;
             preset = track->preset[index];
-            if (preset & 0x80) {
+            if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
                 red = track->color[index][0];
                 green = track->color[index][1];
                 blue = track->color[index][2];
-                for (i = 0; i < g_battle_effect_coord_data.hit_counter; i++) {
-                    if (g_battle_effect_targets[i].target_type == 0) {
-                        battle_gfx_start_misc_unit_palette_modulation(preset & 0x7f, track->duration[index],
-                            g_battle_effect_targets[i].id.misc_id, red, green, blue);
+                for (i = 0; i < g_battle_effect_coord_data.target_count; i++) {
+                    if (g_battle_effect_coord_data.targets[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
+                        battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                            track->duration[index], g_battle_effect_coord_data.targets[i].id.misc_id, red, green, blue);
                     }
                 }
             }

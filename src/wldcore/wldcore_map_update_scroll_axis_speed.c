@@ -1,6 +1,8 @@
 #include "fft/wldcore.h"
 
-/* Advance one axis toward its signed limit, or decay it back to rest.
+/* Step one axis of the map cursor's accelerating move: direction 1 or -1 adds `step` toward the
+ * signed `limit`, 0 lets the value decay toward rest by `decay`; `output` is the whole-pixel speed
+ * (value >> 8).
  *
  * The negative side mirrors the positive one through negation rather than a
  * signed division, so the exported speed truncates toward zero on both sides. */

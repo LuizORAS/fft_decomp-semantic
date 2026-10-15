@@ -1,7 +1,8 @@
 #include "psx/libc.h"
 #include "psx/libgpu.h"
 
-/* LIBGPU, retail 0x80027428-0x800275c0. Offsets are relative to the object table. */
+/* Find object `object_index` in the TMD at `header`: its primitive, vertex and normal tables (offsets from
+ * the object table). Returns its primitive count. Only OpenTMD calls it, and nothing calls OpenTMD. */
 int psyq_gpu_open_tmd_object(
     psyq_tmd_header_t* header, int object_index, u8** primitive, SVECTOR** vertices, SVECTOR** normals) {
     psyq_tmd_object_t* objects = (psyq_tmd_object_t*)(header + 1);

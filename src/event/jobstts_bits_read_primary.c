@@ -1,6 +1,9 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
+/* Reads a `count`-bit value, most significant bit first, from the primary
+ * bitstream. The first read after a reset starts at bit 7 of the current
+ * byte. */
 u32 jobstts_bits_read_primary(s32 count) {
     s32 source_bit;
     s32 next_source_bit;

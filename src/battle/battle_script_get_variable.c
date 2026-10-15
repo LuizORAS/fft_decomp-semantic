@@ -1,9 +1,12 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* 0x8013b590: the word reached through 0x80165f9c is a temporary event
- * operand, not persistent map storage. Preserve it around interpreter calls.
- * Reading the combined weather/time variable refreshes its packed value first; GNS
+/* Read a script variable from any of the word, flag and nibble ranges by adding
+ * it into script word 0 with the variable commands. Word 0 (the comparison
+ * result) is restored before returning.
+ *
+ * Reading the combined weather/time variable first rebuilds it: bit 15 from bit 0
+ * of the time of day and bits 12-14 from the low three bits of the weather. GNS
  * mesh selection combines those upper bits with the layout's low 12 bits. */
 s32 battle_script_get_variable(s32 variable_id) {
     s32 saved_current_variable = *g_battle_script_variables;
@@ -20,8 +23,8 @@ s32 battle_script_get_variable(s32 variable_id) {
         weather <<= 12;
         battle_script_set_variable(EVENT_SCRIPT_VAR_WEATHER_AND_TIME, time_of_day | weather);
     }
-    battle_script_run_variable_command(EVENT_OPCODE_ZERO_VARIABLE, 0, 0, 0);
-    battle_script_run_variable_command(EVENT_OPCODE_ADD_VARIABLE, 0, variable_id, 0);
+    battle_script_run_variable_command(EVENT_OPCODE_ZERO_VARIABLE, EVENT_SCRIPT_VAR_COMPARISON_RESULT, 0, 0);
+    battle_script_run_variable_command(EVENT_OPCODE_ADD_VARIABLE, EVENT_SCRIPT_VAR_COMPARISON_RESULT, variable_id, 0);
     {
         s32 value = *g_battle_script_variables;
 

@@ -1,0 +1,30 @@
+#include "fft/battle.h"
+
+/* Have battle_ai_evaluate_ability_outcome evaluate every entry of the acting unit's AI ability
+ * list against the active units, up to BATTLE_AI_ABILITY_LIST_LENGTH entries or the first
+ * SKILLSET_ID_NONE, resuming at the entry that suspended. Returns -1 to suspend, else 0. */
+s32 battle_ai_evaluate_ability_list(void) {
+    battle_ai_data_t* ai;
+    battle_ai_ability_entry_t* entry;
+
+    ai = &g_battle_ai_data_base;
+    if (g_battle_ai_data_base.resume_pending != 0) {
+        goto retry; /* resume the suspended evaluation inside the loop */
+    }
+    g_battle_ai_data_base.ability_counter = 0;
+    while (1) {
+        entry = &ai->ability_lists[ai->acting_unit_compact_index][ai->ability_counter];
+        if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
+            return 0;
+        }
+        battle_ai_load_ability_entry(entry);
+    retry:
+        if (battle_ai_evaluate_ability_outcome() == -1) {
+            return -1;
+        }
+        ai->ability_counter += 1;
+        if (ai->ability_counter >= BATTLE_AI_ABILITY_LIST_LENGTH) {
+            return 0;
+        }
+    }
+}

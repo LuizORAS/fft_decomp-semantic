@@ -17,8 +17,7 @@ s32 world_card_open_file_with_retries(const char* filename, s32 mode) {
         }
     }
 
-    /* The target uses v0 without the u8 return's mask. */
-    if (((s32 (*)(void))world_card_get_selected_slot)() == 0) {
+    if (world_card_get_selected_slot() == 0) {
         strcpy(path, "bu00:");
     } else {
         strcpy(path, "bu10:");

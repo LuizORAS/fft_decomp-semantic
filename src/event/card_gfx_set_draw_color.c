@@ -1,6 +1,7 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Copy the three RGB bytes at `data` into CARD's draw colour (g_card_text_color). */
 void card_gfx_set_draw_color(const u8* data) {
     g_card_text_color[0] = data[0];
     g_card_text_color[1] = data[1];

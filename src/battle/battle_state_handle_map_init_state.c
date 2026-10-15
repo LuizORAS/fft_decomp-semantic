@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* MAP_INITIALIZE: run one step of battle_map_step_init_sequence for g_battle_map_id behind a
+ * black screen; at step 0xd start MAP_JUMPING_IN. */
 void battle_state_handle_map_init_state(void) {
     char unused[24]; /* unreferenced; sizes the target's 0x30-byte frame */
 

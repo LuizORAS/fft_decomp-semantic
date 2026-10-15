@@ -1,11 +1,8 @@
 #include "fft/battle.h"
 
-/*
- * Restore baseline unit data or suspended simulation status.
- *
- * Mode 0 restores selected baseline fields, action records, and team Golem
- * values. Any nonzero mode restores only the compact status record.
- */
+/* Undo battle_ai_save_unit_state: mode 0 puts every unit in the plan and the teams' Golem back as
+ * the snapshot holds them after a simulation; any other mode brings back the simulated statuses to
+ * resume a suspended one. */
 void battle_ai_restore_unit_state(s32 mode) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_ai_status_snapshot_t* status;
@@ -15,7 +12,7 @@ void battle_ai_restore_unit_state(s32 mode) {
     s32 id;
 
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        id = ai->unit_battle_ids[i];
+        id = ai->unit_compact_indices[i];
         if (id == 0xff) {
             continue;
         }
@@ -45,7 +42,7 @@ void battle_ai_restore_unit_state(s32 mode) {
             battle_ai_transfer_byte_values(&unit->has_turn, &snapshot->has_turn, 3);
             unit->mount_info = snapshot->mount_info;
             battle_ai_transfer_byte_values(&unit->auto_battle_setting, &snapshot->auto_battle_setting, 8);
-            battle_ai_transfer_halfword_values((u16*)&unit->action_actor_id, (u16*)ai->unit_action_records[id], 20);
+            battle_ai_transfer_halfword_values(&unit->action_actor_id, ai->unit_action_records[id], 20);
         }
     }
     if (mode == 0) {

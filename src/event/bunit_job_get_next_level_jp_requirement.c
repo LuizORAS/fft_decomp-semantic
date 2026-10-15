@@ -1,6 +1,9 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-u32 bunit_job_get_next_level_jp_requirement(void) {
+/* Menu row callback of BUNIT's ability list (bunit_ability_run_list_menu):
+ * the next level's JP that bunit_job_calculate_next_level_jp_requirement cached
+ * for the job chosen in the job list. The row is not read. */
+s32 bunit_job_get_next_level_jp_requirement(s32 unused_row) {
     return g_bunit_job_next_level_jp_requirement;
 }

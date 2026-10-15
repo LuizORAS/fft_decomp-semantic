@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Empty the menu buffer allocator: free all 16 slot records, clear the 53-page
+ * occupancy map and release the three typewriter text slots. */
 void battle_menu_init_buffer_allocator(void) {
     s32 index;
     u8* allocation_byte;

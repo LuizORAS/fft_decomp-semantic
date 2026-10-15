@@ -7,8 +7,8 @@
 /* Lays out one OPEN script text line as textured glyph quads.
  *
  * Claims the first free script record, then walks the text until '@' or 42
- * glyphs. Escape characters followed by one hex digit select the font bank
- * ('$'), CLUT row ('^'), pen adjustments ('<', '>', '+'), the record field at
+ * glyphs. Escape characters followed by one hex digit select the font
+ * ('$'), CLUT ('^'), pen adjustments ('<', '>', '+'), the record field at
  * 0x08 ('/') and wide-glyph mode ('*'). Every other character emits a glyph
  * record and a POLY_FT4 in both graphics buffers. Returns the record index
  * plus 1, or 0 when all 16 records are busy.
@@ -39,7 +39,7 @@ s32 open_script_build_text_record(u8* text) {
 
     font = g_open_script_font_metrics;
     for (i = 0; i < 16; i++) {
-        if (!(g_open_script_state.records[i].flags & 1)) {
+        if (!(g_open_script_state.records[i].flags & OPEN_SCRIPT_RECORD_ACTIVE)) {
             break;
         }
     }
@@ -48,7 +48,7 @@ s32 open_script_build_text_record(u8* text) {
     }
     index = i;
 
-    g_open_script_state.records[index].flags = 1;
+    g_open_script_state.records[index].flags = OPEN_SCRIPT_RECORD_ACTIVE;
     pen = 0;
     slot = index * 42;
     drawn = 0;
@@ -60,7 +60,7 @@ s32 open_script_build_text_record(u8* text) {
         if (ch == '$') {
             text++;
             value = open_text_decode_hex_digit(*text++);
-            g_open_script_state.dispatch.font_bank = value;
+            g_open_script_state.dispatch.font_index = value;
             i--;
         } else if (ch == '^') {
             text++;
@@ -92,7 +92,7 @@ s32 open_script_build_text_record(u8* text) {
             pen = open_text_decode_hex_digit(*text++) * 20;
             i--;
         } else {
-            value = (ch - 0x20) * 8 + g_open_script_state.dispatch.font_bank * 0x380;
+            value = (ch - 0x20) * 8 + g_open_script_state.dispatch.font_index * 0x380;
             /* The integer sum keeps this first metrics pointer in a0. */
             mt = (open_font_metrics_t*)(value + (s32)font);
             if (mt->flags & 1) {

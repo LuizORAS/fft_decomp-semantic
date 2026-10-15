@@ -1,18 +1,11 @@
 #include "psx/types.h"
 
-/*
- * The back-offset is built in its own `offset` local in three steps, which
- * gives the target's v0/v1 split for the cursor[1] chain.
- *
- * Three-pointer variant of battle_text_advance_cursor_with_backreferences
- * (0x80130718): the same text-stream walk, but the caller supplies the
- * remaining-byte counter and the resume cursor separately instead of a state
- * record.
- */
+/* Advance a text cursor by one byte as battle_text_advance_cursor_with_backreferences does, keeping the
+ * run's remaining byte count in *remaining_bytes and its return point in *return_cursor instead of a state
+ * record: the form the dialog thread (battle_text_character_handling_thread) uses. */
 u8* battle_text_advance_cursor_with_separate_backreference_state(s32* remaining_bytes, u8* cursor, u8** return_cursor) {
     s32 remaining;
     s32 scratch;
-    s32 offset;
     u8 command;
 
     remaining = *remaining_bytes;
@@ -28,14 +21,11 @@ u8* battle_text_advance_cursor_with_separate_backreference_state(s32* remaining_
     command = cursor[0];
     if (((command & 0xF0) == 0xF0) && ((command & 0xF) < 4)) {
         *return_cursor = cursor + 3;
-        scratch = (cursor[0] & 3) * 8;
+        scratch = (cursor[0] & 3) << 3;
         *remaining_bytes = scratch + (cursor[1] >> 5) + 4;
-        /* Keeps scratch live past the sum; local-alloc otherwise ties the sum to it and swaps $v0/$v1. */
-        __asm__("" : : "r"(scratch));
-        offset = cursor[1] & 0xF;
-        offset = offset * 0xFE;
-        offset = cursor[2] + offset;
-        cursor -= offset;
+        scratch = cursor[1] & 0xF;
+        scratch = scratch * 0xFE + cursor[2];
+        cursor -= scratch;
     }
     return cursor;
 }

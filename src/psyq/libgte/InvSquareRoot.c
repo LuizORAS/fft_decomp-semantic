@@ -3,7 +3,8 @@
 
 #include "psx/cpu_return_abi.h"
 
-/* main 0x8001bfc8–0x8001c054: inverse-root mantissa/exponent table lookup. */
+/* The inverse square root of `value` as a mantissa from LIBGTE's inverse-root table and an exponent, stored
+ * through `mantissa_out` and `exponent_out`; returns 1, or -1 for 0. No code refers to it. */
 void InvSquareRoot(long value, long* mantissa_out, long* exponent_out) {
     register s32 odd __asm__("$8");
     register s32 exponent __asm__("$9");
@@ -14,12 +15,10 @@ void InvSquareRoot(long value, long* mantissa_out, long* exponent_out) {
     register s32 limit __asm__("$1");
     register u32 table_base __asm__("$13");
     register s32 zero __asm__("$0");
-    __asm__("" : "=r"(zero)); /* Physical zero retains the signed-immediate load spelling. */
     PSYQ_GTE_LZCS(value, psyq_cpu_return_value);
     PSYQ_CPU_SIGNED_CONSTANT(limit, 32);
     if (psyq_cpu_return_value == limit)
         goto zero_result;
-    __asm__ volatile("" : : : "memory"); /* Keep the retail empty initial branch delay slot. */
     if (psyq_cpu_return_value == 0)
         goto zero_result;
     __asm__ volatile("" : : : "memory");
@@ -33,13 +32,9 @@ void InvSquareRoot(long value, long* mantissa_out, long* exponent_out) {
     PSYQ_CPU_TRAP_SUB(exponent, exponent, even_leading);
     exponent >>= 1;
     PSYQ_CPU_TRAP_ADDI(difference, even_leading, -24);
-    __asm__(""
-        : "=r"(difference), "=r"(exponent)
-        : "0"(difference), "1"(exponent)); /* Keep the retail arithmetic order. */
     if (difference >= 0) {
         __asm__ volatile("" : : : "memory"); /* Preserve the empty BLTZ delay slot. */
-        normalized = (u32)value << difference;
-        __asm__ volatile("" : : "r"(normalized)); /* Finish normalization before the following branch. */
+        normalized = value << difference;
         PSYQ_CPU_SHARED_DELAY_BEGIN();
         if (zero == 0)
             goto normalized_ready;
@@ -47,10 +42,9 @@ void InvSquareRoot(long value, long* mantissa_out, long* exponent_out) {
     difference = zero + 24;
     PSYQ_CPU_SHARED_DELAY_END();
     PSYQ_CPU_TRAP_SUB(difference, difference, even_leading);
-    normalized = (s32)value >> difference;
+    normalized = value >> difference;
 normalized_ready:
     PSYQ_CPU_TRAP_ADDI(normalized, normalized, -64);
-    __asm__("" : "=r"(normalized) : "0"(normalized)); /* Preserve normalization before the paired relocation. */
     normalized <<= 1;
     PSYQ_GTE_TABLE_HIGH_PAIRED(table_base, g_psyq_gte_inv_sqrt_table);
     table_base += normalized;
@@ -62,7 +56,6 @@ normalized_ready:
     PSYQ_CPU_SIGNED_CONSTANT(psyq_cpu_return_value, 1);
     goto* psyq_cpu_return_address;
 zero_result:
-    __asm__ volatile("" : : : "memory"); /* Keep the separate retail invalid-result return. */
     psyq_cpu_return_value = -1;
     goto* psyq_cpu_return_address;
 }

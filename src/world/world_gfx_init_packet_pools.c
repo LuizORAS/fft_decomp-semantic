@@ -19,8 +19,8 @@ void world_gfx_init_packet_pools(world_gfx_packet_buffer_t* buffer) {
         SetPolyGT4(&buffer->textured_gradient_quads[i]);
         SetShadeTex(&buffer->textured_gradient_quads[i], 0);
     }
-    for (i = 0; i < g_world_gfx_tiles_24_capacity; i++) {
-        SetLineF2(&buffer->tiles_24[i]);
+    for (i = 0; i < g_world_gfx_flat_line_capacity; i++) {
+        SetLineF2(&buffer->flat_lines[i]);
     }
     for (i = 0; i < g_world_gfx_gradient_line_capacity; i++) {
         SetLineG2(&buffer->gradient_lines[i]);

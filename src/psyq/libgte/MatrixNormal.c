@@ -1,15 +1,17 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001c180–0x8001c264: build normalized basis from the first two rows.
- * Input row2 is ignored. Only the rotation diagonal is restored. */
+/* Make `output` an orthonormal basis from `input`'s first two rows: row 1 kept, row 2 the cross product of
+ * rows 0 and 1, and row 0 the cross product of rows 1 and 2 (row 0 turned square to row 1), each normalized.
+ * `input`'s row 2 is ignored, and only the GTE's rotation diagonal is restored afterwards. No code refers to
+ * it. */
 void MatrixNormal(MATRIX* input, MATRIX* output) {
     MATRIX* source = input;
     MATRIX* destination = output;
     /* The GTE transport and private worker fix these scratch-register roles. */
-    register s32 x __asm__("$8");
-    register s32 y __asm__("$9");
-    register s32 z __asm__("$10");
+    s32 x;
+    s32 y;
+    s32 z;
     register s32 second_x __asm__("$11");
     register s32 second_y __asm__("$12");
     register s32 second_z __asm__("$13");
@@ -19,7 +21,7 @@ void MatrixNormal(MATRIX* input, MATRIX* output) {
     s32 diagonal0;
     register s32 diagonal1 __asm__("$3");
     register s32 diagonal2 __asm__("$6");
-    register s32 sum __asm__("$2");
+    s32 sum;
     register u32 saved_ra __asm__("$7");
     x = source->m[0][0];
     y = source->m[0][1];

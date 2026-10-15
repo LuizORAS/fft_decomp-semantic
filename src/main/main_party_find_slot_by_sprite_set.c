@@ -1,5 +1,6 @@
 #include "fft/main.h"
 
+/* Return the roster slot of the unit with sprite set sprite_set, or -1 when no unit has it. */
 s32 main_party_find_slot_by_sprite_set(s32 sprite_set) {
     s32 party_index = 0;
     s32 empty_party_id = PARTY_ID_NONE;

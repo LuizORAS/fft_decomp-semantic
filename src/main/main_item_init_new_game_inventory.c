@@ -1,6 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Empty the inventory, then stock a new game's items: 5 Potions, 2 Hi-Potions, 2 Eye Drops,
+ * 2 Phoenix Downs, and one each of X-Potion, Ether, Hi-Ether, Elixir, Antidote, Echo Grass, Maiden's
+ * Kiss, Soft, Holy Water and Remedy. */
 void main_item_init_new_game_inventory(void) {
     int remaining = ITEM_ID_COUNT - 1;
     u8* quantity = &g_main_item_quantities[ITEM_ID_COUNT - 1];

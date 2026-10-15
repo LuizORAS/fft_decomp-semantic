@@ -2,16 +2,13 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Animates a window's two quads from their current corners towards `to`
- * (and `to2` when it has an x) following the 12.4 fixed-point easing table
- * selected by `table`, yielding to the next thread between steps. Table 4
- * also fades the window colour with the remaining distance. */
+/* WORLD twin of battle_menu_tween_window_quads. */
 void world_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, RECT* to2, s32 table) {
     RECT from;
     RECT from2;
     u16* easing;
     s32 i;
-    s32 step;
+    u32 step;
     s32 fade;
     u16 x;
     u16 y;
@@ -35,7 +32,7 @@ void world_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, RECT
     do {
         step = *easing;
         for (i = 0; i < 3 - g_world_event_speed; i++) {
-            fade = (ONE - (u32)step) >> 5;
+            fade = (ONE - step) >> 5;
             world_thread_yield();
             if (table == 4) {
                 if (*easing != ONE) {
@@ -45,15 +42,16 @@ void world_menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, RECT
                     buffers[buffer_index].r = fade;
                 }
             }
-            world_gfx_lerp_poly_ft4_rect(&buffers[g_world_menu_packet_buffer_index].quads[0], &from, to, step);
+            world_menu_lerp_rect_to_poly_ft4(&buffers[g_world_menu_packet_buffer_index].quads[0], &from, to, step);
             if (to2->x != 0) {
-                world_gfx_lerp_poly_ft4_rect(&buffers[g_world_menu_packet_buffer_index].quads[1], &from2, to2, step);
+                world_menu_lerp_rect_to_poly_ft4(
+                    &buffers[g_world_menu_packet_buffer_index].quads[1], &from2, to2, step);
             }
         }
     } while (*easing++ != ONE);
     world_thread_yield();
-    world_gfx_lerp_poly_ft4_rect(&buffers[g_world_menu_packet_buffer_index].quads[0], &from, to, step);
+    world_menu_lerp_rect_to_poly_ft4(&buffers[g_world_menu_packet_buffer_index].quads[0], &from, to, step);
     if (to2->x != 0) {
-        world_gfx_lerp_poly_ft4_rect(&buffers[g_world_menu_packet_buffer_index].quads[1], &from2, to2, step);
+        world_menu_lerp_rect_to_poly_ft4(&buffers[g_world_menu_packet_buffer_index].quads[1], &from2, to2, step);
     }
 }

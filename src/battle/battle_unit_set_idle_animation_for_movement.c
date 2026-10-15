@@ -2,56 +2,55 @@
 #include "psx/types.h"
 
 /*
- * Selects the movement idle animation from walk speed, height mode and mount state.
+ * Select the animation of a unit that is walking: riding for a rider, else
+ * the walk of its walk speed (fast from 0x3000, slow up to 0x1400), or the
+ * submerged idle of that speed in water two or more deep. A mount on land
+ * also puts its rider in the riding animation.
  *
- * The height-mode result is deliberately truncated to its low byte, and
- * facing is read signed (`lh`) throughout.
+ * The height-mode result is deliberately truncated to its low byte.
  */
 void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) {
     s32 anim;
-    s32 movement_type;
     s32 walk_speed;
     battle_unit_misc_data_t* mount;
 
     if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
-        battle_unit_store_animation_facing(0x32, *(s16*)&unit->facing, unit);
+        battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, unit);
         return;
     }
-    movement_type = (u8)battle_move_validate_float_fly(unit);
-    /* A combined 0..1 range test folds to one unsigned compare; the target
-     * tests the sign first, so that path jumps into the mounted arm. */
-    if (movement_type < 0) {
-        goto mounted;
-    }
-    if (movement_type < 2) {
+    switch (battle_move_get_water_animation_mode(unit)) {
+    case 0:
+    case 1:
         walk_speed = unit->walk_speed.word;
         if (walk_speed >= 0x3000) {
-            anim = 0xD;
+            anim = BATTLE_UNIT_ANIMATION_WALK_FAST;
         } else {
-            anim = 0xC;
+            anim = BATTLE_UNIT_ANIMATION_WALK;
             if (walk_speed < 0x1401) {
-                anim = 0xE;
+                anim = BATTLE_UNIT_ANIMATION_WALK_SLOW;
             }
         }
         if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
             mount = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
             if (mount != 0) {
-                battle_unit_store_animation_facing(0x32, *(s16*)&unit->facing, mount);
+                battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, mount);
             }
         }
-    } else {
-    mounted:
+        break;
+    case 2:
+    default:
         walk_speed = unit->walk_speed.word;
         if (walk_speed >= 0x3000) {
-            anim = 0xA;
+            anim = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_HASTE;
         } else {
-            anim = 0x9;
+            anim = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
             if (walk_speed < 0x1401) {
-                anim = 0xB;
+                anim = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_SLOW;
             }
         }
+        break;
     }
     if (anim != 0) {
-        battle_unit_store_animation_facing(anim, *(s16*)&unit->facing, unit);
+        battle_unit_store_animation_facing(anim, unit->facing, unit);
     }
 }

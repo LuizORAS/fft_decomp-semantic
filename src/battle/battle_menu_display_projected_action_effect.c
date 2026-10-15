@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Provisional layout of the preview value panel at 0x801687a0. */
+/* The preview value panel at 0x801687a0, as this file uses it. */
 typedef struct battle_menu_preview_value_panel {
     s16 x;                /* 0x00 */
     s16 y;                /* 0x02 */
@@ -14,7 +14,7 @@ typedef struct battle_menu_preview_value_panel {
     s16 hit_percent_kind; /* 0x16; second number entry's kind: 0 draws, 2 hides */
 } battle_menu_preview_value_panel_t;
 
-/* Provisional 0x3c-byte label entries at 0x80168474; entry 1 holds the defaults. */
+/* The two 0x3c-byte label entries at 0x80168474, as this file uses them; entry 1 holds the defaults. */
 typedef struct battle_menu_preview_label_panel {
     u16 x;               /* 0x00 */
     u8 _unused_02[0xa];  /* 0x02 */
@@ -35,8 +35,8 @@ extern battle_menu_preview_label_panel_t g_battle_menu_projected_label_panels[2]
  * with the panel state's 2 still in $v0. An explicit `return 2;` adds a second
  * constant load, so they use a bare `return;`. The caller discards the result.
  */
-s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const battle_image_location_t* base_load,
-    const battle_image_location_t* base_screen, world_gfx_image_load_parameters_t* params) {
+s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const world_image_location_t* base_load,
+    const RECT* base_screen, world_gfx_image_load_parameters_t* params) {
     battle_menu_preview_value_panel_t* panel;
     battle_menu_preview_label_panel_t* label;
     const battle_action_display_image_rect_t* rect;
@@ -50,6 +50,7 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const battle_ima
     u16* digits_x;
     u16* label_0c;
     battle_action_data_t* action;
+    u8 target_id;
 
     extra = 0;
     show_empty = 0;
@@ -70,7 +71,8 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const battle_ima
      * (from kernel RAM) before the null test. */
     action = g_battle_menu_preview_target_action;
     g_battle_menu_active_turn_banner.projected_hit_percent = action->attack_accuracy;
-    if ((u8)g_battle_preview_target_unit_id == 0xff || action == 0) {
+    target_id = g_battle_preview_target_unit_id;
+    if (target_id == 0xff || action == 0) {
         g_battle_menu_projected_value_panel.state = 2;
         g_battle_menu_projected_value_panel.hit_percent_kind = 2;
         return;
@@ -80,18 +82,18 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const battle_ima
     }
 
     if (action->attack_type & BATTLE_ACTION_TYPE_HP_DAMAGE) {
-        value = (s16)action->hp_damage;
+        value = action->hp_damage;
         image = BATTLE_ACTION_DISPLAY_IMAGE_HP;
     } else if (action->attack_type & BATTLE_ACTION_TYPE_HP_HEALING) {
-        value = (s16)action->hp_healing;
+        value = action->hp_healing;
         image = BATTLE_ACTION_DISPLAY_IMAGE_HP;
         g_battle_menu_projected_value_panel.format = 0x403;
     } else if (action->attack_type & BATTLE_ACTION_TYPE_MP_DAMAGE) {
-        value = (s16)action->mp_damage;
+        value = action->mp_damage;
         image = BATTLE_ACTION_DISPLAY_IMAGE_MP;
     } else if (action->attack_type & BATTLE_ACTION_TYPE_MP_HEALING) {
         image = BATTLE_ACTION_DISPLAY_IMAGE_MP;
-        value = (s16)action->mp_healing;
+        value = action->mp_healing;
         g_battle_menu_projected_value_panel.format = 0x403;
     } else if (action->gil_change != 0 && (action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS)) {
         value = action->gil_change;
@@ -131,7 +133,7 @@ s32 battle_menu_display_projected_action_effect(POLY_FT4* prim, const battle_ima
         }
         panel->x += 12;
     } else if ((g_battle_menu_preview_target_action->attack_type & BATTLE_ACTION_TYPE_PSEUDO_STATUS)
-        && g_battle_menu_preview_target_action->ct_change == 0xff) {
+        && g_battle_menu_preview_target_action->ct_change == BATTLE_ACTION_CT_CHANGE_QUICK) {
         /* The three shifted-label tails are duplicated in the original and
          * merged by cross-jumping; a shared goto tail allocates differently. */
         image = BATTLE_ACTION_DISPLAY_IMAGE_QUICK;

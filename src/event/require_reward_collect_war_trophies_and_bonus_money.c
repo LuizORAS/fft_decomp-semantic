@@ -1,6 +1,10 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/* After a battle, list the war trophies (the bonus money when it is not 0, then each trophy item
+ * from battle_unit_find_war_trophies_and_bonus_money) and pay them: each item adds a copy to the
+ * inventory, or a quarter of its price in gil when 99 are already owned (equipped copies count), and
+ * the bonus money goes to the war funds. require_reward_render_gil_ticker pays the level money. */
 void require_reward_collect_war_trophies_and_bonus_money(void) {
     s32 i;
     s32 item_id;
@@ -11,7 +15,7 @@ void require_reward_collect_war_trophies_and_bonus_money(void) {
     s32 item_count;
     item_data_t* item;
     u8* qp;
-    volatile u32 pad[4];
+    u32 pad[4];
     s32* iv;
     s32* it;
 
@@ -25,7 +29,7 @@ void require_reward_collect_war_trophies_and_bonus_money(void) {
         it = g_require_reward_war_trophy_entry_types;
         j = g_require_reward_war_trophy_entry_count;
         iv[j] = g_require_reward_war_trophy_search_result.bonus_money;
-        it[j] = 1;
+        it[j] = REQUIRE_WAR_TROPHY_ENTRY_BONUS_MONEY;
         if (iv[j] != 0) {
             next = j + 1;
             g_require_reward_war_trophy_entry_count = next;
@@ -47,7 +51,7 @@ void require_reward_collect_war_trophies_and_bonus_money(void) {
             item_id = g_require_reward_war_trophy_search_result.item_ids[i];
             i++;
             vb[entry] = item_id;
-            tb[entry] = 0;
+            tb[entry] = REQUIRE_WAR_TROPHY_ENTRY_ITEM;
             loop_count = *cp;
             g_require_reward_war_trophy_entry_count = entry + 1;
         } while (i < loop_count);
@@ -58,8 +62,8 @@ void require_reward_collect_war_trophies_and_bonus_money(void) {
         s32* vp = g_require_reward_war_trophy_entry_values;
         s32* tp = g_require_reward_war_trophy_entry_types;
         do {
-            if (*tp == 0) {
-                item_id = *(u8*)vp;
+            if (*tp == REQUIRE_WAR_TROPHY_ENTRY_ITEM) {
+                item_id = *vp;
                 quantity = main_item_get_total_equipment_quantity(item_id, 1);
                 if (quantity == 99) {
                     item = main_item_get_data_pointer(*vp);

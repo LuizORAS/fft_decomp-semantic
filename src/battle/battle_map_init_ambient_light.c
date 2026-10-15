@@ -1,15 +1,15 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-void battle_map_init_ambient_light(s32 unused_0, s32 unused_1, s32 map_id) {
-    /* Pin: the target copies the record pointer into $a2 (`move a2,v0`);
-     * unpinned GCC uses $v0 directly, and reusing the map_id
-     * parameter for it does not produce the copy either. */
-    register map_color_t* color asm("$6");
+/* Seed the ambient light fade from the colour the map loaded: the base colour and
+ * the 16.16 transition channels take the current GTE back colour.
+ *
+ * The unset `color` is passed as the command's data argument, which the GET
+ * command does not read, and then receives the result. */
+void battle_map_init_ambient_light(void) {
+    map_color_t* color;
 
-    color = (map_color_t*)battle_map_light_state_command(MAP_LIGHT_COMMAND_GET_AMBIENT_COLOR, (u8*)map_id);
-    /* Makes the `move a2,v0` copy happen right after the call. */
-    asm volatile("" : "=r"(color) : "0"(color));
+    color = battle_map_light_state_command(MAP_LIGHT_COMMAND_GET_AMBIENT_COLOR, color);
     g_battle_map_ambient_light_color = *color;
     g_battle_map_ambient_light_transition.channels.red = color->red << 16;
     g_battle_map_ambient_light_transition.channels.green = color->green << 16;

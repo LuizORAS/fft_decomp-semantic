@@ -1,6 +1,8 @@
 #include "fft/event_attack.h"
 #include "psx/types.h"
 
+/* Return the deployed-unit coordinate slots to fill: the first six on the
+ * first call, the slots from index 6 on every later call. */
 void* attack_deploy_get_coordinate_slots(void) {
     void* coordinate_slots;
 

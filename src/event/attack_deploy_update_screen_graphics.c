@@ -2,12 +2,17 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* The v/y adjustments and the tpage/clut stores address the current
- * primitive through a byte offset recomputed at the top of each iteration:
- * GCC then strength-reduces that offset last, after the g_attack_deploy_text_graphic_params[i]
- * parameter pointer, which is the target's induction-register order. The
- * equivalent g_attack_deploy_text_polys[parity][i] (or a flat index) form reduces a second
- * copy of the offset after the join below and changes the loop increments. */
+/* Thread of the deployment screen's captions (started by attack_deploy_run_screen): each frame draw its
+ * nine text sprites from the texture page at (0x100, 0), the squad caption (placed for the first squad or
+ * for the others), the squad's unit limit and the units it can still take, each revealed 12 pixels tall
+ * step by step; the last three hide while no unit can be added. When thread parameter 3 is set they all
+ * hide, and the thread exits once they are gone.
+ *
+ * The v/y adjustments and the tpage/clut stores address the current primitive through a byte offset
+ * recomputed at the top of each iteration: GCC then strength-reduces that offset last, after the
+ * g_attack_deploy_text_graphic_params[i] parameter pointer, which is the target's induction-register order.
+ * The equivalent g_attack_deploy_text_polys[parity][i] (or a flat index) form reduces a second copy of the
+ * offset after the join below and changes the loop increments. */
 void attack_deploy_update_screen_graphics(void) {
     s32 i;
     s32 parity;
@@ -54,9 +59,8 @@ void attack_deploy_update_screen_graphics(void) {
             battle_gfx_init_default_poly_ft4(&g_attack_deploy_text_polys[parity][i]);
             ((POLY_FT4*)((u8*)g_attack_deploy_text_polys + off))->tpage = GetTPage(0, 0, 0x100, 0);
             ((POLY_FT4*)((u8*)g_attack_deploy_text_polys + off))->clut = 0x7d7c;
-            battle_gfx_init_image_loading(&g_attack_deploy_text_polys[parity][i],
-                (battle_image_location_t*)g_attack_deploy_texture_location, &g_attack_deploy_text_screen_origin,
-                &g_attack_deploy_text_graphic_params[i]);
+            battle_gfx_init_image_loading(&g_attack_deploy_text_polys[parity][i], g_attack_deploy_texture_location,
+                &g_attack_deploy_text_screen_origin, &g_attack_deploy_text_graphic_params[i]);
             if (g_attack_deploy_text_reveal_steps[i] != 0) {
                 if (g_attack_deploy_text_reveal_steps[i] > 0) {
                     value = &g_attack_deploy_text_reveal_heights[i];

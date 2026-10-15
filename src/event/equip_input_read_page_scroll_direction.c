@@ -14,7 +14,7 @@ s32 equip_input_read_page_scroll_direction(void) {
     u16 held_frames;
 
     direction = 0;
-    if (g_equip_input_page_scroll_disabled == 0 && g_event_mode == 0) {
+    if (g_equip_input_page_scroll_disabled == 0 && g_battle_menu_input_lock_mode == 0) {
         input = PadRead(0);
         if ((input & PSX_PAD_UP) && (input & PSX_PAD_SQUARE)) {
             direction = -1;

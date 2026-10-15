@@ -5,7 +5,7 @@
  * clear the three sound script variables.
  *
  * The switch tests the separately catalogued neighbour
- * g_wldcore_active_saved_record.sound_mode, not part of g_wldcore_active_saved_record.music_selection.
+ * g_wldcore_sound_novel_record.sound_mode, not part of g_wldcore_sound_novel_record.music_selection.
  * The selection byte read goes through *(u8*) so it stays an lbu as in the target. */
 void wldcore_sound_play_pending_script_sounds(s32 sound_id, s32 weather_sound_id, s32 track) {
     s32* music_flags;
@@ -13,9 +13,9 @@ void wldcore_sound_play_pending_script_sounds(s32 sound_id, s32 weather_sound_id
     if ((sound_id | weather_sound_id | track) == 0) {
         return;
     }
-    switch ((s16)g_wldcore_active_saved_record.sound_mode) {
+    switch (g_wldcore_sound_novel_record.sound_mode) {
     case 0:
-        if (sound_id != 0) {
+        if (sound_id != MAIN_SFX_NONE) {
             wldcore_sound_play_effect(sound_id);
         }
         if (weather_sound_id != 0) {
@@ -23,18 +23,18 @@ void wldcore_sound_play_pending_script_sounds(s32 sound_id, s32 weather_sound_id
         }
         break;
     case 1:
-        if (sound_id != 0) {
+        if (sound_id != MAIN_SFX_NONE) {
             wldcore_sound_play_effect(sound_id);
         }
         if (weather_sound_id != 0) {
             wldcore_sound_stop_weather_sfx_and_send_quad(weather_sound_id);
         }
         if (track != 0) {
-            if ((u8)g_wldcore_active_saved_record.music_selection != track) {
+            if ((g_wldcore_sound_novel_record.music_selection & 0xFF) != track) {
                 wldcore_sound_change_scenario_music(track);
                 music_flags = &g_wldcore_audio_queue.music.flags;
-                *music_flags |= 1;
-                main_sound_switch_music_track(((s32)(g_wldcore_active_saved_record.music_selection << 16)) >> 24, 0, 0);
+                *music_flags |= WLDCORE_AUDIO_MUSIC_PLAYING;
+                main_sound_switch_music_track(g_wldcore_sound_novel_record.music_selection >> 8, 0, 0);
                 main_sound_set_current_music_target(g_wldcore_audio_queue.volume, 0x28);
             }
         }

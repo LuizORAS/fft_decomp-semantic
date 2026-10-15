@@ -2,6 +2,8 @@
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 
+/* Send the pixels at `pixels` to the VRAM rectangle `rect`, through the queue (_dws). About 140 functions load
+ * images, CLUTs and texture pages this way. */
 s32 LoadImage(RECT* rect, u32* pixels) {
     checkRECT(g_psyq_gpu_load_image_name, rect);
     return g_psyq_gpu_dispatch->enqueue_four(g_psyq_gpu_dispatch->load, rect, 8, (u32)pixels);

@@ -1,6 +1,9 @@
 /* SCUS_942.21 0x80020650..0x8002074f. */
 #include "psx/libcd.h"
 
+/* Copy `words` words from the drive's sector buffer to destination: request the data, set the bus
+ * delays, start DMA channel 3 in one block and wait, with no timeout, for the buffer and the transfer.
+ * Returns 0. */
 s32 CD_getsector(void* destination, s32 words) {
     *g_psyq_cd_index_status_register = 0;
     *g_psyq_cd_request_interrupt_register = 0x80;

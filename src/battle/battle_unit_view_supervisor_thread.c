@@ -15,7 +15,7 @@ extern world_unit_view_thread_set_t g_battle_unit_view_thread_sets[];
 
 /*
  * Battle twin of world_unit_view_supervisor_thread; started by
- * battle_menu_store_unit_names_and_event_block_data.
+ * battle_unit_start_view_thread.
  *
  * For the requested view mode it starts each missing slot thread, and asks
  * running ones with the wrong task (or a stale viewed unit) to stop, then
@@ -31,10 +31,10 @@ void battle_unit_view_supervisor_thread(void) {
     native_thread_t* thread;
 
     for (;;) {
-        mode = (s32)battle_thread_get_current_parameter_1();
+        mode = battle_thread_get_current_parameter_1();
         set = &g_battle_unit_view_thread_sets[mode];
         g_battle_unit_view_mode = mode;
-        g_battle_thread_contexts[g_battle_current_thread_id].function_parameter_1 = 0xff;
+        g_battle_thread_contexts[g_battle_thread_current_id].function_parameter_1 = 0xff;
         for (i = 15; i >= 0; i--) {
             states[i] = BATTLE_UNIT_VIEW_SLOT_IDLE;
         }
@@ -43,9 +43,12 @@ void battle_unit_view_supervisor_thread(void) {
             if (thread->is_running != 0) {
                 task = thread->task_id;
                 if (task == set->task_ids[i]
-                    && (task != 0x11 || g_battle_unit_view_started_battle_id == g_battle_active_turn_unit.battle_id)
-                    && (task != 0x3a || g_battle_unit_view_started_comparison_id == g_battle_preview_target_unit_id)
-                    && (task != 0x14 || g_battle_unit_view_started_battle_id == g_battle_active_turn_unit.battle_id)) {
+                    && (task != NATIVE_THREAD_TASK_HOVERED_UNIT_STATS
+                        || g_battle_unit_view_started_battle_id == g_battle_active_turn_unit.battle_id)
+                    && (task != NATIVE_THREAD_TASK_RIGHT_UNIT_STATS
+                        || g_battle_unit_view_started_comparison_id == g_battle_preview_target_unit_id)
+                    && (task != NATIVE_THREAD_TASK_UNIT_SUMMARY_PANEL
+                        || g_battle_unit_view_started_battle_id == g_battle_active_turn_unit.battle_id)) {
                     continue;
                 }
                 states[set->thread_ids[i]] = BATTLE_UNIT_VIEW_SLOT_RESTART;
@@ -78,7 +81,7 @@ void battle_unit_view_supervisor_thread(void) {
                 g_battle_thread_contexts[set->thread_ids[i]].task_id = set->task_ids[i];
             }
         }
-        if ((s32)battle_thread_get_current_parameter_1() == 0xff) {
+        if (battle_thread_get_current_parameter_1() == 0xff) {
             battle_thread_exit_current();
         }
     }

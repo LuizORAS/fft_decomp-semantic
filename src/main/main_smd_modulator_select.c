@@ -1,9 +1,10 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xF0: selects the modulator that 0xF1 and
- * 0xF2 program and sets its waveform (low nibble of the second byte; bit 4
- * clear sets flags bit 1) and output target (third byte). */
+/* SMD opcode 0xF0 "Modulator Select": selects the modulator that 0xF1 and
+ * 0xF2 program and sets its waveform (low nibble of the second byte; it
+ * restarts on key-on unless bit 4 is set) and output target (third byte,
+ * suzuki_modulator_target_e). The modulator is left inactive. */
 u8* main_smd_modulator_select(u8* note_data, suzuki_music_t* music, suzuki_music_channel_t* channel) {
     suzuki_modulator_t* modulator;
     u8 param;
@@ -14,12 +15,12 @@ u8* main_smd_modulator_select(u8* note_data, suzuki_music_t* music, suzuki_music
     modulator->waveform = param & 0xf;
     modulator->step = g_main_smd_modulator_waveforms[modulator->waveform];
     if ((param & 0x10) == 0) {
-        modulator->flags = 2;
+        modulator->flags = SUZUKI_MODULATOR_RESTART_ON_KEY_ON;
     } else {
         modulator->flags = 0;
     }
     modulator->target = note_data[2];
-    modulator->counter_14_reset = 0;
-    modulator->counter_18_reset = 0x100;
+    modulator->delay_reset = 0;
+    modulator->fade_step = 0x100;
     return note_data + 3;
 }

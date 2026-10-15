@@ -1,10 +1,11 @@
 #include "fft/battle.h"
 
+/* Set the target's HP damage to XA * YA, as HP damage. */
 void battle_formula_store_xa_times_ya_damage(void) {
-    u32 damage;
+    s16 damage;
     battle_action_data_t* action;
 
-    damage = g_current_ability.xa * g_current_ability.ya;
+    damage = g_battle_action_current_ability.xa * g_battle_action_current_ability.ya;
     action = g_battle_action_target_data;
     action->attack_type = BATTLE_ACTION_TYPE_HP_DAMAGE;
     action->hp_damage = damage;

@@ -5,19 +5,18 @@ typedef struct world_formation_unit_halfwords {
     s16 fields[sizeof(world_formation_unit_t) / 2];
 } world_formation_unit_halfwords_t;
 
-/*
- * Sort the formation roster order by the key list selected by `index`,
- * then move guest units (gender flag bit 2) to the end in ascending order
- * and rebuild the unit pointer table.
+/* Sort the formation records by the roster's Order Unit keys (key list `index`, always 0): a bubble
+ * sort comparing each key's field in priority order until one differs, Number ascending and the other
+ * keys descending (g_world_formation_sort_field_indices). Eggs then move to the end, the lowest record
+ * index last, and the unit pointer table is rebuilt with the preview record after it.
  *
  * `rec` is reused for both records so that only the first record's 0x128
  * multiply leaves the key loop, as in the target. The second key value
- * shares `swap` with the guest loop and `lhs` doubles as the exchanged
+ * shares `swap` with the egg loop and `lhs` doubles as the exchanged
  * order entry: both must be multi-set variables for the target's register
- * choice (a1/v0) and load order.
- */
+ * choice (a1/v0) and load order. */
 void world_formation_sort_roster(s32 index) {
-    s8 guests[24];
+    s8 eggs[24];
     s8* keys;
     s32 i;
     s32 j;
@@ -56,13 +55,13 @@ void world_formation_sort_roster(s32 index) {
     }
     count = 0;
     for (i = 0; i < g_world_formation_record_count; i++) {
-        if (g_world_formation_unit_records[g_world_formation_record_order[i]].gender_flags & 4) {
-            guests[count++] = g_world_formation_record_order[i];
+        if (g_world_formation_unit_records[g_world_formation_record_order[i]].gender_flags & UNIT_FLAG_EGG) {
+            eggs[count++] = g_world_formation_record_order[i];
         }
     }
     for (i = 0; i < count; i++) {
         j = 0;
-        swap = guests[i];
+        swap = eggs[i];
         while (1) {
             if (g_world_formation_record_order[j] == swap) {
                 break;
@@ -72,22 +71,23 @@ void world_formation_sort_roster(s32 index) {
         for (; j < g_world_formation_record_count - 1; j++) {
             g_world_formation_record_order[j] = g_world_formation_record_order[j + 1];
         }
-        g_world_formation_record_order[g_world_formation_record_count - 1] = guests[i];
+        g_world_formation_record_order[g_world_formation_record_count - 1] = eggs[i];
     }
     for (i = count - 1; i > 0; i--) {
         for (j = 0; j < i; j++) {
-            if (guests[j + 1] < guests[j]) {
-                first = guests[j];
-                guests[j] = guests[j + 1];
-                guests[j + 1] = first;
+            if (eggs[j + 1] < eggs[j]) {
+                first = eggs[j];
+                eggs[j] = eggs[j + 1];
+                eggs[j + 1] = first;
             }
         }
     }
     for (i = 0; i < count; i++) {
-        g_world_formation_record_order[g_world_formation_record_count - 1 - i] = guests[i];
+        g_world_formation_record_order[g_world_formation_record_count - 1 - i] = eggs[i];
     }
     for (i = 0; i < g_world_formation_record_count; i++) {
         g_world_formation_unit_pointers[i] = &g_world_formation_unit_records[g_world_formation_record_order[i]];
     }
-    g_world_formation_unit_pointers[20] = &g_world_formation_unit_records[20];
+    g_world_formation_unit_pointers[WORLD_FORMATION_PREVIEW_RECORD]
+        = &g_world_formation_unit_records[WORLD_FORMATION_PREVIEW_RECORD];
 }

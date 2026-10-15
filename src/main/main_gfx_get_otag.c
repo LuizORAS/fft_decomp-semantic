@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 #include "fft/main.h"
 
+/* Return the ordering table of BATTLE's current render buffer (g_battle_gfx_current_render_buffer). */
 u32* main_gfx_get_otag(void) {
-    return g_battle_data->otag;
+    return g_battle_gfx_current_render_buffer->otag;
 }

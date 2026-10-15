@@ -1,7 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 0x43: damage equal to the caster's missing HP (MaxHP - CurHP). */
+/* Formula 0x43, Shock, Shock!, Blade Beam, Ulmaguest and Lifebreak: damage equal to the caster's
+ * max HP - current HP; no evade or hit roll. */
 void battle_formula_43_damage_caster_missing_hp(void) {
     battle_stats_t* unit = g_battle_action_attacker;
     battle_action_data_t* action = g_battle_action_target_data;

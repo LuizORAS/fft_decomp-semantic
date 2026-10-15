@@ -1,18 +1,19 @@
 #include "fft/battle.h"
 
-/*
- * Score each reachable tile, resuming suspended evaluations.
+/* Score standing on each reachable tile of the current scenario: simulate moving there without
+ * acting, with the crystal or treasure pickup (battle_ai_check_unit_for_crystal_or_treasure_status,
+ * battle_ai_simulate_action_and_score), and store the negated score in tile_priority. The simulation
+ * unit returns to its own tile when the scan ends. Returns -1 to suspend, resuming at the same tile,
+ * else 0.
  *
- * Return -1 to suspend and 0 after restoring the simulation coordinates.
- * Integer address stages preserve the target's addition order; direct typed
- * indexing changes the machine code. Each level has 18 rows of 16 tiles.
- */
+ * Integer address stages preserve the target's addition order; direct typed indexing changes the
+ * machine code. Each level has 18 rows of 16 tiles. */
 s32 battle_ai_score_reachable_tiles(void) {
     s32 x, y, level;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     u32 row;
 
-    if (g_battle_ai_data_base.decision_state != 0) {
+    if (g_battle_ai_data_base.resume_pending != 0) {
         x = g_battle_ai_data_base.current_action.coords.bytes.x;
         y = g_battle_ai_data_base.current_action.coords.bytes.y;
         level = g_battle_ai_data_base.current_action.coords.bytes.elevation;
@@ -29,7 +30,7 @@ s32 battle_ai_score_reachable_tiles(void) {
         goto evaluate_tile;
     }
     level = 0;
-    g_battle_ai_data_base.current_action.target_flags_set = 0;
+    g_battle_ai_data_base.current_action.act_before_move = 0;
     g_battle_ai_data_base.current_action.skillset = 0;
     for (; level < 2; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
@@ -61,7 +62,7 @@ s32 battle_ai_score_reachable_tiles(void) {
                             level_address += (u32)&ai->tile_priority - (u32)ai;
                             row_address = y * 32 + level_address;
                             tile_address = x * 2 + row_address;
-                            *(u16*)tile_address = -ai->current_action.priority;
+                            *(u16*)tile_address = -ai->current_action.rank.priority;
                         }
                     }
                 }

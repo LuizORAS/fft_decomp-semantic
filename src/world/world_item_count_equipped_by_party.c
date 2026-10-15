@@ -1,0 +1,28 @@
+#include "fft/world.h"
+#include "psx/types.h"
+
+/* Count copies of an item equipped across the active formation records.
+ *
+ * The comparison uses the stored equipment halfword as-is; only the requested
+ * ID is masked. */
+s32 world_item_count_equipped_by_party(s32 item_id) {
+    s32 count;
+    s32 unit_index;
+    s32 slot;
+    world_formation_unit_t* unit;
+
+    count = 0;
+    item_id &= WORLD_ITEM_ID_MASK;
+    for (unit_index = 0; unit_index < g_world_formation_record_count; unit_index++) {
+        unit = g_world_formation_unit_pointers[unit_index];
+        for (slot = 0; slot < 5; slot++) {
+            if (unit->equipment[slot] == item_id) {
+                count++;
+            }
+        }
+        /* The target reloads the record count on every pass although nothing
+         * in the loop stores; without this the load is hoisted. */
+        __asm__("" : : : "memory");
+    }
+    return count;
+}

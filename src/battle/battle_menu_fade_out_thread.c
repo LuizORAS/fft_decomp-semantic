@@ -1,6 +1,14 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Thread that runs the unit list overlay (BUNIT.OUT) and returns to the battle;
+ * battle_menu_run_bunit_transition_thread starts it in the borrowed fade-out slot
+ * once the overlay is loaded and the screen is dark.
+ *
+ * It holds g_battle_menu_transition_state at 4, waits for thread 6 to end, hands
+ * the frame driver the overlay's entry point and waits for it to return, frees
+ * the high overlay memory, asks threads 2-14 to stop, fades the screen back in
+ * over 32 frames and restores the hovered-unit view for the active-turn unit. */
 void battle_menu_fade_out_thread(void) {
     s32 thread_id;
     s32 fade;
@@ -9,13 +17,13 @@ void battle_menu_fade_out_thread(void) {
     g_battle_menu_transition_state = 4;
     do {
         battle_thread_yield();
-    } while (battle_thread_is_running_8014cc94(6));
+    } while (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_GRANDCHILD));
 
-    g_companion_overlay_state = 2;
+    g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_BUNIT;
     g_battle_menu_help_open = 0;
     do {
         battle_thread_wait_frames(1);
-    } while (g_companion_overlay_state != 0);
+    } while (g_battle_companion_overlay_state != BATTLE_COMPANION_OVERLAY_STATE_IDLE);
 
     battle_menu_free_high_overlay();
     for (thread_id = 2; thread_id < 15; thread_id++) {
@@ -27,10 +35,10 @@ void battle_menu_fade_out_thread(void) {
         battle_thread_yield();
     }
 
-    battle_menu_clear_option_menu_open();
-    g_option_menu_submenu_state = 0;
+    battle_menu_unblock_help();
+    g_battle_menu_suspend_state = 0;
     g_battle_screen_fade = 0;
     g_battle_menu_transition_state = 0;
-    battle_menu_store_unit_names_and_event_block_data(2, g_battle_active_turn_unit.battle_id, 0xff);
+    battle_unit_start_view_thread(UNIT_VIEW_MODE_HOVERED_UNIT, g_battle_active_turn_unit.battle_id, 0xff);
     battle_thread_exit_current();
 }

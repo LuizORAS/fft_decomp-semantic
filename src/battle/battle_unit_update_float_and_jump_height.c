@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Copies the Float display status into BATTLE_MOTION_FLAG_FLOAT and, unless the
+ * unit is in a Jump (flag set, being removed, or its height still active), puts
+ * the unit back at its tile's height. */
 void battle_unit_update_float_and_jump_height(battle_unit_misc_data_t* unit) {
     if (unit->status_flags_5_6 & BATTLE_MISC_STATUS_FLOAT) {
         unit->movement.word |= BATTLE_MOTION_FLAG_FLOAT;

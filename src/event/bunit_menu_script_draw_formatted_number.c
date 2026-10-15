@@ -9,13 +9,12 @@
  * highlighted CLUT, 0x20000000 draws dashes, and a negative value gets a minus
  * glyph ahead of the first cell.
  *
- * Register allocation hinges on GCC 2.6.3 allocno priorities: the dash loop
- * is a goto loop (no loop notes, so its uses of `y` and `color` weigh 1),
- * `negative` is an s8 (the promoted subreg gives the target's `move v0,s7`
- * copy before the test) and is cleared after the minus-glyph call, and the
- * if/else spellings of `color` and `value` set the live lengths that put
- * `color` in s6 ahead of `negative` in s7. */
-bunit_draw_number_command_t* bunit_menu_script_draw_formatted_number(bunit_draw_number_command_t* command) {
+ * Register allocation hinges on GCC 2.6.3 allocno priorities: `negative` is
+ * an s8 (the promoted subreg gives the target's `move v0,s7` copy before the
+ * test) and is cleared after the minus-glyph call, and the if/else spellings
+ * of `color` and `value` set the live lengths that put `color` in s6 ahead of
+ * `negative` in s7. */
+world_draw_number_command_t* bunit_menu_script_draw_formatted_number(world_draw_number_command_t* command) {
     s8 text[16];
     RECT rect;
     RECT glyph;
@@ -42,10 +41,10 @@ bunit_draw_number_command_t* bunit_menu_script_draw_formatted_number(bunit_draw_
         y = command->y;
     } else {
         row = g_bunit_menu_scroll_base_index + g_bunit_menu_cursor_row;
-        y = (s16)g_bunit_menu_list_row_height * g_bunit_menu_cursor_row + command->y - g_bunit_menu_scroll_pixel_offset;
+        y = g_bunit_menu_list_row_height * g_bunit_menu_cursor_row + command->y - g_bunit_menu_scroll_pixel_offset;
         if (g_bunit_menu_scroll_pixel_offset < 0) {
             row--;
-            y -= (s16)g_bunit_menu_list_row_height;
+            y -= g_bunit_menu_list_row_height;
         }
     }
     if (getter != 0) {
@@ -58,19 +57,19 @@ bunit_draw_number_command_t* bunit_menu_script_draw_formatted_number(bunit_draw_
         negative = 1;
     }
     opcode = command->opcode;
-    if (opcode == 0x1B || opcode == 0x19) {
+    if (opcode == MENU_SCRIPT_OP_NUMBER_TINTED || opcode == MENU_SCRIPT_OP_NUMBER_TINTED_NO_LEADING_ZEROS) {
         color = g_bunit_gfx_sprite_color;
     } else {
         color = 0;
     }
     if (command->alternate_palette != 0) {
-        clut = g_bunit_text_metric_1;
+        clut = g_bunit_menu_alternate_number_clut;
     } else {
-        clut = g_bunit_text_metric_2;
+        clut = g_bunit_menu_palette_clut;
     }
-    if (value & 0x40000000) {
-        clut = g_bunit_text_metric_3;
-        value &= 0xBFFFFFFF;
+    if (value & MENU_NUMBER_VALUE_DISABLED) {
+        clut = g_bunit_menu_disabled_number_clut;
+        value &= ~MENU_NUMBER_VALUE_DISABLED;
     }
     if (command->style == 1) {
         glyph.x = 0x78;
@@ -88,7 +87,7 @@ bunit_draw_number_command_t* bunit_menu_script_draw_formatted_number(bunit_draw_
         glyph.w = 0xA;
         glyph.h = 0x10;
     }
-    if (value & 0x20000000) {
+    if (value & MENU_NUMBER_VALUE_DASHES) {
         value = command->width;
         while (value > 0) {
             next_remaining = value - 1;
@@ -101,7 +100,7 @@ bunit_draw_number_command_t* bunit_menu_script_draw_formatted_number(bunit_draw_
             value = next_remaining;
         }
     } else {
-        blanks = command->width - sprintf((char*)text, g_bunit_text_decimal_format, value) - negative;
+        blanks = command->width - sprintf(text, g_bunit_text_decimal_format, value) - negative;
         text_index = 0;
         for (i = 0; i < command->width; i++) {
             x = command->x + i * command->spacing;
@@ -118,17 +117,17 @@ bunit_draw_number_command_t* bunit_menu_script_draw_formatted_number(bunit_draw_
                     g_bunit_text_digit_texture_page, clut, g_bunit_gfx_otag_index);
                 negative = 0;
             } else {
-                if (command->opcode == 0x1A) {
-                    clut = g_bunit_text_metric_2;
+                if (command->opcode == MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS) {
+                    clut = g_bunit_menu_palette_clut;
                 }
                 if (blanks != 0) {
                     digit = 0;
                     blanks--;
-                    if (command->opcode == 0x19) {
+                    if (command->opcode == MENU_SCRIPT_OP_NUMBER_TINTED_NO_LEADING_ZEROS) {
                         continue;
                     }
-                    if (command->opcode == 0x1A && i < command->width - 1) {
-                        clut = g_bunit_text_metric_3;
+                    if (command->opcode == MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS && i < command->width - 1) {
+                        clut = g_bunit_menu_disabled_number_clut;
                     }
                 } else {
                     digit = text[text_index] - '0';
@@ -141,5 +140,5 @@ bunit_draw_number_command_t* bunit_menu_script_draw_formatted_number(bunit_draw_
             }
         }
     }
-    return (bunit_draw_number_command_t*)((u8*)command + command->length);
+    return (world_draw_number_command_t*)((u8*)command + command->length);
 }

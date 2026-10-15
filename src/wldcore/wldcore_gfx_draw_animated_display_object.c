@@ -4,18 +4,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* One frame of an animation sequence: the cel it draws and how long it holds.
- * duration 0xffff pins the frame. */
-typedef struct wldcore_anim_frame {
-    u16 cel;      /* 0x00 */
-    u16 duration; /* 0x02 */
-} wldcore_anim_frame_t;
-
-typedef struct wldcore_anim_sequence {
-    s32 frame_count;                /* 0x00 */
-    wldcore_anim_frame_t frames[1]; /* 0x04 */
-} wldcore_anim_sequence_t;
-
 /* One sprite part of a cel, two packed words. The byte view supplies the
  * position and the source rectangle; the word view supplies the bitfields. */
 typedef union wldcore_sprite_part {
@@ -58,7 +46,7 @@ extern wldcore_anim_sequence_t** g_wldcore_anim_sequence_table;
  * as a USE-only pseudo. That pseudo and the part loop's folded entry test
  * (combine turns it into `blez count`, keeps `i = 0`, and leaves the slt
  * pseudo only a USE) get the unreferenced reload slots at 0x50 and 0x58. */
-void wldcore_gfx_draw_animated_display_object(wldcore_anim_object_t* object, GsOT* ot) {
+void wldcore_gfx_draw_animated_display_object(wldcore_window_record_t* object, GsOT* ot) {
     GsSPRITE sprite;
     CVECTOR color;
     wldcore_anim_sequence_t* sequence;
@@ -74,10 +62,7 @@ void wldcore_gfx_draw_animated_display_object(wldcore_anim_object_t* object, GsO
     s32 cx_base;
     s32 cy;
     s32 palette;
-    s32 ox;
-    s32 oy;
     s32 px;
-    s32 py;
 
     sequence = g_wldcore_anim_sequence_table[object->sequence];
     sprite.my = 0;
@@ -86,7 +71,7 @@ void wldcore_gfx_draw_animated_display_object(wldcore_anim_object_t* object, GsO
     sprite.scalex = ONE;
     sprite.rotate = 0;
     cels = g_wldcore_anim_cel_table;
-    if (object->flags & 0x400) {
+    if (object->flags & WLDCORE_DISPLAY_OBJECT_UNTINTED) {
         color = object->color;
     } else {
         wldcore_gfx_copy_color_with_tint(&object->color, &color);
@@ -94,7 +79,8 @@ void wldcore_gfx_draw_animated_display_object(wldcore_anim_object_t* object, GsO
     sprite.r = color.r;
     sprite.g = color.g;
     sprite.b = color.b;
-    if ((object->flags & 0x800) || !(g_main_system_flags & 0x08000000)) {
+    if ((object->flags & WLDCORE_DISPLAY_OBJECT_ANIMATE_WHILE_PAUSED)
+        || !(g_main_system_flags & MAIN_SYSTEM_FLAG_FREEZE_ANIMATION)) {
         object->anim_counter = object->anim_counter + 1;
     }
     /* A goto loop: as a for/while loop, GCC's loop pass hoists the 0xffff
@@ -120,20 +106,20 @@ step_frame:
     for (i = 0; i < count; i++) {
         index = ((count - i) * 2) | 1;
         sprite.attribute = words[index] & 0x80000000;
-        if (object->flags & 0x20) {
+        if (object->flags & WLDCORE_DISPLAY_OBJECT_SEMI_TRANSPARENT) {
             sprite.attribute |= 0x40000000;
-            sprite.attribute |= (object->flags & 0xc0) << 22;
-            mode = (object->flags & 0xc0) >> 6;
+            sprite.attribute |= (object->flags & WLDCORE_DISPLAY_OBJECT_BLEND_RATE_MASK) << 22;
+            mode = (object->flags & WLDCORE_DISPLAY_OBJECT_BLEND_RATE_MASK) >> 6;
         } else {
             sprite.attribute |= words[index] & 0x70000000;
-            mode = ((u32)words[index] >> 28) & 3;
+            mode = (words[index] >> 28) & 3;
         }
         part = (wldcore_sprite_part_t*)(index * 4 + (s32)words);
         sprite.attribute |= (part->packed.flags & 0x07000000) >> 2;
         px = part->field.x - 0x80;
-        sprite.x = object->x + px;
+        sprite.x = object->position.x + px;
         px = part->field.y - 0x80;
-        sprite.y = object->y + px;
+        sprite.y = object->position.y + px;
         sprite.w = part->field.w;
         sprite.h = part->field.h;
         sprite.tpage = GetTPage(0, mode, clut_x, clut_y);
@@ -152,6 +138,6 @@ step_frame:
         if (sprite.attribute & 0x400000) {
             sprite.v = sprite.v + 1;
         }
-        world_gs_sortflipsprite(&sprite, ot, object->priority);
+        GsSortFlipSprite(&sprite, ot, object->priority);
     }
 }

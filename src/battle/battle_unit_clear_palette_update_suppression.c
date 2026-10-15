@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* Clear BATTLE_MOTION_FLAG_SUPPRESS_PALETTE_UPDATE on the unit with this misc id
+ * (battle_script_set_units_palette_update_suppression). */
 void battle_unit_clear_palette_update_suppression(u32 misc_id) {
     battle_unit_misc_data_t* unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xffff);
 

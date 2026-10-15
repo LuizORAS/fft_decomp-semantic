@@ -1,13 +1,14 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-#define JOB_COUNT 19
-
-/* Return a random unlocked generic job ID, or 0 when none are unlocked.
+/* Return a random unlocked job id, or 0 when none is unlocked. The draw covers the career jobs
+ * before Mime (the last, never drawn); the base job slot gives a special character's own job (its
+ * identity) and Squire for a generic unit. An ENTD unit's random secondary skillset comes from it
+ * (main_unit_calculate_jobs_and_skillsets_from_entd).
  *
  * The ENTD caller explicitly normalizes the zero-extended job byte. */
 s32 main_job_get_random_unlocked(const battle_stats_t* unit) {
-    u8 candidates[JOB_COUNT];
+    u8 candidates[UNIT_CAREER_JOB_INDEX_MIME];
     s32 job_mask = 0x800000;
     s32 candidate_count = 0;
     s32 job_index = 0;
@@ -28,7 +29,7 @@ s32 main_job_get_random_unlocked(const battle_stats_t* unit) {
         }
         job_index++;
         job_mask /= 2;
-    } while (job_index < JOB_COUNT);
+    } while (job_index < UNIT_CAREER_JOB_INDEX_MIME);
 
     if (candidate_count != 0) {
         s32 scaled_random = rand() * candidate_count;

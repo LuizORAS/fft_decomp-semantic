@@ -1,6 +1,8 @@
 /* LIBGPU 80024740-80024868: debug-only rectangle diagnosis. */
 #include "psx/libgpu.h"
 
+/* Report the VRAM rectangle `rect` of the operation `name`: at debug level 1 only when it falls outside VRAM,
+ * at level 2 always. The VRAM transfers check their rectangle with it. */
 void checkRECT(const char* name, RECT* rect) {
     switch (g_psyq_gpu_debug_level) {
     case 1:

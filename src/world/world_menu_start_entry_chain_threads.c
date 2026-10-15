@@ -3,7 +3,7 @@
 
 /* Walks a menu entry chain upward through the parent-index table, starting
  * a thread for each entry, until a root-type thread entry is reached. */
-void world_menu_start_entry_chain_threads(s32 index, s32 thread) {
+void world_menu_start_entry_chain_threads(u32 index, s32 thread) {
     world_menu_entry_t* entry;
 
     do {
@@ -14,7 +14,7 @@ void world_menu_start_entry_chain_threads(s32 index, s32 thread) {
             || entry->thread_entry == world_menu_number_entry_thread) {
             return;
         }
-        index = entry->parent_indices[entry->selected_index];
+        index = entry->row_actions[entry->selected_index];
         thread--;
-    } while ((u32)index < 1000);
+    } while (index < 1000);
 }

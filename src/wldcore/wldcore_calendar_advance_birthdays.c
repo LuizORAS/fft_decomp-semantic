@@ -1,0 +1,39 @@
+#include "fft/wldcore.h"
+
+/* The daily birthday sweep, run by wldcore_calendar_advance_day after the date moves: every Brave
+ * Story character whose birthday is today gets a year older, capped at 99.
+ *
+ * Entry 0 is Ramza. Its row in the birthday table is a placeholder (1/1); the real birthday lives in
+ * EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH and _DAY, written when the player picks one at game start, so
+ * entry 0 is compared against those two variables and the remaining 63 entries against the table.
+ * The table is a 64 x 2 array of month/day byte pairs reached through the pointer cell at
+ * 0x80096a48 (it points at 0x80097028, whose 128 bytes read as plausible month/day pairs
+ * throughout).
+ *
+ * The age column is walked one byte at a time from index 1, which is why the
+ * loop's base materialises as the biased constant 0x80057f35; entry 0 is the
+ * only absolute access to 0x80057f34. */
+void wldcore_calendar_advance_birthdays(void) {
+    const u8(*birthdays)[2] = g_wldcore_brave_story_birthdays;
+    s32 day = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
+    s32 month = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+    s32 birth_month = world_script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH);
+    s32 birth_day = world_script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY);
+    u8 age;
+    s32 i;
+
+    if (month == birth_month && day == birth_day) {
+        age = g_main_brave_story_character_ages[0];
+        if (age < 99) {
+            g_main_brave_story_character_ages[0] = age + 1;
+        }
+    }
+
+    for (i = 1; i < 64; i++) {
+        if (month == birthdays[i][0] && day == birthdays[i][1]) {
+            if (g_main_brave_story_character_ages[i] < 99) {
+                g_main_brave_story_character_ages[i]++;
+            }
+        }
+    }
+}

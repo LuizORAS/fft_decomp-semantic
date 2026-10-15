@@ -1,0 +1,9 @@
+#include "fft/world.h"
+#include "psx/types.h"
+
+/* WORLD twin of battle_menu_set_active_turn_panels. */
+void world_menu_set_active_turn_panels(const void* source_a, const void* source_b, const void* source_c) {
+    world_util_copy_bytes(&g_world_menu_active_turn_banner, source_a, sizeof(g_world_menu_active_turn_banner));
+    world_util_copy_bytes(&g_world_active_turn_unit, source_b, sizeof(g_world_active_turn_unit));
+    world_util_copy_bytes(&g_world_menu_billboard_data, source_c, sizeof(g_world_menu_billboard_data));
+}

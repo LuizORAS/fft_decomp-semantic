@@ -38,7 +38,7 @@ void battle_effect_init_system(void) {
     g_battle_effect_secondary_data[16].function_id = 0;
     g_battle_effect_secondary_data[16].allocation = 0;
     g_battle_effect_active_slot_tail = 0;
-    g_battle_effect_trap_frame_data_ptr = g_battle_effect_trap_frame_data;
+    g_battle_effect_secondary_frames_ptr = g_battle_effect_secondary_frames;
     for (i = 0; i < 17; i++) {
         g_battle_effect_secondary_data[i].active_count = 0;
         for (j = 31; j >= 0; j--) {
@@ -46,5 +46,5 @@ void battle_effect_init_system(void) {
         }
     }
     battle_effect_reset_render_state();
-    battle_effect_init_camera_and_screen_data();
+    battle_effect_init_camera();
 }

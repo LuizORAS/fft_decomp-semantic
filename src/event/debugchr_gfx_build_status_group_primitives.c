@@ -13,11 +13,8 @@ void debugchr_gfx_build_status_group_primitives(POLY_FT4* poly) {
     s32 first;
     s32 status;
     u8 group_id;
-    s16* position_y;
 
     for (group = 0; group < g_debugchr_panel_status_group_count; group++) {
-        /* Assigned inside the loop so the invariant lands in the preheader. */
-        position_y = &g_debugchr_gfx_draw_area_template.y;
         group_id = g_debugchr_panel_status_group_ids[group];
         count = g_debugchr_panel_status_group_bounds[group_id + 1] - g_debugchr_panel_status_group_bounds[group_id];
         first = g_debugchr_panel_status_group_bounds[group_id];
@@ -40,11 +37,11 @@ void debugchr_gfx_build_status_group_primitives(POLY_FT4* poly) {
         for (index = 0; index < count; index++) {
             battle_gfx_init_default_poly_ft4(poly);
             status = first + count - index;
-            *position_y += g_debugchr_panel_status_y_offsets[group * 2];
-            debugchr_gfx_set_scaled_poly_ft4_geometry(poly, &g_debugchr_panel_status_texture, position_y - 1,
-                g_debugchr_panel_status_uv_rects[status], g_debugchr_panel_status_scales[status],
-                g_debugchr_panel_status_offsets[group]);
-            *position_y -= g_debugchr_panel_status_y_offsets[group * 2];
+            g_debugchr_gfx_draw_area_template.y += g_debugchr_panel_status_y_offsets[group * 2];
+            debugchr_gfx_set_scaled_poly_ft4_geometry(poly, &g_debugchr_panel_status_texture,
+                &g_debugchr_gfx_draw_area_template, &g_debugchr_panel_status_uv_rects[status],
+                &g_debugchr_panel_status_scales[status], &g_debugchr_panel_status_offsets[group]);
+            g_debugchr_gfx_draw_area_template.y -= g_debugchr_panel_status_y_offsets[group * 2];
 
             if (g_debugchr_panel_status_animation[group] == 0x40) {
                 poly->r0 = 0x80;

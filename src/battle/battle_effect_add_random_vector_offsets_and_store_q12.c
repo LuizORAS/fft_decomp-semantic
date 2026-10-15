@@ -6,11 +6,11 @@ void battle_effect_add_random_vector_offsets_and_store_q12(
     u16 range;
 
     range = ranges->vx;
-    destination->vx = (source->vx + battle_effect_get_random_between_s16((s16)-range, (s16)range)) << 12;
+    destination->vx = (source->vx + battle_effect_get_random_between_s16(-range, range)) << 12;
 
     range = ranges->vy;
-    destination->vy = (source->vy + battle_effect_get_random_between_s16((s16)-range, (s16)range)) << 12;
+    destination->vy = (source->vy + battle_effect_get_random_between_s16(-range, range)) << 12;
 
     range = ranges->vz;
-    destination->vz = (source->vz + battle_effect_get_random_between_s16((s16)-range, (s16)range)) << 12;
+    destination->vz = (source->vz + battle_effect_get_random_between_s16(-range, range)) << 12;
 }

@@ -1,7 +1,9 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
-s32 card_file_count_free_blocks(const card_directory_entry_t* entries, s32 entry_count) {
+/* Free blocks on a 15-block card given its directory: each file takes its
+ * size rounded up to 8192-byte blocks. */
+s32 card_file_count_free_blocks(const DIRENTRY* entries, s32 entry_count) {
     s32 i;
     s32 used_blocks;
 

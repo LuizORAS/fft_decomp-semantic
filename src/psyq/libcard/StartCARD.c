@@ -1,6 +1,8 @@
 #include "psx/cpu_abi_inline.h"
 #include "psx/libcard.h"
 
+/* Start the memory card interrupts (the BIOS's StartCARD2) with the pad-clear setting off, in a critical
+ * section. main_card_init_events calls it. */
 void StartCARD(void) {
     EnterCriticalSection();
     StartCARD2();

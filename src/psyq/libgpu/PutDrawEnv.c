@@ -1,5 +1,8 @@
 /* LIBGPU 80024cac-80024d70. */
 #include "psx/libgpu.h"
+
+/* Make `env` the draw environment: build its packet (SetDrawEnv), send it through the queue and remember it.
+ * Returns `env`. */
 DRAWENV* PutDrawEnv(DRAWENV* env) {
     u8* debug = &g_psyq_gpu_environment.debug_level;
     DR_ENV* packet;

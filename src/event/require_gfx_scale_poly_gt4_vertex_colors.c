@@ -1,6 +1,9 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Set the four vertex colours of `poly` from the RGB triples at offsets 4, 8,
+ * 0xc and 0x10 of `vertex_colors` (a 0x14-byte record: a four-byte head
+ * followed by four colour words), each scaled by scale / 128. */
 void require_gfx_scale_poly_gt4_vertex_colors(const u8* vertex_colors, s32 scale, POLY_GT4* poly) {
     s32 r;
     s32 g;

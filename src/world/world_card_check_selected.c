@@ -11,7 +11,7 @@ s32 world_card_check_selected(void) {
         g_world_card_info_pending = 1;
     }
     busy = _card_status(g_world_card_selected_slot) & 1;
-    result = world_card_poll_bios_events();
+    result = world_card_poll_bios_event();
     if (busy != 0 && result == CARD_IO_RESULT_PENDING) {
         result = CARD_IO_RESULT_TIMEOUT;
     }

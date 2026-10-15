@@ -1,7 +1,9 @@
 #include "fft/battle.h"
 
-void battle_camera_set_rotation(const battle_camera_rotation_t* rotation) {
-    g_battle_camera_render_state.vx = rotation->x;
-    g_battle_camera_render_state.vy = rotation->y;
-    g_battle_camera_render_state.vz = rotation->z;
+/* Set the camera angles: effect script opcode 0b, the effect camera's angle track and the event camera's
+ * script variables. */
+void battle_camera_set_rotation(const SVECTOR* rotation) {
+    g_battle_camera_angles.vx = rotation->vx;
+    g_battle_camera_angles.vy = rotation->vy;
+    g_battle_camera_angles.vz = rotation->vz;
 }

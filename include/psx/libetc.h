@@ -27,8 +27,6 @@ s32 GetIntrMask(void);
 s32 SetIntrMask(s32 mask);
 s32 SetVideoMode(s32 mode);
 
-/* driver internals */
-
 /* pad state */
 extern s32 g_psyq_etc_pad_mode;
 extern u32 g_psyq_etc_pad_buttons;
@@ -117,7 +115,7 @@ typedef struct {
     volatile u32 address;
     volatile u32 block_control;
     volatile u32 channel_control;
-    u32 _unknown_0c;
+    u32 _padding_0c; /* register spacing: channels sit 0x10 apart and use 12 bytes */
 } psyq_dma_channel_t;
 extern psyq_dma_channel_t* g_psyq_etc_dma_channels;
 psyq_interrupt_callback_t setIntr(s32 slot, psyq_interrupt_callback_t callback);

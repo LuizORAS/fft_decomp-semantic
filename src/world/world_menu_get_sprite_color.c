@@ -1,5 +1,6 @@
 #include "fft/world.h"
 
-CVECTOR* world_menu_get_sprite_color(void) {
-    return &g_world_menu_sprite_color;
+/* Return a pointer to the display scripts' draw colour (its r, g, b bytes). */
+u8* world_menu_get_sprite_color(void) {
+    return &g_world_menu_sprite_color.r;
 }

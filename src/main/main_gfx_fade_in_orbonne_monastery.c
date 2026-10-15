@@ -1,5 +1,11 @@
 #include "fft/main.h"
 
+/* Fade in a 256x24 caption strip centred on a black 256x240 screen.
+ *
+ * The strip is the texture at VRAM (896, 256) with its CLUT at (896, 287), drawn
+ * at y 116. A full-screen subtractive quad steps from 248 to 0 in 32 frames, each
+ * presented with main_gfx_swap_display_area. No function in the tree calls this
+ * routine or main_gfx_fade_out_orbonne_monastery. */
 void main_gfx_fade_in_orbonne_monastery(void) {
     POLY_F4 fade_polygons[2];
     DR_MODE draw_modes[2];
@@ -11,7 +17,7 @@ void main_gfx_fade_in_orbonne_monastery(void) {
     s16 intensity;
 
     intensity = 248;
-    main_set_display_draw_new_game(256, 240, 512, 0, 0, 0);
+    main_gfx_set_display_draw_new_game(256, 240, 512, 0, 0, 0);
 
     SetPolyF4(&fade_polygons[0]);
     fade_polygons[0].r0 = 0;

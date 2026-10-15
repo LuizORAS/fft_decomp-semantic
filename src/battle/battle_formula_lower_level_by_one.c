@@ -1,7 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Formula 0x59: -Level (1), hit (MA+X)%. */
+/* Formula 0x59, Level Blast: the magical evade check and the hit chance MA + X without Faith, then
+ * the target loses a level (LEVEL_DOWN); a target below level 2 fails, though the flag is still
+ * written. */
 void battle_formula_lower_level_by_one(void) {
     battle_action_data_t* action;
 

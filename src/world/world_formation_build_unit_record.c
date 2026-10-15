@@ -1,15 +1,15 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/*
- * Fills one WORLD formation record from a unit's battle stats and party data.
+/* Fills one WORLD formation record from a unit's battle stats and party data.
  *
- * HP/MP/level/experience/CT are clamped for display, monster-skillset units
- * (primary skillset 0xb0-0xdf) list up to three nonzero skillset abilities
- * instead of equipment and learned abilities, and JP totals cap at 9999.
+ * HP and MP are shown full (their maximum, capped at 999), level and experience at 99, CT at 100; a
+ * guest slot gets team_kind 2. A monster-skillset unit (primary skillset 0xb0-0xdf) lists up to three
+ * nonzero skillset abilities instead of equipment and learned abilities, and a Mime carries neither.
+ * Unlocked jobs come from the job levels (monsters copy theirs), JP totals cap at 9999, and the
+ * two-handing flag is worked out from the equipment.
  * One scratch variable `i` also carries the monster flag, the second evade
- * operand and the unlocked-job mask; separate locals reallocate a0/v1.
- */
+ * operand and the unlocked-job mask; separate locals reallocate a0/v1. */
 void world_formation_build_unit_record(battle_stats_t* unit, world_formation_unit_t* record, party_data_t* party) {
     s16* abilities;
     s32 i;
@@ -18,7 +18,7 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     memset(record, 0, sizeof(world_formation_unit_t));
     record->level = party->level < 100 ? party->level : 99;
     if (unit->formation_index >= PARTY_GUEST_SLOT_FIRST) {
-        record->guest_marker = 2;
+        record->team_kind = 2;
     }
     record->experience = party->experience < 100 ? party->experience : 99;
     record->party_index = unit->formation_index;
@@ -41,7 +41,7 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     record->left_weapon_power = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_POWER];
     record->right_weapon_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_EVADE];
     record->left_weapon_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_EVADE];
-    i = (u8)(unit->primary_skillset + 0x50) < 0x30;
+    i = unit->primary_skillset >= SKILLSET_ID_MONSTER_FIRST && unit->primary_skillset < SKILLSET_ID_END;
     record->uses_monster_skillset = i;
     record->physical_attack = unit->attributes[UNIT_ATTRIBUTE_PHYSICAL_ATTACK];
     record->physical_class_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_CLASS_PHYSICAL_EVADE];
@@ -85,7 +85,7 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
             record->equipment[3] = party->equipment[UNIT_EQUIPMENT_SLOT_BODY];
             record->equipment[4] = party->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
             for (i = 0; i < 5; i++) {
-                if (record->equipment[i] >= 0xfe) {
+                if (record->equipment[i] >= ITEM_ID_END) {
                     record->equipment[i] = ITEM_ID_NOTHING;
                 }
             }
@@ -122,9 +122,9 @@ void world_formation_build_unit_record(battle_stats_t* unit, world_formation_uni
     bcopy(party->name, record->name, sizeof(record->name));
     bcopy(unit->support_abilities, record->support_abilities, sizeof(record->support_abilities));
     record->proposition_status = party->proposition_status;
-    record->graphic_variant = unit->graphic_variant;
+    record->monster_graphic = unit->monster_graphic;
     record->birthday = *(u16*)&unit->birthday & 0x1ff;
     record->egg_color = party->egg_color;
-    record->two_handed = world_item_check_two_hands_for_weapons(
-        (struct weapon_pair*)record->equipment, record->support_abilities[2] & 2);
+    record->two_handed = world_unit_is_two_handing_weapon(
+        (s16*)record->equipment, record->support_abilities[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS);
 }

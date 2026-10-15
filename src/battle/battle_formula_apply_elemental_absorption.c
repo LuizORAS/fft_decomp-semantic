@@ -1,7 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Turn absorbed elemental HP damage into HP healing; otherwise mark the action as HP damage. */
+/* Turn the HP damage into HP healing when an affinity absorbed the element
+ * (battle_formula_apply_element_affinities); otherwise mark the action as HP damage. A nullified
+ * action is left alone. */
 void battle_formula_apply_elemental_absorption(void) {
     battle_action_data_t* action = g_battle_action_target_data;
 

@@ -1,5 +1,6 @@
 #ifndef PSX_CPU_RETURN_ZERO_INLINE_H
 #define PSX_CPU_RETURN_ZERO_INLINE_H
+
 /* Return zero through architectural v0 and RA. GCC2.6 emits a C computed
  * transfer as `j $31`; a one-shot assembler pseudo-op supplies its required
  * ADDIU zero delay slot without another C epilogue. Only this terminal transfer
@@ -15,4 +16,5 @@
     } while (0)
 /* File-scope metadata restores assembler scheduling after the final boundary. */
 #define PSYQ_CPU_RETURN_ZERO_END() __asm__(".set\treorder")
+
 #endif

@@ -1,7 +1,6 @@
 #include "fft/world.h"
 
-/* Mark both entries unused and clear their headers; a missing key stops
- * the current thread (0x800e27f4). */
+/* WORLD twin of battle_menu_release_window_buffer_pair. */
 void world_menu_release_window_buffer_pair(menu_window_buffer_t* value) {
     s32 index;
 

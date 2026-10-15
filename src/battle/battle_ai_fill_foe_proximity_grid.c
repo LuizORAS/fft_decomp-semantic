@@ -1,12 +1,9 @@
 #include "fft/battle.h"
 
-/*
- * Score reachable tiles by nearby eligible enemies.
- *
- * Each enemy contributes max(10 - Manhattan distance, 0), ignoring height.
- * Only scenario-0 reachable tiles are updated; other cells remain unchanged.
- * The shared targetability list is rebuilt before scoring both map layers.
- */
+/* Fill tile_foe_proximity for the scenario-0 reachable tiles: each imminent enemy (in play and not
+ * left out by battle_ai_should_exclude_from_imminent_enemies) within 10 tiles adds 10 minus its
+ * Manhattan distance, ignoring height. The targetable flags are rebuilt as that enemy list first;
+ * other cells keep their old values. */
 void battle_ai_fill_foe_proximity_grid(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 i;
@@ -20,7 +17,7 @@ void battle_ai_fill_foe_proximity_grid(void) {
 
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         ai->targetability.live.unit_targetable[i] = 0;
-        if (battle_ai_check_target_type(i) == 0 && battle_ai_should_exclude_from_imminent_enemies(i) == 0) {
+        if (battle_ai_is_unit_out_of_play(i) == 0 && battle_ai_should_exclude_from_imminent_enemies(i) == 0) {
             ai->targetability.live.unit_targetable[i] = 1;
         }
     }

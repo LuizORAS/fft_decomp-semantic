@@ -7,7 +7,7 @@
  * rect->x before checking the -1 pointer sentinel; this is not a safe invalid
  * pointer check. Out-of-range positive cell coordinates stop this thread.
  *
- * BATTLE twin of world_gfx_free_texture_grid_rect.
+ * BATTLE twin of world_gfx_free_tpage7_vram.
  */
 void battle_gfx_free_tpage7_vram(RECT* rect) {
     s32* source;
@@ -18,7 +18,7 @@ void battle_gfx_free_tpage7_vram(RECT* rect) {
     s32 value;
     if (rect->x != -1 && rect != (void*)-1) {
         g_battle_gfx_tpage7_free_rect_pixels[0] = (rect->x - 0x1c0) * 4;
-        g_battle_gfx_tpage7_free_rect_pixels[1] = (u8)rect->y;
+        g_battle_gfx_tpage7_free_rect_pixels[1] = rect->y & 0xff;
         source = g_battle_gfx_tpage7_free_rect_pixels;
         i = 0;
         g_battle_gfx_tpage7_free_rect_pixels[2] = rect->w * 4;

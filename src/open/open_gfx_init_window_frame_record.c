@@ -12,7 +12,8 @@ void open_gfx_init_window_frame_record(s32 index, RECT quad, s32 depth, u16* ima
     s32 half;
     s32 scaled;
 
-    g_open_gfx_render_records_56[index].flags &= ~0x1C;
+    g_open_gfx_render_records_56[index].flags
+        &= ~(WLDCORE_DISPLAY_OBJECT_8BIT_CLUT | WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN);
     g_open_gfx_render_records_56[index].x = quad.x - 0x80;
     g_open_gfx_render_records_56[index].y = quad.y - 0x78;
     g_open_gfx_render_records_56[index].depth = depth;

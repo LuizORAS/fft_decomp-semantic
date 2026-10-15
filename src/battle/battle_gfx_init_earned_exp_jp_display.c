@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* Queues the gained Exp and JP displays after an action, when the Display Gained
+ * Exp/JP option is on and the amount is not 0. The first display is built at once
+ * unless one is already running. */
 void battle_gfx_init_earned_exp_jp_display(battle_unit_misc_data_t* unit) {
     battle_gfx_sprite_display_data_t* display_0;
     battle_gfx_sprite_display_data_t* display_1;
@@ -9,9 +12,9 @@ void battle_gfx_init_earned_exp_jp_display(battle_unit_misc_data_t* unit) {
         display_0 = unit->numeric_displays[0];
         display_1 = unit->numeric_displays[1];
         display_2 = unit->numeric_displays[2];
-        display_2->spritesheet_id = BATTLE_SPRITESHEET_ID_FRAME;
-        display_1->spritesheet_id = BATTLE_SPRITESHEET_ID_FRAME;
-        display_0->spritesheet_id = BATTLE_SPRITESHEET_ID_FRAME;
+        display_2->tpage = BATTLE_GFX_TPAGE_FRAME;
+        display_1->tpage = BATTLE_GFX_TPAGE_FRAME;
+        display_0->tpage = BATTLE_GFX_TPAGE_FRAME;
         if (unit->action_rewards.earned_experience != 0) {
             unit->action_display_flags.word |= BATTLE_ACTION_DISPLAY_FLAG_GAINED_EXP;
         }
@@ -20,9 +23,7 @@ void battle_gfx_init_earned_exp_jp_display(battle_unit_misc_data_t* unit) {
         }
         if (unit->numeric_display_active == 0) {
             unit->numeric_display_progress = 0;
-            /* The target passes two extra arguments the one-parameter callee ignores. */
-            ((s32 (*)(battle_unit_misc_data_t*, battle_gfx_sprite_display_data_t*,
-                battle_unit_misc_data_t*))battle_gfx_build_next_special_action_result_display)(unit, display_0, unit);
+            battle_gfx_build_next_special_action_result_display(unit);
         }
     }
 }

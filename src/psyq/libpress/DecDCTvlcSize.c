@@ -2,7 +2,8 @@
 #include "psx/libpress.h"
 #include "psx/libpress_abi_inline.h"
 
-/* opening 0x80073ba0–0x80073bd0: select VLC budget; return the old halfword limit. */
+/* Set DecDCTvlc's output limit to `words` words (kept in halfwords), or to the default 0xffffff halfwords
+ * for `words` of 1 or less, and return the previous limit. No code refers to it, so the default stays. */
 s32 DecDCTvlcSize(s32 words) {
     /* The handwritten body addresses the limit through t0 and tests through at. */
     register u32* limit __asm__("$8");
@@ -15,7 +16,7 @@ s32 DecDCTvlcSize(s32 words) {
         goto default_limit;
     psyq_cpu_return_value = *limit;
     PSYQ_CPU_SHARED_DELAY_END();
-    condition = (u32)words << 1;
+    condition = words << 1;
     *limit = condition;
     goto* psyq_cpu_return_address;
 default_limit:

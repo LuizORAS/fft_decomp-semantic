@@ -1,6 +1,6 @@
 #include "fft/world.h"
 
-/* Target 0x8012d454. */
+/* Start the fade from intensity 240 down to zero (the screen fades in), unless fades are disabled. */
 void world_gfx_start_decreasing_fade(void) {
     if (g_world_gfx_fade_disabled == 0) {
         g_world_gfx_fade_decreasing = 1;

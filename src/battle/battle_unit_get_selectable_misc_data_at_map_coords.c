@@ -1,5 +1,8 @@
 #include "fft/battle.h"
 
+/* The unit the map cursor picks on (map_x, map_y, map_z): of the units standing there with a battle
+ * record that are not crystals, treasure chests or jumping, the acting unit first, then a rider, else
+ * the first found; NULL when there is none. */
 battle_unit_misc_data_t* battle_unit_get_selectable_misc_data_at_map_coords(s32 map_x, s32 map_y, s32 map_z) {
     battle_unit_misc_data_t* matches[16];
     battle_unit_misc_data_t* unit;
@@ -21,7 +24,7 @@ battle_unit_misc_data_t* battle_unit_get_selectable_misc_data_at_map_coords(s32 
     if (count != 0) {
         if (count != 1) {
             for (index = 0; index < count; index++) {
-                if (matches[index]->unit_id == g_casting_unit_misc_id) {
+                if (matches[index]->unit_id == g_battle_unit_source_misc_id) {
                     return matches[index];
                 }
             }

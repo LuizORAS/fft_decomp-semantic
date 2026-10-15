@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-/* Provisional 20-byte action copy; same layout as battle_stats_t +0x16e. */
+/* Provisional 20-byte action copy; same layout as battle_stats_t +0x16e.
+ * Type debt (QUIRKS.md): it duplicates battle_ai_command_action_t, which
+ * the callers pass as `source`. */
 typedef struct battle_target_unit_action_copy {
     u8 actor_id;         /* 0x00 */
     u8 skillset_id;      /* 0x01 */
@@ -8,7 +10,7 @@ typedef struct battle_target_unit_action_copy {
     u16 calculator_type; /* 0x04 */
     u16 calculator_multiplier;
     u16 used_item;        /* 0x08 */
-    u8 reaction_id;       /* 0x0a */
+    u8 target_kind;       /* 0x0a; battle_action_target_kind_e */
     u8 target_id;         /* 0x0b */
     s16 target_x;         /* 0x0c */
     s16 target_elevation; /* 0x0e */
@@ -16,6 +18,9 @@ typedef struct battle_target_unit_action_copy {
     u8 _unused_12[2];
 } battle_target_unit_action_copy_t;
 
+/* Linear and three-direction abilities: keep in the area only the tiles on the line from the unit
+ * toward the target (mode 1), or on that line and the two at right angles to it (mode 3), and have
+ * the hit units listed nearest first (g_battle_sort_targets_nearest_first). */
 void battle_target_build_directional_attack_panels(const void* source, u8 mode) {
     battle_target_unit_action_copy_t action;
     battle_stats_t* unit;
@@ -27,40 +32,38 @@ void battle_target_build_directional_attack_panels(const void* source, u8 mode) 
     s32 i;
 
     main_util_copy_action_data(source, &action);
-    /* Barrier: without it `mode` and `target_x` swap $s2/$s3. */
-    __asm__ volatile("");
-    target_x = action.target_x;
-    target_y = action.target_y;
     g_battle_sort_targets_nearest_first = 1;
     unit = &g_battle_unit_stats[action.actor_id];
     x = unit->x;
     y = unit->position.bits.y;
+    target_x = action.target_x;
+    target_y = action.target_y;
     if (x < target_x) {
-        battle_target_calculate_linear_attack_tiles(0, x, y);
+        battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_EAST, x, y);
         if (mode == 3) {
-            battle_target_calculate_linear_attack_tiles(6, x, y);
-            battle_target_calculate_linear_attack_tiles(4, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_NORTH, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_SOUTH, x, y);
         }
     }
     if (target_x < x) {
-        battle_target_calculate_linear_attack_tiles(2, x, y);
+        battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_WEST, x, y);
         if (mode == 3) {
-            battle_target_calculate_linear_attack_tiles(6, x, y);
-            battle_target_calculate_linear_attack_tiles(4, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_NORTH, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_SOUTH, x, y);
         }
     }
     if (y < target_y) {
-        battle_target_calculate_linear_attack_tiles(6, x, y);
+        battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_NORTH, x, y);
         if (mode == 3) {
-            battle_target_calculate_linear_attack_tiles(0, x, y);
-            battle_target_calculate_linear_attack_tiles(2, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_EAST, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_WEST, x, y);
         }
     }
     if (target_y < y) {
-        battle_target_calculate_linear_attack_tiles(4, x, y);
+        battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_SOUTH, x, y);
         if (mode == 3) {
-            battle_target_calculate_linear_attack_tiles(2, x, y);
-            battle_target_calculate_linear_attack_tiles(0, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_WEST, x, y);
+            battle_target_calculate_linear_attack_tiles(BATTLE_TARGET_LINE_EAST, x, y);
         }
     }
     for (i = 0; i < 0x200; i++) {

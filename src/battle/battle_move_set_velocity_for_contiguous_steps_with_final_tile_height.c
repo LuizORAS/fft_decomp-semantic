@@ -12,6 +12,9 @@ enum {
  * the remaining path while the steps keep the same direction quadrant and the
  * ground stays at the unit's current height, then hands the accumulated
  * edge-to-edge delta to the velocity solver.
+ *
+ * The step code is copied to a halfword before the switch, as in the clamped
+ * twin: read through the byte again, cse reuses the direction test's load.
  */
 void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
     battle_unit_misc_data_t* unit, const u8* path, const u8* step) {
@@ -29,7 +32,7 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
     s32 end_z;
     u32 layer;
     u32 depth;
-    s32 next;
+    s16 code;
 
     battle_map_get_tile_data_pointer(unit->map_x, unit->map_y, unit->map_z);
     x = unit->map_x;
@@ -40,37 +43,29 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
     start_z = unit->screen.vy;
 
     while (index < *path) {
-        /* Holds the masked path code in $v1 as the target does; otherwise $v0/$v1 swap. */
-        register u8 compare_code __asm__("$3");
-
         current = &path[index + 1];
-        compare_code = *current;
-        compare_code &= 0xc0;
-        if (compare_code != (*step & 0xc0)) {
+        if ((*current & 0xc0) != (*step & 0xc0)) {
             break;
         }
-        switch (*current >> 6) {
-        case 0:
-            next = x + 1;
-            x = next + (*current & 3);
+        code = *current;
+        switch (code >> 6) {
+        case BATTLE_MOVE_STEP_DIRECTION_EAST:
+            x += (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_WIDTH;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             break;
-        case 1:
-            next = x - 1;
-            x = next - (*current & 3);
+        case BATTLE_MOVE_STEP_DIRECTION_WEST:
+            x -= (code & 3) + 1;
             end_x = x * BATTLE_MOVE_STEP_WIDTH;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             break;
-        case 2:
-            next = y - 1;
-            y = next - (*current & 3);
+        case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
+            y -= (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             end_y = y * BATTLE_MOVE_STEP_WIDTH;
             break;
-        case 3:
-            next = y + 1;
-            y = next + (*current & 3);
+        case BATTLE_MOVE_STEP_DIRECTION_NORTH:
+            y += (code & 3) + 1;
             end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
             end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_WIDTH;
             break;
@@ -78,7 +73,7 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
         layer = (*current >> 5) & 1;
         if (unit->movement_path_offset == *path) {
             tile = battle_map_get_tile_data_pointer(x, y, layer);
-            depth = tile->depth_half_height;
+            depth = tile->depth_half_height.value;
             end_z = -(((tile->height + (depth >> MAP_TILE_DEPTH_SHIFT)) * 2) + (depth & MAP_TILE_HALF_HEIGHT_MASK))
                 * BATTLE_MOVE_STEP_HEIGHT_SCALE;
         } else {
@@ -94,7 +89,7 @@ void battle_move_set_velocity_for_contiguous_steps_with_final_tile_height(
     direction.vz = end_y - start_y;
     direction.vy = end_z - start_z;
     VectorNormal(&direction, &unit->velocity);
-    unit->velocity.vx = unit->velocity.vx * g_animation_speed;
-    unit->velocity.vy = unit->velocity.vy * g_animation_speed;
-    unit->velocity.vz = unit->velocity.vz * g_animation_speed;
+    unit->velocity.vx = unit->velocity.vx * g_main_system_vsync_interval;
+    unit->velocity.vy = unit->velocity.vy * g_main_system_vsync_interval;
+    unit->velocity.vz = unit->velocity.vz * g_main_system_vsync_interval;
 }

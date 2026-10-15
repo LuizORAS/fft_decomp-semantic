@@ -1,3 +1,10 @@
+#include "fft/battle.h"
+#include "psx/types.h"
+
+/* One track per camera component; 7 * 0xa4 == 0x47c, the allocation size the
+ * target passes to battle_menu_alloc_memory. */
+#define BATTLE_CAMERA_FUSION_COMPONENT_COUNT 7
+
 /* Runs an event camera fusion: seeds one track per camera component from the
  * script's CAMERA instructions up to CAMERA_FUSION_END, then steps every track
  * each frame until track 3 finishes.
@@ -7,16 +14,6 @@
  * reads each track through a `track` pointer taken first in the body: that
  * makes loop.c discover the track giv before the script-variable and values
  * givs, which gives the target's induction-increment order. */
-#include "fft/battle.h"
-#include "psx/types.h"
-
-/* One track per camera component; 7 * 0xa4 == 0x47c, the allocation size the
- * target passes to battle_menu_alloc_memory. */
-#define BATTLE_CAMERA_FUSION_COMPONENT_COUNT 7
-
-/* Sentinel operand meaning "keep the component's current value". */
-#define BATTLE_CAMERA_FUSION_HOLD 10000
-
 void battle_camera_fusion_thread(void) {
     battle_camera_track_t* tracks;
     battle_camera_track_t* track;
@@ -35,8 +32,9 @@ void battle_camera_fusion_thread(void) {
     tracks = (battle_camera_track_t*)battle_menu_alloc_memory(
         sizeof(battle_camera_track_t) * BATTLE_CAMERA_FUSION_COMPONENT_COUNT);
     script = (u8*)battle_thread_get_current_parameter_1();
-    battle_clear_menu_render_buffer(tracks, sizeof(battle_camera_track_t) * BATTLE_CAMERA_FUSION_COMPONENT_COUNT);
+    battle_menu_clear_render_buffer(tracks, sizeof(battle_camera_track_t) * BATTLE_CAMERA_FUSION_COMPONENT_COUNT);
 
+    /* One key per CAMERA instruction up to the end marker, plus the starting key. */
     cursor = script;
     key_count = 0;
     for (;;) {
@@ -54,6 +52,9 @@ void battle_camera_fusion_thread(void) {
     cursor = script;
     battle_camera_store_yaw_band(g_battle_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW]);
 
+    /* Key 0 is the camera as it stands. Each later key is the next CAMERA
+     * instruction, after the Focus, RelativeCamera and FocusSpeed instructions
+     * in front of it have run. */
     for (key_index = 0; key_index < key_count; key_index++) {
         if (key_index == 0) {
             for (i = 0; i < BATTLE_CAMERA_FUSION_COMPONENT_COUNT; i++) {
@@ -70,14 +71,14 @@ void battle_camera_fusion_thread(void) {
             for (;;) {
                 if (*cursor == EVENT_OPCODE_FOCUS) {
                     battle_script_focus(cursor + 1);
-                } else if (*cursor == EVENT_OPCODE_UNKNOWN_73) {
+                } else if (*cursor == EVENT_OPCODE_RELATIVE_CAMERA) {
                     battle_script_apply_relative_camera(cursor + 1, values);
                 } else if (*cursor == EVENT_OPCODE_FOCUS_SPEED) {
                     battle_script_focus_speed(cursor + 1, values, values + 3);
                 } else if (*cursor == EVENT_OPCODE_CAMERA) {
                     for (i = 0; i < BATTLE_CAMERA_FUSION_COMPONENT_COUNT; i++) {
                         value = battle_script_load_halfword(cursor + i + i + 1);
-                        if (value == BATTLE_CAMERA_FUSION_HOLD) {
+                        if (value == BATTLE_CAMERA_FUSION_HOLD_SENTINEL) {
                             if (i < 3) {
                                 value = values[i] / 1024;
                             } else {
@@ -105,11 +106,12 @@ void battle_camera_fusion_thread(void) {
         }
     }
 
+    /* Play the tracks; the three position tracks stand still while the position is locked. */
     for (;;) {
         track = tracks;
         for (key_index = 0; key_index < 3; key_index++, track++) {
             /* The target tests this flag with lhu; the s16 declaration gives lh. */
-            if (*(u16*)&g_battle_camera_position_locked == 0) {
+            if (g_battle_camera_position_locked == 0) {
                 g_battle_script_variables[g_battle_camera_script_variable_indices[key_index]]
                     = battle_camera_step_track(track, key_index);
             }
@@ -121,7 +123,7 @@ void battle_camera_fusion_thread(void) {
         if (tracks[3].finished == 1) {
             break;
         }
-        battle_script_clear_indexed_variable_bit0();
+        battle_camera_clear_zoom_variable_low_bit();
         battle_thread_yield();
     }
 

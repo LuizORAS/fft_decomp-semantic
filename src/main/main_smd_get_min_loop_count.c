@@ -14,7 +14,7 @@ u16* main_smd_get_min_loop_count(suzuki_music_t* music) {
     result = &music->min_loop_count;
     min = 0xffff;
     do {
-        if (channel->active != 0) {
+        if (channel->flags != 0) {
             if (channel->loop_count < min) {
                 min = channel->loop_count;
             }

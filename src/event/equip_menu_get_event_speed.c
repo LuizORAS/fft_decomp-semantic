@@ -1,6 +1,9 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Return the event speed, the VSync interval of the screen's frames (g_equip_menu_event_speed; 1 when
+ * unset): cursor, fade and scroll timers advance by it, so they keep their pace when the screen runs at
+ * 30 frames a second. */
 s32 equip_menu_get_event_speed(void) {
     s32 value = g_equip_menu_event_speed;
 

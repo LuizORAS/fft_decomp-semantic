@@ -4,7 +4,8 @@
 #include "psx/cpu_return_abi.h"
 #include "psx/cpu_return_zero_inline.h"
 
-/* main 0x8001c268–0x8001c2fc: table approximation with signed normalization. */
+/* The square root of the 20.12 value `value`, as a 20.12 value, from the same table as SquareRoot0; 0 for 0.
+ * The effect trajectories and launch speeds use it. */
 s32 SquareRoot12(s32 value) {
     register s32 odd __asm__("$8");
     register s32 exponent __asm__("$9");
@@ -15,7 +16,6 @@ s32 SquareRoot12(s32 value) {
     register s32 limit __asm__("$1");
     register u32 table_base __asm__("$13");
     register s32 zero __asm__("$0");
-    __asm__("" : "=r"(zero)); /* Physical zero retains the signed-immediate load spelling. */
     PSYQ_GTE_LZCS(value, psyq_cpu_return_value);
     PSYQ_CPU_SIGNED_CONSTANT(limit, 32);
     if (psyq_cpu_return_value == limit)
@@ -31,13 +31,9 @@ s32 SquareRoot12(s32 value) {
     PSYQ_CPU_TRAP_SUB(exponent, exponent, even_leading);
     exponent >>= 1;
     PSYQ_CPU_TRAP_ADDI(difference, even_leading, -24);
-    __asm__(""
-        : "=r"(difference), "=r"(exponent)
-        : "0"(difference), "1"(exponent)); /* Keep the retail arithmetic order. */
     if (difference >= 0) {
         __asm__ volatile("" : : : "memory"); /* Preserve the empty BLTZ delay slot. */
-        normalized = (u32)value << difference;
-        __asm__ volatile("" : : "r"(normalized)); /* Finish normalization before the following branch. */
+        normalized = value << difference;
         PSYQ_CPU_SHARED_DELAY_BEGIN();
         if (zero == 0)
             goto normalized_ready;
@@ -45,10 +41,9 @@ s32 SquareRoot12(s32 value) {
     difference = zero + 24;
     PSYQ_CPU_SHARED_DELAY_END();
     PSYQ_CPU_TRAP_SUB(difference, difference, even_leading);
-    normalized = (s32)value >> difference;
+    normalized = value >> difference;
 normalized_ready:
     PSYQ_CPU_TRAP_ADDI(normalized, normalized, -64);
-    __asm__("" : "=r"(normalized) : "0"(normalized)); /* Preserve normalization before the paired relocation. */
     normalized <<= 1;
     PSYQ_GTE_TABLE_HIGH_PAIRED(table_base, g_psyq_gte_sqrt_table);
     table_base += normalized;
@@ -57,8 +52,7 @@ normalized_ready:
     PSYQ_CPU_LOAD_WAIT();
     if (exponent < 0)
         goto negative_exponent;
-    __asm__ volatile("" : : : "memory"); /* Retain the empty exponent-branch delay slot. */
-    psyq_cpu_return_value = (u32)factor << exponent;
+    psyq_cpu_return_value = factor << exponent;
     __asm__ volatile("" : : "r"(psyq_cpu_return_value)); /* Retain the positive-result JR NOP. */
     goto* psyq_cpu_return_address;
 negative_exponent:
@@ -66,7 +60,6 @@ negative_exponent:
     psyq_cpu_return_value = (u32)factor >> exponent;
     goto* psyq_cpu_return_address;
 zero_result:
-    __asm__ volatile("" : : : "memory"); /* Keep the separate retail invalid-result return. */
     PSYQ_CPU_RETURN_ZERO();
 }
 

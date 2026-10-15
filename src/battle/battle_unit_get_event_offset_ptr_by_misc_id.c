@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* The event offset of the unit with this misc id: the halfwords the Jump and sprite-move instructions
+ * and some effects shift its sprite by. An absent unit raises pointer exception 12 and returns 0. */
 s16* battle_unit_get_event_offset_ptr_by_misc_id(u32 misc_id) {
     battle_unit_misc_data_t* unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xffff);
 
@@ -7,5 +9,5 @@ s16* battle_unit_get_event_offset_ptr_by_misc_id(u32 misc_id) {
         main_system_handle_pointer_exception(12);
         return 0;
     }
-    return &unit->effect_vector_2.vx;
+    return &unit->event_offset.vx;
 }

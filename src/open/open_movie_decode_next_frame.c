@@ -1,5 +1,7 @@
 #include "fft/open.h"
 
+/* Fetch the next movie frame and decode its bitstream into the other VLC buffer,
+ * releasing the frame's ring sectors. Returns 0 when no frame arrived. */
 s32 open_movie_decode_next_frame(open_movie_mdec_stream_state_t* state) {
     void* frame_data;
     s32 result;

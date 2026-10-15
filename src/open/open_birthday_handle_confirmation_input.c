@@ -1,10 +1,13 @@
 #include "fft/open.h"
 #include "psx/pad.h"
 
-/* Handle confirmation, cancellation, and cursor movement on the final birthday prompt.
+/* Per-frame handler of the birthday confirmation (handler 6). Up or Down toggles Yes and No.
  *
- * Confirming the selected date stores Ramza's birthday and zodiac data before starting the opening transition.
- */
+ * Circle on Yes stores the birthday in the script variables EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH and _DAY and in
+ * party slot 0 (the day of the year, whose ninth bit shares the zodiac byte with the sign), fades the music
+ * and the screen out and blocks input. Once the fade has ended the birthday records and both birthday
+ * controllers are released and FFTOP.STR, the opening movie, starts. Circle on No, or Cross, returns to the
+ * date entry. */
 void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t* menu) {
     s32 month;
     s32 day;
@@ -12,16 +15,16 @@ void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t*
     party_data_t* member;
     u32 buttons;
 
-    if ((g_open_system_runtime_flags & OPEN_RUNTIME_INPUT_DISABLED)
+    if ((g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_INPUT_DISABLED)
         && !(g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE)) {
-        g_open_system_runtime_flags ^= OPEN_RUNTIME_INPUT_DISABLED;
+        g_open_system_runtime_flags ^= OPEN_SYSTEM_RUNTIME_FLAG_INPUT_DISABLED;
         main_sound_unload_current_scenario_music();
-        g_active_graphics_buffer_index = 1;
+        g_main_gfx_active_buffer_index = 1;
         g_open_gfx_next_render_record_56 -= 3;
         g_open_gfx_next_render_record_36 -= 3;
         g_open_gfx_render_record_pointer_count -= 6;
         g_open_current_controller_index -= 2;
-        open_movie_stream_and_push_controller_1(0x17B60, 0x64D8, 0x9E4);
+        open_movie_push_fftop_controller(DISC_SECTOR_OPEN_FFTOP_STR, 0x64D8, 0x9E4);
         return;
     }
 
@@ -33,22 +36,21 @@ void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t*
             day = g_open_controller_birthdays[g_open_current_controller_index - 2].day;
             world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH, month);
             world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY, day);
-            value = open_birthday_calculate_day_index(month, day);
+            value = open_birthday_month_day_to_day_of_year(month, day);
             open_birthday_convert_to_zodiac_position(&month, &day);
             member = main_party_get_data_pointer(0);
             member->birthday_day = value;
             member->zodiac = ((value & 0x100) >> 8) | ((month - 1) * 0x10);
             main_sound_set_current_music_target(0, 0x60);
             open_gfx_start_overlay_fade_in(0x20);
-            g_open_system_runtime_flags |= OPEN_RUNTIME_INPUT_DISABLED;
+            g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_INPUT_DISABLED;
             return;
         }
         g_open_gfx_render_record_pointer_count -= 3;
         g_open_gfx_next_render_record_56 -= 1;
         g_open_gfx_next_render_record_36 -= 2;
         g_open_current_controller_index -= 1;
-        open_restore_birthday_date_menu(
-            (open_birthday_date_state_t*)&g_open_controller_records[g_open_current_controller_index]);
+        open_birthday_restore_date_menu(&g_open_controller_records[g_open_current_controller_index].birthday_date);
         return;
     }
     if (buttons & PSX_PAD_CROSS) {
@@ -58,8 +60,7 @@ void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t*
         g_open_gfx_next_render_record_56 -= 1;
         g_open_gfx_next_render_record_36 -= 2;
         g_open_current_controller_index -= 1;
-        open_restore_birthday_date_menu(
-            (open_birthday_date_state_t*)&g_open_controller_records[g_open_current_controller_index]);
+        open_birthday_restore_date_menu(&g_open_controller_records[g_open_current_controller_index].birthday_date);
         return;
     }
 

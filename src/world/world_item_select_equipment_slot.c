@@ -15,33 +15,28 @@ world_unit_equipment_slot_e world_item_select_equipment_slot(s16 unit_index, s32
     left_hand = unit->equipment[1];
     if (item_id < ITEM_ID_THROWABLE_FIRST) {
         if (left_hand < ITEM_ID_THROWABLE_FIRST) {
-            if (right_hand < ITEM_ID_THROWABLE_FIRST) {
-                slot = left_hand != 0;
+            if (right_hand >= ITEM_ID_THROWABLE_FIRST) {
+                slot = WORLD_EQUIPMENT_SLOT_LEFT_HAND;
             } else {
-                /* Shared tail: the target branches into the next arm's
-                   left-hand assignment; a second assignment here lets jump
-                   threading re-lay that arm. */
-                goto left_hand_slot;
+                slot = left_hand != ITEM_ID_NOTHING;
             }
         } else {
             slot = WORLD_EQUIPMENT_SLOT_RIGHT_HAND;
         }
     } else if (item_id < ITEM_ID_HEADGEAR_FIRST) {
-        if (left_hand < ITEM_ID_THROWABLE_FIRST && left_hand != 0) {
+        if (left_hand < ITEM_ID_THROWABLE_FIRST && left_hand != ITEM_ID_NOTHING) {
             slot = WORLD_EQUIPMENT_SLOT_RIGHT_HAND;
-        } else if (right_hand < ITEM_ID_THROWABLE_FIRST && right_hand != 0) {
-        left_hand_slot:
+        } else if (right_hand < ITEM_ID_THROWABLE_FIRST && right_hand != ITEM_ID_NOTHING) {
             slot = WORLD_EQUIPMENT_SLOT_LEFT_HAND;
         } else {
-            slot = !(left_hand < ITEM_ID_THROWABLE_FIRST);
+            slot = left_hand >= ITEM_ID_THROWABLE_FIRST;
         }
     } else if (item_id < ITEM_ID_BODY_ARMOR_FIRST) {
         slot = WORLD_EQUIPMENT_SLOT_HEAD;
+    } else if (item_id < ITEM_ID_ACCESSORY_FIRST) {
+        slot = WORLD_EQUIPMENT_SLOT_BODY;
     } else {
         slot = WORLD_EQUIPMENT_SLOT_ACCESSORY;
-        if (item_id < ITEM_ID_ACCESSORY_FIRST) {
-            slot = WORLD_EQUIPMENT_SLOT_BODY;
-        }
     }
     return slot;
 }

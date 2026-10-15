@@ -1,6 +1,8 @@
 /* LIBGPU 80026f58-80026f84. */
 #include "psx/libgpu.h"
 
+/* Fill `size` bytes at `destination` with `value`. ResetGraph, SetDispMask and _reset clear LIBGPU's state
+ * with it. */
 void memset2(void* destination, int value, int size) {
     int unused[2]; /* The original leaf reserves eight stack bytes. */
     u8* p = destination;

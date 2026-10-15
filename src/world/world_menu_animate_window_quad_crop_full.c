@@ -8,7 +8,7 @@
  * centre: each frame crops a sprite of the rectangle by the level's
  * percentage and copies the cropped bounds into the quad's corners.
  */
-void world_menu_animate_window_quad_crop_full(menu_window_buffer_t* buffers, RECT* rect) {
+void world_menu_animate_window_quad_crop_full(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to) {
     SPRT sprite;
     void* source; /* never assigned; the target passes an uninitialised $s5 */
     s32 level;

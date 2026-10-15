@@ -1,5 +1,7 @@
 #include "fft/world.h"
 
+/* Clear slots 0-15 and the current id, and mark slot 0, the main loop, running; slot 16
+ * keeps its state (QUIRKS.md). world_menu_reset_subsystems calls it. */
 void world_thread_reset_scheduler(void) {
     s32* word;
     s32 i;
@@ -12,6 +14,6 @@ void world_thread_reset_scheduler(void) {
         i--;
         word--;
     } while (i >= 0);
-    g_world_thread_current_id = 0;
+    g_world_thread_current_id = NATIVE_THREAD_SLOT_MAIN;
     g_world_threads->is_running = 1;
 }

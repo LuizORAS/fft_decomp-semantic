@@ -1,23 +1,21 @@
 #include "fft/battle.h"
 
 /* Allocate one effect record and link it into the in-use list. */
-s32 battle_effect_alloc_state_record(void) {
-    s32 index;
-    u16 next;
-    /* Keep the available-list base in its target register. */
-    u16* allocated;
-    register s16* available __asm__("$7");
-    /* Unused local: the target reserves an 8-byte frame. */
-    s32 unused;
+s16 battle_effect_alloc_state_record(void) {
+    u16* available;
+    s16* allocated;
+    s16 index;
+    u16 next_available;
+    u16 next_allocated;
 
-    allocated = &g_battle_effect_allocated_record_head;
-    available = (s16*)&g_battle_effect_available_record_head;
+    available = &g_battle_effect_available_record_head;
     index = *available;
-    next = *allocated;
-    *available = g_effect_state_records[index].next_index;
-    g_effect_state_records[index].next_index = next;
+    next_available = g_battle_effect_state_records[index].next_index;
+    allocated = &g_battle_effect_allocated_record_head;
+    next_allocated = *allocated;
+    *available = next_available;
+    g_battle_effect_state_records[index].next_index = next_allocated;
     *allocated = index;
-    g_effect_state_records[index].flags |= 1;
-    (void)&unused;
+    g_battle_effect_state_records[index].flags |= EFFECT_RECORD_FLAG_ALLOCATED;
     return index;
 }

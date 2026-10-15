@@ -18,6 +18,7 @@ static __inline__ s32 cd_issue_with_retry(u8 command, const u8* parameter, u8* r
     return -1;
 }
 
+/* Same as CdControl without waiting for the acknowledgement or taking a result. */
 s32 CdControlF(u8 command, u8* parameter) {
     return cd_issue_with_retry(command, parameter, 0, 1) == 0;
 }

@@ -1,6 +1,10 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Bring the selected card to a readable state: acknowledge a newly inserted
+ * card, then load its directory. Returns CARD_IO_RESULT_COMPLETE,
+ * CARD_IO_RESULT_NEW_CARD (the load still reports a new, unformatted card)
+ * or CARD_IO_RESULT_TIMEOUT for any failure. */
 s32 card_io_open_or_create_selected_card(void) {
     s32 result = card_io_wait_operation_result(10);
 

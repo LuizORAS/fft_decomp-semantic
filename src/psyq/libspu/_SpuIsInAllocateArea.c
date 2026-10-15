@@ -1,12 +1,12 @@
 /* SCUS_942.21 0x80019f08..0x80019f87. */
 #include "psx/libspu.h"
 
+/* Return 1 when an allocated SPU RAM block contains the byte `address` or lies above it, else 0 (also with
+ * no heap). No code refers to it. */
 s32 _SpuIsInAllocateArea(u32 address) {
     s32 index;
     u32 start;
     if (_spu_memList == 0) {
-        /* Without this barrier GCC reverses the null branch and removes the retail jump. */
-        __asm__ volatile("");
         return 0;
     }
     for (index = 0;; index++) {

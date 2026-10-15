@@ -1,6 +1,8 @@
 #include "psx/libgte.h"
 
-/* main 0x8001be1c–0x8001beb8. */
+/* A square root of `value`: shifted by an even count (Lzc) into the kernel's range, computed by
+ * psyq_gte_csqrt_kernel and shifted back; 0 for 0. bunit_gfx_calculate_distance_falloff,
+ * world_formation_cursor_distance_falloff and WLDCORE's path animation use it. */
 long csqrt(long value) {
     long result;
     long difference;

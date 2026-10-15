@@ -1,11 +1,8 @@
 #include "fft/battle.h"
 
-/*
- * Test whether a current status lasts through the requested charge time.
- *
- * Equality counts as present. Jump uses its charged-ability timer; other
- * timed statuses use their duration unless the status is innate.
- */
+/* Return 1 when unit has status_id and keeps it for delay clockticks (equality counts): Jump until
+ * the jump lands (charged_ability_ct), a timed status while its CT lasts unless it is innate, any
+ * other status always. */
 s32 battle_ai_is_status_active_through_delay(s32 delay, battle_stats_t* unit, s32 status_id) {
     s32 byte_off;
 

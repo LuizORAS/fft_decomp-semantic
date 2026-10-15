@@ -1,5 +1,8 @@
 #include "fft/main.h"
 
+/* Fade out the caption strip main_gfx_fade_in_orbonne_monastery shows: the
+ * subtractive quad steps from 0 to 255 in 32 frames over the same strip, then
+ * both display buffers are cleared. */
 void main_gfx_fade_out_orbonne_monastery(void) {
     POLY_F4 fade_polygons[2];
     DR_MODE draw_modes[2];

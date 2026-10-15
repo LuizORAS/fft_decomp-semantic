@@ -1,8 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Returns the voices of every in-use channel that holds a fermata and is not
- * muted or flagged 0x10: the read-only twin of
+/* Returns the voices of every in-use channel that is sounding and is not
+ * muted or flagged SUZUKI_CHANNEL_NO_RETRIGGER: the read-only twin of
  * main_smd_retrigger_held_voices, with the same merged bit test. */
 u32 main_smd_get_held_voices(suzuki_music_t* music) {
     suzuki_music_channel_t* channel;
@@ -13,8 +13,8 @@ u32 main_smd_get_held_voices(suzuki_music_t* music) {
     channel = music->channels;
     voices = 0;
     do {
-        if ((channel->active & 1) && (channel->active & 0x100)) {
-            if ((channel->active & 0x30) == 0) {
+        if ((channel->flags & SUZUKI_CHANNEL_IN_USE) && (channel->flags & SUZUKI_CHANNEL_SOUNDING)) {
+            if ((channel->flags & (SUZUKI_CHANNEL_MUTED | SUZUKI_CHANNEL_NO_RETRIGGER)) == 0) {
                 voices |= channel->voice_mask;
             }
         }

@@ -2,9 +2,9 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Applies a scroll delta to the projection origin when the resulting window
- * origin would leave [-64, 72] horizontally or [-64, 64] vertically, and
- * raises system flag 0x2 if the origin's x or y changed. */
+/* Keep the travelling marker in view: when its next screen position (marker + delta) would leave
+ * x -64..72 or y -64..64 in the direction it moves, scroll the map by the delta within the scroll
+ * limits, and set MAIN_SYSTEM_FLAG_DRAW_MAP when the origin changed. */
 void wldcore_map_scroll_projection_if_focus_near_edge(wldcore_point32_t* delta) {
     wldcore_point32_t position;
     VECTOR saved;
@@ -19,6 +19,6 @@ void wldcore_map_scroll_projection_if_focus_near_edge(wldcore_point32_t* delta) 
         wldcore_map_apply_clamped_vertical_scroll(delta, (wldcore_point32_t*)&g_wldcore_map_projection_origin);
     }
     if (saved.vx != g_wldcore_map_projection_origin.vx || saved.vy != g_wldcore_map_projection_origin.vy) {
-        g_main_system_flags |= 2;
+        g_main_system_flags |= MAIN_SYSTEM_FLAG_DRAW_MAP;
     }
 }

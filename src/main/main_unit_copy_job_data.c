@@ -2,6 +2,15 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Load a battle unit's job-derived fields from its job record: primary skillset, innate abilities,
+ * equippable types, growths and multipliers, Move, Jump, the innate, immunity and starting status
+ * sets, elemental affinities and graphics ids.
+ *
+ * base_job_skillset is the skillset of the job whose id equals a special character's identity, and 0
+ * for a generic unit. The job's stepping-stone bit moves from the Jump byte to the unit's position
+ * byte. An immortal unit that also has a save- or load-formation flag gains the immortal and the
+ * formation immunity check sets; the tests inside that loop repeat the outer condition. The
+ * strengthened elements are cleared. */
 void main_unit_copy_job_data(battle_stats_t* unit) {
     job_data_t* job;
     s32 i;
@@ -9,16 +18,16 @@ void main_unit_copy_job_data(battle_stats_t* unit) {
     s32 flag_b;
 
     if (unit->character_identity < CHARACTER_IDENTITY_GENERIC_FIRST) {
-        unit->base_job_skillset = g_job_data_pointer[unit->character_identity].skillset;
+        unit->base_job_skillset = g_main_job_data_pointer[unit->character_identity].skillset;
     } else {
         unit->base_job_skillset = 0;
     }
 
-    job = g_job_data_pointer + unit->job_id;
+    job = g_main_job_data_pointer + unit->job_id;
     unit->primary_skillset = job->skillset;
     main_util_copy_byte_data(job->innate_abilities, unit->innate_abilities, 8);
     main_util_copy_byte_data(job->equipment_categories, unit->equipment_categories, 4);
-    main_util_copy_byte_data(job->growths_multipliers, &unit->raw_stats[UNIT_RAW_STAT_DATA_BYTE_COUNT], 10);
+    main_util_copy_byte_data(job->growths_multipliers, unit->growths_multipliers, 10);
     unit->move = job->move;
     unit->jump = job->jump & JOB_JUMP_VALUE_MASK;
     if (job->jump & JOB_JUMP_STEPPING_STONE) {
@@ -49,5 +58,5 @@ void main_unit_copy_job_data(battle_stats_t* unit) {
     unit->elemental_affinity[ELEMENTAL_AFFINITY_STRENGTHEN] = 0;
     unit->spritesheet_id = job->spritesheet_id;
     unit->job_portrait_palette = job->job_portrait_palette;
-    unit->graphic_variant = job->graphic_variant;
+    unit->monster_graphic = job->monster_graphic;
 }

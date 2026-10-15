@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* For an enemy-targeting ability, drop from the targetable list the enemies that move before its
+ * charge lands (battle_ai_moves_before_charge_lands); return 1 when any target is left. */
 s32 battle_ai_exclude_enemies_acting_before_ct(void) {
     s32 result;
     s32 i;
@@ -18,7 +20,7 @@ s32 battle_ai_exclude_enemies_acting_before_ct(void) {
         if (ai->targetability.live.unit_targetable[i] != 0) {
             if ((ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_FLAG_1_TARGET_ENEMIES)
                 && (((battle_ai_unit_decision_t*)(walk + 0x182c))->enemy_flag != 0)
-                && (battle_ai_check_ability_use_based_on_ct(i) != 0)) {
+                && (battle_ai_moves_before_charge_lands(i) != 0)) {
                 ai->targetability.live.unit_targetable[i] = 0;
             } else {
                 result = 1;

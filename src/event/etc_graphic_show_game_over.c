@@ -1,21 +1,28 @@
 #include "fft/event_etc.h"
 #include "psx/types.h"
 
+/*
+ * Show the game-over graphic: swap the scenario music for the game-over
+ * track, reveal the graphic from the left, one pixel column (one row of the
+ * rotated texture) per event-speed step, hold it for 600 steps, then fade its
+ * brightness from 0x80 to 0 over 128 steps. The two primitive buffers
+ * alternate by frame.
+ */
 void etc_graphic_show_game_over(s32 graphic_id) {
     /* The target reserves two otherwise unreferenced local words. */
-    volatile s32 reserved_stack_words[2];
+    s32 reserved_stack_words[2];
     s32 frame;
     s32 fade;
     s32 color;
     etc_graphic_dimensions_t* dimensions;
 
-    g_battle_thread_call_target = main_sound_unload_scenario_music_and_tunes;
+    g_battle_thread_call_target = main_sound_unload_scenario_music_and_stop_tune;
     battle_thread_call_on_main_stack();
-    g_battle_thread_call_target = (void (*)(void))main_sound_open_scenario_smd_files;
-    battle_thread_call_on_main_stack(0x32);
+    g_battle_thread_call_target = (void (*)(void))main_sound_start_music_load_into_free_slot;
+    battle_thread_call_on_main_stack(MAIN_MUSIC_GAME_OVER);
     do {
         battle_thread_yield();
-        g_battle_thread_call_target = (void (*)(void))main_sound_poll_scenario_smd_load;
+        g_battle_thread_call_target = (void (*)(void))main_sound_poll_music_load;
     } while (battle_thread_call_on_main_stack() != 0);
     g_battle_thread_call_target = (void (*)(void))main_sound_switch_music_track;
     battle_thread_call_on_main_stack(1, 0x7f, 0);

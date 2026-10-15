@@ -11,7 +11,7 @@ typedef struct battle_unit_placement_tile_bits {
     u8 depth : 3;
     u8 slope_type;
     u8 _unused_05;
-    map_tile_flags_06_t flags_06;
+    map_tile_flags_t flags;
     u8 camera_block_masks;
 } battle_unit_placement_tile_bits_t;
 
@@ -32,14 +32,14 @@ s32 battle_unit_validate_placement(s32 unit_idx) {
     x = unit->x;
     y = unit->position.bits.y;
     higher_elevation = unit->position.bits.higher_elevation;
-    if (x >= g_map_max_x) {
+    if (x >= g_battle_map_max_x) {
         return -1;
     }
-    if (y >= g_map_max_y) {
+    if (y >= g_battle_map_max_y) {
         return -1;
     }
     tile = (battle_unit_placement_tile_bits_t*)&g_battle_map_tile_data[battle_map_calculate_location(unit)];
-    if (tile->flags_06.value & MAP_TILE_COLLISION_MASK) {
+    if (tile->flags.value & MAP_TILE_COLLISION_MASK) {
         return -1;
     }
     if (tile->slope_half_height >= 3) {
@@ -51,7 +51,7 @@ s32 battle_unit_validate_placement(s32 unit_idx) {
     }
     if (tile->depth >= 3
         && !(unit->movement_abilities[2]
-            & (BATTLE_MOVEMENT_SET_3_WALK_ON_WATER | BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER
+            & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER
                 | BATTLE_MOVEMENT_SET_3_MOVE_UNDERWATER | BATTLE_MOVEMENT_SET_3_FLOAT))) {
         return -1;
     }

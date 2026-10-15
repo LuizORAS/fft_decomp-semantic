@@ -1,5 +1,7 @@
 #include "fft/battle.h"
 
+/* The unit's camera_facing_sixteenth modulo 16, or -1 when no record has the misc
+ * id. No retail code calls it. */
 s16 battle_unit_get_camera_facing_sixteenth_by_misc_id(u32 misc_id) {
     battle_unit_misc_data_t* unit;
 

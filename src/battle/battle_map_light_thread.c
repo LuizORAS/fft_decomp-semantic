@@ -48,10 +48,10 @@ void battle_map_light_thread(void) {
         translation.vy = (values[10] - values[4]) * step / frames + values[4];
         translation.vz = (values[11] - values[5]) * step / frames + values[5];
         ScaleMatrixL(&matrix, &translation);
-        battle_map_light_matrix_command(0x5e, &matrix, &rotation, 0);
+        battle_map_light_matrix_command(MAP_LIGHT_MATRIX_COMMAND_SET, &matrix, &rotation, 0);
         battle_thread_wait_frames(1);
     }
-    battle_copy_bytes(&g_battle_script_light_angles, &color, 8);
-    battle_copy_bytes(&g_battle_script_light_scale, &translation, 0x10);
+    battle_util_copy_bytes(&g_battle_script_light_angles, &color, 8);
+    battle_util_copy_bytes(&g_battle_script_light_scale, &translation, 0x10);
     battle_thread_exit_current();
 }

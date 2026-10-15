@@ -3,6 +3,8 @@
 #include "psx/libcd.h"
 #include "psx/libetc.h"
 
+/* Clear the callbacks and the drive status, reset the interrupt callbacks and install the library's
+ * interrupt handler (callback) on interrupt 2, the CD-ROM. */
 void CD_initintr(void) {
     g_psyq_cd_ready_callback = 0;
     g_psyq_cd_sync_callback = 0;

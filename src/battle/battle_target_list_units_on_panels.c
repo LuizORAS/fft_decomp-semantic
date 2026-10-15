@@ -28,7 +28,7 @@ s32 battle_target_list_units_on_panels(u8* list, battle_stats_t* origin) {
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && battle_target_is_unit_untargetable_and_store_tile(i, &tile) == 0
-            && (g_battle_map_tile_data[tile].ceiling_depth_and_marks & MAP_TILE_FLAG_TARGETED)) {
+            && (g_battle_map_tile_data[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_TARGETED)) {
             if (g_battle_sort_targets_nearest_first != 0) {
                 dx = x - unit->x;
                 if (dx < 0) {

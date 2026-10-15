@@ -77,7 +77,7 @@ extern int CdGetSector(void*, int);
 extern int CdDataSync(int);
 
 s32 CdMix(CdlATV* vol);
-s32 CdControlB(s32 command, const u8* parameter, u8* result);
+s32 CdControlB(u8 command, const u8* parameter, u8* result);
 s32 CdRead2(s32 mode);
 s32 StGetBackloc(CdlLOC* position);
 s32 StGetNext(void** frame_data, void** header);
@@ -104,7 +104,6 @@ void* CdDataCallback(void* callback);
 void StClearRing(void);
 
 /* driver internals */
-
 typedef enum {
     PSYQ_CD_DATA_WORDS = 2048 / sizeof(u32),
     PSYQ_CD_SECTOR_2340_WORDS = 2340 / sizeof(u32),
@@ -153,8 +152,8 @@ void CD_set_test_parmnum(s32 mode);
 /* Current SDK caller ABI corrections, established by original v0 use. */
 s32 CD_cw(u8 command, const u8* parameter, u8* result, s32 asynchronous);
 void callback(void);
-void init_ring_status(u32 first_sector, u32 sector_count);
-void mem2mem(u32* destination, u32* source, u32 words);
+s32 init_ring_status(u32 first_sector, u32 sector_count);
+void mem2mem(u32* destination, u32* source, u32 words, s32 unused_frame_complete);
 
 /* Original data pointers (typed volatile at hardware register accesses). */
 extern volatile u8* g_psyq_cd_index_status_register;
@@ -168,11 +167,10 @@ extern volatile u8* g_psyq_cd_unset_request_register;
 extern u32 g_psyq_cd_status_detail;
 extern char g_psyq_cd_init_message[];
 extern char g_psyq_cd_init_address_format[];
-extern u8 g_psyq_cd_sync_interrupt;
-extern volatile u8 g_psyq_cd_ready_interrupt;        /* CD IRQ updates this result byte. */
-extern volatile u8 g_psyq_cd_second_ready_interrupt; /* CD IRQ updates this result byte. */
 
-/* Stream ring records, corroborated by StHEADER and the retail IRQ/callback accesses. */
+/* Stream ring records, corroborated by StHEADER and the retail IRQ/callback accesses.
+ * Retail reads and writes status through halfword pointers (volatile where the CD
+ * interrupt shares it), never as a struct member: those accesses keep an explicit view. */
 typedef struct {
     u16 status;
     u16 type;
@@ -185,7 +183,7 @@ typedef struct {
     u32 dummy2;
     CdlLOC position;
 } psyq_cd_ring_record_t;
-extern psyq_cd_ring_record_t* volatile g_psyq_cd_stream_ring; /* Streaming IRQ updates the ring base. */
+extern psyq_cd_ring_record_t* g_psyq_cd_stream_ring;
 extern u32 g_psyq_cd_stream_write_index;
 extern u32 g_psyq_cd_stream_frame_start_index;
 extern u32 g_psyq_cd_stream_read_index;
@@ -216,9 +214,7 @@ extern volatile u32* g_psyq_cd_dma_control_register;  /* DMA3 CHCR */
 s32 getintr(void);
 extern u8 g_psyq_cd_sync_result[8];
 extern u8 g_psyq_cd_ready_result[8];
-extern s32 g_psyq_cd_timeout_deadline;
-extern s32 g_psyq_cd_timeout_poll_count;
-extern char* g_psyq_cd_timeout_description;
+
 extern char g_psyq_cd_timeout_message[];
 extern char g_psyq_cd_timeout_format[];
 extern char g_psyq_cd_data_sync_timeout_name[];
@@ -250,7 +246,7 @@ typedef struct {
     u8 second_ready;
 } psyq_cd_interrupt_result_t;
 extern volatile psyq_cd_interrupt_result_t g_psyq_cd_irq_state;
-/* g_psyq_cd_ready_interrupt also has a measured store/reload in getintr. */
+/* The ready byte also has a measured store/reload in getintr. */
 
 typedef struct {
     s32 sectors;
@@ -267,18 +263,6 @@ typedef struct {
 } psyq_cd_read_state_t;
 extern volatile psyq_cd_read_state_t g_psyq_cd_read_state;
 
-/* Separate aliases retain measured independent address reloads. */
-extern s32 g_psyq_cd_read_sectors;
-extern u32* g_psyq_cd_read_first_buffer;
-extern u32* g_psyq_cd_read_next_buffer;
-extern volatile s32 g_psyq_cd_read_mode;
-extern s32 g_psyq_cd_read_words;
-extern volatile s32 g_psyq_cd_read_remaining;
-extern s32 g_psyq_cd_read_sector_clock;
-extern s32 g_psyq_cd_read_start_clock;
-extern s32 g_psyq_cd_read_expected_sector;
-extern void* g_psyq_cd_read_saved_sync_callback;
-extern void* g_psyq_cd_read_saved_ready_callback;
 void cb_read(u8 event, u8* result);
 s32 cd_read_retry(s32 retry);
 extern char g_psyq_cd_sector_error_message[];

@@ -2,6 +2,8 @@
 #include "psx/abi_inline.h"
 #include "psx/libapi.h"
 
+/* The BIOS's GPU_cw (table A, 0x49): wait until the GPU is ready, then write `command` as one GP0 word
+ * (psx-spx). ResetGraph sends the GPU dispatch table's address masked to 24 bits, so the command byte is 0. */
 void GPU_cw(u32 command) {
     PSYQ_BIOS_TAIL_CALL(PSYQ_BIOS_TABLE_A, PSYQ_BIOS_A_GPU_CW);
 }

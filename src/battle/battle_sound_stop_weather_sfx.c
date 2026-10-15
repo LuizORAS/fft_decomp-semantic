@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Stop the rain sound and the two thunder sounds and forget their ids. The result
+ * is an unset local; no caller reads it. */
 s32 battle_sound_stop_weather_sfx(void) {
     s32 result;
     s32 sound_id;

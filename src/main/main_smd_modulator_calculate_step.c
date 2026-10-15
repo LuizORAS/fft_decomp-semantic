@@ -9,11 +9,11 @@
 s32 main_smd_modulator_calculate_step(s32 depth, s16 speed, s16 waveform) {
     if (depth != 0 && speed != 0) {
         switch (waveform) {
-        case 2:
-        case 3:
+        case SUZUKI_MODULATOR_WAVEFORM_TRIANGLE:
+        case SUZUKI_MODULATOR_WAVEFORM_TRIANGLE_CENTERED:
             depth /= speed;
             break;
-        case 4:
+        case SUZUKI_MODULATOR_WAVEFORM_SAWTOOTH:
             if (speed != 1) {
                 depth /= speed - 1;
             }

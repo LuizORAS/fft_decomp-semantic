@@ -1,5 +1,7 @@
 #include "fft/open.h"
 
+/* Empty both render record pools and the pointer list. Every record gets its
+ * layout flag, ordering-table entry 8 and the neutral colour 0x80. */
 void open_gfx_init_render_buffers(void) {
     s32 i;
     u8* color;
@@ -10,7 +12,7 @@ void open_gfx_init_render_buffers(void) {
     g_open_gfx_render_record_pointer_count = 0;
 
     for (i = 0; i < 16; i++) {
-        g_open_gfx_render_records_36[i].flags = 1;
+        g_open_gfx_render_records_36[i].flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
         g_open_gfx_render_records_36[i].ot_layer = 8;
         color = &g_open_gfx_render_records_36[i].color.r;
         color[0] = 0x80;
@@ -19,7 +21,7 @@ void open_gfx_init_render_buffers(void) {
     }
 
     for (i = 0; i < 16; i++) {
-        g_open_gfx_render_records_56[i].flags = 2;
+        g_open_gfx_render_records_56[i].flags = WLDCORE_DISPLAY_OBJECT_IMAGE;
         g_open_gfx_render_records_56[i].ot_layer = 8;
         color = &g_open_gfx_render_records_56[i].color.r;
         color[0] = 0x80;

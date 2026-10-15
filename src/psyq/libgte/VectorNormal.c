@@ -1,7 +1,8 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001c068–0x8001c094: normalize a wide vector through the register-ABI worker. */
+/* Scale the 32-bit vector `input` to length 4096 (ONE) into `output` (psyq_gte_normalize_register_vector).
+ * About 35 functions (unit steps, the camera, effects) take directions this way. */
 void VectorNormal(VECTOR* input, VECTOR* output) {
     VECTOR* source = input;
     VECTOR* destination = output;
@@ -9,7 +10,7 @@ void VectorNormal(VECTOR* input, VECTOR* output) {
     register s32 x __asm__("$8");
     register s32 y __asm__("$9");
     register s32 z __asm__("$10");
-    register s32 sum __asm__("$2");
+    s32 sum;
     register u32 saved_ra __asm__("$7");
     x = source->vx;
     y = source->vy;

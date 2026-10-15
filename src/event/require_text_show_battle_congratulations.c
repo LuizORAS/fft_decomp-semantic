@@ -1,33 +1,44 @@
 #include "fft/event_require.h"
 #include "psx/types.h"
 
+/*
+ * Thread body of the "Congratulations!" battle-complete display.
+ *
+ * Swaps the scenario music for the victory track, shows banner 1 and, half a
+ * second later, banner 7, holds them, then fades both out and waits for
+ * their threads. During event 0x145 a different track plays, the waits
+ * cannot be skipped and the hold is 300 frames in place of 180.
+ */
 void require_text_show_battle_congratulations(void) {
     s32 thread_a;
     s32 thread_b;
 
-    g_battle_thread_call_target = main_sound_unload_scenario_music_and_tunes;
+    g_battle_thread_call_target = main_sound_unload_scenario_music_and_stop_tune;
     battle_thread_call_on_main_stack();
-    g_battle_thread_call_target = (void (*)(void))main_sound_open_scenario_smd_files;
-    battle_thread_call_on_main_stack(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x145 ? 0x2b : 0x2c);
+    g_battle_thread_call_target = (void (*)(void))main_sound_start_music_load_into_free_slot;
+    battle_thread_call_on_main_stack(
+        battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_GRAVEYARD_OF_AIRSHIPS_VICTORY
+            ? MAIN_MUSIC_CONGRATULATIONS
+            : MAIN_MUSIC_CONGRATULATIONS_FINAL_BATTLE);
     do {
         battle_thread_yield();
-        g_battle_thread_call_target = (void (*)(void))main_sound_poll_scenario_smd_load;
+        g_battle_thread_call_target = (void (*)(void))main_sound_poll_music_load;
     } while (battle_thread_call_on_main_stack() != 0);
     g_battle_thread_call_target = (void (*)(void))main_sound_switch_music_track;
     battle_thread_call_on_main_stack(1, 0x7f, 0);
 
-    thread_a = battle_thread_resolve_id(0x10);
-    battle_thread_start(thread_a, require_render_display_condition_special_cases_thread);
+    thread_a = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
+    battle_thread_start(thread_a, require_condition_show_special_banner_thread);
     battle_thread_set_parameters(thread_a, 1, 0, 0);
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x145)
+    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_GRAVEYARD_OF_AIRSHIPS_VICTORY)
         require_input_wait_frames_or_skip(0x1e);
     else
         battle_thread_wait_frames(0x1e);
 
-    thread_b = battle_thread_resolve_id(0x10);
-    battle_thread_start(thread_b, require_render_display_condition_special_cases_thread);
+    thread_b = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
+    battle_thread_start(thread_b, require_condition_show_special_banner_thread);
     battle_thread_set_parameters(thread_b, 7, 1, 0);
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != 0x145)
+    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_GRAVEYARD_OF_AIRSHIPS_VICTORY)
         require_input_wait_frames_or_skip(0xb4);
     else
         battle_thread_wait_frames(0x12c);

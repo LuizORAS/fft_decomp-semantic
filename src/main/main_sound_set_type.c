@@ -11,27 +11,27 @@
 void main_sound_set_type(s32 type) {
     suzuki_music_t* music;
 
-    g_main_sound_driver_flags &= 0xf8ff;
+    g_main_sound_driver_flags &= ~(MAIN_SOUND_DRIVER_WIDE_OPPOSITE | MAIN_SOUND_DRIVER_WIDE | MAIN_SOUND_DRIVER_STEREO);
     switch (type) {
-    case 0:
+    case MAIN_SOUND_TYPE_MONO:
         break;
-    case 1:
-        g_main_sound_driver_flags |= 0x100;
+    case MAIN_SOUND_TYPE_STEREO:
+        g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_STEREO;
         break;
-    case 2:
-        g_main_sound_driver_flags |= 0x300;
+    case MAIN_SOUND_TYPE_WIDE:
+        g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_WIDE | MAIN_SOUND_DRIVER_STEREO;
         break;
-    case 3:
-        g_main_sound_driver_flags |= 0x500;
+    case MAIN_SOUND_TYPE_WIDE_OPPOSITE:
+        g_main_sound_driver_flags |= MAIN_SOUND_DRIVER_WIDE_OPPOSITE | MAIN_SOUND_DRIVER_STEREO;
         break;
     }
     main_sound_commit_volume_change();
     SpuSetReverbModeParam(&g_main_sound_reverb_attr);
     g_main_sound_reverb_attr.mask = 0;
     for (music = g_main_sound_active_music_list; music != 0; music = music->next) {
-        main_smd_set_note_flags2_all_channels(0x100, music);
+        main_smd_set_voice_update_flags_all_channels(SUZUKI_VOICE_UPDATE_VOLUME, music);
     }
-    if (g_main_sound_driver_flags & 0x2000) {
-        main_sound_put_type(g_main_sound_spu_state.sound_type);
+    if (g_main_sound_driver_flags & MAIN_SOUND_DRIVER_PUT_TYPE) {
+        main_sound_put_type(g_main_sound_spu_state.cd_mix_level);
     }
 }

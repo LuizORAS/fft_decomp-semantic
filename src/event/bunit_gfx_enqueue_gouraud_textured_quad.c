@@ -1,33 +1,26 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/*
+ * Append a Gouraud-shaded textured rectangle to the selected ordering-table
+ * entry. Screen x coordinates use the menu's +0x80 origin; `color` holds four
+ * RGB triples, one per corner.
+ */
 void bunit_gfx_enqueue_gouraud_textured_quad(
-    const bunit_gouraud_rect_t* rect, const u8* color, s32 semitrans, s32 otag_index) {
+    const world_gfx_textured_rect_source_t* rect, const u8* color, s32 semitrans, s32 otag_index) {
     POLY_GT4* poly;
-    u16 index = g_bunit_gfx_poly_gt4_count;
 
-    g_bunit_gfx_poly_gt4_count = index + 1;
-    poly = &g_bunit_gfx_context->gouraud_textured_quads[index];
+    poly = &g_bunit_gfx_context->gouraud_textured_quads[g_bunit_gfx_poly_gt4_count++];
 
     SetSemiTrans(poly, semitrans);
 
     poly->x0 = rect->x + 0x80;
     poly->y0 = rect->y;
-    {
-        s32 right_offset = (u16)rect->w + 0x80;
-        s32 right_x = (u16)rect->x;
-        right_x += right_offset;
-        poly->x1 = right_x;
-    }
+    poly->x1 = (rect->x + 0x80) + rect->w;
     poly->y1 = rect->y;
     poly->x2 = rect->x + 0x80;
     poly->y2 = rect->y + rect->h;
-    {
-        s32 right_offset = (u16)rect->w + 0x80;
-        s32 right_x = (u16)rect->x;
-        right_x += right_offset;
-        poly->x3 = right_x;
-    }
+    poly->x3 = (rect->x + 0x80) + rect->w;
     poly->y3 = rect->y + rect->h;
 
     poly->u0 = rect->u;
@@ -55,9 +48,5 @@ void bunit_gfx_enqueue_gouraud_textured_quad(
     poly->clut = rect->clut;
     poly->tpage = rect->tpage;
 
-    {
-        bunit_gfx_context_t* context = g_bunit_gfx_context;
-        setaddr(poly, getaddr(&context->otag[otag_index]));
-        setaddr(&context->otag[otag_index], poly);
-    }
+    addPrim(&g_bunit_gfx_context->otag[otag_index], poly);
 }

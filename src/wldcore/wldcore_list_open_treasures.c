@@ -1,8 +1,10 @@
 #include "fft/wldcore.h"
+#include "psx/pad.h"
 
-/* Opens a panel list of the set script flags 0x321-0x34f (entry values
- * 0xe000 + flag index), shows up to eight rows at (0x88, 0x50) with width
- * 0x5a, and appends its 0x5c-byte record tagged 0x1a. Twin of 0x8007dfcc. */
+/* Open the Brave Story's Treasure section (level TREASURES): one row per treasure found (the script
+ * variables from EVENT_SCRIPT_VAR_TREASURE_FIRST, named by text TEXT_ID_TREASURE_NAME_BASE + index), up to
+ * eight rows at (0x88, 0x50) with width 0x5a, with the saved cursor (slot TREASURES) clamped to the
+ * list. Twin of wldcore_list_open_unexplored_lands. */
 void wldcore_list_open_treasures(void) {
     wldcore_point32_t dimensions;
     wldcore_point32_t origin;
@@ -11,14 +13,14 @@ void wldcore_list_open_treasures(void) {
     s32 record_index;
 
     count = 0;
-    for (i = 0; i < 47; i++) {
-        if (world_script_get_variable(i + 0x321) != 0) {
-            g_wldcore_list_entry_values[count] = i - 0x2000;
+    for (i = 0; i < EVENT_SCRIPT_VAR_TREASURE_COUNT; i++) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
+            g_wldcore_list_entry_values[count] = i + (s16)TEXT_ID_TREASURE_NAME_BASE;
             g_wldcore_list_row_flags[count] = 0;
             count++;
         }
     }
-    world_thread_set_parameters(0xE, 0x19, 0xB848, 0);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count = count;
     if (count < 8) {
         i = count;
@@ -29,11 +31,11 @@ void wldcore_list_open_treasures(void) {
     origin.x = 0x88;
     dimensions.y = i;
     origin.y = 0x50;
-    wldcore_list_clamp_cursor_state(8, count, i);
-    wldcore_window_start_panel_render_thread(
-        0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
+    wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_TREASURES, count, i);
+    wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
+        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
     record_index = g_wldcore_menu_stack_depth;
-    g_wldcore_menu_result = 0x160;
+    g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_TREASURES;
     g_wldcore_menu_stack_depth = record_index + 1;
 }

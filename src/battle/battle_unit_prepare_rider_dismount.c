@@ -44,7 +44,7 @@ s32 battle_unit_prepare_rider_dismount(u32 misc_id, s32 direction, s32 jump_leng
         unit->movement_path_count = 1;
         unit->walk_speed.word = 0x2000;
         unit->step_speed = 0x2000;
-        unit->mount_byte = 0;
+        unit->pending_mount = 0;
         unit->movement_path_offset = 0;
         state->bits_5_7 = 0;
         state->bit_4 = 0;

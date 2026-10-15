@@ -1,9 +1,8 @@
 #include "fft/main.h"
 
-/*
- * Rolls the five 24-bit raw stats (3 bytes each, little-endian) for the
- * selected unit type: generic male, generic female, Ramza, or monster.
- */
+/* Roll the five 24-bit raw stats (3 bytes each, little-endian) for a unit type (generic male, generic
+ * female, Ramza or monster): each is base << 14 plus a random part below variance << 14, from that
+ * type's row of g_main_unit_generation_base_data and g_main_unit_generation_raw_stat_variance. */
 void main_unit_generate_base_raw_stats(u8* raw_stats, int unit_type) {
     /* Pin required: unpinned, type_index, index and base rotate among $s2/$s3/$s4. */
     register int type_index __asm__("$20") = unit_type;

@@ -2,6 +2,22 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Latch this frame's pad state for the event and menu code and derive the
+ * pressed-button mask with key repeat.
+ *
+ * g_battle_script_event_current_input and _previous_input hold the held buttons.
+ * g_battle_script_event_input receives the buttons that count as pressed this
+ * frame: the newly pressed ones whenever the pad state changes or no repeatable
+ * button (d-pad, L1, R1) is held. A state held unchanged counts frames: at the
+ * initial delay the repeatable buttons fire once, and from then on the d-pad
+ * fires every repeat period and L1/R1 every secondary period. While Square is
+ * held the d-pad repeat is limited to Left/Right, and Up/Down fire with L1/R1 on
+ * the secondary period. The three delays (g_main_input_repeat_*) are divided by
+ * the event speed.
+ *
+ * No input at all, or a tutorial event that has Up or Down disabled, resets the
+ * three repeat counters. world_script_update_event_input_state is the WORLD copy;
+ * it takes no argument and fetches the buttons itself. */
 void battle_script_update_event_input_state(u32 input) {
     u32 filtered_input;
     s32 initial_delay;

@@ -13,7 +13,7 @@ u8* world_text_advance_entry_by_char_count(u8* text, s32 count) {
         if (*cursor == 0xFE) {
             break;
         }
-        if ((u8)(*cursor + 0x30) < 0x10) {
+        if (*cursor >= 0xd0 && *cursor <= 0xdf) {
             offset += 2;
         } else {
             offset += 1;

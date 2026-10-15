@@ -1,8 +1,14 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
+/* Draw one 10x14 font glyph into a 4bpp image at `position` and return the
+ * glyph's width.
+ *
+ * A glyph is 35 bytes of 2-bit pixels, most significant bits first. A
+ * nonzero pixel is stored as its value plus style * 4, which selects the
+ * style's four palette entries; an odd x is rounded down to the even pixel. */
 s32 jobstts_text_render_glyph_to_4bpp_image(
-    s32 glyph_id, u8* image, const jobstts_text_image_position_t* position, s32 style) {
+    s32 glyph_id, u8* image, const bunit_text_image_position_t* position, s32 style) {
     s32 row;
     const u8* glyph_bitmap;
     s32 col;
@@ -11,11 +17,11 @@ s32 jobstts_text_render_glyph_to_4bpp_image(
     u8 pixel;
     u8 byte;
 
-    glyph_bitmap = g_text_glyph_bitmap_data;
-    jobstts_bits_init_primary_reader(glyph_bitmap + glyph_id * 35);
+    glyph_bitmap = g_battle_text_glyph_bitmap_data;
+    jobstts_bits_init_primary_reader(glyph_bitmap + glyph_id * TEXT_GLYPH_BYTES);
     for (row = 0; row < 14; row++) {
         stride = position->row_stride * 2;
-        dst = image + stride * (position->y + row) + ((s16)position->x >> 1);
+        dst = image + stride * (position->y + row) + (position->x >> 1);
         for (col = 0; col < 5; col++) {
             pixel = jobstts_bits_read_primary(2);
             if (pixel != 0) {
@@ -30,5 +36,5 @@ s32 jobstts_text_render_glyph_to_4bpp_image(
             *dst++ = byte;
         }
     }
-    return g_text_glyph_widths[glyph_id];
+    return g_battle_text_glyph_widths[glyph_id];
 }

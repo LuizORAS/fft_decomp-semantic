@@ -1,10 +1,10 @@
-/* Menu thread: resolves the current entry's display value (kind 0x11 reads
- * the text binding's halfword table, masked to 11 bits, with 0x2b remapped
- * to 0x63 and bit 15 set; other kinds index g_world_menu_entry_text_id_tables) and hands it to the
- * text-character handler before parking the menu input state. */
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Menu thread: resolve the current entry's display value (kind 0x11 reads the text binding's
+ * halfword table, masked to 11 bits, with 0x2b remapped to 0x63 and bit 15 set; other kinds index
+ * g_world_menu_entry_text_id_tables) and hand it to the text-character handler before parking the menu
+ * input state. */
 void world_menu_announce_entry_value_thread(void) {
     world_menu_entry_t* entry;
     native_thread_t* thread;
@@ -40,11 +40,11 @@ void world_menu_announce_entry_value_thread(void) {
     } else {
         value = g_world_menu_entry_text_id_tables[kind][index];
     }
-    g_world_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
+    g_world_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
     world_thread_set_parameters(g_world_thread_current_id, 0x3F, value, 0);
     world_text_character_handling_thread();
-    g_world_formation_menu_new_buttons = 0;
-    g_world_thread_task_active = 0;
-    world_input_store_menu_state(&g_world_formation_menu_input_state);
+    g_world_menu_frame_new_buttons = 0;
+    g_world_menu_input_lock_mode = 0;
+    world_script_load_event_input_state(&g_world_menu_frame_input_state);
     world_thread_exit_current();
 }

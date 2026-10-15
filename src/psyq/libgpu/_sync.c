@@ -1,6 +1,8 @@
 #include "psx/libgpu.h"
 
-/* LIBGPU, retail 0x80026b94-0x80026cdc. Blocking/nonblocking DMA and queue synchronization. */
+/* The dispatch table's sync, behind DrawSync: mode 0 runs the queue until it is empty and waits for the DMA
+ * and the GPU (-1 on a timeout); any other mode only starts the queue and returns how many entries wait, at
+ * least 1 while the GPU is busy. */
 int _sync(int mode) {
     int count;
     if (!mode) {

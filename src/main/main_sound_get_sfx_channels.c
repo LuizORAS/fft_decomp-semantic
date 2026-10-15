@@ -15,7 +15,7 @@ u32 main_sound_get_sfx_channels(s32 sound_id) {
     channels = 0;
     if (sound_id == -1) {
         do {
-            if (channel->active & 1) {
+            if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
                 channels |= bit;
             }
             channel++;
@@ -23,7 +23,7 @@ u32 main_sound_get_sfx_channels(s32 sound_id) {
         } while (--count != 0);
     } else {
         do {
-            if (channel->active & 1) {
+            if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
                 if (channel->sound_id.raw == sound_id) {
                     channels |= bit;
                 }

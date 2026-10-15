@@ -12,6 +12,9 @@
  * the quad is sorted by that ground point's depth; otherwise it goes into
  * the caller's ordering-table entry.
  *
+ * The dirty test sets bit 0 of shadow_dirty before testing it, so the quad is
+ * recalculated on every call.
+ *
  * `unused` reproduces the target's 0x58-byte frame. */
 void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     VECTOR transformed;
@@ -32,7 +35,7 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     }
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);
-    prim = (POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter();
+    prim = g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim();
     corners = unit->shadow_quad;
     ((P_TAG*)prim)->len = 9;
     prim->code = 0x2c;
@@ -49,12 +52,13 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     prim->x3 = transformed.vx;
     prim->y3 = transformed.vy;
     prim->code |= 2;
-    tile = battle_map_get_tile_data_pointer((s16)(unit->screen.vx / 28), (s16)(unit->screen.vz / 28), unit->map_z);
-    if ((tile->depth_half_height & 0xe0) && -(tile->height + (tile->depth_half_height >> 5)) * 12 < unit->screen.vy) {
-        unit->shadow_counter += g_animation_speed;
+    tile = battle_map_get_tile_data_pointer((unit->screen.vx / 28), (unit->screen.vz / 28), unit->map_z);
+    if ((tile->depth_half_height.value & MAP_TILE_DEPTH_MASK)
+        && -(tile->height + (tile->depth_half_height.value >> 5)) * 12 < unit->screen.vy) {
+        unit->shadow_counter += g_main_system_vsync_interval;
         frame = unit->shadow_counter;
         prim->tpage = 0x3f;
-        prim->clut = unit->vram_palette_id + 0x40;
+        prim->clut = unit->clut + 0x40; /* the unit's CLUT of MAP_CLUT_ROW_UNIT_SHADOWS */
         prim->r0 = prim->g0 = prim->b0 = 0x80;
         switch (frame & 0x30) {
         case 0:
@@ -84,31 +88,31 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
         }
     } else {
         prim->tpage = 0x5f;
-        prim->clut = unit->vram_palette_id + 0x40;
+        prim->clut = unit->clut + 0x40; /* the unit's CLUT of MAP_CLUT_ROW_UNIT_SHADOWS */
         prim->r0 = prim->g0 = prim->b0 = 0x80;
         prim->u0 = prim->u2 = 0x90;
         prim->u1 = prim->u3 = 0xa3;
         prim->v0 = prim->v1 = 0x40;
         prim->v2 = prim->v3 = 0x53;
     }
-    main_util_set_svector(&position, unit->screen.vx + unit->effect_vector_2.vx + unit->effect_vector.vx, 0,
-        unit->screen.vz + unit->effect_vector_2.vz + unit->effect_vector.vz);
+    main_util_set_svector(&position, unit->screen.vx + unit->event_offset.vx + unit->seq_offset.vx, 0,
+        unit->screen.vz + unit->event_offset.vz + unit->seq_offset.vz);
     position.vy = battle_map_calculate_slope_height(&position.vx, unit->map_z);
     if (unit->screen.vy >= position.vy) {
         packet = ot;
     } else {
-        tile = battle_map_get_tile_data_pointer((s16)(position.vx / 28), (s16)(position.vz / 28), unit->map_z);
-        position.vy -= (tile->depth_half_height >> 5) * 12;
-        if (unit->centre_tile_offset != 0) {
-            if (tile->surface.value & 0x40) {
-                battle_camera_calculate_relative_offset_5((u16*)&position, &offset.vx);
+        tile = battle_map_get_tile_data_pointer((position.vx / 28), (position.vz / 28), unit->map_z);
+        position.vy -= (tile->depth_half_height.value >> 5) * 12;
+        if (unit->step_phase != BATTLE_MOVE_STEP_PHASE_NONE) {
+            if (tile->surface.value & MAP_TILE_SURFACE_FLAG_DEPTH_BIAS) {
+                battle_camera_get_step_sort_point_biased((u16*)&position, &offset.vx);
             } else {
-                battle_camera_calculate_relative_offset_1((u16*)&position, &offset.vx);
+                battle_camera_get_step_sort_point_unbiased((u16*)&position, &offset.vx);
             }
-        } else if (tile->surface.value & 0x40) {
-            battle_camera_convert_screen_coords_modify_by_5(&position.vx, &offset.vx);
+        } else if (tile->surface.value & MAP_TILE_SURFACE_FLAG_DEPTH_BIAS) {
+            battle_camera_get_tile_sort_point_biased(&position.vx, &offset.vx);
         } else {
-            battle_camera_convert_screen_coords_modify_by_1(&position.vx, &offset.vx);
+            battle_camera_get_tile_sort_point_unbiased(&position.vx, &offset.vx);
         }
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);

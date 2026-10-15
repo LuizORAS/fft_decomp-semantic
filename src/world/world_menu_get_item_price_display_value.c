@@ -5,7 +5,7 @@
 s32 world_menu_get_item_price_display_value(s32 entry_index) {
     s32 display_value = world_item_get_price(g_world_menu_entry_ids[entry_index]);
 
-    if ((g_world_menu_entry_ids[entry_index] & 0x4000) != 0)
-        display_value |= 0x40000000;
+    if ((g_world_menu_entry_ids[entry_index] & WORLD_ITEM_LIST_ENTRY_UNEQUIPPABLE) != 0)
+        display_value |= MENU_NUMBER_VALUE_DISABLED;
     return display_value;
 }

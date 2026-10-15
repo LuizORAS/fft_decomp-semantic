@@ -2,6 +2,7 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Yield until Circle is newly pressed, at least one frame. */
 void require_input_wait_skip(void) {
     u32* input;
 

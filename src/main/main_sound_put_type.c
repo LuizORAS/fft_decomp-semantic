@@ -12,14 +12,19 @@
 void main_sound_put_type(s16 level) {
     s16 cross;
 
-    g_main_sound_spu_state.sound_type = level;
-    if (g_main_sound_driver_flags & 0x700) {
+    g_main_sound_spu_state.cd_mix_level = level;
+    if (g_main_sound_driver_flags
+        & (MAIN_SOUND_DRIVER_WIDE_OPPOSITE | MAIN_SOUND_DRIVER_WIDE | MAIN_SOUND_DRIVER_STEREO)) {
         cross = 0;
         g_main_sound_cd_mix.val0 = g_main_sound_cd_mix.val2 = level;
     } else {
         cross = level * 160 / 255;
         g_main_sound_cd_mix.val0 = g_main_sound_cd_mix.val2 = cross;
     }
-    g_main_sound_cd_mix_left_to_right = g_main_sound_cd_mix_right_to_left = cross;
-    CdMix(&g_main_sound_cd_mix);
+    {
+        CdlATV* mix = &g_main_sound_cd_mix;
+
+        g_main_sound_cd_mix.val1 = g_main_sound_cd_mix.val3 = cross;
+        CdMix(mix);
+    }
 }

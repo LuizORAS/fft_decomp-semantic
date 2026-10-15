@@ -1,7 +1,14 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-void bunit_gfx_enqueue_textured_quad_corners(bunit_sprite_desc_t* src, u8* color, s32 semi, s32 idx) {
+/*
+ * Append a textured menu quad, given by its four corners, to the selected
+ * ordering-table entry.
+ *
+ * Screen x coordinates use the menu's +0x80 origin. With `color` the quad is
+ * shaded with that color; otherwise texture shading is disabled.
+ */
+void bunit_gfx_enqueue_textured_quad_corners(world_gfx_textured_quad_source_t* src, u8* color, s32 semi, s32 idx) {
     POLY_FT4* poly;
 
     poly = &g_bunit_gfx_context->textured_quads[g_bunit_gfx_poly_ft4_count++];
@@ -32,9 +39,5 @@ void bunit_gfx_enqueue_textured_quad_corners(bunit_sprite_desc_t* src, u8* color
     poly->v3 = src->v3;
     poly->clut = src->clut;
     poly->tpage = src->tpage;
-    {
-        bunit_gfx_context_t* ctx = g_bunit_gfx_context;
-        setaddr(poly, getaddr(&ctx->otag[idx]));
-        setaddr(&ctx->otag[idx], poly);
-    }
+    addPrim(&g_bunit_gfx_context->otag[idx], poly);
 }

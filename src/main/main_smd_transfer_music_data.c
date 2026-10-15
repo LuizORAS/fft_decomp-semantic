@@ -6,7 +6,7 @@
 void main_smd_transfer_music_data(suzuki_music_t* music) {
     suzuki_smd_header_t* smd;
 
-    music->status |= 1;
+    music->status |= SUZUKI_MUSIC_STATUS_SMD;
     smd = music->smd;
     music->id = smd->id;
     music->_unknown_014 = smd->_unknown_12;

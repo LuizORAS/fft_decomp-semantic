@@ -7,6 +7,5 @@ u32 psyq_gte_apply_rotation_ir(SVECTOR* input, VECTOR* output, u32 return_value)
     u32 result;
     PSYQ_GTE_APPLY_SHORT(input, output);
     __asm__("" : "=r"(result) : "0"(saved_return));
-    __asm__ volatile("" : : "r"(result)); /* Retail leaves the return delay slot empty. */
     return result;
 }

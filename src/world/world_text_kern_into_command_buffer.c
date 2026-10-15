@@ -7,7 +7,7 @@
  * space and 0xFE terminates. The buffer is then handed to the image-row
  * renderer
  * with the caller's name, rect and palette passed through unchanged. */
-void world_text_kern_into_command_buffer(u8* text, u16* name, RECT* rect, s32 palette) {
+void world_text_kern_into_command_buffer(u8* text, s16* name, RECT* rect, s32 palette) {
     u8 buf[0x78];
     u8* out;
     s32 len;
@@ -30,10 +30,10 @@ void world_text_kern_into_command_buffer(u8* text, u16* name, RECT* rect, s32 pa
             if (character == TEXT_SPACE) {
                 x += 6;
             } else {
-                if (character >= 0xD0) {
+                if (character >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                     glyph = character & 0xF;
                     second = *text++;
-                    glyph = second + glyph * 0xD0;
+                    glyph = second + glyph * TEXT_GLYPHS_PER_PREFIX;
                 }
                 glyph = g_world_text_glyph_widths[glyph];
                 if (glyph == 2) {
@@ -56,7 +56,7 @@ void world_text_kern_into_command_buffer(u8* text, u16* name, RECT* rect, s32 pa
                 len++;
                 *out++ = character;
                 len++;
-                if (character >= 0xD0) {
+                if (character >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                     *out++ = second;
                     len++;
                 }
@@ -72,5 +72,5 @@ void world_text_kern_into_command_buffer(u8* text, u16* name, RECT* rect, s32 pa
         } while (glyph != 0xFE);
     }
     buf[len] = 0xFE;
-    world_text_render_id_list_to_image_rows(buf, (s16*)name, rect, palette);
+    world_text_render_id_list_to_image_rows(buf, name, rect, palette);
 }

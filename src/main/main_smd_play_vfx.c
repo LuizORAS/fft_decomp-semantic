@@ -1,8 +1,8 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0x9E "Play VFX SMD": moves the channel into a loaded
- * VFX sound resource. The resource is the one whose id matches the high half
+/* SMD opcode 0x9E "Play VFX": moves the channel into a loaded sound
+ * resource. The resource is the one whose id matches the high half
  * of the channel's sound id (id 0 takes the list head). Its channel_offsets
  * entry sound * 2 + byte 2, with the sound number little-endian in bytes 0-1,
  * gives the stream, and reading resumes three bytes past it. Without a matching resource

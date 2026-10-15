@@ -8,7 +8,7 @@ register void* psyq_crt_return_address __asm__("$31");
 
 #include "psx/cpu_abi_inline.h"
 
-/* main 0x80010ad0–0x80010b40: guarded constructor dispatch with a private frame. */
+/* Run the table of C++ constructors once. The table is empty, and nothing calls it. */
 void __main(void) {
     /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
     register s32 initialized __asm__("$8");

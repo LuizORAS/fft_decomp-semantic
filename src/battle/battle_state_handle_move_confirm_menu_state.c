@@ -1,19 +1,22 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* MOVE_CONFIRM_MENU: after the walk, 7 keeps the move (the rider's data goes to the mount); 8 or
+ * cancel undoes it and returns to choosing the destination, except after a teleport, which is
+ * kept. */
 void battle_state_handle_move_confirm_menu_state(void) {
-    s32* selected_ability_address;
-    s32 selected_ability;
+    s32* command_address;
+    s32 command;
     battle_unit_misc_data_t* source_misc_data;
     battle_unit_misc_data_t* casting_misc_data;
 
-    battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    selected_ability_address = battle_menu_get_selected_ability_address();
+    battle_state_update_units();
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
+    command_address = battle_menu_get_selected_command_address();
     source_misc_data = battle_unit_get_source_misc_data();
     casting_misc_data = battle_unit_get_casting_misc_data();
-    selected_ability = *selected_ability_address;
-    switch (selected_ability) {
+    command = *command_address;
+    switch (command) {
     case 8:
     case 0xff:
         if (casting_misc_data->movement_flags & BATTLE_EFFECTIVE_MOVEMENT_TELEPORT) {
@@ -23,7 +26,7 @@ void battle_state_handle_move_confirm_menu_state(void) {
         }
         battle_move_undo_unit_move(casting_misc_data);
         battle_gfx_update_unit_palettes();
-        battle_menu_close_move_help();
+        battle_state_enter_select_move_tile();
         return;
     }
 }

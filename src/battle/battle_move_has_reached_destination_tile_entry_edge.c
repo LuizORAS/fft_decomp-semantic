@@ -6,13 +6,13 @@
  * keeps a 7-unit margin. */
 s32 battle_move_has_reached_destination_tile_entry_edge(s32 direction, battle_unit_misc_data_t* unit) {
     switch (direction) {
-    case 2:
+    case BATTLE_MOVE_DIRECTION_NORTH:
         return unit->screen.vz >= ((unit->movement.bytes.destination_y * 28) + 7);
-    case 0:
+    case BATTLE_MOVE_DIRECTION_SOUTH:
         return (((unit->movement.bytes.destination_y + 1) * 28) - 7) >= unit->screen.vz;
-    case 3:
+    case BATTLE_MOVE_DIRECTION_WEST:
         return (((unit->movement.bytes.destination_x + 1) * 28) - 7) >= unit->screen.vx;
-    case 1:
+    case BATTLE_MOVE_DIRECTION_EAST:
         return unit->screen.vx >= ((unit->movement.bytes.destination_x * 28) + 7);
     }
 }

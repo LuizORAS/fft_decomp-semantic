@@ -34,7 +34,7 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
     state->tile_level = config->target_level = elevation;
     battle_move_store_unit_movement_to_scratchpad(unit_id);
     index = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
-    if (!((g_battle_map_tile_data[index].ceiling_depth_and_marks >> 5) & 1)) {
+    if (!((g_battle_map_tile_data[index].ceiling_depth_and_marks.value >> 5) & 1)) {
         return 0;
     }
     if (g_battle_move_reachable_tiles_valid == 0) {
@@ -46,7 +46,7 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
     if (g_battle_unit_stats[unit_id].entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return 0;
     }
-    battle_move_set_tile_flags_for_pathfinding(2);
+    battle_move_set_tile_flags_for_pathfinding(BATTLE_MOVE_TILE_FLAGS_MODE_KEEP_RANGES);
     g_battle_move_path_height_offsets = 0;
     g_battle_move_destination_unit_record = 0;
     config->source_tile_occupied = 0;
@@ -57,42 +57,43 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
     index = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
     flags = frontier[index];
     if (flags & FRONTIER_FLAG_UNIT_ON_TILE) {
-        if (!(flags & FRONTIER_FLAG_VALID_DESTINATION)) {
+        if (!(flags & FRONTIER_FLAG_MOUNTABLE_UNIT)) {
             return 0;
         }
         config->destination_tile_occupied = 1;
         state->source_unit_record_index = g_battle_target_panels[index].unit_record_index;
-        g_battle_move_destination_unit_record = (records[state->source_unit_record_index].unit_id_flags & 0x1f) + 0x80;
+        g_battle_move_destination_unit_record
+            = (records[state->source_unit_record_index].unit_id_flags & BATTLE_MOVE_RECORD_UNIT_ID_MASK) + 0x80;
         state->outer_count = 0x1c;
     }
     index = (config->high_elevation << 8) + config->y * config->map_max_x + config->x;
     source_flags = frontier[index];
     if (source_flags & FRONTIER_FLAG_UNIT_ON_TILE) {
-        if (!(source_flags & FRONTIER_FLAG_VALID_DESTINATION)) {
+        if (!(source_flags & FRONTIER_FLAG_MOUNTABLE_UNIT)) {
             return 0;
         }
         config->source_tile_occupied = 1;
     }
-    if (config->move_type == 1) {
+    if (config->move_type == BATTLE_MOVEMENT_CLASS_TELEPORT) {
         move_flags = &g_battle_move_effective_flags;
-        *move_flags = 8;
+        *move_flags = BATTLE_EFFECTIVE_MOVEMENT_TELEPORT;
         value = config->movement_3;
-        if (value & 0x80) {
-            *move_flags = 0x28;
-        } else if (value & 0x40) {
-            *move_flags = 0x18;
+        if (value & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
+            *move_flags = BATTLE_EFFECTIVE_MOVEMENT_TELEPORT | BATTLE_EFFECTIVE_MOVEMENT_ON_WATER;
+        } else if (value & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
+            *move_flags = BATTLE_EFFECTIVE_MOVEMENT_TELEPORT | BATTLE_EFFECTIVE_MOVEMENT_IN_WATER;
         }
-        if (value & 2) {
+        if (value & BATTLE_MOVEMENT_SET_3_SILENT_WALK) {
             move_flags = &g_battle_move_effective_flags;
-            *move_flags |= 2;
+            *move_flags |= BATTLE_EFFECTIVE_MOVEMENT_SILENT_WALK;
         }
-        if (battle_move_calculate_teleport_chances() != 0) {
-            g_battle_move_path[0] = 0xfe;
+        if (battle_move_roll_teleport_success() != 0) {
+            g_battle_move_path[0] = BATTLE_MOVE_PATH_TELEPORT;
             g_battle_move_path[1] = x;
             g_battle_move_path[2] = y;
             g_battle_move_path[3] = elevation;
         } else {
-            g_battle_move_path[0] = 0xff;
+            g_battle_move_path[0] = BATTLE_MOVE_PATH_TELEPORT_FAILED;
         }
         return g_battle_move_path;
     }
@@ -103,7 +104,7 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
     while (state->candidate_remaining_range.value != 0) {
         state->previous_source_side_shift = state->selected_source_side_shift;
         pass = state->path_length + 1;
-        state->tile_index = state->tile_level * 256 + (s16)state->tile_y * config->map_max_x + state->tile_x;
+        state->tile_index = state->tile_level * 256 + state->tile_y * config->map_max_x + state->tile_x;
         state->current_tile = &g_battle_map_tile_data[state->tile_index];
         state->current_panel = &g_battle_target_panels[state->tile_index];
         state->path_length = pass;
@@ -126,17 +127,16 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
             state->current_panel->mark = pass;
         }
         state->candidate_remaining_range.value = value;
-        if ((s16)state->tile_x == config->x && (s16)state->tile_y == config->y
-            && state->tile_level == config->high_elevation) {
+        if (state->tile_x == config->x && state->tile_y == config->y && state->tile_level == config->high_elevation) {
             break;
         }
-        battle_move_spread_to_neighbors();
+        battle_move_search_adjacent_candidates();
         previous = state->candidate_remaining_range.value;
         if (previous != value) {
             state->outer_count = 4;
             continue;
         }
-        battle_move_calculate_spread();
+        battle_move_search_jump_candidates();
         current = state->candidate_remaining_range.value;
         if (current != previous) {
             state->outer_count = 4;
@@ -144,12 +144,12 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
         }
         if (config->source_tile_occupied != 0) {
             state->inner_count = 7;
-            battle_move_spread_to_neighbors();
+            battle_move_search_adjacent_candidates();
             previous = state->candidate_remaining_range.value;
             if (previous != current) {
                 continue;
             }
-            battle_move_calculate_spread();
+            battle_move_search_jump_candidates();
             if (state->candidate_remaining_range.value != previous) {
                 continue;
             }

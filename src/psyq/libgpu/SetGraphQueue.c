@@ -1,6 +1,9 @@
 /* LIBGPU 80024510-800245bc. */
 #include "psx/libapi.h"
 #include "psx/libgpu.h"
+
+/* Turn the operation queue on or off, emptying it (_reset(1)) and removing the DMA callback when the setting
+ * changes; returns the old setting. No code refers to it. */
 int SetGraphQueue(int enabled) {
     u8* state = &g_psyq_gpu_queue_enabled;
     int old = *state;

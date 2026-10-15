@@ -1,6 +1,10 @@
 /* SCUS_942.21 0x80020d44..0x80020e0f. */
 #include "psx/libcd.h"
 #include "psx/libetc.h"
+
+/* Return how many sectors the CdRead in progress still has to read: 0 when it is done, -1 when it failed.
+ * Mode 0 waits, mode 1 checks once. A read that failed, or had no sector for 60 VBlanks, restarts from its
+ * first sector; after 1200 VBlanks it gives up. */
 s32 CdReadSync(s32 mode, u8* result) {
     s32 remaining;
     while (1) {

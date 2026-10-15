@@ -1,27 +1,27 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Input handler for the proposition list level (type 0x26).
+/* Input step of the Job section's Advancing list: Up and Down move the cursor with wrap-around, Circle
+ * opens the proposition's participants (wldcore_menu_push_participant_list_level) and keeps the cursor
+ * row, Cross closes the list and forgets it, and Select shows help message 0x105a.
  *
- * The level's first five words are the window/render indices that
- * wldcore_window_set_layout_states consumes. The wrap-around move is spelled as
- * a subtraction of a negative step: that keeps the window's y operand first
- * in the addition, as the target's register assignment requires. */
+ * The wrap-around move is spelled as a subtraction of a negative step: that keeps the window's y operand
+ * first in the addition, as the target's register assignment requires. */
 void wldcore_list_handle_active_propositions_input(wldcore_menu_proposition_list_level_t* level) {
     u32 buttons;
     s32 count;
     s32 window;
 
-    if ((g_wldcore_window_render_records[level->render_index].flags & 0x100) != 0) {
+    if ((g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) != 0) {
         return;
     }
     buttons = g_wldcore_new_button_presses;
     if ((buttons & PSX_PAD_SELECT) != 0) {
-        g_wldcore_window_records[level->cursor_window].sequence = 1;
+        g_wldcore_window_records[level->cursor_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
         window = level->cursor_window;
         g_wldcore_window_records[window].anim_counter = 0;
         g_wldcore_window_records[window].frame_index = 0;
-        wldcore_window_set_layout_states(&level->cursor_window);
+        wldcore_menu_suspend_active_propositions_level(&level->cursor_window);
         wldcore_menu_push_message_level(0x105A, 1);
         return;
     }
@@ -48,10 +48,10 @@ void wldcore_list_handle_active_propositions_input(wldcore_menu_proposition_list
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
         if (level->entry_count >= 2) {
             if (level->cursor != 0) {
-                g_wldcore_window_records[level->cursor_window].y -= 0x10;
+                g_wldcore_window_records[level->cursor_window].position.y -= 0x10;
                 level->cursor = level->cursor - 1;
             } else {
-                g_wldcore_window_records[level->cursor_window].y -= (level->entry_count - 1) * -0x10;
+                g_wldcore_window_records[level->cursor_window].position.y -= (level->entry_count - 1) * -0x10;
                 level->cursor = level->entry_count - 1;
             }
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
@@ -62,10 +62,10 @@ void wldcore_list_handle_active_propositions_input(wldcore_menu_proposition_list
         if (count >= 2) {
             count = count - 1;
             if (level->cursor < count) {
-                g_wldcore_window_records[level->cursor_window].y += 0x10;
+                g_wldcore_window_records[level->cursor_window].position.y += 0x10;
                 level->cursor = level->cursor + 1;
             } else {
-                g_wldcore_window_records[level->cursor_window].y -= count * 0x10;
+                g_wldcore_window_records[level->cursor_window].position.y -= count * 0x10;
                 level->cursor = 0;
             }
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);

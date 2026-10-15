@@ -1,10 +1,17 @@
 #include "fft/battle.h"
 
-/* Run a weapon/effect sprite's animation script up to its next frame.
+/* Run a weapon or effect sprite block's sequence up to its next frame
+ * instruction, or to its end, as battle_gfx_run_unit_seq_script does for the
+ * unit's own sprite. The unit-only commands are errors here, the ones that
+ * move a unit only skip their operands, and BATTLE_SEQ_OP_STRIKE_TARGETS and
+ * the two shadow commands do nothing.
  *
- * Script bytes other than 0xff select a frame; 0xff introduces an opcode.
- * The frame's parts are expanded into the block's display record, using the
- * weapon graphic row for weapon sprites.
+ * A frame id counts from the first frame of the unit's weapon type
+ * (battle_gfx_weapon_shp_t.first_frame). The frame's parts, three at most,
+ * are expanded into the block's display: a weapon block draws them from the
+ * weapon sheet, at the row of the used item's graphic, and an effect block
+ * from the effect sheet. `index` is the block's number; it selects the CLUT
+ * row.
  *
  * Matching constraints: the size table is indexed by element (`>> 10`); the
  * shift that combine later folds into `>> 7` keeps the script loop just large
@@ -18,7 +25,7 @@ void battle_gfx_run_wep_eff_seq_script(
     u8** seq;
     u8 op;
     u8* data;
-    u16 anim;
+    u16 sequence_id;
     s16 pos;
     u16 frame;
     u16 graphic_v;
@@ -28,53 +35,53 @@ void battle_gfx_run_wep_eff_seq_script(
     battle_gfx_source_part_t* part;
     s16 offset;
     u16 count;
-    u8 slot;
-    u8 animation;
+    u8 block_id;
+    u8 block_sequence;
     u32 parts;
     u8 flags;
     u16 i;
     u16 attr;
 
-    anim = sprite->animation_id;
-    graphic_v = g_battle_gfx_item_graphic_data[unit->used_item_or_weapon_id * 2 + 1] * 8;
+    sequence_id = sprite->sequence_id;
+    graphic_v = g_battle_gfx_item_graphic_data[unit->used_item_or_weapon_id].texture_row * 8;
     pos = sprite->script_pos;
     shp = sprite->shp;
     seq = sprite->seq;
     if (advance == 0) {
         pos -= 2;
     }
-    if (anim > 0x100) {
-        main_system_handle_animation_exception(9);
+    if (sequence_id > 0x100) {
+        main_system_handle_error(MAIN_SYSTEM_ERROR_SEQ_ANIMATION);
     }
-    if (seq[anim] == (u8*)-1) {
-        main_system_handle_animation_exception(9);
+    if (seq[sequence_id] == (u8*)-1) {
+        main_system_handle_error(MAIN_SYSTEM_ERROR_SEQ_ANIMATION);
     }
     for (;;) {
-        data = seq[anim];
+        data = seq[sequence_id];
         if (data[pos] == BATTLE_SEQ_OP_PREFIX) {
             pos++;
-            op = seq[anim][pos++];
+            op = seq[sequence_id][pos++];
             switch (op) {
             case BATTLE_SEQ_OP_FLIP_HORIZONTAL:
-                sprite->flags ^= 2;
+                sprite->flags ^= BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP;
                 break;
             case BATTLE_SEQ_OP_FLIP_VERTICAL:
-                sprite->flags ^= 4;
+                sprite->flags ^= BATTLE_MISC_DISPLAY_VERTICAL_FLIP;
                 break;
             case BATTLE_SEQ_OP_END_ANIMATION:
                 sprite->trigger = 0;
             case BATTLE_SEQ_OP_PAUSE_ANIMATION:
                 sprite->wait = 0;
                 return;
-            case BATTLE_SEQ_OP_INCREMENT_LOOP:
-                sprite->counter_0c++;
+            case BATTLE_SEQ_OP_RESTART:
+                sprite->restart_count++;
                 pos = 0;
                 break;
-            case BATTLE_SEQ_OP_SET_Y_ROTATION_0:
-                sprite->display->y_rotation = 0;
+            case BATTLE_SEQ_OP_CLEAR_ROTATION:
+                sprite->display->rotation = 0;
                 break;
-            case BATTLE_SEQ_OP_QUEUE_THROW_ANIMATION:
-                battle_effect_set_evade_type_data_item_and_throw_stone_hardcoding(unit);
+            case BATTLE_SEQ_OP_LAUNCH_PROJECTILE:
+                battle_effect_start_action_projectile_secondary(unit);
             case BATTLE_SEQ_OP_UNKNOWN_E6:
             case BATTLE_SEQ_OP_UNKNOWN_E7:
             case BATTLE_SEQ_OP_UNKNOWN_E8:
@@ -84,93 +91,93 @@ void battle_gfx_run_wep_eff_seq_script(
             case BATTLE_SEQ_OP_UNKNOWN_FB:
                 pos += 2;
                 break;
-            case BATTLE_SEQ_OP_RELOAD_ANIMATION:
+            case BATTLE_SEQ_OP_RETURN:
                 pos = sprite->saved_script_pos;
-                anim = sprite->saved_animation_id;
+                sequence_id = sprite->saved_sequence_id;
                 break;
             case BATTLE_SEQ_OP_SET_LAYER_PRIORITY:
-                unit->layer_priority = seq[anim][pos++];
+                unit->layer_priority = seq[sequence_id][pos++];
                 break;
-            case BATTLE_SEQ_OP_WEAPON_SHEATHE_CHECK_2:
+            case BATTLE_SEQ_OP_WAIT_FOR_EFFECT:
                 if (g_battle_state_animation_continue_check != 0) {
-                    offset = (s8)seq[anim][pos];
-                    pos = offset + (s16)(pos - 2);
+                    offset = (s8)seq[sequence_id][pos];
+                    pos += offset - 2;
                 } else {
                     pos++;
                 }
                 break;
             case BATTLE_SEQ_OP_PLAY_SOUND:
-                battle_sound_play_movement_sfx(unit, seq[anim][pos++]);
+                battle_sound_play_movement_sfx(unit, seq[sequence_id][pos++]);
                 break;
-            case BATTLE_SEQ_OP_SET_SLOWDOWN:
-                sprite->wait_bias = (s8)seq[anim][pos++];
+            case BATTLE_SEQ_OP_SET_WAIT_BIAS:
+                sprite->wait_bias = (s8)seq[sequence_id][pos++];
                 break;
-            case BATTLE_SEQ_OP_SET_FRAME_OFFSET:
-                sprite->frame_bias = (s8)seq[anim][pos++];
+            case BATTLE_SEQ_OP_SET_FRAME_BIAS:
+                sprite->frame_bias = (s8)seq[sequence_id][pos++];
                 break;
-            case BATTLE_SEQ_OP_OVERRIDE_ANIMATION:
-                sprite->saved_animation_id = anim;
-                anim = seq[anim][pos++];
+            case BATTLE_SEQ_OP_CALL_SEQUENCE:
+                sprite->saved_sequence_id = sequence_id;
+                sequence_id = seq[sequence_id][pos++];
                 sprite->saved_script_pos = pos;
                 pos = 0;
                 break;
-            case BATTLE_SEQ_OP_UNKNOWN_F9:
-                unit->screen_offset.vx += (s8)seq[anim][pos++];
-                unit->screen_offset.vy += (s8)seq[anim][pos++];
+            case BATTLE_SEQ_OP_MOVE_SCREEN_OFFSET:
+                unit->screen_offset.vx += (s8)seq[sequence_id][pos++];
+                unit->screen_offset.vy += (s8)seq[sequence_id][pos++];
                 break;
-            case BATTLE_SEQ_OP_WAIT:
-                offset = (s8)seq[anim][pos++];
-                count = seq[anim][pos++];
-                if (sprite->loop_count != 0) {
-                    if (--sprite->loop_count != 0) {
-                        pos = offset + (s16)(pos - 4);
+            case BATTLE_SEQ_OP_REPEAT:
+                offset = (s8)seq[sequence_id][pos++];
+                count = seq[sequence_id][pos++];
+                if (sprite->repeat_count != 0) {
+                    if (--sprite->repeat_count != 0) {
+                        pos += offset - 4;
                     }
                 } else {
-                    pos = offset + (s16)(pos - 4);
-                    sprite->loop_count = count;
+                    pos += offset - 4;
+                    sprite->repeat_count = count;
                 }
                 break;
-            case BATTLE_SEQ_OP_QUEUE_SPRITE_ANIM:
-                slot = seq[anim][pos++];
-                animation = seq[anim][pos++];
-                if (slot == 0) {
-                    main_system_handle_animation_exception(0xd);
+            case BATTLE_SEQ_OP_START_BLOCK_SEQUENCE:
+                block_id = seq[sequence_id][pos++];
+                block_sequence = seq[sequence_id][pos++];
+                if (block_id == 0) {
+                    main_system_handle_error(MAIN_SYSTEM_ERROR_SEQ_OPCODE);
                 }
-                block = &unit->sprite_blocks[slot - 1];
-                block->animation_id = animation;
+                block = &unit->sprite_blocks[block_id - 1];
+                block->sequence_id = block_sequence;
                 block->script_pos = 0;
                 block->wait = 1;
                 block->wait_bias = 0;
                 block->frame_bias = 0;
-                block->loop_count = 0;
+                block->repeat_count = 0;
                 block->trigger = 1;
                 break;
-            case BATTLE_SEQ_OP_SAVE_Y_SPIN:
+            case BATTLE_SEQ_OP_SET_ROTATION:
                 /* The one-trip loop is load-bearing: flow weights register
                  * references by loop depth, and the extra weight lets `count`
                  * take a0 ahead of `offset` (target a0/a1 in 0xfc and 0xe5),
                  * as in battle_gfx_run_unit_seq_script. */
                 do {
-                    count = seq[anim][pos++];
-                    count |= seq[anim][pos++] << 8;
-                    sprite->display->y_rotation = count;
+                    count = seq[sequence_id][pos++];
+                    count |= seq[sequence_id][pos++] << 8;
+                    sprite->display->rotation = count;
                 } while (0);
                 break;
             case BATTLE_SEQ_OP_UNKNOWN_F7:
             case BATTLE_SEQ_OP_MOVE_UNIT:
                 pos += 3;
                 break;
-            case BATTLE_SEQ_OP_WEAPON_SHEATHE_CHECK_1:
+            case BATTLE_SEQ_OP_WAIT_FOR_EFFECT_LOAD:
                 if (g_battle_state_animation_continue_check == 1) {
-                    offset = (s8)seq[anim][pos];
-                    pos = offset + (s16)(pos - 2);
+                    offset = (s8)seq[sequence_id][pos];
+                    pos += offset - 2;
                 } else {
                     pos++;
                 }
                 break;
-            case BATTLE_SEQ_OP_HOLD_WEAPON:
-                offset = (s8)seq[anim][pos];
-                pos = offset + (s16)(pos - 2);
+            case BATTLE_SEQ_OP_JUMP:
+                offset = (s8)seq[sequence_id][pos];
+                pos += offset - 2;
                 break;
             case BATTLE_SEQ_OP_UNKNOWN_D7:
             case BATTLE_SEQ_OP_UNKNOWN_E3:
@@ -185,12 +192,12 @@ void battle_gfx_run_wep_eff_seq_script(
             case BATTLE_SEQ_OP_UNKNOWN_F5:
                 pos++;
                 break;
-            case BATTLE_SEQ_OP_POST_GENERIC_ATTACK:
-            case BATTLE_SEQ_OP_CLEAR_SHADOW:
-            case BATTLE_SEQ_OP_SET_SHADOW:
+            case BATTLE_SEQ_OP_STRIKE_TARGETS:
+            case BATTLE_SEQ_OP_HIDE_SHADOW:
+            case BATTLE_SEQ_OP_SHOW_SHADOW:
                 break;
             default:
-                main_system_handle_animation_exception(0xd);
+                main_system_handle_error(MAIN_SYSTEM_ERROR_SEQ_OPCODE);
                 break;
             }
         } else {
@@ -202,25 +209,25 @@ void battle_gfx_run_wep_eff_seq_script(
             }
             src = shp->frames[frame];
             if (frame > 0x200) {
-                main_system_handle_animation_exception(8);
+                main_system_handle_error(MAIN_SYSTEM_ERROR_SHP_FRAME);
             }
             if (src == (battle_gfx_source_frame_t*)-1) {
-                main_system_handle_animation_exception(8);
+                main_system_handle_error(MAIN_SYSTEM_ERROR_SHP_FRAME);
             }
             display = sprite->display;
             parts = display->part_count = (src->part_count_and_rotation & 7) + 1;
-            display->y_rotation = g_battle_gfx_sprite_y_rotations[src->part_count_and_rotation >> 3];
-            if (unit->sprite_display_flags.half & 2) {
-                display->y_rotation = -display->y_rotation;
+            display->rotation = g_battle_gfx_sprite_y_rotations[src->part_count_and_rotation >> 3];
+            if (unit->sprite_display_flags.half & BATTLE_MISC_DISPLAY_HORIZONTAL_FLIP) {
+                display->rotation = -display->rotation;
             }
             if (parts > 3) {
                 parts = 3;
             }
             flags = src->flags;
             switch (sprite->graphic_type) {
-            case 1:
-                display->spritesheet_id = (flags & 0x60) | 9;
-                display->clut = unit->vram_palette_id + index * 64 + 0x80;
+            case BATTLE_SPRITE_GRAPHIC_WEAPON:
+                display->tpage = (flags & BATTLE_MISC_DISPLAY_BLEND_MASK) | BATTLE_GFX_TPAGE_WEAPON;
+                display->clut = unit->clut + index * 64 + 0x80; /* MAP_CLUT_ROW_ITEM_A or _B */
                 for (i = 0; i < parts; i++) {
                     u32 size;
                     u32 tile;
@@ -232,23 +239,21 @@ void battle_gfx_run_wep_eff_seq_script(
 
                     part = &src->parts[i];
                     attr = part->attributes;
-                    size = (attr & 0x3c00) >> 10;
+                    size = (attr & BATTLE_SHP_PART_SIZE_MASK) >> 10;
                     width = g_battle_gfx_part_sizes[size].width;
                     height = g_battle_gfx_part_sizes[size].height;
-                    tile = attr & 0x3ff;
+                    tile = attr & BATTLE_SHP_PART_TILE_MASK;
                     u = (tile & 0x1f) * 8;
                     v = (tile >> 5) * 8 + graphic_v;
-                    mode = (flags & 0x61) | ((attr & 0xc000) >> 13);
-                    /* The callee takes narrow parameters; this caller passes
-                     * sign-extended coordinates and full-width values. */
-                    ((void (*)(battle_gfx_sprite_display_data_t*, s32, s32, s32, s32, s32, s32, s32,
-                        s32))battle_gfx_store_sprite_display_data)(
-                        display, i, part->x_shift, part->y_shift, u, v, (s16)(width * 8), (s16)(height * 8), mode);
+                    mode = (flags & (BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT | BATTLE_MISC_DISPLAY_BLEND_MASK))
+                        | ((attr & BATTLE_SHP_PART_FLIP_MASK) >> 13);
+                    battle_gfx_store_sprite_display_data(
+                        display, i, part->x_shift, part->y_shift, u, v, width * 8, height * 8, mode);
                 }
                 break;
-            case 2:
-                display->spritesheet_id = (flags & 0x60) | 8;
-                display->clut = unit->vram_palette_id + index * 64 + 0x80;
+            case BATTLE_SPRITE_GRAPHIC_EFFECT:
+                display->tpage = (flags & BATTLE_MISC_DISPLAY_BLEND_MASK) | BATTLE_GFX_TPAGE_EFFECT;
+                display->clut = unit->clut + index * 64 + 0x80; /* MAP_CLUT_ROW_ITEM_A or _B */
                 for (i = 0; i < parts; i++) {
                     u32 size;
                     u32 tile;
@@ -260,23 +265,22 @@ void battle_gfx_run_wep_eff_seq_script(
 
                     part = &src->parts[i];
                     attr = part->attributes;
-                    size = (attr & 0x3c00) >> 10;
+                    size = (attr & BATTLE_SHP_PART_SIZE_MASK) >> 10;
                     width = g_battle_gfx_part_sizes[size].width;
                     height = g_battle_gfx_part_sizes[size].height;
-                    tile = attr & 0x3ff;
+                    tile = attr & BATTLE_SHP_PART_TILE_MASK;
                     u = (tile & 0x1f) * 8;
                     v = (tile >> 5) * 8;
-                    mode = (flags & 0x61) | ((attr & 0xc000) >> 13);
-                    /* Same int-argument view as the call above. */
-                    ((void (*)(battle_gfx_sprite_display_data_t*, s32, s32, s32, s32, s32, s32, s32,
-                        s32))battle_gfx_store_sprite_display_data)(
-                        display, i, part->x_shift, part->y_shift, u, v, (s16)(width * 8), (s16)(height * 8), mode);
+                    mode = (flags & (BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT | BATTLE_MISC_DISPLAY_BLEND_MASK))
+                        | ((attr & BATTLE_SHP_PART_FLIP_MASK) >> 13);
+                    battle_gfx_store_sprite_display_data(
+                        display, i, part->x_shift, part->y_shift, u, v, width * 8, height * 8, mode);
                 }
                 break;
             }
             sprite->script_pos = pos;
             sprite->frame = frame;
-            sprite->animation_id = anim;
+            sprite->sequence_id = sequence_id;
             return;
         }
     }

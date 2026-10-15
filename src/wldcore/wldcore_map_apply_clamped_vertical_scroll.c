@@ -1,8 +1,7 @@
 #include "fft/wldcore.h"
 
-/* Vertical counterpart of wldcore_map_apply_clamped_horizontal_scroll at
- * 0x8006ac08: the same shape applied to the y member of both points and
- * clamped to [-64, 80], the y range wldcore_map_negate_and_clamp_coordinates uses. */
+/* The y counterpart of wldcore_map_apply_clamped_horizontal_scroll, within
+ * WLDCORE_SCROLL_MIN_Y..WLDCORE_SCROLL_MAX_Y, for the y members of both points. */
 void wldcore_map_apply_clamped_vertical_scroll(wldcore_point32_t* amount, wldcore_point32_t* position) {
     s32 delta;
     s32 old_position;

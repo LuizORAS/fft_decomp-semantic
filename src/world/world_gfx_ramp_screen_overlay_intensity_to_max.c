@@ -1,8 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* The screen-covering tile consumes g_world_screen_fade as RGB intensity, not alpha.
- * Yield once per step, then clamp to 255. */
+/* Fade the screen out: raise g_world_screen_fade from 0 by 4 per frame, yielding once per step, and
+ * end on 255. The screen-covering tile takes the value as an RGB intensity, not as alpha. */
 void world_gfx_ramp_screen_overlay_intensity_to_max(void) {
     s32 level;
 

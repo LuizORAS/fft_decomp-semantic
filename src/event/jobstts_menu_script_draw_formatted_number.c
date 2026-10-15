@@ -11,10 +11,10 @@
  * sp+0x50). Only the first 0x10 bytes are ever touched; `reserved` stands in
  * for the unidentified tail and is required for the 0x70 frame. */
 typedef struct jobstts_number_glyph {
-    urect16_t rect;
+    RECT rect;
     s16 u;
     s16 v;
-    u16 w;
+    s16 w;
     u16 h;
     u16 _unused_10[8];
 } jobstts_number_glyph_t;
@@ -22,12 +22,12 @@ typedef struct jobstts_number_glyph {
 /* Render command that draws the decimal value returned by one of the shared
  * condition/getter routines as a row of digit tiles.
  *
- * data[3] selects the routine in g_jobstts_cmd_conditions, data[4]
+ * data[3] selects the routine in g_jobstts_menu_script_conditions, data[4]
  * is the number of digit cells, data[5] their horizontal pitch, data[7] the
  * left edge and data[8] the row offset; data[9] supplies the routine argument
  * outside a scrollable list, and data[6] selects the window CLUT variant.
  * Inside a list row the argument and the row offset follow the same
- * scroll-base/row-height derivation as jobstts_cmd_run_if_group_handler.
+ * scroll-base/row-height derivation as jobstts_menu_script_if_group.
  *
  * The routine returns flags in the top bits of its value: 0x40000000 selects
  * the highlighted CLUT, and 0x20000000 replaces the number with a row of
@@ -45,13 +45,11 @@ typedef struct jobstts_number_glyph {
  *
  * The dash loop reuses `value` as its counter, which is what keeps the
  * target's `move a2, s0`: a global allocno's copy is not coalesced, and a2 is
- * the register `value` already occupies at the 0x20000000 test. The loop has
- * to be a structured `while` so loop.c's duplicate_loop_exit_test clones the
- * top test - a hand-duplicated `goto` is cross-jumped back into one test. */
+ * the register `value` already occupies at the 0x20000000 test. */
 u8* jobstts_menu_script_draw_formatted_number(u8* data) {
     s8 text[16];
     jobstts_number_glyph_t glyph;
-    jobstts_condition_t condition;
+    jobstts_menu_script_condition_t condition;
     s32 arg;
     s32 y;
     s32 value;
@@ -64,29 +62,29 @@ u8* jobstts_menu_script_draw_formatted_number(u8* data) {
     s32 cell;
     u16 clut;
 
-    condition = g_jobstts_cmd_conditions[data[3]];
+    condition = g_jobstts_menu_script_conditions[data[3]];
     if (g_jobstts_menu_list_row_rendering == 0) {
         arg = data[9];
         y = data[8];
     } else {
         arg = g_jobstts_menu_scroll_base_index + g_jobstts_menu_list_row_index;
-        y = (((s16)g_jobstts_menu_list_row_height * g_jobstts_menu_list_row_index) + data[8])
+        y = ((g_jobstts_menu_list_row_height * g_jobstts_menu_list_row_index) + data[8])
             - g_jobstts_menu_list_scroll_offset_y;
         if (g_jobstts_menu_list_scroll_offset_y < 0) {
             arg -= 1;
-            y -= (s16)g_jobstts_menu_list_row_height;
+            y -= g_jobstts_menu_list_row_height;
         }
     }
 
     value = condition(arg);
     if (data[6] != 0) {
-        clut = g_jobstts_text_metric_1;
+        clut = g_jobstts_menu_alternate_number_clut;
     } else {
-        clut = g_jobstts_gfx_background_clut_id;
+        clut = g_jobstts_menu_palette_clut;
     }
-    if (value & 0x40000000) {
-        clut = g_jobstts_text_metric_3;
-        value &= ~0x40000000;
+    if (value & MENU_NUMBER_VALUE_DISABLED) {
+        clut = g_jobstts_menu_disabled_number_clut;
+        value &= ~MENU_NUMBER_VALUE_DISABLED;
     }
 
     glyph.u = 0x78;
@@ -94,7 +92,7 @@ u8* jobstts_menu_script_draw_formatted_number(u8* data) {
     glyph.w = 6;
     glyph.h = 0xB;
 
-    if (value & 0x20000000) {
+    if (value & MENU_NUMBER_VALUE_DASHES) {
         value = data[4];
         while (value > 0) {
             cell = value - 1;
@@ -110,7 +108,7 @@ u8* jobstts_menu_script_draw_formatted_number(u8* data) {
         return data + data[1];
     }
 
-    pad = data[4] - sprintf((char*)text, g_jobstts_text_decimal_format, value);
+    pad = data[4] - sprintf(text, g_jobstts_text_decimal_format, value);
     pos = 0;
     i = 0;
     if (data[4] != 0) {
@@ -127,7 +125,7 @@ u8* jobstts_menu_script_draw_formatted_number(u8* data) {
             glyph.rect.y = y;
             glyph.rect.h = glyph.h;
             glyph.rect.x = cell_x;
-            jobstts_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + ((s16)glyph.w * digit), glyph.v, 0,
+            jobstts_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + (glyph.w * digit), glyph.v, 0,
                 g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, clut, g_jobstts_gfx_otag_index);
             i += 1;
         } while (i < data[4]);

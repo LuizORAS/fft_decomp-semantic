@@ -1,8 +1,9 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001c308–0x8001c468: affine composition with short translation input.
- * The translation sums retain retail's overflow traps. */
+/* Compose two transforms into `output`: the rotation `left` x `right`, and the translation `left`'s rotation
+ * times `right`'s translation (taken as 16-bit values) plus `left`'s translation; the additions trap on
+ * overflow. No code refers to it. */
 MATRIX* CompMatrix(MATRIX* left, MATRIX* right, MATRIX* output) {
     MATRIX* left_operand = left;
     MATRIX* right_operand = right;
@@ -23,18 +24,13 @@ MATRIX* CompMatrix(MATRIX* left, MATRIX* right, MATRIX* output) {
     left_x = left_operand->t[0];
     left_y = left_operand->t[1];
     left_z = left_operand->t[2];
-    __asm__ volatile(""
-        :
-        : "r"(left_x), "r"(left_y), "r"(left_z)); /* Finish all input loads before the trapping sums. */
     PSYQ_CPU_TRAP_ADD(x, x, left_x);
     PSYQ_CPU_TRAP_ADD(y, y, left_y);
     PSYQ_CPU_TRAP_ADD(z, z, left_z);
-    __asm__ volatile("" : : "r"(x), "r"(y), "r"(z) : "memory");
     destination->t[0] = x;
     destination->t[1] = y;
     destination->t[2] = z;
     __asm__ volatile("" : "=r"(destination) : "0"(destination) : "memory");
     __asm__("" : "=r"(result) : "0"(destination));
-    __asm__ volatile("" : : "r"(result)); /* Retail copies the result before JR and keeps its delay slot empty. */
     return result;
 }

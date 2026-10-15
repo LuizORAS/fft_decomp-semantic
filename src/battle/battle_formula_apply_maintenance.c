@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 
-/* Battle Stats 0x91 bit 0x04 is the Maintenance support. */
+/* The target's Maintenance: the Break, Steal or Might Sword action fails on it (forced failure,
+ * accuracy 0). */
 void battle_formula_apply_maintenance(void) {
     if (g_battle_action_target->support_abilities[2] & BATTLE_SUPPORT_SET_3_MAINTENANCE) {
         g_battle_action_target_data->hit = 0;

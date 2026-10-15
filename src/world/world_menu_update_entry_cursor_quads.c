@@ -17,11 +17,11 @@ void world_menu_update_entry_cursor_quads(
     s32 y;
 
     if (cursor >= 0) {
-        if (g_world_formation_display_mode == 1) {
+        if (g_world_menu_cursor_confirm_hold == 1) {
             thread->task_words[1] = 2;
             thread->task_words[0] = 0;
         }
-        if (world_thread_is_previous_running() == 0 && g_world_thread_task_active == 0) {
+        if (world_thread_is_previous_running() == 0 && g_world_menu_input_lock_mode == 0) {
             if (thread->task_words[1] != 0 && thread->task_words[0] >= 0x1B) {
                 thread->task_words[1] = 0;
                 thread->task_words[0] = 0;
@@ -31,9 +31,9 @@ void world_menu_update_entry_cursor_quads(
             thread->task_words[0] = 0;
         }
         if (thread->task_words[1] != 0) {
-            y = world_lookup_thread_parameter_threshold_value(1);
+            y = world_menu_get_cursor_bob_offset(1);
         } else {
-            y = world_lookup_thread_parameter_threshold_value(0);
+            y = world_menu_get_cursor_bob_offset(0);
         }
         thread->task_words[0] += g_world_event_speed;
         x = -(cursor + 1) * 6;

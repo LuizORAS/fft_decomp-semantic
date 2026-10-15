@@ -3,62 +3,51 @@
 /* Initialize the panel renderer's shared geometry and data pointers.
  *
  * Width is rounded for its tiled image; stored origins are screen-relative.
- */
+ * Each coordinate is read into an int before it is narrowed into its s16
+ * field: the target loads full words. */
 void wldcore_window_init_panel_render_state(
     s32 unused, s32 extent, wldcore_point32_t* dimensions, wldcore_point32_t* origin) {
-    s32 rounded_width = dimensions->x;
-    s32 height = dimensions->y;
-    s32 height_again;
-    s32 origin_coordinate;
-    s32 final_height;
-    /* Pins required: unpinned, the loaded value and data pointer move out of v0 into t0/t1. */
-    register s32 value __asm__("$2");
-    register void* data_pointer __asm__("$2");
-    world_menu_text_layout_t* label;
+    s32 width = dimensions->x;
+    s32 rows = dimensions->y;
+    s32 visible_rows;
+    s32 text_width;
+    s32 x;
+    s32 y;
+    s32 last_row;
 
-    label = &g_wldcore_window_panel_label_state;
-    label->row_count = height;
-    height_again = dimensions->y;
-    value = 4;
-    label->x[1] = value;
-    label->x[0] = value;
-    value = 2;
-    label->mode[1] = value;
-    label->mode[2] = value;
-    value = (s32)g_wldcore_list_entry_values;
-    label->text_ids[0] = (s16*)value;
-    value = (s32)g_wldcore_list_row_flags;
-    label->text_colors[0] = (s16*)value;
-    value = 0x200;
-    g_wldcore_window_panel_render_state.vram_x = value;
-    value = 0x100;
-    rounded_width = (rounded_width + 0x18) & 0xFFFC;
-    label->mode[0] = 0;
-    g_wldcore_window_panel_render_state.vram_y = value;
-    g_wldcore_window_panel_render_state.inner_width = rounded_width;
+    g_wldcore_window_panel_label_state.row_count = rows;
+    visible_rows = dimensions->y;
+    g_wldcore_window_panel_label_state.hidden_rows = extent - visible_rows;
+    g_wldcore_window_panel_label_state.x[0] = g_wldcore_window_panel_label_state.x[1] = 4;
+    g_wldcore_window_panel_label_state.mode[0] = MENU_TEXT_COLUMN_TEXT;
+    g_wldcore_window_panel_label_state.mode[1] = MENU_TEXT_COLUMN_HIDDEN;
+    g_wldcore_window_panel_label_state.mode[2] = MENU_TEXT_COLUMN_HIDDEN;
+    g_wldcore_window_panel_label_state.text_ids[0] = g_wldcore_list_entry_values;
+    g_wldcore_window_panel_label_state.text_colors[0] = g_wldcore_list_row_flags;
+    text_width = (width + 0x18) & 0xFFFC;
+    g_wldcore_window_panel_render_state.vram_x = 0x200;
+    g_wldcore_window_panel_render_state.vram_y = 0x100;
+    g_wldcore_window_panel_render_state.inner_width = text_width;
     g_wldcore_window_panel_render_state.inner_height = 0;
-    extent -= height_again;
-    label->hidden_rows = extent;
-    origin_coordinate = origin->x;
-    g_wldcore_window_panel_render_state.window_x = origin_coordinate - 0x80;
-    origin_coordinate = origin->y;
-    g_wldcore_window_panel_render_state.window_width = rounded_width;
+    x = origin->x;
+    g_wldcore_window_panel_render_state.window_x = x - 0x80;
+    y = origin->y;
+    g_wldcore_window_panel_render_state.window_y = y - 0x78;
+    g_wldcore_window_panel_render_state.window_width = text_width;
     g_wldcore_window_panel_render_state.window_height = 0;
-    g_wldcore_window_panel_render_state._unknown_10[0] = 0;
-    g_wldcore_window_panel_render_state._unknown_10[1] = 0;
-    g_wldcore_window_panel_render_state.overall_width = rounded_width;
-    g_wldcore_window_panel_render_state.overall_height = 0;
-    g_wldcore_window_panel_render_state._unknown_18[0] = 0;
-    g_wldcore_window_panel_render_state._unknown_18[1] = 0;
+    g_wldcore_window_panel_render_state.text_image.x_load = 0;
+    g_wldcore_window_panel_render_state.text_image.y_load = 0;
+    g_wldcore_window_panel_render_state.text_image.width = text_width;
+    g_wldcore_window_panel_render_state.text_image.height = 0;
+    g_wldcore_window_panel_render_state.text_image.x_screen_offset = 0;
+    g_wldcore_window_panel_render_state.text_image.y_screen_offset = 0;
     g_wldcore_window_panel_render_state.text_id = 0;
-    g_wldcore_window_panel_render_state.window_y = origin_coordinate - 0x78;
-    final_height = dimensions->y;
-    data_pointer = g_wldcore_panel_row_actions;
-    g_wldcore_window_panel_render_state.parent_indices = data_pointer;
-    value = 1;
-    g_wldcore_window_panel_render_state.field_0x20 = 0;
-    g_wldcore_window_panel_render_state.max_row_index = final_height;
-    g_wldcore_window_panel_render_state.header_id = value;
-    g_wldcore_window_panel_render_state.text_binding = (struct world_menu_text_binding*)label; /* a column layout */
+    last_row = dimensions->y;
+    g_wldcore_window_panel_render_state.max_row_index = last_row;
+    g_wldcore_window_panel_render_state.cancel_thread_count = 0;
+    g_wldcore_window_panel_render_state.row_actions = g_wldcore_panel_row_actions;
+    g_wldcore_window_panel_render_state.header_id = 1;
+    g_wldcore_window_panel_render_state.text_binding
+        = (struct world_menu_text_binding*)&g_wldcore_window_panel_label_state; /* a column layout */
     g_wldcore_window_panel_render_state.value = &g_wldcore_active_menu_value;
 }

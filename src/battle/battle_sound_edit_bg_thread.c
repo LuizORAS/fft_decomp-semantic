@@ -10,6 +10,13 @@ typedef struct battle_sound_bg_fade_request {
     u8 steps;       /* 0x4 */
 } battle_sound_bg_fade_request_t;
 
+/* Thread task 0x35: ramp the volume of an environment sound from volume_from to
+ * volume_to over `steps` yields, then settle on the final level and exit the
+ * thread.
+ *
+ * A step's volume is never 0, which would stop the sound: a negative level is
+ * negated and 0 becomes 1. The event script's edit-background-sound instruction
+ * starts it as a thread, and battle_sound_bg_thread continues in it. */
 void battle_sound_edit_bg_thread(void) {
     battle_sound_bg_fade_request_t* request;
     s32 sound_id;
@@ -20,7 +27,7 @@ void battle_sound_edit_bg_thread(void) {
     s32 scaled;
     s32 volume;
     s32 step;
-    s32 bank;
+    s32 resource;
     /* The target reserves eight frame bytes that no other local
      * accounts for; the pad reproduces the 0x40-byte frame. */
     s32 stack_pad[2];
@@ -32,7 +39,7 @@ void battle_sound_edit_bg_thread(void) {
     volume_from = request->volume_from;
     steps = request->steps;
     volume_to = request->volume_to;
-    bank = 0x10000;
+    resource = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, 0);
     if (steps != 0) {
         delta = volume_to - volume_from;
         scaled = 0;
@@ -46,10 +53,10 @@ void battle_sound_edit_bg_thread(void) {
                 volume = 1;
             }
             scaled += delta;
-            main_sound_set_sfx_echo(sound_id + bank, volume);
+            main_sound_set_sfx_echo(sound_id + resource, volume);
             step++;
         } while (step < steps);
     }
-    main_sound_set_sfx_echo(sound_id | bank, volume_to);
+    main_sound_set_sfx_echo(sound_id | resource, volume_to);
     battle_thread_exit_current();
 }

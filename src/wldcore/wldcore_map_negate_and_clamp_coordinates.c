@@ -1,6 +1,7 @@
 #include "fft/wldcore.h"
 
-/* Negate and clamp a signed coordinate pair to the world-scroll limits. */
+/* The camera origin that centres a map position: the position negated and clamped to the scroll
+ * limits (WLDCORE_SCROLL_MIN/MAX_X and _Y). */
 void wldcore_map_negate_and_clamp_coordinates(const s16* input, wldcore_map_clamped_point32_t* output) {
     s32 x;
     s32 y;

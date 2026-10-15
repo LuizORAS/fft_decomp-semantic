@@ -1,6 +1,8 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Writes one bit (set when the low byte of `value` is nonzero) through the
+ * primary cursor, MSB first, advancing the cursor after every 8 bits. */
 void card_bits_write_primary(s32 value) {
     s32 bit_index;
     u8 mask;

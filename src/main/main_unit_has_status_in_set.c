@@ -1,5 +1,8 @@
 #include "fft/main.h"
 
+/* Return 1 when the unit has any current status of check set status_set_index
+ * (g_main_status_check_sets: KO, CT freeze, no reactions and the others main_status_init_check_data
+ * builds), else 0. */
 s32 main_unit_has_status_in_set(const battle_stats_t* unit, main_status_check_set_e status_set_index) {
     const u8* status_set = g_main_status_check_sets[0];
     s32 index = 0;

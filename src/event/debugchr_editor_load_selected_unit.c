@@ -1,6 +1,24 @@
 #include "fft/event_debugchr.h"
 #include "psx/types.h"
 
+/*
+ * Fills the comparison and selected-unit billboards and the status panel's
+ * fields for the selected battle unit. DEBUGCHR copy of
+ * battle_menu_load_selected_unit.
+ *
+ * The halfword fields are: 0 move, 1 speed, 2 jump, 3/4 right and left weapon
+ * power, 5/6 right and left weapon evade, 7 set for a monster skillset, 8 set
+ * when a lone weapon is held in two hands, 9 physical attack, 10 class evade,
+ * 11/12 shield (the larger hand) and accessory physical evade, 14 magic
+ * attack, 16/17 shield and accessory magic evade, 18..22 the equipped items
+ * (-1 for none) and 23..27 the ability rows (-1 for none): both skillsets,
+ * reaction, support and movement, or a monster's skillset abilities packed to
+ * the front, the fourth kept only while battle_menu_init_monster_skill_check
+ * allows it.
+ *
+ * An empty secondary skillset marks byte 1 of its name buffer, not byte 0,
+ * before the names are cleared and copied.
+ */
 void debugchr_editor_load_selected_unit(void) {
     battle_stats_t* unit;
     s16* editor;
@@ -14,24 +32,24 @@ void debugchr_editor_load_selected_unit(void) {
     u8 field_value;
     s16 list_value;
 
-    unit = battle_unit_get_stats_from_battle_id(g_debugchr_panel_comparison_unit_id);
+    unit = battle_unit_get_stats_from_battle_id(g_debugchr_panel_comparison_unit_data.battle_id);
     editor = g_debugchr_editor_unit_fields.halfwords;
     if (unit != 0) {
-        debugchr_panel_copy_unit_data_to_billboard(unit, (u8*)&g_debugchr_panel_comparison_billboard);
+        debugchr_menu_copy_unit_data_to_status_billboard(unit, &g_debugchr_panel_comparison_billboard);
     }
 
-    unit = battle_unit_get_stats_from_battle_id(g_debugchr_editor_selected_unit_id);
+    unit = battle_unit_get_stats_from_battle_id(g_debugchr_panel_selected_unit_data.battle_id);
     if (unit == 0)
         return;
-    debugchr_panel_copy_unit_data_to_billboard(unit, (u8*)&g_debugchr_panel_selected_billboard);
+    debugchr_menu_copy_unit_data_to_status_billboard(unit, &g_debugchr_panel_selected_billboard);
 
-    g_debugchr_editor_unit_type = unit->job_id;
-    g_debugchr_editor_brave = unit->brave;
-    g_debugchr_editor_faith = unit->faith;
+    g_debugchr_panel_selected_unit_data.job_id = unit->job_id;
+    g_debugchr_panel_selected_unit_data.brave = unit->brave;
+    g_debugchr_panel_selected_unit_data.faith = unit->faith;
     /* The zodiac sign lives in the top nibble of the halfword at 0x008. */
     /* Direct union-member access hoists the halfword load above the faith
      * store (1344 vs 1348 bytes); keep the typed field's aliased word view. */
-    g_debugchr_editor_zodiac = *(u16*)&unit->birthday >> 12;
+    g_debugchr_panel_selected_unit_data.zodiac = *(u16*)&unit->birthday >> 12;
 
     editor[0] = unit->move;
     editor[1] = unit->attributes[UNIT_ATTRIBUTE_SPEED];
@@ -76,11 +94,11 @@ void debugchr_editor_load_selected_unit(void) {
     }
 
     editor[7] = 0;
-    if ((u8)(unit->primary_skillset + 0x50) < 0x30)
+    if (unit->primary_skillset >= SKILLSET_ID_MONSTER_FIRST && unit->primary_skillset < SKILLSET_ID_END)
         editor[7] = 1;
 
     if (editor[7] != 0) {
-        innate_items = main_ability_store_skillset_abilities(unit->primary_skillset, 1);
+        innate_items = main_ability_store_skillset_abilities(unit->primary_skillset, SKILLSET_ABILITY_FILTER_ACTION);
         i = 0;
         ability_slot = editor;
         do {
@@ -104,11 +122,11 @@ void debugchr_editor_load_selected_unit(void) {
         field_value = unit->primary_skillset;
         editor[23] = field_value;
         if (field_value == 0)
-            g_debugchr_editor_third_ability_bytes[0] = 0xfe;
+            g_debugchr_editor_primary_skillset_name[0] = 0xfe;
         field_value = unit->secondary_skillset;
         editor[24] = field_value;
         if (field_value == 0)
-            g_debugchr_editor_fourth_ability_bytes[1] = 0xfe;
+            g_debugchr_editor_secondary_skillset_name[1] = 0xfe;
         editor[25] = unit->reaction_ability;
         editor[26] = unit->support_ability;
         editor[27] = unit->movement_ability;
@@ -140,14 +158,14 @@ void debugchr_editor_load_selected_unit(void) {
         }
     }
 
-    debugchr_text_clear_string_buffer(g_debugchr_editor_first_ability_bytes);
-    debugchr_text_clear_string_buffer(g_debugchr_editor_second_ability_bytes);
-    debugchr_text_clear_string_buffer(g_debugchr_editor_third_ability_bytes);
-    debugchr_text_clear_string_buffer(g_debugchr_editor_fourth_ability_bytes);
+    debugchr_text_clear_string_buffer(g_debugchr_editor_unit_name);
+    debugchr_text_clear_string_buffer(g_debugchr_editor_job_name);
+    debugchr_text_clear_string_buffer(g_debugchr_editor_primary_skillset_name);
+    debugchr_text_clear_string_buffer(g_debugchr_editor_secondary_skillset_name);
     /* The editor uses 16-byte windows at each text destination, including
      * the two eight-byte skillset names; preserve those target copy lengths. */
-    battle_copy_bytes(g_debugchr_editor_first_ability_bytes, unit->name, 0x10);
-    battle_copy_bytes(g_debugchr_editor_second_ability_bytes, unit->job_name, 0x10);
-    battle_copy_bytes(g_debugchr_editor_third_ability_bytes, unit->primary_skillset_name, 0x10);
-    battle_copy_bytes(g_debugchr_editor_fourth_ability_bytes, unit->secondary_skillset_name, 0x10);
+    battle_util_copy_bytes(g_debugchr_editor_unit_name, unit->name, 0x10);
+    battle_util_copy_bytes(g_debugchr_editor_job_name, unit->job_name, 0x10);
+    battle_util_copy_bytes(g_debugchr_editor_primary_skillset_name, unit->primary_skillset_name, 0x10);
+    battle_util_copy_bytes(g_debugchr_editor_secondary_skillset_name, unit->secondary_skillset_name, 0x10);
 }

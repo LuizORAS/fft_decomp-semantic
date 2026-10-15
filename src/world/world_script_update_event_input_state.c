@@ -2,9 +2,10 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* WORLD twin of battle_script_update_event_input_state: while the event thread
- * (0x10) is current, latch the pad state and derive the new-press mask with
- * the shared initial/repeat/secondary key-repeat delays. */
+/* WORLD's version of battle_script_update_event_input_state, for the tutorials: only while the
+ * tutorial text thread (WORLD_THREAD_SLOT_TUTORIAL_TEXT) is current, latch the tutorial's buttons
+ * (world_input_get_tutorial_buttons) and derive the pressed mask with the same initial, repeat and
+ * secondary key-repeat delays. */
 void world_script_update_event_input_state(void) {
     u32 input;
     s32 initial_delay;
@@ -13,11 +14,10 @@ void world_script_update_event_input_state(void) {
     u32 previous_input;
     u32 counter;
 
-    if (g_world_thread_current_id != 0x10) {
+    if (g_world_thread_current_id != WORLD_THREAD_SLOT_TUTORIAL_TEXT) {
         return;
     }
-    /* The definition's s16 return conversion would change this call's codegen. */
-    input = ((s32 (*)(void))world_input_get_tutorial_buttons)();
+    input = world_input_get_tutorial_buttons();
     if (input == 0) {
         g_world_event_initial_repeat_counter = 0;
         g_world_event_repeat_counter = 0;

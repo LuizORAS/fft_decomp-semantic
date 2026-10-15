@@ -1,6 +1,8 @@
 /* SCUS_942.21 0x80020edc..0x80020f3b. */
 #include "psx/libcd.h"
 
+/* Empty the stream ring: reset its read and write indices and its frame count, and mark every record
+ * free. */
 void StClearRing(void) {
     g_psyq_cd_stream_read_index = 0;
     g_psyq_cd_stream_frame_start_index = 0;

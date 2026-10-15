@@ -1,6 +1,9 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Step the fade toward zero intensity by 8 per event-speed step and draw the
+ * fade tile over the screen. Returns 0 on the call that reaches zero and
+ * ends the fade, 1 otherwise (also when no fade is active). */
 s32 card_gfx_update_decreasing_fade(void) {
     s32 result = 1;
     s32 speed = card_menu_get_event_speed();
@@ -12,10 +15,14 @@ s32 card_gfx_update_decreasing_fade(void) {
             result = 0;
         }
         card_gfx_set_draw_mode_and_link_ot(0, 0, GetTPage(0, 2, 0x100, 0) & 0xffff, 0, g_card_gfx_otag_length - 2);
-        g_card_gfx_fade_color_b = g_card_gfx_fade_intensity;
-        g_card_gfx_fade_color_g = g_card_gfx_fade_intensity;
-        g_card_gfx_fade_color[0] = g_card_gfx_fade_intensity;
-        card_gfx_enqueue_translucent_tile(&g_card_gfx_fade_rect, g_card_gfx_fade_color, 1, g_card_gfx_otag_length - 1);
+        {
+            u8* color = g_card_gfx_fade_color;
+
+            g_card_gfx_fade_color[2] = g_card_gfx_fade_intensity;
+            g_card_gfx_fade_color[1] = g_card_gfx_fade_intensity;
+            *color = g_card_gfx_fade_intensity;
+            card_gfx_enqueue_tile(&g_card_gfx_fade_rect, color, 1, g_card_gfx_otag_length - 1);
+        }
     }
     return result;
 }

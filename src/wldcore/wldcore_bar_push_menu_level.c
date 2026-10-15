@@ -1,27 +1,27 @@
 #include "fft/wldcore.h"
 
-/* Opens a full-screen menu level (type 5): hides the map, loads data set
- * 0x16 or 0x17 by `EVENT_SCRIPT_VAR_TOWN_BACKGROUND`, starts WORLD thread 14 on
- * 0x8010f250 with text 0xb806, and allocates two window records and one
- * render record for the level before 0x8007148c fills it. */
+/* Open the Bar (WLDCORE_MENU_LEVEL_BAR_MENU) from a town's menu: the map hides behind the Bar's
+ * background (set 0x16 or 0x17 by EVENT_SCRIPT_VAR_TOWN_BACKGROUND, 0 otherwise), the date and the
+ * location label hide, the barkeeper's welcome (WLDCORE_TEXT_ID_BAR_WELCOME) opens in the message box,
+ * and the menu's rows are built (wldcore_bar_build_menu_rows). */
 void wldcore_bar_push_menu_level(void) {
     s32 value;
     s32 set;
     s32 record_index;
 
-    wldcore_clear_screen_and_set_map_clip_rect(1);
+    wldcore_gfx_clear_screen_and_set_map_clip_rect(1);
     wldcore_window_set_render_objects_visible(0);
-    wldcore_fade_start_screen(0, 0x10);
+    wldcore_gfx_start_screen_fade(0, 0x10);
     value = world_script_get_variable(EVENT_SCRIPT_VAR_TOWN_BACKGROUND);
     set = value == 1 ? 0x16 : 0;
     if (value == 2) {
         set = 0x17;
     }
-    wldcore_load_data_set_into_scratch_buffer(set);
-    wldcore_wait_for_file_load();
-    g_main_system_flags |= 0x3000;
-    world_thread_start(0xE, world_text_message_box_thread);
-    world_thread_set_parameters(0xE, 0x19, 0xB806, 0);
+    wldcore_gfx_load_background_set(set);
+    wldcore_file_wait_for_load();
+    g_main_system_flags |= MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE | MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL;
+    world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BAR_WELCOME, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_pair_render.first_window
         = wldcore_window_append_record_and_reset_color(
             g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);

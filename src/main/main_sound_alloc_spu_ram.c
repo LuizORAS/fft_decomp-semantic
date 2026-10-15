@@ -1,8 +1,8 @@
 #include "psx/libspu.h"
 #include "psx/types.h"
 
-/* "SpuMalloc with extra steps": the sound code always reserves SPU RAM
- * through this wrapper, which now only forwards to the library. */
+/* Reserve `size` bytes of SPU RAM (SpuMalloc) and return their address: the waveset upload
+ * (main_sound_load_waveset) is the only caller. */
 s32 main_sound_alloc_spu_ram(s32 size) {
     return SpuMalloc(size);
 }

@@ -1,14 +1,10 @@
 #include "fft/battle.h"
 
-enum {
-    BATTLE_OUTCOME_SPECIAL_CLASS_MASK = 0x03,
-    BATTLE_OUTCOME_SPECIAL_CLASS = 0x03,
-};
-
-/* Determine whether either side has met its battle-ending condition.
- *
- * Returns -1 when the blue side is defeated, 0 when all opposing units are
- * defeated, and 1 while both sides can continue. */
+/* Decide whether the battle is over. First the units carrying both team flag bits 0x03 (set on
+ * Ramza): one that has left the field (existence DISABLED) or is crystallized, invited or treasure
+ * (MAIN_STATUS_CHECK_SET_UNIT_LOST) ends it, as a defeat (-1) when blue and a victory (0) otherwise. Then
+ * the units present: -1 when no blue unit is outside the KO set, 0 when no other unit is, 1 while
+ * both sides fight on. */
 s32 battle_action_check_battle_outcome(void) {
     s32 player_unit_count;
     s32 enemy_unit_count;
@@ -21,10 +17,10 @@ s32 battle_action_check_battle_outcome(void) {
     unit_index = 0;
     do {
         unit = &g_battle_unit_stats[unit_index];
-        if ((unit->initial_team_flags & BATTLE_OUTCOME_SPECIAL_CLASS_MASK) == BATTLE_OUTCOME_SPECIAL_CLASS) {
-            if (unit->existence != 0xff) {
+        if ((unit->initial_team_flags & BATTLE_TEAM_IMPORTANCE_MASK) == BATTLE_TEAM_IMPORTANCE_MASK) {
+            if (unit->existence != BATTLE_UNIT_EXISTENCE_NONE) {
                 selected = unit->existence == BATTLE_UNIT_EXISTENCE_DISABLED;
-                selected += main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PROVISIONAL_TEAM_LOSS_ENEMY);
+                selected += main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_UNIT_LOST);
                 if (selected != 0) {
                     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
                         enemy_unit_count++;

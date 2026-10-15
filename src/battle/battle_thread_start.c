@@ -1,6 +1,8 @@
 #include "fft/battle.h"
 
-/* BATTLE twin of world_thread_start; same context layout (fft/thread.h). */
+/* Start function in slot thread_id: its stack begins at the slot's top, the slot is marked
+ * running and its task id, parameter 4 and task words are cleared. It first runs at the next
+ * scheduler pass. */
 void battle_thread_start(s32 thread_id, void (*function)(void)) {
     void* global_pointer = battle_thread_get_current_global_pointer();
     native_thread_t* thread = &g_battle_threads[thread_id];
@@ -10,7 +12,7 @@ void battle_thread_start(s32 thread_id, void (*function)(void)) {
     thread->frame_pointer = thread->stack_top;
     thread->code_pointer = function;
     thread->is_running = 1;
-    thread->task_id = 0;
+    thread->task_id = NATIVE_THREAD_TASK_NONE;
     thread->function_parameter_4 = 0;
     thread->task_words[0] = 0;
     thread->task_words[1] = 0;

@@ -1,6 +1,8 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Read the next two script operands (a month and a day) and the calendar's
+ * current month and day. */
 void wldcore_script_read_operand_pair_and_date(
     s32* out_month, s32* out_day, s32* out_current_month, s32* out_current_day) {
     u16* ipp;

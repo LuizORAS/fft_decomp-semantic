@@ -1,21 +1,16 @@
 #include "fft/wldcore.h"
 #include "psx/libgte.h"
 
-enum {
-    WLDCORE_PROJECTION_MOTION_ACTIVE = 0x01,
-};
-
-/* Start a wrapped projection move for a point outside the camera bounds.
+/* Start a camera pan toward a map position when its screen point calls for one
+ * (wldcore_map_is_point_outside_projection_bounds): from the current origin to the origin that
+ * centres the position (wldcore_map_negate_and_clamp_coordinates), over a number of frames that grows
+ * with the distance. Returns 1 when a pan started.
  *
  * The motion record snapshots the current origin and stores the target
  * distance in the same 8-bit fractional scale used by its progress field. */
 s32 wldcore_map_start_projection_motion_if_outside_bounds(const wldcore_point32_t* point, const s16* coordinates) {
     s32 dx;
     s32 dy;
-    s32 dx_squared;
-    /* Pin required: unpinned, dx*dx takes $a1 and dy*dy the csqrt argument
-     * register $a0. */
-    register s32 dy_squared __asm__("$3");
 
     if (wldcore_map_is_point_outside_projection_bounds(point) == 0) {
         return 0;
@@ -27,9 +22,7 @@ s32 wldcore_map_start_projection_motion_if_outside_bounds(const wldcore_point32_
 
     dx = g_wldcore_map_projection_motion.target.x - g_wldcore_map_projection_motion.origin.vx;
     dy = g_wldcore_map_projection_motion.target.y - g_wldcore_map_projection_motion.origin.vy;
-    dx_squared = dx * dx;
-    dy_squared = dy * dy;
     g_wldcore_map_projection_motion.progress = 0;
-    g_wldcore_map_projection_motion.distance = csqrt(dx_squared + dy_squared) >> 8;
+    g_wldcore_map_projection_motion.distance = csqrt(dx * dx + dy * dy) >> 8;
     return 1;
 }

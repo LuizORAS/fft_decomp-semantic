@@ -41,7 +41,7 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
         g_battle_unit_misc_slot_flags[unit->unit_id].in_use = 0;
         return 0;
     }
-    if ((u16)(spritesheet_id - 0x60) < 0x26 && stats != 0) {
+    if (id >= BATTLE_SPRITESHEET_ID_JOB_FIRST && id < BATTLE_SPRITESHEET_ID_CHOCOBO && stats != 0) {
         palette = stats->sprite_palette;
     }
     if (palette >= 6) {
@@ -54,50 +54,48 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->statuses_to_add_1_4 = 0;
     unit->status_flags_5_6 = 0;
     unit->status_flags_1_4 = 0;
-    /* The target passes the palette as a fifth argument the definition does not take. */
-    ((void (*)(u8*, u32, s32, battle_unit_misc_data_t*, s32))battle_gfx_load_spritesheet_into_vram_slot)(
-        data, slot, unit_id, unit, (s16)palette);
+    battle_gfx_load_spritesheet_into_vram_slot(data, slot, unit_id, unit, palette);
     tile = battle_map_get_tile_data_pointer(map_x, map_y, map_level);
-    battle_gfx_check_tile_status_palette_mod(unit, tile->flags_06.bits.shadow_mode, 1);
-    battle_map_load_palette_data(g_battle_gfx_shadow_palette, 4, unit_id, 0);
-    unit->vram_palette_id = GetClut(unit_id << 4, 0x1e3);
-    unit->vram_spritesheet_id = slot + 0x14;
+    battle_gfx_check_tile_status_palette_mod(unit, tile->flags.bits.shadow_mode, 1);
+    battle_map_load_palette_data(g_battle_gfx_shadow_palette, MAP_CLUT_ROW_UNIT_SHADOWS, unit_id, 0);
+    unit->clut = GetClut(unit_id << 4, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_UNITS);
+    unit->tpage = slot + BATTLE_GFX_TPAGE_SPRITESHEET_SLOT_0;
     if (flags == 0) {
-        unit->ability_in_use = 1;
+        unit->draw_enabled = 1;
         unit->sprite_graphic_trigger = 1;
     } else {
-        unit->ability_in_use = 0;
+        unit->draw_enabled = 0;
         unit->sprite_graphic_trigger = 0;
     }
-    unit->current_unit_id_plus_one = 0;
+    unit->standing_on_unit_id_plus_one = 0;
     unit->battle_data = stats;
     unit->requested_animation = 0;
     unit->facing = facing * 1024;
-    unit->camera_facing_sixteenth.s = unit->camera_facing_quadrant.s = *(s16*)& unit->attack_facing = -1;
-    unit->mount_state = 0;
+    unit->camera_facing_sixteenth.s = unit->camera_facing_quadrant.s = unit->attack_facing = -1;
+    unit->mount_state = BATTLE_MISC_MOUNT_STATE_NONE;
     unit->horizontal_flip_flag = 0;
     unit->depth_height_offset = 0;
-    unit->mounted_height_offset = 0;
+    unit->float_bob_offset = 0;
     unit->float_bob_phase = 0;
-    unit->centre_tile_offset = 0;
+    unit->step_phase = BATTLE_MOVE_STEP_PHASE_NONE;
     unit->movement_path_count = 0;
     unit->sprite_display_flags.half = 0;
     unit->layer_priority = 0;
-    unit->ability_ct_resolved = 0;
+    unit->turn_action_flags = 0;
     unit->special_graphic_y_offset = 0;
-    unit->distortion_animation_id = 0;
+    unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
     unit->distortion_phase = 0;
     tile_x = map_x;
     unit->map_x = tile_x;
-    unit->movement.word &= ~0x01000000;
+    unit->movement.word &= ~BATTLE_MOTION_FLAG_SUPPRESS_FACING_UPDATE;
     tile_y = map_y;
     unit->map_y = tile_y;
-    unit->movement.word &= ~0x04000000;
+    unit->movement.word &= ~BATTLE_MOTION_FLAG_SUPPRESS_PALETTE_UPDATE;
     tile_z = map_level;
     unit->map_z = tile_z;
-    unit->movement.word &= ~0x08000000;
-    unit->movement.word &= ~0x10000000;
-    unit->movement.word &= ~0x20000000;
+    unit->movement.word &= ~BATTLE_MOTION_FLAG_ALTERNATE_SHORT_HOP;
+    unit->movement.word &= ~BATTLE_MOTION_FLAG_FLOAT;
+    unit->movement.word &= ~BATTLE_MOTION_FLAG_FORCE_ANIMATION_UPDATE;
     unit->movement.bytes.destination_x = tile_x;
     unit->movement.bytes.destination_y = tile_y;
     unit->movement.bytes.destination_z = tile_z;
@@ -107,99 +105,97 @@ battle_unit_misc_data_t* battle_unit_init_misc_data(s32 map_x, s32 map_y, s32 ma
     unit->velocity.vy = 0;
     unit->velocity.vx = 0;
     unit->walk_speed.word = 0x2000;
-    unit->effect_vector.vz = 0;
-    unit->effect_vector.vy = 0;
-    unit->effect_vector.vx = 0;
+    unit->seq_offset.vz = 0;
+    unit->seq_offset.vy = 0;
+    unit->seq_offset.vx = 0;
     unit->screen_offset.vz = 0;
     unit->screen_offset.vy = 0;
     unit->screen_offset.vx = 0;
-    unit->effect_vector_2.vz = 0;
-    unit->effect_vector_2.vy = 0;
-    unit->effect_vector_2.vx = 0;
-    unit->palette_modifier = 0;
+    unit->event_offset.vz = 0;
+    unit->event_offset.vy = 0;
+    unit->event_offset.vx = 0;
+    unit->fade_out_phase = BATTLE_MISC_FADE_OUT_NONE;
     unit->shadow_graphic_trigger = 1;
     unit->shadow_dirty = 1;
     unit->shadow_counter = 0;
     unit->numeric_display_active = 0;
     unit->numeric_display_selector = 0;
     unit->numeric_display_progress = 0;
-    unit->numeric_displays[0]
-        = ((battle_gfx_sprite_display_data_t * (*)(s32, s32)) battle_gfx_init_numeric_sprite_display)(unit_id, 0);
-    unit->numeric_displays[1]
-        = ((battle_gfx_sprite_display_data_t * (*)(s32, s32)) battle_gfx_init_numeric_sprite_display)(unit_id, 1);
-    unit->numeric_displays[2]
-        = ((battle_gfx_sprite_display_data_t * (*)(s32, s32)) battle_gfx_init_numeric_sprite_display)(unit_id, 2);
+    unit->numeric_displays[0] = battle_gfx_init_numeric_sprite_display(unit_id, 0);
+    unit->numeric_displays[1] = battle_gfx_init_numeric_sprite_display(unit_id, 1);
+    unit->numeric_displays[2] = battle_gfx_init_numeric_sprite_display(unit_id, 2);
     unit->numeric_displays[0]->scale_x = unit->numeric_displays[0]->scale_y = unit->numeric_displays[1]->scale_x
         = unit->numeric_displays[1]->scale_y = unit->numeric_displays[2]->scale_x = unit->numeric_displays[2]->scale_y
         = ONE;
-    unit->numeric_displays[0]->spritesheet_id = unit->numeric_displays[1]->spritesheet_id
-        = unit->numeric_displays[2]->spritesheet_id = 0x1f;
+    unit->numeric_displays[0]->tpage = unit->numeric_displays[1]->tpage = unit->numeric_displays[2]->tpage
+        = BATTLE_GFX_TPAGE_FRAME;
     unit->numeric_displays[0]->clut = unit->numeric_displays[1]->clut = unit->numeric_displays[2]->clut
-        = unit->vram_palette_id + 0x100;
+        = unit->clut + 0x100; /* the unit's CLUT of MAP_CLUT_ROW_ACTION_RESULTS */
     unit->numeric_displays[0]->part_count = unit->numeric_displays[1]->part_count
         = unit->numeric_displays[2]->part_count = 1;
     unit->status_bubble_active = 0;
     unit->status_bubble_id = 0;
     unit->status_bubble_timer = 0;
     unit->status_bubble_display = battle_gfx_init_status_bubble_sprite_display(unit_id);
-    unit->item_ability_display = 0;
+    unit->item_display_active = 0;
     unit->item_display = battle_gfx_init_item_sprite_display(unit_id);
     unit->position_copies_active = 0;
     unit->sprite_display_section = (battle_gfx_sprite_display_data_t*)battle_gfx_init_unit_sprite_display(unit_id);
-    sprite->graphic_type = 0;
-    unit->shp_data = unit->saved_shp_data = battle_gfx_get_spritesheet_shp_data_address(id);
-    unit->seq_data = unit->saved_seq_data = battle_gfx_get_spritesheet_seq_data_address(id);
+    sprite->graphic_type = BATTLE_SPRITE_GRAPHIC_UNIT;
+    unit->shp_data = unit->saved_shp_data = battle_gfx_get_unit_shp_by_spritesheet_id(id);
+    unit->seq_data = unit->saved_seq_data = battle_gfx_get_unit_seq_by_spritesheet_id(id);
     sprite->wait = 1;
-    sprite->counter_0c = 0;
+    sprite->restart_count = 0;
     sprite->script_pos = 0;
-    sprite->animation_id = 6;
+    sprite->sequence_id = BATTLE_UNIT_ANIMATION_IDLE << 1;
     sprite->frame = 0;
     sprite->flags = 0;
     sprite->wait_bias = 0;
     sprite->frame_bias = 0;
-    sprite->loop_count = 0;
+    sprite->repeat_count = 0;
     unit->sprite_display_section->scale_x = ONE;
     unit->sprite_display_section->scale_y = ONE;
-    unit->sprite_display_section->y_rotation = 0;
+    unit->sprite_display_section->rotation = 0;
     battle_unit_set_animation_based_on_status(unit);
     battle_gfx_run_unit_seq_script(unit, (battle_unit_anim_state_t*)sprite, 1);
     for (i = 0; i < 3; i++) {
         sprite = &unit->sprite_blocks[i];
         sprite->display = battle_gfx_init_weapon_sprite_display(unit_id, i);
         if (i == 0) {
-            sprite->graphic_type = 1;
-            sprite->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_spritesheet_shp_data(id);
-            sprite->seq = (u8**)battle_gfx_get_spritesheet_seq_data(id);
+            sprite->graphic_type = BATTLE_SPRITE_GRAPHIC_WEAPON;
+            sprite->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_weapon_shp_by_spritesheet_id(id);
+            sprite->seq = (u8**)battle_gfx_get_weapon_seq_by_spritesheet_id(id);
         } else {
-            sprite->graphic_type = 2;
-            sprite->shp = ((battle_gfx_weapon_shp_t * (*)(u32)) battle_gfx_get_body_part_sprite_data)(id);
-            sprite->seq = ((u8 * *(*)(u32)) battle_gfx_get_body_part_seq_data)(id);
+            sprite->graphic_type = BATTLE_SPRITE_GRAPHIC_EFFECT;
+            sprite->shp = (battle_gfx_weapon_shp_t*)battle_gfx_get_effect_shp_data(id);
+            sprite->seq = (u8**)battle_gfx_get_effect_seq_data(id);
         }
         sprite->trigger = 0;
         sprite->wait = 1;
         sprite->script_pos = 0;
-        sprite->animation_id = 0;
+        sprite->sequence_id = 0;
         sprite->frame = 0;
         sprite->flags = 0;
         sprite->wait_bias = 0;
         sprite->frame_bias = 0;
-        sprite->loop_count = 0;
+        sprite->repeat_count = 0;
         sprite->display->scale_x = ONE;
         sprite->display->scale_y = ONE;
-        sprite->display->y_rotation = 0;
-        if ((s16)id < 0x86 && (s16)id < 0x3c && (s16)id >= 0x4a && (s16)id != 0x5d) {
+        sprite->display->rotation = 0;
+        if ((s16)id < BATTLE_SPRITESHEET_ID_CHOCOBO && (s16)id < BATTLE_SPRITESHEET_ID_VELIUS
+            && (s16)id >= BATTLE_SPRITESHEET_ID_BOY && (s16)id != BATTLE_SPRITESHEET_ID_DAMI) {
             battle_gfx_run_wep_eff_seq_script(unit, &unit->sprite_blocks[i], i, 1);
         }
     }
-    head = &g_battle_misc_unit_list_head;
+    head = &g_battle_unit_misc_list_head;
     unit->previous = *head;
     *head = unit;
     battle_gfx_set_thrown_item_graphic_palette(
         unit->battle_data->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON], unit);
     battle_status_init_special_flag_enabling(unit->battle_data->misc_unit_id);
-    unit->movement.word |= 0x02000000;
+    unit->movement.word |= BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS;
     battle_unit_update_display_by_misc_id(unit->unit_id);
     battle_unit_set_animation_based_on_status(unit);
-    unit->movement.word &= ~0x02000000;
+    unit->movement.word &= ~BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS;
     return unit;
 }

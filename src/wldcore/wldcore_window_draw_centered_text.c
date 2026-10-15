@@ -1,6 +1,9 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Clear a render record's text image, draw text `text_id` centred
+ * horizontally in it (nothing for id 0) and upload it. Also clears the
+ * three pending sound script variables. */
 void wldcore_window_draw_centered_text(s32 window_index, s32 text_id) {
     wldcore_point32_t point;
     s16 text_width;
@@ -9,10 +12,10 @@ void wldcore_window_draw_centered_text(s32 window_index, s32 text_id) {
 
     world_text_measure_pixels(&text_width, &text_height, world_text_find_entry(text_id));
     i = 0;
-    point.x = (((g_wldcore_window_render_record_widths[window_index].value - text_width) / 2) & 0xfffe) + 8;
+    point.x = (((g_wldcore_window_render_records[window_index].bounds.dimensions.x - text_width) / 2) & 0xfffe) + 8;
     point.y = 10;
-    for (; i < g_wldcore_window_render_record_widths[window_index].value
-            * g_wldcore_window_render_record_heights[window_index].value / 8;
+    for (; i < g_wldcore_window_render_records[window_index].bounds.dimensions.x
+            * g_wldcore_window_render_records[window_index].bounds.dimensions.y / 8;
         i++) {
         g_wldcore_window_image_buffer[i] = 0;
     }

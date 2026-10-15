@@ -1,11 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Fades the screen colour modulation from a start RGB to an end RGB over a duration.
+/* Thread body of ColorScreen (EVENT_OPCODE_COLOR_SCREEN): fade the screen colour modulation from a
+ * start RGB to an end RGB over a duration.
  *
- * Twin of world_script_color_screen_thread. Parameters: mode byte, start RGB, end RGB,
- * then a halfword duration in frames. The colour advances by two frames per
- * step and finally snaps to the end colour. */
+ * Parameters: mode byte, start RGB, end RGB, then a halfword duration in frames. The colour advances
+ * by two frames per step and finally snaps to the end colour. */
 void battle_script_color_screen_thread(void) {
     s32 color[3][3]; /* start, end, current RGB */
     u8* parameters;

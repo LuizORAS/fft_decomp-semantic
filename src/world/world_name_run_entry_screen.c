@@ -11,7 +11,7 @@ typedef void (*world_name_entry_handler_t)(void);
 typedef struct world_name_entry_screen_packets {
     POLY_FT4 textured_quads[2 * 220];     /* 0x0000: g_world_gfx_textured_quad_capacity = 220 */
     TILE tiles[2 * 4];                    /* 0x44c0: g_world_gfx_tile_capacity = 4 */
-    TILE tiles_24[2 * 4];                 /* 0x4540: g_world_gfx_tiles_24_capacity = 4 */
+    LINE_F2 flat_lines[2 * 4];            /* 0x4540: g_world_gfx_flat_line_capacity = 4 */
     DR_MOVE draw_moves[2 * 30];           /* 0x45c0: g_world_gfx_draw_move_capacity = 30 */
     DR_MODE draw_modes[2 * 30];           /* 0x4b60: g_world_gfx_draw_mode_capacity = 30 */
     DR_AREA draw_areas[2 * 10];           /* 0x4e30: g_world_gfx_draw_area_capacity = 10 */
@@ -21,19 +21,18 @@ typedef struct world_name_entry_screen_packets {
 
 extern world_name_entry_handler_t g_world_name_entry_state_handlers[];
 
-/*
- * Run the WORLD name-entry screen until its state reaches 0xFF.
+/* Run the name entry as a screen of its own until its state reaches 0xFF and return the encoded name:
+ * OPEN's New Game asks for Ramza's name this way (open_title_step_new_game_start, with WORLD loaded on
+ * EVENT/OPEN.LZW), `image` being the title's last frame, which stays behind it.
  *
- * Binds both packet buffers onto a stack-resident pool block, then each frame
- * presents the previous ordering table, redraws the keyboard image, steps the
- * current name-entry handler, draws the cursor and key prompts, and dispatches
- * the queued sound effect. Returns the encoded name.
+ * Binds both packet buffers onto a stack-resident pool block. Each frame it swaps the buffers, loads `image`
+ * into the new draw buffer, draws the previous ordering table over it, applies L1, R1 and Square as the
+ * frame step does, runs the state handler, draws the cursor and key prompts and dispatches the queued sound.
  *
  * value is one local reused for the cursor x, the drawn-state compare and the
- * sound id; the shared pseudo conflicts with $a0 and keeps all three in $v1.
- */
+ * sound id; the shared pseudo conflicts with $a0 and keeps all three in $v1. */
 u8* world_name_run_entry_screen(u8* list, u32* image) {
-    world_menu_point_t cursor;
+    point16_t cursor;
     world_name_entry_screen_packets_t packets;
     DRAWENV env;
     u32* otag;
@@ -49,7 +48,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
     g_world_gfx_poly_gt3_capacity = 0;
     g_world_gfx_gradient_quad_capacity = 0;
     g_world_gfx_textured_gradient_quad_capacity = 0;
-    g_world_gfx_tiles_24_capacity = 4;
+    g_world_gfx_flat_line_capacity = 4;
     g_world_gfx_line_f3_capacity = 0;
     g_world_gfx_line_f4_capacity = 0;
     g_world_gfx_gradient_line_capacity = 0;
@@ -66,19 +65,19 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
     g_world_gfx_draw_mode_capacity = 30;
     g_world_gfx_draw_area_capacity = 10;
     world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0, 0, 0,
-        packets.tiles_24, 0, 0, 0, 0, 0, packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas,
+        packets.flat_lines, 0, 0, 0, 0, 0, packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas,
         packets.draw_modes);
-    g_world_shop_id = -2;
+    g_world_shop_id = WORLD_SHOP_ID_NAME_ENTRY;
     world_formation_init_menu_display();
-    world_thread_start(2, world_text_message_box_thread);
-    world_thread_set_parameters(2, 0x21, 0xC015, 0);
-    world_menu_open_scrollable_list(list);
+    world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+    world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x21, 0xC015, 0);
+    world_name_open_entry(list);
     g_world_name_entry_last_state = -1;
     world_gfx_set_fade_disabled(1);
-    world_thread_update_task_state();
+    world_input_update_with_message_state();
     while (g_world_name_entry_state != 0xFF) {
         world_gfx_update_fade_in_tile();
-        main_noop_800449ec();
+        main_system_frame_hook();
         g_world_gfx_poly_f3_count = 0;
         g_world_gfx_poly_ft3_count = 0;
         g_world_gfx_poly_f4_count = 0;
@@ -87,7 +86,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         g_world_gfx_poly_gt3_count = 0;
         g_world_gfx_gradient_quad_count = 0;
         g_world_gfx_textured_gradient_quad_count = 0;
-        g_world_gfx_tiles_24_count = 0;
+        g_world_gfx_flat_line_count = 0;
         g_world_gfx_line_f3_count = 0;
         g_world_gfx_line_f4_count = 0;
         g_world_gfx_gradient_line_count = 0;
@@ -118,20 +117,20 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         }
         PutDrawEnv(&g_world_gfx_active_packet_buffer->draw_env);
         g_world_name_entry_screen_image_rect.y = g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0;
-        world_gfx_load_image_sync(&g_world_name_entry_screen_image_rect, image);
+        world_gfx_load_image_and_wait(&g_world_name_entry_screen_image_rect, image);
         DrawOTag(otag);
         ClearOTag(g_world_gfx_active_packet_buffer->otag, g_world_ot_length);
-        world_thread_update_task_state();
-        busy = world_map_is_busy();
+        world_input_update_with_message_state();
+        busy = world_menu_is_screen_busy();
         if (busy == 0) {
             if (g_world_input_primary_repeat & PSX_PAD_L1) {
-                world_name_apply_entry_key(-4);
+                world_name_apply_entry_key(WORLD_NAME_ENTRY_KEY_CURSOR_LEFT);
             }
             if (g_world_input_primary_repeat & PSX_PAD_R1) {
-                world_name_apply_entry_key(-5);
+                world_name_apply_entry_key(WORLD_NAME_ENTRY_KEY_CURSOR_RIGHT);
             }
             if (g_world_input_primary_repeat & PSX_PAD_SQUARE) {
-                world_name_apply_entry_key(-2);
+                world_name_apply_entry_key(WORLD_NAME_ENTRY_KEY_DELETE);
             }
         }
         g_world_name_entry_state_handlers[g_world_name_entry_state]();
@@ -141,41 +140,39 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         world_menu_set_draw_priority(0x28);
         world_menu_draw_animated_vertical_cursor(&cursor, &g_world_name_entry_text_cursor_anim, busy);
         world_menu_run_script_with_palette_mode(g_world_name_entry_display_script, 0, busy);
-        /* The definition's s16/u16 parameter conversions would change this call's codegen. */
-        ((void (*)(s32, s32, s32, s32, s16, s32))world_menu_draw_pressable_button)(
-            0, 0x37, 0x50, (u16)g_world_input_primary_repeat & PSX_PAD_L1, busy, 6);
-        /* The definition's s16/u16 parameter conversions would change this call's codegen. */
-        ((void (*)(s32, s32, s32, s32, s16, s32))world_menu_draw_pressable_button)(
-            1, 0xB1, 0x50, (u16)g_world_input_primary_repeat & PSX_PAD_R1, busy, 6);
+        world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_L1, 0x37, 0x50,
+            g_world_input_primary_repeat & PSX_PAD_L1, busy, MAIN_SFX_PAGE_SWITCH);
+        world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_R1, 0xB1, 0x50,
+            g_world_input_primary_repeat & PSX_PAD_R1, busy, MAIN_SFX_PAGE_SWITCH);
         world_menu_run_script_with_palette_mode(g_world_name_entry_keyboard_script, g_world_input_primary_repeat, busy);
-        g_world_gfx_active_otag_entries = g_world_gfx_active_packet_buffer->otag + 63;
+        g_world_gfx_current_otag_entry = g_world_gfx_active_packet_buffer->otag + 63;
         world_menu_draw_active_window_frames();
-        world_script_update_event_frame_input(
+        world_input_update_event_state(
             g_world_gfx_active_packet_buffer->otag + 63, PadRead(0), g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0);
         value = g_world_name_entry_state;
         if (value != g_world_name_entry_last_state) {
             g_world_name_entry_last_state = value;
         }
-        if ((u32)(g_world_sound_effect_id_to_play - 2) < 2) {
-            g_world_menu_sound_effect_id = g_world_sound_effect_id_to_play;
+        if (g_world_sound_pending_sfx_id == 2 || g_world_sound_pending_sfx_id == 3) {
+            g_world_menu_sound_effect_id = g_world_sound_pending_sfx_id;
         }
-        if (g_world_sound_effect_id_to_play < 0 || g_world_menu_sound_muted != 0) {
-            g_world_sound_effect_id_to_play = 0;
+        if (g_world_sound_pending_sfx_id < 0 || g_world_sound_suppressed != 0) {
+            g_world_sound_pending_sfx_id = MAIN_SFX_NONE;
         }
-        value = g_world_sound_effect_id_to_play;
-        if (value == 0) {
+        value = g_world_sound_pending_sfx_id;
+        if (value == MAIN_SFX_NONE) {
             value = g_world_menu_sound_effect_id;
         }
         if (value == MAIN_SFX_TEXT_GLYPH) {
             main_sound_play_sfx_find_channel(MAIN_SFX_TEXT_GLYPH);
-        } else if (value != 0) {
+        } else if (value != MAIN_SFX_NONE) {
             main_sound_play_sfx(value);
         }
-        g_world_menu_sound_effect_id = 0;
-        g_world_sound_effect_id_to_play = 0;
+        g_world_menu_sound_effect_id = MAIN_SFX_NONE;
+        g_world_sound_pending_sfx_id = MAIN_SFX_NONE;
     }
     world_script_set_vsync_mode_and_event_speed(2);
-    world_formation_reset_menu_context();
+    world_menu_reset_context();
     world_gfx_set_fade_disabled(0);
     return g_world_name_entry_text;
 }

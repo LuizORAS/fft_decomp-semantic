@@ -22,7 +22,9 @@ register void* psyq_crt_return_address __asm__("$31");
 
 #define PSYQ_CRT_CACHED_SEGMENT 0x80000000
 
-/* main 0x80010a30–0x80010ad0: zero BSS, establish stack/heap/GP and enter main. */
+/* The program's entry point: clear the BSS, put the stack at the top of RAM (_ramsize less 8), give the heap
+ * the space between the BSS and the stack (_stacksize), set the global pointer and call main. A return from
+ * main reaches a break. */
 void __SN_ENTRY_POINT(void) {
     /* Pins preserve the handwritten SDK scratch-register and private-call ABI. */
     u32* cursor;
@@ -35,12 +37,10 @@ void __SN_ENTRY_POINT(void) {
     register s32 more __asm__("$1");
     cursor = &g_psyq_crt_saved_ra;
     end = (u32*)g_psyq_crt_bss_end;
-    __asm__("" : "=r"(end) : "0"(end)); /* Keep both BSS endpoint loads before the first store. */
 clear_bss:
     *cursor = 0;
     cursor++;
     more = (u32)cursor < (u32)end;
-    __asm__("" : "=r"(more) : "0"(more)); /* Preserve the handwritten SLTU/zero-test pair. */
     if (more != 0)
         goto clear_bss;
     ram_top = _ramsize;
@@ -50,7 +50,6 @@ clear_bss:
     psyq_crt_stack_pointer = ram_top | cached_segment;
     heap_address = (u32)g_psyq_crt_bss_end;
     heap_address <<= 3;
-    __asm__("" : "=r"(heap_address) : "0"(heap_address)); /* Keep physical-address extraction as SLL/SRL. */
     heap_address >>= 3;
     stack_size = _stacksize;
     PSYQ_CPU_LOAD_WAIT();

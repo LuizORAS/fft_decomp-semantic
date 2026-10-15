@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* The event's Inflict Status: on the unit with ENTD id entd_id (none found: nothing), stage one
+ * status, numbered from the low bit of its byte, as an infliction (which nonzero) or a removal, and
+ * resolve it on the main stack (battle_status_resolve_unit_changes with removal_only). */
 void battle_status_inflict_by_entd_unit_id(s32 entd_id, s32 status, s32 which, s32 removal_only) {
     s32 idx;
     battle_stats_t* unit;
@@ -17,8 +20,8 @@ void battle_status_inflict_by_entd_unit_id(s32 entd_id, s32 status, s32 which, s
         unit->action.status_infliction[i] = 0;
         unit->action.status_removal[i] = 0;
     }
-    /* Action infliction/removal bytes are LSB-first; stored status sets use
-     * BATTLE_STATUS_BYTE_MASK's MSB-first representation. */
+    /* The event numbers a status from the low bit of its byte; BATTLE_STATUS_ID and the action's
+     * bytes count from the high bit (BATTLE_STATUS_BYTE_MASK). */
     byte = status / 8;
     bit = 1 << (status - byte * 8);
     if (which != 0) {

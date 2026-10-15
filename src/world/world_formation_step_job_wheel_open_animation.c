@@ -1,6 +1,9 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* One frame of the job wheel opening: the wheel turns through the last
+ * quarter turn into place while its radius shrinks by 0x140 a frame to 1.0.
+ * It ends by setting the menu value WORLD_FORMATION_MENU_JOB_WHEEL. */
 void world_formation_step_job_wheel_open_animation(void) {
     s32 pos;
 
@@ -12,6 +15,6 @@ void world_formation_step_job_wheel_open_animation(void) {
     g_world_job_wheel_open_frame--;
     if (g_world_job_wheel_open_frame == 0) {
         g_world_job_wheel_opening = 0;
-        g_world_formation_current_menu = 3;
+        g_world_formation_current_menu = WORLD_FORMATION_MENU_JOB_WHEEL;
     }
 }

@@ -22,16 +22,16 @@ s32 battle_move_init_source_geometry(s32 direction) {
             + state->source_half_height * ((state->source_slope >> state->source_side_shift) & 3);
         if (state->source_exit_height < state->work_height)
             return 1;
-        state->source_ceiling_height = battle_move_calculate_tile_ceiling((s16)state->tile_x, (s16)state->tile_y,
-            state->source_side_shift, (u8)(records[state->source_unit_record_index].standing_height + 5));
+        state->source_ceiling_height = battle_move_calculate_tile_ceiling(state->tile_x, state->tile_y,
+            state->source_side_shift, (records[state->source_unit_record_index].standing_height + 5));
         state->source_side_height_delta = 0;
     } else if (state->source_unit_record_flag != 0) {
-        if (!(frontier[state->tile_index] & 8))
+        if (!(frontier[state->tile_index] & FRONTIER_FLAG_STAND_ON_UNIT))
             return 1;
         state->source_exit_height = records[state->source_unit_record_index].top_height;
         state->source_opposite_height = state->source_exit_height;
         state->source_ceiling_height = battle_move_calculate_tile_ceiling(
-            (s16)state->tile_x, (s16)state->tile_y, state->source_side_shift, (u8)(state->source_exit_height - 1));
+            state->tile_x, state->tile_y, state->source_side_shift, (state->source_exit_height - 1));
         state->source_side_height_delta = 0;
     } else {
         state->source_exit_height = state->source_base_height_times_two
@@ -39,12 +39,12 @@ s32 battle_move_init_source_geometry(s32 direction) {
         state->source_opposite_height = state->source_base_height_times_two
             + state->source_half_height * ((state->source_slope >> state->destination_side_shift) & 3);
         state->source_ceiling_height = battle_move_calculate_tile_ceiling(
-            (s16)state->tile_x, (s16)state->tile_y, state->source_side_shift, state->source_exit_height);
+            state->tile_x, state->tile_y, state->source_side_shift, state->source_exit_height);
         difference = state->source_opposite_height - state->source_exit_height;
         state->source_side_height_delta = difference;
-        if (difference > 0 && (frontier[state->tile_index] & 0x40))
+        if (difference > 0 && (frontier[state->tile_index] & FRONTIER_FLAG_STEEP))
             return 1;
-        state->source_exit_height += (state->current_tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT) * 2;
+        state->source_exit_height += (state->current_tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 2;
     }
     return 0;
 }

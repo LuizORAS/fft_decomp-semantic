@@ -27,7 +27,7 @@ s32 battle_target_move_cursor_by_input(void) {
 
     options = g_main_game_options;
     do {
-        switch ((s32)options.fields.multi_height_cursor_speed) {
+        switch (options.fields.multi_height_cursor_speed) {
         case 0:
             delay = 30;
             break;
@@ -43,9 +43,9 @@ s32 battle_target_move_cursor_by_input(void) {
     direction = 0;
     current = battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (g_main_game_options.fields.multi_height_cursor_speed == 3) {
-        if (g_controller_input_pressed & PSX_PAD_START) {
+        if (g_main_input_pressed_buttons & PSX_PAD_START) {
             if (!battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z ^ 1)
-                    ->flags_06.bits.blocked) {
+                    ->flags.bits.blocked) {
                 direction = 1;
                 g_battle_cursor_z ^= 1;
             }
@@ -53,7 +53,7 @@ s32 battle_target_move_cursor_by_input(void) {
     } else if (g_battle_cursor_repeat_counter > delay) {
         g_battle_cursor_repeat_counter = 0;
         if (!battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z ^ 1)
-                ->flags_06.bits.blocked) {
+                ->flags.bits.blocked) {
             direction = 1;
             g_battle_cursor_z ^= 1;
         }
@@ -64,78 +64,78 @@ s32 battle_target_move_cursor_by_input(void) {
         g_battle_cursor_previous_z = g_battle_cursor_z;
         g_battle_cursor_previous_y = g_battle_cursor_y;
         /* The target passes only the mode; the definition's second parameter is a matching device. */
-        direction = ((s32 (*)(s32))battle_camera_get_input_direction)(1);
+        direction = battle_camera_get_input_direction(BATTLE_CAMERA_INPUT_PRESSED);
         switch (direction) {
-        case 0x800:
+        case BATTLE_FACING_NORTH:
             g_battle_cursor_y++;
             break;
-        case 0:
+        case BATTLE_FACING_SOUTH:
             g_battle_cursor_y--;
             break;
-        case 0x400:
+        case BATTLE_FACING_WEST:
             g_battle_cursor_x--;
             break;
-        case 0xc00:
+        case BATTLE_FACING_EAST:
             g_battle_cursor_x++;
             break;
-        case 0xa00:
+        case BATTLE_FACING_NORTH_EAST:
             g_battle_cursor_y++;
             g_battle_cursor_x++;
             break;
-        case 0x600:
+        case BATTLE_FACING_NORTH_WEST:
             g_battle_cursor_y++;
             g_battle_cursor_x--;
             break;
-        case 0xe00:
+        case BATTLE_FACING_SOUTH_EAST:
             g_battle_cursor_x++;
             g_battle_cursor_y--;
             break;
-        case 0x200:
+        case BATTLE_FACING_SOUTH_WEST:
             g_battle_cursor_y--;
             g_battle_cursor_x--;
             break;
         }
-        if (g_battle_cursor_x == g_map_max_x) {
+        if (g_battle_cursor_x == g_battle_map_max_x) {
             g_battle_cursor_x--;
-        } else if ((u32)g_battle_cursor_x > g_map_max_x) {
+        } else if ((u32)g_battle_cursor_x > g_battle_map_max_x) {
             g_battle_cursor_x = 0;
         }
-        if (g_battle_cursor_y == g_map_max_y) {
-            g_battle_cursor_y = g_map_max_y - 1;
+        if (g_battle_cursor_y == g_battle_map_max_y) {
+            g_battle_cursor_y = g_battle_map_max_y - 1;
         }
-        if ((u32)g_battle_cursor_y > g_map_max_y) {
+        if ((u32)g_battle_cursor_y > g_battle_map_max_y) {
             g_battle_cursor_y = 0;
         }
         lower = battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
         upper = battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z ^ 1);
-        if (lower->flags_06.bits.blocked) {
-            if (upper->flags_06.bits.blocked) {
+        if (lower->flags.bits.blocked) {
+            if (upper->flags.bits.blocked) {
                 switch (direction) {
-                case 0x800:
+                case BATTLE_FACING_NORTH:
                     g_battle_cursor_y--;
                     break;
-                case 0:
+                case BATTLE_FACING_SOUTH:
                     g_battle_cursor_y++;
                     break;
-                case 0x400:
+                case BATTLE_FACING_WEST:
                     g_battle_cursor_x++;
                     break;
-                case 0xc00:
+                case BATTLE_FACING_EAST:
                     g_battle_cursor_x--;
                     break;
-                case 0xa00:
+                case BATTLE_FACING_NORTH_EAST:
                     g_battle_cursor_y--;
                     g_battle_cursor_x--;
                     break;
-                case 0x600:
+                case BATTLE_FACING_NORTH_WEST:
                     g_battle_cursor_y--;
                     g_battle_cursor_x++;
                     break;
-                case 0xe00:
+                case BATTLE_FACING_SOUTH_EAST:
                     g_battle_cursor_x--;
                     g_battle_cursor_y++;
                     break;
-                case 0x200:
+                case BATTLE_FACING_SOUTH_WEST:
                     g_battle_cursor_y++;
                     g_battle_cursor_x++;
                     break;
@@ -143,7 +143,7 @@ s32 battle_target_move_cursor_by_input(void) {
             } else {
                 g_battle_cursor_z ^= 1;
             }
-        } else if (!upper->flags_06.bits.blocked) {
+        } else if (!upper->flags.bits.blocked) {
             lower_rise = lower->height - current->height;
             upper_rise = upper->height - current->height;
             if (lower_rise < 0) {
@@ -164,12 +164,12 @@ s32 battle_target_move_cursor_by_input(void) {
         g_battle_cursor_repeat_counter = 0;
         switch (g_battle_game_state) {
         case BATTLE_GAME_STATE_FREE_CURSOR:
-        case BATTLE_GAME_STATE_CLOSE_MOVE_HELP:
+        case BATTLE_GAME_STATE_SELECT_MOVE_TILE:
         case BATTLE_GAME_STATE_TARGET_SELECT:
-            battle_target_store_cursor_unit_name_and_data();
+            battle_target_show_cursor_unit_panel();
             break;
         case BATTLE_GAME_STATE_TARGETING_RANGE:
-            battle_target_store_cursor_unit_as_preview_target();
+            battle_target_show_cursor_target_panel();
             break;
         }
         return 1;

@@ -28,27 +28,27 @@ s32 world_card_load_globals_from_save_image(s32 partial_load) {
     u8 parity;
     u8* block;
 
-    if (g_world_load_work_buffer->slot == 0xff) {
+    if (g_world_load_work_buffer->summary.slot == 0xff) {
         return 0;
     }
-    if (g_world_load_work_buffer->format_version != 4) {
+    if (g_world_load_work_buffer->summary.format_version != 4) {
         return 0;
     }
 
     if (partial_load == 0) {
-        world_bit_cursor_set_primary(g_world_load_work_buffer->parity_bits);
+        world_bits_set_primary_cursor(g_world_load_work_buffer->parity_bits);
         /* The sweep reads the image as raw 128-byte blocks; block 3 starts mid-field. */
         block = (u8*)g_world_load_work_buffer + 3 * 0x80;
-        world_bit_cursor_read_primary(3);
-        for (i = 3; (u32)i < 0x3c; i++) {
+        world_bits_read_primary(3);
+        for (i = 3; i >= 0 && i < 0x3c; i++) {
             parity = 0;
-            world_bit_cursor_set_secondary(block);
+            world_bits_set_secondary_cursor(block);
             for (j = 0; j < 0x400; j++) {
-                parity += world_bit_cursor_read_secondary(1);
+                parity += world_bits_read_secondary(1);
             }
             block += 0x80;
             parity &= 1;
-            if (parity != (u8)world_bit_cursor_read_primary(1)) {
+            if (parity != (u8)world_bits_read_primary(1)) {
                 return 0;
             }
         }
@@ -88,7 +88,7 @@ s32 world_card_load_globals_from_save_image(s32 partial_load) {
         bcopy(g_world_load_work_buffer->item_type_order_1, g_main_item_type_order_1, 8);
     }
 
-    ((s8*)g_main_item_type_order_1)[7] = -1;
+    g_main_item_type_order_1[7] = -1;
     bcopy(g_world_load_work_buffer->item_type_order_2, g_main_item_type_order_2, 7);
     bcopy(g_world_load_work_buffer->item_type_order_3, g_main_item_type_order_3, 5);
     bcopy(g_world_load_work_buffer->item_type_order_4, g_main_item_type_order_4, 5);
@@ -104,9 +104,9 @@ s32 world_card_load_globals_from_save_image(s32 partial_load) {
     bcopy(
         g_world_load_work_buffer->proposition_last_attempt_date_bits, g_main_proposition_last_attempt_date_bits, 0x6c);
     bcopy(g_world_load_work_buffer->proposition_states, g_main_proposition_states, 0x60);
-    bcopy(g_world_load_work_buffer->saved_records, g_main_saved_records, 0x118);
-    bcopy(g_world_load_work_buffer->saved_data_bits, g_main_saved_data_bits, 0xa0);
-    bcopy(g_world_load_work_buffer->secondary_saved_data_bits, g_main_secondary_saved_data_bits, 8);
+    bcopy(g_world_load_work_buffer->saved_records, g_main_sound_novel_records, 0x118);
+    bcopy(g_world_load_work_buffer->saved_data_bits, g_main_sound_novel_section_bits, 0xa0);
+    bcopy(g_world_load_work_buffer->secondary_saved_data_bits, g_main_sound_novel_saved_flags, 8);
     bcopy(g_world_load_work_buffer->brave_story_character_ages, g_main_brave_story_character_ages, 0x40);
     g_main_save_proposition_count = g_world_load_work_buffer->proposition_count;
     bcopy(g_world_load_work_buffer->active_propositions, g_main_active_propositions, 0x48);

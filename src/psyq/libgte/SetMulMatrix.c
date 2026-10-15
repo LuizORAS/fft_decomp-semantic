@@ -1,7 +1,8 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001c740–0x8001c850: product goes into GTE rotation control state. */
+/* Load `left`'s rotation times `right`'s into the GTE's rotation matrix and return `left`. No code refers to
+ * it. */
 MATRIX* SetMulMatrix(MATRIX* left, MATRIX* right) {
     register MATRIX* left_operand __asm__("$4") = left; /* Retail directly uses argument registers. */
     MATRIX* right_operand = right;

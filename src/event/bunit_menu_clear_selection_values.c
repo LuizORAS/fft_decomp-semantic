@@ -1,6 +1,7 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Set the screen's 16 selector values to 0, the first choice (g_bunit_menu_selection_values). */
 void bunit_menu_clear_selection_values(void) {
     s32 index;
 

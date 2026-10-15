@@ -1,6 +1,10 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Returns 1 when the unit holds a single weapon in two hands: exactly one of
+ * the two hand slots is occupied, its item is below the throwable range, and
+ * the weapon either forces two hands or allows them while `two_hands_support`
+ * (the Two Hands support ability) is set. */
 s32 equip_unit_is_two_handing_weapon(weapon_pair_t* slots, s32 two_hands_support) {
     s32 result;
     s32 item_id;

@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Event instructions are an unaligned byte stream; operands are read bytewise. */
-#define EVENT_BYTE(offset, index) ((g_world_event_script + (offset))[index])
+#define EVENT_BYTE(offset, index) ((g_world_event_block + offset)[index])
 
 /* Measure the widest text a DisplayMessage window will show.
  *
@@ -24,7 +24,7 @@ void world_text_build_display_message(s32 offset, s32 flags, s32* out_width) {
             &width, &rows, world_text_find_entry(((EVENT_BYTE(offset, 4) << 8) + EVENT_BYTE(offset, 3)) - 1));
         max_width = width;
         next = offset + 1;
-        size = g_world_event_instruction_sizes[EVENT_OPCODE_DISPLAY_MESSAGE];
+        size = g_world_script_event_instruction_sizes[EVENT_OPCODE_DISPLAY_MESSAGE];
         offset = next + size;
         while ((offset = world_script_find_instruction_byte_offset(offset, EVENT_OPCODE_CHANGE_DIALOG)) != 0) {
             if (EVENT_BYTE(offset, 0) == EVENT_OPCODE_CHANGE_DIALOG) {
@@ -41,7 +41,7 @@ void world_text_build_display_message(s32 offset, s32 flags, s32* out_width) {
                 }
             }
             next = offset + 1;
-            size = g_world_event_instruction_sizes[EVENT_OPCODE_CHANGE_DIALOG];
+            size = g_world_script_event_instruction_sizes[EVENT_OPCODE_CHANGE_DIALOG];
             offset = next + size;
         }
         *out_width = max_width;

@@ -5,6 +5,8 @@ enum {
     MAP_TEXTURE_ANIMATION_COUNT = 32,
 };
 
+/* Stop the weather sound effects and every colour rotation the 32 map texture
+ * animations hold a handle for. Always returns 0. */
 s32 battle_map_stop_texture_animations_and_weather_sfx(void) {
     s32 index;
     s32* handle;

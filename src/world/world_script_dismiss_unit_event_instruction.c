@@ -1,10 +1,13 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* Event instruction: remove the roster unit with sprite set `sprite_set`
+ * (slot 0 is never considered), returning its seven equipped items to the
+ * inventory. */
 void world_script_dismiss_unit_event_instruction(s32 sprite_set) {
     party_data_t* party_data;
     s32 party_index = 1;
-    s32 empty_party_id = 0xff;
+    s32 empty_party_id = PARTY_ID_NONE;
     s32 empty_item;
     s32 slot;
     u8 item;
@@ -19,7 +22,7 @@ void world_script_dismiss_unit_event_instruction(s32 sprite_set) {
     if (party_index != PARTY_ROSTER_SLOT_COUNT) {
         slot = 0;
         empty_item = ITEM_ID_NONE;
-        for (; slot < 7; slot++) {
+        for (; slot < UNIT_EQUIPMENT_SLOT_COUNT; slot++) {
             item = party_data->equipment[slot];
             if (item != ITEM_ID_NOTHING && item != empty_item) {
                 g_main_item_quantities[item]++;

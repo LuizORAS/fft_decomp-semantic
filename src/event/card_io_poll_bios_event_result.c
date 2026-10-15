@@ -1,6 +1,9 @@
 #include "fft/event_card.h"
 #include "psx/types.h"
 
+/* Test the four BIOS card events (done, error, timeout, new card) and return
+ * the matching CARD_IO_RESULT_*, or CARD_IO_RESULT_PENDING when none has
+ * fired. A result clears all four events. */
 s32 card_io_poll_bios_event_result(void) {
     s32 result = CARD_IO_RESULT_PENDING;
     if (TestEvent(g_main_card_bios_events[MAIN_CARD_EVENT_BIOS_DONE]) == 1)

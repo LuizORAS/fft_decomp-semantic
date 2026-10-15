@@ -2,8 +2,8 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Yield until the scheduler leaves task 3 or the player presses one of the
- * 0x160 buttons (event pause instruction at 0x800e7654-0x800e76a8). */
+/* Pause (EVENT_OPCODE_PAUSE): yield until Select, Cross or Circle is pressed, or until the thread's
+ * task id becomes NATIVE_THREAD_TASK_STOP_REQUEST. */
 void world_script_pause_event_instruction(void) {
     do {
         world_thread_yield();

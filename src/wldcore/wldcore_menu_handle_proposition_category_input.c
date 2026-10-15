@@ -1,13 +1,14 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Input step for the brave-story top-level list window.
+/* Input step of the Brave Story's Job section, rows Advancing and Work history (text 0xb864 + row).
  *
  * Refreshes the displayed play-time copies each frame, then, while the side
  * render record is not pending (flag 0x100): button 0x100 opens the help
  * message for the highlighted row (0x105a + entry), button 0x40 pops the
- * level, button 0x20 dispatches on the row value (0 opens the brave-story
- * submenu at wldcore_list_open_active_propositions, 1 the proposition list), and up/down wrap the
+ * level, button 0x20 dispatches on the row value (0 opens the propositions in
+ * progress, wldcore_list_open_active_propositions, 1 the Work history,
+ * wldcore_list_open_proposition_history), and up/down wrap the
  * cursor, moving the cursor window by 16 pixels a row. The wrap-around move
  * is spelled as a subtraction of a negative step to keep the window's y as
  * the first addition operand. */
@@ -21,7 +22,7 @@ void wldcore_menu_handle_proposition_category_input(wldcore_menu_list_window_lev
     g_wldcore_displayed_numeric_value_secondary = g_main_system_play_time_minutes;
     g_wldcore_displayed_numeric_value_tertiary = g_main_system_play_time_seconds;
 
-    if ((g_wldcore_window_render_records[level->side_window].flags & 0x100) != 0) {
+    if ((g_wldcore_window_render_records[level->side_window].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) != 0) {
         return;
     }
     buttons = g_wldcore_new_button_presses;
@@ -31,7 +32,7 @@ void wldcore_menu_handle_proposition_category_input(wldcore_menu_list_window_lev
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 2]
                                             .list_window.content_render]
             .palette = 2;
-        g_wldcore_window_records[level->main_window].sequence = 1;
+        g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
         window = level->main_window;
         g_wldcore_window_records[window].anim_counter = 0;
         g_wldcore_window_records[window].frame_index = 0;
@@ -53,15 +54,15 @@ void wldcore_menu_handle_proposition_category_input(wldcore_menu_list_window_lev
         g_wldcore_proposition_category_saved_cursor[0] = level->selected_entry;
         entry = level->entries[level->selected_entry];
         switch (entry) {
-        case 0:
-            wldcore_window_begin_tint_transition((wldcore_window_tint_request_t*)level);
-            g_wldcore_window_records[level->main_window].sequence = 1;
+        case WLDCORE_PROPOSITION_CATEGORY_ROW_ACTIVE:
+            wldcore_menu_suspend_proposition_category_level((wldcore_window_tint_request_t*)level);
+            g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_active_propositions();
             break;
-        case 1:
-            wldcore_window_begin_tint_transition((wldcore_window_tint_request_t*)level);
+        case WLDCORE_PROPOSITION_CATEGORY_ROW_BRAVE_STORY:
+            wldcore_menu_suspend_proposition_category_level((wldcore_window_tint_request_t*)level);
             g_wldcore_window_records[level->main_window].sequence = entry;
-            wldcore_list_open_brave_story_propositions();
+            wldcore_list_open_proposition_history();
             break;
         }
         return;
@@ -69,10 +70,10 @@ void wldcore_menu_handle_proposition_category_input(wldcore_menu_list_window_lev
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
         if (level->entry_count >= 2) {
             if (level->selected_entry != 0) {
-                g_wldcore_window_records[level->main_window].y -= 0x10;
+                g_wldcore_window_records[level->main_window].position.y -= 0x10;
                 level->selected_entry = level->selected_entry - 1;
             } else {
-                g_wldcore_window_records[level->main_window].y -= (level->entry_count - 1) * -0x10;
+                g_wldcore_window_records[level->main_window].position.y -= (level->entry_count - 1) * -0x10;
                 level->selected_entry = level->entry_count - 1;
             }
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
@@ -83,10 +84,10 @@ void wldcore_menu_handle_proposition_category_input(wldcore_menu_list_window_lev
         if (count >= 2) {
             count = count - 1;
             if (level->selected_entry < count) {
-                g_wldcore_window_records[level->main_window].y += 0x10;
+                g_wldcore_window_records[level->main_window].position.y += 0x10;
                 level->selected_entry = level->selected_entry + 1;
             } else {
-                g_wldcore_window_records[level->main_window].y -= count * 0x10;
+                g_wldcore_window_records[level->main_window].position.y -= count * 0x10;
                 level->selected_entry = 0;
             }
             wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);

@@ -1,6 +1,9 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
+/* Returns 1 while the unit list is scrolling, or when the selected unit lies
+ * outside the three rows of four shown at the current page offset, so that
+ * the list has to scroll. */
 s32 bunit_menu_is_unit_list_scroll_needed(void) {
     s32 ret = 0;
 

@@ -1,7 +1,8 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Start the text-character worker only when its thread slot is available. */
+/* Start the dialog thread (world_text_character_handling_thread) in slot `thread_id` with parameters 1-3,
+ * unless that slot is already running a thread. */
 void world_text_start_character_thread_if_idle(s32 thread_id, s32 first, s32 second, s32 third) {
     if (world_thread_is_running(thread_id) == 0) {
         world_thread_start(thread_id, world_text_character_handling_thread);

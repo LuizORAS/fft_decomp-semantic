@@ -1,6 +1,6 @@
 // function.go implements the single-function tools: `diff` compares one
 // configured function with its original bytes and `permute` runs
-// decomp-permuter on it. Both compile exactly as `build` and `validate` do.
+// decomp-permuter on it. Both compile exactly as `build` and `check` do.
 package main
 
 import (
@@ -73,7 +73,7 @@ func (p project) originalFunction(config *projectConfig, name, moduleName string
 	}
 	if !p.validExtraction() {
 		if _, err := os.Stat(filepath.Join(p.root, targetInput)); err != nil {
-			return nil, nil, nil, nil, fmt.Errorf("the original bytes come from %s, which is missing: place it at the repo root (make validate needs no BIN)", targetInput)
+			return nil, nil, nil, nil, fmt.Errorf("the original bytes come from %s, which is missing: place it at the repo root (make check needs no BIN)", targetInput)
 		}
 		if err := p.extractDisc(); err != nil {
 			return nil, nil, nil, nil, err

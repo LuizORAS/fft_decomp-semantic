@@ -1,17 +1,17 @@
 #include "fft/battle.h"
 
-/* Event instructions 0x6c (enable 0) and 0x6d (enable 1): clear or set
- * palette-update suppression on the event unit, or on every unit its group
- * mode selects.
+/* ResumeUnitPaletteUpdates (EVENT_OPCODE_RESUME_UNIT_PALETTE_UPDATES, enable 0) and
+ * SuppressUnitPaletteUpdates (EVENT_OPCODE_SUPPRESS_UNIT_PALETTE_UPDATES, enable 1): clear or set
+ * palette-update suppression on the event unit, or on every unit its group mode selects.
  *
- * 0x80149698 stores a0 directly as a halfword. The interpreter passes a
- * zero-extended word; signed argument normalization is not part of this ABI. */
+ * The target stores a0 directly as a halfword. The interpreter passes a zero-extended word; signed
+ * argument normalization is not part of this ABI. */
 void battle_script_set_units_palette_update_suppression(s32 event_unit_id, s32 enable) {
     u16 unit_id;
     s32 mode;
     s32 i;
 
-    unit_id = (u16)event_unit_id;
+    unit_id = event_unit_id;
     if (battle_unit_try_get_misc_data_by_unit_id(&unit_id, &mode) != 0) {
         i = 0;
         do {

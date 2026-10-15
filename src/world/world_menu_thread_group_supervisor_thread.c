@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Provisional: 0x24-byte menu thread-group record at 0x80189ecc, indexed by
+/* 0x24-byte menu thread-group record at 0x80189ecc, indexed by
  * the request word (0-3). Each group names up to three menu threads. */
 typedef struct world_menu_thread_group {
     void (*function[3])(void); /* 0x00; -1 when unused */

@@ -10,7 +10,7 @@ void main_smd_set_pitch_shift(suzuki_music_t* music, s16 value, s16 time) {
     if (time == 0) {
         music->pitch_shift.value = value << 24;
         music->pitch_shift.count = 0;
-        main_smd_set_note_flags2_all_channels(0x200, music);
+        main_smd_set_voice_update_flags_all_channels(SUZUKI_VOICE_UPDATE_PITCH, music);
     } else {
         difference = (value << 16) - (music->pitch_shift.value >> 8);
         if (difference != 0) {

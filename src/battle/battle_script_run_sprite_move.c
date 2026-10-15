@@ -1,26 +1,23 @@
-/*
- * BATTLE twin of WORLD world_script_run_sprite_move (identical code except the
- * checked-division guard, which this default-profile copy lacks).
- *
- * Sprite-move worker called by battle_script_sprite_move (mode 0) and
- * battle_script_sprite_move_beta (mode 1) with the script cursor: a unit
- * halfword, three destination halfwords, an easing byte, a weight byte and a
- * halfword that is a frame count (mode 0) or a speed (mode 1). pos[0] is the
- * start, pos[1] the destination, pos[2] the current position and pos[3] the
- * negated previous step, re-applied each frame so the unit's coordinate is
- * rewritten rather than accumulated. The misc id is published as the current
- * thread's record word 1, which battle_script_waitspritemove_event_instruction
- * polls.
- */
 #include "fft/battle.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* The parameters are copied into locals in this order: it is what places the
- * s0 copy before the s2 copy in the prologue. */
+/* Move a unit's sprite by an offset along an eased curve: the worker of
+ * battle_script_sprite_move_thread (mode 0, the last operand a frame count) and
+ * battle_script_sprite_move_beta_thread (mode 1, a speed). The operands are a unit halfword, the three
+ * offset halfwords, an easing byte, a weight byte and that last halfword. pos[0] is the start, pos[1]
+ * the destination, pos[2] the current position and pos[3] the negated previous step, re-applied each
+ * frame so the unit's coordinate is rewritten rather than accumulated. The misc id is published as the
+ * current thread's record word 1, which battle_script_wait_sprite_move_event_instruction polls.
+ * WORLD's copy has the checked-division guard this default-profile copy lacks.
+ *
+ * The parameters are copied into locals in this order: it is what places the s0 copy before the s2
+ * copy in the prologue.
+ *
+ * Port debt (QUIRKS.md): parameter_address arrives as a thread parameter (s32). */
 void battle_script_run_sprite_move(s32 parameter_address, s32 use_speed) {
     s32 pos[4][4];
-    battle_screen_coords_t vec;
+    SVECTOR vec;
     u8* parameters;
     s32 mode;
     s16* coords;
@@ -40,11 +37,11 @@ void battle_script_run_sprite_move(s32 parameter_address, s32 use_speed) {
 
     parameters = (u8*)parameter_address;
     mode = use_speed;
-    misc_id = battle_get_misc_id(battle_script_load_halfword(parameters));
+    misc_id = battle_script_get_misc_id(battle_script_load_halfword(parameters));
     if (misc_id == EVENT_MISC_ID_NONE) {
         return;
     }
-    g_battle_thread_task_ids[g_battle_current_thread_id][1] = misc_id;
+    g_battle_thread_task_ids[g_battle_thread_current_id][1] = misc_id;
     coords = battle_unit_get_event_offset_ptr_by_misc_id(misc_id);
     parameters += 2;
     pos[0][0] = coords[0];
@@ -75,17 +72,17 @@ void battle_script_run_sprite_move(s32 parameter_address, s32 use_speed) {
         for (j = 0; j < 3; j++) {
             delta = pos[1][j] - pos[0][j];
             if (curve == 0) {
-                pos[2][j] = battle_mul_div_s64(delta, i, total) + pos[0][j];
+                pos[2][j] = battle_util_mul_div_s64(delta, i, total) + pos[0][j];
             } else if (curve == 1) {
                 weighted = delta * (16 - weight);
                 scaled = (delta * weight) * 2;
-                step = battle_mul_div_s64(scaled + weighted + weighted, i, total * 32);
-                step += battle_mul_div_s64(scaled, (total - i) * i, (total * 32) * total);
+                step = battle_util_mul_div_s64(scaled + weighted + weighted, i, total * 32);
+                step += battle_util_mul_div_s64(scaled, (total - i) * i, (total * 32) * total);
                 pos[2][j] = step + pos[0][j];
             } else if (curve == 3) {
                 weighted = delta * (16 - weight);
-                step = battle_mul_div_s64((delta * weight) * 2, i, total);
-                step = battle_mul_div_s64(step + weighted + weighted, i, total * 32);
+                step = battle_util_mul_div_s64((delta * weight) * 2, i, total);
+                step = battle_util_mul_div_s64(step + weighted + weighted, i, total * 32);
                 pos[2][j] = step + pos[0][j];
             } else if (curve == 2) {
                 mid = total / 2;
@@ -95,15 +92,15 @@ void battle_script_run_sprite_move(s32 parameter_address, s32 use_speed) {
                 }
                 if (i * 2 < total) {
                     weighted = delta * (16 - weight);
-                    step = battle_mul_div_s64((delta * weight) * 2, i, mid);
-                    step = battle_mul_div_s64(step + weighted + weighted, i, mid * 64);
+                    step = battle_util_mul_div_s64((delta * weight) * 2, i, mid);
+                    step = battle_util_mul_div_s64(step + weighted + weighted, i, mid * 64);
                     pos[2][j] = step + pos[0][j];
                 } else {
                     weighted = delta * (16 - weight);
                     scaled = (delta * weight) * 2;
                     elapsed = i - mid;
-                    step = battle_mul_div_s64(scaled, mid - elapsed, mid);
-                    step = battle_mul_div_s64(scaled + step + weighted + weighted, elapsed, mid * 64);
+                    step = battle_util_mul_div_s64(scaled, mid - elapsed, mid);
+                    step = battle_util_mul_div_s64(scaled + step + weighted + weighted, elapsed, mid * 64);
                     /* Extra use: lifts half's allocation priority above j and total (s6/s7/fp). */
                     __asm__("" : : "r"(half));
                     pos[2][j] = step + pos[0][j] + (half >> 1);
@@ -113,28 +110,28 @@ void battle_script_run_sprite_move(s32 parameter_address, s32 use_speed) {
         if (battle_unit_has_misc_id(misc_id) == 0) {
             battle_thread_exit_current();
         }
-        vec.x = pos[3][0];
-        vec.z = pos[3][1];
-        vec.y = pos[3][2];
+        vec.vx = pos[3][0];
+        vec.vy = pos[3][1];
+        vec.vz = pos[3][2];
         battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
-        vec.x = pos[2][0] / 256;
-        vec.z = pos[2][1] / 256;
-        vec.y = pos[2][2] / 256;
+        vec.vx = pos[2][0] / 256;
+        vec.vy = pos[2][1] / 256;
+        vec.vz = pos[2][2] / 256;
         battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
-        pos[3][0] = -vec.x;
-        pos[3][1] = -vec.z;
-        pos[3][2] = -vec.y;
+        pos[3][0] = -vec.vx;
+        pos[3][1] = -vec.vy;
+        pos[3][2] = -vec.vz;
     }
     if (battle_unit_has_misc_id(misc_id) == 0) {
         battle_thread_exit_current();
     }
-    vec.x = pos[3][0];
-    vec.z = pos[3][1];
-    vec.y = pos[3][2];
+    vec.vx = pos[3][0];
+    vec.vy = pos[3][1];
+    vec.vz = pos[3][2];
     battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
-    vec.x = pos[1][0] / 256;
-    vec.z = pos[1][1] / 256;
-    vec.y = pos[1][2] / 256;
+    vec.vx = pos[1][0] / 256;
+    vec.vy = pos[1][1] / 256;
+    vec.vz = pos[1][2] / 256;
     battle_unit_add_event_offset_by_misc_id(misc_id, &vec);
     if (total == 1) {
         battle_thread_yield();

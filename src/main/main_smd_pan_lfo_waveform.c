@@ -1,9 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* SMD opcode 0xED: as 0xEC, but the low nibble of the
- * third byte selects the waveform and the modulator starts without a delay;
- * flags bit 1 is set unless bit 4 of that byte is set.
+/* SMD opcode 0xED "Pan LFO Waveform": as Pan LFO (0xEC), but the low nibble
+ * of the third byte selects the waveform and the modulator starts without a
+ * delay; it restarts on key-on unless bit 4 of that byte is set.
  *
  * Matching notes: depth and param are reassigned in place (the loads lose
  * sched1's birthing boost and keep the target's load order, and param's
@@ -27,11 +27,11 @@ u8* main_smd_pan_lfo_waveform(u8* note_data, suzuki_music_t* music, suzuki_music
         depth <<= 24;
         modulator->amplitude = main_smd_modulator_calculate_step(depth, speed, param);
         modulator->timer_reset = speed;
-        modulator->counter_14_reset = 0;
-        modulator->counter_18_reset = 0x100;
+        modulator->delay_reset = 0;
+        modulator->fade_step = 0x100;
         modulator->step = g_main_smd_modulator_waveforms[param];
         modulator->waveform = param;
-        modulator->target = 2;
+        modulator->target = SUZUKI_MODULATOR_TARGET_BALANCE;
         modulator->flags = flags + 1;
         main_smd_modulator_reset(modulator);
     }

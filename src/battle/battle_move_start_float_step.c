@@ -4,36 +4,41 @@
 /* Start the unit's next movement step from the current tile centre.
  *
  * The step byte's top two bits pick the direction, which sets the facing and
- * edge offset; its low two bits extend the destination tile coordinate. The
+ * step phase; its low two bits extend the destination tile coordinate. The
  * second tile argument is unused. */
 void battle_move_start_float_step(battle_unit_misc_data_t* unit, const map_tile_t* from, const map_tile_t* to) {
     u8* step;
     s32 step_count;
     s16 facing;
+    u8 next;
 
     battle_unit_dismount_rider_and_update_display(unit);
     step_count = unit->current_edge_height;
-    step = &unit->movement_value;
-    switch (unit->movement_value >> 6) {
-    case 0:
+    step = &unit->current_path_step.value;
+    switch (unit->current_path_step.value >> 6) {
+    case BATTLE_MOVE_STEP_DIRECTION_EAST:
         facing = BATTLE_FACING_EAST;
-        unit->centre_tile_offset = 0x2F;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x + 1) + (unit->movement_value & 3);
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_EAST;
+        next = unit->map_x + 1;
+        unit->movement.bytes.destination_x = next + (unit->current_path_step.value & 3);
         break;
-    case 1:
+    case BATTLE_MOVE_STEP_DIRECTION_WEST:
         facing = BATTLE_FACING_WEST;
-        unit->centre_tile_offset = 0x37;
-        unit->movement.bytes.destination_x = (u8)(unit->map_x - 1) - (unit->movement_value & 3);
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_WEST;
+        next = unit->map_x - 1;
+        unit->movement.bytes.destination_x = next - (unit->current_path_step.value & 3);
         break;
-    case 2:
+    case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         facing = BATTLE_FACING_SOUTH;
-        unit->centre_tile_offset = 0x2B;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y - 1) - (unit->movement_value & 3);
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_SOUTH;
+        next = unit->map_y - 1;
+        unit->movement.bytes.destination_y = next - (unit->current_path_step.value & 3);
         break;
-    case 3:
+    case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         facing = BATTLE_FACING_NORTH;
-        unit->centre_tile_offset = 0x33;
-        unit->movement.bytes.destination_y = (u8)(unit->map_y + 1) + (unit->movement_value & 3);
+        unit->step_phase = BATTLE_MOVE_STEP_PHASE_FLOAT_TO_EDGE_NORTH;
+        next = unit->map_y + 1;
+        unit->movement.bytes.destination_y = next + (unit->current_path_step.value & 3);
         break;
     }
     unit->facing = facing;

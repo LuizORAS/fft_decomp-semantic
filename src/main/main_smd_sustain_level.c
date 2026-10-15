@@ -6,7 +6,7 @@ u8* main_smd_sustain_level(u8* note_data, suzuki_music_t* music, suzuki_music_ch
     u16 level;
 
     level = note_data[0];
-    channel->func_flags |= 0x100;
+    channel->voice_attr_flags |= SUZUKI_VOICE_ATTR_SUSTAIN_LEVEL;
     channel->sustain_level = level;
     return note_data + 1;
 }

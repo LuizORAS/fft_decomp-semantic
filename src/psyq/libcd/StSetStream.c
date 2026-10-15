@@ -1,6 +1,8 @@
 /* SCUS_942.21 0x80021084..0x8002110b. */
 #include "psx/libcd.h"
 
+/* Set up a stream: its frame range (StSetMask), its mode, its frame and end callbacks, and reset its
+ * channel and frame counters. */
 void StSetStream(s32 mode, s32 start_frame, s32 end_frame, void* frame_callback, void* end_callback) {
     StSetMask(1, start_frame, end_frame);
     g_psyq_cd_stream_emulation_base = 0;

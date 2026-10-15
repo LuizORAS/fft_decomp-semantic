@@ -1,5 +1,6 @@
 #include "fft/battle.h"
 
+/* Port debt (QUIRKS.md): the row address is computed through u32 casts. */
 /* Whether the unit has learned the given ability bit of a skillset: returns 1
  * for monsters (every ability known) and for skillsets the unit does not own.
  * Job skillsets 5..0x17 map to learned_abilities rows 0..0x12; the unit's own
@@ -12,7 +13,7 @@ s32 battle_ai_load_known_ability_flag(s32 unit_id, s32 skillset_id, s32 bit) {
     if ((unit->unit_flags & UNIT_FLAG_MONSTER) != 0) {
         return 1;
     }
-    if ((u32)(skillset_id - SKILLSET_ID_BASIC_SKILL) < (SKILLSET_ID_MIMIC - SKILLSET_ID_BASIC_SKILL)) {
+    if (skillset_id >= SKILLSET_ID_BASIC_SKILL && skillset_id < SKILLSET_ID_MIMIC) {
         skillset_id = skillset_id - SKILLSET_ID_BASIC_SKILL;
     } else {
         if (skillset_id != unit->primary_skillset && skillset_id != unit->base_job_skillset)

@@ -1,12 +1,9 @@
 #include "fft/battle.h"
 
-/* The target loads 0xff as 255, not -1, for the first 2 directions. */
-/*
- * Build the targetable-tile mask around same-team Monster Skill holders.
- *
- * Only the low map level is visited; the high-level mask remains cleared.
- * Tile base heights must differ by at most 2; slope and depth are ignored.
- */
+/* Mark in targetable_tiles the tiles next to each same-team Monster Skill holder that can react,
+ * within 2 levels of its tile's height (slope and depth do not count), for abilities that need Monster
+ * Skill. Only the lower level is marked, and the -x and -y neighbours are lost: the target loads their
+ * 0xff offsets as 255 (QUIRKS.md). */
 void battle_ai_build_monster_skill_tile_mask(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* unit;
@@ -44,7 +41,8 @@ void battle_ai_build_monster_skill_tile_mask(void) {
             if (y < 0 || y >= ai->map_max_y)
                 continue;
             for (level = 0; level <= 0; level++) {
-                if ((u32)(g_battle_map_tile_data[(level << 8) + y * ai->map_max_x + x].height - height + 2) < 5) {
+                if ((g_battle_map_tile_data[(level << 8) + y * ai->map_max_x + x].height - height) >= -2
+                    && (g_battle_map_tile_data[(level << 8) + y * ai->map_max_x + x].height - height) <= 2) {
                     /* A typed level-row pointer folds the field offset into
                      * the induction value. Preserve the target's AI-base
                      * cursor with a member-derived displacement. */

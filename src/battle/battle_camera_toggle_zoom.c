@@ -1,26 +1,17 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Toggle the battle map zoom between "in" (target=1, action=2) and
-   "out" (target=4, action=4), playing the corresponding zoom SFX. Any
-   other current zoom target is left alone. */
+/* Switch the zoom target for L2 between in (scale ONE) and out (0xc00), start the move and play its
+ * sound. Any other target is left alone, but the zoom increment still restarts at 4. */
 void battle_camera_toggle_zoom(void) {
-    s32 sound_id;
-    s32 zoomed_in = 1;
-
-    if (g_battle_map_zoom_target == zoomed_in) {
-        g_battle_camera_zoom_action = 4;
-        g_battle_map_zoom_target = 4;
-        sound_id = MAIN_SFX_CAMERA_ZOOM_OUT;
-        goto play;
-    }
-    sound_id = MAIN_SFX_CAMERA_ZOOM_IN;
-    if (g_battle_map_zoom_target == 4) {
-        g_battle_map_zoom_target = zoomed_in;
-        g_battle_camera_zoom_action = 2;
-    play:
-        /* The target passes a second argument the one-parameter callee ignores. */
-        ((void (*)(s32, s32))main_sound_play_sfx)(sound_id, zoomed_in);
+    if (g_battle_camera_zoom_target == BATTLE_CAMERA_ZOOM_IN) {
+        g_battle_camera_zoom_action = BATTLE_CAMERA_STEP_DECREASE;
+        g_battle_camera_zoom_target = BATTLE_CAMERA_ZOOM_OUT;
+        main_sound_play_sfx(MAIN_SFX_CAMERA_ZOOM_OUT);
+    } else if (g_battle_camera_zoom_target == BATTLE_CAMERA_ZOOM_OUT) {
+        g_battle_camera_zoom_target = BATTLE_CAMERA_ZOOM_IN;
+        g_battle_camera_zoom_action = BATTLE_CAMERA_STEP_INCREASE;
+        main_sound_play_sfx(MAIN_SFX_CAMERA_ZOOM_IN);
     }
     g_battle_camera_zoom_increment = 4;
 }

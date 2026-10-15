@@ -1,14 +1,14 @@
 #include "fft/battle.h"
 
-/*
- * Select a reachable destination using priority-first or distance-first ordering.
+/* Pick the current scenario's destination among its reachable tiles at most max_distance from the
+ * decision target (tile_target_distance). PRIORITY_FIRST takes the best standing score (the lowest
+ * tile_priority, then the lowest tile_foe_proximity), then the nearest; DISTANCE_FIRST takes the
+ * nearest, then the best score. Ties go to the last tile scanned. Returns 1 after choosing, or 0 with
+ * the destination unchanged.
  *
- * Return 1 after selecting a tile, or 0 without changing the destination.
- * Both orders favor the last scanned tile when their two ranking values tie.
- * Integer address stages preserve the target's shared grid-index calculation;
- * direct multidimensional indexing changes the loop code. Strides and field
- * offsets come from the workspace layout, with 16 tiles in each row.
- */
+ * Integer address stages preserve the target's shared grid-index calculation; direct
+ * multidimensional indexing changes the loop code. Strides and field offsets come from the workspace
+ * layout, with 16 tiles in each row. */
 s32 battle_ai_select_destination(s32 max_distance, battle_ai_destination_order_e order) {
     s32 x, y, level;
     s32 best_score = 0x7fffffff;
@@ -45,7 +45,7 @@ s32 battle_ai_select_destination(s32 max_distance, battle_ai_destination_order_e
                             score = *(u16*)(tile_index * sizeof(ai->tile_priority[0][0][0]) + (u32)ai
                                 + ((u32)&ai->tile_priority - (u32)ai));
                             /* Compare the packed priority and proximity as a signed score. */
-                            score = (u32)score << 16;
+                            score = score << 16;
                             score += proximity;
                         }
                         if (order != BATTLE_AI_DESTINATION_PRIORITY_FIRST) {

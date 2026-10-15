@@ -16,7 +16,7 @@ s32 battle_menu_get_cursor_bob_offset(s32 mode) {
     s32 counter;
     s32 threshold;
 
-    counter = g_battle_thread_contexts[g_battle_current_thread_id].task_words[0];
+    counter = g_battle_thread_contexts[g_battle_thread_current_id].task_words[0];
     if (mode == 0) {
         entry = g_battle_cursor_bob_thresholds;
         counter %= entry->threshold;
@@ -24,25 +24,19 @@ s32 battle_menu_get_cursor_bob_offset(s32 mode) {
         entry = g_battle_cursor_bob_active_thresholds;
     }
 
-    /* Goto loop: the target emits the found exit between the loop entry
-     * jump and the loop body; while/for forms place it after the mode-0
-     * branch instead. */
+    /* Any other mode leaves entry unset. The first threshold is tested here
+     * and again by the loop condition. */
     entry++;
-    goto test_threshold;
-
-found:
-    return entry->offset;
-
-compare_threshold:
-    if (counter < threshold) {
-        goto found;
-    }
-    entry++;
-
-test_threshold:
     threshold = entry->threshold;
-    if (threshold != 0) {
-        goto compare_threshold;
+    if (threshold == 0) {
+        return 0;
+    }
+    while (threshold != 0) {
+        if (counter < threshold) {
+            return entry->offset;
+        }
+        entry++;
+        threshold = entry->threshold;
     }
     return 0;
 }

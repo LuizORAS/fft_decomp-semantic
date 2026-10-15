@@ -1,6 +1,10 @@
 /* SCUS_942.21 0x8001ac7c..0x8001acef. */
 #include "psx/libspu.h"
 
+/* Read the SPU's capture buffers of decoded CD audio and voices 1 and 3 into `d_data` by DMA: flag 5 reads
+ * the two CD buffers, 6 the two voice buffers, anything else all four (4 KB). Returns 1 when the SPU is
+ * writing the second half of each buffer (psx-spx: status bit 11). main_sound_transfer_spu_data reads all four
+ * (0) or the CD buffers (5). */
 s32 SpuReadDecodedData(SpuDecodedData* d_data, s32 flag) {
     u16 address;
     u32 blocks;
@@ -21,8 +25,6 @@ s32 SpuReadDecodedData(SpuDecodedData* d_data, s32 flag) {
         break;
     }
     _spu_Fr_(d_data, address, blocks);
-    status = _spu_RXX->status & 0x800;
-    /* A natural narrow-field test becomes srl/andi instead of retail andi/sltu. */
-    __asm__("" : "=r"(status) : "0"(status));
+    status = _spu_RXX->rxx.status & 0x800;
     return status != 0;
 }

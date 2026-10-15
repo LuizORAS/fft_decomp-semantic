@@ -39,6 +39,12 @@ static __inline__ void cd_dispatch_callbacks(void) {
     }
     *g_psyq_cd_index_status_register = bank;
 }
+
+/* Write CD command `command` and its parameters to the drive. A command that needs parameters gets none
+ * and fails (-2); otherwise wait for the previous command, record a Setloc position, clear the sync state
+ * (and the ready state for the commands that reset it) and send. An asynchronous call returns 0 at once;
+ * otherwise wait for the acknowledgement with CD_sync's timeout, keep the mode a Setmode set, copy the result
+ * and return 0, or -1 on a disk error. */
 s32 CD_cw(u8 command, const u8* parameter, u8* result, s32 asynchronous) {
     s32 index;
     if (g_psyq_cd_debug_level > 1)

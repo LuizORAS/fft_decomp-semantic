@@ -1,0 +1,67 @@
+#include "fft/world.h"
+#include "psx/libgpu.h"
+#include "psx/types.h"
+
+/* Same as battle_menu_draw_large_number_glyphs: draw `value` right to left in the menu glyph sheet's
+ * large digits (8 x 15 pixels, 7 apart), after the sign glyphs the flag bits of `digits` select. */
+void world_menu_draw_large_number_glyphs(s32 value, s32 digits, void* resource, world_glyph_blit_t* pos) {
+    s32 i;
+    s32 cursor;
+    world_glyph_blit_t* src;
+
+    /* One variable holds the sign-glyph selector first and the x to leave the
+     * cursor at afterwards; the target keeps both roles in $s6. */
+    src = &g_world_menu_large_number_glyph_rect;
+    g_world_menu_large_number_glyph_rect.rect.h = 0xF;
+    cursor = digits & 0xFF00;
+    if (cursor == 0xC00) {
+        pos->rect.x += 2;
+        src->rect.x = 0xBA;
+        g_world_menu_large_number_glyph_rect.rect.y = 0xD;
+        g_world_menu_large_number_glyph_rect.rect.w = 6;
+        world_text_blit_glyph(g_world_menu_glyph_image, resource, src, pos);
+        pos->rect.x += 7;
+        world_text_blit_glyph(g_world_menu_glyph_image, resource, src, pos);
+        pos->rect.x += 7;
+        g_world_menu_large_number_glyph_rect.rect.w = 8;
+        return;
+    }
+    if (digits & 0x1000) {
+        src->rect.x = 0xC8;
+        g_world_menu_large_number_glyph_rect.rect.y = 0;
+        world_text_blit_glyph(g_world_menu_glyph_image, resource, src, pos);
+        pos->rect.x += 7;
+    }
+    if ((digits & 0x800) || (digits & 0x400)) {
+        if (digits & 0x400) {
+            src->rect.x = 0xC8;
+        } else {
+            src->rect.x = 0xBA;
+        }
+        src->rect.y = 0xD;
+        src->rect.w = 6;
+        pos->rect.x -= 6;
+        world_text_blit_glyph(g_world_menu_glyph_image, resource, &g_world_menu_large_number_glyph_rect, pos);
+        pos->rect.x += 6;
+        src->rect.w = 8;
+    }
+    /* Not a variable: the target recomputes the digit count at the loop test
+     * rather than keeping it live, so each use spells the mask out. */
+    pos->rect.x += ((digits & 0xFF) - 1) * 7;
+    cursor = pos->rect.x + 7;
+    for (i = 0; i < (digits & 0xFF); i++) {
+        src->rect.y = 0;
+        src->rect.x = (value % 10) * 8 + 0x78;
+        if (g_world_menu_hide_numeric_values != 0) {
+            src->rect.x = 0x48;
+            src->rect.y = 0x10;
+        }
+        world_text_blit_glyph(g_world_menu_glyph_image, resource, &g_world_menu_large_number_glyph_rect, pos);
+        /* After the call: the quotient stays live past the argument setup, so
+         * it takes a callee-saved register and the update lands in the delay
+         * slot, as the target does at 0x238. */
+        value /= 10;
+        pos->rect.x -= 7;
+    }
+    pos->rect.x = cursor;
+}

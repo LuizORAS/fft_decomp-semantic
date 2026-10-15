@@ -1,12 +1,10 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/*
- * Event instruction: put the addressed unit(s) into their status idle
- * animation and wait.  Parameters: 0x00 unit id (halfword), 0x02 wait length
- * in frames.  A unit id above 0xff selects a group, so the misc-state loop
- * runs over all 21 unit indices.
- */
+/* March (EVENT_OPCODE_MARCH): put the unit, or each unit of a group in turn, into its status idle
+ * animation and wait the operand's frames after each.
+ *
+ * A unit id above 0xff selects a group, so the misc-state loop runs over all 21 unit indices. */
 void battle_script_march_units(u8* parameters) {
     u16 misc_id;
     s32 state;

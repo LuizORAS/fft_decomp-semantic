@@ -14,21 +14,21 @@ void battle_effect_build_secondary_init_from_action(
     s32 i;
 
     init->target_count = unit->target_count;
-    init->caster.fields.target_type = 0;
+    init->caster.fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
     init->caster.fields.caster_id = unit->unit_id;
     init->used_weapon_id = unit->used_weapon_id;
     if (init->target_count != 0) {
         for (i = 0; i < init->target_count; i++) {
             target = battle_unit_get_misc_data_by_battle_id(unit->target_list[i]);
-            (&init->target)[i].fields.target_type = 0;
-            (&init->target)[i].fields.target_id = target->unit_id;
+            init->target[i].fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
+            init->target[i].fields.target_id = target->unit_id;
             action = &target->battle_data->action;
             switch (action->miss_type) {
             case BATTLE_ACTION_MISS_TYPE_ACCESSORY_EVADE:
             case BATTLE_ACTION_MISS_TYPE_RIGHT_HAND_EVADE:
             case BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE:
             case BATTLE_ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD:
-                (&init->target)[i].fields.result_animation = 3;
+                init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_MISSED;
                 break;
             case BATTLE_ACTION_MISS_TYPE_NULLIFIED:
             case BATTLE_ACTION_MISS_TYPE_ACCURACY_MISS:
@@ -36,26 +36,26 @@ void battle_effect_build_secondary_init_from_action(
             case BATTLE_ACTION_MISS_TYPE_CANCELLED:
             case BATTLE_ACTION_MISS_TYPE_BLADE_GRASP_OR_FINGER_GUARD:
             case BATTLE_ACTION_MISS_TYPE_CATCH:
-                (&init->target)[i].fields.result_animation = 4;
+                init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_NO_EFFECT;
                 break;
             case BATTLE_ACTION_MISS_TYPE_GOLEM_GUARD:
-                (&init->target)[i].fields.result_animation = 5;
+                init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_GOLEM;
                 break;
             default:
                 if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT) {
-                    (&init->target)[i].fields.result_animation = 6;
+                    init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_BREAK;
                 } else if (action->critical != 0) {
-                    (&init->target)[i].fields.result_animation = 1;
+                    init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_CRITICAL;
                 } else {
-                    (&init->target)[i].fields.result_animation = 0;
+                    init->target[i].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
                 }
                 break;
             }
         }
     } else {
-        init->target.block.values[0] = 1;
-        init->target.block.values[1] = g_battle_cursor_x;
-        init->target.block.values[2] = g_battle_cursor_z;
-        init->target.block.values[3] = g_battle_cursor_y;
+        init->target[0].block.values[0] = 1;
+        init->target[0].block.values[1] = g_battle_cursor_x;
+        init->target[0].block.values[2] = g_battle_cursor_z;
+        init->target[0].block.values[3] = g_battle_cursor_y;
     }
 }

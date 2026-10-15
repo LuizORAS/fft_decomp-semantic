@@ -1,7 +1,8 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001d1a8–0x8001d1c0. */
+/* Set the GTE's screen offset, the screen position of the projection centre, to (`x`, `y`). The display
+ * set-ups of MAIN, BATTLE, the effects and LIBGS set it. */
 void SetGeomOffset(int x, int y) {
     x <<= 16;
     y <<= 16;

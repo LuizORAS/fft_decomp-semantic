@@ -1,15 +1,12 @@
 #include "fft/battle.h"
 
-/*
- * Build a reachable-tile mask within the target-distance limit.
+/* Put into the current scenario the scenario-0 reachable tiles at most distance_limit from the
+ * decision target and return 1; with none, copy all of scenario 0 and return 0.
  *
- * Filter scenario 0 into the selected scenario, accepting distances equal
- * to the limit. Return 1 if any tile qualifies; otherwise copy all scenario
- * 0 rows and return 0. The destination is cleared before reading the source,
- * so callers select scenario 1 to preserve the scenario 0 mask.
- */
+ * The destination is cleared before reading the source, so callers select scenario 1 to preserve the
+ * scenario 0 mask. */
 s32 battle_ai_filter_reachable_tiles_by_target_distance(s32 distance_limit) {
-    s32 g_main_item_move_find_flags = 0;
+    s32 found = 0;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 x, y, level;
     u16 row;
@@ -25,15 +22,15 @@ s32 battle_ai_filter_reachable_tiles_by_target_distance(s32 distance_limit) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if (((row << x) & 0x8000) && distance_limit >= ai->tile_target_distance[level][y][x]) {
                         ai->reachable_tiles[ai->movement_scenario][level][y] |= 0x8000 >> x;
-                        g_main_item_move_find_flags = 1;
+                        found = 1;
                     }
                 }
             }
         }
     }
-    if (g_main_item_move_find_flags == 0) {
-        battle_ai_transfer_halfword_values((u16*)ai->reachable_tiles[ai->movement_scenario],
-            (u16*)ai->reachable_tiles[0], sizeof(ai->reachable_tiles[0]));
+    if (found == 0) {
+        battle_ai_transfer_halfword_values(
+            ai->reachable_tiles[ai->movement_scenario], ai->reachable_tiles[0], sizeof(ai->reachable_tiles[0]));
         return 0;
     }
     return 1;

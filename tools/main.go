@@ -210,7 +210,7 @@ type inventoryRecord struct {
 	StackSize    int    `json:"stack_size,omitempty"`
 }
 
-const usage = "usage: tools build [module|disc]|validate [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|declarations ...|symbols <action> ...|extract"
+const usage = "usage: tools build [module|disc]|check [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|declarations ...|symbols <action> ...|map [--out=build/DIR] [--pull-docs]|warnings [--module=M]|extract"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -218,12 +218,14 @@ func main() {
 	}
 	commandsWithArguments := map[string]bool{
 		"build":                  true,
-		"validate":               true,
+		"check":                  true,
 		"diff":                   true,
 		"library-diff":           true,
 		"permute":                true,
 		"symbols":                true,
 		"declarations":           true,
+		"map":                    true,
+		"warnings":               true,
 		"compile-permuter-input": true,
 	}
 	if !commandsWithArguments[os.Args[1]] && len(os.Args) != 2 {
@@ -237,8 +239,8 @@ func main() {
 	switch os.Args[1] {
 	case "build":
 		err = p.buildCommand(os.Args[2:])
-	case "validate":
-		err = p.validateCommand(os.Args[2:])
+	case "check":
+		err = p.checkCommand(os.Args[2:])
 	case "checksums":
 		err = p.checksumsCommand(nil)
 	case "check-config":
@@ -255,6 +257,10 @@ func main() {
 		err = p.symbolsCommand(os.Args[2:])
 	case "declarations":
 		err = p.declarationsCommand(os.Args[2:])
+	case "map":
+		err = p.mapCommand(os.Args[2:])
+	case "warnings":
+		err = p.warningsCommand(os.Args[2:])
 	case "extract":
 		err = p.extractDisc()
 	case "analyze":
@@ -323,7 +329,7 @@ func (p project) verifyDisc() (string, error) {
 	image := filepath.Join(p.root, targetInput)
 	info, err := os.Stat(image)
 	if err != nil {
-		return "", fmt.Errorf("missing %s at the repo root (make validate works without it)", targetInput)
+		return "", fmt.Errorf("missing %s at the repo root (make check works without it)", targetInput)
 	}
 	fmt.Printf("disc: %s\nbytes: %d\n", targetInput, info.Size())
 	if info.Size() != targetInputBytes {

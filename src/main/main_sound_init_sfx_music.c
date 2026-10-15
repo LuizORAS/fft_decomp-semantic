@@ -17,7 +17,7 @@ suzuki_music_t* main_sound_init_sfx_music(void) {
     count = 8;
     index = 0;
     do {
-        channel->active = 0;
+        channel->flags = 0;
         channel->channel_number = index++;
         channel->voice = voice;
         channel->voice_mask = 1 << voice;

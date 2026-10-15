@@ -2,9 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Fills one POLY_GT4 per piece of quad group `group` and returns the piece count.
- *
- * BATTLE twin of world_menu_build_quad_pieces. */
+/* Fills one POLY_GT4 per piece of quad group `group` and returns the piece count. */
 s32 battle_menu_build_quad_pieces(s32 group, POLY_GT4* poly) {
     world_menu_quad_piece_t* piece;
     s32 count;

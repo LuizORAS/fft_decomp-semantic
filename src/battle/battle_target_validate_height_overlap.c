@@ -11,13 +11,13 @@ s32 battle_target_validate_height_overlap(
     u32 attacker_total_height;
     u32 attacker_walking_height;
 
-    battle_calculate_unit_height_data(&height_data, target_id);
+    battle_unit_calculate_height_data(&height_data, target_id);
     if ((height_data.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) != 0) {
         return -1;
     }
     target_walking_height = height_data.walking_height;
     target_total_height = height_data.total_height;
-    battle_calculate_unit_height_data(&height_data, attacker_id);
+    battle_unit_calculate_height_data(&height_data, attacker_id);
     if ((height_data.unit_flags & BATTLE_UNIT_HEIGHT_UNAVAILABLE) != 0) {
         return -1;
     }

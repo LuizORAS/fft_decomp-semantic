@@ -2,16 +2,10 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-typedef enum wldcore_projection_flags {
-    WLDCORE_PROJECTION_FLAG_UPDATE_POSITION = 0x01,
-    WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION = 0x02,
-    WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET = 0x04,
-} wldcore_projection_flags_e;
-
 /* Apply pending direction and GTE projection updates to the camera state.
  *
- * The direction word is the player marker's sprite_id: the facing octant picks
- * one of eight marker sprites from a base of 0x10, or 0x18 for the alternate
+ * The direction word is the player marker's sequence: the facing octant picks
+ * one of eight marker sequences from a base of 0x10, or 0x18 for the alternate
  * set. The projected point is written into the marker's screen_x/screen_y by
  * RotTrans, whose input is the marker's own position. */
 void wldcore_map_update_camera_direction_and_projection(void) {
@@ -26,12 +20,12 @@ void wldcore_map_update_camera_direction_and_projection(void) {
     flags = state->flags;
     if (flags & WLDCORE_PROJECTION_FLAG_UPDATE_DIRECTION) {
         angle_direction = ((state->angle + 0x100) >> 9) & 7;
-        direction = angle_direction + 0x10;
+        direction = angle_direction + WLDCORE_ANIM_SEQUENCE_MARKER_FIRST;
         if (flags & WLDCORE_PROJECTION_FLAG_ALTERNATE_DIRECTION_SET) {
-            direction = angle_direction + 0x18;
+            direction = angle_direction + WLDCORE_ANIM_SEQUENCE_MARKER_ALTERNATE_FIRST;
         }
-        if (state->marker.sprite_id != direction) {
-            state->marker.sprite_id = direction;
+        if (state->marker.sequence != direction) {
+            state->marker.sequence = direction;
             state->marker.anim_counter = 0;
             state->marker.frame_index = 0;
         }

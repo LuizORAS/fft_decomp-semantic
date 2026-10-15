@@ -15,8 +15,8 @@ void SuzukiTurnOffAllMusic(void) {
     music = g_main_sound_sfx_music;
     channel = music->channels;
     for (i = 8; i != 0; i--) {
-        if (channel->active & 1) {
-            channel->active = 0;
+        if (channel->flags & SUZUKI_CHANNEL_IN_USE) {
+            channel->flags = 0;
             voices |= channel->voice_mask;
         }
         channel++;

@@ -1,16 +1,14 @@
-/* Advances one camera-track component by a frame and returns its new value.
- * Called per component by world_camera_fusion_thread (0x800f14b4); the
- * BATTLE twin is battle_camera_step_track (0x8013dfb0).
- *
- * Each call samples the two tangent lines of the active key segment at this
- * frame and the next, intersects them (world_cross_product_q12 is a Q12 cross product
- * that sets g_world_fixed_math_overflow on overflow) and moves the value along the resulting
- * control point. The locals span, frame and lead are reused across the
- * stages, as the target's register map requires. */
 #include "fft/world.h"
 #include "psx/types.h"
 
-s32 world_camera_step_track(world_camera_track_t* track, s32 component) {
+/* Advance one camera-track component by a frame and return its new value. world_camera_fusion_thread
+ * calls it per component; the BATTLE twin is battle_camera_step_track.
+ *
+ * Each call samples the two tangent lines of the active key segment at this frame and the next, intersects
+ * them (world_util_cross_product_q12 is a Q12 cross product that sets g_world_camera_cross_product_overflow on
+ * overflow) and moves the value along the resulting control point. The locals span, frame and lead are
+ * reused across the stages, as the target's register map requires. */
+s32 world_camera_step_track(battle_camera_track_t* track, s32 component) {
     s32 time[4];  /* line 0: time[0]->time[1]; line 1: time[2]->time[3] */
     s32 value[4]; /* matching values for the two sampled lines */
     s32 value_delta0;
@@ -21,9 +19,9 @@ s32 world_camera_step_track(world_camera_track_t* track, s32 component) {
     s32 result;
     s32 segment;
     s32 key_value;
-    s32 t0;
-    s32 t1;
-    s32 t2;
+    s32 key0_time;
+    s32 key1_time;
+    s32 key2_time;
     s32 lead;
     s32 time_delta0;
     s32 time_delta1;
@@ -40,12 +38,12 @@ s32 world_camera_step_track(world_camera_track_t* track, s32 component) {
 
     if (track->segment_frame == 0) {
         segment = track->segment;
-        t2 = track->keys[segment + 2].time;
-        t1 = track->keys[segment + 1].time;
-        t0 = track->keys[segment].time;
-        span = t2 - t1;
-        lead = t1 - t0;
-        frame = t2 - t0; /* whole two-key span */
+        key2_time = track->keys[segment + 2].time;
+        key1_time = track->keys[segment + 1].time;
+        key0_time = track->keys[segment].time;
+        span = key2_time - key1_time;
+        lead = key1_time - key0_time;
+        frame = key2_time - key0_time; /* whole two-key span */
         if (track->key_count >= 4) {
             if (segment == 0) {
                 track->segment_duration = span / 2 + lead;
@@ -99,7 +97,7 @@ s32 world_camera_step_track(world_camera_track_t* track, s32 component) {
                 track->keys[track->segment + 1].value, track->keys[track->segment + 2].value, frame, span);
         }
         flag = 0;
-        g_world_fixed_math_overflow = 0;
+        g_world_camera_cross_product_overflow = 0;
         value1 = value[1];
         value0 = value[0];
         time3 = time[3];
@@ -112,14 +110,15 @@ s32 world_camera_step_track(world_camera_track_t* track, s32 component) {
         time_delta1 = time3 - time2;
         value_delta1 = value3 - value2;
         time_delta0 = time1 - time0;
-        divisor = world_cross_product_q12(value_delta0, time_delta1, time_delta0, value_delta1);
-        result = world_cross_product_q12(time_delta1, value2 - value0, value_delta1, time2 - time0);
+        divisor = world_util_cross_product_q12(value_delta0, time_delta1, time_delta0, value_delta1);
+        result = world_util_cross_product_q12(time_delta1, value2 - value0, value_delta1, time2 - time0);
         if (divisor != 0) {
-            span = world_mul_div_64(time_delta0, result, divisor) + time0;   /* crossing time */
-            lead = world_mul_div_64(value_delta0, result, divisor) + value0; /* crossing value */
+            span = world_util_mul_div_s64(time_delta0, result, divisor) + time0;   /* crossing time */
+            lead = world_util_mul_div_s64(value_delta0, result, divisor) + value0; /* crossing value */
             divisor = span - track->prev_time;
             if (divisor != 0) {
-                result = world_mul_div_64(lead - track->prev_value, (track->frame << 12) - track->prev_time, divisor)
+                result
+                    = world_util_mul_div_s64(lead - track->prev_value, (track->frame << 12) - track->prev_time, divisor)
                     + track->prev_value;
                 track->prev_time = span;
                 track->prev_value = lead;
@@ -129,7 +128,7 @@ s32 world_camera_step_track(world_camera_track_t* track, s32 component) {
         } else {
             flag = 1;
         }
-        if (g_world_fixed_math_overflow != 0 || flag != 0) {
+        if (g_world_camera_cross_product_overflow != 0 || flag != 0) {
             result = track->prev_value;
         }
     }

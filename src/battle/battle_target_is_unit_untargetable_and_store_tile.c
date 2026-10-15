@@ -1,6 +1,7 @@
 #include "fft/battle.h"
 
-/* Store a unit's tile and report whether targeting must reject the unit. */
+/* Store the unit's tile index and report whether it cannot be a target: an empty slot, a crystal, a
+ * jumping unit, a treasure chest, or a mount carrying a rider. */
 s32 battle_target_is_unit_untargetable_and_store_tile(s32 unit_id, s32* tile_index) {
     battle_stats_t* unit = &g_battle_unit_stats[unit_id];
     s32 result;

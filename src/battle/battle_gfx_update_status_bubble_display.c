@@ -1,25 +1,27 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Draw the unit's status bubble (battle_gfx_draw_status_bubble) when it is active and the unit is on
+ * screen, within the ordering table's depth range, visible, and not a mount carrying its rider. */
 void battle_gfx_update_status_bubble_display(battle_unit_misc_data_t* unit) {
     u16 screen_coords[2];
     u16 screen_x;
-    u16 screen_y;
+    s16 screen_y;
     s32 screen_x_in_range;
 
     /* The camera-relative position is read unsigned (lhu) here. */
-    screen_x = *(u16*)&unit->item_get_camera_x;
+    screen_x = unit->camera_relative_x;
     screen_coords[0] = screen_x;
-    screen_x_in_range = (u32)(screen_x - 0x61) < 0x13f;
-    screen_y = *(u16*)&unit->item_get_camera_y;
+    screen_x_in_range = screen_x >= 0x61 && screen_x <= 0x19f;
+    screen_y = unit->camera_relative_y;
     screen_coords[1] = screen_y;
     if (!screen_x_in_range) {
         return;
     }
-    if ((u16)(screen_y + 0x1f) >= 0x12f) {
+    if (screen_y < -0x1f || screen_y > 0x10f) {
         return;
     }
-    if ((u32)(unit->otag_depth_index - 1) >= 0x17f) {
+    if ((unit->otag_depth_index - 1) >= 0x17f) {
         return;
     }
     if (unit->sprite_graphic_trigger == 0) {

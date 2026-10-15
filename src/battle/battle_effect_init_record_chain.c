@@ -4,6 +4,8 @@ enum {
     EFFECT_RECORD_COUNT = 256,
 };
 
+/* Allocate the 256 effect work records and chain them all into the free list.
+ * Also clears the translation of the particle heading and emitter matrices. */
 void battle_effect_init_record_chain(void) {
     s32 index;
     effect_work_record_t* records;

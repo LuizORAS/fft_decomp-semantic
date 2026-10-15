@@ -2,6 +2,9 @@
 #include "psx/abi_inline.h"
 #include "psx/libgpu.h"
 
+/* The BIOS's memcpy (table A, 0x2a) under a library name: copy `size` bytes from `source` to `destination`.
+ * LIBGPU's environment calls (GetDrawEnv, PutDrawEnv, GetDispEnv, PutDispEnv, DrawOTagEnv) copy their
+ * records with it. */
 void psyq_api_memcpy(void* destination, const void* source, int size) {
     PSYQ_BIOS_TAIL_CALL(PSYQ_BIOS_TABLE_A, PSYQ_BIOS_A_MEMCPY);
 }

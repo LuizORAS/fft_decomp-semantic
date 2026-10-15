@@ -1,12 +1,14 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
+/* Copy the selected unit's stat summary, identity and stat detail blocks
+ * into the panel records and request a redraw of all four panels. */
 void bunit_unit_copy_selected_data(void) {
-    /* The retail code reads the index unsigned here (lhu) and signed below (lh). */
-    s32 idx = *(u16*)&g_bunit_unit_selected_index;
-    bunit_unit_data_t* unit_data = g_bunit_unit_data[(s16)idx];
-    g_bunit_unit_comparison_index = idx;
+    bunit_unit_data_t* unit_data;
+
+    g_bunit_unit_comparison_index = g_bunit_unit_selected_index;
+    unit_data = g_bunit_unit_data[g_bunit_unit_comparison_index];
     bcopy(unit_data, &g_bunit_panel_selected_billboard, 0x22);
-    bcopy(&g_bunit_unit_data[g_bunit_unit_selected_index]->entd_slot_22, g_bunit_panel_selected_unit_data, 0xE);
+    bcopy(&g_bunit_unit_data[g_bunit_unit_selected_index]->name_index, g_bunit_panel_selected_unit_data, 0xE);
     bcopy(&g_bunit_unit_data[g_bunit_unit_selected_index]->move, &g_bunit_editor_unit_fields, 0x40);
     g_bunit_status_display_redraw_request = 1;
     g_bunit_comparison_display_redraw_request = 1;

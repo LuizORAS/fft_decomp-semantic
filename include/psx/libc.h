@@ -6,7 +6,7 @@
 extern void srand(unsigned int);
 extern int rand(void);
 extern int sprintf(char* destination, const char* format, ...);
-void printf(const char* fmt, ...);
+int printf(const char* fmt, ...);
 extern char* strcat(char* destination, const char* source);
 extern char* strcpy(char* destination, const char* source);
 extern int strlen(const char* source);
@@ -25,7 +25,6 @@ s32 setjmp(void* jump_buffer);
 void* memmove(void* destination, const void* source, s32 count);
 
 /* driver internals */
-
 typedef enum {
     PSYQ_PRINTF_LEFT = 1,
     PSYQ_PRINTF_PLUS = 2,

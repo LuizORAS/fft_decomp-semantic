@@ -4,6 +4,11 @@ typedef s32 (*battle_secondary_effect_function_t)(void);
 
 extern battle_secondary_effect_function_t g_battle_effect_secondary_handlers[];
 
+/* Run the handler of every active secondary effect once, newest first, and remove
+ * each one whose handler returns 0. Returns 0 when none is active.
+ *
+ * Before the handlers run it takes this frame's ordering table and flips the
+ * buffer index their double-buffered primitives use. */
 s32 battle_effect_update_secondary_effects(void) {
     battle_effect_secondary_data_t* effect;
     u32 previous_slot_id;

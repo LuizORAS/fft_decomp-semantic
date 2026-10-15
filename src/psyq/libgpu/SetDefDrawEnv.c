@@ -2,6 +2,9 @@
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 
+/* Fill `env` with a default draw environment for the area (`x`, `y`, `w`, `h`): the clip and offset on it, no
+ * texture window, dithering on, drawing to the displayed area only for heights up to 256 (288 in PAL), texture
+ * page 10 and no background clear. Returns `env`. */
 DRAWENV* SetDefDrawEnv(DRAWENV* env, int x, int y, int w, int h) {
     int video_mode = GetVideoMode();
     env->clip.x = x;

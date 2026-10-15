@@ -3,7 +3,8 @@
 #include "psx/libc.h"
 #include "psx/libgte.h"
 
-/* main 0x8001cb04–0x8001cba4: save the eight rotation/translation controls. */
+/* Save the GTE's rotation matrix and translation on LIBGTE's matrix stack of 20 entries; when it is full,
+ * print a message and save nothing. battle_map_draw_mesh_and_weather pairs it with PopMatrix. */
 void PushMatrix(void) {
     /* Fixed scratch registers reproduce the handwritten COP2/ABI allocation. */
     register s32 offset __asm__("$14");

@@ -23,37 +23,41 @@ void bunit_menu_draw_thread_status_indicators(void) {
     s16 y;
 
     active = 0;
-    if (bunit_thread_is_running(8) != 0) {
-        if (g_battle_threads[8].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            thread = (native_thread_t*)g_battle_threads[8].function_parameter_1;
+    if (bunit_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) != 0) {
+        if (g_battle_threads[NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
+            thread = (native_thread_t*)g_battle_threads[NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
             active = (thread->function_parameter_1 == 0) * 8;
         }
     }
-    if (bunit_thread_is_running(7) != 0) {
-        if (g_battle_threads[7].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            descriptor = (native_thread_t*)g_battle_threads[7].function_parameter_1;
+    if (bunit_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) != 0) {
+        if (g_battle_threads[NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS].task_id
+            == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
+            descriptor
+                = (native_thread_t*)g_battle_threads[NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;
             if (descriptor->function_parameter_1 == 0) {
                 active = 7;
                 thread = descriptor;
             }
         }
     }
+    /* Both requests jump past the fade-out updates; an if/else chain or a
+     * do/while(0) break reorders the second request's block. */
     if (active != 0) {
         if ((thread->function_parameter_2 == 0x90) && !(thread->function_parameter_3 & 0x80)) {
-            g_bunit_menu_indicator_state[0] = 2;
-            g_bunit_menu_indicator_state[1] = 1;
+            g_bunit_menu_indicator_state[0] = MENU_INDICATOR_STATE_FADING_OUT;
+            g_bunit_menu_indicator_state[1] = MENU_INDICATOR_STATE_FADING_IN;
             goto draw_panels;
         } else if ((thread->function_parameter_2 == 0) && !(thread->function_parameter_3 & 0x80)) {
-            g_bunit_menu_indicator_state[0] = 1;
-            g_bunit_menu_indicator_state[1] = 2;
+            g_bunit_menu_indicator_state[0] = MENU_INDICATOR_STATE_FADING_IN;
+            g_bunit_menu_indicator_state[1] = MENU_INDICATOR_STATE_FADING_OUT;
             goto draw_panels;
         }
     }
-    if (g_bunit_menu_indicator_state[0] == 1) {
-        g_bunit_menu_indicator_state[0] = 2;
+    if (g_bunit_menu_indicator_state[0] == MENU_INDICATOR_STATE_FADING_IN) {
+        g_bunit_menu_indicator_state[0] = MENU_INDICATOR_STATE_FADING_OUT;
     }
-    if (g_bunit_menu_indicator_state[1] == 1) {
-        g_bunit_menu_indicator_state[1] = 2;
+    if (g_bunit_menu_indicator_state[1] == MENU_INDICATOR_STATE_FADING_IN) {
+        g_bunit_menu_indicator_state[1] = MENU_INDICATOR_STATE_FADING_OUT;
     }
 draw_panels:
     for (i = 0; i < 2; i++) {
@@ -102,26 +106,26 @@ draw_panels:
             prims->bottom[j].x0 = 0x80;
             prims->bottom[j].y0 = y + j;
         }
-        if (g_bunit_menu_indicator_state[i] == 0) {
+        if (g_bunit_menu_indicator_state[i] == MENU_INDICATOR_STATE_HIDDEN) {
             prims->frame.r0 = 0;
             prims->frame.g0 = 0;
             prims->frame.b0 = 0;
         } else {
-            if (g_bunit_menu_indicator_state[i] == 1) {
+            if (g_bunit_menu_indicator_state[i] == MENU_INDICATOR_STATE_FADING_IN) {
                 if (g_bunit_menu_indicator_brightness[i] < 0x78) {
                     g_bunit_menu_indicator_brightness[i] += 0xc;
                 }
             }
-            if (g_bunit_menu_indicator_state[i] == 2) {
+            if (g_bunit_menu_indicator_state[i] == MENU_INDICATOR_STATE_FADING_OUT) {
                 if (g_bunit_menu_indicator_brightness[i] != 0) {
                     g_bunit_menu_indicator_brightness[i] -= 0xc;
                 } else {
-                    g_bunit_menu_indicator_state[i] = 0;
+                    g_bunit_menu_indicator_state[i] = MENU_INDICATOR_STATE_HIDDEN;
                 }
             }
-            prims->frame.r0 = (u8)g_bunit_menu_indicator_brightness[i];
-            prims->frame.g0 = (u8)g_bunit_menu_indicator_brightness[i];
-            prims->frame.b0 = (u8)g_bunit_menu_indicator_brightness[i];
+            prims->frame.r0 = g_bunit_menu_indicator_brightness[i];
+            prims->frame.g0 = g_bunit_menu_indicator_brightness[i];
+            prims->frame.b0 = g_bunit_menu_indicator_brightness[i];
             /* fade_work holds the edge brightness that steps down across the gradient. */
             g_bunit_menu_indicator_fade_work[i] = g_bunit_menu_indicator_brightness[i];
             for (j = 0; j < 9; j++) {
@@ -129,12 +133,12 @@ draw_panels:
                     g_bunit_menu_indicator_fade_work[i] -= 0xc;
                 }
                 k = 8 - j;
-                (k + prims->top)->r0 = (u8)g_bunit_menu_indicator_fade_work[i];
-                (k + prims->top)->g0 = (u8)g_bunit_menu_indicator_fade_work[i];
-                (k + prims->top)->b0 = (u8)g_bunit_menu_indicator_fade_work[i];
-                prims->bottom[j].r0 = (u8)g_bunit_menu_indicator_fade_work[i];
-                prims->bottom[j].g0 = (u8)g_bunit_menu_indicator_fade_work[i];
-                prims->bottom[j].b0 = (u8)g_bunit_menu_indicator_fade_work[i];
+                (k + prims->top)->r0 = g_bunit_menu_indicator_fade_work[i];
+                (k + prims->top)->g0 = g_bunit_menu_indicator_fade_work[i];
+                (k + prims->top)->b0 = g_bunit_menu_indicator_fade_work[i];
+                prims->bottom[j].r0 = g_bunit_menu_indicator_fade_work[i];
+                prims->bottom[j].g0 = g_bunit_menu_indicator_fade_work[i];
+                prims->bottom[j].b0 = g_bunit_menu_indicator_fade_work[i];
                 battle_gfx_draw_or_append_gpu_primitive((k + prims->top));
                 battle_gfx_draw_or_append_gpu_primitive(&prims->bottom[j]);
             }

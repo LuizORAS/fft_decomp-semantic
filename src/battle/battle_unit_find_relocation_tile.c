@@ -43,7 +43,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
     unit = &g_battle_unit_stats[unit_index];
     origin_x = unit->x;
     origin_y = unit->position.bits.y;
-    for (n = 0x1ff * sizeof(battle_target_panel_t); n >= 0; n -= sizeof(battle_target_panel_t)) {
+    for (n = (MAP_TILE_SLOT_COUNT - 1) * sizeof(battle_target_panel_t); n >= 0; n -= sizeof(battle_target_panel_t)) {
         ((battle_target_panel_t*)((u8*)g_battle_target_panels + n))->unit_record_index = 0;
     }
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
@@ -53,7 +53,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
             panel = &g_battle_target_panels[index];
             tile = &g_battle_map_tile_data[index];
             if (i == unit_index) {
-                height = tile->height * 2 + (tile->depth_half_height & 0x1f);
+                height = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK);
                 low = height - 10;
                 if (low < 0) {
                     low = 0;
@@ -65,7 +65,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
         }
     }
     for (i = 0; i < g_battle_relocated_unit_count; i++) {
-        index = g_battle_relocated_unit_coords[i][2] * 256 + g_battle_relocated_unit_coords[i][1] * g_map_max_x
+        index = g_battle_relocated_unit_coords[i][2] * 256 + g_battle_relocated_unit_coords[i][1] * g_battle_map_max_x
             + g_battle_relocated_unit_coords[i][0];
         panel = &g_battle_target_panels[index];
         panel->unit_record_index = 1;
@@ -78,7 +78,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
         for (i = 1; i < limit; i++) {
             for (dx = -i; dx <= i; dx++) {
                 x = origin_x + dx;
-                if (x < 0 || x >= g_map_max_x) {
+                if (x < 0 || x >= g_battle_map_max_x) {
                     continue;
                 }
                 if (dx > 0) {
@@ -89,20 +89,20 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
                 side = -1;
                 found_x = x;
                 for (y = origin_y - dy; side < 2; side += 2) {
-                    if (y >= 0 && y < g_map_max_y) {
+                    if (y >= 0 && y < g_battle_map_max_y) {
                         found_y = y;
                         for (level = 0; level < 2; level++) {
-                            index = level * 256 + g_map_max_x * y + x;
+                            index = level * 256 + g_battle_map_max_x * y + x;
                             tile = &g_battle_map_tile_data[index];
-                            depth = tile->depth_half_height;
-                            if ((s32)(depth >> 5) >= 3) {
+                            depth = tile->depth_half_height.value;
+                            if (tile->depth_half_height.bits.depth >= 3) {
                                 continue;
                             }
-                            height = depth & 0x1f;
+                            height = depth & MAP_TILE_HALF_HEIGHT_MASK;
                             if (height >= 3) {
                                 continue;
                             }
-                            flags = tile->flags_06.value;
+                            flags = tile->flags.value;
                             if (flags & MAP_TILE_FLAG_BLOCKED) {
                                 continue;
                             }
@@ -112,7 +112,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
                             if (g_battle_target_panels[index].unit_record_index != 0) {
                                 continue;
                             }
-                            surface = tile->surface.value & 0x3f;
+                            surface = tile->surface.value & MAP_SURFACE_MASK;
                             if (surface == MAP_SURFACE_LAVA || surface == MAP_SURFACE_OBSTACLE) {
                                 continue;
                             }

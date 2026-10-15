@@ -1,10 +1,11 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-void world_thread_wait_frames(s32 ticks) {
+/* Yield frames times: one scheduler pass, so one frame, each. */
+void world_thread_wait_frames(s32 frames) {
     s32 elapsed = 0;
 
-    while (elapsed < ticks) {
+    while (elapsed < frames) {
         world_thread_yield();
         elapsed++;
     }

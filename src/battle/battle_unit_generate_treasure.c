@@ -1,6 +1,9 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
+/* Pick a chest's item: one of the dead unit's seven equipment slots at random, or with nothing
+ * equipped a random consumable from Potion to Phoenix Down except Elixir. Outside execution (AI
+ * simulation, preview) it returns no value (QUIRKS.md). */
 u8 battle_unit_generate_treasure(battle_stats_t* unit) {
     u8 buf[8];
     s32 count;
@@ -15,7 +18,7 @@ u8 battle_unit_generate_treasure(battle_stats_t* unit) {
     for (i = 0; i < 7; i++) {
         buf[count] = unit->equipment[i];
         item_id = buf[count];
-        if (item_id >= 0xFE) {
+        if (item_id >= ITEM_ID_END) {
             continue;
         }
         if (item_id == 0) {
@@ -25,8 +28,8 @@ u8 battle_unit_generate_treasure(battle_stats_t* unit) {
     }
 
     if (count == 0) {
-        buf[0] = ((rand() * 13) / 0x8000) - 0x10;
-        if (buf[0] >= 0xF5) {
+        buf[0] = ((rand() * 13) / 0x8000) - (ITEM_ID_COUNT - ITEM_ID_CONSUMABLE_FIRST);
+        if (buf[0] >= ITEM_ID_ELIXIR) {
             buf[0] = buf[0] + 1;
         }
         count = 1;

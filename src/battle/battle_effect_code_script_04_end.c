@@ -1,8 +1,8 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
-/* battle_effect_run_block stops the block on this result. */
-enum { EFFECT_SCRIPT_END = 2 };
-
+/* Opcode 04: end the script; battle_effect_run_block's caller then frees the
+ * record. */
 s32 battle_effect_code_script_04_end(void) {
-    return EFFECT_SCRIPT_END;
+    return EFFECT_SCRIPT_RESULT_ABORT;
 }

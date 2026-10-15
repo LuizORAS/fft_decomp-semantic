@@ -1,6 +1,7 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
+/* Clear the four BIOS card events by testing each. */
 void open_card_consume_bios_events(void) {
     TestEvent(g_main_card_bios_events[MAIN_CARD_EVENT_BIOS_DONE]);
     TestEvent(g_main_card_bios_events[MAIN_CARD_EVENT_BIOS_ERROR]);

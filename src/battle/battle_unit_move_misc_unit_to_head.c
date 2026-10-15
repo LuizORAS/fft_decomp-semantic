@@ -1,8 +1,9 @@
 #include "fft/battle.h"
 
+/* Moves a unit's record to the head of the misc unit list, so list walks reach it
+ * first. Returns 1 when moved, 0 when no record has the misc id. */
 s32 battle_unit_move_misc_unit_to_head(u32 misc_id) {
     battle_unit_misc_data_t* unit;
-    battle_unit_misc_data_t* previous;
     battle_unit_misc_data_t* iterator;
     battle_unit_misc_data_t* head;
 
@@ -10,22 +11,17 @@ s32 battle_unit_move_misc_unit_to_head(u32 misc_id) {
     if (unit != 0) {
         /* The list-head word serves as a sentinel record: its previous field
          * (0x000) is the head link. */
-        iterator = (battle_unit_misc_data_t*)&g_battle_unit_misc_list_head;
-        while (iterator != 0) {
-            previous = iterator->previous;
-            if (previous == unit) {
-                /* The target places the splice after the not-found return. */
-                goto found;
+        for (iterator = (battle_unit_misc_data_t*)&g_battle_unit_misc_list_head; iterator != 0;
+            iterator = iterator->previous) {
+            if (iterator->previous == unit) {
+                iterator->previous = unit->previous;
+                head = (battle_unit_misc_data_t*)&g_battle_unit_misc_list_head;
+                unit->previous = head->previous;
+                head->previous = unit;
+                return 1;
             }
-            iterator = previous;
         }
         return 0;
-    found:
-        iterator->previous = unit->previous;
-        head = (battle_unit_misc_data_t*)&g_battle_unit_misc_list_head;
-        unit->previous = head->previous;
-        head->previous = unit;
-        return 1;
     }
     return 0;
 }

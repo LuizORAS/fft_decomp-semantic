@@ -33,6 +33,18 @@
  */
 #include "fft/world.h"
 
+/* Best fit in the shop's fitting room: fill out[0..3] (right hand, left hand, head, body)
+ * with the best-ranked of the items the shop sells that the unit can equip (world_shop_build_item_list)
+ * and what it has in that slot; the accessory is left to the caller. A hand counts the item the
+ * fitting room keeps for it, when there is one, as its current item. The rules are those of
+ * world_unit_build_best_fit_equipment (Two Hands, Two Swords, Martial Arts, the hand swap) over its
+ * own slot table, g_world_shop_best_fit_slot_categories. A pick that is neither the unit's item nor
+ * the kept one is flagged WORLD_EQUIPMENT_SHOP_ITEM.
+ *
+ * The two hand lookups are if/else with a shared loaded temporary (`reserved`), not
+ * `x = a; if (x == 0) x = b;`. The 432-byte frame (args 24 + vars 368 + 10 saves) is what
+ * `s16 list[0x90]` reproduces: sp+24 to sp+312 is exactly 0x120 bytes, and every slot above it is a
+ * reload slot on the 8-byte stride. */
 void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_id, s16* out) {
     s16 list[0x90];
     s32 right;
@@ -71,7 +83,7 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
     }
     if (dual) {
         second = left;
-        g_world_fitting_room_best_fit_slot_categories[1] = 5;
+        g_world_shop_best_fit_slot_categories[1] = ITEM_LIST_FILTER_WEAPON;
         /* Written last so it is the instruction immediately before the test:
          * reorg scans backward from the branch and takes it into the delay
          * slot, which is where the target has `sw s8,328(sp)`. */
@@ -81,7 +93,7 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
             second = ITEM_ID_NOTHING;
         }
     } else {
-        g_world_fitting_room_best_fit_slot_categories[1] = 6;
+        g_world_shop_best_fit_slot_categories[1] = ITEM_LIST_FILTER_SHIELD;
         if (right >= ITEM_ID_THROWABLE_FIRST)
             second = right;
         else if (right != ITEM_ID_NOTHING)
@@ -93,10 +105,10 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
     }
 
     for (slot = 0; slot < 4; slot++) {
-        category = g_world_fitting_room_best_fit_slot_categories[slot];
-        count = world_shop_build_item_list(unit_index, shop_id, category, (world_item_list_entry_t*)list, 2);
+        category = g_world_shop_best_fit_slot_categories[slot];
+        count = world_shop_build_item_list(unit_index, shop_id, category, list, ITEM_LIST_MODE_EQUIPPABLE);
         length = count;
-        if (category == 5) {
+        if (category == ITEM_LIST_FILTER_WEAPON) {
             /* One lvalue per arm: the target computes &list[length] once and stores
              * through it from both sides of the test (`sh t0,0(v1)` then
              * `sh zero,0(a0)`), with `length` post-incremented. Two separate
@@ -108,7 +120,7 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
                 list[length++] = (second < ITEM_ID_THROWABLE_FIRST) ? second : ITEM_ID_NOTHING;
             }
             list[length] = -1;
-            world_item_sort_id_list(7, (world_item_list_entry_t*)list);
+            world_item_sort_id_list(7, list);
             if (world_ability_has_two_hands(unit_index)) {
                 for (i = 0; list[i] != -1; i++) {
                     s16 item_id = list[i];
@@ -121,7 +133,7 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
                 retry = 0;
                 for (i = 0;; i++) {
                     if (list[i] == -1) {
-                        g_world_fitting_room_best_fit_slot_categories[1] = 6;
+                        g_world_shop_best_fit_slot_categories[1] = ITEM_LIST_FILTER_SHIELD;
                         if (slot == 1) {
                             retry = 1;
                             slot--;
@@ -136,7 +148,7 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
                 if (retry)
                     continue;
             }
-        } else if (category == 6) {
+        } else if (category == ITEM_LIST_FILTER_SHIELD) {
             if ((world_ability_has_two_hands(unit_index)
                     && (g_main_item_weapon_data[out[0]].flags & WEAPON_FLAG_TWO_HANDS_COMPATIBLE))
                 || (g_main_item_weapon_data[out[0]].flags & WEAPON_FLAG_FORCED_TWO_HANDS)) {
@@ -145,12 +157,12 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
                 if (second >= ITEM_ID_THROWABLE_FIRST)
                     list[length++] = second;
                 list[length] = -1;
-                world_item_sort_id_list(7, (world_item_list_entry_t*)list);
+                world_item_sort_id_list(7, list);
             }
         } else {
             list[length++] = g_world_formation_unit_pointers[unit_index]->equipment[slot] & WORLD_ITEM_ID_MASK;
             list[length] = -1;
-            world_item_sort_id_list(7, (world_item_list_entry_t*)list);
+            world_item_sort_id_list(7, list);
         }
         if (list[0] <= ITEM_ID_NOTHING)
             out[slot] = ITEM_ID_NOTHING;
@@ -179,7 +191,7 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
         s16 item = out[slot];
         if (item != g_world_formation_unit_pointers[unit_index]->equipment[slot]
             && item != g_world_shop_fitting_room_items[unit_index][slot]) {
-            out[slot] = item | 0x8000;
+            out[slot] = item | WORLD_EQUIPMENT_SHOP_ITEM;
         }
     }
 }

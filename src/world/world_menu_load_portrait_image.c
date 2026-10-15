@@ -1,0 +1,15 @@
+#include "fft/world.h"
+#include "psx/libgpu.h"
+#include "psx/types.h"
+
+/* WORLD twin of battle_menu_load_portrait_image. */
+void world_menu_load_portrait_image(s32 index) {
+    u8* buffer;
+
+    buffer = world_menu_alloc_memory(0x2000);
+    g_world_thread_call_target = (void (*)(void))main_file_load_to_address_checked;
+    world_thread_call_on_main_stack(index * 4 + DISC_SECTOR_EVENT_EVTFACE_BIN, 0x2000, buffer);
+    LoadImage(&g_world_menu_portrait_pixel_rect, buffer);
+    LoadImage(&g_world_menu_portrait_palette_rect, buffer + 0x1800);
+    world_menu_free_memory(buffer);
+}

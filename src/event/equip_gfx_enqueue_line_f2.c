@@ -1,25 +1,20 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
-/* `rect` carries the two endpoints as (x0, y0, x1, y1). */
-void equip_gfx_enqueue_line_f2(const RECT* rect, const u8* color, s32 semitrans, s32 otag_index) {
+/* Take the next LINE_F2 packet from the pool, draw it from (rect x, y) to (rect w, h) with an x bias of
+ * 0x80 in `color`, semi-transparent when `semitrans` is set, and link it into ordering-table entry
+ * `otag_index`; twin of world_gfx_enqueue_line_f2. */
+void equip_gfx_enqueue_line_f2(const RECT* rect, const u8* color, u8 semitrans, s32 otag_index) {
     LINE_F2* line;
-    const RECT* endpoints = rect;
-    u16 index = g_equip_gfx_line_f2_count;
 
-    g_equip_gfx_line_f2_count = index + 1;
-    line = &g_equip_gfx_context->lines[index];
+    line = &g_equip_gfx_context->lines[g_equip_gfx_line_f2_count++];
     line->r0 = color[0];
     line->g0 = color[1];
     line->b0 = color[2];
     SetSemiTrans(line, semitrans & 0xff);
-    line->x0 = endpoints->x + 0x80;
-    line->y0 = endpoints->y;
-    line->x1 = endpoints->w + 0x80;
-    line->y1 = endpoints->h;
-    {
-        equip_gfx_context_t* context = g_equip_gfx_context;
-        setaddr(line, getaddr(&context->otag[otag_index]));
-        setaddr(&context->otag[otag_index], line);
-    }
+    line->x0 = rect->x + 0x80;
+    line->y0 = rect->y;
+    line->x1 = rect->w + 0x80;
+    line->y1 = rect->h;
+    addPrim(&g_equip_gfx_context->otag[otag_index], line);
 }

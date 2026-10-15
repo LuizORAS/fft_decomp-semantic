@@ -8,14 +8,13 @@ typedef struct {
 
 extern battle_menu_calculator_skillsets_t g_battle_menu_calculator_skillsets;
 
-/*
- * Collects the unit's Calculator-eligible abilities from the four skillsets
- * at g_battle_menu_calculator_skillsets into out, -1-terminated, and returns the count. Only the Math
- * Skill skillset collects anything.
+/* Collect the abilities Calculator can use into out, terminated with -1: every learned ability
+ * flagged ABILITY_SECONDARY_FLAG_3_CALCULATOR_ELIGIBLE in the four skillsets of
+ * g_battle_menu_calculator_skillsets (White, Black, Time and Yin-Yang Magic). Returns the count; only
+ * the Math Skill skillset collects anything.
  *
  * The record pointer must be taken inside the inner loop: hoisting the table
- * base into a local before the loop swaps the two preheader address setups.
- */
+ * base into a local before the loop swaps the two preheader address setups. */
 s32 battle_menu_collect_calculator_abilities(s32 unit_id, u8 skillset, s16* out) {
     s16 abilities[0x14];
     u8 mp_costs[0x18];

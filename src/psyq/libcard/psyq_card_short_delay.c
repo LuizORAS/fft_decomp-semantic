@@ -3,7 +3,8 @@
 
 #include "psx/libcard.h"
 
-/* main 0x800289b8–0x800289d4: fixed 200-step BIOS timing delay. */
+/* A busy delay of 200 steps. After _patch_card2 the BIOS's pad-clear routine calls the place of the delay
+ * template, where its own five words now run and fall through into this delay. */
 void psyq_card_short_delay(void) {
     register s32 psyq_card_delay_count __asm__("$8"); /* Unpinned allocation changes the timing loop bytes. */
     PSYQ_CPU_LOAD_WAIT();

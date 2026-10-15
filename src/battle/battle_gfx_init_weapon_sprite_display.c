@@ -1,15 +1,16 @@
 #include "fft/battle.h"
 
+/* Reset the display of one of a unit's three sprite blocks: neutral colour,
+ * no flags on its three parts and none of them in use. */
 battle_gfx_sprite_display_data_t* battle_gfx_init_weapon_sprite_display(s32 unit_index, s32 display_type) {
     s32 weapon_part;
-    u8* record;
     battle_gfx_sprite_display_data_t* display;
-    volatile battle_gfx_sprite_part_display_data_t* part;
+    battle_gfx_sprite_part_display_data_t* part;
 
     weapon_part = 2;
-    record = g_battle_gfx_weapon_sprite_display_data + unit_index * 0x440;
-    display = (battle_gfx_sprite_display_data_t*)(record + display_type * 0x24);
-    part = (volatile battle_gfx_sprite_part_display_data_t*)display->parts;
+    display
+        = (battle_gfx_sprite_display_data_t*)g_battle_unit_misc_data[unit_index].sprite_block_displays[display_type];
+    part = display->parts;
     display->blue = 0x80;
     display->green = 0x80;
     display->red = 0x80;

@@ -21,15 +21,15 @@ void world_menu_build_unit_status_list(void) {
     s16* flag_b;
 
     for (i = 0; i < 8; i++) {
-        flag_a = (s16*)&g_world_unit_editor_panel_data;
-        flag_b = &g_world_unit_selected_status_billboard.status_icon;
+        flag_a = &g_world_menu_billboard_data.state.generic_monster;
+        flag_b = &g_world_menu_active_turn_banner.team_kind;
         if (*flag_a != 0 || *flag_b == 1) {
             g_world_menu_status_list_row_actions[i] = 0x7D0;
         } else {
-            g_world_menu_status_list_row_actions[i] = 0x1015;
+            g_world_menu_status_list_row_actions[i] = BATTLE_MENU_ROW_ACTION_SILENT | BATTLE_MENU_ID_JOBSTTS;
         }
     }
-    unit = battle_unit_get_stats_from_battle_id(g_world_unit_view_battle_id);
+    unit = battle_unit_get_stats_from_battle_id(g_world_active_turn_unit.battle_id);
     for (i = 0; i < 20; i++) {
         g_world_menu_status_left_text_ids[i] = TEXT_ID_ABILITY_NAME_BASE;
         g_world_menu_status_right_text_ids[i] = TEXT_ID_ABILITY_NAME_BASE;
@@ -53,7 +53,7 @@ void world_menu_build_unit_status_list(void) {
     }
     world_sound_set_effect_to_confirm();
     if (count == 0) {
-        world_menu_run_companion_overlay_7_thread();
+        world_menu_run_jobstts_thread();
     }
     odd = count & 1;
     half = count / 2;
@@ -65,5 +65,5 @@ void world_menu_build_unit_status_list(void) {
         g_world_menu_status_list_layout.columns.row_count = count;
         g_world_menu_status_list_layout.columns.hidden_rows = 0;
     }
-    world_menu_scrolling_list_thread();
+    world_menu_run_scrolling_ability_list_thread();
 }

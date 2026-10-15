@@ -1,0 +1,78 @@
+#include "fft/battle.h"
+/* The `blez` target depends on which reorg pass fills its delay slot, not on
+ * how the two `i = 0` insns are spelled (they are identical RTL by then).
+ * Zeroing the counter ahead of the guard (see below) puts `move a0,zero`
+ * immediately before the branch, so fill_simple_delay_slots takes it from
+ * there and the redundancy test that would retarget the branch never runs.
+ *
+ * A barrier at the head of the join block does not work: it stops gcc filling
+ * the slot at all, and the -gcoff line note then keeps the assembler from
+ * filling it, leaving a nop.
+ */
+#include "psx/pad.h"
+#include "psx/types.h"
+
+/* On Cross, while the menu may accept input, close a menu entry and its thread group.
+ *
+ * When the entry has a thread group (cancel_thread_count is not -1), each of its threads, counted from
+ * the current thread, gets thread parameter 3 set to 1, after which battle_menu_is_input_allowed
+ * refuses it input; thread 8 also clears the four pending selections. Every thread whose task is 1 (a
+ * running text thread) is asked to stop (task 3). The entry's result cell receives -1, the event input
+ * is consumed, the cancel sound is queued and event input stays suppressed for 5 frames. */
+void battle_menu_handle_entry_cancel(void* menu) {
+    world_menu_entry_t* ctx = menu;
+    s32 count;
+    s32 i;
+    s32 idx;
+    s32 j;
+    s16* pending;
+    s16* cur;
+    s32 thread;
+    char unused[8];
+
+    if ((g_battle_script_event_input & PSX_PAD_CROSS) && battle_menu_is_input_allowed() != 0) {
+        count = ctx->cancel_thread_count;
+        if (count != -1) {
+            /* The counter is zeroed ahead of the guard, not inside the arm.
+               That is what puts `move a0,zero` immediately before the `blez`,
+               so reorg fills the branch's delay slot from *before* the branch
+               and never considers the join block's own `i = 0` -- leaving the
+               branch pointing at it (`blez a1,0xa4`).  Written inside the arm,
+               the slot is instead filled from the fallthrough thread, the
+               identical insn at the branch target is recognised as redundant,
+               and the branch is retargeted one instruction later. */
+            i = 0;
+            if (count > 0) {
+                thread = g_battle_thread_current_id;
+                do {
+                    idx = i + thread;
+                    g_battle_thread_contexts[idx].function_parameter_3 = 1;
+                    if (idx == 8) {
+                        j = 3;
+                        pending = &g_battle_menu_pending_selection[j];
+                        do {
+                            *pending = -1;
+                            pending--;
+                            j--;
+                        } while (j >= 0);
+                    }
+                    i++;
+                } while (i < count);
+            }
+            i = 0;
+            j = 0;
+            do {
+                i++;
+                if (g_battle_thread_contexts[j].task_id == NATIVE_THREAD_TASK_RESUME) {
+                    g_battle_thread_contexts[j].task_id = NATIVE_THREAD_TASK_STOP_REQUEST;
+                }
+                j++;
+            } while (i < 0x10);
+        }
+        cur = ctx->value;
+        g_battle_script_event_input = 0;
+        *cur = -1;
+        battle_sound_set_effect_to_cancel();
+        g_battle_event_input_suppression_frames = 5;
+    }
+}

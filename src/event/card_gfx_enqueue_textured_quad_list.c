@@ -1,27 +1,16 @@
 #include "fft/event_card.h"
-#include "psx/libgpu.h"
 #include "psx/types.h"
 
+/* Takes one POLY_FT4 from the pool per sprite cell, fills it as a w x h quad
+ * at (x + 0x80, y) with texture origin (u, v), and links it into ordering
+ * table entry otag_index. With `color` the quads are shaded with that
+ * colour. */
 void card_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads, const u8* color, s32 semitrans,
     u16 texture_page, u16 clut, s32 otag_index, s32 count) {
-    u32 command_mask;
-    u32 address_mask;
-    u32 otag_offset;
+    POLY_FT4* poly;
 
-    count--;
-    if (count < 0) {
-        return;
-    }
-
-    otag_offset = otag_index << 2;
-    address_mask = 0xffffff;
-    command_mask = 0xff000000;
-    do {
-        POLY_FT4* poly;
-        u16 index = g_card_gfx_poly_ft4_count;
-
-        g_card_gfx_poly_ft4_count = index + 1;
-        poly = &g_card_gfx_context->polygons[index];
+    for (count -= 1; count >= 0; count--) {
+        poly = &g_card_gfx_context->polygons[g_card_gfx_poly_ft4_count++];
 
         if (color != 0) {
             SetShadeTex(poly, 0);
@@ -41,7 +30,6 @@ void card_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads,
         poly->y2 = quads->y + quads->h;
         poly->x3 = quads->w + (quads->x + 0x80);
         poly->y3 = quads->y + quads->h;
-
         poly->u0 = quads->u;
         poly->v0 = quads->v;
         poly->u1 = quads->u + quads->w;
@@ -53,27 +41,8 @@ void card_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads,
         poly->clut = clut;
         poly->tpage = texture_page;
 
-        {
-            card_graphics_context_t* context = g_card_gfx_context;
-            u32 tag_word = poly->tag;
-            u32 otag_word = *(u32*)(otag_offset + (u32)context->otag);
-
-            tag_word &= command_mask;
-            otag_word &= address_mask;
-            tag_word |= otag_word;
-            poly->tag = tag_word;
-
-            {
-                u32 old_otag = *(u32*)(otag_offset + (u32)context->otag);
-                u32 poly_address = (u32)poly & address_mask;
-
-                old_otag &= command_mask;
-                old_otag |= poly_address;
-                *(u32*)(otag_offset + (u32)context->otag) = old_otag;
-            }
-        }
-
+        setaddr(poly, g_card_gfx_context->otag[otag_index]);
+        catPrim(&g_card_gfx_context->otag[otag_index], poly);
         quads++;
-        count--;
-    } while (count >= 0);
+    }
 }

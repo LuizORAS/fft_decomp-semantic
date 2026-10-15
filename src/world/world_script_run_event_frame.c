@@ -1,0 +1,191 @@
+#include "fft/event_bunit.h"
+#include "fft/event_card.h"
+#include "fft/event_equip.h"
+#include "fft/event_jobstts.h"
+#include "fft/world.h"
+#include "psx/libgpu.h"
+#include "psx/pad.h"
+#include "psx/types.h"
+
+/* WORLD's copy of battle_script_run_event_frame: run one frame of an event around WORLD's thread
+ * scheduler, with the same results (1 while the event runs; at its end 0, or 9, 0xA, 0xB or 0x13 for
+ * the exit). The pad goes through world_input_update_menu_repeat and the event input state is reloaded
+ * every frame, the end waits for thread slots 1-16, and there are no sound requests to reset. */
+s32 world_script_run_event_frame(u32* ot, u32 buttons) {
+    RECT rect;
+    s32 i;
+    s32 op;
+    u32 prims;
+    s32 polarity;
+
+    g_battle_ai_workspace_ptr = (world_event_work_t*)g_battle_ai_workspace;
+    if (g_world_gfx_draw_primitives_immediately != 0) {
+        DrawSync(0);
+        rect.w = 0x100;
+        rect.x = 0;
+        rect.h = 0xF0;
+        rect.y = (g_main_gfx_screen_polarity & 1) * 0xF0;
+        LoadImage(&rect, (u32*)g_main_heap_high_overlay_load_address);
+    }
+    g_world_gfx_current_otag_entry = ot;
+    world_gfx_submit_screen_fade_overlay(
+        &g_world_screen_tint_tiles[g_world_menu_packet_buffer_index], g_world_screen_fade);
+    world_camera_store_state_to_script_variables();
+    world_menu_draw_active_window_frames();
+
+    if (g_world_script_finish_check_pending != 0) {
+        for (i = 1; i < 17; i++) {
+            if (world_thread_is_running_asm(i) != 0) {
+                break;
+            }
+        }
+        if (i == 17) {
+            op = world_script_get_current_scenario_finish_operation();
+            if (op != 0) {
+                if (world_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) != 0) {
+                    g_world_script_finish_check_pending = 0;
+                    world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
+                    return 9;
+                }
+            } else {
+                g_world_script_finish_check_pending = 0;
+                g_world_menu_suspend_state = 0;
+                return 0;
+            }
+            if (world_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_REUNION_AND_BEYOND) {
+                return 0x13;
+            }
+            world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((op & 0xC00) >> 2) | (op & 0xFF));
+            op = (op & 0xF300) >> 8;
+            g_world_script_finish_check_pending = 0;
+            g_world_menu_suspend_state = 0;
+            if (op == 0x80) {
+                return 9;
+            }
+            if (op == 0x81) {
+                return 0xA;
+            }
+            if (op == 0x82) {
+                return 0xB;
+            }
+            world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0);
+            world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, 0);
+            g_battle_entd_selection_mode = BATTLE_ENTD_SELECTION_MAP_ID;
+            return 9;
+        }
+        g_world_script_finish_check_pending = 0;
+    }
+
+    world_input_update_menu_repeat(buttons);
+    if (g_world_menu_input_mode == MENU_INPUT_TUTORIAL) {
+        g_world_input_unfiltered_controller = g_world_menu_new_button_input;
+        world_script_apply_input_overrides(&g_world_menu_new_button_input);
+        g_world_script_saved_event_input = g_world_menu_new_button_input;
+        world_script_set_variable(EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS, 0);
+    }
+    if (g_world_map_reload_state >= 3) {
+        g_world_map_reload_state = 0;
+    }
+    if (g_world_map_append_state >= 3) {
+        g_world_map_append_state = 0;
+        g_world_map_destruction_wait_state = 1;
+    }
+    g_world_event_pending_map_jump_out_id = -1;
+    g_world_event_weather_request = -1;
+    g_world_event_pending_map_state = -1;
+    g_world_event_pending_map_jump_out_2_id = -1;
+    g_world_event_pending_effect_id = -1;
+    g_world_event_pending_loaded_evtchr_slot = (void*)-1;
+    g_world_event_pending_evtchr_save_slot = -1;
+    g_world_event_pending_saved_evtchr_clear_slot = -1;
+    g_world_event_pending_loaded_evtchr_clear_slot = -1;
+    g_world_event_pending_unit_vram_copy = -1;
+    g_world_event_pending_reserved_vram_release_slot = -1;
+    g_world_event_map_jump_in_request = 0;
+    g_world_3d_object_use_request = 0;
+    g_world_field_object_use_request = 0;
+
+    if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_JOBSTTS) {
+        g_world_companion_overlay_primitives = jobstts_entrypoint(g_world_active_turn_unit.battle_id, 0);
+        if (g_world_companion_overlay_primitives != 0) {
+            AddPrims(g_world_gfx_current_otag_entry, (void*)g_world_companion_overlay_primitives,
+                (void*)(g_world_companion_overlay_primitives + 0xFC));
+        } else {
+            g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
+        }
+    }
+    if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_EQUIP) {
+        prims = equip_entrypoint(g_world_active_turn_unit.battle_id, g_world_gfx_current_otag_entry + 1);
+        g_world_companion_overlay_primitives = prims;
+        if (prims >= 2) {
+            AddPrims(g_world_gfx_current_otag_entry, (void*)prims, (void*)(prims + 0xFC));
+        } else {
+            g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
+        }
+    }
+
+    world_script_load_event_input_state((world_menu_input_state_t*)&g_world_menu_new_button_input);
+    if (world_script_is_tutorial_event_slot() == 0 && g_world_menu_new_button_input != PSX_PAD_SELECT
+        && g_world_menu_new_button_input != 0) {
+        g_world_event_input_suppression_frames = 5;
+    }
+    for (i = 1; i < 16; i++) {
+        g_world_event_thread_status_snapshot[i] = world_thread_is_running_asm(i);
+    }
+    world_thread_yield();
+    for (i = 1; i < 16; i++) {
+        if (g_world_event_thread_status_snapshot[i] != world_thread_is_running_asm(i)) {
+            g_world_event_input_suppression_frames = 5;
+        }
+    }
+    if (g_world_event_input_suppression_frames != 0) {
+        g_world_event_input_suppression_frames--;
+    }
+    world_camera_load_state_from_script_variables();
+    g_world_frame_counter++;
+    g_world_menu_packet_buffer_index = (g_world_menu_packet_buffer_index + 1) & 1;
+    if (g_world_menu_input_block_frames != 0) {
+        g_world_menu_input_block_frames--;
+    }
+    world_script_frame_after_threads_stub();
+    if (g_world_script_frame_result_override != 0) {
+        return g_world_script_frame_result_override;
+    }
+
+    if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_STUB) {
+        world_menu_run_companion_overlay_stub();
+        g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
+    } else if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_BUNIT) {
+        world_script_set_event_speed(1);
+        i = bunit_entrypoint(0, 0);
+        battle_target_move_cursor_to_battle_id(i);
+        g_world_active_turn_unit.battle_id = i;
+        g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
+    } else if (g_world_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_CARD_SAVE) {
+        world_script_set_event_speed(1);
+        polarity = g_main_gfx_screen_polarity;
+        world_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
+        card_save_run_menu(0);
+        g_world_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
+        g_main_gfx_screen_polarity = polarity;
+    }
+    world_menu_open_companion_executable();
+    world_menu_open_companion_data_file();
+    world_script_process_pending_requests();
+    world_script_frame_after_requests_stub();
+    if (g_world_menu_input_mode == MENU_INPUT_BLOCKED) {
+        return 1;
+    }
+    if (g_world_menu_input_mode == MENU_INPUT_TUTORIAL) {
+        return 0;
+    }
+    for (i = 1; i < 17; i++) {
+        if (world_thread_is_running_asm(i) != 0) {
+            break;
+        }
+    }
+    if (i == 17) {
+        g_world_script_finish_check_pending = 1;
+    }
+    return 1;
+}

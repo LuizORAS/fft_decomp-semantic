@@ -1,6 +1,9 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
+/* Block until a card hardware event fires and return it. Returns timeout when
+ * card status bit 0 of the selected slot is set and no event has fired. Nothing
+ * in OPEN.BIN calls it. */
 s32 open_card_wait_for_hardware_event(void) {
     s32 card_ready;
     s32 event_result;

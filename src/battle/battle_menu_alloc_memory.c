@@ -6,7 +6,7 @@
  * Scans the page occupancy map first-fit. When no run of free pages or no free slot
  * remains, it optionally prints a diagnostic, yields the thread, and rescans.
  *
- * BATTLE twin of world_menu_alloc_ui_buffer. */
+ * BATTLE twin of world_menu_alloc_memory. */
 void* battle_menu_alloc_memory(s32 size) {
     s32 page;
     s32 n;
@@ -43,8 +43,8 @@ void* battle_menu_alloc_memory(s32 size) {
             }
         }
     fail:
-        if (g_font_print_enabled != 0) {
-            FntPrint(g_battle_text_wait_for_allocation_message, g_battle_current_thread_id, size);
+        if (g_main_font_print_enabled != 0) {
+            FntPrint(g_battle_menu_wait_for_allocation_message, g_battle_thread_current_id, size);
         }
         battle_thread_yield();
     }

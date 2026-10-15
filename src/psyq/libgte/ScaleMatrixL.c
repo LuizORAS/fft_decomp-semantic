@@ -1,8 +1,8 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001c9e0–0x8001cb04: row scaling, low-word products and word stores.
- * The packed view preserves writes to the matrix alignment word. */
+/* Scale `matrix`'s rotation by the 4.12 vector `scale`, row by row (row i times component i). The map light
+ * threads and battle_effect_draw_projectile_model use it. */
 void ScaleMatrixL(MATRIX* matrix, VECTOR* scale) {
     /* Bindings preserve the packed-halfword multiply and store registers. */
     register psyq_packed_matrix_t* packed_matrix __asm__("$4") = (psyq_packed_matrix_t*)matrix;
@@ -19,75 +19,59 @@ void ScaleMatrixL(MATRIX* matrix, VECTOR* scale) {
     __asm__("" : "=r"(low) : "0"(low)); /* Keep the retail redundant low-half mask. */
     low = (low << 16) >> 16;
     PSYQ_GTE_MULTU_BEGIN(low, scale_x);
-    __asm__("" : "=r"(packed) : "0"(packed));
     high = (s32)packed >> 16;
-    __asm__ volatile("" : : "r"(high) : "memory");
     scale_y = scale->vy;
     scale_z = scale->vz;
     __asm__ volatile("" : : "r"(scale_y), "r"(scale_z) : "memory");
     packed = packed_matrix->words[1];
     __asm__ volatile("" : "=r"(packed_matrix) : "0"(packed_matrix), "r"(packed) : "memory");
-    __asm__("" : "=r"(result) : "0"((MATRIX*)packed_matrix));
+    __asm__("" : "=r"(result) : "0"(packed_matrix));
     __asm__ volatile("" : : "r"(result)); /* Retail exposes the result pointer before its stores. */
     PSYQ_GTE_READ_LO(low);
     low = (low >> 12) & 0xffff;
-    __asm__ volatile("" : : "r"(low));
     PSYQ_GTE_MULTU_BEGIN(high, scale_x);
     PSYQ_GTE_READ_LO(high);
     high = (high >> 12) << 16;
     low |= high;
-    __asm__("" : "=r"(low), "=r"(packed) : "0"(low), "1"(packed));
     packed_matrix->words[0] = low;
     low = packed & 0xffff;
     __asm__("" : "=r"(low) : "0"(low));
     low = (low << 16) >> 16;
     PSYQ_GTE_MULTU_BEGIN(low, scale_x);
-    __asm__("" : "=r"(packed) : "0"(packed));
     high = (s32)packed >> 16;
-    __asm__ volatile("" : : "r"(high) : "memory");
     packed = packed_matrix->words[2];
     PSYQ_GTE_READ_LO(low);
     low = (low >> 12) & 0xffff;
-    __asm__ volatile("" : : "r"(low));
     PSYQ_GTE_MULTU_BEGIN(high, scale_y);
     PSYQ_GTE_READ_LO(high);
     high = (high >> 12) << 16;
     low |= high;
-    __asm__("" : "=r"(low), "=r"(packed) : "0"(low), "1"(packed));
     packed_matrix->words[1] = low;
     low = packed & 0xffff;
     __asm__("" : "=r"(low) : "0"(low));
     low = (low << 16) >> 16;
     PSYQ_GTE_MULTU_BEGIN(low, scale_y);
-    __asm__("" : "=r"(packed) : "0"(packed));
     high = (s32)packed >> 16;
-    __asm__ volatile("" : : "r"(high) : "memory");
     packed = packed_matrix->words[3];
     PSYQ_GTE_READ_LO(low);
     low = (low >> 12) & 0xffff;
-    __asm__ volatile("" : : "r"(low));
     PSYQ_GTE_MULTU_BEGIN(high, scale_y);
     PSYQ_GTE_READ_LO(high);
     high = (high >> 12) << 16;
     low |= high;
-    __asm__("" : "=r"(low), "=r"(packed) : "0"(low), "1"(packed));
     packed_matrix->words[2] = low;
     low = packed & 0xffff;
     __asm__("" : "=r"(low) : "0"(low));
     low = (low << 16) >> 16;
     PSYQ_GTE_MULTU_BEGIN(low, scale_z);
-    __asm__("" : "=r"(packed) : "0"(packed));
     high = (s32)packed >> 16;
-    __asm__ volatile("" : : "r"(high) : "memory");
     packed = packed_matrix->words[4];
     PSYQ_GTE_READ_LO(low);
     low = (low >> 12) & 0xffff;
-    __asm__ volatile("" : : "r"(low));
     PSYQ_GTE_MULTU_BEGIN(high, scale_z);
     PSYQ_GTE_READ_LO(high);
     high = (high >> 12) << 16;
     low |= high;
-    __asm__("" : "=r"(low), "=r"(packed) : "0"(low), "1"(packed));
     packed_matrix->words[3] = low;
     low = packed & 0xffff;
     __asm__("" : "=r"(low) : "0"(low));
@@ -95,6 +79,5 @@ void ScaleMatrixL(MATRIX* matrix, VECTOR* scale) {
     PSYQ_GTE_MULTU_BEGIN(low, scale_z);
     PSYQ_GTE_READ_LO(low);
     low >>= 12;
-    __asm__("" : "=r"(low) : "0"(low));
     packed_matrix->words[4] = low;
 }

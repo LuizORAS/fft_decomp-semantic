@@ -1,23 +1,22 @@
 #include "fft/battle.h"
 
-enum {
-    MINI_MENU_THREAD_ID = 8,
-    MINI_MENU_MENU_ID = 10,
-};
-
+/* Start the mini menu in the menu thread slot, on
+ * battle_menu_display_triangle_selection with the mini menu's entry, unless the
+ * menu or its child thread is running or the menus are suspended. */
 void battle_menu_start_mini_menu_display_thread(void) {
-    if (battle_thread_is_running_8014cc94(MINI_MENU_THREAD_ID) != 0) {
+    if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU) != 0) {
         return;
     }
-    if (battle_thread_is_running_8014cc94(7) != 0) {
+    if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_CHILD) != 0) {
         return;
     }
-    if (g_option_menu_submenu_state != 0) {
+    if (g_battle_menu_suspend_state != 0) {
         return;
     }
-    g_battle_menu_current_id = MINI_MENU_MENU_ID;
+    g_battle_menu_current_id = BATTLE_MENU_ID_MINI_MENU;
     g_battle_menu_thread_menu_data = g_battle_menu_idle_action_entries;
-    battle_thread_start(MINI_MENU_THREAD_ID, battle_menu_display_triangle_selection);
-    battle_thread_set_parameters(MINI_MENU_THREAD_ID, (s32)&g_battle_menu_thread_menu_data[10], 0, 0);
-    g_battle_thread_contexts[8].task_id = NATIVE_THREAD_TASK_MENU_SOUND_DELAY;
+    battle_thread_start(NATIVE_THREAD_SLOT_MENU, battle_menu_display_triangle_selection);
+    battle_thread_set_parameters(
+        NATIVE_THREAD_SLOT_MENU, (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_MINI_MENU], 0, 0);
+    g_battle_thread_contexts[NATIVE_THREAD_SLOT_MENU].task_id = NATIVE_THREAD_TASK_MINI_MENU;
 }

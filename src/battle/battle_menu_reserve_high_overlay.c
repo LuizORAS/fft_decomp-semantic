@@ -1,0 +1,17 @@
+#include "fft/battle.h"
+#include "psx/types.h"
+
+/* Retry the overlay allocation until it lands at the expected address, yielding and printing a debug message each pass.
+ */
+void battle_menu_reserve_high_overlay(u32 size) {
+    while (1) {
+        if (main_heap_reserve_at(g_main_heap_high_overlay_load_address, size)
+            == g_main_heap_high_overlay_load_address) {
+            break;
+        }
+        battle_thread_yield();
+        if (g_main_font_print_enabled != 0) {
+            FntPrint(g_battle_menu_wait_for_file_allocation_message);
+        }
+    }
+}

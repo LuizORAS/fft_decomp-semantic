@@ -2,18 +2,12 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-#define WLDCORE_ROUTE_COUNT           48
-#define SCRIPT_VAR_ROUTE_VISIBLE_BASE 556
-
-/* Draws the visible world-map routes into the auxiliary ordering table as
- * textured semi-transparent ribbons. Each route record is a run of packed
- * (x, y) pairs holding the two edges of the ribbon; every point is projected
- * through func_8001D3E8 into one of four rotating vertex slots and flagged
- * in-bounds when x + 127 and y + 111 fall inside 255 x 227. Once four slots
- * are full they become one POLY_FT4 quad, emitted when either edge-leading
- * vertex was in bounds, and the last pair slides down to slots 0 and 1 so the
- * next pair closes the following segment. Gated as a whole by system flag
- * 0x20 and per route by script variable 556 + route.
+/* Draw the routes whose variable (EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST + route) is set as textured
+ * semi-transparent ribbons in the auxiliary ordering table; nothing while
+ * MAIN_SYSTEM_FLAG_HIDE_MAP_ROUTES is set. A route's polyline holds the two edges of its ribbon as
+ * pairs of points: each point is projected (RotTransSV) into one of four vertex slots and flagged on
+ * screen when it lies within x -127..127, y -111..115. Each further pair closes one quad with the
+ * pair before it, drawn when either leading vertex is on screen.
  *
  * The count is sign-extended into count_tmp, which the loop guard tests before
  * the copy into count; the `j < count_tmp` guard leaves an unused compare
@@ -35,10 +29,10 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
     s32 j;
     s16 slot;
     SVECTOR* vertex;
-    u16 raw;
+    s16 raw;
     s32 count_tmp;
 
-    if (g_main_system_flags & 0x20) {
+    if (g_main_system_flags & MAIN_SYSTEM_FLAG_HIDE_MAP_ROUTES) {
         return;
     }
 
@@ -60,13 +54,13 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
     poly.clut = GetClut(0x10, 0x1E8);
 
     for (i = 0, vertex = verts; i < WLDCORE_ROUTE_COUNT; i++) {
-        if (world_script_get_variable(i + SCRIPT_VAR_ROUTE_VISIBLE_BASE) == 0) {
+        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST) == 0) {
             continue;
         }
         slot = 0;
         points = table[i];
         raw = *points++;
-        count_tmp = (s16)raw;
+        count_tmp = raw;
         in.vz = 0;
         j = 0;
         if (j < count_tmp) {
@@ -75,7 +69,8 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
                 in.vx = *points++;
                 in.vy = *points++;
                 RotTransSV(&in, &vertex[slot], &projected);
-                if ((u16)(vertex[slot].vx + 127) < 255 && (u16)(vertex[slot].vy + 111) < 227) {
+                if (vertex[slot].vx >= -127 && vertex[slot].vx <= 127 && vertex[slot].vy >= -111
+                    && vertex[slot].vy <= 115) {
                     flags[slot] = 1;
                 } else {
                     flags[slot] = 0;
@@ -94,8 +89,7 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
                     verts[0] = verts[2];
                     verts[1] = verts[3];
                     if (flags[0] != 0 || flags[2] != 0) {
-                        /* This caller sets only a0-a2, hence the three-argument cast. */
-                        ((void (*)(POLY_FT4*, s32, s32))world_gs_sortpoly)(&poly, (s32)ot, 1);
+                        GsSortPoly(&poly, ot, 1);
                     }
                     flags[0] = flags[2];
                     flags[1] = flags[3];

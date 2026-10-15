@@ -1,6 +1,7 @@
 #include "fft/main.h"
 
-/* Map ENTD's five equipment bytes into the seven simulation slots. */
+/* Copy a monster's five ENTD equipment bytes into the seven battle slots: both hands as weapons, no
+ * shields. */
 void main_unit_store_monster_equipment(battle_stats_t* unit, const entd_unit_t* entd) {
     unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = entd->equipment[ENTD_EQUIPMENT_SLOT_RIGHT_HAND];
     unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD] = ITEM_ID_NONE;

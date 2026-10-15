@@ -1,6 +1,7 @@
 /* LIBGPU 80026388-800263d8. */
 #include "psx/libgpu.h"
 
+/* Write `count` command words from `commands` to GP0 by the CPU. DrawPrim sends one primitive this way. */
 int _cwb(u32* commands, int count) {
     int unused[2]; /* The original leaf reserves eight stack bytes. */
     int remaining = count - 1;

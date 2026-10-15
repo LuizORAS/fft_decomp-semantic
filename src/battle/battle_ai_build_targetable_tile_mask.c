@@ -1,14 +1,11 @@
 #include "fft/battle.h"
 
-/*
- * Build the considered origin's targetable-tile mask on both map levels.
+/* Build targetable_tiles: the tiles within a Manhattan radius of considered_unit_coords, the same on
+ * both levels (height is not counted). The radius is the considered ability's range, area or both, or
+ * the given one for BATTLE_AI_TILE_MASK_EXPLICIT; a linear ability keeps only the centre's row and
+ * column, and a radius of 16 or more marks every tile.
  *
- * Modes 0, 1, and 2 select range, area, or their sum; other modes use radius.
- * Radius 16 or greater fills both masks without applying the linear filter.
- * Radii 8 through 15 read the following status-priority weights instead of
- * row templates. This helper does not guard those inputs; caller restrictions
- * are not established.
- */
+ * Radii 8-15 read past the eight row templates (QUIRKS.md). */
 void battle_ai_build_targetable_tile_mask(battle_ai_tile_mask_mode_e mode, s32 radius) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 i;

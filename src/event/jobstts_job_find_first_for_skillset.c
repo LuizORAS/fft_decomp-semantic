@@ -1,6 +1,7 @@
 #include "fft/event_jobstts.h"
 #include "psx/types.h"
 
+/* Return the lowest job id whose skillset is the given one, or -1. */
 s32 jobstts_job_find_first_for_skillset(s32 skillset_id) {
     s32 job_id = 0;
 

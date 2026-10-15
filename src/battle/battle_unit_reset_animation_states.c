@@ -9,7 +9,7 @@ void battle_unit_reset_animation_states(void) {
     s32 i;
 
     i = 0;
-    state = g_battle_unit_misc_rotation_data;
+    state = g_battle_unit_animation_states;
     do {
         state->rotating = 0;
         state->delay = 0;

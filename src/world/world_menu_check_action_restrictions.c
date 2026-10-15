@@ -1,14 +1,7 @@
 #include "fft/battle.h"
 #include "fft/world.h"
 
-/*
- * Check action-menu restrictions and show the applicable warning.
- *
- * Menu groups 0x13/0x14 and 0x30/0x31 use the battle eligibility check.
- * Other menus inspect the unit's current status and last action. The packed
- * options can suppress status warnings, but messages 0x1002/0x1003 always
- * stop the current thread after any warning thread finishes.
- */
+/* WORLD twin of battle_menu_check_action_restrictions. */
 void world_menu_check_action_restrictions(void) {
     s32 message = 0;
     battle_stats_t* unit;
@@ -16,29 +9,32 @@ void world_menu_check_action_restrictions(void) {
     s32 result;
     s32 mode;
 
-    unit = world_unit_get_battle_stats_for_stored();
+    unit = world_unit_get_active_turn_unit_stats();
     menu = g_world_menu_current_id;
-    if ((u32)(menu - 0x13) < 2 || (u32)(menu - 0x30) < 2) {
-        result = battle_formula_can_unit_evade(unit);
-        if (result == 0) {
+    if (menu == BATTLE_MENU_ID_TURN_ACTED || menu == BATTLE_MENU_ID_TURN_MOVED_ACTED
+        || menu == BATTLE_MENU_ID_RIDER_TURN_ACTED || menu == BATTLE_MENU_ID_RIDER_TURN_MOVED_ACTED) {
+        result = battle_unit_get_action_block(unit);
+        if (result == BATTLE_UNIT_ACTION_BLOCK_NONE) {
             world_sound_set_effect_to_invalid();
             world_thread_exit_current();
         }
-        if (result == 1) {
+        if (result == BATTLE_UNIT_ACTION_BLOCK_DISABLED) {
             message = 0x1002;
         }
-        if (result == 2) {
+        if (result == BATTLE_UNIT_ACTION_BLOCK_SUBMERGED) {
             message = 0x1003;
         }
     } else {
-        if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)) {
+        if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING)) {
             if (g_main_action_menu_types_by_skillset[unit->last_skillset_id] == ACTION_MENU_TYPE_CHARGE) {
-                g_world_text_substitution_values[0] = unit->last_skillset_id | 0xb000;
+                g_world_text_substitution_values[0] = unit->last_skillset_id | TEXT_ID_SKILLSET_NAME_SOURCE_BASE;
             } else {
                 g_world_text_substitution_values[0] = unit->last_ability_id + TEXT_ID_ABILITY_NAME_BASE;
             }
             message = 0x8001;
-        } else if (unit->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)) {
+        } else if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PERFORMING)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)) {
             message = 0x8002;
         }
     }
@@ -48,12 +44,13 @@ void world_menu_check_action_restrictions(void) {
             world_sound_set_effect_to_confirm_checked();
         } else if (g_world_menu_restore_pending == 0) {
             world_sound_set_effect_to_invalid();
-            g_world_menu_thread_menu_data[35].text_id = message;
+            g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE].text_id = message;
             world_thread_start(g_world_thread_current_id - 1, world_menu_icon_linked_entry_thread);
-            world_thread_set_parameters(g_world_thread_current_id - 1, (s32)&g_world_menu_thread_menu_data[35], 0, 0);
+            world_thread_set_parameters(g_world_thread_current_id - 1,
+                (s32)&g_world_menu_thread_menu_data[BATTLE_MENU_ID_ACTION_RESTRICTION_MESSAGE], 0, 0);
             world_thread_wait_until_inactive(g_world_thread_current_id - 1);
         }
-        if ((u32)(message - 0x1002) < 2) {
+        if (message == 0x1002 || message == 0x1003) {
             world_thread_exit_current();
         }
     } else {

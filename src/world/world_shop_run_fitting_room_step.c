@@ -3,26 +3,18 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* 0x801cd72a and 0x801cd72c are separately catalogued halfwords inside the
- * menu selection results. The target holds a base register for the first
- * (two `lh 0(s0)` reads) and addresses the second absolutely, which is the
- * pointer-local-plus-absolute split src/world/world_formation_item_menu.c
- * already uses on this same pair. */
-
-/* Fitting-room menu step: on entry clear the trial equipment and its cost;
- * then either browse the formation (confirm opens the fitting menu, cancel
- * returns to shop step 0xC) or run the fitting menu thread and dispatch its
- * selection to the next shop step. */
+/* Shop step FITTING_ROOM. On entry (after any button) it clears the fitting room: no tried-on
+ * item, no kept item, a cost of 0. Then the unit grid: Circle or Triangle picks a unit and opens the
+ * fitting menu, X goes to the checkout (FITTING_ROOM_CHECKOUT). The fitting menu's rows go to Try it
+ * on (FITTING_ROOM_EQUIP), Best fit, Quit fitting (FITTING_ROOM_REMOVE), Sell (then Sell equip or
+ * Stock) and Fitting over (the checkout); cancel returns to the unit grid. The cost window shows while
+ * a unit is chosen. */
 void world_shop_run_fitting_room_step(void) {
     s32 busy;
-    s32 chosen;
-    /* Pin: holds the 4 in $v0 ahead of the flag stores; unpinned, GCC loads it after them. */
-    register s32 exit_choice __asm__("$2");
-    s16* selection;
 
     if (g_world_shop_fitting_room_initialized == 0) {
         if (g_world_input_newly_pressed == 0) {
-            world_shop_run_obtain_gil_menu();
+            world_shop_run_gil_menu_script();
             return;
         }
         world_formation_init_cursor_and_scroll_state(0);
@@ -30,72 +22,71 @@ void world_shop_run_fitting_room_step(void) {
         world_shop_add_fitting_room_cost(-world_shop_add_fitting_room_cost(0));
         g_world_shop_fitting_room_unit_chosen = 0;
         g_world_shop_cost_window_visible = 0;
-        world_thread_set_parameters(2, 0x19, -1, 0);
+        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
         g_world_shop_fitting_room_initialized = 1;
         return;
     }
     if (g_world_shop_fitting_room_unit_chosen == 0) {
         g_world_shop_background_visible = 0;
         if (g_world_formation_unit_banner_enabled != 0) {
-            g_world_menu_description_text_id = (g_world_formation_scroll_enabled != 0) ? 0x20001 : 0x20000;
+            g_world_menu_description_text_id = (g_world_formation_unit_banner_at_bottom != 0)
+                ? MENU_GRID_HELP_BANNER_BOTTOM
+                : MENU_GRID_HELP_BANNER_TOP;
         } else {
             g_world_menu_description_text_id = 0;
         }
         busy = world_input_get_lockout_timer();
-        busy += world_formation_can_scroll_slots_back();
+        busy += world_formation_is_unit_list_scroll_needed();
         if ((g_world_input_primary_repeat & PSX_PAD_CROSS) && busy == 0) {
             g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
             g_world_formation_unit_banner_enabled = 0;
-            g_world_shop_menu_step = 0xC;
+            g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM_CHECKOUT;
         } else if ((g_world_input_primary_repeat & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE)) && busy == 0) {
             g_world_formation_unit_cycle_mode = 2;
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
             g_world_shop_fitting_room_unit_chosen = 1;
             g_world_formation_unit_browse_enabled = 1;
-            g_world_formation_scroll_enabled = 0;
+            g_world_formation_unit_banner_at_bottom = 0;
             g_world_shop_cost_window_visible = 1;
-            g_world_shop_fitting_room_menu_thread_data[0].cursor = 0;
-            g_world_shop_fitting_room_menu_thread_data[1].cursor = 0;
-            world_gfx_clear_sprite_slots();
+            g_world_shop_fitting_room_menu_thread_data[0].selected_index = 0;
+            g_world_shop_fitting_room_menu_thread_data[1].selected_index = 0;
+            world_menu_clear_selection_records();
         } else {
-            world_formation_update_and_draw_unit_grid(1, 1, 0, (s16)g_world_input_secondary_repeat,
-                *(s16*)&g_world_thread_task_active, world_shop_fitting_room_get_unit_marker, 0);
+            world_formation_update_and_draw_unit_grid(1, 1, 0, g_world_input_secondary_repeat,
+                g_world_menu_input_lock_mode, world_shop_fitting_room_get_unit_marker, 0);
         }
     } else {
         g_world_shop_background_visible = 1;
         g_world_menu_description_text_id = 0;
-        if (world_menu_run_thread(6, g_world_shop_fitting_room_menu_thread_data) == 0) {
-            selection = &g_world_menu_selection_results[1];
-            if (*selection == 0) {
-                g_world_shop_menu_step = 7;
-            } else if (*selection == 1) {
-                g_world_shop_menu_step = 8;
-            } else if (*selection == 2) {
-                g_world_shop_menu_step = 9;
-            } else if (*selection == 3) {
+        if (world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_shop_fitting_room_menu_thread_data) == 0) {
+            if (g_world_menu_selection_results[1] == 0) {
+                g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM_EQUIP;
+            } else if (g_world_menu_selection_results[1] == 1) {
+                g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM_BEST_FIT;
+            } else if (g_world_menu_selection_results[1] == 2) {
+                g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM_REMOVE;
+            } else if (g_world_menu_selection_results[1] == 3) {
                 if (g_world_menu_selection_results[2] == 0) {
-                    g_world_shop_menu_step = 0xA;
+                    g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM_SELL_EQUIPPED;
                 } else {
-                    g_world_shop_menu_step = 0xB;
+                    g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM_SELL;
                 }
             } else {
                 g_world_shop_fitting_room_unit_chosen = 0;
                 world_formation_init_selection_cursor(g_world_formation_selected_unit_index);
-                chosen = *selection;
-                exit_choice = 4;
                 g_world_formation_unit_cycle_mode = 0;
                 g_world_formation_unit_browse_enabled = 0;
                 g_world_shop_cost_window_visible = 0;
-                if (chosen == exit_choice) {
+                if (g_world_menu_selection_results[1] == 4) {
                     g_world_formation_unit_banner_enabled = 0;
-                    g_world_shop_menu_step = 0xC;
+                    g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM_CHECKOUT;
                 }
             }
-            world_menu_set_cursor_position(3, 0);
-            world_menu_set_cursor_position(2, 0);
+            world_menu_set_cursor_position(WORLD_MENU_CURSOR_REMOVE_SLOT, 0);
+            world_menu_set_cursor_position(WORLD_MENU_CURSOR_EQUIP_SLOT, 0);
         }
     }
     if (g_world_shop_cost_window_visible != 0) {
-        world_shop_install_callbacks_and_run();
+        world_shop_run_fitting_cost_menu_script();
     }
 }

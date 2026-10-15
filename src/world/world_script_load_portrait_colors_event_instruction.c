@@ -2,10 +2,9 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Loads the 0x2000-byte portrait colour record (sector 0x164b + 4 * index) on
- * the main thread, yielding until the request is queued and again until the
- * read completes, then uploads the eight 8x0x30 palette columns and the
- * trailing image half to VRAM. */
+/* WORLD's copy of battle_script_load_portrait_colors_event_instruction (PortraitCol): read one
+ * four-sector block of EVTFACE.BIN on the main stack, upload its eight pixel columns and its palette to
+ * VRAM, and free the buffer. */
 void world_script_load_portrait_colors_event_instruction(s32 index) {
     RECT rect;
     u8* buffer;
@@ -13,17 +12,17 @@ void world_script_load_portrait_colors_event_instruction(s32 index) {
     u8* upper_half;
     s32 i;
 
-    buffer = world_menu_alloc_ui_buffer(0x2000);
+    buffer = world_menu_alloc_memory(0x2000);
     do {
         world_thread_yield();
-        g_world_thread_inner_subroutine_callback = (void (*)(void))main_file_call_build_header;
-    } while (world_thread_call_on_main_stack(index * 4 + 0x164B, 0x2000, buffer) != 0);
+        g_world_thread_call_target = (void (*)(void))main_file_request_read_bytes;
+    } while (world_thread_call_on_main_stack(index * 4 + DISC_SECTOR_EVENT_EVTFACE_BIN, 0x2000, buffer) != 0);
     do {
         world_thread_yield();
-        g_world_thread_inner_subroutine_callback = (void (*)(void))main_file_is_still_loading;
+        g_world_thread_call_target = (void (*)(void))main_file_is_still_loading;
     } while (world_thread_call_on_main_stack() != 0);
     upper_half = buffer + 0x1800;
-    world_script_copy_bytes(&rect, &g_world_menu_portrait_pixel_rect, 8);
+    world_util_copy_bytes(&rect, &g_world_menu_portrait_pixel_rect, 8);
     i = 0;
     source = buffer;
     rect.w = 8;

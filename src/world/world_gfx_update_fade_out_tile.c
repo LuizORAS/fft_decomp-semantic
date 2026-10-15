@@ -2,10 +2,9 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Target 0x8012d5bc; sibling of world_gfx_update_fade_in_tile. Steps the
- * subtractive fade level up (the screen darkens) and draws the full-screen
- * fade tile; returns 1 while the fade is still running, 0 once done or when
- * fading is suppressed. */
+/* Step the subtractive fade level up (the screen darkens) and draw the full-screen fade tile, as
+ * world_gfx_update_fade_in_tile does the other way; return 1 while the fade is still running, 0 once done
+ * or while fading is disabled. */
 s32 world_gfx_update_fade_out_tile(void) {
     s32 running = 1;
     u8 level;
@@ -22,13 +21,13 @@ s32 world_gfx_update_fade_out_tile(void) {
             g_world_gfx_fade_increasing = 0;
             g_world_gfx_fade_intensity = 0xFF;
         }
-        world_gfx_add_draw_mode_primitive(0, 0, GetTPage(0, 2, 0x100, 0) & 0xFFFF, 0, g_world_ot_length - 2);
+        world_gfx_enqueue_draw_mode(0, 0, GetTPage(0, 2, 0x100, 0) & 0xFFFF, 0, g_world_ot_length - 2);
         rgb = &g_world_fade_tile_color.r;
         level = g_world_gfx_fade_intensity;
         g_world_fade_tile_color.b = level;
         g_world_fade_tile_color.g = level;
         *rgb = level;
-        world_gfx_append_tile_to_otag(&g_world_gfx_fade_tile_rect, rgb, 1, g_world_ot_length - 1);
+        world_gfx_enqueue_tile(&g_world_gfx_fade_tile_rect, rgb, 1, g_world_ot_length - 1);
     }
     return running;
 }

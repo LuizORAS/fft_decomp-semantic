@@ -1,7 +1,8 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001d264–0x8001d288: INTPL emits RGB2 including input code effects. */
+/* Fade the vector `input`, taken as a colour, towards the far colour by `depth` (INTPL) into `output`. No
+ * code refers to it. */
 void Intpl(VECTOR* input, s32 depth, CVECTOR* output) {
     PSYQ_GTE_INTPLC(input, depth, output);
 }

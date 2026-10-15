@@ -3,10 +3,10 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Sprite frame table 4 bytes into g_battle_effect_trap_frame_data
+/* Sprite frame table 4 bytes into g_battle_effect_secondary_frames
  * (0x801b7694): the leading halfword is the offset of the per-frame offset
  * array, and each of those offsets reaches a frame record from the same base. */
-#define SPRITE_TABLE (&g_battle_effect_trap_frame_data[4])
+#define SPRITE_TABLE (&g_battle_effect_secondary_frames[4])
 
 /* Queues one effect slot's billboard sprite: projects the slot origin for its
  * ordering-table depth, builds the rotated, camera-scaled 2D matrix from the
@@ -21,9 +21,6 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     battle_effect_quad_prim_t* prim;
     battle_effect_sprite_frame_t* frame;
     u16 offset;
-    u32 color;
-    /* Reusing v1 preserves the packed-color store before the opcode load. */
-    register s32 code __asm__("$3");
     s32 depth;
     s32 sine;
     s32 cosine;
@@ -39,7 +36,7 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     local.vx = slot->x >> 12;
     local.vy = slot->y >> 12;
     local.vz = slot->z >> 12;
-    RotTrans(&local, &position, (long*)&position.pad);
+    RotTrans(&local, &position, &position.pad);
     depth = (position.vz >> 2) - 8;
     if (depth < EFFECT_OT_DEPTH_MIN) {
         depth = EFFECT_OT_DEPTH_MIN;
@@ -63,18 +60,10 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     offset = *(u16*)&SPRITE_TABLE[slot->color.field.frame * 2
         + ((battle_effect_sprite_table_header_t*)SPRITE_TABLE)->offsets_offset];
     prim = &slot->quads[g_battle_effect_buffer_index];
-    color = slot->color.packed;
-    prim->length = 9;
-    prim->color.packed = color;
-    code = 0x2c;
-    prim->color.field.cd = code;
+    prim->color.packed = slot->color.packed;
+    setPolyFT4(prim);
     frame = (battle_effect_sprite_frame_t*)&SPRITE_TABLE[offset];
-    if (frame->flags & 0x200) {
-        prim->color.field.cd = 0x2e;
-    }
-    /* Keeps the &prim->xy0 setup ($a3) after this branch; otherwise GCC hoists
-     * it into the branch delay slot. */
-    __asm__("" : : : "$7");
+    setSemiTrans(prim, frame->flags & EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT);
     ((battle_effect_corner_t*)&g_battle_effect_corner_top_left)->packed = frame->corners[0];
     ((battle_effect_corner_t*)&g_battle_effect_corner_top_right)->packed = frame->corners[1];
     ((battle_effect_corner_t*)&g_battle_effect_corner_bottom_left)->packed = frame->corners[2];
@@ -82,7 +71,7 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     RotTransPers3(&g_battle_effect_corner_top_left, &g_battle_effect_corner_top_right,
         &g_battle_effect_corner_bottom_left, &prim->xy0, &prim->xy1, &prim->xy2, &sxy, &flag);
     RotTransPers(&g_battle_effect_corner_bottom_right, &prim->xy3, &sxy, &flag);
-    prim->tpage = (frame->flags & 0xe0) | 8;
+    prim->tpage = (frame->flags & EFFECT_SPRITE_PART_TPAGE_MODE_MASK) | 8;
     prim->clut = slot->clut;
     corner_u = frame->u;
     prim->u2 = corner_u;

@@ -1,11 +1,12 @@
 #include "fft/battle.h"
 
-/* Moves a unit toward its action target over distortion_timer frames.
+/* Move a unit toward its action target at a constant speed over distortion_timer frames
+ * (distortions 4 and 8, through the battle_move_glide_to_action_target_* wrappers).
  *
- * Phase 0 picks the destination and splits the remaining distance into equal
- * Q12 steps: during an event the unit's own map tile, else the first entry of
- * the target list, else the recorded action target panel.  Phase 1 applies the
- * steps (height only when allow_height_change is set). */
+ * Phase 0 picks the destination and splits the remaining distance into equal Q12 steps: during an
+ * event the unit's own map tile, else the first entry of the target list, else the recorded action
+ * target panel. Phase 1 applies the steps (height only when allow_height_change is set) and ends when
+ * the timer runs out. A unit with no battle record ends at once. */
 void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 allow_height_change) {
     SVECTOR tile_center;
     VECTOR velocity;
@@ -33,10 +34,9 @@ void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 al
                 velocity.vz = (unit->battle_data->action_target_y * 0x1C + 0xE - unit->screen.vz) << 12;
                 tile_center.vx = unit->battle_data->action_target_x * 0x1C + 0xE;
                 tile_center.vz = unit->battle_data->action_target_y * 0x1C + 0xE;
-                /* The target loads the elevation as an s16 halfword; the u8 prototype would load a byte. */
-                velocity.vy = (((s32 (*)(s16*, s16))battle_map_calculate_slope_height)(
-                                   &tile_center.vx, unit->battle_data->action_target_elevation)
-                                  - unit->screen.vy)
+                velocity.vy
+                    = (battle_map_calculate_slope_height(&tile_center.vx, unit->battle_data->action_target_elevation)
+                          - unit->screen.vy)
                     << 12;
             }
             velocity.vx /= timer;
@@ -44,7 +44,7 @@ void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 al
             velocity.vz /= timer;
             unit->distortion_phase++;
         } else {
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
             break;
         }
     case 1:
@@ -55,7 +55,7 @@ void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 al
             }
             unit->real.vz += velocity.vz;
         } else {
-            unit->distortion_animation_id = 0;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
         timer--;
         break;

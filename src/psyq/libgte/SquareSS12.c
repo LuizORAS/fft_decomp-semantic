@@ -1,7 +1,7 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* main 0x8001d418–0x8001d450: short-vector SQR, sf=1. */
+/* Same as SquareSL12 into a 16-bit `output`. No code refers to it. */
 SVECTOR* SquareSS12(SVECTOR* input, SVECTOR* output) {
     SVECTOR* destination = output;
     PSYQ_GTE_SVECTOR_SQUARE(input, destination, PSYQ_GTE_CMD_SQUARE_12);

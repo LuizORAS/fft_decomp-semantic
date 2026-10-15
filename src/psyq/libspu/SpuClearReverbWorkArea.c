@@ -3,16 +3,17 @@
 
 #include "psx/libapi.h"
 
+/* Zero the reverb work area of `mode` (from its start to the end of SPU RAM; for mode 0 the last 0x80 bytes)
+ * by DMA in 1 KB transfers of a zero block, waiting for the DMA event after each, with the transfer callback
+ * held back. Returns 0, or -1 for a mode past 9 or one whose work area overlaps allocated SPU RAM.
+ * SpuSetReverbModeParam calls it for a mode with 0x100 added. */
 s32 SpuClearReverbWorkArea(s32 mode) {
-    /* Volatile keeps the saved callback in the original stack slot. */
+    /* Retail keeps the saved callback in a volatile stack slot and reloads it for each use. */
     volatile SpuTransferCallbackProc callback = 0;
-    extern void (*volatile current_callback)(void) __asm__("_spu_transferCallback");
     u32 remaining;
     u32 address;
     s32 more;
-    /* This view keeps the handle load before the transfer-count update. */
-    extern volatile s32 completion_event __asm__("_spu_EVdma");
-    s32 event;
+    s32 count;
     s32 saved_mode;
     s32 changed_mode = 0;
     if ((u32)mode >= 10 || _SpuIsInAllocateArea_(_spu_rev_startaddr[mode])) {
@@ -30,31 +31,25 @@ s32 SpuClearReverbWorkArea(s32 mode) {
         _spu_transMode = 0;
         changed_mode = 1;
     }
-    {
-        SpuTransferCallbackProc active_callback = current_callback;
-        more = 1;
-        if (active_callback != 0) {
-            callback = current_callback;
-            current_callback = 0;
-        }
+    more = 1;
+    if (_spu_transferCallback != 0) {
+        callback = _spu_transferCallback;
+        _spu_transferCallback = 0;
     }
-    do {
-        mode = remaining;
+    while (more) {
         if (remaining > 1024) {
-            mode = 1024;
+            count = 1024;
         } else {
+            count = remaining;
             more = 0;
         }
         _spu_t(PSYQ_SPU_DMA_SET_ADDRESS, address);
         _spu_t(PSYQ_SPU_DMA_WRITE);
-        _spu_t(PSYQ_SPU_DMA_START_TRANSFER, _spu_zerobuf, mode);
-        event = completion_event;
-        /* The barrier retains the event load before the address/count updates. */
-        __asm__ volatile("");
+        _spu_t(PSYQ_SPU_DMA_START_TRANSFER, _spu_zerobuf, count);
+        WaitEvent(_spu_EVdma);
         remaining -= 1024;
         address += 1024;
-        WaitEvent(event);
-    } while (more);
+    }
     if (changed_mode) {
         _spu_transMode = saved_mode;
     }

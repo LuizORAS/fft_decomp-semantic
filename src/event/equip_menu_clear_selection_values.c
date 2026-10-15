@@ -1,6 +1,7 @@
 #include "fft/event_equip.h"
 #include "psx/types.h"
 
+/* Set the screen's 4 selector values to 0, the first choice (g_equip_menu_selection_values). */
 void equip_menu_clear_selection_values(void) {
     s32 i;
 

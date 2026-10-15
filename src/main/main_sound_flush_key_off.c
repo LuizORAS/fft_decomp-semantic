@@ -1,10 +1,9 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* The shared body in main_sound_key_flush.h. The generated linker script only
- * binds names that appear in this file, so the ones that body uses are listed
- * here: g_main_sound_active_music_list, g_main_mask_exclusion, g_main_sound_music_key_off_voices,
- * g_main_sound_sfx_key_off_voices, SpuSetVoiceRRAttr and SpuSetKey. */
+/* Key off the voices queued in each playing music record and the voices pending release. The body is
+ * main_sound_flush_key_off_inline in fft/main.h, which main_sound_root_counter_2_handler also contains; no
+ * retail code calls this copy. */
 void main_sound_flush_key_off(void) {
     main_sound_flush_key_off_inline();
 }

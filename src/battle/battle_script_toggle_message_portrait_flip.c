@@ -1,12 +1,11 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Event instruction 0x37 (unused by the scenario scripts): toggles bit 0 of
- * portrait_flipped of the menu window buffer whose message_id matches the
- * operand.
+/* FlipMessagePortrait (EVENT_OPCODE_FLIP_MESSAGE_PORTRAIT, unused by the scenario scripts): toggle
+ * bit 0 of portrait_flipped of the menu window buffer whose message_id matches the operand.
  *
- * record_index is never assigned: the target indexes with whatever $s0 holds
- * on entry and tests that one record six times. */
+ * record_index is never assigned: the target indexes with whatever $s0 holds on entry and tests that
+ * one record six times. */
 void battle_script_toggle_message_portrait_flip(u8* parameters) {
     s32 i;
     s32 record_index;

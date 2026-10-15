@@ -4,10 +4,10 @@
  * widens the unit's screen X/Z/Y halfwords into a word triple
  * (used for effect camera targets). */
 void battle_effect_copy_misc_unit_screen_location(u32 misc_id, VECTOR* destination) {
-    battle_screen_coords_t* screen_data;
+    SVECTOR* screen_data;
 
     screen_data = battle_unit_get_screen_data_ptr_by_misc_id(misc_id);
-    destination->vx = screen_data->x;
-    destination->vy = screen_data->z;
-    destination->vz = screen_data->y;
+    destination->vx = screen_data->vx;
+    destination->vy = screen_data->vy;
+    destination->vz = screen_data->vz;
 }

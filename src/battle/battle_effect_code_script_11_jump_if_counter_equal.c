@@ -1,15 +1,15 @@
 #include "fft/battle.h"
 
-/* Jump to the offset in the third halfword when the counter selected by the
- * top two bits of the second byte equals the second halfword; otherwise step
- * over the 6-byte instruction. */
-s32 battle_effect_code_script_11_jump_if_counter_equal(effect_record_t* effect) {
-    s16 pc = effect->pc;
-    u8* instruction = (u8*)(pc + (s32)effect->script);
-    if (effect->counters[instruction[1] >> 6] == *(s16*)(instruction + 2)) {
-        effect->pc = (s16) * (u16*)(instruction + 4);
+/* Opcode 11: jump to the offset in the third halfword when the counter
+ * selected by the top two bits of the second byte equals the second halfword;
+ * otherwise step over the 6-byte instruction. */
+s32 battle_effect_code_script_11_jump_if_counter_equal(effect_record_t* record) {
+    s16 pc = record->pc;
+    u8* instruction = pc + record->script;
+    if (record->counters[instruction[1] >> 6] == *(s16*)(instruction + 2)) {
+        record->pc = *(u16*)(instruction + 4);
     } else {
-        effect->pc = pc + 6;
+        record->pc = pc + 6;
     }
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

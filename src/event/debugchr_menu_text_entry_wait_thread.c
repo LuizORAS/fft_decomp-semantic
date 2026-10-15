@@ -1,0 +1,37 @@
+#include "fft/event_debugchr.h"
+#include "psx/pad.h"
+#include "psx/types.h"
+
+/*
+ * Menu thread body for an entry that shows a message: runs the text
+ * binding's prepare hook, forces a Circle press so the menu action fires at
+ * once, starts the text thread named by the entry's text binding with the entry's
+ * header and text ids and the binding's speaker, then waits for the previous
+ * thread slot and the text thread to end.
+ */
+void debugchr_menu_text_entry_wait_thread(void) {
+    world_menu_entry_t* obj;
+    world_menu_text_binding_t* task;
+    u32* ctl;
+    u16 id;
+    u16 arg;
+    u16 header_id;
+    u16 text_id;
+
+    obj = (world_menu_entry_t*)g_battle_threads[g_battle_thread_current_id].function_parameter_1;
+    obj->text_binding->prepare();
+    ctl = battle_script_get_controller_input_pointer(0);
+    text_id = obj->text_id;
+    task = obj->text_binding;
+    header_id = obj->header_id;
+    g_debugchr_input_controller = ctl;
+    id = task->text_thread_id;
+    arg = task->speaker_id;
+    *ctl = PSX_PAD_CIRCLE;
+    battle_menu_handle_entry_confirm(obj, 0);
+    battle_thread_start(id, battle_text_character_handling_thread);
+    battle_thread_set_four_parameters(id, header_id, text_id, arg, arg);
+    battle_thread_wait_until_inactive(g_battle_thread_current_id - 1);
+    battle_thread_wait_until_inactive(id);
+    battle_thread_exit_current();
+}

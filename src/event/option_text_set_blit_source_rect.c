@@ -1,6 +1,8 @@
 #include "fft/event_option.h"
 #include "psx/types.h"
 
+/* Set the source rectangle of the frame-piece blit (g_option_text_glyph_source): the window frame
+ * threads copy the frame's corners and edges out of the menu glyph image with battle_text_blit_glyph. */
 void option_text_set_blit_source_rect(s16 source_x, s16 source_y, s16 width, s16 height) {
     g_option_text_glyph_source.rect.x = source_x;
     g_option_text_glyph_source.rect.y = source_y;

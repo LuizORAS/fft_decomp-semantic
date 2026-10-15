@@ -11,7 +11,6 @@ void world_menu_build_submenu_text_id_page(void) {
     s32 count;
     s32 i;
     u8* src;
-    s32 unused;
 
     selection = g_world_menu_thread_menu_data[9].selected_index;
     count = g_world_menu_submenu_page_counts[selection];
@@ -26,5 +25,5 @@ void world_menu_build_submenu_text_id_page(void) {
         g_world_menu_submenu_page_layout.columns.row_count = 7;
         g_world_menu_submenu_page_layout.columns.hidden_rows = count - 7;
     }
-    world_menu_scrolling_list_thread();
+    world_menu_run_scrolling_ability_list_thread();
 }

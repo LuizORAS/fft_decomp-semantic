@@ -1,10 +1,14 @@
 #include "psx/types.h"
 
-void main_util_copy_action_data(const u8* source, u8* destination) {
+/* Copy 20 bytes, the size of a command action record
+ * (battle_ai_command_action_t). */
+void main_util_copy_action_data(const void* source, void* destination) {
+    const u8* from = source;
+    u8* to = destination;
     u32 index = 0;
 
     do {
-        *destination++ = *source++;
+        *to++ = *from++;
         index++;
     } while (index < 20);
 }

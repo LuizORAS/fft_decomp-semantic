@@ -1,0 +1,155 @@
+#include "fft/world.h"
+#include "psx/pad.h"
+
+/* Handler of formation menus UNIT_GRID, DISMISS_UNIT and ORDER_UNIT (g_world_formation_menu_handlers).
+ * Entering the grid rebuilds the roster records, clamps and stages the selection (an egg turns
+ * browsing and its panels off). With no input lockout and no scroll due, Triangle or Start opens the
+ * unit menu "Item / Ability / Change Job / Remove Unit / Order Unit" on the side away from the unit and
+ * the banner; a pick moves to that menu (Item, Ability and Change Job through their ENTER states). For
+ * an egg the menu asks "Destroy the monster egg?" and Yes dismisses it. Circle while browsing a unit
+ * opens View Abilities (refused for a monster skillset); X outside browsing and tutorials fades the
+ * screen and the music out, and the finished fade ends the screen. Remove Unit and Order Unit run
+ * world_formation_run_dismiss_unit_menu and world_formation_run_order_unit_menu. */
+void world_formation_run_unit_grid_menu(void) {
+    u32 input;
+
+    input = g_world_input_primary_repeat;
+    if (g_world_formation_current_menu == WORLD_FORMATION_MENU_UNIT_GRID) {
+        if (g_world_formation_main_menu_initialized == 0) {
+            g_world_formation_unit_banner_enabled = g_world_formation_saved_banner_enabled;
+            g_world_formation_dismiss_anim_timer = 0;
+            g_world_formation_unit_count = world_formation_build_record_list(
+                0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
+            if (g_world_formation_selected_unit_index > g_world_formation_unit_count - 1) {
+                g_world_formation_selected_unit_index_latch = g_world_formation_selected_unit_index
+                    = g_world_formation_unit_count - 1;
+            }
+            world_menu_reset_selection_results();
+            g_world_formation_unit_cycle_mode = 0;
+            world_formation_init_selection_cursor(g_world_formation_selected_unit_index);
+            if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG) {
+                g_world_formation_unit_browse_enabled = 0;
+                g_world_numeric_editor_thread_params.style = 0;
+                g_world_equipment_ability_panel_thread_params.style = 0;
+                world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+                world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+                g_world_formation_triangle_menu_open = 0;
+            }
+            g_world_formation_main_menu_initialized = 1;
+        }
+        if (g_world_tutorial_id == 0 && world_gfx_update_fade_out_tile() == 0) {
+            g_world_formation_main_menu_initialized = 0;
+            world_thread_suspend(NATIVE_SCREEN_THREAD_SLOT_MENU);
+            g_world_formation_screen_running = 0;
+            return;
+        }
+        if (g_world_formation_triangle_menu_running != 0) {
+            g_world_menu_description_text_id = 0;
+            if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG) {
+                if ((g_world_formation_triangle_menu_running
+                        = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_formation_egg_triangle_menu))
+                    == 0) {
+                    if (g_world_menu_selection_results[0] == 0) {
+                        world_formation_dismiss_unit(g_world_formation_selected_unit_index);
+                        g_world_formation_main_menu_initialized = 0;
+                        g_world_menu_sound_effect_id = MAIN_SFX_DISMISS;
+                    }
+                    g_world_formation_egg_submenu.selected_index = 0;
+                    world_menu_reset_selection_results();
+                    g_world_equipment_ability_panel_thread_params.style = 0;
+                    g_world_numeric_editor_thread_params.style = 0;
+                    g_world_formation_triangle_menu_open = 0;
+                }
+            } else {
+                if ((g_world_formation_triangle_menu_running
+                        = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_formation_triangle_menu))
+                    == 0) {
+                    if (g_world_menu_selection_results[0] == 0) {
+                        g_world_formation_current_menu = WORLD_FORMATION_MENU_ITEM_ENTER;
+                        world_formation_run_item_menu();
+                    } else if (g_world_menu_selection_results[0] == 1) {
+                        g_world_formation_current_menu = WORLD_FORMATION_MENU_ABILITY_ENTER;
+                        world_formation_run_ability_menu();
+                    } else if (g_world_menu_selection_results[0] == 2) {
+                        g_world_formation_current_menu = WORLD_FORMATION_MENU_JOB_WHEEL_ENTER;
+                        world_formation_run_job_wheel_menu();
+                    } else if (g_world_menu_selection_results[0] == 3) {
+                        g_world_formation_current_menu = WORLD_FORMATION_MENU_DISMISS_UNIT;
+                    } else if (g_world_menu_selection_results[0] == 4) {
+                        g_world_formation_current_menu = WORLD_FORMATION_MENU_ORDER_UNIT;
+                    }
+                    g_world_equipment_ability_panel_thread_params.style = 0;
+                    g_world_numeric_editor_thread_params.style = 0;
+                    if (g_world_menu_selection_results[0] != -1) {
+                        g_world_formation_saved_banner_enabled = g_world_formation_unit_banner_enabled;
+                        if (g_world_formation_current_menu != WORLD_FORMATION_MENU_DISMISS_UNIT) {
+                            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+                            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+                        } else {
+                            g_world_equipment_ability_panel_thread_params.style = 1;
+                            g_world_numeric_editor_thread_params.style = 1;
+                        }
+                        g_world_formation_selection_cursor_ready = 0;
+                        g_world_formation_main_menu_initialized = 0;
+                        return;
+                    }
+                    g_world_formation_triangle_menu_open = 0;
+                }
+            }
+        } else {
+            g_world_menu_description_text_id = -1;
+            if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG) {
+                g_world_menu_description_text_id = 0x101C;
+            } else if (g_world_formation_triangle_menu_open == 0) {
+                if (g_world_formation_unit_browse_enabled != 0) {
+                    g_world_menu_description_text_id = MENU_GRID_HELP_UNIT_BROWSE;
+                } else if (g_world_formation_unit_banner_enabled != 0) {
+                    g_world_menu_description_text_id = g_world_formation_unit_banner_at_bottom != 0
+                        ? MENU_GRID_HELP_BANNER_BOTTOM
+                        : MENU_GRID_HELP_BANNER_TOP;
+                }
+            }
+            if (world_input_get_lockout_timer() == 0 && world_formation_is_unit_list_scroll_needed() == 0) {
+                if ((input & PSX_PAD_TRIANGLE) || (input & PSX_PAD_START)
+                    || g_world_formation_triangle_menu_open != 0) {
+                    if (g_world_formation_unit_banner_at_bottom != 0) {
+                        g_world_formation_triangle_menu.window_y = 0x20;
+                    } else {
+                        g_world_formation_triangle_menu.window_y = 0x78;
+                    }
+                    g_world_formation_triangle_menu.window_x = ((g_world_formation_selected_unit_index % 4) < 2
+                                                                   || g_world_formation_unit_browse_enabled != 0)
+                        ? 0x12C
+                        : 0x8A;
+                    g_world_equipment_ability_panel_thread_params.style = 1;
+                    g_world_numeric_editor_thread_params.style = 1;
+                    g_world_formation_triangle_menu_running = 1;
+                    g_world_formation_triangle_menu_open = 1;
+                    if ((input & PSX_PAD_TRIANGLE) || (input & PSX_PAD_START)) {
+                        g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
+                    }
+                } else if (input & PSX_PAD_CIRCLE) {
+                    if (g_world_formation_unit_browse_enabled != 0) {
+                        if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
+                                ->uses_monster_skillset
+                            != 0) {
+                            g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
+                        } else {
+                            g_world_formation_main_menu_initialized = 0;
+                            g_world_formation_current_menu = WORLD_FORMATION_MENU_VIEW_ABILITIES;
+                        }
+                    }
+                }
+                if (g_world_formation_unit_browse_enabled == 0 && (input & PSX_PAD_CROSS) && g_world_tutorial_id == 0) {
+                    world_gfx_start_increasing_fade();
+                    main_sound_set_current_music_target(0, 0xF0);
+                    g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
+                }
+            }
+        }
+    } else if (g_world_formation_current_menu == WORLD_FORMATION_MENU_ORDER_UNIT) {
+        world_formation_run_order_unit_menu();
+    } else if (g_world_formation_current_menu == WORLD_FORMATION_MENU_DISMISS_UNIT) {
+        world_formation_run_dismiss_unit_menu();
+    }
+}

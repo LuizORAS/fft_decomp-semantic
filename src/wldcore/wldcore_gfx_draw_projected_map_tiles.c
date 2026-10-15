@@ -5,34 +5,28 @@
 /* Needs aspsx 2.21: four sites that reach the typed global array keep their
  * `addiu at,at,<offset>` under 2.21 and lose it under 2.34.
  *
- * Expression form and source order carry most of the schedule: the target
- * masks then shifts, so the mask-first spelling is written directly, and one
- * masked value is defined below its neighbour so it can reach a branch delay
- * slot. The $2/$3/$6 pins close a register rotation among the UV values, and
- * the $4/$5 pins steer the inner call's arguments into their own registers.
- * Two empty asm operands are each needed on their own: the `texture`
- * launder keeps the loaded word whole, and the `poly_a0` launder anchors the
- * inner call's first argument setup at its statement, where the target has it
- * (the $4 pin alone does not).
- *
  * Walks g_wldcore_map_projected_tiles, the table that
  * wldcore_map_project_and_cull_tiles fills: each tile reads its own entry's
  * flags, texture and .screen_x/.screen_y, and the .screen_x of the next
- * entry, so the accesses are written against `index` and `index + 1`. */
+ * entry, so the accesses are written against `index` and `index + 1`.
+ *
+ * The texture word packs u, v, width and height from the top byte down; a
+ * width or height that would run past texel 255 is shortened by one. */
 
 #define WLDCORE_MAP_TILE_ROWS    12
 #define WLDCORE_MAP_TILE_COLUMNS 16
 #define WLDCORE_MAP_ROW_STRIDE   17
-#define WLDCORE_TILE_CULLED_MASK 0x300
-#define WLDCORE_MAP_DOT_CLUT_Y   0x1e0
+#define WLDCORE_MAP_CLUT_Y       0x1e0
 
-void wldcore_gfx_draw_projected_map_tiles(s32 ot) {
+/* Sorts the world map's projected tile grid into `ot` as textured quads.
+ * Each tile spans from its own projected corner to the next column's x and
+ * the next row's y; a tile flagged off screen or empty is skipped. All tiles
+ * share the map CLUT and the current screen tint. */
+void wldcore_gfx_draw_projected_map_tiles(GsOT* ot) {
     POLY_FT4 poly;
     CVECTOR color;
-    s32 ot_s3 = ot;
-    s32 row_s2;
-    s32 column_s1;
-    register s32 store_tmp __asm__("$2");
+    s32 row;
+    s32 column;
     s32 index;
 
     SetPolyFT4(&poly);
@@ -43,69 +37,45 @@ void wldcore_gfx_draw_projected_map_tiles(s32 ot) {
     poly.r0 = color.r;
     poly.g0 = color.g;
     poly.b0 = color.b;
-    poly.clut = GetClut(0, WLDCORE_MAP_DOT_CLUT_Y);
+    poly.clut = GetClut(0, WLDCORE_MAP_CLUT_Y);
 
-    for (row_s2 = 0; row_s2 < WLDCORE_MAP_TILE_ROWS; row_s2++) {
-        index = row_s2 * WLDCORE_MAP_ROW_STRIDE;
+    for (row = 0; row < WLDCORE_MAP_TILE_ROWS; row++) {
+        index = row * WLDCORE_MAP_ROW_STRIDE;
 
-        poly.y1 = g_wldcore_map_projected_tiles[index].screen_y;
-        poly.y0 = poly.y1;
-        poly.y3 = g_wldcore_map_projected_tiles[index + WLDCORE_MAP_ROW_STRIDE].screen_y;
-        poly.y2 = poly.y3;
+        poly.y0 = poly.y1 = g_wldcore_map_projected_tiles[index].screen_y;
+        poly.y2 = poly.y3 = g_wldcore_map_projected_tiles[index + WLDCORE_MAP_ROW_STRIDE].screen_y;
 
-        for (column_s1 = 0; column_s1 < WLDCORE_MAP_TILE_COLUMNS; column_s1++, index++) {
+        for (column = 0; column < WLDCORE_MAP_TILE_COLUMNS; column++, index++) {
             s32 flags = g_wldcore_map_projected_tiles[index].flags;
             u32 texture;
-            s32 u0;
-            s32 u1;
-            s32 v0;
-            s32 v1;
-            register s32 edge_u __asm__("$3");
-            register s32 edge_v __asm__("$6");
-            register s32 ot_a1 __asm__("$5");
-            register POLY_FT4* poly_a0 __asm__("$4");
+            s32 u;
+            s32 v;
+            s32 w;
+            s32 h;
 
-            if (flags & WLDCORE_TILE_CULLED_MASK) {
+            if (flags & (WLDCORE_MAP_TILE_OFF_SCREEN | WLDCORE_MAP_TILE_EMPTY)) {
                 continue;
             }
-            poly.tpage = flags & 0xff;
-            poly.x2 = g_wldcore_map_projected_tiles[index].screen_x;
-            poly.x0 = poly.x2;
-            poly.x3 = g_wldcore_map_projected_tiles[index + 1].screen_x;
-            poly.x1 = poly.x3;
+            poly.tpage = flags & WLDCORE_MAP_TILE_TPAGE_MASK;
+            poly.x0 = poly.x2 = g_wldcore_map_projected_tiles[index].screen_x;
+            poly.x1 = poly.x3 = g_wldcore_map_projected_tiles[index + 1].screen_x;
 
             texture = g_wldcore_map_projected_tiles[index].texture;
-            /* Emits nothing; the target masks the loaded word, and without
-             * this the byte fields narrow into separate lbu loads. */
-            __asm__("" : "=r"(texture) : "0"(texture));
-            u1 = (texture & 0xff00) >> 8;
-            v1 = texture >> 24;
-            v0 = (texture >> 16) & 0xff;
-            if (v1 + u1 >= 0x100) {
-                u1--;
+            u = (texture & 0xff000000) >> 24;
+            v = (texture & 0x00ff0000) >> 16;
+            w = (texture & 0x0000ff00) >> 8;
+            if (u + w >= 0x100) {
+                w--;
             }
-            edge_u = v1 + u1;
-            u0 = texture & 0xff;
-            if (v0 + u0 >= 0x100) {
-                u0--;
+            h = texture & 0x000000ff;
+            if (v + h >= 0x100) {
+                h--;
             }
-            edge_v = v0 + u0;
-            poly_a0 = &poly;
-            /* Emits nothing; keeps `addiu a0,sp,0x10` here, ahead of the UV
-             * stores, instead of next to the call. */
-            __asm__("" : "=r"(poly_a0) : "0"(poly_a0));
-            ot_a1 = ot_s3;
-            store_tmp = v1;
-            poly.u2 = store_tmp;
-            poly.u0 = store_tmp;
-            poly.v3 = edge_v;
-            poly.v2 = edge_v;
-            store_tmp = v0;
-            poly.v1 = store_tmp;
-            poly.v0 = store_tmp;
-            poly.u3 = edge_u;
-            poly.u1 = edge_u;
-            world_gs_sortpoly(poly_a0, ot_a1, 2, v1);
+            poly.u0 = poly.u2 = u;
+            poly.v0 = poly.v1 = v;
+            poly.u1 = poly.u3 = u + w;
+            poly.v2 = poly.v3 = v + h;
+            GsSortPoly(&poly, ot, 2);
         }
     }
 }

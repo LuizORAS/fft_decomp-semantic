@@ -8,7 +8,7 @@
 
 /* Measure a WORLD text entry in pixels: the widest line and the line count.
  *
- * Pixel-width sibling of world_measure_text. Spaces (0xFA) are 4 pixels,
+ * Pixel-width sibling of world_text_measure. Spaces (0xFA) are 4 pixels,
  * substituted digits 6, and other glyphs come from the per-page width table,
  * where a 0xDx prefix byte selects the page for the following glyph. Each
  * line's width is also recorded in g_world_text_line_widths. */
@@ -16,7 +16,7 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
     party_data_t* party;
     u8* cursor;
     s32 i;
-    u8* fill = g_world_text_player_name_buffer;
+    u8* fill = g_world_text_player_name;
     u8 terminator;
     world_text_backreference_state_t* state;
 
@@ -27,7 +27,7 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
         fill[i] = terminator;
     }
     for (i = 0; i < 16; i++) {
-        g_world_text_player_name_buffer[i] = party->name[i];
+        g_world_text_player_name[i] = party->name[i];
     }
     TEXT_STATE->return_cursor = (u8*)-1;
     TEXT_STATE->value_cursor = g_world_text_substitution_values;
@@ -82,24 +82,25 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
                 state->column += state->pending_width * 6;
                 state->pending_width = 0xFFFF;
             }
-        } else if ((u32)(state->command - TEXT_SET_GLYPH_COLOR) < 2
-            || (u32)(state->command - TEXT_SET_VARIABLE_BASE) < 2 || state->command == TEXT_SET_PORTRAIT) {
+        } else if (state->command == TEXT_SET_GLYPH_DELAY || state->command == TEXT_SET_PALETTE
+            || state->command == TEXT_SET_VARIABLE_BASE || state->command == TEXT_STORE_VARIABLE
+            || state->command == TEXT_SET_PORTRAIT) {
             cursor = world_text_advance_cursor_with_backreferences(
                 state, world_text_advance_cursor_with_backreferences(state, cursor));
             continue;
         }
-        state->value = world_text_adjust_value_for_event_code(state->command, *state->value_cursor);
+        state->value = world_text_resolve_format_string_id(state->command, *state->value_cursor);
         if (state->value != -1) {
             state->return_cursor = cursor + 1;
             if (state->command == TEXT_FORMAT_RAMZA_NAME) {
-                cursor = g_world_text_player_name_buffer;
+                cursor = g_world_text_player_name;
             } else {
                 cursor = world_text_find_entry(state->value);
             }
             state->value_cursor++;
             continue;
         }
-        if ((state->command & 0xF0) == 0xF0 && (state->command & 0xF) < 4) {
+        if ((state->command & 0xF0) == TEXT_BACKREFERENCE_PREFIX_FIRST && (state->command & 0xF) < 4) {
             state->return_cursor = cursor + 3;
             state->scratch = (cursor[0] & 3) * 8;
             state->remaining_bytes = cursor[1] >> 5;
@@ -109,14 +110,15 @@ void world_text_measure_pixels(s16* width, s16* rows, const u8* text) {
             cursor -= state->scratch;
             continue;
         }
-        if ((state->command & 0xF0) >= 0xD0) {
-            if ((state->command & 0xF0) == 0xD0) {
+        if ((state->command & 0xF0) >= TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
+            if ((state->command & 0xF0) == TEXT_EXTENDED_GLYPH_PREFIX_FIRST) {
                 state->glyph_page = state->command;
             } else {
                 state->glyph_page = 0;
             }
         } else {
-            state->column += g_world_text_glyph_widths[(state->glyph_page & 0xF) * 0xD0 + state->command];
+            state->column
+                += g_world_text_glyph_widths[(state->glyph_page & 0xF) * TEXT_GLYPHS_PER_PREFIX + state->command];
             state->glyph_page = 0;
         }
         cursor = world_text_advance_cursor_with_backreferences(state, cursor);

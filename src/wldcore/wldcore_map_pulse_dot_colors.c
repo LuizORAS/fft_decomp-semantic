@@ -1,10 +1,15 @@
-/* The 0x40 compare limit reuses the dead `flags` local. With its own `limit`
- * variable the allocator swaps the g_wldcore_map_dot_pulse_direction snapshot ($a0 in the target) and
- * the limit ($v1); reusing the function-scope allocno reproduces the target
- * pair. */
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Pulse the visible location dots once a frame: a phase runs from 0 to 64 and back (held while
+ * MAIN_SYSTEM_FLAG_FREEZE_ANIMATION is set); the blue and green dots take brightness 0x60 + 2 * phase
+ * and the red ones 0xE0 - 2 * phase, so the two kinds pulse in opposition. Nothing while
+ * MAIN_SYSTEM_FLAG_HIDE_DISPLAY_OBJECTS is set.
+ *
+ * The 0x40 compare limit reuses the dead `flags` local. With its own `limit`
+ * variable the allocator swaps the g_wldcore_map_dot_pulse_direction snapshot ($a0 in the target) and
+ * the limit ($v1); reusing the function-scope allocno reproduces the target
+ * pair. */
 void wldcore_map_pulse_dot_colors(void) {
     s32 flags;
     s32 i;
@@ -16,10 +21,10 @@ void wldcore_map_pulse_dot_colors(void) {
     u8* color;
 
     flags = g_main_system_flags;
-    if (flags & 0x400) {
+    if (flags & MAIN_SYSTEM_FLAG_HIDE_DISPLAY_OBJECTS) {
         return;
     }
-    if (!(flags & 0x8000000)) {
+    if (!(flags & MAIN_SYSTEM_FLAG_FREEZE_ANIMATION)) {
         state = g_wldcore_map_dot_pulse_direction;
         flags = 0x40;
         if (state == 0) {
@@ -42,7 +47,7 @@ void wldcore_map_pulse_dot_colors(void) {
     bright = phase + 0x60;
     dark = -0x20 - phase;
     for (i = 0; i < g_wldcore_map_dot_count; i++) {
-        if (!(g_wldcore_map_dots[i].flags & 0x10)) {
+        if (!(g_wldcore_map_dots[i].flags & WLDCORE_DISPLAY_OBJECT_HIDDEN)) {
             color = g_wldcore_map_dots[i].rgb;
             if (g_wldcore_map_dots[i].palette != 0) {
                 color[0] = bright;

@@ -1,7 +1,7 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-/* Stack view of bunit_oriented_quad_t whose clut/tpage slots receive the
+/* Stack view of world_oriented_quad_t whose clut/tpage slots receive the
  * sprite query's palette and spritesheet IDs directly; the query's last two
  * halfwords extend it to 0x18 bytes. */
 typedef struct {
@@ -16,17 +16,24 @@ typedef struct {
     battle_unit_sprite_query_t query; /* 0x10 */
 } bunit_sprite_quad_t;
 
-/* One SHP frame cell: signed pixel offset, then a 10-bit 8x8 cell index (32
- * cells per row) and a 4-bit size class indexing g_bunit_sprite_cell_sizes. */
+/* battle_gfx_source_part_t with its attributes as bit-fields: the part's
+ * place, the 8x8 tile its picture starts at (32 tiles per row) and the size
+ * that indexes g_bunit_sprite_cell_sizes, this overlay's copy of
+ * g_battle_gfx_part_sizes in pixels. The flip bits are not read: the facing
+ * quadrant alone mirrors the sprite. */
 typedef struct {
-    s8 dx;
-    s8 dy;
-    u16 cell : 10;
+    s8 x_shift;
+    s8 y_shift;
+    u16 tile : 10;
     u16 size : 4;
-    u16 unk_2_14 : 2;
+    u16 flip : 2;
 } bunit_sprite_cell_t;
 
 /* Draw a unit's current SHP frame at (x, y), then its two name-plate quads.
+ *
+ * The frame's first byte is taken whole as the part count minus one, where
+ * BATTLE keeps only its low three bits; no unit frame on the disc sets the
+ * others.
  *
  * Brightness falls off with distance from the animated focal point; the
  * selected unit's plate also pulses. The target keeps two short-lived values
@@ -42,7 +49,6 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     s32 dx;
     s32 orientation;
     s32 value;
-    s32 pulse;
     s32 size;
 
     i = bunit_gfx_calculate_distance_falloff(x, y, 0xC8, 0x50);
@@ -57,38 +63,38 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
         size = cells[i].size;
         quad.uw = quad.w = g_bunit_sprite_cell_sizes[size][0];
         quad.vh = quad.h = g_bunit_sprite_cell_sizes[size][1];
-        value = battle_unit_get_camera_facing_quadrant_by_battle_id(g_bunit_unit_data[unit]->roster_id);
-        dx = cells[i].dx;
-        orientation = 0;
+        value = battle_unit_get_camera_facing_quadrant_by_battle_id(g_bunit_unit_data[unit]->battle_id);
+        dx = cells[i].x_shift;
+        orientation = TEXTURE_UV_FLIP_NONE;
         if (value >= 2) {
-            orientation = 1;
+            orientation = TEXTURE_UV_FLIP_X;
             dx = -dx - quad.w;
         }
         /* The (s16) keeps the 0x1C offset on dx instead of letting fold
          * reassociate it onto x. */
         quad.x = x + (s16)(dx + 0x1C);
-        quad.y = cells[i].dy + (y + base_y);
-        if (g_bunit_unit_data[unit]->formation_order_key & 0x80) {
+        quad.y = cells[i].y_shift + (y + base_y);
+        if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_RIDER) {
             quad.y -= 8;
         }
-        quad.u = cells[i].cell % 32 * 8;
-        quad.v = cells[i].cell / 32 * 8 + quad.query.graphic_y_offset;
+        quad.u = cells[i].tile % 32 * 8;
+        quad.v = cells[i].tile / 32 * 8 + quad.query.graphic_y_offset;
         value = 7;
-        if (g_bunit_unit_data[unit]->formation_order_key & 0x40) {
+        if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
             value = 8;
             if (i >= 3) {
                 value = 6;
             }
         }
-        bunit_gfx_enqueue_oriented_textured_quad((bunit_oriented_quad_t*)&quad, rgb, orientation, 0, value);
+        bunit_gfx_enqueue_oriented_textured_quad((world_oriented_quad_t*)&quad, rgb, orientation, 0, value);
     }
-    if (g_bunit_unit_data[unit]->formation_order_key & 0x40) {
+    if (g_bunit_unit_data[unit]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) {
         return;
     }
     g_bunit_unit_shadow_sprite.x = x + 0x12;
     g_bunit_unit_shadow_sprite.y = y + base_y - 4;
     g_bunit_unit_shadow_sprite.tpage = GetTPage(0, 2, 0x3C0, 0x100);
-    bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_shadow_sprite, 0, 0, 1, 5);
+    bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_shadow_sprite, 0, TEXTURE_UV_FLIP_NONE, 1, 5);
     g_bunit_unit_dot_sprite.x = x;
     g_bunit_unit_dot_sprite.y = y;
     if (g_bunit_unit_data[unit]->team_kind == 1) {
@@ -98,17 +104,16 @@ void bunit_gfx_draw_unit_sprite_and_name_plate(s16 unit, s32 x, s32 y) {
     }
     g_bunit_unit_dot_sprite.tpage = GetTPage(0, 1, 0x3C0, 0x100);
     if (unit == g_bunit_unit_selected_index) {
-        pulse = g_bunit_unit_dot_glow_timer + g_bunit_unit_dot_glow_direction * 2;
-        g_bunit_unit_dot_glow_timer = pulse;
-        if ((s8)pulse > 0x28) {
+        g_bunit_unit_dot_glow_timer += g_bunit_unit_dot_glow_direction * 2;
+        if (g_bunit_unit_dot_glow_timer > 0x28) {
             g_bunit_unit_dot_glow_direction = -1;
         }
-        if ((s8)pulse < -0x28) {
+        if (g_bunit_unit_dot_glow_timer < -0x28) {
             g_bunit_unit_dot_glow_direction = 1;
         }
-        rgb[0] += pulse;
-        rgb[1] += pulse;
-        rgb[2] += pulse;
+        rgb[0] += g_bunit_unit_dot_glow_timer;
+        rgb[1] += g_bunit_unit_dot_glow_timer;
+        rgb[2] += g_bunit_unit_dot_glow_timer;
     }
-    bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_dot_sprite, rgb, 0, 1, 8);
+    bunit_gfx_enqueue_oriented_textured_quad(&g_bunit_unit_dot_sprite, rgb, TEXTURE_UV_FLIP_NONE, 1, 8);
 }

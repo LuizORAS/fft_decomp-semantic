@@ -1,5 +1,8 @@
 /* LIBGPU 8002400c-8002418c. */
 #include "psx/libgpu.h"
+
+/* Print draw environment `env`: clip, offset, texture window, dithering, drawing to the displayed area and its
+ * texture page. No code refers to it. */
 void DumpDrawEnv(DRAWENV* env) {
     g_psyq_gpu_printf(g_psyq_gpu_draw_clip_format, env->clip.x, env->clip.y, env->clip.w, env->clip.h);
     g_psyq_gpu_printf(g_psyq_gpu_draw_offset_format, env->ofs[0], env->ofs[1]);

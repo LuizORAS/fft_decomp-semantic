@@ -1,6 +1,8 @@
 /* SCUS_942.21 0x8002004c..0x800200d3. */
 #include "psx/libcd.h"
 
+/* Write the CD audio mix (left to left, left to right, right to right, right to left) to the drive's volume
+ * registers and apply it. */
 s32 CD_vol(CdlATV* volume) {
     *g_psyq_cd_index_status_register = 2;
     *g_psyq_cd_parameter_data_register = volume->val0;

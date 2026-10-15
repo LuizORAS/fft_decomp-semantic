@@ -1,11 +1,12 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Primitive tag helpers (clean-room equivalents of the libgpu macros). */
-#define setlen(p, l)  (((P_TAG*)(p))->len = (u8)(l))
-#define setcode(p, c) (((P_TAG*)(p))->code = (u8)(c))
-#define setPolyFT4(p) (setlen(p, 9), setcode(p, 0x2c))
-
+/* Build the "Now Loading" message: seven glyph quads from texture page 0x1f with
+ * the CLUT loaded to VRAM (0x70, 0x1e2), one copy per display buffer, the text
+ * starting at (x + 0xa0, y + 0xc8).
+ *
+ * visible is stored for main_gfx_add_now_loading_to_otag, which blinks the
+ * message, and the blink counter restarts. */
 void main_gfx_build_now_loading(u32 visible, s32 x, s32 y) {
     POLY_FT4* prims = g_main_gfx_now_loading_primitives[0];
     POLY_FT4* poly;

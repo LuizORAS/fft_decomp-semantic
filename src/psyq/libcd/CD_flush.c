@@ -1,6 +1,8 @@
 /* SCUS_942.21 0x800200d4..0x800201b3. */
 #include "psx/libcd.h"
 
+/* Acknowledge every pending drive interrupt, set the sync state to complete and both ready states to
+ * none, and restore the common bus delay. */
 void CD_flush(void) {
     *g_psyq_cd_index_status_register = 1;
     while (*g_psyq_cd_request_interrupt_register & 7) {

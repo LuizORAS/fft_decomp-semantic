@@ -2,6 +2,10 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Fill unit->equipment_stats from the equipped items: the job's class evade, the
+ * accessory's and each shield's physical and magic evade, and each weapon's power
+ * and evade. A slot whose item is not of the expected kind leaves zeros, and a
+ * monster gets only the class evade. */
 void main_unit_set_equipment_stats(battle_stats_t* unit) {
     item_data_t* item;
     shield_data_t* shield;
@@ -9,20 +13,18 @@ void main_unit_set_equipment_stats(battle_stats_t* unit) {
 
     main_util_clear_byte_data(unit->equipment_stats, BATTLE_UNIT_EQUIPMENT_STAT_COUNT);
     unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_CLASS_PHYSICAL_EVADE]
-        = g_job_data_pointer[unit->job_id].class_evade;
+        = g_main_job_data_pointer[unit->job_id].class_evade;
     if (unit->unit_flags & UNIT_FLAG_MONSTER) {
         return;
     }
 
     item = &g_main_item_primary_data[unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY]];
     if (item->type_flags & ITEM_TYPE_FLAG_ACCESSORY) {
-        accessory_data_t* g_main_item_accessory_flags
+        accessory_data_t* accessory
             = &g_main_item_accessory_data[g_main_item_secondary_data_ids[unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY]
                 * sizeof(item_data_t)]];
-        unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_PHYSICAL_EVADE]
-            = g_main_item_accessory_flags->physical_evade;
-        unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_MAGIC_EVADE]
-            = g_main_item_accessory_flags->magic_evade;
+        unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_PHYSICAL_EVADE] = accessory->physical_evade;
+        unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_MAGIC_EVADE] = accessory->magic_evade;
     }
     item = &g_main_item_primary_data[unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD]];
     if (item->type_flags & ITEM_TYPE_FLAG_SHIELD) {

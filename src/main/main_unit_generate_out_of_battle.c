@@ -2,13 +2,16 @@
 #include "fft/world.h"
 #include "psx/libc.h"
 
-/*
- * Fills a fresh party record for a generic male (0), generic female (1),
- * monster (3) or Ramza (anything else, forced to 2).
- */
+/* Fill a fresh party record for a generic male (0), generic female (1), monster (3) or Ramza
+ * (anything else, forced to 2).
+ *
+ * The birthday is a random day 1..365. Brave and Faith are each rolled in 40..70; Ramza gets 70 and
+ * 70. The unit starts as a Squire (Ramza in his Chapter 1 Squire job) at level 1 with 0 EXP, the
+ * generation table's equipment and its base job unlocked; a human gets 100..199 JP and job level 1 in
+ * every job but the one its sex cannot take (Bard, Dancer), and Ramza knows Wish. The name is drawn
+ * until no party member of the same kind has it. */
 void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
-    /* Pin: unpinned, combine turns the text-id addu into an or (disjoint known bits). */
-    register s32 name_flags __asm__("$23");
+    s32 name_flags;
     u32 name_modifier;
     u16 birthday;
     s32 zodiac;
@@ -18,11 +21,11 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
     u8 generic_id;
     main_unit_generation_base_data_t* base;
     main_unit_generation_base_data_t* table;
-    volatile party_data_t* volatile_name_view;
     party_data_t* other;
     s32 found;
     s32 jp;
     u32 hi;
+    u8 name_id_hi;
 
     if (unit_type == MAIN_UNIT_TYPE_MALE) {
         name_flags = TEXT_ID_UNIT_NAME_GENERIC_MALE_BASE;
@@ -43,7 +46,7 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
         party->gender_flags = UNIT_FLAG_MONSTER;
         party->job_id = JOB_ID_SQUIRE;
     } else {
-        name_flags = TEXT_ID_UNIT_NAME_SPECIAL_BASE;
+        name_flags = TEXT_ID_UNIT_NAME_BASE;
         unit_type = MAIN_UNIT_TYPE_RAMZA;
         name_modifier = PARTY_NAME_CLASS_SPECIAL;
         party->sprite_set = CHARACTER_IDENTITY_RAMZA_CHAPTER_1;
@@ -107,11 +110,8 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
     if (unit_type == MAIN_UNIT_TYPE_RAMZA) {
         name_id = 1;
     } else {
-        /* volatile keeps the two byte stores ordered as the target has them
-         * (the scheduler otherwise sinks the low byte past the high byte). */
-        volatile_name_view = party;
-        volatile_name_view->name_id[0] = 0xff;
-        volatile_name_view->name_id[1] = hi;
+        party->name_id[0] = 0xff;
+        party->name_id[1] = hi;
         do {
             found = 1;
             name_id = name_modifier + (rand() * 255) / 0x8000;
@@ -125,12 +125,11 @@ void main_unit_generate_out_of_battle(party_data_t* party, s32 unit_type) {
             }
         } while (found == 0);
     }
-    /* Reuse the earlier arithmetic temporary: a separate single-set value
-     * sinks the shift; reusing hi conflicts with v0 and selects v1. */
-    zodiac = name_id >> PARTY_NAME_CLASS_SHIFT;
+    name_id_hi = name_id >> PARTY_NAME_CLASS_SHIFT;
     party->name_id[0] = name_id;
-    party->name_id[1] = zodiac;
-    main_util_copy_bytes(world_text_find_entry(name_flags + (name_id & 0xff)), party->name, 0x10);
+    party->name_id[1] = name_id_hi;
+    name_flags += name_id & 0xff;
+    main_util_copy_bytes(world_text_find_entry(name_flags), party->name, 0x10);
     party->proposition_status = 0;
     party->egg_color = 0;
     if (unit_type == MAIN_UNIT_TYPE_RAMZA) {
