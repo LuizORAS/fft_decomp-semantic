@@ -81,7 +81,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
                     unit->seq_offset.vz = 0;
                     unit->seq_offset.vy = 0;
                     unit->seq_offset.vx = 0;
-                    battle_gfx_load_trap_and_unit_frame_parts(unit, state, frame, sequence_id);
+                    battle_gfx_load_shp_frame_parts(unit, state, frame, sequence_id);
                 }
                 state->wait = 0;
                 return;
@@ -341,7 +341,7 @@ void battle_gfx_run_unit_seq_script(battle_unit_misc_data_t* unit, battle_unit_a
             } else {
                 pos++;
             }
-            battle_gfx_load_trap_and_unit_frame_parts(unit, state, frame, sequence_id);
+            battle_gfx_load_shp_frame_parts(unit, state, frame, sequence_id);
             state->script_pos = pos;
             state->frame = frame;
             state->sequence_id = sequence_id;

@@ -135,7 +135,7 @@ void battle_gfx_update_and_animate_unit_wep_eff(battle_unit_misc_data_t* unit_da
                                             other->seq_offset.vz = 0;
                                             other->seq_offset.vy = 0;
                                             other->seq_offset.vx = 0;
-                                            battle_gfx_load_trap_and_unit_frame_parts(other,
+                                            battle_gfx_load_shp_frame_parts(other,
                                                 (battle_unit_anim_state_t*)&other->sprite_graphic_trigger,
                                                 other->animation_frame, other->sequence_id);
                                             ok = 1;

@@ -1773,7 +1773,7 @@ typedef union battle_move_destination {
 } battle_move_destination_t;
 
 /* One frame of an SHP file: a 2-byte header followed by 4-byte parts, each a
- * rectangle of the sheet and where it is drawn (battle_gfx_load_trap_and_unit_frame_parts). */
+ * rectangle of the sheet and where it is drawn (battle_gfx_load_shp_frame_parts). */
 typedef struct battle_gfx_source_part {
     s8 x_shift; /* pixels from the sprite's origin to the part's left and top edges */
     s8 y_shift;
@@ -3157,11 +3157,11 @@ typedef struct battle_effect_ring_state {
 } battle_effect_ring_state_t;
 
 /* Zodiac-poof spawn state for the 24-slot particle group 3. */
-typedef struct battle_effect_trap_state_24 {
+typedef struct battle_effect_zodiac_poof_state {
     s32 done;   /* 0x00; reaches 1 when the effect is finished */
     s32 count;  /* 0x04; slots started so far */
     u8 ids[24]; /* 0x08 */
-} battle_effect_trap_state_24_t;
+} battle_effect_zodiac_poof_state_t;
 
 /* Work area at 0x801bade0 shared by the secondary effect handlers; the
  * spell-charge, summon-charge and zodiac-poof handlers each lay it out as
@@ -3169,7 +3169,7 @@ typedef struct battle_effect_trap_state_24 {
 typedef union battle_effect_secondary_state {
     battle_effect_charge_state_t charge;
     battle_effect_ring_state_t summon_ring;
-    battle_effect_trap_state_24_t zodiac_poof;
+    battle_effect_zodiac_poof_state_t zodiac_poof;
 } battle_effect_secondary_state_t;
 
 typedef struct battle_effect_coord_data {
@@ -3328,7 +3328,7 @@ enum {
     BATTLE_EFFECT_MODEL_COMMAND_G4 = 0x39,
 };
 
-/* Index into g_battle_effect_trap_particle_configs: the particle groups of the secondary effect
+/* Index into g_battle_effect_particle_groups: the particle groups of the secondary effect
  * handlers, named after the handler that spawns each. */
 typedef enum battle_effect_particle_group {
     /* battle_effect_weapon_hit_secondary_handler: its first slot set */
@@ -3339,7 +3339,7 @@ typedef enum battle_effect_particle_group {
     BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP = 5,
     BATTLE_EFFECT_PARTICLE_GROUP_FALL_DUST = 6,
     BATTLE_EFFECT_PARTICLE_GROUP_SPLASH = 7,
-    BATTLE_EFFECT_PARTICLE_GROUP_VENOM_TRAP = 8,
+    BATTLE_EFFECT_PARTICLE_GROUP_TRAP = 8,
     BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_B_MISSED = 9, /* the second slot set of a missed hit */
     BATTLE_EFFECT_PARTICLE_GROUP_RED_ORBS = 10,
     BATTLE_EFFECT_PARTICLE_GROUP_EQUIP_BREAK = 11,
@@ -3369,7 +3369,7 @@ typedef enum battle_effect_secondary_animation_id {
     BATTLE_EFFECT_SECONDARY_ANIMATION_ZODIAC_POOF = 0x0b,
     BATTLE_EFFECT_SECONDARY_ANIMATION_DEATH_SMOKE = 0x0c,
     BATTLE_EFFECT_SECONDARY_ANIMATION_LEVEL_UP = 0x0d,
-    BATTLE_EFFECT_SECONDARY_ANIMATION_VENOM_TRAP = 0x0e,
+    BATTLE_EFFECT_SECONDARY_ANIMATION_TRAP = 0x0e,
     BATTLE_EFFECT_SECONDARY_ANIMATION_SPLASH = 0x0f,
     BATTLE_EFFECT_SECONDARY_ANIMATION_THROWN_ITEM = 0x10, /* Item and Throw: the item's graphic or the shuriken model */
     BATTLE_EFFECT_SECONDARY_ANIMATION_RED_ORBS = 0x11,    /* the Charge abilities and Accumulate */
@@ -3381,16 +3381,19 @@ typedef enum battle_effect_secondary_animation_id {
 } battle_effect_secondary_animation_id_e;
 
 /* One particle group of the secondary effects: a 0x2e-byte record of
- * g_battle_effect_trap_particle_configs. Its leading bytes schedule the
+ * g_battle_effect_particle_groups. Its leading bytes schedule the
  * group's effect slots (battle_effect_start_group); the rest is a fixed
  * emitter, from which battle_effect_spawn_particle_motion draws each slot's
- * motion as the effect file emitter does a particle's. */
+ * motion as the effect file emitter does a particle's. The schedule fields
+ * serve the scheduled groups, the ones battle_effect_start_group starts; the
+ * charge, weapon-hit, zodiac poof and death smoke handlers place their slots
+ * themselves. */
 typedef struct battle_effect_emitter_values {
-    u8 trap_animation;    /* 0x00; trap groups: index into g_battle_effect_trap_animation_data */
+    u8 animation_script;  /* 0x00; scheduled groups: index into g_battle_effect_slot_animation_scripts */
     u8 _unused_01;        /* 0x01 */
-    u8 spawn_start_frame; /* 0x02; trap groups */
-    u8 spawn_end_frame;   /* 0x03; trap groups */
-    u8 count;             /* 0x04; trap groups: slots the group owns */
+    u8 spawn_start_frame; /* 0x02; scheduled groups */
+    u8 spawn_end_frame;   /* 0x03; scheduled groups */
+    u8 count;             /* 0x04; scheduled groups: slots the group owns */
     u8 _unused_05;        /* 0x05 */
     u16 anchor_flags;     /* 0x06; effect_emitter_origin_e: CASTER and TARGET are honoured */
     u16 motion_flags;     /* 0x08; effect_emitter_velocity_e */
@@ -3402,7 +3405,7 @@ typedef struct battle_effect_emitter_values {
     s16 weight_max;       /* 0x24 */
     u16 speed_min;        /* 0x26 */
     u16 speed_max;        /* 0x28 */
-    u8 spawns_per_frame;  /* 0x2a; trap groups: slots one frame may start */
+    u8 spawns_per_frame;  /* 0x2a; scheduled groups: slots one frame may start */
     u8 _unused_2b;        /* 0x2b */
     s8 lifetime_min;      /* 0x2c */
     s8 lifetime_max;      /* 0x2d */
@@ -4076,7 +4079,7 @@ typedef char battle_effect_motion_size_must_be_0x34[(sizeof(battle_effect_motion
 /* 0xcc-byte effect slots at 0x801b9278, chained through the leading next/prev
  * byte pair; slot 0 is the null sentinel. g_battle_effect_active_slot_head heads the active chain
  * and g_battle_effect_slot_free_head the free chain. 0x84..0x87 has the battle_effect_sprite_block_t
- * layout (colour plus the frame byte); battle_effect_init_trap_animation resets
+ * layout (colour plus the frame byte); battle_effect_init_slot_animation resets
  * the colour and writes the halfwords at 0x88 and 0x8e. */
 
 typedef struct battle_effect_slot {
@@ -4614,7 +4617,7 @@ extern u8 g_battle_effect_weapon_type_extra_flags[];
 extern u32 g_battle_effect_camera_rotation_mode;
 extern u32 g_battle_effect_camera_position_mode;
 extern u32 g_battle_effect_camera_zoom_mode;
-extern u8 g_battle_effect_trap_frame_data[];
+extern u8 g_battle_effect_secondary_frames[];
 extern u8 g_battle_effect_element_masks[];
 extern s32 g_battle_effect_gravity_scale;
 extern MATRIX g_battle_effect_particle_heading_matrix;
@@ -4642,7 +4645,7 @@ extern VECTOR g_battle_effect_camera_zoom_saved;
 extern s32 D_801B8B18; /* zeroed with the effect camera modes; never read */
 extern s32 D_801B8B1C; /* zeroed with the effect camera modes; never read */
 extern s32 g_battle_effect_trajectory_hit_unit_id;
-extern void* g_battle_effect_trap_frame_data_ptr;
+extern void* g_battle_effect_secondary_frames_ptr;
 extern s32 g_battle_effect_callback_slots[];
 extern u8 g_battle_effect_palette_target_misc_ids[];
 extern SVECTOR g_battle_effect_trajectory_origin;
@@ -4650,12 +4653,13 @@ extern SVECTOR g_battle_effect_trajectory_destination;
 extern s32 g_battle_effect_trajectory_step_count;
 extern u8* g_battle_effect_palette_ptr;
 
-/* Per-group trap emitter records (0x801b8564, stride 0x2e). The secondary-effect
+/* Per-group emitter records (0x801b8564, stride 0x2e). FFHacktics calls this resident data, with the
+ * frames, animation scripts and colours beside it, "TRAP vfx". The secondary-effect
  * handlers spawn while spawn_start_frame <= timer < spawn_end_frame and finish
  * once timer passes spawn_start_frame with no live slots;
  * battle_effect_update_active_slots walks count active slots. The level-up
  * handler seeds group 5's position[1] with -8, then lowers it by 3 per frame. */
-extern battle_effect_emitter_values_t g_battle_effect_trap_particle_configs[17];
+extern battle_effect_emitter_values_t g_battle_effect_particle_groups[17];
 extern s16 g_battle_effect_root_record_index;
 extern battle_effect_resource_t* g_battle_effect_model_data_ptrs[];
 extern battle_file_extent_t g_battle_effect_disc_entries[];
@@ -4756,9 +4760,9 @@ extern s32 D_801B8B98; /* set to 0x80000000 when the arrow arc handler ends earl
  * base plus a byte offset -- and the halfword entries are read through a cast
  * at the use site. Declaring it `u16[]` and casting the symbol to `u8*` for
  * the address instead reserves an unused 8-byte frame in
- * battle_effect_init_trap_animation. */
-extern u8 g_battle_effect_trap_animation_data[];
-extern u8 g_battle_effect_trap_colors[][3];
+ * battle_effect_init_slot_animation. */
+extern u8 g_battle_effect_slot_animation_scripts[];
+extern u8 g_battle_effect_charge_line_colors[][3];
 
 /* CLUT of the zodiac poof's particles, an index in the weapons row, for each
  * sprite palette (the secondary effect's parameter). */
@@ -4825,7 +4829,7 @@ void battle_effect_init_teleport_data(battle_unit_misc_data_t* unit, battle_effe
 s32 battle_effect_init_weapon_hit_secondary(s32 elements, battle_effect_secondary_init_t* source, s32 unused_is_bow);
 void battle_effect_start_action_projectile_secondary(battle_unit_misc_data_t* unit);
 void battle_effect_set_secondary_death_smoke(battle_unit_misc_data_t* unit);
-void battle_effect_set_secondary_venom_trap(battle_unit_misc_data_t* unit);
+void battle_effect_set_secondary_trap(battle_unit_misc_data_t* unit);
 void battle_effect_set_secondary_zodiac_poof(battle_unit_misc_data_t* unit);
 void battle_effect_set_landing_secondary_by_surface_type(battle_unit_misc_data_t* unit);
 s32 battle_effect_start_teleport_arrival(battle_unit_misc_data_t* unit);
@@ -4946,7 +4950,7 @@ s32 battle_effect_get_animation_timing_curve_value(battle_effect_timing_entry_t*
 s32 battle_effect_get_timing_curve_value(battle_effect_timing_entry_t* entry);
 s32 battle_effect_update_file_load(void);
 void battle_effect_init_animation_sequence(effect_list_node_t* state, s32 frame_group, s32 animation_index);
-void battle_effect_init_trap_animation(s32 group, u16 clut, battle_effect_slot_t* slot);
+void battle_effect_init_slot_animation(s32 group, u16 clut, battle_effect_slot_t* slot);
 s32 battle_effect_interpolate_s32_cos(s32 start, s32 end, s32 duration, s32 current);
 u32 battle_effect_ability_has_no_effect(s32 ability_id);
 void battle_effect_render_particle_sprite(effect_list_node_t* particle, s32 red, s32 green, s32 blue);
@@ -6909,7 +6913,7 @@ void battle_gfx_update_float_height_and_status_bubble(battle_unit_misc_data_t* u
 battle_gfx_sprite_display_data_t* battle_gfx_init_status_bubble_sprite_display(s32 unit_index);
 battle_gfx_sprite_display_data_t* battle_gfx_init_weapon_sprite_display(s32 unit_index, s32 display_type);
 
-void battle_gfx_load_trap_and_unit_frame_parts(
+void battle_gfx_load_shp_frame_parts(
     battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, u16 frame, u16 sequence_id);
 
 void battle_gfx_load_unit_frame_parts(battle_unit_misc_data_t* unit, battle_gfx_sprite_display_data_t* display,

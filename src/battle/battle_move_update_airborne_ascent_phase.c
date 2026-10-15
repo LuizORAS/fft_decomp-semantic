@@ -8,7 +8,7 @@ void battle_move_update_airborne_ascent_phase(battle_unit_misc_data_t* unit) {
     battle_unit_misc_data_t* occupant;
     s32 direction;
 
-    battle_gfx_load_trap_and_unit_frame_parts(
+    battle_gfx_load_shp_frame_parts(
         unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, unit->animation_frame, unit->sequence_id);
     direction = battle_move_get_direction(unit);
     if (g_battle_game_state != BATTLE_GAME_STATE_EVENT) {

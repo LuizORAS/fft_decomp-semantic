@@ -73,8 +73,8 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
         }
         if (state->frame < 4) {
             if (state->count_a < 8) {
-                for (i = 0; i
-                    < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_A].spawns_per_frame;
+                for (i = 0;
+                    i < g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_A].spawns_per_frame;
                     i++) {
                     for (j = 0; j < 8; j++) {
                         if (state->ids_a[j] == 0) {
@@ -87,9 +87,8 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
                     }
                     slot = &g_battle_effect_slots[state->ids_a[j]];
                     slot->life = battle_effect_spawn_particle_motion(
-                        &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_A],
-                        &slot->motion);
-                    battle_effect_init_trap_animation(BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_A,
+                        &g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_A], &slot->motion);
+                    battle_effect_init_slot_animation(BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_A,
                         g_battle_effect_current_secondary->parameter + MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 0), slot);
                     state->count_a++;
                     if (state->count_a == 8) {
@@ -98,7 +97,7 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
                 }
             }
             if (state->frame < 4 && state->count_b < 16) {
-                for (i = 0; i < g_battle_effect_trap_particle_configs[group].spawns_per_frame; i++) {
+                for (i = 0; i < g_battle_effect_particle_groups[group].spawns_per_frame; i++) {
                     for (j = 0; j < 16; j++) {
                         if (state->ids_b[j] == 0) {
                             break;
@@ -109,9 +108,9 @@ s32 battle_effect_weapon_hit_secondary_handler(void) {
                         break;
                     }
                     slot = &g_battle_effect_slots[state->ids_b[j]];
-                    slot->life = battle_effect_spawn_particle_motion(
-                        &g_battle_effect_trap_particle_configs[group], &slot->motion);
-                    battle_effect_init_trap_animation(
+                    slot->life
+                        = battle_effect_spawn_particle_motion(&g_battle_effect_particle_groups[group], &slot->motion);
+                    battle_effect_init_slot_animation(
                         BATTLE_EFFECT_PARTICLE_GROUP_WEAPON_HIT_B, MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 10), slot);
                     slot->red = slot->green = slot->blue = 0xff;
                     state->count_b++;

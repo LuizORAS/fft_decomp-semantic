@@ -52,8 +52,8 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
             if (j != 0) {
                 slot = &g_battle_effect_slots[j];
                 slot->life = battle_effect_spawn_particle_motion(
-                    &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SUMMON_CHARGE], &slot->motion);
-                battle_effect_init_trap_animation(
+                    &g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_SUMMON_CHARGE], &slot->motion);
+                battle_effect_init_slot_animation(
                     BATTLE_EFFECT_PARTICLE_GROUP_SUMMON_CHARGE, BATTLE_EFFECT_RING_CLUT, slot);
             }
         }

@@ -444,7 +444,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   keeps it on 1 (loader busy). The next frame allocates again and has its
   second request refused, so the file arrives in the kept block only because
   the heap hands the freed pages back.
-- `battle_effect_set_secondary` (fall dust, splash, level up, venom trap,
+- `battle_effect_set_secondary` (fall dust, splash, level up, trap,
   zodiac poof, death smoke, teleport) builds its init record in a local of
   which `battle_effect_build_secondary_init` sets five fields;
   `battle_effect_init_secondary` copies the rest of the two ten-byte blocks and
@@ -468,7 +468,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `battle_map_set_tile_data_value` retries `battle_map_tile_data_15_stub`,
   which returns 0 at once, up to 1000 times before load exception 0x80.
   `battle_gfx_run_unit_seq_script`, `battle_gfx_run_wep_eff_seq_script` and
-  `battle_gfx_load_trap_and_unit_frame_parts` test sequence and frame pointers
+  `battle_gfx_load_shp_frame_parts` test sequence and frame pointers
   for -1, which the unpackers replace with the start of the data, and the last
   tests a three-bit part count plus one for `> 8`. The weapon interpreter's own
   bounds (`sequence_id > 0x100`, `frame > 0x200`) admit the index one past each

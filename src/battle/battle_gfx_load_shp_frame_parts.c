@@ -12,7 +12,7 @@
  * A 48x48 part from a spritesheet slot ends the frame: it is stored as two
  * 48x24 halves, the upper one flagged to draw nearer the camera. The two
  * Altima sheets keep theirs whole. */
-void battle_gfx_load_trap_and_unit_frame_parts(
+void battle_gfx_load_shp_frame_parts(
     battle_unit_misc_data_t* unit, battle_unit_anim_state_t* state, u16 frame, u16 sequence_id) {
     s32* frame_table;
     battle_gfx_source_frame_t* frame_data;

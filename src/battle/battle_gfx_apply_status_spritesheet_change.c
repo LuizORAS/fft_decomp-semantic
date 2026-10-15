@@ -43,7 +43,7 @@ void battle_gfx_apply_status_spritesheet_change(battle_unit_misc_data_t* unit, s
             unit->spritesheet_id = spritesheet_id;
             battle_gfx_tint_unit_palette_for_weather_and_tile(unit, tile_effect_level, 1);
             battle_unit_set_animation_based_on_status(unit);
-            battle_gfx_load_trap_and_unit_frame_parts(unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger,
+            battle_gfx_load_shp_frame_parts(unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger,
                 unit->animation_frame, unit->sequence_id);
         }
     } else if (unit->spritesheet_id != g_battle_gfx_spritesheet_slots[unit->spritesheet_vram_slot].spritesheet_id) {
@@ -54,7 +54,7 @@ void battle_gfx_apply_status_spritesheet_change(battle_unit_misc_data_t* unit, s
         unit->spritesheet_id = original_id;
         battle_gfx_check_tile_status_palette_mod(unit, tile_effect_level, 1);
         battle_unit_set_animation_based_on_status(unit);
-        battle_gfx_load_trap_and_unit_frame_parts(
+        battle_gfx_load_shp_frame_parts(
             unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, unit->animation_frame, unit->sequence_id);
     }
 }

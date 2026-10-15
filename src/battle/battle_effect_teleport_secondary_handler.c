@@ -42,7 +42,7 @@ s32 battle_effect_teleport_secondary_handler(void) {
         effect->timer = effect->timer + 1;
         if (effect->active_count == 0
             && effect->timer
-                > g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_TELEPORT].spawn_start_frame) {
+                > g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_TELEPORT].spawn_start_frame) {
             effect->finish_timer = finish_timer + 1;
         }
         break;

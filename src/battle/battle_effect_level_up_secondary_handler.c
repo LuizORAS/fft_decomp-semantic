@@ -2,7 +2,7 @@
 
 /*
  * Secondary effect function 0x0d (Level Up) in g_battle_effect_secondary_handlers.
- * It shares the venom trap
+ * It shares the trap
  * handler's shape but seeds group 5's position_y with -8 and lowers it by 3 per
  * executing frame instead of playing a sound. Returns 1 to keep animating.
  */
@@ -22,14 +22,14 @@ s32 battle_effect_level_up_secondary_handler(void) {
         effect->timer = 0;
         effect->finish_timer = 0;
         effect->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
-        g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].position[1] = -8;
+        g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].position[1] = -8;
         result = 1;
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
         battle_effect_start_group(BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP, 11);
         {
             /* Addressing through a pointer keeps the target lui/addiu pair. */
-            s16* rise = &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].position[1];
+            s16* rise = &g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].position[1];
             *rise -= 3;
         }
         /* fallthrough */
@@ -50,7 +50,7 @@ s32 battle_effect_level_up_secondary_handler(void) {
         current->timer = current->timer + 1;
         if (current->active_count == 0
             && current->timer
-                > g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].spawn_start_frame) {
+                > g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].spawn_start_frame) {
             current->finish_timer = finish_timer + 1;
         }
         break;

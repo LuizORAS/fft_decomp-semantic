@@ -113,7 +113,7 @@ s32 battle_move_start_next_post_move_event(void) {
         }
         battle_gfx_prepare_post_action_display(source);
         battle_unit_set_target_animation_from_attack_type(0, source);
-        battle_effect_set_secondary_venom_trap(source);
+        battle_effect_set_secondary_trap(source);
         battle_menu_init_system_function(
             BATTLE_MENU_SYSTEM_COMMAND_TRAP_RESULT, trap, source->battle_data->misc_unit_id, 0, 1);
         battle_ai_record_sprung_trap(casting->map_x, casting->map_z, casting->map_y);

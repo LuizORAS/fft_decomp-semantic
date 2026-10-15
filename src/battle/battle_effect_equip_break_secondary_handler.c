@@ -2,7 +2,7 @@
 
 /*
  * Secondary effect function 0x15 (Equip Break) in g_battle_effect_secondary_handlers.
- * Same shape as the venom trap
+ * Same shape as the trap
  * handler, but its particle group is held in a variable, so its spawn_start_frame lookup
  * is an indexed table read. Returns 1 to keep animating.
  */
@@ -43,8 +43,7 @@ s32 battle_effect_equip_break_secondary_handler(void) {
         finish_timer = current->finish_timer;
         result = finish_timer != 1;
         current->timer = current->timer + 1;
-        if (current->active_count == 0
-            && current->timer > g_battle_effect_trap_particle_configs[group].spawn_start_frame) {
+        if (current->active_count == 0 && current->timer > g_battle_effect_particle_groups[group].spawn_start_frame) {
             current->finish_timer = finish_timer + 1;
         }
         break;

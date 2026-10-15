@@ -3,18 +3,18 @@
 
 /* Eight-byte spawn state of one death smoke (g_battle_effect_death_smoke_states),
  * indexed by battle_effect_secondary_data_t::own_slot_id. It carries the same
- * roles the generic trap spawner keeps in the effect record itself. */
-typedef struct battle_effect_trap_state {
+ * roles the group spawner (battle_effect_start_group) keeps in the effect record itself. */
+typedef struct battle_effect_death_smoke_state {
     s32 count;        /* 0x00; slots started so far */
     u16 finish_timer; /* 0x04; reaches 1 when the effect is finished */
     u8 ids[2];        /* 0x06 */
-} battle_effect_trap_state_t;
+} battle_effect_death_smoke_state_t;
 
-extern battle_effect_trap_state_t g_battle_effect_death_smoke_states[];
+extern battle_effect_death_smoke_state_t g_battle_effect_death_smoke_states[];
 
 enum {
-    BATTLE_EFFECT_TRAP_SLOT_COUNT = 2,
-    BATTLE_EFFECT_TRAP_CLUT = MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 15),
+    BATTLE_EFFECT_DEATH_SMOKE_SLOT_COUNT = 2,
+    BATTLE_EFFECT_DEATH_SMOKE_CLUT = MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 15),
 };
 
 /* Secondary effect function 0x0f (the death smoke, BATTLE_EFFECT_SECONDARY_ANIMATION_DEATH_SMOKE) in
@@ -26,7 +26,7 @@ enum {
  * the caller left in the second argument register. */
 s32 battle_effect_death_smoke_secondary_handler(s32 unused_arg0, s32 passthrough) {
     battle_effect_secondary_data_t* effect;
-    battle_effect_trap_state_t* state;
+    battle_effect_death_smoke_state_t* state;
     s32 unused[6]; /* Reserves the target's 0x58-byte frame. */
     battle_effect_gravity_t gravity;
     s32 result;
@@ -40,7 +40,7 @@ s32 battle_effect_death_smoke_secondary_handler(s32 unused_arg0, s32 passthrough
     switch (effect->phase) {
     case BATTLE_SECONDARY_EFFECT_INITIALIZING: {
         state->count = 0;
-        for (i = 0; i < BATTLE_EFFECT_TRAP_SLOT_COUNT; i++) {
+        for (i = 0; i < BATTLE_EFFECT_DEATH_SMOKE_SLOT_COUNT; i++) {
             state->ids[i] = 0;
         }
         state->finish_timer = 0;
@@ -54,14 +54,13 @@ s32 battle_effect_death_smoke_secondary_handler(s32 unused_arg0, s32 passthrough
         s32 i;
         u8 id;
 
-        if (effect->timer
-                >= g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_SMOKE].spawn_start_frame
+        if (effect->timer >= g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_SMOKE].spawn_start_frame
             && effect->timer
-                < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_SMOKE].spawn_end_frame) {
-            for (spawned = 0; spawned
-                < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_SMOKE].spawns_per_frame;
+                < g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_SMOKE].spawn_end_frame) {
+            for (spawned = 0;
+                spawned < g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_SMOKE].spawns_per_frame;
                 spawned++) {
-                for (i = 0; i < BATTLE_EFFECT_TRAP_SLOT_COUNT; i++) {
+                for (i = 0; i < BATTLE_EFFECT_DEATH_SMOKE_SLOT_COUNT; i++) {
                     if (state->ids[i] == 0) {
                         break;
                     }
@@ -73,11 +72,11 @@ s32 battle_effect_death_smoke_secondary_handler(s32 unused_arg0, s32 passthrough
                 }
                 slot = &g_battle_effect_slots[state->ids[i]];
                 slot->life = battle_effect_spawn_particle_motion(
-                    &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_SMOKE], &slot->motion);
-                battle_effect_init_trap_animation(
-                    BATTLE_EFFECT_PARTICLE_GROUP_DEATH_SMOKE, BATTLE_EFFECT_TRAP_CLUT, slot);
+                    &g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_SMOKE], &slot->motion);
+                battle_effect_init_slot_animation(
+                    BATTLE_EFFECT_PARTICLE_GROUP_DEATH_SMOKE, BATTLE_EFFECT_DEATH_SMOKE_CLUT, slot);
                 state->count++;
-                if (state->count == BATTLE_EFFECT_TRAP_SLOT_COUNT) {
+                if (state->count == BATTLE_EFFECT_DEATH_SMOKE_SLOT_COUNT) {
                     break;
                 }
             }
@@ -95,7 +94,7 @@ s32 battle_effect_death_smoke_secondary_handler(s32 unused_arg0, s32 passthrough
         gravity.y = ONE;
         battle_effect_save_gravity();
         battle_effect_set_gravity(&gravity);
-        for (i = 0; i < BATTLE_EFFECT_TRAP_SLOT_COUNT; i++) {
+        for (i = 0; i < BATTLE_EFFECT_DEATH_SMOKE_SLOT_COUNT; i++) {
             id = state->ids[i];
             if (id != 0 && battle_effect_update_slot(id) == 0) {
                 battle_effect_free_slot(id);
@@ -110,7 +109,7 @@ s32 battle_effect_death_smoke_secondary_handler(s32 unused_arg0, s32 passthrough
         result = state->finish_timer != 1;
         if (state->count == 0
             && current->timer
-                > g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_SMOKE].spawn_start_frame) {
+                > g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_DEATH_SMOKE].spawn_start_frame) {
             state->finish_timer = state->finish_timer + 1;
         }
         break;

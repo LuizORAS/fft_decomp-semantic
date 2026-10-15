@@ -29,7 +29,7 @@ functions:
   - {addr: 0x80068a74, size: 32, name: battle_effect_set_secondary_zodiac_poof, hash: 4bbadd82baf56346}
   - {addr: 0x80068a94, size: 32, name: battle_effect_set_secondary_death_smoke, hash: 74870a14edf727e3}
   - {addr: 0x80068ab4, size: 32, name: battle_effect_set_secondary_level_up, hash: bb3240f9eb96e6da}
-  - {addr: 0x80068ad4, size: 32, name: battle_effect_set_secondary_venom_trap, hash: 2a3a2845d2ed30d7}
+  - {addr: 0x80068ad4, size: 32, name: battle_effect_set_secondary_trap, hash: 2a3a2845d2ed30d7}
   - {addr: 0x80068af4, size: 32, name: battle_effect_set_secondary_splash, hash: 91c6c5ecfc40c189}
   - {addr: 0x80068b14, size: 32, name: battle_effect_set_secondary_fall_dust, hash: febddddbc599c9e3}
   - {addr: 0x80068b34, size: 32, name: battle_effect_set_secondary_teleport, hash: af9f0e47706a7582}
@@ -397,7 +397,7 @@ functions:
   - {addr: 0x80083cd4, size: 316, name: battle_unit_claim_misc_slot, hash: a702e55c7a143b03}
   - {addr: 0x80083e10, size: 264, name: battle_gfx_load_unit_frame_parts, hash: 7c2d24d870985fbc}
   - {addr: 0x80083f18, size: 764, name: battle_gfx_select_unit_shp_frame, hash: 6496d27583c8397e}
-  - {addr: 0x80084214, size: 1180, name: battle_gfx_load_trap_and_unit_frame_parts, hash: 7923ab456bd0ab55}
+  - {addr: 0x80084214, size: 1180, name: battle_gfx_load_shp_frame_parts, hash: 7923ab456bd0ab55}
   - {addr: 0x800846b0, size: 168, name: battle_unit_shift_right_or_left, hash: 95a7753c75b3d0d8}
   - {addr: 0x80084758, size: 24, name: battle_unit_shift_down_or_up, hash: 8f78e07ca80038dd}
   - {addr: 0x80084770, size: 168, name: battle_unit_shift_forward_or_backward, hash: 227b94f478e2ac29}
@@ -1882,7 +1882,7 @@ functions:
   - {addr: 0x801b06d0, size: 328, name: battle_effect_check_direct_trajectory_between_units, hash: 00074ecc7438b34c}
   - {addr: 0x801b0818, size: 632, name: battle_effect_check_direct_trajectory_to_target, hash: ea05f8f36d0b34dd}
   - {addr: 0x801b0a90, size: 504, name: battle_effect_set_arrow_trajectory, hash: cabea7a6753fca8b}
-  - {addr: 0x801b0c88, size: 104, name: battle_effect_init_trap_animation, hash: 1c82ddeba81b4537}
+  - {addr: 0x801b0c88, size: 104, name: battle_effect_init_slot_animation, hash: 1c82ddeba81b4537}
   - {addr: 0x801b0cf0, size: 536, name: battle_effect_start_group, hash: 72df2180b076033d}
   - {addr: 0x801b0f08, size: 228, name: battle_effect_update_active_slots, hash: 8189eac9894daa3c}
   - {addr: 0x801b0fec, size: 8, name: battle_return_zero_801b0fec, hash: 207819bf4ebe3078}
@@ -1898,7 +1898,7 @@ functions:
   - {addr: 0x801b2a88, size: 372, name: battle_effect_splash_secondary_handler, hash: 04cb8d2ab066b35c}
   - {addr: 0x801b2bfc, size: 8, name: battle_noop_801b2bfc, hash: 6d64edf91449c1b1}
   - {addr: 0x801b2c04, size: 8, name: battle_noop_801b2c04, hash: 6d64edf91449c1b1}
-  - {addr: 0x801b2c0c, size: 284, name: battle_effect_venom_trap_secondary_handler, hash: e590accae4f3bb0a}
+  - {addr: 0x801b2c0c, size: 284, name: battle_effect_trap_secondary_handler, hash: e590accae4f3bb0a}
   - {addr: 0x801b2d28, size: 312, name: battle_effect_level_up_secondary_handler, hash: 9c23b956c57776bd}
   - {addr: 0x801b2e60, size: 8, name: battle_noop_801b2e60, hash: 6d64edf91449c1b1}
   - {addr: 0x801b2e68, size: 688, name: battle_effect_death_smoke_secondary_handler, hash: 4dbfac13fe5b16c4}
@@ -2753,16 +2753,16 @@ data:
   - {addr: 0x801b69d0, name: g_battle_effect_camera_position_mode}
   - {addr: 0x801b69d4, name: g_battle_effect_camera_zoom_mode}
   - {addr: 0x801b69d8, name: g_battle_camera_quadrant_block_directions}
-  - {addr: 0x801b7690, name: g_battle_effect_trap_frame_data}
-  - {addr: 0x801b8320, name: g_battle_effect_trap_animation_data}
+  - {addr: 0x801b7690, name: g_battle_effect_secondary_frames}
+  - {addr: 0x801b8320, name: g_battle_effect_slot_animation_scripts}
   - {addr: 0x801b84ac, name: g_battle_effect_secondary_by_charge_animation}
-  - {addr: 0x801b84c0, name: g_battle_effect_trap_colors}
+  - {addr: 0x801b84c0, name: g_battle_effect_charge_line_colors}
   - {addr: 0x801b84dc, name: g_battle_effect_secondary_animations}
   - {addr: 0x801b8530, name: g_battle_effect_ending_secondary_function_id}
   - {addr: 0x801b8534, name: g_battle_effect_model_data_ptrs}
   - {addr: 0x801b8544, name: g_battle_effect_element_masks}
   - {addr: 0x801b8550, name: g_battle_effect_reflect_palette_colors}
-  - {addr: 0x801b8564, name: g_battle_effect_trap_particle_configs}
+  - {addr: 0x801b8564, name: g_battle_effect_particle_groups}
   - {addr: 0x801b8874, name: g_battle_effect_gravity_scale}
   - {addr: 0x801b8878, name: g_battle_effect_gravity_modifier}
   - {addr: 0x801b8880, name: g_battle_effect_charge_line_params}
@@ -2832,7 +2832,7 @@ data:
   - {addr: 0x801b9130, name: g_battle_effect_active_slot_tail}
   - {addr: 0x801b9134, name: g_battle_effect_free_slot_head}
   - {addr: 0x801b9138, name: g_battle_effect_current_slot_id}
-  - {addr: 0x801b913c, name: g_battle_effect_trap_frame_data_ptr}
+  - {addr: 0x801b913c, name: g_battle_effect_secondary_frames_ptr}
   - {addr: 0x801b9140, name: g_battle_effect_work_record_peak}
   - {addr: 0x801b9144, name: g_battle_effect_callback_slots}
   - {addr: 0x801b9158, name: g_battle_effect_available_record_head}

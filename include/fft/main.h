@@ -1826,7 +1826,7 @@ typedef enum main_sfx {
      * stop them with main_sound_stop_sfx_channels when they finish. */
     MAIN_SFX_SPELL_CHARGE = 0x1f,
     MAIN_SFX_SUMMON_CHARGE = 0x21,
-    MAIN_SFX_VENOM_TRAP = 0x22, /* battle_effect_venom_trap_secondary_handler starts */
+    MAIN_SFX_VENOM_TRAP = 0x22, /* battle_effect_trap_secondary_handler starts */
     /* battle_sound_play_landing_sfx_by_surface_type: water surfaces play
      * 0x23, grassland, thicket and rug 0x28, wooden floor, tree and box 0x3a,
      * every other surface 0x29. A step that ends on another unit also plays

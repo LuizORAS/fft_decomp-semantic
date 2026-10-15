@@ -13,7 +13,7 @@ enum {
  */
 s32 battle_effect_zodiac_poof_secondary_handler(void) {
     battle_effect_secondary_data_t* effect;
-    battle_effect_trap_state_24_t* state;
+    battle_effect_zodiac_poof_state_t* state;
     battle_effect_slot_t* slot;
     s32 unused[6]; /* Reserves the target's 0x58-byte frame. */
     battle_effect_gravity_t gravity;
@@ -41,12 +41,11 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
         break;
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
         clut_index = g_battle_effect_zodiac_poof_animations[effect->parameter];
-        if (effect->timer
-                >= g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF].spawn_start_frame
+        if (effect->timer >= g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF].spawn_start_frame
             && effect->timer
-                < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF].spawn_end_frame) {
-            for (spawned = 0; spawned
-                < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF].spawns_per_frame;
+                < g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF].spawn_end_frame) {
+            for (spawned = 0;
+                spawned < g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF].spawns_per_frame;
                 spawned++) {
                 for (i = 0; i < BATTLE_EFFECT_TRAP3_SLOT_COUNT; i++) {
                     if (state->ids[i] == 0) {
@@ -60,8 +59,8 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
                 }
                 slot = &g_battle_effect_slots[state->ids[i]];
                 slot->life = battle_effect_spawn_particle_motion(
-                    &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF], &slot->motion);
-                battle_effect_init_trap_animation(
+                    &g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF], &slot->motion);
+                battle_effect_init_slot_animation(
                     BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF, clut_index + MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 0), slot);
                 state->count++;
                 if (state->count == BATTLE_EFFECT_TRAP3_SLOT_COUNT) {
@@ -98,8 +97,7 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
         done = state->done;
         result = done != 1;
         if (state->count == 0
-            && timer
-                > g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF].spawn_start_frame) {
+            && timer > g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF].spawn_start_frame) {
             state->done = done + 1;
         }
         break;

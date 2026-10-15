@@ -27,7 +27,7 @@ s32 battle_effect_splash_secondary_handler(void) {
     case BATTLE_SECONDARY_EFFECT_EXECUTING:
         tile = battle_map_get_tile_data_ptr_from_misc_screen_coords(
             g_battle_effect_current_secondary->target.fields.target_id);
-        g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPLASH].position[1]
+        g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_SPLASH].position[1]
             = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12)
             - battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->target.fields.target_id)
                   ->vy;
@@ -49,8 +49,7 @@ s32 battle_effect_splash_secondary_handler(void) {
         result = finish_timer != 1;
         effect->timer = effect->timer + 1;
         if (effect->active_count == 0
-            && effect->timer
-                > g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPLASH].spawn_start_frame) {
+            && effect->timer > g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_SPLASH].spawn_start_frame) {
             effect->finish_timer = finish_timer + 1;
         }
         break;

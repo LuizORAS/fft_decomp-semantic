@@ -13,7 +13,7 @@ void battle_move_finish_unit_step_at_tile_edge(battle_unit_misc_data_t* unit) {
     s16 target_z;
     map_tile_t* tile;
 
-    battle_gfx_load_trap_and_unit_frame_parts(
+    battle_gfx_load_shp_frame_parts(
         unit, (battle_unit_anim_state_t*)&unit->sprite_graphic_trigger, unit->animation_frame, unit->sequence_id);
     direction = battle_move_get_direction(unit);
     battle_move_apply_unit_step_velocity(unit);

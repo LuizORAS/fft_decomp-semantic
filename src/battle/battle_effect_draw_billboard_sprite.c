@@ -3,10 +3,10 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Sprite frame table 4 bytes into g_battle_effect_trap_frame_data
+/* Sprite frame table 4 bytes into g_battle_effect_secondary_frames
  * (0x801b7694): the leading halfword is the offset of the per-frame offset
  * array, and each of those offsets reaches a frame record from the same base. */
-#define SPRITE_TABLE (&g_battle_effect_trap_frame_data[4])
+#define SPRITE_TABLE (&g_battle_effect_secondary_frames[4])
 
 /* Queues one effect slot's billboard sprite: projects the slot origin for its
  * ordering-table depth, builds the rotated, camera-scaled 2D matrix from the

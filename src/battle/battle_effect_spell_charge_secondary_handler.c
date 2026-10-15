@@ -98,8 +98,8 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         i = battle_gfx_get_unit_spritesheet_height_by_misc_id(
                 g_battle_effect_current_secondary->caster.fields.caster_id)
             + 8;
-        g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE].position[1]
-            = g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE_13].position[1] = -i;
+        g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE].position[1]
+            = g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE_13].position[1] = -i;
         in.vx = screen->vx;
         in.vz = screen->vz;
         in.vy = screen->vy - i;
@@ -143,8 +143,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
             }
         }
         if (state->count.n.b < 14) {
-            for (i = 0;
-                i < g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE].spawns_per_frame;
+            for (i = 0; i < g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE].spawns_per_frame;
                 i++) {
                 for (j = 0; j < 14; j++) {
                     if (state->ids_b[j] == 0) {
@@ -157,8 +156,8 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                 }
                 slot = &g_battle_effect_slots[state->ids_b[j]];
                 slot->life = battle_effect_spawn_particle_motion(
-                    &g_battle_effect_trap_particle_configs[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE], &slot->motion);
-                battle_effect_init_trap_animation(
+                    &g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE], &slot->motion);
+                battle_effect_init_slot_animation(
                     BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE, MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 15), slot);
                 state->count.n.b++;
                 if (state->count.n.b == 14) {
@@ -186,9 +185,9 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                 state->count.n.b--;
             }
         }
-        red = g_battle_effect_trap_colors[state->colour][0];
-        green = g_battle_effect_trap_colors[state->colour][1];
-        blue = g_battle_effect_trap_colors[state->colour][2];
+        red = g_battle_effect_charge_line_colors[state->colour][0];
+        green = g_battle_effect_charge_line_colors[state->colour][1];
+        blue = g_battle_effect_charge_line_colors[state->colour][2];
         offsets = &g_battle_effect_charge_line_direction_offsets[0].vx;
         offsets_y = &g_battle_effect_charge_line_direction_offsets[0].vy;
         for (i = 0; i < 16; i++) {
