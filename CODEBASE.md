@@ -179,7 +179,9 @@ two of them before the ending.
 - **Other libraries:** WORLD links LIBGS, and OPEN links LIBPRESS for the
   movies.
 
-All of these libraries are reconstructed C, matched like the game code.
+All of these libraries are reconstructed C, matched like the game code; the
+[Sony Libraries](docs/mechanics/Sony%20Libraries.md) page lists what each one
+does for the game.
 
 ## Source layout and names
 
@@ -237,7 +239,8 @@ All of these libraries are reconstructed C, matched like the game code.
   [Sound](docs/mechanics/Sound.md),
   [Ability Effects](docs/mechanics/Ability%20Effects.md),
   [Effect Files](docs/mechanics/Effect%20Files.md),
-  [Sound Driver](docs/mechanics/Sound%20Driver.md) and
+  [Sound Driver](docs/mechanics/Sound%20Driver.md),
+  [Sony Libraries](docs/mechanics/Sony%20Libraries.md) and
   [Engine core](docs/mechanics/Engine%20core.md) so far. The guides walk
   through common changes, such as the
   [Movement rules](docs/guides/Movement%20rules.md),

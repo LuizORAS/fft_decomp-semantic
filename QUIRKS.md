@@ -729,6 +729,9 @@ translation unit. Share their types and constants through headers.
 
 ## Other surprises
 
+- `main_boot_run_startup` installs the empty `main_file_handle_cd_ready_callback` and
+  `main_file_handle_cd_read_callback` as LIBCD callbacks, and `main_file_init_cd`'s `CdInit` replaces
+  them with LIBCD's defaults right after, so they never run.
 - `main_gfx_load_efc_fnt`: patches the low immediate byte of `FntLoad` at `0x80022f5c`, changing its font CLUT placement from `y + 128` to `y + 127`.
 - `StCdInterrupt`: tracks frame numbers through the header's low `u16`, while DMA completion and OPEN retain the full `u32` frame number.
 - `psyq_gte_apply_rotation_ir`: writes saturated IR1–IR3 output words and returns its unchanged third argument.
