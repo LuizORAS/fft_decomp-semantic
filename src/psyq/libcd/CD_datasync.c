@@ -20,6 +20,9 @@ static __inline__ s32 cd_check_timeout(void) {
     }
     return 0;
 }
+
+/* Wait until the CD-ROM DMA channel is idle (0), or check it once (mode 1: 1 while busy), with CD_sync's
+ * timeout (-1). */
 s32 CD_datasync(s32 mode) {
     s32 result;
     cd_set_timeout(g_psyq_cd_data_sync_timeout_name);

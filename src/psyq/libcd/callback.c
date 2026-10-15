@@ -11,6 +11,10 @@ static __inline__ void cd_dispatch_callbacks(void) {
     }
     *g_psyq_cd_index_status_register = bank;
 }
+
+/* The CD-ROM interrupt handler CD_initintr installs: read interrupts (getintr) until none is left,
+ * calling the ready callback for a data interrupt and the sync callback for a command interrupt, then restore
+ * the drive's register bank. */
 void callback(void) {
     cd_dispatch_callbacks();
 }

@@ -3,6 +3,9 @@
 #include "psx/libcd.h"
 #include "psx/libetc.h"
 
+/* Reset the drive: print the address of the interrupt state (a debug line), clear the library's state,
+ * install the interrupt handler, acknowledge pending interrupts, then send Nop (twice with the lid open),
+ * Reset and Demute and wait for completion. Returns 0, or -1 when a command fails. */
 s32 CD_init(void) {
     puts(g_psyq_cd_init_message);
     printf(g_psyq_cd_init_address_format, &g_psyq_cd_init_irq_state_pointer);

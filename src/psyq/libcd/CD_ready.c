@@ -39,6 +39,9 @@ static __inline__ void cd_dispatch_callbacks(void) {
     }
     *g_psyq_cd_index_status_register = bank;
 }
+
+/* Same as CD_sync for the data-ready state; a pending data end (the second ready state) is returned
+ * first. */
 s32 CD_ready(s32 mode, u8* result) {
     s32 event;
     cd_set_timeout(g_psyq_cd_ready_timeout_name);

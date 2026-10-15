@@ -12,6 +12,10 @@ static __inline__ void cd_copy_result(void* destination, void* source, u32 size)
         *output++ = *input++;
 }
 
+/* Read one drive interrupt: its type and up to 8 response bytes, then acknowledge it. The status byte
+ * updates (counting each lid opening); an acknowledgement becomes the command's completion unless the
+ * command waits for a second interrupt; data ready, data end and a disk error set the ready state. Returns
+ * the callbacks to run: 2 sync, 4 ready, 6 both, 1 for an acknowledgement alone, 0 for none. */
 s32 getintr(void) {
     /* Volatile keeps the stack interrupt byte and separate status-mask calculation. */
     volatile u8 interrupt;
