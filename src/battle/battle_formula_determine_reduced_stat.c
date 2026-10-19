@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Power Break and Power Ruin lower the target's PA by X, Mind Break and Mind Ruin its MA, Speed Break

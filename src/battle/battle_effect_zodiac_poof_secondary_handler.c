@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 enum {
@@ -29,17 +31,17 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
     state = &g_battle_effect_secondary_state.zodiac_poof;
     /* Preserve the target's unsigned phase-dispatch comparison. */
     switch (effect->phase) {
-    case BATTLE_SECONDARY_EFFECT_INITIALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_INITIALIZING:
         state->count = 0;
         for (spawned = 0; spawned < BATTLE_EFFECT_TRAP3_SLOT_COUNT; spawned++) {
             state->ids[spawned] = 0;
         }
         state->done = 0;
         g_battle_effect_current_secondary->timer = 0;
-        g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
+        g_battle_effect_current_secondary->phase = BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING;
         result = 1;
         break;
-    case BATTLE_SECONDARY_EFFECT_EXECUTING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING:
         clut_index = g_battle_effect_zodiac_poof_animations[effect->parameter];
         if (effect->timer >= g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_ZODIAC_POOF].spawn_start_frame
             && effect->timer
@@ -69,7 +71,7 @@ s32 battle_effect_zodiac_poof_secondary_handler(void) {
             }
         }
         /* fallthrough */
-    case BATTLE_SECONDARY_EFFECT_FINALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_FINALIZING:
         battle_effect_save_inertia_threshold();
         battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
         gravity.z = 0;

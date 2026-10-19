@@ -1,5 +1,6 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/unit.h"
 
 /* Formula 0x15, Return 2: the magical evade check and hit chance (MA + X with both Faiths, no
  * Strengthen), then the target's CT drops to 0. */

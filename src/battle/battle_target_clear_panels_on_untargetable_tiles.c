@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Clear the range and mark of each untargetable tile's panel, but only on the lower layer: the loop
@@ -11,13 +12,10 @@ void battle_target_clear_panels_on_untargetable_tiles(void) {
     i = 0;
     dst = g_battle_target_panels;
     src = g_battle_map_tile_data;
-    do {
-        if (src->flags.value & MAP_TILE_FLAG_UNTARGETABLE) {
+    for (; i < 256; src++, i++, dst++) {
+        if (src->flags.untargetable) {
             dst->remaining_range = 0;
             dst->mark = 0;
         }
-        src++;
-        i += 1;
-        dst++;
-    } while (i < 0x100);
+    }
 }

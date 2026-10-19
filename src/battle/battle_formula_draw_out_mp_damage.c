@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Formula 0x21, Bizen Boat: the katana break roll (battle_formula_roll_katana_break), then MA * Y as

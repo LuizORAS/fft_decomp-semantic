@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/unit.h"
 #include "fft/world.h"
 
 /* WORLD twin of battle_menu_store_auto_battle_main_target_id. */

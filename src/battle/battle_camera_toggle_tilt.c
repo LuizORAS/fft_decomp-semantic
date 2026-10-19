@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Switch the tilt target for R2 between low (pitch 0x12e) and high (0x1c0), start the move and play its

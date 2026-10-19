@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Tutorial command HIDE_HIGHLIGHT: fade the highlight ring out, its brightness counting down by the
  * VSync mode, and move to the next command when it reaches zero. */

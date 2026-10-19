@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x27, Gil Taking and Shine Lover: the physical evade check and the hit chance Speed + X
  * (battle_formula_calculate_physical_status_accuracy), then Speed * Level gil taken

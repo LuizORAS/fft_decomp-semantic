@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Find the first camera keyframe of the tracks in mask that is still ahead
@@ -10,7 +11,7 @@
  * phase 2 table is relative to the end of that window.
  *
  * The conditional-expression header reads keep the entry block from caching
- * the misc-data pointer. */
+ * the address of g_battle_effect_coord_data. */
 s32 battle_camera_find_active_keyframe(s16 frame, s16 mask, s32* out_index, s32* out_frame) {
     s32 phase1;
     s32 spawn_delay;
@@ -23,7 +24,7 @@ s32 battle_camera_find_active_keyframe(s16 frame, s16 mask, s32* out_index, s32*
 
     phase1 = g_battle_effect_timeline->phase1_duration;
     spawn_delay = g_battle_effect_coord_data.target_count != 0 ? g_battle_effect_timeline->spawn_delay : 0;
-    child_duration = g_battle_effect_coord_data.target_count != 0 ? g_battle_effect_timeline->child_duration : 0;
+    child_duration = g_battle_effect_coord_data.target_count != 0 ? g_battle_effect_timeline->child.duration : 0;
 
     if (frame < phase1) {
         for (i = 0; i <= g_battle_effect_timeline->phase1_camera.last_keyframe_index; i++) {

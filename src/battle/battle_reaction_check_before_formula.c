@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Give the target its reactions that come before the formula, in a primary action: Reflect when it
@@ -30,7 +30,7 @@ void battle_reaction_check_before_formula(void) {
     if (battle_unit_get_action_block(g_battle_action_target) != BATTLE_UNIT_ACTION_BLOCK_NONE) {
         return;
     }
-    reaction_flags = g_battle_action_target->reaction_abilities[3];
+    reaction_flags = g_battle_action_target->ability_flags.reaction[3];
     if (reaction_flags & BATTLE_REACTION_SET_4_BLADE_GRASP) {
         battle_reaction_try_blade_grasp();
         return;

@@ -1,3 +1,8 @@
+#include "fft/gfx.h"
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -10,31 +15,31 @@ void world_menu_icon_clamped_list_thread(void) {
     RECT rect;
     world_menu_icon_record_t records[2];
     world_menu_entry_t* param;
-    void* buffer;
+    u8* buffer;
     s32 i;
     s32 cursor;
     world_menu_icon_record_t* record;
     world_menu_icon_sprites_t* sprites;
 
-    g_world_menu_list_controller_input = world_input_get_menu_controller(0);
-    param = world_thread_get_current_parameter_1();
+    g_world_menu_list_controller_input = input_get_menu_controller(0);
+    param = (world_menu_entry_t*)world_thread_get_current_parameter_1();
     cursor = param->selected_index;
     record = &records[0];
     if (cursor == -1) {
         cursor = 0;
     }
     world_menu_build_icon_record(&rect, param, record);
-    world_util_copy_bytes(&records[1], record, 0x7C);
+    mem_copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
     buffer = world_menu_build_and_upload_window_frame_image(
         param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
-    g_world_menu_text_state.pen.stride = param->inner_width;
+    g_menu_text_state.pen.stride = param->inner_width;
     world_menu_set_text_origin(8, 9);
-    g_world_menu_text_color = 0;
-    world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.pen);
+    g_menu_text_palette_offset = 0;
+    world_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
     LoadImage(&rect, buffer);
     for (i = 0;; i++) {
         record = &records[i & 1];
-        world_thread_yield();
+        thread_yield();
         if (i == 0) {
             world_menu_free_memory(buffer);
         }
@@ -55,11 +60,11 @@ void world_menu_icon_clamped_list_thread(void) {
         sprites = &record->base;
         world_menu_select_icon_cluts(sprites);
         world_menu_update_icon_cursor_sprites(param, &record->base, i, cursor);
-        world_gfx_draw_or_append_gpu_primitive(&sprites->sprites[3].tag);
-        world_gfx_draw_or_append_gpu_primitive(&sprites->sprites[2].tag);
-        world_gfx_draw_or_append_gpu_primitive(&sprites->sprites[1].tag);
-        world_gfx_draw_or_append_gpu_primitive(&sprites->draw_mode);
+        gfx_draw_or_append_gpu_primitive(&sprites->sprites[3].tag);
+        gfx_draw_or_append_gpu_primitive(&sprites->sprites[2].tag);
+        gfx_draw_or_append_gpu_primitive(&sprites->sprites[1].tag);
+        gfx_draw_or_append_gpu_primitive(&sprites->draw_mode);
     }
-    world_thread_yield();
-    world_thread_exit_current();
+    thread_yield();
+    thread_exit_current();
 }

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Return the clockticks until a dead unit without Reraise loses its body:
  * ((death counter + 1) * 100 - CT) / Speed, rounded up. 0x7fffffff when it is alive, has Reraise, has
@@ -25,8 +25,8 @@ s32 battle_ai_calculate_clockticks_until_death_counter_expires(battle_stats_t* u
     if (counter == 0xff)
         return 0x7fffffff;
     total = counter;
-    total *= 100;
-    sum = total + 100;
+    total *= UNIT_TURN_CT_THRESHOLD;
+    sum = total + UNIT_TURN_CT_THRESHOLD;
     total = sum - unit->ct;
     ticks = total / speed;
     if (total % speed)

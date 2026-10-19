@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Give the target Quick (CT change 0xFF) as a pseudo-status result: the Quick spell, and Dragon
  * Level Up, whose formula (0x5d) gives a dragon or a hydra Quick. */

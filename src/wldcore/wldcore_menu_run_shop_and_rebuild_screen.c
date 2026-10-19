@@ -1,8 +1,9 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
 /* Run a shop screen from a town's menu at full brightness (world_shop_run_screen: 0 for the Shop,
- * WORLD_SHOP_ID_SOLDIER_OFFICE, WORLD_SHOP_ID_FUR_SHOP), then come back: reload the war funds for the
+ * WORLD_MENU_CONTEXT_SOLDIER_OFFICE, WORLD_MENU_CONTEXT_FUR_SHOP), then come back: reload the war funds for the
  * HUD value, reset the parent level's window, push the town's menu again, fade in with the map
  * redrawing, clear the screen and the backdrop, and start the world map music again.
  *
@@ -16,7 +17,7 @@ void wldcore_menu_run_shop_and_rebuild_screen(s32 shop_id) {
     world_menu_set_brightness(0x80, 0x80, 0x80);
     wldcore_sound_wait_for_queue_drain();
     world_shop_run_screen(shop_id);
-    g_wldcore_displayed_numeric_value = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
+    g_wldcore_displayed_numeric_value = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
     wldcore_menu_suspend_root_level(&g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]);
     selected = &g_wldcore_map_projection_state.marker.kind;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count

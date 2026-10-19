@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Queue the unit's status bubble into the ordering table.
@@ -7,7 +9,7 @@
  * (id 0) and the Death Sentence bubble (id 20) show a counter digit, and ids 9, 10 and 21 have a
  * second texture row selected by status_bubble_alternate_row. The bubble is drawn one tile above the
  * unit's feet and offset by status_bubble_x and status_bubble_y. */
-void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* screen_coords) {
+void battle_gfx_draw_status_bubble(battle_unit_t* unit, const DVECTOR* unused_screen_coords) {
     SVECTOR position;
     SVECTOR zoom = g_battle_status_bubble_zoom;
     VECTOR transformed;
@@ -28,7 +30,7 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* scr
 
     /* The caller supplies its culling coordinates in a1, but this routine
      * independently projects the bubble and never reads them. */
-    (void)screen_coords;
+    (void)unused_screen_coords;
 
     bubble_id = unit->status_bubble_id;
     display = unit->status_bubble_display;
@@ -39,8 +41,8 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* scr
             display->parts[0].v = 0xBC;
         }
     } else if (bubble_id == 0) {
-        table_index = unit->battle_data->death_counter;
-        if (unit->status_flags_1_4 & BATTLE_MISC_STATUS_RERAISE) {
+        table_index = unit->stats->death_counter;
+        if (unit->status_flags_1_4 & BATTLE_UNIT_STATUS_RERAISE) {
             display->parts[0].u = g_battle_status_bubble_u[10];
             flag_row = g_battle_status_bubble_v[10];
             display->parts[0].v = flag_row;
@@ -59,7 +61,7 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* scr
             }
         }
     } else if (bubble_id == 20) {
-        table_index = unit->battle_data->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)] & 3;
+        table_index = unit->stats->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)] & 3;
         display->parts[0].u = g_battle_status_bubble_digit_u[table_index];
         display->parts[0].v = g_battle_status_bubble_digit_v[table_index];
     } else {
@@ -75,8 +77,9 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* scr
 
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);
-    main_util_set_svector(&base, unit->screen.vx + unit->event_offset.vx,
-        unit->screen.vy + unit->event_offset.vy + unit->status_bubble_y, unit->screen.vz + unit->event_offset.vz);
+    main_util_set_svector(&base, unit->world_coords.vx + unit->event_offset.vx,
+        unit->world_coords.vy + unit->event_offset.vy + unit->status_bubble_y,
+        unit->world_coords.vz + unit->event_offset.vz);
     RotTrans(&base, &transformed, &unit->gte_flag);
     position.vx = unit->status_bubble_x + (transformed.vx + unit->screen_offset.vx);
     y = transformed.vy + unit->screen_offset.vy;
@@ -84,7 +87,7 @@ void battle_gfx_draw_status_bubble(battle_unit_misc_data_t* unit, const u16* scr
     if (unit->status_bubble_timer & 0x10) {
         position.vy = y - 1;
     }
-    battle_camera_get_tile_sort_point_unbiased(&base.vx, (s16*)&raised);
+    battle_camera_get_tile_sort_point_unbiased(&base, &raised);
     raised.vy += 12;
     RotTrans(&raised, &transformed, &flag);
     display = unit->status_bubble_display;

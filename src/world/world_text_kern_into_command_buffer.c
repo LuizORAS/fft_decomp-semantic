@@ -23,8 +23,8 @@ void world_text_kern_into_command_buffer(u8* text, s16* name, RECT* rect, s32 pa
     x = 0;
     glyph = *text++;
     character = glyph;
-    if (glyph != 0xFE) {
-        code = 0xE7;
+    if (glyph != TEXT_END_WAIT_FOR_CONFIRM) {
+        code = TEXT_SET_X_POSITION;
         out = buf;
         do {
             if (character == TEXT_SPACE) {
@@ -35,7 +35,7 @@ void world_text_kern_into_command_buffer(u8* text, s16* name, RECT* rect, s32 pa
                     second = *text++;
                     glyph = second + glyph * TEXT_GLYPHS_PER_PREFIX;
                 }
-                glyph = g_world_text_glyph_widths[glyph];
+                glyph = g_text_glyph_widths[glyph];
                 if (glyph == 2) {
                     pre = 2;
                     post = 2;
@@ -69,8 +69,8 @@ void world_text_kern_into_command_buffer(u8* text, s16* name, RECT* rect, s32 pa
             len++;
             glyph = *text++;
             character = glyph;
-        } while (glyph != 0xFE);
+        } while (glyph != TEXT_END_WAIT_FOR_CONFIRM);
     }
-    buf[len] = 0xFE;
+    buf[len] = TEXT_END_WAIT_FOR_CONFIRM;
     world_text_render_id_list_to_image_rows(buf, name, rect, palette);
 }

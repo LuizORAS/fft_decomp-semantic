@@ -1,3 +1,5 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -12,14 +14,14 @@
  *   0x1d  hides the render objects, sets menu slot 4's cursor to 2, restarts
  *         music 0x220, resets the level's window, records in g_wldcore_brave_story_saved_cursor
  *         whether script variable 0x92 and any of variables 0x1a4..0x1bb are
- *         set, closes the parent list, loads chapter 4 and saves the word
- *         pair at 0x80049a10;
+ *         set, closes the parent list, loads chapter 4 and saves the value pair at
+ *         0x80049a10;
  *   0x2b  hides the render objects and restarts music 0x21a;
  *   0x2c  rebuilds the tutorial category panel image and closes the parent
  *         list frame windows;
  *   0x2d  hides the render objects, sets menu slot 4's cursor to 3, resets
- *         the level's window, reopens the tutorial categories and saves the
- *         word pair at 0x80049a10.
+ *         the level's window, reopens the tutorial categories and saves the value pair at
+ *         0x80049a10.
  * It then records the three arguments on the new level, zeroes the 0x1e000
  * scratch buffer, blacks the menu brightness out, starts WORLD thread 4 and
  * pushes the level as type 0x31 with delay = 0x14.
@@ -49,9 +51,9 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         wldcore_sound_wait_for_queue_drain();
         wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_BRAVE_STORY));
         wldcore_menu_suspend_root_level(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth]);
-        if (world_script_get_variable(EVENT_SCRIPT_VAR_FACTS_ENABLED) != 0) {
+        if (script_get_variable(EVENT_SCRIPT_VAR_FACTS_ENABLED) != 0) {
             for (i = 0; i < EVENT_SCRIPT_VAR_FACT_COUNT; i++) {
-                if (world_script_get_variable(i + EVENT_SCRIPT_VAR_FACT_FIRST) != 0) {
+                if (script_get_variable(i + EVENT_SCRIPT_VAR_FACT_FIRST) != 0) {
                     count++;
                 }
             }
@@ -91,7 +93,7 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         wldcore_text_load_message_block_if_changed(WLDCORE_MESSAGE_BLOCK_TREASURES);
         wldcore_file_wait_for_load();
         wldcore_sound_wait_for_queue_drain();
-        main_sound_set_master_volume(0x3FFF, 1);
+        suzuki_sound_set_master_volume(0x3FFF, 1);
         wldcore_sound_enqueue_music_start(WLDCORE_AUDIO_MUSIC(2, MAIN_MUSIC_BRAVE_STORY));
         break;
     default:
@@ -108,8 +110,8 @@ void wldcore_menu_push_screen_transition_level(s32 screen, s32 param_a, s32 para
         clear--;
     }
     world_menu_set_brightness(0, 0, 0);
-    world_thread_start(WLDCORE_THREAD_SLOT_TRANSITION, world_menu_zodiac_backdrop_thread);
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_TRANSITION, 0, 0, 0);
+    thread_start(WLDCORE_THREAD_SLOT_TRANSITION, world_menu_zodiac_backdrop_thread);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_TRANSITION, 0, 0, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].screen_transition.delay = 0x14;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].screen_transition.phase = 0;
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_SCREEN_TRANSITION;

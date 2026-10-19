@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "psx/types.h"
 
 /* Start an automatic turn of angle yaw units (0x400 is a quarter turn;

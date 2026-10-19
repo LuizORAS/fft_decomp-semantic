@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
+#include "fft/battle_unit.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /*
@@ -8,7 +10,7 @@
  * Each changed status is applied through the main-thread dispatcher before
  * the unit graphics are refreshed. State 2 prevents applying the snapshot twice.
  */
-void world_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
+void world_unit_apply_staged_status_data(s32 unit_id, s32 runtime_id) {
     battle_stats_t* unit;
     s32 i;
     s32 status_id;
@@ -36,17 +38,17 @@ void world_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
         unit->hp = g_world_unit_status_staging_data->hp[unit_id];
         unit->team_flags = g_world_unit_status_staging_data->team_flags[unit_id];
         unit->death_counter = g_world_unit_status_staging_data->death_counter[unit_id];
-        g_world_thread_call_target = (void (*)(void))battle_status_queue_misc_graphics_flag_change;
+        g_thread_call_target = (void (*)(void))battle_status_queue_runtime_graphics_flag_change;
         i = 0;
         status_id = BATTLE_STATUS_HANDLER_INDEX(BATTLE_STATUS_ID_UNNAMED_00);
         for (; i < BATTLE_STATUS_COUNT; i++) {
             byte_index = i / 8;
             mask = 0x80 >> (i % 8);
             if (g_world_unit_status_staging_data->added[unit_id][byte_index] & mask) {
-                world_thread_call_on_main_stack(status_id, 0, unit_id);
+                thread_call_on_main_stack(status_id, 0, unit_id);
             }
             if (g_world_unit_status_staging_data->removed[unit_id][byte_index] & mask) {
-                world_thread_call_on_main_stack(status_id, 1, unit_id);
+                thread_call_on_main_stack(status_id, 1, unit_id);
             }
             status_id++;
         }
@@ -61,20 +63,20 @@ void world_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
         inflict_status_mode = g_world_unit_status_staging_data->inflict_status_mode[unit_id];
         if (inflict_status_mode != UNIT_INFLICT_STATUS_MODE_NONE) {
             if (inflict_status_mode == UNIT_INFLICT_STATUS_MODE_POISON) {
-                unit->action.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_POISON)]
+                unit->action.status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_POISON)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_POISON);
             } else if (inflict_status_mode == UNIT_INFLICT_STATUS_MODE_CRYSTAL) {
-                unit->action.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
+                unit->action.status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRYSTAL)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRYSTAL);
             } else if (inflict_status_mode == UNIT_INFLICT_STATUS_MODE_REVIVE) {
                 unit->hp = 1;
-                unit->action.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
+                unit->action.status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL);
-                unit->action.status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+                unit->action.status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
                     |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD);
             }
-            g_world_thread_call_target = (void (*)(void))battle_status_resolve_unit_changes;
-            world_thread_call_on_main_stack(unit_id, 1);
+            g_thread_call_target = (void (*)(void))battle_status_resolve_unit_changes;
+            thread_call_on_main_stack(unit_id, 1);
         }
         if (!(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
                 & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)
@@ -84,7 +86,7 @@ void world_unit_apply_staged_status_data(s32 unit_id, s32 misc_id) {
             unit->charged_ability_ct = g_world_unit_status_staging_data->charged_ability_ct[unit_id];
         }
         g_world_unit_status_staging_data->state[unit_id] = UNIT_STATUS_STAGING_RESTORED;
-        g_world_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-        world_thread_call_on_main_stack(misc_id);
+        g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_runtime_id;
+        thread_call_on_main_stack(runtime_id);
     }
 }

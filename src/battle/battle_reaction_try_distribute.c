@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Distribute: when healing goes past max HP, a successful Brave roll queues the reaction with the

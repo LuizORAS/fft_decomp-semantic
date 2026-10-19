@@ -1,4 +1,5 @@
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
 
 /* Draw a window's 5x9/5x7 border pieces around its rectangle and tile the
  * interior through jobstts_menu_script_draw_tiled_rectangle.
@@ -7,9 +8,7 @@
  * source selection. Reassigning the command pointer before the return keeps
  * its reference count high enough for global allocation to place it in s6.
  */
-
-u8* jobstts_menu_script_draw_window_frame(u8* stream) {
-    world_menu_window_command_t* command;
+menu_instruction_t* jobstts_menu_script_draw_window_frame(menu_instruction_t* command) {
     RECT rect;
     s32 left;
     s32 top;
@@ -24,18 +23,17 @@ u8* jobstts_menu_script_draw_window_frame(u8* stream) {
     u8 width;
     u8 height;
 
-    command = (world_menu_window_command_t*)stream;
-    priority = g_jobstts_gfx_otag_index;
-    clut = g_jobstts_menu_palette_clut;
-    left = command->x - 5;
-    top = command->y - 9;
-    width = command->width;
+    priority = g_menu_gfx_otag_index;
+    clut = g_menu_palette_clut;
+    left = command->window.x - 5;
+    top = command->window.y - 9;
+    width = command->window.width;
     full_columns = width >> 4;
     partial_width = width & 15;
-    height = command->height;
+    height = command->window.height;
     full_rows = height >> 4;
     partial_height = height & 15;
-    g_jobstts_menu_window_right_x = command->width + left + 5;
+    g_jobstts_menu_window_right_x = command->window.width + left + 5;
 
     rect.x = left;
     rect.y = top;
@@ -91,11 +89,11 @@ u8* jobstts_menu_script_draw_window_frame(u8* stream) {
             &rect, 0x1A, 8, 0, g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, clut, priority);
     }
 
-    g_jobstts_menu_window_interior_command.x = command->x;
-    g_jobstts_menu_window_interior_command.y = command->y;
-    g_jobstts_menu_window_interior_command.width = command->width;
-    g_jobstts_menu_window_interior_command.height = command->height;
-    jobstts_menu_script_draw_tiled_rectangle((u8*)&g_jobstts_menu_window_interior_command);
+    g_jobstts_menu_window_interior_command.x = command->window.x;
+    g_jobstts_menu_window_interior_command.y = command->window.y;
+    g_jobstts_menu_window_interior_command.width = command->window.width;
+    g_jobstts_menu_window_interior_command.height = command->window.height;
+    jobstts_menu_script_draw_tiled_rectangle((menu_instruction_t*)&g_jobstts_menu_window_interior_command);
 
     top = top + 9 + partial_height + full_rows * 16;
     rect.x = left;
@@ -124,6 +122,6 @@ u8* jobstts_menu_script_draw_window_frame(u8* stream) {
     rect.h = 7;
     jobstts_gfx_enqueue_textured_quad(
         &rect, 0xF2, 0x11, 0, g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, clut, priority);
-    command = (world_menu_window_command_t*)((u8*)command + command->length);
-    return (u8*)command;
+    command = menu_next_instruction(command);
+    return command;
 }

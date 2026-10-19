@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Offset of a point current along a straight path of length total: dst is src,
  * the whole path's delta, scaled by current / total (a Q12 fraction). */

@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/libc.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -25,7 +26,7 @@ s32 equip_menu_run_remove_mode(void) {
         g_equip_remove_all_equipment_prompt_active = 0;
         g_equip_remove_mode_initialized = 1;
     }
-    input = g_equip_input_primary_repeat;
+    input = g_menu_input_primary_repeat;
     if (input & PSX_PAD_CROSS) {
         equip_panel_toggle_item_numeric_thread(0);
         g_equip_unit_status_panel_redraw = 1;
@@ -52,16 +53,16 @@ s32 equip_menu_run_remove_mode(void) {
         g_equip_sound_queued_effect_id = MAIN_SFX_PAGE_SWITCH;
     }
     selection = equip_menu_update_vertical_selection_and_mark_change(
-        5, 1, g_equip_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
+        5, 1, g_menu_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
     g_equip_remove_item_marker_rect.y = ((selection & 0xFF) << 4) + 0x90;
     equip_gfx_set_otag_index(0x28);
-    equip_menu_update_and_draw_animated_cursor(
-        &g_equip_remove_item_marker_rect, g_equip_remove_item_cursor_anim, g_battle_menu_input_lock_mode);
+    menu_update_and_draw_animated_cursor(
+        &g_equip_remove_item_marker_rect, g_equip_remove_item_cursor_anim, g_menu_input_lock_mode);
 
     g_equip_text_help_message_id = g_equip_remove_item_equipment[selection & 0xFF] != 0
         ? g_equip_remove_item_equipment[selection & 0xFF] + 0x6800
         : -1;
-    if (g_equip_input_primary_repeat & PSX_PAD_CIRCLE) {
+    if (g_menu_input_primary_repeat & PSX_PAD_CIRCLE) {
         if (g_equip_remove_item_equipment[selection & 0xFF] == 0
             || equip_unit_set_slot_item(g_equip_unit_selected_index, (u8)selection, 0)
                 == EQUIP_SLOT_ITEM_CURRENT_LOCKED) {

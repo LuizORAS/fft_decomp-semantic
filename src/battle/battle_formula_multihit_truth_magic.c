@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x1E, Rafa's Truth abilities (Heaven Thunder, Asura, Diamond Sword, Hydragon Pit, Space
  * Storage, Sky Demon) and Holy Bracelet: the magical evade check, then XA = MA and YA = (MA + Y) / 2

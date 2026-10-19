@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Remove the target's equipment named by the action's destroyed-slot mask.
@@ -41,8 +41,8 @@ s32 battle_action_remove_broken_or_stolen_equipment(void) {
                 unit = g_battle_action_target;
                 if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
                         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING))
-                    && unit->charged_ability_ct != 0xFF && unit->last_skillset_id == SKILLSET_ID_CHARGE) {
-                    action->status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
+                    && unit->charged_ability_ct != 0xFF && unit->action_command.skillset_id == SKILLSET_ID_CHARGE) {
+                    action->status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)]
                         |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING);
                 }
             }

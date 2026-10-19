@@ -1,22 +1,19 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
-
-typedef void (*world_name_entry_handler_t)(void);
-
-extern world_name_entry_handler_t g_world_name_entry_state_handlers[];
 
 /* One frame of the name entry inside another screen: the Soldier Office's hire and rename steps call it
  * every frame. The first call opens the entry on `list` once the message box slot is free; then L1 and R1 move
  * the cursor, Square deletes at it, the state handler runs (g_world_name_entry_state_handlers: the keyboard or
  * the confirmation) and the cursor, buttons and keyboard are drawn. It returns the entered name
  * (g_world_name_entry_text) when the state reaches 0xFF, NULL until then. */
-u8* world_name_run_entry_keyboard_frame(u8* list, s32 unused_1) {
+u8* world_name_run_entry_keyboard_frame(const u8* list, s32 unused_1) {
     point16_t cursor;
     s32 busy;
 
     if (g_world_name_entry_started == 0) {
-        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE) == 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) == 0) {
             g_world_name_keyboard_last_state = -1;
             world_name_open_entry(list);
             g_world_name_entry_started = 1;
@@ -41,12 +38,13 @@ u8* world_name_run_entry_keyboard_frame(u8* list, s32 unused_1) {
         cursor.x = g_world_name_entry_cursor * 6 + 0x54;
         world_menu_set_draw_priority(0x28);
         world_menu_draw_animated_vertical_cursor(&cursor, &g_world_name_keyboard_text_cursor_anim, busy);
-        world_menu_run_script_with_palette_mode(g_world_name_entry_display_script, 0, busy);
+        world_menu_run_script_with_palette_mode(&g_world_name_entry_display_script, 0, busy);
         world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_L1, 0x37, 0x50,
             g_world_input_primary_repeat & PSX_PAD_L1, busy, MAIN_SFX_PAGE_SWITCH);
         world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_R1, 0xB1, 0x50,
             g_world_input_primary_repeat & PSX_PAD_R1, busy, MAIN_SFX_PAGE_SWITCH);
-        world_menu_run_script_with_palette_mode(g_world_name_entry_keyboard_script, g_world_input_primary_repeat, busy);
+        world_menu_run_script_with_palette_mode(
+            &g_world_name_entry_keyboard_script, g_world_input_primary_repeat, busy);
         if (g_world_name_entry_state != g_world_name_keyboard_last_state) {
             g_world_name_keyboard_last_state = g_world_name_entry_state;
         }

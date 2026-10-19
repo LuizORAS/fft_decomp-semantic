@@ -7,28 +7,28 @@
  * or chest gone, both reward phases shown, the item animation over), clear its bit and start the
  * next (battle_move_start_next_post_move_event). */
 void battle_state_handle_crystal_learn_state(void) {
-    s32* choice;
-    battle_unit_misc_data_t* source;
-    battle_unit_misc_data_t* casting;
+    battle_ai_command_t* choice;
+    battle_unit_t* source;
+    battle_unit_t* casting;
     u16 counter;
 
     battle_state_update_units();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     choice = battle_menu_get_selected_command_address();
-    source = battle_unit_get_source_misc_data();
-    casting = battle_unit_get_casting_misc_data();
-    switch (*choice) {
+    source = battle_unit_get_source();
+    casting = battle_unit_get_casting();
+    switch ((s32)choice->kind) {
     case 2:
-        battle_unit_learn_from_crystal(source->battle_data, BATTLE_CRYSTAL_RESTORE_HP_MP);
+        battle_unit_learn_from_crystal(source->stats, BATTLE_CRYSTAL_RESTORE_HP_MP);
         g_battle_action_post_action = 1;
-        battle_action_apply_target_result(source->battle_data->misc_unit_id);
+        battle_action_apply_target_result(source->stats->battle_id);
         battle_gfx_prepare_post_action_display(source);
-        battle_unit_update_display_by_misc_id(source->unit_id);
+        battle_unit_update_display_by_runtime_id(source->runtime_id);
         break;
     case 0:
     case 1:
     case 4:
-        battle_unit_learn_from_crystal(source->battle_data, *choice);
+        battle_unit_learn_from_crystal(source->stats, choice->kind);
         g_battle_action_post_action = 1;
         break;
     case 7:
@@ -49,10 +49,10 @@ void battle_state_handle_crystal_learn_state(void) {
     if (counter < 0x1f) {
         return;
     }
-    if (source->numeric_display_active != 0) {
+    if (source->numeric_display.active != 0) {
         return;
     }
-    if (casting->numeric_display_active != 0) {
+    if (casting->numeric_display.active != 0) {
         return;
     }
 
@@ -68,7 +68,7 @@ void battle_state_handle_crystal_learn_state(void) {
             g_battle_move_post_move_events &= ~BATTLE_MOVE_POST_EVENT_MOVEMENT_BENEFIT;
         }
     } else if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_ITEM_FOUND) {
-        if ((source->animation_wait != 0) && ((source->sequence_id >> 1) >= 0xc)) {
+        if ((source->animation.wait != 0) && ((source->animation.sequence_id >> 1) >= 0xc)) {
             return;
         }
         source->item_display_active = 0;
@@ -76,7 +76,7 @@ void battle_state_handle_crystal_learn_state(void) {
     } else if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_TRAP_TRIGGERED) {
         g_battle_move_post_move_events &= ~BATTLE_MOVE_POST_EVENT_TRAP_TRIGGERED;
         battle_ai_init_selected_action();
-        battle_unit_update_display_by_misc_id(source->unit_id);
+        battle_unit_update_display_by_runtime_id(source->runtime_id);
     } else if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_CHARGING_CANCEL) {
         g_battle_move_post_move_events &= ~BATTLE_MOVE_POST_EVENT_CHARGING_CANCEL;
     } else if (g_battle_move_post_move_events & BATTLE_MOVE_POST_EVENT_SOURCE_DISPLAY) {

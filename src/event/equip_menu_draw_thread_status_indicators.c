@@ -1,4 +1,7 @@
 #include "fft/event_equip.h"
+#include "fft/gfx.h"
+#include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -6,16 +9,16 @@
  * Builds and submits the two translucent letterbox panels used by the event
  * dialogue overlay.
  *
- * Threads 13 and 14 running task 0x39 with a cleared first parameter request
- * a panel; parameter 2 selects which of the two opens. Each panel fades its
+ * Banner tasks in slots 13 and 14 request a panel when display->x is zero;
+ * display->y selects which of the two opens. Each panel fades its
  * gradient in by 0xc per frame up to 0x78 and back out again, alternating
  * between two primitive buffers so the previous frame stays queued.
  *
  */
 void equip_menu_draw_thread_status_indicators(void) {
-    battle_menu_status_panel_indicator_prims_t* prims;
-    native_thread_t* thread;
-    native_thread_t* descriptor;
+    menu_gradient_panel_prims_t* prims;
+    wldcore_menu_status_thread_t* display;
+    wldcore_menu_status_thread_t* descriptor;
     s32 active;
     s32 i;
     s32 j;
@@ -24,29 +27,30 @@ void equip_menu_draw_thread_status_indicators(void) {
     s16 y;
 
     active = 0;
-    if (equip_thread_is_running(EQUIP_THREAD_SLOT_UNIT_STATUS) != 0) {
-        if (g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            thread = (native_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
-            active = (-(thread->function_parameter_1 == 0)) & 13;
+    if (menu_thread_is_running(EQUIP_THREAD_SLOT_UNIT_STATUS) != 0) {
+        if (g_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].task_id == THREAD_TASK_UNIT_STATUS_BANNER) {
+            display = (wldcore_menu_status_thread_t*)g_threads[EQUIP_THREAD_SLOT_UNIT_STATUS].function_parameter_1;
+            active = (-(display->x == 0)) & 13;
         }
     }
-    if (equip_thread_is_running(EQUIP_THREAD_SLOT_COMPARISON_STATUS) != 0) {
-        if (g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].task_id == NATIVE_THREAD_TASK_UNIT_STATUS_BANNER) {
-            descriptor = (native_thread_t*)g_battle_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;
-            if (descriptor->function_parameter_1 == 0) {
+    if (menu_thread_is_running(EQUIP_THREAD_SLOT_COMPARISON_STATUS) != 0) {
+        if (g_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].task_id == THREAD_TASK_UNIT_STATUS_BANNER) {
+            descriptor
+                = (wldcore_menu_status_thread_t*)g_threads[EQUIP_THREAD_SLOT_COMPARISON_STATUS].function_parameter_1;
+            if (descriptor->x == 0) {
                 active = 14;
-                thread = descriptor;
+                display = descriptor;
             }
         }
     }
     /* Both requests jump past the fade-out updates; the target shares one
      * state[1] store between them and the fall-through path. */
     if (active != 0) {
-        if ((thread->function_parameter_2 == 0x90) && !(thread->function_parameter_3 & 0x80)) {
+        if ((display->y == 0x90) && !(display->flags & MENU_STATUS_PANEL_HIDDEN)) {
             g_equip_menu_indicator_state[0] = MENU_INDICATOR_STATE_FADING_OUT;
             g_equip_menu_indicator_state[1] = MENU_INDICATOR_STATE_FADING_IN;
             goto draw_panels;
-        } else if ((thread->function_parameter_2 == 0) && !(thread->function_parameter_3 & 0x80)) {
+        } else if ((display->y == 0) && !(display->flags & MENU_STATUS_PANEL_HIDDEN)) {
             g_equip_menu_indicator_state[0] = MENU_INDICATOR_STATE_FADING_IN;
             g_equip_menu_indicator_state[1] = MENU_INDICATOR_STATE_FADING_OUT;
             goto draw_panels;
@@ -63,52 +67,38 @@ draw_panels:
         flip = g_equip_menu_indicator_buffer_index[i] ^ 1;
         g_equip_menu_indicator_buffer_index[i] = flip;
         prims = &g_equip_thread_indicator_packets[i][flip];
-        SetDrawMode(&prims->mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100) & 0xffff, &g_equip_gfx_draw_area_template);
-        SetTile(&prims->frame);
-        prims->frame.r0 = 0;
-        prims->frame.g0 = 0;
-        prims->frame.b0 = 0;
-        SetSemiTrans(&prims->frame, 1);
+        SetDrawMode(&prims->draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_menu_draw_area_template);
+        SetTile(&prims->center);
+        setRGB0(&prims->center, 0, 0, 0);
+        SetSemiTrans(&prims->center, 1);
         y = 0xb2;
         if (i == 0) {
             y = 0x23;
         }
-        prims->frame.x0 = 0x80;
-        prims->frame.y0 = y;
-        prims->frame.w = 0x100;
-        prims->frame.h = 0x32;
+        setXY0(&prims->center, 0x80, y);
+        setWH(&prims->center, 0x100, 0x32);
         for (j = 0; j < 9; j++) {
             SetTile(&prims->top[j]);
-            prims->top[j].r0 = 0;
-            prims->top[j].g0 = 0;
-            prims->top[j].b0 = 0;
+            setRGB0(&prims->top[j], 0, 0, 0);
             SetSemiTrans(&prims->top[j], 1);
             y = 0xa9;
-            prims->top[j].w = 0x100;
-            prims->top[j].h = 1;
+            setWH(&prims->top[j], 0x100, 1);
             if (i == 0) {
                 y = 0x1a;
             }
-            prims->top[j].x0 = 0x80;
-            prims->top[j].y0 = y + j;
+            setXY0(&prims->top[j], 0x80, y + j);
             SetTile(&prims->bottom[j]);
-            prims->bottom[j].r0 = 0;
-            prims->bottom[j].g0 = 0;
-            prims->bottom[j].b0 = 0;
+            setRGB0(&prims->bottom[j], 0, 0, 0);
             SetSemiTrans(&prims->bottom[j], 1);
             y = 0xe4;
-            prims->bottom[j].w = 0x100;
-            prims->bottom[j].h = 1;
+            setWH(&prims->bottom[j], 0x100, 1);
             if (i == 0) {
                 y = 0x55;
             }
-            prims->bottom[j].x0 = 0x80;
-            prims->bottom[j].y0 = y + j;
+            setXY0(&prims->bottom[j], 0x80, y + j);
         }
         if (g_equip_menu_indicator_state[i] == MENU_INDICATOR_STATE_HIDDEN) {
-            prims->frame.r0 = 0;
-            prims->frame.g0 = 0;
-            prims->frame.b0 = 0;
+            setRGB0(&prims->center, 0, 0, 0);
         } else {
             if (g_equip_menu_indicator_state[i] == MENU_INDICATOR_STATE_FADING_IN) {
                 if (g_equip_menu_indicator_brightness[i] < 0x78) {
@@ -122,9 +112,8 @@ draw_panels:
                     g_equip_menu_indicator_state[i] = MENU_INDICATOR_STATE_HIDDEN;
                 }
             }
-            prims->frame.r0 = g_equip_menu_indicator_brightness[i];
-            prims->frame.g0 = g_equip_menu_indicator_brightness[i];
-            prims->frame.b0 = g_equip_menu_indicator_brightness[i];
+            setRGB0(&prims->center, g_equip_menu_indicator_brightness[i], g_equip_menu_indicator_brightness[i],
+                g_equip_menu_indicator_brightness[i]);
             g_equip_menu_indicator_edge_brightness[i] = g_equip_menu_indicator_brightness[i];
             for (j = 0; j < 9; j++) {
                 if (g_equip_menu_indicator_edge_brightness[i] != 0) {
@@ -134,14 +123,13 @@ draw_panels:
                 (k + prims->top)->r0 = g_equip_menu_indicator_edge_brightness[i];
                 (k + prims->top)->g0 = g_equip_menu_indicator_edge_brightness[i];
                 (k + prims->top)->b0 = g_equip_menu_indicator_edge_brightness[i];
-                prims->bottom[j].r0 = g_equip_menu_indicator_edge_brightness[i];
-                prims->bottom[j].g0 = g_equip_menu_indicator_edge_brightness[i];
-                prims->bottom[j].b0 = g_equip_menu_indicator_edge_brightness[i];
-                battle_gfx_draw_or_append_gpu_primitive(k + prims->top);
-                battle_gfx_draw_or_append_gpu_primitive(&prims->bottom[j]);
+                setRGB0(&prims->bottom[j], g_equip_menu_indicator_edge_brightness[i],
+                    g_equip_menu_indicator_edge_brightness[i], g_equip_menu_indicator_edge_brightness[i]);
+                gfx_draw_or_append_gpu_primitive(k + prims->top);
+                gfx_draw_or_append_gpu_primitive(&prims->bottom[j]);
             }
-            battle_gfx_draw_or_append_gpu_primitive(&prims->frame);
-            battle_gfx_draw_or_append_gpu_primitive(&prims->mode);
+            gfx_draw_or_append_gpu_primitive(&prims->center);
+            gfx_draw_or_append_gpu_primitive(&prims->draw_mode);
         }
     }
 }

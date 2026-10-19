@@ -10,10 +10,10 @@ void world_formation_build_job_wheel_job_name(void) {
     s8 pixel_width;
 
     if (g_world_job_wheel_job_count < 2) {
-        font = g_world_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN];
+        font = g_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN];
         g_world_job_wheel_name_text = 0x1B;
     } else {
-        font = g_world_text_section_pointers[TEXT_SECTION_JOB_NAMES];
+        font = g_text_section_pointers[TEXT_SECTION_JOB_NAMES];
         g_world_job_wheel_name_text = g_world_job_wheel_jobs[g_world_job_wheel_cursor_index];
     }
     name = &g_world_job_wheel_name_text;

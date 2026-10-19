@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Reload the map when the number of crystals on the field has changed.
@@ -15,17 +16,17 @@ s32 battle_map_check_deep_dungeon_crystal_and_init_state(void) {
 
     if (g_main_system_frontend_world_result == 4) {
         if (g_battle_map_deep_dungeon_load_in_progress == 0) {
-            crystal_count = battle_unit_count_crystal_misc_units();
+            crystal_count = battle_unit_count_crystals();
             if (crystal_count >= 5) {
                 crystal_count = 4;
             }
-            previous_count = battle_script_get_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_CRYSTAL_COUNT);
+            previous_count = script_get_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_CRYSTAL_COUNT);
             if (crystal_count != previous_count) {
-                battle_script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_CRYSTAL_COUNT, crystal_count);
+                script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_CRYSTAL_COUNT, crystal_count);
                 if (battle_map_start_data_load() != 0) {
                     g_battle_map_deep_dungeon_load_in_progress = 1;
                 } else {
-                    battle_script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_CRYSTAL_COUNT, previous_count);
+                    script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_CRYSTAL_COUNT, previous_count);
                 }
             }
         }

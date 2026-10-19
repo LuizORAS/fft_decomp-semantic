@@ -1,7 +1,8 @@
+#include "fft/script.h"
 #include "fft/world.h"
 
 /* Fill entries with the items a shop offers in one category filter, sorted (sort mode 6) and
- * ended by -1, and return their count. A town's outfitter (shop_id below WORLD_SHOP_ID_FUR_SHOP)
+ * ended by -1, and return their count. A town's outfitter (shop_id below WORLD_MENU_CONTEXT_FUR_SHOP)
  * offers each item whose g_world_shop_item_availability bit for that town is set and whose
  * shop_availability is at most EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY; the fur shop offers its
  * poached stock. ITEM_LIST_MODE_EQUIPPABLE leaves out what unit_id cannot equip, and
@@ -64,11 +65,11 @@ s32 world_shop_build_item_list(s16 unit_id, s16 shop_id, s16 category, s16* entr
         }
     }
 
-    if (shop_id < WORLD_SHOP_ID_FUR_SHOP) {
+    if (shop_id < WORLD_MENU_CONTEXT_FUR_SHOP) {
         s32 progression;
         s32 shop_mask;
 
-        progression = world_script_get_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY);
+        progression = script_get_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY);
         item_id = 0;
         shop_mask = 0x8000 >> shop_id;
         for (; item_id < ITEM_ID_END; item_id++) {

@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Point text sections 0-30 at the menu text BATTLE.BIN carries, a copy of EVENT/SAMPLE.LZW
@@ -16,9 +18,9 @@ void battle_text_init_menu_section_pointers(void) {
 
     source = g_battle_menu_text_section_offsets;
     index = 0;
-    menu_input_mode = g_battle_menu_input_mode;
+    menu_input_mode = g_menu_input_mode;
     text = source + 32;
-    destination = g_battle_text_section_pointers;
+    destination = g_text_section_pointers;
     do {
         if (menu_input_mode == MENU_INPUT_PLAYER || index != TEXT_SECTION_EVENT_MESSAGES) {
             offset = *source;

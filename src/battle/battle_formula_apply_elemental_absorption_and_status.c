@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* The elemental absorption (battle_formula_apply_elemental_absorption), then the 19% roll

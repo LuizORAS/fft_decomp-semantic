@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -24,7 +25,7 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
     s32 participant;
 
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS) == 0) {
+        && thread_is_running(THREAD_SCREEN_SLOT_UNIT_STATUS) == 0) {
         rect.x = 0x200;
         rect.y = 0x100;
         rect.w = 0x40;
@@ -33,22 +34,22 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
         g_wldcore_menu_stack_depth--;
         MoveImage(&rect, 0x180, 0);
         DrawSync(0);
-        g_world_text_substitution_values[0]
+        g_text_substitution_values[0]
             = g_main_active_propositions[level->proposition].proposition_id | TEXT_ID_PROPOSITION_NAME_BASE;
-        world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
+        thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
         wldcore_menu_push_participant_list_level(level->proposition);
         return;
     }
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         g_wldcore_window_record_count -= 2;
         g_wldcore_window_render_object_count -= 2;
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
+        thread_set_parameters(THREAD_SCREEN_SLOT_UNIT_STATUS, 0, 0, 1);
+        thread_set_parameters(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+        thread_set_parameters(THREAD_SCREEN_SLOT_CHARACTER_STATUS, 0, 0, 1);
         return;
     }
     if (buttons & PSX_PAD_SELECT) {
@@ -58,7 +59,7 @@ void wldcore_menu_handle_participant_detail_input(wldcore_menu_participant_level
         wldcore_menu_push_status_help_level();
         return;
     }
-    if (!(g_wldcore_current_button_input & (PSX_PAD_L1 | PSX_PAD_R1))) {
+    if (!(g_wldcore_input_current_buttons & (PSX_PAD_L1 | PSX_PAD_R1))) {
         g_wldcore_window_records[level->left_window].sequence = WLDCORE_ANIM_SEQUENCE_L1_BUTTON;
         g_wldcore_window_records[level->right_window].sequence = WLDCORE_ANIM_SEQUENCE_R1_BUTTON;
         g_wldcore_window_records[level->left_window].frame_index

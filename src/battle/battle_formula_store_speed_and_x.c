@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Set XA = Speed and YA = X, X from the ability's data. */
 void battle_formula_store_speed_and_x(void) {

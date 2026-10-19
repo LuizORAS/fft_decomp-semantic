@@ -3,7 +3,7 @@
 /* Set up a scrollable list on `entries` with its cursor and scroll base (bunit_menu_init_scrollable_list),
  * then draw it with display script `script`. */
 void bunit_menu_init_and_draw_scrollable_list(
-    s16* entries, s32 selected_index, s32 scroll_base_index, u8* text_table, u8* script) {
+    s16* entries, s32 selected_index, s32 scroll_base_index, u8* text_table, const menu_instruction_t* script) {
     bunit_menu_init_scrollable_list(entries, selected_index, scroll_base_index, text_table);
     bunit_menu_draw_scrollable_list(script);
 }

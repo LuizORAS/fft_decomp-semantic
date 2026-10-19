@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -15,7 +16,7 @@ s32 wldcore_map_collect_location_choice_text_ids(s32 location_id, s32* out) {
     if (location_id == WORLD_LOCATION_MUROND_DEATH_CITY) {
         return -1;
     }
-    if (world_script_get_variable(location_id + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
+    if (script_get_variable(location_id + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
         return 0;
     }
     if (wldcore_script_find_location_request(g_wldcore_map_projection_state.marker.kind, WLDCORE_SCRIPT_ACTION_CHOICE)
@@ -37,7 +38,7 @@ s32 wldcore_map_collect_location_choice_text_ids(s32 location_id, s32* out) {
     written = 0;
     for (i = 0; i < available; i++) {
         entry = g_wldcore_script_state.choice_vars[i];
-        if (world_script_get_variable(
+        if (script_get_variable(
                 g_wldcore_choice_hidden_variable_offsets[entry] + EVENT_SCRIPT_VAR_LOCATION_CHOICE_HIDDEN_FIRST)
             == 0) {
             out[written++] = entry + (TEXT_ID_MAP_NAME_BASE - 1);

@@ -1,5 +1,4 @@
 #include "fft/event_card.h"
-#include "psx/types.h"
 
 /* Read the pad (card_input_update_controller) and drop every press while a fade
  * runs. */

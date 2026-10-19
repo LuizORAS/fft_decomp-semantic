@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -7,7 +8,7 @@
  * sequences 0x1A pixels to its right, in the HUD colour tinted by the screen fade. Nothing is drawn
  * while MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE is set. */
 void wldcore_gfx_draw_calendar_date(GsOT* ot) {
-    wldcore_window_record_t request;
+    world_animated_render_record_t request;
     CVECTOR color;
     s32 first;
     s32 second;
@@ -21,15 +22,15 @@ void wldcore_gfx_draw_calendar_date(GsOT* ot) {
     request.palette = 0;
     request.anim_counter = 0;
     request.frame_index = 0;
-    request.position.x = g_wldcore_date_display_x;
-    request.position.y = g_wldcore_date_display_y;
+    request.position.x = g_wldcore_calendar_display_x;
+    request.position.y = g_wldcore_calendar_display_y;
     wldcore_gfx_copy_color_with_tint(&g_wldcore_hud_color, &color);
     request.color.r = color.r;
     request.color.g = color.g;
     request.color.b = color.b;
 
-    first = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    second = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
+    first = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+    second = script_get_variable(EVENT_SCRIPT_VAR_DAY);
     request.sequence = first + (WLDCORE_ANIM_SEQUENCE_MONTH_FIRST - 1);
     wldcore_gfx_draw_animated_display_object(&request, ot);
 

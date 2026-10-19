@@ -80,7 +80,7 @@ pushes the next one, replaces itself (index - 1, then a push) or pops.
 |---|---|
 | [[open_controller_record_t]], [[open_controller_handler_e]] | A controller's record and handler id |
 | [[open_system_runtime_flag_e]] | `g_open_system_runtime_flags`: running, input disabled, display blanked, screen width, WORLD loaded, the new-game party built |
-| [[open_render_record_36_t]], [[open_render_record_56_t]] | The two render records: animated sprites (menu words, cursor, warning) and window images (birthday windows) |
+| [[world_animated_render_record_t]], [[open_render_record_56_t]] | The two render records: animated sprites (menu words, cursor, warning) and window images (birthday windows) |
 | [[open_overlay_fade_t]] | The full-screen fade to and from black |
 | [[open_title_controller_t]] | The title menu: its records, cursor, idle timer and where the title music stops |
 | [[open_prologue_t]], [[open_prologue_entry_t]] | The prologue's state and its 12 pages (`g_open_prologue_entries`) |

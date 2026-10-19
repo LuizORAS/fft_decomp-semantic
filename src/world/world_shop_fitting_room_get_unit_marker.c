@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 /* Unit-grid marker callback of the fitting room's unit choice: no unit gets a marker (-1). */

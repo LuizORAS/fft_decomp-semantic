@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Reflect the strike off the target: for a reflectable ability that is not a Math Skill, the target's
@@ -15,7 +15,7 @@ void battle_reaction_mark_reflected(void) {
         action = g_battle_action_target_data;
         action->reaction_id = ABILITY_ID_REACTION_REFLECT;
         ability = *ability_ptr;
-        /* The target stores the accuracy as a halfword (0x2a..0x2b). */
+        /* The target stores the accuracy as a 16-bit value (0x2a..0x2b). */
         action->attack_accuracy = 0;
         action->hit = 0;
         action->last_received_attack = ability;

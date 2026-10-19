@@ -24,9 +24,9 @@ void open_title_push_menu_controller(s32 cd_end_sector) {
     s32 y;
     s32 controller;
     wldcore_window_xy_t* positions;
-    wldcore_window_xy_t* position;
-    open_render_record_36_t* records;
-    open_render_record_36_t* entry;
+    open_point32_t* position;
+    world_animated_render_record_t* records;
+    world_animated_render_record_t* entry;
     s32* field;
 
     g_open_system_runtime_flags
@@ -46,12 +46,12 @@ void open_title_push_menu_controller(s32 cd_end_sector) {
         g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
     entry = g_open_gfx_render_records_36;
     records = entry;
-    field = &records->x;
+    field = &records->position.x;
     positions = (wldcore_window_xy_t*)field;
     g_open_title_menu_states[g_open_current_controller_index].records_36[0] = record;
-    g_open_gfx_render_records_36[record].anim_id = 0x11;
-    g_open_gfx_render_records_36[record].ot_layer = 4;
-    g_open_gfx_render_records_36[record].frame_timer = 0;
+    g_open_gfx_render_records_36[record].sequence = 0x11;
+    g_open_gfx_render_records_36[record].priority = 4;
+    g_open_gfx_render_records_36[record].anim_counter = 0;
     g_open_gfx_render_records_36[record].frame_index = 0;
     positions[record].x = 0;
     positions[record].y = 0x64;
@@ -60,9 +60,9 @@ void open_title_push_menu_controller(s32 cd_end_sector) {
         record = open_gfx_append_animated_render_record(
             g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
         g_open_title_menu_states[g_open_current_controller_index].records_36[i + 1] = record;
-        g_open_gfx_render_records_36[record].anim_id = i + 3;
-        g_open_gfx_render_records_36[record].ot_layer = 4;
-        records[record].frame_timer = 0;
+        g_open_gfx_render_records_36[record].sequence = i + 3;
+        g_open_gfx_render_records_36[record].priority = 4;
+        records[record].anim_counter = 0;
         g_open_gfx_render_records_36[record].frame_index = 0;
         positions[record].y = y;
         y += 0xc;
@@ -73,12 +73,12 @@ void open_title_push_menu_controller(s32 cd_end_sector) {
         g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
     g_open_title_menu_states[g_open_current_controller_index].cursor_record_36 = record;
     entry = &g_open_gfx_render_records_36[record];
-    entry->anim_id = 0x13;
-    g_open_gfx_render_records_36[record].ot_layer = 4;
-    g_open_gfx_render_records_36[record].frame_timer = 0;
+    entry->sequence = 0x13;
+    g_open_gfx_render_records_36[record].priority = 4;
+    g_open_gfx_render_records_36[record].anim_counter = 0;
     g_open_gfx_render_records_36[record].frame_index = 0;
     g_open_gfx_render_records_36[record].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    position = (wldcore_window_xy_t*)&g_open_gfx_render_records_36[record].x;
+    position = &g_open_gfx_render_records_36[record].position;
     position->x = 0x60;
     position->y = 0x58;
 

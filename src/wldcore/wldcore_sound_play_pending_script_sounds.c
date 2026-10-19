@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -40,7 +41,7 @@ void wldcore_sound_play_pending_script_sounds(s32 sound_id, s32 weather_sound_id
         }
         break;
     }
-    world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
-    world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);
-    world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
 }

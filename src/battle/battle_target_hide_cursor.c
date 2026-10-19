@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Stop drawing the map cursor and its tile glow; the cursor tile is still projected for the
  * camera. */

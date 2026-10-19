@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x5E, Triple Thunder, Triple Flame and Dark Whisper: the magical evade check, then XA = MA
  * and YA = (MA + Y) / 2 as magical damage without Faith (battle_formula_calculate_truth_damage).

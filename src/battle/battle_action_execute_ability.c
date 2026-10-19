@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 
 /* Run the acting unit's confirmed command: switch the unit panels to mode 0, mark the unit as having
  * acted (which can end its turn), face it toward the cursor and commit the command
@@ -8,15 +10,15 @@
  * COMMENCE_ATTACK_PHASE, with the charge pose when the ability has a charge animation; 2 (Change
  * Equipment) or another value reports pointer exception 0x13 and ends the command. */
 void battle_action_execute_ability(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 result;
 
     battle_unit_start_view_thread(UNIT_VIEW_MODE_NONE, 0, 0);
-    unit = battle_unit_get_source_misc_data();
-    battle_action_set_only_action_taken(unit->battle_data->misc_unit_id);
-    unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
+    unit = battle_unit_get_source();
+    battle_action_set_only_action_taken(unit->stats->battle_id);
+    unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
     battle_unit_face_toward_cursor(unit);
-    result = battle_action_commit_command((u8*)&unit->command_state.ai.data);
+    result = battle_action_commit_command(&unit->command_state.ai.data.action);
     unit->attack_phase_state = result;
     switch (result) {
     case BATTLE_ATTACK_PREPARATION_CHARGE:
@@ -24,10 +26,10 @@ void battle_action_execute_ability(void) {
         break;
     case BATTLE_ATTACK_PREPARATION_IMMEDIATE:
     case BATTLE_ATTACK_PREPARATION_JUMP:
-        battle_state_disable_camera_pan();
+        battle_camera_disable_map_pan();
         g_battle_game_state = BATTLE_GAME_STATE_COMMENCE_ATTACK_PHASE;
         g_battle_action_post_action = 0;
-        unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
+        unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
         if (g_battle_ability_animation_data[unit->used_ability_id].charge_animation_set_id != 0) {
             battle_unit_start_ability_charging_animation(unit);
         }

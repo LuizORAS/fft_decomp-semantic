@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+#include "fft/map.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
@@ -22,21 +24,21 @@ s32 battle_effect_calculate_arcing_trajectory(battle_arc_query_t* query, s32* ar
 
     result = 0;
     tile = battle_map_get_tile_data_ptr_from_battle_id(query->target.unit_id);
-    tile_height = tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT);
+    tile_height = tile->height + tile->depth_half_height.depth;
     floor = (tile_height * 3) << 14;
     peak = battle_effect_calculate_arc_height_term(query->delta.distance);
     if (query->delta.distance != 0) {
         height = query->target.height / 2;
-        limit = (height + query->delta.y) << 12;
+        limit = (height + query->delta.y) * ONE;
         if (peak >= limit && floor >= limit) {
             query->target.height = height;
         } else {
             height = query->target.height * 3 / 4;
-            limit = (height + query->delta.y) << 12;
+            limit = (height + query->delta.y) * ONE;
             if (peak >= limit && floor >= limit) {
                 query->target.height = height;
             } else {
-                limit = query->delta.y << 12;
+                limit = query->delta.y * ONE;
                 if (peak < limit || floor < limit) {
                     return result;
                 }

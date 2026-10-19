@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Bring up the GPU for the world map: GsInitGraph2 at 256 x 240 with two display buffers, 3D
  * with no geometry offset, the screen cleared with the map's clip rectangle
@@ -13,13 +12,13 @@ void wldcore_gfx_init_subsystem(void) {
     SetGeomOffset(0, 0);
     wldcore_gfx_clear_screen_and_set_map_clip_rect(0);
 
-    g_wldcore_gfx_aux_ordering_tables[1].log2n = 2;
-    g_wldcore_gfx_aux_ordering_tables[0].log2n = 2;
+    g_wldcore_gfx_aux_ordering_tables[1].length = 2;
+    g_wldcore_gfx_aux_ordering_tables[0].length = 2;
     g_wldcore_gfx_aux_ordering_tables[0].org = g_wldcore_gfx_aux_ot_tags[0];
     g_wldcore_gfx_aux_ordering_tables[1].org = g_wldcore_gfx_aux_ot_tags[1];
 
-    g_wldcore_gfx_ordering_tables[1].log2n = 4;
-    g_wldcore_gfx_ordering_tables[0].log2n = 4;
+    g_wldcore_gfx_ordering_tables[1].length = 4;
+    g_wldcore_gfx_ordering_tables[0].length = 4;
     g_wldcore_gfx_ordering_tables[0].org = g_wldcore_gfx_ot_tags[0];
     g_wldcore_gfx_ordering_tables[1].org = g_wldcore_gfx_ot_tags[1];
 }

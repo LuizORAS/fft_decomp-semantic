@@ -1,4 +1,8 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/battle_map.h"
+#include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Bows and crossbows lose a quarter of the base hit at night and another quarter in a storm, which
@@ -12,8 +16,8 @@ void battle_formula_apply_weather_effects_on_bows(void) {
 
     if (g_main_item_primary_data[g_battle_action_current_ability.weapon_id].type == ITEM_TYPE_CROSSBOW
         || g_main_item_primary_data[g_battle_action_current_ability.weapon_id].type == ITEM_TYPE_BOW) {
-        weather = battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
-        time_of_day = battle_script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY);
+        weather = script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
+        time_of_day = script_get_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY);
         if (time_of_day == 1) { /* night */
             g_battle_action_current_ability.base_hit = g_battle_action_current_ability.base_hit * 3 / 4;
         }

@@ -8,7 +8,6 @@
 void world_formation_cycle_selected_unit(s16 pad_buttons) {
     u16 index;
 
-    index = pad_buttons;
     if (pad_buttons & PSX_PAD_L1) {
         g_world_menu_sound_effect_id = MAIN_SFX_PAGE_SWITCH;
         do {
@@ -19,7 +18,7 @@ void world_formation_cycle_selected_unit(s16 pad_buttons) {
             }
             g_world_formation_selected_unit_index = index;
         } while (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG);
-    } else if (index & PSX_PAD_R1) {
+    } else if (pad_buttons & PSX_PAD_R1) {
         g_world_menu_sound_effect_id = MAIN_SFX_PAGE_SWITCH;
         do {
             index = (g_world_formation_selected_unit_index != g_world_formation_unit_count - 1)

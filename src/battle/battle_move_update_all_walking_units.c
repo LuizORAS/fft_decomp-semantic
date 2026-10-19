@@ -1,20 +1,16 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
-/* Advance the path step of every unit (misc ids 0-15) that has a path; the event states call
+/* Advance the path step of every unit (runtime ids 0-15) that has a path; the event states call
  * it each frame. */
 void battle_move_update_all_walking_units(void) {
     s32 i;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
-    i = 0;
-    do {
-        unit = battle_unit_get_misc_data_by_misc_id(i);
-        if (unit != 0) {
-            if (unit->movement_path_count != 0) {
-                battle_move_update_path_step(unit);
-            }
+    for (i = 0; i < BATTLE_UNIT_RUNTIME_SLOT_COUNT; i++) {
+        unit = battle_unit_get_by_runtime_id(i);
+        if (unit != 0 && unit->path.count != 0) {
+            battle_move_update_path_step(unit);
         }
-        i++;
-    } while (i < 0x10);
+    }
 }

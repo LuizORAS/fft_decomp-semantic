@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Step the queued unit graphics load (battle_gfx_step_queued_unit_graphics_load) while it reports
  * immediate progress (2), and return 0 once it has finished or 1 while it waits for a read or an

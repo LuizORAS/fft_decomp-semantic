@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Validate and clamp the target's result before it applies.
@@ -35,7 +38,7 @@ void battle_action_finalize_target_current_action(void) {
         invalid = 1;
     }
     if (invalid != 0) {
-        battle_target_remove_ability_target(g_battle_action_target->misc_unit_id);
+        battle_target_remove_ability_target(g_battle_action_target->battle_id);
         battle_action_clear_target_and_actor_data();
         battle_formula_cancel_weapon_spell();
         battle_action_cancel_knockback();
@@ -63,7 +66,7 @@ void battle_action_finalize_target_current_action(void) {
         battle_action_cancel_knockback();
         battle_formula_cancel_weapon_spell();
     }
-    team = (g_battle_action_target->initial_team_flags & BATTLE_TEAM_MASK) >> 4;
+    team = (g_battle_action_target->initial_team_flags & BATTLE_TEAM_MASK) >> BATTLE_TEAM_SHIFT;
     action = g_battle_action_target_data;
     if ((action->attack_type != 0) && (action->hit != 0) && (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY)
         && (g_battle_team_golem[team] != 0)

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 
 /* Upload the pending CLUT rows as one image to the lines below the rows, and
  * on the next call move them into place. */

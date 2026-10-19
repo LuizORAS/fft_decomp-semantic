@@ -3,7 +3,7 @@
 
 /* The byte colour triple of the screen-wide fade overlay. It
  * overlaps g_wldcore_screen_fade_state.boxes[0].r, but the target addresses
- * it separately from the flags word: reaching it through the fade-state
+ * it separately from the 32-bit flags: reaching it through the fade-state
  * struct makes the flags update use absolute addressing instead of a base
  * register. */
 extern CVECTOR g_wldcore_screen_fade_box_0_color;

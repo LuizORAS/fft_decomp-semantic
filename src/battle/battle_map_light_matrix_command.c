@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /*
@@ -15,7 +15,8 @@
  * Commands 0x5e-0x60 and 0x66-0x69 return the uninitialized result, like
  * battle_map_light_state_command.
  */
-MATRIX* battle_map_light_matrix_command(s32 command, MATRIX* color, MATRIX* light, s32 duration) {
+MATRIX* battle_map_light_matrix_command(
+    map_light_matrix_command_e command, MATRIX* color, MATRIX* light, s32 duration) {
     MATRIX* result;
     s32 i;
     s32 j;

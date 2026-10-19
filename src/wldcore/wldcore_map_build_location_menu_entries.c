@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -10,7 +11,7 @@ s32 wldcore_map_build_location_menu_entries(s32 location_id, s32* out) {
     s32 i;
 
     if (location_id == WORLD_LOCATION_DEEP_DUNGEON) {
-        count = world_script_get_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_LIST_LENGTH) + 1;
+        count = script_get_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_LIST_LENGTH) + 1;
         for (i = 0; i < count; i++) {
             out[i] = WLDCORE_TEXT_ID_DEEP_DUNGEON_FLOOR_FIRST + i;
         }
@@ -23,7 +24,7 @@ s32 wldcore_map_build_location_menu_entries(s32 location_id, s32* out) {
         out[0] = WLDCORE_TEXT_ID_BAR;
         out[1] = WLDCORE_TEXT_ID_SHOP;
         out[2] = WLDCORE_TEXT_ID_SOLDIER_OFFICE;
-        if (world_script_get_variable(EVENT_SCRIPT_VAR_FUR_SHOP_ENABLED) != 0) {
+        if (script_get_variable(EVENT_SCRIPT_VAR_FUR_SHOP_ENABLED) != 0) {
             if ((location_id == WORLD_LOCATION_DORTER) || (location_id == WORLD_LOCATION_WARJILIS)
                 || (location_id == WORLD_LOCATION_ZARGHIDAS)) {
                 out[count] = WLDCORE_TEXT_ID_FUR_SHOP;

@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Give the single unit targeted by id's pending action the chance to strike first with Hamedo
@@ -18,7 +20,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
     battle_stats_t* unit;
     battle_stats_t* base;
     battle_stats_t* target;
-    u8* action;
+    action_command_t* action;
     s32 i;
     s32 count;
     s32 result;
@@ -46,10 +48,10 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
         base[i].ability_outcome = 0;
     }
 
-    menu_type = g_main_action_menu_types_by_skillset[unit->last_skillset_id];
+    menu_type = g_main_action_menu_types_by_skillset[unit->action_command.skillset_id];
     flags_1 = 0;
     if ((menu_type & 0xff) == ACTION_MENU_TYPE_DEFAULT || (menu_type & 0xff) == ACTION_MENU_TYPE_MONSTER) {
-        ability_id = unit->last_ability_id;
+        ability_id = unit->action_command.ability_id;
         if (ability_id < ABILITY_ID_ITEM_FIRST) {
             flags_1 = g_main_ability_range_data[ability_id].flags_1;
         }
@@ -59,7 +61,7 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
     if ((menu_type & 0xff) == ACTION_MENU_TYPE_ATTACK || (menu_type & 0xff) == ACTION_MENU_TYPE_CHARGE
         || (menu_type & 0xff) == ACTION_MENU_TYPE_WEAPON_INVENTORY
         || (flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
-        result = battle_target_validate_weapon_target((battle_ai_command_action_t*)&unit->action_actor_id);
+        result = battle_target_validate_weapon_target(&unit->action_command);
     }
     if (result == -1) {
         return -1;
@@ -75,22 +77,22 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
         return -1;
     }
     target = &g_battle_unit_stats[tid];
-    if (!(target->reaction_abilities[3] & BATTLE_REACTION_SET_4_HAMEDO)) {
+    if (!(target->ability_flags.reaction[3] & BATTLE_REACTION_SET_4_HAMEDO)) {
         return -1;
     }
     if (battle_reaction_fails_brave_roll(target) != 0) {
         return -1;
     }
-    action = &target->action_actor_id;
+    action = &target->action_command;
     if (battle_reaction_is_prevented(target) != 0) {
         return -1;
     }
 
     g_battle_action_context = count;
-    main_util_copy_action_data(action, g_battle_action_saved_command);
+    main_util_copy_action_data(action, &g_battle_action_saved_command);
     g_battle_reaction_ability_id = ABILITY_ID_REACTION_HAMEDO;
     g_battle_acting_unit_id = id;
-    target->action_actor_id = tid;
+    target->action_command.actor_id = tid;
     if (battle_reaction_set_counter_command(target, SKILLSET_ID_ATTACK, 0, 1) == 0
         && battle_action_check_and_consume_mp(target) == 0) {
         battle_action_init_current_ability_strike_data(target);
@@ -102,6 +104,6 @@ s32 battle_reaction_prepare_hamedo_for_pending_action(s32 id, s16* out_ability) 
         }
         return tid;
     }
-    main_util_copy_action_data(g_battle_action_saved_command, action);
+    main_util_copy_action_data(&g_battle_action_saved_command, action);
     return -1;
 }

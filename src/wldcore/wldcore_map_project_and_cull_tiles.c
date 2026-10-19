@@ -12,15 +12,18 @@ void wldcore_map_project_and_cull_tiles(void) {
     long flag;
     s32 i;
     wldcore_projected_entry_t* entry;
-    u8* rotation;
+    wldcore_map_projection_view_t* view;
+    SVECTOR* rotation;
     s32 flags;
     s32 updated;
     s32 coordinate;
 
-    rotation = g_wldcore_map_projection_rotation_bytes;
+    /* Retail keeps the camera base at rotation; the record base changes its argument instructions. */
+    rotation = &g_wldcore_map_projection_rotation;
+    view = (wldcore_map_projection_view_t*)((u8*)rotation - offsetof(wldcore_map_projection_view_t, rotation));
     RotMatrix(rotation, &matrix);
-    TransMatrix(&matrix, rotation - 0x20);
-    ScaleMatrix(&matrix, rotation - 0x10);
+    TransMatrix(&matrix, &view->origin);
+    ScaleMatrix(&matrix, &view->scale);
     SetRotMatrix(&matrix);
     SetTransMatrix(&matrix);
 

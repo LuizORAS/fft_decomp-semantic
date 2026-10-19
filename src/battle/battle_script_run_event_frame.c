@@ -1,43 +1,54 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_event.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_script.h"
+#include "fft/battle_target.h"
 #include "fft/event_bunit.h"
 #include "fft/event_card.h"
 #include "fft/event_equip.h"
 #include "fft/event_jobstts.h"
+#include "fft/gfx.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
 /* Run one frame of an event around the thread scheduler; the battle's EVENT state calls it every
- * frame.
+ * frame. BATTLE's copy of world_script_run_event_frame.
  * - Before the threads: the ETC graphic upload, the screen fade overlay, the camera copied into the
  *   script variables and the window frames; the pad state (battle_script_update_event_input_state),
  *   with the tutorial's input overrides; the main-loop requests reset to none; JOBSTTS or EQUIP drawn
  *   into this frame's ordering table while one of them is open.
- * - Every thread runs once (battle_thread_yield). A change in which threads run, or a button pressed
+ * - Every thread runs once (thread_yield). A change in which threads run, or a button pressed
  *   outside a tutorial, holds the input off for five frames.
  * - After them: the camera back from the script variables, the BUNIT, CARD save or stub companion
  *   overlay a thread asked for, the companion files, and the requests
  *   (battle_script_process_pending_requests).
  *
- * Returns 1 while the event runs (0 under tutorial input, g_battle_script_frame_result_override while
+ * Returns 1 while the event runs (0 under tutorial input, g_script_frame_result_override while
  * that is set). The frame after every thread of slots 1-15 has stopped, it ends the event: 0 when the
  * event has no scenario finish operation; otherwise the next event goes into
  * EVENT_SCRIPT_VAR_CURRENT_EVENT and the result names the exit: 9 the world map (also at the end of a
  * replay, EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS), 0xA the next battle, 0xB a reset, and 0x13 the
  * ending after EVENT_ID_REUNION_AND_BEYOND.
  *
- * The three BATTLE-only halfword clears come after the word clears in source; the scheduler still
- * groups them with the other halfword stores, and this order keeps the g_battle_companion_overlay_state
+ * The three BATTLE-only 16-bit value clears come after the 32-bit clears in source; the scheduler still
+ * groups them with the other 16-bit value stores, and this order keeps the g_battle_companion_overlay_state
  * load below them as in the target. */
 s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     RECT rect;
     s32 i;
     s32 finish_op;
     u32 prims;
+    u32* ordering_table;
     s32 polarity;
 
-    g_battle_ai_workspace_ptr = (world_event_work_t*)g_battle_ai_workspace;
-    if (g_battle_gfx_draw_primitives_immediately != 0) {
+    g_ai_workspace_ptr = (world_event_work_t*)g_battle_ai_workspace;
+    if (g_gfx_draw_primitives_immediately != 0) {
         DrawSync(0);
         rect.w = 0x100;
         rect.x = 0;
@@ -45,13 +56,13 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         rect.y = (g_main_gfx_screen_polarity & 1) * 0xF0;
         LoadImage(&rect, (u32*)g_main_heap_high_overlay_load_address);
     }
-    g_battle_gfx_current_otag_entry = ot;
+    g_gfx_current_otag_entry = ot;
     battle_gfx_submit_screen_fade_overlay(
-        &g_battle_gfx_screen_fade_overlays[g_battle_menu_packet_buffer_index], g_battle_screen_fade);
-    battle_camera_store_state_to_script_variables();
+        &g_battle_gfx_screen_fade_overlays[g_menu_packet_buffer_index], g_battle_screen_fade);
+    camera_store_state_to_script_variables();
     battle_menu_draw_active_window_frames();
 
-    if (g_battle_script_finish_check_pending != 0) {
+    if (g_script_finish_check_pending != 0) {
         for (i = 1; i < 16; i++) {
             if (battle_thread_is_running_asm(i) != 0) {
                 break;
@@ -60,23 +71,23 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         if (i == 16) {
             finish_op = battle_script_get_current_scenario_finish_operation();
             if (finish_op != 0) {
-                if (battle_script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) != 0) {
-                    g_battle_script_finish_check_pending = 0;
-                    battle_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
+                if (script_get_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS) != 0) {
+                    g_script_finish_check_pending = 0;
+                    script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 0);
                     return 9;
                 }
             } else {
-                g_battle_script_finish_check_pending = 0;
-                g_battle_menu_suspend_state = 0;
+                g_script_finish_check_pending = 0;
+                g_menu_overlay_state = 0;
                 return 0;
             }
-            if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_REUNION_AND_BEYOND) {
+            if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) == EVENT_ID_REUNION_AND_BEYOND) {
                 return 0x13;
             }
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((finish_op & 0xC00) >> 2) | (finish_op & 0xFF));
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, ((finish_op & 0xC00) >> 2) | (finish_op & 0xFF));
             finish_op = (finish_op & 0xF300) >> 8;
-            g_battle_script_finish_check_pending = 0;
-            g_battle_menu_suspend_state = 0;
+            g_script_finish_check_pending = 0;
+            g_menu_overlay_state = 0;
             if (finish_op == 0x80) {
                 return 9;
             }
@@ -86,20 +97,20 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
             if (finish_op == 0x82) {
                 return 0xB;
             }
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0);
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, 0);
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, 0);
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD, 0);
             g_battle_entd_selection_mode = BATTLE_ENTD_SELECTION_MAP_ID;
             return 9;
         }
-        g_battle_script_finish_check_pending = 0;
+        g_script_finish_check_pending = 0;
     }
 
     battle_script_update_event_input_state(buttons);
-    if (g_battle_menu_input_mode == MENU_INPUT_TUTORIAL) {
-        g_battle_script_unfiltered_controller_input = g_battle_script_event_input;
-        battle_script_apply_input_overrides((u32*)&g_battle_script_event_input);
-        g_battle_script_saved_event_input = g_battle_script_event_input;
-        battle_script_set_variable(EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS, 0);
+    if (g_menu_input_mode == MENU_INPUT_TUTORIAL) {
+        g_script_unfiltered_controller_input = g_script_event_input;
+        script_apply_input_overrides(&g_script_event_input);
+        g_battle_script_saved_event_input = g_script_event_input;
+        script_set_variable(EVENT_SCRIPT_VAR_FORCED_CONTROLLER_INPUTS, 0);
     }
     if (g_battle_map_reload_state >= 3) {
         g_battle_map_reload_state = 0;
@@ -119,42 +130,41 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     g_battle_event_pending_loaded_evtchr_clear_slot = -1;
     g_battle_event_pending_unit_vram_copy = -1;
     g_battle_event_pending_reserved_vram_release_slot = -1;
-    g_battle_sound_pending_sfx_id = -1;
-    g_battle_music_volume_transition_request = -1;
-    g_battle_music_set_track_request = -1;
-    g_battle_music_switch_request = -1;
-    g_battle_music_unload_slot_request = -1;
+    g_sound_pending_sfx_id = -1;
+    g_battle_sound_music_volume_transition_request = -1;
+    g_battle_sound_music_set_track_request = -1;
+    g_battle_sound_music_switch_request = -1;
+    g_battle_sound_music_unload_slot_request = -1;
     g_battle_event_map_jump_in_request = 0;
     g_battle_3d_object_use_request = 0;
     g_battle_field_object_use_request = 0;
 
     if (g_battle_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_JOBSTTS) {
-        g_battle_companion_overlay_primitives = jobstts_entrypoint(g_battle_active_turn_unit.battle_id, 0);
-        if (g_battle_companion_overlay_primitives != 0) {
-            AddPrims(g_battle_gfx_current_otag_entry, (void*)g_battle_companion_overlay_primitives,
-                (void*)(g_battle_companion_overlay_primitives + 0xFC));
+        ordering_table = jobstts_entrypoint(g_menu_selected_unit.battle_id, 0);
+        g_battle_companion_overlay_primitives = (s32)ordering_table;
+        if (ordering_table != 0) {
+            AddPrims(g_gfx_current_otag_entry, ordering_table, &ordering_table[0x3f]);
         } else {
             g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
         }
     }
     if (g_battle_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_EQUIP) {
-        prims = equip_entrypoint(g_battle_active_turn_unit.battle_id, g_battle_gfx_current_otag_entry + 1);
+        prims = equip_entrypoint(g_menu_selected_unit.battle_id, g_gfx_current_otag_entry + 1);
         g_battle_companion_overlay_primitives = prims;
         if (prims >= 2) {
-            AddPrims(g_battle_gfx_current_otag_entry, (void*)prims, (void*)(prims + 0xFC));
+            AddPrims(g_gfx_current_otag_entry, (void*)prims, (void*)(prims + 0xFC));
         } else {
             g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
         }
     }
 
-    if (battle_script_is_tutorial_event_slot() == 0 && g_battle_script_event_input != PSX_PAD_SELECT
-        && g_battle_script_event_input != 0) {
+    if (script_is_tutorial_event_slot() == 0 && g_script_event_input != PSX_PAD_SELECT && g_script_event_input != 0) {
         g_battle_event_input_suppression_frames = 5;
     }
     for (i = 1; i < 16; i++) {
         g_battle_event_thread_status_snapshot[i] = battle_thread_is_running_asm(i);
     }
-    battle_thread_yield();
+    thread_yield();
     for (i = 1; i < 16; i++) {
         if (g_battle_event_thread_status_snapshot[i] != battle_thread_is_running_asm(i)) {
             g_battle_event_input_suppression_frames = 5;
@@ -165,13 +175,13 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     }
     battle_camera_load_state_from_script_variables();
     g_battle_event_frame_counter++;
-    g_battle_menu_packet_buffer_index = (g_battle_menu_packet_buffer_index + 1) & 1;
+    g_menu_packet_buffer_index = (g_menu_packet_buffer_index + 1) & 1;
     if (g_battle_menu_input_block_frames != 0) {
         g_battle_menu_input_block_frames--;
     }
     battle_script_frame_after_threads_stub();
-    if (g_battle_script_frame_result_override != 0) {
-        return g_battle_script_frame_result_override;
+    if (g_script_frame_result_override != 0) {
+        return g_script_frame_result_override;
     }
 
     if (g_battle_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_STUB) {
@@ -181,12 +191,12 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         battle_script_set_event_speed(1);
         i = bunit_entrypoint(0, 0);
         battle_target_move_cursor_to_battle_id(i);
-        g_battle_active_turn_unit.battle_id = i;
+        g_menu_selected_unit.battle_id = i;
         g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
     } else if (g_battle_companion_overlay_state == BATTLE_COMPANION_OVERLAY_STATE_CARD_SAVE) {
         battle_script_set_event_speed(1);
         polarity = g_main_gfx_screen_polarity;
-        battle_script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
+        script_set_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS, 1);
         card_save_run_menu(0);
         g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_IDLE;
         g_main_gfx_screen_polarity = polarity;
@@ -195,10 +205,10 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
     battle_menu_open_companion_data_file();
     battle_script_process_pending_requests();
     battle_script_frame_after_requests_stub();
-    if (g_battle_menu_input_mode == MENU_INPUT_BLOCKED) {
+    if (g_menu_input_mode == MENU_INPUT_BLOCKED) {
         return 1;
     }
-    if (g_battle_menu_input_mode == MENU_INPUT_TUTORIAL) {
+    if (g_menu_input_mode == MENU_INPUT_TUTORIAL) {
         return 0;
     }
     for (i = 1; i < 16; i++) {
@@ -207,7 +217,7 @@ s32 battle_script_run_event_frame(u32* ot, u32 buttons) {
         }
     }
     if (i == 16) {
-        g_battle_script_finish_check_pending = 1;
+        g_script_finish_check_pending = 1;
     }
     return 1;
 }

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/main.h"
+#include "fft/sound.h"
 #include "psx/types.h"
 
 /* Stop the rain sound and the two thunder sounds and forget their ids. The result

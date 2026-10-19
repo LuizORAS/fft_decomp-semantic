@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Formula 0x34, Chakra: no evade or hit roll; PA * Y with Attack Up and Martial Arts and the zodiac,

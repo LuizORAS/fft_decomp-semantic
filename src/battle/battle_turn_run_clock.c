@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Run the turn clock (g_battle_turn_clock_state) until a phase yields a turn event, returned
@@ -18,7 +19,7 @@
  * (cross-jumped `li v0,N` tails). With no note between them the constant set
  * directly follows the loop and is hoisted with the table base, as in the
  * target (a spilled invariant rematerialised as `li a2,N`). */
-s32 battle_turn_run_clock(s32 mode) {
+s32 battle_turn_run_clock(battle_between_turn_mode_e mode) {
     battle_stats_t* unit;
     s32 result;
     s32 count;
@@ -36,7 +37,7 @@ s32 battle_turn_run_clock(s32 mode) {
     if (mode == BATTLE_BETWEEN_TURN_MODE_RESET) {
         g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_ADD_CT;
         g_battle_turn_unit_id = -1;
-        for (i = 3; i >= 0; i--) {
+        for (i = BATTLE_TEAM_COUNT - 1; i >= 0; i--) {
             g_battle_team_golem[i] = 0;
         }
         g_battle_action_current_attacker.mimic_pending = 0;
@@ -91,7 +92,7 @@ s32 battle_turn_run_clock(s32 mode) {
             g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_PICK_UNIT;
             break;
         case BATTLE_BETWEEN_TURN_STATE_PICK_UNIT:
-            max_ct = 99;
+            max_ct = UNIT_TURN_CT_THRESHOLD - 1;
             best = 0xff;
             for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                 unit = &g_battle_unit_stats[i];
@@ -107,13 +108,13 @@ s32 battle_turn_run_clock(s32 mode) {
                 unit = &g_battle_unit_stats[best];
                 if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_JUMP)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)) {
-                    unit->ct = 99;
+                    unit->ct = UNIT_TURN_CT_THRESHOLD - 1;
                     continue;
                 }
                 if (unit->ct == 0xff) {
                     unit->ct = 0;
                 } else {
-                    unit->ct = max_ct % 100;
+                    unit->ct = max_ct % UNIT_TURN_CT_THRESHOLD;
                 }
                 ret = battle_status_build_upkeep_action(best, unit);
                 if (ret != 0) {
@@ -158,7 +159,7 @@ s32 battle_turn_run_clock(s32 mode) {
                     }
                 }
                 /* clang-format off */
-            } while (++i < 21); g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_RESOLVE_CHARGE;
+            } while (++i < BATTLE_UNIT_SLOT_COUNT); g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_RESOLVE_CHARGE;
             /* clang-format on */
             break;
         case BATTLE_BETWEEN_TURN_STATE_RESOLVE_CHARGE:
@@ -190,7 +191,7 @@ s32 battle_turn_run_clock(s32 mode) {
                     battle_status_update_expiring(i);
                 }
                 /* clang-format off */
-            } while (++i < 21); g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_COLLECT_PENDING_ACTIONS;
+            } while (++i < BATTLE_UNIT_SLOT_COUNT); g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_COLLECT_PENDING_ACTIONS;
             /* clang-format on */
             break;
         case BATTLE_BETWEEN_TURN_STATE_COLLECT_PENDING_ACTIONS:
@@ -204,7 +205,7 @@ s32 battle_turn_run_clock(s32 mode) {
                     g_battle_turn_pending_flags[i] = unit->action.attack_type;
                 }
                 /* clang-format off */
-            } while (++i < 21); g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_RUN_PENDING_ACTIONS;
+            } while (++i < BATTLE_UNIT_SLOT_COUNT); g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_RUN_PENDING_ACTIONS;
             /* clang-format on */
             break;
         case BATTLE_BETWEEN_TURN_STATE_RUN_PENDING_ACTIONS:
@@ -305,7 +306,7 @@ s32 battle_turn_run_clock(s32 mode) {
                         g_battle_turn_pending_flags[i] = 1;
                     }
                     /* clang-format off */
-                } while (++i < 21); g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_RUN_MIMES;
+                } while (++i < BATTLE_UNIT_SLOT_COUNT); g_battle_turn_clock_state = BATTLE_BETWEEN_TURN_STATE_RUN_MIMES;
                 /* clang-format on */
             } else {
                 g_battle_turn_clock_state = g_battle_turn_clock_resume_state;

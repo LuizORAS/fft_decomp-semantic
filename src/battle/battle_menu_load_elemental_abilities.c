@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Return the one Elemental ability the unit can use: the one for the surface type of
@@ -28,8 +30,7 @@ u16 battle_menu_load_elemental_abilities(s32 unit_id, u8 skillset) {
         return 0;
     }
     terrain_ability
-        = g_main_terrain_geomancy_abilities[g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.value
-            & MAP_SURFACE_MASK];
+        = g_main_terrain_geomancy_abilities[g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.type];
     for (i = 0; i < count; i++) {
         if (abilities[i] == terrain_ability) {
             return terrain_ability;

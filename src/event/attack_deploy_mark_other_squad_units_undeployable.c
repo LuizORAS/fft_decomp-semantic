@@ -1,4 +1,5 @@
 #include "fft/event_attack.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* Rebuild the "deployable" flags of the 20 roster slots for the current
@@ -9,7 +10,8 @@ void attack_deploy_mark_other_squad_units_undeployable(void) {
     s32 i;
     s32 unit_id;
 
-    battle_util_copy_bytes(g_attack_deploy_roster_unit_deployable, g_attack_deploy_unit_fieldable, 20);
+    mem_copy_bytes_nonempty(
+        g_attack_deploy_roster_unit_deployable, g_attack_deploy_unit_fieldable, PARTY_ROSTER_SLOT_COUNT);
     for (squad_id = 0; squad_id < 4; squad_id++) {
         if (squad_id != g_attack_deploy_current_squad) {
             for (i = 0; i < 25; i++) {

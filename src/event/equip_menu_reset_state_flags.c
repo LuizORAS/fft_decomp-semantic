@@ -1,5 +1,4 @@
 #include "fft/event_equip.h"
-#include "psx/types.h"
 
 /* Prime the four "menu section dirty" flags before the
  * next redraw pass. */

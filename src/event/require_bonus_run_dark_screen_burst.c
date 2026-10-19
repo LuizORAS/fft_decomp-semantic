@@ -1,21 +1,13 @@
+#include "fft/battle_script.h"
 #include "fft/event_require.h"
-#include "psx/libc.h"
+#include "fft/gfx.h"
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
-
-/* One 12x24 burst tile: a double-buffered flat quad plus its motion state. */
-typedef struct {
-    POLY_F4 poly[2];   /* 0x00 */
-    s32 delay;         /* 0x30 */
-    s32 radius;        /* 0x34 */
-    s32 angle;         /* 0x38 */
-    s32 x;             /* 0x3C */
-    s32 y;             /* 0x40 */
-    s32 initial_delay; /* 0x44 */
-} require_bonus_burst_tile_t;
-
-extern require_bonus_burst_tile_t g_require_bonus_burst_tiles[12][24];
 
 /* Thread body of event opcode DarkScreen (battle_script_dark_screen_thread): load BONUS.BIN image 0, or
  * image 1 after the Graveyard of Airships victory event, and break it into a burst of tiles. Thread
@@ -23,8 +15,8 @@ extern require_bonus_burst_tile_t g_require_bonus_burst_tiles[12][24];
  * (require_bonus_burst_mode_e), the delay divisor, the angle step and the radius step. The image is cut into
  * a 12x24 grid of flat quads; each tile starts after its delay, then two rotations of its radius place the
  * quad corners while angle and radius grow (phase 0) or shrink (phase 1). Between the phases a full-screen
- * flash quad in g_require_gfx_fade_rgb is drawn (task NATIVE_THREAD_TASK_DARK_SCREEN_HOLD) until the
- * RemoveDarkScreen opcode sets the task back to NATIVE_THREAD_TASK_DARK_SCREEN.
+ * flash quad in g_require_gfx_fade_rgb is drawn (task THREAD_TASK_DARK_SCREEN_HOLD) until the
+ * RemoveDarkScreen opcode sets the task back to THREAD_TASK_DARK_SCREEN.
  *
  * Profile gcc-2.6.3_O2_aspsx-2.34_divcheck: the per-tile delay is an unsigned division whose divisor
  * carries ASPSX's zero check (`bnez`/`break 7`).
@@ -53,15 +45,15 @@ void require_bonus_run_dark_screen_burst(void) {
     require_bonus_burst_tile_t* tile;
     POLY_F4* poly;
 
-    g_require_thread_suspended_id = g_battle_thread_current_id;
-    g_battle_text_section_pointers[TEXT_SECTION_UNIT_MESSAGE]
-        = g_battle_text_section_pointers[TEXT_SECTION_SKILLSET_NAMES_COPY];
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_GRAVEYARD_OF_AIRSHIPS_VICTORY) {
+    g_require_thread_suspended_id = g_thread_current_id;
+    g_text_section_pointers[TEXT_SECTION_UNIT_MESSAGE] = g_text_section_pointers[TEXT_SECTION_SKILLSET_NAMES_COPY];
+    if (script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT) != EVENT_ID_GRAVEYARD_OF_AIRSHIPS_VICTORY) {
         require_bonus_load_image(0);
     } else {
         require_bonus_load_image(1);
     }
-    params = (u8*)battle_thread_get_current_parameter_2();
+    /* Named operand loads fold the three native cursor advances. */
+    params = battle_thread_get_current_parameter_2();
     params++;
     mode = *params;
     params++;
@@ -96,8 +88,8 @@ void require_bonus_run_dark_screen_burst(void) {
                 g_require_bonus_burst_rotation.vy = 0;
                 g_require_bonus_burst_rotation.vz = 0x200;
                 RotMatrix(&g_require_bonus_burst_rotation, &g_require_bonus_burst_matrix);
-                g_require_bonus_burst_offset.vx = dx << 12;
-                g_require_bonus_burst_offset.vy = dy << 12;
+                g_require_bonus_burst_offset.vx = dx * ONE;
+                g_require_bonus_burst_offset.vy = dy * ONE;
                 g_require_bonus_burst_offset.vz = 0;
                 ApplyMatrixLV(&g_require_bonus_burst_matrix, &g_require_bonus_burst_offset,
                     &g_require_bonus_burst_rotated_offset);
@@ -113,19 +105,17 @@ void require_bonus_run_dark_screen_burst(void) {
             }
             SetPolyF4(&tile->poly[0]);
             SetSemiTrans(&tile->poly[0], 1);
-            battle_util_copy_bytes(&tile->poly[1], &tile->poly[0], sizeof(POLY_F4));
+            mem_copy_bytes_nonempty(&tile->poly[1], &tile->poly[0], sizeof(POLY_F4));
         }
     }
-    SetDrawMode(
-        &g_require_bonus_burst_draw_modes[0], 0, 0, GetTPage(0, 0, 0x180, 0), &g_require_gfx_draw_area_template);
-    SetDrawMode(
-        &g_require_bonus_burst_draw_modes[1], 0, 0, GetTPage(0, 0, 0x180, 0), &g_require_gfx_draw_area_template);
+    SetDrawMode(&g_require_bonus_burst_draw_modes[0], 0, 0, GetTPage(0, 0, 0x180, 0), &g_menu_draw_area_template);
+    SetDrawMode(&g_require_bonus_burst_draw_modes[1], 0, 0, GetTPage(0, 0, 0x180, 0), &g_menu_draw_area_template);
     frame = 0;
     for (phase = 0; phase < 2; phase++) {
         done = 0;
         for (;;) {
             any = 0;
-            battle_thread_yield();
+            thread_yield();
             for (row = 0; row < 12; row++) {
                 for (col = 0; col < 24; col++) {
                     tile = &g_require_bonus_burst_tiles[row][col];
@@ -135,7 +125,7 @@ void require_bonus_run_dark_screen_burst(void) {
                         g_require_bonus_burst_rotation.vy = 0;
                         g_require_bonus_burst_rotation.vz = tile->angle + 0x200;
                         RotMatrix(&g_require_bonus_burst_rotation, &g_require_bonus_burst_matrix);
-                        g_require_bonus_burst_offset.vx = tile->radius << 12;
+                        g_require_bonus_burst_offset.vx = tile->radius * ONE;
                         g_require_bonus_burst_offset.vy = 0;
                         g_require_bonus_burst_offset.vz = 0;
                         ApplyMatrixLV(&g_require_bonus_burst_matrix, &g_require_bonus_burst_offset,
@@ -150,7 +140,7 @@ void require_bonus_run_dark_screen_burst(void) {
                         g_require_bonus_burst_rotation.vy = 0;
                         g_require_bonus_burst_rotation.vz = tile->angle + 0x600;
                         RotMatrix(&g_require_bonus_burst_rotation, &g_require_bonus_burst_matrix);
-                        g_require_bonus_burst_offset.vx = tile->radius << 12;
+                        g_require_bonus_burst_offset.vx = tile->radius * ONE;
                         g_require_bonus_burst_offset.vy = 0;
                         g_require_bonus_burst_offset.vz = 0;
                         ApplyMatrixLV(&g_require_bonus_burst_matrix, &g_require_bonus_burst_offset,
@@ -189,20 +179,20 @@ void require_bonus_run_dark_screen_burst(void) {
                         poly->r0 = g_require_gfx_fade_rgb[0];
                         poly->g0 = g_require_gfx_fade_rgb[1];
                         poly->b0 = g_require_gfx_fade_rgb[2];
-                        battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)poly);
+                        gfx_append_gpu_primitive_to_secondary_otag(poly);
                     } else {
                         poly->r0 = g_require_gfx_fade_rgb[0];
                         poly->g0 = g_require_gfx_fade_rgb[1];
                         poly->b0 = g_require_gfx_fade_rgb[2];
                         if (phase == 1) {
-                            battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)poly);
+                            gfx_append_gpu_primitive_to_secondary_otag(poly);
                         }
                         any = 1;
                         tile->delay--;
                     }
                 }
             }
-            battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)&g_require_bonus_burst_draw_modes[frame & 1]);
+            gfx_append_gpu_primitive_to_secondary_otag(&g_require_bonus_burst_draw_modes[frame & 1]);
             if (done == 1) {
                 break;
             }
@@ -215,30 +205,23 @@ void require_bonus_run_dark_screen_burst(void) {
             break;
         }
         SetPolyF4(&g_require_bonus_burst_flash_polys[0]);
-        g_require_bonus_burst_flash_polys[0].x0 = 0x80;
-        g_require_bonus_burst_flash_polys[0].y0 = 0;
-        g_require_bonus_burst_flash_polys[0].x1 = 0x180;
-        g_require_bonus_burst_flash_polys[0].y1 = 0;
-        g_require_bonus_burst_flash_polys[0].x2 = 0x80;
-        g_require_bonus_burst_flash_polys[0].y2 = 0x100;
-        g_require_bonus_burst_flash_polys[0].x3 = 0x180;
-        g_require_bonus_burst_flash_polys[0].y3 = 0x100;
+        setXY4(&g_require_bonus_burst_flash_polys[0], 0x80, 0, 0x180, 0, 0x80, 0x100, 0x180, 0x100);
         g_require_bonus_burst_flash_polys[0].r0 = 0x30;
         g_require_bonus_burst_flash_polys[0].g0 = 0x28;
         g_require_bonus_burst_flash_polys[0].b0 = 0x10;
         SetSemiTrans(&g_require_bonus_burst_flash_polys[0], 1);
-        battle_util_copy_bytes(
+        mem_copy_bytes_nonempty(
             &g_require_bonus_burst_flash_polys[1], &g_require_bonus_burst_flash_polys[0], sizeof(POLY_F4));
         frame++;
-        battle_thread_set_current_task_id(NATIVE_THREAD_TASK_DARK_SCREEN_HOLD);
+        thread_set_current_task_id(THREAD_TASK_DARK_SCREEN_HOLD);
         for (;;) {
-            battle_thread_yield();
+            thread_yield();
             g_require_bonus_burst_flash_polys[frame & 1].r0 = g_require_gfx_fade_rgb[0];
             g_require_bonus_burst_flash_polys[frame & 1].g0 = g_require_gfx_fade_rgb[1];
             g_require_bonus_burst_flash_polys[frame & 1].b0 = g_require_gfx_fade_rgb[2];
-            battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)&g_require_bonus_burst_flash_polys[frame & 1]);
-            battle_gfx_append_gpu_primitive_to_secondary_otag((u32*)&g_require_bonus_burst_draw_modes[frame & 1]);
-            if (g_battle_threads[g_battle_thread_current_id].task_id == NATIVE_THREAD_TASK_DARK_SCREEN) {
+            gfx_append_gpu_primitive_to_secondary_otag(&g_require_bonus_burst_flash_polys[frame & 1]);
+            gfx_append_gpu_primitive_to_secondary_otag(&g_require_bonus_burst_draw_modes[frame & 1]);
+            if (g_threads[g_thread_current_id].task_id == THREAD_TASK_DARK_SCREEN) {
                 break;
             }
             frame++;
@@ -251,6 +234,6 @@ void require_bonus_run_dark_screen_burst(void) {
             }
         }
     }
-    battle_thread_wait_frames(1);
-    battle_thread_exit_current();
+    thread_wait_frames(1);
+    thread_exit_current();
 }

@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 
 /*
  * Dispatch one keyframe's action flags to every live effect target: bits 4-6
@@ -6,55 +8,58 @@
  * caster entry instead of the whole target list; bits 0-2 register a callback
  * slot.
  */
-void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_effect_state_t* state) {
-    s32 misc_id;
+void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_effect_record_t* state) {
+    s32 runtime_id;
     u16 animation;
     u16 slot;
     s32 i;
 
     if (flags & EFFECT_KEYFRAME_ACTION_FLAG_CASTER_ONLY) {
-        misc_id = -1;
+        runtime_id = -1;
         if (g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type
             == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-            misc_id = g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id;
+            runtime_id = g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.runtime_id;
         }
     }
     if (flags & EFFECT_KEYFRAME_ACTION_FLAG_POST_ACTION_DISPLAY) {
         if (flags & EFFECT_KEYFRAME_ACTION_FLAG_CASTER_ONLY) {
-            if (misc_id != -1) {
-                battle_gfx_prepare_post_action_display_by_misc_id(misc_id);
+            if (runtime_id != -1) {
+                battle_gfx_prepare_post_action_display_by_runtime_id(runtime_id);
             }
         } else {
             for (i = 0; i < g_battle_effect_coord_data.target_count; i++) {
                 if (g_battle_effect_coord_data.targets[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-                    battle_gfx_prepare_post_action_display_by_misc_id(g_battle_effect_coord_data.targets[i].id.misc_id);
+                    battle_gfx_prepare_post_action_display_by_runtime_id(
+                        g_battle_effect_coord_data.targets[i].data.unit.runtime_id);
                 }
             }
         }
     }
     if (flags & EFFECT_KEYFRAME_ACTION_FLAG_UPDATE_DISPLAY) {
         if (flags & EFFECT_KEYFRAME_ACTION_FLAG_CASTER_ONLY) {
-            if (misc_id != -1) {
-                battle_unit_update_display_by_misc_id(misc_id);
+            if (runtime_id != -1) {
+                battle_unit_update_display_by_runtime_id(runtime_id);
             }
         } else {
             for (i = 0; i < g_battle_effect_coord_data.target_count; i++) {
                 if (g_battle_effect_coord_data.targets[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-                    battle_unit_update_display_by_misc_id(g_battle_effect_coord_data.targets[i].id.misc_id);
+                    battle_unit_update_display_by_runtime_id(
+                        g_battle_effect_coord_data.targets[i].data.unit.runtime_id);
                 }
             }
         }
     }
     if (flags & EFFECT_KEYFRAME_ACTION_FLAG_TARGET_ANIMATION) {
         if (flags & EFFECT_KEYFRAME_ACTION_FLAG_CASTER_ONLY) {
-            if (misc_id != -1) {
-                /* misc_id is an s32 here; the u16 prototype would add an andi the target lacks. */
-                battle_unit_set_target_anim_by_misc_id(misc_id);
+            if (runtime_id != -1) {
+                /* runtime_id is an s32 here; the u16 prototype would add an andi the target lacks. */
+                battle_unit_set_target_animation_by_runtime_id(runtime_id);
             }
         } else {
             for (i = 0; i < g_battle_effect_coord_data.target_count; i++) {
                 if (g_battle_effect_coord_data.targets[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-                    battle_unit_set_target_anim_by_misc_id(g_battle_effect_coord_data.targets[i].id.misc_id);
+                    battle_unit_set_target_animation_by_runtime_id(
+                        g_battle_effect_coord_data.targets[i].data.unit.runtime_id);
                 }
             }
         }
@@ -62,21 +67,21 @@ void battle_effect_run_keyframe_actions_all_targets(u16 flags, battle_keyframe_e
     animation = (flags & EFFECT_KEYFRAME_ACTION_ANIMATION_MASK) >> EFFECT_KEYFRAME_ACTION_ANIMATION_SHIFT;
     if (animation != 0) {
         if (flags & EFFECT_KEYFRAME_ACTION_FLAG_CASTER_ONLY) {
-            if (misc_id != -1) {
-                battle_unit_set_specific_animation_by_misc_id(misc_id, animation);
+            if (runtime_id != -1) {
+                battle_unit_set_specific_animation_by_runtime_id(runtime_id, animation);
             }
         } else {
             for (i = 0; i < g_battle_effect_coord_data.target_count; i++) {
                 if (g_battle_effect_coord_data.targets[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-                    battle_unit_set_specific_animation_by_misc_id(
-                        g_battle_effect_coord_data.targets[i].id.misc_id, animation);
+                    battle_unit_set_specific_animation_by_runtime_id(
+                        g_battle_effect_coord_data.targets[i].data.unit.runtime_id, animation);
                 }
             }
         }
     }
     if (flags & EFFECT_KEYFRAME_ACTION_CALLBACK_MASK) {
         slot = (flags & EFFECT_KEYFRAME_ACTION_CALLBACK_MASK) - 1;
-        state->callback_phase[slot] = EFFECT_PHASE_INIT;
+        state->callback_phase[slot] = EFFECT_CALLBACK_PHASE_INIT;
         state->callbacks[slot] = g_battle_effect_callback_slots[slot];
     }
 }

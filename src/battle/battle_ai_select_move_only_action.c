@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 #include "psx/types.h"
 
 /* Make the selected action only moving to the current scenario's destination, Defending there when
@@ -11,11 +11,11 @@ void battle_ai_select_move_only_action(void) {
 
     g_battle_ai_data_base.selected_action.act_before_move = 0;
     coords = g_battle_ai_data_base.candidate_coords[scenario].word;
-    support = unit->support_ability;
+    support = unit->abilities.support;
     g_battle_ai_data_base.selected_action.coords.word = coords;
     if (support == ABILITY_ID_SUPPORT_DEFEND) {
-        g_battle_ai_data_base.selected_action.skillset = SKILLSET_ID_DEFEND;
+        g_battle_ai_data_base.selected_action.command.skillset_id = SKILLSET_ID_DEFEND;
     } else {
-        g_battle_ai_data_base.selected_action.skillset = 0;
+        g_battle_ai_data_base.selected_action.command.skillset_id = 0;
     }
 }

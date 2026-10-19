@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -5,18 +6,18 @@
  * waits until that thread and the one below it have finished. */
 void world_option_menu_start_at_list_thread(void) {
     world_menu_entry_t* list = &g_world_menu_at_list_state;
-    world_menu_entry_t* saved = g_world_menu_thread_menu_data;
+    world_menu_entry_t* saved = g_menu_thread_menu_data;
 
     g_world_menu_at_list_state.select_text_table = 0x13;
-    g_world_menu_thread_menu_data = list;
-    g_world_menu_at_list_state.text_binding = (struct world_menu_text_binding*)g_world_menu_at_list_entry_table;
+    g_menu_thread_menu_data = list;
+    g_world_menu_at_list_state.context = &g_world_menu_at_list_entry_table;
     world_option_menu_init_at_list(list);
-    world_thread_start(g_world_thread_current_id - 2, world_option_menu_run_list_thread);
-    world_thread_set_parameters(g_world_thread_current_id - 2, (s32)list, 0, 0);
+    thread_start(g_thread_current_id - 2, world_option_menu_run_list_thread);
+    thread_set_parameters(g_thread_current_id - 2, (s32)list, 0, 0);
     do {
-        world_thread_yield();
-    } while (world_thread_is_running_asm(g_world_thread_current_id - 2) != 0
-        || world_thread_is_running_asm(g_world_thread_current_id - 3) != 0);
-    g_world_menu_thread_menu_data = saved;
-    world_thread_exit_current();
+        thread_yield();
+    } while (world_thread_is_running_asm(g_thread_current_id - 2) != 0
+        || world_thread_is_running_asm(g_thread_current_id - 3) != 0);
+    g_menu_thread_menu_data = saved;
+    thread_exit_current();
 }

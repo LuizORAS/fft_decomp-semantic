@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Steal EXP: take Speed + Y EXP, at most 100 and at most what the target has; the attacker's result
  * gains it and the target's loses it (bit 0x80 of exp_change, battle_action_apply_exp_change). With

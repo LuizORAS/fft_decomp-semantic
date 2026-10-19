@@ -1,4 +1,5 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /*
@@ -29,7 +30,7 @@ world_menu_window_command_t* card_menu_script_draw_window_frame(world_menu_windo
     s32 row;
 
     priority = g_card_text_otag_index;
-    clut = g_card_menu_palette_clut;
+    clut = g_menu_palette_clut;
     if (command->rectangle_source == 2) {
         left = g_card_menu_window_rect_source->rect.x - 5;
         top = g_card_menu_window_rect_source->rect.y - 9;
@@ -130,7 +131,7 @@ world_menu_window_command_t* card_menu_script_draw_window_frame(world_menu_windo
         g_card_menu_window_interior_command.width = command->width;
         g_card_menu_window_interior_command.height = command->height;
     }
-    card_menu_script_draw_tiled_rectangle((u8*)&g_card_menu_window_interior_command);
+    card_menu_script_draw_tiled_rectangle(&g_card_menu_window_interior_command);
 
     top = top + 9 + partial_height + full_rows * 16;
     rect.x = left;

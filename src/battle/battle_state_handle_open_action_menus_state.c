@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* OPEN_ACTION_MENUS: update the units and the menu; once the menu answers (7, 8 or cancel) and
  * the camera has stopped, open the idle action menu. */
@@ -7,7 +8,7 @@ void battle_state_handle_open_action_menus_state(void) {
 
     battle_state_update_units();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
-    command = *battle_menu_get_selected_command_address();
+    command = battle_menu_get_selected_command_address()->kind;
     if (command >= 7 && (command < 9 || command == 0xff)) {
         g_battle_action_post_action = 1;
     }

@@ -1,13 +1,18 @@
+#include "fft/gfx.h"
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Numeric entry thread: edits the halfword at param->value one decimal digit
- * at a time within the range bound at param->text_binding. Left/right move the digit cursor, up/down
+/* Numeric entry thread: edits the 16-bit value at param->value one decimal digit
+ * at a time within the range bound at param->context. Left/right move the digit cursor, up/down
  * step the value by the g_world_menu_number_entry_digit_steps step of that digit (clamped to the range),
  * and a changed value is redrawn as a signed number in the window. When the
- * cancel/confirm handlers change the input word, a -1 left in the value
+ * cancel/confirm handlers change the 32-bit input mask, a -1 left in the value
  * restores the original; otherwise the value is stored and the range's
  * on_change callback runs. */
 void world_menu_number_entry_thread(void) {
@@ -16,10 +21,11 @@ void world_menu_number_entry_thread(void) {
     POLY_FT4 cursor_quads[2];
     POLY_FT4 shadow_quads[2];
     world_menu_number_range_t* range;
-    void* buffer;
+    u8* buffer;
     s16 original;
     s32 digits;
-    native_thread_t* thread;
+    thread_t* thread;
+    s32* parameter;
     world_menu_entry_t* param;
     s16 value;
     s32 i;
@@ -32,26 +38,23 @@ void world_menu_number_entry_thread(void) {
     POLY_FT4* shadow_quad;
     s32* stride;
 
-    g_world_menu_list_controller_input = world_input_get_menu_controller(0);
-    /* A register copy of the address: the target forms the pen address as
-     * &g_world_menu_text_state.pen.stride - 8 instead of folding the constant. */
-    stride = &g_world_menu_text_state.pen.stride;
-    thread = &g_world_threads[g_world_thread_current_id];
-    /* Read as a plain word rather than thread->function_parameter_1: GCC 2.6.3
-     * lets a struct-member load pass the g_world_menu_list_controller_input store above, but the
-     * target keeps the store first. */
-    param = *(world_menu_entry_t**)thread;
-    range = (world_menu_number_range_t*)param->text_binding;
-    digits = world_text_count_decimal_digits(range->max);
-    original = *param->value;
+    g_world_menu_list_controller_input = input_get_menu_controller(0);
+    /* A direct pen pointer folds both member-address adjustments and changes scheduling. */
+    stride = &g_menu_text_state.pen.stride;
+    thread = &g_threads[g_thread_current_id];
+    parameter = &thread->function_parameter_1;
+    param = (world_menu_entry_t*)*parameter;
+    range = param->context;
+    digits = text_count_decimal_digits(range->bounds.max);
+    original = *menu_entry_result(param);
     value = original;
-    if (value < range->min || range->max < value) {
-        value = range->min;
+    if (value < range->bounds.min || range->bounds.max < value) {
+        value = range->bounds.min;
     }
     world_menu_build_icon_record(&rect, param, &records[0]);
-    world_util_copy_bytes(&records[1], &records[0], 0x7C);
+    mem_copy_bytes_nonempty(&records[1], &records[0], sizeof(records[1]));
     for (j = 0; j < 2; j++) {
-        world_gfx_init_default_poly_ft4(&cursor_quads[j]);
+        menu_init_default_poly_ft4(&cursor_quads[j]);
         SetSemiTrans(&cursor_quads[j], 0);
         cursor_quads[j].tpage = GetTPage(0, 0, 0x3C0, 0x100);
         cursor_quads[j].clut = 0x7D7C;
@@ -63,7 +66,7 @@ void world_menu_number_entry_thread(void) {
         cursor_quads[j].v1 = 0x10;
         cursor_quads[j].v2 = 0;
         cursor_quads[j].v3 = 0x10;
-        world_gfx_init_default_poly_ft4(&shadow_quads[j]);
+        menu_init_default_poly_ft4(&shadow_quads[j]);
         SetSemiTrans(&shadow_quads[j], 1);
         shadow_quads[j].tpage = GetTPage(0, 2, 0x3C0, 0x100);
         shadow_quads[j].clut = 0x7DBC;
@@ -82,13 +85,14 @@ void world_menu_number_entry_thread(void) {
     *stride = param->inner_width;
     world_menu_set_text_origin(8, 9);
     world_menu_set_text_origin(param->inner_width - digits * 6 - 0x10, 9);
-    world_gfx_draw_signed_number(value, digits, buffer, (world_glyph_blit_t*)(stride - 2));
+    world_gfx_draw_signed_number(
+        value, digits, buffer, (world_glyph_blit_t*)((u8*)stride - offsetof(world_glyph_blit_t, stride)));
     LoadImage(&rect, buffer);
     redraw = 1;
     for (i = 0;; i++) {
         record = &records[i & 1].base;
-        *param->value = value;
-        world_thread_wait_frames(1);
+        *menu_entry_result(param) = value;
+        thread_wait_frames(1);
         if (redraw == 1) {
             redraw = 0;
             world_menu_free_memory(buffer);
@@ -100,11 +104,14 @@ void world_menu_number_entry_thread(void) {
         world_menu_handle_entry_cancel(param);
         world_menu_handle_entry_confirm(param, 0);
         if (input != *g_world_menu_list_controller_input) {
-            if (*param->value == -1) {
-                *param->value = original;
+            if (*menu_entry_result(param) == -1) {
+                *menu_entry_result(param) = original;
             } else {
-                *param->value = value;
-                ((world_menu_number_range_t*)param->text_binding)->on_change();
+                world_menu_number_range_t* current_range;
+
+                *menu_entry_result(param) = value;
+                current_range = param->context;
+                current_range->on_change();
             }
         }
         if (thread[-1].is_running == 0) {
@@ -115,18 +122,18 @@ void world_menu_number_entry_thread(void) {
                 digit++;
             }
             if (*g_world_menu_list_controller_input & PSX_PAD_UP) {
-                if (value <= range->max - g_world_menu_number_entry_digit_steps[digit]) {
+                if (value <= range->bounds.max - g_world_menu_number_entry_digit_steps[digit]) {
                     value += g_world_menu_number_entry_digit_steps[digit];
                 } else {
-                    value = range->max;
+                    value = range->bounds.max;
                 }
                 redraw = 1;
             }
             if (*g_world_menu_list_controller_input & PSX_PAD_DOWN) {
-                if (value >= range->min + g_world_menu_number_entry_digit_steps[digit]) {
+                if (value >= range->bounds.min + g_world_menu_number_entry_digit_steps[digit]) {
                     value -= g_world_menu_number_entry_digit_steps[digit];
                 } else {
-                    value = range->min;
+                    value = range->bounds.min;
                 }
                 redraw = 1;
             }
@@ -136,7 +143,8 @@ void world_menu_number_entry_thread(void) {
                 param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
             *stride = param->inner_width;
             world_menu_set_text_origin(param->inner_width - digits * 6 - 0x10, 9);
-            world_gfx_draw_signed_number(value, digits, buffer, (world_glyph_blit_t*)(stride - 2));
+            world_gfx_draw_signed_number(
+                value, digits, buffer, (world_glyph_blit_t*)((u8*)stride - offsetof(world_glyph_blit_t, stride)));
             LoadImage(&rect, buffer);
         }
         cursor_quad = &cursor_quads[i & 1];
@@ -153,11 +161,11 @@ void world_menu_number_entry_thread(void) {
         }
         world_menu_update_icon_cursor_sprites(param, record, i, -1);
         world_menu_select_icon_cluts(record);
-        world_gfx_draw_or_append_gpu_primitive(&cursor_quads[i & 1]);
-        world_gfx_draw_or_append_gpu_primitive(&shadow_quads[i & 1]);
-        world_gfx_draw_or_append_gpu_primitive(&record->sprites[0]);
-        world_gfx_draw_or_append_gpu_primitive(record);
+        gfx_draw_or_append_gpu_primitive(&cursor_quads[i & 1]);
+        gfx_draw_or_append_gpu_primitive(&shadow_quads[i & 1]);
+        gfx_draw_or_append_gpu_primitive(&record->sprites[0]);
+        gfx_draw_or_append_gpu_primitive(record);
     }
-    world_thread_yield();
-    world_thread_exit_current();
+    thread_yield();
+    thread_exit_current();
 }

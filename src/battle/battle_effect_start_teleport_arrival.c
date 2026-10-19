@@ -1,8 +1,11 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/data.h"
+#include "fft/main.h"
 
 /* Same as battle_effect_start_teleport_departure for the arrival: Altima's arrival abilities, else the
  * teleport secondary effect and the teleport-in sound. */
-s32 battle_effect_start_teleport_arrival(battle_unit_misc_data_t* unit) {
+s32 battle_effect_start_teleport_arrival(battle_unit_t* unit) {
     battle_effect_secondary_init_t teleport_data;
 
     battle_effect_init_teleport_data(unit, &teleport_data);

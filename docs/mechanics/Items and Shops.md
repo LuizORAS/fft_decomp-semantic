@@ -10,13 +10,15 @@ scope:
   - world_item_count_equipped_by_party()
   - world_unit_can_equip_item_id()
   - world_unit_build_best_fit_equipment()
-  - world_unit_is_two_handing_weapon()
+  - unit_is_two_handing_weapon()
   - battle_unit_find_war_trophies_and_bonus_money()
   - require_reward_collect_war_trophies_and_bonus_money()
   - require_party_store_equipment_or_sell_overflow()
   - require_party_sell_equipment_over_limit()
   - require_party_restore_item_counts()
   - world_menu_has_items()
+  - menu_clear_stat_preview()
+  - menu_subtract_scaled_stat_preview()
 ---
 
 # Items and Shops
@@ -137,7 +139,7 @@ scope:
 | Record | What it holds |
 |---|---|
 | [[item_data_t]] | An item (12 bytes, [[g_main_item_primary_data]] at MAIN `0x80062eb8`): palette, sprite, item level, type flags, secondary record, type, attributes, price, shop level |
-| [[weapon_data_t]], [[shield_data_t]], [[armor_data_t]], [[accessory_data_t]], [[item_secondary_data_t]] | The kind records ([[g_main_item_weapon_data]] `0x80063ab8`, [[g_main_item_shield_data]] `0x80063eb8`, [[g_main_item_helm_armor_secondary_data]] `0x80063ed8`, [[g_main_item_accessory_data]] `0x80063f58`, [[g_main_item_secondary_data]] `0x80063f98`) |
+| [[weapon_data_t]], [[item_evade_t]], [[armor_data_t]], [[item_evade_t]], [[item_secondary_data_t]] | The kind records ([[g_main_item_weapon_data]] `0x80063ab8`, [[g_main_item_shield_data]] `0x80063eb8`, [[g_main_item_helm_armor_secondary_data]] `0x80063ed8`, [[g_main_item_accessory_data]] `0x80063f58`, [[g_main_item_secondary_data]] `0x80063f98`) |
 | [[g_main_item_quantities]] | The inventory, a byte per item (MAIN `0x800596e0`) |
 | [[g_main_item_poached_quantities]] | The fur shop's stock, a byte per item (MAIN `0x80059494`) |
 | [[g_main_item_poach_table]] | Common and rare item per monster job (MAIN `0x80066064`, 48 rows) |

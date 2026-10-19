@@ -1,13 +1,4 @@
-#include "fft/battle.h"
 #include "fft/main.h"
-
-/* One job's row of battle_stats_t.learned_abilities. Indexing the rows
- * through this view keeps the row address (unit + job * 3 + 0x99) one
- * loop-invariant value, as in the target; a flat learned_abilities[job * 3 +
- * i / 8] adds the two indexes first. */
-typedef struct unit_learned_ability_row {
-    u8 bits[UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
-} unit_learned_ability_row_t;
 
 /* Learn the abilities of one job for a unit built from ENTD, paying with that job's JP. job_id
  * JOB_ID_SQUIRE stands for the base job: a special character's own job, or a monster's current job.
@@ -43,8 +34,9 @@ void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_
             }
         }
     } else {
-        i = 0x800000 >> job_index;
-        scratch = (unit->unlocked_jobs[0] << 16) + (unit->unlocked_jobs[1] << 8) + unit->unlocked_jobs[2];
+        i = UNIT_UNLOCKED_JOB_SQUIRE >> job_index;
+        scratch = (unit->career.unlocked_jobs[0] << 16) + (unit->career.unlocked_jobs[1] << 8)
+            + unit->career.unlocked_jobs[2];
         if ((scratch & i) == 0) {
             return;
         }
@@ -76,14 +68,14 @@ void main_unit_learn_job_abilities(battle_stats_t* unit, s32 job_id, const entd_
                 learned = 1;
             } else if (main_util_roll_pass_fail(100, scratch) == 0) {
                 u16 cost = ability->jp_cost;
-                if (unit->job_points[job_index] >= cost) {
-                    unit->job_points[job_index] -= cost;
-                    ((unit_learned_ability_row_t*)unit->learned_abilities)[job_index].bits[i / 8] |= 0x80 >> (i % 8);
+                if (unit->career.job_points.current.values[job_index] >= cost) {
+                    unit->career.job_points.current.values[job_index] -= cost;
+                    unit->career.learned_abilities[job_index][i / 8] |= 0x80 >> (i % 8);
                     learned = 1;
                 }
             }
             if (learned != 0) {
-                ((unit_learned_ability_row_t*)unit->learned_abilities)[job_index].bits[i / 8] |= 0x80 >> (i % 8);
+                unit->career.learned_abilities[job_index][i / 8] |= 0x80 >> (i % 8);
             }
         }
     }

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Return the launch speed of an arcing projectile in 20.12: the square root of

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
 #include "psx/types.h"
 
 /* Turn-clock count of the timed statuses 0x18-0x26 (Poison through Reflect; Death Sentence
@@ -26,7 +27,7 @@ void battle_status_update_expiring(s32 unit_id) {
                 target->status_ct[i] = remaining_ct;
                 if ((remaining_ct & 0xFF) == 0) {
                     action = g_battle_action_target_data;
-                    action->status_removal[byte_idx] = mask | action->status_removal[byte_idx];
+                    action->status_changes.removal[byte_idx] = mask | action->status_changes.removal[byte_idx];
                 }
             }
         }

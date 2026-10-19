@@ -7,8 +7,6 @@
  * or while fading is disabled. */
 s32 world_gfx_update_fade_out_tile(void) {
     s32 running = 1;
-    u8 level;
-    u8* rgb;
     s32 unused[4]; /* target frame is 0x10 larger than the live locals need */
 
     if (g_world_gfx_fade_disabled != 0) {
@@ -21,13 +19,9 @@ s32 world_gfx_update_fade_out_tile(void) {
             g_world_gfx_fade_increasing = 0;
             g_world_gfx_fade_intensity = 0xFF;
         }
-        world_gfx_enqueue_draw_mode(0, 0, GetTPage(0, 2, 0x100, 0) & 0xFFFF, 0, g_world_ot_length - 2);
-        rgb = &g_world_fade_tile_color.r;
-        level = g_world_gfx_fade_intensity;
-        g_world_fade_tile_color.b = level;
-        g_world_fade_tile_color.g = level;
-        *rgb = level;
-        world_gfx_enqueue_tile(&g_world_gfx_fade_tile_rect, rgb, 1, g_world_ot_length - 1);
+        world_gfx_enqueue_draw_mode(0, 0, GetTPage(0, 2, 0x100, 0), 0, g_world_ot_length - 2);
+        g_world_fade_tile_color.r = g_world_fade_tile_color.g = g_world_fade_tile_color.b = g_world_gfx_fade_intensity;
+        world_gfx_enqueue_tile(&g_world_gfx_fade_tile_rect, &g_world_fade_tile_color, 1, g_world_ot_length - 1);
     }
     return running;
 }

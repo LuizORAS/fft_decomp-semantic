@@ -1,17 +1,17 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Simulate one action's strikes and reactions (battle_ai_simulate_strikes). For the acting unit's
  * own action it marks ability_processing_done, and the first time (no base hit chance yet) it counts
  * the hits: it returns 0 when no strike lands on a unit in the targetable list, else stores their
  * average hit chance (per target and strike) as base_hit_percent. Returns 1 otherwise. */
-s32 battle_ai_simulate_ability_use(battle_ai_command_action_t* action) {
+s32 battle_ai_simulate_ability_use(action_command_t* action) {
     battle_ai_data_t* ai;
     s32 base_hit;
     s32 cnt;
 
     ai = &g_battle_ai_data_base;
     g_battle_ai_data_base.hit_counter = 0xFF;
-    if (action->unit_id == g_battle_ai_data_base.acting_unit_id) {
+    if (action->actor_id == g_battle_ai_data_base.acting_unit_id) {
         base_hit = g_battle_ai_data_base.current_action.rank.base_hit_percent;
         g_battle_ai_data_base.ability_processing_done = 1;
         if (base_hit == 0xFF) {

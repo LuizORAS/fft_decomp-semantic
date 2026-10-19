@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Validates a lunging-weapon target one or two tiles away in a straight line.
@@ -44,7 +45,7 @@ s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevati
 
     unit = &g_battle_unit_stats[unit_id];
     unit_x = unit->x;
-    unit_y = unit->position.bits.y;
+    unit_y = unit->position.y;
     if (unit_x < x) {
         dx = x - unit_x;
     } else {
@@ -108,14 +109,14 @@ s32 battle_target_validate_lunging_target(s32 unit_id, s32 x, s32 y, s32 elevati
         lower = &g_battle_map_tile_data[index];
         upper_index = index + 0x100;
         upper = &g_battle_map_tile_data[upper_index];
-        lower_height = lower->height * 2 + (lower->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK);
-        upper_height = upper->height * 2 + (upper->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK);
+        lower_height = lower->height * 2 + lower->depth_half_height.half_height;
+        upper_height = upper->height * 2 + upper->depth_half_height.half_height;
         lower_id = battle_target_get_unit_at_tile(mid_x, mid_y, 0);
         upper_id = battle_target_get_unit_at_tile(mid_x, mid_y, 1);
-        if (lower->flags.bits.blocked) {
+        if (lower->flags.blocked) {
             lower_height = 0xff;
         }
-        if (upper->flags.bits.blocked) {
+        if (upper->flags.blocked) {
             upper_height = 0xff;
         }
         if (lower_height > upper_height) {

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x0B, supporting status spells (Regen, Protect, Shell, Wall, Esuna, Haste, Float,
  * Reflect, Reraise, Carbunkle, Magic Barrier and others): no evade check; hit chance MA + X with the

@@ -1,7 +1,12 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_script.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "fft/script.h"
+#include "psx/libc.h"
 #include "psx/types.h"
 
-/* volatile views: the target reloads these globals at every use. */
+/* Dropping either volatile view moves the mode load past the initial ENTD store. */
 extern volatile s32 g_battle_entd_selection_mode;
 
 /* Chooses the encounter's ENTD id and starts reading its ENTD file.
@@ -14,7 +19,7 @@ s32 battle_unit_select_and_open_entd(void) {
     s32 event_id;
     s32 selection_mode;
 
-    event_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD);
+    event_id = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_ENTD);
     selection_mode = g_battle_entd_selection_mode;
     current_event_id = &g_main_entd_current_event_id;
     *current_event_id = event_id;

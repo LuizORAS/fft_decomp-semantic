@@ -14,17 +14,15 @@ void open_opcode_create_positioned_text_record(s16* command) {
     x = *command++;
     y = *command++;
     index = open_script_build_text_record(
-        (u8*)open_script_add_pointer_offset(g_open_script_state.dispatch.data_base, *command));
+        open_script_add_pointer_offset(g_open_script_state.dispatch.cursor.data_base, *command));
     if (index != 0) {
         index--;
         if (x == -1) {
-            /* Pins required (this block and the y block): unpinned, the -1 sentinel and the offsets rotate among
-             * a0/a2/v0/v1 and an extra move appears. */
             s32 last = g_open_script_state.records[index].glyph_count - 1;
 
             x = 256
                 - (g_open_script_state.records[index].glyphs[last].x
-                      + g_open_script_state.records[index].glyphs[last].width)
+                      + g_open_script_state.records[index].glyphs[last].w)
                     / 2;
         }
         if (y == -1) {
@@ -32,17 +30,17 @@ void open_opcode_create_positioned_text_record(s16* command) {
 
             y = 120
                 - (g_open_script_state.records[index].glyphs[last].y
-                      + g_open_script_state.records[index].glyphs[last].height)
+                      + g_open_script_state.records[index].glyphs[last].h)
                     / 2;
         }
         if (x & 0x100) {
             s32 glyph = x & 0xFF;
 
             x = 0x100 - g_open_script_state.records[index].glyphs[glyph].x
-                - g_open_script_state.records[index].glyphs[glyph].width / 2;
+                - g_open_script_state.records[index].glyphs[glyph].w / 2;
         }
         g_open_script_state.records[index].x = x;
         g_open_script_state.records[index].y = y;
     }
-    g_open_script_state.dispatch.byte_offset += 8;
+    g_open_script_state.dispatch.cursor.byte_offset += 8;
 }

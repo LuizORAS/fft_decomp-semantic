@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 
 /* Return 1 when the requested map state stands in the relation to a GNS row's state that the row's
  * comparison byte asks for: equal (1), requested less than the row's (2) or requested greater (3). Any

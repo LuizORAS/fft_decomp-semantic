@@ -1,5 +1,8 @@
 #include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_script.h"
+#include "fft/battle_unit.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Loads the 16 ENTD units of the encounter into the battle unit slots.
@@ -32,14 +35,14 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
     g_battle_enemy_level_sum = 0;
     g_battle_highest_enemy_level = 0;
     main_party_calculate_highest_level();
-    free_spritesheets = battle_script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT);
+    free_spritesheets = script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT);
     free_spritesheets = (free_spritesheets < 10) ? 9 - free_spritesheets : 0;
     enemy_limit = free_spritesheets + 7;
     enemy_count = 0;
     battle_unit_add_unique_entd_spritesheet(0xff, 0, 0);
     for (battle_id = 0, entd = entd_list; battle_id < ENTD_UNITS_PER_ENCOUNTER; entd++, battle_id++) {
         unit = &g_battle_unit_stats[battle_id];
-        unit->misc_unit_id = battle_id;
+        unit->battle_id = battle_id;
         g_main_entd_current_unit = entd;
         if (entd->sprite_set == CHARACTER_IDENTITY_ENTD_NONE) {
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
@@ -112,9 +115,8 @@ void battle_unit_load_entd_units(entd_encounter_t* entd_data, s32 mode) {
             status = 0;
             battle_unit_set_enemy_level_data(unit);
         }
-        battle_gfx_append_unit_graphics_load_descriptor(unit->x, unit->position.bits.y,
-            unit->position.bits.higher_elevation, unit->position.bits.facing, spritesheet_id, palette_id, unit_id, unit,
-            status);
+        battle_gfx_append_unit_graphics_load_descriptor(unit->x, unit->position.y, unit->position.higher_elevation,
+            unit->position.facing, spritesheet_id, palette_id, unit_id, unit, status);
         if (presence != BATTLE_TEAM_PRESENCE_MASK) {
             enemy_count++;
         }

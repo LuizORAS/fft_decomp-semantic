@@ -1,16 +1,16 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Start world_thread_idle_yield_forever in each stopped slot from 8 down to 5, keeping
  * those slots taken. */
 void world_thread_start_idle_5_to_8(void) {
-    s32 thread_id = 8;
+    s32 thread_id;
 
-    do {
-        native_thread_t* thread = &g_world_threads[thread_id];
+    for (thread_id = 8; thread_id >= 5; thread_id--) {
+        thread_t* thread = &g_threads[thread_id];
 
         if (thread->is_running == 0) {
-            world_thread_start(thread_id, world_thread_idle_yield_forever);
+            thread_start(thread_id, world_thread_idle_yield_forever);
         }
-        thread_id--;
-    } while (thread_id >= 5);
+    }
 }

@@ -4,7 +4,7 @@
 /* Handler 11, a title demo movie: Start stops it. Once it has stopped the display is blanked and the
  * controller is replaced by FFTST.STR (open_movie_push_fftst_controller), which leads back to the title menu
  * with its music. */
-void open_movie_update_demo_controller(void) {
+void open_movie_update_demo_controller(open_controller_record_t* unused_record) {
     if ((g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_MOVIE_STREAMING) == 0) {
         SetDispMask(0);
         g_main_gfx_active_buffer_index = 1;

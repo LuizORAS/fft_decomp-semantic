@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
 
 /* Enter EVENT when the battle's setup is done (battle_state_run_battle_setup, map step 0xd) and let
  * system command 8 start the event that is due then, with no acting unit (0xff). */

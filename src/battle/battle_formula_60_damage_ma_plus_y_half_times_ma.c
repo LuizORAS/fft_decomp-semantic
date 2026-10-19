@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x60: formula 0x5E's damage (battle_formula_calculate_truth_damage) with no evade check;
  * no retail ability, weapon or item uses it. */

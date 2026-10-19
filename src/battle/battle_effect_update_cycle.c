@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
 
 /* The effect system's frame: the effect file, the secondary effects and the
  * effect camera moves. Returns 1 while an effect of either kind runs. */

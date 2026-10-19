@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 
 enum {
     GNS_INITIAL_LOAD_BYTES = 0x1000,

@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -21,27 +24,18 @@ void battle_state_run_battle_setup(void) {
 
     battle_state_init_display(0x100, 0xf0, 0x200, 0, 0, 0);
     fade_enabled = g_main_system_go_straight_to_battle;
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS) != 0) {
+    if (script_get_variable(EVENT_SCRIPT_VAR_SAVE_IN_PROGRESS) != 0) {
         fade_enabled = 0;
     }
     g_battle_deployment_skipped = battle_menu_init_attack_resources_and_threads();
     main_gfx_build_now_loading_center(g_battle_deployment_skipped);
-    map_id = g_battle_map_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP);
+    map_id = g_battle_map_id = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP);
     g_battle_state_map_init_step = 0;
     g_battle_deployment_finished = 0;
 
     SetPolyF4(&g_battle_screen_fade_polygons[0]);
-    g_battle_screen_fade_polygons[0].r0 = 0;
-    g_battle_screen_fade_polygons[0].g0 = 0;
-    g_battle_screen_fade_polygons[0].b0 = 0;
-    g_battle_screen_fade_polygons[0].x0 = 0x80;
-    g_battle_screen_fade_polygons[0].y0 = 0;
-    g_battle_screen_fade_polygons[0].x1 = 0x180;
-    g_battle_screen_fade_polygons[0].y1 = 0;
-    g_battle_screen_fade_polygons[0].x2 = 0;
-    g_battle_screen_fade_polygons[0].y2 = 0x100;
-    g_battle_screen_fade_polygons[0].x3 = 0x180;
-    g_battle_screen_fade_polygons[0].y3 = 0x100;
+    setRGB0(&g_battle_screen_fade_polygons[0], 0, 0, 0);
+    setXY4(&g_battle_screen_fade_polygons[0], 0x80, 0, 0x180, 0, 0, 0x100, 0x180, 0x100);
     SetSemiTrans(&g_battle_screen_fade_polygons[0], 1);
     g_battle_screen_fade_polygons[1] = g_battle_screen_fade_polygons[0];
     g_battle_gfx_screen_modulation_polygons[0] = g_battle_screen_fade_polygons[0];
@@ -53,25 +47,9 @@ void battle_state_run_battle_setup(void) {
 
     ((P_TAG*)&banner[0])->len = 9;
     banner[0].code = 0x2c;
-    banner[0].r0 = 0x80;
-    banner[0].g0 = 0x80;
-    banner[0].b0 = 0x80;
-    banner[0].x0 = 0x80;
-    banner[0].y0 = 0x74;
-    banner[0].x1 = 0x17f;
-    banner[0].y1 = 0x74;
-    banner[0].x2 = 0x80;
-    banner[0].y2 = 0x8c;
-    banner[0].x3 = 0x17f;
-    banner[0].y3 = 0x8c;
-    banner[0].u0 = 0;
-    banner[0].v0 = 0;
-    banner[0].u1 = 0xff;
-    banner[0].v1 = 0;
-    banner[0].u2 = 0;
-    banner[0].v2 = 0x18;
-    banner[0].u3 = 0xff;
-    banner[0].v3 = 0x18;
+    setRGB0(&banner[0], 0x80, 0x80, 0x80);
+    setXY4(&banner[0], 0x80, 0x74, 0x17f, 0x74, 0x80, 0x8c, 0x17f, 0x8c);
+    setUV4(&banner[0], 0, 0, 0xff, 0, 0, 0x18, 0xff, 0x18);
     SetSemiTrans(&banner[0], 0);
     banner[0].tpage = GetTPage(0, 0, 0x380, 0x100);
     banner[0].clut = GetClut(0x380, 0x11f);

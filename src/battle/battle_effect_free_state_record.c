@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Tear down effect state record record_index and return it to the free list.
  *
@@ -9,8 +10,8 @@
  * edges, as in the target, and the list-head pointers keep the target's
  * materialized global address. */
 void battle_effect_free_state_record(s16 record_index) {
-    effect_work_record_t* work;
-    effect_work_record_t* particle;
+    battle_effect_work_record_t* work;
+    battle_effect_work_record_t* particle;
     s16 head;
     s16 i;
     s16 parent;
@@ -22,7 +23,7 @@ void battle_effect_free_state_record(s16 record_index) {
         battle_effect_free_work_record(record_index, particle);
         particle = work = work->next;
     }
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < EFFECT_RECORD_CALLBACK_SLOT_COUNT; i++) {
         if (g_battle_effect_state_records[record_index].work_slots[i] != 0) {
             battle_heap_free_block(g_battle_effect_state_records[record_index].work_slots[i]);
             g_battle_effect_state_records[record_index].work_slots[i] = 0;
@@ -31,7 +32,7 @@ void battle_effect_free_state_record(s16 record_index) {
     }
     parent = g_battle_effect_state_records[record_index].parent_index;
     if (parent != 0 && (g_battle_effect_state_records[parent].flags & EFFECT_RECORD_FLAG_ALLOCATED)) {
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < EFFECT_SCRIPT_CHILD_SLOT_COUNT; i++) {
             if (g_battle_effect_state_records[parent].child_indices[i] == record_index) {
                 g_battle_effect_state_records[parent].child_indices[i] = 0;
             }

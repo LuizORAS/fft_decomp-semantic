@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Location script opcode 34 (DrawLocation): end the script with a location's dot to show (the
  * location visibility level). It does not step past its operand; the script ends there anyway. */

@@ -10,7 +10,7 @@ void bunit_unit_build_list_index_map(void) {
     s32 unit_index;
 
     for (unit_index = 0; unit_index < g_bunit_unit_list_count; unit_index++) {
-        bunit_unit_data_t* unit = g_bunit_unit_data[unit_index];
+        bunit_unit_t* unit = g_bunit_unit_pointers[unit_index];
 
         if (!(unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT)) {
             g_bunit_unit_list_index_map[unit_index] = reorderable_index;

@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /* Rebuild a present unit's AI ability list (battle_ai_build_unit_ability_list) and the figures read from
  * it: its lowest and highest MP cost and the share, in quarters, of its abilities that cost MP, are
@@ -21,7 +23,7 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
     s32 evade_count;
     s32 i;
 
-    if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE || ai->unit_compact_indices[unit_id] >= 16) {
+    if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE || ai->unit_compact_indices[unit_id] >= BATTLE_AI_COMPACT_UNIT_COUNT) {
         return;
     }
     battle_ai_build_unit_ability_list(unit_id);
@@ -34,13 +36,13 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
     decision->lowest_mp_cost = 0xff;
     for (i = 0; i < BATTLE_AI_ABILITY_LIST_LENGTH; i++) {
         entry = &ai->ability_lists[ai->unit_compact_indices[unit_id]][i];
-        if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
+        if (entry->skillset == SKILLSET_ID_NONE) {
             break;
         }
         battle_ai_load_ability_entry(entry);
         ability_count++;
-        /* The target reads and updates skillset/usage as one halfword. */
-        if (!(entry->skillset_flags.packed & (BATTLE_AI_ABILITY_ENTRY_REQUIRES_MONSTER_SKILL << 8))) {
+        /* The target reads and updates skillset/usage as one 16-bit value. */
+        if (!entry->usage.policy.requires_monster_skill) {
             if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_AFFECTED_BY_SILENCE) {
                 silence_count++;
             }
@@ -57,40 +59,40 @@ void battle_ai_init_unit_abilities(s32 unit_id) {
                 }
             }
         }
-        entry->skillset_flags.bytes.usage_flags &= BATTLE_AI_ABILITY_ENTRY_INIT_PRESERVE_MASK;
+        entry->usage.flags &= BATTLE_AI_ABILITY_ENTRY_INIT_PRESERVE_MASK;
         if (ai->considered_ability.ai_flags.word
             & (BATTLE_AI_ABILITY_DIRECT_TRAJECTORY | BATTLE_AI_ABILITY_ARC_TRAJECTORY)) {
             continue;
         }
-        if (ai->considered_ability.ai_flags.bytes.flags_3 & BATTLE_AI_ABILITY_FLAG_3_EXHAUSTIVE_ORIGIN_MASK) {
-            entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN << 8);
+        if (ai->considered_ability.ai_flags.fields.flags_3 & BATTLE_AI_ABILITY_FLAG_3_EXHAUSTIVE_ORIGIN_MASK) {
+            entry->usage.policy.exhaustive_origin_scan = 1;
         } else {
             if (ai->considered_ability.ability_id < ABILITY_ID_ITEM_FIRST) {
-                if (ai->considered_ability.parameters.bytes.range + ai->considered_ability.parameters.bytes.aoe < 3
+                if (ai->considered_ability.parameters.fields.range + ai->considered_ability.parameters.fields.aoe < 3
                     && (g_main_ability_range_data[ai->considered_ability.ability_id].flags_4
                         & ABILITY_SECONDARY_FLAG_4_EVADEABLE)) {
-                    entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN << 8);
+                    entry->usage.policy.exhaustive_origin_scan = 1;
                     continue;
                 }
                 if (g_main_ability_range_data[ai->considered_ability.ability_id].flags_2
                     & (ABILITY_SECONDARY_FLAG_2_CANNOT_HIT_CASTER | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES)) {
-                    entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_FORCE_CONSUME_TARGET_TILES << 8);
+                    entry->usage.policy.force_consume_target_tiles = 1;
                     continue;
                 }
             }
-            if (ai->considered_ability.parameters.bytes.aoe == 0) {
-                entry->skillset_flags.packed |= (BATTLE_AI_ABILITY_ENTRY_FORCE_CONSUME_TARGET_TILES << 8);
+            if (ai->considered_ability.parameters.fields.aoe == 0) {
+                entry->usage.policy.force_consume_target_tiles = 1;
             }
         }
     }
     decision->silence_mod = battle_ai_calculate_ratio_times_4(ability_count, silence_count);
     decision->mp_ability_mod = battle_ai_calculate_ratio_times_4(ability_count, mp_count);
     decision->evade_mod = battle_ai_calculate_ratio_times_4(ability_count, evade_count);
-    battle_ai_transfer_byte_values(&decision->flags, &unit->ai_flags, 5);
-    decision->target.bytes.x = unit->ai_target_x;
-    decision->target.bytes.y = unit->ai_target_y;
-    decision->target.bytes.elevation = unit->ai_flags >> 7;
-    decision->target.bytes.zero = 0;
+    battle_mem_copy_bytes(&decision->flags, &unit->ai_flags, 5);
+    decision->target.fields.x = unit->ai_target_x;
+    decision->target.fields.y = unit->ai_target_y;
+    decision->target.fields.elevation = unit->ai_flags >> 7;
+    decision->target.fields.zero = 0;
     if (!(decision->flags & BATTLE_AI_DECISION_SPECIAL_BEHAVIOR)) {
         return;
     }

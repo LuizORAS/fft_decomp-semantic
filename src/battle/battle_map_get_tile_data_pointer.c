@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* The tile at (x, y) on layer 0 (lower) or 1 (upper), or NULL when the square is off the map or the

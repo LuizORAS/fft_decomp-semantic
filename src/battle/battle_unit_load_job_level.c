@@ -1,9 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /*
  * Returns the unit's level (0..8) in the generic job job_id, from the
- * nibble-packed battle_stats_t.job_levels bytes at 0xd2.
+ * nibble-packed battle_stats_t.career.job_levels bytes at 0xd2.
  * *out_slot receives the zero-based job slot (Chemist = 1 ... Mime = 19),
  * or 0 for Squire and non-generic jobs.
  */
@@ -16,7 +16,7 @@ s32 battle_unit_load_job_level(battle_stats_t* unit, s32 job_id, s32* out_slot) 
         *out_slot = 0;
     }
     slot = *out_slot;
-    packed = unit->job_levels[slot / 2];
+    packed = unit->career.job_levels[slot / 2];
     /* Reassigning packed in both arms keeps the target's `sra`; returning
      * `packed >> 4` directly lets GCC use the byte's range and emit `srl`. */
     if (!(slot & 1)) {

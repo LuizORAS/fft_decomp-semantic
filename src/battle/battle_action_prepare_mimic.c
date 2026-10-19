@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Set up a Mime's copy of the action recorded in g_battle_action_current_attacker (battle_turn_run_clock,
@@ -6,16 +8,16 @@
  * actor, copies it, and not an ordinary, Math Skill or monster ability flagged Can't Mimic. The target
  * offset turns with the Mime's facing (Jump keeps its own, bit 0x100), the actor's weapons are lent
  * to the Mime, and the copied command must reach its tile; it is then committed at preview state, the
- * Mime's charge time becomes 0xff and main_status_change_unit(self, 0, 0xd, 1) runs. Returns 1 when
+ * Mime's charge time becomes 0xff and main_status_change_unit(unit, 0, 0xd, 1) runs. Returns 1 when
  * set, 0 for a unit that does not copy, -1 when the copy fails (the lent weapons go back).
  *
  * The menu type stays byte-sized, and the facing subtraction and action-field
  * assignments retain the target's evaluation order. The tile index and saved
  * action state share a temporary because their lifetimes do not overlap. */
 s32 battle_action_prepare_mimic(battle_stats_t* unit) {
-    battle_stats_t* self;
-    battle_ai_command_action_t action;
-    battle_ai_command_action_t* current;
+    /* A byte flag test retains the original compound-condition scheduling. */
+    action_command_t action;
+    action_command_t* current;
     s32 x;
     s32 y;
     s32 z;
@@ -29,18 +31,17 @@ s32 battle_action_prepare_mimic(battle_stats_t* unit) {
     s32 ability_id;
     s32 facing;
 
-    self = unit;
     current = &g_battle_action_current_attacker.action;
-    if (battle_reaction_is_prevented(self) != 0) {
+    if (battle_reaction_is_prevented(unit) != 0) {
         return 0;
     }
-    if ((self->team_flags & BATTLE_TEAM_MASK) != g_battle_action_current_attacker.team) {
+    if ((unit->team_flags & BATTLE_TEAM_MASK) != g_battle_action_current_attacker.team) {
         return 0;
     }
-    if (self->misc_unit_id == current->unit_id) {
+    if (unit->battle_id == current->actor_id) {
         return 0;
     }
-    menu_type = g_main_action_menu_types_by_skillset[current->skillset];
+    menu_type = g_main_action_menu_types_by_skillset[current->skillset_id];
     ability_id = g_battle_action_current_attacker.action.ability_id;
     if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_ARITHMETICKS
         || menu_type == ACTION_MENU_TYPE_MONSTER) {
@@ -48,50 +49,50 @@ s32 battle_action_prepare_mimic(battle_stats_t* unit) {
             return 0;
         }
     }
-    facing = self->position.bits.facing;
+    facing = unit->position.facing;
     attacker_facing = g_battle_action_current_attacker.facing - 4;
     direction = facing - attacker_facing;
     if (menu_type == ACTION_MENU_TYPE_JUMP) {
         direction |= 0x100;
     }
-    if (battle_map_resolve_rotated_offset_layer(self, g_battle_action_current_attacker.target_delta_x,
+    if (battle_map_resolve_rotated_offset_layer(unit, g_battle_action_current_attacker.target_delta_x,
             g_battle_action_current_attacker.target_delta_y, direction, &x, &y, &z)
         != 0) {
         return -1;
     }
     main_util_copy_action_data(current, &action);
     action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
-    action.unit_id = self->misc_unit_id;
-    unit_id = self->misc_unit_id;
-    action.target_x = x;
-    action.target_elevation = z;
+    action.actor_id = unit->battle_id;
+    unit_id = unit->battle_id;
+    action.target_position.vx = x;
+    action.target_position.vy = z;
     weapon_id = g_battle_action_current_attacker.right_hand_weapon_id;
-    action.target_y = y;
+    action.target_position.vz = y;
     action.target_id = unit_id;
-    self->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = weapon_id;
-    self->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = g_battle_action_current_attacker.left_hand_weapon_id;
-    result = battle_target_set_panels_for_action((u8*)&action);
+    unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = weapon_id;
+    unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = g_battle_action_current_attacker.left_hand_weapon_id;
+    result = battle_target_set_panels_for_action(&action);
     if (result == -1 || result == 3
         || (result < 2
-            && !(g_battle_map_tile_data[saved_state = (z << 8) + (g_battle_map_max_x * y) + x]
-                     .ceiling_depth_and_marks.value
+            && !((*(u8*)&g_battle_map_tile_data[saved_state = (z << 8) + (g_battle_map_max_x * y) + x]
+                         .ceiling_depth_and_marks)
                 & MAP_TILE_FLAG_ABILITY_RANGE))) {
-        self->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE;
-        self->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = ITEM_ID_NONE;
+        unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE;
+        unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = ITEM_ID_NONE;
         return -1;
     }
     saved_state = g_battle_action_state;
     g_battle_action_state = BATTLE_ACTION_STATE_PREVIEW;
-    result = battle_action_prepare_attack(&action, (battle_ai_command_action_t*)&self->action_actor_id, 1);
-    self->charged_ability_ct = 0xff;
-    main_status_change_unit(self, 0,
+    result = battle_action_prepare_attack(&action, &unit->action_command, 1);
+    unit->charged_ability_ct = 0xff;
+    main_status_change_unit(unit, 0,
         BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARGING) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_JUMP)
             | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING),
         MAIN_STATUS_REMOVE);
     g_battle_action_state = saved_state;
     if (result < 0) {
-        self->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE;
-        self->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = ITEM_ID_NONE;
+        unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] = ITEM_ID_NONE;
+        unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] = ITEM_ID_NONE;
         return -1;
     }
     return 1;

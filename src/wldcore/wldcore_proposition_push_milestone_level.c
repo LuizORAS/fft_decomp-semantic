@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Announce a discovery milestone (WLDCORE_MENU_LEVEL_DISCOVERY_MILESTONE): the barkeeper's messages
@@ -20,8 +21,8 @@ void wldcore_proposition_push_milestone_level(void) {
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].milestone.remaining = 1;
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].milestone.current += 2 + count;
     }
-    if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
-        world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+    if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
+        thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     }
     wldcore_proposition_show_next_milestone_message(
         &g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].milestone);

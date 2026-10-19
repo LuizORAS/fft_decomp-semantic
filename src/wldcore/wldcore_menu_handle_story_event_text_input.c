@@ -1,3 +1,5 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -7,7 +9,7 @@
  * MAIN_SYSTEM_FLAG_STORY_EVENT_REPLAY, keeping the Record's cursor, the entry and the weather so that
  * wldcore_menu_restore_level_on_world_entry can return to the list. When the text window finishes
  * instead, the level pops, the Brave Story's windows come back and the Record list opens again. */
-void wldcore_menu_handle_story_event_text_input(s32* selection) {
+void wldcore_menu_handle_story_event_text_input(wldcore_menu_stack_record_t* level) {
     s32 depth;
     s32 index;
     s32 value;
@@ -18,24 +20,23 @@ void wldcore_menu_handle_story_event_text_input(s32* selection) {
         != 0) {
         return;
     }
-    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
+    if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED) && thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
         flags = g_main_system_flags;
         if ((flags & MAIN_SYSTEM_FLAG_FADING) == 0) {
-            value = *selection;
+            value = level->story_event_index;
             g_main_saved_list_cursor_state = g_wldcore_story_events_cursor_state;
             g_main_system_flags = (flags ^ MAIN_SYSTEM_FLAG_RUNNING) | MAIN_SYSTEM_FLAG_STORY_EVENT_REPLAY;
             g_main_replay_story_event_index = value;
-            g_main_saved_weather_variable = world_script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
+            g_main_saved_weather_variable = script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
             return;
         }
     }
-    if ((g_wldcore_new_button_presses & PSX_PAD_TRIANGLE) != 0) {
-        world_script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 1);
-        world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_story_event_ids[*selection]);
+    if ((g_wldcore_input_new_button_presses & PSX_PAD_TRIANGLE) != 0) {
+        script_set_variable(EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS, 1);
+        script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_story_event_ids[level->story_event_index]);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_OUT, 0x10);
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
         return;

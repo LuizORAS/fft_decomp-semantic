@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_status.h"
+#include "fft/main.h"
 
 /* Clear the unit's action state (charging, jumping, defending, performing) through
  * main_status_set_action_state. A new command clears it (battle_action_commit_command and the menu

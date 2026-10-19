@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x51, Choco Esuna, Protect Spirit and Clam Spirit: no evade check; hit chance MA + X with
  * the element's Strengthen, Magic Attack Up and the zodiac, without Faith, then the ability's status. */

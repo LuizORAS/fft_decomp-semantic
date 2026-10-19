@@ -9,11 +9,8 @@
 void world_tutorial_update_controller_input(void) {
     s16 bit;
     s32 index;
-    /* Pinned: unpinned, GCC gives filtered_input and the hoisted 1 << index
-     * constant each other's register ($t1/$t2). */
-    register u32 current_input asm("$8");
-    register u32 filtered_input asm("$9");
-    u32* counter;
+    u32 current_input;
+    u32 filtered_input;
     u32* counter_base;
     u32 speed, initial_delay, secondary_repeat_period, repeat_period;
     speed = world_gfx_get_vsync_mode_or_one();
@@ -77,7 +74,7 @@ void world_tutorial_update_controller_input(void) {
         }
         g_world_input_newly_pressed = filtered_input;
         for (index = 0; index < 16; index++) {
-            s32 mask = 1 << index;
+            s32 mask = 1U << index;
 
             if (mask & g_world_input_newly_pressed) {
                 if (mask & g_world_tutorial_previous_input) {
@@ -90,36 +87,35 @@ void world_tutorial_update_controller_input(void) {
             }
         }
         counter_base = g_world_tutorial_repeat_counters;
-        index = 0;
-        counter = counter_base;
-        do {
+        for (index = 0; index < 16; index++) {
             if (index == 4) {
-                counter = counter_base + 12;
                 index = 12;
             }
-            if (current_input & (1 << index)) {
-                (*counter)++;
+            if (current_input & (1U << index)) {
+                counter_base[index]++;
             } else {
-                *counter = 0;
+                counter_base[index] = 0;
             }
-            if ((*counter >= initial_delay && *counter % repeat_period != 0)
-                || ((s32)*counter >= 2 && *counter < initial_delay)) {
-                current_input &= ~(1 << index);
+            if ((counter_base[index] >= initial_delay && counter_base[index] % repeat_period != 0)
+                || ((s32)counter_base[index] >= 2 && counter_base[index] < initial_delay)) {
+                current_input &= ~(1U << index);
             }
-            if (*counter >= initial_delay) {
-                current_input |= 1 << (index + 16);
+            if (counter_base[index] >= initial_delay) {
+                current_input |= 1U << (index + 16);
             }
-            if ((*counter >= initial_delay && *counter % secondary_repeat_period != 0)
-                || ((s32)*counter >= 2 && *counter < initial_delay << 1)) {
-                filtered_input &= ~(1 << index);
+            if ((counter_base[index] >= initial_delay && counter_base[index] % secondary_repeat_period != 0)
+                || ((s32)counter_base[index] >= 2 && counter_base[index] < initial_delay << 1)) {
+                filtered_input &= ~(1U << index);
             }
-            index++;
-            counter++;
-        } while (index < 16);
+        }
         {
             u32 newly_pressed = g_world_input_newly_pressed & 0x0ff0;
-            g_world_input_primary_repeat = (current_input & 0xf00ff00f) | newly_pressed;
-            g_world_input_secondary_repeat = (filtered_input & 0xf00ff00f) | newly_pressed;
+            current_input &= 0xf00ff00f;
+            filtered_input &= 0xf00ff00f;
+            current_input |= newly_pressed;
+            filtered_input |= newly_pressed;
+            g_world_input_primary_repeat = current_input;
+            g_world_input_secondary_repeat = filtered_input;
         }
     }
     g_world_input_primary_repeat_latched = g_world_input_primary_repeat;

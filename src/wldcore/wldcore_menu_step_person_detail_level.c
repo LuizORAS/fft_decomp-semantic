@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Per-frame step of a person's profile (menu level PERSON_DETAIL).
@@ -9,7 +10,7 @@
  * the text window's render record and returns to phase 0, which pops the level
  * back to the Persons list once the text window has finished scrolling.
  *
- * The loading test reads g_main_file_cd_state.state (the same word as
+ * The loading test reads g_main_file_cd_state.state (the same 32-bit value as
  * g_main_file_still_loading): only a struct-member load stays behind the
  * delay store. The unused RECT reserves the 8 bytes that put the descriptor
  * at sp+0x18, and page_x keeps the target's (column + 0x280) association. */
@@ -22,9 +23,9 @@ void wldcore_menu_step_person_detail_level(wldcore_menu_detail_level_t* level) {
     s32 depth;
     s32 value;
     s32 page_x;
-    urect16_t* bounds;
+    RECT* bounds;
     CVECTOR* color;
-    wldcore_point32_t* base;
+    open_point32_t* base;
 
     switch (level->phase) {
     case WLDCORE_DETAIL_PHASE_LOAD:
@@ -38,7 +39,7 @@ void wldcore_menu_step_person_detail_level(wldcore_menu_detail_level_t* level) {
             level->timer = level->timer + 1;
             return;
         }
-        world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, 0xFF);
+        script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, 0xFF);
         entry = level->value;
         g_wldcore_scrollable_text_window.image_y = 0x70;
         g_wldcore_scrollable_text_window.base.x = -0x7A;
@@ -51,7 +52,7 @@ void wldcore_menu_step_person_detail_level(wldcore_menu_detail_level_t* level) {
         character = entry >> 4;
         g_wldcore_scrollable_text_window.text_id = (entry & 0xFF) | TEXT_ID_WORLD_MESSAGE_BASE;
         if (character == 0) {
-            g_wldcore_scrollable_text_window.text_substitutions[0] = g_world_text_substitution_values[0];
+            g_wldcore_scrollable_text_window.text_substitutions[0] = g_text_substitution_values[0];
             g_wldcore_scrollable_text_window.text_substitutions[1] = g_main_brave_story_character_ages[0];
         } else {
             g_wldcore_scrollable_text_window.text_substitutions[0] = g_main_brave_story_character_ages[character];
@@ -59,7 +60,7 @@ void wldcore_menu_step_person_detail_level(wldcore_menu_detail_level_t* level) {
         }
         g_wldcore_scrollable_text_window.extra_render_index = -1;
         wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
-        value = world_script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
+        value = script_get_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT);
         render_index = level->render_index;
         if (value != 0xFF) {
             world_gfx_set_portrait_poly_texture(&portrait, value);
@@ -70,15 +71,13 @@ void wldcore_menu_step_person_detail_level(wldcore_menu_detail_level_t* level) {
             /* The rectangle at +0x28 and the colour triple at +0x30 are written
              * through their own addresses; the rectangle and the base point are
              * then copied as blocks into the text window's extra-record fields. */
-            bounds = (urect16_t*)&g_wldcore_window_render_records[render_index].bounds;
+            bounds = &g_wldcore_window_render_records[render_index].bounds;
             bounds->x = portrait.u0;
             bounds->y = portrait.v0;
             bounds->w = portrait.u1 - portrait.u0;
             bounds->h = portrait.v2 - portrait.v0;
             color = &g_wldcore_window_render_records[render_index].color;
-            color->r = 0x80;
-            color->g = 0x80;
-            color->b = 0x80;
+            color->b = color->g = color->r = 0x80;
             g_wldcore_window_render_records[render_index].anim_counter = 0;
             base = &g_wldcore_window_render_records[render_index].base;
             base->x = -0x72;

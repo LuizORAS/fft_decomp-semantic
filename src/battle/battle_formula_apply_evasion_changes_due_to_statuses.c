@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* The target's statuses on evasion: asleep, Don't Act, stopped, confused, charging or performing
@@ -25,7 +27,7 @@ void battle_formula_apply_evasion_changes_due_to_statuses(void) {
         flag = 1;
     }
     if (flag) {
-        main_util_clear_byte_data(&g_battle_action_current_ability.accessory_evade, 4);
+        main_mem_zero(&g_battle_action_current_ability.accessory_evade, 4);
     }
     if (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEFENDING)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEFENDING)) {

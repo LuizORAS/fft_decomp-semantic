@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Same as battle_effect_save_gravity for g_battle_effect_inertia_threshold. */
 void battle_effect_save_inertia_threshold(void) {

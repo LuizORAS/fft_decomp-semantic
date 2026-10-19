@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x3A, Cheer Up: raise Brave by Y; no hit roll. */
 void battle_formula_add_brave_y(void) {

@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -6,7 +8,7 @@
  * Reset the battle map's mesh, draw-mode and per-part render state before a
  * map load.
  *
- * Clears the four polygon counts and position spare halfwords, the nine mesh
+ * Clears the four polygon counts and position spare 16-bit values, the nine mesh
  * part records (vector triples reset to zero/unit scale) and several map
  * tables. The weather flags keep only bits 0x7d.
  */
@@ -14,6 +16,7 @@ void battle_map_reset_mesh_render_state(void) {
     SVECTOR zero_vector;
     VECTOR unit_scale;
     s32 i;
+    s16 no_tile;
     s32 j;
     s32* weather_flags;
 
@@ -32,8 +35,8 @@ void battle_map_reset_mesh_render_state(void) {
         }
         D_800F78E8[i] = 0;
     }
-    for (i = 0; i < 49; i++) {
-        bzero(g_battle_map_loaded_gns_records[i].load_info, 14);
+    for (i = 0; i < GNS_RESOURCE_END; i++) {
+        bzero(g_battle_map_loaded_gns_records[i].load_info.bytes, sizeof(gns_load_info_t));
         bzero(&g_battle_map_pending_gns_records[i].resource_type, 14);
     }
     battle_map_run_weather_command(MAP_WEATHER_COMMAND_CLEAR);
@@ -44,9 +47,9 @@ void battle_map_reset_mesh_render_state(void) {
     SetDrawMode(&g_battle_render_buffers[1].overlay_modes[1], 0, 1, 0, 0);
     SetDrawMode(&g_battle_render_buffers[0].overlay_modes[0], 0, 1, 0, 0);
     SetDrawMode(&g_battle_render_buffers[1].overlay_modes[0], 0, 1, 0, 0);
-    g_battle_map_ambient_polygon_color[0] = 0x80;
-    g_battle_map_ambient_polygon_color[1] = 0x80;
-    g_battle_map_ambient_polygon_color[2] = 0x80;
+    g_battle_map_ambient_polygon_color.r = 0x80;
+    g_battle_map_ambient_polygon_color.g = 0x80;
+    g_battle_map_ambient_polygon_color.b = 0x80;
     for (i = 0; i < 360; i++) {
         g_battle_map_textured_triangle_positions[i].polygon_flags
             = (s16)(MAP_POLYGON_FLAG_LIT | MAP_POLYGON_FLAG_LIT_ACTIVE);
@@ -61,15 +64,18 @@ void battle_map_reset_mesh_render_state(void) {
     for (i = 0; i < 256; i++) {
         g_battle_map_untextured_quad_positions[i].polygon_flags = 0;
     }
-    for (i = 0; i < 32; i++) {
+    for (i = 0; i < MAP_TEXTURE_ANIMATION_COUNT; i++) {
         g_battle_map_texture_animations[i].mode = MAP_TEXTURE_ANIMATION_MODE_NONE;
         g_battle_map_texture_animations[i].active = 0;
     }
+    /* A signed sentinel local retains each array's original -2 constant load. */
+    no_tile = MAP_POLYGON_TILE_NONE;
     for (i = 0; i < 360; i++) {
-        g_battle_map_textured_triangle_positions[i].terrain_tile.reset_value = -2;
+        g_battle_map_textured_triangle_positions[i].terrain_tile = no_tile;
     }
+    no_tile = MAP_POLYGON_TILE_NONE;
     for (i = 0; i < 710; i++) {
-        g_battle_map_textured_quad_positions[i].terrain_tile.reset_value = -2;
+        g_battle_map_textured_quad_positions[i].terrain_tile = no_tile;
     }
     for (i = 1; i < 9; i++) {
         g_battle_map_mesh_animation_instructions[i].states[0][1].next = 0;

@@ -7,6 +7,10 @@ scope:
   - open_card
   - main_card
   - main_save
+  - menu_bits_init_secondary_reader()
+  - menu_bits_read_secondary()
+  - menu_set_palette_mode()
+  - menu_text_render_id_rows_to_vram()
 ---
 
 # Save and Memory Card

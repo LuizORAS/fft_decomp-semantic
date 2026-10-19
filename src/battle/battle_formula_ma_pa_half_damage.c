@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x24, the Elemental abilities (Pitfall, Water Ball, Hell Ivy and nine more): the
  * magical evade check, then XA = MA and YA = (PA + Y) / 2 as magical damage without Faith

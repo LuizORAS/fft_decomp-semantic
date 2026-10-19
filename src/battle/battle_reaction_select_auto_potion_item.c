@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* The potion Auto Potion uses: a unit that is not blue always has a Potion; a blue one takes the first

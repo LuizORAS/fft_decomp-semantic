@@ -1,8 +1,10 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Tutorial command: wait the number of frames in the command's operand byte
  * (counted by the VSync mode), then step past the two-byte command. */
+/* Tutorial command: wait the number of frames in the command's operand byte
+ * (counted by the VSync mode), then step past the two-byte command. Reading
+ * the operand through `*&` on its field keeps the -O0 byte-address steps. */
 void world_tutorial_command_wait_time(void) {
     if (g_world_tutorial_command_active != 0) {
         g_world_tutorial_wait_time_remaining -= world_gfx_get_vsync_mode_or_one();
@@ -12,6 +14,7 @@ void world_tutorial_command_wait_time(void) {
         }
     } else {
         g_world_tutorial_command_active = 1;
-        g_world_tutorial_wait_time_remaining = *(g_world_tutorial_command_ptr + 1);
+        g_world_tutorial_wait_time_remaining
+            = *(&((world_tutorial_wait_instruction_t*)g_world_tutorial_command_ptr)->frames);
     }
 }

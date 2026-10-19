@@ -1,10 +1,12 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 #include "psx/pad.h"
 
 /* FREE_CURSOR state, also any unknown state: camera and cursor input, then the button actions
  * (help, team highlight, act menu, move range, AT list and mini menu). */
 void battle_state_handle_free_cursor_state(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 input;
     RECT rect; /* never used; retail reserves its 8 bytes */
 
@@ -24,11 +26,10 @@ void battle_state_handle_free_cursor_state(void) {
     } else if (input & PSX_PAD_CIRCLE) {
         battle_target_tint_marked_tiles(BATTLE_TILE_MARK_NONE, 0);
         main_sound_play_sfx(MAIN_SFX_CONFIRM);
-        if (battle_unit_get_selectable_misc_data_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z)
-            != 0) {
+        if (battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z) != 0) {
             battle_menu_dispatch_idle_action_menu();
         } else {
-            unit = battle_unit_get_source_misc_data();
+            unit = battle_unit_get_source();
             if (unit != 0) {
                 battle_target_move_cursor_to_unit(unit);
                 battle_state_enter_open_action_menus();
@@ -36,10 +37,9 @@ void battle_state_handle_free_cursor_state(void) {
         }
     } else if (input & PSX_PAD_CROSS) {
         battle_turn_clear_at_list_index();
-        unit = battle_unit_get_selectable_misc_data_at_map_coords(
-            g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+        unit = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
         if (unit != 0) {
-            g_battle_casting_unit_id = unit->unit_id;
+            g_battle_casting_runtime_id = unit->runtime_id;
             battle_target_show_move_range_in_free_cursor();
         }
     } else if (input & PSX_PAD_START) {

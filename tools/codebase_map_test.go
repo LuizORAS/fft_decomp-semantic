@@ -524,3 +524,21 @@ func TestMapDocsScopesAndEditProtection(t *testing.T) {
 		t.Fatalf("a page changed on both sides was overwritten: %v", err)
 	}
 }
+
+// A shared source defines its source_symbol, not the name of each row that
+// uses it.
+func TestMapSharedSourceDefinition(t *testing.T) {
+	root := t.TempDir()
+	source := "/* Reports whether the unit is deployed. */\ns32 shared_is_deployed(s32 id) { return id; }\n"
+	if err := os.WriteFile(filepath.Join(root, "a.c"), []byte(source), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	index := &codebaseIndex{identifiers: map[string]bool{}}
+	f := &mapFunction{name: "module_has_id", symbol: "shared_is_deployed", source: "a.c"}
+	if err := index.scanFunction(root, f); err != nil {
+		t.Fatal(err)
+	}
+	if f.line != 2 || f.summary != "Reports whether the unit is deployed." {
+		t.Fatalf("line %d, summary %q", f.line, f.summary)
+	}
+}

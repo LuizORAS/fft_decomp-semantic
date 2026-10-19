@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_effect.h"
 
 /* Same as battle_effect_reset_frame_data_pointer for g_battle_effect_animation_sequences, whose start
  * pointer nothing writes either. */

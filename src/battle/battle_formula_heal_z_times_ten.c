@@ -1,5 +1,6 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/main.h"
 
 /* Formula 0x48, Potion, Hi-Potion and X-Potion: restore the item's Z * 10 HP (30, 70, 150), or deal
  * it to an undead target (battle_formula_apply_undead_reversal). */

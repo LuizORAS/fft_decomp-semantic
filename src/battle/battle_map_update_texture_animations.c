@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -17,7 +17,7 @@
 void battle_map_update_texture_animations(void) {
     s32 i;
 
-    for (i = 0; i < 32; i++) {
+    for (i = 0; i < MAP_TEXTURE_ANIMATION_COUNT; i++) {
         if (g_battle_map_texture_animations[i].active == 0) {
             continue;
         }
@@ -30,22 +30,22 @@ void battle_map_update_texture_animations(void) {
             g_battle_map_texture_animations[i].timer = 0;
             g_battle_map_texture_animations[i].frame++;
             g_battle_map_texture_animations[i].column++;
-            if (g_battle_map_texture_animation_moves[i].x0 + g_battle_map_texture_animations[i].width * 2
+            if (g_battle_map_texture_animation_moves[i].sx + g_battle_map_texture_animations[i].width * 2
                 > g_battle_map_texture_animations[i].frame_x / 64 * 64 + 0x3F) {
                 g_battle_map_texture_animations[i].column = 0;
                 g_battle_map_texture_animations[i].row++;
-                g_battle_map_texture_animation_moves[i].x0 = g_battle_map_texture_animations[i].frame_x / 64 * 64 + 2
+                g_battle_map_texture_animation_moves[i].sx = g_battle_map_texture_animations[i].frame_x / 64 * 64 + 2
                     - g_battle_map_texture_animations[i].width;
             }
             if (g_battle_map_texture_animations[i].frame_count - 1 < g_battle_map_texture_animations[i].frame) {
                 g_battle_map_texture_animations[i].frame = 0;
                 g_battle_map_texture_animations[i].column = 0;
                 g_battle_map_texture_animations[i].row = 0;
-                g_battle_map_texture_animation_moves[i].x0
+                g_battle_map_texture_animation_moves[i].sx
                     = g_battle_map_texture_animations[i].frame_x - g_battle_map_texture_animations[i].width;
             }
-            g_battle_map_texture_animation_moves[i].x0 += g_battle_map_texture_animations[i].width;
-            g_battle_map_texture_animation_moves[i].y0 = g_battle_map_texture_animations[i].frame_y
+            g_battle_map_texture_animation_moves[i].sx += g_battle_map_texture_animations[i].width;
+            g_battle_map_texture_animation_moves[i].sy = g_battle_map_texture_animations[i].frame_y
                 + g_battle_map_texture_animations[i].height * g_battle_map_texture_animations[i].row;
             AddPrim(g_battle_gfx_current_render_buffer->otag, &g_battle_map_texture_animation_moves[i]);
             break;
@@ -55,18 +55,18 @@ void battle_map_update_texture_animations(void) {
                 g_battle_map_texture_animations[i].timer = 0;
                 g_battle_map_texture_animations[i].frame++;
                 g_battle_map_texture_animations[i].column++;
-                if (g_battle_map_texture_animation_moves[i].x0 + g_battle_map_texture_animations[i].width * 2
+                if (g_battle_map_texture_animation_moves[i].sx + g_battle_map_texture_animations[i].width * 2
                     > g_battle_map_texture_animations[i].frame_x / 64 * 64 + 0x3F) {
                     g_battle_map_texture_animations[i].column = 0;
                     g_battle_map_texture_animations[i].row++;
-                    g_battle_map_texture_animation_moves[i].x0 = g_battle_map_texture_animations[i].frame_x / 64 * 64
+                    g_battle_map_texture_animation_moves[i].sx = g_battle_map_texture_animations[i].frame_x / 64 * 64
                         + 2 - g_battle_map_texture_animations[i].width;
                 }
                 if (g_battle_map_texture_animations[i].frame_count - 2 < g_battle_map_texture_animations[i].frame) {
                     g_battle_map_texture_animations[i].mode = MAP_TEXTURE_ANIMATION_MODE_UV_PING_PONG_BACK;
                 }
-                g_battle_map_texture_animation_moves[i].x0 += g_battle_map_texture_animations[i].width;
-                g_battle_map_texture_animation_moves[i].y0 = g_battle_map_texture_animations[i].frame_y
+                g_battle_map_texture_animation_moves[i].sx += g_battle_map_texture_animations[i].width;
+                g_battle_map_texture_animation_moves[i].sy = g_battle_map_texture_animations[i].frame_y
                     + g_battle_map_texture_animations[i].height * g_battle_map_texture_animations[i].row;
                 AddPrim(g_battle_gfx_current_render_buffer->otag, &g_battle_map_texture_animation_moves[i]);
             }
@@ -77,20 +77,20 @@ void battle_map_update_texture_animations(void) {
                 g_battle_map_texture_animations[i].timer = 0;
                 g_battle_map_texture_animations[i].frame--;
                 g_battle_map_texture_animations[i].column--;
-                if (g_battle_map_texture_animation_moves[i].x0 - g_battle_map_texture_animations[i].width
+                if (g_battle_map_texture_animation_moves[i].sx - g_battle_map_texture_animations[i].width
                     < g_battle_map_texture_animations[i].frame_x / 64 * 64 + 2) {
                     g_battle_map_texture_animations[i].column
                         = (0x40 - (g_battle_map_texture_animations[i].frame_x % 64))
                         / g_battle_map_texture_animations[i].width;
                     g_battle_map_texture_animations[i].row--;
-                    g_battle_map_texture_animation_moves[i].x0 = g_battle_map_texture_animations[i].frame_x
+                    g_battle_map_texture_animation_moves[i].sx = g_battle_map_texture_animations[i].frame_x
                         + g_battle_map_texture_animations[i].column * g_battle_map_texture_animations[i].width;
                 }
                 if (g_battle_map_texture_animations[i].frame == 0) {
                     g_battle_map_texture_animations[i].mode = MAP_TEXTURE_ANIMATION_MODE_UV_PING_PONG;
                 }
-                g_battle_map_texture_animation_moves[i].x0 -= g_battle_map_texture_animations[i].width;
-                g_battle_map_texture_animation_moves[i].y0 = g_battle_map_texture_animations[i].frame_y
+                g_battle_map_texture_animation_moves[i].sx -= g_battle_map_texture_animations[i].width;
+                g_battle_map_texture_animation_moves[i].sy = g_battle_map_texture_animations[i].frame_y
                     + g_battle_map_texture_animations[i].height * g_battle_map_texture_animations[i].row;
                 AddPrim(g_battle_gfx_current_render_buffer->otag, &g_battle_map_texture_animation_moves[i]);
             }
@@ -107,9 +107,8 @@ void battle_map_update_texture_animations(void) {
                 g_battle_map_texture_animations[i].frame = 0;
                 g_battle_map_texture_animations[i].column = 0;
             }
-            battle_map_load_palette_data(
-                g_battle_map_palette_animation_frames[g_battle_map_texture_animations[i].frame_x]
-                    + g_battle_map_texture_animations[i].column * 16,
+            battle_map_load_palette_data(g_battle_map_palette_animation_frames
+                    + g_battle_map_texture_animations[i].frame_x + g_battle_map_texture_animations[i].column,
                 MAP_CLUT_ROW_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
             break;
         case MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG:
@@ -120,9 +119,8 @@ void battle_map_update_texture_animations(void) {
                 if (g_battle_map_texture_animations[i].frame == g_battle_map_texture_animations[i].frame_count - 1) {
                     g_battle_map_texture_animations[i].mode = MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG_BACK;
                 }
-                battle_map_load_palette_data(
-                    g_battle_map_palette_animation_frames[g_battle_map_texture_animations[i].frame_x]
-                        + g_battle_map_texture_animations[i].frame * 16,
+                battle_map_load_palette_data(g_battle_map_palette_animation_frames
+                        + g_battle_map_texture_animations[i].frame_x + g_battle_map_texture_animations[i].frame,
                     MAP_CLUT_ROW_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
             }
             break;
@@ -134,9 +132,8 @@ void battle_map_update_texture_animations(void) {
                 if (g_battle_map_texture_animations[i].frame == 0) {
                     g_battle_map_texture_animations[i].mode = MAP_TEXTURE_ANIMATION_MODE_PALETTE_PING_PONG;
                 }
-                battle_map_load_palette_data(
-                    g_battle_map_palette_animation_frames[g_battle_map_texture_animations[i].frame_x]
-                        + g_battle_map_texture_animations[i].frame * 16,
+                battle_map_load_palette_data(g_battle_map_palette_animation_frames
+                        + g_battle_map_texture_animations[i].frame_x + g_battle_map_texture_animations[i].frame,
                     MAP_CLUT_ROW_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
             }
             break;
@@ -151,15 +148,15 @@ void battle_map_update_texture_animations(void) {
             g_battle_map_texture_animations[i].frame = 0;
             while (g_battle_map_texture_animations[i].frame < g_battle_map_texture_animations[i].frame_count) {
                 g_battle_map_texture_animations[i].column++;
-                if (g_battle_map_texture_animation_moves[i].x0 + g_battle_map_texture_animations[i].width * 2
+                if (g_battle_map_texture_animation_moves[i].sx + g_battle_map_texture_animations[i].width * 2
                     > g_battle_map_texture_animations[i].frame_x / 64 * 64 + 0x3F) {
                     g_battle_map_texture_animations[i].column = 0;
                     g_battle_map_texture_animations[i].row++;
-                    g_battle_map_texture_animation_moves[i].x0 = g_battle_map_texture_animations[i].frame_x / 64 * 64
+                    g_battle_map_texture_animation_moves[i].sx = g_battle_map_texture_animations[i].frame_x / 64 * 64
                         + 2 - g_battle_map_texture_animations[i].width;
                 }
-                g_battle_map_texture_animation_moves[i].x0 += g_battle_map_texture_animations[i].width;
-                g_battle_map_texture_animation_moves[i].y0 = g_battle_map_texture_animations[i].frame_y
+                g_battle_map_texture_animation_moves[i].sx += g_battle_map_texture_animations[i].width;
+                g_battle_map_texture_animation_moves[i].sy = g_battle_map_texture_animations[i].frame_y
                     + g_battle_map_texture_animations[i].height * g_battle_map_texture_animations[i].row;
                 g_battle_map_texture_animations[i].frame++;
             }
@@ -172,7 +169,7 @@ void battle_map_update_texture_animations(void) {
                 g_battle_map_texture_animations[i].timer = 0;
                 g_battle_map_texture_animations[i].frame--;
                 g_battle_map_texture_animations[i].column--;
-                if (g_battle_map_texture_animation_moves[i].x0 - g_battle_map_texture_animations[i].width
+                if (g_battle_map_texture_animation_moves[i].sx - g_battle_map_texture_animations[i].width
                     < g_battle_map_texture_animations[i].frame_x / 64 * 64 + 2) {
                     g_battle_map_texture_animations[i].column
                         = (0x40 - (g_battle_map_texture_animations[i].frame_x % 64))
@@ -184,9 +181,9 @@ void battle_map_update_texture_animations(void) {
                     g_battle_map_texture_animations[i].active = 0;
                     g_battle_map_texture_animations[i].mode = MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_0;
                 }
-                g_battle_map_texture_animation_moves[i].x0 = g_battle_map_texture_animations[i].frame_x
+                g_battle_map_texture_animation_moves[i].sx = g_battle_map_texture_animations[i].frame_x
                     + g_battle_map_texture_animations[i].width * g_battle_map_texture_animations[i].column;
-                g_battle_map_texture_animation_moves[i].y0 = g_battle_map_texture_animations[i].frame_y
+                g_battle_map_texture_animation_moves[i].sy = g_battle_map_texture_animations[i].frame_y
                     + g_battle_map_texture_animations[i].height * g_battle_map_texture_animations[i].row;
                 AddPrim(g_battle_gfx_current_render_buffer->otag, &g_battle_map_texture_animation_moves[i]);
             }
@@ -202,18 +199,18 @@ void battle_map_update_texture_animations(void) {
             g_battle_map_texture_animations[i].timer += g_main_system_vsync_interval;
             if (g_battle_map_texture_animations[i].timer > g_battle_map_texture_animations[i].duration) {
                 if (g_battle_map_texture_animations[i].column != 0) {
-                    g_battle_map_texture_animation_moves[i].x0 += g_battle_map_texture_animations[i].width;
+                    g_battle_map_texture_animation_moves[i].sx += g_battle_map_texture_animations[i].width;
                 }
                 g_battle_map_texture_animations[i].timer = 0;
                 g_battle_map_texture_animations[i].frame++;
                 g_battle_map_texture_animations[i].column++;
-                if (g_battle_map_texture_animation_moves[i].x0 + g_battle_map_texture_animations[i].width
+                if (g_battle_map_texture_animation_moves[i].sx + g_battle_map_texture_animations[i].width
                     > g_battle_map_texture_animations[i].frame_x / 64 * 64 + 0x3F) {
                     g_battle_map_texture_animations[i].column = 0;
                     g_battle_map_texture_animations[i].row++;
-                    g_battle_map_texture_animation_moves[i].x0
+                    g_battle_map_texture_animation_moves[i].sx
                         = g_battle_map_texture_animations[i].frame_x / 64 * 64 + 2;
-                    g_battle_map_texture_animation_moves[i].y0
+                    g_battle_map_texture_animation_moves[i].sy
                         += g_battle_map_texture_animations[i].height * g_battle_map_texture_animations[i].row;
                 }
                 if (g_battle_map_texture_animations[i].frame > g_battle_map_texture_animations[i].frame_count) {
@@ -221,8 +218,8 @@ void battle_map_update_texture_animations(void) {
                     g_battle_map_texture_animations[i].column = 0;
                     g_battle_map_texture_animations[i].row = 0;
                     g_battle_map_texture_animations[i].active = 0;
-                    g_battle_map_texture_animation_moves[i].x0 = g_battle_map_texture_animations[i].frame_x;
-                    g_battle_map_texture_animation_moves[i].y0 = g_battle_map_texture_animations[i].frame_y;
+                    g_battle_map_texture_animation_moves[i].sx = g_battle_map_texture_animations[i].frame_x;
+                    g_battle_map_texture_animation_moves[i].sy = g_battle_map_texture_animations[i].frame_y;
                     break;
                 }
                 AddPrim(g_battle_gfx_current_render_buffer->otag, &g_battle_map_texture_animation_moves[i]);
@@ -239,9 +236,8 @@ void battle_map_update_texture_animations(void) {
             g_battle_map_texture_animations[i].timer += g_main_system_vsync_interval;
             if (g_battle_map_texture_animations[i].timer > g_battle_map_texture_animations[i].duration) {
                 g_battle_map_texture_animations[i].timer = 0;
-                battle_map_load_palette_data(
-                    g_battle_map_palette_animation_frames[g_battle_map_texture_animations[i].frame_x]
-                        + g_battle_map_texture_animations[i].frame * 16,
+                battle_map_load_palette_data(g_battle_map_palette_animation_frames
+                        + g_battle_map_texture_animations[i].frame_x + g_battle_map_texture_animations[i].frame,
                     MAP_CLUT_ROW_MAP, g_battle_map_texture_animations[i].canvas_x / 16, 0);
                 g_battle_map_texture_animations[i].frame++;
                 if (g_battle_map_texture_animations[i].frame == g_battle_map_texture_animations[i].frame_count) {
@@ -250,12 +246,12 @@ void battle_map_update_texture_animations(void) {
             }
             break;
         case MAP_TEXTURE_ANIMATION_MODE_COLOR_CYCLE:
-            if (g_battle_map_texture_animation_handles[i] == 0) {
-                g_battle_map_texture_animation_handles[i]
-                    = battle_map_start_texture_animation(g_battle_map_texture_animations[i].duration, MAP_CLUT_ROW_MAP,
+            if (g_battle_map_texture_animation_cycle_handles[i] == 0) {
+                g_battle_map_texture_animation_cycle_handles[i]
+                    = battle_map_start_clut_cycle(g_battle_map_texture_animations[i].duration, MAP_CLUT_ROW_MAP,
                         g_battle_map_texture_animations[i].canvas_x,
                         g_battle_map_texture_animations[i].canvas_x + g_battle_map_texture_animations[i].width - 1);
-                if (g_battle_map_texture_animation_handles[i] == 0) {
+                if (g_battle_map_texture_animation_cycle_handles[i] == 0) {
                     main_system_report_error(2, 0x3CC);
                 }
             }

@@ -1,3 +1,5 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -7,21 +9,21 @@
  * to the list; the value display hides. Twin of wldcore_list_open_treasures, but walks the output arrays
  * by pointer. */
 void wldcore_list_open_story_events(void) {
-    wldcore_point32_t dimensions;
-    wldcore_point32_t origin;
+    wldcore_window_panel_layout_t layout;
+    open_point32_t origin;
     s16* values;
     s16* flags;
     s32 count;
     s32 i;
     s32 record_index;
 
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
     count = 0;
     i = 0;
     flags = g_wldcore_list_row_flags;
     values = g_wldcore_list_entry_values;
     for (; i < EVENT_SCRIPT_VAR_STORY_EVENT_COUNT; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_STORY_EVENT_FIRST) != 0) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_STORY_EVENT_FIRST) != 0) {
             *values = i + (s16)TEXT_ID_STORY_EVENT_NAME_BASE;
             *flags = 0;
             flags++;
@@ -35,13 +37,13 @@ void wldcore_list_open_story_events(void) {
     } else {
         i = 8;
     }
-    dimensions.x = 0x94;
+    layout.text_width = 0x94;
     origin.x = 0x4C;
-    dimensions.y = i;
+    layout.visible_rows = i;
     origin.y = 0x4F;
     wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_STORY_EVENTS, count, i);
     wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
-        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
+        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &layout, &origin);
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;
     g_wldcore_menu_ordering_table_offset = 9;
     record_index = g_wldcore_menu_stack_depth;

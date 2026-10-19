@@ -1,5 +1,5 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Roll the extra reward of a successful proposition. A row that finds something
@@ -14,8 +14,9 @@ void wldcore_proposition_roll_bonus_reward(void) {
     s32 candidates[32];
     u16* bonus_table;
     u16* value_table;
+    /* Discovery-row indexing adds two instructions; retain its byte index. */
     u8* location_pairs;
-    u8* random_pairs;
+    wldcore_proposition_reward_pair_t* random_pairs;
     s32 count;
     s32 i;
     s32 index;
@@ -23,21 +24,21 @@ void wldcore_proposition_roll_bonus_reward(void) {
     u16 discovery_kind;
     s32 bonus;
 
-    bonus_table = (u16*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JP_AMOUNTS);
-    value_table = (u16*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_GIL_AMOUNTS);
-    location_pairs = (u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_DISCOVERY_REWARDS);
-    random_pairs = (u8*)wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_RANDOM_REWARDS);
+    bonus_table = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_JP_AMOUNTS);
+    value_table = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_GIL_AMOUNTS);
+    location_pairs = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_DISCOVERY_REWARDS);
+    random_pairs = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_RANDOM_REWARDS);
     g_wldcore_proposition_outcome.reward_type = WLDCORE_PROPOSITION_REWARD_NONE;
     g_wldcore_proposition_outcome.reward_value = 0;
     if (g_wldcore_proposition_outcome.result != WLDCORE_PROPOSITION_RESULT_SUCCESS) {
         return;
     }
-    discovery_kind = g_wldcore_selected_proposition_row[0].fields.discovery_kind;
+    discovery_kind = g_wldcore_selected_proposition_row[0].discovery_kind;
     if (discovery_kind == WLDCORE_PROPOSITION_REWARD_TREASURE) {
         g_wldcore_proposition_outcome.reward_type = WLDCORE_PROPOSITION_REWARD_TREASURE;
         count = 0;
         for (i = 0; i < 31; i++) {
-            if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) == 0) {
+            if (script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) == 0) {
                 candidates[count] = i;
                 count++;
             }
@@ -46,7 +47,7 @@ void wldcore_proposition_roll_bonus_reward(void) {
         count = 0;
         g_wldcore_proposition_outcome.reward_type = discovery_kind;
         for (i = 0; i < 16; i++) {
-            if (world_script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) == 0) {
+            if (script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) == 0) {
                 candidates[count] = i;
                 count++;
             }
@@ -63,16 +64,16 @@ void wldcore_proposition_roll_bonus_reward(void) {
         g_wldcore_proposition_outcome.reward_index = (rand() * 16) >> 15;
     }
     participant_count = g_main_active_propositions[g_wldcore_proposition_outcome.proposition_index].participant_count;
-    index = (g_wldcore_selected_proposition_row[0].fields.category_index - 1) * 2;
+    index = (g_wldcore_selected_proposition_row[0].category_index - 1) * 2;
     for (i = 0; i < participant_count; i++) {
         bonus = bonus_table[location_pairs[index + 1] - 1];
-        g_wldcore_proposition_outcome.rows[0][i] += bonus;
+        g_wldcore_proposition_outcome.participant_jp[i] += bonus;
     }
     g_wldcore_proposition_outcome.reward_value = value_table[location_pairs[index] - 1];
     return;
 
 random_reward:
-    if (g_wldcore_selected_proposition_row[0].fields.random_bonus != 1) {
+    if (g_wldcore_selected_proposition_row[0].random_bonus != 1) {
         return;
     }
     g_wldcore_proposition_outcome.reward_type = WLDCORE_PROPOSITION_REWARD_RANDOM_BONUS;
@@ -86,12 +87,12 @@ random_reward:
     } else {
         index = 0;
     }
-    index += (g_wldcore_selected_proposition_row[0].fields.category_index - 1) * 3;
+    index += (g_wldcore_selected_proposition_row[0].category_index - 1) * 3;
     g_wldcore_proposition_outcome.reward_index = index;
     participant_count = g_main_active_propositions[g_wldcore_proposition_outcome.proposition_index].participant_count;
     for (i = 0; i < participant_count; i++) {
-        bonus = bonus_table[random_pairs[index * 2 + 1] - 1];
-        g_wldcore_proposition_outcome.rows[0][i] += bonus;
+        bonus = bonus_table[random_pairs[index].jp_index - 1];
+        g_wldcore_proposition_outcome.participant_jp[i] += bonus;
     }
-    g_wldcore_proposition_outcome.reward_value = value_table[random_pairs[index * 2] - 1];
+    g_wldcore_proposition_outcome.reward_value = value_table[random_pairs[index].gil_index - 1];
 }

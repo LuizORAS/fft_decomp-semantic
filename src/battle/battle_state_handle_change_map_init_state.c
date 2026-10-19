@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* MAP_INITIALIZE_2, the map change an event asks for: as battle_state_handle_map_init_state, but
  * at step 0xd return to the saved state with the screen still black; the event fades it in with

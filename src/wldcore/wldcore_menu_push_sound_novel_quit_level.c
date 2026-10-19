@@ -4,18 +4,18 @@
  * (sequences 2 and 4)
  * and one render record showing text 0xb83a in a 0x3c x 0x30 image at
  * (-0x1e, -0x18), with the windows offset inside it. Blocks every button
- * (-1), clears the fade box colour, sets fade flag 8 and clears the new
- * level's words 0x10..0x1c.
+ * (-1), clears the fade box colour, sets fade flag 8 and clears the new level's 32-bit values
+ * 0x10..0x1c.
  *
  * The level is written through the sound_novel_quit member of the stack-record
  * union; union field access keeps the target's per-field `$at` bases. The
  * fade state is written through a pointer, which keeps the
- * target's register base for the offset-0 flags word. The unused array
+ * target's register base for the offset-0 flags. The unused array
  * preserves the target's 0x68-byte frame. */
 void wldcore_menu_push_sound_novel_quit_level(void) {
-    wldcore_window_render_bounds16_t bounds;
+    RECT bounds;
     u8 unused[0x28];
-    wldcore_point32_t* base;
+    open_point32_t* base;
     s32 index;
     s32 depth;
     wldcore_sortbox_state_t* fade;
@@ -37,16 +37,16 @@ void wldcore_menu_push_sound_novel_quit_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_quit.render_index = index;
-    bounds.position.x = 0x80;
-    bounds.dimensions.x = 0x3C;
-    bounds.dimensions.y = 0x30;
-    bounds.position.y = 0;
+    bounds.x = 0x80;
+    bounds.w = 0x3C;
+    bounds.h = 0x30;
+    bounds.y = 0;
     wldcore_window_init_render_record_image(
         index, bounds, 0, WLDCORE_TEXT_ID_QUIT_CONTINUE, g_wldcore_window_image_buffer);
     base = &g_wldcore_window_render_records[index].base;
     g_wldcore_window_render_records[index].priority = 8;
     depth = g_wldcore_menu_stack_depth;
-    base->x = -(bounds.dimensions.x / 2);
+    base->x = -(bounds.w / 2);
     base->y = -0x18;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].sound_novel_quit.cursor_window].position.x
         = g_wldcore_window_render_records[index].base.x + 6;

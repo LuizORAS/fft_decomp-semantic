@@ -28,9 +28,9 @@ void open_birthday_push_date_controller(void) {
     record = open_gfx_append_animated_render_record(
         g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
     g_open_controller_records_next[g_open_current_controller_index].birthday_date.cursor_record_36 = record;
-    g_open_gfx_render_records_36[record].anim_id = 0xC;
-    g_open_gfx_render_records_36[record].ot_layer = 4;
-    g_open_gfx_render_records_36[record].frame_timer = 0;
+    g_open_gfx_render_records_36[record].sequence = 0xC;
+    g_open_gfx_render_records_36[record].priority = 4;
+    g_open_gfx_render_records_36[record].anim_counter = 0;
     g_open_gfx_render_records_36[record].frame_index = 0;
 
     record = open_gfx_append_window_record(g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
@@ -53,11 +53,11 @@ void open_birthday_push_date_controller(void) {
     controller = g_open_current_controller_index;
     g_open_gfx_render_records_56[g_open_controller_records_next[controller].birthday_date.window_record_56].flags
         |= WLDCORE_DISPLAY_OBJECT_POP_IN;
-    g_open_gfx_render_records_36[g_open_controller_records_next[controller].birthday_date.cursor_record_36].x
+    g_open_gfx_render_records_36[g_open_controller_records_next[controller].birthday_date.cursor_record_36].position.x
         = g_open_gfx_render_records_56[g_open_controller_records_next[controller].birthday_date.window_record_56].x
         + 0x46;
     g_open_current_controller_index = controller + 1;
-    g_open_gfx_render_records_36[g_open_controller_records_next[controller].birthday_date.cursor_record_36].y
+    g_open_gfx_render_records_36[g_open_controller_records_next[controller].birthday_date.cursor_record_36].position.y
         = g_open_gfx_render_records_56[g_open_controller_records_next[controller].birthday_date.window_record_56].y
         + 0x18;
     g_open_controller_records_next[controller].birthday_date.selecting_month = 0;

@@ -8,15 +8,15 @@
  * block only because the next allocation gets the same pages back (QUIRKS.md). */
 void battle_state_handle_open_sp2_files_state(void) {
     RECT image_rect;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 open_result;
     s32 counter;
     s32 empty_slot;
     s32 offset;
     RECT* image_rect_address;
-    void* sp2_data;
+    u32* sp2_data;
 
-    unit = battle_unit_get_casting_misc_data();
+    unit = battle_unit_get_casting();
     if (g_battle_gfx_sp2_data == 0) {
         g_battle_gfx_sp2_data = main_heap_alloc(0x8000);
         open_result = battle_gfx_open_sp2_file(unit, g_battle_gfx_sp2_data);
@@ -38,7 +38,7 @@ void battle_state_handle_open_sp2_files_state(void) {
                 image_rect_address = &image_rect;
                 sp2_data = g_battle_gfx_sp2_data;
                 ((battle_gfx_vram_slot_t*)((u8*)g_battle_gfx_vram_slots + offset))->owner
-                    = unit->unit_id | BATTLE_GFX_VRAM_SLOT_OWNER_SP2;
+                    = unit->runtime_id | BATTLE_GFX_VRAM_SLOT_OWNER_SP2;
                 image_rect_address->x
                     = ((battle_gfx_vram_slot_t*)((u8*)g_battle_gfx_vram_slots + offset))->image_rect.x;
                 image_rect_address->y

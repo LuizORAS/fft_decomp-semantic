@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* MAP_INITIALIZE: run one step of battle_map_step_init_sequence for g_battle_map_id behind a
  * black screen; at step 0xd start MAP_JUMPING_IN. */

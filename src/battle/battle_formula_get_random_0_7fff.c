@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* A random number from 0 to 0x7fff (rand) while executing; outside that (AI simulation, preview) the

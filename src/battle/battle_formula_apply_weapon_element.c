@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* The target's affinities for the weapon's element (battle_formula_apply_element_affinities). */
 void battle_formula_apply_weapon_element(void) {

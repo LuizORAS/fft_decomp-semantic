@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /* Build the AI command for unit_id's turn (battle_state_handle_ai_command_state): MOVE to a tile, ACT with
  * the chosen action, or END_TURN. The turn ends at once when the chosen action is spent and the unit has
@@ -21,7 +23,7 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
 
     ticks = VSync(1);
     ai = &g_battle_ai_data_base;
-    if (ticks > 440)
+    if (ticks >= BATTLE_AI_DECISION_SCANLINE_LIMIT)
         return -1;
     if (g_battle_ai_data_base.resume_pending) {
         /* Resume: re-enter the suspended decision stage. */
@@ -40,12 +42,13 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
         return 0;
     }
     ai->acting_unit_id = unit_id;
-    if (ai->unit_compact_indices[unit_id] >= 16) {
+    if (ai->unit_compact_indices[unit_id] >= BATTLE_AI_COMPACT_UNIT_COUNT) {
         command->kind = BATTLE_AI_COMMAND_END_TURN;
         return 0;
     }
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        if (g_battle_unit_stats[i].entd_slot != BATTLE_ENTD_SLOT_NONE && ai->unit_compact_indices[i] >= 16) {
+        if (g_battle_unit_stats[i].entd_slot != BATTLE_ENTD_SLOT_NONE
+            && ai->unit_compact_indices[i] >= BATTLE_AI_COMPACT_UNIT_COUNT) {
             command->kind = BATTLE_AI_COMMAND_END_TURN;
             return 0;
         }
@@ -84,20 +87,20 @@ s32 battle_ai_build_command(s32 unit_id, battle_ai_command_t* command) {
         battle_ai_end_simulation();
     }
     if (!ai->acting_unit->movement_taken && (ai->acting_unit->action_taken || !ai->selected_action.act_before_move)) {
-        ai->selected_action.coords.bytes.zero = 0;
+        ai->selected_action.coords.fields.zero = 0;
         if (ai->selected_action.coords.word != ai->acting_unit_coords.word) {
             command->kind = BATTLE_AI_COMMAND_MOVE;
-            command->data.move.x = ai->selected_action.coords.bytes.x;
-            command->data.move.y = ai->selected_action.coords.bytes.y;
-            command->data.move.elevation = ai->selected_action.coords.bytes.elevation;
+            command->data.move.x = ai->selected_action.coords.fields.x;
+            command->data.move.y = ai->selected_action.coords.fields.y;
+            command->data.move.layer = ai->selected_action.coords.fields.elevation;
             goto preserve;
         }
     }
-    if (ai->acting_unit->action_taken || !ai->selected_action.skillset) {
+    if (ai->acting_unit->action_taken || !ai->selected_action.command.skillset_id) {
         command->kind = BATTLE_AI_COMMAND_END_TURN;
     } else {
         command->kind = BATTLE_AI_COMMAND_ACT;
-        battle_ai_transfer_halfword_values(command->data.halfwords, &ai->selected_action.unit_id, 20);
+        battle_mem_copy_u16_values(&command->data.action, &ai->selected_action.command, sizeof(command->data.action));
     }
 preserve:
     moved = ai->acting_unit->movement_taken;
@@ -107,7 +110,7 @@ preserve:
     battle_ai_move_temp_unit_to_coords(&ai->acting_unit_coords);
     history = &g_battle_ai_command_history[0];
     last_command = history + 1;
-    battle_ai_transfer_halfword_values(history, last_command, 24);
-    battle_ai_transfer_halfword_values(last_command, command, 24);
+    battle_mem_copy_u16_values(history, last_command, sizeof(*history));
+    battle_mem_copy_u16_values(last_command, command, sizeof(*last_command));
     return 0;
 }

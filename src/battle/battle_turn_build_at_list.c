@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Rebuild the 40-entry AT list, each entry keyed by the tick it comes due, for every unit able
@@ -14,7 +15,7 @@
  * be a multi-set u32: a single-set shift temporary gets sched1's birth boost
  * and lands after the a1 load. The 0x50-byte array is the unreferenced frame
  * area the target reserves. */
-s32 battle_turn_build_at_list(battle_at_entry_t* list, s32 mode) {
+s32 battle_turn_build_at_list(battle_at_entry_t* list, battle_at_list_mode_e mode) {
     battle_stats_t* unit;
     u8 unused[0x50];
     s32 placed;
@@ -36,16 +37,16 @@ s32 battle_turn_build_at_list(battle_at_entry_t* list, s32 mode) {
 
     placed = 0;
     phase_tick = g_battle_turn_clock_resume_state == BATTLE_BETWEEN_TURN_STATE_PICK_UNIT_AFTER_CHARGE;
-    for (slot = 0; slot < 0x28; slot++) {
-        list[slot].unit = 0xff;
-        list[slot].flags = 0xff;
+    for (slot = 0; slot < BATTLE_AT_LIST_CAPACITY; slot++) {
+        list[slot].unit_code = 0xff;
+        list[slot].action_id_low = 0xff;
         list[slot].sort_key = 0xffff;
     }
 
     if (mode != BATTLE_AT_LIST_MODE_ACTIONS_ONLY) {
         unit = battle_unit_find_active_data_pointer();
         if (unit != 0) {
-            battle_turn_insert_at_entry(unit->misc_unit_id, 0, 0, list);
+            battle_turn_insert_at_entry(unit->battle_id, 0, 0, list);
         }
     }
 
@@ -78,7 +79,7 @@ s32 battle_turn_build_at_list(battle_at_entry_t* list, s32 mode) {
             if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PERFORMING)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)) {
                 main_unit_copy_last_ability_ct(unit);
-                for (turns = 0; turns < 0x27; turns++) {
+                for (turns = 0; turns < BATTLE_AT_LIST_CAPACITY - 1; turns++) {
                     tick += unit->ability_ct;
                     key = tick;
                     if (key >= 0x100) {
@@ -125,8 +126,8 @@ s32 battle_turn_build_at_list(battle_at_entry_t* list, s32 mode) {
         }
         tick = wait;
         ct = unit->ct;
-        for (turns = 0; turns < 0x28; turns++) {
-            while (ct < 100) {
+        for (turns = 0; turns < BATTLE_AT_LIST_CAPACITY; turns++) {
+            while (ct < UNIT_TURN_CT_THRESHOLD) {
                 tick++;
                 value = speed;
                 if (slow != 0) {
@@ -151,9 +152,10 @@ s32 battle_turn_build_at_list(battle_at_entry_t* list, s32 mode) {
                 break;
             }
             remainder = ct;
-            remainder %= 100;
+            remainder %= UNIT_TURN_CT_THRESHOLD;
             ct = remainder;
-            added = battle_turn_insert_at_entry(slot, 0, ((tick << 8) + (100 - remainder)) & 0xffff, list);
+            added = battle_turn_insert_at_entry(
+                slot, 0, ((tick << 8) + (UNIT_TURN_CT_THRESHOLD - remainder)) & 0xffff, list);
             if (added == 0) {
                 break;
             }

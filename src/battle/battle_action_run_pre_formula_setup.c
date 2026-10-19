@@ -1,4 +1,9 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* g_battle_action_current_ability bound a second time. Spelling every field through one
@@ -10,7 +15,7 @@ extern battle_current_ability_t g_battle_action_current_ability_view;
  * the formula handler.
  *
  * A reaction that battle_reaction_apply_effect resolves and a pending knockback
- * (battle_move_set_knockback_fall_damage) return 0 before any formula. Otherwise it loads the
+ * (battle_move_apply_knockback) return 0 before any formula. Otherwise it loads the
  * target's terrain, the strike's weapon (Draw Out's katana; a non-weapon item counts as none), the
  * ability's range data, the weapon data and both faiths, and picks the formula by the skillset's menu
  * type: the ability's formula (a Frog fights bare-handed, and an ability that neither uses the
@@ -25,8 +30,8 @@ extern battle_current_ability_t g_battle_action_current_ability_view;
  * id holds the weapon, then the thrown item, then the status-infliction index. The fields the target
  * addresses through a base register, plus ability_id, go through g_battle_action_current_ability_view; the others
  * use g_battle_action_current_ability. */
-s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
-    battle_ai_command_action_t action;
+s32 battle_action_run_pre_formula_setup(const action_command_t* source, u8 target_id) {
+    action_command_t action;
     weapon_data_t* weapon;
     ability_secondary_data_t* ability;
     item_secondary_data_t* item;
@@ -42,7 +47,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     g_battle_action_target = &g_battle_unit_stats[target_id];
     g_battle_action_target_data = &g_battle_unit_stats[target_id].action;
     g_battle_action_current_ability.post_action_message = BATTLE_POST_ACTION_MESSAGE_NONE;
-    g_battle_action_current_ability_view.attacker_id = action.unit_id;
+    g_battle_action_current_ability_view.attacker_id = action.actor_id;
     g_battle_action_attacker_data = &g_battle_action_attacker_action_data;
     g_battle_action_attacker = &g_battle_unit_stats[g_battle_action_current_ability_view.attacker_id];
     if (g_battle_action_context != BATTLE_ACTION_CONTEXT_PRIMARY && battle_reaction_apply_effect() != 0) {
@@ -50,18 +55,19 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         return 0;
     }
     if (g_battle_action_current_ability.knockback_flags & BATTLE_KNOCKBACK_PENDING) {
-        battle_move_set_knockback_fall_damage();
+        battle_move_apply_knockback();
         return 0;
     }
     g_battle_action_current_ability_view.terrain
-        = g_battle_map_tile_data[battle_map_calculate_location(g_battle_action_target)].surface.bits.type;
+        = g_battle_map_tile_data[battle_map_calculate_location(g_battle_action_target)].surface.type;
     if (g_battle_action_current_ability.strike_counter == 0) {
         id = g_battle_action_current_ability.primary_weapon_id;
     } else {
         id = g_battle_action_current_ability.secondary_weapon_id;
     }
-    if (action.skillset == SKILLSET_ID_DRAW_OUT) {
-        id = action.item_id;
+    if (action.skillset_id == SKILLSET_ID_DRAW_OUT) {
+        /* Item selection reads only the low byte of the 16-bit item/equipment field. */
+        id = action.item_or_equipment;
     }
     if (id >= 0x80) {
         id = ITEM_ID_NOTHING;
@@ -75,16 +81,17 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         ability_id = 0;
     }
     weapon = &g_main_item_weapon_data[id];
-    main_util_copy_byte_data(&g_main_ability_range_data[ability_id], &g_battle_action_current_ability_view.range_data,
-        sizeof(ability_secondary_data_t));
-    main_util_copy_byte_data(weapon, &g_battle_action_current_ability_view.weapon_data, sizeof(weapon_data_t));
+    main_mem_copy_byte_data_source_first(&g_main_ability_range_data[ability_id],
+        &g_battle_action_current_ability_view.range_data, sizeof(ability_secondary_data_t));
+    main_mem_copy_byte_data_source_first(
+        weapon, &g_battle_action_current_ability_view.weapon_data, sizeof(weapon_data_t));
     g_battle_action_current_ability.proc_id = weapon->proc_id;
     g_battle_action_current_ability.charge_power = 0;
     g_battle_action_current_ability.formula = ABILITY_FORMULA_WEAPON_DAMAGE;
     g_battle_action_current_ability.attacker_faith = g_battle_action_attacker->faith;
     g_battle_action_current_ability.target_faith = g_battle_action_target->faith;
     battle_action_clear_target_and_actor_data();
-    skillset = action.skillset;
+    skillset = action.skillset_id;
     g_battle_action_current_ability.skillset = skillset;
     menu_type = g_main_action_menu_types_by_skillset[skillset];
     if (g_battle_action_current_ability_view.weapon_spell_pending != 0) {
@@ -95,12 +102,13 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         g_battle_action_current_ability_view.reaction_id = 0;
     }
     data = &g_main_ability_data[action.ability_id];
-    g_battle_action_target_data->miss_display_flags = data->ai_flags.bytes[0] & BATTLE_ACTION_MISS_DISPLAY_TEAM_MASK;
-    if (data->ai_flags.bytes[3] & BATTLE_AI_ABILITY_FLAG_4_EVADE_WITH_MOTION) {
+    g_battle_action_target_data->miss_display_flags = data->ai_flags.flags_1 & BATTLE_ACTION_MISS_DISPLAY_TEAM_MASK;
+    if (data->ai_flags.flags_4 & BATTLE_AI_ABILITY_FLAG_4_EVADE_WITH_MOTION) {
         g_battle_action_target_data->miss_display_flags += BATTLE_ACTION_MISS_DISPLAY_DODGE_ANIMATION;
     }
     if (menu_type == ACTION_MENU_TYPE_KATANA_INVENTORY) {
-        action.ability_id = action.item_id + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
+        id = action.item_or_equipment;
+        action.ability_id = id + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
     }
     switch (menu_type) {
     case ACTION_MENU_TYPE_ELEMENTS:
@@ -116,11 +124,11 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
                 && g_battle_action_current_ability_view.weapon_spell_pending == 0) {
                 g_battle_action_current_ability_view.weapon_id = ITEM_ID_NOTHING;
-                main_util_copy_byte_data(
+                main_mem_copy_byte_data_source_first(
                     g_main_item_weapon_data, &g_battle_action_current_ability_view.weapon_data, sizeof(weapon_data_t));
             }
             ability = &g_main_ability_range_data[action.ability_id];
-            main_util_copy_byte_data(
+            main_mem_copy_byte_data_source_first(
                 ability, &g_battle_action_current_ability_view.range_data, sizeof(ability_secondary_data_t));
             g_battle_action_current_ability.proc_id = ability->status_infliction_id;
             formula = ability->formula;
@@ -133,15 +141,14 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
         break;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
         formula = ABILITY_FORMULA_WEAPON_DAMAGE;
-        id = action.item_id;
+        id = action.item_or_equipment;
         if (id >= ITEM_ID_CONSUMABLE_FIRST) {
             g_battle_action_current_ability_view.weapon_id = id;
             id += ITEM_ID_COUNT - ITEM_ID_CONSUMABLE_FIRST;
             item = &g_main_item_secondary_data[id];
             g_battle_action_current_ability.used_item_id = id;
             g_battle_action_current_ability.proc_id = item->status_infliction_id;
-            main_util_clear_byte_data(
-                &g_battle_action_current_ability_view.range_data, sizeof(ability_secondary_data_t));
+            main_mem_zero(&g_battle_action_current_ability_view.range_data, sizeof(ability_secondary_data_t));
             formula = item->formula;
         }
         break;
@@ -162,7 +169,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     case ACTION_MENU_TYPE_ATTACK:
         formula = weapon->formula;
         if ((g_battle_action_current_ability.weapon_data.flags & WEAPON_FLAG_TWO_HANDS_COMPATIBLE)
-            && (g_battle_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS)) {
+            && (g_battle_action_attacker->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS)) {
             if (g_battle_action_attacker->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] == ITEM_ID_NONE
                 && g_battle_action_attacker->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD] == ITEM_ID_NONE) {
                 g_battle_action_current_ability.two_hands_active = 1;
@@ -186,7 +193,7 @@ s32 battle_action_run_pre_formula_setup(const u8* source, u8 target_id) {
     if (formula == ABILITY_FORMULA_GUN_DAMAGE) {
         id = 0;
     }
-    main_util_copy_byte_data(&g_main_status_infliction_data[id],
+    main_mem_copy_byte_data_source_first(&g_main_status_infliction_data[id],
         &g_battle_action_current_ability_view.status_infliction, sizeof(status_infliction_data_t));
     battle_status_store_ability_cancellations();
     g_battle_action_current_ability.formula = formula;

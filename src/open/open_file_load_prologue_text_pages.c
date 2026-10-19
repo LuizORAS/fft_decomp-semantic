@@ -1,5 +1,4 @@
 #include "fft/open.h"
-#include "psx/types.h"
 
 /* Upload the two TIMs at sectors 0x43 and 0x54 of OPNTEX.BIN: the text pages at
  * VRAM (256, 256) and (320, 256) that hold Alazlam's prologue, its lines drawn as images.

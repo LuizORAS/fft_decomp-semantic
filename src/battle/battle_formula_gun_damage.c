@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Formula 0x03, the guns (Romanda Gun, Mythril Gun, Stone Gun): XA = YA = the gun's power, Charge's

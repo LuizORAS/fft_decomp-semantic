@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Run battle_unit_update_and_animate_units three times, for the queued unit graphics load

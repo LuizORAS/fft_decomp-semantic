@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 
@@ -31,15 +32,15 @@ void world_formation_run_unit_grid_menu(void) {
                 g_world_formation_unit_browse_enabled = 0;
                 g_world_numeric_editor_thread_params.style = 0;
                 g_world_equipment_ability_panel_thread_params.style = 0;
-                world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
-                world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+                world_menu_request_thread_stop(THREAD_SCREEN_SLOT_CHARACTER_STATUS);
+                world_menu_request_thread_stop(THREAD_SCREEN_SLOT_NUMERIC_EDITOR);
                 g_world_formation_triangle_menu_open = 0;
             }
             g_world_formation_main_menu_initialized = 1;
         }
         if (g_world_tutorial_id == 0 && world_gfx_update_fade_out_tile() == 0) {
             g_world_formation_main_menu_initialized = 0;
-            world_thread_suspend(NATIVE_SCREEN_THREAD_SLOT_MENU);
+            thread_suspend(THREAD_SCREEN_SLOT_MENU);
             g_world_formation_screen_running = 0;
             return;
         }
@@ -47,7 +48,7 @@ void world_formation_run_unit_grid_menu(void) {
             g_world_menu_description_text_id = 0;
             if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_EGG) {
                 if ((g_world_formation_triangle_menu_running
-                        = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_formation_egg_triangle_menu))
+                        = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, &g_world_formation_egg_triangle_menu))
                     == 0) {
                     if (g_world_menu_selection_results[0] == 0) {
                         world_formation_dismiss_unit(g_world_formation_selected_unit_index);
@@ -62,7 +63,7 @@ void world_formation_run_unit_grid_menu(void) {
                 }
             } else {
                 if ((g_world_formation_triangle_menu_running
-                        = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_formation_triangle_menu))
+                        = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, &g_world_formation_triangle_menu))
                     == 0) {
                     if (g_world_menu_selection_results[0] == 0) {
                         g_world_formation_current_menu = WORLD_FORMATION_MENU_ITEM_ENTER;
@@ -83,8 +84,8 @@ void world_formation_run_unit_grid_menu(void) {
                     if (g_world_menu_selection_results[0] != -1) {
                         g_world_formation_saved_banner_enabled = g_world_formation_unit_banner_enabled;
                         if (g_world_formation_current_menu != WORLD_FORMATION_MENU_DISMISS_UNIT) {
-                            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
-                            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+                            world_menu_request_thread_stop(THREAD_SCREEN_SLOT_CHARACTER_STATUS);
+                            world_menu_request_thread_stop(THREAD_SCREEN_SLOT_NUMERIC_EDITOR);
                         } else {
                             g_world_equipment_ability_panel_thread_params.style = 1;
                             g_world_numeric_editor_thread_params.style = 1;
@@ -113,11 +114,11 @@ void world_formation_run_unit_grid_menu(void) {
                 if ((input & PSX_PAD_TRIANGLE) || (input & PSX_PAD_START)
                     || g_world_formation_triangle_menu_open != 0) {
                     if (g_world_formation_unit_banner_at_bottom != 0) {
-                        g_world_formation_triangle_menu.window_y = 0x20;
+                        g_world_formation_triangle_menu.window.y = 0x20;
                     } else {
-                        g_world_formation_triangle_menu.window_y = 0x78;
+                        g_world_formation_triangle_menu.window.y = 0x78;
                     }
-                    g_world_formation_triangle_menu.window_x = ((g_world_formation_selected_unit_index % 4) < 2
+                    g_world_formation_triangle_menu.window.x = ((g_world_formation_selected_unit_index % 4) < 2
                                                                    || g_world_formation_unit_browse_enabled != 0)
                         ? 0x12C
                         : 0x8A;

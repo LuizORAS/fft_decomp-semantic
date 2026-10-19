@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 
 /* Doubles the cursor tile vector computed by
  * battle_camera_calculate_cursor_tile_vector_normal and passes that routine's

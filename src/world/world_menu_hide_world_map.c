@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Save g_main_system_flags (world_menu_restore_world_map puts them back) and hide the world map
  * for a full-screen menu: no dots, routes, background image, display objects, context value, date or

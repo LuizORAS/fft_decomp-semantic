@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* Apply the actor's own result (g_battle_action_attacker_action_data, the attacker record that the formulas fill)
@@ -22,7 +23,7 @@ s32 battle_action_apply_actor_result(s32 unit_id) {
     if (stats->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return -1;
     }
-    main_util_copy_byte_data(&g_battle_action_attacker_action_data, action, 0x2C);
+    main_mem_copy_byte_data_source_first(&g_battle_action_attacker_action_data, action, 0x2C);
     result = battle_action_apply_target_result(unit_id);
     if (g_battle_action_target_data->hit == 0) {
         g_battle_action_target_data->miss_type = BATTLE_ACTION_MISS_TYPE_CANCELLED;

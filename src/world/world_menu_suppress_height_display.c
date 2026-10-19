@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* WORLD twin of battle_menu_suppress_height_display. */
 void world_menu_suppress_height_display(void) {

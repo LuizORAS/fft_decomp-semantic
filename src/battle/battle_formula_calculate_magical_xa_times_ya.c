@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* XA * YA for a healing formula: Magic Attack Up and the zodiac compatibility on XA (no target
  * defenses), stored as HP damage for the caller to turn into healing. */

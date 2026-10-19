@@ -3,18 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Local view of world_menu_thread_data_t with the +0x0a field. */
-typedef struct world_card_prompt_thread_data {
-    u8 _unused_00[0x0a];
-    s16 window_y; /* 0x0a: menu record window y; prompt y chosen from the selected row */
-    u8 _unused_0c[0x74 - 0x0c];
-    s16 selection; /* 0x74 */
-} world_card_prompt_thread_data_t;
-
-extern world_card_prompt_thread_data_t g_world_card_overwrite_confirm_prompt;
-extern world_card_prompt_thread_data_t g_world_card_load_confirm_prompt;
-extern world_card_prompt_thread_data_t* g_world_card_confirm_prompt;
-
 /*
  * Memory-card slot list: in menu step 3 handle slot selection input, then
  * draw the visible slot rows, the row cursor and the scroll arrows.
@@ -46,20 +34,20 @@ void world_card_update_and_draw_slot_list(s32 input) {
         }
         if (world_card_check_selected() > CARD_IO_RESULT_COMPLETE) {
             if (world_card_wait_for_selected_status(3) != CARD_IO_RESULT_COMPLETE) {
-                world_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
-                world_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD);
+                world_menu_stop_thread_and_wait(THREAD_SCREEN_SLOT_MENU);
+                world_menu_stop_thread_and_wait(THREAD_SCREEN_SLOT_MENU_CHILD);
                 g_world_card_menu_step = WORLD_CARD_MENU_STEP_SCANNING;
                 g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
             }
         } else if (g_world_card_overwrite_prompt_running != 0) {
             g_world_card_overwrite_prompt_running
-                = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_card_overwrite_confirm_prompt);
+                = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, g_world_card_overwrite_confirm_prompt);
             if (g_world_card_overwrite_prompt_running == 0 && g_world_menu_selection_results[5] == 0) {
                 g_world_card_menu_step = WORLD_CARD_MENU_STEP_SAVING;
             }
         } else if (g_world_card_load_prompt_running != 0) {
             g_world_card_load_prompt_running
-                = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_card_load_confirm_prompt);
+                = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, g_world_card_load_confirm_prompt);
             if (g_world_card_load_prompt_running == 0 && g_world_menu_selection_results[5] == 0) {
                 g_world_card_menu_step = WORLD_CARD_MENU_STEP_LOADING;
             }
@@ -102,13 +90,13 @@ void world_card_update_and_draw_slot_list(s32 input) {
                 break;
             }
             if (g_world_card_save_mode == 0) {
-                g_world_card_confirm_prompt = &g_world_card_overwrite_confirm_prompt;
-                g_world_card_overwrite_confirm_prompt.selection = 1;
+                g_world_card_confirm_prompt = g_world_card_overwrite_confirm_prompt;
+                g_world_card_overwrite_confirm_prompt[1].selected_index = 1;
             } else {
-                g_world_card_confirm_prompt = &g_world_card_load_confirm_prompt;
-                g_world_card_load_confirm_prompt.selection = 0;
+                g_world_card_confirm_prompt = g_world_card_load_confirm_prompt;
+                g_world_card_load_confirm_prompt[1].selected_index = 0;
             }
-            g_world_card_confirm_prompt->window_y = i;
+            g_world_card_confirm_prompt->window.y = i;
             if (g_world_card_save_mode == 0) {
                 if (g_card_save_slot_file_states[g_world_card_active_slot] == CARD_SAVE_SLOT_OCCUPIED) {
                     g_world_card_overwrite_prompt_running = 1;
@@ -173,13 +161,13 @@ void world_card_update_and_draw_slot_list(s32 input) {
         world_menu_set_draw_priority(10);
         value = row != g_world_card_slot_cursor_row || busy != 0;
         world_menu_set_palette_mode(value);
-        world_menu_script_draw_window_frame(&g_world_card_slot_window_command);
-        g_world_card_slot_quad_3.y = g_world_card_slot_quad_4.y = g_world_card_slot_quad_0.y
-            = g_world_card_slot_quad_1.y = g_world_card_slot_window.rect.y - 14;
-        g_world_card_slot_quad_3.y = g_world_card_slot_quad_3.y + 1;
-        g_world_card_slot_quad_4.y = g_world_card_slot_quad_4.y + 1;
-        g_world_card_slot_quad_1.y++;
-        if (g_world_card_slot_quad_0.y >= 0 && g_world_card_slot_quad_0.y < 241) {
+        world_menu_script_draw_window_frame((menu_instruction_t*)&g_world_card_slot_window_command);
+        g_world_card_slot_quad_3.position.y = g_world_card_slot_quad_4.position.y = g_world_card_slot_quad_0.position.y
+            = g_world_card_slot_quad_1.position.y = g_world_card_slot_window.rect.y - 14;
+        g_world_card_slot_quad_3.position.y = g_world_card_slot_quad_3.position.y + 1;
+        g_world_card_slot_quad_4.position.y = g_world_card_slot_quad_4.position.y + 1;
+        g_world_card_slot_quad_1.position.y++;
+        if (g_world_card_slot_quad_0.position.y >= 0 && g_world_card_slot_quad_0.position.y < 241) {
             world_gfx_enqueue_oriented_textured_quad(
                 &g_world_card_slot_quad_0, world_menu_get_sprite_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
             world_gfx_enqueue_oriented_textured_quad(
@@ -189,25 +177,25 @@ void world_card_update_and_draw_slot_list(s32 input) {
             world_gfx_enqueue_oriented_textured_quad(
                 &g_world_card_slot_quad_4, world_menu_get_sprite_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
             world_menu_set_draw_priority(11);
-            g_world_card_slot_number_command.y = g_world_card_slot_quad_0.y;
+            g_world_card_slot_number_command.y = g_world_card_slot_quad_0.position.y;
             g_world_card_slot_number_command.value = i + 1;
-            world_menu_script_draw_formatted_number(&g_world_card_slot_number_command);
+            world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_card_slot_number_command);
         }
-        g_world_card_slot_quad_2.y = g_world_card_slot_quad_0.y;
-        if (g_world_card_slot_quad_2.y >= 0 && g_world_card_slot_quad_2.y < 241) {
+        g_world_card_slot_quad_2.position.y = g_world_card_slot_quad_0.position.y;
+        if (g_world_card_slot_quad_2.position.y >= 0 && g_world_card_slot_quad_2.position.y < 241) {
             world_gfx_enqueue_oriented_textured_quad(
                 &g_world_card_slot_quad_2, world_menu_get_sprite_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
             g_world_card_playtime_seconds_command.y = g_world_card_playtime_minutes_command.y
-                = g_world_card_playtime_hours_command.y = g_world_card_slot_quad_0.y;
-            g_world_card_playtime_seconds_command.value = g_main_card_save_slot_playtimes[i][2];
-            g_world_card_playtime_minutes_command.value = g_main_card_save_slot_playtimes[i][1];
-            g_world_card_playtime_hours_command.value = g_main_card_save_slot_playtimes[i][0];
+                = g_world_card_playtime_hours_command.y = g_world_card_slot_quad_0.position.y;
+            g_world_card_playtime_seconds_command.value = g_main_card_save_slot_playtimes[i].seconds;
+            g_world_card_playtime_minutes_command.value = g_main_card_save_slot_playtimes[i].minutes;
+            g_world_card_playtime_hours_command.value = g_main_card_save_slot_playtimes[i].hours;
             if (g_world_card_playtime_hours_command.value >= 100) {
                 g_world_card_playtime_hours_command.value = 99;
             }
-            world_menu_script_draw_formatted_number(&g_world_card_playtime_hours_command);
-            world_menu_script_draw_formatted_number(&g_world_card_playtime_minutes_command);
-            world_menu_script_draw_formatted_number(&g_world_card_playtime_seconds_command);
+            world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_card_playtime_hours_command);
+            world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_card_playtime_minutes_command);
+            world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_card_playtime_seconds_command);
         }
         if (g_card_save_slot_file_states[i] == CARD_SAVE_SLOT_AVAILABLE) {
             rect.x = 0x74;

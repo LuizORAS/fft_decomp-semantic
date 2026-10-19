@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x17, Gravi 2: the magical evade check and hit chance (MA + X with both Faiths, no
  * Strengthen), then damage of the target's current HP - 1 (battle_formula_calculate_damage_leaving_one_hp). */

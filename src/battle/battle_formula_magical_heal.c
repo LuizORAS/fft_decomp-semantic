@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x0C, Cure to Cure 4, Moogle and Fairy: no evade or hit roll; XA = MA and YA = Y with the
  * element's Strengthen, Magic Attack Up and the zodiac compatibility

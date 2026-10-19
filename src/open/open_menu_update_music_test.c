@@ -1,4 +1,5 @@
 #include "fft/open.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 
 /* Runs the hidden Music Test menu.
@@ -12,7 +13,8 @@
  * release. Up and Down are withheld from the list for ten frames after each
  * selection.
  */
-void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
+void open_menu_update_music_test(open_controller_record_t* record) {
+    open_menu_sound_test_state_t* state = &record->music_test;
     open_point32_t extent;
     open_point32_t origin;
     s32 buttons;
@@ -47,7 +49,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
             open_title_push_menu_controller(0);
         }
     } else if (state->step == OPEN_MUSIC_TEST_STEP_CLOSE) {
-        if (world_thread_is_running(OPEN_THREAD_SLOT_MUSIC_TEST_LIST) == 0) {
+        if (thread_is_running(OPEN_THREAD_SLOT_MUSIC_TEST_LIST) == 0) {
             state->step = OPEN_MUSIC_TEST_STEP_FADE_OUT;
             open_gfx_start_overlay_fade_in(0x20);
         }
@@ -67,7 +69,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
             }
         }
     } else {
-        if (state->music_slot != 0 && SuzukiGetMusicPlaying((suzuki_music_t*)g_open_music_test_sound_handle) == 0) {
+        if (state->music_slot != 0 && suzuki_smd_is_music_playing(g_open_music_test_sound_handle) == 0) {
             main_sound_unload_scenario_mus(state->music_slot);
             state->music_slot = 0;
             state->music_id = 0;
@@ -91,7 +93,7 @@ void open_menu_update_music_test(open_menu_sound_test_state_t* state) {
                 state->delay = 0x20;
             } else {
                 state->step = OPEN_MUSIC_TEST_STEP_CLOSE;
-                world_thread_set_parameters(OPEN_THREAD_SLOT_MUSIC_TEST_LIST, 0, 0, 1);
+                thread_set_parameters(OPEN_THREAD_SLOT_MUSIC_TEST_LIST, 0, 0, 1);
                 g_open_system_runtime_flags |= OPEN_SYSTEM_RUNTIME_FLAG_INPUT_DISABLED;
             }
         } else if (buttons & PSX_PAD_SELECT) {

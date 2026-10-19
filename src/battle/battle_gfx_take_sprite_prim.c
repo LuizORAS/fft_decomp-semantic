@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Take the next of the 256 primitives of g_battle_gfx_sprite_prim_pool, used as a ring, and return its

@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Spread the range from the frontier panels up to `passes` times: each pass visits every panel

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Append one mesh geometry block (the primary mesh or a part's, GNS resources 0x10 and 0x24-0x2b) to
@@ -11,10 +11,11 @@
  * The block holds four counts (textured triangles, textured quads, untextured triangles, untextured
  * quads), the positions of all four kinds, the normals of the textured ones, the texture records (10 or 12
  * bytes) and untextured records (4 bytes), which this pass skips, and the terrain tiles of the textured
- * polygons. Each position or normal takes eight bytes in the tables, XYZ and a spare halfword; the first
- * position's spare halfword holds the packed terrain tile. */
-void battle_map_append_mesh_geometry(void* geometry_data, battle_map_mesh_part_t* metadata) {
-    u16* source = geometry_data;
+ * polygons. Each position or normal takes eight bytes in the tables, XYZ and a spare 16-bit value; the first
+ * position's spare 16-bit value holds the packed terrain tile. */
+void battle_map_append_mesh_geometry(const map_mesh_geometry_t* geometry_data, battle_map_mesh_part_t* metadata) {
+    /* Named count loads fold the retail four 16-bit cursor advances. */
+    const u16* source = &geometry_data->textured_triangle_count;
     s32 i;
     s32 textured_triangle_count;
     s32 textured_quad_count;
@@ -22,7 +23,7 @@ void battle_map_append_mesh_geometry(void* geometry_data, battle_map_mesh_part_t
     s32 untextured_quad_count;
 
     g_battle_map_resource_load_state = MAP_LOAD_STATE_MESH_RECORDS;
-    g_battle_map_mesh_data_buffer = (s32)g_battle_gfx_current_render_buffer;
+    g_battle_map_mesh_last_render_buffer = g_battle_gfx_current_render_buffer;
 
     textured_triangle_count = *source++;
     textured_quad_count = *source++;
@@ -128,11 +129,11 @@ void battle_map_append_mesh_geometry(void* geometry_data, battle_map_mesh_part_t
 
     for (i = g_battle_map_textured_triangle_count; i < g_battle_map_textured_triangle_count + textured_triangle_count;
         i++) {
-        g_battle_map_textured_triangle_positions[i].terrain_tile.packed = *source++;
+        g_battle_map_textured_triangle_positions[i].terrain_tile = *source++;
     }
 
     for (i = g_battle_map_textured_quad_count; i < g_battle_map_textured_quad_count + textured_quad_count; i++) {
-        g_battle_map_textured_quad_positions[i].terrain_tile.packed = *source++;
+        g_battle_map_textured_quad_positions[i].terrain_tile = *source++;
     }
 
     g_battle_map_textured_triangle_count += textured_triangle_count;

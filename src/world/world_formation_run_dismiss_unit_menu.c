@@ -1,23 +1,7 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
-#include "psx/libc.h"
 #include "psx/types.h"
-
-/*
- * The menu record handed to world_menu_run_thread for the
- * dismissal prompt. Offset 0x74 is world_menu_thread_data_t.selection; the
- * other two fields are written only here.
- */
-typedef struct world_formation_dismiss_menu {
-    u8 _unused_00[0x74];
-    s16 selection; /* 0x74 */
-    u8 _unused_76[0x94 - 0x76];
-    s16 prompt_text_id; /* 0x94 */
-    u8 _unused_96[0xec - 0x96];
-    s16 entry3_selected_index; /* 0xec: selected_index of the fourth 0x3c menu entry */
-} world_formation_dismiss_menu_t;
-
-extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu;
-extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu_scrolled;
 
 /* Per-frame step of the "Remove Unit" menu
  * (WORLD_FORMATION_MENU_DISMISS_UNIT), called by world_formation_run_unit_grid_menu.
@@ -38,8 +22,8 @@ extern world_formation_dismiss_menu_t g_world_formation_dismiss_confirm_menu_scr
  * g_world_formation_dismiss_entries row matching the unit's sprite set has
  * its script variable set to 0xC and the unit is removed. */
 void world_formation_run_dismiss_unit_menu(void) {
-    world_formation_unit_t* unit;
-    world_formation_dismiss_menu_t* menu;
+    world_unit_t* unit;
+    world_menu_entry_t* menu;
     s32 i;
     s32 value;
     s32 sprite;
@@ -65,7 +49,7 @@ void world_formation_run_dismiss_unit_menu(void) {
         for (i = 0; g_world_formation_dismiss_entries[i].sprite_set != -1; i++) {
             if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->sprite_set
                 == g_world_formation_dismiss_entries[i].sprite_set) {
-                world_script_set_variable(g_world_formation_dismiss_entries[i].variable_id, 0xC);
+                script_set_variable(g_world_formation_dismiss_entries[i].variable_id, 0xC);
             }
         }
         world_formation_dismiss_unit(g_world_formation_selected_unit_index);
@@ -86,8 +70,8 @@ void world_formation_run_dismiss_unit_menu(void) {
             if (g_world_formation_unit_browse_enabled != 0) {
                 g_world_formation_unit_cycle_mode = 1;
             }
-            g_world_text_substitution_values[0]
-                = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->roster_slot;
+            g_text_substitution_values[0]
+                = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->identity.roster_slot;
             unit = g_world_formation_unit_pointers[g_world_formation_selected_unit_index];
             sprite = unit->sprite_set;
             if (sprite >= 0x4B) {
@@ -112,7 +96,7 @@ void world_formation_run_dismiss_unit_menu(void) {
             text_id = value + 0xE800;
             if (g_world_formation_dismiss_step == 0) {
                 g_world_sound_suppressed = 1;
-                g_world_formation_dismiss_menu_data = g_world_formation_dismiss_prompt;
+                g_world_formation_dismiss_menu_data = &g_world_formation_dismiss_prompt;
                 if (g_world_formation_unit_banner_at_bottom != 0) {
                     value = 0x19;
                 } else {
@@ -121,14 +105,14 @@ void world_formation_run_dismiss_unit_menu(void) {
                 g_world_formation_dismiss_prompt_kind = value;
                 g_world_formation_dismiss_prompt_text_id = text_id;
             } else {
-                menu = &g_world_formation_dismiss_confirm_menu;
+                menu = g_world_formation_dismiss_confirm_menu;
                 if (g_world_formation_unit_banner_at_bottom != 0) {
-                    menu = &g_world_formation_dismiss_confirm_menu_scrolled;
+                    menu = g_world_formation_dismiss_confirm_menu_scrolled;
                 }
-                g_world_formation_dismiss_menu_data = (u8*)menu;
-                menu->selection = 0;
-                menu->entry3_selected_index = 0;
-                menu->prompt_text_id = text_id;
+                g_world_formation_dismiss_menu_data = menu;
+                menu[1].selected_index = 0;
+                menu[3].selected_index = 0;
+                menu[2].text_id = text_id;
             }
             g_world_dismiss_unit_prompt_running = 1;
         }
@@ -136,7 +120,7 @@ void world_formation_run_dismiss_unit_menu(void) {
     }
 
     if (g_world_formation_dismiss_step == 2) {
-        running = world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT);
+        running = thread_is_running(THREAD_SCREEN_SLOT_TEXT);
         g_world_dismiss_unit_prompt_running = running;
         if (running != 0) {
             return;
@@ -145,11 +129,11 @@ void world_formation_run_dismiss_unit_menu(void) {
         return;
     }
 
-    running = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_formation_dismiss_menu_data);
+    running = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, g_world_formation_dismiss_menu_data);
     step = g_world_formation_dismiss_step;
     g_world_dismiss_unit_prompt_running = running;
     if (step != 0) {
-        if (world_thread_is_running(3) != 0) {
+        if (thread_is_running(3) != 0) {
             step = g_world_formation_dismiss_step;
             if (step == 1) {
                 selection = g_world_menu_selection_results[10];

@@ -17,8 +17,8 @@ interpreters run them.
 
 | What | Where |
 |---|---|
-| A scene's instructions and its text | Its 8 KB block of `EVENT/TEST.EVT`: event id × 4 sectors from `DISC_SECTOR_EVENT_TEST_EVT` ([[battle_script_load_event]]) |
-| What each instruction does and its operands | [[event_opcode_e]] in `include/fft/script.h`; the handlers are the arms of [[battle_script_execute_event]] and WORLD's copy |
+| A scene's instructions and its text | Its 8 KB block of `EVENT/TEST.EVT`: event id × 4 sectors from `DISC_SECTOR_EVENT_TEST_EVT` ([[script_load_event]]) |
+| What each instruction does and its operands | [[event_opcode_e]] in `include/fft/script.h`; the handlers are the arms of [[script_execute_event]] and WORLD's copy |
 | Which event a battle plays next | The scenario's condition chains (loaded by ATTACK) and each event's finish operation in `g_main_scenario_event_finish_operations` |
 | Story flags | The script variables ([[event_script_variable_id_e]]) |
 | What a world map location starts | Its location scripts ([[wldcore_script_find_location_request]]) |

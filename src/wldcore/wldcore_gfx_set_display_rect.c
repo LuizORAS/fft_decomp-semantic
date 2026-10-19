@@ -1,14 +1,14 @@
 #include "fft/wldcore.h"
 
-/* Fill `rect` (x, y, w, h halfwords) with the 256x238 display area of frame
+/* Fill `rect` (x, y, w, h 16-bit values) with the 256x238 display area of frame
  * buffer 0 (y 0) or 1 (y 0xF0). */
-void wldcore_gfx_set_display_rect(s32 buffer_index, s16* rect) {
-    rect[2] = 0x100;
-    rect[0] = 0;
-    rect[3] = 0xEE;
+void wldcore_gfx_set_display_rect(s32 buffer_index, RECT* rect) {
+    rect->w = 0x100;
+    rect->x = 0;
+    rect->h = 0xEE;
     if (buffer_index == 0) {
-        rect[1] = 0;
+        rect->y = 0;
     } else {
-        rect[1] = 0xF0;
+        rect->y = 0xF0;
     }
 }

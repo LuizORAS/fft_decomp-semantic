@@ -1,14 +1,9 @@
 #include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
-
-typedef struct battle_map_weather_splash_rects {
-    RECT rects[4];
-} battle_map_weather_splash_rects_t;
-
-extern battle_map_weather_splash_rects_t g_battle_map_weather_splash_uv_rects;
 
 #define GT3(i)       (g_battle_gfx_current_render_buffer->gt3[i])
 #define GT4(i)       (g_battle_gfx_current_render_buffer->gt4[i])
@@ -29,8 +24,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     MATRIX light_rotation;
     MATRIX light_matrix;
     MATRIX effect_matrix;
-    battle_map_weather_splash_rects_t splash_uv;
-    battle_weather_sprite_rects_t drop_uv;
+    RECT splash_uv[4];
+    RECT drop_uv[3];
     VECTOR effect_translation;
     VECTOR unused_vector;
     VECTOR screen;
@@ -54,8 +49,8 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     s16 tile;
     u16 frame;
 
-    splash_uv = g_battle_map_weather_splash_uv_rects;
-    drop_uv = g_battle_map_weather_drop_uv_rects;
+    memcpy(splash_uv, g_battle_map_weather_splash_uv_rects, sizeof(splash_uv));
+    memcpy(drop_uv, g_battle_map_weather_drop_uv_rects, sizeof(drop_uv));
     unused = g_battle_map_white_cvector;
     AddPrim(g_battle_gfx_current_render_buffer->otag + 0x17F, &g_battle_gfx_current_render_buffer->overlay_modes[1]);
     AddPrim(g_battle_gfx_current_render_buffer->otag + 0x17F, &g_battle_gfx_current_render_buffer->overlay);
@@ -67,31 +62,32 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             g_battle_map_lightning_state.timer = 60;
             if (rand() & 1) {
                 g_battle_sound_secondary_weather_sfx_id
-                    = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_A);
-                main_sound_play_sfx_find_channel(MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_A));
+                    = MAIN_SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_A);
+                main_sound_play_sfx_find_channel(MAIN_SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_A));
             } else {
-                g_battle_sound_tertiary_weather_sfx_id = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_B);
-                main_sound_play_sfx_find_channel(MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_B));
+                g_battle_sound_tertiary_weather_sfx_id
+                    = MAIN_SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_B);
+                main_sound_play_sfx_find_channel(MAIN_SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_THUNDER_B));
             }
         }
         if (g_battle_map_lightning_state.timer != 0) {
             u32 remaining;
 
             remaining = --g_battle_map_lightning_state.timer;
-            g_battle_map_lightning_state.colors[0].red = g_battle_map_lightning_state.base_colors[0].red
-                - g_battle_map_lightning_state.base_colors[0].red * remaining / 60 + remaining * 208 / 60;
-            g_battle_map_lightning_state.colors[0].green = g_battle_map_lightning_state.base_colors[0].green
-                - g_battle_map_lightning_state.base_colors[0].green * remaining / 60 + remaining * 208 / 60;
-            g_battle_map_lightning_state.colors[0].blue = g_battle_map_lightning_state.base_colors[0].blue
-                - g_battle_map_lightning_state.base_colors[0].blue * remaining / 60 + remaining * 3;
-            g_battle_map_lightning_state.colors[1].red = g_battle_map_lightning_state.base_colors[1].red
-                - g_battle_map_lightning_state.base_colors[1].red * remaining / 60 + remaining * 112 / 60;
-            g_battle_map_lightning_state.colors[1].green = g_battle_map_lightning_state.base_colors[1].green
-                - g_battle_map_lightning_state.base_colors[1].green * remaining / 60 + remaining * 112 / 60;
-            g_battle_map_lightning_state.colors[1].blue = g_battle_map_lightning_state.base_colors[1].blue
-                - g_battle_map_lightning_state.base_colors[1].blue * remaining / 60 + remaining * 96 / 60;
+            g_battle_map_lightning_state.colors[0].r = g_battle_map_lightning_state.base_colors[0].r
+                - g_battle_map_lightning_state.base_colors[0].r * remaining / 60 + remaining * 208 / 60;
+            g_battle_map_lightning_state.colors[0].g = g_battle_map_lightning_state.base_colors[0].g
+                - g_battle_map_lightning_state.base_colors[0].g * remaining / 60 + remaining * 208 / 60;
+            g_battle_map_lightning_state.colors[0].b = g_battle_map_lightning_state.base_colors[0].b
+                - g_battle_map_lightning_state.base_colors[0].b * remaining / 60 + remaining * 3;
+            g_battle_map_lightning_state.colors[1].r = g_battle_map_lightning_state.base_colors[1].r
+                - g_battle_map_lightning_state.base_colors[1].r * remaining / 60 + remaining * 112 / 60;
+            g_battle_map_lightning_state.colors[1].g = g_battle_map_lightning_state.base_colors[1].g
+                - g_battle_map_lightning_state.base_colors[1].g * remaining / 60 + remaining * 112 / 60;
+            g_battle_map_lightning_state.colors[1].b = g_battle_map_lightning_state.base_colors[1].b
+                - g_battle_map_lightning_state.base_colors[1].b * remaining / 60 + remaining * 96 / 60;
             battle_map_light_state_command(
-                MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT, &g_battle_map_lightning_state.colors[0].red);
+                MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT, &g_battle_map_lightning_state.colors[0]);
         } else {
             battle_map_light_state_command(MAP_LIGHT_COMMAND_RESTORE_BACKGROUND_GRADIENT, 0);
             if (g_battle_map_lightning_mode == MAP_LIGHTNING_ONCE) {
@@ -111,18 +107,30 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         battle_map_light_matrix_command(
             g_battle_map_light_transition_command, &g_battle_map_light_color_matrix, &g_battle_map_light_matrix, 0);
     }
-    g_battle_gfx_current_render_buffer->overlay.r0 = g_battle_map_background_gradient_colors.first.red;
-    g_battle_gfx_current_render_buffer->overlay.g0 = g_battle_map_background_gradient_colors.first.green;
-    g_battle_gfx_current_render_buffer->overlay.b0 = g_battle_map_background_gradient_colors.first.blue;
-    g_battle_gfx_current_render_buffer->overlay.r1 = g_battle_map_background_gradient_colors.first.red;
-    g_battle_gfx_current_render_buffer->overlay.g1 = g_battle_map_background_gradient_colors.first.green;
-    g_battle_gfx_current_render_buffer->overlay.b1 = g_battle_map_background_gradient_colors.first.blue;
-    g_battle_gfx_current_render_buffer->overlay.r2 = g_battle_map_background_gradient_colors.second.red;
-    g_battle_gfx_current_render_buffer->overlay.g2 = g_battle_map_background_gradient_colors.second.green;
-    g_battle_gfx_current_render_buffer->overlay.b2 = g_battle_map_background_gradient_colors.second.blue;
-    g_battle_gfx_current_render_buffer->overlay.r3 = g_battle_map_background_gradient_colors.second.red;
-    g_battle_gfx_current_render_buffer->overlay.g3 = g_battle_map_background_gradient_colors.second.green;
-    g_battle_gfx_current_render_buffer->overlay.b3 = g_battle_map_background_gradient_colors.second.blue;
+    g_battle_gfx_current_render_buffer->overlay.r0
+        = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP].r;
+    g_battle_gfx_current_render_buffer->overlay.g0
+        = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP].g;
+    g_battle_gfx_current_render_buffer->overlay.b0
+        = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP].b;
+    g_battle_gfx_current_render_buffer->overlay.r1
+        = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP].r;
+    g_battle_gfx_current_render_buffer->overlay.g1
+        = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP].g;
+    g_battle_gfx_current_render_buffer->overlay.b1
+        = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_TOP].b;
+    g_battle_gfx_current_render_buffer->overlay.r2
+        = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].r;
+    g_battle_gfx_current_render_buffer->overlay.g2
+        = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].g;
+    g_battle_gfx_current_render_buffer->overlay.b2
+        = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].b;
+    g_battle_gfx_current_render_buffer->overlay.r3
+        = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].r;
+    g_battle_gfx_current_render_buffer->overlay.g3
+        = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].g;
+    g_battle_gfx_current_render_buffer->overlay.b3
+        = g_battle_map_background_gradient_colors.colors[MAP_BACKGROUND_GRADIENT_BOTTOM].b;
     MulMatrix0(&g_battle_map_light_matrix, &g_battle_map_light_rotation_matrix, &g_battle_map_local_light_matrix);
     SetLightMatrix(&g_battle_map_local_light_matrix);
     if (g_battle_map_polygon_flag_clear_countdown != 0) {
@@ -215,7 +223,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             battle_map_queue_untextured_quads(g_battle_gfx_current_render_buffer->otag,
                 &g_battle_gfx_current_render_buffer->f4[g_battle_map_mesh_parts[part].untextured_quad_start],
                 g_battle_map_camera_rotation.vy, &i);
-            if (g_battle_map_untextured_otz_mask != 0 && g_battle_effect_current_work != 0
+            if (g_battle_map_untextured_otz_mask != 0 && g_battle_effect_map_vertices != 0
                 && (g_battle_map_loaded_id == MAP_ID_ENTRANCE_TO_DEATH_CITY
                     || g_battle_map_loaded_id == MAP_ID_GRAVEYARD_OF_AIRSHIPS
                     || g_battle_map_loaded_id == MAP_ID_ZIREKILE_FALLS)) {
@@ -230,13 +238,13 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 for (j = 0; j < 4; j++) {
                     effect_base = (part - 1) * 4 + 0x61;
                     RotTrans(&g_battle_map_mesh_animation_keyframes[j + effect_base].translation,
-                        (VECTOR*)g_battle_effect_current_work + j + (part - 1) * 4, &effect_flag);
+                        g_battle_effect_map_vertices + j + (part - 1) * 4, &effect_flag);
                 }
             }
         }
     }
     PopMatrix();
-    if (g_battle_map_weather_effect_mode == MAP_WEATHER_COMMAND_SNOW) {
+    if (g_battle_map_weather_effect_mode == MAP_WEATHER_EFFECT_SNOW) {
         PushMatrix();
         g_battle_map_weather_rotation.vy += g_battle_map_weather_primary_speed;
         RotMatrix(&g_battle_map_weather_rotation, &g_battle_map_weather_matrix);
@@ -247,10 +255,10 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         half_size = g_battle_map_camera_zoom.vx * g_battle_map_weather_sprite_scale / 0x100000;
         for (i = 0; i < 64; i++) {
             g_battle_map_tile_data_ptr = g_battle_map_tile_data;
-            tile = (g_battle_map_weather_particles[i].z / 28) * g_battle_map_tile_width
-                + g_battle_map_weather_particles[i].x / 28;
-            ground = -((g_battle_map_tile_data_ptr[tile].height
-                           + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
+            tile = (g_battle_map_weather_particles[i].z / BATTLE_MAP_TILE_SIZE) * g_battle_map_tile_width
+                + g_battle_map_weather_particles[i].x / BATTLE_MAP_TILE_SIZE;
+            ground = -(
+                (g_battle_map_tile_data_ptr[tile].height + (g_battle_map_tile_data_ptr[tile].depth_half_height.depth))
                 * 12);
             if (g_battle_render_buffers[0].ft3[i].y0 >= 0x119) {
                 if (g_battle_map_weather_scale.vy != 0) {
@@ -259,18 +267,18 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 g_battle_map_weather_particles[i].fall_speed = 0;
                 sprite = rand() % 3;
 
-                g_battle_render_buffers[0].ft3[i].u0 = drop_uv.rects[sprite].x;
-                g_battle_render_buffers[1].ft3[i].u0 = drop_uv.rects[sprite].x;
-                g_battle_render_buffers[0].ft3[i].u1 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[1].ft3[i].u1 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[0].ft3[i].u2 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[1].ft3[i].u2 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[0].ft3[i].v0 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[1].ft3[i].v0 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[0].ft3[i].v1 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[1].ft3[i].v1 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[0].ft3[i].v2 = drop_uv.rects[sprite].y + drop_uv.rects[sprite].h;
-                g_battle_render_buffers[1].ft3[i].v2 = drop_uv.rects[sprite].y + drop_uv.rects[sprite].h;
+                g_battle_render_buffers[0].ft3[i].u0 = drop_uv[sprite].x;
+                g_battle_render_buffers[1].ft3[i].u0 = drop_uv[sprite].x;
+                g_battle_render_buffers[0].ft3[i].u1 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[1].ft3[i].u1 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[0].ft3[i].u2 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[1].ft3[i].u2 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[0].ft3[i].v0 = drop_uv[sprite].y;
+                g_battle_render_buffers[1].ft3[i].v0 = drop_uv[sprite].y;
+                g_battle_render_buffers[0].ft3[i].v1 = drop_uv[sprite].y;
+                g_battle_render_buffers[1].ft3[i].v1 = drop_uv[sprite].y;
+                g_battle_render_buffers[0].ft3[i].v2 = drop_uv[sprite].y + drop_uv[sprite].h;
+                g_battle_render_buffers[1].ft3[i].v2 = drop_uv[sprite].y + drop_uv[sprite].h;
                 g_battle_map_weather_particles[i].fall_speed = sprite + g_battle_map_weather_fall_speed;
                 if (g_battle_map_weather_scale.vx != 0) {
                     if (rand() & 1) {
@@ -319,7 +327,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         }
         PopMatrix();
     }
-    if (g_battle_map_weather_effect_mode == 0x96) {
+    if (g_battle_map_weather_effect_mode == MAP_WEATHER_EFFECT_TIMED_PARTICLE_TRANSFORM) {
         s32 sine;
 
         PushMatrix();
@@ -339,15 +347,15 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         half_size = g_battle_map_camera_zoom.vx * g_battle_map_weather_sprite_scale / 0x100000;
         for (i = 0; i < 64; i++) {
             g_battle_map_tile_data_ptr = g_battle_map_tile_data;
-            tile = (g_battle_map_weather_particles[i].z / 28) * g_battle_map_tile_width
-                + g_battle_map_weather_particles[i].x / 28;
-            ground = -((g_battle_map_tile_data_ptr[tile].height
-                           + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
+            tile = (g_battle_map_weather_particles[i].z / BATTLE_MAP_TILE_SIZE) * g_battle_map_tile_width
+                + g_battle_map_weather_particles[i].x / BATTLE_MAP_TILE_SIZE;
+            ground = -(
+                (g_battle_map_tile_data_ptr[tile].height + (g_battle_map_tile_data_ptr[tile].depth_half_height.depth))
                 * 12);
-            tile = (g_battle_map_weather_particles[i + 32].z / 28) * g_battle_map_tile_width
-                + g_battle_map_weather_particles[i + 32].x / 28;
-            ground = -((g_battle_map_tile_data_ptr[tile].height
-                           + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
+            tile = (g_battle_map_weather_particles[i + 32].z / BATTLE_MAP_TILE_SIZE) * g_battle_map_tile_width
+                + g_battle_map_weather_particles[i + 32].x / BATTLE_MAP_TILE_SIZE;
+            ground = -(
+                (g_battle_map_tile_data_ptr[tile].height + (g_battle_map_tile_data_ptr[tile].depth_half_height.depth))
                 * 12);
             if ((g_battle_map_command_0x96_frame < g_battle_map_command_0x96_duration / 8
                     && g_battle_render_buffers[0].ft3[i].y0 >= 0x119)
@@ -364,18 +372,18 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 sprite = rand() % 3;
                 g_battle_map_weather_particles[i].fall_speed = g_battle_map_weather_fall_speed + 3 - sprite;
 
-                g_battle_render_buffers[0].ft3[i].u0 = drop_uv.rects[sprite].x;
-                g_battle_render_buffers[1].ft3[i].u0 = drop_uv.rects[sprite].x;
-                g_battle_render_buffers[0].ft3[i].u1 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[1].ft3[i].u1 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[0].ft3[i].u2 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[1].ft3[i].u2 = drop_uv.rects[sprite].x + drop_uv.rects[sprite].w;
-                g_battle_render_buffers[0].ft3[i].v0 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[1].ft3[i].v0 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[0].ft3[i].v1 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[1].ft3[i].v1 = drop_uv.rects[sprite].y;
-                g_battle_render_buffers[0].ft3[i].v2 = drop_uv.rects[sprite].y + drop_uv.rects[sprite].h;
-                g_battle_render_buffers[1].ft3[i].v2 = drop_uv.rects[sprite].y + drop_uv.rects[sprite].h;
+                g_battle_render_buffers[0].ft3[i].u0 = drop_uv[sprite].x;
+                g_battle_render_buffers[1].ft3[i].u0 = drop_uv[sprite].x;
+                g_battle_render_buffers[0].ft3[i].u1 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[1].ft3[i].u1 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[0].ft3[i].u2 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[1].ft3[i].u2 = drop_uv[sprite].x + drop_uv[sprite].w;
+                g_battle_render_buffers[0].ft3[i].v0 = drop_uv[sprite].y;
+                g_battle_render_buffers[1].ft3[i].v0 = drop_uv[sprite].y;
+                g_battle_render_buffers[0].ft3[i].v1 = drop_uv[sprite].y;
+                g_battle_render_buffers[1].ft3[i].v1 = drop_uv[sprite].y;
+                g_battle_render_buffers[0].ft3[i].v2 = drop_uv[sprite].y + drop_uv[sprite].h;
+                g_battle_render_buffers[1].ft3[i].v2 = drop_uv[sprite].y + drop_uv[sprite].h;
                 if (g_battle_map_weather_scale.vx != 0) {
                     if (rand() & 1) {
                         g_battle_map_weather_particles[i].x = rand() % (0x8C000 / g_battle_map_weather_scale.vx);
@@ -442,20 +450,20 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         }
         PopMatrix();
     }
-    if (g_battle_map_weather_effect_mode == MAP_WEATHER_COMMAND_RAIN) {
+    if (g_battle_map_weather_effect_mode == MAP_WEATHER_EFFECT_RAIN) {
         half_size = g_battle_map_camera_zoom.vx * 22;
         half_size /= 0x2000;
         for (i = 0; i < 32; i++) {
             g_battle_map_tile_data_ptr = g_battle_map_tile_data;
-            tile = (g_battle_map_weather_particles[i].z / 28) * g_battle_map_tile_width
-                + g_battle_map_weather_particles[i].x / 28;
-            ground = -((g_battle_map_tile_data_ptr[tile].height
-                           + (g_battle_map_tile_data_ptr[tile].depth_half_height.value >> 5))
+            tile = (g_battle_map_weather_particles[i].z / BATTLE_MAP_TILE_SIZE) * g_battle_map_tile_width
+                + g_battle_map_weather_particles[i].x / BATTLE_MAP_TILE_SIZE;
+            ground = -(
+                (g_battle_map_tile_data_ptr[tile].height + (g_battle_map_tile_data_ptr[tile].depth_half_height.depth))
                 * 12);
             if (ground < g_battle_map_weather_particles[i + 32].y) {
                 g_battle_map_weather_particles[i].fall_speed = 0;
-                g_battle_map_weather_particles[i].x = rand() % (g_battle_map_tile_width * 28);
-                g_battle_map_weather_particles[i].z = rand() % (g_battle_map_tile_depth * 28);
+                g_battle_map_weather_particles[i].x = rand() % (g_battle_map_tile_width * BATTLE_MAP_TILE_SIZE);
+                g_battle_map_weather_particles[i].z = rand() % (g_battle_map_tile_depth * BATTLE_MAP_TILE_SIZE);
                 spawn_y = -0x180;
                 g_battle_map_weather_particles[i].y = spawn_y;
                 g_battle_map_weather_particles[i + 32].x = g_battle_map_weather_particles[i].x;
@@ -506,7 +514,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 g_battle_map_rain_splash_particles[i].y = ground - 8;
                 g_battle_map_rain_splash_particles[i].x = g_battle_map_weather_particles[i].x;
                 g_battle_map_rain_splash_particles[i].z = g_battle_map_weather_particles[i].z;
-                if (!(g_battle_map_tile_data_ptr[tile].flags.value & MAP_TILE_FLAG_UNTARGETABLE)) {
+                if (!(g_battle_map_tile_data_ptr[tile].flags.untargetable)) {
                     g_battle_map_weather_particles[i].fall_speed = 1;
                 } else {
                     g_battle_map_weather_particles[i].fall_speed = 2;
@@ -533,24 +541,24 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
                 g_battle_map_rain_splash_particles[i].fall_speed--;
                 frame = g_battle_map_rain_splash_particles[i].fall_speed;
                 if ((frame & 3) == 0) {
-                    g_battle_render_buffers[0].ft3[i + 32].u0 = splash_uv.rects[(frame >> 2) & 3].x;
-                    g_battle_render_buffers[1].ft3[i + 32].u0 = splash_uv.rects[(frame >> 2) & 3].x;
+                    g_battle_render_buffers[0].ft3[i + 32].u0 = splash_uv[(frame >> 2) & 3].x;
+                    g_battle_render_buffers[1].ft3[i + 32].u0 = splash_uv[(frame >> 2) & 3].x;
                     g_battle_render_buffers[0].ft3[i + 32].u1
-                        = splash_uv.rects[(frame >> 2) & 3].x + splash_uv.rects[(frame >> 2) & 3].w;
+                        = splash_uv[(frame >> 2) & 3].x + splash_uv[(frame >> 2) & 3].w;
                     g_battle_render_buffers[1].ft3[i + 32].u1
-                        = splash_uv.rects[(frame >> 2) & 3].x + splash_uv.rects[(frame >> 2) & 3].w;
-                    g_battle_render_buffers[0].ft3[i + 32].u2 = splash_uv.rects[(frame >> 2) & 3].x;
-                    g_battle_render_buffers[1].ft3[i + 32].u2 = splash_uv.rects[(frame >> 2) & 3].x;
-                    g_battle_render_buffers[0].ft3[i + 32].v0 = splash_uv.rects[(frame >> 2) & 3].y;
-                    g_battle_render_buffers[1].ft3[i + 32].v0 = splash_uv.rects[(frame >> 2) & 3].y;
+                        = splash_uv[(frame >> 2) & 3].x + splash_uv[(frame >> 2) & 3].w;
+                    g_battle_render_buffers[0].ft3[i + 32].u2 = splash_uv[(frame >> 2) & 3].x;
+                    g_battle_render_buffers[1].ft3[i + 32].u2 = splash_uv[(frame >> 2) & 3].x;
+                    g_battle_render_buffers[0].ft3[i + 32].v0 = splash_uv[(frame >> 2) & 3].y;
+                    g_battle_render_buffers[1].ft3[i + 32].v0 = splash_uv[(frame >> 2) & 3].y;
                     g_battle_render_buffers[0].ft3[i + 32].v1
-                        = splash_uv.rects[(frame >> 2) & 3].y + splash_uv.rects[(frame >> 2) & 3].h;
+                        = splash_uv[(frame >> 2) & 3].y + splash_uv[(frame >> 2) & 3].h;
                     g_battle_render_buffers[1].ft3[i + 32].v1
-                        = splash_uv.rects[(frame >> 2) & 3].y + splash_uv.rects[(frame >> 2) & 3].h;
+                        = splash_uv[(frame >> 2) & 3].y + splash_uv[(frame >> 2) & 3].h;
                     g_battle_render_buffers[0].ft3[i + 32].v2
-                        = splash_uv.rects[(frame >> 2) & 3].y + splash_uv.rects[(frame >> 2) & 3].h;
+                        = splash_uv[(frame >> 2) & 3].y + splash_uv[(frame >> 2) & 3].h;
                     g_battle_render_buffers[1].ft3[i + 32].v2
-                        = splash_uv.rects[(frame >> 2) & 3].y + splash_uv.rects[(frame >> 2) & 3].h;
+                        = splash_uv[(frame >> 2) & 3].y + splash_uv[(frame >> 2) & 3].h;
                 }
                 if (g_battle_map_rain_splash_particles[i].fall_speed == 0) {
                     g_battle_map_weather_particles[i].fall_speed = 0;
@@ -565,31 +573,31 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
         if (g_battle_map_ambient_restored_buffer != g_battle_gfx_current_render_buffer) {
             for (i = 0; i < g_battle_map_textured_triangle_count; i++) {
                 if (!(g_battle_map_textured_triangle_positions[i].polygon_flags & MAP_POLYGON_FLAG_LIT)) {
-                    (g_battle_gfx_current_render_buffer->gt3 + i)->r0 = g_battle_map_ambient_polygon_color[0];
-                    (g_battle_gfx_current_render_buffer->gt3 + i)->g0 = g_battle_map_ambient_polygon_color[1];
-                    (g_battle_gfx_current_render_buffer->gt3 + i)->b0 = g_battle_map_ambient_polygon_color[2];
-                    (g_battle_gfx_current_render_buffer->gt3 + i)->r1 = g_battle_map_ambient_polygon_color[0];
-                    (g_battle_gfx_current_render_buffer->gt3 + i)->g1 = g_battle_map_ambient_polygon_color[1];
-                    (g_battle_gfx_current_render_buffer->gt3 + i)->b1 = g_battle_map_ambient_polygon_color[2];
-                    (g_battle_gfx_current_render_buffer->gt3 + i)->r2 = g_battle_map_ambient_polygon_color[0];
-                    (g_battle_gfx_current_render_buffer->gt3 + i)->g2 = g_battle_map_ambient_polygon_color[1];
-                    (g_battle_gfx_current_render_buffer->gt3 + i)->b2 = g_battle_map_ambient_polygon_color[2];
+                    (g_battle_gfx_current_render_buffer->gt3 + i)->r0 = g_battle_map_ambient_polygon_color.r;
+                    (g_battle_gfx_current_render_buffer->gt3 + i)->g0 = g_battle_map_ambient_polygon_color.g;
+                    (g_battle_gfx_current_render_buffer->gt3 + i)->b0 = g_battle_map_ambient_polygon_color.b;
+                    (g_battle_gfx_current_render_buffer->gt3 + i)->r1 = g_battle_map_ambient_polygon_color.r;
+                    (g_battle_gfx_current_render_buffer->gt3 + i)->g1 = g_battle_map_ambient_polygon_color.g;
+                    (g_battle_gfx_current_render_buffer->gt3 + i)->b1 = g_battle_map_ambient_polygon_color.b;
+                    (g_battle_gfx_current_render_buffer->gt3 + i)->r2 = g_battle_map_ambient_polygon_color.r;
+                    (g_battle_gfx_current_render_buffer->gt3 + i)->g2 = g_battle_map_ambient_polygon_color.g;
+                    (g_battle_gfx_current_render_buffer->gt3 + i)->b2 = g_battle_map_ambient_polygon_color.b;
                 }
             }
             for (i = 0; i < g_battle_map_textured_quad_count; i++) {
                 if (!(g_battle_map_textured_quad_positions[i].polygon_flags & MAP_POLYGON_FLAG_LIT)) {
-                    (g_battle_gfx_current_render_buffer->gt4 + i)->r0 = g_battle_map_ambient_polygon_color[0];
-                    (g_battle_gfx_current_render_buffer->gt4 + i)->g0 = g_battle_map_ambient_polygon_color[1];
-                    (g_battle_gfx_current_render_buffer->gt4 + i)->b0 = g_battle_map_ambient_polygon_color[2];
-                    (g_battle_gfx_current_render_buffer->gt4 + i)->r1 = g_battle_map_ambient_polygon_color[0];
-                    (g_battle_gfx_current_render_buffer->gt4 + i)->g1 = g_battle_map_ambient_polygon_color[1];
-                    (g_battle_gfx_current_render_buffer->gt4 + i)->b1 = g_battle_map_ambient_polygon_color[2];
-                    (g_battle_gfx_current_render_buffer->gt4 + i)->r2 = g_battle_map_ambient_polygon_color[0];
-                    (g_battle_gfx_current_render_buffer->gt4 + i)->g2 = g_battle_map_ambient_polygon_color[1];
-                    (g_battle_gfx_current_render_buffer->gt4 + i)->b2 = g_battle_map_ambient_polygon_color[2];
-                    (g_battle_gfx_current_render_buffer->gt4 + i)->r3 = g_battle_map_ambient_polygon_color[0];
-                    (g_battle_gfx_current_render_buffer->gt4 + i)->g3 = g_battle_map_ambient_polygon_color[1];
-                    (g_battle_gfx_current_render_buffer->gt4 + i)->b3 = g_battle_map_ambient_polygon_color[2];
+                    (g_battle_gfx_current_render_buffer->gt4 + i)->r0 = g_battle_map_ambient_polygon_color.r;
+                    (g_battle_gfx_current_render_buffer->gt4 + i)->g0 = g_battle_map_ambient_polygon_color.g;
+                    (g_battle_gfx_current_render_buffer->gt4 + i)->b0 = g_battle_map_ambient_polygon_color.b;
+                    (g_battle_gfx_current_render_buffer->gt4 + i)->r1 = g_battle_map_ambient_polygon_color.r;
+                    (g_battle_gfx_current_render_buffer->gt4 + i)->g1 = g_battle_map_ambient_polygon_color.g;
+                    (g_battle_gfx_current_render_buffer->gt4 + i)->b1 = g_battle_map_ambient_polygon_color.b;
+                    (g_battle_gfx_current_render_buffer->gt4 + i)->r2 = g_battle_map_ambient_polygon_color.r;
+                    (g_battle_gfx_current_render_buffer->gt4 + i)->g2 = g_battle_map_ambient_polygon_color.g;
+                    (g_battle_gfx_current_render_buffer->gt4 + i)->b2 = g_battle_map_ambient_polygon_color.b;
+                    (g_battle_gfx_current_render_buffer->gt4 + i)->r3 = g_battle_map_ambient_polygon_color.r;
+                    (g_battle_gfx_current_render_buffer->gt4 + i)->g3 = g_battle_map_ambient_polygon_color.g;
+                    (g_battle_gfx_current_render_buffer->gt4 + i)->b3 = g_battle_map_ambient_polygon_color.b;
                 }
             }
         }
@@ -598,15 +606,14 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     g_battle_map_tile_data_ptr = g_battle_map_tile_data;
     if (g_battle_target_tile_mark_modes[0] == BATTLE_TILE_MARK_SHOW_MOVE) {
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_triangle_count; i++) {
-            if (g_battle_map_textured_triangle_positions[i].terrain_tile.packed != 0xFFFE) {
-                g_battle_target_color_tile_y
-                    = (g_battle_map_textured_triangle_positions[i].terrain_tile.packed >> 1) & 0x7F;
-                g_battle_target_color_tile_x = g_battle_map_textured_triangle_positions[i].terrain_tile.packed >> 8;
+            if (g_battle_map_textured_triangle_positions[i].terrain_tile != MAP_POLYGON_TILE_NONE) {
+                g_battle_target_color_tile_y = (g_battle_map_textured_triangle_positions[i].terrain_tile >> 1) & 0x7F;
+                g_battle_target_color_tile_x = g_battle_map_textured_triangle_positions[i].terrain_tile >> 8;
                 tile = g_battle_target_color_tile_y * g_battle_map_tile_width + g_battle_target_color_tile_x;
-                if (g_battle_map_textured_triangle_positions[i].terrain_tile.packed & 1) {
+                if (g_battle_map_textured_triangle_positions[i].terrain_tile & 1) {
                     tile += 0x100;
                 }
-                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_MOVE_DESTINATION) {
+                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.move_destination) {
                     GT3(i).clut = (GT3(i).clut & 0x803F) | MAP_CLUT(MAP_CLUT_ROW_MARKED_TILES, 0);
                     GT3(i).r0 = 0x20;
                     GT3(i).r1 = 0x20;
@@ -621,15 +628,14 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             }
         }
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_quad_count; i++) {
-            if (g_battle_map_textured_quad_positions[i].terrain_tile.packed != 0xFFFE) {
-                g_battle_target_color_tile_y
-                    = (g_battle_map_textured_quad_positions[i].terrain_tile.packed >> 1) & 0x7F;
-                g_battle_target_color_tile_x = g_battle_map_textured_quad_positions[i].terrain_tile.packed >> 8;
+            if (g_battle_map_textured_quad_positions[i].terrain_tile != MAP_POLYGON_TILE_NONE) {
+                g_battle_target_color_tile_y = (g_battle_map_textured_quad_positions[i].terrain_tile >> 1) & 0x7F;
+                g_battle_target_color_tile_x = g_battle_map_textured_quad_positions[i].terrain_tile >> 8;
                 tile = g_battle_target_color_tile_y * g_battle_map_tile_width + g_battle_target_color_tile_x;
-                if (g_battle_map_textured_quad_positions[i].terrain_tile.packed & 1) {
+                if (g_battle_map_textured_quad_positions[i].terrain_tile & 1) {
                     tile += 0x100;
                 }
-                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_MOVE_DESTINATION) {
+                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.move_destination) {
                     GT4(i).clut = (GT4(i).clut & 0x803F) | MAP_CLUT(MAP_CLUT_ROW_MARKED_TILES, 0);
                     GT4(i).r0 = 0x20;
                     GT4(i).r1 = 0x20;
@@ -650,15 +656,14 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     }
     if (g_battle_target_tile_mark_modes[1] == BATTLE_TILE_MARK_SHOW_RANGE) {
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_triangle_count; i++) {
-            if (g_battle_map_textured_triangle_positions[i].terrain_tile.packed != 0xFFFE) {
-                g_battle_target_color_tile_y
-                    = (g_battle_map_textured_triangle_positions[i].terrain_tile.packed >> 1) & 0x7F;
-                g_battle_target_color_tile_x = g_battle_map_textured_triangle_positions[i].terrain_tile.packed >> 8;
+            if (g_battle_map_textured_triangle_positions[i].terrain_tile != MAP_POLYGON_TILE_NONE) {
+                g_battle_target_color_tile_y = (g_battle_map_textured_triangle_positions[i].terrain_tile >> 1) & 0x7F;
+                g_battle_target_color_tile_x = g_battle_map_textured_triangle_positions[i].terrain_tile >> 8;
                 tile = g_battle_target_color_tile_y * g_battle_map_tile_width + g_battle_target_color_tile_x;
-                if (g_battle_map_textured_triangle_positions[i].terrain_tile.packed & 1) {
+                if (g_battle_map_textured_triangle_positions[i].terrain_tile & 1) {
                     tile += 0x100;
                 }
-                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_ABILITY_RANGE) {
+                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.ability_range) {
                     GT3(i).clut = (GT3(i).clut & 0x803F) | MAP_CLUT(MAP_CLUT_ROW_MARKED_TILES, 0);
                     GT3(i).r0 = 0x60;
                     GT3(i).r1 = 0x60;
@@ -673,15 +678,14 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             }
         }
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_quad_count; i++) {
-            if (g_battle_map_textured_quad_positions[i].terrain_tile.packed != 0xFFFE) {
-                g_battle_target_color_tile_y
-                    = (g_battle_map_textured_quad_positions[i].terrain_tile.packed >> 1) & 0x7F;
-                g_battle_target_color_tile_x = g_battle_map_textured_quad_positions[i].terrain_tile.packed >> 8;
+            if (g_battle_map_textured_quad_positions[i].terrain_tile != MAP_POLYGON_TILE_NONE) {
+                g_battle_target_color_tile_y = (g_battle_map_textured_quad_positions[i].terrain_tile >> 1) & 0x7F;
+                g_battle_target_color_tile_x = g_battle_map_textured_quad_positions[i].terrain_tile >> 8;
                 tile = g_battle_target_color_tile_y * g_battle_map_tile_width + g_battle_target_color_tile_x;
-                if (g_battle_map_textured_quad_positions[i].terrain_tile.packed & 1) {
+                if (g_battle_map_textured_quad_positions[i].terrain_tile & 1) {
                     tile += 0x100;
                 }
-                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_ABILITY_RANGE) {
+                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.ability_range) {
                     GT4(i).clut = (GT4(i).clut & 0x803F) | MAP_CLUT(MAP_CLUT_ROW_MARKED_TILES, 0);
                     GT4(i).r0 = 0x60;
                     GT4(i).r1 = 0x60;
@@ -702,15 +706,14 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
     }
     if (g_battle_target_tile_mark_modes[2] == BATTLE_TILE_MARK_SHOW_TARGETS) {
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_triangle_count; i++) {
-            if (g_battle_map_textured_triangle_positions[i].terrain_tile.packed != 0xFFFE) {
-                g_battle_target_color_tile_y
-                    = (g_battle_map_textured_triangle_positions[i].terrain_tile.packed >> 1) & 0x7F;
-                g_battle_target_color_tile_x = g_battle_map_textured_triangle_positions[i].terrain_tile.packed >> 8;
+            if (g_battle_map_textured_triangle_positions[i].terrain_tile != MAP_POLYGON_TILE_NONE) {
+                g_battle_target_color_tile_y = (g_battle_map_textured_triangle_positions[i].terrain_tile >> 1) & 0x7F;
+                g_battle_target_color_tile_x = g_battle_map_textured_triangle_positions[i].terrain_tile >> 8;
                 tile = g_battle_target_color_tile_y * g_battle_map_tile_width + g_battle_target_color_tile_x;
-                if (g_battle_map_textured_triangle_positions[i].terrain_tile.packed & 1) {
+                if (g_battle_map_textured_triangle_positions[i].terrain_tile & 1) {
                     tile += 0x100;
                 }
-                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_TARGETED) {
+                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.targeted) {
                     GT3(i).clut = (GT3(i).clut & 0x803F) | MAP_CLUT(MAP_CLUT_ROW_MARKED_TILES, 0);
                     GT3(i).r0 = 0x50;
                     GT3(i).r1 = 0x50;
@@ -725,15 +728,14 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             }
         }
         for (i = 0; i < g_battle_map_mesh_parts[0].textured_quad_count; i++) {
-            if (g_battle_map_textured_quad_positions[i].terrain_tile.packed != 0xFFFE) {
-                g_battle_target_color_tile_y
-                    = (g_battle_map_textured_quad_positions[i].terrain_tile.packed >> 1) & 0x7F;
-                g_battle_target_color_tile_x = g_battle_map_textured_quad_positions[i].terrain_tile.packed >> 8;
+            if (g_battle_map_textured_quad_positions[i].terrain_tile != MAP_POLYGON_TILE_NONE) {
+                g_battle_target_color_tile_y = (g_battle_map_textured_quad_positions[i].terrain_tile >> 1) & 0x7F;
+                g_battle_target_color_tile_x = g_battle_map_textured_quad_positions[i].terrain_tile >> 8;
                 tile = g_battle_target_color_tile_y * g_battle_map_tile_width + g_battle_target_color_tile_x;
-                if (g_battle_map_textured_quad_positions[i].terrain_tile.packed & 1) {
+                if (g_battle_map_textured_quad_positions[i].terrain_tile & 1) {
                     tile += 0x100;
                 }
-                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_TARGETED) {
+                if (g_battle_map_tile_data_ptr[tile].ceiling_depth_and_marks.targeted) {
                     GT4(i).clut = (GT4(i).clut & 0x803F) | MAP_CLUT(MAP_CLUT_ROW_MARKED_TILES, 0);
                     GT4(i).r0 = 0x50;
                     GT4(i).r1 = 0x50;

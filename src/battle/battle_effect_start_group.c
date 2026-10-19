@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Spawn this frame's share of a particle group's effect slots, drawn with CLUT
@@ -9,7 +10,6 @@
  * secondary effect's active_count counts the live slots and stops the
  * spawning at the group's total count. */
 void battle_effect_start_group(s32 group, s32 clut_index) {
-    battle_effect_secondary_data_t* effect;
     battle_effect_slot_t* slot;
     s32 spawned;
     s32 i;
@@ -32,9 +32,8 @@ void battle_effect_start_group(s32 group, s32 clut_index) {
             slot = &g_battle_effect_slots[g_battle_effect_current_secondary->slot_ids[i]];
             slot->life = battle_effect_spawn_particle_motion(&g_battle_effect_particle_groups[group], &slot->motion);
             battle_effect_init_slot_animation(group, clut_index + MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 0), slot);
-            effect = g_battle_effect_current_secondary;
-            effect->active_count++;
-            if (effect->active_count == g_battle_effect_particle_groups[group].count) {
+            g_battle_effect_current_secondary->active_count++;
+            if (g_battle_effect_current_secondary->active_count == g_battle_effect_particle_groups[group].count) {
                 break;
             }
         }

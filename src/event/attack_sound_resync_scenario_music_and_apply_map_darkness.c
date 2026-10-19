@@ -1,13 +1,10 @@
+#include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/main.h"
+#include "fft/script.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
 #include "psx/types.h"
-
-/* Four unaligned bytes at the head of ATTACK.OUT; only the first three reach
- * the map darkness record through selector 0x63. */
-typedef struct attack_map_darkness {
-    u8 data[4];
-} attack_map_darkness_t;
-
-extern attack_map_darkness_t attack_D_801BF000;
 
 /* Re-syncs the two battle scenario-music slots with the pending track pair,
  * then applies the map darkness record.
@@ -18,18 +15,18 @@ extern attack_map_darkness_t attack_D_801BF000;
  * `playing` is s32 rather than u16 because a u16 merge of the two lhu results
  * adds an andi 0xffff that the target does not have. */
 void attack_sound_resync_scenario_music_and_apply_map_darkness(void) {
-    attack_map_darkness_t darkness = attack_D_801BF000;
+    CVECTOR darkness = attack_map_darkness_color;
     s32 scenario;
     s32 playing;
     u16 replacement;
 
-    scenario = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
+    scenario = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT);
     if (g_battle_scenario_event_active != 0 && (scenario < 410 || scenario > 425)) {
         if (g_battle_sound_music_track_1_id == 0 && g_battle_sound_music_track_2_id == 0) {
-            g_battle_current_music_track_index = 0;
-            attack_sound_play_music_tracks(g_battle_scenario_music_1_id, g_battle_scenario_music_2_id);
+            g_battle_sound_music_track_index = 0;
+            sound_play_music_tracks(g_battle_scenario_music_1_id, g_battle_scenario_music_2_id);
         } else {
-            if (g_battle_current_music_track_index == 0) {
+            if (g_battle_sound_music_track_index == 0) {
                 playing = g_battle_sound_music_track_1_id;
                 replacement = g_battle_scenario_music_1_id;
             } else {
@@ -38,14 +35,14 @@ void attack_sound_resync_scenario_music_and_apply_map_darkness(void) {
             }
 
             if (playing != g_battle_scenario_music_1_id && playing != g_battle_scenario_music_2_id) {
-                g_battle_current_music_track_index = 0;
-                attack_sound_play_music_tracks(g_battle_scenario_music_1_id, g_battle_scenario_music_2_id);
+                g_battle_sound_music_track_index = 0;
+                sound_play_music_tracks(g_battle_scenario_music_1_id, g_battle_scenario_music_2_id);
             } else {
-                g_battle_thread_call_target = (void (*)(void))main_sound_unload_scenario_mus;
-                battle_thread_call_on_main_stack((g_battle_current_music_track_index ^ 1) + 1);
-                g_battle_thread_call_target = (void (*)(void))main_sound_load_music_into_slot;
-                battle_thread_call_on_main_stack(replacement, (g_battle_current_music_track_index ^ 1) + 1);
-                attack_sound_wait_for_music_stub();
+                g_thread_call_target = (void (*)(void))main_sound_unload_scenario_mus;
+                thread_call_on_main_stack((g_battle_sound_music_track_index ^ 1) + 1);
+                g_thread_call_target = (void (*)(void))main_sound_load_music_into_slot;
+                thread_call_on_main_stack(replacement, (g_battle_sound_music_track_index ^ 1) + 1);
+                sound_wait_for_music_stub();
             }
         }
 

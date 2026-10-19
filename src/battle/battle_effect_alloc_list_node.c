@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Take a sprite node from the free list, push it on the head of the active list
  * and give it a one-sprite block; kind is an EFFECT_LIST_NODE_* value and the
@@ -24,7 +24,7 @@ effect_list_node_t* battle_effect_alloc_list_node(s16 kind) {
     node->frame_timer = 0;
     node->sequence_data = 0;
     node->sequence_offset = 0;
-    node->frame_group_index = 0;
+    node->frame_group_offset = 0;
     node->sprite_offset_y = 0;
     node->sprite_offset_x = 0;
     node->kind = kind;

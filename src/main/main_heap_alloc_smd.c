@@ -6,16 +6,15 @@
  * fits. Music and sound effect files live there. */
 void* main_heap_alloc_smd(u32 size) {
     u32 run = 0;
-    u32 needed = size >> 11;
+    u32 needed = size >> MAIN_HEAP_PAGE_SHIFT;
     u32 tag = 1;
     u32 index;
     u32 start;
 
-    if ((size & 0x7ff) != 0) {
+    if ((size & (MAIN_HEAP_PAGE_SIZE - 1)) != 0) {
         needed++;
     }
-    index = 0;
-    do {
+    for (index = 0; index < MAIN_HEAP_SMD_PAGE_COUNT; index++) {
         u32 cell;
 
         cell = g_main_heap_smd_allocator_table[index];
@@ -33,13 +32,12 @@ void* main_heap_alloc_smd(u32 size) {
             }
             run = 0;
         }
-        index++;
-    } while (index < 16);
+    }
     if (run >= needed) {
         for (index = 0; index < run; index++) {
             g_main_heap_smd_allocator_table[start + index] = tag;
         }
-        return &g_main_heap_smd_base[start << 11];
+        return &g_main_heap_smd_base[start << MAIN_HEAP_PAGE_SHIFT];
     }
     return 0;
 }

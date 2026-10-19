@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Step the screen colour-modulation fade once a frame: add each channel's Q8 step to its accumulator,
@@ -24,13 +24,13 @@ void battle_gfx_update_screen_color_modulation_fade(void) {
         g_battle_gfx_screen_color_modulation_value[1] = green;
         blue = g_battle_gfx_screen_color_modulation_value[2] + g_battle_gfx_screen_color_modulation_step[2];
         g_battle_gfx_screen_color_modulation_value[2] = blue;
-        g_battle_gfx_screen_color_modulation[0] = red >> 8;
-        g_battle_gfx_screen_color_modulation[1] = green >> 8;
-        g_battle_gfx_screen_color_modulation[2] = blue >> 8;
+        g_battle_gfx_screen_color_modulation.r = red >> 8;
+        g_battle_gfx_screen_color_modulation.g = green >> 8;
+        g_battle_gfx_screen_color_modulation.b = blue >> 8;
         if (remaining == 0) {
-            g_battle_gfx_screen_color_modulation[0] = g_battle_gfx_screen_color_modulation_target[0];
-            g_battle_gfx_screen_color_modulation[1] = g_battle_gfx_screen_color_modulation_target[1];
-            g_battle_gfx_screen_color_modulation[2] = g_battle_gfx_screen_color_modulation_target[2];
+            g_battle_gfx_screen_color_modulation.r = g_battle_gfx_screen_color_modulation_target.r;
+            g_battle_gfx_screen_color_modulation.g = g_battle_gfx_screen_color_modulation_target.g;
+            g_battle_gfx_screen_color_modulation.b = g_battle_gfx_screen_color_modulation_target.b;
         }
     }
 }

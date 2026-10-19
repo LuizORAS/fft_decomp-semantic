@@ -1,8 +1,8 @@
+#include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
-
-/* This overlay reads BATTLE's attack entry mode unsigned (lhu). */
-#define ENTRY_MODE (*(u16*)&g_battle_script_attack_entry_mode)
 
 /* Uploads the 20 party portraits (sprite and palette cells) from the 0x18ba
  * portrait sheet file to VRAM.
@@ -13,12 +13,12 @@
  * (multi-set temps keep the i / 7 mult after the row * 0x3000 terms), and the
  * palette offset has its own variable. */
 void require_gfx_prepare_party_portrait_textures(void) {
-    s32 file;
+    main_gfx_wldface_sheet_t* file;
     s32 offset;
     s32 pal_offset;
     s32 i;
     s32 value;
-    party_data_t* unit;
+    party_unit_t* unit;
     s32 job_id;
     s32 base;
     s32 cell;
@@ -29,22 +29,22 @@ void require_gfx_prepare_party_portrait_textures(void) {
     u8* src;
     RECT unused[2];
 
-    file = (s32)main_heap_alloc(MAIN_GFX_WLDFACE_FILE_SIZE);
-    if (ENTRY_MODE != 0) {
-        g_battle_thread_call_target = (void (*)(void))main_file_load_to_address_checked;
-        battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MAIN_GFX_WLDFACE_FILE_SIZE, file);
+    file = main_heap_alloc(MAIN_MENU_WLDFACE_FILE_SIZE);
+    if (g_script_attack_entry_mode != 0) {
+        g_thread_call_target = (void (*)(void))main_file_load_to_address_checked;
+        thread_call_on_main_stack(DISC_SECTOR_EVENT_WLDFACE_BIN, MAIN_MENU_WLDFACE_FILE_SIZE, file);
     } else {
-        StoreImage(&g_require_portrait_sheet_rect_0, (u32*)file);
-        StoreImage(&g_require_portrait_sheet_rect_1, (u32*)(file + MAIN_GFX_WLDFACE_SHEET_SIZE));
-        StoreImage(&g_require_portrait_sheet_rect_2, (u32*)(file + MAIN_GFX_WLDFACE_SHEET_SIZE * 2));
-        StoreImage(&g_require_portrait_sheet_rect_3, (u32*)(file + MAIN_GFX_WLDFACE_SHEET_SIZE * 3));
+        StoreImage(&g_require_portrait_sheet_rect_0, (u32*)file[0].pixels);
+        StoreImage(&g_require_portrait_sheet_rect_1, (u32*)file[1].pixels);
+        StoreImage(&g_require_portrait_sheet_rect_2, (u32*)file[2].pixels);
+        StoreImage(&g_require_portrait_sheet_rect_3, (u32*)file[3].pixels);
         DrawSync(0);
     }
     for (i = 0; i < 0x15; i++) {
         if (i == 20) {
             break;
         }
-        unit = main_party_get_data_pointer(i);
+        unit = main_party_get_unit(i);
         if (unit->sprite_set < CHARACTER_IDENTITY_SELECTOR_FIRST) {
             value = unit->sprite_set;
         } else {
@@ -81,8 +81,8 @@ void require_gfx_prepare_party_portrait_textures(void) {
         }
         cell = value & 0xff;
         palette = (value & 0xc00) >> 10;
-        sheet = cell / MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
-        value = cell - sheet * MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
+        sheet = cell / MAIN_MENU_WLDFACE_PORTRAITS_PER_SHEET;
+        value = cell - sheet * MAIN_MENU_WLDFACE_PORTRAITS_PER_SHEET;
         row = value / 8;
         col = value % 8;
         g_require_portrait_cell_rect.x = (i % 7) * 8 + 0x100;
@@ -95,7 +95,8 @@ void require_gfx_prepare_party_portrait_textures(void) {
         offset <<= 12;
         offset += col * 0x20;
         offset >>= 1;
-        src = (u8*)(sheet * MAIN_GFX_WLDFACE_SHEET_SIZE + file + offset);
+        /* Ordinary sheet indexing reverses the native ADDU operands. */
+        src = (u8*)(sheet * MAIN_MENU_WLDFACE_SHEET_SIZE + (s32)file + offset);
         for (; value < 0x30; value++) {
             for (col = 0; col < 0x10; col++) {
                 g_require_portrait_cell_pixels[value * 0x10 + col] = src[col];
@@ -108,26 +109,25 @@ void require_gfx_prepare_party_portrait_textures(void) {
         g_require_portrait_palette_rect.y = i / 3;
         g_require_portrait_palette_rect.w = 0x10;
         g_require_portrait_palette_rect.h = 1;
-        sheet = cell / MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
-        value = cell - sheet * MAIN_GFX_WLDFACE_PORTRAITS_PER_SHEET;
+        sheet = cell / MAIN_MENU_WLDFACE_PORTRAITS_PER_SHEET;
+        value = cell - sheet * MAIN_MENU_WLDFACE_PORTRAITS_PER_SHEET;
         row = value / 4;
         col = value % 4;
         value = row;
         if (palette != 0) {
-            sheet = (cell - MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT) / MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW_COUNT;
+            sheet = (cell - MAIN_MENU_WLDFACE_FIRST_MONSTER_PORTRAIT) / MAIN_MENU_WLDFACE_MONSTER_PALETTE_ROW_COUNT;
             col = palette;
-            row = (cell - MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT) % MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW_COUNT;
-            value = row + MAIN_GFX_WLDFACE_MONSTER_CLUT_ROW;
+            row = (cell - MAIN_MENU_WLDFACE_FIRST_MONSTER_PORTRAIT) % MAIN_MENU_WLDFACE_MONSTER_PALETTE_ROW_COUNT;
+            value = row + MAIN_MENU_WLDFACE_MONSTER_PALETTE_ROW;
         }
         pal_offset = value * 0x100 + 0xf000 + col * 0x40 >> 1;
+        /* Palette member indexing changes the native offset calculation and allocation. */
         if (i == 20) {
-            LoadImage(&g_require_special_portrait_palette_rect,
-                (u32*)(file + sheet * MAIN_GFX_WLDFACE_SHEET_SIZE + pal_offset));
+            LoadImage(&g_require_special_portrait_palette_rect, (u32*)((u8*)&file[sheet] + pal_offset));
         } else {
-            LoadImage(
-                &g_require_portrait_palette_rect, (u32*)(file + sheet * MAIN_GFX_WLDFACE_SHEET_SIZE + pal_offset));
+            LoadImage(&g_require_portrait_palette_rect, (u32*)((u8*)&file[sheet] + pal_offset));
         }
         DrawSync(0);
     }
-    main_heap_call_free((void*)file);
+    main_heap_call_free(file);
 }

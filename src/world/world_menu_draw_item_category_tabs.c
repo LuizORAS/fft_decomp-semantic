@@ -6,8 +6,12 @@
  * The incoming mode stays in a2 until the first drawing-helper call. */
 void world_menu_draw_item_category_tabs(s32 wide, s32 row, s32 mode) {
     s16 x;
-    s16 width;
-    s16* rect;
+    s16 y;
+    /* One pointer serves the script then the quad; separate locals remove the argument copy. */
+    union {
+        menu_instruction_t* script;
+        world_oriented_quad_t* quad;
+    } drawing;
     s32 cursor_x;
     world_oriented_quad_t* cursor;
 
@@ -16,24 +20,24 @@ void world_menu_draw_item_category_tabs(s32 wide, s32 row, s32 mode) {
         x -= 1;
     }
     if (wide == 0) {
-        rect = &g_world_item_category_tabs_script;
-        width = 0x40;
+        drawing.script = &g_world_item_category_tabs_script;
+        y = 0x40;
     } else {
-        width = 0x4F;
-        rect = &g_world_item_category_tabs_wide_script;
+        y = 0x4F;
+        drawing.script = &g_world_item_category_tabs_wide_script;
     }
-    world_menu_run_script_with_palette_mode(rect, 0, mode);
-    rect = g_world_item_category_tab_sprites[row];
-    rect[0] = x;
-    rect[1] = width - (row == 0);
+    world_menu_run_script_with_palette_mode(drawing.script, 0, mode);
+    drawing.quad = &g_world_item_category_tab_sprites[row];
+    drawing.quad->position.x = x;
+    drawing.quad->position.y = y - (row == 0);
     world_gfx_enqueue_oriented_textured_quad(
-        (const world_oriented_quad_t*)rect, world_menu_get_sprite_color(), TEXTURE_UV_FLIP_NONE, 0, 0x2C);
+        drawing.quad, world_menu_get_sprite_color(), TEXTURE_UV_FLIP_NONE, 0, 0x2C);
     cursor = &g_world_item_category_tab_cursor_sprite;
     cursor_x = x + 9;
     if (row == 3) {
         cursor_x = x + 7;
     }
-    cursor->x = cursor_x;
-    g_world_item_category_tab_cursor_sprite.y = width + 10;
+    cursor->position.x = cursor_x;
+    g_world_item_category_tab_cursor_sprite.position.y = y + 10;
     world_gfx_enqueue_oriented_textured_quad(cursor, 0, TEXTURE_UV_FLIP_NONE, 0, 0x2D);
 }

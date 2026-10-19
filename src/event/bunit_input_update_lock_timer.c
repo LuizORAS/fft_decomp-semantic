@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Hold the menu input masks at zero while the comparison banner thread runs,
@@ -7,7 +8,7 @@
 void bunit_input_update_lock_timer(void) {
     s32 timer;
 
-    if (battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) != 0) {
+    if (thread_is_running(THREAD_SCREEN_SLOT_COMPARISON_STATUS) != 0) {
         timer = 0xA;
     } else if ((g_bunit_status_display_flags & (MENU_STATUS_PANEL_SLIDE_DOWN | MENU_STATUS_PANEL_SLIDE_UP)) != 0) {
         timer = 0xA;

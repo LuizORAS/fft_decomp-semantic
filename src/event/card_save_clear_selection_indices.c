@@ -1,5 +1,4 @@
 #include "fft/event_card.h"
-#include "psx/types.h"
 
 /* Clear the menu selection and the chosen save slot (both -1). Nothing references it
  * (QUIRKS.md). */

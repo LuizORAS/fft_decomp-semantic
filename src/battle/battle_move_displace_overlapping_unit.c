@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Keep a unit that shares the mover's tile pushed aside while the mover leaves it: the push
@@ -9,41 +9,41 @@
  *
  * The case order and per-case centre temporaries reproduce the target's cross-jumped tails; indexing
  * from movement_path - 2 reproduces its offset-before-base address add. */
-void battle_move_displace_overlapping_unit(battle_unit_misc_data_t* unit, s32 direction) {
-    battle_unit_misc_data_t* other;
+void battle_move_displace_overlapping_unit(battle_unit_t* unit, s32 direction) {
+    battle_unit_t* other;
     s32 dist;
     s32 x;
     s32 y;
     s32 center;
 
-    other = battle_unit_get_overlapping_misc_data_pointer(unit, unit->map_x, unit->map_y, unit->map_z);
+    other = battle_unit_find_overlapping_at_tile(unit, unit->map_x, unit->map_y, unit->map_z);
     if (unit->movement_path_offset < 2) {
         return;
     }
-    if (((unit->movement_path - 2)[unit->movement_path_offset].value >> 4) & 1) {
+    if (unit->path.data.steps[unit->movement_path_offset - 2].mount) {
         return;
     }
     if (other == 0) {
         return;
     }
-    x = other->map_x * 28 + 14;
-    y = other->map_y * 28 + 14;
+    x = other->map_x * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+    y = other->map_y * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
     switch (direction) {
     case BATTLE_MOVE_DIRECTION_NORTH:
-        center = unit->map_y * 28 + 14;
-        dist = unit->screen.vz - center;
+        center = unit->map_y * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+        dist = unit->world_coords.vz - center;
         break;
     case BATTLE_MOVE_DIRECTION_SOUTH:
-        center = unit->map_y * 28 + 14;
-        dist = center - unit->screen.vz;
+        center = unit->map_y * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+        dist = center - unit->world_coords.vz;
         break;
     case BATTLE_MOVE_DIRECTION_WEST:
-        center = unit->map_x * 28 + 14;
-        dist = center - unit->screen.vx;
+        center = unit->map_x * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+        dist = center - unit->world_coords.vx;
         break;
     case BATTLE_MOVE_DIRECTION_EAST:
-        center = unit->map_x * 28 + 14;
-        dist = unit->screen.vx - center;
+        center = unit->map_x * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+        dist = unit->world_coords.vx - center;
         break;
     }
     if (dist >= 8) {

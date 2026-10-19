@@ -1,4 +1,5 @@
 #include "fft/main.h"
+#include "fft/open.h"
 
 /* Load OPEN.BIN and run the ending cutscene. */
 void main_overlay_exec_open_bin_ending(void) {

@@ -1,37 +1,33 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Release the menu window buffer pair whose first buffer is `buffer`: both slot pointers become -1
- * and the active and thread_id words of both buffers are cleared. -1 is ignored; a buffer that is not
- * the first of one of the three pairs stops the current thread. */
-void battle_menu_release_window_buffer_pair(s32 buffer) {
+ * and the active and thread_id fields of both buffers are cleared. -1 is ignored; a buffer that is not
+ * the first of one of the three pairs stops the current thread. BATTLE's copy of
+ * world_menu_release_window_buffer_pair. */
+void battle_menu_release_window_buffer_pair(menu_window_buffer_t* buffer) {
     s32 slot;
-    s32 offset;
-    s32 empty;
+    menu_window_buffer_t* empty;
 
-    if (buffer == -1) {
+    if (buffer == (menu_window_buffer_t*)-1) {
         return;
     }
 
     slot = 0;
-    empty = -1;
-    offset = 0x118;
-    do {
-        if ((s32)g_battle_menu_window_buffer_pointers[slot] == buffer) {
-            g_battle_menu_window_buffer_pointers[slot] = (void*)empty;
-            g_battle_menu_window_buffer_pointers[slot + 1] = (void*)empty;
-            /* Clears active and thread_id of both buffers of the pair; offset
-             * is the byte offset of the pair's second buffer, and these
-             * field-address + offset forms keep the target's addressing. */
-            *(s32*)((u8*)&g_battle_menu_window_buffers[-1].active + offset) = 0;
-            *(s32*)((u8*)&g_battle_menu_window_buffers[0].active + offset) = 0;
-            *(s32*)((u8*)&g_battle_menu_window_buffers[-1].thread_id + offset) = 0;
-            *(s32*)((u8*)&g_battle_menu_window_buffers[0].thread_id + offset) = 0;
+    empty = (menu_window_buffer_t*)-1;
+    for (; slot < 6; slot += 2) {
+        if (g_menu_window_buffer_pointers[slot] == buffer) {
+            g_menu_window_buffer_pointers[slot] = empty;
+            g_menu_window_buffer_pointers[slot + 1] = empty;
+            g_menu_window_buffers[slot].active = 0;
+            g_menu_window_buffers[slot + 1].active = 0;
+            g_menu_window_buffers[slot].thread_id = 0;
+            g_menu_window_buffers[slot + 1].thread_id = 0;
             return;
         }
-        offset += 0x230;
-        slot += 2;
-    } while (slot < 6);
+    }
 
-    battle_thread_exit_current();
+    thread_exit_current();
 }

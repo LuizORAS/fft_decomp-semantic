@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Set XA = PA and YA = (PA + Y) / 2, Y from the ability's data. */
 void battle_formula_store_pa_and_pa_plus_y_divided_by_two(void) {

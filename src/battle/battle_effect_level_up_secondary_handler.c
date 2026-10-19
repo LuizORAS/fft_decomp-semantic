@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "psx/libgte.h"
 
 /*
  * Secondary effect function 0x0d (Level Up) in g_battle_effect_secondary_handlers.
@@ -17,23 +18,23 @@ s32 battle_effect_level_up_secondary_handler(void) {
     effect = g_battle_effect_current_secondary;
     /* Preserve the target's unsigned phase-dispatch comparison. */
     switch (effect->phase) {
-    case BATTLE_SECONDARY_EFFECT_INITIALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_INITIALIZING:
         effect->active_count = 0;
         effect->timer = 0;
         effect->finish_timer = 0;
-        effect->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
-        g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].position[1] = -8;
+        effect->phase = BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING;
+        g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].position.y = -8;
         result = 1;
         break;
-    case BATTLE_SECONDARY_EFFECT_EXECUTING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING:
         battle_effect_start_group(BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP, 11);
         {
             /* Addressing through a pointer keeps the target lui/addiu pair. */
-            s16* rise = &g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].position[1];
+            s16* rise = &g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_LEVEL_UP].position.y;
             *rise -= 3;
         }
         /* fallthrough */
-    case BATTLE_SECONDARY_EFFECT_FINALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_FINALIZING:
         battle_effect_save_inertia_threshold();
         battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
         gravity.z = 0;

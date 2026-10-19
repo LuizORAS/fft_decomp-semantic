@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Handler of the formation's Item menus (ITEM, its ENTER and LEAVE states and the rows EQUIP,
@@ -23,7 +24,7 @@ void world_formation_run_item_menu(void) {
             g_world_formation_unit_banner_at_bottom = 0;
             g_world_formation_unit_browse_enabled = 0;
             g_world_item_menu_saved_browse_enabled = saved;
-            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+            world_menu_request_thread_stop(THREAD_SCREEN_SLOT_CHARACTER_STATUS);
             g_world_item_menu_initialized = 1;
         }
         if (g_world_formation_current_menu == WORLD_FORMATION_MENU_ITEM_ENTER) {
@@ -45,11 +46,11 @@ void world_formation_run_item_menu(void) {
         }
         return;
     }
-    if (g_world_item_menu_initialized == 0 && world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU) == 0) {
+    if (g_world_item_menu_initialized == 0 && thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU) == 0) {
         g_world_item_icon_menu.selected_index = 0;
-        g_world_menu_thread_menu_data = &g_world_item_icon_menu;
-        world_thread_start(WORLD_THREAD_SLOT_UPPER_MENU, world_menu_icon_list_thread);
-        world_thread_set_parameters(WORLD_THREAD_SLOT_UPPER_MENU, (s32)g_world_menu_thread_menu_data, 0, 0);
+        g_menu_thread_menu_data = &g_world_item_icon_menu;
+        thread_start(WORLD_THREAD_SLOT_UPPER_MENU, world_menu_icon_list_thread);
+        thread_set_parameters(WORLD_THREAD_SLOT_UPPER_MENU, (s32)g_menu_thread_menu_data, 0, 0);
         g_world_item_menu_unit_index = 0xFF;
         world_menu_clear_selection_records();
         g_world_formation_unit_banner_enabled = 1;
@@ -60,7 +61,7 @@ void world_formation_run_item_menu(void) {
         world_formation_place_unit_portrait_at_rest(g_world_formation_selected_unit_index);
     }
     if (g_world_item_menu_unit_index != g_world_formation_selected_unit_index) {
-        g_world_item_menu_unit_index = ((world_menu_halfword_view_t*)&g_world_formation_selected_unit_index)->bytes[0];
+        g_world_item_menu_unit_index = (u8)g_world_formation_selected_unit_index;
         if (world_formation_get_unit_lock(g_world_formation_selected_unit_index) < 0) {
             g_world_item_icon_menu.text_id = 0xD802;
         } else {
@@ -69,7 +70,7 @@ void world_formation_run_item_menu(void) {
         g_world_menu_text_redraw_request = 1;
     }
     if (g_world_item_submenu_exit_pending != 0) {
-        world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU_CHILD);
+        thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU_CHILD);
         g_world_item_submenu_exit_pending = 0;
     }
     if (g_world_formation_current_menu == WORLD_FORMATION_MENU_ITEM) {
@@ -83,17 +84,17 @@ void world_formation_run_item_menu(void) {
         selection = &g_world_menu_selection_results[1];
         if (*selection != -1) {
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
-            world_thread_start(WORLD_THREAD_SLOT_UPPER_MENU_CHILD, world_formation_item_menu_idle_thread);
+            thread_start(WORLD_THREAD_SLOT_UPPER_MENU_CHILD, world_formation_item_menu_idle_thread);
             g_world_formation_current_menu = *selection + WORLD_FORMATION_MENU_ITEM_EQUIP;
             world_menu_set_cursor_position(WORLD_MENU_CURSOR_EQUIP_SLOT, 0);
             world_menu_set_cursor_position(WORLD_MENU_CURSOR_REMOVE_SLOT, 0);
             world_menu_set_cursor_position(WORLD_MENU_CURSOR_ITEM_TAB, 0);
         }
-        running = world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU);
+        running = thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU);
         g_world_item_menu_initialized = running;
         if (running == 0) {
             world_menu_toggle_change_banner_panel_thread(0);
-            roster_slot = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->roster_slot;
+            roster_slot = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->identity.roster_slot;
             world_formation_build_record_list(0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
             g_world_formation_selected_unit_index = world_formation_find_index_by_roster_slot(roster_slot);
             g_world_formation_current_menu = WORLD_FORMATION_MENU_ITEM_LEAVE;

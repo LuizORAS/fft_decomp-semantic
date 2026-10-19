@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
 #include "fft/main.h"
 
 /* Set the unit's action state: Charging, Jump, Defending or Performing as the one status of those
@@ -7,7 +7,7 @@
  * statuses that changed queues its graphics (battle_status_queue_graphics_change_if_executing). */
 void main_status_set_action_state(battle_stats_t* unit, u8 action_state) {
     u8 old_status;
-    s32 misc_unit_id;
+    s32 battle_id;
     u8 status;
     u8 cleared;
     s32 status_id;
@@ -15,7 +15,7 @@ void main_status_set_action_state(battle_stats_t* unit, u8 action_state) {
     u8 changed;
 
     old_status = unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARGING)];
-    misc_unit_id = unit->misc_unit_id;
+    battle_id = unit->battle_id;
     if (action_state == MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING) {
         action_state = (old_status & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PERFORMING)) << 3;
     }
@@ -53,9 +53,9 @@ void main_status_set_action_state(battle_stats_t* unit, u8 action_state) {
         status_id <= BATTLE_STATUS_HANDLER_INDEX(BATTLE_STATUS_ID_PERFORMING); status_id++) {
         if (changed & mask) {
             if ((old_status & mask) != 0) {
-                battle_status_queue_graphics_change_if_executing(status_id, 0, misc_unit_id);
+                battle_status_queue_graphics_change_if_executing(status_id, 0, battle_id);
             } else {
-                battle_status_queue_graphics_change_if_executing(status_id, 1, misc_unit_id);
+                battle_status_queue_graphics_change_if_executing(status_id, 1, battle_id);
             }
         }
         mask >>= 1;

@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Draw the tutorial's highlight ring at its brightness. Until the command is HIDE_HIGHLIGHT the ring
  * stays at full brightness (0x12) and grows by one quad a frame (by the VSync mode) up to its 30 quads.

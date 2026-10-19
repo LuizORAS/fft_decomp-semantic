@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* Add one of an item to the party inventory for a blue unit while executing: a stolen item, a caught
@@ -6,7 +7,7 @@
  * slot are skipped. With 99 already owned (equipped ones counted), the item becomes its price / 4 in
  * war funds instead. */
 s32 battle_action_add_party_item(battle_stats_t* unit, u8 item) {
-    s32 item_id;
+    u8 item_id;
 
     if (g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE) {
         return 0;
@@ -21,7 +22,7 @@ s32 battle_action_add_party_item(battle_stats_t* unit, u8 item) {
     if (item_id == ITEM_ID_NONE) {
         return 0;
     }
-    if (main_item_get_total_equipment_quantity_s32(item_id, 1) >= 0x63) {
+    if (main_item_get_total_equipment_quantity(item_id, 1) >= 0x63) {
         return battle_action_add_war_funds(unit, 0, item_id);
     }
     g_main_item_quantities[item_id] += 1;

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /*
  * Prepare source-side heights and ceiling for a movement candidate.
@@ -44,7 +44,7 @@ s32 battle_move_init_source_geometry(s32 direction) {
         state->source_side_height_delta = difference;
         if (difference > 0 && (frontier[state->tile_index] & FRONTIER_FLAG_STEEP))
             return 1;
-        state->source_exit_height += (state->current_tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 2;
+        state->source_exit_height += state->current_tile->depth_half_height.depth * 2;
     }
     return 0;
 }

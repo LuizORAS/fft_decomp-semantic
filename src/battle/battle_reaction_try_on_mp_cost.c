@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Faith Up and Absorb Used MP: against an ability that cost MP, a successful Brave roll queues

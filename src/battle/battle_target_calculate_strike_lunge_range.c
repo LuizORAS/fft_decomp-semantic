@@ -1,10 +1,10 @@
-#include "fft/battle.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Striking weapons (WEAPON_FLAG_STRIKING) reach the four adjacent tiles within -6..+5 half levels of
  * the unit's height; lunging ones the tiles 1 and 2 steps away in a straight line, from -8 (-6 at 2
  * steps) to +7 half levels. */
-void battle_target_calculate_strike_lunge_range(battle_stats_t* unit, u8 flags) {
+void battle_target_calculate_strike_lunge_range(const battle_stats_t* unit, u8 flags) {
     u8 height;
     s32 x;
     s32 y;
@@ -14,7 +14,7 @@ void battle_target_calculate_strike_lunge_range(battle_stats_t* unit, u8 flags) 
 
     height = battle_unit_get_effective_height(unit);
     x = unit->x;
-    y = unit->position.bits.y;
+    y = unit->position.y;
     if (flags & WEAPON_FLAG_STRIKING) {
         lo = height - 6;
         hi = height + 5;

@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -18,9 +19,9 @@ extern s16 g_wldcore_menu_scroll_offset;
  * shares the index product's register, and the chained frame_index/anim_counter
  * store keeps anim_counter's base in a register as in the target. */
 void wldcore_proposition_push_send_unit_level(void) {
-    wldcore_point32_t dimensions;
-    wldcore_point32_t origin;
-    wldcore_window_render_bounds16_t bounds;
+    wldcore_window_panel_layout_t layout;
+    open_point32_t origin;
+    RECT bounds;
     s32 index;
     s32 depth;
     s32 count;
@@ -30,12 +31,12 @@ void wldcore_proposition_push_send_unit_level(void) {
     g_wldcore_proposition_send_unit_count = 0;
     count = wldcore_proposition_load_send_unit_candidates(
         &g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit);
-    dimensions.x = 0x6E;
-    dimensions.y = count;
+    layout.text_width = 0x6E;
+    layout.visible_rows = count;
     origin.x = 8;
     origin.y = 0x50;
     wldcore_window_init_panel_render_state(
-        0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.unit_count, &dimensions, &origin);
+        0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.unit_count, &layout, &origin);
     g_wldcore_window_panel_label_state.mode[1] = MENU_TEXT_COLUMN_NUMBER_GLYPHS;
     g_wldcore_window_panel_label_state.x[1] = 0x58;
     g_wldcore_window_panel_label_state.text_ids[1] = g_wldcore_proposition_candidate_levels;
@@ -44,14 +45,14 @@ void wldcore_proposition_push_send_unit_level(void) {
     g_wldcore_window_panel_render_state.header_id = 0x10;
     g_wldcore_window_panel_render_state.selected_index = 0;
     g_wldcore_menu_scroll_offset = 0;
-    world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_screen_build_at_list);
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
+    thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_screen_build_at_list);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
 
     index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.list_window = index;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.list_frame.window_index = index;
     {
-        wldcore_point32_t* position = &g_wldcore_window_records[index].position;
+        open_point32_t* position = &g_wldcore_window_records[index].position;
         g_wldcore_window_records[index].priority = 9;
         position->x = 0xE;
         position->y = -0x29;
@@ -69,15 +70,15 @@ void wldcore_proposition_push_send_unit_level(void) {
 
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.layout_render = index;
-    bounds.position.x = 0x80;
-    bounds.position.y = 0;
-    bounds.dimensions.x = 0x6C;
-    bounds.dimensions.y = 0x40;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.list_frame.render_index = index;
+    bounds.x = 0x80;
+    bounds.y = 0;
+    bounds.w = 0x6C;
+    bounds.h = 0x40;
     wldcore_window_init_render_record_image(index, bounds, 0, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
     {
-        wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
+        open_point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = 0xC;
         base->y = -0x28;
     }
@@ -87,7 +88,7 @@ void wldcore_proposition_push_send_unit_level(void) {
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.frame_window_a = index;
     {
-        wldcore_point32_t* position = &g_wldcore_window_records[index].position;
+        open_point32_t* position = &g_wldcore_window_records[index].position;
         g_wldcore_window_records[index].priority = 9;
         position->x = -0x60;
         position->y = 0x60;
@@ -99,7 +100,7 @@ void wldcore_proposition_push_send_unit_level(void) {
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.frame_window_b = index;
     {
-        wldcore_point32_t* position = &g_wldcore_window_records[index].position;
+        open_point32_t* position = &g_wldcore_window_records[index].position;
         g_wldcore_window_records[index].priority = 9;
         position->x = -0x12;
         position->y = 0x60;
@@ -113,7 +114,7 @@ void wldcore_proposition_push_send_unit_level(void) {
     g_wldcore_window_render_records[index].priority = 9;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     {
-        wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
+        open_point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = 0x11;
         base->y = 0x18;
     }
@@ -121,14 +122,14 @@ void wldcore_proposition_push_send_unit_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.list_render = index;
-    bounds.position.x = 0x80;
-    bounds.position.y = 0x40;
-    bounds.dimensions.x = 0x30;
-    bounds.dimensions.y = 0x3B;
+    bounds.x = 0x80;
+    bounds.y = 0x40;
+    bounds.w = 0x30;
+    bounds.h = 0x3B;
     wldcore_window_init_render_record_image(index, bounds, 0, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
     {
-        wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
+        open_point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = 0xC;
         base->y = 0x14;
     }
@@ -140,7 +141,7 @@ void wldcore_proposition_push_send_unit_level(void) {
     g_wldcore_window_render_records[index].priority = 9;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     {
-        wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
+        open_point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = 0x4D;
         base->y = 0x18;
     }
@@ -148,15 +149,15 @@ void wldcore_proposition_push_send_unit_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.portrait_frame = index;
-    bounds.position.x = 0x80;
-    bounds.position.y = 0x40;
-    bounds.dimensions.x = 0x30;
-    bounds.dimensions.y = 0x3B;
+    bounds.x = 0x80;
+    bounds.y = 0x40;
+    bounds.w = 0x30;
+    bounds.h = 0x3B;
     wldcore_window_init_render_record_image(index, bounds, 0, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     {
-        wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
+        open_point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = 0x48;
         base->y = 0x14;
     }
@@ -165,7 +166,7 @@ void wldcore_proposition_push_send_unit_level(void) {
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.portrait_window = index;
     {
-        wldcore_point32_t* position = &g_wldcore_window_records[index].position;
+        open_point32_t* position = &g_wldcore_window_records[index].position;
         g_wldcore_window_records[index].priority = 9;
         g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         position->x = 0x3E;
@@ -178,7 +179,7 @@ void wldcore_proposition_push_send_unit_level(void) {
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.left_arrow = index;
     {
-        wldcore_point32_t* position = &g_wldcore_window_records[index].position;
+        open_point32_t* position = &g_wldcore_window_records[index].position;
         g_wldcore_window_records[index].priority = 9;
         g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         position->x = -0x74;
@@ -191,7 +192,7 @@ void wldcore_proposition_push_send_unit_level(void) {
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].send_unit.right_arrow = index;
     {
-        wldcore_point32_t* position = &g_wldcore_window_records[index].position;
+        open_point32_t* position = &g_wldcore_window_records[index].position;
         g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_SELECT;
         g_wldcore_window_records[index].priority = 9;
         g_wldcore_window_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
@@ -200,7 +201,7 @@ void wldcore_proposition_push_send_unit_level(void) {
     }
     g_wldcore_window_records[index].sequence = WLDCORE_ANIM_SEQUENCE_R1_BUTTON;
     g_wldcore_window_records[index].frame_index = g_wldcore_window_records[index].anim_counter = 0;
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_CHOOSE_UNITS, 0);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_CHOOSE_UNITS, 0);
 
     depth = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[depth].send_unit.shown_preview = -1;

@@ -1,13 +1,15 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
+#include "psx/libgpu.h"
 
-/* Opcode 08: move the camera to the position in the three halfwords that
+/* Opcode 08: move the camera to the position in the three 16-bit values that
  * follow (x, y, z in world units). */
-s32 battle_effect_code_script_08_set_camera_position(effect_record_t* record) {
+effect_script_result_e battle_effect_code_script_08_set_camera_position(battle_effect_record_t* record) {
     VECTOR coords;
 
-    coords.vx = ((s16*)(record->pc + (s32)record->script))[1] << 12;
-    coords.vy = ((s16*)(record->pc + (s32)record->script))[2] << 12;
-    coords.vz = ((s16*)(record->pc + (s32)record->script))[3] << 12;
+    setVector(&coords, effect_get_current_script_instruction(record)->vector.x * ONE,
+        effect_get_current_script_instruction(record)->vector.y * ONE,
+        effect_get_current_script_instruction(record)->vector.z * ONE);
     battle_camera_set_current_real_coords(&coords);
     record->pc += 8;
     return EFFECT_SCRIPT_RESULT_CONTINUE;

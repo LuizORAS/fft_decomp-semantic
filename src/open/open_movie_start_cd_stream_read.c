@@ -1,4 +1,4 @@
-#include "psx/libcd.h"
+#include "fft/open.h"
 #include "psx/types.h"
 
 /* Set the read location and start the streaming read (CdRead2 mode 0x1a0),

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "psx/libgte.h"
 
 /* Secondary effect function 0x03 in g_battle_effect_secondary_handlers: the
  * particles of BATTLE_EFFECT_SECONDARY_ANIMATION_GOLEM.
@@ -21,17 +22,17 @@ s32 battle_effect_golem_secondary_handler(void) {
     effect = g_battle_effect_current_secondary;
     /* Preserve the target's unsigned phase-dispatch comparison. */
     switch (effect->phase) {
-    case BATTLE_SECONDARY_EFFECT_INITIALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_INITIALIZING:
         result = 1;
         effect->active_count = 0;
         effect->timer = 0;
         effect->finish_timer = 0;
-        effect->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
+        effect->phase = BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING;
         break;
-    case BATTLE_SECONDARY_EFFECT_EXECUTING:
-        battle_effect_start_group(BATTLE_EFFECT_PARTICLE_GROUP_GOLEM, 0xD);
+    case BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING:
+        battle_effect_start_group(BATTLE_EFFECT_PARTICLE_GROUP_GOLEM, 13);
         /* fallthrough */
-    case BATTLE_SECONDARY_EFFECT_FINALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_FINALIZING:
         battle_effect_save_inertia_threshold();
         battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
         gravity.z = 0;

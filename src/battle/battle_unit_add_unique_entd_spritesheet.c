@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Track the distinct spritesheets of the encounter's ENTD units (battle_unit_load_entd_units): mode 0xff

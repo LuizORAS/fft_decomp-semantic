@@ -1,4 +1,12 @@
+#include "fft/battle_menu.h"
+#include "fft/battle_script.h"
 #include "fft/event_helpmenu.h"
+#include "fft/gfx.h"
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -15,13 +23,13 @@
 void helpmenu_menu_run_require_help(void) {
     POLY_FT4 cursor[2];
     POLY_FT4 shadow[2];
-    native_thread_t* self;
+    thread_t* self;
     help_navigation_record_t* navigation;
     help_navigation_record_t* entry;
     POLY_FT4* poly;
     POLY_FT4* shadow_poly;
     s32 menu_index;
-    native_thread_t* text_thread;
+    thread_t* text_thread;
     s32 text_thread_id;
     s32 frame;
     s32 buffer;
@@ -35,53 +43,53 @@ void helpmenu_menu_run_require_help(void) {
 
     for (frame = 0; frame < 2; frame++) {
         poly = &cursor[frame];
-        battle_gfx_init_default_poly_ft4(poly);
+        menu_init_default_poly_ft4(poly);
         SetSemiTrans(poly, 0);
         poly->tpage = GetTPage(0, 0, 0x3C0, 0x100);
         poly->clut = 0x7D7C;
         shadow_poly = &shadow[frame];
-        battle_gfx_init_default_poly_ft4(shadow_poly);
+        menu_init_default_poly_ft4(shadow_poly);
         SetSemiTrans(shadow_poly, 1);
         shadow_poly->tpage = GetTPage(0, 2, 0x3C0, 0x100);
         shadow_poly->clut = 0x7DBC;
     }
-    battle_util_copy_bytes(g_helpmenu_text_saved_pointers, g_battle_text_section_pointers, 0x80);
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
+    mem_copy_bytes_nonempty(g_helpmenu_text_saved_pointers, g_text_section_pointers, 0x80);
+    g_text_section_pointers[HELP_TEXT_SECTION_UNIT_STATUS]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_UNIT_STATUS];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]
+    g_text_section_pointers[HELP_TEXT_SECTION_MENU_COMMANDS]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_MENU_COMMANDS];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_TERRAIN]
+    g_text_section_pointers[HELP_TEXT_SECTION_TERRAIN]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_TERRAIN];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_JOBS]
+    g_text_section_pointers[HELP_TEXT_SECTION_JOBS]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_JOBS];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_ITEMS]
+    g_text_section_pointers[HELP_TEXT_SECTION_ITEMS]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_ITEMS];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_ABILITIES]
+    g_text_section_pointers[HELP_TEXT_SECTION_ABILITIES]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_ABILITIES];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_SKILLSETS]
+    g_text_section_pointers[HELP_TEXT_SECTION_SKILLSETS]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_SKILLSETS];
-    g_battle_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
+    g_text_section_pointers[HELP_TEXT_SECTION_STATUSES]
         = g_helpmenu_text_data + g_helpmenu_text_section_offsets[HELP_TEXT_SECTION_STATUSES];
-    self = &g_battle_threads[g_battle_thread_current_id];
-    battle_menu_get_active_turn_panels(
+    self = &g_threads[g_thread_current_id];
+    menu_get_active_turn_panels(
         &g_helpmenu_active_banner, &g_helpmenu_active_unit_data, &g_helpmenu_billboard, &g_helpmenu_menu_cursor_tile);
     if (g_helpmenu_selected_unit_panel_mode != 0 || g_battle_post_battle_unit_changes_active != 0) {
         g_helpmenu_require_navigation[2].destination[2] = 7;
         g_helpmenu_require_navigation[7].destination[3] = 2;
     }
-    g_helpmenu_controller_state_ptr = battle_script_get_controller_input_pointer(0);
+    g_helpmenu_controller_state_ptr = input_get_menu_controller(0);
     menu_index = 0;
     g_helpmenu_require_navigation[0].x = 0xC4;
     g_helpmenu_require_navigation[2].x = 0xE0;
     g_helpmenu_require_navigation[0].destination[3] = 0;
     g_helpmenu_require_navigation[3].destination[0] = 0;
     navigation = g_helpmenu_require_navigation;
-    text_thread_id = battle_thread_resolve_id(NATIVE_THREAD_SLOT_FIRST_IDLE);
-    text_thread = &g_battle_threads[text_thread_id];
+    text_thread_id = battle_thread_resolve_id(THREAD_SLOT_FIRST_IDLE);
+    text_thread = &g_threads[text_thread_id];
     for (frame = 0;; frame++) {
         if (text_thread->is_running == 0) {
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
-                g_battle_menu_input_lock_mode = 0;
+            if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
+                g_menu_input_lock_mode = 0;
             }
             if (self->task_words[1] != 0) {
                 self->task_words[1] = 0;
@@ -90,28 +98,28 @@ void helpmenu_menu_run_require_help(void) {
             entry = &navigation[menu_index];
             y = entry->y;
             x = entry->x;
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_DEBUG_UNIT_EDITOR) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_DEBUG_UNIT_EDITOR) != 0) {
                 y += 8;
             }
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
                 y += 8;
             }
             input = *g_helpmenu_controller_state_ptr;
             if (input & PSX_PAD_CROSS) {
-                g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
+                g_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 break;
             }
             if (input & PSX_PAD_CIRCLE) {
                 if (entry->value != 0) {
                     help_id = entry->help_base + *entry->value;
-                    if (entry->help_base == -0x6800 && g_helpmenu_billboard.generic_monster != 0) {
+                    if (entry->help_base == -0x6800 && g_helpmenu_billboard.state.generic_monster != 0) {
                         help_id = *entry->value | 0x7800;
                         if ((*entry->value & 0x7FF) == 0x7FF || (*entry->value & 0x7FF) == 0) {
                             *g_helpmenu_controller_state_ptr = 0;
                         } else {
-                            g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                            battle_thread_start(text_thread_id, battle_text_character_handling_thread);
-                            battle_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
+                            g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
+                            thread_start(text_thread_id, battle_text_run_dialog_thread);
+                            thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                         }
                     } else if (entry->help_base == 0x7800 && (*(u16*)entry->value - 1) >= 0x301U) {
                         *g_helpmenu_controller_state_ptr = 0;
@@ -120,15 +128,15 @@ void helpmenu_menu_run_require_help(void) {
                     } else if (entry->help_base == -0x6800 && (*(u16*)entry->value - 1) >= 0x101U) {
                         *g_helpmenu_controller_state_ptr = 0;
                     } else {
-                        g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                        battle_thread_start(text_thread_id, battle_text_character_handling_thread);
-                        battle_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
+                        g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
+                        thread_start(text_thread_id, battle_text_run_dialog_thread);
+                        thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                     }
                 } else {
                     help_id = entry->help_base;
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
-                    battle_thread_start(text_thread_id, battle_text_character_handling_thread);
-                    battle_thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
+                    g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
+                    thread_start(text_thread_id, battle_text_run_dialog_thread);
+                    thread_set_parameters(text_thread_id, 0x3B, help_id, 0);
                 }
             } else if (input & PSX_PAD_DPAD_MASK) {
                 if (input & PSX_PAD_UP) {
@@ -141,15 +149,15 @@ void helpmenu_menu_run_require_help(void) {
                     help_id = 3;
                 }
                 if (menu_index != entry->destination[help_id]) {
-                    g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
                 menu_index = entry->destination[help_id];
             }
         } else {
             /* The help text is up: entry, x and y keep the values of the last
                idle frame. */
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
-                g_battle_menu_input_lock_mode = 1;
+            if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
+                g_menu_input_lock_mode = 1;
             }
             if (self->task_words[1] == 0) {
                 self->task_words[1] = 2;
@@ -161,7 +169,7 @@ void helpmenu_menu_run_require_help(void) {
         } else {
             bob = battle_menu_get_cursor_bob_offset(0);
         }
-        self->task_words[0] += g_battle_event_speed;
+        self->task_words[0] += g_script_event_speed;
         bob -= 4;
         buffer = frame & 1;
         if (entry->vertical_cursor != 0) {
@@ -190,6 +198,7 @@ void helpmenu_menu_run_require_help(void) {
             shadow_quad->v2 = 0;
             shadow_quad->v3 = 16;
             setXYWH(quad, x, y + bob, 16, 16);
+            /* The shadow follows cursor; its named pointer changes store scheduling. */
             setXYWH(&quad[2], x + 2, y + bob + 2, 16, 16);
         } else {
             POLY_FT4* quads;
@@ -200,10 +209,10 @@ void helpmenu_menu_run_require_help(void) {
             quads = cursor;
             setUV4(&quads[buffer], u, 0, u + 16, 0, 0xA8, 16, u + 16, 16);
             u += 16;
-            setUV4(&quads[buffer + 2], u, 0, u + 16, 0, 0xB8, 16, u + 16, 16);
+            setUV4(&shadow[buffer], u, 0, u + 16, 0, 0xB8, 16, u + 16, 16);
             setXYWH(&quads[buffer], x + bob, y, 16, 16);
             shadow_x = x + 2 + bob;
-            setXYWH(&quads[buffer + 2], shadow_x, y + 2, 16, 16);
+            setXYWH(&shadow[buffer], shadow_x, y + 2, 16, 16);
         }
         if (self->task_words[1] != 0) {
             cursor[buffer].clut = 0x7DFC;
@@ -212,11 +221,11 @@ void helpmenu_menu_run_require_help(void) {
             cursor[buffer].clut = 0x7D7C;
             shadow[buffer].clut = 0x7DBC;
         }
-        battle_gfx_draw_or_append_gpu_primitive(&cursor[buffer]);
-        battle_gfx_draw_or_append_gpu_primitive(&shadow[buffer]);
-        battle_thread_wait_frames(1);
+        gfx_draw_or_append_gpu_primitive(&cursor[buffer]);
+        gfx_draw_or_append_gpu_primitive(&shadow[buffer]);
+        thread_wait_frames(1);
     }
     *g_helpmenu_controller_state_ptr = 0;
-    battle_thread_wait_frames(1);
+    thread_wait_frames(1);
     helpmenu_menu_close();
 }

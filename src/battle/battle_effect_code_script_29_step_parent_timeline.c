@@ -1,25 +1,10 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
-/* The parent timeline's state in an effect_record_t, from 0x26. */
-typedef struct battle_effect_timeline_state {
-    u16 target_index;             /* 0x00 (record 0x26) */
-    s16 frame;                    /* 0x02 (record 0x28) */
-    s16 spawn_countdown;          /* 0x04 (record 0x2a) */
-    u16 spawned_count;            /* 0x06 (record 0x2c) */
-    s16 particle_keyframe[2][5];  /* 0x08 */
-    s16 track_keyframe[7][2];     /* 0x1c; four colour tracks then three sound tracks, per phase */
-    u8 _unused_38[4];             /* 0x38 */
-    s16 particle_remaining[2][5]; /* 0x3c */
-    s16 track_remaining[7][2];    /* 0x50 */
-    u8 _unused_6c[4];             /* 0x6c */
-    s16 particle_step[2][5];      /* 0x70 */
-    u8 _unused_84[0x10];          /* 0x84 */
-    u8 sound_state[3][2][2];      /* 0x94 */
-} battle_effect_timeline_state_t;
-
 /* Opcode 29: advance the record's parent timeline by one frame. The second
- * halfword is the script offset its child records start at.
+ * 16-bit value is the script offset its child records start at.
  *
  * Before phase1_duration the phase 1 particle channels, colour tracks and
  * sound tracks run (and the time scale follows the timing curve under
@@ -27,81 +12,93 @@ typedef struct battle_effect_timeline_state {
  * target is started, spawn_delay frames apart. Phase 2 runs from
  * phase1_duration + (target_count - 1) * spawn_delay + child_duration. The
  * camera tracks advance every frame. */
-s32 battle_effect_code_script_29_step_parent_timeline(effect_record_t* record) {
-    battle_effect_timeline_state_t* state;
+effect_script_result_e battle_effect_code_script_29_step_parent_timeline(battle_effect_record_t* record) {
+    battle_effect_record_timeline_t* timeline;
     s32 i;
     s16 child;
     u8 unused_stack[16]; /* Unread locals that size the target's 0x48-byte frame. */
 
-    state = (battle_effect_timeline_state_t*)&record->target_index;
-    if (state->frame >= g_battle_effect_timeline->phase1_duration) {
-        while (state->spawn_countdown == 0 && state->spawned_count < g_battle_effect_coord_data.target_count) {
-            child = battle_effect_start_script_record(
-                record->script, *(s16*)(record->pc + (s32)record->script + 2), record->record_index);
-            g_battle_effect_state_records[child].target_index = state->spawned_count;
-            state->spawned_count++;
-            state->spawn_countdown += g_battle_effect_timeline->spawn_delay;
+    timeline = &record->timeline;
+    if (timeline->frame >= g_battle_effect_timeline->phase1_duration) {
+        while (timeline->state.parent.spawn_countdown == 0
+            && timeline->state.parent.spawned_count < g_battle_effect_coord_data.target_count) {
+            const effect_script_instruction_t* instruction = effect_get_current_script_instruction(record);
+
+            child
+                = battle_effect_start_script_record(record->script, instruction->immediate.value, record->record_index);
+            g_battle_effect_state_records[child].timeline.target_index = timeline->state.parent.spawned_count;
+            timeline->state.parent.spawned_count++;
+            timeline->state.parent.spawn_countdown += g_battle_effect_timeline->spawn_delay;
         }
-        state->spawn_countdown--;
+        timeline->state.parent.spawn_countdown--;
     } else {
-        for (i = 0; i < 5; i++) {
-            battle_effect_step_emitter_timeline((battle_keyframe_effect_state_t*)record,
-                &g_battle_effect_timeline->particle_channels[0][i], &state->particle_keyframe[0][i],
-                &state->particle_remaining[0][i], &state->particle_step[0][i]);
+        for (i = 0; i < EFFECT_PARTICLE_CHANNEL_COUNT; i++) {
+            battle_effect_step_emitter_timeline(record, &g_battle_effect_timeline->particle_channels[0][i],
+                &timeline->state.parent.keyframe.tracks.particle[0][i],
+                &timeline->state.parent.remaining.tracks.particle[0][i],
+                &timeline->state.parent.step.tracks.particle[0][i]);
         }
         battle_effect_advance_target_palette_track(&g_battle_effect_timeline->color_tracks[0].surroundings,
-            &state->track_keyframe[0][0], &state->track_remaining[0][0]);
+            &timeline->state.parent.keyframe.tracks.surroundings[0],
+            &timeline->state.parent.remaining.tracks.surroundings[0]);
         if (g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type
             == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             battle_effect_advance_caster_palette_track(&g_battle_effect_timeline->color_tracks[0].caster,
-                &state->track_keyframe[1][0], &state->track_remaining[1][0],
-                g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id);
+                &timeline->state.parent.keyframe.tracks.caster[0], &timeline->state.parent.remaining.tracks.caster[0],
+                g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.runtime_id);
         }
         battle_effect_advance_coord_target_palette_track(&g_battle_effect_timeline->color_tracks[0].target,
-            &state->track_keyframe[2][0], &state->track_remaining[2][0]);
+            &timeline->state.parent.keyframe.tracks.target[0], &timeline->state.parent.remaining.tracks.target[0]);
         battle_effect_advance_map_background_track(&g_battle_effect_timeline->color_tracks[0].screen,
-            &state->track_keyframe[3][0], &state->track_remaining[3][0]);
-        battle_effect_advance_sound_track(g_battle_effect_timeline->sound_tracks[0][0], &state->track_keyframe[4][0],
-            &state->track_remaining[4][0], &state->sound_state[0][0][1]);
-        battle_effect_advance_sound_track(g_battle_effect_timeline->sound_tracks[0][1], &state->track_keyframe[5][0],
-            &state->track_remaining[5][0], &state->sound_state[1][0][1]);
-        battle_effect_advance_sound_track(g_battle_effect_timeline->sound_tracks[0][2], &state->track_keyframe[6][0],
-            &state->track_remaining[6][0], &state->sound_state[2][0][1]);
+            &timeline->state.parent.keyframe.tracks.screen[0], &timeline->state.parent.remaining.tracks.screen[0]);
+        battle_effect_advance_parent_sound_track(&g_battle_effect_timeline->sound_tracks[0][0],
+            &timeline->state.parent.keyframe.tracks.sound[0][0], &timeline->state.parent.remaining.tracks.sound[0][0],
+            &timeline->state.parent.step.tracks._unknown_24[0][0][1]);
+        battle_effect_advance_parent_sound_track(&g_battle_effect_timeline->sound_tracks[0][1],
+            &timeline->state.parent.keyframe.tracks.sound[1][0], &timeline->state.parent.remaining.tracks.sound[1][0],
+            &timeline->state.parent.step.tracks._unknown_24[1][0][1]);
+        battle_effect_advance_parent_sound_track(&g_battle_effect_timeline->sound_tracks[0][2],
+            &timeline->state.parent.keyframe.tracks.sound[2][0], &timeline->state.parent.remaining.tracks.sound[2][0],
+            &timeline->state.parent.step.tracks._unknown_24[2][0][1]);
         if (g_battle_effect_flags_section->flags & EFFECT_FLAG_TIMING_CURVE_PHASE1) {
-            battle_state_set_min_vsync_interval(
-                battle_effect_get_timing_curve_value((battle_effect_timing_entry_t*)record));
+            battle_state_set_min_vsync_interval(battle_effect_get_timing_curve_value(record));
         }
     }
     i = g_battle_effect_timeline->phase1_duration
         + (g_battle_effect_coord_data.target_count - 1) * g_battle_effect_timeline->spawn_delay
-        + g_battle_effect_timeline->child_duration;
-    if (state->frame >= i) {
-        for (i = 0; i < 5; i++) {
-            battle_effect_step_emitter_timeline((battle_keyframe_effect_state_t*)record,
-                &g_battle_effect_timeline->particle_channels[1][i], &state->particle_keyframe[1][i],
-                &state->particle_remaining[1][i], &state->particle_step[1][i]);
+        + g_battle_effect_timeline->child.duration;
+    if (timeline->frame >= i) {
+        for (i = 0; i < EFFECT_PARTICLE_CHANNEL_COUNT; i++) {
+            battle_effect_step_emitter_timeline(record, &g_battle_effect_timeline->particle_channels[1][i],
+                &timeline->state.parent.keyframe.tracks.particle[1][i],
+                &timeline->state.parent.remaining.tracks.particle[1][i],
+                &timeline->state.parent.step.tracks.particle[1][i]);
         }
         battle_effect_advance_target_palette_track(&g_battle_effect_timeline->color_tracks[1].surroundings,
-            &state->track_keyframe[0][1], &state->track_remaining[0][1]);
+            &timeline->state.parent.keyframe.tracks.surroundings[1],
+            &timeline->state.parent.remaining.tracks.surroundings[1]);
         if (g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type
             == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
             battle_effect_advance_caster_palette_track(&g_battle_effect_timeline->color_tracks[1].caster,
-                &state->track_keyframe[1][1], &state->track_remaining[1][1],
-                g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].id.misc_id);
+                &timeline->state.parent.keyframe.tracks.caster[1], &timeline->state.parent.remaining.tracks.caster[1],
+                g_battle_effect_coord_data.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.runtime_id);
         }
         battle_effect_advance_coord_target_palette_track(&g_battle_effect_timeline->color_tracks[1].target,
-            &state->track_keyframe[2][1], &state->track_remaining[2][1]);
+            &timeline->state.parent.keyframe.tracks.target[1], &timeline->state.parent.remaining.tracks.target[1]);
         battle_effect_advance_map_background_track(&g_battle_effect_timeline->color_tracks[1].screen,
-            &state->track_keyframe[3][1], &state->track_remaining[3][1]);
-        battle_effect_advance_sound_track(g_battle_effect_timeline->sound_tracks[1][0], &state->track_keyframe[4][1],
-            &state->track_remaining[4][1], &state->sound_state[0][1][1]);
-        battle_effect_advance_sound_track(g_battle_effect_timeline->sound_tracks[1][1], &state->track_keyframe[5][1],
-            &state->track_remaining[5][1], &state->sound_state[1][1][1]);
-        battle_effect_advance_sound_track(g_battle_effect_timeline->sound_tracks[1][2], &state->track_keyframe[6][1],
-            &state->track_remaining[6][1], &state->sound_state[2][1][1]);
+            &timeline->state.parent.keyframe.tracks.screen[1], &timeline->state.parent.remaining.tracks.screen[1]);
+        battle_effect_advance_parent_sound_track(&g_battle_effect_timeline->sound_tracks[1][0],
+            &timeline->state.parent.keyframe.tracks.sound[0][1], &timeline->state.parent.remaining.tracks.sound[0][1],
+            &timeline->state.parent.step.tracks._unknown_24[0][1][1]);
+        battle_effect_advance_parent_sound_track(&g_battle_effect_timeline->sound_tracks[1][1],
+            &timeline->state.parent.keyframe.tracks.sound[1][1], &timeline->state.parent.remaining.tracks.sound[1][1],
+            &timeline->state.parent.step.tracks._unknown_24[1][1][1]);
+        battle_effect_advance_parent_sound_track(&g_battle_effect_timeline->sound_tracks[1][2],
+            &timeline->state.parent.keyframe.tracks.sound[2][1], &timeline->state.parent.remaining.tracks.sound[2][1],
+            &timeline->state.parent.step.tracks._unknown_24[2][1][1]);
     }
-    battle_camera_start_parent_keyframe_moves(state->frame);
-    state->frame++;
+    battle_camera_start_parent_keyframe_moves(timeline->frame);
+    timeline->frame++;
     record->pc += 4;
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

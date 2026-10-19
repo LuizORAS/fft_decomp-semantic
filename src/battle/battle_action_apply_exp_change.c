@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Apply an EXP change while executing. With bit 0x80 the low seven bits are taken away (at least 0);
@@ -20,7 +20,7 @@ void battle_action_apply_exp_change(battle_stats_t* unit, u8 amount) {
         }
         unit->experience = capped;
         if (main_unit_check_level_up(unit) != 0) {
-            if (unit->misc_unit_id == g_battle_acting_unit_id) {
+            if (unit->battle_id == g_battle_acting_unit_id) {
                 g_battle_action_current_ability.level_gained_flag = 1;
             }
         }

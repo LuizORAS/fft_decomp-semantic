@@ -6,7 +6,7 @@
  * its fade (or stop the sequence after the last frame). */
 void open_gfx_update_opntex_sequence(void) {
     s32 frame;
-    const u8* source;
+    u32* source;
 
     if (g_open_script_state.opntex.frame_duration == 0) {
         return;
@@ -33,7 +33,7 @@ void open_gfx_update_opntex_sequence(void) {
     }
 
     source = g_open_gfx_opntex_data;
-    source += frame * 23 * 2048;
+    source += frame * 23 * 512;
     open_gfx_load_opntex_into_frame_buffer(source);
     g_open_script_state.dispatch.flags |= OPEN_SCRIPT_DISPATCH_INCREASE_FADE_INTENSITY;
     g_open_script_state.opntex.fade_elapsed_frames = 0;

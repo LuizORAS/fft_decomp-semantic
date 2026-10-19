@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
+#include "fft/battle_target.h"
 
 /* Return 1 when the acting unit cannot jump across tile_index at height.
  *
@@ -32,7 +34,7 @@ s32 battle_move_check_horizontal_jump(s32 tile_index, u8 shift_a, u8 shift_b, u8
     records = g_battle_move_records_ptr;
     state->jump_unit_size = g_battle_move_config_ptr->unit_size;
     for (layer = 0; layer < 4; layer++) {
-        index = (layer / 2) * 256 + tile_index;
+        index = (layer / 2) * MAP_TILES_PER_LAYER + tile_index;
         tile = &g_battle_map_tile_data[index];
         if (layer & 1) {
             if ((frontier[index] & (FRONTIER_FLAG_UNIT_ON_TILE | FRONTIER_FLAG_STAND_ON_UNIT))
@@ -57,20 +59,20 @@ s32 battle_move_check_horizontal_jump(s32 tile_index, u8 shift_a, u8 shift_b, u8
                 continue;
             }
             state->work_height = tile->height * 2;
-            state->jump_half_height = tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK;
+            state->jump_half_height = tile->depth_half_height.half_height;
             state->jump_slope = tile->slope_type;
             height_a = state->work_height + state->jump_half_height * ((state->jump_slope >> shift_a) & 3);
             height_b = state->work_height + state->jump_half_height * ((state->jump_slope >> shift_b) & 3);
             if ((u8)height_a > (u8)height_b) {
-                high = height_b - (tile->ceiling_depth_and_marks.value & MAP_TILE_CEILING_DEPTH_MASK) * 2;
-                depth = (tile->depth_half_height.value >> 5) * 2;
+                high = height_b - (tile->ceiling_depth_and_marks.ceiling_depth) * 2;
+                depth = (tile->depth_half_height.depth) * 2;
                 state->work_height = high;
                 low = state->work_height;
                 high = height_a + depth;
             } else {
-                high = height_b + (tile->depth_half_height.value >> 5) * 2;
+                high = height_b + (tile->depth_half_height.depth) * 2;
                 low = height_a;
-                low -= (tile->ceiling_depth_and_marks.value & MAP_TILE_CEILING_DEPTH_MASK) * 2;
+                low -= (tile->ceiling_depth_and_marks.ceiling_depth) * 2;
             }
         }
         if ((u8)low < (u8)lowest) {

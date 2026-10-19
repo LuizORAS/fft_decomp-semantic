@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Open a treasure's detail (level TREASURE_DETAIL); the twin of
@@ -30,7 +31,7 @@ void wldcore_menu_push_treasure_detail_level(s32 value) {
     s32 index;
     s32 coordinate_mode = 1;
     u8 unused[8];
-    u8 date[2];
+    calendar_date_t date;
 
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].detail.value = value;
     wldcore_gfx_load_picture_set(g_wldcore_treasure_picture_sets[value]);
@@ -38,7 +39,7 @@ void wldcore_menu_push_treasure_detail_level(s32 value) {
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].detail.render_index = index;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    wldcore_calendar_read_date(g_main_treasure_acquisition_date_bits, value, date);
+    wldcore_calendar_read_date(g_main_treasure_acquisition_date_bits, value, &date);
     g_wldcore_scrollable_text_window.text_id = value + TEXT_ID_WORLD_MESSAGE_BASE;
     switch (coordinate_mode) {
     case 0:
@@ -57,8 +58,8 @@ void wldcore_menu_push_treasure_detail_level(s32 value) {
     g_wldcore_scrollable_text_window.priority = 0xa;
     g_wldcore_scrollable_text_window.image_coordinate_mode = coordinate_mode;
     g_wldcore_scrollable_text_window.extra_render_index = -1;
-    g_wldcore_scrollable_text_window.text_substitutions[0] = date[0] + WLDCORE_TEXT_ID_MONTH_NAME_BASE;
-    g_wldcore_scrollable_text_window.text_substitutions[1] = date[1];
+    g_wldcore_scrollable_text_window.text_substitutions[0] = date.month + WLDCORE_TEXT_ID_MONTH_NAME_BASE;
+    g_wldcore_scrollable_text_window.text_substitutions[1] = date.day;
     wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.main_window]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
@@ -71,8 +72,8 @@ void wldcore_menu_push_treasure_detail_level(s32 value) {
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.lower_window]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_world_text_substitution_values[0] = value + TEXT_ID_TREASURE_NAME_BASE;
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
+    g_text_substitution_values[0] = value + TEXT_ID_TREASURE_NAME_BASE;
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].detail.phase = WLDCORE_DETAIL_PHASE_LOAD;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].detail.timer = 0;
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_TREASURE_DETAIL;

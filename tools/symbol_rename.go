@@ -607,7 +607,7 @@ type symbolRename struct {
 
 // renameSymbols renames functions (function true) or data symbols across the
 // configuration and every source under src/ and include/. A function
-// rename also moves its source file to <dir>/<new>.c.
+// definition rename also moves its source file to <dir>/<new>.c.
 func (p project) renameSymbols(renames []symbolRename, function, dryRun bool) (result symbolMutationResult, err error) {
 	seen := make(map[string]bool)
 	for _, rename := range renames {
@@ -635,7 +635,9 @@ func (p project) renameSymbols(renames []symbolRename, function, dryRun bool) (r
 				if err != nil {
 					return err
 				}
-				moves = append(moves, move{from, to})
+				if from != "" {
+					moves = append(moves, move{from, to})
+				}
 			} else if err := renameConfigData(config, rename.oldName, rename.newName); err != nil {
 				return err
 			}
@@ -697,11 +699,11 @@ func (p project) renameSymbols(renames []symbolRename, function, dryRun bool) (r
 	return result, err
 }
 
-// renameConfigFunction renames every module's function oldName (a shared
-// source can back one function in several modules) and returns the source
-// move it implies.
+// renameConfigFunction keeps entry-only renames separate from source-definition
+// renames. A definition rename updates every owner and moves its shared source.
 func renameConfigFunction(config *projectConfig, oldName, newName string) (string, string, error) {
 	from, to := "", ""
+	found := false
 	for _, m := range config.Modules {
 		if m.function(newName) != nil {
 			return "", "", fmt.Errorf("function already exists: %s", newName)
@@ -711,35 +713,59 @@ func renameConfigFunction(config *projectConfig, oldName, newName string) (strin
 				return "", "", fmt.Errorf("%s already names a symbol in %s", newName, m.ID)
 			}
 		}
-	}
-	for _, m := range config.Modules {
-		f := m.function(oldName)
-		if f == nil {
-			continue
-		}
-		source := m.sourceOf(f)
-		if from != "" && source != from {
-			return "", "", fmt.Errorf("%s has different sources in different modules; rename it manually", oldName)
-		}
-		for _, other := range m.Functions {
-			if other.Name != oldName && m.sourceOf(&other) == source {
-				return "", "", fmt.Errorf("source %s owns several functions; rename it manually", source)
+		for index := range m.Functions {
+			f := &m.Functions[index]
+			if f.Name == oldName {
+				found = true
+			}
+			if f.sourceSymbol() == oldName {
+				found = true
+				source := m.sourceOf(f)
+				if from != "" && source != from {
+					return "", "", fmt.Errorf("%s has different sources in different modules; rename it manually", oldName)
+				}
+				from = source
+				to = filepath.ToSlash(filepath.Join(filepath.Dir(source), newName+filepath.Ext(source)))
 			}
 		}
-		from = source
-		to = filepath.ToSlash(filepath.Join(filepath.Dir(source), newName+filepath.Ext(source)))
-		f.Name = newName
-		if f.Source != "" {
-			f.Source = to
+	}
+	if !found {
+		return "", "", fmt.Errorf("no function or source symbol named %s", oldName)
+	}
+	// Check all owners before changing any entry or implicit default path.
+	if from != "" {
+		for _, m := range config.Modules {
+			for index := range m.Functions {
+				f := &m.Functions[index]
+				if m.sourceOf(f) == from && f.sourceSymbol() != oldName {
+					return "", "", fmt.Errorf("source %s has conflicting definition symbols; rename it manually", from)
+				}
+			}
+		}
+	}
+	for _, m := range config.Modules {
+		for index := range m.Functions {
+			f := &m.Functions[index]
+			source := m.sourceOf(f)
+			definition := f.sourceSymbol()
+			entryRename := f.Name == oldName
+			if entryRename {
+				f.Name = newName
+				// An alias's old default path remains owned by its definition.
+				f.Source = source
+			}
+			if definition == oldName {
+				f.SourceSymbol = newName
+			}
+			if from != "" && source == from {
+				f.Source = to
+			}
 		}
 		for index := range m.Overrides {
 			if m.Overrides[index].Function == oldName {
 				m.Overrides[index].Function = newName
 			}
 		}
-	}
-	if from == "" {
-		return "", "", fmt.Errorf("no function named %s", oldName)
 	}
 	renameConfigReferences(config, oldName, newName)
 	return from, to, nil

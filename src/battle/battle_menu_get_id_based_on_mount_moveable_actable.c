@@ -1,14 +1,15 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* The idle action menu for a unit id: battle_menu_get_unit_action_menu_id, with
  * the four TURN menus replaced by their RIDER_TURN variants for a rider. Returns
  * BATTLE_MENU_ID_NONE for an empty slot. */
-s32 battle_menu_get_id_based_on_mount_moveable_actable(s32 unit_id) {
+battle_menu_id_e battle_menu_get_id_based_on_mount_moveable_actable(s32 battle_id) {
     battle_stats_t* unit;
     s32 menu;
 
-    unit = battle_unit_get_existing_pointer(unit_id);
+    unit = battle_unit_get_existing_pointer(battle_id);
     if (unit == 0) {
         return BATTLE_MENU_ID_NONE;
     }

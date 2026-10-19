@@ -1,5 +1,5 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
-#include "psx/libc.h"
 
 /* Run the sound novel being read until its script yields; wldcore_menu_step_sound_novel_level calls it
  * every frame. Each turn plays the pending script sounds (EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT and the
@@ -7,36 +7,35 @@
  * - after a branch (WLDCORE_SOUND_NOVEL_STATE_BRANCH) it marks the section read in
  *   g_main_sound_novel_section_bits, enters it through the novel's section table and, for the first
  *   five novels, copies the record into its bookmark in g_main_sound_novel_records;
- * - when an instruction is due (WLDCORE_SOUND_NOVEL_STATE_FETCH) it loads the next word;
+ * - when an instruction is due (WLDCORE_SOUND_NOVEL_STATE_FETCH) it loads the next 32-bit instruction;
  * - it runs the opcode's handler (g_wldcore_sound_novel_handlers).
  * The turns end when a handler yields or the script ends. Returns 0 when the script ended, else 1.
  *
- * The record's first word holds the save-slot section table while a script runs
- * (g_wldcore_script_slot_table names the same word). */
+ * The record's first 32-bit value holds the save-slot section table while a script runs
+ * (g_wldcore_sound_novel_record names the same value). */
 s32 wldcore_sound_novel_run_until_yield(void) {
     s32 low;
     s32 high;
-    u32 offset;
+    u32 section_byte_offset;
     u16 flags;
     s32 aborted;
 
     do {
-        low = world_script_get_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT);
-        high = world_script_get_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND);
-        wldcore_sound_play_pending_script_sounds(
-            low, high, world_script_get_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK));
+        low = script_get_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT);
+        high = script_get_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND);
+        wldcore_sound_play_pending_script_sounds(low, high, script_get_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK));
         wldcore_sound_novel_update_countdown_timer();
 
         if (g_wldcore_sound_novel_record.state_flags & WLDCORE_SOUND_NOVEL_STATE_BRANCH) {
             wldcore_bits_assign(g_main_sound_novel_section_bits,
                 (g_wldcore_sound_novel_index << 8) + g_wldcore_sound_novel_record.section, 1);
             g_wldcore_sound_novel_record.state_flags &= ~WLDCORE_SOUND_NOVEL_STATE_BRANCH;
-            offset = ((wldcore_save_slot_table_t*)g_wldcore_sound_novel_record.buffer)
-                         ->offsets[g_wldcore_sound_novel_record.section];
+            section_byte_offset = g_wldcore_sound_novel_record.buffer->offsets[g_wldcore_sound_novel_record.section];
             g_wldcore_sound_novel_record.section++;
             g_wldcore_sound_novel_record.word_index = 0;
             g_wldcore_sound_novel_record.state_flags |= WLDCORE_SOUND_NOVEL_STATE_FETCH;
-            g_wldcore_sound_novel_record.script_words = &((u32*)g_main_save_slot_buffer)[offset >> 2];
+            g_wldcore_sound_novel_record.script_words
+                = &((u32*)&g_main_save_slot_buffer)[section_byte_offset / sizeof(u32)];
             if (g_wldcore_sound_novel_index < 5) {
                 memcpy(&g_main_sound_novel_records[g_wldcore_sound_novel_index], &g_wldcore_sound_novel_record,
                     sizeof(wldcore_sound_novel_record_t));

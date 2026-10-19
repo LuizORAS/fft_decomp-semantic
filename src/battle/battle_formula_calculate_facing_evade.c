@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Classifies the attack direction and drops evades the target cannot use.
@@ -19,12 +21,12 @@ void battle_formula_calculate_facing_evade(void) {
 
     dx = g_battle_action_target->x - g_battle_action_attacker->x;
     distance_x = dx < 0 ? -dx : dx;
-    dy = g_battle_action_target->position.bits.y - g_battle_action_attacker->position.bits.y;
+    dy = g_battle_action_target->position.y - g_battle_action_attacker->position.y;
     distance_y = dy < 0 ? -dy : dy;
     direction = BATTLE_ABILITY_FACING_SIDE;
     if (distance_y < distance_x) {
         if (dx > 0) {
-            facing = g_battle_action_target->position.raw & BATTLE_UNIT_POSITION_FACING_MASK;
+            facing = g_battle_action_target->position.facing << 8;
             if (facing == BATTLE_UNIT_POSITION_FACING_WEST) {
                 direction = BATTLE_ABILITY_FACING_FRONT;
             } else if (facing == BATTLE_UNIT_POSITION_FACING_EAST) {
@@ -32,7 +34,7 @@ void battle_formula_calculate_facing_evade(void) {
             }
         }
         if (dx < 0) {
-            facing = g_battle_action_target->position.raw & BATTLE_UNIT_POSITION_FACING_MASK;
+            facing = g_battle_action_target->position.facing << 8;
             if (facing == BATTLE_UNIT_POSITION_FACING_EAST) {
                 direction = BATTLE_ABILITY_FACING_FRONT;
             } else if (facing == BATTLE_UNIT_POSITION_FACING_WEST) {
@@ -41,7 +43,7 @@ void battle_formula_calculate_facing_evade(void) {
         }
     } else if (distance_x < distance_y) {
         if (dy > 0) {
-            facing = g_battle_action_target->position.raw & BATTLE_UNIT_POSITION_FACING_MASK;
+            facing = g_battle_action_target->position.facing << 8;
             if (facing == BATTLE_UNIT_POSITION_FACING_SOUTH) {
                 direction = BATTLE_ABILITY_FACING_FRONT;
             } else if (facing == BATTLE_UNIT_POSITION_FACING_NORTH) {
@@ -49,28 +51,20 @@ void battle_formula_calculate_facing_evade(void) {
             }
         }
         if (dy < 0) {
-            facing = g_battle_action_target->position.raw & BATTLE_UNIT_POSITION_FACING_MASK;
+            facing = g_battle_action_target->position.facing << 8;
             if (facing == BATTLE_UNIT_POSITION_FACING_NORTH) {
                 direction = BATTLE_ABILITY_FACING_FRONT;
             } else if (facing == BATTLE_UNIT_POSITION_FACING_SOUTH) {
                 direction = BATTLE_ABILITY_FACING_BACK;
             }
         }
-    } else if (dx > 0
-        && (g_battle_action_target->position.raw & BATTLE_UNIT_POSITION_FACING_MASK)
-            == BATTLE_UNIT_POSITION_FACING_WEST) {
+    } else if (dx > 0 && (g_battle_action_target->position.facing << 8) == BATTLE_UNIT_POSITION_FACING_WEST) {
         direction = BATTLE_ABILITY_FACING_FRONT;
-    } else if (dx < 0
-        && (g_battle_action_target->position.raw & BATTLE_UNIT_POSITION_FACING_MASK)
-            == BATTLE_UNIT_POSITION_FACING_EAST) {
+    } else if (dx < 0 && (g_battle_action_target->position.facing << 8) == BATTLE_UNIT_POSITION_FACING_EAST) {
         direction = BATTLE_ABILITY_FACING_FRONT;
-    } else if (dy > 0
-        && (g_battle_action_target->position.raw & BATTLE_UNIT_POSITION_FACING_MASK)
-            == BATTLE_UNIT_POSITION_FACING_SOUTH) {
+    } else if (dy > 0 && (g_battle_action_target->position.facing << 8) == BATTLE_UNIT_POSITION_FACING_SOUTH) {
         direction = BATTLE_ABILITY_FACING_FRONT;
-    } else if (dy < 0
-        && (g_battle_action_target->position.raw & BATTLE_UNIT_POSITION_FACING_MASK)
-            == BATTLE_UNIT_POSITION_FACING_NORTH) {
+    } else if (dy < 0 && (g_battle_action_target->position.facing << 8) == BATTLE_UNIT_POSITION_FACING_NORTH) {
         direction = BATTLE_ABILITY_FACING_FRONT;
     } else if (dx == 0 && dy == 0) {
         direction = BATTLE_ABILITY_FACING_BACK;

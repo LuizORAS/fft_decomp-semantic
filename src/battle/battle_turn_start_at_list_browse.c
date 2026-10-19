@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
 
 /* Open the status menu at the first AT list entry unless it is open. */
 void battle_turn_start_at_list_browse(void) {

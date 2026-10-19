@@ -15,18 +15,18 @@
  * for the menu and starts the screen fade.
  */
 void wldcore_menu_push_sound_novel_level(s32 argument) {
-    wldcore_window_render_bounds16_t bounds;
-    wldcore_point32_t origin;
-    wldcore_window_record_t* window1;
-    wldcore_window_record_t* window2;
-    wldcore_window_record_t* window4;
+    RECT bounds;
+    open_point32_t origin;
+    world_animated_render_record_t* window1;
+    world_animated_render_record_t* window2;
+    world_animated_render_record_t* window4;
     s32 bar_render;
     s32 index;
-    wldcore_point32_t* pos1;
-    wldcore_point32_t* pos2;
-    wldcore_point32_t* pos3;
-    wldcore_point32_t* pos4;
-    wldcore_point32_t* render_pos;
+    open_point32_t* pos1;
+    open_point32_t* pos2;
+    open_point32_t* pos3;
+    open_point32_t* pos4;
+    open_point32_t* render_pos;
 
     /* Held from entry: with every saved register taken, reload rematerialises
      * the constant beside its one use, which is the target's la placement. */
@@ -70,14 +70,14 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel.render_index = index;
-    bounds.position.x = 0x1E4;
-    bounds.position.y = 0x1E8;
-    bounds.dimensions.x = 0x20;
-    bounds.dimensions.y = 8;
+    bounds.x = 0x1E4;
+    bounds.y = 0x1E8;
+    bounds.w = 0x20;
+    bounds.h = 8;
     origin.x = 0x20;
     origin.y = 0x1E8;
     wldcore_window_init_vram_render_record(index, bounds, origin, 0);
-    pos3 = (wldcore_point32_t*)((s32)render_pos + index * sizeof(wldcore_window_render_record_t));
+    pos3 = (open_point32_t*)((s32)render_pos + index * sizeof(wldcore_window_render_record_t));
     pos3->x = 0x34;
     pos3->y = 0x55;
     g_wldcore_window_render_records[index].priority = 8;
@@ -97,7 +97,7 @@ void wldcore_menu_push_sound_novel_level(s32 argument) {
     pos4->y = 0x58;
     g_wldcore_window_records[index].palette = 0;
 
-    SuzukiAppendVFXSMD(g_wldcore_sound_novel_sound_resource);
+    suzuki_sound_append_resource(g_wldcore_sound_novel_sound_resource);
     wldcore_sound_novel_restore_saved_state(bar_render);
     g_wldcore_menu_blocked_buttons = PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_SELECT;
     g_wldcore_menu_ordering_table_offset = 9;

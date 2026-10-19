@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* The physical XA modifiers without the attacker's supports, in order: the attacker's Berserk and
  * Frog, the target's Defense Up, its Protect, Sleep, Charging, Chicken and Frog

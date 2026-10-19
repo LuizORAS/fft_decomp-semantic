@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -12,9 +13,9 @@
  * as in the target. The unused point record preserves the 24-byte local
  * area. */
 void wldcore_proposition_open_report_list(void) {
-    wldcore_point32_t origin;
-    wldcore_point32_t dimensions;
-    wldcore_point32_t unused_point;
+    open_point32_t origin;
+    wldcore_window_panel_layout_t layout;
+    open_point32_t unused_point;
     s32 count;
     s32 i;
     s32 total;
@@ -36,10 +37,10 @@ void wldcore_proposition_open_report_list(void) {
         g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[previous].window_pair_render.render_index]
             .flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
     }
-    if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
-        world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+    if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) == 0) {
+        thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
     }
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_JOBS_RETURNED, 0);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_JOBS_RETURNED, 0);
     count = 0;
     loaded_count = g_main_save_proposition_count;
     if ((i = 0, loaded_count) > 0) {
@@ -64,13 +65,13 @@ void wldcore_proposition_open_report_list(void) {
         } else {
             i = 6;
         }
-        dimensions.x = 0x96;
+        layout.text_width = 0x96;
         origin.x = 0x48;
-        dimensions.y = i;
+        layout.visible_rows = i;
         origin.y = 0x50;
         wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_COMPLETED_PROPOSITIONS, count, i);
         wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
-            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entry_count, &dimensions,
+            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entry_count, &layout,
             &origin);
     } else {
         wldcore_bar_build_menu_rows(&g_wldcore_menu_stack_records[g_wldcore_menu_stack_depth].list_window);

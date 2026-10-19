@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Switch to 30 fps and the EFFECT state, and show the map cursor. Nothing calls it or
  * battle_state_enter_effect_playback, the only other code that enters EFFECT, so that state

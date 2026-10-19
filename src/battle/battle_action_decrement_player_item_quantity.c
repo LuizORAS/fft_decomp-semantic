@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Use one of an item from the party inventory. Only blue units draw on it: -1 when the party has

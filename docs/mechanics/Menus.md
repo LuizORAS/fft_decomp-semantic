@@ -7,6 +7,29 @@ scope:
   - world_option
   - world_input
   - world_screen
+  - menu_alloc_window_buffer_pair()
+  - menu_animate_window_quad_crop()
+  - menu_build_quad_pieces()
+  - menu_build_window_image_row()
+  - menu_confirm_sound_delay_thread()
+  - menu_copy_bytes_to_halfwords()
+  - menu_copy_ff_terminated_bytes_to_halfwords()
+  - menu_copy_unit_data_to_status_billboard()
+  - menu_free_high_overlay()
+  - menu_get_active_turn_panels()
+  - menu_init_panel_fade_tiles()
+  - menu_init_sprite_array()
+  - menu_lerp_fixed12()
+  - menu_lerp_rect_to_poly_ft4()
+  - menu_mini_menu_cancel_delay_thread()
+  - menu_request_open_companion_data_file()
+  - menu_request_open_companion_executable()
+  - menu_request_open_small()
+  - menu_reserve_high_overlay()
+  - menu_submit_numeric_display_frame_primitives()
+  - menu_text_advance_cursor_with_backreferences()
+  - menu_tween_window_quads()
+  - menu_zoom_cursor_frame()
 ---
 
 # Menus
@@ -33,7 +56,7 @@ WLDCORE ([[World Map and Travel]], [[Propositions and the Bar]]).
   skillset list under Act) and its grandchild in 6 (the ability list). The
   menu-building slot 3 opens menus and the help, slot 4 runs the system
   functions, and the unit view's panels use slots 10 to 13
-  ([[native_thread_slot_e]]).
+  ([[thread_slot_e]]).
 - **Rows act** through [[battle_menu_handle_entry_confirm]]: an action from 0 to
   0xff opens that entry in the slot below (bit 0x1000 without the confirm
   sound), a negative action closes that many levels.
@@ -70,13 +93,13 @@ WLDCORE ([[World Map and Travel]], [[Propositions and the Bar]]).
    and target confirmations, ability announcements, crystal or treasure, traps,
    Move-Find items): [[battle_menu_init_system_function]] and
    [[battle_menu_dispatch_system_function]] pick a record of
-   `g_battle_system_function_table` ([[battle_system_function_t]]), and
+   `g_battle_system_function_table` ([[battle_menu_system_function_t]]), and
    [[battle_menu_run_system_function_thread]] shows it in slot 4, with the
    record's alternate when navigation messages are off.
 
 ### Drawing
 
-- Windows are three buffer pairs ([[battle_menu_alloc_window_buffer_pair]],
+- Windows are three buffer pairs ([[menu_alloc_window_buffer_pair]],
   [[battle_menu_draw_active_window_frames]]); work memory comes from an arena
   of 53 pages of 256 bytes ([[battle_menu_alloc_memory]]).
 - Text is rendered into 4bpp window images ([[battle_menu_build_window_image]],
@@ -85,7 +108,7 @@ WLDCORE ([[World Map and Travel]], [[Propositions and the Bar]]).
 - Lists and cursors: [[battle_menu_run_icon_selection_loop]] (icon lists with
   a wrapping cursor), [[battle_menu_run_scrolling_ability_list_thread]] (the
   three-column ability list), [[battle_menu_get_cursor_bob_offset]] and
-  [[battle_menu_zoom_cursor_frame]].
+  [[menu_zoom_cursor_frame]].
 
 ### WORLD
 
@@ -110,10 +133,10 @@ WLDCORE ([[World Map and Travel]], [[Propositions and the Bar]]).
 | Record | What it holds |
 |---|---|
 | [[world_menu_entry_t]] | One menu: window, text image, text id, row count, cancel count, row actions, thread entry, result cell, selected row |
-| `g_battle_menu_idle_action_entries` ([[battle_menu_id_e]]) | BATTLE's menu entries; `g_battle_menu_thread_menu_data` points at the table in use |
+| `g_battle_menu_idle_action_entries` ([[battle_menu_id_e]]) | BATTLE's menu entries; `g_menu_thread_menu_data` points at the table in use |
 | `g_battle_menu_command_maps` ([[battle_menu_id_record_t]]) | Per menu id, the map from a row to the command the battle state reads |
-| `g_battle_menu_unit_selection_records` ([[battle_menu_record_t]]) | Each unit's remembered rows |
-| `g_battle_system_function_table` ([[battle_system_function_t]]) | The prompts and messages: menu id, text, entry, row action, cancel count, thread, alternate |
+| `g_battle_menu_unit_selection_records` ([[battle_menu_unit_selection_record_t]]) | Each unit's remembered rows |
+| `g_battle_system_function_table` ([[battle_menu_system_function_t]]) | The prompts and messages: menu id, text, entry, row action, cancel count, thread, alternate |
 | [[battle_companion_overlay_e]] | The companion overlays the menus load |
 | [[menu_script_opcode_e]] | The display script commands of WORLD's menus and the battle screens |
 
@@ -137,7 +160,7 @@ WLDCORE ([[World Map and Travel]], [[Propositions and the Bar]]).
 | What a choice does in battle | `g_battle_menu_command_maps` and the state that reads the command |
 | A prompt or message | Its record in `g_battle_system_function_table` |
 | An ability list's checks | [[battle_menu_validate_skill_selection_thread]], [[battle_menu_check_action_restrictions]] |
-| A WORLD menu's look | Its display script ([[world_menu_get_script]]) |
+| A WORLD menu's look | Its display script ([[menu_script_opcode_e]]) |
 | BATTLE and WORLD alike | Both twins: WORLD's copy is separate code |
 
 ## Quirks and debts
@@ -145,7 +168,7 @@ WLDCORE ([[World Map and Travel]], [[Propositions and the Bar]]).
 - With navigation messages off, [[battle_menu_check_action_restrictions]]
   drops the Charging and Performing messages by comparing the message's high
   byte with the option bits, which only works because both are 0x8000.
-- [[battle_menu_alloc_window_buffer_pair]] initialises only the first record
+- [[menu_alloc_window_buffer_pair]] initialises only the first record
   of the pair, and [[battle_menu_build_window_image]] returns a leftover `$v0`
   on its upload path.
 - [[battle_menu_get_cursor_bob_offset]] reads an unset pointer for a mode other

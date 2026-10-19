@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+#include "fft/map.h"
 #include "psx/types.h"
 
 /* Start the landing effect that suits the surface of the unit's destination tile:
@@ -6,19 +8,19 @@
  * and open water. Other surfaces (grassland, thicket, snow, lava, rugs, furniture
  * and the like) get none.
  *
- * Nothing starts when the unit's movement word carries
+ * Nothing starts when the unit's 32-bit movement value carries
  * BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS. */
-void battle_effect_set_landing_secondary_by_surface_type(battle_unit_misc_data_t* unit) {
+void battle_effect_set_landing_secondary_by_surface_type(battle_unit_t* unit) {
     map_tile_t* tile;
     s32 surface;
 
-    if (unit->movement.word & BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS)
+    if (unit->movement.suppress_sfx_and_landing_effects)
         return;
     tile = battle_map_get_tile_data_pointer(
-        unit->movement.bytes.destination_x, unit->movement.bytes.destination_y, unit->movement.bytes.destination_z);
+        unit->movement.destination_x, unit->movement.destination_y, unit->movement.destination_z);
     if (tile == 0)
         return;
-    surface = tile->surface.value & MAP_SURFACE_MASK;
+    surface = tile->surface.type;
     switch (surface) {
     case MAP_SURFACE_SAND:
     case MAP_SURFACE_STALACTITE:

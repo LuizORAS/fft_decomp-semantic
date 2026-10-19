@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_status.h"
+#include "fft/battle_unit.h"
 
 /* Mark the units the ability search takes for mode and return 1 when there is one. A unit qualifies
  * when it is targetable and worth targeting (BATTLE_AI_DECISION_WORTH_TARGETING) or Confused, and is

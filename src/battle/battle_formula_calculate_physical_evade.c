@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* The physical evade check, in order: the target's evades (battle_formula_store_physical_evade_values),
  * the attacker's Concentrate, Darkness or Confusion and Transparent, the target's Abandon and

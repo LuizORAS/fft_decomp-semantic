@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Clear the current action's decided byte (current_action.rank.decided) before
  * battle_ai_simulate_action_and_score scores it: only the selected action ever holds

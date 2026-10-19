@@ -6,13 +6,13 @@
 void equip_item_build_inventory_totals(void) {
     s32 i;
     s32 j;
-    party_data_t* unit;
+    party_unit_t* unit;
     u32 item;
 
     bcopy(g_main_item_quantities, g_equip_item_inventory_totals, 0x100);
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        unit = main_party_get_data_pointer(i);
+        unit = main_party_get_unit(i);
         if (unit->party_id != PARTY_ID_NONE) {
             for (j = 0; j < 7; j++) {
                 item = unit->equipment[j];

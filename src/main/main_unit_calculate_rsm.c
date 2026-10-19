@@ -1,9 +1,7 @@
-#include "fft/battle.h"
 #include "fft/main.h"
 #include "psx/types.h"
 
-#define RSM_CANDIDATE_COUNT     480
-#define RSM_SKILLSET_SLOT_FIRST 0x10
+#define RSM_CANDIDATE_COUNT 480
 
 /* Resolve an ENTD reaction, support or movement ability: an id below ABILITY_ID_RANDOM_FIRST is kept,
  * and a monster gets 0. Otherwise one is drawn from the R/S/M slots, of the kinds `flags` selects
@@ -23,6 +21,7 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
     s32 keep;
     u16 rel;
     u32 id;
+    u16 checked_id;
     s32 checking;
     u8 skillset;
     u8 secondary;
@@ -35,11 +34,9 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
     if (unit->unit_flags & UNIT_FLAG_MONSTER) {
         return 0;
     }
-    i = 0;
-    do {
+    for (i = 0; i < 4; i++) {
         innate[i] = unit->innate_abilities[i];
-        i++;
-    } while (i < 4);
+    }
     count = 0;
     secondary_unchecked = 1;
     secondary = unit->secondary_skillset;
@@ -79,7 +76,7 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
             secondary_unchecked = 0;
         }
         if (checking) {
-            known = unit->learned_abilities[i * UNIT_LEARNED_ABILITY_BYTES_PER_JOB + 2];
+            known = unit->career.learned_abilities[i][2];
         }
         for (j = RSM_SKILLSET_SLOT_FIRST; j < HUMAN_SKILLSET_ABILITY_COUNT; j++) {
             if (checking) {
@@ -89,15 +86,16 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
             }
             keep = 0;
             id = main_ability_get_id_from_skillset(skillset, j);
-            if ((id & 0xFFFF) == ABILITY_ID_REACTION_SUNKEN_STATE)
+            checked_id = id;
+            if (checked_id == ABILITY_ID_REACTION_SUNKEN_STATE)
                 continue;
-            if ((id & 0xFFFF) == innate[0])
+            if (checked_id == innate[0])
                 continue;
-            if ((id & 0xFFFF) == innate[1])
+            if (checked_id == innate[1])
                 continue;
-            if ((id & 0xFFFF) == innate[2])
+            if (checked_id == innate[2])
                 continue;
-            if ((id & 0xFFFF) == innate[3])
+            if (checked_id == innate[3])
                 continue;
             if (flags & RSM_ABILITY_FILTER_REACTION) {
                 rel = id - ABILITY_ID_REACTION_FIRST;
@@ -110,7 +108,8 @@ u16 main_unit_calculate_rsm(battle_stats_t* unit, u16 ability_id, s32 flags, ent
                 }
             }
             if (flags & RSM_ABILITY_FILTER_MOVEMENT) {
-                if ((id & 0xFFFF) >= ABILITY_ID_MOVEMENT_FIRST) {
+                u16 movement_id = id;
+                if (movement_id >= ABILITY_ID_MOVEMENT_FIRST) {
                     keep = 1;
                 }
             }

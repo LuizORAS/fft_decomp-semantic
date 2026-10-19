@@ -1,6 +1,8 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
+#include "fft/battle.h"
 /* Mark the tiles in range of the action's ability (its ability_secondary_data_t): spread its range
  * from the unit's tile on both layers, use the weapon's range for WEAPON_RANGE abilities, or take
  * every tile for range 0xff (no retail ability). Then drop the unit's own tile (CANNOT_TARGET_SELF),
@@ -12,8 +14,8 @@
  * The separate byte offset and register binding preserve the target's copy of the location index.
  * Direct typed indexing removes that copy and changes the later register allocation; the binding
  * emits no instructions. */
-s32 battle_target_set_ability_panels(const u8* source) {
-    battle_ai_command_action_t action;
+s32 battle_target_set_ability_panels(const action_command_t* source) {
+    action_command_t action;
     battle_stats_t* unit;
     ability_secondary_data_t* ability;
     battle_target_panel_t* panels;
@@ -21,6 +23,7 @@ s32 battle_target_set_ability_panels(const u8* source) {
     battle_target_panel_t* seed;
     battle_target_panel_t* seed_upper;
     map_tile_t* tile;
+    map_tile_depth_t terrain_depth;
     s32 location;
     s32 index;
     s32 elevation;
@@ -36,7 +39,7 @@ s32 battle_target_set_ability_panels(const u8* source) {
     u8 y;
 
     main_util_copy_action_data(source, &action);
-    unit = &g_battle_unit_stats[action.unit_id];
+    unit = &g_battle_unit_stats[action.actor_id];
     ability = &g_main_ability_range_data[action.ability_id];
     range = ability->range;
     aoe = ability->aoe;
@@ -44,11 +47,11 @@ s32 battle_target_set_ability_panels(const u8* source) {
     vertical = ability->vertical;
     flags_4 = ability->flags_4;
     x = unit->x;
-    y = unit->position.bits.y;
+    y = unit->position.y;
     location = battle_map_calculate_location(unit);
     tile = &g_battle_map_tile_data[location];
-    elevation = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
-        + (tile->depth_half_height.value >> 5) * 2;
+    terrain_depth = tile->depth_half_height;
+    elevation = tile->height * 2 + (terrain_depth.half_height) + tile->depth_half_height.depth * 2;
     panels = g_battle_target_panels;
     origin_offset = location * sizeof(battle_target_panel_t);
     origin = (battle_target_panel_t*)((s32)panels + origin_offset);

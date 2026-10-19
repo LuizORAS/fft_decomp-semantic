@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Roll the hit chance that the accuracy steps left in hp_damage: 100 or more always hits; otherwise

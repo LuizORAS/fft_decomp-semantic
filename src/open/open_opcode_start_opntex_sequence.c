@@ -11,5 +11,5 @@ void open_opcode_start_opntex_sequence(s16* command) {
     g_open_script_state.opntex.frame_duration = *command++;
     g_open_script_state.opntex_control_value = *command++;
     g_open_script_state.opntex.frame_countdown = 1;
-    g_open_script_state.dispatch.byte_offset += 10;
+    g_open_script_state.dispatch.cursor.byte_offset += 10;
 }

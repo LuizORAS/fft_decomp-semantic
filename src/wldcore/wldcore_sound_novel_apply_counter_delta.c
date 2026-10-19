@@ -4,13 +4,11 @@
  * the delta and show the new counter. */
 void wldcore_sound_novel_apply_counter_delta(void) {
     s32 delta;
-    s32 current;
     s32* value = &g_wldcore_sound_novel_record.counter;
 
     delta = g_wldcore_sound_novel_record.counter_delta;
     g_wldcore_sound_novel_record.counter_delta = 0;
-    current = *value;
-    *value = current + delta;
+    *value += delta;
     if (*value > 0xFFFF) {
         *value = 0xFFFF;
     }

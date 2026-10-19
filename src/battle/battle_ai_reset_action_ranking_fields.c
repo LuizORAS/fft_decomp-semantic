@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Reset an action's ranking fields: the lowest score, no hit chance, plan not chosen, facing chosen
  * at Wait, not reflected. The rest of the record is kept. */

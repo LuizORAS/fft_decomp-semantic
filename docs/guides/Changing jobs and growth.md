@@ -19,7 +19,7 @@ retail values.
 | What | Where |
 |---|---|
 | A job's growths and multipliers, Move, Jump, class evade, innate abilities, equippable types, status sets | the job record ([[job_data_t]], [[g_main_job_data]], MAIN `0x800610b8`, 48 bytes a job, disc data) |
-| JP per job level | [[g_main_job_level_jp_requirements]] (MAIN `0x80066184`, eight halfwords, disc data) |
+| JP per job level | [[g_main_job_level_jp_requirements]] (MAIN `0x80066184`, eight 16-bit values, disc data) |
 | Which job levels unlock a job | [[g_main_job_unlock_requirements]] (MAIN `0x800660c4`, ten packed bytes per job after Squire, disc data); the Bard, Dancer and Mime rule in [[main_job_calculate_unlocked]] |
 | How a level grows the raw stats, and the stat caps | [[main_unit_apply_level_growth]], [[main_unit_calculate_actual_stats]], [[main_party_raise_unit_level]] |
 | EXP to the next level | [[main_unit_check_level_up]] (100) |
@@ -45,7 +45,7 @@ retail values.
   lower bit; the menus, the random secondary skillset
   ([[main_job_get_random_unlocked]]) and a generated unit's ability learning
   ([[main_unit_learn_job_abilities]]) read it.
-- **The roster record.** [[party_data_t]] keeps JP as byte pairs and saves
+- **The roster record.** [[party_unit_t]] keeps JP as byte pairs and saves
   0xe0 bytes per unit; a new field needs room there and in the save image.
 - **Quirks.** The [[Units and Jobs]] page lists the `QUIRKS.md` entries here
   (the discarded `rand()`, the two level-up divisors, the double learned bit).

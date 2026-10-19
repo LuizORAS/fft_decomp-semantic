@@ -13,7 +13,7 @@
  * The goto form for the shared bravery/faith tails matches the target, which
  * reloads the stat after the compare. */
 s32 wldcore_proposition_select_report_speaker(s32 index) {
-    party_data_t* unit;
+    party_unit_t* unit;
     s32 best;
     s32 i;
     s32 selected;
@@ -21,14 +21,13 @@ s32 wldcore_proposition_select_report_speaker(s32 index) {
     if (g_main_active_propositions[index].participant_count == 1) {
         return g_main_active_propositions[index].participant_indices[0];
     }
-    best
-        = (g_wldcore_selected_proposition_row[0].fields.speaker_mode == WLDCORE_PROPOSITION_SPEAKER_HIGHEST_BRAVERY
-              || g_wldcore_selected_proposition_row[0].fields.speaker_mode == WLDCORE_PROPOSITION_SPEAKER_HIGHEST_FAITH)
+    best = (g_wldcore_selected_proposition_row[0].speaker_mode == WLDCORE_PROPOSITION_SPEAKER_HIGHEST_BRAVERY
+               || g_wldcore_selected_proposition_row[0].speaker_mode == WLDCORE_PROPOSITION_SPEAKER_HIGHEST_FAITH)
         ? -1
         : 99999;
     for (i = 0; i < g_main_active_propositions[index].participant_count; i++) {
-        unit = wldcore_unit_get_party_data_pointer(g_main_active_propositions[index].participant_indices[i]);
-        switch (g_wldcore_selected_proposition_row[0].fields.speaker_mode) {
+        unit = wldcore_unit_get_party_unit(g_main_active_propositions[index].participant_indices[i]);
+        switch (g_wldcore_selected_proposition_row[0].speaker_mode) {
         case WLDCORE_PROPOSITION_SPEAKER_HIGHEST_BRAVERY:
             if (best < unit->bravery) {
                 goto take_bravery;

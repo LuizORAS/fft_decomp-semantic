@@ -1,11 +1,13 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 
 /*
  * Pick and start the reaction animation a target plays after an action
  * resolves, then apply the action's special-effect side effects.
  */
-void battle_unit_set_target_animation_from_attack_type(
-    battle_unit_misc_data_t* attacker, battle_unit_misc_data_t* target) {
+void battle_unit_set_target_animation_from_attack_type(battle_unit_t* attacker, battle_unit_t* target) {
     battle_stats_t* stats;
     battle_action_data_t* action;
     s32 animation;
@@ -17,16 +19,16 @@ void battle_unit_set_target_animation_from_attack_type(
     if (attacker == target) {
         return;
     }
-    if ((target->sequence_id >> 1) == BATTLE_UNIT_ANIMATION_DEAD) {
+    if ((target->animation.sequence_id >> 1) == BATTLE_UNIT_ANIMATION_DEAD) {
         return;
     }
-    if ((target->sequence_id >> 1) == BATTLE_UNIT_ANIMATION_DEATH) {
+    if ((target->animation.sequence_id >> 1) == BATTLE_UNIT_ANIMATION_DEATH) {
         return;
     }
     water_depth = battle_move_get_water_animation_mode(target);
     animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
     if (water_depth < 2) {
-        stats = target->battle_data;
+        stats = target->stats;
         if (stats != 0) {
             action = &stats->action;
             animation = BATTLE_UNIT_ANIMATION_STAND;
@@ -35,10 +37,10 @@ void battle_unit_set_target_animation_from_attack_type(
             case BATTLE_ACTION_MISS_TYPE_LEFT_HAND_EVADE:
                 battle_unit_face_towards_action_target(target, attacker);
                 battle_gfx_set_thrown_item_graphic_palette(action->item_lost, target);
-                attacker_height
-                    = battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->unit_id) / 2 - attacker->screen.vy;
-                target_height
-                    = battle_gfx_get_unit_spritesheet_height_by_misc_id(target->unit_id) / 2 - target->screen.vy;
+                attacker_height = battle_gfx_get_unit_spritesheet_height_by_runtime_id(attacker->runtime_id) / 2
+                    - attacker->world_coords.vy;
+                target_height = battle_gfx_get_unit_spritesheet_height_by_runtime_id(target->runtime_id) / 2
+                    - target->world_coords.vy;
                 delta = attacker_height - target_height;
                 if (delta < -0xb) {
                     animation = BATTLE_UNIT_ANIMATION_WEAPON_GUARD_LOW;
@@ -91,16 +93,16 @@ void battle_unit_set_target_animation_from_attack_type(
                 battle_move_start_knockback(attacker, target);
             }
             if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_POACH) {
-                target->status_flags_5_6 |= BATTLE_MISC_STATUS_POACHED;
+                target->status_flags_5_6 |= BATTLE_UNIT_STATUS_POACHED;
             }
             if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_MORBOL) {
-                target->status_flags_5_6 |= BATTLE_MISC_STATUS_MORBOL;
+                target->status_flags_5_6 |= BATTLE_UNIT_STATUS_MORBOL;
             }
             if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT) {
-                battle_ai_init_unit_abilities(target->battle_data->misc_unit_id);
+                battle_ai_init_unit_abilities(target->stats->battle_id);
             }
             if (action->special_effect & BATTLE_ACTION_SPECIAL_EFFECT_STEAL_ITEM) {
-                battle_ai_init_unit_abilities(target->battle_data->misc_unit_id);
+                battle_ai_init_unit_abilities(target->stats->battle_id);
             }
             return;
         }

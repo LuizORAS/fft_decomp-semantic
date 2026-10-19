@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Push the Brave Story's Job section (level PROPOSITION_CATEGORY): rows Advancing and Work history.
@@ -10,10 +11,10 @@
  * target's v1/v0 assignment in the tail. `unused` reproduces the 0x58 frame.
  */
 void wldcore_menu_push_proposition_category_level(void) {
-    wldcore_point32_t point;
-    wldcore_window_render_bounds16_t bounds;
+    open_point32_t point;
+    RECT bounds;
     s32 unused[4];
-    wldcore_point32_t* base;
+    open_point32_t* base;
     s32 index;
     s32 i;
     s32 completed;
@@ -36,8 +37,7 @@ void wldcore_menu_push_proposition_category_level(void) {
     }
     completed = 0;
     for (i = 0; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
-            & WLDCORE_PROPOSITION_VARIABLE_COMPLETED) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST) & WLDCORE_PROPOSITION_VARIABLE_COMPLETED) {
             completed++;
         }
     }
@@ -51,11 +51,10 @@ void wldcore_menu_push_proposition_category_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.side_window = index;
-    bounds.position.x = 0x80;
-    bounds.position.y = 0x80;
-    bounds.dimensions.x = 0x4C;
-    bounds.dimensions.y
-        = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count * 0x10 + 0x10;
+    bounds.x = 0x80;
+    bounds.y = 0x80;
+    bounds.w = 0x4C;
+    bounds.h = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count * 0x10 + 0x10;
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 9;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;

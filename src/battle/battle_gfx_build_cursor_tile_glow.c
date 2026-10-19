@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
@@ -12,7 +14,6 @@
  * 0x50 palette, and both are queued only when the first three projected
  * vertices face the camera. The pool stride is always sizeof(POLY_FT4).
  */
-
 void battle_gfx_build_cursor_tile_glow(
     s32 palette, s32 shape, SVECTOR* v0, SVECTOR* v1, SVECTOR* v2, SVECTOR* v3, u32* ot) {
     VECTOR screen;

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Collect the items the unit's Item skillset lets it use: each learned item ability (0x170-0x17d)
@@ -7,7 +8,7 @@
  *
  * Loading the ability id into `item_index` before subtracting ABILITY_ID_ITEM_FIRST
  * keeps the table index in its own s16 pseudo, so GCC emits the target's fresh
- * `addiu v1,-0x170` on the sign-extended halfword instead of reusing the
+ * `addiu v1,-0x170` on the sign-extended 16-bit value instead of reusing the
  * masked `id + 0xfe90` sum the range test already holds (the two differ only
  * above bit 15); spelled as one expression it is one instruction short. The
  * `+ 0x10000` in the range test forces that sum into a register, matching the

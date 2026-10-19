@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /*
  * Test whether the actor's available abilities can remove this current status.
@@ -6,7 +6,7 @@
  * Innate statuses are excluded. The cancellation mask aggregates the actor's
  * usable ability list; it does not describe only the considered ability.
  */
-s32 battle_ai_can_cancel_current_status(battle_stats_t* unit, s32 status_bit) {
+s32 battle_ai_can_cancel_current_status(const battle_stats_t* unit, s32 status_bit) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 byte_off;
     s32 bit;

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x47, Blood Suck: no evade or hit roll; Y% of the target's max HP drained
  * (battle_formula_apply_hp_absorption), then the ability's status on every use

@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x28, Steal Exp: the physical evade check; hit chance Speed + X with Attack Up and
  * Martial Arts, the attacker's Berserk and Frog, the target's Defense Up and statuses, and the

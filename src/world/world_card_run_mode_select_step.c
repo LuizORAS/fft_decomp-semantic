@@ -1,10 +1,9 @@
-#include "fft/event_card.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
 /* An 8-bit count: CARD.OUT stores it with `sb` at 0x801cc814 and reads it
- * with `lb`/`lbu`. This function reads the halfword at that address instead
+ * with `lb`/`lbu`. This function reads the 16-bit value at that address instead
  * (`lh`), so the read is spelled through an s16 lvalue rather than the
  * declaration. */
 
@@ -26,16 +25,16 @@ void world_card_run_mode_select_step(void) {
         g_world_card_pending_message = 0;
         g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
         world_menu_stop_thread_and_wait(WORLD_THREAD_SLOT_UPPER_MENU);
-        world_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
+        world_menu_stop_thread_and_wait(THREAD_SCREEN_SLOT_MENU);
         g_world_card_mode_select_running = 0;
         g_world_card_menu_step = WORLD_CARD_MENU_STEP_SCANNING;
         return;
     }
     if (g_world_card_pending_message != 0) {
-        world_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_card_pending_message);
+        world_menu_start_or_poll_thread(THREAD_SCREEN_SLOT_MENU, g_world_card_pending_message);
         if (g_world_input_primary_repeat & (PSX_PAD_CIRCLE | PSX_PAD_CROSS)) {
             g_world_card_pending_message = 0;
-            world_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
+            world_menu_stop_thread_and_wait(THREAD_SCREEN_SLOT_MENU);
             g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
             g_world_card_menu_step = WORLD_CARD_MENU_STEP_SELECT_CARD;
         }
@@ -68,7 +67,7 @@ void world_card_run_mode_select_step(void) {
             }
         }
         if (all) {
-            g_world_card_pending_message = g_world_card_save_unavailable_message;
+            g_world_card_pending_message = &g_world_card_save_unavailable_message;
         }
     } else {
         for (i = 0, all = 1; i < 15; i++) {
@@ -77,7 +76,7 @@ void world_card_run_mode_select_step(void) {
             }
         }
         if (all) {
-            g_world_card_pending_message = g_world_card_no_save_data_message;
+            g_world_card_pending_message = &g_world_card_no_save_data_message;
         }
     }
     if (g_world_card_pending_message == 0) {

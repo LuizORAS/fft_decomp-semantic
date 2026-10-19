@@ -17,17 +17,8 @@ void main_boot_fade_in_squaresoft_logo(void) {
     main_gfx_set_display_draw(320, 240, 512, 0, 0, 0);
 
     SetPolyF4(&polygons[0]);
-    polygons[0].r0 = 0;
-    polygons[0].g0 = 0;
-    polygons[0].b0 = 0;
-    polygons[0].x0 = 0;
-    polygons[0].y0 = 0;
-    polygons[0].x1 = 320;
-    polygons[0].y1 = 0;
-    polygons[0].x2 = 0;
-    polygons[0].y2 = 256;
-    polygons[0].x3 = 320;
-    polygons[0].y3 = 256;
+    setRGB0(&polygons[0], 0, 0, 0);
+    setXY4(&polygons[0], 0, 0, 320, 0, 0, 256, 320, 256);
     SetSemiTrans(&polygons[0], 1);
     polygons[1] = polygons[0];
 
@@ -50,9 +41,7 @@ void main_boot_fade_in_squaresoft_logo(void) {
         buffer = g_main_gfx_screen_polarity;
         ClearOTag(otags[buffer], 2);
         /* Reversed indexing preserves the retail compiler's addu operand order. */
-        g_main_gfx_screen_polarity[polygons].r0 = intensity;
-        g_main_gfx_screen_polarity[polygons].g0 = intensity;
-        g_main_gfx_screen_polarity[polygons].b0 = intensity;
+        setRGB0(&g_main_gfx_screen_polarity[polygons], intensity, intensity, intensity);
         AddPrim(otags[buffer], &polygons[g_main_gfx_screen_polarity]);
         AddPrim(otags[buffer], &draw_modes[g_main_gfx_screen_polarity]);
         main_boot_draw_squaresoft_logo_frame(otags[buffer], g_main_boot_squaresoft_logo_image_words);

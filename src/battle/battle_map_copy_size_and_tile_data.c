@@ -1,7 +1,8 @@
-#include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
+/* Load a terrain chunk (GNS_RESOURCE_TERRAIN): the map's width and depth in
+ * tiles, then the 0x1000 bytes of the two 256-tile layers. */
 /* Load the map's terrain from its GNS terrain resource (0x1a): the width and depth into
  * g_battle_map_max_x and g_battle_map_max_y, then 0x1000 bytes of tiles, 256 eight-byte map_tile_t
  * per layer, into g_battle_map_tile_data. */

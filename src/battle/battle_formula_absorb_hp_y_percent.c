@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x10, Life Drain and Drain: the magical evade check and hit chance (MA + X with both
  * Faiths, no Strengthen), then Y% of the target's max HP drained to the attacker, the other way

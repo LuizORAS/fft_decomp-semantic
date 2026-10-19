@@ -1,14 +1,14 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Filter a copied misc unit ID by presence, team, and status for modes 0-5.
+/* Filter a copied runtime unit ID by presence, team, and status for modes 0-5.
  *
  * Modes 3 and 5 reject the MAIN_STATUS_CHECK_SET_SCRIPT_FILTER_EXCLUDED statuses; mode 5
  * ignores Undead (bit 0x10 in the first status byte). The target has no defined return value for other
- * modes; callers must pass 0-5. The two team-flag locals use $v1 to preserve
- * the target's branch and delay-slot allocation without emitting assembly. */
-s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode) {
+ * modes; callers must pass 0-5. `in_id` is read as a 16-bit value: callers pass the address of an int
+ * slot counter or of an s16 slot-order entry. */
+s32 world_script_filter_unit_id_by_mode(u16* out_id, const void* in_id, const s32* mode) {
     battle_stats_t* unit;
     s32 index;
     s32 i;
@@ -19,17 +19,17 @@ s32 world_script_filter_unit_id_by_mode(u16* out_id, void* in_id, s32* mode) {
     if (*mode == 0) {
         return 1;
     }
-    *out_id = *(u16*)in_id;
-    if (battle_unit_has_misc_id(*out_id) != 0) {
-        index = battle_unit_get_battle_index_by_misc_id(*out_id);
+    *out_id = *(const u16*)in_id;
+    if (battle_unit_has_runtime_id(*out_id) != 0) {
+        index = battle_unit_get_battle_id_by_runtime_id(*out_id);
         if (index != -1) {
             unit = battle_unit_get_stats_from_battle_id(index);
         }
     }
     if (*mode == 1) {
-        return battle_unit_has_misc_id(*out_id);
+        return battle_unit_has_runtime_id(*out_id);
     }
-    if (battle_unit_has_misc_id(*out_id) == 0) {
+    if (battle_unit_has_runtime_id(*out_id) == 0) {
         return 0;
     }
     query = *mode;

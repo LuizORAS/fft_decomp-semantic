@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -27,10 +28,10 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
     if (mode == WORLD_ABILITY_LIST_MODE_LEARNED_ONLY && kind == MENU_ABILITY_CATEGORY_ACTION) {
         return world_ability_list_secondary_skillsets(unit, out);
     }
-    skillset = world_job_get_skillset(job);
-    generic = world_job_get_generic_index(job);
-    if (world_job_find_first_for_skillset(skillset) == -1) {
-        skillset = g_world_formation_unit_pointers[unit]->primary_skillset;
+    skillset = job_get_skillset(job);
+    generic = job_get_generic_index(job);
+    if (job_find_first_for_skillset(skillset) == -1) {
+        skillset = g_world_formation_unit_pointers[unit]->abilities.fields.primary_skillset;
     }
     abilities = (s16*)main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ALL);
     if (kind == MENU_ABILITY_CATEGORY_ACTION) {
@@ -55,10 +56,10 @@ s32 world_ability_find_unit_abilities(s16 unit, s16 job, s32 kind, s16* out, s32
         }
     }
     count = 0;
-    jp = g_world_formation_unit_pointers[unit]->job_points[generic];
-    world_bits_set_primary_cursor(&g_world_formation_unit_pointers[unit]->learned_abilities[generic * 3]);
+    jp = g_world_formation_unit_pointers[unit]->job_points.current.values[generic];
+    world_bits_set_primary_cursor(g_world_formation_unit_pointers[unit]->learned_abilities[generic]);
     for (i = 0; i < SKILLSET_ABILITY_LIST_COUNT; i++) {
-        if (world_job_is_special_monster(g_world_formation_unit_pointers[unit]->job_id) != 0) {
+        if (job_is_special_monster(g_world_formation_unit_pointers[unit]->identity.job_id) != 0) {
             learned = 1;
         } else if (g_world_formation_unit_pointers[unit]->uses_monster_skillset != 0) {
             if (i >= 3) {

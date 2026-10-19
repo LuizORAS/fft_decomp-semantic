@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Current weather as seen by damage and movement rules: none when the map
@@ -8,7 +10,7 @@ s32 battle_map_get_effective_weather(void) {
     s32 weather;
     u32 flags;
 
-    weather = battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
+    weather = script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
     flags = g_battle_map_weather_flags;
     if (flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER) {
         return BATTLE_WEATHER_NONE;

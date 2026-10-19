@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Return the headroom, in half-heights, between a point 3 levels above the surface of the tile
@@ -14,12 +15,12 @@ s32 battle_move_calculate_tile_layer_step_offset(s32 x, s32 y, u32 layer) {
 
     from = battle_map_get_tile_data_pointer(x, y, layer);
     to = battle_map_get_tile_data_pointer(x, y, layer ^ 1);
-    if ((to->flags.value & MAP_TILE_FLAG_BLOCKED) == 0) {
-        from_height = from->height + (from->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT);
-        to_height = to->height + (to->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT);
+    if ((to->flags.blocked) == 0) {
+        from_height = from->height + (from->depth_half_height.depth);
+        to_height = to->height + (to->depth_half_height.depth);
         if (from_height < to_height) {
             limit = from_height + 3;
-            return (to->height - (to->ceiling_depth_and_marks.value & MAP_TILE_CEILING_DEPTH_MASK) - limit) * 2;
+            return (to->height - (to->ceiling_depth_and_marks.ceiling_depth) - limit) * 2;
         }
     }
     return 0x40;

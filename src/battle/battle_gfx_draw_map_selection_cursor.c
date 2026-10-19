@@ -1,4 +1,8 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/battle_menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -24,7 +28,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     s32 duration[8] = { 16, 8, 2, 2, 6, 4, 4, 10 };
     long flag;
     POLY_FT4* prim;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 height;
     s32 scaled;
     s32 half_width;
@@ -44,13 +48,10 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
             }
         }
     }
-    unit = battle_unit_get_selectable_misc_data_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+    unit = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (unit != 0) {
         scaled = g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height * g_battle_camera_zoom.vy;
-        if (scaled < 0) {
-            scaled += 0xfff;
-        }
-        height = (scaled >> 12) + 0x18;
+        height = (scaled / ONE) + 0x18;
     } else {
         height = 0x3c;
     }
@@ -64,10 +65,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     prim->x0 = transformed.vx - (half_width >> 9);
     {
         s32 zoom_height = g_battle_camera_zoom.vy * 12;
-        if (zoom_height < 0) {
-            zoom_height += 0xfff;
-        }
-        prim->y0 = transformed.vy - (zoom_height >> 12);
+        prim->y0 = transformed.vy - (zoom_height / ONE);
     }
     half_width = g_battle_camera_zoom.vx;
     if (half_width < 0) {
@@ -76,10 +74,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     prim->x1 = transformed.vx + (half_width >> 9);
     {
         s32 zoom_height = g_battle_camera_zoom.vy * 12;
-        if (zoom_height < 0) {
-            zoom_height += 0xfff;
-        }
-        prim->y1 = transformed.vy - (zoom_height >> 12);
+        prim->y1 = transformed.vy - (zoom_height / ONE);
     }
     half_width = g_battle_camera_zoom.vx;
     if (half_width < 0) {
@@ -88,10 +83,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     prim->x2 = transformed.vx - (half_width >> 9);
     {
         s32 zoom_height = g_battle_camera_zoom.vy * 12;
-        if (zoom_height < 0) {
-            zoom_height += 0xfff;
-        }
-        prim->y2 = transformed.vy + (zoom_height >> 12);
+        prim->y2 = transformed.vy + (zoom_height / ONE);
     }
     half_width = g_battle_camera_zoom.vx;
     if (half_width < 0) {
@@ -119,7 +111,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     prim->v0 = color;
     prim->v3 = 0x98;
     prim->v2 = 0x98;
-    battle_camera_get_tile_sort_point_unbiased(&base->vx, &screen.vx);
+    battle_camera_get_tile_sort_point_unbiased(base, &screen);
     RotTrans(&screen, &transformed, &flag);
     AddPrim(ot + (transformed.vz / 4), prim);
 }

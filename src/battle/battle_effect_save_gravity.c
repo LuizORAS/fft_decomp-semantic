@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Save g_battle_effect_gravity in g_battle_effect_saved_gravity. A secondary-effect handler saves the
  * effect file's gravity, sets its own while it steps its slots, then puts it back

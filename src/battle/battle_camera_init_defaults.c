@@ -1,5 +1,7 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 
 /* Resets the camera for a new map: screen offset (0x100, 0xa0, 0x280), zoom ONE,
  * pitch 0x12e (the low tilt), yaw 0xe00, position at the origin, cursor on tile
@@ -11,8 +13,8 @@ void battle_camera_init_defaults(void) {
     main_util_set_svector(&g_battle_camera_angles, 0x12E, 0xE00, 0);
     main_util_set_vector(&g_battle_camera_current_real_coords, 0, 0, 0);
 
-    g_battle_casting_unit_id = 0xFF;
-    g_battle_unit_source_misc_id = 0xFF;
+    g_battle_casting_runtime_id = 0xFF;
+    g_battle_unit_source_runtime_id = 0xFF;
     g_battle_cursor_y = 0;
     g_battle_cursor_z = 0;
     g_battle_cursor_x = 0;

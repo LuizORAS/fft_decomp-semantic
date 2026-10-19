@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x05: a weapon strike without the weather and night penalty on bows
  * (battle_formula_calculate_physical_evade_without_weather), the weapon's element or its Strengthen:

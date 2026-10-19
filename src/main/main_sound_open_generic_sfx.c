@@ -13,30 +13,31 @@
 void main_sound_open_generic_sfx(void) {
     s32 i;
 
-    SuzukiSPUInitialiser(0);
+    suzuki_sound_init(0);
     main_heap_clear_smd_allocator_table();
-    main_sound_load_waveset(
+    suzuki_sound_load_waveset(
         main_file_load_to_address(DISC_SECTOR_SOUND_WAVESET_WD, WAVESET_WD_SIZE, g_main_heap_low_overlay_load_address));
-    SuzukiAppendVFXSMD(
+    suzuki_sound_append_resource(
         main_file_load_to_address(DISC_SECTOR_SOUND_SYSTEM_SED, SYSTEM_SED_SIZE, g_main_sound_system_sed_data));
-    SuzukiAppendVFXSMD(main_file_load_to_address(DISC_SECTOR_SOUND_ENV_SED, ENV_SED_SIZE, g_main_sound_env_sed_data));
+    suzuki_sound_append_resource(
+        main_file_load_to_address(DISC_SECTOR_SOUND_ENV_SED, ENV_SED_SIZE, g_main_sound_env_sed_data));
 
     g_main_sound_music.state.current_smd = 0;
     g_main_sound_music.slots.tune = 0;
-    g_main_sound_music.slots.handles.loading_slot = 0;
+    g_main_sound_music.slots.loading_slot = 0;
     for (i = 6; i >= 0; i--) {
-        g_main_sound_music.slots.handles.music[i + 1] = 0;
+        g_main_sound_music.slots.music[i] = 0;
     }
 
     g_main_sound_weather_sfx_id = 0;
-    g_main_sound_music.slots.smd[3] = main_file_alloc_smd_and_load(
+    g_main_sound_music.slots.smd[2] = main_file_alloc_smd_and_load(
         g_main_sound_permanent_smd_files[0].sector, g_main_sound_permanent_smd_files[0].size);
-    g_main_sound_music.slots.smd[4] = main_file_alloc_smd_and_load(
+    g_main_sound_music.slots.smd[3] = main_file_alloc_smd_and_load(
         g_main_sound_permanent_smd_files[1].sector, g_main_sound_permanent_smd_files[1].size);
-    g_main_sound_music.slots.smd[5] = main_file_alloc_smd_and_load(
+    g_main_sound_music.slots.smd[4] = main_file_alloc_smd_and_load(
         g_main_sound_permanent_smd_files[2].sector, g_main_sound_permanent_smd_files[2].size);
-    g_main_sound_music.slots.smd[6] = main_file_alloc_smd_and_load(
+    g_main_sound_music.slots.smd[5] = main_file_alloc_smd_and_load(
         g_main_sound_permanent_smd_files[3].sector, g_main_sound_permanent_smd_files[3].size);
-    g_main_sound_music.slots.smd[7] = main_file_alloc_smd_and_load(
+    g_main_sound_music.slots.smd[6] = main_file_alloc_smd_and_load(
         g_main_sound_permanent_smd_files[4].sector, g_main_sound_permanent_smd_files[4].size);
 }

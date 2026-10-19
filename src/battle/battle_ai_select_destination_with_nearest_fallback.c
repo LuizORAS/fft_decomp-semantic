@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Choose the best-scored destination at most range from the decision target, or else the nearest
  * tile with no limit (battle_ai_select_destination). */

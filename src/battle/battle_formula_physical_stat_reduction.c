@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x2B, Speed Break, Power Break and Mind Break: the physical evade check and the hit chance
  * PA + Y with the physical modifiers (battle_formula_calculate_physical_accuracy), then Speed, PA or

@@ -1,3 +1,5 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -8,12 +10,12 @@
  * visible. When the Bar's menu was hidden it is shown and rebuilt first. With none the barkeeper says
  * so (WLDCORE_TEXT_ID_NO_PROPOSITIONS) and the Bar's menu stays. */
 void wldcore_proposition_open_available_list(void) {
-    wldcore_point32_t dimensions;
-    wldcore_point32_t origin;
+    wldcore_window_panel_layout_t layout;
+    open_point32_t origin;
     s32 count;
     s32 i;
     s32 index;
-    wldcore_window_record_t* record;
+    world_animated_render_record_t* record;
     s32 record_index;
 
     if (g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
@@ -42,7 +44,7 @@ void wldcore_proposition_open_available_list(void) {
     }
     count = 0;
     for (i = 0; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++) {
-        if (!(world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
+        if (!(script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
                 & (WLDCORE_PROPOSITION_VARIABLE_IN_PROGRESS | WLDCORE_PROPOSITION_VARIABLE_COMPLETED))
             && !(g_main_proposition_states[i] & WLDCORE_PROPOSITION_STATE_DAYS_MASK)
             && wldcore_proposition_is_offered_at(i, g_wldcore_map_projection_state.marker.kind + 1) != 0) {
@@ -52,23 +54,23 @@ void wldcore_proposition_open_available_list(void) {
         }
     }
     if (count != 0) {
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_PROPOSITIONS_INTRO, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_PROPOSITIONS_INTRO, 0);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count = count;
         if (count < 6) {
             i = count;
         } else {
             i = 6;
         }
-        dimensions.x = 0x96;
+        layout.text_width = 0x96;
         origin.x = 0x4C;
-        dimensions.y = i;
+        layout.visible_rows = i;
         origin.y = 0x50;
         wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_AVAILABLE_PROPOSITIONS, count, i);
         wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
-            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &dimensions, &origin);
+            g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &layout, &origin);
     } else {
         wldcore_menu_dispatch_resume_handler();
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_NO_PROPOSITIONS, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_NO_PROPOSITIONS, 0);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.content_render = 1;
         return;
     }

@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /*
@@ -8,7 +10,7 @@
  * copies; each copy is projected with the battle camera and queued at its own
  * ordering-table depth using the current camera zoom.
  */
-void battle_gfx_draw_unit_sprite_position_copies(battle_unit_misc_data_t* unit) {
+void battle_gfx_draw_unit_sprite_position_copies(battle_unit_t* unit) {
     SVECTOR position;
     SVECTOR zoom;
     VECTOR transformed;
@@ -27,12 +29,10 @@ void battle_gfx_draw_unit_sprite_position_copies(battle_unit_misc_data_t* unit) 
         depth = transformed.vz / 4;
         position.vx = transformed.vx;
         position.vy = transformed.vy;
-        flags = ((unit->horizontal_flip_flag ^ unit->sprite_display_flags.half) & ~BATTLE_MISC_DISPLAY_BLEND_MASK)
-            | BATTLE_MISC_DISPLAY_SEMI_TRANSPARENT;
-        zoom.vx = g_battle_camera_zoom.vx;
-        zoom.vy = g_battle_camera_zoom.vy;
-        zoom.vz = g_battle_camera_zoom.vz;
-        display = unit->sprite_display_section;
+        flags = ((unit->horizontal_flip_flag ^ unit->sprite_display_flags) & ~BATTLE_SPRITE_DISPLAY_BLEND_MASK)
+            | BATTLE_SPRITE_DISPLAY_SEMI_TRANSPARENT;
+        copyVector(&zoom, &g_battle_camera_zoom);
+        display = unit->animation.display;
         battle_gfx_construct_polygon_data_for_units(
             display, display->part_count, 0, &position, 0, flags, &zoom, main_gfx_get_otag() + depth);
     }

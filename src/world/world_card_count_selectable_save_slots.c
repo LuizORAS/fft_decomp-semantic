@@ -9,7 +9,7 @@ s32 world_card_count_selectable_save_slots(void) {
     s32 count;
     s32 i;
 
-    g_world_menu_script_callbacks[0] = 0;
+    g_world_menu_script_callbacks[0].value = 0;
     for (i = 0, count = 0; i < 15; i++) {
         if (i == g_main_card_save_last_used_slot) {
             g_world_card_active_slot = i;
@@ -24,13 +24,13 @@ s32 world_card_count_selectable_save_slots(void) {
         }
     }
     i = 0;
-    do {
+    while (i < 10) {
         world_card_scroll_menu_list(g_world_card_slot_cursor_row);
         if (g_world_card_list_scroll_velocity != 0) {
             i = 0;
         } else {
             i++;
         }
-    } while (i < 10);
+    }
     return count;
 }

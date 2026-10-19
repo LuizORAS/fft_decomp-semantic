@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Push a fact's text as menu level FACT_DETAIL, the partner of the
@@ -50,8 +51,8 @@ void wldcore_menu_push_fact_detail_level(s32 value) {
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.lower_window]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_world_text_substitution_values[0] = value + TEXT_ID_FACT_NAME_BASE;
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
+    g_text_substitution_values[0] = value + TEXT_ID_FACT_NAME_BASE;
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_FACT_DETAIL;
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth + 1;
 }

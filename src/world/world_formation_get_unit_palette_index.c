@@ -9,7 +9,7 @@
  * expanded by the job's portrait palette. For a story identity below 0x80 `job` is never set (see
  * QUIRKS.md). */
 s32 world_formation_get_unit_palette_index(s32 party_index) {
-    party_data_t* unit = main_party_get_data_pointer(party_index);
+    party_unit_t* unit = main_party_get_unit(party_index);
     job_data_t* job;
     s32 portrait;
     s32 product;
@@ -52,8 +52,8 @@ s32 world_formation_get_unit_palette_index(s32 party_index) {
     if (portrait == 0x18) {
         return 0x7A;
     }
-    if (portrait >= MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT) {
-        portrait = g_world_monster_formation_sprite_table[portrait - MAIN_GFX_WLDFACE_FIRST_MONSTER_PORTRAIT];
+    if (portrait >= MAIN_MENU_WLDFACE_FIRST_MONSTER_PORTRAIT) {
+        portrait = g_world_monster_formation_sprite_table[portrait - MAIN_MENU_WLDFACE_FIRST_MONSTER_PORTRAIT];
     } else if (unit->sprite_set & CHARACTER_IDENTITY_HIGH_BIT_MASK) {
         portrait -= 1;
     }

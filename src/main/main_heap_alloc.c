@@ -8,15 +8,15 @@
  * tag (main_heap_free tells blocks apart by tag alone, QUIRKS.md); returns 0 when nothing fits. */
 void* main_heap_alloc(u32 size) {
     u32 run = 0;
-    u32 needed = size >> 11;
+    u32 needed = size >> MAIN_HEAP_PAGE_SHIFT;
     u32 tag = 1;
     u32 index;
     u32 start;
 
-    if ((size & 0x7ff) != 0) {
+    if ((size & (MAIN_HEAP_PAGE_SIZE - 1)) != 0) {
         needed++;
     }
-    for (index = 0; index < 0x40; index++) {
+    for (index = 0; index < MAIN_HEAP_GAME_PAGE_COUNT; index++) {
         u32 cell = g_main_heap_game_allocator_table[index];
 
         if (cell == 0) {
@@ -38,7 +38,7 @@ void* main_heap_alloc(u32 size) {
         for (index = 0; index < run; index++) {
             g_main_heap_game_allocator_table[start + index] = tag;
         }
-        return (start << 11) + g_main_heap_high_overlay_load_address;
+        return (start << MAIN_HEAP_PAGE_SHIFT) + g_main_heap_high_overlay_load_address;
     }
     return 0;
 }

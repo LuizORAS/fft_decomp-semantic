@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* HP Restore, MP Restore, Critical Quick and Meatbone Slash: when the target is Critical after HP

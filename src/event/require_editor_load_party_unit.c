@@ -8,9 +8,8 @@
  * and CT, and without the monster-skill or name-text refresh. */
 void require_editor_load_party_unit(s32 unused, s32 party_index) {
     battle_stats_t* unit;
-    s16* editor;
+    battle_menu_status_panel_slot_state_t* editor;
     u16* innate_items;
-    s16* ability_slot;
     item_data_t* item;
     s32 i;
     s32 item_id;
@@ -18,10 +17,10 @@ void require_editor_load_party_unit(s32 unused, s32 party_index) {
     u8 field_value;
     u16 maximum_hp;
     u16 maximum_mp;
-    battle_unit_status_record_t* gauges;
+    battle_menu_unit_status_record_t* gauges;
 
     main_unit_init_from_party_slot(&g_require_editor_party_unit_stats, party_index, 0);
-    editor = g_require_editor_unit_fields.halfwords;
+    editor = &g_require_editor_unit_fields.state;
     unit = &g_require_editor_party_unit_stats;
     gauges = &g_require_panel_selected_billboard;
 
@@ -31,7 +30,7 @@ void require_editor_load_party_unit(s32 unused, s32 party_index) {
     g_require_active_unit_data.job_id = unit->job_id;
     g_require_active_unit_data.brave = unit->brave;
     g_require_active_unit_data.faith = unit->faith;
-    g_require_active_unit_data.zodiac = *(u16*)&unit->birthday >> 12;
+    g_require_active_unit_data.zodiac = unit->birthday.zodiac;
     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
         gauges->team_kind = 1;
     }
@@ -44,99 +43,97 @@ void require_editor_load_party_unit(s32 unused, s32 party_index) {
     g_require_panel_selected_billboard.level = unit->level;
     g_require_panel_selected_billboard.experience = unit->experience;
     maximum_hp = unit->max_hp;
-    g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = maximum_hp;
+    g_require_panel_selected_billboard.gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].max = maximum_hp;
     if (maximum_hp == 0) {
-        g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = maximum_hp + 1;
+        g_require_panel_selected_billboard.gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].max = maximum_hp + 1;
     }
-    g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_HP].value
-        = g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max;
+    g_require_panel_selected_billboard.gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].value
+        = g_require_panel_selected_billboard.gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].max;
     maximum_mp = unit->max_mp;
-    g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = maximum_mp;
+    g_require_panel_selected_billboard.gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].max = maximum_mp;
     if (maximum_mp == 0) {
-        g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = maximum_mp + 1;
+        g_require_panel_selected_billboard.gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].max = maximum_mp + 1;
     }
-    g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_MP].value
-        = g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max;
-    g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_CT].max = 100;
-    g_require_panel_selected_billboard.gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = 100;
+    g_require_panel_selected_billboard.gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].value
+        = g_require_panel_selected_billboard.gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].max;
+    g_require_panel_selected_billboard.gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_CT].max = UNIT_TURN_CT_THRESHOLD;
+    g_require_panel_selected_billboard.gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_CT].value = UNIT_TURN_CT_THRESHOLD;
 
-    editor[0] = unit->move;
-    editor[1] = unit->attributes[UNIT_ATTRIBUTE_SPEED];
-    editor[2] = unit->jump;
-    editor[5] = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_EVADE];
-    editor[6] = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_EVADE];
-    editor[3] = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_POWER];
-    editor[4] = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_POWER];
-    editor[9] = unit->attributes[UNIT_ATTRIBUTE_PHYSICAL_ATTACK];
-    editor[10] = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_CLASS_PHYSICAL_EVADE];
-    editor[11] = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_PHYSICAL_EVADE];
+    editor->move = unit->move;
+    editor->speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];
+    editor->jump = unit->jump;
+    editor->right_weapon_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_EVADE];
+    editor->left_weapon_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_EVADE];
+    editor->right_weapon_power = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_POWER];
+    editor->left_weapon_power = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_POWER];
+    editor->physical_attack = unit->attributes[UNIT_ATTRIBUTE_PHYSICAL_ATTACK];
+    editor->physical_class_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_CLASS_PHYSICAL_EVADE];
+    editor->physical_shield_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_PHYSICAL_EVADE];
     if (unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_PHYSICAL_EVADE]
         <= unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_SHIELD_PHYSICAL_EVADE])
-        editor[11] = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_SHIELD_PHYSICAL_EVADE];
-    editor[12] = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_PHYSICAL_EVADE];
-    editor[14] = unit->attributes[UNIT_ATTRIBUTE_MAGIC_ATTACK];
-    editor[15] = 0;
-    editor[16] = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_MAGIC_EVADE];
+        editor->physical_shield_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_SHIELD_PHYSICAL_EVADE];
+    editor->physical_accessory_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_PHYSICAL_EVADE];
+    editor->magical_attack = unit->attributes[UNIT_ATTRIBUTE_MAGIC_ATTACK];
+    editor->magical_class_evade = 0;
+    editor->magical_shield_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_MAGIC_EVADE];
     if (unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_MAGIC_EVADE]
         <= unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_SHIELD_MAGIC_EVADE])
-        editor[16] = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_SHIELD_MAGIC_EVADE];
-    editor[17] = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_MAGIC_EVADE];
+        editor->magical_shield_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_SHIELD_MAGIC_EVADE];
+    editor->magical_accessory_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_MAGIC_EVADE];
 
     for (i = 4; i >= 0; i--)
-        editor[18 + i] = 0;
+        editor->equipment[i] = 0;
 
     if (!(unit->unit_flags & UNIT_FLAG_MONSTER)) {
-        editor[18] = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] != ITEM_ID_NONE
+        editor->equipment[0] = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] != ITEM_ID_NONE
             ? unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON]
             : unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD];
-        editor[19] = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] != ITEM_ID_NONE
+        editor->equipment[1] = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] != ITEM_ID_NONE
             ? unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON]
             : unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD];
-        editor[20] = unit->equipment[UNIT_EQUIPMENT_SLOT_HEAD];
-        editor[21] = unit->equipment[UNIT_EQUIPMENT_SLOT_BODY];
-        editor[22] = unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
+        editor->equipment[2] = unit->equipment[UNIT_EQUIPMENT_SLOT_HEAD];
+        editor->equipment[3] = unit->equipment[UNIT_EQUIPMENT_SLOT_BODY];
+        editor->equipment[4] = unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
     }
 
     for (i = 0; i < 5; i++) {
-        if (editor[18 + i] == 0 || editor[18 + i] == 0xff)
-            editor[18 + i] = -1;
+        if (editor->equipment[i] == 0 || editor->equipment[i] == 0xff)
+            editor->equipment[i] = -1;
     }
 
-    editor[7] = 0;
+    editor->generic_monster = 0;
     if (unit->primary_skillset >= SKILLSET_ID_MONSTER_FIRST && unit->primary_skillset < SKILLSET_ID_END)
-        editor[7] = 1;
+        editor->generic_monster = 1;
 
-    if (editor[7] != 0) {
+    if (editor->generic_monster != 0) {
         innate_items = main_ability_store_skillset_abilities(unit->primary_skillset, SKILLSET_ABILITY_FILTER_ACTION);
         i = 0;
-        ability_slot = editor;
         do {
-            ability_slot[23] = *innate_items++;
+            editor->ability_ids[i] = *innate_items++;
             i++;
-            ability_slot++;
         } while (i < 5);
-        editor[26] = 0;
+        editor->ability_ids[3] = 0;
     } else {
         field_value = unit->primary_skillset;
-        editor[23] = field_value;
+        editor->ability_ids[0] = field_value;
         if (field_value == 0)
             g_require_editor_primary_skillset_name[0] = 0xfe;
         field_value = unit->secondary_skillset;
-        editor[24] = field_value;
+        editor->ability_ids[1] = field_value;
         if (field_value == 0)
             g_require_editor_secondary_skillset_name[1] = 0xfe;
-        editor[25] = unit->reaction_ability;
-        editor[26] = unit->support_ability;
-        editor[27] = unit->movement_ability;
+        editor->ability_ids[2] = unit->abilities.reaction;
+        editor->ability_ids[3] = unit->abilities.support;
+        editor->ability_ids[4] = unit->abilities.movement;
     }
 
     item_id = 0;
-    editor[8] = 0;
-    if (editor[18] != -1) {
-        if (editor[19] == -1)
-            item_id = editor[18];
-    } else if (editor[19] != -1) {
-        item_id = editor[19];
+    editor->two_hands = 0;
+    if (editor->equipment[0] != -1) {
+        if (editor->equipment[1] == -1)
+            item_id = editor->equipment[0];
+    } else if (editor->equipment[1] != -1) {
+        item_id = editor->equipment[1];
     }
 
     if (item_id != 0) {
@@ -144,9 +141,9 @@ void require_editor_load_party_unit(s32 unused, s32 party_index) {
         if (item->type_flags & ITEM_TYPE_FLAG_WEAPON) {
             item_flags = g_main_item_weapon_data[item_id].flags;
             if ((item_flags & WEAPON_FLAG_FORCED_TWO_HANDS)
-                || ((unit->support_abilities[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS)
+                || ((unit->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS)
                     && (item_flags & WEAPON_FLAG_TWO_HANDS_COMPATIBLE)))
-                editor[8] = 1;
+                editor->two_hands = 1;
         }
     }
 }

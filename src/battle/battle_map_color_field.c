@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Event ColorField: tint or fade all 256 colours of the map CLUT row with battle_map_modify_palette.

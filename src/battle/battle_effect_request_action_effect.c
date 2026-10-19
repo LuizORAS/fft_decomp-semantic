@@ -1,4 +1,10 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_unit.h"
+#include "fft/data.h"
+#include "fft/main.h"
+#include "fft/unit.h"
 #include "psx/types.h"
 
 /* Request the effect of the unit's action: build its effect init record and pass it to
@@ -11,10 +17,10 @@
  * no attack to animate. The failed-condition path is written as its own `packed = 0` block: the target keeps
  * that block, and a pre-initialized `packed` lets GCC thread the failing tests straight to the call. Items
  * 0x4a..0x4c (the elemental guns) and Throw Ball (0x189) are hard-coded exceptions. */
-void battle_effect_request_action_effect(s32 ability, battle_unit_misc_data_t* unit) {
+void battle_effect_request_action_effect(s32 ability, battle_unit_t* unit) {
     battle_effect_secondary_init_t init;
-    battle_unit_misc_data_t* target;
-    battle_unit_misc_data_t* spectator;
+    battle_unit_t* target;
+    battle_unit_t* spectator;
     battle_stats_t* stats;
     s32 i;
     s32 j;
@@ -23,58 +29,58 @@ void battle_effect_request_action_effect(s32 ability, battle_unit_misc_data_t* u
     u8 item;
     battle_strike_work_t* block;
 
-    init.target_count = unit->target_count;
-    init.caster.fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
-    init.caster.fields.caster_id = unit->unit_id;
-    main_util_set_svector_u16(
-        (SVECTOR*)&init.target_tile.id.tile_x, unit->target_new_x, unit->target_new_map_level, unit->target_new_y);
-    block = (battle_strike_work_t*)&unit->actor_id;
+    init.target_count = unit->strike.target_count;
+    init.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
+    init.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.runtime_id = unit->runtime_id;
+    main_util_set_svector(&init.target_tile.data.tile, unit->strike.target_new_x, unit->strike.target_new_map_level,
+        unit->strike.target_new_y);
+    block = &unit->strike;
     if (init.target_count != 0) {
         for (i = 0; i < init.target_count; i++) {
-            target = battle_unit_get_misc_data_by_battle_id(block->target_list[i]);
-            init.target[i].fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
-            init.target[i].fields.target_id = target->unit_id;
+            target = battle_unit_get_by_battle_id(block->target_list[i]);
+            init.targets[i].target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
+            init.targets[i].data.unit.runtime_id = target->runtime_id;
             {
                 battle_stats_t* target_stats;
 
-                target_stats = target->battle_data;
+                target_stats = target->stats;
 
                 if (target_stats == 0) {
-                    init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
+                    init.targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_NORMAL;
                 } else if (target_stats->action.critical != 0) {
-                    init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_CRITICAL;
+                    init.targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_CRITICAL;
                 } else if (target_stats->action.miss_type == BATTLE_ACTION_MISS_TYPE_REFLECTED) {
-                    init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_REFLECTED;
+                    init.targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_REFLECTED;
                 } else if (target_stats->action.miss_type != BATTLE_ACTION_MISS_TYPE_HIT) {
-                    init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_MISSED;
+                    init.targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_MISSED;
                 } else {
-                    init.target[i].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
+                    init.targets[i].data.unit.result_animation = BATTLE_EFFECT_HIT_NORMAL;
                 }
             }
         }
-    } else if (unit->skip_empty_tile_effect == 0) {
+    } else if (unit->strike.skip_empty_tile_effect == 0) {
         init.target_count = 1;
-        init.target[0].block.values[0] = 1;
-        init.target[0].block.values[1] = unit->target_new_x;
-        init.target[0].block.values[3] = unit->target_new_y;
-        init.target[0].block.values[2] = unit->target_new_map_level;
+        init.targets[0].target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
+        init.targets[0].data.tile.vx = unit->strike.target_new_x;
+        init.targets[0].data.tile.vz = unit->strike.target_new_y;
+        init.targets[0].data.tile.vy = unit->strike.target_new_map_level;
     }
     spectators = 0;
-    for (i = 0; i < 0x10; i++) {
-        if (i != unit->unit_id) {
-            spectator = battle_unit_get_misc_data_by_misc_id(i);
+    for (i = 0; i < BATTLE_UNIT_RUNTIME_SLOT_COUNT; i++) {
+        if (i != unit->runtime_id) {
+            spectator = battle_unit_get_by_runtime_id(i);
             if (spectator != 0) {
-                stats = spectator->battle_data;
+                stats = spectator->stats;
                 if (stats != 0) {
                     for (j = 0; j < block->target_count; j++) {
-                        if (stats->misc_unit_id == block->target_list[j]) {
+                        if (stats->battle_id == block->target_list[j]) {
                             break;
                         }
                     }
                     if (j < block->target_count) {
                         continue;
                     }
-                    init.spectator_ids[spectators++] = spectator->unit_id;
+                    init.spectator_ids[spectators++] = spectator->runtime_id;
                 }
             }
         }

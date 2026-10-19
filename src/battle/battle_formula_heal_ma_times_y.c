@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x4C, Choco Cure and Spirit of Life: no evade or hit roll; MA * Y with Magic Attack Up and
  * the zodiac, without Faith (battle_formula_calculate_magical_xa_times_ya), restored as HP, or taken

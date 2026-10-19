@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/memory.h"
 
 /* Put into the current scenario the scenario-0 reachable tiles at most distance_limit from the
  * decision target and return 1; with none, copy all of scenario 0 and return 0.
@@ -11,11 +12,11 @@ s32 battle_ai_filter_reachable_tiles_by_target_distance(s32 distance_limit) {
     s32 x, y, level;
     u16 row;
 
-    for (x = 0; x < 18; x++) {
+    for (x = 0; x < BATTLE_AI_GRID_ROW_COUNT; x++) {
         ai->reachable_tiles[ai->movement_scenario][0][x] = 0;
         ai->reachable_tiles[ai->movement_scenario][1][x] = 0;
     }
-    for (level = 0; level < 2; level++) {
+    for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             row = ai->reachable_tiles[0][level][y];
             if (row != 0) {
@@ -29,7 +30,7 @@ s32 battle_ai_filter_reachable_tiles_by_target_distance(s32 distance_limit) {
         }
     }
     if (found == 0) {
-        battle_ai_transfer_halfword_values(
+        battle_mem_copy_u16_values(
             ai->reachable_tiles[ai->movement_scenario], ai->reachable_tiles[0], sizeof(ai->reachable_tiles[0]));
         return 0;
     }

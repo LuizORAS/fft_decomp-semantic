@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Choose the destination within distance_limit of the decision target, raised to 3 for a ranged unit
  * (BATTLE_AI_TARGETING_FLAG_1_HAS_RANGED_ABILITY) against an enemy target so it may stop 3 tiles away,

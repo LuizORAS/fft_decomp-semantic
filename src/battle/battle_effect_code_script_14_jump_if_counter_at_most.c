@@ -1,16 +1,15 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
-/* Opcode 14: jump to the offset in the third halfword when the counter
+/* Opcode 14: jump to the offset in the third 16-bit value when the counter
  * selected by the top two bits of the second byte is at most the second
- * halfword; otherwise step over the 6-byte instruction. */
-s32 battle_effect_code_script_14_jump_if_counter_at_most(effect_record_t* record) {
-    s16 pc = record->pc;
-    u8* cur = pc + record->script;
-    s16* counter = &record->counters[cur[1] >> 6];
-    if (*counter <= *(s16*)(cur + 2)) {
-        record->pc = *(u16*)(cur + 4);
+ * 16-bit value; otherwise step over the 6-byte instruction. */
+effect_script_result_e battle_effect_code_script_14_jump_if_counter_at_most(battle_effect_record_t* record) {
+    const effect_script_instruction_t* instruction = effect_get_current_script_instruction(record);
+    effect_script_parameters_t parameters = instruction->header.parameters;
+    if (record->counters[parameters.counter.slot] <= instruction->branch.comparison) {
+        record->pc = instruction->branch.target_offset;
     } else {
-        record->pc = pc + 6;
+        record->pc += 6;
     }
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

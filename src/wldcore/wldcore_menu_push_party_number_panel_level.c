@@ -2,11 +2,11 @@
 #include "psx/pad.h"
 
 /* Open the debug Party number panel (level PARTY_NUMBER_PANEL) that the world menu's debug row
- * requests: a number panel labelled "Party number:" (WLDCORE_TEXT_ID_PARTY_NUMBER_LABEL), range word
+ * requests: a number panel labelled "Party number:" (WLDCORE_TEXT_ID_PARTY_NUMBER_LABEL), 32-bit range value
  * 0x3e70000, starting at 0, run by the panel thread (WLDCORE_THREAD_SLOT_WINDOW_PANEL), with Circle and
  * Cross withheld from WORLD's menus. */
 void wldcore_menu_push_party_number_panel_level(void) {
-    wldcore_point32_t origin;
+    open_point32_t origin;
     s32 record_index;
 
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS;

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Have battle_ai_evaluate_ability_outcome evaluate every entry of the acting unit's AI ability
  * list against the active units, up to BATTLE_AI_ABILITY_LIST_LENGTH entries or the first
@@ -12,9 +12,9 @@ s32 battle_ai_evaluate_ability_list(void) {
         goto retry; /* resume the suspended evaluation inside the loop */
     }
     g_battle_ai_data_base.ability_counter = 0;
-    while (1) {
+    do {
         entry = &ai->ability_lists[ai->acting_unit_compact_index][ai->ability_counter];
-        if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE) {
+        if (entry->skillset == SKILLSET_ID_NONE) {
             return 0;
         }
         battle_ai_load_ability_entry(entry);
@@ -23,8 +23,6 @@ s32 battle_ai_evaluate_ability_list(void) {
             return -1;
         }
         ai->ability_counter += 1;
-        if (ai->ability_counter >= BATTLE_AI_ABILITY_LIST_LENGTH) {
-            return 0;
-        }
-    }
+    } while (ai->ability_counter < BATTLE_AI_ABILITY_LIST_LENGTH);
+    return 0;
 }

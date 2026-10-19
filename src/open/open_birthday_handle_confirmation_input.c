@@ -1,4 +1,5 @@
 #include "fft/open.h"
+#include "fft/script.h"
 #include "psx/pad.h"
 
 /* Per-frame handler of the birthday confirmation (handler 6). Up or Down toggles Yes and No.
@@ -8,11 +9,12 @@
  * and the screen out and blocks input. Once the fade has ended the birthday records and both birthday
  * controllers are released and FFTOP.STR, the opening movie, starts. Circle on No, or Cross, returns to the
  * date entry. */
-void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t* menu) {
+void open_birthday_handle_confirmation_input(open_controller_record_t* record) {
+    open_birthday_confirmation_state_t* menu = &record->birthday_confirmation;
     s32 month;
     s32 day;
     s32 value;
-    party_data_t* member;
+    party_unit_t* member;
     u32 buttons;
 
     if ((g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_INPUT_DISABLED)
@@ -32,13 +34,13 @@ void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t*
     if (buttons & PSX_PAD_CIRCLE) {
         main_sound_play_sfx(MAIN_SFX_CONFIRM);
         if (menu->selected_option == 0) {
-            month = g_open_controller_birthdays[g_open_current_controller_index - 2].month;
-            day = g_open_controller_birthdays[g_open_current_controller_index - 2].day;
-            world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH, month);
-            world_script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY, day);
-            value = open_birthday_month_day_to_day_of_year(month, day);
-            open_birthday_convert_to_zodiac_position(&month, &day);
-            member = main_party_get_data_pointer(0);
+            month = g_open_controller_records_next[g_open_current_controller_index - 2].birthday_date.month;
+            day = g_open_controller_records_next[g_open_current_controller_index - 2].birthday_date.day;
+            script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH, month);
+            script_set_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY, day);
+            value = open_birthday_to_day_of_year(month, day);
+            open_birthday_to_zodiac_date(&month, &day);
+            member = main_party_get_unit(0);
             member->birthday_day = value;
             member->zodiac = ((value & 0x100) >> 8) | ((month - 1) * 0x10);
             main_sound_set_current_music_target(0, 0x60);
@@ -68,7 +70,7 @@ void open_birthday_handle_confirmation_input(open_birthday_confirmation_state_t*
         || open_input_check_repeating_directional(PSX_PAD_DOWN) != 0) {
         menu->selected_option ^= 1;
         /* Adding 12 before the option offset keeps the target's (option * 16 + 12) + y evaluation. */
-        g_open_gfx_render_records_36[menu->cursor_record_36].y
+        g_open_gfx_render_records_36[menu->cursor_record_36].position.y
             = g_open_gfx_render_records_56[menu->menu_record_56].y + 12 + menu->selected_option * 16;
         main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
     }

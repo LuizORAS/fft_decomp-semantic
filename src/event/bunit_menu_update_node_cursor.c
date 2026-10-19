@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -9,7 +10,7 @@
  * Separate linker aliases preserve those loads; volatile accesses change the
  * instruction schedule. */
 void bunit_menu_update_node_cursor(s16 mode) {
-    u16 pos[2];
+    point16_t pos;
     u32 flags;
     help_navigation_record_t* node;
     u16 x;
@@ -38,7 +39,7 @@ void bunit_menu_update_node_cursor(s16 mode) {
             g_bunit_help_nodes = g_bunit_help_nodes_unit_browse;
         }
     }
-    running = battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT);
+    running = thread_is_running(THREAD_SCREEN_SLOT_TEXT);
     if (running == 0) {
         flags = g_bunit_input_primary_repeat;
         node_index = g_bunit_help_node_index;
@@ -82,15 +83,15 @@ void bunit_menu_update_node_cursor(s16 mode) {
     }
     node = &g_bunit_help_nodes[g_bunit_help_node_index];
     x = node->x;
-    pos[0] = x;
+    pos.x = x;
     y = node->y;
-    pos[1] = y;
+    pos.y = y;
     if (node->vertical_cursor != 0) {
-        pos[1] = y + 1;
-        bunit_menu_update_and_draw_bouncing_cursor(pos, g_bunit_help_cursor_anim_state, running);
+        pos.y = y + 1;
+        bunit_menu_update_and_draw_bouncing_cursor(&pos, &g_bunit_help_cursor_anim_state, running);
     } else {
-        pos[0] = x - 2;
-        pos[1] = y + 6;
-        bunit_menu_update_and_draw_animated_cursor(pos, g_bunit_help_cursor_anim_state, running);
+        pos.x = x - 2;
+        pos.y = y + 6;
+        bunit_menu_update_and_draw_animated_cursor(&pos, &g_bunit_help_cursor_anim_state, running);
     }
 }

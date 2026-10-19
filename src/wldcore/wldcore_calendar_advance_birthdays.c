@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* The daily birthday sweep, run by wldcore_calendar_advance_day after the date moves: every Brave
@@ -15,10 +16,10 @@
  * only absolute access to 0x80057f34. */
 void wldcore_calendar_advance_birthdays(void) {
     const u8(*birthdays)[2] = g_wldcore_brave_story_birthdays;
-    s32 day = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
-    s32 month = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    s32 birth_month = world_script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH);
-    s32 birth_day = world_script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY);
+    s32 day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
+    s32 month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+    s32 birth_month = script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH);
+    s32 birth_day = script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY);
     u8 age;
     s32 i;
 

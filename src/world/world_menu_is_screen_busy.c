@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -7,8 +8,8 @@
 s32 world_menu_is_screen_busy(void) {
     s32 result = 0;
 
-    if (g_world_grid_menu_id != MENU_GRID_HELP_NONE || world_thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU) != 0
-        || g_world_menu_input_lock_mode != 0 || world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU) != 0) {
+    if (g_world_grid_menu_id != MENU_GRID_HELP_NONE || thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU) != 0
+        || g_menu_input_lock_mode != 0 || thread_is_running(THREAD_SCREEN_SLOT_MENU) != 0) {
         result = 1;
     }
     return result;

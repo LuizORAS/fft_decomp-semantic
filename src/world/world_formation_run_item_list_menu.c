@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -24,9 +25,9 @@ s32 world_formation_run_item_list_menu(void) {
     if (g_world_item_submenu_initialized == 0) {
         g_world_item_submenu_initialized = 1;
         g_world_item_menu_category = world_menu_init_cursor_position(WORLD_MENU_CURSOR_ITEM_TAB, 0);
-        world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
-        world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS);
-        world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+        thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
+        world_menu_request_thread_stop(THREAD_SCREEN_SLOT_UNIT_STATUS);
+        world_menu_request_thread_stop(THREAD_SCREEN_SLOT_NUMERIC_EDITOR);
         world_menu_request_thread_stop(WORLD_THREAD_SLOT_EQUIP_ABILITY_PANEL);
         g_world_item_menu_mode = MENU_ITEM_LIST_STATE_BROWSE;
         g_world_formation_unit_banner_enabled = 0;
@@ -39,7 +40,7 @@ s32 world_formation_run_item_list_menu(void) {
         world_script_set_vsync_mode_and_event_speed(0);
         g_world_item_submenu_initialized = 0;
         g_world_formation_unit_banner_enabled = 1;
-        world_thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
+        thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
         g_world_preview_stats_thread_params.x = 2;
         g_world_preview_stats_thread_params.y = 2;
         g_world_formation_unit_cycle_mode = 2;
@@ -77,10 +78,10 @@ s32 world_formation_run_item_list_menu(void) {
     world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_ITEM_LIST_TRIANGLE, 0xB8, 0x3C,
         g_world_input_primary_repeat & PSX_PAD_TRIANGLE, disabled, MAIN_SFX_CONFIRM);
     busy = 0;
-    if (world_thread_is_task_active(0) != 0 || world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) != 0) {
+    if (world_thread_is_task_active(0) != 0 || thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) != 0) {
         busy = 1;
     }
-    world_menu_run_script_with_palette_mode(g_world_item_list_window_script, input, busy);
+    world_menu_run_script_with_palette_mode(&g_world_item_list_window_script, input, busy);
     world_menu_draw_item_category_tabs(0, g_world_item_menu_category, busy);
     if (g_world_menu_option_count != 0) {
         if (g_world_menu_entry_ids[g_world_menu_cursor_position] < ITEM_ID_THROWABLE_FIRST) {
@@ -88,7 +89,7 @@ s32 world_formation_run_item_list_menu(void) {
         }
         if (g_world_menu_entry_ids[g_world_menu_cursor_position] >= ITEM_ID_HEADGEAR_FIRST
             && g_world_menu_entry_ids[g_world_menu_cursor_position] < ITEM_ID_ACCESSORY_FIRST) {
-            world_menu_run_script_with_palette_mode(g_world_item_hp_mp_bonus_window_script, 0, 0);
+            world_menu_run_script_with_palette_mode(&g_world_item_hp_mp_bonus_window_script, 0, 0);
         }
         world_item_build_status_list_polygons(g_world_menu_entry_ids[g_world_menu_cursor_position]);
     }

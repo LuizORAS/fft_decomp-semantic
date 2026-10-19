@@ -1,0 +1,24 @@
+#include "fft/thread.h"
+
+/* Start function in slot thread_id: its stack begins at the slot's top, the slot is marked
+ * running and its task id, parameter 4 and 32-bit task values are cleared (parameters 1-3 keep what
+ * thread_set_parameters stored). It first runs at the next scheduler pass. */
+void thread_start(s32 thread_id, void (*function)(void)) {
+    void* global_pointer = thread_get_current_global_pointer();
+    thread_t* thread = &g_threads[thread_id];
+
+    thread->global_pointer = global_pointer;
+    thread->stack_pointer = thread->stack_top;
+    thread->frame_pointer = thread->stack_top;
+    thread->code_pointer = function;
+    thread->is_running = 1;
+    thread->task_id = THREAD_TASK_NONE;
+    thread->function_parameter_4 = 0;
+    thread->task_words[0] = 0;
+    thread->task_words[1] = 0;
+    thread->task_words[2] = 0;
+    thread->task_words[3] = 0;
+    thread->task_words[4] = 0;
+    thread->task_words[5] = 0;
+    thread->task_words[6] = 0;
+}

@@ -1,31 +1,13 @@
 #include "fft/event_jobstts.h"
-#include "psx/libc.h"
-
-/* Destination rectangle followed by the source glyph cell. The target keeps
- * all eight halfwords in the frame and reloads them inside the digit loop, so
- * they belong to one address-taken aggregate rather than separate scalars;
- * as separate s16/u16 locals GCC promotes them to $s6-$s8 instead.
- *
- * The record occupies 0x20 frame bytes in the target (locals run text[16] at
- * sp+0x20, this record at sp+0x30, nothing else before the saved registers at
- * sp+0x50). Only the first 0x10 bytes are ever touched; `reserved` stands in
- * for the unidentified tail and is required for the 0x70 frame. */
-typedef struct jobstts_number_glyph {
-    RECT rect;
-    s16 u;
-    s16 v;
-    s16 w;
-    u16 h;
-    u16 _unused_10[8];
-} jobstts_number_glyph_t;
+#include "fft/menu.h"
 
 /* Render command that draws the decimal value returned by one of the shared
  * condition/getter routines as a row of digit tiles.
  *
- * data[3] selects the routine in g_jobstts_menu_script_conditions, data[4]
- * is the number of digit cells, data[5] their horizontal pitch, data[7] the
- * left edge and data[8] the row offset; data[9] supplies the routine argument
- * outside a scrollable list, and data[6] selects the window CLUT variant.
+ * data->number.getter selects the routine in g_jobstts_menu_script_conditions,
+ * width is the number of digit cells, spacing their horizontal pitch, x the left
+ * edge and y the row offset; value supplies the routine argument outside a
+ * scrollable list, and alternate_palette selects the window CLUT variant.
  * Inside a list row the argument and the row offset follow the same
  * scroll-base/row-height derivation as jobstts_menu_script_if_group.
  *
@@ -35,7 +17,7 @@ typedef struct jobstts_number_glyph {
  * character indexes the 6x11 digit strip at (0x78, 0x10); leading cells are
  * blanked by drawing digit 0's cell, biased by the pad count.
  *
- * `dash_x` and `cell_x` exist because the target reads data[5]/data[7] before
+ * `dash_x` and `cell_x` exist because the target reads spacing and x before
  * storing the rectangle: those loads go through the command pointer, which
  * GCC 2.6.3 cannot disambiguate from the frame stores, so computing the x
  * coordinate first is what puts the loads ahead of the stores. They are two
@@ -46,13 +28,15 @@ typedef struct jobstts_number_glyph {
  * The dash loop reuses `value` as its counter, which is what keeps the
  * target's `move a2, s0`: a global allocno's copy is not coalesced, and a2 is
  * the register `value` already occupies at the 0x20000000 test. */
-u8* jobstts_menu_script_draw_formatted_number(u8* data) {
+menu_instruction_t* jobstts_menu_script_draw_formatted_number(menu_instruction_t* data) {
     s8 text[16];
-    jobstts_number_glyph_t glyph;
+    menu_digit_glyph_t glyph;
+    u16 unused[8]; /* Preserves the original frame size. */
     jobstts_menu_script_condition_t condition;
     s32 arg;
     s32 y;
     s32 value;
+    /* Separate positions preserve the load/store order in the two loops. */
     s32 dash_x;
     s32 i;
     s32 pad;
@@ -62,13 +46,13 @@ u8* jobstts_menu_script_draw_formatted_number(u8* data) {
     s32 cell;
     u16 clut;
 
-    condition = g_jobstts_menu_script_conditions[data[3]];
+    condition = g_jobstts_menu_script_conditions[data->number.getter];
     if (g_jobstts_menu_list_row_rendering == 0) {
-        arg = data[9];
-        y = data[8];
+        arg = data->number.value;
+        y = data->number.y;
     } else {
         arg = g_jobstts_menu_scroll_base_index + g_jobstts_menu_list_row_index;
-        y = ((g_jobstts_menu_list_row_height * g_jobstts_menu_list_row_index) + data[8])
+        y = ((g_jobstts_menu_list_row_height * g_jobstts_menu_list_row_index) + data->number.y)
             - g_jobstts_menu_list_scroll_offset_y;
         if (g_jobstts_menu_list_scroll_offset_y < 0) {
             arg -= 1;
@@ -77,13 +61,13 @@ u8* jobstts_menu_script_draw_formatted_number(u8* data) {
     }
 
     value = condition(arg);
-    if (data[6] != 0) {
-        clut = g_jobstts_menu_alternate_number_clut;
+    if (data->number.alternate_palette != 0) {
+        clut = g_menu_alternate_number_clut;
     } else {
-        clut = g_jobstts_menu_palette_clut;
+        clut = g_menu_palette_clut;
     }
     if (value & MENU_NUMBER_VALUE_DISABLED) {
-        clut = g_jobstts_menu_disabled_number_clut;
+        clut = g_menu_disabled_number_clut;
         value &= ~MENU_NUMBER_VALUE_DISABLED;
     }
 
@@ -93,25 +77,25 @@ u8* jobstts_menu_script_draw_formatted_number(u8* data) {
     glyph.h = 0xB;
 
     if (value & MENU_NUMBER_VALUE_DASHES) {
-        value = data[4];
+        value = data->number.width;
         while (value > 0) {
             cell = value - 1;
-            dash_x = data[7] + (cell * data[5]);
+            dash_x = data->number.x + (cell * data->number.spacing);
             glyph.rect.y = y + 5;
             glyph.rect.w = 6;
             glyph.rect.h = 3;
             glyph.rect.x = dash_x;
             jobstts_gfx_enqueue_textured_quad(&glyph.rect, 0xBA, 0x13, 0, g_jobstts_gfx_semitransparency,
-                g_jobstts_gfx_background_texture_page, clut, g_jobstts_gfx_otag_index);
+                g_jobstts_gfx_background_texture_page, clut, g_menu_gfx_otag_index);
             value = cell;
         }
-        return data + data[1];
+        return menu_next_instruction(data);
     }
 
-    pad = data[4] - sprintf(text, g_jobstts_text_decimal_format, value);
+    pad = data->number.width - sprintf(text, g_jobstts_text_decimal_format, value);
     pos = 0;
     i = 0;
-    if (data[4] != 0) {
+    if (data->number.width != 0) {
         do {
             if (pad != 0) {
                 digit = 0;
@@ -120,15 +104,15 @@ u8* jobstts_menu_script_draw_formatted_number(u8* data) {
                 digit = text[pos] - 0x30;
                 pos += 1;
             }
-            cell_x = data[7] + (i * data[5]);
+            cell_x = data->number.x + (i * data->number.spacing);
             glyph.rect.w = glyph.w;
             glyph.rect.y = y;
             glyph.rect.h = glyph.h;
             glyph.rect.x = cell_x;
             jobstts_gfx_enqueue_textured_quad(&glyph.rect, glyph.u + (glyph.w * digit), glyph.v, 0,
-                g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, clut, g_jobstts_gfx_otag_index);
+                g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, clut, g_menu_gfx_otag_index);
             i += 1;
-        } while (i < data[4]);
+        } while (i < data->number.width);
     }
-    return data + data[1];
+    return menu_next_instruction(data);
 }

@@ -1,4 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_script.h"
+#include "fft/menu.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* FlipMessagePortrait (EVENT_OPCODE_FLIP_MESSAGE_PORTRAIT, unused by the scenario scripts): toggle
@@ -6,19 +9,19 @@
  *
  * record_index is never assigned: the target indexes with whatever $s0 holds on entry and tests that
  * one record six times. */
-void battle_script_toggle_message_portrait_flip(u8* parameters) {
+void battle_script_toggle_message_portrait_flip(const u8* parameters) {
     s32 i;
     s32 record_index;
     s16 record_id;
     menu_window_buffer_t* record;
 
-    record_id = battle_script_load_halfword(parameters);
+    record_id = script_load_halfword(parameters);
     for (i = 0; i < 6; i++) {
-        if (g_battle_menu_window_buffers[record_index].message_id == record_id) {
-            record = &g_battle_menu_window_buffers[record_index];
-            record->portrait_flipped = g_battle_menu_window_buffers[record_index].portrait_flipped + 1;
-            g_battle_menu_window_buffers[record_index].portrait_flipped
-                = g_battle_menu_window_buffers[record_index].portrait_flipped & 1;
+        if (g_menu_window_buffers[record_index].message_id == record_id) {
+            record = &g_menu_window_buffers[record_index];
+            record->portrait_flipped = g_menu_window_buffers[record_index].portrait_flipped + 1;
+            g_menu_window_buffers[record_index].portrait_flipped
+                = g_menu_window_buffers[record_index].portrait_flipped & 1;
         }
     }
 }

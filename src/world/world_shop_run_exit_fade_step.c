@@ -1,6 +1,6 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /* Shop step EXIT_FADE: once the goodbye line shows, any face button starts the screen and
  * music fade-out; when the fade ends the step becomes WORLD_SHOP_STEP_EXIT, which ends
@@ -18,11 +18,11 @@ void world_shop_run_exit_fade_step(void) {
     } else if (g_world_input_newly_pressed & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE)) {
         world_gfx_start_increasing_fade();
         main_sound_set_current_music_target(0, 0xF0);
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+        thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, -1, 0);
         g_world_shop_exit_fade_started = 1;
     }
     world_shop_run_gil_menu_script();
-    if (g_world_shop_id == WORLD_SHOP_ID_SOLDIER_OFFICE) {
+    if (g_world_menu_context_id == WORLD_MENU_CONTEXT_SOLDIER_OFFICE) {
         world_shop_run_soldier_office_fee_menu_script();
         world_menu_run_script_with_callback_suppressed();
     }

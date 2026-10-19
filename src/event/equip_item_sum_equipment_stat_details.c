@@ -2,29 +2,29 @@
 #include "psx/types.h"
 
 /* Sum the stat bonuses of the five equipped items listed in `equipment`. */
-void equip_item_sum_equipment_stat_details(world_item_stat_detail_t* total, u16* equipment) {
-    world_item_stat_summary_t summary;
+void equip_item_sum_equipment_stat_details(world_item_stat_detail_t* total, const u16* equipment) {
+    battle_menu_unit_status_record_t summary;
     world_item_stat_detail_t detail;
     world_item_stat_detail_t unused; /* unreferenced in the target; needed for the frame size */
     s32 i;
 
-    total->right_weapon_power = 0;
-    total->left_weapon_power = 0;
-    total->left_weapon_evade = 0;
-    total->right_weapon_evade = 0;
-    total->physical_shield_evade = 0;
-    total->physical_accessory_evade = 0;
-    total->magical_shield_evade = 0;
-    total->magical_accessory_evade = 0;
+    total->state.right_weapon_power = 0;
+    total->state.left_weapon_power = 0;
+    total->state.left_weapon_evade = 0;
+    total->state.right_weapon_evade = 0;
+    total->state.physical_shield_evade = 0;
+    total->state.physical_accessory_evade = 0;
+    total->state.magical_shield_evade = 0;
+    total->state.magical_accessory_evade = 0;
     for (i = 0; i < 5; i++) {
         equip_item_collect_stat_deltas(equipment[i] & EQUIP_ITEM_ID_MASK, &summary, &detail, i);
-        total->right_weapon_power += detail.right_weapon_power;
-        total->left_weapon_power += detail.left_weapon_power;
-        total->right_weapon_evade += detail.right_weapon_evade;
-        total->left_weapon_evade += detail.left_weapon_evade;
-        total->physical_shield_evade += detail.physical_shield_evade;
-        total->physical_accessory_evade += detail.physical_accessory_evade;
-        total->magical_shield_evade += detail.magical_shield_evade;
-        total->magical_accessory_evade += detail.magical_accessory_evade;
+        total->state.right_weapon_power += detail.state.right_weapon_power;
+        total->state.left_weapon_power += detail.state.left_weapon_power;
+        total->state.right_weapon_evade += detail.state.right_weapon_evade;
+        total->state.left_weapon_evade += detail.state.left_weapon_evade;
+        total->state.physical_shield_evade += detail.state.physical_shield_evade;
+        total->state.physical_accessory_evade += detail.state.physical_accessory_evade;
+        total->state.magical_shield_evade += detail.state.magical_shield_evade;
+        total->state.magical_accessory_evade += detail.state.magical_accessory_evade;
     }
 }

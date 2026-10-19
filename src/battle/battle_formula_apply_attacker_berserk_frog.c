@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* The attacker's Berserk multiplies XA by 3 / 2; a Frog attacker's XA becomes 1. */
 void battle_formula_apply_attacker_berserk_frog(void) {

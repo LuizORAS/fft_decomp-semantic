@@ -1,10 +1,11 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Show the used item on the unit (battle_gfx_store_item_display_data) and start its use animation:
  * 0x39 on itself or on a target one tile away in a straight line, otherwise the throw (0x4c), which
  * clears item_display_active. */
-void battle_unit_set_animation_for_item_abilities(battle_unit_misc_data_t* unit, battle_unit_misc_data_t* target) {
+void battle_unit_set_animation_for_item_abilities(battle_unit_t* unit, battle_unit_t* target) {
     s32 dx;
     s32 dy;
 

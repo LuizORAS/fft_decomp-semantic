@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* The switch runs on the offset from the first reaction ability. */
 #define REACTION_CASE(name) (ABILITY_ID_REACTION_##name - ABILITY_ID_REACTION_FIRST)
@@ -43,28 +44,28 @@ s32 battle_reaction_apply_effect(void) {
         g_battle_action_target_data->sp_change = 0x81;
         break;
     case ABILITY_ID_REACTION_SUNKEN_STATE:
-        g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
+        g_battle_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_TRANSPARENT)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT);
         if (battle_status_modify_inflictions(0) != 0) {
             attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
         }
         break;
     case ABILITY_ID_REACTION_CAUTION:
-        g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEFENDING)]
+        g_battle_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEFENDING)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEFENDING);
         if (battle_status_modify_inflictions(0) != 0) {
             attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
         }
         break;
     case ABILITY_ID_REACTION_DRAGON_SPIRIT:
-        g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
+        g_battle_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE);
         if (battle_status_modify_inflictions(0) != 0) {
             attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
         }
         break;
     case ABILITY_ID_REACTION_REGENERATOR:
-        g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_REGEN)]
+        g_battle_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_REGEN)]
             = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_REGEN);
         if (battle_status_modify_inflictions(0) != 0) {
             attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;

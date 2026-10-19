@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_gfx.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
@@ -9,23 +11,23 @@
 void battle_gfx_load_evtchr_thread(void) {
     s32 parameter;
     s32 block;
-    void* buffer;
+    evtchr_file_record_t* buffer;
 
     parameter = battle_thread_get_current_parameter_1();
     block = battle_thread_get_current_parameter_2();
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_LOAD_EVTCHR);
+    thread_set_current_task_id(THREAD_TASK_LOAD_EVTCHR);
     buffer = main_heap_alloc(0x7800);
     do {
-        battle_thread_yield();
-        g_battle_thread_call_target = (void (*)(void))main_file_request_read_bytes;
-    } while (battle_thread_call_on_main_stack((block * 15) + DISC_SECTOR_EVENT_EVTCHR_BIN, 0x7800, buffer) != 0);
+        thread_yield();
+        g_thread_call_target = (void (*)(void))main_file_request_read_bytes;
+    } while (thread_call_on_main_stack((block * 15) + DISC_SECTOR_EVENT_EVTCHR_BIN, 0x7800, buffer) != 0);
     do {
-        battle_thread_yield();
-        g_battle_thread_call_target = (void (*)(void))main_file_is_still_loading;
-    } while (battle_thread_call_on_main_stack() != 0);
+        thread_yield();
+        g_thread_call_target = (void (*)(void))main_file_is_still_loading;
+    } while (thread_call_on_main_stack() != 0);
     g_battle_event_pending_loaded_evtchr_slot = parameter;
     g_battle_event_loaded_evtchr_buffer = buffer;
-    battle_thread_yield();
+    thread_yield();
     main_heap_free(buffer);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

@@ -18,7 +18,7 @@ The [[AI]] page explains the whole decision. Each lever sits in one place:
 | What | Where |
 |---|---|
 | What the AI believes an ability does: whom it targets, whether it touches HP, MP, stats or statuses, what stops it, random use, follow target, Undead reversal, Reflect, trajectories, team limits | the ability's `ai_flags` ([[ability_data_t]] bytes 4-7, [[g_main_ability_data]], MAIN `0x8005ebf0`, 8 bytes per id, disc data) |
-| How much each status is worth to the side that has it | [[g_battle_ai_status_priority_weights]] (BATTLE `0x8019f308`, 40 signed halfwords by status id, disc data) |
+| How much each status is worth to the side that has it | [[g_battle_ai_status_priority_weights]] (BATTLE `0x8019f308`, 40 signed 16-bit values by status id, disc data) |
 | How HP, MP, equipment and the Golem count in the score | [[battle_ai_simulate_action_and_score]] |
 | When an ability is useful, adverse or pointless on a unit: the HP and MP thresholds, the statuses worth adding or removing | [[battle_ai_classify_ability_effect]] |
 | Which list entries are usable, and when Protect, Shell, Reflect and Float are dropped; the healer and supporter hints | [[battle_ai_set_ability_considerations]] |
@@ -30,8 +30,8 @@ The [[AI]] page explains the whole decision. Each lever sits in one place:
 | A scenario unit's mode, focus unit and stay-near tile | its ENTD record ([[entd_unit_t]] `ai_flags`, `ai_target_unit_id`, `ai_target_xy`, `ai_flags_2`, disc data), read by [[battle_ai_init_unit_abilities]] |
 | The default target, the 45/128 HP retreat and the switch to Save fading life | [[battle_ai_init_target_consideration]] |
 | When a Frog, Critical or Don't Act unit runs | [[battle_ai_select_action]], [[battle_ai_update_team_targeting_flags]] |
-| What each Auto-Battle mode does | [[battle_ai_handle_autobattle]], [[battle_ai_select_fight_for_life_action]], [[battle_ai_select_protect_allies_action]], [[battle_ai_select_save_fading_life_action]], [[battle_ai_select_retreat_action]] |
-| Chicken, Blood Suck, Confusion and Berserk | [[battle_ai_choose_status_action]], [[battle_ai_choose_random_action]] |
+| What each Auto-Battle mode does | [[battle_ai_select_auto_battle_action]], [[battle_ai_select_fight_for_life_action]], [[battle_ai_select_protect_allies_action]], [[battle_ai_select_save_fading_life_action]], [[battle_ai_select_retreat_action]] |
+| Chicken, Blood Suck, Confusion and Berserk | [[battle_ai_select_status_action]], [[battle_ai_select_random_action]] |
 | The facing at Wait | [[battle_ai_choose_wait_facing]] |
 | How much planning fits in a frame | the `VSync(1)` limits: 440 and 441 horizontal blanks in most steps, 313 while the simulation runs the clock, 325 in the movement propagation ([[battle_ai_is_propagation_budget_spent]]) |
 

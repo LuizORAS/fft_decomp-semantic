@@ -1,10 +1,5 @@
 #include "fft/world.h"
 
-/* Halfword view of a formation record; sort keys select a halfword field. */
-typedef struct world_formation_unit_halfwords {
-    s16 fields[sizeof(world_formation_unit_t) / 2];
-} world_formation_unit_halfwords_t;
-
 /* Sort the formation records by the roster's Order Unit keys (key list `index`, always 0): a bubble
  * sort comparing each key's field in priority order until one differs, Number ascending and the other
  * keys descending (g_world_formation_sort_field_indices). Eggs then move to the end, the lowest record
@@ -16,7 +11,7 @@ typedef struct world_formation_unit_halfwords {
  * order entry: both must be multi-set variables for the target's register
  * choice (a1/v0) and load order. */
 void world_formation_sort_roster(s32 index) {
-    s8 eggs[24];
+    s8 eggs[PARTY_ROSTER_SLOT_COUNT];
     s8* keys;
     s32 i;
     s32 j;
@@ -26,19 +21,17 @@ void world_formation_sort_roster(s32 index) {
     s32 first;
     s32 swap;
     s32 lhs;
-    world_formation_unit_halfwords_t* rec;
+    s16* rec; /* Sort keys select signed 16-bit values within the unit record. */
 
     keys = g_world_sort_key_lists[index];
     for (count = g_world_formation_record_count - 1; count > 0; count--) {
         for (i = 0; i < count; i++) {
             k = 0;
             do {
-                rec = (world_formation_unit_halfwords_t*)&g_world_formation_unit_records
-                    [g_world_formation_record_order[i]];
-                lhs = rec->fields[g_world_formation_sort_field_indices[keys[k]]];
-                rec = (world_formation_unit_halfwords_t*)&g_world_formation_unit_records
-                    [g_world_formation_record_order[i + 1]];
-                swap = rec->fields[g_world_formation_sort_field_indices[keys[k]]];
+                rec = (s16*)&g_world_formation_unit_records[g_world_formation_record_order[i]];
+                lhs = rec[g_world_formation_sort_field_indices[keys[k]]];
+                rec = (s16*)&g_world_formation_unit_records[g_world_formation_record_order[i + 1]];
+                swap = rec[g_world_formation_sort_field_indices[keys[k]]];
                 diff = swap - lhs;
                 k++;
             } while (diff == 0);

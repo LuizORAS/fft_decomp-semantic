@@ -2,7 +2,7 @@
 type: mechanic
 tier: 4
 scope:
-  - src/psyq/
+  - src/lib/psyq/
 ---
 
 # Sony Libraries
@@ -11,7 +11,7 @@ scope:
 
 The game is built on Sony's Psy-Q SDK: the libraries it linked do the
 hardware work, and this repository rebuilds them as C under
-[`src/psyq/<library>/`](../../src/psyq/), with their SDK names. Game code
+[`src/lib/psyq/<library>/`](../../src/psyq/), with their SDK names. Game code
 reads the disc, plays sound, draws, reads the pads and saves through them.
 Their summaries come from the code; what the BIOS does with a call comes
 from [psx-spx](https://psx-spx.consoledev.net/), and each such summary says
@@ -59,7 +59,7 @@ The four routines of `src/psyq/suzuki/` are the sound driver's CPU heap; the
    and starts LIBCD ([[main_file_init_cd]]: [[SetMem]], [[CdInit]]). The
    memory card follows ([[main_card_init_events]]: the card events,
    [[InitCARD]], [[StartCARD]], [[_bu_init]]) and the sound driver
-   ([[SuzukiSPUInitialiser]]: SPU RAM heap, root counter 2 at about 240
+   ([[suzuki_sound_init]]: SPU RAM heap, root counter 2 at about 240
    ticks a second).
 3. **Each frame.** The game's loops draw their ordering tables
    ([[DrawOTag]]), wait for drawing and the VBlank ([[DrawSync]], [[VSync]])
@@ -78,7 +78,7 @@ The four routines of `src/psyq/suzuki/` are the sound driver's CPU heap; the
 |---|---|
 | Disc read retries and time limits | [[CdReadSync]] and [[cd_read_retry]] (a read restarts after 60 quiet VBlanks and gives up after 1200), [[CD_sync]] (960 VBlanks) |
 | The VBlank wait and its time limit | [[VSync]], [[v_wait]] |
-| The sound driver's tick | [[SuzukiSPUInitialiser]]'s [[SetRCnt]] call |
+| The sound driver's tick | [[suzuki_sound_init]]'s [[SetRCnt]] call |
 | The debug text | [[FntOpen]], [[FntPrint]], [[FntFlush]]; [[SetDumpFnt]] routes LIBGPU's diagnostics there |
 | PAL or NTSC display | The video mode stays 0 (NTSC): nothing calls [[SetVideoMode]] |
 | A port | These libraries are the hardware boundary: a port replaces them, the BIOS veneers (`PSYQ_BIOS_TAIL_CALL` in `abi_inline.h`) and the GTE helpers (`gte_inline.h`) with its own equivalents |
@@ -95,7 +95,7 @@ moves code waits for the shiftable build.
   pauses here.
 - Surprises: [[StartRCnt]] and [[StopRCnt]] index their mask table before
   checking the counter; [[SpuGetVoiceEnvelopeAttr]] stores its key state as
-  a halfword; [[_patch_card2]] undoes itself on a second call; [[InitCARD]]
+  a 16-bit value; [[_patch_card2]] undoes itself on a second call; [[InitCARD]]
   and [[StartCARD]] pass 0 to ChangeClearPAD; [[SetDrawLoad]] leaves the
   pixels to its caller; [[memmove]] returns different pointers on its two
   paths; [[main_gfx_load_efc_fnt]] patches [[FntLoad]]'s CLUT row.

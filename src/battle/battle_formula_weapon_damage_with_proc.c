@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x02, the weapons that cast a spell (Ice Brand, Flame Rod, Ice Rod, Thunder Rod, Flame
  * Whip, Lightning Bow, Holy Lance): formula 0x01's strike, but the 19% roll queues the weapon's

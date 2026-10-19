@@ -6,7 +6,7 @@
  * `color` modulates the texture with that RGB triple; the screen x is offset
  * by 0x80. */
 void card_gfx_enqueue_oriented_textured_quad(
-    const world_oriented_quad_t* descriptor, const u8* color, s32 orientation, s32 semitrans, s32 otag_index) {
+    const world_oriented_quad_t* descriptor, const rgb24_t* color, s32 orientation, s32 semitrans, s32 otag_index) {
     s32 quad_semitrans = semitrans;
     s32 quad_orientation = orientation;
     POLY_FT4* poly;
@@ -15,67 +15,55 @@ void card_gfx_enqueue_oriented_textured_quad(
 
     if (color != 0) {
         SetShadeTex(poly, 0);
-        poly->r0 = color[0];
-        poly->g0 = color[1];
-        poly->b0 = color[2];
+        setRGB0(poly, color->r, color->g, color->b);
     } else {
         SetShadeTex(poly, 1);
     }
     SetSemiTrans(poly, quad_semitrans);
 
-    poly->x0 = descriptor->x + 0x80;
-    poly->y0 = descriptor->y;
-    poly->x1 = descriptor->x + (descriptor->w + 0x80);
-    poly->y1 = descriptor->y;
-    poly->x2 = descriptor->x + 0x80;
-    poly->y2 = descriptor->y + descriptor->h;
-    poly->x3 = descriptor->x + (descriptor->w + 0x80);
-    poly->y3 = descriptor->y + descriptor->h;
+    setXY4(poly, descriptor->position.x + 0x80, descriptor->position.y, descriptor->position.x + (descriptor->w + 0x80),
+        descriptor->position.y, descriptor->position.x + 0x80, descriptor->position.y + descriptor->h,
+        descriptor->position.x + (descriptor->w + 0x80), descriptor->position.y + descriptor->h);
 
     switch (quad_orientation & 0xff) {
     case TEXTURE_UV_FLIP_NONE:
-        poly->u0 = descriptor->u;
-        poly->v0 = descriptor->v;
-        poly->u1 = descriptor->u + descriptor->uw;
-        poly->v1 = descriptor->v;
-        poly->u2 = descriptor->u;
-        poly->v2 = descriptor->v + descriptor->vh;
-        poly->u3 = descriptor->u + descriptor->uw;
-        poly->v3 = descriptor->v + descriptor->vh;
+        setUV4(poly, descriptor->source.u, descriptor->source.v, descriptor->source.u + descriptor->source.w,
+            descriptor->source.v, descriptor->source.u, descriptor->source.v + descriptor->source.h,
+            descriptor->source.u + descriptor->source.w, descriptor->source.v + descriptor->source.h);
         break;
     case TEXTURE_UV_FLIP_X:
-        poly->u1 = descriptor->u;
-        poly->v1 = descriptor->v;
-        poly->u0 = descriptor->u + descriptor->uw;
-        poly->v0 = descriptor->v;
-        poly->u3 = descriptor->u;
-        poly->v3 = descriptor->v + descriptor->vh;
-        poly->u2 = descriptor->u + descriptor->uw;
-        poly->v2 = descriptor->v + descriptor->vh;
+        poly->u1 = descriptor->source.u;
+        poly->v1 = descriptor->source.v;
+        poly->u0 = descriptor->source.u + descriptor->source.w;
+        poly->v0 = descriptor->source.v;
+        poly->u3 = descriptor->source.u;
+        poly->v3 = descriptor->source.v + descriptor->source.h;
+        poly->u2 = descriptor->source.u + descriptor->source.w;
+        poly->v2 = descriptor->source.v + descriptor->source.h;
         break;
     case TEXTURE_UV_FLIP_Y:
-        poly->u2 = descriptor->u;
-        poly->v2 = descriptor->v;
-        poly->u3 = descriptor->u + descriptor->uw;
-        poly->v3 = descriptor->v;
-        poly->u0 = descriptor->u;
-        poly->v0 = descriptor->v + descriptor->vh;
-        poly->u1 = descriptor->u + descriptor->uw;
-        poly->v1 = descriptor->v + descriptor->vh;
+        poly->u2 = descriptor->source.u;
+        poly->v2 = descriptor->source.v;
+        poly->u3 = descriptor->source.u + descriptor->source.w;
+        poly->v3 = descriptor->source.v;
+        poly->u0 = descriptor->source.u;
+        poly->v0 = descriptor->source.v + descriptor->source.h;
+        poly->u1 = descriptor->source.u + descriptor->source.w;
+        poly->v1 = descriptor->source.v + descriptor->source.h;
         break;
     case TEXTURE_UV_FLIP_XY:
-        poly->u3 = descriptor->u;
-        poly->v3 = descriptor->v;
-        poly->u2 = descriptor->u + descriptor->uw;
-        poly->v2 = descriptor->v;
-        poly->u1 = descriptor->u;
-        poly->v1 = descriptor->v + descriptor->vh;
-        poly->u0 = descriptor->u + descriptor->uw;
-        poly->v0 = descriptor->v + descriptor->vh;
+        poly->u3 = descriptor->source.u;
+        poly->v3 = descriptor->source.v;
+        poly->u2 = descriptor->source.u + descriptor->source.w;
+        poly->v2 = descriptor->source.v;
+        poly->u1 = descriptor->source.u;
+        poly->v1 = descriptor->source.v + descriptor->source.h;
+        poly->u0 = descriptor->source.u + descriptor->source.w;
+        poly->v0 = descriptor->source.v + descriptor->source.h;
         break;
     }
 
-    poly->clut = descriptor->clut;
-    poly->tpage = descriptor->tpage;
+    poly->clut = descriptor->source.clut;
+    poly->tpage = descriptor->source.tpage;
     addPrim(&g_card_gfx_context->otag[otag_index], poly);
 }

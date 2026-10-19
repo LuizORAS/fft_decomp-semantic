@@ -1,11 +1,12 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Why unit cannot act (battle_unit_action_block_e): DISABLED under Don't Act or as a mount carrying
  * its rider; SUBMERGED at water depth 2 or more, unless it has Float, Chicken or Frog, a water
  * movement ability (Walk on Water, Move in Water, Float) or rides a mount; otherwise NONE. The menus
  * grey the action out with it; evasion, Weapon Guard, Abandon and reactions need NONE. */
-s32 battle_unit_get_action_block(battle_stats_t* unit) {
+battle_unit_action_block_e battle_unit_get_action_block(const battle_stats_t* unit) {
     s32 depth;
 
     if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_ACT)]
@@ -16,7 +17,7 @@ s32 battle_unit_get_action_block(battle_stats_t* unit) {
     if ((unit->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) != 0) {
         return BATTLE_UNIT_ACTION_BLOCK_DISABLED;
     }
-    depth = g_battle_map_tile_data[battle_map_calculate_location(unit)].depth_half_height.value >> MAP_TILE_DEPTH_SHIFT;
+    depth = g_battle_map_tile_data[battle_map_calculate_location(unit)].depth_half_height.depth;
     if (depth < 2) {
         return BATTLE_UNIT_ACTION_BLOCK_NONE;
     }
@@ -26,7 +27,7 @@ s32 battle_unit_get_action_block(battle_stats_t* unit) {
         != 0) {
         return BATTLE_UNIT_ACTION_BLOCK_NONE;
     }
-    if ((unit->movement_abilities[2]
+    if ((unit->ability_flags.movement[2]
             & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER | BATTLE_MOVEMENT_SET_3_FLOAT))
         != 0) {
         return BATTLE_UNIT_ACTION_BLOCK_NONE;

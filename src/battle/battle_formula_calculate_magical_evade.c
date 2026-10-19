@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* The magical evade check: the target's magic evades (battle_formula_store_magical_evade_values, no
  * class evade), the attacker's Transparent, the target's Abandon and statuses, then the rolls

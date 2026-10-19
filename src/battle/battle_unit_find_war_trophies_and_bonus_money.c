@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Collect a battle's war trophies into result: the war trophy item of each unit on the field
@@ -15,7 +16,7 @@ void battle_unit_find_war_trophies_and_bonus_money(battle_war_result_t* result) 
 
     count = 0;
     money = 0;
-    lowest = 99;
+    lowest = UNIT_LEVEL_MAX;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->existence != BATTLE_UNIT_EXISTENCE_NONE && unit->existence != BATTLE_UNIT_EXISTENCE_OFF_FIELD) {

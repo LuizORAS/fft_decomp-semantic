@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Fill the current render buffer's packets for one mesh geometry block, from the polygons the loader
@@ -7,11 +7,12 @@
  * (MAP_LOAD_STATE_MESH_RECORDS); battle_map_append_mesh_geometry has read the positions and normals of the
  * same block.
  *
- * The pass skips the position and normal vectors, then reads five halfwords per textured triangle and six
- * per textured quad. A clut word keeps its low six bits (the CLUT) and gains the map CLUT row; texture
+ * The pass skips the position and normal vectors, then reads five 16-bit values per textured triangle and six
+ * per textured quad. A CLUT keeps its low six bits (the CLUT) and gains the map CLUT row; texture
  * pages are copied as they are. Untextured POLY_F3/POLY_F4 packets start with colour 0/0/1. */
-void battle_map_init_mesh_render_records(void* geometry_data) {
-    u16* source = geometry_data;
+void battle_map_init_mesh_render_records(const map_mesh_geometry_t* geometry_data) {
+    /* Named count loads fold the retail four 16-bit cursor advances. */
+    const u16* source = &geometry_data->textured_triangle_count;
     s32 polygon_index;
     s32 textured_triangle_count;
     s32 textured_quad_count;
@@ -24,7 +25,7 @@ void battle_map_init_mesh_render_records(void* geometry_data) {
     u16 clut_data;
     u16 texture_page;
 
-    g_battle_map_mesh_data_buffer = (s32)g_battle_gfx_current_render_buffer;
+    g_battle_map_mesh_last_render_buffer = g_battle_gfx_current_render_buffer;
 
     textured_triangle_count = *source++;
     textured_quad_count = *source++;

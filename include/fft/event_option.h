@@ -1,9 +1,7 @@
 #ifndef EVENT_OPTION_H
 #define EVENT_OPTION_H
 
-/* EVENT/OPTION.OUT: the battle's option screens. BATTLE's menus load it for the mini menu's Option row
- * (the game options) and AT row (the turn order list), and for the crystal or chest a dead unit leaves
- * (system function 0x1f). WORLD.BIN carries a copy of it (world_option_*). */
+/* EVENT/OPTION.OUT: menu screen overlay that runs with BATTLE. */
 
 #include "fft/battle.h"
 
@@ -11,18 +9,6 @@
 /* The stand-in thread that yields forever. */
 
 void option_thread_wait_forever(void);
-
-/* gfx */
-/* The draw-area pair of a window's open and close zoom: option_gfx_build_scaled_draw_area_packets and
- * option_gfx_init_scaled_draw_area_packets, which nothing references (QUIRKS.md). */
-
-extern const u16 g_option_gfx_draw_area_scale_percent[12];
-extern RECT g_option_gfx_draw_area_template;
-
-void option_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const void* source,
-    s32 scale_index, s32 lower_half, const world_status_thread_t* thread);
-
-void option_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet);
 
 /* text */
 /* The frame-piece blit: the source and destination rectangles of the copies the window frame threads
@@ -37,33 +23,16 @@ void option_text_set_blit_source_rect(s16 source_x, s16 source_y, s16 width, s16
 /* The list windows: the scrolling list thread, its text columns and page scroll, the window frame
  * threads and their frame images, and the AT list's menu records, rows and unit view. */
 
-/* OPTION's view of the 0x3c-byte menu record (g_battle_menu_thread_menu_data);
- * field names follow world_menu_entry_t. */
-typedef struct option_at_menu {
-    s16 vram_x;       /* 0x00: text-image VRAM x */
-    s16 vram_y;       /* 0x02: text-image VRAM y */
-    s16 inner_width;  /* 0x04 */
-    s16 inner_height; /* 0x06 */
-    s16 window_x;     /* 0x08 */
-    s16 window_y;     /* 0x0a */
-    s16 window_width; /* 0x0c */
-    u8 _unused_0e[6];
-    s16 overall_width; /* 0x14 */
-    u8 _unused_16[0x1a];
-    world_menu_text_layout_t* layout; /* 0x30 */
-} option_at_menu_t;
-
-extern const u8 g_option_menu_at_list_entry_table[];
-extern const void* g_option_menu_at_list_entry_table_pointer;
+extern world_menu_text_layout_t g_option_menu_at_list_entry_table[1];
+extern world_menu_text_layout_t* g_option_menu_at_list_entry_table_pointer;
 extern s16 g_option_menu_at_list_flags[];
 extern s16 g_option_menu_at_list_indices[];
 extern s16 g_option_menu_at_list_menu_type;
 extern s16 g_option_menu_at_list_primary_values[];
 extern s16 g_option_menu_at_list_secondary_values[];
-extern option_at_menu_t g_option_menu_at_list_state[];
+extern world_menu_entry_t g_option_menu_at_list_state[1];
 extern u8 g_option_menu_at_list_text[];
-
-extern world_panel_frame_t g_option_menu_panel_frames[2];
+extern world_menu_panel_frame_t g_option_menu_panel_frames[2];
 extern u8 g_option_menu_panel_pixels[];
 
 /* One libgpu texture window per window frame DR_MODE packet. The static
@@ -72,21 +41,19 @@ extern u8 g_option_menu_panel_pixels[];
  * Indexing the array is what reproduces the target's symbol-plus-byte-offset
  * addressing. */
 extern RECT g_option_menu_panel_texture_windows[7];
+
 extern RECT g_option_menu_thin_panel_texture_windows[7];
 extern u8 g_option_menu_render_buffer[];
 extern s32 g_option_menu_state;
 extern u16 g_option_menu_transition_duration;
 extern s16 g_option_menu_transition_timer;
 extern RECT g_option_menu_entry_panel_rect;
-
-void option_menu_init_at_list(option_at_menu_t* menu);
-void option_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, void* buffer);
+void option_menu_init_at_list(world_menu_entry_t* menu);
+void option_menu_draw_text_columns(world_menu_entry_t* entry, s32* row_offset, u8* buffer);
 void option_menu_start_at_list_thread(void);
-
 void option_menu_window_frame_thread(void);
-void* option_menu_redraw_text_page_on_scroll(
+u8* option_menu_redraw_text_page_on_scroll(
     world_menu_entry_t* menu, s32* first_row, s32* render_pending, s32* unused_cursor);
-
 void option_menu_run_list_thread(void);
 
 /* options */
@@ -94,38 +61,32 @@ void option_menu_run_list_thread(void);
  * text ids, the options list and the value picker. */
 
 extern world_menu_text_layout_t g_option_menu_entry_table[1];
-
+extern world_options_menu_page_t g_option_menu_pages[2];
 extern world_menu_entry_t g_option_menu_icon_thread_param;
 extern RECT g_option_menu_title_image_rect;
 extern RECT g_option_menu_value_image_rect;
-
 extern s32 g_option_current_values[GAME_OPTION_UNCHANGED + 1];
 extern s32 g_option_reference_values[];
-
 extern s32 g_option_choice_counts[];
 extern s32 g_option_choice_window_widths[];
 extern world_menu_icon_record_t g_option_picker_icon_records[2];
 extern s32 g_option_value_text_id_bases[];
 extern world_input_timing_profile_t g_option_input_repeat_timings[];
-
 void option_menu_run_options_thread(void);
-
 void option_menu_run_option_choice_thread(void);
+extern world_menu_list_page_t g_option_at_list_pages[2];
+extern battle_at_entry_t g_option_menu_at_list_descriptors[BATTLE_AT_LIST_CAPACITY];
 
 /* crystal pickup */
 /* The panel of the crystal or chest a dead unit leaves: its menu record, its ability list and
  * the choices it returns to BATTLE (g_battle_crystal_pickup_action). */
 
 void option_menu_start_crystal_pickup_threads(void);
-
 extern u32* g_option_crystal_pickup_controller_input;
-
-extern crystal_pickup_menu_t g_option_crystal_pickup_menu;
-extern crystal_pickup_entry_counts_t g_option_crystal_pickup_menu_entries;
+extern world_menu_entry_t g_option_crystal_pickup_menu[CRYSTAL_PICKUP_MENU_ENTRY_COUNT];
+extern world_menu_text_layout_t g_option_crystal_pickup_menu_entries;
 extern s16 g_option_crystal_pickup_menu_flags[];
-
 extern s16 g_option_crystal_pickup_primary_result;
-
 extern s16 g_option_crystal_pickup_secondary_result;
 
 /* screen */

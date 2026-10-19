@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x64, the Jump command (battle_action_run_pre_formula_setup selects it): XA and YA for
  * Jump (battle_formula_store_jump_xa_ya: PA, or PA * 3 / 2 with a spear, times the weapon's power,

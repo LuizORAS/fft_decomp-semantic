@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Blade Grasp: against an ability flagged ABILITY_SECONDARY_FLAG_4_BLADE_GRASP_ELIGIBLE, the accuracy
  * shown becomes 100 - Brave, and a successful Brave roll while executing turns the hit into a Blade
@@ -12,7 +11,7 @@ void battle_reaction_try_blade_grasp(void) {
         return;
     attacker = g_battle_action_target;
     target = g_battle_action_target_data;
-    /* Halfword store covers attack_accuracy and the pad byte after it. */
+    /* 16-bit store covers attack_accuracy and the pad byte after it. */
     target->attack_accuracy = 0x64 - attacker->brave;
     if (battle_reaction_fails_brave_roll(attacker) != 0)
         return;

@@ -5,5 +5,5 @@
  * of the previewed equipment (g_equip_selected_unit_stat_summary.mp_bonus). Callback 5 shows the same value
  * with dashes for 0. */
 s32 equip_menu_get_preview_mp_bonus(s32 unused_row) {
-    return g_equip_selected_unit_stat_summary.mp_bonus;
+    return g_equip_selected_unit_stat_summary.gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].bonus;
 }

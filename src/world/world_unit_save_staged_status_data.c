@@ -1,4 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
+#include "fft/script.h"
+#include "fft/thread.h"
+#include "fft/unit.h"
 #include "fft/world.h"
 
 /* Snapshot a unit into the event staging record and queue its status removal.
@@ -32,7 +35,7 @@ s32 world_unit_save_staged_status_data(s32 unit_id) {
         g_world_unit_status_staging_data->hp[unit_id] = stats->hp;
         g_world_unit_status_staging_data->team_flags[unit_id] = stats->team_flags;
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-            if (world_script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
+            if (script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) != 0) {
                 if ((stats->primary_skillset >= SKILLSET_ID_MONSTER_FIRST && stats->primary_skillset < SKILLSET_ID_END)
                     || stats->character_identity == CHARACTER_IDENTITY_ALTIMA_FIRST_FORM
                     || stats->character_identity == CHARACTER_IDENTITY_ALTIMA_SECOND_FORM
@@ -42,14 +45,14 @@ s32 world_unit_save_staged_status_data(s32 unit_id) {
                     value = stats->status_sets.current[i];
                     value &= g_world_status_removal_mask_staged_monster[i];
                     st = g_world_unit_status_staging_data;
-                    stats->action.status_removal[i] = value;
+                    stats->action.status_changes.removal[i] = value;
                     st->added[unit_id][i] = value;
                     st->removed[unit_id][i] = value;
                 } else {
                     value = stats->status_sets.current[i];
                     value &= g_world_status_removal_mask_staged[i];
                     st = g_world_unit_status_staging_data;
-                    stats->action.status_removal[i] = value;
+                    stats->action.status_changes.removal[i] = value;
                     st->added[unit_id][i] = value;
                     st->removed[unit_id][i] = value;
                 }
@@ -57,7 +60,7 @@ s32 world_unit_save_staged_status_data(s32 unit_id) {
                 value = stats->status_sets.current[i];
                 value &= g_world_status_removal_mask_unstaged[i];
                 st = g_world_unit_status_staging_data;
-                stats->action.status_removal[i] = value;
+                stats->action.status_changes.removal[i] = value;
                 st->added[unit_id][i] = value;
                 st->removed[unit_id][i] = value;
             }
@@ -70,12 +73,12 @@ s32 world_unit_save_staged_status_data(s32 unit_id) {
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
             g_world_unit_status_staging_data->jump_float_flags |= UNIT_STATUS_STAGING_FLOAT_REMOVED;
         }
-        if (stats->action.status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
+        if (stats->action.status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHARM)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHARM)) {
             stats->team_flags = stats->initial_team_flags;
         }
-        g_world_thread_call_target = (void (*)(void))battle_status_apply_unit_action_removal;
-        world_thread_call_on_main_stack(stats);
+        g_thread_call_target = (void (*)(void))battle_status_apply_unit_action_removal;
+        thread_call_on_main_stack(stats);
         g_world_unit_status_staging_data->state[unit_id] = UNIT_STATUS_STAGING_SAVED;
         return 1;
     }

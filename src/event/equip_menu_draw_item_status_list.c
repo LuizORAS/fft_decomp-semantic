@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -53,7 +54,7 @@ void equip_menu_draw_item_status_list(s16 item_id) {
     x = 0xD1;
     tpage = GetTPage(0, 0, 0x180, 0);
     drawn = 0;
-    icon_tpage = g_equip_menu_cursor_texture_page;
+    icon_tpage = g_menu_cursor_texture_page;
     equip_bits_init_primary_reader(ITEM_ATTRIBUTES_FLAT[attribute].immunity);
     for (i = 0; i < BATTLE_STATUS_COUNT; i++) {
         if (drawn >= count) {

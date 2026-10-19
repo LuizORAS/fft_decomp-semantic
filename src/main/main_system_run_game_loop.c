@@ -1,6 +1,6 @@
 #include "fft/battle.h"
 #include "fft/main.h"
-#include "psx/types.h"
+#include "fft/script.h"
 
 /* Top-level loop, never returns (main_system_reset_game re-enters it with the stack restored).
  * Each pass resets the inventory to the new-game stock and runs the OPEN.BIN title, after
@@ -54,10 +54,10 @@ void main_system_run_game_loop(void) {
         if (g_main_system_game_flow_state == MAIN_GAME_FLOW_ENDING) {
             main_sound_stop_weather_sfx_music();
             main_sound_unload_scenario_music_and_stop_tune();
-            battle_script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
+            script_set_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO, 1);
             /* With NEXT_SCENARIO set, the ATTACK scenario loader advances this
              * event to Things Obtained or Those Who Squirm in Darkness. */
-            battle_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_SEARCHING_FOR_ALMA);
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, EVENT_ID_SEARCHING_FOR_ALMA);
             main_overlay_exec_open_bin_ending();
             main_overlay_exec_battle_bin();
             main_gfx_load_zodiac_frame();

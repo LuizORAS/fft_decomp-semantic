@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Same as battle_menu_collect_draw_out_katanas, returning only the low byte (the count); the

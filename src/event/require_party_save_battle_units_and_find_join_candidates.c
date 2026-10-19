@@ -1,4 +1,6 @@
+#include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /*
@@ -26,7 +28,7 @@ s32 require_party_save_battle_units_and_find_join_candidates(void) {
 
     g_require_party_affected_unit_count = 0;
     for (party_index = 0; party_index < PARTY_ROSTER_SLOT_COUNT; party_index++) {
-        party_data_t* party_unit = main_party_get_data_pointer(party_index);
+        party_unit_t* party_unit = main_party_get_unit(party_index);
 
         if (party_unit->party_id != PARTY_ID_NONE) {
             battle_stats_t* unit;
@@ -108,7 +110,7 @@ s32 require_party_save_battle_units_and_find_join_candidates(void) {
                     s32 script_variant;
                     unit->unit_flags &= ~(UNIT_FLAG_SAVE_FORMATION | UNIT_FLAG_LOAD_FORMATION);
                     g_require_party_affected_unit_message_args[g_require_party_affected_unit_count] = unit->unit_id;
-                    script_variant = battle_script_get_variable(script_index) & 7;
+                    script_variant = script_get_variable(script_index) & 7;
                     prompt_count++;
                     count = g_require_party_affected_unit_count;
                     g_require_party_affected_unit_message_ids[count]

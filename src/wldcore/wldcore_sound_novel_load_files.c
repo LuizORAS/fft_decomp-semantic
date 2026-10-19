@@ -11,12 +11,12 @@ void wldcore_sound_novel_load_files(s32 chapter) {
     wldcore_file_request_read(&g_main_file_cd_state,
         g_wldcore_sound_novel_script_sector_offsets[chapter] + DISC_SECTOR_WORLD_SNPLBIN_BIN,
         g_wldcore_sound_novel_script_sector_offsets[chapter + 1] - g_wldcore_sound_novel_script_sector_offsets[chapter],
-        g_main_save_slot_buffer);
+        &g_main_save_slot_buffer);
     wldcore_file_wait_for_load();
     wldcore_file_request_read(&g_main_file_cd_state,
         g_wldcore_sound_novel_text_sector_offsets[chapter] + DISC_SECTOR_WORLD_SNPLMES_BIN,
         g_wldcore_sound_novel_text_sector_offsets[chapter + 1] - g_wldcore_sound_novel_text_sector_offsets[chapter],
         g_wldcore_message_buffer);
-    g_world_text_section_pointers[TEXT_SECTION_MESSAGES] = g_wldcore_message_buffer;
+    g_text_section_pointers[TEXT_SECTION_MESSAGES] = g_wldcore_message_buffer;
     g_wldcore_loaded_message_block = -1;
 }

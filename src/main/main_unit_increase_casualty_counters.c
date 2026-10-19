@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/main.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Count a unit lost for good, when its death counter runs out and it becomes a Crystal or Treasure
@@ -11,9 +11,9 @@ void main_unit_increase_casualty_counters(battle_stats_t* unit) {
 
     id = (unit->initial_team_flags & BATTLE_TEAM_MASK) != BATTLE_TEAM_BLUE ? EVENT_SCRIPT_VAR_INJURED
                                                                            : EVENT_SCRIPT_VAR_CASUALTIES;
-    count = battle_script_get_variable(id);
+    count = script_get_variable(id);
     if (count < 0x270F) {
         count++;
     }
-    battle_script_set_variable(id, count);
+    script_set_variable(id, count);
 }

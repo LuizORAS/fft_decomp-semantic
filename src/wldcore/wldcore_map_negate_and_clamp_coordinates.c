@@ -2,12 +2,12 @@
 
 /* The camera origin that centres a map position: the position negated and clamped to the scroll
  * limits (WLDCORE_SCROLL_MIN/MAX_X and _Y). */
-void wldcore_map_negate_and_clamp_coordinates(const s16* input, wldcore_map_clamped_point32_t* output) {
+void wldcore_map_negate_and_clamp_coordinates(const SVECTOR* input, VECTOR* output) {
     s32 x;
     s32 y;
 
-    x = -input[0];
-    y = -input[1];
+    x = -input->vx;
+    y = -input->vy;
     if (x < WLDCORE_SCROLL_MIN_X) {
         x = WLDCORE_SCROLL_MIN_X;
     }
@@ -20,6 +20,6 @@ void wldcore_map_negate_and_clamp_coordinates(const s16* input, wldcore_map_clam
     if (y > WLDCORE_SCROLL_MAX_Y) {
         y = WLDCORE_SCROLL_MAX_Y;
     }
-    output->x = x;
-    output->y = y;
+    output->vx = x;
+    output->vy = y;
 }

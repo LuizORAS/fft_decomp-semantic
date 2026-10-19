@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Clear the range and mark of all 512 tile panels. */

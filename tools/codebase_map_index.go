@@ -23,6 +23,7 @@ type mapInstance struct {
 
 type mapFunction struct {
 	name      string
+	symbol    string // C definition name: the source_symbol of a shared source
 	source    string // repo-relative path
 	asm       string // why the function is standalone assembly
 	instances []mapInstance
@@ -208,7 +209,7 @@ func (index *codebaseIndex) addConfigFunctions() {
 			f := &m.Functions[position]
 			entry := index.functions[f.Name]
 			if entry == nil {
-				entry = &mapFunction{name: f.Name, source: m.sourceOf(f), asm: f.Asm}
+				entry = &mapFunction{name: f.Name, symbol: f.sourceSymbol(), source: m.sourceOf(f), asm: f.Asm}
 				index.functions[f.Name] = entry
 				if _, seen := index.functionBySource[entry.source]; !seen {
 					index.functionBySource[entry.source] = f.Name
@@ -556,7 +557,7 @@ func (index *codebaseIndex) scanFunction(root string, f *mapFunction) error {
 		if err != nil {
 			return fmt.Errorf("%s: %w", f.source, err)
 		}
-		if !definition || !definesSymbol(statement, f.name) {
+		if !definition || !definesSymbol(statement, f.definitionName()) {
 			start = next
 			continue
 		}
@@ -572,7 +573,16 @@ func (index *codebaseIndex) scanFunction(root string, f *mapFunction) error {
 		f.locals = index.declaredNames(f, tokens[start:next])
 		return nil
 	}
-	return fmt.Errorf("%s: no definition of %s", f.source, f.name)
+	return fmt.Errorf("%s: no definition of %s", f.source, f.definitionName())
+}
+
+// definitionName is the name its source defines: a shared source defines
+// its source_symbol for every row that uses it.
+func (f *mapFunction) definitionName() string {
+	if f.symbol != "" {
+		return f.symbol
+	}
+	return f.name
 }
 
 func definesSymbol(statement []cToken, name string) bool {

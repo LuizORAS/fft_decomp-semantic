@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Ally-only and enemy-only abilities (CAN_TARGET_ALLIES, CAN_TARGET_ENEMIES): take out of the area

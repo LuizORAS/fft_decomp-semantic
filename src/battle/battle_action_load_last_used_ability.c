@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Return the last ability id kept in the reaction snapshot (g_battle_action_saved_ability_id, part

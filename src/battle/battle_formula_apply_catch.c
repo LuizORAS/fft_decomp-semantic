@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Catch the thrown weapon when the target's Brave-based reaction roll succeeds. */
@@ -16,10 +17,10 @@ void battle_formula_apply_catch(void) {
     if (g_battle_action_attacker->job_id == JOB_ID_MIME)
         return;
     unit = g_battle_action_target;
-    if ((unit->reaction_abilities[3] & BATTLE_REACTION_SET_4_CATCH) == 0)
+    if ((unit->ability_flags.reaction[3] & BATTLE_REACTION_SET_4_CATCH) == 0)
         return;
     chance = 0x64 - unit->brave;
-    /* The target stores the accuracy as a halfword (0x2a..0x2b). */
+    /* The target stores the accuracy as a 16-bit value (0x2a..0x2b). */
     g_battle_action_target_data->attack_accuracy = chance;
     if (chance != 0) {
         if (battle_reaction_fails_brave_roll(unit) != 0)

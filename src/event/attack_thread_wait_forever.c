@@ -1,8 +1,9 @@
 #include "fft/event_attack.h"
+#include "fft/thread.h"
 
 /* Park this event thread while allowing the scheduler to continue. */
 void attack_thread_wait_forever(void) {
     while (1) {
-        battle_thread_yield();
+        thread_yield();
     }
 }

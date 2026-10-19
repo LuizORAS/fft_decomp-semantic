@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Return requested_thread_id when it is a slot number (below 16); otherwise the first stopped
@@ -6,7 +6,7 @@
 s32 battle_thread_resolve_id(s32 requested_thread_id) {
     s32 i;
 
-    if (requested_thread_id < NATIVE_THREAD_SLOT_COUNT) {
+    if (requested_thread_id < THREAD_SLOT_COUNT) {
         return requested_thread_id;
     }
     i = 1;
@@ -15,6 +15,6 @@ s32 battle_thread_resolve_id(s32 requested_thread_id) {
             return i;
         }
         i++;
-    } while (i < NATIVE_THREAD_SLOT_COUNT);
-    battle_thread_exit_current();
+    } while (i < THREAD_SLOT_COUNT);
+    thread_exit_current();
 }

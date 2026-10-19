@@ -2,7 +2,7 @@
 
 /* WORLD twin of battle_menu_select_icon_cluts. */
 void world_menu_select_icon_cluts(world_menu_icon_sprites_t* menu) {
-    if (world_thread_is_previous_running() != 0 || g_world_menu_input_lock_mode == 1) {
+    if (world_thread_is_previous_running() != 0 || g_menu_input_lock_mode == 1) {
         menu->sprites[0].clut = 0x7D3C;
         menu->sprites[1].clut = 0x7DFC;
         menu->sprites[2].clut = 0x7E3C;

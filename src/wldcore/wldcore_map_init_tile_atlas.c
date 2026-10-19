@@ -4,7 +4,7 @@
 #include "psx/types.h"
 
 /* Lay out the world map's tile grid and reset its camera, once per visit from
- * wldcore_system_init_subsystems. Each of the 13 x 17 grid corners takes the next six-word tile descriptor
+ * wldcore_system_init_subsystems. Each of the 13 x 17 grid corners takes the next tile descriptor of six 32-bit values
  * (texture page x and y, texture u and v, width, height): the corners run from (-256, -192) by the
  * tile sizes, and a tile with no width or height is empty. A restart keeps the grid. The camera gets
  * scale ONE and no rotation or offset; then the map frame and root menu frame windows are appended
@@ -15,12 +15,12 @@
  * Layout:
  *  - 0x8009f2d0 g_wldcore_map_projection_scale is a VECTOR;
  *    wldcore_map_project_and_cull_tiles reaches it as rotation - 0x10 off
- *    g_wldcore_map_projection_rotation_bytes.
+ *    g_wldcore_map_projection_rotation.
  *  - g_wldcore_map_projection_rotation is the SVECTOR view of 0x8009f2e0
  *    (three `sh` stores at +0/+2/+4); the byte view keeps its own name.
  *  - The 24-byte tile source table is reached through the pointer cell
- *    g_wldcore_map_tile_descriptors. The target indexes it by word
- *    (base + k*4, k += 6), not by record, so it is an s32* with a word index.
+ *    g_wldcore_map_tile_descriptors. The target indexes it by 32-bit value
+ *    (base + k*4, k += 6), not by record, so it is an s32* with an index.
  *
  * Shapes the bytes depend on:
  *  - `.map_x`/`.map_y` are written through one loop-invariant s32* to element
@@ -43,10 +43,10 @@
  *    first in the outer preheader. */
 void wldcore_map_init_tile_atlas(void) {
     s32* descriptor;
-    s32* wpos;
-    s32* wpos2;
-    wldcore_window_record_t* rec;
-    wldcore_window_record_t* rec2;
+    open_point32_t* wpos;
+    open_point32_t* wpos2;
+    world_animated_render_record_t* rec;
+    world_animated_render_record_t* rec2;
     s32* pos;
     s32 map_window_index;
     s32 menu_window_index;
@@ -110,10 +110,10 @@ void wldcore_map_init_tile_atlas(void) {
     g_wldcore_map_window_index = map_window_index;
     g_wldcore_window_records[map_window_index].sequence = WLDCORE_ANIM_SEQUENCE_MAP_FRAME;
     g_wldcore_window_records[map_window_index].priority = 13;
-    wpos = &g_wldcore_window_records[map_window_index].position.x;
+    wpos = &g_wldcore_window_records[map_window_index].position;
     rec = &g_wldcore_window_records[map_window_index];
-    wpos[0] = 0;
-    wpos[1] = 8;
+    wpos->x = 0;
+    wpos->y = 8;
     rec->anim_counter = 0;
     g_wldcore_window_records[map_window_index].frame_index = 0;
 
@@ -122,10 +122,10 @@ void wldcore_map_init_tile_atlas(void) {
     g_wldcore_menu_stack_types[0] = menu_window_index;
     g_wldcore_window_records[menu_window_index].sequence = WLDCORE_ANIM_SEQUENCE_ROOT_MENU_FRAME;
     g_wldcore_window_records[menu_window_index].priority = 13;
-    wpos2 = &g_wldcore_window_records[menu_window_index].position.x;
+    wpos2 = &g_wldcore_window_records[menu_window_index].position;
     rec2 = &g_wldcore_window_records[menu_window_index];
-    wpos2[0] = -4;
-    wpos2[1] = 8;
+    wpos2->x = -4;
+    wpos2->y = 8;
     rec2->anim_counter = 0;
     g_wldcore_window_records[menu_window_index].frame_index = 0;
 

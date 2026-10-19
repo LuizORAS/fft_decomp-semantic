@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Initialize one battle slot from the current party entry.
  *
@@ -9,7 +9,7 @@ s32 battle_unit_init_party_member_battle_data(s32 unused0, s32 unused1, s32 unit
 
     unit = &g_battle_unit_stats[unit_index];
     formation_id = g_main_unit_deployed_coords->party_id;
-    unit->misc_unit_id = unit_index;
+    unit->battle_id = unit_index;
     if (main_unit_init_from_party_slot(unit, formation_id, 0) != 0) {
         return -1;
     }

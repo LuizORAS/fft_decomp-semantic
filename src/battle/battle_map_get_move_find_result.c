@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_script.h"
+#include "fft/script.h"
 
 /* Fill and return the Move-Find result record (g_battle_move_find_result_flags and the bytes after
  * it) for tile (x, y, layer): BATTLE_MOVE_FIND_RESULT_OCCUPIED and the unit id when a unit stands
@@ -11,7 +13,6 @@ battle_move_find_result_data_t* battle_map_get_move_find_result(s32 x, u8 y, u8 
     s32 unit;
     s32 i;
     s32 trap;
-    u8 position;
     u8* result;
 
     trap = BATTLE_TRAP_ID_NONE;
@@ -28,15 +29,14 @@ battle_move_find_result_data_t* battle_map_get_move_find_result(s32 x, u8 y, u8 
     }
     for (i = 0; i < 4; i++) {
         tile = &g_battle_current_map_move_find_item_data.entries[i];
-        position = tile->position;
-        if ((position >> 4) == (u8)x && (position & 0xF) == y && (tile->flags >> 7) == layer) {
+        if (tile->x == (u8)x && tile->y == y && tile->elevation == layer) {
             break;
         }
     }
     if (i != 4) {
         g_battle_move_find_entry_index = i;
         if (!(tile->flags & MAP_MOVE_FIND_ENTRY_NO_ITEM)) {
-            if (battle_map_calculate_move_find_item_flag(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), i, 0)
+            if (battle_map_calculate_move_find_item_flag(script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), i, 0)
                 != 0) {
                 g_battle_move_find_result_flags |= BATTLE_MOVE_FIND_RESULT_ITEM;
                 g_battle_move_find_rare_item_id = tile->rare_item_id;
@@ -60,5 +60,5 @@ battle_move_find_result_data_t* battle_map_get_move_find_result(s32 x, u8 y, u8 
             }
         }
     }
-    return (battle_move_find_result_data_t*)&g_battle_move_find_result_flags;
+    return &g_move_find_tile_result;
 }

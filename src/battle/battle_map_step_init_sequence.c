@@ -1,4 +1,10 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_script.h"
+#include "fft/menu.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Run one step of the map load of the MAP_INITIALIZE states (battle_state_handle_map_init_state,
@@ -9,7 +15,7 @@
  * coordinates the deployment left (g_main_deployed_unit_map_coordinates). `unused_18` reproduces the
  * target's unreferenced frame slot at sp+0x18.
  *
- * Jump table: .rodata 0x80068260, 13 words. */
+ * Jump table: .rodata 0x80068260, 13 entries. */
 s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
     s32 result;
     u8 unused_18[4];
@@ -21,9 +27,9 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         step++;
         battle_camera_init_defaults();
         battle_map_init_palette_state();
-        battle_map_load_palette_data(g_battle_map_weather_particle_palette, MAP_CLUT_ROW_SPRITES, 0, 0);
+        battle_map_load_palette_data(&g_battle_map_weather_particle_palette, MAP_CLUT_ROW_SPRITES, 0, 0);
         g_main_gfx_unit_graphics_load_queue.count = 0;
-        battle_menu_request_open_small();
+        menu_request_open_small();
         break;
     case 1:
         if (battle_menu_poll_small_load() == 0) {
@@ -63,7 +69,7 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         }
         break;
     case 8:
-        battle_unit_build_deployed_units_data((battle_deployed_coords_t*)g_main_deployed_unit_map_coordinates, 0);
+        battle_unit_build_deployed_units_data(g_main_deployed_unit_map_coordinates, 0);
         step++;
         break;
     case 9:
@@ -72,7 +78,7 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         break;
     case 11:
         if (g_main_system_frontend_world_result == 1
-            || battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
+            || script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
             main_sound_unload_current_scenario_music();
             /* Called with no argument: the sound id is whatever
              * main_sound_unload_current_scenario_music left in $a0. */

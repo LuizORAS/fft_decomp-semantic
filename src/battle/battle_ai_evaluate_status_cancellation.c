@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /* Look for an ability that removes status_id (Dead, Petrify or Blood Suck) from unit_id, for Protect
  * allies. Dead and Petrify are tried only when the decision record marks the unit dead without Reraise
@@ -43,19 +45,15 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_SPECIFIC, unit_id) != 0) {
         for (ai->ability_counter = 0; ai->ability_counter < BATTLE_AI_ABILITY_LIST_LENGTH; ai->ability_counter++) {
             entry = &ai->ability_lists[ai->acting_unit_compact_index][ai->ability_counter];
-            if (entry->skillset_flags.bytes.skillset == SKILLSET_ID_NONE)
+            if (entry->skillset == SKILLSET_ID_NONE)
                 break;
             battle_ai_load_ability_entry(entry);
             flags = ai->considered_ability.ai_flags.word;
             if (!(flags & BATTLE_AI_ABILITY_CANCEL_STATUS))
                 continue;
 
-            status_byte = status_id;
-            if (status_id < 0)
-                status_byte = status_id + 7;
-            status_byte >>= 3;
-            if (!(ai->considered_ability.parameters.bytes.status_infliction[status_byte]
-                    & (0x80 >> (status_id - status_byte * 8))))
+            status_byte = status_id / 8;
+            if (!(ai->considered_ability.parameters.fields.status_infliction[status_byte] & (0x80 >> (status_id % 8))))
                 continue;
             if ((flags & BATTLE_AI_ABILITY_AFFECTED_BY_FAITH)
                 && (unit->status_sets.innate[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INNOCENT)]
@@ -83,8 +81,7 @@ s32 battle_ai_evaluate_status_cancellation(s32 unit_id, s32 status_id) {
     }
 
     if (ai->ranked_actions[0].rank.base_hit_percent != 0) {
-        battle_ai_transfer_halfword_values(
-            &ai->selected_action, &ai->ranked_actions[0], sizeof(battle_ai_action_data_t));
+        battle_mem_copy_u16_values(&ai->selected_action, &ai->ranked_actions[0], sizeof(battle_ai_action_data_t));
         return 2;
     }
     if (g_battle_ai_status_candidate_count == 0)

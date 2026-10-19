@@ -26,9 +26,7 @@ void card_gfx_init_contexts(card_graphics_context_t* contexts, u32* otags, s32 u
         SetDefDrawEnv(&g_card_gfx_context_base[i].draw_environment, 0, i * 0xf0, 0x100, 0xf0);
         SetDefDispEnv(&g_card_gfx_context_base[i].display_environment, 0, i == 0 ? 0xf0 : 0, 0x100, 0xf0);
         g_card_gfx_context_base[i].draw_environment.isbg = 0;
-        g_card_gfx_context_base[i].draw_environment.r0 = 0;
-        g_card_gfx_context_base[i].draw_environment.g0 = 0;
-        g_card_gfx_context_base[i].draw_environment.b0 = 0;
+        setRGB0(&g_card_gfx_context_base[i].draw_environment, 0, 0, 0);
         g_card_gfx_context_base[i].draw_environment.ofs[0] = -0x80;
     }
     card_gfx_submit_frame_and_swap_buffers(0, -1);

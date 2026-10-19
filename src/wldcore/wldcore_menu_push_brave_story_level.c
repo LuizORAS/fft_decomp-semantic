@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Push the Brave Story menu (level BRAVE_STORY): the main, upper, lower and side windows, one text row
@@ -8,8 +9,8 @@
  *
  * The unused 48-byte local reproduces the target's frame size. */
 void wldcore_menu_push_brave_story_level(void) {
-    wldcore_window_render_bounds16_t bounds;
-    wldcore_point32_t point;
+    RECT bounds;
+    open_point32_t point;
     s32 index;
     s32 value;
     s32 i;
@@ -57,16 +58,15 @@ void wldcore_menu_push_brave_story_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.frame_render = index;
-    bounds.position.x = 0;
-    bounds.position.y = 0;
-    bounds.dimensions.x = 0x5C;
-    bounds.dimensions.y
-        = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count * 0x10 + 0x10;
+    bounds.x = 0;
+    bounds.y = 0;
+    bounds.w = 0x5C;
+    bounds.h = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count * 0x10 + 0x10;
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;
     {
-        wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
+        open_point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = -0x78;
         base->y = -0x28;
     }
@@ -85,25 +85,25 @@ void wldcore_menu_push_brave_story_level(void) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.content_render = index;
-    value = world_script_get_variable(EVENT_SCRIPT_VAR_INJURED);
+    value = script_get_variable(EVENT_SCRIPT_VAR_INJURED);
     if (value >= 10000) {
         value = 9999;
     }
-    g_world_text_substitution_values[0] = value;
-    value = world_script_get_variable(EVENT_SCRIPT_VAR_CASUALTIES);
+    g_text_substitution_values[0] = value;
+    value = script_get_variable(EVENT_SCRIPT_VAR_CASUALTIES);
     if (value >= 10000) {
         value = 9999;
     }
-    g_world_text_substitution_values[1] = value;
-    bounds.position.x = 0x80;
-    bounds.position.y = 0x40;
-    bounds.dimensions.x = 0x5C;
-    bounds.dimensions.y = 0x30;
+    g_text_substitution_values[1] = value;
+    bounds.x = 0x80;
+    bounds.y = 0x40;
+    bounds.w = 0x5C;
+    bounds.h = 0x30;
     wldcore_window_init_render_record_image(
         index, bounds, 0, WLDCORE_TEXT_ID_INJURED_CASUALTIES, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
     {
-        wldcore_point32_t* base = &g_wldcore_window_render_records[index].base;
+        open_point32_t* base = &g_wldcore_window_render_records[index].base;
         base->x = 0x1C;
         base->y = -0x28;
     }

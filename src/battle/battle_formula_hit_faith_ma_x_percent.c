@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x0A, 38 status spells (Poison, Frog, Slow, Stop, Don't Move, Sleep, Petrify, Silence
  * Song, Dispel Magic, Berserk, Don't Act and others): the magical evade check and hit chance (MA + X

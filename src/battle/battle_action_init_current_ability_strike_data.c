@@ -1,16 +1,6 @@
 #include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
-
-/* g_battle_action_current_ability.primary_weapon_id and secondary_weapon_id: the final
- * eligibility test reads the primary/secondary pair as one halfword and the
- * primary alone as a byte, off one shared base register. */
-typedef union {
-    u16 pair;
-    u8 primary;
-} battle_action_ability_weapon_ids_t;
-
-#define WEAPON_IDS (*(battle_action_ability_weapon_ids_t*)&g_battle_action_current_ability.primary_weapon_id)
 
 /* Set up the strike data of the unit's action: one strike, counter 0, no pending weapon spell or
  * knockback; in a primary action the EXP/JP and level-up flags are cleared too. The two weapon hands
@@ -49,7 +39,7 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
         g_battle_action_current_ability.job_level_gained_flag = 0;
     }
 
-    menu_type = g_main_action_menu_types_by_skillset[unit->last_skillset_id];
+    menu_type = g_main_action_menu_types_by_skillset[unit->action_command.skillset_id];
     g_battle_loaded_ability_flags_1 = 0;
     g_battle_action_current_ability.primary_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
     g_battle_action_current_ability.secondary_weapon_id = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
@@ -60,12 +50,12 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
     }
 
     if (menu_type == ACTION_MENU_TYPE_WEAPON_INVENTORY) {
-        g_battle_action_current_ability.primary_weapon_id = unit->used_item_or_equipment;
+        g_battle_action_current_ability.primary_weapon_id = unit->action_command.item_or_equipment;
         return;
     }
 
     if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_MONSTER) {
-        ability_id = unit->last_ability_id;
+        ability_id = unit->action_command.ability_id;
         if (ability_id >= 0 || ability_id < ABILITY_ID_ITEM_FIRST) {
             data = &g_main_ability_range_data[ability_id];
             g_battle_loaded_ability_flags_1 = data->flags_1;
@@ -93,7 +83,7 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
         }
     }
 
-    support = unit->support_abilities[2];
+    support = unit->ability_flags.support[2];
     if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
         || (unit->unit_flags & UNIT_FLAG_MONSTER)) {
@@ -101,8 +91,9 @@ void battle_action_init_current_ability_strike_data(battle_stats_t* unit) {
         g_battle_action_current_ability.secondary_weapon_id = ITEM_ID_NONE;
     }
 
-    if (WEAPON_IDS.pair == 0xffff
-        || (WEAPON_IDS.primary != ITEM_ID_NONE
+    if ((g_battle_action_current_ability.primary_weapon_id == ITEM_ID_NONE
+            && g_battle_action_current_ability.secondary_weapon_id == ITEM_ID_NONE)
+        || (g_battle_action_current_ability.primary_weapon_id != ITEM_ID_NONE
             && g_battle_action_current_ability.secondary_weapon_id != ITEM_ID_NONE)) {
         if (support & BATTLE_SUPPORT_SET_3_TWO_SWORDS) {
             g_battle_action_current_ability.strike_count = 2;

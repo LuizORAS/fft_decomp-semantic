@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /**
@@ -14,24 +17,21 @@ s32 battle_menu_resolve_selection(void) {
     s32 index;
     s32 i;
     s32 menu;
-    const world_menu_selection_view_t* selection;
 
-    /* The object is four halfwords; command and option use their slots'
-     * low bytes and item uses the full halfword at slot 2. */
-    selection = (const world_menu_selection_view_t*)g_battle_menu_pending_selection;
-    command = selection->command;
-    option = selection->option;
-    item = selection->item;
-    g_battle_menu_selected_command = command;
+    command = (u8)g_menu_pending_selection[0];
+    option = (u8)g_menu_pending_selection[1];
+    item = (u16)g_menu_pending_selection[2];
+    g_battle_menu_selected_command.kind = command;
     index = option;
     if (command != 0x12 && (command & 0xFE) != 0xFE) {
-        menu = g_battle_menu_current_id;
+        menu = g_menu_current_id;
         for (i = 0; i < 31; i++) {
             if (menu == g_battle_menu_command_maps[i].menu_id) {
                 if (command != 0xFF) {
                     if (menu == BATTLE_MENU_ID_CRYSTAL_PICKUP) {
                         command = g_battle_crystal_pickup_action;
-                        g_battle_menu_selected_action.item_id = g_battle_crystal_pickup_item;
+                        /* Item selection updates only the low byte of the 16-bit command field. */
+                        *(u8*)&g_battle_menu_selected_action.item_or_equipment = g_battle_crystal_pickup_item;
                         option = MENU_SELECTION_NONE;
                     } else if (menu == 0x19 || menu >= 0x64) {
                         command = *(g_battle_menu_command_maps[i].map + option + 1);
@@ -54,7 +54,7 @@ s32 battle_menu_resolve_selection(void) {
             g_battle_menu_selected_action.targeting_type = command;
         }
         if (command == 1) {
-            g_battle_menu_restore_pending = 1;
+            g_menu_restore_pending = 1;
         }
         if (command == 12) {
             if (option < 3) {
@@ -69,24 +69,24 @@ s32 battle_menu_resolve_selection(void) {
             item = MENU_SELECTION_NONE;
             g_battle_menu_resolved_command = command;
         }
-        g_battle_menu_selected_command = command;
+        g_battle_menu_selected_command.kind = command;
         if ((option & 0xFE) != 0xFE) {
-            option = g_battle_action_menu_skillsets[index];
+            option = g_action_menu_skillsets[index];
             /* Attack/Defend, Equip Change/0x04 and Elemental/Jump take no list entry. */
             if (option == SKILLSET_ID_ATTACK || option == SKILLSET_ID_DEFEND || option == SKILLSET_ID_EQUIP_CHANGE
                 || option == SKILLSET_ID_BLANK_04 || option == SKILLSET_ID_ELEMENTAL || option == SKILLSET_ID_JUMP) {
                 g_battle_menu_selected_action.ability_id = 0;
                 item = MENU_SELECTION_NONE;
-            } else if (option == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING && g_battle_menu_monster_skillset_flag == 0) {
+            } else if (option == ACTION_MENU_PSEUDO_SKILLSET_ANYTHING && g_menu_skillset_build_result == 0) {
                 item = g_battle_menu_anything_ability_id;
             } else {
-                item = g_battle_ai_workspace_ptr->ability_list.ids[item] & 0x1FF;
+                item = g_ai_workspace_ptr->ability_list.ids[item] & 0x1FF;
             }
-            g_battle_menu_selected_action.skillset = option;
+            g_battle_menu_selected_action.skillset_id = option;
             g_battle_menu_resolved_skillset = option;
             if (item != MENU_SELECTION_NONE) {
                 if (option == SKILLSET_ID_ITEM || option == SKILLSET_ID_DRAW_OUT || option == SKILLSET_ID_THROW) {
-                    g_battle_menu_selected_action.item_id = item;
+                    *(u8*)&g_battle_menu_selected_action.item_or_equipment = item;
                 } else {
                     g_battle_menu_selected_action.ability_id = item;
                 }

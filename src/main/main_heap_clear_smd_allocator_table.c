@@ -3,8 +3,8 @@
 
 /* Free every SMD heap cell; main_sound_open_generic_sfx calls it. */
 void main_heap_clear_smd_allocator_table(void) {
-    int index = 15;
-    u8* entry = &g_main_heap_smd_allocator_table[15];
+    int index = MAIN_HEAP_SMD_PAGE_COUNT - 1;
+    u8* entry = &g_main_heap_smd_allocator_table[MAIN_HEAP_SMD_PAGE_COUNT - 1];
 
     for (; index >= 0; index--, entry--) {
         *entry = 0;

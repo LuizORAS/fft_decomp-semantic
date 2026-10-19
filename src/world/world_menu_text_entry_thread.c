@@ -1,3 +1,5 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -6,22 +8,26 @@
  * thread for it, then idles until input arrives or the previous thread's
  * third parameter is raised. */
 void world_menu_text_entry_thread(void) {
-    native_thread_t* thread = &g_world_threads[g_world_thread_current_id];
+    thread_t* thread = &g_threads[g_thread_current_id];
     world_menu_entry_t* entry = (world_menu_entry_t*)thread->function_parameter_1;
+    world_menu_text_binding_t* binding;
     s32 text_thread;
     u16 second;
     s32 speaker_id;
     u16 text_id;
+    world_menu_text_binding_t* prepare_binding;
 
-    entry->text_binding->prepare();
-    g_world_menu_list_controller_input = world_input_get_menu_controller(0);
+    prepare_binding = entry->context;
+    prepare_binding->prepare();
+    g_world_menu_list_controller_input = input_get_menu_controller(0);
     text_id = entry->text_id;
     second = entry->header_id;
-    text_thread = entry->text_binding->text_thread_id;
-    speaker_id = entry->text_binding->speaker_id;
-    world_thread_start(text_thread, world_text_character_handling_thread);
-    world_thread_set_parameters(text_thread, second, text_id, speaker_id);
-    world_thread_wait_until_inactive(text_thread);
+    binding = entry->context;
+    text_thread = binding->text_thread_id;
+    speaker_id = binding->speaker_id;
+    thread_start(text_thread, world_text_character_handling_thread);
+    thread_set_parameters(text_thread, second, text_id, speaker_id);
+    thread_wait_until_inactive(text_thread);
     *g_world_menu_list_controller_input = PSX_PAD_CIRCLE;
     while (1) {
         world_menu_handle_entry_confirm(entry, 0);
@@ -31,7 +37,7 @@ void world_menu_text_entry_thread(void) {
         if ((thread - 1)->function_parameter_3 != 0) {
             break;
         }
-        world_thread_wait_frames(1);
+        thread_wait_frames(1);
     }
-    world_thread_exit_current();
+    thread_exit_current();
 }

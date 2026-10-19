@@ -1,30 +1,21 @@
-#include "fft/world.h"
-#include "psx/types.h"
+#include "fft/thread.h"
 
-/* Hand-assembled in the retail binary: the loads go through $at as a base
- * register (`lui at / move at,at / lw t0,off(at)`), use $t0/$t1 scratch and a
- * trapping `add`, none of which GCC emits. The $1 pin is therefore required.
- * The target uses $at as an ordinary scratch register here, which the assembler
- * warns about by default ("used $at without .set noat"). The directive emits no
- * instructions, so it silences the warning without affecting the output. */
+/* The original entry is hand-assembled: its loads go through $at as a base register
+ * (`lui at / move at,at / lw t0,off(at)`) and use fixed $t0/$t1 scratch registers and a trapping
+ * `add`, none of which GCC emits. The directive emits no instructions; it silences the assembler's
+ * warning about $at without .set noat. */
 __asm__(".set noat");
 
 /* Return the current thread's parameter 1; world_thread_get_current_parameter_2 and _3
  * return the others. */
-void* world_thread_get_current_parameter_1(void) {
-    register void* global_pointer __asm__("$1");
+s32 world_thread_get_current_parameter_1(void) {
     register s32 thread_offset __asm__("$8");
-    register u8* thread_array __asm__("$9");
+    register thread_t* threads __asm__("$9");
+    register thread_t* thread __asm__("$8");
 
-    global_pointer = (void*)0x801d0000;
-    __asm__("move $1,$1" : "=r"(global_pointer) : "0"(global_pointer));
-    /* Raw: $at holds a fabricated lui base, not a struct; the displacements
-     * address the current-thread id and the g_world_threads pointer. */
-    thread_offset = *(s32*)((u8*)global_pointer - 0x2e90);
+    THREAD_LOAD_GLOBAL(thread_offset, g_thread_current_id);
     __asm__("nop\nsll $8,$8,10" : "=r"(thread_offset) : "0"(thread_offset));
-    global_pointer = (void*)0x80150000;
-    __asm__("move $1,$1" : "=r"(global_pointer) : "0"(global_pointer));
-    thread_array = *(u8**)((u8*)global_pointer + 0x327c);
-    __asm__("nop\nadd $8,$8,$9" : "=r"(thread_offset) : "0"(thread_offset), "r"(thread_array));
-    return (void*)((native_thread_t*)thread_offset)->function_parameter_1;
+    THREAD_LOAD_GLOBAL(threads, g_threads);
+    __asm__("nop\nadd %0,%1,%2" : "=r"(thread) : "0"(thread_offset), "r"(threads));
+    return thread->function_parameter_1;
 }

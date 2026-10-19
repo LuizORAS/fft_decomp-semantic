@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Build the Bar's menu rows into its list level: Rumors and Leave always, Propositions while
@@ -10,11 +11,11 @@
  * access raises `index` above `level` in allocation priority. */
 void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     s32 index;
-    wldcore_point32_t point;
-    wldcore_window_render_bounds16_t bounds;
+    open_point32_t point;
+    RECT bounds;
     s32 unused[8];
     wldcore_menu_cursor_state_t* cursor;
-    wldcore_point32_t* base;
+    open_point32_t* base;
     wldcore_window_render_record_t* render;
     s32 i;
 
@@ -30,7 +31,7 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     g_wldcore_window_records[index].frame_index = 0;
     level->entries[0] = WLDCORE_BAR_MENU_ROW_RUMORS;
     level->entry_count = 1;
-    if (world_script_get_variable(EVENT_SCRIPT_VAR_PROPOSITIONS_ENABLED) != 0) {
+    if (script_get_variable(EVENT_SCRIPT_VAR_PROPOSITIONS_ENABLED) != 0) {
         level->entries[1] = WLDCORE_BAR_MENU_ROW_AVAILABLE_PROPOSITIONS;
         level->entry_count++;
     }
@@ -45,10 +46,10 @@ void wldcore_bar_build_menu_rows(wldcore_menu_list_window_level_t* level) {
     level->entries[level->entry_count] = WLDCORE_BAR_MENU_ROW_LEAVE;
     level->entry_count++;
     index = level->frame_render;
-    bounds.position.x = 0;
-    bounds.position.y = 0;
-    bounds.dimensions.x = 0x48;
-    bounds.dimensions.y = level->entry_count * 0x10 + 0x10;
+    bounds.x = 0;
+    bounds.y = 0;
+    bounds.w = 0x48;
+    bounds.h = level->entry_count * 0x10 + 0x10;
     wldcore_window_build_render_record_image(index, bounds, 0, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
     g_wldcore_window_render_records[index].flags |= WLDCORE_DISPLAY_OBJECT_POP_IN;

@@ -18,6 +18,14 @@ scope:
   - battle_unit_apply_level_up_down_ability()
   - world_unit_update_monster_breeding()
   - world_unit_get_zodiac_for_date()
+  - job_calculate_and_store_unlocks()
+  - job_find_first_for_skillset()
+  - job_get_generic_index()
+  - job_get_skillset()
+  - job_is_special_monster()
+  - menu_job_calculate_next_level_jp_requirement()
+  - menu_job_get_current_level()
+  - menu_job_get_next_level_jp_requirement()
 ---
 
 # Units and Jobs
@@ -29,7 +37,7 @@ sign), what it can do (job levels, JP, unlocked jobs, learned abilities,
 skillsets, reaction, support and movement abilities) and how strong it is
 (level, EXP, Brave, Faith and five raw stats).
 
-- **The roster.** [[g_main_party_data]] holds 20 records: 16 ordinary slots
+- **The roster.** [[g_main_party_units]] holds 20 records: 16 ordinary slots
   and 4 guest slots (16-19). A battle unit is built from a roster record
   ([[main_unit_init_from_party_slot]]) or from an ENTD record
   ([[main_unit_init_from_entd]]), and the roster takes it back after the
@@ -121,7 +129,7 @@ skillsets, reaction, support and movement abilities) and how strong it is
 | Record | What it holds |
 |---|---|
 | [[battle_stats_t]] | A unit in battle (and in WORLD's formation): identity, job, statuses, stats, equipment, abilities, AI data |
-| [[party_data_t]] | A roster record (0x100 bytes, 0xe0 saved): what survives between battles |
+| [[party_unit_t]] | A roster record (0x100 bytes, 0xe0 saved): what survives between battles |
 | [[entd_unit_t]] | An ENTD record (0x28 bytes): a story or random-battle unit, with random markers |
 | [[job_data_t]] | A job (48 bytes, [[g_main_job_data]] at MAIN `0x800610b8`, read through [[g_main_job_data_pointer]]): skillset, innate abilities, equippable types, growths and multipliers, Move, Jump, class evade, status sets, elemental affinities, graphics |
 | [[g_main_job_level_jp_requirements]] | The eight job-level thresholds (MAIN `0x80066184`) |

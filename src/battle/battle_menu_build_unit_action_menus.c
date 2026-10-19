@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Builds a unit's 0xff-terminated action-menu skillset list and loads each
@@ -38,7 +39,7 @@ s32 battle_menu_build_unit_action_menus(s32 unit_id, u8* entries, u8* empty, u8*
         entries[1] = SKILLSET_ID_NONE;
         return 1;
     }
-    supports = unit->support_abilities[3];
+    supports = unit->ability_flags.support[3];
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
         supports = 0;

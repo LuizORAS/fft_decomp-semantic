@@ -50,6 +50,7 @@ void open_prologue_step_crossfade(void) {
                     destination_row_start = reverse_row * OPEN_IMAGE_ROW_STRIDE;
                     fade = g_open_prologue_crossfade_row_flags[row + 2]++;
                     do {
+                        /* An ordinary source-pointer load is hoisted and adds a saved-register frame. */
                         source_pixel = g_open_prologue_crossfade_source[source_row_start + column];
                         destination_pixel = g_open_prologue_crossfade_destination[source_row_start + column];
                         pixel = 0;

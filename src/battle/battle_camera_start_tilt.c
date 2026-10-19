@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* Start a tilt toward the low pitch 0x12e (mode 0) or the high pitch 0x1c0

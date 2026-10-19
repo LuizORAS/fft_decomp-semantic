@@ -12,8 +12,8 @@ extern s32 g_wldcore_map_projection_motion_target_x;
  * progress / distance. Returns 1 while the pan runs, and 0 on the frame it lands, with the origin
  * on the target and the pan's active flag cleared.
  *
- * The final snap goes through the VECTOR view of the target, so the four
- * words copy as one struct assignment. */
+ * The final snap goes through the VECTOR view of the target, so the four 32-bit values
+ * copy as one struct assignment. */
 s32 wldcore_map_step_projection_motion(void) {
     s32 progress;
     s32 distance;
@@ -31,9 +31,9 @@ s32 wldcore_map_step_projection_motion(void) {
     g_wldcore_map_projection_origin.vx = origin_x + delta_x;
     origin_y = g_wldcore_map_projection_motion.origin.vy;
     g_wldcore_map_projection_origin.vy
-        = origin_y + (g_wldcore_map_projection_motion.target.y - origin_y) * progress / distance;
+        = origin_y + (g_wldcore_map_projection_motion.target.vy - origin_y) * progress / distance;
     if (progress >= distance) {
-        g_wldcore_map_projection_origin = *(VECTOR*)&g_wldcore_map_projection_motion.target;
+        g_wldcore_map_projection_origin = g_wldcore_map_projection_motion.target;
         g_wldcore_map_projection_motion.flags ^= WLDCORE_PROJECTION_MOTION_ACTIVE;
         return 0;
     }

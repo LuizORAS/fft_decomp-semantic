@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Mark the in-range tiles, on both layers, on the line from (x, y), that tile included, in

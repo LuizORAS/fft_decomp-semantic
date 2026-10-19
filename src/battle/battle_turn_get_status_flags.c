@@ -1,11 +1,12 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
 #include "psx/types.h"
 
 /* Return the unit's BATTLE_TURN_STATUS flags: CT frozen without an ENTD slot, under a
  * CT-freezing status or as a ridden mount; dead (also incapacitated); otherwise asleep (also
  * incapacitated), Haste and Slow. The retail status data puts Sleep in the CT-freezing set, so
  * the asleep result is never returned. */
-s32 battle_turn_get_status_flags(battle_stats_t* unit) {
+s32 battle_turn_get_status_flags(const battle_stats_t* unit) {
     s32 status1;
     s32 status4;
     s32 status5;

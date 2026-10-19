@@ -1,4 +1,5 @@
 #include "fft/event_etc.h"
+#include "fft/gfx.h"
 #include "psx/types.h"
 
 /* The dimension row of the tile being built. Spelled out at each access: the
@@ -13,7 +14,7 @@
  * half's right edge in the dead `graphic_id` argument. */
 void etc_graphic_build_game_over_polygons(
     s32 graphic_id, s32 fade, s32 dimension_set, s32 reverse_order, POLY_GT4* primitives, s32 color) {
-    etc_graphic_dimensions_t* dimensions;
+    sprite_sheet_frame_t* dimensions;
     POLY_GT4* primitive;
     s32 texture_mode;
     s32 half;
@@ -44,48 +45,43 @@ void etc_graphic_build_game_over_polygons(
 
             if (half == 0) {
                 if (reverse_order == 0) {
-                    primitive->u0 = ROW->u.value + ROW->width.value;
-                    primitive->v0 = ROW->v.value;
-                    primitive->u2 = ROW->u.value;
-                    primitive->v2 = ROW->v.value;
-                    primitive->u1 = ROW->u.value + ROW->width.value;
-                    primitive->v1 = ROW->v.value + fade;
-                    primitive->u3 = ROW->u.value;
-                    primitive->v3 = ROW->v.value + fade;
-                    primitive->x0 = ROW->y.value + 0x100;
-                    primitive->y0 = ROW->x.value + 0x80;
+                    primitive->u0 = ROW->source.x + ROW->source.w;
+                    primitive->v0 = ROW->source.y;
+                    primitive->u2 = ROW->source.x;
+                    primitive->v2 = ROW->source.y;
+                    primitive->u1 = ROW->source.x + ROW->source.w;
+                    primitive->v1 = ROW->source.y + fade;
+                    primitive->u3 = ROW->source.x;
+                    primitive->v3 = ROW->source.y + fade;
+                    primitive->x0 = ROW->offset.y + 0x100;
+                    primitive->y0 = ROW->offset.x + 0x80;
                     graphic_id = fade + 0x100;
-                    primitive->x1 = ROW->y.value + graphic_id;
-                    primitive->y1 = ROW->x.value + 0x80;
-                    primitive->x2 = ROW->y.value + 0x100;
-                    primitive->y2 = ROW->x.value + (ROW->width.value + 0x80);
-                    primitive->x3 = ROW->y.value + graphic_id;
-                    primitive->y3 = ROW->x.value + (ROW->width.value + 0x80);
+                    primitive->x1 = ROW->offset.y + graphic_id;
+                    primitive->y1 = ROW->offset.x + 0x80;
+                    primitive->x2 = ROW->offset.y + 0x100;
+                    primitive->y2 = ROW->offset.x + (ROW->source.w + 0x80U);
+                    primitive->x3 = ROW->offset.y + graphic_id;
+                    primitive->y3 = ROW->offset.x + (ROW->source.w + 0x80U);
                     setRGB0(primitive, color, color, color);
                     setRGB1(primitive, color, color, color);
                     setRGB2(primitive, color, color, color);
                     setRGB3(primitive, color, color, color);
                 }
             } else if (half == 1) {
-                clip = ROW->height.signed_value < fade + 0x20 ? ROW->height.signed_value - fade : 0x20;
+                clip = ROW->source.h < fade + 0x20 ? ROW->source.h - fade : 0x20;
                 if (reverse_order == 0) {
                     fade_x = fade + 0x100;
-                    primitive->u0 = ROW->u.value + ROW->width.value;
-                    primitive->v0 = ROW->v.value + fade;
-                    primitive->u2 = ROW->u.value;
-                    primitive->v2 = ROW->v.value + fade;
-                    primitive->u1 = ROW->u.value + ROW->width.value;
-                    primitive->v1 = ROW->v.value + fade + clip;
-                    primitive->u3 = ROW->u.value;
-                    primitive->v3 = ROW->v.value + fade + clip;
-                    primitive->x0 = ROW->y.value + fade_x;
-                    primitive->y0 = ROW->x.value + 0x80;
-                    primitive->x1 = ROW->y.value + fade_x + clip;
-                    primitive->y1 = ROW->x.value + 0x80;
-                    primitive->x2 = ROW->y.value + fade_x;
-                    primitive->y2 = ROW->x.value + (ROW->width.value + 0x80);
-                    primitive->x3 = ROW->y.value + fade_x + clip;
-                    primitive->y3 = ROW->x.value + (ROW->width.value + 0x80);
+                    primitive->u0 = ROW->source.x + ROW->source.w;
+                    primitive->v0 = ROW->source.y + fade;
+                    primitive->u2 = ROW->source.x;
+                    primitive->v2 = ROW->source.y + fade;
+                    primitive->u1 = ROW->source.x + ROW->source.w;
+                    primitive->v1 = ROW->source.y + fade + clip;
+                    primitive->u3 = ROW->source.x;
+                    primitive->v3 = ROW->source.y + fade + clip;
+                    setXY4(primitive, ROW->offset.y + fade_x, ROW->offset.x + 0x80, ROW->offset.y + fade_x + clip,
+                        ROW->offset.x + 0x80, ROW->offset.y + fade_x, ROW->offset.x + (ROW->source.w + 0x80U),
+                        ROW->offset.y + fade_x + clip, ROW->offset.x + (ROW->source.w + 0x80U));
                     setRGB0(primitive, color, color, color);
                     setRGB1(primitive, 0, 0, 0);
                     setRGB2(primitive, color, color, color);
@@ -97,14 +93,14 @@ void etc_graphic_build_game_over_polygons(
     }
 
     if (reverse_order != 0) {
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[0]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[3]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[2]);
+        gfx_draw_or_append_gpu_primitive(&primitives[1]);
+        gfx_draw_or_append_gpu_primitive(&primitives[0]);
+        gfx_draw_or_append_gpu_primitive(&primitives[3]);
+        gfx_draw_or_append_gpu_primitive(&primitives[2]);
     } else {
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[3]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[2]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[0]);
+        gfx_draw_or_append_gpu_primitive(&primitives[3]);
+        gfx_draw_or_append_gpu_primitive(&primitives[2]);
+        gfx_draw_or_append_gpu_primitive(&primitives[1]);
+        gfx_draw_or_append_gpu_primitive(&primitives[0]);
     }
 }

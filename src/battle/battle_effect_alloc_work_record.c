@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/main.h"
 
 /*
  * Take a work record from the free chain and attach it to state record
@@ -8,9 +9,9 @@
  * record's data (0x0000-0x3000 map to list kinds 0, 2, 4 and 6); other kinds
  * get no data. g_battle_effect_work_record_peak tracks the peak number of records in use.
  */
-effect_work_record_t* battle_effect_alloc_work_record(s16 record_index, s16 kind) {
-    effect_work_record_t* work;
-    effect_record_t* owner;
+battle_effect_work_record_t* battle_effect_alloc_work_record(s16 record_index, s16 kind) {
+    battle_effect_work_record_t* work;
+    battle_effect_record_t* owner;
 
     work = g_battle_effect_free_work_record_head;
     g_battle_effect_work_record_count++;

@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -31,7 +32,7 @@ void world_shop_run_fur_menu_step(void) {
         }
         if (g_world_shop_fur_has_secret_hunt == 0) {
             g_world_shop_menu_step = WORLD_SHOP_STEP_EXIT_FADE;
-            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF82D, 0);
+            thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xF82D, 0);
             return;
         }
         g_world_shop_fur_access_granted = 1;
@@ -39,10 +40,10 @@ void world_shop_run_fur_menu_step(void) {
     }
     if (g_world_shop_fur_waiting_message != 0) {
         if (g_world_input_primary_repeat & (PSX_PAD_TRIANGLE | PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SQUARE)) {
-            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF830, 0);
+            thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xF830, 0);
             g_world_shop_fur_waiting_message = 0;
         }
-    } else if (world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_shop_fur_menu_thread_data) == 0) {
+    } else if (world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, &g_world_shop_fur_menu_thread_data) == 0) {
         world_menu_clear_selection_records();
         if (g_world_menu_selection_results[0] == 0) {
             if (g_world_shop_fur_has_poached_stock != 0) {
@@ -50,7 +51,7 @@ void world_shop_run_fur_menu_step(void) {
                 g_world_shop_menu_step = WORLD_SHOP_STEP_FUR_BUY_LIST;
                 g_world_shop_fur_opened = 0;
             } else {
-                world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF82E, 0);
+                thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xF82E, 0);
                 g_world_shop_fur_waiting_message = 1;
             }
         } else if (g_world_menu_selection_results[0] == 1) {
@@ -58,12 +59,12 @@ void world_shop_run_fur_menu_step(void) {
                 g_world_shop_menu_step = WORLD_SHOP_STEP_FUR_SELL_LIST;
                 g_world_shop_fur_opened = 0;
             } else {
-                world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF845, 0);
+                thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xF845, 0);
                 g_world_shop_fur_waiting_message = 1;
             }
         } else {
             g_world_shop_menu_step = WORLD_SHOP_STEP_EXIT_FADE;
-            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xF831, 0);
+            thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xF831, 0);
             g_world_shop_fur_opened = 0;
         }
     }

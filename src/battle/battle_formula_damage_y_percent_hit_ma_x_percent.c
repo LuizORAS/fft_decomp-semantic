@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x53, Hurricane and Triple Bracelet: the magical evade check and the hit chance MA + X
  * without Faith, then damage of Y% of the target's max HP with the weather and the element, the

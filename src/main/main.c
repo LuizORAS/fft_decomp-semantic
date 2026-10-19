@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* Program entry: boot, save the base stack pointer for main_system_reset_game, then run the
  * game loop, which never returns (the PadStop/StopCallback tail is unreachable). */

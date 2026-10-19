@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x12, Quick: no evade check; hit chance MA + X with both Faiths, then Quick
  * (battle_formula_apply_quick_effect). */

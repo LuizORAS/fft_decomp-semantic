@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* Resolve the pending status changes in unit_id's action record: filter them
@@ -7,14 +9,14 @@
  * (battle_status_remove_control). Returns -1 for an empty slot, else 0.
  *
  * The current target's ten status bytes are saved and restored around it, since the event thread
- * (battle_status_inflict_by_entd_unit_id) can call it in the middle of an action. */
+ * (status_inflict_by_entd_unit_id) can call it in the middle of an action. */
 s32 battle_status_resolve_unit_changes(s32 unit_id, s32 removal_only) {
-    u8 saved[10];
+    unit_action_status_changes_t saved;
 
     if (g_battle_unit_stats[unit_id].entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return -1;
     }
-    main_util_copy_byte_data(g_battle_action_target_data->status_infliction, saved, 10);
+    main_mem_copy_byte_data_source_first(&g_battle_action_target_data->status_changes, &saved, sizeof(saved));
     g_battle_action_current_ability.target_id = unit_id;
     g_battle_action_target = &g_battle_unit_stats[unit_id];
     g_battle_action_target_data = &g_battle_unit_stats[unit_id].action;
@@ -31,6 +33,6 @@ s32 battle_status_resolve_unit_changes(s32 unit_id, s32 removal_only) {
         g_battle_action_target->charged_ability_ct = 0xFF;
     }
     battle_status_remove_control(g_battle_action_target);
-    main_util_copy_byte_data(saved, g_battle_action_target_data->status_infliction, 10);
+    main_mem_copy_byte_data_source_first(&saved, &g_battle_action_target_data->status_changes, sizeof(saved));
     return 0;
 }

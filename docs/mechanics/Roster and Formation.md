@@ -102,7 +102,7 @@ The shops reuse its unit grid, records and panels for their own unit screens
 
 | Record | What it holds |
 |---|---|
-| [[world_formation_unit_t]] | A formation record (0x128 bytes): the display stats, identity, job, equipment, abilities, job levels and JP of a roster unit, built by [[world_formation_build_unit_record]] |
+| [[world_unit_t]] | A formation record (0x128 bytes): the display stats, identity, job, equipment, abilities, job levels and JP of a roster unit, built by [[world_formation_build_unit_record]] |
 | [[g_world_formation_unit_records]], [[g_world_formation_unit_pointers]], [[g_world_formation_record_order]] | The records, the sorted pointers the screens index, and the sort order; record 20 is the preview record (`WORLD_FORMATION_PREVIEW_RECORD`) the menus try equipment on |
 | [[g_world_formation_menu_handlers]] | The screen's 25 states ([[world_formation_menu_e]], WORLD `0x8018baec`), one handler each |
 | [[g_world_sort_key_lists]], [[g_main_item_type_order_1]], [[g_world_formation_sort_field_indices]] | The Order Unit keys (saved in MAIN) and the record field each key compares |

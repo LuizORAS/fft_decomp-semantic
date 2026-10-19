@@ -1,11 +1,12 @@
 #include "fft/event_equip.h"
-#include "psx/libc.h"
+#include "fft/menu.h"
+#include "fft/menu_script.h"
 #include "psx/types.h"
 
 /* Draw record: print a callback-supplied number right-aligned in a field of
- * `command[4]` eight-pixel cells, then advance past the record. `count` holds
- * the value, then the printed length, then the number of digit cells. */
-u8* equip_menu_script_draw_plain_number(u8* command) {
+ * command->number.width eight-pixel cells, then advance past the record. `count`
+ * holds the value, then the printed length, then the number of digit cells. */
+menu_instruction_t* equip_menu_script_draw_plain_number(menu_instruction_t* command) {
     s8 buf[0x10];
     RECT rect;
     s16 i;
@@ -15,17 +16,17 @@ u8* equip_menu_script_draw_plain_number(u8* command) {
     s16 blanks;
     s32 j;
 
-    count = g_equip_menu_list_row_callbacks[command[3]](command[9]);
+    count = g_menu_row_callbacks[command->number.getter].value(command->number.value);
     count = sprintf(buf, g_equip_text_decimal_format, count);
-    blanks = command[4] - count;
-    x = command[7];
-    y = command[8];
-    count = command[4] - blanks;
-    g_equip_gfx_blank_cell_rect.y = y + 4;
+    blanks = command->number.width - count;
+    x = command->number.x;
+    y = command->number.y;
+    count = command->number.width - blanks;
+    g_equip_gfx_blank_cell_rect.position.y = y + 4;
     for (i = blanks - 1; i != -1; i--) {
-        g_equip_gfx_blank_cell_rect.x = x;
-        equip_gfx_enqueue_oriented_textured_quad(
-            &g_equip_gfx_blank_cell_rect, 0, TEXTURE_UV_FLIP_NONE, 0, g_equip_gfx_sprite_ot_index);
+        g_equip_gfx_blank_cell_rect.position.x = x;
+        menu_gfx_enqueue_oriented_textured_quad(
+            &g_equip_gfx_blank_cell_rect, 0, TEXTURE_UV_FLIP_NONE, 0, g_menu_gfx_otag_index);
         x += 8;
     }
     rect.x = x;
@@ -33,9 +34,9 @@ u8* equip_menu_script_draw_plain_number(u8* command) {
     rect.w = 8;
     rect.h = 0x10;
     for (j = 0; j < count; j++) {
-        equip_gfx_enqueue_textured_quad(&rect, (buf[j] * 8) - 0xD8, 0x30, 0, 0, g_equip_menu_cursor_texture_page,
-            g_equip_text_clut_1_mode0, g_equip_gfx_sprite_ot_index);
+        menu_gfx_enqueue_textured_quad(&rect, (buf[j] * 8) - 0xD8, 0x30, 0, 0, g_menu_cursor_texture_page,
+            g_equip_text_clut_1_mode0, g_menu_gfx_otag_index);
         rect.x += 8;
     }
-    return command + command[1];
+    return menu_next_instruction(command);
 }

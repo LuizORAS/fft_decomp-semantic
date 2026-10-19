@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Return the acting unit's reach toward its focus target: enemy_reach for an enemy, ally_reach for
  * anyone else, and Move without a focus target. The caller consumes the full register. */

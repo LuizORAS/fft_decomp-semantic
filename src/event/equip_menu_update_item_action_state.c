@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -32,7 +33,7 @@ s32 equip_menu_update_item_action_state(void) {
     if (g_equip_item_action_menu_active == 0) {
         return MENU_ITEM_LIST_STATE_BROWSE;
     }
-    if (g_equip_input_primary_repeat & PSX_PAD_CIRCLE) {
+    if (g_menu_input_primary_repeat & PSX_PAD_CIRCLE) {
         if (g_equip_item_action_menu.selected_index == 2) {
             g_equip_item_action_menu_active = 0;
             equip_thread_stop_and_clear_state(EQUIP_THREAD_SLOT_POPUP_MENU);

@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 
 /*
@@ -15,7 +16,7 @@ bunit_menu_vertical_scroll_direction_e bunit_input_read_page_scroll_direction(vo
 
     direction = BUNIT_VERTICAL_SCROLL_NONE;
     if (g_bunit_input_page_scroll_disabled == 0) {
-        if (g_battle_menu_input_lock_mode == 0) {
+        if (g_menu_input_lock_mode == 0) {
             input = PadRead(0);
             if ((input & PSX_PAD_UP) && (input & PSX_PAD_SQUARE)) {
                 direction = BUNIT_VERTICAL_SCROLL_UP;
@@ -27,7 +28,7 @@ bunit_menu_vertical_scroll_direction_e bunit_input_read_page_scroll_direction(vo
                 g_bunit_input_page_scroll_hold_frames = 0;
             }
             /* One variable holds the input and then the speed, as in the target. */
-            input = bunit_menu_get_event_speed();
+            input = menu_get_event_speed();
             initial_delay = g_main_input_repeat_initial_delay / input;
             repeat_period = g_main_input_secondary_repeat_period / input;
             held_frames = g_bunit_input_page_scroll_hold_frames;

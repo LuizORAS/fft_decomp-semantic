@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 
 /* Rebuilds the camera matrix from the angles (`angles`, an SVECTOR), the
  * screen offset and the zoom.
@@ -10,15 +10,14 @@
  * part 0; the angles and zoom are kept in g_battle_map_camera_rotation and
  * g_battle_map_camera_zoom, and the light rotation matrix is rebuilt. The GTE is
  * left with the scaled rotation and the bare screen offset as its translation. */
-void battle_camera_update_matrices(
-    MATRIX* camera_matrix, void* angles, void* offset_screen_coords, VECTOR* camera_zoom) {
+void battle_camera_update_matrices(MATRIX* camera_matrix, SVECTOR* angles, VECTOR* screen_offset, VECTOR* camera_zoom) {
     long result;
 
     g_battle_map_camera_zoom = *camera_zoom;
-    memcpy(&g_battle_map_camera_rotation, angles, 8);
+    memcpy(&g_battle_map_camera_rotation, angles, sizeof(g_battle_map_camera_rotation));
 
     RotMatrix(angles, camera_matrix);
-    TransMatrix(camera_matrix, offset_screen_coords);
+    TransMatrix(camera_matrix, screen_offset);
     ScaleMatrix(camera_matrix, &g_battle_map_camera_zoom);
     RotMatrix(angles, &g_battle_map_camera_matrix);
     SetRotMatrix(camera_matrix);

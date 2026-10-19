@@ -1,4 +1,5 @@
 #include "fft/event_etc.h"
+#include "fft/gfx.h"
 #include "psx/types.h"
 
 /* The record for one half of the title: `dimension_set` picks the pair,
@@ -9,7 +10,7 @@
  * the part already revealed by `fade`; row 1 is the 32-pixel gradient edge. */
 void etc_graphic_build_chapter_polygons(
     s32 graphic_id, s32 fade, s32 dimension_set, s32 layer, POLY_GT4* primitives, s32 color) {
-    etc_graphic_dimensions_t* dimensions;
+    sprite_sheet_frame_t* dimensions;
     s32 texture_mode;
     POLY_GT4* poly;
     s32 row;
@@ -38,48 +39,40 @@ void etc_graphic_build_chapter_polygons(
             }
             if (row == 0) {
                 if (layer != 0) {
-                    setUV4(poly, DIM.u.signed_value + DIM.width.signed_value - fade, DIM.v.signed_value,
-                        DIM.u.signed_value + DIM.width.signed_value, DIM.v.signed_value,
-                        DIM.u.signed_value + DIM.width.signed_value - fade,
-                        DIM.v.signed_value + DIM.height.signed_value, DIM.u.signed_value + DIM.width.signed_value,
-                        DIM.v.signed_value + DIM.height.signed_value);
-                    setXY4(poly, DIM.x.signed_value + DIM.width.signed_value - fade + 0x100, DIM.y.signed_value + 0x80,
-                        DIM.x.signed_value + DIM.width.signed_value + 0x100, DIM.y.signed_value + 0x80,
-                        DIM.x.signed_value + DIM.width.signed_value - fade + 0x100,
-                        DIM.y.signed_value + 0x80 + DIM.height.signed_value,
-                        DIM.x.signed_value + DIM.width.signed_value + 0x100,
-                        DIM.y.signed_value + 0x80 + DIM.height.signed_value);
+                    setUV4(poly, DIM.source.x + DIM.source.w - fade, DIM.source.y, DIM.source.x + DIM.source.w,
+                        DIM.source.y, DIM.source.x + DIM.source.w - fade, DIM.source.y + DIM.source.h,
+                        DIM.source.x + DIM.source.w, DIM.source.y + DIM.source.h);
+                    setXY4(poly, DIM.offset.x + DIM.source.w - fade + 0x100, DIM.offset.y + 0x80,
+                        DIM.offset.x + DIM.source.w + 0x100, DIM.offset.y + 0x80,
+                        DIM.offset.x + DIM.source.w - fade + 0x100, DIM.offset.y + 0x80 + DIM.source.h,
+                        DIM.offset.x + DIM.source.w + 0x100, DIM.offset.y + 0x80 + DIM.source.h);
                     setRGB0(poly, color, color, color);
                     setRGB1(poly, color, color, color);
                     setRGB2(poly, color, color, color);
                     setRGB3(poly, color, color, color);
                 } else {
-                    setUVWH(poly, DIM.u.signed_value, DIM.v.signed_value, fade, DIM.height.signed_value);
-                    setXYWH(poly, DIM.x.signed_value + 0x100, DIM.y.signed_value + 0x80, fade, DIM.height.signed_value);
+                    setUVWH(poly, DIM.source.x, DIM.source.y, fade, DIM.source.h);
+                    setXYWH(poly, DIM.offset.x + 0x100, DIM.offset.y + 0x80, fade, DIM.source.h);
                     setRGB0(poly, color, color, color);
                     setRGB1(poly, color, color, color);
                     setRGB2(poly, color, color, color);
                     setRGB3(poly, color, color, color);
                 }
             } else if (row == 1) {
-                clip = (DIM.width.signed_value < fade + 0x20) ? DIM.width.signed_value - fade : 0x20;
+                clip = (DIM.source.w < fade + 0x20) ? DIM.source.w - fade : 0x20;
                 if (layer != 0) {
-                    setUV4(poly, DIM.u.signed_value + DIM.width.signed_value - fade - clip, DIM.v.signed_value,
-                        DIM.u.signed_value + DIM.width.signed_value - fade, DIM.v.signed_value,
-                        DIM.u.signed_value + DIM.width.signed_value - fade - clip,
-                        DIM.v.signed_value + DIM.height.signed_value,
-                        DIM.u.signed_value + DIM.width.signed_value - fade,
-                        DIM.v.signed_value + DIM.height.signed_value);
-                    setXYWH(poly, DIM.x.signed_value + DIM.width.signed_value - fade + 0x100 - clip,
-                        DIM.y.signed_value + 0x80, clip, DIM.height.signed_value);
+                    setUV4(poly, DIM.source.x + DIM.source.w - fade - clip, DIM.source.y,
+                        DIM.source.x + DIM.source.w - fade, DIM.source.y, DIM.source.x + DIM.source.w - fade - clip,
+                        DIM.source.y + DIM.source.h, DIM.source.x + DIM.source.w - fade, DIM.source.y + DIM.source.h);
+                    setXYWH(poly, DIM.offset.x + DIM.source.w - fade + 0x100 - clip, DIM.offset.y + 0x80, clip,
+                        DIM.source.h);
                     setRGB0(poly, 0, 0, 0);
                     setRGB1(poly, color, color, color);
                     setRGB2(poly, 0, 0, 0);
                     setRGB3(poly, color, color, color);
                 } else {
-                    setUVWH(poly, DIM.u.signed_value + fade, DIM.v.signed_value, clip, DIM.height.signed_value);
-                    setXYWH(poly, DIM.x.signed_value + fade + 0x100, DIM.y.signed_value + 0x80, clip,
-                        DIM.height.signed_value);
+                    setUVWH(poly, DIM.source.x + fade, DIM.source.y, clip, DIM.source.h);
+                    setXYWH(poly, DIM.offset.x + fade + 0x100, DIM.offset.y + 0x80, clip, DIM.source.h);
                     setRGB0(poly, color, color, color);
                     setRGB1(poly, 0, 0, 0);
                     setRGB2(poly, color, color, color);
@@ -90,14 +83,14 @@ void etc_graphic_build_chapter_polygons(
         }
     }
     if (layer != 0) {
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[0]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[3]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[2]);
+        gfx_draw_or_append_gpu_primitive(&primitives[1]);
+        gfx_draw_or_append_gpu_primitive(&primitives[0]);
+        gfx_draw_or_append_gpu_primitive(&primitives[3]);
+        gfx_draw_or_append_gpu_primitive(&primitives[2]);
     } else {
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[3]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[2]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&primitives[0]);
+        gfx_draw_or_append_gpu_primitive(&primitives[3]);
+        gfx_draw_or_append_gpu_primitive(&primitives[2]);
+        gfx_draw_or_append_gpu_primitive(&primitives[1]);
+        gfx_draw_or_append_gpu_primitive(&primitives[0]);
     }
 }

@@ -1,8 +1,10 @@
 #ifndef MAP_H
 #define MAP_H
 
-/* Map tile and surface records shared by BATTLE and WORLD. */
+/* Tactical-level data shared by BATTLE and WORLD: map IDs, terrain tiles and
+ * surface records. The map engine is declared in battle_map.h. */
 
+#include "psx/libgte.h"
 #include "psx/types.h"
 
 /* map */
@@ -189,13 +191,6 @@ typedef enum map_surface_type {
 
 enum { MAP_SURFACE_MASK = 0x3f };
 
-/* Tile slots are indexed level * 256 + y * width + x
- * (battle_map_calculate_location): two levels of 256 slots. */
-enum {
-    MAP_LEVEL_TILE_SLOT_COUNT = 0x100,
-    MAP_TILE_SLOT_COUNT = 0x200,
-};
-
 /* Selectors accepted by battle_map_get_tile_data_value and its setter twin.
  * Selector 14 is unsupported; setter selector 15 performs a separate operation
  * whose relationship to tile data is not established. No caller passes
@@ -217,67 +212,57 @@ typedef enum map_tile_data_selector {
     MAP_TILE_DATA_ABILITY_RANGE_MARK = 13,
 } map_tile_data_selector_e;
 
-/* RGB888 in a four-byte runtime slot, not the packed three-byte map-file
- * format. The background gradient, ambient light and darkness colours all use
- * it: the scenario VM copies RGB into bytes 0..2 (and 4..6 for the second
- * gradient colour), and 0x800901f8 copies each complete word with lwl/lwr.
- * Preserve byte alignment. */
-typedef struct map_color {
-    u8 red;
-    u8 green;
-    u8 blue;
-    u8 _unused_03; /* Copied by the helper; not an established alpha channel. */
-} map_color_t;
+/* Map backgrounds use two four-byte runtime colour slots. The fourth byte
+ * is copied with each CVECTOR but is not an alpha channel; mesh-file RGB
+ * triples have a separate three-byte layout. */
+typedef enum map_background_gradient_color {
+    MAP_BACKGROUND_GRADIENT_TOP = 0,
+    MAP_BACKGROUND_GRADIENT_BOTTOM = 1,
+    MAP_BACKGROUND_GRADIENT_COLOR_COUNT = 2,
+} map_background_gradient_color_e;
 
 typedef struct map_background_gradient_colors {
-    map_color_t first;
-    map_color_t second;
+    CVECTOR colors[MAP_BACKGROUND_GRADIENT_COLOR_COUNT];
 } map_background_gradient_colors_t;
 typedef char map_background_gradient_colors_size_must_be_8[(sizeof(map_background_gradient_colors_t) == 8) ? 1 : -1];
 
-typedef union map_tile_surface {
-    u8 value;
-    struct {
-        u8 type : 6;       /* map_surface_type_e */
-        u8 depth_bias : 1; /* camera depth offset 5 instead of 1 for the cursor, units and shadows on this tile */
-        u8 _unused_00_bit7 : 1;
-    } bits;
+typedef struct map_tile_surface {
+    u8 type : 6;       /* map_surface_type_e */
+    u8 depth_bias : 1; /* camera depth offset 5 instead of 1 for the cursor, units and shadows on this tile */
+    u8 _unused_00_bit7 : 1;
 } map_tile_surface_t;
 
 /* Tile byte 0x05. Retail reads the depth as a bitfield: its zero test and
  * its value are separate loads (BATTLE 0x801af948..0x801af970). */
-typedef union map_tile_marks {
-    u8 value;
-    struct {
-        u8 ceiling_depth : 5;
-        u8 move_destination : 1; /* MAP_TILE_FLAG_MOVE_DESTINATION */
-        u8 ability_range : 1;    /* MAP_TILE_FLAG_ABILITY_RANGE */
-        u8 targeted : 1;         /* MAP_TILE_FLAG_TARGETED */
-    } bits;
+typedef struct map_tile_marks {
+    u8 ceiling_depth : 5;
+    u8 move_destination : 1;
+    u8 ability_range : 1;
+    u8 targeted : 1;
 } map_tile_marks_t;
 
-typedef union map_tile_flags {
-    u8 value;
-    struct {
-        u8 blocked : 1;
-        u8 untargetable : 1;
-        u8 shadow_mode : 2;
-        /* A value 0-5 in the terrain files. The trajectory obstacle test copies
-         * it to g_battle_effect_trajectory_tile_flags, which nothing reads. */
-        u8 _unknown_00_bit4 : 3;
-        u8 cannot_stop : 1;
-    } bits;
+/* Terrain shading darkens the unit palette by 0, 4, 8 or 12 per channel. */
+typedef enum map_tile_shading {
+    MAP_TILE_SHADING_NORMAL = 0,
+    MAP_TILE_SHADING_DARK = 1,
+    MAP_TILE_SHADING_DARKER = 2,
+    MAP_TILE_SHADING_DARKEST = 3,
+} map_tile_shading_e;
+
+typedef struct map_tile_flags {
+    u8 blocked : 1;
+    u8 untargetable : 1;
+    u8 shading : 2;
+    /* Values 0-5 in the terrain files; copied to the unread trajectory obstacle result. */
+    u8 _unknown_00 : 3;
+    u8 cannot_stop : 1; /* set by no terrain file */
 } map_tile_flags_t;
 
-/* Tile byte 0x03: slope half-height and the depth added to the height
- * (battle_map_get_tile_data_value selectors 3/4, movement geometry setup).
- * Retail reads the two as bit-fields where it loads the byte once for each. */
-typedef union map_tile_depth {
-    u8 value;
-    struct {
-        u8 half_height : 5; /* MAP_TILE_HALF_HEIGHT_MASK */
-        u8 depth : 3;       /* MAP_TILE_DEPTH_MASK */
-    } bits;
+/* Tile byte 0x03: five-bit slope half-height and three-bit depth. Both
+ * contribute to the height used by movement and targeting geometry. */
+typedef struct map_tile_depth {
+    u8 half_height : 5;
+    u8 depth : 3;
 } map_tile_depth_t;
 
 /* map_tile_t.slope_type shapes. The byte holds the height of each side in two bits (east, west,
@@ -319,9 +304,9 @@ typedef struct map_tile {
 typedef char map_tile_size_must_be_8[(sizeof(map_tile_t) == 8) ? 1 : -1];
 
 /* Provisional 0xa-byte selected-tile record: BATTLE's at 0x8014d02c, filled by
- * battle_map_store_selected_tile_data, and WORLD's at 0x8013a310, filled by
+ * map_store_selected_tile_data, and WORLD's at 0x8013a310, filled by
  * world_map_store_selected_tile_data and saved whole by
- * world_menu_get_active_turn_panels.
+ * menu_get_active_turn_panels.
  * _unknown_02/_unknown_04 are the two bytes of the per-surface-type main table
  * g_main_terrain_tile_info_pairs, 25 and 25 for all 64 surface types; nothing
  * reads them back. */
@@ -332,5 +317,71 @@ typedef struct map_selected_tile {
     s16 display_height; /* 0x06: half height + height * 2 + depth * 2 */
     s16 depth;          /* 0x08 */
 } map_selected_tile_t;
+
+/* Horizontal X/Z extent of one terrain tile in map geometry units. */
+enum { BATTLE_MAP_TILE_SIZE = 28 };
+
+/* Vertical map geometry units per whole terrain-height step. */
+enum { MAP_HEIGHT_STEP = 12 };
+
+/* Terrain storage has two fixed-size layers, independent of the map dimensions. */
+enum {
+    MAP_TERRAIN_LAYER_COUNT = 2,
+    MAP_TILES_PER_LAYER = 256,
+    MAP_TILE_COUNT = MAP_TERRAIN_LAYER_COUNT * MAP_TILES_PER_LAYER,
+};
+
+/* Map x, terrain layer and map y, shared by unit placement and obstacle tests. */
+typedef struct map_tile_coordinates {
+    s16 x;     /* 0x00 */
+    s16 layer; /* 0x02 */
+    s16 y;     /* 0x04 */
+} map_tile_coordinates_t;
+typedef char map_tile_coordinates_size_must_be_6[sizeof(map_tile_coordinates_t) == 6 ? 1 : -1];
+
+/* The battle map: the GNS file of each map and the resources it picks by map state (layout, weather, time
+ * of day): mesh, textures, palettes, lighting, terrain, texture and mesh animations; the loader and the two
+ * map load sequences; the per-frame draw of the mesh, the weather and the tile marks; the colour fades and
+ * CLUT rows; the tiles, the Move-Find tiles and the Deep Dungeon reload. */
+
+/* Packed mark flags in terrain tile byte 0x05. */
+enum {
+    MAP_TILE_FLAG_MOVE_DESTINATION = 0x20,
+    MAP_TILE_FLAG_ABILITY_RANGE = 0x40,
+    MAP_TILE_FLAG_TARGETED = 0x80,
+};
+
+/* Packed collision flags in terrain tile byte 0x06. */
+enum {
+    MAP_TILE_FLAG_BLOCKED = 0x01,
+    MAP_TILE_FLAG_UNTARGETABLE = 0x02,
+    MAP_TILE_COLLISION_MASK = 0x03,
+    MAP_TILE_FLAG_CANNOT_STOP = 0x80,
+};
+
+enum {
+    MAP_TILE_HALF_HEIGHT_MASK = 0x1f,
+    MAP_TILE_DEPTH_VALUE_MASK = 0x07,
+    MAP_TILE_DEPTH_SHIFT = 5,
+};
+
+/* Direction bits shared by the flat and steep nibbles of tile byte 0x07. */
+typedef enum map_tile_camera_block_direction {
+    MAP_TILE_CAMERA_BLOCK_NORTHWEST = 0x01,
+    MAP_TILE_CAMERA_BLOCK_SOUTHWEST = 0x02,
+    MAP_TILE_CAMERA_BLOCK_SOUTHEAST = 0x04,
+    MAP_TILE_CAMERA_BLOCK_NORTHEAST = 0x08,
+} map_tile_camera_block_direction_e;
+
+enum {
+    MAP_TILE_CAMERA_BLOCK_DIRECTION_MASK = 0x0f,
+    MAP_TILE_CAMERA_BLOCK_STEEP_SHIFT = 4,
+    MAP_TILE_CAMERA_BLOCK_STEEP_MASK = 0xf0,
+};
+
+/* Depth-bias flag in terrain tile byte0; the low six bits use MAP_SURFACE_MASK. */
+enum {
+    MAP_TILE_SURFACE_FLAG_DEPTH_BIAS = 0x40,
+};
 
 #endif

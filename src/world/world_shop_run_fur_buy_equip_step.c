@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Shop step FUR_BUY_EQUIP: world_shop_run_equip_candidate_step for the fur shop; leaving it
  * returns to the fur shop's buy list instead of the outfitter's. */

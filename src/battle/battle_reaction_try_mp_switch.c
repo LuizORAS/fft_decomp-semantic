@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* MP Switch: when HP damage meets a target with MP, a successful Brave roll while executing moves the
  * whole damage to MP damage (capped at 999), even past the MP left, and HP takes none. */

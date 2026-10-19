@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* The discovery milestone a successful proposition has just reached, as a one-based rank, or 0: a
@@ -19,7 +20,7 @@ s32 wldcore_proposition_get_milestone_rank(void) {
     if (g_wldcore_proposition_outcome.reward_type == WLDCORE_PROPOSITION_REWARD_TREASURE) {
         count = 0;
         for (i = 0; i < 31; i++) {
-            if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
+            if (script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
                 count++;
             }
         }
@@ -36,7 +37,7 @@ s32 wldcore_proposition_get_milestone_rank(void) {
     if (g_wldcore_proposition_outcome.reward_type == WLDCORE_PROPOSITION_REWARD_UNEXPLORED_LAND) {
         count = 0;
         for (i = 0; i < EVENT_SCRIPT_VAR_UNEXPLORED_LAND_COUNT; i++) {
-            if (world_script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) != 0) {
+            if (script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) != 0) {
                 count++;
             }
         }

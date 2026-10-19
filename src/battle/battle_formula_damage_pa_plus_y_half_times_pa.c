@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x31, Spin Fist, Wave Fist, Earth Slash, Small Bomb, Choco Ball, Turn Punch, Wave Around,
  * Sudden Cry and Snake Carrier: the physical evade check; XA = PA and YA = (PA + Y) / 2 with the

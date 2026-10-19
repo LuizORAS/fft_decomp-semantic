@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x22, Kiyomori and Masamune: the katana break roll (battle_formula_roll_katana_break),
  * then the katana's status (battle_formula_apply_status_to_action). No evade or hit roll. */

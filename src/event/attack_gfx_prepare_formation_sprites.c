@@ -1,9 +1,9 @@
+#include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
-
-/* This overlay reads BATTLE's attack entry mode unsigned (lhu). */
-#define ENTRY_MODE (*(u16*)&g_battle_script_attack_entry_mode)
 
 /* Load file 0x166b (0x10000 bytes) through the entry-mode load paths and upload its second half; then,
  * for the 16 formation slots, derive each unit's portrait (world_formation_get_unit_palette_index's logic,
@@ -23,7 +23,7 @@ void attack_gfx_prepare_formation_sprites(void) {
     u8 unused[0x10];
     u8* buffer;
     s32 i;
-    party_data_t* party;
+    party_unit_t* party;
     s32 base;
     s32 code;
     u8* pixel;
@@ -40,12 +40,12 @@ void attack_gfx_prepare_formation_sprites(void) {
     s32 source;
 
     buffer = main_heap_alloc(0x10000);
-    if (ENTRY_MODE != 0) {
-        if (ENTRY_MODE == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+    if (g_script_attack_entry_mode != 0) {
+        if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
             attack_file_load_sync(DISC_SECTOR_EVENT_UNIT_BIN, 0x10000, buffer);
         } else {
-            g_battle_thread_call_target = (void (*)(void))main_file_load_to_address_checked;
-            battle_thread_call_on_main_stack(DISC_SECTOR_EVENT_UNIT_BIN, 0x10000, buffer);
+            g_thread_call_target = (void (*)(void))main_file_load_to_address_checked;
+            thread_call_on_main_stack(DISC_SECTOR_EVENT_UNIT_BIN, 0x10000, buffer);
         }
     } else {
         StoreImage(&g_attack_formation_sheet_rect, (u32*)buffer);
@@ -53,13 +53,13 @@ void attack_gfx_prepare_formation_sprites(void) {
         DrawSync(0);
     }
     LoadImage(&g_attack_formation_sheet_rect, (u32*)(buffer + 0x8000));
-    if (ENTRY_MODE == SCRIPT_ATTACK_ENTRY_PRELOADED) {
-        battle_thread_yield();
+    if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+        thread_yield();
     } else {
         DrawSync(0);
     }
     for (i = 0; i < 0x10; i++) {
-        party = main_party_get_data_pointer(i);
+        party = main_party_get_unit(i);
         if (party->sprite_set >= CHARACTER_IDENTITY_SELECTOR_FIRST) {
             if (party->sprite_set == CHARACTER_IDENTITY_GENERIC_MALE) {
                 base = (party->job_id - JOB_ID_SQUIRE) * 2;
@@ -177,8 +177,8 @@ void attack_gfx_prepare_formation_sprites(void) {
         g_attack_portrait_palette_upload_rect.w = 0x10;
         g_attack_portrait_palette_upload_rect.h = 1;
         LoadImage(&g_attack_portrait_palette_upload_rect, (u32*)(buffer + offset));
-        if (ENTRY_MODE == SCRIPT_ATTACK_ENTRY_PRELOADED) {
-            battle_thread_yield();
+        if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+            thread_yield();
         } else {
             DrawSync(0);
         }

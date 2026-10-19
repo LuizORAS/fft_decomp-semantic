@@ -10,9 +10,19 @@
  * flags, texture and .screen_x/.screen_y, and the .screen_x of the next
  * entry, so the accesses are written against `index` and `index + 1`.
  *
- * The texture word packs u, v, width and height from the top byte down; a
+ * The 32-bit texture value packs u, v, width and height from the top byte down; a
  * width or height that would run past texel 255 is shortened by one. */
 
+/* Needs aspsx 2.21: four sites that reach the typed global array keep their
+ * `addiu at,at,<offset>` under 2.21 and lose it under 2.34.
+ *
+ * Walks g_wldcore_map_projected_tiles, the table that
+ * wldcore_map_project_and_cull_tiles fills: each tile reads its own entry's
+ * flags, texture and .screen_x/.screen_y, and the .screen_x of the next
+ * entry, so the accesses are written against `index` and `index + 1`.
+ *
+ * The 32-bit texture value packs u, v, width and height from the top byte down; a
+ * width or height that would run past texel 255 is shortened by one. */
 #define WLDCORE_MAP_TILE_ROWS    12
 #define WLDCORE_MAP_TILE_COLUMNS 16
 #define WLDCORE_MAP_ROW_STRIDE   17
@@ -34,9 +44,7 @@ void wldcore_gfx_draw_projected_map_tiles(GsOT* ot) {
     color.g = 0x80;
     color.b = 0x80;
     wldcore_gfx_copy_color_with_tint(&color, &color);
-    poly.r0 = color.r;
-    poly.g0 = color.g;
-    poly.b0 = color.b;
+    setRGB0(&poly, color.r, color.g, color.b);
     poly.clut = GetClut(0, WLDCORE_MAP_CLUT_Y);
 
     for (row = 0; row < WLDCORE_MAP_TILE_ROWS; row++) {

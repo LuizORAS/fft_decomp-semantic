@@ -1,11 +1,15 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_status.h"
+#include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /* Save unit data for the AI simulation. Mode 0, before an action is simulated, snapshots every unit
  * in the plan (g_battle_ai_unit_snapshots: HP, MP, statuses and their CTs, Brave, Faith, stats, CT,
  * position, turn flags, Auto-Battle, equipment, mount and action record) and the teams' Golem. Any
  * other mode, when the simulation suspends, keeps the simulated statuses, death counter and Death
  * Sentence CT (unit_status_records) and puts the snapshot's back while the frame runs. */
-void battle_ai_save_unit_state(s32 mode) {
+void battle_ai_save_unit_state(battle_ai_snapshot_mode_e mode) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_ai_status_snapshot_t* status;
     battle_ai_extended_snapshot_t* snapshot;
@@ -19,41 +23,42 @@ void battle_ai_save_unit_state(s32 mode) {
             continue;
         }
         unit = &g_battle_unit_stats[i];
-        if (mode != 0) {
-            status = (battle_ai_status_snapshot_t*)ai->unit_status_records[id];
+        if (mode != BATTLE_AI_SNAPSHOT_BASELINE) {
+            status = &ai->unit_status_records[id];
         } else {
             status = &g_battle_ai_unit_snapshots[id].status;
         }
         status->entd_slot = unit->entd_slot;
         status->death_counter = unit->death_counter;
-        battle_ai_transfer_byte_values(status->current_status, unit->status_sets.current, 5);
-        if (mode != 0) {
+        battle_mem_copy_bytes(status->current_status, unit->status_sets.current, sizeof(status->current_status));
+        if (mode != BATTLE_AI_SNAPSHOT_BASELINE) {
             status->death_sentence_ct = unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)];
             snapshot = &g_battle_ai_unit_snapshots[id];
             unit->entd_slot = snapshot->status.entd_slot;
             unit->death_counter = snapshot->status.death_counter;
             unit->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
                 = snapshot->status_ct[BATTLE_STATUS_CT_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)];
-            battle_ai_transfer_byte_values(unit->status_sets.current, snapshot->status.current_status, 5);
+            battle_mem_copy_bytes(
+                unit->status_sets.current, snapshot->status.current_status, sizeof(snapshot->status.current_status));
         } else {
             snapshot = (battle_ai_extended_snapshot_t*)status;
             snapshot->team_flags = unit->team_flags;
-            battle_ai_transfer_byte_values(snapshot->status_ct, unit->status_ct, BATTLE_TIMED_STATUS_COUNT);
-            battle_ai_transfer_byte_values(snapshot->equipment, unit->equipment, 7);
+            battle_mem_copy_bytes(snapshot->status_ct, unit->status_ct, BATTLE_TIMED_STATUS_COUNT);
+            battle_mem_copy_bytes(snapshot->equipment, unit->equipment, sizeof(snapshot->equipment));
             snapshot->brave = unit->brave;
-            battle_ai_transfer_byte_values(&snapshot->faith, &unit->faith, 4);
+            battle_mem_copy_bytes(&snapshot->faith, &unit->faith, 4);
             snapshot->mp = unit->mp;
-            battle_ai_transfer_byte_values(snapshot->base_attributes, unit->base_attributes, 3);
-            battle_ai_transfer_byte_values(snapshot->attributes, unit->attributes, 4);
-            battle_ai_transfer_byte_values(&snapshot->x, &unit->x, 3);
+            battle_mem_copy_bytes(snapshot->base_attributes, unit->base_attributes, 3);
+            battle_mem_copy_bytes(snapshot->attributes, unit->attributes, 4);
+            battle_mem_copy_bytes(&snapshot->x, &unit->x, 3);
             snapshot->charged_ability_ct = unit->charged_ability_ct;
-            battle_ai_transfer_byte_values(&snapshot->has_turn, &unit->has_turn, 3);
+            battle_mem_copy_bytes(&snapshot->has_turn, &unit->has_turn, 3);
             snapshot->mount_info = unit->mount_info;
-            battle_ai_transfer_byte_values(&snapshot->auto_battle_setting, &unit->auto_battle_setting, 8);
-            battle_ai_transfer_halfword_values(ai->unit_action_records[id], &unit->action_actor_id, 20);
+            battle_mem_copy_bytes(&snapshot->auto_battle_setting, &unit->auto_battle_setting, 8);
+            battle_mem_copy_u16_values(&ai->unit_action_records[id], &unit->action_command, 20);
         }
     }
-    if (mode == 0) {
-        battle_ai_transfer_byte_values(ai->team_golem.bytes, (u8*)g_battle_team_golem, 8);
+    if (mode == BATTLE_AI_SNAPSHOT_BASELINE) {
+        battle_mem_copy_bytes(ai->team_golem, g_battle_team_golem, sizeof(ai->team_golem));
     }
 }

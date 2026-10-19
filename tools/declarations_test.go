@@ -19,10 +19,10 @@ func scanOne(t *testing.T, source string) []scannedDeclaration {
 func TestDeclarationSignatureRendering(t *testing.T) {
 	for _, test := range []struct{ source, symbol, want string }{
 		{"extern u32 g_flags;", "g_flags", "u32 @"},
-		{"extern battle_stats_t* g_unit;", "g_unit", "battle_stats_t * @"},
+		{"extern unit_stats_t* g_unit;", "g_unit", "unit_stats_t * @"},
 		{"extern u8 D_800BF790[32];", "D_800BF790", "u8 @ []"},
 		{"extern u8 D_800BF790[4][32];", "D_800BF790", "u8 @ [] []"},
-		{"s32 battle_check(battle_stats_t* unit);", "battle_check", "s32 @ (battle_stats_t *)"},
+		{"s32 battle_check(unit_stats_t* unit);", "battle_check", "s32 @ (unit_stats_t *)"},
 		{"void battle_end(void) { register s32 i asm(\"$17\"); i = 0; }", "battle_end", "void @ (void)"},
 		{"s32 func_801342CC();", "func_801342CC", "s32 @ (...)"},
 		{"extern s32 (*g_cb)(s32);", "g_cb", "s32 ( * @ ) (s32)"},
@@ -35,7 +35,7 @@ func TestDeclarationSignatureRendering(t *testing.T) {
 		{"extern u32 g_main_game_options_raw __asm__(\"g_main_game_options\");", "g_main_game_options", "u32 @"},
 		{"s32 g_table[] = { 1, 2, 3 };", "g_table", "s32 @ []"},
 		{"void f(a, b, c, d) u16 a; register unsigned char b; u8* c; { u16 a2; a2 = a; }", "f", "void @ (s32, s32, u8 *, s32)"},
-		{"s16 f(unit, weight) battle_stats_t* unit; float weight; { return 0; }", "f", "s16 @ (battle_stats_t *, double)"},
+		{"s16 f(unit, weight) unit_stats_t* unit; float weight; { return 0; }", "f", "s16 @ (unit_stats_t *, double)"},
 	} {
 		declarations := scanOne(t, test.source)
 		if len(declarations) != 1 {
@@ -51,7 +51,7 @@ func TestDeclarationSignatureRendering(t *testing.T) {
 
 func TestDeclarationScanSkipsNonBindingStatements(t *testing.T) {
 	source := `#include "fft/battle.h"
-typedef struct battle_stats { u8 id; } battle_stats_t;
+typedef struct unit_stats { u8 id; } unit_stats_t;
 static s32 g_local;
 struct loose { s32 a; };
 enum { A, B };
@@ -128,7 +128,7 @@ func TestDeclarationAgreement(t *testing.T) {
 		return declarations[0].signature
 	}
 	unprototyped := split("s32 f();")
-	if !signaturesAgree(unprototyped, split("s32 f(battle_stats_t* unit);")) {
+	if !signaturesAgree(unprototyped, split("s32 f(unit_stats_t* unit);")) {
 		t.Error("unprototyped declaration should agree with a prototype of the same return type")
 	}
 	if signaturesAgree(unprototyped, split("void f(s32 a);")) {

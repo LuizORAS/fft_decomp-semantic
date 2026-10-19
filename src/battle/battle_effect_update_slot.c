@@ -1,6 +1,4 @@
-#include "fft/battle.h"
-
-struct battle_effect_motion;
+#include "fft/battle_effect.h"
 
 /* Advance one effect slot (a particle of a secondary effect) by a frame: step its
  * motion, advance its frame script, in which each step shows a frame for hold
@@ -24,7 +22,7 @@ s32 battle_effect_update_slot(s32 id) {
             slot->step_index = 0;
         }
     }
-    battle_effect_draw_billboard_sprite((battle_effect_sprite_slot_t*)slot);
+    battle_effect_draw_billboard_sprite(slot);
     result = 1;
     if (slot->life < 0) {
         result = wrapped == 0;

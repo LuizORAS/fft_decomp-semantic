@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -10,7 +11,7 @@
  * the book can resume where it stopped, and returns through a screen transition to the treasure
  * the book was opened from (wldcore_menu_push_screen_transition_level).
  *
- * Every colour store rereads the fade word through a local: a direct
+ * Every colour store rereads the 32-bit fade value through a local: a direct
  * `u8 = level->fade_in` assignment narrows the reload to `lbu`, while the
  * target keeps `lw`. The target stores the -1 history marker with a signed
  * `addiu`, so it is written through an s16 view of the u16 slot. The cursor
@@ -24,7 +25,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_sound_novel_quit_leve
     s32 fade;
     s32 base;
     s32 offset;
-    wldcore_window_record_t* record;
+    world_animated_render_record_t* record;
     s32 window;
     u16 first;
 
@@ -80,12 +81,12 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_sound_novel_quit_leve
             g_wldcore_screen_fade_state.boxes[0].b = fade;
             return;
         }
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
-        g_wldcore_screen_brightness_rgb[0] = 0;
-        g_wldcore_screen_brightness_rgb[1] = 0;
-        g_wldcore_screen_brightness_rgb[2] = 0;
+        g_wldcore_screen_brightness_rgb.r = 0;
+        g_wldcore_screen_brightness_rgb.g = 0;
+        g_wldcore_screen_brightness_rgb.b = 0;
         g_wldcore_screen_fade_state.flags[0] |= WLDCORE_SCREEN_FADE_OUT;
         first = g_wldcore_sound_novel_text_history_0;
         g_wldcore_sound_novel_text_history_0 = -1;
@@ -102,19 +103,19 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_sound_novel_quit_leve
         g_wldcore_window_render_record_count -= 2;
         g_wldcore_window_render_object_count -= 5;
         g_wldcore_menu_stack_depth -= 2;
-        main_sound_remove_vfx_resource(g_wldcore_sound_novel_sound_resource);
+        suzuki_sound_remove_resource(g_wldcore_sound_novel_sound_resource);
         wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_TREASURE_DETAIL,
             g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.selected_entry, 0);
         return;
     }
 
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         level->fade_out = level->fade_in;
         return;
     }
     if (buttons & PSX_PAD_SELECT) {
-        wldcore_menu_suspend_sound_novel_quit_level(&level->cursor_window);
+        wldcore_menu_suspend_sound_novel_quit_level(level);
         wldcore_menu_push_text_window_level(g_wldcore_sound_novel_quit_help_text_ids[level->choice] | 0x1000, 1);
         return;
     }
@@ -128,7 +129,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_sound_novel_quit_leve
         record->position.y = base + offset;
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
         g_wldcore_window_records[level->cursor_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
         window = level->cursor_window;
         g_wldcore_window_records[window].anim_counter = 0;
@@ -138,7 +139,7 @@ void wldcore_menu_step_sound_novel_quit_level(wldcore_menu_sound_novel_quit_leve
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count--;
             g_wldcore_window_render_object_count -= 3;
-            if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
+            if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
                 world_thread_request_stop(WLDCORE_THREAD_SLOT_MESSAGE);
             }
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x20);

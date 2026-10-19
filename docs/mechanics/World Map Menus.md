@@ -9,7 +9,7 @@ scope:
   - wldcore_gfx_dispatch_display_object_list()
   - wldcore_gfx_draw_animated_display_object()
   - wldcore_gfx_draw_display_object_sprite()
-  - wldcore_gfx_calculate_scaled_rectangle()
+  - gfx_calculate_scaled_rectangle()
   - wldcore_gfx_step_dissolve_image_upload()
   - wldcore_gfx_load_picture_set()
   - wldcore_gfx_load_background_set()
@@ -72,7 +72,7 @@ this page covers the stack itself and the screens built on it.
 
 ### Windows and pictures
 
-- **Window records** ([[wldcore_window_record_t]], 36 bytes) are animated
+- **Window records** ([[world_animated_render_record_t]], 36 bytes) are animated
   sprites: cursors, frames, button prompts. **Render records**
   ([[wldcore_window_render_record_t]], 52 bytes) are images in VRAM: text
   panels built in `g_wldcore_window_image_buffer`
@@ -152,7 +152,7 @@ party from an ENTD.
 | [[wldcore_menu_level_type_e]] | The level types, which index the three handler tables |
 | [[wldcore_menu_stack_record_t]] | One level's record; a union of the views each level uses |
 | `g_wldcore_menu_idle_handlers`, `g_wldcore_menu_suspend_handlers`, `g_wldcore_menu_resume_handlers` | The handlers of each level type |
-| [[wldcore_window_record_t]], [[wldcore_window_render_record_t]] | Window and render records, in `g_wldcore_window_records` and `g_wldcore_window_render_records` |
+| [[world_animated_render_record_t]], [[wldcore_window_render_record_t]] | Window and render records, in `g_wldcore_window_records` and `g_wldcore_window_render_records` |
 | [[wldcore_menu_cursor_state_t]] ([[wldcore_cursor_slot_e]]) | Each list's remembered row and scroll, `g_wldcore_menu_cursor_states` |
 | [[wldcore_text_scrollable_window_t]] | The paged text window shared by the detail levels |
 | [[wldcore_brave_story_row_e]] | The Brave Story's sections |

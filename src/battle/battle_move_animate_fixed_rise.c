@@ -1,31 +1,34 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
+#include "psx/libgte.h"
 
-/* Distortion 2 (BATTLE_DISTORTION_RISE): raise the unit 36 screen units (three height levels) at a
- * constant speed over the queued frames, then end. Monster SEQ animations pair it with
+/* Distortion 2 (BATTLE_DISTORTION_ANIMATION_RISE): raise the unit 36 world units (three height levels) at
+ * a constant speed over the queued frames, then end; phase 0 turns distortion_timer into the per-frame
+ * step and distortion_target into the end height. Monster SEQ animations pair it with
  * battle_move_animate_descent_to_ground. */
-void battle_move_animate_fixed_rise(battle_unit_misc_data_t* misc) {
+void battle_move_animate_fixed_rise(battle_unit_t* unit) {
     s32 step;
     s32 target;
     s32 height;
 
-    step = misc->distortion_timer;
-    target = misc->distortion_target;
-    switch (misc->distortion_phase) {
+    step = unit->distortion_timer;
+    target = unit->distortion_target;
+    switch (unit->distortion_phase) {
     case 0:
         step = -0x24000 / step;
-        target = misc->real.vy + -0x24000;
-        misc->distortion_phase = 1;
+        target = unit->real.vy + -0x24000;
+        unit->distortion_phase = 1;
     case 1:
-        if (target < misc->real.vy) {
-            misc->real.vy = step + misc->real.vy;
+        if (target < unit->real.vy) {
+            unit->real.vy = step + unit->real.vy;
         } else {
-            misc->real.vy = target;
-            misc->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
+            unit->real.vy = target;
+            unit->distortion_animation_id = BATTLE_DISTORTION_ANIMATION_NONE;
         }
-        height = misc->real.vy;
-        misc->screen.vy = height / ONE;
+        height = unit->real.vy;
+        unit->world_coords.vy = height / ONE;
         break;
     }
-    misc->distortion_timer = step;
-    misc->distortion_target = target;
+    unit->distortion_timer = step;
+    unit->distortion_target = target;
 }

@@ -1,15 +1,7 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
-
-typedef struct wldcore_deep_dungeon_battle {
-    u8 map_id;   /* 0x00 */
-    u8 squad_id; /* 0x01: deployment zone id */
-    u8 choices[8];
-} wldcore_deep_dungeon_battle_t;
-
-extern wldcore_deep_dungeon_battle_t* g_wldcore_deep_dungeon_battles;
-
-s32 rand(void);
 
 /* Step of a location's menu level: fade its windows in, start the list panel thread after 8 frames,
  * then handle the input. Circle on an entry fades the screen and the music out and closes the panel,
@@ -35,12 +27,12 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
         if (level->fade >= 0x80) {
             level->fade = 0x80;
         }
-        g_wldcore_window_record_colors[level->slots.window_a].red = level->fade;
-        g_wldcore_window_record_colors[level->slots.window_a].green = level->fade;
-        g_wldcore_window_record_colors[level->slots.window_a].blue = level->fade;
-        g_wldcore_window_record_colors[level->slots.window_b].red = level->fade;
-        g_wldcore_window_record_colors[level->slots.window_b].green = level->fade;
-        g_wldcore_window_record_colors[level->slots.window_b].blue = level->fade;
+        g_wldcore_window_records[level->slots.window_a].color.r = level->fade;
+        g_wldcore_window_records[level->slots.window_a].color.g = level->fade;
+        g_wldcore_window_records[level->slots.window_a].color.b = level->fade;
+        g_wldcore_window_records[level->slots.window_b].color.r = level->fade;
+        g_wldcore_window_records[level->slots.window_b].color.g = level->fade;
+        g_wldcore_window_records[level->slots.window_b].color.b = level->fade;
         if (level->fade == 0x80) {
             level->fade = 0;
             wldcore_gfx_toggle_captured_world_frame(1);
@@ -51,9 +43,8 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
     }
     if (level->delay != 0) {
         if (level->delay == 8) {
-            world_thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_screen_build_at_list);
-            world_thread_set_parameters(
-                WLDCORE_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
+            thread_start(WLDCORE_THREAD_SLOT_WINDOW_PANEL, world_screen_build_at_list);
+            thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, (s32)&g_wldcore_window_panel_render_state, 0, 0);
         }
         level->delay--;
         return;
@@ -62,7 +53,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
         return;
     }
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
-        && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+        && thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         wldcore_gfx_toggle_captured_world_frame(0);
         g_main_system_flags = (g_main_system_flags | MAIN_SYSTEM_FLAG_INPUT_BLOCKED)
             & ~(MAIN_SYSTEM_FLAG_DRAW_MAP | MAIN_SYSTEM_FLAG_FREEZE_ANIMATION);
@@ -86,30 +77,30 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                     return;
                 case WLDCORE_TEXT_ID_SOLDIER_OFFICE& TEXT_ID_ENTRY_MASK:
                     wldcore_menu_close_level_and_release_records(&level->slots, 0);
-                    wldcore_menu_run_shop_and_rebuild_screen(WORLD_SHOP_ID_SOLDIER_OFFICE);
+                    wldcore_menu_run_shop_and_rebuild_screen(WORLD_MENU_CONTEXT_SOLDIER_OFFICE);
                     return;
                 case WLDCORE_TEXT_ID_FUR_SHOP& TEXT_ID_ENTRY_MASK:
                     wldcore_menu_close_level_and_release_records(&level->slots, 0);
-                    wldcore_menu_run_shop_and_rebuild_screen(WORLD_SHOP_ID_FUR_SHOP);
+                    wldcore_menu_run_shop_and_rebuild_screen(WORLD_MENU_CONTEXT_FUR_SHOP);
                     return;
                 default:
-                    world_script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_SELECTION,
+                    script_set_variable(EVENT_SCRIPT_VAR_DEEP_DUNGEON_SELECTION,
                         value - (WLDCORE_TEXT_ID_DEEP_DUNGEON_FLOOR_FIRST & TEXT_ID_ENTRY_MASK));
                     wldcore_menu_close_level_and_release_records(&level->slots, 0);
                     if (wldcore_script_find_location_request(
                             g_wldcore_map_projection_state.marker.kind, WLDCORE_SCRIPT_ACTION_DEEP_DUNGEON_ENTRY)
                         != 0) {
-                        offset = g_wldcore_script_state.args[0] * 10;
+                        offset = g_wldcore_script_state.args[0] * sizeof(wldcore_deep_dungeon_battle_t);
                         records = g_wldcore_deep_dungeon_battles;
-                        /* The byte offset and shared base preserve the target's choice-index calculation. */
-                        record = (wldcore_deep_dungeon_battle_t*)((u8*)records + offset);
+                        record = &records[g_wldcore_script_state.args[0]];
                         g_wldcore_next_map_id[0] = record->map_id;
-                        world_script_set_variable(
-                            EVENT_SCRIPT_VAR_CURRENT_ENTD, ((u8*)records)[((rand() * 8) >> 15) + offset + 2]);
-                        world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);
-                        world_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, record->squad_id);
-                        world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[1]);
-                        world_script_set_variable(
+                        /* Direct ENTD indexing folds the table base and removes a retail addition. */
+                        script_set_variable(
+                            EVENT_SCRIPT_VAR_CURRENT_ENTD, (&records->entd_ids[0])[((rand() * 8) >> 15) + offset]);
+                        script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 1);
+                        script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, record->squad_id);
+                        script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[1]);
+                        script_set_variable(
                             EVENT_SCRIPT_VAR_DEEP_DUNGEON_EXIT, (rand() * g_wldcore_script_state.args[2]) >> 15);
                         g_main_system_flags
                             = (g_main_system_flags | MAIN_SYSTEM_FLAG_DEEP_DUNGEON_BATTLE) ^ MAIN_SYSTEM_FLAG_RUNNING;
@@ -120,7 +111,7 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
                     return;
                 }
             }
-            world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[*selected]);
+            script_set_variable(EVENT_SCRIPT_VAR_CURRENT_EVENT, g_wldcore_script_state.args[*selected]);
             g_main_system_flags ^= MAIN_SYSTEM_FLAG_RUNNING;
             value = values[*selected] & TEXT_ID_ENTRY_MASK;
             g_wldcore_next_map_id[0] = value + 1;
@@ -131,16 +122,16 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
         wldcore_menu_close_level_and_release_records(&level->slots, 1);
         return;
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CROSS) {
         value = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index];
         if ((value & TEXT_ID_SECTION_MASK) == TEXT_ID_WORLD_MENU_BASE) {
             wldcore_sound_play_effect(MAIN_SFX_CANCEL);
             level->slots.result = 0;
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+            thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
             g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         }
-    } else if (g_wldcore_new_button_presses & PSX_PAD_SELECT) {
-        wldcore_menu_suspend_location_menu_level((s32*)level);
+    } else if (g_wldcore_input_new_button_presses & PSX_PAD_SELECT) {
+        wldcore_menu_suspend_location_menu_level(&level->slots);
         value = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index];
         if ((value & TEXT_ID_SECTION_MASK) == TEXT_ID_MAP_NAME_BASE) {
             /* Map name n: WLDHELP.LZW 0x8801 + n describes the map. */
@@ -155,14 +146,14 @@ void wldcore_menu_step_location_menu_level(wldcore_menu_location_menu_level_t* l
             }
             wldcore_menu_push_message_level(text, 1);
         }
-    } else if ((g_wldcore_new_button_presses & PSX_PAD_CIRCLE) && level->entry_count != 0
+    } else if ((g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) && level->entry_count != 0
         && g_main_file_still_loading == 0) {
         wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_OUT, 0x10);
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x10);
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_UNLOAD, 2);
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         level->slots.result = 1;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
     }
 }

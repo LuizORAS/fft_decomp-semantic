@@ -1,7 +1,8 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-/* Same word as g_wldcore_sound_novel_countdown_frames; the target stores 0 through
+/* Same 32-bit value as g_wldcore_sound_novel_countdown_frames; the target stores 0 through
  * both spellings, and a single name lets GCC merge the two stores. */
 extern s32 g_wldcore_sound_novel_countdown_frames_reset;
 
@@ -22,7 +23,7 @@ s32 wldcore_sound_novel_update_countdown_timer(void) {
     s32 days;
 
     if (g_wldcore_sound_novel_countdown_frames == -1) {
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return 0;
         }
         g_wldcore_sound_novel_countdown_frames = 0;

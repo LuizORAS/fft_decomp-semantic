@@ -1,4 +1,6 @@
+#include "fft/script.h"
 /* The switch jump table lives at .rodata 0x800671dc (0x18 bytes). */
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -33,39 +35,39 @@ s32 wldcore_proposition_step_participant_message(wldcore_proposition_report_leve
         } else {
             g_wldcore_proposition_outcome.speaker_party_index = speaker;
         }
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         state->phase++;
         break;
     case 1:
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE))
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE))
             return 0;
         state->phase++;
         break;
     case 2:
-        world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-        g_world_text_substitution_values[0]
+        thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        g_text_substitution_values[0]
             = g_wldcore_proposition_outcome.speaker_party_index + TEXT_ID_UNIT_NAME_SPECIAL_BASE;
-        world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT,
+        script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT,
             world_unit_get_formation_sprite(g_wldcore_proposition_outcome.speaker_party_index));
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19,
             wldcore_proposition_adjust_message_index(message, g_wldcore_proposition_outcome.speaker_party_index)
                 + TEXT_ID_WORLD_MESSAGE_BASE,
             0);
         state->phase++;
         break;
     case 3:
-        if (!(g_wldcore_new_button_presses & PSX_PAD_CIRCLE))
+        if (!(g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE))
             return 0;
         if (!world_menu_is_message_waiting_for_confirm())
             return 0;
         state->phase++;
         break;
     case 4:
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         state->phase++;
         break;
     case 5:
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE))
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE))
             return 0;
         state->phase = 0;
         return 1;

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Scale XA by the attacker's and target's zodiac compatibility: good +25%, best +50%, bad -25%,
@@ -13,9 +14,7 @@
 void battle_formula_apply_zodiac_compatibility(void) {
     battle_stats_t* attacker;
     battle_stats_t* target;
-    u16 attacker_birthday;
-    u16 target_birthday;
-    u32 attacker_zodiac;
+    u16 attacker_zodiac;
     u32 attacker_zodiac_compare;
     u16 target_zodiac;
     u32 serpentarius = ZODIAC_SIGN_SERPENTARIUS;
@@ -26,10 +25,8 @@ void battle_formula_apply_zodiac_compatibility(void) {
 
     attacker = g_battle_action_attacker;
     target = g_battle_action_target;
-    attacker_birthday = attacker->birthday.value;
-    target_birthday = target->birthday.value;
-    attacker_zodiac = attacker_birthday >> 12;
-    target_zodiac = target_birthday >> 12;
+    attacker_zodiac = attacker->birthday.zodiac;
+    target_zodiac = target->birthday.zodiac;
     attacker_zodiac_compare = (u8)attacker_zodiac;
     if (serpentarius == attacker_zodiac_compare) {
         return;

@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -7,8 +8,8 @@
 void wldcore_sound_novel_branch_if_dialog_option(s32 branch_if_equal) {
     u8 operand = g_wldcore_sound_novel_record.instruction.bytes.operand_1;
 
-    if (operand == world_script_get_variable(EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION) ? branch_if_equal == 1
-                                                                                      : branch_if_equal == 0) {
+    if (operand == script_get_variable(EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION) ? branch_if_equal == 1
+                                                                                : branch_if_equal == 0) {
         g_wldcore_sound_novel_record.section = g_wldcore_sound_novel_record.instruction.bytes.operand_0;
         g_wldcore_sound_novel_record.state_flags |= WLDCORE_SOUND_NOVEL_STATE_BRANCH;
     } else {

@@ -45,7 +45,7 @@ the battle: on to the world map, the next battle, a reset or the ending.
   back. [[g_battle_action_post_action]] marks that the window or the step has
   finished.
 - **The action.** The acting unit's command sits in its
-  [[battle_unit_misc_data_t]] (`command_state`), and [[g_battle_action_phase]]
+  [[battle_unit_t]] (`command_state`), and [[g_battle_action_phase]]
   steps through a Hamedo (0), the action itself (1) and the reactions
   (2).
 

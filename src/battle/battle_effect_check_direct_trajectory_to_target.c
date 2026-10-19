@@ -1,7 +1,10 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
+#include "fft/map.h"
+#include "psx/libgpu.h"
 #include "psx/libgte.h"
-
-struct battle_effect_obstacle_unit_list;
 
 /* Trace a straight shot from a source unit to either a target unit or the bare tile at tile_position,
  * and report whether it is blocked.
@@ -16,7 +19,7 @@ struct battle_effect_obstacle_unit_list;
 s32 battle_effect_check_direct_trajectory_to_target(s32 source_id, SVECTOR* tile_position, s32 target_id) {
     VECTOR delta;
     map_tile_t* tile;
-    void* obstacles;
+    battle_effect_obstacle_unit_list_t* obstacles;
     s32 distance;
     s32 source_height;
     s32 target_height;
@@ -29,23 +32,25 @@ s32 battle_effect_check_direct_trajectory_to_target(s32 source_id, SVECTOR* tile
             target_height = 12;
         }
     }
-    battle_effect_list_valid_unit_targeting_data(source_id, -1, (struct battle_effect_obstacle_unit_list**)&obstacles);
+    battle_effect_list_valid_unit_targeting_data(source_id, -1, &obstacles);
     battle_unit_get_tile_center_and_height_by_battle_id(source_id, &g_battle_effect_trajectory_origin);
     g_battle_effect_trajectory_origin.vy -= source_height;
     if (target_id == -1) {
         tile = battle_map_get_tile_data_pointer(tile_position->vx, tile_position->vz, tile_position->vy);
-        g_battle_effect_trajectory_destination.vx = tile_position->vx * 28 + 14;
-        g_battle_effect_trajectory_destination.vz = tile_position->vz * 28 + 14;
+        g_battle_effect_trajectory_destination.vx
+            = tile_position->vx * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+        g_battle_effect_trajectory_destination.vz
+            = tile_position->vz * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
         g_battle_effect_trajectory_destination.vy = -(tile->height * 12);
     } else {
         battle_unit_get_tile_center_and_height_by_battle_id(target_id, &g_battle_effect_trajectory_destination);
         g_battle_effect_trajectory_destination.vy -= target_height;
     }
-    delta.vx = g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx;
-    delta.vy = g_battle_effect_trajectory_destination.vy - g_battle_effect_trajectory_origin.vy;
-    delta.vz = g_battle_effect_trajectory_destination.vz - g_battle_effect_trajectory_origin.vz;
+    setVector(&delta, g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx,
+        g_battle_effect_trajectory_destination.vy - g_battle_effect_trajectory_origin.vy,
+        g_battle_effect_trajectory_destination.vz - g_battle_effect_trajectory_origin.vz);
     g_battle_effect_arctan_angle_mod = ratan2(delta.vy, SquareRoot0(delta.vx * delta.vx + delta.vz * delta.vz)) + 0x400;
-    distance = SquareRoot12((delta.vx * delta.vx + delta.vy * delta.vy + delta.vz * delta.vz) << 12);
+    distance = SquareRoot12((delta.vx * delta.vx + delta.vy * delta.vy + delta.vz * delta.vz) * ONE);
     if (battle_effect_trace_projectile_path(&delta, &g_battle_effect_trajectory_origin, &distance, obstacles) != 0) {
         return target_id;
     }

@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/data.h"
 #include "psx/types.h"
 
 /* Request the effect of an ability: select its effect file, set the effect phase to REQUESTED, start the
@@ -8,7 +10,7 @@
  * An ability without an effect file requests nothing: the Break abilities
  * start the equip break secondary effect, and the Charge abilities and Accumulate the red orbs.
  *
- * `packed` carries the charge animation set in its low halfword and the element mask in its high halfword. */
+ * `packed` carries the charge animation set in its low 16 bits and the element mask in its high 16 bits. */
 void battle_effect_request_ability_effect(u32 packed, s32 ability, battle_effect_secondary_init_t* source) {
     g_battle_effect_load_state = BATTLE_EFFECT_LOAD_START;
     if (ability < ABILITY_ID_COUNT) {
@@ -21,28 +23,29 @@ void battle_effect_request_ability_effect(u32 packed, s32 ability, battle_effect
             else if (ball == BATTLE_EFFECT_ELEMENT_INDEX_LIGHTNING)
                 g_battle_ability_effect_id = BATTLE_EFFECT_FILE_BOLT;
         } else {
-            g_battle_ability_effect_id = g_battle_effect_ability_ids[ability];
+            g_battle_ability_effect_id = g_battle_effect_ability_files[ability];
         }
     } else {
-        /* Ids from 0x200 up continue the table after the action abilities. */
-        g_battle_ability_effect_id = g_battle_effect_ability_ids[ability - ABILITY_ID_COUNT + ABILITY_ID_SUPPORT_FIRST];
+        /* Event ids (0x200 and up) continue the table after the action and reaction ability rows. */
+        g_battle_ability_effect_id
+            = g_battle_effect_ability_files[ability - ABILITY_ID_COUNT + ABILITY_ID_SUPPORT_FIRST];
     }
 
     if (g_battle_ability_effect_id >= 0) {
         g_battle_ability_effect_id &= BATTLE_EFFECT_ABILITY_FILE_MASK;
-        g_battle_effect_phase = BATTLE_EFFECT_PHASE_REQUESTED;
+        g_battle_effect_playback_phase = BATTLE_EFFECT_PLAYBACK_PHASE_REQUESTED;
         if (g_battle_effect_secondary_by_charge_animation[packed & 0xffff] != 0) {
-            g_battle_effect_target_id = battle_effect_init_secondary(
+            g_battle_effect_charge_secondary_id = battle_effect_init_secondary(
                 g_battle_effect_secondary_by_charge_animation[packed & 0xffff], packed >> 16, source);
         } else {
-            g_battle_effect_target_id = 0;
+            g_battle_effect_charge_secondary_id = 0;
         }
         g_battle_effect_sound_call_counts[3] = 0;
         g_battle_effect_sound_call_counts[2] = 0;
         g_battle_effect_sound_call_counts[1] = 0;
         g_battle_effect_sound_call_counts[0] = 0;
+        g_battle_effect_coord_data = *source;
         /* The coord data block retains a copy of the caller's secondary-init record. */
-        *(battle_effect_secondary_init_t*)&g_battle_effect_coord_data = *source;
         D_801BC0D4 = 0;
         return;
     }

@@ -1,4 +1,4 @@
-#include "psx/libgte.h"
+#include "fft/main.h"
 
 /* Set the three components of an SVECTOR. */
 void main_util_set_svector(SVECTOR* vector, s32 x, s32 y, s32 z) {

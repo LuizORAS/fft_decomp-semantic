@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* DEEP_DUNGEON_MESH_LOAD: step the Deep Dungeon map update; when it finishes, check the
  * between-turn events. */

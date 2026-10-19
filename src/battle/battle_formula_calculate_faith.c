@@ -1,7 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
-/* Faith step: HP damage * caster Faith * target Faith / 10000. The Faith
- * status counts as 100 and Innocent as 0; Innocent wins when a unit has both. */
 /* Scale the stored amount by both Faiths: amount * target Faith * attacker Faith / 10000, with the
  * Faith status counting as 100 and Innocent as 0 (Innocent wins). The amount is the HP damage or
  * healing, or the hit chance that the accuracy steps keep in hp_damage. */

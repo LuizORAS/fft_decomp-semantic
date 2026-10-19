@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 
 /* AI_COMMAND: after 31 frames, build the source unit's command with battle_ai_build_command (at
  * 30 fps while that takes more frames), then carry it out: a move, Defend, Equip Change, an
@@ -6,19 +8,19 @@
  *
  * Keep each special skillset's completion explicit so its distinct call tail is preserved. */
 void battle_state_handle_ai_command_state(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 kind;
     s32 result;
     u16 frame;
 
     battle_state_update_units();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     if (unit->state_frame_counter >= 31 && !unit->command_ready) {
         g_main_system_vsync_interval = 2;
-        if (!battle_ai_build_command(unit->battle_data->misc_unit_id, &unit->command_state.ai)) {
+        if (!battle_ai_build_command(unit->stats->battle_id, &unit->command_state.ai)) {
             if (unit->command_state.ai.kind == BATTLE_AI_COMMAND_ACT) {
-                unit->command_state.ai.data.action.unit_id = unit->battle_data->misc_unit_id;
+                unit->command_state.ai.data.action.actor_id = unit->stats->battle_id;
                 battle_action_resolve_command_ability(&unit->command_state.ai.data.action);
             }
             unit->command_ready = 1;
@@ -31,36 +33,36 @@ void battle_state_handle_ai_command_state(void) {
     kind = unit->command_state.ai.kind;
     switch (kind) {
     case BATTLE_AI_COMMAND_MOVE:
-        if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
-            g_battle_casting_unit_id = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id)->unit_id;
+        if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
+            g_battle_casting_runtime_id = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id)->runtime_id;
             battle_state_enter_unit_move();
             return;
         }
         /* fallthrough */
     case BATTLE_AI_COMMAND_MOVE_SELF:
-        g_battle_casting_unit_id = g_battle_unit_source_misc_id;
+        g_battle_casting_runtime_id = g_battle_unit_source_runtime_id;
         battle_state_enter_unit_move();
         return;
     case BATTLE_AI_COMMAND_ACT:
-        switch (unit->command_state.ai.data.action.skillset) {
+        switch (unit->command_state.ai.data.action.skillset_id) {
         case SKILLSET_ID_DEFEND:
-            battle_status_inflict_defending_to_battle_id(unit->battle_data->misc_unit_id);
-            unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
-            battle_unit_update_display_by_misc_id(unit->unit_id);
-            battle_action_set_only_action_taken(unit->battle_data->misc_unit_id);
+            battle_status_inflict_defending_to_battle_id(unit->stats->battle_id);
+            unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
+            battle_unit_update_display_by_runtime_id(unit->runtime_id);
+            battle_action_set_only_action_taken(unit->stats->battle_id);
             battle_state_enter_after_command();
             return;
         case SKILLSET_ID_EQUIP_CHANGE:
-            unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_ACTED;
-            battle_status_clear_action_state(unit->battle_data);
-            battle_ai_init_unit_abilities(unit->battle_data->misc_unit_id);
-            battle_unit_update_display_by_misc_id(unit->unit_id);
-            battle_action_set_only_action_taken(unit->battle_data->misc_unit_id);
+            unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
+            battle_status_clear_action_state(unit->stats);
+            battle_ai_init_unit_abilities(unit->stats->battle_id);
+            battle_unit_update_display_by_runtime_id(unit->runtime_id);
+            battle_action_set_only_action_taken(unit->stats->battle_id);
             battle_state_enter_after_command();
             return;
         case SKILLSET_ID_BLANK_04:
         case SKILLSET_ID_MIMIC:
-            battle_action_set_only_action_taken(unit->battle_data->misc_unit_id);
+            battle_action_set_only_action_taken(unit->stats->battle_id);
             battle_state_enter_after_command();
             return;
         /* Explicit ordinary skillsets retain the native 24-entry dispatch table. */
@@ -86,7 +88,7 @@ void battle_state_handle_ai_command_state(void) {
         case SKILLSET_ID_DANCE:
         default:
             unit->used_ability_id = unit->command_state.ai.data.action.ability_id;
-            result = battle_target_set_panels_for_action(&unit->command_state.ai.data.action.unit_id);
+            result = battle_target_set_panels_for_action(&unit->command_state.ai.data.action);
             unit->ability_preview_phase = result;
             switch (result) {
             case BATTLE_TARGET_PANELS_UNIT_OR_TILE:
@@ -105,7 +107,7 @@ void battle_state_handle_ai_command_state(void) {
     default:
         return;
     }
-    unit->turn_action_flags |= BATTLE_MISC_TURN_ACTION_MOVED | BATTLE_MISC_TURN_ACTION_ACTED;
-    battle_turn_end(unit->battle_data->misc_unit_id);
+    unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_MOVED | BATTLE_UNIT_TURN_ACTION_ACTED;
+    battle_turn_end(unit->stats->battle_id);
     battle_state_enter_after_command();
 }

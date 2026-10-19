@@ -1,3 +1,4 @@
+#include "fft/open.h"
 #include "psx/types.h"
 
 /* Value of a hexadecimal digit character, or 0 for any other character. */

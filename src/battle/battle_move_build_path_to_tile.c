@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Build the acting unit's movement path to a target tile.
@@ -13,7 +15,8 @@
  *
  * The flag byte at 0x8018f86d is written through a pointer loaded twice: the
  * target materialises its address in a register in both blocks. */
-u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
+battle_walk_path_t* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
+    battle_move_height_offsets_t no_offsets = { 0 };
     battle_move_pathfind_scratch_t* config = g_battle_move_config_ptr;
     battle_move_spread_state_t* state = g_battle_move_scratch_pad_ptr;
     battle_move_record_t* records = g_battle_move_records_ptr;
@@ -34,7 +37,7 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
     state->tile_level = config->target_level = elevation;
     battle_move_store_unit_movement_to_scratchpad(unit_id);
     index = (config->target_level << 8) + config->target_y * config->map_max_x + config->target_x;
-    if (!((g_battle_map_tile_data[index].ceiling_depth_and_marks.value >> 5) & 1)) {
+    if (!g_battle_map_tile_data[index].ceiling_depth_and_marks.move_destination) {
         return 0;
     }
     if (g_battle_move_reachable_tiles_valid == 0) {
@@ -47,7 +50,7 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
         return 0;
     }
     battle_move_set_tile_flags_for_pathfinding(BATTLE_MOVE_TILE_FLAGS_MODE_KEEP_RANGES);
-    g_battle_move_path_height_offsets = 0;
+    g_battle_move_path_height_offsets = no_offsets;
     g_battle_move_destination_unit_record = 0;
     config->source_tile_occupied = 0;
     config->destination_tile_occupied = 0;
@@ -88,23 +91,23 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
             *move_flags |= BATTLE_EFFECTIVE_MOVEMENT_SILENT_WALK;
         }
         if (battle_move_roll_teleport_success() != 0) {
-            g_battle_move_path[0] = BATTLE_MOVE_PATH_TELEPORT;
-            g_battle_move_path[1] = x;
-            g_battle_move_path[2] = y;
-            g_battle_move_path[3] = elevation;
+            g_battle_move_path.count = BATTLE_MOVE_PATH_TELEPORT;
+            g_battle_move_path.data.teleport.x = x;
+            g_battle_move_path.data.teleport.y = y;
+            g_battle_move_path.data.teleport.elevation = elevation;
         } else {
-            g_battle_move_path[0] = BATTLE_MOVE_PATH_TELEPORT_FAILED;
+            g_battle_move_path.count = BATTLE_MOVE_PATH_TELEPORT_FAILED;
         }
-        return g_battle_move_path;
+        return &g_battle_move_path;
     }
-    state->candidate_remaining_range.value = 0xff;
+    state->candidate_remaining_range = 0xff;
     state->path_length = 0;
     state->inner_count = 4;
     state->selected_source_side_shift = 0;
-    while (state->candidate_remaining_range.value != 0) {
+    while (state->candidate_remaining_range != 0) {
         state->previous_source_side_shift = state->selected_source_side_shift;
         pass = state->path_length + 1;
-        state->tile_index = state->tile_level * 256 + state->tile_y * config->map_max_x + state->tile_x;
+        state->tile_index = state->tile_level * MAP_TILES_PER_LAYER + state->tile_y * config->map_max_x + state->tile_x;
         state->current_tile = &g_battle_map_tile_data[state->tile_index];
         state->current_panel = &g_battle_target_panels[state->tile_index];
         state->path_length = pass;
@@ -112,7 +115,7 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
             value = state->current_panel->ride_remaining_range;
             range = state->current_panel->remaining_range;
             if (range < value) {
-                g_battle_target_panels[state->source_unit_record_index + 0x200].ride_remaining_range = pass;
+                g_battle_target_panels[state->source_unit_record_index + MAP_TILE_COUNT].ride_remaining_range = pass;
             } else {
                 value = range;
                 state->source_unit_record_flag = 0;
@@ -120,24 +123,24 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
                 state->current_panel->mark = state->path_length;
             }
         } else if (state->source_unit_record_flag != 0) {
-            value = g_battle_target_panels[state->source_unit_record_index + 0x200].remaining_range;
-            g_battle_target_panels[state->source_unit_record_index + 0x200].mark = pass;
+            value = g_battle_target_panels[state->source_unit_record_index + MAP_TILE_COUNT].remaining_range;
+            g_battle_target_panels[state->source_unit_record_index + MAP_TILE_COUNT].mark = pass;
         } else {
             value = state->current_panel->remaining_range;
             state->current_panel->mark = pass;
         }
-        state->candidate_remaining_range.value = value;
+        state->candidate_remaining_range = value;
         if (state->tile_x == config->x && state->tile_y == config->y && state->tile_level == config->high_elevation) {
             break;
         }
         battle_move_search_adjacent_candidates();
-        previous = state->candidate_remaining_range.value;
+        previous = state->candidate_remaining_range;
         if (previous != value) {
             state->outer_count = 4;
             continue;
         }
         battle_move_search_jump_candidates();
-        current = state->candidate_remaining_range.value;
+        current = state->candidate_remaining_range;
         if (current != previous) {
             state->outer_count = 4;
             continue;
@@ -145,17 +148,17 @@ u8* battle_move_build_path_to_tile(s32 unit_id, s32 x, s32 y, s32 elevation) {
         if (config->source_tile_occupied != 0) {
             state->inner_count = 7;
             battle_move_search_adjacent_candidates();
-            previous = state->candidate_remaining_range.value;
+            previous = state->candidate_remaining_range;
             if (previous != current) {
                 continue;
             }
             battle_move_search_jump_candidates();
-            if (state->candidate_remaining_range.value != previous) {
+            if (state->candidate_remaining_range != previous) {
                 continue;
             }
         }
         return 0;
     }
     battle_move_encode_path_steps();
-    return g_battle_move_path;
+    return &g_battle_move_path;
 }

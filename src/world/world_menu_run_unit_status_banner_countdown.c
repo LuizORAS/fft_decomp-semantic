@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -9,14 +10,14 @@ s32 world_menu_run_unit_status_banner_countdown(s32 message_id, s32 frames) {
     if (g_world_unit_status_banner_state == 0) {
         g_world_unit_status_banner_state = frames;
         g_world_unit_status_banner_menu.text_id = message_id;
-        world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MENU, g_world_unit_status_banner_menu.thread_entry);
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MENU, (s32)&g_world_unit_status_banner_menu, 0, 0);
+        thread_start(THREAD_SCREEN_SLOT_MENU, g_world_unit_status_banner_menu.thread_entry);
+        thread_set_parameters(THREAD_SCREEN_SLOT_MENU, (s32)&g_world_unit_status_banner_menu, 0, 0);
         g_world_unit_status_banner_active = 1;
     }
     current = g_world_unit_status_banner_state;
     if (current == 1) {
-        world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_MENU);
-        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU) == 0) {
+        world_menu_request_thread_stop(THREAD_SCREEN_SLOT_MENU);
+        if (thread_is_running(THREAD_SCREEN_SLOT_MENU) == 0) {
             g_world_unit_status_banner_active = 0;
             g_world_unit_status_banner_state = 0;
             return 0;

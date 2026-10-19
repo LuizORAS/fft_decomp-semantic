@@ -139,7 +139,7 @@ for the menus and shops.
 | [[g_wldcore_map_travel]] ([[wldcore_map_travel_t]]) | The path found and the leg, segment and frame the marker is on |
 | `g_wldcore_random_battle_data` | Per field, three roads: route, deployment squad, four tiers (threshold, chance, ENTD mask), eight ENTDs, battle map, progress variable |
 | [[g_wldcore_location_records]] ([[wldcore_state_record_t]]) | Per location: its picture and whether it is a town |
-| [[g_wldcore_days_per_month]], [[g_wldcore_zodiac_start_dates]], [[g_wldcore_brave_story_birthdays]] | The calendar's tables: month lengths (no leap years), the first day of each sign, the Brave Story birthdays |
+| [[g_wldcore_calendar_days_per_month]], [[g_wldcore_calendar_zodiac_start_dates]], [[g_wldcore_brave_story_birthdays]] | The calendar's tables: month lengths (no leap years), the first day of each sign, the Brave Story birthdays |
 | [[g_wldcore_map_label_location]] | The location whose name label is drawn |
 | Script variables | `EVENT_SCRIPT_VAR_LOCATION` (where the marker is), `_LOCATION_VISIBLE_FIRST`, `_PATH_VISIBLE_FIRST`, `_LOCATION_COLOR_FIRST` (0 is red), `_LOCATION_CHOICE_HIDDEN_FIRST`, `_MONTH`, `_DAY`, `_DATE_ADVANCE`, `_YEAR_COUNT` |
 

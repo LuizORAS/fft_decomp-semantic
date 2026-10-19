@@ -1,0 +1,8 @@
+#include "fft/battle_unit.h"
+#include "psx/types.h"
+
+/* Run battle_unit_set_animation_based_on_status on the unit with runtime id runtime_id (low 16 bits);
+ * battle start and the event marches of BATTLE and WORLD use it. */
+void battle_unit_set_status_animation_by_runtime_id(u32 runtime_id) {
+    battle_unit_set_animation_based_on_status(battle_unit_get_by_runtime_id(runtime_id & 0xffff));
+}

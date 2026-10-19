@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Resolve Secret Hunt and Train after an HP-damaging formula 01-06 hit.
@@ -22,7 +24,7 @@ void battle_formula_apply_poach_and_train(void) {
     if (target->unit_flags & (UNIT_FLAG_FEMALE | UNIT_FLAG_MALE)) {
         return;
     }
-    if ((g_battle_team_golem[(target->initial_team_flags & BATTLE_TEAM_MASK) >> 4] != 0)
+    if ((g_battle_team_golem[(target->initial_team_flags & BATTLE_TEAM_MASK) >> BATTLE_TEAM_SHIFT] != 0)
         && (g_battle_action_current_ability.range_data.flags_3 & ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM)) {
         return;
     }
@@ -37,9 +39,9 @@ void battle_formula_apply_poach_and_train(void) {
         return;
     }
     if (((remaining <= 0)
-            || (action->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+            || (action->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)))
-        && (g_battle_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_SECRET_HUNT)
+        && (g_battle_action_attacker->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_SECRET_HUNT)
         && !(target->team_flags & BATTLE_TEAM_FLAG_IMMORTAL)) {
         if (target->job_id < JOB_ID_MONSTER_FIRST || target->job_id > JOB_ID_MONSTER_LAST) {
             return;
@@ -51,8 +53,8 @@ void battle_formula_apply_poach_and_train(void) {
         return;
     }
     if ((remaining > 0) && ((g_battle_action_target->max_hp / 5) >= remaining)
-        && (g_battle_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_TRAIN)) {
-        g_battle_action_target_data->status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INVITE)]
+        && (g_battle_action_attacker->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_TRAIN)) {
+        g_battle_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INVITE)]
             |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE);
         if (battle_status_modify_inflictions(0) != 0) {
             g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_TEAM_CHANGE;

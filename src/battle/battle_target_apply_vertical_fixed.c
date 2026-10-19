@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* VERTICAL_FIXED abilities: mark as choices, on both layers, the tiles in range in the unit's row

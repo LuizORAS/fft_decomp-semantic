@@ -1,4 +1,10 @@
 #include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_script.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 /* The `blez` target depends on which reorg pass fills its delay slot, not on
  * how the two `i = 0` insns are spelled (they are identical RTL by then).
  * Zeroing the counter ahead of the guard (see below) puts `move a0,zero`
@@ -19,8 +25,7 @@
  * refuses it input; thread 8 also clears the four pending selections. Every thread whose task is 1 (a
  * running text thread) is asked to stop (task 3). The entry's result cell receives -1, the event input
  * is consumed, the cancel sound is queued and event input stays suppressed for 5 frames. */
-void battle_menu_handle_entry_cancel(void* menu) {
-    world_menu_entry_t* ctx = menu;
+void battle_menu_handle_entry_cancel(world_menu_entry_t* menu) {
     s32 count;
     s32 i;
     s32 idx;
@@ -30,8 +35,8 @@ void battle_menu_handle_entry_cancel(void* menu) {
     s32 thread;
     char unused[8];
 
-    if ((g_battle_script_event_input & PSX_PAD_CROSS) && battle_menu_is_input_allowed() != 0) {
-        count = ctx->cancel_thread_count;
+    if ((g_script_event_input & PSX_PAD_CROSS) && battle_menu_is_input_allowed() != 0) {
+        count = menu->cancel_thread_count;
         if (count != -1) {
             /* The counter is zeroed ahead of the guard, not inside the arm.
                That is what puts `move a0,zero` immediately before the `blez`,
@@ -43,13 +48,13 @@ void battle_menu_handle_entry_cancel(void* menu) {
                and the branch is retargeted one instruction later. */
             i = 0;
             if (count > 0) {
-                thread = g_battle_thread_current_id;
+                thread = g_thread_current_id;
                 do {
                     idx = i + thread;
-                    g_battle_thread_contexts[idx].function_parameter_3 = 1;
+                    g_thread_contexts[idx].function_parameter_3 = 1;
                     if (idx == 8) {
                         j = 3;
-                        pending = &g_battle_menu_pending_selection[j];
+                        pending = &g_menu_pending_selection[j];
                         do {
                             *pending = -1;
                             pending--;
@@ -63,16 +68,16 @@ void battle_menu_handle_entry_cancel(void* menu) {
             j = 0;
             do {
                 i++;
-                if (g_battle_thread_contexts[j].task_id == NATIVE_THREAD_TASK_RESUME) {
-                    g_battle_thread_contexts[j].task_id = NATIVE_THREAD_TASK_STOP_REQUEST;
+                if (g_thread_contexts[j].task_id == THREAD_TASK_RESUME) {
+                    g_thread_contexts[j].task_id = THREAD_TASK_STOP_REQUEST;
                 }
                 j++;
             } while (i < 0x10);
         }
-        cur = ctx->value;
-        g_battle_script_event_input = 0;
+        cur = menu->value;
+        g_script_event_input = 0;
         *cur = -1;
-        battle_sound_set_effect_to_cancel();
+        sound_queue_sfx_cancel();
         g_battle_event_input_suppression_frames = 5;
     }
 }

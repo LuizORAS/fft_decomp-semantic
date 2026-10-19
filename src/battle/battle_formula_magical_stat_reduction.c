@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x1A, Speed Ruin, Power Ruin and Mind Ruin: the magical evade check; hit chance MA + Y with
  * the element's Strengthen, the magical XA modifiers and both Faiths; a hit lowers Speed, PA or MA by
@@ -13,7 +13,7 @@ void battle_formula_magical_stat_reduction(void) {
         battle_formula_calculate_faith();
         battle_formula_roll_hit_chance();
         if (g_battle_action_target_data->hit == 0) {
-            /* The target clears the bit in the special_effect halfword. */
+            /* The target clears the bit in the special_effect 16-bit value. */
             g_battle_action_target_data->special_effect &= ~BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT;
         } else {
             battle_formula_determine_reduced_stat();

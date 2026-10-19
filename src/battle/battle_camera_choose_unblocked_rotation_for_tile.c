@@ -1,10 +1,11 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
 /* Copies the camera rotation, snapped to the nearest yaw quadrant whose view
  * of the tile is not blocked. The camera angles are read as an SVECTOR: the
- * quadrant is a signed short division, which unsigned halfwords do not emit. */
+ * quadrant is a signed short division, which unsigned 16-bit values do not emit. */
 void battle_camera_choose_unblocked_rotation_for_tile(const SVECTOR* tile_coords, SVECTOR* rotation_out) {
     map_tile_t* tile;
     SVECTOR* rotation;

@@ -8,7 +8,7 @@
  * Team kind is 0 for the player's side, 1 for the enemy team, 2 for a unit on
  * neither the enemy team nor under player control, and 3 for a unit on auto
  * battle. A zero maximum HP or MP is stored as 1. */
-void require_panel_copy_battle_stats_to_gauges(battle_stats_t* unit, battle_unit_status_record_t* output) {
+void require_panel_copy_battle_stats_to_gauges(battle_stats_t* unit, battle_menu_unit_status_record_t* output) {
     u16 maximum_hp;
     u16 maximum_mp;
     u8 ct;
@@ -26,23 +26,23 @@ void require_panel_copy_battle_stats_to_gauges(battle_stats_t* unit, battle_unit
     }
     output->experience = unit->experience;
     maximum_hp = unit->max_hp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = maximum_hp;
+    output->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].max = maximum_hp;
     if (maximum_hp == 0) {
-        output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = maximum_hp + 1;
+        output->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].max = maximum_hp + 1;
     }
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].value = unit->hp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].bonus = 0;
+    output->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].value = unit->hp;
+    output->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].bonus = 0;
     maximum_mp = unit->max_mp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = maximum_mp;
+    output->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].max = maximum_mp;
     if (maximum_mp == 0) {
-        output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = maximum_mp + 1;
+        output->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].max = maximum_mp + 1;
     }
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].value = unit->mp;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].bonus = 0;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].max = 100;
+    output->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].value = unit->mp;
+    output->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].bonus = 0;
+    output->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_CT].max = UNIT_TURN_CT_THRESHOLD;
     ct = unit->ct;
     output->unit_index = 0;
     output->list_index = 0;
     output->unit_count = 0;
-    output->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = ct;
+    output->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_CT].value = ct;
 }

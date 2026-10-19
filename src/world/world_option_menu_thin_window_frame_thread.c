@@ -1,8 +1,14 @@
+#include "fft/gfx.h"
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
 /* WORLD twin of option_menu_thin_window_frame_thread (byte-identical apart from addresses). Nothing
- * calls it.
+ * calls it. world_screen_menu_thin_window_frame_thread, a second copy of this text, has its own blit
+ * descriptors, blit setters and texture-window table (g_world_screen_menu_thin_panel_texture_windows);
+ * both draw into g_world_menu_panel_buffer.
  *
  * One libgpu texture window per DR_MODE packet. The static table already holds each window's w/h
  * (0x10x0x10, 8x0x10, 0x10x8 and two full 0x100x0x100 windows); this function only fills in the
@@ -10,16 +16,11 @@
  * addressing. */
 void world_option_menu_thin_window_frame_thread(void) {
     RECT texture;
-    /* The target holds the frame record base in one callee-saved register across
-       the whole setup section. The address is a constant, so it picks up a
-       REG_EQUIV note and reload rematerializes it at every use instead; the
-       tied empty asm below breaks that equivalence. The two stride pointers are
-       locals for the same reason: the target keeps each one live and re-derives
-       the descriptor base from it (addiu -8) for the glyph calls. */
-    world_panel_frame_t* prim = g_world_menu_panel_buffer.panel_frames;
+    /* Keeping both stride fields live retains their descriptor bases. */
+    world_menu_panel_frame_t* prim = g_world_menu_panel_buffer.panel_frames;
     s32* source_stride = &g_world_gfx_image_blit_source.stride;
     s32* dest_stride = &g_world_gfx_image_blit_destination.stride;
-    world_menu_window_t* menu;
+    urect16_t* menu;
     u8* pixels;
     s32 texture_u;
     s32 texture_v;
@@ -33,7 +34,7 @@ void world_option_menu_thin_window_frame_thread(void) {
     s32 index;
     s32 frame;
 
-    menu = world_thread_get_current_parameter_1();
+    menu = (urect16_t*)world_thread_get_current_parameter_1();
     pixels = world_menu_alloc_memory(0x400);
 
     world_menu_clear_render_buffer(pixels, 0x400);
@@ -46,25 +47,25 @@ void world_option_menu_thin_window_frame_thread(void) {
     world_option_text_set_blit_source_rect(8, 8, 0x20, 0x10);
     world_option_text_set_blit_destination(0, 0);
     world_text_blit_glyph(
-        g_world_menu_glyph_image, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
+        g_menu_glyph_image->pixels, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
     world_option_text_set_blit_source_rect(0, 8, 8, 0x10);
     world_option_text_set_blit_destination(0x20, 0);
     world_text_blit_glyph(
-        g_world_menu_glyph_image, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
+        g_menu_glyph_image->pixels, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
     world_option_text_set_blit_source_rect(0, 0, 0x28, 8);
     world_option_text_set_blit_destination(0x28, 0);
     world_text_blit_glyph(
-        g_world_menu_glyph_image, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
+        g_menu_glyph_image->pixels, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
     world_option_text_set_blit_source_rect(0, 0x18, 0x28, 8);
     world_option_text_set_blit_destination(0x28, 8);
     world_text_blit_glyph(
-        g_world_menu_glyph_image, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
+        g_menu_glyph_image->pixels, pixels, &g_world_gfx_image_blit_source, &g_world_gfx_image_blit_destination);
 
     LoadImage(&texture, (u32*)pixels);
-    world_menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
+    menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
     texture_u = (texture.x & 0x3f) * 4;
     /* The target loads the returned rectangle's y once as a byte (lbu) and
-       reuses it for every halfword and byte store below. */
+       reuses it for every 16-bit and byte store below. */
     texture_v = texture.y & 0xFF;
     for (index = 0; index < 4; index++) {
         g_world_menu_thin_panel_texture_windows[index].x = (texture_u + index) * 0x10;
@@ -83,7 +84,7 @@ void world_option_menu_thin_window_frame_thread(void) {
     prim->sprites[0].x0 = menu->x + 8;
     prim->sprites[0].y0 = menu->y + 8;
     /* The subtractions go through an s32 temporary: assigning the difference
-       straight into the halfword field lets combine narrow it to HImode, where
+       straight into the 16-bit field lets combine narrow it to HImode, where
        the negative constant no longer fits an addiu and is loaded instead. */
     span = menu->w - 0x18;
     prim->sprites[0].w = span;
@@ -136,40 +137,41 @@ void world_option_menu_thin_window_frame_thread(void) {
     prim->sprites[8].h = border_thin;
 
     world_gfx_init_scaled_draw_area_packets(&prim->draw_areas);
-    world_util_copy_bytes(&g_world_menu_panel_buffer.panel_frames[1], &g_world_menu_panel_buffer.panel_frames[0],
-        sizeof(world_panel_frame_t));
+    mem_copy_bytes_nonempty(&g_world_menu_panel_buffer.panel_frames[1], &g_world_menu_panel_buffer.panel_frames[0],
+        sizeof(world_menu_panel_frame_t));
 
     frame = 0;
     while (world_thread_get_current_parameter_3() == 0) {
         prim = &g_world_menu_panel_buffer.panel_frames[frame & 1];
-        world_gfx_build_scaled_draw_area_pair_swapped(&prim->draw_areas, menu, frame, g_main_gfx_active_buffer_index);
+        world_gfx_build_scaled_draw_area_pair_swapped(
+            &prim->draw_areas, (const RECT*)menu, frame, g_main_gfx_active_buffer_index);
         /* The CLUT id the nine border sprites are drawn with this frame, which
            the target keeps in this variable's register once the texture column
            is dead. A separate local is allocated a different callee-saved
            register and does not reproduce the target. */
         texture_u = 0x7d3c;
-        if (world_thread_get_current_parameter_2() == 0 && g_world_menu_input_lock_mode == 0) {
+        if (world_thread_get_current_parameter_2() == 0 && g_menu_input_lock_mode == 0) {
             texture_u = 0x7c3c;
         }
         for (index = 8; index >= 0; index--) {
             prim->sprites[index].clut = texture_u;
         }
-        world_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[1]);
-        world_gfx_draw_or_append_gpu_primitive(&prim->modes[6]);
+        gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&prim->modes[6]);
         for (index = 0; index < 5; index++) {
-            world_gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
-            world_gfx_draw_or_append_gpu_primitive(&prim->modes[index]);
+            gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
+            gfx_draw_or_append_gpu_primitive(&prim->modes[index]);
         }
         for (index = 8; index >= 5; index--) {
-            world_gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
+            gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
         }
-        world_gfx_draw_or_append_gpu_primitive(&prim->modes[5]);
-        world_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[0]);
+        gfx_draw_or_append_gpu_primitive(&prim->modes[5]);
+        gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[0]);
         frame++;
-        world_thread_yield();
+        thread_yield();
     }
-    world_thread_yield();
+    thread_yield();
     world_menu_free_memory(pixels);
     world_gfx_free_tpage7_vram(&texture);
-    world_thread_exit_current();
+    thread_exit_current();
 }

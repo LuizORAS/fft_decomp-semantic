@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_unit.h"
 
 /* Apply the acting unit's EXP and JP after its action. Nothing happens when Hamedo cancelled the
  * action (-1), the action earns nothing (0), or the unit is gone, a Crystal, Dead, Petrified or a
@@ -12,7 +13,6 @@
 s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_display_t* display) {
     s32 job_slot;
     battle_stats_t* unit;
-    u8* earned_experience;
     u8 old_level;
     s32 experience;
     s32 jp;
@@ -58,8 +58,7 @@ s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_displa
     if (main_unit_check_level_up(unit) != 0 || g_battle_action_current_ability.level_gained_flag != 0) {
         display->level_for_display = unit->level;
     }
-    earned_experience = &g_battle_action_current_ability.earned_experience;
-    display->earned_experience = *earned_experience;
+    display->earned_experience = g_battle_action_current_ability.earned_experience;
 
     if (unit->unit_flags & UNIT_FLAG_MONSTER) {
         return 0;
@@ -70,7 +69,7 @@ s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_displa
     job_component = old_job_level * 2;
     level_component = (old_level >> 2) + 8;
     jp = job_component + level_component;
-    if (*earned_experience == 0) {
+    if (g_battle_action_current_ability.earned_experience == 0) {
         jp = 0;
     }
 
@@ -81,7 +80,7 @@ s32 battle_unit_apply_action_rewards(s32 unit_index, battle_action_reward_displa
         }
     }
 
-    if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_GAINED_JP_UP) {
+    if (unit->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_GAINED_JP_UP) {
         jp = jp * 3 / 2;
     }
     team = unit->initial_team_flags & BATTLE_TEAM_MASK;

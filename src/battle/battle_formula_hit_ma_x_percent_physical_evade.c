@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x50, Secret Fist and monster touches (Eye Gouge, Poison Nail, Black Ink, Zombie Touch,
  * Sleep Touch, Grease Touch, Look of Devil, Beak): the physical evade check and the hit chance MA + X

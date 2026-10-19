@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* The general search, for a unit without a controlling status or an Auto-Battle mode: build the
  * movement scenarios, take moving to the destination as the baseline (battle_ai_set_movement_baseline),
@@ -9,21 +9,21 @@
 s32 battle_ai_select_general_action(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 charging_result;
-    s32 resume_state;
+    battle_ai_autobattle_stage_e resume_state;
 
     if (g_battle_ai_data_base.resume_pending != 0) {
         /* Resume: re-enter the step that suspended. */
         resume_state = g_battle_ai_data_base.autobattle_state;
-        if (resume_state == 4)
+        if (resume_state == BATTLE_AI_AUTOBATTLE_MOVEMENT)
             goto evaluate_movement;
-        if (resume_state == 2)
+        if (resume_state == BATTLE_AI_AUTOBATTLE_CHARGING)
             goto evaluate_charging;
         goto evaluate_abilities;
     }
     g_battle_ai_data_base.movement_scenario = 1;
 evaluate_movement:
     if (battle_ai_build_movement_scenarios() == -1) {
-        ai->autobattle_state = 4;
+        ai->autobattle_state = BATTLE_AI_AUTOBATTLE_MOVEMENT;
         return -1;
     }
     ai->movement_scenario = 0;
@@ -33,7 +33,7 @@ evaluate_charging:
     charging_result = battle_ai_evaluate_charged_action();
     switch (charging_result) {
     case -1:
-        ai->autobattle_state = 2;
+        ai->autobattle_state = BATTLE_AI_AUTOBATTLE_CHARGING;
         return -1;
     case 1:
         return 0;
@@ -42,7 +42,7 @@ evaluate_charging:
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_ANY, 0) != 0) {
     evaluate_abilities:
         if (battle_ai_evaluate_ability_list() == -1) {
-            ai->autobattle_state = 7;
+            ai->autobattle_state = BATTLE_AI_AUTOBATTLE_ABILITIES;
             return -1;
         }
     }

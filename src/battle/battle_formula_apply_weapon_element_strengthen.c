@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* The attacker's Strengthen for the weapon's element: XA * 5 / 4. */
 void battle_formula_apply_weapon_element_strengthen(void) {

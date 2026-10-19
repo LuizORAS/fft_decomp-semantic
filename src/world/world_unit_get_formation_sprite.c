@@ -1,16 +1,16 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Resolve a party member's formation sprite word: bits 0-9 select the
+/* Resolve a party member's 32-bit formation sprite value: bits 0-9 select the
  * sprite, and for monsters bits 10-11 carry the job's portrait palette. */
 s32 world_unit_get_formation_sprite(s32 party_index) {
-    party_data_t* party_unit;
+    party_unit_t* party_unit;
     job_data_t* job_data;
     u32 sprite_set;
     s32 portrait_id;
     s32 formation_sprite;
 
-    party_unit = main_party_get_data_pointer(party_index);
+    party_unit = main_party_get_unit(party_index);
     sprite_set = party_unit->sprite_set;
     portrait_id = sprite_set;
     if (sprite_set >= CHARACTER_IDENTITY_SELECTOR_FIRST) {

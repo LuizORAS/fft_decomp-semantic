@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* The Dance and Song hit chance: the shown accuracy scales by X%; while executing, a 0-99 roll at or

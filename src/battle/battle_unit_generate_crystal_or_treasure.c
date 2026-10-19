@@ -1,15 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_unit.h"
+#include "fft/memory.h"
 #include "psx/types.h"
-
-extern main_crystal_pickup_result_t g_main_crystal_pickup_result;
-
-/* Local view of battle_stats_t with learned_abilities (0x99) as 19 rows of 3
- * bytes. The 2D indexing is what makes loop.c reduce `unit + i * 3` as the
- * outer-loop giv (target `move s6,s2` / `addiu a2,s6,0x99`). */
-typedef struct {
-    u8 _unused_00[0x99];
-    u8 learned_abilities[UNIT_LEARNED_ABILITY_JOB_COUNT][UNIT_LEARNED_ABILITY_BYTES_PER_JOB];
-} battle_stats_learned_rows_t;
 
 /* Resolve the crystal or chest under a unit that moved (battle_unit_find_at_tile) into
  * g_main_crystal_pickup_result: -1 when there is none; 4 with a random item for a chest
@@ -35,7 +27,7 @@ main_crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_st
     battle_stats_t* crystal;
     s32 crystal_index;
     s32 job_id;
-    s32 i;
+    s32 job_index;
     s32 j;
     s32 byte_index;
     s32 mask;
@@ -43,7 +35,7 @@ main_crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_st
     s32 ability;
     u16 ability_id;
 
-    crystal_index = battle_unit_find_at_tile(mover->x, mover->position.bits.y, mover->position.bits.higher_elevation,
+    crystal_index = battle_unit_find_at_tile(mover->x, mover->position.y, mover->position.higher_elevation,
         BATTLE_UNIT_TILE_FILTER_CRYSTAL | BATTLE_UNIT_TILE_FILTER_TREASURE);
     if (crystal_index < 0) {
         g_main_crystal_pickup_result.result = -1;
@@ -66,33 +58,33 @@ main_crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_st
         crystal_flags = crystal->unit_flags;
         if (!(mover_flags & UNIT_FLAG_MONSTER) && !(crystal_flags & UNIT_FLAG_MONSTER)) {
             learned_count = 0;
-            unlocked_jobs_mask
-                = (mover->unlocked_jobs[0] << 16) + (mover->unlocked_jobs[1] << 8) + mover->unlocked_jobs[2];
+            unlocked_jobs_mask = (mover->career.unlocked_jobs[0] << 16) + (mover->career.unlocked_jobs[1] << 8)
+                + mover->career.unlocked_jobs[2];
             mover_identity = mover->character_identity;
             crystal_identity = crystal->character_identity;
-            main_util_clear_byte_data(g_main_crystal_pickup_result.learned_abilities, 0x40);
-            for (i = 0; i < UNIT_LEARNED_ABILITY_JOB_COUNT; i++) {
+            main_mem_zero(g_main_crystal_pickup_result.learned_abilities, 0x40);
+            for (job_index = UNIT_CAREER_JOB_INDEX_BASE; job_index < UNIT_LEARNED_ABILITY_JOB_COUNT; job_index++) {
                 for (j = 0; j < UNIT_LEARNED_ABILITY_BYTES_PER_JOB; j++) {
-                    g_main_crystal_pickup_result.learned[i][j] = 0;
+                    g_main_crystal_pickup_result.learned[job_index][j] = 0;
                     gained[j] = 0;
-                    known[j] = ((battle_stats_learned_rows_t*)mover)->learned_abilities[i][j];
-                    offered[j] = ((battle_stats_learned_rows_t*)crystal)->learned_abilities[i][j];
+                    known[j] = mover->career.learned_abilities[job_index][j];
+                    offered[j] = crystal->career.learned_abilities[job_index][j];
                 }
-                job_id = i + JOB_ID_GENERIC_FIRST;
-                if (i == 0) {
+                job_id = job_index + JOB_ID_GENERIC_FIRST;
+                if (job_index == UNIT_CAREER_JOB_INDEX_BASE) {
                     if (mover_identity != crystal_identity) {
                         continue;
                     }
                     if (mover_identity < CHARACTER_IDENTITY_SELECTOR_FIRST) {
                         job_id = mover_identity;
                     }
-                } else if (!(unlocked_jobs_mask & (0x800000 >> i))) {
+                } else if (!(unlocked_jobs_mask & (UNIT_UNLOCKED_JOB_SQUIRE >> job_index))) {
                     continue;
                 }
-                if (i == 0x11 && (mover_flags & UNIT_FLAG_FEMALE)) {
+                if (job_index == UNIT_CAREER_JOB_INDEX_BARD && (mover_flags & UNIT_FLAG_FEMALE)) {
                     continue;
                 }
-                if (i == 0x12 && (mover_flags & UNIT_FLAG_MALE)) {
+                if (job_index == UNIT_CAREER_JOB_INDEX_DANCER && (mover_flags & UNIT_FLAG_MALE)) {
                     continue;
                 }
                 skillset = g_main_job_data_pointer[job_id].skillset;
@@ -114,7 +106,7 @@ main_crystal_pickup_result_t* battle_unit_generate_crystal_or_treasure(battle_st
                     }
                 }
                 for (j = 0; j < UNIT_LEARNED_ABILITY_BYTES_PER_JOB; j++) {
-                    g_main_crystal_pickup_result.learned[i][j] = gained[j];
+                    g_main_crystal_pickup_result.learned[job_index][j] = gained[j];
                 }
             }
             if (learned_count != 0) {

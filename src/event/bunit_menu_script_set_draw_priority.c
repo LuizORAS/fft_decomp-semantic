@@ -1,10 +1,10 @@
 #include "fft/event_bunit.h"
-#include "psx/types.h"
+#include "fft/menu.h"
 
 /* Opcode 0x0f (MENU_SCRIPT_OP_DRAW_PRIORITY): byte 3 becomes the draw priority, the ordering-table
- * index of the primitives the following commands queue (g_bunit_gfx_otag_index). Returns the next
+ * index of the primitives the following commands queue (g_menu_gfx_otag_index). Returns the next
  * command. */
-u8* bunit_menu_script_set_draw_priority(u8* data) {
-    g_bunit_gfx_otag_index = data[3];
-    return data + data[1];
+menu_instruction_t* bunit_menu_script_set_draw_priority(menu_instruction_t* data) {
+    g_menu_gfx_otag_index = data->draw_state.value;
+    return menu_next_instruction(data);
 }

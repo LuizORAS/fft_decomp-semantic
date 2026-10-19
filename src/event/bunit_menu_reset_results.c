@@ -1,5 +1,4 @@
 #include "fft/event_bunit.h"
-#include "psx/types.h"
 
 /* Set the unit list menu's results to -1 (nothing chosen): the menu row (g_bunit_menu_primary_result)
  * and the sort-order list's (g_bunit_menu_reorder_result). */

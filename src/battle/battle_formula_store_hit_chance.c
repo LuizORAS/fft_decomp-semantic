@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Store the hit chance XA + YA in the target's hp_damage, where the accuracy steps keep it until

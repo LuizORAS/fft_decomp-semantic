@@ -6,7 +6,7 @@
  * the list's scroll.
  *
  * At rest, a row above or below the window moves the first visible row by
- * one and starts a scroll. The velocity word then holds the signed pixels
+ * one and starts a scroll. The signed 16-bit velocity then holds the pixels
  * covered so far, growing by 4 a call; after one row height (0x30) it folds
  * into g_world_card_list_scroll_y and returns to 0.
  */

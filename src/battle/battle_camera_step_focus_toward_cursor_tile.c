@@ -1,8 +1,11 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
+#include "psx/libgte.h"
 
-/* Move one 12.4 fixed-point camera component toward its bound by its per-frame
+/* Move one 20.12 fixed-point camera component toward its bound by its per-frame
  * step, without overshooting. The bound is compared against the component's
- * whole-unit part, so the clamp lands exactly on bound << 12. The test is
+ * whole-unit part, so the clamp lands exactly on bound * ONE. The test is
  * written once per sign of the step because the overshoot comparison reverses
  * with it. The body is a bare if/else: wrapped in do/while (0) it becomes a
  * loop to the compiler, which doubles its reference counts and changes the
@@ -10,22 +13,22 @@
 #define BATTLE_CAMERA_STEP_TOWARD(component, step, limit)                                                              \
     if (step < 0) {                                                                                                    \
         s32* position = component;                                                                                     \
-        s32 whole = *position / 4096;                                                                                  \
+        s32 whole = *position / ONE;                                                                                   \
         s32 bound = limit;                                                                                             \
         if (whole > bound) {                                                                                           \
             *position += step;                                                                                         \
-            if (*position / 4096 < bound) {                                                                            \
-                *position = bound << 12;                                                                               \
+            if (*position / ONE < bound) {                                                                             \
+                *position = bound * ONE;                                                                               \
             }                                                                                                          \
         }                                                                                                              \
     } else {                                                                                                           \
         s32* position = component;                                                                                     \
-        s32 whole = *position / 4096;                                                                                  \
+        s32 whole = *position / ONE;                                                                                   \
         s32 bound = limit;                                                                                             \
         if (whole < bound) {                                                                                           \
             *position += step;                                                                                         \
-            if (bound < *position / 4096) {                                                                            \
-                *position = bound << 12;                                                                               \
+            if (bound < *position / ONE) {                                                                             \
+                *position = bound * ONE;                                                                               \
             }                                                                                                          \
         }                                                                                                              \
     }
@@ -37,9 +40,9 @@
  * half a tile of bias); the caller supplies the height bound directly.
  */
 void battle_camera_step_focus_toward_cursor_tile(s16 height) {
-    BATTLE_CAMERA_STEP_TOWARD(
-        &g_battle_camera_current_real_coords.vx, g_battle_camera_step_vector.vx, g_battle_cursor_x * 28 + 14);
+    BATTLE_CAMERA_STEP_TOWARD(&g_battle_camera_current_real_coords.vx, g_battle_camera_step_vector.vx,
+        g_battle_cursor_x * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2));
     BATTLE_CAMERA_STEP_TOWARD(&g_battle_camera_current_real_coords.vy, g_battle_camera_step_vector.vy, height);
-    BATTLE_CAMERA_STEP_TOWARD(
-        &g_battle_camera_current_real_coords.vz, g_battle_camera_step_vector.vz, g_battle_cursor_y * 28 + 14);
+    BATTLE_CAMERA_STEP_TOWARD(&g_battle_camera_current_real_coords.vz, g_battle_camera_step_vector.vz,
+        g_battle_cursor_y * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2));
 }

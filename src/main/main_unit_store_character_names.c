@@ -1,5 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_text.h"
 #include "fft/main.h"
+#include "fft/memory.h"
+#include "fft/unit.h"
 #include "fft/world.h"
 #include "psx/libc.h"
 
@@ -13,76 +15,86 @@ enum {
  * roster member or battle unit of that kind has. It also clears the action's status infliction and
  * removal sets. */
 void main_unit_store_character_names(battle_stats_t* unit) {
+    /* Removing this unused array reduces the native stack frame by 0x100. */
     u8 unused[0x100];
     u8* (*prepare_text)(u32 text_id);
-    u32 name_flags;
-    u32 name_mod;
+    u32 text_id;
+    unit_name_id_t name_base;
     u8 gender;
-    u16 name_id;
-    s32 unused_name;
+    unit_name_id_t name_id;
+    unit_name_id_t existing_name;
+    u8 name_index;
+    s32 name_available;
     s32 i;
     u8* text;
-    party_data_t* party;
+    party_unit_t* party;
     battle_stats_t* other;
-    u8* name_bytes;
+    const unit_name_id_t* name_id_record;
 
     prepare_text = battle_text_find_entry;
     if (g_main_unit_name_uses_world_text != 0) {
         prepare_text = world_text_find_entry;
     }
     if (unit->formation_index == PARTY_ID_NONE) {
-        name_flags = TEXT_ID_UNIT_NAME_BASE;
-        name_id = unit->quote_name_id & 0xFF;
-        if (name_id == 0xff) {
+        text_id = TEXT_ID_UNIT_NAME_BASE;
+        name_index = unit->quote_name_id.value;
+        name_id.value = name_index;
+        if (name_id.value == 0xff) {
             gender = unit->unit_flags & NAME_GENDER_MASK;
             if (unit->unit_flags & UNIT_FLAG_MALE) {
-                name_flags = TEXT_ID_UNIT_NAME_GENERIC_MALE_BASE;
-                name_mod = 0x100;
+                text_id = TEXT_ID_UNIT_NAME_GENERIC_MALE_BASE;
+                name_base.value = 0;
+                name_base.fields.name_class = PARTY_NAME_CLASS_GENERIC_MALE;
             } else if (unit->unit_flags & UNIT_FLAG_FEMALE) {
-                /* The empty loop wrapper only raises this variable's reference
-                 * weight so the allocator keeps it in $s1; it emits no code. */
-                do {
-                    name_flags = TEXT_ID_UNIT_NAME_GENERIC_FEMALE_BASE;
-                } while (0);
-                name_mod = 0x200;
+                text_id = TEXT_ID_UNIT_NAME_GENERIC_FEMALE_BASE;
+                name_base.value = 0;
+                name_base.fields.name_class = PARTY_NAME_CLASS_GENERIC_FEMALE;
             } else {
-                name_flags = TEXT_ID_UNIT_NAME_GENERIC_MONSTER_BASE;
-                name_mod = 0x300;
+                text_id = TEXT_ID_UNIT_NAME_GENERIC_MONSTER_BASE;
+                name_base.value = 0;
+                name_base.fields.name_class = PARTY_NAME_CLASS_GENERIC_MONSTER;
             }
             do {
-                unused_name = 1;
-                name_id = name_mod + (rand() * 255) / 0x8000;
+                name_available = 1;
+                name_id.value = name_base.value + (rand() * 255) / 0x8000;
                 for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-                    party = &g_main_party_data[i];
+                    party = &g_main_party_units[i];
                     if (party->party_id != PARTY_ID_NONE && gender == (party->gender_flags & NAME_GENDER_MASK)) {
-                        name_bytes = party->name_id;
-                        if ((name_bytes[0] | (name_bytes[1] << 8)) == name_id) {
-                            unused_name = 0;
+                        name_id_record = &party->name_id;
+                        existing_name.value = 0;
+                        existing_name.fields.name_class = name_id_record->fields.name_class;
+                        existing_name.fields.index = name_id_record->fields.index;
+                        if (existing_name.value == name_id.value) {
+                            name_available = 0;
                             break;
                         }
                     }
                 }
                 for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
                     other = &g_battle_unit_stats[i];
-                    if (gender == (other->unit_flags & NAME_GENDER_MASK) && other->quote_name_id == name_id) {
-                        unused_name = 0;
+                    if (gender == (other->unit_flags & NAME_GENDER_MASK)
+                        && other->quote_name_id.value == name_id.value) {
+                        name_available = 0;
                         break;
                     }
                 }
-            } while (unused_name == 0);
-            unit->quote_name_id = name_id;
+            } while (name_available == 0);
+            unit->quote_name_id.value = name_id.value;
         }
-        name_flags += name_id & 0xff;
-        text = prepare_text(name_flags);
+        name_index = name_id.fields.index;
+        text_id += name_index;
+        text = prepare_text(text_id);
     } else {
-        text = main_party_get_data_pointer(unit->formation_index)->name;
+        text = main_party_get_unit(unit->formation_index)->name;
     }
-    main_util_copy_bytes(text, unit->name, 16);
-    main_util_copy_bytes(prepare_text(unit->job_id | TEXT_ID_JOB_NAME_BASE), unit->job_name, 16);
-    main_util_copy_bytes(
-        prepare_text(unit->primary_skillset | TEXT_ID_SKILLSET_NAME_BASE), unit->primary_skillset_name, 8);
-    main_util_copy_bytes(
-        prepare_text(unit->secondary_skillset | TEXT_ID_SKILLSET_NAME_BASE), unit->secondary_skillset_name, 8);
-    /* Clear the adjacent inflicted/removed status sets (five bytes each). */
-    main_util_clear_byte_data(unit->action.status_infliction, 10);
+    main_mem_copy_bytes_source_first(text, unit->name, sizeof(unit->name));
+    text_id = unit->job_id | TEXT_ID_JOB_NAME_BASE;
+    main_mem_copy_bytes_source_first(prepare_text(text_id), unit->job_name, sizeof(unit->job_name));
+    text_id = unit->primary_skillset | TEXT_ID_SKILLSET_NAME_BASE;
+    main_mem_copy_bytes_source_first(
+        prepare_text(text_id), unit->primary_skillset_name, sizeof(unit->primary_skillset_name));
+    text_id = unit->secondary_skillset | TEXT_ID_SKILLSET_NAME_BASE;
+    main_mem_copy_bytes_source_first(
+        prepare_text(text_id), unit->secondary_skillset_name, sizeof(unit->secondary_skillset_name));
+    main_mem_zero(&unit->action.status_changes, sizeof(unit->action.status_changes));
 }

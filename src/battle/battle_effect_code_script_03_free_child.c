@@ -1,10 +1,11 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Opcode 03: free the child record in the child slot named by bits 4-5 of
  * the instruction's second byte. */
-s32 battle_effect_code_script_03_free_child(effect_record_t* record) {
-    s32 slot_offset = (*(u8*)(record->pc + (s32)record->script + 1) >> 3) & 6;
-    s16 child = record->child_indices[slot_offset >> 1];
+effect_script_result_e battle_effect_code_script_03_free_child(battle_effect_record_t* record) {
+    const effect_script_instruction_t* instruction = effect_get_current_script_instruction(record);
+    effect_script_parameters_t parameters = instruction->header.parameters;
+    s16 child = record->child_indices[parameters.free_child.slot];
     if (child != 0)
         battle_effect_free_state_record(child);
     record->pc += 2;

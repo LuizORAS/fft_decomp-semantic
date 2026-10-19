@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* Enter OPEN_SP2_FILES at 60 fps with no SP2 buffer yet. */
 void battle_state_enter_open_sp2_files(void) {

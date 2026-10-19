@@ -13,17 +13,17 @@
  * is its own local so the pointer shares the register of the constant it dies into. */
 void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     GsIMAGE image;
-    wldcore_window_render_bounds16_t bounds;
-    wldcore_point32_t clut;
+    RECT bounds;
+    open_point32_t clut;
     s32 unused[4];
     s32 index;
     s32 depth;
     s32 offset_x;
     s32 offset_y;
-    wldcore_point32_t* base1;
-    wldcore_point32_t* base2;
-    wldcore_point32_t* base3;
-    wldcore_point32_t* base4;
+    open_point32_t* base1;
+    open_point32_t* base2;
+    open_point32_t* base3;
+    open_point32_t* base4;
 
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_resume.mode = mode;
     index = wldcore_window_append_record_and_reset_color(
@@ -38,10 +38,10 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_resume.picture_render = index;
-    bounds.position.x = image.px;
-    bounds.position.y = image.py;
-    bounds.dimensions.x = image.pw;
-    bounds.dimensions.y = image.ph;
+    bounds.x = image.px;
+    bounds.y = image.py;
+    bounds.w = image.pw;
+    bounds.h = image.ph;
     clut.x = image.cx;
     clut.y = image.cy;
     wldcore_window_init_vram_render_record(index, bounds, clut, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
@@ -51,11 +51,11 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_resume.message_render = index;
-    bounds.position.x = 0;
-    bounds.position.y = 0x70;
-    bounds.dimensions.x = 0x7C;
-    bounds.dimensions.y = 0x80;
-    g_world_text_substitution_values[0] = mode + TEXT_ID_TREASURE_NAME_BASE;
+    bounds.x = 0;
+    bounds.y = 0x70;
+    bounds.w = 0x7C;
+    bounds.h = 0x80;
+    g_text_substitution_values[0] = mode + TEXT_ID_TREASURE_NAME_BASE;
     wldcore_window_init_render_record_image(
         index, bounds, 1, WLDCORE_TEXT_ID_SUBSTITUTED_TEXT, g_wldcore_window_image_buffer);
     g_wldcore_window_render_records[index].priority = 0xA;
@@ -76,10 +76,10 @@ void wldcore_menu_push_sound_novel_resume_level(s32 mode) {
     index = wldcore_window_append_render_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].sound_novel_resume.option_render = index;
-    bounds.position.x = 0x80;
-    bounds.position.y = 0x70;
-    bounds.dimensions.x = 0x70;
-    bounds.dimensions.y = 0x70;
+    bounds.x = 0x80;
+    bounds.y = 0x70;
+    bounds.w = 0x70;
+    bounds.h = 0x70;
     wldcore_window_init_render_record_image(
         index, bounds, 1, WLDCORE_TEXT_ID_SOUND_NOVEL_RESUME_CHOICES, g_wldcore_window_image_buffer + 0x400);
     g_wldcore_window_render_records[index].priority = 0xA;

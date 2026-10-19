@@ -1,10 +1,10 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Allocate one typed primitive from the effect renderer's circular arena.
  *
  * The original renderer wraps before an allocation that would cross the
  * 0x8000-byte arena boundary; callers consume the result immediately. */
-void* battle_effect_alloc_primitive(s32 primitive_type) {
+void* battle_effect_alloc_primitive(effect_primitive_type_e primitive_type) {
     s32 offset;
     /* The primitive size stays in $a0 across the wrap test and the size-table
      * offset takes $v0. */

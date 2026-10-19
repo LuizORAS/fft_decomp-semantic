@@ -1,3 +1,5 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -9,11 +11,11 @@ void world_menu_zodiac_backdrop_thread(void) {
     s32 frame;
 
     if (g_world_menu_hosted_frame != 0) {
-        g_world_menu_zodiac_backdrop.offset.x = 0;
-        g_world_menu_zodiac_backdrop.offset.y = 8;
+        g_world_menu_zodiac_backdrop.offset.position.x = 0;
+        g_world_menu_zodiac_backdrop.offset.position.y = 8;
     } else {
-        g_world_menu_zodiac_backdrop.offset.x = 0x100;
-        g_world_menu_zodiac_backdrop.offset.y = 0x80;
+        g_world_menu_zodiac_backdrop.offset.position.x = 0x100;
+        g_world_menu_zodiac_backdrop.offset.position.y = 0x80;
     }
     if (world_thread_get_current_parameter_1() == 0) {
         g_world_menu_zodiac_backdrop.scale_x = 0x2000;
@@ -25,16 +27,15 @@ void world_menu_zodiac_backdrop_thread(void) {
     for (frame = 0;; frame++) {
         g_world_menu_zodiac_backdrop.ot = g_world_menu_zodiac_backdrop_otag;
         if (g_world_menu_zodiac_backdrop.scale_x > ONE) {
-            s32 step = g_world_event_speed << 8;
+            s32 step = g_script_event_speed << 8;
             g_world_menu_zodiac_backdrop.scale_x -= step;
             g_world_menu_zodiac_backdrop.scale_y -= step;
         }
         g_world_menu_zodiac_backdrop.brightness = g_world_menu_color_red;
-        world_gfx_build_zodiac_primitives(
-            &g_world_menu_zodiac_backdrop, (POLY_FT4*)g_world_menu_zodiac_backdrop_quads[frame & 1]);
-        world_thread_yield();
+        world_gfx_build_zodiac_primitives(&g_world_menu_zodiac_backdrop, g_world_menu_zodiac_backdrop_quads[frame & 1]);
+        thread_yield();
         if (world_thread_get_current_parameter_3() != 0) {
-            world_thread_exit_current();
+            thread_exit_current();
         }
     }
 }

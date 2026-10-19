@@ -1,5 +1,6 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/unit.h"
 
 /* Formula 0x0E, Death: the magical evade check, which an undead target skips along with Magic Defense
  * Up and its Shell, Frog and Chicken; hit chance MA + X with Magic Attack Up, the zodiac and both

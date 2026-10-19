@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Handler of the formation's Ability menus (ABILITY, its ENTER and LEAVE states and the rows SET,
@@ -24,7 +25,7 @@ void world_formation_run_ability_menu(void) {
             g_world_formation_unit_banner_at_bottom = 0;
             g_world_formation_unit_browse_enabled = 0;
             g_world_ability_menu_saved_browse_enabled = saved;
-            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
+            world_menu_request_thread_stop(THREAD_SCREEN_SLOT_CHARACTER_STATUS);
             g_world_ability_menu_initialized = 1;
             g_world_ability_menu_slots_changed = 0;
         }
@@ -56,8 +57,7 @@ void world_formation_run_ability_menu(void) {
     }
     if (g_world_ability_menu_unit_index != g_world_formation_selected_unit_index) {
         value = world_formation_get_unit_lock(g_world_formation_selected_unit_index);
-        g_world_ability_menu_unit_index
-            = ((world_menu_halfword_view_t*)&g_world_formation_selected_unit_index)->bytes[0];
+        g_world_ability_menu_unit_index = (u8)g_world_formation_selected_unit_index;
         if (value == WORLD_FORMATION_UNIT_LOCK_MIME) {
             g_world_ability_menu.text_id = 0xd80d;
         } else {
@@ -93,7 +93,7 @@ void world_formation_run_ability_menu(void) {
                 g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
                 g_world_formation_current_menu = *selection + WORLD_FORMATION_MENU_ABILITY_SET;
                 if (g_world_formation_current_menu != WORLD_FORMATION_MENU_ABILITY_LEARN) {
-                    world_thread_start(WORLD_THREAD_SLOT_UPPER_MENU_CHILD, world_formation_ability_menu_idle_thread);
+                    thread_start(WORLD_THREAD_SLOT_UPPER_MENU_CHILD, world_formation_ability_menu_idle_thread);
                     world_menu_set_cursor_position(WORLD_MENU_CURSOR_SET_ABILITY_SLOT, 0);
                     world_menu_set_cursor_position(WORLD_MENU_CURSOR_REMOVE_ABILITY_SLOT, 0);
                 } else {
@@ -107,8 +107,8 @@ void world_formation_run_ability_menu(void) {
     } else {
         if (g_world_ability_submenu_running == 0) {
             g_world_formation_current_menu = WORLD_FORMATION_MENU_ABILITY;
-            world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU_CHILD);
-            value = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->roster_slot;
+            thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU_CHILD);
+            value = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->identity.roster_slot;
             world_formation_build_record_list(0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
             g_world_formation_selected_unit_index = world_formation_find_index_by_roster_slot(value);
             g_world_ability_submenu_running = 1;

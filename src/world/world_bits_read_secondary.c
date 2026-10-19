@@ -6,7 +6,7 @@ s32 world_bits_read_secondary(s32 bit_count) {
     s32 result;
     s32 shift;
     s32 byte;
-    u8* cursor;
+    const u8* cursor;
 
     if (bit_count == 0) {
         return 0;

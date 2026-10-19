@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Start the attacker's animation for its ability's strike (battle_action_apply_strike_results): the
@@ -6,8 +8,7 @@
  * the ability's attack animation (g_battle_ability_animation_data): the weapon's swing
  * (battle_unit_select_weapon_attack_animation), the item's use
  * (battle_unit_set_animation_for_item_abilities) or that animation. */
-void battle_unit_select_attack_animation_for_ability(
-    battle_unit_misc_data_t* attacker, battle_unit_misc_data_t* target) {
+void battle_unit_select_attack_animation_for_ability(battle_unit_t* attacker, battle_unit_t* target) {
     s32 animation;
     s32 seq_type;
 

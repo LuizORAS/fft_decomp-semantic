@@ -1,6 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
+#include "fft/data.h"
 /* Build the parallel ability lists for one of a unit's skillsets: each of the 16 action slots the
  * unit has learned goes into ability_ids, terminated with -1, and the count is returned. A monster, or
  * a skillset that is neither a generic job's nor the unit's own, counts as fully learned. Default
@@ -14,7 +17,7 @@
  * allocated register, which the target does not. */
 s32 battle_menu_get_unit_skillset_ability_data(
     s32 unit_id, u8 skillset, s16* ability_ids, u8* mp_out, u8* ct_out, s32 unused, u8* flags_out, u8* turns_out) {
-    battle_at_entry_t at_list[40];
+    battle_at_entry_t at_list[BATTLE_AT_LIST_CAPACITY];
     battle_stats_t* unit;
     ability_secondary_data_t* secondary;
     s32 known;
@@ -48,12 +51,12 @@ s32 battle_menu_get_unit_skillset_ability_data(
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) { /* Frog */
         frog = 1;
     }
-    if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP) {
+    if (unit->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_HALF_MP) {
         half_mp = 1;
     }
-    if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_NON_CHARGE) {
+    if (unit->ability_flags.support[3] & BATTLE_SUPPORT_SET_4_NON_CHARGE) {
         charge = 2;
-    } else if (unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_SHORT_CHARGE) {
+    } else if (unit->ability_flags.support[3] & BATTLE_SUPPORT_SET_4_SHORT_CHARGE) {
         charge = 1;
     }
     battle_turn_build_at_list(at_list, BATTLE_AT_LIST_MODE_ALL);

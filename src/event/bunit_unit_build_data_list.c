@@ -13,7 +13,7 @@ s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode) {
 
     shown = 0;
     total = 0;
-    /* Keep status-byte reads separate; GCC otherwise merges the two tests into one halfword load. */
+    /* Keep status-byte reads separate; GCC otherwise merges the two tests into one 16-bit load. */
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = battle_unit_get_stats_from_battle_id(i);
         if ((unit != 0) && (unit->entd_slot != BATTLE_ENTD_SLOT_NONE)) {

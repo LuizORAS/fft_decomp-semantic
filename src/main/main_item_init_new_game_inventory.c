@@ -5,14 +5,13 @@
  * 2 Phoenix Downs, and one each of X-Potion, Ether, Hi-Ether, Elixir, Antidote, Echo Grass, Maiden's
  * Kiss, Soft, Holy Water and Remedy. */
 void main_item_init_new_game_inventory(void) {
-    int remaining = ITEM_ID_COUNT - 1;
-    u8* quantity = &g_main_item_quantities[ITEM_ID_COUNT - 1];
+    s32 remaining;
+    u8* quantity;
 
-    do {
+    for (remaining = ITEM_ID_COUNT - 1, quantity = &g_main_item_quantities[ITEM_ID_COUNT - 1]; remaining >= 0;
+        remaining--, quantity--) {
         *quantity = 0;
-        remaining--;
-        quantity--;
-    } while (remaining >= 0);
+    }
 
     g_main_item_quantities[ITEM_ID_POTION] = 5;
     g_main_item_quantities[ITEM_ID_HI_POTION] = 2;

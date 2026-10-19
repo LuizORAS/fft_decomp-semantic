@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Put back the inertia threshold battle_effect_save_inertia_threshold saved. */
 void battle_effect_restore_inertia_threshold(void) {

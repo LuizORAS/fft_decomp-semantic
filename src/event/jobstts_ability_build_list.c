@@ -1,4 +1,5 @@
 #include "fft/event_jobstts.h"
+#include "fft/main.h"
 
 /* Build the selected job's ability list for one menu category.
  *
@@ -20,9 +21,9 @@ s32 jobstts_ability_build_list(
     s16 lo;
     s16 hi;
 
-    generic_index = jobstts_job_get_generic_index(job_id);
-    i = jobstts_job_get_skillset(job_id);
-    if (jobstts_job_find_first_for_skillset(i) == -1) {
+    generic_index = job_get_generic_index(job_id);
+    i = job_get_skillset(job_id);
+    if (job_find_first_for_skillset(i) == -1) {
         i = g_jobstts_unit_data[unit_index]->primary_skillset;
     }
     abilities = (s16*)main_ability_store_skillset_abilities(i, SKILLSET_ABILITY_FILTER_ALL);
@@ -54,10 +55,10 @@ s32 jobstts_ability_build_list(
     unit_data = g_jobstts_unit_data[unit_index];
     /* Keeping this offset separate preserves the target's GCC operand order;
      * direct learned_abilities indexing reverses the final commutative addu. */
-    byte_offset = generic_index * 3 + 0xb;
+    byte_offset = generic_index * UNIT_LEARNED_ABILITY_BYTES_PER_JOB + 0xb;
     jobstts_bits_init_primary_reader((u8*)(byte_offset + (s32)unit_data));
     for (i = 0; i < SKILLSET_ABILITY_LIST_COUNT; i++) {
-        if (jobstts_job_is_special_monster(g_jobstts_unit_data[unit_index]->job_id) != 0) {
+        if (job_is_special_monster(g_jobstts_unit_data[unit_index]->job_id) != 0) {
             kind = 1;
         } else {
             kind = jobstts_bits_read_primary(1);

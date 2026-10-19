@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x5A, Dragon Tame: only on a dragon or a hydra (battle_formula_check_dragon); then the
  * ability's status with no evade or hit roll. */

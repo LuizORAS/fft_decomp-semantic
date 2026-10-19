@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* PA Save, MA Save, Speed Save, Regenerator, Gilgame Heart and Auto Potion: after HP damage, a

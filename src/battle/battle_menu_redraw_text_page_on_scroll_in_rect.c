@@ -1,9 +1,16 @@
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
 /*
  * WORLD twin:
  * world_menu_redraw_text_page_on_scroll_in_rect, plus the mode-2 buffer
  * placement after the event overlay.
  */
 #include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_script.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -17,7 +24,7 @@
  * redrawn. */
 u8* battle_menu_redraw_text_page_on_scroll_in_rect(
     world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32 unused, RECT* area) {
-    world_menu_text_layout_t* layout = (world_menu_text_layout_t*)entry->text_binding;
+    world_menu_text_layout_t* layout = entry->context;
     u32* input;
     u32* input2;
     RECT rect;
@@ -26,22 +33,22 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
     s32 offset;
     u8* buffer;
 
-    input = battle_script_get_controller_input_pointer(0);
-    input2 = battle_script_get_controller_input_pointer(1);
-    rect.x = (area->x / 4) + entry->vram_x;
+    input = input_get_menu_controller(0);
+    input2 = input_get_menu_controller(1);
+    rect.x = (area->x / 4) + entry->vram_origin.x;
     rect.y = 0x80;
     rect.w = area->w / 4;
     rect.h = area->h;
     changed = 0;
-    if (g_battle_menu_input_mode == MENU_INPUT_PLAYER
-        && ((*input2 & PSX_PAD_SQUARE) || g_battle_threads[g_battle_thread_current_id].task_words[4] != 0)) {
+    if (g_menu_input_mode == MENU_INPUT_PLAYER
+        && ((*input2 & PSX_PAD_SQUARE) || g_threads[g_thread_current_id].task_words[4] != 0)) {
         if ((*input & PSX_PAD_UP) && *row_offset != 0) {
             offset = *row_offset - layout->row_count;
             *row_offset = offset;
             if (offset < 0) {
                 *row_offset = 0;
             }
-            g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+            g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
             changed = 1;
         } else if ((*input & PSX_PAD_DOWN) && *row_offset != layout->hidden_rows) {
             offset = layout->row_count + *row_offset;
@@ -49,11 +56,11 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
             if (layout->hidden_rows < offset) {
                 *row_offset = layout->hidden_rows;
             }
-            g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+            g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
             changed = 1;
-        } else if (g_battle_threads[g_battle_thread_current_id].task_words[4] != 0) {
+        } else if (g_threads[g_thread_current_id].task_words[4] != 0) {
             changed = 1;
-            g_battle_threads[g_battle_thread_current_id].task_words[4] = 0;
+            g_threads[g_thread_current_id].task_words[4] = 0;
         }
         if (changed != 0) {
             if (g_battle_menu_scroll_list_depth == 2) {
@@ -65,7 +72,7 @@ u8* battle_menu_redraw_text_page_on_scroll_in_rect(
             battle_menu_draw_text_columns_narrow(entry, row_offset, buffer);
             *redraw = 0;
             LoadImage(&rect, buffer);
-            battle_util_copy_bytes(&clear, &rect, 8);
+            mem_copy_bytes_nonempty(&clear, &rect, sizeof(clear));
             clear.h = 2;
             clear.x = rect.x;
             clear.y = ((rect.y - 2) & 0xFF) + (rect.y & 0xFF00);

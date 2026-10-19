@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -29,7 +30,7 @@ s32 world_item_show_units_equipping_selected(void) {
         world_script_set_vsync_mode_and_event_speed(0);
         g_world_formation_unit_cycle_mode = 2;
     }
-    if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) == 0) {
+    if (thread_is_running(THREAD_SCREEN_SLOT_COMPARISON_STATUS) == 0) {
         if ((g_world_input_newly_pressed & PSX_PAD_CROSS) || (g_world_input_newly_pressed & PSX_PAD_CIRCLE)) {
             g_world_formation_unit_browse_enabled = 0;
             g_world_formation_unit_banner_enabled = 0;
@@ -37,9 +38,9 @@ s32 world_item_show_units_equipping_selected(void) {
                 0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
             g_world_formation_selected_unit_index = g_world_item_saved_selected_unit_index;
             world_formation_stage_selected_unit();
-            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
-            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
-            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS);
+            world_menu_request_thread_stop(THREAD_SCREEN_SLOT_CHARACTER_STATUS);
+            world_menu_request_thread_stop(THREAD_SCREEN_SLOT_NUMERIC_EDITOR);
+            world_menu_request_thread_stop(THREAD_SCREEN_SLOT_UNIT_STATUS);
             g_world_item_equipping_units_initialized = 0;
             g_world_formation_unit_cycle_mode = 0;
             g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;

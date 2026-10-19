@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Keep in the targetable list only the units the considered ability is useful on
  * (battle_ai_classify_ability_effect, with the Reflect check) and return 1 when any is left. */

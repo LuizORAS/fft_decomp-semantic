@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Unlink a sprite node from the active list, release its sprite block and push it on the free list: the
  * inverse of battle_effect_alloc_list_node. battle_effect_free_work_record calls it. */

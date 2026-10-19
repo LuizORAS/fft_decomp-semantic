@@ -11,7 +11,7 @@ void wldcore_window_load_party_unit_sprite_record(wldcore_menu_send_unit_level_t
     s32 code;
     s32 cell;
     CVECTOR* color;
-    wldcore_window_render_bounds16_t* bounds;
+    RECT* bounds;
 
     code = world_unit_get_formation_sprite(party_index);
     cell = code;
@@ -20,14 +20,12 @@ void wldcore_window_load_party_unit_sprite_record(wldcore_menu_send_unit_level_t
     g_wldcore_window_render_records[index].clut.y = cell % 40 / 4 + 0x1F0;
     g_wldcore_window_render_records[index].tpage = poly.tpage;
     bounds = &g_wldcore_window_render_records[index].bounds;
-    bounds->position.x = poly.u0;
-    bounds->position.y = poly.v0;
-    bounds->dimensions.x = poly.u1 - poly.u0;
-    bounds->dimensions.y = poly.v2 - poly.v0;
+    bounds->x = poly.u0;
+    bounds->y = poly.v0;
+    bounds->w = poly.u1 - poly.u0;
+    bounds->h = poly.v2 - poly.v0;
     color = &g_wldcore_window_render_records[index].color;
-    color->r = 0x80;
-    color->g = 0x80;
-    color->b = 0x80;
+    color->b = color->g = color->r = 0x80;
     g_wldcore_window_render_records[index].anim_counter = 0;
     g_wldcore_window_render_records[index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
 }

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x37, Dash, Throw Stone, Cat Kick and Tail Swing: the physical evade check; XA = PA with
  * Attack Up and Martial Arts and the physical status modifiers; damage of a random 1 to Y times XA,

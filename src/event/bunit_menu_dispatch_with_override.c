@@ -1,13 +1,13 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-/* Run the menu command stream `menu` with `state`, but clear `state` to
+/* Run the menu command stream `script` with `state`, but clear `state` to
  * 0 whenever the override flag is set (also passed to bunit_menu_set_palette_mode). */
-void bunit_menu_dispatch_with_override(u8* menu, s32 state, s32 override) {
+void bunit_menu_dispatch_with_override(menu_instruction_t* script, s32 state, s32 override) {
     s32 effective_state = state;
     if (override != 0) {
         effective_state = 0;
     }
     bunit_menu_set_palette_mode(override);
-    bunit_menu_run_display_script(menu, effective_state);
+    bunit_menu_run_display_script(script, effective_state);
 }

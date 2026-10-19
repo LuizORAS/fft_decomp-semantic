@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
 #include "psx/types.h"
 
 /* Deliberately argument-free: the target sets up no arguments before this

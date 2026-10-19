@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -16,14 +17,12 @@
  * store onward. */
 void wldcore_proposition_step_send_unit_level(wldcore_menu_send_unit_level_t* level) {
     s32 buttons;
-    s32 mode;
     s32 value;
     s32 i;
     s32 unused[4];
 
-    mode = level->mode;
-    if (mode == WLDCORE_SEND_UNIT_MODE_CANCEL) {
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+    if (level->mode == WLDCORE_SEND_UNIT_MODE_CANCEL) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
             g_wldcore_menu_blocked_buttons = 0;
             g_main_system_flags &= ~MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             g_wldcore_menu_stack_depth--;
@@ -31,27 +30,28 @@ void wldcore_proposition_step_send_unit_level(wldcore_menu_send_unit_level_t* le
         }
         return;
     }
-    if (mode == WLDCORE_SEND_UNIT_MODE_ACCEPT) {
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+    if (level->mode == WLDCORE_SEND_UNIT_MODE_ACCEPT) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
             g_wldcore_menu_blocked_buttons = 0;
             g_main_system_flags &= ~MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
             g_wldcore_menu_stack_depth--;
-            wldcore_proposition_push_detail_level(g_wldcore_selected_proposition_row[0].fields.id - 1);
-            wldcore_menu_suspend_proposition_detail_level((s32*)level);
+            wldcore_proposition_push_detail_level(g_wldcore_selected_proposition_row[0].id - 1);
+            wldcore_menu_suspend_proposition_detail_level(&level->list_frame);
             wldcore_proposition_push_days_level();
         }
         return;
     }
-    if ((mode - 3) < 2U || mode == WLDCORE_SEND_UNIT_MODE_STATUS_CLOSE) {
+    if (level->mode == WLDCORE_SEND_UNIT_MODE_STATUS_OPEN || level->mode == WLDCORE_SEND_UNIT_MODE_STATUS
+        || level->mode == WLDCORE_SEND_UNIT_MODE_STATUS_CLOSE) {
         wldcore_proposition_step_send_unit_status(level);
         return;
     }
-    if (mode == WLDCORE_SEND_UNIT_MODE_REPLACE) {
+    if (level->mode == WLDCORE_SEND_UNIT_MODE_REPLACE) {
         wldcore_proposition_step_send_unit_slot_input(level);
         return;
     }
 
-    if (!(g_wldcore_window_render_records[level->layout_render].flags & WLDCORE_DISPLAY_OBJECT_POP_IN)) {
+    if (!(g_wldcore_window_render_records[level->list_frame.render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN)) {
         value = g_wldcore_list_entry_values[g_wldcore_window_panel_render_state.selected_index] & TEXT_ID_ENTRY_MASK;
         if (value != level->shown_preview) {
             level->shown_preview = value;
@@ -59,9 +59,9 @@ void wldcore_proposition_step_send_unit_level(wldcore_menu_send_unit_level_t* le
         }
     }
 
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & PSX_PAD_SELECT) {
-        wldcore_menu_suspend_proposition_send_unit_level((wldcore_window_tint_request_t*)level);
+        wldcore_menu_suspend_proposition_send_unit_level(level);
         wldcore_menu_push_message_level(0x109A, 1);
         return;
     }
@@ -82,7 +82,7 @@ void wldcore_proposition_step_send_unit_level(wldcore_menu_send_unit_level_t* le
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         level->mode = WLDCORE_SEND_UNIT_MODE_CANCEL;
     suspend:
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
         g_wldcore_window_record_count -= 7;
         g_wldcore_window_render_record_count -= 5;
         g_wldcore_window_render_object_count -= 0xC;
@@ -90,10 +90,10 @@ void wldcore_proposition_step_send_unit_level(wldcore_menu_send_unit_level_t* le
         return;
     }
     if (buttons & PSX_PAD_SQUARE) {
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
-        g_wldcore_window_records[level->list_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-        g_wldcore_window_render_records[level->layout_render].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+        g_wldcore_window_records[level->list_frame.window_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_window_render_records[level->list_frame.render_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_records[level->frame_window_a].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_records[level->frame_window_b].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_render_records[level->preview_render].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
@@ -133,9 +133,9 @@ void wldcore_proposition_step_send_unit_level(wldcore_menu_send_unit_level_t* le
         level->slot = 0;
         g_wldcore_window_records[level->cursor_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_records[level->cursor_window].position.x
-            = g_wldcore_window_render_records[level->layout_render].base.x + 6;
+            = g_wldcore_window_render_records[level->list_frame.render_index].base.x + 6;
         g_wldcore_window_records[level->cursor_window].position.y
-            = g_wldcore_window_render_records[level->layout_render].base.y + level->slot * 16 + 0xC;
+            = g_wldcore_window_render_records[level->list_frame.render_index].base.y + level->slot * 16 + 0xC;
         return;
     }
     g_wldcore_proposition_send_units[g_wldcore_proposition_send_unit_count] = value;

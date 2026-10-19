@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x25, Head Break, Armor Break, Shield Break and Weapon Break: with no piece to break (a
  * monster, an empty slot) the action becomes a plain Attack (battle_formula_select_target_equipment);
@@ -20,7 +20,7 @@ void battle_formula_break_equipped_hit_pa_wp_y_percent(void) {
     }
     battle_formula_store_pa_and_weapon_power_plus_y();
     if (battle_formula_calculate_physical_accuracy() != 0) {
-        /* The target writes the combined special-effect field as one halfword. */
+        /* The target writes the combined special-effect field as one 16-bit value. */
         g_battle_action_target_data->special_effect = 0;
         return;
     }

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* The elemental absorption (battle_formula_apply_elemental_absorption), then the 19% roll's result
  * (battle_formula_roll_conditional_status_proc): 0 when the caller adds the ability's status. */

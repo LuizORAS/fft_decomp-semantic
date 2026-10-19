@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* Advance the calendar by the days an event asked for (EVENT_SCRIPT_VAR_DATE_ADVANCE, applied as a
@@ -30,17 +31,16 @@ void wldcore_calendar_advance_days(s32 days) {
 
     birthdays = g_wldcore_brave_story_birthdays;
     years = days / 365;
-    world_script_set_variable(
-        EVENT_SCRIPT_VAR_YEAR_COUNT, world_script_get_variable(EVENT_SCRIPT_VAR_YEAR_COUNT) + years);
+    script_set_variable(EVENT_SCRIPT_VAR_YEAR_COUNT, script_get_variable(EVENT_SCRIPT_VAR_YEAR_COUNT) + years);
     days %= 365;
-    month = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    day = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
+    month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+    day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
     today = wldcore_calendar_to_day_of_year(month, day);
     for (i = 0; i < 64; i++) {
         g_main_brave_story_character_ages[i] += years;
         if (i == 0) {
-            month = world_script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH);
-            day = world_script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY);
+            month = script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_MONTH);
+            day = script_get_variable(EVENT_SCRIPT_VAR_PLAYER_BIRTH_DAY);
         } else {
             month = birthdays[i][0];
             day = birthdays[i][1];
@@ -55,13 +55,12 @@ void wldcore_calendar_advance_days(s32 days) {
     }
     today += days;
     if (today >= 365) {
-        world_script_set_variable(
-            EVENT_SCRIPT_VAR_YEAR_COUNT, world_script_get_variable(EVENT_SCRIPT_VAR_YEAR_COUNT) + 1);
+        script_set_variable(EVENT_SCRIPT_VAR_YEAR_COUNT, script_get_variable(EVENT_SCRIPT_VAR_YEAR_COUNT) + 1);
         today -= 365;
     }
     wldcore_calendar_from_day_of_year(today, &month, &day);
-    world_script_set_variable(EVENT_SCRIPT_VAR_MONTH, month);
-    world_script_set_variable(EVENT_SCRIPT_VAR_DAY, day);
+    script_set_variable(EVENT_SCRIPT_VAR_MONTH, month);
+    script_set_variable(EVENT_SCRIPT_VAR_DAY, day);
     for (i = 0; i < g_main_save_proposition_count; i++) {
         if (!(g_main_active_propositions[i].flags & WLDCORE_PROPOSITION_PROGRESS_RETURNED)) {
             if (g_main_active_propositions[i].elapsed_days + days >= g_main_active_propositions[i].assigned_days) {

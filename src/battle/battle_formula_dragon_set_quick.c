@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x5D, Dragon Level Up: only on a dragon or a hydra (battle_formula_check_dragon); then
  * Quick (battle_formula_apply_quick_effect), not a level. */

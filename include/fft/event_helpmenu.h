@@ -1,9 +1,7 @@
 #ifndef EVENT_HELPMENU_H
 #define EVENT_HELPMENU_H
 
-/* EVENT/HELPMENU.OUT: the help cursor that Select opens over the battle's menus and unit panels
- * (battle_menu_run_helpmenu_thread) and over REQUIRE's screens (require_overlay_run_helpmenu). It loads at
- * 0x801df000, above the reservation the opener makes. */
+/* EVENT/HELPMENU.OUT: menu screen overlay that runs with BATTLE. */
 
 #include "fft/battle.h"
 
@@ -16,40 +14,38 @@ s32 helpmenu_thread_find_first_running_menu_thread(void);
 /* The help texts: HELPMENU's text file, bound over BATTLE's text sections while the help is open,
  * and the pointers it saves. */
 
-/* 0x80 bytes of saved g_battle_text_section_pointers, i.e. 32 pointers. */
+/* 0x80 bytes of saved g_text_section_pointers, i.e. 32 pointers. */
 extern u8* g_helpmenu_text_saved_pointers[32];
 
-/* Section offsets of EVENT/HELP.LZW, which HELPMENU.OUT carries, relative to g_helpmenu_text_data
- * (0x80 bytes before it). */
+/* Section offsets of the help text file, relative to g_helpmenu_text_data (0x80 bytes before it). */
 extern s32 g_helpmenu_text_section_offsets[32];
+
 extern u8 g_helpmenu_text_data[];
 
 /* menu */
 /* The help cursor: each screen's navigation records (the unit view modes, REQUIRE's panels), the
  * BATTLE records it copies (banner, unit, billboard, cursor tile), the help runners and the close. */
 
-extern battle_unit_status_record_t g_helpmenu_active_banner;
-extern battle_active_unit_t g_helpmenu_active_unit_data;
+/* Saved copies of four BATTLE records (menu_get_active_turn_panels);
+ * a second, unused slot follows the banner and the unit record. */
+extern battle_menu_unit_status_record_t g_helpmenu_active_banner;
 
-/* 0x40-byte billboard filled by battle_menu_get_active_turn_panels; +0x0e is the monster-skillset flag. */
-extern battle_menu_status_panel_slot_state_t g_helpmenu_billboard;
+extern battle_menu_active_unit_t g_helpmenu_active_unit_data;
+
+/* 0x40-byte billboard filled by menu_get_active_turn_panels; +0x0e is the monster-skillset flag. */
+extern world_item_stat_detail_t g_helpmenu_billboard;
+
 extern help_navigation_record_t g_helpmenu_require_navigation[];
-
 extern s16 g_helpmenu_selected_unit_panel_mode;
-
 extern u32* g_helpmenu_controller_state_ptr;
 extern u16* g_helpmenu_current_text_ids;
 extern help_navigation_record_t g_helpmenu_view_mode_2_navigation[];
 extern help_navigation_record_t g_helpmenu_view_mode_3_navigation[];
 extern help_navigation_record_t g_helpmenu_view_mode_4_navigation[];
-
-/* Saved copies of four BATTLE records (battle_menu_get_active_turn_panels);
- * a second, unused slot follows the banner and the unit record. */
 extern map_selected_tile_t g_helpmenu_menu_cursor_tile;
-extern u8 g_helpmenu_menu_text_id_tables[];
+extern u16* const g_helpmenu_menu_text_id_tables[23];
 void helpmenu_menu_run_require_help(void);
 void helpmenu_menu_close(void);
-
 void helpmenu_menu_run_battle_help(void);
 
 #endif

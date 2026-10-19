@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 
 /* Set BATTLE_AI_TARGET_SETTING_RETREAT_SUPPORT_AVAILABLE when the acting unit's side has at least two
  * units in play and one of them is neither Critical nor a Frog, and mark the AI targetable override when

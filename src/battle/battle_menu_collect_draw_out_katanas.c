@@ -1,10 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
-/* Collects the Draw Out weapon entry (ability id - 0x26) of each of the unit's
- * usable Draw Out abilities into out_item_ids, 0xff-terminated, and returns
- * 0x100 plus their count (0 when the unit or skillset is wrong or the list is
- * empty). */
 /* Collect the katana of each Draw Out ability the unit has learned (the ability id minus
  * ABILITY_ID_DRAW_OUT_ITEM_OFFSET) into out_item_ids, terminated by 0xff. Returns 0x100 plus
  * the count, or 0 when the unit is missing, the skillset is not Draw Out or nothing is learned; the

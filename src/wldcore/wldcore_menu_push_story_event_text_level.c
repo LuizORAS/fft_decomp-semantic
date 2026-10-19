@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Open a Record entry's text (level STORY_EVENT_TEXT): the shared scrollable text window
@@ -26,7 +27,7 @@ void wldcore_menu_push_story_event_text_level(s32 value) {
     s32 unused[2];
     s32 coordinate_mode = 1;
 
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = value;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].story_event_index = value;
     g_wldcore_scrollable_text_window.text_id = value + TEXT_ID_WORLD_MESSAGE_BASE;
     switch (coordinate_mode) {
     case 0:
@@ -59,8 +60,8 @@ void wldcore_menu_push_story_event_text_level(s32 value) {
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.lower_window]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_world_text_substitution_values[0] = value + TEXT_ID_STORY_EVENT_NAME_BASE;
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
+    g_text_substitution_values[0] = value + TEXT_ID_STORY_EVENT_NAME_BASE;
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_STORY_EVENT_TEXT;
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth + 1;
 }

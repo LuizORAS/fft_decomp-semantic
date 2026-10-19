@@ -1,15 +1,16 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 
 /* When the target blocked with a hand or a golem took the blow, replace the
  * attacker's unarmed, swing or thrust animation with its recoil at the same
  * height. Only the TYPE1 and TYPE2 sheets have the recoils. */
-void battle_unit_set_attacker_animation_for_shield_block(
-    battle_unit_misc_data_t* attacker, battle_unit_misc_data_t* target) {
+void battle_unit_set_attacker_animation_for_shield_block(battle_unit_t* attacker, battle_unit_t* target) {
     battle_stats_t* stats;
     s32 kind;
     s32 anim;
 
-    stats = target->battle_data;
+    stats = target->stats;
     if (stats == 0) {
         return;
     }
@@ -20,7 +21,7 @@ void battle_unit_set_attacker_animation_for_shield_block(
     anim = 0;
     if (kind >= BATTLE_ACTION_MISS_TYPE_RIGHT_HAND_EVADE
         && (kind < BATTLE_ACTION_MISS_TYPE_CLASS_EVADE_OR_ARROW_GUARD || kind == BATTLE_ACTION_MISS_TYPE_GOLEM_GUARD)) {
-        switch (attacker->sequence_id >> 1) {
+        switch (attacker->animation.sequence_id >> 1) {
         case BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_HIGH:
             anim = BATTLE_UNIT_ANIMATION_UNARMED_ATTACK_BLOCKED_HIGH;
             break;

@@ -1,10 +1,8 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-/* Read pad 1 for the deployment screen and derive the pressed and released
- * buttons; the reset button combination resets the game. Always returns 1, so the
- * -1 that battle_state_run_battle_setup tests for does not occur. */
-/* Same pad words for the setup screens, with the soft-reset combination. Returns 1. */
+/* Same button states (pad 1) for the setup screens, with the soft-reset combination. Returns 1, so the
+ * -1 that battle_state_run_battle_setup waits for never comes. */
 s32 battle_state_update_deployment_controller_input(void) {
     u32 previous;
     u32 current;

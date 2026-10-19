@@ -5,5 +5,5 @@
  * stop it and main_sound_replay_bg_sfx can start it again. */
 void main_sound_play_bg_sfx(int sound_id) {
     g_main_sound_weather_sfx_id = sound_id;
-    SuzukiPlaySound2(sound_id);
+    suzuki_sound_play_background_sfx(sound_id);
 }

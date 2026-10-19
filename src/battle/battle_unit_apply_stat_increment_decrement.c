@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Apply one stat change of an action result: the low seven bits are the amount

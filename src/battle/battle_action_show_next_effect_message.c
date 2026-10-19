@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Enter RESUME_ATTACK_PHASE at 60 fps and show the next queued effect message (system command 0x11
@@ -9,7 +11,7 @@ s32 battle_action_show_next_effect_message(void) {
 
     g_battle_game_state = BATTLE_GAME_STATE_RESUME_ATTACK_PHASE;
     g_main_system_vsync_interval = 1;
-    battle_unit_get_casting_misc_data();
+    battle_unit_get_casting();
     idx = g_battle_action_post_effect_msg_counter;
     if (idx != 0) {
         idx -= 1;

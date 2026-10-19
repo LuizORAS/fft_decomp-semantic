@@ -1,21 +1,20 @@
+#include "fft/open.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* Upload an OPNTEX image, preceded by its CLUT when flag bit 3 is set.
  *
- * Word 1 holds the flags, and each tim is a block header followed by the
- * pixel data. The CLUT rectangle is flattened to one row of w * h entries.
- * Reading x and w through word locals keeps the target's full-word loads. The
- * product is pinned to $a3, where the allocator would not otherwise place
- * it. Type debt (QUIRKS.md): callers pass the OPNTEX bytes (u8*), read here
- * as words. */
-void open_gfx_load_opntex_into_frame_buffer(const void* source_data) {
-    u32* tim = (u32*)source_data;
+ * The second 32-bit value holds the flags, and each block is a TIM block: its byte length (itself included), the
+ * VRAM position packed as y << 16 | x, the size packed as h << 16 | w, then the pixel data. The CLUT
+ * rectangle is flattened to one row of w * h entries. Type debt (QUIRKS.md): callers pass the
+ * OPNTEX bytes (u8*), read here as 32-bit values. */
+void open_gfx_load_opntex_into_frame_buffer(u32* tim) {
     RECT rect;
     s32 offset;
     /* Unused; the target's frame is 16 bytes larger than rect needs. */
     s32 stack_padding[4];
 
+    /* Packed 32-bit RECT reads preserve the retail lw/lhu mix. */
     if (tim[1] & 8) {
         offset = (tim[2] >> 2) + 2;
         rect.x = tim[3] & 0xFFFF;

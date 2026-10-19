@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_status.h"
 
 /* Restore control after a control status: under Confusion, Blood Suck, Berserk, Chicken or Charm
  * the unit loses player control, otherwise it regains its initial player control; without Charm its

@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 #include "psx/pad.h"
 
 /* TARGETING_RANGE: choose the target tile. Under player control the d-pad moves the cursor and
@@ -8,10 +9,10 @@
  * 31 frames, or reopens its menus when that unit is gone. */
 void battle_state_handle_targeting_range_state(void) {
     u16 frame_data;
-    battle_unit_misc_data_t* unit;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* unit;
+    battle_unit_t* target;
 
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     battle_state_update_units();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
@@ -26,8 +27,7 @@ void battle_state_handle_targeting_range_state(void) {
         }
         if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
             if ((battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z)
-                        ->ceiling_depth_and_marks.value
-                    & MAP_TILE_FLAG_ABILITY_RANGE)
+                        ->ceiling_depth_and_marks.ability_range)
                 != 0) {
                 battle_target_select_tile();
                 return;
@@ -46,7 +46,7 @@ void battle_state_handle_targeting_range_state(void) {
             }
             return;
         case BATTLE_TARGETING_TYPE_UNIT:
-            target = battle_unit_get_misc_data_by_battle_id(unit->command_state.ai.data.action.target_id);
+            target = battle_unit_get_by_battle_id(unit->command_state.ai.data.action.target_id);
             if (target != 0) {
                 battle_target_move_cursor_to_selection(unit, target);
                 frame_data = unit->state_frame_counter++;

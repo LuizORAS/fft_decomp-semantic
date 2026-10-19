@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Initialize deployed units from map coordinates and return a failure bitmask.
@@ -7,7 +8,7 @@
  * slots 0..4 and clears the remaining ENTD slots. The target reloads each row
  * from g_main_unit_deployed_coords at its distinct uses.
  */
-s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s32 is_red_team_debug) {
+s32 battle_unit_init_deployed_units_data(unit_deployment_coordinates_t* formation, s32 is_red_team_debug) {
     s32 failures = 0;
     s32 weight = 1;
     s32 i;
@@ -24,7 +25,7 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
     } else {
         next_generated_unit_id = 0x78;
         slot_step = 1;
-        slot_start = 0x10;
+        slot_start = BATTLE_DEPLOYED_UNIT_SLOT_FIRST;
     }
     for (i = 0; i < 5; i++, weight *= 2) {
         s32 battle_id = i + slot_start;
@@ -32,7 +33,7 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
         u8 sprite;
         u32 identity;
 
-        unit->misc_unit_id = battle_id;
+        unit->battle_id = battle_id;
         if (g_main_unit_deployed_coords[i].party_id != PARTY_ID_NONE) {
             unit->entd_slot = battle_id;
             unit->existence = BATTLE_UNIT_EXISTENCE_ACTIVE;
@@ -53,13 +54,12 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
                     unit->initial_team_flags = BATTLE_TEAM_RED | BATTLE_TEAM_FLAG_PLAYER_CONTROLLED;
                     unit->sprite_palette = 1;
                 }
-                if (g_main_unit_deployed_coords[i].facing_elevation_flags & 0x10) {
+                if (g_main_unit_deployed_coords[i].flags.off_field) {
                     unit->existence = BATTLE_UNIT_EXISTENCE_OFF_FIELD;
                     unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
                 } else {
-                    battle_gfx_append_unit_graphics_load_descriptor(unit->x, unit->position.bits.y,
-                        unit->position.bits.higher_elevation, unit->position.bits.facing, sprite, palette, 0xff, unit,
-                        0);
+                    battle_gfx_append_unit_graphics_load_descriptor(unit->x, unit->position.y,
+                        unit->position.higher_elevation, unit->position.facing, sprite, palette, 0xff, unit, 0);
                     main_unit_init_status_and_rewards(unit, 1);
                     unit->existence = BATTLE_UNIT_EXISTENCE_ACTIVE;
                 }
@@ -71,9 +71,9 @@ s32 battle_unit_init_deployed_units_data(battle_deployed_coords_t* formation, s3
         unit->existence = BATTLE_UNIT_EXISTENCE_NONE;
     }
     if (is_red_team_debug) {
-        for (i = 5; i < 16; i++) {
+        for (i = 5; i < ENTD_UNITS_PER_ENCOUNTER; i++) {
             battle_stats_t* unit = &g_battle_unit_stats[i];
-            unit->misc_unit_id = i;
+            unit->battle_id = i;
             unit->entd_slot = BATTLE_ENTD_SLOT_NONE;
             unit->existence = BATTLE_UNIT_EXISTENCE_NONE;
         }

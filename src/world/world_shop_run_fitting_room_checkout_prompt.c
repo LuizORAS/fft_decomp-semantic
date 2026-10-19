@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Run one frame of the fitting room's checkout; the menus' cursors are reset on entry. An empty
@@ -13,12 +14,12 @@ s32 world_shop_run_fitting_room_checkout_prompt(void) {
     s32 cost;
 
     if (g_world_shop_checkout_prompt_initialized == 0) {
-        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE) != 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) != 0) {
             return WORLD_SHOP_CHECKOUT_PROMPT_OPEN;
         }
         g_world_shop_checkout_confirm_menu.selected_index = 0;
         g_world_shop_checkout_quit_menu.selected_index = 0;
-        world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_message_box_thread);
         balance = world_shop_add_gil(0) - (cost = world_shop_add_fitting_room_cost(0));
         if (cost == 0) {
             world_shop_buy_from_fitting_room();
@@ -27,12 +28,12 @@ s32 world_shop_run_fitting_room_checkout_prompt(void) {
         if (balance >= 0) {
             g_world_sound_suppressed = 1;
             g_world_shop_checkout_prompt_menu = &g_world_shop_checkout_confirm_menu;
-            g_world_text_substitution_values[0] = cost;
-            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf819, 0);
+            g_text_substitution_values[0] = cost;
+            thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xf819, 0);
             g_world_shop_checkout_insufficient_gil = 0;
         } else {
             g_world_shop_checkout_prompt_menu = &g_world_shop_checkout_quit_menu;
-            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf81a, 0);
+            thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xf81a, 0);
             g_world_shop_checkout_insufficient_gil = 1;
         }
         g_world_shop_checkout_prompt_initialized = 1;
@@ -65,7 +66,7 @@ s32 world_shop_run_fitting_room_checkout_prompt(void) {
             if (g_world_shop_checkout_prompt_result == 1) {
                 g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
             }
-            world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, 0xf81c, 0);
+            thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, 0xf81c, 0);
             return WORLD_SHOP_CHECKOUT_PROMPT_OPEN;
         }
         if (g_world_shop_checkout_prompt_result != 1) {
@@ -73,7 +74,7 @@ s32 world_shop_run_fitting_room_checkout_prompt(void) {
             g_world_shop_checkout_prompt_initialized = 0;
             return WORLD_SHOP_CHECKOUT_DONE;
         }
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+        thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, -1, 0);
         g_world_shop_checkout_prompt_initialized = 0;
         return WORLD_SHOP_CHECKOUT_CANCELLED;
     }
@@ -88,6 +89,6 @@ s32 world_shop_run_fitting_room_checkout_prompt(void) {
         }
         return WORLD_SHOP_CHECKOUT_DONE;
     }
-    world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+    thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, -1, 0);
     return WORLD_SHOP_CHECKOUT_CANCELLED;
 }

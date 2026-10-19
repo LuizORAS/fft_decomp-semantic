@@ -1,8 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
-/* CloseBattle game-state handler: draw the fade overlay and raise its intensity
- * by g_battle_state_screen_fade_step. The game loop leaves in the frame it finds
- * this state, so the handler runs for at most one frame. */
 /* CLOSE_BATTLE: update the units and darken the screen by the transition step.
  * battle_state_run_game_loop leaves its frame loop at the end of the frame that enters this
  * state, so no frame of that loop runs this handler. */

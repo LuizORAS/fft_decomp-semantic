@@ -13,7 +13,7 @@
  * changes the register assignment. */
 void world_text_render_encoded_ids_to_image(
     u8* image, RECT* rect, s32 unused, s32 max_glyphs, u8* font, s16* ids, s32 count, s16 glyph, s32 unused_palette) {
-    world_text_glyph_target_t target;
+    RECT target;
     s32 line;
     s32 i;
     s32 palette;
@@ -24,7 +24,7 @@ void world_text_render_encoded_ids_to_image(
     s16* colors2;
 
     line = 0;
-    target.stride = rect->w;
+    target.w = rect->w;
     for (k = 0; ids[k] != -1; k++) {
         if (count == 0) {
             return;

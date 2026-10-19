@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -10,7 +11,7 @@
 void wldcore_menu_step_party_number_panel_level(wldcore_menu_panel_level_t* level) {
     u32 buttons;
 
-    if ((level->result != 0) && (world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0)) {
+    if ((level->result != 0) && (thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0)) {
         g_wldcore_menu_blocked_buttons = 0;
         g_wldcore_menu_ordering_table_offset = 1;
         g_wldcore_menu_stack_depth--;
@@ -25,14 +26,14 @@ void wldcore_menu_step_party_number_panel_level(wldcore_menu_panel_level_t* leve
         return;
     }
 
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if ((buttons & PSX_PAD_CROSS) != 0) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         level->result = -1;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
     } else if ((buttons & PSX_PAD_CIRCLE) != 0) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         level->result = 1;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
     }
 }

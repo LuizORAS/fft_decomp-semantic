@@ -13,16 +13,16 @@
  * before color as the target's register assignment requires. top is reused
  * for y + 45 in layouts 3 and 4 so it shares s4 as in the target. */
 void world_formation_draw_unit_readout(
-    s16 unit_index, s32 mode, s32 x, s32 y, u8* color, s32 (*get_value)(s32), s32 enabled, s32 priority) {
+    s16 unit_index, s32 mode, s32 x, s32 y, rgb24_t* color, s32 (*get_value)(s32), s32 enabled, s32 priority) {
     RECT unused_rect;
     RECT rect;
-    s16 xy[20];
+    point16_t xy[10];
     s32 top;
     s16 label_y;
     s16 num_x;
     s16 num_y;
     u16 clut;
-    u8* rgb;
+    rgb24_t* rgb;
     world_oriented_quad_t* sprite;
 
     if (mode < 0) {
@@ -53,7 +53,7 @@ void world_formation_draw_unit_readout(
                 g_world_formation_gauge_max_number.x = num_x;
                 g_world_formation_gauge_max_number.y = num_y;
                 g_world_formation_gauge_max_number.value = unit_index;
-                world_menu_script_draw_formatted_number(&g_world_formation_gauge_max_number);
+                world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_formation_gauge_max_number);
             }
             num_x = x + 20;
             num_y = top;
@@ -61,7 +61,7 @@ void world_formation_draw_unit_readout(
                 g_world_formation_gauge_value_number.x = num_x;
                 g_world_formation_gauge_value_number.y = num_y;
                 g_world_formation_gauge_value_number.value = unit_index;
-                world_menu_script_draw_formatted_number(&g_world_formation_gauge_value_number);
+                world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_formation_gauge_value_number);
             }
             rect.x = x + 35;
             rect.y = top + 5;
@@ -84,15 +84,15 @@ void world_formation_draw_unit_readout(
             rect.w = 0x25;
             rect.h = 3;
             world_gfx_enqueue_textured_quad(&rect, 0xD8, 0xCA, color, 0, g_world_menu_icon_tpage, clut, priority - 1);
-            xy[0] = g_world_formation_gauge_bar_offsets[0] + x;
-            xy[1] = g_world_formation_gauge_bar_offsets[1] + top + 8;
-            xy[6] = xy[2] = 0x20;
-            xy[2] += xy[0];
-            xy[3] = g_world_formation_gauge_bar_offsets[1] + top + 8;
-            xy[4] = g_world_formation_gauge_bar_offsets[2] + x;
-            xy[5] = g_world_formation_gauge_bar_offsets[3] + top + 8;
-            xy[6] += xy[4];
-            xy[7] = g_world_formation_gauge_bar_offsets[3] + top + 8;
+            xy[0].x = g_world_formation_gauge_bar_offsets[0] + x;
+            xy[0].y = g_world_formation_gauge_bar_offsets[1] + top + 8;
+            xy[3].x = xy[1].x = 0x20;
+            xy[1].x += xy[0].x;
+            xy[1].y = g_world_formation_gauge_bar_offsets[1] + top + 8;
+            xy[2].x = g_world_formation_gauge_bar_offsets[2] + x;
+            xy[2].y = g_world_formation_gauge_bar_offsets[3] + top + 8;
+            xy[3].x += xy[2].x;
+            xy[3].y = g_world_formation_gauge_bar_offsets[3] + top + 8;
             world_gfx_enqueue_gouraud_quad(xy, rgb, 0, priority);
         } else if (g_world_formation_stat_display_mode == MENU_UNIT_READOUT_LEVEL_EXP) {
             s32 y40;
@@ -120,7 +120,7 @@ void world_formation_draw_unit_readout(
                 g_world_formation_level_number.x = num_x;
                 g_world_formation_level_number.y = num_y;
                 g_world_formation_level_number.value = unit_index;
-                world_menu_script_draw_formatted_number(&g_world_formation_level_number);
+                world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_formation_level_number);
             }
             num_x = x + 45;
             num_y = top;
@@ -128,7 +128,7 @@ void world_formation_draw_unit_readout(
                 g_world_formation_experience_number.x = num_x;
                 g_world_formation_experience_number.y = num_y;
                 g_world_formation_experience_number.value = unit_index;
-                world_menu_script_draw_formatted_number(&g_world_formation_experience_number);
+                world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_formation_experience_number);
             }
         } else if (g_world_formation_stat_display_mode == MENU_UNIT_READOUT_BRAVE_FAITH) {
             s32 y40;
@@ -167,11 +167,11 @@ void world_formation_draw_unit_readout(
                 g_world_formation_brave_number.x = num_x;
                 g_world_formation_brave_number_wide.y = g_world_formation_brave_number.y = y40;
                 g_world_formation_brave_number_wide.value = g_world_formation_brave_number.value = unit_index;
-                if (g_world_formation_unit_pointers[unit_index]->brave >= 100) {
+                if (g_world_formation_unit_pointers[unit_index]->identity.brave >= 100) {
                     g_world_formation_brave_number_wide.x = num_x - 3;
-                    world_menu_script_draw_formatted_number(&g_world_formation_brave_number_wide);
+                    world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_formation_brave_number_wide);
                 } else {
-                    world_menu_script_draw_formatted_number(&g_world_formation_brave_number);
+                    world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_formation_brave_number);
                 }
             }
             num_x = x + 45;
@@ -180,11 +180,11 @@ void world_formation_draw_unit_readout(
                 g_world_formation_faith_number.x = num_x;
                 g_world_formation_faith_number_wide.y = g_world_formation_faith_number.y = num_y;
                 g_world_formation_faith_number_wide.value = g_world_formation_faith_number.value = unit_index;
-                if (g_world_formation_unit_pointers[unit_index]->faith >= 100) {
+                if (g_world_formation_unit_pointers[unit_index]->identity.faith >= 100) {
                     g_world_formation_faith_number_wide.x = num_x - 5;
-                    world_menu_script_draw_formatted_number(&g_world_formation_faith_number_wide);
+                    world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_formation_faith_number_wide);
                 } else {
-                    world_menu_script_draw_formatted_number(&g_world_formation_faith_number);
+                    world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_formation_faith_number);
                 }
             }
         }
@@ -193,21 +193,21 @@ void world_formation_draw_unit_readout(
     if (mode == MENU_UNIT_READOUT_EQUIP_LABEL) {
         if (get_value(unit_index) < 100) {
             sprite = &g_world_formation_label_cant_equip;
-            sprite->x = x + 9;
+            sprite->position.x = x + 9;
         } else {
             sprite = &g_world_formation_label_equipping;
-            sprite->x = x + 11;
+            sprite->position.x = x + 11;
         }
     } else if (mode == MENU_UNIT_READOUT_LEAVING && enabled != 0) {
         sprite = &g_world_formation_label_leaving;
-        sprite->x = x + 6;
+        sprite->position.x = x + 6;
     } else if (mode == MENU_UNIT_READOUT_MISSING && enabled != 0) {
         sprite = &g_world_formation_label_missing;
-        sprite->x = x + 15;
+        sprite->position.x = x + 15;
     } else {
         return;
     }
-    sprite->y = y + 40;
-    sprite->tpage = GetTPage(0, 0, 0x180, 0);
+    sprite->position.y = y + 40;
+    sprite->source.tpage = GetTPage(0, 0, 0x180, 0);
     world_gfx_enqueue_oriented_textured_quad(sprite, color, TEXTURE_UV_FLIP_NONE, 0, priority);
 }

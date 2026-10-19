@@ -5,7 +5,7 @@
  * is done, the milestone jingle (MAIN_MUSIC_MILESTONE) plays for at least 180 frames, the Bar's music
  * returns, and once the audio queue is idle the level closes into the list of job reports.
  *
- * The busy words are read as g_wldcore_audio_queue members, not scalars, which
+ * The busy fields are read as g_wldcore_audio_queue members, not scalars, which
  * keeps the timer store ahead of their loads as in the target. */
 void wldcore_proposition_step_milestone_level(wldcore_menu_milestone_level_t* milestone) {
     if (milestone->phase == WLDCORE_MILESTONE_PHASE_CLOSE) {
@@ -32,7 +32,7 @@ void wldcore_proposition_step_milestone_level(wldcore_menu_milestone_level_t* mi
             wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_IN, 0x10);
             milestone->phase = WLDCORE_MILESTONE_PHASE_JINGLE;
         }
-    } else if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
+    } else if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
         wldcore_proposition_show_next_milestone_message(milestone);
     }
 }

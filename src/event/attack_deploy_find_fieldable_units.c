@@ -1,4 +1,5 @@
 #include "fft/event_attack.h"
+#include "fft/script.h"
 
 #define ATTACK_NAME_BYTES 16
 #define ATTACK_NAME_END   0xfe
@@ -22,18 +23,17 @@ void attack_deploy_find_fieldable_units(void) {
     s32 index;
     s32 name_index;
     u8* name_cursor;
-    party_data_t* party_unit;
+    party_unit_t* party_unit;
 
-    name_cursor = g_battle_text_section_pointers[TEXT_SECTION_PARTY_UNIT_NAMES];
-    g_battle_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES]
+    name_cursor = g_text_section_pointers[TEXT_SECTION_PARTY_UNIT_NAMES];
+    g_text_section_pointers[TEXT_SECTION_ROSTER_UNIT_NAMES]
         = g_attack_text_data + g_attack_text_roster_unit_names_offset;
-    g_battle_text_section_pointers[TEXT_SECTION_JOB_NAMES] = g_attack_text_data + g_attack_text_job_names_offset;
-    g_battle_text_section_pointers[TEXT_SECTION_SKILLSET_NAMES_COPY]
-        = g_battle_text_section_pointers[TEXT_SECTION_SKILLSET_NAMES];
+    g_text_section_pointers[TEXT_SECTION_JOB_NAMES] = g_attack_text_data + g_attack_text_job_names_offset;
+    g_text_section_pointers[TEXT_SECTION_SKILLSET_NAMES_COPY] = g_text_section_pointers[TEXT_SECTION_SKILLSET_NAMES];
     g_attack_deploy_fieldable_unit_count = 0;
 
     for (index = 0; index < PARTY_ROSTER_SLOT_COUNT; index++) {
-        party_unit = main_party_get_data_pointer(index);
+        party_unit = main_party_get_unit(index);
         if (party_unit->party_id == PARTY_ID_NONE || index >= PARTY_GUEST_SLOT_FIRST
             || party_unit->proposition_status != 0 || (party_unit->gender_flags & UNIT_FLAG_EGG) != 0) {
             g_attack_deploy_unit_fieldable[index] = 0;
@@ -63,8 +63,8 @@ void attack_deploy_find_fieldable_units(void) {
         g_attack_deploy_current_squad_id = 0;
     }
 
-    if (battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
-        s32 map_id = battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP);
+    if (script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
+        s32 map_id = script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP);
 
         g_attack_deploy_current_squad_id = 0;
         for (index = 0; index < 0x300; index++) {
@@ -76,21 +76,20 @@ void attack_deploy_find_fieldable_units(void) {
         if (g_attack_deploy_squad_data[g_attack_deploy_current_squad_id].valid_tile_bitmap == 0) {
             g_attack_deploy_current_squad_id = 0;
         }
-        battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 2);
-        battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, g_attack_deploy_current_squad_id);
+        script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SQUAD_COUNT, 2);
+        script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID, g_attack_deploy_current_squad_id);
         if (g_attack_deploy_current_squad_id == 0) {
-            battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SECONDARY_SQUAD_ID, 0);
+            script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SECONDARY_SQUAD_ID, 0);
         } else {
-            battle_script_set_variable(
-                EVENT_SCRIPT_VAR_DEPLOYMENT_SECONDARY_SQUAD_ID, g_attack_deploy_current_squad_id + 1);
+            script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_SECONDARY_SQUAD_ID, g_attack_deploy_current_squad_id + 1);
         }
-        battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT,
+        script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT,
             g_attack_deploy_squad_data[g_attack_deploy_current_squad_id].unit_limit);
         g_attack_deploy_squad_data[g_attack_deploy_current_squad_id].unit_limit = 4;
     } else {
         g_battle_entd_selection_mode = BATTLE_ENTD_SELECTION_SCRIPT_VARIABLE;
-        g_attack_deploy_current_squad_id = battle_script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID);
-        battle_script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT,
+        g_attack_deploy_current_squad_id = script_get_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_PRIMARY_SQUAD_ID);
+        script_set_variable(EVENT_SCRIPT_VAR_DEPLOYMENT_UNIT_LIMIT,
             g_attack_deploy_squad_data[g_attack_deploy_current_squad_id].unit_limit);
     }
 }

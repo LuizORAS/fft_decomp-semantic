@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x4E, 25 abilities: Cloud's limits (Braver, Cross-slash, Meteorain, Omnislash, Cherry
  * Blossom), the Ice, Fire and Thunder Bracelets, and monster attacks such as Choco Meteor, Flame

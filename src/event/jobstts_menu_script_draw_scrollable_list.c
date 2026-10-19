@@ -1,4 +1,6 @@
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
+#include "fft/menu_script.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 
@@ -15,12 +17,12 @@
  * event-speed multiplier. The unused arrays reproduce the target's frame: it references only rect (0x20) and marker
  * (0x38). The scroll-down path follows WORLD's world_menu_script_draw_scrollable_list spelling.
  */
-u8* jobstts_menu_script_draw_scrollable_list(u8* command) {
+menu_instruction_t* jobstts_menu_script_draw_scrollable_list(menu_instruction_t* command) {
     RECT rect;
     u8 unused_28[16];
-    RECT marker;
+    point16_t marker;
     u8 unused_40[8];
-    u8* start;
+    menu_instruction_t* start;
     s16* ids;
     u16 previous;
     s32 input;
@@ -32,15 +34,15 @@ u8* jobstts_menu_script_draw_scrollable_list(u8* command) {
     u16 ot_index;
     s32 count;
 
-    ot_index = g_jobstts_gfx_otag_index;
+    ot_index = g_menu_gfx_otag_index;
     speed = 1;
-    if (g_jobstts_menu_event_speed != 0) {
-        speed = g_jobstts_menu_event_speed;
+    if (g_menu_event_speed != 0) {
+        speed = g_menu_event_speed;
     }
     if (g_jobstts_menu_list_entry_count <= 0) {
-        count = command[4] + 1;
+        count = command->list.skip_count + 1;
         while (--count != -1) {
-            command = jobstts_menu_script_skip_group(command);
+            command = menu_script_skip_group(command);
         }
         return command;
     }
@@ -152,63 +154,62 @@ u8* jobstts_menu_script_draw_scrollable_list(u8* command) {
     }
     if (g_jobstts_menu_list_text_table != 0) {
         if (g_jobstts_menu_list_scroll_offset_y != 0) {
-            rect.x = command[7];
-            rect.y = command[8] - 5;
+            rect.x = command->list.x;
+            rect.y = command->list.y - 5;
             rect.w = g_jobstts_menu_list_vram_width * 4;
             rect.h = (g_jobstts_menu_list_row_height * g_jobstts_menu_list_visible_rows) + 0xa;
             jobstts_gfx_enqueue_textured_quad(&rect, 0, g_jobstts_menu_list_scroll_offset_y + 0x2b, 0,
-                g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, g_jobstts_menu_window_clut,
-                g_jobstts_gfx_otag_index);
+                g_jobstts_gfx_semitransparency, g_jobstts_gfx_background_texture_page, g_menu_window_clut,
+                g_menu_gfx_otag_index);
         } else {
-            rect.x = command[7];
-            rect.y = command[8];
+            rect.x = command->list.x;
+            rect.y = command->list.y;
             rect.w = g_jobstts_menu_list_vram_width * 4;
             rect.h = g_jobstts_menu_list_row_height * g_jobstts_menu_list_visible_rows;
             jobstts_gfx_enqueue_textured_quad(&rect, 0, 0x30, 0, g_jobstts_gfx_semitransparency,
-                g_jobstts_gfx_background_texture_page, g_jobstts_menu_window_clut, g_jobstts_gfx_otag_index);
+                g_jobstts_gfx_background_texture_page, g_menu_window_clut, g_menu_gfx_otag_index);
         }
     }
-    if (g_jobstts_menu_use_alternate_palette == 0) {
+    if (g_menu_use_alternate_palette == 0) {
         if (g_jobstts_menu_scroll_base_index != 0) {
             rect.x = g_jobstts_menu_window_right_x;
-            rect.y = command[0xc];
+            rect.y = command->list.arrow_up_y;
             rect.w = 8;
             rect.h = 0x10;
             jobstts_gfx_enqueue_textured_quad(&rect, 0xd8, 0, 0, g_jobstts_gfx_semitransparency,
-                g_jobstts_menu_cursor_texture_page, g_jobstts_menu_cursor_mode0_foreground_clut, 0x1e);
+                g_menu_cursor_texture_page, g_menu_cursor_mode0_foreground_clut, 0x1e);
         }
         if (g_jobstts_menu_scroll_base_index < (g_jobstts_menu_list_entry_count - g_jobstts_menu_list_visible_rows)) {
             rect.x = g_jobstts_menu_window_right_x;
-            rect.y = command[0xd];
+            rect.y = command->list.arrow_down_y;
             rect.w = 8;
             rect.h = 0x10;
             jobstts_gfx_enqueue_textured_quad(&rect, 0xe0, 0, 0, g_jobstts_gfx_semitransparency,
-                g_jobstts_menu_cursor_texture_page, g_jobstts_menu_cursor_mode0_foreground_clut, 0x1e);
+                g_menu_cursor_texture_page, g_menu_cursor_mode0_foreground_clut, 0x1e);
         }
         if (g_jobstts_menu_list_entry_count > g_jobstts_menu_list_visible_rows) {
-            y = command[0xc] + 0x14;
-            j = command[0xd] - y;
+            y = command->list.arrow_up_y + 0x14;
+            j = command->list.arrow_down_y - y;
             y = (j * g_jobstts_menu_list_selected_index) / (g_jobstts_menu_list_entry_count - 1);
-            j = command[0xc] + 0xf;
+            j = command->list.arrow_up_y + 0xf;
             j += y;
             rect.w = 8;
             rect.h = 8;
             rect.x = g_jobstts_menu_window_right_x;
             rect.y = j;
             jobstts_gfx_enqueue_textured_quad(&rect, 0x10, 0x10, 0, g_jobstts_gfx_semitransparency,
-                g_jobstts_menu_cursor_texture_page, g_jobstts_menu_cursor_mode0_foreground_clut,
-                g_jobstts_gfx_otag_index);
+                g_menu_cursor_texture_page, g_menu_cursor_mode0_foreground_clut, g_menu_gfx_otag_index);
         }
-        if (command[2] != 0) {
-            marker.x = command[7] - command[0xb];
-            marker.y = command[8]
+        if (command->list.show_cursor != 0) {
+            marker.x = command->list.x - command->list.cursor_x_offset;
+            marker.y = command->list.y
                 + ((g_jobstts_menu_list_selected_index - g_jobstts_menu_scroll_base_index)
                     * g_jobstts_menu_list_row_height);
-            jobstts_menu_update_and_draw_animated_cursor(
-                &marker, &g_jobstts_menu_list_cursor_anim_state, g_jobstts_menu_use_alternate_palette);
+            menu_update_and_draw_animated_cursor(
+                &marker, &g_jobstts_menu_list_cursor_anim_state, g_menu_use_alternate_palette);
         }
     }
-    command += command[1];
+    command = menu_next_instruction(command);
     g_jobstts_menu_list_row_index = 0;
     total = g_jobstts_menu_list_visible_rows + 1;
     if (g_jobstts_menu_list_scroll_offset_y == 0) {
@@ -222,7 +223,7 @@ u8* jobstts_menu_script_draw_scrollable_list(u8* command) {
         }
         command = start;
         for (j = 0; j < g_jobstts_menu_list_row_group_count; j++) {
-            command = g_jobstts_menu_script_handlers[*command](command);
+            command = g_jobstts_menu_script_handlers[command->header.opcode](command);
         }
         g_jobstts_menu_list_row_index += 1;
     }

@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Tutorial command below WORLD_TUTORIAL_CMD_PRESS_BUTTON_LIMIT: press pad bit number <command> for
  * one frame (g_world_tutorial_pressed_button, which world_input_read_tutorial_or_controller hands the

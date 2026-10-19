@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_move.h"
 
 /* Set the spread direction to +y, with the slope shifts of the exit and entry sides. */
 void battle_move_spread_to_north_preset(void) {

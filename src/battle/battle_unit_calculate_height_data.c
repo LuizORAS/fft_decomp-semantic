@@ -1,18 +1,5 @@
-#include "fft/battle.h"
-
-/* The result bytes as the target writes them. The elevation store is a 7-bit
- * field write that keeps bit 7 of the uninitialized local byte, and only these
- * 7 bytes are copied out. */
-typedef struct battle_unit_height_copy {
-    u8 x;
-    u8 y;
-    u8 elevation : 7;
-    u8 _unused_02_bit7 : 1;
-    u8 unit_flags;
-    s8 unit_height;
-    s8 walking_height;
-    s8 total_height;
-} battle_unit_height_copy_t;
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 
 /* Build a unit's targeting-height record.
  *
@@ -26,10 +13,11 @@ typedef struct battle_unit_height_copy {
  * outranks `depth` in allocation, which gives it $v1 and `depth` $a1.
  */
 battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_data_t* out, s32 unit_id) {
-    battle_unit_height_copy_t height;
+    battle_unit_height_data_t height;
     battle_stats_t* unit;
     battle_stats_t* candidate;
     map_tile_t* tile;
+    /* Byte access retains the original packed load and field-extraction order. */
     s32 offset;
     s32 i;
     s32 id;
@@ -54,14 +42,14 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
             flags = unit_id | BATTLE_UNIT_HEIGHT_NON_CHOCOBO;
         x = unit->x;
         height.x = x;
-        y = unit->position.bits.y;
+        y = unit->position.y;
         height.y = y;
-        level = unit->position.bits.higher_elevation;
+        level = unit->position.higher_elevation;
         height.elevation = level;
         for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
             candidate = &g_battle_unit_stats[i];
             if (i != unit_id && candidate->entd_slot != BATTLE_ENTD_SLOT_NONE && candidate->x == x
-                && candidate->position.bits.y == y && candidate->position.bits.higher_elevation == level) {
+                && candidate->position.y == y && candidate->position.higher_elevation == level) {
                 if (flags & BATTLE_UNIT_HEIGHT_NON_CHOCOBO)
                     unit = candidate;
                 offset = 2;
@@ -76,10 +64,10 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
             height.unit_height = offset + 4;
         else
             height.unit_height = offset + 6;
-        flags = unit->movement_abilities[2];
+        flags = unit->ability_flags.movement[2];
         tile = &g_battle_map_tile_data[battle_map_calculate_location(unit)];
-        tile_height = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK);
-        depth = tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT;
+        tile_height = tile->height * 2 + ((*(u8*)&tile->depth_half_height) & MAP_TILE_HALF_HEIGHT_MASK);
+        depth = (*(u8*)&tile->depth_half_height) >> MAP_TILE_DEPTH_SHIFT;
         level = tile_height;
         if (depth != 0) {
             if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
@@ -104,6 +92,6 @@ battle_unit_height_data_t* battle_unit_calculate_height_data(battle_unit_height_
     } else {
         height.unit_flags = BATTLE_UNIT_HEIGHT_UNAVAILABLE;
     }
-    *(battle_unit_height_copy_t*)out = height;
+    *out = height;
     return out;
 }

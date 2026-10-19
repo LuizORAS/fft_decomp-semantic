@@ -72,10 +72,10 @@ runs that id's handler once per target and strike.
 - **The result.** [[battle_action_data_t]] for the target
   ([[g_battle_action_target_data]]) and for the actor
   ([[g_battle_action_attacker_data]]): hit, miss type, HP and MP damage and
-  healing, stat changes ([[battle_action_stat_change_e]], CT
+  healing, stat changes (`BATTLE_ACTION_STAT_CHANGE_*`, CT
   `BATTLE_ACTION_CT_CHANGE_*`), special effects
   ([[battle_action_special_effect_e]]), statuses to add and remove, and the
-  result type ([[battle_action_type_e]]). While the hit chance is built,
+  result type ([[battle_action_type_flags_e]]). While the hit chance is built,
   `hp_damage` holds it.
 - **When it runs.** [[g_battle_action_state]]: executing, AI simulation or
   preview.

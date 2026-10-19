@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_move.h"
 
 /* Set the work tile one step from the current tile in the spread direction. */
 void battle_move_set_spreading_tile_x_and_y_coordinates(void) {

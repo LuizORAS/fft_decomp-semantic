@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* Store both arguments to their incoming stack home slots and return. Nothing on the disc calls it or holds its

@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 
 /* Resolve one strike of the current ability: build the target list, run the per-target formula
  * setup and fill the strike work record.
@@ -14,7 +17,7 @@
  * After the clearing loop i holds 21, which the target reuses as the Math skillset id in the
  * control-value test. The (u16*)/(s16*) views reproduce the target's load forms and memory-access
  * ordering. */
-s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t* work) {
+s32 battle_action_resolve_ability_strike(s32 battle_id, battle_strike_work_t* work) {
     u8 targets[BATTLE_UNIT_SLOT_COUNT];
     s32 count;
     u8 flags_3;
@@ -31,10 +34,10 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         targets[i] = 0xff;
     }
-    if (misc_unit_id >= BATTLE_UNIT_SLOT_COUNT) {
+    if (battle_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
-    attacker = &g_battle_unit_stats[misc_unit_id];
+    attacker = &g_battle_unit_stats[battle_id];
     battle_action_clear_current_data(&attacker->action);
     attacker->action.hit = 0;
     attacker->action.miss_type = BATTLE_ACTION_MISS_TYPE_CANCELLED;
@@ -47,7 +50,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     reaction_targeted = 0;
     if (g_battle_action_context != BATTLE_ACTION_CONTEXT_PRIMARY) {
         work->reaction_ability_id = g_battle_reaction_ability_id;
-        if (battle_reaction_build_targets(misc_unit_id, work, &count, targets)) {
+        if (battle_reaction_build_targets(battle_id, work, &count, targets)) {
             if (g_battle_reaction_ability_id == ABILITY_ID_REACTION_REFLECT) {
                 flags_3 = ABILITY_SECONDARY_FLAG_3_ANIMATE_ON_MISS;
             } else {
@@ -55,38 +58,38 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
             }
             reaction_targeted = 1;
         }
-    } else if (attacker->last_skillset_id == i) {
+    } else if (attacker->action_command.skillset_id == i) {
         work->math_skill_flag = 1;
     }
     if (!reaction_targeted) {
-        if (battle_target_mark_hit_tiles((battle_ai_command_action_t*)&attacker->action_actor_id, &flags_3) == -1) {
+        if (battle_target_mark_hit_tiles(&attacker->action_command, &flags_3) == -1) {
             work->target_count = 0;
             work->continue_attack = 0;
             return -1;
         }
-        if (g_battle_action_current_ability.post_action_target_id < 21
+        if (g_battle_action_current_ability.post_action_target_id < BATTLE_UNIT_SLOT_COUNT
             && (g_battle_action_current_ability.weapon_spell_pending != 0
                 || (g_battle_action_current_ability.knockback_flags & BATTLE_KNOCKBACK_PENDING))) {
             battle_target_clear_targeted_flags();
             count = 1;
             targets[0] = g_battle_action_current_ability.post_action_target_id;
-            for (i = 1; i < 16; i++) {
+            for (i = 1; i < BATTLE_UNIT_RUNTIME_SLOT_COUNT; i++) {
                 targets[i] = 0xff;
             }
             tile = &g_battle_map_tile_data[battle_map_calculate_location(
                 &g_battle_unit_stats[g_battle_action_current_ability.post_action_target_id])];
-            tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
+            tile->ceiling_depth_and_marks.targeted = 1;
         }
         count = battle_target_list_units_on_panels(targets, attacker);
     }
     g_battle_action_current_ability.target_count = count;
     battle_target_set_ability_targets(targets);
-    battle_action_store_used_weapon((battle_ai_command_action_t*)&attacker->action_actor_id);
+    battle_action_store_used_weapon(&attacker->action_command);
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         target_id = targets[i];
         if (target_id != 0xff) {
             g_battle_action_current_ability.defaulted_to_attack = 0;
-            battle_action_run_pre_formula_setup(&attacker->action_actor_id, target_id);
+            battle_action_run_pre_formula_setup(&attacker->action_command, target_id);
         }
     }
     battle_status_remove_transparent_if_jump_used(attacker);
@@ -98,14 +101,14 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     }
     work->can_earn_experience = 0;
     battle_action_finalize_draw_out_katana_result(attacker, work, count);
-    work->actor_id = misc_unit_id;
+    work->actor_id = battle_id;
     work->used_weapon_id = g_battle_action_current_ability.weapon_id;
     work->reaction_occurred = 0;
     work->current_hit_number = g_battle_action_current_ability.strike_counter;
     battle_target_store_strike_destination(attacker, work);
     if (count == 0) {
         g_battle_action_current_ability.strike_counter++;
-        work->last_attack_id = attacker->last_ability_id;
+        work->last_attack_id = attacker->action_command.ability_id;
         work->reaction_id = 0;
         if (!(flags_3 & ABILITY_SECONDARY_FLAG_3_ANIMATE_ON_MISS)) {
             work->skip_empty_tile_effect = 1;
@@ -126,7 +129,7 @@ s32 battle_action_resolve_ability_strike(s32 misc_unit_id, battle_strike_work_t*
     } else if (g_battle_action_current_ability.defaulted_to_attack != 0) {
         work->last_attack_id = 0;
     } else {
-        work->last_attack_id = attacker->last_ability_id;
+        work->last_attack_id = attacker->action_command.ability_id;
     }
     work->reaction_id = g_battle_action_current_ability.reaction_id;
     if (g_battle_action_current_ability.knockback_flags != 0) {

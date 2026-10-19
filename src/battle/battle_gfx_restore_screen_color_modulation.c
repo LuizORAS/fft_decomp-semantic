@@ -1,10 +1,9 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_gfx.h"
 
 /* Reload the screen colour modulation from the backup battle_gfx_copy_screen_color_modulation saved.
  * No retail code calls it. */
 void battle_gfx_restore_screen_color_modulation(void) {
-    g_battle_gfx_screen_color_modulation[0] = g_battle_gfx_screen_color_modulation_backup[0];
-    g_battle_gfx_screen_color_modulation[1] = g_battle_gfx_screen_color_modulation_backup[1];
-    g_battle_gfx_screen_color_modulation[2] = g_battle_gfx_screen_color_modulation_backup[2];
+    g_battle_gfx_screen_color_modulation.r = g_battle_gfx_screen_color_modulation_backup.r;
+    g_battle_gfx_screen_color_modulation.g = g_battle_gfx_screen_color_modulation_backup.g;
+    g_battle_gfx_screen_color_modulation.b = g_battle_gfx_screen_color_modulation_backup.b;
 }

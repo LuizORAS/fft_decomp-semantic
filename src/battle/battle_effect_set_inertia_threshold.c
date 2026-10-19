@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Set g_battle_effect_inertia_threshold: each frame a particle keeps (inertia - threshold) / inertia of
  * its velocity. Script opcode 27 and the secondary-effect handlers set it as they set the gravity. */

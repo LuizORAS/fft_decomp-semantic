@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Same as battle_move_search_adjacent_candidates for tiles across a gap of 1 to Jump / 2 tiles
  * whose tiles in between are clear (battle_move_check_horizontal_jump). */

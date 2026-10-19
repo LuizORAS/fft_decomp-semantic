@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Set XA and YA for Jump (formula 0x64, which only Jump uses): XA = PA, or PA * 3 / 2 with a spear;
  * YA = the weapon's power, or PA * Brave / 100 (at least 1) bare-handed. */

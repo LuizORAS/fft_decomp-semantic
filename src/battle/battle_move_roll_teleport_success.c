@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Return 1 when a teleport succeeds: always with Teleport 2, else on a roll of 0-99 at or above

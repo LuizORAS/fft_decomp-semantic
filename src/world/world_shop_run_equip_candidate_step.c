@@ -1,3 +1,4 @@
+#include "fft/unit.h"
 #include "fft/world.h"
 #include "psx/libc.h"
 #include "psx/pad.h"
@@ -8,7 +9,7 @@
  *
  * Moving onto a unit that can equip the item stages it in the temporary formation record
  * (WORLD_FORMATION_PREVIEW_RECORD) and shows the stat preview; slots already holding the item are
- * flagged in g_world_selected_unit_stat_detail.equipment. X returns to the buy list. */
+ * flagged in g_world_selected_unit_stat_detail.state.equipment. X returns to the buy list. */
 void world_shop_run_equip_candidate_step(void) {
     s32 unused[16];
     s32 input;
@@ -29,7 +30,7 @@ void world_shop_run_equip_candidate_step(void) {
     }
     g_world_shop_equip_candidate_saved_browse = g_world_formation_unit_browse_enabled;
     world_formation_update_and_draw_unit_grid(0, g_world_formation_unit_browse_enabled == 0, 1, input,
-        g_world_menu_input_lock_mode, world_item_get_equip_candidate_marker, world_item_get_equip_candidate_brightness);
+        g_menu_input_lock_mode, world_item_get_equip_candidate_marker, world_item_get_equip_candidate_brightness);
     if (g_world_shop_equip_candidate_saved_browse == 0) {
         if (g_world_formation_unit_browse_enabled != 0) {
             g_world_shop_equip_candidate_last_unit = -1;
@@ -53,11 +54,11 @@ void world_shop_run_equip_candidate_step(void) {
             i = 0;
             equipped = 0;
             g_world_shop_equip_candidate_last_unit = g_world_formation_selected_unit_index;
-            for (; i < 5; i++) {
+            for (; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
                 if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i]
                     == g_world_shop_equip_candidate_item) {
                     equipped = 1;
-                    g_world_selected_unit_stat_detail.equipment[i] |= 0x8000;
+                    g_world_selected_unit_stat_detail.state.equipment[i] |= 0x8000;
                 }
             }
             if (equipped != 0
@@ -71,16 +72,16 @@ void world_shop_run_equip_candidate_step(void) {
                 world_formation_equip_item_to_unit_slot(
                     WORLD_FORMATION_PREVIEW_RECORD, slot, g_world_shop_equip_candidate_item);
                 bcopy(g_world_formation_unit_pointers[WORLD_FORMATION_PREVIEW_RECORD]->equipment,
-                    g_world_item_preview_stat_detail.equipment, 10);
+                    g_world_item_preview_stat_detail.state.equipment, 10);
                 world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,
                     &g_world_selected_unit_stat_summary,
                     g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
                     g_world_formation_unit_pointers[WORLD_FORMATION_PREVIEW_RECORD]->equipment);
-                g_world_item_preview_stat_detail.two_hands
-                    = world_unit_is_two_handing_weapon(g_world_item_preview_stat_detail.equipment,
+                g_world_item_preview_stat_detail.state.two_hands
+                    = unit_is_two_handing_weapon(g_world_item_preview_stat_detail.state.equipment,
                         world_ability_has_two_hands(g_world_formation_selected_unit_index));
                 g_world_shop_equip_candidate_preview_visible = 1;
-                g_world_item_preview_stat_detail.equipment[slot]
+                g_world_item_preview_stat_detail.state.equipment[slot]
                     = g_world_shop_equip_candidate_item | WORLD_EQUIPMENT_SHOP_ITEM;
             }
         }

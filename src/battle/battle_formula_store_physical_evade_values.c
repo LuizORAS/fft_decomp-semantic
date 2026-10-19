@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Collects the current target's physical evade sources for the ability being
@@ -29,7 +30,7 @@ void battle_formula_store_physical_evade_values(void) {
     u8 weapon_secondary;
 
     weapon_guard = 0;
-    if ((g_battle_action_target->reaction_abilities[3] & BATTLE_REACTION_SET_4_WEAPON_GUARD) != 0) {
+    if ((g_battle_action_target->ability_flags.reaction[3] & BATTLE_REACTION_SET_4_WEAPON_GUARD) != 0) {
         weapon_guard = battle_unit_get_action_block(g_battle_action_target) == BATTLE_UNIT_ACTION_BLOCK_NONE;
     }
     g_battle_action_current_ability.base_hit = 100;

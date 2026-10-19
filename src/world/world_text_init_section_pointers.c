@@ -15,13 +15,12 @@ void world_text_init_section_pointers(void) {
     offset = g_world_text_section_offsets;
     i = 0;
     text = (u8*)(offset + TEXT_SECTION_COUNT);
-    section = g_world_text_section_pointers;
-    do {
+    section = g_text_section_pointers;
+    for (; i < TEXT_SECTION_COUNT; i++) {
         value = *offset;
         offset++;
-        i++;
         value += (s32)text;
         *section = (u8*)value;
         section++;
-    } while (i < TEXT_SECTION_COUNT);
+    }
 }

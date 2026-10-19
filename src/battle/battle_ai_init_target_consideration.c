@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Choose the acting unit's Auto-Battle mode and main target. A player-controlled unit keeps its own
  * Auto-Battle setting; any other takes its ENTD behaviour, and keeps its special behaviour while it is
@@ -6,12 +6,13 @@
  * left). Otherwise the player's team (guests) heads for the nearest healer or crystal below 45/128 HP
  * and for the nearest eligible enemy above; another team's supporter switches to Save Fading Life
  * while team support is available, and the rest target the nearest eligible enemy
- * (battle_ai_find_nearest_target, battle_ai_store_main_target_id_and_focus_on_target_flag). */
+ * (battle_ai_find_nearest_target, battle_ai_focus_on_target). */
 void battle_ai_init_target_consideration(void) {
     battle_ai_unit_decision_t* decision;
     battle_ai_data_t* ai;
     battle_stats_t* acting;
     s32 flags;
+    u8 targeting_flags;
     battle_ai_nearest_target_mode_e mode;
     s32 target;
 
@@ -55,21 +56,20 @@ void battle_ai_init_target_consideration(void) {
                 ai->targetability.live.unit_targetable[target] = 1;
             mode = BATTLE_AI_NEAREST_ELIGIBLE_ENEMY;
         }
+        target = battle_ai_find_nearest_target(mode);
+        battle_ai_focus_on_target(target);
     } else {
-        /* Nested: a combined && folds both byte tests into one word test. */
-        if (decision->targeting_flags_1 & BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT) {
-            if (!(decision->targeting_flags_2 & BATTLE_AI_TARGET_TEAM_SUPPORT_UNAVAILABLE))
-                goto save_fading_life;
+        targeting_flags = decision->targeting_flags_1;
+        if (!(targeting_flags & BATTLE_AI_TARGETING_FLAG_1_MOSTLY_SUPPORT)
+            || (decision->targeting_flags_2 & BATTLE_AI_TARGET_TEAM_SUPPORT_UNAVAILABLE)) {
+            ai->autobattle_setting = BATTLE_AUTO_BATTLE_MANUAL;
+            for (target = 0; target < BATTLE_UNIT_SLOT_COUNT; target++)
+                ai->targetability.live.unit_targetable[target] = 1;
+            mode = BATTLE_AI_NEAREST_ELIGIBLE_ENEMY;
+            target = battle_ai_find_nearest_target(mode);
+            battle_ai_focus_on_target(target);
+        } else {
+            ai->autobattle_setting = BATTLE_AUTO_BATTLE_SAVE_FADING_LIFE;
         }
-        ai->autobattle_setting = BATTLE_AUTO_BATTLE_MANUAL;
-        for (target = 0; target < BATTLE_UNIT_SLOT_COUNT; target++)
-            ai->targetability.live.unit_targetable[target] = 1;
-        mode = BATTLE_AI_NEAREST_ELIGIBLE_ENEMY;
     }
-    target = battle_ai_find_nearest_target(mode);
-    battle_ai_store_main_target_id_and_focus_on_target_flag(target);
-    return;
-
-save_fading_life: /* the target places this exit after the shared tail */
-    ai->autobattle_setting = BATTLE_AUTO_BATTLE_SAVE_FADING_LIFE;
 }

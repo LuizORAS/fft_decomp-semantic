@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 
 /* Project the cursor tile to the screen and, while the cursor is visible, draw the cursor and
  * its tile glow. */

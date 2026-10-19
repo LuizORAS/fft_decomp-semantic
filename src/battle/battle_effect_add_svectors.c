@@ -1,5 +1,5 @@
+#include "fft/battle_effect.h"
 #include "psx/libgte.h"
-#include "psx/types.h"
 
 /* Add two SVECTORs into out (battle_camera_execute_angle_command). */
 void battle_effect_add_svectors(const SVECTOR* first, const SVECTOR* second, SVECTOR* out) {

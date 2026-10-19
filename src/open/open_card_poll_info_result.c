@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/open.h"
 #include "psx/types.h"
 
@@ -15,7 +16,7 @@ s32 open_card_poll_info_result(void) {
     }
 
     status = _card_status(g_open_card_slot) & 1;
-    result = open_card_poll_bios_event();
+    result = card_io_poll_bios_event_result();
     if (status != 0 && result == CARD_IO_RESULT_PENDING) {
         g_open_card_info_pending = 0;
     }

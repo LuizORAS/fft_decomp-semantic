@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* The target's affinities for element, on the stored HP damage: Absorb marks the action for
  * battle_formula_apply_elemental_absorption, Null nullifies it (battle_formula_nullify_action), Half
@@ -14,7 +15,7 @@ void battle_formula_apply_element_affinities(s32 element) {
 
     if (g_battle_action_target->elemental_affinity[ELEMENTAL_AFFINITY_ABSORB] & element_mask) {
         absorb_action = g_battle_action_target_data;
-        /* The target updates the combined special-effect field as a halfword. */
+        /* The target updates the combined special-effect field as a 16-bit value. */
         absorb_action->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_ELEMENTAL_ABSORPTION;
     }
     unit = g_battle_action_target;

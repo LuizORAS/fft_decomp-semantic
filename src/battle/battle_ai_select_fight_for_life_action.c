@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 
 /* Fight for life: attack the Auto-Battle target. When the target is out of play or not an enemy,
  * the unit drops its ENTD special behaviour and takes the rider of a ridden mount (unless both are
@@ -16,13 +17,13 @@ s32 battle_ai_select_fight_for_life_action(void) {
     /* Reload the persistent target before every resume dispatch. */
     if (g_battle_ai_data_base.resume_pending) {
         switch (g_battle_ai_data_base.action_selection_phase) {
-        case 0:
+        case BATTLE_AI_TARGETED_SELECTION_SCORE_TILES:
             goto score_tiles;
-        case 1:
+        case BATTLE_AI_TARGETED_SELECTION_MOVEMENT:
             goto movement;
-        case 2:
+        case BATTLE_AI_TARGETED_SELECTION_CHARGING:
             goto charging;
-        case 3:
+        case BATTLE_AI_TARGETED_SELECTION_TARGET_ABILITIES:
             goto target_abilities;
         default:
             goto other_abilities;
@@ -65,16 +66,16 @@ s32 battle_ai_select_fight_for_life_action(void) {
         }
     }
     ai->acting_unit->auto_battle_target = target;
-    battle_ai_store_main_target_id_and_focus_on_target_flag(target);
+    battle_ai_focus_on_target(target);
     ai->movement_scenario = 0;
 score_tiles:
     if (battle_ai_score_reachable_tiles() == -1) {
-        ai->action_selection_phase = 0;
+        ai->action_selection_phase = BATTLE_AI_TARGETED_SELECTION_SCORE_TILES;
         return -1;
     }
 movement:
     if (battle_ai_build_targeted_movement() == -1) {
-        ai->action_selection_phase = 1;
+        ai->action_selection_phase = BATTLE_AI_TARGETED_SELECTION_MOVEMENT;
         return -1;
     }
     ai->movement_scenario = 2;
@@ -84,7 +85,7 @@ charging:
     result = battle_ai_evaluate_charged_action();
     switch (result) {
     case -1:
-        ai->action_selection_phase = 2;
+        ai->action_selection_phase = BATTLE_AI_TARGETED_SELECTION_CHARGING;
         return -1;
     case 1:
         return 0;
@@ -93,7 +94,7 @@ charging:
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_SPECIFIC, target)) {
     target_abilities:
         if (battle_ai_evaluate_ability_list() == -1) {
-            ai->action_selection_phase = 3;
+            ai->action_selection_phase = BATTLE_AI_TARGETED_SELECTION_TARGET_ABILITIES;
             return -1;
         }
         if (battle_ai_select_ranked_action())
@@ -103,7 +104,7 @@ charging:
     if (battle_ai_select_active_units(BATTLE_AI_UNIT_FILTER_ANY, 0)) {
     other_abilities:
         if (battle_ai_evaluate_ability_list() == -1) {
-            ai->action_selection_phase = 4;
+            ai->action_selection_phase = BATTLE_AI_TARGETED_SELECTION_OTHER_ABILITIES;
             return -1;
         }
         if (battle_ai_select_ranked_action())

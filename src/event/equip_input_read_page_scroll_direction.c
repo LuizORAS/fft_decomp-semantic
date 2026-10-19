@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 
 enum {
@@ -14,7 +15,7 @@ s32 equip_input_read_page_scroll_direction(void) {
     u16 held_frames;
 
     direction = 0;
-    if (g_equip_input_page_scroll_disabled == 0 && g_battle_menu_input_lock_mode == 0) {
+    if (g_equip_input_page_scroll_disabled == 0 && g_menu_input_lock_mode == 0) {
         input = PadRead(0);
         if ((input & PSX_PAD_UP) && (input & PSX_PAD_SQUARE)) {
             direction = -1;
@@ -26,7 +27,7 @@ s32 equip_input_read_page_scroll_direction(void) {
             g_equip_input_page_scroll_hold_frames = 0;
         }
         /* One variable holds the input and then the speed, as in the target. */
-        input = g_equip_menu_event_speed;
+        input = g_menu_event_speed;
         initial_delay = g_main_input_repeat_initial_delay / input;
         repeat_period = g_main_input_secondary_repeat_period / input;
         held_frames = g_equip_input_page_scroll_hold_frames;

@@ -15,13 +15,13 @@ void wldcore_list_handle_active_propositions_input(wldcore_menu_proposition_list
     if ((g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) != 0) {
         return;
     }
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if ((buttons & PSX_PAD_SELECT) != 0) {
         g_wldcore_window_records[level->cursor_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
         window = level->cursor_window;
         g_wldcore_window_records[window].anim_counter = 0;
         g_wldcore_window_records[window].frame_index = 0;
-        wldcore_menu_suspend_active_propositions_level(&level->cursor_window);
+        wldcore_menu_suspend_active_propositions_level(level);
         wldcore_menu_push_message_level(0x105A, 1);
         return;
     }

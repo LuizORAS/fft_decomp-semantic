@@ -1,4 +1,5 @@
 #include "fft/main.h"
+#include "fft/open.h"
 
 /* Load OPEN.BIN (sector 0x14ff0) and run the opening and title. Returns 0 when the game goes
  * straight to a battle instead of the world map. */

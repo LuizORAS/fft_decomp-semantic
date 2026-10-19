@@ -123,18 +123,18 @@ sound driver keeps a separate CPU heap.
 
 BATTLE and WORLD each schedule cooperative native threads:
 - **Slots:** `0x400` bytes each, with about 900 bytes of stack
-  (`native_thread_t` in [`include/fft/thread.h`](include/fft/thread.h)).
+  (`thread_t` in [`include/fft/thread.h`](include/fft/thread.h)).
   Slot 0 is the overlay's main loop; BATTLE runs threads in slots 1–15 and
   WORLD in slots 1–16.
 - **A frame:** the main loop yields once a frame
   (`battle_script_run_event_frame`, `world_script_run_event_frame`). The
-  hand-written `battle_thread_yield` and `world_thread_yield` save the
+  hand-written `thread_yield` and `thread_yield` save the
   thread's registers in its slot and resume the next running slot, returning
   to slot 0 after the last. So every running thread advances once a frame,
   and `*_thread_wait_frames(n)` waits n frames.
 - **Starting and identifying:** `*_thread_resolve_id` finds a free slot,
-  `*_thread_set_parameters` passes the inputs, `battle_thread_start` and
-  `world_thread_start` start the function, and a `task_id` lets other threads
+  `*_thread_set_parameters` passes the inputs, `thread_start` and
+  `thread_start` start the function, and a `task_id` lets other threads
   find it.
 - **Large calls:** a thread runs disc reads and overlay loads through
   `*_thread_call_on_main_stack`, on the main loop's stack.
@@ -168,11 +168,11 @@ two of them before the ending.
 ### Sound, graphics and libraries
 
 - **Sound:** MAIN's `main_sound_*` controls it, and the Suzuki driver
-  (`main_smd_*`, `Suzuki*`) plays it. The [Sound](docs/mechanics/Sound.md)
+  (`suzuki_smd_*`, `Suzuki*`) plays it. The [Sound](docs/mechanics/Sound.md)
   page covers the music, the tunes and the sound effects, and the
   [Sound Driver](docs/mechanics/Sound%20Driver.md) page the driver.
 - **Graphics:** they go through the Psy-Q GPU and GTE libraries
-  ([`src/psyq/`](src/psyq/)), in fixed point where `ONE` (4096) is 1.0. The
+  ([`src/lib/psyq/`](src/lib/psyq/)), in fixed point where `ONE` (4096) is 1.0. The
   [Battle Map](docs/mechanics/Battle%20Map.md) and
   [Sprites and Graphics](docs/mechanics/Sprites%20and%20Graphics.md) pages
   cover how a battle is drawn.
@@ -186,7 +186,7 @@ does for the game.
 ## Source layout and names
 
 - **Files:** one function per file, at `src/<module>/<name>.c`. Sony
-  libraries live under `src/psyq/<library>/`.
+  libraries live under `src/lib/psyq/<library>/`.
 - **Headers:** one per module in [`include/fft/`](include/fft/), plus shared
   type headers. Each header groups its declarations under short subsystem
   labels such as `/* ai */`, each opened by a comment that says what its

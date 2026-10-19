@@ -1,4 +1,10 @@
+#include "fft/battle_script.h"
 #include "fft/event_option.h"
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -21,19 +27,19 @@
 void option_menu_run_option_choice_thread(void) {
     RECT rect;
     u32* input;
-    native_thread_t* thread;
+    thread_t* thread;
     s32 kind;
     s32 height;
     world_menu_entry_t* param;
     s32 width;
-    u32* buffer;
+    u8* buffer;
     s32 i;
     s32 cursor;
     world_menu_icon_record_t* record;
 
-    input = battle_script_get_controller_input_pointer(0);
-    battle_script_get_controller_input_pointer(1);
-    thread = &g_battle_threads[g_battle_thread_current_id];
+    input = input_get_menu_controller(0);
+    input_get_menu_controller(1);
+    thread = &g_threads[g_thread_current_id];
     kind = thread->function_parameter_1;
     thread->function_parameter_1 = (s32)&g_option_menu_icon_thread_param;
     param = &g_option_menu_icon_thread_param;
@@ -43,46 +49,46 @@ void option_menu_run_option_choice_thread(void) {
     }
     height = g_option_choice_counts[kind] * 16 + 16;
     buffer = battle_menu_build_and_upload_window_frame_image(width, height, &rect, MENU_WINDOW_FRAME_BUILD);
-    battle_thread_wait_frames(1);
-    g_battle_menu_text_state.pen.stride = width;
+    thread_wait_frames(1);
+    g_menu_text_state.pen.stride = width;
     for (i = 0; i < g_option_choice_counts[kind]; i++) {
         battle_menu_set_text_origin(8, i * 16 + 8);
         if (i == g_option_current_values[kind]) {
-            g_battle_menu_text_color = 8;
+            g_menu_text_palette_offset = 8;
         }
-        battle_menu_display_text_entry(i + g_option_value_text_id_bases[kind], buffer, &g_battle_menu_text_state.pen);
-        g_battle_menu_text_color = 0;
+        battle_menu_display_text_entry(i + g_option_value_text_id_bases[kind], buffer, &g_menu_text_state.pen);
+        g_menu_text_palette_offset = 0;
     }
     /* Dead store: allocation device, see the file header. */
     if (height <= 0) {
         cursor = 0;
     }
-    param->window_x = 0x170 - width;
-    param->window_y = 0xA0 - (height >> 1);
-    param->inner_width = param->window_width = param->text_image.width = width;
-    param->inner_height = param->window_height = param->text_image.height = height;
-    param->vram_x = 0x1C0;
-    param->vram_y = 0x100 - height;
+    param->window.x = 0x170 - width;
+    param->window.y = 0xA0 - (height >> 1);
+    param->inner_width = param->window.w = param->text_image.width = width;
+    param->inner_height = param->window.h = param->text_image.height = height;
+    param->vram_origin.x = 0x1C0;
+    param->vram_origin.y = 0x100 - height;
     if (kind == GAME_OPTION_FINGER_CURSOR_REPEAT_SPEED) {
-        param->vram_x = 0x1AE;
+        param->vram_origin.x = 0x1AE;
     }
     param->text_image.width -= 4;
     battle_menu_build_window_sprites(&rect, param, &g_option_picker_icon_records[0]);
-    battle_util_copy_bytes(&g_option_picker_icon_records[1], &g_option_picker_icon_records[0], sizeof(*record));
-    LoadImage(&rect, buffer);
+    mem_copy_bytes_nonempty(&g_option_picker_icon_records[1], &g_option_picker_icon_records[0], sizeof(*record));
+    LoadImage(&rect, (u32*)buffer);
     battle_menu_free_memory(buffer);
-    battle_thread_wait_frames(1);
+    thread_wait_frames(1);
     cursor = g_option_current_values[kind];
     for (width = 0;; width++) {
-        battle_menu_should_close_thread((s32*)input);
+        battle_menu_should_close_thread(input);
         record = &g_option_picker_icon_records[width & 1];
         if (battle_menu_is_input_allowed()) {
             if (*input & PSX_PAD_CROSS) {
-                g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
+                g_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 break;
             }
             if (*input & PSX_PAD_CIRCLE) {
-                g_battle_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
+                g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                 if (kind == GAME_OPTION_COUNT) {
                     if (cursor == 1) {
                         /* Dead store: allocation device, see the file header. */
@@ -109,7 +115,7 @@ void option_menu_run_option_choice_thread(void) {
                 } else {
                     cursor = g_option_choice_counts[kind] - 1;
                 }
-                g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
             }
             if (*input & PSX_PAD_DOWN) {
                 *input = 0;
@@ -118,13 +124,13 @@ void option_menu_run_option_choice_thread(void) {
                 } else {
                     cursor++;
                 }
-                g_battle_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
             }
         }
-        battle_menu_select_icon_cluts(record);
+        battle_menu_select_icon_cluts(&record->base);
         battle_menu_update_icon_cursor_sprites(param, &record->base, width, cursor);
-        battle_menu_submit_icon_primitives(record);
-        battle_thread_wait_frames(1);
+        battle_menu_submit_icon_primitives(&record->base);
+        thread_wait_frames(1);
     }
     g_main_game_options.fields.cursor_movement = g_option_current_values[GAME_OPTION_CURSOR_MOVEMENT];
     g_main_game_options.fields.cursor_repeat_speed = g_option_current_values[GAME_OPTION_CURSOR_REPEAT_SPEED];
@@ -141,8 +147,8 @@ void option_menu_run_option_choice_thread(void) {
     g_main_game_options.fields.show_unequippable_items = g_option_current_values[GAME_OPTION_SHOW_UNEQUIPPABLE_ITEMS];
     g_main_game_options.fields.max_equip_at_job_change = g_option_current_values[GAME_OPTION_MAX_EQUIP_AT_JOB_CHANGE];
     g_main_game_options.fields.sound_mode = g_option_current_values[GAME_OPTION_SOUND_MODE];
-    g_battle_thread_call_target = (void (*)(void))main_sound_set_type;
-    battle_thread_call_on_main_stack(g_option_current_values[GAME_OPTION_SOUND_MODE]);
+    g_thread_call_target = (void (*)(void))suzuki_sound_set_type;
+    thread_call_on_main_stack(g_option_current_values[GAME_OPTION_SOUND_MODE]);
     width = g_main_game_options.fields.finger_cursor_repeat_speed;
     g_main_input_repeat_initial_delay = g_option_input_repeat_timings[width].initial_delay;
     g_main_input_repeat_period = g_option_input_repeat_timings[width].repeat_period;
@@ -151,6 +157,6 @@ void option_menu_run_option_choice_thread(void) {
     g_main_menu_scroll_slow_step = g_option_input_repeat_timings[width].scroll_slow_step;
     g_main_menu_scroll_fast_step = g_option_input_repeat_timings[width].scroll_fast_step;
     *input = 0;
-    battle_thread_wait_frames(1);
-    battle_thread_exit_current();
+    thread_wait_frames(1);
+    thread_exit_current();
 }

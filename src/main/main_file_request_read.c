@@ -14,10 +14,10 @@ s32 main_file_request_read(
     if (descriptor->state != MAIN_FILE_LOAD_STATE_IDLE) {
         return 1;
     }
-    if (loading_display_mode != 1) {
+    if (loading_display_mode != MAIN_FILE_LOADING_DISPLAY_PRESERVE) {
         g_main_gfx_loading_display_frame_counter = loading_display_mode;
     }
-    if (loading_display_mode == 0) {
+    if (loading_display_mode == MAIN_FILE_LOADING_DISPLAY_INIT) {
         SetDispMask(0);
         main_gfx_build_now_loading(1, 0, 0);
         rect.x = 0;
@@ -46,7 +46,7 @@ s32 main_file_request_read(
     descriptor->error_count = 0;
     descriptor->state = MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED;
     descriptor->lba = lba;
-    CdIntToPos(lba, descriptor->position);
+    CdIntToPos(lba, &descriptor->position);
     descriptor->sector_count = sector_count;
     descriptor->destination = destination;
     return 0;

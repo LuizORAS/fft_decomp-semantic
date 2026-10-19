@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x09, Demi, Demi 2 and Lich: the magical evade check and hit chance (MA + X with both
  * Faiths, battle_formula_calculate_magic_accuracy), then damage of Y% of the target's max HP with the

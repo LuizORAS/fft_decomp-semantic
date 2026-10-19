@@ -24,7 +24,7 @@ with what the code does for each.
 | Who controls the unit | [[battle_status_remove_control]] and [[battle_status_apply_pending_inflictions]] (Charm and Invite) |
 | What lands and what is filtered | [[battle_status_modify_inflictions]] (immunities, the immortal and rider masks, the "blocked by" lists, Frog on a frog) |
 | Statuses the engine sets itself | [[battle_action_apply_target_result]] (Dead, Critical, Chicken, the HP-damage removals) |
-| How it looks | [[g_battle_misc_status_mask_by_handler_index]] and [[battle_status_queue_misc_graphics_flag_change]] (the misc mirror), [[g_battle_gfx_status_bubble_status_masks]] (the bubble), [[battle_gfx_update_misc_unit_status_palette]], [[battle_gfx_apply_status_spritesheet_change]], [[battle_unit_set_animation_based_on_status]], [[g_battle_status_display_image_ids]] (the preview) |
+| How it looks | [[g_battle_unit_status_mask_by_handler_index]] and [[battle_status_queue_runtime_graphics_flag_change]] (the runtime mirror), [[g_battle_gfx_status_bubble_status_masks]] (the bubble), [[battle_gfx_update_unit_status_palette]], [[battle_gfx_apply_status_spritesheet_change]], [[battle_unit_set_animation_based_on_status]], [[g_battle_status_display_image_ids]] (the preview) |
 
 A status's effect is rarely in one place: a test such as
 `status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SLEEP)]`

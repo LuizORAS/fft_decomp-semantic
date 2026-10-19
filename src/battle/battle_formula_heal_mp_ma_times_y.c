@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x54, Magic Spirit: no evade or hit roll; MA * Y with Magic Attack Up and the zodiac,
  * without Faith, restored as MP (battle_formula_convert_hp_damage_to_mp_recovery). */

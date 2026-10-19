@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Same as battle_move_calculate_pathing with the per-call search budget enabled, so a long search can

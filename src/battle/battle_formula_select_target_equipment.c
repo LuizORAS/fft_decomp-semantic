@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Pick the piece of equipment a Steal, Break or Might Sword ability takes: helmet (0x6e/0x8a/0xa1),

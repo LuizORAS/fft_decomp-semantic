@@ -1,9 +1,11 @@
+#include "fft/memory.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
 /*
- * WORLD's copy of option_gfx_build_scaled_draw_area_packets, beside its copy of the OPTION.OUT list
+ * WORLD's copy of menu_build_scaled_draw_area_packets, beside its copy of the OPTION.OUT list
  * code; nothing calls it.
  * Build a double-buffered draw-area pair whose rectangle is `source` moved
  * left one page, shifted by `offset` (x by offset->x, y by offset->w) and
@@ -14,20 +16,20 @@
  * instructions early and rotates every temporary.
  */
 void world_option_gfx_build_scaled_draw_area_packets(
-    world_gfx_scaled_draw_area_pair_t* pair, const RECT* source, s32 step, s32 flag, const RECT* offset) {
+    world_scaled_draw_area_pair_t* pair, const RECT* source, s32 step, s32 flag, const RECT* offset) {
     s32 percent;
     s16 w;
     s16 h;
     s32 crop;
 
-    if (g_world_event_speed == 2) {
+    if (g_script_event_speed == 2) {
         step *= 2;
     }
     if (step >= 12) {
         step = 11;
     }
     percent = g_world_gfx_draw_area_scale_percent[step];
-    world_util_copy_bytes(&pair->rects[0], source, 8);
+    mem_copy_bytes_nonempty(&pair->rects[0], source, sizeof(pair->rects[0]));
     w = pair->rects[0].w;
     h = pair->rects[0].h;
     pair->rects[0].x -= 0x80;

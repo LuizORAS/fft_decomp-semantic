@@ -1,11 +1,12 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 
 /* Move a unit to the centre of its map tile at a constant speed over distortion_timer frames
  * (distortions 5 and 9).
  *
- * Phase 0 splits the remaining screen-to-tile distance into equal Q12 steps; phase 1 applies them
+ * Phase 0 splits the remaining distance to the tile centre into equal Q12 steps; phase 1 applies them
  * (height only when allow_height_change is set) and snaps to the tile once the timer runs out. */
-void battle_move_step_unit_to_map_tile_center(battle_unit_misc_data_t* unit, s32 allow_height_change) {
+void battle_move_step_unit_to_map_tile_center(battle_unit_t* unit, s32 allow_height_change) {
     SVECTOR tile_center;
     VECTOR velocity;
     s32 timer;
@@ -16,11 +17,11 @@ void battle_move_step_unit_to_map_tile_center(battle_unit_misc_data_t* unit, s32
     velocity = unit->velocity;
     switch (unit->distortion_phase) {
     case 0:
-        velocity.vx = (unit->map_x * 0x1C + 0xE - unit->screen.vx) << 12;
-        velocity.vz = (unit->map_y * 0x1C + 0xE - unit->screen.vz) << 12;
-        tile_center.vx = unit->map_x * 0x1C + 0xE;
-        tile_center.vz = unit->map_y * 0x1C + 0xE;
-        velocity.vy = (battle_map_calculate_slope_height(&tile_center.vx, unit->map_z) - unit->screen.vy) << 12;
+        velocity.vx = (unit->map_x * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2) - unit->world_coords.vx) * ONE;
+        velocity.vz = (unit->map_y * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2) - unit->world_coords.vz) * ONE;
+        tile_center.vx = unit->map_x * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+        tile_center.vz = unit->map_y * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+        velocity.vy = (battle_map_calculate_slope_height(&tile_center, unit->map_z) - unit->world_coords.vy) * ONE;
         velocity.vx /= timer;
         velocity.vy /= timer;
         velocity.vz /= timer;
@@ -40,7 +41,7 @@ void battle_move_step_unit_to_map_tile_center(battle_unit_misc_data_t* unit, s32
         break;
     }
     unit->velocity = velocity;
-    battle_unit_set_screen_coords_from_real_coords(unit);
+    battle_unit_set_world_coords_from_real_coords(unit);
     unit->distortion_timer = timer;
     unit->distortion_target = target_z;
 }

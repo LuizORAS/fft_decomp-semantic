@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Mark the tiles in range of the unit's weapon (its weapon_data_t): striking and lunging weapons
@@ -8,7 +9,7 @@
  *
  * Frog uses the bare-hand entry; an empty right hand falls back to the left hand, and non-weapon
  * items also use entry 0. */
-void battle_target_calculate_weapon_range(battle_stats_t* unit) {
+void battle_target_calculate_weapon_range(const battle_stats_t* unit) {
     s32 y;
     s32 x;
     s32 index;
@@ -19,7 +20,7 @@ void battle_target_calculate_weapon_range(battle_stats_t* unit) {
     battle_target_panel_t* panel;
     battle_target_panel_t* upper;
 
-    y = unit->position.bits.y;
+    y = unit->position.y;
     weapon = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
     x = unit->x;
     index = x + y * g_battle_map_max_x;

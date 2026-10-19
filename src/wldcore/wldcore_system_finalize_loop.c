@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
@@ -13,5 +14,5 @@ void wldcore_system_finalize_loop(void) {
     if ((g_main_system_flags & MAIN_SYSTEM_FLAG_TUTORIAL_EVENT) == 0) {
         main_sound_unload_scenario_music_and_stop_tune();
     }
-    world_script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, g_wldcore_next_map_id[0]);
+    script_set_variable(EVENT_SCRIPT_VAR_CURRENT_MAP, g_wldcore_next_map_id[0]);
 }

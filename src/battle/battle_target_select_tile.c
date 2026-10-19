@@ -1,4 +1,8 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Take the chosen tile as the action's target and mark the area it hits
@@ -9,27 +13,27 @@
  * charge animation (PRE_ATTACK_ANIMATION); on -1 return to the action menu. The cursor is hidden
  * either way. */
 void battle_target_select_tile(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 result;
     s32 prev;
 
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     unit->state_frame_counter = 0;
     if (unit->ability_preview_phase == BATTLE_TARGET_PANELS_NO_TARGETING) {
         main_util_set_svector(
-            (SVECTOR*)&unit->command_state.ai.data.action.target_x, unit->map_x, unit->map_z, unit->map_y);
+            &unit->command_state.ai.data.action.target_position, unit->map_x, unit->map_z, unit->map_y);
         unit->command_state.ai.data.action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
     } else if (unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
-        main_util_set_svector((SVECTOR*)&unit->command_state.ai.data.action.target_x, g_battle_cursor_x,
-            g_battle_cursor_z, g_battle_cursor_y);
+        main_util_set_svector(&unit->command_state.ai.data.action.target_position, g_battle_cursor_x, g_battle_cursor_z,
+            g_battle_cursor_y);
         unit->command_state.ai.data.action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
     }
-    result = battle_target_mark_action_area(&unit->command_state.ai.data.action.unit_id);
+    result = battle_target_mark_action_area(&unit->command_state.ai.data.action);
     unit->target_select_result = result;
     switch (result) {
     case 0:
     case 1:
-        battle_state_enable_camera_pan();
+        battle_camera_enable_map_pan();
         prev = g_battle_cursor_input_mode;
         g_battle_game_state = BATTLE_GAME_STATE_ABILITY_PREVIEW_HANDLING;
         g_battle_cursor_input_mode = BATTLE_CURSOR_INPUT_FREE_CURSOR;
@@ -41,7 +45,7 @@ void battle_target_select_tile(void) {
         }
         break;
     case 2:
-        battle_state_disable_camera_pan();
+        battle_camera_disable_map_pan();
         battle_state_enter_pre_attack_animation();
         battle_target_show_actor_and_target_panels();
         break;

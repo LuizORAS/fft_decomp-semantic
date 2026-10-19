@@ -25,9 +25,9 @@ void bunit_menu_update_unit_browser(void) {
             g_bunit_comparison_display_flags = BUNIT_REQUEST_FLAGS;
             BUNIT_REQUEST_FLAGS = 0;
             if (g_bunit_status_banner_at_bottom_latch != g_bunit_status_banner_at_bottom) {
-                bcopy(g_bunit_unit_data[g_bunit_unit_comparison_index], &g_bunit_panel_comparison_billboard, 0x22);
-                bcopy(&g_bunit_unit_data[g_bunit_unit_comparison_index]->name_index, g_bunit_panel_comparison_unit_data,
-                    0xE);
+                bcopy(g_bunit_unit_pointers[g_bunit_unit_comparison_index], &g_bunit_panel_comparison_billboard, 0x22);
+                bcopy(&g_bunit_unit_pointers[g_bunit_unit_comparison_index]->name_index,
+                    g_bunit_panel_comparison_unit_data, 0xE);
                 bunit_panel_toggle_comparison_status_thread(1);
                 g_bunit_status_banner_at_bottom_latch = g_bunit_status_banner_at_bottom;
                 if (g_bunit_status_banner_slide_step < 0) {
@@ -87,14 +87,14 @@ void bunit_menu_update_unit_browser(void) {
         g_bunit_comparison_display_offset_y = slide * 8;
         if (--g_bunit_status_banner_slide_step < -0xF) {
             g_bunit_status_banner_slide_step = 0;
-            bunit_thread_request_stop(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS);
+            bunit_thread_request_stop(THREAD_SCREEN_SLOT_COMPARISON_STATUS);
         }
     } else if (slide > 0) {
         g_bunit_status_display_offset_y = slide * 8 - 0x78;
         g_bunit_comparison_display_offset_y = slide * 8 + 0x90;
         if (++g_bunit_status_banner_slide_step >= 0x10) {
             g_bunit_status_banner_slide_step = 0;
-            bunit_thread_request_stop(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS);
+            bunit_thread_request_stop(THREAD_SCREEN_SLOT_COMPARISON_STATUS);
         }
     }
 }

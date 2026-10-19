@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Marks the tiles of every unit selected by a Calculator (Arithmeticks) action.
@@ -8,9 +9,9 @@
  * it for primality or divisibility by 5, 4 or 3. Units that are absent, crystallized, jumping,
  * treasure, or a mount carrying a rider are skipped. Returns the number of marked units, or -1 when
  * the command does not name one type and one multiplier ability. */
-s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
+s32 battle_target_run_calculator(const action_command_t* source) {
     battle_unit_height_data_t height;
-    battle_ai_command_action_t action;
+    action_command_t action;
     battle_stats_t* actor;
     battle_stats_t* unit;
     map_tile_t* tile;
@@ -30,7 +31,7 @@ s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
     main_util_copy_action_data(source, &action);
     type = action.calculator_type;
     multiplier = action.calculator_multiplier;
-    actor = &g_battle_unit_stats[action.unit_id];
+    actor = &g_battle_unit_stats[action.actor_id];
     if (type < ABILITY_ID_MATH_FIRST || type >= ABILITY_ID_REACTION_FIRST) {
         return -1;
     }
@@ -64,8 +65,8 @@ s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
         }
         if (type_flags & CALCULATOR_ATTRIBUTE_CT) {
             value = unit->ct;
-            if (value > 100 || unit == actor) {
-                value = 100;
+            if (value > UNIT_TURN_CT_THRESHOLD || unit == actor) {
+                value = UNIT_TURN_CT_THRESHOLD;
             }
         } else if (type_flags & CALCULATOR_ATTRIBUTE_LEVEL) {
             value = unit->level;
@@ -100,7 +101,7 @@ s32 battle_target_run_calculator(const battle_ai_command_action_t* source) {
         if (hit != 0) {
             tile = &g_battle_map_tile_data[battle_map_calculate_location(unit)];
             count++;
-            tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
+            tile->ceiling_depth_and_marks.targeted = 1;
         }
     }
     return count;

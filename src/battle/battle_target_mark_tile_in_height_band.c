@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Put square (x, y) in range (range 1) on each layer whose surface height, in half levels, lies
@@ -10,7 +11,7 @@ void battle_target_mark_tile_in_height_band(s32 x, s32 y, s32 lo, s32 hi) {
     s32 height;
     map_tile_t* tile;
     battle_target_panel_t* panel;
-    u32 flags;
+    map_tile_depth_t flags;
 
     if ((x >= 0) && (x < g_battle_map_max_x) && (y >= 0) && (y < g_battle_map_max_y)) {
         level = 0;
@@ -21,8 +22,8 @@ void battle_target_mark_tile_in_height_band(s32 x, s32 y, s32 lo, s32 hi) {
             idx = (level << 8) + (y * g_battle_map_max_x) + x;
             tile = &g_battle_map_tile_data[idx];
             panel = &g_battle_target_panels[idx];
-            flags = tile->depth_half_height.value;
-            height = (tile->height * 2) + (flags & MAP_TILE_HALF_HEIGHT_MASK) + ((flags >> MAP_TILE_DEPTH_SHIFT) * 2);
+            flags = tile->depth_half_height;
+            height = (tile->height * 2) + (flags.half_height) + ((flags.depth) * 2);
             level++;
             if ((height >= lo) && (hi >= height)) {
                 panel->remaining_range = 1;

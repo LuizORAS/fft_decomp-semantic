@@ -1,4 +1,8 @@
 #include "fft/event_option.h"
+#include "fft/gfx.h"
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* The frame thread of OPTION's list windows, started one slot above option_menu_run_list_thread and
@@ -12,13 +16,7 @@
  * 16-pixel corners. */
 void option_menu_window_frame_thread(void) {
     RECT texture;
-    /* The target holds the frame record base in one callee-saved register across
-       the whole setup section. The address is a constant, so it picks up a
-       REG_EQUIV note and reload rematerializes it at every use instead; the
-       tied empty asm below breaks that equivalence. The two stride pointers are
-       locals for the same reason: the target keeps each one live and re-derives
-       the descriptor base from it (addiu -8) for the glyph calls. */
-    world_panel_frame_t* prim = g_option_menu_panel_frames;
+    world_menu_panel_frame_t* prim = g_option_menu_panel_frames;
     s32* source_stride = &g_option_text_glyph_source.stride;
     s32* dest_stride = &g_option_text_glyph_dest.stride;
     /* The menu thread's first parameter. Only its leading window rectangle is
@@ -45,26 +43,26 @@ void option_menu_window_frame_thread(void) {
 
     option_text_set_blit_source_rect(8, 8, 0x20, 0x10);
     option_text_set_blit_destination(0, 0);
-    battle_text_blit_glyph(
-        g_battle_menu_glyph_image, g_option_menu_panel_pixels, &g_option_text_glyph_source, &g_option_text_glyph_dest);
+    text_blit_glyph(
+        g_menu_glyph_image->pixels, g_option_menu_panel_pixels, &g_option_text_glyph_source, &g_option_text_glyph_dest);
     option_text_set_blit_source_rect(0, 8, 8, 0x10);
     option_text_set_blit_destination(0x20, 0);
-    battle_text_blit_glyph(
-        g_battle_menu_glyph_image, g_option_menu_panel_pixels, &g_option_text_glyph_source, &g_option_text_glyph_dest);
+    text_blit_glyph(
+        g_menu_glyph_image->pixels, g_option_menu_panel_pixels, &g_option_text_glyph_source, &g_option_text_glyph_dest);
     option_text_set_blit_source_rect(0xd8, 0, 0x28, 0x10);
     option_text_set_blit_destination(0x28, 0);
-    battle_text_blit_glyph(
-        g_battle_menu_glyph_image, g_option_menu_panel_pixels, &g_option_text_glyph_source, &g_option_text_glyph_dest);
+    text_blit_glyph(
+        g_menu_glyph_image->pixels, g_option_menu_panel_pixels, &g_option_text_glyph_source, &g_option_text_glyph_dest);
     option_text_set_blit_source_rect(0xd8, 0x10, 0x28, 0x10);
     option_text_set_blit_destination(0x58, 0);
-    battle_text_blit_glyph(
-        g_battle_menu_glyph_image, g_option_menu_panel_pixels, &g_option_text_glyph_source, &g_option_text_glyph_dest);
+    text_blit_glyph(
+        g_menu_glyph_image->pixels, g_option_menu_panel_pixels, &g_option_text_glyph_source, &g_option_text_glyph_dest);
 
     LoadImage(&texture, (u32*)g_option_menu_panel_pixels);
-    battle_menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
+    menu_init_sprite_array(prim->sprites, 9, 0x7c3c);
     texture_u = (texture.x & 0x3f) * 4;
     /* The target loads the returned rectangle's y once as a byte (lbu 0x1a(sp))
-       and reuses it for every halfword and byte store below. */
+       and reuses it for every 16-bit and byte store below. */
     texture_v = texture.y & 0xff;
     for (index = 0; index < 4; index++) {
         g_option_menu_panel_texture_windows[index].x = (texture_u + index) * 0x10;
@@ -82,7 +80,7 @@ void option_menu_window_frame_thread(void) {
     prim->sprites[0].x0 = menu->x + 8;
     prim->sprites[0].y0 = menu->y + 0x10;
     /* The subtractions go through an s32 temporary: assigning the difference
-       straight into the halfword field lets combine narrow it to HImode, where
+       straight into the 16-bit field lets combine narrow it to HImode, where
        the negative constant no longer fits an addiu and is loaded instead. */
     size = menu->w - 0x18;
     prim->sprites[0].w = size;
@@ -135,38 +133,40 @@ void option_menu_window_frame_thread(void) {
     prim->sprites[8].h = border_wide;
 
     battle_gfx_init_scaled_draw_area_packets(&prim->draw_areas);
-    battle_util_copy_bytes(&g_option_menu_panel_frames[1], &g_option_menu_panel_frames[0], sizeof(world_panel_frame_t));
+    mem_copy_bytes_nonempty(
+        &g_option_menu_panel_frames[1], &g_option_menu_panel_frames[0], sizeof(world_menu_panel_frame_t));
 
     frame = 0;
     while (battle_thread_get_current_parameter_3() == 0) {
         prim = &g_option_menu_panel_frames[frame & 1];
-        battle_gfx_build_scaled_draw_area_pair_swapped(&prim->draw_areas, menu, frame, g_main_gfx_screen_polarity);
+        battle_gfx_build_scaled_draw_area_pair_swapped(
+            &prim->draw_areas, (const RECT*)menu, frame, g_main_gfx_screen_polarity);
         /* The CLUT id the nine border sprites are drawn with this frame, which
            the target keeps in this variable's register once the texture column
            is dead. A separate local is allocated a different callee-saved
            register and does not reproduce the target. */
         texture_u = 0x7d3c;
-        if (battle_thread_get_current_parameter_2() == 0 && g_battle_menu_input_lock_mode == 0) {
+        if (battle_thread_get_current_parameter_2() == 0 && g_menu_input_lock_mode == 0) {
             texture_u = 0x7c3c;
         }
         for (index = 8; index >= 0; index--) {
             prim->sprites[index].clut = texture_u;
         }
-        battle_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[1]);
-        battle_gfx_draw_or_append_gpu_primitive(&prim->modes[6]);
+        gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[1]);
+        gfx_draw_or_append_gpu_primitive(&prim->modes[6]);
         for (index = 0; index < 5; index++) {
-            battle_gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
-            battle_gfx_draw_or_append_gpu_primitive(&prim->modes[index]);
+            gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
+            gfx_draw_or_append_gpu_primitive(&prim->modes[index]);
         }
         for (index = 8; index >= 5; index--) {
-            battle_gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
+            gfx_draw_or_append_gpu_primitive(&prim->sprites[index]);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&prim->modes[5]);
-        battle_gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[0]);
+        gfx_draw_or_append_gpu_primitive(&prim->modes[5]);
+        gfx_draw_or_append_gpu_primitive(&prim->draw_areas.areas[0]);
         frame++;
-        battle_thread_yield();
+        thread_yield();
     }
-    battle_thread_yield();
+    thread_yield();
     battle_gfx_free_tpage7_vram(&texture);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

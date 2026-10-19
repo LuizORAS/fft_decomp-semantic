@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/main.h"
+#include "fft/memory.h"
 
 /* Set a unit's job levels, unlocked jobs, job and skillsets from its ENTD record and load the job's
  * data (main_unit_copy_job_data). A human whose record names a career job (job_unlock below 20) gets
@@ -18,13 +18,13 @@ void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, cons
     u16 skillset;
     u8 levels;
 
-    main_util_clear_byte_data(unit->job_levels, UNIT_JOB_LEVEL_BYTE_COUNT);
+    main_mem_zero(unit->career.job_levels, UNIT_JOB_LEVEL_BYTE_COUNT);
     unlocked = 0;
     if (!entd) {
         main_unit_copy_job_data(unit);
         unit->secondary_skillset = 0;
         unit->unit_flags = UNIT_FLAG_MONSTER;
-        main_job_store_unlock_bitset(unit->unlocked_jobs, 0);
+        main_job_store_unlock_bitset(unit->career.unlocked_jobs, 0);
     } else {
         flags = entd->unit_flags;
         if (!(flags & UNIT_FLAG_MONSTER)) {
@@ -33,7 +33,7 @@ void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, cons
                 levels = entd->job_level & UNIT_JOB_LEVEL_LOW_NIBBLE_MASK;
                 if (!(selected & 1))
                     levels <<= 4;
-                unit->job_levels[selected / UNIT_JOBS_PER_LEVEL_BYTE] = levels;
+                unit->career.job_levels[selected / UNIT_JOBS_PER_LEVEL_BYTE] = levels;
                 for (i = 0; i < UNIT_JOB_LEVEL_BYTE_COUNT; i++) {
                     if (selected)
                         levels = g_main_job_unlock_requirements[selected - 1][i];
@@ -42,21 +42,22 @@ void main_unit_calculate_jobs_and_skillsets_from_entd(battle_stats_t* unit, cons
                         if (i != 0)
                             levels = UNIT_JOB_LEVEL_ONE_BOTH_NIBBLES;
                     }
-                    levels |= unit->job_levels[i];
+                    levels |= unit->career.job_levels[i];
                     if (!(levels & UNIT_JOB_LEVEL_LOW_NIBBLE_MASK))
                         levels |= UNIT_JOB_LEVEL_ONE_LOW_NIBBLE;
                     if (!(levels & UNIT_JOB_LEVEL_HIGH_NIBBLE_MASK))
                         levels |= UNIT_JOB_LEVEL_ONE_HIGH_NIBBLE;
-                    unit->job_levels[i] = levels;
+                    unit->career.job_levels[i] = levels;
                 }
                 if (flags & UNIT_FLAG_FEMALE)
-                    unit->job_levels[UNIT_JOB_LEVEL_BYTE_INDEX_CALCULATOR_BARD] &= UNIT_JOB_LEVEL_HIGH_NIBBLE_MASK;
+                    unit->career.job_levels[UNIT_JOB_LEVEL_BYTE_INDEX_CALCULATOR_BARD]
+                        &= UNIT_JOB_LEVEL_HIGH_NIBBLE_MASK;
                 if (flags & UNIT_FLAG_MALE)
-                    unit->job_levels[UNIT_JOB_LEVEL_BYTE_INDEX_DANCER_MIME] &= UNIT_JOB_LEVEL_LOW_NIBBLE_MASK;
-                unlocked = main_job_calculate_unlocked(unit->job_levels, flags);
+                    unit->career.job_levels[UNIT_JOB_LEVEL_BYTE_INDEX_DANCER_MIME] &= UNIT_JOB_LEVEL_LOW_NIBBLE_MASK;
+                unlocked = main_job_calculate_unlocked(unit->career.job_levels, flags);
             }
         }
-        main_job_store_unlock_bitset(unit->unlocked_jobs, unlocked);
+        main_job_store_unlock_bitset(unit->career.unlocked_jobs, unlocked);
         unit->job_id = entd->job_id;
         main_unit_copy_job_data(unit);
         selected = entd->primary_skillset;

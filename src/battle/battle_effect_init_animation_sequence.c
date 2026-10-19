@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Point a sprite animation node at parameter set animation_index and restart
@@ -11,11 +11,12 @@ void battle_effect_init_animation_sequence(effect_list_node_t* state, s32 frame_
     u16 flags;
 
     sequences = g_battle_effect_animation_sequences;
-    entry = (u8*)(((animation_index << 16) >> 15) + (s32)sequences);
+    /* Integer addresses preserve the offset/base operand order at both additions. */
+    entry = (u8*)((s16)animation_index * 2 + (s32)sequences);
     flags = state->kind | EFFECT_LIST_NODE_FRAME_CHANGED;
     offset = entry[0] + (entry[1] << 8);
     state->sequence_offset = 0;
-    state->frame_group_index = (frame_group & 0xFF) * 2;
+    state->frame_group_offset = (frame_group & 0xFF) * 2;
     state->frame_timer = 0;
     state->kind = flags;
     /* Integer addition preserves the original register order. */

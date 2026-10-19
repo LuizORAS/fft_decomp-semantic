@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/sound.h"
+#include "fft/unit.h"
 #include "fft/world.h"
 
 /* Builds the two-column status list for the stored unit: every set bit of
@@ -7,7 +8,7 @@
  *
  * The flag reads go through local pointers so they are reloaded each
  * iteration as the target does; the columns are s16 so `index + 0x8800`
- * stays a word addition with the constant hoisted into a register. */
+ * stays a 32-bit addition with the constant hoisted into a register. */
 void world_menu_build_unit_status_list(void) {
     battle_stats_t* unit;
     u16 i;
@@ -21,15 +22,15 @@ void world_menu_build_unit_status_list(void) {
     s16* flag_b;
 
     for (i = 0; i < 8; i++) {
-        flag_a = &g_world_menu_billboard_data.state.generic_monster;
-        flag_b = &g_world_menu_active_turn_banner.team_kind;
+        flag_a = &g_menu_billboard_data.state.generic_monster;
+        flag_b = &g_menu_selected_unit_status.team_kind;
         if (*flag_a != 0 || *flag_b == 1) {
             g_world_menu_status_list_row_actions[i] = 0x7D0;
         } else {
             g_world_menu_status_list_row_actions[i] = BATTLE_MENU_ROW_ACTION_SILENT | BATTLE_MENU_ID_JOBSTTS;
         }
     }
-    unit = battle_unit_get_stats_from_battle_id(g_world_active_turn_unit.battle_id);
+    unit = battle_unit_get_stats_from_battle_id(g_menu_selected_unit.battle_id);
     for (i = 0; i < 20; i++) {
         g_world_menu_status_left_text_ids[i] = TEXT_ID_ABILITY_NAME_BASE;
         g_world_menu_status_right_text_ids[i] = TEXT_ID_ABILITY_NAME_BASE;
@@ -51,7 +52,7 @@ void world_menu_build_unit_status_list(void) {
             mask >>= 1;
         }
     }
-    world_sound_set_effect_to_confirm();
+    sound_queue_sfx_confirm();
     if (count == 0) {
         world_menu_run_jobstts_thread();
     }

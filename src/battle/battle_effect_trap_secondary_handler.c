@@ -1,4 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/main.h"
+#include "psx/libgte.h"
+#include "psx/suzuki.h"
 
 /* Secondary effect function 0x0c (the trap, BATTLE_EFFECT_SECONDARY_ANIMATION_TRAP) in
  * g_battle_effect_secondary_handlers. It shares the golem handler's shape: initialize and play sound 0x22,
@@ -14,18 +17,18 @@ s32 battle_effect_trap_secondary_handler(void) {
     effect = g_battle_effect_current_secondary;
     /* Preserve the target's unsigned phase-dispatch comparison. */
     switch (effect->phase) {
-    case BATTLE_SECONDARY_EFFECT_INITIALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_INITIALIZING:
         effect->active_count = 0;
         effect->timer = 0;
         effect->finish_timer = 0;
-        effect->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
-        SuzukiPlaySoundFindChannel(MAIN_SFX_VENOM_TRAP);
+        effect->phase = BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING;
+        suzuki_sound_play_sfx(MAIN_SFX_VENOM_TRAP);
         result = 1;
         break;
-    case BATTLE_SECONDARY_EFFECT_EXECUTING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING:
         battle_effect_start_group(BATTLE_EFFECT_PARTICLE_GROUP_TRAP, 12);
         /* fallthrough */
-    case BATTLE_SECONDARY_EFFECT_FINALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_FINALIZING:
         battle_effect_save_inertia_threshold();
         battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
         gravity.z = 0;

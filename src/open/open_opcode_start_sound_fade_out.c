@@ -7,5 +7,5 @@
  * prologue's ra save. */
 void open_opcode_start_sound_fade_out(s16* command) {
     open_sound_set_cd_mix_and_volume(0, command[1] * 4);
-    g_open_script_state.dispatch.byte_offset += 4;
+    g_open_script_state.dispatch.cursor.byte_offset += 4;
 }

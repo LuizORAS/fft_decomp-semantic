@@ -1,4 +1,7 @@
+#include "fft/battle_text.h"
 #include "fft/event_equip.h"
+#include "fft/menu.h"
+#include "fft/menu_script.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -11,7 +14,7 @@
  * spelling; its `(s16)` row-height cast adds the other 8 bytes of frame and
  * keeps the row count in a register of its own.
  */
-u8* equip_menu_script_draw_scrollable_list(u8* command) {
+menu_instruction_t* equip_menu_script_draw_scrollable_list(menu_instruction_t* command) {
     RECT rect;
     u8 pad0[0x10];
     RECT marker;
@@ -29,18 +32,18 @@ u8* equip_menu_script_draw_scrollable_list(u8* command) {
     s32 height;
     s32 i;
     s32 j;
-    u8* row_commands;
+    menu_instruction_t* row_commands;
 
-    ot_index = g_equip_gfx_sprite_ot_index;
+    ot_index = g_menu_gfx_otag_index;
     if (g_equip_menu_list_entry_count <= 0) {
-        j = command[4];
+        j = command->list.skip_count;
         while (j != -1) {
-            command = equip_menu_script_skip_group(command);
+            command = menu_script_skip_group(command);
             j -= 1;
         }
         return command;
     }
-    g_equip_menu_list_row_mode = 1;
+    g_menu_scroll_list_active = 1;
     previous_selected = g_equip_menu_selected_list_index;
     step = 2;
     if (g_equip_menu_list_redraw_pending != 0) {
@@ -55,7 +58,7 @@ u8* equip_menu_script_draw_scrollable_list(u8* command) {
         } else {
             input = g_equip_menu_display_script_input;
             if ((input & (PSX_PAD_UP << 16)) || (input & PSX_PAD_UP)) {
-                scroll_base = g_equip_menu_scroll_base_index;
+                scroll_base = g_menu_scroll_base_index;
                 if (scroll_base == g_equip_menu_selected_list_index) {
                     if (scroll_base > 0) {
                         g_equip_menu_list_scroll_direction = -1;
@@ -67,29 +70,28 @@ u8* equip_menu_script_draw_scrollable_list(u8* command) {
                             rect.w = g_equip_menu_list_vram_width;
                             rect.h = g_equip_menu_list_row_height;
                             *row_ids = text_id;
-                            equip_text_render_id_rows_to_vram(g_equip_menu_list_text_table, row_ids, &rect, 0);
+                            menu_text_render_id_rows_to_vram(g_equip_menu_list_text_table, row_ids, &rect, 0);
                         }
                     }
                 } else if (input & PSX_PAD_UP) {
                     g_equip_menu_selected_list_index--;
                 }
             } else if ((input & (PSX_PAD_DOWN << 16)) || (input & PSX_PAD_DOWN)) {
-                if (g_equip_menu_scroll_base_index + g_equip_menu_list_visible_rows - 1
-                    == g_equip_menu_selected_list_index) {
-                    if (g_equip_menu_scroll_base_index + g_equip_menu_list_visible_rows - 1
+                if (g_menu_scroll_base_index + g_equip_menu_list_visible_rows - 1 == g_equip_menu_selected_list_index) {
+                    if (g_menu_scroll_base_index + g_equip_menu_list_visible_rows - 1
                         < g_equip_menu_list_entry_count - 1) {
                         g_equip_menu_list_scroll_direction = 1;
                         if (g_equip_menu_list_text_table != 0) {
                             s16* entry_ids;
 
-                            j = g_equip_menu_scroll_base_index + g_equip_menu_list_visible_rows - 1;
+                            j = g_menu_scroll_base_index + g_equip_menu_list_visible_rows - 1;
                             entry_ids = &g_equip_menu_list_scroll_entry_ids;
                             *entry_ids = g_equip_menu_list_entries[j + 1];
                             rect.x = 0x100;
                             rect.y = g_equip_menu_list_visible_rows * g_equip_menu_list_row_height + 0x30;
                             rect.w = g_equip_menu_list_vram_width;
                             rect.h = g_equip_menu_list_row_height;
-                            equip_text_render_id_rows_to_vram(g_equip_menu_list_text_table, entry_ids, &rect, 0);
+                            menu_text_render_id_rows_to_vram(g_equip_menu_list_text_table, entry_ids, &rect, 0);
                         }
                     }
                 } else if (g_equip_menu_selected_list_index < g_equip_menu_list_entry_count - 1
@@ -103,16 +105,16 @@ u8* equip_menu_script_draw_scrollable_list(u8* command) {
     }
     if (g_equip_menu_list_scroll_direction < 0) {
         if (g_equip_menu_list_scroll_progress >= g_main_menu_scroll_accel_delay) {
-            g_equip_menu_list_scroll_offset -= step * g_main_menu_scroll_fast_step;
+            g_menu_list_scroll_offset -= step * g_main_menu_scroll_fast_step;
         } else {
-            g_equip_menu_list_scroll_offset -= g_main_menu_scroll_slow_step * (step & 0xff);
+            g_menu_list_scroll_offset -= g_main_menu_scroll_slow_step * (step & 0xff);
             g_equip_menu_list_scroll_progress = (step & 0xff) + g_equip_menu_list_scroll_progress;
         }
-        if (g_equip_menu_list_scroll_offset <= -g_equip_menu_list_row_height) {
-            g_equip_menu_list_scroll_offset = 0;
+        if (g_menu_list_scroll_offset <= -g_equip_menu_list_row_height) {
+            g_menu_list_scroll_offset = 0;
             g_equip_menu_list_scroll_direction = 0;
             g_equip_menu_selected_list_index -= 1;
-            g_equip_menu_scroll_base_index = g_equip_menu_selected_list_index;
+            g_menu_scroll_base_index = g_equip_menu_selected_list_index;
             if (g_equip_menu_list_text_table != 0) {
                 for (j = 0; j < g_equip_menu_list_visible_rows; j++) {
                     height = g_equip_menu_list_row_height;
@@ -120,110 +122,105 @@ u8* equip_menu_script_draw_scrollable_list(u8* command) {
                     rect.w = g_equip_menu_list_vram_width;
                     rect.h = height;
                     rect.y = (j - 1) * height + 0x30;
-                    equip_gfx_enqueue_draw_move(&rect, 0x100, height * j + 0x30, ot_index - 1);
+                    menu_gfx_enqueue_draw_move(&rect, 0x100, height * j + 0x30, ot_index - 1);
                 }
             }
         }
     } else if (g_equip_menu_list_scroll_direction > 0) {
         if (g_equip_menu_list_scroll_progress >= g_main_menu_scroll_accel_delay) {
-            g_equip_menu_list_scroll_offset += step * g_main_menu_scroll_fast_step;
+            g_menu_list_scroll_offset += step * g_main_menu_scroll_fast_step;
         } else {
-            g_equip_menu_list_scroll_offset += g_main_menu_scroll_slow_step * (step & 0xff);
+            g_menu_list_scroll_offset += g_main_menu_scroll_slow_step * (step & 0xff);
             g_equip_menu_list_scroll_progress = (step & 0xff) + g_equip_menu_list_scroll_progress;
         }
-        if (g_equip_menu_list_scroll_offset >= g_equip_menu_list_row_height) {
-            g_equip_menu_list_scroll_offset = 0;
+        if (g_menu_list_scroll_offset >= g_equip_menu_list_row_height) {
+            g_menu_list_scroll_offset = 0;
             g_equip_menu_list_scroll_direction = 0;
-            g_equip_menu_scroll_base_index++;
+            g_menu_scroll_base_index++;
             g_equip_menu_selected_list_index++;
             if (g_equip_menu_list_text_table != 0) {
                 rect.x = 0x100;
                 rect.y = g_equip_menu_list_row_height + 0x30;
                 rect.w = g_equip_menu_list_vram_width;
                 rect.h = g_equip_menu_list_row_height * g_equip_menu_list_visible_rows;
-                equip_gfx_enqueue_draw_move(&rect, 0x100, 0x30, ot_index - 1);
+                menu_gfx_enqueue_draw_move(&rect, 0x100, 0x30, ot_index - 1);
             }
         }
     }
     if (g_equip_menu_list_text_table != 0) {
-        if (g_equip_menu_list_scroll_offset != 0) {
-            rect.x = command[7];
-            rect.y = command[8] - 5;
+        if (g_menu_list_scroll_offset != 0) {
+            rect.x = command->list.x;
+            rect.y = command->list.y - 5;
             rect.w = g_equip_menu_list_vram_width * 4;
             rect.h = g_equip_menu_list_row_height * g_equip_menu_list_visible_rows + 10;
-            equip_gfx_enqueue_textured_quad(&rect, 0, g_equip_menu_list_scroll_offset + 0x2b, 0,
-                g_equip_gfx_semitransparency, g_equip_text_digit_texture_page, g_equip_menu_window_clut,
-                g_equip_gfx_sprite_ot_index);
+            menu_gfx_enqueue_textured_quad(&rect, 0, g_menu_list_scroll_offset + 0x2b, 0, g_menu_gfx_semitransparency,
+                g_menu_atlas_texture_page, g_equip_menu_window_clut, g_menu_gfx_otag_index);
         } else {
-            rect.x = command[7];
-            rect.y = command[8];
+            rect.x = command->list.x;
+            rect.y = command->list.y;
             rect.w = g_equip_menu_list_vram_width * 4;
             rect.h = g_equip_menu_list_row_height * g_equip_menu_list_visible_rows;
-            equip_gfx_enqueue_textured_quad(&rect, 0, 0x30, 0, g_equip_gfx_semitransparency,
-                g_equip_text_digit_texture_page, g_equip_menu_window_clut, g_equip_gfx_sprite_ot_index);
+            menu_gfx_enqueue_textured_quad(&rect, 0, 0x30, 0, g_menu_gfx_semitransparency, g_menu_atlas_texture_page,
+                g_equip_menu_window_clut, g_menu_gfx_otag_index);
         }
     }
-    if (g_equip_menu_use_alternate_palette == 0) {
-        if (g_equip_menu_scroll_base_index != 0) {
-            rect.x = g_equip_menu_window_right_x;
-            rect.y = command[12];
+    if (g_menu_use_alternate_palette == 0) {
+        if (g_menu_scroll_base_index != 0) {
+            rect.x = g_menu_window_right_x;
+            rect.y = command->list.arrow_up_y;
             rect.w = 8;
             rect.h = 0x10;
-            equip_gfx_enqueue_textured_quad(&rect, 0xd8, 0, 0, g_equip_gfx_semitransparency,
-                g_equip_menu_cursor_texture_page, g_equip_menu_cursor_mode0_foreground_clut,
-                g_equip_gfx_sprite_ot_index);
+            menu_gfx_enqueue_textured_quad(&rect, 0xd8, 0, 0, g_menu_gfx_semitransparency, g_menu_cursor_texture_page,
+                g_menu_cursor_mode0_foreground_clut, g_menu_gfx_otag_index);
         }
-        if (g_equip_menu_scroll_base_index < g_equip_menu_list_entry_count - g_equip_menu_list_visible_rows) {
-            rect.x = g_equip_menu_window_right_x;
-            rect.y = command[13];
+        if (g_menu_scroll_base_index < g_equip_menu_list_entry_count - g_equip_menu_list_visible_rows) {
+            rect.x = g_menu_window_right_x;
+            rect.y = command->list.arrow_down_y;
             rect.w = 8;
             rect.h = 0x10;
-            equip_gfx_enqueue_textured_quad(&rect, 0xe0, 0, 0, g_equip_gfx_semitransparency,
-                g_equip_menu_cursor_texture_page, g_equip_menu_cursor_mode0_foreground_clut,
-                g_equip_gfx_sprite_ot_index);
+            menu_gfx_enqueue_textured_quad(&rect, 0xe0, 0, 0, g_menu_gfx_semitransparency, g_menu_cursor_texture_page,
+                g_menu_cursor_mode0_foreground_clut, g_menu_gfx_otag_index);
         }
         if (g_equip_menu_list_entry_count > g_equip_menu_list_visible_rows) {
-            top = command[12];
+            top = command->list.arrow_up_y;
             offset = top + 0x14;
-            j = command[13] - offset;
+            j = command->list.arrow_down_y - offset;
             offset = j * g_equip_menu_selected_list_index / (g_equip_menu_list_entry_count - 1);
             j = top + 0xf;
             j += offset;
             rect.w = 8;
             rect.h = 8;
-            rect.x = g_equip_menu_window_right_x;
+            rect.x = g_menu_window_right_x;
             rect.y = j;
-            equip_gfx_enqueue_textured_quad(&rect, 0x10, 0x10, 0, g_equip_gfx_semitransparency,
-                g_equip_menu_cursor_texture_page, g_equip_menu_cursor_mode0_foreground_clut,
-                g_equip_gfx_sprite_ot_index);
+            menu_gfx_enqueue_textured_quad(&rect, 0x10, 0x10, 0, g_menu_gfx_semitransparency,
+                g_menu_cursor_texture_page, g_menu_cursor_mode0_foreground_clut, g_menu_gfx_otag_index);
         }
     }
-    if (command[2] != 0) {
-        marker.x = command[7] - command[11];
-        marker.y = command[8]
-            + (g_equip_menu_selected_list_index - g_equip_menu_scroll_base_index) * g_equip_menu_list_row_height;
-        equip_menu_update_and_draw_animated_cursor(
-            &marker, g_equip_menu_list_cursor_anim_state, g_equip_menu_use_alternate_palette);
+    if (command->list.show_cursor != 0) {
+        marker.x = command->list.x - command->list.cursor_x_offset;
+        marker.y = command->list.y
+            + (g_equip_menu_selected_list_index - g_menu_scroll_base_index) * g_equip_menu_list_row_height;
+        menu_update_and_draw_animated_cursor(
+            &marker, g_equip_menu_list_cursor_anim_state, g_menu_use_alternate_palette);
     }
-    command += command[1];
-    g_equip_menu_list_row_index = 0;
+    command = menu_next_instruction(command);
+    g_menu_list_row_index = 0;
     row_count = g_equip_menu_list_visible_rows + 1;
-    if (g_equip_menu_list_scroll_offset == 0) {
+    if (g_menu_list_scroll_offset == 0) {
         row_count = g_equip_menu_list_visible_rows;
     }
     row_commands = command;
     for (i = 0; i < row_count; i++) {
-        if (g_equip_menu_scroll_base_index + i > g_equip_menu_list_entry_count - 1
-            && g_equip_menu_list_scroll_offset == 0) {
+        if (g_menu_scroll_base_index + i > g_equip_menu_list_entry_count - 1 && g_menu_list_scroll_offset == 0) {
             break;
         }
         command = row_commands;
         for (j = 0; j < g_equip_menu_list_row_group_count; j++) {
-            command = g_equip_menu_script_handlers[*command](command);
+            command = menu_script_handlers[command->header.opcode](command);
         }
-        g_equip_menu_list_row_index += 1;
+        g_menu_list_row_index += 1;
     }
-    g_equip_menu_list_row_mode = 0;
+    g_menu_scroll_list_active = 0;
     if (previous_selected != g_equip_menu_selected_list_index) {
         g_equip_sound_queued_effect_id = MAIN_SFX_CURSOR_MOVE;
     }

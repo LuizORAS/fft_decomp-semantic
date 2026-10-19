@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x20, Draw Out's damaging katanas (Asura, Koutetsu, Heaven's Cloud, Muramasa,
  * Kikuichimoji, Chirijiraden): the katana break roll (battle_formula_roll_katana_break), then XA = MA

@@ -1,4 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
+#include "fft/map.h"
+#include "fft/unit.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
@@ -53,17 +58,18 @@ s32 battle_effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_p
     g_battle_effect_trajectory_origin.vy -= query.source.height;
     if (target_id == -1) {
         tile = battle_map_get_tile_data_pointer(tile_position->vx, tile_position->vz, tile_position->vy);
-        g_battle_effect_trajectory_destination.vx = tile_position->vx * 28 + 14;
-        g_battle_effect_trajectory_destination.vz = tile_position->vz * 28 + 14;
-        g_battle_effect_trajectory_destination.vy
-            = -((tile->height + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT)) * 12);
+        g_battle_effect_trajectory_destination.vx
+            = tile_position->vx * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+        g_battle_effect_trajectory_destination.vz
+            = tile_position->vz * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+        g_battle_effect_trajectory_destination.vy = -((tile->height + tile->depth_half_height.depth) * 12);
     } else {
         battle_unit_get_tile_center_and_height_by_battle_id(target_id, &g_battle_effect_trajectory_destination);
     }
     query.delta.x = g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx;
     query.delta.z = g_battle_effect_trajectory_destination.vz - g_battle_effect_trajectory_origin.vz;
     query.delta.y = g_battle_effect_trajectory_origin.vy - g_battle_effect_trajectory_destination.vy;
-    query.delta.distance = SquareRoot12((query.delta.x * query.delta.x + query.delta.z * query.delta.z) << 12);
+    query.delta.distance = SquareRoot12((query.delta.x * query.delta.x + query.delta.z * query.delta.z) * ONE);
     arc.vy = ratan2(-query.delta.z, query.delta.x);
     if (battle_effect_calculate_arcing_trajectory(&query, &arc_a, &arc_b) == 0) {
         arc_b = ONE;

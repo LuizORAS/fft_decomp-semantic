@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Formula 0x04, the magic guns (Blaze Gun, Glacier Gun, Blast Gun): cast a Fire, Ice or Bolt spell

@@ -1,12 +1,7 @@
 #ifndef EVENT_ATTACK_H
 #define EVENT_ATTACK_H
 
-/* EVENT/ATTACK.OUT: the start of a battle. BATTLE loads it before a battle
- * (battle_menu_init_attack_resources_and_threads, or ahead of time through event opcode
- * LoadAttackGraphics) to advance the story to the next scenario and load its setup
- * (attack_scenario_load_conditionals), prepare the formation sprites and the party portraits, and run the
- * deployment screen, where the player places units on each squad's tiles (attack_deploy_run_screen).
- * Event opcode ShowMapTitle loads it for the map's title (attack_map_show_title). */
+/* EVENT/ATTACK.OUT: menu screen overlay that runs with BATTLE. */
 
 #include "fft/battle.h"
 
@@ -14,20 +9,16 @@
 /* The thread slots of the screens, the status indicator packets and the thread helpers. */
 
 /* Slots of the deployment screen's own threads; the screen itself runs in
- * NATIVE_BORROWED_THREAD_SLOT_DEPLOYMENT and its panels in the
- * native_screen_thread_slot_e slots (unit status 8, character status 9,
+ * THREAD_BORROWED_SLOT_DEPLOYMENT and its panels in the
+ * thread_screen_slot_e slots (unit status 8, character status 9,
  * numeric editor 12). */
 typedef enum attack_thread_slot {
     ATTACK_THREAD_SLOT_SELECT_MENU = 3,      /* attack_deploy_run_select_menu */
-    ATTACK_THREAD_SLOT_ROSTER_STEP = 4,      /* attack_deploy_select_next_roster_unit and _previous_roster_unit */
+    ATTACK_THREAD_SLOT_ROSTER_STEP = 4,      /* attack_deploy_select_*_roster_unit */
     ATTACK_THREAD_SLOT_NOTICE = 13,          /* the notice shown for an invalid deployment input */
     ATTACK_THREAD_SLOT_SCREEN_GRAPHICS = 14, /* attack_deploy_update_screen_graphics, then the map title */
     ATTACK_THREAD_SLOT_DEPLOY_RENDER = 15,   /* attack_deploy_run_render_thread */
 } attack_thread_slot_e;
-
-extern battle_menu_status_panel_indicator_prims_t g_attack_thread_indicator_packets[2][2];
-
-s32 attack_thread_is_running(s32 thread_id);
 
 void attack_thread_wait_forever(void);
 
@@ -46,18 +37,12 @@ void attack_file_load_sync(s32 lba, s32 size, void* destination);
  * the event condition blocks, copied into the script variables. */
 
 extern u8 g_attack_event_condition_blocks[];
-
 extern u8 g_attack_scenario_table[];
-
 s32 attack_scenario_load_conditionals(void);
-
 s16 attack_scenario_load_unaligned_s16(const u8* ptr);
 
 /* sound */
 /* The scenario's two music tracks, the wait for their load, and the map darkness applied with them. */
-
-void attack_sound_play_music_tracks(s32 slot_1_music_id, s32 slot_2_music_id);
-void attack_sound_wait_for_music_stub(void);
 
 void attack_sound_resync_scenario_music_and_apply_map_darkness(void);
 
@@ -72,10 +57,11 @@ extern s32 g_attack_map_title_closing_past_midpoint;
 /* Two buffers of the four shaded title-panel strips. */
 extern POLY_GT4 g_attack_map_title_sprites[2][4];
 
-/* Scenario interpreter interfaces shared by battle_script_execute_event and
+/* Scenario interpreter interfaces shared by script_execute_event and
  * world_script_execute_event. Signatures are as the interpreters bind them;
  * unverified names stay provisional. */
 void attack_map_load_title_graphic(void);
+
 void attack_map_show_title(void);
 
 /* deploy */
@@ -102,24 +88,10 @@ enum {
 
 /* The roster id of a deployment tile or placement record that holds no unit
  * (g_attack_deploy_roster_id_by_tile, g_attack_deploy_units_by_squad and
- * attack_deployed_unit_coordinate_t.roster_id). */
+ * unit_deployment_coordinates_t.party_id). */
 enum {
     ATTACK_DEPLOY_ROSTER_ID_NONE = 0xff,
 };
-
-/* Four-byte placement record per deployed unit at
- * g_attack_deployed_unit_map_coordinates: party ID, X, Y, flags. */
-typedef struct attack_deployed_unit_coordinate {
-    u8 roster_id;  /* 0x00 */
-    u8 x;          /* 0x01 */
-    u8 y;          /* 0x02 */
-    u8 facing : 2; /* 0x03 */
-    /* Bits 2-4: BATTLE reads bits 0-3 as facing and bit 4 as unit absent
-     * (battle_unit_init_deployed_units_data); placement clears all three. */
-    u8 facing_high_and_absent : 3;
-    u8 _unused_03_bit5 : 2;
-    u8 upper_level : 1;
-} attack_deployed_unit_coordinate_t;
 
 /* Twelve-byte deployment-area record used by EVENT/ATTACK.OUT. The exact
  * roster-fieldability routine proves the stride, unit limit, and map ID;
@@ -134,7 +106,14 @@ typedef struct attack_deployment_squad_data {
     u8 map_id;             /* 0x09 */
     u16 placement_id;      /* 0x0a */
 } attack_deployment_squad_data_t;
-typedef char attack_squad_data_size_must_be_0x0c[(sizeof(attack_deployment_squad_data_t) == 0x0c) ? 1 : -1];
+typedef char attack_deployment_squad_data_size_must_be_12[(sizeof(attack_deployment_squad_data_t) == 12) ? 1 : -1];
+
+/* Textured deployment banner followed by its two triangle packets. */
+typedef struct attack_deploy_arrow_gfx {
+    POLY_FT4 banner; /* 0x00 */
+    POLY_F3 tri[2];  /* 0x28; tri[1], the second arrowhead, is initialised but never drawn */
+} attack_deploy_arrow_gfx_t;
+typedef char attack_deploy_arrow_gfx_size_must_be_80[sizeof(attack_deploy_arrow_gfx_t) == 80 ? 1 : -1];
 
 /* One 0xa2c-byte half of the double-buffered deployment-screen primitive
  * block at 0x801db650 (g_attack_deploy_render_buffers). The 5-by-5 valid-tile
@@ -145,24 +124,22 @@ typedef struct attack_deploy_render_buffer {
     SPRT tiles[5][5];       /* 0x000 */
     POLY_FT4 portraits[10]; /* 0x1f4 */
     POLY_FT4 status[30];    /* 0x384 */
-    /* 0x834; built by attack_deploy_build_screen_arrow through g_attack_deploy_screen_arrow */
-    POLY_FT4 banner;
-    POLY_F3 arrow;             /* 0x85c */
-    u8 _unused_870[0x14];      /* 0x870; that view's second arrowhead: initialised, never drawn */
-    POLY_FT4 menu_cursor[4];   /* 0x884 */
-    POLY_FT4 cursor[2][2];     /* 0x924 */
-    DR_MODE draw_mode_9c4;     /* 0x9c4 */
-    DR_MODE draw_mode_9d0;     /* 0x9d0 */
-    DR_MODE draw_mode_9dc;     /* 0x9dc */
-    DR_MODE draw_mode_9e8;     /* 0x9e8 */
-    DR_MODE draw_mode_9f4;     /* 0x9f4 */
-    DR_MODE menu_draw_mode;    /* 0xa00 */
-    DR_OFFSET world_offset;    /* 0xa0c */
-    point16_t world_position;  /* 0xa18 */
+    attack_deploy_arrow_gfx_t
+        screen_arrow;        /* 0x834; built by attack_deploy_build_screen_arrow through g_attack_deploy_screen_arrow */
+    POLY_FT4 menu_cursor[4]; /* 0x884 */
+    POLY_FT4 cursor[2][2];   /* 0x924 */
+    DR_MODE draw_mode_9c4;   /* 0x9c4 */
+    DR_MODE draw_mode_9d0;   /* 0x9d0 */
+    DR_MODE draw_mode_9dc;   /* 0x9dc */
+    DR_MODE draw_mode_9e8;   /* 0x9e8 */
+    DR_MODE draw_mode_9f4;   /* 0x9f4 */
+    DR_MODE menu_draw_mode;  /* 0xa00 */
+    DR_OFFSET world_offset;  /* 0xa0c */
+    point16_t world_position;  /* 0xa18; draw-offset input */
     DR_OFFSET screen_offset;   /* 0xa1c */
-    point16_t screen_position; /* 0xa28 */
+    point16_t screen_position; /* 0xa28; draw-offset input */
 } attack_deploy_render_buffer_t;
-typedef char attack_deploy_render_buffer_size_must_be_0xa2c[(sizeof(attack_deploy_render_buffer_t) == 0xa2c) ? 1 : -1];
+typedef char attack_deploy_render_buffer_size_must_be_2604[(sizeof(attack_deploy_render_buffer_t) == 2604) ? 1 : -1];
 
 /* g_attack_deploy_menu_state: what the deployment cursor is over. It selects
  * the button hint attack_deploy_build_menu_cursor_primitives draws. */
@@ -186,7 +163,11 @@ extern s32 g_attack_deploy_menu_state; /* attack_deploy_menu_state_e */
 extern s32 g_attack_deploy_pending_roster_index;
 extern u8 g_attack_deploy_roster_id_by_tile[5][5];
 extern s32 g_attack_deploy_roster_navigation_direction;
-extern u8 g_attack_deploy_roster_unit_deployable[20];
+extern u8 g_attack_deploy_roster_unit_deployable[PARTY_ROSTER_SLOT_COUNT];
+
+/* Alias of render_buffers[0].screen_arrow, addressed separately by the constructor. */
+extern attack_deploy_arrow_gfx_t g_attack_deploy_screen_arrow;
+
 extern s32 g_attack_deploy_second_pass;
 extern s32 g_attack_deploy_selected_roster_index;
 extern s32 g_attack_deploy_selected_unit_deployed;
@@ -194,16 +175,17 @@ extern attack_deployment_squad_data_t* g_attack_deploy_squad_data;
 extern attack_deploy_render_buffer_t g_attack_deploy_render_buffers[2];
 extern u8 g_attack_deploy_units_by_squad[4][25];
 extern u8 g_attack_deploy_valid_tiles[5][5];
-extern attack_deployed_unit_coordinate_t g_attack_deployed_unit_map_coordinates[12];
+extern unit_deployment_coordinates_t g_attack_deployed_unit_map_coordinates[12];
 extern u32 g_attack_deploy_cursor_texture_data[];
 extern s32 g_attack_deploy_active_cursor;
 extern s32 g_attack_deploy_grid_slide_x;
 extern s32 g_attack_deploy_grid_slide_y;
 extern s32 g_attack_deploy_tiles_only_mode;
 extern RECT g_attack_deploy_arrow_clut_rect;
-extern world_image_location_t g_attack_deploy_texture_location[];
-extern world_gfx_image_load_parameters_t g_attack_deploy_menu_cursor_cells[];
+extern point16_t g_attack_deploy_texture_location[];
+extern image_load_parameters_t g_attack_deploy_menu_cursor_cells[];
 extern help_navigation_record_t g_attack_deploy_select_menu_nodes[];
+
 /* g_attack_scenario_table string arena, installed as TEXT_SECTION_DEPLOYMENT_UNIT_HELP */
 extern u8* g_attack_deploy_unit_text_section;
 
@@ -217,25 +199,24 @@ extern POLY_FT4* g_attack_deploy_cursor_0_poly;
 extern s32 g_attack_deploy_cursor_0_submitted;
 extern POLY_FT4* g_attack_deploy_cursor_1_poly;
 extern s32 g_attack_deploy_cursor_1_submitted;
-extern u16 g_attack_deploy_cursor_clut[16];
+extern palette_t g_attack_deploy_cursor_clut;
 extern RECT g_attack_deploy_cursor_clut_rect;
-extern u16 g_attack_deploy_cursor_palette_cycle[];
-extern u8 g_attack_deploy_cursor_palette_source[];
+extern palette_t g_attack_deploy_cursor_palette_cycle[2];
+extern const palette_t g_attack_deploy_cursor_palette_source[2];
 extern s32 g_attack_deploy_deployed_unit_count;
 extern world_menu_entry_t g_attack_deploy_menu_entries[];
 extern RECT g_attack_deploy_rect_09c;
 extern RECT g_attack_deploy_rect_0ac;
 extern RECT g_attack_deploy_rect_0cc;
-
-extern u16 g_attack_deploy_semitrans_clut_buffer[0x10];
+extern palette_t g_attack_deploy_semitrans_clut_buffer;
 extern s32 g_attack_deploy_slot_offsets[5];
-extern world_gfx_image_load_parameters_t g_attack_deploy_text_graphic_params[9];
+extern image_load_parameters_t g_attack_deploy_text_graphic_params[9];
 extern POLY_FT4 g_attack_deploy_text_polys[2][9];
 extern s32 g_attack_deploy_text_reveal_heights[9];
 extern s32 g_attack_deploy_text_reveal_steps[9];
 extern RECT g_attack_deploy_text_screen_origin;
-extern u16 g_attack_deploy_tile_clut_buffer[0x30];
-extern u32 g_attack_deploy_tile_clut_data[];
+extern rgba5551_t g_attack_deploy_tile_clut_buffer[48];
+extern const palette_t g_attack_deploy_tile_clut_data[3];
 extern RECT g_attack_deploy_tile_clut_rect;
 extern u8 g_attack_deploy_unit_fieldable[PARTY_ROSTER_SLOT_COUNT];
 extern RECT g_attack_deploy_vram_copy_rect;
@@ -243,9 +224,10 @@ extern s16 g_attack_deploy_vram_copy_x;
 extern s16 g_attack_deploy_vram_copy_y;
 
 /* The brightness byte of g_attack_deploy_zodiac_draw_context (+4) as its own s32 symbol: the fade decrements the whole
- * word (lw/addiu/sw), which a u8 member access would not reproduce. The array form lets GCC hoist its address out of
- * the fade loop, as the target does. */
+ * 32-bit value (lw/addiu/sw), which a u8 member access would not reproduce. The array form lets GCC hoist its address
+ * out of the fade loop, as the target does. */
 extern s32 g_attack_deploy_zodiac_brightness_word[1];
+
 extern zodiac_draw_context_t g_attack_deploy_zodiac_draw_context;
 void attack_deploy_build_menu_cursor_primitives(s32 frame, u32 mode, attack_deploy_render_buffer_t* render_buffer);
 void attack_deploy_build_screen_arrow(void);
@@ -267,10 +249,8 @@ void attack_deploy_swap_roster_unit_tile(s32 column, s32 row, s32 roster_id);
 void attack_deploy_update_screen_graphics(void);
 void attack_deploy_init_cursor_primitives(void);
 void attack_deploy_update_cursor_primitives(s32 frame, attack_deploy_render_buffer_t* buffer);
-void* attack_deploy_get_coordinate_slots(void);
-
-extern RECT attack_D_801CD0A4;
-
+unit_deployment_coordinates_t* attack_deploy_get_coordinate_slots(void);
+extern RECT attack_deploy_cursor_texture_rect;
 void attack_deploy_prepare_valid_tiles(SPRT* sprites);
 
 /* formation */
@@ -281,16 +261,15 @@ extern RECT g_attack_formation_sheet_rect;
 extern RECT g_attack_formation_sheet_source_rect;
 extern u8 g_attack_formation_sprite_staging[];
 extern u8 g_attack_formation_sprite_tall_cell[];
-
 extern u8 g_attack_monster_formation_sprite_table[20]; /* indexed by sprite code - 0x3f */
 
 /* editor */
 /* The status panels' unit: loaded from the roster, with its numbers and names. */
 
 /* Status editor at 0x801ca0e8 (monster-skillset and two-hands flags at +0x0e/+0x10). */
-extern battle_menu_status_panel_slot_storage_t g_attack_editor_unit_fields;
-void attack_editor_load_party_unit(s32 mode, s32 roster_index);
+extern world_item_stat_detail_t g_attack_editor_unit_fields;
 
+void attack_editor_load_party_unit(s32 mode, s32 roster_index);
 extern menu_number_entry_t g_attack_editor_numeric_descriptor_a[];
 extern menu_number_entry_t g_attack_editor_numeric_descriptor_b[];
 extern RECT g_attack_editor_numeric_entries_a;
@@ -299,13 +278,12 @@ extern RECT g_attack_editor_numeric_entries_c;
 extern RECT g_attack_editor_numeric_entries_d;
 extern RECT g_attack_editor_numeric_entries_e;
 extern RECT g_attack_editor_numeric_entries_f;
-extern world_image_location_t g_attack_editor_numeric_geometry[];
+extern point16_t g_attack_editor_numeric_geometry[];
 extern battle_menu_status_panel_numeric_buffer_t g_attack_editor_numeric_state[2];
 extern battle_menu_status_panel_numeric_geometry_t g_attack_editor_numeric_table;
-extern u8 g_attack_editor_numeric_text_a[];
-extern u8 g_attack_editor_numeric_text_b[];
-extern world_gfx_image_load_parameters_t g_attack_editor_numeric_texture[];
-
+extern menu_unit_stat_number_images_t g_attack_editor_numeric_text_a;
+extern menu_unit_stat_number_images_t g_attack_editor_numeric_text_b;
+extern image_load_parameters_t g_attack_editor_numeric_texture[];
 extern u8 g_attack_editor_primary_skillset_name[];
 extern u8 g_attack_editor_secondary_skillset_name[];
 
@@ -314,11 +292,10 @@ extern u8 g_attack_editor_secondary_skillset_name[];
  * standalone address: indexing the editor record instead folds 0x24 into each
  * load and allocates the walk from the record base. */
 extern s16 g_attack_editor_item_and_ability_ids[10];
+
 extern struct battle_stats g_attack_editor_party_unit_stats;
 void attack_editor_run_numeric_thread(void);
-
 extern s32 g_attack_numeric_editor_redraw_request;
-
 extern u8 g_attack_numeric_editor_thread_params[];
 
 /* panel */
@@ -329,23 +306,19 @@ extern RECT g_attack_character_status_frame_rect[];
 extern RECT g_attack_character_status_draw_area_rect;
 extern s32 g_attack_character_status_redraw_request;
 extern u8 g_attack_character_status_frame_config[];
-
-extern battle_active_unit_t g_attack_panel_selected_unit_data;
-
+extern battle_menu_active_unit_t g_attack_panel_selected_unit_data;
 void attack_panel_unit_status_banner_thread(void);
-
-extern battle_unit_status_record_t g_attack_panel_selected_billboard;
-
-extern battle_unit_status_record_t g_attack_panel_comparison_billboard;
-extern world_image_location_t g_attack_panel_item_icon_texture[];
+extern battle_menu_unit_status_record_t g_attack_panel_selected_billboard;
+extern battle_menu_unit_status_record_t g_attack_panel_comparison_billboard;
+extern point16_t g_attack_panel_item_icon_texture[];
 extern RECT g_attack_panel_origin_offsets[];
 extern RECT g_attack_panel_text_upload_rect_a;
 extern RECT g_attack_panel_text_upload_rect_b;
-extern world_gfx_image_load_parameters_t g_attack_panel_label_layouts_mode0[];
-extern world_gfx_image_load_parameters_t g_attack_panel_label_layouts_mode1[];
-extern world_gfx_image_load_parameters_t g_attack_panel_label_layouts_mode2[];
-extern world_gfx_image_load_parameters_t g_attack_panel_label_layouts_mode3[];
-extern world_gfx_image_load_parameters_t g_attack_panel_item_icon_layouts[];
+extern image_load_parameters_t g_attack_panel_label_layouts_mode0[];
+extern image_load_parameters_t g_attack_panel_label_layouts_mode1[];
+extern image_load_parameters_t g_attack_panel_label_layouts_mode2[];
+extern image_load_parameters_t g_attack_panel_label_layouts_mode3[];
+extern image_load_parameters_t g_attack_panel_item_icon_layouts[];
 extern u8 g_attack_panel_status_animation[];
 extern battle_menu_status_panel_buffer_t g_attack_panel_frames_a[];
 extern u8 g_attack_panel_text_image_a[];
@@ -357,48 +330,42 @@ extern u8 g_attack_panel_comparison_name_image[];
 extern u8 g_attack_panel_comparison_number_image[];
 extern menu_number_entry_t g_attack_panel_comparison_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_attack_panel_comparison_packets[2];
-extern u16 g_attack_panel_comparison_portrait_image[];
+extern palette_t g_attack_panel_comparison_portrait_palettes[2];
 extern RECT g_attack_panel_comparison_portrait_rect;
-extern battle_active_unit_t g_attack_panel_comparison_unit_data;
-extern world_gfx_image_load_parameters_t g_attack_panel_editor_label_cells[];
+extern battle_menu_active_unit_t g_attack_panel_comparison_unit_data;
+extern image_load_parameters_t g_attack_panel_editor_label_cells[];
 extern u16 g_attack_panel_editor_label_cluts[][2];
-extern world_gfx_image_load_parameters_t g_attack_panel_editor_mode_cell[];
-extern world_gfx_image_load_parameters_t g_attack_panel_editor_mode_cells[];
-extern world_gfx_image_load_parameters_t g_attack_panel_editor_value_cells[];
+extern image_load_parameters_t g_attack_panel_editor_mode_cell[];
+extern image_load_parameters_t g_attack_panel_editor_mode_cells[];
+extern image_load_parameters_t g_attack_panel_editor_value_cells[];
 extern u16 g_attack_panel_editor_value_cluts[][2];
 extern RECT g_attack_panel_frame_rect;
 extern CVECTOR g_attack_panel_gauge_bar_colors[];
-extern world_gfx_image_load_parameters_t g_attack_panel_portrait_cell[];
+extern image_load_parameters_t g_attack_panel_portrait_cell[];
 extern battle_menu_status_panel_editor_packet_t g_attack_panel_selected_editor_packets[2];
 extern u8 g_attack_panel_selected_large_number_image[];
 extern u8 g_attack_panel_selected_name_image[];
 extern u8 g_attack_panel_selected_number_image[];
 extern menu_number_entry_t g_attack_panel_selected_numeric_entries[];
 extern battle_menu_status_panel_packet_t g_attack_panel_selected_packets[2];
-extern u16 g_attack_panel_selected_portrait_image[];
+extern palette_t g_attack_panel_selected_portrait_palettes[2];
 extern RECT g_attack_panel_selected_portrait_rect;
 extern s16 g_attack_panel_slide_down_y[];
 extern s16 g_attack_panel_slide_up_y[];
-extern world_gfx_image_load_parameters_t g_attack_panel_sprite_cells[];
+extern image_load_parameters_t g_attack_panel_sprite_cells[];
 
 /* Per-sprite first/end cell indices (interleaved pairs), the visible-entry
  * count, each entry's sprite id and fade/blink state, and a 4-byte record per
- * entry whose first halfword biases the draw point's y. */
+ * entry whose first 16-bit value biases the draw point's y. */
 extern u8 g_attack_panel_status_group_bounds[];
+
 extern u8 g_attack_panel_status_group_count;
 extern u8 g_attack_panel_status_group_ids[];
-
 extern point16_t g_attack_panel_status_scales[];
 extern main_zodiac_draw_offset_t g_attack_panel_status_offsets[];
-extern main_zodiac_sprite_frame_t g_attack_panel_status_uv_rects[];
-
-void attack_panel_set_primitive_colors(
-    battle_menu_status_panel_buffer_t* primitives, const world_status_thread_t* state);
-
+extern sprite_sheet_frame_t g_attack_panel_status_uv_rects[];
 void attack_panel_run_character_status_thread(void);
-
 extern s32 g_attack_status_display_thread_params;
-
 extern s32 g_attack_status_display_offset_y[];
 
 /* gfx */
@@ -406,16 +373,15 @@ extern s32 g_attack_status_display_offset_y[];
  * gradient grid, shaded strips, draw areas and CLUT rectangles. */
 
 void attack_gfx_prepare_party_portrait_textures(void);
-
-extern const u16 g_attack_gfx_draw_area_scale_percent[12];
 extern POLY_FT4 g_attack_gfx_frame_ft4[];
-extern RECT g_attack_gfx_portrait_origin;
-extern u8 g_attack_gfx_portrait_transition_offsets[];
 extern u8 g_attack_gfx_scaled_sprite_count;
 extern point16_t g_attack_gfx_scaled_sprite_scale[];
-extern world_image_location_t g_attack_gfx_scaled_sprite_texture_page[];
-extern main_zodiac_sprite_frame_t g_attack_gfx_scaled_sprite_uv_rects[];
-extern RECT g_attack_gfx_draw_area_template;
+extern point16_t g_attack_gfx_scaled_sprite_texture_page[];
+extern sprite_sheet_frame_t g_attack_gfx_scaled_sprite_uv_rects[];
+
+/* Map darkness uses RGB and ignores the fourth byte. */
+extern const CVECTOR attack_map_darkness_color;
+
 extern u16 g_attack_gfx_draw_offset_y;
 extern u16 g_attack_portrait_index_by_sprite_set[];
 extern RECT g_attack_portrait_palette_upload_rect;
@@ -425,36 +391,17 @@ extern RECT g_attack_portrait_sheet_rect_2;
 extern RECT g_attack_portrait_sheet_rect_3;
 extern u8 g_attack_portrait_staging[];
 extern RECT g_attack_portrait_upload_rect;
-
 void attack_gfx_build_formation_sprites(void);
 void attack_gfx_build_portrait_poly_ft4(s32 portrait_id, POLY_FT4* poly);
 
-void attack_gfx_build_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* packet, const RECT* source,
-    s32 scale_index, s32 lower_half, const world_status_thread_t* thread);
+void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_page, const RECT* position,
+    sprite_sheet_frame_t* sprite_rect, point16_t* scale, const main_zodiac_draw_offset_t* offset);
 
-void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, world_image_location_t* texture_page, const RECT* position,
-    main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, const main_zodiac_draw_offset_t* offset);
-
-void attack_gfx_clip_portrait_poly_from_left(POLY_FT4* poly, s32 amount);
-void attack_gfx_clip_portrait_poly_from_right(POLY_FT4* poly, s32 amount);
-void attack_gfx_init_menu_tile_and_line_primitives(battle_menu_status_panel_buffer_t* menu);
-void attack_gfx_init_scaled_draw_area_packets(world_gfx_scaled_draw_area_pair_t* data);
 void attack_gfx_load_portraits(void);
-void attack_gfx_set_clut_rect_from_id(RECT* rect, s32 clut_id);
-void attack_gfx_set_formation_icon_uv(POLY_FT4* primitive, s32 icon_id);
-
-void attack_gfx_set_scaled_poly_ft4_geometry(POLY_FT4* poly, const world_image_location_t* texture_page,
-    const RECT* position, main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, main_zodiac_draw_offset_t* base);
-
 void attack_gfx_prepare_formation_sprites(void);
-
-void attack_gfx_build_portrait_transition_primitives(const RECT* texture_rect, s32* transition,
-    const s32* first_portrait, const s32* second_portrait, u16* image, POLY_FT4* poly, s32 direction);
-
 void attack_gfx_build_shaded_panel_strips(POLY_GT4* polys, s32 width, s32 shade, s32 reverse);
 void attack_gfx_build_status_group_primitives(POLY_FT4* poly);
 void attack_gfx_init_frame_ft4_array(void);
-
 extern RECT g_attack_special_portrait_palette_rect;
 extern RECT g_attack_special_portrait_rect;
 
@@ -464,31 +411,21 @@ extern RECT g_attack_special_portrait_rect;
 /* Entries [1] and [2] of the unit-name text file's section-offset table (0x801cd2b0, s32[32], ending at
  * g_attack_text_data). */
 extern s32 g_attack_text_roster_unit_names_offset;
+
 extern s32 g_attack_text_job_names_offset;
+
+/* Overlay text file: offsets are relative to the data following the header. */
+typedef struct attack_text_file {
+    s32 section_offsets[32];
+    u8 section_data[0];
+} attack_text_file_t;
+typedef char attack_text_file_header_size_must_be_128[(sizeof(attack_text_file_t) == 128) ? 1 : -1];
+
 extern u8 g_attack_text_data[];
-
-extern battle_menu_status_panel_glyph_t g_attack_text_decimal_glyph;
 void attack_text_build_deployment_strings(void);
+void attack_text_init_battle_pointers(attack_text_file_t* file);
 
-void attack_text_render_decimal_entry_list(
-    u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
-
-void attack_text_render_decimal_value(s32 value, s32 flags, u8* pixels, world_glyph_blit_t* position);
-
-void attack_text_render_signed_decimal_entries(
-    u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count);
-
-void attack_text_init_battle_pointers(s32* offsets);
-
-/* menu */
-/* The menu primitives' colours and the status indicators' fade state. */
-
-void attack_menu_select_primitive_color_palette(
-    world_menu_palette_primitives_t* primitives, const world_status_thread_t* thread);
-
-extern s32 g_attack_menu_indicator_brightness[2];
-extern s32 g_attack_menu_indicator_fade_work[2];
-extern s32 g_attack_menu_indicator_packet_index[2];
-extern s32 g_attack_menu_indicator_state[2];
+/* added from build-2 (merge dry run) */
+extern const u16 g_menu_draw_area_scale_percent[12];
 
 #endif

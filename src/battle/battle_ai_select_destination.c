@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Pick the current scenario's destination among its reachable tiles at most max_distance from the
  * decision target (tile_target_distance). PRIORITY_FIRST takes the best standing score (the lowest
@@ -18,7 +18,7 @@ s32 battle_ai_select_destination(s32 max_distance, battle_ai_destination_order_e
     u16 row;
     s32 distance, score;
 
-    for (level = 0; level < 2; level++) {
+    for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             {
                 u32 scenario_address = ai->movement_scenario * sizeof(ai->reachable_tiles[0]) + (u32)ai;
@@ -63,10 +63,10 @@ s32 battle_ai_select_destination(s32 max_distance, battle_ai_destination_order_e
                         }
                         best_score = score;
                         best_distance = distance;
-                        destination->bytes.x = x;
-                        destination->bytes.y = y;
-                        destination->bytes.elevation = level;
-                        destination->bytes.zero = 0;
+                        destination->fields.x = x;
+                        destination->fields.y = y;
+                        destination->fields.elevation = level;
+                        destination->fields.zero = 0;
                     }
                 }
             }

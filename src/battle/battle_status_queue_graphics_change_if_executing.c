@@ -1,10 +1,11 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
 
-/* Queue a status's graphics change (battle_status_queue_misc_graphics_flag_change: status is the
+/* Queue a status's graphics change (battle_status_queue_runtime_graphics_flag_change: status is the
  * handler index, enabled 0 removes, 1 adds, 2 re-adds) only while executing, so previews and AI
  * simulations change no graphics. */
-void battle_status_queue_graphics_change_if_executing(s32 status_id, s32 enabled, s32 misc_unit_id) {
+void battle_status_queue_graphics_change_if_executing(s32 status_id, s32 enabled, s32 battle_id) {
     if (g_battle_action_state == BATTLE_ACTION_STATE_EXECUTE) {
-        battle_status_queue_misc_graphics_flag_change(status_id, enabled, misc_unit_id);
+        battle_status_queue_runtime_graphics_flag_change(status_id, enabled, battle_id);
     }
 }

@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Resets the memory card menu state and allocates the 0x2000-byte load
  * buffer; also used by "Open tutorial files". */

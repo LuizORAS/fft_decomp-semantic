@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -11,7 +12,7 @@
  *
  * The count is sign-extended into count_tmp, which the loop guard tests before
  * the copy into count; the `j < count_tmp` guard leaves an unused compare
- * pseudo whose stack slot is the target's otherwise empty frame word at 0x88,
+ * pseudo whose stack slot is the target's otherwise empty frame slot at 0x88,
  * and taking `vertex` in the loop header numbers the vertex-base pseudo ahead
  * of it so the base spills to 0x80 as in the target. The 2-byte alignment of
  * SVECTOR makes `verts[0] = verts[2]` take GCC's unaligned block-move path
@@ -39,22 +40,14 @@ void wldcore_map_draw_visible_routes(GsOT* ot) {
     table = g_wldcore_map_route_polylines;
     SetPolyFT4(&poly);
     SetSemiTrans(&poly, 1);
-    poly.u0 = 0x88;
-    poly.v0 = 0xE0;
-    poly.u1 = 0x97;
-    poly.v1 = 0xE0;
-    poly.u2 = 0x88;
-    poly.v2 = 0xEF;
-    poly.u3 = 0x97;
-    poly.v3 = 0xEF;
-    poly.r0 = g_wldcore_screen_brightness_rgb[0];
-    poly.g0 = g_wldcore_screen_brightness_rgb[1];
-    poly.b0 = g_wldcore_screen_brightness_rgb[2];
+    setUV4(&poly, 0x88, 0xE0, 0x97, 0xE0, 0x88, 0xEF, 0x97, 0xEF);
+    setRGB0(
+        &poly, g_wldcore_screen_brightness_rgb.r, g_wldcore_screen_brightness_rgb.g, g_wldcore_screen_brightness_rgb.b);
     poly.tpage = GetTPage(0, 0, 0x1C0, 0x100);
     poly.clut = GetClut(0x10, 0x1E8);
 
     for (i = 0, vertex = verts; i < WLDCORE_ROUTE_COUNT; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST) == 0) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_PATH_VISIBLE_FIRST) == 0) {
             continue;
         }
         slot = 0;

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* The 19% roll for an added effect (battle_formula_roll_conditional_status_proc_inner): returns 0

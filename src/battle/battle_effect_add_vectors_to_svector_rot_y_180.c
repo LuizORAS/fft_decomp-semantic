@@ -1,5 +1,5 @@
+#include "fft/battle_effect.h"
 #include "psx/libgte.h"
-#include "psx/types.h"
 
 /* Same as battle_effect_add_vectors_to_svector with right turned 180 degrees about Y first: (x - right x,
  * y + right y, z - right z). */

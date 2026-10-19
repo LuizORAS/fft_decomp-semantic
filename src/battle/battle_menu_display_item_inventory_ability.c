@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Loads the unit's Item skillset entries through battle_menu_load_item_abilities and returns the

@@ -1,9 +1,16 @@
+#include "fft/battle_gfx.h"
+#include "fft/battle_script.h"
 #include "fft/event_card.h"
+#include "fft/gfx.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
 /*
- * Per-frame event input update: derives the edge/auto-repeat input word,
+ * Per-frame event input update: derives the edge/auto-repeat input 32-bit value,
  * publishes it, and yields once while tracking thread status changes.
  *
  * CARD copy of bunit_input_update_event_state without its frame_arg latch,
@@ -28,8 +35,8 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
     if (count_frame != 0) {
         g_main_gfx_screen_polarity = 1;
     }
-    g_battle_gfx_current_otag_entry = otag;
-    g_card_input_controller = battle_script_get_controller_input_pointer(0);
+    g_gfx_current_otag_entry = otag;
+    g_card_input_controller = input_get_menu_controller(0);
     if (input == 0) {
         g_card_input_initial_repeat_counter = 0;
         g_card_input_repeat_counter = 0;
@@ -48,7 +55,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
         g_card_input_event = ~previous_input & input;
         g_card_input_initial_repeat_counter = 0;
     } else {
-        initial_delay = g_main_input_repeat_initial_delay / g_battle_event_speed;
+        initial_delay = g_main_input_repeat_initial_delay / g_script_event_speed;
         counter = ++g_card_input_initial_repeat_counter;
         if (counter == initial_delay) {
             g_card_input_event = filtered_input;
@@ -56,7 +63,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
         if (counter >= initial_delay) {
             counter = ++g_card_input_repeat_counter;
             g_card_input_secondary_repeat_counter++;
-            repeat_delay = g_main_input_repeat_period / g_battle_event_speed;
+            repeat_delay = g_main_input_repeat_period / g_script_event_speed;
             if (counter >= repeat_delay) {
                 g_card_input_repeat_counter = 0;
                 if ((input & PSX_PAD_SQUARE) != 0) {
@@ -65,7 +72,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
                     g_card_input_event = input & (PSX_PAD_UP | PSX_PAD_RIGHT | PSX_PAD_DOWN | PSX_PAD_LEFT);
                 }
             }
-            secondary_delay = g_main_input_secondary_repeat_period / g_battle_event_speed;
+            secondary_delay = g_main_input_secondary_repeat_period / g_script_event_speed;
             if (g_card_input_secondary_repeat_counter >= secondary_delay) {
                 g_card_input_secondary_repeat_counter = 0;
                 if ((g_card_input_current & PSX_PAD_SQUARE) != 0) {
@@ -80,8 +87,9 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
         }
     }
 
-    g_battle_sound_pending_sfx_id = -1;
-    battle_script_load_event_input_state(&g_card_input_event);
+    g_sound_pending_sfx_id = -1;
+    /* CARD inserts its controller pointer at +4; the copy of six 32-bit values includes it. */
+    script_load_event_input_state((const world_menu_input_state_t*)&g_card_input_event);
     if (g_card_input_event != PSX_PAD_SELECT && g_card_input_event != 0) {
         g_battle_event_input_suppression_frames = 5;
     }
@@ -92,7 +100,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
         thread_id++;
     } while (thread_id < 16);
 
-    battle_thread_yield();
+    thread_yield();
     thread_id = 1;
     do {
         status = g_card_thread_status_snapshot[thread_id];
@@ -106,7 +114,7 @@ void card_input_update_event_state(u32* otag, u32 input, s32 count_frame) {
         g_battle_event_input_suppression_frames--;
     }
     g_battle_event_frame_counter++;
-    g_battle_menu_packet_buffer_index = (g_battle_menu_packet_buffer_index + 1) & 1;
+    g_menu_packet_buffer_index = (g_menu_packet_buffer_index + 1) & 1;
     if (g_battle_menu_input_block_frames != 0) {
         g_battle_menu_input_block_frames--;
     }

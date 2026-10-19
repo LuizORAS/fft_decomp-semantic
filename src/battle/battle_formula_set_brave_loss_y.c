@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Lower the target's Brave by Y, from the ability's data, as a pseudo-status result. */
 void battle_formula_set_brave_loss_y(void) {

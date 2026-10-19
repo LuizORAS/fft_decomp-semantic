@@ -1,4 +1,7 @@
+#include "fft/battle_script.h"
 #include "fft/event_card.h"
+#include "fft/menu.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Build save slot `slot`'s 0x1e00-byte save image in the save buffer: the memory card header
@@ -17,10 +20,10 @@ void card_save_build_buffer(s32 slot) {
     u8 parity;
     s32 unused_38[0x40];
     s32 unused_138;
-    party_data_t* unit;
+    party_unit_t* unit;
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        unit = main_party_get_data_pointer(i);
+        unit = main_party_get_unit(i);
         if (unit->party_id != PARTY_ID_NONE && unit->sprite_set < CHARACTER_IDENTITY_RAMZA_END) {
             break;
         }
@@ -31,11 +34,11 @@ void card_save_build_buffer(s32 slot) {
     g_card_save_buffer_pointer->summary.job_id = unit->job_id;
     g_card_save_buffer_pointer->summary.level = unit->level;
 
-    day = battle_script_get_variable(EVENT_SCRIPT_VAR_DAY);
-    month = battle_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    g_card_save_buffer_pointer->summary.day = day;
-    g_card_save_buffer_pointer->summary.month = month;
-    g_card_save_buffer_pointer->summary.location = battle_script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
+    day = script_get_variable(EVENT_SCRIPT_VAR_DAY);
+    month = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+    g_card_save_buffer_pointer->summary.date.day = day;
+    g_card_save_buffer_pointer->summary.date.month = month;
+    g_card_save_buffer_pointer->summary.location = script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
     g_card_save_buffer_pointer->summary.slot = 0xff;
     g_card_save_buffer_pointer->elapsed_seconds
         = g_main_system_play_time_minutes * 60 + g_main_system_play_time_seconds + g_main_system_play_time_hours * 3600;
@@ -44,7 +47,7 @@ void card_save_build_buffer(s32 slot) {
     card_save_build_file_header(slot, unit->level, &g_card_save_buffer_pointer->header);
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        bcopy(&g_main_party_data[i], g_card_save_buffer_pointer->party_records[i],
+        bcopy(&g_main_party_units[i], g_card_save_buffer_pointer->party_records[i],
             sizeof(g_card_save_buffer_pointer->party_records[i]));
     }
 
@@ -90,9 +93,9 @@ void card_save_build_buffer(s32 slot) {
     block = (u8*)g_card_save_buffer_pointer;
     for (i = 0; (u32)i < CARD_SAVE_PARITY_BLOCK_COUNT; i++) {
         parity = 0;
-        card_bits_init_secondary_reader(block);
+        menu_bits_init_secondary_reader(block);
         for (j = 0; j < CARD_SAVE_PARITY_BITS_PER_BLOCK; j++) {
-            parity += card_bits_read_secondary(1);
+            parity += menu_bits_read_secondary(1);
         }
         block += CARD_SAVE_PARITY_BLOCK_BYTES;
         card_bits_write_primary(parity & 1);

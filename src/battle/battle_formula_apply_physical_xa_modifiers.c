@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_formula.h"
 
 /* The physical XA modifiers, in order: the weapon-strike supports
  * (battle_formula_apply_physical_attack_supports: Two Hands, Attack Up, Martial Arts), then

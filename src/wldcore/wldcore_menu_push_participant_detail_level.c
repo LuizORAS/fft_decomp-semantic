@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/libgpu.h"
 
@@ -10,10 +11,10 @@
  */
 void wldcore_menu_push_participant_detail_level(s32 proposition, s32 participant) {
     RECT rect;
-    wldcore_window_record_t* window1;
-    wldcore_window_record_t* window2;
-    wldcore_point32_t* pos1;
-    wldcore_point32_t* pos2;
+    world_animated_render_record_t* window1;
+    world_animated_render_record_t* window2;
+    open_point32_t* pos1;
+    open_point32_t* pos2;
     s32 index;
     s32 depth;
 
@@ -56,12 +57,12 @@ void wldcore_menu_push_participant_detail_level(s32 proposition, s32 participant
     g_wldcore_thread8_params.y = 0;
     g_wldcore_threadc_params.y = 0;
     g_wldcore_thread9_params.y = 0;
-    world_thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, world_menu_unit_status_banner_thread);
-    world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (s32)&g_wldcore_thread8_params, 0, 0);
-    world_thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, world_menu_run_numeric_editor_thread);
-    world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (s32)&g_wldcore_threadc_params, 0, 0);
-    world_thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, world_menu_equipment_and_ability_panel_thread);
-    world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)&g_wldcore_thread9_params, 0, 0);
+    thread_start(THREAD_SCREEN_SLOT_UNIT_STATUS, world_menu_unit_status_banner_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_UNIT_STATUS, (s32)&g_wldcore_thread8_params, 0, 0);
+    thread_start(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, world_menu_run_numeric_editor_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, (s32)&g_wldcore_threadc_params, 0, 0);
+    thread_start(THREAD_SCREEN_SLOT_CHARACTER_STATUS, world_menu_equipment_and_ability_panel_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_CHARACTER_STATUS, (s32)&g_wldcore_thread9_params, 0, 0);
     g_main_system_flags |= MAIN_SYSTEM_FLAG_UNIT_PANEL_THREADS;
 
     depth = g_wldcore_menu_stack_depth;

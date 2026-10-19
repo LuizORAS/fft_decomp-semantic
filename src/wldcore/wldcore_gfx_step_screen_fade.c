@@ -54,9 +54,9 @@ s32 wldcore_gfx_step_screen_fade(void) {
             }
             g_wldcore_screen_fade_state.elapsed++;
             world_menu_set_brightness(brightness, brightness, brightness);
-            g_wldcore_screen_brightness_rgb[0] = brightness;
-            g_wldcore_screen_brightness_rgb[1] = brightness;
-            g_wldcore_screen_brightness_rgb[2] = brightness;
+            g_wldcore_screen_brightness_rgb.r = brightness;
+            g_wldcore_screen_brightness_rgb.g = brightness;
+            g_wldcore_screen_brightness_rgb.b = brightness;
             g_wldcore_screen_fade_state.boxes[0].r = box_level;
             g_wldcore_screen_fade_state.boxes[0].g = box_level;
             g_wldcore_screen_fade_state.boxes[0].b = box_level;

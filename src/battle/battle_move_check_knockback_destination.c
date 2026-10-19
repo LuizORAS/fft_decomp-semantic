@@ -1,10 +1,13 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Half-unit height of a tile edge: base height plus the slope height scaled by
  * that side's two-bit slope factor. */
 #define TILE_EDGE_HEIGHT(tile, shift)                                                                                  \
-    (tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK) * ((tile->slope_type >> shift) & 3))
+    (tile->height * 2 + tile->depth_half_height.half_height * ((tile->slope_type >> shift) & 3))
 
 /* Checks whether the current target can be knocked back onto tile (x, y).
  *
@@ -54,30 +57,30 @@ s32 battle_move_check_knockback_destination(s32 direction, s32 x, s32 y) {
     tile = &g_battle_map_tile_data[battle_map_calculate_location(g_battle_action_target)];
     height = TILE_EDGE_HEIGHT(tile, source_shift);
     index = y * g_battle_map_max_x + x;
-    upper_index = index + 0x100;
+    upper_index = index + MAP_TILES_PER_LAYER;
     lower = &g_battle_map_tile_data[index];
     upper = &g_battle_map_tile_data[upper_index];
-    if (lower->flags.value & MAP_TILE_FLAG_BLOCKED) {
+    if (lower->flags.blocked) {
         lower_height = 0xff;
     } else {
         lower_height = TILE_EDGE_HEIGHT(lower, destination_shift);
     }
     upper_height = 0xff;
-    if (!(upper->flags.value & MAP_TILE_FLAG_BLOCKED)) {
+    if (!(upper->flags.blocked)) {
         upper_height = TILE_EDGE_HEIGHT(upper, destination_shift);
     }
     if (height < lower_height && height < upper_height) {
         return -1;
     }
     if (height < upper_height && height >= lower_height) {
-        upper_height -= upper->ceiling_depth_and_marks.value & MAP_TILE_CEILING_DEPTH_MASK;
+        upper_height -= upper->ceiling_depth_and_marks.ceiling_depth;
         if (upper_height < height + 4) {
             return -1;
         }
         level = 0;
         fall = height - lower_height;
     } else if (height < lower_height && height >= upper_height) {
-        lower_height -= lower->ceiling_depth_and_marks.value & MAP_TILE_CEILING_DEPTH_MASK;
+        lower_height -= lower->ceiling_depth_and_marks.ceiling_depth;
         if (lower_height < height + 4) {
             return -1;
         }

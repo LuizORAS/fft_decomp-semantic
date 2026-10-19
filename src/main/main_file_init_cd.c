@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* Set the RAM size to 2 MB (SetMem), initialize libcd with its debug output off, then stop
  * any read and pause the drive. Boot and each per-session reset call it. */

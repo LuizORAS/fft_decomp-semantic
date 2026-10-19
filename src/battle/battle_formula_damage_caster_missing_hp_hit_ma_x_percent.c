@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x4F, Goblin Punch: the physical evade check and the hit chance MA + X with the physical
  * status modifiers, then damage equal to the caster's max HP - current HP

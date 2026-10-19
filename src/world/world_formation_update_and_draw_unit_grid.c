@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -6,16 +7,6 @@
 #ifndef NULL
 #    define NULL 0
 #endif
-
-/* The slot record passed to the unit sprite and egg portrait drawers: the
- * world_oriented_quad_t layout with the quad size at +0x04/+0x06. */
-typedef struct world_formation_slot_sprite {
-    s16 x;
-    s16 y;
-    s16 w;
-    s16 h;
-    u8 _unused_08[0x14 - 0x08];
-} world_formation_slot_sprite_t;
 
 /* Run and draw the unit grid of the formation and the shops. With no `get_mode` callback and no
  * unit open, L2/R2 cycle the cards' readout (HP, MP, CT, Level/EXP, Brave/Faith). With
@@ -34,9 +25,9 @@ typedef struct world_formation_slot_sprite {
 s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banner, s16 allow_browse, s16 input,
     s16 locked, s32 (*get_mode)(s32), s32 (*get_shade)(s32)) {
     world_oriented_quad_t unused_desc;
-    world_formation_slot_sprite_t pos;
-    u8 unused_rgb[3];
-    u8 rgb[3];
+    world_oriented_quad_t pos;
+    rgb24_t unused_rgb;
+    rgb24_t rgb;
     s32 enabled;
     s16 y;
     s32 row;
@@ -46,9 +37,9 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
     s16 mode;
     u8 rgb_value;
     battle_menu_sprite_cell_t* cells;
-    world_menu_window_command_t* window;
-    u8* color;
-    world_formation_unit_t* unit;
+    menu_instruction_t* window;
+    rgb24_t* color;
+    world_unit_t* unit;
 
     if (locked != 0) {
         input = 0;
@@ -78,7 +69,7 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
                     if (g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags
                         & UNIT_FLAG_EGG) {
                         g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
-                    } else if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0) {
+                    } else if (thread_is_running(THREAD_SCREEN_SLOT_CHARACTER_STATUS) == 0) {
                         g_world_formation_unit_browse_enabled = 1;
                         g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
                     }
@@ -87,12 +78,12 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
                 g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
                 enabled = 0;
                 g_world_formation_unit_browse_enabled = 0;
-                world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS);
-                world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+                world_menu_request_thread_stop(THREAD_SCREEN_SLOT_CHARACTER_STATUS);
+                world_menu_request_thread_stop(THREAD_SCREEN_SLOT_NUMERIC_EDITOR);
             }
         }
-        if (toggle_banner != 0 && world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0
-            && world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS) == 0
+        if (toggle_banner != 0 && thread_is_running(THREAD_SCREEN_SLOT_CHARACTER_STATUS) == 0
+            && thread_is_running(THREAD_SCREEN_SLOT_COMPARISON_STATUS) == 0
             && world_formation_is_unit_list_scroll_needed() == 0 && (g_world_input_primary_repeat & PSX_PAD_SQUARE)) {
             g_world_menu_sound_effect_id = MAIN_SFX_PAGE_SWITCH;
             g_world_formation_unit_banner_enabled = g_world_formation_unit_banner_enabled == 0;
@@ -101,8 +92,8 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
     if (g_world_formation_unit_browse_enabled != 0) {
         input &= 0xff0;
     }
-    if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS) == 0
-        && g_world_grid_menu_id == MENU_GRID_HELP_NONE && world_gfx_get_fade_state() == WORLD_FADE_STATE_NONE) {
+    if (thread_is_running(THREAD_SCREEN_SLOT_CHARACTER_STATUS) == 0 && g_world_grid_menu_id == MENU_GRID_HELP_NONE
+        && world_gfx_get_fade_state() == WORLD_FADE_STATE_NONE) {
         g_world_formation_selected_unit_index = world_menu_update_wrapped_grid_selection(
             4, 5, g_world_formation_unit_count - 1, g_world_formation_selected_unit_index, input);
     }
@@ -121,10 +112,10 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             cells = g_world_formation_label_tiles_bottom;
         }
         row = 0;
-        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU) != 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MENU) != 0) {
             row = g_world_formation_current_menu == WORLD_FORMATION_MENU_UNIT_GRID;
         }
-        row |= g_world_menu_input_lock_mode != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE;
+        row |= g_menu_input_lock_mode != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE;
         world_menu_draw_pressable_button(
             MENU_PRESSABLE_BUTTON_L2, 0x26, value, input & PSX_PAD_L2, row, MAIN_SFX_PAGE_SWITCH);
         world_menu_draw_pressable_button(
@@ -155,9 +146,9 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
     world_menu_set_draw_priority(8);
     i = 0;
     color = world_menu_get_sprite_color();
-    g_world_formation_saved_sprite_color[0] = color[0];
-    g_world_formation_saved_sprite_color[1] = color[1];
-    g_world_formation_saved_sprite_color[2] = color[2];
+    g_world_formation_saved_sprite_color.r = color->r;
+    g_world_formation_saved_sprite_color.g = color->g;
+    g_world_formation_saved_sprite_color.b = color->b;
     for (row = 0; row < 5; row++, y += 0x3c) {
         value = 0;
         if (g_world_formation_unit_banner_enabled != 0 && g_world_status_display_thread_params.flags == 0) {
@@ -168,13 +159,13 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
             }
         }
         world_menu_set_sprite_color(
-            value ? g_world_formation_dimmed_sprite_color : g_world_formation_normal_sprite_color);
+            value ? &g_world_formation_dimmed_sprite_color : &g_world_formation_normal_sprite_color);
         for (col = 0; col < 4; col++, i++) {
             if (i >= g_world_formation_unit_count) {
                 break;
             }
-            pos.x = col * 62 + 6;
-            pos.y = y;
+            pos.position.x = col * 62 + 6;
+            pos.position.y = y;
             if (i == g_world_formation_selected_unit_index) {
                 g_world_formation_cursor_target.x = col * 62 + 0x22;
                 g_world_formation_cursor_target.y = y + 0x19;
@@ -195,33 +186,32 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
                 } else {
                     mode = g_world_formation_stat_display_mode;
                 }
-                world_formation_draw_unit_readout(i, mode, pos.x, pos.y, color, get_shade, 0, 8);
+                world_formation_draw_unit_readout(i, mode, pos.position.x, pos.position.y, color, get_shade, 0, 8);
             }
             value = 0x50;
             if (g_world_formation_unit_pointers[i]->proposition_status == 0) {
                 if (get_shade != NULL) {
                     value = get_shade(i);
                 } else {
-                    value = world_formation_cursor_distance_falloff(pos.x, pos.y, 0xc8, 0x50);
+                    value = world_formation_cursor_distance_falloff(pos.position.x, pos.position.y, 0xc8, 0x50);
                     if (value > 0x80) {
                         value = 0x80;
                     }
                 }
             }
             rgb_value = value;
-            rgb[2] = rgb_value;
-            rgb[1] = rgb_value;
-            rgb[0] = rgb_value;
+            rgb.b = rgb_value;
+            rgb.g = rgb_value;
+            rgb.r = rgb_value;
             unit = g_world_formation_unit_pointers[i];
             if (unit->gender_flags & UNIT_FLAG_EGG) {
-                world_formation_draw_egg_sprite(
-                    (world_oriented_quad_t*)&pos, unit->egg_color, rgb, unit->birthday & 0xf, 6);
+                world_formation_draw_egg_sprite(&pos.position, unit->egg_color, &rgb, unit->birthday & 0xf, 6);
             } else {
-                world_formation_draw_unit_sprite(i, (point16_t*)&pos, rgb, 6);
+                world_formation_draw_unit_sprite(i, &pos.position, &rgb, 6);
             }
-            g_world_formation_unit_dot_sprite.x = pos.x;
-            g_world_formation_unit_dot_sprite.y = pos.y;
-            g_world_formation_unit_dot_sprite.tpage = GetTPage(0, 1, 0x3c0, 0x100);
+            g_world_formation_unit_dot_sprite.position.x = pos.position.x;
+            g_world_formation_unit_dot_sprite.position.y = pos.position.y;
+            g_world_formation_unit_dot_sprite.source.tpage = GetTPage(0, 1, 0x3c0, 0x100);
             if (i == g_world_formation_selected_unit_index) {
                 g_world_formation_dot_glow_timer += g_world_formation_dot_glow_direction * 2;
                 if (g_world_formation_dot_glow_timer > 0x28) {
@@ -230,16 +220,16 @@ s32 world_formation_update_and_draw_unit_grid(s16 background_y, s16 toggle_banne
                 if (g_world_formation_dot_glow_timer < -0x28) {
                     g_world_formation_dot_glow_direction = 1;
                 }
-                rgb[0] += g_world_formation_dot_glow_timer;
-                rgb[1] += g_world_formation_dot_glow_timer;
-                rgb[2] += g_world_formation_dot_glow_timer;
+                rgb.r += g_world_formation_dot_glow_timer;
+                rgb.g += g_world_formation_dot_glow_timer;
+                rgb.b += g_world_formation_dot_glow_timer;
             }
             world_gfx_enqueue_oriented_textured_quad(
-                &g_world_formation_unit_dot_sprite, rgb, TEXTURE_UV_FLIP_NONE, 1, 8);
+                &g_world_formation_unit_dot_sprite, &rgb, TEXTURE_UV_FLIP_NONE, 1, 8);
         }
     }
-    world_menu_set_sprite_color(g_world_formation_saved_sprite_color);
-    world_formation_draw_cursor_trail(&g_world_formation_cursor_target.x);
+    world_menu_set_sprite_color(&g_world_formation_saved_sprite_color);
+    world_formation_draw_cursor_trail(&g_world_formation_cursor_target);
     g_world_formation_cursor_position.x
         = (g_world_formation_cursor_position.x * 3 + g_world_formation_cursor_target.x) / 4;
     g_world_formation_cursor_position.y

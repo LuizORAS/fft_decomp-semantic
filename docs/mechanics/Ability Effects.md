@@ -31,11 +31,11 @@ the targets react (flinch, block, fall) on its keyframes.
 
 | Record | What it holds |
 |---|---|
-| `g_battle_effect_ability_ids` | The effect file of each ability, with flags ([[battle_effect_is_item_ability]]); a negative entry means no file. Ids from 0x200 on continue the table after the action abilities |
-| `g_battle_effect_disc_entries` ([[battle_file_extent_t]]) | Sector and size of each effect file ([[battle_effect_get_file_extent]]) |
+| `g_battle_effect_ability_files` | The effect file of each ability, with flags ([[battle_effect_is_item_ability]]); a negative entry means no file. Ids from 0x200 on continue the table after the action abilities |
+| `g_battle_effect_disc_entries` ([[main_file_extent_t]]) | Sector and size of each effect file ([[battle_effect_get_file_extent]]) |
 | [[effect_file_header_t]], `g_battle_effect_file_headers` | The section offsets of each file: frames, animation sequences, script, particle system, animation curves, timing curves, flags, timeline, sound, palette. The `battle_effect_set_*_pointer` routines bind them to globals when the effect starts |
 | `g_battle_effect_native_callbacks` | 198 fixed addresses in the effect overlay area that script opcodes 06 and 07 bind or call ([[battle_effect_get_native_callback]]) |
-| [[effect_record_t]], `g_battle_effect_state_records` | The script records: a script position, counters, child records, a parent and a child timeline, callback slots and the particles it owns |
+| [[battle_effect_record_t]], `g_battle_effect_state_records` | The script records: a script position, counters, child records, a parent and a child timeline, callback slots and the particles it owns |
 | [[effect_timeline_t]] | The parent timeline: particle channels, colour tracks (screen, caster, targets), sound tracks and camera keyframes for two phases; the child timeline runs per target |
 | [[effect_geometry_table_t]], [[effect_geometry_entry_t]] | The particle-system section: gravity, inertia threshold and one record per emitter or mesh, which each renderer reads through its own view |
 | [[effect_animation_curve_t]], `g_battle_effect_animation_curves` | Per-frame factors out of 256 that move an emitter's values from start to end, tint particles and set homing strength |
@@ -106,10 +106,10 @@ the targets react (flinch, block, fall) on its keyframes.
 
 | To change | Edit |
 |---|---|
-| Which effect an ability plays | Its entry in `g_battle_effect_ability_ids` (data); Throw Ball picks Fire, Ice or Bolt by element in [[battle_effect_request_ability_effect]] |
+| Which effect an ability plays | Its entry in `g_battle_effect_ability_files` (data); Throw Ball picks Fire, Ice or Bolt by element in [[battle_effect_request_ability_effect]] |
 | Whether an ability plays one at all | [[battle_effect_ability_has_no_effect]] and its callers |
 | The charge before a spell or summon | `g_battle_effect_secondary_by_charge_animation` (data), indexed by the ability's charge animation set |
-| The projectile of a weapon type | `g_battle_effect_weapon_type_extra_flags` (data) and [[battle_effect_start_action_projectile_secondary]] |
+| The projectile of a weapon type | `g_battle_effect_weapon_projectile_animations` (data) and [[battle_effect_start_action_projectile_secondary]] |
 | A resident effect's look | Its particle group in `g_battle_effect_particle_groups` and its handler |
 | The landing effects | [[battle_effect_set_landing_secondary_by_surface_type]] |
 | The music during an effect | EFFECT_FLAG_QUIET_MUSIC in the file's flags section; the volumes in [[battle_effect_update_file_load]] and [[battle_effect_update_stage]] |

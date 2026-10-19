@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "psx/types.h"
 
 /* Store the current $sp at destination. main saves the game loop's base stack this way, and

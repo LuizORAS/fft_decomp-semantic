@@ -1,7 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
-/* Target statuses on physical XA: Protect * 2/3; Sleep or Charging * 3/2;
- * Chicken or Frog * 3/2. */
 /* The target's statuses on a physical XA: Protect * 2 / 3; asleep or charging * 3 / 2; Chicken or
  * Frog * 3 / 2. */
 void battle_formula_apply_target_physical_status_xa_modifiers(void) {

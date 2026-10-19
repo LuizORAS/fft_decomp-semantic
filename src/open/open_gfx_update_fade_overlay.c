@@ -11,7 +11,7 @@
  *
  * With a single struct, cse keeps the flags address in a register (the target's
  * `la a3`/`la a2`/`la s1`) and the stores through tiles[] serialise the x/y/w/h
- * halfword copies exactly as the target does.  Per-block locals give block 2 its
+ * 16-bit copies exactly as the target does.  Per-block locals give block 2 its
  * own a2/a1/a0/v1 registers. */
 void open_gfx_update_fade_overlay(u32* ot) {
     if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_OUT) {
@@ -54,9 +54,8 @@ void open_gfx_update_fade_overlay(u32* ot) {
         g_open_gfx_overlay_fade.tiles[g_main_gfx_active_buffer_index].y0 = g_open_gfx_overlay_fade.rect.y;
         g_open_gfx_overlay_fade.tiles[g_main_gfx_active_buffer_index].w = g_open_gfx_overlay_fade.rect.w;
         g_open_gfx_overlay_fade.tiles[g_main_gfx_active_buffer_index].h = g_open_gfx_overlay_fade.rect.h;
-        tiles[g_main_gfx_active_buffer_index].r0 = g_open_gfx_overlay_fade.level;
-        tiles[g_main_gfx_active_buffer_index].g0 = g_open_gfx_overlay_fade.level;
-        tiles[g_main_gfx_active_buffer_index].b0 = g_open_gfx_overlay_fade.level;
+        setRGB0(&tiles[g_main_gfx_active_buffer_index], g_open_gfx_overlay_fade.level, g_open_gfx_overlay_fade.level,
+            g_open_gfx_overlay_fade.level);
         AddPrim(&ot[g_open_gfx_overlay_fade.ot_index], &tiles[g_main_gfx_active_buffer_index]);
         AddPrim(&ot[g_open_gfx_overlay_fade.ot_index], &g_open_gfx_overlay_fade.modes[g_main_gfx_active_buffer_index]);
     }

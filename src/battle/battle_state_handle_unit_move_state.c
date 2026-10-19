@@ -7,7 +7,7 @@ void battle_state_handle_unit_move_state(void) {
 
     battle_state_update_units();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
-    command = *battle_menu_get_selected_command_address();
+    command = battle_menu_get_selected_command_address()->kind;
     switch (command) {
     case 7:
         battle_state_enter_select_move_tile();

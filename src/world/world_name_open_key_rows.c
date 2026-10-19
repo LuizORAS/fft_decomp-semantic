@@ -14,5 +14,5 @@ void world_name_open_key_rows(void) {
     }
     g_world_name_entry_key_ids[count] = -1;
     world_menu_init_and_load_scrollable_list(g_world_name_entry_key_ids, g_world_menu_cursor_position,
-        world_menu_get_script(7), g_world_name_entry_keyboard_script);
+        world_menu_get_script(WORLD_TEXT_DATA_NAME_ENTRY_KEYBOARD), &g_world_name_entry_keyboard_script);
 }

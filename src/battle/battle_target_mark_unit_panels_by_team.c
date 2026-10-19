@@ -1,10 +1,11 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Mark as a choice the panel under each ally (ALLY_UNIT_TILES) or enemy (ENEMY_UNIT_TILES) unit.
  * The loop never advances `unit`, so it only ever marks the caster's own tile, after its own team
  * test; no retail ability sets these flags (QUIRKS.md). */
-void battle_target_mark_unit_panels_by_team(battle_stats_t* unit, s32 flags) {
+void battle_target_mark_unit_panels_by_team(const battle_stats_t* unit, s32 flags) {
     battle_target_panel_t* panel;
     s32 i;
     s32 mark_allies;

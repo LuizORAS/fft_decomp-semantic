@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Reset the formation screen to its initial state (the formation and the shops,
  * world_shop_run_screen, start with it): every submenu's "initialized" latch, the panel thread styles,

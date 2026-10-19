@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 
@@ -15,14 +16,14 @@ s32 world_formation_run_ability_job_list(void) {
     if (g_world_learn_job_list_initialized == 0) {
         world_script_set_vsync_mode_and_event_speed(2);
         world_job_build_unit_list(g_world_formation_selected_unit_index, g_world_menu_learn_unlocked_jobs, 0);
-        g_world_menu_script_callbacks[0] = world_job_calculate_current_level;
-        g_world_menu_script_callbacks[2] = world_menu_get_learn_job_jp;
-        g_world_menu_script_callbacks[5] = world_job_calculate_next_level_jp_requirement;
-        g_world_menu_script_callbacks[6] = world_job_calculate_current_total_jp;
-        g_world_menu_script_callbacks[13] = world_job_calculate_current_mastered;
+        g_world_menu_script_callbacks[0].value = world_job_calculate_current_level;
+        g_world_menu_script_callbacks[2].value = world_menu_get_learn_job_jp;
+        g_world_menu_script_callbacks[5].value = world_job_calculate_next_level_jp_requirement;
+        g_world_menu_script_callbacks[6].value = world_job_calculate_current_total_jp;
+        g_world_menu_script_callbacks[13].value = world_job_calculate_current_mastered;
         world_menu_get_selection_record(9, &x, &y, g_world_menu_learn_unlocked_jobs);
         world_menu_init_scrollable_list(
-            g_world_menu_learn_unlocked_jobs, x, y, g_world_text_section_pointers[TEXT_SECTION_JOB_NAMES]);
+            g_world_menu_learn_unlocked_jobs, x, y, g_text_section_pointers[TEXT_SECTION_JOB_NAMES]);
         g_world_learn_job_list_initialized = 1;
     }
     g_world_menu_description_text_id = g_world_menu_learn_unlocked_jobs[g_world_menu_cursor_position] + 0x6000;
@@ -36,7 +37,7 @@ s32 world_formation_run_ability_job_list(void) {
         if (world_job_calculate_current_mastered(g_world_menu_cursor_position) == 0
             || g_world_formation_current_menu == WORLD_FORMATION_MENU_VIEW_ABILITIES) {
             g_world_learn_selected_job = g_world_menu_learn_unlocked_jobs[g_world_menu_cursor_position];
-            g_world_learn_selected_job_index = world_job_get_generic_index(g_world_learn_selected_job);
+            g_world_learn_selected_job_index = job_get_generic_index(g_world_learn_selected_job);
             world_job_calculate_current_level(g_world_menu_cursor_position);
             world_menu_get_learn_job_jp(g_world_menu_cursor_position);
             world_job_calculate_current_total_jp(g_world_menu_cursor_position);
@@ -50,6 +51,6 @@ s32 world_formation_run_ability_job_list(void) {
         world_text_show_message_and_play_sound(0xC007, MAIN_SFX_ERROR_MESSAGE);
     }
     world_menu_run_script_with_palette_mode(
-        g_world_learn_job_list_script, g_world_input_primary_repeat, g_world_menu_input_lock_mode);
+        &g_world_learn_job_list_script, g_world_input_primary_repeat, g_menu_input_lock_mode);
     return MENU_JOB_LIST_STEP_JOBS;
 }

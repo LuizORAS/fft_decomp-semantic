@@ -1,24 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
-
-/* A route word read whole (lw, stored as its low half) or as its
- * high half (lhu at +2). */
-typedef union wldcore_route_word {
-    s32 word;
-    struct {
-        s16 low;
-        u16 high;
-    } halves;
-} wldcore_route_word_t;
-
-/* One 12-byte route point. The heading's high half is a 12-bit
- * angle. The points follow the wldcore_route_record_t header and are indexed
- * as 4-byte words from the record base, (point * 3 + 1) * 4. */
-typedef struct wldcore_route_point {
-    wldcore_route_word_t position; /* 0x00 */
-    wldcore_route_word_t heading;  /* 0x04 */
-    s32 distance;                  /* 0x08 */
-} wldcore_route_point_t;
 
 /* Stage one segment of a route leg in the travel state. The low byte of `route` is the route id and
  * bit 8 (WLDCORE_ROUTE_TRAVEL_REVERSED) runs it end to start; `step` is the segment. Its start and end
@@ -31,10 +11,9 @@ typedef struct wldcore_route_point {
  * target load the table first and keep both in $t0. The unused 32-byte local
  * reproduces the target's otherwise empty 0x20 frame, and `index` is shared by
  * both arms while each arm has its own point pointer, which fixes the
- * target's register choice for both index computations. Reading a position
- * word through `word` keeps the target's whole-word lw (a direct narrowing
- * store is expanded as lhu), and the `flags` local gives its `or` operand
- * order. */
+ * target's register choice for both index computations. Reading a 32-bit
+ * position (x in its low 16 bits, y in its high one) through `word` keeps the target's 32-bit lw (a
+ * direct narrowing store is expanded as lhu), and the `flags` local gives its `or` operand order. */
 s32 wldcore_map_begin_route_segment(wldcore_map_travel_t* state, u32 route, s32 step) {
     s32 unused[8];
     wldcore_route_record_t* record;
@@ -44,42 +23,46 @@ s32 wldcore_map_begin_route_segment(wldcore_map_travel_t* state, u32 route, s32 
     s32 word;
     s32 flags;
 
+    /* Direct indexing or separate typed locals move the table load after the route-ID store. */
     record = (wldcore_route_record_t*)g_wldcore_map_route_tables;
-    state->route_id = route & 0xff;
+    state->route_id = route & WLDCORE_ROUTE_PATH_ID_MASK;
     flags = state->flags;
     state->flags = flags | ((route >> 7) & WLDCORE_ROUTE_TRAVEL_REVERSED);
     record = ((wldcore_route_record_t**)record)[state->route_id];
     if (state->flags & WLDCORE_ROUTE_TRAVEL_REVERSED) {
         state->leg_end_location = record->start_location;
         state->leg_start_location = record->end_location;
-        index = (record->count - step - 1) * 3 + 1;
-        point_down = (wldcore_route_point_t*)(index * 4 + (s32)record);
-        word = point_down->position.word;
+        /* Direct point indexing moves the header addition past the shift. */
+        index = (record->count - step - 1) * (sizeof(wldcore_route_point_t) / sizeof(u32))
+            + offsetof(wldcore_route_record_t, points) / sizeof(u32);
+        point_down = (wldcore_route_point_t*)(index * sizeof(u32) + (s32)record);
+        word = point_down->position;
         state->position.vx = word;
-        state->position.vy = point_down->position.halves.high;
+        state->position.vy = (u16)(point_down->position >> 16);
         state->position.vz = 0;
-        word = point_down[-1].position.word;
+        word = point_down[-1].position;
         state->target_position.vx = word;
-        state->target_position.vy = point_down[-1].position.halves.high;
+        state->target_position.vy = (u16)(point_down[-1].position >> 16);
         state->target_position.vz = 0;
         state->previous_position = state->position;
-        state->heading = (point_down[-1].heading.halves.high + 0x800) & 0xfff;
+        state->heading = ((point_down[-1].heading >> 16) + 0x800) & 0xfff;
         state->segment_frames = point_down[-1].distance * 2;
     } else {
         state->leg_start_location = record->start_location;
         state->leg_end_location = record->end_location;
-        index = step * 3 + 1;
-        point_up = (wldcore_route_point_t*)(index * 4 + (s32)record);
-        word = point_up->position.word;
+        index = step * (sizeof(wldcore_route_point_t) / sizeof(u32))
+            + offsetof(wldcore_route_record_t, points) / sizeof(u32);
+        point_up = (wldcore_route_point_t*)(index * sizeof(u32) + (s32)record);
+        word = point_up->position;
         state->position.vx = word;
-        state->position.vy = point_up->position.halves.high;
+        state->position.vy = (u16)(point_up->position >> 16);
         state->position.vz = 0;
-        word = point_up[1].position.word;
+        word = point_up[1].position;
         state->target_position.vx = word;
-        state->target_position.vy = point_up[1].position.halves.high;
+        state->target_position.vy = (u16)(point_up[1].position >> 16);
         state->target_position.vz = 0;
         state->previous_position = state->position;
-        state->heading = point_up->heading.halves.high;
+        state->heading = (point_up->heading >> 16);
         state->segment_frames = point_up->distance * 2;
     }
     state->segment_frame = 0;

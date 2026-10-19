@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x35, Revive and Oink: no evade check; hit chance PA + X with Attack Up and Martial Arts
  * and the zodiac; the status must change something unless the target is undead

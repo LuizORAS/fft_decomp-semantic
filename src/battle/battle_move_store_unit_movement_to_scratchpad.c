@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Fills the pathfinding scratch pad for `unit_id`: its movement, jump and
@@ -21,13 +23,14 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     battle_stats_t* unit;
     battle_stats_t* other;
     map_tile_t* tile;
+    /* Byte access retains the original packed load and field-extraction order. */
     u8 movement[3];
     battle_unit_height_data_t height_data;
     s32 i;
     s32 count;
     s32 weather;
     s32 ignore_terrain;
-    u8* table;
+    const u8* table;
     u8 value;
     u8 movement_3;
     u8 team;
@@ -43,12 +46,12 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     battle_unit_calculate_height_data(&height_data, unit_id);
     unit = &g_battle_unit_stats[unit_id];
     for (i = 0; i < 3; i++) {
-        movement[i] = unit->movement_abilities[i];
+        movement[i] = unit->ability_flags.movement[i];
     }
     config->unit_id = unit_id;
     config->x = unit->x;
-    config->y = unit->position.bits.y;
-    config->high_elevation = unit->position.bits.higher_elevation;
+    config->y = unit->position.y;
+    config->high_elevation = unit->position.higher_elevation;
     config->map_max_x = g_battle_map_max_x;
     config->map_max_y = g_battle_map_max_y;
     config->cannot_enter_water = 0;
@@ -56,16 +59,16 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     config->will_drown = 1;
     config->will_sink = 1;
     config->fly_or_teleport = 0;
-    config->stepping_stone = unit->position.bits.stepping_stone;
+    config->stepping_stone = unit->position.stepping_stone;
     if (movement[2] & (BATTLE_MOVEMENT_SET_3_MOVE_ON_LAVA | BATTLE_MOVEMENT_SET_3_FLOAT)) {
         config->can_pass_lava = 1;
     } else {
         config->can_pass_lava = 0;
     }
-    value = unit->status_sets.current[2];
+    value = unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHICKEN)];
     if (value & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
-        movement[1] &= 0xF3;
-        movement[2] &= 0xFB;
+        movement[1] &= ~(BATTLE_MOVEMENT_SET_2_TELEPORT_2 | BATTLE_MOVEMENT_SET_2_TELEPORT);
+        movement[2] &= ~BATTLE_MOVEMENT_SET_3_FLY;
         config->unit_size = 4;
     } else {
         config->unit_size = 6;
@@ -84,7 +87,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         movement[2] |= BATTLE_MOVEMENT_SET_3_FLOAT;
     }
     if (movement[1] & BATTLE_MOVEMENT_SET_2_CANNOT_ENTER_WATER) {
-        movement[2] &= 0xAF;
+        movement[2] &= ~(BATTLE_MOVEMENT_SET_3_MOVE_UNDERWATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER);
     }
     weather = battle_move_get_weather_terrain_cost();
     if (movement[2] & BATTLE_MOVEMENT_SET_3_FLY) {
@@ -152,7 +155,7 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         value = 7;
     }
     config->jump_half = value >> 1;
-    if (config->move_type == BATTLE_MOVEMENT_CLASS_FLY || (movement[0] & 2)) {
+    if (config->move_type == BATTLE_MOVEMENT_CLASS_FLY || (movement[0] & BATTLE_MOVEMENT_SET_1_IGNORE_HEIGHT)) {
         value = 0x1F;
     }
     config->jump_times_two = (value & 0xFF) * 2;
@@ -178,13 +181,13 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
     }
     team = unit->initial_team_flags;
     config->_unknown_1a = D_8018F4FC;
-    mount = 0xFF;
-    for (i = 15; i >= 0; i--) {
+    mount = BATTLE_MOVE_RECORD_NONE;
+    for (i = BATTLE_MOVE_RECORD_COUNT - 1; i >= 0; i--) {
         record[i].unit_id_flags = mount;
     }
     count = 0;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        if (count >= 16) {
+        if (count >= BATTLE_MOVE_RECORD_COUNT) {
             break;
         }
         other = &g_battle_unit_stats[i];
@@ -220,10 +223,10 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         current = &record[count];
         current->unit_id_flags = value;
         current->x = other->x;
-        current->y = other->position.bits.y;
-        current->higher_elevation = other->position.bits.higher_elevation;
-        current->stepping_stone = other->position.bits.stepping_stone;
-        value = other->status_sets.current[2];
+        current->y = other->position.y;
+        current->higher_elevation = other->position.higher_elevation;
+        current->stepping_stone = other->position.stepping_stone;
+        value = other->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CHICKEN)];
         if (value
             & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
             current->body_height = 4;
@@ -235,10 +238,10 @@ void battle_move_store_unit_movement_to_scratchpad(s32 unit_id) {
         if ((value & BATTLE_MOUNT_INFO_FLAG_MOUNT) && (value & BATTLE_MOUNT_INFO_PARTNER_ID_MASK) != config->unit_id) {
             current->body_height += 2;
         }
-        movement_3 = other->movement_abilities[2];
+        movement_3 = other->ability_flags.movement[2];
         tile = &g_battle_map_tile_data[battle_map_calculate_location(other)];
-        base = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK);
-        depth = tile->depth_half_height.value >> 5;
+        base = tile->height * 2 + ((*(u8*)&tile->depth_half_height) & MAP_TILE_HALF_HEIGHT_MASK);
+        depth = (*(u8*)&tile->depth_half_height) >> 5;
         byte = base;
         if (depth != 0) {
             if (other->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]

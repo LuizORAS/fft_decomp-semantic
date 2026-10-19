@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Reset the save record fields and new-game data tables.
@@ -27,14 +26,15 @@ void main_save_init_data_tables(void) {
         record->_unknown_18 = 0;
         record->text_id = 0;
         g_main_sound_novel_records[i].counter_delta = 0;
-        g_main_sound_novel_records[i].buffer = g_main_save_slot_buffer;
+        g_main_sound_novel_records[i].buffer = &g_main_save_slot_buffer;
     }
     g_main_sound_novel_records[0].brightness = 0x10;
     g_main_sound_novel_records[1].brightness = 0x10;
     g_main_sound_novel_records[2].brightness = 0;
     g_main_sound_novel_records[3].brightness = 0;
     g_main_sound_novel_records[4].brightness = 0x10;
-    memcpy(g_main_brave_story_character_ages, g_main_brave_story_ages_source, 0x40);
+    memcpy(
+        g_main_brave_story_character_ages, g_main_brave_story_ages_source, sizeof(g_main_brave_story_character_ages));
     for (i = 0; i < 40; i++) {
         g_main_sound_novel_section_bits[i] = 0;
     }

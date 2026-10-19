@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x3D, Blaster, Mind Blast and the monster Death Sentence: the magical evade check and the
  * hit chance MA + X without Faith (battle_formula_calculate_magic_accuracy_without_faith), then the

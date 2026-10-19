@@ -1,3 +1,4 @@
+#include "fft/gfx.h"
 #include "fft/wldcore.h"
 #include "psx/libgs.h"
 #include "psx/types.h"
@@ -7,7 +8,7 @@
  *
  * Flag 0x004 selects the 8-bit colour mode (attribute 0x01000000); flag 0x400 copies
  * the object's colour verbatim, otherwise wldcore_gfx_copy_color_with_tint applies the global fade
- * tint to it; flag 0x100 selects the animated path, where wldcore_gfx_calculate_scaled_rectangle looks up
+ * tint to it; flag 0x100 selects the animated path, where gfx_calculate_scaled_rectangle looks up
  * the frame rectangle for anim_counter/2 and the counter is then stepped, the
  * flag clearing itself once the halved counter reaches 4.
  *
@@ -29,11 +30,10 @@
  */
 void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* object, GsOT* ot) {
     GsSPRITE sprite;
-    wldcore_window_render_bounds16_t frame;
+    RECT frame;
     CVECTOR color;
     s32 centre_x;
     s32 centre_y;
-    s32 stepped_x;
     s32 page;
     s32 step;
 
@@ -48,8 +48,7 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* obje
     sprite.cy = centre_y;
     step = object->palette;
     if (step != 0) {
-        stepped_x = object->clut.x;
-        sprite.cx = stepped_x + ((step - 1) << 4);
+        sprite.cx = object->clut.x + ((step - 1) << 4);
     }
     if (object->flags & WLDCORE_DISPLAY_OBJECT_UNTINTED) {
         color = object->color;
@@ -67,17 +66,17 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* obje
         s32 ox;
         s32 oy;
 
-        wldcore_gfx_calculate_scaled_rectangle(object->anim_counter / 2, &object->bounds, &frame);
+        gfx_calculate_scaled_rectangle(object->anim_counter / 2, &object->bounds, &frame);
         ox = object->base.x;
-        fx = frame.position.x;
-        fy = frame.position.y;
+        fx = frame.x;
+        fy = frame.y;
         sprite.x = fx + ox;
         oy = object->base.y;
         sprite.y = fy + oy;
-        sprite.u = object->bounds.position.x + fx;
-        sprite.v = object->bounds.position.y + fy;
-        sprite.w = frame.dimensions.x;
-        sprite.h = frame.dimensions.y;
+        sprite.u = object->bounds.x + fx;
+        sprite.v = object->bounds.y + fy;
+        sprite.w = frame.w;
+        sprite.h = frame.h;
         if (object->anim_counter / 2 >= 4) {
             object->anim_counter = 0;
             object->flags ^= WLDCORE_DISPLAY_OBJECT_POP_IN;
@@ -94,12 +93,12 @@ void wldcore_gfx_draw_display_object_sprite(wldcore_window_render_record_t* obje
         sprite.x = sx;
         sy = object->base.y;
         sprite.y = sy;
-        su = object->bounds.position.x;
+        su = object->bounds.x;
         sprite.u = su;
-        sv = object->bounds.position.y;
+        sv = object->bounds.y;
         sprite.v = sv;
-        sprite.w = object->bounds.dimensions.x;
-        sprite.h = object->bounds.dimensions.y;
+        sprite.w = object->bounds.w;
+        sprite.h = object->bounds.h;
     }
     GsSortFastSprite(&sprite, ot, object->priority);
 }

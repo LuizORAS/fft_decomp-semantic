@@ -1,5 +1,4 @@
 #include "fft/event_card.h"
-#include "psx/types.h"
 
 /*
  * Save-menu state CARD_SAVE_MENU_SELECT_CARD: runs the "slot 1 / slot 2" menu.
@@ -18,7 +17,7 @@ void card_save_update_card_slot_selection(void) {
     }
 
     g_card_save_slot_selection_thread_state
-        = card_thread_start_managed(NATIVE_SCREEN_THREAD_SLOT_MENU, g_card_save_card_slot_selection_descriptor);
+        = card_thread_start_managed(THREAD_SCREEN_SLOT_MENU, g_card_save_card_slot_selection_descriptor);
     if (g_card_save_slot_selection_thread_state == 0) {
         if (g_card_save_slot_index == -1) {
             if (g_card_save_completed != 0) {
@@ -27,7 +26,7 @@ void card_save_update_card_slot_selection(void) {
                 g_card_save_menu_state = CARD_SAVE_MENU_INITIAL_PROMPT;
             }
         } else {
-            g_battle_text_substitution_values[0] = g_card_save_slot_index + 1;
+            g_text_substitution_values[0] = g_card_save_slot_index + 1;
             if (g_card_save_selected_slot != g_card_save_slot_index) {
                 g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
             }

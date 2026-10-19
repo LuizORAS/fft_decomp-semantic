@@ -3,7 +3,7 @@
 
 /* Sound novel opcode 41: fade the screen in over operand 0 frames and drop the white-overlay state. */
 void wldcore_sound_novel_fade_screen_in(void) {
-    u32* state = (u32*)&g_wldcore_screen_fade_state;
+    u32* state = &g_wldcore_screen_fade_state.flags[0];
     u16* flags = &g_wldcore_sound_novel_record.state_flags;
 
     *state |= WLDCORE_SCREEN_FADE_OUT;

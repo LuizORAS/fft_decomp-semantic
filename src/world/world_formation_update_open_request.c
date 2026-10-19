@@ -34,7 +34,7 @@ void world_formation_update_open_request(void) {
         world_menu_start_thread_group(g_world_menu_thread_group_parameter, g_world_menu_location_id,
             g_world_menu_location_window_x, g_world_menu_location_window_y);
         world_menu_open_entry_window(g_world_menu_open_entry_index, -0x30, -0x38);
-        g_world_menu_thread_menu_data = g_world_menu_default_entries;
+        g_menu_thread_menu_data = g_world_menu_default_entries;
         world_menu_hide_world_map();
         wldcore_gfx_clear_screen_and_set_map_clip_rect(0);
         for (i = 0x77FF; i >= 0; i--) {

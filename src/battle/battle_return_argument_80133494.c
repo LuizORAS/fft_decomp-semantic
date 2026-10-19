@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* Return `value` unchanged; battle_return_argument_8013349c right after it is the same. Nothing on the

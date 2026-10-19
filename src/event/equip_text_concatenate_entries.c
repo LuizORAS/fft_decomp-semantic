@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Concatenate the text for each entry of a -1 terminated id list into dst,
@@ -10,7 +11,7 @@ void equip_text_concatenate_entries(const u8* text_table, u8* dst, s16* list, s3
     if (*list != -1) {
         entry = list;
         do {
-            src = equip_text_find_entry_by_index(text_table, *entry & 0x7FF, 1);
+            src = menu_text_find_entry_by_index(text_table, *entry & 0x7FF, 1);
             while (*src != 0xFE) {
                 *dst = *src;
                 src++;

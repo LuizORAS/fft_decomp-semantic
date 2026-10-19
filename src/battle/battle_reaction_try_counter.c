@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Queue a reaction to being targeted (reaction_id): against an ability whose flags_4 carry mask, and

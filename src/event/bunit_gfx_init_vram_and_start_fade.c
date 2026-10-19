@@ -1,11 +1,7 @@
 #include "fft/event_bunit.h"
+#include "fft/gfx.h"
+#include "fft/menu.h"
 #include "psx/types.h"
-
-typedef struct {
-    u8 data[0x200];
-} bunit_block_200_t;
-
-extern bunit_block_200_t bunit_D_801BF000;
 
 /*
  * Load the BUNIT screen's VRAM images and start the fade-in.
@@ -23,53 +19,55 @@ void bunit_gfx_init_vram_and_start_fade(void) {
     RECT rect;
     u16 buf1[4];
     u16 buf2[12];
-    bunit_block_200_t block = bunit_D_801BF000;
+    clut_t block;
 
-    bunit_menu_set_vsync_mode_and_event_speed(0);
-    g_battle_text_section_pointers[TEXT_SECTION_EVENT_MESSAGES] = g_bunit_text_menu_section;
-    g_battle_text_section_pointers[TEXT_SECTION_COMPOSED_TEXT] = g_bunit_text_reorder_list_buffer;
+    memcpy(block, bunit_menu_clut, sizeof(block));
+
+    menu_set_vsync_mode_and_event_speed(0);
+    g_text_section_pointers[TEXT_SECTION_EVENT_MESSAGES] = g_bunit_text_menu_section;
+    g_text_section_pointers[TEXT_SECTION_COMPOSED_TEXT] = g_bunit_text_reorder_list_buffer;
     rect.x = 0x100;
     rect.y = 0;
     rect.w = 0x40;
     rect.h = 0x30;
-    bunit_gfx_load_image_and_wait(&rect, g_battle_menu_glyph_image);
+    gfx_load_image_and_wait(&rect, g_menu_glyph_image->pixels);
     rect.x = 0x3C0;
     rect.y = 0x1F0;
     rect.w = 0x10;
     rect.h = 1;
-    bunit_gfx_store_image_and_wait(&rect, buf1);
+    gfx_store_image_and_wait(&rect, buf1);
     buf2[0] = 0;
     rect.x = 0x120;
     rect.y = 0xFE;
     rect.w = 0x10;
     rect.h = 1;
-    bunit_gfx_load_image_and_wait(&rect, buf1);
+    gfx_load_image_and_wait(&rect, buf1);
     rect.x = 0x100;
     rect.y = 0xFE;
     rect.w = 0xC;
     rect.h = 1;
-    bunit_gfx_load_image_and_wait(&rect, buf2);
+    gfx_load_image_and_wait(&rect, buf2);
     rect.x = 0x3C0;
     rect.y = 0x1F4;
     rect.w = 0x10;
     rect.h = 1;
-    bunit_gfx_store_image_and_wait(&rect, buf1);
+    gfx_store_image_and_wait(&rect, buf1);
     buf2[0] = 0;
     rect.x = 0x130;
     rect.y = 0xFE;
     rect.w = 0x10;
     rect.h = 1;
-    bunit_gfx_load_image_and_wait(&rect, buf1);
+    gfx_load_image_and_wait(&rect, buf1);
     rect.x = 0x110;
     rect.y = 0xFE;
     rect.w = 0xC;
     rect.h = 1;
-    bunit_gfx_load_image_and_wait(&rect, buf2);
+    gfx_load_image_and_wait(&rect, buf2);
     rect.x = 0x100;
     rect.y = 0xFA;
     rect.w = 0x40;
     rect.h = 4;
-    bunit_gfx_load_image_and_wait(&rect, &block);
+    gfx_load_image_and_wait(&rect, block);
     g_bunit_text_selection_id = 0;
     g_bunit_help_screen_id = MENU_GRID_HELP_NONE;
     bunit_gfx_start_decreasing_fade();

@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/main.h"
+#include "psx/libgpu.h"
 
 /* Starts a linear turn of all three camera angles to the one value
  * *destination_value over frame_count frames (divided by the animation speed),
@@ -11,7 +13,7 @@ void battle_camera_set_rotation_delta_from_value(const s16* destination_value, s
     delta_x = *destination_value - g_battle_camera_angles.vx;
     g_battle_camera_rotation_countdown = animation_frames;
     animation_frames = g_battle_camera_rotation_countdown;
-    g_battle_camera_rotation_delta.vx = delta_x / animation_frames;
-    g_battle_camera_rotation_delta.vy = (*destination_value - g_battle_camera_angles.vy) / animation_frames;
-    g_battle_camera_rotation_delta.vz = (*destination_value - g_battle_camera_angles.vz) / animation_frames;
+    setVector(&g_battle_camera_rotation_delta, delta_x / animation_frames,
+        (*destination_value - g_battle_camera_angles.vy) / animation_frames,
+        (*destination_value - g_battle_camera_angles.vz) / animation_frames);
 }

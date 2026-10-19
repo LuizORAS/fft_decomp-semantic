@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x4D, Mutilate and Drain Touch: the physical evade check and the hit chance MA + X with
  * the physical status modifiers (battle_formula_calculate_physical_status_accuracy), then Y% of the

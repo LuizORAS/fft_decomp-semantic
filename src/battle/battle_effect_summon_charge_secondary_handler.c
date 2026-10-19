@@ -1,5 +1,8 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+#include "fft/main.h"
 #include "psx/libgte.h"
+#include "psx/suzuki.h"
 #include "psx/types.h"
 
 enum {
@@ -33,15 +36,15 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
     state = &g_battle_effect_secondary_state.summon_ring;
     /* Preserve the target's unsigned phase-dispatch comparison. */
     switch (effect->phase) {
-    case BATTLE_SECONDARY_EFFECT_INITIALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_INITIALIZING:
         state->index = 0;
         state->radius = 0;
         state->angle_step = 0;
         state->angle = 0;
-        battle_effect_resolve_target_render_coords(
+        battle_effect_resolve_target_world_coords(
             0, BATTLE_EFFECT_TARGET_INDEX_CASTER, &g_battle_effect_coord_data, &state->center);
         state->brightness = 0;
-        state->center.vy -= 0x18;
+        state->center.vy -= 24;
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 10; j++) {
                 state->points[i][j].vx = state->points[i][j].vy = state->points[i][j].vz = 0;
@@ -59,31 +62,31 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
         }
         g_battle_effect_current_secondary->timer = 0;
         g_battle_effect_current_secondary->finish_timer = 0;
-        g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
-        SuzukiPlaySoundFindChannel(MAIN_SFX_SUMMON_CHARGE);
+        g_battle_effect_current_secondary->phase = BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING;
+        suzuki_sound_play_sfx(MAIN_SFX_SUMMON_CHARGE);
         result = 1;
         break;
-    case BATTLE_SECONDARY_EFFECT_EXECUTING:
-        if (effect->timer < 0x18) {
+    case BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING:
+        if (effect->timer < 24) {
             state->radius = effect->timer;
             state->angle_step = effect->timer * 3;
         }
         if (effect->timer < 8) {
             state->brightness = (effect->timer + 1) * 16;
         }
-        if (effect->timer < 0x100) {
+        if (effect->timer < 256) {
             effect->timer++;
         }
         goto update; /* skip the finalizing fade into the shared update */
-    case BATTLE_SECONDARY_EFFECT_FINALIZING:
-        if (effect->finish_timer < 0x3d) {
+    case BATTLE_EFFECT_SECONDARY_PHASE_FINALIZING:
+        if (effect->finish_timer < 61) {
             if (effect->finish_timer & 8) {
                 state->radius++;
             }
             state->angle_step++;
-            if (effect->finish_timer < 0x3d) {
-                state->brightness = (0x3c - effect->finish_timer) * 4;
-                if (effect->finish_timer < 0x3d) {
+            if (effect->finish_timer < 61) {
+                state->brightness = (60 - effect->finish_timer) * 4;
+                if (effect->finish_timer < 61) {
                     effect->finish_timer++;
                 }
             }
@@ -99,7 +102,7 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
                 id = g_battle_effect_current_secondary->slot_ids[i * 10 + j];
                 if (id != 0) {
                     slot = &g_battle_effect_slots[id];
-                    slot->red = slot->green = slot->blue
+                    slot->color.r = slot->color.g = slot->color.b
                         = g_battle_effect_summon_ring_brightness[j] * state->brightness / 128;
                 }
             }
@@ -110,9 +113,9 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
                 id = g_battle_effect_current_secondary->slot_ids[i * 10 + j];
                 if (id != 0) {
                     slot = &g_battle_effect_slots[id];
-                    slot->motion.position[0] = (state->center.vx + state->points[i][k].vx) << 12;
-                    slot->motion.position[1] = (state->center.vy + state->points[i][k].vy) << 12;
-                    slot->motion.position[2] = (state->center.vz + state->points[i][k].vz) << 12;
+                    slot->motion.position.x = (state->center.vx + state->points[i][k].vx) * ONE;
+                    slot->motion.position.y = (state->center.vy + state->points[i][k].vy) * ONE;
+                    slot->motion.position.z = (state->center.vz + state->points[i][k].vz) * ONE;
                     battle_effect_update_slot(g_battle_effect_current_secondary->slot_ids[i * 10 + j]);
                 }
                 k++;
@@ -125,18 +128,14 @@ s32 battle_effect_summon_charge_secondary_handler(void) {
         if (state->index >= 10) {
             state->index = 0;
         }
-        /* The finished arm comes first. Its jump and barrier then precede the
-         * result = 1 block, so reorg's liveness at the return label no longer
-         * sees a0 from the final call's delay slot and fills the phase-1
-         * branch slot at the dispatch as the target does. */
-        if (g_battle_effect_current_secondary->finish_timer >= 0x3d) {
+        if (g_battle_effect_current_secondary->finish_timer >= 61) {
             for (i = 0; i < BATTLE_EFFECT_RING_SLOT_COUNT; i++) {
                 if (g_battle_effect_current_secondary->slot_ids[i] != 0) {
                     battle_effect_free_slot(g_battle_effect_current_secondary->slot_ids[i]);
                     g_battle_effect_current_secondary->slot_ids[i] = 0;
                 }
             }
-            main_sound_stop_sfx_channels(MAIN_SFX_SUMMON_CHARGE);
+            suzuki_sound_stop_sfx_channels(MAIN_SFX_SUMMON_CHARGE);
             result = 0;
         } else {
             result = 1;

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Formula 0x49, Ether and Hi-Ether: restore the item's Z * 10 MP (20, 50); an undead target is

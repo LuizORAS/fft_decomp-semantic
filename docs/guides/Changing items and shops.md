@@ -56,6 +56,6 @@ original hash, and the item, shop and poach tables are disc data, which the
 repository does not hold. To try an idea, change the game's memory in an
 emulator: `make run` launches PCSX-Redux, and `make map` writes the symbol
 maps that name these tables in its debugger. For example, an item's price is
-the halfword at `0x80062eb8 + id * 12 + 8`, and its town mask the two bytes
+the 16-bit value at `0x80062eb8 + id * 12 + 8`, and its town mask the two bytes
 at `0x8018d844 + id * 2` while WORLD is loaded. Code changes wait for the
 shiftable build, then build 3.

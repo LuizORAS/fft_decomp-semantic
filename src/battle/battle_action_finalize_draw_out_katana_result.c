@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Finalize Draw Out's katana-consumption result after target processing.
  *
@@ -9,7 +9,7 @@
 void battle_action_finalize_draw_out_katana_result(battle_stats_t* attacker, battle_strike_work_t* work, u8 hit_count) {
     u16 flags;
 
-    if (g_main_action_menu_types_by_skillset[attacker->last_skillset_id] != ACTION_MENU_TYPE_KATANA_INVENTORY)
+    if (g_main_action_menu_types_by_skillset[attacker->action_command.skillset_id] != ACTION_MENU_TYPE_KATANA_INVENTORY)
         return;
     if (attacker->job_id == JOB_ID_MIME)
         return;

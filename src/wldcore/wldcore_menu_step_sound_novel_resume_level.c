@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/libgs.h"
 #include "psx/pad.h"
@@ -12,7 +13,6 @@
  * g_wldcore_sound_novel_index. */
 void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_level_t* level) {
     GsIMAGE image;
-    s32 toggle;
     s32 buttons;
 
     if (g_wldcore_window_render_records[level->message_render].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
@@ -39,14 +39,14 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
         wldcore_menu_push_sound_novel_level(level->mode);
         return;
     }
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         g_wldcore_window_record_count--;
         g_wldcore_window_render_record_count -= 3;
         g_wldcore_window_render_object_count -= 4;
         g_wldcore_menu_stack_depth--;
-        world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
+        thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         wldcore_menu_push_treasure_detail_level(level->mode);
         return;
@@ -65,8 +65,7 @@ void wldcore_menu_step_sound_novel_resume_level(wldcore_menu_sound_novel_resume_
         return;
     }
     level->cursor_row ^= 1;
-    toggle = level->cursor_row;
     g_wldcore_window_records[level->cursor_window].position.y
-        = g_wldcore_window_render_records[level->option_render].base.y + 0x3c + toggle * 0x10;
+        = g_wldcore_window_render_records[level->option_render].base.y + 0x3c + level->cursor_row * 0x10;
     wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
 }

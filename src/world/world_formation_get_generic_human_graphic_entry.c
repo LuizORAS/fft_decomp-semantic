@@ -6,8 +6,7 @@
  * are looked up in a table; of the rest, Bard and Dancer have fixed entries
  * (0x3a, 0x3b), while Mime uses 0x3c and the others job * 2 - 0x7c, both
  * plus one for a female unit. */
-void world_formation_get_generic_human_graphic_entry(
-    s32 job_id, s16 is_female, world_formation_graphic_entry_t* destination) {
+void world_formation_get_generic_human_graphic_entry(s32 job_id, s16 is_female, texture_source_t* destination) {
     s16 id = job_id;
     s16 idx;
 

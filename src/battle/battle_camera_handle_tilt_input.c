@@ -1,6 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "psx/pad.h"
-#include "psx/types.h"
 
 /* Toggles the tilt when R2 is newly pressed and no tilt is running. */
 void battle_camera_handle_tilt_input(void) {

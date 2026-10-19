@@ -1,14 +1,15 @@
+#include "fft/menu.h"
 #include "fft/world.h"
 
 /* Build a 4bpp window-frame image from the shared menu graphics.
  *
  * Top and bottom bands are fixed; the middle 16 rows tile. The unused `s32`
  * return keeps $v0 live and preserves the target loop scheduling; the target
- * leaves the failed loop test's 0 there, or the partial-word flag when `h` is
+ * leaves the failed loop test's 0 there, or the partial 16-bit-element flag when `h` is
  * not positive.
  */
 s32 world_menu_build_window_frame_image(s32 w, s32 h, u16* dst) {
-    u16* src = (u16*)g_world_menu_glyph_image;
+    u16* src = (u16*)g_menu_glyph_image->pixels;
     s32 words;
     s32 i;
     s32 first = 0;

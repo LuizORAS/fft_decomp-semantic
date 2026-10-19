@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x45, Climhazzard: HP damage equal to the target's max HP - current HP; no evade or hit
  * roll. */

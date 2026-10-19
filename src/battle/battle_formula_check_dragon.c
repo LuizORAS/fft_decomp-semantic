@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Fail the action (forced failure) unless the target is a dragon or a hydra: monster_graphic 0x0f
  * (Dragon, Blue Dragon, Red Dragon, Holy Dragon) or 0x10 (Hydra, Hyudra, Tiamat). Reis's Dragon

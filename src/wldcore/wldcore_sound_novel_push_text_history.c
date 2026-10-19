@@ -10,7 +10,7 @@ void wldcore_sound_novel_push_text_history(void) {
     u16 history_3;
 
     history_1 = g_wldcore_sound_novel_text_history_1;
-    new_entry = g_wldcore_sound_novel_record.instruction.bytes.operand_0;
+    new_entry = (g_wldcore_sound_novel_record.instruction.word & 0xff00) >> 8;
     history_2 = g_wldcore_sound_novel_text_history_2;
     history_3 = g_wldcore_sound_novel_text_history_3;
     g_wldcore_sound_novel_text_history_0 = history_1;

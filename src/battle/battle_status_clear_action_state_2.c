@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_status.h"
+#include "fft/main.h"
 
 /* Same as battle_status_clear_action_state; only battle_status_check_charging_charge calls it. */
 void battle_status_clear_action_state_2(battle_stats_t* unit) {

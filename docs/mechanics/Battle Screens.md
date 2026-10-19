@@ -11,9 +11,71 @@ scope:
   - require
   - attack
   - battle_deployment
-  - world_deployment_skip_thread()
+  - deployment_skip_thread()
   - etc
   - small
+  - gfx_clip_portrait_poly_from_left()
+  - gfx_clip_portrait_poly_from_right()
+  - gfx_load_image_and_wait()
+  - gfx_move_image_and_wait()
+  - gfx_set_clut_rect_from_id()
+  - gfx_set_formation_icon_uv()
+  - gfx_set_scaled_poly_ft4_4bpp()
+  - gfx_set_scaled_poly_ft4_8bpp()
+  - gfx_store_image_and_wait()
+  - menu_ability_get_ct_display_value()
+  - menu_ability_get_jp_cost_display_value()
+  - menu_ability_get_mp_cost_display_value()
+  - menu_ability_is_action()
+  - menu_ability_is_action_tab()
+  - menu_ability_is_learned()
+  - menu_ability_is_movement_tab()
+  - menu_ability_is_non_action_learned()
+  - menu_ability_is_non_action_unlearned()
+  - menu_ability_is_reaction_tab()
+  - menu_ability_is_support_tab()
+  - menu_build_item_icon_source()
+  - menu_build_scaled_draw_area_packets()
+  - menu_build_status_group_primitives()
+  - menu_build_unflagged_portrait_poly()
+  - menu_build_unit_portrait_transition()
+  - menu_build_zodiac_primitives()
+  - menu_draw_thread_status_indicators()
+  - menu_get_event_speed()
+  - menu_gfx_enqueue_draw_area()
+  - menu_gfx_enqueue_draw_mode()
+  - menu_gfx_enqueue_draw_move()
+  - menu_gfx_enqueue_oriented_textured_quad()
+  - menu_gfx_enqueue_textured_quad()
+  - menu_gfx_enqueue_textured_quad_list()
+  - menu_gfx_get_draw_color()
+  - menu_icon_list_thread()
+  - menu_icon_strip_thread()
+  - menu_init_scaled_draw_area_packets()
+  - menu_init_status_panel_primitives()
+  - menu_input_update_controller()
+  - menu_run_status_panel_thread()
+  - menu_script_draw_window_frame()
+  - menu_script_if_else_group()
+  - menu_script_if_group()
+  - menu_script_set_clut()
+  - menu_script_set_draw_color()
+  - menu_script_set_fixed_clut()
+  - menu_script_set_texture_page()
+  - menu_script_skip_group()
+  - menu_select_status_primitive_color_palette()
+  - menu_set_status_panel_primitive_colors()
+  - menu_set_vsync_mode_and_event_speed()
+  - menu_text_entry_wait_thread()
+  - menu_text_find_entry_by_index()
+  - menu_text_render_decimal_entry_list()
+  - menu_text_render_decimal_value()
+  - menu_text_render_encoded_ids_to_image()
+  - menu_text_render_glyph_to_4bpp_image()
+  - menu_text_render_signed_decimal_entries()
+  - menu_thread_is_running()
+  - menu_update_and_draw_animated_cursor()
+  - menu_update_wrapped_horizontal_selection()
 ---
 
 # Battle Screens
@@ -43,7 +105,7 @@ cells there are reserved.
 ### Loading and running
 
 - **Loading.** A thread names the overlay in
-  [[battle_menu_request_open_companion_executable]], and the frame loop reads it
+  [[menu_request_open_companion_executable]], and the frame loop reads it
   on the main stack ([[battle_menu_open_companion_executable]]): the sector,
   read size and offset from 0x801bf000 come from
   `g_battle_menu_companion_executable_lbas`, `_sizes` and `_offsets`. BUNIT and
@@ -82,8 +144,8 @@ status panels:
 - the character status panel, task 0x3b
   (`<overlay>_panel_run_character_status_thread` in ATTACK, DEBUGCHR, EQUIP and
   REQUIRE), and the numeric editor (`<overlay>_editor_run_numeric_thread`);
-- the billboards they read ([[battle_unit_status_record_t]],
-  [[battle_active_unit_t]], [[battle_menu_status_panel_slot_storage_t]]) and the
+- the billboards they read ([[battle_menu_unit_status_record_t]],
+  [[battle_menu_active_unit_t]], [[world_item_stat_detail_t]]) and the
   palettes the panels switch while they are dimmed
   (`<overlay>_panel_set_primitive_colors`).
 
@@ -145,7 +207,7 @@ display id ([[event_display_condition_e]]):
 | 2 | Congratulations ([[require_text_show_battle_congratulations]]) |
 | 3 | The gil reward ([[require_reward_render_gil_ticker]]) |
 | 4 | The war trophies ([[require_reward_render_war_trophies]]) |
-| 5 | The permanent Brave and Faith changes: each unit keeps a quarter of the battle's change, and Brave 6-15 or Faith 85-94 brings a warning ([[require_party_apply_permanent_brave_faith_changes]]) |
+| 5 | The permanent Brave and Faith changes: each unit keeps a quarter of the battle's change, and Brave 6-15 or Faith 85-94 brings a warning ([[require_party_report_brave_faith_changes]]) |
 | 6 | The units with Brave below 6 or Faith of 95 and above leave ([[require_party_remove_low_brave_high_faith_units]]) |
 | 7 | The party after the battle: units saved, recruits asked to join, the removal menus when the roster is full ([[require_party_apply_post_battle_unit_changes]]) |
 | 8 and up | BONUS.BIN image (id - 8) as a banner ([[require_condition_show_bonus_banner]]) |
@@ -167,7 +229,7 @@ holds a dark flash until RemoveDarkScreen
   through the roster; then the deployed units' map coordinates are written,
   the deployment is marked finished ([[battle_deployment_mark_finished]]) for
   the battle's map setup, which waits for it, and the map title starts. A
-  scenario without a first squad runs [[battle_deployment_skip_thread]]
+  scenario without a first squad runs [[deployment_skip_thread]]
   instead, which marks it a frame later.
 - Event opcode ShowMapTitle shows the map's title graphic
   ([[attack_map_load_title_graphic]], [[attack_map_show_title]]).
@@ -197,7 +259,7 @@ retail. The same overlay draws the Status screen of a rider or a mount
 | `g_battle_menu_companion_executable_lbas`, `_sizes`, `_offsets` | Each overlay's disc sector, read size and offset from 0x801bf000 |
 | [[battle_companion_overlay_state_e]] | The overlay the event frame runs each frame |
 | [[menu_script_opcode_e]] | The display script commands |
-| [[battle_unit_status_record_t]], [[battle_active_unit_t]], [[battle_menu_status_panel_slot_storage_t]] | The status panels' billboards and unit fields |
+| [[battle_menu_unit_status_record_t]], [[battle_menu_active_unit_t]], [[world_item_stat_detail_t]] | The status panels' billboards and unit fields |
 | [[event_display_condition_e]] | The displays of DisplayConditions |
 | [[option_menu_type_e]] | OPTION's three menus |
 | `g_etc_graphics` ([[etc_graphic_t]]) | ETC's graphics: file, sector, size, VRAM area, texture mode |

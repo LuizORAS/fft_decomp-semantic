@@ -1,8 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/main.h"
 
 /* Take secondary effect record id (1-16) off the active chain, free its work
  * block and append it to the end of the free chain headed by
- * g_battle_effect_free_slot_head: the inverse of
+ * g_battle_effect_secondary_free_head: the inverse of
  * battle_effect_allocate_secondary_slot. An id outside 1-16 only reaches the
  * empty report hook with code 0x67.
  *
@@ -17,7 +18,7 @@ void battle_effect_remove_secondary(u8 id) {
     s32 tail;
 
     slot = &g_battle_effect_secondary_data[id];
-    if (id != 0 && id < 17) {
+    if (id != 0 && id < EFFECT_SECONDARY_RECORD_COUNT) {
         if (slot->allocation != 0) {
             main_heap_free(slot->allocation);
             slot->allocation = 0;
@@ -25,10 +26,10 @@ void battle_effect_remove_secondary(u8 id) {
         if (slot->next_slot_id != 0) {
             g_battle_effect_secondary_data[slot->next_slot_id].previous_slot_id = slot->previous_slot_id;
         } else {
-            g_battle_effect_active_slot_tail = slot->previous_slot_id;
+            g_battle_effect_secondary_active_tail = slot->previous_slot_id;
         }
-        g_battle_effect_secondary_data[g_battle_effect_active_slot_tail].next_slot_id = 0;
-        tail = g_battle_effect_free_slot_head;
+        g_battle_effect_secondary_data[g_battle_effect_secondary_active_tail].next_slot_id = 0;
+        tail = g_battle_effect_secondary_free_head;
         if (tail != 0) {
             while (g_battle_effect_secondary_data[tail].previous_slot_id != 0) {
                 tail = g_battle_effect_secondary_data[tail].previous_slot_id;
@@ -36,11 +37,11 @@ void battle_effect_remove_secondary(u8 id) {
             g_battle_effect_secondary_data[tail].previous_slot_id = id;
             slot->next_slot_id = tail;
         } else {
-            g_battle_effect_free_slot_head = id;
+            g_battle_effect_secondary_free_head = id;
             slot->next_slot_id = 0;
         }
         slot->previous_slot_id = 0;
-        slot->phase = BATTLE_SECONDARY_EFFECT_ENDED;
+        slot->phase = BATTLE_EFFECT_SECONDARY_PHASE_ENDED;
         return;
     }
     main_system_report_error_2(1, 0x67);

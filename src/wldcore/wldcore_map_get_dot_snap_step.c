@@ -7,7 +7,7 @@
  *
  * The point is passed by value in a0/a1; the target reads both members back
  * from the incoming argument home slots. */
-s32 wldcore_map_get_dot_snap_step(wldcore_point32_t point, s32* step_x, s32* step_y) {
+s32 wldcore_map_get_dot_snap_step(open_point32_t point, s32* step_x, s32* step_y) {
     s32 hit;
     s32 dot_x;
     s32 dot_y;
@@ -16,8 +16,8 @@ s32 wldcore_map_get_dot_snap_step(wldcore_point32_t point, s32* step_x, s32* ste
     *step_y = 0;
     hit = wldcore_map_find_dot_at_point(point);
     if (hit != 0) {
-        dot_x = g_wldcore_map_dots[hit - 1].screen_x;
-        dot_y = g_wldcore_map_dots[hit - 1].screen_y - 4;
+        dot_x = g_wldcore_map_dots[hit - 1].render.position.x;
+        dot_y = g_wldcore_map_dots[hit - 1].render.position.y - 4;
         if (dot_x < point.x) {
             if (dot_x > point.x - 2) {
                 *step_x = dot_x - point.x;

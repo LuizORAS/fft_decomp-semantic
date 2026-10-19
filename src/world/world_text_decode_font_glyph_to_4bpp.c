@@ -2,8 +2,9 @@
 #include "psx/types.h"
 
 /* Decode glyph `glyph` of the dialog font (10 x 14 pixels at 2 bits, 35 bytes) into the 4-bit image
- * `image` at `target`, adding `palette * 4` to every non-zero pixel, and return the glyph's advance width. */
-s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_target_t* target, s32 palette) {
+ * `image`, whose rows are target->w 16-bit values, at target's x and y, adding `palette * 4` to every
+ * non-zero pixel, and return the glyph's advance width. */
+s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, RECT* target, s32 palette) {
     s32 row;
     s32 col;
     u8* dst;
@@ -11,12 +12,12 @@ s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_
     u8 pixel;
     u8 byte;
 
-    font = g_world_text_glyph_bitmap_data;
+    font = g_text_glyph_bitmap_data;
     world_bits_set_primary_cursor(font + glyph * TEXT_GLYPH_BYTES);
     row = 0;
     if ((target->x & 1) == 0) {
         for (; row < 14; row++) {
-            dst = image + (target->stride << 1) * (target->y + row) + (target->x >> 1);
+            dst = image + (target->w << 1) * (target->y + row) + (target->x >> 1);
             for (col = 0; col < 5; col++) {
                 pixel = world_bits_read_primary(2);
                 if (pixel != 0) {
@@ -33,7 +34,7 @@ s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_
         }
     } else {
         for (; row < 14; row++) {
-            dst = image + (target->stride << 1) * (target->y + row) + (target->x >> 1);
+            dst = image + (target->w << 1) * (target->y + row) + (target->x >> 1);
             pixel = world_bits_read_primary(2);
             if (pixel != 0) {
                 pixel += palette * 4;
@@ -60,5 +61,5 @@ s32 world_text_decode_font_glyph_to_4bpp(s32 glyph, u8* image, world_text_glyph_
             *dst = pixel;
         }
     }
-    return g_world_text_glyph_widths[glyph];
+    return g_text_glyph_widths[glyph];
 }

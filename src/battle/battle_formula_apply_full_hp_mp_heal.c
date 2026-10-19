@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Stage a full restore: the target's max HP as the amount, stored as HP damage until
  * battle_formula_apply_undead_reversal turns it into healing (or keeps it as damage on an undead

@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 #include "psx/pad.h"
 
 /* ABILITY_PREVIEW_HANDLING: the preview of the ability on the chosen tile. Under player
@@ -7,9 +9,9 @@
  * ability aimed at the unit's own tile (preview phase 2); an AI unit confirms after 31 frames. */
 void battle_state_handle_ability_preview_state(void) {
     u16 frame_data;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
         battle_camera_handle_rotation_input();
         battle_camera_handle_zoom_input();

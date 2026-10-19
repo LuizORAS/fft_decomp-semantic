@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -5,7 +6,7 @@
  *
  * Latches the play-time counters into the D_800D09Ax mirror, then runs one of
  * three behaviours depending on g_main_system_flags bit 0x4 (a battle/event
- * hand-off is in progress) and the level's own mode word:
+ * hand-off is in progress) and the level's own mode:
  *  - hand-off in progress: wait for the world thread (slot 0xE) to stop and
  *    for the audio queue to drain, then tear the level down, pop the menu
  *    stack and either re-enter through the 0x10000000 path or fade out;
@@ -23,7 +24,6 @@
  * accessed as an array element (a scalar store does not alias the level field). The wrap-to-bottom step is written `y
  * -= n * -16` to keep y as the first addu operand.
  */
-
 void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* level) {
     u32 flags;
     u32 buttons;
@@ -46,7 +46,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
         if (level->mode != WLDCORE_LIST_WINDOW_MODE_LEAVE_WAIT) {
             return;
         }
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             return;
         }
         if ((g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY) && g_wldcore_audio_queue.count != 0) {
@@ -70,11 +70,11 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
     }
 
     if (level->mode == WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE) {
-        if (!(g_wldcore_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS))) {
+        if (!(g_wldcore_input_new_button_presses & (PSX_PAD_CIRCLE | PSX_PAD_CROSS))) {
             return;
         }
         level->mode = WLDCORE_LIST_WINDOW_MODE_FADE_OR_HELP;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0, -1, 0);
         g_main_system_flags |= MAIN_SYSTEM_FLAG_INPUT_BLOCKED;
         wldcore_gfx_start_screen_fade(WLDCORE_SCREEN_FADE_OUT, 0x10);
         if (g_main_system_flags & MAIN_SYSTEM_FLAG_TITLE_BRAVE_STORY) {
@@ -91,10 +91,10 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
         return;
     }
 
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_GOODBYE, 0);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_GOODBYE, 0);
         level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
         g_wldcore_window_record_count -= 4;
         g_wldcore_window_render_record_count -= 2;
@@ -149,7 +149,7 @@ void wldcore_menu_handle_brave_story_input(wldcore_menu_list_window_level_t* lev
             wldcore_list_open_treasures();
             return;
         case WLDCORE_BRAVE_STORY_ROW_LEAVE:
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_GOODBYE, 0);
+            thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_GOODBYE, 0);
             level->mode = WLDCORE_LIST_WINDOW_MODE_LEAVE_MESSAGE;
             g_wldcore_window_record_count -= 4;
             g_wldcore_window_render_record_count -= 2;

@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -16,7 +18,7 @@
  * recalculated on every call.
  *
  * `unused` reproduces the target's 0x58-byte frame. */
-void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
+void battle_gfx_draw_unit_shadow(battle_unit_t* unit, u32* ot) {
     VECTOR transformed;
     SVECTOR position;
     SVECTOR offset;
@@ -52,9 +54,9 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
     prim->x3 = transformed.vx;
     prim->y3 = transformed.vy;
     prim->code |= 2;
-    tile = battle_map_get_tile_data_pointer((unit->screen.vx / 28), (unit->screen.vz / 28), unit->map_z);
-    if ((tile->depth_half_height.value & MAP_TILE_DEPTH_MASK)
-        && -(tile->height + (tile->depth_half_height.value >> 5)) * 12 < unit->screen.vy) {
+    tile = battle_map_get_tile_data_pointer(
+        (unit->world_coords.vx / BATTLE_MAP_TILE_SIZE), (unit->world_coords.vz / BATTLE_MAP_TILE_SIZE), unit->map_z);
+    if (tile->depth_half_height.depth && -(tile->height + tile->depth_half_height.depth) * 12 < unit->world_coords.vy) {
         unit->shadow_counter += g_main_system_vsync_interval;
         frame = unit->shadow_counter;
         prim->tpage = 0x3f;
@@ -95,24 +97,25 @@ void battle_gfx_draw_unit_shadow(battle_unit_misc_data_t* unit, u32* ot) {
         prim->v0 = prim->v1 = 0x40;
         prim->v2 = prim->v3 = 0x53;
     }
-    main_util_set_svector(&position, unit->screen.vx + unit->event_offset.vx + unit->seq_offset.vx, 0,
-        unit->screen.vz + unit->event_offset.vz + unit->seq_offset.vz);
-    position.vy = battle_map_calculate_slope_height(&position.vx, unit->map_z);
-    if (unit->screen.vy >= position.vy) {
+    main_util_set_svector(&position, unit->world_coords.vx + unit->event_offset.vx + unit->seq_offset.vx, 0,
+        unit->world_coords.vz + unit->event_offset.vz + unit->seq_offset.vz);
+    position.vy = battle_map_calculate_slope_height(&position, unit->map_z);
+    if (unit->world_coords.vy >= position.vy) {
         packet = ot;
     } else {
-        tile = battle_map_get_tile_data_pointer((position.vx / 28), (position.vz / 28), unit->map_z);
-        position.vy -= (tile->depth_half_height.value >> 5) * 12;
+        tile = battle_map_get_tile_data_pointer(
+            (position.vx / BATTLE_MAP_TILE_SIZE), (position.vz / BATTLE_MAP_TILE_SIZE), unit->map_z);
+        position.vy -= tile->depth_half_height.depth * 12;
         if (unit->step_phase != BATTLE_MOVE_STEP_PHASE_NONE) {
-            if (tile->surface.value & MAP_TILE_SURFACE_FLAG_DEPTH_BIAS) {
-                battle_camera_get_step_sort_point_biased((u16*)&position, &offset.vx);
+            if (tile->surface.depth_bias) {
+                battle_camera_get_step_sort_point_biased(&position, &offset);
             } else {
-                battle_camera_get_step_sort_point_unbiased((u16*)&position, &offset.vx);
+                battle_camera_get_step_sort_point_unbiased(&position, &offset);
             }
-        } else if (tile->surface.value & MAP_TILE_SURFACE_FLAG_DEPTH_BIAS) {
-            battle_camera_get_tile_sort_point_biased(&position.vx, &offset.vx);
+        } else if (tile->surface.depth_bias) {
+            battle_camera_get_tile_sort_point_biased(&position, &offset);
         } else {
-            battle_camera_get_tile_sort_point_unbiased(&position.vx, &offset.vx);
+            battle_camera_get_tile_sort_point_unbiased(&position, &offset);
         }
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);

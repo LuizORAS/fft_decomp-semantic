@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x5B, Dragon Care: only on a dragon or a hydra (battle_formula_check_dragon); formula
  * 0x3C's exchange (the caster loses a fifth of its max HP and the target restores twice that), then

@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_formula.h"
 
 /* Magical damage that ignores Faith, from the caller's XA and YA: Strengthen for the ability's
  * element, the magical XA modifiers, XA * YA with weather and element, then absorption and the

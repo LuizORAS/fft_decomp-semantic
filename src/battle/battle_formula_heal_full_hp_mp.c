@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x4A, Elixir: restore all HP and MP (battle_formula_apply_full_hp_mp_heal); an undead
  * target takes the HP part as damage. */

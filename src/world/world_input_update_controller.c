@@ -11,11 +11,8 @@
 void world_input_update_controller(void) {
     s16 bit;
     s32 index;
-    /* Pinned: the copies a hard-register variable costs keep the third loop above
-     * loop.c's size threshold, so the `index == 4` constant is reloaded each pass. */
-    register u32 current_input __asm__("$8");
+    u32 current_input;
     u32 filtered_input;
-    s32* counter;
     s32* counter_base;
     u32 speed, initial_delay, secondary_repeat_period, repeat_period;
     speed = world_gfx_get_vsync_mode_or_one();
@@ -49,7 +46,7 @@ void world_input_update_controller(void) {
             if (g_world_input_activation_timer >= 4) {
                 g_world_input_activation_timer = 0;
                 for (index = 0; index < 16; index++) {
-                    bit = 1 << index;
+                    bit = 1U << index;
                     if (current_input & bit) {
                         current_input &= bit;
                         g_world_input_latched_button = bit;
@@ -66,7 +63,7 @@ void world_input_update_controller(void) {
         }
         g_world_input_newly_pressed = filtered_input;
         for (index = 0; index < 16; index++) {
-            s32 mask = 1 << index;
+            s32 mask = 1U << index;
 
             if (mask & g_world_input_newly_pressed) {
                 if (mask & g_world_input_previous) {
@@ -79,26 +76,25 @@ void world_input_update_controller(void) {
             }
         }
         counter_base = g_world_input_repeat_counters;
-        for (index = 0, counter = counter_base; index < 16; index++, counter++) {
+        for (index = 0; index < 16; index++) {
             if (index == 4) {
-                counter = counter_base + 12;
                 index = 12;
             }
-            if (current_input & (1 << index)) {
-                (*counter)++;
+            if (current_input & (1U << index)) {
+                counter_base[index]++;
             } else {
-                *counter = 0;
+                counter_base[index] = 0;
             }
-            if ((*counter >= initial_delay && *counter % repeat_period != 0)
-                || (*counter >= 2 && *counter < initial_delay)) {
-                current_input &= ~(1 << index);
+            if ((counter_base[index] >= initial_delay && counter_base[index] % repeat_period != 0)
+                || (counter_base[index] >= 2 && counter_base[index] < initial_delay)) {
+                current_input &= ~(1U << index);
             }
-            if (*counter >= initial_delay) {
-                current_input |= 1 << (index + 16);
+            if (counter_base[index] >= initial_delay) {
+                current_input |= 1U << (index + 16);
             }
-            if ((*counter >= initial_delay && *counter % secondary_repeat_period != 0)
-                || (*counter >= 2 && *counter < initial_delay << 1)) {
-                filtered_input &= ~(1 << index);
+            if ((counter_base[index] >= initial_delay && counter_base[index] % secondary_repeat_period != 0)
+                || (counter_base[index] >= 2 && counter_base[index] < initial_delay << 1)) {
+                filtered_input &= ~(1U << index);
             }
         }
         current_input &= 0xf00ff00f;

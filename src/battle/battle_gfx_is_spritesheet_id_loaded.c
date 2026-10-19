@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Return 1 when one of the nine spritesheet slots holds `spritesheet_id`: the queued unit graphics load
  * then skips reading the sheet's SPR file and goes straight to installing it. */

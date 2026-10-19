@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Mark the unit as having moved (move_flag) and/or acted (act_flag), then end its turn

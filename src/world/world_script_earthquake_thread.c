@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -6,22 +7,22 @@
 void world_script_earthquake_thread(void) {
     s32 first_frames;
     s32 second_frames;
-    u8* parameter;
+    event_earthquake_parameters_t* parameter;
 
-    world_thread_set_current_task_id(NATIVE_THREAD_TASK_EARTHQUAKE);
+    thread_set_current_task_id(THREAD_TASK_EARTHQUAKE);
     first_frames = 0;
-    parameter = world_thread_get_current_parameter_1();
+    parameter = (event_earthquake_parameters_t*)world_thread_get_current_parameter_1();
     second_frames = 0;
     for (;;) {
         first_frames++;
-        world_thread_yield();
+        thread_yield();
         second_frames++;
-        if (first_frames == parameter[1]) {
+        if (first_frames == parameter->pulses[0].frames) {
             first_frames = 0;
-            g_world_camera_shake_z_offset += parameter[0];
+            g_world_camera_shake_z_offset += parameter->pulses[0].z_delta;
         }
-        if (second_frames == parameter[3]) {
-            g_world_camera_shake_z_offset += parameter[2];
+        if (second_frames == parameter->pulses[1].frames) {
+            g_world_camera_shake_z_offset += parameter->pulses[1].z_delta;
             second_frames = 0;
         }
     }

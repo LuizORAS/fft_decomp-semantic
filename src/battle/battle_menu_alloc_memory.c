@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_text.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Claims enough 256-byte arena pages for size bytes and records them in a free slot.
@@ -15,10 +18,10 @@ void* battle_menu_alloc_memory(s32 size) {
 
     size = (size & 0xFF) != 0 ? (size >> 8) + 1 : size >> 8;
     for (;;) {
-        for (page = 0; page < 53; page++) {
+        for (page = 0; page < BATTLE_MENU_BUFFER_PAGE_COUNT; page++) {
             if (g_battle_menu_buffer_allocation_map[page] == 0) {
                 for (n = 0;; n++) {
-                    if (n + page >= 53) {
+                    if (n + page >= BATTLE_MENU_BUFFER_PAGE_COUNT) {
                         /* Leaves both scans for the wait-and-retry path. */
                         goto fail;
                     }
@@ -30,7 +33,7 @@ void* battle_menu_alloc_memory(s32 size) {
                     for (n = 0; n < size; n++) {
                         g_battle_menu_buffer_allocation_map[page + n] = 1;
                     }
-                    for (i = 0; i < 16; i++) {
+                    for (i = 0; i < MENU_BUFFER_ALLOCATION_COUNT; i++) {
                         if (g_battle_menu_allocator_slot_records[i].buffer == (u8*)-1) {
                             buffer = g_battle_menu_buffer_arena[page];
                             g_battle_menu_allocator_slot_records[i].buffer = buffer;
@@ -44,8 +47,8 @@ void* battle_menu_alloc_memory(s32 size) {
         }
     fail:
         if (g_main_font_print_enabled != 0) {
-            FntPrint(g_battle_menu_wait_for_allocation_message, g_battle_thread_current_id, size);
+            FntPrint(g_battle_menu_wait_for_allocation_message, g_thread_current_id, size);
         }
-        battle_thread_yield();
+        thread_yield();
     }
 }

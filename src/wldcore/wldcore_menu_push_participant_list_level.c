@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Opens the participant list (level PARTICIPANT_LIST) of g_main_active_propositions[proposition]:
@@ -14,7 +15,7 @@ void wldcore_menu_push_participant_list_level(s32 proposition) {
 
     wldcore_proposition_unpack_row(
         g_wldcore_selected_proposition_row, g_main_active_propositions[proposition].proposition_id);
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].participant.proposition = proposition;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].participant_list.proposition = proposition;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                  .window_render.window_index]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
@@ -23,35 +24,33 @@ void wldcore_menu_push_participant_list_level(s32 proposition) {
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     window = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_pair_render.first_window = window;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].participant_list.cursor_window = window;
     g_wldcore_window_records[window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
     g_wldcore_window_records[window].priority = 8;
     g_wldcore_window_records[window].anim_counter = 0;
     g_wldcore_window_records[window].frame_index = 0;
     wldcore_proposition_build_detail_panel_image(
-        &g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_pair_render, proposition, 1);
-    g_world_text_substitution_values[0]
+        &g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth], proposition, 1);
+    g_text_substitution_values[0]
         = g_main_active_propositions[proposition].proposition_id | TEXT_ID_PROPOSITION_NAME_BASE;
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
     depth = g_wldcore_menu_stack_depth;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_pair_render.first_window].position.x
-        = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth].window_pair_render.render_index]
-              .base.x
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].participant_list.cursor_window].position.x
+        = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth].participant_list.render_index].base.x
         + 0x38;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].window_pair_render.first_window].position.y
-        = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth].window_pair_render.render_index]
-              .base.y
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth].participant_list.cursor_window].position.y
+        = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[depth].participant_list.render_index].base.y
         - -(g_wldcore_menu_cursor_states[WLDCORE_CURSOR_SLOT_PARTICIPANT_LIST].selected_index * 16)
-        - -(g_wldcore_menu_stack_records_next[depth].window_pair_render.panel_rows * 16 + 0xE);
-    g_wldcore_menu_stack_records_next[depth].list_window.entry_count
+        - -(g_wldcore_menu_stack_records_next[depth].participant_list.panel_rows * 16 + 0xE);
+    g_wldcore_menu_stack_records_next[depth].participant_list.entry_count
         = g_main_active_propositions[proposition].participant_count;
-    if (g_wldcore_menu_stack_records_next[depth].list_window.entry_count
+    if (g_wldcore_menu_stack_records_next[depth].participant_list.entry_count
         < g_wldcore_menu_cursor_states[WLDCORE_CURSOR_SLOT_PARTICIPANT_LIST].selected_index + 1) {
         g_wldcore_menu_cursor_states[WLDCORE_CURSOR_SLOT_PARTICIPANT_LIST].selected_index = 0;
     }
-    g_wldcore_menu_stack_records_next[depth].list_window.selected_entry
+    g_wldcore_menu_stack_records_next[depth].participant_list.cursor
         = g_wldcore_menu_cursor_states[WLDCORE_CURSOR_SLOT_PARTICIPANT_LIST].selected_index;
     g_wldcore_menu_stack_depth = depth + 1;
-    g_wldcore_menu_stack_records_next[depth].list_window.mode = WLDCORE_LIST_WINDOW_MODE_BROWSE;
+    g_wldcore_menu_stack_records_next[depth].participant_list.mode = WLDCORE_LIST_WINDOW_MODE_BROWSE;
     g_wldcore_menu_stack_types[depth + 1] = WLDCORE_MENU_LEVEL_PARTICIPANT_LIST;
 }

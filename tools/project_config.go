@@ -55,14 +55,15 @@ type moduleSpec struct {
 }
 
 type functionSpec struct {
-	Addr    uint32
-	Size    int
-	Name    string
-	Hash    string
-	Profile string // empty: the module profile
-	Source  string // empty: <source_dir>/<name>.c, or .s when Asm is set
-	Asm     string // why this function is standalone assembly
-	Rodata  []rodataSpec
+	Addr         uint32
+	Size         int
+	Name         string
+	Hash         string
+	Profile      string // empty: the module profile
+	Source       string // empty: <source_dir>/<name>.c, or .s when Asm is set
+	SourceSymbol string // empty: Name; C definition compiled separately for this entry
+	Asm          string // why this function is standalone assembly
+	Rodata       []rodataSpec
 }
 
 type rodataSpec struct {
@@ -260,14 +261,15 @@ type moduleFileYAML struct {
 }
 
 type functionYAML struct {
-	Addr    uint32       `yaml:"addr"`
-	Size    int          `yaml:"size"`
-	Name    string       `yaml:"name"`
-	Hash    string       `yaml:"hash"`
-	Profile string       `yaml:"profile"`
-	Source  string       `yaml:"source"`
-	Asm     string       `yaml:"asm"`
-	Rodata  []rodataYAML `yaml:"rodata"`
+	Addr         uint32       `yaml:"addr"`
+	Size         int          `yaml:"size"`
+	Name         string       `yaml:"name"`
+	Hash         string       `yaml:"hash"`
+	Profile      string       `yaml:"profile"`
+	Source       string       `yaml:"source"`
+	SourceSymbol string       `yaml:"source_symbol"`
+	Asm          string       `yaml:"asm"`
+	Rodata       []rodataYAML `yaml:"rodata"`
 }
 
 type rodataYAML struct {
@@ -320,7 +322,7 @@ func parseModuleConfig(data []byte) (*moduleSpec, error) {
 	for _, item := range file.Functions {
 		function := functionSpec{
 			Addr: item.Addr, Size: item.Size, Name: item.Name, Hash: item.Hash,
-			Profile: item.Profile, Source: item.Source, Asm: item.Asm,
+			Profile: item.Profile, Source: item.Source, SourceSymbol: item.SourceSymbol, Asm: item.Asm,
 		}
 		for _, rodata := range item.Rodata {
 			function.Rodata = append(function.Rodata, rodataSpec(rodata))
@@ -360,6 +362,9 @@ func (m *moduleSpec) normalize() {
 		function := &m.Functions[index]
 		if function.Profile == m.Profile {
 			function.Profile = ""
+		}
+		if function.SourceSymbol == function.Name {
+			function.SourceSymbol = ""
 		}
 		if function.Source == m.defaultSource(function) {
 			function.Source = ""
@@ -434,6 +439,9 @@ func renderModuleConfig(m *moduleSpec) []byte {
 		}
 		if item.Source != "" {
 			fields = append(fields, "source: "+yamlText(item.Source))
+		}
+		if item.SourceSymbol != "" {
+			fields = append(fields, "source_symbol: "+yamlText(item.SourceSymbol))
 		}
 		if item.Asm != "" {
 			fields = append(fields, "asm: "+yamlText(item.Asm))
@@ -572,6 +580,8 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 	seenFiles := make(map[string]string)
 	seenLBAs := make(map[int]string)
 	sources := make(map[string]bool)
+	sourceSymbols := make(map[string]string)
+	checkedDefinitions := make(map[string]bool)
 	rendered := renderConfigFiles(config)
 	paths := make([]string, 0, len(rendered))
 	for path := range rendered {
@@ -645,11 +655,26 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 			} else if filepath.Ext(source) != ".c" {
 				fail("%s: C function requires a .c source (set asm for assembly)", where)
 			}
-			if _, err := projectPath(p.root, source, "source"); err != nil {
-				fail("%s: %v", where, err)
+			_, sourceErr := projectPath(p.root, source, "source")
+			if sourceErr != nil {
+				fail("%s: %v", where, sourceErr)
 			}
-			if owner := moduleSources[source]; owner != "" {
-				fail("%s: source %s is shared with %s", where, source, owner)
+			sourceSymbol := f.sourceSymbol()
+			if !validSymbol(sourceSymbol) {
+				fail("%s: invalid source_symbol %q", where, sourceSymbol)
+			}
+			if previous := sourceSymbols[source]; previous != "" && previous != sourceSymbol {
+				fail("%s: source %s has conflicting definition symbols %s and %s", where, source, previous, sourceSymbol)
+			}
+			sourceSymbols[source] = sourceSymbol
+			if f.SourceSymbol != "" && f.Asm != "" {
+				fail("%s: source_symbol requires a C source", where)
+			}
+			if (f.SourceSymbol != "" || moduleSources[source] != "") && f.Asm == "" && sourceErr == nil && !checkedDefinitions[source] {
+				checkedDefinitions[source] = true
+				if err := validateSourceDefinition(p.root, source, sourceSymbol); err != nil {
+					fail("%s: %v", where, err)
+				}
 			}
 			moduleSources[source] = f.Name
 			sources[source] = true
@@ -669,7 +694,11 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 			claim(symbol.Name, "import")
 		}
 		for _, override := range m.Overrides {
-			if m.function(override.Function) == nil || !validSymbol(override.Name) {
+			f := m.function(override.Function)
+			if f != nil && f.SourceSymbol != "" && override.Name == f.sourceSymbol() && override.Addr != f.Addr {
+				fail("%s: override %s/%s conflicts with its source definition", label, override.Function, override.Name)
+			}
+			if f == nil || !validSymbol(override.Name) {
 				fail("%s: override %s/%s names no function of this module", label, override.Function, override.Name)
 			}
 		}

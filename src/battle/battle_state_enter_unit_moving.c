@@ -1,18 +1,20 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_target.h"
 
 /* Enter UNIT_MOVING: save the unit's state (and its mount's) for an undo, set the step speed to
  * 0x2000, start at the path's first step and hide the map cursor. */
 void battle_state_enter_unit_moving(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
-    battle_state_disable_camera_pan();
+    battle_camera_disable_map_pan();
     g_battle_game_state = BATTLE_GAME_STATE_UNIT_MOVING;
     battle_target_show_cursor_unit_panel();
-    unit = battle_unit_get_casting_misc_data();
+    unit = battle_unit_get_casting();
     battle_unit_save_previous_state(unit);
-    if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
-        battle_unit_misc_data_t* mount = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+    if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
+        battle_unit_t* mount = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
         if (mount != 0) {
             battle_unit_save_previous_state(mount);
         }

@@ -1,10 +1,7 @@
+#include "fft/menu.h"
 #include "fft/open.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
-
-typedef struct open_title_party_name_block {
-    /* 0x00 */ char name[16];
-} open_title_party_name_block_t;
 
 /* Per-frame handler of the New Game controller (handler 4).
  *
@@ -15,10 +12,11 @@ typedef struct open_title_party_name_block {
  *
  * Step 5 unloads the music and opens the Music Test, but nothing sets step 5 (QUIRKS.md). Community sources
  * say the Japanese release reached it by naming Ramza "BGM kikitai" ("I want to hear the BGM") in kana. */
-void open_title_step_new_game_start(open_title_new_game_state_t* state) {
+void open_title_step_new_game_start(open_controller_record_t* record) {
+    open_title_new_game_state_t* state = &record->new_game;
     RECT rect;
-    open_title_party_name_block_t* name;
-    party_data_t* party;
+    u8* name;
+    party_unit_t* party;
 
     if (state->step == 5) {
         if (g_open_gfx_overlay_fade.flags & OPEN_OVERLAY_FADE_ACTIVE) {
@@ -64,10 +62,9 @@ void open_title_step_new_game_start(open_title_new_game_state_t* state) {
         DrawSync(0);
 
         g_open_file_current_openbk_image_id = -1;
-        name = (open_title_party_name_block_t*)world_name_run_entry_screen(
-            world_text_find_entry(TEXT_ID_UNIT_NAME_SPECIAL_BASE), g_open_file_destination);
-        party = main_party_get_data_pointer(0);
-        *(open_title_party_name_block_t*)party->name = *name;
+        name = world_name_run_entry_screen(text_find_entry(TEXT_ID_UNIT_NAME_SPECIAL_BASE), g_open_file_destination);
+        party = main_party_get_unit(0);
+        memcpy(party->name, name, sizeof(party->name));
         g_open_current_controller_index -= 1;
         open_birthday_push_date_controller();
         return;

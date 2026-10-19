@@ -41,8 +41,8 @@ void world_formation_draw_job_wheel_mastered_star(s32 x, s32 y, s32 otag_index, 
         }
     }
     sprite = &g_world_job_wheel_mastered_icon_sprite;
-    sprite->x = x + 7;
-    g_world_job_wheel_mastered_icon_sprite.y = y - 0xC;
-    g_world_job_wheel_mastered_icon_sprite.u = frame * 10 + 0x24;
+    sprite->position.x = x + 7;
+    g_world_job_wheel_mastered_icon_sprite.position.y = y - 0xC;
+    g_world_job_wheel_mastered_icon_sprite.source.u = frame * 10 + 0x24;
     world_gfx_enqueue_oriented_textured_quad(sprite, 0, TEXTURE_UV_FLIP_NONE, 0, otag_index);
 }

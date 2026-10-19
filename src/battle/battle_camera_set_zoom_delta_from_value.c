@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/main.h"
+#include "psx/libgpu.h"
 
 /* Starts a linear change of all three zoom scales to the one value
  * *destination_value over frame_count frames (divided by the animation speed),
@@ -11,7 +13,7 @@ void battle_camera_set_zoom_delta_from_value(const s32* destination_value, s32 f
     delta_x = *destination_value - g_battle_camera_zoom.vx;
     g_battle_camera_zoom_countdown = animation_frames;
     animation_frames = g_battle_camera_zoom_countdown;
-    g_battle_camera_zoom_delta.vx = delta_x / animation_frames;
-    g_battle_camera_zoom_delta.vy = (*destination_value - g_battle_camera_zoom.vy) / animation_frames;
-    g_battle_camera_zoom_delta.vz = (*destination_value - g_battle_camera_zoom.vz) / animation_frames;
+    setVector(&g_battle_camera_zoom_delta, delta_x / animation_frames,
+        (*destination_value - g_battle_camera_zoom.vy) / animation_frames,
+        (*destination_value - g_battle_camera_zoom.vz) / animation_frames);
 }

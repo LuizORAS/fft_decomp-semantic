@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
 #include "psx/types.h"
 
 /* For an ability whose status set cancels (BATTLE_STATUS_INFLICTION_TYPE_CANCEL), copy the set to
@@ -7,10 +8,8 @@
 void battle_status_store_ability_cancellations(void) {
     s32 i;
     if (g_battle_action_current_ability.status_infliction.type & BATTLE_STATUS_INFLICTION_TYPE_CANCEL) {
-        i = 0;
-        do {
+        for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
             g_battle_action_canceled_statuses[i] = g_battle_action_current_ability.status_infliction.statuses[i];
-            i++;
-        } while (i < BATTLE_STATUS_BYTE_COUNT);
+        }
     }
 }

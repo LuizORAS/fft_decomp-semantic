@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -11,10 +12,10 @@ void* world_menu_alloc_memory(s32 size) {
 
     size = (size & 0xFF) != 0 ? (size >> 8) + 1 : size >> 8;
     for (;;) {
-        for (page = 0; page < 0x70; page++) {
+        for (page = 0; page < WORLD_MENU_BUFFER_PAGE_COUNT; page++) {
             if (g_world_menu_buffer_allocation_map[page] == 0) {
                 for (pages = 0;; pages++) {
-                    if (pages + page >= 0x70) {
+                    if (pages + page >= WORLD_MENU_BUFFER_PAGE_COUNT) {
                         /* Leaves the run and page loops for the retry wait. */
                         goto fail;
                     }
@@ -26,7 +27,7 @@ void* world_menu_alloc_memory(s32 size) {
                     for (pages = 0; pages < size; pages++) {
                         g_world_menu_buffer_allocation_map[page + pages] = 1;
                     }
-                    for (i = 0; i < 16; i++) {
+                    for (i = 0; i < MENU_BUFFER_ALLOCATION_COUNT; i++) {
                         if (g_world_menu_allocator_slot_records[i].buffer == (u8*)-1) {
                             buffer = g_world_menu_buffer_arena[page];
                             g_world_menu_allocator_slot_records[i].buffer = buffer;
@@ -40,8 +41,8 @@ void* world_menu_alloc_memory(s32 size) {
         }
     fail:
         if (g_main_font_print_enabled != 0) {
-            FntPrint(g_world_menu_wait_for_allocation_message, g_world_thread_current_id, size);
+            FntPrint(g_world_menu_wait_for_allocation_message, g_thread_current_id, size);
         }
-        world_thread_yield();
+        thread_yield();
     }
 }

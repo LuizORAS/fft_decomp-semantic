@@ -35,7 +35,7 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         stream->state++;
         break;
     case MAIN_FILE_LOAD_STATE_START_SEEK:
-        CdControlF(CdlSetloc, stream->position);
+        CdControlF(CdlSetloc, (u8*)&stream->position);
         stream->state++;
         break;
     case MAIN_FILE_LOAD_STATE_POLL_SEEK:
@@ -74,7 +74,7 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         }
         if (stream->wait_frames > 0x40000 || (CdStatus() & 1) != 0) {
             main_file_reset_cd_subsystems();
-            CdIntToPos(stream->lba + stream->sector_index, stream->position);
+            CdIntToPos(stream->lba + stream->sector_index, &stream->position);
             stream->state = MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED;
             stream->error_count++;
             return;
@@ -85,17 +85,18 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         if (CdDataSync(1) != 0) {
             return;
         }
+        /* Each sector has a count, then pairs of packed 32-bit XY/WH values and 32-bit image data. */
         word = (stream->sector_index & 1) * 512;
-        rect_count = *(s32*)(stream->destination + (stream->sector_index & 1) * 2048);
+        rect_count = ((u32*)stream->destination)[(stream->sector_index & 1) * 512];
         word++;
         for (n = 0; n < rect_count; n++) {
-            rect.x = *(s32*)(stream->destination + word * 4);
-            rect.y = (*(s32*)(stream->destination + word * 4) & 0xFFFF0000) >> 16;
+            rect.x = ((u32*)stream->destination)[word];
+            rect.y = (((u32*)stream->destination)[word] & 0xFFFF0000) >> 16;
             word++;
-            rect.w = *(s32*)(stream->destination + word * 4);
-            rect.h = (*(s32*)(stream->destination + word * 4) & 0xFFFF0000) >> 16;
+            rect.w = ((u32*)stream->destination)[word];
+            rect.h = (((u32*)stream->destination)[word] & 0xFFFF0000) >> 16;
             word++;
-            LoadImage(&rect, (u32*)(stream->destination + word * 4));
+            LoadImage(&rect, (u32*)stream->destination + word);
             word += rect.w * rect.h / 2;
         }
         stream->sector_index++;

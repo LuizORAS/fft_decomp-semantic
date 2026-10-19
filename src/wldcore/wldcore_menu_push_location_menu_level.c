@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/wldcore.h"
 #include "psx/libgs.h"
 #include "psx/pad.h"
@@ -15,9 +16,9 @@
  * (records + 0x18) + index * 36. The unused array reproduces the 0xb8 frame. */
 void wldcore_menu_push_location_menu_level(s32 location) {
     GsIMAGE image;
-    wldcore_window_render_bounds16_t bounds;
-    wldcore_point32_t origin;
-    wldcore_point32_t dimensions;
+    RECT bounds;
+    open_point32_t origin;
+    wldcore_window_panel_layout_t layout;
     s16 text_width;
     s16 text_rows;
     s32 index;
@@ -28,10 +29,10 @@ void wldcore_menu_push_location_menu_level(s32 location) {
     s32 kind;
     u32 flags;
     s32 i;
-    wldcore_window_entry_36_rgb_t* color;
-    wldcore_window_record_t* records;
+    CVECTOR* color;
+    world_animated_render_record_t* records;
     wldcore_location_list_level_t* level;
-    wldcore_point32_t* base;
+    open_point32_t* base;
     wldcore_window_xy_t* position;
 
     g_wldcore_map_projection_state.marker.sub_kind
@@ -55,14 +56,15 @@ void wldcore_menu_push_location_menu_level(s32 location) {
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.cursor_window = index;
     records = g_wldcore_window_records;
-    color = (wldcore_window_entry_36_rgb_t*)&records->color;
+    /* Direct record.color access changes the column base and instruction scheduling. */
+    color = &records->color;
     g_wldcore_window_records[index].priority = 0xB;
     g_wldcore_window_records[index].sequence = location;
     g_wldcore_window_records[index].anim_counter = 0;
     g_wldcore_window_records[index].frame_index = 0;
-    color[index].red = 0;
-    color[index].green = 0;
-    color[index].blue = 0;
+    ((CVECTOR*)((u8*)color + index * sizeof(g_wldcore_window_records[0])))->r = 0;
+    ((CVECTOR*)((u8*)color + index * sizeof(g_wldcore_window_records[0])))->g = 0;
+    ((CVECTOR*)((u8*)color + index * sizeof(g_wldcore_window_records[0])))->b = 0;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.mode = 8;
 
     if (g_wldcore_map_projection_state.marker.sub_kind != 0) {
@@ -76,10 +78,10 @@ void wldcore_menu_push_location_menu_level(s32 location) {
         index = wldcore_window_append_render_record_and_reset_color(
             g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
         g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.frame_render = index;
-        bounds.position.x = image.px;
-        bounds.position.y = image.py;
-        bounds.dimensions.x = image.pw;
-        bounds.dimensions.y = image.ph;
+        bounds.x = image.px;
+        bounds.y = image.py;
+        bounds.w = image.pw;
+        bounds.h = image.ph;
         origin.x = image.cx;
         origin.y = image.cy;
         wldcore_window_init_vram_render_record(index, bounds, origin, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
@@ -99,17 +101,16 @@ void wldcore_menu_push_location_menu_level(s32 location) {
         position = (wldcore_window_xy_t*)&records->position.x;
         position[index].x = -8;
         position[index].y = 0x10;
-        color[index].red = 0;
-        color[index].green = 0;
-        color[index].blue = 0;
+        ((CVECTOR*)((u8*)color + index * sizeof(g_wldcore_window_records[0])))->r = 0;
+        ((CVECTOR*)((u8*)color + index * sizeof(g_wldcore_window_records[0])))->g = 0;
+        ((CVECTOR*)((u8*)color + index * sizeof(g_wldcore_window_records[0])))->b = 0;
     }
 
     widest = 0;
     count = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.entry_count;
     for (i = 0; i < count; i++) {
-        world_text_measure_pixels(&text_width, &text_rows,
-            world_text_find_entry(
-                g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.entries[i]));
+        text_measure_pixels(&text_width, &text_rows,
+            text_find_entry(g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.entries[i]));
         if (widest < text_width) {
             widest = text_width;
         }
@@ -126,20 +127,20 @@ void wldcore_menu_push_location_menu_level(s32 location) {
     if (count < 4) {
         i = count;
     }
-    dimensions.x = widest;
-    dimensions.y = i;
-    origin.x = 0x80 - (((dimensions.x + 0x18) & 0xFFFC) >> 1);
+    layout.text_width = widest;
+    layout.visible_rows = i;
+    origin.x = 0x80 - (((layout.text_width + 0x18) & 0xFFFC) >> 1);
     if (g_wldcore_map_projection_state.marker.sub_kind != 0) {
         origin.y = 0x80;
     } else {
         origin.y = 0x70 - i * 8;
     }
     wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_LOCATION_MENU, count, i);
-    wldcore_window_init_panel_render_state(0xC,
-        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.entry_count, &dimensions, &origin);
-    g_wldcore_window_panel_render_state.vram_x = 0x240;
+    wldcore_window_init_panel_render_state(
+        0xC, g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].location_list.entry_count, &layout, &origin);
+    g_wldcore_window_panel_render_state.vram_origin.x = 0x240;
     g_wldcore_window_panel_render_state.header_id = 0;
-    g_wldcore_window_panel_render_state.vram_y = 0x100;
+    g_wldcore_window_panel_render_state.vram_origin.y = 0x100;
 
     if (g_wldcore_map_projection_state.marker.sub_kind != 0) {
         s32 unused[6]; /* frame padding: the target frame is 0xb8 */

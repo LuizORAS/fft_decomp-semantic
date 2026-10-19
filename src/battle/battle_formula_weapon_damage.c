@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x01, the strike of 112 weapons and of bare hands, and monster attacks such as Choco
  * Attack, Tackle and Bite: the physical evade check, the weapon damage

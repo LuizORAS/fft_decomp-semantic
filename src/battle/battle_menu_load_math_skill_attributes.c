@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Collects the unit's learned Math Skill attribute abilities (CT, Level, Exp,

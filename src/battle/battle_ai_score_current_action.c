@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/memory.h"
 
 /* Simulate and score the current action (battle_ai_simulate_action_and_score) and keep it as
  * best_action when it outranks it (battle_ai_is_action_higher_ranked). Returns -1 to suspend, else
@@ -12,7 +13,7 @@ s32 battle_ai_score_current_action(void) {
     }
     if (result != 0) {
         if (battle_ai_is_action_higher_ranked(&ai->current_action, &ai->best_action) != 0) {
-            battle_ai_transfer_halfword_values(&ai->best_action, &ai->current_action, sizeof(battle_ai_action_data_t));
+            battle_mem_copy_u16_values(&ai->best_action, &ai->current_action, sizeof(battle_ai_action_data_t));
         }
     }
     return 0;

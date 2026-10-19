@@ -1,5 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Run one step of the map load that sets up a battle (battle_state_run_battle_setup, under Now Loading
@@ -34,7 +36,7 @@ s32 battle_map_step_setup_sequence(s32 map_id, s32 step, s32 deployment_running)
             battle_map_randomize_weather_from_calendar();
         }
         step++;
-        battle_map_load_palette_data(g_battle_map_weather_particle_palette, MAP_CLUT_ROW_SPRITES, 0, 0);
+        battle_map_load_palette_data(&g_battle_map_weather_particle_palette, MAP_CLUT_ROW_SPRITES, 0, 0);
         g_main_gfx_unit_graphics_load_queue.count = 0;
         break;
     case 1:
@@ -56,14 +58,15 @@ s32 battle_map_step_setup_sequence(s32 map_id, s32 step, s32 deployment_running)
         }
         break;
     case 5:
-        if (battle_unit_poll_and_load_entd_units() == 0) {
-            if (g_battle_unit_graphics_load_complete != 0) {
-                battle_gfx_rewind_unit_graphics_loader(map_id);
-                step = 7;
-            } else {
-                step++;
-                battle_gfx_reset_unit_graphics_load_state();
-            }
+        if (battle_unit_poll_and_load_entd_units() != 0) {
+            break;
+        }
+        if (g_battle_unit_graphics_load_complete != 0) {
+            battle_gfx_rewind_unit_graphics_loader(map_id);
+            step = 7;
+        } else {
+            step++;
+            battle_gfx_reset_unit_graphics_load_state();
         }
         break;
     case 6:
@@ -74,7 +77,7 @@ s32 battle_map_step_setup_sequence(s32 map_id, s32 step, s32 deployment_running)
         }
         break;
     case 7:
-        if (battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
+        if (script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
             step++;
             break;
         }
@@ -108,7 +111,7 @@ s32 battle_map_step_setup_sequence(s32 map_id, s32 step, s32 deployment_running)
         break;
     case 11:
         if (g_main_system_frontend_world_result == 1
-            || battle_script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
+            || script_get_variable(EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE) != 0) {
             main_sound_unload_current_scenario_music();
             /* Called with no argument: the sound id is whatever
              * main_sound_unload_current_scenario_music left in $a0. */

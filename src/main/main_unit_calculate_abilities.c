@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/main.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* Fill a unit's abilities from its ENTD record: the primary skillset (the record's, or else the
@@ -21,7 +21,7 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
     u16 value;
 
     if (entd == 0) {
-        main_util_clear_byte_data(&unit->reaction_ability, 6);
+        main_mem_zero(&unit->abilities, sizeof(unit->abilities));
         return;
     }
 
@@ -33,9 +33,9 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
     }
 
     if (gender & (UNIT_FLAG_MALE | UNIT_FLAG_FEMALE)) {
-        main_util_clear_byte_data(unit->learned_abilities, UNIT_LEARNED_ABILITY_BYTE_COUNT);
+        main_mem_zero(unit->career.learned_abilities, UNIT_LEARNED_ABILITY_BYTE_COUNT);
         for (i = 0; i < UNIT_JOB_LEVEL_BYTE_COUNT; i++) {
-            byte = unit->job_levels[i];
+            byte = unit->career.job_levels[i];
             level = byte >> 4;
             if (i == UNIT_JOB_LEVEL_BYTE_COUNT - 1 && (gender & UNIT_FLAG_MALE)) {
                 value = 0; /* Dancer is female only */
@@ -44,8 +44,8 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
             } else {
                 value = rand() * 100 / 0x8000 + 100;
             }
-            unit->total_job_points[i * 2] = value;
-            unit->job_points[i * 2] = value;
+            unit->career.job_points.total.values[i * 2] = value;
+            unit->career.job_points.current.values[i * 2] = value;
             main_unit_learn_job_abilities(unit, i * 2 + JOB_ID_SQUIRE, entd);
 
             level = byte & 0xf;
@@ -56,8 +56,8 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
             } else {
                 value = rand() * 100 / 0x8000 + 100;
             }
-            unit->total_job_points[i * 2 + 1] = value;
-            unit->job_points[i * 2 + 1] = value;
+            unit->career.job_points.total.values[i * 2 + 1] = value;
+            unit->career.job_points.current.values[i * 2 + 1] = value;
             if (i == UNIT_JOB_LEVEL_BYTE_COUNT - 1) {
                 break; /* Mime's JP is initialized, but its learning call is skipped. */
             }
@@ -65,9 +65,9 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
         }
 
         if (entd->primary_skillset != 0 && entd->primary_skillset != SKILLSET_ID_NONE) {
-            unit->learned_abilities[0] = 0xff;
-            unit->learned_abilities[1] = 0xff;
-            unit->learned_abilities[2] = 0xff;
+            unit->career.learned_abilities[0][0] = 0xff;
+            unit->career.learned_abilities[0][1] = 0xff;
+            unit->career.learned_abilities[0][2] = 0xff;
         }
     }
 
@@ -79,7 +79,9 @@ void main_unit_calculate_abilities(battle_stats_t* unit, entd_unit_t* entd) {
         unit->equipment_categories[i] = g_main_job_data_pointer[job_id].equipment_categories[i];
     }
 
-    unit->reaction_ability = main_unit_calculate_rsm(unit, entd->reaction_ability, RSM_ABILITY_FILTER_REACTION, entd);
-    unit->support_ability = main_unit_calculate_rsm(unit, entd->support_ability, RSM_ABILITY_FILTER_SUPPORT, entd);
-    unit->movement_ability = main_unit_calculate_rsm(unit, entd->movement_ability, RSM_ABILITY_FILTER_MOVEMENT, entd);
+    unit->abilities.reaction
+        = main_unit_calculate_rsm(unit, entd->abilities.reaction, RSM_ABILITY_FILTER_REACTION, entd);
+    unit->abilities.support = main_unit_calculate_rsm(unit, entd->abilities.support, RSM_ABILITY_FILTER_SUPPORT, entd);
+    unit->abilities.movement
+        = main_unit_calculate_rsm(unit, entd->abilities.movement, RSM_ABILITY_FILTER_MOVEMENT, entd);
 }

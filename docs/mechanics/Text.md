@@ -5,6 +5,15 @@ scope:
   - battle_text
   - world_text
   - world_name
+  - text_advance_cursor_with_backreferences()
+  - text_advance_cursor_with_separate_backreference_state()
+  - text_count_decimal_digits()
+  - text_fill_field_with_terminators()
+  - text_find_entry()
+  - text_measure()
+  - text_measure_pixels()
+  - text_resolve_format_string_id()
+  - text_skip_to_entry()
 ---
 
 # Text
@@ -28,10 +37,10 @@ A text id is 16 bits:
 - the low eleven pick the entry (`TEXT_ID_SECTION_MASK`,
   `TEXT_ID_ENTRY_MASK`).
 
-Each engine keeps the 32 section pointers (`g_battle_text_section_pointers`,
-`g_world_text_section_pointers`). An entry is found by counting the
-terminators before it ([[battle_text_find_entry]],
-[[battle_text_skip_to_entry]]). [[text_id_base_e]] names the first id of each
+Each engine keeps the 32 section pointers (`g_text_section_pointers`,
+`g_text_section_pointers`). An entry is found by counting the
+terminators before it ([[text_find_entry]],
+[[text_skip_to_entry]]). [[text_id_base_e]] names the first id of each
 section the code uses: job names 0x3000, item names 0x3800, unit names 0x4000,
 ability names 0x7000, location names 0x9000 and so on.
 
@@ -81,7 +90,7 @@ Byte values:
 
 | Control | Effect |
 |---|---|
-| 0xE0, 0xE1, 0xE5, 0xE9, 0xEA, 0xEB | Insert a name: Ramza's, a unit's, a location's, an item's or an ability's by the next substitution value, or any text by id ([[battle_text_resolve_format_string_id]]) |
+| 0xE0, 0xE1, 0xE5, 0xE9, 0xEA, 0xEB | Insert a name: Ramza's, a unit's, a location's, an item's or an ability's by the next substitution value, or any text by id ([[text_resolve_format_string_id]]) |
 | 0xE4, 0xE6 | Print the next substitution value, or the one an operand names |
 | 0xE8 | The digit count of the next number |
 | 0xE2, 0xE3, 0xE7 | The typewriter delay, the palette, the pen's x position |
@@ -100,7 +109,7 @@ Byte values:
 A back-reference is three bytes: its length is `(byte 0 & 3) * 8 +
 (byte 1 >> 5) + 4`, and it starts `(byte 1 & 0xf) * 254 + byte 2` bytes
 before the command. The readers follow it as they go
-([[battle_text_advance_cursor_with_backreferences]]), so a compressed file
+([[text_advance_cursor_with_backreferences]]), so a compressed file
 is never unpacked. The offset is counted in base 254 and bit 4 of byte 1 is
 unused. So no byte inside an entry is 0xFE or 0xFF, and the entry scan counts
 terminators without decoding anything.
@@ -108,7 +117,7 @@ terminators without decoding anything.
 ### The dialog thread
 
 A DisplayMessage instruction (see [[Event Scripts]]), a help window or a
-spell quote starts the dialog thread ([[battle_text_character_handling_thread]],
+spell quote starts the dialog thread ([[battle_text_run_dialog_thread]],
 [[world_text_character_handling_thread]]). Its parameters:
 1. the dialog type ([[dialog_box_type_e]], [[dialog_options_e]]);
 2. the text id;
@@ -116,7 +125,7 @@ spell quote starts the dialog thread ([[battle_text_character_handling_thread]],
 4. the portrait.
 
 Then the thread:
-1. measures the text ([[battle_text_measure_pixels]]) and sizes the window
+1. measures the text ([[text_measure_pixels]]) and sizes the window
    to it: three lines with a portrait, at most four for Check and Help;
 2. draws the glyphs one at a time ([[battle_text_draw_glyph_with_typewriter_delay]]),
    pausing 3 - event speed frames after every 8, 2 or 1 glyphs by the Message
@@ -174,7 +183,7 @@ places use it:
 | [[world_text_dialog_record_t]] | The dialog thread's window |
 | [[battle_text_glyph_state_t]] | The glyph waiting to be drawn |
 | [[dialog_box_type_e]], [[dialog_options_e]] | The DisplayMessage dialog type's fields |
-| `g_battle_text_substitution_values`, `g_world_text_substitution_values` | The 32 values controls 0xE4 and 0xE6 print |
+| `g_text_substitution_values`, `g_text_substitution_values` | The 32 values controls 0xE4 and 0xE6 print |
 | [[world_text_data_e]] | WORLD's resident text blocks ([[world_text_bind_section_data]]) |
 
 ## Main flow
@@ -194,9 +203,9 @@ places use it:
 | A line of text | The text file it lives in (the table above); same-size edits only for now, since several files sit inside the binaries |
 | The typing speed | [[battle_text_draw_glyph_with_typewriter_delay]] and its WORLD twin |
 | How long a timed battle message stays | [[battle_text_set_message_duration_frames]]'s callers |
-| A dialog window's size | The sizing at the top of [[battle_text_character_handling_thread]] and its twin |
-| What a control does | Both dialog threads and both measuring routines ([[battle_text_measure]], [[battle_text_measure_pixels]]) |
-| A name substitution | [[battle_text_resolve_format_string_id]] and its twin |
+| A dialog window's size | The sizing at the top of [[battle_text_run_dialog_thread]] and its twin |
+| What a control does | Both dialog threads and both measuring routines ([[text_measure]], [[text_measure_pixels]]) |
+| A name substitution | [[text_resolve_format_string_id]] and its twin |
 | The name keyboard | [[world_name_open_key_rows]], `g_world_name_entry_character_rows`, [[world_name_apply_entry_key]] |
 | The font | `g_battle_text_glyph_bitmaps`, `g_world_text_glyph_bitmaps` and the width tables |
 

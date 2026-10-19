@@ -1,4 +1,8 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_target.h"
 
 /* Open the tile choice for the acting unit's action by its range result (ability_preview_phase,
  * from battle_target_set_panels_for_action): 0 or 1 enter TARGETING_RANGE with the ability range
@@ -6,14 +10,14 @@
  * battle_target_select_tile; -1 and 3 (invalid, or nothing in range) return to the action menu.
  * Returns the phase. */
 s32 battle_target_begin_tile_selection(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     unit->state_frame_counter = 0;
     switch (unit->ability_preview_phase) {
     case BATTLE_TARGET_PANELS_UNIT_OR_TILE:
     case BATTLE_TARGET_PANELS_TILE_ONLY:
-        battle_state_disable_camera_pan();
+        battle_camera_disable_map_pan();
         g_battle_game_state = BATTLE_GAME_STATE_TARGETING_RANGE;
         battle_target_tint_marked_tiles(BATTLE_TILE_MARK_SHOW_RANGE, 2);
         battle_target_show_cursor_target_panel();
@@ -24,7 +28,7 @@ s32 battle_target_begin_tile_selection(void) {
         }
         break;
     case BATTLE_TARGET_PANELS_NO_TARGETING:
-        battle_state_disable_camera_pan();
+        battle_camera_disable_map_pan();
         battle_target_select_tile();
         battle_target_show_cursor_target_panel();
         break;

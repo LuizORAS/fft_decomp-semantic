@@ -3,6 +3,9 @@ type: mechanic
 tier: 1
 scope:
   - battle_ai
+  - battle_mem_copy_bytes()
+  - battle_mem_copy_u16_values()
+  - battle_mem_zero_32bit_values()
 ---
 
 # AI
@@ -35,9 +38,9 @@ Who decides, in order ([[battle_ai_select_action]]):
 
 | Case | What runs |
 |---|---|
-| Chicken, Blood Suck, Confusion or Berserk | [[battle_ai_choose_status_action]]: run, bite, act at random or attack the nearest enemy |
+| Chicken, Blood Suck, Confusion or Berserk | [[battle_ai_select_status_action]]: run, bite, act at random or attack the nearest enemy |
 | Frog or Critical with an ally able to help, or Don't Act with a focus target | [[battle_ai_select_retreat_action]]: head for a healer or a crystal |
-| An Auto-Battle mode | [[battle_ai_handle_autobattle]]: Fight for life, Protect allies, Save fading life, Run like a rabbit |
+| An Auto-Battle mode | [[battle_ai_select_auto_battle_action]]: Fight for life, Protect allies, Save fading life, Run like a rabbit |
 | Anything else | [[battle_ai_select_general_action]]: the general search |
 
 A player unit takes its Auto-Battle setting from the menu. Any other unit
@@ -192,7 +195,7 @@ The other statuses weigh 0.
 - **Where units move and stand:** [[battle_ai_build_movement_scenarios]],
   [[battle_ai_select_destination]], [[battle_ai_fill_foe_proximity_grid]].
 - **Modes and targets:** [[battle_ai_init_target_consideration]],
-  [[battle_ai_handle_autobattle]] and the `battle_ai_select_*_action`
+  [[battle_ai_select_auto_battle_action]] and the `battle_ai_select_*_action`
   functions; a scenario unit's behaviour bits are in its ENTD record (disc
   data).
 - **Which abilities a unit considers:** [[battle_ai_build_unit_ability_list]]

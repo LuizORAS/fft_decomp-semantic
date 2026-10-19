@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/main.h"
+#include "fft/unit.h"
 
 /* Build the unit in slot unit_id of an ENTD encounter (main_unit_init_from_entd, in a stack record)
  * and save it into the party roster; main_entd_init_event_unit_data fills the roster this way.
@@ -16,7 +16,7 @@ s32 main_unit_save_entd_unit_to_party(entd_encounter_t* entd, s32 unit_id, s32 a
         battle_stats_t unit;
         battle_stats_t* unit_data = &unit;
 
-        unit_data->misc_unit_id = 0xff;
+        unit_data->battle_id = 0xff;
         unit_data->entd_slot = 0x20;
         unit_data->existence = BATTLE_UNIT_EXISTENCE_ACTIVE;
         unit_data->formation_index = BATTLE_FORMATION_INDEX_NONE;

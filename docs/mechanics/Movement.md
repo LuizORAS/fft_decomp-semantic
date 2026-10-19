@@ -16,8 +16,8 @@ scope:
   - battle_map_copy_size_and_tile_data()
   - battle_map_get_tile_data_pointer()
   - battle_map_get_tile_data_ptr_from_battle_id()
-  - battle_map_get_tile_data_ptr_from_misc_id()
-  - battle_map_get_tile_data_ptr_from_misc_screen_coords()
+  - battle_map_get_unit_tile_by_runtime_id()
+  - battle_map_get_unit_tile_from_world_coords()
   - battle_map_get_tile_data_value()
   - battle_map_set_tile_data_value()
   - battle_map_load_move_find_item_data()
@@ -62,7 +62,7 @@ along scripted paths that ignore the other units.
 - **The unit.** [[battle_stats_t]] holds `move`, `jump`, the three
   `movement_abilities` bytes ([[battle_unit_movement_set_1_e]],
   [[battle_unit_movement_set_2_e]], [[battle_unit_movement_set_3_e]]) and the
-  map position. [[battle_unit_misc_data_t]] holds the moving unit: map square
+  map position. [[battle_unit_t]] holds the moving unit: map square
   and screen position, `step_phase` (below), the path (`movement_path_count`,
   `movement_path_offset`, `movement_path`), the step in progress
   (`movement_value`) and its `movement` destination, `walk_speed` and
@@ -145,7 +145,7 @@ along scripted paths that ignore the other units.
 6. **Knockback.** `battle_formula_calculate_knockback` picks the tile
    ([[battle_move_check_knockback_destination]]);
    `battle_action_run_pre_formula_setup` turns it into the action result
-   ([[battle_move_set_knockback_fall_damage]]); the target's animation starts
+   ([[battle_move_apply_knockback]]); the target's animation starts
    the push ([[battle_move_start_knockback]], [[battle_move_init_knockback]]),
    and ACTION_EXECUTE runs [[battle_move_update_knockback_step]] for each
    target.
@@ -194,7 +194,7 @@ along scripted paths that ignore the other units.
 - **The teleport chance:** [[battle_move_roll_teleport_success]].
 - **Scripted walks:** [[battle_move_calculate_pathing]] (its generic unit's
   Move, Jump and costs).
-- **Knockback damage:** [[battle_move_set_knockback_fall_damage]]; where the
+- **Knockback damage:** [[battle_move_apply_knockback]]; where the
   target lands: `battle_formula_calculate_knockback` and
   [[battle_move_check_knockback_destination]].
 - **Move-Find Item:** the odds in [[battle_map_determine_rare_common_item]];
@@ -220,9 +220,9 @@ along scripted paths that ignore the other units.
 - [[battle_map_load_gns_and_move_find_items]] has no return value for a map
   with no GNS sector.
 - [[battle_map_get_tile_data_ptr_from_battle_id]] and
-  [[battle_map_get_tile_data_ptr_from_misc_id]] do not check the unit lookup.
+  [[battle_map_get_unit_tile_by_runtime_id]] do not check the unit lookup.
 - Post-move event 0x200 (`SOURCE_DISPLAY`) is handled but never set.
-- `battle_unit_misc_data_t.movement_value` is a plain `u8` that holds a packed
+- `battle_unit_t.movement_value` is a plain `u8` that holds a packed
   [[battle_move_step_bits_e]] step; its readers shift and mask it by hand.
 - Only the first 64 bytes of [[g_main_item_location_flags]] (the Move-Find
   found flags) have a known meaning.

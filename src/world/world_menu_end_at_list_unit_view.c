@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* WORLD twin of battle_menu_end_at_list_unit_view, for WORLD's copy of the AT list; nothing in the
  * game calls it. */

@@ -1,9 +1,12 @@
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
-
-extern world_glyph_blit_t g_world_text_message_box_state;
 
 /* Draw the message box's pending glyph into VRAM and hold it for the typewriter delay.
  *
@@ -24,15 +27,15 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
 
     if (g_world_text_message_box_glyph.mode != DIALOG_BOX_TYPE_PORTRAIT
         && g_world_text_message_box_glyph.mode != DIALOG_BOX_TYPE_CHECK && g_world_text_message_box_glyph.mode != 0) {
-        world_thread_yield();
+        thread_yield();
         return;
     }
     for (;;) {
         slot = 0x10;
         for (i = 0; i < 3; i++) {
-            if (g_world_thread_current_id == g_world_text_message_box_slot_threads[i]) {
+            if (g_thread_current_id == g_world_text_message_box_slot_threads[i]) {
                 slot = i;
-                g_world_text_message_box_slot_threads[i] = g_world_thread_current_id;
+                g_world_text_message_box_slot_threads[i] = g_thread_current_id;
                 break;
             }
         }
@@ -40,7 +43,7 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
             for (j = 0; j < 3; j++) {
                 if (g_world_text_message_box_slot_threads[j] == 0) {
                     slot = j;
-                    g_world_text_message_box_slot_threads[j] = g_world_thread_current_id;
+                    g_world_text_message_box_slot_threads[j] = g_thread_current_id;
                     g_world_text_message_box_slot_carry_offset[slot] = 0;
                     g_world_text_message_box_slot_prev_width[slot] = 0;
                     break;
@@ -50,14 +53,14 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
         if (slot != 0x10) {
             break;
         }
-        world_thread_yield();
+        thread_yield();
     }
 
     ring = g_world_text_message_box_slot_glyph_counters[slot];
     phase = g_world_text_message_box_glyph.x & 3;
     dst = g_world_text_message_box_glyph_images[slot][ring];
     src = g_world_text_message_box_previous_images[slot];
-    if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 4
+    if (g_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 4
         || g_world_text_message_box_glyph.glyph == TEXT_SPACE) {
         if (phase == 2) {
             width = 8;
@@ -66,10 +69,10 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
             width = 4;
             g_world_text_message_box_vram_rect.w = 1;
         }
-    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 2) {
+    } else if (g_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 2) {
         width = 4;
         g_world_text_message_box_vram_rect.w = 1;
-    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 6) {
+    } else if (g_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 6) {
         width = 8;
         g_world_text_message_box_vram_rect.w = 2;
     } else {
@@ -88,20 +91,20 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
         }
     }
 
-    if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 4
+    if (g_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 4
         || g_world_text_message_box_glyph.glyph == TEXT_SPACE) {
         if (phase == 2) {
             g_world_text_message_box_slot_carry_offset[slot] = 2;
         } else {
             g_world_text_message_box_slot_carry_offset[slot] = 1;
         }
-    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 2) {
+    } else if (g_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 2) {
         if (phase == 2) {
             g_world_text_message_box_slot_carry_offset[slot] = 1;
         } else {
             g_world_text_message_box_slot_carry_offset[slot] = 0;
         }
-    } else if (g_world_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 6) {
+    } else if (g_text_glyph_widths[g_world_text_message_box_glyph.glyph] == 6) {
         if (phase == 2) {
             g_world_text_message_box_slot_carry_offset[slot] = 3;
         } else {
@@ -122,7 +125,7 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
             if (g_world_text_message_box_glyph.mode == 0) {
                 (dst + i)[offset / 2] = 0;
             } else {
-                (dst + i)[offset / 2] = ((u8*)g_world_menu_glyph_image
+                (dst + i)[offset / 2] = (g_menu_glyph_image->pixels
                     + ((((g_world_text_message_box_glyph.x + (i << 1)) & 0xF) + 8) / 2))[(j << 7) + 0x400];
             }
         }
@@ -133,7 +136,7 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
         g_world_text_message_box_state.rect.y = 0;
         g_world_text_message_box_state.stride = width;
         world_text_blit_font_glyph_to_4bpp(
-            g_world_text_glyph_bitmap_data + g_world_text_message_box_glyph.glyph * TEXT_GLYPH_BYTES, dst,
+            g_text_glyph_bitmap_data + g_world_text_message_box_glyph.glyph * TEXT_GLYPH_BYTES, dst,
             &g_world_text_message_box_state, g_world_text_message_box_glyph.palette);
         g_world_text_message_box_vram_rect.x = (x >> 2) + 0x1c0;
         g_world_text_message_box_vram_rect.y = y;
@@ -141,33 +144,33 @@ void world_text_message_box_draw_glyph_with_typewriter_delay(s32 x, s32 y, s32 w
         LoadImage(&g_world_text_message_box_vram_rect, (u32*)dst);
     }
     g_world_text_message_box_slot_glyph_counters[slot]++;
-    world_util_copy_bytes(src, dst, 84);
+    mem_copy_bytes_nonempty(src, dst, 84);
     if (wait == 0) {
         DrawSync(0);
         g_world_text_message_box_slot_glyph_counters[slot] = 0;
     } else if (wait >= 2) {
-        for (i = 0; i < wait * (3 - g_world_event_speed); i++) {
-            world_thread_wait_frames(1);
+        for (i = 0; i < wait * (3 - g_script_event_speed); i++) {
+            thread_wait_frames(1);
         }
         g_world_text_message_box_slot_glyph_counters[slot] = 0;
     } else {
         if (PadRead(1) & PSX_PAD_CIRCLE) {
             g_world_text_message_box_glyph_delay = 8;
-        } else if ((g_main_game_options.value & GAME_OPTIONS_MESSAGE_DISPLAY_SPEED_MASK) == 0) {
+        } else if (g_main_game_options.fields.message_display_speed == GAME_MESSAGE_DISPLAY_SPEED_FAST) {
             g_world_text_message_box_glyph_delay = 8;
-        } else if ((g_main_game_options.value & GAME_OPTIONS_MESSAGE_DISPLAY_SPEED_MASK) == 0x1000) {
+        } else if (g_main_game_options.fields.message_display_speed == GAME_MESSAGE_DISPLAY_SPEED_REGULAR) {
             g_world_text_message_box_glyph_delay = 2;
         } else {
             g_world_text_message_box_glyph_delay = 1;
         }
         if (g_world_text_message_box_slot_glyph_counters[slot] >= g_world_text_message_box_glyph_delay) {
-            for (i = 0; i < 3 - g_world_event_speed; i++) {
-                world_thread_wait_frames(1);
+            for (i = 0; i < 3 - g_script_event_speed; i++) {
+                thread_wait_frames(1);
             }
             g_world_text_message_box_slot_glyph_counters[slot] = 0;
         }
     }
     if (g_world_text_message_box_glyph.mode != 0) {
-        g_world_sound_pending_sfx_id = MAIN_SFX_TEXT_GLYPH;
+        g_sound_pending_sfx_id = MAIN_SFX_TEXT_GLYPH;
     }
 }

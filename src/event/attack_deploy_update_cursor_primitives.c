@@ -1,4 +1,7 @@
 #include "fft/event_attack.h"
+#include "fft/memory.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -10,15 +13,16 @@
  * expression in each arm and the separate height variable reproduce the
  * target's cross-jumped arm tails and its unfolded lift + 10 addition. */
 void attack_deploy_update_cursor_primitives(s32 frame, attack_deploy_render_buffer_t* buffer) {
-    native_thread_t* thread = &g_battle_threads[g_battle_thread_current_id];
+    thread_t* thread = &g_threads[g_thread_current_id];
     s32 bob = battle_menu_get_cursor_bob_offset(0);
     s32 i;
     u8(*tiles)[5];
 
-    thread->task_words[0] += g_battle_event_speed;
-    battle_util_copy_bytes(
-        &g_attack_deploy_cursor_clut[1], &g_attack_deploy_cursor_palette_cycle[1 + (frame / 4) % 14], 0x1e);
-    g_attack_deploy_cursor_clut[0] = 0;
+    thread->task_words[0] += g_script_event_speed;
+    mem_copy_bytes_nonempty(
+        &g_attack_deploy_cursor_clut[1], &g_attack_deploy_cursor_palette_cycle[0][1 + (frame / 4) % 14], 0x1e);
+    g_attack_deploy_cursor_clut[0].red = g_attack_deploy_cursor_clut[0].green = g_attack_deploy_cursor_clut[0].blue
+        = g_attack_deploy_cursor_clut[0].semi_transparent = 0;
     LoadImage(&g_attack_deploy_cursor_clut_rect, (u32*)g_attack_deploy_cursor_clut);
 
     for (i = 0, tiles = g_attack_deploy_valid_tiles; i < 2; i++) {
@@ -42,21 +46,7 @@ void attack_deploy_update_cursor_primitives(s32 frame, attack_deploy_render_buff
             - i * 3;
         top = y + offset;
 
-        buffer->cursor[i][0].x0 = x - 8;
-        buffer->cursor[i][0].y0 = top;
-        buffer->cursor[i][0].x1 = x + 8;
-        buffer->cursor[i][0].y1 = top;
-        buffer->cursor[i][0].x2 = x - 8;
-        buffer->cursor[i][0].y2 = top + 0x18;
-        buffer->cursor[i][0].x3 = x + 8;
-        buffer->cursor[i][0].y3 = top + 0x18;
-        buffer->cursor[i][1].x0 = x;
-        buffer->cursor[i][1].y0 = y - 10;
-        buffer->cursor[i][1].x1 = x + 20;
-        buffer->cursor[i][1].y1 = y;
-        buffer->cursor[i][1].x2 = x - 20;
-        buffer->cursor[i][1].y2 = y;
-        buffer->cursor[i][1].x3 = x;
-        buffer->cursor[i][1].y3 = y + 10;
+        setXY4(&buffer->cursor[i][0], x - 8, top, x + 8, top, x - 8, top + 0x18, x + 8, top + 0x18);
+        setXY4(&buffer->cursor[i][1], x, y - 10, x + 20, y, x - 20, y, x, y + 10);
     }
 }

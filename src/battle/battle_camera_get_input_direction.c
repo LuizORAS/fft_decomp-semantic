@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -6,10 +6,10 @@
  * steps) for the d-pad state, or -1 when none applies or a 0x9F0 button bit
  * is pressed.
  *
- * `mode` (0-2) selects the input source. `input` stays unset when `mode` or
+ * `source` (0-2) selects the input source. `input` stays unset when `source` or
  * the controller mode is out of range: the direction tests then read whatever
  * the caller left in $a1. */
-s32 battle_camera_get_input_direction(s32 mode) {
+s32 battle_camera_get_input_direction(s32 source) {
     s32 direction;
     u32 input;
     u32 previous;
@@ -21,7 +21,7 @@ s32 battle_camera_get_input_direction(s32 mode) {
     switch (g_battle_cursor_input_mode) {
     case BATTLE_CURSOR_INPUT_OPTION_A:
     case BATTLE_CURSOR_INPUT_OPTION_B:
-        switch (mode) {
+        switch (source) {
         case BATTLE_CAMERA_INPUT_HELD:
             input = g_main_input_previous_buttons;
             break;
@@ -52,7 +52,7 @@ s32 battle_camera_get_input_direction(s32 mode) {
         }
         break;
     case BATTLE_CURSOR_INPUT_FREE_CURSOR:
-        switch (mode) {
+        switch (source) {
         case BATTLE_CAMERA_INPUT_HELD:
             input = g_main_input_previous_buttons | g_main_input_previous_copy_0;
             break;

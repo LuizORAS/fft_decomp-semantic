@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 /* Unit-grid marker callback of Change name: no unit gets a marker (-1). */

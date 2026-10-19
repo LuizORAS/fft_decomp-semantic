@@ -20,8 +20,8 @@ The [[Menus]] page describes the engine.
 | The row texts | The text entry the menu entry names (`text_id`) |
 | What a row opens | The entry's row actions: a menu id, plus 0x1000 for no confirm sound, or a negative count of levels to close |
 | What a choice does | `g_battle_menu_command_maps` turns it into a command; the battle state reads it |
-| A prompt or message | Its [[battle_system_function_t]] in `g_battle_system_function_table` |
-| A WORLD menu's look | Its display script ([[menu_script_opcode_e]], [[world_menu_get_script]]) |
+| A prompt or message | Its [[battle_menu_system_function_t]] in `g_battle_system_function_table` |
+| A WORLD menu's look | Its display script ([[menu_script_opcode_e]]) |
 
 ## What changes with it
 

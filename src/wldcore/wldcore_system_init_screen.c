@@ -13,7 +13,7 @@ void wldcore_system_init_screen(void) {
     wldcore_file_wait_for_load();
     count = GsGetActiveBuff();
     g_main_gfx_active_buffer_index = count;
-    GsSetWorkBase(&g_wldcore_gfx_world_primitive_buffers + count * 0xE000);
+    GsSetWorkBase(g_wldcore_gfx_world_primitive_buffers + count * 0xE000);
     wldcore_gfx_capture_map_backdrop();
     VSync(0);
     ResetGraph(1);

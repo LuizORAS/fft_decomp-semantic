@@ -1,3 +1,4 @@
+#include "fft/battle.h"
 #include "psx/types.h"
 
 /* Return 0. Nothing on the disc calls it or holds its address. */

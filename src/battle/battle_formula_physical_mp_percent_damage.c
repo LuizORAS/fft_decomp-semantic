@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x2C, Magic Break: the physical evade check and the hit chance PA + Y with the physical
  * modifiers, then MP damage of Y% of the target's max MP. */

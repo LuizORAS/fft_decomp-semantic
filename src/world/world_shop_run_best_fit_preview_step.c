@@ -1,3 +1,5 @@
+#include "fft/thread.h"
+#include "fft/unit.h"
 #include "fft/world.h"
 #include "psx/libc.h"
 #include "psx/types.h"
@@ -34,7 +36,7 @@
  * The target has `move s1,v0` after world_menu_run_thread and no
  * initialisation of s1 at loop 2's head: loop 2's counter is the run_thread
  * result's allocno, so the source assigns the result to `i` and the loop is
- * written `for (; i < 4; i++)`. A fresh block-local takes a call-clobbered
+ * written `for (; i < WORLD_EQUIPMENT_SLOT_ACCESSORY; i++)`. A fresh block-local takes a call-clobbered
  * register; reusing a function-scope allocno that is already dead puts the
  * counter in the target's callee-saved s1 and decides which of the two loop
  * quantities is allocated first.
@@ -71,31 +73,34 @@ void world_shop_run_best_fit_preview_step(void) {
     s32 item;
 
     if (g_world_shop_best_fit_menu_open == 0) {
-        world_formation_unit_t** unit_slot;
+        world_unit_t** unit_slot;
         s16* room_base;
         s16* reserved;
 
         g_world_shop_best_fit_menu.selected_index = 0;
-        bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, staged, 8);
+        bcopy(
+            g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, staged, sizeof(staged));
         unit_slot = &g_world_formation_unit_pointers[g_world_formation_selected_unit_index];
         room_base = &g_world_shop_fitting_room_items[0][0];
-        reserved = room_base + g_world_formation_selected_unit_index * 5;
-        for (i = 0; i < 4; i++, reserved++) {
+        reserved = room_base + g_world_formation_selected_unit_index * WORLD_EQUIPMENT_SLOT_COUNT;
+        for (i = 0; i < WORLD_EQUIPMENT_SLOT_ACCESSORY; i++, reserved++) {
             if (((*unit_slot)->equipment[i] >> 15) != 0) {
                 (*unit_slot)->equipment[i] = *reserved;
             }
         }
-        world_shop_build_fitting_room_best_fit_equipment(
-            g_world_formation_selected_unit_index, g_world_shop_id, g_world_item_preview_stat_detail.equipment);
-        g_world_item_preview_stat_detail.equipment[4]
-            = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[4];
-        bcopy(staged, g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, 8);
+        world_shop_build_fitting_room_best_fit_equipment(g_world_formation_selected_unit_index, g_world_menu_context_id,
+            g_world_item_preview_stat_detail.state.equipment);
+        g_world_item_preview_stat_detail.state.equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY]
+            = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
+                  ->equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY];
+        bcopy(
+            staged, g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment, sizeof(staged));
         world_item_calculate_equipment_swap_stat_delta(&g_world_item_preview_stat_detail,
             &g_world_selected_unit_stat_summary,
             g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment,
-            (u16*)g_world_item_preview_stat_detail.equipment);
-        g_world_item_preview_stat_detail.two_hands
-            = world_unit_is_two_handing_weapon(g_world_item_preview_stat_detail.equipment,
+            (u16*)g_world_item_preview_stat_detail.state.equipment);
+        g_world_item_preview_stat_detail.state.two_hands
+            = unit_is_two_handing_weapon(g_world_item_preview_stat_detail.state.equipment,
                 world_ability_has_two_hands(g_world_formation_selected_unit_index));
         world_menu_toggle_stat_preview_panel_thread(1);
         world_menu_toggle_preview_stats_window(1);
@@ -105,7 +110,7 @@ void world_shop_run_best_fit_preview_step(void) {
         g_world_formation_unit_cycle_mode = 1;
         g_world_sound_suppressed = 1;
     }
-    i = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_shop_best_fit_menu);
+    i = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, &g_world_shop_best_fit_menu);
     if (i == 0) {
         if (g_world_menu_selection_results[5] == 0) {
             g_world_menu_sound_effect_id = MAIN_SFX_EQUIP;
@@ -119,7 +124,7 @@ void world_shop_run_best_fit_preview_step(void) {
         g_world_shop_best_fit_menu_open = 0;
         g_world_formation_unit_cycle_mode = 2;
         if (g_world_menu_selection_results[5] == 0) {
-            for (; i < 4; i++) {
+            for (; i < WORLD_EQUIPMENT_SLOT_ACCESSORY; i++) {
                 u16 suggested;
                 s32 shifted;
                 s32 current;
@@ -130,7 +135,7 @@ void world_shop_run_best_fit_preview_step(void) {
                  * it loads the unit's own slot ONCE at the loop head -- the
                  * `sra ,0xf` lands in the `bgez` delay slot and the same
                  * register is sign-extended again for world_item_get_price. */
-                suggested = g_world_item_preview_stat_detail.equipment[i];
+                suggested = g_world_item_preview_stat_detail.state.equipment[i];
                 shifted = suggested << 16;
                 item = shifted >> 16;
                 current = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->equipment[i];
@@ -147,7 +152,7 @@ void world_shop_run_best_fit_preview_step(void) {
         }
         g_world_shop_menu_step = WORLD_SHOP_STEP_FITTING_ROOM;
         g_world_sound_suppressed = 0;
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+        thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, -1, 0);
     }
     if (g_world_shop_cost_window_visible != 0) {
         world_shop_run_fitting_cost_menu_script();

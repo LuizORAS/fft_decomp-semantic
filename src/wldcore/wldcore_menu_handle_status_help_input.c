@@ -9,10 +9,10 @@ void wldcore_menu_handle_status_help_input(wldcore_menu_status_help_level_t* req
     s32 field;
     s16* value;
     s16 message;
-    wldcore_window_record_t* record;
+    world_animated_render_record_t* record;
     s32 window;
 
-    if ((g_wldcore_new_button_presses & PSX_PAD_CROSS) != 0) {
+    if ((g_wldcore_input_new_button_presses & PSX_PAD_CROSS) != 0) {
         g_wldcore_window_record_count -= 1;
         g_wldcore_window_render_object_count -= 1;
         g_wldcore_menu_ordering_table_offset = request->saved_state;
@@ -22,7 +22,7 @@ void wldcore_menu_handle_status_help_input(wldcore_menu_status_help_level_t* req
         return;
     }
 
-    if ((g_wldcore_new_button_presses & PSX_PAD_CIRCLE) != 0) {
+    if ((g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) != 0) {
         field = request->field;
         value = g_wldcore_status_help_fields[field].value;
         if (value != 0) {
@@ -34,7 +34,7 @@ void wldcore_menu_handle_status_help_input(wldcore_menu_status_help_level_t* req
             message = g_wldcore_status_help_fields[field].message_base;
         }
         wldcore_menu_push_message_level(message, 1);
-        g_world_menu_input_lock_mode = 1;
+        g_menu_input_lock_mode = 1;
         window = request->window_index;
         record = &g_wldcore_window_records[window];
         record->sequence = g_wldcore_window_records[window].sequence - 1;

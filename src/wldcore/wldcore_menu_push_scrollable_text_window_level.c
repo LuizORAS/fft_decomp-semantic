@@ -1,3 +1,4 @@
+#include "fft/menu.h"
 #include "fft/wldcore.h"
 
 /* Show a location's arrival text (a world help message; wldcore_menu_restore_level_on_world_entry) as
@@ -8,10 +9,8 @@
 void wldcore_menu_push_scrollable_text_window_level(s32 text) {
     s16 width;
     s16 rows;
-    u8* entry;
 
-    entry = world_text_find_entry(text);
-    world_text_measure_pixels(&width, &rows, entry);
+    text_measure_pixels(&width, &rows, text_find_entry(text));
     if (rows > 4) {
         rows = 4;
     }

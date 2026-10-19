@@ -7,10 +7,8 @@ void world_menu_init_scrollable_list_core(const s16* values, s32 value, u8* text
 
     if (values != 0) {
         g_world_menu_option_count = 0;
-        if (values[0] != -1) {
-            do {
-                g_world_menu_option_count++;
-            } while (g_world_menu_list_entry_ids[g_world_menu_option_count] != -1);
+        while (g_world_menu_list_entry_ids[g_world_menu_option_count] != -1) {
+            g_world_menu_option_count++;
         }
     }
 

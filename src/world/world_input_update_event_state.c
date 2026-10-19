@@ -1,12 +1,17 @@
+#include "fft/gfx.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Per-frame event input update: derives the edge/auto-repeat input word,
+/* Per-frame event input update: derives the edge/auto-repeat 32-bit input mask,
  * publishes it, and yields once while tracking thread status changes.
  *
  * WORLD twin of bunit_input_update_event_state; publishes the state twice.
- * The six g_world_frame_* words at 0x801c0528 are laid out as a
+ * The six g_world_frame_* 32-bit values at 0x801c0528 are laid out as a
  * world_menu_input_state_t, but a struct global makes GCC keep a base
  * register for the field accesses, so they are separate scalars here.
  */
@@ -20,9 +25,9 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
     s32 thread_id;
     s32 status;
 
-    g_world_gfx_current_otag_entry = otag;
+    g_gfx_current_otag_entry = otag;
     g_world_frame_arg = frame_arg;
-    g_world_input_frame_controller_input = world_input_get_menu_controller(0);
+    g_world_input_frame_controller_input = input_get_menu_controller(0);
     g_world_menu_hosted_frame = 0;
     if (input == 0) {
         g_world_input_frame_initial_repeat_counter = 0;
@@ -39,7 +44,7 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
         g_world_input_frame_new = ~previous_input & input;
         g_world_input_frame_initial_repeat_counter = 0;
     } else {
-        initial_delay = g_main_input_repeat_initial_delay / g_world_event_speed;
+        initial_delay = g_main_input_repeat_initial_delay / g_script_event_speed;
         counter = ++g_world_input_frame_initial_repeat_counter;
         if (counter == initial_delay) {
             g_world_input_frame_new = filtered_input;
@@ -47,7 +52,7 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
         if (counter >= initial_delay) {
             counter = ++g_world_input_frame_repeat_counter;
             g_world_input_frame_secondary_repeat_counter++;
-            repeat_delay = g_main_input_repeat_period / g_world_event_speed;
+            repeat_delay = g_main_input_repeat_period / g_script_event_speed;
             if (counter >= repeat_delay) {
                 g_world_input_frame_repeat_counter = 0;
                 if ((input & PSX_PAD_SQUARE) != 0) {
@@ -56,7 +61,7 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
                     g_world_input_frame_new = input & PSX_PAD_DPAD_MASK;
                 }
             }
-            secondary_delay = g_main_input_secondary_repeat_period / g_world_event_speed;
+            secondary_delay = g_main_input_secondary_repeat_period / g_script_event_speed;
             if (g_world_input_frame_secondary_repeat_counter >= secondary_delay) {
                 g_world_input_frame_secondary_repeat_counter = 0;
                 if ((g_world_input_frame_current & PSX_PAD_SQUARE) != 0) {
@@ -72,35 +77,31 @@ void world_input_update_event_state(u32* otag, u32 input, s32 frame_arg) {
         }
     }
 
-    g_world_sound_pending_sfx_id = -1;
-    world_script_load_event_input_state((const world_menu_input_state_t*)&g_world_input_frame_new);
-    world_script_load_event_input_state((const world_menu_input_state_t*)&g_world_input_frame_new);
+    g_sound_pending_sfx_id = -1;
+    script_load_event_input_state(&g_world_input_frame_state);
+    script_load_event_input_state(&g_world_input_frame_state);
     if (g_world_input_frame_new != PSX_PAD_SELECT && g_world_input_frame_new != 0) {
         g_world_event_input_suppression_frames = 5;
     }
 
-    thread_id = 1;
-    do {
+    for (thread_id = 1; thread_id < 16; thread_id++) {
         g_world_thread_status_snapshot[thread_id] = world_thread_is_running_asm(thread_id);
-        thread_id++;
-    } while (thread_id < 16);
+    }
 
-    world_thread_yield();
-    thread_id = 1;
-    do {
+    thread_yield();
+    for (thread_id = 1; thread_id < 16; thread_id++) {
         status = g_world_thread_status_snapshot[thread_id];
         if (status != world_thread_is_running_asm(thread_id)) {
             g_world_event_input_suppression_frames = 5;
         }
-        thread_id++;
-    } while (thread_id < 16);
+    }
 
     if (g_world_event_input_suppression_frames != 0) {
         g_world_event_input_suppression_frames--;
     }
     world_menu_draw_thread_status_indicators();
     g_world_frame_counter++;
-    g_world_menu_packet_buffer_index = (g_world_menu_packet_buffer_index + 1) & 1;
+    g_menu_packet_buffer_index = (g_menu_packet_buffer_index + 1) & 1;
     if (g_world_menu_input_block_frames != 0) {
         g_world_menu_input_block_frames--;
     }

@@ -5,7 +5,7 @@
  * the two hand slots is occupied, its item is below the throwable range, and
  * the weapon either forces two hands or allows them while `two_hands_support`
  * (the Two Hands support ability) is set. */
-s32 equip_unit_is_two_handing_weapon(weapon_pair_t* slots, s32 two_hands_support) {
+s32 equip_unit_is_two_handing_weapon(const s16* slots, s32 two_hands_support) {
     s32 result;
     s32 item_id;
     s16 w0;
@@ -13,14 +13,14 @@ s32 equip_unit_is_two_handing_weapon(weapon_pair_t* slots, s32 two_hands_support
     u8 flags;
 
     result = 0;
-    w0 = slots->slot_a;
+    w0 = slots[EQUIP_SLOT_RIGHT_HAND];
     item_id = 0;
     if (w0 != 0) {
-        if (slots->slot_b == 0) {
+        if (slots[EQUIP_SLOT_LEFT_HAND] == 0) {
             item_id = w0;
         }
     } else {
-        w1 = slots->slot_b;
+        w1 = slots[EQUIP_SLOT_LEFT_HAND];
         if (w1 != 0) {
             item_id = w1;
         }

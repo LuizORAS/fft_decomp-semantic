@@ -25,7 +25,7 @@ s32 main_unit_init_from_entd(battle_stats_t* unit, entd_unit_t* entd, u32 use_wo
             return 0;
         }
         if (entd->sprite_set < CHARACTER_IDENTITY_RAMZA_END) {
-            if (entd->birthday[0] == 0) {
+            if (entd->birth_month == 0) {
                 return 0;
             }
         }

@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -7,7 +8,7 @@ void wldcore_script_check_war_funds_at_least(void) {
     u16 idx = *ip;
     u16 value = g_wldcore_script_state.data[idx];
     *ip = idx + 1;
-    if (world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) < value) {
+    if (script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS) < value) {
         g_wldcore_script_state.flags |= WLDCORE_SCRIPT_RESULT_CONDITION_FAILED;
     }
 }

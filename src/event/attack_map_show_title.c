@@ -1,5 +1,5 @@
 #include "fft/event_attack.h"
-#include "psx/libgpu.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /* Thread body that animates the map-title panel strip with double-buffered
@@ -21,7 +21,7 @@ void attack_map_show_title(void) {
         buffer ^= 1;
         attack_gfx_build_shaded_panel_strips(g_attack_map_title_sprites[buffer], width, 0x80, 0);
         width += step;
-        battle_thread_yield();
+        thread_yield();
     } while (width < 0xf8);
 
     width = 0;
@@ -29,7 +29,7 @@ void attack_map_show_title(void) {
         buffer ^= 1;
         attack_gfx_build_shaded_panel_strips(g_attack_map_title_sprites[buffer], 0xf8, 0x80, 0);
         width += step;
-        battle_thread_yield();
+        thread_yield();
     } while (width < 0x6e);
 
     width = 8;
@@ -40,8 +40,8 @@ void attack_map_show_title(void) {
             g_attack_map_title_closing_past_midpoint = 1;
         }
         width += step;
-        battle_thread_yield();
+        thread_yield();
     } while (width < 0xf9);
 
-    battle_thread_exit_current();
+    thread_exit_current();
 }

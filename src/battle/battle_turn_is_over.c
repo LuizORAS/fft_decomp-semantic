@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
 #include "psx/types.h"
 
 /* Return 1 when the unit's turn is over: it has no ENTD slot or no longer has the turn, or a

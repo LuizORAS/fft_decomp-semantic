@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_script.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -63,6 +65,6 @@ void battle_state_handle_event_state(void) {
         g_battle_screen_fade_polygons[g_main_gfx_screen_polarity].b0 = level;
 
         AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_polygons[g_main_gfx_screen_polarity]);
-        AddPrim(main_gfx_get_otag(), (u8*)g_battle_screen_fade_draw_modes + g_main_gfx_screen_polarity * 0xc);
+        AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_draw_modes[g_main_gfx_screen_polarity]);
     }
 }

@@ -1,17 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
-
-/* 0x28-byte GT3 polygon initialised by SetPolyGT3. */
-typedef struct battle_effect_reflect_prim {
-    u8 data[0x28];
-} battle_effect_reflect_prim_t;
-
-/* 0x798-byte work buffer: two 6-colour CLUT images then two 24-polygon strips. */
-typedef struct battle_effect_reflect_work {
-    u16 clut[2][6];
-    battle_effect_reflect_prim_t prims[2][24];
-} battle_effect_reflect_work_t;
 
 /* Secondary-effect handler 0x12 (Reflect). The effect's parameter is the
  * frames the shield stays, at least 26: the child timeline passes the
@@ -23,7 +15,9 @@ typedef struct battle_effect_reflect_work {
  * to battle_effect_draw_projectile_model; phase 3 finishes. The wipe indices are assigned inside the
  * subscript, each to its own variable: a separate statement or a folded
  * `timer - 1 - span` changes the order and association of the index
- * arithmetic. spin_timer keeps the timer load at full width (lh). */
+ * arithmetic. spin_timer keeps the timer load at full width (lh).
+ *
+ * The 0x798-byte work buffer holds two 6-colour CLUT images, then two 24-polygon strips. */
 s32 battle_effect_reflect_secondary_handler(void) {
     battle_effect_secondary_data_t* effect;
     s32 unused[2];
@@ -33,13 +27,13 @@ s32 battle_effect_reflect_secondary_handler(void) {
     VECTOR scale;
     SVECTOR spin;
     RECT rect;
-    battle_effect_reflect_work_t* work;
+    battle_effect_reflect_buffer_t* work;
     SVECTOR* caster;
     SVECTOR* target;
-    u8* rgb;
-    u8* red;
-    u8* green;
+    rgb24_t* colors;
     u8* blue;
+    u8* green;
+    u8* red;
     s32 span;
     s32 timer;
     s32 lit;
@@ -55,7 +49,7 @@ s32 battle_effect_reflect_secondary_handler(void) {
         span = 0x1a;
     }
     switch (g_battle_effect_current_secondary->phase) {
-    case BATTLE_SECONDARY_EFFECT_INITIALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_INITIALIZING:
         if (g_battle_effect_current_secondary->allocation != 0) {
             main_heap_free(g_battle_effect_current_secondary->allocation);
         }
@@ -67,20 +61,22 @@ s32 battle_effect_reflect_secondary_handler(void) {
                 SetSemiTrans(&work->prims[i][j], 1);
             }
         }
+        /* Separate channel pointers retain the target's three stride bases. */
         for (i = 0; i < 2; i++) {
-            rgb = g_battle_effect_reflect_palette_colors;
-            blue = rgb;
-            green = rgb + 1;
-            red = rgb + 2;
+            colors = g_battle_effect_reflect_palette_colors;
+            red = &colors->r;
+            green = &colors->g;
+            blue = &colors->b;
             for (j = 0; j < 6; j++) {
-                work->clut[i][j] = blue[j * 3] | (green[j * 3] << 5) | (red[j * 3] << 10) | 0x8000;
+                work->clut[i][j] = red[j * sizeof(*colors)] | (green[j * sizeof(*colors)] << 5)
+                    | (blue[j * sizeof(*colors)] << 10) | 0x8000;
             }
         }
         result = 1;
         g_battle_effect_current_secondary->timer = 0;
-        g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
+        g_battle_effect_current_secondary->phase = BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING;
         break;
-    case BATTLE_SECONDARY_EFFECT_EXECUTING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING:
         work = g_battle_effect_current_secondary->allocation;
         timer = g_battle_effect_current_secondary->timer;
         if (span < timer && timer < span + 4) {
@@ -96,16 +92,16 @@ s32 battle_effect_reflect_secondary_handler(void) {
         rect.w = 6;
         rect.h = 1;
         LoadImage(&rect, (u32*)work->clut[g_battle_effect_buffer_index]);
-        caster = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->caster.fields.caster_id);
-        target = battle_unit_get_screen_data_ptr_by_misc_id(g_battle_effect_current_secondary->target.fields.target_id);
-        delta.vx = caster->vx - target->vx;
-        delta.vy = caster->vy - target->vy;
-        delta.vz = caster->vz - target->vz;
+        caster = battle_unit_get_world_coords_by_runtime_id(
+            g_battle_effect_current_secondary->caster.data.unit.runtime_id);
+        target = battle_unit_get_world_coords_by_runtime_id(
+            g_battle_effect_current_secondary->target.record.data.unit.runtime_id);
+        setVector(&delta, caster->vx - target->vx, caster->vy - target->vy, caster->vz - target->vz);
         position.vx = target->vx;
         position.vz = target->vz;
         position.vy = target->vy
-            - (s32)battle_gfx_get_unit_spritesheet_height_by_misc_id(
-                  g_battle_effect_current_secondary->target.fields.target_id)
+            - (s32)battle_gfx_get_unit_spritesheet_height_by_runtime_id(
+                  g_battle_effect_current_secondary->target.record.data.unit.runtime_id)
                 / 2;
         angles.vy = ratan2(-delta.vz, delta.vx);
         angles.vz = ratan2(delta.vy, SquareRoot0(delta.vx * delta.vx + delta.vz * delta.vz)) + 0x400;
@@ -122,11 +118,11 @@ s32 battle_effect_reflect_secondary_handler(void) {
         effect = g_battle_effect_current_secondary;
         effect->timer++;
         if (span + 4 < effect->timer) {
-            effect->phase = BATTLE_SECONDARY_EFFECT_FINALIZING;
+            effect->phase = BATTLE_EFFECT_SECONDARY_PHASE_FINALIZING;
         }
         result = 1;
         break;
-    case BATTLE_SECONDARY_EFFECT_FINALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_FINALIZING:
         result = 0;
         break;
     }

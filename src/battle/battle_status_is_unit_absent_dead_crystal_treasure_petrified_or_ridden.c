@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
 
 /* Return 1 when the unit has no place in the AT list: no unit in the slot, Crystal, Dead, Petrify
  * or Treasure, or a mount carrying its rider; otherwise 0. */

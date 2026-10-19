@@ -5,7 +5,7 @@
  * is taken as complete and the output rectangle moves to the other frame buffer.
  * The second argument is not read. */
 void open_movie_wait_for_mdec_output(open_movie_mdec_stream_state_t* state, s32 unused) {
-    /* volatile in the source: retail keeps the counter on the stack. */
+    /* The timeout is read and written on the stack each iteration. */
     volatile s32 timeout = 0x800000;
 
     while (state->output_ready == 0) {

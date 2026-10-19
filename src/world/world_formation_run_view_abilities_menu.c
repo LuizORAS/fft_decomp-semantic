@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Handler of the formation's View Abilities (VIEW_ABILITIES in g_world_formation_menu_handlers,
  * Circle on an open unit): the job list (world_formation_run_ability_job_list), then the chosen job's

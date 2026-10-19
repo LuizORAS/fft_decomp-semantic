@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x5F, Nanoflare: the magical evade check, then formula 0x5E's damage
  * (battle_formula_calculate_truth_damage). */

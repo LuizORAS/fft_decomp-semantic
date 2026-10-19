@@ -12,6 +12,22 @@ scope:
   - battle_heap
   - battle_thread
   - world_thread
+  - suzuki_sound_disable_root_counter_2_event()
+  - suzuki_sound_enable_root_counter_2_event()
+  - thread_exit_current()
+  - thread_get_current_global_pointer()
+  - thread_get_current_task_id()
+  - thread_is_running()
+  - thread_reset_scheduler()
+  - thread_resume()
+  - thread_set_current_task_id()
+  - thread_set_four_parameters()
+  - thread_set_parameters()
+  - thread_start()
+  - thread_suspend()
+  - thread_wait_for_unit_view_panels()
+  - thread_wait_frames()
+  - thread_wait_until_inactive()
 ---
 
 # Engine core
@@ -47,10 +63,10 @@ words at the start of MAIN's data (`0x80010000`) hold the load addresses.
   [[g_main_heap_smd_allocator_table]] hold one tag per cell (0 is free);
   the battle heap is a free list of [[battle_heap_node_t]] blocks from
   [[g_battle_heap_rover]], with one list of live blocks per owner.
-- Threads: [[native_thread_t]] slots of `0x400` bytes reached through
-  [[g_battle_threads]] and [[g_world_threads]]; the running one is
-  [[g_battle_thread_current_id]] or [[g_world_thread_current_id]]. Task ids
-  ([[native_thread_task_e]]) let threads find each other.
+- Threads: [[thread_t]] slots of `0x400` bytes reached through
+  [[g_threads]] and [[g_threads]]; the running one is
+  [[g_thread_current_id]] or [[g_thread_current_id]]. Task ids
+  ([[thread_task_e]]) let threads find each other.
 - The game loop: [[g_main_system_game_flow_state]] (2 resets, 3 plays the
   ending), [[g_main_system_go_straight_to_battle]] and
   [[g_main_system_frontend_world_result]] (5 returns to the title).
@@ -72,15 +88,15 @@ words at the start of MAIN's data (`0x80010000`) hold the load addresses.
 3. **A frame inside an overlay.** The overlay's main loop is thread slot 0.
    Once a frame its event or menu frame function
    ([[battle_script_run_event_frame]], [[world_script_run_event_frame]]) yields:
-   [[battle_thread_yield]] saves its registers and resumes the next running
+   [[thread_yield]] saves its registers and resumes the next running
    slot, each thread runs until its own next yield, and after the last slot
    (15 in BATTLE, 16 in WORLD) control returns to slot 0. Every running
-   thread therefore advances once a frame, and [[battle_thread_wait_frames]]
+   thread therefore advances once a frame, and [[thread_wait_frames]]
    waits that many frames.
 4. **Disc reads while playing.** [[main_file_request_read_bytes]] arms a read
    on the shared descriptor; the overlay's frame loop advances it with
    [[main_file_poll_load]] and tests [[main_file_is_still_loading]]. A thread
-   makes such calls through [[battle_thread_call_on_main_stack]], because its
+   makes such calls through [[thread_call_on_main_stack]], because its
    own stack is about 900 bytes. Waiting loaders
    ([[main_file_load_to_address]], [[main_file_alloc_and_load]]) poll in a
    loop of their own.
@@ -106,8 +122,8 @@ words at the start of MAIN's data (`0x80010000`) hold the load addresses.
   waits for the shiftable build.
 - **Run a task beside the main loop:** take a slot from
   [[battle_thread_resolve_id]], pass inputs with
-  [[battle_thread_set_parameters]], start it with [[battle_thread_start]],
-  and yield every frame; stop with [[battle_thread_exit_current]]. WORLD has
+  [[thread_set_parameters]], start it with [[thread_start]],
+  and yield every frame; stop with [[thread_exit_current]]. WORLD has
   the same functions under `world_thread_`.
 - **Memory:** [[main_heap_alloc]] gives 2 KB cells (128 KB in all);
   [[battle_heap_alloc_block]] serves the battle effects.
@@ -123,7 +139,7 @@ words at the start of MAIN's data (`0x80010000`) hold the load addresses.
 - [[battle_heap_alloc_block]] has no out-of-memory exit.
 - [[battle_thread_resolve_id]] and its twins return a leftover `$v0` when no
   slot is free, which a main-loop caller receives.
-- WORLD runs slot 16, which [[world_thread_reset_scheduler]] does not clear.
+- WORLD runs slot 16, which [[thread_reset_scheduler]] does not clear.
 - Thread parameters are `s32` but often carry pointers (QUIRKS.md, "Pointers
   held in 32-bit integers").
 - [[world_card_run_menu_screen]]'s stack frame reaches into the game heap's

@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Ask all eight unit panels of the formation and shop screens to redraw (redraw_request 1): the
  * status and comparison banners, the equipment-and-ability, stats, preview stats, equipment, stat

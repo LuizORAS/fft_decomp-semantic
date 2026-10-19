@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Re-validate the acting unit's stored target and mark the tile of the unit it hits.
@@ -13,8 +15,8 @@
  * One `hand` variable carries both hands, so the right-hand load stays after the left-hand mask;
  * `target` is reused for the result unit, which keeps it a global pseudo and gives the target's v1
  * for the copied position. */
-s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* source) {
-    battle_ai_command_action_t action;
+s32 battle_target_validate_weapon_target(const action_command_t* source) {
+    action_command_t action;
     s16 x;
     battle_stats_t* unit;
     battle_stats_t* target;
@@ -36,7 +38,7 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     s32 result;
 
     main_util_copy_action_data(source, &action);
-    unit_id = action.unit_id;
+    unit_id = action.actor_id;
     if (unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
@@ -44,7 +46,7 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return -1;
     }
-    menu_type = g_main_action_menu_types_by_skillset[action.skillset];
+    menu_type = g_main_action_menu_types_by_skillset[action.skillset_id];
     ability_flags = 0;
     if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_MONSTER) {
         ability_flags = g_main_ability_range_data[(u8)action.ability_id].flags_1;
@@ -75,27 +77,28 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
                 return -1;
             }
             target = &g_battle_unit_stats[action.target_id];
-            action.target_x = target->x;
-            action.target_y = target->position.bits.y;
-            action.target_elevation = target->position.raw >> 15;
+            action.target_position.vx = target->x;
+            action.target_position.vz = target->position.y;
+            action.target_position.vy = target->position.higher_elevation;
         }
         flags = WEAPON_FLAG_DIRECT;
     }
-    x = unit->action_target_x;
-    y = unit->action_target_y;
-    elevation = unit->action_target_elevation;
+    x = unit->action_command.target_position.vx;
+    y = unit->action_command.target_position.vz;
+    elevation = unit->action_command.target_position.vy;
     target_id = battle_target_get_unit_at_tile(x, y, elevation);
     if (target_id < 0) {
         target_id = -1;
     }
     if (flags & WEAPON_FLAG_ARC) {
-        result = battle_effect_set_and_validate_arc_trajectory(unit_id, (SVECTOR*)&unit->action_target_x, target_id);
+        result
+            = battle_effect_set_and_validate_arc_trajectory(unit_id, &unit->action_command.target_position, target_id);
     } else if (flags & WEAPON_FLAG_DIRECT) {
         distance_x = x - unit->x;
         if (distance_x < 0) {
             distance_x = -distance_x;
         }
-        distance_y = y - unit->position.bits.y;
+        distance_y = y - unit->position.y;
         if (distance_y < 0) {
             distance_y = -distance_y;
         }
@@ -103,8 +106,8 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
         if (menu_type == ACTION_MENU_TYPE_ITEM_INVENTORY && distance < 2) {
             result = target_id;
         } else {
-            result
-                = battle_effect_check_direct_trajectory_to_target(unit_id, (SVECTOR*)&unit->action_target_x, target_id);
+            result = battle_effect_check_direct_trajectory_to_target(
+                unit_id, &unit->action_command.target_position, target_id);
         }
     } else if (flags & WEAPON_FLAG_LUNGING) {
         result = battle_target_validate_lunging_target(unit_id, x, y, elevation, target_id);
@@ -115,7 +118,7 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     if (result >= 0 && result < BATTLE_UNIT_SLOT_COUNT) {
         target = &g_battle_unit_stats[result];
         tile = &g_battle_map_tile_data[battle_map_calculate_location(target)];
-        tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
+        tile->ceiling_depth_and_marks.targeted = 1;
     }
     return 0;
 }

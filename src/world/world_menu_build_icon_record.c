@@ -1,3 +1,6 @@
+#include "fft/gfx.h"
+#include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -21,15 +24,15 @@ void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_m
      * frame at zero instructions. Worth the whole prologue and epilogue. */
     u8 unused_scratch[8];
 
-    world_thread_set_current_task_id(NATIVE_THREAD_TASK_MENU_WINDOW_BUILD);
-    rect->x = param->vram_x;
-    rect->y = param->vram_y;
+    thread_set_current_task_id(THREAD_TASK_MENU_WINDOW_BUILD);
+    rect->x = param->vram_origin.x;
+    rect->y = param->vram_origin.y;
     rect->w = param->inner_width >> 2;
     rect->h = param->inner_height;
     record->_unknown_74 = 0;
     record->_unknown_78 = 0;
-    world_menu_init_sprite_array(record->base.sprites, 4, 0x7cfc);
-    world_gfx_init_image_loading(record->base.sprites, param, &param->window_x, &param->text_image);
+    menu_init_sprite_array(record->base.sprites, 4, 0x7cfc);
+    gfx_init_image_loading(record->base.sprites, &param->vram_origin, &param->window, &param->text_image);
     SetSemiTrans(&record->base.sprites[1], 0);
     SetSemiTrans(&record->base.sprites[2], 1);
     size = 0x10;
@@ -42,38 +45,40 @@ void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_m
     record->base.sprites[2].u0 = 0xb8;
     record->base.sprites[2].v0 = 0;
     kind = param->header_id;
-    /* The range test below reads its own halfword copy of the kind. */
+    /* The range test below reads its own 16-bit copy of the kind. */
     index = (s16)kind;
     if (kind == 0x10) {
-        world_menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
+        const image_load_parameters_t* image_params;
+
+        menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
         record->icons[0]->u0 = 0x30;
         record->icons[0]->v0 = 0x10;
         record->icons[0]->w = size;
         record->icons[0]->h = 8;
-        record->icons[0]->x0
-            = ((const world_gfx_image_load_parameters_t*)param->text_binding)->height + param->window_x + 7;
-        record->icons[0]->y0 = param->window_y - 1;
-        world_gfx_init_image_loading(&record->base.sprites[3], &g_world_menu_texture_location, &param->window_x,
+        image_params = param->context;
+        record->icons[0]->x0 = image_params->height + param->window.x + 7;
+        record->icons[0]->y0 = param->window.y - 1;
+        gfx_init_image_loading(&record->base.sprites[3], &g_menu_texture_location, &param->window,
             &g_world_menu_single_icon_image_params[1]);
     } else if (kind < 5) {
-        world_gfx_init_image_loading(&record->base.sprites[3], &g_world_menu_texture_location, &param->window_x,
+        gfx_init_image_loading(&record->base.sprites[3], &g_menu_texture_location, &param->window,
             &g_world_menu_single_icon_image_params[kind]);
     } else {
         if (index >= 5 && index < 0x10) {
-            world_menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
-            world_menu_init_sprite_array(record->icons[1], 1, 0x7cfc);
-            world_menu_init_sprite_array(record->icons[2], 1, 0x7cfc);
+            menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
+            menu_init_sprite_array(record->icons[1], 1, 0x7cfc);
+            menu_init_sprite_array(record->icons[2], 1, 0x7cfc);
             /* `kind` stays unscaled and the x4 is spelled `<< 2` inline. Written
              * `kind * 4 + n`, fold collapses it to one x48 whose 3-op synth is an
              * instruction short; `(kind << 2) + n` selects the target's 4-op form. */
             kind -= 5;
-            world_gfx_init_image_loading(&record->base.sprites[3], &g_world_menu_texture_location, &param->window_x,
+            gfx_init_image_loading(&record->base.sprites[3], &g_menu_texture_location, &param->window,
                 &g_world_menu_icon_strip_image_params[(kind << 2)]);
-            world_gfx_init_image_loading(record->icons[0], &g_world_menu_texture_location, &param->window_x,
+            gfx_init_image_loading(record->icons[0], &g_menu_texture_location, &param->window,
                 &g_world_menu_icon_strip_image_params[(kind << 2) + 1]);
-            world_gfx_init_image_loading(record->icons[1], &g_world_menu_texture_location, &param->window_x,
+            gfx_init_image_loading(record->icons[1], &g_menu_texture_location, &param->window,
                 &g_world_menu_icon_strip_image_params[(kind << 2) + 2]);
-            world_gfx_init_image_loading(record->icons[2], &g_world_menu_texture_location, &param->window_x,
+            gfx_init_image_loading(record->icons[2], &g_menu_texture_location, &param->window,
                 &g_world_menu_icon_strip_image_params[(kind << 2) + 3]);
         } else {
             record->icons[0] = 0;
@@ -81,7 +86,6 @@ void world_menu_build_icon_record(RECT* rect, world_menu_entry_t* param, world_m
             record->icons[2] = 0;
         }
     }
-    /* Taking the draw_mode field adds an instruction; the record starts with that packet. */
-    world_gfx_set_draw_mode_from_rect((DR_MODE*)record, (u16*)param);
-    SetDrawMode(&record->base.draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_world_menu_disabled_texture_window);
+    world_gfx_set_draw_mode_from_origin(&record->base.first_draw_mode, &param->vram_origin);
+    SetDrawMode(&record->base.draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_menu_disabled_texture_window);
 }

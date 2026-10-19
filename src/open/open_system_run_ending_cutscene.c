@@ -1,7 +1,7 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
-/* Each graphics buffer's ordering table holds 16 words. */
+/* Each graphics buffer's ordering table holds 16 32-bit entries. */
 #define OPEN_OTAG_BUFFER_BYTES 64
 
 /* Entry point of OPEN.BIN for the ending: play FFTEND.STR, then run the ending

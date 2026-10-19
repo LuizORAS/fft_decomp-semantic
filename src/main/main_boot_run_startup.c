@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* Cold boot: clear the game allocator, install the VSync, DrawSync and CD callbacks, reset the
  * GPU, pads, SPU and CD, show the SCEA and Squaresoft logos, open the memory card events and

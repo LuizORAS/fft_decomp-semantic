@@ -1,4 +1,6 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
+#include "fft/menu_script.h"
 
 /* Point the scrollable list menu at a new -1 terminated entry list and reset
  * its render state. The scroll base is reset only when the selected index
@@ -19,14 +21,14 @@ void bunit_menu_init_scrollable_list_core(s16* entries, s32 selected_index, u8* 
     }
     g_bunit_menu_list_selected_index = selected_index;
     if (selected_index == 0) {
-        g_bunit_menu_scroll_base_index = 0;
+        g_menu_scroll_base_index = 0;
     }
-    g_bunit_gfx_sprite_color[0] = 0x80;
-    g_bunit_gfx_sprite_color[1] = 0x80;
-    g_bunit_gfx_sprite_color[2] = 0x80;
-    g_bunit_gfx_otag_index = 0;
-    g_bunit_menu_scroll_list_active = 0;
-    g_bunit_menu_scroll_pixel_offset = 0;
+    g_menu_gfx_sprite_color.r = 0x80;
+    g_menu_gfx_sprite_color.g = 0x80;
+    g_menu_gfx_sprite_color.b = 0x80;
+    g_menu_gfx_otag_index = 0;
+    g_menu_scroll_list_active = 0;
+    g_menu_list_scroll_offset = 0;
     g_bunit_menu_list_redraw_pending = 1;
     g_bunit_gfx_transition_frame = 0;
     g_bunit_gfx_otag_index_locked = 0;

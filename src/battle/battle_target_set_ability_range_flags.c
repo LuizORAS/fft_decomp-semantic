@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Flag MAP_TILE_FLAG_ABILITY_RANGE on every tile in range that is neither blocked nor a
@@ -13,12 +14,12 @@ s32 battle_target_set_ability_range_flags(void) {
     for (i = 0; i < 0x200; i++) {
         tile = &g_battle_map_tile_data[i];
         panel = &g_battle_target_panels[i];
-        if (panel->remaining_range != 0 && !(tile->flags.value & MAP_TILE_FLAG_BLOCKED)
-            && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
+        if (panel->remaining_range != 0 && !(tile->flags.blocked)
+            && (tile->surface.type) != MAP_SURFACE_CROSS_SECTION) {
             count++;
-            tile->ceiling_depth_and_marks.value |= MAP_TILE_FLAG_ABILITY_RANGE;
+            tile->ceiling_depth_and_marks.ability_range = 1;
         } else {
-            tile->ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_ABILITY_RANGE;
+            tile->ceiling_depth_and_marks.ability_range = 0;
         }
     }
     return count;

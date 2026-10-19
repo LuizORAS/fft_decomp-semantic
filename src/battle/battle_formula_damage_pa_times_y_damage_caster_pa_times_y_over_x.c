@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Formula 0x42, Destroy, Compress, Dispose and Crush: no evade or hit roll; PA * Y with the zodiac

@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
+#include "fft/battle_target.h"
 
 /* Prepare a spread: clear the 528 panels (with mode bit 0, also their ranges and the reachable
  * count) and build each tile's frontier flags from its slope, half height, water depth and
@@ -22,12 +24,12 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
     u8* frontier_cell;
     u8* unit_cell;
     u8 slope;
-    u8 tile_flags;
+    map_tile_flags_t tile_flags;
     u8 flags;
     u8 depth;
     u8 value;
 
-    for (i = 0, frontier_cell = frontier; i < 0x210; frontier_cell++, i++) {
+    for (i = 0, frontier_cell = frontier; i < BATTLE_MOVE_PANEL_COUNT; frontier_cell++, i++) {
         panel = &g_battle_target_panels[i];
         panel->mark = 0;
         panel->unit_record_index = 0;
@@ -36,37 +38,37 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
             panel->ride_remaining_range = 0;
             panel->max_height_delta = 0xff;
         }
-        if (i < 0x200) {
+        if (i < MAP_TILE_COUNT) {
             tile = &g_battle_map_tile_data[i];
             frontier[i] = 0;
             slope = tile->slope_type & 5;
             if (slope == 1 || slope == 4) {
                 *frontier_cell |= FRONTIER_FLAG_LOW_CORNER;
-                if (tile->depth_half_height.bits.half_height >= 3) {
+                if (tile->depth_half_height.half_height >= 3) {
                     *frontier_cell |= FRONTIER_FLAG_STEEP;
                 }
             } else {
-                if (tile->depth_half_height.bits.half_height > config->jump_or_1f) {
+                if (tile->depth_half_height.half_height > config->jump_or_1f) {
                     *frontier_cell |= FRONTIER_FLAG_STEEP;
                 }
             }
-            if ((tile->flags.bits.blocked | tile->flags.bits.untargetable) == 0) {
-                depth = tile->depth_half_height.value >> 5;
+            if ((tile->flags.blocked | tile->flags.untargetable) == 0) {
+                depth = tile->depth_half_height.depth;
                 if ((depth == 0 || !config->cannot_enter_water) && (depth < 4 || !config->will_sink)) {
                     *frontier_cell |= FRONTIER_FLAG_ENTERABLE;
                 }
             }
-            tile_flags = tile->flags.value;
-            if (tile_flags & MAP_TILE_FLAG_BLOCKED) {
+            tile_flags = tile->flags;
+            if (tile_flags.blocked) {
                 *frontier_cell |= FRONTIER_FLAG_BLOCKED;
-            } else if (!config->move_type && (tile_flags & MAP_TILE_FLAG_UNTARGETABLE)
-                && (tile->surface.value & MAP_SURFACE_MASK) != MAP_SURFACE_CROSS_SECTION) {
+            } else if (!config->move_type && (tile_flags.untargetable)
+                && (tile->surface.type) != MAP_SURFACE_CROSS_SECTION) {
                 *frontier_cell |= FRONTIER_FLAG_ENTERABLE;
             }
         }
     }
     if (mode != BATTLE_MOVE_TILE_FLAGS_MODE_TERRAIN_ONLY) {
-        for (i = 0; i < 16; i++) {
+        for (i = 0; i < BATTLE_MOVE_RECORD_COUNT; i++) {
             record = &records[i];
             flags = record->unit_id_flags;
             if (flags != BATTLE_MOVE_RECORD_NONE) {
@@ -109,7 +111,7 @@ void battle_move_set_tile_flags_for_pathfinding(s32 mode) {
         panel = &g_battle_target_panels[index];
         if (frontier[index] & FRONTIER_FLAG_MOUNTABLE_UNIT) {
             state->outer_count = 0x24;
-            aux = g_battle_target_panels + 0x200 + panel->unit_record_index;
+            aux = g_battle_target_panels + MAP_TILE_COUNT + panel->unit_record_index;
             aux->remaining_range = config->move + 1;
             aux->max_height_delta = 0;
         } else {

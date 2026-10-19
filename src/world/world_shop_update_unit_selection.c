@@ -16,16 +16,15 @@
  * so each branch materialises the address like the target. */
 void world_shop_update_unit_selection(void) {
     s32 previous;
-    s32 enable;
     s32* flags;
 
     if (g_world_formation_selected_unit_index != g_world_formation_selected_unit_index_latch) {
         if (g_world_formation_unit_banner_enabled != 0) {
             if (g_world_formation_unit_banner_at_bottom_latch != g_world_formation_unit_banner_at_bottom) {
                 bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index_latch],
-                    g_world_comparison_unit_stat_summary, 0x22);
-                bcopy(&g_world_formation_unit_pointers[g_world_formation_selected_unit_index_latch]->name_index,
-                    &g_world_comparison_unit_identity, 0xE);
+                    &g_world_comparison_unit_stat_summary, 0x22);
+                bcopy(&g_world_formation_unit_pointers[g_world_formation_selected_unit_index_latch]->identity,
+                    &g_world_comparison_unit_identity, sizeof(world_menu_unit_status_identity_t));
                 world_menu_toggle_comparison_status_thread(1);
                 g_world_formation_unit_banner_at_bottom_latch = g_world_formation_unit_banner_at_bottom;
                 if (g_world_formation_banner_slide_step < 0) {
@@ -83,18 +82,15 @@ void world_shop_update_unit_selection(void) {
     } else {
         world_menu_toggle_change_banner_panel_thread(g_world_formation_unit_browse_enabled);
     }
-    enable = 0;
-    if (g_world_formation_unit_banner_enabled != 0 || g_world_formation_unit_browse_enabled != 0) {
-        enable = 1;
-    }
-    world_menu_toggle_unit_status_thread(enable);
+    world_menu_toggle_unit_status_thread(
+        g_world_formation_unit_banner_enabled != 0 || g_world_formation_unit_browse_enabled != 0);
     if (g_world_formation_banner_slide_step < 0) {
         g_world_status_display_thread_params.y = g_world_formation_banner_slide_step * 8 + 0x108;
         g_world_comparison_display_thread_params.y = g_world_formation_banner_slide_step * 8;
         g_world_formation_banner_slide_step--;
         if (g_world_formation_banner_slide_step < -15) {
             g_world_formation_banner_slide_step = 0;
-            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS);
+            world_menu_request_thread_stop(THREAD_SCREEN_SLOT_COMPARISON_STATUS);
         }
     } else if (g_world_formation_banner_slide_step > 0) {
         g_world_status_display_thread_params.y = g_world_formation_banner_slide_step * 8 - 0x78;
@@ -102,7 +98,7 @@ void world_shop_update_unit_selection(void) {
         g_world_formation_banner_slide_step++;
         if (g_world_formation_banner_slide_step >= 16) {
             g_world_formation_banner_slide_step = 0;
-            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS);
+            world_menu_request_thread_stop(THREAD_SCREEN_SLOT_COMPARISON_STATUS);
         }
     }
 }

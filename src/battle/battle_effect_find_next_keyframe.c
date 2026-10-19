@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /*
@@ -15,7 +15,7 @@ s32 battle_effect_find_next_keyframe(s16 frame, s16 mask, s32* out_index, s32* o
     s32 i;
 
     data = g_battle_effect_timeline;
-    if (frame < data->child_duration) {
+    if (frame < data->child.duration) {
         i = 0;
         if (data->last_keyframe_index >= 0) {
             do {

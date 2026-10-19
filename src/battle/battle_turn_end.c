@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* End the unit's turn and set its CT for the next one: what was left at the turn's start, plus

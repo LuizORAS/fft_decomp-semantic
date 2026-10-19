@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -7,16 +8,16 @@
  * (WLDCORE_TEXT_ID_CHOOSE_DAYS), and the number panel thread runs on that range from the minimum,
  * with Circle and Cross kept from the WORLD menu threads (the level's own step takes them). */
 void wldcore_proposition_push_days_level(void) {
-    wldcore_point32_t origin;
+    open_point32_t origin;
     s32 record_index;
     s32 x;
     s32 y;
 
-    x = g_wldcore_selected_proposition_row[0].fields.min_days;
-    y = g_wldcore_selected_proposition_row[0].fields.max_days;
-    g_world_text_substitution_values[0] = x;
-    g_world_text_substitution_values[1] = y;
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_CHOOSE_DAYS, 0);
+    x = g_wldcore_selected_proposition_row[0].min_days;
+    y = g_wldcore_selected_proposition_row[0].max_days;
+    g_text_substitution_values[0] = x;
+    g_text_substitution_values[1] = y;
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_CHOOSE_DAYS, 0);
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS;
     g_wldcore_menu_ordering_table_offset = 8;
     origin.x = 0x38;

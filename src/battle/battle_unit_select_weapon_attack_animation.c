@@ -1,4 +1,8 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Choose the attacker's weapon attack animation from the target's height.
@@ -10,7 +14,7 @@
  * the first animation and one 12 or more below the third. A Golem or Blade
  * Grasp guard always takes the first, and the sheets from the crystal up
  * always play the unarmed level attack. */
-void battle_unit_select_weapon_attack_animation(battle_unit_misc_data_t* attacker, battle_unit_misc_data_t* target) {
+void battle_unit_select_weapon_attack_animation(battle_unit_t* attacker, battle_unit_t* target) {
     s32 miss_type;
     s16 attacker_centre;
     s16 target_centre;
@@ -31,7 +35,7 @@ void battle_unit_select_weapon_attack_animation(battle_unit_misc_data_t* attacke
                 attacker);
             return;
         }
-        miss_type = target->battle_data->action.miss_type;
+        miss_type = target->stats->action.miss_type;
         if (miss_type != BATTLE_ACTION_MISS_TYPE_HIT) {
             if (miss_type >= BATTLE_ACTION_MISS_TYPE_REFLECTED) {
                 if (miss_type < BATTLE_ACTION_MISS_TYPE_BUGGED_REFLECTION) {
@@ -45,9 +49,10 @@ void battle_unit_select_weapon_attack_animation(battle_unit_misc_data_t* attacke
             }
         }
         /* The target loads the attacker's screen_z zero-extended (lhu). */
-        attacker_centre
-            = battle_gfx_get_unit_spritesheet_height_by_misc_id(attacker->unit_id) / 2 - attacker->screen.vy;
-        target_centre = battle_gfx_get_unit_spritesheet_height_by_misc_id(target->unit_id) / 2 - target->screen.vy;
+        attacker_centre = battle_gfx_get_unit_spritesheet_height_by_runtime_id(attacker->runtime_id) / 2
+            - attacker->world_coords.vy;
+        target_centre
+            = battle_gfx_get_unit_spritesheet_height_by_runtime_id(target->runtime_id) / 2 - target->world_coords.vy;
         difference = attacker_centre - target_centre;
         if (difference < -11) {
             battle_unit_store_animation_facing_movement_data(

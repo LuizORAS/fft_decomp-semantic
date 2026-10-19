@@ -1,0 +1,61 @@
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+
+#include "fft/event_attack.h"
+#include "fft/event_bunit.h"
+#include "fft/event_debugchr.h"
+#include "fft/event_equip.h"
+#include "fft/event_option.h"
+#include "fft/world.h"
+/*
+ * Build the double-buffered draw-area pair of a window's open/close zoom.
+ *
+ * The first rectangle is `source` moved left one page (0x80), shifted by the
+ * thread's x and y, and cropped about its centre to
+ * g_menu_draw_area_scale_percent[scale_index] percent of its size;
+ * scale_index is doubled at event speed 2 and capped at 11. The second
+ * rectangle is the frame buffer's own area. With `lower_half` zero both are
+ * placed in the buffer at y 0xF0.
+ *
+ * Several modules compile this text, WORLD's unit panels among them
+ * (world_panel_gfx_build_scaled_draw_area_packets, as BUNIT and EQUIP do), and one copy is never
+ * referenced (QUIRKS.md). Callers pass different thread records, of which only the 16-bit values at
+ * offsets 0 and 4 are read; copying the view into a local reorders the prologue's saved-register
+ * moves.
+ */
+void menu_build_scaled_draw_area_packets(world_scaled_draw_area_pair_t* packet, const RECT* source, s32 scale_index,
+    s32 lower_half, const wldcore_menu_status_thread_t* thread) {
+    s32 percent;
+    s32 w;
+    s32 h;
+    s32 scaled;
+
+    if (g_script_event_speed == 2) {
+        scale_index *= 2;
+    }
+    if (scale_index >= 12) {
+        scale_index = 11;
+    }
+    percent = g_menu_draw_area_scale_percent[scale_index];
+    mem_copy_bytes_nonempty(&packet->rects[0], source, 8);
+    w = packet->rects[0].w;
+    h = packet->rects[0].h;
+    packet->rects[0].x -= 0x80;
+    packet->rects[0].x += thread->x;
+    packet->rects[0].y += thread->y;
+    scaled = (w * percent) / 200;
+    packet->rects[0].x = w / 2 + packet->rects[0].x - scaled;
+    scaled = (h * percent) / 200;
+    packet->rects[0].y = h / 2 + packet->rects[0].y - scaled;
+    packet->rects[0].w = (packet->rects[0].w * percent) / 100;
+    packet->rects[0].h = (packet->rects[0].h * percent) / 100;
+    if (lower_half != 0) {
+        packet->rects[1].y = 0;
+    } else {
+        packet->rects[1].y = 0xF0;
+        packet->rects[0].y += 0xF0;
+    }
+    SetDrawArea(&packet->areas[0], &packet->rects[0]);
+    SetDrawArea(&packet->areas[1], &packet->rects[1]);
+}

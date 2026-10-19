@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -6,16 +7,14 @@
  * (WLDCORE_MENU_LEVEL_WORLD_MENU) pushed to wait for it, with every button kept from the WORLD menu
  * frame until it starts. A fade in progress runs 4 frames longer, with the animation frozen. */
 void wldcore_menu_push_world_menu_level(void) {
-    s32 one;
     u32 flags;
     s32 depth;
     s32* counter;
 
     g_wldcore_menu_blocked_buttons = -1;
     world_menu_open_entry_window(4, -0x30, -0x38);
-    one = 1;
-    g_wldcore_context_value_display_mode = one;
-    g_wldcore_displayed_numeric_value = world_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
+    g_wldcore_context_value_display_mode = 1;
+    g_wldcore_displayed_numeric_value = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
     depth = g_wldcore_menu_stack_depth;
     flags = g_main_system_flags;
     g_wldcore_menu_stack_records_next[depth].world_menu.delay = 3;
@@ -29,7 +28,7 @@ void wldcore_menu_push_world_menu_level(void) {
     {
         s32 last;
         last = g_wldcore_menu_stack_depth;
-        g_wldcore_menu_stack_types[last + 1] = one;
+        g_wldcore_menu_stack_types[last + 1] = WLDCORE_MENU_LEVEL_WORLD_MENU;
         g_wldcore_menu_stack_depth = last + 1;
     }
 }

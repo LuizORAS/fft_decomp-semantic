@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Return 1 when the AI cannot target unit_id: absent, Crystal or Treasure, a ridden mount, or a

@@ -1,5 +1,7 @@
-#include "fft/battle.h"
-#include "psx/libc.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Picks the knockback destination for the current action's target.
@@ -48,14 +50,14 @@ void battle_formula_calculate_knockback(void) {
         return;
     }
     dx = target->x - attacker->x;
-    dy = target->position.bits.y - attacker->position.bits.y;
+    dy = target->position.y - attacker->position.y;
     adx = abs(dx);
     ady = abs(dy);
     if (adx + ady == 0) {
         return;
     }
     x = target->x;
-    y = target->position.bits.y;
+    y = target->position.y;
     if (ady < adx) {
         if (dx > 0) {
             direction = 3;
@@ -78,14 +80,14 @@ void battle_formula_calculate_knockback(void) {
         return;
     }
     tile = &g_battle_map_tile_data[(level << 8) + y * g_battle_map_max_x + x];
-    surface = tile->surface.bits.type;
-    if (tile->flags.bits.untargetable) {
+    surface = tile->surface.type;
+    if (tile->flags.untargetable) {
         return;
     }
-    if (tile->depth_half_height.bits.depth != 0) {
+    if (tile->depth_half_height.depth != 0) {
         return;
     }
-    if (tile->depth_half_height.bits.half_height >= 3) {
+    if (tile->depth_half_height.half_height >= 3) {
         return;
     }
     if (surface == MAP_SURFACE_LAVA || surface == MAP_SURFACE_OBSTACLE) {

@@ -1,3 +1,4 @@
+#include "fft/main.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -15,8 +16,8 @@ void world_ability_learn(s16 unit_id, s16 job_id, s16 ability_id) {
     s32 mask;
     u8* learned_abilities;
 
-    skillset = world_job_get_skillset(job_id);
-    generic_job = world_job_get_generic_index(job_id);
+    skillset = job_get_skillset(job_id);
+    generic_job = job_get_generic_index(job_id);
     list = (s16*)main_ability_store_skillset_abilities(skillset, SKILLSET_ABILITY_FILTER_ALL);
     i = 0;
     while (list[i] != ability_id) {
@@ -26,8 +27,8 @@ void world_ability_learn(s16 unit_id, s16 job_id, s16 ability_id) {
     bit = 7 - (i & 7);
     mask = 1;
     i = mask << bit;
-    /* Keeping the field base as byte arithmetic preserves the target's
-     * separate addiu 0x7a before the byte-index addition. */
-    learned_abilities = (u8*)g_world_formation_unit_pointers[unit_id] + generic_job * 3 + 0x7A;
+    /* Keeping the job-byte stride before the field address preserves the retail load/add order. */
+    learned_abilities
+        = ((world_unit_t*)((u8*)g_world_formation_unit_pointers[unit_id] + generic_job * 3))->learned_abilities[0];
     learned_abilities[byte] |= i;
 }

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/memory.h"
 
 /* Choose the turn's action from the ranked list: walk the eight entries best first and take each
  * with its hit chance (rand() % 100 below base_hit_percent), so a sure action is always taken when
@@ -11,20 +12,19 @@ s32 battle_ai_select_ranked_action(void) {
     s32 chance;
 
     any = 0;
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < BATTLE_AI_RANKED_ACTION_COUNT; i++) {
         chance = ai->ranked_actions[i].rank.base_hit_percent;
         if (chance != 0) {
             any = 1;
         }
         if ((rand() % 100) < chance) {
-            battle_ai_transfer_halfword_values(
-                &ai->selected_action, &ai->ranked_actions[i], sizeof(battle_ai_action_data_t));
+            battle_mem_copy_u16_values(&ai->selected_action, &ai->ranked_actions[i], sizeof(battle_ai_action_data_t));
             return 1;
         }
     }
     if (any == 0) {
         return 0;
     }
-    battle_ai_transfer_halfword_values(&ai->selected_action, &ai->ranked_actions[0], sizeof(battle_ai_action_data_t));
+    battle_mem_copy_u16_values(&ai->selected_action, &ai->ranked_actions[0], sizeof(battle_ai_action_data_t));
     return 1;
 }

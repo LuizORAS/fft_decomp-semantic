@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /* Transform a unit into a Morbol, keeping its name, position and facing. */
 void battle_unit_transform_into_morbol(battle_stats_t* unit) {
@@ -17,20 +18,20 @@ void battle_unit_transform_into_morbol(battle_stats_t* unit) {
     unit_id = unit->unit_id;
     unit->job_id = JOB_ID_MORBOL;
     unit->character_identity = CHARACTER_IDENTITY_MONSTER;
-    main_util_copy_byte_data(name, saved_name, 0x10);
+    main_mem_copy_byte_data_source_first(name, saved_name, 0x10);
     formation_index = unit->formation_index;
     x = unit->x;
-    y = unit->position.bits.y;
-    higher_elevation = unit->position.bits.higher_elevation;
-    facing = unit->position.bits.facing;
+    y = unit->position.y;
+    higher_elevation = unit->position.higher_elevation;
+    facing = unit->position.facing;
     unit->formation_index = BATTLE_FORMATION_INDEX_GENERATED_UNIT;
     main_unit_init_from_entd(unit, 0, 0, JOB_ID_MORBOL);
     unit->x = x;
-    unit->position.bits.y = y;
+    unit->position.y = y;
     unit->formation_index = formation_index;
-    unit->position.bits.higher_elevation = higher_elevation;
-    unit->position.bits.facing = facing;
-    main_util_copy_byte_data(saved_name, name, 0x10);
+    unit->position.higher_elevation = higher_elevation;
+    unit->position.facing = facing;
+    main_mem_copy_byte_data_source_first(saved_name, name, 0x10);
     unit->unit_id = unit_id;
     main_unit_calculate_palette_spritesheet(unit, palette);
 }

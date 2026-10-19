@@ -1,4 +1,5 @@
 #include "fft/event_debugchr.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Render signed gauge values with their positive, negative, or zero color. */
@@ -25,7 +26,7 @@ void debugchr_text_render_signed_decimal_entries(
         flags = entries->format;
         entries++;
         i++;
-        debugchr_text_render_decimal_value(amount, flags, pixels, out);
+        menu_text_render_decimal_value(amount, flags, pixels, out);
         out->color = 0;
     }
 }

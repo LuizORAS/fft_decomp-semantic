@@ -21,13 +21,13 @@
  * volume back for the streams. */
 void open_script_update_xa_audio(void) {
     u8 result[8];
-    u8 play[2];
+    CdlFILTER filter;
     u8 mode;
 
     if (g_open_script_state.dispatch.flags & OPEN_SCRIPT_DISPATCH_XA_STARTING) {
         switch (g_open_script_state.control_state) {
         case 0:
-            mode = 0x68;
+            mode = CdlModeRT | CdlModeSF | CdlModeSize1;
             CdControlF(CdlSetmode, &mode);
             {
                 s32* state = &g_open_script_state.control_state;
@@ -36,8 +36,8 @@ void open_script_update_xa_audio(void) {
             }
             break;
         case 4:
-            CdIntToPos(DISC_SECTOR_OPEN_ENDING_XA, g_open_file_location);
-            CdControlF(CdlSeekL, g_open_file_location);
+            CdIntToPos(DISC_SECTOR_OPEN_ENDING_XA, &g_main_file_cd_state.position);
+            CdControlF(CdlSeekL, (u8*)&g_main_file_cd_state.position);
             {
                 s32* state = &g_open_script_state.control_state;
 
@@ -57,13 +57,13 @@ void open_script_update_xa_audio(void) {
             }
         } break;
         case 6:
-            play[0] = 1;
+            filter.file = 1;
             {
                 s32 parameter = g_open_script_state.control_parameter;
 
-                play[1] = parameter;
+                filter.chan = parameter;
             }
-            CdControlF(0xd, play);
+            CdControlF(CdlSetfilter, (u8*)&filter);
             g_open_script_state.control_state++;
             break;
         case 1:
@@ -111,7 +111,7 @@ void open_script_update_xa_audio(void) {
                 *control = (*control ^ OPEN_SCRIPT_DISPATCH_XA_PLAYING) | OPEN_SCRIPT_DISPATCH_XA_STARTING;
                 return;
             }
-            if (CdControl(0x10, 0, result) != 0 && CdPosToInt(result) > ENDING_XA_LAST_SECTOR) {
+            if (CdControl(CdlGetlocL, 0, result) != 0 && CdPosToInt((CdlLOC*)result) > ENDING_XA_LAST_SECTOR) {
                 open_sound_set_cd_mix_and_volume(0, 1);
                 g_open_script_state.control_state = 0;
                 *control = (*control ^ OPEN_SCRIPT_DISPATCH_XA_PLAYING) | OPEN_SCRIPT_DISPATCH_XA_STOPPING;

@@ -7,22 +7,19 @@
  * bonuses, Move and Jump with full HP and MP, and names in BATTLE's or WORLD's text
  * (use_world_text). Returns -1 for an empty or invalid slot, else 0. */
 s32 main_unit_init_from_party_slot(battle_stats_t* unit, s32 slot, s32 use_world_text) {
-    party_data_t* party_unit;
-    u8* job_levels;
+    party_unit_t* party_unit;
 
     g_main_unit_name_uses_world_text = use_world_text;
-    party_unit = main_party_get_data_pointer(slot);
+    party_unit = main_party_get_unit(slot);
     if (party_unit == 0) {
         return -1;
     }
     if (party_unit->party_id == PARTY_ID_NONE) {
         return -1;
     }
-    job_levels = party_unit->job_levels;
-    /* The party record keeps each job's JP as a byte pair; the reader takes them as halfwords. */
-    main_unit_init_job_levels((u16*)party_unit->total_job_points, job_levels);
-    main_job_store_unlock_bitset(
-        party_unit->unlocked_jobs, main_job_calculate_unlocked(job_levels, party_unit->gender_flags));
+    main_unit_init_job_levels(party_unit->career.job_points.total.values, party_unit->career.job_levels);
+    main_job_store_unlock_bitset(party_unit->career.unlocked_jobs,
+        main_job_calculate_unlocked(party_unit->career.job_levels, party_unit->gender_flags));
     main_unit_reset_battle_state(unit);
     unit->formation_index = slot;
     main_unit_copy_party_record(unit, party_unit);

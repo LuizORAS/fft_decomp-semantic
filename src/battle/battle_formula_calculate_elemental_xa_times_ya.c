@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* XA * YA as HP damage, then the weather (battle_formula_apply_weather_elemental_effects) and the

@@ -5,18 +5,18 @@
  * and its return) at `positions`: for each unit on screen, its card readout dimmed to `shade` (not for
  * the selected unit), then its sprite or egg, the selected unit above the others. */
 void world_formation_draw_unit_slots(point16_t* positions, s32 shade) {
-    u8 sprite_rgb[3];
-    u8 backdrop_rgb[3];
+    rgb24_t sprite_rgb;
+    rgb24_t backdrop_rgb;
     s32 i;
     s32 ot_index;
     s32 mode;
-    world_formation_unit_t* unit;
+    world_unit_t* unit;
     s32 brightness;
     s8 rgb_value;
 
-    backdrop_rgb[2] = shade;
-    backdrop_rgb[1] = shade;
-    backdrop_rgb[0] = shade;
+    backdrop_rgb.b = shade;
+    backdrop_rgb.g = shade;
+    backdrop_rgb.r = shade;
 
     for (i = 0; i < g_world_formation_unit_count; i++) {
         if (positions[i].x < -0x1E || positions[i].y < -0x1E || positions[i].x >= 0x101 || positions[i].y >= 0xF1) {
@@ -37,25 +37,24 @@ void world_formation_draw_unit_slots(point16_t* positions, s32 shade) {
                     }
                 }
             }
-            world_formation_draw_unit_readout(i, mode, positions[i].x, positions[i].y, backdrop_rgb, 0, 0, 9);
+            world_formation_draw_unit_readout(i, mode, positions[i].x, positions[i].y, &backdrop_rgb, 0, 0, 9);
             ot_index = 8;
         } else {
             ot_index = 10;
         }
         unit = g_world_formation_unit_pointers[i];
         if (unit->gender_flags & UNIT_FLAG_EGG) {
-            world_formation_draw_egg_sprite(
-                (world_oriented_quad_t*)&positions[i], unit->egg_color, 0, unit->birthday & 0xF, ot_index);
+            world_formation_draw_egg_sprite(&positions[i], unit->egg_color, 0, unit->birthday & 0xF, ot_index);
         } else {
             brightness = world_formation_cursor_distance_falloff(positions[i].x, positions[i].y, 0xC8, 0x50);
             if (brightness > 0x80) {
                 brightness = 0x80;
             }
             rgb_value = brightness;
-            sprite_rgb[2] = rgb_value;
-            sprite_rgb[1] = rgb_value;
-            sprite_rgb[0] = rgb_value;
-            world_formation_draw_unit_sprite(i, &positions[i], sprite_rgb, ot_index);
+            sprite_rgb.b = rgb_value;
+            sprite_rgb.g = rgb_value;
+            sprite_rgb.r = rgb_value;
+            world_formation_draw_unit_sprite(i, &positions[i], &sprite_rgb, ot_index);
         }
     }
 }

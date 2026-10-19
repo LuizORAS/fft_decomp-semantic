@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Return 1 while battle_effect_update_file_load has work left, else 0: the event script's EffectStart

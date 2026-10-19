@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 
@@ -34,7 +35,7 @@ s8 world_item_run_action_menu(void) {
                 != 0) {
             text[1] = 0;
             g_world_item_action_option_states[0] = 1;
-            g_world_item_action_quantity_range.max = result;
+            g_world_item_action_quantity_range.bounds.max = result;
         } else {
             text[1] = 4;
             g_world_item_action_option_states[0] = 0x14D2;
@@ -65,7 +66,7 @@ s8 world_item_run_action_menu(void) {
         g_world_menu_text_redraw_request = 1;
         g_world_item_action_menu_initialized = 1;
     }
-    result = world_menu_run_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, &g_world_item_action_menu);
+    result = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, &g_world_item_action_menu);
     if (result == 0) {
         g_world_item_action_menu_initialized = 0;
         if (g_world_menu_selection_results[3] == -1) {
@@ -81,7 +82,7 @@ s8 world_item_run_action_menu(void) {
     if (selected != -1) {
         if (selected == 0) {
             g_world_preview_stats_thread_params.style = 1;
-            if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) != 0) {
+            if (thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) != 0) {
                 return MENU_ITEM_LIST_STATE_ACTION;
             }
             if (g_world_menu_selection_results[5] == 0) {
@@ -92,7 +93,7 @@ s8 world_item_run_action_menu(void) {
                         g_world_menu_entry_ids[i] = g_world_menu_entry_ids[i + 1];
                     }
                     world_menu_init_and_load_scrollable_list(g_world_menu_entry_ids, g_world_menu_cursor_position,
-                        g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES], g_world_item_list_window_script);
+                        g_text_section_pointers[TEXT_SECTION_ITEM_NAMES], &g_world_item_list_window_script);
                     world_menu_set_window_scale_step(10);
                     world_item_reconcile_sorted_list(g_world_item_menu_category);
                     world_item_populate_stat_preview(g_world_menu_entry_ids[g_world_menu_cursor_position],
@@ -117,12 +118,12 @@ s8 world_item_run_action_menu(void) {
                 }
                 g_world_item_action_menu_initialized = g_world_menu_sound_effect_id != MAIN_SFX_NONE ? 100 : 1;
             }
-            if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) != 0) {
+            if (thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) != 0) {
                 return MENU_ITEM_LIST_STATE_ACTION;
             }
             if (g_world_menu_selection_results[5] == 0) {
                 for (i = 0; i < g_world_formation_unit_count; i++) {
-                    for (slot = 0; slot < 5; slot++) {
+                    for (slot = 0; slot < WORLD_EQUIPMENT_SLOT_COUNT; slot++) {
                         if (item == g_world_formation_unit_pointers[i]->equipment[slot]) {
                             world_formation_equip_item_to_unit_slot(i, slot, ITEM_ID_NOTHING);
                         }
@@ -140,7 +141,7 @@ s8 world_item_run_action_menu(void) {
             return MENU_ITEM_LIST_STATE_ACTION;
         }
     } else {
-        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) != 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) != 0) {
             return MENU_ITEM_LIST_STATE_ACTION;
         }
         result = world_menu_update_horizontal_selection_and_mark_change(
@@ -156,8 +157,7 @@ s8 world_item_run_action_menu(void) {
             g_world_item_menu_category != 4 ? g_world_item_menu_category + 1 : ITEM_LIST_FILTER_OTHER,
             g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
         world_menu_get_selection_record(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
-        world_menu_init_scrollable_list(
-            g_world_menu_entry_ids, x, y, g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
+        world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         world_menu_set_window_scale_step(10);
         if (g_world_menu_option_count != 0) {
             result = g_world_menu_entry_ids[g_world_menu_cursor_position];

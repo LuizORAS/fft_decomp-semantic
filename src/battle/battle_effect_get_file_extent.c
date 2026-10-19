@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Copy the disc sector and the byte size of effect file effect_id from g_battle_effect_disc_entries into
  * lba and byte_length. */

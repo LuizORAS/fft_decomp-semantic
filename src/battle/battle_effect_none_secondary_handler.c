@@ -1,3 +1,4 @@
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Secondary effect function 0x00 of g_battle_effect_secondary_handlers, which the NONE animation names:

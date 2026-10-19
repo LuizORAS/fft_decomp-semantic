@@ -1,8 +1,8 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Return 1 when the unit can neither move (moved, or Don't Move) nor act (acted, or
  * battle_unit_get_action_block returns nonzero) and has done one of them. */
-s32 battle_turn_should_end(battle_stats_t* unit) {
+s32 battle_turn_should_end(const battle_stats_t* unit) {
     s32 cannot_act;
     u8 no_move;
     u8 no_action;

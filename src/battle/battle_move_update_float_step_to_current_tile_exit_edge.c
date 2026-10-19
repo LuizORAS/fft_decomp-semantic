@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /*
@@ -7,7 +8,7 @@
  * tile or, when the next tile is more than one step higher, set step speed
  * 0x2000 and start a climb jump through battle_move_start_float_climb_jump_step.
  */
-void battle_move_update_float_step_to_current_tile_exit_edge(battle_unit_misc_data_t* unit) {
+void battle_move_update_float_step_to_current_tile_exit_edge(battle_unit_t* unit) {
     s32 direction;
 
     direction = battle_move_get_direction(unit);
@@ -18,12 +19,10 @@ void battle_move_update_float_step_to_current_tile_exit_edge(battle_unit_misc_da
     if (battle_move_has_reached_current_tile_exit_edge(direction, unit) != 0) {
         battle_move_snap_axis_to_current_tile_exit_edge(direction, unit);
         g_battle_move_current_edge_height = g_battle_move_current_tile->height * 2
-            + (g_battle_move_current_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
-                * unit->current_edge_height;
-        unit->standing_on_unit_id_plus_one = 0;
+            + g_battle_move_current_tile->depth_half_height.half_height * unit->current_edge_height;
+        unit->standing_on_battle_id_plus_one = 0;
         g_battle_move_destination_edge_height = g_battle_move_destination_tile->height * 2
-            + (g_battle_move_destination_tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
-                * unit->destination_edge_height;
+            + g_battle_move_destination_tile->depth_half_height.half_height * unit->destination_edge_height;
         if (g_battle_move_current_edge_height + 1 >= g_battle_move_destination_edge_height) {
             battle_move_start_float_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
             unit->step_phase = g_battle_move_float_to_centre_phases[direction];

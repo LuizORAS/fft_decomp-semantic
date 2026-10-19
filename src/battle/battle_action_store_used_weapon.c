@@ -1,11 +1,11 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Pick the weapon the current strike uses (g_battle_action_current_ability.weapon_id): the first strike's hand,
  * then the second's. An ordinary, Math Skill, Elemental or monster ability that neither uses the
  * weapon's range nor strikes with it uses none; Item and Draw Out use the command's item; Jump and
  * menu type 0x0f use none. An empty hand counts as ITEM_ID_NOTHING. */
-void battle_action_store_used_weapon(const battle_ai_command_action_t* action) {
+void battle_action_store_used_weapon(const action_command_t* action) {
     u8 weapon;
     s16 ability_id;
 
@@ -14,7 +14,7 @@ void battle_action_store_used_weapon(const battle_ai_command_action_t* action) {
     } else {
         weapon = g_battle_action_current_ability.secondary_weapon_id;
     }
-    switch (g_main_action_menu_types_by_skillset[action->skillset]) {
+    switch (g_main_action_menu_types_by_skillset[action->skillset_id]) {
     case ACTION_MENU_TYPE_DEFAULT:
     case ACTION_MENU_TYPE_ARITHMETICKS:
     case ACTION_MENU_TYPE_ELEMENTS:
@@ -30,7 +30,8 @@ void battle_action_store_used_weapon(const battle_ai_command_action_t* action) {
         break;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
-        weapon = action->item_id;
+        /* Retail reads only the low byte of the 16-bit item/equipment field. */
+        weapon = action->item_or_equipment;
         break;
     case ACTION_MENU_TYPE_JUMP:
     case ACTION_MENU_TYPE_UNKNOWN_0F:

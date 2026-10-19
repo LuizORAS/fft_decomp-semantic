@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 
 /* Mark the area an ability hits (MAP_TILE_FLAG_TARGETED) and return the number of tiles. It centres
  * on the unit's own tile for linear and three-direction abilities, on the target unit for a unit
@@ -12,12 +13,14 @@
  * `location` carries the column into the index sum: the extra copies give the index pseudo the
  * allocation priority the target needs (a2), while keeping the `(elevation * 256 + y * width) + x`
  * operand order. */
-s32 battle_target_mark_ability_area(battle_ai_command_action_t* action) {
-    battle_ai_command_action_t action_copy;
+s32 battle_target_mark_ability_area(const action_command_t* action) {
+    /* A byte collision test retains the original single-mask branch. */
+    action_command_t action_copy;
     ability_secondary_data_t* ability;
     battle_stats_t* unit;
     battle_stats_t* target;
     map_tile_t* tile;
+    /* Byte access retains the original packed load and field-extraction order. */
     battle_target_panel_t* panel;
     battle_target_panel_t* other_panel;
     battle_target_panel_t* cursor;
@@ -42,7 +45,7 @@ s32 battle_target_mark_ability_area(battle_ai_command_action_t* action) {
     flags_2 = ability->flags_2;
     aoe = ability->aoe;
     vertical = ability->vertical;
-    unit_id = action_copy.unit_id;
+    unit_id = action_copy.actor_id;
     unit = &g_battle_unit_stats[unit_id];
     if (ability->flags_4 & ABILITY_SECONDARY_FLAG_4_DIRECT_TARGETING) {
         flags_1 |= ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE;
@@ -51,17 +54,17 @@ s32 battle_target_mark_ability_area(battle_ai_command_action_t* action) {
     }
     if (flags_2 & (ABILITY_SECONDARY_FLAG_2_THREE_DIRECTIONS | ABILITY_SECONDARY_FLAG_2_LINEAR_ATTACK)) {
         x = unit->x;
-        y = unit->position.bits.y;
-        elevation = unit->position.bits.higher_elevation;
+        y = unit->position.y;
+        elevation = unit->position.higher_elevation;
     } else if (action_copy.targeting_type != BATTLE_TARGETING_TYPE_UNIT) {
-        x = (u8)action_copy.target_x;
-        y = (u8)action_copy.target_y;
-        elevation = (u8)action_copy.target_elevation;
+        x = (u8)action_copy.target_position.vx;
+        y = (u8)action_copy.target_position.vz;
+        elevation = (u8)action_copy.target_position.vy;
     } else {
         target = &g_battle_unit_stats[action_copy.target_id];
         x = target->x;
-        y = target->position.bits.y;
-        elevation = target->position.bits.higher_elevation;
+        y = target->position.y;
+        elevation = target->position.higher_elevation;
     }
     if (x >= g_battle_map_max_x) {
         return -1;
@@ -73,11 +76,11 @@ s32 battle_target_mark_ability_area(battle_ai_command_action_t* action) {
     index = location;
     index = elevation * 256 + y * g_battle_map_max_x + location;
     tile = &g_battle_map_tile_data[index];
-    if (tile->flags.value & MAP_TILE_FLAG_BLOCKED) {
+    if (tile->flags.blocked) {
         return -1;
     }
-    height = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
-        + (tile->depth_half_height.value >> 5) * 2;
+    height = tile->height * 2 + ((*(u8*)&tile->depth_half_height) & MAP_TILE_HALF_HEIGHT_MASK)
+        + ((*(u8*)&tile->depth_half_height) >> 5) * 2;
     if (aoe == 0xff) {
         cursor = g_battle_target_panels;
         for (i = 0; i < 0x200; i++) {
@@ -128,11 +131,11 @@ s32 battle_target_mark_ability_area(battle_ai_command_action_t* action) {
     if (!(flags_2 & (ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ENEMIES | ABILITY_SECONDARY_FLAG_2_CAN_TARGET_ALLIES))) {
         tile = g_battle_map_tile_data;
         for (i = 0, marked = g_battle_target_panels; i < 0x200; i++) {
-            if (marked->remaining_range != 0 && !(tile[i].flags.value & MAP_TILE_COLLISION_MASK)) {
+            if (marked->remaining_range != 0 && !(((*(u8*)&tile[i].flags) & MAP_TILE_COLLISION_MASK))) {
                 count++;
-                tile[i].ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
+                tile[i].ceiling_depth_and_marks.targeted = 1;
             } else {
-                tile[i].ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_TARGETED;
+                tile[i].ceiling_depth_and_marks.targeted = 0;
             }
             marked++;
         }
@@ -140,11 +143,11 @@ s32 battle_target_mark_ability_area(battle_ai_command_action_t* action) {
     }
     tile = g_battle_map_tile_data;
     for (i = 0, marked = g_battle_target_panels; i < 0x200; i++) {
-        if (marked->mark != 0 && !(tile[i].flags.value & MAP_TILE_COLLISION_MASK)) {
+        if (marked->mark != 0 && !(((*(u8*)&tile[i].flags) & MAP_TILE_COLLISION_MASK))) {
             count++;
-            tile[i].ceiling_depth_and_marks.value |= MAP_TILE_FLAG_TARGETED;
+            tile[i].ceiling_depth_and_marks.targeted = 1;
         } else {
-            tile[i].ceiling_depth_and_marks.value &= ~MAP_TILE_FLAG_TARGETED;
+            tile[i].ceiling_depth_and_marks.targeted = 0;
         }
         marked++;
     }

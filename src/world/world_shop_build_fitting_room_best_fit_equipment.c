@@ -26,10 +26,6 @@
  *   - The swap flag and the swap temporary are one variable (both in a0).
  *   - `first = right` is written last in the dual arm, so reorg's backward
  *     scan takes it into the `bnez` delay slot.
- *
- * The 432-byte frame (args 24 + vars 368 + 10 saves) is what `s16 list[0x90]`
- * reproduces: sp+24 to sp+312 is exactly 0x120 bytes, and every slot above it
- * is a reload slot on the 8-byte stride.
  */
 #include "fft/world.h"
 
@@ -62,17 +58,19 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
     s16 retry;
     s16 reserved;
 
-    reserved = g_world_shop_fitting_room_items[unit_index][0];
+    reserved = g_world_shop_fitting_room_items[unit_index][WORLD_EQUIPMENT_SLOT_RIGHT_HAND];
     if (reserved != ITEM_ID_NOTHING) {
         right = reserved;
     } else {
-        right = g_world_formation_unit_pointers[unit_index]->equipment[0] & WORLD_ITEM_ID_MASK;
+        right = g_world_formation_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND]
+            & WORLD_ITEM_ID_MASK;
     }
-    reserved = g_world_shop_fitting_room_items[unit_index][1];
+    reserved = g_world_shop_fitting_room_items[unit_index][WORLD_EQUIPMENT_SLOT_LEFT_HAND];
     if (reserved != ITEM_ID_NOTHING) {
         left = reserved;
     } else {
-        left = g_world_formation_unit_pointers[unit_index]->equipment[1] & WORLD_ITEM_ID_MASK;
+        left = g_world_formation_unit_pointers[unit_index]->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND]
+            & WORLD_ITEM_ID_MASK;
     }
 
     second = ITEM_ID_NOTHING;
@@ -83,7 +81,7 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
     }
     if (dual) {
         second = left;
-        g_world_shop_best_fit_slot_categories[1] = ITEM_LIST_FILTER_WEAPON;
+        g_world_shop_best_fit_slot_categories[WORLD_EQUIPMENT_SLOT_LEFT_HAND] = ITEM_LIST_FILTER_WEAPON;
         /* Written last so it is the instruction immediately before the test:
          * reorg scans backward from the branch and takes it into the delay
          * slot, which is where the target has `sw s8,328(sp)`. */
@@ -93,7 +91,7 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
             second = ITEM_ID_NOTHING;
         }
     } else {
-        g_world_shop_best_fit_slot_categories[1] = ITEM_LIST_FILTER_SHIELD;
+        g_world_shop_best_fit_slot_categories[WORLD_EQUIPMENT_SLOT_LEFT_HAND] = ITEM_LIST_FILTER_SHIELD;
         if (right >= ITEM_ID_THROWABLE_FIRST)
             second = right;
         else if (right != ITEM_ID_NOTHING)
@@ -104,7 +102,7 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
             first = left;
     }
 
-    for (slot = 0; slot < 4; slot++) {
+    for (slot = 0; slot < WORLD_EQUIPMENT_SLOT_ACCESSORY; slot++) {
         category = g_world_shop_best_fit_slot_categories[slot];
         count = world_shop_build_item_list(unit_index, shop_id, category, list, ITEM_LIST_MODE_EQUIPPABLE);
         length = count;
@@ -113,10 +111,10 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
              * through it from both sides of the test (`sh t0,0(v1)` then
              * `sh zero,0(a0)`), with `length` post-incremented. Two separate
              * `list[length] = ...` statements duplicate the address computation. */
-            if (slot == 0) {
+            if (slot == WORLD_EQUIPMENT_SLOT_RIGHT_HAND) {
                 list[length++] = (first < ITEM_ID_THROWABLE_FIRST) ? first : ITEM_ID_NOTHING;
             }
-            if (slot == 1) {
+            if (slot == WORLD_EQUIPMENT_SLOT_LEFT_HAND) {
                 list[length++] = (second < ITEM_ID_THROWABLE_FIRST) ? second : ITEM_ID_NOTHING;
             }
             list[length] = -1;
@@ -133,8 +131,8 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
                 retry = 0;
                 for (i = 0;; i++) {
                     if (list[i] == -1) {
-                        g_world_shop_best_fit_slot_categories[1] = ITEM_LIST_FILTER_SHIELD;
-                        if (slot == 1) {
+                        g_world_shop_best_fit_slot_categories[WORLD_EQUIPMENT_SLOT_LEFT_HAND] = ITEM_LIST_FILTER_SHIELD;
+                        if (slot == WORLD_EQUIPMENT_SLOT_LEFT_HAND) {
                             retry = 1;
                             slot--;
                         }
@@ -150,8 +148,10 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
             }
         } else if (category == ITEM_LIST_FILTER_SHIELD) {
             if ((world_ability_has_two_hands(unit_index)
-                    && (g_main_item_weapon_data[out[0]].flags & WEAPON_FLAG_TWO_HANDS_COMPATIBLE))
-                || (g_main_item_weapon_data[out[0]].flags & WEAPON_FLAG_FORCED_TWO_HANDS)) {
+                    && (g_main_item_weapon_data[out[WORLD_EQUIPMENT_SLOT_RIGHT_HAND]].flags
+                        & WEAPON_FLAG_TWO_HANDS_COMPATIBLE))
+                || (g_main_item_weapon_data[out[WORLD_EQUIPMENT_SLOT_RIGHT_HAND]].flags
+                    & WEAPON_FLAG_FORCED_TWO_HANDS)) {
                 list[0] = -1;
             } else {
                 if (second >= ITEM_ID_THROWABLE_FIRST)
@@ -172,22 +172,23 @@ void world_shop_build_fitting_room_best_fit_equipment(s16 unit_index, s16 shop_i
 
     i = 0; /* reused as the swap flag, as in the sibling */
     if (g_world_formation_unit_pointers[unit_index]->support_abilities[2] & BATTLE_SUPPORT_SET_3_MARTIAL_ARTS) {
-        out[0] = ITEM_ID_NOTHING;
-        out[1] = ITEM_ID_NOTHING;
+        out[WORLD_EQUIPMENT_SLOT_RIGHT_HAND] = ITEM_ID_NOTHING;
+        out[WORLD_EQUIPMENT_SLOT_LEFT_HAND] = ITEM_ID_NOTHING;
     }
-    if ((right != ITEM_ID_NOTHING && right == out[1]) || (left != ITEM_ID_NOTHING && left == out[0])
+    if ((right != ITEM_ID_NOTHING && right == out[WORLD_EQUIPMENT_SLOT_LEFT_HAND])
+        || (left != ITEM_ID_NOTHING && left == out[WORLD_EQUIPMENT_SLOT_RIGHT_HAND])
         || (!dual && left < ITEM_ID_THROWABLE_FIRST && left != ITEM_ID_NOTHING) || right >= ITEM_ID_THROWABLE_FIRST)
         i = 1;
     if (i) {
         /* The target keeps the swap flag and the swap temporary in ONE
          * register (a0), and gcc 2.6.3 never splits live ranges, so the two
          * non-overlapping roles were one variable in the original source. */
-        i = out[0];
-        out[0] = out[1];
-        out[1] = i;
+        i = out[WORLD_EQUIPMENT_SLOT_RIGHT_HAND];
+        out[WORLD_EQUIPMENT_SLOT_RIGHT_HAND] = out[WORLD_EQUIPMENT_SLOT_LEFT_HAND];
+        out[WORLD_EQUIPMENT_SLOT_LEFT_HAND] = i;
     }
 
-    for (slot = 0; slot < 4; slot++) {
+    for (slot = 0; slot < WORLD_EQUIPMENT_SLOT_ACCESSORY; slot++) {
         s16 item = out[slot];
         if (item != g_world_formation_unit_pointers[unit_index]->equipment[slot]
             && item != g_world_shop_fitting_room_items[unit_index][slot]) {

@@ -1,10 +1,11 @@
+#include "fft/menu.h"
 #include "fft/wldcore.h"
 
 /* Opens the paged text window: appends its four frame windows and the text
  * render record, lays the frames out around the padded text width, measures
  * the text and shows the first page.
  *
- * world_text_measure writes only the first two metrics; the array size
+ * text_measure writes only the first two metrics; the array size
  * reproduces the target's 0x60-byte frame. The one-trip do/while(0) around
  * the middle window's y store emits nothing: its loop notes are a
  * scheduling barrier that keeps the right/lower y subtraction in the
@@ -66,7 +67,7 @@ void wldcore_text_init_scrollable_window(wldcore_text_scrollable_window_t* state
     g_wldcore_window_records[state->lower_window_index].position.x = window_x;
     g_wldcore_window_records[state->lower_window_index].position.y = lower_y;
 
-    world_text_measure(&text_metrics[0], &text_metrics[1], world_text_find_entry(state->text_id));
+    text_measure(&text_metrics[0], &text_metrics[1], text_find_entry(state->text_id));
     rows = text_metrics[1];
     last_page_row = (rows - 1) / state->rows_per_page * state->rows_per_page;
     state->page_start_row = 0;

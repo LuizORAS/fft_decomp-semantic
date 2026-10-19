@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* The weather on the ability's element, as HP damage: in a storm (weather 3 or 4) fire * 3 / 4 and

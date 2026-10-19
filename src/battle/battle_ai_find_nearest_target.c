@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 
 /* Return the nearest unit (Manhattan distance; the first slot on ties) that the mode admits, or the
  * acting unit when none does. Every mode skips untargetable and petrified units, and every mode but 4

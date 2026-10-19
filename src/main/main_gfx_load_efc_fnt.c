@@ -1,15 +1,18 @@
 #include "fft/main.h"
 
+/* Low immediate byte of FntLoad's CLUT-Y addiu instruction. */
+extern u8 g_psyq_gpu_font_clut_y_offset_immediate;
+
 /* Set up the debug text font: FntLoad at x 0x280 with its CLUT moved to line 0x7f by patching
- * FntLoad's code (g_fntload_clut_y_offset_immediate, the low immediate byte of its CLUT-Y addiu; QUIRKS.md),
+ * FntLoad's code (g_psyq_gpu_font_clut_y_offset_immediate, the low immediate byte of its CLUT-Y addiu; QUIRKS.md),
  * then EFC_FNT.TIM's image and CLUT over it, read again until the load succeeds, and a FntPrint stream at
  * (0x88, 0x10), 256 by 256, as the default one. */
 void main_gfx_load_efc_fnt(void) {
     TIM_IMAGE image;
-    void* data;
+    u32* data;
     int loaded = 0;
 
-    g_fntload_clut_y_offset_immediate = 0x7f;
+    g_psyq_gpu_font_clut_y_offset_immediate = 0x7f;
     FntLoad(0x280, 0);
 
     while (!loaded) {

@@ -1,4 +1,5 @@
 #include "fft/event_require.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* After a battle, list the war trophies (the bonus money when it is not 0, then each trophy item
@@ -74,16 +75,16 @@ void require_reward_collect_war_trophies_and_bonus_money(void) {
                         adj = price;
                     }
                     price = adj >> 2;
-                    funds = battle_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
-                    battle_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, funds + price);
+                    funds = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
+                    script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, funds + price);
                 } else {
                     s32 id = *vp;
                     qp = &g_main_item_quantities[id];
                     (*qp)++;
                 }
             } else {
-                funds = battle_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
-                battle_script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, funds + *vp);
+                funds = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
+                script_set_variable(EVENT_SCRIPT_VAR_WAR_FUNDS, funds + *vp);
             }
             vp++;
             tp++;

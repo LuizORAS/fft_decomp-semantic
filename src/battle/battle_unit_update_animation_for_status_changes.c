@@ -1,5 +1,8 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 
 /* Play this frame's status graphics changes on a unit (battle_unit_update_display calls it).
  * Becoming a Chicken or Frog starts the idle animation; losing either picks the status animation
@@ -10,26 +13,26 @@
  * land; where the unit is submerged (water animation mode 2 or more) it goes straight into its dead
  * or submerged idle sequence, with the wait cleared so the sequence starts at once. During an event
  * only the submerged case applies. */
-void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* unit) {
+void battle_unit_update_animation_for_status_changes(battle_unit_t* unit) {
     battle_stats_t* stats;
 
-    if (unit->statuses_to_add_5_6 & BATTLE_MISC_STATUS_CHICKEN) {
+    if (unit->statuses_to_add_5_6 & BATTLE_UNIT_STATUS_CHICKEN) {
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_IDLE, unit->facing, unit);
-    } else if (unit->statuses_to_remove_5_6 & BATTLE_MISC_STATUS_CHICKEN) {
+    } else if (unit->statuses_to_remove_5_6 & BATTLE_UNIT_STATUS_CHICKEN) {
         battle_unit_set_animation_based_on_status(unit);
     }
-    if (unit->statuses_to_add_5_6 & BATTLE_MISC_STATUS_FROG) {
+    if (unit->statuses_to_add_5_6 & BATTLE_UNIT_STATUS_FROG) {
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_IDLE, unit->facing, unit);
-    } else if (unit->statuses_to_remove_5_6 & BATTLE_MISC_STATUS_FROG) {
+    } else if (unit->statuses_to_remove_5_6 & BATTLE_UNIT_STATUS_FROG) {
         battle_unit_set_animation_based_on_status(unit);
     }
-    if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
+    if (unit->statuses_to_add_1_4 & BATTLE_UNIT_STATUS_DEAD) {
         if (g_battle_gfx_spritesheet_data[unit->spritesheet_id].seq_id == BATTLE_SEQ_CYOKO
             || g_battle_gfx_spritesheet_data[unit->spritesheet_id].seq_id == BATTLE_SEQ_MON) {
             battle_effect_set_secondary_death_smoke(unit);
         }
         if (g_battle_game_state != BATTLE_GAME_STATE_EVENT) {
-            stats = unit->battle_data;
+            stats = unit->stats;
             if (stats != 0) {
                 if (stats->unit_flags & UNIT_FLAG_MALE) {
                     battle_sound_play_movement_sfx(unit, MAIN_SFX_DEATH_MALE);
@@ -41,41 +44,41 @@ void battle_unit_update_animation_for_status_changes(battle_unit_misc_data_t* un
             }
         }
     }
-    if (unit->statuses_to_add_5_6 & (BATTLE_MISC_STATUS_CRYSTAL | BATTLE_MISC_STATUS_TREASURE)) {
+    if (unit->statuses_to_add_5_6 & (BATTLE_UNIT_STATUS_CRYSTAL | BATTLE_UNIT_STATUS_TREASURE)) {
         battle_effect_set_secondary_zodiac_poof(unit);
     }
     if (g_battle_game_state == BATTLE_GAME_STATE_EVENT) {
-        if (unit->statuses_to_add_5_6 & BATTLE_MISC_STATUS_JUMP) {
+        if (unit->statuses_to_add_5_6 & BATTLE_UNIT_STATUS_JUMP) {
             battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_JUMP_DEPART, unit->facing, unit);
-        } else if (unit->statuses_to_remove_5_6 & BATTLE_MISC_STATUS_JUMP) {
-            battle_unit_draw_and_activate_by_misc_id(unit->unit_id);
+        } else if (unit->statuses_to_remove_5_6 & BATTLE_UNIT_STATUS_JUMP) {
+            battle_unit_draw_and_activate_by_runtime_id(unit->runtime_id);
             battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_JUMP_LAND, unit->facing, unit);
         }
         if ((battle_move_get_water_animation_mode(unit) & 0xff) >= 2) {
-            if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
+            if (unit->statuses_to_add_1_4 & BATTLE_UNIT_STATUS_DEAD) {
                 battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_DEAD, unit->facing, unit);
-                unit->sequence_id = BATTLE_UNIT_ANIMATION_DEAD << 1;
-                unit->animation_wait = 0;
-            } else if (unit->statuses_to_remove_1_4 & BATTLE_MISC_STATUS_DEAD) {
+                unit->animation.sequence_id = BATTLE_UNIT_ANIMATION_DEAD << 1;
+                unit->animation.wait = 0;
+            } else if (unit->statuses_to_remove_1_4 & BATTLE_UNIT_STATUS_DEAD) {
                 battle_unit_store_animation_facing_movement_data(
                     BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE, unit->facing, unit);
-                unit->sequence_id = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE << 1;
-                unit->animation_wait = 0;
+                unit->animation.sequence_id = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE << 1;
+                unit->animation.wait = 0;
             }
         }
     } else if ((battle_move_get_water_animation_mode(unit) & 0xff) < 2) {
-        if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
+        if (unit->statuses_to_add_1_4 & BATTLE_UNIT_STATUS_DEAD) {
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_DEATH, unit->facing, unit);
-        } else if (unit->statuses_to_remove_1_4 & BATTLE_MISC_STATUS_DEAD) {
+        } else if (unit->statuses_to_remove_1_4 & BATTLE_UNIT_STATUS_DEAD) {
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_REVIVE, unit->facing, unit);
         }
-    } else if (unit->statuses_to_add_1_4 & BATTLE_MISC_STATUS_DEAD) {
+    } else if (unit->statuses_to_add_1_4 & BATTLE_UNIT_STATUS_DEAD) {
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_DEAD, unit->facing, unit);
-        unit->sequence_id = BATTLE_UNIT_ANIMATION_DEAD << 1;
-        unit->animation_wait = 0;
-    } else if (unit->statuses_to_remove_1_4 & BATTLE_MISC_STATUS_DEAD) {
+        unit->animation.sequence_id = BATTLE_UNIT_ANIMATION_DEAD << 1;
+        unit->animation.wait = 0;
+    } else if (unit->statuses_to_remove_1_4 & BATTLE_UNIT_STATUS_DEAD) {
         battle_unit_store_animation_facing_movement_data(BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE, unit->facing, unit);
-        unit->sequence_id = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE << 1;
-        unit->animation_wait = 0;
+        unit->animation.sequence_id = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE << 1;
+        unit->animation.wait = 0;
     }
 }

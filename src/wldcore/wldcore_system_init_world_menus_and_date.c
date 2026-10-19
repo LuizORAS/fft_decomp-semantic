@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -10,9 +11,9 @@ void wldcore_system_init_world_menus_and_date(void) {
 
     world_menu_init_with_world_text_and_faces();
     world_text_generate_formation_unit_name_string();
-    value = world_script_get_variable(EVENT_SCRIPT_VAR_DATE_ADVANCE);
+    value = script_get_variable(EVENT_SCRIPT_VAR_DATE_ADVANCE);
     if (value != 0) {
         wldcore_calendar_advance_days(value);
-        world_script_set_variable(EVENT_SCRIPT_VAR_DATE_ADVANCE, 0);
+        script_set_variable(EVENT_SCRIPT_VAR_DATE_ADVANCE, 0);
     }
 }

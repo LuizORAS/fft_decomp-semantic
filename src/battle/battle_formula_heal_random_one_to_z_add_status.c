@@ -1,5 +1,7 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/main.h"
+#include "fft/unit.h"
 
 /* Formula 0x4B, Phoenix Down: the item's status must change something unless the target is undead
  * (battle_formula_apply_status_and_check_undead); then a random 1 to Z (20) HP restored, while an

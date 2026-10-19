@@ -4,7 +4,7 @@
 
 /* Handler 9, FFTEND.STR, the ending movie: Start stops it. Once it has stopped the display is blanked and
  * the controller is replaced by the ending's credits script (open_script_push_controller). */
-void open_movie_update_fftend_controller(void) {
+void open_movie_update_fftend_controller(open_controller_record_t* unused_record) {
     u32 flags;
     s32 controller;
 

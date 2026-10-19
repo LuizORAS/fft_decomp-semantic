@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Pushes the proposition-attempt detail text window as menu level 0x2a, the
@@ -21,11 +22,11 @@
 void wldcore_menu_push_proposition_attempt_detail_level(s32 value) {
     s32 coordinate_mode = 1;
     u8 unused[8];
-    u8 date[2];
+    calendar_date_t date;
 
     wldcore_file_wait_for_load();
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = value;
-    wldcore_calendar_read_date(g_main_proposition_last_attempt_date_bits, value, date);
+    wldcore_calendar_read_date(g_main_proposition_last_attempt_date_bits, value, &date);
     g_wldcore_scrollable_text_window.text_id = value + TEXT_ID_WORLD_MESSAGE_BASE;
     switch (coordinate_mode) {
     case 0:
@@ -44,8 +45,8 @@ void wldcore_menu_push_proposition_attempt_detail_level(s32 value) {
     g_wldcore_scrollable_text_window.priority = 8;
     g_wldcore_scrollable_text_window.image_coordinate_mode = coordinate_mode;
     g_wldcore_scrollable_text_window.extra_render_index = -1;
-    g_wldcore_scrollable_text_window.text_substitutions[0] = date[0] + WLDCORE_TEXT_ID_MONTH_NAME_BASE;
-    g_wldcore_scrollable_text_window.text_substitutions[1] = date[1];
+    g_wldcore_scrollable_text_window.text_substitutions[0] = date.month + WLDCORE_TEXT_ID_MONTH_NAME_BASE;
+    g_wldcore_scrollable_text_window.text_substitutions[1] = date.day;
     wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                  .window_render.window_index]
@@ -53,8 +54,8 @@ void wldcore_menu_push_proposition_attempt_detail_level(s32 value) {
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                         .window_render.render_index]
         .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_world_text_substitution_values[0] = value + TEXT_ID_COMPLETED_PROPOSITION_NAME_BASE;
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
+    g_text_substitution_values[0] = value + TEXT_ID_COMPLETED_PROPOSITION_NAME_BASE;
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_ATTEMPT_DETAIL;
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth + 1;
 }

@@ -5,7 +5,7 @@ scope:
   - battle_target
   - battle_effect_set_and_validate_arc_trajectory()
   - battle_effect_check_direct_trajectory_to_target()
-  - battle_unit_get_selectable_misc_data_at_map_coords()
+  - battle_unit_find_selectable_at_tile()
 ---
 
 # Targeting
@@ -58,7 +58,7 @@ hit (its area) and a preview, and the player confirms.
   [[ability_secondary_flags_1_e]], [[ability_secondary_flags_2_e]] and
   [[ability_secondary_flags_4_e]] bits), [[weapon_data_t]] (range and
   `WEAPON_FLAG_*`) and the Jump records [[g_main_jump_ability_data]].
-- **The action.** A [[battle_ai_command_action_t]]: unit, skillset, ability,
+- **The action.** A [[action_command_t]]: unit, skillset, ability,
   targeting type (5 a tile, 6 a unit), target tile or unit; the skillset's
   menu type ([[g_main_action_menu_types_by_skillset]]) picks the targeting
   routine. The acting unit's `ability_preview_phase` keeps the range result.

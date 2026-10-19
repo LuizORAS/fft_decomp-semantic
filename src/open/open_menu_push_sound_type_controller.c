@@ -16,22 +16,24 @@ void open_menu_push_sound_type_controller(void) {
     register s32 controller_index __asm__("$4");
     s32 sound_type;
     s32 selected_record;
+    open_point32_t* position;
     open_sound_menu_state_t* menu;
 
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < OPEN_SOUND_MENU_ENTRY_COUNT; i++) {
         record = open_gfx_append_animated_render_record(
             g_open_gfx_render_record_pointers, &g_open_gfx_render_record_pointer_count);
-        g_open_controller_records_next[g_open_current_controller_index].sound_menu.render_records[i] = record;
-        g_open_gfx_render_records_36[record].ot_layer = 4;
-        g_open_gfx_render_records_36[record].anim_id = i + 7;
-        (&g_open_gfx_render_records_36[record])->frame_timer = 0;
+        g_open_controller_records_next[g_open_current_controller_index].sound_menu.entry_render_indices[i] = record;
+        g_open_gfx_render_records_36[record].priority = 4;
+        g_open_gfx_render_records_36[record].sequence = i + 7;
+        (&g_open_gfx_render_records_36[record])->anim_counter = 0;
         g_open_gfx_render_records_36[record].frame_index = 0;
-        ((wldcore_window_xy_t*)&g_open_gfx_render_records_36[record].x)->y = i * 0xc + 0x1e;
-        ((wldcore_window_xy_t*)&g_open_gfx_render_records_36[record].x)->x = -0x14;
+        position = &g_open_gfx_render_records_36[record].position;
+        position->y = i * 0xc + 0x1e;
+        position->x = -0x14;
     }
 
     g_open_controller_selected_options[g_open_current_controller_index * 25 + 1] = 0;
-    sound_type = main_sound_get_type();
+    sound_type = suzuki_sound_get_type();
     controller_index = g_open_current_controller_index;
     g_open_controller_selected_options[controller_index * 25] = sound_type;
     menu = &g_open_controller_records_next[controller_index].sound_menu;

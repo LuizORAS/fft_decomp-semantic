@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Keep every button from the WORLD menu frame while the list's help text is up.
  * The caller hands in its menu level; the target reads no argument. */

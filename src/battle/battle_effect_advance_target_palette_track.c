@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Advance the surroundings colour track one frame.
@@ -32,14 +34,14 @@ void battle_effect_advance_target_palette_track(
             *remaining_frames = i;
             preset = track->preset[index];
             if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
-                red = track->color[index][0];
-                green = track->color[index][1];
-                blue = track->color[index][2];
+                red = track->color[index].r;
+                green = track->color[index].g;
+                blue = track->color[index].b;
                 battle_map_color_field(
                     preset & EFFECT_COLOR_KEYFRAME_MODE_MASK, track->duration[index], red, green, blue);
                 for (i = 0; i < g_battle_effect_coord_data.spectator_count; i++) {
-                    battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
-                        track->duration[index], g_battle_effect_palette_target_misc_ids[i], red, green, blue);
+                    battle_gfx_apply_unit_palette_modulation_to_units(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                        track->duration[index], g_battle_effect_palette_target_runtime_ids[i], red, green, blue);
                 }
                 if (!(g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_IGNORE_WEATHER)) {
                     battle_map_start_darkness_blend(

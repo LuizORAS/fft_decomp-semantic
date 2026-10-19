@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
@@ -11,8 +11,8 @@
  *
  * The caller (battle_map_dispatch_gns_resource) stops at type 0 before calling, so the result for type 0
  * or an unknown type is never used; `next` is left unset there, which is why the target returns $a1. */
-u8* battle_map_load_mesh_animation_record(battle_map_mesh_animation_record_t* record) {
-    u8* next;
+battle_map_mesh_animation_record_t* battle_map_load_mesh_animation_record(battle_map_mesh_animation_record_t* record) {
+    battle_map_mesh_animation_record_t* next;
     u32 count;
     u32 i;
     u32 y;
@@ -20,34 +20,32 @@ u8* battle_map_load_mesh_animation_record(battle_map_mesh_animation_record_t* re
 
     count = record->count;
     switch (record->type) {
-    case 1: {
-        u8* src = record->data;
+    case MAP_MESH_ANIMATION_RECORD_KEYFRAMES: {
+        battle_map_mesh_keyframe_t* src = (battle_map_mesh_keyframe_t*)record->data;
 
         count++;
         for (i = 1; i < count; i++) {
-            g_battle_map_mesh_animation_keyframes[i] = *(battle_map_mesh_keyframe_t*)src;
-            src += sizeof(battle_map_mesh_keyframe_t);
+            g_battle_map_mesh_animation_keyframes[i] = *src++;
         }
-        next = src;
+        next = (battle_map_mesh_animation_record_t*)src;
         break;
     }
-    case 0:
+    case MAP_MESH_ANIMATION_RECORD_END:
         break;
-    case 2: {
-        u8* src = record->data;
+    case MAP_MESH_ANIMATION_RECORD_INSTRUCTIONS: {
+        battle_map_mesh_instruction_t* src = (battle_map_mesh_instruction_t*)record->data;
 
         for (y = 0; y < 8; y++) {
             for (i = 1; i < 9; i++) {
                 for (c = 1; c < 17; c++) {
-                    g_battle_map_mesh_animation_instructions[i].states[y][c] = *(battle_map_mesh_instruction_t*)src;
-                    src += sizeof(battle_map_mesh_instruction_t);
+                    g_battle_map_mesh_animation_instructions[i].states[y][c] = *src++;
                 }
             }
         }
-        next = src;
+        next = (battle_map_mesh_animation_record_t*)src;
         break;
     }
-    case 3: {
+    case MAP_MESH_ANIMATION_RECORD_PART_PROPERTIES: {
         u8* src = record->data;
 
         count++;
@@ -89,7 +87,7 @@ u8* battle_map_load_mesh_animation_record(battle_map_mesh_animation_record_t* re
         for (; i < count; i++) {
             src += 4;
         }
-        next = src;
+        next = (battle_map_mesh_animation_record_t*)src;
         break;
     }
     }

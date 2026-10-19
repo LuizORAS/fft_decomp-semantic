@@ -12,19 +12,20 @@ scope:
   - battle_gfx_determine_status_bubble_parameters()
   - battle_gfx_draw_status_bubble()
   - battle_gfx_update_status_bubbles_and_graphics()
-  - battle_gfx_update_misc_unit_status_palette()
+  - battle_gfx_update_unit_status_palette()
   - battle_gfx_check_tile_status_palette_mod()
   - battle_gfx_apply_status_spritesheet_change()
   - battle_unit_set_animation_based_on_status()
   - battle_unit_call_set_animation_based_on_status()
-  - battle_unit_set_status_animation_by_misc_id()
+  - battle_unit_set_status_animation_by_runtime_id()
   - battle_unit_update_animation_for_status_changes()
   - battle_unit_clear_status_staging_data()
   - battle_unit_apply_staged_status_data()
   - battle_unit_update_staged_status_data()
   - battle_unit_save_staged_status_data()
-  - battle_script_process_inflict_status_commands()
-  - battle_script_inflict_status_thread()
+  - script_process_inflict_status_commands()
+  - script_inflict_status_thread()
+  - status_inflict_by_entd_unit_id()
 ---
 
 # Status
@@ -118,7 +119,7 @@ events, and leave when something removes them or their count runs out.
 | `IMMORTAL_IMMUNITY` | Crystal, Dead, Undead, Petrify, Invite, Confusion, Blood Suck, Treasure, Chicken, Frog, Charm, Sleep, Don't Act, Death Sentence | job immunities of a unit both immortal and formation ([[main_unit_copy_job_data]]) |
 | `FORMATION_IMMUNITY` | Crystal, Dead, Undead, Petrify, Invite, Blood Suck, Treasure, Chicken, Frog, Charm, Death Sentence | the same, and every immortal unit's inflictions ([[battle_status_modify_inflictions]]) |
 | `UNUSED_7` | Darkness, Confusion, Silence, Transparent, Berserk, Chicken, Frog, Stop, Charm, Sleep, Don't Move, Don't Act | nothing |
-| `EVENT_EXCLUDED` | Crystal, Dead, Undead, Jump, Petrify, Invite, Treasure, Critical | event commands aimed at a whole team skip these units ([[battle_script_filter_unit_id_by_mode]]) |
+| `EVENT_EXCLUDED` | Crystal, Dead, Undead, Jump, Petrify, Invite, Treasure, Critical | event commands aimed at a whole team skip these units ([[script_filter_unit_id_by_mode]]) |
 | `MOUNT_REMOVAL` | Confusion, Berserk, Poison, Stop, Sleep, Don't Move, Don't Act, Death Sentence | the post-move events ([[battle_move_get_post_move_events]]) |
 | `UNMOUNTABLE` | Crystal, Dead, Petrify, Blood Suck, Treasure, Berserk, Chicken, Frog, Charm (fixed in code) | riding a chocobo ([[battle_unit_get_chocobo_mount_state]]) |
 
@@ -127,9 +128,9 @@ events, and leave when something removes them or their count runs out.
   mount takes only Crystal, Dead, the four action states, Reraise,
   Transparent, Critical, Regen, Protect, Shell, Haste, Wall, Faith,
   Innocent, Charm and Reflect.
-- **The graphics.** Each misc record mirrors the statuses in its own bit
-  order ([[battle_misc_status_flags_1_4_e]], [[battle_misc_status_flags_5_6_e]],
-  translated by [[g_battle_misc_status_mask_by_handler_index]]); changes wait
+- **The graphics.** Each runtime record mirrors the statuses in its own bit
+  order ([[battle_unit_status_flags_1_4_e]], [[battle_unit_status_flags_5_6_e]],
+  translated by [[g_battle_unit_status_mask_by_handler_index]]); changes wait
   in `statuses_to_add_*` and `statuses_to_remove_*` until the frame applies
   them. [[g_battle_gfx_status_bubble_status_masks]] gives each bubble its
   status, and [[g_battle_status_display_image_ids]] each status its preview
@@ -168,7 +169,7 @@ events, and leave when something removes them or their count runs out.
    ([[battle_unit_clear_status_staging_data]]). With script variable 0x1fd
    set it stages every unit at once
    ([[battle_unit_update_staged_status_data]]); otherwise
-   [[battle_script_process_inflict_status_commands]] first runs the Inflict Status
+   [[script_process_inflict_status_commands]] first runs the Inflict Status
    commands of floating or jumping units, and units are staged one by one,
    by an Inflict Status command or when the event adds them. Staging
    ([[battle_unit_save_staged_status_data]]) saves the unit and
@@ -177,16 +178,16 @@ events, and leave when something removes them or their count runs out.
    Undead and Float); with it clear, Undead, Jump, Petrify, Darkness,
    Confusion, Transparent, Chicken, Frog, Haste, Slow, Charm, Sleep and Death
    Sentence. The command itself
-   ([[battle_script_inflict_status_thread]], through
-   [[battle_status_inflict_by_entd_unit_id]]) revives a dead unit at 1 HP
+   ([[script_inflict_status_thread]], through
+   [[status_inflict_by_entd_unit_id]]) revives a dead unit at 1 HP
    with Critical, crystallizes it or poisons it, and leaves an exit mode. At
    the event's end [[battle_unit_apply_staged_status_data]] restores each
    staged unit and applies its exit mode, so that change stays.
-5. **The graphics.** The queued bits reach the misc record's mirror each
+5. **The graphics.** The queued bits reach the runtime record's mirror each
    frame ([[battle_unit_update_display]]), which plays
    [[battle_unit_update_animation_for_status_changes]], swaps the
    spritesheet ([[battle_gfx_apply_status_spritesheet_change]]), tints the
-   palette ([[battle_gfx_update_misc_unit_status_palette]]) and picks the
+   palette ([[battle_gfx_update_unit_status_palette]]) and picks the
    standing animation ([[battle_unit_set_animation_based_on_status]]).
    [[battle_gfx_refresh_status_bubble]] switches the bubble on,
    [[battle_gfx_determine_status_bubble_parameters]] moves it to the next of
@@ -267,10 +268,10 @@ by" counts the retail abilities, weapons and items whose status set adds it
 - **Who controls an affected unit:** [[battle_status_remove_control]].
 - **What events hide:** [[g_battle_event_status_masks]] and
   [[battle_unit_save_staged_status_data]].
-- **How a status looks:** [[g_battle_misc_status_mask_by_handler_index]] and
-  [[battle_status_queue_misc_graphics_flag_change]], the bubbles
+- **How a status looks:** [[g_battle_unit_status_mask_by_handler_index]] and
+  [[battle_status_queue_runtime_graphics_flag_change]], the bubbles
   ([[g_battle_gfx_status_bubble_status_masks]]), the palette
-  ([[battle_gfx_update_misc_unit_status_palette]]), the spritesheet and the
+  ([[battle_gfx_update_unit_status_palette]]), the spritesheet and the
   animation functions in the flow above; the preview image
   ([[g_battle_status_display_image_ids]]).
 - The [[Changing a status]] guide walks through a change.

@@ -2,7 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/libgs.h"
 #include "psx/libgte.h"
-#include "psx/types.h"
 
 /* Draws the HUD numeric readout at the context-value display position, laid
  * out by g_wldcore_context_value_display_mode: 1 is the labelled, underlined
@@ -13,8 +12,8 @@
  * Case 3 falls through into case 0, so the case bodies are ordered 1, 2, 3, 0,
  * 4 to follow the jump table at 0x80067020. The colour triple stores into
  * `separator` precede those into `sprite`. The position read back at the end
- * of case 4 is a plain word load narrowed by the store, where the chained
- * assignment before the switch reads only the low halfword. */
+ * of case 4 is a plain 32-bit load narrowed by the store, where the chained
+ * assignment before the switch reads only the low 16 bits. */
 void wldcore_gfx_draw_context_value_display(GsOT* ot) {
     GsSPRITE sprite;
     GsSPRITE separator;

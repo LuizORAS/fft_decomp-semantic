@@ -1,22 +1,19 @@
-#include "fft/battle.h"
-
-enum { EFFECT_SCRIPT_CHILD_SLOT_COUNT = 4 };
+#include "fft/battle_effect.h"
 
 /* Opcode 02: start a child record on this script at the offset in the second
- * halfword and keep its index in the child slot named by the high nibble of
+ * 16-bit value and keep its index in the child slot named by the high nibble of
  * the instruction's second byte (slots 4 and up keep nothing). */
-s32 battle_effect_code_script_02_spawn_child(effect_record_t* record) {
+effect_script_result_e battle_effect_code_script_02_spawn_child(battle_effect_record_t* record) {
+    effect_script_parameters_t parameters;
     s16 slot;
     s16 child;
-    s32 pc;
-    u8* script;
-    u8* instruction;
+    const effect_script_instruction_t* instruction;
 
-    pc = record->pc;
-    script = record->script;
-    instruction = (u8*)(pc + (u32)script);
-    slot = instruction[1] >> 4;
-    child = battle_effect_start_script_record(script, *(s16*)(instruction + 2), g_battle_effect_current_record_index);
+    instruction = effect_get_current_script_instruction(record);
+    parameters = instruction->header.parameters;
+    slot = parameters.child.slot;
+    child = battle_effect_start_script_record(
+        record->script, instruction->immediate.value, g_battle_effect_current_record_index);
     if (slot < EFFECT_SCRIPT_CHILD_SLOT_COUNT) {
         record->child_indices[slot] = child;
     }

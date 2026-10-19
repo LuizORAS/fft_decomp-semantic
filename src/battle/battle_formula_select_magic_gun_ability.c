@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* volatile view: the target reloads this global at every use. */
@@ -46,7 +48,7 @@ void battle_formula_select_magic_gun_ability(void) {
         }
     }
     g_battle_action_current_ability.ability_id = id;
-    g_battle_action_attacker->last_ability_id = id;
-    main_util_copy_byte_data(&g_main_ability_range_data[id], &g_battle_action_current_ability.range_data,
+    g_battle_action_attacker->action_command.ability_id = id;
+    main_mem_copy_byte_data_source_first(&g_main_ability_range_data[id], &g_battle_action_current_ability.range_data,
         sizeof(g_battle_action_current_ability.range_data));
 }

@@ -2,17 +2,6 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Job-wheel sprite record: destination rectangle followed by the 12-byte
- * source entry, as in world_formation_draw_unit_sprite. */
-typedef struct world_formation_job_wheel_sprite {
-    s16 x;                                  /* 0x00 */
-    s16 y;                                  /* 0x02 */
-    s16 w;                                  /* 0x04 */
-    s16 h;                                  /* 0x06 */
-    world_formation_graphic_entry_t source; /* 0x08 */
-    u8 _unused_14[0x10];                    /* unknown; the frame reserves 0x24 bytes for the record */
-} world_formation_job_wheel_sprite_t;
-
 /* Draw the job wheel's generic-job sprites around an ellipse.
  *
  * Jobs are placed backwards from the cursor at angle steps of ONE / count on
@@ -21,7 +10,8 @@ typedef struct world_formation_job_wheel_sprite {
  * mastered ones (g_world_job_wheel_mastered_jobs) get the twinkling star
  * (world_formation_draw_job_wheel_mastered_star). Needs at least two jobs. */
 void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_y) {
-    world_formation_job_wheel_sprite_t sprite;
+    world_oriented_quad_t sprite;
+    u8 unused_sprite_tail[0x10]; /* Preserve the original 0x24-byte stack allocation. */
     s32 step;
     s32 ot_index;
     s32 i;
@@ -30,7 +20,7 @@ void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_
     s32 scaled_y;
     s32 theta;
     s16 job;
-    u8* rgb;
+    rgb24_t* rgb;
     s16 next;
 
     if (g_world_job_wheel_job_count < 2) {
@@ -60,17 +50,17 @@ void world_formation_draw_job_wheel_sprites(s32 angle, s32 radius_x, s32 radius_
         world_formation_get_generic_human_graphic_entry(g_world_job_wheel_jobs[job] & WORLD_JOB_LIST_ENTRY_ID_MASK,
             g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->gender_flags & UNIT_FLAG_FEMALE,
             &sprite.source);
-        sprite.x = g_world_job_wheel_center_x + ((scaled_x * rcos(theta)) >> 12) - 8;
-        sprite.y = g_world_job_wheel_center_y + ((scaled_y * rsin(theta)) >> 12) - 0x14;
+        sprite.position.x = g_world_job_wheel_center_x + ((scaled_x * rcos(theta)) >> 12) - 8;
+        sprite.position.y = g_world_job_wheel_center_y + ((scaled_y * rsin(theta)) >> 12) - 0x14;
         rgb = 0;
         if (g_world_job_wheel_jobs[job] & WORLD_JOB_LIST_ENTRY_UNAVAILABLE) {
-            rgb = g_world_formation_dimmed_sprite_color;
+            rgb = &g_world_formation_dimmed_sprite_color;
         }
         if (g_world_job_wheel_mastered_jobs[job] != 0) {
             world_formation_draw_job_wheel_mastered_star(
-                sprite.x, sprite.y, ot_index, g_world_job_wheel_animation_counter);
+                sprite.position.x, sprite.position.y, ot_index, g_world_job_wheel_animation_counter);
         }
-        world_formation_draw_sprite_with_shadow((world_oriented_quad_t*)&sprite, rgb, ot_index);
+        world_formation_draw_sprite_with_shadow(&sprite, rgb, ot_index);
         if (job == 0) {
             next = g_world_job_wheel_job_count - 1;
         } else {

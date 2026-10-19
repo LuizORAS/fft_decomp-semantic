@@ -1,3 +1,5 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -16,10 +18,10 @@ void wldcore_menu_step_variable_value_panel_level(wldcore_menu_panel_level_t* le
     s32 depth;
     s32 parent;
     s32 slot;
-    wldcore_window_record_t* record;
+    world_animated_render_record_t* record;
     u32 buttons;
 
-    if (level->result != 0 && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+    if (level->result != 0 && thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         g_wldcore_menu_blocked_buttons = 0;
         g_wldcore_menu_ordering_table_offset = 1;
         depth = g_wldcore_menu_stack_depth - 1;
@@ -39,15 +41,15 @@ void wldcore_menu_step_variable_value_panel_level(wldcore_menu_panel_level_t* le
         g_wldcore_window_records[slot].anim_counter = 0;
         return;
     }
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if (buttons & PSX_PAD_CROSS) {
         level->result = 2;
     } else if (buttons & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         level->result = 1;
-        world_script_set_variable(level->variable_id, g_wldcore_active_menu_value);
+        script_set_variable(level->variable_id, g_wldcore_active_menu_value);
     } else {
         return;
     }
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
 }

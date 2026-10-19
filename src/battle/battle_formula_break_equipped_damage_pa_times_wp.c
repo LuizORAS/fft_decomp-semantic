@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x2E, Might Sword (Shellbust Stab, Blastar Punch, Hellcry Punch, Icewolf Bite): the
  * physical evade check; with no piece to break (a monster, an empty slot) or against Maintenance the
@@ -21,7 +21,7 @@ void battle_formula_break_equipped_damage_pa_times_wp(void) {
     if (action->hit == 0) {
         return;
     }
-    /* The target writes the combined special-effect field as one halfword. */
+    /* The target writes the combined special-effect field as one 16-bit value. */
     action->special_effect = BATTLE_ACTION_SPECIAL_EFFECT_BREAK_EQUIPMENT;
     battle_formula_store_pa_and_weapon_power();
     battle_formula_apply_weapon_element_strengthen();

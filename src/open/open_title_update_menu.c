@@ -1,4 +1,5 @@
 #include "fft/open.h"
+#include "fft/script.h"
 #include "psx/libcd.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -17,7 +18,8 @@
  *   the title picture again and rebuilds the menu, and a loaded game ends OPEN with result 0 when it has a next
  *   scenario and no formation return event (MAIN takes it straight into BATTLE), or 1 (the world map);
  * - Tutorial builds Ramza's roster and ends OPEN with result 2 and MAIN_SYSTEM_FLAG_TITLE_TUTORIAL set. */
-void open_title_update_menu(open_title_controller_t* state) {
+void open_title_update_menu(open_controller_record_t* record) {
+    open_title_controller_t* state = &record->title;
     u8 loc[8];
     s32 status;
     s32 remaining;
@@ -59,8 +61,8 @@ void open_title_update_menu(open_title_controller_t* state) {
     }
 
     if (g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_CD_AUDIO_PLAYING) {
-        CdControlB(0x10, 0, loc);
-        if (CdPosToInt(loc) >= state->cd_end_position) {
+        CdControlB(CdlGetlocL, 0, loc);
+        if (CdPosToInt((CdlLOC*)loc) >= state->cd_end_position) {
             open_sound_set_cd_mix_and_volume(0, 0x20);
             state->exit_timer = 0x20;
             state->exiting = 1;
@@ -108,7 +110,7 @@ void open_title_update_menu(open_title_controller_t* state) {
 
     if (state->state == OPEN_TITLE_STATE_SOUND_MENU) {
         state->state = OPEN_TITLE_STATE_MENU;
-        open_gfx_hide_four_render_records((open_title_entry_records_t*)state);
+        open_gfx_hide_four_render_records(state);
         open_menu_push_sound_type_controller();
         return;
     }
@@ -154,8 +156,8 @@ void open_title_update_menu(open_title_controller_t* state) {
                 return;
             }
             g_open_system_runtime_flags ^= OPEN_SYSTEM_RUNTIME_FLAG_RUNNING;
-            if (world_script_get_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT) != 0
-                || world_script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) == 0) {
+            if (script_get_variable(EVENT_SCRIPT_VAR_FORMATION_RETURN_EVENT) != 0
+                || script_get_variable(EVENT_SCRIPT_VAR_NEXT_SCENARIO) == 0) {
                 g_open_system_result = cursor;
                 return;
             }

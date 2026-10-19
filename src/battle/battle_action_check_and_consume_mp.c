@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Check whether the unit can use its command's ability, and pay the MP. In a primary action the unit
  * first stops Charging, Jumping and Defending (it keeps Performing). Returns 0 when allowed, or the
@@ -15,8 +15,8 @@ s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
     s16 mp;
     ability_secondary_data_t* ability;
 
-    ability_id = unit->last_ability_id;
-    menu = g_main_action_menu_types_by_skillset[unit->last_skillset_id];
+    ability_id = unit->action_command.ability_id;
+    menu = g_main_action_menu_types_by_skillset[unit->action_command.skillset_id];
     g_battle_action_current_ability.mp_cost = 0;
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY)
         main_status_set_action_state(unit, MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING);
@@ -42,7 +42,7 @@ s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
             return 2;
         if (menu == ACTION_MENU_TYPE_DEFAULT && unit->job_id != JOB_ID_MIME) {
             cost = ability->mp_cost;
-            if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP)
+            if (unit->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_HALF_MP)
                 cost >>= 1;
             g_battle_action_current_ability.mp_cost = cost;
             /* A signed member view retains the target store-before-load order;

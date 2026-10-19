@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Put back the gravity battle_effect_save_gravity saved. */
 void battle_effect_restore_gravity(void) {

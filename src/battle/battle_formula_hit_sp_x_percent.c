@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x3F, Leg Aim and Arm Aim: no evade check; hit chance Speed + X with the physical XA
  * modifiers and the zodiac, then the ability's status (battle_formula_apply_status_to_action). */

@@ -1,3 +1,4 @@
+#include "fft/open.h"
 #include "psx/libgpu.h"
 
 /* Copy the 64x256 VRAM page kept at (960, 0) back to (960, 256), where

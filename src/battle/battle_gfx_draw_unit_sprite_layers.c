@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
 #include "psx/libgte.h"
 
 /* Queue a unit's sprite layers into the ordering table at its depth.
@@ -14,11 +15,11 @@
  * reload, but the duplicated RTL makes the mount loop large enough that
  * loop.c leaves `row * 16 + g_battle_gfx_animation_layer_priorities` inside it, which is why the target
  * recomputes the table address each iteration and spills `row`. */
-void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
+void battle_gfx_draw_unit_sprite_layers(battle_unit_t* unit) {
     SVECTOR position;
     SVECTOR rider_position;
     SVECTOR zoom = { ONE, ONE, ONE };
-    battle_unit_misc_data_t* rider;
+    battle_unit_t* rider;
     battle_gfx_sprite_display_data_t* display;
     battle_gfx_sprite_display_data_t* rider_display;
     s32 row;
@@ -38,27 +39,25 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
     if (unit->otag_depth_index - 1 >= 0x17f) {
         return;
     }
-    if (unit->numeric_display_active) {
-        battle_gfx_animate_post_action_text(unit, (u16*)&position);
+    if (unit->numeric_display.active) {
+        battle_gfx_animate_post_action_text(unit, &position);
     }
     if (!((position.vx >= 0x61 && position.vx <= 0x19f) && (position.vy >= -0x1f && position.vy <= 0x10f))
         && unit->spritesheet_id != BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM) {
         return;
     }
-    zoom.vx = g_battle_camera_zoom.vx;
-    zoom.vy = g_battle_camera_zoom.vy;
-    zoom.vz = g_battle_camera_zoom.vz;
-    flags = unit->horizontal_flip_flag ^ unit->sprite_display_flags.half;
+    copyVector(&zoom, &g_battle_camera_zoom);
+    flags = unit->horizontal_flip_flag ^ unit->sprite_display_flags;
     row = unit->layer_priority;
-    if (unit->sprite_graphic_trigger == 0) {
+    if (unit->animation.trigger == 0) {
         return;
     }
     if (unit->item_display_active) {
         battle_gfx_init_item_get_rendering(unit);
     }
-    if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
-        if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
-        } else if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
+    if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
+        if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_RIDER) {
+        } else if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
             for (i = 0; i < 4; i++) {
                 entry = g_battle_gfx_animation_layer_priorities[row][i];
                 if (entry != 0) {
@@ -69,14 +68,14 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                     battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, angle,
                         flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
                 } else {
-                    display = unit->sprite_display_section;
+                    display = unit->animation.display;
                     battle_gfx_construct_polygon_data_for_units(
                         display, 3, 0, &position, angle, flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
-                    rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+                    rider = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
                     if (rider != 0 && rider->draw_enabled != 0) {
                         rider_position.vx = rider->camera_relative_x;
                         rider_position.vy = rider->camera_relative_y;
-                        rider_flags = rider->sprite_display_flags.half;
+                        rider_flags = rider->sprite_display_flags;
                         rider_row = rider->layer_priority;
                         for (j = 0; j < 4; j++) {
                             entry = g_battle_gfx_animation_layer_priorities[rider_row][j];
@@ -89,7 +88,7 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                                     &rider_position, angle, rider_flags, &zoom,
                                     main_gfx_get_otag() + unit->otag_depth_index);
                             } else {
-                                rider_display = rider->sprite_display_section;
+                                rider_display = rider->animation.display;
                                 battle_gfx_construct_polygon_data_for_units(rider_display, rider_display->part_count, 0,
                                     &rider_position, angle, rider_flags, &zoom,
                                     main_gfx_get_otag() + unit->otag_depth_index);
@@ -115,9 +114,9 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                 battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, angle, flags,
                     &zoom, main_gfx_get_otag() + unit->otag_depth_index);
             } else {
-                display = unit->sprite_display_section;
+                display = unit->animation.display;
                 battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, angle,
-                    flags ^ unit->animation_flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
+                    flags ^ unit->animation.flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
             }
         }
         if (unit->shadow_graphic_trigger) {

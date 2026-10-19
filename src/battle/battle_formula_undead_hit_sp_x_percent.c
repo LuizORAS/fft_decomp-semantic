@@ -1,5 +1,6 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/unit.h"
 
 /* Formula 0x40, Seal Evil: formula 0x3F's hit chance, but a target that is not undead fails (forced
  * failure). */

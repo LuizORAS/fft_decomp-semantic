@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
 /* Start the current effect target's weapon-hit secondary effect.
@@ -14,7 +14,7 @@ s32 battle_effect_init_weapon_hit_secondary(s32 elements, battle_effect_secondar
     if (source->target_count != 0) {
         elements = battle_effect_get_element_index(elements);
         secondary_id = battle_effect_allocate_secondary_slot();
-        switch (source->target[0].fields.result_animation) {
+        switch (source->targets[0].data.unit.result_animation) {
         case BATTLE_EFFECT_HIT_NORMAL:
         case BATTLE_EFFECT_HIT_CRITICAL:
         case BATTLE_EFFECT_HIT_MISSED:
@@ -33,10 +33,10 @@ s32 battle_effect_init_weapon_hit_secondary(s32 elements, battle_effect_secondar
         g_battle_effect_secondary_data[secondary_id].function_id
             = g_battle_effect_secondary_animations[g_battle_effect_secondary_data[secondary_id].animation_id]
                   .function_id;
-        g_battle_effect_secondary_data[secondary_id].caster.block = source->caster.block;
-        g_battle_effect_secondary_data[secondary_id].target.block = source->target[0].block;
+        g_battle_effect_secondary_data[secondary_id].caster = source->targets[BATTLE_EFFECT_CASTER_ENTRY];
+        g_battle_effect_secondary_data[secondary_id].target.record = source->targets[0];
         g_battle_effect_secondary_data[secondary_id].timer = 0;
-        g_battle_effect_secondary_data[secondary_id].phase = BATTLE_SECONDARY_EFFECT_INITIALIZING;
+        g_battle_effect_secondary_data[secondary_id].phase = BATTLE_EFFECT_SECONDARY_PHASE_INITIALIZING;
     } else {
         secondary_id = 0;
     }

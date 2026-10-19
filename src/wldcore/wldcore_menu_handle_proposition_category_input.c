@@ -25,7 +25,7 @@ void wldcore_menu_handle_proposition_category_input(wldcore_menu_list_window_lev
     if ((g_wldcore_window_render_records[level->side_window].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) != 0) {
         return;
     }
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if ((buttons & PSX_PAD_SELECT) != 0) {
         g_wldcore_window_records[level->main_window].palette = 0xA;
         g_wldcore_window_render_records[level->side_window].palette = 2;
@@ -49,18 +49,18 @@ void wldcore_menu_handle_proposition_category_input(wldcore_menu_list_window_lev
         wldcore_menu_dispatch_resume_handler();
         return;
     }
-    if ((g_wldcore_new_button_presses & PSX_PAD_CIRCLE) != 0 && g_main_file_still_loading == 0) {
+    if ((g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) != 0 && g_main_file_still_loading == 0) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         g_wldcore_proposition_category_saved_cursor[0] = level->selected_entry;
         entry = level->entries[level->selected_entry];
         switch (entry) {
         case WLDCORE_PROPOSITION_CATEGORY_ROW_ACTIVE:
-            wldcore_menu_suspend_proposition_category_level((wldcore_window_tint_request_t*)level);
+            wldcore_menu_suspend_proposition_category_level(level);
             g_wldcore_window_records[level->main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_PRESS;
             wldcore_list_open_active_propositions();
             break;
         case WLDCORE_PROPOSITION_CATEGORY_ROW_BRAVE_STORY:
-            wldcore_menu_suspend_proposition_category_level((wldcore_window_tint_request_t*)level);
+            wldcore_menu_suspend_proposition_category_level(level);
             g_wldcore_window_records[level->main_window].sequence = entry;
             wldcore_list_open_proposition_history();
             break;

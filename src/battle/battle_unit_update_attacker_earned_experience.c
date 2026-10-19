@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Record the highest EXP award of the current action (in the primary action only). A hit that changed
@@ -10,7 +11,6 @@ void battle_unit_update_attacker_earned_experience(s32 outcome) {
     s32 signed_exp;
     s32 divisor;
     battle_stats_t* attacker;
-    u8* best;
     s16 exp;
     s32 sum;
 
@@ -30,16 +30,15 @@ void battle_unit_update_attacker_earned_experience(s32 outcome) {
         if (exp <= 0) {
             exp = 1;
         }
-        if (attacker->support_abilities[1] & BATTLE_SUPPORT_SET_2_GAINED_EXP_UP) {
+        if (attacker->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_GAINED_EXP_UP) {
             exp = exp * 2;
         }
         if (exp >= 100) {
             exp = 99;
         }
         signed_exp = exp << 16;
-        best = &g_battle_action_current_ability.earned_experience;
-        if (*best < (signed_exp >> 16)) {
-            *best = exp;
+        if (g_battle_action_current_ability.earned_experience < (signed_exp >> 16)) {
+            g_battle_action_current_ability.earned_experience = exp;
         }
     }
 }

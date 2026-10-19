@@ -1,3 +1,4 @@
+#include "fft/world.h"
 #include "psx/types.h"
 
 /* Return `value` unchanged, as world_return_argument_800e7b4c right before it does. Nothing on the disc

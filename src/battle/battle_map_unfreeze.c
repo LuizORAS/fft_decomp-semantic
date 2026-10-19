@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 
 /* Resume the map texture animations paused by battle_map_freeze. */
 void battle_map_unfreeze(void) {

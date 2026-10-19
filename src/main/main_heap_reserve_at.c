@@ -16,23 +16,23 @@ u8* main_heap_reserve_at(u8* allocation, u32 size) {
     addr = (u32)allocation;
     base = (u32)g_main_heap_high_overlay_load_address;
     id = 1;
-    start = (allocation - g_main_heap_high_overlay_load_address) / 2048;
-    nblocks = size >> 11;
-    if ((size & 0x7FF) != 0) {
+    start = (allocation - g_main_heap_high_overlay_load_address) / MAIN_HEAP_PAGE_SIZE;
+    nblocks = size >> MAIN_HEAP_PAGE_SHIFT;
+    if ((size & (MAIN_HEAP_PAGE_SIZE - 1)) != 0) {
         nblocks += 1;
     }
     if (addr < base) {
         return 0;
     }
-    if (addr < base + 0x20000) {
+    if (addr < base + MAIN_HEAP_GAME_PAGE_COUNT * MAIN_HEAP_PAGE_SIZE) {
         do {
-            for (i = 0; i < 64; i++) {
+            for (i = 0; i < MAIN_HEAP_GAME_PAGE_COUNT; i++) {
                 if (g_main_heap_game_allocator_table[i] == id) {
                     id += 1;
                     break;
                 }
             }
-        } while (i != 64);
+        } while (i != MAIN_HEAP_GAME_PAGE_COUNT);
 
         for (i = start; i < start + nblocks; i++) {
             if (g_main_heap_game_allocator_table[i] != 0) {
@@ -43,7 +43,7 @@ u8* main_heap_reserve_at(u8* allocation, u32 size) {
             for (j = 0; j < nblocks; j++) {
                 g_main_heap_game_allocator_table[start + j] = id;
             }
-            return ((start << 11) + g_main_heap_high_overlay_load_address);
+            return ((start << MAIN_HEAP_PAGE_SHIFT) + g_main_heap_high_overlay_load_address);
         }
     }
     return 0;

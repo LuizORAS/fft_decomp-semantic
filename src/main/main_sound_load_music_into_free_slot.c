@@ -8,11 +8,11 @@ int main_sound_load_music_into_free_slot(int music_id) {
     suzuki_smd_header_t* smd;
 
     for (i = 0; i < 2; i++) {
-        if (g_main_sound_music.slots.smd[i + 1] == 0) {
+        if (g_main_sound_music.slots.smd[i] == 0) {
             smd = main_file_alloc_smd_and_load(
                 g_main_sound_scenario_smd_files[music_id].sector, g_main_sound_scenario_smd_files[music_id].size);
-            g_main_sound_music.slots.smd[i + 1] = smd;
-            g_main_sound_music.slots.handles.music[i + 1] = SuzukiPutPlaySMD(smd);
+            g_main_sound_music.slots.smd[i] = smd;
+            g_main_sound_music.slots.music[i] = suzuki_smd_create_music(smd);
             return i + 1;
         }
     }

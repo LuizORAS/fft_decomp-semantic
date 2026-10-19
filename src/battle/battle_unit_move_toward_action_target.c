@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 
 /* Move a unit toward its action target at a constant speed over distortion_timer frames
  * (distortions 4 and 8, through the battle_move_glide_to_action_target_* wrappers).
@@ -7,37 +9,42 @@
  * event the unit's own map tile, else the first entry of the target list, else the recorded action
  * target panel. Phase 1 applies the steps (height only when allow_height_change is set) and ends when
  * the timer runs out. A unit with no battle record ends at once. */
-void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 allow_height_change) {
+void battle_unit_move_toward_action_target(battle_unit_t* unit, s32 allow_height_change) {
     SVECTOR tile_center;
     VECTOR velocity;
     s32 timer;
     s32 target_z;
-    battle_unit_misc_data_t* target;
+    battle_unit_t* target;
 
     timer = unit->distortion_timer;
     target_z = unit->distortion_target;
     velocity = unit->velocity;
     switch (unit->distortion_phase) {
     case 0:
-        if (unit->battle_data != 0) {
+        if (unit->stats != 0) {
             if (g_battle_game_state == BATTLE_GAME_STATE_EVENT) {
-                velocity.vx = ((unit->map_x * 0x1C + 0xE) << 12) - unit->real.vx;
-                velocity.vz = ((unit->map_y * 0x1C + 0xE) << 12) - unit->real.vz;
+                velocity.vx = ((unit->map_x * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2)) * ONE) - unit->real.vx;
+                velocity.vz = ((unit->map_y * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2)) * ONE) - unit->real.vz;
                 velocity.vy = 0;
-            } else if (unit->target_count != 0) {
-                target = battle_unit_get_misc_data_by_battle_id(unit->target_list[0]);
-                velocity.vx = target->real.vx - unit->real.vx;
-                velocity.vy = target->real.vy - unit->real.vy;
-                velocity.vz = target->real.vz - unit->real.vz;
+            } else if (unit->strike.target_count != 0) {
+                target = battle_unit_get_by_battle_id(unit->strike.target_list[0]);
+                setVector(&velocity, target->real.vx - unit->real.vx, target->real.vy - unit->real.vy,
+                    target->real.vz - unit->real.vz);
             } else {
-                velocity.vx = (unit->battle_data->action_target_x * 0x1C + 0xE - unit->screen.vx) << 12;
-                velocity.vz = (unit->battle_data->action_target_y * 0x1C + 0xE - unit->screen.vz) << 12;
-                tile_center.vx = unit->battle_data->action_target_x * 0x1C + 0xE;
-                tile_center.vz = unit->battle_data->action_target_y * 0x1C + 0xE;
+                velocity.vx = (unit->stats->action_command.target_position.vx * BATTLE_MAP_TILE_SIZE
+                                  + (BATTLE_MAP_TILE_SIZE / 2) - unit->world_coords.vx)
+                    * ONE;
+                velocity.vz = (unit->stats->action_command.target_position.vz * BATTLE_MAP_TILE_SIZE
+                                  + (BATTLE_MAP_TILE_SIZE / 2) - unit->world_coords.vz)
+                    * ONE;
+                tile_center.vx = unit->stats->action_command.target_position.vx * BATTLE_MAP_TILE_SIZE
+                    + (BATTLE_MAP_TILE_SIZE / 2);
+                tile_center.vz = unit->stats->action_command.target_position.vz * BATTLE_MAP_TILE_SIZE
+                    + (BATTLE_MAP_TILE_SIZE / 2);
                 velocity.vy
-                    = (battle_map_calculate_slope_height(&tile_center.vx, unit->battle_data->action_target_elevation)
-                          - unit->screen.vy)
-                    << 12;
+                    = (battle_map_calculate_slope_height(&tile_center, unit->stats->action_command.target_position.vy)
+                          - unit->world_coords.vy)
+                    * ONE;
             }
             velocity.vx /= timer;
             velocity.vy /= timer;
@@ -61,7 +68,7 @@ void battle_unit_move_toward_action_target(battle_unit_misc_data_t* unit, s32 al
         break;
     }
     unit->velocity = velocity;
-    battle_unit_set_screen_coords_from_real_coords(unit);
+    battle_unit_set_world_coords_from_real_coords(unit);
     unit->distortion_timer = timer;
     unit->distortion_target = target_z;
 }

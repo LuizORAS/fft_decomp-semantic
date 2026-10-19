@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x06, Blood Sword and Bloody Strings: the physical evade check, XA and YA by weapon type,
  * Charge's power and the physical damage, which the attacker drains

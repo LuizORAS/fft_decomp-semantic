@@ -5,7 +5,7 @@
 /* Converts the 16x16 item icon sprite for one item into a texture source
  * record: texture origin and CLUT from the shared icon-sprite helper, plus the
  * fixed icon texture page at VRAM (0x380, 0x120). */
-void world_gfx_build_item_graphic_descriptor(world_item_icon_source_t* source, s32 item_id) {
+void world_gfx_build_item_graphic_descriptor(battle_menu_icon_source_t* source, s32 item_id) {
     SPRT sprite;
 
     world_gfx_set_item_icon_sprite(&sprite, item_id);

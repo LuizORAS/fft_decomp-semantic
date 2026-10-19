@@ -1,5 +1,4 @@
 #include "fft/open.h"
-#include "psx/types.h"
 
 /* Load the ending's graphics from OPNTEX.BIN and OPNBK.BIN: the TIM at sector
  * 0x65 (the script's glyph page, uploaded at once), OPNBK image 6 (uploaded as
@@ -20,7 +19,7 @@ void open_file_load_end_movie_graphics(void) {
     frame.y = 0x100;
     frame.w = 0x200;
     frame.h = 0xf0;
-    LoadImage(&frame, (u32*)g_open_gfx_opntex_data);
+    LoadImage(&frame, g_open_gfx_opntex_data);
     DrawSync(0);
 
     open_file_wait_then_build_header(header, 0x150d3, 0x170, g_open_gfx_opntex_data);

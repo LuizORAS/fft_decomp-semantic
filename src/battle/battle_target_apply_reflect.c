@@ -1,26 +1,14 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
-
-/* View of battle_stats_t 0x16e..0x17f (action_actor_id through
- * action_target_y); the target keeps a second pointer biased to 0x16e. */
-typedef struct battle_target_reflect_action {
-    u8 actor_id;    /* 0x16e */
-    u8 skillset_id; /* 0x16f */
-    s16 ability_id; /* 0x170 */
-    u8 _unused_04[6];
-    u8 target_kind;       /* 0x178; battle_action_target_kind_e */
-    u8 target_id;         /* 0x179 */
-    s16 target_x;         /* 0x17a */
-    s16 target_elevation; /* 0x17c */
-    s16 target_y;         /* 0x17e */
-} battle_target_reflect_action_t;
 
 /* Redirect a reflected spell: the unit holding Reflect casts the last attack it received again
  * (as Black Magic, reaction 5) at the tile as far beyond it as the caster is in front of it
  * (battle_map_resolve_rotated_offset_layer). Returns -1 when the caster stands on the unit's
  * square or that tile is off the map or blocked. */
 s32 battle_target_apply_reflect(battle_stats_t* unit) {
-    battle_target_reflect_action_t* act;
+    action_command_t* act;
     s32 x;
     s32 y;
     s32 z;
@@ -28,9 +16,9 @@ s32 battle_target_apply_reflect(battle_stats_t* unit) {
     s32 dy;
     s32 last_attack;
 
-    act = (battle_target_reflect_action_t*)&unit->action_actor_id;
+    act = &unit->action_command;
     dx = unit->x - g_battle_acting_unit_x;
-    dy = unit->position.bits.y - g_battle_acting_unit_y;
+    dy = unit->position.y - g_battle_acting_unit_y;
     if (dx == 0 && dy == 0) {
         return -1;
     }
@@ -39,11 +27,11 @@ s32 battle_target_apply_reflect(battle_stats_t* unit) {
     }
     act->skillset_id = SKILLSET_ID_BLACK_MAGIC;
     last_attack = unit->action.last_received_attack;
-    act->target_kind = BATTLE_ACTION_TARGET_TILE;
+    act->targeting_type = BATTLE_TARGETING_TYPE_TILE;
     act->target_id = 0;
     act->ability_id = last_attack;
-    act->target_x = x;
-    act->target_y = y;
-    act->target_elevation = z;
+    act->target_position.vx = x;
+    act->target_position.vz = y;
+    act->target_position.vy = z;
     return 0;
 }

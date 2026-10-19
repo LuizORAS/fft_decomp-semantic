@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Aim the camera vector from the current camera focus at the cursor tile.
@@ -12,16 +15,17 @@ s32 battle_camera_calculate_cursor_tile_vector_normal(void) {
     SVECTOR tile_position;
     VECTOR delta;
     s32 height;
-    u8 depth;
+    map_tile_depth_t depth;
 
     tile = battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     battle_map_get_tile_data_pointer(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z ^ 1);
-    depth = tile->depth_half_height.value;
-    height = -((tile->height + (depth >> MAP_TILE_DEPTH_SHIFT)) * 12 + (depth & MAP_TILE_HALF_HEIGHT_MASK) * 6);
-    main_util_set_svector(&tile_position, g_battle_cursor_x * 28 + 14, height, g_battle_cursor_y * 28 + 14);
-    delta.vx = tile_position.vx - g_battle_camera_current_real_coords.vx / ONE;
-    delta.vy = height - g_battle_camera_current_real_coords.vy / ONE;
-    delta.vz = tile_position.vz - g_battle_camera_current_real_coords.vz / ONE;
+    depth = tile->depth_half_height;
+    height = -((tile->height + depth.depth) * MAP_HEIGHT_STEP + depth.half_height * (MAP_HEIGHT_STEP / 2));
+    main_util_set_svector(&tile_position, g_battle_cursor_x * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2), height,
+        g_battle_cursor_y * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2));
+    setVector(&delta, tile_position.vx - g_battle_camera_current_real_coords.vx / ONE,
+        height - g_battle_camera_current_real_coords.vy / ONE,
+        tile_position.vz - g_battle_camera_current_real_coords.vz / ONE);
     VectorNormal(&delta, &g_battle_camera_step_vector);
     g_battle_camera_step_vector.vx *= 3;
     g_battle_camera_step_vector.vy *= 3;

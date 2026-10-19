@@ -1,3 +1,4 @@
+#include "fft/open.h"
 #include "psx/libcd.h"
 #include "psx/types.h"
 

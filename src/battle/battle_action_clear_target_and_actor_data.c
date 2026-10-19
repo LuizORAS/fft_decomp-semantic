@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
 
 /* Reset the target's and the actor's result records (g_battle_action_target_data,
  * g_battle_action_attacker_data); the actor's starts as a miss (hit 0). */

@@ -5,32 +5,33 @@
  * number of following commands, byte 5 the constant argument. When the
  * predicate holds the following commands are executed via the opcode table;
  * otherwise they are skipped by their length bytes. */
-u8* world_menu_script_if_group(u8* script) {
-    s32 (*predicate)(s32) = g_world_menu_script_callbacks[script[3]];
-    s32 count = script[4];
+menu_instruction_t* world_menu_script_if_group(menu_instruction_t* script) {
+    menu_instruction_t* instruction = script;
+    s32 (*predicate)(s32) = g_world_menu_script_callbacks[instruction->conditional.predicate].value;
+    s32 count = instruction->conditional.count;
     s32 arg;
 
     if (g_world_menu_use_scroll_position == 0) {
-        arg = script[5];
+        arg = instruction->conditional.value;
     } else {
         arg = g_world_menu_scroll_offset + g_world_menu_scroll_row_offset;
         if (g_world_menu_scroll_pixel_offset < 0) {
             arg -= 1;
         }
     }
-    script += script[1];
+    instruction = menu_next_instruction(instruction);
     if (predicate(arg) == 0) {
         count -= 1;
         while (count != -1) {
-            script += script[1];
+            instruction = menu_next_instruction(instruction);
             count -= 1;
         }
     } else {
         count -= 1;
         while (count != -1) {
-            script = g_world_menu_script_handlers[*script](script);
+            instruction = g_world_menu_script_handlers[instruction->header.opcode](instruction);
             count -= 1;
         }
     }
-    return script;
+    return instruction;
 }

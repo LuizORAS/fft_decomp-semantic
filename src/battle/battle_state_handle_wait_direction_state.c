@@ -9,10 +9,10 @@ void battle_state_handle_wait_direction_state(void) {
     s32 facing;
     s32 facing_hint;
     u16 frame_data;
-    battle_unit_misc_data_t* unit;
-    battle_unit_misc_data_t* mounted_unit;
+    battle_unit_t* unit;
+    battle_unit_t* mounted_unit;
 
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     battle_gfx_update_all_unit_rotation_and_vectors();
     if (g_battle_menu_status_screen_selected != 1) {
         battle_unit_update_and_animate_units();
@@ -27,8 +27,8 @@ void battle_state_handle_wait_direction_state(void) {
         battle_camera_handle_zoom_input();
         battle_camera_handle_tilt_input();
         if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
-            if (unit->battle_data != 0) {
-                battle_turn_end(unit->battle_data->misc_unit_id);
+            if (unit->stats != 0) {
+                battle_turn_end(unit->stats->battle_id);
                 battle_unit_set_tile_position_with_mount_partner(unit);
             }
             main_sound_play_sfx(MAIN_SFX_CONFIRM);
@@ -43,8 +43,8 @@ void battle_state_handle_wait_direction_state(void) {
             g_battle_state_wait_direction_facing = facing;
         }
         battle_unit_decide_facing_direction(unit, facing);
-        if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
-            mounted_unit = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+        if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
+            mounted_unit = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
             if (mounted_unit != 0) {
                 battle_unit_decide_facing_direction(mounted_unit, facing);
             }
@@ -53,8 +53,8 @@ void battle_state_handle_wait_direction_state(void) {
         facing_hint = unit->command_state.cursor.facing_hint;
         if (facing_hint < 4) {
             battle_unit_decide_facing_direction(unit, facing_hint << 10);
-            if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
-                mounted_unit = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+            if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
+                mounted_unit = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
                 if (mounted_unit != 0) {
                     battle_unit_decide_facing_direction(mounted_unit, unit->command_state.cursor.facing_hint << 10);
                 }
@@ -62,8 +62,8 @@ void battle_state_handle_wait_direction_state(void) {
         }
         frame_data = unit->state_frame_counter++;
         if (frame_data >= 0x1f) {
-            if (unit->battle_data != 0) {
-                battle_turn_end(unit->battle_data->misc_unit_id);
+            if (unit->stats != 0) {
+                battle_turn_end(unit->stats->battle_id);
                 battle_unit_set_tile_position_with_mount_partner(unit);
             }
             battle_turn_advance();

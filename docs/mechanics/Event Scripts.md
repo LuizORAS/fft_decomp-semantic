@@ -9,6 +9,79 @@ scope:
   - wldcore_sound_novel
   - open_script
   - open_opcode
+  - input_get_menu_controller()
+  - script_advance_date_by_one_year()
+  - script_apply_input_overrides()
+  - script_apply_relative_camera()
+  - script_assign_bitset_flag()
+  - script_block_start_thread()
+  - script_change_stats()
+  - script_check_scenario_condition()
+  - script_clamp_s32_to_range()
+  - script_color_screen_thread()
+  - script_color_unit_event_instruction()
+  - script_copy_matrix()
+  - script_dismiss_unit_event_instruction()
+  - script_display_conditions_thread()
+  - script_execute_event()
+  - script_face_tile()
+  - script_face_unit()
+  - script_filter_controller_input()
+  - script_filter_unit_id_by_mode()
+  - script_find_instruction_byte_offset()
+  - script_find_jump_target()
+  - script_focus()
+  - script_focus_speed()
+  - script_get_rand16()
+  - script_get_variable()
+  - script_get_variable_bit_position()
+  - script_get_variable_word_pointer_from_id()
+  - script_interpolate_range_fixed12()
+  - script_is_tutorial_event_slot()
+  - script_join_units_silently()
+  - script_jump_event_instruction()
+  - script_load_attack_graphics_event_instruction()
+  - script_load_event()
+  - script_load_event_input_state()
+  - script_load_halfword()
+  - script_load_next_event()
+  - script_march_units()
+  - script_mirror_sprite_event_instruction()
+  - script_pause_event_instruction()
+  - script_play_effect_and_wait()
+  - script_play_effect_thread()
+  - script_print_debug_message()
+  - script_pulse_tutorial_wait_value()
+  - script_report_missing_unit_stub()
+  - script_reset_event_state()
+  - script_reset_palette_event_instruction()
+  - script_resolve_runtime_id()
+  - script_rotate_unit()
+  - script_run_condition()
+  - script_run_next_event()
+  - script_run_next_event_unused()
+  - script_run_scenario_conditions()
+  - script_run_variable_command()
+  - script_scale_music_volume()
+  - script_seed_random_from_vsync()
+  - script_set_units_movement_effect_suppression()
+  - script_set_variable()
+  - script_show_graphic_thread()
+  - script_sprite_move_beta_thread()
+  - script_sprite_move_thread()
+  - script_start_current_event_thread()
+  - script_store_halfword()
+  - script_teleport_in_event_instruction()
+  - script_unit_anim()
+  - script_unit_animation_rotate_event_instruction()
+  - script_unlock_date_event_instruction()
+  - script_wait_for_unit_ready()
+  - script_wait_rotate_event_instruction()
+  - script_wait_sprite_move_event_instruction()
+  - script_wait_value_event_instruction()
+  - script_wait_walk_event_instruction()
+  - script_walk_to_event_instruction()
+  - script_warp_unit()
 ---
 
 # Event Scripts
@@ -33,16 +106,16 @@ languages run other parts of the game:
 - **Picking the event.** At the end of an event, and when the battle asks
   (the scenario check of `battle_menu_dispatch_system_function`), the
   scenario's condition chains pick the next one
-  ([[battle_script_run_scenario_conditions]]). ATTACK loads up to ten chains
+  ([[script_run_scenario_conditions]]). ATTACK loads up to ten chains
   per scenario. Each chain is a run of conditions
   ([[event_scenario_condition_e]]: a variable, a unit's presence, HP or MP,
   the acting unit, an equipped item, the war funds, the date, the
   casualties, the enemies defeated, a unit on a tile) that ends in the event
   to run.
-- **Running it.** [[battle_script_start_current_event_thread]] starts the
+- **Running it.** [[script_start_current_event_thread]] starts the
   event thread. It loads the event's 8 KB block
-  ([[battle_script_load_event]]) and interprets it
-  ([[battle_script_execute_event]]). An instruction is an opcode byte and its
+  ([[script_load_event]]) and interprets it
+  ([[script_execute_event]]). An instruction is an opcode byte and its
   operands; [[event_opcode_e]] in `include/fft/script.h` names each one with
   its operands. Instructions that take time start a helper thread, and work
   that belongs to the main loop is posted as a request
@@ -72,7 +145,7 @@ languages run other parts of the game:
   | Flow | BlockStart and End, the comparisons, the variable instructions, JumpForward, JumpForwardIfZero, JumpBack and their targets, Wait, WaitValue, Yield, CallFunction ([[event_call_function_e]]), End |
 
 - **Variables.** A script variable id runs from 0 to 0x3ff
-  ([[battle_script_get_variable_word_pointer_from_id]]): whole words below
+  ([[script_get_variable_word_pointer_from_id]]): whole words below
   0x80, one-bit flags from 0x80, nibbles from 0x360. Some words are live
   values: a random number, the camera, the weather and time of day. The
   ranges hold the story progress, the shop level, 32 locals per scenario,
@@ -82,7 +155,7 @@ languages run other parts of the game:
 - **Replays.** The Brave Story's replay of a story event and the tutorial
   list set `EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS`. The event then skips
   DismissUnit, CallFunction, UnlockDate and SetDateAdvance, and
-  [[battle_script_run_variable_command]] refuses writes outside the scenario
+  [[script_run_variable_command]] refuses writes outside the scenario
   locals and the interpreter's working variables.
 - **Battle tutorials.** Events 0x19a to 0x1a9, played under tutorial input:
   the script forces and disables buttons
@@ -150,7 +223,7 @@ fades, the OPNTEX pictures and slideshows, and the `ENDING.XA` music.
 | `g_main_scenario_condition_offsets`, `g_main_scenario_condition_data` | The scenario's condition chains, loaded by ATTACK (`attack_scenario_load_conditionals`) |
 | `g_main_scenario_event_finish_operations` | Per event: the next event (bits 0-7 and 10-11) and what follows it |
 | `g_main_script_variables` | The script variables: 256 words, the flags and nibbles packed from word 0x80 |
-| `g_battle_script_event_instruction_sizes` | Each opcode's operand length; the scanners step with it |
+| `g_script_event_instruction_sizes` | Each opcode's operand length; the scanners step with it |
 | `g_wldcore_script_base`, [[wldcore_script_state_t]] | The location scripts and the running one's state |
 | [[wldcore_sound_novel_record_t]] (`g_wldcore_sound_novel_record`) | The novel being read: section, instruction, text history, picture, sound, counter |
 | `g_main_sound_novel_section_bits`, `g_main_sound_novel_saved_flags` | Which sections have been read, and the novels' saved flags |
@@ -160,14 +233,14 @@ fades, the OPNTEX pictures and slideshows, and the `ENDING.XA` music.
 
 1. **The event starts.** BATTLE enters its event state
    ([[battle_state_enter_event]]) and
-   [[battle_script_start_current_event_thread]] starts
-   [[battle_script_run_next_event]] on the event thread.
-2. **Load and run.** [[battle_script_load_next_event]] waits for the last
+   [[script_start_current_event_thread]] starts
+   [[script_run_next_event]] on the event thread.
+2. **Load and run.** [[script_load_next_event]] waits for the last
    event's instruction threads and loads the block;
-   [[battle_script_execute_event]] interprets it.
+   [[script_execute_event]] interprets it.
 3. **Each frame.** [[battle_script_run_event_frame]] runs the threads once and
    then [[battle_script_process_pending_requests]].
-4. **The end.** EventEnd asks [[battle_script_run_scenario_conditions]] for
+4. **The end.** EventEnd asks [[script_run_scenario_conditions]] for
    the next event and chains into it, or stops; the frame then returns the
    exit.
 
@@ -177,7 +250,7 @@ fades, the OPNTEX pictures and slideshows, and the `ENDING.XA` music.
 |---|---|
 | What a scene does | Its block in `TEST.EVT` (instructions and text) |
 | Which event follows which | The scenario's condition chains and the finish operations |
-| What an instruction does | Its arm of [[battle_script_execute_event]] or its handler, and WORLD's copy |
+| What an instruction does | Its arm of [[script_execute_event]] or its handler, and WORLD's copy |
 | What happens at a world map location | Its location scripts |
 | A sound novel | Its script and text in `SNPLBIN.BIN`, its pictures in `WLDPIC.BIN` |
 | The ending credits | The credits script and its text |
@@ -187,14 +260,14 @@ fades, the OPNTEX pictures and slideshows, and the `ENDING.XA` music.
 - Instruction values with a length and no handler end the script; a block,
   add-unit or camera-fusion start with no end resumes at byte 1; FocusSpeed
   and RelativeCamera patch the next instruction without checking it; WaitUnitReady
-  never waits ([[battle_script_wait_for_unit_ready]]).
-- [[battle_script_focus_speed]] adds to an uninitialised register, and
+  never waits ([[script_wait_for_unit_ready]]).
+- [[script_focus_speed]] adds to an uninitialised register, and
   [[battle_script_toggle_message_portrait_flip]] never sets its record index.
-- [[battle_script_get_misc_id]]: the active-turn selector with no unit
+- [[script_resolve_runtime_id]]: the active-turn selector with no unit
   holding the turn reads through NULL.
 - WORLD's copy of the interpreter never runs, and it calls BATTLE's
   addresses, which hold WLDCORE code while WORLD runs
-  ([[world_camera_wait_until_idle]]).
+  ([[camera_wait_until_idle]]).
 - Scenario conditions 18 and 19 compare the casualties with the record's id;
   location script opcodes 16 and 17 test the date the other way round from
   scenario conditions 16 and 17.

@@ -9,9 +9,9 @@ void open_prologue_start(void) {
     s32 controller;
     s32 stack_padding[4];
 
-    main_sound_set_master_volume(0, 1);
+    suzuki_sound_set_master_volume(0, 1);
     main_sound_set_current_music_track(MAIN_MUSIC_NEW_GAME);
-    main_sound_set_master_volume(0x3fff, 5);
+    suzuki_sound_set_master_volume(0x3fff, 5);
     open_file_load_prologue_text_pages();
     open_file_build_openbk_header(1, g_open_file_destination);
     open_file_wait_for_pending();

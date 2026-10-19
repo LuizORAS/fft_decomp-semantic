@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* Same as battle_state_handle_map_jumping_out_state, leading to MAP_INITIALIZE_2. */
 void battle_state_handle_change_map_jumping_out_state(void) {
@@ -24,6 +25,6 @@ void battle_state_handle_change_map_jumping_out_state(void) {
         g_battle_game_state = BATTLE_GAME_STATE_MAP_INITIALIZE_2;
         g_battle_state_map_init_step = 0;
         battle_state_stop_map_animations();
-        battle_unit_clear_misc_units();
+        battle_unit_clear_all();
     }
 }

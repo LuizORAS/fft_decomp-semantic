@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 #include "psx/pad.h"
 
 /* SELECT_MOVE_TILE: choose where the casting unit moves. Under player control the d-pad moves
@@ -6,9 +7,9 @@
  * returns to the action menu and Triangle recentres the cursor; an AI unit takes its stored
  * destination after 31 frames. The path is copied to the unit before the move confirmation. */
 void battle_state_handle_select_move_tile_state(void) {
-    battle_unit_misc_data_t* source;
-    battle_unit_misc_data_t* casting;
-    u8* path;
+    battle_unit_t* source;
+    battle_unit_t* casting;
+    battle_walk_path_t* path;
     s32 buttons;
     u16 frame;
     s32 x;
@@ -16,8 +17,8 @@ void battle_state_handle_select_move_tile_state(void) {
     s32 y;
     battle_unit_command_state_t scratch;
 
-    source = battle_unit_get_source_misc_data();
-    casting = battle_unit_get_casting_misc_data();
+    source = battle_unit_get_source();
+    casting = battle_unit_get_casting();
     battle_state_update_units();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if (source->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) {
@@ -28,11 +29,11 @@ void battle_state_handle_select_move_tile_state(void) {
         buttons = g_main_input_pressed_buttons;
         if (buttons & PSX_PAD_CIRCLE) {
             path = battle_move_build_path_to_tile(
-                casting->battle_data->misc_unit_id, g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+                casting->stats->battle_id, g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
             if (path != 0) {
-                /* Copy the 0x80-byte movement block in the renderer-side Misc record. */
-                *(battle_walk_path_t*)&casting->movement_path_count = *(battle_walk_path_t*)path;
-                casting->walk_speed.word = 0x2000;
+                /* Copy the 0x80-byte movement block in the renderer-side runtime record. */
+                casting->path = *path;
+                casting->walk_speed = 0x2000;
                 battle_target_tint_marked_tiles(BATTLE_TILE_MARK_NONE, 1);
                 main_sound_play_sfx(MAIN_SFX_CONFIRM);
                 battle_state_enter_unit_moving_setup();
@@ -48,7 +49,7 @@ void battle_state_handle_select_move_tile_state(void) {
             return;
         }
         if (buttons & PSX_PAD_TRIANGLE) {
-            battle_target_move_cursor_to_unit(battle_unit_get_source_misc_data());
+            battle_target_move_cursor_to_unit(battle_unit_get_source());
             battle_target_show_cursor_unit_panel();
         }
         return;
@@ -58,18 +59,18 @@ void battle_state_handle_select_move_tile_state(void) {
     if (frame < 0x1f) {
         return;
     }
-    path = battle_move_build_path_to_tile(casting->battle_data->misc_unit_id, source->command_state.ai.data.move.x,
-        source->command_state.ai.data.move.y, source->command_state.ai.data.move.elevation);
+    path = battle_move_build_path_to_tile(casting->stats->battle_id, source->command_state.ai.data.move.x,
+        source->command_state.ai.data.move.y, source->command_state.ai.data.move.layer);
     battle_target_tint_marked_tiles(BATTLE_TILE_MARK_NONE, 1);
     if (path != 0) {
         x = source->command_state.ai.data.move.x;
-        elevation = source->command_state.ai.data.move.elevation;
+        elevation = source->command_state.ai.data.move.layer;
         y = source->command_state.ai.data.move.y;
         g_battle_cursor_x = x;
         g_battle_cursor_z = elevation;
         g_battle_cursor_y = y;
-        *(battle_walk_path_t*)&casting->movement_path_count = *(battle_walk_path_t*)path;
-        casting->walk_speed.word = 0x2000;
+        casting->path = *path;
+        casting->walk_speed = 0x2000;
         battle_state_enter_unit_moving_setup();
         return;
     }

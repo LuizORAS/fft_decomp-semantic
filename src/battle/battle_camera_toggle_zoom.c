@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 
 /* Switch the zoom target for L2 between in (scale ONE) and out (0xc00), start the move and play its
  * sound. Any other target is left alone, but the zoom increment still restarts at 4. */

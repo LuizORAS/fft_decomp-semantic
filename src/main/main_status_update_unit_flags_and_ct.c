@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
 #include "fft/main.h"
 #include "psx/types.h"
 
@@ -12,7 +12,7 @@ void main_status_update_unit_flags_and_ct(battle_stats_t* unit) {
     s32 status;
     u8 immunity;
 
-    if (unit->movement_abilities[2] & BATTLE_MOVEMENT_SET_3_FLOAT) {
+    if (unit->ability_flags.movement[2] & BATTLE_MOVEMENT_SET_3_FLOAT) {
         unit->status_sets.innate[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FLOAT)]
             |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT);
     }

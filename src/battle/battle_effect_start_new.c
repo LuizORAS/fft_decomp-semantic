@@ -1,30 +1,30 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 #include "psx/types.h"
 
-/* Starts an ability's effect outside an action, on a unit (target_data is its
- * misc id), on a tile (target_data points to its x, level and y halfwords) or
+/* Starts an ability's effect outside an action, on a unit (`target` holds its
+ * runtime id), on a tile (`target` points to its x, level and y 16-bit values) or
  * on a unit that is also its caster. */
-void battle_effect_start_new(s32 ability_id, s32 target_mode, u8* target_data) {
+void battle_effect_start_new(s32 ability_id, s32 target_mode, effect_start_target_data_t target) {
     battle_effect_secondary_init_t effect_data;
 
     effect_data.target_count = 1;
-    effect_data.caster.fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
-    effect_data.caster.fields.caster_id = 0;
+    effect_data.targets[BATTLE_EFFECT_CASTER_ENTRY].target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
+    effect_data.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.runtime_id = 0;
 
     if (target_mode == BATTLE_EFFECT_START_ON_UNIT) {
-        effect_data.target[0].fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
-        effect_data.target[0].fields.target_id = (u32)target_data;
-        effect_data.target[0].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
+        effect_data.targets[0].target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
+        effect_data.targets[0].data.unit.runtime_id = target.runtime_id;
+        effect_data.targets[0].data.unit.result_animation = BATTLE_EFFECT_HIT_NORMAL;
     } else if (target_mode == BATTLE_EFFECT_START_ON_TILE) {
-        effect_data.target[0].fields.target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
-        effect_data.target[0].block.values[1] = *(u16*)&target_data[0];
-        effect_data.target[0].block.values[3] = *(u16*)&target_data[4];
-        effect_data.target[0].block.values[2] = *(u16*)&target_data[2];
+        effect_data.targets[0].target_type = BATTLE_EFFECT_TARGET_TYPE_TILE;
+        effect_data.targets[0].data.tile.vx = target.tile->vx;
+        effect_data.targets[0].data.tile.vz = target.tile->vz;
+        effect_data.targets[0].data.tile.vy = target.tile->vy;
     } else {
-        effect_data.target[0].fields.target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
-        effect_data.target[0].fields.target_id = (u32)target_data;
-        effect_data.target[0].fields.result_animation = BATTLE_EFFECT_HIT_NORMAL;
-        effect_data.caster.fields.caster_id = (u32)target_data;
+        effect_data.targets[0].target_type = BATTLE_EFFECT_TARGET_TYPE_UNIT;
+        effect_data.targets[0].data.unit.runtime_id = target.runtime_id;
+        effect_data.targets[0].data.unit.result_animation = BATTLE_EFFECT_HIT_NORMAL;
+        effect_data.targets[BATTLE_EFFECT_CASTER_ENTRY].data.unit.runtime_id = target.runtime_id;
     }
 
     effect_data.spectator_count = 0;

@@ -11,7 +11,7 @@ void equip_unit_build_data_from_battle_stats(battle_stats_t* stats, equip_unit_d
     u16 capped;
 
     memset(unit, 0, sizeof(equip_unit_data_t));
-    unit->level = stats->level < 100 ? stats->level : 99;
+    unit->level = stats->level <= UNIT_LEVEL_MAX ? stats->level : UNIT_LEVEL_MAX;
     if (stats->team_flags & BATTLE_TEAM_MASK) {
         unit->team_kind = 1;
     }
@@ -24,39 +24,39 @@ void equip_unit_build_data_from_battle_stats(battle_stats_t* stats, equip_unit_d
         value = i + 1;
     }
     unit->list_index = value;
-    unit->experience = stats->experience < 100 ? stats->experience : 99;
+    unit->experience = stats->experience < UNIT_LEVEL_UP_EXPERIENCE ? stats->experience : UNIT_LEVEL_EXPERIENCE_MAX;
     unit->unit_index = stats->entd_slot;
-    capped = 999;
-    if (stats->hp < 1000) {
+    capped = MAX_HP_MP_CAP;
+    if (stats->hp <= MAX_HP_MP_CAP) {
         capped = stats->hp;
     }
-    unit->hp = capped;
-    capped = 999;
-    if (stats->max_hp < 1000) {
+    unit->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].value = capped;
+    capped = MAX_HP_MP_CAP;
+    if (stats->max_hp <= MAX_HP_MP_CAP) {
         capped = stats->max_hp;
     }
-    unit->max_hp = capped;
-    capped = 999;
-    if (stats->mp < 1000) {
+    unit->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].max = capped;
+    capped = MAX_HP_MP_CAP;
+    if (stats->mp <= MAX_HP_MP_CAP) {
         capped = stats->mp;
     }
-    unit->mp = capped;
-    capped = 999;
-    if (stats->max_mp < 1000) {
+    unit->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].value = capped;
+    capped = MAX_HP_MP_CAP;
+    if (stats->max_mp <= MAX_HP_MP_CAP) {
         capped = stats->max_mp;
     }
-    unit->max_mp = capped;
-    unit->ct = stats->has_turn != 1 ? stats->ct : 100;
-    if (unit->ct > 100) {
-        unit->ct = 100;
+    unit->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].max = capped;
+    unit->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_CT].value = stats->has_turn != 1 ? stats->ct : UNIT_TURN_CT_THRESHOLD;
+    if (unit->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_CT].value > UNIT_TURN_CT_THRESHOLD) {
+        unit->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_CT].value = UNIT_TURN_CT_THRESHOLD;
     }
-    unit->max_ct = 100;
-    unit->entd_slot = stats->entd_slot;
-    unit->job_id = stats->job_id;
-    unit->brave = stats->brave;
-    unit->faith = stats->faith;
-    unit->zodiac = stats->birthday.value >> 12;
-    unit->formation_index = stats->formation_index;
+    unit->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_CT].max = UNIT_TURN_CT_THRESHOLD;
+    unit->identity.unit_index = stats->entd_slot;
+    unit->identity.job_id = stats->job_id;
+    unit->identity.brave = stats->brave;
+    unit->identity.faith = stats->faith;
+    unit->identity.zodiac = stats->birthday.zodiac;
+    unit->identity.roster_slot = stats->formation_index;
     unit->move = stats->move;
     unit->speed = stats->attributes[UNIT_ATTRIBUTE_SPEED];
     unit->jump = stats->jump;
@@ -102,7 +102,7 @@ void equip_unit_build_data_from_battle_stats(battle_stats_t* stats, equip_unit_d
     }
     unit->party_index = stats->formation_index;
     bcopy(stats->equipment_categories, unit->equipment_categories, 4);
-    bcopy(stats->support_abilities, unit->support_abilities, 4);
+    bcopy(stats->ability_flags.support, unit->support_abilities, 4);
     unit->two_handing = equip_unit_is_two_handing_weapon(
-        (weapon_pair_t*)unit->equipment, stats->support_abilities[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS);
+        unit->equipment, stats->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS);
 }

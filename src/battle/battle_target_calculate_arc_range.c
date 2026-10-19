@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /*
@@ -6,7 +7,7 @@
  * away whose distance, less a quarter of the unit's height advantage, is
  * within range. Both elevation levels of each tile are tested.
  */
-void battle_target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags) {
+void battle_target_calculate_arc_range(const battle_stats_t* unit, u8 range, u8 flags) {
     u8 height;
     u8 tile_height;
     s32 ux;
@@ -21,7 +22,7 @@ void battle_target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags)
 
     height = battle_unit_get_effective_height(unit);
     ux = unit->x;
-    uy = unit->position.bits.y;
+    uy = unit->position.y;
     for (y = 0; y < g_battle_map_max_y; y++) {
         if (uy < y) {
             dy = y - uy;
@@ -38,8 +39,8 @@ void battle_target_calculate_arc_range(battle_stats_t* unit, u8 range, u8 flags)
                 for (level = 0; level < 2; level++) {
                     index = (level << 8) + y * g_battle_map_max_x + x;
                     tile = &g_battle_map_tile_data[index];
-                    tile_height = tile->height * 2 + (tile->depth_half_height.value & MAP_TILE_HALF_HEIGHT_MASK)
-                        + (tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 2;
+                    tile_height
+                        = tile->height * 2 + tile->depth_half_height.half_height + tile->depth_half_height.depth * 2;
                     if (dist - (height - tile_height) / 4 <= range) {
                         g_battle_target_panels[index].remaining_range = 1;
                     }

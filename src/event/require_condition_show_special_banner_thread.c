@@ -1,11 +1,14 @@
 #include "fft/event_require.h"
+#include "fft/gfx.h"
+#include "fft/memory.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
 /* The target re-reads the first-quad index for every field. */
 #define QUAD (quads + parameters[0])[quad_index]
 
-#define VERTEX_COLORS (&color_table[(parameters[0] + quad_index) * 0x14])
+#define VERTEX_COLORS (&color_table[parameters[0] + quad_index])
 
 /* Thread of display condition 0 (EVENT_DISPLAY_CONDITION_SPECIAL_CASES, started by
  * require_condition_dispatch): fade the sprites of special banner `thread parameter 1` (a row of
@@ -25,9 +28,9 @@ void require_condition_show_special_banner_thread(void) {
     s32 buffer;
     s32 scale;
     s32 quad_index;
-    require_display_condition_quad_t* quads;
+    sprite_sheet_frame_t* quads;
     u8* table;
-    u8* color_table;
+    require_display_condition_colors_t* color_table;
 
     table = g_require_condition_special_quad_ranges;
     color_table = g_require_condition_special_vertex_colors;
@@ -50,24 +53,13 @@ void require_condition_show_special_banner_thread(void) {
         POLY_GT4* poly
             = &(use_small_array == 0 ? g_require_gfx_poly_gt4_array_32 : g_require_gfx_poly_gt4_array_8)[quad_index];
 
-        poly->u0 = QUAD.u;
-        poly->v0 = QUAD.v;
-        poly->u1 = QUAD.u + QUAD.width;
-        poly->v1 = QUAD.v;
-        poly->u2 = QUAD.u;
-        poly->v2 = QUAD.v + QUAD.height;
-        poly->u3 = QUAD.u + QUAD.width;
-        poly->v3 = QUAD.v + QUAD.height;
-        poly->x0 = QUAD.x + 0x100;
-        poly->y0 = QUAD.y + 0x78;
-        poly->x1 = QUAD.x + 0x100 + QUAD.width;
-        poly->y1 = QUAD.y + 0x78;
-        poly->x2 = QUAD.x + 0x100;
-        poly->y2 = QUAD.y + 0x78 + QUAD.height;
-        poly->x3 = QUAD.x + 0x100 + QUAD.width;
-        poly->y3 = QUAD.y + 0x78 + QUAD.height;
+        setUV4(poly, QUAD.source.x, QUAD.source.y, QUAD.source.x + QUAD.source.w, QUAD.source.y, QUAD.source.x,
+            QUAD.source.y + QUAD.source.h, QUAD.source.x + QUAD.source.w, QUAD.source.y + QUAD.source.h);
+        setXY4(poly, QUAD.offset.x + 0x100, QUAD.offset.y + 0x78, QUAD.offset.x + 0x100 + QUAD.source.w,
+            QUAD.offset.y + 0x78, QUAD.offset.x + 0x100, QUAD.offset.y + 0x78 + QUAD.source.h,
+            QUAD.offset.x + 0x100 + QUAD.source.w, QUAD.offset.y + 0x78 + QUAD.source.h);
     }
-    battle_util_copy_bytes(g_require_gfx_poly_gt4_buffers[1], g_require_gfx_poly_gt4_buffers, 40 * sizeof(POLY_GT4));
+    mem_copy_bytes_nonempty(g_require_gfx_poly_gt4_buffers[1], g_require_gfx_poly_gt4_buffers, 40 * sizeof(POLY_GT4));
 
     buffer = 0;
     scale = 0x30;
@@ -84,21 +76,21 @@ void require_condition_show_special_banner_thread(void) {
         for (quad_index = 0; quad_index < quad_count; quad_index++) {
             POLY_GT4* polys = &g_require_gfx_poly_gt4_buffers[buffer][32];
             u8* parameters = &table[parameter_index];
-            const u8* vertex_colors = VERTEX_COLORS;
+            const require_display_condition_colors_t* vertex_colors = VERTEX_COLORS;
 
             if (use_small_array == 0) {
                 POLY_GT4* poly = &(g_require_gfx_poly_gt4_array_32 + buffer * 40)[quad_index];
 
                 require_gfx_scale_poly_gt4_vertex_colors(vertex_colors, scale, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             } else {
                 POLY_GT4* poly = &polys[quad_index];
 
                 require_gfx_scale_poly_gt4_vertex_colors(vertex_colors, scale, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             }
         }
-        battle_thread_yield();
+        thread_yield();
         scale += 8;
     }
     for (;;) {
@@ -112,21 +104,21 @@ void require_condition_show_special_banner_thread(void) {
         for (quad_index = 0; quad_index < quad_count; quad_index++) {
             POLY_GT4* polys = &g_require_gfx_poly_gt4_buffers[buffer][32];
             u8* parameters = &table[parameter_index];
-            const u8* vertex_colors = VERTEX_COLORS;
+            const require_display_condition_colors_t* vertex_colors = VERTEX_COLORS;
 
             if (use_small_array == 0) {
                 POLY_GT4* poly = &(g_require_gfx_poly_gt4_array_32 + buffer * 40)[quad_index];
 
                 require_gfx_scale_poly_gt4_vertex_colors(vertex_colors, 0x80, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             } else {
                 POLY_GT4* poly = &polys[quad_index];
 
                 require_gfx_scale_poly_gt4_vertex_colors(vertex_colors, 0x80, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             }
         }
-        battle_thread_yield();
+        thread_yield();
     }
 fade_out:
     scale = 0x80;
@@ -138,24 +130,24 @@ fade_out:
         for (quad_index = 0; quad_index < quad_count; quad_index++) {
             POLY_GT4* polys = &g_require_gfx_poly_gt4_buffers[buffer][32];
             u8* parameters = &table[parameter_index];
-            const u8* vertex_colors = VERTEX_COLORS;
+            const require_display_condition_colors_t* vertex_colors = VERTEX_COLORS;
 
             if (use_small_array == 0) {
                 POLY_GT4* poly = &(g_require_gfx_poly_gt4_array_32 + buffer * 40)[quad_index];
 
                 require_gfx_scale_poly_gt4_vertex_colors(vertex_colors, scale, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             } else {
                 POLY_GT4* poly = &polys[quad_index];
 
                 require_gfx_scale_poly_gt4_vertex_colors(vertex_colors, scale, poly);
-                battle_gfx_draw_or_append_gpu_primitive(poly);
+                gfx_draw_or_append_gpu_primitive(poly);
             }
         }
-        battle_thread_yield();
+        thread_yield();
         scale -= 0xc;
     } while (scale >= 0x30);
 done:
-    battle_thread_yield();
-    battle_thread_exit_current();
+    thread_yield();
+    thread_exit_current();
 }

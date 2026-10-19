@@ -1,4 +1,7 @@
 #include "fft/event_equip.h"
+#include "fft/gfx.h"
+#include "fft/menu.h"
+#include "fft/thread.h"
 
 /* Runs one frame of the equipment menu state machine.
  *
@@ -16,16 +19,16 @@ s32 equip_menu_update_equipment(void) {
     if (g_equip_menu_ready == 0) {
         g_equip_menu_ready = 1;
         g_equip_selected_slot = equip_menu_init_selection_value(2, 0);
-        battle_thread_suspend(EQUIP_THREAD_SLOT_COMMAND_MENU);
+        thread_suspend(EQUIP_THREAD_SLOT_COMMAND_MENU);
         equip_thread_request_stop(EQUIP_THREAD_SLOT_UNIT_STATUS);
-        equip_thread_request_stop(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR);
+        equip_thread_request_stop(THREAD_SCREEN_SLOT_NUMERIC_EDITOR);
         equip_thread_request_stop(EQUIP_THREAD_SLOT_EQUIPMENT_LIST);
         equip_menu_init_scrollable_list_core(0, 0, 0);
         g_equip_menu_substate = MENU_ITEM_LIST_STATE_BROWSE;
         g_equip_unit_banner_enabled = 0;
         g_equip_item_numeric_panel_params = 0;
         g_equip_item_numeric_panel_y = -0x49;
-        equip_gfx_load_image_and_wait(&g_equip_status_label_image_rect, g_equip_status_label_image);
+        gfx_load_image_and_wait(&g_equip_status_label_image_rect, g_equip_status_label_image);
     }
     if (g_equip_menu_substate == MENU_ITEM_LIST_STATE_CLOSE) {
         equip_panel_toggle_item_numeric_thread(0);
@@ -34,7 +37,7 @@ s32 equip_menu_update_equipment(void) {
         equip_panel_toggle_unit_status_thread(1);
         g_equip_menu_ready = 0;
         g_equip_unit_banner_enabled = 1;
-        battle_thread_resume(EQUIP_THREAD_SLOT_COMMAND_MENU);
+        thread_resume(EQUIP_THREAD_SLOT_COMMAND_MENU);
         g_equip_item_numeric_panel_params = 2;
         g_equip_item_numeric_panel_y = 2;
         g_equip_sound_queued_effect_id = MAIN_SFX_CANCEL;
@@ -52,17 +55,17 @@ s32 equip_menu_update_equipment(void) {
 
     input = 0;
     if (g_equip_menu_substate < 2) {
-        input = g_equip_input_primary_repeat;
+        input = g_menu_input_primary_repeat;
         g_equip_input_page_scroll_disabled = 0;
     } else {
         g_equip_input_page_scroll_disabled = 1;
     }
     override = 0;
-    if (g_battle_menu_input_lock_mode != 0 || battle_thread_is_running(2) != 0) {
+    if (g_menu_input_lock_mode != 0 || thread_is_running(2) != 0) {
         override = 1;
     }
-    equip_menu_dispatch_with_override(g_equip_equipment_render_commands, input, override);
-    equip_menu_draw_equipment_slot_marker(0, g_equip_selected_slot, g_battle_menu_input_lock_mode);
+    equip_menu_dispatch_with_override(&g_equip_equipment_render_commands, input, override);
+    equip_menu_draw_equipment_slot_marker(0, g_equip_selected_slot, g_menu_input_lock_mode);
     if (g_equip_menu_list_entry_count != 0) {
         item_id = g_equip_item_list_entries[g_equip_menu_selected_list_index];
         if (item_id < ITEM_ID_THROWABLE_FIRST) {
@@ -70,7 +73,7 @@ s32 equip_menu_update_equipment(void) {
         }
         if (g_equip_item_list_entries[g_equip_menu_selected_list_index] >= ITEM_ID_HEADGEAR_FIRST
             && g_equip_item_list_entries[g_equip_menu_selected_list_index] <= ITEM_ID_ACCESSORY_FIRST - 1) {
-            equip_menu_dispatch_with_override(g_equip_armor_bonus_render_commands, 0, 0);
+            equip_menu_dispatch_with_override(&g_equip_armor_bonus_render_commands, 0, 0);
         }
         equip_menu_draw_item_status_list(g_equip_item_list_entries[g_equip_menu_selected_list_index]);
     }

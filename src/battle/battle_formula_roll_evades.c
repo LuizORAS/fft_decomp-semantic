@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Run battle_formula_calculate_final_hit_percent (the shown accuracy and the evade rolls, only for

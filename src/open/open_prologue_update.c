@@ -21,7 +21,7 @@ s32 open_prologue_update(void) {
     u16 flags;
     s32 i;
     open_prologue_entry_t* entry;
-    s32 type;
+    s32 image_command;
 
     open_prologue_step_crossfade();
     if (!(g_open_prologue.flags & OPEN_PROLOGUE_SKIP)) {
@@ -57,16 +57,16 @@ s32 open_prologue_update(void) {
                 g_open_prologue.flags = flags | OPEN_PROLOGUE_NEXT_STEP;
                 entry = g_open_prologue.entry_table[g_open_prologue.current_index];
                 g_open_prologue.entry = entry;
-                g_open_prologue.step_count = entry->bytes[0];
+                g_open_prologue.step_count = (u8)entry->header;
                 g_open_prologue.tpage_x = (entry->header & 0xf00) >> 2;
                 g_open_prologue.tpage_y = (entry->header >> 4) & 0x100;
-                /* Image operation: 0x10 + n prepares the crossfade to picture n, 0x20 starts it. */
-                type = entry->bytes[2];
-                switch (type & 0xf0) {
-                case 0x10:
-                    open_prologue_prepare_crossfade(type & 0xf);
+                /* The high nibble selects the operation; the low nibble selects its image. */
+                image_command = (u8)(entry->header >> 16);
+                switch (image_command & OPEN_GFX_TRANSITION_IMAGE_OPERATION_MASK) {
+                case OPEN_GFX_TRANSITION_PREPARE_IMAGE:
+                    open_prologue_prepare_crossfade(image_command & OPEN_GFX_TRANSITION_IMAGE_INDEX_MASK);
                     break;
-                case 0x20:
+                case OPEN_GFX_TRANSITION_START_CROSSFADE:
                     open_file_wait_for_pending();
                     g_open_prologue_crossfade_row_flags[0] = 1;
                     break;
@@ -92,10 +92,14 @@ s32 open_prologue_update(void) {
             return 1;
         }
         /* First line: read every line's texture row and width from the entry. */
+        /* Byte indexing preserves the retail address-add order and entry reloads. */
         if (g_open_prologue.step == 0) {
             for (i = 0; i < g_open_prologue.step_count; i++) {
-                g_open_prologue.step_durations[i] = g_open_prologue.entry->bytes[i * 4 + 5];
-                g_open_prologue.step_values[i] = g_open_prologue.entry->bytes[i * 4 + 4];
+                g_open_prologue.line_widths[i] = g_open_prologue.entry->line_data[i * sizeof(open_gfx_transition_line_t)
+                    + offsetof(open_gfx_transition_line_t, width)];
+                g_open_prologue.line_texture_rows[i]
+                    = g_open_prologue.entry->line_data[i * sizeof(open_gfx_transition_line_t)
+                        + offsetof(open_gfx_transition_line_t, texture_row)];
             }
         }
         {
@@ -105,7 +109,7 @@ s32 open_prologue_update(void) {
             (*step)++;
         }
     }
-    if (++g_open_prologue.timer == g_open_prologue.step_durations[g_open_prologue.step - 1]) {
+    if (++g_open_prologue.timer == g_open_prologue.line_widths[g_open_prologue.step - 1]) {
         g_open_prologue.flags |= OPEN_PROLOGUE_NEXT_STEP;
     }
     if (g_open_prologue.flags & OPEN_PROLOGUE_SKIP) {

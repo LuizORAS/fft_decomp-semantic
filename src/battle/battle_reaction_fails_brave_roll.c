@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* The Brave roll of a reaction: 0 when it triggers (a roll of 0-99 below the unit's Brave), 1 when it

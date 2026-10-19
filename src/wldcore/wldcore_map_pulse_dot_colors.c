@@ -18,7 +18,7 @@ void wldcore_map_pulse_dot_colors(void) {
     s32 dark;
     u8 state;
     s32 counter;
-    u8* color;
+    CVECTOR* color;
 
     flags = g_main_system_flags;
     if (flags & MAIN_SYSTEM_FLAG_HIDE_DISPLAY_OBJECTS) {
@@ -47,16 +47,17 @@ void wldcore_map_pulse_dot_colors(void) {
     bright = phase + 0x60;
     dark = -0x20 - phase;
     for (i = 0; i < g_wldcore_map_dot_count; i++) {
-        if (!(g_wldcore_map_dots[i].flags & WLDCORE_DISPLAY_OBJECT_HIDDEN)) {
-            color = g_wldcore_map_dots[i].rgb;
-            if (g_wldcore_map_dots[i].palette != 0) {
-                color[0] = bright;
-                color[1] = bright;
-                color[2] = bright;
+        if (!(g_wldcore_map_dots[i].render.flags & WLDCORE_DISPLAY_OBJECT_HIDDEN)) {
+            /* Direct nested access biases the base to render; retail addresses the color column. */
+            color = (CVECTOR*)((u8*)&g_wldcore_map_dots[i] + offsetof(wldcore_map_dot_t, render.color));
+            if (g_wldcore_map_dots[i].render.palette != 0) {
+                color->r = bright;
+                color->g = bright;
+                color->b = bright;
             } else {
-                color[0] = dark;
-                color[1] = dark;
-                color[2] = dark;
+                color->r = dark;
+                color->g = dark;
+                color->b = dark;
             }
         }
     }

@@ -8,7 +8,7 @@
  * sequence is written after the tint call because the target reloads the label location
  * there. */
 void wldcore_map_draw_location_label(GsOT* ot) {
-    wldcore_window_record_t request;
+    world_animated_render_record_t request;
     CVECTOR color;
     s32 index;
     s32 shade;
@@ -22,8 +22,8 @@ void wldcore_map_draw_location_label(GsOT* ot) {
 
     index = g_wldcore_map_label_location - 1;
     request.flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
-    request.position.x = g_wldcore_map_dot_screen_x[index].value;
-    request.position.y = g_wldcore_map_dot_screen_y[index].value;
+    request.position.x = g_wldcore_map_dots[index].render.position.x;
+    request.position.y = g_wldcore_map_dots[index].render.position.y;
     shade = g_wldcore_map_label_shade;
     request.priority = 4;
     request.palette = 0;

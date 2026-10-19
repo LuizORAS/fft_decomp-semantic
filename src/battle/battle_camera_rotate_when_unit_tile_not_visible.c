@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 
 /* Turns the camera when the unit's tile is blocked from the current view.
  *
@@ -14,7 +15,7 @@
  * the casting unit's auto-battle target and when the action menus open for a
  * scripted turn. The `direction < 0` adjustment cannot run: the value is already
  * masked to 0..0xfff. */
-void battle_camera_rotate_when_unit_tile_not_visible(battle_unit_misc_data_t* unit) {
+void battle_camera_rotate_when_unit_tile_not_visible(const battle_unit_t* unit) {
     s32 direction;
     u8 flags;
     map_tile_t* tile;

@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x61, Foxbird and Chicken: the magical evade check and hit chance (MA + X with both
  * Faiths), then Brave lowered by Y (battle_formula_set_brave_loss_y). */

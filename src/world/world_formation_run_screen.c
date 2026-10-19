@@ -1,24 +1,9 @@
+#include "fft/gfx.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
-
-/* Stack-resident primitive pools for both WORLD packet buffers; each pool
- * holds two frames of the per-type counts this routine publishes. */
-typedef struct world_formation_screen_packets {
-    POLY_FT4 textured_quads[2 * 500];         /* 0x0000: g_world_gfx_textured_quad_capacity = 500 */
-    POLY_G4 gradient_quads[2 * 90];           /* 0x9c40: g_world_gfx_gradient_quad_capacity = 90 */
-    LINE_G2 gradient_lines[2 * 130];          /* 0xb590: g_world_gfx_gradient_line_capacity = 130 */
-    LINE_F2 flat_lines[2 * 10];               /* 0xc9e0: g_world_gfx_flat_line_capacity = 10 */
-    POLY_GT4 textured_gradient_quads[2 * 60]; /* 0xcb20: g_world_gfx_textured_gradient_quad_capacity = 60 */
-    TILE tiles[2 * 30];                       /* 0xe380: g_world_gfx_tile_capacity = 30 */
-    DR_MOVE draw_moves[2 * 30];               /* 0xe740: g_world_gfx_draw_move_capacity = 30 */
-    DR_MODE draw_modes[2 * 30];               /* 0xece0: g_world_gfx_draw_mode_capacity = 30 */
-    DR_AREA draw_areas[2 * 30];               /* 0xefb0: g_world_gfx_draw_area_capacity = 30 */
-    u32 otags[2 * 64];                        /* 0xf280: g_world_ot_length = 64 */
-    world_gfx_packet_buffer_t buffers[2];     /* 0xf480 */
-    u8 _unused_f658[0x18];
-} world_formation_screen_packets_t;
 
 /* Run the formation screen until g_world_formation_screen_running clears or the tutorial script
  * ends.
@@ -36,7 +21,18 @@ typedef struct world_formation_screen_packets {
  * reuse it. i is one local reused for the button disabled flag, the otag
  * index and the thread loop counter, which keeps the (s16) extension. */
 void world_formation_run_screen(s32 tutorial, s32 unused) {
-    world_formation_screen_packets_t packets;
+    POLY_FT4 textured_quads[2 * 500];
+    POLY_G4 gradient_quads[2 * 90];
+    LINE_G2 gradient_lines[2 * 130];
+    LINE_F2 flat_lines[2 * 10];
+    POLY_GT4 textured_gradient_quads[2 * 60];
+    TILE tiles[2 * 30];
+    DR_MOVE draw_moves[2 * 30];
+    DR_MODE draw_modes[2 * 30];
+    DR_AREA draw_areas[2 * 30];
+    u32 otags[2 * 64];
+    bunit_menu_gfx_context_t buffers[2];
+    u8 unused_packet_gap[0x18]; /* Retains the original unused stack space. */
     s32 buttons;
     s32 i;
     u8 last_menu;
@@ -51,10 +47,10 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
     g_world_gfx_draw_move_capacity = 0x1E;
     g_world_gfx_draw_area_capacity = 0x1E;
     g_world_gfx_draw_mode_capacity = 0x1E;
-    world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0,
-        packets.gradient_quads, packets.textured_gradient_quads, packets.flat_lines, 0, 0, packets.gradient_lines, 0, 0,
-        packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas, packets.draw_modes);
-    g_world_shop_id = WORLD_SHOP_ID_FORMATION;
+    world_gfx_init_double_packet_buffers(buffers, otags, 0, 0, 0, textured_quads, 0, 0, gradient_quads,
+        textured_gradient_quads, flat_lines, 0, 0, gradient_lines, 0, 0, tiles, 0, 0, 0, 0, 0, 0, draw_moves,
+        draw_areas, draw_modes);
+    g_world_menu_context_id = WORLD_MENU_CONTEXT_FORMATION;
     world_formation_init_menu_state();
     tutorial = -(tutorial < 11) & tutorial;
     world_tutorial_start(tutorial);
@@ -77,13 +73,13 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             world_input_update_lockout_timer();
             world_gfx_update_fade_in_tile();
             if (g_world_input_primary_repeat & PSX_PAD_SELECT) {
-                world_menu_start_description_text_thread((world_menu_description_record_t*)3);
+                world_menu_start_description_text_thread(DIALOG_POSITION_CENTER);
             }
             if (g_world_grid_menu_id != MENU_GRID_HELP_NONE) {
                 world_menu_update_grid_cursor(
                     g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->uses_monster_skillset);
             }
-            world_menu_set_palette_mode(g_world_menu_input_lock_mode);
+            world_menu_set_palette_mode(g_menu_input_lock_mode);
             g_world_formation_menu_handlers[g_world_formation_current_menu]();
             if (g_world_formation_current_menu == WORLD_FORMATION_MENU_UNIT_GRID
                 || g_world_formation_current_menu == WORLD_FORMATION_MENU_DISMISS_UNIT
@@ -101,7 +97,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             }
             i = 0;
             if (g_world_formation_unit_cycle_mode != 0 || g_world_formation_unit_browse_enabled != 0) {
-                if (g_world_menu_input_lock_mode != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE
+                if (g_menu_input_lock_mode != 0 || g_world_grid_menu_id != MENU_GRID_HELP_NONE
                     || g_world_formation_unit_cycle_mode == 1 || g_world_formation_triangle_menu_running != 0) {
                     i = 1;
                 }
@@ -124,7 +120,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             if (g_world_formation_unit_slide_pending != 0) {
                 world_formation_step_unit_selection_slide();
             }
-            g_world_gfx_current_otag_entry = g_world_gfx_active_packet_buffer->otag + 63;
+            g_gfx_current_otag_entry = g_menu_gfx_context->otag + 63;
             world_menu_draw_active_window_frames();
             if (g_world_formation_current_menu == WORLD_FORMATION_MENU_ITEM_LIST || g_world_formation_current_menu >= 14
                 || g_world_formation_current_menu == WORLD_FORMATION_MENU_JOB_WHEEL) {
@@ -138,7 +134,7 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
             if (g_world_formation_cursor_ot_override != 0) {
                 i = g_world_formation_cursor_ot_override;
             }
-            world_input_update_event_state(g_world_gfx_active_packet_buffer->otag + i, world_input_filter_menu(),
+            world_input_update_event_state(g_menu_gfx_context->otag + i, world_input_filter_menu(),
                 g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0);
             if (g_world_formation_current_menu != last_menu) {
                 g_world_formation_cursor_ot_override = 0;
@@ -155,16 +151,16 @@ void world_formation_run_screen(s32 tutorial, s32 unused) {
     do {
         buttons = 0;
         for (i = 1; i < 16; i++) {
-            if (world_thread_is_running(i) != 0) {
+            if (thread_is_running(i) != 0) {
                 buttons = 1;
                 world_menu_request_thread_stop(i);
             }
         }
-        if (world_thread_is_running(WORLD_THREAD_SLOT_TUTORIAL_TEXT) != 0) {
+        if (thread_is_running(WORLD_THREAD_SLOT_TUTORIAL_TEXT) != 0) {
             buttons = 1;
             world_text_resume_printing(WORLD_THREAD_SLOT_TUTORIAL_TEXT);
         }
-        world_input_update_event_state(g_world_gfx_active_packet_buffer->otag, 0, 0);
+        world_input_update_event_state(g_menu_gfx_context->otag, 0, 0);
     } while (buttons != 0);
     if (tutorial == 0) {
         main_sound_unload_scenario_mus(g_world_menu_music_slot);

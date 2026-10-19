@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x07, the Healing Staff: XA and YA by weapon type, the zodiac compatibility, Charge's
  * power and the physical XA modifiers, then XA * YA restored as HP, or taken as damage by an undead

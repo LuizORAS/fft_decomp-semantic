@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/main.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* Load a battle unit's job-derived fields from its job record: primary skillset, innate abilities,
@@ -25,36 +25,35 @@ void main_unit_copy_job_data(battle_stats_t* unit) {
 
     job = g_main_job_data_pointer + unit->job_id;
     unit->primary_skillset = job->skillset;
-    main_util_copy_byte_data(job->innate_abilities, unit->innate_abilities, 8);
-    main_util_copy_byte_data(job->equipment_categories, unit->equipment_categories, 4);
-    main_util_copy_byte_data(job->growths_multipliers, unit->growths_multipliers, 10);
+    main_mem_copy_byte_data_source_first(job->innate_abilities, unit->innate_abilities, sizeof(unit->innate_abilities));
+    main_mem_copy_byte_data_source_first(
+        job->equipment_categories, unit->equipment_categories, sizeof(unit->equipment_categories));
+    main_mem_copy_byte_data_source_first(job->stat_growths, unit->stat_growths, sizeof(unit->stat_growths));
     unit->move = job->move;
     unit->jump = job->jump & JOB_JUMP_VALUE_MASK;
     if (job->jump & JOB_JUMP_STEPPING_STONE) {
-        unit->position.raw |= BATTLE_UNIT_POSITION_STEPPING_STONE;
+        unit->position.stepping_stone = 1;
     } else {
-        unit->position.raw &= ~BATTLE_UNIT_POSITION_STEPPING_STONE;
+        unit->position.stepping_stone = 0;
     }
-    main_util_copy_byte_data(&job->status_sets, &unit->status_sets, 15);
+    main_mem_copy_byte_data_source_first(&job->status_sets, &unit->status_sets, sizeof(job->status_sets));
 
     flag_a = unit->team_flags & BATTLE_TEAM_FLAG_IMMORTAL;
     flag_b = unit->unit_flags & (UNIT_FLAG_SAVE_FORMATION | UNIT_FLAG_LOAD_FORMATION);
     if (flag_a != 0 && flag_b != 0) {
-        u8* statuses;
-        i = 0;
-        statuses = unit->status_sets.immunity;
-        for (; i < BATTLE_STATUS_BYTE_COUNT; i++) {
+        u8* statuses = unit->status_sets.immunity;
+        for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
             if (flag_a != 0) {
-                *statuses |= g_main_status_check_sets[MAIN_STATUS_CHECK_SET_IMMORTAL_IMMUNITY][i];
+                statuses[i] |= g_main_status_check_sets[MAIN_STATUS_CHECK_SET_IMMORTAL_IMMUNITY][i];
             }
             if (flag_b != 0) {
-                *statuses |= g_main_status_check_sets[MAIN_STATUS_CHECK_SET_FORMATION_IMMUNITY][i];
+                statuses[i] |= g_main_status_check_sets[MAIN_STATUS_CHECK_SET_FORMATION_IMMUNITY][i];
             }
-            statuses++;
         }
     }
 
-    main_util_copy_byte_data(job->elemental_affinity, unit->elemental_affinity, 4);
+    main_mem_copy_byte_data_source_first(
+        job->elemental_affinity, unit->elemental_affinity, sizeof(job->elemental_affinity));
     unit->elemental_affinity[ELEMENTAL_AFFINITY_STRENGTHEN] = 0;
     unit->spritesheet_id = job->spritesheet_id;
     unit->job_portrait_palette = job->job_portrait_palette;

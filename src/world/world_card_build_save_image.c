@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libc.h"
 #include "psx/types.h"
@@ -33,16 +34,17 @@ void world_card_build_save_image(s32 slot) {
         i = 0;
     }
 
-    bcopy(g_world_formation_unit_pointers[i]->name, g_world_load_work_buffer->summary.name, 0x10);
+    bcopy(g_world_formation_unit_pointers[i]->name, g_world_load_work_buffer->summary.name,
+        sizeof(g_world_load_work_buffer->summary.name));
     g_world_load_work_buffer->summary.name_terminator = 0xfe;
-    g_world_load_work_buffer->summary.job_id = g_world_formation_unit_pointers[i]->job_id;
-    g_world_load_work_buffer->summary.level = g_world_formation_unit_pointers[i]->level;
+    g_world_load_work_buffer->summary.job_id = g_world_formation_unit_pointers[i]->identity.job_id;
+    g_world_load_work_buffer->summary.level = g_world_formation_unit_pointers[i]->status.level;
 
-    script_var_2f = world_script_get_variable(EVENT_SCRIPT_VAR_DAY);
-    script_var_2e = world_script_get_variable(EVENT_SCRIPT_VAR_MONTH);
-    g_world_load_work_buffer->summary.day = script_var_2f;
-    g_world_load_work_buffer->summary.month = script_var_2e;
-    location = world_script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
+    script_var_2f = script_get_variable(EVENT_SCRIPT_VAR_DAY);
+    script_var_2e = script_get_variable(EVENT_SCRIPT_VAR_MONTH);
+    g_world_load_work_buffer->summary.date.day = script_var_2f;
+    g_world_load_work_buffer->summary.date.month = script_var_2e;
+    location = script_get_variable(EVENT_SCRIPT_VAR_LOCATION);
     slot_marker = (slot >= 0) ? 0xff : 0;
     g_world_load_work_buffer->summary.location = location;
     g_world_load_work_buffer->summary.slot = slot_marker;
@@ -51,41 +53,66 @@ void world_card_build_save_image(s32 slot) {
     g_world_load_work_buffer->summary.format_version = 4;
 
     world_card_build_save_file_header(
-        slot, g_world_formation_unit_pointers[i]->level, &g_world_load_work_buffer->header);
+        slot, g_world_formation_unit_pointers[i]->status.level, &g_world_load_work_buffer->header);
 
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        bcopy(&g_main_party_data[i], g_world_load_work_buffer->party_records[i], 0xe0);
+        bcopy(&g_main_party_units[i], g_world_load_work_buffer->party_records[i],
+            sizeof(g_world_load_work_buffer->party_records[i]));
     }
 
-    bcopy(g_main_item_quantities, g_world_load_work_buffer->item_quantities, 0x100);
-    bcopy(g_main_item_poached_quantities, g_world_load_work_buffer->poached_item_quantities, 0x100);
-    bcopy(g_main_item_location_flags, g_world_load_work_buffer->item_location_flags, 0x80);
+    bcopy(g_main_item_quantities, g_world_load_work_buffer->item_quantities,
+        sizeof(g_world_load_work_buffer->item_quantities));
+    bcopy(g_main_item_poached_quantities, g_world_load_work_buffer->poached_item_quantities,
+        sizeof(g_world_load_work_buffer->poached_item_quantities));
+    bcopy(g_main_item_location_flags, g_world_load_work_buffer->item_location_flags,
+        sizeof(g_world_load_work_buffer->item_location_flags));
     g_world_load_work_buffer->_unknown_1c88 = D_80057b1c;
-    bcopy(g_main_script_variables, g_world_load_work_buffer->script_variables, 0x400);
-    bcopy(&g_main_game_options, &g_world_load_work_buffer->options, 4);
-    bcopy(g_main_item_type_order_tables.order_0, g_world_load_work_buffer->item_type_order_0, 0xc);
-    bcopy(g_main_item_type_order_1, g_world_load_work_buffer->item_type_order_1, 8);
-    bcopy(g_main_item_type_order_2, g_world_load_work_buffer->item_type_order_2, 7);
-    bcopy(g_main_item_type_order_3, g_world_load_work_buffer->item_type_order_3, 5);
-    bcopy(g_main_item_type_order_4, g_world_load_work_buffer->item_type_order_4, 5);
-    bcopy(g_main_item_type_order_5, g_world_load_work_buffer->item_type_order_5, 7);
-    bcopy(g_main_item_type_order_6, g_world_load_work_buffer->item_type_order_6, 5);
-    bcopy(g_main_weapon_page_order, g_world_load_work_buffer->weapon_page_order, 0x8a);
-    bcopy(g_main_helmet_page_order, g_world_load_work_buffer->helmet_page_order, 0x1d);
-    bcopy(g_main_armor_page_order, g_world_load_work_buffer->armor_page_order, 0x25);
-    bcopy(g_main_accessory_page_order, g_world_load_work_buffer->accessory_page_order, 0x21);
-    bcopy(g_main_item_page_order, g_world_load_work_buffer->item_page_order, 0x15);
-    bcopy(g_main_treasure_acquisition_date_bits, g_world_load_work_buffer->treasure_acquisition_date_bits, 0x35);
-    bcopy(g_main_land_discovery_date_bits, g_world_load_work_buffer->land_discovery_date_bits, 0x12);
-    bcopy(
-        g_main_proposition_last_attempt_date_bits, g_world_load_work_buffer->proposition_last_attempt_date_bits, 0x6c);
-    bcopy(g_main_proposition_states, g_world_load_work_buffer->proposition_states, 0x60);
-    bcopy(g_main_sound_novel_records, g_world_load_work_buffer->saved_records, 0x118);
-    bcopy(g_main_sound_novel_section_bits, g_world_load_work_buffer->saved_data_bits, 0xa0);
-    bcopy(g_main_sound_novel_saved_flags, g_world_load_work_buffer->secondary_saved_data_bits, 8);
-    bcopy(g_main_brave_story_character_ages, g_world_load_work_buffer->brave_story_character_ages, 0x40);
+    bcopy(g_main_script_variables, g_world_load_work_buffer->script_variables,
+        sizeof(g_world_load_work_buffer->script_variables));
+    bcopy(&g_main_game_options, &g_world_load_work_buffer->options, sizeof(g_world_load_work_buffer->options));
+    bcopy(g_main_item_type_order_tables.order_0, g_world_load_work_buffer->item_type_order_0,
+        sizeof(g_world_load_work_buffer->item_type_order_0));
+    bcopy(g_main_item_type_order_1, g_world_load_work_buffer->item_type_order_1,
+        sizeof(g_world_load_work_buffer->item_type_order_1));
+    bcopy(g_main_item_type_order_2, g_world_load_work_buffer->item_type_order_2,
+        sizeof(g_world_load_work_buffer->item_type_order_2));
+    bcopy(g_main_item_type_order_3, g_world_load_work_buffer->item_type_order_3,
+        sizeof(g_world_load_work_buffer->item_type_order_3));
+    bcopy(g_main_item_type_order_4, g_world_load_work_buffer->item_type_order_4,
+        sizeof(g_world_load_work_buffer->item_type_order_4));
+    bcopy(g_main_item_type_order_5, g_world_load_work_buffer->item_type_order_5,
+        sizeof(g_world_load_work_buffer->item_type_order_5));
+    bcopy(g_main_item_type_order_6, g_world_load_work_buffer->item_type_order_6,
+        sizeof(g_world_load_work_buffer->item_type_order_6));
+    bcopy(g_main_weapon_page_order, g_world_load_work_buffer->weapon_page_order,
+        sizeof(g_world_load_work_buffer->weapon_page_order));
+    bcopy(g_main_helmet_page_order, g_world_load_work_buffer->helmet_page_order,
+        sizeof(g_world_load_work_buffer->helmet_page_order));
+    bcopy(g_main_armor_page_order, g_world_load_work_buffer->armor_page_order,
+        sizeof(g_world_load_work_buffer->armor_page_order));
+    bcopy(g_main_accessory_page_order, g_world_load_work_buffer->accessory_page_order,
+        sizeof(g_world_load_work_buffer->accessory_page_order));
+    bcopy(g_main_item_page_order, g_world_load_work_buffer->item_page_order,
+        sizeof(g_world_load_work_buffer->item_page_order));
+    bcopy(g_main_treasure_acquisition_date_bits, g_world_load_work_buffer->treasure_acquisition_date_bits,
+        sizeof(g_world_load_work_buffer->treasure_acquisition_date_bits));
+    bcopy(g_main_land_discovery_date_bits, g_world_load_work_buffer->land_discovery_date_bits,
+        sizeof(g_world_load_work_buffer->land_discovery_date_bits));
+    bcopy(g_main_proposition_last_attempt_date_bits, g_world_load_work_buffer->proposition_last_attempt_date_bits,
+        sizeof(g_world_load_work_buffer->proposition_last_attempt_date_bits));
+    bcopy(g_main_proposition_states, g_world_load_work_buffer->proposition_states,
+        sizeof(g_world_load_work_buffer->proposition_states));
+    bcopy(g_main_sound_novel_records, g_world_load_work_buffer->saved_records,
+        sizeof(g_world_load_work_buffer->saved_records));
+    bcopy(g_main_sound_novel_section_bits, g_world_load_work_buffer->saved_data_bits,
+        sizeof(g_world_load_work_buffer->saved_data_bits));
+    bcopy(g_main_sound_novel_saved_flags, g_world_load_work_buffer->secondary_saved_data_bits,
+        sizeof(g_world_load_work_buffer->secondary_saved_data_bits));
+    bcopy(g_main_brave_story_character_ages, g_world_load_work_buffer->brave_story_character_ages,
+        sizeof(g_world_load_work_buffer->brave_story_character_ages));
     g_world_load_work_buffer->proposition_count = g_main_save_proposition_count;
-    bcopy(g_main_active_propositions, g_world_load_work_buffer->active_propositions, 0x48);
+    bcopy(g_main_active_propositions, g_world_load_work_buffer->active_propositions,
+        sizeof(g_world_load_work_buffer->active_propositions));
 
     world_bits_set_primary_cursor(g_world_load_work_buffer->parity_bits);
     block = (u8*)g_world_load_work_buffer;

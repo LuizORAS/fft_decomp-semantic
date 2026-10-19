@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x1C, the Bard's songs: a sleeping target fails (battle_formula_force_sleeping_target_miss);
  * otherwise no evade check, an X% hit (battle_formula_calculate_dance_song_hit), XA = MA and YA = Y,

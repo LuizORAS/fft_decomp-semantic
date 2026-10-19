@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Give the unit back its Move and Act (clear movement_taken and action_taken). Nothing on the disc
  * calls it. */

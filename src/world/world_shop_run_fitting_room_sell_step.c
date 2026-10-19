@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 
 /* Shop step FITTING_ROOM_SELL (Sell, then Stock): run the shop's SELL_LIST and SELL_CONFIRM
@@ -7,10 +8,10 @@
  * stays at FITTING_ROOM_SELL, until the sell list's exit to MAIN_MENU sends it back to FITTING_ROOM. */
 void world_shop_run_fitting_room_sell_step(void) {
     if (g_world_shop_sell_subflow_initialized == 0) {
-        if (world_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MESSAGE) != 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_MESSAGE) != 0) {
             return;
         }
-        world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
+        thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_message_box_thread);
         g_world_formation_unit_browse_enabled = 0;
         g_world_formation_unit_banner_enabled = 0;
         world_formation_stop_menu_threads();
@@ -38,7 +39,7 @@ void world_shop_run_fitting_room_sell_step(void) {
         g_world_shop_sell_subflow_initialized = 0;
         g_world_formation_unit_browse_enabled = 1;
         world_script_set_vsync_mode_and_event_speed(2);
-        world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x19, -1, 0);
+        thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x19, -1, 0);
         return;
     }
     g_world_shop_sell_subflow_step = g_world_shop_menu_step;

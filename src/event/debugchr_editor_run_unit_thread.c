@@ -1,4 +1,12 @@
+#include "fft/battle_menu.h"
+#include "fft/battle_script.h"
 #include "fft/event_debugchr.h"
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
+#include "fft/unit.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -12,7 +20,7 @@
  * (refused for a generic monster with no status), and Cross closes the
  * panels and ends the loop, after which the first unit is loaded again. The
  * menu-building thread holds the status groups' animation bytes at 1 while
- * it runs, and the panels are dimmed only while a NATIVE_THREAD_TASK_RESUME
+ * it runs, and the panels are dimmed only while a THREAD_TASK_RESUME
  * thread is running as well.
  *
  * `sound_latched` is read before anything assigns it when the menu-building
@@ -23,6 +31,7 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
     s32 one;
     u8* animation;
     POLY_FT4* render_buffers;
+    /* A record-base cursor changes the saved address and all three retail offsets. */
     s16* selected_unit;
     u8* animation_second;
     u8* animation_third;
@@ -38,9 +47,9 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
      * loads. */
     volatile u8* unit_ids;
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_DEBUG_UNIT_EDITOR);
+    thread_set_current_task_id(THREAD_TASK_DEBUG_UNIT_EDITOR);
     g_debugchr_editor_active = 0;
-    g_debugchr_panel_status_group_count = 2;
+    g_menu_panel_status_group_count = 2;
     unit = battle_unit_get_stats_from_battle_id(unit_id);
     unit_ids = g_debugchr_editor_unit_ids;
     unit_ids[0] = unit_id;
@@ -65,15 +74,16 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
     /* The template store is repeated in both arms: jump2 cross-jumps the
      * identical tails only after sched2, so the join keeps the store ahead of
      * the thread-setup constant loads. */
-    if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
-        battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xa8);
+    if (g_menu_status_panel_fields.state.generic_monster != 0) {
+        mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xa8);
         g_debugchr_editor_fields[15].destination[0] = 0xe;
     } else {
-        battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xa8);
+        mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xa8);
         g_debugchr_editor_fields[15].destination[0] = 0xe;
     }
 
     {
+        /* Whole-record locals fold these saved member addresses into absolute stores. */
         s32* refresh_a;
         s32* refresh_b;
         s32* refresh_c;
@@ -84,38 +94,42 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         *refresh_a = 0;
         *refresh_b = 0;
         *refresh_c = 0;
-        battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, debugchr_panel_unit_status_banner_thread);
-        battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (u8*)refresh_a - 0x10, 0, 0);
-        battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, debugchr_editor_run_numeric_thread);
-        battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (u8*)refresh_b - 0x10, 0, 0);
-        battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, debugchr_panel_run_character_status_thread);
-        battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (u8*)refresh_c - 0x10, 0, 0);
+        thread_start(THREAD_SCREEN_SLOT_UNIT_STATUS, debugchr_panel_unit_status_banner_thread);
+        thread_set_parameters(
+            THREAD_SCREEN_SLOT_UNIT_STATUS, (u8*)refresh_a - offsetof(wldcore_menu_status_thread_t, style), 0, 0);
+        thread_start(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, debugchr_editor_run_numeric_thread);
+        thread_set_parameters(
+            THREAD_SCREEN_SLOT_NUMERIC_EDITOR, (u8*)refresh_b - offsetof(wldcore_menu_status_thread_t, style), 0, 0);
+        thread_start(THREAD_SCREEN_SLOT_CHARACTER_STATUS, menu_run_status_panel_thread);
+        thread_set_parameters(
+            THREAD_SCREEN_SLOT_CHARACTER_STATUS, (u8*)refresh_c - offsetof(wldcore_menu_status_thread_t, style), 0, 0);
     }
 
     frame = 0;
     render_buffers = g_debugchr_gfx_render_buffers[0];
     one = 1;
-    animation = g_debugchr_panel_status_animation;
+    animation = g_menu_panel_status_animation;
     animation_second = animation + 1;
     animation_third = animation + 2;
     selected_unit = &g_debugchr_panel_selected_unit_data.battle_id;
-    g_battle_menu_help_blocked = 0;
+    g_battle_menu_modal_open = 0;
 
     for (;; frame++) {
-        battle_thread_yield();
-        g_debugchr_input_controller = battle_script_get_controller_input_pointer(0);
+        thread_yield();
+        g_menu_input_controller = input_get_menu_controller(0);
         {
             s32 render_offset;
-            render_offset = (frame & 1) * 0x4b0;
-            debugchr_gfx_build_status_group_primitives((void*)(render_offset + (s32)render_buffers));
+            render_offset = (frame & 1) * sizeof(g_debugchr_gfx_render_buffers[0]);
+            /* Typed polygon indexing reverses the ADDU operands. */
+            menu_build_status_group_primitives((POLY_FT4*)(render_offset + (s32)render_buffers));
         }
 
-        if (battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) != 0) {
+        if (battle_thread_is_running_asm(THREAD_SLOT_MENU_BUILDING) != 0) {
             if (sound_latched == 0) {
-                g_battle_sound_pending_sfx_id = one;
+                g_sound_pending_sfx_id = one;
                 sound_latched = 1;
             }
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_RESUME) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_RESUME) != 0) {
                 g_debugchr_status_display_thread_params.style = one;
                 g_debugchr_numeric_editor_thread_params.style = one;
                 g_debugchr_character_status_frame_config.style = one;
@@ -130,41 +144,42 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             continue;
         }
 
-        event_mode = g_battle_menu_input_lock_mode;
+        event_mode = g_menu_input_lock_mode;
         sound_latched = 0;
         animation[0] = 0;
         animation[1] = 0;
         animation[2] = 0;
 
         if (event_mode == 0 && g_battle_menu_help_open == 0 && battle_thread_is_previous_running() == 0) {
-            input = *g_debugchr_input_controller;
+            input = *g_menu_input_controller;
             if ((input & PSX_PAD_CROSS) != 0) {
-                battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
-                battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
-                battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
-                g_battle_sound_pending_sfx_id = MAIN_SFX_CANCEL;
+                thread_set_parameters(THREAD_SCREEN_SLOT_UNIT_STATUS, 0, 0, 1);
+                thread_set_parameters(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+                thread_set_parameters(THREAD_SCREEN_SLOT_CHARACTER_STATUS, 0, 0, 1);
+                g_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 break;
             }
-            if ((input & PSX_PAD_CIRCLE) != 0 && battle_thread_is_running_asm(NATIVE_THREAD_SLOT_MENU_BUILDING) == 0
-                && (battle_unit_has_any_current_status(g_debugchr_panel_selected_unit_data.battle_id) != 0
-                    || g_debugchr_editor_unit_fields.state.generic_monster == 0)) {
+            if ((input & PSX_PAD_CIRCLE) != 0 && battle_thread_is_running_asm(THREAD_SLOT_MENU_BUILDING) == 0
+                && (unit_has_any_current_status(g_debugchr_panel_selected_unit_data.battle_id) != 0
+                    || g_menu_status_panel_fields.state.generic_monster == 0)) {
                 g_debugchr_status_display_thread_params.style = one;
                 g_debugchr_numeric_editor_thread_params.style = one;
                 g_debugchr_character_status_frame_config.style = one;
-                battle_thread_start(g_battle_thread_current_id - 1, battle_menu_build_unit_status_list);
-                battle_thread_set_parameters(g_battle_thread_current_id - 1,
-                    (s32)&g_battle_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
+                thread_start(g_thread_current_id - 1, battle_menu_build_unit_status_list);
+                thread_set_parameters(
+                    g_thread_current_id - 1, (s32)&g_menu_thread_menu_data[BATTLE_MENU_ID_STATUS_LIST], 0, 0);
                 animation[0] = one;
                 animation_second[0] = one;
                 animation_third[0] = one;
                 for (;;) {
-                    battle_thread_yield();
+                    thread_yield();
                     {
                         s32 render_offset;
-                        render_offset = (frame & 1) * 0x4b0;
-                        debugchr_gfx_build_status_group_primitives((void*)(render_offset + (s32)render_buffers));
+                        render_offset = (frame & 1) * sizeof(g_debugchr_gfx_render_buffers[0]);
+                        /* Typed polygon indexing reverses the ADDU operands. */
+                        menu_build_status_group_primitives((POLY_FT4*)(render_offset + (s32)render_buffers));
                     }
-                    if (battle_thread_is_running_asm(g_battle_thread_current_id - 1) == 0) {
+                    if (battle_thread_is_running_asm(g_thread_current_id - 1) == 0) {
                         break;
                     }
                     frame++;
@@ -178,44 +193,48 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
             }
         }
 
-        if ((*g_debugchr_input_controller & PSX_PAD_R1) != 0) {
+        if ((*g_menu_input_controller & PSX_PAD_R1) != 0) {
             s32 slot;
             u8* chosen_unit;
 
             slot = g_debugchr_editor_selected_unit_slot;
-            g_battle_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
-            g_debugchr_panel_status_animation[1] = 7;
+            g_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
+            g_menu_panel_status_animation[1] = 7;
             slot ^= 1;
             g_debugchr_editor_selected_unit_slot = slot;
             chosen_unit = &g_debugchr_editor_unit_ids[slot];
             *selected_unit = *chosen_unit;
-            selected_unit[-5] = *chosen_unit;
+            ((battle_menu_active_unit_t*)((u8*)selected_unit - offsetof(battle_menu_active_unit_t, battle_id)))->name_id
+                = *chosen_unit;
             unit_type_ptr = &g_debugchr_panel_selected_billboard.unit_index;
             *unit_type_ptr = *chosen_unit;
             debugchr_editor_load_selected_unit();
-            battle_menu_set_active_turn_panels(
-                unit_type_ptr - 5, selected_unit - 5, &g_debugchr_editor_unit_fields.state);
+            battle_menu_set_active_turn_panels(&g_debugchr_panel_selected_billboard,
+                ((battle_menu_active_unit_t*)((u8*)selected_unit - offsetof(battle_menu_active_unit_t, battle_id))),
+                &g_menu_status_panel_fields);
             g_debugchr_status_display_thread_params.redraw_request = one;
             g_debugchr_numeric_editor_thread_params.redraw_request = one;
             g_debugchr_character_status_frame_config.redraw_request = one;
         }
-        if ((*g_debugchr_input_controller & PSX_PAD_L1) != 0) {
+        if ((*g_menu_input_controller & PSX_PAD_L1) != 0) {
             s32 slot;
             u8* chosen_unit;
 
             slot = g_debugchr_editor_selected_unit_slot;
-            g_battle_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
-            g_debugchr_panel_status_animation[0] = 7;
+            g_sound_pending_sfx_id = MAIN_SFX_PAGE_SWITCH;
+            g_menu_panel_status_animation[0] = 7;
             slot ^= 1;
             g_debugchr_editor_selected_unit_slot = slot;
             chosen_unit = &g_debugchr_editor_unit_ids[slot];
             *selected_unit = *chosen_unit;
-            selected_unit[-5] = *chosen_unit;
+            ((battle_menu_active_unit_t*)((u8*)selected_unit - offsetof(battle_menu_active_unit_t, battle_id)))->name_id
+                = *chosen_unit;
             unit_type_ptr = &g_debugchr_panel_selected_billboard.unit_index;
             *unit_type_ptr = *chosen_unit;
             debugchr_editor_load_selected_unit();
-            battle_menu_set_active_turn_panels(
-                unit_type_ptr - 5, selected_unit - 5, &g_debugchr_editor_unit_fields.state);
+            battle_menu_set_active_turn_panels(&g_debugchr_panel_selected_billboard,
+                ((battle_menu_active_unit_t*)((u8*)selected_unit - offsetof(battle_menu_active_unit_t, battle_id))),
+                &g_menu_status_panel_fields);
             g_debugchr_status_display_thread_params.redraw_request = 2;
             g_debugchr_numeric_editor_thread_params.redraw_request = one;
             g_debugchr_character_status_frame_config.redraw_request = one;
@@ -232,11 +251,13 @@ void debugchr_editor_run_unit_thread(s32 unit_id) {
         selected_unit_ptr[0] = g_debugchr_editor_unit_ids[0];
         /* A register address keeps cse from folding this store to a direct
          * global address. */
-        comparison_ptr = selected_unit_ptr - 5;
+        comparison_ptr = selected_unit_ptr
+            - (offsetof(battle_menu_active_unit_t, battle_id) - offsetof(battle_menu_active_unit_t, name_id))
+                / sizeof(*selected_unit_ptr);
         *comparison_ptr = g_debugchr_editor_unit_ids[0];
         *unit_type_id_ptr = g_debugchr_editor_unit_ids[0];
         debugchr_editor_load_selected_unit();
         battle_menu_set_active_turn_panels(
-            unit_type_id_ptr - 5, selected_unit_ptr - 5, &g_debugchr_editor_unit_fields.state);
+            &g_debugchr_panel_selected_billboard, &g_debugchr_panel_selected_unit_data, &g_menu_status_panel_fields);
     }
 }

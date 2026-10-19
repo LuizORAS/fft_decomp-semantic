@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -12,8 +13,8 @@ void wldcore_sound_novel_start_text_thread_and_push_history(void) {
     s32 operand;
 
     operand = g_wldcore_sound_novel_record.instruction.bytes.operand_0;
-    world_thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_character_handling_thread);
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 9, operand | TEXT_ID_WORLD_MESSAGE_BASE, 0);
+    thread_start(WLDCORE_THREAD_SLOT_MESSAGE, world_text_character_handling_thread);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 9, operand | TEXT_ID_WORLD_MESSAGE_BASE, 0);
     history_1 = g_wldcore_sound_novel_record.text_history_1;
     history_2 = g_wldcore_sound_novel_record.text_history_2;
     history_3 = g_wldcore_sound_novel_record.text_history_3;

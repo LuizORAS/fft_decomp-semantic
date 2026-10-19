@@ -1,4 +1,3 @@
-#include "fft/battle.h"
 #include "fft/main.h"
 #include "psx/types.h"
 
@@ -14,7 +13,7 @@ void main_unit_calculate_move_jump(battle_stats_t* unit, s32 keep_hp_mp) {
         unit->mp = unit->max_mp;
     }
     move = unit->move;
-    flags = unit->movement_abilities[0];
+    flags = unit->ability_flags.movement[0];
     jump = unit->jump;
     if (flags & BATTLE_MOVEMENT_SET_1_MOVE_PLUS_1) {
         move += 1;

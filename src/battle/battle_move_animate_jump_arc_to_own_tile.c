@@ -1,10 +1,14 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "fft/map.h"
 #include "psx/types.h"
 
-/* Distortion 7 (BATTLE_DISTORTION_JUMP_TO_OWN_TILE): jump along an arc back to the centre of the
+/* Distortion 7 (BATTLE_DISTORTION_ANIMATION_JUMP_TO_OWN_TILE): jump along an arc back to the centre of the
  * unit's own map tile (battle_move_calculate_jump_arc_velocity), then keep falling under
  * g_battle_move_jump_gravity until it reaches the ground, and snap to the tile. */
-void battle_move_animate_jump_arc_to_own_tile(battle_unit_misc_data_t* unit) {
+void battle_move_animate_jump_arc_to_own_tile(battle_unit_t* unit) {
     /* Unreferenced 8-byte frame slot below the target point, like the one in
      * battle_move_animate_jump_start; it puts `target` at sp+0x18. */
     SVECTOR unused_10;
@@ -16,10 +20,10 @@ void battle_move_animate_jump_arc_to_own_tile(battle_unit_misc_data_t* unit) {
     velocity = unit->velocity;
     switch (unit->distortion_phase) {
     case 0:
-        target.vx = unit->map_x * 28 + 14;
-        target.vz = unit->map_y * 28 + 14;
-        target.vy = battle_gfx_calculate_screen_z_from_misc_map_data(unit);
-        timer = battle_move_calculate_jump_arc_velocity(&unit->screen, &target, &velocity);
+        target.vx = unit->map_x * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+        target.vz = unit->map_y * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+        target.vy = battle_gfx_calculate_world_height_from_unit_tile(unit);
+        timer = battle_move_calculate_jump_arc_velocity(&unit->world_coords, &target, &velocity);
         unit->distortion_phase++;
     case 1:
         if (timer > 0) {
@@ -35,9 +39,10 @@ void battle_move_animate_jump_arc_to_own_tile(battle_unit_misc_data_t* unit) {
         timer--;
         break;
     case 2:
-        main_util_set_svector(&target, unit->map_x * 28 + 14, 0, unit->map_y * 28 + 14);
-        target.vy = battle_gfx_calculate_screen_z_from_misc_screen_data(unit);
-        if (unit->screen.vy < target.vy) {
+        main_util_set_svector(&target, unit->map_x * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2), 0,
+            unit->map_y * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2));
+        target.vy = battle_gfx_calculate_world_height_from_world_coords(unit);
+        if (unit->world_coords.vy < target.vy) {
             unit->real.vy += velocity.vy;
             velocity.vy += g_battle_move_jump_gravity;
         } else {
@@ -47,6 +52,6 @@ void battle_move_animate_jump_arc_to_own_tile(battle_unit_misc_data_t* unit) {
         break;
     }
     unit->velocity = velocity;
-    battle_unit_set_screen_coords_from_real_coords(unit);
+    battle_unit_set_world_coords_from_real_coords(unit);
     unit->distortion_timer = timer;
 }

@@ -4,7 +4,7 @@
 /* Opens the debug variable editor (level VARIABLE_VALUE_PANEL), a number panel that edits script variable
  * `variable_id`, starting the panel at `value`. */
 void wldcore_menu_push_variable_value_panel_level(s32 variable_id, s32 value) {
-    wldcore_point32_t origin;
+    open_point32_t origin;
     s32 record_index;
 
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS;

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
 #include "psx/types.h"
 
 /* Turn-clock Transparent upkeep: a unit that is not absent, crystal, dead, jumping, petrified or
@@ -17,7 +18,8 @@ s32 battle_status_remove_transparent(battle_stats_t* unit) {
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT))
             != 0) {
             if (target->transparent_removal_flag != 0) {
-                g_battle_action_target_data->status_removal[2] = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT);
+                g_battle_action_target_data->status_changes.removal[2]
+                    = BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_TRANSPARENT);
                 g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
             }
         }

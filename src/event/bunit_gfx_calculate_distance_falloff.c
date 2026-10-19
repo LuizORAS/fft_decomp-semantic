@@ -14,7 +14,7 @@ s32 bunit_gfx_calculate_distance_falloff(s32 x, s32 y, s32 base_value, s32 minim
     dy = abs(g_bunit_gfx_falloff_focus_y - y);
     dy *= 2;
     dy *= dy;
-    dx = base_value - (csqrt((dy + dx) << 12) >> 12);
+    dx = base_value - (csqrt((dy + dx) * ONE) >> 12);
     if (dx < minimum) {
         dx = minimum;
     }

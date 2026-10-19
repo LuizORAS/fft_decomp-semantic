@@ -1,25 +1,11 @@
+#include "fft/gfx.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
-
-typedef void (*world_name_entry_handler_t)(void);
-
-/* Stack-resident primitive pools for both WORLD packet buffers; each pool
- * holds two frames of the per-type counts this routine publishes. */
-typedef struct world_name_entry_screen_packets {
-    POLY_FT4 textured_quads[2 * 220];     /* 0x0000: g_world_gfx_textured_quad_capacity = 220 */
-    TILE tiles[2 * 4];                    /* 0x44c0: g_world_gfx_tile_capacity = 4 */
-    LINE_F2 flat_lines[2 * 4];            /* 0x4540: g_world_gfx_flat_line_capacity = 4 */
-    DR_MOVE draw_moves[2 * 30];           /* 0x45c0: g_world_gfx_draw_move_capacity = 30 */
-    DR_MODE draw_modes[2 * 30];           /* 0x4b60: g_world_gfx_draw_mode_capacity = 30 */
-    DR_AREA draw_areas[2 * 10];           /* 0x4e30: g_world_gfx_draw_area_capacity = 10 */
-    u32 otags[2 * 64];                    /* 0x4f20: g_world_ot_length = 64 */
-    world_gfx_packet_buffer_t buffers[2]; /* 0x5120 */
-} world_name_entry_screen_packets_t;
-
-extern world_name_entry_handler_t g_world_name_entry_state_handlers[];
 
 /* Run the name entry as a screen of its own until its state reaches 0xFF and return the encoded name:
  * OPEN's New Game asks for Ramza's name this way (open_title_step_new_game_start, with WORLD loaded on
@@ -31,9 +17,16 @@ extern world_name_entry_handler_t g_world_name_entry_state_handlers[];
  *
  * value is one local reused for the cursor x, the drawn-state compare and the
  * sound id; the shared pseudo conflicts with $a0 and keeps all three in $v1. */
-u8* world_name_run_entry_screen(u8* list, u32* image) {
+u8* world_name_run_entry_screen(const u8* list, u32* image) {
     point16_t cursor;
-    world_name_entry_screen_packets_t packets;
+    POLY_FT4 textured_quads[2 * 220];
+    TILE tiles[2 * 4];
+    LINE_F2 flat_lines[2 * 4];
+    DR_MOVE draw_moves[2 * 30];
+    DR_MODE draw_modes[2 * 30];
+    DR_AREA draw_areas[2 * 10];
+    u32 otags[2 * 64];
+    bunit_menu_gfx_context_t buffers[2];
     DRAWENV env;
     u32* otag;
     s32 busy;
@@ -64,13 +57,12 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
     g_world_gfx_draw_move_capacity = 30;
     g_world_gfx_draw_mode_capacity = 30;
     g_world_gfx_draw_area_capacity = 10;
-    world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0, 0, 0,
-        packets.flat_lines, 0, 0, 0, 0, 0, packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas,
-        packets.draw_modes);
-    g_world_shop_id = WORLD_SHOP_ID_NAME_ENTRY;
+    world_gfx_init_double_packet_buffers(buffers, otags, 0, 0, 0, textured_quads, 0, 0, 0, 0, flat_lines, 0, 0, 0, 0, 0,
+        tiles, 0, 0, 0, 0, 0, 0, draw_moves, draw_areas, draw_modes);
+    g_world_menu_context_id = WORLD_MENU_CONTEXT_NAME_ENTRY;
     world_formation_init_menu_display();
-    world_thread_start(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, world_text_message_box_thread);
-    world_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_MESSAGE, 0x21, 0xC015, 0);
+    thread_start(THREAD_SCREEN_SLOT_MESSAGE, world_text_message_box_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_MESSAGE, 0x21, 0xC015, 0);
     world_name_open_entry(list);
     g_world_name_entry_last_state = -1;
     world_gfx_set_fade_disabled(1);
@@ -81,11 +73,11 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         g_world_gfx_poly_f3_count = 0;
         g_world_gfx_poly_ft3_count = 0;
         g_world_gfx_poly_f4_count = 0;
-        g_world_gfx_textured_quad_count = 0;
+        g_menu_gfx_poly_ft4_count = 0;
         g_world_gfx_poly_g3_count = 0;
         g_world_gfx_poly_gt3_count = 0;
         g_world_gfx_gradient_quad_count = 0;
-        g_world_gfx_textured_gradient_quad_count = 0;
+        g_menu_gfx_poly_gt4_count = 0;
         g_world_gfx_flat_line_count = 0;
         g_world_gfx_line_f3_count = 0;
         g_world_gfx_line_f4_count = 0;
@@ -99,27 +91,27 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         g_world_gfx_sprite_count = 0;
         g_world_gfx_sprite_8_count = 0;
         g_world_gfx_sprite_16_count = 0;
-        g_world_gfx_draw_move_count = 0;
+        g_menu_gfx_draw_move_count = 0;
         g_world_gfx_draw_area_count = 0;
-        otag = g_world_gfx_active_packet_buffer->otag;
+        otag = g_menu_gfx_context->otag;
         GetDrawEnv(&env);
         g_world_gfx_draw_buffer_clip_y = env.clip.y;
         while (DrawSync(1) != 0) { }
         VSync(g_world_gfx_vsync_mode);
         {
-            world_gfx_packet_buffer_t* context = g_world_gfx_packet_buffers;
+            bunit_menu_gfx_context_t* context = g_world_gfx_packet_buffers;
 
-            if (g_world_gfx_active_packet_buffer == context) {
+            if (g_menu_gfx_context == context) {
                 context++;
             }
-            g_world_gfx_active_packet_buffer = context;
+            g_menu_gfx_context = context;
             PutDispEnv(&context->disp_env);
         }
-        PutDrawEnv(&g_world_gfx_active_packet_buffer->draw_env);
+        PutDrawEnv(&g_menu_gfx_context->draw_env);
         g_world_name_entry_screen_image_rect.y = g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0;
-        world_gfx_load_image_and_wait(&g_world_name_entry_screen_image_rect, image);
+        gfx_load_image_and_wait(&g_world_name_entry_screen_image_rect, image);
         DrawOTag(otag);
-        ClearOTag(g_world_gfx_active_packet_buffer->otag, g_world_ot_length);
+        ClearOTag(g_menu_gfx_context->otag, g_world_ot_length);
         world_input_update_with_message_state();
         busy = world_menu_is_screen_busy();
         if (busy == 0) {
@@ -139,27 +131,28 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
         cursor.x = value;
         world_menu_set_draw_priority(0x28);
         world_menu_draw_animated_vertical_cursor(&cursor, &g_world_name_entry_text_cursor_anim, busy);
-        world_menu_run_script_with_palette_mode(g_world_name_entry_display_script, 0, busy);
+        world_menu_run_script_with_palette_mode(&g_world_name_entry_display_script, 0, busy);
         world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_L1, 0x37, 0x50,
             g_world_input_primary_repeat & PSX_PAD_L1, busy, MAIN_SFX_PAGE_SWITCH);
         world_menu_draw_pressable_button(MENU_PRESSABLE_BUTTON_R1, 0xB1, 0x50,
             g_world_input_primary_repeat & PSX_PAD_R1, busy, MAIN_SFX_PAGE_SWITCH);
-        world_menu_run_script_with_palette_mode(g_world_name_entry_keyboard_script, g_world_input_primary_repeat, busy);
-        g_world_gfx_current_otag_entry = g_world_gfx_active_packet_buffer->otag + 63;
+        world_menu_run_script_with_palette_mode(
+            &g_world_name_entry_keyboard_script, g_world_input_primary_repeat, busy);
+        g_gfx_current_otag_entry = g_menu_gfx_context->otag + 63;
         world_menu_draw_active_window_frames();
         world_input_update_event_state(
-            g_world_gfx_active_packet_buffer->otag + 63, PadRead(0), g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0);
+            g_menu_gfx_context->otag + 63, PadRead(0), g_world_gfx_draw_buffer_clip_y == 0 ? 0xF0 : 0);
         value = g_world_name_entry_state;
         if (value != g_world_name_entry_last_state) {
             g_world_name_entry_last_state = value;
         }
-        if (g_world_sound_pending_sfx_id == 2 || g_world_sound_pending_sfx_id == 3) {
-            g_world_menu_sound_effect_id = g_world_sound_pending_sfx_id;
+        if (g_sound_pending_sfx_id == 2 || g_sound_pending_sfx_id == 3) {
+            g_world_menu_sound_effect_id = g_sound_pending_sfx_id;
         }
-        if (g_world_sound_pending_sfx_id < 0 || g_world_sound_suppressed != 0) {
-            g_world_sound_pending_sfx_id = MAIN_SFX_NONE;
+        if (g_sound_pending_sfx_id < 0 || g_world_sound_suppressed != 0) {
+            g_sound_pending_sfx_id = MAIN_SFX_NONE;
         }
-        value = g_world_sound_pending_sfx_id;
+        value = g_sound_pending_sfx_id;
         if (value == MAIN_SFX_NONE) {
             value = g_world_menu_sound_effect_id;
         }
@@ -169,7 +162,7 @@ u8* world_name_run_entry_screen(u8* list, u32* image) {
             main_sound_play_sfx(value);
         }
         g_world_menu_sound_effect_id = MAIN_SFX_NONE;
-        g_world_sound_pending_sfx_id = MAIN_SFX_NONE;
+        g_sound_pending_sfx_id = MAIN_SFX_NONE;
     }
     world_script_set_vsync_mode_and_event_speed(2);
     world_menu_reset_context();

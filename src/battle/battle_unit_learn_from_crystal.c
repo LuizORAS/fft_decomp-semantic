@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Apply the choice made at a crystal or chest (flags, from the CRYSTAL_LEARN state and the

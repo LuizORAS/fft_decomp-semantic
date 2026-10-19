@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Rotate a tile offset by the caller's facing and select its terrain layer.
@@ -42,7 +42,7 @@ s32 battle_map_resolve_rotated_offset_layer(
         break;
     }
     *out_x = unit->x + dx;
-    *out_y = unit->position.bits.y + dy;
+    *out_y = unit->position.y + dy;
     if (*out_x < 0 || *out_x >= g_battle_map_max_x) {
         return -1;
     }
@@ -54,8 +54,8 @@ s32 battle_map_resolve_rotated_offset_layer(
     upper_index = index + 0x100;
     upper = &g_battle_map_tile_data[upper_index];
     lower = &g_battle_map_tile_data[index];
-    upper_value = upper->flags.value & MAP_TILE_FLAG_BLOCKED;
-    if ((lower->flags.value & MAP_TILE_FLAG_BLOCKED) != 0) {
+    upper_value = upper->flags.blocked;
+    if ((lower->flags.blocked) != 0) {
         if (upper_value != 0) {
             return -1;
         }

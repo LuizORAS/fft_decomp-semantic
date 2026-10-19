@@ -1,8 +1,8 @@
-#include "fft/battle.h"
+#include "fft/battle_text.h"
 #include "psx/types.h"
 
 /* Debug print: FntPrint `value` and then `value` + 1 in decimal. The dialog thread
- * (battle_text_character_handling_thread) calls it with the window's line count for each centred line. */
+ * (battle_text_run_dialog_thread) calls it with the window's line count for each centred line. */
 void battle_text_print_fnt_value_and_next(s32 value) {
     FntPrint(g_battle_text_decimal_format, value);
     value++;

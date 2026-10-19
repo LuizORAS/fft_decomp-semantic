@@ -8,9 +8,9 @@
  * skillset's first five abilities instead of their equipped ability set. */
 void wldcore_unit_build_status_panel_data(s32 party_index) {
     battle_stats_t* unit;
-    battle_unit_status_record_t* gauges;
-    world_unit_status_identity_t* identity;
-    world_item_stat_detail_t* detail;
+    battle_menu_unit_status_record_t* gauges;
+    world_menu_unit_status_identity_t* identity;
+    battle_menu_status_panel_slot_state_t* detail;
     u16* abilities;
     s32 i;
     u8 flags;
@@ -21,9 +21,9 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
         return;
     }
     unit = &g_wldcore_status_unit;
-    gauges = (battle_unit_status_record_t*)&g_world_selected_unit_stat_summary;
+    gauges = &g_world_selected_unit_stat_summary;
     identity = &g_world_selected_unit_identity;
-    detail = &g_world_selected_unit_stat_detail;
+    detail = &g_world_selected_unit_stat_detail.state;
     gauges->team_kind = 0;
     gauges->level = unit->level;
     flags = unit->team_flags;
@@ -37,36 +37,36 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
     gauges->unit_count = 0;
     gauges->experience = unit->experience;
     maximum_hp = unit->max_hp;
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = maximum_hp;
+    gauges->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].max = maximum_hp;
     if (maximum_hp == 0) {
-        gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].max = maximum_hp + 1;
+        gauges->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].max = maximum_hp + 1;
     }
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].bonus = 0;
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_HP].value = unit->hp;
+    gauges->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].bonus = 0;
+    gauges->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].value = unit->hp;
     maximum_mp = unit->max_mp;
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = maximum_mp;
+    gauges->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].max = maximum_mp;
     if (maximum_mp == 0) {
-        gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].max = maximum_mp + 1;
+        gauges->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].max = maximum_mp + 1;
     }
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].max = 100;
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].value = unit->mp;
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_CT].value = unit->ct;
+    gauges->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_CT].max = UNIT_TURN_CT_THRESHOLD;
+    gauges->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].value = unit->mp;
+    gauges->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_CT].value = unit->ct;
     identity->job_id = unit->job_id;
     identity->brave = unit->brave;
-    gauges->gauges[BATTLE_UNIT_STATUS_GAUGE_MP].bonus = 0;
+    gauges->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].bonus = 0;
     gauges->unit_index = party_index;
     identity->unit_index = party_index;
     identity->roster_slot = party_index;
     identity->faith = unit->faith;
-    identity->zodiac = unit->birthday.fields.zodiac;
-    detail->move_bonus = unit->move;
-    detail->speed_bonus = unit->attributes[UNIT_ATTRIBUTE_SPEED];
-    detail->jump_bonus = unit->jump;
+    identity->zodiac = unit->birthday.zodiac;
+    detail->move = unit->move;
+    detail->speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];
+    detail->jump = unit->jump;
     detail->right_weapon_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_EVADE];
     detail->left_weapon_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_EVADE];
     detail->right_weapon_power = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_POWER];
     detail->left_weapon_power = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_POWER];
-    detail->physical_attack_bonus = unit->attributes[UNIT_ATTRIBUTE_PHYSICAL_ATTACK];
+    detail->physical_attack = unit->attributes[UNIT_ATTRIBUTE_PHYSICAL_ATTACK];
     detail->physical_class_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_CLASS_PHYSICAL_EVADE];
     detail->physical_shield_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_PHYSICAL_EVADE];
     if (unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_PHYSICAL_EVADE]
@@ -74,7 +74,7 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
         detail->physical_shield_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_SHIELD_PHYSICAL_EVADE];
     }
     detail->physical_accessory_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_PHYSICAL_EVADE];
-    detail->magical_attack_bonus = unit->attributes[UNIT_ATTRIBUTE_MAGIC_ATTACK];
+    detail->magical_attack = unit->attributes[UNIT_ATTRIBUTE_MAGIC_ATTACK];
     detail->magical_class_evade = 0;
     detail->magical_shield_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_MAGIC_EVADE];
     if (unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_SHIELD_MAGIC_EVADE]
@@ -82,16 +82,18 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
         detail->magical_shield_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_SHIELD_MAGIC_EVADE];
     }
     detail->magical_accessory_evade = unit->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_ACCESSORY_MAGIC_EVADE];
-    detail->equipment[0] = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] != ITEM_ID_NONE
+    detail->equipment[WORLD_EQUIPMENT_SLOT_RIGHT_HAND]
+        = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON] != ITEM_ID_NONE
         ? unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON]
         : unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_SHIELD];
-    detail->equipment[1] = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] != ITEM_ID_NONE
+    detail->equipment[WORLD_EQUIPMENT_SLOT_LEFT_HAND]
+        = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON] != ITEM_ID_NONE
         ? unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON]
         : unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_SHIELD];
-    detail->equipment[2] = unit->equipment[UNIT_EQUIPMENT_SLOT_HEAD];
-    detail->equipment[3] = unit->equipment[UNIT_EQUIPMENT_SLOT_BODY];
-    detail->equipment[4] = unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
-    for (i = 0; i < 5; i++) {
+    detail->equipment[WORLD_EQUIPMENT_SLOT_HEAD] = unit->equipment[UNIT_EQUIPMENT_SLOT_HEAD];
+    detail->equipment[WORLD_EQUIPMENT_SLOT_BODY] = unit->equipment[UNIT_EQUIPMENT_SLOT_BODY];
+    detail->equipment[WORLD_EQUIPMENT_SLOT_ACCESSORY] = unit->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY];
+    for (i = 0; i < WORLD_EQUIPMENT_SLOT_COUNT; i++) {
         if (detail->equipment[i] == 0 || detail->equipment[i] == ITEM_ID_NONE) {
             detail->equipment[i] = -1;
         }
@@ -105,9 +107,9 @@ void wldcore_unit_build_status_panel_data(s32 party_index) {
     } else {
         detail->ability_ids[0] = unit->primary_skillset;
         detail->ability_ids[1] = unit->secondary_skillset;
-        detail->ability_ids[2] = unit->reaction_ability;
-        detail->ability_ids[3] = unit->support_ability;
-        detail->ability_ids[4] = unit->movement_ability;
+        detail->ability_ids[2] = unit->abilities.reaction;
+        detail->ability_ids[3] = unit->abilities.support;
+        detail->ability_ids[4] = unit->abilities.movement;
     }
     for (i = 0; i < 5; i++) {
         if (detail->ability_ids[i] == 0) {

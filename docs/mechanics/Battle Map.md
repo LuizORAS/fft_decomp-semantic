@@ -3,6 +3,9 @@ type: mechanic
 tier: 3
 scope:
   - battle_map
+  - map_reset_script_light_transform()
+  - map_store_selected_tile_data()
+  - map_wait_for_refresh()
 ---
 
 # Battle Map
@@ -21,7 +24,7 @@ tints it, animates parts of it and runs the weather over it.
 | Walls that vanish when the camera turns | Each textured polygon carries hide bits for eight yaw bands and four resting diagonals, which the queue routines test | `MAP_POLYGON_FLAG_*`, [[battle_map_polygon_flag_command]] |
 | A different map by day, by night, in rain or after an event | The GNS rows are picked by the map state: a script variable's value (the layout), the weather and the time of day | [[battle_map_load_data]], [[battle_map_is_gns_record_matching_state]] |
 | The sky and the light | A background gradient behind the map, the light colour and direction matrices and the ambient (GTE back) colour, all from the map's lighting resource; events and effects fade them | [[battle_map_dispatch_gns_resource]], [[battle_map_light_state_command]], [[battle_map_update_animations]] |
-| Flowing water, flickering torches | 32 texture animations per map: frames moved through VRAM, palette frames, or a rotation of colours | [[battle_map_update_texture_animations]], [[battle_map_start_texture_animation]] |
+| Flowing water, flickering torches | 32 texture animations per map: frames moved through VRAM, palette frames, or a rotation of colours | [[battle_map_update_texture_animations]], [[battle_map_start_clut_cycle]] |
 | Rain, snow and lightning | 32 rain drops with splashes or 64 snowflakes, random lightning in heavy rain | [[battle_map_run_weather_command]], [[battle_map_init_weather_particles]] |
 | The coloured tiles of a move range, an ability's range and its targets | The polygons of marked tiles switch to the marked-tile CLUT row and take one colour per kind of mark | [[battle_map_draw_mesh_and_weather]], [[battle_target_tint_marked_tiles]] |
 | A map that changes during an event | Event instructions start a part's animation (Use3DObject) or a texture animation, reload the map for a new state, change the weather or tint the whole map | [[battle_script_process_pending_requests]], [[battle_map_color_field]] |
@@ -35,14 +38,14 @@ items) belong to the same map but are covered by the [[Movement]] page.
 | Record | What it holds |
 |---|---|
 | `g_battle_map_gns_lba` | The disc sector of each map's GNS file, 0 for a map id without one |
-| [[gns_file_record_t]], [[gns_command_record_prefix_t]] | The GNS rows: a resource file (type, map state, comparison, sector, length), then command rows (indoor, outdoor, snow, camera position) |
-| `g_battle_map_gns_records`, `g_battle_map_pending_gns_records`, `g_battle_map_loaded_gns_records` | The first 150 rows, the rows picked for the current state and the rows loaded, by resource type ([[gns_resource_type_e]]) |
+| [[gns_record_view_t]], [[gns_command_record_prefix_t]] | The GNS rows: a resource file (type, map state, comparison, sector, length), then command rows (indoor, outdoor, snow, camera position) |
+| `g_battle_map_gns_records`, `g_battle_map_pending_gns_records`, `g_battle_map_loaded_gns_records` | The first 150 rows, the rows picked for the current state and the rows loaded, by resource type ([[map_resource_type_e]]) |
 | [[map_mesh_file_header_t]] | A mesh file's table of chunk offsets: geometry, palettes, lighting, terrain, animations, part geometry, polygon flags |
 | `g_battle_map_mesh_parts` ([[battle_map_mesh_part_t]]) | The primary mesh (part 0) and the eight animated parts: their polygons, matrix, parent and running keyframe |
 | `g_battle_map_mesh_animation_keyframes`, `g_battle_map_mesh_animation_instructions` | The parts' keyframes ([[battle_map_mesh_keyframe_t]]) and their eight animation states of instructions each |
 | `g_battle_map_textured_triangle_positions` and siblings | The polygon positions, normals, flags and terrain tiles; the GPU packets live in the render buffers |
 | `g_battle_map_palette_state` ([[map_palette_state_t]]) | The 14 CLUT rows ([[map_clut_row_e]]) under y 0x1e0: map, marked tiles, sprites, units, items, effects; each CLUT's blend |
-| `g_battle_map_texture_animations` ([[battle_map_texture_animation_t]]) | The map's 32 texture animations; `g_battle_map_texture_animation_states` holds the eight colour rotations |
+| `g_battle_map_texture_animations` ([[battle_map_texture_animation_t]]) | The map's 32 texture animations; `g_battle_map_clut_cycle_states` holds the eight colour rotations |
 | `g_battle_map_background_gradient_transition`, `g_battle_map_ambient_light_transition`, `g_battle_map_darkness_transition` | The three colour fades: the background gradient, the ambient colour and the darkness colour, the colour of the untextured polygons |
 | `g_battle_map_lightning_state` ([[battle_lightning_state_t]]) | The flash timer and the colours it starts from |
 | `g_battle_map_weather_particles` ([[battle_weather_particle_t]]) | The snowflakes, or the rain drops (head and tail) and their splashes |
@@ -131,7 +134,7 @@ units' palettes use the same machinery.
 - GNS command rows apply in file order, so the last of a kind wins; types
   0x87 and 0x8a have no case ([[battle_map_run_gns_command_record]]).
 - [[battle_map_load_mesh_variant]] scales the palette offset by four.
-- [[battle_map_stop_texture_animation]] stops the slot after the handle's own.
+- [[battle_map_stop_clut_cycle]] stops the slot after the handle's own.
 - [[battle_map_light_state_command]] and
   [[battle_map_light_matrix_command]] return an unset pointer for most
   commands; [[battle_map_control_gte_background_color]] too.

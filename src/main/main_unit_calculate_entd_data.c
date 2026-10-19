@@ -1,4 +1,3 @@
-#include "fft/battle.h"
 #include "fft/main.h"
 #include "psx/types.h"
 
@@ -20,7 +19,7 @@
  * experience of 100 or more in 0..99. */
 s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     const job_data_t* ramza_jobs;
-    party_data_t* party_unit;
+    party_unit_t* party_unit;
     s32 party_slot;
     s32 party_index;
     s32 i;
@@ -48,9 +47,9 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     value = entd->unit_flags;
     if (value & UNIT_FLAG_LOAD_FORMATION) {
         party_slot = main_unit_init_from_entd_party_member(unit, entd);
-    } else if (entd->sprite_set < CHARACTER_IDENTITY_RAMZA_END && entd->birthday[0] == 0) {
-        for (party_index = 0, ramza_jobs = &g_main_job_data[1]; party_index < 20; party_index++) {
-            party_unit = main_party_get_data_pointer(party_index);
+    } else if (entd->sprite_set < CHARACTER_IDENTITY_RAMZA_END && entd->birth_month == 0) {
+        for (party_index = 0, ramza_jobs = &g_main_job_data[1]; party_index < PARTY_ROSTER_SLOT_COUNT; party_index++) {
+            party_unit = main_party_get_unit(party_index);
             if (party_unit->party_id == PARTY_ID_NONE) {
                 continue;
             }
@@ -102,26 +101,26 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
         level = 1;
     }
     value = level;
-    if (value >= 100) {
-        value = 99;
+    if (value > UNIT_LEVEL_MAX) {
+        value = UNIT_LEVEL_MAX;
     }
     unit->level = value;
 
-    number = entd->birthday[0];
-    day = entd->birthday[1];
+    number = entd->birth_month;
+    day = entd->birth_day;
     if (number == 0 || number >= 13 || day == 0 || day >= 32) {
         birthday = (365 * rand()) / 0x8000 + 1;
     } else {
         birthday = g_main_month_start_day_offsets[number] + day;
     }
     year_day = birthday;
-    unit->birthday.value = (unit->birthday.value & 0xfe00) | (year_day & 0x1ff);
+    unit->birthday.birthday = year_day;
     /* Preserve the target's explicit 16-bit normalization before packing the
-     * zodiac nibble into the birthday word. */
+     * zodiac nibble into the 16-bit birthday value. */
     zodiac = main_unit_calculate_zodiac_symbol(year_day) & 0xFFFF;
-    unit->birthday.value = (unit->birthday.value & 0x0fff) | (zodiac << 12);
+    unit->birthday.zodiac = zodiac;
     if (entd->job_id == JOB_ID_SERPENTARIUS) {
-        unit->birthday.value = (unit->birthday.value & 0x0fff) | (ZODIAC_SIGN_SERPENTARIUS << 12);
+        unit->birthday.zodiac = ZODIAC_SIGN_SERPENTARIUS;
     }
 
     value = entd->bravery;
@@ -137,10 +136,10 @@ s32 main_unit_calculate_entd_data(battle_stats_t* unit, entd_unit_t* entd) {
     unit->faith = value;
     unit->original_faith = value;
     value = entd->experience;
-    if (value >= 100) {
-        value = (100 * rand()) / 0x8000;
+    if (value >= UNIT_LEVEL_UP_EXPERIENCE) {
+        value = (UNIT_LEVEL_UP_EXPERIENCE * rand()) / 0x8000;
     }
     unit->experience = value;
-    unit->quote_name_id = entd->name_id;
+    unit->quote_name_id.value = entd->name_id;
     return 0;
 }

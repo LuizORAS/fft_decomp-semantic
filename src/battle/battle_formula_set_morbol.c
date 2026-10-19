@@ -1,5 +1,7 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/data.h"
+#include "fft/unit.h"
 
 /* Formula 0x58, Moldball Virus: no evade check; hit chance MA + X with the element's Strengthen,
  * Magic Attack Up and the zodiac, without Faith; a hit turns a generic, mortal, unmounted target that
@@ -26,7 +28,7 @@ void battle_formula_set_morbol(void) {
         && target->character_identity >= CHARACTER_IDENTITY_GENERIC_MALE
         && target->character_identity <= CHARACTER_IDENTITY_MONSTER
         && (target->job_id < JOB_ID_MORBOL || target->job_id > JOB_ID_MORBOL_FAMILY_LAST)) {
-        /* The halfword store clears all other special-effect flags. */
+        /* The 16-bit store clears all other special-effect flags. */
         action->special_effect = BATTLE_ACTION_SPECIAL_EFFECT_MORBOL;
         action->attack_type = BATTLE_ACTION_TYPE_PSEUDO_STATUS;
         return;

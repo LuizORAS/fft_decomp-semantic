@@ -1,5 +1,4 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_ai.h"
 
 /* Reset the selected action's ranking (battle_ai_reset_action_ranking_fields) so the next
  * battle_ai_build_command plans again: at a unit's new turn, after a crystal or chest pickup, after a

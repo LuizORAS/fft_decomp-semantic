@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Return 1 when unit_id will be able to move within limit clockticks: present, Speed above 0, not

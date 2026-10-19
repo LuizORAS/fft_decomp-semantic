@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 #include "psx/pad.h"
 
 /* DISPLAY_MOVE_AREA: show a unit's move range from the free cursor, the camera free to rotate,

@@ -1,47 +1,22 @@
 #include "fft/event_attack.h"
 
-typedef struct {
-    POLY_FT4 poly;
-    POLY_F3 tri[2];
-} attack_deploy_arrow_gfx_t;
-
-extern attack_deploy_arrow_gfx_t g_attack_deploy_screen_arrow;
-
 /* Build the textured deployment banner and its two arrowhead triangles.
  * The banner fields are written in libgpu setRGB0/setXY4/setUV4 order. */
 void attack_deploy_build_screen_arrow(void) {
-    SetPolyFT4(&g_attack_deploy_screen_arrow.poly);
-    SetSemiTrans(&g_attack_deploy_screen_arrow.poly, 1);
-    SetShadeTex(&g_attack_deploy_screen_arrow.poly, 0);
-    g_attack_deploy_screen_arrow.poly.r0 = 0x80;
-    g_attack_deploy_screen_arrow.poly.g0 = 0x80;
-    g_attack_deploy_screen_arrow.poly.b0 = 0x80;
-    g_attack_deploy_screen_arrow.poly.x0 = 0xAF;
-    g_attack_deploy_screen_arrow.poly.y0 = 0xB6;
-    g_attack_deploy_screen_arrow.poly.x1 = 0xEF;
-    g_attack_deploy_screen_arrow.poly.y1 = 0xB6;
-    g_attack_deploy_screen_arrow.poly.x2 = 0xAF;
-    g_attack_deploy_screen_arrow.poly.y2 = 0xDE;
-    g_attack_deploy_screen_arrow.poly.x3 = 0xEF;
-    g_attack_deploy_screen_arrow.poly.y3 = 0xDE;
-    g_attack_deploy_screen_arrow.poly.u0 = 0x58;
-    g_attack_deploy_screen_arrow.poly.v0 = 0xB8;
-    g_attack_deploy_screen_arrow.poly.u1 = 0x98;
-    g_attack_deploy_screen_arrow.poly.v1 = 0xB8;
-    g_attack_deploy_screen_arrow.poly.u2 = 0x58;
-    g_attack_deploy_screen_arrow.poly.v2 = 0xE0;
-    g_attack_deploy_screen_arrow.poly.u3 = 0x98;
-    g_attack_deploy_screen_arrow.poly.v3 = 0xE0;
-    g_attack_deploy_screen_arrow.poly.tpage = GetTPage(0, 1, 0x100, 0);
-    g_attack_deploy_screen_arrow.poly.clut
+    SetPolyFT4(&g_attack_deploy_screen_arrow.banner);
+    SetSemiTrans(&g_attack_deploy_screen_arrow.banner, 1);
+    SetShadeTex(&g_attack_deploy_screen_arrow.banner, 0);
+    setRGB0(&g_attack_deploy_screen_arrow.banner, 0x80, 0x80, 0x80);
+    setXY4(&g_attack_deploy_screen_arrow.banner, 0xAF, 0xB6, 0xEF, 0xB6, 0xAF, 0xDE, 0xEF, 0xDE);
+    setUV4(&g_attack_deploy_screen_arrow.banner, 0x58, 0xB8, 0x98, 0xB8, 0x58, 0xE0, 0x98, 0xE0);
+    g_attack_deploy_screen_arrow.banner.tpage = GetTPage(0, 1, 0x100, 0);
+    g_attack_deploy_screen_arrow.banner.clut
         = GetClut(g_attack_deploy_arrow_clut_rect.x, g_attack_deploy_arrow_clut_rect.y);
 
     SetPolyF3(&g_attack_deploy_screen_arrow.tri[0]);
     SetSemiTrans(&g_attack_deploy_screen_arrow.tri[0], 0);
     SetShadeTex(&g_attack_deploy_screen_arrow.tri[0], 1);
-    g_attack_deploy_screen_arrow.tri[0].r0 = 0xFF;
-    g_attack_deploy_screen_arrow.tri[0].g0 = 0xFF;
-    g_attack_deploy_screen_arrow.tri[0].b0 = 0xFF;
+    setRGB0(&g_attack_deploy_screen_arrow.tri[0], 0xFF, 0xFF, 0xFF);
     if (g_attack_deploy_tiles_only_mode != 0) {
         g_attack_deploy_screen_arrow.tri[0].x0 = 0x99;
         g_attack_deploy_screen_arrow.tri[0].x1 = 0xC0;

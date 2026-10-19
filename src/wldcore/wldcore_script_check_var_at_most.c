@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -6,11 +7,9 @@
 void wldcore_script_check_var_at_most(void) {
     s32 variable_id;
     s32 value;
-    s32* flags;
 
     wldcore_script_read_operand_pair(&variable_id, &value);
-    if (world_script_get_variable(variable_id) > value) {
-        flags = &g_wldcore_script_state.flags;
-        *flags |= WLDCORE_SCRIPT_RESULT_CONDITION_FAILED;
+    if (script_get_variable(variable_id) > value) {
+        g_wldcore_script_state.flags |= WLDCORE_SCRIPT_RESULT_CONDITION_FAILED;
     }
 }

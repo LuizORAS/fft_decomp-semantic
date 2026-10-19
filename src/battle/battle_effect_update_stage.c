@@ -1,4 +1,9 @@
 #include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+#include "fft/battle_menu.h"
+#include "fft/main.h"
+#include "psx/suzuki.h"
 
 /* Runs the loaded effect file one frame and returns 1 while it plays.
  *
@@ -14,27 +19,27 @@ s32 battle_effect_update_stage(void) {
     s32 next;
 
     id = g_battle_effect_allocated_record_head;
-    switch (g_battle_effect_phase) {
-    case BATTLE_EFFECT_PHASE_IDLE:
+    switch (g_battle_effect_playback_phase) {
+    case BATTLE_EFFECT_PLAYBACK_PHASE_IDLE:
         result = 0;
         break;
-    case BATTLE_EFFECT_PHASE_REQUESTED:
+    case BATTLE_EFFECT_PLAYBACK_PHASE_REQUESTED:
         result = 1;
         break;
-    case BATTLE_EFFECT_PHASE_INIT_PALETTE:
+    case BATTLE_EFFECT_PLAYBACK_PHASE_INIT_PALETTE:
         battle_map_freeze();
         battle_menu_suppress_height_display();
         battle_effect_init_palette(g_battle_ability_effect_id);
-        g_battle_effect_phase = BATTLE_EFFECT_PHASE_START_SCRIPT;
+        g_battle_effect_playback_phase = BATTLE_EFFECT_PLAYBACK_PHASE_START_SCRIPT;
         D_801BF000 = 0;
         battle_state_clear_slowdown();
         result = 1;
         break;
-    case BATTLE_EFFECT_PHASE_START_SCRIPT:
+    case BATTLE_EFFECT_PLAYBACK_PHASE_START_SCRIPT:
         battle_heap_init((battle_heap_node_t*)g_battle_effect_palette_ptr,
             g_battle_heap_end_address - (u32)g_battle_effect_palette_ptr);
         battle_effect_reset_subsystems();
-        battle_effect_copy_camera_angles_and_screen_coords();
+        battle_effect_copy_camera_angles_and_world_coords();
         battle_state_clear_min_vsync_interval();
         battle_effect_set_frame_data_pointer(g_battle_ability_effect_id);
         battle_effect_set_animation_sequences_pointer(g_battle_ability_effect_id);
@@ -53,11 +58,11 @@ s32 battle_effect_update_stage(void) {
             }
         }
         g_battle_effect_root_record_index = battle_effect_start_script_record(g_battle_effect_script, 0, 0);
-        g_battle_effect_phase = BATTLE_EFFECT_PHASE_RUNNING;
+        g_battle_effect_playback_phase = BATTLE_EFFECT_PLAYBACK_PHASE_RUNNING;
         battle_map_configure_effect_data_state(MAP_EFFECT_DATA_BEGIN);
         result = 1;
         break;
-    case BATTLE_EFFECT_PHASE_RUNNING:
+    case BATTLE_EFFECT_PLAYBACK_PHASE_RUNNING:
         g_battle_effect_otag = main_gfx_get_otag();
         battle_effect_start_render_frame();
         while (id != 0) {
@@ -76,25 +81,25 @@ s32 battle_effect_update_stage(void) {
                 main_sound_set_current_music_volume_timed(0x78);
             }
             if (g_battle_effect_sound_section_ptr != 0) {
-                main_sound_remove_vfx_resource(g_battle_effect_sound_section_ptr);
+                suzuki_sound_remove_resource(g_battle_effect_sound_section_ptr);
                 g_battle_effect_sound_section_ptr = 0;
             }
             battle_map_configure_effect_data_state(MAP_EFFECT_DATA_END);
             battle_map_unfreeze();
             battle_menu_enable_height_display();
             battle_state_clear_min_vsync_interval();
-            g_battle_effect_phase = BATTLE_EFFECT_PHASE_IDLE;
+            g_battle_effect_playback_phase = BATTLE_EFFECT_PLAYBACK_PHASE_IDLE;
             result = 0;
         }
         break;
-    case BATTLE_EFFECT_PHASE_RESTART_SCRIPT:
+    case BATTLE_EFFECT_PLAYBACK_PHASE_RESTART_SCRIPT:
         battle_heap_init((battle_heap_node_t*)g_battle_effect_palette_ptr,
             g_battle_heap_end_address - (u32)g_battle_effect_palette_ptr);
         battle_effect_reset_subsystems();
         battle_effect_reset_frame_data_pointer();
         battle_effect_reset_animation_sequences_pointer();
         g_battle_effect_root_record_index = battle_effect_start_script_record(g_battle_effect_script, 0, 0);
-        g_battle_effect_phase = BATTLE_EFFECT_PHASE_RUNNING;
+        g_battle_effect_playback_phase = BATTLE_EFFECT_PLAYBACK_PHASE_RUNNING;
         return 1;
     }
     return result;

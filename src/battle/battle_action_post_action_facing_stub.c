@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
 
 /* Empty. Called when the acting unit's own action has ended, with its stats and the quadrant
  * (0 to 3) its sprite faces. */

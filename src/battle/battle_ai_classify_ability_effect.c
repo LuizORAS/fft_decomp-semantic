@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 
 /* Return how the considered ability would serve the acting side on unit_id: USEFUL, ADVERSE or
  * NONE. NONE when the unit is outside the ability's ENEMIES_ONLY or ALLIES_ONLY limit, is the caster
@@ -56,7 +57,7 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
     /* Death/revival timing determines which effects can still matter. */
     i = 0;
     if ((ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_CANCEL_STATUS)
-        && (ai->considered_ability.parameters.bytes.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+        && (ai->considered_ability.parameters.fields.status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)))
         i = 1;
     if (decision->targeting_flags_2 & BATTLE_AI_TARGET_DEAD_WITH_RERAISE) {
@@ -76,13 +77,13 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
     if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))
         && (!(ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_CANCEL_STATUS)
-            || !(ai->considered_ability.parameters.bytes
+            || !(ai->considered_ability.parameters.fields
                      .status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))))
         return BATTLE_AI_ABILITY_EFFECT_NONE;
     if (battle_ai_is_status_active_through_delay(ct, unit, BATTLE_STATUS_ID_WALL)
         && (!(ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_CANCEL_STATUS)
-            || !(ai->considered_ability.parameters.bytes
+            || !(ai->considered_ability.parameters.fields
                      .status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_WALL)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_WALL))))
         return BATTLE_AI_ABILITY_EFFECT_NONE;
@@ -136,8 +137,8 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
                 if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_ADD_STATUS) {
                     /* Early acceptance of a disabling effect bypasses the generic
                      * already-present/immunity filters below. Status bytes 1..4
-                     * are loaded together as an aligned word by the target. */
-                    s32 status_mask = ai->considered_ability.parameters.words.status_tail
+                     * are loaded together as an aligned 32-bit value by the target. */
+                    s32 status_mask = ai->considered_ability.parameters.packed.status_tail
                         & (BATTLE_AI_STATUS_TAIL_PACKED_MASK(BATTLE_STATUS_ID_SLOW)
                             | BATTLE_AI_STATUS_TAIL_PACKED_MASK(BATTLE_STATUS_ID_STOP)
                             | BATTLE_AI_STATUS_TAIL_PACKED_MASK(BATTLE_STATUS_ID_SLEEP)
@@ -176,7 +177,7 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
         if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
             & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)) {
             if ((ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_ADD_STATUS)
-                && (ai->considered_ability.parameters.bytes
+                && (ai->considered_ability.parameters.fields
                         .status_infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_RERAISE)]
                     & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_RERAISE)))
                 return BATTLE_AI_ABILITY_EFFECT_USEFUL;
@@ -199,7 +200,7 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
     }
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_ADD_STATUS) {
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-            mask = ai->considered_ability.parameters.bytes.status_infliction[i];
+            mask = ai->considered_ability.parameters.fields.status_infliction[i];
             mask ^= mask & unit->status_sets.current[i];
             if (mask) {
                 mask ^= mask & unit->status_sets.immunity[i];
@@ -252,7 +253,7 @@ battle_ai_ability_effect_e battle_ai_classify_ability_effect(s32 unit_id, s32 ch
     }
     if (ai->considered_ability.ai_flags.word & BATTLE_AI_ABILITY_CANCEL_STATUS) {
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-            mask = ai->considered_ability.parameters.bytes.status_infliction[i];
+            mask = ai->considered_ability.parameters.fields.status_infliction[i];
             mask &= unit->status_sets.current[i];
             if (mask) {
                 mask ^= mask & unit->status_sets.innate[i];

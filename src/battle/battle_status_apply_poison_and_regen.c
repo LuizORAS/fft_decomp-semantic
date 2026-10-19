@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
 #include "psx/types.h"
 
 /* Turn-clock HP upkeep for one unit: nothing for an absent, crystal, dead, jumping, petrified or

@@ -9,13 +9,13 @@ without changing a single byte.
 
 Linked Psy-Q, runtime/startup and Suzuki library reconstructions are normal
 repository source. Keep public SDK entry-point names, use `include/psx/`, and
-put one reconstructed function per file under `src/psyq/<library>/`. Register
-it in the original module's `target/` configuration with an explicit `source:`
-path. A routine or global with no established SDK name is `psyq_<lib>_…` or
-`g_psyq_<lib>_…`. LIBGS (WORLD) is `src/psyq/libgs/` and LIBPRESS (OPENING)
-`src/psyq/libpress/`. The Suzuki sound driver is in `src/main/` under `main_`
-and `Suzuki` names, apart from its four heap routines in `src/psyq/suzuki/`;
-it stays there unless a separate change moves it coherently.
+put one reconstructed function per file under `src/lib/psyq/<library>/`.
+Register it in the original module's `target/` configuration with an explicit
+`source:` path. A routine or global with no established SDK name is
+`psyq_<lib>_…` or `g_psyq_<lib>_…`. LIBGS (WORLD) is `src/lib/psyq/libgs/` and
+LIBPRESS (OPENING) `src/lib/psyq/libpress/`. The Suzuki sound driver, its four
+heap routines included, is `src/lib/suzuki/` under `suzuki_` names, declared in
+`include/psx/suzuki.h`.
 
 Library C has the same byte-exact requirements as game C. Every completed
 function must match all original bytes; unmatched drafts stay in ignored
@@ -58,8 +58,9 @@ remain excluded. Never modify `meta/`.
 | Path | Contents |
 |---|---|
 | `src/<module>/` | One C file per function, named after it |
-| `src/psyq/<library>/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
-| `include/fft/` | One header per module (`main.h`, `battle.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`) plus shared type headers (`thread.h`, `gfx.h`, `data.h`, `unit.h`, `map.h`, `menu.h`, `script.h`) |
+| `src/shared/<subsystem>/` | Proven shared implementations: one source compiled at every original entry that runs it, bound per module with `source:` and `source_symbol` in `target/` |
+| `src/lib/psyq/<library>/`, `src/lib/suzuki/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
+| `include/fft/` | Module headers (`main.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), BATTLE's subsystem headers (`battle_<subsystem>.h`, all included by `battle.h`) and shared type headers (`data.h`, `gfx.h`, `map.h`, `memory.h`, `menu.h`, `menu_script.h`, `script.h`, `sound.h`, `thread.h`, `unit.h`) |
 | `include/psx/` | Psy-Q SDK, library and PS1 hardware declarations (keep SDK names and signatures) |
 | `target/*.yaml` | Every disc module: functions with hashes, data names, libraries, regions |
 | `tools/` | Go tooling (its own module), rebuilt from the working tree on every `make` call |
@@ -98,6 +99,7 @@ make check-config          # validate target/, sources and declarations
 make config-fmt            # rewrite target/*.yaml in canonical form
 make declarations          # report conflicting declarations in detail
 make symbols ACTION=rename-function|rename-global ARGS="--old A --new B"
+make share-audit [MODULE=x] # report shared C implementation candidates as JSON
 make diff FUNC=f           # compare one function with the original bytes (needs the BIN)
 make library-diff ARGS="..." # compare a scratch library candidate without registering it
 make permute FUNC=f        # run decomp-permuter on it [DURATION=300 JOBS=4]
@@ -140,8 +142,9 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
 
 - Header: `module`, `file`, `lba`, `size`, `sha256`, `load`, `source_dir`,
   `profile` (module default), `links` (modules resident alongside).
-- `functions`: `{addr, size, name, hash}`, plus `profile`, `rodata` or `asm`
-  only when needed. `hash` is the first 16 hex digits of the SHA-256 of the
+- `functions`: `{addr, size, name, hash}`, plus `profile`, `rodata`, `asm`,
+  `source` (a path other than `src/<module>/<name>.c`) or `source_symbol` (the
+  neutral symbol a `src/shared/` source defines) only when needed. `hash` is the first 16 hex digits of the SHA-256 of the
   original bytes; only `make checksums` writes it.
 - `data`: named addresses with no reconstruction (globals, library entry
   points). `imports`: names from overlays that linking cannot otherwise
@@ -200,7 +203,10 @@ none), and prefer the profile of its neighbours.
   hex offset in the member's own struct, zero-padded to the same width
   throughout the struct. `make check-config` fails on any access to an
   `_unused_` or `_padding_` member. snake_case; `_t` struct and `_e` enum typedefs; uppercase enum values;
-  `_init_`, not `_initialize_`. `include/psx/` keeps SDK names. Header guards
+  `_init_`, not `_initialize_`. Decimal for counts and ordinary enum values,
+  hex for flags and encoded values. A `src/shared/` source defines the neutral
+  name its rows' `source_symbol` gives; each module's row keeps its module name
+  where the module names that entry. `include/psx/` keeps SDK names. Header guards
   use descriptive header/path names without an `FFT_` prefix. A library
   header groups its SDK interface and reconstructed driver internals together;
   register-reserving ABI helpers stay in focused separate headers.
@@ -213,23 +219,34 @@ none), and prefer the profile of its neighbours.
 - One declaration per symbol, in its header. `make check-config` fails on
   conflicting declarations. Globals and prototypes go in the header of their
   name's module prefix. A type goes in the most specific module header that
-  every user can see: `battle.h` for BATTLE and its overlays (whose headers
-  include it), `world.h` for WORLD, WLDCORE and OPENING, and a shared type
-  header only when both families use it. Two exceptions: `main_` types stay
+  every user can see: BATTLE's subsystem header (`battle_<subsystem>.h`) for
+  BATTLE and its overlays (whose headers include `battle.h`), `world.h` for
+  WORLD, WLDCORE and OPENING, and a shared type header only when both families
+  use it. A subsystem header includes its own dependencies, not the module
+  umbrella. Two exceptions: `main_` types stay
   in `main.h`, and MAIN-only table or unit records (item, ability, job,
   party, ENTD) sit with their siblings in `data.h` and `unit.h`. A `volatile`
   or otherwise one-function view of a global stays local to that source
   file, with its reason. A source file includes its own
   module header, plus another module's header when it calls into that module
   (MAIN and WORLD code calling BATTLE functions, for example). `main.h`
-  includes every shared header. Each header groups its declarations under
+  includes the shared type headers. Each header groups its declarations under
   short lowercase subsystem labels (`/* ai */`), types first, then globals,
   then functions. A comment and a blank line after each label say what its
   block holds.
 - Comments: a short summary above every function (what it does, in a line or
   two), then only the rationale needed to read the code. State facts, not
   history. Record retail bugs and caller/callee disagreements with one line in
-  `QUIRKS.md`.
+  `QUIRKS.md`. Reference library material validates our interfaces; never copy
+  its implementations or comments into the repository.
+- Trace casts, shifts, masks and unions through their readers and writers
+  before changing a type. Keep genuine encoded data and format-dispatch
+  boundaries; do not invent overlays or split records without evidence.
+- `const` only for genuinely read-only inputs, checked at every caller under
+  its historical compiler profile (see WLDCORE's reload rule above).
+- Shared-source consolidation (`src/shared/`) keeps every original address and
+  call binding, with no runtime wrappers or invented alias machinery; each
+  entry still compiles with its own profile and bindings.
 - Run `make fmt` after editing C or headers, then `make check`: cc1 emits
   line notes, so formatting can change the bytes.
 

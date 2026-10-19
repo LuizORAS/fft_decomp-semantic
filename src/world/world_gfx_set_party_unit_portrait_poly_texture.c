@@ -14,18 +14,18 @@
 #define CLUT_SUPPRESS_MASK 0x300
 
 /*
- * Resolves a roster slot's sprite sheet to its CLUT word and, unless the word
+ * Resolves a roster slot's sprite sheet to its 16-bit CLUT value and, unless that value
  * is masked out, applies it to the caller's portrait sprite record.
  */
 void world_gfx_set_party_unit_portrait_poly_texture(s32 roster_slot, POLY_FT4* poly) {
-    party_data_t* party;
+    party_unit_t* party;
     job_data_t* job;
     u32 sprite;
     u8 job_id;
     s32 offset;
     s32 current_job;
 
-    party = main_party_get_data_pointer(roster_slot);
+    party = main_party_get_unit(roster_slot);
     sprite = party->sprite_set;
     if (sprite >= CHARACTER_IDENTITY_GENERIC_MALE) {
         if (sprite == CHARACTER_IDENTITY_GENERIC_MALE) {

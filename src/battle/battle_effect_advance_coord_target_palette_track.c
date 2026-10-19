@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Advance the target colour track of the parent timeline one frame: an APPLY
@@ -31,13 +32,14 @@ void battle_effect_advance_coord_target_palette_track(
             *remaining_frames = timer;
             preset = track->preset[index];
             if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
-                red = track->color[index][0];
-                green = track->color[index][1];
-                blue = track->color[index][2];
+                red = track->color[index].r;
+                green = track->color[index].g;
+                blue = track->color[index].b;
                 for (i = 0; i < g_battle_effect_coord_data.target_count; i++) {
                     if (g_battle_effect_coord_data.targets[i].target_type == BATTLE_EFFECT_TARGET_TYPE_UNIT) {
-                        battle_gfx_start_misc_unit_palette_modulation(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
-                            track->duration[index], g_battle_effect_coord_data.targets[i].id.misc_id, red, green, blue);
+                        battle_gfx_apply_unit_palette_modulation_to_units(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                            track->duration[index], g_battle_effect_coord_data.targets[i].data.unit.runtime_id, red,
+                            green, blue);
                     }
                 }
             }

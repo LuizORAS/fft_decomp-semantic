@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "psx/suzuki.h"
 #include "psx/types.h"
 
 /* Replace the effect sounds: unregister the sound resource of the previous effect
@@ -9,15 +10,15 @@ void battle_effect_load_sound_section(s16 index) {
     s32 offset;
 
     if (g_battle_effect_sound_section_ptr != 0) {
-        main_sound_remove_vfx_resource(g_battle_effect_sound_section_ptr);
+        suzuki_sound_remove_resource(g_battle_effect_sound_section_ptr);
     }
 
     base = g_battle_effect_file_headers[index];
     offset = base->sound_section;
     if (offset != 0) {
-        g_battle_effect_sound_section_ptr = (main_sound_resource_t*)((u8*)base + offset);
-        SuzukiAppendVFXSMD((main_sound_resource_t*)((u8*)base + offset));
-        g_battle_effect_sound_data_base = MAIN_SOUND_ID(g_battle_effect_sound_section_ptr->id, 0);
+        g_battle_effect_sound_section_ptr = (suzuki_sound_resource_t*)((u8*)base + offset);
+        suzuki_sound_append_resource(g_battle_effect_sound_section_ptr);
+        g_battle_effect_sound_data_base = MAIN_SUZUKI_SOUND_ID(g_battle_effect_sound_section_ptr->id, 0);
     } else {
         g_battle_effect_sound_section_ptr = 0;
         g_battle_effect_sound_data_base = 0;

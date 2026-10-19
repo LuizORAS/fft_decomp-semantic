@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Resume handler of the Brave Story menu: its windows and texts go back to CLUT 0, the cursor to its
@@ -14,7 +15,7 @@ void wldcore_menu_resume_brave_story_level(wldcore_menu_stack_record_t* level) {
     g_wldcore_window_records[level->list_window.main_window].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
     g_wldcore_window_records[level->list_window.main_window].frame_index
         = g_wldcore_window_records[level->list_window.main_window].anim_counter = 0;
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_INTRO, 0);
     if (g_wldcore_window_render_records[level->list_window.frame_render].flags & WLDCORE_DISPLAY_OBJECT_HIDDEN) {
         g_wldcore_window_records[level->list_window.main_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         g_wldcore_window_records[level->list_window.side_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;

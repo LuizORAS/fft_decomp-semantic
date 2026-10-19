@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Damage Split: after HP damage, a successful Brave roll queues the reaction with half the damage,

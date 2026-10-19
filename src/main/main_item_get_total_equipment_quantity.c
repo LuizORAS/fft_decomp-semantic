@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/main.h"
+#include "fft/unit.h"
 #include "psx/types.h"
 
 /* Counts how many of `item_id` the player owns: the inventory stock plus the
@@ -10,14 +10,14 @@ s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle) {
     s32 total;
     s32 i;
     s32 j;
-    party_data_t* party;
+    party_unit_t* party;
     battle_stats_t* unit;
     s32 deployed;
     s32 party_id;
 
     total = g_main_item_quantities[item_id];
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        party = main_party_get_data_pointer(i);
+        party = main_party_get_unit(i);
         party_id = party->party_id;
         if (party_id == PARTY_ID_NONE) {
             continue;

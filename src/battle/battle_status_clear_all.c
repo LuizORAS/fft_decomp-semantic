@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
 /* Remove every status for a Morbol transformation: queue the removal graphics of each current
@@ -6,17 +7,15 @@
  * (battle_action_apply_target_result, MORBOL effect, while executing). */
 void battle_status_clear_all(battle_stats_t* unit) {
     s32 i;
-    s32 misc_unit_id = unit->misc_unit_id;
+    s32 battle_id = unit->battle_id;
 
-    i = 0;
-    do {
+    for (i = 0; i < BATTLE_STATUS_COUNT; i++) {
         s32 byte_index = i / 8;
         s32 mask = 0x80 >> (i & 7);
         if (unit->status_sets.current[byte_index] & mask) {
-            battle_status_queue_misc_graphics_flag_change(BATTLE_STATUS_HANDLER_INDEX(i), 0, misc_unit_id);
+            battle_status_queue_runtime_graphics_flag_change(BATTLE_STATUS_HANDLER_INDEX(i), 0, battle_id);
         }
-        i += 1;
-    } while (i < BATTLE_STATUS_COUNT);
-    main_util_clear_byte_data(unit->status_sets.innate, 0x1F);
-    main_util_clear_byte_data(unit->inflicted_status, BATTLE_STATUS_BYTE_COUNT);
+    }
+    main_mem_zero(unit->status_sets.innate, 0x1F);
+    main_mem_zero(unit->inflicted_status, BATTLE_STATUS_BYTE_COUNT);
 }

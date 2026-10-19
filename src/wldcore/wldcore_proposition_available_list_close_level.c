@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Pop the list of propositions on offer: the menu ordering table offset back to 1,
  * MAIN_SYSTEM_FLAG_INPUT_BLOCKED toggled off and the buttons unblocked.

@@ -31,8 +31,8 @@ void card_save_update_slot_write(s32 slot) {
         g_card_save_write_failed = 0;
         D_801ca964 = 0;
         card_save_build_buffer(slot);
-        card_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_card_save_in_progress_thread_descriptor);
-        g_battle_sound_suppressed = 1;
+        card_menu_start_or_poll_thread(THREAD_SCREEN_SLOT_MENU, g_card_save_in_progress_thread_descriptor);
+        g_sound_suppressed = 1;
         return;
     } else {
         if (g_card_save_write_phase < 2) {
@@ -41,20 +41,20 @@ void card_save_update_slot_write(s32 slot) {
         }
     }
 
-    g_battle_sound_suppressed = 0;
+    g_sound_suppressed = 0;
     if (g_card_save_write_failed != 0) {
-        card_menu_start_or_poll_thread(NATIVE_SCREEN_THREAD_SLOT_MENU, g_card_save_failure_thread_descriptor);
+        card_menu_start_or_poll_thread(THREAD_SCREEN_SLOT_MENU, g_card_save_failure_thread_descriptor);
         if ((g_card_input_primary_repeat & PSX_PAD_CIRCLE) != 0 || (g_card_input_primary_repeat & PSX_PAD_CROSS) != 0) {
-            card_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
+            card_menu_stop_thread_and_wait(THREAD_SCREEN_SLOT_MENU);
             g_card_save_write_phase = 0;
             g_card_save_menu_state = CARD_SAVE_MENU_SCANNING;
         }
         return;
     }
 
-    write_result = card_file_write_buffer(g_card_save_file_names[slot], (const u8*)g_card_save_buffer_pointer, 0x1e00,
-        g_card_save_slot_file_states[slot]);
-    card_menu_stop_thread_and_wait(NATIVE_SCREEN_THREAD_SLOT_MENU);
+    write_result = card_file_write_buffer(
+        g_card_save_file_names[slot], g_card_save_buffer_pointer, 0x1e00, g_card_save_slot_file_states[slot]);
+    card_menu_stop_thread_and_wait(THREAD_SCREEN_SLOT_MENU);
     header_result = 0;
     if (write_result == 0x1e00) {
         g_card_save_buffer_pointer->summary.slot = slot;
@@ -73,7 +73,7 @@ void card_save_update_slot_write(s32 slot) {
     if (write_result == 0x1e00 && header_result == 0x80) {
         g_card_save_menu_state = CARD_SAVE_MENU_SELECT_SAVE;
         g_card_save_slot_file_states[slot] = CARD_SAVE_SLOT_OCCUPIED;
-        card_save_build_slot_description(0, g_card_save_slot_descriptions[slot].data);
+        card_save_build_slot_description(0, g_card_save_slot_descriptions[slot]);
         card_save_render_slot_text(slot);
         bcopy(&g_card_save_buffer_pointer->summary, &g_main_card_save_slot_metadata[slot], sizeof(card_save_summary_t));
         card_save_update_slot_playtime(slot);

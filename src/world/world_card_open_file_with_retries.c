@@ -1,6 +1,5 @@
 #include "fft/world.h"
 #include "psx/libapi.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* WORLD twin of card_file_open_selected_with_retries (src/event). */

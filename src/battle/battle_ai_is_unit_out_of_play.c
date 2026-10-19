@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Return 1 when the AI ignores unit_id: untargetable, dead without Reraise, or petrified. */

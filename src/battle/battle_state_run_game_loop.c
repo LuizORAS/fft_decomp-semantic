@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 
 /* BATTLE's main loop: set up each battle with battle_state_run_battle_setup, then once a frame
  * read the pad, draw the map, run the handler of g_battle_game_state, update the camera, map
@@ -21,6 +22,7 @@ void battle_state_run_game_loop(void) {
     battle_gfx_init_render_state();
     battle_effect_init_system();
 
+    /* A reverse slot-index loop changes the reset's original bytes. */
     init_offset = 0x196b0;
     do {
         g_battle_gfx_spritesheet_ids_by_vram_slot[init_offset] = 0;
@@ -48,10 +50,7 @@ void battle_state_run_game_loop(void) {
             }
             camera_integer->vx = camera_component >> 12;
             camera_component = -camera_fixed->vy;
-            if (camera_component < 0) {
-                camera_component += 0xfff;
-            }
-            camera_integer->vy = camera_component >> 12;
+            camera_integer->vy = camera_component / ONE;
             camera_integer->vz = -camera_fixed->vz / ONE;
 
             battle_camera_update_matrices(&g_battle_camera_matrix, &g_battle_camera_angles,
@@ -296,7 +295,7 @@ void battle_state_run_game_loop(void) {
         }
 
         battle_state_stop_map_animations();
-        battle_unit_clear_misc_units();
+        battle_unit_clear_all();
     } while (g_main_system_game_flow_state == MAIN_GAME_FLOW_BATTLE);
 
     DrawSync(0);

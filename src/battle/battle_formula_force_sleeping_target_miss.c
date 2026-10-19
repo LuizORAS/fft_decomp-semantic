@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* A sleeping target fails the action (battle_formula_force_attack_miss); Dance, Song and Talk Skill
  * use it. */

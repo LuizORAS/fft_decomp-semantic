@@ -1,4 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Steal Gil and Negotiate: take Speed * Level gil, at most the war funds when the target is on the
@@ -16,7 +19,7 @@ void battle_formula_calculate_stolen_gil(void) {
     attacker = g_battle_action_attacker;
     amount = attacker->attributes[UNIT_ATTRIBUTE_SPEED] * attacker->level;
     if (!(g_battle_action_target->team_flags & BATTLE_TEAM_MASK)) {
-        available = battle_script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
+        available = script_get_variable(EVENT_SCRIPT_VAR_WAR_FUNDS);
         if (available < amount) {
             amount = available;
         }

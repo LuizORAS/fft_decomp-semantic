@@ -14,17 +14,17 @@ s32 main_sound_update_tunes(void) {
         suzuki_music_t** tune_handles;
         suzuki_music_t** handle;
 
-        if (SuzukiGetMusicPlaying(g_main_sound_music.state.current_music) != 0) {
+        if (suzuki_smd_is_music_playing(g_main_sound_music.state.current_music) != 0) {
             return 0;
         }
         tune_index = g_main_sound_music.slots.tune & MAIN_SOUND_TUNE_ID_MASK;
         g_main_sound_music.slots.tune &= 0x7f;
-        tune_handles = &g_main_sound_music.slots.handles.music[2];
+        tune_handles = &g_main_sound_music.slots.music[1];
         handle = &tune_handles[tune_index];
         if (*handle == 0) {
-            *handle = SuzukiPutPlaySMD(g_main_sound_music.slots.smd[2 + tune_index]);
+            *handle = suzuki_smd_create_music(g_main_sound_music.slots.smd[1 + tune_index]);
         }
-        main_smd_reset_music(*handle, 0x7f, 0);
+        suzuki_smd_reset_music(*handle, 0x7f, 0);
         return 1;
     }
     if (tune != 0) {
@@ -32,14 +32,14 @@ s32 main_sound_update_tunes(void) {
         suzuki_music_t** handle;
 
         tune_index = tune & MAIN_SOUND_TUNE_ID_MASK;
-        tune_handles = &g_main_sound_music.slots.handles.music[2];
+        tune_handles = &g_main_sound_music.slots.music[1];
         handle = &tune_handles[tune_index];
-        if (SuzukiGetMusicPlaying(*handle) != 0) {
+        if (suzuki_smd_is_music_playing(*handle) != 0) {
             return 0;
         }
-        SuzukiDeallocateMUSChannels(*handle);
+        suzuki_smd_stop_music(*handle);
         if (*handle != 0) {
-            SuzukiUnloadMUS(*handle);
+            suzuki_smd_unload_music(*handle);
         }
         *handle = 0;
         g_main_sound_music.slots.tune = 0;

@@ -1,23 +1,24 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
-/* The word at movement_path_count holds the count in its low byte and the first path step
+#include "fft/battle.h"
+/* The 32-bit value at path holds the count in its low byte and the first path step
  * (battle_move_step_bits_e) in the next. */
 #define FIRST_STEP_BITS(bits) ((bits) << 8)
 
 /* Set up a knocked-back unit's move: a one-step path toward movement.destination (its layer in
  * BATTLE_MOVE_STEP_HIGH_LEVEL, the direction from battle_move_get_direction, no climb), the unit's
- * effective movement flags, and walk_speed 0x8000 (8.0), which battle_move_update_knockback_step
- * slows every frame. The first step is edited through the word that starts at movement_path_count,
- * as the original does. */
-void battle_move_init_knockback(battle_unit_misc_data_t* unit) {
-    u32* path_word = (u32*)&unit->movement_path_count;
+ * effective movement flags, and walk_speed 0x8000 (8.0), which battle_move_update_knockback_step slows
+ * every frame. The first step is edited through the 32-bit value that starts at path (the count byte, then
+ * the first step in bits 8-15), as the original does. */
+void battle_move_init_knockback(battle_unit_t* unit) {
+    u32* path_word = (u32*)&unit->path;
     u32 state;
     u32 knockback_state;
     s32 direction;
 
     unit->movement_path_offset = 0;
-    unit->movement_path_count = 1;
-    unit->movement_flags = battle_move_get_effective_flags(unit->battle_data);
+    unit->path.count = 1;
+    unit->path.flags = battle_move_get_effective_flags(unit->stats);
 
     state = *path_word;
     state &= ~FIRST_STEP_BITS(BATTLE_MOVE_STEP_DISTANCE_MASK);
@@ -28,7 +29,7 @@ void battle_move_init_knockback(battle_unit_misc_data_t* unit) {
 
     knockback_state = state & ~FIRST_STEP_BITS(BATTLE_MOVE_STEP_HIGH_LEVEL);
     /* The destination layer into BATTLE_MOVE_STEP_HIGH_LEVEL (bit 5 of the step). */
-    knockback_state |= (unit->movement.bytes.destination_z & 1) << 13;
+    knockback_state |= (unit->movement.destination_z & 1) << 13;
     *path_word = knockback_state;
     direction = battle_move_get_direction(unit);
 
@@ -49,5 +50,5 @@ void battle_move_init_knockback(battle_unit_misc_data_t* unit) {
         break;
     }
 
-    unit->walk_speed.word = 0x8000;
+    unit->walk_speed = 0x8000;
 }

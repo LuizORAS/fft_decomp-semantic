@@ -51,7 +51,7 @@ it provokes and the rewards.
 
 ## Data and structures
 
-- **The command.** A [[battle_ai_command_action_t]] at `battle_stats_t`
+- **The command.** A [[action_command_t]] at `battle_stats_t`
   `+0x16e` (`action_actor_id`): unit, skillset, ability, item, target kind and
   target. [[g_battle_action_saved_command]] keeps a copy while a reaction or a
   preview borrows the record.
@@ -59,16 +59,16 @@ it provokes and the rewards.
   `+0x18c`: hit and miss type, HP and MP damage and healing, gil, the reaction
   id, the special effect ([[battle_action_special_effect_e]]), stat changes
   (bit `0x80` up, the low bits the amount), status inflictions and removals,
-  the attack type ([[battle_action_type_e]]), EXP and JP changes and the
+  the attack type ([[battle_action_type_flags_e]]), EXP and JP changes and the
   accuracy shown. [[g_battle_action_target_data]] and
   [[g_battle_action_attacker_data]] point at the target's and at the actor's
   own ([[g_battle_action_attacker_action_data]]).
 - **The strike.** [[g_battle_action_current_ability]] ([[battle_current_ability_t]]): the
   attacker and target, the strike count and counter, the two weapons, a
   pending weapon spell (`weapon_spell_pending`) or knockback
-  ([[battle_knockback_flags_e]]), the formula's inputs and copies of the
+  ([[battle_knockback_kind_e]]), the formula's inputs and copies of the
   ability, weapon and status-infliction data. The strike work
-  ([[battle_strike_work_t]], in the casting unit's misc record at `+0x18c`)
+  ([[battle_strike_work_t]], in the casting unit's runtime record at `+0x18c`)
   carries the targets and `continue_attack` to the display.
 - **Context.** [[g_battle_action_state]] (executing, AI simulation or
   preview), [[g_battle_action_context]] (the primary action, or a reaction or
@@ -184,7 +184,7 @@ reacts.
 - [[battle_action_init_current_ability_strike_data]] and
   [[battle_action_run_pre_formula_setup]] read range data past the ability
   table for item ids (`QUIRKS.md`).
-- `battle_unit_misc_data_t` repeats [[battle_strike_work_t]] field by field
+- `battle_unit_t` repeats [[battle_strike_work_t]] field by field
   (`QUIRKS.md`, Declaration leads).
 - [[battle_reaction_try_distribute]] passes an ignored second argument
   (`QUIRKS.md`).

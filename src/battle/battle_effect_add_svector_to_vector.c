@@ -1,8 +1,8 @@
-#include "psx/types.h"
+#include "fft/battle_effect.h"
 
-/* Add three halfwords to three words into out (battle_effect_spawn_emitter_particles). */
-void battle_effect_add_svector_to_vector(const s16* first, const s32* second, s32* out) {
-    out[0] = first[0] + second[0];
-    out[1] = first[1] + second[1];
-    out[2] = first[2] + second[2];
+/* Add three 16-bit values to three 32-bit values into out (battle_effect_spawn_emitter_particles). */
+void battle_effect_add_svector_to_vector(const SVECTOR* first, const VECTOR* second, VECTOR* out) {
+    out->vx = first->vx + second->vx;
+    out->vy = first->vy + second->vy;
+    out->vz = first->vz + second->vz;
 }

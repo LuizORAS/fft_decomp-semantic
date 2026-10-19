@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/main.h"
 #include "psx/types.h"
 
 /*
@@ -21,7 +23,7 @@ s32 battle_effect_update_file_load(void) {
     if (g_battle_ability_effect_id >= 0) {
         switch (g_battle_effect_load_state) {
         case BATTLE_EFFECT_LOAD_START:
-            if (g_battle_effect_target_id != 0) {
+            if (g_battle_effect_charge_secondary_id != 0) {
                 g_battle_effect_load_countdown = 60;
             } else {
                 g_battle_effect_load_countdown = 0;
@@ -49,19 +51,20 @@ s32 battle_effect_update_file_load(void) {
                 result = 1;
                 break;
             }
-            if (g_battle_effect_target_id != 0) {
-                battle_effect_finalize_secondary(g_battle_effect_target_id);
+            if (g_battle_effect_charge_secondary_id != 0) {
+                battle_effect_finalize_secondary(g_battle_effect_charge_secondary_id);
             }
             g_battle_effect_load_state = BATTLE_EFFECT_LOAD_ENDING_SECONDARY;
             battle_effect_set_flags_section_pointer(g_battle_ability_effect_id);
-            /* An `lw` of the section's leading word, not a byte test. */
+            /* An `lw` of the section's leading 32-bit value, not a byte test. */
             if (g_battle_effect_flags_section->flags & EFFECT_FLAG_QUIET_MUSIC) {
                 main_sound_set_current_music_volume(0x40, 0xF0);
             }
             result = 1;
             break;
         case BATTLE_EFFECT_LOAD_ENDING_SECONDARY:
-            result = battle_effect_get_secondary_phase(g_battle_effect_target_id) != BATTLE_SECONDARY_EFFECT_ENDED;
+            result = battle_effect_get_secondary_phase(g_battle_effect_charge_secondary_id)
+                != BATTLE_EFFECT_SECONDARY_PHASE_ENDED;
             break;
         }
         if (g_battle_effect_load_countdown > 0) {

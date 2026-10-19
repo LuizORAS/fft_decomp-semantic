@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Queue the weapon's spell to follow its hit (formula 0x02's 19% roll): set weapon_spell_pending,
  * put the spell (proc_id) in reaction_id and the target in post_action_target_id, and cancel the

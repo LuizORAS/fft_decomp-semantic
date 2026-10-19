@@ -1,11 +1,13 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 
 /* Return 1 when the considered ability may be used from coords: not water 2 or more deep for a unit
  * with the water penalty; for Elemental, terrain that gives this ability
  * (battle_ai_can_elemental_ability_be_used); for an ability that needs Monster Skill, a same-team
  * holder that can react on or next to the tile, within 2 levels. Range and targets are checked
  * elsewhere. */
-s32 battle_ai_can_use_ability_at_coords(battle_ai_coords_t* coords) {
+s32 battle_ai_can_use_ability_at_coords(const battle_ai_coords_t* coords) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 i;
     s32 dx;
@@ -14,10 +16,9 @@ s32 battle_ai_can_use_ability_at_coords(battle_ai_coords_t* coords) {
     battle_stats_t* unit;
 
     if (g_battle_ai_data_base.water_penalty) {
-        s32 depth = g_battle_map_tile_data[coords->bytes.y * g_battle_ai_data_base.map_max_x + coords->bytes.x
-                        + (coords->bytes.elevation << 8)]
-                        .depth_half_height.value
-            >> MAP_TILE_DEPTH_SHIFT;
+        s32 depth = g_battle_map_tile_data[coords->fields.y * g_battle_ai_data_base.map_max_x + coords->fields.x
+            + (coords->fields.elevation * MAP_TILES_PER_LAYER)]
+                        .depth_half_height.depth;
         if (depth >= 2)
             return 0;
     }
@@ -28,16 +29,16 @@ s32 battle_ai_can_use_ability_at_coords(battle_ai_coords_t* coords) {
             unit = &g_battle_unit_stats[i];
             if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE)
                 continue;
-            if (!(unit->support_abilities[3] & BATTLE_SUPPORT_SET_4_MONSTER_SKILL))
+            if (!(unit->ability_flags.support[3] & BATTLE_SUPPORT_SET_4_MONSTER_SKILL))
                 continue;
             if ((unit->initial_team_flags & BATTLE_TEAM_MASK) != ai->acting_unit_team)
                 continue;
             if (main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PREVENT_REACTION))
                 continue;
-            dx = unit->x - coords->bytes.x;
+            dx = unit->x - coords->fields.x;
             if (dx < 0)
                 dx = -dx;
-            dy = unit->position.bits.y - coords->bytes.y;
+            dy = unit->position.y - coords->fields.y;
             if (dy < 0)
                 dy = -dy;
             if (dx + dy < 2) {

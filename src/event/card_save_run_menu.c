@@ -1,4 +1,9 @@
+#include "fft/battle_gfx.h"
 #include "fft/event_card.h"
+#include "fft/gfx.h"
+#include "fft/main.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -19,7 +24,9 @@
 void card_save_run_menu(s32 unused) {
     TILE tile_storage[20];
     u32 otag_storage[0x80];
-    u8 context_storage[0x1f8];
+    card_graphics_context_t context_storage[2];
+    /* The retail frame reserves 16 bytes beyond the two contexts. */
+    u8 unused_context_tail[0x10];
     s32 leading_alignment;
     s32 input;
     s32 unused_local;
@@ -32,8 +39,8 @@ void card_save_run_menu(s32 unused) {
     g_card_gfx_otag_length = 0x40;
     g_card_gfx_poly_ft4_capacity = 0x258;
     g_card_gfx_tile_capacity = 10;
-    card_gfx_init_contexts((card_graphics_context_t*)context_storage, otag_storage, 0, 0, 0,
-        g_card_gfx_poly_ft4_buffers, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, tile_storage, 0, 0, 0, 0, 0, 0, 0, 0);
+    card_gfx_init_contexts(context_storage, otag_storage, 0, 0, 0, g_card_gfx_poly_ft4_buffers, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, tile_storage, 0, 0, 0, 0, 0, 0, 0, 0);
     card_save_init_menu_graphics();
     music_slot = main_sound_load_music_into_free_slot(MAIN_MUSIC_SAVE);
     while (main_sound_is_music_loading_stub() != 0) { }
@@ -41,18 +48,18 @@ void card_save_run_menu(s32 unused) {
     card_io_consume_all_events();
     g_card_save_menu_work_buffer = save_buffer;
     card_save_init_menu_state();
-    battle_thread_start(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, card_save_run_menu_graphic_thread);
-    battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, 0, 0);
+    thread_start(THREAD_BORROWED_SLOT_CARD_BACKDROP, card_save_run_menu_graphic_thread);
+    thread_set_parameters(THREAD_BORROWED_SLOT_CARD_BACKDROP, 0, 0, 0);
     g_card_save_initial_prompt_timer = 0;
 
     while (card_gfx_update_increasing_fade() != 0) {
         card_gfx_submit_frame_and_swap_buffers(0, 0);
         card_input_update_suppressed_during_fade();
         card_gfx_update_decreasing_fade();
-        card_gfx_enqueue_tile(&g_card_gfx_fullscreen_fade_rect, g_card_gfx_fade_overlay_color, 0, 0);
+        card_gfx_enqueue_tile(&g_card_gfx_fullscreen_fade_rect, &g_card_gfx_fade_overlay_color, 0, 0);
 
         menu_input = g_card_save_menu_state == CARD_SAVE_MENU_SELECT_SAVE
-                && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) == 0
+                && thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) == 0
             ? g_card_input_primary_repeat
             : 0;
         if (g_card_save_menu_state >= CARD_SAVE_MENU_SELECT_SAVE && g_card_save_menu_state <= CARD_SAVE_MENU_WRITING) {
@@ -78,33 +85,31 @@ void card_save_run_menu(s32 unused) {
         }
 
         card_gfx_set_render_otag(g_card_gfx_context->otag + 1);
-        g_battle_gfx_current_otag_entry = g_card_gfx_context->otag + 0x3c;
+        g_gfx_current_otag_entry = g_card_gfx_context->otag + 0x3c;
         battle_menu_draw_active_window_frames();
         input = PadRead(0) & (PSX_PAD_UP | PSX_PAD_RIGHT | PSX_PAD_DOWN | PSX_PAD_LEFT);
         buttons = g_card_input_newly_pressed & 0x0fff;
         input |= buttons;
-        if (battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_TEXT) == 0
-            && battle_thread_is_running(NATIVE_SCREEN_THREAD_SLOT_MENU_CHILD) == 0
-            && battle_thread_is_running(14) == 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_TEXT) == 0 && thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) == 0
+            && thread_is_running(14) == 0) {
             input &= 0xff00;
         }
         card_input_update_event_state(g_card_gfx_context->otag + 0x3c, input, g_card_gfx_drawenv_y == 0 ? 0xf0 : 0);
 
-        if (g_battle_sound_pending_sfx_id == MAIN_SFX_CURSOR_MOVE || g_battle_sound_pending_sfx_id == MAIN_SFX_CANCEL) {
-            g_card_sound_queued_effect_id = g_battle_sound_pending_sfx_id;
+        if (g_sound_pending_sfx_id == MAIN_SFX_CURSOR_MOVE || g_sound_pending_sfx_id == MAIN_SFX_CANCEL) {
+            g_card_sound_queued_effect_id = g_sound_pending_sfx_id;
         }
-        if (g_battle_sound_pending_sfx_id < 0 || g_battle_sound_suppressed != 0) {
-            g_battle_sound_pending_sfx_id = MAIN_SFX_NONE;
+        if (g_sound_pending_sfx_id < 0 || g_sound_suppressed != 0) {
+            g_sound_pending_sfx_id = MAIN_SFX_NONE;
         }
-        input = g_battle_sound_pending_sfx_id != MAIN_SFX_NONE ? g_battle_sound_pending_sfx_id
-                                                               : g_card_sound_queued_effect_id;
+        input = g_sound_pending_sfx_id != MAIN_SFX_NONE ? g_sound_pending_sfx_id : g_card_sound_queued_effect_id;
         if (input != MAIN_SFX_NONE) {
             main_sound_play_sfx(input);
         }
         g_card_sound_queued_effect_id = MAIN_SFX_NONE;
-        g_battle_sound_pending_sfx_id = MAIN_SFX_NONE;
+        g_sound_pending_sfx_id = MAIN_SFX_NONE;
     }
 
-    battle_thread_set_parameters(NATIVE_BORROWED_THREAD_SLOT_CARD_BACKDROP, 0, -1, 0);
+    thread_set_parameters(THREAD_BORROWED_SLOT_CARD_BACKDROP, 0, -1, 0);
     main_sound_unload_scenario_mus(music_slot);
 }

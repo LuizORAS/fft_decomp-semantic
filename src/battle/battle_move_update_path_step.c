@@ -1,4 +1,8 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "fft/sound.h"
 #include "psx/types.h"
 
 /*
@@ -14,7 +18,7 @@
  * path mounts the pending mount. Otherwise the next path byte starts a step: fly and float units
  * (BATTLE_EFFECTIVE_MOVEMENT_FLY, _FLOAT) have their own starters, BATTLE_MOVE_STEP_SOURCE_CLIMB
  * picks the climb speed, and battle_move_set_unit_path_flag marks the last step. */
-void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
+void battle_move_update_path_step(battle_unit_t* unit) {
     u32 offset;
     u8 count;
     u8 flags;
@@ -26,7 +30,7 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
     case BATTLE_MOVE_STEP_PHASE_JUMP_START_EAST:
     case BATTLE_MOVE_STEP_PHASE_JUMP_START_NORTH:
     case BATTLE_MOVE_STEP_PHASE_JUMP_START_WEST:
-        if (unit->animation_wait == 0) {
+        if (unit->animation.wait == 0) {
             unit->step_phase++;
             battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_FALL, unit->facing, unit);
             battle_sound_play_movement_sfx(unit, MAIN_SFX_JUMP);
@@ -109,14 +113,14 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
         break;
     }
     if (unit->step_phase == BATTLE_MOVE_STEP_PHASE_NONE) {
-        count = unit->movement_path_count;
+        count = unit->path.count;
         if (count == BATTLE_MOVE_PATH_TELEPORT) {
             battle_unit_dismount_rider_and_update_display(unit);
             battle_move_start_teleport_step(unit);
         } else if (count == BATTLE_MOVE_PATH_TELEPORT_FAILED) {
             battle_unit_dismount_rider_and_update_display(unit);
             battle_move_start_teleport_step(unit);
-            unit->pending_mount = 0;
+            unit->path.pending_mount = 0;
             battle_ai_init_selected_action();
         } else if (count == 0) {
             battle_unit_mount_onto_pending_mount(unit);
@@ -126,15 +130,15 @@ void battle_move_update_path_step(battle_unit_misc_data_t* unit) {
             }
             offset = unit->movement_path_offset;
             unit->movement_path_offset = offset + 1;
-            unit->current_path_step = g_battle_move_step_value = unit->movement_path[offset];
+            unit->current_path_step = g_battle_move_step_value = unit->path.data.steps[offset];
             battle_move_set_unit_step_slope_scales(unit);
-            flags = unit->movement_flags;
+            flags = unit->path.flags;
             if (flags & BATTLE_EFFECTIVE_MOVEMENT_FLY) {
-                battle_move_start_fly_step(unit, (s32)g_battle_move_current_tile, (s32)g_battle_move_destination_tile);
+                battle_move_start_fly_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
             } else if (flags & BATTLE_EFFECTIVE_MOVEMENT_FLOAT) {
                 battle_move_start_float_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);
             } else {
-                switch (g_battle_move_step_value.bits.slow) {
+                switch (g_battle_move_step_value.slow) {
                 case 0:
                     unit->step_speed = 0x2000;
                     battle_move_start_unit_step(unit, g_battle_move_current_tile, g_battle_move_destination_tile);

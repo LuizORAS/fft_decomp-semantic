@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/types.h"
 
 /* Bring the status banner back after an egg: an egg hides it, and a unit staged while it is hidden
  * sets g_world_formation_unit_slide_pending (world_formation_stage_selected_unit). Count nine frames

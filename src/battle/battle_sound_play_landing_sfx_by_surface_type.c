@@ -1,4 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "fft/sound.h"
 #include "psx/types.h"
 
 /* Play the landing sound for the surface of the tile a unit's step ends on:
@@ -6,18 +9,18 @@
  * water and marsh surfaces, MAIN_SFX_LAND_WOOD for wooden floor, tree and box,
  * and MAIN_SFX_LAND_DEFAULT otherwise. Nothing plays for a unit whose motion
  * flags suppress landing effects, or when the destination tile does not exist. */
-void battle_sound_play_landing_sfx_by_surface_type(battle_unit_misc_data_t* unit) {
+void battle_sound_play_landing_sfx_by_surface_type(battle_unit_t* unit) {
     map_tile_t* tile;
     s32 surface;
     s32 sfx;
 
-    if (unit->movement.word & BATTLE_MOTION_FLAG_SUPPRESS_SFX_AND_LANDING_EFFECTS)
+    if (unit->movement.suppress_sfx_and_landing_effects)
         return;
     tile = battle_map_get_tile_data_pointer(
-        unit->movement.bytes.destination_x, unit->movement.bytes.destination_y, unit->movement.bytes.destination_z);
+        unit->movement.destination_x, unit->movement.destination_y, unit->movement.destination_z);
     if (tile == 0)
         return;
-    surface = tile->surface.value & MAP_SURFACE_MASK;
+    surface = tile->surface.type;
     switch (surface) {
     case MAP_SURFACE_GRASSLAND:
     case MAP_SURFACE_THICKET:

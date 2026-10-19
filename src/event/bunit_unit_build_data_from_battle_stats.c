@@ -1,4 +1,6 @@
 #include "fft/event_bunit.h"
+#include "fft/main.h"
+#include "fft/unit.h"
 #include "psx/libc.h"
 #include "psx/types.h"
 
@@ -11,7 +13,7 @@
  * slot so loop.c strength-reduces it into the record pointer; with an explicit
  * pointer walk the smaller loop lets loop.c hoist the constant 3 into $s6. The
  * caller also passes its shown-list slot, which is not read. */
-void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_data_t* record, s32 unused_slot) {
+void bunit_unit_build_data_from_battle_stats(const battle_stats_t* unit, bunit_unit_t* record, s32 unused_slot) {
     s16* abilities;
     s32 count;
     s32 i;
@@ -21,8 +23,8 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
     u32 evade;
     u32 other;
 
-    memset(record, 0, sizeof(bunit_unit_data_t));
-    record->level = unit->level < 100 ? unit->level : 99;
+    memset(record, 0, sizeof(bunit_unit_t));
+    record->level = unit->level <= UNIT_LEVEL_MAX ? unit->level : UNIT_LEVEL_MAX;
     if (unit->initial_team_flags & BATTLE_TEAM_MASK) {
         record->team_kind = 1;
     }
@@ -38,27 +40,27 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
         list_index = i + 1;
     }
     record->list_index = list_index;
-    record->experience = unit->experience < 100 ? unit->experience : 99;
+    record->experience = unit->experience < UNIT_LEVEL_UP_EXPERIENCE ? unit->experience : UNIT_LEVEL_EXPERIENCE_MAX;
     record->entd_slot = unit->entd_slot;
-    record->current_hp = unit->hp < 1000 ? unit->hp : 999;
-    record->max_hp = unit->max_hp < 1000 ? unit->max_hp : 999;
-    record->current_mp = unit->mp < 1000 ? unit->mp : 999;
-    record->max_mp = unit->max_mp < 1000 ? unit->max_mp : 999;
-    value = 100;
+    record->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].value = unit->hp <= MAX_HP_MP_CAP ? unit->hp : MAX_HP_MP_CAP;
+    record->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_HP].max = unit->max_hp <= MAX_HP_MP_CAP ? unit->max_hp : MAX_HP_MP_CAP;
+    record->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].value = unit->mp <= MAX_HP_MP_CAP ? unit->mp : MAX_HP_MP_CAP;
+    record->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_MP].max = unit->max_mp <= MAX_HP_MP_CAP ? unit->max_mp : MAX_HP_MP_CAP;
+    value = UNIT_TURN_CT_THRESHOLD;
     if (unit->has_turn != 1) {
         value = unit->ct;
     }
-    record->current_ct = value;
-    if (value >= 101) {
-        record->current_ct = 100;
+    record->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_CT].value = value;
+    if (value > UNIT_TURN_CT_THRESHOLD) {
+        record->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_CT].value = UNIT_TURN_CT_THRESHOLD;
     }
-    record->max_ct = 100;
+    record->gauges[BATTLE_MENU_UNIT_STATUS_GAUGE_CT].max = UNIT_TURN_CT_THRESHOLD;
     record->formation_index = unit->formation_index;
     record->name_index = unit->entd_slot;
     record->job_id = unit->job_id;
     record->brave = unit->brave;
     record->faith = unit->faith;
-    record->zodiac = *(u16*)&unit->birthday >> 12;
+    record->zodiac = unit->birthday.zodiac;
     record->battle_id = unit->entd_slot;
     record->move = unit->move;
     record->speed = unit->attributes[UNIT_ATTRIBUTE_SPEED];
@@ -121,37 +123,36 @@ void bunit_unit_build_data_from_battle_stats(battle_stats_t* unit, bunit_unit_da
         }
         record->abilities[0] = unit->primary_skillset;
         record->abilities[1] = unit->secondary_skillset;
-        record->abilities[2] = unit->reaction_ability;
-        record->abilities[3] = unit->support_ability;
-        record->abilities[4] = unit->movement_ability;
+        record->abilities[2] = unit->abilities.reaction;
+        record->abilities[3] = unit->abilities.support;
+        record->abilities[4] = unit->abilities.movement;
     }
 
-    record->misc_unit_id = battle_unit_get_misc_id_by_battle_id(unit->entd_slot);
+    record->runtime_id = battle_unit_get_runtime_id_by_battle_id(unit->entd_slot);
     record->initial_team_flags = unit->initial_team_flags;
     record->mount_info = unit->mount_info;
-    record->two_handed = bunit_unit_is_two_handing_weapon(
-        record->equipment, unit->support_abilities[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS);
+    record->two_handed = unit_is_two_handing_weapon(
+        record->equipment, unit->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS);
     record->gender_flags = unit->unit_flags;
     record->character_identity = unit->character_identity;
-    if (bunit_job_is_special_monster(unit->job_id) != 0 || record->uses_monster_skillset != 0
-        || record->team_kind == 1) {
-        bcopy(unit->unlocked_jobs, record->unlocked_jobs, sizeof(record->unlocked_jobs));
+    if (job_is_special_monster(unit->job_id) != 0 || record->uses_monster_skillset != 0 || record->team_kind == 1) {
+        bcopy(unit->career.unlocked_jobs, record->unlocked_jobs, sizeof(record->unlocked_jobs));
     } else {
-        i = main_job_calculate_unlocked(unit->job_levels, unit->unit_flags & UNIT_FLAG_MALE);
+        i = main_job_calculate_unlocked(unit->career.job_levels, unit->unit_flags & UNIT_FLAG_MALE);
         record->unlocked_jobs[0] = i >> 16;
         record->unlocked_jobs[1] = i >> 8;
         record->unlocked_jobs[2] = i;
     }
-    bcopy(unit->learned_abilities, record->learned_abilities, sizeof(record->learned_abilities));
-    bcopy(unit->job_levels, record->job_levels, sizeof(record->job_levels));
-    bcopy(unit->job_points, record->job_points, sizeof(record->job_points));
-    bcopy(unit->total_job_points, record->total_job_points, sizeof(record->total_job_points));
+    bcopy(unit->career.learned_abilities, record->learned_abilities, sizeof(record->learned_abilities));
+    bcopy(unit->career.job_levels, record->job_levels, sizeof(record->job_levels));
+    bcopy(&unit->career.job_points.current, &record->job_points.current, sizeof(record->job_points.current));
+    bcopy(&unit->career.job_points.total, &record->job_points.total, sizeof(record->job_points.total));
     for (i = 0; i < 20; i++) {
-        if (record->job_points[i] >= 10000) {
-            record->job_points[i] = 9999;
+        if (record->job_points.current.values[i] > UNIT_JOB_POINT_MAX) {
+            record->job_points.current.values[i] = UNIT_JOB_POINT_MAX;
         }
-        if (record->total_job_points[i] >= 10000) {
-            record->total_job_points[i] = 9999;
+        if (record->job_points.total.values[i] > UNIT_JOB_POINT_MAX) {
+            record->job_points.total.values[i] = UNIT_JOB_POINT_MAX;
         }
     }
 }

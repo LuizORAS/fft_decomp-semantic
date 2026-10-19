@@ -20,25 +20,24 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
     s32 keep_base_attributes;
     s32 divisor;
     s32 is_low;
-    u8* mult;
-    u8* raw;
+    job_stat_growth_t* mult;
+    unit_raw_stat_bytes_t* raw;
 
     cap = 100;
-    max = 999;
+    max = MAX_HP_MP_CAP;
     keep_base_attributes = mode & 1;
     if (unit->unit_flags & UNIT_FLAG_EGG) {
         cap = 10;
         max = 0xffff;
     }
-    mult = unit->growths_multipliers;
+    mult = unit->stat_growths;
     level = unit->level;
     raw = unit->raw_stats;
 
     for (i = 0; i < UNIT_RAW_STAT_COUNT; i++) {
-        value = raw[i * UNIT_RAW_STAT_SERIALIZED_BYTES] + (raw[i * UNIT_RAW_STAT_SERIALIZED_BYTES + 1] << 8)
-            + (raw[i * UNIT_RAW_STAT_SERIALIZED_BYTES + 2] << 16);
+        value = raw[i].low + (raw[i].middle << 8) + (raw[i].high << 16);
         if (mode == 0 && unit->formation_index == BATTLE_FORMATION_INDEX_GENERATED_UNIT) {
-            divisor = mult[i * 2];
+            divisor = mult[i].growth;
             divisor = divisor ? divisor : 1;
             for (j = 2; j <= level; j++) {
                 value += value / (divisor + j - 1);
@@ -48,11 +47,11 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
         if (value > 0xffffff) {
             value = 0xffffff;
         }
-        raw[i * UNIT_RAW_STAT_SERIALIZED_BYTES + 1] = value >> 8;
+        raw[i].middle = value >> 8;
         is_low = i < UNIT_RAW_STAT_SPEED;
-        raw[i * UNIT_RAW_STAT_SERIALIZED_BYTES] = value;
-        raw[i * UNIT_RAW_STAT_SERIALIZED_BYTES + 2] = value >> 16;
-        multiplier = mult[i * 2 + 1];
+        raw[i].low = value;
+        raw[i].high = value >> 16;
+        multiplier = mult[i].multiplier;
         if (is_low) {
             divisor = cap;
         }
@@ -65,11 +64,11 @@ void main_unit_calculate_actual_stats(battle_stats_t* unit, s32 mode) {
                 value = max;
             }
         }
-        if (i == UNIT_RAW_STAT_SPEED && value >= 0x33) {
-            value = 0x32;
+        if (i == UNIT_RAW_STAT_SPEED && value > UNIT_SPEED_MAX) {
+            value = UNIT_SPEED_MAX;
         }
-        if (i >= UNIT_RAW_STAT_PHYSICAL_ATTACK && value >= 0x64) {
-            value = 0x63;
+        if (i >= UNIT_RAW_STAT_PHYSICAL_ATTACK && value > UNIT_ATTACK_STAT_MAX) {
+            value = UNIT_ATTACK_STAT_MAX;
         }
         switch (i) {
         case UNIT_RAW_STAT_HP:

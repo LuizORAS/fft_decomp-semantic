@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x62, Look of Fright: formula 0x61 without Faith in the hit chance. */
 void battle_formula_lower_brave_y_without_faith(void) {

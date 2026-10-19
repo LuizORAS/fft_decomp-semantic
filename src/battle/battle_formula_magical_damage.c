@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x08, most attack magic (41 abilities: Fire, Bolt and Ice and their levels, Holy, Flare,
  * Meteor, Bio, Melt, Tornado, Quake, Ultima, the summons Shiva to Zodiac): the magical evade check,

@@ -3,13 +3,6 @@
 #define OPEN_IMAGE_COPY_WIDTH  210
 #define OPEN_IMAGE_COPY_HEIGHT 180
 
-/* View of the frame image at g_open_file_destination, 256 pixels per row:
- * the 210x180 picture starts at byte 0x5600, the first pixel of row 43. */
-typedef struct open_gfx_image_file {
-    u8 _unused_0000[0x5600];
-    u16 pixels[1];
-} open_gfx_image_file_t;
-
 /* Prepare the crossfade of the new-game prologue's picture to OPNBK image
  * file_index + 2.
  *
@@ -32,12 +25,13 @@ void open_prologue_prepare_crossfade(s32 file_index) {
     s32 source_index;
     u16* pixels;
     u16 value;
-    open_gfx_image_file_t* file_image;
+    u16(*file_image)[256];
 
     copy_source = (u16*)g_open_work_buffer_0;
     copy_destination = (u16*)g_open_work_buffer_1;
     file_image = g_open_file_destination;
-    file_pixels = file_image->pixels;
+    /* The 210x180 picture begins at row 43 of the 256-pixel frame image. */
+    file_pixels = file_image[43];
     g_open_prologue_crossfade_source = copy_source;
     g_open_prologue_crossfade_destination = copy_destination;
     g_open_prologue_crossfade_file_pixels = file_pixels;
@@ -45,24 +39,21 @@ void open_prologue_prepare_crossfade(s32 file_index) {
 
     row = 0;
     source_row = 0;
-    do {
+    for (; row < OPEN_IMAGE_COPY_HEIGHT; row++) {
         column = 0;
         source_offset = row << 8;
-        do {
+        while (column < OPEN_IMAGE_COPY_WIDTH) {
             destination_index = source_row + column;
-            source_index = source_offset + column;
-            column++;
+            source_index = source_offset + column++;
             destination_index <<= 1;
             pixels = g_open_prologue_crossfade_file_pixels;
-            source_index <<= 1;
-            /* index + (u32)pointer: the retail addu sums index first. */
-            value = *(u16*)(source_index + (u32)pixels);
+            value = pixels[source_index];
+            /* Destination indexing hoists pointer loads; byte-pointer arithmetic changes registers. */
             *(u16*)(destination_index + (u32)g_open_prologue_crossfade_destination) = value;
-        } while (column < OPEN_IMAGE_COPY_WIDTH);
+        }
         g_open_prologue_crossfade_row_flags[row + 2] = 0;
-        row++;
         source_row += OPEN_IMAGE_COPY_WIDTH;
-    } while (row < OPEN_IMAGE_COPY_HEIGHT);
+    }
 
     g_open_prologue_crossfade_row_flags[0] = 0;
     g_open_prologue_crossfade_row_flags[1] = 0;

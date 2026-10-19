@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
 /* Allocate `bytes` from the menu buffer arena (battle_menu_alloc_memory); battle_menu_free_memory

@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Render signed gauge values with their positive, negative, or zero color. */
@@ -23,7 +24,7 @@ void bunit_text_render_signed_decimal_entries(
             out->color = 0;
             entries->format |= MENU_DECIMAL_SIGN_MINUS;
         }
-        bunit_text_render_decimal_value(amount, entries->format, pixels, out);
+        menu_text_render_decimal_value(amount, entries->format, pixels, out);
         out->color = 0;
     }
 }

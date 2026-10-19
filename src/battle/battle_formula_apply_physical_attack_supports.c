@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* The weapon-strike supports on XA: Two Hands doubles it (a weapon that allows two hands without
  * forcing them, with Two Hands active), Attack Up multiplies it by 4 / 3, and Martial Arts by 3 / 2
@@ -12,12 +13,12 @@ void battle_formula_apply_physical_attack_supports(void) {
         g_battle_action_current_ability.xa = g_battle_action_current_ability.xa * 2;
     }
 
-    if (g_battle_action_attacker->support_abilities[1] & BATTLE_SUPPORT_SET_2_ATTACK_UP) {
+    if (g_battle_action_attacker->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_ATTACK_UP) {
         g_battle_action_current_ability.xa = g_battle_action_current_ability.xa * 4 / 3;
     }
 
     if (g_battle_action_current_ability.weapon_id == ITEM_ID_NOTHING
-        && (g_battle_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_MARTIAL_ARTS)) {
+        && (g_battle_action_attacker->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_MARTIAL_ARTS)) {
         g_battle_action_current_ability.xa = g_battle_action_current_ability.xa * 3 / 2;
     }
 }

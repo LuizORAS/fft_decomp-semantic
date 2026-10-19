@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Queue the post-action effect messages of one unit that was hit, one 8-byte record (message code,
@@ -10,22 +10,22 @@
  *
  * The 11-way dispatch really is a jump table in the target (at 0x80067548),
  * which is why the .ld places a .rodata output section there. */
-void battle_action_queue_unit_effect_messages(battle_unit_misc_data_t* misc) {
+void battle_action_queue_unit_effect_messages(battle_unit_t* runtime) {
     battle_action_data_t* action;
     s32 i;
     s32 queued;
     s32 off;
 
-    if (misc == 0) {
+    if (runtime == 0) {
         return;
     }
-    if (misc->battle_data == 0) {
+    if (runtime->stats == 0) {
         return;
     }
     if (g_battle_action_post_effect_msg_counter >= 0x10) {
         return;
     }
-    action = &misc->battle_data->action;
+    action = &runtime->stats->action;
     if (action->hit == 0) {
         return;
     }
@@ -120,8 +120,7 @@ void battle_action_queue_unit_effect_messages(battle_unit_misc_data_t* misc) {
             break;
         }
         if (queued != 0) {
-            g_battle_action_post_effect_msgs[g_battle_action_post_effect_msg_counter].unit
-                = misc->battle_data->misc_unit_id;
+            g_battle_action_post_effect_msgs[g_battle_action_post_effect_msg_counter].unit = runtime->stats->battle_id;
             g_battle_action_post_effect_msg_counter += 1;
         }
     }

@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "psx/types.h"
 
 /* TARGET_DISPLAY_START: once the message has been answered and the camera has stopped, enter
@@ -8,7 +9,7 @@ void battle_state_handle_target_display_start_state(void) {
 
     battle_state_update_units();
     battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
-    command = *battle_menu_get_selected_command_address();
+    command = battle_menu_get_selected_command_address()->kind;
     if ((command >= 7) && ((command < 9) || (command == 0xFF))) {
         g_battle_action_post_action = 1;
     }

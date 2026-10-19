@@ -4,7 +4,7 @@
 /* Per-frame step of an unexplored land's detail (level UNEXPLORED_LAND_DETAIL).
  *
  * Phase 1 waits for the render record at saved_record_index to leave its 0x100
- * state, although the push never sets that word (QUIRKS.md).
+ * state, although the push never sets that field (QUIRKS.md).
  * Phase 2, once file loading finishes, uploads the land picture's TIM pixels
  * and CLUT, binds the level's render record to the VRAM image at (-116, -34)
  * and makes it the scrollable text window's extra render record (position and
@@ -15,12 +15,12 @@
  *
  * The TIM widths are read unsigned (`lhu`), as Psy-Q's GsIMAGE declares
  * pw/ph. The text window's base and image rectangle are each copied as one
- * aggregate: the target loads both words before either store. */
+ * aggregate: the target loads both 32-bit values before either store. */
 void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_detail_level_t* level) {
     GsIMAGE image;
-    wldcore_window_render_bounds16_t bounds;
-    wldcore_point32_t clut_position;
-    wldcore_point32_t* base;
+    RECT bounds;
+    open_point32_t clut_position;
+    open_point32_t* base;
     s32* index;
     s32 render;
     s32 depth;
@@ -39,10 +39,10 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_detail_level_t*
         LoadTPage(image.pixel, 0, 0, image.px, image.py, image.pw * 4, image.ph);
         LoadClut(image.clut, image.cx, image.cy);
         render = level->render_index;
-        bounds.position.x = image.px;
-        bounds.position.y = image.py;
-        bounds.dimensions.x = image.pw;
-        bounds.dimensions.y = image.ph;
+        bounds.x = image.px;
+        bounds.y = image.py;
+        bounds.w = image.pw;
+        bounds.h = image.ph;
         clut_position.x = image.cx;
         clut_position.y = image.cy;
         wldcore_window_init_vram_render_record(render, bounds, clut_position, WLDCORE_DISPLAY_OBJECT_8BIT_CLUT);
@@ -68,7 +68,7 @@ void wldcore_menu_step_unexplored_land_detail_level(wldcore_menu_detail_level_t*
         if (g_wldcore_window_render_records[*index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
             break;
         }
-        if (wldcore_text_is_window_finished((wldcore_text_scrollable_window_t*)((u8*)index - 0x44)) != 0) {
+        if (wldcore_text_is_window_finished(&g_wldcore_scrollable_text_window) != 0) {
             break;
         }
         depth = g_wldcore_menu_stack_depth;

@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_target.h"
 
 /* Per-frame unit update most states run: rotation and animation (not while the status screen
  * is up), status bubbles and the map cursor (battle_target_update_cursor). */

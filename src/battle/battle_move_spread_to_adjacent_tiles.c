@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Spread the range from the current tile through battle_move_propagate_destination: sources 0-3
  * leave its four sides from the ground, 4-7 from on top of a unit standing there, and 8 and up

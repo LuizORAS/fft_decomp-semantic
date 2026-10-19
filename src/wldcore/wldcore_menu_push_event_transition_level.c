@@ -24,7 +24,7 @@ void wldcore_menu_push_event_transition_level(s32 mode) {
             | MAIN_SYSTEM_FLAG_HIDE_MAP_ROUTES | MAIN_SYSTEM_FLAG_NO_BACKGROUND_IMAGE
             | MAIN_SYSTEM_FLAG_HIDE_CONTEXT_VALUE | MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE
             | MAIN_SYSTEM_FLAG_HIDE_LOCATION_LABEL;
-        g_wldcore_map_projection_state.marker.flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+        g_wldcore_map_projection_state.marker.render.flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         MoveImage(&rect, 0x200, 0x100);
         DrawSync(0);
         rect.x = 0x100;

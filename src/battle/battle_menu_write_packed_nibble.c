@@ -1,3 +1,4 @@
+#include "fft/battle_text.h"
 #include "psx/types.h"
 
 /* Write the 4-bit pixel at (`index`, `row`) of an image `stride` pixels wide, keeping the other

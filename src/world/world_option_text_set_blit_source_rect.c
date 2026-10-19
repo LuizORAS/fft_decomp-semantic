@@ -2,7 +2,8 @@
 #include "psx/types.h"
 
 /* WORLD's copy of option_text_set_blit_source_rect: set the source rectangle of the frame-piece blit
- * (g_world_gfx_image_blit_source). */
+ * (g_world_gfx_image_blit_source). world_gfx_set_blit_source_rect, a second copy of this text, sets the
+ * glyph blit's (g_world_text_glyph_source), for the menu-screen window frame threads. */
 void world_option_text_set_blit_source_rect(s16 x, s16 y, s16 width, s16 height) {
     g_world_gfx_image_blit_source.rect.x = x;
     g_world_gfx_image_blit_source.rect.y = y;

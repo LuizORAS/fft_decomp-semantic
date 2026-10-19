@@ -25,7 +25,7 @@ All of it is WORLD code and a few WORLD and MAIN tables. The
 | Hand pairing | [[world_formation_can_equip_item_in_slot]]; the weapon flags it reads are item data (Two Swords compatible, two-handed only) |
 | What a job change drops | [[world_formation_remove_invalid_unit_loadout]] (the innate supports Chemist/Throw Item, Monk/Martial Arts, Mediator/Monster Talk and Ninja/Two Swords are literals there) |
 | When the best fit is re-equipped | [[world_formation_change_unit_job]] (job wheel), [[world_formation_set_unit_ability_slot]] with [[world_ability_is_equip_support_change]] (supports), both gated by the Max Equip at Job Change option |
-| The roster order | [[g_world_formation_sort_field_indices]] (WORLD `0x8018d7cc`: the record halfword each key compares), the key list in MAIN ([[g_main_item_type_order_1]], saved with the game), [[world_formation_sort_roster]] (Number ascending, the rest descending, eggs last) |
+| The roster order | [[g_world_formation_sort_field_indices]] (WORLD `0x8018d7cc`: the record 16-bit value each key compares), the key list in MAIN ([[g_main_item_type_order_1]], saved with the game), [[world_formation_sort_roster]] (Number ascending, the rest descending, eggs last) |
 | The cards' readouts | [[world_formation_draw_unit_readout]] and the callbacks [[world_formation_init_selection_cursor]] installs |
 
 ## What changes with it

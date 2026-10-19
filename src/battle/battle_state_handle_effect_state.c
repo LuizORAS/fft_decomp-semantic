@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* EFFECT: animate the units, camera and screen fade (not while the status screen is up) and draw
  * the status bubbles; once no effect runs, return to the saved state and VSync interval. It

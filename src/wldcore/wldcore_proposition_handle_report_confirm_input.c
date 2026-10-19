@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -20,13 +21,13 @@
  * 0xE))` and `base_y - (0 - (0xE + selection * 0x10))` are byte-identical
  * spellings; `base_y - (-0xE - selection * 0x10)` is not (fold collapses it
  * back to a plus tree and the tie returns). */
-void wldcore_proposition_handle_report_confirm_input(wldcore_job_report_confirm_level_t* level) {
+void wldcore_proposition_handle_report_confirm_input(wldcore_proposition_report_confirm_level_t* level) {
     s32 selection;
 
     if (g_wldcore_window_render_records[level->render_index].flags & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
     block_tail:
         g_wldcore_window_record_count -= 2;
@@ -45,14 +46,14 @@ void wldcore_proposition_handle_report_confirm_input(wldcore_job_report_confirm_
         wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
         return;
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         if (level->selection != 0) {
             /* Shared tail: a duplicated release path is cross-jumped into
              * this arm instead of the cancel arm the target keeps. */
             goto block_tail;
         } else {
-            world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+            thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count -= 1;
             g_wldcore_window_render_object_count -= 3;

@@ -1,5 +1,6 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/unit.h"
 
 /* Formula 0x63, the Throw command (battle_action_run_pre_formula_setup selects it): Catch may take
  * the thrown weapon first (battle_formula_apply_catch); then the physical evade check, XA = Speed and

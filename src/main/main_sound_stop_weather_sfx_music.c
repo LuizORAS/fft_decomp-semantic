@@ -4,5 +4,5 @@
  * It leaves the music alone. */
 void main_sound_stop_weather_sfx_music(void) {
     g_main_sound_weather_sfx_id = 0;
-    SuzukiTurnOffAllMusic();
+    suzuki_sound_stop_all_sfx();
 }

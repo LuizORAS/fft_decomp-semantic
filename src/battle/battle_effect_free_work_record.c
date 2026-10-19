@@ -1,9 +1,10 @@
 #include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Unlinks work from state record record_index, releases its data according
  * to the kind in kind_flags, and returns it to the free chain. */
-void battle_effect_free_work_record(s16 record_index, effect_work_record_t* work) {
-    effect_record_t* owner;
+void battle_effect_free_work_record(s16 record_index, battle_effect_work_record_t* work) {
+    battle_effect_record_t* owner;
 
     owner = &g_battle_effect_state_records[record_index];
     if (work->next != 0) {

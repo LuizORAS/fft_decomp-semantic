@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Move the best remaining origin tile into the current action's coords and remove it: the lowest
  * tile_priority, then the lowest tile_foe_proximity; ties go to the last tile scanned. The caller
@@ -9,15 +9,10 @@ void battle_ai_take_best_origin(void) {
     s32 x, y, level;
     s32 key;
     u16 row;
-    u16* movable_rows;
-    u32 mask_level_address;
 
-    for (level = 0; level < 2; level++) {
+    for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
-            /* Typed indexing changes the mask-base instruction order. */
-            mask_level_address = level * (18 * sizeof(u16)) + (u32)ai;
-            movable_rows = (u16*)(mask_level_address + ((u32)&ai->origin_tiles - (u32)ai));
-            row = movable_rows[y];
+            row = ai->origin_tiles[level][y];
             if (row != 0) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((row << x) & 0x8000) {
@@ -27,20 +22,16 @@ void battle_ai_take_best_origin(void) {
                         key += ai->tile_foe_proximity[level][y][x];
                         if (best_key >= key) {
                             best_key = key;
-                            ai->current_action.coords.bytes.x = x;
-                            ai->current_action.coords.bytes.y = y;
-                            ai->current_action.coords.bytes.elevation = level;
+                            ai->current_action.coords.fields.x = x;
+                            ai->current_action.coords.fields.y = y;
+                            ai->current_action.coords.fields.elevation = level;
                         }
                     }
                 }
             }
         }
     }
-    {
-        /* Typed indexing folds the field offset before the selected level. */
-        u32 selected_level_address = ai->current_action.coords.bytes.elevation * (18 * sizeof(u16)) + (u32)ai;
-        movable_rows = (u16*)(selected_level_address + ((u32)&ai->origin_tiles - (u32)ai));
-        movable_rows[ai->current_action.coords.bytes.y] ^= 0x8000 >> ai->current_action.coords.bytes.x;
-    }
+    ai->origin_tiles[ai->current_action.coords.fields.elevation][ai->current_action.coords.fields.y]
+        ^= 0x8000 >> ai->current_action.coords.fields.x;
     ai->origin_tile_count--;
 }

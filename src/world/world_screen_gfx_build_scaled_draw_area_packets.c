@@ -1,3 +1,5 @@
+#include "fft/memory.h"
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -13,20 +15,20 @@
  * instructions early and rotates every temporary.
  */
 void world_screen_gfx_build_scaled_draw_area_packets(
-    world_gfx_scaled_draw_area_pair_t* pair, const RECT* source, s32 step, s32 flag, const RECT* offset) {
+    world_scaled_draw_area_pair_t* pair, const RECT* source, s32 step, s32 flag, const RECT* offset) {
     s32 percent;
     s32 w;
     s32 h;
     s32 crop;
 
-    if (g_world_event_speed == 2) {
+    if (g_script_event_speed == 2) {
         step *= 2;
     }
     if (step >= 12) {
         step = 11;
     }
     percent = g_world_menu_zoom_percentages[step];
-    world_util_copy_bytes(&pair->rects[0], source, 8);
+    mem_copy_bytes_nonempty(&pair->rects[0], source, sizeof(pair->rects[0]));
     w = pair->rects[0].w;
     h = pair->rects[0].h;
     pair->rects[0].x -= 0x80;

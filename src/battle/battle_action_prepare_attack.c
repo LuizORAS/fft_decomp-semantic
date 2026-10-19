@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 #include "psx/types.h"
 
 /* Attack preparation: check a command and turn it into the ability that runs, with its charge
@@ -21,14 +21,14 @@
  * The one-trip loop around `skip = 1` counts that set one loop level deeper,
  * so global-alloc ranks `skip` above `persevere` and gives them s6/s7 as in
  * the target. */
-s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_command_action_t* dest, s32 phase) {
-    battle_ai_command_action_t action;
+s32 battle_action_prepare_attack(action_command_t* source, action_command_t* dest, s32 phase) {
+    action_command_t action;
     battle_stats_t* unit;
     ability_secondary_data_t* entry;
     s16 ability;
     u8* table;
     u8 jump_ct;
-    s32 item;
+    u8 item;
     u8 ct;
     u8 persevere;
     s32 skip;
@@ -37,10 +37,10 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
     u8 support;
 
     main_util_copy_action_data(source, &action);
-    if (action.unit_id >= BATTLE_UNIT_SLOT_COUNT) {
+    if (action.actor_id >= BATTLE_UNIT_SLOT_COUNT) {
         return BATTLE_ATTACK_PREPARATION_INVALID;
     }
-    unit = &g_battle_unit_stats[action.unit_id];
+    unit = &g_battle_unit_stats[action.actor_id];
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return BATTLE_ATTACK_PREPARATION_INVALID;
     }
@@ -53,23 +53,23 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
     }
-    switch (g_main_action_menu_types_by_skillset[action.skillset]) {
+    switch (g_main_action_menu_types_by_skillset[action.skillset_id]) {
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
-        item = action.item_id;
-        if (g_main_item_primary_data[item & 0xff].type != ITEM_TYPE_CONSUMABLE) {
+        item = action.item_or_equipment;
+        if (g_main_item_primary_data[item].type != ITEM_TYPE_CONSUMABLE) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
         main_util_copy_action_data(&action, dest);
         ability = item + (ABILITY_ID_ITEM_FIRST - ITEM_ID_CONSUMABLE_FIRST);
         dest->ability_id = ability;
         if (phase != 0 && (phase & 1)) {
-            battle_action_decrement_player_item_quantity(unit, item & 0xff, 1);
+            battle_action_decrement_player_item_quantity(unit, item, 1);
             unit->action_taken = 1;
         }
         return BATTLE_ATTACK_PREPARATION_IMMEDIATE;
     case ACTION_MENU_TYPE_WEAPON_INVENTORY:
         ability = ABILITY_ID_THROW_FIRST;
-        item = action.item_id;
+        item = action.item_or_equipment;
         table = g_main_throw_ability_item_types - ABILITY_ID_THROW_FIRST;
         for (; ability < ABILITY_ID_JUMP_FIRST; ability++) {
             /* The index+base integer spelling of the biased table is byte-required. */
@@ -109,7 +109,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         action.ability_id = battle_action_get_elemental_ability_id(unit);
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
-        item = action.item_id;
+        item = action.item_or_equipment;
         if (item < ITEM_ID_ASURA_KNIFE || item > ITEM_ID_CHIRIJIRADEN) {
             return BATTLE_ATTACK_PREPARATION_INVALID;
         }
@@ -178,7 +178,7 @@ s32 battle_action_prepare_attack(battle_ai_command_action_t* source, battle_ai_c
         entry = &g_main_ability_range_data[ability];
         ct = entry->ct & 0x7f;
         persevere = entry->flags_3 & ABILITY_SECONDARY_FLAG_3_PERSEVERE;
-        support = unit->support_abilities[3];
+        support = unit->ability_flags.support[3];
         if (!persevere) {
             if (support & BATTLE_SUPPORT_SET_4_SHORT_CHARGE) {
                 ct = (ct + 1) >> 1;

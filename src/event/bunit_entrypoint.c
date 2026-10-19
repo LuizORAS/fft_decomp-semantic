@@ -1,36 +1,15 @@
+#include "fft/battle_gfx.h"
 #include "fft/event_bunit.h"
+#include "fft/gfx.h"
+#include "fft/sound.h"
 #include "psx/libetc.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Plain view of the pool capacities; the packet-pool initializers read them volatile. */
-extern u16 g_bunit_gfx_poly_f3_capacity;
-extern u16 g_bunit_gfx_poly_ft3_capacity;
-extern u16 g_bunit_gfx_poly_f4_capacity;
-extern u16 g_bunit_gfx_poly_ft4_capacity;
-extern u16 g_bunit_gfx_poly_g3_capacity;
-extern u16 g_bunit_gfx_poly_gt3_capacity;
-extern u16 g_bunit_gfx_poly_g4_capacity;
-extern u16 g_bunit_gfx_poly_gt4_capacity;
-extern u16 g_bunit_gfx_line_f2_capacity;
-extern u16 g_bunit_gfx_line_f3_capacity;
-extern u16 g_bunit_gfx_line_f4_capacity;
+/* The double-buffer binder uses a volatile view of these two capacities. */
 extern u16 g_bunit_gfx_line_g2_capacity;
 extern u16 g_bunit_gfx_line_g3_capacity;
-extern u16 g_bunit_gfx_line_g4_capacity;
-extern u16 g_bunit_gfx_tile_capacity;
-extern u16 g_bunit_gfx_tile_1_capacity;
-extern u16 g_bunit_gfx_tile_8_capacity;
-extern u16 g_bunit_gfx_tile_16_capacity;
-extern u16 g_bunit_gfx_sprite_capacity;
-extern u16 g_bunit_gfx_sprite_8_capacity;
-extern u16 g_bunit_gfx_sprite_16_capacity;
-extern u16 g_bunit_gfx_draw_move_capacity;
-extern u16 g_bunit_gfx_draw_area_capacity;
-extern u16 g_bunit_gfx_draw_mode_capacity;
-
-typedef struct bunit_gfx_frame_buffer bunit_gfx_frame_buffer_t;
 
 /* Run the Unit List screen (BUNIT.OUT, the battle mini menu's Unit List row, started by
  * battle_script_run_event_frame for companion overlay state BUNIT): set up the packet pools, load the
@@ -53,7 +32,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
     DR_MODE draw_modes[60];
     DR_AREA draw_areas[60];
     u32 otags[128];
-    bunit_gfx_context_t buffers[2];
+    bunit_menu_gfx_context_t buffers[2];
     u8 previous_mode;
     u8 running;
     s32 sound_id;
@@ -91,7 +70,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
     bunit_menu_init_unit_list(g_bunit_unit_selected_index);
     do {
         bunit_gfx_submit_frame_and_swap_buffers(0, 0);
-        previous_mode = g_battle_menu_input_lock_mode;
+        previous_mode = g_menu_input_lock_mode;
         bunit_menu_update_event_thread_state();
         bunit_input_update_lock_timer();
         bunit_gfx_update_decreasing_fade();
@@ -99,12 +78,12 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
             bunit_text_start_selection_thread(3);
         }
         if (g_bunit_help_screen_id != MENU_GRID_HELP_NONE) {
-            bunit_menu_update_node_cursor(g_bunit_unit_data[g_bunit_unit_selected_index]->uses_monster_skillset);
+            bunit_menu_update_node_cursor(g_bunit_unit_pointers[g_bunit_unit_selected_index]->uses_monster_skillset);
         }
-        if (previous_mode != 0 && g_battle_menu_input_lock_mode == 0) {
+        if (previous_mode != 0 && g_menu_input_lock_mode == 0) {
             battle_text_restore_section_pointers();
         }
-        bunit_menu_set_palette_mode(g_battle_menu_input_lock_mode);
+        bunit_menu_set_palette_mode(g_menu_input_lock_mode);
         if (g_bunit_menu_current_menu == BUNIT_MENU_JOB) {
             bunit_menu_update_job();
             /* The target also passes a1 = 0 to this one-argument callee. */
@@ -117,18 +96,18 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
                 bunit_menu_is_active_or_transitioning());
         }
         bunit_menu_update_unit_browser();
-        g_battle_gfx_current_otag_entry = g_bunit_gfx_context->otag + 0x3d;
+        g_gfx_current_otag_entry = g_menu_gfx_context->otag + 0x3d;
         battle_menu_draw_active_window_frames();
         bunit_input_update_event_state(
-            g_bunit_gfx_context->otag + 9, bunit_input_read_pad1_unless_locked(), g_bunit_gfx_drawenv_y);
-        sound_request = g_battle_sound_pending_sfx_id;
+            g_menu_gfx_context->otag + 9, bunit_input_read_pad1_unless_locked(), g_menu_gfx_drawenv_y);
+        sound_request = g_sound_pending_sfx_id;
         if (sound_request == MAIN_SFX_CURSOR_MOVE || sound_request == MAIN_SFX_CANCEL) {
-            g_bunit_sound_queued_effect_id = g_battle_sound_pending_sfx_id;
+            g_bunit_sound_queued_effect_id = g_sound_pending_sfx_id;
         }
-        if (sound_request < 0 || g_battle_sound_suppressed != 0) {
-            g_battle_sound_pending_sfx_id = MAIN_SFX_NONE;
+        if (sound_request < 0 || g_sound_suppressed != 0) {
+            g_sound_pending_sfx_id = MAIN_SFX_NONE;
         }
-        sound_id = g_battle_sound_pending_sfx_id;
+        sound_id = g_sound_pending_sfx_id;
         if (sound_id == MAIN_SFX_NONE) {
             sound_id = g_bunit_sound_queued_effect_id;
         }
@@ -138,7 +117,7 @@ s32 bunit_entrypoint(s32 unused_unit, void* unused_otag) {
             main_sound_play_sfx(sound_id);
         }
         g_bunit_sound_queued_effect_id = MAIN_SFX_NONE;
-        g_battle_sound_pending_sfx_id = MAIN_SFX_NONE;
+        g_sound_pending_sfx_id = MAIN_SFX_NONE;
     } while (running != 0);
     bunit_panel_toggle_equipment_and_numeric_editor_threads(0);
     bunit_panel_toggle_unit_status_thread(0);

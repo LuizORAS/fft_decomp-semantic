@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x36, Accumulate and Gather Power: raise PA by Y; no hit roll. */
 void battle_formula_add_pa_y(void) {

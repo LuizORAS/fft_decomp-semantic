@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -7,8 +8,8 @@
  * (shown on a gauge for a second), and at the end it remembers the play time, resets the novel's
  * record and returns through a screen transition to the treasure the book was opened from.
  *
- * The unused array reproduces the target's 0x40-byte frame. The 0x140 state-flag test is a
- * word load (`lw`) of the u16 g_wldcore_sound_novel_record.state_flags in the target, so it
+ * The unused array reproduces the target's 0x40-byte frame. The 0x140 state-flag test is a 32-bit load
+ * (`lw`) of the u16 g_wldcore_sound_novel_record.state_flags in the target, so it
  * reads the flags through an s32 cast; the u16 declaration gives `lhu`.
  */
 void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level) {
@@ -32,7 +33,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
             level->countdown--;
             return;
         case WLDCORE_SOUND_NOVEL_PHASE_END:
-            if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
+            if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
                 return;
             }
             g_wldcore_menu_blocked_buttons = 0;
@@ -47,7 +48,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
             g_wldcore_menu_stack_depth--;
             fade->flags[0] = (fade->flags[0] & ~WLDCORE_SCREEN_FADE_BOX_VISIBLE) | WLDCORE_SCREEN_FADE_OUT;
             main_sound_stop_weather_sfx_music();
-            main_sound_remove_vfx_resource(g_wldcore_sound_novel_sound_resource);
+            suzuki_sound_remove_resource(g_wldcore_sound_novel_sound_resource);
             wldcore_sound_novel_reset_selected_record(g_wldcore_sound_novel_index);
             g_wldcore_sound_novel_countdown_frames = 0;
             wldcore_menu_push_screen_transition_level(WLDCORE_MENU_LEVEL_TREASURE_DETAIL, level->message, 0);
@@ -61,13 +62,13 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
     }
 
     if (wldcore_sound_novel_run_until_yield() != 0) {
-        if (g_wldcore_current_button_input & (PSX_PAD_L1 | PSX_PAD_R1)) {
-            if (g_wldcore_current_button_input & PSX_PAD_L1) {
+        if (g_wldcore_input_current_buttons & (PSX_PAD_L1 | PSX_PAD_R1)) {
+            if (g_wldcore_input_current_buttons & PSX_PAD_L1) {
                 if (g_wldcore_sound_novel_record.brightness < 0xFF) {
                     g_wldcore_sound_novel_record.brightness++;
                 }
             }
-            if (g_wldcore_current_button_input & PSX_PAD_R1) {
+            if (g_wldcore_input_current_buttons & PSX_PAD_R1) {
                 brightness = &g_wldcore_sound_novel_record.brightness;
                 if (*brightness != 0) {
                     (*brightness)--;
@@ -84,7 +85,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
             g_wldcore_window_render_records[level->render_index].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             g_wldcore_window_records[level->overlay_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             width = 0x100 - g_wldcore_sound_novel_record.brightness;
-            g_wldcore_window_render_records[level->render_index].bounds.dimensions.x = width / 4;
+            g_wldcore_window_render_records[level->render_index].bounds.w = width / 4;
             level->fade_timer--;
         } else {
             g_wldcore_window_render_records[level->render_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
@@ -92,7 +93,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
         }
 
         if (world_menu_is_message_waiting_for_confirm() != 0) {
-            buttons = g_wldcore_new_button_presses;
+            buttons = g_wldcore_input_new_button_presses;
             if (buttons & PSX_PAD_CIRCLE) {
                 return;
             }
@@ -115,7 +116,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
                 wldcore_menu_push_sound_novel_quit_level();
                 return;
             }
-            if ((g_wldcore_current_button_input & PSX_PAD_SQUARE)
+            if ((g_wldcore_input_current_buttons & PSX_PAD_SQUARE)
                 && (g_wldcore_sound_novel_record.state_flags & WLDCORE_SOUND_NOVEL_STATE_PARENT_WINDOWS_VISIBLE)
                 && g_wldcore_sound_novel_record.text_history_3 != -1) {
                 g_wldcore_window_records[level->right_window].sequence
@@ -135,7 +136,7 @@ void wldcore_menu_step_sound_novel_level(wldcore_menu_sound_novel_level_t* level
                 = 0xA;
         }
     } else {
-        if (world_thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
+        if (thread_is_running(WLDCORE_THREAD_SLOT_MESSAGE) != 0) {
             world_thread_request_stop(WLDCORE_THREAD_SLOT_MESSAGE);
         }
         wldcore_sound_enqueue_audio_command(WLDCORE_AUDIO_COMMAND_FADE_OUT, 0x20);

@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* HP damage of the target's current HP - 1 (0 when it has none), so the hit leaves 1 HP. Gravi 2
  * (formula 0x17) and formula 0x3e use it. */

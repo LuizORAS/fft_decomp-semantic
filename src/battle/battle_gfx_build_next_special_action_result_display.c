@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 
 /* Builds the next EXP/JP or failure-message display.
  *
@@ -6,34 +8,33 @@
  * 0x02000000 and above. Returns 0 when no flag is pending. Reading the
  * flags into a block-local before clearing keeps the target's and operand
  * order. */
-s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t* unit) {
+s32 battle_gfx_build_next_special_action_result_display(battle_unit_t* unit) {
     battle_action_result_display_t* display;
     battle_gfx_sprite_display_data_t* display_0;
     battle_gfx_sprite_display_data_t* display_1;
     battle_gfx_sprite_display_data_t* display_2;
-    battle_gfx_sprite_display_data_t* color;
     s32 digits[3];
     u32 flags;
     u32 clear;
     u16 selector;
 
-    flags = unit->action_display_flags.word;
-    display = (battle_action_result_display_t*)&unit->numeric_display_active;
+    flags = unit->action_display_flags;
+    display = &unit->numeric_display;
     if ((flags & BATTLE_ACTION_DISPLAY_FLAG_GAINED_EXP) != 0) {
-        unit->numeric_display_selector = BATTLE_NUMERIC_DISPLAY_GAINED_EXP;
-        unit->numeric_display_active = 1;
-        unit->numeric_display_value = unit->action_rewards.earned_experience;
-        unit->action_display_flags.word &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_EXP;
-        if (unit->numeric_display_progress >= 22) {
-            unit->numeric_display_progress = 21;
+        unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_GAINED_EXP;
+        unit->numeric_display.active = 1;
+        unit->numeric_display.value = unit->strike.action_rewards.earned_experience;
+        unit->action_display_flags &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_EXP;
+        if (unit->numeric_display.progress >= 22) {
+            unit->numeric_display.progress = 21;
         }
     } else if ((flags & BATTLE_ACTION_DISPLAY_FLAG_GAINED_JP) != 0) {
-        unit->numeric_display_selector = BATTLE_NUMERIC_DISPLAY_GAINED_JP;
-        unit->numeric_display_active = 1;
-        unit->numeric_display_value = unit->action_rewards.earned_jp;
-        unit->action_display_flags.word &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_JP;
-        if (unit->numeric_display_progress >= 22) {
-            unit->numeric_display_progress = 21;
+        unit->numeric_display.selector = BATTLE_NUMERIC_DISPLAY_GAINED_JP;
+        unit->numeric_display.active = 1;
+        unit->numeric_display.value = unit->strike.action_rewards.earned_jp;
+        unit->action_display_flags &= ~BATTLE_ACTION_DISPLAY_FLAG_GAINED_JP;
+        if (unit->numeric_display.progress >= 22) {
+            unit->numeric_display.progress = 21;
         }
     } else {
         if ((flags & BATTLE_ACTION_DISPLAY_FLAG_NO_TARGET) != 0) {
@@ -48,21 +49,21 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
         } else {
             return 0;
         }
-        unit->numeric_display_selector = selector;
-        unit->numeric_display_active = 1;
+        unit->numeric_display.selector = selector;
+        unit->numeric_display.active = 1;
         {
             u32 current;
-            current = unit->action_display_flags.word;
-            unit->action_display_flags.word = current & clear;
+            current = unit->action_display_flags;
+            unit->action_display_flags = current & clear;
         }
-        if (unit->numeric_display_progress >= 22) {
-            unit->numeric_display_progress = 21;
+        if (unit->numeric_display.progress >= 22) {
+            unit->numeric_display.progress = 21;
         }
     }
 
-    display->displays[0]->red = display->displays[1]->red = display->displays[2]->red = 150;
-    display->displays[0]->green = display->displays[1]->green = display->displays[2]->green = 140;
-    display->displays[0]->blue = display->displays[1]->blue = display->displays[2]->blue = 20;
+    display->displays[0]->color.r = display->displays[1]->color.r = display->displays[2]->color.r = 150;
+    display->displays[0]->color.g = display->displays[1]->color.g = display->displays[2]->color.g = 140;
+    display->displays[0]->color.b = display->displays[1]->color.b = display->displays[2]->color.b = 20;
 
     if ((display->value / 1000) & 0xffff) {
         digits[2] = 9;
@@ -103,22 +104,19 @@ s32 battle_gfx_build_next_special_action_result_display(battle_unit_misc_data_t*
         }
         break;
     case BATTLE_NUMERIC_DISPLAY_NO_TARGET:
-        color = display->displays[0];
-        color->red = color->green = color->blue = 128;
+        display->displays[0]->color.r = display->displays[0]->color.g = display->displays[0]->color.b = 128;
         battle_gfx_store_sprite_display_data(display_0, 0, -14, -24, 0x1a, 0xdb, 0x25, 10, 0);
         break;
     case BATTLE_NUMERIC_DISPLAY_SILENCED:
-        color = display->displays[0];
-        color->red = color->green = color->blue = 128;
+        display->displays[0]->color.r = display->displays[0]->color.g = display->displays[0]->color.b = 128;
         battle_gfx_store_sprite_display_data(display_0, 0, -14, -24, 0xd8, 0xe9, 0x1e, 8, 0);
         break;
     case BATTLE_NUMERIC_DISPLAY_NO_MP:
-        color = display->displays[0];
-        color->red = color->green = color->blue = 128;
+        display->displays[0]->color.r = display->displays[0]->color.g = display->displays[0]->color.b = 128;
         battle_gfx_store_sprite_display_data(display_0, 0, -14, -24, 0x64, 0x20, 0x1a, 9, 0);
         break;
     }
 
-    battle_map_load_palette_data(g_battle_action_result_palette, MAP_CLUT_ROW_ACTION_RESULTS, unit->unit_id, 0);
+    battle_map_load_palette_data(&g_battle_action_result_palette, MAP_CLUT_ROW_ACTION_RESULTS, unit->runtime_id, 0);
     return 1;
 }

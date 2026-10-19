@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Event Use3DObject: start animation state `state` of map mesh part `part` (map data command 0x80,

@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "psx/libgte.h"
 
 /*
  * Secondary effect function 0x08 (the dust of a fall) in g_battle_effect_secondary_handlers.
@@ -15,17 +16,17 @@ s32 battle_effect_fall_dust_secondary_handler(void) {
 
     /* Preserve the target's unsigned phase-dispatch comparison. */
     switch (g_battle_effect_current_secondary->phase) {
-    case BATTLE_SECONDARY_EFFECT_INITIALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_INITIALIZING:
         result = 1;
         g_battle_effect_current_secondary->active_count = 0;
         g_battle_effect_current_secondary->timer = 0;
         g_battle_effect_current_secondary->finish_timer = 0;
-        g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
+        g_battle_effect_current_secondary->phase = BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING;
         break;
-    case BATTLE_SECONDARY_EFFECT_EXECUTING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING:
         battle_effect_start_group(BATTLE_EFFECT_PARTICLE_GROUP_FALL_DUST, 9);
         /* fallthrough */
-    case BATTLE_SECONDARY_EFFECT_FINALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_FINALIZING:
         battle_effect_save_inertia_threshold();
         battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
         gravity.z = 0;

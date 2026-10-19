@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* The Dance effects on a target the dance hit: Witch Hunt takes XA + YA MP and Wiznaibus XA + YA HP,
  * from the dancer's weapon (battle_formula_calculate_base_xa); Slow Dance, Polka Polka and

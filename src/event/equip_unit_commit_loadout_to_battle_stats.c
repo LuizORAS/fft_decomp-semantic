@@ -46,7 +46,7 @@ void equip_unit_commit_loadout_to_battle_stats(void) {
     stats->equipment[UNIT_EQUIPMENT_SLOT_ACCESSORY] = g_equip_unit_data[0]->equipment[EQUIP_SLOT_ACCESSORY] != 0
         ? g_equip_unit_data[0]->equipment[EQUIP_SLOT_ACCESSORY]
         : ITEM_ID_NONE;
-    bcopy(stats->equipment, main_party_get_data_pointer(g_equip_unit_data[0]->party_index)->equipment, 7);
+    bcopy(stats->equipment, main_party_get_unit(g_equip_unit_data[0]->party_index)->equipment, 7);
     main_unit_refresh_stats_and_statuses(stats);
     stats = battle_unit_get_stats_from_battle_id(unit_id);
     hp = g_equip_unit_saved_hp;
@@ -59,10 +59,10 @@ void equip_unit_commit_loadout_to_battle_stats(void) {
     max = stats->max_mp;
     stats->mp = mp > max ? max : mp;
     equip_item_sum_equipment_stat_details(&bonuses, g_equip_unit_data[0]->equipment);
-    stats->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_POWER] = bonuses.right_weapon_power;
-    stats->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_POWER] = bonuses.left_weapon_power;
-    stats->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_EVADE] = bonuses.right_weapon_evade;
-    stats->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_EVADE] = bonuses.left_weapon_evade;
+    stats->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_POWER] = bonuses.state.right_weapon_power;
+    stats->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_POWER] = bonuses.state.left_weapon_power;
+    stats->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_RIGHT_WEAPON_EVADE] = bonuses.state.right_weapon_evade;
+    stats->equipment_stats[BATTLE_UNIT_EQUIPMENT_STAT_LEFT_WEAPON_EVADE] = bonuses.state.left_weapon_evade;
     saved = g_equip_unit_data[0]->unit_count;
     equip_unit_build_data_from_battle_stats(stats, g_equip_unit_data[0]);
     g_equip_unit_data[0]->unit_count = saved;

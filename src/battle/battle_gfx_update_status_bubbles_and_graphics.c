@@ -1,13 +1,14 @@
 #include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
 
 /* Per-frame status bubbles and unit graphics. In the menu, move and targeting states the status
- * bubbles are drawn (battle_gfx_update_status_bubble_display on every misc record) once the camera has
+ * bubbles are drawn (battle_gfx_update_status_bubble_display on every runtime record) once the camera has
  * been still for 0x3c frames; a zoom, tilt, rotation or camera move restarts that delay. In every
  * state the casting unit's graphics are loaded and each unit's sprite layers drawn
  * (battle_gfx_draw_unit_sprite_layers). */
 void battle_gfx_update_status_bubbles_and_graphics(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
 
     switch (g_battle_game_state) {
     case BATTLE_GAME_STATE_FREE_CURSOR:
@@ -32,7 +33,7 @@ void battle_gfx_update_status_bubbles_and_graphics(void) {
                     g_battle_gfx_status_bubble_delay = 0;
                 }
             } else {
-                for (unit = g_battle_unit_misc_list_head; unit != 0; unit = unit->previous) {
+                for (unit = g_battle_unit_list_head; unit != 0; unit = unit->previous) {
                     battle_gfx_update_status_bubble_display(unit);
                 }
             }
@@ -42,7 +43,7 @@ void battle_gfx_update_status_bubbles_and_graphics(void) {
         break;
     }
     battle_gfx_load_casting_unit_graphics();
-    for (unit = g_battle_unit_misc_list_head; unit != 0; unit = unit->previous) {
+    for (unit = g_battle_unit_list_head; unit != 0; unit = unit->previous) {
         battle_gfx_draw_unit_sprite_layers(unit);
     }
 }

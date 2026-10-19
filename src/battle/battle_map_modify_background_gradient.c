@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Same as battle_map_blend_background_gradient_color with the colour offsets narrowed to s16: the

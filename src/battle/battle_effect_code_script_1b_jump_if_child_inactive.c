@@ -1,16 +1,16 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
-/* Opcode 1b: jump to the offset in the second halfword when the child slot
+/* Opcode 1b: jump to the offset in the second 16-bit value when the child slot
  * named by the second byte's high nibble is empty; otherwise step over the
  * 4-byte instruction. */
-s32 battle_effect_code_script_1b_jump_if_child_inactive(effect_record_t* record) {
-    u8* cur;
-    u32 slot;
+effect_script_result_e battle_effect_code_script_1b_jump_if_child_inactive(battle_effect_record_t* record) {
+    effect_script_parameters_t parameters;
+    const effect_script_instruction_t* instruction;
 
-    cur = record->pc + record->script;
-    slot = cur[1] >> 4;
-    if (record->child_indices[slot] == 0) {
-        record->pc = *(u16*)(cur + 2);
+    instruction = effect_get_current_script_instruction(record);
+    parameters = instruction->header.parameters;
+    if (record->child_indices[parameters.child.slot] == 0) {
+        record->pc = instruction->immediate.value;
     } else {
         record->pc = record->pc + 4;
     }

@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/libc.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -12,7 +11,7 @@
  * destination register as the minuend; written as a single subtraction the
  * sign-extended blanks claims $s2 and the operands swap.
  */
-world_draw_number_command_t* world_menu_script_draw_plain_number(world_draw_number_command_t* command) {
+menu_instruction_t* world_menu_script_draw_plain_number(menu_instruction_t* instruction) {
     s8 text[16];
     RECT rect;
     s32 value;
@@ -21,18 +20,18 @@ world_draw_number_command_t* world_menu_script_draw_plain_number(world_draw_numb
     s32 y;
     s32 i;
 
-    value = g_world_menu_script_callbacks[command->getter] != 0
-        ? g_world_menu_script_callbacks[command->getter](command->value)
-        : command->value;
-    blanks = command->width - sprintf(text, "%d", value);
-    value = command->width;
+    value = g_world_menu_script_callbacks[instruction->number.getter].value != 0
+        ? g_world_menu_script_callbacks[instruction->number.getter].value(instruction->number.value)
+        : instruction->number.value;
+    blanks = instruction->number.width - sprintf(text, "%d", value);
+    value = instruction->number.width;
     value -= blanks;
-    x = command->x;
-    y = command->y;
-    g_world_menu_number_blank_sprite.y = y + 4;
+    x = instruction->number.x;
+    y = instruction->number.y;
+    g_world_menu_number_blank_sprite.position.y = y + 4;
     blanks -= 1;
     while (blanks != -1) {
-        g_world_menu_number_blank_sprite.x = x;
+        g_world_menu_number_blank_sprite.position.x = x;
         world_gfx_enqueue_oriented_textured_quad(
             &g_world_menu_number_blank_sprite, 0, TEXTURE_UV_FLIP_NONE, 0, g_world_menu_draw_priority);
         blanks -= 1;
@@ -49,5 +48,5 @@ world_draw_number_command_t* world_menu_script_draw_plain_number(world_draw_numb
         i++;
         rect.x += 8;
     }
-    return (world_draw_number_command_t*)((u8*)command + command->length);
+    return menu_next_instruction(instruction);
 }

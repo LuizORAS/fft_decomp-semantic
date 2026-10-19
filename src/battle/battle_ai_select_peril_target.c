@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 
 /* Pick the ally in most peril as the acting unit's Auto-Battle target, the unit itself by default.
  * Peril ranks: dead without Reraise and revivable by the unit, then for a healer dead with Reraise or

@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* The Talk Skill effects on a target the talk hit: Negotiate takes gil
  * (battle_formula_calculate_stolen_gil), Persuade sets CT to 0, Praise and Threaten raise and lower

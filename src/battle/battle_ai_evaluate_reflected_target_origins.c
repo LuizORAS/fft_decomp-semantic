@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
+#include "fft/memory.h"
 
 /* Evaluate bouncing the considered ability off a Reflect unit onto another unit. A reflector is
  * targetable, not the acting unit, keeps Reflect through the charge, cannot move before it lands, and
@@ -40,13 +42,13 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
             if (battle_ai_calculate_clockticks_until_death_counter_expires(reflector) < ct)
                 continue;
         }
-        ai->current_action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
+        ai->current_action.command.targeting_type = BATTLE_TARGETING_TYPE_TILE;
         battle_ai_transfer_unit_coordinates(ai->reflector_unit_index, &ai->considered_unit_coords);
         mode = BATTLE_AI_TILE_MASK_AOE;
-        if (ai->current_action.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
+        if (ai->current_action.command.targeting_type == BATTLE_TARGETING_TYPE_UNIT)
             mode = BATTLE_AI_TILE_MASK_EXPLICIT;
         battle_ai_build_targetable_tile_mask(mode, 0);
-        battle_ai_transfer_halfword_values(ai->target_tiles, ai->targetable_tiles, 72);
+        battle_mem_copy_u16_values(ai->target_tiles, ai->targetable_tiles, sizeof(ai->target_tiles));
         for (ai->reflected_target_unit_index = 0; ai->reflected_target_unit_index < BATTLE_UNIT_SLOT_COUNT;
             ai->reflected_target_unit_index++) {
             if (!ai->targetability.live.unit_targetable[ai->reflected_target_unit_index])
@@ -60,22 +62,22 @@ s32 battle_ai_evaluate_reflected_target_origins(void) {
             if (battle_ai_classify_ability_effect(ai->reflected_target_unit_index, 0)
                 != BATTLE_AI_ABILITY_EFFECT_USEFUL)
                 continue;
-            ai->current_action.coords.bytes.x
+            ai->current_action.coords.fields.x
                 = reflector->x * 2 - g_battle_unit_stats[ai->reflected_target_unit_index].x;
-            ai->current_action.coords.bytes.y
-                = reflector->position.bits.y * 2 - g_battle_unit_stats[ai->reflected_target_unit_index].position.bits.y;
-            if (ai->current_action.coords.bytes.x >= ai->map_max_x)
+            ai->current_action.coords.fields.y
+                = reflector->position.y * 2 - g_battle_unit_stats[ai->reflected_target_unit_index].position.y;
+            if (ai->current_action.coords.fields.x >= ai->map_max_x)
                 continue;
-            if (ai->current_action.coords.bytes.y >= ai->map_max_y)
+            if (ai->current_action.coords.fields.y >= ai->map_max_y)
                 continue;
-            for (ai->reflected_candidate_level = 0; ai->reflected_candidate_level < 2;
+            for (ai->reflected_candidate_level = 0; ai->reflected_candidate_level < MAP_TERRAIN_LAYER_COUNT;
                 ai->reflected_candidate_level++) {
-                ai->current_action.coords.bytes.elevation = ai->reflected_candidate_level;
+                ai->current_action.coords.fields.elevation = ai->reflected_candidate_level;
                 if ((ai->reachable_tiles[ai->movement_scenario][ai->reflected_candidate_level]
-                                        [ai->current_action.coords.bytes.y]
-                        << ai->current_action.coords.bytes.x)
+                                        [ai->current_action.coords.fields.y]
+                        << ai->current_action.coords.fields.x)
                     & 0x8000) {
-                    battle_ai_check_unit_for_crystal_or_treasure_status();
+                    battle_ai_update_tile_pickup();
                     ai->current_action.act_before_move = 1;
                     ai->reflected_origin_phase = 0;
                     for (;;) {

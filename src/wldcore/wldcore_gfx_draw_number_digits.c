@@ -18,7 +18,6 @@ void wldcore_gfx_draw_number_digits(s32 value, s32 digits, GsSPRITE* sprite, GsO
     s32 saved_y;
 
     divisor = 1;
-    i = 0;
     sprite->w = 8;
     sprite->v = 0x31;
     saved_y = sprite->y;

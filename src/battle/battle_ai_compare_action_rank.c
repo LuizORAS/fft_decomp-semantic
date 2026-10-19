@@ -1,8 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Compare two actions' ranking fields: decided (0 in every action the ranking compares), then
  * the score (priority, signed), then the hit chance (base_hit_percent). */
-battle_ai_rank_order_e battle_ai_compare_action_rank(battle_ai_action_rank_t* first, battle_ai_action_rank_t* second) {
+battle_ai_rank_order_e battle_ai_compare_action_rank(
+    const battle_ai_action_rank_t* first, const battle_ai_action_rank_t* second) {
     u8 decided_a, decided_b;
     s16 priority_a, priority_b;
     u8 hit_a, hit_b;

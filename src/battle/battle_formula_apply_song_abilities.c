@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* The Song effects on a target the song hit (XA = MA, YA = Y): Angel Song restores MA + Y MP and
  * Life Song MA + Y HP; Cheer Song, Battle Song and Magic Song raise Speed, PA and MA by 1; Last Song

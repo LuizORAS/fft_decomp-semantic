@@ -14,6 +14,6 @@ void wldcore_sound_novel_set_master_volume(void) {
     if (volume == 0x3FC0) {
         volume = 0x3FFF;
     }
-    main_sound_set_master_volume(volume, steps);
+    suzuki_sound_set_master_volume(volume, steps);
     g_wldcore_sound_novel_record.state_flags |= WLDCORE_SOUND_NOVEL_STATE_FETCH;
 }

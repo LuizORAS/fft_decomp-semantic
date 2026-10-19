@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
@@ -15,8 +16,9 @@
  * after the call. Testing depth & MAP_TILE_HALF_HEIGHT_MASK directly (rather
  * than masking depth in place) keeps the height load ahead of the depth load.
  */
-s32 battle_target_calculate_cursor_tile_polygon(SVECTOR* coords, u8 layer, SVECTOR* quad) {
+s32 battle_target_calculate_cursor_tile_polygon(const SVECTOR* coords, u8 layer, SVECTOR* quad) {
     map_tile_t* tile;
+    /* Byte access retains the original packed load and field-extraction order. */
     s32 split;
     s32 rise;
     u8 height;
@@ -24,9 +26,10 @@ s32 battle_target_calculate_cursor_tile_polygon(SVECTOR* coords, u8 layer, SVECT
     u8 slope;
 
     split = 0;
-    tile = battle_map_get_tile_data_pointer((coords->vx / 28), (coords->vz / 28), layer);
+    tile = battle_map_get_tile_data_pointer(
+        (coords->vx / BATTLE_MAP_TILE_SIZE), (coords->vz / BATTLE_MAP_TILE_SIZE), layer);
     height = tile->height;
-    depth = tile->depth_half_height.value;
+    depth = (*(u8*)&tile->depth_half_height);
     slope = tile->slope_type;
     quad[0].vx = coords->vx - 14;
     quad[0].vz = coords->vz + 14;

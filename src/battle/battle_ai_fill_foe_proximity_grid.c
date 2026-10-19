@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 
 /* Fill tile_foe_proximity for the scenario-0 reachable tiles: each imminent enemy (in play and not
  * left out by battle_ai_should_exclude_from_imminent_enemies) within 10 tiles adds 10 minus its
@@ -21,7 +22,7 @@ void battle_ai_fill_foe_proximity_grid(void) {
             ai->targetability.live.unit_targetable[i] = 1;
         }
     }
-    for (level = 0; level < 2; level++) {
+    for (level = 0; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         battle_stats_t* units = g_battle_unit_stats;
         s32 proximity_limit = 10;
         for (y = 0; y < ai->map_max_y; y++) {
@@ -43,7 +44,7 @@ void battle_ai_fill_foe_proximity_grid(void) {
                     if (distance < 0) {
                         distance = -distance;
                     }
-                    dy = unit->position.bits.y - y;
+                    dy = unit->position.y - y;
                     if (dy < 0) {
                         dy = -dy;
                     }

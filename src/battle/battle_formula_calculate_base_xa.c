@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Set XA and YA for a weapon strike from the weapon's type. Bare hands: XA = PA and YA = PA * Brave

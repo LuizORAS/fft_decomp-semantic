@@ -1,4 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_script.h"
+#include "fft/script.h"
+#include "fft/sound.h"
 #include "psx/pad.h"
 
 /* While the menu may accept input, move a row cursor with Up and Down, wrapping
@@ -9,7 +12,7 @@ void battle_menu_step_wrapping_row_cursor(world_menu_entry_t* ctx, s32* sel) {
     s32 cur;
 
     if (battle_menu_is_input_allowed() != 0) {
-        if (g_battle_script_event_input & PSX_PAD_UP) {
+        if (g_script_event_input & PSX_PAD_UP) {
             selection = *sel;
             if (selection == 0) {
                 selection = ctx->max_row_index;
@@ -17,9 +20,9 @@ void battle_menu_step_wrapping_row_cursor(world_menu_entry_t* ctx, s32* sel) {
                 selection = selection - 1;
             }
             *sel = selection;
-            battle_sound_set_effect_to_cursor_move();
+            sound_queue_sfx_cursor_move();
         }
-        if (g_battle_script_event_input & PSX_PAD_DOWN) {
+        if (g_script_event_input & PSX_PAD_DOWN) {
             max = ctx->max_row_index;
             cur = *sel;
             if (cur == max) {
@@ -27,7 +30,7 @@ void battle_menu_step_wrapping_row_cursor(world_menu_entry_t* ctx, s32* sel) {
             } else {
                 *sel = cur + 1;
             }
-            battle_sound_set_effect_to_cursor_move();
+            sound_queue_sfx_cursor_move();
         }
     }
 }

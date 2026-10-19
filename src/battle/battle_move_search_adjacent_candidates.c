@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Try the tiles next to the current one (and, with more directions, the heights on top of
  * units) as the next step: in AI propagation mode spread the range to them

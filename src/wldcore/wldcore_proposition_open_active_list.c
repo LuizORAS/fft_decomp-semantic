@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -9,9 +10,9 @@
  * The otherwise unused point record preserves the target's 24-byte local area;
  * GCC removes its operations but retains its stack slot. */
 void wldcore_proposition_open_active_list(void) {
-    wldcore_point32_t origin;
-    wldcore_point32_t dimensions;
-    wldcore_point32_t unused_point;
+    open_point32_t origin;
+    wldcore_window_panel_layout_t layout;
+    open_point32_t unused_point;
     s32 count;
     s32 i;
     s32 loaded_count;
@@ -21,7 +22,7 @@ void wldcore_proposition_open_active_list(void) {
     s16* row_flags;
     s32 active_row_flag;
 
-    world_thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_JOBS_IN_PROGRESS, 0);
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_JOBS_IN_PROGRESS, 0);
     count = 0;
     loaded_count = g_main_save_proposition_count;
     if ((i = 0, loaded_count) > 0) {
@@ -37,26 +38,25 @@ void wldcore_proposition_open_active_list(void) {
                 } else {
                     row_flags[count] = 0;
                 }
-                g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entries[count] = i;
+                g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entries[count] = i;
                 count++;
             }
             i++;
         } while (i < total);
     }
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entry_count = count;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count = count;
     if (count < 6) {
         i = count;
     } else {
         i = 6;
     }
-    dimensions.x = 0x96;
+    layout.text_width = 0x96;
     origin.x = 0x4C;
-    dimensions.y = i;
+    layout.visible_rows = i;
     origin.y = 0x50;
     wldcore_list_clamp_cursor_state(WLDCORE_CURSOR_SLOT_PROPOSITIONS, g_main_save_proposition_count, i);
     wldcore_window_start_panel_render_thread(WLDCORE_THREAD_SLOT_WINDOW_PANEL,
-        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].proposition_list.entry_count, &dimensions,
-        &origin);
+        g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].panel.entry_count, &layout, &origin);
     previous = g_wldcore_menu_stack_depth - 1;
     g_wldcore_menu_ordering_table_offset = 9;
     g_wldcore_menu_blocked_buttons = PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT;

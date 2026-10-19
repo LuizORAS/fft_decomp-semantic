@@ -1,4 +1,5 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
 /* MAP_JUMPING_IN: update the units and brighten the screen by the transition step a frame;
  * once clear, return to 60 fps and the saved state. */

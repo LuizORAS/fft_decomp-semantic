@@ -1,3 +1,5 @@
+#include "fft/menu.h"
+#include "fft/open.h"
 #include "fft/wldcore.h"
 
 /* Pushes the self-sizing message window as menu level TEXT_WINDOW, the windowed
@@ -13,19 +15,19 @@
  * reuse that register after the measure call, which gives the base
  * priority over `text` in global allocation (s1/s2 as in the target). The
  * combined-away address pseudo of that store keeps a reload stack slot, part
- * of the target's 40-byte locals area. `box` is an aggregate so its words stay
- * in memory across wldcore_text_init_scrollable_window; `dims` is an array so
+ * of the target's 40-byte locals area. `box` is an aggregate so its fields stay in
+ * memory across wldcore_text_init_scrollable_window; `dims` is an array so
  * it is laid out in declaration order at 32(sp). `unused_point` and `unused`
  * are sized from the target frame only; their original types are unknown. */
 void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     wldcore_text_scrollable_window_t* window;
-    wldcore_window_record_t* records;
-    wldcore_point32_t* positions;
-    wldcore_point32_t* position;
-    s32* anchor;
+    world_animated_render_record_t* records;
+    open_point32_t* positions;
+    open_point32_t* position;
+    s32* text_id;
     s32 index;
-    wldcore_point32_t box;
-    wldcore_point32_t unused_point;
+    open_point32_t box;
+    open_point32_t unused_point;
     s16 dims[2];
     s32 unused[2];
     u8* entry;
@@ -45,16 +47,16 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     records = g_wldcore_window_records;
     records[index].frame_index = 0;
 
-    entry = world_text_find_entry(text);
-    world_text_measure_pixels(&dims[0], &dims[1], entry);
+    entry = text_find_entry(text);
+    text_measure_pixels(&dims[0], &dims[1], entry);
     if (dims[1] > 3) {
         dims[1] = 3;
     }
 
-    anchor = &g_wldcore_scrollable_text_window.text_id;
-    window = (wldcore_text_scrollable_window_t*)(anchor - 13);
+    text_id = &g_wldcore_scrollable_text_window.text_id;
+    window = &g_wldcore_scrollable_text_window;
 
-    window->text_id = text;
+    *text_id = text;
     window->image_x = 0;
     g_wldcore_scrollable_text_window.image_y = 0xC0;
     box.x = (dims[0] + 24) & 0xFFFC;
@@ -74,7 +76,7 @@ void wldcore_menu_push_text_window_level(s32 text, s32 reload_text) {
     positions = &records[0].position;
     /* This byte-view stride retains the target addiu of &records[0].x;
      * &records[index].x removes it and breaks the exact match. */
-    position = (wldcore_point32_t*)((u8*)positions + index * sizeof(wldcore_window_record_t));
+    position = (open_point32_t*)((u8*)positions + index * sizeof(world_animated_render_record_t));
     position->x = -(box.x / 2) + 2;
     position->y = -(box.y / 2) - 2;
     wldcore_sound_play_effect(MAIN_SFX_WINDOW_OPEN);

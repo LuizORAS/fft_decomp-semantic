@@ -1,5 +1,6 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "fft/unit.h"
 
 /* Formula 0x29, Steal Heart, Allure and Nose Bracelet: no evade check; hit chance MA + X with the
  * zodiac; a hit fails (forced failure) when the target's monster, female and male flags equal the

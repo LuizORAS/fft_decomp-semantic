@@ -1,9 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
-/* Opcode 01: jump to the script offset in the second halfword. */
-s32 battle_effect_code_script_01_jump(effect_record_t* record) {
-    s32 pc = record->pc;
-    s32 base = (s32)record->script;
-    record->pc = *(u16*)(pc + base + 2);
+/* Opcode 01: jump to the script offset in the second 16-bit value. */
+effect_script_result_e battle_effect_code_script_01_jump(battle_effect_record_t* record) {
+    record->pc = effect_get_current_script_instruction(record)->immediate.value;
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

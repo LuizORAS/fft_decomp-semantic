@@ -1,3 +1,5 @@
+#include "fft/gfx.h"
+#include "fft/sound.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
@@ -18,20 +20,20 @@ void wldcore_menu_run_world_frame(GsOT* context) {
     if (g_main_system_flags & MAIN_SYSTEM_FLAG_SKIP_MENU_FRAME) {
         return;
     }
-    world_menu_set_zodiac_backdrop_otag(context->org + 15);
+    world_menu_set_zodiac_backdrop_otag((u32*)(context->org + 15));
     world_menu_set_allowed_buttons(~g_wldcore_menu_blocked_buttons);
     if (g_main_system_flags & MAIN_SYSTEM_FLAG_UNIT_PANEL_THREADS) {
-        otag_entries = context->org;
-        g_world_gfx_current_otag_entry = otag_entries + g_wldcore_menu_ordering_table_offset;
+        otag_entries = (u32*)context->org;
+        g_gfx_current_otag_entry = otag_entries + g_wldcore_menu_ordering_table_offset;
         world_menu_draw_active_window_frames();
-        sprite_entries = context->org;
+        sprite_entries = (u32*)context->org;
         world_input_update_event_state(sprite_entries + g_wldcore_menu_ordering_table_offset + 2,
-            g_wldcore_current_button_input, g_main_gfx_active_buffer_index * 240);
-        if (g_world_sound_pending_sfx_id != -1) {
-            wldcore_sound_play_effect(g_world_sound_pending_sfx_id);
+            g_wldcore_input_current_buttons, g_main_gfx_active_buffer_index * 240);
+        if (g_sound_pending_sfx_id != -1) {
+            wldcore_sound_play_effect(g_sound_pending_sfx_id);
         }
     } else {
-        menu_entries = context->org;
-        world_menu_run_frame(menu_entries + g_wldcore_menu_ordering_table_offset, g_wldcore_current_button_input);
+        menu_entries = (u32*)context->org;
+        world_menu_run_frame(menu_entries + g_wldcore_menu_ordering_table_offset, g_wldcore_input_current_buttons);
     }
 }

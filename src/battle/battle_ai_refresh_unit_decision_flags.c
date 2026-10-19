@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 
 /* Refresh every unit's decision record for the plan, then score the present state: an untargetable
  * unit only gets BATTLE_AI_TARGET_UNTARGETABLE; the others get the enemy flag (another team than the
@@ -54,7 +55,7 @@ s32 battle_ai_refresh_unit_decision_flags(void) {
                 decision->flags |= BATTLE_AI_DECISION_WORTH_TARGETING;
         }
         ai->current_action.act_before_move = 1;
-        ai->current_action.skillset = 0;
+        ai->current_action.command.skillset_id = 0;
         ai->targetability.live.target_setting_flags |= BATTLE_AI_TARGET_SETTING_REFRESH_UNIT_STATUS_FLAGS;
     }
     if (battle_ai_simulate_action_and_score() == -1) {

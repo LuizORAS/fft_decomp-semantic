@@ -1,8 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
-/* Return 1 when unit_index gets a turn and can move before the considered ability's charge lands:
- * the ability charges, the unit's next turn comes within its CT
+/* Return 1 when unit_index gets a turn and can move before the considered ability's charge lands: the
+ * ability charges (an instant one gives 0), the unit's next turn comes within its CT
  * (battle_ai_calculate_clockticks_until_unit_acts) and it can move by then
  * (battle_ai_can_unit_move_within). */
 s32 battle_ai_moves_before_charge_lands(s32 unit_index) {

@@ -1,9 +1,6 @@
-#include "fft/battle.h"
 #include "fft/main.h"
-
-enum {
-    MAX_HP_MP_CAP = 999,
-};
+#include "fft/memory.h"
+#include "fft/unit.h"
 
 /* Apply the equipped items' attribute records to a unit. The stats are derived again first
  * (main_unit_calculate_actual_stats; with reset_base_attributes also base Speed, PA and MA); then
@@ -21,13 +18,11 @@ void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 reset_base_att
     u32 second_id;
     item_data_t* item;
     item_attribute_t* attribute;
-    u8* bonus_base;
     u8* bonus; /* equipment bonuses, later reused to walk the base/actual stats */
     u8* source;
     u8* target;
 
-    bonus_base = unit->equipment_attributes;
-    main_util_clear_byte_data(bonus_base, 3);
+    main_mem_zero(unit->equipment_attributes, sizeof(unit->equipment_attributes));
     cap = MAX_HP_MP_CAP;
     main_unit_calculate_actual_stats(unit, reset_base_attributes + 1);
     unit->equipped_flags = 0;
@@ -106,12 +101,12 @@ void main_unit_set_equipment_attributes(battle_stats_t* unit, s32 reset_base_att
     for (j = 0; j < 3; j++) {
         value = bonus[j + 3] + bonus[j];
         if (j < 2) {
-            if (value >= 100) {
-                value = 99;
+            if (value > UNIT_ATTACK_STAT_MAX) {
+                value = UNIT_ATTACK_STAT_MAX;
             }
         } else {
-            if ((u16)value >= 51) {
-                value = 50;
+            if ((u16)value > UNIT_SPEED_MAX) {
+                value = UNIT_SPEED_MAX;
             }
         }
         bonus[j + 6] = value;

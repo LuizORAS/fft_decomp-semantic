@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /*
@@ -9,19 +10,19 @@
  *
  * The height-mode result is deliberately truncated to its low byte.
  */
-void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) {
+void battle_unit_set_idle_animation_for_movement(battle_unit_t* unit) {
     s32 anim;
     s32 walk_speed;
-    battle_unit_misc_data_t* mount;
+    battle_unit_t* mount;
 
-    if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
+    if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_RIDER) {
         battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, unit);
         return;
     }
     switch (battle_move_get_water_animation_mode(unit)) {
     case 0:
     case 1:
-        walk_speed = unit->walk_speed.word;
+        walk_speed = unit->walk_speed;
         if (walk_speed >= 0x3000) {
             anim = BATTLE_UNIT_ANIMATION_WALK_FAST;
         } else {
@@ -30,8 +31,8 @@ void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) 
                 anim = BATTLE_UNIT_ANIMATION_WALK_SLOW;
             }
         }
-        if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
-            mount = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+        if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
+            mount = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
             if (mount != 0) {
                 battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, mount);
             }
@@ -39,7 +40,7 @@ void battle_unit_set_idle_animation_for_movement(battle_unit_misc_data_t* unit) 
         break;
     case 2:
     default:
-        walk_speed = unit->walk_speed.word;
+        walk_speed = unit->walk_speed;
         if (walk_speed >= 0x3000) {
             anim = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE_HASTE;
         } else {

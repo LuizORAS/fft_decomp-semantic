@@ -4,7 +4,8 @@
 /* Set up double-buffered drawing at width x height without restarting the GPU:
  * the second buffer sits 240 lines below the first (a 480-line mode uses one),
  * both draw environments clear to the given colour, and the display is masked
- * until the caller turns it on. image_rect is not used. */
+ * until the caller turns it on. image_rect is not used. main_gfx_set_display_draw_new_game is a
+ * second copy of this text, called only by main_gfx_fade_in_orbonne_monastery. */
 void main_gfx_set_display_draw(int width, int height, int projection, u8 red, u8 green, u8 blue) {
     RECT image_rect = { 0, 0, 1024, 512 };
     int second_y = height == 480 ? 0 : 240;
@@ -20,12 +21,8 @@ void main_gfx_set_display_draw(int width, int height, int projection, u8 red, u8
 
     g_main_gfx_draw_envs[0].dtd = g_main_gfx_draw_envs[1].dtd = 0;
     g_main_gfx_draw_envs[0].isbg = g_main_gfx_draw_envs[1].isbg = 1;
-    g_main_gfx_draw_envs[0].r0 = red;
-    g_main_gfx_draw_envs[0].g0 = green;
-    g_main_gfx_draw_envs[0].b0 = blue;
-    g_main_gfx_draw_envs[1].r0 = red;
-    g_main_gfx_draw_envs[1].g0 = green;
-    g_main_gfx_draw_envs[1].b0 = blue;
+    setRGB0(&g_main_gfx_draw_envs[0], red, green, blue);
+    setRGB0(&g_main_gfx_draw_envs[1], red, green, blue);
 
     PutDispEnv(&g_main_gfx_display_envs[g_main_gfx_screen_polarity]);
     PutDrawEnv(&g_main_gfx_draw_envs[g_main_gfx_screen_polarity]);

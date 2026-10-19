@@ -1,5 +1,5 @@
+#include "fft/gfx.h"
 #include "fft/world.h"
-#include "psx/libc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/pad.h"
@@ -22,8 +22,8 @@
  * separate phase accumulator, changes the target's register assignment. */
 s32 world_formation_step_job_change_animation(s32 job) {
     union {
-        world_formation_graphic_entry_t entry;
-        s16 points[6];
+        texture_source_t entry;
+        point16_t points[3];
     } scratch;
     RECT rect;
     s32 i;
@@ -44,22 +44,22 @@ s32 world_formation_step_job_change_animation(s32 job) {
         g_world_job_change_skip_requested = 0;
         world_input_clear_state();
         g_world_job_change_old_sprite_image = main_heap_alloc(0x1e0);
-        world_gfx_store_image_and_wait(&g_world_job_change_old_sprite_rect, g_world_job_change_old_sprite_image);
+        gfx_store_image_and_wait(&g_world_job_change_old_sprite_rect, g_world_job_change_old_sprite_image);
         g_world_job_change_new_sprite_image = main_heap_alloc(0x1e0);
         memset(g_world_job_change_new_sprite_image, 0, 0x1e0);
         world_formation_change_unit_job(WORLD_FORMATION_PREVIEW_RECORD, job, 0);
         world_formation_build_unit_graphic_entry(WORLD_FORMATION_PREVIEW_RECORD, &scratch.entry, 0);
         g_world_job_change_new_sprite_source = main_heap_alloc(0x1e0);
         if (scratch.entry.tpage == 100) {
-            rect.x = (scratch.entry.x >> 2) + 0x100;
+            rect.x = (scratch.entry.u >> 2) + 0x100;
         } else {
-            rect.x = (scratch.entry.x >> 2) + 0x140;
+            rect.x = (scratch.entry.u >> 2) + 0x140;
         }
-        rect.y = scratch.entry.y;
+        rect.y = scratch.entry.v;
         rect.w = scratch.entry.w >> 2;
         rect.h = scratch.entry.h;
         g_world_job_wheel_new_portrait_quad.clut = scratch.entry.clut;
-        world_gfx_store_image_and_wait(&rect, g_world_job_change_new_sprite_source);
+        gfx_store_image_and_wait(&rect, g_world_job_change_new_sprite_source);
         g_world_job_change_dissolve_order = main_heap_alloc(0x3c0);
         for (i = 479; i >= 0; i--) {
             g_world_job_change_dissolve_order[i] = i;
@@ -90,21 +90,21 @@ s32 world_formation_step_job_change_animation(s32 job) {
         amplitude = 240 - g_world_job_change_frame;
         offset = (g_world_job_change_frame - 220) * 8;
     }
-    scratch.points[1] = 0;
+    scratch.points[0].y = 0;
     for (i = 0; i < 64; i++) {
         n = (i * k + g_world_job_change_frame * 4) % ONE;
         line_x = ((amplitude * rcos(n)) >> 12) + 0x80;
-        scratch.points[0] = line_x;
-        scratch.points[2] = line_x;
-        scratch.points[4] = line_x;
+        scratch.points[0].x = line_x;
+        scratch.points[1].x = line_x;
+        scratch.points[2].x = line_x;
         base = offset - 146;
         line_y = ((swing * rsin(n)) >> 12) - base;
-        scratch.points[5] = scratch.points[3] = base = line_y;
+        scratch.points[2].y = scratch.points[1].y = base = line_y;
         line_y -= 64;
-        scratch.points[3] = line_y - offset;
+        scratch.points[1].y = line_y - offset;
         world_menu_add_gradient_line_primitive(&scratch.points[0], g_world_job_change_wave_colors, 1, 0x38);
-        scratch.points[3]++;
-        world_menu_add_gradient_line_primitive(&scratch.points[2], g_world_job_change_wave_colors + 3, 1, 0x38);
+        scratch.points[1].y++;
+        world_menu_add_gradient_line_primitive(&scratch.points[1], g_world_job_change_wave_colors + 1, 1, 0x38);
     }
     world_gfx_enqueue_draw_mode(0, 0, GetTPage(0, 3, 0x100, 0), 0, 0x37);
     g_world_job_change_frame++;

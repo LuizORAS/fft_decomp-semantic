@@ -1,4 +1,5 @@
 #include "fft/event_bunit.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /*
@@ -7,30 +8,16 @@
  * `pts` holds the four corners as x, y pairs and `color` four RGB triples.
  * Screen x coordinates use the menu's +0x80 origin.
  */
-void bunit_gfx_enqueue_gouraud_quad(u16* pts, u8* color, s32 semi, s32 idx) {
+void bunit_gfx_enqueue_gouraud_quad(const upoint16_t* pts, const rgb24_t* color, s32 semi, s32 idx) {
     POLY_G4* poly;
 
-    poly = &g_bunit_gfx_context->gouraud_quads[g_bunit_gfx_poly_g4_count++];
+    poly = &g_menu_gfx_context->poly_g4[g_bunit_gfx_poly_g4_count++];
     SetSemiTrans(poly, semi);
-    poly->x0 = pts[0] + 0x80;
-    poly->y0 = pts[1];
-    poly->x1 = pts[2] + 0x80;
-    poly->y1 = pts[3];
-    poly->x2 = pts[4] + 0x80;
-    poly->y2 = pts[5];
-    poly->x3 = pts[6] + 0x80;
-    poly->y3 = pts[7];
-    poly->r0 = color[0];
-    poly->g0 = color[1];
-    poly->b0 = color[2];
-    poly->r1 = color[3];
-    poly->g1 = color[4];
-    poly->b1 = color[5];
-    poly->r2 = color[6];
-    poly->g2 = color[7];
-    poly->b2 = color[8];
-    poly->r3 = color[9];
-    poly->g3 = color[10];
-    poly->b3 = color[11];
-    addPrim(&g_bunit_gfx_context->otag[idx], poly);
+    setXY4(poly, pts[0].x + 0x80, pts[0].y, pts[1].x + 0x80, pts[1].y, pts[2].x + 0x80, pts[2].y, pts[3].x + 0x80,
+        pts[3].y);
+    setRGB0(poly, color[0].r, color[0].g, color[0].b);
+    setRGB1(poly, color[1].r, color[1].g, color[1].b);
+    setRGB2(poly, color[2].r, color[2].g, color[2].b);
+    setRGB3(poly, color[3].r, color[3].g, color[3].b);
+    addPrim(&g_menu_gfx_context->otag[idx], poly);
 }

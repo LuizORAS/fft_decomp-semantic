@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Cancel a pending weapon spell: clear weapon_spell_pending, reaction_id and the target's

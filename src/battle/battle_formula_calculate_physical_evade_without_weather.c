@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Same as battle_formula_calculate_physical_evade, without the weather and night penalty on bows;

@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
@@ -7,9 +8,9 @@ void world_menu_start_entry_chain_threads(u32 index, s32 thread) {
     world_menu_entry_t* entry;
 
     do {
-        entry = &g_world_menu_thread_menu_data[index];
-        world_thread_start(thread, entry->thread_entry);
-        world_thread_set_parameters(thread, (s32)entry, 0, 0);
+        entry = &g_menu_thread_menu_data[index];
+        thread_start(thread, entry->thread_entry);
+        thread_set_parameters(thread, (s32)entry, 0, 0);
         if (entry->thread_entry == world_menu_labeled_number_entry_thread
             || entry->thread_entry == world_menu_number_entry_thread) {
             return;

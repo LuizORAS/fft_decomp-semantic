@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 /* Build the post-move events (BATTLE_MOVE_POST_EVENT_*) of a unit that has just moved: a crystal or
@@ -16,7 +18,7 @@ u32 battle_move_get_post_move_events(battle_stats_t* unit) {
 
     /* Synthesize CRYSTAL_OR_TREASURE when the filtered tile search returns a
      * non-negative unit ID. The explicit sign test keeps the target nor/srl. */
-    flags = (~battle_unit_find_at_tile(unit->x, unit->position.bits.y, unit->position.bits.higher_elevation,
+    flags = (~battle_unit_find_at_tile(unit->x, unit->position.y, unit->position.higher_elevation,
                  BATTLE_UNIT_TILE_FILTER_CRYSTAL | BATTLE_UNIT_TILE_FILTER_TREASURE)
                 >> 31)
         & 1;
@@ -28,17 +30,17 @@ u32 battle_move_get_post_move_events(battle_stats_t* unit) {
         g_battle_action_target_data = &target->action;
         battle_action_clear_current_data(&target->action);
         for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
-            g_battle_action_target_data->status_removal[i]
+            g_battle_action_target_data->status_changes.removal[i]
                 = g_main_status_check_sets[MAIN_STATUS_CHECK_SET_MOUNT_REMOVAL][i];
         }
         if (battle_status_modify_inflictions(0) != 0) {
             g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;
-            battle_status_resolve_unit_changes(target->misc_unit_id, 0);
+            battle_status_resolve_unit_changes(target->battle_id, 0);
             flags |= BATTLE_MOVE_POST_EVENT_MOUNT_STATUS_CHANGE;
         }
     }
-    find_item = target->movement_abilities[2] & BATTLE_MOVEMENT_SET_3_MOVE_FIND_ITEM;
-    tile = battle_map_get_move_find_result(unit->x, unit->position.bits.y, unit->position.bits.higher_elevation);
+    find_item = target->ability_flags.movement[2] & BATTLE_MOVEMENT_SET_3_MOVE_FIND_ITEM;
+    tile = battle_map_get_move_find_result(unit->x, unit->position.y, unit->position.higher_elevation);
     if (find_item && (tile->flags & BATTLE_MOVE_FIND_RESULT_ITEM)) {
         flags |= BATTLE_MOVE_POST_EVENT_ITEM_FOUND;
     } else if (tile->flags & BATTLE_MOVE_FIND_RESULT_TRAP) {

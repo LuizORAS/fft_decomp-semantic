@@ -114,8 +114,8 @@ Every town has a Bar ([[wldcore_bar_push_menu_level]]). Its menu
 | [[g_main_active_propositions]] ([[wldcore_proposition_progress_t]]), `g_main_save_proposition_count` | The jobs out, at most 8: flags (dispatched, called back, returned), days elapsed and assigned, the town, the units sent |
 | [[g_main_proposition_states]] | Per proposition, the days before it is offered again and which failure it was |
 | `EVENT_SCRIPT_VAR_PROPOSITION_FIRST` + id | Per proposition: in progress, completed, attempted ([[wldcore_proposition_variable_flag_e]]) |
-| [[g_wldcore_proposition_outcome]] ([[wldcore_proposition_outcome_t]]) | The outcome being reported: who reports, the result, the reward, and each unit's score, JP and gil |
-| `party_data_t.proposition_status` | A unit away on a job |
+| [[g_wldcore_proposition_outcome]] ([[wldcore_proposition_report_t]]) | The outcome being reported: who reports, the result, the reward, and each unit's score, JP and gil |
+| `party_unit_t.proposition_status` | A unit away on a job |
 | Dates (`g_main_proposition_last_attempt_date_bits`, the treasure and land date bits) | When each proposition last succeeded, and when each treasure or land was found ([[wldcore_calendar_write_date]]) |
 
 ## Main flow

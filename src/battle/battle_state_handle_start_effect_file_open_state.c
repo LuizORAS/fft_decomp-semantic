@@ -1,5 +1,4 @@
 #include "fft/battle.h"
-#include "psx/types.h"
 
 /* START_EFFECT_FILE_OPEN: wait until battle_effect_update_file_load reports the effect file ready,
  * then pick the attack animation and resolve the targets

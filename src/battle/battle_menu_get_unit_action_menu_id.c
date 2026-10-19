@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Pick a unit's idle action menu (battle_menu_id_e), before the rider variants.
@@ -10,7 +12,7 @@
  * restriction), and any other unit gets PLAYER_UNIT or OTHER_UNIT.
  *
  * The local can_evade holds the action restriction. */
-s32 battle_menu_get_unit_action_menu_id(battle_stats_t* unit) {
+battle_menu_id_e battle_menu_get_unit_action_menu_id(const battle_stats_t* unit) {
     battle_stats_t* act;
     s32 flag;
     s32 player_controlled;

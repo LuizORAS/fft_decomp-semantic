@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
+#include "fft/battle_target.h"
 
 /*
  * Select a source movement panel and prepare its exit height.
@@ -34,7 +35,7 @@ s32 battle_move_init_source_panel(s32 direction) {
         state->source_opposite_height = state->source_exit_height;
         state->source_ceiling_height = battle_move_calculate_tile_ceiling(
             state->tile_x, state->tile_y, state->source_side_shift, (state->source_exit_height - 1));
-        panel_index = state->source_unit_record_index + 512;
+        panel_index = state->source_unit_record_index + MAP_TILE_COUNT;
         state->source_panel_index = panel_index;
         state->source_panel = &g_battle_target_panels[panel_index];
     } else {
@@ -47,9 +48,9 @@ s32 battle_move_init_source_panel(s32 direction) {
             state->tile_x, state->tile_y, state->source_side_shift, state->source_exit_height);
         if (state->source_side_height_delta >= 0 && (frontier[state->tile_index] & FRONTIER_FLAG_STEEP))
             return 3;
-        if ((state->current_tile->depth_half_height.value & MAP_TILE_DEPTH_MASK)
+        if (state->current_tile->depth_half_height.depth
             && (config->movement_set_3 & (BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER | BATTLE_MOVEMENT_SET_3_WALK_ON_WATER))) {
-            state->source_exit_height += (state->current_tile->depth_half_height.value >> MAP_TILE_DEPTH_SHIFT) * 2;
+            state->source_exit_height += state->current_tile->depth_half_height.depth * 2;
             if (config->movement_set_3 & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER)
                 state->source_exit_height -= 2;
         }

@@ -1,10 +1,8 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
-
-/* Accepted spelling (battle_camera_step_target_t*, per the definition); this
- * site passes the misc record that overlays it, so the view is a cast. */
-typedef struct battle_camera_step_target battle_camera_step_target_t;
-void battle_camera_step_real_coords_toward_target(battle_camera_step_target_t* target);
 
 /* Per-frame camera vector update, dispatched on the game state.
  *
@@ -26,12 +24,11 @@ void battle_camera_step_real_coords_toward_target(battle_camera_step_target_t* t
  * statement. Written the natural way, the merged block lands mid-function
  * with an extra `j`. */
 void battle_camera_update_vector_from_game_state(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 height;
 
     if (g_battle_game_state == BATTLE_GAME_STATE_CRYSTAL_LEARN) {
-        unit = battle_unit_get_selectable_misc_data_at_map_coords(
-            g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+        unit = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
         height = 0;
         if (unit != 0) {
             height = (g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height >> 1) * g_battle_camera_zoom.vy
@@ -48,7 +45,7 @@ void battle_camera_update_vector_from_game_state(void) {
     }
     if (g_battle_game_state == BATTLE_GAME_STATE_UNIT_MOVING || g_battle_game_state == BATTLE_GAME_STATE_WAIT_DIRECTION
         || g_battle_game_state == BATTLE_GAME_STATE_PRE_ATTACK_ANIMATION) {
-        unit = battle_unit_get_source_misc_data();
+        unit = battle_unit_get_source();
         height
             = (g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height >> 1) * g_battle_camera_zoom.vy / ONE;
         if (unit->camera_relative_x >= 0xB1 && unit->camera_relative_x < 0x150
@@ -62,7 +59,7 @@ void battle_camera_update_vector_from_game_state(void) {
         } else {
             battle_camera_shift_acting_unit_vector();
         }
-        battle_camera_step_real_coords_toward_target((battle_camera_step_target_t*)unit);
+        battle_camera_step_real_coords_toward_target(unit);
         return;
     }
     if (g_battle_game_state >= BATTLE_GAME_STATE_ANNOUNCE_ABILITY) {
@@ -71,8 +68,7 @@ void battle_camera_update_vector_from_game_state(void) {
     }
     if (g_battle_camera_zoom_action == BATTLE_CAMERA_STEP_NONE && g_battle_camera_tilt_action == BATTLE_CAMERA_STEP_NONE
         && g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE && g_battle_state_camera_pan_enabled == 0) {
-        unit = battle_unit_get_selectable_misc_data_at_map_coords(
-            g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+        unit = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
         height = 0;
         if (unit != 0) {
             height = (g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height >> 1) * g_battle_camera_zoom.vy

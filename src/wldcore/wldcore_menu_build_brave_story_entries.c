@@ -1,3 +1,4 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 
 /* List the Brave Story's sections for its menu: Fact when EVENT_SCRIPT_VAR_FACTS_ENABLED is set and a
@@ -9,10 +10,10 @@ void wldcore_menu_build_brave_story_entries(void) {
     s32 i;
 
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count = 0;
-    if (world_script_get_variable(EVENT_SCRIPT_VAR_FACTS_ENABLED) != 0) {
+    if (script_get_variable(EVENT_SCRIPT_VAR_FACTS_ENABLED) != 0) {
         count = 0;
         for (i = 0; i < EVENT_SCRIPT_VAR_FACT_COUNT; i++) {
-            if (world_script_get_variable(i + EVENT_SCRIPT_VAR_FACT_FIRST) != 0) {
+            if (script_get_variable(i + EVENT_SCRIPT_VAR_FACT_FIRST) != 0) {
                 count++;
             }
         }
@@ -32,8 +33,7 @@ void wldcore_menu_build_brave_story_entries(void) {
 
     count = g_main_save_proposition_count;
     for (i = 0; i < EVENT_SCRIPT_VAR_PROPOSITION_COUNT; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST)
-            & WLDCORE_PROPOSITION_VARIABLE_COMPLETED) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_PROPOSITION_FIRST) & WLDCORE_PROPOSITION_VARIABLE_COMPLETED) {
             count++;
         }
     }
@@ -48,7 +48,7 @@ void wldcore_menu_build_brave_story_entries(void) {
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.upper_window]
         .flags |= WLDCORE_DISPLAY_OBJECT_BLANK;
     for (i = 0; i < EVENT_SCRIPT_VAR_UNEXPLORED_LAND_COUNT; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) != 0) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_UNEXPLORED_LAND_FIRST) != 0) {
             count++;
         }
     }
@@ -71,7 +71,7 @@ void wldcore_menu_build_brave_story_entries(void) {
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.lower_window]
         .flags |= WLDCORE_DISPLAY_OBJECT_BLANK;
     for (i = 0; i < EVENT_SCRIPT_VAR_TREASURE_COUNT; i++) {
-        if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
             count++;
         }
     }
@@ -81,7 +81,7 @@ void wldcore_menu_build_brave_story_entries(void) {
             .position.y
             = g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count * 0x10 + 0xE;
         for (i = 0; i < 0x1F; i++) {
-            if (world_script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
+            if (script_get_variable(i + EVENT_SCRIPT_VAR_TREASURE_FIRST) != 0) {
                 count++;
             }
         }

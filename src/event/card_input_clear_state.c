@@ -1,5 +1,4 @@
 #include "fft/event_card.h"
-#include "psx/types.h"
 
 /* Clear the pad masks the screen reads: newly pressed, primary repeat and secondary repeat. */
 void card_input_clear_state(void) {

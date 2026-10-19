@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Reset the best-candidate tie-breakers for a new search and load the current tile as its
  * source. */

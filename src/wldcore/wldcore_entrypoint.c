@@ -28,7 +28,7 @@ s32 wldcore_entrypoint(void) {
             wldcore_sound_process_audio_queue();
             buffer_index = GsGetActiveBuff();
             g_main_gfx_active_buffer_index = buffer_index;
-            GsSetWorkBase(&g_wldcore_gfx_world_primitive_buffers + buffer_index * 0xE000);
+            GsSetWorkBase(g_wldcore_gfx_world_primitive_buffers + buffer_index * 0xE000);
             wldcore_gfx_step_screen_fade();
             wldcore_map_pulse_dot_colors();
             wldcore_menu_dispatch_idle_handler();
@@ -61,17 +61,17 @@ s32 wldcore_entrypoint(void) {
             if (flags & MAIN_SYSTEM_FLAG_TUTORIAL_EVENT) {
                 return 2;
             }
-            /* Returning through display_mask keeps two separate `return 2`
+            /* Returning through a local keeps two separate `return 2`
              * blocks; a plain `return 2` here cross-jumps into the one above. */
             {
-                s32 display_mask;
+                s32 result;
 
                 if (flags & MAIN_SYSTEM_FLAG_STORY_EVENT_REPLAY) {
-                    display_mask = 2;
+                    result = 2;
                 } else {
-                    display_mask = (flags & MAIN_SYSTEM_FLAG_RANDOM_BATTLE) > 0;
+                    result = (flags & MAIN_SYSTEM_FLAG_RANDOM_BATTLE) > 0;
                 }
-                return display_mask;
+                return result;
             }
         }
     }

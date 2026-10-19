@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
@@ -6,7 +7,7 @@
  * dispatch is confirmed (wldcore_proposition_push_dispatch_confirm_level), or the list on offer
  * returns. */
 void wldcore_proposition_step_days_level(wldcore_menu_panel_level_t* level) {
-    if (level->result != 0 && world_thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
+    if (level->result != 0 && thread_is_running(WLDCORE_THREAD_SLOT_WINDOW_PANEL) == 0) {
         g_wldcore_menu_blocked_buttons = 0;
         g_wldcore_menu_ordering_table_offset = 1;
         g_wldcore_window_render_record_count--;
@@ -19,15 +20,15 @@ void wldcore_proposition_step_days_level(wldcore_menu_panel_level_t* level) {
         }
         return;
     }
-    if (g_wldcore_new_button_presses & PSX_PAD_CROSS) {
+    if (g_wldcore_input_new_button_presses & PSX_PAD_CROSS) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         g_wldcore_context_value_display_mode = WLDCORE_VALUE_DISPLAY_FUNDS;
         level->result = -1;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
-    } else if (g_wldcore_new_button_presses & PSX_PAD_CIRCLE) {
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+    } else if (g_wldcore_input_new_button_presses & PSX_PAD_CIRCLE) {
         wldcore_sound_play_effect(MAIN_SFX_CONFIRM);
         level->result = 1;
         g_wldcore_proposition_dispatch_days = g_wldcore_active_menu_value;
-        world_thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
+        thread_set_parameters(WLDCORE_THREAD_SLOT_WINDOW_PANEL, 0, 0, 1);
     }
 }

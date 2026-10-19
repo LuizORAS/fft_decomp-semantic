@@ -1,4 +1,7 @@
 #include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_script.h"
+#include "fft/script.h"
 #include "psx/types.h"
 
 /* Run a weather command (map_weather_command_e): start snow (0x53, light 0x7e, heavy 0x7f) or rain
@@ -11,7 +14,7 @@
  * normal and heavy rain also play the rain sound, and heavy rain brings random lightning. The weather local
  * is an s8: compares on the promoted value copy it into a scratch register for the 3 and 4 tests, as the
  * target does. */
-void battle_map_run_weather_command(s32 command) {
+void battle_map_run_weather_command(map_weather_command_e command) {
     s8 weather;
 
     switch (command & 0xff) {
@@ -21,7 +24,7 @@ void battle_map_run_weather_command(s32 command) {
         SetBackColor(g_battle_map_back_color_red, g_battle_map_back_color_green, g_battle_map_back_color_blue);
         break;
     case MAP_WEATHER_COMMAND_APPLY_SCRIPT_WEATHER:
-        weather = battle_script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
+        weather = script_get_variable(EVENT_SCRIPT_VAR_WEATHER);
         g_battle_map_lightning_mode = MAP_LIGHTNING_OFF;
         weather &= 7;
         if (weather < BATTLE_WEATHER_RAIN) {
@@ -33,26 +36,25 @@ void battle_map_run_weather_command(s32 command) {
             if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_SNOW) {
                 battle_sound_stop_weather_sfx();
                 battle_map_run_weather_command(MAP_WEATHER_COMMAND_LIGHT_SNOW);
-                battle_map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             } else {
                 battle_sound_stop_weather_sfx();
                 battle_map_run_weather_command(MAP_WEATHER_COMMAND_LIGHT_RAIN);
-                battle_map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             }
+            battle_map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
         }
         if (weather == BATTLE_WEATHER_STORM) {
             if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_SNOW) {
                 battle_sound_stop_weather_sfx();
                 battle_map_run_weather_command(MAP_WEATHER_COMMAND_SNOW);
-                battle_map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             } else {
-                g_battle_sound_primary_weather_sfx_id = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN);
+                g_battle_sound_primary_weather_sfx_id
+                    = MAIN_SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN);
                 if (g_battle_sound_weather_sfx_enabled != 0) {
-                    main_sound_play_bg_sfx(MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN));
+                    main_sound_play_bg_sfx(MAIN_SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN));
                 }
                 battle_map_run_weather_command(MAP_WEATHER_COMMAND_RAIN);
-                battle_map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
             }
+            battle_map_run_weather_command(MAP_WEATHER_COMMAND_RESTORE_LIGHTING);
         }
         if (weather == BATTLE_WEATHER_STRONG_STORM) {
             if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_SNOW) {
@@ -63,9 +65,10 @@ void battle_map_run_weather_command(s32 command) {
                 battle_sound_stop_weather_sfx();
                 battle_map_run_weather_command(MAP_WEATHER_COMMAND_HEAVY_RAIN);
                 battle_map_run_weather_command(MAP_WEATHER_COMMAND_LIGHTNING);
-                g_battle_sound_primary_weather_sfx_id = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN);
+                g_battle_sound_primary_weather_sfx_id
+                    = MAIN_SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN);
                 if (g_battle_sound_weather_sfx_enabled != 0) {
-                    main_sound_play_bg_sfx(MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN));
+                    main_sound_play_bg_sfx(MAIN_SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN));
                 }
             }
         }
@@ -73,9 +76,9 @@ void battle_map_run_weather_command(s32 command) {
     case MAP_WEATHER_COMMAND_THUNDER:
         g_battle_map_lightning_mode = MAP_LIGHTNING_ONCE;
         g_battle_map_lightning_state.timer = 0x3c;
-        g_battle_sound_primary_weather_sfx_id = MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN);
+        g_battle_sound_primary_weather_sfx_id = MAIN_SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN);
         if (g_battle_sound_weather_sfx_enabled != 0) {
-            main_sound_play_bg_sfx(MAIN_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN));
+            main_sound_play_bg_sfx(MAIN_SUZUKI_SOUND_ID(MAIN_SOUND_RESOURCE_ENV, MAIN_ENV_SFX_RAIN));
         }
         g_battle_map_lightning_state.color_matrices[1].m[0][0] = 0;
         g_battle_map_lightning_state.color_matrices[1].m[0][1] = 0;
@@ -136,7 +139,7 @@ void battle_map_run_weather_command(s32 command) {
         battle_map_init_weather_particles(MAP_WEATHER_COMMAND_INIT_RAIN_PARTICLES);
         break;
     case MAP_WEATHER_COMMAND_CLEAR:
-        g_battle_map_weather_effect_mode = MAP_WEATHER_COMMAND_CLEAR;
+        g_battle_map_weather_effect_mode = MAP_WEATHER_EFFECT_CLEAR;
         g_battle_map_lightning_mode = MAP_LIGHTNING_OFF;
         break;
     }

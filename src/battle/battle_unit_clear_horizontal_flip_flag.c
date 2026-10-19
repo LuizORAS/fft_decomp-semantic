@@ -1,9 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
-/* Stop mirroring the unit with this misc id (battle_script_mirror_sprite_event_instruction). */
-void battle_unit_clear_horizontal_flip_flag(u32 misc_id) {
-    battle_unit_misc_data_t* unit = battle_unit_get_misc_data_by_misc_id(misc_id & 0xffff);
+/* Stop mirroring the unit with this runtime id (script_mirror_sprite_event_instruction). */
+void battle_unit_clear_horizontal_flip_flag(u32 runtime_id) {
+    battle_unit_t* unit = battle_unit_get_by_runtime_id(runtime_id & 0xffff);
 
     if (unit != 0) {
         unit->horizontal_flip_flag = 0;

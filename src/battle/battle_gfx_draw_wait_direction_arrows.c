@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -21,14 +22,14 @@ void battle_gfx_draw_wait_direction_arrows(SVECTOR* base, u32* ot) {
     s32 dx[4] = { 0, -14, 0, 14 };
     s32 dz[4] = { -14, 0, 14, 0 };
     long flag;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     POLY_FT4* prim;
-    /* Signed halfword: the target's division emits the `bgez`/`addiu 0x3ff`
+    /* Signed 16-bit value: the target's division emits the `bgez`/`addiu 0x3ff`
      * correction, so the quadrant bits are not held in an unsigned type. */
     s16 facing_bits;
     s32 i;
 
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     g_battle_gfx_wait_arrow_blink_timer += g_main_system_vsync_interval;
     for (i = 0; i < 4; i++) {
         prim = g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim();

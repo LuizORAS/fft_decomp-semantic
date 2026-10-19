@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* HP damage of a random 1 to Y times XA ((Y / 2 + 1) * XA in an estimate). While executing, the

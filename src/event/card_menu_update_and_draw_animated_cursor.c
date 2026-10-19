@@ -1,18 +1,18 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Advances the animated cursor at `position` and draws it, sliding
  * horizontally, with its semi-transparent shadow. `mode` bit 0 starts the
  * reverse curve; mode 0 cancels it.
  *
- * CARD copy of bunit_menu_update_and_draw_animated_cursor. The state word
+ * CARD copy of bunit_menu_update_and_draw_animated_cursor. The 16-bit state
  * packs the reverse flag in bit 15 and a frame counter in bits 0-6; the
  * counter is scaled by the event speed before the keyframe lookup and
  * clamped to the end of the curve in use (0x24 reverse, wrapping at 0x2f
  * forward). */
-void card_menu_update_and_draw_animated_cursor(const u16* position, u16* animation_state_arg, s32 mode) {
+void card_menu_update_and_draw_animated_cursor(const point16_t* position, u16* animation_state, s32 mode) {
     RECT rect;
-    u16* animation_state = animation_state_arg;
     s32 reverse;
     u32 state_value;
     s32 frame;
@@ -39,7 +39,7 @@ void card_menu_update_and_draw_animated_cursor(const u16* position, u16* animati
 
     frame = *animation_state;
     frame &= 0x7f;
-    frame *= card_menu_get_event_speed();
+    frame *= menu_get_event_speed();
     state_value = reverse;
     if (state_value != 0) {
         state_value = frame < 0x25;
@@ -62,7 +62,7 @@ void card_menu_update_and_draw_animated_cursor(const u16* position, u16* animati
     }
     x_offset = raw_offset;
 
-    frame += card_menu_get_event_speed();
+    frame += menu_get_event_speed();
     state_value = reverse;
     if (state_value != 0) {
         state_value = frame < 0x25;
@@ -79,15 +79,15 @@ void card_menu_update_and_draw_animated_cursor(const u16* position, u16* animati
     }
 
     if (mode != 0) {
-        foreground_clut = g_card_menu_cursor_mode1_foreground_clut;
-        background_clut = g_card_menu_cursor_mode1_background_clut;
+        foreground_clut = g_menu_cursor_mode1_foreground_clut;
+        background_clut = g_menu_cursor_mode1_background_clut;
     } else {
-        foreground_clut = g_card_menu_cursor_mode0_foreground_clut;
-        background_clut = g_card_menu_cursor_mode0_background_clut;
+        foreground_clut = g_menu_cursor_mode0_foreground_clut;
+        background_clut = g_menu_cursor_mode0_background_clut;
     }
 
-    rect.x = x_offset + position[0] - 2;
-    rect.y = position[1];
+    rect.x = x_offset + position->x - 2;
+    rect.y = position->y;
     rect.w = 0x10;
     rect.h = 0x10;
     card_gfx_enqueue_textured_quad(&rect, 0xa8, 0, 0, 0, g_card_menu_cursor_texture_page, foreground_clut, 0x3c);

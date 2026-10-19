@@ -1,3 +1,10 @@
+#include "fft/battle_unit.h"
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/open.h"
+#include "fft/script.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
@@ -5,13 +12,13 @@
 
 #define WINDOW_AT(index) ((menu_window_buffer_t*)((index) * sizeof(menu_window_buffer_t) + (s32)win))
 
-#define NEXT() text = world_text_advance_cursor_with_separate_backreference_state(&repeat, text, &saved)
+#define NEXT() text = text_advance_cursor_with_separate_backreference_state(&repeat, text, &saved)
 
 /* Aborts (here and below) leave the nested text loops for the shared
    window close-and-release tail at `end`. */
 #define CHECK_ABORT()                                                                                                  \
-    if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST                                          \
-        && g_world_thread_current_id != WORLD_THREAD_SLOT_TUTORIAL_TEXT) {                                             \
+    if (thread_get_current_task_id() == THREAD_TASK_STOP_REQUEST                                                       \
+        && g_thread_current_id != WORLD_THREAD_SLOT_TUTORIAL_TEXT) {                                                   \
         goto end;                                                                                                      \
     }
 
@@ -19,10 +26,10 @@
     if (g_world_menu_hosted_frame != 0 && rec.box_type == DIALOG_BOX_TYPE_HELP) {                                      \
         world_input_update_menu_state();                                                                               \
     } else {                                                                                                           \
-        world_thread_yield();                                                                                          \
+        thread_yield();                                                                                                \
     }
 
-/* Same as battle_text_character_handling_thread in WORLD: the dialog thread that opens a window and draws
+/* Same as battle_text_run_dialog_thread in WORLD: the dialog thread that opens a window and draws
  * text entry `parameter 2` into it glyph by glyph, with the same parameters and text controls. Centred and
  * eight-line boxes take their text's line count instead of six and eight lines. A Help box with no hosted
  * frame (or with options 0x0c) binds EVENT/WLDHELP.LZW (g_world_text_wldhelp_section_offsets) while it runs,
@@ -43,7 +50,7 @@ void world_text_character_handling_thread(void) {
     u16 no_wait;
     u16 variable_id;
     u16 value_index;
-    native_thread_t* thread;
+    thread_t* thread;
     s32 party_name_request;
     menu_window_buffer_t* win;
     menu_window_buffer_t* cursor_window;
@@ -54,7 +61,7 @@ void world_text_character_handling_thread(void) {
     menu_window_buffer_t* choice_window;
     menu_window_buffer_t* choice_hidden_window;
     menu_window_buffer_t* choice_hidden_window_2;
-    party_data_t* party;
+    party_unit_t* party;
     job_data_t* job;
     u8* text;
     s16 cursor_x;
@@ -76,12 +83,12 @@ void world_text_character_handling_thread(void) {
     s32 no_value;
 
     party_name_request = 0;
-    world_thread_set_current_task_id(NATIVE_THREAD_TASK_RESUME);
-    world_script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
+    thread_set_current_task_id(THREAD_TASK_RESUME);
+    script_set_variable(EVENT_SCRIPT_VAR_TYPEWRITER_VRAM_X_OFFSET, 0);
     value_index = 0;
     variable_id = EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION;
-    thread = (native_thread_t*)((g_world_thread_current_id << 10) + (s32)g_world_threads);
-    param = (s32)world_thread_get_current_parameter_1();
+    thread = &g_threads[g_thread_current_id];
+    param = world_thread_get_current_parameter_1();
     rec.dialog_type = param;
     if ((param & 0x70) == 0x70) {
         rec.dialog_type = (param & 0x1C) | 0x10;
@@ -113,17 +120,17 @@ void world_text_character_handling_thread(void) {
             thread->function_parameter_2 = i | 0xA000;
             rec.box_type = DIALOG_BOX_TYPE_PORTRAIT;
             rec.options = DIALOG_OPTIONS_NO_TAIL;
-            rec.portrait = g_world_active_turn_unit.battle_id;
+            rec.portrait = g_menu_selected_unit.battle_id;
         }
     }
     if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_menu_hosted_frame == 1) {
-        g_world_menu_input_lock_mode = g_world_menu_hosted_frame;
+        g_menu_input_lock_mode = g_world_menu_hosted_frame;
     }
     if (rec.dialog_type & 0x10) {
         if (party_name_request == 0) {
             rec.portrait = thread->function_parameter_4;
         }
-        party = main_party_get_data_pointer(rec.portrait);
+        party = main_party_get_unit(rec.portrait);
         if (party->sprite_set >= CHARACTER_IDENTITY_SELECTOR_FIRST) {
             if (party->sprite_set == CHARACTER_IDENTITY_GENERIC_MALE) {
                 s32 base = (party->job_id - JOB_ID_GENERIC_FIRST) * 2;
@@ -161,8 +168,8 @@ void world_text_character_handling_thread(void) {
     } else {
         rec.portrait = thread->function_parameter_4 - 1;
     }
-    text = world_text_find_entry(world_thread_get_current_parameter_2());
-    world_text_measure_pixels(&rec.mark, &rec.lines, text);
+    text = text_find_entry(world_thread_get_current_parameter_2());
+    text_measure_pixels(&rec.mark, &rec.lines, text);
     if (thread->task_words[6] != 0) {
         rec.mark = thread->task_words[6];
     }
@@ -196,20 +203,20 @@ void world_text_character_handling_thread(void) {
     }
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT && rec.options != DIALOG_OPTIONS_NO_TAIL) {
         center = rec.width >> 1;
-        value = world_script_get_misc_id(world_thread_get_current_parameter_3());
-        world_unit_project_misc_to_screen(value, g_world_text_speaker_screen_coords);
+        value = script_resolve_runtime_id(world_thread_get_current_parameter_3());
+        unit_project_to_screen(value, &g_world_text_speaker_screen_coords);
         cursor_x = center;
         rec.tail_offset = 0;
-        rec.x = g_world_text_speaker_screen_coords[0] - center - 4;
+        rec.x = g_world_text_speaker_screen_coords.vx - center - 4;
         if (rec.position == 0) {
             if (world_thread_get_current_parameter_3() == g_world_text_speaker_swap_unit_a) {
                 value = g_world_text_speaker_swap_unit_b;
             } else if (world_thread_get_current_parameter_3() == g_world_text_speaker_swap_unit_b) {
                 value = g_world_text_speaker_swap_unit_a;
             }
-            world_unit_project_misc_to_screen(world_script_get_misc_id(value), g_world_text_partner_screen_coords);
-            if (g_world_text_speaker_screen_coords[1] < 0
-                || g_world_text_partner_screen_coords[1] < g_world_text_speaker_screen_coords[1]) {
+            unit_project_to_screen(script_resolve_runtime_id(value), &g_world_text_partner_screen_coords);
+            if (g_world_text_speaker_screen_coords.vy < 0
+                || g_world_text_partner_screen_coords.vy < g_world_text_speaker_screen_coords.vy) {
                 rec.position = 2;
             } else {
                 rec.position = 1;
@@ -218,11 +225,11 @@ void world_text_character_handling_thread(void) {
         }
         if (rec.position == 1) {
             rec.x += 0xC;
-            rec.y = g_world_text_speaker_screen_coords[1] - rec.height - 0x28;
+            rec.y = g_world_text_speaker_screen_coords.vy - rec.height - 0x28;
         }
         if (rec.position == 2) {
             rec.x -= 8;
-            rec.y = g_world_text_speaker_screen_coords[1];
+            rec.y = g_world_text_speaker_screen_coords.vy;
         }
         if (rec.x < 0x88) {
             rec.tail_offset = rec.x - 0x88;
@@ -278,14 +285,14 @@ void world_text_character_handling_thread(void) {
         right = half_w + rec.x - 6;
         bottom = half_h + rec.y - 2;
     }
-    win = world_menu_alloc_window_buffer_pair();
+    win = menu_alloc_window_buffer_pair();
     win->message_id = world_thread_get_current_parameter_2();
     win->dialogue_selector = rec.position;
     win->box_type = rec.box_type;
     rec.text = world_thread_get_current_parameter_2();
     rec.rect.w = rec.width;
     rec.rect.h = rec.height;
-    world_gfx_alloc_tpage7_vram(&rec.rect, (world_texture_prim_t*)win->quads, (u32*)-1);
+    world_gfx_alloc_tpage7_vram(&rec.rect, win->quads, (u32*)-1);
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
         if (text[0] == TEXT_SET_PORTRAIT) {
             win->portrait_code = text[1];
@@ -322,14 +329,7 @@ void world_text_character_handling_thread(void) {
     if (bottom > 0xE4) {
         bottom = 0xE4;
     }
-    win->quads[0].x0 = right;
-    win->quads[0].y0 = bottom;
-    win->quads[0].x1 = right;
-    win->quads[0].y1 = bottom;
-    win->quads[0].x2 = right;
-    win->quads[0].y2 = bottom;
-    win->quads[0].x3 = right;
-    win->quads[0].y3 = bottom;
+    setXY4(&win->quads[0], right, bottom, right, bottom, right, bottom, right, bottom);
     from.x = rec.x;
     from.y = rec.y;
     from.w = rec.width;
@@ -338,14 +338,7 @@ void world_text_character_handling_thread(void) {
     rec.arrow_y = rec.y + rec.height - 0x18;
     to.x = 0;
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
-        win->quads[1].x0 = right;
-        win->quads[1].y0 = bottom;
-        win->quads[1].x1 = right;
-        win->quads[1].y1 = bottom;
-        win->quads[1].x2 = right;
-        win->quads[1].y2 = bottom;
-        win->quads[1].x3 = right;
-        win->quads[1].y3 = bottom;
+        setXY4(&win->quads[1], right, bottom, right, bottom, right, bottom, right, bottom);
         if (rec.tail_offset < 0) {
             to.x = rec.x + 8;
             if (rec.portrait < 8) {
@@ -395,13 +388,13 @@ void world_text_character_handling_thread(void) {
         win->sprites[3].h = 8;
         win->sprites[3].clut = 0x7CBC;
     }
-    world_util_copy_bytes(&win[1], win, 0x118);
+    mem_copy_bytes_nonempty(&win[1], win, sizeof(win[1]));
     win[0].active = 1;
     win[1].active = 1;
     if (rec.box_type == DIALOG_BOX_TYPE_PORTRAIT) {
-        world_menu_tween_window_quads(win, &from, &to, thread->task_words[5] & 0xF);
+        menu_tween_window_quads(win, &from, &to, thread->task_words[5] & 0xF);
     } else {
-        world_menu_animate_window_quad_crop(win, &from, &to);
+        menu_animate_window_quad_crop(win, &from, &to);
     }
     base = win->quads[0].u0;
     rec.x = base + 8;
@@ -466,15 +459,15 @@ void world_text_character_handling_thread(void) {
                     column = 0;
                 }
                 if (no_wait == 0) {
-                    for (tick = 0;; tick += g_world_event_speed) {
+                    for (tick = 0;; tick += g_script_event_speed) {
                         YIELD_OR_INPUT();
-                        if (g_world_menu_new_button_input & (PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT)) {
+                        if (g_script_event_input & (PSX_PAD_CIRCLE | PSX_PAD_CROSS | PSX_PAD_SELECT)) {
                             break;
                         }
                         CHECK_ABORT();
                         if (code == TEXT_PAGE_BREAK) {
                             if (rec.box_type != DIALOG_BOX_TYPE_PORTRAIT) {
-                                cursor_window = WINDOW_AT(g_world_menu_packet_buffer_index);
+                                cursor_window = WINDOW_AT(g_menu_packet_buffer_index);
                                 cursor_window->sprites[0].x0 = cursor_x
                                     + (cursor_window->quads[0].x0 + rec.x - cursor_window->quads[0].u0)
                                     + (s16)(((tick >> 4) & 3) - 8);
@@ -490,16 +483,16 @@ void world_text_character_handling_thread(void) {
                             }
                             if (code == TEXT_NEWLINE
                                 || (code == TEXT_END_WAIT_FOR_CONFIRM && rec.box_type == DIALOG_BOX_TYPE_CENTERED)) {
-                                WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].u0 = (tick & 0x30) - 0x58;
-                                WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].v0 = 0x10;
-                                arrow_window = WINDOW_AT(g_world_menu_packet_buffer_index);
+                                WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].u0 = (tick & 0x30) - 0x58;
+                                WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].v0 = 0x10;
+                                arrow_window = WINDOW_AT(g_menu_packet_buffer_index);
                                 arrow_window->sprites[2].x0 = rec.arrow_x;
                                 arrow_window->sprites[2].y0 = rec.arrow_y;
                             }
-                            if (g_world_menu_current_button_input & PSX_PAD_SQUARE) {
+                            if (g_script_event_current_input & PSX_PAD_SQUARE) {
                                 while (1) {
                                     if (rec.line != rec.lines) {
-                                        scroll_window = WINDOW_AT(g_world_menu_packet_buffer_index);
+                                        scroll_window = WINDOW_AT(g_menu_packet_buffer_index);
                                         scroll_window->scroll_range = rec.line - rec.lines;
                                         scroll_window->scroll_position = rec.first_line;
                                         scroll_window->icon_flags = MENU_WINDOW_ICON_SCROLL_MARKER;
@@ -508,32 +501,32 @@ void world_text_character_handling_thread(void) {
                                                 = MENU_WINDOW_ICON_SCROLL_UP | MENU_WINDOW_ICON_SCROLL_MARKER;
                                         }
                                         if (rec.first_line != rec.line - rec.lines) {
-                                            WINDOW_AT(g_world_menu_packet_buffer_index)->icon_flags
+                                            WINDOW_AT(g_menu_packet_buffer_index)->icon_flags
                                                 |= MENU_WINDOW_ICON_SCROLL_DOWN;
                                         }
                                     }
-                                    if ((g_world_menu_new_button_input & PSX_PAD_UP) && rec.first_line != 0) {
-                                        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
-                                        WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
+                                    if ((g_script_event_input & PSX_PAD_UP) && rec.first_line != 0) {
+                                        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                                        WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                         rec.first_line += no_value;
                                         rec.last_line = rec.first_line + rec.lines;
                                         world_menu_render_text_image_at_record_origin(&rec);
                                     }
-                                    if ((g_world_menu_new_button_input & PSX_PAD_DOWN)
+                                    if ((g_script_event_input & PSX_PAD_DOWN)
                                         && rec.first_line != rec.line - rec.lines) {
-                                        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
-                                        WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
+                                        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                                        WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                         rec.first_line++;
                                         rec.last_line = rec.first_line + rec.lines;
                                         world_menu_render_text_image_at_record_origin(&rec);
                                     }
-                                    if (!(g_world_menu_current_button_input & PSX_PAD_SQUARE)) {
+                                    if (!(g_script_event_current_input & PSX_PAD_SQUARE)) {
                                         win[0].icon_flags = 0;
                                         win[1].icon_flags = 0;
                                         break;
                                     }
                                     CHECK_ABORT();
-                                    WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
+                                    WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                     YIELD_OR_INPUT();
                                 }
                             }
@@ -541,7 +534,7 @@ void world_text_character_handling_thread(void) {
                                `while` is rotated to test at the bottom. */
                             for (;;) {
                                 if (rec.line - rec.lines != rec.first_line) {
-                                    WINDOW_AT(g_world_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
+                                    WINDOW_AT(g_menu_packet_buffer_index)->sprites[2].x0 = 0x200;
                                     rec.first_line++;
                                     rec.last_line = rec.first_line + rec.lines;
                                     world_menu_render_text_image_at_record_origin(&rec);
@@ -553,13 +546,13 @@ void world_text_character_handling_thread(void) {
                     }
                 }
                 g_world_menu_message_waiting_for_confirm = 0;
-                hidden_window = WINDOW_AT(g_world_menu_packet_buffer_index);
+                hidden_window = WINDOW_AT(g_menu_packet_buffer_index);
                 hidden_window->sprites[0].x0 = 0x200;
                 hidden_window->sprites[1].x0 = 0x200;
                 hidden_window->sprites[2].x0 = 0x200;
                 hidden_window->icon_flags = 0;
                 YIELD_OR_INPUT();
-                hidden_window_2 = WINDOW_AT(g_world_menu_packet_buffer_index);
+                hidden_window_2 = WINDOW_AT(g_menu_packet_buffer_index);
                 hidden_window_2->sprites[0].x0 = 0x200;
                 hidden_window_2->sprites[1].x0 = 0x200;
                 hidden_window_2->sprites[2].x0 = 0x200;
@@ -568,17 +561,17 @@ void world_text_character_handling_thread(void) {
                     if (rec.no_box == 0) {
                         break;
                     }
-                    world_thread_set_current_task_id(NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT);
-                    while (world_thread_get_current_task_id() != NATIVE_THREAD_TASK_RESUME) {
+                    thread_set_current_task_id(THREAD_TASK_DIALOG_AWAIT_TEXT);
+                    while (thread_get_current_task_id() != THREAD_TASK_RESUME) {
                         CHECK_ABORT();
-                        world_thread_yield();
+                        thread_yield();
                     }
                     win->message_id = win[1].message_id = rec.text = world_thread_get_current_parameter_2();
                     if ((rec.text & no_value) == no_value) {
                         break;
                     }
                     column = 0;
-                    text = world_text_find_entry(rec.text);
+                    text = text_find_entry(rec.text);
                     no_wait = 0;
                     world_menu_build_and_upload_window_image(
                         rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
@@ -596,7 +589,7 @@ void world_text_character_handling_thread(void) {
                     saved = (u8*)-1;
                     repeat = 0;
                     win[1].portrait_code = rec.portrait;
-                    world_thread_yield();
+                    thread_yield();
                     continue;
                 }
                 if (code == TEXT_PAGE_BREAK) {
@@ -606,13 +599,13 @@ void world_text_character_handling_thread(void) {
                     world_menu_build_and_upload_window_image(
                         rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
                 } else if (rec.box_type != DIALOG_BOX_TYPE_CENTERED) {
-                    g_world_sound_pending_sfx_id = MAIN_SFX_TEXT_PAGE;
+                    g_sound_pending_sfx_id = MAIN_SFX_TEXT_PAGE;
                     rec.first_line = rec.line;
                     rec.last_line = rec.line + rec.lines;
                     world_menu_render_text_image_at_record_origin(&rec);
                 }
                 cursor_y = rec.y - 0x10;
-                world_thread_yield();
+                thread_yield();
             }
             cursor_x = rec.x;
             no_wait = 0;
@@ -624,55 +617,55 @@ void world_text_character_handling_thread(void) {
         } else if (code == TEXT_CHOICE_SELECT) {
             if (rec.mark != -1) {
                 choice = rec.mark;
-                for (i = 0;; i += g_world_event_speed) {
+                for (i = 0;; i += g_script_event_speed) {
                     g_world_menu_message_waiting_for_confirm = 1;
-                    choice_window = WINDOW_AT(g_world_menu_packet_buffer_index);
+                    choice_window = WINDOW_AT(g_menu_packet_buffer_index);
                     choice_window->sprites[0].x0
                         = mark_x + (choice_window->quads[0].x0 + rec.x - choice_window->quads[0].u0) - ((i >> 4) & 3);
                     choice_window->sprites[0].y0
                         = (choice_window->quads[0].y0 + rec.y - choice_window->quads[0].v0) + choice * 16;
                     choice_window->sprites[1].x0 = choice_window->sprites[0].x0 + 2;
                     choice_window->sprites[1].y0 = choice_window->sprites[0].y0 + 2;
-                    world_thread_yield();
-                    if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+                    thread_yield();
+                    if (thread_get_current_task_id() == THREAD_TASK_STOP_REQUEST) {
                         goto end;
                     }
-                    if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_WAIT_FOR_RESUME) {
+                    if (thread_get_current_task_id() == THREAD_TASK_WAIT_FOR_RESUME) {
                         continue;
                     }
-                    if ((g_world_menu_new_button_input & PSX_PAD_UP) && choice != rec.mark) {
-                        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    if ((g_script_event_input & PSX_PAD_UP) && choice != rec.mark) {
+                        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                         choice += no_value;
                     }
-                    if ((g_world_menu_new_button_input & PSX_PAD_DOWN) && choice != column) {
-                        g_world_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
+                    if ((g_script_event_input & PSX_PAD_DOWN) && choice != column) {
+                        g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                         choice++;
                     }
-                    if (g_world_menu_new_button_input & PSX_PAD_CIRCLE) {
+                    if (g_script_event_input & PSX_PAD_CIRCLE) {
                         if (rec.box_type != DIALOG_BOX_TYPE_CENTERED) {
-                            g_world_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
+                            g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
                         }
                         break;
                     }
                 }
-                choice_hidden_window = WINDOW_AT(g_world_menu_packet_buffer_index);
+                choice_hidden_window = WINDOW_AT(g_menu_packet_buffer_index);
                 choice_hidden_window->sprites[0].x0 = 0x200;
                 choice_hidden_window->sprites[1].x0 = 0x200;
-                world_thread_yield();
-                choice_hidden_window_2 = WINDOW_AT(g_world_menu_packet_buffer_index);
+                thread_yield();
+                choice_hidden_window_2 = WINDOW_AT(g_menu_packet_buffer_index);
                 choice_hidden_window_2->sprites[0].x0 = 0x200;
                 choice_hidden_window_2->sprites[1].x0 = 0x200;
-                g_world_script_variables[EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION] = choice - rec.mark;
+                g_script_variables[EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION] = choice - rec.mark;
             }
             NEXT();
             g_world_menu_message_waiting_for_confirm = 0;
         } else if (code == TEXT_WAIT_FOR_RESUME) {
-            world_thread_set_current_task_id(NATIVE_THREAD_TASK_WAIT_FOR_RESUME);
-            while (world_thread_get_current_task_id() != NATIVE_THREAD_TASK_RESUME) {
-                if (world_thread_get_current_task_id() == NATIVE_THREAD_TASK_STOP_REQUEST) {
+            thread_set_current_task_id(THREAD_TASK_WAIT_FOR_RESUME);
+            while (thread_get_current_task_id() != THREAD_TASK_RESUME) {
+                if (thread_get_current_task_id() == THREAD_TASK_STOP_REQUEST) {
                     goto end;
                 }
-                world_thread_yield();
+                thread_yield();
             }
             if (rec.no_box != 0) {
                 win->message_id = win[1].message_id = rec.text = world_thread_get_current_parameter_2();
@@ -680,7 +673,7 @@ void world_text_character_handling_thread(void) {
                     break;
                 }
                 column = 0;
-                text = world_text_find_entry(rec.text);
+                text = text_find_entry(rec.text);
                 no_wait = 0;
                 world_menu_build_and_upload_window_image(
                     rec.width, rec.height, &rec.rect, rec.dialog_type, rec.tail_offset);
@@ -695,27 +688,26 @@ void world_text_character_handling_thread(void) {
                 repeat = 0;
                 g_world_menu_message_waiting_for_confirm = 0;
                 saved = (u8*)-1;
-                world_thread_yield();
+                thread_yield();
                 continue;
             }
-            world_thread_yield();
+            thread_yield();
             NEXT();
             no_wait = 1;
         } else if (code == TEXT_RELEASE_WAITING_THREADS) {
             for (i = 0; i < 0x11; i++) {
-                if (g_world_thread_current_id != i
-                    && g_world_thread_task_ids[i][0] == NATIVE_THREAD_TASK_WAIT_FOR_RESUME
+                if (g_thread_current_id != i && g_thread_contexts[i].task_id == THREAD_TASK_WAIT_FOR_RESUME
                     && world_thread_is_running_asm(i)) {
-                    g_world_thread_task_ids[i][0] = NATIVE_THREAD_TASK_RESUME;
+                    g_thread_contexts[i].task_id = THREAD_TASK_RESUME;
                 }
             }
-            world_thread_yield();
+            thread_yield();
             NEXT();
         } else if (code == TEXT_SET_PORTRAIT) {
             NEXT();
             win[0].portrait_code = *text;
             win[1].portrait_code = *text;
-            world_script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, *text);
+            script_set_variable(EVENT_SCRIPT_VAR_DIALOG_PORTRAIT, *text);
             NEXT();
         } else if (code == TEXT_SET_VARIABLE_BASE) {
             NEXT();
@@ -723,12 +715,12 @@ void world_text_character_handling_thread(void) {
             NEXT();
         } else if (code == TEXT_STORE_VARIABLE) {
             NEXT();
-            i = world_script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
+            i = script_get_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX);
             if (i != 0) {
-                world_script_set_variable(variable_id + i * 10, *text);
-                world_script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);
+                script_set_variable(variable_id + i * 10, *text);
+                script_set_variable(EVENT_SCRIPT_VAR_TEXT_STORE_INDEX, 0);
             } else {
-                world_script_set_variable(variable_id, *text);
+                script_set_variable(variable_id, *text);
             }
             NEXT();
         } else if (code == TEXT_SET_GLYPH_DELAY) {
@@ -740,15 +732,15 @@ void world_text_character_handling_thread(void) {
             rec.color = *text;
             NEXT();
         } else {
-            substitution = &g_world_text_substitution_values[value_index];
-            value = world_text_resolve_format_string_id(code, *substitution);
+            substitution = &g_text_substitution_values[value_index];
+            value = text_resolve_format_string_id(code, *substitution);
             if (value != -1) {
                 saved = text + 1;
                 value_index++;
                 if (code == TEXT_FORMAT_RAMZA_NAME) {
-                    text = g_world_text_player_name;
+                    text = g_text_player_name;
                 } else {
-                    text = world_text_find_entry(value);
+                    text = text_find_entry(value);
                 }
                 continue;
             }
@@ -762,9 +754,9 @@ void world_text_character_handling_thread(void) {
                     value_index++;
                 } else {
                     NEXT();
-                    value = g_world_text_substitution_values[*text];
+                    value = g_text_substitution_values[*text];
                 }
-                digits = world_text_count_decimal_digits(value);
+                digits = text_count_decimal_digits(value);
                 started = 0;
                 if (width_override != no_value) {
                     digits = width_override;
@@ -779,7 +771,7 @@ void world_text_character_handling_thread(void) {
                         value -= code * g_world_text_decimal_divisors[i];
                     }
                     {
-                        battle_text_glyph_state_t* glyph = &g_world_text_typewriter_glyph;
+                        battle_text_glyph_state_t* glyph = &g_text_typewriter_glyph;
 
                         glyph->x = cursor_x;
                         glyph->y = cursor_y;
@@ -791,7 +783,7 @@ void world_text_character_handling_thread(void) {
                     if (code == TEXT_SPACE) {
                         cursor_x += 4;
                     } else {
-                        cursor_x += g_world_text_glyph_widths[code];
+                        cursor_x += g_text_glyph_widths[code];
                     }
                 }
                 NEXT();
@@ -821,7 +813,7 @@ void world_text_character_handling_thread(void) {
                     code += *text;
                 }
                 {
-                    battle_text_glyph_state_t* glyph = &g_world_text_typewriter_glyph;
+                    battle_text_glyph_state_t* glyph = &g_text_typewriter_glyph;
 
                     glyph->x = cursor_x;
                     glyph->y = cursor_y;
@@ -833,7 +825,7 @@ void world_text_character_handling_thread(void) {
                 if (code == TEXT_SPACE) {
                     cursor_x += 4;
                 } else {
-                    cursor_x += g_world_text_glyph_widths[code];
+                    cursor_x += g_text_glyph_widths[code];
                 }
                 NEXT();
             }
@@ -845,8 +837,8 @@ end:
         from.h = 0;
         from.x = right;
         from.y = bottom;
-        world_util_copy_bytes(&to, &from, 8);
-        world_menu_tween_window_quads(win, &from, &to, 4);
+        mem_copy_bytes_nonempty(&to, &from, sizeof(to));
+        menu_tween_window_quads(win, &from, &to, 4);
     }
     g_world_menu_message_waiting_for_confirm = 0;
     win->active = 0;
@@ -855,13 +847,13 @@ end:
     world_menu_release_current_thread_slot();
     YIELD_OR_INPUT();
     if (rec.box_type == DIALOG_BOX_TYPE_HELP && g_world_menu_hosted_frame == 1) {
-        g_world_menu_input_lock_mode = 0;
+        g_menu_input_lock_mode = 0;
     }
     if (((rec.box_type == DIALOG_BOX_TYPE_HELP || party_name_request != 0) && rec.options == 0xC)
         || ((rec.box_type == DIALOG_BOX_TYPE_HELP || party_name_request != 0) && g_world_menu_hosted_frame == 0)) {
         world_text_restore_section_pointers();
     }
-    if (g_world_thread_current_id != NATIVE_SCREEN_THREAD_SLOT_TEXT || rec.options != 0xC) {
-        world_thread_exit_current();
+    if (g_thread_current_id != THREAD_SCREEN_SLOT_TEXT || rec.options != 0xC) {
+        thread_exit_current();
     }
 }

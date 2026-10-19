@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Moldball Virus cannot reach water: take every tile with depth out of its area. */
@@ -13,7 +14,7 @@ void battle_target_check_moldball_virus_depth(s16 ability_id) {
     panel = g_battle_target_panels;
     tile = g_battle_map_tile_data;
     do {
-        if (tile->depth_half_height.value & MAP_TILE_DEPTH_MASK) {
+        if (tile->depth_half_height.depth) {
             panel->remaining_range = 0;
         }
         tile++;

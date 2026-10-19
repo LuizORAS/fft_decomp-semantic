@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Physical damage from XA and YA: the physical XA modifiers
  * (battle_formula_apply_physical_xa_modifiers), a critical hit, then HP damage XA * YA. */

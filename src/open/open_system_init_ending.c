@@ -1,5 +1,4 @@
 #include "fft/open.h"
-#include "psx/types.h"
 
 /* Set up the ending for open_system_run_ending_cutscene: unload the scenario music, reset the runtime
  * state, save the 64x256 VRAM page at (960, 256) to (960, 0) (open_gfx_restore_frame_vram_page puts it back),

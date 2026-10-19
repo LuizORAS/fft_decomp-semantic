@@ -1,12 +1,14 @@
 #include "fft/event_card.h"
+#include "fft/menu.h"
 #include "psx/types.h"
 
 /* Draw a rectangle tiled with 16-pixel textured quads.
  *
- * Kind 2 takes the rectangle from the global tiled rect; otherwise command
- * bytes 5 and 6 pack the full-tile counts and remainders in their nibbles.
+ * Rectangle source 2 takes the rectangle from the global tiled rect; otherwise
+ * command->width and command->height pack the full-tile counts and remainders in
+ * their nibbles.
  */
-u8* card_menu_script_draw_tiled_rectangle(u8* command) {
+world_menu_window_command_t* card_menu_script_draw_tiled_rectangle(world_menu_window_command_t* command) {
     RECT rect;
     s32 base_x;
     s32 base_y;
@@ -20,9 +22,9 @@ u8* card_menu_script_draw_tiled_rectangle(u8* command) {
     s32 column;
 
     otag_index = g_card_text_otag_index;
-    clut = g_card_menu_palette_clut;
+    clut = g_menu_palette_clut;
 
-    if (command[2] == 2) {
+    if (command->rectangle_source == 2) {
         base_x = g_card_gfx_tiled_rect.x;
         base_y = g_card_gfx_tiled_rect.y;
         full_columns = g_card_gfx_tiled_rect.w / 16;
@@ -33,10 +35,10 @@ u8* card_menu_script_draw_tiled_rectangle(u8* command) {
         u8 packed_width;
         u8 packed_height;
 
-        base_x = command[3];
-        base_y = command[4];
-        packed_width = command[5];
-        packed_height = command[6];
+        base_x = command->x;
+        base_y = command->y;
+        packed_width = command->width;
+        packed_height = command->height;
         full_columns = packed_width >> 4;
         partial_width = packed_width & 15;
         full_rows = packed_height >> 4;
@@ -77,6 +79,6 @@ u8* card_menu_script_draw_tiled_rectangle(u8* command) {
         }
     }
 
-    command += command[1];
+    command = (world_menu_window_command_t*)((u8*)command + command->length);
     return command;
 }

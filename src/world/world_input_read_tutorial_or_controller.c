@@ -1,7 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Return the tutorial's scripted button word while a tutorial runs, pad 0
+/* Return the tutorial's scripted 16-bit button mask while a tutorial runs, pad 0
  * otherwise. The soft-reset combination resets the game. */
 s32 world_input_read_tutorial_or_controller(s32 unused_0) {
     u32 input;

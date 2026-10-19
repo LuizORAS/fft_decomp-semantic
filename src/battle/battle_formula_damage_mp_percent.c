@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x1B, Magic Ruin: the magical evade check and hit chance (MA + X with both Faiths), then
  * MP damage of Y% of the target's max MP. */

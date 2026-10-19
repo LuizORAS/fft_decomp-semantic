@@ -5,7 +5,7 @@
 /* Handler 1, FFTOP.STR, the opening movie that follows the birthday: Start stops it. Once it has stopped
  * the controller pops, the display is blanked and OPEN ends with result 0, a new game, which MAIN takes
  * straight into BATTLE. */
-void open_movie_update_fftop_controller(void) {
+void open_movie_update_fftop_controller(open_controller_record_t* unused_record) {
     u32 flags;
     s32 controller;
 

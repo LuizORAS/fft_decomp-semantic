@@ -1,5 +1,5 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 
 /* Mark the target missed by accuracy: no hit, miss type ACCURACY_MISS. */
 void battle_formula_set_accuracy_miss(void) {

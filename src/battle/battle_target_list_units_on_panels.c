@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Fill `list` (BATTLE_UNIT_SLOT_COUNT bytes, 0xff padded) with the ids of present units whose
@@ -8,7 +10,8 @@
  * ordering is enabled the list is insertion-sorted by Manhattan distance from
  * `origin`.
  */
-s32 battle_target_list_units_on_panels(u8* list, battle_stats_t* origin) {
+s32 battle_target_list_units_on_panels(u8* list, const battle_stats_t* origin) {
+    /* A byte flag test retains the original compound-condition scheduling. */
     s32 distance[BATTLE_UNIT_SLOT_COUNT];
     s32 tile;
     s32 count;
@@ -24,17 +27,17 @@ s32 battle_target_list_units_on_panels(u8* list, battle_stats_t* origin) {
 
     count = 0;
     x = origin->x;
-    y = origin->position.bits.y;
+    y = origin->position.y;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
         if (unit->entd_slot != BATTLE_ENTD_SLOT_NONE && battle_target_is_unit_untargetable_and_store_tile(i, &tile) == 0
-            && (g_battle_map_tile_data[tile].ceiling_depth_and_marks.value & MAP_TILE_FLAG_TARGETED)) {
+            && ((*(u8*)&g_battle_map_tile_data[tile].ceiling_depth_and_marks) & MAP_TILE_FLAG_TARGETED)) {
             if (g_battle_sort_targets_nearest_first != 0) {
                 dx = x - unit->x;
                 if (dx < 0) {
                     dx = -dx;
                 }
-                dy = y - unit->position.bits.y;
+                dy = y - unit->position.y;
                 if (dy < 0) {
                     dy = -dy;
                 }

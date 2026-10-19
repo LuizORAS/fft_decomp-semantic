@@ -4,8 +4,8 @@
  *
  * This variant selects 8-bit texture mode and adds the PSX screen center to
  * the draw offset. */
-void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, world_image_location_t* texture_page, const RECT* position,
-    main_zodiac_sprite_frame_t* sprite_rect, point16_t* scale, const main_zodiac_draw_offset_t* offset) {
+void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture_page, const RECT* position,
+    sprite_sheet_frame_t* sprite_rect, point16_t* scale, const main_zodiac_draw_offset_t* offset) {
     s32 rx;
     s32 ry;
     s32 rw;
@@ -17,10 +17,10 @@ void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, world_image_location
     s32 x1;
     s32 y1;
 
-    ox = sprite_rect->offset_x * scale->x;
-    oy = sprite_rect->offset_y * scale->y;
-    w = sprite_rect->width * scale->x;
-    h = sprite_rect->height * scale->y;
+    ox = sprite_rect->offset.x * scale->x;
+    oy = sprite_rect->offset.y * scale->y;
+    w = sprite_rect->source.w * scale->x;
+    h = sprite_rect->source.h * scale->y;
 
     rx = 0;
     ry = 0;
@@ -51,24 +51,15 @@ void attack_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, world_image_location
     }
 
     poly->tpage = GetTPage(1, 0, texture_page->x, texture_page->y & 0xF00);
-    poly->u0 = sprite_rect->u;
-    poly->v0 = sprite_rect->v;
-    poly->u1 = sprite_rect->u + sprite_rect->width;
-    poly->v1 = sprite_rect->v;
-    poly->u2 = sprite_rect->u;
-    poly->v2 = sprite_rect->v + sprite_rect->height;
-    poly->u3 = sprite_rect->u + sprite_rect->width;
-    poly->v3 = sprite_rect->v + sprite_rect->height;
+    setUV4(poly, sprite_rect->source.x, sprite_rect->source.y, sprite_rect->source.x + sprite_rect->source.w,
+        sprite_rect->source.y, sprite_rect->source.x, sprite_rect->source.y + sprite_rect->source.h,
+        sprite_rect->source.x + sprite_rect->source.w, sprite_rect->source.y + sprite_rect->source.h);
 
     x1 = w + 0x100;
     y1 = h + 0x78;
 
-    poly->x0 = position->x + ox + offset->x + 0x100;
-    poly->y0 = position->y + oy + offset->y + 0x78;
-    poly->x1 = position->x + ox + offset->x + x1;
-    poly->y1 = position->y + oy + offset->y + 0x78;
-    poly->x2 = position->x + ox + offset->x + 0x100;
-    poly->y2 = position->y + oy + offset->y + y1;
-    poly->x3 = position->x + ox + offset->x + x1;
-    poly->y3 = position->y + oy + offset->y + y1;
+    setXY4(poly, position->x + ox + offset->position.x + 0x100, position->y + oy + offset->position.y + 0x78,
+        position->x + ox + offset->position.x + x1, position->y + oy + offset->position.y + 0x78,
+        position->x + ox + offset->position.x + 0x100, position->y + oy + offset->position.y + y1,
+        position->x + ox + offset->position.x + x1, position->y + oy + offset->position.y + y1);
 }

@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* The ability's element on the current target: Oil with fire doubles XA and is marked for removal,
@@ -19,7 +21,7 @@ void battle_formula_apply_ability_element(void) {
         && (element & BATTLE_ELEMENT_FIRE)) {
         action = g_battle_action_target_data;
         g_battle_action_current_ability.xa = g_battle_action_current_ability.xa * 2;
-        action->status_removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_OIL)]
+        action->status_changes.removal[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_OIL)]
             |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_OIL);
         if (battle_status_modify_inflictions(0) != 0) {
             g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_STATUS_CHANGE;

@@ -1,9 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
 enum {
-    BATTLE_MOVE_STEP_WIDTH = 28,
-    BATTLE_MOVE_STEP_HALF_WIDTH = 14,
+    BATTLE_MOVE_STEP_HALF_WIDTH = BATTLE_MAP_TILE_SIZE / 2,
     BATTLE_MOVE_STEP_NEAR_EDGE = -7,
     BATTLE_MOVE_STEP_FAR_EDGE = 35,
 };
@@ -16,13 +16,13 @@ enum {
  * battle_move_set_velocity_for_contiguous_steps_with_final_tile_height does the
  * same, but aims the path's last step at the destination tile's surface.
  *
- * The step code is copied to a halfword before the switch: read through the
+ * The step code is copied to a 16-bit value before the switch: read through the
  * byte again, cse reuses the direction test's load and the reload is lost.
  */
 void battle_move_set_velocity_for_contiguous_clamped_steps(
-    battle_unit_misc_data_t* unit, const u8* path, const u8* step) {
+    battle_unit_t* unit, const battle_walk_path_t* path, const battle_move_step_t* step) {
     VECTOR direction;
-    const u8* current;
+    const battle_move_step_t* current;
     s32 start_x;
     s32 start_y;
     s32 start_z;
@@ -38,39 +38,39 @@ void battle_move_set_velocity_for_contiguous_clamped_steps(
     x = unit->map_x;
     y = unit->map_y;
     index = unit->movement_path_offset - 1;
-    start_x = unit->screen.vx;
-    start_y = unit->screen.vz;
-    start_z = unit->screen.vy;
+    start_x = unit->world_coords.vx;
+    start_y = unit->world_coords.vz;
+    start_z = unit->world_coords.vy;
 
-    while (index < *path) {
-        current = &path[index + 1];
-        if ((*current & 0xc0) != (*step & 0xc0)) {
+    while (index < path->count) {
+        current = &path->data.steps[index];
+        if (current->direction != step->direction) {
             break;
         }
-        code = *current;
+        code = *(u8*)current;
         switch (code >> 6) {
         case BATTLE_MOVE_STEP_DIRECTION_EAST:
             x += (code & 3) + 1;
-            end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_NEAR_EDGE;
-            end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
+            end_x = (x * BATTLE_MAP_TILE_SIZE) + BATTLE_MOVE_STEP_NEAR_EDGE;
+            end_y = (y * BATTLE_MAP_TILE_SIZE) + BATTLE_MOVE_STEP_HALF_WIDTH;
             break;
         case BATTLE_MOVE_STEP_DIRECTION_WEST:
             x -= (code & 3) + 1;
-            end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_FAR_EDGE;
-            end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
+            end_x = (x * BATTLE_MAP_TILE_SIZE) + BATTLE_MOVE_STEP_FAR_EDGE;
+            end_y = (y * BATTLE_MAP_TILE_SIZE) + BATTLE_MOVE_STEP_HALF_WIDTH;
             break;
         case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
             y -= (code & 3) + 1;
-            end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
-            end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_FAR_EDGE;
+            end_x = (x * BATTLE_MAP_TILE_SIZE) + BATTLE_MOVE_STEP_HALF_WIDTH;
+            end_y = (y * BATTLE_MAP_TILE_SIZE) + BATTLE_MOVE_STEP_FAR_EDGE;
             break;
         case BATTLE_MOVE_STEP_DIRECTION_NORTH:
             y += (code & 3) + 1;
-            end_x = (x * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_HALF_WIDTH;
-            end_y = (y * BATTLE_MOVE_STEP_WIDTH) + BATTLE_MOVE_STEP_NEAR_EDGE;
+            end_x = (x * BATTLE_MAP_TILE_SIZE) + BATTLE_MOVE_STEP_HALF_WIDTH;
+            end_y = (y * BATTLE_MAP_TILE_SIZE) + BATTLE_MOVE_STEP_NEAR_EDGE;
             break;
         }
-        end_z = battle_move_clamp_z_to_tile_headroom(start_z, x, y, (*current >> 5) & 1);
+        end_z = battle_move_clamp_z_to_tile_headroom(start_z, x, y, current->higher);
         if (end_z != start_z) {
             break;
         }

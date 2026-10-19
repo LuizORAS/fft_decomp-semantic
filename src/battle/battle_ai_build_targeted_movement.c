@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/memory.h"
 
 /* Build the movement scenarios of Fight for life and Protect allies around the decision target (the
  * Auto-Battle target; every distance is 0 when that is the unit itself or untargetable). Scenario 0's
@@ -11,7 +12,7 @@
 s32 battle_ai_build_targeted_movement(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 range;
-    u8(*distance_rows)[16];
+    u8(*distance_rows)[BATTLE_AI_GRID_COLUMN_COUNT];
     u32 distance_level_base;
     s32 limit;
     s32 distance;
@@ -21,7 +22,7 @@ s32 battle_ai_build_targeted_movement(void) {
         && (g_battle_ai_data_base.acting_unit->auto_battle_target == g_battle_ai_data_base.acting_unit_id
             || ((ai->unit_decisions[g_battle_ai_data_base.acting_unit->auto_battle_target].targeting_flags_2 >> 4)
                 & (BATTLE_AI_TARGET_UNTARGETABLE >> 4)))) {
-        battle_ai_clear_words(ai->tile_target_distance, sizeof(ai->tile_target_distance));
+        battle_mem_zero_32bit_values(ai->tile_target_distance, sizeof(ai->tile_target_distance));
     } else if (battle_ai_fill_target_distance_grid(&ai->acting_unit_decision->target) == -1) {
         return -1;
     }
@@ -29,10 +30,11 @@ s32 battle_ai_build_targeted_movement(void) {
     /* Direct typed level indexing reverses the two address-building instructions
      * at +0xbc/+0xc0. Stage only the level base; retain the real member offset
      * and typed row/column indexing for the byte-exact match. */
-    distance_level_base = ai->acting_unit_coords.bytes.elevation * sizeof(ai->tile_target_distance[0]) + (u32)ai;
-    distance_rows = (u8(*)[16])(distance_level_base + (u32) & ((battle_ai_data_t*)0)->tile_target_distance);
+    distance_level_base = ai->acting_unit_coords.fields.elevation * sizeof(ai->tile_target_distance[0]) + (u32)ai;
+    distance_rows = (u8(*)[BATTLE_AI_GRID_COLUMN_COUNT])(
+        distance_level_base + (u32) & ((battle_ai_data_t*)0)->tile_target_distance);
     limit = range;
-    distance = distance_rows[ai->acting_unit_coords.bytes.y][ai->acting_unit_coords.bytes.x];
+    distance = distance_rows[ai->acting_unit_coords.fields.y][ai->acting_unit_coords.fields.x];
     within_two_tiles = distance < 3;
     ai->movement_scenario = 0;
     if (ai->autobattle_setting == BATTLE_AUTO_BATTLE_PROTECT_ALLIES && !within_two_tiles) {
@@ -49,7 +51,7 @@ s32 battle_ai_build_targeted_movement(void) {
         battle_ai_set_candidate_and_actor_reachable_tiles();
     }
     ai->movement_scenario = 2;
-    battle_ai_transfer_halfword_values(ai->reachable_tiles[2], ai->reachable_tiles[0], sizeof(ai->reachable_tiles[0]));
+    battle_mem_copy_u16_values(ai->reachable_tiles[2], ai->reachable_tiles[0], sizeof(ai->reachable_tiles[0]));
     if (!ai->acting_unit->action_taken) {
         s32 closer_distance = distance - 1;
         if (closer_distance < limit) {
@@ -59,7 +61,7 @@ s32 battle_ai_build_targeted_movement(void) {
     } else {
         ai->candidate_coords[2] = ai->candidate_coords[1];
     }
-    ai->reachable_tiles[1][ai->acting_unit_coords.bytes.elevation][ai->acting_unit_coords.bytes.y]
-        |= 0x8000 >> ai->acting_unit_coords.bytes.x;
+    ai->reachable_tiles[1][ai->acting_unit_coords.fields.elevation][ai->acting_unit_coords.fields.y]
+        |= 0x8000 >> ai->acting_unit_coords.fields.x;
     return 0;
 }

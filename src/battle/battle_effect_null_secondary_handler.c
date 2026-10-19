@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /*
  * Secondary effect function 0x05: an erroneous
@@ -10,15 +10,15 @@ s32 battle_effect_null_secondary_handler(void) {
 
     /* Preserve the target's unsigned phase-dispatch comparison. */
     switch (g_battle_effect_current_secondary->phase) {
-    case BATTLE_SECONDARY_EFFECT_INITIALIZING:
-        g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
+    case BATTLE_EFFECT_SECONDARY_PHASE_INITIALIZING:
+        g_battle_effect_current_secondary->phase = BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING;
         result = 1;
         break;
-    case BATTLE_SECONDARY_EFFECT_EXECUTING:
-        g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_FINALIZING;
+    case BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING:
+        g_battle_effect_current_secondary->phase = BATTLE_EFFECT_SECONDARY_PHASE_FINALIZING;
         result = 1;
         break;
-    case BATTLE_SECONDARY_EFFECT_FINALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_FINALIZING:
         result = 0;
         break;
     }

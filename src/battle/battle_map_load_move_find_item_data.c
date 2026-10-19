@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 
 /* Make a map's four Move-Find tiles (their items and traps) the current ones, in
  * g_battle_current_map_move_find_item_data. */

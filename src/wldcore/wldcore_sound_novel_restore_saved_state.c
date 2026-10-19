@@ -1,11 +1,5 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
-
-/* View of the picture state at 0x800d485c (render record index,
- * then the pending picture id). */
-typedef struct wldcore_script_picture_state {
-    s16 render_index; /* 0x00; g_wldcore_sound_novel_record.picture_render_index */
-    s16 picture;      /* 0x02; g_wldcore_sound_novel_record.picture_id */
-} wldcore_script_picture_state_t;
 
 /*
  * Loads the sound novel's reading state and replays what it implies.
@@ -19,7 +13,7 @@ typedef struct wldcore_script_picture_state {
  * and the value display re-shown when their state flags say so, and the fade
  * box set to the saved
  * brightness (0x100 is stored as 0xFF). After the novel's files are loaded
- * the script resumes at the saved section's word table entry, or branches to
+ * the script resumes at the saved section's 32-bit table entry, or branches to
  * the start when the section is 0.
  */
 void wldcore_sound_novel_restore_saved_state(s32 render_record) {
@@ -31,7 +25,6 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     s32 tint;
     s32 section;
     u16* state_flags;
-    wldcore_script_picture_state_t* picture;
 
     if (g_wldcore_sound_novel_index < 5) {
         g_wldcore_sound_novel_record = g_main_sound_novel_records[g_wldcore_sound_novel_index];
@@ -39,20 +32,21 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
         wldcore_sound_novel_reset_record(&g_wldcore_sound_novel_record);
     }
     g_wldcore_sound_novel_record.picture_render_index = render_record;
-    g_wldcore_sound_novel_record.buffer = g_main_save_slot_buffer;
+    g_wldcore_sound_novel_record.buffer = &g_main_save_slot_buffer;
     g_wldcore_sound_novel_record.state_flags &= ~(WLDCORE_SOUND_NOVEL_STATE_BRANCH | WLDCORE_SOUND_NOVEL_STATE_FETCH);
     for (i = 0; i < 1; i++) {
         g_wldcore_sound_novel_local_flags[i] = 0;
     }
-    world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
-    world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);
-    world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
-    picture = (wldcore_script_picture_state_t*)&g_wldcore_sound_novel_record.picture_render_index;
-    g_wldcore_window_render_records[picture->render_index].priority = 0xC;
-    g_wldcore_window_render_records[picture->render_index].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
-    g_wldcore_window_render_records[picture->render_index].flags &= ~WLDCORE_DISPLAY_OBJECT_POP_IN;
+    script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);
+    script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
+    g_wldcore_window_render_records[g_wldcore_sound_novel_record.picture_render_index].priority = 0xC;
+    g_wldcore_window_render_records[g_wldcore_sound_novel_record.picture_render_index].flags
+        |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_wldcore_window_render_records[g_wldcore_sound_novel_record.picture_render_index].flags
+        &= ~WLDCORE_DISPLAY_OBJECT_POP_IN;
 
-    picture_id = picture->picture;
+    picture_id = g_wldcore_sound_novel_record.picture_id;
     if (picture_id != -1) {
         g_wldcore_sound_novel_record.picture_id = -1;
         g_wldcore_sound_novel_state.instruction.word = (g_wldcore_sound_novel_record.picture_x << 24)
@@ -106,8 +100,9 @@ void wldcore_sound_novel_restore_saved_state(s32 render_record) {
     wldcore_file_wait_for_load();
     section = g_wldcore_sound_novel_record.section;
     if (section != 0) {
+        /* The 32-bit view preserves register order; the named offset field swaps the index and base. */
         g_wldcore_sound_novel_record.script_words
-            = (u32*)&g_main_save_slot_buffer[(((u32*)g_wldcore_sound_novel_record.buffer)[section] >> 2) * 4];
+            = &((u32*)&g_main_save_slot_buffer)[((u32*)g_wldcore_sound_novel_record.buffer)[section] / sizeof(u32)];
         /* A struct-field store: as a scalar global the store would be
          * scheduled above the table load (GCC 2.7 alias rule). */
         g_wldcore_sound_novel_record.word_index = 0;

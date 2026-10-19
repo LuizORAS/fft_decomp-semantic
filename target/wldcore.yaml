@@ -49,7 +49,7 @@ functions:
   - {addr: 0x80069adc, size: 212, name: wldcore_calendar_advance_day, hash: fa23d9cb75d2330b}
   - {addr: 0x80069bb0, size: 400, name: wldcore_calendar_to_zodiac_date, hash: 8d40642805cd5ac8}
   - {addr: 0x80069d40, size: 248, name: wldcore_calendar_advance_birthdays, hash: 093651326def3e0f}
-  - {addr: 0x80069e38, size: 32, name: wldcore_unit_get_party_data_pointer, hash: 94137dd4e32ea227}
+  - {addr: 0x80069e38, size: 32, name: wldcore_unit_get_party_unit, hash: 94137dd4e32ea227}
   - {addr: 0x80069e58, size: 172, name: wldcore_calendar_write_date, hash: a100a01dd3458fa8}
   - {addr: 0x80069f04, size: 276, name: wldcore_calendar_read_date, hash: 337a6e03c2eb3680}
   - {addr: 0x8006a018, size: 148, name: wldcore_gfx_clear_vram_and_scratch, hash: 6d07a88a3d3e8359}
@@ -68,7 +68,7 @@ functions:
   - {addr: 0x8006b26c, size: 500, name: wldcore_gfx_draw_display_object_sprite, hash: 3a72d1b76b19a115}
   - {addr: 0x8006b460, size: 232, name: wldcore_window_append_record_and_reset_color, hash: 9d472c712e7475fd}
   - {addr: 0x8006b548, size: 304, name: wldcore_window_append_render_record_and_reset_color, hash: 8b95487b55821e0b}
-  - {addr: 0x8006b678, size: 276, name: wldcore_gfx_calculate_scaled_rectangle, hash: 63903852735eac70}
+  - {addr: 0x8006b678, size: 276, name: gfx_calculate_scaled_rectangle, hash: 63903852735eac70, source: src/shared/gfx/gfx_calculate_scaled_rectangle.c}
   - {addr: 0x8006b78c, size: 840, name: wldcore_gfx_draw_context_value_display, hash: a64c4fe093eb72d2, rodata: [{addr: 0x80067020, size: 20, hash: ec1dbbcbf2752505}]}
   - {addr: 0x8006bad4, size: 244, name: wldcore_gfx_draw_cursor_sprite_and_underline, hash: 477515410b583ab3}
   - {addr: 0x8006bbc8, size: 444, name: wldcore_gfx_draw_number_digits, hash: 4f4c1a14ea91b92e}
@@ -270,7 +270,7 @@ functions:
   - {addr: 0x800890f0, size: 1100, name: wldcore_list_open_tutorial_categories, hash: 61d22220966e7b4d}
   - {addr: 0x8008953c, size: 392, name: wldcore_list_build_tutorial_category_panel_image, hash: 6e7e170a9de6189f}
   - {addr: 0x800896c4, size: 236, name: wldcore_menu_resume_tutorial_categories_level, hash: 1fe1a6d4d29bc858}
-  - {addr: 0x800897b0, size: 228, name: wldcore_menu_suspend_tutorial_categories_level, hash: 512442d2f93c0290}
+  - {addr: 0x800897b0, size: 228, name: wldcore_menu_suspend_tutorial_categories_level, hash: 512442d2f93c0290, source: src/wldcore/wldcore_menu_suspend_bar_menu_level.c, source_symbol: wldcore_menu_suspend_bar_menu_level}
   - {addr: 0x80089894, size: 1468, name: wldcore_list_handle_tutorial_categories_input, hash: a3346d6f4a1eb56a}
   - {addr: 0x80089e50, size: 412, name: wldcore_list_open_formation_tutorials, hash: e1c1e7140539bd33}
   - {addr: 0x80089fec, size: 20, name: wldcore_list_formation_tutorials_restore_blocked_buttons, hash: 7e9ed99f23ab0769}
@@ -284,7 +284,7 @@ functions:
   - {addr: 0x8008aba8, size: 60, name: wldcore_sound_novel_reset_selected_record, hash: 23177777d1486fca}
   - {addr: 0x8008abe4, size: 76, name: wldcore_sound_novel_reset_record, hash: 8362564a9498299c}
   - {addr: 0x8008ac30, size: 520, name: wldcore_sound_novel_run_until_yield, hash: d58db67b16b103f2}
-  - {addr: 0x8008ae38, size: 104, name: wldcore_save_find_slot_entry_by_tag, hash: 7f2dbc1cc0cfb332}
+  - {addr: 0x8008ae38, size: 104, name: wldcore_sound_novel_find_section_instruction, hash: 7f2dbc1cc0cfb332}
   - {addr: 0x8008aea0, size: 336, name: wldcore_window_draw_centered_text, hash: fc163dab7b9ad241}
   - {addr: 0x8008aff0, size: 304, name: wldcore_sound_play_pending_script_sounds, hash: 02e5ec28fdf0e91a}
   - {addr: 0x8008b120, size: 124, name: wldcore_sound_stop_weather_sfx_and_send_quad, hash: 2853875af4bd3a7f}
@@ -390,7 +390,7 @@ functions:
   - {addr: 0x8009036c, size: 120, name: wldcore_window_init_record, hash: c2ddfb60e7100f16}
   - {addr: 0x800903e4, size: 732, name: wldcore_text_is_window_finished, hash: b51b825f77122c7e}
   - {addr: 0x800906c0, size: 872, name: wldcore_text_render_scrollable_window_page, hash: 0a6626b97c286fca}
-  - {addr: 0x80090a28, size: 140, name: wldcore_window_update_flag_from_owner_progress, hash: 65507cce57e00cfe}
+  - {addr: 0x80090a28, size: 140, name: wldcore_text_update_page_prompt_visibility, hash: 65507cce57e00cfe}
   - {addr: 0x80090ab4, size: 636, name: wldcore_text_update_scroll_indicators, hash: 8edf02f6f19c040c}
   - {addr: 0x80090d30, size: 32, name: wldcore_sound_play_effect, hash: cbcbcaac21c3c09d}
   - {addr: 0x80090d50, size: 208, name: wldcore_sound_enqueue_audio_command, hash: 6b10a0879bd17fe8}
@@ -445,7 +445,8 @@ functions:
   - {addr: 0x8009de1c, size: 720, name: wldcore_calendar_advance_days, hash: 3ddb67c3d1ca1de9}
 
 data:
-  - {addr: 0x8008cdd0, name: wldcore_unit_get_id_from_misc_id}
+  - {addr: 0x8008c0ac, name: world_unit_get_facing_sixteenth_by_runtime_id}
+  - {addr: 0x8008cdd0, name: wldcore_unit_get_battle_id_by_runtime_id}
   - {addr: 0x80092b04, name: wldcore_system_switch_to_stack}
   - {addr: 0x80092b1c, name: wldcore_system_restore_previous_stack}
   - {addr: 0x80092b2c, name: g_wldcore_anim_sequence_table}
@@ -460,6 +461,8 @@ data:
   - {addr: 0x80096a48, name: g_wldcore_brave_story_birthdays}
   - {addr: 0x80096a4c, name: g_wldcore_rumor_location_masks}
   - {addr: 0x80096a50, name: g_wldcore_story_event_ids}
+  - {addr: 0x80096a54, name: g_wldcore_default_script_base}
+  - {addr: 0x80096a58, name: g_wldcore_default_sound_novel_sound_resource}
   - {addr: 0x80096a5c, name: g_wldcore_map_tile_descriptors}
   - {addr: 0x80096a60, name: g_wldcore_dissolve_band_order}
   - {addr: 0x80097028, name: g_wldcore_brave_story_birthday_table}
@@ -469,8 +472,8 @@ data:
   - {addr: 0x8009e470, name: g_wldcore_message_block_sector_offsets}
   - {addr: 0x8009e634, name: g_wldcore_sound_novel_script_sector_offsets}
   - {addr: 0x8009e650, name: g_wldcore_sound_novel_text_sector_offsets}
-  - {addr: 0x8009e66c, name: g_wldcore_days_per_month}
-  - {addr: 0x8009e678, name: g_wldcore_zodiac_start_dates}
+  - {addr: 0x8009e66c, name: g_wldcore_calendar_days_per_month}
+  - {addr: 0x8009e678, name: g_wldcore_calendar_zodiac_start_dates}
   - {addr: 0x8009e690, name: g_wldcore_menu_idle_handlers}
   - {addr: 0x8009e774, name: g_wldcore_menu_resume_handlers}
   - {addr: 0x8009e858, name: g_wldcore_menu_suspend_handlers}
@@ -507,7 +510,6 @@ data:
   - {addr: 0x8009f1ec, name: g_wldcore_proposition_outcome}
   - {addr: 0x8009f244, name: g_wldcore_window_render_record_count}
   - {addr: 0x8009f248, name: g_wldcore_random_battle_squad_id}
-  - {addr: 0x8009f24c, name: g_wldcore_location_view}
   - {addr: 0x8009f24c, name: g_wldcore_map_projection_state}
   - {addr: 0x8009f288, name: g_wldcore_transition_screen_sprite}
   - {addr: 0x8009f2ac, name: g_wldcore_hud_color}
@@ -518,16 +520,15 @@ data:
   - {addr: 0x8009f2c0, name: g_wldcore_map_projection_view}
   - {addr: 0x8009f2d0, name: g_wldcore_map_projection_scale}
   - {addr: 0x8009f2e0, name: g_wldcore_map_projection_rotation}
-  - {addr: 0x8009f2e0, name: g_wldcore_map_projection_rotation_bytes}
-  - {addr: 0x8009f2e8, name: g_wldcore_current_button_input}
+  - {addr: 0x8009f2e8, name: g_wldcore_input_current_buttons}
   - {addr: 0x8009f2ec, name: g_wldcore_selected_proposition_row}
   - {addr: 0x8009f31c, name: g_wldcore_gfx_world_primitive_buffers}
   - {addr: 0x800bb31c, name: g_wldcore_window_panel_render_state}
   - {addr: 0x800bb356, name: g_wldcore_menu_scroll_offset}
   - {addr: 0x800bb358, name: g_wldcore_window_panel_number_state}
   - {addr: 0x800bb364, name: g_wldcore_gfx_ordering_tables}
-  - {addr: 0x800bb38c, name: g_wldcore_date_display_x}
-  - {addr: 0x800bb390, name: g_wldcore_date_display_y}
+  - {addr: 0x800bb38c, name: g_wldcore_calendar_display_x}
+  - {addr: 0x800bb390, name: g_wldcore_calendar_display_y}
   - {addr: 0x800bb394, name: g_wldcore_window_panel_label_state}
   - {addr: 0x800bb3c0, name: g_wldcore_menu_blocked_buttons}
   - {addr: 0x800bb3c4, name: g_wldcore_gfx_aux_ordering_tables}
@@ -539,17 +540,16 @@ data:
   - {addr: 0x800bb4f8, name: g_wldcore_sound_novel_countdown_frames_reset}
   - {addr: 0x800bb4fc, name: g_wldcore_sound_novel_index}
   - {addr: 0x800bb500, name: g_wldcore_loaded_background_set}
-  - {addr: 0x800bb504, name: g_wldcore_window_position_records}
   - {addr: 0x800bb504, name: g_wldcore_window_records}
   - {addr: 0x800bb51c, name: g_wldcore_window_record_positions}
   - {addr: 0x800bb524, name: g_wldcore_window_record_colors}
   - {addr: 0x800bb930, name: g_wldcore_menu_stack_records}
-  - {addr: 0x800bb984, name: g_wldcore_previous_button_input}
+  - {addr: 0x800bb984, name: g_wldcore_input_previous_buttons}
   - {addr: 0x800bb988, name: g_wldcore_picture_buffer}
   - {addr: 0x800bb98c, name: g_wldcore_menu_stack_records_next}
   - {addr: 0x800bbc6c, name: g_wldcore_next_map_id}
   - {addr: 0x800bbc70, name: g_wldcore_window_render_records}
-  - {addr: 0x800bc2f0, name: g_wldcore_new_button_presses}
+  - {addr: 0x800bc2f0, name: g_wldcore_input_new_button_presses}
   - {addr: 0x800bc2f4, name: g_wldcore_message_buffer}
   - {addr: 0x800c72f4, name: g_wldcore_scratch_buffer}
   - {addr: 0x800c72f8, name: g_wldcore_input_repeat_initial_delay}
@@ -561,7 +561,7 @@ data:
   - {addr: 0x800c7310, name: g_wldcore_input_repeat_counter_right}
   - {addr: 0x800c7314, name: g_wldcore_input_repeat_counter_r1}
   - {addr: 0x800c7318, name: g_wldcore_input_repeat_counter_l1}
-  - {addr: 0x800c731c, name: g_wldcore_polled_button_input}
+  - {addr: 0x800c731c, name: g_wldcore_input_polled_buttons}
   - {addr: 0x800c7320, name: g_wldcore_map_projected_tiles}
   - {addr: 0x800c87d8, name: g_wldcore_window_image_buffer}
   - {addr: 0x800c8fd8, name: g_wldcore_proposition_detail_image_buffer}
@@ -621,9 +621,7 @@ data:
   - {addr: 0x800d4678, name: g_wldcore_route_search_cost}
   - {addr: 0x800d467c, name: g_wldcore_status_unit}
   - {addr: 0x800d483c, name: g_wldcore_random_battle_map_id}
-  - {addr: 0x800d4840, name: g_wldcore_script_slot_table}
   - {addr: 0x800d4840, name: g_wldcore_sound_novel_record}
-  - {addr: 0x800d4848, name: g_wldcore_sound_novel_instruction}
   - {addr: 0x800d4848, name: g_wldcore_sound_novel_state}
   - {addr: 0x800d484c, name: g_wldcore_sound_novel_state_flags}
   - {addr: 0x800d4852, name: g_wldcore_sound_novel_counter_delta}

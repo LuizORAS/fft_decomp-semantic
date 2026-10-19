@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Sound novel opcode 20: branch when local flag operand 0 is clear
  * (wldcore_sound_novel_branch_if_local_flag). */

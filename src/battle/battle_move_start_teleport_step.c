@@ -1,7 +1,8 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_move.h"
 
 /* Puts the unit in the TELEPORT_START step phase. The init record it builds is not used. */
-void battle_move_start_teleport_step(battle_unit_misc_data_t* unit) {
+void battle_move_start_teleport_step(battle_unit_t* unit) {
     battle_effect_secondary_init_t data;
 
     battle_effect_build_secondary_init(unit, &data);

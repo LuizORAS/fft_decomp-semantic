@@ -1,11 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
 #include "psx/gte_inline.h"
 #include "psx/types.h"
-
-/* Defined in battle_effect_integrate_particle_motion.c. */
-typedef struct battle_effect_particle battle_effect_particle_t;
-
-extern void battle_effect_integrate_particle_motion(battle_effect_particle_t* list);
 
 /*
  * Effect-script opcode 0x25: update every particle on the record's work list.
@@ -22,16 +18,16 @@ extern void battle_effect_integrate_particle_motion(battle_effect_particle_t* li
  * whose arms are identical (cross-jumping merges them): `mode == 1 || mode ==
  * 2` is folded into an unsigned range test that the target does not contain.
  */
-s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
-    effect_work_record_t* work;
+effect_script_result_e battle_effect_code_script_25_update_all_particles(battle_effect_record_t* record) {
+    battle_effect_work_record_t* work;
 
     work = record->work_head;
     gte_SetRotMatrix(&g_battle_camera_matrix);
     gte_SetTransMatrix(&g_battle_camera_matrix);
-    battle_effect_integrate_particle_motion((battle_effect_particle_t*)record->work_head);
+    battle_effect_integrate_particle_motion(record->work_head);
 
     for (;;) {
-        effect_work_record_t* node;
+        battle_effect_work_record_t* node;
         s32 threshold;
         s32 delta;
 
@@ -43,11 +39,11 @@ s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
             = (node->flags & EFFECT_EMITTER_FLAG_ARRIVAL_DISTANCE_MASK) >> EFFECT_EMITTER_FLAG_ARRIVAL_DISTANCE_SHIFT;
         work = node->next;
         if (threshold != 0) {
-            delta = (node->position[0] >> 12) - node->target_x;
+            delta = (node->motion.position.x >> 12) - node->target.x;
             if (delta < threshold && -threshold < delta) {
-                delta = (node->position[1] >> 12) - node->target_y;
+                delta = (node->motion.position.y >> 12) - node->target.y;
                 if (delta < threshold && -threshold < delta) {
-                    delta = (node->position[2] >> 12) - node->target_z;
+                    delta = (node->motion.position.z >> 12) - node->target.z;
                     if (delta < threshold && -threshold < delta) {
                         node->lifetime = EFFECT_PARTICLE_LIFETIME_ANIMATION_DRIVEN;
                     }
@@ -55,7 +51,7 @@ s32 battle_effect_code_script_25_update_all_particles(effect_record_t* record) {
             }
         }
 
-        g_battle_effect_particle_render_handlers[(node->kind_flags >> 12) & 0xf](record, node);
+        g_battle_effect_particle_render_handlers[(u16)node->kind_flags >> 12](record, node);
 
         if ((node->flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) == EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MODE_1
             || (node->flags & EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK) == EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MODE_2) {

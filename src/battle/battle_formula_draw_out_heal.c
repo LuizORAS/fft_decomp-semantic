@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_formula.h"
 
 /* Formula 0x23, Murasame: the katana break roll (battle_formula_roll_katana_break), then MA * Y
  * restored as HP, or taken as damage by an undead target (battle_formula_apply_undead_reversal). No

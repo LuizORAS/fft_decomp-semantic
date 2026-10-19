@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Start map texture animation `animation` from its first frame (map data command 0x83). `state` goes

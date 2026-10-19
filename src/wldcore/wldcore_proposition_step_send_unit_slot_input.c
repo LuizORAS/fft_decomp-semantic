@@ -5,10 +5,10 @@
  * chosen slot it replaces, Circle replaces it and refreshes the list, Cross keeps the three; either
  * way the list takes the input again. The slot's unit is shown in the portrait.
  *
- * The target's frame holds two words no instruction touches, reproduced by
+ * The target's frame holds two 32-bit slots no instruction touches, reproduced by
  * the unused point. */
 void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_t* level) {
-    wldcore_point32_t unused;
+    open_point32_t unused;
     u32 buttons;
     s32 unit;
 
@@ -19,7 +19,7 @@ void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_
             wldcore_window_load_party_unit_sprite_record(level, unit, level->portrait_render);
         }
     }
-    buttons = g_wldcore_new_button_presses;
+    buttons = g_wldcore_input_new_button_presses;
     if ((buttons & PSX_PAD_CROSS) != 0) {
         wldcore_sound_play_effect(MAIN_SFX_CANCEL);
         /* Shared tail: a duplicated close path cross-jumps to the same
@@ -61,7 +61,7 @@ void wldcore_proposition_step_send_unit_slot_input(wldcore_menu_send_unit_level_
     }
     wldcore_sound_play_effect(MAIN_SFX_CURSOR_MOVE);
     g_wldcore_window_records[level->cursor_window].position.x
-        = g_wldcore_window_render_records[level->layout_render].base.x + 6;
+        = g_wldcore_window_render_records[level->list_frame.render_index].base.x + 6;
     g_wldcore_window_records[level->cursor_window].position.y
-        = g_wldcore_window_render_records[level->layout_render].base.y + level->slot * 16 + 12;
+        = g_wldcore_window_render_records[level->list_frame.render_index].base.y + level->slot * 16 + 12;
 }

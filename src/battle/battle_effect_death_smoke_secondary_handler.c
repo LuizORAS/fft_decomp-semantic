@@ -1,16 +1,7 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
-
-/* Eight-byte spawn state of one death smoke (g_battle_effect_death_smoke_states),
- * indexed by battle_effect_secondary_data_t::own_slot_id. It carries the same
- * roles the group spawner (battle_effect_start_group) keeps in the effect record itself. */
-typedef struct battle_effect_death_smoke_state {
-    s32 count;        /* 0x00; slots started so far */
-    u16 finish_timer; /* 0x04; reaches 1 when the effect is finished */
-    u8 ids[2];        /* 0x06 */
-} battle_effect_death_smoke_state_t;
-
-extern battle_effect_death_smoke_state_t g_battle_effect_death_smoke_states[];
 
 enum {
     BATTLE_EFFECT_DEATH_SMOKE_SLOT_COUNT = 2,
@@ -38,18 +29,18 @@ s32 battle_effect_death_smoke_secondary_handler(s32 unused_arg0, s32 passthrough
     state = &g_battle_effect_death_smoke_states[effect->own_slot_id];
     /* Preserve the target's unsigned phase-dispatch comparison. */
     switch (effect->phase) {
-    case BATTLE_SECONDARY_EFFECT_INITIALIZING: {
+    case BATTLE_EFFECT_SECONDARY_PHASE_INITIALIZING: {
         state->count = 0;
         for (i = 0; i < BATTLE_EFFECT_DEATH_SMOKE_SLOT_COUNT; i++) {
             state->ids[i] = 0;
         }
         state->finish_timer = 0;
         g_battle_effect_current_secondary->timer = 0;
-        g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
+        g_battle_effect_current_secondary->phase = BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING;
         result = 1;
         break;
     }
-    case BATTLE_SECONDARY_EFFECT_EXECUTING: {
+    case BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING: {
         battle_effect_slot_t* slot;
         s32 i;
         u8 id;
@@ -83,7 +74,7 @@ s32 battle_effect_death_smoke_secondary_handler(s32 unused_arg0, s32 passthrough
         }
     }
     /* fallthrough */
-    case BATTLE_SECONDARY_EFFECT_FINALIZING: {
+    case BATTLE_EFFECT_SECONDARY_PHASE_FINALIZING: {
         battle_effect_secondary_data_t* current;
         u8 id;
 

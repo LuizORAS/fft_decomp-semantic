@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_text.h"
 #include "psx/types.h"
 
 /* Set how long the next timed battle message (battle_menu_icon_timed_thread) stays up before it closes

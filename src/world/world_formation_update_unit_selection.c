@@ -21,10 +21,10 @@ void world_formation_update_unit_selection(void) {
         if (g_world_formation_unit_banner_enabled != 0) {
             saved = g_world_status_display_thread_params.flags;
             if (g_world_formation_unit_banner_at_bottom_latch != g_world_formation_unit_banner_at_bottom) {
-                bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index_latch],
-                    g_world_comparison_unit_stat_summary, 0x22);
-                bcopy(g_world_formation_unit_pointers[g_world_formation_selected_unit_index_latch]->name_index,
-                    &g_world_comparison_unit_identity, 0xe);
+                bcopy(&g_world_formation_unit_pointers[g_world_formation_selected_unit_index_latch]->status,
+                    &g_world_comparison_unit_stat_summary, sizeof(battle_menu_unit_status_record_t));
+                bcopy(&g_world_formation_unit_pointers[g_world_formation_selected_unit_index_latch]->identity,
+                    &g_world_comparison_unit_identity, sizeof(world_menu_unit_status_identity_t));
                 world_menu_toggle_comparison_status_thread(1);
                 g_world_comparison_display_thread_params.flags = saved;
                 g_world_formation_unit_banner_at_bottom_latch = g_world_formation_unit_banner_at_bottom;
@@ -92,7 +92,7 @@ void world_formation_update_unit_selection(void) {
         g_world_formation_banner_slide_step--;
         if (g_world_formation_banner_slide_step < -0xf) {
             g_world_formation_banner_slide_step = 0;
-            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS);
+            world_menu_request_thread_stop(THREAD_SCREEN_SLOT_COMPARISON_STATUS);
         }
     } else if (g_world_formation_banner_slide_step > 0) {
         g_world_status_display_thread_params.y = g_world_formation_banner_slide_step * 8 - 0x78;
@@ -100,7 +100,7 @@ void world_formation_update_unit_selection(void) {
         g_world_formation_banner_slide_step++;
         if (g_world_formation_banner_slide_step >= 0x10) {
             g_world_formation_banner_slide_step = 0;
-            world_menu_request_thread_stop(NATIVE_SCREEN_THREAD_SLOT_COMPARISON_STATUS);
+            world_menu_request_thread_stop(THREAD_SCREEN_SLOT_COMPARISON_STATUS);
         }
     }
 }

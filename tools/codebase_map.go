@@ -44,6 +44,9 @@ func (p project) mapCommand(args []string) error {
 	// The rename table's committed copy lives in docs/, so it is written
 	// before docs/ is read and copied into the vault.
 	renames, upstreamAvailable, upstreamErr := upstreamRenames(p.root, config)
+	if upstreamErr != nil {
+		fmt.Fprintf(p.stdout(), "map: upstream target/ not read, %s left as is: %v\n", mapUpstreamTable, upstreamErr)
+	}
 	if upstreamAvailable && upstreamErr == nil {
 		changed, err := writeUpstreamRenames(p.root, renames)
 		if err != nil {
@@ -82,7 +85,7 @@ func (p project) mapCommand(args []string) error {
 		quirks += len(section.entries)
 	}
 	fmt.Fprintf(p.stdout(), "map: %d QUIRKS.md entries, %d debt comments, %d stale mentions\n", quirks, len(index.debts), len(index.stale))
-	if vault.upstreamAvailable {
+	if vault.upstreamAvailable && vault.upstreamErr == nil {
 		fmt.Fprintf(p.stdout(), "map: %d names differ from upstream\n", len(vault.renames))
 	}
 	fmt.Fprintf(p.stdout(), "map: %d hand-written files (%d mechanics, %d guides), %d functions in a mechanic scope\n",

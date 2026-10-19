@@ -1,5 +1,4 @@
 #include "fft/wldcore.h"
-#include "psx/types.h"
 
 /* Location script opcode 35 (EraseLocation): end the script with a location's dot to hide. It does
  * not step past its operand; the script ends there anyway. */

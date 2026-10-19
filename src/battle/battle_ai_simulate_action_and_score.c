@@ -1,5 +1,16 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_status.h"
+#include "fft/battle_unit.h"
 #include "psx/libetc.h"
+
+/* Unit-state utility at full HP/MP, unchanged equipment, or one average HP of Golem. */
+enum {
+    AI_HP_SCORE_SCALE = 128,
+    AI_MP_SCORE_SCALE = 64,
+    AI_EQUIPMENT_SCORE = 51,
+    AI_GOLEM_SCORE_SCALE = 128,
+};
 
 /* Simulate the current action and score the state it leaves (battle_ai_score_current_action keeps
  * the best). The unit moves to the action's destination (battle_ai_simulate_movement_and_pickup)
@@ -23,7 +34,7 @@ s32 battle_ai_simulate_action_and_score(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     battle_stats_t* unit;
     battle_ai_unit_decision_t* decision;
-    battle_action_command_prefix_t* action;
+    action_command_t* action;
     battle_ai_data_t* clear_cursor;
     battle_ai_data_t* decision_base;
     s32 unit_index;
@@ -35,18 +46,18 @@ s32 battle_ai_simulate_action_and_score(void) {
     u32 below_cost;
 
     if (g_battle_ai_data_base.resume_pending && g_battle_ai_data_base.action_simulation_phase) {
-        battle_ai_restore_unit_state(1);
+        battle_ai_restore_unit_state(BATTLE_AI_SNAPSHOT_SIMULATED_STATUS);
         /* Resume: re-enter the suspended turn-advance or scoring phase. */
         if (g_battle_ai_data_base.action_simulation_phase == BATTLE_AI_SIMULATION_ADVANCE_TURNS)
             goto advance_turns;
         if (g_battle_ai_data_base.action_simulation_phase == BATTLE_AI_SIMULATION_SCORE_STATE)
             goto score_state;
     }
-    if (VSync(1) >= 441) {
+    if (VSync(1) >= BATTLE_AI_DECISION_SCANLINE_LIMIT) {
         ai->action_simulation_phase = BATTLE_AI_SIMULATION_PREPARE_ACTION;
         return -1;
     }
-    battle_ai_save_unit_state(0);
+    battle_ai_save_unit_state(BATTLE_AI_SNAPSHOT_BASELINE);
     ai->ability_processing_done = 0;
     /* Direct array iteration changes the bytes; retain a workspace-relative cursor. */
     for (unit_index = BATTLE_UNIT_SLOT_COUNT - 1,
@@ -57,11 +68,12 @@ s32 battle_ai_simulate_action_and_score(void) {
     ai->current_action.rank.priority = 0;
     ai->current_action.rank.base_hit_percent = 0xff;
     if (ai->current_action.act_before_move) {
-        if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
-            action = (battle_action_command_prefix_t*)&ai->current_action.unit_id;
-            if (battle_action_commit_command((u8*)action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
-                && battle_ai_simulate_ability_use((battle_ai_command_action_t*)action) == 0) {
-                battle_ai_restore_unit_state(0);
+        if (ai->current_action.command.skillset_id != 0
+            && ai->current_action.command.skillset_id != SKILLSET_ID_DEFEND) {
+            action = &ai->current_action.command;
+            if (battle_action_commit_command(action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
+                && battle_ai_simulate_ability_use(action) == 0) {
+                battle_ai_restore_unit_state(BATTLE_AI_SNAPSHOT_BASELINE);
                 ai->resume_pending = 0;
                 return 0;
             }
@@ -70,23 +82,24 @@ s32 battle_ai_simulate_action_and_score(void) {
         }
     } else {
         battle_ai_simulate_movement_and_pickup();
-        if (ai->current_action.skillset != 0 && ai->current_action.skillset != SKILLSET_ID_DEFEND) {
-            action = (battle_action_command_prefix_t*)&ai->current_action.unit_id;
-            if (battle_action_commit_command((u8*)action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
-                && battle_ai_simulate_ability_use((battle_ai_command_action_t*)action) == 0) {
-                battle_ai_restore_unit_state(0);
+        if (ai->current_action.command.skillset_id != 0
+            && ai->current_action.command.skillset_id != SKILLSET_ID_DEFEND) {
+            action = &ai->current_action.command;
+            if (battle_action_commit_command(action) == BATTLE_ATTACK_PREPARATION_IMMEDIATE
+                && battle_ai_simulate_ability_use(action) == 0) {
+                battle_ai_restore_unit_state(BATTLE_AI_SNAPSHOT_BASELINE);
                 ai->resume_pending = 0;
                 return 0;
             }
             ai->acting_unit->action_taken = 1;
         }
     }
-    if (ai->current_action.skillset == SKILLSET_ID_DEFEND) {
+    if (ai->current_action.command.skillset_id == SKILLSET_ID_DEFEND) {
         battle_status_inflict_defending_to_battle_id(ai->acting_unit_id);
         ai->current_action.rank.base_hit_percent = 100;
         ai->acting_unit->action_taken = 1;
     }
-    if (ai->current_action.skillset == 0)
+    if (ai->current_action.command.skillset_id == 0)
         ai->current_action.rank.base_hit_percent = 100;
     battle_turn_end(ai->acting_unit_id);
     ai->saved_between_turn_state = g_battle_turn_clock_state;
@@ -95,13 +108,13 @@ s32 battle_ai_simulate_action_and_score(void) {
     ai->simulated_turn_events = 0;
     for (;;) {
     advance_turns:
-        if (VSync(1) >= 313) {
-            battle_ai_save_unit_state(1);
+        if (VSync(1) >= BATTLE_AI_TURN_SIMULATION_SCANLINE_LIMIT) {
+            battle_ai_save_unit_state(BATTLE_AI_SNAPSHOT_SIMULATED_STATUS);
             ai->action_simulation_phase = BATTLE_AI_SIMULATION_ADVANCE_TURNS;
             return -1;
         }
         ai->simulated_turn_events++;
-        if (ai->simulated_turn_events >= 256)
+        if (ai->simulated_turn_events >= BATTLE_AI_SIMULATED_TURN_LIMIT)
             break;
         unit_index = battle_turn_run_clock(BATTLE_BETWEEN_TURN_MODE_RUN);
         status = unit_index & 0xff00;
@@ -112,7 +125,7 @@ s32 battle_ai_simulate_action_and_score(void) {
         if (status == BATTLE_TURN_EVENT_ACTION_RESULT) {
             battle_action_apply_target_result(unit_index);
         } else if (status == BATTLE_TURN_EVENT_ABILITY_READY) {
-            if (battle_ai_simulate_ability_use((battle_ai_command_action_t*)&unit->action_actor_id) == 0) {
+            if (battle_ai_simulate_ability_use(&unit->action_command) == 0) {
                 g_battle_turn_clock_state = ai->saved_between_turn_state;
                 g_battle_turn_clock_resume_state = ai->saved_between_turn_resume_state;
                 g_battle_turn_unit_id = ai->saved_turn_unit_id;
@@ -146,8 +159,8 @@ s32 battle_ai_simulate_action_and_score(void) {
     g_battle_turn_clock_resume_state = ai->saved_between_turn_resume_state;
     g_battle_turn_unit_id = ai->saved_turn_unit_id;
 score_state:
-    if (VSync(1) >= 441) {
-        battle_ai_save_unit_state(1);
+    if (VSync(1) >= BATTLE_AI_DECISION_SCANLINE_LIMIT) {
+        battle_ai_save_unit_state(BATTLE_AI_SNAPSHOT_SIMULATED_STATUS);
         ai->action_simulation_phase = BATTLE_AI_SIMULATION_SCORE_STATE;
         return -1;
     }
@@ -187,7 +200,7 @@ score_state:
                 continue;
             unit = &g_battle_unit_stats[unit_index];
             score = unit->hp;
-            score <<= 7;
+            score *= AI_HP_SCORE_SCALE;
             score /= unit->max_hp;
             status = 0;
             /* A pointer to unit_decisions adds an addiu and changes scheduling;
@@ -240,16 +253,16 @@ score_state:
                 score += weight;
             }
             if (!(unit->unit_flags & UNIT_FLAG_MONSTER)) {
-                for (equipment_slot = 0; equipment_slot < 7; equipment_slot++) {
+                for (equipment_slot = 0; equipment_slot < UNIT_EQUIPMENT_SLOT_COUNT; equipment_slot++) {
                     if (unit->equipment[equipment_slot]
                         == g_battle_ai_unit_snapshots[ai->unit_compact_indices[unit_index]].equipment[equipment_slot])
-                        score += 51;
+                        score += AI_EQUIPMENT_SCORE;
                 }
             }
             if (unit->max_mp) {
                 weight_offset = unit->mp;
                 below_cost = weight_offset;
-                weight_offset <<= 6;
+                weight_offset *= AI_MP_SCORE_SCALE;
                 below_cost = below_cost < ai->unit_decisions[unit_index].lowest_mp_cost;
                 weight_offset /= unit->max_mp;
                 if (below_cost)
@@ -260,11 +273,11 @@ score_state:
             {
                 u32 golem;
 
-                weight_offset = g_battle_team_golem[(unit->team_flags >> 4) & 3];
+                weight_offset = g_battle_team_golem[(unit->team_flags >> BATTLE_TEAM_SHIFT) & BATTLE_TEAM_INDEX_MASK];
                 golem = weight_offset;
-                weight_offset <<= 7;
+                weight_offset *= AI_GOLEM_SCORE_SCALE;
                 score += weight_offset / ai->present_unit_average_max_hp;
-                if (golem < ai->team_golem.by_team[(unit->team_flags >> 4) & 3])
+                if (golem < ai->team_golem[(unit->team_flags >> BATTLE_TEAM_SHIFT) & BATTLE_TEAM_INDEX_MASK])
                     score--;
             }
             if (ai->unit_decisions[unit_index].enemy_flag)
@@ -275,12 +288,12 @@ score_state:
             && ai->considered_ability.ability_id != ABILITY_ID_THROW_SHURIKEN
             && ai->considered_ability.ability_id != ABILITY_ID_THROW_BALL)
             ai->current_action.rank.base_hit_percent >>= 1;
-        battle_ai_restore_unit_state(0);
+        battle_ai_restore_unit_state(BATTLE_AI_SNAPSHOT_BASELINE);
         ai->resume_pending = 0;
         return 1;
     }
 finish_without_scoring:
-    battle_ai_restore_unit_state(0);
+    battle_ai_restore_unit_state(BATTLE_AI_SNAPSHOT_BASELINE);
     ai->resume_pending = 0;
     return 0;
 }

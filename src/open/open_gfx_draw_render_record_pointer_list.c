@@ -5,9 +5,10 @@
  * 56-byte one. Nothing is drawn while
  * OPEN_SYSTEM_RUNTIME_FLAG_RENDER_RECORDS_HIDDEN is set, which no code in
  * OPEN.BIN does. */
-void open_gfx_draw_render_record_pointer_list(u32* otag, open_render_record_t** records, s32 count) {
+void open_gfx_draw_render_record_pointer_list(u32* otag, void** records, s32 count) {
     s32 i;
-    open_render_record_t* record;
+    void* record;
+    u32* flags_word;
     u32 flags;
 
     if ((g_open_system_runtime_flags & OPEN_SYSTEM_RUNTIME_FLAG_RENDER_RECORDS_HIDDEN) != 0) {
@@ -16,13 +17,16 @@ void open_gfx_draw_render_record_pointer_list(u32* otag, open_render_record_t** 
 
     for (i = 0; i < count; i++) {
         record = records[i];
-        flags = record->flags;
-        /* Flags bits 0 and 1 select the record layout behind the common prefix. */
+        flags_word = record;
+        flags = *flags_word;
+        /* Both layouts start with the 32-bit flags. */
         if ((flags & (WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN)) == 0) {
             if ((flags & WLDCORE_DISPLAY_OBJECT_ANIMATED) != 0) {
-                open_gfx_draw_animated_render_record((open_render_record_36_t*)record, otag);
+                world_animated_render_record_t* animated = record;
+                open_gfx_draw_animated_render_record(animated, otag);
             } else if ((flags & WLDCORE_DISPLAY_OBJECT_IMAGE) != 0) {
-                open_gfx_draw_window_record((open_render_record_56_t*)record, otag);
+                open_render_record_56_t* window = record;
+                open_gfx_draw_window_record(window, otag);
             }
         }
     }

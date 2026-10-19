@@ -1,3 +1,4 @@
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libc.h"
 #include "psx/pad.h"
@@ -52,8 +53,8 @@ s32 world_formation_run_equip_item_menu(void) {
         return 1;
     }
     if (g_world_equip_item_list_open == 0) {
-        g_world_equip_item_slot = world_menu_update_vertical_selection_and_mark_change(
-            5, WORLD_MENU_CURSOR_EQUIP_SLOT, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
+        g_world_equip_item_slot = world_menu_update_vertical_selection_and_mark_change(WORLD_EQUIPMENT_SLOT_COUNT,
+            WORLD_MENU_CURSOR_EQUIP_SLOT, g_world_input_secondary_repeat, MAIN_SFX_PAGE_SWITCH);
         if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
             world_item_build_category_list(g_world_formation_selected_unit_index, g_world_equip_item_slot + 1,
                 g_world_equip_item_slot, g_world_menu_entry_ids, ITEM_LIST_MODE_MARK_UNEQUIPPABLE);
@@ -61,18 +62,18 @@ s32 world_formation_run_equip_item_menu(void) {
             g_world_formation_unit_cycle_mode = 1;
             g_world_equip_item_list_open = 1;
             g_world_change_banner_panel_thread_params.style = 1;
-            world_thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
+            thread_suspend(WORLD_THREAD_SLOT_UPPER_MENU);
             slot = 0;
             if (g_world_equip_item_slot != 0) {
                 slot = g_world_equip_item_slot - 1;
             }
             world_menu_get_selection_record(slot, &x, &y, g_world_menu_entry_ids);
             world_menu_init_scrollable_list(
-                g_world_menu_entry_ids, x, y, g_world_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
-            g_world_menu_script_callbacks[0] = world_menu_get_entry_item_equipped_count;
-            g_world_menu_script_callbacks[1] = world_menu_get_entry_item_count;
-            g_world_menu_script_callbacks[2] = (s32 (*)(s32))world_item_build_type_icon_source;
-            g_world_menu_script_callbacks[3] = (s32 (*)(s32))world_menu_get_entry_item_icon_source;
+                g_world_menu_entry_ids, x, y, g_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
+            g_world_menu_script_callbacks[0].value = world_menu_get_entry_item_equipped_count;
+            g_world_menu_script_callbacks[1].value = world_menu_get_entry_item_count;
+            g_world_menu_script_callbacks[2].icon = world_item_build_type_icon_source;
+            g_world_menu_script_callbacks[3].icon = world_menu_get_entry_item_icon_source;
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
             g_world_equip_item_previewed_cursor = -1;
         }
@@ -127,7 +128,7 @@ s32 world_formation_run_equip_item_menu(void) {
             }
             g_world_status_display_thread_params.redraw_request = 1;
         }
-        world_menu_run_display_script(g_world_equip_item_menu_script, g_world_input_primary_repeat);
+        world_menu_run_display_script(&g_world_equip_item_menu_script, g_world_input_primary_repeat);
     }
     if (g_world_equip_item_list_refresh != 0) {
         g_world_change_banner_panel_thread_params.style = 0;
@@ -136,7 +137,7 @@ s32 world_formation_run_equip_item_menu(void) {
         world_script_set_vsync_mode_and_event_speed(0);
         g_world_equip_item_preview_active = 0;
         g_world_status_display_thread_params.redraw_request = 1;
-        world_thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
+        thread_resume(WORLD_THREAD_SLOT_UPPER_MENU);
         slot = 0;
         if (g_world_equip_item_slot != 0) {
             slot = g_world_equip_item_slot - 1;
@@ -152,6 +153,6 @@ s32 world_formation_run_equip_item_menu(void) {
     /* The mode is an argument expression so &g_world_equip_item_cursor_point is formed before its
        branches and derived from cursor_y (addiu a0,s0,-2), as in the target. */
     world_menu_draw_animated_cursor(&g_world_equip_item_cursor_point, &g_world_equip_item_cursor_anim,
-        g_world_equip_item_list_open != 0 || g_world_menu_input_lock_mode != 0);
+        g_world_equip_item_list_open != 0 || g_menu_input_lock_mode != 0);
     return 1;
 }

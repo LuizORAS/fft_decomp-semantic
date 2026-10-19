@@ -35,7 +35,7 @@ scope:
   - battle_unit_set_animation_for_item_abilities()
   - battle_unit_start_ability_pre_attack_animation()
   - battle_unit_start_ability_charging_animation()
-  - battle_text_determine_spell_quote()
+  - battle_text_select_ability_announcement()
   - world_text_determine_spell_quote()
   - battle_text_is_skillset_in_spell_quote_exception_list()
 ---
@@ -108,7 +108,7 @@ innate ones of its job.
   it that can react and stands within 5 height
   ([[battle_menu_init_monster_skill_check]]).
 - **Announcing.** Before an action plays, a window shows its name, or the
-  unit speaks a spell quote ([[battle_text_determine_spell_quote]]). The name
+  unit speaks a spell quote ([[battle_text_select_ability_announcement]]). The name
   shows for an ability with `ABILITY_TYPE_FLAG_SHOW_NAME` while the Ability
   Names option is on, and always for Item and Throw. Attack, Defend, Equip
   Change, Jump, Item and Throw never quote, and the first four show no name
@@ -144,7 +144,7 @@ innate ones of its job.
 - **In BATTLE:** [[g_battle_ability_animation_data]] (for ids below 0x1c6:
   the charge animation set, the attack animation and a third byte that no
   code reads), [[g_battle_ability_charge_animation_sets]] (pre-attack and
-  charging variants), [[g_battle_effect_ability_ids]] (the effect file, or
+  charging variants), [[g_battle_effect_ability_files]] (the effect file, or
   none), [[g_battle_spell_quote_exception_skillsets]] and the crystal result
   [[g_main_crystal_pickup_result]] ([[main_crystal_pickup_result_t]]).
 
@@ -277,7 +277,7 @@ The [[Movement rules]] guide details the movement classes.
 - **What a reaction, support or movement ability does:** the "Where" column
   above.
 - **Its animation and effect:** [[g_battle_ability_animation_data]] and
-  [[g_battle_effect_ability_ids]] (disc data).
+  [[g_battle_effect_ability_files]] (disc data).
 - The [[Changing an ability]] guide walks through a change.
 - **Today's limits:** every change must keep the original bytes; code that
   grows or moves waits for the shiftable build (`CODEBASE.md`, "What can

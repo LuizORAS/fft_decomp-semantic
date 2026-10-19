@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Return the next sound of effect sound channel `channel` and count it: the channel's mode picks one of
  * its three ids from the number of sounds it has played (the first, alternating, the first then the second,

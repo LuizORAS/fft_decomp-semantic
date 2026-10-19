@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
 /* Return dividend * 4 / divisor, or 0 for a zero divisor: a share in quarters
  * (battle_ai_init_unit_abilities). */

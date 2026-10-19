@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Take an effect slot from the free chain and push it on the head of the active
  * chain. Returns its id, or 0 (the null sentinel) when no slot is free; the

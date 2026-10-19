@@ -1,8 +1,9 @@
 #ifndef SCRIPT_H
 #define SCRIPT_H
 
-/* Event-script bytecode and variables shared by the BATTLE and WORLD interpreters. */
+/* Scenario bytecode, interpreter APIs and shared helpers for BATTLE and WORLD. */
 
+#include "fft/gfx.h"
 #include "fft/menu.h"
 #include "fft/unit.h"
 #include "psx/types.h"
@@ -15,7 +16,7 @@ enum {
     EVENT_BLOCK_BYTES = 8192,
     EVENT_BLOCK_SECTORS = 4,
     EVENT_OPCODE_COUNT = 256,
-    /* Number of simulation unit slots an interpreter scans by misc id. */
+    /* Number of simulation unit slots an interpreter scans by runtime id. */
     EVENT_UNIT_SLOT_COUNT = BATTLE_UNIT_SLOT_COUNT,
     /* External unit-id selectors used by scenario commands. */
     EVENT_UNIT_SELECTOR_SLOT_FIRST = 0x64,
@@ -30,17 +31,19 @@ enum {
     /* Five ordinary deployed-unit IDs; the end value is exclusive. */
     EVENT_UNIT_ID_DEPLOYED_FIRST = 0x78,
     EVENT_UNIT_ID_DEPLOYED_END = 0x7d,
-    /* battle_script_get_misc_id / world_script_get_misc_id result for an absent unit. */
-    EVENT_MISC_ID_NONE = 2000,
-    /* g_*_event_unit_slots[] entry with no ghost unit assigned. */
+    /* script_resolve_runtime_id result for an absent unit. */
+    EVENT_RUNTIME_ID_NONE = 2000,
+    /* g_script_unit_slots[] entry with no ghost unit assigned. */
     EVENT_UNIT_SLOT_EMPTY = 1000,
 };
 
 #define EVENT_TEXT_OFFSET_PROCESSED 0xf2f2f2f2U
 
-/* TEST.EVT event slots the engine tests by number. Names follow the
- * FFHacktics "Event Scripts and Scenario Order correlation" list, where a
- * Setup entry is the slot before its event. */
+/* Event ids: EVENT_SCRIPT_VAR_CURRENT_EVENT, the 0x2000-byte block of
+ * EVENT/TEST.EVT that holds the event's script and text, and the index of
+ * g_main_scenario_event_finish_operations. The game has no names for its
+ * events; the ones the code singles out are named here for what their own
+ * script and text show. */
 typedef enum event_id {
     /* CallFunction JOIN_UNITS_SILENTLY also restores the new-game inventory
      * in the events below this one. */
@@ -64,22 +67,17 @@ typedef enum event_id {
     /* The 0x1a events no scenario names, through TUTORIAL_LAST:
      * SCENARIO_CHECK starts the first four, and the sixteen tutorials follow. */
     EVENT_ID_GENERIC_FIRST = 0x190,
-    /* Byte-identical copy of the EVENT_ID_GAME_OVER_RAMZA script in TEST.EVT. The
-     * menu dispatchers start it in any battle once the player's side is wiped
-     * out or Ramza is crystallised or turned to treasure. FFHacktics lists it
-     * as "Random Battle Template (Setup)", which neither the code nor the data
-     * supports. */
-    EVENT_ID_GAME_OVER = 0x190,
+    EVENT_ID_GAME_OVER = 0x190,              /* the battle is lost */
     EVENT_ID_RANDOM_BATTLE_INITIATE = 0x191, /* while EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED is set */
     EVENT_ID_RANDOM_BATTLE_VICTORY = 0x192,
-    /* Started instead of 0x191 while WORLD_DEBUG_BATTLE_STYLE is set;
-     * FFHacktics marks the slot "NOT USABLE". */
-    EVENT_ID_DEBUG_BATTLE_INITIATE = 0x193,
-    /* No retail code, scenario chain, BTLEVT.BIN condition, event or world
-     * script starts this slot (QUIRKS.md). */
+    EVENT_ID_DEBUG_BATTLE_INITIATE = 0x193, /* BATTLE_START under EVENT_SCRIPT_VAR_WORLD_DEBUG_BATTLE_STYLE */
+    /* The same script as GAME_OVER; while it runs, every unit selector
+     * resolves to the first unit that is a Ramza. */
     EVENT_ID_GAME_OVER_RAMZA = 0x194,
     EVENT_ID_TUTORIAL_FIRST = 0x19a,
     EVENT_ID_TUTORIAL_LAST = 0x1a9,
+    EVENT_ID_GENERIC_END
+    = 0x1aa, /* one past TUTORIAL_LAST: the interpreter chains no next story event after the generic events */
     /* These two scenes carry on in the event that follows; the EVTCHR sprites
      * stay loaded after them. */
     EVENT_ID_DELITAS_BETRAYAL = 0x1ad,
@@ -88,34 +86,12 @@ typedef enum event_id {
     EVENT_ID_CHAPTER_2_START_SETUP = 0x074,
 } event_id_e;
 
-/* The Deep Dungeon location menu stores the chosen floor in the pending
- * sound effect's variable before it runs the entry script. */
-enum {
-    EVENT_SCRIPT_VAR_DEEP_DUNGEON_SELECTION = 0x5c,
-};
-
-/* Ordinary variables are whole words; the remaining script-variable domains
- * are packed as 32 one-bit values or eight four-bit values per word. */
-enum {
-    EVENT_SCRIPT_VAR_PACKED_BIT_FIRST = 0x80,
-    EVENT_SCRIPT_VAR_PACKED_NIBBLE_FIRST = 0x360,
-    EVENT_SCRIPT_VAR_END = 0x400,
-    EVENT_SCRIPT_PACKED_BIT_WORD_FIRST = 0x80,
-    EVENT_SCRIPT_PACKED_NIBBLE_WORD_FIRST = 0x97,
-};
-
-/* Random battle, Game Over and tutorial events; the interpreter chains no
- * next story event after them. */
-enum {
-    EVENT_ID_GENERIC_END = 0x1aa,
-};
-
 /* Retail scenario bytecode, reviewed against BATTLE 0x80143bd8..0x80145f78 and
  * the shared BATTLE/WORLD operand-length tables
- * (g_battle_script_event_instruction_sizes, g_world_script_event_instruction_sizes).
+ * (g_script_event_instruction_sizes, g_world_script_event_instruction_sizes).
  *
  * Encoding: one opcode byte, then the operand bytes the length table counts
- * for that opcode. Halfword operands are little-endian and unaligned. After a
+ * for that opcode. 16-bit operands are little-endian and unaligned. After a
  * handler returns, the interpreter steps over 1 + length bytes.
  * JUMP_FORWARD, JUMP_FORWARD_IF_ZERO and JUMP_BACK seek past their target
  * marker instead; BLOCK_START, ADD_UNIT_START and CAMERA_FUSION_START hand
@@ -124,10 +100,10 @@ enum {
  *
  * Each comment gives the encoded operand byte count, then the operands in the
  * order the handler reads them. A plain name is one unsigned byte, (s8) a
- * signed byte, (u16) or (s16) a halfword, and "unread" a byte no handler
- * reads. A "unit id" names one unit (*_script_get_misc_id); a "unit group"
+ * signed byte, (u16) or (s16) a 16-bit value, and "unread" a byte no handler
+ * reads. A "unit id" names one unit (script_resolve_runtime_id); a "unit group"
  * is a unit id, 0 for every unit, or a team selector from
- * EVENT_UNIT_GROUP_FIRST (*_unit_try_get_misc_data_by_unit_id).
+ * EVENT_UNIT_GROUP_FIRST (script_prepare_unit_filter).
  *
  * UNKNOWN values are explicit dispatch cases, not guesses for otherwise
  * unrecognized byte values. UNHANDLED values have a length in the table but
@@ -136,7 +112,7 @@ enum {
  * labels describe BATTLE; WORLD can handle them differently: there WALK_TO
  * does nothing outside a block, ARROW resolves both units and stops,
  * DARK_SCREEN's thread only sets its task id, and the two CHANGE_MAP
- * instructions leave the script light transform alone. BETA does not imply
+ * instructions leave the camera's script transform alone. BETA does not imply
  * unused. JUMP animates a unit, whereas JUMP_FORWARD/JUMP_BACK branch within
  * the script. CALL_FUNCTION selects a built-in operation, not a native
  * function pointer. EFFECT_END starts the staged effect; it does not cancel
@@ -173,7 +149,7 @@ typedef enum event_opcode {
     EVENT_OPCODE_SET_SPEAKER_PAIR = 0x25,      /* 4: unit id (u16), unit id (u16) */
     EVENT_OPCODE_RESUME_WAITING_DIALOG = 0x26, /* 2: text id - 1 (u16) */
     EVENT_OPCODE_RELOAD_MAP_STATE = 0x27,      /* 0 */
-    /* 8: unit id (u16), x, y, elevation, speed (u16), terrain-costs flag (event_walk_to_parameters_t) */
+    /* 8: unit id (u16), x, y, elevation, speed (s16), terrain-cost flag (event_walk_to_parameters_t) */
     EVENT_OPCODE_WALK_TO = 0x28,
     EVENT_OPCODE_WAIT_WALK = 0x29,   /* 2: unit id (u16) */
     EVENT_OPCODE_BLOCK_START = 0x2a, /* 0; seeks to BLOCK_END */
@@ -192,7 +168,7 @@ typedef enum event_opcode {
     EVENT_OPCODE_UNHANDLED_34 = 0x34,           /* 2 */
     EVENT_OPCODE_UNHANDLED_35 = 0x35,           /* 4 */
     EVENT_OPCODE_UNHANDLED_36 = 0x36,           /* 2 */
-    EVENT_OPCODE_FLIP_MESSAGE_PORTRAIT = 0x37,  /* 2: text id - 1 (u16) */
+    EVENT_OPCODE_FLIP_MESSAGE_PORTRAIT = 0x37,  /* 2: text id - 1 (s16) */
     EVENT_OPCODE_FOCUS_SPEED = 0x38,            /* 2: speed (s16); rewrites the next CAMERA's frames */
     EVENT_OPCODE_WAIT_ALL_UNIT_MOVEMENT = 0x39, /* 0 */
     EVENT_OPCODE_WAIT_FILE_LOAD = 0x3a,         /* 0 */
@@ -258,10 +234,10 @@ typedef enum event_opcode {
     EVENT_OPCODE_SUPPRESS_UNIT_PALETTE_UPDATES = 0x6d, /* 2: unit group (u16) */
     /* 12: unit id (u16), offset x, y, z (s16 each), curve, curve weight, speed (u16) */
     EVENT_OPCODE_SPRITE_MOVE_BETA = 0x6e,
-    EVENT_OPCODE_WAIT_SPRITE_MOVE = 0x6f,    /* 2: unit id (u16) */
-    EVENT_OPCODE_JUMP = 0x70,                /* 4: unit id (u16), jump length + 1, direction */
-    EVENT_OPCODE_SET_FIRST_MISC_UNIT = 0x71, /* 2: unit id (u16) */
-    EVENT_OPCODE_DEBUG_PAUSE = 0x72,         /* 0 */
+    EVENT_OPCODE_WAIT_SPRITE_MOVE = 0x6f, /* 2: unit id (u16) */
+    EVENT_OPCODE_JUMP = 0x70,             /* 4: unit id (u16), jump length + 1, direction */
+    EVENT_OPCODE_SET_FIRST_UNIT = 0x71,   /* 2: unit id (u16) */
+    EVENT_OPCODE_DEBUG_PAUSE = 0x72,      /* 0 */
     /* 14: x, z, y, tilt, yaw, roll, zoom deltas (s16 each; 10000 keeps a component); rewrites the next CAMERA */
     EVENT_OPCODE_RELATIVE_CAMERA = 0x73,
     EVENT_OPCODE_UNKNOWN_74 = 0x74, /* 6: unread; calls an empty function */
@@ -345,13 +321,13 @@ typedef enum event_opcode {
     EVENT_OPCODE_BACK_TARGET_BARRIER = 0xd9,  /* 1: unread; JUMP_BACK ignores the targets before it */
     EVENT_OPCODE_UNKNOWN_DA = 0xda,           /* 0; recognized no-op */
     EVENT_OPCODE_END = 0xdb,                  /* 0 */
-    EVENT_OPCODE_UNKNOWN_DC = 0xdc,           /* 0; stores 13 to a word nothing else reads */
+    EVENT_OPCODE_UNKNOWN_DC = 0xdc,           /* 0; stores 13 to a 32-bit value nothing else reads */
     EVENT_OPCODE_UNKNOWN_E0 = 0xe0,           /* 2: unread; recognized no-op */
     EVENT_OPCODE_UNHANDLED_E1 = 0xe1,         /* 1 */
     EVENT_OPCODE_UNHANDLED_E2 = 0xe2,         /* 1 */
     EVENT_OPCODE_END_2 = 0xe3,                /* 0 */
     EVENT_OPCODE_UNHANDLED_E4 = 0xe4,         /* 1 */
-    EVENT_OPCODE_WAIT_FOR_INSTRUCTION = 0xe5, /* 2: native_thread_task_e (u16); waits until no thread runs it */
+    EVENT_OPCODE_WAIT_FOR_INSTRUCTION = 0xe5, /* 2: thread_task_e (u16); waits until no thread runs it */
     EVENT_OPCODE_YIELD = 0xf0,                /* 0 */
     EVENT_OPCODE_WAIT = 0xf1,                 /* 2: frames (s16) */
     EVENT_OPCODE_NOP = 0xf2,                  /* 0 */
@@ -382,8 +358,8 @@ typedef enum event_call_function {
 } event_call_function_e;
 
 /* Display selected by the first EVENT_OPCODE_DISPLAY_CONDITIONS operand and
- * run by require_condition_dispatch. Values from GENERAL_FIRST up show BONUS.BIN
- * image (value - GENERAL_FIRST) as a banner (require_condition_show_bonus_banner). */
+ * run by require_condition_dispatch. Values from GENERAL_FIRST up show bonus
+ * image (value - GENERAL_FIRST) as a banner. */
 typedef enum event_display_condition {
     EVENT_DISPLAY_CONDITION_SPECIAL_CASES = 0x00,
     EVENT_DISPLAY_CONDITION_HOVERED_UNIT_STATS = 0x01,
@@ -405,8 +381,8 @@ typedef enum event_rotate_unit_facing {
     EVENT_ROTATE_UNIT_FACING_RESTORE = 0x14,
 } event_rotate_unit_facing_e;
 
-/* First halfword of a scenario condition record, as
- * *_script_check_scenario_condition tests it. The record's next halfwords are
+/* First 16-bit value of a scenario condition record, as
+ * script_check_scenario_condition tests it. The record's next 16-bit values are
  * called id and value below; the two tile conditions also read a y and an
  * elevation. Other types fail. */
 typedef enum event_scenario_condition {
@@ -438,8 +414,8 @@ typedef enum event_scenario_condition {
     EVENT_SCENARIO_CONDITION_PALETTE_UNIT_AT_TILE = 37,
 } event_scenario_condition_e;
 
-/* Result of *_script_check_scenario_condition for one condition record.
- * *_script_run_scenario_conditions walks a chain of records while they pass,
+/* Result of script_check_scenario_condition for one condition record.
+ * script_run_scenario_conditions walks a chain of records while they pass,
  * drops the chain at the first failure and reports an event to run when it
  * reaches the record (type 25) that stores the event id. */
 typedef enum event_scenario_condition_result {
@@ -464,8 +440,8 @@ typedef enum event_inflict_status {
     EVENT_INFLICT_STATUS_POISON = 0x02,
 } event_inflict_status_e;
 
-/* EVENT/TEST.EVT record. The first word is relative to the block base, not
- * data[]. battle_script_load_event converts it to a text pointer, then overwrites
+/* EVENT/TEST.EVT record. The first 32-bit value is relative to the block base, not
+ * data[]. script_load_event converts it to a text pointer, then overwrites
  * it with EVENT_TEXT_OFFSET_PROCESSED. This is not a decoded instruction
  * array or a native scheduler context. The interpreter starts at byte zero:
  * the processed header is four one-byte 0xf2 NOPs before data[]. */
@@ -474,6 +450,38 @@ typedef struct event_file_block {
     u8 data[EVENT_BLOCK_BYTES - 4];
 } event_file_block_t;
 typedef char event_file_block_size_must_be_8192[(sizeof(event_file_block_t) == EVENT_BLOCK_BYTES) ? 1 : -1];
+
+/* Dialogue commands are byte-aligned records in the event instruction stream. */
+typedef struct event_display_message_instruction {
+    u8 opcode;
+    u8 thread_id;
+    u8 dialog_type;
+    u8 text_id_le[2]; /* one-based text id */
+    u8 unit_id_le[2];
+    u8 portrait_selector;
+    u8 x_offset_le[2];
+    u8 y_offset_le[2];
+    u8 arrow_offset_le[2];
+    u8 window_options;
+} event_display_message_instruction_t;
+typedef char
+    event_display_message_instruction_size_must_be_15[sizeof(event_display_message_instruction_t) == 15 ? 1 : -1];
+
+typedef struct event_change_dialog_instruction {
+    u8 opcode;
+    u8 window_selector;
+    u8 text_id_le[2]; /* one-based text id; 0xffff closes the window */
+    u8 portrait_selector_le[2];
+} event_change_dialog_instruction_t;
+typedef char event_change_dialog_instruction_size_must_be_6[sizeof(event_change_dialog_instruction_t) == 6 ? 1 : -1];
+
+static inline event_display_message_instruction_t* event_display_message_at(u8* base, s32 byte_offset) {
+    return (event_display_message_instruction_t*)(base + byte_offset);
+}
+
+static inline event_change_dialog_instruction_t* EVENT_BYTE(u8* base, s32 byte_offset) {
+    return (event_change_dialog_instruction_t*)(base + byte_offset);
+}
 
 /* Eight-byte operand payload of EVENT_OPCODE_WALK_TO. Multi-byte values
  * remain byte arrays because event scripts are not guaranteed to be aligned. */
@@ -487,46 +495,283 @@ typedef struct event_walk_to_parameters {
 } event_walk_to_parameters_t;
 typedef char event_walk_to_parameters_size_must_be_8[sizeof(event_walk_to_parameters_t) == 8 ? 1 : -1];
 
-/* Operand view of the event jump instruction that
- * *_script_jump_event_instruction reads: a unit id halfword, then the two
- * byte operands. */
-typedef struct battle_script_jump_instruction {
-    u8 _unused_00[2];
-    u8 param0;
-    u8 param1;
-} battle_script_jump_instruction_t;
+enum { EVENT_CAMERA_POSITION_COMPONENT_COUNT = 3, EVENT_CAMERA_COMPONENT_COUNT = 7 };
 
-/* Provisional work block at *g_battle_ai_workspace_ptr, the AI data block reused while the AI is
- * idle: the menus build their ability list and the outermost scrolling list's packet pages in it,
- * events keep the staged-status snapshot at 0x5f0. */
+/* The event byte is widened into a 32-bit setting; bitfield reads change the extraction order. */
+enum {
+    EVENT_CAMERA_SPEED_CURVE_MODE_MASK = 0x03,
+    EVENT_CAMERA_SPEED_CURVE_GROUP_MASK = 0x0c,
+    EVENT_CAMERA_SPEED_CURVE_GROUP_SHIFT = 2,
+    EVENT_CAMERA_SPEED_CURVE_EASING_MASK = 0xf0,
+    EVENT_CAMERA_SPEED_CURVE_EASING_SHIFT = 4,
+};
+
+/* Fixed event operand records. 16-bit values stay in little-endian byte arrays
+ * because the interpreter may address them at any byte alignment. */
+typedef struct event_background_sound_parameters {
+    u8 sound_id;
+    u8 volume_from;
+    u8 volume_to;
+    u8 find_channel;
+    u8 frames;
+} event_background_sound_parameters_t;
+typedef char
+    event_background_sound_parameters_size_must_be_5[sizeof(event_background_sound_parameters_t) == 5 ? 1 : -1];
+
+typedef struct event_inflict_status_parameters {
+    u8 unit_id_le[2];
+    u8 mode; /* event_inflict_status_e */
+    u8 wait_frames_le[2];
+} event_inflict_status_parameters_t;
+typedef char event_inflict_status_parameters_size_must_be_5[sizeof(event_inflict_status_parameters_t) == 5 ? 1 : -1];
+
+typedef struct event_earthquake_parameters {
+    struct {
+        u8 z_delta;
+        u8 frames;
+    } pulses[2];
+} event_earthquake_parameters_t;
+typedef char event_earthquake_parameters_size_must_be_4[sizeof(event_earthquake_parameters_t) == 4 ? 1 : -1];
+
+typedef struct event_color_screen_parameters {
+    u8 mode;
+    struct {
+        rgb24_t start;
+        rgb24_t end;
+    } colors;
+    u8 duration_le[2];
+} event_color_screen_parameters_t;
+typedef char event_color_screen_parameters_size_must_be_9[sizeof(event_color_screen_parameters_t) == 9 ? 1 : -1];
+
+/* Six byte-aligned 16-bit lighting targets, followed by the frame duration. */
+typedef struct event_map_light_parameters {
+    u8 target_rotation_le[3][2];
+    u8 target_scale_le[3][2];
+    u8 duration_le[2];
+} event_map_light_parameters_t;
+typedef char event_map_light_parameters_size_must_be_14[sizeof(event_map_light_parameters_t) == 14 ? 1 : -1];
+
+typedef struct event_unit_color {
+    u8 mode;
+    rgb_s8_t rgb;
+    u8 duration;
+} event_unit_color_t;
+
+typedef struct event_color_unit_parameters {
+    u8 unit_id_le[2];
+    event_unit_color_t color;
+} event_color_unit_parameters_t;
+typedef char event_color_unit_parameters_size_must_be_7[sizeof(event_color_unit_parameters_t) == 7 ? 1 : -1];
+
+typedef struct event_change_stats_parameters {
+    u8 unit_id_le[2];
+    u8 stat; /* event_change_stats_e */
+    u8 delta_le[2];
+} event_change_stats_parameters_t;
+typedef char event_change_stats_parameters_size_must_be_5[sizeof(event_change_stats_parameters_t) == 5 ? 1 : -1];
+
+typedef struct event_mirror_sprite_parameters {
+    u8 unit_id_le[2];
+    u8 mode;
+} event_mirror_sprite_parameters_t;
+
+typedef struct event_movement_effect_parameters {
+    u8 unit_id_le[2];
+    u8 suppressed;
+} event_movement_effect_parameters_t;
+
+typedef struct event_march_parameters {
+    u8 unit_id_le[2];
+    u8 wait_frames;
+} event_march_parameters_t;
+
+typedef struct event_unit_anim_parameters {
+    u8 unit_id_le[2];
+    u8 animation_le[2];
+    u8 facing_update_mode;
+} event_unit_anim_parameters_t;
+
+/* The animation's high byte also controls facing-update suppression. */
+typedef struct event_unit_anim_rotate_parameters {
+    u8 unit_id_le[2];
+    u8 rotation;
+    u8 animation_le[2];
+} event_unit_anim_rotate_parameters_t;
+
+typedef struct event_wait_value_parameters {
+    u8 variable_id_le[2];
+    u8 test_value_le[2];
+} event_wait_value_parameters_t;
+
+typedef struct event_rotate_unit_parameters {
+    u8 unit_id_le[2];
+    u8 facing;
+    u8 mode;
+    u8 speed;
+    u8 delay;
+} event_rotate_unit_parameters_t;
+
+typedef struct event_unit_parameters {
+    u8 unit_id_le[2];
+} event_unit_parameters_t;
+
+typedef struct event_unit_placement {
+    u8 x;
+    u8 y;
+    u8 elevation;
+    u8 facing;
+} event_unit_placement_t;
+
+/* Direct battle-slot placement bypasses the renderer update performed by WarpUnit. */
+typedef struct event_set_battle_unit_position_instruction {
+    u8 opcode;
+    u8 battle_id;
+    u8 _unused_02;
+    event_unit_placement_t placement;
+} event_set_battle_unit_position_instruction_t;
+typedef char event_set_battle_unit_position_instruction_size_must_be_7
+    [sizeof(event_set_battle_unit_position_instruction_t) == 7 ? 1 : -1];
+
+typedef struct event_warp_unit_parameters {
+    u8 unit_id_le[2];
+    event_unit_placement_t placement;
+} event_warp_unit_parameters_t;
+
+typedef struct event_face_tile_parameters {
+    u8 unit_id_le[2];
+    u8 x;
+    u8 y;
+    u8 _unused_04;
+    u8 mode;
+    u8 speed;
+    u8 delay;
+} event_face_tile_parameters_t;
+
+typedef struct event_face_unit_parameters {
+    u8 first_unit_id_le[2];
+    u8 second_unit_id_le[2];
+    u8 mode;
+    u8 speed;
+    u8 delay;
+} event_face_unit_parameters_t;
+
+/* SpriteMove uses duration_or_speed_le as frames; SpriteMoveBeta as speed. */
+typedef struct event_sprite_move_parameters {
+    u8 unit_id_le[2];
+    u8 destination_le[3][2];
+    u8 curve;
+    u8 weight;
+    u8 duration_or_speed_le[2];
+} event_sprite_move_parameters_t;
+typedef char event_sprite_move_parameters_size_must_be_12[sizeof(event_sprite_move_parameters_t) == 12 ? 1 : -1];
+
+typedef enum event_camera_component {
+    EVENT_CAMERA_COMPONENT_X = 0,
+    EVENT_CAMERA_COMPONENT_Z,
+    EVENT_CAMERA_COMPONENT_Y,
+    EVENT_CAMERA_COMPONENT_TILT,
+    EVENT_CAMERA_COMPONENT_YAW,
+    EVENT_CAMERA_COMPONENT_ROLL,
+    EVENT_CAMERA_COMPONENT_ZOOM
+} event_camera_component_e;
+
+/* Camera operands remain byte-aligned in the event stream. Positions are
+ * x, z (height), y; rotations are tilt, yaw, roll. RelativeCamera has the
+ * same seven values, and Camera appends a frame duration. */
+typedef struct event_camera_values {
+    u8 position_le[3][2];
+    u8 rotation_le[3][2];
+    u8 zoom_le[2];
+} event_camera_values_t;
+typedef char event_camera_values_size_must_be_14[sizeof(event_camera_values_t) == 14 ? 1 : -1];
+
+typedef struct event_camera_parameters {
+    event_camera_values_t values;
+    u8 duration_le[2];
+} event_camera_parameters_t;
+typedef char event_camera_parameters_size_must_be_16[sizeof(event_camera_parameters_t) == 16 ? 1 : -1];
+
+typedef struct event_camera_instruction {
+    u8 opcode;
+    event_camera_parameters_t parameters;
+} event_camera_instruction_t;
+typedef char event_camera_instruction_size_must_be_17[sizeof(event_camera_instruction_t) == 17 ? 1 : -1];
+
+/* Focus scans subsequent instructions for the Camera that it rewrites. */
+typedef struct event_focus_parameters {
+    u8 first_unit_id_le[2];
+    u8 second_unit_id_le[2];
+    u8 keep_angle;
+} event_focus_parameters_t;
+typedef char event_focus_parameters_size_must_be_5[sizeof(event_focus_parameters_t) == 5 ? 1 : -1];
+
+/* FocusSpeed rewrites the immediately following Camera's duration. */
+typedef struct event_focus_speed_parameters {
+    u8 speed_le[2];
+} event_focus_speed_parameters_t;
+
+typedef struct event_focus_speed_instruction {
+    u8 opcode;
+    event_focus_speed_parameters_t parameters;
+} event_focus_speed_instruction_t;
+typedef char event_focus_speed_instruction_size_must_be_3[sizeof(event_focus_speed_instruction_t) == 3 ? 1 : -1];
+
+/* Jump operands: unit id, encoded path length, and direction. */
+typedef struct event_jump_parameters {
+    u8 unit_id_le[2];
+    u8 length_plus_one;
+    u8 direction;
+} event_jump_parameters_t;
+
+/* Provisional work block at *g_ai_workspace_ptr, the AI data block reused while the AI is idle: the menus build their
+ * ability list and the outermost scrolling list's packet pages in it, events keep the staged-status snapshot at 0x5f0.
+ */
 typedef struct world_event_work {
-    world_ability_list_t ability_list;    /* 0x000 */
-    u8 _padding_386[2];                   /* alignment */
-    world_menu_list_page_t list_pages[2]; /* 0x388 */
-    unit_status_staging_t status_staging; /* 0x5f0 */
+    world_menu_ability_list_t ability_list; /* 0x000 */
+    u8 _padding_386[2];                     /* alignment */
+    world_menu_list_page_t list_pages[2];   /* 0x388 */
+    unit_status_staging_t status_staging;   /* 0x5f0 */
 } world_event_work_t;
 typedef char world_event_work_status_staging_offset_must_be_0x5f0
     [((unsigned long)&((world_event_work_t*)0)->status_staging == 0x5F0) ? 1 : -1];
+typedef char event_work_size_must_be_2532[(sizeof(world_event_work_t) == 2532) ? 1 : -1];
 
-/* variables */
-/* The script variables: the ids the code names, the packed flag and nibble ranges, and the story,
- * world-map and Brave Story ranges. */
+/* script */
+/* The event-script interpreter (battle_script_*): loading and running an event, its frame, the
+ * script variables and comparisons, the scenario conditions that pick the next event, and the event
+ * input. */
+
+/* The Deep Dungeon location menu stores the chosen floor in the pending
+ * sound effect's variable before it runs the entry script. */
+enum {
+    EVENT_SCRIPT_VAR_DEEP_DUNGEON_SELECTION = 0x5c,
+};
+
+/* Ordinary variables are 32-bit values; the remaining script-variable domains
+ * are packed as 32 one-bit values or eight four-bit values per 32-bit value. */
+enum {
+    EVENT_SCRIPT_VAR_PACKED_BIT_FIRST = 0x80,
+    EVENT_SCRIPT_VAR_PACKED_NIBBLE_FIRST = 0x360,
+    EVENT_SCRIPT_VAR_END = 0x400,
+    EVENT_SCRIPT_PACKED_BIT_WORD_FIRST = 0x80,
+    EVENT_SCRIPT_PACKED_NIBBLE_WORD_FIRST = 0x97,
+};
 
 /* Event-script variable ids shared by the BATTLE and WORLD interpreters.
  * The calendar and location ids are also serialized into the memory-card
- * slot description by card_save_build_buffer. */
+ * slot description by CARD 0x801c01ac. */
 typedef enum event_script_variable_id {
-    /* Result word tested by the conditional-jump opcodes. */
+    /* 32-bit result tested by the conditional-jump opcodes. */
     EVENT_SCRIPT_VAR_COMPARISON_RESULT = 0x00,
-    /* The comparison opcodes compare word 0 with this word and leave the
-     * truth value in word 0. */
+    /* The comparison opcodes compare 32-bit variable 0 with this 32-bit variable and leave the
+     * truth value in 32-bit variable 0. */
     EVENT_SCRIPT_VAR_COMPARISON_OPERAND = 0x01,
     /* Also where TEXT_STORE_VARIABLE writes until TEXT_SET_VARIABLE_BASE
      * names another variable. */
     EVENT_SCRIPT_VAR_SELECTED_DIALOG_OPTION = 0x18,
-    /* A whole-word store is also copied to text substitution value 0. */
+    /* A 32-bit store is also copied to text substitution value 0. */
     EVENT_SCRIPT_VAR_TEXT_SUBSTITUTION_VALUE = 0x19,
-    /* Words 0x1a-0x20 mirror the live camera: the store and load routines copy
+    /* 32-bit variables 0x1a-0x20 mirror the live camera: the store and load routines copy
      * X -> vx, Z (height) -> vy, Y (map depth) -> vz, tilt, yaw, roll and zoom.
      * The camera opcodes take X, Z, Y and tilt (0x1a-0x1d) as one block. */
     EVENT_SCRIPT_VAR_CAMERA_X = 0x1a,
@@ -538,7 +783,7 @@ typedef enum event_script_variable_id {
     EVENT_SCRIPT_VAR_CAMERA_YAW = 0x1e,
     EVENT_SCRIPT_VAR_CAMERA_ROLL = 0x1f,
     EVENT_SCRIPT_VAR_CAMERA_ZOOM = 0x20,
-    /* Reads synthesize a fresh random value; the backing word does not retain
+    /* Reads synthesize a fresh random value; the backing 32-bit value does not retain
      * the value returned by the interpreter. */
     EVENT_SCRIPT_VAR_RANDOM_VALUE = 0x21,
     EVENT_SCRIPT_VAR_WEATHER_AND_TIME = 0x22,
@@ -597,9 +842,8 @@ typedef enum event_script_variable_id {
     /* Scaled by 10 and added to the TEXT_SET_VARIABLE_BASE variable by
      * TEXT_STORE_VARIABLE, which then clears it. */
     EVENT_SCRIPT_VAR_TEXT_STORE_INDEX = 0x66,
-    /* Years passed: wldcore_calendar_advance_day adds one each March 21 (the first day of Aries,
-     * capped at 99) and wldcore_calendar_advance_days one per whole year and one when it crosses
-     * December 31. Only WLDCORE writes it. */
+    /* Incremented each March 21 and by whole years of advanced days, capped
+     * at 99. */
     EVENT_SCRIPT_VAR_YEAR_COUNT = 0x67,
     EVENT_SCRIPT_VAR_DEEP_DUNGEON_EXIT = 0x68,
     /* WLDCORE also uses this value to select the current-location marker's
@@ -611,7 +855,7 @@ typedef enum event_script_variable_id {
     /* Main story progress counter. */
     EVENT_SCRIPT_VAR_STORY_PROGRESS = 0x6e,
     EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY = 0x6f,
-    /* Special misc-unit count (capped at 4) that selects the Deep Dungeon
+    /* Special runtime-unit count (capped at 4) that selects the Deep Dungeon
      * map state; a change reloads the map. */
     EVENT_SCRIPT_VAR_DEEP_DUNGEON_CRYSTAL_COUNT = 0x70,
     /* ATTACK zeroes these 32 variables each time it loads a scenario, and
@@ -673,10 +917,8 @@ typedef enum event_script_variable_id {
      * (Reis returns to human form). */
     EVENT_SCRIPT_VAR_WORKER_7_DEFEATED = 0xab,
     EVENT_SCRIPT_VAR_REIS_RESTORED = 0xac,
-    /* Set while a story event replays from the Brave Story or a tutorial plays from its list
-     * (WLDCORE), and cleared when that event ends. The interpreters then skip the DismissUnit,
-     * CallFunction, UnlockDate and SetDateAdvance side effects, and *_script_run_variable_command
-     * refuses writes outside the scenario locals and the interpreter's working variables. */
+    /* When set, the interpreters skip the DismissUnit, CallFunction,
+     * UnlockDate, and SetDateAdvance side effects. */
     EVENT_SCRIPT_VAR_SUPPRESS_PROGRESS_EFFECTS = 0x1fc,
     /* Set by ATTACK when a battle is loaded and cleared at EventEnd; while set,
      * statuses are staged and the turn check starts the battle-start event. */
@@ -719,5 +961,164 @@ enum {
     EVENT_SCRIPT_VAR_PROPOSITION_COUNT = 96,
     EVENT_SCRIPT_VAR_PERSON_PROFILE_COUNT = 64,
 };
+
+/* Whether an event instruction loaded the ATTACK overlay and its graphics
+ * before the deployment screen starts. */
+typedef enum script_attack_entry_mode {
+    SCRIPT_ATTACK_ENTRY_NORMAL = 1,       /* set when an event thread starts */
+    SCRIPT_ATTACK_ENTRY_PRELOADED = 2,    /* *_script_load_attack_graphics_event_instruction ran */
+    SCRIPT_ATTACK_ENTRY_PRELOAD_USED = 3, /* *_menu_init_attack_resources_and_threads skipped its loads */
+} script_attack_entry_mode_e;
+
+/* Resolve single selectors in place; leave group selectors for the filter loop. */
+s32 script_prepare_unit_filter(u16* unit_id, s32* filter_mode);
+
+extern s32 g_script_loaded_event_id;
+extern u8 g_world_script_event_instruction_sizes[0xf4];
+extern u16 g_script_attack_entry_mode; /* script_attack_entry_mode_e */
+extern s32 g_script_condition_unit_battle_id;
+extern s32 g_script_rand16_state;
+extern u32 g_script_unfiltered_controller_input;
+extern const char g_script_pause_message[];
+extern s16 g_script_debug_paused;
+extern u8 g_script_condition_param_lengths[];
+extern u16 g_script_unit_filter_modes[];
+extern u32 g_script_event_input;
+extern u16 g_script_frame_result_override;
+extern u32 g_script_event_current_input;
+extern u32 g_script_event_initial_repeat_counter;
+extern u32 g_script_event_previous_input;
+extern u32 g_script_event_repeat_counter;
+extern u32 g_script_event_secondary_repeat_counter;
+
+/* Each scene points to the resident script-variable bank. */
+extern s32* g_script_variables;
+
+/* Operand-byte counts, excluding the opcode; not per-operand width schemas.
+ * BATTLE 0x8014d170, WORLD 0x8013a454. The tables end after opcode 0xf3. */
+extern u8 g_script_event_instruction_sizes[0xf4];
+
+/* Suppress recursive write filtering while getters use comparison variable 0. */
+extern u8 g_script_variable_write_guard;
+
+extern s16 g_battle_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
+void script_advance_date_by_one_year(void);
+void script_apply_input_overrides(u32* input);
+void script_assign_bitset_flag(u32* bitset, s32 bit_index, s32 value);
+void script_change_stats(const event_change_stats_parameters_t* parameters);
+void script_clamp_s32_to_range(s32* value, s32 minimum, s32 maximum);
+void script_face_tile(const event_face_tile_parameters_t* parameters);
+void script_face_unit(const event_face_unit_parameters_t* parameters, s32 second_only);
+void script_filter_controller_input(u32* input);
+void script_focus(event_focus_parameters_t* parameters);
+
+/* A typed operand plus a local Camera cursor reorders the original argument saves. */
+void script_focus_speed(u8* parameters, s32* position, s32* rotation);
+
+u32* input_get_menu_controller(s32 use_current);
+
+/* Read through the resident scene's variable commands, preserving the comparison
+ * result. Reading weather/time first rebuilds it from the separate variables. */
+s32 script_get_variable(s32 variable_id);
+
+s32 script_interpolate_range_fixed12(s32 start, s32 end, s32 fraction, s32 value);
+void script_join_units_silently(void);
+void script_load_event(s32 id);
+
+/* Read and write unaligned little-endian signed 16-bit operands. */
+s16 script_load_halfword(const void* source);
+
+s32 script_load_next_event(void);
+void script_march_units(const event_march_parameters_t* parameters);
+void script_print_debug_message(void);
+void script_reset_event_state(void);
+void script_run_next_event(void);
+void script_seed_random_from_vsync(void);
+void script_set_variable(s32 variable_id, s32 value);
+void script_show_graphic_thread(void);
+void script_start_current_event_thread(void);
+void script_unit_anim(const event_unit_anim_parameters_t* parameters);
+void script_store_halfword(u8* destination, s16 value);
+void script_wait_for_unit_ready(s32 runtime_id);
+void script_set_units_movement_effect_suppression(const event_movement_effect_parameters_t* parameters);
+s32 script_run_scenario_conditions(void);
+
+event_scenario_condition_result_e script_check_scenario_condition(
+    event_scenario_condition_e type, s32 id, s32 value, s32 tile_y, s32 elevation);
+
+void script_load_event_input_state(const world_menu_input_state_t* saved);
+void script_copy_matrix(MATRIX* destination, const MATRIX* source);
+u32 battle_script_get_event_initial_repeat_counter(void);
+s32 script_scale_music_volume(s32 volume);
+void script_pulse_tutorial_wait_value(s32 value);
+void script_dismiss_unit_event_instruction(s32 sprite_set);
+void script_color_screen_thread(void);
+void script_color_unit_event_instruction(const event_color_unit_parameters_t* parameters);
+void script_apply_relative_camera(event_camera_values_t* parameters, const s32* camera_values);
+void script_load_attack_graphics_event_instruction(void);
+void script_display_conditions_thread(void);
+
+/* Whole matching interpreter ranges:
+ * BATTLE 0x80143bd8..0x80145f78, WORLD 0x800f6f20..0x800f92a0 (exclusive). */
+void script_execute_event(void);
+
+s32 script_find_instruction_byte_offset(s32 offset, s32 opcode);
+
+/* 0x80149d6c..0x80149ebc: returns offset after the matching target marker;
+ * missing targets stop the current thread. alternate_opcode accepts -1. */
+s32 script_find_jump_target(s32 limit_offset, event_opcode_e target_opcode, s32 alternate_opcode, s32 target_id);
+
+s32 script_get_rand16(void);
+s32 script_get_variable_bit_position(s32 variable_id);
+s32* script_get_variable_word_pointer_from_id(s32 variable_id);
+void script_inflict_status_thread(void);
+void script_mirror_sprite_event_instruction(const event_mirror_sprite_parameters_t* parameters);
+void script_pause_event_instruction(void);
+void script_play_effect_thread(void);
+void script_reset_palette_event_instruction(const event_unit_parameters_t* parameters);
+void script_run_condition(event_opcode_e opcode);
+
+/* The fourth argument is supplied by callers but is not read. */
+void script_run_variable_command(s32 opcode, s32 destination_id, s32 source, s32 unused);
+
+/* TeleportIn forwards the unit ID; the interpreter's second argument is unused. */
+void script_teleport_in_event_instruction(s32 unit_id, s32 unused);
+
+void script_jump_event_instruction(const event_jump_parameters_t* parameters);
+void script_unit_animation_rotate_event_instruction(const event_unit_anim_rotate_parameters_t* parameters);
+void script_unlock_date_event_instruction(u32* bitset, s32 date_index, s32 month, s32 day);
+void script_wait_value_event_instruction(const event_wait_value_parameters_t* parameters);
+void script_wait_rotate_event_instruction(s32 unit_id);
+void script_wait_walk_event_instruction(s32 unit_id);
+void script_walk_to_event_instruction(const event_walk_to_parameters_t* parameters);
+void script_rotate_unit(const event_rotate_unit_parameters_t* parameters);
+
+/* Event-unit lookup uses the resident scene's interpreter state. */
+s32 script_resolve_runtime_id(s32 unit_id);
+
+void script_play_effect_and_wait(void);
+void script_report_missing_unit_stub(s32 unused_unit_id);
+void script_block_start_thread(void);
+void script_run_next_event_unused(void);
+void script_process_inflict_status_commands(void);
+
+/* BATTLE pointer slot 0x80173ca4; WORLD pointer slot 0x801cd75c. */
+extern event_file_block_t* g_script_event_block;
+
+extern s32 g_script_event_speed;
+
+/* Four unit bindings used by the scenario's slot selectors. */
+extern s16 g_script_unit_slots[EVENT_UNIT_SELECTOR_SLOT_COUNT];
+
+/* WORLD's copy of the event-script interpreter (world_script_*, twins of battle_script_*): loading
+ * and running an event, its frame, the script variables and the scenario conditions, and the event
+ * input. */
+
+extern s32 g_world_script_loaded_event_id;
+extern s16 g_world_script_opcode_dc_value; /* EVENT_OPCODE_UNKNOWN_DC stores 13; nothing reads it */
+void world_script_load_event(s32 id);
+s32 world_script_load_next_event(void);
+void world_script_start_current_event_thread(void);
+void world_script_execute_event(void);
 
 #endif

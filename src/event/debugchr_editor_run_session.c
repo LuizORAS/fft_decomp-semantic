@@ -1,14 +1,15 @@
+#include "fft/battle_script.h"
 #include "fft/event_debugchr.h"
+#include "fft/gfx.h"
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Non-volatile view of debugchr.h's volatile array: volatile accesses change this function. */
-#define EDITOR_UNIT_IDS ((u8*)g_debugchr_editor_unit_ids)
-
-/* `index + base`, not `base + index`: GCC canonicalises a PLUS of two
-   registers, but a MINUS over a NEGATE keeps the source operand order, which
-   is the target's `addu rd,index,base` at the five primitive bases. */
+/* Ordinary indexing changes the ADDU operand order at the primitive bases. */
 #define PRIM_AT(base, index) ((POLY_FT4*)((s32)((index) * sizeof(POLY_FT4)) - -(s32)(base)))
 
 /* Run the debug unit editor, which battle_menu_open_debugchr and world_menu_open_debugchr start for
@@ -32,7 +33,7 @@
  *    only splits `lh` into a fresh register plus a copy (the target's
  *    `lh v0; move a0,v0`) when the destination has no tracked nonzero bits;
  *    reusing the function-wide `cur` there loads it with a plain `lh`, and
- *    writing `cur` in the up-arm clamp computes `hi - 1` in `cur`'s register.
+ *    writing `cur` in the up-arm clamp computes `max - 1` in `cur`'s register.
  *  - The memory clobber after `g_debugchr_editor_fields[15].destination[0] = 0xE`, the tied `mark` and `uv_lo`
  *    operands, the empty volatile asm in `prev_unit` and the two
  *    `"r"(clearable)` uses each fix a scheduling or allocation difference
@@ -41,7 +42,7 @@
 void debugchr_editor_run_session(void) {
     s32 battle_id;
     help_navigation_record_t* field;
-    s32* input;
+    u32* input;
     POLY_FT4* cursor_v;
     POLY_FT4* shadow_v;
     POLY_FT4* cursor_prims;
@@ -51,26 +52,26 @@ void debugchr_editor_run_session(void) {
     POLY_FT4* shadow_h;
     POLY_FT4* cursor_h_edit;
     POLY_FT4* shadow_h_edit;
-    s32 buttons;
-    s32 keys;
-    s32 navkeys;
+    u32 buttons;
+    u32 keys;
+    u32 navkeys;
     s32 i;
     s32 row;
     s32 steps;
     s32 direction;
     s32 bob_y;
     s32 bob_x;
-    s32 uv_lo;
-    s32 uv_v_hi;
-    s32 uv_v_far;
-    s32 uv_h_hi;
-    s32 uv_h_far;
-    s32 uv_h_mid;
-    s32 uv_s_hi;
-    s32 uv_s_far;
-    s32 uv_s_mid;
-    s32 mark;
-    s16* menu_state;
+    u8 uv_lo;
+    u8 uv_v_hi;
+    u8 uv_v_far;
+    u8 uv_h_hi;
+    u8 uv_h_far;
+    u8 uv_h_mid;
+    u8 uv_s_hi;
+    u8 uv_s_far;
+    u8 uv_s_mid;
+    u8 mark;
+    s16* selected_battle_id;
     u16 unit_index;
     s32 clearable;
     s32 span;
@@ -92,17 +93,17 @@ void debugchr_editor_run_session(void) {
     s32 shadow_bob_x;
 
     g_debugchr_editor_active = 1;
-    g_debugchr_panel_status_group_count = 2;
+    g_menu_panel_status_group_count = 2;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         battle_unit_find_stats_by_entd_unit_id(battle_unit_get_stats_from_battle_id(i)->unit_id, &battle_id);
         if ((battle_id >= 0) && (i == battle_id)) {
-            EDITOR_UNIT_IDS[i] = 1;
+            g_debugchr_editor_unit_ids[i] = 1;
         } else {
-            EDITOR_UNIT_IDS[i] = 0;
+            g_debugchr_editor_unit_ids[i] = 0;
         }
     }
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        if (EDITOR_UNIT_IDS[i] != 0) {
+        if (g_debugchr_editor_unit_ids[i] != 0) {
             g_debugchr_panel_selected_unit_data.battle_id = i;
             g_debugchr_panel_selected_unit_data.name_id = i;
             g_debugchr_panel_selected_billboard.unit_index = i;
@@ -113,103 +114,92 @@ void debugchr_editor_run_session(void) {
     }
     debugchr_editor_load_selected_unit();
     g_debugchr_editor_selected_unit_slot = 0;
-    if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
-        battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
+    if (g_menu_status_panel_fields.state.generic_monster != 0) {
+        mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
         g_debugchr_editor_fields[15].destination[0] = 0xE;
     } else {
-        battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
+        mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
         g_debugchr_editor_fields[15].destination[0] = 0xE;
     }
     g_debugchr_status_display_thread_params.style = 0;
     g_debugchr_numeric_editor_thread_params.style = 0;
     g_debugchr_character_status_frame_config.style = 0;
-    battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, debugchr_panel_unit_status_banner_thread);
-    battle_thread_set_parameters(
-        NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, (s32)&g_debugchr_status_display_thread_params, 0, 0);
-    battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, debugchr_editor_run_numeric_thread);
-    battle_thread_set_parameters(
-        NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, (s32)&g_debugchr_numeric_editor_thread_params, 0, 0);
-    battle_thread_start(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, debugchr_panel_run_character_status_thread);
-    battle_thread_set_parameters(
-        NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, (s32)&g_debugchr_character_status_frame_config, 0, 0);
+    thread_start(THREAD_SCREEN_SLOT_UNIT_STATUS, debugchr_panel_unit_status_banner_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_UNIT_STATUS, (s32)&g_debugchr_status_display_thread_params, 0, 0);
+    thread_start(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, debugchr_editor_run_numeric_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, (s32)&g_debugchr_numeric_editor_thread_params, 0, 0);
+    thread_start(THREAD_SCREEN_SLOT_CHARACTER_STATUS, menu_run_status_panel_thread);
+    thread_set_parameters(THREAD_SCREEN_SLOT_CHARACTER_STATUS, (s32)&g_debugchr_character_status_frame_config, 0, 0);
     row = 0;
     /* The unit menu and the field editor re-enter each other by label: an
        enclosing loop's notes reweight the allocation of the whole body. */
 loop_outer:
     i = 0;
-    /* Assigned here, in the preheader, rather than inside the loop: as a loop
-     * body statement it becomes a loop.c movable, and moving it consumes
-     * threshold budget that then makes a fourth invariant (&g_debugchr_editor_selected_unit_slot)
-     * profitable, which the target does not hoist. Assigned outside the loop
-     * it is not a movable at all, so loop.c still hoists exactly mark and the
-     * constant 1, and this address is emitted into the preheader ahead of
-     * them -- the target's emission order. */
-    menu_state = &g_debugchr_panel_selected_unit_data.battle_id;
+    /* name_id is five 16-bit values before battle_id; record access changes the store displacements. */
+    selected_battle_id = &g_debugchr_panel_selected_unit_data.battle_id;
     for (;;) {
         mark = 0xE;
-        /* Tied launder: it invalidates cse's constant equivalence for
-         * `mark`, which puts `mark` in $s1 and the hoisted `&g_debugchr_panel_selected_unit_data.battle_id`
-         * in $s3, as the target has them. */
+        /* Removing the tied use changes the marker and menu-pointer allocation. */
         __asm__("" : "=r"(mark) : "0"(mark));
-        battle_thread_yield();
-        debugchr_gfx_build_status_group_primitives(g_debugchr_gfx_render_buffers[i & 1]);
-        input = battle_script_get_controller_input_pointer(0);
-        g_debugchr_input_controller = input;
+        thread_yield();
+        menu_build_status_group_primitives(g_debugchr_gfx_render_buffers[i & 1]);
+        input = input_get_menu_controller(0);
+        g_menu_input_controller = input;
         buttons = *input;
         if (buttons & PSX_PAD_CIRCLE) {
             goto editor;
         }
         if (buttons & PSX_PAD_CROSS) {
-            battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_UNIT_STATUS, 0, 0, 1);
-            battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_NUMERIC_EDITOR, 0, 0, 1);
-            battle_thread_set_parameters(NATIVE_SCREEN_THREAD_SLOT_CHARACTER_STATUS, 0, 0, 1);
+            thread_set_parameters(THREAD_SCREEN_SLOT_UNIT_STATUS, 0, 0, 1);
+            thread_set_parameters(THREAD_SCREEN_SLOT_NUMERIC_EDITOR, 0, 0, 1);
+            thread_set_parameters(THREAD_SCREEN_SLOT_CHARACTER_STATUS, 0, 0, 1);
             return;
         }
         if (buttons & PSX_PAD_R1) {
-            g_debugchr_panel_status_animation[1] = 7;
+            g_menu_panel_status_animation[1] = 7;
             /* Label loops: a do-while's loop notes change the allocation. */
         next_unit:
             g_debugchr_editor_selected_unit_slot += 1;
             if (g_debugchr_editor_selected_unit_slot == BATTLE_UNIT_SLOT_COUNT) {
                 g_debugchr_editor_selected_unit_slot = 0;
             }
-            if (EDITOR_UNIT_IDS[g_debugchr_editor_selected_unit_slot] == 0) {
+            if (g_debugchr_editor_unit_ids[g_debugchr_editor_selected_unit_slot] == 0) {
                 goto next_unit;
             }
             unit_index = g_debugchr_editor_selected_unit_slot;
-            menu_state[0] = unit_index;
-            menu_state[-5] = unit_index;
+            selected_battle_id[0] = unit_index;
+            selected_battle_id[-5] = unit_index;
             g_debugchr_panel_selected_billboard.unit_index = unit_index;
             debugchr_editor_load_selected_unit();
-            if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
-                battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
+            if (g_menu_status_panel_fields.state.generic_monster != 0) {
+                mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
             } else {
-                battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
+                mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
             }
             g_debugchr_editor_fields[15].destination[0] = mark;
             g_debugchr_status_display_thread_params.redraw_request = 1;
             g_debugchr_numeric_editor_thread_params.redraw_request = 1;
             g_debugchr_character_status_frame_config.redraw_request = 1;
         }
-        if (*g_debugchr_input_controller & PSX_PAD_L1) {
-            g_debugchr_panel_status_animation[0] = 7;
+        if (*g_menu_input_controller & PSX_PAD_L1) {
+            g_menu_panel_status_animation[0] = 7;
         prev_unit:
             g_debugchr_editor_selected_unit_slot -= 1;
             if (g_debugchr_editor_selected_unit_slot == -1) {
                 g_debugchr_editor_selected_unit_slot = 0x14;
             }
-            if (EDITOR_UNIT_IDS[g_debugchr_editor_selected_unit_slot] == 0) {
+            if (g_debugchr_editor_unit_ids[g_debugchr_editor_selected_unit_slot] == 0) {
                 goto prev_unit;
             }
             unit_index = g_debugchr_editor_selected_unit_slot;
-            menu_state[0] = unit_index;
-            menu_state[-5] = unit_index;
+            selected_battle_id[0] = unit_index;
+            selected_battle_id[-5] = unit_index;
             g_debugchr_panel_selected_billboard.unit_index = unit_index;
             debugchr_editor_load_selected_unit();
-            if (g_debugchr_editor_unit_fields.state.generic_monster != 0) {
-                battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
+            if (g_menu_status_panel_fields.state.generic_monster != 0) {
+                mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_special, 0xA8);
             } else {
-                battle_util_copy_bytes(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
+                mem_copy_bytes_nonempty(g_debugchr_editor_template, g_debugchr_editor_template_normal, 0xA8);
             }
             g_debugchr_editor_fields[15].destination[0] = mark;
             /* Keeps the `li v0,2` for the redraw store below the byte store. */
@@ -222,11 +212,11 @@ loop_outer:
     }
 editor:
     for (i = 0; i < 2; i++) {
-        battle_gfx_init_default_poly_ft4(&g_debugchr_editor_cursor_polys[i]);
+        menu_init_default_poly_ft4(&g_debugchr_editor_cursor_polys[i]);
         SetSemiTrans(&g_debugchr_editor_cursor_polys[i], 0);
         g_debugchr_editor_cursor_polys[i].tpage = GetTPage(0, 0, 0x3C0, 0x100);
         g_debugchr_editor_cursor_polys[i].clut = 0x7D7C;
-        battle_gfx_init_default_poly_ft4(&g_debugchr_editor_cursor_shade_polys[i]);
+        menu_init_default_poly_ft4(&g_debugchr_editor_cursor_shade_polys[i]);
         SetSemiTrans(&g_debugchr_editor_cursor_shade_polys[i], 1);
         g_debugchr_editor_cursor_shade_polys[i].tpage = GetTPage(0, 2, 0x3C0, 0x100);
         g_debugchr_editor_cursor_shade_polys[i].clut = 0x7DBC;
@@ -234,13 +224,13 @@ editor:
     g_debugchr_editor_field_table = g_debugchr_editor_fields;
     cursor_prims = g_debugchr_editor_cursor_polys;
     i = 0;
-    battle_thread_yield();
+    thread_yield();
     for (;;) {
         field = &g_debugchr_editor_field_table[row];
         x = field->x;
         y = field->y + 8;
         g_debugchr_editor_current_field = field;
-        keys = *g_debugchr_input_controller;
+        keys = *g_menu_input_controller;
         if (keys & PSX_PAD_CROSS) {
             if (g_debugchr_editor_field_edit_active != 1) {
                 goto loop_outer;
@@ -258,7 +248,7 @@ editor:
             }
         }
         if ((g_debugchr_editor_field_edit_active != 0) && ((row - 9) < 5U)
-            && (*g_debugchr_input_controller & PSX_PAD_TRIANGLE)) {
+            && (*g_menu_input_controller & PSX_PAD_TRIANGLE)) {
             *g_debugchr_editor_current_field->value = 0;
             debugchr_editor_apply_values_to_battle_unit(g_debugchr_editor_selected_unit_slot);
             debugchr_editor_load_selected_unit();
@@ -266,15 +256,10 @@ editor:
             g_debugchr_numeric_editor_thread_params.redraw_request = 1;
             g_debugchr_character_status_frame_config.redraw_request = 1;
         }
-        navkeys = *g_debugchr_input_controller;
+        navkeys = *g_menu_input_controller;
         if (navkeys & PSX_PAD_DPAD_MASK) {
             if (g_debugchr_editor_field_edit_active == 0) {
-                /* The `do { } while (0)` is a register-allocation lever, not
-                 * control flow: flow.c adds the loop depth to reg_n_refs for
-                 * every pseudo referenced inside a loop note, which raises
-                 * `direction` above `navkeys` in allocno_compare's order so that
-                 * `direction` is allocated first and takes $v1, leaving `navkeys`
-                 * in $a0 as the target has it. */
+                /* Removing the wrapper changes direction and input-mask allocation. */
                 do {
                     direction = 0;
                 } while (0);
@@ -293,18 +278,15 @@ editor:
                 if ((navkeys & PSX_PAD_RIGHT) || (navkeys & PSX_PAD_UP)) {
                     value = g_debugchr_editor_current_field->value;
                     cur = *value;
-                    /* One pointer local per basic block: a shared one loses the
-                     * target's per-block address materialisation. */
-                    /* `||` instead of the goto moves the upper-bound address
-                       out of its own block. */
-                    up_lo = &g_debugchr_editor_template[row].lo;
+                    /* Shared pointers or a combined range test change address materialization. */
+                    up_lo = &g_debugchr_editor_template[row].min;
                     if (cur < *up_lo) {
                         goto clamp_hi;
                     }
-                    up_hi = &g_debugchr_editor_template[row].hi;
+                    up_hi = &g_debugchr_editor_template[row].max;
                     if (*up_hi < cur) {
                     clamp_hi:
-                        up_clamp = &g_debugchr_editor_template[row].hi;
+                        up_clamp = &g_debugchr_editor_template[row].max;
                         *value = *up_clamp - 1;
                     }
                     if (PadRead(1) & PSX_PAD_L1) {
@@ -313,13 +295,10 @@ editor:
                         steps = 1;
                     }
                     for (i = 0; i < steps; i++) {
-                        hi_limit = &g_debugchr_editor_template[row].hi;
+                        hi_limit = &g_debugchr_editor_template[row].max;
                         span = row - 9;
                         clearable = span < 5U;
-                        /* The target hoists this clear-to-zero range test into
-                         * the preheader and never reads the result; the empty
-                         * "r" operand keeps the use alive without emitting an
-                         * instruction. */
+                        /* The native loop computes this range test without reading its result. */
                         __asm__("" : : "r"(clearable));
                         value = g_debugchr_editor_current_field->value;
                         cur_u = *value;
@@ -339,11 +318,11 @@ editor:
                 } else {
                     down_value = g_debugchr_editor_current_field->value;
                     cur = *down_value;
-                    dn_lo = &g_debugchr_editor_template[row].lo;
+                    dn_lo = &g_debugchr_editor_template[row].min;
                     if (cur < *dn_lo) {
                         goto clamp_lo;
                     }
-                    dn_hi = &g_debugchr_editor_template[row].hi;
+                    dn_hi = &g_debugchr_editor_template[row].max;
                     if (*dn_hi < cur) {
                     clamp_lo:
                         *down_value = *dn_lo + 1;
@@ -354,13 +333,10 @@ editor:
                         steps = 1;
                     }
                     for (i = 0; i < steps; i++) {
-                        lo_limit = &g_debugchr_editor_template[row].lo;
+                        lo_limit = &g_debugchr_editor_template[row].min;
                         span = row - 9;
                         clearable = span < 5U;
-                        /* The target hoists this clear-to-zero range test into
-                         * the preheader and never reads the result; the empty
-                         * "r" operand keeps the use alive without emitting an
-                         * instruction. */
+                        /* The native loop computes this range test without reading its result. */
                         __asm__("" : : "r"(clearable));
                         value = g_debugchr_editor_current_field->value;
                         cur_d = *value;
@@ -408,43 +384,15 @@ editor:
             if (g_debugchr_editor_field_edit_active == 0) {
                 cursor_v = PRIM_AT(cursor_prims, buffer);
                 shadow_v = &g_debugchr_editor_cursor_shade_polys[buffer];
-                bob_y = y - (((i * g_battle_event_speed) >> 4) & 3);
-                cursor_v->x0 = x;
-                cursor_v->y0 = bob_y;
-                cursor_v->x1 = x + 0x10;
-                cursor_v->y1 = bob_y;
-                cursor_v->x2 = x;
-                cursor_v->y2 = bob_y + 0x10;
-                cursor_v->x3 = x + 0x10;
-                cursor_v->y3 = bob_y + 0x10;
-                shadow_v->x0 = x + 2;
-                shadow_v->y0 = bob_y + 2;
-                shadow_v->x1 = x + 0x12;
-                shadow_v->y1 = bob_y + 2;
-                shadow_v->x2 = x + 2;
-                shadow_v->y2 = bob_y + 0x12;
-                shadow_v->x3 = x + 0x12;
-                shadow_v->y3 = bob_y + 0x12;
+                bob_y = y - (((i * g_script_event_speed) >> 4) & 3);
+                setXY4(cursor_v, x, bob_y, x + 0x10, bob_y, x, bob_y + 0x10, x + 0x10, bob_y + 0x10);
+                setXY4(shadow_v, x + 2, bob_y + 2, x + 0x12, bob_y + 2, x + 2, bob_y + 0x12, x + 0x12, bob_y + 0x12);
                 g_debugchr_editor_cursor_polys[buffer].clut = 0x7D7C;
             } else {
                 cursor_v_edit = PRIM_AT(cursor_prims, buffer);
                 shadow_v_edit = &g_debugchr_editor_cursor_shade_polys[buffer];
-                cursor_v_edit->x0 = x;
-                cursor_v_edit->y0 = y;
-                cursor_v_edit->x1 = x + 0x10;
-                cursor_v_edit->y1 = y;
-                cursor_v_edit->x2 = x;
-                cursor_v_edit->y2 = y + 0x10;
-                cursor_v_edit->x3 = x + 0x10;
-                cursor_v_edit->y3 = y + 0x10;
-                shadow_v_edit->x0 = x + 2;
-                shadow_v_edit->y0 = y + 2;
-                shadow_v_edit->x1 = x + 0x12;
-                shadow_v_edit->y1 = y + 2;
-                shadow_v_edit->x2 = x + 2;
-                shadow_v_edit->y2 = y + 0x12;
-                shadow_v_edit->x3 = x + 0x12;
-                shadow_v_edit->y3 = y + 0x12;
+                setXY4(cursor_v_edit, x, y, x + 0x10, y, x, y + 0x10, x + 0x10, y + 0x10);
+                setXY4(shadow_v_edit, x + 2, y + 2, x + 0x12, y + 2, x + 2, y + 0x12, x + 0x12, y + 0x12);
                 g_debugchr_editor_cursor_polys[buffer].clut = 0x7E7C;
             }
         } else if (g_debugchr_editor_field_edit_active == 0) {
@@ -452,8 +400,7 @@ editor:
             uv_lo = 0xA8;
             cursor_h->u0 = uv_lo;
             uv_lo = 0xB8;
-            /* Hides the constant from cse; without it this block loses two of
-             * the target's instructions. */
+            /* Removing the tied use eliminates two native instructions. */
             __asm__("" : "=r"(uv_lo) : "0"(uv_lo));
             cursor_h->v0 = 0;
             uv_h_hi = 0xB8;
@@ -474,26 +421,13 @@ editor:
             shadow_h->v2 = 0x10;
             shadow_h->u3 = uv_h_far;
             shadow_h->v3 = 0x10;
-            bob_x = ((i * g_battle_event_speed) >> 4) & 3;
-            cursor_h->x0 = x - bob_x;
-            cursor_h->y0 = y;
-            cursor_h->x1 = (x - bob_x) + 0x10;
-            cursor_h->y1 = y;
-            cursor_h->x2 = x - bob_x;
-            cursor_h->y2 = y + 0x10;
-            cursor_h->x3 = (x - bob_x) + 0x10;
-            cursor_h->y3 = y + 0x10;
+            bob_x = ((i * g_script_event_speed) >> 4) & 3;
+            setXY4(cursor_h, x - bob_x, y, (x - bob_x) + 0x10, y, x - bob_x, y + 0x10, (x - bob_x) + 0x10, y + 0x10);
             /* A separate temporary schedules the decrement after the
              * `(x - bob_x) + 0x10` sum; `bob_x -= 2` would move it ahead. */
             shadow_bob_x = bob_x - 2;
-            shadow_h->x0 = x - shadow_bob_x;
-            shadow_h->y0 = y + 2;
-            shadow_h->x1 = (x - shadow_bob_x) + 0x10;
-            shadow_h->y1 = y + 2;
-            shadow_h->x2 = x - shadow_bob_x;
-            shadow_h->y2 = y + 0x12;
-            shadow_h->x3 = (x - shadow_bob_x) + 0x10;
-            shadow_h->y3 = y + 0x12;
+            setXY4(shadow_h, x - shadow_bob_x, y + 2, (x - shadow_bob_x) + 0x10, y + 2, x - shadow_bob_x, y + 0x12,
+                (x - shadow_bob_x) + 0x10, y + 0x12);
             g_debugchr_editor_cursor_polys[buffer].clut = 0x7D7C;
         } else {
             cursor_h_edit = PRIM_AT(cursor_prims, buffer);
@@ -501,8 +435,7 @@ editor:
             uv_lo = 0xA8;
             cursor_h_edit->u0 = uv_lo;
             uv_lo = 0xB8;
-            /* Hides the constant from cse; without it this block loses two of
-             * the target's instructions. */
+            /* Removing the tied use eliminates two native instructions. */
             __asm__("" : "=r"(uv_lo) : "0"(uv_lo));
             cursor_h_edit->v0 = 0;
             uv_s_hi = 0xB8;
@@ -522,27 +455,13 @@ editor:
             shadow_h_edit->v2 = 0x10;
             shadow_h_edit->u3 = uv_s_far;
             shadow_h_edit->v3 = 0x10;
-            cursor_h_edit->x0 = x;
-            cursor_h_edit->y0 = y;
-            cursor_h_edit->x1 = x + 0x10;
-            cursor_h_edit->y1 = y;
-            cursor_h_edit->x2 = x;
-            cursor_h_edit->y2 = y + 0x10;
-            cursor_h_edit->x3 = x + 0x10;
-            cursor_h_edit->y3 = y + 0x10;
-            shadow_h_edit->x0 = x + 2;
-            shadow_h_edit->y0 = y + 2;
-            shadow_h_edit->x1 = x + 0x12;
-            shadow_h_edit->y1 = y + 2;
-            shadow_h_edit->x2 = x + 2;
-            shadow_h_edit->y2 = y + 0x12;
-            shadow_h_edit->x3 = x + 0x12;
-            shadow_h_edit->y3 = y + 0x12;
+            setXY4(cursor_h_edit, x, y, x + 0x10, y, x, y + 0x10, x + 0x10, y + 0x10);
+            setXY4(shadow_h_edit, x + 2, y + 2, x + 0x12, y + 2, x + 2, y + 0x12, x + 0x12, y + 0x12);
             g_debugchr_editor_cursor_polys[buffer].clut = 0x7E7C;
         }
-        battle_gfx_draw_or_append_gpu_primitive(PRIM_AT(cursor_prims, buffer));
-        battle_gfx_draw_or_append_gpu_primitive(&g_debugchr_editor_cursor_shade_polys[buffer]);
-        battle_thread_wait_frames(1);
+        gfx_draw_or_append_gpu_primitive(PRIM_AT(cursor_prims, buffer));
+        gfx_draw_or_append_gpu_primitive(&g_debugchr_editor_cursor_shade_polys[buffer]);
+        thread_wait_frames(1);
         i++;
     }
 }

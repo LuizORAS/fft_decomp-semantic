@@ -4,7 +4,7 @@
 /* Present one SCEA logo frame: flip the display buffers, wait for the GPU and VSync, upload the
  * 320x32 logo strip at line 104 of the new draw buffer and draw otag (the caller's fade quad)
  * over it. Returns VSync(0)'s value. */
-int main_boot_draw_sceap_logo_frame(void* otag, void* image) {
+int main_boot_draw_sceap_logo_frame(u32* otag, u32* image) {
     RECT destination;
     int elapsed;
 

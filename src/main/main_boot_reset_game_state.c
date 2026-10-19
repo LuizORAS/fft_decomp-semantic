@@ -1,11 +1,11 @@
 #include "fft/main.h"
-#include "psx/types.h"
 
 /* Start a new game session before each title screen: initialize the save options, status checks,
  * data tables and item order. Every call after the first one (a reset or the end of the game)
  * also frees the game heap, unloads the scenario music, zeroes the play time, restarts the GPU,
  * SPU and CD and reloads the generic sound effects and the zodiac frame under the Squaresoft
- * logo, which stays at least 60 frames. */
+ * logo, which stays at least 60 frames; the first call needs none of that, since
+ * main_boot_run_startup has just shown the logos. */
 void main_boot_reset_game_state(void) {
     int frame;
 
