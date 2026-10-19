@@ -210,7 +210,7 @@ type inventoryRecord struct {
 	StackSize    int    `json:"stack_size,omitempty"`
 }
 
-const usage = "usage: tools build [module|disc]|validate [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|declarations ...|symbols <action> ...|extract"
+const usage = "usage: tools build [module|disc]|check [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|declarations ...|share-audit [--module=M] [--min-bytes=N] [--prefix=P]|symbols <action> ...|map [--out=build/DIR] [--pull-docs]|warnings [--module=M]|extract"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -218,12 +218,15 @@ func main() {
 	}
 	commandsWithArguments := map[string]bool{
 		"build":                  true,
-		"validate":               true,
+		"check":                  true,
 		"diff":                   true,
 		"library-diff":           true,
 		"permute":                true,
 		"symbols":                true,
 		"declarations":           true,
+		"share-audit":            true,
+		"map":                    true,
+		"warnings":               true,
 		"compile-permuter-input": true,
 	}
 	if !commandsWithArguments[os.Args[1]] && len(os.Args) != 2 {
@@ -237,8 +240,8 @@ func main() {
 	switch os.Args[1] {
 	case "build":
 		err = p.buildCommand(os.Args[2:])
-	case "validate":
-		err = p.validateCommand(os.Args[2:])
+	case "check":
+		err = p.checkCommand(os.Args[2:])
 	case "checksums":
 		err = p.checksumsCommand(nil)
 	case "check-config":
@@ -255,6 +258,12 @@ func main() {
 		err = p.symbolsCommand(os.Args[2:])
 	case "declarations":
 		err = p.declarationsCommand(os.Args[2:])
+	case "share-audit":
+		err = p.shareAuditCommand(os.Args[2:])
+	case "map":
+		err = p.mapCommand(os.Args[2:])
+	case "warnings":
+		err = p.warningsCommand(os.Args[2:])
 	case "extract":
 		err = p.extractDisc()
 	case "analyze":
@@ -323,7 +332,7 @@ func (p project) verifyDisc() (string, error) {
 	image := filepath.Join(p.root, targetInput)
 	info, err := os.Stat(image)
 	if err != nil {
-		return "", fmt.Errorf("missing %s at the repo root (make validate works without it)", targetInput)
+		return "", fmt.Errorf("missing %s at the repo root (make check works without it)", targetInput)
 	}
 	fmt.Printf("disc: %s\nbytes: %d\n", targetInput, info.Size())
 	if info.Size() != targetInputBytes {
@@ -553,6 +562,19 @@ func runInDir(dir string, arguments ...string) error {
 	return nil
 }
 
+// A macro can introduce a binding found only after the first link attempt.
+// Keep that attempt's diagnostics in its error so a successful retry is quiet.
+func linkHistoricalObject(dir, script, object, linkedPath string) error {
+	command := exec.Command("mipsel-linux-gnu-ld", "-EL", "-T", script, "-o", linkedPath, object)
+	command.Dir = dir
+	output, err := command.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("mipsel-linux-gnu-ld: %w\n%s", err, bytes.TrimSpace(output))
+	}
+	_, err = os.Stderr.Write(output)
+	return err
+}
+
 func transformFile(dir, input, output string, arguments ...string) error {
 	in, err := os.Open(input)
 	if err != nil {
@@ -728,7 +750,7 @@ func (p project) compileHistoricalSections(sourcePath, linkPath, buildDir string
 	if err := runInDir(p.root, "mipsel-linux-gnu-as", "-EL", "-march=r3000", "-mtune=r3000", "-no-pad-sections", "-O1", fmt.Sprintf("-G%d", profile.smallDataLimit), "-o", object, translated); err != nil {
 		return nil, err
 	}
-	if err := runInDir(p.root, "mipsel-linux-gnu-ld", "-EL", "-T", linkPath, "-o", linkedPath, object); err != nil {
+	if err := linkHistoricalObject(p.root, linkPath, object, linkedPath); err != nil {
 		return nil, err
 	}
 	if err := runInDir(p.root, "mipsel-linux-gnu-objcopy", "-O", "binary", "--only-section=.text", linkedPath, binary); err != nil {

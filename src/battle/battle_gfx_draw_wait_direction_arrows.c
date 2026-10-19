@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -21,17 +22,17 @@ void battle_gfx_draw_wait_direction_arrows(SVECTOR* base, u32* ot) {
     s32 dx[4] = { 0, -14, 0, 14 };
     s32 dz[4] = { -14, 0, 14, 0 };
     long flag;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     POLY_FT4* prim;
-    /* Signed halfword: the target's division emits the `bgez`/`addiu 0x3ff`
+    /* Signed 16-bit value: the target's division emits the `bgez`/`addiu 0x3ff`
      * correction, so the quadrant bits are not held in an unsigned type. */
     s16 facing_bits;
     s32 i;
 
-    unit = battle_unit_get_source_misc_data();
-    g_battle_gfx_wait_arrow_blink_timer += g_animation_speed;
+    unit = battle_unit_get_source();
+    g_battle_gfx_wait_arrow_blink_timer += g_main_system_vsync_interval;
     for (i = 0; i < 4; i++) {
-        prim = (POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter();
+        prim = g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim();
         ((P_TAG*)prim)->len = 9;
         prim->code = 0x2e;
         prim->tpage = 0x3f;
@@ -41,7 +42,7 @@ void battle_gfx_draw_wait_direction_arrows(SVECTOR* base, u32* ot) {
         prim->x1 = prim->x3 = transformed.vx + 7;
         prim->y0 = prim->y1 = transformed.vy - 7;
         prim->y2 = prim->y3 = transformed.vy + 7;
-        prim->clut = GetClut(0x30, 0x1e2);
+        prim->clut = GetClut(0x30, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
         prim->r0 = prim->g0 = prim->b0 = 0x80;
         facing_bits = unit->facing & 0xc00;
         if (i == facing_bits / 0x400) {

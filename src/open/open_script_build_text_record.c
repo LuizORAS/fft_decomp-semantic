@@ -2,13 +2,11 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-#define G g_open_script_state.records[index].glyphs[drawn]
-
 /* Lays out one OPEN script text line as textured glyph quads.
  *
  * Claims the first free script record, then walks the text until '@' or 42
- * glyphs. Escape characters followed by one hex digit select the font bank
- * ('$'), CLUT row ('^'), pen adjustments ('<', '>', '+'), the record field at
+ * glyphs. Escape characters followed by one hex digit select the font
+ * ('$'), CLUT ('^'), pen adjustments ('<', '>', '+'), the record field at
  * 0x08 ('/') and wide-glyph mode ('*'). Every other character emits a glyph
  * record and a POLY_FT4 in both graphics buffers. Returns the record index
  * plus 1, or 0 when all 16 records are busy.
@@ -39,7 +37,7 @@ s32 open_script_build_text_record(u8* text) {
 
     font = g_open_script_font_metrics;
     for (i = 0; i < 16; i++) {
-        if (!(g_open_script_state.records[i].flags & 1)) {
+        if (!(g_open_script_state.records[i].flags & OPEN_SCRIPT_RECORD_ACTIVE)) {
             break;
         }
     }
@@ -48,7 +46,7 @@ s32 open_script_build_text_record(u8* text) {
     }
     index = i;
 
-    g_open_script_state.records[index].flags = 1;
+    g_open_script_state.records[index].flags = OPEN_SCRIPT_RECORD_ACTIVE;
     pen = 0;
     slot = index * 42;
     drawn = 0;
@@ -60,12 +58,12 @@ s32 open_script_build_text_record(u8* text) {
         if (ch == '$') {
             text++;
             value = open_text_decode_hex_digit(*text++);
-            g_open_script_state.dispatch.font_bank = value;
+            g_open_script_state.dispatch.font_index = value;
             i--;
         } else if (ch == '^') {
             text++;
             value = open_text_decode_hex_digit(*text++);
-            g_open_script_state.dispatch.clut = GetClut(value * 16, 0x1e0) & 0xffff;
+            g_open_script_state.dispatch.clut = GetClut(value * 16, 0x1e0);
             i--;
         } else if (ch == '<') {
             text++;
@@ -92,26 +90,32 @@ s32 open_script_build_text_record(u8* text) {
             pen = open_text_decode_hex_digit(*text++) * 20;
             i--;
         } else {
-            value = (ch - 0x20) * 8 + g_open_script_state.dispatch.font_bank * 0x380;
-            /* The integer sum keeps this first metrics pointer in a0. */
+            value = (ch - 0x20) * 8 + g_open_script_state.dispatch.font_index * 0x380;
+            /* Typed pointer addition reverses this retail addu's operands. */
             mt = (open_font_metrics_t*)(value + (s32)font);
             if (mt->flags & 1) {
                 text++;
                 i--;
                 pen += mt->width;
             } else {
-                G.x = pen - mt->bearing;
-                G.y = -mt->descender;
+                g_open_script_state.records[index].glyphs[drawn].x = pen - mt->bearing;
+                g_open_script_state.records[index].glyphs[drawn].y = -mt->descender;
                 width = mt->bearing + mt->width;
                 height = mt->height + mt->descender - 1;
-                G.width = width;
-                G.height = height;
+                g_open_script_state.records[index].glyphs[drawn].w = width;
+                g_open_script_state.records[index].glyphs[drawn].h = height;
                 if (g_open_script_state.dispatch.wide_glyphs == 0) {
-                    G.x = G.x * 2;
-                    G.width = G.width * 2;
+                    g_open_script_state.records[index].glyphs[drawn].x
+                        = g_open_script_state.records[index].glyphs[drawn].x * 2;
+                    g_open_script_state.records[index].glyphs[drawn].w
+                        = g_open_script_state.records[index].glyphs[drawn].w * 2;
                 } else {
-                    G.x = G.x + G.x / 2;
-                    G.width = G.width + G.width / 2;
+                    g_open_script_state.records[index].glyphs[drawn].x
+                        = g_open_script_state.records[index].glyphs[drawn].x
+                        + g_open_script_state.records[index].glyphs[drawn].x / 2;
+                    g_open_script_state.records[index].glyphs[drawn].w
+                        = g_open_script_state.records[index].glyphs[drawn].w
+                        + g_open_script_state.records[index].glyphs[drawn].w / 2;
                 }
                 front = &g_open_script_glyph_primitives[0][slot];
                 g_open_script_state.records[index].skew = g_open_script_state.dispatch.skew;
@@ -127,31 +131,13 @@ s32 open_script_build_text_record(u8* text) {
                 tpage = g_open_script_state.dispatch.clut;
                 front[16 * 42].clut = tpage;
                 g_open_script_glyph_primitives[0][slot].clut = tpage;
-                front->r0 = 0x80;
-                front->g0 = 0x80;
-                front->b0 = 0x80;
-                back->r0 = 0x80;
-                back->g0 = 0x80;
-                back->b0 = 0x80;
-                mt2 = (open_font_metrics_t*)((u8*)font + value);
+                setRGB0(front, 0x80, 0x80, 0x80);
+                setRGB0(back, 0x80, 0x80, 0x80);
+                mt2 = font + (value >> 3);
                 u0 = mt2->u;
                 v0 = mt2->v - mt2->height - mt2->descender + 1;
-                front->u0 = u0;
-                front->v0 = v0;
-                front->u1 = u0 + width;
-                front->v1 = v0;
-                front->u2 = u0;
-                front->v2 = v0 + height;
-                front->u3 = u0 + width;
-                front->v3 = v0 + height;
-                back->u0 = u0;
-                back->v0 = v0;
-                back->u1 = u0 + width;
-                back->v1 = v0;
-                back->u2 = u0;
-                back->v2 = v0 + height;
-                back->u3 = u0 + width;
-                back->v3 = v0 + height;
+                setUV4(front, u0, v0, u0 + width, v0, u0, v0 + height, u0 + width, v0 + height);
+                setUV4(back, u0, v0, u0 + width, v0, u0, v0 + height, u0 + width, v0 + height);
                 text++;
                 slot++;
                 pen += mt2->advance;

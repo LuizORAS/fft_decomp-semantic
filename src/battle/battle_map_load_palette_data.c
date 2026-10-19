@@ -1,32 +1,29 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
-void battle_map_load_palette_data(const u16* palette, s32 mesh_index, s32 palette_row_index, s32 load_all_rows) {
+/* Load colours into a map CLUT row and mark the rows for upload: the row's
+ * sixteen CLUTs (256 colours) when load_all is 1, otherwise the sixteen colours
+ * of CLUT clut_index. The blends of the loaded CLUTs stop. Nothing happens while
+ * the row's updates are disabled. */
+void battle_map_load_palette_data(const palette_t* palettes, s32 clut_row, s32 clut_index, s32 load_all) {
     s32 clear_index;
-    s32 row_index;
-    const u16* palette_row;
+    s32 i;
 
-    if (g_battle_map_palette_state.banks[mesh_index].updates_disabled != 0) {
+    if (g_battle_map_palette_state.clut_rows[clut_row].updates_disabled != 0) {
         return;
     }
 
-    if (load_all_rows == 1) {
-        clear_index = MAP_PALETTE_ROW_COUNT - 1;
-        do {
-            g_battle_map_palette_state.banks[mesh_index].animations[clear_index].active = 0;
-            clear_index--;
-        } while (clear_index >= 0);
+    if (load_all == 1) {
+        for (clear_index = MAP_CLUTS_PER_ROW - 1; clear_index >= 0; clear_index--) {
+            g_battle_map_palette_state.clut_rows[clut_row].animations[clear_index].active = 0;
+        }
 
-        row_index = 0;
-        palette_row = palette;
-        do {
-            battle_map_extract_palette_colors(palette_row, mesh_index, row_index);
-            row_index++;
-            palette_row += MAP_PALETTE_COLORS_PER_ROW;
-        } while (row_index < MAP_PALETTE_ROW_COUNT);
+        for (i = 0; i < MAP_CLUTS_PER_ROW; i++) {
+            battle_map_extract_palette_colors(palettes[i], clut_row, i);
+        }
     } else {
-        g_battle_map_palette_state.banks[mesh_index].animations[palette_row_index].active = 0;
-        battle_map_extract_palette_colors(palette, mesh_index, palette_row_index);
+        g_battle_map_palette_state.clut_rows[clut_row].animations[clut_index].active = 0;
+        battle_map_extract_palette_colors(*palettes, clut_row, clut_index);
     }
 
     g_battle_map_palette_state.upload_pending = 1;

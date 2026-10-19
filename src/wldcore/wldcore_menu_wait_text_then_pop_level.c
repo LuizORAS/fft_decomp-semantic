@@ -1,17 +1,20 @@
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
+/* Steps a message level: once the text window has popped in and
+ * wldcore_text_is_window_finished reports 0, pops the level, restores the
+ * blocked-button mask it saved and (when asked) the text section pointers,
+ * and resumes the level underneath. */
 void wldcore_menu_wait_text_then_pop_level(wldcore_menu_message_level_t* level) {
-    s32* index = &g_wldcore_scroll_text_render_record_index;
-
-    if (g_wldcore_window_render_records[*index].flags & 0x100) {
+    if (g_wldcore_window_render_records[g_wldcore_scrollable_text_window.render_record_index].flags
+        & WLDCORE_DISPLAY_OBJECT_POP_IN) {
         return;
     }
-    if (wldcore_text_is_window_finished((wldcore_text_scrollable_window_t*)((u8*)index - 0x44)) != 0) {
+    if (wldcore_text_is_window_finished(&g_wldcore_scrollable_text_window) != 0) {
         return;
     }
-    g_wldcore_current_button_input = 0;
-    g_wldcore_menu_result = level->saved_menu_result;
+    g_wldcore_input_current_buttons = 0;
+    g_wldcore_menu_blocked_buttons = level->saved_blocked_buttons;
     g_wldcore_window_record_count -= 1;
     g_wldcore_window_render_object_count -= 1;
     g_wldcore_menu_stack_depth -= 1;

@@ -11,8 +11,7 @@ void world_gfx_add_draw_area_primitive(RECT* rect, s32 ot_index) {
     if (g_world_gfx_draw_buffer_clip_y >= 0x65) {
         rect->y += 0xF0;
     }
-    area = &g_world_gfx_active_packet_buffer->draw_areas[g_world_gfx_draw_area_count++];
+    area = &g_menu_gfx_context->draw_areas[g_world_gfx_draw_area_count++];
     SetDrawArea(area, rect);
-    setaddr(area, getaddr(&g_world_gfx_active_packet_buffer->otag[ot_index]));
-    setaddr(&g_world_gfx_active_packet_buffer->otag[ot_index], area);
+    addPrim(&g_menu_gfx_context->otag[ot_index], area);
 }

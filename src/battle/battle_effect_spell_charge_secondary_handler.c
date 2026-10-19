@@ -1,24 +1,16 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
 #include "psx/libc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
+#include "psx/suzuki.h"
 
-typedef struct battle_effect_charge_params {
-    s16 speed;
-    s16 spread_range;
-    s16 spread_offset;
-    s16 duration;
-    s16 radius;
-    u8 spawn_interval;
-    u8 _unused_0b;
-    u8 max_trails;
-    u8 fade_row;
-} battle_effect_charge_params_t;
-
-/* The target compares a line's two endpoints as whole words. */
-#define LINE_G2_XY_WORD(line, n) (*(s32*)&(line)->x##n)
-
-extern battle_effect_charge_params_t g_battle_effect_charge_line_params[];
+/* The target compares a line's two endpoints as 32-bit values. */
+#define LINE_G2_XY_WORD(line, n) (*(s32*)&line->x##n)
 
 /* Secondary handler for a charge effect: phase 1 loads the animation's
  * parameters and primes the line primitives, phase 2 spawns trails that
@@ -35,7 +27,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
     s32 unused[4];
     VECTOR out;
     LINE_G2* line;
-    battle_screen_coords_t* screen;
+    SVECTOR* screen;
     battle_effect_slot_t* slot;
     u32* ot;
     s16* offsets;
@@ -60,10 +52,10 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
 
     effect = g_battle_effect_current_secondary;
     state = &g_battle_effect_secondary_state.charge;
-    switch ((u32)effect->phase) {
-    case BATTLE_SECONDARY_EFFECT_INITIALIZING:
+    switch (effect->phase) {
+    case BATTLE_EFFECT_SECONDARY_PHASE_INITIALIZING:
         index = g_battle_effect_secondary_animations[effect->animation_id].parameter;
-        g_battle_effect_current_secondary->parameter = battle_effect_get_ninja_ball((u16)effect->parameter);
+        g_battle_effect_current_secondary->parameter = battle_effect_get_element_index(effect->parameter);
         g_battle_effect_secondary_state.charge.speed = g_battle_effect_charge_line_params[index].speed;
         g_battle_effect_secondary_state.charge.spread_range = g_battle_effect_charge_line_params[index].spread_range;
         g_battle_effect_secondary_state.charge.spread_offset = g_battle_effect_charge_line_params[index].spread_offset;
@@ -71,7 +63,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         g_battle_effect_secondary_state.charge.radius = g_battle_effect_charge_line_params[index].radius;
         g_battle_effect_secondary_state.charge.spawn_interval
             = g_battle_effect_charge_line_params[index].spawn_interval;
-        g_battle_effect_secondary_state.charge.colour = (u16)g_battle_effect_current_secondary->parameter;
+        g_battle_effect_secondary_state.charge.colour = g_battle_effect_current_secondary->parameter;
         g_battle_effect_secondary_state.charge.max_trails = g_battle_effect_charge_line_params[index].max_trails;
         g_battle_effect_secondary_state.charge.fade_row = g_battle_effect_charge_line_params[index].fade_row;
         SetDrawMode(&state->mode[0], 1, 1, 0x20, 0);
@@ -85,38 +77,39 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         for (i = 0; i < 16; i++) {
             state->trails[i].slot_id = 0;
         }
-        state->count.n.trails = 0;
-        state->count.n.a = 0;
-        state->count.n.b = 0;
+        state->count.trails = 0;
+        state->count.auxiliary_particles = 0;
+        state->count.particles = 0;
         for (i = 0; i < 2; i++) {
             state->ids_a[i] = 0;
         }
         for (i = 0; i < 14; i++) {
             state->ids_b[i] = 0;
         }
-        screen
-            = battle_unit_get_screen_data_ptr_by_misc_id((u8)g_battle_effect_current_secondary->caster_block.values[1]);
-        i = battle_gfx_get_unit_spritesheet_height_by_misc_id(
-                (u8)g_battle_effect_current_secondary->caster_block.values[1])
+        screen = battle_unit_get_world_coords_by_runtime_id(
+            g_battle_effect_current_secondary->caster.data.unit.runtime_id);
+        i = battle_gfx_get_unit_spritesheet_height_by_runtime_id(
+                g_battle_effect_current_secondary->caster.data.unit.runtime_id)
             + 8;
-        g_battle_effect_groups[12].position_y = g_battle_effect_groups[13].position_y = -i;
-        in.vx = screen->x;
-        in.vz = screen->y;
-        in.vy = screen->z - i;
+        g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE].position.y
+            = g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE_13].position.y = -i;
+        in.vx = screen->vx;
+        in.vz = screen->vz;
+        in.vy = screen->vy - i;
         SetRotMatrix(&g_battle_camera_matrix);
         SetTransMatrix(&g_battle_camera_matrix);
-        RotTrans(&in, &out, (long*)&out.pad);
+        RotTrans(&in, &out, &out.pad);
         state->angle = 0;
         state->done = 0;
         state->x = out.vx;
         state->y = out.vy;
-        SuzukiPlaySoundFindChannel(0x1f);
+        suzuki_sound_play_sfx(MAIN_SFX_SPELL_CHARGE);
         result = 1;
-        g_battle_effect_current_secondary->phase = BATTLE_SECONDARY_EFFECT_EXECUTING;
+        g_battle_effect_current_secondary->phase = BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING;
         break;
-    case BATTLE_SECONDARY_EFFECT_EXECUTING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING:
         if (g_battle_effect_secondary_state.charge.done == 0
-            && g_battle_effect_secondary_state.charge.count.n.trails < g_battle_effect_secondary_state.charge.max_trails
+            && g_battle_effect_secondary_state.charge.count.trails < g_battle_effect_secondary_state.charge.max_trails
             && rand() % g_battle_effect_secondary_state.charge.spawn_interval == 0) {
             for (i = 0; i < 16; i++) {
                 if (state->trails[i].slot_id == 0) {
@@ -124,26 +117,27 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                     if (j == 0) {
                         break;
                     }
-                    state->count.n.trails++;
+                    state->count.trails++;
                     k = (rand() & 0x1ff) + state->angle;
                     state->angle += 0x571;
-                    g_battle_effect_slots[j].motion.position[0] = rcos(k) * state->radius + (state->x << 12);
-                    g_battle_effect_slots[j].motion.position[1] = rsin(k) * state->radius + (state->y << 12);
+                    g_battle_effect_slots[j].motion.position.x = rcos(k) * state->radius + (state->x * ONE);
+                    g_battle_effect_slots[j].motion.position.y = rsin(k) * state->radius + (state->y * ONE);
                     k = k + rand() % state->spread_range - state->spread_offset - 0x800;
-                    g_battle_effect_slots[j].motion.velocity[0] = rcos(k) * state->speed;
-                    g_battle_effect_slots[j].motion.velocity[1] = rsin(k) * state->speed;
+                    g_battle_effect_slots[j].motion.velocity.x = rcos(k) * state->speed;
+                    g_battle_effect_slots[j].motion.velocity.y = rsin(k) * state->speed;
                     g_battle_effect_slots[j].life = 1;
                     for (k = 0; k < 7; k++) {
-                        state->trails[i].points[k].vx = g_battle_effect_slots[j].motion.position[0] >> 12;
-                        state->trails[i].points[k].vy = g_battle_effect_slots[j].motion.position[1] >> 12;
+                        state->trails[i].points[k].vx = g_battle_effect_slots[j].motion.position.x >> 12;
+                        state->trails[i].points[k].vy = g_battle_effect_slots[j].motion.position.y >> 12;
                     }
                     state->trails[i].age = 0;
                     break;
                 }
             }
         }
-        if (state->count.n.b < 14) {
-            for (i = 0; i < g_battle_effect_groups[12].spawns_per_frame; i++) {
+        if (state->count.particles < 14) {
+            for (i = 0; i < g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE].spawns_per_frame;
+                i++) {
                 for (j = 0; j < 14; j++) {
                     if (state->ids_b[j] == 0) {
                         break;
@@ -155,24 +149,25 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                 }
                 slot = &g_battle_effect_slots[state->ids_b[j]];
                 slot->life = battle_effect_spawn_particle_motion(
-                    (battle_effect_emitter_values_t*)((u8*)&g_battle_effect_groups[12] - 2), &slot->motion);
-                battle_effect_init_trap_animation(0xc, 0x7acf, slot);
-                state->count.n.b++;
-                if (state->count.n.b == 14) {
+                    &g_battle_effect_particle_groups[BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE], &slot->motion);
+                battle_effect_init_slot_animation(
+                    BATTLE_EFFECT_PARTICLE_GROUP_SPELL_CHARGE, MAP_CLUT(MAP_CLUT_ROW_WEAPONS, 15), slot);
+                state->count.particles++;
+                if (state->count.particles == 14) {
                     break;
                 }
             }
         }
         /* fallthrough */
-    case BATTLE_SECONDARY_EFFECT_FINALIZING:
+    case BATTLE_EFFECT_SECONDARY_PHASE_FINALIZING:
         battle_effect_save_inertia_threshold();
-        battle_effect_set_inertia_threshold(0x230);
+        battle_effect_set_inertia_threshold(BATTLE_EFFECT_SECONDARY_INERTIA_THRESHOLD);
         for (i = 0; i < 2; i++) {
             j = state->ids_a[i];
             if (j != 0 && battle_effect_update_slot(j) == 0) {
                 battle_effect_free_slot(j);
                 state->ids_a[i] = 0;
-                state->count.n.a--;
+                state->count.auxiliary_particles--;
             }
         }
         for (i = 0; i < 14; i++) {
@@ -180,22 +175,22 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
             if (j != 0 && battle_effect_update_slot(j) == 0) {
                 battle_effect_free_slot(j);
                 state->ids_b[i] = 0;
-                state->count.n.b--;
+                state->count.particles--;
             }
         }
-        red = g_battle_effect_trap_colors[state->colour][0];
-        green = g_battle_effect_trap_colors[state->colour][1];
-        blue = g_battle_effect_trap_colors[state->colour][2];
+        red = g_battle_effect_charge_line_colors[state->colour].r;
+        green = g_battle_effect_charge_line_colors[state->colour].g;
+        blue = g_battle_effect_charge_line_colors[state->colour].b;
         offsets = &g_battle_effect_charge_line_direction_offsets[0].vx;
         offsets_y = &g_battle_effect_charge_line_direction_offsets[0].vy;
         for (i = 0; i < 16; i++) {
             j = state->trails[i].slot_id;
             if (j != 0) {
                 work = &g_battle_effect_slots[j];
-                work->motion.position[0] = x
-                    = g_battle_effect_slots[j].motion.position[0] + g_battle_effect_slots[j].motion.velocity[0];
-                work->motion.position[1] = y
-                    = g_battle_effect_slots[j].motion.position[1] + g_battle_effect_slots[j].motion.velocity[1];
+                work->motion.position.x = x
+                    = g_battle_effect_slots[j].motion.position.x + g_battle_effect_slots[j].motion.velocity.x;
+                work->motion.position.y = y
+                    = g_battle_effect_slots[j].motion.position.y + g_battle_effect_slots[j].motion.velocity.y;
                 age = ++state->trails[i].age;
                 head = age % 7;
                 if (age <= state->duration) {
@@ -217,9 +212,9 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                     line = &state->lines[g_battle_effect_buffer_index][i * 6 + k];
                     line->x0 = state->trails[i].points[head].vx;
                     line->y0 = state->trails[i].points[head].vy;
-                    line->r0 = red * g_battle_effect_charge_line_fade_levels[state->fade_row * 7 + fade] >> 8;
-                    line->g0 = green * g_battle_effect_charge_line_fade_levels[state->fade_row * 7 + fade] >> 8;
-                    line->b0 = blue * g_battle_effect_charge_line_fade_levels[state->fade_row * 7 + fade] >> 8;
+                    setRGB0(line, red * g_battle_effect_charge_line_fade_levels[state->fade_row * 7 + fade] >> 8,
+                        green * g_battle_effect_charge_line_fade_levels[state->fade_row * 7 + fade] >> 8,
+                        blue * g_battle_effect_charge_line_fade_levels[state->fade_row * 7 + fade] >> 8);
                     if (--head < 0) {
                         head = 6;
                     }
@@ -232,9 +227,9 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                     }
                     line->x1 = state->trails[i].points[head].vx;
                     line->y1 = state->trails[i].points[head].vy;
-                    line->r1 = red * g_battle_effect_charge_line_fade_levels[state->fade_row * 7 + fade] >> 8;
-                    line->g1 = green * g_battle_effect_charge_line_fade_levels[state->fade_row * 7 + fade] >> 8;
-                    line->b1 = blue * g_battle_effect_charge_line_fade_levels[state->fade_row * 7 + fade] >> 8;
+                    setRGB1(line, red * g_battle_effect_charge_line_fade_levels[state->fade_row * 7 + fade] >> 8,
+                        green * g_battle_effect_charge_line_fade_levels[state->fade_row * 7 + fade] >> 8,
+                        blue * g_battle_effect_charge_line_fade_levels[state->fade_row * 7 + fade] >> 8);
                     if (LINE_G2_XY_WORD(line, 0) != LINE_G2_XY_WORD(line, 1)) {
                         dir = (ratan2(line->y1 - line->y0, line->x1 - line->x0) + 0x900) / 512;
                         line->x1 += offsets[dir * 2];
@@ -248,15 +243,16 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                 if (state->trails[i].age >= state->duration + 7) {
                     battle_effect_free_slot(j);
                     state->trails[i].slot_id = 0;
-                    state->count.n.trails--;
+                    state->count.trails--;
                 }
             }
         }
         AddPrim(g_battle_effect_polygon_depth_data + 1, &state->mode[g_battle_effect_buffer_index]);
-        if (g_battle_effect_current_secondary->phase == BATTLE_SECONDARY_EFFECT_EXECUTING || state->count.all != 0) {
+        if (g_battle_effect_current_secondary->phase == BATTLE_EFFECT_SECONDARY_PHASE_EXECUTING
+            || (state->count.trails != 0 || state->count.auxiliary_particles != 0 || state->count.particles != 0)) {
             result = 1;
         } else {
-            main_sound_stop_sfx_channels(0x1f);
+            suzuki_sound_stop_sfx_channels(MAIN_SFX_SPELL_CHARGE);
             result = 0;
         }
         break;

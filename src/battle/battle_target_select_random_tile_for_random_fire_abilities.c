@@ -1,6 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
+#include "fft/battle.h"
 /*
  * Pick a random tile among those whose MAP_TILE_FLAG_TARGETED is set,
  * clearing the flag on every candidate and setting it again on the chosen
@@ -15,19 +18,19 @@ void battle_target_select_random_tile_for_random_fire_abilities(void) {
     s32 i;
     s32 index;
     s32 tile;
-    u8 flags;
+    map_tile_marks_t marks;
     map_tile_t* tile_data;
     battle_target_panel_t* panel;
 
     count = 0;
-    for (i = 0; i < 0x200; i++) {
+    for (i = 0; i < MAP_TILE_SLOT_COUNT; i++) {
         tile_data = &g_battle_map_tile_data[i];
-        if (i == 0x100) {
+        if (i == MAP_LEVEL_TILE_SLOT_COUNT) {
             lower_count = count;
         }
-        flags = tile_data->ceiling_depth_and_marks;
-        if (flags & MAP_TILE_FLAG_TARGETED) {
-            tile_data->ceiling_depth_and_marks = flags & ~MAP_TILE_FLAG_TARGETED;
+        marks = tile_data->ceiling_depth_and_marks;
+        if (marks.targeted) {
+            tile_data->ceiling_depth_and_marks.targeted = 0;
             panel = &g_battle_target_panels[count];
             count++;
             panel->mark = i;
@@ -38,10 +41,10 @@ void battle_target_select_random_tile_for_random_fire_abilities(void) {
     if (index >= lower_count) {
         tile += 0x100;
     }
-    g_battle_map_tile_data[tile].ceiling_depth_and_marks |= MAP_TILE_FLAG_TARGETED;
-    g_current_ability.random_fire_flag = 1;
-    g_current_ability.target_elevation = tile / 256;
-    g_current_ability.target_y = (tile & 0xFF) / g_map_max_x;
-    g_current_ability.target_x = (tile & 0xFF) % g_map_max_x;
-    battle_target_clear_panel_spread_flags();
+    g_battle_map_tile_data[tile].ceiling_depth_and_marks.targeted = 1;
+    g_battle_action_current_ability.random_fire_flag = 1;
+    g_battle_action_current_ability.target_new_elevation = tile / 256;
+    g_battle_action_current_ability.target_new_y = (tile & 0xFF) / g_battle_map_max_x;
+    g_battle_action_current_ability.target_new_x = (tile & 0xFF) % g_battle_map_max_x;
+    battle_target_clear_panel_marks();
 }

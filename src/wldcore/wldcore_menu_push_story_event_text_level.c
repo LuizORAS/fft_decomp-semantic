@@ -1,70 +1,67 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
-/* Pushes the shared scrollable text window as menu level 0x1e for a story
- * event entry, the partner of the wldcore_menu_wait_tutorial_topic_text_then_pop_level pop: records the entry on the
- * new level, sets up the window at g_wldcore_scrollable_text_window for text 0x8800 + entry with no
- * substitutions, then hides the parent list-window level's four window records
- * and its frame render record with flag 0x10 and starts WORLD thread 14 on
- * text 0xb849 with substitution value 0xe800 + entry.
+/* Open a Record entry's text (level STORY_EVENT_TEXT): the shared scrollable text window
+ * (g_wldcore_scrollable_text_window) shows text 0x8800 + entry with no substitutions, the Brave Story's
+ * windows hide, and WORLD thread 14 shows Alazlam's line on the entry
+ * (WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, with the event's name 0xe800 + entry).
+ * wldcore_menu_handle_story_event_text_input steps it.
  *
- * Masked-identical to wldcore_menu_push_script_flag_01a4_detail_level across all 165 instructions.
- * The two differ only in the substitution addend (0x9800 there, 0xe800 here),
- * the menu level type (0x2f there, 0x1e here) and the frame size; the text id
- * is value + 0x8800 in both, so 0xe800 is the substitution value and not a
- * text id.
+ * Masked-identical to wldcore_menu_push_fact_detail_level across all 165 instructions. The two differ
+ * only in the substitution addend (0x9800 there, 0xe800 here), the menu level type (0x2f there, 0x1e
+ * here) and the frame size; the text id is value + 0x8800 in both, so 0xe800 is the substitution value
+ * and not a text id.
  *
- * Addressing follows wldcore_menu_push_proposition_attempt_detail_level and
- * wldcore_menu_push_tutorial_topic_text_level: the target holds one base of g_wldcore_scrollable_text_window+0x34 (its
- * text_id) and reaches the earlier fields at negative displacements, so the original held a pointer biased to that
- * field. Laundering the anchor keeps it opaque to cse, which otherwise rewrites every displacement back to the $at
- * absolute form after the first two stores. image_y is the one field the target still stores absolutely, so it is
- * written as g_wldcore_scrollable_text_window.image_y.
+ * The coordinate mode is a constant local, yet retail still switched on it to choose the text image
+ * origin: (0, 0x60) for mode 0, (0, 0x70) for mode 1. The compiler folds the switch in its first CSE
+ * pass, after the stores were split around it, which is why image_y keeps its absolute address while the
+ * later stores go through the text_id base register. That only happens when the live case is the last
+ * one.
  *
- * The depth is spelled as the global at every use rather than cached in a
- * local: the target re-reads g_wldcore_menu_stack_depth after each call.
+ * The depth is spelled as the global at every use rather than cached in a local: the target re-reads
+ * g_wldcore_menu_stack_depth after each call.
  *
- * The frame is 32 bytes against the twin's 24: the target reserves eight bytes
- * below its two saved registers that it never touches, reproduced by the
- * unused local. */
+ * The frame is 32 bytes against the twin's 24: the target reserves eight bytes below its two saved
+ * registers that it never touches, reproduced by the unused local. */
 void wldcore_menu_push_story_event_text_level(s32 value) {
     s32 unused[2];
-    wldcore_text_scrollable_window_t* window;
-    s32* anchor;
+    s32 coordinate_mode = 1;
 
-    anchor = &g_wldcore_scrollable_text_window.text_id;
-    /* Keeps the biased anchor opaque to cse (see above). */
-    __asm__("" : "=r"(anchor) : "0"(anchor));
-
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = value;
-
-    window = (wldcore_text_scrollable_window_t*)(anchor - 13);
-
-    window->text_id = value + 0x8800;
-    window->image_x = 0;
-    g_wldcore_scrollable_text_window.image_y = 0x70;
-    window->base.x = -122;
-    window->base.y = -40;
-    window->text_width = 0xdc;
-    window->rows_per_page = 8;
-    window->priority = 9;
-    window->image_coordinate_mode = 1;
-    window->extra_render_index = -1;
-    window->text_substitutions[1] = -1;
-    window->text_substitutions[0] = -1;
-    wldcore_text_init_scrollable_window(window);
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].story_event_index = value;
+    g_wldcore_scrollable_text_window.text_id = value + TEXT_ID_WORLD_MESSAGE_BASE;
+    switch (coordinate_mode) {
+    case 0:
+        g_wldcore_scrollable_text_window.image_x = 0;
+        g_wldcore_scrollable_text_window.image_y = 0x60;
+        break;
+    case 1:
+        g_wldcore_scrollable_text_window.image_x = 0;
+        g_wldcore_scrollable_text_window.image_y = 0x70;
+        break;
+    }
+    g_wldcore_scrollable_text_window.base.x = -122;
+    g_wldcore_scrollable_text_window.base.y = -40;
+    g_wldcore_scrollable_text_window.text_width = 0xdc;
+    g_wldcore_scrollable_text_window.rows_per_page = 8;
+    g_wldcore_scrollable_text_window.priority = 9;
+    g_wldcore_scrollable_text_window.image_coordinate_mode = coordinate_mode;
+    g_wldcore_scrollable_text_window.extra_render_index = -1;
+    g_wldcore_scrollable_text_window.text_substitutions[1] = -1;
+    g_wldcore_scrollable_text_window.text_substitutions[0] = -1;
+    wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.main_window]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.side_window]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                         .list_window.frame_render]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.upper_window]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1].list_window.lower_window]
-        .flags |= 0x10;
-    g_world_text_substitution_values[0] = value + 0xe800;
-    world_thread_set_parameters(0xE, 0x19, 0xB849, 0);
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_text_substitution_values[0] = value + TEXT_ID_STORY_EVENT_NAME_BASE;
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_STORY_EVENT_TEXT;
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth + 1;
 }

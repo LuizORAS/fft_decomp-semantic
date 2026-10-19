@@ -1,6 +1,9 @@
 #include "fft/event_etc.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
+/* Thread body: load ETC graphic parameter 1 and run its show routine, the
+ * chapter title for texture mode 0 or the game-over screen for mode 1. */
 void etc_graphic_show_async(void) {
     s32 graphic_id;
     s32 graphic_type;
@@ -13,5 +16,5 @@ void etc_graphic_show_async(void) {
     } else if (graphic_type == 1) {
         etc_graphic_show_game_over(graphic_id);
     }
-    battle_thread_exit_current();
+    thread_exit_current();
 }

@@ -1,13 +1,18 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
+/* Turn the stored amount into HP healing, keeping the other result types (MP healing). An undead
+ * target takes it as HP damage only, and the ability cancels none of the first status byte's
+ * statuses (Dead among them) on it. */
 void battle_formula_apply_undead_reversal(void) {
     battle_action_data_t* action;
     battle_action_data_t* action_again;
     u16 hp_damage;
-    if (g_battle_action_target->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)) {
+    if (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)) {
         g_battle_action_target_data->attack_type = BATTLE_ACTION_TYPE_HP_DAMAGE;
-        g_current_ability_canceled_statuses[0] = 0;
+        g_battle_action_canceled_statuses[0] = 0;
         return;
     }
     action = g_battle_action_target_data;

@@ -1,123 +1,139 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
-/* Offsets of the point inside its 28-unit tile along X and Z. */
-#define TILE_OFFSET_X ((s16)(coords[0] % 28))
-#define TILE_OFFSET_Z ((s16)(coords[2] % 28))
-/* Surface height for lhs slope rising (UP) or falling (DOWN) across the tile. */
-#define SLOPE_PRODUCT(f) ((f) * (half * 12))
-#define SLOPE_UP(f)      (base - SLOPE_PRODUCT(f) / 28)
-#define SLOPE_DOWN(f)    (base - (half * 12 - SLOPE_PRODUCT(f) / 28))
+/* Surface height for a slope rising (UP) or falling (DOWN) across the tile. */
+#define SLOPE_PRODUCT(f) ((f) * (half * MAP_HEIGHT_STEP))
+#define SLOPE_UP(f)      (base - SLOPE_PRODUCT(f) / BATTLE_MAP_TILE_SIZE)
+#define SLOPE_DOWN(f)    (base - (half * MAP_HEIGHT_STEP - SLOPE_PRODUCT(f) / BATTLE_MAP_TILE_SIZE))
 
 /*
- * Return the negated terrain height, in screen units, under lhs point.
+ * Return the negated terrain height, in world units, under a point.
  *
- * coords[0] and coords[2] are the X and Z positions (tile index * 28 + offset). A tile without a
+ * coords->vx and coords->vz are the X and Z positions (tile index * 28 + offset). A tile without a
  * slope half-height, or with an unrecognised slope type, yields
  * -(height * 12); the recognised types interpolate half * 12 across the tile
- * along X, Z, or whichever of the two the corner type selects.
- *
- * The two-axis comparands must be the lhs/rhs variables while the offsets
- * used only by the formulas stay expressions: that split reproduces the
- * target's register allocation.
+ * along X, Z, or whichever of the two the corner type selects. x and z are
+ * the offsets of the point inside its 28-unit tile.
  */
-s32 battle_map_calculate_slope_height(const s16* coords, u8 map_z) {
+s32 battle_map_calculate_slope_height(const SVECTOR* coords, s32 map_z) {
     s16 tile_pos[2];
     map_tile_t* tile;
     s32 half;
     s32 base;
     s16 result;
+    s16 x;
+    s16 z;
     s32 lhs;
     s32 rhs;
 
-    tile_pos[0] = coords[0] / 28;
-    tile_pos[1] = coords[2] / 28;
-    tile = battle_map_get_tile_data_pointer(tile_pos[0], tile_pos[1], map_z);
-    base = -(tile->height * 12);
-    half = tile->depth_half_height & 0x1f;
+    tile_pos[0] = coords->vx / BATTLE_MAP_TILE_SIZE;
+    tile_pos[1] = coords->vz / BATTLE_MAP_TILE_SIZE;
+    tile = battle_map_get_tile_data_pointer(tile_pos[0], tile_pos[1], (u8)map_z);
+    base = -(tile->height * MAP_HEIGHT_STEP);
+    half = tile->depth_half_height.half_height;
     result = base;
     if (half != 0) {
         switch (tile->slope_type) {
-        case 0x52:
-            result = SLOPE_UP(TILE_OFFSET_X);
+        case MAP_SLOPE_EDGE_EAST:
+            x = coords->vx % BATTLE_MAP_TILE_SIZE;
+            result = SLOPE_UP(x);
             break;
-        case 0x58:
-            result = SLOPE_DOWN(TILE_OFFSET_X);
+        case MAP_SLOPE_EDGE_WEST:
+            x = coords->vx % BATTLE_MAP_TILE_SIZE;
+            result = SLOPE_DOWN(x);
             break;
-        case 0x25:
-            result = SLOPE_DOWN(TILE_OFFSET_Z);
+        case MAP_SLOPE_EDGE_SOUTH:
+            z = coords->vz % BATTLE_MAP_TILE_SIZE;
+            result = SLOPE_DOWN(z);
             break;
-        case 0x85:
-            result = SLOPE_UP(TILE_OFFSET_Z);
+        case MAP_SLOPE_EDGE_NORTH:
+            z = coords->vz % BATTLE_MAP_TILE_SIZE;
+            result = SLOPE_UP(z);
             break;
-        case 0x41:
-            lhs = TILE_OFFSET_X;
-            rhs = TILE_OFFSET_Z;
+        case MAP_SLOPE_LOW_CORNER_NORTH_EAST:
+            x = coords->vx % BATTLE_MAP_TILE_SIZE;
+            z = coords->vz % BATTLE_MAP_TILE_SIZE;
+            lhs = x;
+            rhs = z;
             if (lhs < rhs) {
                 result = SLOPE_UP(lhs);
             } else {
                 result = SLOPE_UP(rhs);
             }
             break;
-        case 0x11:
-            lhs = TILE_OFFSET_X;
-            rhs = 28 - TILE_OFFSET_Z;
+        case MAP_SLOPE_LOW_CORNER_SOUTH_EAST:
+            x = coords->vx % BATTLE_MAP_TILE_SIZE;
+            z = coords->vz % BATTLE_MAP_TILE_SIZE;
+            lhs = x;
+            rhs = BATTLE_MAP_TILE_SIZE - z;
             if (lhs >= rhs) {
-                result = SLOPE_DOWN(TILE_OFFSET_Z);
+                result = SLOPE_DOWN(z);
             } else {
                 result = SLOPE_UP(lhs);
             }
             break;
-        case 0x14:
-            lhs = 28 - TILE_OFFSET_X;
-            rhs = 28 - TILE_OFFSET_Z;
+        case MAP_SLOPE_LOW_CORNER_SOUTH_WEST:
+            x = coords->vx % BATTLE_MAP_TILE_SIZE;
+            z = coords->vz % BATTLE_MAP_TILE_SIZE;
+            lhs = BATTLE_MAP_TILE_SIZE - x;
+            rhs = BATTLE_MAP_TILE_SIZE - z;
             if (lhs >= rhs) {
-                result = SLOPE_DOWN(TILE_OFFSET_Z);
+                result = SLOPE_DOWN(z);
             } else {
-                result = SLOPE_DOWN(TILE_OFFSET_X);
+                result = SLOPE_DOWN(x);
             }
             break;
-        case 0x44:
-            lhs = 28 - TILE_OFFSET_X;
-            rhs = TILE_OFFSET_Z;
+        case MAP_SLOPE_LOW_CORNER_NORTH_WEST:
+            x = coords->vx % BATTLE_MAP_TILE_SIZE;
+            z = coords->vz % BATTLE_MAP_TILE_SIZE;
+            lhs = BATTLE_MAP_TILE_SIZE - x;
+            rhs = z;
             if (lhs >= rhs) {
                 result = SLOPE_UP(rhs);
             } else {
-                result = SLOPE_DOWN(TILE_OFFSET_X);
+                result = SLOPE_DOWN(x);
             }
             break;
-        case 0x96:
-            lhs = TILE_OFFSET_X;
-            rhs = TILE_OFFSET_Z;
+        case MAP_SLOPE_HIGH_CORNER_NORTH_EAST:
+            x = coords->vx % BATTLE_MAP_TILE_SIZE;
+            z = coords->vz % BATTLE_MAP_TILE_SIZE;
+            lhs = x;
+            rhs = z;
             if (lhs >= rhs) {
                 result = SLOPE_UP(lhs);
             } else {
                 result = SLOPE_UP(rhs);
             }
             break;
-        case 0x66:
-            lhs = TILE_OFFSET_X;
-            rhs = 28 - TILE_OFFSET_Z;
+        case MAP_SLOPE_HIGH_CORNER_SOUTH_EAST:
+            x = coords->vx % BATTLE_MAP_TILE_SIZE;
+            z = coords->vz % BATTLE_MAP_TILE_SIZE;
+            lhs = x;
+            rhs = BATTLE_MAP_TILE_SIZE - z;
             if (lhs >= rhs) {
                 result = SLOPE_UP(lhs);
             } else {
-                result = SLOPE_DOWN(TILE_OFFSET_Z);
+                result = SLOPE_DOWN(z);
             }
             break;
-        case 0x69:
-            lhs = 28 - TILE_OFFSET_X;
-            rhs = 28 - TILE_OFFSET_Z;
+        case MAP_SLOPE_HIGH_CORNER_SOUTH_WEST:
+            x = coords->vx % BATTLE_MAP_TILE_SIZE;
+            z = coords->vz % BATTLE_MAP_TILE_SIZE;
+            lhs = BATTLE_MAP_TILE_SIZE - x;
+            rhs = BATTLE_MAP_TILE_SIZE - z;
             if (lhs < rhs) {
-                result = SLOPE_DOWN(TILE_OFFSET_Z);
+                result = SLOPE_DOWN(z);
             } else {
-                result = SLOPE_DOWN(TILE_OFFSET_X);
+                result = SLOPE_DOWN(x);
             }
             break;
-        case 0x99:
-            lhs = 28 - TILE_OFFSET_X;
-            rhs = TILE_OFFSET_Z;
+        case MAP_SLOPE_HIGH_CORNER_NORTH_WEST:
+            x = coords->vx % BATTLE_MAP_TILE_SIZE;
+            z = coords->vz % BATTLE_MAP_TILE_SIZE;
+            lhs = BATTLE_MAP_TILE_SIZE - x;
+            rhs = z;
             if (lhs >= rhs) {
-                result = SLOPE_DOWN(TILE_OFFSET_X);
+                result = SLOPE_DOWN(x);
             } else {
                 result = SLOPE_UP(rhs);
             }

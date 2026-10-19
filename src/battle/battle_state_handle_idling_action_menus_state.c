@@ -1,86 +1,86 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_target.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* IdlingActionMenus game-state handler: act on the selected menu command.
- *
- * Move (0) and the 0x19 variant hand off to the move command, Act (1)
- * dispatches Defend, Equip Change and ordinary abilities on the command's
- * skillset, Wait (2) chooses a facing, and the remaining commands enter
- * target selection/display, the event check or scripted menus.
+/* IDLING_ACTION_MENUS: act on the command chosen in the player's action menu. Move (0) and 0x19
+ * start the move command, Act (1) runs Defend, Equip Change or an ability of the command's
+ * skillset, Wait (2) chooses a facing, and the other commands enter target selection or display,
+ * the between-turn event check or scripted menus.
  *
  * The kind is switched as s32: the unsigned enum type makes GCC emit sltiu
- * where the target has slti. The empty 0xfe/0xff range is provisional: some
- * two-value range above 0x19 is required, since it both disables the jump
- * table (range > 10 * count) and yields the target's compare-tree split. */
+ * where the target has slti. The empty cases for the unresolved commands 0xfe
+ * and 0xff keep the switch a compare tree with the target's split: a
+ * two-value range above 0x19 disables the jump table (range > 10 * count). */
 void battle_state_handle_idling_action_menus_state(void) {
     battle_ai_command_t* command;
-    battle_unit_misc_data_t* misc;
+    battle_unit_t* unit;
     s32 result;
 
-    if (battle_menu_is_still_building() == 0) {
-        battle_state_set_free_cursor();
+    if (battle_menu_get_thread_activity() == 0) {
+        battle_state_enter_free_cursor();
     }
-    if (g_controller_input_pressed & PSX_PAD_SELECT) {
-        battle_menu_open_help();
+    if (g_main_input_pressed_buttons & PSX_PAD_SELECT) {
+        battle_state_enter_action_help_menu();
     }
-    battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    command = (battle_ai_command_t*)battle_menu_get_selected_ability_address();
-    misc = battle_unit_get_casting_misc_data();
+    battle_state_update_units();
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
+    command = battle_menu_get_selected_command_address();
+    unit = battle_unit_get_casting();
     switch ((s32)command->kind) {
     case BATTLE_AI_COMMAND_MOVE:
-        if (misc->mount_state != 0) {
-            g_battle_casting_unit_id = battle_unit_get_misc_data_by_misc_id(misc->mount_partner_misc_id)->unit_id;
+        if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
+            g_battle_casting_runtime_id = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id)->runtime_id;
         } else {
-            g_battle_casting_unit_id = g_battle_casting_misc_id;
+            g_battle_casting_runtime_id = g_battle_unit_source_runtime_id;
         }
-        battle_action_clear_at_list_id();
-        battle_action_handle_move_command();
+        battle_turn_clear_at_list_index();
+        battle_state_enter_unit_move();
         break;
-    case 0x19:
-        g_battle_casting_unit_id = g_battle_casting_misc_id;
-        battle_action_clear_at_list_id();
-        battle_action_handle_move_command();
+    case BATTLE_AI_COMMAND_MOVE_SELF:
+        g_battle_casting_runtime_id = g_battle_unit_source_runtime_id;
+        battle_turn_clear_at_list_index();
+        battle_state_enter_unit_move();
         break;
     case BATTLE_AI_COMMAND_ACT:
-        battle_action_clear_at_list_id();
-        switch (command->data.action.skillset) {
+        battle_turn_clear_at_list_index();
+        switch (command->data.action.skillset_id) {
         case SKILLSET_ID_DEFEND:
-            misc->command_state.ai = *command;
-            battle_status_inflict_defending_to_battle_id(misc->battle_data->misc_unit_id);
-            misc->ability_ct_resolved |= 2;
-            battle_unit_update_display_by_misc_id(misc->unit_id);
-            battle_action_set_only_action_taken(misc->battle_data->misc_unit_id);
+            unit->command_state.ai = *command;
+            battle_status_inflict_defending_to_battle_id(unit->stats->battle_id);
+            unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
+            battle_unit_update_display_by_runtime_id(unit->runtime_id);
+            battle_action_set_only_action_taken(unit->stats->battle_id);
             battle_state_enter_after_command();
             break;
         case SKILLSET_ID_EQUIP_CHANGE:
-            misc->command_state.ai = *command;
-            misc->ability_ct_resolved |= 2;
-            battle_status_enable_disable_acting(misc->battle_data);
-            battle_ai_init_unit_abilities(misc->battle_data->misc_unit_id);
-            battle_unit_update_display_by_misc_id(misc->unit_id);
-            battle_action_set_only_action_taken(misc->battle_data->misc_unit_id);
+            unit->command_state.ai = *command;
+            unit->turn_action_flags |= BATTLE_UNIT_TURN_ACTION_ACTED;
+            battle_status_clear_action_state(unit->stats);
+            battle_ai_init_unit_abilities(unit->stats->battle_id);
+            battle_unit_update_display_by_runtime_id(unit->runtime_id);
+            battle_action_set_only_action_taken(unit->stats->battle_id);
         case SKILLSET_ID_BLANK_04:
         case SKILLSET_ID_MIMIC:
             battle_state_enter_after_command();
             break;
-        case 1:
+        case SKILLSET_ID_ATTACK:
         default:
-            misc->command_state.ai = *command;
-            misc->command_state.ai.data.action.unit_id = misc->battle_data->misc_unit_id;
-            misc->command_state.ai.data.action.targeting_type = 5;
-            battle_action_call_attack_preparation(&misc->command_state.ai.data.action);
-            misc->used_ability_id = misc->command_state.ai.data.action.ability_id;
-            result = battle_target_set_panels_for_action((u8*)&misc->command_state.ai.data.action);
-            misc->ability_preview_phase = result;
+            unit->command_state.ai = *command;
+            unit->command_state.ai.data.action.actor_id = unit->stats->battle_id;
+            unit->command_state.ai.data.action.targeting_type = BATTLE_TARGETING_TYPE_TILE;
+            battle_action_resolve_command_ability(&unit->command_state.ai.data.action);
+            unit->used_ability_id = unit->command_state.ai.data.action.ability_id;
+            result = battle_target_set_panels_for_action(&unit->command_state.ai.data.action);
+            unit->ability_preview_phase = result;
             switch (result) {
-            case 0:
-            case 1:
-            case 3:
-                battle_state_enter_action_execution_setup();
+            case BATTLE_TARGET_PANELS_UNIT_OR_TILE:
+            case BATTLE_TARGET_PANELS_TILE_ONLY:
+            case BATTLE_TARGET_PANELS_NONE:
+                battle_state_enter_targeting_message();
                 break;
-            case 2:
+            case BATTLE_TARGET_PANELS_NO_TARGETING:
             default:
                 battle_target_select_tile();
                 break;
@@ -89,31 +89,31 @@ void battle_state_handle_idling_action_menus_state(void) {
         }
         break;
     case BATTLE_AI_COMMAND_END_TURN:
-        battle_action_choose_wait();
+        battle_state_enter_wait();
         break;
-    case 0xc:
-    case 0xe:
-        misc->target_select_command = command->kind;
+    case BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_SELECT:
+    case BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_SELECT:
+        unit->target_select_command = command->kind;
         battle_state_enter_target_select_start();
         break;
-    case 0xd:
-    case 0xf:
-        misc->target_select_command = command->kind;
+    case BATTLE_AI_COMMAND_AUTOBATTLE_TARGETED_DISPLAY:
+    case BATTLE_AI_COMMAND_AUTOBATTLE_RECOVERY_DISPLAY:
+        unit->target_select_command = command->kind;
         battle_state_enter_target_display_start();
         break;
-    case 0x10:
-    case 0x11:
-        battle_menu_set_next_script_action_menus();
+    case BATTLE_AI_COMMAND_AUTOBATTLE_FADING_LIFE:
+    case BATTLE_AI_COMMAND_AUTOBATTLE_RETREAT:
+        battle_state_enter_open_action_menus();
         break;
-    case 7:
+    case BATTLE_AI_COMMAND_NO_MENU_RECORD:
         battle_menu_clear_status_menu_state();
-        battle_action_check_between_turn_events();
+        battle_turn_advance();
         break;
-    case 0x12:
-        battle_unit_store_entd_flags_without_control_flag(misc);
+    case BATTLE_AI_COMMAND_REFRESH_CONTROL:
+        battle_unit_store_entd_flags_without_control_flag(unit);
         break;
-    case 0xfe:
-    case 0xff:
+    case BATTLE_AI_COMMAND_UNRESOLVED_FE:
+    case BATTLE_AI_COMMAND_UNRESOLVED_FF:
         break;
     }
 }

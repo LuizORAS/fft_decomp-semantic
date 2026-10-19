@@ -1,4 +1,8 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/battle_menu.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -24,18 +28,18 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     s32 duration[8] = { 16, 8, 2, 2, 6, 4, 4, 10 };
     long flag;
     POLY_FT4* prim;
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 height;
     s32 scaled;
     s32 half_width;
     s32 half_height;
     u8 color;
 
-    prim = (POLY_FT4*)g_battle_unit_last_misc_init_byte + battle_gfx_increment_counter();
+    prim = g_battle_gfx_sprite_prim_pool + battle_gfx_take_sprite_prim();
     ((P_TAG*)prim)->len = 9;
     prim->code = 0x2c;
     if (g_battle_menu_status_screen_selected != 1) {
-        g_battle_gfx_selection_cursor_bob_timer += g_animation_speed;
+        g_battle_gfx_selection_cursor_bob_timer += g_main_system_vsync_interval;
         if (g_battle_gfx_selection_cursor_bob_timer >= duration[g_battle_gfx_selection_cursor_bob_frame]) {
             g_battle_gfx_selection_cursor_bob_frame += 1;
             g_battle_gfx_selection_cursor_bob_timer = 0;
@@ -44,17 +48,14 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
             }
         }
     }
-    unit = battle_unit_get_selectable_misc_data_at_map_coords(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
+    unit = battle_unit_find_selectable_at_tile(g_battle_cursor_x, g_battle_cursor_y, g_battle_cursor_z);
     if (unit != 0) {
         scaled = g_battle_gfx_spritesheet_data[unit->spritesheet_id].graphic_height * g_battle_camera_zoom.vy;
-        if (scaled < 0) {
-            scaled += 0xfff;
-        }
-        height = (scaled >> 12) + 0x18;
+        height = (scaled / ONE) + 0x18;
     } else {
         height = 0x3c;
     }
-    base->vy -= height - *(u16*)&bob[g_battle_gfx_selection_cursor_bob_frame];
+    base->vy -= height - bob[g_battle_gfx_selection_cursor_bob_frame];
     RotTrans(base, &transformed, &flag);
 
     half_width = g_battle_camera_zoom.vx;
@@ -64,10 +65,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     prim->x0 = transformed.vx - (half_width >> 9);
     {
         s32 zoom_height = g_battle_camera_zoom.vy * 12;
-        if (zoom_height < 0) {
-            zoom_height += 0xfff;
-        }
-        prim->y0 = transformed.vy - (zoom_height >> 12);
+        prim->y0 = transformed.vy - (zoom_height / ONE);
     }
     half_width = g_battle_camera_zoom.vx;
     if (half_width < 0) {
@@ -76,10 +74,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     prim->x1 = transformed.vx + (half_width >> 9);
     {
         s32 zoom_height = g_battle_camera_zoom.vy * 12;
-        if (zoom_height < 0) {
-            zoom_height += 0xfff;
-        }
-        prim->y1 = transformed.vy - (zoom_height >> 12);
+        prim->y1 = transformed.vy - (zoom_height / ONE);
     }
     half_width = g_battle_camera_zoom.vx;
     if (half_width < 0) {
@@ -88,10 +83,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     prim->x2 = transformed.vx - (half_width >> 9);
     {
         s32 zoom_height = g_battle_camera_zoom.vy * 12;
-        if (zoom_height < 0) {
-            zoom_height += 0xfff;
-        }
-        prim->y2 = transformed.vy + (zoom_height >> 12);
+        prim->y2 = transformed.vy + (zoom_height / ONE);
     }
     half_width = g_battle_camera_zoom.vx;
     if (half_width < 0) {
@@ -109,7 +101,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     }
     prim->code |= 2;
     color = 0x80;
-    prim->clut = GetClut(0x40, 0x1e2);
+    prim->clut = GetClut(0x40, MAP_CLUT_ROWS_Y + MAP_CLUT_ROW_SPRITES);
     prim->r0 = prim->g0 = prim->b0 = color;
     prim->u2 = 0x40;
     prim->u0 = 0x40;
@@ -119,7 +111,7 @@ void battle_gfx_draw_map_selection_cursor(SVECTOR* base, u32* ot) {
     prim->v0 = color;
     prim->v3 = 0x98;
     prim->v2 = 0x98;
-    battle_camera_convert_screen_coords_modify_by_1(&base->vx, &screen.vx);
+    battle_camera_get_tile_sort_point_unbiased(base, &screen);
     RotTrans(&screen, &transformed, &flag);
     AddPrim(ot + (transformed.vz / 4), prim);
 }

@@ -1,21 +1,14 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* The three VRAM uploads read consecutive regions of FRAME.BIN after its
- * 0x1000-byte prefix. Keep the regions word-aligned for LoadImage. */
-typedef struct main_gfx_frame_bin {
-    u8 _unused_0000[0x1000];
-    u32 image[0x8000 / sizeof(u32)];
-    u32 palette[0x200 / sizeof(u32)];
-    u32 palette_tail[0x600 / sizeof(u32)];
-} main_gfx_frame_bin_t;
-
+/* Load EVENT/FRAME.BIN and upload its pixels and its two CLUT blocks. */
 void main_gfx_load_frame_bin_into_vram(void) {
-    main_gfx_frame_bin_t* frame = main_file_get_bin_as_tim(0xe68, 0x9800);
+    main_gfx_frame_bin_t* frame
+        = main_file_alloc_and_load_checked(DISC_SECTOR_EVENT_FRAME_BIN, sizeof(main_gfx_frame_bin_t));
 
-    LoadImage(&g_main_gfx_frame_image_rect, frame->image);
-    LoadImage(&g_main_gfx_frame_palette_rect, frame->palette);
-    LoadImage(&g_main_gfx_frame_palette_tail_rect, frame->palette_tail);
+    LoadImage(&g_main_gfx_frame_image_rect, (u32*)frame->pixels[32]);
+    LoadImage(&g_main_gfx_frame_palette_rect, (u32*)frame->clut);
+    LoadImage(&g_main_gfx_frame_palette_tail_rect, (u32*)frame->palette_tail);
     DrawSync(0);
     main_heap_call_free(frame);
 }

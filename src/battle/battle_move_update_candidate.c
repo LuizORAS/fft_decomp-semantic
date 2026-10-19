@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /* Check a movement candidate and update its mode-dependent budget state.
  *
@@ -29,32 +29,32 @@ s32 battle_move_update_candidate(s32 extra_span) {
         return 7;
 
     if (config->ai_propagation_mode != 0) {
-        state->candidate_remaining_range.value = state->current_panel->remaining_range - extra_span
-            - terrain_costs[state->current_tile->surface.value & MAP_SURFACE_MASK];
-        if (state->candidate_remaining_range.value <= 0)
+        state->candidate_remaining_range
+            = state->current_panel->remaining_range - extra_span - terrain_costs[state->current_tile->surface.type];
+        if (state->candidate_remaining_range <= 0)
             return 8;
-        if (state->candidate_remaining_range.bytes.low < state->destination_panel->remaining_range)
+        if ((u8)state->candidate_remaining_range < state->destination_panel->remaining_range)
             return 9;
-        if (state->candidate_remaining_range.bytes.low == state->destination_panel->remaining_range
+        if ((u8)state->candidate_remaining_range == state->destination_panel->remaining_range
             && state->height_delta >= state->destination_panel->max_height_delta)
             return 10;
-        state->destination_panel->remaining_range = state->candidate_remaining_range.bytes.low;
+        state->destination_panel->remaining_range = (u8)state->candidate_remaining_range;
         state->destination_panel->max_height_delta = state->height_delta;
-        if (state->candidate_remaining_range.value >= 2) {
-            g_battle_move_frontier_flags_ptr[state->destination_index] |= 1;
-            if (state->candidate_remaining_range.bytes.low > state->frontier_max_remaining_range)
-                state->frontier_max_remaining_range = state->candidate_remaining_range.bytes.low;
+        if (state->candidate_remaining_range >= 2) {
+            g_battle_move_frontier_flags_ptr[state->destination_index] |= FRONTIER_FLAG_QUEUED;
+            if ((u8)state->candidate_remaining_range > state->frontier_max_remaining_range)
+                state->frontier_max_remaining_range = (u8)state->candidate_remaining_range;
         }
         return 11;
     }
     step_cost = extra_span + 1;
     if (state->outer_count >= 5 || state->source_unit_record_flag != 0) {
-        if (state->candidate_remaining_range.value == state->effective_destination_panel->remaining_range - step_cost)
+        if (state->candidate_remaining_range == state->effective_destination_panel->remaining_range - step_cost)
             state->budget_matches = 1;
     } else {
-        if (state->candidate_remaining_range.value
+        if (state->candidate_remaining_range
             == state->effective_destination_panel->remaining_range
-                - g_battle_move_terrain_costs_ptr[state->current_tile->surface.value & MAP_SURFACE_MASK] - extra_span)
+                - g_battle_move_terrain_costs_ptr[state->current_tile->surface.type] - extra_span)
             state->budget_matches = 1;
     }
     return 0;

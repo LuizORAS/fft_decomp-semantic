@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
 /* Resolve Secret Hunt and Train after an HP-damaging formula 01-06 hit.
@@ -18,40 +20,46 @@ void battle_formula_apply_poach_and_train(void) {
         return;
     }
     target = g_battle_action_target;
-    remaining = target->hp - (s16)action->hp_damage + (s16)action->hp_healing;
+    remaining = target->hp - action->hp_damage + action->hp_healing;
     if (target->unit_flags & (UNIT_FLAG_FEMALE | UNIT_FLAG_MALE)) {
         return;
     }
-    if ((g_battle_team_golem[(target->initial_team_flags & BATTLE_TEAM_MASK) >> 4] != 0)
-        && (g_current_ability.range_data.flags_3 & ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM)) {
+    if ((g_battle_team_golem[(target->initial_team_flags & BATTLE_TEAM_MASK) >> BATTLE_TEAM_SHIFT] != 0)
+        && (g_battle_action_current_ability.range_data.flags_3 & ABILITY_SECONDARY_FLAG_3_BLOCKED_BY_GOLEM)) {
         return;
     }
-    if (*(u16*)&target->status_sets.current[0]
-        & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_DEAD) | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_PETRIFY))) {
+    if ((target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD))
+        || (target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_PETRIFY)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_PETRIFY))) {
         return;
     }
-    if (target->status_sets.current[3] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_WALL)) {
+    if (target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_WALL)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_WALL)) {
         return;
     }
-    if (((remaining <= 0) || (action->status_infliction[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)))
-        && (g_battle_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_SECRET_HUNT)
+    if (((remaining <= 0)
+            || (action->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEAD)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEAD)))
+        && (g_battle_action_attacker->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_SECRET_HUNT)
         && !(target->team_flags & BATTLE_TEAM_FLAG_IMMORTAL)) {
-        if ((u32)(target->job_id - JOB_ID_MONSTER_FIRST) >= JOB_ID_MONSTER_COUNT) {
+        if (target->job_id < JOB_ID_MONSTER_FIRST || target->job_id > JOB_ID_MONSTER_LAST) {
             return;
         }
-        battle_action_clear_knockback_flag();
-        battle_formula_clear_nullify_flags();
+        battle_action_cancel_knockback();
+        battle_formula_cancel_weapon_spell();
         g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_POACH;
-        g_current_ability.post_formula_flag = 6;
+        g_battle_action_current_ability.post_action_message = BATTLE_POST_ACTION_MESSAGE_POACHED;
         return;
     }
-    if ((remaining > 0) && ((u16)(g_battle_action_target->max_hp / 5) >= remaining)
-        && (g_battle_action_attacker->support_abilities[2] & BATTLE_SUPPORT_SET_3_TRAIN)) {
-        g_battle_action_target_data->status_infliction[1] |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE);
+    if ((remaining > 0) && ((g_battle_action_target->max_hp / 5) >= remaining)
+        && (g_battle_action_attacker->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_TRAIN)) {
+        g_battle_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INVITE)]
+            |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE);
         if (battle_status_modify_inflictions(0) != 0) {
             g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_TEAM_CHANGE;
             g_battle_action_target_data->attack_type |= BATTLE_ACTION_TYPE_STATUS_CHANGE;
-            g_current_ability.post_formula_flag = 9;
+            g_battle_action_current_ability.post_action_message = BATTLE_POST_ACTION_MESSAGE_TRAINED;
         }
     }
 }

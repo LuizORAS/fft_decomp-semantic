@@ -1,5 +1,8 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/main.h"
 
-void battle_effect_code_script_2e_invalid(void) {
-    main_noop_800449f8(1, 0x22);
+/* Opcodes 2e-77, the rest of the 120-entry handler table: the error report. */
+effect_script_result_e battle_effect_code_script_2e_invalid(battle_effect_record_t* unused_record) {
+    main_system_report_error_2(1, 0x22);
+    /* Retail leaves the dispatch result undefined after an invalid opcode. */
 }

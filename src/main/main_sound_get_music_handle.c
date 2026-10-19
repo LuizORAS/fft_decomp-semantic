@@ -1,5 +1,6 @@
 #include "fft/main.h"
 
-int main_sound_get_music_handle(int slot) {
-    return g_main_sound_music.slots.handles[slot];
+/* Return the music record of music slot `slot`. No retail code calls it. */
+suzuki_music_t* main_sound_get_music_handle(int slot) {
+    return g_main_sound_music.slots.music[slot - 1];
 }

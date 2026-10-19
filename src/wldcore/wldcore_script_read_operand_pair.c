@@ -1,5 +1,6 @@
 #include "fft/wldcore.h"
 
+/* Read the running location script's next two operands, a variable id and a value. */
 void wldcore_script_read_operand_pair(s32* out1, s32* out2) {
     u16* ip = &g_wldcore_script_state.ip;
     u16 next_ip;

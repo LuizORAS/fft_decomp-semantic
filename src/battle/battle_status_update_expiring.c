@@ -1,6 +1,11 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_status.h"
 #include "psx/types.h"
 
+/* Turn-clock count of the timed statuses 0x18-0x26 (Poison through Reflect; Death Sentence
+ * counts separately): each inflicted, non-innate one loses 1 CT and is staged for removal at 0;
+ * the result becomes a status change when anything is left after filtering
+ * (battle_status_modify_inflictions). */
 void battle_status_update_expiring(s32 unit_id) {
     s32 i;
     s32 byte_idx;
@@ -9,7 +14,7 @@ void battle_status_update_expiring(s32 unit_id) {
     battle_action_data_t* action;
     s32 remaining_ct;
 
-    battle_action_set_target_variables(&g_battle_unit_stats[unit_id]);
+    battle_action_set_target_unit(&g_battle_unit_stats[unit_id]);
 
     /* Statuses 24..38 (bytes 3 and 4): tick the CT of each inflicted,
        non-innate status and flag it for removal when it reaches zero. */
@@ -22,7 +27,7 @@ void battle_status_update_expiring(s32 unit_id) {
                 target->status_ct[i] = remaining_ct;
                 if ((remaining_ct & 0xFF) == 0) {
                     action = g_battle_action_target_data;
-                    action->status_removal[byte_idx] = mask | action->status_removal[byte_idx];
+                    action->status_changes.removal[byte_idx] = mask | action->status_changes.removal[byte_idx];
                 }
             }
         }

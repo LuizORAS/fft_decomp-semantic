@@ -2,6 +2,13 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Return the newly pressed buttons in `buttons`, or else Up or Down when that
+ * held direction's auto-repeat fires, or 0.
+ *
+ * A new press clears the four direction counters. A held direction counts once
+ * per call; past g_open_input_directional_repeat_initial_delay it fires and steps
+ * back by g_open_input_directional_repeat_period. Unlike the WLDCORE twin only Up
+ * and Down repeat: the other two counters are cleared and never counted. */
 u32 open_input_check_repeating_directional(u32 buttons) {
     s32 next;
     u32 pressed;
@@ -9,8 +16,8 @@ u32 open_input_check_repeating_directional(u32 buttons) {
     pressed = g_open_input_new_button_presses;
     pressed &= buttons;
     if (pressed != 0) {
-        g_open_input_direction_counter_3 = 0;
-        g_open_input_direction_counter_2 = 0;
+        g_open_input_right_repeat_counter = 0;
+        g_open_input_left_repeat_counter = 0;
         g_open_input_down_repeat_counter = 0;
         g_open_input_up_repeat_counter = 0;
         return pressed;
@@ -22,7 +29,7 @@ u32 open_input_check_repeating_directional(u32 buttons) {
 
             if (g_open_input_directional_repeat_initial_delay < (*up_counter = next = *up_counter + 1)) {
                 *up_counter = next - g_open_input_directional_repeat_period;
-                return 0x1000;
+                return PSX_PAD_UP;
             }
         } else {
             g_open_input_up_repeat_counter = 0;
@@ -39,7 +46,7 @@ u32 open_input_check_repeating_directional(u32 buttons) {
             if (g_open_input_directional_repeat_initial_delay < (*down_counter = down_next = old_counter + 1)) {
                 old_counter = down_next - g_open_input_directional_repeat_period;
                 *down_counter = old_counter;
-                return 0x4000;
+                return PSX_PAD_DOWN;
             }
         } else {
             g_open_input_down_repeat_counter = 0;

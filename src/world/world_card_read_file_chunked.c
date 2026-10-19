@@ -1,27 +1,24 @@
-/* `result` is pinned to $17 with a tied asm after the open call: the target
- * copies that result into s1 and tests s1, while plain C lets copy
- * propagation test $v0 directly and drop the `move s1,v0`.
- * The shared `fail:` tail reproduces the target's cross-jumped `j; li v0,-1`
- * block at 0x64, which all three -1 returns reach. */
 #include "fft/world.h"
 #include "psx/libapi.h"
 #include "psx/types.h"
 
+/*
+ * Read a card file in up to 40 attempts.
+ *
+ * A failed seek stops the read; partial reads and -1 results allow another
+ * attempt. A successful close returns the bytes read.
+ */
 s32 world_card_read_file_chunked(const char* filename, u8* destination, u32 size) {
-    register s32 result __asm__("$17");
     u32 total;
+    s32 result;
     s32 i;
 
     result = world_card_open_file_with_retries(filename, 1);
-    __asm__("" : "=r"(result) : "0"(result));
-    /* Both failures share the -1 return below; separate returns get laid
-       out as separate blocks. */
     if (result < 0) {
-        goto fail;
+        return -1;
     }
     if (_get_error(g_world_card_open_descriptor) != 0) {
         world_card_close_file_with_retries(g_world_card_open_descriptor);
-    fail:
         return -1;
     }
     total = 0;
@@ -38,7 +35,12 @@ s32 world_card_read_file_chunked(const char* filename, u8* destination, u32 size
         }
     }
     if (world_card_close_file_with_retries(g_world_card_open_descriptor) == 0) {
-        goto fail;
+        return -1;
+    }
+    /* Ineffective check retained from the CARD twin: it emits nothing but
+     * keeps `result` live across the calls, hence its callee-saved register. */
+    if (result != size) {
+        result = -1;
     }
     return total;
 }

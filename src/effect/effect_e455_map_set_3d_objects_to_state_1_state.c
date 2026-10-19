@@ -1,24 +1,31 @@
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+/* E455.BIN is the effect of effect id 0x20f, one of the ids past the abilities. */
 #include "fft/effect.h"
 
-s32 effect_e455_map_set_3d_objects_to_state_1_state(s16 record_index, s32 byte_offset) {
-    effect_record_t* record = &g_effect_state_records[record_index];
+/* Callback handler: when its keyframe starts, sets the map's 3D objects 1-6 to
+ * state 1. */
+s32 effect_e455_map_set_3d_objects_to_state_1_state(
+    s32 record_index, s32 callback_slot, s32 unused_emitter_index, s32 unused_frame) {
+    s16 state_index = record_index;
+    battle_effect_record_t* record = &g_battle_effect_state_records[state_index];
 
-    switch (record->phase[byte_offset]) {
-    case EFFECT_PHASE_IDLE:
+    switch (record->callback_phase[callback_slot]) {
+    case EFFECT_CALLBACK_PHASE_IDLE:
         break;
-    case EFFECT_PHASE_INIT:
+    case EFFECT_CALLBACK_PHASE_INIT:
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 1, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 2, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 3, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 4, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 5, 1, 1);
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_SET_3D_OBJECT_STATE, 6, 1, 1);
-        record->phase[byte_offset] = EFFECT_PHASE_UPDATE;
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_UPDATE;
         break;
-    case EFFECT_PHASE_UPDATE:
+    case EFFECT_CALLBACK_PHASE_UPDATE:
         break;
-    case EFFECT_PHASE_DESTROY:
-        record->phase[byte_offset] = EFFECT_PHASE_IDLE;
+    case EFFECT_CALLBACK_PHASE_DESTROY:
+        record->callback_phase[callback_slot] = EFFECT_CALLBACK_PHASE_IDLE;
         break;
     }
 }

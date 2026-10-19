@@ -1,31 +1,36 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 
-void battle_unit_set_animation_based_on_mounted_state(battle_unit_misc_data_t* unit) {
+/* Give a rider the riding animation and any other unit the standing one, or
+ * the submerged idle in water two or more deep; a mount on land also puts
+ * its rider back in the riding animation. The depth is a byte, so its
+ * negative test never holds. */
+void battle_unit_set_animation_based_on_mounted_state(battle_unit_t* unit) {
     s32 anim;
-    s32 s1v;
-    s32 fv;
-    battle_unit_misc_data_t* other;
+    s32 selected;
+    s32 water_depth;
+    battle_unit_t* other;
 
-    anim = 0x32;
-    if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_RIDER) {
-        fv = battle_move_validate_float_fly(unit) & 0xFF;
-        if (fv < 0) {
-            s1v = 9;
-        } else if (fv < 2) {
-            s1v = 2;
-            if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
-                other = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+    anim = BATTLE_UNIT_ANIMATION_RIDING;
+    if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_RIDER) {
+        water_depth = battle_move_get_water_animation_mode(unit) & 0xFF;
+        if (water_depth < 0) {
+            selected = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
+        } else if (water_depth < 2) {
+            selected = BATTLE_UNIT_ANIMATION_STAND;
+            if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
+                other = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
                 if (other != 0) {
-                    battle_unit_store_animation_facing(0x32, (s16)unit->facing, other);
+                    battle_unit_store_animation_facing(BATTLE_UNIT_ANIMATION_RIDING, unit->facing, other);
                 }
             }
         } else {
-            s1v = 9;
+            selected = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
         }
-        if (s1v == 0) {
+        if (selected == 0) {
             return;
         }
-        anim = s1v;
+        anim = selected;
     }
-    battle_unit_store_animation_facing(anim, (s16)unit->facing, unit);
+    battle_unit_store_animation_facing(anim, unit->facing, unit);
 }

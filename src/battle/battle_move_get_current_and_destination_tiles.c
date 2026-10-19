@@ -1,13 +1,15 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
 #include "psx/types.h"
 
+#include "fft/battle.h"
 /*
  * Resolves the terrain records for a moving unit's current tile and the tile
- * one step away, as encoded by movement_value: bits 6-7 select the axis and
+ * one step away, as encoded by current_path_step: bits 6-7 select the axis and
  * sign, bit 5 selects the map layer and bits 0-1 add extra distance.
  */
 void battle_move_get_current_and_destination_tiles(
-    battle_unit_misc_data_t* unit, map_tile_t** out_current, map_tile_t** out_target) {
+    battle_unit_t* unit, map_tile_t** out_current, map_tile_t** out_target) {
     u8 movement;
     u32 flags;
     s32 dir;
@@ -18,42 +20,43 @@ void battle_move_get_current_and_destination_tiles(
     x = unit->map_x;
     y = unit->map_y;
     layer = unit->map_z;
-    movement = unit->movement_value;
+    /* The scalar snapshot preserves the direction switch and layer extraction registers. */
+    movement = *(u8*)&unit->current_path_step;
     *out_current = battle_map_get_tile_data_pointer(x, y, layer);
     flags = movement;
-    dir = flags >> 6;
+    dir = flags >> BATTLE_MOVE_STEP_DIRECTION_SHIFT;
     switch (dir) {
-    case 0:
+    case BATTLE_MOVE_STEP_DIRECTION_EAST:
         layer = flags >> 5;
         layer &= 1;
         x = unit->map_x;
         x += 1;
         y = unit->map_y;
-        x += flags & 3;
+        x += flags & BATTLE_MOVE_STEP_DISTANCE_MASK;
         break;
-    case 1:
+    case BATTLE_MOVE_STEP_DIRECTION_WEST:
         layer = flags >> 5;
         layer &= 1;
         x = unit->map_x;
         x -= 1;
         y = unit->map_y;
-        x -= flags & 3;
+        x -= flags & BATTLE_MOVE_STEP_DISTANCE_MASK;
         break;
-    case 2:
+    case BATTLE_MOVE_STEP_DIRECTION_SOUTH:
         layer = flags >> 5;
         layer &= 1;
         y = unit->map_y;
         y -= 1;
         x = unit->map_x;
-        y -= flags & 3;
+        y -= flags & BATTLE_MOVE_STEP_DISTANCE_MASK;
         break;
-    case 3:
+    case BATTLE_MOVE_STEP_DIRECTION_NORTH:
         layer = flags >> 5;
         layer &= 1;
         y = unit->map_y;
         y += 1;
         x = unit->map_x;
-        y += flags & 3;
+        y += flags & BATTLE_MOVE_STEP_DISTANCE_MASK;
         break;
     default:
         return;

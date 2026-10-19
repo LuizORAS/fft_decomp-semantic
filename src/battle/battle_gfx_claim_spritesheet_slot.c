@@ -1,9 +1,8 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
 /* Claim a VRAM spritesheet slot for `spritesheet_id`: reuse the slot that
- * already holds it, otherwise take the first free one, and raise animation
- * exception 0xB when all nine are taken. */
+ * already holds it, otherwise take the first free one, and report error 0xB when all nine are taken. */
 s32 battle_gfx_claim_spritesheet_slot(s16 spritesheet_id) {
     s32 slot;
     s32 found;
@@ -27,7 +26,7 @@ s32 battle_gfx_claim_spritesheet_slot(s16 spritesheet_id) {
         }
     }
     if (slot >= 9) {
-        animation_exception_handler(0xB);
+        main_system_handle_error(MAIN_SYSTEM_ERROR_NO_SPRITESHEET_SLOT);
         return 0xFFFF;
     }
     return found & 0xFFFF;

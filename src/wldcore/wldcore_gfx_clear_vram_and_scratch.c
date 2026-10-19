@@ -1,6 +1,8 @@
 #include "fft/wldcore.h"
 #include "psx/libgpu.h"
 
+/* Clear both frame buffers (256 x 480 at the VRAM origin) to black and, when
+ * asked, zero the 0x7800-entry scratch buffer. */
 void wldcore_gfx_clear_vram_and_scratch(s32 clear_scratch) {
     RECT image_rect;
     s32 i;

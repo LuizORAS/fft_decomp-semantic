@@ -1,9 +1,12 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
-/* Returns the Elemental (Geomancy) ability for the surface under the unit when
- * the unit knows and can use it, otherwise 0. */
-s32 battle_menu_load_elemental_abilities(s32 unit_id, u8 skillset) {
+/* Return the one Elemental ability the unit can use: the one for the surface type of
+ * its tile (g_main_terrain_geomancy_abilities), when it has learned it; otherwise 0, also for a
+ * missing unit or another skillset. */
+u16 battle_menu_load_elemental_abilities(s32 unit_id, u8 skillset) {
     battle_stats_t* unit;
     s16 abilities[0x14];
     u8 mp_costs[0x18];
@@ -27,11 +30,10 @@ s32 battle_menu_load_elemental_abilities(s32 unit_id, u8 skillset) {
         return 0;
     }
     terrain_ability
-        = g_geomancy_terrain_ability_table[g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.value
-            & MAP_SURFACE_MASK];
+        = g_main_terrain_geomancy_abilities[g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.type];
     for (i = 0; i < count; i++) {
         if (abilities[i] == terrain_ability) {
-            return (u16)terrain_ability;
+            return terrain_ability;
         }
     }
     return 0;

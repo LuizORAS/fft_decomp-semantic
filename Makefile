@@ -22,9 +22,15 @@ TOOL_ENV = $(if $(JOBS),--env TOOLS_JOBS=$(JOBS)) \
 
 # Every command runs in a fresh container as the host user, so files written
 # under the bind-mounted checkout keep the caller's ownership. --init forwards
-# Ctrl-C and reaps the permuter's children.
-DOCKER_RUN = $(DOCKER) run --rm --init --pull=never --user "$(HOST_USER)" \
-	--volume "$(CURDIR):/work" $(strip $(TOOL_ENV))
+# Ctrl-C and reaps the permuter's children. --log-driver=none keeps output on
+# the terminal only; podman's journald default copies every line to the host.
+# Rootless podman (also behind a podman-docker shim) needs the caller's uid
+# kept inside the user namespace and the SELinux label check disabled, or the
+# bind mount is unreadable.
+DOCKER_IS_PODMAN := $(shell $(DOCKER) --version 2>/dev/null | grep -qi podman && echo 1)
+DOCKER_RUN_FLAGS = $(if $(DOCKER_IS_PODMAN),--userns=keep-id --security-opt label=disable)
+DOCKER_RUN = $(DOCKER) run --rm --init --pull=never --log-driver=none $(DOCKER_RUN_FLAGS) \
+	--user "$(HOST_USER)" --volume "$(CURDIR):/work" $(strip $(TOOL_ENV))
 
 # tools/ is rebuilt from the working tree on every call (incrementally, via
 # build/cache/go), so edits apply on the next command. A container-local copy
@@ -57,7 +63,7 @@ image-name:
 bootstrap: _docker-build ## Rebuild the Docker image, check-config, and extract scus-94221.bin if present
 	@$(TOOLS) check-config
 	@if [ -f scus-94221.bin ]; then $(MAKE) --no-print-directory extract; \
-	else echo 'No scus-94221.bin: skipped extraction. `make validate` works without it; `make build` needs it.'; fi
+	else echo 'No scus-94221.bin: skipped extraction. `make check` works without it; `make build` needs it.'; fi
 
 .PHONY: extract
 extract: image ## Extract scus-94221.bin (automatic for build and checksums)
@@ -67,9 +73,9 @@ extract: image ## Extract scus-94221.bin (automatic for build and checksums)
 build: extract ## Build and verify every module and the disc (MODULE=x for one module)
 	@$(TOOLS) build $(if $(strip $(MODULE)),"$(MODULE)",disc)
 
-.PHONY: validate
-validate: image ## Compile and compare with target/ hashes, no BIN needed (MODULE=x)
-	@$(TOOLS) validate $(if $(strip $(MODULE)),--module="$(MODULE)")
+.PHONY: check
+check: image ## Compile and compare with target/ hashes, no BIN needed (MODULE=x)
+	@$(TOOLS) check $(if $(strip $(MODULE)),--module="$(MODULE)")
 
 # FUNC names a configured function; MODULE is needed only when it is ambiguous.
 function_args = $(if $(strip $(MODULE)),--module="$(MODULE)") "$(FUNC)"
@@ -104,16 +110,61 @@ config-fmt: image ## Rewrite target/*.yaml in canonical form
 declarations: image ## Report conflicting file-scope declarations (ARGS="...")
 	@$(TOOLS) declarations $(ARGS)
 
+.PHONY: share-audit
+share-audit: image ## Report shared C implementation candidates as JSON (MODULE=x, ARGS="...")
+	@$(TOOLS) share-audit $(if $(strip $(MODULE)),--module="$(MODULE)") $(ARGS)
+
 .PHONY: symbols
 symbols: image ## Rename a symbol: ACTION=rename-function|rename-global ARGS="--old A --new B"
 	@test -n "$(ACTION)" || { echo "ACTION is required: rename-function or rename-global"; exit 2; }
 	@$(TOOLS) symbols "$(ACTION)" $(ARGS)
 
+MAP_UPSTREAM ?= upstream/master
+
+# The upstream target/ files are exported on the host, where git runs, so the
+# map can translate upstream names; a clone without that ref skips the page.
+# MAP_EXPORT copies the vault to a directory outside build/ (a Windows drive:
+# Obsidian cannot watch a vault inside WSL), keeping that copy's own .obsidian/
+# settings. The copy's docs/ pages, CODEBASE.md and hash manifest come back
+# into build/map first, so edits made there get the same protection; only
+# changed files are rewritten, so Obsidian re-reads only those.
+.PHONY: map
+map: image ## Generate the Obsidian codebase map in build/map (MAP_EXPORT=dir also copies it)
+	@rm -rf build/upstream
+	@if git rev-parse --verify -q "$(MAP_UPSTREAM)" >/dev/null 2>&1; then \
+		mkdir -p build/upstream/target && \
+		for file in $$(git ls-tree --name-only "$(MAP_UPSTREAM)" target/); do \
+			git show "$(MAP_UPSTREAM):$$file" > "build/upstream/$$file" || exit 1; \
+		done; \
+	fi
+	@if [ -n "$(MAP_EXPORT)" ] && [ -f "$(MAP_EXPORT)/.docs.sha256" ] && [ -d "$(MAP_EXPORT)/docs" ]; then \
+		mkdir -p build/map/docs && \
+		rsync -r --checksum --delete "$(MAP_EXPORT)/docs/" build/map/docs/ && \
+		rsync -r --checksum --ignore-missing-args "$(MAP_EXPORT)/CODEBASE.md" "$(MAP_EXPORT)/.docs.sha256" build/map/ || exit 1; \
+	fi
+	@$(TOOLS) map $(ARGS)
+	@if [ -n "$(MAP_EXPORT)" ]; then \
+		if [ -d "$(MAP_EXPORT)" ] && [ -n "$$(ls -A "$(MAP_EXPORT)")" ] && [ ! -f "$(MAP_EXPORT)/Home.md" ]; then \
+			echo "map: $(MAP_EXPORT) is not empty and holds no earlier map; not copying"; exit 1; \
+		fi; \
+		mkdir -p "$(MAP_EXPORT)" && \
+		rsync -r --checksum --delete --exclude .obsidian build/map/ "$(MAP_EXPORT)/" && \
+		rsync -a --ignore-existing build/map/.obsidian "$(MAP_EXPORT)/" && \
+		echo "map: copied to $(MAP_EXPORT)"; \
+	fi
+
+.PHONY: warnings
+warnings: image ## List cc1 -Wall warnings per function in build/warnings (MODULE=x)
+	@$(TOOLS) warnings $(if $(strip $(MODULE)),--module="$(MODULE)")
+
+.PHONY: verify
+verify: fmt-check check-config check ## Run the per-change checks: fmt-check, check-config, check (MODULE=x)
+
 .PHONY: test
 test: image ## Vet and test the Go tooling
 	@$(DOCKER_RUN) $(IMAGE) sh -c 'cd tools && go vet ./... && go test ./...'
 
-# cc1 runs with -gcoff, so moving lines can change the bytes: `make validate` after.
+# cc1 runs with -gcoff, so moving lines can change the bytes: `make check` after.
 .PHONY: fmt
 fmt: image ## clang-format every C source and header in place
 	@$(FORMAT) -i

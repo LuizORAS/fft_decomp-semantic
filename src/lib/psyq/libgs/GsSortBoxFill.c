@@ -1,0 +1,29 @@
+#include "psx/libgpu.h"
+#include "psx/libgs.h"
+#include "psx/types.h"
+
+/* Sort a flat rectangle: build a draw-mode command word and a TILE from the GsBOXF `bp` (its colour, position offset
+ * by the sorter offsets, size and semi-transparency) in the packet area and link it into `otp` at `pri`. A
+ * negative attribute hides it. wldcore_gfx_draw_screen_fade_overlays draws its fades this way. */
+void GsSortBoxFill(GsBOXF* bp, GsOT* otp, u16 pri) {
+    TILE* packet;
+    DR_TPAGE* draw_mode;
+    s32 attr; /* Attribute packing uses signed right shifts. */
+    u32 hi;
+    u32 lo;
+
+    attr = bp->attribute;
+    if (!(attr & GsDOFF)) {
+        draw_mode = (DR_TPAGE*)GsOUT_PACKET_P;
+        /* Share one DMA tag: the 32-bit mode command occupies this primitive view's tag slot. */
+        packet = (TILE*)draw_mode->code;
+        hi = (attr >> 17) & 0x180;
+        lo = ((attr >> 23) & 0x60) | (PSYQ_GPU_COMMAND_WORD(PSYQ_GPU_CODE_DRAW_MODE) | 0x200);
+        draw_mode->code[0] = hi | lo;
+        setRGB0(packet, bp->r, bp->g, bp->b);
+        packet->code = ((attr >> 29) & PSYQ_GPU_CODE_SEMI_TRANSPARENT) | PSYQ_GPU_CODE_TILE;
+        setXY0(packet, bp->x + GsORGOFSX, bp->y + GsORGOFSY);
+        setWH(packet, bp->w, bp->h);
+        GsOUT_PACKET_P = psyq_gs_sort_sprite_bg((u32*)draw_mode, otp, pri, PSYQ_GPU_PACKET_WORDS(TILE) + 1);
+    }
+}

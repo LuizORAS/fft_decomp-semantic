@@ -1,4 +1,10 @@
+#include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/gfx.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/sound.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -6,7 +12,7 @@
 /* Runs the deployment screen's select menu until the player cancels.
  *
  * Moves the cursor between the g_attack_deploy_select_menu_nodes nodes with the d-pad, starts a
- * battle_text_character_handling_thread in the previous thread slot to show the
+ * battle_text_run_dialog_thread in the previous thread slot to show the
  * selected node's string, and draws the two-part cursor as a double-buffered
  * pair of POLY_FT4 primitives each frame. Text ids 0xd000 + roster * 11 + n
  * resolve through text section 26 to the unit strings built by
@@ -32,8 +38,8 @@ void attack_deploy_run_select_menu(void) {
     s32 selected;
     u32* input;
     s32 parent_id;
-    native_thread_t* thread;
-    native_thread_t* parent;
+    thread_t* thread;
+    thread_t* parent;
     help_navigation_record_t* node;
     help_navigation_record_t* nodes;
     s32 x;
@@ -49,13 +55,13 @@ void attack_deploy_run_select_menu(void) {
     u_mid = 0xb8;
     g_attack_panel_status_animation[0] = 1;
     g_attack_panel_status_animation[1] = 1;
-    g_sound_effect_id_to_play = MAIN_SFX_CONFIRM;
+    g_sound_pending_sfx_id = MAIN_SFX_CONFIRM;
     for (i = 0; i < 2; i++) {
-        battle_gfx_init_default_poly_ft4(&left[i]);
+        menu_init_default_poly_ft4(&left[i]);
         SetSemiTrans(&left[i], 0);
         left[i].tpage = GetTPage(0, 0, 0x3c0, 0x100);
         left[i].clut = 0x7d7c;
-        battle_gfx_init_default_poly_ft4(&right[i]);
+        menu_init_default_poly_ft4(&right[i]);
         SetSemiTrans(&right[i], 1);
         right[i].tpage = GetTPage(0, 2, 0x3c0, 0x100);
         right[i].clut = 0x7dbc;
@@ -71,24 +77,23 @@ void attack_deploy_run_select_menu(void) {
     }
     g_attack_deploy_select_menu_nodes[8].help_base = g_attack_deploy_selected_roster_index * 11 + 10 - 0x3000;
     for (i = 0; i < 10; i++) {
-        g_attack_deploy_select_menu_nodes[i + 18].help_base
-            = g_attack_deploy_selected_roster_index * 11 + (s16)(i - 0x3000);
+        g_attack_deploy_select_menu_nodes[i + 18].help_base = g_attack_deploy_selected_roster_index * 11 - 0x3000 + i;
     }
     selected = 0;
     nodes = g_attack_deploy_select_menu_nodes;
-    g_battle_text_section_pointers[26] = g_attack_deploy_unit_text_section;
-    g_battle_text_section_pointers[27] = g_attack_deploy_help_text_section;
-    parent_id = g_battle_current_thread_id - 1;
-    input = battle_script_get_controller_input_pointer(0);
+    g_text_section_pointers[TEXT_SECTION_DEPLOYMENT_UNIT_HELP] = g_attack_deploy_unit_text_section;
+    g_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_attack_deploy_help_text_section;
+    parent_id = g_thread_current_id - 1;
+    input = input_get_menu_controller(0);
     i = 0;
-    thread = &g_battle_threads[g_battle_current_thread_id];
-    parent = &g_battle_threads[parent_id];
+    thread = &g_threads[g_thread_current_id];
+    parent = &g_threads[parent_id];
     while (1) {
         if (parent->is_running == 0) {
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
-                g_event_mode = 0;
+            if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
+                g_menu_input_lock_mode = 0;
             }
-            g_event_mode = 0;
+            g_menu_input_lock_mode = 0;
             if (thread->task_words[1] != 0) {
                 thread->task_words[1] = 0;
                 thread->task_words[0] = 0;
@@ -96,49 +101,49 @@ void attack_deploy_run_select_menu(void) {
             node = &nodes[selected];
             y = node->y;
             x = node->x;
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_DEBUG_UNIT_EDITOR) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_DEBUG_UNIT_EDITOR) != 0) {
                 y += 8;
             }
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
+            if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
                 y += 8;
             }
             buttons = *input;
             y += 8;
             if (buttons & PSX_PAD_CROSS) {
-                g_sound_effect_id_to_play = MAIN_SFX_CANCEL;
+                g_sound_pending_sfx_id = MAIN_SFX_CANCEL;
                 *input = 0;
                 break;
             }
             if (buttons & PSX_PAD_CIRCLE) {
                 if (node->value != 0) {
                     text_id = node->help_base + *node->value;
-                    if (node->help_base == -0x6800 && g_attack_unit_editor_state.state.generic_monster != 0) {
+                    if (node->help_base == -0x6800 && g_attack_editor_unit_fields.state.generic_monster != 0) {
                         text_id = *node->value | 0x7800;
                         if ((*node->value & 0x7ff) == 0x7ff || (*node->value & 0x7ff) == 0) {
                             *input = 0;
                         } else {
-                            g_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
-                            battle_thread_start(parent_id, battle_text_character_handling_thread);
-                            battle_thread_set_parameters(parent_id, 0x3b, text_id, 0);
+                            g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
+                            thread_start(parent_id, battle_text_run_dialog_thread);
+                            thread_set_parameters(parent_id, 0x3b, text_id, 0);
                         }
-                    } else if (node->help_base == 0x7800 && (u32)((u16)*node->value - 1) >= 0x301) {
+                    } else if (node->help_base == 0x7800 && (u16)*node->value - 1 >= 0x301U) {
                         *input = 0;
-                    } else if (node->help_base == 0x6800 && (u32)((u16)*node->value - 1) >= 0x101) {
+                    } else if (node->help_base == 0x6800 && (u16)*node->value - 1 >= 0x101U) {
                         *input = 0;
-                    } else if (node->help_base == -0x6800 && (u32)((u16)*node->value - 1) >= 0x101) {
+                    } else if (node->help_base == -0x6800 && (u16)*node->value - 1 >= 0x101U) {
                         *input = 0;
                     } else {
-                        g_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
-                        battle_thread_start(parent_id, battle_text_character_handling_thread);
-                        battle_thread_set_parameters(parent_id, 0x3b, text_id, 0);
+                        g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
+                        thread_start(parent_id, battle_text_run_dialog_thread);
+                        thread_set_parameters(parent_id, 0x3b, text_id, 0);
                     }
                 } else {
                     text_id = node->help_base;
-                    g_battle_thread_call_target = (void (*)(void))battle_text_init_entry;
-                    if ((*(u8*)battle_thread_call_on_main_stack(text_id) & 0xfe) != 0xfe) {
-                        g_sound_effect_id_to_play = MAIN_SFX_WINDOW_OPEN;
-                        battle_thread_start(parent_id, battle_text_character_handling_thread);
-                        battle_thread_set_parameters(parent_id, 0x3b, text_id, 0);
+                    g_thread_call_target = (void (*)(void))text_find_entry;
+                    if ((*(u8*)thread_call_on_main_stack(text_id) & 0xfe) != 0xfe) {
+                        g_sound_pending_sfx_id = MAIN_SFX_WINDOW_OPEN;
+                        thread_start(parent_id, battle_text_run_dialog_thread);
+                        thread_set_parameters(parent_id, 0x3b, text_id, 0);
                     }
                 }
             } else if (buttons & PSX_PAD_DPAD_MASK) {
@@ -154,15 +159,15 @@ void attack_deploy_run_select_menu(void) {
                     }
                 }
                 if (selected != node->destination[text_id]) {
-                    g_sound_effect_id_to_play = MAIN_SFX_CURSOR_MOVE;
+                    g_sound_pending_sfx_id = MAIN_SFX_CURSOR_MOVE;
                 }
                 selected = node->destination[text_id];
             }
         } else {
-            if (battle_thread_find_running_by_task(NATIVE_THREAD_TASK_HELP_MENU) != 0) {
-                g_event_mode = 1;
+            if (battle_thread_find_running_by_task(THREAD_TASK_HELP_MENU) != 0) {
+                g_menu_input_lock_mode = 1;
             }
-            g_event_mode = 1;
+            g_menu_input_lock_mode = 1;
             if (thread->task_words[1] == 0) {
                 thread->task_words[1] = 2;
                 thread->task_words[0] = 0;
@@ -173,7 +178,7 @@ void attack_deploy_run_select_menu(void) {
         } else {
             bob = battle_menu_get_cursor_bob_offset(0);
         }
-        thread->task_words[0] += g_battle_event_speed;
+        thread->task_words[0] += g_script_event_speed;
         bob -= 4;
         buffer = i & 1;
         if (node->vertical_cursor != 0) {
@@ -195,14 +200,7 @@ void attack_deploy_run_select_menu(void) {
             right[buffer].v1 = 0x10;
             right[buffer].v2 = 0;
             right[buffer].v3 = 0x10;
-            left[buffer].x0 = x;
-            left[buffer].y0 = y + bob;
-            left[buffer].x1 = x + 0x10;
-            left[buffer].y1 = y + bob;
-            left[buffer].x2 = x;
-            left[buffer].y2 = y + bob + 0x10;
-            left[buffer].x3 = x + 0x10;
-            left[buffer].y3 = y + bob + 0x10;
+            setXY4(&left[buffer], x, y + bob, x + 0x10, y + bob, x, y + bob + 0x10, x + 0x10, y + bob + 0x10);
             (right + buffer)->x0 = x + 2;
             (right + buffer)->y0 = y + bob + 2;
             (right + buffer)->x1 = x + 0x12;
@@ -255,12 +253,12 @@ void attack_deploy_run_select_menu(void) {
             left[buffer].clut = 0x7d7c;
             right[buffer].clut = 0x7dbc;
         }
-        battle_gfx_draw_or_append_gpu_primitive(&left[buffer]);
-        battle_gfx_draw_or_append_gpu_primitive(&right[buffer]);
-        battle_thread_wait_frames(1);
+        gfx_draw_or_append_gpu_primitive(&left[buffer]);
+        gfx_draw_or_append_gpu_primitive(&right[buffer]);
+        thread_wait_frames(1);
         i++;
     }
     g_attack_panel_status_animation[0] = 0;
     g_attack_panel_status_animation[1] = 0;
-    battle_thread_exit_current();
+    thread_exit_current();
 }

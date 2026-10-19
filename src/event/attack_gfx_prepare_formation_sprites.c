@@ -1,33 +1,29 @@
-/* Loads file 0x166b (0x10000 bytes) via the entry-mode load paths, uploads its
- * second half, then for the 16 formation slots derives each unit's portrait
- * (inlined world_unit_get_portrait_index logic), copies a 0x18x0x30 cell into
- * the g_attack_formation_sprite_staging staging buffer, uploads it to g_attack_portrait_upload_rect and uploads the
- * 16x1 palette row to g_attack_portrait_palette_upload_rect; g_attack_formation_sprite_tall_cell[slot] records the cell
- * layout.
- *
- * Load-bearing shapes: the nested else routes the remainder<8 and (code-8)/5
- * arms through `product` and a trailing `row = product` copy, so jump2 sees
- * two different join labels and keeps the two identical `code / 10` arms instead
- * of cross-jumping them. `palette_base` (a multi-block variable) holds the
- * source offset sum so it is not tied to the dying `>> 1` temporary, and
- * `y` is initialised between that sum and `source`. `code` is one variable
- * reused for sheet, code, remainder and the final portrait code; the clear
- * loop counter reuses `x`; `source` is an integer so `x + source` keeps its
- * order. The palette offset's `/ 2` of an even sum compiles to the target's
- * plain `sra` and its allocation order; it also adds an 8-byte compiler
- * stack slot, so `unused` covers only the remaining 16 bytes. */
+#include "fft/battle_script.h"
 #include "fft/event_attack.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* This overlay reads BATTLE's attack entry mode unsigned (lhu). */
-#define ENTRY_MODE (*(u16*)&g_battle_script_attack_entry_mode)
-
+/* Load file 0x166b (0x10000 bytes) through the entry-mode load paths and upload its second half; then,
+ * for the 16 formation slots, derive each unit's portrait (world_formation_get_unit_palette_index's logic,
+ * inlined), copy its 0x18x0x30 cell into the g_attack_formation_sprite_staging buffer, upload it to
+ * g_attack_portrait_upload_rect with its 16x1 CLUT at g_attack_portrait_palette_upload_rect, and record
+ * the cell layout in g_attack_formation_sprite_tall_cell[slot].
+ *
+ * Load-bearing shapes: the nested else routes the remainder<8 and (code-8)/5 arms through `product` and a
+ * trailing `row = product` copy, so jump2 sees two different join labels and keeps the two identical
+ * `code / 10` arms instead of cross-jumping them. `palette_base` (a multi-block variable) holds the source
+ * offset sum so it is not tied to the dying `>> 1` temporary, and `y` is initialised between that sum and
+ * `source`. `code` is one variable reused for sheet, code, remainder and the final portrait code; the
+ * clear loop counter reuses `x`; `source` is an integer so `x + source` keeps its order. The palette
+ * offset's `/ 2` of an even sum compiles to the target's plain `sra` and its allocation order; it also adds
+ * an 8-byte compiler stack slot, so `unused` covers only the remaining 16 bytes. */
 void attack_gfx_prepare_formation_sprites(void) {
     u8 unused[0x10];
     u8* buffer;
     s32 i;
-    party_data_t* party;
+    party_unit_t* party;
     s32 base;
     s32 code;
     u8* pixel;
@@ -44,12 +40,12 @@ void attack_gfx_prepare_formation_sprites(void) {
     s32 source;
 
     buffer = main_heap_alloc(0x10000);
-    if (ENTRY_MODE != 0) {
-        if (ENTRY_MODE == 2) {
-            attack_file_load_sync(0x166B, 0x10000, buffer);
+    if (g_script_attack_entry_mode != 0) {
+        if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+            attack_file_load_sync(DISC_SECTOR_EVENT_UNIT_BIN, 0x10000, buffer);
         } else {
-            g_battle_thread_call_target = (void (*)(void))main_file_load_checked_to_address;
-            battle_thread_call_on_main_stack(0x166B, 0x10000, buffer);
+            g_thread_call_target = (void (*)(void))main_file_load_to_address_checked;
+            thread_call_on_main_stack(DISC_SECTOR_EVENT_UNIT_BIN, 0x10000, buffer);
         }
     } else {
         StoreImage(&g_attack_formation_sheet_rect, (u32*)buffer);
@@ -57,13 +53,13 @@ void attack_gfx_prepare_formation_sprites(void) {
         DrawSync(0);
     }
     LoadImage(&g_attack_formation_sheet_rect, (u32*)(buffer + 0x8000));
-    if (ENTRY_MODE == 2) {
-        battle_thread_yield();
+    if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+        thread_yield();
     } else {
         DrawSync(0);
     }
     for (i = 0; i < 0x10; i++) {
-        party = main_party_get_data_pointer(i);
+        party = main_party_get_unit(i);
         if (party->sprite_set >= CHARACTER_IDENTITY_SELECTOR_FIRST) {
             if (party->sprite_set == CHARACTER_IDENTITY_GENERIC_MALE) {
                 base = (party->job_id - JOB_ID_SQUIRE) * 2;
@@ -102,7 +98,7 @@ void attack_gfx_prepare_formation_sprites(void) {
             portrait = -1;
             code = 0x4C;
         } else if (code >= 0x3F) {
-            code = g_attack_monster_formation_sprite_table[code];
+            code = g_attack_monster_formation_sprite_table[code - 0x3F];
             portrait = code;
         } else {
             portrait = code;
@@ -181,8 +177,8 @@ void attack_gfx_prepare_formation_sprites(void) {
         g_attack_portrait_palette_upload_rect.w = 0x10;
         g_attack_portrait_palette_upload_rect.h = 1;
         LoadImage(&g_attack_portrait_palette_upload_rect, (u32*)(buffer + offset));
-        if (ENTRY_MODE == 2) {
-            battle_thread_yield();
+        if (g_script_attack_entry_mode == SCRIPT_ATTACK_ENTRY_PRELOADED) {
+            thread_yield();
         } else {
             DrawSync(0);
         }

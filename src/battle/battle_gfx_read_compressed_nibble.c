@@ -1,6 +1,8 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 #include "psx/types.h"
 
+/* The next nibble of the compressed spritesheet stream, the high nibble of each
+ * byte first. */
 u32 battle_gfx_read_compressed_nibble(void) {
     u32 nibble;
     u8 value;

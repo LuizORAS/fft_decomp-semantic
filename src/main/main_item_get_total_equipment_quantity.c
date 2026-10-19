@@ -1,5 +1,5 @@
-#include "fft/battle.h"
 #include "fft/main.h"
+#include "fft/unit.h"
 #include "psx/types.h"
 
 /* Counts how many of `item_id` the player owns: the inventory stock plus the
@@ -10,14 +10,14 @@ s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle) {
     s32 total;
     s32 i;
     s32 j;
-    party_data_t* party;
+    party_unit_t* party;
     battle_stats_t* unit;
     s32 deployed;
     s32 party_id;
 
     total = g_main_item_quantities[item_id];
     for (i = 0; i < PARTY_ROSTER_SLOT_COUNT; i++) {
-        party = main_party_get_data_pointer(i);
+        party = main_party_get_unit(i);
         party_id = party->party_id;
         if (party_id == PARTY_ID_NONE) {
             continue;
@@ -29,7 +29,7 @@ s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle) {
             deployed = 0;
             for (j = 0; j < BATTLE_UNIT_SLOT_COUNT; j++) {
                 unit = &g_battle_unit_stats[j];
-                if (unit->existence != 0xff && !(unit->unit_flags & UNIT_FLAG_MONSTER)
+                if (unit->existence != BATTLE_UNIT_EXISTENCE_NONE && !(unit->unit_flags & UNIT_FLAG_MONSTER)
                     && unit->formation_index == party_id) {
                     deployed = 1;
                     break;
@@ -52,7 +52,7 @@ s32 main_item_get_total_equipment_quantity(u8 item_id, s32 include_battle) {
 
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
         unit = &g_battle_unit_stats[i];
-        if (unit->existence != 0xff && !(unit->unit_flags & UNIT_FLAG_MONSTER)
+        if (unit->existence != BATTLE_UNIT_EXISTENCE_NONE && !(unit->unit_flags & UNIT_FLAG_MONSTER)
             && !(unit->initial_team_flags & BATTLE_TEAM_MASK) && unit->job_id != JOB_ID_MIME) {
             for (j = 0; j < UNIT_EQUIPMENT_SLOT_COUNT; j++) {
                 if (unit->equipment[j] == item_id) {

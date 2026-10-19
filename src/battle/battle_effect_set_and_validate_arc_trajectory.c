@@ -1,4 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
+#include "fft/map.h"
+#include "fft/unit.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
@@ -16,7 +21,7 @@
  */
 s32 battle_effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_position, s32 target_id) {
     s32 unused[4];
-    battle_effect_arc_t arc;
+    SVECTOR arc;
     VECTOR second_step;
     VECTOR first_step;
     SVECTOR second_position;
@@ -42,31 +47,30 @@ s32 battle_effect_set_and_validate_arc_trajectory(s32 source_id, SVECTOR* tile_p
     g_battle_effect_trajectory_source_id = source_id;
     query.source.unit_id = source_id;
     query.target.unit_id = target_id;
-    query.source.height = battle_gfx_get_unit_spritesheet_height_by_unit_id(source_id) * 2 / 3;
+    query.source.height = battle_gfx_get_unit_spritesheet_height_by_battle_id(source_id) * 2 / 3;
     if (target_id != -1) {
-        query.target.height = battle_gfx_get_unit_spritesheet_height_by_unit_id(target_id);
+        query.target.height = battle_gfx_get_unit_spritesheet_height_by_battle_id(target_id);
     } else {
         query.target.height = 0;
     }
     battle_effect_list_valid_unit_targeting_data(source_id, -1, &obstacles);
-    battle_unit_get_tile_center_and_height_by_battle_id(
-        source_id, (battle_screen_coords_t*)&g_battle_effect_trajectory_origin);
+    battle_unit_get_tile_center_and_height_by_battle_id(source_id, &g_battle_effect_trajectory_origin);
     g_battle_effect_trajectory_origin.vy -= query.source.height;
     if (target_id == -1) {
         tile = battle_map_get_tile_data_pointer(tile_position->vx, tile_position->vz, tile_position->vy);
-        g_battle_effect_trajectory_destination.vx = tile_position->vx * 28 + 14;
-        g_battle_effect_trajectory_destination.vz = tile_position->vz * 28 + 14;
-        g_battle_effect_trajectory_destination.vy
-            = -((tile->height + (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT)) * 12);
+        g_battle_effect_trajectory_destination.vx
+            = tile_position->vx * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+        g_battle_effect_trajectory_destination.vz
+            = tile_position->vz * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
+        g_battle_effect_trajectory_destination.vy = -((tile->height + tile->depth_half_height.depth) * 12);
     } else {
-        battle_unit_get_tile_center_and_height_by_battle_id(
-            target_id, (battle_screen_coords_t*)&g_battle_effect_trajectory_destination);
+        battle_unit_get_tile_center_and_height_by_battle_id(target_id, &g_battle_effect_trajectory_destination);
     }
     query.delta.x = g_battle_effect_trajectory_destination.vx - g_battle_effect_trajectory_origin.vx;
     query.delta.z = g_battle_effect_trajectory_destination.vz - g_battle_effect_trajectory_origin.vz;
     query.delta.y = g_battle_effect_trajectory_origin.vy - g_battle_effect_trajectory_destination.vy;
-    query.delta.distance = SquareRoot12((query.delta.x * query.delta.x + query.delta.z * query.delta.z) << 12);
-    arc.yaw = ratan2(-query.delta.z, query.delta.x);
+    query.delta.distance = SquareRoot12((query.delta.x * query.delta.x + query.delta.z * query.delta.z) * ONE);
+    arc.vy = ratan2(-query.delta.z, query.delta.x);
     if (battle_effect_calculate_arcing_trajectory(&query, &arc_a, &arc_b) == 0) {
         arc_b = ONE;
         arc_a = ONE;

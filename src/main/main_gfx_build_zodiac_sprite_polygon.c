@@ -1,13 +1,18 @@
 #include "fft/main.h"
 #include "psx/libgte.h"
 
-void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, main_zodiac_texture_position_t* texture,
-    main_zodiac_screen_position_t* base, main_zodiac_sprite_frame_t* frame, main_zodiac_scale_t* scale,
-    main_zodiac_draw_offset_t* offset) {
-    s32 x = frame->offset_x * scale->x;
-    s32 y = frame->offset_y * scale->y;
-    s32 width = frame->width * scale->x;
-    s32 height = frame->height * scale->y;
+/* Fill one textured quad from a zodiac sprite record.
+ *
+ * The record's offset and size are multiplied by scale (ONE = 1.0) and rounded to
+ * nearest; a negative size is made positive. The quad's top-left corner is base +
+ * offset + the scaled record offset + (0x100, 0x78), and it samples the unscaled
+ * record rectangle from the 8-bit texture page that holds *texture. */
+void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, point16_t* texture, upoint16_t* base,
+    sprite_sheet_frame_t* frame, point16_t* scale, main_zodiac_draw_offset_t* offset) {
+    s32 x = frame->offset.x * scale->x;
+    s32 y = frame->offset.y * scale->y;
+    s32 width = frame->source.w * scale->x;
+    s32 height = frame->source.h * scale->y;
     s32 round_x = 0;
     s32 round_y = 0;
     s32 round_width = 0;
@@ -46,23 +51,19 @@ void main_gfx_build_zodiac_sprite_polygon(POLY_FT4* poly, main_zodiac_texture_po
         height = -height;
     }
     poly->tpage = GetTPage(1, 0, texture->x, texture->y & 0xF00);
-    poly->u0 = frame->u;
-    poly->v0 = frame->v;
+    poly->u0 = frame->source.x;
+    poly->v0 = frame->source.y;
     /* The target adds only the low byte of the 16-bit width/height here. */
-    poly->u1 = frame->u + (u8)frame->width;
-    poly->v1 = frame->v;
-    poly->u2 = frame->u;
-    poly->v2 = frame->v + (u8)frame->height;
-    poly->u3 = frame->u + (u8)frame->width;
-    poly->v3 = frame->v + (u8)frame->height;
+    poly->u1 = frame->source.x + frame->source.w;
+    poly->v1 = frame->source.y;
+    poly->u2 = frame->source.x;
+    poly->v2 = frame->source.y + frame->source.h;
+    poly->u3 = frame->source.x + frame->source.w;
+    poly->v3 = frame->source.y + frame->source.h;
     right = width + 0x100;
     bottom = height + 0x78;
-    poly->x0 = base->x + x + offset->x + 0x100;
-    poly->y0 = base->y + y + offset->y + 0x78;
-    poly->x1 = base->x + x + offset->x + right;
-    poly->y1 = base->y + y + offset->y + 0x78;
-    poly->x2 = base->x + x + offset->x + 0x100;
-    poly->y2 = base->y + y + offset->y + bottom;
-    poly->x3 = base->x + x + offset->x + right;
-    poly->y3 = base->y + y + offset->y + bottom;
+    setXY4(poly, base->x + x + offset->position.x + 0x100, base->y + y + offset->position.y + 0x78,
+        base->x + x + offset->position.x + right, base->y + y + offset->position.y + 0x78,
+        base->x + x + offset->position.x + 0x100, base->y + y + offset->position.y + bottom,
+        base->x + x + offset->position.x + right, base->y + y + offset->position.y + bottom);
 }

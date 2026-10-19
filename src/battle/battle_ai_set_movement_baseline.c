@@ -1,0 +1,32 @@
+#include "fft/battle_ai.h"
+#include "psx/types.h"
+
+enum {
+    BATTLE_AI_BASE_HIT_PERCENT = 100,
+    BATTLE_AI_TILE_ROW_BYTE_STRIDE = BATTLE_AI_GRID_COLUMN_COUNT * sizeof(s16),
+    BATTLE_AI_TILE_LEVEL_BYTE_STRIDE = BATTLE_AI_GRID_ROW_COUNT * BATTLE_AI_TILE_ROW_BYTE_STRIDE,
+};
+
+/* 0x5f4; kept as a separate integer term so the target's addu/addiu order
+ * survives (a typed &ai->tile_priority[...] folds the offset first). */
+#define BATTLE_AI_TILE_PRIORITY_OFFSET ((u32) & ((battle_ai_data_t*)0)->tile_priority)
+
+/* Make the movement baseline the score of only moving to the current scenario's destination: rank 0,
+ * 100% hit and the tile's standing score (tile_priority, 16 x 18 16-bit values per level, holds it
+ * negated). battle_ai_insert_ranked_action keeps only actions that rank above it. */
+void battle_ai_set_movement_baseline(void) {
+    battle_ai_data_t* ai;
+    battle_ai_coords_t* coords;
+    u8* level_row;
+    u8 scenario;
+    u32 row;
+
+    ai = &g_battle_ai_data_base;
+    scenario = g_battle_ai_data_base.movement_scenario;
+    g_battle_ai_data_base.movement_baseline_action.rank.decided = 0;
+    g_battle_ai_data_base.movement_baseline_action.rank.base_hit_percent = BATTLE_AI_BASE_HIT_PERCENT;
+    coords = &ai->candidate_coords[scenario];
+    level_row = (u8*)ai + coords->fields.elevation * BATTLE_AI_TILE_LEVEL_BYTE_STRIDE + BATTLE_AI_TILE_PRIORITY_OFFSET;
+    row = coords->fields.y * BATTLE_AI_TILE_ROW_BYTE_STRIDE + (u32)level_row;
+    g_battle_ai_data_base.movement_baseline_action.rank.priority = -*(u16*)(coords->fields.x * 2 + row);
+}

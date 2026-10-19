@@ -3,13 +3,14 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Streams CD-resident image chunks to VRAM through a retrying state machine.
+/* Advance a disc read that goes straight to VRAM, one state per call and with the same retries as
+ * main_file_poll_load. The sectors arrive in alternate 2 KB halves of the destination; each holds a
+ * rectangle count and that many rectangles (x, y, w, h, then the pixels), which
+ * MAIN_FILE_LOAD_STATE_UPLOAD_SECTOR loads with LoadImage before the next sector. The drive pauses
+ * after the last one. The world map texture loads this way (wldcore_map_load_texture).
  *
- * The named sector pointer, negative-offset subtraction, and in-place width
- * multiplication preserve the target's commutative operand ordering. The
- * volatile word reads prevent GCC from narrowing loads that feed s16 RECT
- * fields. The switch jump table occupies 0x80067000-0x80067020, at the start
- * of WLDCORE.BIN. */
+ * The switch jump table occupies 0x80067000-0x80067020, at the start of
+ * WLDCORE.BIN. */
 void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
     RECT rect;
     u8 mode[8];
@@ -17,28 +18,27 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
     s32 word;
     s32 n;
     s32 status;
-    u8* sector_buffer;
 
     switch (stream->state) {
-    case 0:
+    case MAIN_FILE_LOAD_STATE_IDLE:
         break;
-    case 1:
+    case MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED:
         mode[0] = CdlModeSpeed;
         CdControl(CdlSetmode, mode, 0);
-        g_main_system_session_frames = 0;
+        g_main_system_frame_timer = 0;
         stream->state++;
         break;
-    case 2:
-        if (g_main_system_session_frames < 4) {
+    case MAIN_FILE_LOAD_STATE_WAIT_AFTER_SET_MODE:
+        if (g_main_system_frame_timer < 4) {
             return;
         }
         stream->state++;
         break;
-    case 3:
-        CdControlF(CdlSetloc, stream->position);
+    case MAIN_FILE_LOAD_STATE_START_SEEK:
+        CdControlF(CdlSetloc, (u8*)&stream->position);
         stream->state++;
         break;
-    case 4:
+    case MAIN_FILE_LOAD_STATE_POLL_SEEK:
         status = CdSync(1, 0);
         if (status == CdlComplete) {
             stream->state++;
@@ -47,12 +47,12 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         if (status != CdlDiskError) {
             return;
         }
-        stream->state = 1;
+        stream->state = MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED;
         stream->error_count++;
         return;
-    case 5:
+    case MAIN_FILE_LOAD_STATE_START_READ:
         if (CdRead2(CdlModeSpeed) == 0) {
-            stream->state = 1;
+            stream->state = MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED;
             stream->error_count++;
             return;
         }
@@ -60,60 +60,51 @@ void wldcore_file_poll_vram_image_stream(main_file_load_descriptor_t* stream) {
         stream->sector_index = 0;
         stream->state++;
         break;
-    case 6:
+    case MAIN_FILE_LOAD_STATE_POLL_READ:
         status = CdReady(1, 0);
         if (status == CdlDataReady) {
-            sector_buffer = stream->destination;
-            sector_buffer += (stream->sector_index & 1) * 2048;
-            CdGetSector(sector_buffer, 0x200);
+            CdGetSector(stream->destination + (stream->sector_index & 1) * 2048, 0x200);
             stream->wait_frames = 0;
             stream->state++;
             break;
         }
         if (status == CdlDiskError) {
-            stream->state = 1;
+            stream->state = MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED;
             stream->error_count++;
         }
         if (stream->wait_frames > 0x40000 || (CdStatus() & 1) != 0) {
             main_file_reset_cd_subsystems();
-            CdIntToPos(stream->lba + stream->sector_index, stream->position);
-            stream->state = 1;
+            CdIntToPos(stream->lba + stream->sector_index, &stream->position);
+            stream->state = MAIN_FILE_LOAD_STATE_SET_DOUBLE_SPEED;
             stream->error_count++;
             return;
         }
         stream->wait_frames++;
         return;
-    case 7:
+    case MAIN_FILE_LOAD_STATE_UPLOAD_SECTOR:
         if (CdDataSync(1) != 0) {
             return;
         }
+        /* Each sector has a count, then pairs of packed 32-bit XY/WH values and 32-bit image data. */
         word = (stream->sector_index & 1) * 512;
-        rect_count = *(s32*)(stream->destination + (stream->sector_index & 1) * 2048);
+        rect_count = ((u32*)stream->destination)[(stream->sector_index & 1) * 512];
         word++;
         for (n = 0; n < rect_count; n++) {
-            rect.x = *(volatile s32*)(stream->destination + word * 4);
-            rect.y = (*(s32*)(stream->destination + word * 4) & 0xFFFF0000) >> 16;
+            rect.x = ((u32*)stream->destination)[word];
+            rect.y = (((u32*)stream->destination)[word] & 0xFFFF0000) >> 16;
             word++;
-            rect.w = *(volatile s32*)(stream->destination + word * 4);
-            rect.h = (*(s32*)(stream->destination + word * 4) & 0xFFFF0000) >> 16;
+            rect.w = ((u32*)stream->destination)[word];
+            rect.h = (((u32*)stream->destination)[word] & 0xFFFF0000) >> 16;
             word++;
-            LoadImage(&rect, (u32*)(stream->destination - -(word * 4)));
-            {
-                s32 width;
-                s32 height;
-
-                width = rect.w;
-                height = rect.h;
-                width *= height;
-                word += width / 2;
-            }
+            LoadImage(&rect, (u32*)stream->destination + word);
+            word += rect.w * rect.h / 2;
         }
         stream->sector_index++;
         if (stream->sector_index < stream->sector_count) {
-            stream->state = 6;
+            stream->state = MAIN_FILE_LOAD_STATE_POLL_READ;
             return;
         }
-        stream->state = 0;
+        stream->state = MAIN_FILE_LOAD_STATE_IDLE;
         CdControlB(CdlPause, 0, 0);
         return;
     }

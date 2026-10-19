@@ -1,12 +1,15 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
+#include "psx/libgpu.h"
 
-s32 battle_effect_code_script_0b_set_camera_rotation(effect_record_t* effect) {
-    battle_camera_rotation_t rotation;
+/* Opcode 0b: set the camera rotation from the three 16-bit values that follow. */
+effect_script_result_e battle_effect_code_script_0b_set_camera_rotation(battle_effect_record_t* record) {
+    SVECTOR rotation;
 
-    rotation.x = *(u16*)(effect->pc + (s32)effect->script + 2);
-    rotation.y = *(u16*)(effect->pc + (s32)effect->script + 4);
-    rotation.z = *(u16*)(effect->pc + (s32)effect->script + 6);
+    setVector(&rotation, effect_get_current_script_instruction(record)->vector.x,
+        effect_get_current_script_instruction(record)->vector.y,
+        effect_get_current_script_instruction(record)->vector.z);
     battle_camera_set_rotation(&rotation);
-    effect->pc += 8;
+    record->pc += 8;
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

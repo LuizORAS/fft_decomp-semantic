@@ -1,13 +1,18 @@
+#include "fft/battle_script.h"
 #include "fft/event_require.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Yield until Circle is newly pressed, at least one frame. */
 void require_input_wait_skip(void) {
     u32* input;
 
     do {
-        battle_thread_yield();
-        input = battle_script_get_controller_input_pointer(0);
-        g_require_input_controller = input;
+        thread_yield();
+        input = input_get_menu_controller(0);
+        g_menu_input_controller = input;
     } while ((*input & PSX_PAD_CIRCLE) == 0);
 }

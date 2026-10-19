@@ -1,23 +1,10 @@
-#include "fft/event_card.h"
+#include "fft/gfx.h"
+#include "fft/main.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
+#include "psx/pad.h"
 #include "psx/types.h"
-
-/* Stack-resident primitive pools for both WORLD packet buffers. Each pool
- * holds two frames of the per-type counts this routine publishes, which is
- * what fixes the offsets of the pool arguments passed to
- * world_gfx_init_double_packet_buffers. */
-typedef struct world_card_screen_packets {
-    POLY_FT4 textured_quads[2 * 600];     /* 0x0000: g_world_gfx_textured_quad_capacity = 600 */
-    TILE tiles[2 * 10];                   /* 0xbb80: g_world_gfx_tile_capacity = 10 */
-    DR_MOVE draw_moves[2 * 30];           /* 0xbcc0: g_world_gfx_draw_move_capacity = 30 */
-    DR_MODE draw_modes[2 * 30];           /* 0xc260: g_world_gfx_draw_mode_capacity = 30 */
-    DR_AREA draw_areas[2 * 10];           /* 0xc530: g_world_gfx_draw_area_capacity = 10 */
-    u32 otags[2 * 64];                    /* 0xc620: g_world_ot_length = 64 */
-    world_gfx_packet_buffer_t buffers[2]; /* 0xc820: the two packet-buffer headers */
-    u8 _unused_c9f8[0x10];                /* 0xc9f8: gap before the published work area */
-    u8 directory_buffer[0x258];           /* 0xca08: published through g_world_card_directory_buffer */
-} world_card_screen_packets_t;
 
 /*
  * Run the WORLD memory-card screen until its fade-out completes.
@@ -30,10 +17,18 @@ typedef struct world_card_screen_packets {
  * constants whose overlapping lifetimes put the 10 in $t0, and sched2 then
  * hoists only the $v0 stores.
  */
-s32 world_card_run_menu_screen(s32 slot_count) {
-    world_card_screen_packets_t packets;
-    s32 music_handle;
-    s32 input;
+s32 world_card_run_menu_screen(s32 mode_select_enabled) {
+    POLY_FT4 textured_quads[2 * 600];    /* 0x0000: g_world_gfx_textured_quad_capacity = 600 */
+    TILE tiles[2 * 10];                  /* 0xbb80: g_world_gfx_tile_capacity = 10 */
+    DR_MOVE draw_moves[2 * 30];          /* 0xbcc0: g_world_gfx_draw_move_capacity = 30 */
+    DR_MODE draw_modes[2 * 30];          /* 0xc260: g_world_gfx_draw_mode_capacity = 30 */
+    DR_AREA draw_areas[2 * 10];          /* 0xc530: g_world_gfx_draw_area_capacity = 10 */
+    u32 otags[2 * 64];                   /* 0xc620: g_world_ot_length = 64 */
+    bunit_menu_gfx_context_t buffers[2]; /* 0xc820: the two packet-buffer headers */
+    u8 unused_packet_gap[0x10];          /* Retains the original unused stack space. */
+    DIRENTRY directory_buffer[CARD_SAVE_SLOT_COUNT];
+    s16 music_handle;
+    u16 input;
     s32 buttons;
     s32 step;
 
@@ -46,7 +41,7 @@ s32 world_card_run_menu_screen(s32 slot_count) {
     g_world_gfx_poly_gt3_capacity = 0;
     g_world_gfx_gradient_quad_capacity = 0;
     g_world_gfx_textured_gradient_quad_capacity = 0;
-    g_world_gfx_tiles_24_capacity = 0;
+    g_world_gfx_flat_line_capacity = 0;
     g_world_gfx_line_f3_capacity = 0;
     g_world_gfx_line_f4_capacity = 0;
     g_world_gfx_gradient_line_capacity = 0;
@@ -62,71 +57,74 @@ s32 world_card_run_menu_screen(s32 slot_count) {
     g_world_gfx_draw_move_capacity = 30;
     g_world_gfx_draw_area_capacity = 10;
     g_world_gfx_draw_mode_capacity = 30;
-    world_gfx_init_double_packet_buffers(packets.buffers, packets.otags, 0, 0, 0, packets.textured_quads, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, packets.tiles, 0, 0, 0, 0, 0, 0, packets.draw_moves, packets.draw_areas, packets.draw_modes);
+    world_gfx_init_double_packet_buffers(buffers, otags, 0, 0, 0, textured_quads, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, tiles,
+        0, 0, 0, 0, 0, 0, draw_moves, draw_areas, draw_modes);
     world_formation_init_menu_display();
-    g_world_formation_unit_count = world_formation_build_record_list(0, g_world_formation_unit_pointers, 0);
-    g_world_text_section_pointers[27] = g_world_card_slot_text_table;
-    world_gfx_bind_data_pointer(3);
-    g_world_card_menu_step = 0;
-    /* WORLD stores the CARD slot count as a halfword. */
-    *(s16*)&g_card_save_occupied_slot_count = slot_count;
-    music_handle = main_sound_open_music_into_free_slot(0x29);
-    while (main_return_zero_80043708() != 0) { }
-    main_sound_switch_music_track((s16)music_handle, 0x7f, 0);
-    world_card_clear_events();
-    g_world_card_directory_buffer = packets.directory_buffer;
+    g_world_formation_unit_count
+        = world_formation_build_record_list(0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
+    g_text_section_pointers[TEXT_SECTION_OVERLAY_SCREEN] = g_world_card_slot_text_table;
+    world_text_bind_section_data(WORLD_TEXT_DATA_FORMATION_MESSAGES);
+    g_world_card_menu_step = WORLD_CARD_MENU_STEP_SELECT_CARD;
+    /* 1 from the world menu, 0 from the title screen's Continue (load only). */
+    g_world_card_mode_select_enabled = mode_select_enabled;
+    music_handle = main_sound_load_music_into_free_slot(MAIN_MUSIC_SAVE);
+    while (main_sound_is_music_loading_stub() != 0) { }
+    main_sound_switch_music_track(music_handle, 0x7f, 0);
+    card_io_consume_all_events();
+    g_world_card_directory_buffer = directory_buffer;
     world_card_init_menu_state();
-    world_thread_start(2, world_formation_view_zoom_thread);
-    world_thread_set_parameters(2, 0, 0, 0);
+    thread_start(THREAD_BORROWED_SLOT_CARD_BACKDROP, world_menu_zodiac_backdrop_thread);
+    thread_set_parameters(THREAD_BORROWED_SLOT_CARD_BACKDROP, 0, 0, 0);
     while (world_gfx_update_fade_out_tile() != 0) {
-        g_world_script_tutorial_id = 0;
+        g_world_tutorial_id = 0;
         world_gfx_present_frame_and_swap_packet_buffer(0, 0);
-        world_thread_update_task_state_2();
+        world_card_input_update_with_message_state();
         world_gfx_update_fade_in_tile();
-        world_gfx_append_tile_to_otag(&g_world_card_screen_background_tile, g_world_gfx_black_tile_color, 0, 0);
-        if (g_world_card_menu_step == 3 && world_thread_is_running(5) == 0) {
-            input = (u16)g_world_input_primary_repeat;
+        world_gfx_enqueue_tile(&g_world_card_screen_background_tile, &g_world_gfx_black_tile_color, 0, 0);
+        if (g_world_card_menu_step == WORLD_CARD_MENU_STEP_SELECT_SAVE
+            && thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) == 0) {
+            input = g_world_input_primary_repeat;
         } else {
             input = 0;
         }
-        if ((u32)(g_world_card_menu_step - 3) < 3) {
+        if (g_world_card_menu_step >= 3 && g_world_card_menu_step <= 5) {
             world_card_update_and_draw_slot_list(input);
         }
         step = g_world_card_menu_step;
-        if (step == 0) {
+        if (step == WORLD_CARD_MENU_STEP_SELECT_CARD) {
             world_card_run_slot_select_step();
-        } else if (step == 2) {
+        } else if (step == WORLD_CARD_MENU_STEP_SCANNING) {
             world_card_update_slot_scan();
-        } else if (step == 1) {
+        } else if (step == WORLD_CARD_MENU_STEP_SELECT_MODE) {
             world_card_run_mode_select_step();
-        } else if (step == 4) {
+        } else if (step == WORLD_CARD_MENU_STEP_LOADING) {
             world_card_run_load_step(g_world_card_active_slot);
-        } else if (step == 5) {
+        } else if (step == WORLD_CARD_MENU_STEP_SAVING) {
             world_card_run_save_step(g_world_card_active_slot);
-        } else if (step == 9) {
+        } else if (step == WORLD_CARD_MENU_STEP_LEAVE) {
             main_sound_set_current_music_target(0, 0xf0);
-            while (world_card_check_selected() == -1) { }
+            while (world_card_check_selected() == CARD_IO_RESULT_PENDING) { }
             world_gfx_start_increasing_fade();
-            g_world_card_menu_step = 0xff;
+            g_world_card_menu_step = WORLD_CARD_MENU_STEP_LEFT;
         }
-        world_formation_set_ordering_table_pointer(g_world_gfx_active_packet_buffer->otag + 1);
-        g_world_gfx_active_otag_entries = g_world_gfx_active_packet_buffer->otag + 60;
+        world_menu_set_zodiac_backdrop_otag(g_menu_gfx_context->otag + 1);
+        g_gfx_current_otag_entry = g_menu_gfx_context->otag + 60;
         world_menu_draw_active_window_frames();
-        buttons = PadRead(0) & 0xf000;
+        buttons = PadRead(0) & PSX_PAD_DPAD_MASK;
         buttons |= g_world_input_newly_pressed & 0xfff;
-        if (world_thread_is_running(1) == 0 && world_thread_is_running(5) == 0 && world_thread_is_running(0xf) == 0) {
+        if (thread_is_running(THREAD_SCREEN_SLOT_TEXT) == 0 && thread_is_running(THREAD_SCREEN_SLOT_MENU_CHILD) == 0
+            && thread_is_running(WORLD_THREAD_SLOT_UPPER_MENU) == 0) {
             buttons &= 0xff00;
         }
-        world_script_update_event_frame_input(
-            g_world_gfx_active_packet_buffer->otag + 60, buttons, g_world_gfx_draw_buffer_clip_y == 0 ? 0xf0 : 0);
+        world_input_update_event_state(
+            g_menu_gfx_context->otag + 60, buttons, g_world_gfx_draw_buffer_clip_y == 0 ? 0xf0 : 0);
         world_sound_dispatch_effect();
     }
-    world_thread_set_parameters(2, 0, -1, 0);
-    world_free_work_buffer();
-    world_noop_801325d4();
-    main_sound_unload_scenario_mus((s16)music_handle);
-    world_formation_reset_menu_context();
+    thread_set_parameters(THREAD_BORROWED_SLOT_CARD_BACKDROP, 0, -1, 0);
+    world_card_free_load_work_buffer();
+    world_card_close_stub();
+    main_sound_unload_scenario_mus(music_handle);
+    world_menu_reset_context();
     world_text_generate_formation_unit_name_string();
     return g_world_card_menu_result;
 }

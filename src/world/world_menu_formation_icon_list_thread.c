@@ -1,3 +1,6 @@
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
@@ -10,14 +13,14 @@ void world_menu_formation_icon_list_thread(void) {
     RECT rect;
     world_menu_icon_record_t records[2];
     s32 cursor;
-    world_menu_icon_thread_param_t* param;
-    void* buffer;
+    world_menu_entry_t* param;
+    u8* buffer;
     s32 i;
     world_menu_icon_sprites_t* record;
 
-    param = world_thread_get_current_parameter_1();
+    param = (world_menu_entry_t*)world_thread_get_current_parameter_1();
     record = &records[0].base;
-    cursor = param->cursor;
+    cursor = param->selected_index;
     if (cursor == -1) {
         cursor = 0;
     }
@@ -26,44 +29,37 @@ void world_menu_formation_icon_list_thread(void) {
     SetShadeTex(&record->sprites[1], 0);
     SetShadeTex(&record->sprites[2], 0);
     SetShadeTex(&record->sprites[3], 0);
-    world_script_copy_bytes(&records[1], record, 0x7C);
-    buffer = world_menu_build_and_upload_window_frame_image(param->width, param->height, &rect, 1);
-    g_world_menu_text_state.stride = param->width;
+    mem_copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
+    buffer = world_menu_build_and_upload_window_frame_image(
+        param->inner_width, param->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
+    g_menu_text_state.pen.stride = param->inner_width;
     world_menu_set_text_origin(8, 9);
-    g_world_menu_text_color = 0;
-    world_menu_display_text_entry(param->text_id, buffer, &g_world_menu_text_state.origin_x);
+    g_menu_text_palette_offset = 0;
+    world_menu_display_text_entry(param->text_id, buffer, &g_menu_text_state.pen);
     LoadImage(&rect, buffer);
     for (i = 0;; i++) {
-        world_thread_yield();
+        thread_yield();
         if (i == 0) {
             world_menu_free_memory(buffer);
         }
         record = &records[i & 1].base;
-        param->cursor = cursor;
+        param->selected_index = cursor;
         world_menu_select_icon_cluts(record);
         world_menu_update_icon_cursor_sprites(param, record, i, cursor);
-        if (world_menu_check_thread_completion(&g_world_formation_menu_input_state.new_buttons) != 0) {
+        if (world_menu_should_close_thread(&g_world_menu_frame_input_state.new_buttons) != 0) {
             break;
         }
         if (world_thread_is_previous_running() == 0) {
-            world_menu_step_wrapping_cursor_on_scroll_buttons((world_menu_wrapping_cursor_bounds_t*)param, &cursor);
-            world_menu_handle_entry_confirm((world_menu_entry_t*)param, cursor);
-            world_menu_cancel_thread_group((world_menu_cancel_context_t*)param);
+            world_menu_step_wrapping_row_cursor(param, &cursor);
+            world_menu_handle_entry_confirm(param, cursor);
+            world_menu_handle_entry_cancel(param);
         }
-        record->sprites[0].r0 = g_world_menu_color_red;
-        record->sprites[0].g0 = g_world_menu_color_green;
-        record->sprites[0].b0 = g_world_menu_color_blue;
-        record->sprites[1].r0 = g_world_menu_color_red;
-        record->sprites[1].g0 = g_world_menu_color_green;
-        record->sprites[1].b0 = g_world_menu_color_blue;
-        record->sprites[2].r0 = g_world_menu_color_red;
-        record->sprites[2].g0 = g_world_menu_color_green;
-        record->sprites[2].b0 = g_world_menu_color_blue;
-        record->sprites[3].r0 = g_world_menu_color_red;
-        record->sprites[3].g0 = g_world_menu_color_green;
-        record->sprites[3].b0 = g_world_menu_color_blue;
+        setRGB0(&record->sprites[0], g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
+        setRGB0(&record->sprites[1], g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
+        setRGB0(&record->sprites[2], g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
+        setRGB0(&record->sprites[3], g_world_menu_color_red, g_world_menu_color_green, g_world_menu_color_blue);
         world_menu_submit_icon_primitives(record);
     }
-    world_thread_yield();
-    world_thread_exit_current();
+    thread_yield();
+    thread_exit_current();
 }

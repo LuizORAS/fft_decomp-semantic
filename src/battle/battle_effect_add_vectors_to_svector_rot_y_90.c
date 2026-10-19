@@ -1,11 +1,11 @@
+#include "fft/battle_effect.h"
 #include "psx/libgte.h"
-#include "psx/types.h"
 
-/* Only the low halfword of each input component is read. */
-/* result = left + right rotated 90 degrees about Y (RotMatrixY convention:
- * x' = x cos + z sin, z' = -x sin + z cos), i.e. (x + rz, y + ry, z - rx). */
+/* Same as battle_effect_add_vectors_to_svector with right turned 90 degrees about Y first, in RotMatrixY's
+ * convention (x' = x cos + z sin, z' = -x sin + z cos): (x + right z, y + right y, z - right x).
+ * battle_effect_add_vectors_to_svector_rot_y_180 and _rot_y_270 turn it further. */
 void battle_effect_add_vectors_to_svector_rot_y_90(const VECTOR* left, const VECTOR* right, SVECTOR* result) {
-    result->vx = (u16)left->vx + (u16)right->vz;
-    result->vy = (u16)left->vy + (u16)right->vy;
-    result->vz = (u16)left->vz - (u16)right->vx;
+    result->vx = left->vx + right->vz;
+    result->vy = left->vy + right->vy;
+    result->vz = left->vz - right->vx;
 }

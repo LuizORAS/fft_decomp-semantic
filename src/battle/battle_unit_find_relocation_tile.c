@@ -1,6 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
+#include "fft/battle.h"
 /* Find a free tile near a unit for it to be moved to, returning 0 or -1.
  *
  * Panels holding another unit or an earlier destination are marked in
@@ -13,9 +16,10 @@
  * The panel clear walks the byte offset itself: the target loop has no index
  * register, which an index loop keeps. Only level's destination store is an
  * assignment chain; that shape alone gives the target's register choices. */
-s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* destination) {
+s32 battle_unit_find_relocation_tile(s32 unit_index, map_tile_coordinates_t* destination) {
     battle_stats_t* unit;
     map_tile_t* tile;
+    /* Byte access retains the original packed load and field-extraction order. */
     s32 origin_x;
     s32 origin_y;
     s32 low;
@@ -34,7 +38,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
     s32 index;
     s32 surface;
     u32 depth;
-    s32 flags;
+    map_tile_flags_t flags;
     s32 found_x;
     s32 found_y;
     s32 total;
@@ -42,8 +46,8 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
 
     unit = &g_battle_unit_stats[unit_index];
     origin_x = unit->x;
-    origin_y = unit->position.bits.y;
-    for (n = 0x1ff * sizeof(battle_target_panel_t); n >= 0; n -= sizeof(battle_target_panel_t)) {
+    origin_y = unit->position.y;
+    for (n = (MAP_TILE_SLOT_COUNT - 1) * sizeof(battle_target_panel_t); n >= 0; n -= sizeof(battle_target_panel_t)) {
         ((battle_target_panel_t*)((u8*)g_battle_target_panels + n))->unit_record_index = 0;
     }
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
@@ -53,7 +57,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
             panel = &g_battle_target_panels[index];
             tile = &g_battle_map_tile_data[index];
             if (i == unit_index) {
-                height = tile->height * 2 + (tile->depth_half_height & 0x1f);
+                height = tile->height * 2 + tile->depth_half_height.half_height;
                 low = height - 10;
                 if (low < 0) {
                     low = 0;
@@ -65,8 +69,8 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
         }
     }
     for (i = 0; i < g_battle_relocated_unit_count; i++) {
-        index = g_battle_relocated_unit_coords[i][2] * 256 + g_battle_relocated_unit_coords[i][1] * g_map_max_x
-            + g_battle_relocated_unit_coords[i][0];
+        index = g_battle_relocated_unit_coords[i].elevation * 256
+            + g_battle_relocated_unit_coords[i].y * g_battle_map_max_x + g_battle_relocated_unit_coords[i].x;
         panel = &g_battle_target_panels[index];
         panel->unit_record_index = 1;
     }
@@ -78,7 +82,7 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
         for (i = 1; i < limit; i++) {
             for (dx = -i; dx <= i; dx++) {
                 x = origin_x + dx;
-                if (x < 0 || x >= g_map_max_x) {
+                if (x < 0 || x >= g_battle_map_max_x) {
                     continue;
                 }
                 if (dx > 0) {
@@ -89,30 +93,30 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
                 side = -1;
                 found_x = x;
                 for (y = origin_y - dy; side < 2; side += 2) {
-                    if (y >= 0 && y < g_map_max_y) {
+                    if (y >= 0 && y < g_battle_map_max_y) {
                         found_y = y;
                         for (level = 0; level < 2; level++) {
-                            index = level * 256 + g_map_max_x * y + x;
+                            index = level * 256 + g_battle_map_max_x * y + x;
                             tile = &g_battle_map_tile_data[index];
-                            depth = tile->depth_half_height;
-                            if ((s32)(depth >> 5) >= 3) {
+                            depth = (*(u8*)&tile->depth_half_height);
+                            if (tile->depth_half_height.depth >= 3) {
                                 continue;
                             }
-                            height = depth & 0x1f;
+                            height = depth & MAP_TILE_HALF_HEIGHT_MASK;
                             if (height >= 3) {
                                 continue;
                             }
-                            flags = tile->flags_06.value;
-                            if (flags & MAP_TILE_FLAG_BLOCKED) {
+                            flags = tile->flags;
+                            if (flags.blocked) {
                                 continue;
                             }
-                            if (flags & MAP_TILE_FLAG_UNTARGETABLE) {
+                            if (flags.untargetable) {
                                 continue;
                             }
                             if (g_battle_target_panels[index].unit_record_index != 0) {
                                 continue;
                             }
-                            surface = tile->surface.value & 0x3f;
+                            surface = tile->surface.type;
                             if (surface == MAP_SURFACE_LAVA || surface == MAP_SURFACE_OBSTACLE) {
                                 continue;
                             }
@@ -123,9 +127,9 @@ s32 battle_unit_find_relocation_tile(s32 unit_index, battle_dismount_coords_t* d
                                 }
                             }
                             destination->x = found_x;
-                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count][0] = found_x;
-                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count][1] = destination->y = found_y;
-                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count][2] = destination->level
+                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count].x = found_x;
+                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count].y = destination->y = found_y;
+                            g_battle_relocated_unit_coords[g_battle_relocated_unit_count].elevation = destination->layer
                                 = level;
                             g_battle_relocated_unit_count++;
                             return 0;

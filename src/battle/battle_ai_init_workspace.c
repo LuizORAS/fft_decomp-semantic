@@ -1,10 +1,11 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
 
-/*
- * Initialize AI workspace defaults and present-unit indexing.
- *
- * Average maximum HP includes all present slots and is capped at 255.
- */
+/* Set up the AI workspace (battle setup and the event state): number the present units in slot order
+ * (unit_compact_indices; only 0-15 get an ability list, battle_ai_init_unit_abilities), store their average
+ * max HP (at most 255), install the fixed Blood Suck and Frog Attack entries, empty the sprung-trap list
+ * and default the generic Throw entry to Knife with a Dagger. */
 void battle_ai_init_workspace(void) {
     s32 i = 0;
     s32 present_count = 0;
@@ -13,24 +14,24 @@ void battle_ai_init_workspace(void) {
 
     g_battle_ai_workspace = ai;
     g_battle_ai_unit_snapshots = g_battle_ai_unit_snapshot_storage;
-    ai->decision_state = 0;
-    ai->selected_action.rank_byte = 0;
-    ai->selected_action.coords.bytes.zero = 0;
-    ai->hardcoded_status_abilities[0].skillset_flags.bytes.skillset = SKILLSET_ID_ELMDOR_BLOOD_SUCK;
-    ai->hardcoded_status_abilities[0].id.packed_id = ABILITY_ID_ELMDOR_BLOOD_SUCK;
-    ai->hardcoded_status_abilities[0].skillset_flags.bytes.usage_flags
+    ai->resume_pending = 0;
+    ai->selected_action.rank.decided = 0;
+    ai->selected_action.coords.fields.zero = 0;
+    ai->hardcoded_status_abilities[0].skillset = SKILLSET_ID_BLOOD_SUCK_STATUS;
+    ai->hardcoded_status_abilities[0].packed_id = ABILITY_ID_BLOOD_SUCK;
+    ai->hardcoded_status_abilities[0].usage.flags
         = BATTLE_AI_ABILITY_ENTRY_USABLE | BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN;
-    ai->hardcoded_status_abilities[1].skillset_flags.bytes.skillset = SKILLSET_ID_FROG_ATTACK;
-    ai->hardcoded_status_abilities[1].id.packed_id = ABILITY_ID_FROG_ATTACK;
-    ai->hardcoded_status_abilities[1].skillset_flags.bytes.usage_flags
+    ai->hardcoded_status_abilities[1].skillset = SKILLSET_ID_FROG_ATTACK;
+    ai->hardcoded_status_abilities[1].packed_id = ABILITY_ID_FROG_ATTACK;
+    ai->hardcoded_status_abilities[1].usage.flags
         = BATTLE_AI_ABILITY_ENTRY_USABLE | BATTLE_AI_ABILITY_ENTRY_EXHAUSTIVE_ORIGIN_SCAN;
     ai->present_unit_average_max_hp = 0;
-    ai->map_max_x = g_map_max_x;
-    ai->map_max_y = g_map_max_y;
+    ai->map_max_x = g_battle_map_max_x;
+    ai->map_max_y = g_battle_map_max_y;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++) {
-        ai->unit_battle_ids[i] = 0xff;
+        ai->unit_compact_indices[i] = 0xff;
         if (g_battle_unit_stats[i].entd_slot != BATTLE_ENTD_SLOT_NONE) {
-            ai->unit_battle_ids[i] = present_count;
+            ai->unit_compact_indices[i] = present_count;
             battle_ai_init_unit_abilities(i);
             present_count++;
             total_max_hp += g_battle_unit_stats[i].max_hp;
@@ -46,10 +47,10 @@ void battle_ai_init_workspace(void) {
     }
     {
         s32 empty = 0xff;
-        for (i = 3; i >= 0; i--) {
-            ai->coords_181c[i].bytes.x = empty;
+        for (i = BATTLE_AI_KNOWN_TRAP_COUNT - 1; i >= 0; i--) {
+            ai->sprung_trap_tiles[i].fields.x = empty;
         }
     }
     ai->throw_ability_id = ABILITY_ID_THROW_KNIFE;
-    ai->throw_weapon_id = 1;
+    ai->throw_weapon_id = ITEM_ID_DAGGER;
 }

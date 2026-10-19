@@ -1,55 +1,62 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_script.h"
+#include "fft/battle_unit.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
-/* Battle twin of world_unit_update_staged_status_data. Saves or restores the event status snapshot for every misc
- * record of a unit.
- *
- * With restore clear, each resolved battle unit is snapshotted and its graphics are
- * refreshed on the main stack; otherwise the snapshot is replayed through
- * battle_unit_apply_staged_status_data. Follow-up flags add 40-frame waits. */
+/* Stage or restore the event status snapshot of the units an event names (unit_id: one ENTD
+ * unit, 0 for all, or a team filter; script_prepare_unit_filter). restore 0 snapshots
+ * each unit and strips the statuses an event hides (battle_unit_save_staged_status_data),
+ * refreshing its graphics; restore 1 replays the snapshot (battle_unit_apply_staged_status_data).
+ * Waits 40 frames when a unit lost Jump or Float, 40 more after Jump. Does nothing while
+ * g_menu_input_mode is set. The event interpreter stages every unit at the start of an
+ * event when script variable 0x1fd is set and restores them at its end; the Inflict Status thread
+ * stages its unit. The WORLD twin is world_unit_update_staged_status_data. */
 void battle_unit_update_staged_status_data(u16 unit_id, u16 restore) {
-    s32 misc_index;
+    s32 filter_mode;
     s32 unit_index;
     s32 battle_id;
     s32 battle_unit_index;
 
-    g_battle_unit_status_staging_data = &((world_event_work_t*)g_battle_ai_workspace_ptr)->status_staging;
-    if (g_battle_menu_input_disabled == 0 && battle_unit_try_get_misc_data_by_unit_id(&unit_id, &misc_index) != 0) {
+    g_battle_unit_status_staging_data = &g_ai_workspace_ptr->status_staging;
+    if (g_menu_input_mode == MENU_INPUT_PLAYER && script_prepare_unit_filter(&unit_id, &filter_mode) != 0) {
         unit_index = 0;
-        g_battle_unit_status_staging_data->flags = 0;
-        do {
-            if (battle_script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &misc_index) != 0) {
-                battle_unit_index = battle_unit_get_battle_index_by_misc_id(unit_id);
+        g_battle_unit_status_staging_data->jump_float_flags = 0;
+        for (; unit_index < BATTLE_UNIT_SLOT_COUNT; unit_index++) {
+            if (script_filter_unit_id_by_mode(&unit_id, (u16*)&unit_index, &filter_mode) != 0) {
+                battle_unit_index = battle_unit_get_battle_id_by_runtime_id(unit_id);
                 if (battle_unit_index != -1) {
-                    battle_find_unit_data_pointer_for_entd_unit_id(
+                    battle_unit_find_stats_by_entd_unit_id(
                         battle_unit_get_stats_from_battle_id(battle_unit_index)->unit_id, &battle_id);
                     if (battle_id >= 0) {
                         if (restore == 0) {
-                            if (battle_update_unit_status_and_staged_status_data(battle_unit_index) != 0) {
-                                g_battle_thread_call_target
-                                    = (void (*)(void))battle_unit_update_graphics_by_misc_id_wrapper;
-                                battle_thread_call_on_main_stack(unit_id);
+                            if (battle_unit_save_staged_status_data(battle_unit_index) != 0) {
+                                g_thread_call_target = (void (*)(void))battle_unit_update_graphics_by_runtime_id;
+                                thread_call_on_main_stack(unit_id);
                             }
                         } else {
                             battle_unit_apply_staged_status_data(battle_unit_index, unit_id);
                         }
                     }
                 }
-                if (misc_index == 0) {
+                if (filter_mode == 0) {
                     break;
                 }
             }
-            unit_index++;
-        } while (unit_index < BATTLE_UNIT_SLOT_COUNT);
-        if (g_battle_unit_status_staging_data->flags != 0) {
-            battle_thread_wait_frames(40);
         }
-        if (g_battle_unit_status_staging_data->flags & 1) {
-            battle_thread_wait_frames(40);
+        if (g_battle_unit_status_staging_data->jump_float_flags != 0) {
+            thread_wait_frames(40);
+        }
+        if (g_battle_unit_status_staging_data->jump_float_flags & UNIT_STATUS_STAGING_JUMP_REMOVED) {
+            thread_wait_frames(40);
         }
         if (restore == 0) {
-            g_battle_thread_call_target = battle_gfx_reset_jumping_unit_graphic_triggers;
-            battle_thread_call_on_main_stack();
+            g_thread_call_target = battle_gfx_reset_jumping_unit_graphic_triggers;
+            thread_call_on_main_stack();
         }
     }
 }

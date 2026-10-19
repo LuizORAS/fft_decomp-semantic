@@ -1,14 +1,18 @@
 #include "fft/battle.h"
 #include "psx/pad.h"
 
+/* WAIT_DIRECTION: under player control the d-pad turns the unit (and its mount) with a sound,
+ * Circle ends the turn and checks the between-turn events, and Cross goes back to AFTER_COMMAND;
+ * an AI unit turns to its facing hint (0-3, in quarter turns) and ends its turn after 31 frames.
+ * Ending the turn (battle_turn_end) also re-registers the unit's tile with its mount partner. */
 void battle_state_handle_wait_direction_state(void) {
     s32 facing;
     s32 facing_hint;
     u16 frame_data;
-    battle_unit_misc_data_t* unit;
-    battle_unit_misc_data_t* mounted_unit;
+    battle_unit_t* unit;
+    battle_unit_t* mounted_unit;
 
-    unit = battle_unit_get_source_misc_data();
+    unit = battle_unit_get_source();
     battle_gfx_update_all_unit_rotation_and_vectors();
     if (g_battle_menu_status_screen_selected != 1) {
         battle_unit_update_and_animate_units();
@@ -17,30 +21,30 @@ void battle_state_handle_wait_direction_state(void) {
         battle_gfx_draw_wait_direction_unit();
     }
     battle_gfx_update_status_bubbles_and_graphics();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
     if ((unit->team_flags & BATTLE_TEAM_FLAG_PLAYER_CONTROLLED) != 0) {
         battle_camera_handle_rotation_input();
-        battle_camera_call_zoom_map();
-        battle_camera_call_toggle_tilt();
-        if ((g_controller_input_pressed & PSX_PAD_CIRCLE) != 0) {
-            if (unit->battle_data != 0) {
-                battle_action_end_turn(unit->battle_data->misc_unit_id);
-                battle_unit_update_mount_animation_display(unit);
+        battle_camera_handle_zoom_input();
+        battle_camera_handle_tilt_input();
+        if ((g_main_input_pressed_buttons & PSX_PAD_CIRCLE) != 0) {
+            if (unit->stats != 0) {
+                battle_turn_end(unit->stats->battle_id);
+                battle_unit_set_tile_position_with_mount_partner(unit);
             }
             main_sound_play_sfx(MAIN_SFX_CONFIRM);
-            battle_action_check_between_turn_events();
-        } else if ((g_controller_input_pressed & PSX_PAD_CROSS) != 0) {
+            battle_turn_advance();
+        } else if ((g_main_input_pressed_buttons & PSX_PAD_CROSS) != 0) {
             battle_state_enter_after_command();
         }
         /* The target passes only the mode; the definition's second parameter is a matching device. */
-        facing = ((s32 (*)(s32))battle_camera_get_input_direction)(1);
-        if (facing != -1 && facing != g_current_facing_direction) {
+        facing = battle_camera_get_input_direction(BATTLE_CAMERA_INPUT_PRESSED);
+        if (facing != -1 && facing != g_battle_state_wait_direction_facing) {
             main_sound_play_sfx(MAIN_SFX_CURSOR_MOVE);
-            g_current_facing_direction = facing;
+            g_battle_state_wait_direction_facing = facing;
         }
         battle_unit_decide_facing_direction(unit, facing);
-        if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
-            mounted_unit = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+        if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
+            mounted_unit = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
             if (mounted_unit != 0) {
                 battle_unit_decide_facing_direction(mounted_unit, facing);
             }
@@ -49,8 +53,8 @@ void battle_state_handle_wait_direction_state(void) {
         facing_hint = unit->command_state.cursor.facing_hint;
         if (facing_hint < 4) {
             battle_unit_decide_facing_direction(unit, facing_hint << 10);
-            if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
-                mounted_unit = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
+            if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
+                mounted_unit = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
                 if (mounted_unit != 0) {
                     battle_unit_decide_facing_direction(mounted_unit, unit->command_state.cursor.facing_hint << 10);
                 }
@@ -58,11 +62,11 @@ void battle_state_handle_wait_direction_state(void) {
         }
         frame_data = unit->state_frame_counter++;
         if (frame_data >= 0x1f) {
-            if (unit->battle_data != 0) {
-                battle_action_end_turn(unit->battle_data->misc_unit_id);
-                battle_unit_update_mount_animation_display(unit);
+            if (unit->stats != 0) {
+                battle_turn_end(unit->stats->battle_id);
+                battle_unit_set_tile_position_with_mount_partner(unit);
             }
-            battle_action_check_between_turn_events();
+            battle_turn_advance();
         }
     }
 }

@@ -1,6 +1,7 @@
 #include "fft/wldcore.h"
 
-/* Pushes the tutorial-category list level (type 0x2b).
+/* Pushes Professor Daravon's tutorial menu (level TUTORIAL_CATEGORIES): Organization, Battle, Tips
+ * and Return (text 0xb8d9 + row).
  *
  * Appends a cursor window, a header window and the frame render record, seeds
  * the four category entries, and positions both windows relative to the render
@@ -24,7 +25,7 @@ void wldcore_list_open_tutorial_categories(s32 selected_entry, s32 reset) {
     window_index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.main_window = window_index;
-    g_wldcore_window_records[window_index].sequence = 2;
+    g_wldcore_window_records[window_index].sequence = WLDCORE_ANIM_SEQUENCE_CURSOR_IDLE;
     g_wldcore_window_records[window_index].priority = 0xA;
     g_wldcore_window_records[window_index].anim_counter = 0;
     g_wldcore_window_records[window_index].frame_index = 0;
@@ -32,14 +33,18 @@ void wldcore_list_open_tutorial_categories(s32 selected_entry, s32 reset) {
     window_index = wldcore_window_append_record_and_reset_color(
         g_wldcore_window_render_object_queue, &g_wldcore_window_render_object_count);
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.side_window = window_index;
-    g_wldcore_window_records[window_index].sequence = 4;
+    g_wldcore_window_records[window_index].sequence = WLDCORE_ANIM_SEQUENCE_LIST_SIDE_LABEL;
     g_wldcore_window_records[window_index].priority = 0xA;
     g_wldcore_window_records[window_index].anim_counter = 0;
     g_wldcore_window_records[window_index].frame_index = 0;
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[0] = 0;
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[1] = 1;
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[2] = 2;
-    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[3] = 3;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[0]
+        = WLDCORE_TUTORIAL_CATEGORY_ROW_FORMATION;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[1]
+        = WLDCORE_TUTORIAL_CATEGORY_ROW_BATTLE_TUTORIALS;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[2]
+        = WLDCORE_TUTORIAL_CATEGORY_ROW_TOPICS;
+    g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entries[3]
+        = WLDCORE_TUTORIAL_CATEGORY_ROW_LEAVE;
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.entry_count = 4;
 
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].list_window.frame_render
@@ -50,23 +55,23 @@ void wldcore_list_open_tutorial_categories(s32 selected_entry, s32 reset) {
 
     record_index = g_wldcore_menu_stack_depth;
     g_wldcore_menu_stack_records_next[record_index].list_window.selected_entry = selected_entry;
-    g_wldcore_menu_stack_records_next[record_index].list_window.mode = 0;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.main_window].x
+    g_wldcore_menu_stack_records_next[record_index].list_window.mode = WLDCORE_LIST_WINDOW_MODE_BROWSE;
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.main_window].position.x
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index].list_window.frame_render]
-              .base_x
+              .base.x
         + 6;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.main_window].y
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.main_window].position.y
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index].list_window.frame_render]
-              .base_y
+              .base.y
         - -(g_wldcore_menu_stack_records_next[record_index].list_window.selected_entry * 0x10) + 0xE;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.side_window].x
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.side_window].position.x
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index].list_window.frame_render]
-              .base_x
+              .base.x
         + 3;
     g_wldcore_menu_stack_depth = record_index + 1;
-    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.side_window].y
+    g_wldcore_window_records[g_wldcore_menu_stack_records_next[record_index].list_window.side_window].position.y
         = g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[record_index].list_window.frame_render]
-              .base_y
+              .base.y
         - 2;
     g_wldcore_menu_stack_records_next[record_index].list_window.content_render = 0x18;
     g_wldcore_menu_stack_types[record_index + 1] = WLDCORE_MENU_LEVEL_TUTORIAL_CATEGORIES;

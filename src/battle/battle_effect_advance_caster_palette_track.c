@@ -1,11 +1,10 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
 
-/* Advance the caster palette track one frame.
- *
- * When a keyframe with preset bit 7 starts, its colour is applied to the
- * caster's unit palette. */
+/* Advance the caster colour track one frame: an APPLY keyframe recolours the
+ * caster. */
 void battle_effect_advance_caster_palette_track(
-    battle_effect_palette_track_t* track, s16* keyframe, s16* remaining_frames, s32 caster_misc_id) {
+    battle_effect_palette_track_t* track, s16* keyframe, s16* remaining_frames, s32 caster_runtime_id) {
     s16 current;
     s32 index;
     s32 timer;
@@ -27,12 +26,12 @@ void battle_effect_advance_caster_palette_track(
             }
             *remaining_frames = timer;
             preset = track->preset[index];
-            if (preset & 0x80) {
-                red = track->color[index][0];
-                green = track->color[index][1];
-                blue = track->color[index][2];
-                battle_gfx_start_misc_unit_palette_modulation(
-                    preset & 0x7f, track->duration[index], caster_misc_id, red, green, blue);
+            if (preset & EFFECT_COLOR_KEYFRAME_APPLY) {
+                red = track->color[index].r;
+                green = track->color[index].g;
+                blue = track->color[index].b;
+                battle_gfx_apply_unit_palette_modulation_to_units(preset & EFFECT_COLOR_KEYFRAME_MODE_MASK,
+                    track->duration[index], caster_runtime_id, red, green, blue);
             }
         }
         *remaining_frames = *remaining_frames - 1;

@@ -1,13 +1,15 @@
 #include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_script.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Per-frame update for a battle state that fades the screen out: it advances
- * the simulation unless the status screen owns the frame, runs the event
- * script and then draws the fade overlay one step darker. When the fade
- * reaches zero the previous game state is restored. */
+/* MAP_JUMPING_IN_2: animate the units and camera, run one frame of the event script and
+ * brighten the screen by the transition step; once clear, return to the saved state. A
+ * scenario finish here maps 9 and 0xA the other way round from battle_state_handle_event_state
+ * (QUIRKS.md). */
 void battle_state_handle_change_map_jumping_in_state(void) {
-    u32 intensity;
+    u16 intensity;
     char unused[24];
 
     battle_gfx_update_all_unit_rotation_and_vectors();
@@ -18,21 +20,21 @@ void battle_state_handle_change_map_jumping_in_state(void) {
         battle_camera_update_offset_screen_coord_animation();
         battle_camera_update_zoom_animation();
         battle_camera_update_rotation_animation();
-        battle_move_update_unit_by_misc_id();
+        battle_move_update_all_walking_units();
     }
     battle_gfx_update_status_bubbles_and_graphics();
     battle_gfx_draw_screen_color_modulation_overlay();
-    switch (battle_script_run_event_frame(main_gfx_get_otag(), g_controller_input_raw)) {
+    switch (battle_script_run_event_frame(main_gfx_get_otag(), g_main_input_current_buttons)) {
     case 1:
         break;
     case 0:
-        battle_action_check_between_turn_events();
+        battle_turn_advance();
         break;
     case 9:
-        battle_state_halve_animation_speed_and_queue_close(8, 0);
+        battle_state_enter_close_battle(8, MAIN_GAME_FLOW_BATTLE);
         break;
     case 10:
-        battle_state_halve_animation_speed_and_queue_close(8, 1);
+        battle_state_enter_close_battle(8, MAIN_GAME_FLOW_WORLD);
         break;
     }
 
@@ -47,10 +49,10 @@ void battle_state_handle_change_map_jumping_in_state(void) {
     AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_polygons[g_main_gfx_screen_polarity]);
     AddPrim(main_gfx_get_otag(), &g_battle_screen_fade_draw_modes[g_main_gfx_screen_polarity]);
 
-    g_battle_screen_fade_intensity -= *(u16*)&g_battle_state_map_transition_step;
-    if ((s16)g_battle_screen_fade_intensity <= 0) {
+    g_battle_screen_fade_intensity -= g_battle_state_screen_fade_step;
+    if (g_battle_screen_fade_intensity <= 0) {
         g_battle_screen_fade_intensity = 0;
-        g_battle_game_state = g_previous_battle_game_state;
-        g_previous_battle_game_state = 0;
+        g_battle_game_state = g_battle_previous_game_state;
+        g_battle_previous_game_state = BATTLE_GAME_STATE_FREE_CURSOR;
     }
 }

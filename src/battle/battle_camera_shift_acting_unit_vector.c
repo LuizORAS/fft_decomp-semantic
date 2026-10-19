@@ -1,9 +1,11 @@
-#include "fft/battle.h"
-#include "psx/types.h"
+#include "fft/battle_action.h"
+#include "fft/battle_camera.h"
 
+/* The acting-unit camera step vector at double length, used when the unit is
+ * outside the wider screen window. */
 void battle_camera_shift_acting_unit_vector(void) {
     battle_camera_calculate_acting_unit_vector_normal();
-    g_battle_current_vector.vx *= 2;
-    g_battle_current_vector.vy *= 2;
-    g_battle_current_vector.vz *= 2;
+    g_battle_camera_step_vector.vx *= 2;
+    g_battle_camera_step_vector.vy *= 2;
+    g_battle_camera_step_vector.vz *= 2;
 }

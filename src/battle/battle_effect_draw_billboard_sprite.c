@@ -1,29 +1,24 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
+#include "psx/libc.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
-
-/* Sprite frame table 4 bytes into g_battle_effect_trap_frame_data
- * (0x801b7694): the leading halfword is the offset of the per-frame offset
- * array, and each of those offsets reaches a frame record from the same base. */
-#define SPRITE_TABLE (&g_battle_effect_trap_frame_data[4])
 
 /* Queues one effect slot's billboard sprite: projects the slot origin for its
  * ordering-table depth, builds the rotated, camera-scaled 2D matrix from the
  * slot angle, transforms the frame's four corners into the slot's
  * double-buffered POLY_FT4, and adds that quad between the slot's two draw-mode
  * primitives. */
-void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
+void battle_effect_draw_billboard_sprite(battle_effect_slot_t* slot) {
     SVECTOR local;
     VECTOR position;
     s32 sxy;
     s32 flag;
-    battle_effect_quad_prim_t* prim;
-    battle_effect_sprite_frame_t* frame;
+    POLY_FT4* prim;
+    battle_effect_sprite_frameset_t* frame;
     u16 offset;
-    u32 color;
-    /* Reusing v1 preserves the packed-color store before the opcode load. */
-    register s32 code __asm__("$3");
+    effect_sprite_group_t* frame_group;
     s32 depth;
     s32 sine;
     s32 cosine;
@@ -36,10 +31,8 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
 
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);
-    local.vx = slot->x >> 12;
-    local.vy = slot->y >> 12;
-    local.vz = slot->z >> 12;
-    RotTrans(&local, &position, (long*)&position.pad);
+    setVector(&local, slot->motion.position.x >> 12, slot->motion.position.y >> 12, slot->motion.position.z >> 12);
+    RotTrans(&local, &position, &position.pad);
     depth = (position.vz >> 2) - 8;
     if (depth < EFFECT_OT_DEPTH_MIN) {
         depth = EFFECT_OT_DEPTH_MIN;
@@ -60,40 +53,35 @@ void battle_effect_draw_billboard_sprite(battle_effect_sprite_slot_t* slot) {
     SetRotMatrix(&g_battle_effect_matrix);
     SetTransMatrix(&g_battle_effect_matrix);
 
-    offset = *(u16*)&SPRITE_TABLE[slot->color.field.frame * 2
-        + ((battle_effect_sprite_table_header_t*)SPRITE_TABLE)->offsets_offset];
+    frame_group = g_battle_effect_secondary_frames.groups;
+    offset = *(u16*)((u8*)frame_group + (slot->frame * 2 + frame_group->frame_table_offset));
     prim = &slot->quads[g_battle_effect_buffer_index];
-    color = slot->color.packed;
-    prim->length = 9;
-    prim->color.packed = color;
-    code = 0x2c;
-    prim->color.field.cd = code;
-    frame = (battle_effect_sprite_frame_t*)&SPRITE_TABLE[offset];
-    if (frame->flags & 0x200) {
-        prim->color.field.cd = 0x2e;
-    }
-    /* Keeps the &prim->xy0 setup ($a3) after this branch; otherwise GCC hoists
-     * it into the branch delay slot. */
-    __asm__("" : : : "$7");
-    ((battle_effect_corner_t*)&g_battle_effect_corner_top_left)->packed = frame->corners[0];
-    ((battle_effect_corner_t*)&g_battle_effect_corner_top_right)->packed = frame->corners[1];
-    ((battle_effect_corner_t*)&g_battle_effect_corner_bottom_left)->packed = frame->corners[2];
-    ((battle_effect_corner_t*)&g_battle_effect_corner_bottom_right)->packed = frame->corners[3];
+    /* Copy RGB and the frame byte; the packet header overwrites that last byte. */
+    memcpy(&prim->r0, &slot->color.r, sizeof(CVECTOR));
+    setPolyFT4(prim);
+    frame = (battle_effect_sprite_frameset_t*)((u8*)frame_group + offset);
+    setSemiTrans(prim, frame->flags & EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT);
+    /* Copy x/y while retaining the GTE input's z. */
+    memcpy(&g_battle_effect_corner_top_left, &frame->parts[0].corners[0], sizeof(frame->parts[0].corners[0]));
+    memcpy(&g_battle_effect_corner_top_right, &frame->parts[0].corners[1], sizeof(frame->parts[0].corners[1]));
+    memcpy(&g_battle_effect_corner_bottom_left, &frame->parts[0].corners[2], sizeof(frame->parts[0].corners[2]));
+    memcpy(&g_battle_effect_corner_bottom_right, &frame->parts[0].corners[3], sizeof(frame->parts[0].corners[3]));
+    /* The GTE returns each x/y pair as one packed 32-bit value. */
     RotTransPers3(&g_battle_effect_corner_top_left, &g_battle_effect_corner_top_right,
-        &g_battle_effect_corner_bottom_left, &prim->xy0, &prim->xy1, &prim->xy2, &sxy, &flag);
-    RotTransPers(&g_battle_effect_corner_bottom_right, &prim->xy3, &sxy, &flag);
-    prim->tpage = (frame->flags & 0xe0) | 8;
+        &g_battle_effect_corner_bottom_left, (s32*)&prim->x0, (s32*)&prim->x1, (s32*)&prim->x2, &sxy, &flag);
+    RotTransPers(&g_battle_effect_corner_bottom_right, (s32*)&prim->x3, &sxy, &flag);
+    prim->tpage = (frame->flags & EFFECT_SPRITE_PART_TPAGE_MODE_MASK) | 8;
     prim->clut = slot->clut;
-    corner_u = frame->u;
+    corner_u = frame->parts[0].u;
     prim->u2 = corner_u;
     prim->u0 = corner_u;
-    right = corner_u + frame->width;
+    right = corner_u + frame->parts[0].width;
     prim->u3 = right;
     prim->u1 = right;
-    corner_v = frame->v;
+    corner_v = frame->parts[0].v;
     prim->v1 = corner_v;
     prim->v0 = corner_v;
-    bottom = corner_v + frame->height;
+    bottom = corner_v + frame->parts[0].height;
     prim->v3 = bottom;
     prim->v2 = bottom;
     SetDrawMode(&slot->modes[g_battle_effect_buffer_index][0], 1, 1, 1, 0);

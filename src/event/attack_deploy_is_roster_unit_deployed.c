@@ -1,6 +1,9 @@
 #include "fft/event_attack.h"
 #include "psx/types.h"
 
+/* Return 1 when roster unit `roster_id` stands on one of the 5x5 deployment tiles
+ * (g_attack_deploy_roster_id_by_tile), 0 otherwise. attack_deploy_has_roster_id_on_tiles is a second
+ * copy of this text. */
 s32 attack_deploy_is_roster_unit_deployed(s32 roster_id) {
     s32 row;
     s32 column;

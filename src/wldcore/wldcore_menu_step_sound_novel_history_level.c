@@ -1,36 +1,26 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Provisional: the text box handed to world_menu_display_text_entry_mode_1 (0x800fe7a4); the s32
- * pixel width at +0x08 is the destination render record's width. The 16-byte
- * size follows the target frame (box at sp+0x10, point at sp+0x20). */
-typedef struct wldcore_history_text_origin {
-    s16 x;
-    s16 y;
-    u8 _unused_04[4];
-    s32 width;
-    s32 _unused_0c;
-} wldcore_history_text_origin_t;
-
-/* Handler of the history-text level (type 0x17).
+/* Per-frame step of the sound novel's history (level SOUND_NOVEL_HISTORY).
  *
- * Phase 1 steps the picture render record (g_wldcore_active_saved_record.picture_render_index) and g_wldcore_hud_color
+ * Phase 1 steps the picture render record (g_wldcore_sound_novel_record.picture_render_index) and g_wldcore_hud_color
  * from 0x80 down to 0x60 while the screen fade box brightens, in five steps. Phase 2 runs the reverse ramp and then, if
- * g_wldcore_active_saved_record.text_id names a text, clears the image buffer for the level's render record (width *
- * height / 8 words), renders text 0x8800 + g_wldcore_active_saved_record.text_id into it, uploads it and clears script
- * variables 0x5c-0x5e; it then pops the level and resumes WORLD thread 14.
- * Phase 0 scrolls the text history with up/down, hiding the arrow window at
- * either end, and starts phase 2 once button bit 0x80 is released.
+ * g_wldcore_sound_novel_record.text_id names a text, clears the image buffer for the level's render record (width *
+ * height / 8 32-bit values), renders text 0x8800 + g_wldcore_sound_novel_record.text_id into it, uploads it and clears
+ * script variables 0x5c-0x5e; it then pops the level and resumes WORLD thread 14. Phase 0 scrolls the text history with
+ * up/down, hiding the arrow window at either end, and starts phase 2 once button bit 0x80 is released.
  *
  * Load-bearing spellings: the nonzero phases are a switch nested under
  * `phase != 0`, matching the target's test order; each fade case holds
- * &g_wldcore_active_saved_record.picture_render_index in its own pointer local, and `shade` is shared between the
+ * &g_wldcore_sound_novel_record.picture_render_index in its own pointer local, and `shade` is shared between the
  * cases (a global pseudo, as in the target's $a2); the text box position is
  * read into `x`/`y` so the s32 point is loaded with `lw`; `unused` preserves
  * the 0x58-byte frame. */
 void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_history_level_t* level) {
-    wldcore_history_text_origin_t box;
-    wldcore_point32_t point;
+    world_glyph_blit_t box;
+    open_point32_t point;
     u8 unused[0x20];
     u32* image;
     s16* index1;
@@ -44,14 +34,14 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
     s32 x;
     s32 y;
 
-    if (level->phase != 0) {
+    if (level->phase != WLDCORE_SOUND_NOVEL_HISTORY_PHASE_BROWSE) {
         switch (level->phase) {
-        case 1:
+        case WLDCORE_SOUND_NOVEL_HISTORY_PHASE_DIM:
             shade = 0x80 - level->step * 8;
-            index1 = &g_wldcore_active_saved_record.picture_render_index;
-            g_wldcore_window_render_records[*index1].red = shade;
-            g_wldcore_window_render_records[*index1].green = shade;
-            g_wldcore_window_render_records[*index1].blue = shade;
+            index1 = &g_wldcore_sound_novel_record.picture_render_index;
+            g_wldcore_window_render_records[*index1].color.r = shade;
+            g_wldcore_window_render_records[*index1].color.g = shade;
+            g_wldcore_window_render_records[*index1].color.b = shade;
             g_wldcore_hud_color.r = shade;
             g_wldcore_hud_color.g = shade;
             g_wldcore_hud_color.b = shade;
@@ -63,15 +53,15 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
             level->step = step;
             if (step >= 5) {
                 level->step = 0;
-                level->phase = 0;
+                level->phase = WLDCORE_SOUND_NOVEL_HISTORY_PHASE_BROWSE;
             }
             break;
-        case 2:
-            index2 = &g_wldcore_active_saved_record.picture_render_index;
+        case WLDCORE_SOUND_NOVEL_HISTORY_PHASE_RESTORE:
+            index2 = &g_wldcore_sound_novel_record.picture_render_index;
             shade = level->step * 0x10 + 0x40;
-            g_wldcore_window_render_records[*index2].red = shade;
-            g_wldcore_window_render_records[*index2].green = shade;
-            g_wldcore_window_render_records[*index2].blue = shade;
+            g_wldcore_window_render_records[*index2].color.r = shade;
+            g_wldcore_window_render_records[*index2].color.g = shade;
+            g_wldcore_window_render_records[*index2].color.b = shade;
             g_wldcore_hud_color.r = shade;
             g_wldcore_hud_color.g = shade;
             g_wldcore_hud_color.b = shade;
@@ -84,17 +74,17 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
             if (step < 5) {
                 break;
             }
-            text_id = g_wldcore_active_saved_record.text_id;
+            text_id = g_wldcore_sound_novel_record.text_id;
             if (text_id != -1) {
-                text_id += 0x8800;
+                text_id += TEXT_ID_WORLD_MESSAGE_BASE;
                 i = 0;
                 image = g_wldcore_window_image_buffer;
                 point.x = 8;
                 point.y = 8;
                 for (;;) {
                     render_index = level->render_index;
-                    if (i >= g_wldcore_window_render_records[render_index].width
-                            * g_wldcore_window_render_record_heights[render_index].value / 8) {
+                    if (i >= g_wldcore_window_render_records[render_index].bounds.w
+                            * g_wldcore_window_render_records[render_index].bounds.h / 8) {
                         break;
                     }
                     i++;
@@ -103,19 +93,19 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
                 }
                 x = point.x;
                 y = point.y;
-                box.x = x;
-                box.y = y;
-                box.width = g_wldcore_window_render_records[level->render_index].width;
-                world_menu_display_text_entry_mode_1(text_id, (s32)g_wldcore_window_image_buffer, (s32)&box);
+                box.rect.x = x;
+                box.rect.y = y;
+                box.stride = g_wldcore_window_render_records[level->render_index].bounds.w;
+                world_menu_display_text_entry_past_choice_marks(text_id, g_wldcore_window_image_buffer, &box);
                 wldcore_window_load_image_record_to_vram(level->render_index, g_wldcore_window_image_buffer);
-                world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
-                world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);
-                world_script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
+                script_set_variable(EVENT_SCRIPT_VAR_PENDING_SOUND_EFFECT, 0);
+                script_set_variable(EVENT_SCRIPT_VAR_PENDING_WEATHER_SOUND, 0);
+                script_set_variable(EVENT_SCRIPT_VAR_PENDING_MUSIC_TRACK, 0);
             }
             level->step = 0;
-            level->phase = 0;
-            g_wldcore_menu_result = 0x1C0;
-            g_wldcore_screen_fade_state.flags[0] ^= 8;
+            level->phase = WLDCORE_SOUND_NOVEL_HISTORY_PHASE_BROWSE;
+            g_wldcore_menu_blocked_buttons = PSX_PAD_CROSS | PSX_PAD_SQUARE | PSX_PAD_SELECT;
+            g_wldcore_screen_fade_state.flags[0] ^= WLDCORE_SCREEN_FADE_BOX_VISIBLE;
             depth = g_wldcore_menu_stack_depth;
             g_wldcore_window_record_count -= 2;
             g_wldcore_window_render_record_count--;
@@ -123,34 +113,34 @@ void wldcore_menu_step_sound_novel_history_level(wldcore_menu_sound_novel_histor
             g_wldcore_menu_stack_depth = depth - 1;
             g_wldcore_window_records[g_wldcore_menu_stack_records_next[depth - 2].window_pair_render.first_window]
                 .palette = 0;
-            world_thread_resume(0xE);
+            thread_resume(WLDCORE_THREAD_SLOT_MESSAGE);
             break;
         }
         return;
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_UP) != 0) {
         if (level->scroll < 3 && level->text_ids[level->scroll] != -1) {
-            wldcore_window_draw_indexed_text((wldcore_window_text_table_t*)level, 4);
+            wldcore_window_draw_indexed_text(level, 4);
             level->scroll = level->scroll + 1;
             if (level->scroll == 3 || level->text_ids[level->scroll] == -1) {
-                g_wldcore_window_records[level->upper_window].flags |= 0x10;
+                g_wldcore_window_records[level->upper_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
             } else {
-                g_wldcore_window_records[level->upper_window].flags &= ~0x10;
+                g_wldcore_window_records[level->upper_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
             }
-            g_wldcore_window_records[level->lower_window].flags &= ~0x10;
+            g_wldcore_window_records[level->lower_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         }
     }
     if (wldcore_input_check_repeating_directional(PSX_PAD_DOWN) != 0 && level->scroll != 0) {
-        wldcore_window_draw_indexed_text((wldcore_window_text_table_t*)level, 2);
+        wldcore_window_draw_indexed_text(level, 2);
         level->scroll = level->scroll - 1;
         if (level->scroll == 0) {
-            g_wldcore_window_records[level->lower_window].flags |= 0x10;
+            g_wldcore_window_records[level->lower_window].flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         } else {
-            g_wldcore_window_records[level->lower_window].flags &= ~0x10;
+            g_wldcore_window_records[level->lower_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
         }
-        g_wldcore_window_records[level->upper_window].flags &= ~0x10;
+        g_wldcore_window_records[level->upper_window].flags &= ~WLDCORE_DISPLAY_OBJECT_HIDDEN;
     }
-    if (!(g_wldcore_current_button_input & PSX_PAD_SQUARE)) {
-        level->phase = 2;
+    if (!(g_wldcore_input_current_buttons & PSX_PAD_SQUARE)) {
+        level->phase = WLDCORE_SOUND_NOVEL_HISTORY_PHASE_RESTORE;
     }
 }

@@ -1,10 +1,9 @@
 #include "fft/world.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Deletes `name` from the selected memory card, retrying erase up to
  * ten times; gives up with 0 when world_card_wait_for_selected_status reports a problem. */
-s32 world_card_delete_file(char* name) {
+s32 world_card_delete_file(const char* name) {
     char path[256];
     s32 i;
     s32 result;

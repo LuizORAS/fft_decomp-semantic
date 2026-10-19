@@ -21,7 +21,7 @@ void world_name_apply_entry_key(s16 key) {
     j = 0;
     slot = 0;
     while (g_world_name_entry_text[j] != TEXT_END_WAIT_FOR_CONFIRM) {
-        if ((u8)(g_world_name_entry_text[j] + 0x30) >= 0x10) {
+        if (g_world_name_entry_text[j] < 0xd0 || g_world_name_entry_text[j] > 0xdf) {
             chars[slot] = g_world_name_entry_text[j++];
         } else {
             chars[slot] = (g_world_name_entry_text[j] << 8) + g_world_name_entry_text[j + 1];
@@ -29,7 +29,7 @@ void world_name_apply_entry_key(s16 key) {
         }
         slot++;
     }
-    if (key == -1) {
+    if (key == WORLD_NAME_ENTRY_KEY_BACKSPACE) {
         if (g_world_name_entry_cursor == 0) {
             return;
         }
@@ -38,19 +38,19 @@ void world_name_apply_entry_key(s16 key) {
             chars[i] = chars[i + 1];
         }
         chars[13] = TEXT_SPACE;
-    } else if (key == -2) {
+    } else if (key == WORLD_NAME_ENTRY_KEY_DELETE) {
         for (i = g_world_name_entry_cursor; i < 13; i++) {
             chars[i] = chars[i + 1];
         }
         chars[13] = TEXT_SPACE;
-    } else if (key == -3) {
+    } else if (key == WORLD_NAME_ENTRY_KEY_INSERT_SPACE) {
         for (i = 13; g_world_name_entry_cursor < i; i--) {
             chars[i] = chars[i - 1];
         }
         chars[g_world_name_entry_cursor] = TEXT_SPACE;
-    } else if (key == -4) {
+    } else if (key == WORLD_NAME_ENTRY_KEY_CURSOR_LEFT) {
         g_world_name_entry_cursor = g_world_name_entry_cursor != 0 ? g_world_name_entry_cursor - 1 : 0;
-    } else if (key == -5) {
+    } else if (key == WORLD_NAME_ENTRY_KEY_CURSOR_RIGHT) {
         g_world_name_entry_cursor = g_world_name_entry_cursor < 13 ? g_world_name_entry_cursor + 1 : 13;
     } else {
         chars[g_world_name_entry_cursor] = key;

@@ -2,28 +2,18 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-enum {
-    WLDCORE_PROJECTION_MOTION_ACTIVE = 0x01,
-};
+/* Second names for three fields of g_wldcore_map_projection_motion: the
+ * target loads each through its own address, in this order. */
+extern s32 g_wldcore_map_projection_motion_progress;
+extern s32 g_wldcore_map_projection_motion_origin_x;
+extern s32 g_wldcore_map_projection_motion_target_x;
 
-/* These volatile field aliases preserve the target's independent load order.
- * Direct accesses through g_wldcore_map_projection_motion let GCC 2.6.3
- * combine/reorder the loads and do not reproduce this function's bytes. */
-extern volatile s32 g_wldcore_map_projection_motion_progress;
-extern volatile s32 g_wldcore_map_projection_motion_origin_x;
-extern volatile s32 g_wldcore_map_projection_motion_target_x;
-
-/* Advance one frame of the wrapped projection move started at 0x8008ec38.
+/* Step the camera pan one frame: the origin moves from where the pan started toward its target by
+ * progress / distance. Returns 1 while the pan runs, and 0 on the frame it lands, with the origin
+ * on the target and the pan's active flag cleared.
  *
- * Interpolates the live projection origin between the snapshotted origin and
- * the clamped target by progress/distance. While progress is still short of
- * distance it is advanced and 1 is returned. On the final frame the origin is
- * snapped to the target, the record's active flag is toggled off, and 0 is
- * returned.
- *
- * The final snap goes through the VECTOR view of the target, which drops the
- * clamped-point volatile qualifier and lets the four words copy as one batched
- * struct assignment. */
+ * The final snap goes through the VECTOR view of the target, so the four 32-bit values
+ * copy as one struct assignment. */
 s32 wldcore_map_step_projection_motion(void) {
     s32 progress;
     s32 distance;
@@ -41,9 +31,9 @@ s32 wldcore_map_step_projection_motion(void) {
     g_wldcore_map_projection_origin.vx = origin_x + delta_x;
     origin_y = g_wldcore_map_projection_motion.origin.vy;
     g_wldcore_map_projection_origin.vy
-        = origin_y + (g_wldcore_map_projection_motion.target.y - origin_y) * progress / distance;
+        = origin_y + (g_wldcore_map_projection_motion.target.vy - origin_y) * progress / distance;
     if (progress >= distance) {
-        g_wldcore_map_projection_origin = *(VECTOR*)&g_wldcore_map_projection_motion.target;
+        g_wldcore_map_projection_origin = g_wldcore_map_projection_motion.target;
         g_wldcore_map_projection_motion.flags ^= WLDCORE_PROJECTION_MOTION_ACTIVE;
         return 0;
     }

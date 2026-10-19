@@ -1,27 +1,27 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-/* Awards proposition JP to a roster unit's current generic job (special jobs
- * use slot 0), recomputes the job level nibble and the unlocked-job bitset.
- * Returns -1 when the unit or JP amount is invalid. */
-s32 main_job_add_proposition_jp(s32 party_index, s32 jp) {
+/* Give a roster unit the JP of a finished proposition, in its current job's slot (slot 0 for a
+ * special job): current and total JP each stop at 9999, and the job level and unlocked jobs are
+ * derived again. Returns -1 for a negative amount, a slot past the roster, an empty slot or a monster,
+ * else 0. wldcore_proposition_step_result_level pays each participant this way. */
+s32 main_job_add_proposition_jp(u32 party_index, s32 jp) {
     s32 slot;
-    party_data_t* party;
-    s32 job;
-    s32 byte_index;
+    party_unit_t* party;
+    u8 job;
     s32 total;
     s32 level;
     s32 levels;
     u8 level_byte;
-    party_data_t* record;
+    u16 total_jp;
 
     if (jp < 0) {
         return -1;
     }
-    if ((u32)party_index >= 20) {
+    if (party_index >= PARTY_ROSTER_SLOT_COUNT) {
         return -1;
     }
-    party = main_party_get_data_pointer(party_index);
+    party = main_party_get_unit(party_index);
     if (party->party_id == PARTY_ID_NONE) {
         return -1;
     }
@@ -29,44 +29,41 @@ s32 main_job_add_proposition_jp(s32 party_index, s32 jp) {
         return -1;
     }
     job = party->job_id;
-    if ((u32)(job - JOB_ID_SQUIRE) < JOB_ID_GENERIC_COUNT) {
-        /* Zero-byte hint: the original recomputes job - 0x4a here instead
-         * of reusing the range-check temporary. */
-        __asm__("" : "=r"(job) : "0"(job));
-        slot = job - JOB_ID_SQUIRE;
+    if (job >= JOB_ID_GENERIC_FIRST && job <= JOB_ID_GENERIC_LAST) {
+        slot = job - JOB_ID_GENERIC_FIRST;
     } else {
         slot = 0;
     }
 
-    /* Each serialized JP entry is a little-endian byte pair. The local base
-     * and doubled index preserve the target's base-before-index addition. */
-    record = party;
-    byte_index = slot + slot;
-    total = record->job_points[byte_index] + (record->job_points[byte_index + 1] << 8) + jp;
-    if (total >= 10000) {
-        total = 9999;
+    /* Each serialized JP entry is a little-endian byte pair. */
+    total = party->career.job_points.current.entries[slot].low
+        + (party->career.job_points.current.entries[slot].high << 8) + jp;
+    if (total > UNIT_JOB_POINT_MAX) {
+        total = UNIT_JOB_POINT_MAX;
     }
-    record->job_points[byte_index] = total;
-    record->job_points[byte_index + 1] = total / 256;
+    party->career.job_points.current.entries[slot].low = total;
+    party->career.job_points.current.entries[slot].high = total / 256;
 
-    total = record->total_job_points[byte_index] + (record->total_job_points[byte_index + 1] << 8) + jp;
-    if (total >= 10000) {
-        total = 9999;
+    total = party->career.job_points.total.entries[slot].low + (party->career.job_points.total.entries[slot].high << 8)
+        + jp;
+    if (total > UNIT_JOB_POINT_MAX) {
+        total = UNIT_JOB_POINT_MAX;
     }
-    record->total_job_points[byte_index] = total;
-    record->total_job_points[byte_index + 1] = total / 256;
-    level = main_job_calculate_level(total & 0xFFFF);
+    party->career.job_points.total.entries[slot].low = total;
+    party->career.job_points.total.entries[slot].high = total / 256;
+    total_jp = total;
+    level = main_job_calculate_level(total_jp);
 
-    levels = party->job_levels[slot / 2];
+    levels = party->career.job_levels[slot / 2];
     level_byte = level;
     if ((slot & 1) != 0) {
         levels = level + (levels & 0xF0);
     } else {
         levels = (levels & 0xF) | (level_byte << 4);
     }
-    party->job_levels[slot / 2] = levels;
+    party->career.job_levels[slot / 2] = levels;
 
     main_job_store_unlock_bitset(
-        party->unlocked_jobs, main_job_calculate_unlocked(party->job_levels, party->gender_flags));
+        party->career.unlocked_jobs, main_job_calculate_unlocked(party->career.job_levels, party->gender_flags));
     return 0;
 }

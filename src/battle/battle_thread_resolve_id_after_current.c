@@ -1,21 +1,22 @@
-#include "fft/battle.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
+/* Same as battle_thread_resolve_id, but the search starts after the current thread's
+ * slot. */
 s32 battle_thread_resolve_id_after_current(s32 requested_thread_id) {
     s32 i;
 
-    if (requested_thread_id < 0x10) {
+    if (requested_thread_id < THREAD_SLOT_COUNT) {
         return requested_thread_id;
     }
-    i = g_battle_current_thread_id + 1;
-    if (i < 0x10) {
+    i = g_thread_current_id + 1;
+    if (i < THREAD_SLOT_COUNT) {
         do {
-            if (battle_thread_is_running_8014cc94(i) == 0) {
+            if (battle_thread_is_running_asm(i) == 0) {
                 return i;
             }
             i++;
-        } while (i < 0x10);
+        } while (i < THREAD_SLOT_COUNT);
     }
-    /* The target returns the void callee's leftover $v0. */
-    return ((s32 (*)(void))battle_thread_exit_current)();
+    thread_exit_current();
 }

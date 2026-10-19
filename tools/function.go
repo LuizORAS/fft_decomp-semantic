@@ -1,6 +1,6 @@
 // function.go implements the single-function tools: `diff` compares one
 // configured function with its original bytes and `permute` runs
-// decomp-permuter on it. Both compile exactly as `build` and `validate` do.
+// decomp-permuter on it. Both compile exactly as `build` and `check` do.
 package main
 
 import (
@@ -73,7 +73,7 @@ func (p project) originalFunction(config *projectConfig, name, moduleName string
 	}
 	if !p.validExtraction() {
 		if _, err := os.Stat(filepath.Join(p.root, targetInput)); err != nil {
-			return nil, nil, nil, nil, fmt.Errorf("the original bytes come from %s, which is missing: place it at the repo root (make validate needs no BIN)", targetInput)
+			return nil, nil, nil, nil, fmt.Errorf("the original bytes come from %s, which is missing: place it at the repo root (make check needs no BIN)", targetInput)
 		}
 		if err := p.extractDisc(); err != nil {
 			return nil, nil, nil, nil, err
@@ -194,6 +194,10 @@ func permuterSettings(functionName string) string {
 	return fmt.Sprintf("func_name = %q\ncompiler_type = \"gcc\"\nobjdump_command = \"mipsel-linux-gnu-objdump -drz -m mips:3000\"\n", functionName)
 }
 
+func permuterTargetAssembly(f *functionSpec) string {
+	return fmt.Sprintf(".set noreorder\n.section .text\n.globl %[1]s\n.type %[1]s, @function\n%[1]s:\n.incbin \"target.bin\"\n.size %[1]s, . - %[1]s\n", f.sourceSymbol())
+}
+
 // permuteCommand builds a decomp-permuter workspace for one function under
 // build/permute/<name> from the build's source, linker bindings and profile,
 // checks that the permuter scores its base, and runs it for a bounded time.
@@ -238,7 +242,7 @@ func (p project) permuteCommand(args []string) error {
 	if err := os.MkdirAll(workspace, 0o755); err != nil {
 		return err
 	}
-	targetAssembly := fmt.Sprintf(".set noreorder\n.section .text\n.globl %[1]s\n.type %[1]s, @function\n%[1]s:\n.incbin \"target.bin\"\n.size %[1]s, . - %[1]s\n", f.Name)
+	targetAssembly := permuterTargetAssembly(f)
 	targetLinker := fmt.Sprintf("OUTPUT_ARCH(mips)\nSECTIONS { .text 0x%08x : SUBALIGN(4) { *(.text) } /DISCARD/ : { *(.reginfo) *(.pdr) *(.comment) *(.gnu.attributes) } }\n", f.Addr)
 	compileScript := fmt.Sprintf("#!/bin/sh\nset -eu\n/work/build/bin/tools compile-permuter-input %q \"$1\" \"$3\" %q\n", relative+"/function.ld", m.profileOf(f))
 	for _, file := range []struct {
@@ -251,7 +255,7 @@ func (p project) permuteCommand(args []string) error {
 		{"target.ld", []byte(targetLinker), 0o644},
 		{"function.ld", []byte(script), 0o644},
 		{"compile.sh", []byte(compileScript), 0o755},
-		{"settings.toml", []byte(permuterSettings(f.Name)), 0o644},
+		{"settings.toml", []byte(permuterSettings(f.sourceSymbol())), 0o644},
 	} {
 		if err := os.WriteFile(filepath.Join(workspace, file.name), file.data, file.mode); err != nil {
 			return err

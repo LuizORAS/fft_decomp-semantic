@@ -1,31 +1,33 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_gfx.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
 /*
- * Loads one 0x7800-byte EVTCHR bank into a fresh allocation on the main
+ * Loads one 0x7800-byte block of EVTCHR.BIN into a fresh allocation on the main
  * stack, publishing it through g_battle_event_pending_loaded_evtchr_slot / g_battle_event_loaded_evtchr_buffer before
- * releasing it. Parameter 2 selects the bank; each occupies 15 sectors from 0x1d4c.
+ * releasing it. Parameter 2 selects the block; each occupies 15 sectors from 0x1d4c.
  */
 void battle_gfx_load_evtchr_thread(void) {
     s32 parameter;
-    s32 bank;
-    void* buffer;
+    s32 block;
+    evtchr_file_record_t* buffer;
 
     parameter = battle_thread_get_current_parameter_1();
-    bank = battle_thread_get_current_parameter_2();
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_LOAD_EVTCHR);
-    buffer = game_malloc(0x7800);
+    block = battle_thread_get_current_parameter_2();
+    thread_set_current_task_id(THREAD_TASK_LOAD_EVTCHR);
+    buffer = main_heap_alloc(0x7800);
     do {
-        battle_thread_yield();
-        g_battle_thread_call_target = (void (*)(void))main_file_call_build_header;
-    } while (battle_thread_call_on_main_stack((bank * 15) + 0x1d4c, 0x7800, buffer) != 0);
+        thread_yield();
+        g_thread_call_target = (void (*)(void))main_file_request_read_bytes;
+    } while (thread_call_on_main_stack((block * 15) + DISC_SECTOR_EVENT_EVTCHR_BIN, 0x7800, buffer) != 0);
     do {
-        battle_thread_yield();
-        g_battle_thread_call_target = (void (*)(void))main_file_is_still_loading;
-    } while (battle_thread_call_on_main_stack() != 0);
+        thread_yield();
+        g_thread_call_target = (void (*)(void))main_file_is_still_loading;
+    } while (thread_call_on_main_stack() != 0);
     g_battle_event_pending_loaded_evtchr_slot = parameter;
     g_battle_event_loaded_evtchr_buffer = buffer;
-    battle_thread_yield();
+    thread_yield();
     main_heap_free(buffer);
-    battle_thread_exit_current();
+    thread_exit_current();
 }

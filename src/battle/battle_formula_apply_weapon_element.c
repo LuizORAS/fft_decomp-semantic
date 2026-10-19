@@ -1,0 +1,7 @@
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+
+/* The target's affinities for the weapon's element (battle_formula_apply_element_affinities). */
+void battle_formula_apply_weapon_element(void) {
+    battle_formula_apply_element_affinities(g_battle_action_current_ability.weapon_data.element);
+}

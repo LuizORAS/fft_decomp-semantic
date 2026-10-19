@@ -1,28 +1,34 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
-void battle_map_store_modified_palette_colors(s32 palette_group, s32 palette_index, s32 store_all) {
+/* Make the colours staged for upload the base colours of a CLUT row: copy them
+ * from g_battle_map_palette_modified_colors into the row's packed mirror, all 256
+ * when store_all is 1, otherwise the 16 of CLUT clut_index. `store_all` then
+ * serves as the loop counter.
+ *
+ * The event script issues it for the whole map row, so that later BASE and
+ * RESTORE colour modes start from the colours as they are tinted then. */
+void battle_map_store_modified_palette_colors(s32 clut_row, s32 clut_index, s32 store_all) {
     if (store_all == 1) {
         u16* destination;
         u16* source;
 
         store_all = 0;
-        destination = g_battle_map_palette_state.banks[palette_group].packed_colors;
+        destination = g_battle_map_palette_state.clut_rows[clut_row].packed_colors;
         source = g_battle_map_palette_modified_colors[0];
-        source += palette_group * 0x100;
-        while (store_all < 256) {
+        source += clut_row * MAP_CLUT_ROW_COLOR_COUNT;
+        while (store_all < MAP_CLUT_ROW_COLOR_COUNT) {
             *destination++ = *source++;
             store_all++;
         }
     } else {
-        u16* stored_palette_group;
+        u16* packed_row;
 
         store_all = 0;
-        palette_index *= 16;
-        stored_palette_group = g_battle_map_palette_state.banks[palette_group].packed_colors;
-        while (store_all < 16) {
-            stored_palette_group[palette_index + store_all]
-                = g_battle_map_palette_modified_colors[palette_group][palette_index + store_all];
+        clut_index *= MAP_CLUT_COLOR_COUNT;
+        packed_row = g_battle_map_palette_state.clut_rows[clut_row].packed_colors;
+        while (store_all < MAP_CLUT_COLOR_COUNT) {
+            packed_row[clut_index + store_all] = g_battle_map_palette_modified_colors[clut_row][clut_index + store_all];
             store_all++;
         }
     }

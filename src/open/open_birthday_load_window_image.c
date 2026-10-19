@@ -1,7 +1,9 @@
 #include "fft/open.h"
 
-/* Record coordinates are quarter-pixel values; x also selects a 64-pixel
- * page before the upload is placed in VRAM at x 0x180. */
+/* Upload a window record's image to its place in VRAM.
+ *
+ * Record coordinates are quarter-pixel values; x also selects a 64-pixel page
+ * before the upload is placed in VRAM at x 0x180. */
 void open_birthday_load_window_image(s32 record_index, u32* image) {
     RECT destination;
     s32 x;

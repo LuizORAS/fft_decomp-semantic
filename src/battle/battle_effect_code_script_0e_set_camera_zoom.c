@@ -1,12 +1,16 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
+#include "psx/libgpu.h"
 
-s32 battle_effect_code_script_0e_set_camera_zoom(effect_record_t* effect) {
+/* Opcode 0e: set the camera zoom from the three 16-bit values that follow (ONE is
+ * no zoom). */
+effect_script_result_e battle_effect_code_script_0e_set_camera_zoom(battle_effect_record_t* record) {
     VECTOR zoom;
 
-    zoom.vx = *(s16*)(effect->pc + (s32)effect->script + 2);
-    zoom.vy = *(s16*)(effect->pc + (s32)effect->script + 4);
-    zoom.vz = *(s16*)(effect->pc + (s32)effect->script + 6);
+    setVector(&zoom, effect_get_current_script_instruction(record)->vector.x,
+        effect_get_current_script_instruction(record)->vector.y,
+        effect_get_current_script_instruction(record)->vector.z);
     battle_camera_set_zoom(&zoom);
-    effect->pc += 8;
+    record->pc += 8;
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

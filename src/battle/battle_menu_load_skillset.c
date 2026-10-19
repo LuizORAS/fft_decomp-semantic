@@ -1,11 +1,14 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
-/* Loads the unit's usable abilities for an action menu type into scratch lists.
- *
- * A frog only keeps the default, blank, monster and attack menus. Returns the
- * menu loader's result, or whether the menu type is below 15 for menus without
- * a loader. */
+/* Load the unit's usable entries of one skillset for its action menu type into scratch lists,
+ * through the type's loader: the ability list (default), the Item abilities, the throwable items
+ * (Throw), Math Skill's attributes, then multiples, then the Calculator abilities, the Elemental
+ * ability of the unit's tile, the Draw Out katanas or the Charge abilities. A Frog gets 0 for every
+ * type but the default, blank, monster and attack menus. Returns the loader's result, 0 when nothing
+ * is usable, or for types without a loader whether the type is below 15;
+ * battle_menu_build_unit_action_menus marks a skillset empty on 0. */
 s32 battle_menu_load_skillset(s32 unit_id, u8 skillset, u8 menu) {
     u8 items[0x58];
     s16 abilities[0x44];
@@ -15,7 +18,8 @@ s32 battle_menu_load_skillset(s32 unit_id, u8 skillset, u8 menu) {
     u8 turns[0x18];
     s32 result;
 
-    if ((g_battle_unit_stats[unit_id].status_sets.current[2] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
+    if ((g_battle_unit_stats[unit_id].status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
+            & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
         && menu != ACTION_MENU_TYPE_DEFAULT && menu != ACTION_MENU_TYPE_MONSTER && menu != ACTION_MENU_TYPE_ATTACK
         && menu != ACTION_MENU_TYPE_BLANK_05) {
         return 0;
@@ -38,7 +42,7 @@ s32 battle_menu_load_skillset(s32 unit_id, u8 skillset, u8 menu) {
         }
         return result;
     case ACTION_MENU_TYPE_ELEMENTS:
-        return (u16)battle_menu_load_elemental_abilities(unit_id, skillset);
+        return battle_menu_load_elemental_abilities(unit_id, skillset);
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         return battle_menu_collect_draw_out_katanas(unit_id, skillset, items);
     case ACTION_MENU_TYPE_CHARGE:

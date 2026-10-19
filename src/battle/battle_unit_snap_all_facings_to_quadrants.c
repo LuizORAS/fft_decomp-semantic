@@ -1,19 +1,22 @@
-#include "fft/battle.h"
+#include "fft/battle_unit.h"
 
+/* Turn every unit to one of the four sides by its facing in sixteenths: south below south-west, then
+ * west, north and east, and south again from south-east. An event instruction issues it
+ * (script_execute_event). */
 void battle_unit_snap_all_facings_to_quadrants(void) {
-    battle_unit_misc_data_t* unit;
+    battle_unit_t* unit;
     s32 facing;
 
-    unit = g_battle_unit_misc_list_head;
+    unit = g_battle_unit_list_head;
     while (unit != 0) {
         facing = unit->facing & BATTLE_FACING_MASK;
-        if (facing < 0x200) {
+        if (facing < BATTLE_FACING_SOUTH_WEST) {
             unit->facing = BATTLE_FACING_SOUTH;
-        } else if (facing < 0x600) {
+        } else if (facing < BATTLE_FACING_NORTH_WEST) {
             unit->facing = BATTLE_FACING_WEST;
-        } else if (facing < 0xa00) {
+        } else if (facing < BATTLE_FACING_NORTH_EAST) {
             unit->facing = BATTLE_FACING_NORTH;
-        } else if (facing < 0xe00) {
+        } else if (facing < BATTLE_FACING_SOUTH_EAST) {
             unit->facing = BATTLE_FACING_EAST;
         } else {
             unit->facing = BATTLE_FACING_SOUTH;

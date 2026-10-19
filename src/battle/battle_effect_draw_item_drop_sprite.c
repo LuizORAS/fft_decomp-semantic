@@ -1,4 +1,6 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_effect.h"
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
@@ -28,14 +30,12 @@ void battle_effect_draw_item_drop_sprite(VECTOR* origin, s32 item_id, s32 angle)
     s16 bottom;
 
     slot = &g_battle_effect_slots[g_battle_effect_current_secondary->slot_ids[0]];
-    battle_get_item_graphic_data(&sprite, item_id);
+    battle_gfx_set_item_icon_sprite(&sprite, item_id);
     prim = &slot->quads[g_battle_effect_buffer_index];
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);
-    local.vx = origin->vx;
-    local.vy = origin->vy;
-    local.vz = origin->vz;
-    RotTrans(&local, &position, (long*)&position.pad);
+    copyVector(&local, origin);
+    RotTrans(&local, &position, &position.pad);
     depth = (position.vz >> 2) - 8;
     if (depth < EFFECT_OT_DEPTH_MIN) {
         depth = EFFECT_OT_DEPTH_MIN;

@@ -1,7 +1,8 @@
 #include "fft/event_option.h"
+#include "fft/thread.h"
 
-/* Give other event work one turn before terminating this thread. */
+/* Yield once, then exit the current thread. Nothing references it (QUIRKS.md). */
 void option_thread_stop_after_yield(void) {
-    battle_thread_yield();
-    battle_thread_exit_current();
+    thread_yield();
+    thread_exit_current();
 }

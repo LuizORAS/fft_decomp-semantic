@@ -1,5 +1,7 @@
-#include "psx/types.h"
+#include "fft/open.h"
 
-s32 open_script_add_pointer_offset(s32 left, s32 right) {
-    return left + right;
+/* Return `base` + `byte_offset`: the dispatcher and the text opcode turn a byte offset into the script
+ * data into a pointer with it, the address held in an s32. */
+u8* open_script_add_pointer_offset(u8* base, s32 byte_offset) {
+    return base + byte_offset;
 }

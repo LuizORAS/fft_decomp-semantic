@@ -1,6 +1,10 @@
 #include "fft/event_debugchr.h"
 #include "psx/types.h"
 
+/* Write the editor's values back to battle unit `unit_id`: HP, MP and CT
+ * (each first capped at its maximum), level, experience, Brave, Faith, the
+ * zodiac sign (the top nibble of the birthday 16-bit value), move, speed and
+ * jump. */
 void debugchr_editor_apply_values_to_battle_unit(s32 unit_id) {
     battle_stats_t* unit;
     s32 zodiac;
@@ -8,24 +12,24 @@ void debugchr_editor_apply_values_to_battle_unit(s32 unit_id) {
 
     unit = battle_unit_get_stats_from_battle_id(unit_id);
 
-    if (g_debugchr_editor_first_maximum < g_debugchr_editor_values[0])
-        g_debugchr_editor_values[0] = g_debugchr_editor_first_maximum;
-    if (g_debugchr_editor_second_maximum < g_debugchr_editor_values[3])
-        g_debugchr_editor_values[3] = g_debugchr_editor_second_maximum;
-    if (g_debugchr_editor_third_maximum < g_debugchr_editor_values[6])
-        g_debugchr_editor_values[6] = g_debugchr_editor_third_maximum;
+    if (g_debugchr_editor_hp_max < g_debugchr_editor_values[0])
+        g_debugchr_editor_values[0] = g_debugchr_editor_hp_max;
+    if (g_debugchr_editor_mp_max < g_debugchr_editor_values[3])
+        g_debugchr_editor_values[3] = g_debugchr_editor_mp_max;
+    if (g_debugchr_editor_ct_max < g_debugchr_editor_values[6])
+        g_debugchr_editor_values[6] = g_debugchr_editor_ct_max;
     unit->hp = g_debugchr_editor_values[0];
     unit->mp = g_debugchr_editor_values[3];
     unit->ct = g_debugchr_editor_values[6];
     unit->level = g_debugchr_panel_selected_billboard.level;
     unit->experience = g_debugchr_panel_selected_billboard.experience;
-    /* Halfword objects (the loader stores sh); this function reads only the
+    /* 16-bit objects (the loader stores sh); this function reads only the
      * low byte, and the lvalue form emits the target's bare lbu. */
-    unit->brave = *(u8*)&g_debugchr_editor_brave;
-    unit->faith = *(u8*)&g_debugchr_editor_faith;
-    /* Zodiac is the top nibble of the birthday halfword. Union-member access
-     * instead of the u16 view reorders the stores. */
-    zodiac = g_debugchr_editor_zodiac << 12;
+    unit->brave = g_debugchr_panel_selected_unit_data.brave;
+    unit->faith = g_debugchr_panel_selected_unit_data.faith;
+    /* Named bitfield assignment narrows the signed 16-bit zodiac load
+     * and reorders these stores. */
+    zodiac = g_debugchr_panel_selected_unit_data.zodiac << 12;
     unit_flags = *(u16*)&unit->birthday & 0x0fff;
     *(u16*)&unit->birthday = unit_flags | zodiac;
     unit->move = g_debugchr_editor_move;

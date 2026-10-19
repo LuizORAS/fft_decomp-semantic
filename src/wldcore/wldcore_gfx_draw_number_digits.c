@@ -18,7 +18,6 @@ void wldcore_gfx_draw_number_digits(s32 value, s32 digits, GsSPRITE* sprite, GsO
     s32 saved_y;
 
     divisor = 1;
-    i = 0;
     sprite->w = 8;
     sprite->v = 0x31;
     saved_y = sprite->y;
@@ -42,7 +41,7 @@ void wldcore_gfx_draw_number_digits(s32 value, s32 digits, GsSPRITE* sprite, GsO
                 sprite->h = 0xf;
                 sprite->y = sprite->y + 1;
             }
-            world_gs_sortfastsprite(sprite, ot, g_wldcore_hud_ot_priority);
+            GsSortFastSprite(sprite, ot, g_wldcore_hud_ot_priority);
             sprite->y = saved_y;
         }
         sprite->x = sprite->x + 8;

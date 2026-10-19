@@ -1,10 +1,11 @@
 #include "fft/battle.h"
+#include "fft/battle_unit.h"
 
 /* Face a renderer unit toward the current cursor tile.
  *
  * The 14-pixel adjustment compares the projected unit position with the tile
  * center; masking the fixed-point angle selects one of four cardinal facings. */
-void battle_unit_face_toward_cursor(battle_unit_misc_data_t* unit) {
+void battle_unit_face_toward_cursor(battle_unit_t* unit) {
     VECTOR difference;
     s32 unit_x;
     s32 unit_y;
@@ -16,14 +17,14 @@ void battle_unit_face_toward_cursor(battle_unit_misc_data_t* unit) {
         s32 tile_y;
         difference.vz = 0;
         difference.vx = 0;
-        tile_x = cursor_x * 28;
-        unit_x = unit->screen.vx - 14;
+        tile_x = cursor_x * BATTLE_MAP_TILE_SIZE;
+        unit_x = unit->world_coords.vx - BATTLE_MAP_TILE_SIZE / 2;
         difference.vx = tile_x - unit_x;
-        tile_y = cursor_y * 28;
-        unit_y = unit->screen.vz - 14;
+        tile_y = cursor_y * BATTLE_MAP_TILE_SIZE;
+        unit_y = unit->world_coords.vz - BATTLE_MAP_TILE_SIZE / 2;
         difference.vz = tile_y - unit_y;
         if (difference.vx != 0 || difference.vz != 0) {
-            unit->facing = (s16)((ratan2(-difference.vz, difference.vx) - 0x200) & 0xC00);
+            unit->facing = (ratan2(-difference.vz, difference.vx) - 0x200) & 0xC00;
         }
     }
 }

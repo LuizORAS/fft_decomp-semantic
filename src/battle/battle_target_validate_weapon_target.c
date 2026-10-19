@@ -1,21 +1,22 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
-/* Re-validate the acting unit's stored target and mark the target's tile.
+/* Re-validate the acting unit's stored target and mark the tile of the unit it hits.
  *
- * The weapon's flags select the trajectory test: ARC takes 0x801aff18,
- * DIRECT the direct-weapon check (skipped for an adjacent tile when the
- * skillset menu type is ITEM_INVENTORY), LUNGING 0x8017afc0, and anything else
- * the plain height-overlap test. Attack and Charge skillsets, and abilities
- * flagged 0x20, use the equipped weapon; other skillsets use DIRECT and first
- * copy the target unit's position into the action for targeting type 6.
- * Returns 0 once a valid unit is marked, else -1.
+ * The weapon's flags select the trajectory test: ARC battle_effect_set_and_validate_arc_trajectory,
+ * DIRECT the direct-trajectory check (skipped for an Item on the unit's own or an adjacent tile), LUNGING
+ * battle_target_validate_lunging_target, and anything else the plain height-overlap test. Attack,
+ * Charge and WEAPON_RANGE abilities use the equipped weapon (bare hands for Frog and monsters);
+ * other skillsets use DIRECT and, for a unit target (type 6), aim at that unit's square. Returns 0,
+ * or -1 for an absent unit, a non-weapon item or a missing target unit.
  *
- * One `hand` variable carries both hands, so the right-hand load stays after
- * the left-hand mask; `target` is reused for the result unit, which keeps it a
- * global pseudo and gives the target's v1 for the copied position. */
-s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* source) {
-    battle_ai_command_action_t action;
+ * One `hand` variable carries both hands, so the right-hand load stays after the left-hand mask;
+ * `target` is reused for the result unit, which keeps it a global pseudo and gives the target's v1
+ * for the copied position. */
+s32 battle_target_validate_weapon_target(const action_command_t* source) {
+    action_command_t action;
     s16 x;
     battle_stats_t* unit;
     battle_stats_t* target;
@@ -36,8 +37,8 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     s32 distance;
     s32 result;
 
-    main_util_copy_action_data((u8*)source, (u8*)&action);
-    unit_id = action.unit_id;
+    main_util_copy_action_data(source, &action);
+    unit_id = action.actor_id;
     if (unit_id >= BATTLE_UNIT_SLOT_COUNT) {
         return -1;
     }
@@ -45,57 +46,59 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
         return -1;
     }
-    menu_type = g_main_action_menu_types_by_skillset[action.skillset];
+    menu_type = g_main_action_menu_types_by_skillset[action.skillset_id];
     ability_flags = 0;
     if (menu_type == ACTION_MENU_TYPE_DEFAULT || menu_type == ACTION_MENU_TYPE_MONSTER) {
         ability_flags = g_main_ability_range_data[(u8)action.ability_id].flags_1;
     }
-    if (menu_type == ACTION_MENU_TYPE_ATTACK || menu_type == ACTION_MENU_TYPE_CHARGE || (ability_flags & 0x20)) {
+    if (menu_type == ACTION_MENU_TYPE_ATTACK || menu_type == ACTION_MENU_TYPE_CHARGE
+        || (ability_flags & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
         /* An empty left hand contributes 0; an equipped right hand wins. */
         hand = unit->equipment[UNIT_EQUIPMENT_SLOT_LEFT_HAND_WEAPON];
-        mask = -(hand != 0xff);
+        mask = -(hand != ITEM_ID_NONE);
         weapon = hand & mask;
         hand = unit->equipment[UNIT_EQUIPMENT_SLOT_RIGHT_HAND_WEAPON];
-        if (hand != 0xff) {
+        if (hand != ITEM_ID_NONE) {
             weapon = hand;
         }
         if ((unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
                 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))
-            || (unit->unit_flags & UNIT_FLAG_MONSTER) || weapon == 0xff) {
+            || (unit->unit_flags & UNIT_FLAG_MONSTER) || weapon == ITEM_ID_NONE) {
             weapon = 0;
         }
         weapon_id = weapon;
-        if (weapon_id >= 0x80) {
+        if (weapon_id >= ITEM_ID_SHIELD_FIRST) {
             return -1;
         }
         flags = g_main_item_weapon_data[weapon_id].flags;
     } else {
-        if (action.targeting_type == 6) {
+        if (action.targeting_type == BATTLE_TARGETING_TYPE_UNIT) {
             if (action.target_id >= BATTLE_UNIT_SLOT_COUNT) {
                 return -1;
             }
             target = &g_battle_unit_stats[action.target_id];
-            action.target_x = target->x;
-            action.target_y = target->position.bits.y;
-            action.target_elevation = target->position.raw >> 15;
+            action.target_position.vx = target->x;
+            action.target_position.vz = target->position.y;
+            action.target_position.vy = target->position.higher_elevation;
         }
         flags = WEAPON_FLAG_DIRECT;
     }
-    x = unit->action_target_x;
-    y = unit->action_target_y;
-    elevation = unit->action_target_elevation;
-    target_id = battle_target_get_unit_id_if_tile_targetable(x, y, elevation);
+    x = unit->action_command.target_position.vx;
+    y = unit->action_command.target_position.vz;
+    elevation = unit->action_command.target_position.vy;
+    target_id = battle_target_get_unit_at_tile(x, y, elevation);
     if (target_id < 0) {
         target_id = -1;
     }
     if (flags & WEAPON_FLAG_ARC) {
-        result = battle_effect_set_and_validate_arc_trajectory(unit_id, (SVECTOR*)&unit->action_target_x, target_id);
+        result
+            = battle_effect_set_and_validate_arc_trajectory(unit_id, &unit->action_command.target_position, target_id);
     } else if (flags & WEAPON_FLAG_DIRECT) {
         distance_x = x - unit->x;
         if (distance_x < 0) {
             distance_x = -distance_x;
         }
-        distance_y = y - unit->position.bits.y;
+        distance_y = y - unit->position.y;
         if (distance_y < 0) {
             distance_y = -distance_y;
         }
@@ -103,19 +106,19 @@ s32 battle_target_validate_weapon_target(const battle_ai_command_action_t* sourc
         if (menu_type == ACTION_MENU_TYPE_ITEM_INVENTORY && distance < 2) {
             result = target_id;
         } else {
-            result
-                = battle_effect_check_direct_trajectory_to_target(unit_id, (SVECTOR*)&unit->action_target_x, target_id);
+            result = battle_effect_check_direct_trajectory_to_target(
+                unit_id, &unit->action_command.target_position, target_id);
         }
     } else if (flags & WEAPON_FLAG_LUNGING) {
         result = battle_target_validate_lunging_target(unit_id, x, y, elevation, target_id);
     } else {
         result = battle_target_validate_height_overlap(unit_id, x, y, elevation, target_id);
     }
-    battle_target_disable_green_panel_flags();
-    if ((u32)result < BATTLE_UNIT_SLOT_COUNT) {
+    battle_target_clear_targeted_flags();
+    if (result >= 0 && result < BATTLE_UNIT_SLOT_COUNT) {
         target = &g_battle_unit_stats[result];
         tile = &g_battle_map_tile_data[battle_map_calculate_location(target)];
-        tile->ceiling_depth_and_marks |= MAP_TILE_FLAG_TARGETED;
+        tile->ceiling_depth_and_marks.targeted = 1;
     }
     return 0;
 }

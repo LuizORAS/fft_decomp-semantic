@@ -1,7 +1,8 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
 #include "psx/types.h"
 
-/* Thin public entry point for the BATTLE menu-buffer allocator. */
+/* Allocate `bytes` from the menu buffer arena (battle_menu_alloc_memory); battle_menu_free_memory
+ * returns it. */
 void* battle_menu_alloc_buffer(s32 bytes) {
     return battle_menu_alloc_memory(bytes);
 }

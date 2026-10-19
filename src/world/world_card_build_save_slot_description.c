@@ -1,8 +1,6 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-#define WORLD_CARD_SLOT_TEXT_TABLE g_world_card_slot_text_table
-
 /* Build the encoded save-slot description text for WORLD's save screen.
  *
  * mode 1 copies the empty-slot caption; mode 0 formats leader name, job,
@@ -13,52 +11,52 @@
  * through after writing the terminator, and no caller reads the result.
  * An explicit return at the tail introduces an extra constant load.
  *
- * `world_gfx_bind_data_pointer` is declared void but leaves the bound table in
- * $v0, which the target passes straight on as the text table; the
- * function-pointer cast reproduces that without lying about the callee. */
-s32 world_card_build_save_slot_description(s32 mode, u8* slot_graphic) {
+ * `world_text_bind_section_data` has no return statement; the job-name table
+ * passed on below is the address its store left in $v0. */
+s32 world_card_build_save_slot_description(s32 mode, u8* destination) {
     s32 index;
     u8* source;
 
     if (mode == 1) {
-        source = world_text_find_entry_by_index(WORLD_CARD_SLOT_TEXT_TABLE, 14, 1);
-        while ((*slot_graphic++ = *source++) != 0xFE) { }
+        source = world_text_find_entry_by_index(g_world_card_slot_text_table, 14, 1);
+        while ((*destination++ = *source++) != 0xFE) { }
     } else if (mode < 0) {
         return 0;
     } else if (mode == 0) {
         index = 0;
-        while (g_world_load_work_buffer->name[index] != 0xFE) {
-            *slot_graphic++ = g_world_load_work_buffer->name[index];
+        while (g_world_load_work_buffer->summary.name[index] != 0xFE) {
+            *destination++ = g_world_load_work_buffer->summary.name[index];
             index++;
         }
-        *slot_graphic++ = 0xE7;
-        *slot_graphic++ = 0x58;
+        *destination++ = 0xE7;
+        *destination++ = 0x58;
         source = world_text_find_entry_by_index(
-            ((u8 * (*)(u32)) world_gfx_bind_data_pointer)(1), g_world_load_work_buffer->job_id, 1);
+            world_text_bind_section_data(WORLD_TEXT_DATA_JOB_NAMES), g_world_load_work_buffer->summary.job_id, 1);
         while (*source != 0xFE) {
-            *slot_graphic++ = *source++;
+            *destination++ = *source++;
         }
-        *slot_graphic++ = 0xE7;
-        *slot_graphic++ = 0xAC;
-        source = world_text_find_entry_by_index(WORLD_CARD_SLOT_TEXT_TABLE, 13, 1);
+        *destination++ = 0xE7;
+        *destination++ = 0xAC;
+        source = world_text_find_entry_by_index(g_world_card_slot_text_table, 13, 1);
         while (*source != 0xFE) {
-            *slot_graphic++ = *source++;
+            *destination++ = *source++;
         }
-        *slot_graphic++ = g_world_load_work_buffer->level / 10;
-        *slot_graphic++ = g_world_load_work_buffer->level % 10;
-        *slot_graphic++ = 0xFE;
-        source = world_text_find_entry_by_index(WORLD_CARD_SLOT_TEXT_TABLE, g_world_load_work_buffer->month, 1);
+        *destination++ = g_world_load_work_buffer->summary.level / 10;
+        *destination++ = g_world_load_work_buffer->summary.level % 10;
+        *destination++ = 0xFE;
+        source = world_text_find_entry_by_index(
+            g_world_card_slot_text_table, g_world_load_work_buffer->summary.date.month, 1);
         while (*source != 0xFE) {
-            *slot_graphic++ = *source++;
+            *destination++ = *source++;
         }
-        *slot_graphic++ = 0xFA;
-        *slot_graphic++ = g_world_load_work_buffer->day / 10;
-        *slot_graphic++ = g_world_load_work_buffer->day % 10;
-        *slot_graphic++ = 0xE7;
-        *slot_graphic++ = 0x58;
-        source
-            = world_text_find_entry_by_index((u8*)g_world_text_location_names, g_world_load_work_buffer->location, 1);
-        while ((*slot_graphic++ = *source++) != 0xFE) { }
+        *destination++ = 0xFA;
+        *destination++ = g_world_load_work_buffer->summary.date.day / 10;
+        *destination++ = g_world_load_work_buffer->summary.date.day % 10;
+        *destination++ = 0xE7;
+        *destination++ = 0x58;
+        source = world_text_find_entry_by_index(
+            g_text_section_pointers[TEXT_SECTION_LOCATION_NAMES], g_world_load_work_buffer->summary.location, 1);
+        while ((*destination++ = *source++) != 0xFE) { }
     }
-    *slot_graphic = 0xFE;
+    *destination = 0xFE;
 }

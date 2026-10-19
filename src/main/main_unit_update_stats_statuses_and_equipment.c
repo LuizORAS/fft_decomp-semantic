@@ -1,12 +1,16 @@
-#include "fft/battle.h"
+#include "fft/battle_status.h"
 #include "fft/main.h"
+#include "fft/memory.h"
 #include "psx/types.h"
 
-/* Re-derives the job-dependent stats (move/jump, equippable categories,
- * innate/immune/starting statuses, elemental affinity, R/S/M flags and
- * equipment bonuses), then reconciles the status bits.  `skip_status_check`
- * leaves the critical/status notifications alone; `initializing` seeds the
- * inflicted statuses from the current ones and clears their CTs. */
+/* Derive a unit's job and equipment data again, keeping its inflicted statuses: Move and Jump, the
+ * equippable types, the job's innate, immunity and starting status sets, elemental affinities
+ * (Strengthen cleared), R/S/M flags, equipment stats and bonuses (base Speed, PA and MA kept), then
+ * the current statuses. Unless skip_status_check is set, Critical follows HP (on at max HP / 5 or
+ * less) and each status that changed queues its graphics change
+ * (battle_status_queue_graphics_change_if_executing). With initializing the starting statuses (job
+ * and equipment) become the inflicted ones, every status counts as changed, and each one present gets
+ * CT 0. */
 void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 skip_status_check, s32 initializing) {
     u8 saved_inflicted[BATTLE_STATUS_BYTE_COUNT];
     u8 saved_current[BATTLE_STATUS_BYTE_COUNT];
@@ -15,24 +19,25 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
     s32 mask;
     s32 byte_index;
     s32 current_bit;
-    s32 misc_unit_id;
+    s32 battle_id;
     s32 saved_bit;
-    s32 enabled;
     u8 formation_index;
     job_data_t* job;
 
-    misc_unit_id = unit->misc_unit_id;
+    battle_id = unit->battle_id;
     main_status_store_current(unit);
     for (i = 0; i < BATTLE_STATUS_BYTE_COUNT; i++) {
         saved_current[i] = unit->status_sets.current[i];
         saved_inflicted[i] = unit->inflicted_status[i];
     }
-    job = &g_job_data_pointer[unit->job_id];
+    job = &g_main_job_data_pointer[unit->job_id];
     unit->move = job->move;
-    unit->jump = job->jump & 0x7F;
-    main_util_copy_bytes(job->equipment_categories, unit->equipment_categories, 4);
-    main_util_copy_bytes(&job->status_sets, &unit->status_sets, 15);
-    main_util_copy_bytes(job->elemental_affinity, unit->elemental_affinity, 4);
+    unit->jump = job->jump & JOB_JUMP_VALUE_MASK;
+    main_mem_copy_bytes_source_first(
+        job->equipment_categories, unit->equipment_categories, sizeof(job->equipment_categories));
+    main_mem_copy_bytes_source_first(&job->status_sets, &unit->status_sets, sizeof(job->status_sets));
+    main_mem_copy_bytes_source_first(
+        job->elemental_affinity, unit->elemental_affinity, sizeof(job->elemental_affinity));
     unit->elemental_affinity[ELEMENTAL_AFFINITY_STRENGTHEN] = 0;
     main_unit_enable_rsm_flags(unit);
     main_unit_calculate_move_jump(unit, 1);
@@ -57,7 +62,7 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
     if (skip_status_check != 0) {
         return;
     }
-    if ((u16)(unit->max_hp / 5) >= unit->hp) {
+    if ((unit->max_hp / 5) >= unit->hp) {
         unit->inflicted_status[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CRITICAL)]
             |= BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CRITICAL);
     } else {
@@ -66,9 +71,8 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
     }
     main_status_store_current(unit);
 
-    i = 0;
-    status_id = BATTLE_STATUS_HANDLER_INDEX(BATTLE_STATUS_ID_UNNAMED_00);
-    do {
+    for (i = 0, status_id = BATTLE_STATUS_HANDLER_INDEX(BATTLE_STATUS_ID_UNNAMED_00); i < BATTLE_STATUS_COUNT;
+        i++, status_id++) {
         byte_index = i / 8;
         mask = 0x80 >> (i & 7);
         saved_bit = saved_current[byte_index] & mask;
@@ -78,12 +82,10 @@ void main_unit_update_stats_statuses_and_equipment(battle_stats_t* unit, s32 ski
                 if (initializing != 0) {
                     main_status_set_ct(unit, i, 0);
                 }
-                battle_status_enable_special_flags(status_id, 1, misc_unit_id);
+                battle_status_queue_graphics_change_if_executing(status_id, 1, battle_id);
             } else {
-                battle_status_enable_special_flags(status_id, 0, misc_unit_id);
+                battle_status_queue_graphics_change_if_executing(status_id, 0, battle_id);
             }
         }
-        i++;
-        status_id++;
-    } while (i < BATTLE_STATUS_COUNT);
+    }
 }

@@ -1,9 +1,13 @@
 #include "fft/battle.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
 /* Integer address arithmetic preserves the retail instruction order here. */
-#define LEARNED_ABILITIES_OFFSET ((u32) & ((battle_stats_t*)0)->learned_abilities)
+#define LEARNED_ABILITIES_OFFSET ((u32) & ((battle_stats_t*)0)->career.learned_abilities)
 
+/* Mark the ability just used (g_battle_acting_unit_used_ability_id) as learned in the unit's
+ * current job row, when its primary skillset holds it and it is not learned yet; the learn-on-hit
+ * state calls it for the unit battle_ability_find_learn_on_hit_unit picked. */
 void battle_unit_learn_used_ability(battle_stats_t* unit) {
     u8 learned[3];
     u8 skillset;

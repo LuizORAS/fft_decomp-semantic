@@ -1,31 +1,34 @@
-#include "fft/battle.h"
-#include "fft/world.h"
+#include "fft/battle_map.h"
+#include "fft/battle_unit.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
-/* WORLD twin of battle_unit_set_specific_animation_value_on_battle_init. */
-void world_unit_set_animation(s32 misc_id, u32 value) {
+/* WORLD's own version of battle_unit_set_animation, whose summary gives the rule;
+ * WORLD's copies of the shared script texts bind world_unit_set_animation to it. */
+void world_unit_set_animation(s32 runtime_id, u32 animation) {
     s32 battle_id;
     battle_stats_t* stats;
     s32 depth;
 
-    if ((world_script_get_variable(EVENT_SCRIPT_VAR_PENDING_STAGED_STATUS) == 0)
-        && (world_script_get_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY) != 0)) {
-        battle_id = battle_unit_get_battle_index_by_misc_id(misc_id);
-        if ((battle_id >= 0) && (value < 0x1F4)) {
+    if ((script_get_variable(EVENT_SCRIPT_VAR_BATTLE_NOT_STARTED) == 0)
+        && (script_get_variable(EVENT_SCRIPT_VAR_SHOP_ITEM_AVAILABILITY) != 0)) {
+        battle_id = battle_unit_get_battle_id_by_runtime_id(runtime_id);
+        if ((battle_id >= 0) && (animation < BATTLE_SEQUENCE_EVTCHR_SLOT_0)) {
             stats = battle_unit_get_stats_from_battle_id(battle_id);
             depth = battle_map_get_tile_data_value(
-                MAP_TILE_DATA_DEPTH, stats->x, stats->position.bits.y, stats->position.raw >> 15);
+                MAP_TILE_DATA_DEPTH, stats->x, stats->position.y, stats->position.higher_elevation);
             if ((stats->mount_info & BATTLE_MOUNT_INFO_ROLE_MASK) != 0) {
-                g_world_thread_call_target = (void (*)(void))battle_unit_set_status_animation_by_misc_id;
-                world_thread_call_on_main_stack(misc_id);
+                g_thread_call_target = (void (*)(void))battle_unit_set_status_animation_by_runtime_id;
+                thread_call_on_main_stack(runtime_id);
                 return;
             }
             if ((depth & 0xFF) >= 2) {
-                g_world_thread_call_target = (void (*)(void))battle_unit_set_mounted_animation_by_misc_id;
-                world_thread_call_on_main_stack(misc_id);
+                g_thread_call_target = (void (*)(void))battle_unit_set_mounted_animation_by_runtime_id;
+                thread_call_on_main_stack(runtime_id);
                 return;
             }
         }
     }
-    battle_unit_set_specific_animation_by_misc_id(misc_id, value);
+    battle_unit_set_specific_animation_by_runtime_id(runtime_id, animation);
 }

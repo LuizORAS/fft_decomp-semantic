@@ -1,7 +1,11 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
-struct battle_effect_motion;
-
+/* Advance one effect slot (a particle of a secondary effect) by a frame: step its
+ * motion, advance its frame script, in which each step shows a frame for hold
+ * calls and the last step wraps to the first, and draw it as a billboard.
+ *
+ * Returns 0 when the slot has finished: a positive life counts down and ends the
+ * slot at 0; a negative life ends it on the frame the script wraps. */
 s32 battle_effect_update_slot(s32 id) {
     battle_effect_slot_t* slot = &g_battle_effect_slots[id];
     s32 wrapped;
@@ -18,7 +22,7 @@ s32 battle_effect_update_slot(s32 id) {
             slot->step_index = 0;
         }
     }
-    battle_effect_draw_billboard_sprite((battle_effect_sprite_slot_t*)slot);
+    battle_effect_draw_billboard_sprite(slot);
     result = 1;
     if (slot->life < 0) {
         result = wrapped == 0;

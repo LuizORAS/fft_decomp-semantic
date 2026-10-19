@@ -36,18 +36,18 @@ u32 main_job_calculate_unlocked(const u8* packed_job_levels, u32 gender_flags) {
         return 0;
     }
 
-    unlock_bit = 0x800000;
-    unlocked = 0x800000;
+    unlock_bit = UNIT_UNLOCKED_JOB_SQUIRE;
+    unlocked = UNIT_UNLOCKED_JOB_SQUIRE;
     for (job = 0; job < UNIT_CAREER_JOB_COUNT - 1; job++) {
         unlock_bit /= 2;
         blocked = 0;
         for (j = 0; j < UNIT_JOB_LEVEL_BYTE_COUNT; j++) {
-            if ((g_job_unlock_requirements[job][j] & UNIT_JOB_LEVEL_HIGH_NIBBLE_MASK)
+            if ((g_main_job_unlock_requirements[job][j] & UNIT_JOB_LEVEL_HIGH_NIBBLE_MASK)
                 > (levels[j] & UNIT_JOB_LEVEL_HIGH_NIBBLE_MASK)) {
                 blocked = 1;
                 break;
             }
-            if ((g_job_unlock_requirements[job][j] & UNIT_JOB_LEVEL_LOW_NIBBLE_MASK)
+            if ((g_main_job_unlock_requirements[job][j] & UNIT_JOB_LEVEL_LOW_NIBBLE_MASK)
                 > (levels[j] & UNIT_JOB_LEVEL_LOW_NIBBLE_MASK)) {
                 blocked = 1;
                 break;
@@ -59,10 +59,10 @@ u32 main_job_calculate_unlocked(const u8* packed_job_levels, u32 gender_flags) {
     }
 
     if (gender_flags & UNIT_FLAG_MALE) {
-        unlocked &= 0xffffd0;
+        unlocked &= UNIT_UNLOCKED_JOB_MASK & ~UNIT_UNLOCKED_JOB_DANCER;
     }
     if (gender_flags & UNIT_FLAG_FEMALE) {
-        unlocked &= 0xffffb0;
+        unlocked &= UNIT_UNLOCKED_JOB_MASK & ~UNIT_UNLOCKED_JOB_BARD;
     }
     return unlocked;
 }

@@ -1,7 +1,11 @@
 #include "fft/event_jobstts.h"
 
+/* Takes one POLY_FT4 from the pool per sprite cell, fills it as a w x h quad
+ * at (x + 0x80, y) with texture origin (u, v), and links it into ordering
+ * table entry ot_index. With `color` the quads are shaded with that
+ * colour. */
 void jobstts_gfx_enqueue_textured_quad_list(
-    battle_menu_sprite_cell_t* sprites, u8* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index, s32 count) {
+    battle_menu_sprite_cell_t* sprites, rgb24_t* color, s32 semitrans, u16 tpage, u16 clut, s32 ot_index, s32 count) {
     POLY_FT4* poly;
 
     for (count -= 1; count >= 0; count--) {
@@ -9,35 +13,21 @@ void jobstts_gfx_enqueue_textured_quad_list(
 
         if (color != 0) {
             SetShadeTex(poly, 0);
-            poly->r0 = color[0];
-            poly->g0 = color[1];
-            poly->b0 = color[2];
+            setRGB0(poly, color->r, color->g, color->b);
         } else {
             SetShadeTex(poly, 1);
         }
         SetSemiTrans(poly, semitrans);
 
-        poly->x0 = sprites->x + 0x80;
-        poly->y0 = sprites->y;
-        poly->x1 = sprites->w + (sprites->x + 0x80);
-        poly->y1 = sprites->y;
-        poly->x2 = sprites->x + 0x80;
-        poly->y2 = sprites->y + sprites->h;
-        poly->x3 = sprites->w + (sprites->x + 0x80);
-        poly->y3 = sprites->y + sprites->h;
-        poly->u0 = sprites->u;
-        poly->v0 = sprites->v;
-        poly->u1 = sprites->u + sprites->w;
-        poly->v1 = sprites->v;
-        poly->u2 = sprites->u;
-        poly->v2 = sprites->v + sprites->h;
-        poly->u3 = sprites->u + sprites->w;
-        poly->v3 = sprites->v + sprites->h;
+        setXY4(poly, sprites->x + 0x80, sprites->y, sprites->w + (sprites->x + 0x80), sprites->y, sprites->x + 0x80,
+            sprites->y + sprites->h, sprites->w + (sprites->x + 0x80), sprites->y + sprites->h);
+        setUV4(poly, sprites->u, sprites->v, sprites->u + sprites->w, sprites->v, sprites->u, sprites->v + sprites->h,
+            sprites->u + sprites->w, sprites->v + sprites->h);
         poly->clut = clut;
         poly->tpage = tpage;
 
-        ((P_TAG*)poly)->addr = g_jobstts_gfx_context->otag[ot_index];
-        ((P_TAG*)&g_jobstts_gfx_context->otag[ot_index])->addr = (u32)poly;
+        setaddr(poly, g_jobstts_gfx_context->otag[ot_index]);
+        catPrim(&g_jobstts_gfx_context->otag[ot_index], poly);
         sprites++;
     }
 }

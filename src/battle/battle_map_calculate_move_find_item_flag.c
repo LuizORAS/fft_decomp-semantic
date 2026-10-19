@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /* Test (save == 0) or set the found flag of one of a map's four move-find item tiles.
@@ -14,6 +14,6 @@ s32 battle_map_calculate_move_find_item_flag(s32 map_id, s32 tile_index, s32 sav
     if (save == 0) {
         return (g_main_item_location_flags[byte_index] & bit) == 0;
     }
-    g_main_item_location_flags[byte_index] = (u8)bit | g_main_item_location_flags[byte_index];
+    g_main_item_location_flags[byte_index] = bit | g_main_item_location_flags[byte_index];
     return 1;
 }

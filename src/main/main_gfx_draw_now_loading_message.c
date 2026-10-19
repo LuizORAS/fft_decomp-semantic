@@ -1,11 +1,15 @@
 #include "fft/main.h"
 
+/* Draw the blinking Now Loading message while a disc read is unfinished: main_file_poll_load calls it
+ * on every poll. Unless the counter is -1 (message off), the 64th call unmasks the display and from then on
+ * every call draws the message on its own, alternating the two display buffers; the counter stays at 0x40
+ * or 0x41. */
 void main_gfx_draw_now_loading_message(void) {
     s32 frame;
     u32* otag;
 
     frame = g_main_gfx_loading_display_frame_counter;
-    if (frame != -1) {
+    if (frame != MAIN_FILE_LOADING_DISPLAY_OFF) {
         frame++;
         g_main_gfx_loading_display_frame_counter = frame;
         if (frame >= 0x40) {

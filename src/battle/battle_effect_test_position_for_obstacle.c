@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_map.h"
+#include "fft/map.h"
 #include "psx/types.h"
 
 /*
@@ -8,12 +10,9 @@
  * position is inside that tile's solid column (either map layer) or inside a
  * listed unit's sprite box; the blocking unit's battle id is reported through
  * `out_unit`, which is otherwise left at -1.
- *
- * The ceiling-depth byte is read through a volatile lvalue: the target reloads
- * it in each arm of the depth selection instead of reusing the tested value.
  */
 s32 battle_effect_test_position_for_obstacle(
-    battle_effect_obstacle_unit_list_t* list, VECTOR* position, s32* out_unit, battle_effect_tile_ref_t* tile_ref) {
+    battle_effect_obstacle_unit_list_t* list, VECTOR* position, s32* out_unit, map_tile_coordinates_t* tile_ref) {
     map_tile_t* tile;
     s32 ceiling;
     s32 height;
@@ -21,32 +20,32 @@ s32 battle_effect_test_position_for_obstacle(
     s32 i;
 
     *out_unit = -1;
-    tile_ref->x = position->vx / 28;
-    tile_ref->y = position->vz / 28;
+    tile_ref->x = position->vx / BATTLE_MAP_TILE_SIZE;
+    tile_ref->y = position->vz / BATTLE_MAP_TILE_SIZE;
     tile = battle_map_get_tile_data_pointer(tile_ref->x, tile_ref->y, 0);
-    if (((*(volatile u8*)&tile->ceiling_depth_and_marks) & MAP_TILE_CEILING_DEPTH_MASK) == 0) {
+    if (tile->ceiling_depth_and_marks.ceiling_depth == 0) {
         ceiling = tile->height;
     } else {
-        ceiling = (*(volatile u8*)&tile->ceiling_depth_and_marks) & MAP_TILE_CEILING_DEPTH_MASK;
+        ceiling = tile->ceiling_depth_and_marks.ceiling_depth;
     }
     height = tile->height;
     y = position->vy;
     if (y >= -(height * 12) && y < -((height - ceiling) * 12)) {
         tile_ref->layer = 0;
-        g_battle_effect_trajectory_tile_flags = tile->flags_06.bits.unknown_4_6;
+        g_battle_effect_trajectory_tile_flags = tile->flags._unknown_00;
         return 1;
     }
 
     tile = battle_map_get_tile_data_pointer(tile_ref->x, tile_ref->y, 1);
     ceiling = 1;
-    if (((*(volatile u8*)&tile->ceiling_depth_and_marks) & MAP_TILE_CEILING_DEPTH_MASK) != 0) {
-        ceiling = (*(volatile u8*)&tile->ceiling_depth_and_marks) & MAP_TILE_CEILING_DEPTH_MASK;
+    if (tile->ceiling_depth_and_marks.ceiling_depth != 0) {
+        ceiling = tile->ceiling_depth_and_marks.ceiling_depth;
     }
     height = tile->height;
     y = position->vy;
     if (y >= -(height * 12) && y < -((height - ceiling) * 12)) {
         tile_ref->layer = 1;
-        g_battle_effect_trajectory_tile_flags = tile->flags_06.bits.unknown_4_6;
+        g_battle_effect_trajectory_tile_flags = tile->flags._unknown_00;
         return 1;
     }
 

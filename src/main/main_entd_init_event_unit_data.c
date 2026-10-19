@@ -1,5 +1,8 @@
 #include "fft/main.h"
 
+/* Rebuild the party roster from an event's ENTD: load the ENTD file that holds
+ * event_id (blocking), empty the roster, save each of the encounter's 16 unit
+ * slots into it through main_unit_save_entd_unit_to_party, and free the file. */
 void main_entd_init_event_unit_data(int event_id) {
     entd_encounter_t* entd;
     int unit_id;
@@ -17,8 +20,8 @@ void main_entd_init_event_unit_data(int event_id) {
         }
         if (entd != 0) {
             main_party_clear_all();
-            for (unit_id = 0; unit_id < 16; unit_id++) {
-                main_unit_init(entd, unit_id, 0, 1);
+            for (unit_id = 0; unit_id < ENTD_UNITS_PER_ENCOUNTER; unit_id++) {
+                main_unit_save_entd_unit_to_party(entd, unit_id, 0, 1);
             }
             main_heap_call_free(g_main_entd_set);
             break;

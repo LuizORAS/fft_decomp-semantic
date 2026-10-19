@@ -1,0 +1,25 @@
+#include "fft/battle.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
+#include "psx/types.h"
+
+/* Start the charging variant of the ability's charge animation set, the pose held while the unit
+ * charges or performs, or the submerged stance (9) in deep water; nothing when the set has none.
+ * Committing a command, the start of a charged attack and the Charging and Performing stances use
+ * it. */
+void battle_unit_start_ability_charging_animation(battle_unit_t* unit) {
+    u8 animation;
+    u8 water_depth;
+    s32 selected_animation;
+
+    animation = g_battle_ability_charge_animation_sets[g_battle_ability_animation_data[unit->used_ability_id]
+            .charge_animation_set_id][BATTLE_CHARGE_ANIMATION_CHARGING];
+    if (animation != 0) {
+        water_depth = battle_move_get_water_animation_mode(unit);
+        selected_animation = BATTLE_UNIT_ANIMATION_SUBMERGED_IDLE;
+        if (water_depth < 2) {
+            selected_animation = animation;
+        }
+        battle_unit_store_animation_facing(selected_animation, unit->facing, unit);
+    }
+}

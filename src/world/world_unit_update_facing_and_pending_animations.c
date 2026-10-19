@@ -1,7 +1,13 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
+#include "fft/battle_unit.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* WORLD copy of battle_unit_update_facing_and_pending_animations: per frame,
+ * apply each unit's pending animation on the frame it stops moving and step
+ * each rotating unit one facing (of 16) toward its target, after its delay
+ * and once every frames_per_step frames. The shortest mode turns whichever
+ * way is nearer; the other two modes always increment or decrement. */
 void world_unit_update_facing_and_pending_animations(void) {
     s32 i;
     s32 facing;
@@ -10,18 +16,18 @@ void world_unit_update_facing_and_pending_animations(void) {
     s32 moving;
     world_unit_animation_state_t* state;
 
-    state = g_world_unit_animation_states;
+    state = g_unit_animation_states;
     for (i = 0; i < BATTLE_UNIT_SLOT_COUNT; i++, state++) {
-        if (battle_unit_has_misc_id(i) != 0) {
-            if (g_world_unit_pending_animations[i] != 0) {
-                moving = battle_move_is_unit_moving_by_misc_id(i);
-                if (moving == 0 && g_world_unit_was_moving_latch[i] != 0) {
-                    world_unit_set_animation(i, g_world_unit_pending_animations[i]);
-                    g_world_unit_pending_animations[i] = 0;
+        if (battle_unit_has_runtime_id(i) != 0) {
+            if (g_unit_pending_animation_ids[i] != 0) {
+                moving = battle_move_is_unit_moving_by_runtime_id(i);
+                if (moving == 0 && g_unit_was_moving_latch[i] != 0) {
+                    world_unit_set_animation(i, g_unit_pending_animation_ids[i]);
+                    g_unit_pending_animation_ids[i] = 0;
                 }
-                g_world_unit_was_moving_latch[i] = moving;
+                g_unit_was_moving_latch[i] = moving;
             }
-            current = get_current_facing_byte_from_misc_id(i);
+            current = battle_unit_get_facing_nibble_by_runtime_id(i);
             if (state->rotating == 0) {
                 continue;
             }
@@ -38,7 +44,7 @@ void world_unit_update_facing_and_pending_animations(void) {
                 continue;
             }
             state->step_counter = 0;
-            if (state->rotate_mode == 0) {
+            if (state->rotate_mode == UNIT_ROTATE_MODE_SHORTEST) {
                 moving = state->target_facing - current + 0x10;
                 facing = current - state->target_facing + 0x10;
                 moving &= 0xF;
@@ -49,15 +55,15 @@ void world_unit_update_facing_and_pending_animations(void) {
                     next = current + 1;
                 }
                 facing = next & 0xF;
-            } else if (state->rotate_mode == 1) {
+            } else if (state->rotate_mode == UNIT_ROTATE_MODE_INCREMENT) {
                 facing = (current + 1) & 0xF;
-            } else if (state->rotate_mode == 2) {
+            } else if (state->rotate_mode == UNIT_ROTATE_MODE_DECREMENT) {
                 facing = (current + 0xF) & 0xF;
             }
-            world_unit_set_facing(i, facing);
+            unit_set_facing(i, facing);
         } else {
-            g_world_unit_was_moving_latch[i] = 0;
-            g_world_unit_pending_animations[i] = 0;
+            g_unit_was_moving_latch[i] = 0;
+            g_unit_pending_animation_ids[i] = 0;
         }
     }
 }

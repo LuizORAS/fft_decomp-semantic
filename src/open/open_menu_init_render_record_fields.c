@@ -1,45 +1,34 @@
 #include "fft/open.h"
 
-typedef struct open_menu_packed_halfword_pair {
-    u16 first;
-    u16 second;
-} open_menu_packed_halfword_pair_t;
-
-/* Passed by value in $a3 + the first stack slot; copied whole into the
- * record tail (the retail code homes $a3 and reloads both words). */
-typedef struct open_menu_render_record_tail_pair {
-    s32 parameter;
-    void* image;
-} open_menu_render_record_tail_pair_t;
-
-void open_menu_init_render_record_fields(s32 record_index, open_menu_packed_halfword_pair_t first_pair,
-    open_menu_packed_halfword_pair_t second_pair, open_menu_render_record_tail_pair_t pair, u32 flags) {
-    open_menu_render_record_tail_pair_t* tail_base;
-    open_menu_render_record_tail_pair_t* tail;
+/* Prepare a 56-byte render record for an image that is already in VRAM.
+ *
+ * vram_position is the image's VRAM position and image_size its size. The source
+ * rectangle keeps x within the texture page of 64 16-bit columns and doubles x and the width
+ * (4-bit texels). `clut_position` becomes the record's CLUT position and `flags` replaces
+ * the 8-bit, blank and hidden bits. The WLDCORE twin
+ * wldcore_window_init_vram_render_record stores a texture page id where this one
+ * stores the VRAM position. Nothing in OPEN.BIN calls it. */
+void open_menu_init_render_record_fields(
+    s32 record_index, point16_t vram_position, point16_t image_size, open_point32_t clut_position, u32 flags) {
     RECT* quad_base;
     RECT* quad;
-    CVECTOR* color_base;
     CVECTOR* color;
 
     g_open_gfx_render_records_56[record_index].flags
-        = (g_open_gfx_render_records_56[record_index].flags & ~0x1c) | flags;
-    /* The retail code materialises each field base from the tail before
-     * adding the record stride. */
-    tail_base = (open_menu_render_record_tail_pair_t*)&g_open_gfx_render_records_56[0].tail;
-    tail = tail_base + record_index * (sizeof(open_render_record_56_t) / sizeof(*tail_base));
-    *tail = pair;
-    g_open_gfx_render_records_56[record_index].vram_x = (s16)first_pair.first;
-    g_open_gfx_render_records_56[record_index].vram_y = (s16)first_pair.second;
-    quad_base = (RECT*)(tail_base + 1);
+        = (g_open_gfx_render_records_56[record_index].flags
+              & ~(WLDCORE_DISPLAY_OBJECT_8BIT_CLUT | WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN))
+        | flags;
+    g_open_gfx_render_records_56[record_index].tail.clut = clut_position;
+    g_open_gfx_render_records_56[record_index].vram_x = vram_position.x;
+    g_open_gfx_render_records_56[record_index].vram_y = vram_position.y;
+    /* Direct quad indexing changes the original record and column base selection. */
+    quad_base = &g_open_gfx_render_records_56[0].tail.quad;
     quad = quad_base + record_index * (sizeof(open_render_record_56_t) / sizeof(RECT));
-    quad->x = (first_pair.first & 0x3f) * 2;
-    quad->y = (u8)first_pair.second;
-    quad->w = (s16)second_pair.first * 2;
-    quad->h = second_pair.second;
-    color_base = (CVECTOR*)(tail_base + 2);
-    color = color_base + record_index * (sizeof(open_render_record_56_t) / sizeof(CVECTOR));
-    color->r = 0x80;
-    color->g = 0x80;
-    color->b = 0x80;
+    quad->x = (vram_position.x & 0x3f) * 2;
+    quad->y = vram_position.y & 0xFF;
+    quad->w = image_size.x * 2;
+    quad->h = image_size.y;
+    color = &g_open_gfx_render_records_56[record_index].color;
+    color->b = color->g = color->r = 0x80;
     g_open_gfx_render_records_56[record_index].pop_in_step = 0;
 }

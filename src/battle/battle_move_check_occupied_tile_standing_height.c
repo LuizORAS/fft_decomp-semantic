@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Raises the destination panel's ride_remaining_range to the remaining movement budget
@@ -44,7 +45,7 @@ void battle_move_check_occupied_tile_standing_height(s32 record_index, s32 extra
     }
     top = state->destination_base_height_times_two
         + state->destination_half_height * ((state->destination_slope >> state->destination_side_shift) & 3)
-        + (state->destination_tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT) * 2;
+        + state->destination_tile->depth_half_height.depth * 2;
     value = records[height].standing_height;
     limit = records[height].standing_height + records[height].body_height;
     if (value < top) {

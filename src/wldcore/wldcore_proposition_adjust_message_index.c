@@ -1,16 +1,16 @@
 #include "fft/wldcore.h"
 
-/* Bravery/faith bands used to index the 3x3 table in proposition record 2:
- * < 0x24 -> 0, < 0x42 -> 1, < 0x65 -> 2 (a value of 0x65+ leaves the band
- * uninitialized, as in the target). */
-/* Target 0x800793f0. */
+/* A report message in a unit's voice: `base` plus the proposition data's adjustment (record 2) for
+ * the unit's Faith and Brave bands (below 36, 66 and 101 give 0, 1 and 2), plus 3 for a unit not
+ * flagged male. A value of 101 or more leaves its band unset, as in the target. */
 s32 wldcore_proposition_adjust_message_index(s32 base, s32 party_index) {
     s32 faith_band;
     s32 bravery_band;
-    s32 is_not_male;
-    party_data_t* party;
+    u32 is_not_male;
+    party_unit_t* party;
+    const u8* adjustments;
 
-    party = wldcore_get_party_data_pointer(party_index);
+    party = wldcore_unit_get_party_unit(party_index);
     if (party->bravery < 0x65) {
         bravery_band = 2;
     }
@@ -30,7 +30,7 @@ s32 wldcore_proposition_adjust_message_index(s32 base, s32 party_index) {
         faith_band = 0;
     }
     is_not_male = party->gender_flags & UNIT_FLAG_MALE;
-    is_not_male = (u32)is_not_male < 1;
-    return base + wldcore_proposition_get_data_pointer(2)->message_adjustments[faith_band * 3 + bravery_band]
-        + is_not_male * 3;
+    is_not_male = is_not_male < 1;
+    adjustments = wldcore_proposition_get_data_pointer(WLDCORE_PROPOSITION_DATA_MESSAGE_ADJUSTMENTS);
+    return base + adjustments[faith_band * 3 + bravery_band] + is_not_male * 3;
 }

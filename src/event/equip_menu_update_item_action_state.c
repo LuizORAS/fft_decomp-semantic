@@ -1,4 +1,5 @@
 #include "fft/event_equip.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
@@ -8,7 +9,7 @@ s32 equip_menu_update_item_action_state(void) {
 
     if (g_equip_item_action_menu_active == 0) {
         if (g_equip_menu_list_entry_count == 0) {
-            return 0;
+            return MENU_ITEM_LIST_STATE_BROWSE;
         }
         g_equip_item_action_menu.selected_index = 0;
         g_equip_item_action_menu_single_item.selected_index = 0;
@@ -27,17 +28,18 @@ s32 equip_menu_update_item_action_state(void) {
     }
 
     g_equip_text_help_message_id = g_equip_item_action_active_menu->selected_index + 0x102F;
-    g_equip_item_action_menu_active = equip_thread_start_managed(3, g_equip_item_action_active_menu);
+    g_equip_item_action_menu_active
+        = equip_thread_start_managed(EQUIP_THREAD_SLOT_POPUP_MENU, g_equip_item_action_active_menu);
     if (g_equip_item_action_menu_active == 0) {
-        return 0;
+        return MENU_ITEM_LIST_STATE_BROWSE;
     }
-    if (g_equip_input_primary_repeat & PSX_PAD_CIRCLE) {
+    if (g_menu_input_primary_repeat & PSX_PAD_CIRCLE) {
         if (g_equip_item_action_menu.selected_index == 2) {
             g_equip_item_action_menu_active = 0;
-            equip_thread_stop_and_clear_state(3);
-            return 5;
+            equip_thread_stop_and_clear_state(EQUIP_THREAD_SLOT_POPUP_MENU);
+            return MENU_ITEM_LIST_STATE_SORT_ORDER;
         }
         g_equip_sound_queued_effect_id = MAIN_SFX_INVALID;
     }
-    return 2;
+    return MENU_ITEM_LIST_STATE_ACTION;
 }

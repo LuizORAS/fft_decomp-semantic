@@ -1,18 +1,19 @@
-#include "fft/battle.h"
 #include "fft/main.h"
 #include "psx/types.h"
 
-void main_unit_calculate_move_jump(battle_stats_t* unit, s32 keep_position) {
+/* Add the Move +1/+2/+3 and Jump +1/+2/+3 abilities to Move and Jump; Move is capped at 0xFC and Jump
+ * at 7. Unless keep_hp_mp is set, HP and MP are refilled first. */
+void main_unit_calculate_move_jump(battle_stats_t* unit, s32 keep_hp_mp) {
     u16 move;
     u16 jump;
     u8 flags;
 
-    if (keep_position == 0) {
+    if (keep_hp_mp == 0) {
         unit->hp = unit->max_hp;
         unit->mp = unit->max_mp;
     }
     move = unit->move;
-    flags = unit->movement_abilities[0];
+    flags = unit->ability_flags.movement[0];
     jump = unit->jump;
     if (flags & BATTLE_MOVEMENT_SET_1_MOVE_PLUS_1) {
         move += 1;

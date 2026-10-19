@@ -1,0 +1,35 @@
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
+
+/* Return the unit's animation mode in water: 0 with ON_WATER movement, the Float status or
+ * Crystal, 1 with Chicken, Frog, Treasure or IN_WATER movement, otherwise its tile's water depth
+ * (0 on dry ground). The animation code uses 0 to walk, 1 for small hops and 2 or more to stand
+ * submerged. */
+u8 battle_move_get_water_animation_mode(battle_unit_t* unit) {
+    map_tile_t* tile;
+    s32 status;
+    u32 flags;
+
+    tile = battle_map_get_tile_data_pointer(
+        unit->world_coords.vx / BATTLE_MAP_TILE_SIZE, unit->world_coords.vz / BATTLE_MAP_TILE_SIZE, unit->map_z);
+    if (unit->stats != 0) {
+        status = battle_move_get_effective_flags(unit->stats);
+        if (status & BATTLE_EFFECTIVE_MOVEMENT_ON_WATER) {
+            return 0;
+        }
+        flags = unit->status_flags_5_6;
+        if (flags & BATTLE_UNIT_STATUS_FLOAT) {
+            return 0;
+        }
+        if (flags & (BATTLE_UNIT_STATUS_CHICKEN | BATTLE_UNIT_STATUS_FROG | BATTLE_UNIT_STATUS_TREASURE)) {
+            return 1;
+        }
+        if (status & BATTLE_EFFECTIVE_MOVEMENT_IN_WATER) {
+            return 1;
+        }
+        if (flags & BATTLE_UNIT_STATUS_CRYSTAL) {
+            return 0;
+        }
+    }
+    return tile->depth_half_height.depth;
+}

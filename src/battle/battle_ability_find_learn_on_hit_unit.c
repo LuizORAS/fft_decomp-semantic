@@ -8,13 +8,12 @@ enum {
     BATTLE_LEARNED_ABILITIES_OFFSET = 0x99
 };
 
-/* Find a unit that learns the ability it was just hit with.
- *
- * Every hit unit whose ability outcome is still pending is demoted to outcome 4
- * first.  Monsters, units whose status prevents a reaction, and units that
- * already know the ability are skipped; the remaining candidates roll the
- * ability's learn rate out of 100.  Returns the learning unit's slot and writes
- * the ability id through `ability_id`, or -1 when nobody learns it. */
+/* Find a unit that learns the ability it was just hit with. Nothing is learned when Hamedo cancelled the
+ * action, no ability was used or the ability lacks the learn-on-hit type flag.
+ * Every other unit the action reached (ability_outcome bit 2) is marked done (4); a human not under a
+ * status that prevents reactions can learn the ability when it is in its current job's skillset and
+ * not learned yet, on a roll of the ability's learn rate out of 100. Returns the learning unit's slot
+ * and writes the ability id through ability_id, or -1 when nobody learns it. */
 s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id) {
     u8 known[BATTLE_LEARN_ON_HIT_ROW_BYTES];
     ability_data_t* ability;
@@ -29,7 +28,7 @@ s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id) {
     s32 k;
     u8 skillset;
 
-    if (g_current_ability_hamedo_flag != 0) {
+    if (g_battle_reaction_hamedo_cancels != 0) {
         return -1;
     }
     if (g_battle_acting_unit_used_ability_id == 0) {
@@ -46,8 +45,8 @@ s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id) {
     do {
         if (attacker_id != i) {
             unit = &g_battle_unit_stats[i];
-            if (unit->ability_outcome & 2) {
-                unit->ability_outcome = 4;
+            if (unit->ability_outcome & BATTLE_ABILITY_OUTCOME_AFFECTED) {
+                unit->ability_outcome = BATTLE_ABILITY_OUTCOME_LEARN_CHECKED;
                 if (!(unit->unit_flags & UNIT_FLAG_MONSTER)
                     && main_unit_has_status_in_set(unit, MAIN_STATUS_CHECK_SET_PREVENT_REACTION) == 0) {
                     skillset = unit->primary_skillset;
@@ -59,10 +58,9 @@ s32 battle_ability_find_learn_on_hit_unit(s32 attacker_id, u16* ability_id) {
                     }
                     /* Typed field access reassociates the 0x99 field offset
                      * with the row and demonstrably breaks the byte-exact
-                     * address calculation. Preserve the target's word-row,
+                     * address calculation. Preserve the target's row-offset,
                      * unit-base, then field-offset order. */
-                    src = (u8*)((u32)(row * BATTLE_LEARN_ON_HIT_ROW_BYTES) + (u32)unit
-                        + BATTLE_LEARNED_ABILITIES_OFFSET);
+                    src = (u8*)((row * BATTLE_LEARN_ON_HIT_ROW_BYTES) + (u32)unit + BATTLE_LEARNED_ABILITIES_OFFSET);
                     for (k = 0; k < BATTLE_LEARN_ON_HIT_ROW_BYTES; k++) {
                         scratch[k] = src[k];
                     }

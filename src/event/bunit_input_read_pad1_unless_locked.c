@@ -1,7 +1,7 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-/* BUNIT.OUT 001c3150 - Return the pad-1 input, or 0 while the input lock timer is active. */
+/* Return the pad-1 input, or 0 while the input lock timer is active. */
 s32 bunit_input_read_pad1_unless_locked(void) {
     u32 input;
 

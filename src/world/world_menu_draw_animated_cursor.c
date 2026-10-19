@@ -8,7 +8,7 @@
  * Bit 15 selects the alternate animation. The `state_mode` copies are the
  * target's own `move v0,s2` before each test.
  */
-void world_menu_draw_animated_cursor(world_menu_point_t* position, u16* state, s32 mode) {
+void world_menu_draw_animated_cursor(point16_t* position, u16* state, s32 mode) {
     RECT rect;
     /* Pin required: unpinned, the roles held in $s2/$s3/$s4 rotate. */
     register s32 active __asm__("$20");
@@ -16,7 +16,7 @@ void world_menu_draw_animated_cursor(world_menu_point_t* position, u16* state, s
     s32 alternate;
     s32 frame;
     s32 index;
-    u32 x_offset_word;
+    s8 bob;
     s32 x_offset;
     u16 front_clut;
     u16 back_clut;
@@ -52,23 +52,13 @@ void world_menu_draw_animated_cursor(world_menu_point_t* position, u16* state, s
     }
     state_mode = alternate;
     if (state_mode != 0) {
-        index = 0;
-        if ((s8)g_world_menu_cursor_bob_active_thresholds[0] < frame) {
-            do {
-                index += 2;
-            } while ((s8)g_world_menu_cursor_bob_active_thresholds[index] < frame);
-        }
-        x_offset_word = g_world_menu_cursor_bob_active_thresholds[index + 1] << 24;
+        for (index = 0; g_world_menu_cursor_bob_active_thresholds[index] < frame; index += 2) { }
+        bob = g_world_menu_cursor_bob_active_thresholds[index + 1];
     } else {
-        index = 0;
-        if ((s8)g_world_menu_cursor_bob_thresholds[0] < frame) {
-            do {
-                index += 2;
-            } while ((s8)g_world_menu_cursor_bob_thresholds[index] < frame);
-        }
-        x_offset_word = g_world_menu_cursor_bob_thresholds[index + 1] << 24;
+        for (index = 0; g_world_menu_cursor_bob_thresholds[index] < frame; index += 2) { }
+        bob = g_world_menu_cursor_bob_thresholds[index + 1];
     }
-    x_offset = (s32)x_offset_word >> 24;
+    x_offset = bob;
     frame += world_gfx_get_vsync_mode_or_one();
     state_mode = alternate;
     if (state_mode != 0) {

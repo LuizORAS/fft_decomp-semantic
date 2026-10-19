@@ -1,37 +1,50 @@
-/*
- * The .ld places .rodata at 0x80174068 so the switch's jump table lands on the
- * target's table.
- */
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
-s32 battle_target_set_panels_for_action(u8* source) {
-    battle_ai_command_action_t action;
+/* Mark the tiles an action can target, by the menu type of its skillset (the
+ * action_command_t in source): an ability's own range
+ * (battle_target_set_ability_panels; Elemental takes the ability of the unit's surface type,
+ * Draw Out the katana's), Attack and Charge the weapon's
+ * (battle_target_set_weapon_attack_panels), Jump the learned Jumps'
+ * (battle_target_set_jump_ability_panels), and Item and Throw a plain range
+ * (battle_target_set_item_range_panels: 1, or 4 with Throw Item or for a Mime; Throw reaches
+ * Move tiles, not the unit's own). Returns a battle_target_panels_e: UNIT_OR_TILE or TILE_ONLY
+ * when the player picks a tile (TILE_ONLY when flags_2 has CANNOT_FOLLOW_TARGET, and for
+ * weapons, Jump and items), NO_TARGETING when there is nothing to pick (other menu types, or an
+ * Auto ability without range), NONE when no tile is in range, and INVALID for an invalid unit,
+ * menu or ability.
+ *
+ * The .ld places .rodata at 0x80174068 so the switch's jump table lands on the target's table. */
+s32 battle_target_set_panels_for_action(const action_command_t* source) {
+    action_command_t action;
     battle_stats_t* unit;
     ability_secondary_data_t* ability;
     s32 mode;
     s32 range;
     s32 result;
     u8 flags;
+    u8 item;
     u16 ability_id;
 
-    main_util_copy_action_data(source, (u8*)&action);
+    main_util_copy_action_data(source, &action);
     mode = 0;
-    if (action.unit_id >= 21) {
-        return -1;
+    if (action.actor_id >= BATTLE_UNIT_SLOT_COUNT) {
+        return BATTLE_TARGET_PANELS_INVALID;
     }
-    unit = &g_battle_unit_stats[action.unit_id];
+    unit = &g_battle_unit_stats[action.actor_id];
     if (unit->entd_slot == BATTLE_ENTD_SLOT_NONE) {
-        return -1;
+        return BATTLE_TARGET_PANELS_INVALID;
     }
-    switch (g_main_action_menu_types_by_skillset[action.skillset]) {
+    switch (g_main_action_menu_types_by_skillset[action.skillset_id]) {
     case ACTION_MENU_TYPE_DEFAULT:
     case ACTION_MENU_TYPE_MONSTER:
         ability_id = action.ability_id;
         mode = 1;
         break;
     case ACTION_MENU_TYPE_ITEM_INVENTORY:
-        range = ((unit->support_abilities[2] & 8) || unit->job_id == JOB_ID_MIME) ? 4 : 1;
+        range = ((unit->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_THROW_ITEM) || unit->job_id == JOB_ID_MIME) ? 4
+                                                                                                                    : 1;
         mode = 2;
         break;
     case ACTION_MENU_TYPE_WEAPON_INVENTORY:
@@ -39,55 +52,56 @@ s32 battle_target_set_panels_for_action(u8* source) {
         range = unit->move | 0x80;
         break;
     case ACTION_MENU_TYPE_ELEMENTS:
-        ability_id
-            = g_geomancy_terrain_ability_table[g_battle_map_tile_data[battle_map_calculate_location(unit)].surface.value
-                & 0x3f];
+        ability_id = g_main_terrain_geomancy_abilities[g_battle_map_tile_data[battle_map_calculate_location(unit)]
+                .surface.type];
         mode = 1;
         break;
     case ACTION_MENU_TYPE_KATANA_INVENTORY:
         mode = 1;
-        if ((u32)(action.item_id - 0x26) >= 0xa) {
-            return -1;
+        item = action.item_or_equipment;
+        if (item < ITEM_ID_ASURA_KNIFE || item > ITEM_ID_CHIRIJIRADEN) {
+            return BATTLE_TARGET_PANELS_INVALID;
         }
-        ability_id = action.item_id + 0x26;
+        ability_id = (u8)action.item_or_equipment + (ABILITY_ID_DRAW_OUT_ASURA - ITEM_ID_ASURA_KNIFE);
         break;
     case ACTION_MENU_TYPE_ATTACK:
     case ACTION_MENU_TYPE_CHARGE:
         result = battle_target_set_weapon_attack_panels(&action);
-        flags = 0x10;
+        flags = ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET;
         break;
     case ACTION_MENU_TYPE_JUMP:
-        result = battle_target_set_jump_ability_panels((const u8*)&action);
-        flags = 0x10;
+        result = battle_target_set_jump_ability_panels(&action);
+        flags = ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET;
         break;
     case ACTION_MENU_TYPE_BLANK_05:
     case ACTION_MENU_TYPE_UNKNOWN_0F:
-        return -1;
+        return BATTLE_TARGET_PANELS_INVALID;
     default:
-        return 2;
+        return BATTLE_TARGET_PANELS_NO_TARGETING;
     }
     if (mode == 1) {
-        if (ability_id >= 0x170) {
-            return -1;
+        if (ability_id >= ABILITY_ID_ITEM_FIRST) {
+            return BATTLE_TARGET_PANELS_INVALID;
         }
         ability = &g_main_ability_range_data[ability_id];
         range = ability->range;
         flags = ability->flags_2;
-        if ((ability->flags_1 & 2) && range == 0 && !(ability->flags_1 & 0x20)) {
-            return 2;
+        if ((ability->flags_1 & ABILITY_SECONDARY_FLAG_1_AUTO) && range == 0
+            && !(ability->flags_1 & ABILITY_SECONDARY_FLAG_1_WEAPON_RANGE)) {
+            return BATTLE_TARGET_PANELS_NO_TARGETING;
         }
         action.ability_id = ability_id;
-        result = battle_target_set_ability_panels((const u8*)&action);
+        result = battle_target_set_ability_panels(&action);
     }
     if (mode == 2) {
-        result = battle_target_calculate_ability_range_with_map_parameters(unit, range & 0xff);
-        flags = 0x10;
+        result = battle_target_set_item_range_panels(unit, range & 0xff);
+        flags = ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET;
     }
     if (result != 0) {
         /* The named temporary is load-bearing; the direct test compiles differently. */
-        s32 flag_result = flags & 0x10;
+        s32 flag_result = flags & ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET;
 
         return flag_result != 0;
     }
-    return 3;
+    return BATTLE_TARGET_PANELS_NONE;
 }

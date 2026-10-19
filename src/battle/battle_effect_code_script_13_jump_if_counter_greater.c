@@ -1,13 +1,15 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
-s32 battle_effect_code_script_13_jump_if_counter_greater(effect_record_t* ctx) {
-    s16 pc = ctx->pc;
-    u8* cur = (u8*)(pc + (s32)ctx->script);
-    s16* counter = &ctx->counters[(u32)cur[1] >> 6];
-    if (*counter > *(s16*)(cur + 2)) {
-        ctx->pc = (s16) * (u16*)(cur + 4);
+/* Opcode 13: jump to the offset in the third 16-bit value when the counter
+ * selected by the top two bits of the second byte exceeds the second
+ * 16-bit value; otherwise step over the 6-byte instruction. */
+effect_script_result_e battle_effect_code_script_13_jump_if_counter_greater(battle_effect_record_t* record) {
+    const effect_script_instruction_t* instruction = effect_get_current_script_instruction(record);
+    effect_script_parameters_t parameters = instruction->header.parameters;
+    if (record->counters[parameters.counter.slot] > instruction->branch.comparison) {
+        record->pc = instruction->branch.target_offset;
     } else {
-        ctx->pc = pc + 6;
+        record->pc += 6;
     }
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }
