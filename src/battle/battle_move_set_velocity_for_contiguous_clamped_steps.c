@@ -3,7 +3,6 @@
 #include "psx/types.h"
 
 enum {
-    BATTLE_MOVE_STEP_HALF_WIDTH = BATTLE_MAP_TILE_SIZE / 2,
     BATTLE_MOVE_STEP_NEAR_EDGE = -7,
     BATTLE_MOVE_STEP_FAR_EDGE = 35,
 };

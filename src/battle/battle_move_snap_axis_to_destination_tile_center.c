@@ -3,7 +3,6 @@
 
 enum {
     TILE_CENTER_OFFSET = BATTLE_MAP_TILE_SIZE / 2,
-    REAL_COORD_SHIFT = 12,
 };
 
 /*
@@ -19,13 +18,13 @@ void battle_move_snap_axis_to_destination_tile_center(s32 direction, battle_unit
     case BATTLE_MOVE_DIRECTION_SOUTH:
         coordinate = unit->movement.destination_y * BATTLE_MAP_TILE_SIZE + TILE_CENTER_OFFSET;
         unit->world_coords.vz = coordinate;
-        unit->real.vz = coordinate << REAL_COORD_SHIFT;
+        unit->real.vz = coordinate << BATTLE_MOVE_REAL_COORD_SHIFT;
         return;
     case BATTLE_MOVE_DIRECTION_EAST:
     case BATTLE_MOVE_DIRECTION_WEST:
         coordinate = unit->movement.destination_x * BATTLE_MAP_TILE_SIZE + TILE_CENTER_OFFSET;
         unit->world_coords.vx = coordinate;
-        unit->real.vx = coordinate << REAL_COORD_SHIFT;
+        unit->real.vx = coordinate << BATTLE_MOVE_REAL_COORD_SHIFT;
         return;
     }
 }

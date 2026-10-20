@@ -1674,6 +1674,9 @@ typedef struct battle_menu_unit_selection_record {
 } battle_menu_unit_selection_record_t;
 typedef char menu_unit_selection_record_size_must_be_17[(sizeof(battle_menu_unit_selection_record_t) == 17) ? 1 : -1];
 
+/* The record size as a signed count, for the byte views that index the tables. */
+enum { MENU_UNIT_SELECTION_RECORD_BYTES = (s32)sizeof(battle_menu_unit_selection_record_t) };
+
 extern image_load_parameters_t g_menu_status_panel_item_icon_layouts[];
 
 /* One row of the 31-entry menu table at g_battle_menu_command_maps; its first 12 rows are the

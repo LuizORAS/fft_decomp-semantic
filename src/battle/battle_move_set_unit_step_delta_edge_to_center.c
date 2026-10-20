@@ -1,10 +1,6 @@
 #include "fft/battle_move.h"
 #include "psx/types.h"
 
-enum {
-    BATTLE_MOVE_STEP_HEIGHT_SCALE = 6,
-};
-
 /* Same as battle_move_set_unit_step_delta_center_to_edge for the half step from the entry edge
  * to the tile centre: the height part is not negated, so entering over a high side moves the
  * unit down to the centre, and edge_height is the entry side's slope_type value.

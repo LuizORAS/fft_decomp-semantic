@@ -65,6 +65,14 @@ enum {
     BATTLE_MOVE_PATHFIND_RANGE = 124,
 };
 
+/* Step geometry in world units: half a tile across, six world units per half height unit
+ * (world y grows downward), and the shift from world to real (20.12) coordinates. */
+enum {
+    BATTLE_MOVE_STEP_HALF_WIDTH = BATTLE_MAP_TILE_SIZE / 2,
+    BATTLE_MOVE_STEP_HEIGHT_SCALE = 6,
+    BATTLE_MOVE_REAL_COORD_SHIFT = 12,
+};
+
 /* Generic pathfinding flags, distinct from movement ability bytes. */
 typedef enum battle_move_pathfind_flags {
     BATTLE_MOVE_PATHFIND_IGNORE_TERRAIN_COST = 0x100,
