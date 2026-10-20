@@ -102,6 +102,8 @@ make decl-check            # fail on calls to undeclared functions (the build's 
 make declarations          # report conflicting declarations in detail
 make symbols ACTION=rename-function|rename-global ARGS="--old A --new B"
 make share-audit [MODULE=x] # report shared C implementation candidates as JSON
+make twins [MODULE=x]      # group functions identical under renames across modules (needs the BIN)
+make trial TWINS=t0001     # compile each twin's source at the others' entries (or MODULE ENTRY SOURCE)
 make diff FUNC=f           # compare one function with the original bytes (needs the BIN)
 make library-diff ARGS="..." # compare a scratch library candidate without registering it
 make permute FUNC=f        # run decomp-permuter on it [DURATION=300 JOBS=4]

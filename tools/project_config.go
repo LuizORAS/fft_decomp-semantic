@@ -121,6 +121,17 @@ func (m *moduleSpec) contains(addr uint32, size int) bool {
 	return addr >= m.Load && uint64(addr)+uint64(size) <= m.end()
 }
 
+// isLibraryFunction reports whether f lies in one of the module's linked
+// library ranges.
+func (m *moduleSpec) isLibraryFunction(f *functionSpec) bool {
+	for _, library := range m.Libraries {
+		if f.Addr < library.End && uint64(f.Addr)+uint64(f.Size) > uint64(library.Addr) {
+			return true
+		}
+	}
+	return false
+}
+
 func (m *moduleSpec) profileOf(f *functionSpec) string {
 	if f.Profile != "" {
 		return f.Profile
