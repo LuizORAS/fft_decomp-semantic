@@ -37,8 +37,8 @@ A text id is 16 bits:
 - the low eleven pick the entry (`TEXT_ID_SECTION_MASK`,
   `TEXT_ID_ENTRY_MASK`).
 
-Each engine keeps the 32 section pointers (`g_text_section_pointers`,
-`g_text_section_pointers`). An entry is found by counting the
+Each engine keeps the 32 section pointers (`g_text_section_pointers`). An
+entry is found by counting the
 terminators before it ([[text_find_entry]],
 [[text_skip_to_entry]]). [[text_id_base_e]] names the first id of each
 section the code uses: job names 0x3000, item names 0x3800, unit names 0x4000,
@@ -183,7 +183,7 @@ places use it:
 | [[world_text_dialog_record_t]] | The dialog thread's window |
 | [[battle_text_glyph_state_t]] | The glyph waiting to be drawn |
 | [[dialog_box_type_e]], [[dialog_options_e]] | The DisplayMessage dialog type's fields |
-| `g_text_substitution_values`, `g_text_substitution_values` | The 32 values controls 0xE4 and 0xE6 print |
+| `g_text_substitution_values` (BATTLE and WORLD) | The 32 values controls 0xE4 and 0xE6 print |
 | [[world_text_data_e]] | WORLD's resident text blocks ([[world_text_bind_section_data]]) |
 
 ## Main flow

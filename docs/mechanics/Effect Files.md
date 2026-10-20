@@ -40,7 +40,7 @@ Each file's routines say which ability or effect id uses it.
 |---|---|
 | `g_battle_effect_native_callbacks` | The fixed address of each native callback id. A file's code is laid out so that each of its callbacks sits at the address its id names |
 | `battle_effect_record_t.callback_phase` ([[effect_callback_phase_e]]) | The phase of a bound callback: INIT allocates its work block, UPDATE runs once a frame, DESTROY frees the block two frames before its keyframe ends |
-| [[effect_geometry_entry_t]] and its views | The emitter record a callback reads through its own layout: [[effect_radial_mesh_geometry_t]], [[effect_polar_mesh_geometry_view_t]], [[effect_radial_mesh_geometry_t]], [[effect_textured_quad_geometry_view_t]], [[effect_particle_ribbon_geometry_view_t]], [[effect_tentacle_mesh_geometry_view_t]] |
+| [[effect_geometry_entry_t]] and its views | The emitter record a callback reads through its own layout: [[effect_radial_mesh_geometry_t]] (ring, tube and summon-dome meshes), [[effect_polar_mesh_geometry_view_t]], [[effect_textured_quad_geometry_view_t]], [[effect_particle_ribbon_geometry_view_t]], [[effect_tentacle_mesh_geometry_view_t]] |
 | The work blocks of `fft/effect.h` | Each renderer's double-buffered `POLY_GT4` quads and its spin, scroll and wave state, allocated from the effect heap |
 | The scratchpad (`0x1f800000`) | The lattice points a mesh renderer builds before it projects them |
 

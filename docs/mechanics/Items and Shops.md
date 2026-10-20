@@ -139,7 +139,7 @@ scope:
 | Record | What it holds |
 |---|---|
 | [[item_data_t]] | An item (12 bytes, [[g_main_item_primary_data]] at MAIN `0x80062eb8`): palette, sprite, item level, type flags, secondary record, type, attributes, price, shop level |
-| [[weapon_data_t]], [[item_evade_t]], [[armor_data_t]], [[item_evade_t]], [[item_secondary_data_t]] | The kind records ([[g_main_item_weapon_data]] `0x80063ab8`, [[g_main_item_shield_data]] `0x80063eb8`, [[g_main_item_helm_armor_secondary_data]] `0x80063ed8`, [[g_main_item_accessory_data]] `0x80063f58`, [[g_main_item_secondary_data]] `0x80063f98`) |
+| [[weapon_data_t]], [[item_evade_t]] (shields and accessories), [[armor_data_t]], [[item_secondary_data_t]] | The kind records ([[g_main_item_weapon_data]] `0x80063ab8`, [[g_main_item_shield_data]] `0x80063eb8`, [[g_main_item_helm_armor_secondary_data]] `0x80063ed8`, [[g_main_item_accessory_data]] `0x80063f58`, [[g_main_item_secondary_data]] `0x80063f98`) |
 | [[g_main_item_quantities]] | The inventory, a byte per item (MAIN `0x800596e0`) |
 | [[g_main_item_poached_quantities]] | The fur shop's stock, a byte per item (MAIN `0x80059494`) |
 | [[g_main_item_poach_table]] | Common and rare item per monster job (MAIN `0x80066064`, 48 rows) |

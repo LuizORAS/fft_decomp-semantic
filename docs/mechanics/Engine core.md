@@ -64,8 +64,8 @@ words at the start of MAIN's data (`0x80010000`) hold the load addresses.
   the battle heap is a free list of [[battle_heap_node_t]] blocks from
   [[g_battle_heap_rover]], with one list of live blocks per owner.
 - Threads: [[thread_t]] slots of `0x400` bytes reached through
-  [[g_threads]] and [[g_threads]]; the running one is
-  [[g_thread_current_id]] or [[g_thread_current_id]]. Task ids
+  [[g_threads]] (BATTLE and WORLD each have one); the running one is
+  [[g_thread_current_id]]. Task ids
   ([[thread_task_e]]) let threads find each other.
 - The game loop: [[g_main_system_game_flow_state]] (2 resets, 3 plays the
   ending), [[g_main_system_go_straight_to_battle]] and

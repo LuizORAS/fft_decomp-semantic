@@ -127,15 +127,14 @@ BATTLE and WORLD each schedule cooperative native threads:
   Slot 0 is the overlay's main loop; BATTLE runs threads in slots 1–15 and
   WORLD in slots 1–16.
 - **A frame:** the main loop yields once a frame
-  (`battle_script_run_event_frame`, `world_script_run_event_frame`). The
-  hand-written `thread_yield` and `thread_yield` save the
-  thread's registers in its slot and resume the next running slot, returning
-  to slot 0 after the last. So every running thread advances once a frame,
+  (`battle_script_run_event_frame`, `world_script_run_event_frame`). Each
+  module's hand-written `thread_yield` saves the thread's registers in its
+  slot and resumes the next running slot, returning to slot 0 after the
+  last. So every running thread advances once a frame,
   and `*_thread_wait_frames(n)` waits n frames.
 - **Starting and identifying:** `*_thread_resolve_id` finds a free slot,
-  `*_thread_set_parameters` passes the inputs, `thread_start` and
-  `thread_start` start the function, and a `task_id` lets other threads
-  find it.
+  `*_thread_set_parameters` passes the inputs, `thread_start` starts the
+  function, and a `task_id` lets other threads find it.
 - **Large calls:** a thread runs disc reads and overlay loads through
   `*_thread_call_on_main_stack`, on the main loop's stack.
 - **What runs this way:** menu cursors, event unit moves and dialogue text.

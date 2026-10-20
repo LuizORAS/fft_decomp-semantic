@@ -119,8 +119,8 @@ and mark code that a cleanup must not "fix". Details live in the named file.
 - `src/main/main_unit_calculate_random_equipment.c`: throwing and bomb item
   types index past the four equipment-category bytes into the first innate
   status byte; that adjacent byte controls their eligibility.
-- `src/shared/menu/menu_text_render_encoded_ids_to_image.c` and
-  `src/shared/menu/menu_text_render_encoded_ids_to_image.c`: the encoded-text branch tests
+- `src/shared/menu/menu_text_render_encoded_ids_to_image.c` (BUNIT, CARD,
+  EQUIP and JOBSTTS): the encoded-text branch tests
   its glyph counter (`col`) against the line width but never assigns it; the
   stale register stays below the width, so text never wraps.
 - `src/battle/battle_unit_init.c`: tints the new unit's palette
@@ -474,7 +474,7 @@ Where callers pass arguments a callee never reads, the callee declares them as
 written that way.
 
 - `StCdInterrupt`: emulated header/payload copies pass a fourth completion argument to the three-argument `mem2mem` helper, which ignores it.
-- `g_thread_call_target` and `g_thread_call_target` are the
+- BATTLE's and WORLD's `g_thread_call_target` are the
   main-stack dispatch slots for callees with different signatures;
   assignments erase their function types.
 - `world_card_build_save_slot_description` uses the job-name pointer that the
@@ -538,8 +538,8 @@ written that way.
   and no caller reads.
 - `battle_thread_resolve_id`, `battle_thread_resolve_id_after_current`,
   `world_thread_resolve_id` and `world_thread_resolve_id_after_current` return
-  the leftover `$v0` of the void `thread_exit_current` or
-  `thread_exit_current` when no thread slot is free (the WORLD source
+  the leftover `$v0` of the void `thread_exit_current` (BATTLE's or
+  WORLD's copy) when no thread slot is free (the WORLD source
   falls off its end). The caller has exited by then, but the scheduler
   resumes slot 0 without testing it, so a main-loop caller gets that value
   on the next frame.
@@ -591,8 +591,8 @@ written that way.
     with the leftover `$a1`;
   - the five `battle_effect_update_file_load` callers pass nothing, so the states
     it does not handle return the leftover `$a0`;
-  - `menu_build_item_icon_source` and
-    `menu_build_item_icon_source` call
+  - `menu_build_item_icon_source` (one source in ATTACK, BUNIT, DEBUGCHR,
+    EQUIP and REQUIRE) calls
     `battle_gfx_set_item_icon_sprite` without the item id (`$a1`);
   - `battle_status_resolve_unit_changes_in_preview` (referenced nowhere on the disc) calls
     `battle_status_resolve_unit_changes` without `unit_id`/`removal_only`;
@@ -670,8 +670,8 @@ translation unit. Share their types and constants through headers.
   first routine appears in 17 overlays, and E450/E480 are identical.
   E336/E461, E230/E481 and E015/E047 differ only in immediates.
 - BATTLE/WORLD pairs: scenario conditionals
-  (`script_run_scenario_conditions.c` /
-  `script_run_scenario_conditions.c`), action-slot restrictions, the
+  (`src/shared/script/script_run_scenario_conditions.c`, one source for
+  both), action-slot restrictions, the
   portrait-flip toggle (instruction `0x37`), staged status, selected-tile data,
   and the event interpreters.
 - `src/wldcore/wldcore_menu_push_fact_detail_level.c` and
@@ -777,7 +777,7 @@ translation unit. Share their types and constants through headers.
   enters BATTLE through `battle_state_run_game_loop` after the load.
 - WORLD's copy of the event interpreter never runs: `world_script_execute_event` is reached only through `world_script_start_current_event_thread`, whose callers `world_menu_start_entry_thread` (no caller) and `world_menu_dispatch_system_function` (reached only from `world_menu_init_system_function`, below) never run, and no table holds their addresses. It calls BATTLE routines (`battle_map_freeze`, `battle_gfx_load_unit_graphics_by_battle_id` and others), since WORLD links against BATTLE's addresses for the code it copies: `camera_wait_until_idle`, for one, calls `battle_camera_is_active` at 0x8008e17c, which with WORLD loaded is inside WLDCORE's `wldcore_map_find_best_route_path`. Its camera threads (`world_camera_thread`, `world_camera_fusion_thread`) never run either.
 - WORLD's copy of the battle menus is dead code: nothing in any module calls or names `world_menu_init_system_function` (0x800f5230) or `world_menu_start_mini_menu_display_thread` (0x800f0e48), so modes 1 (AT list) and 2 (crystal pickup panel) of `world_option_run_menu` never run; the world map's Options row runs mode 0.
-- `src/shared/script/script_resolve_runtime_id.c`, `src/shared/script/script_resolve_runtime_id.c`: during
+- `src/shared/script/script_resolve_runtime_id.c` (BATTLE and WORLD): during
   Game Over event `0x194` every unit lookup resolves to Ramza, but no retail
   code, scenario chain, `BTLEVT.BIN` condition, event or world script starts
   `0x194`; the engine plays the byte-identical script at `0x190` without the

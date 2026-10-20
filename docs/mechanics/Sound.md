@@ -94,7 +94,7 @@ OPEN's movies and the ending's XA tracks play CD audio, which
 | [[suzuki_sound_resource_t]] | A loaded sound resource ("feds" block): SOUND/SYSTEM.SED ([[main_sfx_e]], 168 sounds), SOUND/ENV.SED ([[main_env_sfx_e]], 27), the block each ability effect file brings and the sound novels' bank. A sound id is the resource id in the high 16 bits and the sound in the low one ([[main_sound_resource_id_e]]) |
 | `g_suzuki_sound_sfx_music` | The SFX record: eight channels on SPU voices 16 to 23. Each sound has two streams, so it plays on a channel pair |
 | [[suzuki_sound_sfx_priority_e]] | Who owns a channel pair: [[main_sound_play_sfx]] takes channels 6-7 and replaces what plays there, the background sound takes 4-5, and the other sounds take a free pair or steal the oldest stealable one ([[suzuki_sound_find_sfx_channel]]) |
-| `g_sound_pending_sfx_id`, `g_sound_pending_sfx_id` | The menu sound queued during a frame and played once the frame's threads have run |
+| `g_sound_pending_sfx_id` (BATTLE and WORLD) | The menu sound queued during a frame and played once the frame's threads have run |
 | `g_wldcore_audio_queue` ([[wldcore_audio_queue_t]]) | The world map's audio queue: music loads, fades and unloads ([[wldcore_audio_command_e]]) run one after the other while the frames go on |
 | `g_battle_sound_weapon_swing_sfx_ids` and its two siblings | The swing, hit and shield sounds of each weapon type |
 
