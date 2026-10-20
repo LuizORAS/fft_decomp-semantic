@@ -106,6 +106,10 @@ check-config: image ## Validate project metadata (target/, sources, declarations
 config-fmt: image ## Rewrite target/*.yaml in canonical form
 	@$(TOOLS) config-fmt
 
+.PHONY: decl-check
+decl-check: image ## Fail on calls to undeclared functions (cc1 -Wimplicit, syntax only)
+	@$(TOOLS) decl-check
+
 .PHONY: declarations
 declarations: image ## Report conflicting file-scope declarations (ARGS="...")
 	@$(TOOLS) declarations $(ARGS)
@@ -158,7 +162,7 @@ warnings: image ## List cc1 -Wall warnings per function in build/warnings (MODUL
 	@$(TOOLS) warnings $(if $(strip $(MODULE)),--module="$(MODULE)")
 
 .PHONY: verify
-verify: fmt-check check-config check ## Run the per-change checks: fmt-check, check-config, check (MODULE=x)
+verify: fmt-check check-config decl-check check ## Run the per-change checks: fmt-check, check-config, decl-check, check (MODULE=x)
 
 .PHONY: test
 test: image ## Vet and test the Go tooling

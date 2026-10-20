@@ -98,6 +98,7 @@ make extract               # extract the BIN (build/checksums/diff do it on dema
 make checksums             # refresh hashes from the ORIGINAL bytes only
 make check-config          # validate target/, sources and declarations
 make config-fmt            # rewrite target/*.yaml in canonical form
+make decl-check            # fail on calls to undeclared functions (the build's -w hides them)
 make declarations          # report conflicting declarations in detail
 make symbols ACTION=rename-function|rename-global ARGS="--old A --new B"
 make share-audit [MODULE=x] # report shared C implementation candidates as JSON
@@ -107,7 +108,7 @@ make permute FUNC=f        # run decomp-permuter on it [DURATION=300 JOBS=4]
 make test                  # vet and test the Go tooling
 make map                   # write the codebase map (Obsidian vault) to build/map and the upstream rename table to docs/upstream-renames.tsv; ARGS=--pull-docs copies docs edited in the vault back
 make warnings              # list cc1 -Wall warnings per function in build/warnings [MODULE=x]
-make verify                # fmt-check, check-config and check
+make verify                # fmt-check, check-config, decl-check and check
 make fmt                   # clang-format src/ and include/ in place
 make fmt-check             # fail on any formatting drift
 make shell                 # interactive shell in the image
@@ -120,7 +121,7 @@ make compile-commands      # editor compile_commands.json (host clang)
 `effect` selects every such module. `diff` and `permute` need it only when
 several modules define `FUNC`. Both compile exactly as `check` does. Every change
 ends with `make check` passing. Before handing off, also run `make build`
-(disc exact), `make check-config` and `make fmt-check`.
+(disc exact), `make check-config`, `make decl-check` and `make fmt-check`.
 
 Every target runs in a fresh `docker run --rm` container of the pinned
 `Dockerfile` image as the host user, with the checkout mounted at `/work`;
@@ -129,9 +130,9 @@ layer proves every tool runs) and rebuilt by `make bootstrap`. It holds the
 old GCC `cc1` binaries (native on x86-64, through `qemu-i386` elsewhere), maspsx, mipsel binutils and
 `cpp`, mkpsxiso, asm-differ (`make diff` listings), decomp-permuter, Go and
 clang-format 22.1.8. CI (`.github/workflows/check.yml`) runs `fmt-check`,
-`check-config`, `test` and `map` in one job and `check` in four module shards,
-without the BIN; `check-config` fails unless the shards' module lists cover
-every module once. Optional overrides: `JOBS`, `CACHE=0`, `WORK_DIR`,
+`check-config`, `test`, `decl-check` and `map` in one job and `check` in four
+module shards, without the BIN; `check-config` fails unless the shards' module
+lists cover every module once. Optional overrides: `JOBS`, `CACHE=0`, `WORK_DIR`,
 `REPORT_ALL=1`, `DURATION` (see the Makefile).
 
 ## target/*.yaml

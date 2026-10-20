@@ -210,7 +210,7 @@ type inventoryRecord struct {
 	StackSize    int    `json:"stack_size,omitempty"`
 }
 
-const usage = "usage: tools build [module|disc]|check [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|declarations ...|share-audit [--module=M] [--min-bytes=N] [--prefix=P]|symbols <action> ...|map [--out=build/DIR] [--pull-docs]|warnings [--module=M]|extract"
+const usage = "usage: tools build [module|disc]|check [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|decl-check|declarations ...|share-audit [--module=M] [--min-bytes=N] [--prefix=P]|symbols <action> ...|map [--out=build/DIR] [--pull-docs]|warnings [--module=M]|extract"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -256,6 +256,8 @@ func main() {
 		err = p.permuteCommand(os.Args[2:])
 	case "symbols":
 		err = p.symbolsCommand(os.Args[2:])
+	case "decl-check":
+		err = p.declCheckCommand()
 	case "declarations":
 		err = p.declarationsCommand(os.Args[2:])
 	case "share-audit":
