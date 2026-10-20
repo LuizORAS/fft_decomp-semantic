@@ -1006,3 +1006,15 @@ computes addresses as integers. A 64-bit build must give these pointer types.
   `g_script_variables`) and `battle_ai_is_ability_known` (the
   learned-ability row).
 
+## Hand-written assembly
+
+The original programmers wrote these routines in assembly; each is a `.s`
+file whose opening comment says why it is not C. Port debt: a native build
+needs a portable C twin of each.
+
+- `main_restore_game_loop_stack_pointer`: replaces `$sp` with the stack
+  address `main` saved at boot and jumps to the top of
+  `main_system_run_game_loop`, abandoning every frame above it on a soft
+  reset; a native build returns there another way (for example `setjmp` and
+  `longjmp`).
+

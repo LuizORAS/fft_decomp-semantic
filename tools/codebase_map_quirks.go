@@ -52,6 +52,7 @@ var mapQuirkSwitches = map[string]string{
 	"Pointers held in 32-bit integers":    "PORT (64-bit)",
 	"Duplicated code":                     "NON_MATCHING (refactor)",
 	"Other surprises":                     "review",
+	"Hand-written assembly":               "PORT (C twin)",
 }
 
 var (

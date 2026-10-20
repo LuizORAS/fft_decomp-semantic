@@ -2,8 +2,9 @@
 
 A byte-exact matching decompilation of the USA PlayStation release of *Final
 Fantasy Tactics* (`SCUS-94221`). Every game function is C that compiles to the
-original bytes. The work now is making that C better (names, types, structure)
-without changing a single byte.
+original bytes, except the routines the original programmers wrote in
+assembly, which are `.s` files that assemble to them. The work now is making
+that C better (names, types, structure) without changing a single byte.
 
 ## Linked libraries
 
@@ -57,7 +58,7 @@ remain excluded. Never modify `meta/`.
 
 | Path | Contents |
 |---|---|
-| `src/<module>/` | One C file per function, named after it |
+| `src/<module>/` | One C file per function, named after it (a `.s` file for an original hand-written routine) |
 | `src/shared/<subsystem>/` | Proven shared implementations: one source compiled at every original entry that runs it, bound per module with `source:` and `source_symbol` in `target/` |
 | `src/lib/psyq/<library>/`, `src/lib/suzuki/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
 | `include/fft/` | Module headers (`main.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), BATTLE's subsystem headers (`battle_<subsystem>.h`, all included by `battle.h`) and shared type headers (`data.h`, `gfx.h`, `map.h`, `memory.h`, `menu.h`, `menu_script.h`, `script.h`, `sound.h`, `thread.h`, `unit.h`) |
@@ -142,8 +143,10 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
 
 - Header: `module`, `file`, `lba`, `size`, `sha256`, `load`, `source_dir`,
   `profile` (module default), `links` (modules resident alongside).
-- `functions`: `{addr, size, name, hash}`, plus `profile`, `rodata`, `asm`,
-  `source` (a path other than `src/<module>/<name>.c`) or `source_symbol` (the
+- `functions`: `{addr, size, name, hash}`, plus `profile`, `rodata`, `asm`
+  (why the routine is assembly; its default source is then
+  `src/<module>/<name>.s`), `source` (a path other than the default) or
+  `source_symbol` (the
   neutral symbol a `src/shared/` source defines) only when needed. `hash` is the first 16 hex digits of the SHA-256 of the
   original bytes; only `make checksums` writes it.
 - `data`: named addresses with no reconstruction (globals, library entry
@@ -184,8 +187,17 @@ none), and prefer the profile of its neighbours.
 ## Code rules
 
 - Byte-exact always. Never weaken a check or edit a hash to accept a mismatch.
-- C only. The single `.s` file (`main_restore_game_loop_stack_pointer.s`) is
-  an ABI boundary. Instruction-emitting inline asm remains in the hand-written
+- C, except the routines the original programmers wrote in assembly. Each is
+  one `.s` file per routine and module, named after it. Its opening comment
+  says which original range it reproduces and why it cannot be C (it replaces
+  `$sp`, saves `k0`/`k1`/`$gp` in a context switch, keeps trapping `addi`,
+  runs code after its own `jr ra`, or another measured reason), and its
+  `functions` row carries that reason in `asm`. Only a range no C spelling
+  under the pinned compilers reproduces becomes `.s`: a `handwritten` region,
+  or a `blocked` one, whose comment then says it was probably C. Addresses in
+  a `.s` are symbols, never numbers. Each routine has a Port debt entry under
+  "Hand-written assembly" in `QUIRKS.md`, because a native build needs a
+  portable C twin. Instruction-emitting inline asm remains in the hand-written
   thread/copy helpers and the PS1 hardware/ABI helpers in `include/psx/`.
   Library algorithms stay C; each hardware instruction or register constraint
   must have a measured PS1 dependency or byte-exact ABI reason.
