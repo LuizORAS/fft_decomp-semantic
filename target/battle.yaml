@@ -7,6 +7,76 @@ load: 0x80067000
 source_dir: src/battle
 profile: gcc-2.6.3_O2_aspsx-2.34
 
+units:
+  - {addr: 0x800683c0, end: 0x800699f4, name: action_effects}
+  - {addr: 0x800699f4, end: 0x8006d288, name: move_steps}
+  - {addr: 0x8006d288, end: 0x80070998, name: move_paths}
+  - {addr: 0x80070998, end: 0x800736d4, name: action_menus}
+  - {addr: 0x800736d4, end: 0x80075e68, name: state_actions}
+  - {addr: 0x80075e68, end: 0x800791e8, name: state_handlers}
+  - {addr: 0x800791e8, end: 0x8007c444, name: battle_scene}
+  - {addr: 0x8007c444, end: 0x80082620, name: unit_render}
+  - {addr: 0x80082620, end: 0x800890b8, name: unit_animations}
+  - {addr: 0x800890b8, end: 0x8008b28c, name: unit_motion}
+  - {addr: 0x8008b28c, end: 0x8008bc0c, name: camera}
+  - {addr: 0x8008bc0c, end: 0x8008c940, name: unit_control}
+  - {addr: 0x8008c940, end: 0x8008ddec, name: unit_runtime}
+  - {addr: 0x8008ddec, end: 0x8008f320, name: map_commands}
+  - {addr: 0x8008f320, end: 0x80093654, name: map_palettes}
+  - {addr: 0x80093654, end: 0x80093c98, name: frame}
+  - {addr: 0x800e72a0, end: 0x800f34c4, name: map_rendering}
+  - {addr: 0x800f34c4, end: 0x800f3718, name: map_gns}
+  - {addr: 0x800f3718, end: 0x800f5aec, name: map_loading}
+  - {addr: 0x8012d8e4, end: 0x8012e190, name: script_helpers}
+  - {addr: 0x8012e190, end: 0x8012e9c0, name: window_buffers}
+  - {addr: 0x8012e9c0, end: 0x8012ee3c, name: texture_allocator}
+  - {addr: 0x8012ee3c, end: 0x8012f10c, name: buffer_allocator}
+  - {addr: 0x8012f10c, end: 0x8012f4e0, name: numbers_frame}
+  - {addr: 0x8012f4e0, end: 0x80130718, name: dialog_messages}
+  - {addr: 0x801307d4, end: 0x801308c0, name: dialog_cursor}
+  - {addr: 0x80132824, end: 0x801330e4, name: dialog_helpers}
+  - {addr: 0x80133130, end: 0x80133494, name: event_unit_lookup}
+  - {addr: 0x801334a4, end: 0x80133568, name: unit_name_list}
+  - {addr: 0x80133568, end: 0x80133c98, name: status_billboard}
+  - {addr: 0x80133c98, end: 0x80137b98, name: unit_status_lists}
+  - {addr: 0x80137b98, end: 0x80138adc, name: menu_entries}
+  - {addr: 0x80138b10, end: 0x801395ac, name: icon_selection}
+  - {addr: 0x801395ac, end: 0x80139bec, name: ability_list_text}
+  - {addr: 0x8013aedc, end: 0x8013b590, name: message_threads}
+  - {addr: 0x8013b590, end: 0x8013b6e4, name: script_variables}
+  - {addr: 0x8013b6e4, end: 0x8013bb70, name: fade_primitives}
+  - {addr: 0x8013bb70, end: 0x8013d230, name: event_resources}
+  - {addr: 0x8013d230, end: 0x8013d320, name: music_tracks}
+  - {addr: 0x8013d320, end: 0x8013f76c, name: attack_resources}
+  - {addr: 0x8013f76c, end: 0x80140980, name: command_selection}
+  - {addr: 0x80140980, end: 0x80142bd0, name: command_menus}
+  - {addr: 0x80142bd0, end: 0x80143b80, name: event_frame}
+  - {addr: 0x80145f78, end: 0x801499ac, name: script_interpreter}
+  - {addr: 0x801499ac, end: 0x8014aec0, name: script_commands}
+  - {addr: 0x8014b264, end: 0x8014b394, name: text_entries}
+  - {addr: 0x8014bf54, end: 0x8014c758, name: window_images}
+  - {addr: 0x8014c858, end: 0x8014ca80, name: thread}
+  - {addr: 0x8014cbb4, end: 0x8014ccb8, name: thread_accessors}
+  - {addr: 0x8014ce78, end: 0x8014ceb4, name: text_skip_to_entry}
+  - {addr: 0x80174370, end: 0x80179204, name: move_range}
+  - {addr: 0x80179204, end: 0x8017c158, name: target_panels}
+  - {addr: 0x8017c158, end: 0x80180178, name: action_preparation}
+  - {addr: 0x80180178, end: 0x801817c0, name: crystals_and_treasure}
+  - {addr: 0x801817c0, end: 0x801827f0, name: skillset_menus}
+  - {addr: 0x801827f0, end: 0x80183e94, name: turn_order}
+  - {addr: 0x80183e94, end: 0x80186c04, name: formula_core}
+  - {addr: 0x80186c04, end: 0x80188800, name: formula_effects}
+  - {addr: 0x80188800, end: 0x801899a4, name: formula_weapons}
+  - {addr: 0x801899a4, end: 0x8018ac74, name: formula_damage}
+  - {addr: 0x8018ac74, end: 0x8018e5e4, name: action_resolution}
+  - {addr: 0x8018e5e4, end: 0x8018f4d8, name: action_outcomes}
+  - {addr: 0x80193e50, end: 0x8019ab08, name: ai_commands}
+  - {addr: 0x8019ab08, end: 0x8019f2f4, name: ai_origins}
+  - {addr: 0x801a0e80, end: 0x801a4d9c, name: effect_script}
+  - {addr: 0x801a4d9c, end: 0x801a5110, name: effect_heap}
+  - {addr: 0x801a5110, end: 0x801aab44, name: effect_renderer}
+  - {addr: 0x801aab90, end: 0x801b48d0, name: effect_system}
+
 functions:
   - {addr: 0x800683c0, size: 20, name: battle_target_show_cursor, hash: 8a8a6eec590a8201}
   - {addr: 0x800683d4, size: 16, name: battle_target_hide_cursor, hash: 4f307990a5cb2cc0}

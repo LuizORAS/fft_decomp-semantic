@@ -13,6 +13,18 @@ links: [world]
 libraries:
   - {id: libpress, addr: 0x8007348c, end: 0x80073f10, kind: psyq, library: LIBPRESS}
 
+units:
+  - {addr: 0x800670f0, end: 0x800685ec, name: movies}
+  - {addr: 0x80068638, end: 0x80068bb0, name: init}
+  - {addr: 0x80068bb0, end: 0x800699d4, name: window_records}
+  - {addr: 0x800699d4, end: 0x80069a90, name: file_wait}
+  - {addr: 0x80069a90, end: 0x8006c750, name: title_controllers}
+  - {addr: 0x8006c750, end: 0x8006cbf8, name: window_render}
+  - {addr: 0x8006cbf8, end: 0x8006e2f0, name: title_sequence}
+  - {addr: 0x8006e2f0, end: 0x800702a8, name: ending}
+  - {addr: 0x800702a8, end: 0x800705a0, name: memcard}
+  - {addr: 0x800705a0, end: 0x800707f8, name: card_checks}
+
 functions:
   - {addr: 0x800670f0, size: 284, name: open_system_run_main_loop, hash: 1b6e181d0ae942f3}
   - {addr: 0x8006720c, size: 276, name: open_system_run_ending_cutscene, hash: 8adfe0f21b2d14df}

@@ -21,6 +21,36 @@ libraries:
   - {id: libgpu, addr: 0x80022c24, end: 0x80028740, kind: psyq, library: LIBGPU}
   - {id: libcard, addr: 0x80028740, end: 0x80028acc, kind: psyq, library: LIBCARD}
 
+units:
+  - {addr: 0x80011bd0, end: 0x80011e38, name: file_requests}
+  - {addr: 0x80012020, end: 0x800120f4, name: loading_draw_message}
+  - {addr: 0x800120f4, end: 0x800124cc, name: suzuki_smd_lifecycle}
+  - {addr: 0x800124cc, end: 0x80012e7c, name: suzuki_sfx}
+  - {addr: 0x80012e7c, end: 0x8001363c, name: suzuki_smd_controls}
+  - {addr: 0x8001363c, end: 0x80014204, name: suzuki_smd_records}
+  - {addr: 0x8001423c, end: 0x8001442c, name: suzuki_heap, profile: gcc-2.6.3_O2_G8_aspsx-2.34}
+  - {addr: 0x8001442c, end: 0x80014590, name: suzuki_memory}
+  - {addr: 0x80014590, end: 0x80015324, name: suzuki_tick}
+  - {addr: 0x80015324, end: 0x80015cb0, name: suzuki_smd_interpreter}
+  - {addr: 0x80015cb0, end: 0x800162b4, name: suzuki_smd_channel_commands}
+  - {addr: 0x800162b4, end: 0x80016fb4, name: suzuki_smd_modulation_commands}
+  - {addr: 0x80016fb4, end: 0x80017920, name: suzuki_smd_voices}
+  - {addr: 0x80017920, end: 0x8001865c, name: suzuki_driver}
+  - {addr: 0x80040934, end: 0x800424c0, name: game_loop}
+  - {addr: 0x800424c0, end: 0x80042b3c, name: startup}
+  - {addr: 0x80042b3c, end: 0x800434dc, name: new_game_caption}
+  - {addr: 0x800434dc, end: 0x800435c4, name: system_callbacks}
+  - {addr: 0x800435c4, end: 0x800442bc, name: sound_requests}
+  - {addr: 0x800442bc, end: 0x800449ec, name: heap}
+  - {addr: 0x800449f8, end: 0x80044ba0, name: system_handlers}
+  - {addr: 0x80044e80, end: 0x80045134, name: zodiac_primitives}
+  - {addr: 0x80045134, end: 0x800452ec, name: overlay_loading}
+  - {addr: 0x800452ec, end: 0x800454cc, name: save_init_data_tables, profile: gcc-2.6.3_O2_aspsx-2.21}
+  - {addr: 0x80045514, end: 0x8004593c, name: open_overlay}
+  - {addr: 0x80059854, end: 0x8005cc64, name: party}
+  - {addr: 0x8005cc64, end: 0x8005e254, name: unit_growth}
+  - {addr: 0x8005e254, end: 0x8005e90c, name: unit_status}
+
 functions:
   - {addr: 0x80010a30, size: 160, name: __SN_ENTRY_POINT, hash: 179da0ce7d5e763f, source: src/lib/psyq/crt/__SN_ENTRY_POINT.c}
   - {addr: 0x80010ad0, size: 112, name: __main, hash: 1dec58075cb55f11, source: src/lib/psyq/crt/__main.c}

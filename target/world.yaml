@@ -11,6 +11,110 @@ links: [wldcore, battle]
 libraries:
   - {id: libgs, addr: 0x800e0228, end: 0x800e1a98, kind: psyq, library: LIBGS}
 
+units:
+  - {addr: 0x800e1a98, end: 0x800e2390, name: script_helpers, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800e2390, end: 0x800e2c0c, name: window_buffers, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800e2c0c, end: 0x800e3088, name: texture_allocator, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800e3088, end: 0x800e3358, name: buffer_allocator, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800e3358, end: 0x800e372c, name: numbers_frame, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800e372c, end: 0x800e4bf4, name: dialog_messages, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800e4cb0, end: 0x800e4d9c, name: dialog_cursor}
+  - {addr: 0x800e6edc, end: 0x800e779c, name: dialog_helpers}
+  - {addr: 0x800e77e8, end: 0x800e7b4c, name: event_unit_lookup}
+  - {addr: 0x800e7b4c, end: 0x800e7c20, name: unit_name_list}
+  - {addr: 0x800e7c20, end: 0x800e8310, name: status_billboard}
+  - {addr: 0x800e8310, end: 0x800eba30, name: unit_status_lists, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800eba30, end: 0x800ecb24, name: menu_entries, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800ecb58, end: 0x800ed5f4, name: icon_selection}
+  - {addr: 0x800ed5f4, end: 0x800edaa8, name: ability_list_text}
+  - {addr: 0x800eeaf4, end: 0x800ef1a8, name: message_threads}
+  - {addr: 0x800ef1a8, end: 0x800ef2fc, name: script_variables}
+  - {addr: 0x800ef2fc, end: 0x800ef788, name: fade_primitives}
+  - {addr: 0x800ef788, end: 0x800f0b9c, name: event_resources}
+  - {addr: 0x800f0b9c, end: 0x800f0c8c, name: music_tracks}
+  - {addr: 0x800f0c8c, end: 0x800f2fe4, name: attack_resources}
+  - {addr: 0x800f2fe4, end: 0x800f41f8, name: command_selection}
+  - {addr: 0x800f41f8, end: 0x800f6490, name: command_menus, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800f6490, end: 0x800f6ec8, name: event_frame, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800f92a0, end: 0x800fce18, name: script_interpreter, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800fce18, end: 0x800fe37c, name: script_commands, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x800fe6e8, end: 0x800fe818, name: text_entries}
+  - {addr: 0x800ff450, end: 0x800ffc28, name: window_images}
+  - {addr: 0x800ffd28, end: 0x800fff50, name: thread}
+  - {addr: 0x80100084, end: 0x80100188, name: thread_accessors}
+  - {addr: 0x80100348, end: 0x80100384, name: text_skip_to_entry}
+  - {addr: 0x80101740, end: 0x80101cd0, name: menu_window_frame_thread}
+  - {addr: 0x80102294, end: 0x80102e78, name: at_list_threads}
+  - {addr: 0x80102e78, end: 0x801041b8, name: options, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x801041b8, end: 0x8010482c, name: option_choice_thread}
+  - {addr: 0x8010482c, end: 0x80105e04, name: help_overlay}
+  - {addr: 0x80105e04, end: 0x801085a0, name: organization_resources, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x801086a0, end: 0x80108a18, name: formation_icon_list}
+  - {addr: 0x80108a18, end: 0x80108f9c, name: zodiac_primitives}
+  - {addr: 0x80108f9c, end: 0x80109374, name: formation_view}
+  - {addr: 0x80109554, end: 0x8010a480, name: screen_text_pages, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x8010b204, end: 0x8010c848, name: number_entry}
+  - {addr: 0x8010cbdc, end: 0x8010d0cc, name: portrait_transitions}
+  - {addr: 0x8010d0cc, end: 0x8010e2c8, name: unit_panel_banner, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x8010e2c8, end: 0x80110260, name: message_box, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x80110260, end: 0x80110480, name: unit_panel_primitives}
+  - {addr: 0x80110480, end: 0x80111070, name: list_threads}
+  - {addr: 0x80111070, end: 0x801117f0, name: equipment_panel_threads}
+  - {addr: 0x801117f0, end: 0x80111ec4, name: panel_text}
+  - {addr: 0x8011241c, end: 0x80112878, name: menu_window_threads}
+  - {addr: 0x801128e0, end: 0x80112c88, name: thread_state, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
+  - {addr: 0x80112c88, end: 0x8011315c, name: menu_panel_backdrops}
+  - {addr: 0x8011315c, end: 0x80113580, name: formation_display_init, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80113580, end: 0x80113618, name: screen_input_lockout}
+  - {addr: 0x80113618, end: 0x80115460, name: formation_screen, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80115460, end: 0x80115528, name: status_thread_toggles, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80115528, end: 0x80115650, name: panel_toggles, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x801156b4, end: 0x80118b3c, name: formation_grid, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80118b3c, end: 0x80118bf0, name: selection_records, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80118bf0, end: 0x80118e1c, name: selected_unit, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80118e1c, end: 0x8011a954, name: job_wheel}
+  - {addr: 0x8011a954, end: 0x8011aae8, name: equipment_rows}
+  - {addr: 0x8011aae8, end: 0x8011bdf8, name: formation_item_menu}
+  - {addr: 0x8011bdf8, end: 0x8011be38, name: preview_bonuses}
+  - {addr: 0x8011be38, end: 0x8011c5d4, name: equipment_menus}
+  - {addr: 0x8011c8d8, end: 0x8011d584, name: item_actions}
+  - {addr: 0x8011dc70, end: 0x8011efc0, name: formation_ability_menu}
+  - {addr: 0x8011efc0, end: 0x8011f390, name: job_learning}
+  - {addr: 0x8011f390, end: 0x8011f548, name: menu_ability_display_values}
+  - {addr: 0x8011f548, end: 0x801208b8, name: ability_lists}
+  - {addr: 0x801208f8, end: 0x80120afc, name: roster_changes}
+  - {addr: 0x80120bb0, end: 0x80121568, name: formation_records}
+  - {addr: 0x80121654, end: 0x80121fc8, name: roster_sorting}
+  - {addr: 0x80121fc8, end: 0x801223b8, name: item_order}
+  - {addr: 0x801223b8, end: 0x80122e40, name: job_abilities}
+  - {addr: 0x80122e40, end: 0x801231cc, name: equipment_stat_changes}
+  - {addr: 0x801231cc, end: 0x80123628, name: equipment_stat_deltas}
+  - {addr: 0x80123628, end: 0x80124fd0, name: equipment_slots}
+  - {addr: 0x8012502c, end: 0x80125374, name: shop_build_stock_list}
+  - {addr: 0x801253d4, end: 0x80125cfc, name: formation_units}
+  - {addr: 0x80125cfc, end: 0x80126374, name: screen_buffers}
+  - {addr: 0x801264dc, end: 0x801265c0, name: menu_script_core, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x801265c0, end: 0x801298b0, name: menu_script_opcodes, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x801298b0, end: 0x801298c0, name: draw_state, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x801298c0, end: 0x80129b14, name: draw_areas, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80129b14, end: 0x80129b6c, name: window_state, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x80129b6c, end: 0x80129e4c, name: menu_page_scroll_input, profile: gcc-2.6.3_O1_aspsx-2.34}
+  - {addr: 0x8012a08c, end: 0x8012a370, name: text_id_lists}
+  - {addr: 0x8012a5c0, end: 0x8012a980, name: font_rendering}
+  - {addr: 0x8012a9d4, end: 0x8012aaf4, name: text_measuring}
+  - {addr: 0x8012acf4, end: 0x8012b1ec, name: grid_cursor}
+  - {addr: 0x8012b1ec, end: 0x8012b400, name: bit_streams}
+  - {addr: 0x8012b400, end: 0x8012b90c, name: tutorial_controller_input}
+  - {addr: 0x8012c430, end: 0x8012c8bc, name: textured_quads}
+  - {addr: 0x8012d418, end: 0x8012d6dc, name: screen_fades}
+  - {addr: 0x8012d6dc, end: 0x8012d73c, name: gfx_image_transfer_wait}
+  - {addr: 0x8012d778, end: 0x8012d92c, name: text_sections}
+  - {addr: 0x8012d92c, end: 0x8012ebd0, name: tutorial, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x8012ebd0, end: 0x801325b4, name: card_save}
+  - {addr: 0x801325b4, end: 0x80133478, name: memcard}
+  - {addr: 0x80133478, end: 0x80138f5c, name: shop}
+  - {addr: 0x80138f5c, end: 0x8013a300, name: name_entry}
+
 functions:
   - {addr: 0x800e0228, size: 452, name: GsSortPoly, hash: 9a10ac6f8c76b4ec, source: src/lib/psyq/libgs/GsSortPoly.c}
   - {addr: 0x800e03ec, size: 148, name: psyq_gs_sort_sprite_bg, hash: 33eb380bed08096b, source: src/lib/psyq/libgs/psyq_gs_sort_sprite_bg.c}

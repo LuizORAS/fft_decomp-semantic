@@ -104,6 +104,7 @@ make symbols ACTION=rename-function|rename-global ARGS="--old A --new B"
 make share-audit [MODULE=x] # report shared C implementation candidates as JSON
 make twins [MODULE=x]      # group functions identical under renames across modules (needs the BIN)
 make trial TWINS=t0001     # compile each twin's source at the others' entries (or MODULE ENTRY SOURCE)
+make unit-check [MODULE=x] # compile each original translation unit whole from its members' sources
 make diff FUNC=f           # compare one function with the original bytes (needs the BIN)
 make library-diff ARGS="..." # compare a scratch library candidate without registering it
 make permute FUNC=f        # run decomp-permuter on it [DURATION=300 JOBS=4]
@@ -149,13 +150,18 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
 - `functions`: `{addr, size, name, hash}`, plus `profile`, `rodata`, `asm`
   (why the routine is assembly; its default source is then
   `src/<module>/<name>.s`), `source` (a path other than the default) or
-  `source_symbol` (the
-  neutral symbol a `src/shared/` source defines) only when needed. `hash` is the first 16 hex digits of the SHA-256 of the
+  `source_symbol` (the neutral symbol a `src/shared/` source defines) only
+  when needed. `hash` is the first 16 hex digits of the SHA-256 of the
   original bytes; only `make checksums` writes it.
 - `data`: named addresses with no reconstruction (globals, library entry
   points). `imports`: names from overlays that linking cannot otherwise
   reach. `overrides`: per-function bindings. `regions`: bytes deliberately
   left original, with the reason.
+- `units`: the original translation units, `{addr, end, name}` plus `profile`
+  when the file was not built with the module default, matched by address
+  from upstream's unit tables and named with its labels. The functions in
+  `[addr, end)` were one source file; each keeps its own source, and
+  `make unit-check` rebuilds the unit from them.
 - Linking one function binds each name it uses from its own module, then
   each `links` module in order, then main.
 
