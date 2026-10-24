@@ -827,14 +827,13 @@ s32 wldcore_text_is_window_finished(wldcore_text_scrollable_window_t* window);
 void wldcore_text_update_scroll_indicators(wldcore_text_scrollable_window_t* state);
 
 /* unit */
-/* The roster as the world map's menus read it: party records by index, Ramza's roster index, a unit's
- * id from its misc id, the status panel data and the participant list's saved cursor. */
+/* The roster as the world map's menus read it: party records by index, Ramza's roster index, the
+ * status panel data and the participant list's saved cursor. */
 
 extern s32 g_wldcore_participant_list_saved_cursor;
 extern battle_stats_t g_wldcore_status_unit;
 party_unit_t* wldcore_unit_get_party_unit(s32 party_index);
 s32 wldcore_unit_get_ramza_roster_index(void);
-s32 wldcore_unit_get_battle_id_by_runtime_id(s32 runtime_id);
 void wldcore_unit_build_status_panel_data(s32 party_index);
 void wldcore_unit_start_status_panel_threads(s32 party_index);
 
