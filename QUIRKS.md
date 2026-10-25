@@ -1324,4 +1324,11 @@ needs a portable C twin of each.
 - `wldcore_system_restore_previous_stack`: restores the `$sp` that
   `wldcore_system_switch_to_stack` stored, from the word just above the
   current one.
+- `battle_map_queue_textured_triangles`: transforms, culls, lights and links
+  the map part's textured triangles through the GTE; a native build needs a C
+  twin of the same arithmetic, the SXY packing under "Retail bugs" included.
+- `battle_map_queue_textured_quads`: the same for the textured quads.
+- `battle_map_queue_untextured_triangles`: the same for the untextured
+  triangles, unlit, at the masked and offset depth slot.
+- `battle_map_queue_untextured_quads`: the same for the untextured quads.
 
