@@ -210,7 +210,7 @@ type inventoryRecord struct {
 	StackSize    int    `json:"stack_size,omitempty"`
 }
 
-const usage = "usage: tools build [module|disc]|check [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|decl-check|declarations ...|share-audit [--module=M] [--min-bytes=N] [--prefix=P]|twins [--module=M] [--min-bytes=N] [--max-near=N] [--out=D]|trial --module=M --entry=E --source=S [--symbol=F] [--subst OLD=NEW]... [--include H]... | trial --batch=FILE | trial --twins=ID[,ID]...|unit-check [--module=M] [--unit=NAME]|symbols <action> ...|map [--out=build/DIR] [--pull-docs]|warnings [--module=M]|extract"
+const usage = "usage: tools build [module|disc]|check [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|decl-check|declarations ...|share-audit [--module=M] [--min-bytes=N] [--prefix=P]|twins [--module=M] [--min-bytes=N] [--max-near=N] [--out=D]|trial --module=M --entry=E --source=S [--symbol=F] [--subst OLD=NEW]... [--include H]... | trial --batch=FILE | trial --twins=ID[,ID]...|unit-check [--module=M] [--unit=NAME]|link [--module=M]|symbols <action> ...|map [--out=build/DIR] [--pull-docs]|warnings [--module=M]|extract"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -228,6 +228,7 @@ func main() {
 		"twins":                  true,
 		"trial":                  true,
 		"unit-check":             true,
+		"link":                   true,
 		"map":                    true,
 		"warnings":               true,
 		"compile-permuter-input": true,
@@ -271,6 +272,8 @@ func main() {
 		err = p.trialCommand(os.Args[2:])
 	case "unit-check":
 		err = p.unitCheckCommand(os.Args[2:])
+	case "link":
+		err = p.linkCommand(os.Args[2:])
 	case "map":
 		err = p.mapCommand(os.Args[2:])
 	case "warnings":
@@ -657,67 +660,55 @@ func (p project) repreprocess(sourcePath, preprocessed string) error {
 	return os.Rename(staging, preprocessed)
 }
 
-func (p project) compileHistoricalSections(sourcePath, linkPath, buildDir string, profile compilerProfile) (map[string][]byte, error) {
+// historicalInput writes sourcePath's preprocessed text (or, for assembly,
+// the validated source) to buildDir/<profile>.i and returns its path and the
+// source language.
+func (p project) historicalInput(sourcePath, buildDir string, profile compilerProfile) (string, string, error) {
 	if err := os.MkdirAll(buildDir, 0o755); err != nil {
-		return nil, err
+		return "", "", err
 	}
-	assembly := filepath.Join(buildDir, profile.name+".s")
 	preprocessed := filepath.Join(buildDir, profile.name+".i")
-	translated := filepath.Join(buildDir, profile.name+".maspsx.s")
-	object := filepath.Join(buildDir, profile.name+".o")
-	linkedPath := filepath.Join(buildDir, profile.name+".elf")
-	binary := filepath.Join(buildDir, profile.name+".bin")
 	language, err := sourceLanguage(sourcePath)
 	if err != nil {
-		return nil, err
+		return "", "", err
 	}
 	if language == "asm" {
 		data, err := os.ReadFile(sourcePath)
 		if err != nil {
-			return nil, err
+			return "", "", err
 		}
 		if err := validateStandaloneAssembly(data); err != nil {
-			return nil, err
+			return "", "", err
 		}
-		if err := os.WriteFile(preprocessed, data, 0o644); err != nil {
-			return nil, err
-		}
-	} else {
-		// Preprocess to a temporary and rename: the cache key is hashed from
-		// this file, so no reader may see a partial write.
-		staging := preprocessed + ".staging"
-		cppDir, cppSource := p.preprocessInput(sourcePath)
-		cpp := []string{
-			"mipsel-linux-gnu-cpp", "-P", "-undef", "-nostdinc", "-Iinclude",
-			cppSource, "-o", staging,
-		}
-		if err := runInDir(cppDir, cpp...); err != nil {
-			return nil, err
-		}
-		info, err := os.Stat(staging)
-		if err != nil {
-			return nil, err
-		}
-		if info.Size() == 0 {
-			return nil, fmt.Errorf("preprocessing %s produced no output", sourcePath)
-		}
-		if err := os.Rename(staging, preprocessed); err != nil {
-			return nil, err
-		}
+		return preprocessed, language, os.WriteFile(preprocessed, data, 0o644)
 	}
-	cacheKey, err := compilationCacheKey(preprocessed, linkPath, profile, language)
+	// Preprocess to a temporary and rename: the cache key is hashed from
+	// this file, so no reader may see a partial write.
+	staging := preprocessed + ".staging"
+	cppDir, cppSource := p.preprocessInput(sourcePath)
+	cpp := []string{
+		"mipsel-linux-gnu-cpp", "-P", "-undef", "-nostdinc", "-Iinclude",
+		cppSource, "-o", staging,
+	}
+	if err := runInDir(cppDir, cpp...); err != nil {
+		return "", "", err
+	}
+	info, err := os.Stat(staging)
 	if err != nil {
-		return nil, err
+		return "", "", err
 	}
-	cachePath := filepath.Join(p.root, "build", "cache", "tools", cacheKey+".json")
-	if os.Getenv("TOOLS_CACHE") != "0" {
-		if data, err := os.ReadFile(cachePath); err == nil {
-			var sections map[string][]byte
-			if json.Unmarshal(data, &sections) == nil && sections[".text"] != nil {
-				return sections, nil
-			}
-		}
+	if info.Size() == 0 {
+		return "", "", fmt.Errorf("preprocessing %s produced no output", sourcePath)
 	}
+	return preprocessed, language, os.Rename(staging, preprocessed)
+}
+
+// assembleHistoricalObject runs cc1 (for C), maspsx and the assembler on a
+// preprocessed source and returns the relocatable buildDir/<profile>.o.
+func (p project) assembleHistoricalObject(sourcePath, preprocessed, buildDir string, profile compilerProfile, language string) (string, error) {
+	assembly := filepath.Join(buildDir, profile.name+".s")
+	translated := filepath.Join(buildDir, profile.name+".maspsx.s")
+	object := filepath.Join(buildDir, profile.name+".o")
 	if language == "asm" {
 		assembly = preprocessed
 	} else {
@@ -732,14 +723,14 @@ func (p project) compileHistoricalSections(sourcePath, linkPath, buildDir string
 			for retry := 0; retry < historicalCompileRetries; retry++ {
 				time.Sleep(historicalCompileRetryDelay)
 				if retryErr := p.repreprocess(sourcePath, preprocessed); retryErr != nil {
-					return nil, errors.Join(compileErr, retryErr)
+					return "", errors.Join(compileErr, retryErr)
 				}
 				if compileErr = runInDir(p.root, cc1...); compileErr == nil {
 					break
 				}
 			}
 			if compileErr != nil {
-				return nil, compileErr
+				return "", compileErr
 			}
 		}
 	}
@@ -751,14 +742,41 @@ func (p project) compileHistoricalSections(sourcePath, linkPath, buildDir string
 		maspsx = append(maspsx, "--expand-div")
 	}
 	if err := transformFile(p.root, assembly, translated, maspsx...); err != nil {
-		return nil, err
+		return "", err
 	}
 	if profile.smallDataLimit != 0 {
 		if err := correctSmallDataLoadDelays(translated, profile.smallDataLimit); err != nil {
-			return nil, err
+			return "", err
 		}
 	}
 	if err := runInDir(p.root, "mipsel-linux-gnu-as", "-EL", "-march=r3000", "-mtune=r3000", "-no-pad-sections", "-O1", fmt.Sprintf("-G%d", profile.smallDataLimit), "-o", object, translated); err != nil {
+		return "", err
+	}
+	return object, nil
+}
+
+func (p project) compileHistoricalSections(sourcePath, linkPath, buildDir string, profile compilerProfile) (map[string][]byte, error) {
+	preprocessed, language, err := p.historicalInput(sourcePath, buildDir, profile)
+	if err != nil {
+		return nil, err
+	}
+	linkedPath := filepath.Join(buildDir, profile.name+".elf")
+	binary := filepath.Join(buildDir, profile.name+".bin")
+	cacheKey, err := compilationCacheKey(preprocessed, linkPath, profile, language)
+	if err != nil {
+		return nil, err
+	}
+	cachePath := filepath.Join(p.root, "build", "cache", "tools", cacheKey+".json")
+	if os.Getenv("TOOLS_CACHE") != "0" {
+		if data, err := os.ReadFile(cachePath); err == nil {
+			var sections map[string][]byte
+			if json.Unmarshal(data, &sections) == nil && sections[".text"] != nil {
+				return sections, nil
+			}
+		}
+	}
+	object, err := p.assembleHistoricalObject(sourcePath, preprocessed, buildDir, profile, language)
+	if err != nil {
 		return nil, err
 	}
 	if err := linkHistoricalObject(p.root, linkPath, object, linkedPath); err != nil {
@@ -890,6 +908,11 @@ func compilationCacheKey(preprocessed, linkPath string, profile compilerProfile,
 	}
 	hash.Write([]byte("toolchain-v2\x00" + toolchain))
 	for _, path := range []string{preprocessed, linkPath} {
+		// A relocatable object depends on no linker script.
+		if path == "" {
+			hash.Write([]byte("object-v1\x00"))
+			continue
+		}
 		data, err := os.ReadFile(path)
 		if err != nil {
 			return "", err

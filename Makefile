@@ -126,6 +126,10 @@ twins: extract ## Group byte-equivalent functions across modules under consisten
 trial: image ## Compile a candidate source at an entry and report the match or first difference (MODULE=x ENTRY=f SOURCE=path ARGS="--subst OLD=NEW", or BATCH=build/x.yaml, or TWINS=t0001)
 	@$(TOOLS) trial $(if $(strip $(BATCH)),--batch="$(BATCH)") $(if $(strip $(TWINS)),--twins="$(TWINS)") $(if $(strip $(MODULE)),--module="$(MODULE)") $(if $(strip $(ENTRY)),--entry="$(ENTRY)") $(if $(strip $(SOURCE)),--source="$(SOURCE)") $(ARGS)
 
+.PHONY: link
+link: image ## Link each module whole from its objects and the bytes between them, compare with the original (MODULE=x)
+	@$(TOOLS) link $(if $(strip $(MODULE)),--module="$(MODULE)")
+
 .PHONY: unit-check
 unit-check: image ## Rebuild each original translation unit from its members' sources and compare (MODULE=x UNIT=name)
 	@$(TOOLS) unit-check $(if $(strip $(MODULE)),--module="$(MODULE)") $(if $(strip $(UNIT)),--unit="$(UNIT)")
