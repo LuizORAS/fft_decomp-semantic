@@ -1,4 +1,3 @@
-#include "fft/battle.h"
 #include "fft/main.h"
 
 /* Call BATTLE.BIN's entry point, main_overlay_battle_entry_stub: MAIN's 4 KB of nops at 0x80010ba8, which

@@ -111,6 +111,7 @@ void main_boot_fade_out_squaresoft_logo(void);
 /* Load OPEN, WLDCORE and WORLD, and BATTLE from fixed disc sectors and run them. */
 
 extern s32 g_main_battle_bin_sector;
+void main_overlay_battle_entry_stub(void);
 void main_overlay_call_battle_entrypoint(void);
 void main_overlay_exec_battle_bin(void);
 int main_overlay_exec_open_bin_main_loop(int mode);

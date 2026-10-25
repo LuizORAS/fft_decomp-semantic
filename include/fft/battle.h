@@ -23,11 +23,6 @@
 #include "fft/thread.h"
 #include "psx/libc.h"
 
-/* overlay */
-/* Load OPEN, WLDCORE and WORLD, and BATTLE from fixed disc sectors and run them. */
-
-void main_overlay_battle_entry_stub(void);
-
 /* heap */
 /* The battle heap: a K&R-style free list in 8-byte units from the effect palette buffer up to MAIN's game heap. */
 

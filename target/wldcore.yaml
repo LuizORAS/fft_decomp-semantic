@@ -466,12 +466,12 @@ functions:
   - {addr: 0x80092434, size: 484, name: wldcore_list_handle_facts_input, hash: 3f569f76520bc273}
   - {addr: 0x80092618, size: 660, name: wldcore_menu_push_fact_detail_level, hash: 611be9a64cdbcc3a}
   - {addr: 0x800928ac, size: 600, name: wldcore_menu_close_fact_detail_level, hash: f5c8d454f1752f2f}
+  - {addr: 0x80092b04, size: 24, name: wldcore_system_switch_to_stack, hash: b22299bbfa49965d, asm: "Moves sp to a caller-supplied stack block; ordinary C cannot assign sp."}
+  - {addr: 0x80092b1c, size: 16, name: wldcore_system_restore_previous_stack, hash: 4f3421d1a3acd285, asm: "Restores the sp wldcore_system_switch_to_stack stored; ordinary C cannot assign sp."}
   - {addr: 0x8009de1c, size: 720, name: wldcore_calendar_advance_days, hash: 3ddb67c3d1ca1de9}
 
 data:
   - {addr: 0x8008c0ac, name: world_unit_get_facing_sixteenth_by_runtime_id}
-  - {addr: 0x80092b04, name: wldcore_system_switch_to_stack}
-  - {addr: 0x80092b1c, name: wldcore_system_restore_previous_stack}
   - {addr: 0x80092b2c, name: g_wldcore_anim_sequence_table}
   - {addr: 0x80092b30, name: g_wldcore_anim_cel_table}
   - {addr: 0x80092b34, name: g_wldcore_location_frame_tim}
@@ -657,7 +657,3 @@ data:
   - {addr: 0x800d48fc, name: g_wldcore_sound_novel_wait_frames}
   - {addr: 0x800d4900, name: g_wldcore_saved_context_value_display_position}
   - {addr: 0x800d4908, name: g_wldcore_gfx_aux_ot_tags}
-
-regions:
-  - {addr: 0x80092b04, end: 0x80092b2c, kind: handwritten, why: "handwritten caller-stack switch; ordinary C cannot assign sp"}
-  - {addr: 0x80092b1c, end: 0x80092b2c, kind: interior, why: "inside 0x80092b04: stack-switch restore tail depends on caller-supplied block"}

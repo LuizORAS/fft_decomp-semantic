@@ -1311,4 +1311,17 @@ needs a portable C twin of each.
   `main_system_run_game_loop`, abandoning every frame above it on a soft
   reset; a native build returns there another way (for example `setjmp` and
   `longjmp`).
+- `main_overlay_battle_entry_stub`: 4 KB of nops and a `jr ra`, which MAIN
+  calls as BATTLE's entry point and which do nothing. A native build calls an
+  empty function, and the 4 KB are MAIN's largest range of free RAM.
+- `main_system_frame_hook`: an empty per-frame hook whose callers enter at a
+  leading `nop`; a native build uses an empty function.
+- `wldcore_system_switch_to_stack`: stores `$sp` in the word at its argument
+  (the scratchpad's last word) and runs on the stack below it, so the calls
+  up to `wldcore_system_restore_previous_stack` keep their frames in the 1 KB
+  scratchpad. Its callers touch no slot of their own frame in between. A
+  native build has no scratchpad stack and keeps its own.
+- `wldcore_system_restore_previous_stack`: restores the `$sp` that
+  `wldcore_system_switch_to_stack` stored, from the word just above the
+  current one.
 
