@@ -2,7 +2,7 @@
 
 /* Render signed gauge values: each entry's sign flag is set (plus above zero,
  * minus at or below it) and its magnitude drawn in the positive, negative or
- * zero colour. */
+ * zero color. */
 void menu_text_render_signed_decimal_entries(
     u8* pixels, menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count) {
     s32 i;

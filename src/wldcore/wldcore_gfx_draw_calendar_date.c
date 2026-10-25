@@ -5,7 +5,7 @@
 /* Draw the world map's date: the label of EVENT_SCRIPT_VAR_MONTH (sequence
  * WLDCORE_ANIM_SEQUENCE_MONTH_FIRST + month - 1; the game names its months after the zodiac signs),
  * then EVENT_SCRIPT_VAR_DAY, the day of the calendar month rather than of the sign, as one or two digit
- * sequences 0x1A pixels to its right, in the HUD colour tinted by the screen fade. Nothing is drawn
+ * sequences 0x1A pixels to its right, in the HUD color tinted by the screen fade. Nothing is drawn
  * while MAIN_SYSTEM_FLAG_HIDE_CALENDAR_DATE is set. */
 void wldcore_gfx_draw_calendar_date(GsOT* ot) {
     world_animated_render_record_t request;

@@ -6,7 +6,7 @@ typedef union ai_direction_viability {
 } ai_direction_viability_t;
 
 /* Separate locals change the stack slots and coordinate byte stores. */
-typedef struct ai_wait_facing_work {
+typedef struct battle_ai_wait_facing_work {
     battle_ai_coords_t target_coords;
     u8 _unused_04[4];
     ai_direction_viability_t viability;

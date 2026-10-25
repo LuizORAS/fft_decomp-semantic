@@ -14,7 +14,7 @@
  * Load-bearing shapes: the nested else routes the remainder<8 and (code-8)/5 arms through `product` and a
  * trailing `row = product` copy, so jump2 sees two different join labels and keeps the two identical
  * `code / 10` arms instead of cross-jumping them. `palette_base` (a multi-block variable) holds the source
- * offset sum so it is not tied to the dying `>> 1` temporary, and `y` is initialised between that sum and
+ * offset sum so it is not tied to the dying `>> 1` temporary, and `y` is initialized between that sum and
  * `source`. `code` is one variable reused for sheet, code, remainder and the final portrait code; the
  * clear loop counter reuses `x`; `source` is an integer so `x + source` keeps its order. The palette
  * offset's `/ 2` of an even sum compiles to the target's plain `sra` and its allocation order; it also adds

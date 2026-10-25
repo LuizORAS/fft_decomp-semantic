@@ -1,6 +1,6 @@
 #include "fft/menu.h"
 
-/* Render gauge values with an explicit sign, coloured by sign (0x7 fill for
+/* Render gauge values with an explicit sign, colored by sign (0x7 fill for
  * negative, 0xb for positive), drawing a zero value as a placeholder. */
 void menu_text_render_decimal_entry_list(
     u8* pixels, const menu_number_entry_t* entries, world_glyph_blit_t* out, s32 count) {

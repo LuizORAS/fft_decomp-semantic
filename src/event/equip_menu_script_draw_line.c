@@ -2,7 +2,7 @@
 #include "fft/menu.h"
 
 /* Opcode 7 (MENU_SCRIPT_OP_LINE): queue a flat line (equip_gfx_enqueue_line_f2) from (byte 2, byte 3)
- * to (byte 4, byte 5) in the RGB colour at byte 6, with the current semi-transparency and draw priority.
+ * to (byte 4, byte 5) in the RGB color at byte 6, with the current semi-transparency and draw priority.
  * Returns the next command. */
 menu_instruction_t* equip_menu_script_draw_line(menu_instruction_t* stream) {
     point16_t endpoints[2];

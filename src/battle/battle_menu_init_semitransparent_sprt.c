@@ -1,7 +1,7 @@
 #include "fft/battle_menu.h"
 #include "psx/libgpu.h"
 
-/* Initialize the menu's spare sprite: a semi-transparent, shade-textured grey (0x80) SPRT with no
+/* Initialize the menu's spare sprite: a semi-transparent, shade-textured gray (0x80) SPRT with no
  * size, parked off-screen at x 0x200, with CLUT 0x7c3c. */
 void battle_menu_init_semitransparent_sprt(SPRT* sprite) {
     SetSprt(sprite);

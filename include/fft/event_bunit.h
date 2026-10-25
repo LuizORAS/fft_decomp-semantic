@@ -195,7 +195,7 @@ extern s32 g_bunit_help_screen_id; /* menu_grid_help_id_e */
 /* Drawing: the packet pools and the two frame buffers, the fades, portraits, quads, tiles, draw
  * areas and VRAM transfers, the distance-shaded rows and the cursor trail. */
 
-typedef enum bunit_vertical_scroll_direction {
+typedef enum bunit_menu_vertical_scroll_direction {
     BUNIT_VERTICAL_SCROLL_UP = -1,
     BUNIT_VERTICAL_SCROLL_NONE = 0,
     BUNIT_VERTICAL_SCROLL_DOWN = 1,
@@ -507,7 +507,7 @@ s32 bunit_unit_build_data_list(s32 mode, s32 unit_data, s32 sort_mode);
 void bunit_unit_build_data_from_battle_stats(const struct battle_stats* unit, bunit_unit_t* record, s32 unused_slot);
 
 /* panel */
-/* Starting and stopping the panel threads, and the colours of the status panel's sprites. */
+/* Starting and stopping the panel threads, and the colors of the status panel's sprites. */
 
 void bunit_panel_toggle_comparison_status_thread(s32 enable);
 void bunit_panel_toggle_unit_status_thread(s32 enable);

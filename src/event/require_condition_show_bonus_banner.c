@@ -169,7 +169,7 @@ void require_condition_show_bonus_banner(s32 hold_frames) {
         /* The one-trip loop emits nothing; its loop note weights these two
          * references of reveal_offset_top one level deeper, which keeps the
          * top offset ahead of the bottom one in global allocation (s3/s6)
-         * while both are initialised top first like the target. */
+         * while both are initialized top first like the target. */
         if (frame >= 9)
             do {
                 reveal_offset_top += 8;

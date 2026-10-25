@@ -42,7 +42,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   `battle_gfx_update_all_unit_rotation_and_vectors`) do the same for units
   that chapter-end cutscenes walk off the map.
 - `src/battle/battle_move_animate_fall_to_target_tile.c`: the event-state
-  (`0x34`) path writes the tile-centre depth into `real.vy` (not `real.vz`).
+  (`0x34`) path writes the tile-center depth into `real.vy` (not `real.vz`).
   The first frame adds the fall speed to it, which puts the unit below the
   ground, and the next frame snaps it to the ground: an event fall ends on its
   second frame.
@@ -75,7 +75,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   negative X therefore forces the 16-bit screen Y to `0xffff`.
 - `src/battle/battle_map_blend_ambient_light_color.c`,
   `src/battle/battle_map_blend_darkness_color.c`: modes `11` and above leave the
-  target colour uninitialized (no default case).
+  target color uninitialized (no default case).
 - `src/battle/battle_ai_load_ability_entry.c`: the CT adjustments test the
   Monster Skill (`0x80`) and Defend (`0x40`) support bits; Short Charge and
   Non-Charge were presumably intended.
@@ -83,7 +83,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   tests `BATTLE_AI_DECISION_JUMPING`, built from Jump (bit `0x04` of status
   byte 0; Blood Suck is bit `0x04` of byte 1), so Protect allies skips Blood
   Suck on a target that is not jumping.
-- `src/battle/battle_ai_build_monster_skill_tile_mask.c`: the `-1` neighbour
+- `src/battle/battle_ai_build_monster_skill_tile_mask.c`: the `-1` neighbor
   offsets are loaded unsigned (+255), so only `+x`/`+y` survive, and the level
   loop runs for level 0 only.
 - `src/battle/battle_ai_build_targetable_tile_mask.c`: radii 8–15 index past
@@ -159,7 +159,7 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   and leaves quotient -1 (1 for a negative dividend) and the dividend as the
   remainder: `100 / ct` in `menu_ability_get_ct_display_value` and
   `world_ability_get_ct_display_value` (CT 0 displays -1 + 1 = 0);
-  `0x20000 / battle_effect_lerp_fixed8(...)` for the wave steps in
+  `0x20000 / battle_effect_lerp_q8(...)` for the wave steps in
   `effect_update_wave_mesh` (E033, E035, E073, E079, E080, E230, E453, E456);
   and the direction-times-spread products over `scale` in
   `battle_effect_spawn_particle_motion`.
@@ -967,8 +967,8 @@ translation unit. Share their types and constants through headers.
 - `g_battle_effect_disc_entries` (`0x801b53e8`) stores whole-sector sizes, and entry 0 repeats entry 1: effect id 0 loads E001.BIN, so E000.BIN's code is never loaded through the table.
 - `battle_effect_update_stage`: its RESTART_SCRIPT phase (6) restarts the effect script after `battle_effect_reset_frame_data_pointer` and `battle_effect_reset_animation_sequences_pointer`, but nothing sets `g_battle_effect_playback_phase` to 6, and the two start pointers those routines restore are never written (0 in BATTLE.BIN). Nothing stores phase 5 either; it has no case and no default, so it would return `result` unset.
 - `src/world/world_gfx_load_wldface_to_frame_buffer.c`: the WLDFACE rectangles (`g_world_wldface_vram_rects`) use x = 1664–1856; the GPU masks VRAM transfer coordinates, so the pages land at x = 640–832.
-- `suzuki_sound_init`: `suzuki_sound_init_sfx_music` reaches `suzuki_smd_insert_music`, which disables and re-enables `g_suzuki_sound_root_counter_2_event` before the initialiser opens that event: handle 0 at boot, the handle `suzuki_sound_quit` closed on a soft reset.
-- `src/event/equip_menu_load_images_and_reset_lists.c` and `bunit_gfx_init_vram_and_start_fade.c`: store 16-colour CLUTs into the 4-entry `buf1`; they run on into `buf2`, which the frame places directly after it (the source reads as two arrays, the stack holds one).
+- `suzuki_sound_init`: `suzuki_sound_init_sfx_music` reaches `suzuki_smd_insert_music`, which disables and re-enables `g_suzuki_sound_root_counter_2_event` before the initializer opens that event: handle 0 at boot, the handle `suzuki_sound_quit` closed on a soft reset.
+- `src/event/equip_menu_load_images_and_reset_lists.c` and `bunit_gfx_init_vram_and_start_fade.c`: store 16-color CLUTs into the 4-entry `buf1`; they run on into `buf2`, which the frame places directly after it (the source reads as two arrays, the stack holds one).
 - EFFECT scripts never run seven state handlers: E000's script calls only `effect_e000_noop` (opcode 07) and E314's names no file function, so native function ids 1 and 90 are bound by nothing; E134/E242 `update_ring_stack_mesh_state`, E454/E455 `map_set_3d_objects_to_state_2_state` and E456 `map_step_freeze_state` sit in callback slots (script opcode 06) that no keyframe selector fires. E457.BIN, which has no code, binds native function 88 (0x801c2578, E259's `effect_update_dome_mesh`; data in its own image) to slot 0, and none of its keyframes names a slot.
 - `src/battle/battle_map_draw_mesh_and_weather.c`: when map command 0x96 (E458) ends, `battle_map_run_weather_command(0x8b)` restores a non-snow rain or storm mid-draw; the mode-0x55 block then re-links `ft3` drops the 0x96 block already linked at OT+2, an ordering-table cycle that holds `DrawSync` until its 240-VBlank timeout.
 - `src/world/world_card_run_menu_screen.c`: its 0xCCD8-byte stack frame, containing packet pools and directory entries, reaches below 0x801ff000 into the top cells of MAIN's game heap (0x801df000-0x801ff000); it is safe only while those cells are free.
@@ -1163,10 +1163,10 @@ translation unit. Share their types and constants through headers.
 - `src/battle/battle_ai_build_unit_ability_list.c`: the weapon kinds of both hands are ORed and only one
   kind at a time is handled (none, damage, absorb, heal), so a unit holding two kinds (a Blood Sword with
   another weapon under Two Swords) gets no target-team flag on its Attack entry.
-- Half of MP: `battle_menu_get_unit_skillset_ability_data` lists the half rounded up and the menu greys
+- Half of MP: `battle_menu_get_unit_skillset_ability_data` lists the half rounded up and the menu grays
   an ability by it, but `battle_action_check_and_consume_mp` and the AI use the half rounded down. Seven
   abilities have odd costs (Zodiac 99; Toad 2, Gravi 2, Flare 2, Blind 2, Confuse 2 and Sleep 2 at 35),
-  so a unit with exactly the lower half sees them greyed.
+  so a unit with exactly the lower half sees them grayed.
 - `src/battle/battle_ai_select_auto_battle_action.c`: Protect allies falls back to Run like a rabbit when
   `battle_ai_select_protect_allies_action` returns -2, which it never does.
 - `src/battle/battle_ai_evaluate_origins.c`: an ability without
@@ -1276,7 +1276,7 @@ translation unit. Share their types and constants through headers.
   (`TEXT_SET_X_POSITION`) to the width as an advance, while the renderers
   (`menu_text_render_encoded_ids_to_image`, `world_text_render_encoded_ids_to_image`,
   `jobstts_text_render_encoded_ids_to_image`) move the pen to that x. Its only caller,
-  `world_formation_build_job_wheel_job_name`, centres the job wheel's job name.
+  `world_formation_build_job_wheel_job_name`, centers the job wheel's job name.
 - `main_gfx_build_zodiac_sprite_polygon` and `attack_gfx_build_zodiac_sprite_polygon`
   (MAIN, ATTACK) and `gfx_set_scaled_poly_ft4_8bpp` (WORLD, CARD, DEBUGCHR, REQUIRE)
   round a scaled offset or size by testing the remainder of a truncating division

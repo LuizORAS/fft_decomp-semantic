@@ -3,7 +3,7 @@
 /* Copies one GPU polygon primitive into the libgs packet area, offsetting
  * each vertex by GsORGOFSX and GsORGOFSY, and sorts it into the OT at `pri`.
  * The 0x04/0x08/0x10 code bits add per-vertex texture words, a fourth vertex
- * and per-vertex colour words. */
+ * and per-vertex color words. */
 void GsSortPoly(void* prim, GsOT* ot, u16 pri) {
     u32* src;
     u32* dst;

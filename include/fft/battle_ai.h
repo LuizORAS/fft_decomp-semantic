@@ -131,7 +131,7 @@ typedef union battle_ai_coords {
     } fields;
 } battle_ai_coords_t;
 
-/* Ability AI behaviour flags 1..4. Consumers read the 32-bit value, two 16-bit values,
+/* Ability AI behavior flags 1..4. Consumers read the 32-bit value, two 16-bit values,
  * or individual bytes; use the corresponding masks above for each view. */
 typedef union battle_ai_ability_flags {
     u32 word;
@@ -221,7 +221,7 @@ typedef struct battle_ai_considered_ability {
     u8 mp_cost;                                /* 0x11 */
     u8 _padding_12[2];                         /* tail padding to 4-byte alignment */
 } battle_ai_considered_ability_t;
-typedef char ai_considered_ability_size_must_be_20[(sizeof(battle_ai_considered_ability_t) == 20) ? 1 : -1];
+typedef char battle_ai_considered_ability_size_must_be_20[(sizeof(battle_ai_considered_ability_t) == 20) ? 1 : -1];
 
 /* battle_ai_action_rank_t.decided of the selected action once it is chosen. */
 enum {
@@ -259,7 +259,7 @@ typedef struct battle_ai_action_data {
     action_command_t command;     /* 0x08; copied as the ACT payload */
     battle_ai_action_rank_t rank; /* 0x1c */
 } battle_ai_action_data_t;
-typedef char ai_action_data_size_must_be_32[(sizeof(battle_ai_action_data_t) == 32) ? 1 : -1];
+typedef char battle_ai_action_data_size_must_be_32[(sizeof(battle_ai_action_data_t) == 32) ? 1 : -1];
 
 /* The packed 16-bit value combines an ability ID and a physical unit slot. */
 enum {
@@ -372,7 +372,7 @@ typedef struct battle_ai_unit_decision {
     u8 enemy_reach;            /* 0x0e; Move + the least range + AoE of its enemy-targeting abilities */
     u8 ally_reach;             /* 0x0f; Move + the least range + AoE of its ally-targeting abilities (items halved) */
 } battle_ai_unit_decision_t;
-typedef char ai_unit_decision_size_must_be_16[(sizeof(battle_ai_unit_decision_t) == 16) ? 1 : -1];
+typedef char battle_ai_unit_decision_size_must_be_16[(sizeof(battle_ai_unit_decision_t) == 16) ? 1 : -1];
 
 /* AI +0x0c78..0x0cb7. The target's 21-byte save at +0xca2 overlaps
  * the low three bytes of target_setting_flags at +0xcb4. Loops at
@@ -571,7 +571,7 @@ typedef struct battle_ai_data {
     u8 _unused_19bf[8];
     u8 _padding_19c7; /* 0x19c7; last documented byte; tail padding to 4-byte alignment */
 } battle_ai_data_t;
-typedef char ai_data_size_must_be_6600[(sizeof(battle_ai_data_t) == 6600) ? 1 : -1];
+typedef char battle_ai_data_size_must_be_6600[(sizeof(battle_ai_data_t) == 6600) ? 1 : -1];
 
 /* Runtime policy byte in battle_ai_ability_entry_t. The low three bits control
  * how the AI searches and consumes candidate action origins; initialization

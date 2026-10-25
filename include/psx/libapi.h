@@ -1,6 +1,8 @@
 #ifndef PSX_LIBAPI_H
 #define PSX_LIBAPI_H
 
+/* Psy-Q LIBAPI: BIOS files, events, root counters and the kernel services the game calls. */
+
 #include "psx/kernel.h"
 #include "psx/libc.h"
 #include "psx/types.h"

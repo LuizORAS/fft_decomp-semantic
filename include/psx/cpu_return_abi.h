@@ -1,5 +1,8 @@
 #ifndef PSX_CPU_RETURN_ABI_H
 #define PSX_CPU_RETURN_ABI_H
+
+/* Register views of the CPU return address and return value. */
+
 #include "psx/types.h"
 
 /* Reserved architectural return state, as with the BIOS selector register. */

@@ -7,7 +7,7 @@
 #include "psx/types.h"
 
 /* 0x28-byte heap state kept in the secondary effect's allocation. */
-typedef struct effect_burst_state {
+typedef struct battle_effect_burst_state {
     s32 frame;    /* 0x00 */
     s32 done;     /* 0x04 */
     s32 count_a;  /* 0x08 */

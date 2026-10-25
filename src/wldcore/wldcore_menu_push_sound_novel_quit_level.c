@@ -4,7 +4,7 @@
  * (sequences 2 and 4)
  * and one render record showing text 0xb83a in a 0x3c x 0x30 image at
  * (-0x1e, -0x18), with the windows offset inside it. Blocks every button
- * (-1), clears the fade box colour, sets fade flag 8 and clears the new level's 32-bit values
+ * (-1), clears the fade box color, sets fade flag 8 and clears the new level's 32-bit values
  * 0x10..0x1c.
  *
  * The level is written through the sound_novel_quit member of the stack-record

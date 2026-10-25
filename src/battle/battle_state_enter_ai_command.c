@@ -3,7 +3,7 @@
 #include "fft/battle_target.h"
 
 /* Start the source unit's AI turn (AI_COMMAND): reset its state counter and command readiness,
- * clear the tile colours and store its names for the menus. */
+ * clear the tile colors and store its names for the menus. */
 void battle_state_enter_ai_command(void) {
     battle_unit_t* unit;
 

@@ -264,7 +264,7 @@ typedef char battle_move_spread_frontier_must_be_62
     [((unsigned long)&((battle_move_spread_state_t*)0)->frontier_max_remaining_range == 0x62) ? 1 : -1];
 typedef char
     battle_move_spread_tile_x_must_be_26[((unsigned long)&((battle_move_spread_state_t*)0)->tile_x == 0x26) ? 1 : -1];
-typedef char move_spread_state_size_must_be_120[(sizeof(battle_move_spread_state_t) == 120) ? 1 : -1];
+typedef char battle_move_spread_state_size_must_be_120[(sizeof(battle_move_spread_state_t) == 120) ? 1 : -1];
 
 /* battle_move_record_t.unit_id_flags. */
 enum {
@@ -289,7 +289,7 @@ typedef struct battle_move_record {
     u8 standing_height; /* 0x05 */
     u8 top_height;      /* 0x06 */
 } battle_move_record_t;
-typedef char move_record_size_must_be_7[(sizeof(battle_move_record_t) == 7) ? 1 : -1];
+typedef char battle_move_record_size_must_be_7[(sizeof(battle_move_record_t) == 7) ? 1 : -1];
 
 extern u8 g_battle_move_find_result_flags;
 extern u8 g_battle_move_find_entry_index;
@@ -502,7 +502,7 @@ typedef struct battle_move_found_item {
     u8 item_id;        /* 0x04 */
     u8 _padding_05[3]; /* tail padding to four-byte alignment */
 } battle_move_found_item_t;
-typedef char move_found_item_size_must_be_8[sizeof(battle_move_found_item_t) == 8 ? 1 : -1];
+typedef char battle_move_found_item_size_must_be_8[sizeof(battle_move_found_item_t) == 8 ? 1 : -1];
 
 /* Contiguous result bytes returned as battle_move_find_result_data_t. Keep
  * distinct symbols: the target reloads their absolute addresses separately. */

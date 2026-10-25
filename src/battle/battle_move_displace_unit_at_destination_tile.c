@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Push aside a unit standing on the tile the mover is stepping onto: within 7 units of that tile's
- * centre the occupant moves off it by (7 - distance) * 3 / 2, up to 10 units at the centre
+ * center the occupant moves off it by (7 - distance) * 3 / 2, up to 10 units at the center
  * (battle_move_displace_unit_along_step_direction). Skipped on the last path step and on a step onto
  * a unit (BATTLE_MOVE_STEP_ON_UNIT).
  *

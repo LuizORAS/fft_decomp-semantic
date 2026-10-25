@@ -8,7 +8,7 @@
 
 /* Distortion 0xd (BATTLE_DISTORTION_ANIMATION_FALL_TO_TARGET): drop the unit under gravity, straight down
  * from where it is, onto the ground of its first target's tile or else of the action target tile,
- * and end there. During an event it falls onto its own tile instead, held at the tile's centre (see
+ * and end there. During an event it falls onto its own tile instead, held at the tile's center (see
  * QUIRKS.md for the coordinate it writes). */
 void battle_move_animate_fall_to_target_tile(battle_unit_t* unit) {
     SVECTOR coords;
@@ -38,7 +38,7 @@ void battle_move_animate_fall_to_target_tile(battle_unit_t* unit) {
             unit->real.vx = x * ONE;
             y = unit->map_y * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2);
             unit->world_coords.vz = y;
-            /* Retail stores the tile-centre depth into real.vy (the height),
+            /* Retail stores the tile-center depth into real.vy (the height),
              * not real.vz. The first frame adds the fall speed to it and the
              * next one snaps the height to the ground. */
             unit->real.vy = y * ONE;

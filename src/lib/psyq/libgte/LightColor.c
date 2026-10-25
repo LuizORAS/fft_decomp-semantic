@@ -1,7 +1,7 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* Multiply the light intensities `input` by the light colour matrix and add the background colour (MVMVA)
+/* Multiply the light intensities `input` by the light color matrix and add the background color (MVMVA)
  * into `output`. No code refers to it. */
 void LightColor(VECTOR* input, VECTOR* output) {
     PSYQ_GTE_IR_VECTOR(

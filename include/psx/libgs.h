@@ -1,6 +1,8 @@
 #ifndef PSX_LIBGS_H
 #define PSX_LIBGS_H
 
+/* Psy-Q LIBGS: the graphics system that WORLD links. */
+
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 #include "psx/types.h"

@@ -1,6 +1,8 @@
 #ifndef PSX_TYPES_H
 #define PSX_TYPES_H
 
+/* Fixed-width integer types. */
+
 typedef signed char s8;
 typedef unsigned char u8;
 typedef signed short s16;

@@ -1,12 +1,12 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* Draws one formation unit sprite centred on pos.
+/* Draws one formation unit sprite centered on pos.
  *
  * When g_world_formation_dismiss_anim_timer selects this unit (high byte) the sprite is drawn shrunk by
  * (low byte + 1) without a shadow. Otherwise a unit away on a proposition gets its "leaving" or
  * "missing" label first and the away tint, and the sprite is drawn with its shadow.
- * Compiled at -O1; the (s16) casts keep the centring offset from being
+ * Compiled at -O1; the (s16) casts keep the centering offset from being
  * reassociated onto pos. */
 void world_formation_draw_unit_sprite(s16 unit_index, point16_t* pos, rgb24_t* rgb, s32 ot_index) {
     world_oriented_quad_t sprite;

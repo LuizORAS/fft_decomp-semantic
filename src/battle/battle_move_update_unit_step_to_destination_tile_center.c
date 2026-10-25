@@ -2,8 +2,8 @@
 #include "fft/battle_move.h"
 #include "psx/types.h"
 
-/* Walk phases 2-16 (even; edge to centre), also run by the knockback step: move, displace a unit
- * standing on the destination tile (outside events), and at the centre snap to it; once the unit
+/* Walk phases 2-16 (even; edge to center), also run by the knockback step: move, displace a unit
+ * standing on the destination tile (outside events), and at the center snap to it; once the unit
  * is down on the ground, take the destination tile and end the step (phase 0). The float copy,
  * battle_move_update_float_step_to_destination_tile_center (float phases 0x2c-0x38, stride 4), is
  * this text with the displacement bound to battle_move_displace_overlapping_unit, so it pushes aside

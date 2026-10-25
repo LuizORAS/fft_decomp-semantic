@@ -45,7 +45,7 @@ Who decides, in order ([[battle_ai_select_action]]):
 
 A player unit takes its Auto-Battle setting from the menu. Any other unit
 takes a mode from its scenario (ENTD) AI flags
-([[battle_ai_init_unit_abilities]]): the special-behaviour bit with Conserve
+([[battle_ai_init_unit_abilities]]): the special-behavior bit with Conserve
 CT runs like a rabbit, and with Focus and Aggressive it fights for life
 against its focus unit, or protects it when it is on the same team. That mode
 lasts while the unit is not Invited and its focus unit is in play
@@ -71,13 +71,13 @@ eligible enemy.
   Reflect, trajectories, map-tile targeting, Monster Skill, team limits.
 - **Decision records:** one [[battle_ai_unit_decision_t]] per unit (16
   bytes): the decision flags (dead, petrified, jumping, the scenario's
-  special behaviour, aggressive, stay near, focus target, worth targeting),
+  special behavior, aggressive, stay near, focus target, worth targeting),
   the main target, targeting flags 1 (ranged, healer, supporter, reflected
   action) and 2 (HP and MP state, Run like a rabbit, untargetable, dead), the
   enemy flag, the MP costs, the shares of its abilities that cost MP, that
   Silence stops and that can be evaded, and its reach toward enemies and
   allies.
-- **Behaviour from the unit:** the Auto-Battle setting and target
+- **Behavior from the unit:** the Auto-Battle setting and target
   ([[battle_stats_t]] `auto_battle_setting`, `auto_battle_target`,
   [[battle_auto_battle_setting_e]], named after the game's menu), and the
   scenario's AI fields copied from [[entd_unit_t]]: the stay-near tile, the
@@ -98,7 +98,7 @@ eligible enemy.
   (`targetable_tiles`).
 - **Tables (BATTLE data):** the status weights
   ([[g_battle_ai_status_priority_weights]], 40 values at `0x8019f308`), the
-  range-row templates, the four neighbour offsets and the statuses Protect
+  range-row templates, the four neighbor offsets and the statuses Protect
   allies tries to remove ([[g_battle_ai_recovery_status_ids]]: Dead,
   Petrify, Blood Suck).
 - **Snapshots:** every planned unit's state before a simulation
@@ -196,7 +196,7 @@ The other statuses weigh 0.
   [[battle_ai_select_destination]], [[battle_ai_fill_foe_proximity_grid]].
 - **Modes and targets:** [[battle_ai_init_target_consideration]],
   [[battle_ai_select_auto_battle_action]] and the `battle_ai_select_*_action`
-  functions; a scenario unit's behaviour bits are in its ENTD record (disc
+  functions; a scenario unit's behavior bits are in its ENTD record (disc
   data).
 - **Which abilities a unit considers:** [[battle_ai_build_unit_ability_list]]
   and [[battle_ai_set_ability_considerations]].
@@ -215,7 +215,7 @@ The other statuses weigh 0.
   ([[battle_ai_add_usable_skillset_abilities]]), a Jump skillset with no
   Level Jump loses its Jump entry, and a unit holding two weapon kinds gets
   no target team for Attack.
-- **Masks:** the Monster Skill mask loses two neighbours and the upper level,
+- **Masks:** the Monster Skill mask loses two neighbors and the upper level,
   and range radii 8-15 read past their templates.
 - **Unreachable or ineffective code:** Protect allies' fallback to Run like a
   rabbit never runs, and the 10-combination test of the origin search has no

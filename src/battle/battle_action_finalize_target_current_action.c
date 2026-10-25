@@ -7,7 +7,7 @@
 /* Validate and clamp the target's result before it applies.
  *
  * A target that is dead (unless the ability cancels Dead and the target is not undead), petrified or
- * under Wall, without the ability cancelling that status, turns the action into a cancelled miss and
+ * under Wall, without the ability canceling that status, turns the action into a canceled miss and
  * leaves the target list. Otherwise zero accuracy clears the hit, HP/MP changes are capped at 999, a
  * lethal HP hit cancels the knockback and the weapon spell, and in a primary action a hit that the
  * target team's Golem absorbs (an ability blocked by Golem) becomes a Golem guard miss. */

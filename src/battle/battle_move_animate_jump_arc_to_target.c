@@ -7,7 +7,7 @@
 #include "psx/types.h"
 
 /* Distortion 6 (BATTLE_DISTORTION_ANIMATION_JUMP_TO_TARGET): jump along an arc toward the first target's
- * sprite centre (half its sprite height above it), or the action target tile when the unit has no
+ * sprite center (half its sprite height above it), or the action target tile when the unit has no
  * targets, and end when the flight frames run out, without landing. Phase 0 asks
  * battle_move_calculate_jump_arc_velocity for the velocity and frame count; phase 1 applies it,
  * accelerating the height by g_battle_move_jump_gravity. A unit with no battle record ends at once. */

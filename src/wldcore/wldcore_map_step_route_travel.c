@@ -1,7 +1,7 @@
 #include "fft/script.h"
 #include "fft/wldcore.h"
 
-/* Move the travelling marker one frame along its path; the live map frame calls it. While a camera
+/* Move the traveling marker one frame along its path; the live map frame calls it. While a camera
  * pan runs it only advances the pan. Otherwise the marker moves between its segment's points, the
  * map scrolling to keep it in view, and the next segment starts when one ends. At the end of each leg
  * a day passes (wldcore_calendar_advance_day), the marker stands on the leg's location

@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 
 /* Fill `env` with a default display environment showing the VRAM area (`x`, `y`, `w`, `h`): standard screen
- * position, 15-bit colour, not interlaced. Returns `env`. */
+ * position, 15-bit color, not interlaced. Returns `env`. */
 DISPENV* SetDefDispEnv(DISPENV* env, int x, int y, int w, int h) {
     setRECT(&env->disp, x, y, w, h);
     setRECT(&env->screen, 0, 0, 0, 0);

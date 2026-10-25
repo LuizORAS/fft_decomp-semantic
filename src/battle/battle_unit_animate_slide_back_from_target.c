@@ -2,7 +2,7 @@
 #include "fft/map.h"
 
 /* Distortion 0xf (BATTLE_DISTORTION_ANIMATION_BACK_AWAY): slide the unit away from its first target, or from
- * the centre of the action target tile, over distortion_timer frames, by seven eighths of the
+ * the center of the action target tile, over distortion_timer frames, by seven eighths of the
  * distance between them wrapped into 0xe000 (half a tile), at a constant height. A unit with no
  * battle record ends at once.
  *

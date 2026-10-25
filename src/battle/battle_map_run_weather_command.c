@@ -6,8 +6,8 @@
 
 /* Run a weather command (map_weather_command_e): start snow (0x53, light 0x7e, heavy 0x7f) or rain
  * (0x55, light 0x7c, heavy 0x7d) particles, stop them (0x54), start one lightning flash (0x89, which
- * also plays the rain sound) or random lightning (0x8a), reload the saved background gradient, the colour
- * matrix and the back colour (0x8c), or set up the weather the event set (0x8b).
+ * also plays the rain sound) or random lightning (0x8a), reload the saved background gradient, the color
+ * matrix and the back color (0x8c), or set up the weather the event set (0x8b).
  *
  * Command 0x8b reads the weather from script variable 0x23 and issues the commands for its strength: none
  * for 0-1, light for 2, normal for 3 and heavy for 4, snow on a map with the snow flag and rain elsewhere;

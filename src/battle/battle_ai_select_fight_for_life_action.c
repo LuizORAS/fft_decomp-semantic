@@ -2,7 +2,7 @@
 #include "fft/battle_unit.h"
 
 /* Fight for life: attack the Auto-Battle target. When the target is out of play or not an enemy,
- * the unit drops its ENTD special behaviour and takes the rider of a ridden mount (unless both are
+ * the unit drops its ENTD special behavior and takes the rider of a ridden mount (unless both are
  * Transparent), else the nearest eligible enemy, else the first Transparent enemy present. It then
  * scores the tiles, moves around the target (battle_ai_build_targeted_movement), keeps a charged action
  * when that scores better, ranks its abilities on the target, then on every unit worth targeting, and

@@ -3,7 +3,7 @@
 
 /* Draw a unit card's readout below its sprite (menu_unit_readout_e `mode`). For the HP, MP and CT
  * readouts: the label, two numbers through the menu number scripts and a gauge in the readout's
- * colours; for Level/EXP and Brave/Faith: two labels and two numbers, a wider number
+ * colors; for Level/EXP and Brave/Faith: two labels and two numbers, a wider number
  * record for a Brave or Faith of 100. Mode 8 shows "equipping" or, when `get_value` is below 100,
  * "can't equip"; 9 and 11 show "leaving" and "missing" when `enabled`; other modes (the egg's 10)
  * draw nothing. Numbers whose position does not fit in a byte are skipped.

@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Scale a cursor sprite to g_menu_cursor_zoom_percentages[step] percent about its centre,
+/* Scale a cursor sprite to g_menu_cursor_zoom_percentages[step] percent about its center,
  * keeping its position and texture coordinates even; steps from 12 leave it alone. `unused_source` is not
  * read: the routine shares the (unused_source, frame, step) shape of menu_copy_sprite_position_uv_and_size.
  * WORLD compiles this text too.

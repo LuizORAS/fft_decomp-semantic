@@ -10,7 +10,7 @@
 
 /* Phase handler for the 8x8 wave-distorted textured quad mesh.
  *
- * Allocation, texture scroll and colour curves follow
+ * Allocation, texture scroll and color curves follow
  * effect_update_textured_quad_grid_8x8; in addition, phase 2 displaces a 9x9
  * scratchpad lattice (48-pixel cells from (0x38, -0x40)) by a vertical and a
  * horizontal sine wave whose amplitude is itself modulated by a cosine per
@@ -112,12 +112,12 @@ s32 effect_update_wave_mesh(s32 record_index, s32 callback_slot, s32 emitter_ind
         texture_height = geometry->textured_quad.texture_height / 2;
         selector = geometry->textured_quad.scroll_curves.scroll_speed;
         READ_CURVE(row, column, selector, work->frame);
-        speed = battle_effect_lerp_fixed8(
+        speed = battle_effect_lerp_q8(
                     geometry->textured_quad.scroll_speed_start, geometry->textured_quad.scroll_speed_end, column)
             << 4;
         selector = geometry->textured_quad.scroll_curves.scroll_angle;
         READ_CURVE(row, column, selector, work->frame);
-        angle = battle_effect_lerp_fixed8(
+        angle = battle_effect_lerp_q8(
             geometry->textured_quad.scroll_angle_start, geometry->textured_quad.scroll_angle_end, column);
         work->scroll_u += (rcos(angle) * speed) >> 12;
         /* Comparison shifts preserve the original loop scheduling. */
@@ -153,14 +153,14 @@ s32 effect_update_wave_mesh(s32 record_index, s32 callback_slot, s32 emitter_ind
         selector = geometry->textured_quad.wave_curves.shape;
         READ_CURVE(row, column, selector, frame);
         step = 0x20000
-            / battle_effect_lerp_fixed8(
+            / battle_effect_lerp_q8(
                 geometry->textured_quad.wave_y_start.period, geometry->textured_quad.wave_y_end.period, column);
         amplitude_step = 0x20000
-            / battle_effect_lerp_fixed8(geometry->textured_quad.wave_y_start.amplitude_period,
+            / battle_effect_lerp_q8(geometry->textured_quad.wave_y_start.amplitude_period,
                 geometry->textured_quad.wave_y_end.amplitude_period, column);
-        amplitude = battle_effect_lerp_fixed8(
+        amplitude = battle_effect_lerp_q8(
             geometry->textured_quad.wave_y_start.amplitude, geometry->textured_quad.wave_y_end.amplitude, column);
-        phase_step = battle_effect_lerp_fixed8(
+        phase_step = battle_effect_lerp_q8(
             geometry->textured_quad.wave_y_start.phase_step, geometry->textured_quad.wave_y_end.phase_step, column);
         for (quad_row = 0; quad_row < 9; quad_row++) {
             scaled = (amplitude * rcos(amplitude_phase)) >> 4;
@@ -176,14 +176,14 @@ s32 effect_update_wave_mesh(s32 record_index, s32 callback_slot, s32 emitter_ind
         phase = work->wave_x_phase;
         amplitude_phase = work->wave_x_amplitude_phase;
         step = 0x20000
-            / battle_effect_lerp_fixed8(
+            / battle_effect_lerp_q8(
                 geometry->textured_quad.wave_x_start.period, geometry->textured_quad.wave_x_end.period, column);
         amplitude_step = 0x20000
-            / battle_effect_lerp_fixed8(geometry->textured_quad.wave_x_start.amplitude_period,
+            / battle_effect_lerp_q8(geometry->textured_quad.wave_x_start.amplitude_period,
                 geometry->textured_quad.wave_x_end.amplitude_period, column);
-        amplitude = battle_effect_lerp_fixed8(
+        amplitude = battle_effect_lerp_q8(
             geometry->textured_quad.wave_x_start.amplitude, geometry->textured_quad.wave_x_end.amplitude, column);
-        phase_step = battle_effect_lerp_fixed8(
+        phase_step = battle_effect_lerp_q8(
             geometry->textured_quad.wave_x_start.phase_step, geometry->textured_quad.wave_x_end.phase_step, column);
         for (quad_column = 0; quad_column < 9; quad_column++) {
             scaled = (amplitude * rcos(amplitude_phase)) >> 4;
@@ -203,9 +203,9 @@ s32 effect_update_wave_mesh(s32 record_index, s32 callback_slot, s32 emitter_ind
         work->wave_y_amplitude_phase += spread.vy;
         phase_selector = geometry->textured_quad.scroll_curves.wave_x_phase_speed;
         READ_CURVE(row, column, phase_selector, frame);
-        work->wave_x_phase += battle_effect_lerp_fixed8(
+        work->wave_x_phase += battle_effect_lerp_q8(
             geometry->textured_quad.wave_phase_speed_start[0], geometry->textured_quad.wave_phase_speed_end[0], column);
-        work->wave_x_amplitude_phase += battle_effect_lerp_fixed8(
+        work->wave_x_amplitude_phase += battle_effect_lerp_q8(
             geometry->textured_quad.wave_phase_speed_start[1], geometry->textured_quad.wave_phase_speed_end[1], column);
 
         depth = geometry->textured_quad.ot_depth;

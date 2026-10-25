@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 
 /* Decode the TMD primitive packet at `packet` into `primitive` by its kind (flat or Gouraud, lit or not,
- * textured or not, triangle or quadrilateral): colours, texture coordinates, CLUT and page, vertex and normal
+ * textured or not, triangle or quadrilateral): colors, texture coordinates, CLUT and page, vertex and normal
  * indices. Returns the packet's size, or -1 for an unknown kind. Only ReadTMD calls it. */
 int psyq_gpu_decode_tmd_primitive(const psyq_tmd_packet_t* packet, TMD_PRIM* primitive) {
     memset(primitive, 0, sizeof(*primitive));

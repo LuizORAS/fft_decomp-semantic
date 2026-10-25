@@ -5,7 +5,7 @@
 
 /* Shop step FITTING_ROOM_CHECKOUT (Fitting over, or X on the unit grid): run the checkout
  * prompt. Done (paid, or left without buying) returns to the main menu (0xF802, "Anything else I can
- * do for you?") and resets the fitting room; cancelled shows 0xF818 ("Who wants to try it on?") until
+ * do for you?") and resets the fitting room; canceled shows 0xF818 ("Who wants to try it on?") until
  * any face button, which returns to the unit grid with the unit's stats recalculated. */
 void world_shop_run_fitting_room_checkout_step(void) {
     s32 result;

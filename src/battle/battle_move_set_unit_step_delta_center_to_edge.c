@@ -1,7 +1,7 @@
 #include "fft/battle_move.h"
 #include "psx/types.h"
 
-/* Set the unit's velocity for the half step from the tile centre to its exit edge: a vector of
+/* Set the unit's velocity for the half step from the tile center to its exit edge: a vector of
  * 28 along the step's direction (path byte bits 6-7) and (edge_height - 1) * the tile's slope
  * half-height * 6 in height, negated since height is negative upward, so it rises toward a high side
  * and falls toward a low one, reduced to unit length (VectorNormal) and times the VSync interval.

@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/libgte.h"
 
-/* Keep the travelling marker in view: when its next screen position (marker + delta) would leave
+/* Keep the traveling marker in view: when its next screen position (marker + delta) would leave
  * x -64..72 or y -64..64 in the direction it moves, scroll the map by the delta within the scroll
  * limits, and set MAIN_SYSTEM_FLAG_DRAW_MAP when the origin changed. */
 void wldcore_map_scroll_projection_if_focus_near_edge(open_point32_t* delta) {

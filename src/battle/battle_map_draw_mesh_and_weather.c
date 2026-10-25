@@ -12,9 +12,9 @@
 
 /* Queue the map for one frame, from battle_state_run_game_loop: step the texture and mesh part
  * animations, a lightning flash (the background gradient brightens and fades back, and for a few frames
- * the map is lit by a dim blue back colour alone) and a light transition; set the background gradient and the light
+ * the map is lit by a dim blue back color alone) and a light transition; set the background gradient and the light
  * matrix; queue the primary mesh, then each animated part under its parent's matrix; queue the snow, rain or mode 0x96
- * particles; finish an ambient colour restore on this buffer; then apply or restore the tile colours of the move range,
+ * particles; finish an ambient color restore on this buffer; then apply or restore the tile colors of the move range,
  * the ability range and the targets.
  *
  * While an effect sorts the untextured polygons by depth on Entrance to Death City, Graveyard of Airships
@@ -566,7 +566,7 @@ void battle_map_draw_mesh_and_weather(MATRIX* camera) {
             }
         }
     }
-    /* The ambient colour restores use pointer arithmetic on the decayed arrays
+    /* The ambient color restores use pointer arithmetic on the decayed arrays
      * rather than GT3(i)/GT4(i) indexing: that keeps the target's
      * `addu offset, base` operand order (as in battle_target_tint_marked_tiles). */
     if (g_battle_map_ambient_restored_buffer != 0) {

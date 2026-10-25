@@ -156,7 +156,7 @@ u8* world_screen_menu_redraw_text_page_on_scroll(
     world_menu_entry_t* entry, s32* row_offset, s32* redraw, s32* unused_cursor);
 void world_screen_menu_window_frame_thread(void);
 void world_screen_menu_build_window_image_row(const u16* source, u16* dest, s32 count, s32 offset);
-s32 world_screen_menu_lerp_fixed12(s32 from, s32 to, s32 t);
+s32 world_screen_menu_lerp_q12(s32 from, s32 to, s32 t);
 
 /* sound */
 /* WORLD's sounds: the menu sound queue that the shop, formation and save screens play once a frame
@@ -343,7 +343,7 @@ typedef enum world_render_record_flag {
     WLDCORE_DISPLAY_OBJECT_SEMI_TRANSPARENT = 0x020,
     WLDCORE_DISPLAY_OBJECT_BLEND_RATE_MASK = 0x0c0,
     WLDCORE_DISPLAY_OBJECT_POP_IN = 0x100,   /* image: the opening animation is running; clears itself */
-    WLDCORE_DISPLAY_OBJECT_UNTINTED = 0x400, /* WLDCORE: the colour is used as is, without the fade tint */
+    WLDCORE_DISPLAY_OBJECT_UNTINTED = 0x400, /* WLDCORE: the color is used as is, without the fade tint */
     /* WLDCORE animated object: steps its frame counter even while system flag 0x08000000 is set. */
     WLDCORE_DISPLAY_OBJECT_ANIMATE_WHILE_PAUSED = 0x800,
 } world_render_record_flag_e;
@@ -756,7 +756,7 @@ s32 world_job_get_selected_unit_job_points_entry(s32 unused_row);
 /* The formation's equipment screens: the equip and remove-all menus' state and cursors, the slot filters
  * of Best Fit, and the equipment and ability panels' rectangles, sprites and thread parameters. */
 
-typedef enum world_equipment_slot {
+typedef enum world_unit_equipment_slot {
     WORLD_EQUIPMENT_SLOT_RIGHT_HAND = 0,
     WORLD_EQUIPMENT_SLOT_LEFT_HAND = 1,
     WORLD_EQUIPMENT_SLOT_HEAD = 2,
@@ -1407,8 +1407,8 @@ extern s16 g_world_tutorial_categories_request_state; /* world_screen_request_st
 extern world_tutorial_state_t g_world_tutorial_saved_game_image;
 extern point16_t g_world_tutorial_highlight_corners_a[31][2]; /* outer/middle ring samples */
 extern point16_t g_world_tutorial_highlight_corners_b[31][2]; /* middle/inner ring samples */
-extern rgb24_t g_world_tutorial_highlight_colors_a[4];        /* first quad corner colours */
-extern rgb24_t g_world_tutorial_highlight_colors_b[4];        /* second quad corner colours */
+extern rgb24_t g_world_tutorial_highlight_colors_a[4];        /* first quad corner colors */
+extern rgb24_t g_world_tutorial_highlight_colors_b[4];        /* second quad corner colors */
 extern u8 g_world_tutorial_highlight_quad_count;
 
 /* Sector and size pairs; flat 32-bit value access preserves the original addressing. */
@@ -1793,7 +1793,7 @@ extern s32 g_world_menu_text_file_buffer[];
 /* Provisional: menu text origin/stride fields at 0x80153280 (the WORLD
  * script variable region; world_menu_set_text_origin writes +0x04/+0x06).
  * The text-image builders address these through one base register, so they
- * are modelled as one aggregate; the two 32-bit parameters at 0x80153304 and
+ * are modeled as one aggregate; the two 32-bit parameters at 0x80153304 and
  * 0x80153308 schedule as plain scalars and stay separate globals. */
 extern s32 g_world_menu_text_param_22; /* 0x80153304: record +0x22 */
 
@@ -1832,7 +1832,7 @@ extern s16 g_world_menu_wait_row_actions[4];
 extern u16 g_world_menu_status_list_row_actions[8];
 extern u16 g_world_menu_system_function_row_actions[];
 extern s16 g_world_menu_confirm_stored_unit_row_actions;
-extern s16 g_world_menu_result; /* menu result: -4 pending, -1 cancelled */
+extern s16 g_world_menu_result; /* menu result: -4 pending, -1 canceled */
 extern s16 g_world_menu_set_auto_battle_row_actions;
 extern RECT g_world_menu_numeric_display_texture_window; /* texture window for the menu page */
 
@@ -1953,7 +1953,7 @@ extern world_menu_grid_cell_t g_world_grid_menu_shop_cells[];
 extern world_menu_grid_cell_t g_world_grid_menu_shop_scrolled_cells[];
 extern world_menu_grid_cell_t* g_world_active_grid_menu_cells;
 extern u16 g_world_grid_menu_cursor_anim; /* grid cursor animation state */
-extern u8 g_world_grid_menu_initialized;  /* grid menu initialised */
+extern u8 g_world_grid_menu_initialized;  /* grid menu initialized */
 extern s16 g_world_menu_status_left_text_ids[20];
 extern s16 g_world_menu_status_right_text_ids[20];
 extern action_command_t g_world_menu_selected_action;
@@ -2047,7 +2047,7 @@ extern s32 g_world_menu_companion_executable_loading; /* 0x801564cc */
 extern RECT g_world_tile_info_image_location;
 extern image_load_parameters_t g_world_tile_info_image_params[2];
 extern s16 g_world_brave_story_request_state;    /* world_screen_request_state_e */
-extern s16 g_world_auto_battle_option_colors[5]; /* text colour per option */
+extern s16 g_world_auto_battle_option_colors[5]; /* text color per option */
 extern u16 g_world_frame_arg;
 extern s32 g_world_frame_counter;
 
@@ -2411,7 +2411,7 @@ extern s16 g_world_item_icon_clut_base_x; /* item icon CLUT base x */
 extern s16 g_world_item_icon_clut_base_y; /* item icon CLUT base y */
 
 /* Menu-subflow "running" flags. The readers sign-extend (lb), so these are
- * signed; the initialiser only stores 0/1/2 and cannot distinguish. */
+ * signed; the initializer only stores 0/1/2 and cannot distinguish. */
 extern s8 g_world_item_menu_initialized;
 
 extern s8 g_world_item_best_remove_initialized;
@@ -2614,7 +2614,7 @@ extern RECT g_world_shop_background_vram_rect;
 extern RECT g_world_shop_vram_backup_rect;
 extern u8 g_world_shop_main_menu_running;     /* menu open flag */
 extern u8 g_world_shop_exit_fade_started;     /* fade-out started */
-extern u8 g_world_shop_exit_step_initialized; /* state initialised */
+extern u8 g_world_shop_exit_step_initialized; /* state initialized */
 extern menu_instruction_t g_world_shop_gil_menu_script;
 extern menu_instruction_t g_world_shop_purchase_menu_script;
 extern s8 g_world_shop_purchase_list_initialized;
@@ -3072,13 +3072,13 @@ typedef struct wldcore_sprite_part {
     u8 v;
     u8 u;
 } wldcore_sprite_part_t;
-typedef char world_sprite_part_size_must_be_8[sizeof(wldcore_sprite_part_t) == 8 ? 1 : -1];
+typedef char wldcore_sprite_part_size_must_be_8[sizeof(wldcore_sprite_part_t) == 8 ? 1 : -1];
 
 /* Animated display objects used by WLDCORE and OPEN. sequence selects a row of the module's animation table; a zero
  * palette keeps each sprite part's CLUT. WLDCORE's window records at 0x800bb504 are these: the pool init
  * wldcore_window_init_record_pools sets flags = 1, so wldcore_gfx_dispatch_display_object_list hands them to
  * wldcore_gfx_draw_animated_display_object, which reads the priority as a 16-bit value; wldcore_window_init_record
- * initialises one (flags |= 0x810, sequence/priority from arguments, frame_index and anim_counter cleared) and
+ * initializes one (flags |= 0x810, sequence/priority from arguments, frame_index and anim_counter cleared) and
  * wldcore_text_update_page_prompt_visibility toggles flag 0x10 by index. OPEN's
  * open_gfx_draw_render_record_pointer_list dispatches on flags bit 0 (this 36-byte record) or bit 1 (the 56-byte image
  * record), bit 4 marking a visible record; OPEN's two pools hold 16 entries each, allocated through the

@@ -1,7 +1,7 @@
 #include "fft/gfx.h"
 #include "fft/script.h"
 
-/* Draws a full-screen semi-transparent tile of grey level |level|: positive
+/* Draws a full-screen semi-transparent tile of gray level |level|: positive
  * values subtract (abr 2), negative values add (abr 1), and 0 draws nothing.
  *
  * WORLD's copy is world_gfx_submit_screen_fade_overlay. The draw mode is submitted

@@ -19,7 +19,7 @@ void battle_deployment_mark_finished(void);
 /* map */
 /* The battle map: the GNS file of each map and the resources it picks by map state (layout, weather, time
  * of day): mesh, textures, palettes, lighting, terrain, texture and mesh animations; the loader and the two
- * map load sequences; the per-frame draw of the mesh, the weather and the tile marks; the colour fades and
+ * map load sequences; the per-frame draw of the mesh, the weather and the tile marks; the color fades and
  * CLUT rows; the tiles, the Move-Find tiles and the Deep Dungeon reload. */
 
 typedef struct map_move_find_item_entry {
@@ -89,7 +89,7 @@ enum {
     MAP_WEATHER_LOW_FLAGS_MASK = 0x7f,
 };
 
-/* Eight CLUT colour-cycle slots at 0x800a1b98. Each holds a row and a colour
+/* Eight CLUT color-cycle slots at 0x800a1b98. Each holds a row and a color
  * range to rotate; they are separate from the mesh's 32 texture-animation
  * instructions and their handle table. */
 typedef struct map_clut_cycle_state {
@@ -98,7 +98,7 @@ typedef struct map_clut_cycle_state {
     u8 frame_duration;
     u8 _padding_03;  /* aligns clut_row */
     u16 clut_row;    /* 0x04; map_clut_row_e */
-    u16 first_color; /* 0x06; colour index in the row: the colours first..last rotate one place */
+    u16 first_color; /* 0x06; color index in the row: the colors first..last rotate one place */
     u16 last_color;  /* 0x08; every frame_duration frames, towards last */
 } map_clut_cycle_state_t;
 typedef char map_clut_cycle_state_size_must_be_10[(sizeof(map_clut_cycle_state_t) == 10) ? 1 : -1];
@@ -291,7 +291,7 @@ typedef enum map_gns_load_phase {
 typedef enum map_polygon_flag_command {
     MAP_POLYGON_FLAG_COMMAND_RESET_ACTIVE = 0x46,    /* copy LIT into LIT_ACTIVE on every polygon */
     MAP_POLYGON_FLAG_COMMAND_CLEAR_ACTIVE = 0x47,    /* clear LIT_ACTIVE everywhere */
-    MAP_POLYGON_FLAG_COMMAND_RESTORE_AMBIENT = 0x94, /* repaint the polygons without LIT in the ambient colour */
+    MAP_POLYGON_FLAG_COMMAND_RESTORE_AMBIENT = 0x94, /* repaint the polygons without LIT in the ambient color */
 } map_polygon_flag_command_e;
 
 /* polygon_flags of the textured map polygons (GNS_RESOURCE_POLYGON_FLAGS).
@@ -299,7 +299,7 @@ typedef enum map_polygon_flag_command {
  * camera yaw is set. No mesh file sets bits 0, 1 or 14. */
 enum {
     /* Working copy of LIT, the bit the queue routines test: the polygon's
-     * colours come from its normals this frame. Cleared on a polygon a tile
+     * colors come from its normals this frame. Cleared on a polygon a tile
      * mark tints. */
     MAP_POLYGON_FLAG_LIT_ACTIVE = 0x0001,
     /* Hidden while the yaw is in 45-degree band n: bit 2 + n, where
@@ -310,11 +310,11 @@ enum {
     MAP_POLYGON_FLAG_HIDDEN_AT_RESTING_YAW_0 = 0x0400,
     MAP_POLYGON_FLAG_HIDDEN_MASK = 0x3ffc,
     /* Lit from its normals each frame; a polygon without it keeps the flat
-     * ambient colour. */
+     * ambient color. */
     MAP_POLYGON_FLAG_LIT = 0x8000,
 };
 
-/* Commands for the map's background gradient, ambient and darkness colours. */
+/* Commands for the map's background gradient, ambient and darkness colors. */
 typedef enum map_light_command {
     MAP_LIGHT_COMMAND_SET_BACKGROUND_GRADIENT = 0x56,
     MAP_LIGHT_COMMAND_GET_BACKGROUND_GRADIENT = 0x57,
@@ -340,27 +340,27 @@ typedef enum map_effect_data_command {
  * battle_gfx_modify_vram_palette honors modes 5-7; every other value adds the
  * offsets to its supplied colors, including RESTORE. */
 typedef enum map_color_mode {
-    MAP_COLOR_MODE_CURRENT = 0,           /* the colour in transition plus the offsets */
+    MAP_COLOR_MODE_CURRENT = 0,           /* the color in transition plus the offsets */
     MAP_COLOR_MODE_CURRENT_HALF = 1,      /* half of it plus the offsets */
-    MAP_COLOR_MODE_CURRENT_GREY = 2,      /* its grey (2R + 3G + B) / 6 plus the offsets */
-    MAP_COLOR_MODE_CURRENT_GREY_HALF = 3, /* half that grey plus the offsets */
-    MAP_COLOR_MODE_BASE = 4,              /* the last applied colour plus the offsets */
+    MAP_COLOR_MODE_CURRENT_GREY = 2,      /* its gray (2R + 3G + B) / 6 plus the offsets */
+    MAP_COLOR_MODE_CURRENT_GREY_HALF = 3, /* half that gray plus the offsets */
+    MAP_COLOR_MODE_BASE = 4,              /* the last applied color plus the offsets */
     MAP_COLOR_MODE_BASE_HALF = 5,
     MAP_COLOR_MODE_BASE_GREY = 6,
     MAP_COLOR_MODE_BASE_GREY_HALF = 7,
-    MAP_COLOR_MODE_RESTORE = 8,      /* map transitions restore the last applied colour and ignore offsets */
+    MAP_COLOR_MODE_RESTORE = 8,      /* map transitions restore the last applied color and ignore offsets */
     MAP_COLOR_MODE_BASE_REPEAT = 9,  /* as BASE, and record the offsets so that the fade alternates with RESTORE */
     MAP_COLOR_MODE_STOP_REPEAT = 10, /* only clear the repeat record */
 } map_color_mode_e;
 
-/* The repeat member of the map colour transitions and of the CLUT animations. */
+/* The repeat member of the map color transitions and of the CLUT animations. */
 typedef enum map_color_repeat {
     MAP_COLOR_REPEAT_OFF = 0,
     MAP_COLOR_REPEAT_TINTED = 1,   /* fading to the recorded offsets; a fade back to the base follows */
     MAP_COLOR_REPEAT_RESTORED = 2, /* fading back to the base; the offsets follow again */
 } map_color_repeat_e;
 
-/* A CLUT row of the battle map: one VRAM line of sixteen 16-colour CLUTs,
+/* A CLUT row of the battle map: one VRAM line of sixteen 16-color CLUTs,
  * at y 0x1e0 through 0x1ed (battle_map_upload_clut_rows uploads a 256x14 image). Index into
  * map_palette_state_t.clut_rows and g_battle_map_palette_modified_colors. */
 typedef enum map_clut_row {
@@ -390,7 +390,7 @@ enum {
  * GetClut(clut_index * 16, MAP_CLUT_ROWS_Y + clut_row), as a constant. */
 #define MAP_CLUT(clut_row, clut_index) (((MAP_CLUT_ROWS_Y + (clut_row)) << 6) | (clut_index))
 
-/* Eight runtime slots rotate a range of colours of a CLUT row for map texture animations.
+/* Eight runtime slots rotate a range of colors of a CLUT row for map texture animations.
  * They are separate from the 32 serialized 0x14-byte animation instructions
  * a map's mesh file carries. */
 enum {
@@ -436,7 +436,7 @@ typedef struct map_palette_animation_state {
 typedef char map_palette_animation_state_size_must_be_8[(sizeof(map_palette_animation_state_t) == 8) ? 1 : -1];
 
 /* The 0x982-byte runtime state of one CLUT row (map_clut_row_e), based at 0x800995f4:
- * an animation per CLUT, then the 256 colours of the row. Components and
+ * an animation per CLUT, then the 256 colors of the row. Components and
  * packed_colors are runtime state/mirror, not the separate 0x200-byte-per-row
  * upload staging at 0x800e4ea4 (g_battle_map_palette_modified_colors). Palette extraction fills
  * both; 0x80092f98 uploads staging and clears the pending 32-bit value at 0x800995ec. */
@@ -560,7 +560,7 @@ typedef struct battle_map_mesh_part {
     u16 untextured_triangle_count;
     u16 untextured_quad_count;
 } battle_map_mesh_part_t;
-typedef char map_mesh_part_size_must_be_152[(sizeof(battle_map_mesh_part_t) == 152) ? 1 : -1];
+typedef char battle_map_mesh_part_size_must_be_152[(sizeof(battle_map_mesh_part_t) == 152) ? 1 : -1];
 
 /* File-load payload at +0x06 of a GNS row. The loader compares all fourteen
  * bytes, including the fixed markers, before deciding whether to reload.
@@ -599,9 +599,9 @@ typedef struct gns_record_view {
     u8 resource_type;        /* 0x05; file resource or command type, or GNS_RECORD_COMMAND_SEPARATOR */
     gns_load_info_t load_info;
 } gns_record_view_t;
-typedef char gns_record_size_must_be_20[(sizeof(gns_record_view_t) == 20) ? 1 : -1];
+typedef char gns_record_view_size_must_be_20[(sizeof(gns_record_view_t) == 20) ? 1 : -1];
 
-/* Runtime colour fades stepped by update_map_animations (0x800912a4):
+/* Runtime color fades stepped by update_map_animations (0x800912a4):
  * g_battle_map_background_gradient_transition at 0x800a1b10, the ambient light at
  * 0x800a1b50 and the darkness at 0x800a1b74. Channels are 16.16 fixed point;
  * the byte fields follow the updater's use. */
@@ -626,7 +626,7 @@ typedef struct map_color_transition {
 } map_color_transition_t;
 typedef char map_color_transition_size_must_be_32[(sizeof(map_color_transition_t) == 32) ? 1 : -1];
 
-/* The background gradient fade: one channel set per gradient colour. colors[]
+/* The background gradient fade: one channel set per gradient color. colors[]
  * at 0x38 (0x800a1b48/0x800a1b4c) is the applied gradient pair;
  * battle_map_blend_background_gradient_color indexes it from the same base. */
 typedef struct map_gradient_transition {
@@ -658,7 +658,7 @@ typedef struct battle_map_mesh_keyframe {
     u16 tween_flags[9];  /* 0x3c; per channel */
     u16 _unused_4e;      /* 0x4e; wiki: unknown/padding to the 0x50-byte record */
 } battle_map_mesh_keyframe_t;
-typedef char map_mesh_keyframe_size_must_be_80[(sizeof(battle_map_mesh_keyframe_t) == 80) ? 1 : -1];
+typedef char battle_map_mesh_keyframe_size_must_be_80[(sizeof(battle_map_mesh_keyframe_t) == 80) ? 1 : -1];
 
 /* battle_map_mesh_keyframe_t.tween_flags: how one channel reaches its keyframe value. */
 typedef enum battle_map_mesh_tween_flags {
@@ -683,7 +683,7 @@ typedef struct battle_map_mesh_instruction {
 typedef struct battle_map_mesh_instructions {
     battle_map_mesh_instruction_t states[8][17];
 } battle_map_mesh_instructions_t;
-typedef char map_mesh_instructions_size_must_be_544[(sizeof(battle_map_mesh_instructions_t) == 544) ? 1 : -1];
+typedef char battle_map_mesh_instructions_size_must_be_544[(sizeof(battle_map_mesh_instructions_t) == 544) ? 1 : -1];
 
 /* battle_map_texture_animation_t.mode: the technique of a map texture animation row and, for the
  * values from 128, its playback state. */
@@ -718,7 +718,7 @@ typedef enum map_texture_animation_mode {
     MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_5 = 26,
     MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_6 = 27,
     MAP_TEXTURE_ANIMATION_MODE_UV_REVERSE_ONCE_7 = 28,
-    /* starts a battle_map_start_clut_cycle over colours canvas_x .. canvas_x + width - 1 of MAP_CLUT_ROW_MAP */
+    /* starts a battle_map_start_clut_cycle over colors canvas_x .. canvas_x + width - 1 of MAP_CLUT_ROW_MAP */
     MAP_TEXTURE_ANIMATION_MODE_COLOR_CYCLE = 29,
     /* Playback states written and dispatched by battle_map_update_texture_animations. */
     MAP_TEXTURE_ANIMATION_MODE_UV_PING_PONG_BACK = 128,
@@ -749,7 +749,7 @@ typedef struct battle_map_texture_animation {
     u8 timer;       /* 0x12 */
     u8 active;      /* 0x13 */
 } battle_map_texture_animation_t;
-typedef char map_texture_animation_size_must_be_20[(sizeof(battle_map_texture_animation_t) == 20) ? 1 : -1];
+typedef char battle_map_texture_animation_size_must_be_20[(sizeof(battle_map_texture_animation_t) == 20) ? 1 : -1];
 
 /* Lightning flash state at 0x800f79c0 (g_battle_map_lightning_state).
  * battle_map_set_light_matrices fills color_matrices[0] and [2]; the lightning weather commands clear the rotation part
@@ -783,11 +783,11 @@ typedef struct battle_map_mesh_animation_record {
 extern rgb24_t g_battle_map_background_color;
 extern rgb24_t g_battle_map_background_color_backup;
 
-/* Packed lighting resource (GNS_RESOURCE_LIGHTING, applied by GNS_RESOURCE_APPLY_LIGHTING): the light colour matrix and
- * the light direction matrix, nine 16-bit entries each, then three RGB colours: the ambient colour and the background
- * gradient's top and bottom colours. */
+/* Packed lighting resource (GNS_RESOURCE_LIGHTING, applied by GNS_RESOURCE_APPLY_LIGHTING): the light color matrix and
+ * the light direction matrix, nine 16-bit entries each, then three RGB colors: the ambient color and the background
+ * gradient's top and bottom colors. */
 typedef struct battle_map_light_resource {
-    s16 colour[3][3];        /* 0x00 */
+    s16 color[3][3];         /* 0x00 */
     s16 direction[3][3];     /* 0x12 */
     rgb24_t ambient;         /* 0x24 */
     rgb24_t gradient_top;    /* 0x27 */
@@ -835,7 +835,7 @@ extern battle_render_buffer_t* g_battle_map_mesh_last_render_buffer;
 extern map_resource_t* g_battle_map_mesh_load_buffer;
 extern s32 g_battle_map_mesh_load_state;
 extern map_move_find_item_data_t g_battle_map_move_find_item_data[MAP_ID_COUNT];
-extern u16 g_battle_map_palette_modified_colors[][MAP_CLUT_ROW_COLOR_COUNT]; /* [map_clut_row_e][colour] */
+extern u16 g_battle_map_palette_modified_colors[][MAP_CLUT_ROW_COLOR_COUNT]; /* [map_clut_row_e][color] */
 extern s32 g_battle_map_resource_load_state;                                 /* map_resource_load_state_e */
 extern s32 g_battle_map_texture_animation_cycle_handles[MAP_TEXTURE_ANIMATION_COUNT];
 extern map_clut_cycle_state_t g_battle_map_clut_cycle_states[];
@@ -898,7 +898,7 @@ extern gns_record_view_t g_battle_map_pending_gns_records[GNS_RESOURCE_END];
 extern gns_record_view_t g_battle_map_loaded_gns_records[GNS_RESOURCE_END];
 
 /* The applied background gradient pair at 0x801251c8. The copies at
- * 0x800e81d0, 0x800e8228 and 0x800e827c move each colour as an independent
+ * 0x800e81d0, 0x800e8228 and 0x800e827c move each color as an independent
  * unaligned 32-bit value (lwl/lwr + swl/swr). */
 extern map_background_gradient_colors_t g_battle_map_background_gradient_colors;
 
@@ -923,10 +923,10 @@ extern CVECTOR g_battle_map_untextured_polygon_color;
 extern u16 g_battle_map_light_transition_command;               /* pending per-frame light command, 0 when idle */
 extern u16 g_battle_map_light_transition_duration;              /* transition duration in frames */
 extern u16 g_battle_map_light_transition_frame;                 /* transition frame counter */
-extern MATRIX g_battle_map_light_transition_start_color_matrix; /* transition start colour matrix */
+extern MATRIX g_battle_map_light_transition_start_color_matrix; /* transition start color matrix */
 extern MATRIX g_battle_map_light_transition_start_light_matrix; /* transition start light matrix */
 extern MATRIX
-    g_battle_map_light_transition_target_color_matrix; /* transition target (0x66) or delta (0x68) colour matrix */
+    g_battle_map_light_transition_target_color_matrix; /* transition target (0x66) or delta (0x68) color matrix */
 extern MATRIX
     g_battle_map_light_transition_target_light_matrix; /* transition target (0x66) or delta (0x68) light matrix */
 extern u8 g_battle_map_lighting_pending;
@@ -968,7 +968,7 @@ extern s32 g_battle_map_saved_back_color_green;
 extern s32 g_battle_map_saved_back_color_red;
 extern CVECTOR g_battle_map_saved_background_gradient_first;
 extern CVECTOR g_battle_map_saved_background_gradient_second;
-extern MATRIX g_battle_map_saved_light_color_matrix; /* saved colour matrix (command 0x5f/0x60) */
+extern MATRIX g_battle_map_saved_light_color_matrix; /* saved color matrix (command 0x5f/0x60) */
 extern MATRIX g_battle_map_saved_light_matrix;       /* saved light matrix (command 0x5f/0x60) */
 extern u8 g_battle_map_saved_texture_animation_modes[];
 extern u8 g_battle_map_texture_pending;

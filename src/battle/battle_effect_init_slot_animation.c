@@ -1,7 +1,7 @@
 #include "fft/battle_effect.h"
 #include "psx/types.h"
 
-/* Start the animation script of particle group `group` on effect slot `slot`: reset its colour and
+/* Start the animation script of particle group `group` on effect slot `slot`: reset its color and
  * script state and store the CLUT at 0x88 (callers pass CLUTs of MAP_CLUT_ROW_WEAPONS).
  * battle_effect_start_group and the charge, weapon-hit and poof handlers call it.
  *

@@ -10,7 +10,7 @@
  * Quick a full CT; Meatbone Slash damage equal to the reacting unit's max HP; Absorb Used MP the MP
  * cost back; Gilgame Heart the damage as gil; Distribute an equal share of the excess healing
  * (rounding up) to each ally; Damage Split half the damage to the actor, healing the reacting unit by
- * as much. For Reflect the acting unit is the attacker again. Returns 0 when the reaction's behaviour
+ * as much. For Reflect the acting unit is the attacker again. Returns 0 when the reaction's behavior
  * flags send it through an ability instead, -1 for a reaction without an effect here, else 1.
  *
  * The Damage Split case chains the damage store so the value reaches `healing` through

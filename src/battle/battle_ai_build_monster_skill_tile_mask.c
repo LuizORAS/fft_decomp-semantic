@@ -4,7 +4,7 @@
 
 /* Mark in targetable_tiles the tiles next to each same-team Monster Skill holder that can react,
  * within 2 levels of its tile's height (slope and depth do not count), for abilities that need Monster
- * Skill. Only the lower level is marked, and the -x and -y neighbours are lost: the target loads their
+ * Skill. Only the lower level is marked, and the -x and -y neighbors are lost: the target loads their
  * 0xff offsets as 255 (QUIRKS.md). */
 void battle_ai_build_monster_skill_tile_mask(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;

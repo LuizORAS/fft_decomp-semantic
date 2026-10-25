@@ -5,7 +5,7 @@
  * Peril ranks: dead without Reraise and revivable by the unit, then for a healer dead with Reraise or
  * Critical, then Blood Suck, Petrify, Confusion and Frog the unit can cancel, then for a healer HP below
  * half; ties go to the nearest, then the most hurt. With none, the most hurt non-supporter is taken,
- * the nearest on ties (the unit itself counts as farthest). Clears the special behaviour and returns 1
+ * the nearest on ties (the unit itself counts as farthest). Clears the special behavior and returns 1
  * only when a peril was found. */
 s32 battle_ai_select_peril_target(void) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;

@@ -4,7 +4,7 @@
 
 /* Float climb-jump phases 0x2d-0x39 (stride 4; set by battle_move_start_float_climb_jump_step):
  * move, displace a unit standing on the destination tile (outside events), and at the
- * destination's entry edge, once down on the ground, float on to the tile centre
+ * destination's entry edge, once down on the ground, float on to the tile center
  * (battle_move_start_float_step). */
 void battle_move_update_float_jump_to_entry_edge(battle_unit_t* unit) {
     s32 direction;

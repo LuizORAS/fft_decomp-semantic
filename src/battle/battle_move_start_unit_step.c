@@ -2,7 +2,7 @@
 #include "fft/battle_move.h"
 #include "psx/types.h"
 
-/* Start the unit's next movement step from the current tile centre.
+/* Start the unit's next movement step from the current tile center.
  *
  * Variant of battle_move_start_fly_step without the rider dismount, storing the
  * facing directly rather than through animation 0x12: the step byte's top

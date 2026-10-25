@@ -212,9 +212,9 @@ places use it:
 ## Quirks and debts
 
 - BATTLE's dialog thread prints the window's line count through `FntPrint`
-  for each centred line ([[battle_text_print_fnt_value_and_next]]), a debug
+  for each centered line ([[battle_text_print_fnt_value_and_next]]), a debug
   leftover.
-- In a centred box, two events keep their lines left-aligned: Meet Velius
+- In a centered box, two events keep their lines left-aligned: Meet Velius
   and Searching for Alma.
 - WORLD.BIN carries HELP.LZW, which only its own copy of HELPMENU reads.
 - Four of the `*_text_render_encoded_ids_to_image` copies (BUNIT, EQUIP,

@@ -1,12 +1,12 @@
 #ifndef PSX_LIBSPU_H
 #define PSX_LIBSPU_H
 
-#include "psx/types.h"
-
 /* Clean-room declarations of the Psy-Q LIBSPU interface that the linked
  * library (0x800186c4-0x8001bb5c) exports to the Suzuki sound driver. Names,
  * layouts and signatures follow the Psy-Q library reference; the offsets
  * noted on each type are the ones the driver's callers use. */
+
+#include "psx/types.h"
 
 /* Psy-Q on/off selectors. */
 enum {

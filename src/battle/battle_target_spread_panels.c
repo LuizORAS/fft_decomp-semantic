@@ -4,7 +4,7 @@
 #include "psx/types.h"
 
 /* Spread the range from the frontier panels up to `passes` times: each pass visits every panel
- * whose mark is set, clears it and spreads to its neighbours (battle_target_spread_panel_to_neighbors),
+ * whose mark is set, clears it and spreads to its neighbors (battle_target_spread_panel_to_neighbors),
  * and the passes stop once none spreads. A zero count only clears the marks. Every caller passes 0
  * as the unused second argument. */
 void battle_target_spread_panels(u8 passes, s32 unused) {

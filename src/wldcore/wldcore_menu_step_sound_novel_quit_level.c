@@ -11,7 +11,7 @@
  * the book can resume where it stopped, and returns through a screen transition to the treasure
  * the book was opened from (wldcore_menu_push_screen_transition_level).
  *
- * Every colour store rereads the 32-bit fade value through a local: a direct
+ * Every color store rereads the 32-bit fade value through a local: a direct
  * `u8 = level->fade_in` assignment narrows the reload to `lbu`, while the
  * target keeps `lw`. The target stores the -1 history marker with a signed
  * `addiu`, so it is written through an s16 view of the u16 slot. The cursor

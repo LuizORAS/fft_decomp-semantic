@@ -26,7 +26,7 @@ enum {
  * hit by and Counter Flood the Elemental ability of its own tile, both without a range test; Reflect
  * sends the spell on (battle_target_apply_reflect); Auto Potion drinks the first potion the party has
  * (Potion, then Hi-Potion, then X-Potion); the other reactions run their own effect on the unit's own
- * tile (Damage Split on the actor's), unless their behaviour flags hold PASSIVE or ACTIVE. A counter
+ * tile (Damage Split on the actor's), unless their behavior flags hold PASSIVE or ACTIVE. A counter
  * through an ability pays its MP. The unit's command is saved in the reaction snapshot first and
  * restored when the reaction falls through. Returns the reacting unit's slot and writes the reaction id
  * to out_ability, or -1 when no unit reacts.

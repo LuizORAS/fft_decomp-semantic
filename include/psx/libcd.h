@@ -1,6 +1,8 @@
 #ifndef PSX_LIBCD_H
 #define PSX_LIBCD_H
 
+/* Psy-Q LIBCD: CD-ROM commands, reads and streaming. */
+
 #include "psx/libapi.h"
 #include "psx/libc.h"
 #include "psx/libetc.h"

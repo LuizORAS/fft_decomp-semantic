@@ -16,7 +16,7 @@ it provokes and the rewards.
 
 - **Charge time.** Each command resolves to the ability that runs and its
   charge time (CT). An ability takes the CT in its data, halved (rounding up)
-  by Short Charge and cancelled by Non-Charge, unless it is a performed
+  by Short Charge and canceled by Non-Charge, unless it is a performed
   (Persevere) ability; Charge takes its own table, which neither support
   changes; Jump takes 50 / Speed (at least 1). Item, Throw, Math Skill and
   Attack act at once. A command with CT 0 acts now; any other charges, and the
@@ -76,7 +76,7 @@ it provokes and the rewards.
   2 reactions).
 - **Reactions.** The four `reaction_abilities` bytes
   ([[battle_unit_reaction_set_1_e]] to [[battle_unit_reaction_set_4_e]]), the
-  behaviour flags ([[g_main_reaction_behavior_flags]],
+  behavior flags ([[g_main_reaction_behavior_flags]],
   [[battle_reaction_behavior_flag_e]]) and the reaction being resolved
   ([[g_battle_reaction_ability_id]]).
 - **Effect messages.** [[g_battle_action_post_effect_msgs]], up to 16

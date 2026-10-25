@@ -34,7 +34,7 @@ All of it is WLDCORE code and WLDCORE tables; the
 - **The scripts.** Where a story event waits, which locations and routes are
   visible and when the Fur Shop opens are script variables that the event and
   location scripts set. A route the scripts never make visible is never
-  travelled.
+  traveled.
 - **Battle data.** A random battle names an ENTD, a map and a deployment
   squad (`0x200` + the road's squad id); the battle itself is BATTLE's. A new
   enemy needs its ENTD.

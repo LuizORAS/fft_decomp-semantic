@@ -11,7 +11,7 @@
  * Per stage: walking and climbing snap onto the ground at or below it, and within 6 units above it,
  * and rebuild the step delta (climbing first raises step_speed by g_battle_move_jump_gravity, up to
  * 0x7fff); higher up they gain gravity, and 0x2a units up (above the destination's ground for the
- * to-centre halves) turns the step into a jump, with the fall animation outside action execution.
+ * to-center halves) turns the step into a jump, with the fall animation outside action execution.
  * Jumps and float jumps gain gravity and stop at the ground on the way down. A float snaps at the
  * ground and rebuilds its delta; above it the fall speed gains gravity while under 0x2000. A flight
  * rebuilds its velocity for the run of contiguous steps when it reaches the ground.

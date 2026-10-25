@@ -158,7 +158,7 @@ s32 effect_update_particle_ribbon_long(s32 record_index, s32 callback_slot, s32 
         READ_CURVE(j, factor,
             effect_get_cached_curve_binding(target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_SPAWN_INTERVAL_SHIFT), frame);
         if (i
-                % battle_effect_lerp_fixed8(
+                % battle_effect_lerp_q8(
                     entry->particle_ribbon.spawn_interval_start, entry->particle_ribbon.spawn_interval_end, factor)
             == 0) {
             SetTransMatrix(&work->matrix);
@@ -183,7 +183,7 @@ s32 effect_update_particle_ribbon_long(s32 record_index, s32 callback_slot, s32 
             READ_CURVE(j, factor,
                 effect_get_cached_curve_binding(target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_PARTICLE_COUNT_SHIFT),
                 frame);
-            count = battle_effect_lerp_fixed8(
+            count = battle_effect_lerp_q8(
                 entry->particle_ribbon.particle_count_start, entry->particle_ribbon.particle_count_end, factor);
 
             READ_CURVE(j, factor,
@@ -237,9 +237,9 @@ s32 effect_update_particle_ribbon_long(s32 record_index, s32 callback_slot, s32 
             j--;
             if (j != -1) {
                 factor = g_battle_effect_animation_curves->curves[j][frame];
-                speed_min = battle_effect_lerp_fixed8(
+                speed_min = battle_effect_lerp_q8(
                     entry->particle_ribbon.radial_speed_start.min, entry->particle_ribbon.radial_speed_end.min, factor);
-                speed_max = battle_effect_lerp_fixed8(
+                speed_max = battle_effect_lerp_q8(
                     entry->particle_ribbon.radial_speed_start.max, entry->particle_ribbon.radial_speed_end.max, factor);
             } else {
                 speed_min = entry->particle_ribbon.radial_speed_start.min;
@@ -259,11 +259,11 @@ s32 effect_update_particle_ribbon_long(s32 record_index, s32 callback_slot, s32 
             READ_CURVE(j, factor,
                 effect_get_cached_curve_binding(target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_TARGET_OFFSET_SHIFT),
                 frame);
-            target_base.vx = battle_effect_lerp_fixed8(
+            target_base.vx = battle_effect_lerp_q8(
                 entry->particle_ribbon.target_offset_start.x, entry->particle_ribbon.target_offset_end.x, factor);
-            target_base.vy = battle_effect_lerp_fixed8(
+            target_base.vy = battle_effect_lerp_q8(
                 entry->particle_ribbon.target_offset_start.y, entry->particle_ribbon.target_offset_end.y, factor);
-            target_base.vz = battle_effect_lerp_fixed8(
+            target_base.vz = battle_effect_lerp_q8(
                 entry->particle_ribbon.target_offset_start.z, entry->particle_ribbon.target_offset_end.z, factor);
             switch (placement & EFFECT_EMITTER_HOMING_MASK) {
             case EFFECT_EMITTER_HOMING_OFFSET:
@@ -299,18 +299,18 @@ s32 effect_update_particle_ribbon_long(s32 record_index, s32 callback_slot, s32 
             READ_CURVE(j, factor,
                 effect_get_cached_curve_binding(target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_TARGET_SPREAD_SHIFT),
                 frame);
-            target_spread.vx = battle_effect_lerp_fixed8(
+            target_spread.vx = battle_effect_lerp_q8(
                 entry->particle_ribbon.target_spread_start_x, entry->particle_ribbon.target_spread_end_x, factor);
-            target_spread.vy = battle_effect_lerp_fixed8(
+            target_spread.vy = battle_effect_lerp_q8(
                 entry->particle_ribbon.target_spread_start_y, entry->particle_ribbon.target_spread_end_y, factor);
-            target_spread.vz = battle_effect_lerp_fixed8(
+            target_spread.vz = battle_effect_lerp_q8(
                 entry->particle_ribbon.target_spread_start_z, entry->particle_ribbon.target_spread_end_z, factor);
 
             READ_CURVE(j, factor,
                 effect_get_cached_curve_binding(target_bindings, EFFECT_PARTICLE_RIBBON_CURVE_LIFETIME_SHIFT), frame);
-            lifetime_min = battle_effect_lerp_fixed8(
+            lifetime_min = battle_effect_lerp_q8(
                 entry->particle_ribbon.lifetime_start.min, entry->particle_ribbon.lifetime_end.min, factor);
-            lifetime_max = battle_effect_lerp_fixed8(
+            lifetime_max = battle_effect_lerp_q8(
                 entry->particle_ribbon.lifetime_start.max, entry->particle_ribbon.lifetime_end.max, factor);
 
             for (i = 0; i < count; i++) {

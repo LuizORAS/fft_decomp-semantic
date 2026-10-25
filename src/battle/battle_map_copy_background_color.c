@@ -1,6 +1,6 @@
 #include "fft/battle_map.h"
 
-/* Save the map background colour in the backup that battle_map_restore_background_color reloads.
+/* Save the map background color in the backup that battle_map_restore_background_color reloads.
  * No retail code calls it. */
 void battle_map_copy_background_color(void) {
     /* Component copies retain the original byte loads and separate addresses. */

@@ -8,7 +8,7 @@
 /*
  * Twin of menu_animate_window_quad_crop without the two-pixel right
  * inset. Animate the current window's first quad growing out from the rectangle
- * centre: each frame crops a sprite of the rectangle by the level's
+ * center: each frame crops a sprite of the rectangle by the level's
  * percentage and copies the cropped bounds into the quad's corners.
  */
 void world_menu_animate_window_quad_crop_full(menu_window_buffer_t* buffers, RECT* rect, RECT* unused_to) {

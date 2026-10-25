@@ -1,6 +1,8 @@
 #ifndef PSX_CARD_ABI_INLINE_H
 #define PSX_CARD_ABI_INLINE_H
 
+/* ABI helpers for the memory card library's BIOS patches. */
+
 #include "psx/bios.h"
 #include "psx/cpu_abi_inline.h"
 

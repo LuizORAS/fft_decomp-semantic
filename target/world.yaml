@@ -201,7 +201,7 @@ functions:
   - {addr: 0x800e6f64, size: 104, name: gfx_flip_poly_ft4_uv_if_negative, hash: 1a53cbbc201168a1, source: src/shared/gfx/gfx_flip_poly_ft4_uv_if_negative.c}
   - {addr: 0x800e6fcc, size: 688, name: menu_animate_window_quad_crop, hash: 81c3085397b8c764, source: src/shared/menu/menu_animate_window_quad_crop.c}
   - {addr: 0x800e727c, size: 652, name: menu_tween_window_quads, hash: 60b84c3c9ba59ec3, source: src/shared/menu/menu_tween_window_quads.c}
-  - {addr: 0x800e7508, size: 36, name: menu_lerp_fixed12, hash: c8c076c648585d00, source: src/shared/menu/menu_lerp_fixed12.c}
+  - {addr: 0x800e7508, size: 36, name: menu_lerp_q12, hash: c8c076c648585d00, source: src/shared/menu/menu_lerp_q12.c}
   - {addr: 0x800e752c, size: 296, name: menu_lerp_rect_to_poly_ft4, hash: 18c92e7328405f4d, source: src/shared/menu/menu_lerp_rect_to_poly_ft4.c}
   - {addr: 0x800e7654, size: 84, name: script_pause_event_instruction, hash: c8f0977405c464dd, source: src/shared/script/script_pause_event_instruction.c}
   - {addr: 0x800e76a8, size: 88, name: world_unit_copy_world_coords_to_scratch, hash: 2a62d55b05ed841c}
@@ -345,7 +345,7 @@ functions:
   - {addr: 0x800f13fc, size: 184, name: script_unlock_date_event_instruction, hash: 756a57b269501269, source: src/shared/script/script_unlock_date_event_instruction.c}
   - {addr: 0x800f14b4, size: 1044, name: world_camera_fusion_thread, hash: 29fbdab9fc995bcc, source: src/shared/camera/camera_fusion_thread.c, source_symbol: camera_fusion_thread}
   - {addr: 0x800f18c8, size: 1432, name: world_camera_step_track, hash: 64ee507b9faf9750, source: src/shared/camera/camera_step_track.c, source_symbol: camera_step_track}
-  - {addr: 0x800f1e60, size: 60, name: script_interpolate_range_fixed12, hash: 959b0c6e3237b93a, source: src/shared/script/script_interpolate_range_fixed12.c}
+  - {addr: 0x800f1e60, size: 60, name: script_interpolate_range_q12, hash: 959b0c6e3237b93a, source: src/shared/script/script_interpolate_range_q12.c}
   - {addr: 0x800f1e9c, size: 60, name: script_print_debug_message, hash: 452ccd9750915554, source: src/shared/script/script_print_debug_message.c}
   - {addr: 0x800f1ed8, size: 156, name: script_walk_to_event_instruction, hash: df0e7f67144df7b9, source: src/shared/script/script_walk_to_event_instruction.c}
   - {addr: 0x800f1f74, size: 104, name: script_mirror_sprite_event_instruction, hash: 2f6891a168cbc54d, source: src/shared/script/script_mirror_sprite_event_instruction.c}
@@ -652,7 +652,7 @@ functions:
   - {addr: 0x8010e3b0, size: 84, name: world_text_release_current_message_box_slot, hash: c06df679de8b3eaf}
   - {addr: 0x8010e404, size: 1572, name: world_text_message_box_draw_glyph_with_typewriter_delay, hash: e9a9ae273a15cb88}
   - {addr: 0x8010ea28, size: 92, name: world_gfx_flip_poly_ft4_u_if_negative, hash: cce394046c44b999}
-  - {addr: 0x8010ea84, size: 36, name: world_screen_menu_lerp_fixed12, hash: c8c076c648585d00}
+  - {addr: 0x8010ea84, size: 36, name: world_screen_menu_lerp_q12, hash: c8c076c648585d00}
   - {addr: 0x8010eaa8, size: 296, name: world_screen_menu_lerp_rect_to_poly_ft4, hash: 1216a4e4bcbe2494}
   - {addr: 0x8010ebd0, size: 984, name: world_menu_animate_window_quads_to_rects, hash: d8d4f05a2221c087}
   - {addr: 0x8010efa8, size: 680, name: world_menu_animate_window_quad_crop_full, hash: 18f8ec0cf76ca5d5}
@@ -2461,7 +2461,7 @@ overrides:
   - {function: menu_text_render_decimal_value, name: text_blit_glyph, addr: 0x800feff0}
   - {function: script_find_instruction_byte_offset, name: g_script_event_instruction_sizes, addr: 0x8013a454}
   - {function: script_find_jump_target, name: g_script_event_instruction_sizes, addr: 0x8013a454}
-  - {function: script_interpolate_range_fixed12, name: battle_util_mul_div_s64, addr: 0x80100188}
+  - {function: script_interpolate_range_q12, name: battle_util_mul_div_s64, addr: 0x80100188}
   - {function: script_run_next_event, name: script_execute_event, addr: 0x800f6f20}
   - {function: script_run_next_event, name: script_load_next_event, addr: 0x800f92a0}
   - {function: script_run_next_event_unused, name: script_execute_event, addr: 0x800f6f20}

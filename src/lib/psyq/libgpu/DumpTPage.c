@@ -1,7 +1,7 @@
 /* LIBGPU 80023a6c-80023b3c. */
 #include "psx/libgpu.h"
 
-/* Print the colour depth, semi-transparency mode and VRAM position of texture page id `tpage`. No code
+/* Print the color depth, semi-transparency mode and VRAM position of texture page id `tpage`. No code
  * refers to it. */
 void DumpTPage(u16 tpage) {
     if (GetGraphType() == 1 || GetGraphType() == 2) {

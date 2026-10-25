@@ -2,7 +2,7 @@
 #include "fft/battle_formula.h"
 
 /* Nullify the action on the current target: no hit, miss type NULLIFIED, and no damage, accuracy,
- * special effect or result type; a pending weapon spell and the knockback are cancelled. */
+ * special effect or result type; a pending weapon spell and the knockback are canceled. */
 void battle_formula_nullify_action(void) {
     battle_action_data_t* target_data;
     battle_action_data_t* target_data_reload;

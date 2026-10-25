@@ -7,7 +7,7 @@
  * remove it from the party. Nothing happens when no member matches.
  *
  * The `slot = 0;` before `empty_item = ITEM_ID_NONE;` is load-bearing: it puts the induction variable's
- * initialisation first in the if-body so the branch's delay slot takes `move a0,zero` rather than
+ * initialization first in the if-body so the branch's delay slot takes `move a0,zero` rather than
  * `li a2,0xff`. */
 void script_dismiss_unit_event_instruction(s32 sprite_set) {
     party_unit_t* party;

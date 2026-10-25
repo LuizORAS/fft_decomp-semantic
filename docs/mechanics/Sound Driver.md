@@ -118,7 +118,7 @@ frame rate.
 - [[main_sound_update_tunes]] asks [[suzuki_smd_is_music_playing]] about a null
   record when no scenario music is loaded.
 - [[suzuki_sound_init]] reaches code that toggles the root counter event
-  before the initialiser has opened it.
+  before the initializer has opened it.
 - [[suzuki_sound_get_largest_free_block]] reports a gap that includes the next
   block's header.
 

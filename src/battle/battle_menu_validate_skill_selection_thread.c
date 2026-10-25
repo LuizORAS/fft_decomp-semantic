@@ -8,7 +8,7 @@
  *
  * A normal skillset checks the MP cost (0x800A, or 0x1008 for an ability with no charge time) and, with
  * the monster skillsets, Silence for a blocked ability (0x8013, or 0x1009); the Item, Throw and Draw
- * Out lists refuse a greyed row (0x100B, 0x100C, 0x100D). The message shows under the current thread with
+ * Out lists refuse a grayed row (0x100B, 0x100C, 0x100D). The message shows under the current thread with
  * the help blocked, or with navigation messages off only the confirm sound plays. The row is refused
  * (g_battle_menu_result -1) unless the message is the charge-time warning 0x800A or 0x8013 and the player
  * did not cancel it. */

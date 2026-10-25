@@ -12,7 +12,7 @@
 /* The ability effect files (EFFECT/E*.BIN) and the engine that plays them: the request and the load
  * (battle_effect_request_ability_effect, battle_effect_update_file_load), the file's section header and the
  * setters that bind its sections, the script records and their interpreter (battle_effect_run_block,
- * g_battle_effect_instructions), the parent and child timelines with their colour, sound and camera tracks,
+ * g_battle_effect_instructions), the parent and child timelines with their color, sound and camera tracks,
  * and the native callbacks the scripts bind. The work record types are here because battle_effect_record_t embeds
  * them. */
 
@@ -43,7 +43,7 @@ typedef struct battle_effect_target {
         SVECTOR tile; /* x, layer, y */
     } data;           /* 0x02 */
 } battle_effect_target_t;
-typedef char effect_target_size_must_be_10[(sizeof(battle_effect_target_t) == 10) ? 1 : -1];
+typedef char battle_effect_target_size_must_be_10[(sizeof(battle_effect_target_t) == 10) ? 1 : -1];
 
 /* target_type of an effect target record. */
 typedef enum battle_effect_target_type {
@@ -72,7 +72,7 @@ typedef struct battle_effect_secondary_init {
     battle_effect_target_t target_tile; /* 0xbc; post-action destination tile */
     u16 used_weapon_id;                 /* 0xc6 */
 } battle_effect_secondary_init_t;
-typedef char effect_secondary_init_size_must_be_200[(sizeof(battle_effect_secondary_init_t) == 200) ? 1 : -1];
+typedef char battle_effect_secondary_init_size_must_be_200[(sizeof(battle_effect_secondary_init_t) == 200) ? 1 : -1];
 
 /* result_animation of a target in an effect init record. The records built by
  * battle_effect_request_action_effect use the first four; the weapon-hit
@@ -82,7 +82,7 @@ typedef enum battle_effect_hit_result {
     BATTLE_EFFECT_HIT_CRITICAL = 1,
     BATTLE_EFFECT_HIT_REFLECTED = 2,
     BATTLE_EFFECT_HIT_MISSED = 3,    /* weapon hits: evaded by an accessory, a hand or the class */
-    BATTLE_EFFECT_HIT_NO_EFFECT = 4, /* nullified, missed outright, cancelled, grasped or caught */
+    BATTLE_EFFECT_HIT_NO_EFFECT = 4, /* nullified, missed outright, canceled, grasped or caught */
     BATTLE_EFFECT_HIT_GOLEM = 5,
     BATTLE_EFFECT_HIT_BREAK = 6,     /* equipment broken */
     BATTLE_EFFECT_HIT_BREAK_ALT = 7, /* handled like BREAK; nothing stores it */
@@ -101,15 +101,15 @@ typedef struct battle_effect_keyframe_table {
     u8 _unused_7c[2];    /* 0x7c */
     s16 last_index;      /* 0x7e; highest valid keyframe index */
 } battle_effect_keyframe_table_t;
-typedef char effect_keyframe_table_size_must_be_128[(sizeof(battle_effect_keyframe_table_t) == 128) ? 1 : -1];
+typedef char battle_effect_keyframe_table_size_must_be_128[(sizeof(battle_effect_keyframe_table_t) == 128) ? 1 : -1];
 
 enum {
     BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES = 33,
 };
 
-/* The screen colour track: the palette-track layout with a second colour per
+/* The screen color track: the palette-track layout with a second color per
  * keyframe. An APPLY keyframe shifts the map background gradient by twice
- * its colour; any other sets the gradient's two stops to its two colours. */
+ * its color; any other sets the gradient's two stops to its two colors. */
 typedef struct battle_effect_background_track {
     s16 duration[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
     rgb_s8_t color[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
@@ -117,15 +117,16 @@ typedef struct battle_effect_background_track {
     u8 preset[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
     s16 count;
 } battle_effect_background_track_t;
-typedef char effect_background_track_size_must_be_300[(sizeof(battle_effect_background_track_t) == 300) ? 1 : -1];
+typedef char
+    battle_effect_background_track_size_must_be_300[(sizeof(battle_effect_background_track_t) == 300) ? 1 : -1];
 
-/* preset of a colour track keyframe. */
+/* preset of a color track keyframe. */
 enum {
-    EFFECT_COLOR_KEYFRAME_MODE_MASK = 0x7f, /* the map colour mode (MAP_COLOR_MODE_*) the colour is applied in */
+    EFFECT_COLOR_KEYFRAME_MODE_MASK = 0x7f, /* the map color mode (MAP_COLOR_MODE_*) the color is applied in */
     EFFECT_COLOR_KEYFRAME_APPLY = 0x80,     /* clear on the unit tracks: the keyframe only waits */
 };
 
-/* A colour track of an effect timeline: timed palette changes of the
+/* A color track of an effect timeline: timed palette changes of the
  * surroundings, the caster or the targets. A keyframe lasts duration * 8
  * frames (one frame for 0); a track of count keyframes plays count - 1. */
 typedef struct battle_effect_palette_track {
@@ -134,9 +135,9 @@ typedef struct battle_effect_palette_track {
     u8 preset[BATTLE_EFFECT_PALETTE_TRACK_KEYFRAMES];
     s16 count;
 } battle_effect_palette_track_t;
-typedef char effect_palette_track_size_must_be_200[sizeof(battle_effect_palette_track_t) == 200 ? 1 : -1];
+typedef char battle_effect_palette_track_size_must_be_200[sizeof(battle_effect_palette_track_t) == 200 ? 1 : -1];
 
-/* One phase's colour tracks. The surroundings are the map's field colour and
+/* One phase's color tracks. The surroundings are the map's field color and
  * the spectators: the living units that are neither a target nor the caster. */
 typedef struct effect_timeline_color_tracks {
     battle_effect_palette_track_t surroundings; /* 0x000: the map and the units that only look on */
@@ -173,7 +174,7 @@ typedef struct battle_effect_child_timeline {
     battle_effect_palette_track_t target;                                   /* 0x4b6 */
     battle_effect_background_track_t screen;                                /* 0x57e */
 } battle_effect_child_timeline_t;
-typedef char effect_child_timeline_size_must_be_1706[sizeof(battle_effect_child_timeline_t) == 1706 ? 1 : -1];
+typedef char battle_effect_child_timeline_size_must_be_1706[sizeof(battle_effect_child_timeline_t) == 1706 ? 1 : -1];
 
 /* target_mode of battle_effect_start_new. */
 typedef enum battle_effect_start_target {
@@ -268,14 +269,14 @@ typedef struct effect_sound_track {
  * The child timeline's channels are the battle_effect_child_timeline_t that
  * g_battle_effect_child_timeline addresses at 0x008; its camera table is the
  * 17-keyframe one at 0x6b2, laid out like effect_camera_keyframes_21_t. Each
- * phase has five particle channels, three sound tracks, four colour tracks
+ * phase has five particle channels, three sound tracks, four color tracks
  * and a 21-keyframe camera table. */
 typedef struct effect_timeline {
     u16 _unused_0000;
     u16 phase2_duration;                  /* 0x002 */
     u16 phase1_duration;                  /* 0x004 */
     u16 spawn_delay;                      /* 0x006; frames between child spawns (see effect_flags_section_t) */
-    battle_effect_child_timeline_t child; /* 0x008; child duration, particle, sound and colour tracks */
+    battle_effect_child_timeline_t child; /* 0x008; child duration, particle, sound and color tracks */
     s16 end_frame[17];                    /* 0x6b2; child camera table: frame each keyframe's moves arrive */
     vec3s16_t rotation[17];               /* 0x6d4 */
     vec3s16_t position[17];               /* 0x73a */
@@ -489,7 +490,7 @@ typedef struct battle_effect_timing_curves {
     u8 parent_timeline[300]; /* 0x000 */
     u8 child_timeline[300];  /* 0x12c */
 } battle_effect_timing_curves_t;
-typedef char effect_timing_curves_size_must_be_600[sizeof(battle_effect_timing_curves_t) == 600 ? 1 : -1];
+typedef char battle_effect_timing_curves_size_must_be_600[sizeof(battle_effect_timing_curves_t) == 600 ? 1 : -1];
 
 extern u8 g_battle_effect_load_state; /* battle_effect_load_state_e */
 extern u8 g_battle_effect_palette_target_runtime_ids[];
@@ -543,7 +544,7 @@ typedef struct battle_effect_sprite_part {
     /* Four-byte alignment preserves the original x/y 32-bit copies. */
     DVECTOR corners[4] __attribute__((aligned(4))); /* 0x08 */
 } battle_effect_sprite_part_t;
-typedef char effect_sprite_part_size_must_be_24[(sizeof(battle_effect_sprite_part_t) == 24) ? 1 : -1];
+typedef char battle_effect_sprite_part_size_must_be_24[(sizeof(battle_effect_sprite_part_t) == 24) ? 1 : -1];
 
 /* An eight-byte prefix followed by one pointer for each sprite part. */
 typedef struct battle_effect_sprite_block {
@@ -626,7 +627,7 @@ void battle_effect_add_random_vector_offsets_and_store_q12(
 void battle_effect_add_vectors(const VECTOR* first, const VECTOR* second, VECTOR* out);
 s16 battle_effect_get_random_between_s16(s16 minimum, s16 maximum);
 void battle_effect_mask_vector_low_12_bits(const SVECTOR* src, SVECTOR* dst);
-void battle_effect_scale_vector_fixed12(const VECTOR* src, VECTOR* dst);
+void battle_effect_scale_vector_q12(const VECTOR* src, VECTOR* dst);
 void battle_effect_shift_vector_right_12(const VECTOR* src, VECTOR* dst);
 void battle_effect_add_svector_to_vector(const SVECTOR* first, const VECTOR* second, VECTOR* out);
 void battle_effect_add_svectors(const SVECTOR* first, const SVECTOR* second, SVECTOR* out);
@@ -655,13 +656,13 @@ typedef struct battle_effect_flag_prefix {
 } battle_effect_flag_prefix_t;
 typedef char
     battle_effect_flag_prefix_flags_must_be_6[((unsigned long)&((battle_effect_flag_prefix_t*)0)->flags == 6) ? 1 : -1];
-typedef char effect_flag_prefix_size_must_be_8[(sizeof(battle_effect_flag_prefix_t) == 8) ? 1 : -1];
+typedef char battle_effect_flag_prefix_size_must_be_8[(sizeof(battle_effect_flag_prefix_t) == 8) ? 1 : -1];
 
 /* flags of a sprite part (battle_effect_sprite_part_t, battle_effect_sprite_frameset_t). */
 enum {
     EFFECT_SPRITE_PART_CLUT_MASK = 0x000f,
     EFFECT_SPRITE_PART_FLAG_SECOND_CLUT_ROW = 0x0010,  /* the CLUT is of MAP_CLUT_ROW_EFFECT_SECOND */
-    EFFECT_SPRITE_PART_TPAGE_MODE_MASK = 0x00e0,       /* the tpage's blend rate and 8-bit colour bits */
+    EFFECT_SPRITE_PART_TPAGE_MODE_MASK = 0x00e0,       /* the tpage's blend rate and 8-bit color bits */
     EFFECT_SPRITE_PART_FLAG_SEMI_TRANSPARENT = 0x0200, /* draw it semi-transparent */
 };
 
@@ -669,11 +670,11 @@ enum {
 enum { EFFECT_PARTICLE_LIFETIME_ANIMATION_DRIVEN = -1 };
 
 /* Emitter spawn origin: bits 9-11 of an emitter's 16-bit placement flags (byte 0x03
- * mask 0x0e). 0xa00 is the map centre:
+ * mask 0x0e). 0xa00 is the map center:
  * every handler adds half the map geometry width and depth there. */
 typedef enum effect_emitter_origin {
     EFFECT_EMITTER_ORIGIN_WORLD = 0x000,
-    EFFECT_EMITTER_ORIGIN_CURSOR_TILE = 0x200, /* centre of g_battle_effect_target_tile */
+    EFFECT_EMITTER_ORIGIN_CURSOR_TILE = 0x200, /* center of g_battle_effect_target_tile */
     EFFECT_EMITTER_ORIGIN_CASTER = 0x400,
     EFFECT_EMITTER_ORIGIN_TARGET = 0x600,
     EFFECT_EMITTER_ORIGIN_PARENT_PARTICLE = 0x800, /* position of the spawning work record */
@@ -685,7 +686,7 @@ enum { EFFECT_EMITTER_ORIGIN_MASK = 0xe00 };
 
 /* Point particles home toward: bits 5-7 of the 16-bit placement flags (byte 0x02 mask
  * 0xe0). 0x00 and 0x20 both leave the
- * interpolated offset unchanged; 0x40 is the map centre. */
+ * interpolated offset unchanged; 0x40 is the map center. */
 typedef enum effect_emitter_homing {
     EFFECT_EMITTER_HOMING_OFFSET = 0x00,
     EFFECT_EMITTER_HOMING_OFFSET_ALT = 0x20,
@@ -743,7 +744,7 @@ enum {
     EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MASK = 0x000c, /* spawn child_emitter_mid_life every frame it lives */
     EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MODE_1 = 0x0004,
     EFFECT_EMITTER_FLAG_CHILD_MID_LIFE_MODE_2 = 0x0008,
-    EFFECT_EMITTER_FLAG_COLOUR_CURVES = 0x0040, /* tint by the three colour curves; clear, a neutral 128 */
+    EFFECT_EMITTER_FLAG_COLOUR_CURVES = 0x0040, /* tint by the three color curves; clear, a neutral 128 */
     /* A particle that comes within this distance of its homing target on all three axes ends its
      * life: the field shifted right by SHIFT is 16, 32 or 48 world units, 0 for never. */
     EFFECT_EMITTER_FLAG_ARRIVAL_DISTANCE_MASK = 0x0300,
@@ -813,7 +814,7 @@ typedef struct effect_child_timeline_state {
 } effect_child_timeline_state_t;
 typedef char effect_child_timeline_state_size_must_be_78[sizeof(effect_child_timeline_state_t) == 78 ? 1 : -1];
 
-/* Parent counters: ten particle tracks, fourteen colour/sound tracks and
+/* Parent counters: ten particle tracks, fourteen color/sound tracks and
  * two extra 16-bit values. The reset clears all 26, not just the 24 stepped tracks. */
 typedef union effect_parent_track_counters {
     s16 reset_slots[EFFECT_PARENT_TRACK_RESET_SLOT_COUNT];
@@ -854,7 +855,7 @@ typedef union battle_effect_timeline_state {
     effect_child_timeline_state_t child;
     battle_effect_parent_timeline_state_t parent;
 } battle_effect_timeline_state_t;
-typedef char effect_timeline_state_size_must_be_166[sizeof(battle_effect_timeline_state_t) == 166 ? 1 : -1];
+typedef char battle_effect_timeline_state_size_must_be_166[sizeof(battle_effect_timeline_state_t) == 166 ? 1 : -1];
 
 /* The target and frame travel with the counters of the active timeline. */
 typedef struct battle_effect_record_timeline {
@@ -862,7 +863,7 @@ typedef struct battle_effect_record_timeline {
     s16 frame;                            /* 0x02 */
     battle_effect_timeline_state_t state; /* 0x04; opcode 28 child or opcode 29 parent */
 } battle_effect_record_timeline_t;
-typedef char effect_record_timeline_size_must_be_170[sizeof(battle_effect_record_timeline_t) == 170 ? 1 : -1];
+typedef char battle_effect_record_timeline_size_must_be_170[sizeof(battle_effect_record_timeline_t) == 170 ? 1 : -1];
 
 /* effect_list_node_t.kind: how battle_effect_render_particle_sprite places the sprite, and the
  * FRAME_CHANGED bit it sets when the sequence picks another frame. */
@@ -1109,7 +1110,7 @@ typedef char effect_polar_curve_bindings_size_must_be_8[sizeof(effect_polar_curv
 /* The polar renderer gives the particle emitter's parameter slots its own meanings. */
 typedef struct effect_polar_mesh_geometry_view {
     u8 _unused_00[0x06];
-    u16 flags;                                    /* 0x06: bit 6 = per-channel colour curves */
+    u16 flags;                                    /* 0x06: bit 6 = per-channel color curves */
     effect_polar_curve_bindings_t curve_bindings; /* 0x08 */
     u32 colour_curves;                            /* 0x10: nibbles 0-2 = r/g/b */
     vec3s16_t center_start; /* 0x14: spawn position, read by battle_effect_interpolate_emitter_spawn_position */
@@ -1214,7 +1215,7 @@ typedef struct effect_radial_mesh_geometry {
     u8 _unused_00[0x02];
     u16 placement_flags; /* 0x02: bits 9-11 select how the origin is placed */
     u8 _unused_04[0x02];
-    u16 flags;                                           /* 0x06: bit 6 = per-channel colour curves */
+    u16 flags;                                           /* 0x06: bit 6 = per-channel color curves */
     effect_radial_motion_curve_bindings_t motion_curves; /* 0x08 */
     effect_radial_shape_curve_bindings_t shape_curves;   /* 0x0c */
     u32 colour_curves;                                   /* 0x10: nibbles 0-2 = r/g/b */
@@ -1347,10 +1348,10 @@ typedef char effect_xyz_min_max_size_must_be_12[sizeof(effect_xyz_min_max_t) == 
 /* Frames in one animation curve: emitter and particle frame counters wrap here. */
 enum { EFFECT_ANIMATION_CURVE_FRAMES = 160 };
 
-/* Textured RGB intensity that preserves the texture colour. */
+/* Textured RGB intensity that preserves the texture color. */
 enum { EFFECT_COLOR_NEUTRAL = 128 };
 
-/* One interpolation factor per frame; curve indices select emitter and colour tracks. */
+/* One interpolation factor per frame; curve indices select emitter and color tracks. */
 typedef u8 effect_animation_curve_t[EFFECT_ANIMATION_CURVE_FRAMES];
 typedef char assert_effect_animation_curve_size[sizeof(effect_animation_curve_t) == 160 ? 1 : -1];
 
@@ -1394,7 +1395,7 @@ typedef struct battle_effect_charge_params {
     u8 max_trails;
     u8 fade_row;
 } battle_effect_charge_params_t;
-typedef char effect_charge_params_size_must_be_14[sizeof(battle_effect_charge_params_t) == 14 ? 1 : -1];
+typedef char battle_effect_charge_params_size_must_be_14[sizeof(battle_effect_charge_params_t) == 14 ? 1 : -1];
 
 /* Native effect handlers receive the record, callback slot, emitter and frame.
  * Individual handlers narrow the record index or ignore unused arguments. */
@@ -1455,7 +1456,7 @@ s32 battle_effect_update_stage(void);
 void battle_effect_interpolate_s16(s16 from, s16 to, s32 t, s16* out);
 void battle_effect_interpolate_svector(const SVECTOR* from, const SVECTOR* to, s32 t, SVECTOR* out);
 void battle_effect_interpolate_vector(const VECTOR* from, const VECTOR* to, s32 t, VECTOR* out);
-s32 battle_effect_lerp_fixed8_and_store(s32 start, s32 end, s32 factor, s32* out);
+s32 battle_effect_lerp_q8_and_store(s32 start, s32 end, s32 factor, s32* out);
 void battle_effect_interpolate_s32(s32 from, s32 to, s32 t, s32* out);
 s32 battle_effect_interpolate_s32_cos(s32 start, s32 end, s32 duration, s32 current);
 s32 battle_effect_get_random_between(s32 value_a, s32 value_b);
@@ -1474,7 +1475,7 @@ void battle_effect_interpolate_vector_out_and_back(
 
 void battle_effect_interpolate_vector_linear(
     const VECTOR* from, const VECTOR* to, s32 duration, s32 current, VECTOR* out);
-s32 battle_effect_lerp_fixed8(s32 start, s32 end, s32 factor);
+s32 battle_effect_lerp_q8(s32 start, s32 end, s32 factor);
 
 /* effect particle */
 /* More of the effect particle block: its types and functions, after the declarations above that they use. */
@@ -1596,7 +1597,7 @@ typedef struct battle_effect_death_smoke_state {
     u16 finish_timer; /* 0x04; reaches 1 when the effect is finished */
     u8 ids[2];        /* 0x06 */
 } battle_effect_death_smoke_state_t;
-typedef char effect_death_poof_state_size_must_be_8[sizeof(battle_effect_death_smoke_state_t) == 8 ? 1 : -1];
+typedef char battle_effect_death_smoke_state_size_must_be_8[sizeof(battle_effect_death_smoke_state_t) == 8 ? 1 : -1];
 
 typedef s32 (*effect_secondary_callback_t)(void);
 
@@ -1732,7 +1733,7 @@ typedef struct battle_effect_emitter_values {
     s8 lifetime_min;        /* 0x2c */
     s8 lifetime_max;        /* 0x2d */
 } battle_effect_emitter_values_t;
-typedef char effect_emitter_values_size_must_be_46[(sizeof(battle_effect_emitter_values_t) == 46) ? 1 : -1];
+typedef char battle_effect_emitter_values_size_must_be_46[(sizeof(battle_effect_emitter_values_t) == 46) ? 1 : -1];
 
 /* Byte offset to a group's frame-offset table, relative to the group-table base. */
 typedef struct effect_sprite_group {
@@ -1753,7 +1754,7 @@ typedef struct battle_effect_sprite_frameset {
     s16 count;                            /* 0x02; number of sprite parts */
     battle_effect_sprite_part_t parts[0]; /* 0x04; variable-length part table */
 } battle_effect_sprite_frameset_t;
-typedef char effect_sprite_frameset_size_must_be_4[sizeof(battle_effect_sprite_frameset_t) == 4 ? 1 : -1];
+typedef char battle_effect_sprite_frameset_size_must_be_4[sizeof(battle_effect_sprite_frameset_t) == 4 ? 1 : -1];
 
 /* One playback step of the animation script referenced by an effect slot:
  * a hold count and the frame id written to the slot. */
@@ -1761,13 +1762,13 @@ typedef struct battle_effect_anim_step {
     u8 hold;  /* 0x00 */
     u8 frame; /* 0x01 */
 } battle_effect_anim_step_t;
-typedef char effect_anim_step_size_must_be_2[sizeof(battle_effect_anim_step_t) == 2 ? 1 : -1];
+typedef char battle_effect_anim_step_size_must_be_2[sizeof(battle_effect_anim_step_t) == 2 ? 1 : -1];
 
 typedef struct battle_effect_anim_script {
     s16 count;                         /* 0x00 */
     battle_effect_anim_step_t step[0]; /* 0x02; count steps follow */
 } battle_effect_anim_script_t;
-typedef char effect_anim_script_prefix_size_must_be_2[sizeof(battle_effect_anim_script_t) == 2 ? 1 : -1];
+typedef char battle_effect_anim_script_size_must_be_2[sizeof(battle_effect_anim_script_t) == 2 ? 1 : -1];
 
 /* Motion state of an effect slot (battle_effect_slot_t +0x98) and of a
  * particle (battle_effect_work_record_t +0x08), stepped once a frame by
@@ -1784,7 +1785,7 @@ typedef struct battle_effect_motion {
     battle_effect_gravity_t acceleration;      /* 0x1c */
     battle_effect_gravity_t acceleration_step; /* 0x28 */
 } battle_effect_motion_t;
-typedef char effect_motion_size_must_be_52[(sizeof(battle_effect_motion_t) == 52) ? 1 : -1];
+typedef char battle_effect_motion_size_must_be_52[(sizeof(battle_effect_motion_t) == 52) ? 1 : -1];
 
 /* effect particle */
 /* More of the effect particle block: its types, after the declarations above that they use. */
@@ -1903,8 +1904,8 @@ battle_effect_work_record_t* battle_effect_get_list_node(s16 record_index, s16 r
 
 /* 0xcc-byte effect slots at 0x801b9278, chained through the leading next/prev byte pair; slot 0 is the null sentinel.
  * g_battle_effect_active_slot_head heads the active chain and g_battle_effect_slot_free_head the free chain. 0x84..0x87
- * has the battle_effect_sprite_block_t layout (colour plus the frame byte), which the billboard renderer copies
- * together; battle_effect_init_slot_animation resets the colour and writes the 16-bit values at 0x88 and 0x8e. */
+ * has the battle_effect_sprite_block_t layout (color plus the frame byte), which the billboard renderer copies
+ * together; battle_effect_init_slot_animation resets the color and writes the 16-bit values at 0x88 and 0x8e. */
 typedef struct battle_effect_slot {
     u8 next;                             /* 0x00 */
     u8 prev;                             /* 0x01 */
@@ -2009,7 +2010,7 @@ typedef struct battle_effect_secondary_data {
     u8 slot_ids[0x20]; /* 0x30; its effect slots, 0 for none; cleared when the record is allocated */
     void* allocation;  /* 0x50; the handler's work block; freed when the record is removed */
 } battle_effect_secondary_data_t;
-typedef char effect_secondary_data_size_must_be_84[(sizeof(battle_effect_secondary_data_t) == 84) ? 1 : -1];
+typedef char battle_effect_secondary_data_size_must_be_84[(sizeof(battle_effect_secondary_data_t) == 84) ? 1 : -1];
 
 /* The secondary animation parameter that makes the projectile handler draw the thrown item's own
  * graphic instead of a model. */
@@ -2066,7 +2067,7 @@ typedef struct battle_effect_charge_state {
     s32 duration;       /* 0x1140 */
     s32 radius;         /* 0x1144 */
     s32 spawn_interval; /* 0x1148 */
-    s32 colour;         /* 0x114c */
+    s32 color;          /* 0x114c */
     s32 max_trails;     /* 0x1150 */
     s32 fade_row;       /* 0x1154 */
     s32 done;           /* 0x1158 */
@@ -2186,7 +2187,7 @@ typedef struct battle_effect_arrow_buffer {
     POLY_G4 g4[2][13]; /* 0x0e0 */
     u8 _unused_488[0x800];
 } battle_effect_arrow_buffer_t;
-typedef char effect_arrow_buffer_size_must_be_3208[(sizeof(battle_effect_arrow_buffer_t) == 3208) ? 1 : -1];
+typedef char battle_effect_arrow_buffer_size_must_be_3208[(sizeof(battle_effect_arrow_buffer_t) == 3208) ? 1 : -1];
 
 extern battle_effect_secondary_animation_t g_battle_effect_secondary_animations[];
 extern battle_effect_secondary_data_t g_battle_effect_secondary_data[];
@@ -2225,7 +2226,7 @@ extern s32 g_battle_effect_projectile_speed;
 extern s16 g_battle_effect_projectile_spin_passes;
 extern s16 g_battle_effect_projectile_step_count;
 
-/* Six RGB byte triples, packed into both CLUT images as 15-bit colours. */
+/* Six RGB byte triples, packed into both CLUT images as 15-bit colors. */
 extern rgb24_t g_battle_effect_reflect_palette_colors[6];
 
 /* Secondary-animation id per charge animation set, indexed by the low 16 bits of the
@@ -2332,7 +2333,7 @@ typedef struct battle_effect_obstacle_unit_list {
     s32 count;                                  /* 0x00 */
     u8 battle_ids[BATTLE_UNIT_SLOT_COUNT];      /* 0x04 */
     u8 _padding_19;                             /* 0x19; aligns the position vectors */
-    SVECTOR positions[BATTLE_UNIT_SLOT_COUNT];  /* 0x1a; tile centre and height */
+    SVECTOR positions[BATTLE_UNIT_SLOT_COUNT];  /* 0x1a; tile center and height */
     u8 _padding_c2[2];                          /* 0xc2; aligns the sprite heights */
     s32 sprite_heights[BATTLE_UNIT_SLOT_COUNT]; /* 0xc4 */
 } battle_effect_obstacle_unit_list_t;

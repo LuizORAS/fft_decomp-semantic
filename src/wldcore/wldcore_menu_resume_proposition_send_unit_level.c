@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 
 /* Resume handler of the send-unit list: its windows and texts go back to CLUT 0 and the tinted render
- * record to neutral grey (0x80), and two more windows go back to CLUT 0. */
+ * record to neutral gray (0x80), and two more windows go back to CLUT 0. */
 void wldcore_menu_resume_proposition_send_unit_level(wldcore_menu_send_unit_level_t* level) {
     CVECTOR* color;
 

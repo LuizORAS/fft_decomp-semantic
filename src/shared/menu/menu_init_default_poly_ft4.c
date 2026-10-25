@@ -1,6 +1,6 @@
 #include "fft/menu.h"
 
-/* Initialize the fixed 4-point textured quad used by the menus: a grey quad
+/* Initialize the fixed 4-point textured quad used by the menus: a gray quad
  * with all four corners parked off-screen at x -0x200, the 4-bit texture page at
  * x=0x1c0 and CLUT 0x7c3c. BATTLE and WORLD compile this text. */
 void menu_init_default_poly_ft4(POLY_FT4* poly) {

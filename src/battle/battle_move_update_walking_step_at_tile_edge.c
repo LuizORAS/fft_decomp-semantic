@@ -2,11 +2,11 @@
 #include "fft/battle_move.h"
 #include "psx/types.h"
 
-/* Walk phases 1-15 (odd; centre to edge). At the current tile's exit edge, a step across a gap
+/* Walk phases 1-15 (odd; center to edge). At the current tile's exit edge, a step across a gap
  * (step bits 0-1) starts a jump step. Otherwise it compares the two edge heights, in half-heights:
  * each is the top of the unit standing there (the one the walker stands on, or the one it steps
  * onto) when that unit's height is available, else the tile edge; with no unit under the walker,
- * the current edge also adds its water standing offset. Up to +1 starts the walk to the next centre
+ * the current edge also adds its water standing offset. Up to +1 starts the walk to the next center
  * (phase 6, or 0xe at climb speed when the step's destination-climb bit is set), up to +7 a climb
  * hop (battle_move_start_unit_climb_hop_step), more a climb jump
  * (battle_move_start_unit_climb_jump_step). A step down is always a walk; falling comes from

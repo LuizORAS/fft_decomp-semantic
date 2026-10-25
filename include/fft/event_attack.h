@@ -111,7 +111,7 @@ typedef char attack_deployment_squad_data_size_must_be_12[(sizeof(attack_deploym
 /* Textured deployment banner followed by its two triangle packets. */
 typedef struct attack_deploy_arrow_gfx {
     POLY_FT4 banner; /* 0x00 */
-    POLY_F3 tri[2];  /* 0x28; tri[1], the second arrowhead, is initialised but never drawn */
+    POLY_F3 tri[2];  /* 0x28; tri[1], the second arrowhead, is initialized but never drawn */
 } attack_deploy_arrow_gfx_t;
 typedef char attack_deploy_arrow_gfx_size_must_be_80[sizeof(attack_deploy_arrow_gfx_t) == 80 ? 1 : -1];
 
@@ -419,7 +419,7 @@ typedef struct attack_text_file {
     s32 section_offsets[32];
     u8 section_data[0];
 } attack_text_file_t;
-typedef char attack_text_file_header_size_must_be_128[(sizeof(attack_text_file_t) == 128) ? 1 : -1];
+typedef char attack_text_file_size_must_be_128[(sizeof(attack_text_file_t) == 128) ? 1 : -1];
 
 extern u8 g_attack_text_data[];
 void attack_text_build_deployment_strings(void);

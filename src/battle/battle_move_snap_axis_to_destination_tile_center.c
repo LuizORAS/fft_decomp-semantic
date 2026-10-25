@@ -6,7 +6,7 @@ enum {
 };
 
 /*
- * Snaps the unit's world/real coordinate on the axis of travel to the centre
+ * Snaps the unit's world/real coordinate on the axis of travel to the center
  * of its movement destination tile: south/north (0, 2) set Y, west/east (1, 3)
  * set X.
  */

@@ -19,7 +19,7 @@ scope:
   - menu_get_active_turn_panels()
   - menu_init_panel_fade_tiles()
   - menu_init_sprite_array()
-  - menu_lerp_fixed12()
+  - menu_lerp_q12()
   - menu_lerp_rect_to_poly_ft4()
   - menu_mini_menu_cancel_delay_thread()
   - menu_request_open_companion_data_file()
@@ -82,7 +82,7 @@ WLDCORE ([[World Map and Travel]], [[Propositions and the Bar]]).
 2. **Act** runs [[battle_menu_run_skillset_thread]] (the skillset list), then
    [[battle_menu_select_unit_action_slots_thread]] (the ability list; Math Skill
    walks three lists), then [[battle_menu_validate_skill_selection_thread]],
-   which checks MP, Silence and greyed rows.
+   which checks MP, Silence and grayed rows.
 3. **Move**, **Wait**, **Status** and **Auto-battle** have their own threads
    ([[battle_menu_confirm_move_command_thread]], [[battle_menu_wait_thread]],
    [[battle_menu_run_status_screen_thread]],
@@ -168,7 +168,7 @@ WLDCORE ([[World Map and Travel]], [[Propositions and the Bar]]).
 - With navigation messages off, [[battle_menu_check_action_restrictions]]
   drops the Charging and Performing messages by comparing the message's high
   byte with the option bits, which only works because both are 0x8000.
-- [[menu_alloc_window_buffer_pair]] initialises only the first record
+- [[menu_alloc_window_buffer_pair]] initializes only the first record
   of the pair, and [[battle_menu_build_window_image]] returns a leftover `$v0`
   on its upload path.
 - [[battle_menu_get_cursor_bob_offset]] reads an unset pointer for a mode other

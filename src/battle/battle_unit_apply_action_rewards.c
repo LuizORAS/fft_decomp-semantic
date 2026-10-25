@@ -1,7 +1,7 @@
 #include "fft/battle_action.h"
 #include "fft/battle_unit.h"
 
-/* Apply the acting unit's EXP and JP after its action. Nothing happens when Hamedo cancelled the
+/* Apply the acting unit's EXP and JP after its action. Nothing happens when Hamedo canceled the
  * action (-1), the action earns nothing (0), or the unit is gone, a Crystal, Dead, Petrified or a
  * Treasure (-1). The action's EXP award is added (capped at 255) and the unit levels up once at 100
  * (main_unit_check_level_up). A monster earns no JP; otherwise the JP is 8 + job level * 2 + level / 4,

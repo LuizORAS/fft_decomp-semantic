@@ -1,14 +1,14 @@
 #include "fft/battle_map.h"
 #include "fft/battle_target.h"
 
-/* Mark the area an ability hits (MAP_TILE_FLAG_TARGETED) and return the number of tiles. It centres
+/* Mark the area an ability hits (MAP_TILE_FLAG_TARGETED) and return the number of tiles. It centers
  * on the unit's own tile for linear and three-direction abilities, on the target unit for a unit
  * target (targeting type 6), else on the chosen tile; the aoe spreads from there (the whole map for
  * 0xff, the tile alone for WEAPON_RANGE and DIRECT_TARGETING abilities) within `vertical` levels of
  * its height (the upper layer only with UPPER_LAYER_ONLY), and Moldball Virus skips water. Then the
  * caster's tile drops out (CANNOT_HIT_CASTER), lines replace the area (LINEAR_ATTACK,
  * THREE_DIRECTIONS), and ally-only or enemy-only abilities drop the other team's units. Returns -1
- * for an off-map or blocked centre.
+ * for an off-map or blocked center.
  *
  * `location` carries the column into the index sum: the extra copies give the index pseudo the
  * allocation priority the target needs (a2), while keeping the `(elevation * 256 + y * width) + x`

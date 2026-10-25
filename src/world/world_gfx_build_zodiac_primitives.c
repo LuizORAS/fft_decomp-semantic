@@ -4,7 +4,7 @@
 #include "psx/types.h"
 
 /* Build the zodiac backdrop's primitive list: one textured quad per sprite
- * (g_world_gfx_zodiac_sprite_frames), shaded with the view colour and placed at the sprite's scaled
+ * (g_world_gfx_zodiac_sprite_frames), shaded with the view color and placed at the sprite's scaled
  * offset, followed by a black backdrop quad; the backdrop is always linked into the ordering table
  * and the quads only when the view asks for it. */
 void world_gfx_build_zodiac_primitives(zodiac_draw_context_t* view, POLY_FT4* poly) {

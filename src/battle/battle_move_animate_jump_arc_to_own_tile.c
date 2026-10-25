@@ -5,7 +5,7 @@
 #include "fft/map.h"
 #include "psx/types.h"
 
-/* Distortion 7 (BATTLE_DISTORTION_ANIMATION_JUMP_TO_OWN_TILE): jump along an arc back to the centre of the
+/* Distortion 7 (BATTLE_DISTORTION_ANIMATION_JUMP_TO_OWN_TILE): jump along an arc back to the center of the
  * unit's own map tile (battle_move_calculate_jump_arc_velocity), then keep falling under
  * g_battle_move_jump_gravity until it reaches the ground, and snap to the tile. */
 void battle_move_animate_jump_arc_to_own_tile(battle_unit_t* unit) {

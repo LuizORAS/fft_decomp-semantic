@@ -30,7 +30,7 @@
     }
 
 /* Same as battle_text_run_dialog_thread in WORLD: the dialog thread that opens a window and draws
- * text entry `parameter 2` into it glyph by glyph, with the same parameters and text controls. Centred and
+ * text entry `parameter 2` into it glyph by glyph, with the same parameters and text controls. Centered and
  * eight-line boxes take their text's line count instead of six and eight lines. A Help box with no hosted
  * frame (or with options 0x0c) binds EVENT/WLDHELP.LZW (g_world_text_wldhelp_section_offsets) while it runs,
  * and its entry 0x807 becomes entry 0xA000 plus the selected unit's name id (at most 0x2FF), shown in a
@@ -411,7 +411,7 @@ void world_text_character_handling_thread(void) {
     rec.color = 0;
     rec.line = 0;
     g_world_text_current_line = 0;
-    /* Both arms are identical, as in the BATTLE twin whose first arm centres
+    /* Both arms are identical, as in the BATTLE twin whose first arm centers
      * the line; the split keeps the preceding stores ahead of these loads. */
     if (rec.box_type == DIALOG_BOX_TYPE_CENTERED) {
         cursor_x = rec.x;

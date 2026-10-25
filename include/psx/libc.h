@@ -1,6 +1,8 @@
 #ifndef PSX_LIBC_H
 #define PSX_LIBC_H
 
+/* Psy-Q LIBC routines the game links: random numbers, strings and memory. */
+
 #include "psx/types.h"
 
 /* random */

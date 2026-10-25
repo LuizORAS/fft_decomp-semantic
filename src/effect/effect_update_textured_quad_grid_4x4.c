@@ -12,13 +12,13 @@
  *
  * Phase 1 builds both POLY_GT4 buffers of a 256x256 grid; phase 2 scrolls the
  * texture window along the emitter record's speed and angle curves, tints each
- * quad from the colour curves and the overlay-local vertex brightness rows, and
+ * quad from the color curves and the overlay-local vertex brightness rows, and
  * links the current buffer into the ordering table; phase 3 frees the work
  * block one call after it is first reached.
  *
  * row and column are also the update phase's curve scratch values. GCC 2.6.3
  * gives each C variable one pseudo, and that sharing is what places the curve
- * index, colour curves and brightness in s2 and the curve factor in s3.
+ * index, color curves and brightness in s2 and the curve factor in s3.
  */
 s32 effect_update_textured_quad_grid_4x4(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
@@ -97,10 +97,10 @@ s32 effect_update_textured_quad_grid_4x4(s32 record_index, s32 callback_slot, s3
         texture_height = geometry->texture_height / 2;
         selector = geometry->scroll_curves.scroll_speed;
         READ_CURVE(row, column, selector, work->frame);
-        speed = battle_effect_lerp_fixed8(geometry->scroll_speed_start, geometry->scroll_speed_end, column) << 4;
+        speed = battle_effect_lerp_q8(geometry->scroll_speed_start, geometry->scroll_speed_end, column) << 4;
         selector = geometry->scroll_curves.scroll_angle;
         READ_CURVE(row, column, selector, work->frame);
-        angle = battle_effect_lerp_fixed8(geometry->scroll_angle_start, geometry->scroll_angle_end, column);
+        angle = battle_effect_lerp_q8(geometry->scroll_angle_start, geometry->scroll_angle_end, column);
         work->scroll_u += (rcos(angle) * speed) >> 12;
         /* Comparison shifts preserve the original loop scheduling. */
         while (work->scroll_u >= texture_width << 12) {

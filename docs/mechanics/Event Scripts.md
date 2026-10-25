@@ -36,7 +36,7 @@ scope:
   - script_get_variable()
   - script_get_variable_bit_position()
   - script_get_variable_word_pointer_from_id()
-  - script_interpolate_range_fixed12()
+  - script_interpolate_range_q12()
   - script_is_tutorial_event_slot()
   - script_join_units_silently()
   - script_jump_event_instruction()

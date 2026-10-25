@@ -5,7 +5,7 @@
 /* Why unit cannot act (battle_unit_action_block_e): DISABLED under Don't Act or as a mount carrying
  * its rider; SUBMERGED at water depth 2 or more, unless it has Float, Chicken or Frog, a water
  * movement ability (Walk on Water, Move in Water, Float) or rides a mount; otherwise NONE. The menus
- * grey the action out with it; evasion, Weapon Guard, Abandon and reactions need NONE. */
+ * gray the action out with it; evasion, Weapon Guard, Abandon and reactions need NONE. */
 battle_unit_action_block_e battle_unit_get_action_block(const battle_stats_t* unit) {
     s32 depth;
 

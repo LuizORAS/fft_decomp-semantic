@@ -6,7 +6,7 @@
 #include "fft/thread.h"
 
 /* Reset the unit animation states and, when the current-event variable is set, fade the screen
- * colour modulation to zero and start the event thread (THREAD_SLOT_EVENT) on
+ * color modulation to zero and start the event thread (THREAD_SLOT_EVENT) on
  * script_run_next_event.
  *
  * While the battle has not started it first stores the camera in the script variables and puts the

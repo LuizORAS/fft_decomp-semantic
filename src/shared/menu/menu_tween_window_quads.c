@@ -7,7 +7,7 @@
 /* Animates a window's two quads from their current corners towards `to`
  * (and `to2` when it has an x) following the 12.4 fixed-point easing table
  * selected by `table`, yielding to the next thread between steps. Table 4
- * also fades the window colour with the remaining distance.
+ * also fades the window color with the remaining distance.
  *
  * BATTLE and WORLD compile this text. */
 void menu_tween_window_quads(menu_window_buffer_t* buffers, RECT* to, RECT* to2, s32 table) {

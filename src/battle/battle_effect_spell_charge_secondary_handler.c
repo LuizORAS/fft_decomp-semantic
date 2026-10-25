@@ -63,7 +63,7 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
         g_battle_effect_secondary_state.charge.radius = g_battle_effect_charge_line_params[index].radius;
         g_battle_effect_secondary_state.charge.spawn_interval
             = g_battle_effect_charge_line_params[index].spawn_interval;
-        g_battle_effect_secondary_state.charge.colour = g_battle_effect_current_secondary->parameter;
+        g_battle_effect_secondary_state.charge.color = g_battle_effect_current_secondary->parameter;
         g_battle_effect_secondary_state.charge.max_trails = g_battle_effect_charge_line_params[index].max_trails;
         g_battle_effect_secondary_state.charge.fade_row = g_battle_effect_charge_line_params[index].fade_row;
         SetDrawMode(&state->mode[0], 1, 1, 0x20, 0);
@@ -178,9 +178,9 @@ s32 battle_effect_spell_charge_secondary_handler(void) {
                 state->count.particles--;
             }
         }
-        red = g_battle_effect_charge_line_colors[state->colour].r;
-        green = g_battle_effect_charge_line_colors[state->colour].g;
-        blue = g_battle_effect_charge_line_colors[state->colour].b;
+        red = g_battle_effect_charge_line_colors[state->color].r;
+        green = g_battle_effect_charge_line_colors[state->color].g;
+        blue = g_battle_effect_charge_line_colors[state->color].b;
         offsets = &g_battle_effect_charge_line_direction_offsets[0].vx;
         offsets_y = &g_battle_effect_charge_line_direction_offsets[0].vy;
         for (i = 0; i < 16; i++) {

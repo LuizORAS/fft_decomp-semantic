@@ -48,7 +48,7 @@ typedef enum event_id {
     /* CallFunction JOIN_UNITS_SILENTLY also restores the new-game inventory
      * in the events below this one. */
     EVENT_ID_NEW_GAME_INVENTORY_END = 0x4e,
-    /* A Zodiac Stone speaks in these two. Their centred messages start at
+    /* A Zodiac Stone speaks in these two. Their centered messages start at
      * the box's left edge while ETC's graphics are off. */
     EVENT_ID_MEET_VELIUS = 0xf9,
     /* Also the event the ending leaves current, with the next scenario
@@ -734,7 +734,7 @@ typedef struct world_event_work {
 } world_event_work_t;
 typedef char world_event_work_status_staging_offset_must_be_0x5f0
     [((unsigned long)&((world_event_work_t*)0)->status_staging == 0x5F0) ? 1 : -1];
-typedef char event_work_size_must_be_2532[(sizeof(world_event_work_t) == 2532) ? 1 : -1];
+typedef char world_event_work_size_must_be_2532[(sizeof(world_event_work_t) == 2532) ? 1 : -1];
 
 /* script */
 /* The event-script interpreter (battle_script_*): loading and running an event, its frame, the
@@ -931,7 +931,7 @@ typedef enum event_script_variable_id {
      * EVENT_SCRIPT_VAR_FACTS_ENABLED gates. */
     EVENT_SCRIPT_VAR_FACT_FIRST = 0x1a4,
     /* First variable of the world-map ranges WLDCORE indexes: one flag per
-     * Brave Story event, location dot, route, alternate dot colour, rumour,
+     * Brave Story event, location dot, route, alternate dot color, rumour,
      * treasure and unexplored land, then one nibble of state bits per proposition. */
     EVENT_SCRIPT_VAR_STORY_EVENT_FIRST = 0x1bc,
     EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST = 0x200,
@@ -1021,7 +1021,7 @@ u32* input_get_menu_controller(s32 use_current);
  * result. Reading weather/time first rebuilds it from the separate variables. */
 s32 script_get_variable(s32 variable_id);
 
-s32 script_interpolate_range_fixed12(s32 start, s32 end, s32 fraction, s32 value);
+s32 script_interpolate_range_q12(s32 start, s32 end, s32 fraction, s32 value);
 void script_join_units_silently(void);
 void script_load_event(s32 id);
 

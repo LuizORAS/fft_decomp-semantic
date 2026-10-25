@@ -7,7 +7,7 @@
 /* ColorUnit: start a palette modulation on a unit or a unit group; BATTLE and WORLD compile this text.
  *
  * Operands: 0x00 unit id or group (16-bit value), 0x02 blend mode, 0x03-0x05 red, green, blue (s8 each)
- * and 0x06 a time. A plain unit id colours that one unit; id 0 and the group ids from
+ * and 0x06 a time. A plain unit id colors that one unit; id 0 and the group ids from
  * EVENT_UNIT_GROUP_FIRST run all 21 runtime ids through
  * script_filter_unit_id_by_mode. Nothing happens when a plain unit id does
  * not resolve. */

@@ -4,7 +4,7 @@
  * sets g_world_formation_unit_slide_pending (world_formation_stage_selected_unit). Count nine frames
  * with no redraw, then show the banner (flags 0) and ask it to redraw (redraw_request 1).
  *
- * Compiled at -O1 like its neighbours: the final arm's two field stores share
+ * Compiled at -O1 like its neighbors: the final arm's two field stores share
  * one `la` of redraw_request, with flags at -4 from it. At -O2, cse2 folds that
  * -4 store back into an absolute address and the scheduler moves the first
  * arm's store into the frame load's delay slot. */

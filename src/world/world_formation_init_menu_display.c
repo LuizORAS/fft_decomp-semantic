@@ -5,7 +5,7 @@
 
 /* Set up the display of WORLD's menu screens (the formation, the shops, name entry and the card
  * screen): reset the menu context, clear the screen unless g_world_menu_context_id is
- * WORLD_MENU_CONTEXT_NAME_ENTRY, upload the menu glyph sheet, the formation palettes and two 16-colour CLUTs
+ * WORLD_MENU_CONTEXT_NAME_ENTRY, upload the menu glyph sheet, the formation palettes and two 16-color CLUTs
  * copied from VRAM rows 0x1f0/0x1f4 with entries 4, 8 and 12 made transparent, then reset the
  * description text, list, cursors and menu results, start the fade-in, bind the skillset, job,
  * ability and formation message texts and point the composed and screen text sections at the

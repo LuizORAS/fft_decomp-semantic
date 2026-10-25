@@ -1,6 +1,6 @@
 #include "fft/battle_map.h"
 
-/* Set the map background colour and load it as the GTE back colour
+/* Set the map background color and load it as the GTE back color
  * (battle_map_control_gte_background_color). No retail code calls it. */
 void battle_map_set_background_color(s32 red, s32 green, s32 blue) {
     g_battle_map_background_color.r = red;

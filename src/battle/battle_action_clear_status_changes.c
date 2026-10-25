@@ -1,7 +1,7 @@
 #include "fft/battle_action.h"
 #include "psx/types.h"
 
-/* Clear a result record's status inflictions and removals, and the ability's cancelled-status list
+/* Clear a result record's status inflictions and removals, and the ability's canceled-status list
  * (g_battle_action_canceled_statuses). */
 void battle_action_clear_status_changes(battle_action_data_t* action) {
     s32 i;

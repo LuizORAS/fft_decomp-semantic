@@ -3,13 +3,13 @@
 
 /* Fill the current render buffer's packets for one mesh geometry block, from the polygons the loader
  * has already filled: the texture coordinates, CLUT and texture page of each textured triangle and quad,
- * and the colour of each untextured one. The loader runs it in each render buffer
+ * and the color of each untextured one. The loader runs it in each render buffer
  * (MAP_LOAD_STATE_MESH_RECORDS); battle_map_append_mesh_geometry has read the positions and normals of the
  * same block.
  *
  * The pass skips the position and normal vectors, then reads five 16-bit values per textured triangle and six
  * per textured quad. A CLUT keeps its low six bits (the CLUT) and gains the map CLUT row; texture
- * pages are copied as they are. Untextured POLY_F3/POLY_F4 packets start with colour 0/0/1. */
+ * pages are copied as they are. Untextured POLY_F3/POLY_F4 packets start with color 0/0/1. */
 void battle_map_init_mesh_render_records(const map_mesh_geometry_t* geometry_data) {
     /* Named count loads fold the retail four 16-bit cursor advances. */
     const u16* source = &geometry_data->textured_triangle_count;

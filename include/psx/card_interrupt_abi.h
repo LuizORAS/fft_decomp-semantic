@@ -1,6 +1,8 @@
 #ifndef PSX_CARD_INTERRUPT_ABI_H
 #define PSX_CARD_INTERRUPT_ABI_H
 
+/* Register views of the memory card interrupt handler's state. */
+
 #include "psx/libcard.h"
 
 /* Reserved architectural state; declarations precede headers with C inline definitions. */

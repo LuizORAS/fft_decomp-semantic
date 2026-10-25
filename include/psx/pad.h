@@ -1,6 +1,8 @@
 #ifndef PSX_PAD_H
 #define PSX_PAD_H
 
+/* Controller button bits. */
+
 typedef enum psx_pad_button {
     PSX_PAD_L2 = 0x0001,
     PSX_PAD_R2 = 0x0002,

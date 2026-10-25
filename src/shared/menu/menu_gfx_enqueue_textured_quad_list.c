@@ -3,7 +3,7 @@
 /* Takes one POLY_FT4 from the pool per sprite cell, fills it as a w x h quad
  * at (x + 0x80, y) with texture origin (u, v), and links it into ordering
  * table entry otag_index. With `color` the quads are shaded with that
- * colour. WORLD compiles this text too (world_gfx_enqueue_textured_quad_list). */
+ * color. WORLD compiles this text too (world_gfx_enqueue_textured_quad_list). */
 void menu_gfx_enqueue_textured_quad_list(const battle_menu_sprite_cell_t* quads, const rgb24_t* color, s32 semitrans,
     u16 texture_page, u16 clut, s32 otag_index, s32 count) {
     POLY_FT4* poly;

@@ -27,7 +27,7 @@ extern s32 g_battle_screen_fade;
 /* Unit sprites and what is drawn around them: the SHP frames and SEQ animations of each sheet and the
  * loader that reads them, the nine spritesheet slots and the two EVTCHR slots in VRAM, the sprite primitive
  * ring and the two render buffers, unit palettes and tints and the fade-out removal, the numbers and
- * messages after an action, status bubbles, shadows, the map cursor, the wait arrows and the screen colour
+ * messages after an action, status bubbles, shadows, the map cursor, the wait arrows and the screen color
  * modulation. */
 
 void battle_gfx_set_item_icon_sprite(SPRT* sprite, s32 item_id);
@@ -354,7 +354,7 @@ typedef enum battle_seq_type {
 } battle_seq_type_e;
 
 /* One of the two 60968-byte battle render buffers. The primitive pools are
- * pre-initialised once; main_gfx_swap_and_clear_otag reads the ordering table
+ * pre-initialized once; main_gfx_swap_and_clear_otag reads the ordering table
  * pointer at +0xe5b4. */
 typedef struct battle_render_buffer {
     POLY_GT3 gt3[360]; /* 0x00000 */
@@ -778,7 +778,7 @@ void battle_gfx_ramp_screen_overlay_intensity_to_max(void);
 void battle_gfx_ramp_screen_overlay_intensity_to_zero(void);
 
 /* Commands of 0x800e77b8, which stores RGB and controls GTE background color. */
-typedef enum battle_background_color_command {
+typedef enum battle_map_background_color_command {
     BATTLE_BACKGROUND_COLOR_SET = 9,
     BATTLE_BACKGROUND_COLOR_GET = 10,
     BATTLE_BACKGROUND_COLOR_DISABLE = 11,

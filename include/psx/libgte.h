@@ -1,6 +1,8 @@
 #ifndef PSX_LIBGTE_H
 #define PSX_LIBGTE_H
 
+/* Psy-Q LIBGTE: GTE geometry and fixed-point math. */
+
 #include "psx/gte_regs.h"
 #include "psx/types.h"
 
@@ -31,7 +33,7 @@ typedef struct {
     s16 vy;
 } DVECTOR;
 
-/* Psy-Q colour vector: r, g, b plus the GPU code byte. */
+/* Psy-Q color vector: r, g, b plus the GPU code byte. */
 typedef struct {
     u8 r;
     u8 g;

@@ -4,7 +4,7 @@
 /* Handler of the formation's Ability menus (ABILITY, its ENTER and LEAVE states and the rows SET,
  * REMOVE and LEARN in g_world_formation_menu_handlers). ABILITY_ENTER slides the grid out,
  * ABILITY_LEAVE brings it back. ABILITY runs the row menu "Set / Remove / Learn" in thread 15: a Mime
- * may only Learn, and a unit that cannot change abilities (egg, monster, away) gets all three greyed.
+ * may only Learn, and a unit that cannot change abilities (egg, monster, away) gets all three grayed.
  * A pick runs world_formation_run_set_ability_menu, world_formation_run_remove_ability_menu or
  * world_formation_run_learn_menu until it returns 0, then rebuilds the roster list keeping the unit
  * by roster slot. */

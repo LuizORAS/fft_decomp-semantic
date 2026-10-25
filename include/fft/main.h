@@ -21,7 +21,7 @@
 /* card */
 /* One save-file icon of the CARD screens. */
 
-/* One selectable save-file icon: 16-colour CLUT plus 16x16 4bpp image. */
+/* One selectable save-file icon: 16-color CLUT plus 16x16 4bpp image. */
 typedef struct card_save_icon {
     palette_t clut; /* 0x00 */
     u8 image[0x80]; /* 0x20 */
@@ -462,7 +462,8 @@ typedef struct wldcore_sound_novel_instruction_bytes {
     u8 operand_1;
     u8 operand_2;
 } wldcore_sound_novel_instruction_bytes_t;
-typedef char wldcore_instruction_bytes_size_must_be_4[sizeof(wldcore_sound_novel_instruction_bytes_t) == 4 ? 1 : -1];
+typedef char
+    wldcore_sound_novel_instruction_bytes_size_must_be_4[sizeof(wldcore_sound_novel_instruction_bytes_t) == 4 ? 1 : -1];
 
 /* Nine-byte active-proposition records at 0x80057eec. Daily update 0x80074b30
  * advances elapsed_days and sets completion bit 0x04. The assignment at
@@ -519,7 +520,7 @@ typedef struct wldcore_sound_novel_record {
     s16 sound_id;             /* 0x32 */
     s32 counter;              /* 0x34 */
 } wldcore_sound_novel_record_t;
-typedef char wldcore_saved_record_size_must_be_56[sizeof(wldcore_sound_novel_record_t) == 56 ? 1 : -1];
+typedef char wldcore_sound_novel_record_size_must_be_56[sizeof(wldcore_sound_novel_record_t) == 56 ? 1 : -1];
 
 extern u8 g_main_save_proposition_count;
 extern s32 g_main_saved_vsync_interval;
@@ -1049,7 +1050,7 @@ extern main_gfx_unit_graphics_load_queue_t g_main_gfx_unit_graphics_load_queue;
 /* The ability effect files (EFFECT/E*.BIN) and the engine that plays them: the request and the load
  * (battle_effect_request_ability_effect, battle_effect_update_file_load), the file's section header and the
  * setters that bind its sections, the script records and their interpreter (battle_effect_run_block,
- * g_battle_effect_instructions), the parent and child timelines with their colour, sound and camera tracks,
+ * g_battle_effect_instructions), the parent and child timelines with their color, sound and camera tracks,
  * and the native callbacks the scripts bind. The work record types are here because battle_effect_record_t embeds
  * them. */
 
@@ -1058,7 +1059,7 @@ typedef struct main_file_extent {
     s32 sector;
     s32 size;
 } main_file_extent_t;
-typedef char file_extent_size_must_be_8[(sizeof(main_file_extent_t) == 8) ? 1 : -1];
+typedef char main_file_extent_size_must_be_8[(sizeof(main_file_extent_t) == 8) ? 1 : -1];
 
 /* sound */
 /* MAIN's sound control over the Suzuki driver: sound resources and sound ids, the music slots (two for

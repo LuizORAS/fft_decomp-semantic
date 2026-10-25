@@ -1,6 +1,6 @@
 #include "fft/battle_map.h"
 
-/* Add per-component deltas to the map background colour and load it as the GTE back colour. No
+/* Add per-component deltas to the map background color and load it as the GTE back color. No
  * retail code calls it.
  *
  * A component whose tested delta is negative (`current + delta < current`) becomes 0xff instead. The

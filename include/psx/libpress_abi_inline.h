@@ -1,6 +1,8 @@
 #ifndef PSX_LIBPRESS_ABI_INLINE_H
 #define PSX_LIBPRESS_ABI_INLINE_H
 
+/* ABI helpers for LIBPRESS's hand-written CPU boundaries. */
+
 #include "psx/cpu_abi_inline.h"
 
 /* Handwritten LIBPRESS CPU and return boundaries. */
