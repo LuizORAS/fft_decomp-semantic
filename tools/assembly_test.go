@@ -14,12 +14,11 @@ func TestAssemblyFunctionValidation(t *testing.T) {
 		"\t.set\tnoreorder\n\t.text\n\t.globl\tbattle_switch\nbattle_switch:\n" +
 		"\tlui\t$t0, %hi(g_battle_value)\n\tlui\t$t1, 0x8000 # the sign bit\n\tjr\t$ra\n\tnop\n"
 	quirks := "# Quirks\n\n## " + quirksAssemblySection + "\n\nIntro.\n\n- `battle_switch`: test.\n"
-	// A region the routine does not cover stays code kept as bytes.
-	pending := "\nregions:\n  - {addr: 0x80067020, end: 0x80067030, kind: handwritten, why: \"test\"}\n"
 	for _, test := range []struct {
 		name, row, path, source, quirks, regions, want string
 	}{
-		{name: "valid outside main", row: row, source: source, quirks: quirks, regions: pending},
+		{name: "valid outside main", row: row, source: source, quirks: quirks},
+		{name: "code with no source", row: row, source: source, quirks: quirks, regions: "\nregions:\n  - {addr: 0x80067020, end: 0x80067030, kind: handwritten, why: \"test\"}\n", want: "is handwritten code with no source"},
 		{name: "blank reason", row: strings.Replace(row, `asm: "Test ABI boundary"`, `asm: " "`, 1), source: source, quirks: quirks, want: "asm needs the reason"},
 		{name: "c source", row: strings.Replace(row, `, asm: "Test ABI boundary"`, `, source: src/battle/battle_switch.s`, 1), source: source, quirks: quirks, want: "requires a .c source"},
 		{name: "not named after it", row: strings.Replace(row, `asm: "Test`, `source: src/battle/other.s, asm: "Test`, 1), path: "other.s", source: source, quirks: quirks, want: "named after it"},
@@ -63,12 +62,6 @@ func TestAssemblyFunctionValidation(t *testing.T) {
 				t.Fatalf("valid assembly rejected: %v", err)
 			case test.want != "" && (err == nil || !strings.Contains(err.Error(), test.want)):
 				t.Fatalf("want %q, got %v", test.want, err)
-			}
-			if test.want == "" {
-				battle, _ := config.module("battle")
-				if ranges, size := battle.codeKeptAsBytes(); ranges != 1 || size != 16 {
-					t.Fatalf("code kept as bytes: %d ranges, %d bytes", ranges, size)
-				}
 			}
 		})
 	}
@@ -159,6 +152,18 @@ func TestAssemblyBackendAndCacheSeparation(t *testing.T) {
 	}
 	if _, differs := mismatch(want[:8], sections[".text"]); !differs {
 		t.Fatal("accepted wrong size")
+	}
+	// Hand-written lines reach the assembler as written: maspsx rejects this
+	// addi from $zero.
+	if err := os.WriteFile(source, []byte("\t.set\tnoreorder\n\t.set\tnoat\n\t.text\n\taddi\t$t0, $zero, 1\n\tlui\t$at, 0x1f80\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	direct, err := p.compileHistoricalSections(source, linker, filepath.Join(root, "direct"), profile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := []byte{0x01, 0x00, 0x08, 0x20, 0x80, 0x1f, 0x01, 0x3c}; !bytes.Equal(direct[".text"], want) {
+		t.Fatalf("direct assembly bytes: %x", direct[".text"])
 	}
 	// Allocatable sections must remain visible to the shared production checker.
 	if err := os.WriteFile(source, []byte(assembly+"\t.section\t.extra,\"a\"\n\t.word\t7\n"), 0o600); err != nil {

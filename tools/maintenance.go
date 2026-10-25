@@ -63,11 +63,7 @@ func (p project) checkConfig() error {
 	counts := map[string]int{}
 	sizes := map[string]int{}
 	functions, total := 0, 0
-	keptRanges, keptBytes := 0, 0
 	for _, m := range config.Modules {
-		ranges, size := m.codeKeptAsBytes()
-		keptRanges += ranges
-		keptBytes += size
 		for _, f := range m.Functions {
 			language := "c"
 			if f.Asm != "" {
@@ -83,7 +79,6 @@ func (p project) checkConfig() error {
 	for _, language := range []string{"c", "asm"} {
 		fmt.Printf("  %s: %d functions (%d bytes)\n", language, counts[language], sizes[language])
 	}
-	fmt.Printf("  hand-written code with no source yet: %d ranges (%d bytes), kept as original bytes\n", keptRanges, keptBytes)
 	fmt.Printf("  declarations: no conflicting file-scope declarations\n")
 	fmt.Printf("  placeholders: no accesses to _unused_ or _padding_ members\n")
 	shards, err := p.checkWorkflowShards(config)

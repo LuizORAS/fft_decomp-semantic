@@ -703,14 +703,18 @@ func (p project) historicalInput(sourcePath, buildDir string, profile compilerPr
 	return preprocessed, language, os.Rename(staging, preprocessed)
 }
 
-// assembleHistoricalObject runs cc1 (for C), maspsx and the assembler on a
-// preprocessed source and returns the relocatable buildDir/<profile>.o.
+// assembleHistoricalObject runs cc1 and maspsx (for C) and the assembler on a
+// preprocessed source and returns the relocatable buildDir/<profile>.o. A
+// hand-written source is already final instructions under noreorder and
+// noat, so it goes to the assembler as written: maspsx translates compiler
+// output into ASPSX's, and rewrites or rejects some hand-written lines (it
+// fails on `addi rt, $zero, imm`).
 func (p project) assembleHistoricalObject(sourcePath, preprocessed, buildDir string, profile compilerProfile, language string) (string, error) {
 	assembly := filepath.Join(buildDir, profile.name+".s")
 	translated := filepath.Join(buildDir, profile.name+".maspsx.s")
 	object := filepath.Join(buildDir, profile.name+".o")
 	if language == "asm" {
-		assembly = preprocessed
+		translated = preprocessed
 	} else {
 		cc1 := append(cc1Command(profile.compilerPath), preprocessed, "-o", assembly,
 			fmt.Sprintf("-G%d", profile.smallDataLimit), "-w", "-funsigned-char", "-fpeephole", "-ffunction-cse",
@@ -733,20 +737,20 @@ func (p project) assembleHistoricalObject(sourcePath, preprocessed, buildDir str
 				return "", compileErr
 			}
 		}
-	}
-	maspsx := []string{"python3", "/opt/maspsx/maspsx.py", "--aspsx-version=" + profile.aspsxVersion}
-	if profile.smallDataLimit != 0 {
-		maspsx = append(maspsx, "--dont-force-G0")
-	}
-	if profile.expandDiv {
-		maspsx = append(maspsx, "--expand-div")
-	}
-	if err := transformFile(p.root, assembly, translated, maspsx...); err != nil {
-		return "", err
-	}
-	if profile.smallDataLimit != 0 {
-		if err := correctSmallDataLoadDelays(translated, profile.smallDataLimit); err != nil {
+		maspsx := []string{"python3", "/opt/maspsx/maspsx.py", "--aspsx-version=" + profile.aspsxVersion}
+		if profile.smallDataLimit != 0 {
+			maspsx = append(maspsx, "--dont-force-G0")
+		}
+		if profile.expandDiv {
+			maspsx = append(maspsx, "--expand-div")
+		}
+		if err := transformFile(p.root, assembly, translated, maspsx...); err != nil {
 			return "", err
+		}
+		if profile.smallDataLimit != 0 {
+			if err := correctSmallDataLoadDelays(translated, profile.smallDataLimit); err != nil {
+				return "", err
+			}
 		}
 	}
 	if err := runInDir(p.root, "mipsel-linux-gnu-as", "-EL", "-march=r3000", "-mtune=r3000", "-no-pad-sections", "-O1", fmt.Sprintf("-G%d", profile.smallDataLimit), "-o", object, translated); err != nil {
@@ -885,7 +889,7 @@ func toolchainDigest() (string, error) {
 func compilationCacheKey(preprocessed, linkPath string, profile compilerProfile, language string) (string, error) {
 	hash := sha256.New()
 	if language == "asm" {
-		hash.Write([]byte("standalone-asm-v1\x00"))
+		hash.Write([]byte("standalone-asm-v2\x00"))
 	}
 	hash.Write([]byte("tools-historical-pipeline-v1\x00" + profile.name + "\x00" + profile.optimization + "\x00" + profile.aspsxVersion + "\x00"))
 	if profile.expandDiv {

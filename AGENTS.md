@@ -211,9 +211,9 @@ none), and prefer the profile of its neighbors.
   or a `blocked` one, whose comment then says it was probably C. Addresses in
   a `.s` are symbols, never numbers. Each routine has a Port debt entry under
   "Hand-written assembly" in `QUIRKS.md`, because a native build needs a
-  portable C twin. `make check-config` checks each of these, fails on a
-  region left over a routine that has its source, and counts the hand-written
-  ranges still kept as original bytes. Instruction-emitting inline asm
+  portable C twin. `make check-config` checks each of these and fails on a
+  region left over a routine that has its source and on a handwritten or
+  blocked range no function covers. Instruction-emitting inline asm
   remains in the hand-written thread/copy helpers and the PS1 hardware/ABI
   helpers in `include/psx/`.
   Library algorithms stay C; each hardware instruction or register constraint

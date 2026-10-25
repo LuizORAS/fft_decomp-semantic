@@ -1135,6 +1135,9 @@ functions:
   - {addr: 0x8014b350, size: 68, name: battle_menu_display_text_string, hash: ebe5d1168147a19f, source: src/shared/menu/menu_display_text_string.c, source_symbol: menu_display_text_string}
   - {addr: 0x8014b394, size: 1684, name: battle_menu_display_text, hash: 80dbacaf4e422774}
   - {addr: 0x8014ba28, size: 188, name: menu_text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0, source: src/shared/text/text_advance_cursor_with_backreferences.c, source_symbol: text_advance_cursor_with_backreferences}
+  - {addr: 0x8014bae4, size: 676, name: text_blit_glyph, hash: 2a36cbcce8040a3b, asm: "Adds with trapping addi and branches with bgez $zero, which the pinned compilers do not emit, and keeps its registers in the scratchpad."}
+  - {addr: 0x8014bd88, size: 336, name: battle_text_render_glyph_to_4bpp_image, hash: a9b933f4d8239dfe, asm: "Adds with trapping addi and branches with bgez $zero, which the pinned compilers do not emit, and keeps its registers in the scratchpad."}
+  - {addr: 0x8014bed8, size: 124, name: battle_menu_clear_render_buffer, hash: 40cdf4f0f6f3348e, asm: "Adds with trapping addi and branches with bgez $zero, which the pinned compilers do not emit."}
   - {addr: 0x8014bf54, size: 40, name: mem_copy_bytes_nonempty, hash: 73eb033d6e800062, source: src/shared/memory/mem_copy_bytes_nonempty.c}
   - {addr: 0x8014bf7c, size: 72, name: battle_menu_read_packed_nibble, hash: ae6f7bc884e8a41c}
   - {addr: 0x8014bfc4, size: 80, name: battle_menu_write_packed_nibble, hash: b50d2f23553363d9}
@@ -1153,13 +1156,17 @@ functions:
   - {addr: 0x8014ca1c, size: 28, name: thread_is_running, hash: d10e3403d7fec970, source: src/shared/thread/thread_is_running.c}
   - {addr: 0x8014ca38, size: 32, name: thread_set_parameters, hash: 40bfd9d6b347f675, source: src/shared/thread/thread_set_parameters.c}
   - {addr: 0x8014ca58, size: 40, name: thread_set_four_parameters, hash: f24ec1f8ce5a962b, source: src/shared/thread/thread_set_four_parameters.c}
+  - {addr: 0x8014ca80, size: 308, name: thread_yield, hash: 2f09dae8797f8acb, asm: "Context switch that saves and restores k0, k1, $gp and $sp."}
   - {addr: 0x8014cbb4, size: 12, name: thread_get_current_global_pointer, hash: 153190eb0d500e3a, source: src/shared/thread/thread_get_current_global_pointer.c}
   - {addr: 0x8014cbc0, size: 52, name: battle_thread_get_current_parameter_1, hash: 4427bc41b35c9c1f}
   - {addr: 0x8014cbf4, size: 52, name: battle_thread_get_current_parameter_2, hash: 7ffeb5877d79f219}
   - {addr: 0x8014cc28, size: 52, name: battle_thread_get_current_parameter_3, hash: d1fc2dccdda1feee}
   - {addr: 0x8014cc5c, size: 56, name: battle_thread_is_previous_running, hash: f14ee857209e40f9}
   - {addr: 0x8014cc94, size: 36, name: battle_thread_is_running_asm, hash: 1057a9f27abe5a5a}
+  - {addr: 0x8014ccb8, size: 336, name: battle_util_mul_div_s64, hash: 01e5e6a30ef41e57, asm: "Keeps s0-s7 in the scratchpad instead of a stack frame and adds with trapping addi."}
+  - {addr: 0x8014ce08, size: 112, name: battle_util_cross_product_q12, hash: c085b3850556068f, asm: "Sets its flag with trapping addi from $zero, which the pinned compilers do not emit."}
   - {addr: 0x8014ce78, size: 60, name: text_skip_to_entry, hash: 90cff8271922ef07, source: src/shared/text/text_skip_to_entry.c}
+  - {addr: 0x8014ceb4, size: 164, name: thread_call_on_main_stack, hash: 1af077ee72ab2dcb, asm: "Replaces $sp and keeps ra in a global across the call."}
   - {addr: 0x80174370, size: 88, name: battle_move_get_weather_terrain_cost, hash: 93bdb40ee3440793}
   - {addr: 0x801743c8, size: 104, name: battle_unit_get_chocobo_mount_state, hash: 7fbe3284351b693c}
   - {addr: 0x80174430, size: 1884, name: battle_move_store_unit_movement_to_scratchpad, hash: 24f5bfdb9efb73c1}
@@ -2341,13 +2348,7 @@ data:
   - {addr: 0x8012d8a4, name: g_menu_wait_for_file_allocation_message}
   - {addr: 0x8012d8c0, name: g_script_pause_message}
   - {addr: 0x8012d8cc, name: g_battle_script_reading_character_message}
-  - {addr: 0x8014bae4, name: text_blit_glyph}
-  - {addr: 0x8014bd88, name: battle_text_render_glyph_to_4bpp_image}
-  - {addr: 0x8014bed8, name: battle_menu_clear_render_buffer}
-  - {addr: 0x8014ca80, name: thread_yield}
-  - {addr: 0x8014ccb8, name: battle_util_mul_div_s64}
-  - {addr: 0x8014ce08, name: battle_util_cross_product_q12}
-  - {addr: 0x8014ceb4, name: thread_call_on_main_stack}
+  - {addr: 0x8014cf5c, name: g_thread_call_saved_ra}
   - {addr: 0x8014cf68, name: g_battle_action_display_image_rects}
   - {addr: 0x8014d02c, name: g_map_selected_tile_data}
   - {addr: 0x8014d038, name: g_menu_selected_unit_status}
@@ -3057,16 +3058,8 @@ regions:
   - {addr: 0x80080e7c, end: 0x80080ebc, kind: interior, why: "inside 0x800808b8: case body inside the enclosing display dispatcher; no independent ABI"}
   - {addr: 0x80080ebc, end: 0x80080f04, kind: interior, why: "inside 0x800808b8: reads caller s1/arg slots and falls through after jal; no return"}
   - {addr: 0x80114680, end: 0x80114750, kind: padding, why: "52 consecutive nop words and no return"}
-  - {addr: 0x8014bae4, end: 0x8014bd88, kind: handwritten, why: "handwritten scratchpad-frame blitter with trapping arithmetic"}
-  - {addr: 0x8014bd88, end: 0x8014bed8, kind: handwritten, why: "handwritten scratchpad-frame 4bpp blitter"}
-  - {addr: 0x8014bed8, end: 0x8014bf54, kind: handwritten, why: "handwritten zero-fill; byte-identical to world twin"}
   - {addr: 0x8014bf54, end: 0x8014bf7c, kind: handwritten, why: "accepted wrapper reproduces retail trapping addi with instruction-emitting inline asm"}
-  - {addr: 0x8014ca80, end: 0x8014cbb4, kind: handwritten, why: "handwritten battle thread context switch"}
-  - {addr: 0x8014ccb8, end: 0x8014ce08, kind: handwritten, why: "handwritten 64-round signed divide"}
-  - {addr: 0x8014ce08, end: 0x8014ce78, kind: handwritten, why: "handwritten fixed-point multiply twin of WORLD helper"}
   - {addr: 0x8014ce78, end: 0x8014ceb4, kind: handwritten, why: "hand-written; its C file wraps the original instructions in inline asm"}
-  - {addr: 0x8014ceb4, end: 0x8014cf58, kind: handwritten, why: "handwritten coroutine dispatcher changes sp and restores ra from a global"}
-  - {addr: 0x8014cf28, end: 0x8014cf58, kind: interior, why: "inside 0x8014ceb4: nesting-depth-zero path within coroutine dispatcher"}
   - {addr: 0x8018f4d8, end: 0x80193e50, kind: data, why: "move-height/configuration tables and pointers; no decoded code"}
   - {addr: 0x80195944, end: 0x801959d4, kind: interior, why: "inside 0x80195878: AI ability dispatcher case body; live saved registers and shared setter tail"}
   - {addr: 0x801959d4, end: 0x80195a24, kind: interior, why: "inside 0x80195878: AI ability dispatcher item-inventory case"}

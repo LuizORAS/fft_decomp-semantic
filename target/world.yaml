@@ -512,6 +512,9 @@ functions:
   - {addr: 0x800fe7d4, size: 68, name: world_menu_display_text_string, hash: 546bc309ac1221e3, source: src/shared/menu/menu_display_text_string.c, source_symbol: menu_display_text_string}
   - {addr: 0x800fe818, size: 1820, name: world_menu_display_text, hash: d9988a33ac0cc206, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
   - {addr: 0x800fef34, size: 188, name: menu_text_advance_cursor_with_backreferences, hash: ecd0d27b4b25d3f0, source: src/shared/text/text_advance_cursor_with_backreferences.c, source_symbol: text_advance_cursor_with_backreferences}
+  - {addr: 0x800feff0, size: 660, name: world_text_blit_glyph, hash: 0898adfda730da6b, asm: "Adds with trapping addi and branches with bgez $zero, which the pinned compilers do not emit, and keeps its registers in the scratchpad."}
+  - {addr: 0x800ff284, size: 336, name: world_text_blit_font_glyph_to_4bpp, hash: b3166e2491866531, asm: "Adds with trapping addi and branches with bgez $zero, which the pinned compilers do not emit, and keeps its registers in the scratchpad."}
+  - {addr: 0x800ff3d4, size: 124, name: world_menu_clear_render_buffer, hash: 40cdf4f0f6f3348e, asm: "Adds with trapping addi and branches with bgez $zero, which the pinned compilers do not emit."}
   - {addr: 0x800ff450, size: 40, name: mem_copy_bytes_nonempty, hash: 73eb033d6e800062, source: src/shared/memory/mem_copy_bytes_nonempty.c}
   - {addr: 0x800ff478, size: 496, name: world_gfx_mirror_4bpp_rect, hash: 29198ac37701ca7e}
   - {addr: 0x800ff668, size: 40, name: world_menu_build_and_upload_window_image, hash: c452a59dd99e0cda}
@@ -528,13 +531,17 @@ functions:
   - {addr: 0x800ffeec, size: 28, name: thread_is_running, hash: 22d1fa2a224de3cd, source: src/shared/thread/thread_is_running.c}
   - {addr: 0x800fff08, size: 32, name: thread_set_parameters, hash: 9a58f319d509b5e5, source: src/shared/thread/thread_set_parameters.c}
   - {addr: 0x800fff28, size: 40, name: thread_set_four_parameters, hash: 5d14fd3dbdba4502, source: src/shared/thread/thread_set_four_parameters.c}
+  - {addr: 0x800fff50, size: 308, name: thread_yield, hash: 538d992c45bc6cd5, asm: "Context switch that saves and restores k0, k1, $gp and $sp."}
   - {addr: 0x80100084, size: 12, name: thread_get_current_global_pointer, hash: 153190eb0d500e3a, source: src/shared/thread/thread_get_current_global_pointer.c}
   - {addr: 0x80100090, size: 52, name: world_thread_get_current_parameter_1, hash: 6e27c290b74e8721}
   - {addr: 0x801000c4, size: 52, name: world_thread_get_current_parameter_2, hash: 520e69329eb48696}
   - {addr: 0x801000f8, size: 52, name: world_thread_get_current_parameter_3, hash: 2eb16d761d6d87fe}
   - {addr: 0x8010012c, size: 56, name: world_thread_is_previous_running, hash: 0a6edd120247a375}
   - {addr: 0x80100164, size: 36, name: world_thread_is_running_asm, hash: d9c5668fe09910ef}
+  - {addr: 0x80100188, size: 336, name: world_util_mul_div_s64, hash: 05673bf3750ea48e, asm: "Keeps s0-s7 in the scratchpad instead of a stack frame and adds with trapping addi."}
+  - {addr: 0x801002d8, size: 112, name: world_util_cross_product_q12, hash: 2fc8621fd93e6896, asm: "Sets its flag with trapping addi from $zero, which the pinned compilers do not emit."}
   - {addr: 0x80100348, size: 60, name: text_skip_to_entry, hash: 90cff8271922ef07, source: src/shared/text/text_skip_to_entry.c}
+  - {addr: 0x80100384, size: 164, name: thread_call_on_main_stack, hash: 2e1cb9e2de4a1a48, asm: "Replaces $sp and keeps ra in a global across the call."}
   - {addr: 0x80100430, size: 480, name: world_option_menu_draw_text_columns, hash: ea0c5d112530bb05, source: src/shared/menu/option_menu_draw_text_columns.c, source_symbol: option_menu_draw_text_columns}
   - {addr: 0x80100610, size: 636, name: world_option_menu_redraw_text_page_on_scroll, hash: 327edc74c76a57e0}
   - {addr: 0x8010088c, size: 3184, name: world_option_menu_run_list_thread, hash: 632132e7dd8d11d5, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
@@ -1132,13 +1139,7 @@ data:
   - {addr: 0x800e007c, name: g_world_script_reading_character_message}
   - {addr: 0x800e01e8, name: g_world_card_save_title_template}
   - {addr: 0x800eda00, name: g_open_work_buffer_1}
-  - {addr: 0x800feff0, name: world_text_blit_glyph}
-  - {addr: 0x800ff284, name: world_text_blit_font_glyph_to_4bpp}
-  - {addr: 0x800ff3d4, name: world_menu_clear_render_buffer}
-  - {addr: 0x800fff50, name: thread_yield}
-  - {addr: 0x80100188, name: world_util_mul_div_s64}
-  - {addr: 0x801002d8, name: world_util_cross_product_q12}
-  - {addr: 0x80100384, name: thread_call_on_main_stack}
+  - {addr: 0x8010042c, name: g_thread_call_saved_ra}
   - {addr: 0x80115a00, name: g_open_movie_cd_stream_ring_buffer}
   - {addr: 0x8013a310, name: g_world_map_selected_tile_data}
   - {addr: 0x8013a31c, name: g_menu_selected_unit_status}
@@ -3156,13 +3157,3 @@ overrides:
   - {function: world_unit_view_supervisor_thread, name: g_menu_unit_view_cached_comparison_id, addr: 0x8013a60e}
   - {function: world_unit_view_supervisor_thread, name: g_menu_unit_view_mode, addr: 0x80153264}
   - {function: world_unit_view_supervisor_thread, name: g_menu_unit_view_thread_sets, addr: 0x801564d0}
-
-regions:
-  - {addr: 0x800feff0, end: 0x800ff284, kind: handwritten, why: "handwritten scratchpad-frame blitter helper"}
-  - {addr: 0x800ff284, end: 0x800ff3d4, kind: handwritten, why: "handwritten scratchpad-frame 4bpp blitter"}
-  - {addr: 0x800ff3d4, end: 0x800ff450, kind: handwritten, why: "handwritten zero-fill; byte-identical to battle twin"}
-  - {addr: 0x800fff50, end: 0x80100084, kind: handwritten, why: "handwritten thread context switch using k0/k1/gp/sp/fp"}
-  - {addr: 0x80100188, end: 0x801002d8, kind: handwritten, why: "handwritten 64-round signed divide using scratchpad saves"}
-  - {addr: 0x801002d8, end: 0x80100348, kind: handwritten, why: "handwritten fixed-point multiply/overflow helper"}
-  - {addr: 0x80100384, end: 0x80100428, kind: handwritten, why: "handwritten coroutine dispatcher; changes sp and saves/restores ra globally"}
-  - {addr: 0x801003f8, end: 0x80100428, kind: interior, why: "inside 0x80100384: branch/fall-through tail within coroutine dispatcher"}

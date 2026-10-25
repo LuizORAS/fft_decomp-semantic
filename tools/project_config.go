@@ -166,28 +166,6 @@ func (m *moduleSpec) sourceOf(f *functionSpec) string {
 	return m.defaultSource(f)
 }
 
-// codeKeptAsBytes counts the handwritten and blocked regions no function
-// covers: routines with no source yet, whose original bytes the build keeps.
-func (m *moduleSpec) codeKeptAsBytes() (ranges, size int) {
-	for _, region := range m.Regions {
-		if region.Kind != "handwritten" && region.Kind != "blocked" {
-			continue
-		}
-		covered := false
-		for _, f := range m.Functions {
-			if region.Addr < f.Addr+uint32(f.Size) && f.Addr < region.End {
-				covered = true
-				break
-			}
-		}
-		if !covered {
-			ranges++
-			size += int(region.End - region.Addr)
-		}
-	}
-	return ranges, size
-}
-
 // quirksAssemblySection is the QUIRKS.md section that lists each hand-written
 // routine's Port debt, a bullet opening with its name in backticks.
 const quirksAssemblySection = "Hand-written assembly"
@@ -911,16 +889,23 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 				fail("%s is invalid or outside the image", where)
 			}
 			if region.Kind == "blocked" || region.Kind == "handwritten" {
+				covered := false
 				for _, f := range m.Functions {
 					if region.Addr >= f.Addr+uint32(f.Size) || f.Addr >= region.End {
 						continue
 					}
+					covered = true
 					switch {
 					case f.Asm != "":
 						fail("%s is %s, but %s is its source now; remove the region", where, region.Kind, f.Name)
 					case region.Kind == "blocked":
 						fail("%s is blocked but overlaps matching function %s; remove the region", where, f.Name)
 					}
+				}
+				// A handwritten range inside a C function is that function's
+				// inline assembly; any other code has a source.
+				if !covered {
+					fail("%s is %s code with no source; write it as a .s routine", where, region.Kind)
 				}
 			}
 		}

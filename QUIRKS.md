@@ -511,9 +511,14 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   instead of the product's high word: `(6264, -400920, -2359)` gives 1065039 where
   signed division gives 1064587. The overflow flag (`g_camera_cross_product_overflow`
   in BATTLE) is set only on the negative-result path; `battle_util_cross_product_q12`
-  and `world_util_cross_product_q12` test bits 44-63 of each product for 0 or -1 and
-  keep bits 12-43, so an overflow into bit 43 escapes. Neither catches every
-  signed 32-bit overflow.
+  and `world_util_cross_product_q12` test bits 44-63 of the 64-bit difference for 0
+  or -1 and keep bits 12-43, so an overflow into bit 43 escapes. Neither catches
+  every signed 32-bit overflow.
+- `battle_menu_clear_render_buffer` and `world_menu_clear_render_buffer`
+  (hand-written) write `buffer & 3` single bytes before the word loop rather
+  than 4 minus that, so a buffer at an odd address reaches the word stores at
+  an address 2 mod 4 and faults. Every retail caller passes a word-aligned
+  stack array or image global.
 - `battle_gfx_step_queued_unit_graphics_load` replaces sheet ids from 0xa0 up with
   Ramza's chapter 1 sheet, but the table has `BATTLE_SPRITESHEET_ID_COUNT` (159)
   sheets, so id 0x9f would read one entry past it;
@@ -1331,4 +1336,31 @@ needs a portable C twin of each.
 - `battle_map_queue_untextured_triangles`: the same for the untextured
   triangles, unlit, at the masked and offset depth slot.
 - `battle_map_queue_untextured_quads`: the same for the untextured quads.
+- `text_blit_glyph`: copies a glyph's 4bpp pixels with the callee-saved
+  registers parked in the scratchpad; a native build needs a plain C loop.
+- `world_text_blit_glyph`: WORLD's `text_blit_glyph`, without its x test.
+- `battle_text_render_glyph_to_4bpp_image`: decodes a 2-bit glyph into a 4bpp
+  image with its registers in the scratchpad; a native build needs a plain C
+  loop.
+- `world_text_blit_font_glyph_to_4bpp`: WORLD's twin of
+  `battle_text_render_glyph_to_4bpp_image`.
+- `battle_menu_clear_render_buffer`: a byte and word zero fill; a native build
+  uses `memset`, which also handles the odd addresses this one cannot.
+- `world_menu_clear_render_buffer`: WORLD's byte-identical twin.
+- `thread_yield` (BATTLE and WORLD): switches threads by saving and restoring
+  `$sp`, `k0`, `k1`, `$gp` and the callee-saved registers in `g_threads`; a
+  native build needs another context switch (fibers, `ucontext` or host
+  threads).
+- `battle_util_mul_div_s64`: a 64-bit multiply and divide by shift and
+  subtract with its registers in the scratchpad; a native build needs a C
+  twin over 64-bit integers that keeps the retail negation results above.
+- `world_util_mul_div_s64`: WORLD's twin of `battle_util_mul_div_s64`.
+- `battle_util_cross_product_q12`: a 64-bit cross product with an overflow
+  flag; a native build needs a C twin over 64-bit integers.
+- `world_util_cross_product_q12`: WORLD's twin of
+  `battle_util_cross_product_q12`.
+- `thread_call_on_main_stack` (BATTLE and WORLD): calls
+  `g_thread_call_target` on the main loop's stack by replacing `$sp` and
+  keeps its return address in `g_thread_call_saved_ra`; a native build
+  calls the target directly or on its own main-context stack.
 
