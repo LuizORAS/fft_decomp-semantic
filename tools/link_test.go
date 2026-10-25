@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -72,13 +73,13 @@ func TestLinkDataAssemblyAndScript(t *testing.T) {
 	if zeroed := linkDataAssembly(m, layout, ""); !strings.Contains(zeroed, "\t.space 8\n") || strings.Contains(zeroed, "incbin") {
 		t.Fatalf("zeroed data assembly:\n%s", zeroed)
 	}
-	objects := map[string]string{"test_first": "/w/first.o", "test_second": "/w/second.o"}
-	script := linkScript(layout, objects, "/w/data.o", map[string]uint32{"g_test_inside": 0x8010000c, "battle_x": 0x80070000}, "")
+	script := linkScript(layout, "/w/data.o", map[string]uint32{"g_test_inside": 0x8010000c, "battle_x": 0x80070000}, "")
 	for _, line := range []string{
 		"PROVIDE(battle_x = 0x80070000);\nPROVIDE(g_test_inside = 0x8010000c);\n",
-		"  .text_80100008 0x80100008 : SUBALIGN(4) { \"/w/first.o\"(.text) }\n",
-		"  .rodata_80100020 0x80100020 : SUBALIGN(4) { \"/w/second.o\"(.rodata .rdata) }\n",
-		"  .bytes_80100018 0x80100018 : SUBALIGN(1) { \"/w/data.o\"(.bytes_80100018) }\n",
+		"  .text_80100008 0x80100008 : SUBALIGN(4) { *(.text_80100008) }\n",
+		"  .rodata_80100020 0x80100020 : SUBALIGN(4) { *(.rodata_80100020) }\n",
+		"  .bytes_80100018 0x80100018 : SUBALIGN(1) { *(.bytes_80100018) }\n",
+		"  /DISCARD/ : { \"/w/data.o\"(.text) ",
 		"ASSERT(test_second == 0x80100010, \"test_second must begin at 0x80100010\");\n",
 		"ASSERT(g_test_tail == 0x80100030, \"g_test_tail must be at 0x80100030\");\n",
 	} {
@@ -124,7 +125,7 @@ func TestMainLinkWritesTheEXEHeaderAndGlobalPointer(t *testing.T) {
 	if err != nil || gp != "g_psyq_crt_saved_ra" {
 		t.Fatalf("global pointer %q, %v", gp, err)
 	}
-	script := linkScript(layout, map[string]string{"__SN_ENTRY_POINT": "/w/a.o", "main_heap_alloc": "/w/b.o"}, "/w/data.o", nil, gp)
+	script := linkScript(layout, "/w/data.o", nil, gp)
 	for _, line := range []string{
 		"OUTPUT_ARCH(mips)\n_gp = g_psyq_crt_saved_ra;\n",
 		"__exe_text_start = ADDR(.text_80010000);\n",
@@ -147,10 +148,21 @@ func TestModuleLinkLayoutShadowsSharedLiterals(t *testing.T) {
 	if len(layout.shadows) != 1 || linkShadowName(layout.shadows[0]) != ".shadow_80100020_test_first" {
 		t.Fatalf("shadows %v", layout.shadows)
 	}
-	script := linkScript(layout, map[string]string{"test_first": "/w/first.o", "test_second": "/w/second.o"}, "/w/data.o", nil, "")
-	if !strings.Contains(script, "  .rodata_80100020 0x80100020 : SUBALIGN(4) { \"/w/second.o\"(.rodata .rdata) }\n") ||
-		!strings.Contains(script, "  .shadow_80100020_test_first 0x80100020 (NOLOAD) : SUBALIGN(4) { \"/w/first.o\"(.rodata .rdata) }\n") {
+	script := linkScript(layout, "/w/data.o", nil, "")
+	if !strings.Contains(script, "  .rodata_80100020 0x80100020 : SUBALIGN(4) { *(.rodata_80100020) }\n") ||
+		!strings.Contains(script, "  .shadow_80100020_test_first 0x80100020 (NOLOAD) : SUBALIGN(4) { *(.shadow_80100020_test_first) }\n") {
 		t.Fatalf("script:\n%s", script)
+	}
+	sections, err := linkObjectSections(layout)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]map[string]string{
+		"test_first":  {".text": ".text_80100008", ".rodata": ".shadow_80100020_test_first", ".rdata": ".shadow_80100020_test_first"},
+		"test_second": {".text": ".text_80100010", ".rodata": ".rodata_80100020", ".rdata": ".rodata_80100020"},
+	}
+	if !reflect.DeepEqual(sections, want) {
+		t.Fatalf("object sections %v", sections)
 	}
 	m.Functions[0].Rodata = []rodataSpec{{Addr: 0x80100022, Size: 4}}
 	if _, err := moduleLinkLayout(m); err == nil || !strings.Contains(err.Error(), "overlaps") {

@@ -105,7 +105,7 @@ make share-audit [MODULE=x] # report shared C implementation candidates as JSON
 make twins [MODULE=x]      # group functions identical under renames across modules (needs the BIN)
 make trial TWINS=t0001     # compile each twin's source at the others' entries (or MODULE ENTRY SOURCE)
 make unit-check [MODULE=x] # compile each original translation unit whole from its members' sources
-make link [MODULE=x]       # link each module whole from its objects and the bytes between them; compare with the original file (function hashes without the BIN)
+make link [MODULE=x]       # link each module whole from its objects and the bytes between them; compare with the original file (function hashes without the BIN); every module with the BIN also builds the disc in build/link/disc
 make diff FUNC=f           # compare one function with the original bytes (needs the BIN)
 make library-diff ARGS="..." # compare a scratch library candidate without registering it
 make permute FUNC=f        # run decomp-permuter on it [DURATION=300 JOBS=4]
@@ -125,8 +125,8 @@ make compile-commands      # editor compile_commands.json (host clang)
 `effect` selects every such module. `diff` and `permute` need it only when
 several modules define `FUNC`. Both compile exactly as `check` does. Every change
 ends with `make check` passing. Before handing off, also run `make build`
-(disc exact), `make check-config`, `make decl-check`, `make fmt-check` and
-`make test`.
+and `make link` (disc exact both ways), `make check-config`,
+`make decl-check`, `make fmt-check` and `make test`.
 
 Every target runs in a fresh `docker run --rm` container of the pinned
 `Dockerfile` image as the host user, with the checkout mounted at `/work`;
@@ -135,10 +135,10 @@ layer proves every tool runs) and rebuilt by `make bootstrap`. It holds the
 old GCC `cc1` binaries (native on x86-64, through `qemu-i386` elsewhere), maspsx, mipsel binutils and
 `cpp`, mkpsxiso, asm-differ (`make diff` listings), decomp-permuter, Go and
 clang-format 22.1.8. CI (`.github/workflows/check.yml`) runs `fmt-check`,
-`check-config`, `test`, `decl-check` and `map` in one job and `check` in four
-module shards, without the BIN; `check-config` fails unless the shards' module
-lists cover every module once. Optional overrides: `JOBS`, `CACHE=0`, `WORK_DIR`,
-`REPORT_ALL=1`, `DURATION` (see the Makefile).
+`check-config`, `test`, `decl-check` and `map` in one job and `check` and
+`link` in four module shards, without the BIN; `check-config` fails unless
+the shards' module lists cover every module once. Optional overrides: `JOBS`,
+`CACHE=0`, `WORK_DIR`, `REPORT_ALL=1`, `DURATION` (see the Makefile).
 
 ## target/*.yaml
 

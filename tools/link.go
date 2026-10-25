@@ -3,6 +3,8 @@
 // address order, with an ASSERT that each name lands at its original address
 // (`make link`). The data bytes come from the extracted disc; without it they
 // are zeros of the right size, which still proves the code and the layout.
+// When every module links equal to its original file, the disc is built from
+// them under build/link/disc, as `make build` does from its copies.
 package main
 
 import (
@@ -26,7 +28,7 @@ import (
 type linkPiece struct {
 	addr     uint32
 	size     int
-	kind     string // "text", "rodata" or "bytes"
+	kind     string // "text", "rodata", "bytes" or MAIN's "header"
 	function *functionSpec
 	labels   []symbolSpec
 }
@@ -124,6 +126,47 @@ func linkSectionName(piece linkPiece) string {
 
 func linkShadowName(piece linkPiece) string {
 	return fmt.Sprintf(".shadow_%08x_%s", piece.addr, piece.function.Name)
+}
+
+// linkObjectSections gives, per function, the name its object's .text and
+// .rodata take: their piece's section name, so the script matches every piece
+// by section name alone. GNU ld 2.40 matches each input statement that names
+// a file against every input file, and one such statement per piece made
+// BATTLE's link take half a minute instead of a fraction of a second.
+func linkObjectSections(layout linkLayout) (map[string]map[string]string, error) {
+	sections := map[string]map[string]string{}
+	take := func(f *functionSpec, name string, kinds ...string) error {
+		names := sections[f.Name]
+		if names == nil {
+			names = map[string]string{}
+			sections[f.Name] = names
+		}
+		for _, kind := range kinds {
+			if other, ok := names[kind]; ok {
+				return fmt.Errorf("%s: its %s is both %s and %s", f.Name, kind, other, name)
+			}
+			names[kind] = name
+		}
+		return nil
+	}
+	for _, piece := range layout.pieces {
+		var err error
+		switch piece.kind {
+		case "text":
+			err = take(piece.function, linkSectionName(piece), ".text")
+		case "rodata":
+			err = take(piece.function, linkSectionName(piece), ".rodata", ".rdata")
+		}
+		if err != nil {
+			return nil, err
+		}
+	}
+	for _, piece := range layout.shadows {
+		if err := take(piece.function, linkShadowName(piece), ".rodata", ".rdata"); err != nil {
+			return nil, err
+		}
+	}
+	return sections, nil
 }
 
 // linkObjectRenames lists, per function, the symbols its object takes under
@@ -250,11 +293,12 @@ func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 	return out.String()
 }
 
-// linkScript places each piece at its address, binds the names the objects
+// linkScript places each piece at its address (every input section carries
+// its piece's name, see linkObjectSections), binds the names the objects
 // leave undefined that this module cannot define (its links, MAIN, imports,
 // data rows outside the bytes pieces) and asserts every function and label.
 // A module with `$gp`-relative code sets `_gp` to the label gp names.
-func linkScript(layout linkLayout, objects map[string]string, dataObject string, bindings map[string]uint32, gp string) string {
+func linkScript(layout linkLayout, dataObject string, bindings map[string]uint32, gp string) string {
 	var script strings.Builder
 	script.WriteString("OUTPUT_ARCH(mips)\n")
 	if gp != "" {
@@ -272,19 +316,16 @@ func linkScript(layout linkLayout, objects map[string]string, dataObject string,
 	// piece's address, as the per-function link does.
 	script.WriteString("SECTIONS {\n")
 	for _, piece := range layout.pieces {
-		switch piece.kind {
-		case "text":
-			fmt.Fprintf(&script, "  %s 0x%08x : SUBALIGN(4) { \"%s\"(.text) }\n", linkSectionName(piece), piece.addr, objects[piece.function.Name])
-		case "rodata":
-			fmt.Fprintf(&script, "  %s 0x%08x : SUBALIGN(4) { \"%s\"(.rodata .rdata) }\n", linkSectionName(piece), piece.addr, objects[piece.function.Name])
-		default:
-			fmt.Fprintf(&script, "  %s 0x%08x : SUBALIGN(1) { \"%s\"(%s) }\n", linkSectionName(piece), piece.addr, dataObject, linkSectionName(piece))
+		align := 4
+		if piece.kind != "text" && piece.kind != "rodata" {
+			align = 1
 		}
+		fmt.Fprintf(&script, "  %s 0x%08x : SUBALIGN(%d) { *(%s) }\n", linkSectionName(piece), piece.addr, align, linkSectionName(piece))
 	}
 	// Another copy of a shared literal keeps its address for its object's
 	// references and loads nothing: the loaded copy holds the same bytes.
 	for _, piece := range layout.shadows {
-		fmt.Fprintf(&script, "  %s 0x%08x (NOLOAD) : SUBALIGN(4) { \"%s\"(.rodata .rdata) }\n", linkShadowName(piece), piece.addr, objects[piece.function.Name])
+		fmt.Fprintf(&script, "  %s 0x%08x (NOLOAD) : SUBALIGN(4) { *(%s) }\n", linkShadowName(piece), piece.addr, linkShadowName(piece))
 	}
 	// Every object's .data, .bss and small-data sections are empty
 	// (objectHoldsOnlyCode), as is the data object's .text; the debug
@@ -413,6 +454,10 @@ func (p project) linkModule(resolver symbolResolver, m *moduleSpec) (linkResult,
 	if err != nil {
 		return result, err
 	}
+	sections, err := linkObjectSections(layout)
+	if err != nil {
+		return result, err
+	}
 	for name, object := range objects {
 		if err := objectHoldsOnlyCode(name, object); err != nil {
 			return result, err
@@ -426,6 +471,14 @@ func (p project) linkModule(resolver symbolResolver, m *moduleSpec) (linkResult,
 		sort.Strings(olds)
 		for _, old := range olds {
 			arguments = append(arguments, "--redefine-sym", old+"="+renames[name][old])
+		}
+		kinds := make([]string, 0, len(sections[name]))
+		for kind := range sections[name] {
+			kinds = append(kinds, kind)
+		}
+		sort.Strings(kinds)
+		for _, kind := range kinds {
+			arguments = append(arguments, "--rename-section", kind+"="+sections[name][kind])
 		}
 		if err := runInDir(p.root, append(append([]string{"mipsel-linux-gnu-objcopy"}, arguments...), object, renamed)...); err != nil {
 			return result, err
@@ -469,7 +522,7 @@ func (p project) linkModule(resolver symbolResolver, m *moduleSpec) (linkResult,
 	if err != nil {
 		return result, err
 	}
-	if err := atomicWrite(script, []byte(linkScript(layout, objects, dataObject, bindings, gp))); err != nil {
+	if err := atomicWrite(script, []byte(linkScript(layout, dataObject, bindings, gp))); err != nil {
 		return result, err
 	}
 	elfPath := filepath.Join(outDir, m.ID+".elf")
@@ -628,8 +681,13 @@ func (p project) linkCommand(args []string) error {
 			return err
 		}
 	}
+	if p, err = p.withInputMirror(); err != nil {
+		return err
+	}
 	resolver := newSymbolResolver(config)
 	linked, failed := 0, 0
+	built := make(map[string]string, len(modules))
+	original := true
 	for _, m := range modules {
 		result, err := p.linkModule(resolver, m)
 		if err != nil {
@@ -638,11 +696,21 @@ func (p project) linkCommand(args []string) error {
 			continue
 		}
 		linked++
+		built[m.ID] = result.output
+		original = original && result.identical
 		fmt.Fprintf(p.stdout(), "ok   %s (%d bytes, %s)\n", m.ID, m.Size, result.checked)
 	}
 	fmt.Fprintf(p.stdout(), "link: %d of %d modules linked whole and identical\n", linked, linked+failed)
 	if failed > 0 {
 		return fmt.Errorf("link: %d modules failed", failed)
 	}
-	return nil
+	switch {
+	case len(built) != len(config.Modules):
+		return nil
+	case !original:
+		fmt.Fprintln(p.stdout(), "link: no disc without the BIN (the data bytes were zeros)")
+		return nil
+	}
+	// Every module, each equal to its original file: the disc from them.
+	return p.writeDisc(config, built, filepath.Join(p.root, "build", "link", "disc"))
 }
