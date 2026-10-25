@@ -19,10 +19,9 @@ import (
 )
 
 const (
-	modulesConfigDir  = "target"
-	hashDigits        = 16
-	mainModuleID      = "main"
-	mainAssemblyLimit = 0x800120f4
+	modulesConfigDir = "target"
+	hashDigits       = 16
+	mainModuleID     = "main"
 )
 
 type projectConfig struct {
@@ -165,6 +164,82 @@ func (m *moduleSpec) sourceOf(f *functionSpec) string {
 		return f.Source
 	}
 	return m.defaultSource(f)
+}
+
+// codeKeptAsBytes counts the handwritten and blocked regions no function
+// covers: routines with no source yet, whose original bytes the build keeps.
+func (m *moduleSpec) codeKeptAsBytes() (ranges, size int) {
+	for _, region := range m.Regions {
+		if region.Kind != "handwritten" && region.Kind != "blocked" {
+			continue
+		}
+		covered := false
+		for _, f := range m.Functions {
+			if region.Addr < f.Addr+uint32(f.Size) && f.Addr < region.End {
+				covered = true
+				break
+			}
+		}
+		if !covered {
+			ranges++
+			size += int(region.End - region.Addr)
+		}
+	}
+	return ranges, size
+}
+
+// quirksAssemblySection is the QUIRKS.md section that lists each hand-written
+// routine's Port debt, a bullet opening with its name in backticks.
+const quirksAssemblySection = "Hand-written assembly"
+
+func quirksAssemblyEntries(root string) (map[string]bool, error) {
+	data, err := os.ReadFile(filepath.Join(root, mapQuirksFile))
+	if err != nil && !os.IsNotExist(err) {
+		return nil, err
+	}
+	names := map[string]bool{}
+	for _, section := range parseQuirks(string(data)) {
+		if section.title != quirksAssemblySection {
+			continue
+		}
+		for _, entry := range section.entries {
+			if match := mapBacktickPattern.FindStringSubmatch(entry.text); match != nil {
+				names[match[1]] = true
+			}
+		}
+	}
+	return names, nil
+}
+
+var (
+	// assemblyCommentPattern matches the comments of a .s source: C block
+	// comments and the assembler's own `#` line comments.
+	assemblyCommentPattern = regexp.MustCompile(`(?s)/\*.*?\*/|#[^\n]*`)
+	// assemblyAddressPattern finds a RAM address written as a number: a word,
+	// a %hi/%lo of a number, or a lui of an address's upper half. 0x80000000
+	// and a lui of 0x8000 are the sign bit, not an address.
+	assemblyAddressPattern = regexp.MustCompile(`(?i)\b0x80[01][0-9a-f]{5}\b|%(?:hi|lo)\(\s*0x|\blui\s+\$\w+\s*,\s*0x80(?:0[1-9a-f]|1[0-9a-f])\b`)
+)
+
+// validateAssemblySource checks a hand-written routine's source: it opens with
+// a comment that names its original start address, and every address in its
+// code is a symbol.
+func validateAssemblySource(root, source string, f *functionSpec) error {
+	data, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(source)))
+	if err != nil {
+		return err
+	}
+	text := strings.TrimSpace(string(data))
+	end := strings.Index(text, "*/")
+	if !strings.HasPrefix(text, "/*") || end < 0 || !strings.Contains(strings.ToLower(text[:end]), fmt.Sprintf("0x%08x", f.Addr)) {
+		return fmt.Errorf("%s does not open with a comment naming its original range from 0x%08x", source, f.Addr)
+	}
+	for _, found := range assemblyAddressPattern.FindAllString(assemblyCommentPattern.ReplaceAllString(text, " "), -1) {
+		if !strings.EqualFold(found, "0x80000000") {
+			return fmt.Errorf("%s writes an address as a number (%s); name its symbol", source, found)
+		}
+	}
+	return nil
 }
 
 // unitMembers lists the functions inside the unit's range, in address order.
@@ -649,6 +724,10 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 	sources := make(map[string]bool)
 	sourceSymbols := make(map[string]string)
 	checkedDefinitions := make(map[string]bool)
+	assemblyEntries, err := quirksAssemblyEntries(p.root)
+	if err != nil {
+		return err
+	}
 	rendered := renderConfigFiles(config)
 	paths := make([]string, 0, len(rendered))
 	for path := range rendered {
@@ -716,8 +795,14 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 			}
 			source := m.sourceOf(f)
 			if f.Asm != "" {
-				if m.ID != mainModuleID || filepath.Ext(source) != ".s" || uint64(f.Addr)+uint64(f.Size) > mainAssemblyLimit {
-					fail("%s: assembly requires a .s source in a main startup/ABI range below 0x%08x", where, mainAssemblyLimit)
+				if strings.TrimSpace(f.Asm) == "" {
+					fail("%s: asm needs the reason the routine is assembly", where)
+				}
+				if source != m.defaultSource(f) {
+					fail("%s: assembly is its own source named after it, %s", where, m.defaultSource(f))
+				}
+				if !assemblyEntries[f.Name] {
+					fail("%s: QUIRKS.md has no %q entry for it (its Port debt)", where, quirksAssemblySection)
 				}
 			} else if filepath.Ext(source) != ".c" {
 				fail("%s: C function requires a .c source (set asm for assembly)", where)
@@ -725,6 +810,10 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 			_, sourceErr := projectPath(p.root, source, "source")
 			if sourceErr != nil {
 				fail("%s: %v", where, sourceErr)
+			} else if f.Asm != "" {
+				if err := validateAssemblySource(p.root, source, f); err != nil {
+					fail("%s: %v", where, err)
+				}
 			}
 			sourceSymbol := f.sourceSymbol()
 			if !validSymbol(sourceSymbol) {
@@ -821,9 +910,15 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 			if region.Addr%4 != 0 || region.End%4 != 0 || region.End <= region.Addr || !m.contains(region.Addr, int(region.End-region.Addr)) {
 				fail("%s is invalid or outside the image", where)
 			}
-			if region.Kind == "blocked" {
+			if region.Kind == "blocked" || region.Kind == "handwritten" {
 				for _, f := range m.Functions {
-					if region.Addr < f.Addr+uint32(f.Size) && f.Addr < region.End {
+					if region.Addr >= f.Addr+uint32(f.Size) || f.Addr >= region.End {
+						continue
+					}
+					switch {
+					case f.Asm != "":
+						fail("%s is %s, but %s is its source now; remove the region", where, region.Kind, f.Name)
+					case region.Kind == "blocked":
 						fail("%s is blocked but overlaps matching function %s; remove the region", where, f.Name)
 					}
 				}

@@ -52,7 +52,7 @@ var mapQuirkSwitches = map[string]string{
 	"Pointers held in 32-bit integers":    "PORT (64-bit)",
 	"Duplicated code":                     "NON_MATCHING (refactor)",
 	"Other surprises":                     "review",
-	"Hand-written assembly":               "PORT (C twin)",
+	quirksAssemblySection:                 "PORT (C twin)",
 }
 
 var (
@@ -108,7 +108,7 @@ func scanComments(path, source string) []mapComment {
 func (index *codebaseIndex) scanQuirksAndComments(root string) error {
 	for _, name := range sortedKeys(index.functions) {
 		f := index.functions[name]
-		if f.asm != "" || index.commentsSeen[f.source] {
+		if index.commentsSeen[f.source] {
 			continue
 		}
 		index.commentsSeen[f.source] = true
@@ -177,7 +177,7 @@ func (index *codebaseIndex) resolveMention(text string) (key string, exists bool
 		return "", false, false
 	}
 	switch {
-	case strings.HasSuffix(text, ".c") || strings.HasSuffix(text, ".h"):
+	case strings.HasSuffix(text, ".c") || strings.HasSuffix(text, ".s") || strings.HasSuffix(text, ".h"):
 		if strings.Contains(text, "/") {
 			if name, found := index.functionBySource[text]; found {
 				return "function:" + name, true, true
@@ -187,8 +187,8 @@ func (index *codebaseIndex) resolveMention(text string) (key string, exists bool
 			}
 			return "", index.files[text], true
 		}
-		stem := strings.TrimSuffix(strings.TrimSuffix(text, ".c"), ".h")
-		if strings.HasSuffix(text, ".c") && index.functions[stem] != nil {
+		stem := strings.TrimSuffix(text, filepath.Ext(text))
+		if !strings.HasSuffix(text, ".h") && index.functions[stem] != nil {
 			return "function:" + stem, true, true
 		}
 		for path := range index.headers {

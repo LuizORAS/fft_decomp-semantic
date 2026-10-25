@@ -9,32 +9,43 @@ import (
 )
 
 func TestAssemblyFunctionValidation(t *testing.T) {
-	valid := "  - {addr: 0x80010000, size: 8, name: main_first, hash: 0123456789abcdef, asm: \"Test ABI boundary\"}"
-	for bad, line := range map[string]string{
-		"":        valid,
-		"range":   strings.Replace(strings.Replace(valid, "0x80010000", "0x800449ec", 1), "main_first", "main_late", 1),
-		"reason":  strings.Replace(valid, `asm: "Test ABI boundary"`, `asm: " "`, 1),
-		"c-file":  strings.Replace(valid, `asm: "Test ABI boundary"`, `source: src/main/main_first.c`, 1),
-		"s-for-c": strings.Replace(valid, `, asm: "Test ABI boundary"`, `, source: src/main/main_first.s`, 1),
+	row := "  - {addr: 0x80067010, size: 8, name: battle_switch, hash: 0123456789abcdef, asm: \"Test ABI boundary\"}\n"
+	source := "/* Switch to the test stack.\n *\n * BATTLE.BIN 0x80067010..0x80067017.\n */\n" +
+		"\t.set\tnoreorder\n\t.text\n\t.globl\tbattle_switch\nbattle_switch:\n" +
+		"\tlui\t$t0, %hi(g_battle_value)\n\tlui\t$t1, 0x8000 # the sign bit\n\tjr\t$ra\n\tnop\n"
+	quirks := "# Quirks\n\n## " + quirksAssemblySection + "\n\nIntro.\n\n- `battle_switch`: test.\n"
+	// A region the routine does not cover stays code kept as bytes.
+	pending := "\nregions:\n  - {addr: 0x80067020, end: 0x80067030, kind: handwritten, why: \"test\"}\n"
+	for _, test := range []struct {
+		name, row, path, source, quirks, regions, want string
+	}{
+		{name: "valid outside main", row: row, source: source, quirks: quirks, regions: pending},
+		{name: "blank reason", row: strings.Replace(row, `asm: "Test ABI boundary"`, `asm: " "`, 1), source: source, quirks: quirks, want: "asm needs the reason"},
+		{name: "c source", row: strings.Replace(row, `, asm: "Test ABI boundary"`, `, source: src/battle/battle_switch.s`, 1), source: source, quirks: quirks, want: "requires a .c source"},
+		{name: "not named after it", row: strings.Replace(row, `asm: "Test`, `source: src/battle/other.s, asm: "Test`, 1), path: "other.s", source: source, quirks: quirks, want: "named after it"},
+		{name: "no Port debt entry", row: row, source: source, quirks: "## Other surprises\n\n- `battle_switch`.\n", want: "QUIRKS.md has no"},
+		{name: "no opening comment", row: row, source: "\tjr\t$ra\n\tnop\n", quirks: quirks, want: "does not open with a comment"},
+		{name: "other range in comment", row: row, source: strings.Replace(source, "0x80067010..", "0x80067014..", 1), quirks: quirks, want: "does not open with a comment"},
+		{name: "numeric word", row: row, source: source + "\t.word\t0x80067100\n", quirks: quirks, want: "as a number (0x80067100)"},
+		{name: "numeric hi", row: row, source: source + "\tlui\t$t0, %hi(0x80067100)\n", quirks: quirks, want: "as a number (%hi("},
+		{name: "numeric upper half", row: row, source: source + "\tlui\t$t0, 0x8006\n", quirks: quirks, want: "as a number (lui"},
+		{name: "region left", row: row, source: source, quirks: quirks, regions: "\nregions:\n  - {addr: 0x80067010, end: 0x80067018, kind: handwritten, why: \"test\"}\n", want: "is its source now; remove the region"},
 	} {
-		t.Run(bad, func(t *testing.T) {
+		t.Run(test.name, func(t *testing.T) {
 			p := validTestProject(t)
-			for _, name := range []string{"main_first.s", "main_late.s"} {
-				if err := os.WriteFile(filepath.Join(p.root, "src", "main", name), []byte("nop\n"), 0o644); err != nil {
+			path := test.path
+			if path == "" {
+				path = "battle_switch.s"
+			}
+			files := map[string]string{
+				"src/battle/" + path: test.source,
+				"QUIRKS.md":          test.quirks,
+				"target/battle.yaml": strings.Replace(testBattleYAML, "\ndata:", test.row+"\ndata:", 1) + test.regions,
+			}
+			for name, text := range files {
+				if err := os.WriteFile(filepath.Join(p.root, filepath.FromSlash(name)), []byte(text), 0o644); err != nil {
 					t.Fatal(err)
 				}
-			}
-			if err := os.Remove(filepath.Join(p.root, "src", "main", "main_first.c")); err != nil {
-				t.Fatal(err)
-			}
-			text := strings.Replace(testMainYAML, "  - {addr: 0x80010000, size: 8, name: main_first, hash: 0123456789abcdef}", line, 1)
-			if bad == "c-file" {
-				if err := os.WriteFile(filepath.Join(p.root, "src", "main", "main_first.c"), []byte("x\n"), 0o644); err != nil {
-					t.Fatal(err)
-				}
-			}
-			if err := os.WriteFile(filepath.Join(p.root, "target", "main.yaml"), []byte(text), 0o644); err != nil {
-				t.Fatal(err)
 			}
 			config, err := p.loadProjectConfig()
 			if err != nil {
@@ -47,11 +58,17 @@ func TestAssemblyFunctionValidation(t *testing.T) {
 				t.Fatal(err)
 			}
 			err = p.validateProjectConfig(config)
-			if bad == "" && err != nil && !strings.Contains(err.Error(), "orphan") {
+			switch {
+			case test.want == "" && err != nil:
 				t.Fatalf("valid assembly rejected: %v", err)
+			case test.want != "" && (err == nil || !strings.Contains(err.Error(), test.want)):
+				t.Fatalf("want %q, got %v", test.want, err)
 			}
-			if bad != "" && (err == nil || !strings.Contains(err.Error(), "main_")) {
-				t.Fatalf("%s accepted: %v", bad, err)
+			if test.want == "" {
+				battle, _ := config.module("battle")
+				if ranges, size := battle.codeKeptAsBytes(); ranges != 1 || size != 16 {
+					t.Fatalf("code kept as bytes: %d ranges, %d bytes", ranges, size)
+				}
 			}
 		})
 	}

@@ -150,7 +150,7 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
 - Header: `module`, `file`, `lba`, `size`, `sha256`, `load`, `source_dir`,
   `profile` (module default), `links` (modules resident alongside).
 - `functions`: `{addr, size, name, hash}`, plus `profile`, `rodata`, `asm`
-  (why the routine is assembly; its default source is then
+  (why the routine is assembly; its source is then
   `src/<module>/<name>.s`), `source` (a path other than the default) or
   `source_symbol` (the neutral symbol a `src/shared/` source defines) only
   when needed. `hash` is the first 16 hex digits of the SHA-256 of the
@@ -211,8 +211,11 @@ none), and prefer the profile of its neighbors.
   or a `blocked` one, whose comment then says it was probably C. Addresses in
   a `.s` are symbols, never numbers. Each routine has a Port debt entry under
   "Hand-written assembly" in `QUIRKS.md`, because a native build needs a
-  portable C twin. Instruction-emitting inline asm remains in the hand-written
-  thread/copy helpers and the PS1 hardware/ABI helpers in `include/psx/`.
+  portable C twin. `make check-config` checks each of these, fails on a
+  region left over a routine that has its source, and counts the hand-written
+  ranges still kept as original bytes. Instruction-emitting inline asm
+  remains in the hand-written thread/copy helpers and the PS1 hardware/ABI
+  helpers in `include/psx/`.
   Library algorithms stay C; each hardware instruction or register constraint
   must have a measured PS1 dependency or byte-exact ABI reason.
 - Typed access: structs and named fields, never raw offsets such as
