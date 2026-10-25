@@ -31,36 +31,28 @@ type linkPiece struct {
 	labels   []symbolSpec
 }
 
-// linkLayout is a module's pieces in address order, and the data rows that
-// no bytes piece holds (inside a function or past the file), which the link
-// binds to their absolute addresses.
+// linkLayout is a module's pieces in address order; the .rodata copies that
+// lie inside another function's (a literal several functions share, which
+// each object carries); and the data rows that no bytes piece holds (inside a
+// function or past the file), which the link binds to their absolute
+// addresses.
 type linkLayout struct {
 	pieces   []linkPiece
+	shadows  []linkPiece
 	absolute []symbolSpec
 }
 
 // linkUnsupported names what keeps a module out of the whole-module link
-// until the per-object renames (overrides, a source compiled at several
-// entries, `source_symbol`) and the hand-written and `$gp` cases are linked.
+// until the hand-written and `$gp` cases are linked.
 func linkUnsupported(m *moduleSpec) string {
-	if len(m.Overrides) > 0 {
-		return fmt.Sprintf("%d per-function overrides", len(m.Overrides))
-	}
-	sources := map[string]bool{}
 	for index := range m.Functions {
 		f := &m.Functions[index]
-		switch {
-		case f.SourceSymbol != "":
-			return f.Name + " binds a shared source by source_symbol"
-		case f.Asm != "":
+		if f.Asm != "" {
 			return f.Name + " is hand-written assembly"
-		case sources[m.sourceOf(f)]:
-			return m.sourceOf(f) + " is compiled at several entries"
 		}
 		if profile, ok := compilerProfileNamed(m.profileOf(f)); ok && profile.smallDataLimit != 0 {
 			return f.Name + " uses $gp-relative small data"
 		}
-		sources[m.sourceOf(f)] = true
 	}
 	return ""
 }
@@ -76,11 +68,23 @@ func moduleLinkLayout(m *moduleSpec) (linkLayout, error) {
 			pieces = append(pieces, linkPiece{addr: rodata.Addr, size: rodata.Size, kind: "rodata", function: f})
 		}
 	}
-	sort.Slice(pieces, func(a, b int) bool { return pieces[a].addr < pieces[b].addr })
+	// The largest of the ranges that start together comes first, so a shared
+	// literal's other copies fall inside it.
+	sort.Slice(pieces, func(a, b int) bool {
+		if pieces[a].addr != pieces[b].addr {
+			return pieces[a].addr < pieces[b].addr
+		}
+		return pieces[a].size > pieces[b].size
+	})
 	var layout linkLayout
 	cursor, end := m.Load, uint32(m.end())
 	for _, piece := range pieces {
 		if piece.addr < cursor {
+			last := layout.pieces[len(layout.pieces)-1]
+			if piece.kind == "rodata" && last.kind == "rodata" && piece.addr+uint32(piece.size) <= last.addr+uint32(last.size) {
+				layout.shadows = append(layout.shadows, piece)
+				continue
+			}
 			return layout, fmt.Errorf("%s: %s %s at 0x%08x overlaps the range before it", m.ID, piece.function.Name, piece.kind, piece.addr)
 		}
 		if piece.addr > cursor {
@@ -112,6 +116,90 @@ func moduleLinkLayout(m *moduleSpec) (linkLayout, error) {
 
 func linkSectionName(piece linkPiece) string {
 	return fmt.Sprintf(".%s_%08x", piece.kind, piece.addr)
+}
+
+func linkShadowName(piece linkPiece) string {
+	return fmt.Sprintf(".shadow_%08x_%s", piece.addr, piece.function.Name)
+}
+
+// linkObjectRenames lists, per function, the symbols its object takes under
+// other names in the module link: the definition of a source compiled for
+// several entries takes the row's name, and each override names a symbol the
+// module resolves to the override's address. An override at an address no
+// name resolves to gets a D_<address> label when the address lies in the
+// module's bytes (it then moves with them); anywhere else the D_ name is an
+// absolute binding, returned with its address.
+func linkObjectRenames(resolver symbolResolver, m *moduleSpec, layout *linkLayout) (map[string]map[string]string, map[string]uint32, error) {
+	named := map[uint32][]string{}
+	addNames := func(names map[string]uint32, keep func(string, uint32) bool) {
+		var sorted []string
+		for name, addr := range names {
+			if keep(name, addr) {
+				sorted = append(sorted, name)
+			}
+		}
+		sort.Strings(sorted)
+		for _, name := range sorted {
+			named[names[name]] = append(named[names[name]], name)
+		}
+	}
+	addNames(resolver.own[m.ID], func(string, uint32) bool { return true })
+	for _, module := range append(append([]string(nil), m.Links...), mainModuleID) {
+		addNames(resolver.exported[module], func(name string, addr uint32) bool {
+			at, ok := resolver.resolve(m, name)
+			return ok && at == addr
+		})
+	}
+	generated := map[uint32]string{}
+	absolute := map[string]uint32{}
+	targetOf := func(addr uint32) string {
+		if names := named[addr]; len(names) > 0 {
+			return names[0]
+		}
+		if name, ok := generated[addr]; ok {
+			return name
+		}
+		name := fmt.Sprintf("D_%08x", addr)
+		generated[addr] = name
+		for index := range layout.pieces {
+			piece := &layout.pieces[index]
+			if piece.kind == "bytes" && piece.addr <= addr && addr < piece.addr+uint32(piece.size) {
+				piece.labels = append(piece.labels, symbolSpec{Addr: addr, Name: name})
+				sort.SliceStable(piece.labels, func(a, b int) bool { return piece.labels[a].Addr < piece.labels[b].Addr })
+				return name
+			}
+		}
+		absolute[name] = addr
+		return name
+	}
+	renames := map[string]map[string]string{}
+	for index := range m.Functions {
+		f := &m.Functions[index]
+		names := map[string]string{}
+		if symbol := f.sourceSymbol(); symbol != f.Name {
+			names[symbol] = f.Name
+		}
+		renames[f.Name] = names
+	}
+	for _, override := range m.Overrides {
+		names := renames[override.Function]
+		if names == nil {
+			return nil, nil, fmt.Errorf("%s: override of %s names no function %s", m.ID, override.Name, override.Function)
+		}
+		if at, ok := resolver.resolve(m, override.Name); ok && at == override.Addr {
+			continue
+		}
+		if _, defined := names[override.Name]; defined {
+			// A body that names itself by its shared definition already
+			// reaches its own entry through the rename.
+			if f := m.function(override.Function); f != nil && f.Addr == override.Addr {
+				continue
+			}
+			return nil, nil, fmt.Errorf("%s: %s overrides %s, the name its own definition takes", m.ID, override.Function, override.Name)
+		}
+		names[override.Name] = targetOf(override.Addr)
+	}
+	return renames, absolute, nil
 }
 
 // linkDataAssembly writes every bytes piece as its own section: the original
@@ -172,6 +260,11 @@ func linkScript(layout linkLayout, objects map[string]string, dataObject string,
 		default:
 			fmt.Fprintf(&script, "  %s 0x%08x : SUBALIGN(1) { \"%s\"(%s) }\n", linkSectionName(piece), piece.addr, dataObject, linkSectionName(piece))
 		}
+	}
+	// Another copy of a shared literal keeps its address for its object's
+	// references and loads nothing: the loaded copy holds the same bytes.
+	for _, piece := range layout.shadows {
+		fmt.Fprintf(&script, "  %s 0x%08x (NOLOAD) : SUBALIGN(4) { \"%s\"(.rodata .rdata) }\n", linkShadowName(piece), piece.addr, objects[piece.function.Name])
 	}
 	// Every object's .data, .bss and small-data sections are empty
 	// (objectHoldsOnlyCode), as is the data object's .text; the debug
@@ -288,8 +381,31 @@ func (p project) linkModule(resolver symbolResolver, m *moduleSpec) (linkResult,
 	}
 
 	outDir := filepath.Join(p.root, "build", "link", m.ID)
-	if err := os.MkdirAll(outDir, 0o755); err != nil {
+	if err := os.MkdirAll(filepath.Join(outDir, "objects"), 0o755); err != nil {
 		return result, err
+	}
+	renames, absolute, err := linkObjectRenames(resolver, m, &layout)
+	if err != nil {
+		return result, err
+	}
+	for name, object := range objects {
+		if err := objectHoldsOnlyCode(name, object); err != nil {
+			return result, err
+		}
+		renamed := filepath.Join(outDir, "objects", name+".o")
+		arguments := []string{}
+		olds := make([]string, 0, len(renames[name]))
+		for old := range renames[name] {
+			olds = append(olds, old)
+		}
+		sort.Strings(olds)
+		for _, old := range olds {
+			arguments = append(arguments, "--redefine-sym", old+"="+renames[name][old])
+		}
+		if err := runInDir(p.root, append(append([]string{"mipsel-linux-gnu-objcopy"}, arguments...), object, renamed)...); err != nil {
+			return result, err
+		}
+		objects[name] = renamed
 	}
 	dataSource := filepath.Join(outDir, "data.s")
 	dataObject := filepath.Join(outDir, "data.o")
@@ -309,10 +425,10 @@ func (p project) linkModule(resolver symbolResolver, m *moduleSpec) (linkResult,
 		}
 	}
 	bindings := map[string]uint32{}
-	for name, object := range objects {
-		if err := objectHoldsOnlyCode(name, object); err != nil {
-			return result, err
-		}
+	for name, addr := range absolute {
+		bindings[name] = addr
+	}
+	for _, object := range objects {
 		undefined, err := undefinedObjectIdentifiers(object)
 		if err != nil {
 			return result, err
@@ -423,6 +539,13 @@ func (p project) checkLinkedSizes(elfPath string, layout linkLayout) error {
 				what = piece.function.Name + " " + piece.kind
 			}
 			return fmt.Errorf("%s is %d bytes, the target %d", what, section.Size, piece.size)
+		}
+	}
+	// A shadow loads nothing; `make check` compares each copy's bytes.
+	for _, piece := range layout.shadows {
+		section := linked.Section(linkShadowName(piece))
+		if section == nil || int(section.Size) != piece.size {
+			return fmt.Errorf("%s's copy of the literal at 0x%08x is not %d bytes", piece.function.Name, piece.addr, piece.size)
 		}
 	}
 	return nil

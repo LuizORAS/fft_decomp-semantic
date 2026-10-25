@@ -92,15 +92,8 @@ func TestLinkUnsupportedNamesTheBlocker(t *testing.T) {
 		t.Fatalf("plain module: %q", reason)
 	}
 	cases := map[string]func(m *moduleSpec){
-		"per-function overrides": func(m *moduleSpec) {
-			m.Overrides = []overrideSpec{{Function: "test_first", Name: "g", Addr: 0x80100000}}
-		},
-		"by source_symbol": func(m *moduleSpec) { m.Functions[1].SourceSymbol = "shared" },
-		"hand-written":     func(m *moduleSpec) { m.Functions[0].Asm = "replaces $sp" },
-		"several entries": func(m *moduleSpec) {
-			m.Functions[1].Source = "src/event/test_first.c"
-		},
-		"small data": func(m *moduleSpec) { m.Functions[0].Profile = "gcc-2.6.3_O2_G8_aspsx-2.34" },
+		"hand-written": func(m *moduleSpec) { m.Functions[0].Asm = "replaces $sp" },
+		"small data":   func(m *moduleSpec) { m.Functions[0].Profile = "gcc-2.6.3_O2_G8_aspsx-2.34" },
 	}
 	for want, change := range cases {
 		m := linkTestModule()
@@ -108,6 +101,72 @@ func TestLinkUnsupportedNamesTheBlocker(t *testing.T) {
 		if reason := linkUnsupported(m); !strings.Contains(reason, want) {
 			t.Fatalf("%s: got %q", want, reason)
 		}
+	}
+}
+
+func TestModuleLinkLayoutShadowsSharedLiterals(t *testing.T) {
+	m := linkTestModule()
+	m.Functions[0].Rodata = []rodataSpec{{Addr: 0x80100020, Size: 2}}
+	m.Functions[1].Rodata = []rodataSpec{{Addr: 0x80100020, Size: 4}}
+	layout, err := moduleLinkLayout(m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(layout.shadows) != 1 || linkShadowName(layout.shadows[0]) != ".shadow_80100020_test_first" {
+		t.Fatalf("shadows %v", layout.shadows)
+	}
+	script := linkScript(layout, map[string]string{"test_first": "/w/first.o", "test_second": "/w/second.o"}, "/w/data.o", nil)
+	if !strings.Contains(script, "  .rodata_80100020 0x80100020 : SUBALIGN(4) { \"/w/second.o\"(.rodata .rdata) }\n") ||
+		!strings.Contains(script, "  .shadow_80100020_test_first 0x80100020 (NOLOAD) : SUBALIGN(4) { \"/w/first.o\"(.rodata .rdata) }\n") {
+		t.Fatalf("script:\n%s", script)
+	}
+	m.Functions[0].Rodata = []rodataSpec{{Addr: 0x80100022, Size: 4}}
+	if _, err := moduleLinkLayout(m); err == nil || !strings.Contains(err.Error(), "overlaps") {
+		t.Fatalf("a literal that runs past the other: %v", err)
+	}
+}
+
+func TestLinkObjectRenamesBindOverridesSymbolically(t *testing.T) {
+	m := linkTestModule()
+	m.Functions[1].Source, m.Functions[1].SourceSymbol = "src/shared/test/shared.c", "shared_entry"
+	m.Overrides = []overrideSpec{
+		{Function: "test_first", Name: "g_test_a", Addr: 0x80100000},       // module-wide already
+		{Function: "test_first", Name: "shared_entry", Addr: 0x80100010},   // the module's name there
+		{Function: "test_second", Name: "battle_helper", Addr: 0x80070000}, // a linked module's
+		{Function: "test_second", Name: "g_unnamed", Addr: 0x80100038},     // inside the bytes
+		{Function: "test_second", Name: "g_far", Addr: 0x80123400},         // nowhere named
+	}
+	m.Links = []string{"battle"}
+	config := &projectConfig{Modules: []*moduleSpec{m,
+		{ID: "battle", Functions: []functionSpec{{Addr: 0x80070000, Name: "battle_helper_entry"}}},
+		{ID: mainModuleID}}}
+	resolver := newSymbolResolver(config)
+	layout, err := moduleLinkLayout(m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	renames, absolute, err := linkObjectRenames(resolver, m, &layout)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := renames["test_first"]; len(got) != 1 || got["shared_entry"] != "test_second" {
+		t.Fatalf("test_first renames %v", got)
+	}
+	want := map[string]string{"shared_entry": "test_second", "battle_helper": "battle_helper_entry", "g_unnamed": "D_80100038", "g_far": "D_80123400"}
+	if got := renames["test_second"]; len(got) != len(want) {
+		t.Fatalf("test_second renames %v", got)
+	}
+	for old, new := range want {
+		if renames["test_second"][old] != new {
+			t.Fatalf("test_second renames %v", renames["test_second"])
+		}
+	}
+	if len(absolute) != 1 || absolute["D_80123400"] != 0x80123400 {
+		t.Fatalf("absolute %v", absolute)
+	}
+	tail := layout.pieces[len(layout.pieces)-1]
+	if len(tail.labels) != 2 || tail.labels[0].Name != "g_test_tail" || tail.labels[1].Name != "D_80100038" {
+		t.Fatalf("tail labels %v", tail.labels)
 	}
 }
 
