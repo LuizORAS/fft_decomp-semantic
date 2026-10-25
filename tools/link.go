@@ -42,23 +42,14 @@ type linkLayout struct {
 	absolute []symbolSpec
 }
 
-// linkUnsupported names what keeps a module out of the whole-module link
-// until the hand-written and `$gp` cases are linked.
-func linkUnsupported(m *moduleSpec) string {
-	for index := range m.Functions {
-		f := &m.Functions[index]
-		if f.Asm != "" {
-			return f.Name + " is hand-written assembly"
-		}
-		if profile, ok := compilerProfileNamed(m.profileOf(f)); ok && profile.smallDataLimit != 0 {
-			return f.Name + " uses $gp-relative small data"
-		}
-	}
-	return ""
-}
+// The resident executable starts with its PS-X EXE header (psxEXEHeaderSize
+// bytes); the link writes the fields that follow from the layout (the entry
+// point, the text address and size) and keeps the rest of the original header.
+const mainEntryPoint = "__SN_ENTRY_POINT"
 
 // moduleLinkLayout splits [load, load+size) into the functions' .text and
-// .rodata ranges and the bytes between them.
+// .rodata ranges and the bytes between them; MAIN's header is a piece of its
+// own.
 func moduleLinkLayout(m *moduleSpec) (linkLayout, error) {
 	var pieces []linkPiece
 	for index := range m.Functions {
@@ -98,6 +89,19 @@ func moduleLinkLayout(m *moduleSpec) (linkLayout, error) {
 	}
 	if cursor < end {
 		layout.pieces = append(layout.pieces, linkPiece{addr: cursor, size: int(end - cursor), kind: "bytes"})
+	}
+	if m.ID == mainModuleID {
+		first := layout.pieces[0]
+		if first.kind != "bytes" || first.addr != m.Load || first.size < psxEXEHeaderSize {
+			return layout, fmt.Errorf("%s: no room for the %d-byte PS-X EXE header before its first function", m.ID, psxEXEHeaderSize)
+		}
+		header := linkPiece{addr: m.Load, size: psxEXEHeaderSize, kind: "header"}
+		if first.size == psxEXEHeaderSize {
+			layout.pieces[0] = header
+		} else {
+			rest := linkPiece{addr: m.Load + psxEXEHeaderSize, size: first.size - psxEXEHeaderSize, kind: "bytes"}
+			layout.pieces = append([]linkPiece{header, rest}, layout.pieces[1:]...)
+		}
 	}
 	data := append([]symbolSpec(nil), m.Data...)
 	sort.Slice(data, func(a, b int) bool { return data[a].Addr < data[b].Addr })
@@ -209,7 +213,7 @@ func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 	var out strings.Builder
 	fmt.Fprintf(&out, "# %s: the bytes between functions, in address order.\n", m.ID)
 	for _, piece := range layout.pieces {
-		if piece.kind != "bytes" {
+		if piece.kind != "bytes" && piece.kind != "header" {
 			continue
 		}
 		fmt.Fprintf(&out, "\t.section %s, \"a\", @progbits\n", linkSectionName(piece))
@@ -225,6 +229,18 @@ func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 			}
 			at = until
 		}
+		if piece.kind == "header" {
+			// "PS-X EXE", the entry point at 0x10 and the text address and
+			// size at 0x18; the other fields and the region text are original.
+			fmt.Fprintf(&out, "\t.ascii \"PS-X EXE\"\n")
+			at += 8
+			emit(piece.addr + 0x10)
+			fmt.Fprintf(&out, "\t.word %s\n", mainEntryPoint)
+			at += 4
+			emit(piece.addr + 0x18)
+			fmt.Fprintf(&out, "\t.word __exe_text_start\n\t.word __exe_text_size\n")
+			at += 8
+		}
 		for _, label := range piece.labels {
 			emit(label.Addr)
 			fmt.Fprintf(&out, "\t.globl %s\n%s:\n", label.Name, label.Name)
@@ -237,9 +253,13 @@ func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 // linkScript places each piece at its address, binds the names the objects
 // leave undefined that this module cannot define (its links, MAIN, imports,
 // data rows outside the bytes pieces) and asserts every function and label.
-func linkScript(layout linkLayout, objects map[string]string, dataObject string, bindings map[string]uint32) string {
+// A module with `$gp`-relative code sets `_gp` to the label gp names.
+func linkScript(layout linkLayout, objects map[string]string, dataObject string, bindings map[string]uint32, gp string) string {
 	var script strings.Builder
 	script.WriteString("OUTPUT_ARCH(mips)\n")
+	if gp != "" {
+		fmt.Fprintf(&script, "_gp = %s;\n", gp)
+	}
 	names := make([]string, 0, len(bindings))
 	for name := range bindings {
 		names = append(names, name)
@@ -270,6 +290,11 @@ func linkScript(layout linkLayout, objects map[string]string, dataObject string,
 	// (objectHoldsOnlyCode), as is the data object's .text; the debug
 	// sections never load.
 	fmt.Fprintf(&script, "  /DISCARD/ : { \"%s\"(.text) *(.data) *(.bss) *(.sdata) *(.sbss) *(.reginfo) *(.pdr) *(.comment) *(.gnu.attributes) *(.MIPS.abiflags) *(.debug*) *(.mdebug*) }\n}\n", dataObject)
+	if header := layout.pieces[0]; header.kind == "header" && len(layout.pieces) > 1 {
+		last := layout.pieces[len(layout.pieces)-1]
+		fmt.Fprintf(&script, "__exe_text_start = ADDR(%s);\n", linkSectionName(layout.pieces[1]))
+		fmt.Fprintf(&script, "__exe_text_size = ADDR(%s) + SIZEOF(%s) - __exe_text_start;\n", linkSectionName(last), linkSectionName(last))
+	}
 	for _, piece := range layout.pieces {
 		if piece.kind == "text" {
 			fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"%s must begin at 0x%08x\");\n", piece.function.Name, piece.addr, piece.function.Name, piece.addr)
@@ -440,7 +465,11 @@ func (p project) linkModule(resolver symbolResolver, m *moduleSpec) (linkResult,
 		}
 	}
 	script := filepath.Join(outDir, "link.ld")
-	if err := atomicWrite(script, []byte(linkScript(layout, objects, dataObject, bindings))); err != nil {
+	gp, err := linkGlobalPointer(m, layout)
+	if err != nil {
+		return result, err
+	}
+	if err := atomicWrite(script, []byte(linkScript(layout, objects, dataObject, bindings, gp))); err != nil {
 		return result, err
 	}
 	elfPath := filepath.Join(outDir, m.ID+".elf")
@@ -487,6 +516,35 @@ func (p project) linkModule(resolver symbolResolver, m *moduleSpec) (linkResult,
 	}
 	result.checked = fmt.Sprintf("%d function hashes (no disc: data zeroed)", checked)
 	return result, nil
+}
+
+// linkGlobalPointer names the data label `_gp` takes in a module whose code
+// addresses small data relative to `$gp`: the one at the profile's global
+// pointer (MAIN's g_psyq_crt_saved_ra, which the C start-up loads). It is ""
+// when no function uses such a profile.
+func linkGlobalPointer(m *moduleSpec, layout linkLayout) (string, error) {
+	var gp uint32
+	for index := range m.Functions {
+		profile, ok := compilerProfileNamed(m.profileOf(&m.Functions[index]))
+		if !ok || profile.smallDataLimit == 0 {
+			continue
+		}
+		if gp != 0 && gp != profile.globalPointer {
+			return "", fmt.Errorf("%s: its functions use two global pointers, 0x%08x and 0x%08x", m.ID, gp, profile.globalPointer)
+		}
+		gp = profile.globalPointer
+	}
+	if gp == 0 {
+		return "", nil
+	}
+	for _, piece := range layout.pieces {
+		for _, label := range piece.labels {
+			if label.Addr == gp {
+				return label.Name, nil
+			}
+		}
+	}
+	return "", fmt.Errorf("%s: no data row in its bytes names the global pointer 0x%08x", m.ID, gp)
 }
 
 // objectHoldsOnlyCode fails when a function's object defines data of its own
@@ -571,13 +629,8 @@ func (p project) linkCommand(args []string) error {
 		}
 	}
 	resolver := newSymbolResolver(config)
-	linked, skipped, failed := 0, 0, 0
+	linked, failed := 0, 0
 	for _, m := range modules {
-		if reason := linkUnsupported(m); reason != "" {
-			skipped++
-			fmt.Fprintf(p.stdout(), "skip %s: %s\n", m.ID, reason)
-			continue
-		}
 		result, err := p.linkModule(resolver, m)
 		if err != nil {
 			failed++
@@ -587,7 +640,7 @@ func (p project) linkCommand(args []string) error {
 		linked++
 		fmt.Fprintf(p.stdout(), "ok   %s (%d bytes, %s)\n", m.ID, m.Size, result.checked)
 	}
-	fmt.Fprintf(p.stdout(), "link: %d of %d modules linked whole and identical, %d not yet supported\n", linked, linked+failed, skipped)
+	fmt.Fprintf(p.stdout(), "link: %d of %d modules linked whole and identical\n", linked, linked+failed)
 	if failed > 0 {
 		return fmt.Errorf("link: %d modules failed", failed)
 	}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/sha256"
+	"encoding/binary"
 	"encoding/hex"
 	"os"
 	"path/filepath"
@@ -72,7 +73,7 @@ func TestLinkDataAssemblyAndScript(t *testing.T) {
 		t.Fatalf("zeroed data assembly:\n%s", zeroed)
 	}
 	objects := map[string]string{"test_first": "/w/first.o", "test_second": "/w/second.o"}
-	script := linkScript(layout, objects, "/w/data.o", map[string]uint32{"g_test_inside": 0x8010000c, "battle_x": 0x80070000})
+	script := linkScript(layout, objects, "/w/data.o", map[string]uint32{"g_test_inside": 0x8010000c, "battle_x": 0x80070000}, "")
 	for _, line := range []string{
 		"PROVIDE(battle_x = 0x80070000);\nPROVIDE(g_test_inside = 0x8010000c);\n",
 		"  .text_80100008 0x80100008 : SUBALIGN(4) { \"/w/first.o\"(.text) }\n",
@@ -87,19 +88,50 @@ func TestLinkDataAssemblyAndScript(t *testing.T) {
 	}
 }
 
-func TestLinkUnsupportedNamesTheBlocker(t *testing.T) {
-	if reason := linkUnsupported(linkTestModule()); reason != "" {
-		t.Fatalf("plain module: %q", reason)
+func TestMainLinkWritesTheEXEHeaderAndGlobalPointer(t *testing.T) {
+	m := &moduleSpec{
+		ID: mainModuleID, File: "SCUS_942.21", Load: 0x8000f800, Size: 0x1000, SourceDir: "src/main",
+		Profile: "gcc-2.6.3_O2_aspsx-2.34",
+		Functions: []functionSpec{
+			{Addr: 0x80010000, Size: 8, Name: "__SN_ENTRY_POINT"},
+			{Addr: 0x80010010, Size: 8, Name: "main_heap_alloc", Profile: "gcc-2.6.3_O2_G8_aspsx-2.34"},
+		},
+		Data: []symbolSpec{{Addr: 0x800105bc, Name: "g_saved_gp_slot"}},
 	}
-	cases := map[string]func(m *moduleSpec){
-		"hand-written": func(m *moduleSpec) { m.Functions[0].Asm = "replaces $sp" },
-		"small data":   func(m *moduleSpec) { m.Functions[0].Profile = "gcc-2.6.3_O2_G8_aspsx-2.34" },
+	layout, err := moduleLinkLayout(m)
+	if err != nil {
+		t.Fatal(err)
 	}
-	for want, change := range cases {
-		m := linkTestModule()
-		change(m)
-		if reason := linkUnsupported(m); !strings.Contains(reason, want) {
-			t.Fatalf("%s: got %q", want, reason)
+	if layout.pieces[0].kind != "header" || layout.pieces[0].size != psxEXEHeaderSize || layout.pieces[1].addr != 0x80010000 {
+		t.Fatalf("pieces %+v", layout.pieces[:2])
+	}
+	data := linkDataAssembly(m, layout, "/disc/SCUS_942.21")
+	want := "\t.section .header_8000f800, \"a\", @progbits\n\t.ascii \"PS-X EXE\"\n\t.incbin \"/disc/SCUS_942.21\", 8, 8\n" +
+		"\t.word __SN_ENTRY_POINT\n\t.incbin \"/disc/SCUS_942.21\", 20, 4\n\t.word __exe_text_start\n\t.word __exe_text_size\n" +
+		"\t.incbin \"/disc/SCUS_942.21\", 32, 2016\n"
+	if !strings.Contains(data, want) {
+		t.Fatalf("header:\n%s", data)
+	}
+	if _, err := linkGlobalPointer(m, layout); err == nil || !strings.Contains(err.Error(), "0x800329bc") {
+		t.Fatalf("no label at the global pointer: %v", err)
+	}
+	m.Data = append(m.Data, symbolSpec{Addr: 0x800329bc, Name: "g_psyq_crt_saved_ra"})
+	m.Size = 0x24000
+	if layout, err = moduleLinkLayout(m); err != nil {
+		t.Fatal(err)
+	}
+	gp, err := linkGlobalPointer(m, layout)
+	if err != nil || gp != "g_psyq_crt_saved_ra" {
+		t.Fatalf("global pointer %q, %v", gp, err)
+	}
+	script := linkScript(layout, map[string]string{"__SN_ENTRY_POINT": "/w/a.o", "main_heap_alloc": "/w/b.o"}, "/w/data.o", nil, gp)
+	for _, line := range []string{
+		"OUTPUT_ARCH(mips)\n_gp = g_psyq_crt_saved_ra;\n",
+		"__exe_text_start = ADDR(.text_80010000);\n",
+		"__exe_text_size = ADDR(.bytes_80010018) + SIZEOF(.bytes_80010018) - __exe_text_start;\n",
+	} {
+		if !strings.Contains(script, line) {
+			t.Fatalf("script lacks %q:\n%s", line, script)
 		}
 	}
 }
@@ -115,7 +147,7 @@ func TestModuleLinkLayoutShadowsSharedLiterals(t *testing.T) {
 	if len(layout.shadows) != 1 || linkShadowName(layout.shadows[0]) != ".shadow_80100020_test_first" {
 		t.Fatalf("shadows %v", layout.shadows)
 	}
-	script := linkScript(layout, map[string]string{"test_first": "/w/first.o", "test_second": "/w/second.o"}, "/w/data.o", nil)
+	script := linkScript(layout, map[string]string{"test_first": "/w/first.o", "test_second": "/w/second.o"}, "/w/data.o", nil, "")
 	if !strings.Contains(script, "  .rodata_80100020 0x80100020 : SUBALIGN(4) { \"/w/second.o\"(.rodata .rdata) }\n") ||
 		!strings.Contains(script, "  .shadow_80100020_test_first 0x80100020 (NOLOAD) : SUBALIGN(4) { \"/w/first.o\"(.rodata .rdata) }\n") {
 		t.Fatalf("script:\n%s", script)
@@ -182,6 +214,7 @@ profile: gcc-2.6.3_O2_aspsx-2.34
 functions:
   - {addr: 0x80010000, size: 16, name: main_first, hash: 0123456789abcdef}
   - {addr: 0x80010100, size: 32, name: main_second, hash: 123456789012345a}
+  - {addr: 0x80010200, size: 8, name: __SN_ENTRY_POINT, hash: 23456789012345ab}
 
 data:
   - {addr: 0x80010080, name: g_main_value}
@@ -197,10 +230,11 @@ func TestLinkModuleRebuildsTheOriginalImage(t *testing.T) {
 	t.Setenv("TOOLS_CACHE", "0")
 	t.Setenv("TOOLS_WORK_DIR", t.TempDir())
 	p := testProject(t, map[string]string{
-		"target/main.yaml":       testLinkMainYAML,
-		"src/main/main_first.c":  "#include \"fft/main.h\"\nint main_first(void) { return g_main_value; }\n",
-		"src/main/main_second.c": "#include \"fft/main.h\"\nint main_second(void) { return main_first() + 1; }\n",
-		"include/fft/main.h":     "extern int g_main_value;\nint main_first(void);\n",
+		"target/main.yaml":            testLinkMainYAML,
+		"src/main/main_first.c":       "#include \"fft/main.h\"\nint main_first(void) { return g_main_value; }\n",
+		"src/main/main_second.c":      "#include \"fft/main.h\"\nint main_second(void) { return main_first() + 1; }\n",
+		"include/fft/main.h":          "extern int g_main_value;\nint main_first(void);\n",
+		"src/main/__SN_ENTRY_POINT.c": "void __SN_ENTRY_POINT(void) {}\n",
 	})
 	config, err := p.loadProjectConfig()
 	if err != nil {
@@ -221,6 +255,11 @@ func TestLinkModuleRebuildsTheOriginalImage(t *testing.T) {
 		f.Size, f.Hash = len(sections[".text"]), shortHash(sections[".text"])
 		copy(image[m.offset(f.Addr):], sections[".text"])
 	}
+	// The PS-X EXE fields the link writes: the entry point and the text.
+	copy(image, "PS-X EXE")
+	binary.LittleEndian.PutUint32(image[0x10:], 0x80010200)
+	binary.LittleEndian.PutUint32(image[0x18:], 0x80010000)
+	binary.LittleEndian.PutUint32(image[0x1c:], uint32(m.Size-psxEXEHeaderSize))
 	path := filepath.Join(p.filesRoot, m.File)
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		t.Fatal(err)
@@ -247,7 +286,7 @@ func TestLinkModuleRebuildsTheOriginalImage(t *testing.T) {
 	if err := os.Remove(path); err != nil {
 		t.Fatal(err)
 	}
-	if result, err = p.linkModule(resolver, m); err != nil || result.identical || !strings.Contains(result.checked, "2 function hashes") {
+	if result, err = p.linkModule(resolver, m); err != nil || result.identical || !strings.Contains(result.checked, "3 function hashes") {
 		t.Fatalf("without the disc: %+v, %v", result, err)
 	}
 	m.Functions[1].Hash = "0000000000000000"
