@@ -97,7 +97,7 @@ extern s8 g_equip_equip_mode_initialized;
 extern u8 g_equip_equipment_panel_params[];
 extern menu_instruction_t g_equip_equipment_render_commands;
 
-typedef enum equip_slot {
+typedef enum equip_unit_equipment_slot {
     EQUIP_SLOT_RIGHT_HAND = 0,
     EQUIP_SLOT_LEFT_HAND = 1,
     EQUIP_SLOT_HEAD = 2,
@@ -107,7 +107,7 @@ typedef enum equip_slot {
     EQUIP_SLOT_COUNT = 5,
 } equip_unit_equipment_slot_e;
 
-typedef enum equip_slot_item_result {
+typedef enum equip_item_slot_result {
     EQUIP_SLOT_ITEM_CURRENT_LOCKED = -2,
     EQUIP_SLOT_ITEM_CANNOT_EQUIP = -1,
     EQUIP_SLOT_ITEM_INCOMPATIBLE_PAIR = 0,

@@ -6,7 +6,7 @@
  *
  * Mode bits 0x1e0 pick the source: effect target `target` (0x0, which also
  * saves the current camera position to g_battle_effect_camera_position_start), the given vector (0x40),
- * the map centre (0x80), the current camera (0xc0), the saved position at
+ * the map center (0x80), the current camera (0xc0), the saved position at
  * g_battle_effect_camera_position_saved (0x100), the caster entry (0x140), the average of all unit
  * targets (0x180) or the tile at g_battle_effect_target_tile (0x1c0). All but 0x40 add offset
  * when present. Bits 0x1e00 are kept in g_battle_effect_camera_position_mode. */

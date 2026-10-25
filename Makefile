@@ -106,6 +106,10 @@ check-config: image ## Validate project metadata (target/, sources, declarations
 config-fmt: image ## Rewrite target/*.yaml in canonical form
 	@$(TOOLS) config-fmt
 
+.PHONY: decl-check
+decl-check: image ## Fail on calls to undeclared functions (cc1 -Wimplicit, syntax only)
+	@$(TOOLS) decl-check
+
 .PHONY: declarations
 declarations: image ## Report conflicting file-scope declarations (ARGS="...")
 	@$(TOOLS) declarations $(ARGS)
@@ -113,6 +117,18 @@ declarations: image ## Report conflicting file-scope declarations (ARGS="...")
 .PHONY: share-audit
 share-audit: image ## Report shared C implementation candidates as JSON (MODULE=x, ARGS="...")
 	@$(TOOLS) share-audit $(if $(strip $(MODULE)),--module="$(MODULE)") $(ARGS)
+
+.PHONY: twins
+twins: extract ## Group byte-equivalent functions across modules under consistent renames into build/analysis/twins (MODULE=x, ARGS="...")
+	@$(TOOLS) twins $(if $(strip $(MODULE)),--module="$(MODULE)") $(ARGS)
+
+.PHONY: trial
+trial: image ## Compile a candidate source at an entry and report the match or first difference (MODULE=x ENTRY=f SOURCE=path ARGS="--subst OLD=NEW", or BATCH=build/x.yaml, or TWINS=t0001)
+	@$(TOOLS) trial $(if $(strip $(BATCH)),--batch="$(BATCH)") $(if $(strip $(TWINS)),--twins="$(TWINS)") $(if $(strip $(MODULE)),--module="$(MODULE)") $(if $(strip $(ENTRY)),--entry="$(ENTRY)") $(if $(strip $(SOURCE)),--source="$(SOURCE)") $(ARGS)
+
+.PHONY: unit-check
+unit-check: image ## Rebuild each original translation unit from its members' sources and compare (MODULE=x UNIT=name)
+	@$(TOOLS) unit-check $(if $(strip $(MODULE)),--module="$(MODULE)") $(if $(strip $(UNIT)),--unit="$(UNIT)")
 
 .PHONY: symbols
 symbols: image ## Rename a symbol: ACTION=rename-function|rename-global ARGS="--old A --new B"
@@ -158,7 +174,7 @@ warnings: image ## List cc1 -Wall warnings per function in build/warnings (MODUL
 	@$(TOOLS) warnings $(if $(strip $(MODULE)),--module="$(MODULE)")
 
 .PHONY: verify
-verify: fmt-check check-config check ## Run the per-change checks: fmt-check, check-config, check (MODULE=x)
+verify: fmt-check check-config decl-check check ## Run the per-change checks: fmt-check, check-config, decl-check, check (MODULE=x)
 
 .PHONY: test
 test: image ## Vet and test the Go tooling

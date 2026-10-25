@@ -385,7 +385,7 @@ typedef struct open_prologue_entry {
     u32 header;
     u8 line_data[0]; /* variable number of encoded open_gfx_transition_line_t records */
 } open_prologue_entry_t;
-typedef char open_gfx_transition_entry_header_size_must_be_4[sizeof(open_prologue_entry_t) == 4 ? 1 : -1];
+typedef char open_prologue_entry_size_must_be_4[sizeof(open_prologue_entry_t) == 4 ? 1 : -1];
 
 enum {
     OPEN_GFX_TRANSITION_IMAGE_OPERATION_MASK = 0xf0,
@@ -425,7 +425,7 @@ typedef struct open_prologue {
     /* 0x30 */ open_prologue_entry_t** entry_table;
     /* 0x34 */ open_prologue_entry_t* entry;
 } open_prologue_t;
-typedef char open_gfx_transition_size_must_be_56[(sizeof(open_prologue_t) == 56) ? 1 : -1];
+typedef char open_prologue_size_must_be_56[(sizeof(open_prologue_t) == 56) ? 1 : -1];
 
 extern u16* g_open_prologue_crossfade_destination;
 extern u16* g_open_prologue_crossfade_file_pixels;

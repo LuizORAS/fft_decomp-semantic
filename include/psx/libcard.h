@@ -1,6 +1,8 @@
 #ifndef PSX_LIBCARD_H
 #define PSX_LIBCARD_H
 
+/* Psy-Q LIBCARD: memory card wrappers and BIOS patches. */
+
 #include "psx/bios.h"
 #include "psx/libapi.h"
 

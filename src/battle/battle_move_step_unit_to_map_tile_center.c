@@ -1,10 +1,10 @@
 #include "fft/battle_map.h"
 #include "fft/battle_move.h"
 
-/* Move a unit to the centre of its map tile at a constant speed over distortion_timer frames
+/* Move a unit to the center of its map tile at a constant speed over distortion_timer frames
  * (distortions 5 and 9).
  *
- * Phase 0 splits the remaining distance to the tile centre into equal Q12 steps; phase 1 applies them
+ * Phase 0 splits the remaining distance to the tile center into equal Q12 steps; phase 1 applies them
  * (height only when allow_height_change is set) and snaps to the tile once the timer runs out. */
 void battle_move_step_unit_to_map_tile_center(battle_unit_t* unit, s32 allow_height_change) {
     SVECTOR tile_center;

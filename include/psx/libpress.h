@@ -1,6 +1,8 @@
 #ifndef PSX_LIBPRESS_H
 #define PSX_LIBPRESS_H
 
+/* Psy-Q LIBPRESS: MDEC movie decoding, linked into OPENING. */
+
 #include "psx/libetc.h"
 #include "psx/types.h"
 

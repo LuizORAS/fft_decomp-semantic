@@ -2,11 +2,11 @@
 #include "fft/battle_map.h"
 #include "psx/types.h"
 
-/* Start a unit's fade-out removal with a colour flash.
+/* Start a unit's fade-out removal with a color flash.
  *
  * The unit moves to the head of the runtime list, enters BATTLE_UNIT_FADE_OUT_FLASH, loses its shadow and its
  * float and depth offsets, and is drawn with additive blending while its palette fades by (red, green,
- * blue) from the last applied colour, `amount` at a step (battle_map_modify_palette).
+ * blue) from the last applied color, `amount` at a step (battle_map_modify_palette).
  * battle_unit_update_fade_out_removal continues from there. */
 void battle_gfx_start_unit_fade_out(s32 runtime_id, s32 amount, s16 red, s16 green, s16 blue) {
     battle_unit_t* unit;

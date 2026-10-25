@@ -1,7 +1,7 @@
 #include "fft/battle.h"
 
 /* Reset the GPU and set up both display buffers for a width x height screen with the given
- * background colour and GTE projection: the second buffer lies at y 0xf0 unless the height is
+ * background color and GTE projection: the second buffer lies at y 0xf0 unless the height is
  * 0x1e0, the draw area extends 128 pixels left of the screen, dithering is on and the automatic
  * clear off, and g_battle_deployment_clear_rect is cleared to black. Loads the debug font when
  * g_main_font_print_enabled is set. battle_state_run_battle_setup calls it with 256 x 240 and

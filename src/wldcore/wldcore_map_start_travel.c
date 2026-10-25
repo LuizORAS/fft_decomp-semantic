@@ -1,7 +1,7 @@
 #include "fft/script.h"
 #include "fft/wldcore.h"
 
-/* Start travelling from the current location to another: the map cursor's Circle, or a destination
+/* Start traveling from the current location to another: the map cursor's Circle, or a destination
  * chosen in WORLD's location list. When the current location's script starts an event now (its
  * WLDCORE_SCRIPT_ACTION_LOAD_EVENT condition) that event plays instead, through the event transition,
  * and 0 is returned. Otherwise its pending SetVar2 is applied and the best path is searched

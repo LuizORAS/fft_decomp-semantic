@@ -42,7 +42,7 @@ extern s32 g_battle_post_battle_unit_changes_active;
 
 /* BATTLE scratch at 0x801cc074, in the event-overlay area past BATTLE.BIN:
  * battle_menu_build_sprite_page lays it out as two sprite pages and the
- * scrolling ability list saves its five 16-colour CLUTs there. WORLD keeps
+ * scrolling ability list saves its five 16-color CLUTs there. WORLD keeps
  * its own g_world_menu_panel_buffer at the same address. */
 typedef union battle_menu_scratch_buffer {
     menu_sprite_page_t sprite_pages[2];
@@ -148,7 +148,7 @@ extern image_load_parameters_t g_battle_menu_icon_strip_image_params[20];
 extern u16 g_battle_menu_input_block_frames;
 extern s32 g_battle_menu_resolved_command;
 extern u8 g_battle_menu_restriction_message_ids[];
-extern s16 g_battle_menu_result; /* menu result: -4 pending, -1 cancelled */
+extern s16 g_battle_menu_result; /* menu result: -4 pending, -1 canceled */
 extern battle_ai_command_t g_battle_menu_selected_command;
 
 /* Action command staged by the battle menu and passed whole to
@@ -160,7 +160,7 @@ extern image_load_parameters_t g_battle_menu_single_icon_image_params[5];
 /* Entries 5..7 above; a separate alias preserves the original template base. */
 extern image_load_parameters_t g_battle_menu_sprite_page_image_param_bases[];
 
-extern u8 g_menu_skillset_disabled_flags[]; /* per-row greyed flag */
+extern u8 g_menu_skillset_disabled_flags[]; /* per-row grayed flag */
 extern s32 g_battle_menu_text_param_22;     /* 0x80166020: record +0x22 */
 extern s32 g_battle_menu_text_param_24;     /* 0x80166024: record +0x24 */
 extern u16 g_battle_menu_modal_open;
@@ -180,7 +180,7 @@ extern RECT g_battle_numeric_display_text_rect_c;
 extern image_load_parameters_t g_battle_numeric_display_image_params[18];
 extern menu_number_entry_t g_battle_numeric_display_entries[15];
 extern world_menu_palette_slot_t g_battle_numeric_display_palettes[];
-extern s16 g_battle_auto_battle_option_colors[5]; /* text colour per option */
+extern s16 g_battle_auto_battle_option_colors[5]; /* text color per option */
 extern s32 g_battle_menu_cursor_confirm_hold;
 extern u16 g_battle_saved_animation_speed; /* animation speed saved while an event thread forces speed 2 */
 extern s32 g_battle_formation_screen_active;

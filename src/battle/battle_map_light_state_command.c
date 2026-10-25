@@ -1,9 +1,9 @@
 #include "fft/battle_map.h"
 #include "psx/types.h"
 
-/* Set, read, save or restore the map's three colour records, selected on command - 0x56: the
- * background gradient pair (0x56-0x59), the ambient colour, which is the GTE back colour (0x5a-0x5d), and
- * the darkness colour, the colour of the untextured map polygons (0x63 sets it, 0x64 resets it to 0/0/1,
+/* Set, read, save or restore the map's three color records, selected on command - 0x56: the
+ * background gradient pair (0x56-0x59), the ambient color, which is the GTE back color (0x5a-0x5d), and
+ * the darkness color, the color of the untextured map polygons (0x63 sets it, 0x64 resets it to 0/0/1,
  * 0x65 returns it).
  *
  * Only the GET arms assign `result`; the others return it uninitialized, as the target does. */

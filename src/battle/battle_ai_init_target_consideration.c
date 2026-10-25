@@ -1,7 +1,7 @@
 #include "fft/battle_ai.h"
 
 /* Choose the acting unit's Auto-Battle mode and main target. A player-controlled unit keeps its own
- * Auto-Battle setting; any other takes its ENTD behaviour, and keeps its special behaviour while it is
+ * Auto-Battle setting; any other takes its ENTD behavior, and keeps its special behavior while it is
  * not Invited and its focus unit is still in play (without a focus unit, while more than one enemy is
  * left). Otherwise the player's team (guests) heads for the nearest healer or crystal below 45/128 HP
  * and for the nearest eligible enemy above; another team's supporter switches to Save Fading Life

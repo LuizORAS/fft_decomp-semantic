@@ -3,7 +3,7 @@
 
 /* Build targetable_tiles: the tiles within a Manhattan radius of considered_unit_coords, the same on
  * both levels (height is not counted). The radius is the considered ability's range, area or both, or
- * the given one for BATTLE_AI_TILE_MASK_EXPLICIT; a linear ability keeps only the centre's row and
+ * the given one for BATTLE_AI_TILE_MASK_EXPLICIT; a linear ability keeps only the center's row and
  * column, and a radius of 16 or more marks every tile without that filter.
  *
  * Radii 8-15 read past the eight row templates, into g_battle_ai_status_priority_weights, which

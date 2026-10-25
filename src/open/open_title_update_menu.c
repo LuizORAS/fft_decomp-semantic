@@ -14,7 +14,7 @@
  * Circle or Start fades the music out; Sound then opens the sound type menu, and the other entries fade the
  * screen first:
  * - New Game runs open_title_start_new_game;
- * - Continue loads WORLD and runs its memory card screen (world_card_run_menu_screen); a cancelled load reads
+ * - Continue loads WORLD and runs its memory card screen (world_card_run_menu_screen); a canceled load reads
  *   the title picture again and rebuilds the menu, and a loaded game ends OPEN with result 0 when it has a next
  *   scenario and no formation return event (MAIN takes it straight into BATTLE), or 1 (the world map);
  * - Tutorial builds Ramza's roster and ends OPEN with result 2 and MAIN_SYSTEM_FLAG_TITLE_TUTORIAL set. */

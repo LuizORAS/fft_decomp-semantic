@@ -4,7 +4,7 @@
 /* Handler of the formation's Item menus (ITEM, its ENTER and LEAVE states and the rows EQUIP,
  * BEST_FIT, REMOVE and LIST in g_world_formation_menu_handlers). ITEM_ENTER slides the grid out,
  * ITEM_LEAVE brings it back. ITEM runs the row menu "Equip / Best / Remove / List" in thread 15; a
- * unit that cannot change equipment (world_formation_get_unit_lock) sees the first three greyed and
+ * unit that cannot change equipment (world_formation_get_unit_lock) sees the first three grayed and
  * is refused them. A pick opens world_formation_run_equip_item_menu,
  * world_formation_run_best_fit_menu, world_formation_run_remove_item_menu or
  * world_formation_run_item_list_menu until it returns 0; closing the row menu rebuilds the roster

@@ -4,7 +4,7 @@
 
 /* Apply the actor's own result (g_battle_action_attacker_action_data, the attacker record that the formulas fill)
  * to unit_id: copy it into the unit's result record and apply it
- * (battle_action_apply_target_result); a miss is marked CANCELLED. Returns -1 for an
+ * (battle_action_apply_target_result); a miss is marked CANCELED. Returns -1 for an
  * absent unit, else the apply result. The AI simulation and
  * battle_unit_update_attack_result_animation call it. */
 s32 battle_action_apply_actor_result(s32 unit_id) {

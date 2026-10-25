@@ -11,7 +11,7 @@
  * the current menu's panels running: the equipment-and-ability panel outside the LEAVE states, the
  * equipment panel in the item menus, the ability panel in the ability menu, and the status banner
  * while the banner or browsing is on. Compiled at O1 like its world_formation_stage_selected_unit
- * neighbour. */
+ * neighbor. */
 void world_formation_update_unit_selection(void) {
     s32 saved;
     s32 previous;

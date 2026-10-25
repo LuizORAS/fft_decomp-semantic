@@ -2,7 +2,7 @@
 
 /* Opcode 0x12: draw a window frame (world_menu_script_draw_window_frame) through the clip of the
  * window's opening animation. While the scale step is below 4 the clip is the window's rectangle scaled
- * by g_world_menu_window_scale_table about its centre (and below 3 the script input is cleared); from
+ * by g_world_menu_window_scale_table about its center (and below 3 the script input is cleared); from
  * step 4 no clip is set. */
 menu_instruction_t* world_menu_script_draw_opening_window_frame(menu_instruction_t* instruction) {
     RECT clip;

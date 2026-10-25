@@ -1,9 +1,10 @@
 #ifndef PSX_TMD_H
 #define PSX_TMD_H
 
+/* Serialized TMD primitives shared by the GPU converter and GS renderer. */
+
 #include "psx/types.h"
 
-/* Serialized TMD primitives shared by the GPU converter and GS renderer. */
 typedef struct {
     u8 out, in, dummy, cd;
     u8 r0, g0, b0, code;

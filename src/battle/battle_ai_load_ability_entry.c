@@ -10,7 +10,7 @@
  * Draw Out names its katana; Math Skill gets every effect flag and map-tile targeting. A default ability
  * takes its 14-byte data, a weapon-range ability the weapon's range, and Half of MP halves its MP cost
  * (rounding down). Unless a default ability perseveres, the CT is halved with the Monster Skill bit and
- * zeroed with the Defend bit, the neighbours of Short Charge and Non-Charge (QUIRKS.md). */
+ * zeroed with the Defend bit, the neighbors of Short Charge and Non-Charge (QUIRKS.md). */
 void battle_ai_load_ability_entry(const battle_ai_ability_entry_t* entry) {
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     s32 ability_id, unit_id, menu, status_id;

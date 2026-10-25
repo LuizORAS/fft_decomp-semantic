@@ -61,7 +61,7 @@ for the menus and shops.
 
 - **Locations.** 43 locations: 15 towns, the castles and other places, and
   19 fields (Mandalia Plains to Germinas Peak). A location's dot shows once
-  its visibility variable is set, and its colour tells the player what waits
+  its visibility variable is set, and its color tells the player what waits
   there:
   - **red:** a story event;
   - **blue:** a town or another place with nothing pending;
@@ -80,7 +80,7 @@ for the menus and shops.
   | Triangle, Start | WORLD's menu: the formation, the location list, Brave Story, the tutorials, the memory card |
 
   The name of the location under the cursor shows beside its dot.
-- **Travelling.** Circle on another dot walks the marker there by the path
+- **Traveling.** Circle on another dot walks the marker there by the path
   with the fewest legs, the cheapest on a tie, along visible routes only
   ([[wldcore_map_find_best_route_path]]). WORLD's location list can also pick
   the destination. At every location the marker reaches, in order:
@@ -209,7 +209,7 @@ The menu levels are records of the WLDCORE menu stack ([[wldcore_menu_level_type
   [[wldcore_menu_step_location_menu_level]].
 - **The map controls:** [[wldcore_menu_step_map_cursor_level]].
 - **Where a story waits:** the location scripts (the WLDCORE opcodes) and the
-  colour, visibility and route variables.
+  color, visibility and route variables.
 
 [[Changing travel and random encounters]] walks through these changes.
 

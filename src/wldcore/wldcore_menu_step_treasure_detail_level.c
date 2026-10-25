@@ -9,7 +9,7 @@
  *
  * Phase 1 waits for the render record at saved_record_index to leave its 0x100 state, although the push
  * never sets that field (QUIRKS.md). Phase 2, once file loading finishes, uploads the picture's CLUT,
- * binds the level's render record to the VRAM image with its right edge at x -0x3e and centred on y
+ * binds the level's render record to the VRAM image with its right edge at x -0x3e and centered on y
  * 0x10, starts the dissolve upload (wldcore_gfx_step_dissolve_image_upload) and hands the record index,
  * position and image rectangle to the text window (g_wldcore_scrollable_text_window extra_render_index,
  * extra_base, extra_bounds). Phase 3 advances the dissolve one step per frame. Then Triangle on a book

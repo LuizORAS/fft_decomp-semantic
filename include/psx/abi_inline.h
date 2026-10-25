@@ -1,6 +1,8 @@
 #ifndef PSX_ABI_INLINE_H
 #define PSX_ABI_INLINE_H
 
+/* ABI helpers for the linked BIOS call veneers. */
+
 #include "psx/bios.h"
 #include "psx/types.h"
 

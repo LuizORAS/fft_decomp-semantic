@@ -7,7 +7,7 @@
 #include "psx/types.h"
 
 /* geometry */
-/* Neutral 2D/3D point, rectangle and colour records for shapes the Psy-Q SDK
+/* Neutral 2D/3D point, rectangle and color records for shapes the Psy-Q SDK
  * does not define.
  *
  * Use the SDK type whenever its layout and signedness fit exactly: DVECTOR
@@ -38,7 +38,7 @@ typedef struct rgb_s8 {
 } rgb_s8_t;
 typedef char rgb_s8_size_must_be_3[sizeof(rgb_s8_t) == 3 ? 1 : -1];
 
-/* Packed PS1 colour: the high bit enables semi-transparency for textured pixels. */
+/* Packed PS1 color: the high bit enables semi-transparency for textured pixels. */
 typedef struct rgba5551 {
     u16 red : 5;
     u16 green : 5;
@@ -52,7 +52,7 @@ enum {
     CLUT_PALETTE_COUNT = 16,
 };
 
-/* Sixteen packed texture colours. */
+/* Sixteen packed texture colors. */
 typedef rgba5551_t palette_t[PALETTE_COLOR_COUNT];
 typedef char assert_palette_size[sizeof(palette_t) == 32 ? 1 : -1];
 
@@ -157,7 +157,7 @@ typedef struct world_scaled_draw_area_pair {
     DR_AREA areas[2]; /* 0x00 */
     RECT rects[2];    /* 0x18 */
 } world_scaled_draw_area_pair_t;
-typedef char scaled_draw_area_pair_size_must_be_40[sizeof(world_scaled_draw_area_pair_t) == 40 ? 1 : -1];
+typedef char world_scaled_draw_area_pair_size_must_be_40[sizeof(world_scaled_draw_area_pair_t) == 40 ? 1 : -1];
 
 void gfx_build_scaled_draw_area_pair_swapped(
     world_scaled_draw_area_pair_t* packets, const RECT* geometry, s32 step, s32 flag);
@@ -168,10 +168,10 @@ void gfx_build_scaled_draw_area_pair_swapped(
 typedef struct world_glyph_blit {
     RECT rect;  /* 0x00 */
     s32 stride; /* 0x08 */
-    u32 color;  /* 0x0c: 32-bit colour value the decimal renderers set by value sign
+    u32 color;  /* 0x0c: 32-bit color value the decimal renderers set by value sign
                  * (0x77777777, 0xbbbbbbbb, ...) and clear after each draw */
 } world_glyph_blit_t;
-typedef char glyph_blit_size_must_be_16[sizeof(world_glyph_blit_t) == 16 ? 1 : -1];
+typedef char world_glyph_blit_size_must_be_16[sizeof(world_glyph_blit_t) == 16 ? 1 : -1];
 
 /* Texture primitive used by the WORLD/BATTLE image-loading and
  * texture-page allocation helpers: a SPRT
@@ -218,7 +218,7 @@ typedef struct world_textured_rect_source {
     u16 clut;  /* 0x0c */
     u16 tpage; /* 0x0e */
 } world_textured_rect_source_t;
-typedef char textured_rect_source_size_must_be_16[sizeof(world_textured_rect_source_t) == 16 ? 1 : -1];
+typedef char world_textured_rect_source_size_must_be_16[sizeof(world_textured_rect_source_t) == 16 ? 1 : -1];
 
 void gfx_enqueue_gouraud_textured_quad(
     const world_textured_rect_source_t* rect, const rgb24_t* color, s32 semitrans, s32 otag_index);
@@ -229,7 +229,7 @@ typedef struct battle_fade_overlay {
     TILE tile;    /* 0x00 */
     DR_MODE mode; /* 0x10 */
 } battle_fade_overlay_t;
-typedef char fade_overlay_size_must_be_28[(sizeof(battle_fade_overlay_t) == 28) ? 1 : -1];
+typedef char battle_fade_overlay_size_must_be_28[(sizeof(battle_fade_overlay_t) == 28) ? 1 : -1];
 
 void gfx_set_draw_mode_for_texture_page(DR_MODE* mode, s32 page);
 void gfx_set_draw_mode_from_origin(DR_MODE* mode, const point16_t* origin);
@@ -240,7 +240,7 @@ typedef struct main_zodiac_draw_offset {
     u8 _unused_00[8];
     upoint16_t position;
 } main_zodiac_draw_offset_t;
-typedef char sprite_draw_offset_size_must_be_12[sizeof(main_zodiac_draw_offset_t) == 12 ? 1 : -1];
+typedef char main_zodiac_draw_offset_size_must_be_12[sizeof(main_zodiac_draw_offset_t) == 12 ? 1 : -1];
 
 /* Draw state shared by the resident, formation and deployment ZODIAC renderers. */
 typedef struct zodiac_draw_context {
@@ -273,7 +273,7 @@ typedef struct world_oriented_quad {
     u16 h;                   /* 0x06 */
     texture_source_t source; /* 0x08 */
 } world_oriented_quad_t;
-typedef char oriented_quad_size_must_be_20[sizeof(world_oriented_quad_t) == 20 ? 1 : -1];
+typedef char world_oriented_quad_size_must_be_20[sizeof(world_oriented_quad_t) == 20 ? 1 : -1];
 
 /* Three signed 32-bit components without VECTOR's trailing 32-bit padding field. */
 typedef struct battle_effect_gravity {
@@ -315,7 +315,7 @@ typedef struct battle_camera_key {
     s32 value; /* 0x04 */
     u8 _unused_08[8];
 } battle_camera_key_t;
-typedef char camera_key_size_must_be_16[sizeof(battle_camera_key_t) == 16 ? 1 : -1];
+typedef char battle_camera_key_size_must_be_16[sizeof(battle_camera_key_t) == 16 ? 1 : -1];
 
 /* Provisional per-component camera fusion track (0xa4 bytes), seeded by the
  * *_camera_fusion_thread and advanced by *_camera_step_track. */
@@ -331,13 +331,13 @@ typedef struct battle_camera_track {
     s32 segment_duration;        /* 0x9c */
     s32 finished;                /* 0xa0 */
 } battle_camera_track_t;
-typedef char camera_track_size_must_be_164[sizeof(battle_camera_track_t) == 164 ? 1 : -1];
+typedef char battle_camera_track_size_must_be_164[sizeof(battle_camera_track_t) == 164 ? 1 : -1];
 
 /* gfx */
 /* Unit sprites and what is drawn around them: the SHP frames and SEQ animations of each sheet and the
  * loader that reads them, the nine spritesheet slots and the two EVTCHR slots in VRAM, the sprite primitive
  * ring and the two render buffers, unit palettes and tints and the fade-out removal, the numbers and
- * messages after an action, status bubbles, shadows, the map cursor, the wait arrows and the screen colour
+ * messages after an action, status bubbles, shadows, the map cursor, the wait arrows and the screen color
  * modulation. */
 
 extern s32 g_gfx_tpage7_free_rect_pixels[4];
@@ -388,7 +388,7 @@ typedef struct wldcore_text_dimensions {
     s32 width;
     s32 height;
 } wldcore_text_dimensions_t;
-typedef char size32_size_must_be_8[sizeof(wldcore_text_dimensions_t) == 8 ? 1 : -1];
+typedef char wldcore_text_dimensions_size_must_be_8[sizeof(wldcore_text_dimensions_t) == 8 ? 1 : -1];
 
 void gfx_move_image_and_wait(RECT* rect, s16 x, s16 y);
 
@@ -435,7 +435,7 @@ typedef struct bunit_menu_gfx_context {
     TILE_1* tiles_1;          /* 0x40 */
     TILE_8* tiles_8;          /* 0x44 */
     TILE_16* tiles_16;        /* 0x48 */
-    /* 0x40..0x54: sized tile/sprite pools in GPU code order; BUNIT initialises the same slots with SetTile1/8/16 and
+    /* 0x40..0x54: sized tile/sprite pools in GPU code order; BUNIT initializes the same slots with SetTile1/8/16 and
      * SetSprt8/16. */
     SPRT* sprites;       /* 0x4c */
     SPRT_8* sprites_8;   /* 0x50; 0x10-byte packet stride */
@@ -455,7 +455,7 @@ typedef char
     bunit_menu_gfx_context_tiles_must_be_0x3c[((unsigned long)&((bunit_menu_gfx_context_t*)0)->tiles == 0x3c) ? 1 : -1];
 typedef char bunit_menu_gfx_context_textured_quads_must_be_0x10
     [((unsigned long)&((bunit_menu_gfx_context_t*)0)->textured_quads == 0x10) ? 1 : -1];
-typedef char menu_gfx_context_size_must_be_236[(sizeof(bunit_menu_gfx_context_t) == 236) ? 1 : -1];
+typedef char bunit_menu_gfx_context_size_must_be_236[(sizeof(bunit_menu_gfx_context_t) == 236) ? 1 : -1];
 
 void gfx_load_image_and_wait(RECT* rect, void* data);
 void gfx_store_image_and_wait(RECT* rect, void* data);

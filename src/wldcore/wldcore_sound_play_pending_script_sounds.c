@@ -5,7 +5,7 @@
 /* Script opcode: play the requested sound, weather quad and music track, then
  * clear the three sound script variables.
  *
- * The switch tests the separately catalogued neighbour
+ * The switch tests the separately catalogued neighbor
  * g_wldcore_sound_novel_record.sound_mode, not part of g_wldcore_sound_novel_record.music_selection.
  * The selection byte read goes through *(u8*) so it stays an lbu as in the target. */
 void wldcore_sound_play_pending_script_sounds(s32 sound_id, s32 weather_sound_id, s32 track) {

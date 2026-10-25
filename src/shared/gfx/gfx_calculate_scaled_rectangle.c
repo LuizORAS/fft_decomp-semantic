@@ -1,6 +1,6 @@
 #include "fft/gfx.h"
 
-/* Build the centred sub-rectangle of source's w x h area for a scale mode
+/* Build the centered sub-rectangle of source's w x h area for a scale mode
  * (20%, 50%, 80%, 90% or 100%), aligned to 4 pixels. */
 void gfx_calculate_scaled_rectangle(s32 scale_mode, const RECT* source, RECT* rectangle) {
     s32 scale;

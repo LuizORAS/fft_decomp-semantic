@@ -4,7 +4,7 @@
 /*
  * Loads a unit spritesheet into spritesheet slot unit->spritesheet_vram_slot: the first
  * 0x200 bytes become the slot's 16 CLUTs with the STP bit (0x80 in each high
- * byte) set on every colour except index 0, two texture blocks go to VRAM
+ * byte) set on every color except index 0, two texture blocks go to VRAM
  * column `index` (256x256 at x=0x100+index*0x40, y=0x100; 256x32 in the
  * 0x340 area), and the 0x30d4 bytes of the compressed attack image at +0x9200
  * are copied into the slot.

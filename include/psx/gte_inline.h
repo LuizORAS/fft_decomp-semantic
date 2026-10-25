@@ -1,6 +1,8 @@
 #ifndef PSX_GTE_INLINE_H
 #define PSX_GTE_INLINE_H
 
+/* Inline GTE instruction helpers for the linked libraries. */
+
 #include "psx/bios.h"
 #include "psx/cpu_abi_inline.h"
 #include "psx/gte_regs.h"

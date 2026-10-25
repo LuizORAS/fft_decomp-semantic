@@ -2,7 +2,7 @@
 #include "psx/libgpu.h"
 
 /* Draw font window `id` (the default window for an invalid id) and empty it: each character becomes an 8x8
- * sprite (lowercase shown as capitals), "~c" and three digits set the colour, a tab moves 32 pixels, and lines
+ * sprite (lowercase shown as capitals), "~c" and three digits set the color, a tab moves 32 pixels, and lines
  * wrap at the window's right edge unless wrapping is off; the backing tile is drawn behind, sized to the text
  * when wrapping is off. Returns the window's packet chain. BATTLE's frame sync and MAIN's boot logos draw the
  * debug text with it. */

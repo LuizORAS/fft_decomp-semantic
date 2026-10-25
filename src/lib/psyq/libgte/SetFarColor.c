@@ -1,7 +1,7 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* Set the GTE's far colour, the colour depth cueing fades towards, to `r`, `g`, `b` (stored times 16).
+/* Set the GTE's far color, the color depth cueing fades towards, to `r`, `g`, `b` (stored times 16).
  * psyq_gs_init_gte sets black. */
 void SetFarColor(s32 r, s32 g, s32 b) {
     r <<= 4;

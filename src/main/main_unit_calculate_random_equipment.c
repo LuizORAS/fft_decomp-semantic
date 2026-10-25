@@ -3,8 +3,9 @@
 /* Pick a random item for one equipment slot of an ENTD unit. Candidates are the items of category
  * item_type_flag (an ITEM_TYPE_FLAG_*) that are not rare, are of required_item_type (an Equip
  * ability's type, or ITEM_TYPE_FILTER_ANY), are equippable by the unit, carry a flag of
- * weapon_flag_mask (when it is not 0) and need at most the unit's level; only those with the highest
- * required level stay, and one of them is drawn. Returns ENTD_VALUE_RANDOM when none fits. */
+ * weapon_flag_mask (when it is not 0) and need at most the unit's level, and one of them is drawn.
+ * Each item with a higher required level than any before it restarts the list, but items scanned
+ * after it with a lower level still join (QUIRKS.md). Returns ENTD_VALUE_RANDOM when none fits. */
 s32 main_unit_calculate_random_equipment(
     battle_stats_t* unit, u8 item_type_flag, u8 weapon_flag_mask, u8 required_item_type) {
     u8 candidates[128];

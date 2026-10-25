@@ -272,6 +272,9 @@ source_dir: src/effect
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
+units:
+  - {addr: 0x801c2c74, end: 0x801c3f74, name: effect_dome_mesh}
+
 functions:
   - {addr: 0x801c2500, size: 1908, name: effect_update_textured_quad_grid_4x4, hash: daf9ed8d679eda98}
   - {addr: 0x801c2c74, size: 120, name: effect_load_dome_mesh_translated_vertex, hash: 8f768abda88cbfca}
@@ -324,6 +327,9 @@ load: 0x801c2500
 source_dir: src/effect
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
+
+units:
+  - {addr: 0x801c416c, end: 0x801c546c, name: effect_dome_mesh}
 
 functions:
   - {addr: 0x801c2500, size: 1908, name: effect_update_textured_quad_grid_4x4, hash: dae7117bbf342f79}
@@ -968,6 +974,9 @@ source_dir: src/effect
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
+units:
+  - {addr: 0x801c2500, end: 0x801c3800, name: effect_dome_mesh}
+
 functions:
   - {addr: 0x801c2500, size: 120, name: effect_load_dome_mesh_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c2578, size: 4744, name: effect_update_dome_mesh, hash: cae5f0fae079c9e4}
@@ -1038,6 +1047,9 @@ source_dir: src/effect
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
+units:
+  - {addr: 0x801c2500, end: 0x801c3800, name: effect_dome_mesh}
+
 functions:
   - {addr: 0x801c2500, size: 120, name: effect_load_dome_mesh_translated_vertex, hash: 8f768abda88cbfca}
   - {addr: 0x801c2578, size: 4744, name: effect_update_dome_mesh, hash: ea924af581a353ac}
@@ -1105,6 +1117,9 @@ load: 0x801c2500
 source_dir: src/effect
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
+
+units:
+  - {addr: 0x801c3ad0, end: 0x801c4dd0, name: effect_dome_mesh}
 
 functions:
   - {addr: 0x801c2500, size: 5584, name: effect_update_ring_mesh, hash: 784dc3c3b5d7f62d}
@@ -1401,6 +1416,9 @@ source_dir: src/effect
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
+units:
+  - {addr: 0x801c3ad0, end: 0x801c4dd0, name: effect_dome_mesh}
+
 functions:
   - {addr: 0x801c2500, size: 5584, name: effect_update_ring_mesh, hash: b1d2acab22900fef}
   - {addr: 0x801c3ad0, size: 120, name: effect_load_dome_mesh_translated_vertex, hash: 8f768abda88cbfca}
@@ -1442,6 +1460,9 @@ load: 0x801c2500
 source_dir: src/effect
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
+
+units:
+  - {addr: 0x801c2500, end: 0x801c28e8, name: effect_banish_map_vertex_particles}
 
 functions:
   - {addr: 0x801c2500, size: 1000, name: effect_e454_particle_update_banish_state, hash: 96b9db988669fa57}
@@ -1592,6 +1613,10 @@ load: 0x801c2500
 source_dir: src/effect
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
+
+units:
+  - {addr: 0x801c2500, end: 0x801c3800, name: effect_dome_mesh}
+  - {addr: 0x801c4b54, end: 0x801c4dc4, name: effect_altima_transformation_map_vertex_particles}
 
 functions:
   - {addr: 0x801c2500, size: 120, name: effect_load_dome_mesh_translated_vertex, hash: 8f768abda88cbfca}
@@ -1751,6 +1776,9 @@ source_dir: src/effect
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
+units:
+  - {addr: 0x801c424c, end: 0x801c554c, name: effect_dome_mesh}
+
 functions:
   - {addr: 0x801c2500, size: 1916, name: effect_update_textured_quad_grid_8x8, hash: 1f197b48f154251b}
   - {addr: 0x801c2c7c, size: 5584, name: effect_update_ring_mesh, hash: afb2e8c0d6ae9ae7}
@@ -1771,6 +1799,9 @@ load: 0x801c2500
 source_dir: src/effect
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
+
+units:
+  - {addr: 0x801c424c, end: 0x801c554c, name: effect_dome_mesh}
 
 functions:
   - {addr: 0x801c2500, size: 1916, name: effect_update_textured_quad_grid_8x8, hash: 1f197b48f154251b}
@@ -1793,6 +1824,9 @@ source_dir: src/effect
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
+units:
+  - {addr: 0x801c424c, end: 0x801c554c, name: effect_dome_mesh}
+
 functions:
   - {addr: 0x801c2500, size: 1916, name: effect_update_textured_quad_grid_8x8, hash: 1f197b48f154251b}
   - {addr: 0x801c2c7c, size: 5584, name: effect_update_ring_mesh, hash: afb2e8c0d6ae9ae7}
@@ -1814,6 +1848,9 @@ source_dir: src/effect
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
+units:
+  - {addr: 0x801c424c, end: 0x801c554c, name: effect_dome_mesh}
+
 functions:
   - {addr: 0x801c2500, size: 1916, name: effect_update_textured_quad_grid_8x8, hash: 1f197b48f154251b}
   - {addr: 0x801c2c7c, size: 5584, name: effect_update_ring_mesh, hash: afb2e8c0d6ae9ae7}
@@ -1834,6 +1871,9 @@ load: 0x801c2500
 source_dir: src/effect
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
+
+units:
+  - {addr: 0x801c424c, end: 0x801c554c, name: effect_dome_mesh}
 
 functions:
   - {addr: 0x801c2500, size: 1916, name: effect_update_textured_quad_grid_8x8, hash: 1f197b48f154251b}

@@ -123,11 +123,11 @@ along scripted paths that ignore the other units.
 
 | Phases | Movement | Handlers |
 |---|---|---|
-| 0x01–0x08 | Walk: odd from the centre to the edge, even from the edge to the centre | [[battle_move_update_walking_step_at_tile_edge]], [[battle_move_update_unit_step_to_destination_tile_center]] |
+| 0x01–0x08 | Walk: odd from the center to the edge, even from the edge to the center | [[battle_move_update_walking_step_at_tile_edge]], [[battle_move_update_unit_step_to_destination_tile_center]] |
 | 0x09–0x10 | The same at climb speed | the same |
 | 0x11–0x20 | Jumps, four per direction: crouch, rise, fall, landing | [[battle_move_update_path_step]], [[battle_move_update_airborne_ascent_phase]], [[battle_move_finish_unit_step_at_tile_edge]], [[battle_move_update_landing_phase]] |
-| 0x22–0x29 | Fly: even to the exit edge, odd to the centre | [[battle_move_update_fly_step_to_exit_edge]], [[battle_move_update_fly_step_to_center]] |
-| 0x2b–0x39 | Float, four per direction: to the exit edge, to the centre, climb jump | [[battle_move_update_float_step_to_current_tile_exit_edge]], [[battle_move_update_float_step_to_destination_tile_center]], [[battle_move_update_float_jump_to_entry_edge]] |
+| 0x22–0x29 | Fly: even to the exit edge, odd to the center | [[battle_move_update_fly_step_to_exit_edge]], [[battle_move_update_fly_step_to_center]] |
+| 0x2b–0x39 | Float, four per direction: to the exit edge, to the center, climb jump | [[battle_move_update_float_step_to_current_tile_exit_edge]], [[battle_move_update_float_step_to_destination_tile_center]], [[battle_move_update_float_jump_to_entry_edge]] |
 | 0x3b | Reset the coordinates | `battle_move_update_teleport_start` |
 | 0x3c | End of the walk | [[battle_move_finalize_path_after_animation]] |
 

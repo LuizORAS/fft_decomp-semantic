@@ -1,6 +1,8 @@
 #ifndef PSX_LIBETC_H
 #define PSX_LIBETC_H
 
+/* Psy-Q LIBETC: interrupts, VSync, video mode and controller input. */
+
 #include "psx/libapi.h"
 
 #include "psx/libc.h"

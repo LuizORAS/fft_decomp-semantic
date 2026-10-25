@@ -1,7 +1,7 @@
 #include "psx/gte_inline.h"
 #include "psx/libgte.h"
 
-/* Set the GTE's background (ambient) colour to `r`, `g`, `b` (stored times 16). The battle map's light and
+/* Set the GTE's background (ambient) color to `r`, `g`, `b` (stored times 16). The battle map's light and
  * weather code sets it. */
 void SetBackColor(s32 r, s32 g, s32 b) {
     r <<= 4;

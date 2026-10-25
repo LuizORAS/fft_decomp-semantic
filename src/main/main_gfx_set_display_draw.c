@@ -3,7 +3,7 @@
 
 /* Set up double-buffered drawing at width x height without restarting the GPU:
  * the second buffer sits 240 lines below the first (a 480-line mode uses one),
- * both draw environments clear to the given colour, and the display is masked
+ * both draw environments clear to the given color, and the display is masked
  * until the caller turns it on. image_rect is not used. main_gfx_set_display_draw_new_game is a
  * second copy of this text, called only by main_gfx_fade_in_orbonne_monastery. */
 void main_gfx_set_display_draw(int width, int height, int projection, u8 red, u8 green, u8 blue) {

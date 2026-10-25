@@ -4,8 +4,8 @@
 #include "psx/types.h"
 
 /* Sound novel opcode 42: drain the GPU and wait a frame, then either arm the full-screen white
- * overlay (sortbox colour 0xff/0xff/0xff, state bit 3 set, transfer bits cleared,
- * WLDCORE_SOUND_NOVEL_STATE_WHITE_OVERLAY set, menus blacked out) or tear it down again (colour
+ * overlay (sortbox color 0xff/0xff/0xff, state bit 3 set, transfer bits cleared,
+ * WLDCORE_SOUND_NOVEL_STATE_WHITE_OVERLAY set, menus blacked out) or tear it down again (color
  * cleared, state bits 0/1/3 cleared, the flag cleared, menus back to neutral 0x80 brightness). The
  * operand byte selects: zero arms it, non-zero clears it. boxes[0].r/green/blue are the catalogued
  * fields at g_wldcore_screen_fade_state+0x24..0x26, gating the draw in

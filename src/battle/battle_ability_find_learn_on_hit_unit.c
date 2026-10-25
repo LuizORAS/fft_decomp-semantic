@@ -8,7 +8,7 @@ enum {
     BATTLE_LEARNED_ABILITIES_OFFSET = 0x99
 };
 
-/* Find a unit that learns the ability it was just hit with. Nothing is learned when Hamedo cancelled the
+/* Find a unit that learns the ability it was just hit with. Nothing is learned when Hamedo canceled the
  * action, no ability was used or the ability lacks the learn-on-hit type flag.
  * Every other unit the action reached (ability_outcome bit 2) is marked done (4); a human not under a
  * status that prevents reactions can learn the ability when it is in its current job's skillset and

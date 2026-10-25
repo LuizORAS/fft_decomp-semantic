@@ -1,7 +1,7 @@
 #include "fft/event_require.h"
 
-/* Set the four vertex colours of `poly` from colors->vertices[0..3] (a 0x14-byte
- * record: a four-byte head followed by four 32-bit colour values), each scaled by
+/* Set the four vertex colors of `poly` from colors->vertices[0..3] (a 0x14-byte
+ * record: a four-byte head followed by four 32-bit color values), each scaled by
  * scale / 128. */
 void require_gfx_scale_poly_gt4_vertex_colors(
     const require_display_condition_colors_t* colors, s32 scale, POLY_GT4* poly) {

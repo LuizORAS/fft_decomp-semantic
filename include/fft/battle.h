@@ -288,7 +288,7 @@ extern SVECTOR g_battle_scratch_coords;
 /* The ability effect files (EFFECT/E*.BIN) and the engine that plays them: the request and the load
  * (battle_effect_request_ability_effect, battle_effect_update_file_load), the file's section header and the
  * setters that bind its sections, the script records and their interpreter (battle_effect_run_block,
- * g_battle_effect_instructions), the parent and child timelines with their colour, sound and camera tracks,
+ * g_battle_effect_instructions), the parent and child timelines with their color, sound and camera tracks,
  * and the native callbacks the scripts bind. The work record types are here because battle_effect_record_t embeds
  * them. */
 
@@ -335,7 +335,7 @@ extern u8 D_8018F4FC;
 /* Unit sprites and what is drawn around them: the SHP frames and SEQ animations of each sheet and the
  * loader that reads them, the nine spritesheet slots and the two EVTCHR slots in VRAM, the sprite primitive
  * ring and the two render buffers, unit palettes and tints and the fade-out removal, the numbers and
- * messages after an action, status bubbles, shadows, the map cursor, the wait arrows and the screen colour
+ * messages after an action, status bubbles, shadows, the map cursor, the wait arrows and the screen color
  * modulation. */
 
 extern s16 D_800b628c;
@@ -344,7 +344,7 @@ extern s16 D_800b6290;
 /* map */
 /* The battle map: the GNS file of each map and the resources it picks by map state (layout, weather, time
  * of day): mesh, textures, palettes, lighting, terrain, texture and mesh animations; the loader and the two
- * map load sequences; the per-frame draw of the mesh, the weather and the tile marks; the colour fades and
+ * map load sequences; the per-frame draw of the mesh, the weather and the tile marks; the color fades and
  * CLUT rows; the tiles, the Move-Find tiles and the Deep Dungeon reload. */
 
 extern s32 D_800F668C;

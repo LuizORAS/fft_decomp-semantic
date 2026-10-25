@@ -4,10 +4,10 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Copy a work record's position, heading, and colour onto its list node.
+/* Copy a work record's position, heading, and color onto its list node.
  *
  * With kind_flags bit 1 the velocity is rotated into camera space and its
- * screen heading stored on the node. Colour-curve records take each channel
+ * screen heading stored on the node. Color-curve records take each channel
  * from its animation curve at the record's curve frame; others use neutral
  * 0x80. */
 void battle_effect_update_node_from_work(s16 record_index, battle_effect_work_record_t* work) {

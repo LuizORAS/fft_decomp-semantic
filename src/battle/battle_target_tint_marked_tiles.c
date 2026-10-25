@@ -11,14 +11,14 @@
  *
  * MOVE_RANGE, ABILITY_RANGE and TARGETED tint the tiles carrying MAP_TILE_FLAG_MOVE_DESTINATION,
  * MAP_TILE_FLAG_ABILITY_RANGE or MAP_TILE_FLAG_TARGETED and select CLUT row 0x1e1 (the move range in
- * blue); the CLEAR_* modes restore CLUT row 0x1e0 and the ambient colour
+ * blue); the CLEAR_* modes restore CLUT row 0x1e0 and the ambient color
  * g_battle_map_ambient_polygon_color (keeping polygons whose flag bit 15 is set), and RESET resets
  * every CLUT row. g_battle_target_tile_mark_modes records the state of the three marks; when the
  * other two are both clear, or in their restored states, the tint modes also shift the unit
  * palettes. A polygon's packed terrain tile (layer bit 0, z bits 1..7, x bits 8..15; 0xfffe for
  * none) selects its map tile.
  *
- * The CLUT and tint stores index the render buffer's polygon arrays; the ambient colour stores use
+ * The CLUT and tint stores index the render buffer's polygon arrays; the ambient color stores use
  * pointer arithmetic on the decayed array (`g_battle_gfx_current_render_buffer->gt3 + i`) instead, which is what keeps
  * the target's `addu offset, base` operand order for them.
  *

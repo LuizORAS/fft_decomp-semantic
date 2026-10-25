@@ -3,7 +3,7 @@
 /* Spread the range from the current tile through battle_move_propagate_destination: sources 0-3
  * leave its four sides from the ground, 4-7 from on top of a unit standing there, and 8 and up
  * (outer_count 0x24, when the mover starts on a mount) from that unit's standing height + source
- * / 4 - 2. Each source whose neighbour is on the map tries inner_count destinations. */
+ * / 4 - 2. Each source whose neighbor is on the map tries inner_count destinations. */
 void battle_move_spread_to_adjacent_tiles(void) {
     battle_move_spread_state_t* state;
     s32 i;

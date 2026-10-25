@@ -45,12 +45,12 @@ and messages after an action, the map cursor and the wait arrows.
 | The same unit from the front or from behind | The facing relative to the camera picks sequence 2n (front) or 2n + 1 (behind) of animation n and mirrors the sprite | [[battle_gfx_update_and_animate_unit_wep_eff]] |
 | A swing, a cast, a weapon in the hand | Three sprite blocks beside the unit's own sprite play the weapon and effect sequences of WEP and EFF | [[battle_gfx_run_wep_eff_seq_script]], [[battle_gfx_draw_unit_sprite_layers]] |
 | Attack poses and extra frames | A sheet's attack image is kept compressed and expanded into one of two EVTCHR slots when an attack sequence needs it; some sheets read the frames of their later attack animations from an SP2 file; events load EVTCHR.BIN blocks there | [[battle_gfx_load_unit_into_evtchr_slot]], [[battle_gfx_open_sp2_file]], [[battle_gfx_unpack_evtchr_file_to_vram_slot]] |
-| A unit tinted red, green, blue or grey | Its CLUT in the units' row of map CLUTs is tinted for its first tinting status, for the weather, the time of day and the tile, or by team while a target is chosen | [[battle_gfx_update_unit_status_palette]], [[battle_gfx_tint_unit_palette_for_weather_and_tile]], [[battle_gfx_modify_palette_based_on_team]] |
-| A unit flashing away | The fade-out removal: a colour flash, additive blending and a palette fade, then the record is removed | [[battle_gfx_start_unit_fade_out]], [[battle_unit_update_fade_out_removal]] |
+| A unit tinted red, green, blue or gray | Its CLUT in the units' row of map CLUTs is tinted for its first tinting status, for the weather, the time of day and the tile, or by team while a target is chosen | [[battle_gfx_update_unit_status_palette]], [[battle_gfx_tint_unit_palette_for_weather_and_tile]], [[battle_gfx_modify_palette_based_on_team]] |
+| A unit flashing away | The fade-out removal: a color flash, additive blending and a palette fade, then the record is removed | [[battle_gfx_start_unit_fade_out]], [[battle_unit_update_fade_out_removal]] |
 | Numbers and words over a unit | After an action: damage and healing, stat changes, Missed, Guarded, the statuses added or removed, Level UP, EXP and JP, and the failure messages of a charged action | [[battle_gfx_prepare_post_action_display]], [[battle_gfx_build_next_action_result_display]] |
 | The status bubble | It shows the unit's statuses in turn, one every 16 ticks, once the camera has been still for 60 frames | [[battle_gfx_determine_status_bubble_parameters]], [[battle_gfx_update_status_bubbles_and_graphics]] |
 | Shadows, the cursor and the wait arrows | A shadow quad laid on the tile, the map selection cursor with its tile glow, and four arrows around the acting unit | [[battle_gfx_draw_unit_shadow]], [[battle_gfx_draw_map_selection_cursor]], [[battle_gfx_draw_wait_direction_arrows]] |
-| The screen fading or tinted | A full-screen tile that subtracts or adds a grey level, and a colour modulation that events fade | [[battle_gfx_submit_screen_fade_overlay]], [[battle_gfx_start_screen_color_modulation_fade]] |
+| The screen fading or tinted | A full-screen tile that subtracts or adds a gray level, and a color modulation that events fade | [[battle_gfx_submit_screen_fade_overlay]], [[battle_gfx_start_screen_color_modulation_fade]] |
 
 WORLD has its own drawing library (`world_gfx_*`) for its menus: two packet
 buffers with pools of every primitive kind, quads and tiles, portraits, the
@@ -101,7 +101,7 @@ font (`main_gfx_*`).
 |---|---|
 | The status tints and their order | [[battle_gfx_update_unit_status_palette]] |
 | The weather, night and tile tints | [[battle_gfx_tint_unit_palette_for_weather_and_tile]] |
-| The team colours of the target selection | [[battle_gfx_modify_palette_based_on_team]] |
+| The team colors of the target selection | [[battle_gfx_modify_palette_based_on_team]] |
 | How a unit vanishes | [[battle_gfx_start_unit_fade_out]], [[battle_unit_update_fade_out_removal]] |
 | The damage numbers and messages | [[battle_gfx_build_next_action_result_display]], [[battle_gfx_animate_post_action_text]] |
 | The status bubble's timing | [[battle_gfx_determine_status_bubble_parameters]], [[battle_gfx_update_status_bubbles_and_graphics]] |

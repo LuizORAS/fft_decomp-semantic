@@ -1,12 +1,12 @@
 #include "fft/battle_map.h"
 
-/* Set, read, blank or restore the GTE back colour (SetBackColor: the colour the GTE adds to every
+/* Set, read, blank or restore the GTE back color (SetBackColor: the color the GTE adds to every
  * lit polygon), kept in g_battle_map_back_color_red, _green and _blue. The map's lighting resource sets
- * it; the ambient colour fades write the same 32-bit values through battle_map_light_state_command.
+ * it; the ambient color fades write the same 32-bit values through battle_map_light_state_command.
  *
  * SET stores the three components and loads them into the GTE, and returns the address of the stored red
- * value; while the back colour is disabled it does neither and returns 0. GET returns that address.
- * DISABLE loads black and blocks SET; RESTORE reloads the stored colour and lifts the block.
+ * value; while the back color is disabled it does neither and returns 0. GET returns that address.
+ * DISABLE loads black and blocks SET; RESTORE reloads the stored color and lifts the block.
  *
  * DISABLE, RESTORE and a command with no case return the unset `result`. Every caller issues SET and
  * ignores the result. */

@@ -20,7 +20,7 @@
  *
  * It closes the tile panel and the menu, then builds two copies of the screen's frame (19 sprites, 5
  * item icons, two tiles, eight lines and the text images for the unit's items and labels) and redraws
- * the current copy each frame until cancelled or told to stop; Square opens the status list. */
+ * the current copy each frame until canceled or told to stop; Square opens the status list. */
 void menu_run_status_screen_thread(void) {
     /* The frame reserves 0x100 bytes for the first copy's line-box
        primitives, the stride of the palette records (WORLD 0x80195ed0). */

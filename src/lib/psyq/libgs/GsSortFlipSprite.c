@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* GsSortSprite for unscaled, unrotated sprites: attribute bits 23 and 22 flip the texture horizontally and
- * vertically, bits 24-25 and 28-29 select the texture page's colour depth and blend mode, bit 30
+ * vertically, bits 24-25 and 28-29 select the texture page's color depth and blend mode, bit 30
  * semi-transparency and bit 6 an unshaded texture. */
 void GsSortFlipSprite(GsSPRITE* sp, GsOT* otp, u16 pri) {
     POLY_FT4* p;

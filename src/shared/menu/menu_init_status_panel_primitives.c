@@ -1,7 +1,7 @@
 #include "fft/battle_gfx.h"
 #include "fft/menu.h"
 
-/* Initialise the frame primitives of a status panel buffer: two
+/* Initialize the frame primitives of a status panel buffer: two
  * semi-transparent 16x90 column tiles at x 0x12 and 0x7c, the two vertical
  * edge lines on either side of each, and the draw modes for the frame, text
  * image and item icon texture pages. */

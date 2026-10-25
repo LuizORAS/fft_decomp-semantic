@@ -8,7 +8,7 @@
  * mode is reset: an exhaustive origin scan for a linear or similar ability and for an evadable default
  * ability reaching less than 3 tiles, consumed origins for a default ability flagged CANNOT_HIT_CASTER or
  * CAN_TARGET_ENEMIES and for any ability with no area. The unit's five ENTD AI bytes and AI target tile
- * become its decision record; with the special-behaviour flag, targeting flag CONSERVE_CT makes it
+ * become its decision record; with the special-behavior flag, targeting flag CONSERVE_CT makes it
  * retreat, and a focus unit found on the field makes it attack that unit (another team) or protect it
  * (its team), as Auto-Battle modes. The turn states, status changes and a Morbol transformation call it
  * again. */

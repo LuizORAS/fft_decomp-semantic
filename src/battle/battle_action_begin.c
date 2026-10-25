@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* Begin the unit's action in the primary context. An absent unit returns -1, an action that
- * Hamedo cancelled (g_battle_reaction_hamedo_cancels) returns 6, and a refusal from
+ * Hamedo canceled (g_battle_reaction_hamedo_cancels) returns 6, and a refusal from
  * battle_action_check_and_consume_mp returns its code (2 Silence, 3 not enough MP, 5 Frog, 7 and
  * up cannot act); in those two cases the actor's position or command is saved
  * (battle_action_store_acting_unit_data). Otherwise the unit becomes the acting unit with its

@@ -61,7 +61,7 @@ innate ones of its job.
 | 0x18a-0x195 | Jump | horizontal and vertical reach (`0x8006102c`) |
 | 0x196-0x19d | Charge | CT and power, added to XA (`0x80061044`) |
 | 0x19e-0x1a5 | Math Skill | its Calculator flags (`0x80061054`) |
-| 0x1a6-0x1c5 | Reaction | one byte each from `0x8006105c`, and the reaction behaviour flags (`0x8005ebd0`) |
+| 0x1a6-0x1c5 | Reaction | one byte each from `0x8006105c`, and the reaction behavior flags (`0x8005ebd0`) |
 | 0x1c6-0x1e5 | Support | one byte each |
 | 0x1e6-0x1fd | Movement | one byte each |
 | 0x1fe-0x1ff | | a random reaction, support or movement pick for a unit from the scenario data ([[main_unit_calculate_rsm]]) |
@@ -161,7 +161,7 @@ innate ones of its job.
    Charge halves it, rounding up; Non-Charge makes it 0; a performed ability
    keeps it) and how many turns come first; a Frog lists only the Frog spell,
    and an ability that needs a sword or Materia Blade drops without one.
-   [[battle_menu_build_ability_list]] then greys the abilities the unit lacks
+   [[battle_menu_build_ability_list]] then grays the abilities the unit lacks
    the MP for or cannot cast while Silenced.
 3. **The command.** The chosen ability goes through the [[Action]] pipeline,
    [[Targeting]] and its formula ([[Formulas]]). Once it is confirmed, the
@@ -219,7 +219,7 @@ need a Brave roll first; the [[Action]] page says when each one is checked.
 | Id | Support | What the code does | Where |
 |---|---|---|---|
 | 0x1c6-0x1cd | Equip Armor, Shield, Sword, Knife (katanas), Crossbow, Spear, Axe, Gun | Adds the equipment categories | [[main_unit_set_equippable_items]], [[main_unit_calculate_entd_equipment]] |
-| 0x1ce | Half of MP | MP cost halved: spent rounded down, listed and greyed rounded up (`QUIRKS.md`) | [[battle_action_check_and_consume_mp]], [[battle_menu_get_unit_skillset_ability_data]], the AI |
+| 0x1ce | Half of MP | MP cost halved: spent rounded down, listed and grayed rounded up (`QUIRKS.md`) | [[battle_action_check_and_consume_mp]], [[battle_menu_get_unit_skillset_ability_data]], the AI |
 | 0x1cf | Gained JP Up | Action JP * 3 / 2; Move-Get JP * 2 | [[battle_unit_apply_action_rewards]], [[battle_action_init_movement_ability_benefit]] |
 | 0x1d0 | Gained Exp Up | EXP * 2 (an award stays at most 99); Move-Get EXP * 2 | [[battle_unit_update_attacker_earned_experience]], the same |
 | 0x1d1 | Attack Up | Physical XA * 4 / 3 | [[battle_formula_apply_physical_attack_supports]], [[battle_formula_apply_attack_up_and_martial_arts]] |

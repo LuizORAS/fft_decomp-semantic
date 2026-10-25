@@ -4,7 +4,7 @@
 /* Opcode 0x12 in JOBSTTS's display scripts, its form of MENU_SCRIPT_OP_OPENING_WINDOW_FRAME: draw the
  * window frame (jobstts_menu_script_draw_window_frame) through a clip that opens vertically. For the first
  * 8 transition frames the clip spans the 256-pixel screen width and the window's height scaled by
- * g_jobstts_gfx_transition_height_percent about its centre (below frame 3 the script input is cleared),
+ * g_jobstts_gfx_transition_height_percent about its center (below frame 3 the script input is cleared),
  * and the frame draws one priority above it. WORLD's and the other overlays' form scale both sides for 4
  * steps. */
 menu_instruction_t* jobstts_menu_script_draw_opening_window_frame(menu_instruction_t* command) {

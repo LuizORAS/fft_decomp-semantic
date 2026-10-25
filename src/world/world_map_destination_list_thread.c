@@ -4,7 +4,7 @@
 
 /* Thread of WORLD's location list (g_menu_thread_menu_data entries 2 and 6, text 0x9000 + location):
  * list the locations whose visibility variable (EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST + location)
- * is set, in row colour 4 for the current one, 8 for a red location and 0 for the others, then run
+ * is set, in row color 4 for the current one, 8 for a red location and 0 for the others, then run
  * it as a scrolling list (world_menu_run_scrolling_ability_list_thread) of at most seven rows, scrolled to the
  * current location. `selected` stays unset when the current location is not listed. */
 void world_map_destination_list_thread(void) {

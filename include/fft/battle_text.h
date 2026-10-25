@@ -54,7 +54,7 @@ typedef struct bunit_text_image_position {
     s16 y;          /* 0x02 */
     s16 row_stride; /* 0x04 */
 } bunit_text_image_position_t;
-typedef char battle_text_image_position_size_must_be_6[(sizeof(bunit_text_image_position_t) == 6) ? 1 : -1];
+typedef char bunit_text_image_position_size_must_be_6[(sizeof(bunit_text_image_position_t) == 6) ? 1 : -1];
 
 /* Text variables $27 and $28 (rows of glyph pixels drawn, 0x10 by default),
  * bound separately: battle_menu_display_text also takes the table base, and

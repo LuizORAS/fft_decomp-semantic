@@ -54,7 +54,7 @@ u32 jobstts_bits_read_primary(s32 count);
 /* The pad: newly pressed buttons, the two repeat rates and the page scroll, cleared while the windows
  * open and while the text thread runs. */
 
-typedef enum jobstts_page_scroll_direction {
+typedef enum jobstts_menu_page_scroll_direction {
     JOBSTTS_PAGE_SCROLL_UP = -1,
     JOBSTTS_PAGE_SCROLL_NONE = 0,
     JOBSTTS_PAGE_SCROLL_DOWN = 1,
@@ -141,7 +141,7 @@ typedef struct jobstts_gfx_context {
     TILE_1* tiles_1;          /* 0x40 */
     TILE_8* tiles_8;          /* 0x44 */
     TILE_16* tiles_16;        /* 0x48 */
-    /* 0x40..0x54: sized tile/sprite pools in GPU code order; BUNIT initialises the same slots with SetTile1/8/16 and
+    /* 0x40..0x54: sized tile/sprite pools in GPU code order; BUNIT initializes the same slots with SetTile1/8/16 and
      * SetSprt8/16. */
     SPRT* sprites;       /* 0x4c */
     SPRT_8* sprites_8;   /* 0x50; 0x10 stride */

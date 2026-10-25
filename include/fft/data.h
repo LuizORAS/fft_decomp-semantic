@@ -1007,7 +1007,7 @@ typedef struct battle_ability_jump_record {
     u8 range;    /* 0x00 */
     u8 vertical; /* 0x01 */
 } battle_ability_jump_record_t;
-typedef char main_ability_jump_record_size_must_be_2[(sizeof(battle_ability_jump_record_t) == 2) ? 1 : -1];
+typedef char battle_ability_jump_record_size_must_be_2[(sizeof(battle_ability_jump_record_t) == 2) ? 1 : -1];
 
 /* The ability tables in MAIN, which every module reads: ability ids and their classes, each
  * ability's 8-byte record and the 14-byte data of the default abilities, with their flags
@@ -1690,7 +1690,7 @@ typedef union main_ability_secondary_pointer {
 } main_ability_secondary_pointer_t;
 typedef char main_ability_secondary_pointer_size_must_be_4[(sizeof(main_ability_secondary_pointer_t) == 4) ? 1 : -1];
 
-/* Static AI behaviour bytes. The AI working record replaces flags_4 with
+/* Static AI behavior bytes. The AI working record replaces flags_4 with
  * skillset usage flags after copying these four bytes. */
 typedef struct ability_ai_flags {
     u8 flags_1;

@@ -9,15 +9,15 @@
  * frames the shield stays, at least 26: the child timeline passes the
  * effect's spawn_delay.
  *
- * Phase 1 allocates and initialises the work buffer; phase 2 advances a
+ * Phase 1 allocates and initializes the work buffer; phase 2 advances a
  * two-entry CLUT wipe near the end of the effect, uploads the CLUT, aims the
- * shield from the target's centre toward the caster and hands the transform
+ * shield from the target's center toward the caster and hands the transform
  * to battle_effect_draw_projectile_model; phase 3 finishes. The wipe indices are assigned inside the
  * subscript, each to its own variable: a separate statement or a folded
  * `timer - 1 - span` changes the order and association of the index
  * arithmetic. spin_timer keeps the timer load at full width (lh).
  *
- * The 0x798-byte work buffer holds two 6-colour CLUT images, then two 24-polygon strips. */
+ * The 0x798-byte work buffer holds two 6-color CLUT images, then two 24-polygon strips. */
 s32 battle_effect_reflect_secondary_handler(void) {
     battle_effect_secondary_data_t* effect;
     s32 unused[2];

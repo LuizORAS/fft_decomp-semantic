@@ -2,7 +2,7 @@
 #include "psx/types.h"
 
 /* Same as battle_map_update_palette_colors for one CLUT of the unit row. A clut_index of 16 or more
- * applies the same sixteen colours to every unit CLUT. */
+ * applies the same sixteen colors to every unit CLUT. */
 void battle_map_update_palette_colors_by_index(s32 mode, s32 clut_index, const palette_t* color_data) {
     s32 index;
 

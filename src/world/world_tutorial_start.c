@@ -4,7 +4,7 @@
 
 /* Start Formation tutorial `index` (0 only clears the tutorial id): load its message and script files
  * (world_tutorial_load_files) and bind them, then swap the game for the tutorial's. The current game is
- * serialised into g_world_tutorial_saved_game_image, and the tutorial save (FFTSAVE.DAT, 0x2000 bytes)
+ * serialized into g_world_tutorial_saved_game_image, and the tutorial save (FFTSAVE.DAT, 0x2000 bytes)
  * is loaded and unpacked into the globals, keeping the player's Max Equip at job change and sound
  * options, with unequippable items shown. world_tutorial_command_end swaps the game back. */
 void world_tutorial_start(s32 index) {

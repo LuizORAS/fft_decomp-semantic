@@ -28,7 +28,7 @@ typedef struct battle_target_panel {
      * sets the target to 0 and old actor tile to 0xff. */
     u8 max_height_delta;
 } battle_target_panel_t;
-typedef char target_panel_size_must_be_5[(sizeof(battle_target_panel_t) == 5) ? 1 : -1];
+typedef char battle_target_panel_size_must_be_5[(sizeof(battle_target_panel_t) == 5) ? 1 : -1];
 
 /* Directions of battle_target_calculate_linear_attack_tiles. */
 typedef enum battle_target_line_direction {
@@ -44,7 +44,7 @@ typedef enum battle_target_panels {
     BATTLE_TARGET_PANELS_INVALID = -1,
     BATTLE_TARGET_PANELS_UNIT_OR_TILE = 0, /* the ability can follow a unit */
     BATTLE_TARGET_PANELS_TILE_ONLY = 1,    /* ABILITY_SECONDARY_FLAG_2_CANNOT_FOLLOW_TARGET */
-    BATTLE_TARGET_PANELS_NO_TARGETING = 2, /* nothing to choose: the action is centred on the acting unit */
+    BATTLE_TARGET_PANELS_NO_TARGETING = 2, /* nothing to choose: the action is centered on the acting unit */
     BATTLE_TARGET_PANELS_NONE = 3,         /* the panel routine marked no tile */
 } battle_target_panels_e;
 

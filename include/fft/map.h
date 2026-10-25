@@ -9,7 +9,7 @@
 
 /* map */
 /* Battle map records BATTLE and WORLD share: the map ids, the tile record (surface, height, slope, depth,
- * flags and marks) and its field selectors, the selected tile and the colours of the map lighting. */
+ * flags and marks) and its field selectors, the selected tile and the colors of the map lighting. */
 
 /* Battle map ids: EVENT_SCRIPT_VAR_CURRENT_MAP and the index of
  * g_battle_map_gns_lba. Each is named as its map name text spells it
@@ -212,7 +212,7 @@ typedef enum map_tile_data_selector {
     MAP_TILE_DATA_ABILITY_RANGE_MARK = 13,
 } map_tile_data_selector_e;
 
-/* Map backgrounds use two four-byte runtime colour slots. The fourth byte
+/* Map backgrounds use two four-byte runtime color slots. The fourth byte
  * is copied with each CVECTOR but is not an alpha channel; mesh-file RGB
  * triples have a separate three-byte layout. */
 typedef enum map_background_gradient_color {
@@ -341,7 +341,7 @@ typedef char map_tile_coordinates_size_must_be_6[sizeof(map_tile_coordinates_t) 
 
 /* The battle map: the GNS file of each map and the resources it picks by map state (layout, weather, time
  * of day): mesh, textures, palettes, lighting, terrain, texture and mesh animations; the loader and the two
- * map load sequences; the per-frame draw of the mesh, the weather and the tile marks; the colour fades and
+ * map load sequences; the per-frame draw of the mesh, the weather and the tile marks; the color fades and
  * CLUT rows; the tiles, the Move-Find tiles and the Deep Dungeon reload. */
 
 /* Packed mark flags in terrain tile byte 0x05. */

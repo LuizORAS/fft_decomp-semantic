@@ -3,14 +3,14 @@
 #include "psx/suzuki.h"
 #include "psx/types.h"
 
-/* Starts the Suzuki driver once (status bit 15 marks it initialised).
+/* Starts the Suzuki driver once (status bit 15 marks it initialized).
  *
  * flags seeds the 16-bit status. Sets up SPU RAM allocation and the driver
  * heap, clears the driver lists, creates the SFX music record, installs the
  * root-counter-2 tick and SPU events and the transfer callback, then applies
  * sound type 1, reverb mode 4, CD mixing and the default volumes. */
 void suzuki_sound_init(s32 flags) {
-    /* Bit 15 (initialised) is tested as a sign, on an `lh` load. */
+    /* Bit 15 (initialized) is tested as a sign, on an `lh` load. */
     if (g_suzuki_sound_driver_flags < 0) {
         return;
     }

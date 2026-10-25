@@ -4,7 +4,7 @@
 
 /* Stream command: draw a textured quad of size (command[5], command[6]) at
  * (command[3], command[4]) with texture origin (command[7], command[8]), in the
- * current sprite colour or, for MENU_SCRIPT_OP_UNCOLOURED_QUAD, unshaded. Returns the next command. */
+ * current sprite color or, for MENU_SCRIPT_OP_UNCOLOURED_QUAD, unshaded. Returns the next command. */
 u8* card_menu_script_draw_textured_quad(u8* command) {
     RECT rect;
     const rgb24_t* color;

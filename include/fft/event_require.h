@@ -66,7 +66,7 @@ extern u8 g_require_condition_special_quad_ranges[];
 
 extern sprite_sheet_frame_t g_require_condition_special_quads[];
 
-/* 0x14-byte vertex-colour records, one per quad. */
+/* 0x14-byte vertex-color records, one per quad. */
 extern require_display_condition_colors_t g_require_condition_special_vertex_colors[];
 
 void require_condition_show_hovered_unit_stats(void);
@@ -98,7 +98,7 @@ typedef struct require_bonus_burst_tile {
     s32 y;             /* 0x40 */
     s32 initial_delay; /* 0x44 */
 } require_bonus_burst_tile_t;
-typedef char require_reward_burst_tile_size_must_be_72[sizeof(require_bonus_burst_tile_t) == 72 ? 1 : -1];
+typedef char require_bonus_burst_tile_size_must_be_72[sizeof(require_bonus_burst_tile_t) == 72 ? 1 : -1];
 
 /* BONUS.BIN stores a 256x200 4bpp image, followed by eight 16-color palette slots. */
 typedef struct require_bonus_image_file {
@@ -106,7 +106,7 @@ typedef struct require_bonus_image_file {
     palette_t palettes[8]; /* 0x6400; four palettes per uploaded VRAM row */
     u8 _unknown_6500[0x300];
 } require_bonus_image_file_t;
-typedef char require_reward_bonus_image_file_size_must_be_26624[sizeof(require_bonus_image_file_t) == 26624 ? 1 : -1];
+typedef char require_bonus_image_file_size_must_be_26624[sizeof(require_bonus_image_file_t) == 26624 ? 1 : -1];
 
 /* The mode byte of the bonus-image burst parameters: the distance that sets
  * each tile's start delay. Any other value measures along a rotated x axis. */
@@ -324,7 +324,7 @@ extern wldcore_menu_status_thread_t g_require_status_display_thread_params;
 
 /* gfx */
 /* Drawing: portraits and the party portrait textures, scaled sprites, frame tiles and lines, the
- * gradient grid, the Gouraud quad arrays, colour fades and draw areas. */
+ * gradient grid, the Gouraud quad arrays, color fades and draw areas. */
 
 void require_gfx_prepare_party_portrait_textures(void);
 extern u16 g_require_gfx_draw_offset_y;

@@ -11,7 +11,7 @@
  * straight from the title outside a save, under a banner faded in and out.
  *
  * banner_p and the loop's fade = 0xff reproduce the target's preheader order and
- * register choice for the hoisted colour. The dead fade = 0 before done keeps the
+ * register choice for the hoisted color. The dead fade = 0 before done keeps the
  * step-0xd exit inline ahead of the per-frame path, as in the target; with a
  * plain break GCC moves that block to the loop tail. */
 void battle_state_run_battle_setup(void) {

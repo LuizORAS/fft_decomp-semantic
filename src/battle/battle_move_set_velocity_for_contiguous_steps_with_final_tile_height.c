@@ -2,11 +2,6 @@
 #include "fft/battle_move.h"
 #include "psx/types.h"
 
-enum {
-    BATTLE_MOVE_STEP_HALF_WIDTH = BATTLE_MAP_TILE_SIZE / 2,
-    BATTLE_MOVE_STEP_HEIGHT_SCALE = 6,
-};
-
 /*
  * Builds the per-frame velocity for a run of identical movement steps: walks
  * the remaining path while the steps keep the same direction quadrant and the

@@ -1,6 +1,8 @@
 #ifndef PSX_CRT_H
 #define PSX_CRT_H
 
+/* C runtime start-up state: constructor tables, the saved return address and the heap. */
+
 #include "psx/types.h"
 
 typedef void (*psyq_crt_handler_t)(void);

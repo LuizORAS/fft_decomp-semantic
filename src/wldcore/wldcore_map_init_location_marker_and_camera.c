@@ -3,7 +3,7 @@
 #include "psx/libgte.h"
 
 /* Place the player's marker on the current location (EVENT_SCRIPT_VAR_LOCATION), queue it for
- * drawing with its palette from EVENT_SCRIPT_VAR_TOWN_BACKGROUND (0, 2 or 3), then centre the camera
+ * drawing with its palette from EVENT_SCRIPT_VAR_TOWN_BACKGROUND (0, 2 or 3), then center the camera
  * on it and project the tiles and the marker.
  *
  * The map-dot position is copied as one SVECTOR, which reproduces the

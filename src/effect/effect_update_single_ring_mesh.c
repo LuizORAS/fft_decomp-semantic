@@ -139,12 +139,12 @@ s32 effect_update_single_ring_mesh(s32 record_index, s32 callback_slot, s32 emit
 
         radius_binding = entry->radial_mesh.shape_curves.radius;
         READ_CURVE(i, j, radius_binding, frame);
-        radius = battle_effect_lerp_fixed8(entry->radial_mesh.radius_start, entry->radial_mesh.radius_end, j);
+        radius = battle_effect_lerp_q8(entry->radial_mesh.radius_start, entry->radial_mesh.radius_end, j);
 
         texture_selector = entry->radial_mesh.motion_curves.texture;
         READ_CURVE(i, j, texture_selector, frame);
-        u = battle_effect_lerp_fixed8(entry->radial_mesh.u_start, entry->radial_mesh.u_end, j);
-        v = battle_effect_lerp_fixed8(entry->radial_mesh.v_start, entry->radial_mesh.v_end, j);
+        u = battle_effect_lerp_q8(entry->radial_mesh.u_start, entry->radial_mesh.u_end, j);
+        v = battle_effect_lerp_q8(entry->radial_mesh.v_start, entry->radial_mesh.v_end, j);
         u_span = entry->radial_mesh.u_span;
         v_span = entry->radial_mesh.v_span;
         work->v_scroll += entry->radial_mesh.v_scroll_speed;
@@ -156,25 +156,23 @@ s32 effect_update_single_ring_mesh(s32 record_index, s32 callback_slot, s32 emit
         }
 
         READ_CURVE(i, j, entry->radial_mesh.shape_curves.growth, frame);
-        growth.vx = battle_effect_lerp_fixed8(entry->radial_mesh.growth_start, entry->radial_mesh.growth_end, j);
-        growth.vy = battle_effect_lerp_fixed8(entry->radial_mesh.height_start, entry->radial_mesh.height_end, j) << 2;
-        growth.vz
-            = battle_effect_lerp_fixed8(entry->radial_mesh.row_radius_start, entry->radial_mesh.row_radius_end, j);
+        growth.vx = battle_effect_lerp_q8(entry->radial_mesh.growth_start, entry->radial_mesh.growth_end, j);
+        growth.vy = battle_effect_lerp_q8(entry->radial_mesh.height_start, entry->radial_mesh.height_end, j) << 2;
+        growth.vz = battle_effect_lerp_q8(entry->radial_mesh.row_radius_start, entry->radial_mesh.row_radius_end, j);
 
         growth_step_selector = entry->radial_mesh.shape_curves.growth_step;
         READ_CURVE(i, j, growth_step_selector, frame);
         growth_step.vx
-            = battle_effect_lerp_fixed8(entry->radial_mesh.growth_step_start, entry->radial_mesh.growth_step_end, j);
+            = battle_effect_lerp_q8(entry->radial_mesh.growth_step_start, entry->radial_mesh.growth_step_end, j);
         growth_step.vy
-            = battle_effect_lerp_fixed8(entry->radial_mesh.height_step_start, entry->radial_mesh.height_step_end, j)
-            << 2;
-        growth_step.vz = battle_effect_lerp_fixed8(
+            = battle_effect_lerp_q8(entry->radial_mesh.height_step_start, entry->radial_mesh.height_step_end, j) << 2;
+        growth_step.vz = battle_effect_lerp_q8(
             entry->radial_mesh.row_radius_step_start, entry->radial_mesh.row_radius_step_end, j);
 
         READ_CURVE(i, j, entry->radial_mesh.motion_curves.spin, frame);
-        work->spin = (work->spin
-                         + battle_effect_lerp_fixed8(
-                             entry->radial_mesh.spin_speed_start, entry->radial_mesh.spin_speed_end, j))
+        work->spin
+            = (work->spin
+                  + battle_effect_lerp_q8(entry->radial_mesh.spin_speed_start, entry->radial_mesh.spin_speed_end, j))
             & (ONE - 1);
 
         n = 0;

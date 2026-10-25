@@ -89,7 +89,7 @@ s32 battle_map_step_init_sequence(s32 map_id, s32 step) {
         break;
     case 12:
         battle_sound_start_weather_sfx();
-        /* Seed the three colour fades from the colours the loaded map set. */
+        /* Seed the three color fades from the colors the loaded map set. */
         battle_map_init_background_gradient();
         battle_map_init_ambient_light();
         battle_map_init_darkness();

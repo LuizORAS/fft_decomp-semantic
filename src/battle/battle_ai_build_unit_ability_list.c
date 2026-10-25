@@ -2,7 +2,7 @@
 #include "fft/battle_unit.h"
 
 /* Byte-oriented view of the same four-byte ability entry. */
-typedef struct ai_ability_entry_byte_view {
+typedef struct battle_ai_ability_entry_byte_view {
     u8 ability_id_low;
     u8 unit_and_id_high;
     u8 skillset;

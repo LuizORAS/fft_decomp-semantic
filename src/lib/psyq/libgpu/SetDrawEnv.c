@@ -2,7 +2,7 @@
 
 /* Build the draw-environment packet `dr_env` for `env`: draw area, offset, draw mode, texture window and mask
  * commands, then, when `env` asks for a background clear, a fill (64-pixel aligned) or a TILE over its clip
- * area in its colour. PutDrawEnv and DrawOTagEnv use it. */
+ * area in its color. PutDrawEnv and DrawOTagEnv use it. */
 void SetDrawEnv(DR_ENV* dr_env, DRAWENV* env) {
     extern volatile psyq_gpu_environment_t g_psyq_gpu_environment; /* An unqualified RAM view removes native 16-bit
                                                                       normalization in the bounds clamps. */

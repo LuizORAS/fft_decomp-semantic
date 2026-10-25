@@ -54,7 +54,7 @@ the weapon's formula for Attack and Charge).
   MP amounts whatever the result type, while the result type and special
   effects choose the animation and the messages (the [[Action]] page).
 - **What does not follow.** The ability's effect animation, its help text
-  and the AI's ability scoring describe the original behaviour.
+  and the AI's ability scoring describe the original behavior.
 - **Quirks.** The [[Formulas]] page lists the `QUIRKS.md` entries that live
   in the formulas (Oil, the bow weather check, the Holy Sword element).
 

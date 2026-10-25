@@ -7,7 +7,7 @@
  * sliding and slot 11 is idle; stop it otherwise. The state goes to g_world_preview_stats_window_active
  * and the style of the stats panel.
  *
- * Built at -O1, like its neighbours world_menu_toggle_stat_preview_panel_thread /
+ * Built at -O1, like its neighbors world_menu_toggle_stat_preview_panel_thread /
  * world_menu_toggle_ability_panel_thread. */
 void world_menu_toggle_preview_stats_window(s32 flag) {
     s32 stored;

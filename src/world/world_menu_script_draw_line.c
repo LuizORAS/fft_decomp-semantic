@@ -1,7 +1,7 @@
 #include "fft/world.h"
 
 /* Menu-script opcode handler: bytes 2..5 give the line's start x, y and end
- * x, y (passed in a RECT's x, y, w, h); the colour payload starts at byte 6.
+ * x, y (passed in a RECT's x, y, w, h); the color payload starts at byte 6.
  * Returns the address of the next instruction. */
 menu_instruction_t* world_menu_script_draw_line(menu_instruction_t* instruction) {
     point16_t endpoints[2];

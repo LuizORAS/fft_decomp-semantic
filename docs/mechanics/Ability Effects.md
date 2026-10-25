@@ -36,7 +36,7 @@ the targets react (flinch, block, fall) on its keyframes.
 | [[effect_file_header_t]], `g_battle_effect_file_headers` | The section offsets of each file: frames, animation sequences, script, particle system, animation curves, timing curves, flags, timeline, sound, palette. The `battle_effect_set_*_pointer` routines bind them to globals when the effect starts |
 | `g_battle_effect_native_callbacks` | 198 fixed addresses in the effect overlay area that script opcodes 06 and 07 bind or call ([[battle_effect_get_native_callback]]) |
 | [[battle_effect_record_t]], `g_battle_effect_state_records` | The script records: a script position, counters, child records, a parent and a child timeline, callback slots and the particles it owns |
-| [[effect_timeline_t]] | The parent timeline: particle channels, colour tracks (screen, caster, targets), sound tracks and camera keyframes for two phases; the child timeline runs per target |
+| [[effect_timeline_t]] | The parent timeline: particle channels, color tracks (screen, caster, targets), sound tracks and camera keyframes for two phases; the child timeline runs per target |
 | [[effect_geometry_table_t]], [[effect_geometry_entry_t]] | The particle-system section: gravity, inertia threshold and one record per emitter or mesh, which each renderer reads through its own view |
 | [[effect_animation_curve_t]], `g_battle_effect_animation_curves` | Per-frame factors out of 256 that move an emitter's values from start to end, tint particles and set homing strength |
 | [[effect_flags_section_t]] | The effect's flags (EFFECT_FLAG_QUIET_MUSIC lowers the music) and its sound channels ([[battle_effect_sound_mode_e]]) |

@@ -32,7 +32,7 @@ enum {
  * `i`, `j`, `k` and `n` are shared temporaries as in the ring mesh renderer.
  * The projected corners are four separate VECTORs: as one array, the unused
  * base address of &screen[2] is CSE'd into the later &screen[0] operand. The
- * colour stores are chained so that loop.c keeps the blue product in the
+ * color stores are chained so that loop.c keeps the blue product in the
  * inner loop, as in the target. */
 s32 effect_update_ring_stack_mesh(s32 record_index, s32 callback_slot, s32 emitter_index, s32 frame) {
     s16 state_index = record_index;
@@ -167,12 +167,12 @@ s32 effect_update_ring_stack_mesh(s32 record_index, s32 callback_slot, s32 emitt
 
         radius_binding = entry->radial_mesh.shape_curves.radius;
         READ_CURVE(i, j, radius_binding, frame);
-        radius = battle_effect_lerp_fixed8(entry->radial_mesh.radius_start, entry->radial_mesh.radius_end, j);
+        radius = battle_effect_lerp_q8(entry->radial_mesh.radius_start, entry->radial_mesh.radius_end, j);
 
         texture_selector = entry->radial_mesh.motion_curves.texture;
         READ_CURVE(i, j, texture_selector, frame);
-        u = battle_effect_lerp_fixed8(entry->radial_mesh.u_start, entry->radial_mesh.u_end, j);
-        v = battle_effect_lerp_fixed8(entry->radial_mesh.v_start, entry->radial_mesh.v_end, j);
+        u = battle_effect_lerp_q8(entry->radial_mesh.u_start, entry->radial_mesh.u_end, j);
+        v = battle_effect_lerp_q8(entry->radial_mesh.v_start, entry->radial_mesh.v_end, j);
         u_span = entry->radial_mesh.u_span;
         v_span = entry->radial_mesh.v_span;
         work->v_scroll += entry->radial_mesh.v_scroll_speed;
@@ -184,24 +184,23 @@ s32 effect_update_ring_stack_mesh(s32 record_index, s32 callback_slot, s32 emitt
         }
 
         READ_CURVE(i, j, entry->radial_mesh.shape_curves.growth, frame);
-        growth.vx = battle_effect_lerp_fixed8(entry->radial_mesh.growth_start, entry->radial_mesh.growth_end, j);
-        growth.vy = battle_effect_lerp_fixed8(entry->radial_mesh.height_start, entry->radial_mesh.height_end, j);
-        growth.vz
-            = battle_effect_lerp_fixed8(entry->radial_mesh.row_radius_start, entry->radial_mesh.row_radius_end, j);
+        growth.vx = battle_effect_lerp_q8(entry->radial_mesh.growth_start, entry->radial_mesh.growth_end, j);
+        growth.vy = battle_effect_lerp_q8(entry->radial_mesh.height_start, entry->radial_mesh.height_end, j);
+        growth.vz = battle_effect_lerp_q8(entry->radial_mesh.row_radius_start, entry->radial_mesh.row_radius_end, j);
 
         growth_step_selector = entry->radial_mesh.shape_curves.growth_step;
         READ_CURVE(i, j, growth_step_selector, frame);
         growth_step.vx
-            = battle_effect_lerp_fixed8(entry->radial_mesh.growth_step_start, entry->radial_mesh.growth_step_end, j);
+            = battle_effect_lerp_q8(entry->radial_mesh.growth_step_start, entry->radial_mesh.growth_step_end, j);
         growth_step.vy
-            = battle_effect_lerp_fixed8(entry->radial_mesh.height_step_start, entry->radial_mesh.height_step_end, j);
-        growth_step.vz = battle_effect_lerp_fixed8(
+            = battle_effect_lerp_q8(entry->radial_mesh.height_step_start, entry->radial_mesh.height_step_end, j);
+        growth_step.vz = battle_effect_lerp_q8(
             entry->radial_mesh.row_radius_step_start, entry->radial_mesh.row_radius_step_end, j);
 
         READ_CURVE(i, j, entry->radial_mesh.motion_curves.spin, frame);
-        work->spin = (work->spin
-                         + battle_effect_lerp_fixed8(
-                             entry->radial_mesh.spin_speed_start, entry->radial_mesh.spin_speed_end, j))
+        work->spin
+            = (work->spin
+                  + battle_effect_lerp_q8(entry->radial_mesh.spin_speed_start, entry->radial_mesh.spin_speed_end, j))
             & (ONE - 1);
         sin0 = rsin(work->spin);
         sin1 = rsin(work->spin + (ONE / RING_STACK_SEGMENT_COUNT));

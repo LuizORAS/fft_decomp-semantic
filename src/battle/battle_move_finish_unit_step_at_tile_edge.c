@@ -7,7 +7,7 @@
  * battle_move_update_airborne_ascent_phase): move, displace a unit standing on the destination
  * tile (outside events), and wait for the destination's entry edge and the ground. A hop
  * (animation 0x30-0x31: a climb hop or a short gap jump) that lands softly (velocity below
- * 0x6000) walks straight on to the centre, at climb speed when the step's destination-climb bit is set, splashing when
+ * 0x6000) walks straight on to the center, at climb speed when the step's destination-climb bit is set, splashing when
  * it lands in water. A harder landing or a long jump enters the landing phase (0x14, stride 4), with animation 0x20
  * outside action execution and the landing sound and terrain effect (sound 0x28 when it lands on a unit). */
 void battle_move_finish_unit_step_at_tile_edge(battle_unit_t* unit) {

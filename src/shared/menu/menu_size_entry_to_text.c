@@ -6,7 +6,7 @@
  *
  * Measures the text, optionally widens single-line messages to eight columns
  * (reporting (8 - width) * 5 extra display frames), pads the width to a
- * multiple of 4 plus 0x18 border, and centres the window on x = 0x102.
+ * multiple of 4 plus 0x18 border, and centers the window on x = 0x102.
  */
 void menu_size_entry_to_text(world_menu_entry_t* entry, s16* width, s16* height, s32* out_pad, s32 pad_short) {
     const u8* text;

@@ -2,11 +2,11 @@
 #include "fft/script.h"
 #include "fft/thread.h"
 
-/* Thread body of ColorScreen (EVENT_OPCODE_COLOR_SCREEN): fade the screen colour modulation from a
+/* Thread body of ColorScreen (EVENT_OPCODE_COLOR_SCREEN): fade the screen color modulation from a
  * start RGB to an end RGB over a duration.
  *
- * Parameters: mode byte, start RGB, end RGB, then a 16-bit value duration in frames. The colour advances
- * by two frames per step and finally snaps to the end colour. */
+ * Parameters: mode byte, start RGB, end RGB, then a 16-bit value duration in frames. The color advances
+ * by two frames per step and finally snaps to the end color. */
 void script_color_screen_thread(void) {
     struct {
         s32 start_and_end[6];

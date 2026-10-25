@@ -1,6 +1,8 @@
 #ifndef PSX_BIOS_H
 #define PSX_BIOS_H
 
+/* BIOS function-table selectors and the services the linked veneers call. */
+
 #include "psx/types.h"
 
 /* Selectors used by linked retail veneers and exception-table patches. */

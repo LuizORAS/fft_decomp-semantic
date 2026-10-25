@@ -3,7 +3,7 @@
 
 /* Draw a list page's three text columns into `buffer`, an image as wide as the window's inside: for each
  * visible row from `*row_offset` on, every column that is not MENU_TEXT_COLUMN_HIDDEN draws its text id,
- * number or number glyphs at its x in its colour (colour 4 also sets the pen colour 0x44444444); an id
+ * number or number glyphs at its x in its color (color 4 also sets the pen color 0x44444444); an id
  * whose low 11 bits are 0x7ff stays blank. OPTION compiles this text (the AT list and the options menu
  * call it), and WORLD twice: world_option_menu_draw_text_columns beside the event program, and
  * world_screen_menu_draw_text_columns in the menu-screen library, which the formation, world map and

@@ -9,6 +9,30 @@ source_dir: src/wldcore
 profile: gcc-2.7.2_O2_aspsx-2.21_divcheck
 links: [world]
 
+units:
+  - {addr: 0x800672f8, end: 0x800685e0, name: startup}
+  - {addr: 0x800685e0, end: 0x8006872c, name: file_wait}
+  - {addr: 0x8006872c, end: 0x80068da4, name: resource_loading}
+  - {addr: 0x80068da4, end: 0x800692ac, name: input}
+  - {addr: 0x800692ac, end: 0x8006a0ac, name: resources}
+  - {addr: 0x8006a0f8, end: 0x8006ad28, name: map_tiles}
+  - {addr: 0x8006ad28, end: 0x8006b78c, name: window_records}
+  - {addr: 0x8006b78c, end: 0x800719bc, name: menu_levels}
+  - {addr: 0x800719bc, end: 0x80074134, name: bar}
+  - {addr: 0x80074134, end: 0x800795c4, name: proposition_dispatch}
+  - {addr: 0x800795c4, end: 0x8007bab8, name: proposition_results}
+  - {addr: 0x8007bab8, end: 0x8008047c, name: brave_story_collections}
+  - {addr: 0x8008047c, end: 0x80080e54, name: event_transition}
+  - {addr: 0x80080e54, end: 0x80084230, name: brave_story}
+  - {addr: 0x80084230, end: 0x80084918, name: tutorial_topics}
+  - {addr: 0x80084918, end: 0x8008a6f8, name: list_levels}
+  - {addr: 0x8008a6f8, end: 0x8008cb8c, name: sound_novel}
+  - {addr: 0x8008cb8c, end: 0x8008f514, name: map_routes}
+  - {addr: 0x8008f514, end: 0x80090d30, name: window_render}
+  - {addr: 0x80090d30, end: 0x80091238, name: music_queue}
+  - {addr: 0x80091238, end: 0x80092b04, name: map_opcodes}
+  - {addr: 0x8009de1c, end: 0x8009e0ec, name: calendar_advance_days}
+
 functions:
   - {addr: 0x800672f8, size: 396, name: wldcore_entrypoint, hash: be43a4c70a891d0f}
   - {addr: 0x80067484, size: 92, name: wldcore_gfx_update_map_backdrop, hash: 25a5e00be7ab4f2a}
@@ -446,7 +470,6 @@ functions:
 
 data:
   - {addr: 0x8008c0ac, name: world_unit_get_facing_sixteenth_by_runtime_id}
-  - {addr: 0x8008cdd0, name: wldcore_unit_get_battle_id_by_runtime_id}
   - {addr: 0x80092b04, name: wldcore_system_switch_to_stack}
   - {addr: 0x80092b1c, name: wldcore_system_restore_previous_stack}
   - {addr: 0x80092b2c, name: g_wldcore_anim_sequence_table}

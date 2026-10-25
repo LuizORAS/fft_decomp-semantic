@@ -101,7 +101,7 @@ typedef struct battle_move_destination {
     u32 force_animation_update : 1;
     u32 : 2;
 } battle_move_destination_t;
-typedef char move_destination_size_must_be_4[sizeof(battle_move_destination_t) == 4 ? 1 : -1];
+typedef char battle_move_destination_size_must_be_4[sizeof(battle_move_destination_t) == 4 ? 1 : -1];
 
 /* One frame of an SHP file: a 2-byte header followed by 4-byte parts, each a
  * rectangle of the sheet and where it is drawn (battle_gfx_load_shp_frame_parts). */
@@ -160,7 +160,7 @@ typedef struct battle_gfx_sprite_part_display_data {
 typedef char
     battle_gfx_sprite_part_display_data_size_must_be_7[(sizeof(battle_gfx_sprite_part_display_data_t) == 7) ? 1 : -1];
 
-/* A sprite display: texture page, CLUT, colour and the parts cut from it.
+/* A sprite display: texture page, CLUT, color and the parts cut from it.
  * Renderer APIs use this common header and variable part tail; the fixed
  * storage records below describe each slot inside a 0x440-byte runtime record. */
 typedef struct battle_gfx_sprite_display_data {
@@ -210,7 +210,7 @@ typedef struct battle_move_step {
     u8 higher : 1;    /* destination on the higher elevation */
     u8 direction : 2; /* battle_move_step_direction_e */
 } battle_move_step_t;
-typedef char move_step_size_must_be_1[sizeof(battle_move_step_t) == 1 ? 1 : -1];
+typedef char battle_move_step_size_must_be_1[sizeof(battle_move_step_t) == 1 ? 1 : -1];
 
 /* battle_walk_path_t.count values that are not a step count
  * (battle_move_build_path_to_tile). */
@@ -242,7 +242,7 @@ typedef enum battle_move_step_direction {
  * a step write the NORTH value whatever the direction. */
 typedef enum battle_move_step_phase {
     BATTLE_MOVE_STEP_PHASE_NONE = 0,
-    /* walking: from the tile centre to its exit edge, then on to the destination centre */
+    /* walking: from the tile center to its exit edge, then on to the destination center */
     BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_SOUTH = 1,
     BATTLE_MOVE_STEP_PHASE_WALK_TO_CENTRE_SOUTH = 2,
     BATTLE_MOVE_STEP_PHASE_WALK_TO_EDGE_EAST = 3,
@@ -351,7 +351,7 @@ typedef struct battle_action_result_display {
     u16 progress;                                  /* 0x06 */
     battle_gfx_sprite_display_data_t* displays[3]; /* 0x08 */
 } battle_action_result_display_t;
-typedef char action_result_display_size_must_be_20[(sizeof(battle_action_result_display_t) == 20) ? 1 : -1];
+typedef char battle_action_result_display_size_must_be_20[(sizeof(battle_action_result_display_t) == 20) ? 1 : -1];
 
 /* Result of battle_unit_get_chocobo_mount_state. */
 typedef enum battle_chocobo_mount_state {
@@ -647,7 +647,7 @@ typedef struct battle_unit_seq_header {
     s32 first_sp2_sequence;    /* 0x04; sequences from here use the SP2 file */
     u8* sequences[0];          /* 0x08; variable pointer tail */
 } battle_unit_seq_header_t;
-typedef char battle_gfx_unit_seq_table_size_must_be_8[sizeof(battle_unit_seq_header_t) == 8 ? 1 : -1];
+typedef char battle_unit_seq_header_size_must_be_8[sizeof(battle_unit_seq_header_t) == 8 ? 1 : -1];
 
 /* An EVTCHR slot's fixed SEQ storage. Its 32-bit header fields are unset and unread;
  * its 0x40 pointers refer into the slot's own 0x400 bytes. */
@@ -842,7 +842,7 @@ typedef enum battle_distortion_animation {
     BATTLE_DISTORTION_ANIMATION_RISE = 2,             /* 0x24 up */
     BATTLE_DISTORTION_ANIMATION_SETTLE = 3,           /* back to the height of where the unit stands */
     BATTLE_DISTORTION_ANIMATION_MOVE_TO_TARGET = 4,   /* to the first target, or to the targeted panel */
-    BATTLE_DISTORTION_ANIMATION_MOVE_TO_OWN_TILE = 5, /* to the centre of the unit's own tile */
+    BATTLE_DISTORTION_ANIMATION_MOVE_TO_OWN_TILE = 5, /* to the center of the unit's own tile */
     BATTLE_DISTORTION_ANIMATION_JUMP_TO_TARGET = 6,   /* the same two along a jump arc */
     BATTLE_DISTORTION_ANIMATION_JUMP_TO_OWN_TILE = 7,
     BATTLE_DISTORTION_ANIMATION_MOVE_TO_TARGET_LEVEL = 8, /* 4 and 5 without the change of height */
@@ -983,7 +983,7 @@ typedef struct battle_move_height_offsets {
     u8 source_present : 1;
     u8 source_height_offset : 3;
 } battle_move_height_offsets_t;
-typedef char move_height_offsets_size_must_be_1[(sizeof(battle_move_height_offsets_t) == 1) ? 1 : -1];
+typedef char battle_move_height_offsets_size_must_be_1[(sizeof(battle_move_height_offsets_t) == 1) ? 1 : -1];
 
 /* Complete movement record copied from 0x8018f7f0 into runtime +0x9c.
  * Count 0xfe selects the explicit teleport destination; 0xff is a failed
@@ -1058,7 +1058,7 @@ typedef struct battle_unit {
     u8 map_y;                     /* 0x07d */
     u8 map_z;                     /* 0x07e */
     /* 0x07f; step phase, run each frame by battle_move_update_path_step. Each group holds one phase per direction
-     * (south, east, north, west): 0 idle; 0x01-0x08 walk (odd: centre to edge, even: edge to centre); 0x09-0x10 the
+     * (south, east, north, west): 0 idle; 0x01-0x08 walk (odd: center to edge, even: edge to center); 0x09-0x10 the
      * same at climb speed; 0x11-0x20 jumps, four per direction (crouch, rise, fall, landing); 0x22-0x29 fly; 0x2b-0x39
      * float; 0x3b reset the coordinates; 0x3c end of the walk. */
     u8 step_phase; /* 0x07f; battle_move_step_phase_e */

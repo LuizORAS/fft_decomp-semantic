@@ -1,12 +1,12 @@
 #include "fft/battle_gfx.h"
 #include "psx/types.h"
 
-/* Step the screen colour-modulation fade once a frame: add each channel's Q8 step to its accumulator,
- * take the high byte as the colour in effect, and on the last frame set the target colour.
+/* Step the screen color-modulation fade once a frame: add each channel's Q8 step to its accumulator,
+ * take the high byte as the color in effect, and on the last frame set the target color.
  *
- * The fade state: the target colour, the colour in effect, a Q8 accumulator and per-frame Q8 step per
+ * The fade state: the target color, the color in effect, a Q8 accumulator and per-frame Q8 step per
  * channel, and the frames left. The three-element shape is what makes GCC hold the base addresses of the
- * current-colour and accumulator arrays in registers for element 0. */
+ * current-color and accumulator arrays in registers for element 0. */
 void battle_gfx_update_screen_color_modulation_fade(void) {
     u16 count;
     u16 remaining;

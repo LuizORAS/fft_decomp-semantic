@@ -10,7 +10,7 @@
  * and report whether it is blocked.
  *
  * Both endpoints are raised by two thirds of their sprite height (12 when the target has none), as in
- * battle_effect_check_direct_trajectory_between_units; the tile case instead centres on the tile at
+ * battle_effect_check_direct_trajectory_between_units; the tile case instead centers on the tile at
  * tile_position (x, layer, y) and sits on its surface, as in battle_effect_set_arrow_trajectory. The
  * extra work over those two is the launch angle: ratan2 of the vertical delta against the horizontal
  * distance, biased by 0x400 (a quarter turn) into g_battle_effect_arctan_angle_mod. Returns target_id

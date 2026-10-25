@@ -4,7 +4,7 @@
 
 /* Build the 43 location dots and queue them for drawing. Each takes its kind, sub-kind and map
  * position from g_wldcore_map_dot_sources; kinds 0 and 1 (the castles and towns) use the first dot
- * sequence and kind 2 (the other places) the second. A location whose colour variable
+ * sequence and kind 2 (the other places) the second. A location whose color variable
  * (EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST + id) is set takes palette 0xc (the first 24 locations) or
  * 0x10 (the fields), the blue and green dots; 0 keeps the sprite's own red, where a story event
  * waits. A location whose visibility variable is 0 is hidden. Resets the pulse and projects the

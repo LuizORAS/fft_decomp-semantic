@@ -18,7 +18,7 @@
  * - 10: wait until the deployment screen stops running, then resync the scenario music and set the map
  *   darkness ATTACK.OUT carries (attack_sound_resync_scenario_music_and_apply_map_darkness);
  * - 11: after a random battle, play a random battle track;
- * - 12: start the weather sounds, seed the three colour fades from the loaded map, upload the CLUT rows,
+ * - 12: start the weather sounds, seed the three color fades from the loaded map, upload the CLUT rows,
  *   reset the turn clock and set up the AI workspace.
  * battle_map_step_init_sequence is the same load for a map entered later in the battle. */
 s32 battle_map_step_setup_sequence(s32 map_id, s32 step, s32 deployment_running) {
@@ -122,7 +122,7 @@ s32 battle_map_step_setup_sequence(s32 map_id, s32 step, s32 deployment_running)
         break;
     case 12:
         battle_sound_start_weather_sfx();
-        /* Seed the three colour fades from the colours the loaded map set. */
+        /* Seed the three color fades from the colors the loaded map set. */
         battle_map_init_background_gradient();
         battle_map_init_ambient_light();
         battle_map_init_darkness();

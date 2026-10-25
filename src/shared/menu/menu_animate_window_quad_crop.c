@@ -6,7 +6,7 @@
 
 /*
  * Animate the current window's first quad growing out from the rectangle
- * centre: each frame crops a sprite of the rectangle by the level's
+ * center: each frame crops a sprite of the rectangle by the level's
  * percentage and copies the cropped bounds into the quad's corners.
  * BATTLE and WORLD compile this text.
  */

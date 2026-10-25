@@ -4,7 +4,7 @@
 #include "psx/types.h"
 
 /* Stream command: draw a textured quad at its position, size and texture
- * origin (cmd->sprite), in the current sprite colour or, for
+ * origin (cmd->sprite), in the current sprite color or, for
  * MENU_SCRIPT_OP_UNCOLOURED_QUAD, unshaded. While a list row is rendered, y is
  * offset by the row's position and the scroll offset. Returns the next command. */
 menu_instruction_t* menu_script_draw_textured_quad(menu_instruction_t* cmd) {

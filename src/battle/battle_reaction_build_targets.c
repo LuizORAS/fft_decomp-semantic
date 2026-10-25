@@ -5,7 +5,7 @@
 /* Build the target list of a reaction's strike. Reflect: the unit on the action's tile (a mount's
  * rider), when targetable. Distribute: the injured allies of the reacting unit's team that are not
  * mounts, crystallized, dead, jumping, petrified or treasure (g_battle_reaction_distribute_count).
- * Damage Split: the acting unit. Others follow the reaction's behaviour flags: TARGET_SELF the unit
+ * Damage Split: the acting unit. Others follow the reaction's behavior flags: TARGET_SELF the unit
  * itself, TARGET_ATTACKER returns 0 so the hit tiles decide. Returns 1 when the list is built (it may
  * be empty). */
 s32 battle_reaction_build_targets(s32 actor_id, battle_strike_work_t* work, s32* target_count, u8* target_ids) {

@@ -6,7 +6,7 @@
 /* Start the next pending post-move event (g_battle_move_post_move_events) and enter
  * BATTLE_GAME_STATE_CRYSTAL_LEARN, whose handler clears the event's bit once it has played and calls
  * this again. Order: a crystal or chest pickup, the movement-ability rewards and level-up reports
- * (two display phases), a found item, a trap, a cancelled charge, then a display refresh of the
+ * (two display phases), a found item, a trap, a canceled charge, then a display refresh of the
  * mover (SOURCE_DISPLAY, which nothing sets) or of its mount (MOUNT_STATUS_CHANGE). Returns 1 when
  * an event started; with none left it refreshes both units, enters the after-command state unless
  * the Deep Dungeon refresh takes over, and returns 0. */

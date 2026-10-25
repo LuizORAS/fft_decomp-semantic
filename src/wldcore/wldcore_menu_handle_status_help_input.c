@@ -1,7 +1,7 @@
 #include "fft/wldcore.h"
 #include "psx/pad.h"
 
-/* Input step of the status help: the d-pad moves the cursor to the neighbouring field
+/* Input step of the status help: the d-pad moves the cursor to the neighboring field
  * (g_wldcore_status_help_fields), Circle shows the field's help text (its base text id, plus the
  * field's current value when it has one; a value of -1 or 0 shows nothing, except on field 0x0b) and
  * Cross closes the level. */

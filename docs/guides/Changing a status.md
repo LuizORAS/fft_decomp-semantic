@@ -39,7 +39,7 @@ them; some older code tests the raw byte and mask instead.
   immunities, event-excluded, mount removal). Changing a flag changes every
   reader of that set, listed on the [[Status]] page.
 - **The AI.** The AI scores statuses with its own tables and checks
-  (`battle_ai_classify_ability_effect` and its neighbours), so a new effect
+  (`battle_ai_classify_ability_effect` and its neighbors), so a new effect
   does not change how the AI values the status.
 - **Estimates.** Previews and AI simulations run the same status code;
   only execution queues the graphics

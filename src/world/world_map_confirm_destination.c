@@ -5,7 +5,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* The location list's confirm callback: a location other than the current one (row colour 4) is
+/* The location list's confirm callback: a location other than the current one (row color 4) is
  * stored in EVENT_SCRIPT_VAR_CURRENT_MAP and MAIN_SYSTEM_FLAG_REQUEST_DESTINATION raised, so the map
  * travels there once WORLD's menu closes, and the list's two helper threads are told to stop; the
  * current location only plays the invalid sound. Ends its own thread.

@@ -45,6 +45,7 @@ type moduleSpec struct {
 	Profile   string   // default compiler profile of the module's functions
 	Links     []string // modules resident alongside this one, searched after it
 	Libraries []librarySpec
+	Units     []unitSpec
 	Functions []functionSpec
 	Data      []symbolSpec
 	Imports   []symbolSpec
@@ -100,6 +101,17 @@ type regionSpec struct {
 	Why  string
 }
 
+// unitSpec is one original translation unit: the functions in [Addr, End),
+// compiled together from one source file under Profile (empty: the module
+// default). Each function keeps its own source; `make unit-check` rebuilds
+// the unit from them.
+type unitSpec struct {
+	Addr    uint32
+	End     uint32
+	Name    string
+	Profile string
+}
+
 var libraryKinds = map[string]bool{"psyq": true, "c-runtime": true, "middleware": true}
 
 // regionKinds are the reasons a code range is not reconstructed as C.
@@ -119,6 +131,17 @@ func (m *moduleSpec) offset(addr uint32) int { return int(addr - m.Load) }
 
 func (m *moduleSpec) contains(addr uint32, size int) bool {
 	return addr >= m.Load && uint64(addr)+uint64(size) <= m.end()
+}
+
+// isLibraryFunction reports whether f lies in one of the module's linked
+// library ranges.
+func (m *moduleSpec) isLibraryFunction(f *functionSpec) bool {
+	for _, library := range m.Libraries {
+		if f.Addr < library.End && uint64(f.Addr)+uint64(f.Size) > uint64(library.Addr) {
+			return true
+		}
+	}
+	return false
 }
 
 func (m *moduleSpec) profileOf(f *functionSpec) string {
@@ -142,6 +165,25 @@ func (m *moduleSpec) sourceOf(f *functionSpec) string {
 		return f.Source
 	}
 	return m.defaultSource(f)
+}
+
+// unitMembers lists the functions inside the unit's range, in address order.
+func (m *moduleSpec) unitMembers(unit unitSpec) []*functionSpec {
+	var members []*functionSpec
+	for index := range m.Functions {
+		if f := &m.Functions[index]; f.Addr >= unit.Addr && f.Addr < unit.End {
+			members = append(members, f)
+		}
+	}
+	sort.SliceStable(members, func(i, j int) bool { return members[i].Addr < members[j].Addr })
+	return members
+}
+
+func (m *moduleSpec) unitProfileName(unit unitSpec) string {
+	if unit.Profile != "" {
+		return unit.Profile
+	}
+	return m.Profile
 }
 
 // regionOverlapping returns the first region overlapping [start, end).
@@ -253,6 +295,7 @@ type moduleFileYAML struct {
 	Profile   string         `yaml:"profile"`
 	Links     []string       `yaml:"links"`
 	Libraries []libraryYAML  `yaml:"libraries"`
+	Units     []unitYAML     `yaml:"units"`
 	Functions []functionYAML `yaml:"functions"`
 	Data      []symbolYAML   `yaml:"data"`
 	Imports   []symbolYAML   `yaml:"imports"`
@@ -304,6 +347,13 @@ type regionYAML struct {
 	Why  string `yaml:"why"`
 }
 
+type unitYAML struct {
+	Addr    uint32 `yaml:"addr"`
+	End     uint32 `yaml:"end"`
+	Name    string `yaml:"name"`
+	Profile string `yaml:"profile"`
+}
+
 func parseModuleConfig(data []byte) (*moduleSpec, error) {
 	decoder := yaml.NewDecoder(bytes.NewReader(data))
 	decoder.KnownFields(true)
@@ -340,6 +390,9 @@ func parseModuleConfig(data []byte) (*moduleSpec, error) {
 	}
 	for _, item := range file.Regions {
 		module.Regions = append(module.Regions, regionSpec(item))
+	}
+	for _, item := range file.Units {
+		module.Units = append(module.Units, unitSpec(item))
 	}
 	return module, nil
 }
@@ -381,6 +434,12 @@ func (m *moduleSpec) normalize() {
 		return m.Overrides[i].Name < m.Overrides[j].Name
 	})
 	sort.SliceStable(m.Libraries, func(i, j int) bool { return m.Libraries[i].Addr < m.Libraries[j].Addr })
+	for index := range m.Units {
+		if m.Units[index].Profile == m.Profile {
+			m.Units[index].Profile = ""
+		}
+	}
+	sort.SliceStable(m.Units, func(i, j int) bool { return m.Units[i].Addr < m.Units[j].Addr })
 	sort.SliceStable(m.Regions, func(i, j int) bool {
 		if m.Regions[i].Addr != m.Regions[j].Addr {
 			return m.Regions[i].Addr < m.Regions[j].Addr
@@ -427,6 +486,14 @@ func renderModuleConfig(m *moduleSpec) []byte {
 	section("libraries", len(m.Libraries), func(index int) string {
 		item := m.Libraries[index]
 		return fmt.Sprintf("id: %s, addr: 0x%08x, end: 0x%08x, kind: %s, library: %s", yamlText(item.ID), item.Addr, item.End, yamlText(item.Kind), yamlText(item.Library))
+	})
+	section("units", len(m.Units), func(index int) string {
+		item := m.Units[index]
+		text := fmt.Sprintf("addr: 0x%08x, end: 0x%08x, name: %s", item.Addr, item.End, yamlText(item.Name))
+		if item.Profile != "" {
+			text += ", profile: " + yamlText(item.Profile)
+		}
+		return text
 	})
 	section("functions", len(m.Functions), func(index int) string {
 		item := m.Functions[index]
@@ -713,6 +780,38 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 				fail("%s: library %s range is invalid, overlapping or outside the image", label, library.ID)
 			}
 			libraryEnd = library.End
+		}
+		var unitEnd uint32
+		seenUnits := make(map[string]bool)
+		for _, unit := range m.Units {
+			where := fmt.Sprintf("%s: unit %s", label, unit.Name)
+			if !validSymbol(unit.Name) || seenUnits[unit.Name] {
+				fail("%s has an invalid or duplicate name", where)
+			}
+			seenUnits[unit.Name] = true
+			if _, ok := compilerProfileNamed(m.unitProfileName(unit)); !ok {
+				fail("%s uses unknown profile %q", where, unit.Profile)
+			}
+			if unit.End <= unit.Addr || unit.Addr < unitEnd || !m.contains(unit.Addr, int(unit.End-unit.Addr)) {
+				fail("%s range is invalid, overlapping or outside the image", where)
+				continue
+			}
+			unitEnd = unit.End
+			// The members tile the range: C functions, each one starting where
+			// the previous one ends.
+			next := unit.Addr
+			for _, f := range m.unitMembers(unit) {
+				if f.Addr != next {
+					break
+				}
+				if f.Asm != "" {
+					fail("%s holds assembly %s", where, f.Name)
+				}
+				next = f.Addr + uint32(f.Size)
+			}
+			if next != unit.End {
+				fail("%s has no function continuing it at 0x%08x", where, next)
+			}
 		}
 		for _, region := range m.Regions {
 			where := fmt.Sprintf("%s: region 0x%08x-0x%08x", label, region.Addr, region.End)

@@ -315,7 +315,7 @@ typedef struct battle_action_data {
      * arrow_guard_usability, battle_formula_apply_catch, force_attack_miss). */
     s16 attack_accuracy; /* 0x2a */
 } battle_action_data_t;
-typedef char action_data_size_must_be_44[(sizeof(battle_action_data_t) == 44) ? 1 : -1];
+typedef char battle_action_data_size_must_be_44[(sizeof(battle_action_data_t) == 44) ? 1 : -1];
 
 /* battle_action_data_t.miss_display_flags, loaded from the ability's AI flags. */
 typedef enum battle_action_miss_display_flags {
@@ -480,19 +480,19 @@ enum {
     CHARACTER_IDENTITY_SELECTOR_COUNT = 3,
 };
 
-typedef enum battle_equipment_categories_1 {
+typedef enum battle_unit_equipment_categories_1 {
     BATTLE_EQUIPMENT_SET_1_AXE = 0x02,
     BATTLE_EQUIPMENT_SET_1_KATANA = 0x04,
     BATTLE_EQUIPMENT_SET_1_SWORD = 0x10,
 } battle_unit_equipment_categories_1_e;
 
-typedef enum battle_equipment_categories_2 {
+typedef enum battle_unit_equipment_categories_2 {
     BATTLE_EQUIPMENT_SET_2_SPEAR = 0x01,
     BATTLE_EQUIPMENT_SET_2_CROSSBOW = 0x10,
     BATTLE_EQUIPMENT_SET_2_GUN = 0x20,
 } battle_unit_equipment_categories_2_e;
 
-typedef enum battle_equipment_categories_3 {
+typedef enum battle_unit_equipment_categories_3 {
     BATTLE_EQUIPMENT_SET_3_ARMOR = 0x01,
     BATTLE_EQUIPMENT_SET_3_RIBBON = 0x02,
     BATTLE_EQUIPMENT_SET_3_HELM = 0x08,
@@ -500,7 +500,7 @@ typedef enum battle_equipment_categories_3 {
     BATTLE_EQUIPMENT_SET_3_BAG = 0x40,
 } battle_unit_equipment_categories_3_e;
 
-typedef enum battle_equipment_categories_4 {
+typedef enum battle_unit_equipment_categories_4 {
     BATTLE_EQUIPMENT_SET_4_PERFUME = 0x01,
 } battle_unit_equipment_categories_4_e;
 
@@ -736,7 +736,7 @@ typedef char battle_unit_position_size_must_be_2[(sizeof(battle_unit_position_t)
 
 /* battle_stats_t.auto_battle_setting and the AI copies of it. The BATTLE and
  * WORLD auto-battle menus store it and the AI reads it. */
-typedef enum battle_ai_autobattle_mode {
+typedef enum battle_auto_battle_setting {
     BATTLE_AUTO_BATTLE_MANUAL = 0, /* the player gives the orders */
     BATTLE_AUTO_BATTLE_FIGHT_FOR_LIFE = 12,
     BATTLE_AUTO_BATTLE_PROTECT_ALLIES = 14,
@@ -913,7 +913,7 @@ typedef struct entd_file {
 typedef char entd_file_size_must_be_81920[(sizeof(entd_file_t) == 81920) ? 1 : -1];
 
 /* Battle Stats 0x05 and unit runtime record 0x13d share this byte. */
-typedef enum battle_team_flags {
+typedef enum battle_unit_team_flags {
     BATTLE_TEAM_MASK = 0x30,
     BATTLE_TEAM_OR_PLAYER_CONTROL_MASK = 0x38,
     BATTLE_TEAM_BLUE = 0x00,
@@ -1146,7 +1146,7 @@ typedef struct battle_stats {
     u8 initial_team_flags;           /* 0x1ba */
     u8 inflicted_status[5];          /* 0x1bb */
 } battle_stats_t;
-typedef char unit_stats_size_must_be_448[(sizeof(battle_stats_t) == 448) ? 1 : -1];
+typedef char battle_stats_size_must_be_448[(sizeof(battle_stats_t) == 448) ? 1 : -1];
 
 /* The battle units: the battle stats of the 21 slots (g_battle_unit_stats) and the display records of
  * the misc unit list (g_battle_units), and what reads and changes them by misc or battle id:

@@ -50,9 +50,9 @@ remain excluded. Never modify `meta/`.
   bytes, SHA-256 `29e63bb6d2e7b842fe87f7c0ee03b7076681c34bcc47095cca27ec53236bf4f9`).
 - Output: `build/disc/output-scus-94221.bin` + `.cue`, byte-identical to the
   input. These constants live in `tools/target.go`.
-- Never add, stage or embed game media, extracted files, build output or
-  proprietary SDK material. `meta/` is the user's private reference folder:
-  never modify it.
+- Never add, stage or embed game media, extracted files, build output,
+  proprietary SDK material or text copied from outside references (wikis,
+  guides). `meta/` is the user's private reference folder: never modify it.
 
 ## Layout
 
@@ -98,16 +98,20 @@ make extract               # extract the BIN (build/checksums/diff do it on dema
 make checksums             # refresh hashes from the ORIGINAL bytes only
 make check-config          # validate target/, sources and declarations
 make config-fmt            # rewrite target/*.yaml in canonical form
+make decl-check            # fail on calls to undeclared functions (the build's -w hides them)
 make declarations          # report conflicting declarations in detail
 make symbols ACTION=rename-function|rename-global ARGS="--old A --new B"
 make share-audit [MODULE=x] # report shared C implementation candidates as JSON
+make twins [MODULE=x]      # group functions identical under renames across modules (needs the BIN)
+make trial TWINS=t0001     # compile each twin's source at the others' entries (or MODULE ENTRY SOURCE)
+make unit-check [MODULE=x] # compile each original translation unit whole from its members' sources
 make diff FUNC=f           # compare one function with the original bytes (needs the BIN)
 make library-diff ARGS="..." # compare a scratch library candidate without registering it
 make permute FUNC=f        # run decomp-permuter on it [DURATION=300 JOBS=4]
 make test                  # vet and test the Go tooling
 make map                   # write the codebase map (Obsidian vault) to build/map and the upstream rename table to docs/upstream-renames.tsv; ARGS=--pull-docs copies docs edited in the vault back
 make warnings              # list cc1 -Wall warnings per function in build/warnings [MODULE=x]
-make verify                # fmt-check, check-config and check
+make verify                # fmt-check, check-config, decl-check and check
 make fmt                   # clang-format src/ and include/ in place
 make fmt-check             # fail on any formatting drift
 make shell                 # interactive shell in the image
@@ -120,7 +124,8 @@ make compile-commands      # editor compile_commands.json (host clang)
 `effect` selects every such module. `diff` and `permute` need it only when
 several modules define `FUNC`. Both compile exactly as `check` does. Every change
 ends with `make check` passing. Before handing off, also run `make build`
-(disc exact), `make check-config` and `make fmt-check`.
+(disc exact), `make check-config`, `make decl-check`, `make fmt-check` and
+`make test`.
 
 Every target runs in a fresh `docker run --rm` container of the pinned
 `Dockerfile` image as the host user, with the checkout mounted at `/work`;
@@ -129,9 +134,9 @@ layer proves every tool runs) and rebuilt by `make bootstrap`. It holds the
 old GCC `cc1` binaries (native on x86-64, through `qemu-i386` elsewhere), maspsx, mipsel binutils and
 `cpp`, mkpsxiso, asm-differ (`make diff` listings), decomp-permuter, Go and
 clang-format 22.1.8. CI (`.github/workflows/check.yml`) runs `fmt-check`,
-`check-config`, `test` and `map` in one job and `check` in four module shards,
-without the BIN; `check-config` fails unless the shards' module lists cover
-every module once. Optional overrides: `JOBS`, `CACHE=0`, `WORK_DIR`,
+`check-config`, `test`, `decl-check` and `map` in one job and `check` in four
+module shards, without the BIN; `check-config` fails unless the shards' module
+lists cover every module once. Optional overrides: `JOBS`, `CACHE=0`, `WORK_DIR`,
 `REPORT_ALL=1`, `DURATION` (see the Makefile).
 
 ## target/*.yaml
@@ -146,13 +151,18 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
 - `functions`: `{addr, size, name, hash}`, plus `profile`, `rodata`, `asm`
   (why the routine is assembly; its default source is then
   `src/<module>/<name>.s`), `source` (a path other than the default) or
-  `source_symbol` (the
-  neutral symbol a `src/shared/` source defines) only when needed. `hash` is the first 16 hex digits of the SHA-256 of the
+  `source_symbol` (the neutral symbol a `src/shared/` source defines) only
+  when needed. `hash` is the first 16 hex digits of the SHA-256 of the
   original bytes; only `make checksums` writes it.
 - `data`: named addresses with no reconstruction (globals, library entry
   points). `imports`: names from overlays that linking cannot otherwise
   reach. `overrides`: per-function bindings. `regions`: bytes deliberately
   left original, with the reason.
+- `units`: the original translation units, `{addr, end, name}` plus `profile`
+  when the file was not built with the module default, matched by address
+  from upstream's unit tables and named with its labels. The functions in
+  `[addr, end)` were one source file; each keeps its own source, and
+  `make unit-check` rebuilds the unit from them.
 - Linking one function binds each name it uses from its own module, then
   each `links` module in order, then main.
 
@@ -182,11 +192,14 @@ function carries its own `profile` only where it differs:
 
 Translation units were contiguous, so profiles come in address runs. Move a
 function to another profile only when it then matches with fewer levers (or
-none), and prefer the profile of its neighbours.
+none), and prefer the profile of its neighbors.
 
 ## Code rules
 
 - Byte-exact always. Never weaken a check or edit a hash to accept a mismatch.
+- Represent only what the original game did: no abstraction, helper layer or
+  scaffolding the game did not have. A macro, header or helper exists only
+  when it expresses something the original contained.
 - C, except the routines the original programmers wrote in assembly. Each is
   one `.s` file per routine and module, named after it. Its opening comment
   says which original range it reproduces and why it cannot be C (it replaces
@@ -206,16 +219,22 @@ none), and prefer the profile of its neighbours.
   provisional name. A raw offset, cast, register pin or empty asm barrier stays
   only when the clean spelling provably changes the bytes, with a one-line
   comment saying so.
+- Ordinary C: named fields, direct assignments, conventional loops. Remove a
+  redundant local unless a named temporary reads better (a long call or index
+  expression, a value used more than once, a step that deserves a name).
 - Names carry the module prefix (`battle_`, `world_`, `wldcore_`, `open_`,
   `main_`, `<overlay>_`; globals `g_battle_`, …). Unknowns stay
-  `func_ADDRESS` or `D_ADDRESS` until the code supports a name. Unnamed
+  `func_ADDRESS` or `D_ADDRESS` until the code supports a name, and a name
+  that rests on thin evidence says Provisional in its comment. Unnamed
   struct members are `_unknown_XX` (code accesses it, meaning unknown),
   `_unused_XX` (no source accesses it by name) or `_padding_XX` (alignment
   or size filler, with an inline comment saying which), where XX is the
   hex offset in the member's own struct, zero-padded to the same width
   throughout the struct. `make check-config` fails on any access to an
-  `_unused_` or `_padding_` member. snake_case; `_t` struct and `_e` enum typedefs; uppercase enum values;
-  `_init_`, not `_initialize_`. Decimal for counts and ordinary enum values,
+  `_unused_` or `_padding_` member. snake_case; `_t` struct and `_e` enum
+  typedefs whose tag repeats the name without the suffix; a size assert of a
+  project type is named after it (`battle_stats_size_must_be_448`); uppercase
+  enum values; `_init_`, not `_initialize_`. Decimal for counts and ordinary enum values,
   hex for flags and encoded values. A `src/shared/` source defines the neutral
   name its rows' `source_symbol` gives; each module's row keeps its module name
   where the module names that entry. `include/psx/` keeps SDK names. Header guards
@@ -227,7 +246,8 @@ none), and prefer the profile of its neighbours.
   it unused. Proven register spacing and alignment remain `_padding_XX`.
 - Fixed point is 1.3.12 / 20.12 with 1.0 = `ONE` (4096, `psx/libgte.h`), also
   one full rsin/rcos turn. Write `ONE` for 1.0; `>> 12` rescales after a
-  multiply.
+  multiply. A name that states a fixed-point format says `qN` for N fraction
+  bits (`battle_effect_lerp_q8`, `menu_lerp_q12`).
 - One declaration per symbol, in its header. `make check-config` fails on
   conflicting declarations. Globals and prototypes go in the header of their
   name's module prefix. A type goes in the most specific module header that
@@ -242,18 +262,23 @@ none), and prefer the profile of its neighbours.
   file, with its reason. A source file includes its own
   module header, plus another module's header when it calls into that module
   (MAIN and WORLD code calling BATTLE functions, for example). `main.h`
-  includes the shared type headers. Each header groups its declarations under
+  includes the shared type headers. A header starts with its guard, then a
+  short comment saying what it declares, then its includes. Each header groups its declarations under
   short lowercase subsystem labels (`/* ai */`), types first, then globals,
   then functions. A comment and a blank line after each label say what its
   block holds.
 - Comments: a short summary above every function (what it does, in a line or
   two), then only the rationale needed to read the code. State facts, not
-  history. Record retail bugs and caller/callee disagreements with one line in
-  `QUIRKS.md`. Reference library material validates our interfaces; never copy
-  its implementations or comments into the repository.
+  history, in American spelling. Record retail bugs and caller/callee
+  disagreements with one line in `QUIRKS.md`. Reference library material
+  validates our interfaces; never copy its implementations or comments into
+  the repository.
 - Trace casts, shifts, masks and unions through their readers and writers
   before changing a type. Keep genuine encoded data and format-dispatch
   boundaries; do not invent overlays or split records without evidence.
+  Prefer concrete records and named fields over raw union views when the
+  accesses support them; keep genuine alternate layouts, and never move a
+  union's uncertainty into casts or byte arithmetic.
 - `const` only for genuinely read-only inputs, checked at every caller under
   its historical compiler profile (see WLDCORE's reload rule above).
 - Shared-source consolidation (`src/shared/`) keeps every original address and
@@ -288,7 +313,7 @@ When a cleanup changes the bytes, look here first.
   that path: a `switch` without `default`, an early exit, a call with too few
   arguments. Declare it and leave it unset (`T x;`), with a `QUIRKS.md` line,
   rather than pinning a register or adding an `"=r"` barrier.
-- A fresh `lui` for each neighbouring global means separate symbols. A struct
+- A fresh `lui` for each neighboring global means separate symbols. A struct
   view gives GCC one base register and reshapes the body; keep the aliases.
 - Raw offset versus field access changes scheduling (`MEM_IN_STRUCT_P`):
   re-measure after converting.

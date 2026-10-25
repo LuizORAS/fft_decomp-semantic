@@ -8,6 +8,24 @@ source_dir: src/event
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
+units:
+  - {addr: 0x801bf004, end: 0x801bf208, name: scaled_draw_area}
+  - {addr: 0x801bf234, end: 0x801bf77c, name: portrait_transitions}
+  - {addr: 0x801c087c, end: 0x801c0aa4, name: unit_panel_primitives}
+  - {addr: 0x801c0aa4, end: 0x801c1280, name: equipment_panel_threads}
+  - {addr: 0x801c1280, end: 0x801c1954, name: panel_text}
+  - {addr: 0x801c1f44, end: 0x801c2418, name: menu_panel_backdrops}
+  - {addr: 0x801c265c, end: 0x801c2adc, name: deploy_panel_primitives}
+  - {addr: 0x801c2dbc, end: 0x801c3070, name: zodiac_primitives}
+  - {addr: 0x801c3070, end: 0x801c33a8, name: fieldable_units}
+  - {addr: 0x801c33c4, end: 0x801c34b4, name: music_tracks}
+  - {addr: 0x801c34b4, end: 0x801c3d8c, name: scenario_setup}
+  - {addr: 0x801c3db4, end: 0x801c8024, name: deploy_screen}
+  - {addr: 0x801c8024, end: 0x801c80d0, name: file_load_sync}
+  - {addr: 0x801c80d0, end: 0x801c8c08, name: portrait_textures}
+  - {addr: 0x801c8c08, end: 0x801c8cf0, name: gfx_set_formation_icon_uv}
+  - {addr: 0x801c8cf0, end: 0x801c9f8c, name: deploy_menu}
+
 functions:
   - {addr: 0x801bf004, size: 464, name: menu_build_scaled_draw_area_packets, hash: 89323ef0080a45f6, source: src/shared/menu/menu_build_scaled_draw_area_packets.c}
   - {addr: 0x801bf1d4, size: 52, name: menu_init_scaled_draw_area_packets, hash: 8568902b86f9d430, source: src/shared/menu/menu_init_scaled_draw_area_packets.c}
@@ -306,6 +324,36 @@ load: 0x801bf000
 source_dir: src/event
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
+
+units:
+  - {addr: 0x801bf204, end: 0x801bf408, name: scaled_draw_area}
+  - {addr: 0x801bf434, end: 0x801bf954, name: portrait_transitions}
+  - {addr: 0x801c0adc, end: 0x801c0d04, name: unit_panel_primitives}
+  - {addr: 0x801c0d04, end: 0x801c14d4, name: equipment_panel_threads}
+  - {addr: 0x801c14d4, end: 0x801c1ba8, name: panel_text}
+  - {addr: 0x801c2100, end: 0x801c255c, name: menu_window_threads}
+  - {addr: 0x801c2964, end: 0x801c2e38, name: menu_panel_backdrops}
+  - {addr: 0x801c2e38, end: 0x801c3ee0, name: entry}
+  - {addr: 0x801c3ee0, end: 0x801c3fa8, name: status_thread_toggles}
+  - {addr: 0x801c3fa8, end: 0x801c657c, name: unit_list}
+  - {addr: 0x801c657c, end: 0x801c66e0, name: selection_records}
+  - {addr: 0x801c66e0, end: 0x801c71a8, name: unit_records}
+  - {addr: 0x801c71a8, end: 0x801c76cc, name: job_abilities}
+  - {addr: 0x801c76cc, end: 0x801c8408, name: packet_buffers}
+  - {addr: 0x801c8564, end: 0x801c88ec, name: menu_script_core}
+  - {addr: 0x801c88ec, end: 0x801c9268, name: draw_commands}
+  - {addr: 0x801c9268, end: 0x801c9718, name: texture_commands}
+  - {addr: 0x801c9718, end: 0x801cb014, name: menu_list}
+  - {addr: 0x801cb014, end: 0x801cb134, name: draw_state}
+  - {addr: 0x801cb134, end: 0x801cb2c0, name: window_state}
+  - {addr: 0x801cb660, end: 0x801cb944, name: text_id_lists}
+  - {addr: 0x801cbb44, end: 0x801cc50c, name: descriptor_threads}
+  - {addr: 0x801cc808, end: 0x801ccc7c, name: job_list}
+  - {addr: 0x801ccc7c, end: 0x801cce34, name: menu_ability_display_values}
+  - {addr: 0x801cce34, end: 0x801cd344, name: ability_page}
+  - {addr: 0x801cd610, end: 0x801cda9c, name: textured_quads}
+  - {addr: 0x801ce5f8, end: 0x801ce82c, name: screen_fade}
+  - {addr: 0x801ce82c, end: 0x801ce88c, name: gfx_image_transfer_wait}
 
 functions:
   - {addr: 0x801bf204, size: 464, name: menu_build_scaled_draw_area_packets, hash: 6d2b5d586ec77661, source: src/shared/menu/menu_build_scaled_draw_area_packets.c}
@@ -869,6 +917,21 @@ source_dir: src/event
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
+units:
+  - {addr: 0x801bf170, end: 0x801c34c8, name: save_screen, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x801c34c8, end: 0x801c3a4c, name: zodiac_primitives}
+  - {addr: 0x801c3dcc, end: 0x801c3f04, name: graphic_thread}
+  - {addr: 0x801c3f04, end: 0x801c5618, name: memcard, profile: gcc-2.6.3_O0_aspsx-2.34}
+  - {addr: 0x801c5618, end: 0x801c59b0, name: gfx_contexts}
+  - {addr: 0x801c5a04, end: 0x801c6998, name: drawing_commands}
+  - {addr: 0x801c6998, end: 0x801c6ab0, name: draw_state}
+  - {addr: 0x801c6bf4, end: 0x801c6ed8, name: text_id_lists}
+  - {addr: 0x801c7384, end: 0x801c75d0, name: bit_streams}
+  - {addr: 0x801c75d0, end: 0x801c796c, name: input}
+  - {addr: 0x801c7a8c, end: 0x801c7f18, name: textured_quads}
+  - {addr: 0x801c83e8, end: 0x801c861c, name: screen_fade}
+  - {addr: 0x801c861c, end: 0x801c867c, name: gfx_image_transfer_wait}
+
 functions:
   - {addr: 0x801bf170, size: 56, name: card_save_clear_selection_indices, hash: 0309a94d3656604d, profile: gcc-2.6.3_O0_aspsx-2.34}
   - {addr: 0x801bf1a8, size: 528, name: card_save_init_menu_graphics, hash: 02499317253c38cb, profile: gcc-2.6.3_O0_aspsx-2.34}
@@ -1135,6 +1198,18 @@ source_dir: src/event
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
+units:
+  - {addr: 0x801bf000, end: 0x801bf204, name: scaled_draw_area}
+  - {addr: 0x801bf230, end: 0x801bf750, name: portrait_transitions}
+  - {addr: 0x801c090c, end: 0x801c0b34, name: unit_panel_primitives}
+  - {addr: 0x801c0b34, end: 0x801c1310, name: equipment_panel_threads}
+  - {addr: 0x801c1310, end: 0x801c19e4, name: panel_text}
+  - {addr: 0x801c1f48, end: 0x801c23a4, name: menu_window_threads}
+  - {addr: 0x801c2430, end: 0x801c2904, name: menu_panel_backdrops}
+  - {addr: 0x801c2904, end: 0x801c3034, name: status_billboard}
+  - {addr: 0x801c36c4, end: 0x801c3c48, name: zodiac_primitives}
+  - {addr: 0x801c3c48, end: 0x801c5244, name: editor}
+
 functions:
   - {addr: 0x801bf000, size: 464, name: menu_build_scaled_draw_area_packets, hash: c8fda5f772410a7c, source: src/shared/menu/menu_build_scaled_draw_area_packets.c}
   - {addr: 0x801bf1d0, size: 52, name: menu_init_scaled_draw_area_packets, hash: 50cc2b9872fcf539, source: src/shared/menu/menu_init_scaled_draw_area_packets.c}
@@ -1304,6 +1379,43 @@ load: 0x801bf000
 source_dir: src/event
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
+
+units:
+  - {addr: 0x801bf004, end: 0x801bf4ac, name: screen_init}
+  - {addr: 0x801bf510, end: 0x801bfa18, name: entry}
+  - {addr: 0x801bfa18, end: 0x801bfbc8, name: selection_records}
+  - {addr: 0x801bfbc8, end: 0x801bfdcc, name: scaled_draw_area}
+  - {addr: 0x801bfdf8, end: 0x801c0318, name: portrait_transitions}
+  - {addr: 0x801c151c, end: 0x801c1744, name: unit_panel_primitives}
+  - {addr: 0x801c1744, end: 0x801c2364, name: equipment_panels}
+  - {addr: 0x801c2364, end: 0x801c2af0, name: equipment_panel_threads}
+  - {addr: 0x801c2af0, end: 0x801c31c4, name: panel_text}
+  - {addr: 0x801c373c, end: 0x801c3b98, name: menu_window_threads}
+  - {addr: 0x801c40fc, end: 0x801c4290, name: equipment_rows}
+  - {addr: 0x801c4290, end: 0x801c4f58, name: equip_modes}
+  - {addr: 0x801c4f58, end: 0x801c4f98, name: preview_bonuses}
+  - {addr: 0x801c4f98, end: 0x801c561c, name: item_menu}
+  - {addr: 0x801c5920, end: 0x801c5eac, name: item_actions}
+  - {addr: 0x801c6598, end: 0x801c684c, name: inventory_totals}
+  - {addr: 0x801c688c, end: 0x801c700c, name: unit_loadout}
+  - {addr: 0x801c70f8, end: 0x801c76cc, name: item_sort_id_list}
+  - {addr: 0x801c76cc, end: 0x801c7abc, name: item_order}
+  - {addr: 0x801c7abc, end: 0x801c7d2c, name: equipment_stat_changes}
+  - {addr: 0x801c7d2c, end: 0x801c8188, name: equipment_stat_deltas}
+  - {addr: 0x801c8188, end: 0x801c8860, name: equipment_items}
+  - {addr: 0x801c891c, end: 0x801c8994, name: unit_comparison}
+  - {addr: 0x801c8ac8, end: 0x801c8dac, name: text_id_lists}
+  - {addr: 0x801c94a4, end: 0x801c9604, name: menu_input}
+  - {addr: 0x801c9aa4, end: 0x801c9f30, name: textured_quads}
+  - {addr: 0x801ca804, end: 0x801ca864, name: gfx_image_transfer_wait}
+  - {addr: 0x801ca9d4, end: 0x801cad5c, name: menu_script_core}
+  - {addr: 0x801cad5c, end: 0x801cb800, name: draw_commands}
+  - {addr: 0x801cb800, end: 0x801cbd48, name: texture_commands}
+  - {addr: 0x801cbd48, end: 0x801cd2b4, name: menu_list}
+  - {addr: 0x801cd2b4, end: 0x801cd3cc, name: draw_state}
+  - {addr: 0x801cd3cc, end: 0x801cd558, name: window_state}
+  - {addr: 0x801cd6a8, end: 0x801cdf30, name: gfx_contexts}
+  - {addr: 0x801cdf50, end: 0x801ce0e0, name: bit_streams}
 
 functions:
   - {addr: 0x801bf004, size: 468, name: equip_menu_load_images_and_reset_lists, hash: ea3dbcc34294a976}
@@ -1829,6 +1941,9 @@ source_dir: src/event
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
+units:
+  - {addr: 0x801bf01c, end: 0x801c0648, name: fullscreen_graphics}
+
 functions:
   - {addr: 0x801bf01c, size: 956, name: etc_graphic_open, hash: 3557a41548363503}
   - {addr: 0x801bf3d8, size: 8, name: etc_noop_801bf3d8, hash: 6d64edf91449c1b1}
@@ -1854,6 +1969,9 @@ load: 0x801df000
 source_dir: src/event
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
+
+units:
+  - {addr: 0x801df000, end: 0x801e05d8, name: help_overlay}
 
 functions:
   - {addr: 0x801df000, size: 80, name: helpmenu_menu_close, hash: af74553ec4c059ff}
@@ -1887,6 +2005,28 @@ load: 0x801df000
 source_dir: src/event
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
+
+units:
+  - {addr: 0x801df004, end: 0x801df478, name: entry}
+  - {addr: 0x801df478, end: 0x801df5dc, name: selection_records}
+  - {addr: 0x801df5dc, end: 0x801df9b4, name: job_list}
+  - {addr: 0x801df9b4, end: 0x801dfb6c, name: menu_ability_display_values}
+  - {addr: 0x801dfb6c, end: 0x801dffa0, name: ability_page}
+  - {addr: 0x801dffc0, end: 0x801e060c, name: job_abilities}
+  - {addr: 0x801e0740, end: 0x801e0a24, name: text_id_lists}
+  - {addr: 0x801e1074, end: 0x801e135c, name: selection_and_quads}
+  - {addr: 0x801e135c, end: 0x801e17e8, name: textured_quads}
+  - {addr: 0x801e1ff0, end: 0x801e2050, name: gfx_image_transfer_wait}
+  - {addr: 0x801e217c, end: 0x801e227c, name: menu_script}
+  - {addr: 0x801e227c, end: 0x801e2520, name: menu_script_core}
+  - {addr: 0x801e2520, end: 0x801e2638, name: draw_commands}
+  - {addr: 0x801e2638, end: 0x801e2cf8, name: menu_window_commands}
+  - {addr: 0x801e2cf8, end: 0x801e30d8, name: texture_commands}
+  - {addr: 0x801e30d8, end: 0x801e4338, name: menu_list}
+  - {addr: 0x801e4338, end: 0x801e4414, name: draw_state}
+  - {addr: 0x801e449c, end: 0x801e458c, name: window_state}
+  - {addr: 0x801e46cc, end: 0x801e4e78, name: gfx_contexts}
+  - {addr: 0x801e4e98, end: 0x801e5028, name: bit_streams}
 
 functions:
   - {addr: 0x801df004, size: 404, name: jobstts_menu_load_images_and_clear_selection, hash: e786b01b51200874}
@@ -2182,6 +2322,12 @@ source_dir: src/event
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
 
+units:
+  - {addr: 0x801c0100, end: 0x801c0304, name: scaled_draw_area}
+  - {addr: 0x801c0304, end: 0x801c0894, name: menu_window_frame_thread}
+  - {addr: 0x801c0e58, end: 0x801c1a3c, name: at_list_threads}
+  - {addr: 0x801c2ddc, end: 0x801c3450, name: option_choice_thread}
+
 functions:
   - {addr: 0x801bf000, size: 480, name: option_menu_draw_text_columns, hash: dff47199f4742289, source: src/shared/menu/option_menu_draw_text_columns.c}
   - {addr: 0x801bf1e0, size: 636, name: option_menu_redraw_text_page_on_scroll, hash: 61145072288429ea}
@@ -2253,6 +2399,23 @@ load: 0x801bf000
 source_dir: src/event
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
+
+units:
+  - {addr: 0x801bf01c, end: 0x801bf228, name: scaled_draw_area}
+  - {addr: 0x801bf254, end: 0x801bf79c, name: portrait_transitions}
+  - {addr: 0x801c07ac, end: 0x801c09d4, name: unit_panel_primitives}
+  - {addr: 0x801c09d4, end: 0x801c11b0, name: equipment_panel_threads}
+  - {addr: 0x801c11b0, end: 0x801c1884, name: panel_text}
+  - {addr: 0x801c1de8, end: 0x801c2244, name: menu_window_threads}
+  - {addr: 0x801c22d0, end: 0x801c27a4, name: menu_panel_backdrops}
+  - {addr: 0x801c27a4, end: 0x801c2dcc, name: status_billboard}
+  - {addr: 0x801c345c, end: 0x801c39e0, name: zodiac_primitives}
+  - {addr: 0x801c39e0, end: 0x801c3d08, name: helpers}
+  - {addr: 0x801c3d08, end: 0x801c3df8, name: music_tracks}
+  - {addr: 0x801c3df8, end: 0x801c52c4, name: post_battle_party}
+  - {addr: 0x801c52c4, end: 0x801c53ac, name: gfx_set_formation_icon_uv}
+  - {addr: 0x801c53ac, end: 0x801c5458, name: file_load_sync}
+  - {addr: 0x801c58d0, end: 0x801cb2cc, name: rewards, profile: gcc-2.6.3_O2_aspsx-2.34_divcheck}
 
 functions:
   - {addr: 0x801bf01c, size: 472, name: require_gfx_build_scaled_draw_area_packets, hash: 79a90437bb46609d}
@@ -2568,6 +2731,9 @@ load: 0x801d7000
 source_dir: src/event
 profile: gcc-2.6.3_O2_aspsx-2.34
 links: [battle]
+
+units:
+  - {addr: 0x801d7000, end: 0x801d706c, name: entry}
 
 functions:
   - {addr: 0x801d7000, size: 100, name: small_text_init_battle_pointers, hash: 33b5d60b7f13ad41}

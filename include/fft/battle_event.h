@@ -93,7 +93,8 @@ typedef struct battle_script_weather_environment {
     u8 environment_id;
     u8 _unused_01;
 } battle_script_weather_environment_t;
-typedef char script_weather_environment_size_must_be_2[(sizeof(battle_script_weather_environment_t) == 2) ? 1 : -1];
+typedef char
+    battle_script_weather_environment_size_must_be_2[(sizeof(battle_script_weather_environment_t) == 2) ? 1 : -1];
 
 extern map_background_gradient_colors_t g_battle_event_background_colors;
 extern battle_script_weather_environment_t g_battle_event_weather_commands[];
