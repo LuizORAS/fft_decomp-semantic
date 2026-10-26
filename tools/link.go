@@ -342,8 +342,10 @@ func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 // its piece's name, see linkObjectSections), binds the names the objects
 // leave undefined that this module cannot define (its links, MAIN, imports,
 // data rows outside the bytes pieces) and asserts every function and label.
-// A module with `$gp`-relative code sets `_gp` to the label gp names.
-func linkScript(layout linkLayout, dataObject string, bindings map[string]uint32, gp string) string {
+// A module with `$gp`-relative code sets `_gp` to the label gp names. A
+// nonzero shift moves every piece and label by that many bytes (reloc-check's
+// shifted links); the bound names stay where they are.
+func linkScript(layout linkLayout, dataObject string, bindings map[string]uint32, gp string, shift uint32) string {
 	var script strings.Builder
 	script.WriteString("OUTPUT_ARCH(mips)\n")
 	if gp != "" {
@@ -365,12 +367,12 @@ func linkScript(layout linkLayout, dataObject string, bindings map[string]uint32
 		if piece.kind != "text" && piece.kind != "rodata" {
 			align = 1
 		}
-		fmt.Fprintf(&script, "  %s 0x%08x : SUBALIGN(%d) { *(%s) }\n", linkSectionName(piece), piece.addr, align, linkSectionName(piece))
+		fmt.Fprintf(&script, "  %s 0x%08x : SUBALIGN(%d) { *(%s) }\n", linkSectionName(piece), piece.addr+shift, align, linkSectionName(piece))
 	}
 	// Another copy of a shared literal keeps its address for its object's
 	// references and loads nothing: the loaded copy holds the same bytes.
 	for _, piece := range layout.shadows {
-		fmt.Fprintf(&script, "  %s 0x%08x (NOLOAD) : SUBALIGN(4) { *(%s) }\n", linkShadowName(piece), piece.addr, linkShadowName(piece))
+		fmt.Fprintf(&script, "  %s 0x%08x (NOLOAD) : SUBALIGN(4) { *(%s) }\n", linkShadowName(piece), piece.addr+shift, linkShadowName(piece))
 	}
 	// Every object's .data, .bss and small-data sections are empty
 	// (objectHoldsOnlyCode), as is the data object's .text; the debug
@@ -383,10 +385,10 @@ func linkScript(layout linkLayout, dataObject string, bindings map[string]uint32
 	}
 	for _, piece := range layout.pieces {
 		if piece.kind == "text" {
-			fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"%s must begin at 0x%08x\");\n", piece.function.Name, piece.addr, piece.function.Name, piece.addr)
+			fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"%s must begin at 0x%08x\");\n", piece.function.Name, piece.addr+shift, piece.function.Name, piece.addr+shift)
 		}
 		for _, label := range piece.labels {
-			fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"%s must be at 0x%08x\");\n", label.Name, label.Addr, label.Name, label.Addr)
+			fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"%s must be at 0x%08x\");\n", label.Name, label.Addr+shift, label.Name, label.Addr+shift)
 		}
 	}
 	return script.String()
@@ -433,6 +435,22 @@ type linkResult struct {
 	output    string
 	identical bool   // the whole image equals the original file
 	checked   string // what was compared
+
+	// What linking the module again takes (reloc-check's shifted links).
+	elf      string
+	layout   linkLayout
+	inputs   []string // the data object, then each function's object
+	bindings map[string]uint32
+	gp       string
+}
+
+// linkObjects runs the linker on inputs (the data object first) with script.
+func linkObjects(script, elfPath string, inputs []string) error {
+	arguments := append([]string{"-EL", "--orphan-handling=error", "-T", script, "-o", elfPath}, inputs...)
+	if output, err := exec.Command("mipsel-linux-gnu-ld", arguments...).CombinedOutput(); err != nil {
+		return fmt.Errorf("mipsel-linux-gnu-ld: %w\n%s", err, bytes.TrimSpace(output))
+	}
+	return nil
 }
 
 // linkModule compiles every function of m to an object, writes the data
@@ -572,17 +590,18 @@ func (p project) linkModule(resolver symbolResolver, m *moduleSpec) (linkResult,
 	if err != nil {
 		return result, err
 	}
-	if err := atomicWrite(script, []byte(linkScript(layout, dataObject, bindings, gp))); err != nil {
+	if err := atomicWrite(script, []byte(linkScript(layout, dataObject, bindings, gp, 0))); err != nil {
 		return result, err
 	}
 	elfPath := filepath.Join(outDir, m.ID+".elf")
-	arguments := []string{"-EL", "--orphan-handling=error", "-T", script, "-o", elfPath, dataObject}
+	inputs := []string{dataObject}
 	for _, f := range m.Functions {
-		arguments = append(arguments, objects[f.Name])
+		inputs = append(inputs, objects[f.Name])
 	}
-	if output, err := exec.Command("mipsel-linux-gnu-ld", arguments...).CombinedOutput(); err != nil {
-		return result, fmt.Errorf("mipsel-linux-gnu-ld: %w\n%s", err, bytes.TrimSpace(output))
+	if err := linkObjects(script, elfPath, inputs); err != nil {
+		return result, err
 	}
+	result.elf, result.layout, result.inputs, result.bindings, result.gp = elfPath, layout, inputs, bindings, gp
 	if err := p.checkLinkedSizes(elfPath, layout); err != nil {
 		return result, err
 	}

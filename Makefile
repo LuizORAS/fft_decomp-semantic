@@ -131,6 +131,10 @@ link: image ## Link each module whole from its objects and the bytes between the
 	@if [ -f scus-94221.bin ]; then $(MAKE) --no-print-directory extract; fi
 	@$(TOOLS) link $(if $(strip $(MODULE)),--module="$(MODULE)")
 
+.PHONY: reloc-check
+reloc-check: extract ## List into build/reloc-check the data words that look like RAM addresses and are neither relocations nor values, and link each module twice shifted to check every changed word (MODULE=x)
+	@$(TOOLS) reloc-check $(if $(strip $(MODULE)),--module="$(MODULE)")
+
 .PHONY: unit-check
 unit-check: image ## Rebuild each original translation unit from its members' sources and compare (MODULE=x UNIT=name)
 	@$(TOOLS) unit-check $(if $(strip $(MODULE)),--module="$(MODULE)") $(if $(strip $(UNIT)),--unit="$(UNIT)")

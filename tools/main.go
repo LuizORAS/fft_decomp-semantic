@@ -210,7 +210,7 @@ type inventoryRecord struct {
 	StackSize    int    `json:"stack_size,omitempty"`
 }
 
-const usage = "usage: tools build [module|disc]|check [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|decl-check|declarations ...|share-audit [--module=M] [--min-bytes=N] [--prefix=P]|twins [--module=M] [--min-bytes=N] [--max-near=N] [--out=D]|trial --module=M --entry=E --source=S [--symbol=F] [--subst OLD=NEW]... [--include H]... | trial --batch=FILE | trial --twins=ID[,ID]...|unit-check [--module=M] [--unit=NAME]|link [--module=M]|symbols <action> ...|map [--out=build/DIR] [--pull-docs]|warnings [--module=M]|extract"
+const usage = "usage: tools build [module|disc]|check [--module=M]|diff [--module=M] FUNC|library-diff --name=N --source=S --addr=A --size=B [--module=M] [--profile=P]|permute [--module=M] [--duration=S] [--jobs=N] FUNC|checksums|check-config|config-fmt|decl-check|declarations ...|share-audit [--module=M] [--min-bytes=N] [--prefix=P]|twins [--module=M] [--min-bytes=N] [--max-near=N] [--out=D]|trial --module=M --entry=E --source=S [--symbol=F] [--subst OLD=NEW]... [--include H]... | trial --batch=FILE | trial --twins=ID[,ID]...|unit-check [--module=M] [--unit=NAME]|link [--module=M]|reloc-check [--module=M]|symbols <action> ...|map [--out=build/DIR] [--pull-docs]|warnings [--module=M]|extract"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -229,6 +229,7 @@ func main() {
 		"trial":                  true,
 		"unit-check":             true,
 		"link":                   true,
+		"reloc-check":            true,
 		"map":                    true,
 		"warnings":               true,
 		"compile-permuter-input": true,
@@ -274,6 +275,8 @@ func main() {
 		err = p.unitCheckCommand(os.Args[2:])
 	case "link":
 		err = p.linkCommand(os.Args[2:])
+	case "reloc-check":
+		err = p.relocCheckCommand(os.Args[2:])
 	case "map":
 		err = p.mapCommand(os.Args[2:])
 	case "warnings":

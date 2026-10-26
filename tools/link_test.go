@@ -73,7 +73,8 @@ func TestLinkDataAssemblyAndScript(t *testing.T) {
 	if zeroed := linkDataAssembly(m, layout, ""); !strings.Contains(zeroed, "\t.space 8\n") || strings.Contains(zeroed, "incbin") {
 		t.Fatalf("zeroed data assembly:\n%s", zeroed)
 	}
-	script := linkScript(layout, "/w/data.o", map[string]uint32{"g_test_inside": 0x8010000c, "battle_x": 0x80070000}, "")
+	bindings := map[string]uint32{"g_test_inside": 0x8010000c, "battle_x": 0x80070000}
+	script := linkScript(layout, "/w/data.o", bindings, "", 0)
 	for _, line := range []string{
 		"PROVIDE(battle_x = 0x80070000);\nPROVIDE(g_test_inside = 0x8010000c);\n",
 		"  .text_80100008 0x80100008 : SUBALIGN(4) { *(.text_80100008) }\n",
@@ -85,6 +86,19 @@ func TestLinkDataAssemblyAndScript(t *testing.T) {
 	} {
 		if !strings.Contains(script, line) {
 			t.Fatalf("script lacks %q:\n%s", line, script)
+		}
+	}
+	// Shifted, every piece and label moves; the bound names do not.
+	shifted := linkScript(layout, "/w/data.o", bindings, "", 0x10010)
+	for _, line := range []string{
+		"PROVIDE(battle_x = 0x80070000);\nPROVIDE(g_test_inside = 0x8010000c);\n",
+		"  .text_80100008 0x80110018 : SUBALIGN(4) { *(.text_80100008) }\n",
+		"  .bytes_80100018 0x80110028 : SUBALIGN(1) { *(.bytes_80100018) }\n",
+		"ASSERT(test_second == 0x80110020, \"test_second must begin at 0x80110020\");\n",
+		"ASSERT(g_test_tail == 0x80110040, \"g_test_tail must be at 0x80110040\");\n",
+	} {
+		if !strings.Contains(shifted, line) {
+			t.Fatalf("shifted script lacks %q:\n%s", line, shifted)
 		}
 	}
 }
@@ -154,7 +168,7 @@ func TestMainLinkWritesTheEXEHeaderAndGlobalPointer(t *testing.T) {
 	if err != nil || gp != "g_psyq_crt_saved_ra" {
 		t.Fatalf("global pointer %q, %v", gp, err)
 	}
-	script := linkScript(layout, "/w/data.o", nil, gp)
+	script := linkScript(layout, "/w/data.o", nil, gp, 0)
 	for _, line := range []string{
 		"OUTPUT_ARCH(mips)\n_gp = g_psyq_crt_saved_ra;\n",
 		"__exe_text_start = ADDR(.text_80010000);\n",
@@ -177,7 +191,7 @@ func TestModuleLinkLayoutShadowsSharedLiterals(t *testing.T) {
 	if len(layout.shadows) != 1 || linkShadowName(layout.shadows[0]) != ".shadow_80100020_test_first" {
 		t.Fatalf("shadows %v", layout.shadows)
 	}
-	script := linkScript(layout, "/w/data.o", nil, "")
+	script := linkScript(layout, "/w/data.o", nil, "", 0)
 	if !strings.Contains(script, "  .rodata_80100020 0x80100020 : SUBALIGN(4) { *(.rodata_80100020) }\n") ||
 		!strings.Contains(script, "  .shadow_80100020_test_first 0x80100020 (NOLOAD) : SUBALIGN(4) { *(.shadow_80100020_test_first) }\n") {
 		t.Fatalf("script:\n%s", script)
