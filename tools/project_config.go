@@ -50,6 +50,11 @@ type moduleSpec struct {
 	Imports   []symbolSpec
 	Overrides []overrideSpec
 	Regions   []regionSpec
+	// Relocations and Values classify the data words that look like RAM
+	// addresses: a relocation is written from its symbol at link time, a
+	// value keeps its original bytes.
+	Relocations []relocationSpec
+	Values      []valueSpec
 
 	path string // file path relative to the project root
 }
@@ -98,6 +103,29 @@ type regionSpec struct {
 	End  uint32
 	Kind string
 	Why  string
+}
+
+// relocationSpec says the data word at Addr holds the address of To plus
+// Offset; To is any name the module resolves (its own, its links', main's).
+type relocationSpec struct {
+	Addr   uint32
+	To     string
+	Offset uint32
+}
+
+// valueSpec says the words at [Addr, End) are values, not addresses, for the
+// reason Why. End is 0 for the one word at Addr.
+type valueSpec struct {
+	Addr uint32
+	End  uint32
+	Why  string
+}
+
+func (v valueSpec) end() uint32 {
+	if v.End == 0 {
+		return v.Addr + 4
+	}
+	return v.End
 }
 
 // unitSpec is one original translation unit: the functions in [Addr, End),
@@ -164,6 +192,25 @@ func (m *moduleSpec) sourceOf(f *functionSpec) string {
 		return f.Source
 	}
 	return m.defaultSource(f)
+}
+
+// codeAt names what code [start, end) overlaps: a function's .text or
+// .rodata, or MAIN's PS-X EXE header; "" for data.
+func (m *moduleSpec) codeAt(start, end uint32) string {
+	if m.ID == mainModuleID && start < m.Load+psxEXEHeaderSize {
+		return "the PS-X EXE header"
+	}
+	for _, f := range m.Functions {
+		if start < f.Addr+uint32(f.Size) && f.Addr < end {
+			return f.Name
+		}
+		for _, rodata := range f.Rodata {
+			if start < rodata.Addr+uint32(rodata.Size) && rodata.Addr < end {
+				return f.Name + "'s .rodata"
+			}
+		}
+	}
+	return ""
 }
 
 // quirksAssemblySection is the QUIRKS.md section that lists each hand-written
@@ -354,6 +401,21 @@ type moduleFileYAML struct {
 	Imports   []symbolYAML   `yaml:"imports"`
 	Overrides []overrideYAML `yaml:"overrides"`
 	Regions   []regionYAML   `yaml:"regions"`
+
+	Relocations []relocationYAML `yaml:"relocations"`
+	Values      []valueYAML      `yaml:"values"`
+}
+
+type relocationYAML struct {
+	Addr   uint32 `yaml:"addr"`
+	To     string `yaml:"to"`
+	Offset uint32 `yaml:"offset"`
+}
+
+type valueYAML struct {
+	Addr uint32 `yaml:"addr"`
+	End  uint32 `yaml:"end"`
+	Why  string `yaml:"why"`
 }
 
 type functionYAML struct {
@@ -447,6 +509,12 @@ func parseModuleConfig(data []byte) (*moduleSpec, error) {
 	for _, item := range file.Units {
 		module.Units = append(module.Units, unitSpec(item))
 	}
+	for _, item := range file.Relocations {
+		module.Relocations = append(module.Relocations, relocationSpec(item))
+	}
+	for _, item := range file.Values {
+		module.Values = append(module.Values, valueSpec(item))
+	}
 	return module, nil
 }
 
@@ -499,6 +567,13 @@ func (m *moduleSpec) normalize() {
 		}
 		return m.Regions[i].End > m.Regions[j].End
 	})
+	sort.SliceStable(m.Relocations, func(i, j int) bool { return m.Relocations[i].Addr < m.Relocations[j].Addr })
+	for index := range m.Values {
+		if m.Values[index].End == m.Values[index].Addr+4 {
+			m.Values[index].End = 0
+		}
+	}
+	sort.SliceStable(m.Values, func(i, j int) bool { return m.Values[i].Addr < m.Values[j].Addr })
 }
 
 func sortSymbols(symbols []symbolSpec) {
@@ -593,6 +668,22 @@ func renderModuleConfig(m *moduleSpec) []byte {
 	section("regions", len(m.Regions), func(index int) string {
 		item := m.Regions[index]
 		return fmt.Sprintf("addr: 0x%08x, end: 0x%08x, kind: %s, why: %s", item.Addr, item.End, yamlText(item.Kind), yamlText(item.Why))
+	})
+	section("relocations", len(m.Relocations), func(index int) string {
+		item := m.Relocations[index]
+		text := fmt.Sprintf("addr: 0x%08x, to: %s", item.Addr, yamlText(item.To))
+		if item.Offset != 0 {
+			text += fmt.Sprintf(", offset: 0x%x", item.Offset)
+		}
+		return text
+	})
+	section("values", len(m.Values), func(index int) string {
+		item := m.Values[index]
+		text := fmt.Sprintf("addr: 0x%08x", item.Addr)
+		if item.End != 0 {
+			text += fmt.Sprintf(", end: 0x%08x", item.End)
+		}
+		return text + ", why: " + yamlText(item.Why)
 	})
 	return out.Bytes()
 }
@@ -706,6 +797,7 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 	if err != nil {
 		return err
 	}
+	resolver := newSymbolResolver(config)
 	rendered := renderConfigFiles(config)
 	paths := make([]string, 0, len(rendered))
 	for path := range rendered {
@@ -907,6 +999,44 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 				if !covered {
 					fail("%s is %s code with no source; write it as a .s routine", where, region.Kind)
 				}
+			}
+		}
+		// Each data word is classified once, as a relocation or as a value.
+		classified := make(map[uint32]string)
+		for _, relocation := range m.Relocations {
+			where := fmt.Sprintf("%s: relocation 0x%08x", label, relocation.Addr)
+			if relocation.Addr%4 != 0 || !m.contains(relocation.Addr, 4) {
+				fail("%s is not an aligned word of the file", where)
+			} else if owner := m.codeAt(relocation.Addr, relocation.Addr+4); owner != "" {
+				fail("%s lies in %s", where, owner)
+			}
+			if previous := classified[relocation.Addr]; previous != "" {
+				fail("%s repeats a %s", where, previous)
+			}
+			classified[relocation.Addr] = "relocation"
+			if _, ok := resolver.resolve(m, relocation.To); !ok {
+				fail("%s: %s is no name this module resolves", where, relocation.To)
+			}
+		}
+		for _, value := range m.Values {
+			where := fmt.Sprintf("%s: value 0x%08x", label, value.Addr)
+			end := value.end()
+			if value.Addr%4 != 0 || end%4 != 0 || end <= value.Addr || !m.contains(value.Addr, int(end-value.Addr)) {
+				fail("%s is not an aligned range of the file", where)
+				continue
+			}
+			if owner := m.codeAt(value.Addr, end); owner != "" {
+				fail("%s lies in %s", where, owner)
+			}
+			if strings.TrimSpace(value.Why) == "" {
+				fail("%s needs a why", where)
+			}
+			for addr := value.Addr; addr < end; addr += 4 {
+				if previous := classified[addr]; previous != "" {
+					fail("%s overlaps a %s at 0x%08x", where, previous, addr)
+					break
+				}
+				classified[addr] = "value"
 			}
 		}
 	}

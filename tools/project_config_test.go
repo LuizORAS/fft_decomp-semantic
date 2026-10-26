@@ -202,6 +202,54 @@ func TestProjectConfigRejectsUnknownKeysAndMisplacedModules(t *testing.T) {
 	}
 }
 
+func TestProjectConfigValidatesRelocationsAndValues(t *testing.T) {
+	valid := "\nrelocations:\n  - {addr: 0x80010108, to: g_main_value, offset: 0x4}\n  - {addr: 0x80010104, to: main_second}\n" +
+		"\nvalues:\n  - {addr: 0x80010120, end: 0x80010130, why: \"a table of constants\"}\n  - {addr: 0x80010114, end: 0x80010118, why: \"one word\"}\n"
+	canonical := "\nrelocations:\n  - {addr: 0x80010104, to: main_second}\n  - {addr: 0x80010108, to: g_main_value, offset: 0x4}\n" +
+		"\nvalues:\n  - {addr: 0x80010114, why: \"one word\"}\n  - {addr: 0x80010120, end: 0x80010130, why: \"a table of constants\"}\n"
+	for name, testCase := range map[string]struct {
+		sections, want string
+	}{
+		"valid":             {valid, ""},
+		"misaligned":        {"\nrelocations:\n  - {addr: 0x80010102, to: main_second}\n", "is not an aligned word"},
+		"in a function":     {"\nrelocations:\n  - {addr: 0x80010004, to: main_second}\n", "lies in main_first"},
+		"in the header":     {"\nrelocations:\n  - {addr: 0x8000f900, to: main_second}\n", "lies in the PS-X EXE header"},
+		"unknown name":      {"\nrelocations:\n  - {addr: 0x80010104, to: g_nowhere}\n", "g_nowhere is no name this module resolves"},
+		"twice":             {"\nrelocations:\n  - {addr: 0x80010104, to: main_second}\n\nvalues:\n  - {addr: 0x80010100, end: 0x80010110, why: \"x\"}\n", "overlaps a relocation at 0x80010104"},
+		"value with no why": {"\nvalues:\n  - {addr: 0x80010110, why: \" \"}\n", "needs a why"},
+		"empty range":       {"\nvalues:\n  - {addr: 0x80010120, end: 0x80010120, why: \"x\"}\n", "is not an aligned range"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			p := validTestProject(t)
+			path := filepath.Join(p.root, "target", "main.yaml")
+			if err := os.WriteFile(path, []byte(testMainYAML+testCase.sections), 0o644); err != nil {
+				t.Fatal(err)
+			}
+			config, err := p.loadProjectConfig()
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err := p.writeProjectConfig(config); err != nil {
+				t.Fatal(err)
+			}
+			if config, err = p.loadProjectConfig(); err != nil {
+				t.Fatal(err)
+			}
+			err = p.validateProjectConfig(config)
+			if testCase.want == "" {
+				written, readErr := os.ReadFile(path)
+				if err != nil || readErr != nil || !strings.HasSuffix(string(written), canonical) {
+					t.Fatalf("valid sections: %v %v\n%s", err, readErr, written)
+				}
+				return
+			}
+			if err == nil || !strings.Contains(err.Error(), testCase.want) {
+				t.Fatalf("error = %v, want %q", err, testCase.want)
+			}
+		})
+	}
+}
+
 func TestProjectConfigValidatesRegionsSourcesAndAssembly(t *testing.T) {
 	for name, testCase := range map[string]struct {
 		edit func(string) string

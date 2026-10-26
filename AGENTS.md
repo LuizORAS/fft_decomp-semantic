@@ -159,6 +159,12 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
   points). `imports`: names from overlays that linking cannot otherwise
   reach. `overrides`: per-function bindings. `regions`: bytes deliberately
   left original, with the reason.
+- `relocations`: data words that hold an address, `{addr, to}` plus
+  `offset` when the word points past the start of `to` (any name the module
+  resolves); `make link` writes each word from its symbol, so it follows the
+  symbol. `values`: words that look like RAM addresses but are not,
+  `{addr, why}` for one word or `{addr, end, why}` for a range. Each word
+  lies outside code and is classified once.
 - `units`: the original translation units, `{addr, end, name}` plus `profile`
   when the file was not built with the module default, matched by address
   from upstream's unit tables and named with its labels. The functions in

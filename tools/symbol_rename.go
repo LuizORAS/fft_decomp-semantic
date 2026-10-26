@@ -828,6 +828,11 @@ func renameConfigReferences(config *projectConfig, oldName, newName string) erro
 				m.Overrides[index].Name = newName
 			}
 		}
+		for index := range m.Relocations {
+			if m.Relocations[index].To == oldName {
+				m.Relocations[index].To = newName
+			}
+		}
 	}
 	return nil
 }

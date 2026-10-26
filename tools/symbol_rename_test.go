@@ -10,6 +10,18 @@ import (
 	"testing"
 )
 
+func TestRenameConfigReferencesFollowsRelocations(t *testing.T) {
+	m := &moduleSpec{ID: "battle", Data: []symbolSpec{{Addr: 0x80100000, Name: "g_old"}},
+		Relocations: []relocationSpec{{Addr: 0x80100010, To: "g_old", Offset: 4}, {Addr: 0x80100014, To: "g_other"}}}
+	config := &projectConfig{Modules: []*moduleSpec{m}}
+	if err := renameConfigReferences(config, "g_old", "g_new"); err != nil {
+		t.Fatal(err)
+	}
+	if m.Data[0].Name != "g_new" || m.Relocations[0].To != "g_new" || m.Relocations[0].Offset != 4 || m.Relocations[1].To != "g_other" {
+		t.Fatalf("after the rename: %+v %+v", m.Data, m.Relocations)
+	}
+}
+
 func writeSymbolRenameFixture(t *testing.T, root, relative, contents string) string {
 	t.Helper()
 	path := filepath.Join(root, filepath.FromSlash(relative))

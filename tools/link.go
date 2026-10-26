@@ -26,11 +26,12 @@ import (
 // linkPiece is one contiguous range of a module image: a function's .text,
 // its .rodata, or the original bytes between them with the data rows inside.
 type linkPiece struct {
-	addr     uint32
-	size     int
-	kind     string // "text", "rodata", "bytes" or MAIN's "header"
-	function *functionSpec
-	labels   []symbolSpec
+	addr        uint32
+	size        int
+	kind        string // "text", "rodata", "bytes" or MAIN's "header"
+	function    *functionSpec
+	labels      []symbolSpec
+	relocations []relocationSpec // words of a bytes piece written from a symbol
 }
 
 // linkLayout is a module's pieces in address order; the .rodata copies that
@@ -116,6 +117,18 @@ func moduleLinkLayout(m *moduleSpec) (linkLayout, error) {
 			continue
 		}
 		layout.absolute = append(layout.absolute, symbol)
+	}
+	relocations := append([]relocationSpec(nil), m.Relocations...)
+	sort.Slice(relocations, func(a, b int) bool { return relocations[a].Addr < relocations[b].Addr })
+	for _, relocation := range relocations {
+		index := sort.Search(len(layout.pieces), func(i int) bool {
+			return layout.pieces[i].addr+uint32(layout.pieces[i].size) > relocation.Addr
+		})
+		piece := &layout.pieces[min(index, len(layout.pieces)-1)]
+		if index == len(layout.pieces) || piece.kind != "bytes" || piece.addr > relocation.Addr || relocation.Addr+4 > piece.addr+uint32(piece.size) {
+			return layout, fmt.Errorf("%s: relocation 0x%08x is not a word of the bytes between functions", m.ID, relocation.Addr)
+		}
+		piece.relocations = append(piece.relocations, relocation)
 	}
 	return layout, nil
 }
@@ -251,7 +264,7 @@ func linkObjectRenames(resolver symbolResolver, m *moduleSpec, layout *linkLayou
 
 // linkDataAssembly writes every bytes piece as its own section: the original
 // bytes (`.incbin` of the extracted file) or, without it, zeros, with a global
-// label at each data row.
+// label at each data row and each relocation's word from its symbol.
 func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 	var out strings.Builder
 	fmt.Fprintf(&out, "# %s: the bytes between functions, in address order.\n", m.ID)
@@ -284,9 +297,41 @@ func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 			fmt.Fprintf(&out, "\t.word __exe_text_start\n\t.word __exe_text_size\n")
 			at += 8
 		}
-		for _, label := range piece.labels {
-			emit(label.Addr)
-			fmt.Fprintf(&out, "\t.globl %s\n%s:\n", label.Name, label.Name)
+		// A relocated word comes from its symbol, so it follows the symbol
+		// wherever the link puts it.
+		word := func(relocation relocationSpec) {
+			emit(relocation.Addr)
+			if relocation.Offset != 0 {
+				fmt.Fprintf(&out, "\t.word %s+0x%x\n", relocation.To, relocation.Offset)
+			} else {
+				fmt.Fprintf(&out, "\t.word %s\n", relocation.To)
+			}
+			at += 4
+		}
+		// A data row inside a relocated word (an array base biased into a
+		// pointer's last bytes) is defined back from the word's end.
+		label := func(symbol symbolSpec) {
+			if symbol.Addr < at {
+				fmt.Fprintf(&out, "\t.globl %s\n\t.set %s, . - %d\n", symbol.Name, symbol.Name, at-symbol.Addr)
+				return
+			}
+			emit(symbol.Addr)
+			fmt.Fprintf(&out, "\t.globl %s\n%s:\n", symbol.Name, symbol.Name)
+		}
+		labels := piece.labels
+		for _, relocation := range piece.relocations {
+			for len(labels) > 0 && labels[0].Addr <= relocation.Addr {
+				label(labels[0])
+				labels = labels[1:]
+			}
+			word(relocation)
+			for len(labels) > 0 && labels[0].Addr < at {
+				label(labels[0])
+				labels = labels[1:]
+			}
+		}
+		for _, symbol := range labels {
+			label(symbol)
 		}
 		emit(piece.addr + uint32(piece.size))
 	}
@@ -506,7 +551,12 @@ func (p project) linkModule(resolver symbolResolver, m *moduleSpec) (linkResult,
 	for name, addr := range absolute {
 		bindings[name] = addr
 	}
+	// The data object names the symbols its relocated words hold.
+	users := []string{dataObject}
 	for _, object := range objects {
+		users = append(users, object)
+	}
+	for _, object := range users {
 		undefined, err := undefinedObjectIdentifiers(object)
 		if err != nil {
 			return result, err

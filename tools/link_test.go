@@ -89,6 +89,35 @@ func TestLinkDataAssemblyAndScript(t *testing.T) {
 	}
 }
 
+func TestLinkDataAssemblyWritesRelocatedWords(t *testing.T) {
+	m := linkTestModule()
+	m.Relocations = []relocationSpec{{Addr: 0x80100030, To: "g_test_a", Offset: 4}, {Addr: 0x80100024, To: "test_first"}}
+	layout, err := moduleLinkLayout(m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := "\t.section .bytes_80100024, \"a\", @progbits\n\t.word test_first\n\t.incbin \"/disc/EVENT/TEST.OUT\", 40, 8\n" +
+		"\t.globl g_test_tail\ng_test_tail:\n\t.word g_test_a+0x4\n\t.incbin \"/disc/EVENT/TEST.OUT\", 52, 12\n"
+	if data := linkDataAssembly(m, layout, "/disc/EVENT/TEST.OUT"); !strings.Contains(data, want) {
+		t.Fatalf("data assembly:\n%s", data)
+	}
+	if zeroed := linkDataAssembly(m, layout, ""); !strings.Contains(zeroed, "\t.word test_first\n\t.space 8\n") {
+		t.Fatalf("zeroed data assembly:\n%s", zeroed)
+	}
+	// An array base biased into a pointer's last byte.
+	m.Data = append(m.Data, symbolSpec{Addr: 0x80100027, Name: "g_test_biased"})
+	if layout, err = moduleLinkLayout(m); err != nil {
+		t.Fatal(err)
+	}
+	if data := linkDataAssembly(m, layout, ""); !strings.Contains(data, "\t.word test_first\n\t.globl g_test_biased\n\t.set g_test_biased, . - 1\n\t.space 8\n") {
+		t.Fatalf("label inside a relocated word:\n%s", data)
+	}
+	m.Relocations = []relocationSpec{{Addr: 0x80100008, To: "test_second"}}
+	if _, err := moduleLinkLayout(m); err == nil || !strings.Contains(err.Error(), "not a word of the bytes") {
+		t.Fatalf("a relocation in code: %v", err)
+	}
+}
+
 func TestMainLinkWritesTheEXEHeaderAndGlobalPointer(t *testing.T) {
 	m := &moduleSpec{
 		ID: mainModuleID, File: "SCUS_942.21", Load: 0x8000f800, Size: 0x1000, SourceDir: "src/main",
@@ -272,6 +301,11 @@ func TestLinkModuleRebuildsTheOriginalImage(t *testing.T) {
 	binary.LittleEndian.PutUint32(image[0x10:], 0x80010200)
 	binary.LittleEndian.PutUint32(image[0x18:], 0x80010000)
 	binary.LittleEndian.PutUint32(image[0x1c:], uint32(m.Size-psxEXEHeaderSize))
+	// Two data words hold addresses, main_second's and four bytes into
+	// g_main_value; the link writes them from the symbols.
+	m.Relocations = []relocationSpec{{Addr: 0x80010300, To: "main_second"}, {Addr: 0x80010400, To: "g_main_value", Offset: 4}}
+	binary.LittleEndian.PutUint32(image[m.offset(0x80010300):], 0x80010100)
+	binary.LittleEndian.PutUint32(image[m.offset(0x80010400):], 0x80010084)
 	path := filepath.Join(p.filesRoot, m.File)
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		t.Fatal(err)
@@ -295,6 +329,18 @@ func TestLinkModuleRebuildsTheOriginalImage(t *testing.T) {
 	if strings.Contains(string(script), "PROVIDE(main_first") || strings.Contains(string(script), "PROVIDE(g_main_value") {
 		t.Fatalf("own names must come from the link, not PROVIDE:\n%s", script)
 	}
+	data, err := os.ReadFile(filepath.Join(p.root, "build", "link", "main", "data.s"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(data), "\t.word main_second\n") || !strings.Contains(string(data), "g_main_tail:\n\t.word g_main_value+0x4\n") {
+		t.Fatalf("relocated words:\n%s", data)
+	}
+	m.Relocations[0].To = "main_first"
+	if _, err := p.linkModule(resolver, m); err == nil || !strings.Contains(err.Error(), "linked image differs at file offset 0xb01") {
+		t.Fatalf("a relocation to the wrong symbol: %v", err)
+	}
+	m.Relocations[0].To = "main_second"
 	if err := os.Remove(path); err != nil {
 		t.Fatal(err)
 	}
